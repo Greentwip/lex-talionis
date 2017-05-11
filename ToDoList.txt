@@ -1,0 +1,98 @@
+ToDo:
+- Scripts (Fix and finalize)
+- Map cleanup for 3 - 10
+- Base Scripts
+	- 3
+		- Prim Meets Eliza (--)
+		- Ophie Meets Renae (Iron Knife)
+		- Ophie Meets Theo (Secret Book)
+	- 4
+		- Prim brings Eliza along (Prim's Charm)
+		- Ophie confronts Sam (Levin Sword)
+		- Theo Sphinx, Private Eye Pt. 1 (--)
+	- 5
+		- Theo Sphinx, Private Eye Pt. 2 (--)
+		Sam confronts Eliza - she's done listening to Sam -- Sam's actually okay with it though... Sam is reasonable dude.
+		??
+	- 6
+		- Theo Sphinx, Private Eye Pt. 3 (--)
+		??
+		??
+	- 7
+		- Theo Sphinx, Private Eye Pt. 4 (Howl)
+		??
+		??
+	- 8
+		Althea, Drake, Prim discuss Althea's potential rise to the Lion Throne. Althea is not sure she wants to. She's not sure she's ready. Why doesn't Sam take it. He's led us for so long. He's been a good leader. I don't think I have it in me to be a leader... 
+		I was the youngest of five. I was never supposed to take the throne. My older sister was trained from birth for the responsibility. But I ... I... I wasn't.
+		Coyote returns from Kiley, informs Sam that preparations are going well. Tells Sam of a secret entrance underneath Rajas. 
+		??
+	- 9
+		??
+		??
+		??
+- General Testing
+- Add music for missing base scripts.
+- Test Base Scripts
+- Test Level 10+ (should Level 10 have infinite reinforcements after turn 4? Should Ulver's weapon auto-cleave?)
+- Need extra advice on Chapter 8... Not sure what to do or how to balance for fun.
+- Re-test Chapter 7
+
+FOR FUTURE UPDATES TO THE ENGINE:
+--- MAPMOVES ---
+- Have units keep their possible moves in memory... (may not be needed) ??
+--- L Button ---
+- Add L button support to different states
+--- COMBAT ---
+- Full Combat Animations
+- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
+- Add screenshake etc on skill uses?? -- certain skills only - Metamagic, Critical, Sol, Luna, 
+--- MAP ---
+- Autotiles for chasm in level 6?
+--- CUSTOMIZATION ---
+- Add ability to select at beginning of new game. (Make it a state, like battle_save), CASUAL/HYBRID(lose stats/levels?)/CLASSIC, NORMAL/HARD (LEVEL OF HARD), FIXED/RANDOM/HYBRID, RNG: 1, 2, 3, INFINITE (Selection 49 default), Skill*Str always hit
+--- AI ---
+- Add support for summons (just append summons to end of ai_list.)
+- Have AI actually test equip items when making calculations ++ (not really important, since so few weapons give statuses..., could do it only if weapon has a status_equip?)
+- Consider moving Recovery AI into main attack AI?? - maybe not
+- Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells)
+- Red highlight appears over position of last enemy fought while using 'other' team AI - I might have solved this with the use of the reset...? I did not solve this...
+- Add threading to AI - stick it on a separate thread - won't actually help much since Python's threading is kind of fake?
+--- DIALOGUE ---
+- Add Visual Novel like dialogue backlog...??** On R press
+--- LEVEL UP ---
+- Have Level up! match the way its done in fe7... (sound)
+- Improve Promotion... Add animation. Make sure exp works correctly.
+--- PICTURES --- 
+- Strategist Class Card
+- Citizen, Wagon Class Card
+--- MUSIC ---
+- Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
+- Music does not work on mac. - AudioComponent.h error in El Capitan mac. Definitely not fixable on my end. - I have an email that will apparently fix it?
+--- GUI ---
+- Add cursor scroll to menus (Choice Menu), so you can just hold down the direction you want to go. ++
+--- AWAKENING UI ---
+- Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons)
+- Transparent dude moves with arrow
+- Pulsing arrow
+- Allow user to control arrow movement (option)
+- Allow quick attack on enemy, quick spell on ally (option)
+- Have on map combat match awakening, fe 7, fe 8
+--- EXTRA ---
+- Names for chapters??
+- Unit Menu ++
+- Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1) ++
+- Color blind mode ++ Allow switching of tile and unit colors (blue, red, green, yellow, purple, white, orange)
+- Add Decals and Colors to Info Menus... ??**
+- Build a GUI that builds levels... Unit Placement, TileInfo placement
+- Keep gameStateObj.allunits sorted by unit_id? (what is it currently sorted by?) (makes get unit by id faster. But its not that slow to begin with...)
+- Add Rescue/Warp/Rewarp handling (would include ability to select starting and ending positions - would allow time for warp animation) (both as staff and as ability)
+- Add Fake arrival to Give/Take/Shove++
+- Scenic Maps (UnitLevel rework?) (Don't need to put previous saved units in UnitLevel.txt manually) (maybe have a load unit command? then a place loaded_units command?)++
+- Convert some of the very slow stuff (line of sight, AStar, Djikstra's) to a C module to make it faster.++
+- Consider upping effects of weapon triangle over time
+- D: 15 hit, 1 damage
+- C: 20 hit, 1 damage
+- B: 20 hit, 2 damage
+- A: 25 hit, 2 damage
+- If you are on impassable terrain, take damage.
