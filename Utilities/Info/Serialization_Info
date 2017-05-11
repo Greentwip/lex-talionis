@@ -1,0 +1,30 @@
+Serialize a UNIT:
+id
+event_id
+position
+previous_position
+name
+team
+faction
+klass
+gender
+level
+exp
+list of components
+list of STATUS_OBJECTS
+list of ITEMS
+fight_quote
+desc
+TRV
+StrTRV
+set of STATS
+AI
+list of lvlgrowths
+list of growth_points
+currenthp
+movement_left
+movement_group
+list of wexp
+SPRITE
+isDone
+total_kills

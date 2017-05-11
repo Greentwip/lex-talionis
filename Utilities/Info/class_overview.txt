@@ -1,0 +1,38 @@
+Class Overview
+Every one has access to Swords by default
+
+Longbowmen (Military Archer) -> Sniper
+Hunters (Wild Archer) -> Ranger 
+Bows
+--
+Pikemen (Military Light) -> Dragoon
+Lances
+Myrmidon (Wild Light) -> Swordmaster
+--
+Mage (Military Mage) -> Sorceror
+Shamans (Wild Mage) -> Warlock
+Magic
+--
+Crusader (Military Heavy) -> Paladin
+Lances
+Barbarian (Wild Heavy) -> Berserker
+Axes
+--
+Soldiers (Military Medium) -> General
+Lances
+Mercenary (Wild Medium) -> Hero 
+Axes
+--
+Cavalry (Military Cavalry) -> Knight
+Lances
+Horse Archers (Wild Cavalry) -> Chieftain
+Bows
+--
+Sapper (Military Special) -> ??
+Bombs
+Thief (Wild Special) -> Assassin
+
+-- Uniques
+Bard
+Historian
+

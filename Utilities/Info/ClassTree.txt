@@ -1,0 +1,55 @@
+Tier 1:
+Sword:
+-Myrmidon (Light/Fast)
+-Mercenary (Medium)
+-Crusader (Heavy/Armor)
+Lance:
+-Skirmisher
+-Soldier
+-Knight
+Axe:
+-Raider
+-Brigand
+-Fighter
+-Sentinel
+Bow:
+-Archer
+Utility:
+-Thief
+Light:
+-Bard
+-Tactician
+-Cleric
+Dark:
+-Sorceror
+-Shaman
+-Oracle
+Fist:
+-Brawler
+
+Tier 2:
+Sword/Sword: Swordmaster (Fast Skill and Speed masters)
+Sword/Lance: General (Armored Tank)
+Sword/Axe: Hero (Perfect Melee)
+Sword/Bow: Ranger (Offensive Damager-Dealer)
+Lance/Lance: Dragoon (Fast Vanguard Unit - One-on-One master)
+Lance/Axe: Halberdier (Defensive Fighter)
+Lance/Bow: Hunter (Traps enemies and picks them off)
+Axe/Axe: Berserker (Fast Moving All Offense - Cleave master)
+Axe/Bow: Warrior (Tanky Offense)
+Bow/Bow: Sniper (Long-range specialist)
+Fist/Fist: Monk (Anti-Magic Specialist)
+Light/Light: Exorcist (Offensive Magic)
+Light/Light: Saint (Support unit)
+Light/Sword: Templar (Fast moving offensive unit)
+Light/Lance: Paladin (Tanky Aura Frontliner)
+Light/Axe: Skald (Tanky Support)
+Dark/Dark: Warlock (Summons expendable allies)
+Dark/Dark: Wizard (AOE Control and Spell support)
+Dark/Sword: Assassin (Ambush killer - Lethality)
+Dark/Lance: Skulk (Status effect master - Fades away in battle)
+Dark/Axe: Dreadguard (Defensive Stalwart)
+Dark/Light: Scion (All powerful mage)
+
+Enemy Only:
+Shade: (Immune to Physical damage, can phase through walls)

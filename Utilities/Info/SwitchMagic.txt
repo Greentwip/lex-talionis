@@ -1,0 +1,25 @@
+Current Setup: 
+4 Melee Weapons: Swords, Lances, Axes, Bows
+S > A > L > S
+Staves (of which other weapon types can resemble staffs)
+5 Magic Weapons: Wind, Fire, Thunder, Light, Dark
+L > D > (W > T > F > W) > L
+
+Change to:
+4 Mostly Melee Weapons: Swords, Lances, Axes, Bows
+S > A > L > S
+2 Magic Weapons: Light, Dark
+
+Advantages to changing
+Current Magic Weapon Triangle is arbitrary and complicated, while the L > D > A > L is easy to remember, the inner Anima trinity is complicated.
+Why are staffs by themselves when other weapon types can also be staves?
+New system simplifies weapon types into essential duality of magic (Light/Dark, Order/Chaos, Artifice/Nature, Divine/Arcane, etc.)
+Less weapon types mean hybrid weapons have a chance to shine.
+Makes no sense to have a Bolt Axe without it being Axe Thunder, but then it can't be used by hardly anyone.
+Difficult to differentiate between 5 different kinds of magic.
+2 magic types means one is light and fast and one can be heavy and strong.
+This duality also fits into the Lore of the world, since magic is truly just effecting control over the Aurora.
+Same type magics are bad against one another, since they are both trying to do the same thing
+Different type magics are strong versus one another, like magnets.
+Allows me to make different classes that use the same magic weapon, like Mercenary, Myrmidon, Crusader but for magic
+Instead of having one class for each type of magic.

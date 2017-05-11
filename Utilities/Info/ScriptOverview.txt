@@ -1,0 +1,197 @@
+An overview of the main events of Lex Talionis
+Level 0:
+	Summary: Sam and Renae are enjoying a nice meal when - suddenly Pirates
+	Objective: Escape, then by turn 3 Defeat Boss (Jack)
+	Recruitable: Sam, Renae (Join automatically at T1)
+	PreBase: None
+	Base: None
+	Narration: Opening Narration describing state of Maeros - downfall of Primark and major players
+	Intro: Sam and Renae exchange small talk, Renae is about to confess something when Pirates attack
+	TurnChange: More pirates show up in back hallway, Jack harasses girl, Sam and Renae decide to act.
+	Outro: Sam and Renae realize there is more fighting going on outside
+Level 1:
+	Summary: Sam, Renae, Tak, Nia, Joel try to lead civilians to safety and escape.
+	Objective: Escape with at least half the civilians
+	Recruitable: Nia, Joel, Tak (Join automatically at T2)
+	PreBase: None
+	Base: None
+	Narration: None
+	Intro: Nia, Tak, and Joel exchange character introductions, Sam and Renae show up leading civilians
+	TurnChange: Recruit NTJ, More pirate reinforcemetns to prevent camping
+	Outro: As they manage to escape, they see horsemen in the distance
+Level 2:
+	Summary: Orson and the gang try and take back the port district, defeat Sydney
+	Objective: Defeat Sydney. Chests in far corner
+	Recruitable: Orson, Ophie, Bernard (Join automatically at T1)
+	PreBase: None
+	Base: None
+	Narration: None
+	Intro: Elena, Orson exchange character introductions, SRNTJ show up, leading civilians, then Razia and her honor guard show up, expressing displeasure. Elena leads Razia away and OOB + SRNTJ devide to go take back the port district
+	TurnChange: Ophie and Bernard character introductions. Thief appears. Extra reinforcements from Sydney's boat
+	Outro: Expression of victory, disbelief at how large the pirate force was. We need to have everything ready for tomorrow.
+Level 3:
+	Summary: Orson is betrayed during opening ceremony, Sam and crew escape.
+	Objective: Escape. Crusader chases team down. (Need Sprite)
+	Recruitable: Elena (Join automatically at T1)
+	PreBase: Narration which explains that remaining nations have arrived, and opening ceremonies have started
+	Base: Kerala
+		1: Nia claims she is leaving soon, Renae asks her to reconsider. 
+		2: Ophie and Bernard discuss spirits.
+	Narration: None
+	Intro: Witty banter between main nation leaders. Suddenly, during the toast, betrayal. Orson dies.
+	TurnChange: Leaders discuss their reasons for doing this, Akilees sends out Drake to prevent Sam from escaping, they have to go command their armies to attack. Wouldn't want to be left out of the ransack of Kerala. Sam wants to go back but is prevented by Renae
+	Outro: Sam orders everyone to keep going. They want us dead - I'm not giving them the satisfaction. They send out Vagnius to track them down - not Drake. Drake is vaguely sad at these turn of events
+Level 4:
+	Summary: The gang continues to escape from Vagnius. Through a rainy winding canyon. In outro, show Marduk grabbing the Springstone
+	Objective: Escape. Vagnius's men chase team down. Ambush (New map) In a canyon with lots of small rivers and lakes, As turn count ++, lakes get bigger. if turn count reaches some #, you lose. Canyon floods
+	Recruitable: None
+	PreBase: None
+	Base: None
+	Narration: After a stunning betrayal, Sam and the gang flee east, hoping only to escape their impending doom. Unfortunately, Vagnius a toady of blah blah blah, has other plans
+	Intro: an ambush!
+	TurnChange: ???
+	Outro: Come on, everyone. Let's keep going. Vagnius isn't going to let up.
+Level 5: 
+	Summary: The gang continue to escape from Vagnius. Through an open field, dotted with small ruins. In narration, show combat between remnants of Kerala's army and the rest of Maeros. (?) and Kayla show up, express interest in looting the valuables, laugh as the nations tear themselves apart. (Modify Level 5's map)
+	Objective: Escape. Vagnius's men chase team down
+	Recruitable: None
+	PreBase: None
+	Base: None
+	Narration: They try to lose Vagnius and his men in bandit country, a mountain pass
+	Intro: ???
+	TurnChange: More reinforcements. Kayla and Coriander and other Ghat bandits show up
+	Outro: I think those bandits should slow them down. Maybe we can rest soon. They head for Podoma.
+Level 6:
+	Summary: The gang holds up in Podoma, a small town near the border of Kerala and the Scrashlands. When Vagnius manages to reach them in the dead of night, they express disbelief. Here they do actually kill Vagnius. In outro, they don't know where to go decide to head into the Scrashlands... Make sure is place of doom and confusion. (Recruit Althea)
+	Objective: Defeat Boss
+	Recruitable: Althea (at Village or on T5)
+	PreBase: Ah, made it. Now we can rest. There's no way Vagnius managed to track us down.
+	Base: Podoma
+		1. Discussion with Podoma Mayor over news (Kerala has fallen. Kerala is lost.)
+		2. Elena/Sam
+		3. ??
+	Narration: None
+	Intro: Attack by Vagnius (Burn the village to the ground)
+	TurnChange: Remaining members of party wake up. Reinforcements continue to assault village
+	Outro: At this rate, they'll keep sending people after us. We'll need to go somewhere they won't follow us to. The scrashlands...
+Level 7:
+	Summary: The gang leaves Podoma and enters the Ghat Mountains. Defend Coyote, Livvi, Iris from Ghat Bandits (which wins grudging respect of bandits. Bandits lead them to Cloud Tribe)  (Look at Eliwood meets Lyn chapter for inspiration)
+	Objective: Reach Boss (Coriander)
+	Recruitable: Coyote, Livvi, Iris (T1)
+	PreBase: None
+	Base: Podoma
+		1. ??
+		2. Introductions: Althea
+	Narration: Leave Podoma
+	Intro: Character introductions for ILC. Bandits show up. Sam's group shows up - recognizes bandits. Bandits challenge them.
+	TurnChange: ???
+	Outro: Hmmph. Well done. We'll leave you alone. A word of advice, kid. Head due east of here, to the Cloud Tribe. Tell them Coriander sent you. Crusader and Akilees discuss Vagnius's failure. Build hatred for Akilees, Apolegetics for Drake.
+Level 8: 
+	Summary: Reach the scrashlands through a pass. They are attacked by Drake and a team of mercenaries. Ruins Escape
+	Objective: Defeat Boss
+	Recruitable: None
+	PreBase: None
+	Base: Camp
+		Introductions: Coyote, Livvi, Iris
+	Narration: Party makes for the Scrashlands
+	Intro: Attack by Drake on party. I'm done running. Let's go.
+	TurnChange: Why attack us Drake? We're just trying to survive. You seem like an honorable fellow
+	Outro: Well, the Scrashlands can't be much worse, right.
+Level 9:
+	Summary: Party travels through the Scrashlands. Attacked by Solo and the Stream Tribe. Get out of our land. Coriander sent us? We don't care who you are. Should we leave? No, the Ghat bandits said we needed to head east. So we head east.
+	Objective: Survive for X turns
+	Recruitable: None
+	PreBase: None
+	Base: Camp
+	Narration: Party leaves for the Scrashlands.
+	Intro: You know, this isn't so bad, after all. Boom! Attack!. I'm done running. We fight here.
+	TurnChange: ???
+	Outro: Rescued by the Cloud Tribe. Leave for Cloud Tribe village. Drake and Akilees discuss his second failure - They break up. This'll be your last change
+Level 10:
+	Summary: Enter Cloud Tribe village. Attacked by Demons. Lore about secondary quest. Retrive the souls of the gods so we can restore the order of nature.
+	Objective: Protect the Villages
+	Recruitable: Sade
+	PreBase: Party, led by Sade, heads to Cloud Tribe
+	Base: Cloud
+	Narration: 
+	Intro: Attack by Demons.
+	TurnChange:
+	Outro: Thanks for your help. We can guide you to your goal. Keenset, correct? Coriandre, Kayla. Please guide them to Keenset. Sade: I'm coming too. This world needs our help. If you won't come, then I will.
+Level 11:
+	Summary: Party leaves Cloud, heads south under accompanienment of Ghat bandits. There's a tunnel underneath Keenset. It's poorly guarded. If you sneak by, you might be able to make it undetected. Stealth mission
+	Objective: Arrive (Escape)
+	Recruitable: None
+	PreBase: Party gets ready for trip south
+	Base: Cloud
+	Narration: Party travels South
+	Intro: Secret Tunnel!
+	Outro: Oh no. It's been blocked. What do we do now. We can't possibly make it through the front. Drake arrives. Party turns on him, but he claims to be good now. I shuold have known what I was doing wasn't right or honorable. Party takes him on anyway.
+Level 12:
+	Summary: Opening the gate triggers alarms. Did you know about this? No! Come on. We have to get to Akilees before too many guards arrive. Long hallway with guards pouring out. 
+	Objective: Defeat Boss
+	Recruitable: Drake
+	PreBase: None
+	Base: None
+	Narration: None
+	Intro: The summary above
+	Outro: One down, four to go. Send a message to the Ghat bandits. We're not heading back with them yet. Razia's next.
+Level 12.5:
+	Summary: Retrieve the Soul of Autumn
+Level 13:
+	Summary: Kayla: No I'm going with you too. I have ... a personal grivance with Razia. Coriander: If you're sure. Plus, I know a couple of old friends who owe me a favor. Turns out her old friends are pirates. And they don't owe her a favor. She owes them money. In fact, how about we take the money now.
+	Objective: Capture two ships. Fully captured when no pirates are on the ship
+	Recruitable: Kayla
+	PreBase: Kayla stuff
+	Base: Camp
+	Narration: Head to port
+	Intro: Second half of summary above
+	Outro: They are on their way. Marduk shows up, grabs Autumnstone. They are making this easy. Who would've thought that killing Orson would have sent all the dominos crumbling down. Short scene with Prim in a jail cell.
+Level 14:
+	Summary: Attacked by Demons
+	Objective: Survive for X turns
+	Recruitable: None
+	PreBase: ??
+	Base: Ship
+	Narration: Head to Saraay, with ships on our tale
+	Intro: Oh man, so many pirates
+	Outro: Kiley's crew arrives and saves them. Pirate honor. You know, we're not pirates. Hell, you stole their boat. That makes yuo honorary pirates. Hey, I know you. You're Razia's sister. That's great. Well, I hate Razia. In fact we're going to kill her. Really? I want in. That bitch needs to go down. Okay everyone. Change of plans. Leave these landlubbers alone. We're assaulting Saraay.
+Level 15:
+	Summary: Either 1 or 2 levels. A Gimmick which involves the pirates helping out. Attack Razia. Recruit Kiley (High-level Pirate? Reskin raider class?)
+	Base: Ship
+	Outro: 2 down, 3 to go.
+Level 15.5:
+	Summary: Retrive the Soul of Summer
+Level 16: 
+	Summary: Head to monastery near Kerala. Retrive the Soul of Spring. Camp at abandoned monastery. Abandoned monastery to the north of here. Coriander joins up. Attack by more demons
+	Base: Cloud
+	Objective: Rout
+	Recruitable: Thormond
+Level 17: Is this one necessary?
+	Summary: Delving deeper into Monastery?
+	Objective: Escape with McGuffin
+	Base: None
+	Outro: ???
+Level 18:
+	Summary: One or two levels... Enter city. No-one stops them. Weird. The gods are returning. My cities fallen. It's been the worst winter storms in a thousand years. I know what you're looking for. Well, you'll have to rip it out of my cold dead hands.
+	Objective: Defeat Boss
+	Base: Camp - Recruits Coriander
+	Recruitable: Prim
+	Outro: Release prisoners from cages. Prim explains what is actually happening.
+Level 19:
+	Summary: On their way to the tower, they come across Solo fighting demons...
+	Objective: Reach Boss
+	Base: Camp
+	Recruitable: Solo, Yohn
+	Outro: They head east to the tower.
+Level 20:
+	Summary: Enter tower, fight Golems... Have to turn off 3 defenses... recruit Ash, Pale, and ?? (Dragoon, Templar, Assassin/Rogue?). Place the souls back in their rightful place. Next up is Marduk. Get the Legendary Weapons of the Heroes. fight some f'in demons?
+Level 21+:
+	Tarja rides out to meet their group. This is the big 'Cog of Destiny' style battle. Tarja has given the Soul of Dusk to Marduk. She is defeated. (1)
+	Head into Tyrana. The toughest one yet. A dungeon crawl. Demons etc. (2-5 big chapters?)
+	The Duskstone is stolen by Jakin.
+	There is a battle with Boaz and Jakin. Marduk is not here.
+	Return to the Godtower
+	Eventually reach Marduk in the middle of his dungeon. He has assembled all 6 souls. We're too late. My process is almost complete. Soon the immortals will truly die, and humanity will reign supreme. I don't give a shit, Marduk. You're going down. You killed Orson. For that, you will die. We need to stop him from killing the gods permanently.
+
+At some point before Level 14. Kayla and Coriander show up in an outro script.
+At some point before Level 12. Akilees and Drake discuss his failure. Traitorous actions. Autumnstone
