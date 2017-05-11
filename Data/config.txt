@@ -1,0 +1,25 @@
+debug;True
+screen_scale;3
+Animation;0
+Unit Speed;45
+Text Speed;10
+Cursor Speed;80
+Show Terrain;1
+Show Objective;1
+Autocursor;1
+Music Volume;0.0
+Sound Volume;0.1
+Autoend Turn;1
+Confirm End;1
+Display Hints;1
+HP Map Team;All
+HP Map Cull;Wounded
+key_SELECT;120
+key_BACK;122
+key_INFO;99
+key_AUX;97
+key_LEFT;276
+key_RIGHT;275
+key_UP;273
+key_DOWN;274
+key_START;115

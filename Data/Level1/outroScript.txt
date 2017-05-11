@@ -1,0 +1,29 @@
+# Outro 1
+m;To A New Journey
+t;1
+b;Forest
+t;2
+u;Prim;MidRight
+u;Ophie;FarRight
+u;Joel;Left;Smiling
+s;Joel;I reckon now would be the proper time for introductions.{w}{br}The name's Joel, and the sour face is my pardnah Nia.{w};auto
+s;Prim;I'm Prim and this is Ophie.{w}{br}Thanks for helping us out back there.{w};auto
+s;Joel;What did ya'll do to rouse Ulver's thugs after you?{w};auto
+s;Ophie;Honestly, nothing.{w}{br}They stormed the monastery, claiming we had some fugitive.{w};auto
+s;Prim;But we weren't harboring any fugitives!{w}{br}Master Yohn, Ophie, and I tried to escape...{w}{br}But Master Yohn went back to hold them off... He died for us.{w};auto
+s;Joel;Lass... No use crying... yer safe now.{w}{br}Yer master's sacrifice had a purpose, right?{w};auto
+s;Prim;Yeah...{w};auto
+s;Joel;I'll let ya'll in on a little secret.{w}{br}I reckon ya'll already figured that Nia and I ain't rangers.{w}{br}We're actually with the Resistance.{w};auto
+s;Prim;The Resistance?{w};auto
+s;Joel;We're... how does Sam phrase it...{w}{br}freedom fighters!{w}{br}The Empire's had its way with our country for too long.{w}{br}We're aiming to take it back!{w}{clear}Anyways, ya'll don't have anywhere to go.{w}{br}Why don't you head back with Nia and me?{w};auto
+s;Ophie;You're inviting us to join your Resistance?{w};auto
+s;Joel;Why not?{w}{br}We could always use new members.{w}{br}You're a competant swordsman.{w};auto
+set_expression;Ophie;Smiling
+s;Joel;And we could certainly use a healer.{w}{br}Sam has his hands full as it is.{w};auto
+s;Ophie;Prim, what do you say?{w}{br}We don't really have anywhere else to go.{w};auto
+s;Prim;If we can avenge Master Yohn, and help Kerala at the same time....{w};auto
+set_expression;Prim;Smiling
+s;Prim;Then, how can I say no?{w};auto
+s;Joel;Sounds like a plan!{w}{br}I'll get Nia, and we'll be off!{w};auto
+r;Prim;Ophie;Joel
+t;1

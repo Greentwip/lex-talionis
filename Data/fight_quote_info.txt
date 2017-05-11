@@ -1,0 +1,169 @@
+# Fight quote info
+# 
+if;self.optionalunit.team == 'player'
+	# Sidney
+	if;self.optionalunit2.name == 'Sidney'
+		if;self.optionalunit.name == 'Ophie' and not 'SidneyOphie' in gameStateObj.event_triggers
+			u;Sidney;Left;u;Ophie;Right
+			s;Sidney;Heh! Finally worked up the nerve to fight?{w}{br}You shoulda kept running, boy!{w};auto
+			s;Ophie;... You scum...{w};auto
+			s;Sidney;Oh I'm scared... Heh heh heh!{w};auto
+			r;Sidney;Ophie
+			trigger_event;SidneyOphie
+		elif;self.optionalunit.name == 'Prim' and not 'SidneyPrim' in gameStateObj.event_triggers
+			u;Sidney;Left;u;Prim;Right
+			s;Sidney;Caught you! You're not getting away this time, little mouse.{w};auto
+			s;Prim;How could you be so cruel?{w}{br}Our home...{w};auto
+			s;Sidney;Hah! You've got no home anymore, girly!{w};auto
+			s;Prim;...You'll pay for what you've done!{w};auto
+			r;Sidney;Prim
+			trigger_event;SidneyPrim
+		elif;self.optionalunit.name not in ['Ophie', 'Prim'] and not 'SidneyDefault' in gameStateObj.event_triggers
+			u;Sidney;Left	
+			s;Sidney;What! How'd you manage to get past my men?{w};auto
+			r;Sidney
+			trigger_event;SidneyDefault
+		end
+	elif;self.optionalunit2.name == 'Brigham'
+		if;not 'BrighamDefault' in gameStateObj.event_triggers
+			u;Brigham;Left
+			s;Brigham;Hmmph. Fools one and all.{w}{br}Don't you understand, Kerala is dead!{w}{br}This is the Empire's realm now.{w};auto
+			r;Brigham
+			trigger_event;BrighamDefault
+		end
+	elif;self.optionalunit2.name == 'Harold'
+		if;not 'HaroldDefault' in gameStateObj.event_triggers
+			u;Harold;Left
+			s;Harold;You cannot escape!{w}{br}Bear witness to the Empire's might!{w};auto
+			r;Harold
+			trigger_event;HaroldDefault
+		end
+	elif;self.optionalunit2.name == 'Midas'
+		if;not 'MidasDefault' in gameStateObj.event_triggers
+			u;Midas;Left
+			s;Midas;Ah! T-the bandits!{w}{br}Guards, attack!{w}{br}Protect me!{w};auto
+			r;Midas
+			trigger_event;MidasDefault
+		end
+	elif;self.optionalunit2.name == 'Anders'
+		if;not 'AndersDefault' in gameStateObj.event_triggers
+			u;Anders;Left
+			s;Anders;You scum chose the wrong caravan to raid.{w}{br}You're gonna regret crossing paths with ol' Anders here.{w};auto
+			r;Anders
+			trigger_event;AndersDefault
+		end
+	elif;self.optionalunit2.name == 'Jules'
+		if;self.optionalunit.name != 'Ophie' and not 'JulesDefault' in gameStateObj.event_triggers
+			u;Jules;Left
+			s;Jules;Man, you best back off.{w}{br}I'm gettin' a little pissed here!{w};auto
+			r;Jules
+			trigger_event;JulesDefault
+		elif;self.optionalunit.name == 'Ophie' and not 'JulesOphie' in gameStateObj.event_triggers
+			u;Jules;Left;u;Ophie;Right
+			s;Jules;I hate to shatter your ego, but this is not the first time I've crossed swords, kid.{w};auto
+			s;Ophie;But it's gonna be your last.{w};auto
+			r;Jules;Ophie
+			trigger_event;JulesOphie
+		end
+	elif;self.optionalunit2.name == 'Vincent'
+		if;gameStateObj.check_dead('Jules') and not 'VincentJulesDead' in gameStateObj.event_triggers
+			u;Vincent;Left
+			s;Vincent;You dun' killed Jules!{w}{br}You killed my b-brother! ARGH!{w};auto
+			r;Vincent
+			change_ai;Vincent;Pursue
+			trigger_event;VincentJulesDead
+		elif;not 'VincentDefault' in gameStateObj.event_triggers
+			u;Vincent;Left
+			s;Vincent;Ah shit, man...{w};auto
+			r;Vincent
+			trigger_event;VincentDefault
+		end
+	elif;self.optionalunit2.name == 'Razia'
+		if;not 'RaziaDefault' in gameStateObj.event_triggers
+			u;Razia;Left
+			s;Razia;Hmmph. What incompetents.{w}{br}To the death then...{w};auto
+			r;Razia
+			trigger_event;RaziaDefault
+		end
+	elif;self.optionalunit2.name == 'Marduk'
+		if;not 'MardukDefault' in gameStateObj.event_triggers
+			u;Marduk;Left
+			s;Marduk;You think you've won? Hah!{w}{br}Nobody can defeat me.{w}{br}You've only fallen deeper into my trap!{w}{br}Wahahaha!{w};auto
+			r;Marduk
+			trigger_event;MardukDefault
+		end
+	elif;self.optionalunit2.name == 'Vagnius'
+		m;Durchriss
+		if;gameStateObj.counters['level'] == 0
+			if;self.optionalunit.name == 'Prim' and not 'Vagnius0Prim' in gameStateObj.event_triggers
+				u;Vagnius;Left;u;Prim;Right
+				s;Prim;Please, stop! We don't have any fugitives!{w};auto
+				s;Vagnius;Well, you don't look like the fugitive girl...{w}{br}But better safe than sorry...{w};auto
+				r;Prim;Vagnius
+				trigger_event;Vagnius0Prim
+			elif;self.optionalunit.name == 'Ophie' and not 'Vagnius0Ophie' in gameStateObj.event_triggers
+				u;Vagnius;Left;u;Ophie;Right
+				s;Vagnius;Hmmph! You're not the fugitive!{w}{br}Out of my way!{w};auto
+				r;Ophie;Vagnius
+				trigger_event;Vagnius0Ophie
+			end
+		elif;self.optionalunit.name == "Sam" and not 'VagniusSam' in gameStateObj.event_triggers
+			u;Vagnius;Left;u;Sam;Right
+			s;Vagnius;Ah!{br}The leader of the rag-tag Resistance.{w}{clear}I was hoping I'd be the one to kill you.{w};auto
+			s;Sam;... {w};auto
+			s;Vagnius;Not talkative I see...{w}{br}Well no matter...{w}{br}I can already smell your charred remains.{w}{br}Your smoking corpse will make for a fine trophy at my victory celebration!{w};auto
+			r;Sam
+			r;Vagnius
+			trigger_event;VagniusSam
+		elif;self.optionalunit.name == "Ophie" and not 'VagniusOphie' in gameStateObj.event_triggers
+			u;Vagnius;Left;u;Ophie;Right
+			s;Vagnius;Hah! This is the best you Keralans have to offer?{w}{br}A child? This is who the Resistance sends to fight?{w};auto
+			s;Ophie;I am no child.{w};auto
+			s;Vagnius;Pah. Out of my way, boy.{w};auto
+			s;Ophie;I am your death, Vagnius.{w}{br}This is for Yohn!{w};auto
+			r;Ophie;Vagnius
+			trigger_event;VagniusOphie
+		elif;self.optionalunit.name == "Prim" and not 'VagniusPrim' in gameStateObj.event_triggers
+			u;Vagnius;Left;u;Prim;Right
+			s;Prim;How could you do this... These people are innocent?{w};auto
+			s;Vagnius;Innocence?{w}{br}Hah. The morals of a child.{w}{br}I care not for your innocence.{w}{br}Power. That is all I seek.{w};auto
+			s;Prim;But...{w};auto
+			s;Vagnius;Spare me your bleatings and die.{w};auto
+			r;Prim;Vagnius
+			trigger_event;VagniusPrim
+		elif;self.optionalunit.name not in ["Sam", "Ophie", "Prim"] and not 'VagniusDefault' in gameStateObj.event_triggers
+			u;Vagnius;Left
+			s;Vagnius;So everyone else has failed me. No matter.{w}{br}Nothing can stand in my way! You least of all!{w}{br}You should thank me for putting you out of your misery!{w};auto
+			r;Vagnius
+			trigger_event;VagniusDefault
+		end
+	elif;self.optionalunit2.name == 'Jakin'
+		if;not 'JakinDefault' in gameStateObj.event_triggers
+			u;Jakin;Left
+			s;Jakin;Memories of flies in the web of a spider.{w}{br}Sorrow for the flies, but as a spider, duty upheld.{w}{br}A deadly dance then, spider and fly.{w};auto
+			r;Jakin
+			trigger_event;JakinDefault
+		end
+	elif;self.optionalunit2.name == 'Boaz'
+		if;not 'BoazDefault' in gameStateObj.event_triggers
+			u;Boaz;Left
+			s;Boaz;Wohoho!{w}{br}I've slain many beast and men alike.{w}{br}You shall not pose any greater challenge!{w};auto
+			r;Boaz
+			trigger_event;BoazDefault
+		end
+	elif;self.optionalunit2.name == 'Adjutant'
+		if;not 'AdjutantDefault' in gameStateObj.event_triggers
+			u;Adjutant;Left
+			s;Adjutant;You pests!{w}{br}You should be grateful the Empire ever graced your backwoods province.{w};auto
+			r;Adjutant
+			trigger_event;AdjutantDefault
+		end
+	elif;self.optionalunit2.name == 'Ulver'
+		if;not 'UlverDefault' in gameStateObj.event_triggers
+			u;Ulver;Left
+			s;Ulver;Come then. Test yourself against my strength!{w};auto
+			r;Ulver
+			trigger_event;UlverDefault
+		end
+	end
+end

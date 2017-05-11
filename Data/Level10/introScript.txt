@@ -1,0 +1,54 @@
+# Intro Script 10
+m;Awakening - Know Peace
+t;2
+set_camera;8,0;16,0
+set_cursor;Ulver;force_hold
+disp_cursor;1
+wait;1000
+disp_cursor;0
+t;1
+b;Palace
+t;2
+u;Ulver;Left;u;Soldier1;Right
+s;Soldier1;Sir, the insurgents have breached the North Gate.{w};auto
+s;Ulver;Hmmm.{w}{br}Tell Commander Praetos to move his forces there.{w}{br}Push those rebels back.{w};auto
+s;Soldier1;Right away, milord.{w};auto
+r;Soldier1
+remove_unit;soldier1
+u;Adjutant;Right
+s;Adjutant;Sir, I'm receiving reports of an insurgent group below the Palace.{w};auto
+s;Ulver;The Resistance.{w};auto
+s;Adjutant;Perhaps, milord...{w};auto
+s;Ulver;I am certain of it.{w};auto
+s;Adjutant;You know best, milord.{w}{br}The group is on the smallish side.{w}{br}Should I send out the Palace Guards?{w};auto
+s;Ulver;No... Leave them here. Let the Resistance come.{w};auto
+s;Adjutant;Milord?!{w};auto
+s;Ulver;If the Resistance has finally worked up the nerve to attack me directly...{w}{br}Well, let them try.{w}{br}They will find that easier said than done.{w};auto
+s;Adjutant;Are you sure that's wise, milord?{w};auto
+s;Ulver;They were too much for my underlings to handle.{w}{br}Brigham, Marduk, Vagnius.{w}{br}All of them met their match against the Resistance.{w}{br}I say that the Resistance has earned their right to challenge me.{w}{br}I will finish them myself, ending their nusiance once and for all.{w}{br}They will die with their honor intact, at least.{w};auto
+s;Adjutant;How magninimous, milord.{w};auto
+s;Ulver;The strong must be gracious to the weak, Adjutant.{w}{br}This is one of the prime teachings of the Empire.{w};auto 
+s;Adjutant;Well then, I will allow the Resistance to pass.{w};auto
+s;Ulver;Let us see how they fare.{w};auto
+r;Ulver;Adjutant
+set_camera;8,36;16,36
+#set_cursor;12,36
+t;1
+remove_background
+t;2
+add_unit;Sam;12,36
+add_unit;Ophie;13,36
+wait;200
+u;Sam;Left;u;Ophie;Right
+s;Sam;It looks like we made it after all.{w}{br}Coyote's passage dropped us right in the center of the palace.{w}{br}Ulver should be right beyond those doors.{w};auto 
+s;Ophie;Then what are we waiting for?{w};auto
+r;Ophie
+move_unit;Ophie;12,29
+s;Sam;I'll never get over that kid's unnatural enthusiasm.{w}{br}Oh well, better to die with hope than despair...{w};auto
+r;Sam
+t;1
+b;BlackBackground
+arrange_formation
+set_camera;8,18;16,26
+remove_background
+t;2

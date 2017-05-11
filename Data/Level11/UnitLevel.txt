@@ -1,0 +1,17 @@
+# UnitLevel.txt is used to define what units will be part of this level; and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# team; savedunit; event_id; unit_id; position; ai; status (optional)
+# - OR -
+# team; savedunit; event_id; class; level; items; position; ai; group; status (optional)
+# 
+# savedunit refers to whether the unit should be loaded from a previous level (ie player characters).
+# event_id gives the unit a unique id that other scripts use. The unit will not start on the battlefield unless event_id = 0.
+# unit_id refers to what kind of unit to load from the data.xml files
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+player;0;Ophie;Ophie;None;None

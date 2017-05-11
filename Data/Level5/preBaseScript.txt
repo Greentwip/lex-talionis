@@ -1,0 +1,8 @@
+# preBase Script 5
+add_to_market;Steel Sword
+add_to_market;Steel Lance
+add_to_market;Steel Axe
+add_to_market;Potion
+if;not gameStateObj.check_dead('Theo') and gameStateObj.counters.get('noir', 1) >= 1
+    set_base_convo;Theo Sphinx, Pt. II
+end

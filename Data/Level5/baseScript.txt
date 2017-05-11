@@ -1,0 +1,26 @@
+# Base Script Level 5
+if;self.optionalunit == 'Theo Sphinx, Pt. II'
+	# Episode 2
+	m;Jazz Noir
+	b;MainBase
+	t;2
+	u;Theo;Left
+	s;Theo;It was what folks called the dead of winter.{w}{br}The dirt mixed with the snow until the alleys were plastered in a crunchy, gritty brown.{w}{br}A fine complement to this cold case.{w}{br}I'd just stopped off at Joel's and ordered a good hot cup o' joe,{w}{br}when in comes a violet-haired vixen with an eerie smile--{w}{br}looking for me, as usual.{w};auto;noir
+	u;Renae;Right
+	s;Renae;Rumor is you wanted to talk to me, Theo?{w}{br}What's up?{w};auto
+	s;Theo;I had little to go on, but this dame was my first lead.{w}{br}She might have looked enticing, but every rose has its thorns.{w}{br}Stolen many a bloke's heart--{w}{br}along with his money.{w}{br}She'd supposedly reformed, but I had my doubts.{w}{br}I asked her if she'd been around O'Halley's street anytime lately.{w}{br}Maybe the temptation of her past had proven too great?{w};auto;noir
+	s;Renae;What are you talking about, Theo?{w}{br}O'Halley Street?{w};auto
+	s;Theo;She tried to play dumb with me, but I wasn't buying it.{w}{br}I'd seen her at Miss Prim's weekend galas,{w}{br}often through the glass of a strong scotch.{w};auto;noir
+	s;Renae;Oh, Prim's room? Yeah, I'd been by...{w}{br}I heard she lost one of her tomes?{w};auto
+	s;Theo;Finally a lead.{w}{br}I pressed her on her story.{w};auto;noir
+	s;Renae;What, you think I took it?{w}{br}Sure, I'm a thief, but I don't steal from the Resistance!{w}{br}You've got to know that by now.{w}{br}Trust me, I'm not the culprit.{w}{br}Maybe Sam knows?{w}{br}He's always keeping tabs on us.{w};auto
+	r;Renae
+	s;Theo;She made like a skydiver with a broken parachute and hit the road,{w}{br}leaving me to my thoughts.{w}{br}This case was a real stumper.{w}{br}But I knew who to turn to next,{w}{br}an old friend on the force who might have some answers...{w};auto;noir
+	r;Theo
+	grey_base_convo;Theo Sphinx, Pt. II
+	t;1
+	b;MainBase
+	t;2
+	inc_counter;noir
+	#give_item;???
+end

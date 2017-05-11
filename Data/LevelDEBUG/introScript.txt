@@ -1,0 +1,9 @@
+b;Town
+t;2
+inc_counter;money;5000
+u;Renae;Left
+s;Renae;You don't have to tell me twice!{w}{br}Catch you all later!{w};auto
+r;Renae
+t;1
+remove_background
+t;2

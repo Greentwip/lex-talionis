@@ -1,0 +1,23 @@
+b;BlackBackground
+foreground;GameOverFade
+t;2
+credits;A Game By;rainlash;wait 
+credits;Lex Talionis Engine;rainlash;wait
+credits;Alpha Testing;rainlash;WinstonJoe
+credits;Map Design;rainlash
+credits;Map Spriting Resources;Feaw;Primefusion
+credits;Information Resources;Serenes Forest
+credits;Portrait Design;rainlash
+credits;Portrait Spriting Resources;FE7x Team;NICKT
+credits;Custom Item Sprites;FE7x Team;LordGlenn;rainlash
+credits;Custom Class Cards;rainlash;Dei;MageKnight404
+credits;Custom Map Sprites;rainlash;FE7x Team;dondon151
+credits;Additional Spriting Resources;FE7x Team;Lexou
+credits;Writing;rainlash
+credits;Sound Effects;Sounds-Resource
+credits;Music Arrangement;rainlash;WinstonJoe
+credits;Music;Assassin's Creed II;Beyond Good and Evil;Brave Story New Traveler;Darksiders II;FE Awakening;FE Fates;FE Radiant Dawn;Full Metal Alchemist Brotherhood;Gundatsch;Heroes of Might and Magic III;Joe Hisaishi;Mostly Autumn;Nicholas Payton;Ori and the Blind Forest;Otto Halmen;Paper Mario;Pirates of the Caribbean;Steins-Gate;To the Moon;Twilight Princess;Wild Arms;Yuji Ohno
+credits;Additional Tools;Python;Pygame;GIMP;Audacity;Tiled;Sublime Text Editor
+wait;2000
+credits;;The Lion Throne is a non-profit fangame, released for free, and developed using Python, Pygame and the Lex Talionis engine. Many assets are copyrighted or trademarked by their respective owners.;wait;center
+t;3

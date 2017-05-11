@@ -1,0 +1,29 @@
+# Turn Change 1
+# Turn 1
+if;gameStateObj.turncount == 1 and OPTIONS['Display Hints']
+	tutorial_mode;Attack
+	s;Narrator;Each chapter has a different challenge.{w};auto;hint
+	set_cursor;Sidney;force_hold
+	disp_cursor;1
+	s;Narrator;In this chapter, your goal is to defeat the boss, Sidney.{w}{br}Luckily, you'll also find new allies along the way.{w};auto;hint
+	disp_cursor;0
+	set_cursor;Joel;force_hold
+	disp_cursor;1
+	s;Narrator;Joel is a fighter who wields axes.{w}{br}He is strong and bulky but not very fast.{w}{br}If you remember from the weapon triangle, axes are strong versus lances but weaker versus swords.{w}{br}Use this to your advantage.{w};auto;hint
+	disp_cursor;0
+	set_cursor;Nia;force_hold
+	disp_cursor;1
+	s;Narrator;Nia is an archer who wields bows.{w}{br}Archers can attack at very long ranges, up to 3 tiles away.{w}{br}However, they cannot fight if they are attacked by an adjacent enemy.{w};auto;hint
+	disp_cursor;0
+	s;Narrator;Let's test out Nia's range now.{w}{br}Select Nia.{w};auto;hint
+# Turn 3
+elif;gameStateObj.turncount == 3
+	set_cursor;0,8;force_hold
+	add_unit;pack1_1
+	add_unit;pack1_2
+	add_unit;pack1_3
+	u;Soldier2;FarLeft
+	s;Soldier2;We've managed to outflank them! Hurry and we'll see victory!{w};auto
+	r;Soldier2
+	trigger_event;reinforceEvent
+end

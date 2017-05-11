@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="10" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="6C006D6E" tilewidth="16" tileheight="16" tilecount="1024">
+  <image source="../../Utilities/TileSets/Mountain_River/6C006D6E.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxt0j9LQlEYx/FzvYMt1VxvoKZeQEVQSyEiQS8i0zBwrDaHIkLanQsVHJuqsazEWmrK2SHoz1DQv6Hvw/ldOEnDh/P4ePyd555rzjnXRit27hB7OEdb9RFKuMQ1rvCMN5xGzs2lnJumnsEsMmRl0aWuoxnkWd3ADe7wiHnnVTBG1jeZm/S3sI0y/RKeNEMnyOsMzLPIvhUsY0mZlp30rZcP+iacYXCeFjawhqZ6ljWBtFbrfTJzDV+R/1zTWgm+T+pRFLGue19FXWcU0McD+38wnvL1C3P1Ip/zEfleT5n2+11lV4MzkzOysWfv8jj292t5xnKsn5aC9pR1X3X39zkukAve6z0WnM880bzWz8uk9jR0f33ltIPM8L/1Hvu7S+7f6s4/efZsw6z72NE6otmruMWZ7iu5K6tf6R8EinruIa2Z4JwpnfULk1pwow==
+  </data>
+ </layer>
+</map>

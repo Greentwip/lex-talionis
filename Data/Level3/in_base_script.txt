@@ -1,0 +1,5 @@
+# in base script 3
+if;OPTIONS['Display Hints'] and not 'tutorial_base' in gameStateObj.event_triggers
+	trigger_event;tutorial_base
+	s;Narrator;This is the{red}base screen.{black}{w}{clear}Here you can trade and equip weapons, buy and sell items, check your combat logs, peruse the library and much more.{w}{br}Each chapter will also have new{red}Info{black}conversations.{w}{br}These are optional but you can learn more about your characters.{w}{br}Plus, they may give you new items or hints for the upcoming battle.{w};auto;hint
+end

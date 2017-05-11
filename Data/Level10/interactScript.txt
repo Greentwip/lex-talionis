@@ -1,0 +1,13 @@
+# Ulver dies
+if;gameStateObj.check_dead('Ulver')
+    win_game
+elif;isinstance(self.optionalunit2, TileObject.TileObject)
+	inc_counter;Wards_Destroyed
+	# Wards destroyed
+	if;gameStateObj.counters['Wards_Destroyed'] == 1
+		# Comment about one ward down. Two to go. Focus your fire on the wards. Ulver will be weak without them
+	elif;gameStateObj.counters['Wards_Destroyed'] >= 3
+		# Comment about the wards being destroyed. Now's the time to strike him down.
+		# I'm still strong enough to destroy you lot
+	end
+end

@@ -1,0 +1,109 @@
+# outro script 7
+m;Awakening - Easy Now
+t;1
+b;OutsideFort
+t;2
+u;Sam;Left;u;Drake;Right
+s;Drake;I sure hope this information is worth the effort, Sam.{w};auto
+s;Sam;I guess we'll find out.{w}{br}I'll head inside the fort and see what I can find.{w}{br}Take a breather. You've earned it.{w};auto
+r;Sam;Drake
+t;1
+b;BlackBackground
+t;2
+s;Narrator;30 minutes later...{w};auto;narration
+t;1
+b;OutsideFort
+t;2
+u;Ophie;Right
+s;Ophie;Damn, what's taking Sam so long...{w}{br}How hard can it be to find some scraps of paper!{w};auto
+u;Kayla;Left
+s;Kayla;Ophie, it's time we had a little chat.{w}{br}I'm getting sick and tired of your constant harassment of Sam.{w};auto
+s;Ophie;Huh?{w};auto
+s;Kayla;You don't know the half of what Sam does for you and your country.{w}{br}He raised this Resistance from nothing.{w}{br}He's the only reason you have a bed to sleep on.{w}{br}So lay off!{w}{br}Sam might not stick up for himself, but I will.{w};auto
+s;Ophie;...{w};auto
+s;Kayla;Are we clear?{w};auto
+s;Ophie;Yeah...{w};auto
+s;Kayla;Great!{w}{br}I'm going to go help Sam look for the information.{w}{br}Keep your eyes open for any more reinforcements.{w}{br}Even in death, that commander may have left us some surprises.{w};auto
+r;Kayla
+s;Ophie;Harrumph...{w}{br}Who does she think she is...{w};auto
+r;Ophie
+end_skip
+t;1
+b;OutsideFort
+t;2
+u;Prim;Left
+s;Prim;That outburst was unlike Kayla.{w}{br}I wonder what's gotten into her...{w};auto
+u;Eliza;Right
+s;Eliza;Pah. You're so funny sometimes, Prim.{w};auto
+s;Prim;Huh?{w};auto
+s;Eliza;You really haven't figured it out, yet?{w};auto
+s;Prim;Figured what out yet?{w};auto
+s;Eliza;Kayla isn't just Sam's secret source.{w}{br}They're also secret... lovers.{w};auto
+s;Prim;What! Really?{w};auto
+s;Eliza;It's obvious.{w}{br}I mean, they do a decent job of hiding it,{w}{br}but can't you just feel the tension in the air?{w};auto
+s;Prim;I guess...{w};auto
+s;Eliza;Kayla just had enough of Ophie's ragging.{w}{br}He needs to learn some respect, and Sam is too kind to correct him.{w};auto
+s;Prim;Oh...{w};auto
+s;Eliza;Hee hee hee.{w}{br}You crack me up sometimes, Prim.{w};auto
+r;Eliza
+s;Prim;...{w};auto
+u;Theo;Right
+s;Theo;Everything alright, Prim?{w};auto
+s;Prim;...Theo?{w};auto
+s;Theo;Yes...?{w};auto
+s;Prim;You know a lot about the Empire.{w};auto
+s;Theo;Uh... well... I don't know if that's true.{w}{br}There's always more to learn.{w};auto
+s;Prim;Well, do you know who that man was?{w};auto
+s;Theo;He definitely didn't seem like one of the Archon's normal lieutenants.{w}{br}That ward he used signified that much.{w}{br}I would guess he was sent here on the Empress's orders.{w}{br}Whatever's in this information must be important...{w};auto
+s;Prim;Hmmm...{w};auto
+r;Theo;Prim
+u;Sam;OffscreenLeft
+move_sprite;Sam;96,0;force_hold
+u;Joel;Right
+s;Joel;Sam!{w}{br}Took you long enough.{w}{br}You look beat up.{w};auto
+s;Sam;The Empire really didn't want anyone getting their hands on this.{w}{br}Anyway, we've got what we came for. Let's go.{w};auto
+r;Joel;Sam
+t;3
+end_skip
+b;Palace_Door
+m;Mount Briggs
+t;4
+u;Vagnius;Left
+s;Vagnius;Keeping ME waiting... He will pay for this insult.{w};auto
+wait;500
+qu;Adjutant;OffscreenRight
+move_sprite;Adjutant;-96,0;force_hold
+s;Adjutant;The Archon will see you now. Follow me.{w};auto
+s;Vagnius;Finally.{w};auto
+r;Adjutant
+r;Vagnius
+t;1
+b;Palace
+t;2
+u;Vagnius;Left
+u;Ulver;Right
+s;Vagnius;Milord.{w};auto
+s;Ulver;Vagnius.{w};auto
+s;Vagnius;How noble of you to grace me with your--{w};auto
+s;Ulver;Vagnius.{w}{br}I care not for your ingratiations.{w}{br}What of the Resistance?{w};auto
+s;Vagnius;Marduk... has failed, milord.{w}{br}The Resistance lives.{w};auto
+s;Ulver;Hmmph!{w};auto
+s;Vagnius;But we were close this time, milord. So very, very close!{w}{br}Give me one more chance.{w};auto
+s;Ulver;...{w}{br}What is your plan this time?{w};auto
+s;Vagnius;The village of Podoma, milord.{w}{br}The Resistance will not ignore the feverish pleas of their own countrymen.{w}{br}I can draw them into the open and eliminate them once and for all.{w};auto
+s;Ulver;How... ignoble.{w};auto
+s;Vagnius;Milord?{w};auto
+s;Ulver;Proceed with your plan, Vagnius.{w}{br}This is your last chance.{w};auto
+s;Vagnius;Thank you, milord.{w}{br}Your magninimony is overwhelming--{w};auto
+s;Ulver;Vagnius, you are dismissed.{w};auto
+s;Vagnius;...{w};auto
+r;Vagnius
+u;Adjutant;Left
+s;Adjutant;Milord, is it wise to let him go?{w}{br}He desires to steal your position.{w};auto
+s;Ulver;Ha! Let the weasel plot.{w}{br}He has not the strength nor fortitude to challenge me.{w}{br}But, if he were to succeed, then it must be so.{w};auto
+s;Adjutant;Milord?{w};auto
+s;Ulver;''To the strongest.''{w}{br}Is this not the way of the Empire, Adjutant?{w};auto
+s;Adjutant;Of course, milord.{w};auto
+s;Ulver;Then we have nothing to worry about.{w};auto
+r;Adjutant;Ulver
+t;1

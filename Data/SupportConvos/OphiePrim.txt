@@ -1,0 +1,38 @@
+# Support Ophie Prim
+if;self.optionalunit == 'C' or True
+	b;Clearing
+	t;2
+	u;Ophie;Left
+	u;Prim;Right
+	s;Ophie;I love you.{w};auto
+	s;Prim;.{w} ..{w} ... What?{w};auto
+	s;Ophie;.{w} ..{w} ...{w};auto
+	move_sprite;Ophie;-96,0;force_hold
+	s;Prim;...{w} Okay...{w};auto
+	s;Prim;...{w};auto
+	r;Prim;Ophie
+	t;1
+elif;self.optionalunit == 'B'
+	b;TrainingGrounds
+	t;2
+	u;Ophie;Left
+	u;Joel;Right
+	s;Ophie;Have at me, scoundrel
+	s;Joel;Urgh!
+	s;Ophie;Eergh... Ow.
+	s;Joel;Hahaha, shows that you still need training.
+	u;Prim;240,0
+	s;Prim;Um... hey...
+	s;Ophie;Ergh... Can't you see, that I'm a little bit busy here right now.
+	s;Prim;Yeah, but... I'm a little confused
+	s;Ophie;About what
+	s;Prim;About what you said... like yesterday
+	s;Ophie;Oh yeah, I meant what I said, what of it?
+	s;Prim;Isn't that, a little sudden?{w}and uncalled for...?{w}and rude?{w};auto
+	s;Ophie;What's rude about talking about my feelings.
+	s;Prim;...{w}...{w}...{w};auto
+	move_sprite;Prim;96,0
+	r;Prim;Ophie;Joel
+	t;1
+end
+

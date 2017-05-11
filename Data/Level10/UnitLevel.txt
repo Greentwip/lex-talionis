@@ -1,0 +1,80 @@
+# UnitLevel.txt is used to define what units will be part of this level; and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# team; savedunit; event_id; unit_id; position; ai; status (optional)
+# - OR -
+# team; savedunit; event_id; class; level; items; position; ai; group; status (optional)
+# 
+# savedunit refers to whether the unit should be loaded from a previous level (ie player characters).
+# event_id gives the unit a unique id that other scripts use. The unit will not start on the battlefield unless event_id = 0.
+# unit_id refers to what kind of unit to load from the data.xml files
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+player;1;Ophie;Ophie;0,0;None
+player;1;Prim;Prim;0,0;None
+player;1;Joel;Joel;0,0;None
+player;1;Nia;Nia;0,0;None
+player;1;Althea;Althea;0,0;None
+player;1;Drake;Drake;0,0;None
+player;1;Renae;Renae;0,0;None
+player;1;Theo;Theo;0,0;None
+player;1;Eliza;Eliza;0,0;None
+player;1;Sam;Sam;0,0;None
+player;1;Kayla;Kayla;0,0;None
+player;1;Coyote;Coyote;0,0;None
+#
+# Groups
+group;Claw;Claw;Empire;Archon Ulver's elite guard
+# Enemies
+# Bosses
+enemy;0;0;Ulver;12,3;DoNothing
+enemy;0;soldier1;Soldier;1;Iron Lance;13,3;DoNothing;Claw
+enemy;0;0;Adjutant;11,3;DoNothing
+# Generic
+# 13, 22 is center
+### First Turn
+# Bottom Right - Halberdiers and Rangers
+enemy;0;br1;Halberdier;20;Great Lance,Long Spear;16,27;Pursue;Claw
+enemy;0;br2;Halberdier;20;Great Lance,Long Spear;17,26;Pursue;Claw
+enemy;0;br3;Ranger;20;Great Bow;17,28;Pursue;Claw
+enemy;0;br4;Ranger;20;Great Bow;18,27;Pursue;Claw
+# Top Left - Oracles and Paladins
+enemy;0;tl1;Oracle;20;Corona,Ruin,Physic;7,16;Pursue;Claw
+enemy;0;tl2;Oracle;20;Corona,Ruin,Physic;6,17;Pursue;Claw
+enemy;0;tl3;Paladin;20;Mithril Lance,Mithril Sword;8,17;Pursue;Claw
+enemy;0;tl4;Paladin;20;Mithril Lance,Mithril Sword;7,18;Pursue;Claw
+### Second Turn
+# Bottom Left - Swordmasters and Dragoons
+enemy;0;bl1;Swordmaster;20;Adamant Sword;8,27;Pursue;Claw
+enemy;0;bl2;Swordmaster;20;Adamant Sword;7,28;Pursue;Claw
+enemy;0;bl3;Dragoon;20;Adamant Lance;6,27;Pursue;Claw
+enemy;0;bl4;Dragoon;20;Adamant Lance;7,26;Pursue;Claw
+# Top Right - Berserkers and Warriors
+enemy;0;tr1;Berserker;20;Great Axe,Tomahawk;18,17;Pursue;Claw
+enemy;0;tr2;Berserker;20;Great Axe,Tomahawk;17,18;Pursue;Claw
+enemy;0;tr3;Warrior;20;Adamant Axe,Yew Bow;16,17;Pursue;Claw
+enemy;0;tr4;Warrior;20;Adamant Axe,Yew Bow;17,16;Pursue;Claw
+### Third Turn
+# Left - Generals and Dracolords
+enemy;0;l1;General;20;Great Sword,Adamant Lance;5,21;Pursue;Claw
+enemy;0;l2;General;20;Great Sword,Adamant Lance;5,23;Pursue;Claw
+enemy;0;l3;Dracolord;20;Mithril Axe,Mithril Lance;4,22;Pursue;Claw
+enemy;0;l4;Dracolord;20;Mithril Axe,Mithril Lance;6,22;Pursue;Claw
+# Right - Sages and Warlocks
+enemy;0;r1;Sage;20;Aether,Conflagrate;18,22;Pursue;Claw
+enemy;0;r2;Sage;20;Aether,Conflagrate;20,22;Pursue;Claw
+enemy;0;r3;Warlock;20;Howl,Disintegrate;19,23;Pursue;Claw
+enemy;0;r4;Warlock;20;Howl,Disintegrate;19,21;Pursue;Claw
+### Fourth Turn
+# Top - General Ulver - Strategist
+# Bottom - Hero and Assassins
+enemy;0;b1;Hero;20;Adamant Sword,Short Axe;7,17;Pursue;Claw
+enemy;0;b2;Hero;20;Adamant Sword,Short Axe;17,17;Pursue;Claw
+enemy;0;b3;Assassin;20;Mithril Knife,Yew Longbow;7,27;Pursue;Claw
+enemy;0;b4;Assassin;20;Mithril Knife,Yew Longbow;17,27;Pursue;Claw
+enemy;0;s1;Strategist;20;Corona,Physic,Silence;12,29;Support;Claw
+### Infinite Reinforcements every turn after?

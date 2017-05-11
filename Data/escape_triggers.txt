@@ -1,0 +1,31 @@
+# Called whenever a unit escapes
+# 
+# Level Specific
+# Level 4
+if;gameStateObj.counters['level'] == 4
+	if;self.optionalunit.klass == 'Wagon'
+		inc_counter;Escaped_Wagons
+	end
+	if;gameStateObj.counters['Escaped_Wagons'] >= 4
+		lose_game
+	# If the number of escaped wagons plus the number of dead wagons is gte than the total number of wagons, win
+	elif;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
+		win_game
+	end
+# Level 6
+elif;gameStateObj.counters['level'] == 6
+	if;self.optionalunit.name == 'Kiley'
+		u;Kiley;Right
+		s;Kiley;Aye, I'd love to help, but it looks like this Resistance can handle itself.{w}{br}I'd best be following me crew.{w}{br}They get mighty rowdy without their captain to steer 'em straight{w};auto
+		r;Kiley
+	elif;self.optionalunit.name == 'Prisoner'
+		inc_counter;Civ_Escape
+	end
+end
+#
+# Universal
+remove_unit;{unit}
+wait;200
+if;not any(unit.team in ["player", "other"] for unit in gameStateObj.allunits if unit.position)
+	win_game
+end

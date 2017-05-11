@@ -1,0 +1,28 @@
+m;Young Man from the East
+t;1
+b;ClearingDark
+t;2
+u;Ophie;FarLeft
+u;Joel;FarRight
+s;Ophie;Phew... I think we finally lost them.{w};auto
+s;Joel;Nia?{w};auto
+u;Nia;MidLeft
+s;Nia;...T-There's n-nobody around... just us...{w};auto
+r;Nia
+s;Joel;Okay, then we can rest here, but only for a little.{w}{br}It's a long walk back to the base.{w};auto
+s;Ophie;Hmmph. That was too close!{w}{br}Sam said we weren't going to have to worry about the guards!{w};auto
+u;Althea;MidLeft
+u;Prim;MidRight
+s;Althea;He did. I wonder what went wrong.{w};auto
+s;Ophie;That asshole's plan nearly got us killed.{w}{br}And he didn't even have the decency to show up!{w}{br}Who does he think he is?{w};auto
+s;Prim;I'm sure he had a good reason, Ophie.{w}{br}He just made a mistake.{w}{br}Besides, this was only our first mission.{w}{br}I'm sure this is just a fluke, right?{w};auto
+s;Joel;Uh... yeah!{w};auto
+s;Ophie;I'm not convinced.{w}{br}Sam gets one more chance.{w}{br}If our so-called tactician's plan fails yet again, Prim and I are done.{w};auto
+r;Ophie
+s;Prim;...{w};auto
+r;Prim
+u;Drake;FarLeft
+s;Althea;... Uh...{w}{br}N-No use dawdling around here, right?.{w}{br}We've been out here long enough.{w}{br}Let's return to base.{w}{br}A long rest there will do everyone some good, I bet.{w};auto
+s;Drake;Well said, milady.{w};auto
+r;Joel;Althea;Drake
+t;1

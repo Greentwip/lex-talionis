@@ -1,0 +1,119 @@
+# turnChange Script 3
+# Turn 1
+if;gameStateObj.turncount == 1
+	set_cursor;0,0;force_hold
+	add_unit;Wagon_1;r0;;closest
+	add_unit;pack1_1;r0
+	add_unit;pack1_2;r0
+	wait;500
+	set_cursor;0,16;force_hold
+	add_unit;Wagon_2;r1;;closest
+	add_unit;pack2_1;r1
+	add_unit;pack2_2;r1
+	wait;500
+elif;gameStateObj.turncount == 2
+	m;Combat Theme 4
+	t;1
+	b;Wastes
+	t;2
+	u;Midas;Right;mirror
+	u;Anders;Left
+	s;Midas;Ah! T-There are bandits to the south!{w}{br}My precious cargo...{w};auto
+	mirror;Midas
+	s;Midas;Anders, what do we do?!{w};auto
+	s;Anders;Those are no ordinary bandits.{w}{br}It's the Resistance! To arms, men!{w};auto
+	s;Midas;To arms...?{w};auto
+	s;Anders;We cannot allow the Resistance to capture this cargo.{w}{br}This is Imperial property!{w}{br}Defend this cargo with your lives!{w};auto
+	r;Midas;Anders
+	t;1
+	remove_background
+	t;2
+	set_cursor;0,0;force_hold
+	add_unit;Wagon_3;r0;;closest
+	add_unit;pack3_1;r0
+	add_unit;pack3_2;r0
+	wait;500
+	set_cursor;0,16;force_hold
+	add_unit;Wagon_4;r1;;closest
+	add_unit;pack4_1;r1
+	add_unit;pack4_2;r1
+	wait;500
+elif;gameStateObj.turncount == 3
+	set_cursor;0,0;force_hold
+	add_unit;Wagon_5;r0;;closest
+	add_unit;pack5_1;r0
+	add_unit;pack5_2;r0
+	wait;500
+	set_cursor;0,16;force_hold
+	add_unit;Wagon_6;r1;;closest
+	add_unit;pack6_1;r1
+	add_unit;pack6_2;r1
+	wait;500
+elif;gameStateObj.turncount == 4
+	m;Combat Theme 4
+	if;not gameStateObj.check_dead('Joel')
+		u;Joel;Right
+		s;Joel;More wagons to the west!{w}{br}Don't let a single one through!{w};auto
+		r;Joel
+	end
+	set_cursor;0,0;force_hold
+	add_unit;Wagon_7;r0;;closest
+	add_unit;pack7_1;r0
+	add_unit;pack7_2;r0
+	wait;500
+	set_cursor;0,16;force_hold
+	wait;200
+	add_unit;Midas;0,16;;push
+	add_unit;Anders;0,17;;push
+	add_unit;pack8_1;0,15;;push
+	set_cursor;Midas;force_hold
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	u;Midas;FarRight
+	change_priority;Midas;10
+	u;Anders;FarLeft
+	s;Midas;Anders, this isn't working!{w}{br}You, soldier, attend me!{w};auto
+	u;Soldier1;MidLeft
+	s;Soldier1;Aye, sir?{w};auto
+	s;Midas;We have to retreat. Order everyone back.{w};auto
+	s;Soldier1;Right away, sir.{w};auto
+	r;Soldier1
+	s;Anders;Soldier! Ignore that order!{w};auto
+	u;Soldier1;MidRight
+	s;Midas;W-What!?{w};auto
+	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Archon.{w}{br}We will lay down our lives for this cargo!{w};auto
+	s;Midas;A-Are you sure there isn't another way?{w};auto
+	if;gameStateObj.counters['Dead_Wagons'] > 1
+		s;Midas;They've already struck down some of my best wagons!{w};auto
+	end
+	s;Anders;You sniveling craven.{w}{br}Out of my way!{w};auto
+	r;Midas
+	s;Anders;Men, listen up!{w}{br}We run this gauntlet.{w}{br}It is your Imperial duty to protect these caravans!{w};auto
+	r;Anders;Soldier1
+elif;gameStateObj.turncount == 5
+	set_cursor;0,0;force_hold
+	add_unit;Wagon_9;r0;;closest
+	add_unit;pack9_1;r0
+	add_unit;pack9_2;r0
+	wait;500
+	set_cursor;0,16;force_hold
+	add_unit;Wagon_10;r1;;closest
+	add_unit;pack10_1;r1
+	add_unit;pack10_2;r1
+	wait;500
+elif;gameStateObj.turncount == 6
+	set_cursor;0,0;force_hold
+	add_unit;Wagon_11;r0;;closest
+	add_unit;pack11_1;r0
+	add_unit;pack11_2;r0
+	wait;500
+	set_cursor;0,16;force_hold
+	add_unit;Wagon_12;r1;;closest
+	add_unit;pack12_1;r1
+	add_unit;pack12_2;r1
+	wait;500
+# Else if all wagons have been destroyed or escaped...
+elif;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
+	win_game
+end

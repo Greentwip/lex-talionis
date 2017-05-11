@@ -1,0 +1,28 @@
+# Base Script Level 6
+if;self.optionalunit == 'Theo Sphinx, Pt. III'
+	# Episode 3
+	m;Jazz Noir
+	b;TacticsRoomDay
+	t;2
+	u;Theo;Left
+	s;Theo;It was raining.{w}{br}Hard, drumming, pounding rain.{w}{br}The kind of rain you’d hope would clean the filth right off the streets.{w}{br}Sam "Snake Eyes" Alhara was waiting outside the station.{w}{br}Well, not all our wishes can come true.{w};auto;noir
+	u;Sam;Right
+	s;Sam;What is it Theo?{w}{br}I'm kind of busy here...{w}{br}Our next raid is quite important.{w};auto
+	s;Theo;Sam was a cool customer, with a face made for radio.{w}{br}An old partner of mine, but we'd drifted apart since I left the force.{w}{br}Too bad he was my only lead on this one.{w};auto;noir
+	s;Sam;Prim's missing tome?{w}{br}Really, Theo?{w}{br}Don't you think this could wait?{w};auto
+	s;Theo;I could tell he was hiding something.{w}{br}Sam's the kind of guy who'd jump at the chance to prove himself to the force.{w}{br}Kissing the commissioner's ass was half his job description these days.{w};auto;noir
+	s;Sam;Well, maybe the Empire's managed to infiltrate us after all?{w}{br}This isn't good...{w};auto
+	s;Theo;Please. Don't make me laugh. {w};auto
+	s;Theo;You'd have figured Sam would have some smarts, since he surely hadn't graduated the academy on his looks.{w};auto;noir 
+	s;Theo;This is not the way the Empire would've done it.{w}{br}It was somebody on the inside, Sam!{w};auto
+	s;Sam;But, who would've taken Prim's tome...{w}{br}Did you talk to Renae?{w}{br}Or you could try Nia, she's perceptive, if you can get her to talk.{w}{br}Anyway, I've got work to do...{w};auto
+	r;Sam
+	s;Theo;Clearly, Sam was not going to be any more help.{w}{br}He didn't know a thing--{w}{br}no surprise.{w}{br}After I roughed him up a bit, he made like a rat on a sinking ship and bailed.{w}{br}But I had one more lead, and I was going to make it count.{w};auto;noir
+	r;Theo
+	grey_base_convo;Theo Sphinx, Pt. III
+	t;1
+	b;MainBase
+	t;2
+	inc_counter;noir
+	#give_item;???
+end

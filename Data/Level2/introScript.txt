@@ -1,0 +1,105 @@
+# Intro Script 2
+m;Hum of the Streets
+add_unit;S1
+add_unit;S2
+b;Forest
+t;2
+u;Joel;MidLeft;u;Ophie;MidRight;u;Prim;FarRight
+s;Joel;The Resistance base is a just little yonder.{w}{clear}Normally I'd stop at the village here for supplies,{w}{br}but I think getting ya'll to the base takes precedence.{w};auto
+s;Prim;Don't burden yourself on our account.{w};auto
+s;Joel;Its no burden, lass...{w};auto
+s;Ophie;So, what's the Resistance base like, anyway?
+s;Joel;Well, lad, we'll be coming upon a waterfall soon...{w};auto
+set_expression;Ophie;Smiling
+s;Ophie;Wait! Don't tell me the Resistance base is behind a waterfall!{w}{br}That's so cool!{w};auto
+s;Joel;Hahaha! Lad, we don't live behind a waterfall.{w}{br}I reckon that'd be mighty damp.{w}{br}Nah, beyond the waterfall is a nice, dry cavern.{w}{br}That's where we're heading.{w};auto
+set_expression;Ophie;Normal
+s;Ophie;Oh... {w};auto
+s;Joel;Though, I like your energy, lad--{w};auto
+u;Nia;FarLeft
+s;Nia;J-Joel.{w};auto
+set_expression;Joel;Normal
+s;Joel;Aah!{w}{br}Nia! You startled me.{w}{br}What did I tell ya 'bout creepin' up on people?{w};auto
+s;Nia;T-There's fighting... ...s-south.{w};auto
+s;Joel;Commotion in Podoma?{w}{br}We'd better skirt around the village, then.{w};auto
+r;Ophie
+s;Joel;Hey, Ophie! Lad!{w}{br}Where you going? Don't run off!{w};auto
+u;Ophie;MidRight
+s;Ophie;Don't you want to see what's up?{w};auto
+s;Joel;That sounds... dangerous.{w}{br}I reckon we should do the smart thing and walk around the fighting.{w};auto
+s;Ophie;I thought you two were freedom fighters, not cowards.{w};auto
+s;Joel;Lad, don't test me.{w};auto
+s;Prim;Ophie's right. Someone could be in trouble...{w};auto
+s;Ophie;Come on, Prim.{w}{br}Let's go see what's up. {w};auto
+r;Ophie;Prim
+s;Joel;Damn. 'Reckon somebody's gotta watch them... {w}{br}Let's follow them, Nia. This isn't going to end well.{w};auto
+r;Joel;Nia
+m;Brave Story 12
+t;1
+remove_background
+t;2
+# Pan to village. Pan over to Althea and Drake fighting Imperial Soldiers
+set_cursor;Drake;force_hold
+disp_cursor;1
+wait;1000
+disp_cursor;0
+interact_unit;S1;Drake
+u;Drake;MidLeft;u;Althea;FarLeft;u;Soldier2;Right
+s;Soldier2;Urgh...{w};auto
+r;Soldier2
+s;Althea;There's so many of them.{w};auto
+s;Drake;Milady, I'm sorry. {w}{br}In the end, my strength was not enough to protect you.{w};auto
+s;Althea;Drake, you've done so much for me.{w}{br}Run.... it's me they're after... you can save yourself.{w};auto
+s;Drake;Never!{w}{br}Death is no punishment compared to the shame of having failed you.{w}{br}Stay back, and allow me this last shred of dignity.{w};auto
+r;Drake;Althea
+# Another fight!
+move_unit;S2;7,4
+start_move
+interact_unit;S2;Drake
+u;Drake;MidLeft;Full_Blink;u;Althea;FarLeft
+s;Althea;Drake!{w};auto
+set_expression;Drake;Normal
+s;Drake;Do not worry, Althea.{w}{br}I still have some fight left.{w};auto
+r;Drake;Althea
+wait;500
+# Pan to top of map
+# OPJN show up
+set_cursor;0,0;force_hold
+disp_cursor;1
+wait;500
+disp_cursor;0
+add_unit;Prim;0,0
+add_unit;Ophie;1,0
+move_unit;Prim;0,1
+move_unit;Ophie;1,1
+start_move
+start_move
+add_unit;Nia
+add_unit;Joel
+wait;500
+u;Prim;MidLeft
+u;Joel;FarLeft
+u;Ophie;Right
+s;Prim;That man is taking on all those Imperial soldiers alone.{w};auto
+s;Ophie;It looks like he's protecting that girl.{w};auto
+s;Joel;Does he have a deathwish?{w}{br}He'll die alone against that horde.{w};auto
+s;Ophie;He won't be alone for long! Hiyaa!{w};auto
+mirror;Ophie
+move_sprite;Ophie;96,0;force_hold
+r;Ophie;Prim;Joel
+# Pan to Boss
+m;Brave Story 27
+set_cursor;Brigham;force_hold
+disp_cursor;1
+wait;1000
+disp_cursor;0
+u;Brigham;Right
+u;Soldier1;Left
+s;Brigham;What! More traitors come out of the woodwork!{w}{br}Who would've thought that Keralan loyalty to the old crown would've held this long...{w}{br}Men, kill them all! Take no prisoners!{w};auto
+s;Soldier1;Even the girl, sir?{w};auto
+s;Brigham;Yes, you idiot!{w}{br}Do you think the Archon wants to keep her as a reminder of his failings?{w};auto
+s;Soldier1;Of course not, sir!{w};auto
+r;Soldier1
+s;Brigham;When this day is done, the Empire's hold in Kerala will finally be secured!{w};auto
+r;Brigham
+set_cursor;Ophie;force_hold
