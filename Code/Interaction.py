@@ -385,6 +385,7 @@ class Combat(object):
         
         self.last_update = Engine.get_time()
         self.length_of_combat = 2000
+        self.additional_time = 0
         self.combat_state = 'Pre_Init'
 
         # Get mode
@@ -427,6 +428,7 @@ class Combat(object):
                 if not skip:
                     gameStateObj.stateMachine.changeState('move_camera')
                 self.combat_state = 'Init1'
+
             elif self.combat_state == 'Init1':
                 self.last_update = Engine.get_time()
                 self.combat_state = 'Init'
@@ -469,8 +471,7 @@ class Combat(object):
                                 sound_to_play = 'Attack Hit ' + str(random.randint(1,4)) # Choose a random hit sound
                                 SOUNDDICT[sound_to_play].play()
                         elif self.current_result.summoning:
-                            # Play sound for summoning
-                            pass
+                            SOUNDDICT['Summon 2'].play()
                         else:
                             SOUNDDICT['Attack Miss 2'].play()
                             gameStateObj.allanimations.append(CustomObjects.Animation(IMAGESDICT['MapMiss'], self.current_result.defender.position, (1, 13)))
@@ -486,14 +487,17 @@ class Combat(object):
                                 pos = self.current_result.attacker.position[0], self.current_result.attacker.position[1] - 1
                                 gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, pos, (stota.x, stota.y), stota.num_frames))
                     self.apply_result(gameStateObj)
+                    self.atk_health_bar.update()
+                    self.def_health_bar.update()
+                    self.additional_time = max(self.atk_health_bar.time_for_change, self.def_health_bar.time_for_change)
                     self.combat_state = 'Clean'
 
             elif self.combat_state == 'Clean':
-                if skip or current_time > 4*self.length_of_combat/5:
+                if skip or current_time > 3*self.length_of_combat/5 + self.additional_time:
                     self.combat_state = 'Wait'
 
             elif self.combat_state == 'Wait': 
-                if skip or current_time > self.length_of_combat:
+                if skip or current_time > 4*self.length_of_combat/5 + self.additional_time:
                     self.end_a_result(gameStateObj)
                     self.old_results.append(self.current_result)
                     self.current_result = None
@@ -714,6 +718,7 @@ class Combat(object):
                         damage_done = sum([result.def_damage_done for result in applicable_results])
                         if not self.item.heal:
                             self.attacker.records['damage'] += damage_done
+
                         if self.item.exp:
                             normal_exp = self.item.exp
                         elif self.item.weapon or not self.attacker.checkIfAlly(other_unit):
@@ -728,6 +733,7 @@ class Combat(object):
                                 normal_exp = CONSTANTS['status_exp']
                         else:
                             normal_exp = 0
+                            
                         if other_unit.isDying:
                             self.attacker.records['kills'] += 1
                             my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in other_unit.tags else 0)
@@ -1001,7 +1007,7 @@ class HealthBar(object):
         if self.unit:
             if self.true_hp != self.unit.currenthp and not self.transition_flag:
                 self.transition_flag = True
-                self.time_for_change = max(100, abs(self.true_hp - self.unit.currenthp)*32)
+                self.time_for_change = max(200, abs(self.true_hp - self.unit.currenthp)*32)
                 self.last_update = Engine.get_time()
             if self.transition_flag:
                 self.true_hp = Utility.easing(Engine.get_time() - self.last_update, self.oldhp, self.unit.currenthp - self.oldhp, self.time_for_change)

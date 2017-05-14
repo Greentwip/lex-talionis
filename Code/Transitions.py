@@ -162,6 +162,7 @@ class StartOption(StateMachine.State):
             # For transition
             self.selection = None
             self.state = "transition_in"
+            self.banner = None
             self.position_x = -WINWIDTH/2
 
             self.background = IMAGESDICT['BlackBackground']
@@ -200,7 +201,15 @@ class StartOption(StateMachine.State):
                 self.selection = self.menu.getSelection()
                 if self.selection == WORDS['Continue']:
                     self.state = 'wait'
+                elif os.path.exists(SUSPEND_LOC) and not self.banner and self.selection in [WORDS['Load Game'], WORDS['Restart Level']]:
+                    SOUNDDICT['Select 2'].play()
+                    text = 'Loading a game will remove suspend!'
+                    self.banner = MenuFunctions.CreateBaseMenuSurf((180, 24), 'DarkMenuBackground')
+                    self.banner = Image_Modification.flickerImageTranslucent(self.banner, 10)
+                    position = (4, 6)
+                    MenuFunctions.OutlineFont(BASICFONT, text, self.banner, colorDict['off_white'], colorDict['off_black'], position)
                 else:
+                    self.banner = None
                     self.state = "transition_out"
                 #elif self.selection == WORDS['New Game']:
                 #    self.state = "wait"
@@ -272,6 +281,8 @@ class StartOption(StateMachine.State):
         gameStateObj.button_b.draw(surf)
         if self.menu:
             self.menu.draw(surf, center=(self.position_x, WINHEIGHT/2), show_cursor= (self.state == "normal"))
+        if self.banner and self.state == 'normal':
+            surf.blit(self.banner, (WINWIDTH/2 - self.banner.get_width()/2, WINHEIGHT/2 - self.banner.get_height()/2))
 
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition)

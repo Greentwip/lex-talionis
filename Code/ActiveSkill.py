@@ -355,6 +355,20 @@ class Revelation(Active_Skill):
     def get_choices(self, cur_unit, gameStateObj):
         return [unit.position for unit in cur_unit.getTeamPartners(gameStateObj)]
 
+class Rally(Active_Skill):
+    def __init__(self, name, required_charge):
+        Active_Skill.__init__(self, name, required_charge)
+        self.mode = 'Interact'
+        self.item = ItemMethods.itemparser('so_Rally')[0]
+
+    def check_valid(self, unit, gameStateObj):
+        if not unit.hasAttacked:
+            return True
+        return False
+
+    def get_choices(self, cur_unit, gameStateObj):
+        return None
+
 class Gate(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
@@ -418,17 +432,6 @@ class Fade(Active_Skill):
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked and not any(status.id == 'Fade_Status' for status in unit.status_effects):
-            return True
-        return False
-
-class Rally(Active_Skill):
-    def __init__(self, name, required_charge):
-        Active_Skill.__init__(self, name, required_charge)
-        self.mode = 'Solo'
-        self.item = ItemMethods.itemparser('so_Rally')[0]
-
-    def check_valid(self, unit, gameStateObj):
-        if not unit.hasAttacked:
             return True
         return False
 

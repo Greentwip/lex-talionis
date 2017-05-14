@@ -42,7 +42,7 @@ class Banner(object):
             self.item.draw(BGSurf, (self.size[0] - 6 - 16 - 2, 4 + 4), cooldown=False)
         surf.blit(BGSurf, pos)
 
-    def update(self, gameStateObj):
+    def update(self, gameStateObj=None):
         if not self.updateflag:
             self.updateflag = True
             self.time_to_start = Engine.get_time()
@@ -93,6 +93,7 @@ class brokenItemBanner(Banner):
             self.sound = None
         self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
+        self.sound = SOUNDDICT['Attack Miss 3']
 
 class gainedWexpBanner(Banner):
     def __init__(self, unit, wexp, weapon_type):
@@ -100,36 +101,36 @@ class gainedWexpBanner(Banner):
         self.unit = unit
         self.item = CustomObjects.WeaponIcon(weapon_type)
         self.banner = [unit.name, ' reached rank ', CustomObjects.WEAPON_EXP.number_to_letter(wexp)]
-        self.sound = SOUNDDICT['Item']
         self.banner_font = ['text_white', 'text_white', 'text_blue']
         self.figure_out_size()
+        self.sound = SOUNDDICT['Item']
 
 class foundNothingBanner(Banner):
     def __init__(self, unit):
         Banner.__init__(self)
         self.unit = unit
         self.banner = [unit.name, ' found nothing of note.']
-        self.sound = None
         self.banner_font = ['text_blue', 'text_white']
         self.figure_out_size()
+        self.sound = SOUNDDICT['Attack Miss 3']
 
 class switchPulledBanner(Banner):
     def __init__(self):
         Banner.__init__(self)
         self.banner = ['Switch pulled!']
-        self.sound = SOUNDDICT['Item']
         self.banner_font = ['text_white']
         self.figure_out_size()
+        self.sound = SOUNDDICT['Item']
 
 class miracleBanner(Banner):
     def __init__(self, unit, skill):
         Banner.__init__(self)
         self.unit = unit
         self.item = skill
-        self.sound = SOUNDDICT['Item']
         self.banner = [skill.name, ' activated!']
         self.banner_font = ['text_blue', 'text_white']
         self.figure_out_size()
+        self.sound = SOUNDDICT['Item']
 
 class tooFewUnitsBanner(Banner):
     def __init__(self):
@@ -143,9 +144,9 @@ class gameSavedBanner(Banner):
     def __init__(self):
         Banner.__init__(self)
         self.banner = ['Progress Saved.']
-        self.sound = SOUNDDICT['Item']
         self.banner_font = ['text_white']
         self.figure_out_size()
+        self.sound = SOUNDDICT['Item']
 
 class gainedSkillBanner(Banner):
     def __init__(self, unit, skill):
@@ -167,6 +168,14 @@ class stealBanner(Banner):
         self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
         self.sound = SOUNDDICT['Item']
+
+class warningContinueBanner(Banner):
+    def __init__(self):
+        Banner.__init__(self)
+        self.banner = ['Loading a game will remove suspend!']
+        self.banner_font = ['text_white']
+        self.figure_out_size()
+        self.sound = SOUNDDICT['Select 2']
 
 # Lower banner that scrolls across bottom of screen
 class Pennant(object):

@@ -278,7 +278,8 @@ class Status_Processor(object):
                     # Processing state handles animation and HP updating
                     if self.current_status.upkeep_animation or self.oldhp != self.newhp:
                         logger.debug('HP change: %s %s', self.oldhp, self.newhp)
-                        self.start_time_for_this_status = current_time
+                        self.health_bar.update()
+                        self.start_time_for_this_status = current_time - self.health_bar.time_for_change
                         gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
                         self.state.changeState('processing')
                         gameStateObj.stateMachine.changeState('move_camera')

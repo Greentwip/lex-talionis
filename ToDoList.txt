@@ -37,11 +37,6 @@ ToDo:
 - Test Level 10+ (should Level 10 have infinite reinforcements after turn 4? Should Ulver's weapon auto-cleave?)
 - Need extra advice on Chapter 8... Not sure what to do or how to balance for fun.
 - Re-test Chapter 7
-- Add a screen that makes sure you want to remove your suspend if you choose anything but continue
-- Add sound to on-map market
-- I think health bar doesn't work perfectly. Try doing a critical on a unit with 30 or more health. Or healing 20 or more. Regeneration.
-- Add sound to broken item.
-- Remove exp bonus from RALLY. RALLY does not currently work on anyone but self.
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- MAPMOVES ---

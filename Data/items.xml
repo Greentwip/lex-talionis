@@ -2266,8 +2266,8 @@
         <id>so_Rally</id>
         <spritetype>Skills</spritetype>
         <spriteid>10,1</spriteid>
-        <components>spell,status,virtual,beneficial,aoe</components>
-        <weapontype>Light</weapontype>
+        <components>spell,status,virtual,beneficial,aoe,exp</components>
+        <weapontype>None</weapontype>
 
         <value>1</value>
         <RNG>0</RNG>
@@ -2276,6 +2276,7 @@
         <targets>Ally</targets>
         <aoe>Blast,3</aoe>
         <LVL>D</LVL>
+        <exp>-1</exp>
     </item>
 
     <item name="Summon_1">

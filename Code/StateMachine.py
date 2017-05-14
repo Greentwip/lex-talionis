@@ -873,11 +873,18 @@ class MenuState(State):
                             gameStateObj.stateMachine.changeState('weapon')
                         elif status.active.mode in ['Interact', 'Tile']:
                             valid_choices = status.active.get_choices(cur_unit, gameStateObj)
-                            cur_unit.validPartners = CustomObjects.MapSelectHelper(valid_choices)
-                            closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
-                            gameStateObj.cursor.setPosition(closest_position, gameStateObj)
-                            gameStateObj.stateMachine.changeState('skillselect')
-                        else:
+                            if valid_choices:
+                                cur_unit.validPartners = CustomObjects.MapSelectHelper(valid_choices)
+                                closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
+                                gameStateObj.cursor.setPosition(closest_position, gameStateObj)
+                                gameStateObj.stateMachine.changeState('skillselect')
+                            else:
+                                skill_item = status.active.item
+                                main_defender, splash_units = Interaction.convert_positions(gameStateObj, cur_unit, cur_unit.position, cur_unit.position, skill_item)
+                                gameStateObj.combatInstance = Interaction.Combat(cur_unit, main_defender, cur_unit.position, splash_units, skill_item, status)
+                                gameStateObj.stateMachine.changeState('combat')
+                                cur_unit.current_skill = None
+                        else: # Solo
                             gameStateObj.combatInstance = Interaction.Combat(cur_unit, cur_unit, cur_unit.position, [], status.active.item, status)
                             gameStateObj.stateMachine.changeState('combat')
                             cur_unit.current_skill = None
@@ -2338,20 +2345,26 @@ class ShopState(State):
             if self.display_message.done:
                 self.stateMachine.changeState('choice')
             if event == 'BACK':
+                SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.changeState('transition_pop')
             elif event == 'SELECT':
+                SOUNDDICT['Select 1'].play()
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False 
                 
         elif self.stateMachine.getState() == 'choice':           
             if event == 'LEFT':
+                SOUNDDICT['Select 6'].play()
                 self.buy_sell_menu.moveDown()
             elif event == 'RIGHT':
+                SOUNDDICT['Select 6'].play()
                 self.buy_sell_menu.moveUp()
             elif event == 'BACK':
+                SOUNDDICT['Select 4'].play()
                 self.display_message = self.get_dialog(self.leave_message)
                 self.stateMachine.changeState('close')
             elif event == 'SELECT':
+                SOUNDDICT['Select 1'].play()
                 if not self.display_message.done:
                     if self.display_message.waiting:
                         self.display_message.waiting = False
@@ -2367,10 +2380,13 @@ class ShopState(State):
 
         elif self.stateMachine.getState() == 'buy':
             if 'DOWN' in directions:
+                SOUNDDICT['Select 6'].play()
                 self.shopMenu.moveDown()
             elif 'UP' in directions:
+                SOUNDDICT['Select 6'].play()
                 self.shopMenu.moveUp()
             elif event == 'BACK':
+                SOUNDDICT['Select 4'].play()
                 if self.info:
                     self.info = False
                 else:
@@ -2381,6 +2397,7 @@ class ShopState(State):
                 selection = self.shopMenu.getSelection()
                 value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                 if ('Convoy' in gameStateObj.game_constants or len(self.unit.items) < CONSTANTS['max_items']) and (gameStateObj.counters['money'] - value) >= 0:
+                    SOUNDDICT['Select 1'].play()
                     self.stateMachine.changeState('buy_sure')
                     if len(self.unit.items) >= CONSTANTS['max_items']:
                         self.display_message = self.get_dialog(WORDS['Shop_convoy'])
@@ -2388,20 +2405,25 @@ class ShopState(State):
                         self.display_message = self.get_dialog(WORDS['Shop_check'])
                     self.shopMenu.takes_input = False
                 elif len(self.unit.items) >= CONSTANTS['max_items']:
+                    SOUNDDICT['Select 4'].play()
                     self.display_message = self.get_dialog(WORDS['Shop_max'])
                     self.shopMenu.takes_input = False
                     self.stateMachine.changeState('choice')
                 elif (gameStateObj.counters['money'] - value) < 0:
+                    SOUNDDICT['Select 4'].play()
                     self.display_message = self.get_dialog(WORDS['Shop_no_money'])
             elif event == 'INFO':
                 self.info = not self.info
 
         elif self.stateMachine.getState() == 'sell':
             if 'DOWN' in directions:
+                SOUNDDICT['Select 6'].play()
                 self.myMenu.moveDown()
             elif 'UP' in directions:
+                SOUNDDICT['Select 6'].play()
                 self.myMenu.moveUp()
             elif event == 'BACK':
+                SOUNDDICT['Select 4'].play()
                 if self.info:
                     self.info = False
                 else:
@@ -2411,10 +2433,12 @@ class ShopState(State):
             elif event == 'SELECT' and not self.info:
                 selection = self.myMenu.getSelection()
                 if not selection.value:
+                    SOUNDDICT['Select 4'].play()
                     self.myMenu.takes_input = False
                     self.stateMachine.changeState('choice')
                     self.display_message = self.get_dialog(WORDS['Shop_no_value'])
                 else:
+                    SOUNDDICT['Select 1'].play()
                     self.stateMachine.changeState('sell_sure')
                     self.display_message = self.get_dialog(WORDS['Shop_check'])
                     self.myMenu.takes_input = False
@@ -2423,8 +2447,10 @@ class ShopState(State):
 
         elif self.stateMachine.getState() == 'buy_sure':
             if event == 'LEFT':
+                SOUNDDICT['Select 6'].play()
                 self.sure_menu.moveDown()
             elif event == 'RIGHT':
+                SOUNDDICT['Select 6'].play()
                 self.sure_menu.moveUp()
             elif event == 'BACK':
                 self.stateMachine.changeState('buy')
@@ -2433,6 +2459,7 @@ class ShopState(State):
             elif event == 'SELECT':
                 choice = self.sure_menu.getSelection()
                 if choice == WORDS['Yes']:
+                    SOUNDDICT['Select 1'].play()
                     selection = self.shopMenu.getSelection()
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                     if len(self.unit.items) < CONSTANTS['max_items']:
@@ -2446,14 +2473,17 @@ class ShopState(State):
                     self.stateMachine.changeState('buy')
                     self.shopMenu.takes_input = True
                 else:
+                    SOUNDDICT['Select 4'].play()
                     self.stateMachine.changeState('buy')
                     self.shopMenu.takes_input = True
                     self.display_message = self.get_dialog(self.back_message)
 
         elif self.stateMachine.getState() == 'sell_sure':
             if event == 'LEFT':
+                SOUNDDICT['Select 6'].play()
                 self.sure_menu.moveDown()
             elif event == 'RIGHT':
+                SOUNDDICT['Select 6'].play()
                 self.sure_menu.moveUp()
             elif event == 'BACK':
                 self.stateMachine.changeState('sell')
@@ -2462,6 +2492,7 @@ class ShopState(State):
             elif event == 'SELECT':
                 choice = self.sure_menu.getSelection()
                 if choice == WORDS['Yes']:
+                    SOUNDDICT['Select 1'].play()
                     selection = self.myMenu.getSelection()
                     self.unit.remove_item(selection)
                     self.myMenu.currentSelection = 0 # Reset selection
@@ -2479,14 +2510,17 @@ class ShopState(State):
                         self.myMenu.takes_input = True
                         self.display_message = self.get_dialog('Selling anything else?')
                 else:
+                    SOUNDDICT['Select 4'].play()
                     self.stateMachine.changeState('sell')
                     self.myMenu.takes_input = True
                     self.display_message = self.get_dialog(self.back_message)
 
         elif self.stateMachine.getState() == 'close':
             if event == 'BACK':
+                SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.back()
             elif event == 'SELECT':
+                SOUNDDICT['Select 1'].play()
                 if self.display_message.done:
                     gameStateObj.stateMachine.back()
                 if self.display_message.waiting: # Remove waiting check
@@ -2547,6 +2581,7 @@ class ShopState(State):
 
 class MinimapState(State):
     def begin(self, gameStateObj, metaDataObj):
+        SOUNDDICT['Map In'].play()
         self.minimap = WorldMap.MiniMap(gameStateObj.map, gameStateObj.allunits)
         self.arrive_flag = True
         self.arrive_time = Engine.get_time()
@@ -2560,6 +2595,7 @@ class MinimapState(State):
         if event and not self.arrive_flag and not self.exit_flag:
             # Back - to free state
             if event in ['BACK', 'SELECT', 'START']:
+                SOUNDDICT['Map Out'].play()
                 self.exit_flag = True
                 self.exit_time = Engine.get_time()
                 return
