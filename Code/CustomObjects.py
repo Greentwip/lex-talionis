@@ -1269,7 +1269,7 @@ class LevelStatistic(object):
     def get_records(self, gameStateObj):
         records = {}
         for unit in gameStateObj.allunits:
-            if unit.team == 'player' and not 'Mount' in unit.tags:
+            if unit.team == 'player' and not unit.generic_flag:
                 records[unit.name] = unit.records
         return records
 

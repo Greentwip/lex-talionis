@@ -201,7 +201,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             cur_unit = UnitObject.UnitObject(u_i)
 
             # Status Effects and Skills
-            get_skills(class_dict, cur_unit, classes, u_i['level'], feat=False)
+            get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
             personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []    ### Actually add statuses
             c_s = [StatusObject.statusparser(status) for status in personal_skills]
@@ -262,7 +262,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     cur_unit.position = u_i['position']
 
     # Status Effects and Skills
-    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj=gameStateObj)
+    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj)
 
     if u_i['event_id'] != "0": # Unit does not start on board
         cur_unit.position = None
@@ -277,7 +277,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     allunits.append(cur_unit)
     return cur_unit
 
-def create_summon(summon_info, summoner, position, metaDataObj):
+def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     # Important Info
     class_dict = metaDataObj['class_dict']
     u_i = {}
@@ -307,7 +307,7 @@ def create_summon(summon_info, summoner, position, metaDataObj):
     unit = UnitObject.UnitObject(u_i)
 
     # Status Effects and Skills
-    get_skills(class_dict, unit, classes, u_i['level'])
+    get_skills(class_dict, unit, classes, u_i['level'], gameStateObj)
 
     return unit
 
@@ -375,7 +375,7 @@ def get_unit_info(class_dict, klass, level, item_line):
 
     return stats, growths, growth_points, items, wexp
 
-def get_skills(class_dict, unit, classes, level, feat=True, gameStateObj=None):
+def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True):
     position = unit.position
     class_skills = []
     for index, klass in enumerate(classes):

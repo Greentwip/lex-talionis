@@ -479,7 +479,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         if status.time and status.time > 2:
             status.time.time_left = 2
 
-    if status.affects_movement and gameStateObj.boundary_manager:
+    if status.affects_movement:
         if unit.team.startswith('enemy'):
             gameStateObj.boundary_manager._remove_unit(unit, gameStateObj)
             if unit.position:
@@ -533,7 +533,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
         unit.isDying = True
         unit.currenthp = 0
         gameStateObj.stateMachine.changeState('dying')
-    if status.affects_movement and gameStateObj.boundary_manager:
+    if status.affects_movement:
         if unit.team.startswith('enemy'):
             gameStateObj.boundary_manager._remove_unit(unit, gameStateObj)
             if unit.position:

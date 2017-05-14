@@ -217,7 +217,7 @@ class GameStateObj(object):
                                  'chosen_unit': None}
 
     def get_total_party_members(self):
-        num_members = sum([1 for unit in self.allunits if unit.team == 'player' and not unit.dead and not 'Mount' in unit.tags])
+        num_members = sum([1 for unit in self.allunits if unit.team == 'player' and not unit.dead and not unit.generic_flag])
         return num_members
 
     def check_dead(self, name):
@@ -372,7 +372,7 @@ class GameStateObj(object):
 
         # Remove non player team units
         for unit in reversed(self.allunits):
-            if unit.team != 'player':
+            if unit.team != 'player' or unit.generic_flag:
                 self.allunits.remove(unit)
 
         # Handle player death

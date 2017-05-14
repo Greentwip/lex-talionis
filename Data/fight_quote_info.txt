@@ -125,7 +125,7 @@ if;self.optionalunit.team == 'player'
 			trigger_event;VagniusOphie
 		elif;self.optionalunit.name == "Prim" and not 'VagniusPrim' in gameStateObj.event_triggers
 			u;Vagnius;Left;u;Prim;Right
-			s;Prim;How could you do this... These people are innocent?{w};auto
+			s;Prim;How could you do this... These people are innocent!{w};auto
 			s;Vagnius;Innocence?{w}{br}Hah. The morals of a child.{w}{br}I care not for your innocence.{w}{br}Power. That is all I seek.{w};auto
 			s;Prim;But...{w};auto
 			s;Vagnius;Spare me your bleatings and die.{w};auto

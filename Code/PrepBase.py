@@ -1391,7 +1391,7 @@ class BasePairingSelectState(StateMachine.State):
 
 class BaseSupportConvoState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not 'Mount' in unit.tags]
+        self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.generic_flag]
         if not hasattr(self, 'state'):
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 1, 9, (4, 4))
             gameStateObj.activeMenu.mode = 'support'

@@ -101,7 +101,7 @@ class Solver(object):
                 result.def_status.append(status_object)
             # Handle summon
             if self.item.summon:
-                result.summoning.append(SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, metaDataObj))
+                result.summoning.append(SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, metaDataObj, gameStateObj))
 
         # Handle lifelink and vampire
         if result.def_damage > 0:
@@ -149,7 +149,7 @@ class Solver(object):
         return result
 
     def generate_summon_phase(self, gameStateObj, metaDataObj):
-        the_summon = SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, metaDataObj)
+        the_summon = SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, metaDataObj, gameStateObj)
 
         result = Result(self.attacker, the_summon)
         result.summoning.append(the_summon)

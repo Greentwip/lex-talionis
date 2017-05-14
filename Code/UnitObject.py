@@ -370,15 +370,18 @@ class UnitObject(object):
             e_wep = enemyunit.getMainWeapon()
 
             # Check enemy vs player
-            if (CONSTANTS['def_double'] or any(status.def_double for status in enemyunit.status_effects)) and \
-                isinstance(enemyunit, UnitObject) and e_wep and \
+            e_num = 1
+            if e_wep and not e_wep.no_double and isinstance(enemyunit, UnitObject) and \
                 Utility.calculate_distance(self.position, enemyunit.position) in e_wep.RNG:
-                if e_wep.brave and enemyunit.attackspeed() - self.attackspeed() >= CONSTANTS['speed_to_double'] \
-                    and not e_wep.no_double:
-                    surf.blit(IMAGESDICT['x4'], x2_position_enemy)
-                elif e_wep.brave or enemyunit.attackspeed() - self.attackspeed() >= CONSTANTS['speed_to_double'] \
-                    and not e_wep.no_double:
-                    surf.blit(IMAGESDICT['x2'], x2_position_enemy)
+                if e_wep.brave:
+                    e_num *= 2
+                if (CONSTANTS['def_double'] or any(status.def_double for status in enemyunit.status_effects)) and \
+                    enemyunit.attackspeed() - self.attackspeed() >= CONSTANTS['speed_to_double']:
+                    e_num *= 2
+            if e_num == 2:
+                surf.blit(IMAGESDICT['x2'], x2_position_enemy)
+            elif e_num == 4:
+                surf.blit(IMAGESDICT['x4'], x2_position_enemy)
 
     def create_spell_info(self, gameStateObj, otherunit):
         if self.getMainSpell().spell.targets in ['Ally', 'Enemy', 'Unit']:

@@ -1258,19 +1258,21 @@ class UnitSelectMenu(Counters.CursorControl):
         self.currentSelection += self.units_per_row
         if self.currentSelection > len(self.options) - 1:
             self.currentSelection -= self.units_per_row
+        else:
             self.cursor_y_offset = -1
-        if len(self.options) > self.units_per_row*self.num_rows and self.scroll < self.currentSelection - self.units_per_row*(self.num_rows-1):
-            self.scroll += self.units_per_row
-        self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options)/self.units_per_row - self.num_rows))
+        if len(self.options) > self.units_per_row*self.num_rows and self.scroll <= self.currentSelection - self.units_per_row*(self.num_rows-1):
+            self.scroll += 1
+            self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options)/self.units_per_row - self.num_rows + 1))
 
     def moveUp(self):
         self.currentSelection -= self.units_per_row
         if self.currentSelection < 0:
             self.currentSelection += self.units_per_row
+        else:
             self.cursor_y_offset = 1
-        if self.scroll > self.currentSelection + self.units_per_row:
-            self.scroll -= self.units_per_row
-        self.scroll = max(self.scroll, 0) # Scroll cannot go negative
+        if self.scroll > 0 and self.currentSelection < self.scroll*self.units_per_row:
+            self.scroll -= 1
+            self.scroll = max(self.scroll, 0) # Scroll cannot go negative
 
     def moveLeft(self):
         if self.currentSelection%self.units_per_row != 0:
@@ -1301,12 +1303,13 @@ class UnitSelectMenu(Counters.CursorControl):
             width = highlightSurf.get_width()
             for slot in range((self.option_length-20)/width): # Gives me the amount of highlight needed
                 left = self.topleft[0] + 20 + self.currentSelection%self.units_per_row*self.option_length + slot*width 
-                top = self.topleft[1] + (self.currentSelection-self.scroll)/self.units_per_row*self.option_height + 12
+                top = self.topleft[1] + (self.currentSelection-self.scroll*self.units_per_row)/self.units_per_row*self.option_height + 12
                 surf.blit(highlightSurf, (left, top))
         if self.draw_extra_marker:
             self.draw_extra_highlight(surf)
 
-        for index, unit in enumerate(self.options[self.scroll:self.units_per_row*self.num_rows+self.scroll]):
+        s_size = self.units_per_row*self.num_rows
+        for index, unit in enumerate(self.options[self.scroll*self.units_per_row:s_size+self.scroll*self.units_per_row]):
             top = index/self.units_per_row
             left = index%self.units_per_row
 
@@ -1328,7 +1331,7 @@ class UnitSelectMenu(Counters.CursorControl):
 
         # Blit cursor
         left = self.topleft[0] - 8 + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
-        top = self.topleft[1] + 4 + (self.currentSelection-self.scroll)/self.units_per_row*self.option_height + self.cursor_y_offset*8
+        top = self.topleft[1] + 4 + (self.currentSelection-self.scroll*self.units_per_row)/self.units_per_row*self.option_height + self.cursor_y_offset*8
         self.cursor_y_offset = 0 # Reset
         surf.blit(self.cursor, (left, top))
         if self.draw_extra_marker:
@@ -1365,20 +1368,22 @@ class UnitSelectMenu(Counters.CursorControl):
         middle_of_scroll_bar = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 1, 7, 1))
         scroll_bar_fill = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 3, 7, 1))
         # Draw parts
-        surf.blit(top_of_scroll_bar, (self.topleft[0] + self.menu_width - 16, self.topleft[1] + 4))
-        surf.blit(bottom_of_scroll_bar, (self.topleft[0] + self.menu_width - 16, self.topleft[1] + 16*self.num_rows + 2))
+        left = self.topleft[0] + self.menu_width - 6
+        surf.blit(top_of_scroll_bar, (left, self.topleft[1] + 4))
+        surf.blit(bottom_of_scroll_bar, (left, self.topleft[1] + 16*self.num_rows + 2))
         for num in xrange(4+1, 16*self.num_rows+2):
-            surf.blit(middle_of_scroll_bar, (self.topleft[0] + self.menu_width - 16, self.topleft[1] + num))
+            surf.blit(middle_of_scroll_bar, (left, self.topleft[1] + num))
         # Draw bar
-        bar_length = int((float(self.num_rows)/len(self.options)*self.units_per_row)*self.num_rows*16)
-        bar_position = int(((float(self.scroll)/self.units_per_row)/len(self.options)*self.units_per_row)*self.num_rows*16)
-        for num in xrange(bar_position, bar_length+bar_position):
-            surf.blit(scroll_bar_fill, (self.topleft[0] + self.menu_width - 16, self.topleft[1] + num))
+        total_num_rows = len(self.options)/self.units_per_row + 1
+        bar_length = int((float(self.num_rows)/total_num_rows)*self.num_rows*16)
+        bar_position = int((float(self.scroll)/total_num_rows)*self.num_rows*16)
+        for num in xrange(bar_position, bar_length+bar_position+2):
+            surf.blit(scroll_bar_fill, (left, self.topleft[1] + num + 1))
         # Draw arrows
         top_arrow = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (8, 4 + self.arrowCounter*6, 8, 6))
         bottom_arrow = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 4 + self.arrowCounter*6, 8 ,6))
-        surf.blit(top_arrow, (self.topleft[0] + self.menu_width - 16, self.topleft[1]))
-        surf.blit(bottom_arrow, (self.topleft[0] + self.menu_width - 16, self.topleft[1] + 16*self.num_rows + 2))
+        surf.blit(top_arrow, (left - 1, self.topleft[1]))
+        surf.blit(bottom_arrow, (left - 1, self.topleft[1] + 16*self.num_rows + 2))
 
 def drawUnitItems(surf, topleft, unit, include_top=False, include_face=False, right=True, shimmer=0):
     if include_top:
@@ -2090,8 +2095,8 @@ class RecordsDisplay(ChoiceMenu):
         #-- Flip horizontally
         RightScrollArrow = Engine.flip_horiz(LeftScrollArrow)
         width = 8
-        surf.blit(LeftScrollArrow, (self.topleft[0] + 8 - width, self.topleft[1] - 6))
-        surf.blit(RightScrollArrow, (self.topleft[0] + 8 + self.menu_width, self.topleft[1] - 6))
+        surf.blit(LeftScrollArrow, (self.topleft[0] + 8 - width + 1, self.topleft[1] - 6))
+        surf.blit(RightScrollArrow, (self.topleft[0] + 8 + self.menu_width - 1, self.topleft[1] - 6))
 
     def draw_cursor(self, surf, index):
         x_position = self.topleft[0] - 8 + self.cursorAnim[self.cursorCounter]

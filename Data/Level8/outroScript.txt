@@ -6,7 +6,7 @@ b;TownDark
 t;2
 u;Sam;Left
 u;Kayla;Right
-s;Kayla;The remaining soldiers in Vagnius's army have turned tail and run.{w};auto
+s;Kayla;The rest have turned tail and run.{w};auto
 s;Sam;Good riddance.{w}{br}I guess we can consider this another victory then.{w};auto
 s;Kayla;Tsk tsk. You sound so down.{w}{br}This was a victory!{w};auto
 s;Sam;There's still so much to do, and so little time.{w};auto
@@ -30,11 +30,11 @@ s;Ophie;...{w};auto
 s;Prim;Are you alright, Ophie?{w};auto
 s;Ophie;I'm fine...{w};auto
 s;Prim;What's wrong? You can talk to me.{w};auto
-s;Ophie;I've been gunning for Vagnius since, well.{w}{br}He was a demon!{w}{br}When he struck down Master Yohn, I thought he was some incarnation of pure evil,{w}{br}like a devil out of a storybook.{w}{br}But really he was just an ordinary man.{w}{br}Twisted, sure.{w}{br}But, he died just the same as the rest...{w};auto
-s;Prim;So... do you feel any better?{w};auto
+s;Ophie;...In my mind's eye, Vagnius was a demon.{w}{br}When he struck down Master Yohn, I thought he was some incarnation of pure evil,{w}{br}like a devil out of a storybook.{w}{br}But really he was just an ordinary man.{w}{br}Twisted, sure.{w}{br}But, he died just the same as the rest...{w};auto
+s;Prim;So... do you feel any better?{w}{br}Now that he's gone.{w};auto
 s;Ophie;Kind of?{w}{br}...I wish Master Yohn were here...{w};auto
 s;Prim;He is--{w}{br}in your heart and in your memories...{w};auto
-s;Ophie;I just keep looking for him...{w}{br}I miss his words of encouragement.{w};auto
+s;Ophie;I just keep looking for him...{w}{br}I miss him.{w};auto
 s;Prim;I do too...{w};auto
 r;Prim;Ophie
 m;Young Man from the East
@@ -43,8 +43,8 @@ b;TownDark
 t;2
 u;Sam;Left
 u;Joel;Right
-s;Joel;So now what, Sam?{w};auto
-s;Sam;For now, we rest.{w}{br}Tomorrow is the final act. If we fail there, we're done.{w}{br}But if we succeed, our long quest will finally be over.{w}{br}The Empire defeated.{w}{br}Althea on the throne.{w}{br}Kerala... finally free.{w};auto
+s;Joel;So now what, captain?{w};auto
+s;Sam;For now, we rest.{w}{br}Tomorrow is the final act.{w}{br}If we succeed, our long quest will finally be over.{w}{br}The Empire defeated.{w}{br}Althea on the throne.{w}{br}Kerala finally free.{w};auto
 s;Joel;It all comes down to tomorrow, then.{w};auto
 s;Sam;It all comes down to tomorrow.{w};auto
 r;Joel;Sam

@@ -699,7 +699,6 @@
         <desc>Armored bruisers who work well on a team.</desc>
     </class>  
 
-    <!-- Ballista -->
     <class name="Ballista">
         <id>13</id>
         <tier>1</tier>
@@ -713,8 +712,8 @@
         <tags></tags>
         <skills>1,True Strike</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,0,55,0,0,20,25</growths>
-		<bases>12,3,0,4,0,0,2,0,13</bases>
+		<growths>95,45,0,55,0,45,20,25</growths>
+		<bases>16,6,0,8,0,0,4,3,13</bases>
         <promotion>8,4,0,6,0,0,3,0,16</promotion>
 		<max>40,17,15,20,15,20,17,16,20</max>
         <desc>Long-range immobile siege weapons.</desc>

@@ -34,9 +34,9 @@ enemy;0;0;Vagnius;30,19;SoftGuard
 # Group
 group;Claw;Claw;Empire;The Empire's elite guard
 # 2 Ballista on cliff, 1 on top right
-enemy;0;0;Ballista;12;Ballista;22,24;HardGuard;Claw
-enemy;0;0;Ballista;15;Ballista;25,5;HardGuard;Claw
-enemy;0;0;Ballista;12;Ballista;23,23;HardGuard;Claw
+enemy;0;0;Ballista;13;Ballista;22,24;HardGuard;Claw
+enemy;0;0;Ballista;17;Ballista;25,5;HardGuard;Claw
+enemy;0;0;Ballista;13;Ballista;23,23;HardGuard;Claw
 # Starting Units = 31 generics
 # 4 Wyvern Riders and 1 Wyvern Lord on bottom right
 enemy;0;0;Dracoknight;10;Slim Lance;28,25;Pursue;Claw

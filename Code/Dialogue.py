@@ -686,7 +686,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'arrange_formation':
             player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
             formation_spots = [position for position, value in gameStateObj.map.tile_info_dict.iteritems() if 'Formation' in value]
-            for index, unit in enumerate(player_units):
+            for index, unit in enumerate(player_units[:len(formation_spots)]):
                 unit.leave(gameStateObj)
                 unit.remove_from_map(gameStateObj)
                 unit.position = formation_spots[index]
@@ -1147,7 +1147,12 @@ class Dialogue_Scene(object):
             new_pos = self.get_position(new_pos)
         # If name, then we want to find a point adjacent to that characters position
         else:
-            new_pos = [gameStateObj.get_unit_from_id(new_pos).position]
+            new_char = gameStateObj.get_unit_from_id(new_pos)
+            if new_char:
+                new_pos = [new_char.position]
+            else:
+                logger.error('Could not find unit %s', new_pos)
+                return
 
         # Shuffle positions if necessary
         if shuffle:

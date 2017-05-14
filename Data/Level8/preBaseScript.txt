@@ -6,46 +6,60 @@ add_to_market;Short Spear
 add_to_market;Oak Longbow
 add_to_market;Ruin
 add_to_market;Wyrmsfire
+# Show room
+b;TacticsFloor;map
+wm_add;Sam;7,2
+wm_add;Ophie;12,6
+wm_add;Prim;10,6
+wm_add;Theo;10,9
+wm_add;Renae;2,9
+wm_add;Drake;5,6
+wm_add;Joel;9,7
+wm_add;Althea;3,6
+wm_add;Nia;13,9
+wm_add;Eliza;5,9
+wm_add;Kayla;2,4
+t;2
+wait;500
+wm_cursor;7,2
+wait;1000
+wm_remove_cursor
+t;1
 b;TacticsRoomDay
 t;2
 u;Sam;FarRight
 s;Sam;Gather round everyone.{w}{br}I have an important announcement to make...{w};auto
-u;Joel;FarLeft
-u;Renae;MidLeft
-s;Joel;Uh-oh. Important announcements are never good news.{w};auto
-s;Sam;Actually, Joel, this is good news.{w}{br}I hope everyone present had a restful sleep, because it may be your last for a while.{w};auto
-s;Joel;How's that good news, boss?{w}{br}No sleep!?{w};auto
-s;Renae;Joel, let the man speak.{w};auto
-s;Joel;Right, right.{w}{br}Carry on, Sam.{w};auto
+u;Renae;MidLeft;u;Althea;FarLeft
+s;Sam;I hope everyone had a restful sleep, because it may be your last for a while.{w};auto
 s;Sam;Kayla, Theo, and I have spent the last few days decrypting the Empire's code... {w}{br}Now, getting the information out from that tome was not easy.{w}{br}All the data was encrypted with a...{w}{br}Well, actually, it was a variant of an advanced Vigarde cipher, really quite something--{w};auto
-s;Renae;What was in the code!?{w}{br}What did you find!{w};auto
-s;Sam;Right... Well...{w}{br}let's just say our timetable's been moved up.{w};auto
-r;Joel
-u;Althea;FarLeft
+s;Renae;Out with it, Sam!{w}{br}What did you find?{w};auto
+s;Sam;Right... well...{w}{br}let's just say our timetable's been moved up.{w};auto
 s;Althea;Our timetable?{w};auto
 s;Sam;For putting you on the throne.{w};auto
 r;Renae
 u;Ophie;MidLeft
-s;Ophie;No more beating around the bush.{w}{br}What did you discover?{w};auto
-s;Sam;There was a treasure trove of information in that tome.{w}{br}It's no wonder the Empire went to such great lengths to protect it.{w}{br}Kayla, why don't you explain it?{w};auto
+s;Ophie;No more beating around the bush, Sam.{w}{br}What did you discover?{w};auto
+s;Sam;That tome held a trove of information.{w}{br}It's no wonder the Empire went to such lengths to protect it.{w}{br}Kayla, why don't you explain it?{w};auto
 u;Kayla;MidRight
 s;Kayla;My pleasure, Sam.{w}{br}The Confederacy has reinforced their northern front.{w}{br}We were hoping to force the Empire to commit some of their own armies there as well.{w}{br}However, we didn't expect the Empire to react so strongly.{w};auto
-s;Althea;They're attacking the Confederacy directly!?{w};auto
-s;Kayla;Tsk Tsk. Even the Empire would not be so bold, Althea.{w}{br}However, the Empress has commandeered nearly four-fifths of Archon Ulver's army.{w}{br}They are to reinforce that front.{w};auto
+s;Ophie;They're going to attack the Confederacy directly!?{w};auto
+s;Kayla;Tsk Tsk. Even the Empire would not be so bold.{w}{br}However, the Empress has commandeered nearly four-fifths of Archon Ulver's army.{w}{br}They are to reinforce that front.{w};auto
 s;Ophie;So that leaves Archon Ulver's force in Rajas... {w};auto
 s;Kayla;Very, very weak.{w};auto
 s;Ophie;When does Ulver's army leave?{w};auto
 s;Kayla;They've already started.{w};auto
-s;Ophie;...Ulver's guard is down.{w};auto
-s;Kayla;Right.{w}{clear}Unfortunately, we can only take advantage of this weakness for a short period of time.{w}{br}Another army of recruits from the Imperial heartlands will reinforce Ulver soon.{w};auto
-s;Sam;We only have three days before the new army arrives,{w}{br}if they're not held up on their march.{w};auto
+s;Ophie;So Ulver's guard is down!{w};auto
+s;Kayla;Another army of recruits from the Imperial heartlands will reinforce Ulver soon.{w};auto
+s;Sam;We only have three days before the new army arrives.{w};auto
 s;Ophie;So, what's our plan?{w};auto
-s;Sam;Simply put, we finish this.{w}{br}We take back Kerala.{w}{br}We put Althea on the Lion Throne.{w}{br}We take this chance, because we may never get another.{w}{br}With the Imperial army weakened, we can attack Rajas directly.{w}{br}Kiley's army assaults the front gates, along with a host of loyalists.{w}{br}In the meantime, we sneak into the Sun Palace and capture Archon Ulver,{w}{br}cutting the Imperial head off the proverbial snake.{w}{br}With their leader deposed, the remaining Imperials should be easily routed.{w};auto
+s;Sam;Simply put, we finish this.{w}{br}We take back Kerala.{w}{br}We put the rightful heir back on the Lion Throne.{w};auto
+s;Althea;...{w};auto
+s;Sam;With the Imperial army weakened, we can attack Rajas directly.{w}{br}Kiley's army, along with a host of loyalists, will assault the front gates.{w}{br}In the meantime, we will sneak into the Sun Palace and capture or kill Archon Ulver,{w}{br}cutting the Imperial head off the proverbial snake.{w}{br}With their leader deposed, the remaining Imperials should be easily routed.{w};auto
 s;Ophie;Then Althea can take the throne.{w}{br}Kerala will be free of foreign rule.{w};auto
-s;Sam;And we'll have the Confederacy's support.{w}{br}We'll announce Althea's presence after our victory.{w}{br}She looks just like her mother, so there should be little doubt that she's no pretender.{w}{br}The Empire will be unlikely to challenge us with the Confederacy openly backing us,{w}{br}and we'll have the support of all of Kerala.{w};auto
+s;Sam;And we'll have the Confederacy's support.{w}{br}We'll announce Althea's presence after our victory.{w}{br}She looks just like her mother, so no accusations of a pretender are likely.{w}{br}The Empire will be unlikely to challenge us after the Confederacy's moves,{w}{br}and we'll have the support of all of Kerala.{w};auto
 r;Althea;Kayla
 u;Joel;FarLeft
-s;Joel;That's quite the ambitious plan, Sam...{w};auto
+s;Joel;That's an ambitious plan...{w}{br}Ya think we can pull it off?{w};auto
 s;Sam;Another opportunity like this may not come again...{w}{br}Is everyone prepared to do this?{w};auto
 s;Ophie;I sure am!{w};auto
 r;Ophie
@@ -53,7 +67,7 @@ u;Prim;MidLeft
 s;Sam;Prim?{w};auto
 s;Prim;Anything that will help the Keralan people.{w};auto
 s;Sam;Joel?{w};auto
-s;Joel;Aye. Count me in, chief.{w};auto
+s;Joel;Aye. Count me in, captain.{w};auto
 r;Prim
 u;Eliza;MidLeft
 s;Sam;Eliza?{w};auto
@@ -61,7 +75,7 @@ s;Eliza;I didn't tag along with you lot this long just to drop out now...{w};aut
 r;Eliza;Joel
 u;Kayla;Left
 s;Sam;Kayla?{w};auto
-s;Kayla;Tsk Tsk, Sam. Anything for you, dearest.{w}{br}Plus, if we succeed here, well, I'll get a fantastic promotion!{w};auto
+s;Kayla;Tsk Tsk, Sam. Anything for you, dearest.{w}{br}Plus, if we succeed here, I'll get a fantastic promotion!{w};auto
 r;Kayla
 u;Theo;Left
 s;Sam;Theo?{w};auto
@@ -71,7 +85,7 @@ u;Drake;MidLeft
 u;Althea;FarLeft
 s;Sam;Althea?{w};auto
 s;Althea;Uh... I guess?{w};auto
-s;Sam;Is something wrong, Althea?{w};auto
+s;Sam;Is something wrong?{w};auto
 s;Althea;No, no...{w}{br}We should restore Kerala's independance!{w};auto
 s;Sam;Ok... Drake?{w};auto
 s;Drake;It would be my honor to return Althea to her rightful station as queen.{w};auto
