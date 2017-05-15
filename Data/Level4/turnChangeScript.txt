@@ -11,6 +11,15 @@ if;gameStateObj.turncount == 1
 	add_unit;pack2_1;r1
 	add_unit;pack2_2;r1
 	wait;500
+	if;not gameStateObj.check_dead('Theo')
+		set_cursor;15,8;force_hold
+		disp_cursor;1
+		wait;1000
+		disp_cursor;0
+		u;Theo;FarLeft
+		s;Theo;Ah! Ancient ruins, here?{w}{br}They might hold interest for my research.{w}{br}The others won't notice if I take a short break, right?{w};auto;thought_bubble
+		r;Theo
+	end
 elif;gameStateObj.turncount == 2
 	m;Combat Theme 4
 	t;1

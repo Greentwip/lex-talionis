@@ -1472,7 +1472,7 @@ class BaseCodexChildState(StateMachine.State):
             if 'WorldMap' in gameStateObj.game_constants:
                 options.insert(1, WORDS['Map'])
             topleft = 4 + gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.topleft[1] + (4*16 if gameStateObj.support else 3*16)
-            gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft)
+            gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft, gem=False)
 
         # Transition in:
         if gameStateObj.stateMachine.from_transition():

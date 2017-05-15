@@ -2038,7 +2038,11 @@ class RecordsDisplay(ChoiceMenu):
         self.total_turns = sum([option[1] for option in self.options])
         self.mvp_dict = self.get_game_mvp_dict(stats)
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8))
+        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        img = IMAGESDICT['Shimmer2']
+        self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
+        self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
+
         self.top_banner = self.create_top_banner()
 
     def set_up(self):
@@ -2165,7 +2169,11 @@ class UnitStats(RecordsDisplay):
 
         self.set_up()
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8))
+        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        img = IMAGESDICT['Shimmer2']
+        self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
+        self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
+
         self.top_banner = self.create_top_banner()
 
     def create_top_banner(self):
@@ -2215,7 +2223,11 @@ class MVPDisplay(RecordsDisplay):
         self.total_turns = sum([level.turncount for level in stats])
         self.mvp_dict = self.get_game_mvp_dict(stats)
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8))
+        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        img = IMAGESDICT['Shimmer2']
+        self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
+        self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
+
         self.top_banner = self.create_top_banner()
 
     def draw(self, surf, offset_x=0, offset_y=0):
@@ -2255,7 +2267,11 @@ class ChapterStats(MVPDisplay):
 
         self.set_up()
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8))
+        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        img = IMAGESDICT['Shimmer2']
+        self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
+        self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
+
         self.top_banner = self.create_top_banner()
 
     def create_top_banner(self):

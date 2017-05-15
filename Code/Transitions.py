@@ -201,10 +201,15 @@ class StartOption(StateMachine.State):
                 self.selection = self.menu.getSelection()
                 if self.selection == WORDS['Continue']:
                     self.state = 'wait'
-                elif os.path.exists(SUSPEND_LOC) and not self.banner and self.selection in [WORDS['Load Game'], WORDS['Restart Level']]:
+                elif os.path.exists(SUSPEND_LOC) and not self.banner and self.selection in [WORDS['Load Game'], WORDS['Restart Level'], WORDS['New Game']]:
                     SOUNDDICT['Select 2'].play()
-                    text = 'Loading a game will remove suspend!'
-                    self.banner = MenuFunctions.CreateBaseMenuSurf((180, 24), 'DarkMenuBackground')
+                    if self.selection == WORDS['New Game']:
+                        text = 'Starting a new game will remove suspend!'
+                        width = 200
+                    else:
+                        text = 'Loading a game will remove suspend!'
+                        width = 180
+                    self.banner = MenuFunctions.CreateBaseMenuSurf((width, 24), 'DarkMenuBackground')
                     self.banner = Image_Modification.flickerImageTranslucent(self.banner, 10)
                     position = (4, 6)
                     MenuFunctions.OutlineFont(BASICFONT, text, self.banner, colorDict['off_white'], colorDict['off_black'], position)
