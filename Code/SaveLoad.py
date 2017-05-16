@@ -403,7 +403,7 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True):
 def auto_level(bases, growths, level, max_stats):
     stats = [sum(x) for x in zip(bases, GROWTHS['enemy_bases'])]
     growths = [sum(x) for x in zip(growths, GROWTHS['enemy_growths'])]
-    growth_points = [0 for growth in growths]
+    growth_points = [50 for growth in growths]
 
     if CONSTANTS['leveling'] == 'fixed':
         for index, growth in enumerate(growths):

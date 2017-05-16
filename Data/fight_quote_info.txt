@@ -140,21 +140,21 @@ if;self.optionalunit.team == 'player'
 	elif;self.optionalunit2.name == 'Jakin'
 		if;not 'JakinDefault' in gameStateObj.event_triggers
 			u;Jakin;Left
-			s;Jakin;Memories of flies in the web of a spider.{w}{br}Sorrow for the flies, but as a spider, duty upheld.{w}{br}A deadly dance then, spider and fly.{w};auto
+			s;Jakin;A deadly dance then, spider and fly.{w};auto
 			r;Jakin
 			trigger_event;JakinDefault
 		end
 	elif;self.optionalunit2.name == 'Boaz'
 		if;not 'BoazDefault' in gameStateObj.event_triggers
 			u;Boaz;Left
-			s;Boaz;Wohoho!{w}{br}I've slain many beast and men alike.{w}{br}You shall not pose any greater challenge!{w};auto
+			s;Boaz;I've slain many beast and men alike.{w}{br}You shall not pose any greater challenge!{w};auto
 			r;Boaz
 			trigger_event;BoazDefault
 		end
 	elif;self.optionalunit2.name == 'Adjutant'
 		if;not 'AdjutantDefault' in gameStateObj.event_triggers
 			u;Adjutant;Left
-			s;Adjutant;You pests!{w}{br}You should be grateful the Empire ever graced your backwoods province.{w};auto
+			s;Adjutant;Insolent pests!{w}{br}You should be grateful the Empire ever graced your backwoods province.{w};auto
 			r;Adjutant
 			trigger_event;AdjutantDefault
 		end

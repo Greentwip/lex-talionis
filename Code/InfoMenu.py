@@ -198,7 +198,7 @@ class InfoMenu(StateMachine.State):
         UnitInfoSurface.blit(PortraitNameSurf, (p_left, p_top))
         # Blit the name on top of the unit name banner
         NameSize = FONT['text_white'].size(self.unit.name)
-        position = (p_left + PortraitBGSurf.get_width()/2 - NameSize[0]/2, p_top + PortraitNameSurf.get_height()/2 - NameSize[1]/2)
+        position = (p_left + PortraitNameSurf.get_width()/2 - NameSize[0]/2, p_top + PortraitNameSurf.get_height()/2 - NameSize[1]/2)
         FONT['text_white'].blit(self.unit.name, UnitInfoSurface, position) 
         # Blit the unit's class on the simple info block
         FONT['text_white'].blit(self.unit.klass.replace('_', ' '), UnitInfoSurface, (TILEWIDTH/2, WINHEIGHT - TILEHEIGHT * 3.25 - 1))

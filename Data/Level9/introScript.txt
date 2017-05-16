@@ -5,7 +5,7 @@ t;2
 u;Joel;Left;u;Coyote;Right
 s;Joel;Are you sure we're going the right way, Coyote?{w};auto
 s;Coyote;Yes.{w};auto
-s;Joel;I mean, I don't want to cast doubt on your judgement, my man...{w}{br}But I could've sworn I'd seen that dead rat before.{w};auto
+s;Joel;I mean, I don't want to cast doubt on your judgement, my man...{w}{br}But I reckon' I've seen that dead rat before.{w};auto
 move_sprite;Joel;-24,0
 u;Sam;MidLeft
 # This line is bad
@@ -13,10 +13,10 @@ s;Sam;Joel, quit your whining and stay alert.{w}{br}Our exit should be nearby.{w
 move_sprite;Coyote;24,0
 u;Nia;MidRight
 s;Sam;Hmm, Nia?{w};auto
-s;Nia;Someone else...{w}{br}Someone else is down here with us.{w};auto
+s;Nia;S-Someone else...{w}{br}Someone else is here...{w};auto
 s;Nia;...Many someones.{w};auto
 s;Sam;Coyote, you said this passage was abandoned.{w};auto
-s;Coyote;I said it was old.{w};auto
+s;Coyote;Old, not abandoned.{w};auto
 s;Sam;Urgh...{w}{br}Everyone, be on your guard.{w}{br}We don't want any surprises.{w};auto
 r;Joel;Nia;Sam;Coyote
 m;Crisis in the North
@@ -38,7 +38,7 @@ set_cursor;Ophie;force_hold
 u;Ophie;MidLeft
 s;Ophie;Woah!{w};auto
 u;Joel;FarLeft
-s;Joel;By the light... What is this place...{w};auto
+s;Joel;By the light...{w};auto
 r;Ophie
 u;Althea;MidLeft
 s;Althea;This is no sewer...{w};auto
@@ -54,22 +54,21 @@ wait;1000
 disp_cursor;0
 u;Althea;MidLeft;u;Sam;FarLeft;u;Jakin;MidRight
 s;Althea;Eek!{w};auto
-s;Jakin;''What is my purpose?''{w}{clear}Said the spider to the fly.{w};auto
+s;Jakin;Purpose...{w}{br}A bird does not wonder if its purpose is to fly.{w};auto
 u;Boaz;FarRight
-s;Boaz;You run from me, and I'll hunt you. Hahaha!{w};auto
-s;Jakin;Play a game, if you dare to seek audience with the king.{w};auto
-s;Althea;Who are you...{w}{br}What sort of game...{w};auto
+s;Boaz;No time for philosophy, my friend. Prey is afoot!{w};auto
+s;Althea;Who are you...{w}{br}What is this...{w};auto
 s;Boaz;Hmm? Did you hear something, Jakin?{w};auto
 s;Jakin;...{w};auto
 move_sprite;Boaz;-48,0
 move_sprite;Jakin;48,0;force_hold
 s;Boaz;What's a nice girl like you doing in the undercity?{w};auto
 move_sprite;Althea;12,0;force_hold
-s;Althea;We need to get to Rajas Palace!{w};auto
-s;Boaz;Hahaha! Such vigor!{w}{br}I'll take pity on you, little girl.{w}{br}You want to cross these waters, you have to play Jakin's game.{w}{br}If you can make it by us alive, then you're free.{w}{br}Otherwise, well... it ain't gonna end well.{w};auto
+s;Althea;O-Out of our way!{w}{br}We need to get to the palace!{w};auto
+s;Boaz;Hahaha! Such vigor!{w}{br}I'll take pity on you, little girl.{w}{br}You want to cross these waters, you have to play our game.{w}{br}There's only one rule.{w}{br}If you can make it by us alive, then you're free.{w}{br}Otherwise, well... Hahaha!.{w};auto
 s;Althea;What sort of sick game is this...{w};auto
-s;Boaz;Wohoho! The greatest of games!{w}{br}Yah just have to bet your life to play!{w}{br}Hahaha!{w};auto
-s;Sam;Insane...{w};auto
+s;Boaz;The greatest of games!{w}{br}You just have to bet your life to play!{w}{br}Hahaha!{w};auto
+s;Sam;You're insane...{w};auto
 s;Boaz;Come on Jakin. Let's scram.{w}{br}We've got to give them a fighting chance, after all.{w};auto
 r;Jakin;Boaz;Althea;Sam
 move_unit;Jakin;4,4;warp

@@ -1,4 +1,4 @@
-import random
+import random, math
 from GlobalConstants import *
 import Engine, Image_Modification
 

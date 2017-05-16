@@ -759,10 +759,11 @@
     <status name="Shimmer">
         <id>Shimmer</id>
         <icon_index>10,6</icon_index>
-        <desc>Grants Avoid +30 against non-adjacent enemies.</desc>
+        <desc>Grants Avoid +30 against non-adjacent attackers.</desc>
         <components>conditional_avoid,class_skill</components>
 
-        <conditional_avoid>30;Utility.gt(Utility.calculate_distance(self.position, target.position), 1)</conditional_avoid>
+        <!-- avoid is swapped because it is only taken into account when being attacked -->
+        <conditional_avoid>30;Utility.gt(Utility.calculate_distance(self.position, target.position), 1) and mode == 'Attack'</conditional_avoid>
     </status>
 
     <status name="Rex Aegis">

@@ -1385,3 +1385,55 @@ Wexp: 75, 0, 20, 0, 0, 0, 0
 Items: Iron Axe 19, Steel Axe 19, Iron Lance 43, Potion 2
 *** Convoy:
 Items: Spiritbane 3, Secret Book 1, Angelic Robe 1, Mana Ring 1, Talisman 1, Windwall 10, Magebane Swd 15, Energy Ring 1, Speedwings 1, Fly 10, Spiritbane 2, Barkskin 3, Energy Ring 1, Blizzard 4, Slim Lance 15, Secret Book 1, Great Lance 22, Iron Knife 14, Rusted Sword 9, Javelin 1, Hatchet 19, Nyx Ward 15, Iron Axe 45, Hatchet 35, Hand Axe 14, Great Sword 22, Fire Ward 14, Tomahawk 10, Brave Sword 28, Superior Axe 10, Scathe 9, Levin Sword 25, Yew Longbow 10, Mithril Knife 10, Talisman 1, Mithril Mail 1, Long Spear 10, Mana Ring 1
+
+=== Level 9 === Money: 2875
+*** Ophie: Riposte,Vantage,Strength +2,Critical,Shimmer
+Lvl 17, Exp 21
+Wexp: 94, 0, 0, 0, 0, 0, 0
+Items: Mithril Knife 6, Magebane Swd 15, Brave Sword 28, Potion 2, Mithril Knife 10
+*** Prim: Healtouch,Miracle,Futuresight
+Lvl 13, Exp 88
+Wexp: 0, 0, 0, 0, 90, 0, 16
+Items: Heal 1, Physic 6, Glimmer Ward 33, Nyx Ward 25, Mend 5
+*** Joel: Cleave,Shove,Heavy Hitter
+Lvl 14, Exp 28
+Wexp: 0, 0, 79, 23, 0, 0, 0
+Items: Mithril Axe 14, Great Axe 23
+*** Nia: Prescience,Critical,Evasion,Maximum HP +5
+Lvl 18, Exp 16
+Wexp: 0, 0, 0, 98, 0, 0, 0
+Items: Yew Bow 8, Willow Bow 10, Longbow 12, Yew Longbow 9, Elixir 2
+*** Althea: Focus,Maximum HP +5,Conductance,Movement +1,Speed +2
+Lvl 15, Exp 85
+Wexp: 0, 0, 0, 0, 0, 82, 0
+Items: Wind Ward 26, Water Ward 20, Earth Ward 25, Vulnerary 3, Wyrmsfire 8
+*** Drake: Canto,Savior,Charisma,Movement +1
+Lvl 15, Exp 10
+Wexp: 41, 55, 0, 0, 0, 0, 0
+Items: Great Lance 25, Vulnerary 3
+*** Renae: Locktouch,Steal,Ghost,Canto
+Lvl 15, Exp 65
+Wexp: 64, 0, 0, 18, 0, 0, 0
+Items: Levin Sword 25, Oak Bow 12, Steel Sword 22, Great Sword 20, Vulnerary 1
+*** Theo: Provoke,Shove,Regeneration,Slow
+Lvl 14, Exp 52
+Wexp: 16, 70, 0, 0, 0, 0, 0
+Items: Axereaver 7, Javelin 20, Iron Lance 43, Great Lance 24, Vulnerary 3
+*** Eliza: Synergy,Maximum HP +5,Speed +2,Movement +1
+Lvl 15, Exp 97
+Wexp: 0, 58, 28, 0, 0, 0, 0
+Items: Iron Axe 42, Great Lance 16, Steel Lance 24, Steel Axe 19, Vulnerary 3
+*** Sam: Inspiration,Skill Aura,Rally,Underdog,Movement +1
+Lvl 15, Exp 0
+Wexp: 0, 0, 0, 0, 99, 0, 0
+Items: Mend 12, Heal 27, Glimmer Ward 17, Shine Ward 22, Prim's Charm --
+*** Kayla: Hex,Empowered,Summon,Movement +1
+Lvl 15, Exp 22
+Wexp: 0, 0, 0, 0, 0, 0, 89
+Items: Scathe 5, Flux Ward 19, Nyx Ward 14, Vulnerary 3, Brave Axe 28
+*** Coyote: Initiative,Resist Status,Poise,Movement +1
+Lvl 15, Exp 50
+Wexp: 79, 0, 23, 0, 0, 0, 0
+Items: Steel Sword 28, Hatchet 33, Mithril Sword 8, Elixir 1
+*** Convoy:
+Items: Spiritbane 3, Secret Book 1, Angelic Robe 1, Mana Ring 1, Talisman 1, Windwall 10, Energy Ring 1, Speedwings 1, Fly 10, Spiritbane 2, Barkskin 3, Energy Ring 1, Blizzard 4, Slim Lance 15, Secret Book 1, Rusted Sword 9, Hatchet 19, Hand Axe 14, Talisman 1, Mithril Mail 1, Long Spear 10, Mana Ring 1, Iron Axe 19, Javelin 15, Iron Lance 35, Swordreaver 7, Angelic Robe 1, Iron Sword 11, Wind Ward 1, Fire Ward 14, Speedwings 1, Aether Ward 14, Silence 3, Vulnerary 3, Superior Lance 10, Iron Knife 2, Meteor 1, Mithril Lance 9, Iron Sword 44

@@ -21,10 +21,10 @@ if;gameStateObj.get_total_party_members() == 12
     r;Eliza;Prim
     u;Sam;Right;u;Ophie;Left
 elif;gameStateObj.get_total_party_members() > 8
-    s;Ophie;No, not all.{w}{br}I guess we'll just have to go on without them.{w};auto
-    s;Sam;Err...{w}{br}Why couldn't I have done more...{w};auto
-    s;Ophie;No need to beat yourself up, Sam.{w}{br}We're still strong enough to take on Ulver!{w};auto
-    s;Sam;Their sacrifices will be remembered.{w};auto
+    s;Ophie;No, not all.{w}{br}I guess we'll just have to go on.{w};auto
+    s;Sam;...{w};auto
+    s;Ophie;No need to beat yourself up.{w}{br}We're still strong enough to take on Ulver!{w};auto
+    s;Sam;...Their sacrifices will be remembered.{w};auto
 else
     s;Ophie;Those goons sure took quite the toll on our numbers.{w};auto
     s;Sam;...Sigh...{w};auto
@@ -33,7 +33,7 @@ else
     s;Ophie;It doesn't matter.{w}{br}We've come so far.{w}{br}We can't give up now.{w};auto
     s;Sam;You're right. We have to proceed.{w}{br}We must, for Kerala's sake.{w}{br}Their sacrifices will be remembered.{w};auto
 end
-s;Ophie;Well, no use dallying.{w}{clear}We're the Resistance!{w}{br}Ulver will rue the day he reckoned with us.{w};auto
+s;Ophie;We're the Resistance!{w}{br}Ulver will rue the day he reckoned with us.{w};auto
 s;Sam;Let's go then. Our final battle awaits.{w};auto
 r;Sam;Ophie
 t;1
