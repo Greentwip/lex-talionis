@@ -6,34 +6,7 @@ t;2
 u;Sam;Right;u;Ophie;Left
 s;Ophie;Phew... Those jokers would not let up.{w}{br}Who were they anyway, Sam?{w};auto
 s;Sam;Now is not the time for conjecture.{w}{br}Archon Ulver himself is beyond these doors.{w};auto
-s;Ophie;Right. Our victory is at hand!{w};auto
-s;Sam;Are we all here?{w};auto
-if;gameStateObj.get_total_party_members() == 12
-    r;Ophie
-    u;Prim;Left
-    s;Prim;Yep! Nothing can stop us on our righteous path!{w};auto
-    r;Sam
-    u;Eliza;Right
-    s;Eliza;Hahaha.{w};auto
-    s;Prim;What?{w};auto
-    s;Eliza;Nothing, nothing, Prim.{w}{br}I don't want to ruin it.{w}{br}You're too innocent for words.{w};auto
-    s;Prim;Uh... okay.{w};auto
-    r;Eliza;Prim
-    u;Sam;Right;u;Ophie;Left
-elif;gameStateObj.get_total_party_members() > 8
-    s;Ophie;No, not all.{w}{br}I guess we'll just have to go on.{w};auto
-    s;Sam;...{w};auto
-    s;Ophie;No need to beat yourself up.{w}{br}We're still strong enough to take on Ulver!{w};auto
-    s;Sam;...Their sacrifices will be remembered.{w};auto
-else
-    s;Ophie;Those goons sure took quite the toll on our numbers.{w};auto
-    s;Sam;...Sigh...{w};auto
-    s;Ophie;Sam?{w};auto
-    s;Sam;I'm not sure...{w}I'm not sure we'll be able to do this... with so few.{w}{br}I didn't expect to be waylaid on the way here.{w};auto
-    s;Ophie;It doesn't matter.{w}{br}We've come so far.{w}{br}We can't give up now.{w};auto
-    s;Sam;You're right. We have to proceed.{w}{br}We must, for Kerala's sake.{w}{br}Their sacrifices will be remembered.{w};auto
-end
-s;Ophie;We're the Resistance!{w}{br}Ulver will rue the day he reckoned with us.{w};auto
+s;Ophie;Right. We're the Resistance!{w}{br}Ulver will rue the day he reckoned with us.{w};auto
 s;Sam;Let's go then. Our final battle awaits.{w};auto
 r;Sam;Ophie
 t;1

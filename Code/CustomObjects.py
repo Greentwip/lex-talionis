@@ -494,6 +494,7 @@ class BoundaryManager(object):
             ValidSpells = unit.getExcessSpellAttacks(gameStateObj, ValidMoves, boundary=True)
         self._set(ValidAttacks, 'attack', unit.id)
         self._set(ValidSpells, 'spell', unit.id)
+        #print(unit.name, unit.position, unit.klass, unit.event_id)
         self.surf = None
 
     def _remove_unit(self, unit, gameStateObj):
@@ -529,6 +530,7 @@ class BoundaryManager(object):
             for key, grid in self.grids.iteritems():
                 # What other units were affecting that position -- only enemies can affect position
                 other_units |= {other_unit for other_unit in gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y]) if not gameStateObj.compare_teams(unit.team, other_unit.team)}
+                #print([(other_unit.name, other_unit.position, other_unit.event_id, other_unit.klass, x, y) for other_unit in other_units])
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
             for other_unit in other_units:

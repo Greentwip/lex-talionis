@@ -201,7 +201,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             cur_unit = UnitObject.UnitObject(u_i)
 
             # Status Effects and Skills
-            get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
+            get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False, seed=sum(u_i['position']))
             # Personal Skills
             personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []    ### Actually add statuses
             c_s = [StatusObject.statusparser(status) for status in personal_skills]
@@ -259,14 +259,14 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     cur_unit = UnitObject.UnitObject(u_i)
 
     # Reposition units
-    cur_unit.position = u_i['position']
-
-    # Status Effects and Skills
-    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj)
-
     if u_i['event_id'] != "0": # Unit does not start on board
         cur_unit.position = None
         reinforceUnits[u_i['event_id']] = (cur_unit.id, u_i['position'])
+    else: # Unit does start on board
+        cur_unit.position = u_i['position']
+
+    # Status Effects and Skills
+    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, seed=sum(u_i['position']))
 
     # Extra Skills
     if len(unitLine) == 10:
@@ -307,7 +307,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     unit = UnitObject.UnitObject(u_i)
 
     # Status Effects and Skills
-    get_skills(class_dict, unit, classes, u_i['level'], gameStateObj)
+    get_skills(class_dict, unit, classes, u_i['level'], gameStateObj, seed=sum(u_i['position']))
 
     return unit
 
@@ -375,7 +375,7 @@ def get_unit_info(class_dict, klass, level, item_line):
 
     return stats, growths, growth_points, items, wexp
 
-def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True):
+def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0):
     position = unit.position
     class_skills = []
     for index, klass in enumerate(classes):
@@ -387,9 +387,9 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True):
         for status in class_skills:
             if status == 'Feat':
                 counter = 0
-                while StatusObject.feat_list[(position[0] + position[1] + counter)%10] in class_skills:
+                while StatusObject.feat_list[(seed + counter)%10] in class_skills:
                     counter += 1
-                class_skills.append(StatusObject.feat_list[(position[0] + position[1] + counter)%10])
+                class_skills.append(StatusObject.feat_list[(seed + counter)%10])
     class_skills = [status for status in class_skills if status != 'Feat']
     logger.debug('Class Skills %s', class_skills)
     ### Actually add statuses

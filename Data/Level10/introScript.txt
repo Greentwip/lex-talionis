@@ -10,13 +10,13 @@ t;1
 b;Palace
 t;2
 u;Ulver;Left;u;Soldier1;Right
-s;Soldier1;Sir, the insurgents have breached the North Gate.{w};auto
+s;Soldier1;Milord, the insurgents have breached the North Gate.{w};auto
 s;Ulver;Hmmm.{w}{br}Tell Commander Praetos to move his forces there.{w}{br}Push those rebels back.{w};auto
 s;Soldier1;Right away, milord.{w};auto
 r;Soldier1
 remove_unit;soldier1
 u;Adjutant;Right
-s;Adjutant;Sir, I'm receiving reports of an insurgent group below the Palace.{w};auto
+s;Adjutant;Milord, I'm receiving reports of an insurgent group below the Palace.{w};auto
 s;Ulver;The Resistance.{w};auto
 s;Adjutant;Perhaps, milord...{w};auto
 s;Ulver;I am certain of it.{w};auto
@@ -31,19 +31,22 @@ s;Ulver;The strong must be gracious to the weak, Adjutant.{w}{br}This is one of 
 s;Adjutant;Well then, I will allow the Resistance to pass.{w};auto
 s;Ulver;Let us see how they fare.{w};auto
 r;Ulver;Adjutant
-set_camera;8,36;16,36
+end_skip
 #set_cursor;12,36
 t;1
 remove_background
 t;2
+set_camera;8,36;16,36
 add_unit;Sam;12,36
 add_unit;Ophie;13,36
 wait;200
 u;Sam;Left;u;Ophie;Right
 s;Sam;It looks like we made it after all.{w}{br}Coyote's passage dropped us right in the center of the palace.{w}{br}Ulver should be right beyond those doors.{w};auto 
 s;Ophie;Then what are we waiting for?{w};auto
-r;Ophie
+r;Ophie;Sam
 move_unit;Ophie;12,29
+start_move
+u;Sam;Left
 s;Sam;I'll never get over that kid's unnatural enthusiasm.{w}{br}Oh well, better to die with hope than despair...{w};auto
 r;Sam
 t;1
