@@ -149,9 +149,9 @@ def farthest_away_pos(unit, valid_moves, all_units):
         return None
 
 def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
-    #import time
     #print('Source:', len(source_pos), source_pos)
     #print('Dest:', len(dest_pos), dest_pos)
+    #import time
     #time1 = time.clock()
 
     # This is important so we can change the values of this while we iterate over it.
@@ -159,129 +159,77 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
         def __init__(self):
             self.visibility = 'unknown'
 
-    """
-    def get_line(start, end):
-        #Bresenham's Line Algorithm
+    def get_line2(start, end):
+        # This one is ~3-6 times faster than get_line1
+        if start == end:
+            return True
+        #SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
         # Setup initial conditions
         x1, y1 = start
         x2, y2 = end
         dx = x2 - x1
         dy = y2 - y1
-     
-        # Determine how steep the line is
-        is_steep = abs(dy) > abs(dx)
-     
-        # Rotate line
-        if is_steep:
-            # Swap each's x and y coordinates
-            x1, y1 = y1, x1
-            x2, y2 = y2, x2
-     
-        # Swap start and end points if necessary and store swap state
-        #swapped = False
-        if x1 > x2:
-            # Swap each one with the other.
-            x1, x2 = x2, x1
-            y1, y2 = y2, y1
-            #swapped = True
-     
-        # Recalculate differentials
-        dx = x2 - x1
-        dy = y2 - y1
-     
-        # Calculate error
-        error = dx/2 #int(dx / 2.0)
-        ystep = 1 if y1 < y2 else -1
-     
-        # Iterate over bounding box generating points between start and end
-        y = y1
-        for x in range(x1, x2 + 1):
-            coord = (y, x) if is_steep else (x, y)
-            if opaque(coord):
-                return False
-            error -= abs(dy)
-            if error < 0:
+        x, y = x1, y1
+
+        xstep, ystep = 1, 1
+        if dy < 0:
+            ystep = -1
+            dy = -dy
+        if dx < 0:
+            xstep = -1
+            dx = -dx
+        ddy, ddx = 2*dy, 2*dx
+
+        if ddx >= ddy:
+            errorprev = error = dx
+            for i in range(dx):
+                x += xstep
+                error += ddy
+                if error > ddx:
+                    y += ystep
+                    error -= ddx
+                    if error + errorprev < ddx: # bottom square
+                        pos = x, y - ystep
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    elif error + errorprev > ddx: # left square
+                        pos = x - xstep, y
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    else:
+                        pos1, pos2 = (x, y - ystep), (x - xstep, y)
+                        if gameStateObj.map.tiles[pos1].opaque and gameStateObj.map.tiles[pos2].opaque:
+                            return False
+                pos = x, y
+                if pos != end and gameStateObj.map.tiles[pos].opaque:
+                    return False
+                errorprev = error
+        else:
+            errorprev = error = dy
+            for i in range(dy):
                 y += ystep
-                error += dx
+                error += ddx
+                if error > ddy:
+                    x += xstep
+                    error -= ddy
+                    if error + errorprev < ddy: # bottom square
+                        pos = x - xstep, y
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    elif error + errorprev > ddy: # left square
+                        pos = x, y - ystep
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    else:
+                        pos1, pos2 = (x, y - ystep), (x - xstep, y)
+                        if gameStateObj.map.tiles[pos1].opaque and gameStateObj.map.tiles[pos2].opaque:
+                            return False
+                pos = x, y
+                if pos != end and gameStateObj.map.tiles[pos].opaque:
+                    return False
+                errorprev = error
+        assert x == x2 and y == y2
         return True
-
-    def get_line2(start, end):
-        # My own personal LOS algorithm
-        print('Start:', start, "End:", end)
-        logger.debug('Start: %s End: %s', start, end)
-        x1, y1 = start
-        x2, y2 = end
-        dx = x2 - x1
-        dy = y2 - y1
-        # Keeps a list of explored tiles on the way to the goal
-        # If ever there are no more tiles in the list, the algorithm has failed
-        # to find the end
-        explored = [(x1, y1, dx, dy)]
-        while explored:
-            x, y, dx, dy = explored.pop()
-            logger.debug('%s %s %s %s', x, y, dx, dy)
-            #print(x, y, dx, dy)
-            # If we're at an opaque tile, do not proceed
-            if opaque((x, y)):
-                continue
-            # If we're in an obviously bad position, do not proceed
-            if obviously_bad(start, (x, y)):
-                continue
-            # We reached our goal
-            if (x, y) == end:
-                return True
-            # Determine where to go next. Can go up to two different places
-            # If we need to go more y, go in that direction
-            # If we need to go more x, go in that direction
-            # If they're even, go in both directions
-            adx = abs(dx)
-            ady = abs(dy)
-            if adx == ady:
-                if dx > 0:
-                    explored.append((x + 1, y, dx - 1, dy))
-                elif dx < 0:
-                    explored.append((x - 1, y, dx + 1, dy))
-                if dy > 0:
-                    explored.append((x, y + 1, dx, dy - 1))
-                elif dy < 0:
-                    explored.append((x, y - 1, dx, dy + 1))
-            elif adx > ady:
-                if dx > 0:
-                    explored.append((x + 1, y, dx - 1, dy))
-                elif dx < 0:
-                    explored.append((x - 1, y, dx + 1, dy))
-            elif ady > adx:
-                if dy > 0:
-                    explored.append((x, y + 1, dx, dy - 1))
-                elif dy < 0:
-                    explored.append((x, y - 1, dx, dy + 1))
-        return False
-
-    def obviously_bad(start, end):
-        # A naive line of sight algorithm. 
-        # If there is a block DIRECTLY in the way, its bad.
-        if start == end:
-            return False
-        x1, y1 = start
-        x2, y2 = end
-        dx = x2 - x1
-        dy = y2 - y1
-        x_inc = 1 if dx > 0 else -1
-        y_inc = 1 if dy > 0 else -1
-        while (x1, y1) != end:
-            if dy == 0:
-                x1 += x_inc
-            elif dx == 0:
-                y1 += y_inc
-            elif abs(dx) == abs(dy):
-                x1 += x_inc
-                y1 += y_inc
-            else:
-                return False
-            if opaque((x1, y1)):
-                return True
-        return False
-    """
 
     def get_line(start, end):
         #print('Start:', start, "End:", end)
@@ -306,6 +254,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
         x2, y2 = end
         d = 1/float(calculate_distance(start, end))/2 # Divide by 2 to get more accurate
         e_x, e_y = x2 + 0.5, y2 + 0.5
+        # Go from each of the four corners
         for (x, y) in [(x1, y1), (x1 + 1, y1), (x1, y1 + 1), (x1 + 1, y1 + 1)]:
             # Determine which tiles are on the line
             #slope = (y - e_y)/(e_x - x) # difference because y goes down.
@@ -330,7 +279,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
     for pos, tile in all_tiles.iteritems():
         if tile.visibility == 'unknown':
             for s_pos in source_pos:
-                if calculate_distance(pos, s_pos) <= max_range and get_line(s_pos, pos):
+                if calculate_distance(pos, s_pos) <= max_range and get_line2(s_pos, pos):
                     tile.visibility = 'lit'
                     break
             if tile.visibility == 'unknown':

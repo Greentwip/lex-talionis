@@ -14,21 +14,22 @@
 #
 # --------------------------------------------
 group;Resistance;Yep;Resistance;Nope
-#enemy;0;0;Ballista;1;Ballista;14,2;HardGuard;Resistance
-#player;0;0;Nia;8,6;None
-#player;0;0;Thief;5;;7,6;None;Resistance
-#player;0;0;Prim;6,6;None
+enemy;0;0;Ballista;1;Ballista;14,2;HardGuard;Resistance
+enemy;0;0;Ballista;1;Ballista;14,3;HardGuard;Resistance
+player;0;0;Nia;8,6;None
+player;0;0;Thief;5;;7,6;None;Resistance
+player;0;0;Prim;6,6;None
 #enemy;0;0;Ranger;20;Willow Bow;12,7;SoftGuard;Resistance
 #
 #enemy;0;0;Brigand;1;Iron Axe;4,16;Pursue;Resistance
 #enemy;0;0;Mage;1;Wyrmsfire,Wind;13,6;Attack;Resistance
 #enemy;0;Mage1;Mage;1;Blizzard,Elixir;12,6;Attack;Resistance
 #
-#player;0;0;Fighter;1;Hatchet,Iron Axe,Steel Axe,Vulnerary;10,7;None;Resistance
-#player;0;0;Fighter;1;Hatchet,Iron Axe,Steel Axe;9,6;None;Resistance
-#player;0;0;Mage;1;Wind;8,7;None;Resistance
-#player;2;archer;Archer;Poison Bow;8,6;None;Resistance
+player;0;0;Ballista;1;Ballista;10,7;None;Resistance
+player;0;0;Ballista;1;Ballista;9,6;None;Resistance
+player;0;0;Mage;1;Wind;8,7;None;Resistance
+player;2;archer;Archer;Poison Bow;8,6;None;Resistance
 #enemy;0;0;Harold;8,8;None
-player;0;0;Berserker;20;Yew Bow,Potion;12,7;None;Resistance
-player;0;0;Strategist;12;Glimmer;11,7;None;Resistance
-enemy;0;0;Warrior;14;Iron Axe;14,7;DoNothing;Resistance
+#player;0;0;Berserker;20;Yew Bow,Potion;12,7;None;Resistance
+#player;0;0;Strategist;12;Glimmer;11,7;None;Resistance
+#enemy;0;0;Warrior;14;Iron Axe;14,7;DoNothing;Resistance
