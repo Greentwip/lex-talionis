@@ -630,7 +630,7 @@
         <skills>1,Flying;5,Empowered</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,60,15,45,40,35,35,25</growths>
-		<bases>13,5,0,3,3,0,5,0,7</bases>
+		<bases>14,5,0,3,3,0,5,0,7</bases>
         <promotion>10,7,0,5,5,0,8,0,6</promotion>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>An elite warrior mounted on the back of a wyvern.</desc>
@@ -650,7 +650,7 @@
         <skills>1,Defense_Aura;5,Feat;10,Terror</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,60,15,45,35,35,35,25</growths>
-		<bases>17,5,0,5,5,0,5,2,9</bases>
+		<bases>18,5,0,5,5,0,5,2,9</bases>
         <promotion>4,0,0,2,2,0,0,2,2</promotion>
 		<max>40,18,15,17,16,20,19,15,20</max>
         <desc>Lords who command the battlefield on their draconic mounts.</desc>

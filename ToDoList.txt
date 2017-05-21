@@ -35,8 +35,7 @@ ToDo:
 - Add music for missing base scripts.
 - Test Base Scripts
 - Test Level 10+ (should Level 10 have infinite reinforcements after turn 4? Should Ulver's weapon auto-cleave?)
-- Need extra advice on Chapter 8... Not sure what to do or how to balance for fun.
-- Re-test Chapter 7
+- Vertically attacking ballista camera movement is weird.
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- MAPMOVES ---

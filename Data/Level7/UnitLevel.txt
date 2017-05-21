@@ -43,12 +43,12 @@ enemy;0;0;Ballista;10;Ballista;3,17;HardGuard;Soldier
 # Original on map is 37 units
 # Region Left of Spawn - 4 Mercs, 1 Hero, 4 Raiders
 enemy;0;0;Mercenary;10;Iron Sword;13,4;Attack_1;Soldier
-enemy;0;0;Mercenary;10;Iron Sword;11,7;Attack_1;Soldier
+enemy;0;0;Mercenary;10;Iron Sword;11,7;Attack;Soldier
 enemy;0;0;Mercenary;10;Iron Sword;17,4;Attack_1;Soldier
 enemy;0;0;Mercenary;10;Iron Sword;16,3;Attack_1;Soldier
 enemy;0;0;Raider;10;Hand Axe;14,1;Attack_1;Soldier
-enemy;0;0;Raider;10;Hand Axe;8,5;Attack_1;Soldier
-enemy;0;0;Raider;10;Steel Axe;9,7;Attack_1;Soldier
+enemy;0;0;Raider;10;Hand Axe;8,5;Attack;Soldier
+enemy;0;0;Raider;10;Steel Axe;9,7;Attack;Soldier
 enemy;0;0;Raider;10;Steel Axe;15,6;Attack_1;Soldier
 enemy;0;0;Hero;12;dMithril Sword;12,5;Attack_1;Soldier
 # Region Right of Spawn - 4 Skirmishers, 1 Dragoon

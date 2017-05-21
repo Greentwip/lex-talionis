@@ -789,15 +789,15 @@ class UnitObject(object):
             for index in range(8):
                 growth = growths[index]
                 if CONSTANTS['leveling'] == 'fixed':
-                    levelup_list[index] = min((self.growth_points[index] + growth)/100, class_info['max'][index] - self.stats.values()[index])
+                    levelup_list[index] = min((self.growth_points[index] + growth)/100, class_info['max'][index] - self.stats.values()[index].base_stat)
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
                 elif CONSTANTS['leveling'] == 'random':
                     while growth > 0:
                         levelup_list[index] += 1 if random.randint(0, 99) < growth else 0
                         growth -= 100
-                    levelup_list[index] = min(levelup_list[index], class_info['max'][index] - self.stats.values()[index])
+                    levelup_list[index] = min(levelup_list[index], class_info['max'][index] - self.stats.values()[index].base_stat)
         else: # Hybrid
-            growths = [growth if self.stats.values()[index] < class_info['max'][index] else 0 for index, growth in enumerate(growths)]
+            growths = [growth if self.stats.values()[index].base_stat < class_info['max'][index] else 0 for index, growth in enumerate(growths)]
             growth_sum = sum(growths)
             num_choices = growth_sum/100
             self.growth_points[0] += growth_sum%100
@@ -809,7 +809,7 @@ class UnitObject(object):
                 index = Utility.weighted_choice(growths)
                 levelup_list[index] += 1
                 growths[index] = max(0, growths[index] - 100)
-                if self.stats.values()[index] + levelup_list[index] >= class_info['max'][index]:
+                if self.stats.values()[index].base_stat + levelup_list[index] >= class_info['max'][index]:
                     growths[index] = 0
                     
         if apply_level:

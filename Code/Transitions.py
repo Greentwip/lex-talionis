@@ -206,12 +206,13 @@ class StartOption(StateMachine.State):
                     if self.selection == WORDS['New Game']:
                         text = 'Starting a new game will remove suspend!'
                         width = 200
+                        position = (6, 6)
                     else:
                         text = 'Loading a game will remove suspend!'
                         width = 180
+                        position = (4, 6)
                     self.banner = MenuFunctions.CreateBaseMenuSurf((width, 24), 'DarkMenuBackground')
                     self.banner = Image_Modification.flickerImageTranslucent(self.banner, 10)
-                    position = (4, 6)
                     MenuFunctions.OutlineFont(BASICFONT, text, self.banner, colorDict['off_white'], colorDict['off_black'], position)
                 else:
                     self.banner = None

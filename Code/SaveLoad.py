@@ -380,7 +380,8 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
     class_skills = []
     for index, klass in enumerate(classes):
         for level_needed, class_skill in class_dict[klass]['skills']:
-            if index < len(classes) - 1 or level%CONSTANTS['max_level'] >= level_needed or level%CONSTANTS['max_level'] == 0:
+            # If level is gte level needed for skill or gte max_level
+            if level%CONSTANTS['max_level'] >= level_needed or level/len(classes) >= CONSTANTS['max_level']:
                 class_skills.append(class_skill)
     ### Handle Feats (Naive choice)
     if feat:

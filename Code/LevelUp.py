@@ -336,7 +336,7 @@ class levelUpScreen(object):
                     self.arrow_animations.append(arrow_animation) 
                     spark_animation = CustomObjects.Animation(self.statupanimation, position, (11, 1), animation_speed=32, ignore_map=True)
                     self.animations.append(spark_animation)
-                    assert 7 > self.levelup_list[self.sparkCounter] > 0 # Only 1-6 are allowed increases for a levelup right now
+                    assert 7 > self.levelup_list[self.sparkCounter] > 0, "%s %s"%(self.levelup_list, self.levelup_list[self.sparkCounter]) # Only 1-6 are allowed increases for a levelup right now
                     if self.levelup_list[self.sparkCounter] == 1:
                         row = Engine.subsurface(self.numbers, (0, (self.levelup_list[self.sparkCounter] - 1)*24, 10*24, 24))
                         number_animation = CustomObjects.Animation(row, (position[0]+31, position[1]+23), (10, 1), animation_speed=32, ignore_map=True, hold=True)

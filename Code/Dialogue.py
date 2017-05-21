@@ -690,7 +690,7 @@ class Dialogue_Scene(object):
                 unit.leave(gameStateObj)
                 unit.remove_from_map(gameStateObj)
                 unit.position = formation_spots[index]
-                print(unit.name, unit.position)
+                #print(unit.name, unit.position)
                 unit.place_on_map(gameStateObj)
                 unit.arrive(gameStateObj)
         elif line[0] == 'reset_units':
