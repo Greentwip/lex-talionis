@@ -1940,8 +1940,8 @@ class UnitPortrait(object):
 
         # Blinking set up
         self.blinking = 2 # 0- Don't blink, 1-hold blink, 2-Blink pseudorandomly
-        self.offset_blinking = [x for x in range(-2000, 2000, 250)]
-        self.blink_counter = Counters.generic3Counter(7000 + random.choice(self.offset_blinking), 40, 80)
+        self.offset_blinking = [x for x in range(-2000, 2000, 125)]
+        self.blink_counter = Counters.generic3Counter(7000 + random.choice(self.offset_blinking), 40, 40) # 3 frames for each
 
         # Expression
         self.expression = expression
@@ -2003,9 +2003,9 @@ class UnitPortrait(object):
 
         if self.transition:
             if self.transition == 'trans2color':
-                self.transition_transparency = 100 - (current_time - self.transition_last_update)/2
+                self.transition_transparency = 100 - (current_time - self.transition_last_update)/2 # 12 frames
             elif self.transition == 'color2trans':
-                self.transition_transparency = (current_time - self.transition_last_update)/2
+                self.transition_transparency = (current_time - self.transition_last_update)/2 # 12 frames
             if self.transition_transparency > 100 or self.transition_transparency < 0:
                 self.transition = 0
                 self.transition_transparency = max(0, min(100, self.transition_transparency))

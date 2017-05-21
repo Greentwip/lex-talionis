@@ -220,8 +220,8 @@
         <skills>1,Canto;5,Savior</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,20</growths>
-		<bases>13,3,0,2,3,0,4,0,6</bases>
-        <promotion>10,5,0,3,5,0,6,0,5</promotion>
+		<bases>13,3,0,2,3,0,4,0,11</bases>
+        <promotion>10,5,0,3,5,0,6,0,10</promotion>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Mounted knights with superior movement.</desc>
     </class>   
@@ -240,8 +240,8 @@
         <skills>1,Charisma;5,Feat;10,Celeste</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,35</growths>
-		<bases>15,4,2,3,7,0,6,4,8</bases>
-        <promotion>2,1,0,1,1,0,2,1,2</promotion>
+		<bases>15,4,2,3,7,0,6,4,11</bases>
+        <promotion>2,1,0,1,1,0,2,1,0</promotion>
 		<max>40,17,15,18,17,20,17,17,20</max>
         <desc>Veteran horse knights.</desc>
     </class>
