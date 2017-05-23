@@ -8,7 +8,7 @@ import copy
 import logging
 logger = logging.getLogger(__name__)
 
-NETPOSITION_SET = {'weapon', 'attack', 'spellweapon', 'spellattack', 'select', 'skillselect', 'stealselect', \
+NETPOSITION_SET = {'weapon', 'attack', 'spellweapon', 'spell', 'select', 'skillselect', 'stealselect', \
                    'tradeselect', 'takeselect', 'dropselect', 'giveselect', 'rescueselect', 'talkselect', \
                    'unlockselect', 'trade', 'steal'}
 
@@ -30,6 +30,9 @@ class UnitSprite(object):
         self.spriteMvm = [1, 2, 3, 2, 1, 0]
         self.spriteMvmindex = 0
         self.lastSpriteUpdate = Engine.get_time()
+
+        self.lastHPUpdate = 0
+        self.current_cut_off = int((self.unit.currenthp/float(self.unit.stats['HP']))*12) + 1
 
     def set_transition(self, new_state):
         self.transition_counter = self.transition_time
@@ -143,15 +146,16 @@ class UnitSprite(object):
             surf.blit(Engine.subsurface(IMAGESDICT['TalkMarker'], (frame*8, 0, 8, 16)), topleft)
 
     def draw_hp(self, surf, gameStateObj):
+        current_time = Engine.get_time()
         if self.transition_state == 'normal':
             #print('draw_hp')
             x, y = self.unit.position
             left = x * TILEWIDTH + self.spriteOffset[0]
             top = y * TILEHEIGHT + self.spriteOffset[1]
             # Health Bar
-            if self.state in ['gray', 'passive'] and not self.unit.isDying:
+            if not self.unit.isDying:
                 if (OPTIONS['HP Map Team'] == 'All') or (OPTIONS['HP Map Team'] == 'Ally' and self.unit.team in ['player', 'other']) or (OPTIONS['HP Map Team'] == 'Enemy' and self.unit.team.startswith('enemy')):
-                    if (OPTIONS['HP Map Cull'] == 'All') or (OPTIONS['HP Map Cull'] == 'Wounded' and self.unit.currenthp < self.unit.stats['HP']):
+                    if (OPTIONS['HP Map Cull'] == 'All') or (OPTIONS['HP Map Cull'] == 'Wounded' and (self.unit.currenthp < self.unit.stats['HP'] or self.current_cut_off != 13)):
                         health_outline = IMAGESDICT['Map_Health_Outline']
                         health_bar = IMAGESDICT['Map_Health_Bar']
                         if(self.unit.currenthp >= int(self.unit.stats['HP'])):
@@ -160,11 +164,18 @@ class UnitSprite(object):
                             cut_off = 0
                         else:
                             cut_off = int((self.unit.currenthp/float(self.unit.stats['HP']))*12) + 1
+                        if current_time - self.lastUpdate > 32:
+                            self.lastUpdate = current_time
+                            if self.current_cut_off < cut_off:
+                                self.current_cut_off += 1
+                            elif self.current_cut_off > cut_off:
+                                self.current_cut_off -= 1
+
                         surf.blit(health_outline, (left, top+13))
-                        health_bar = Engine.subsurface(health_bar, (0, 0, cut_off, 1))
+                        health_bar = Engine.subsurface(health_bar, (0, 0, self.current_cut_off, 1))
                         surf.blit(health_bar, (left+1, top+14))
             # Extra Icons
-            if 'Boss' in self.unit.tags and self.state in ['gray', 'passive'] and int((Engine.get_time()%450)/150) in [1, 2]: # Essentially an every 132 millisecond timer
+            if 'Boss' in self.unit.tags and self.state in ['gray', 'passive'] and int((current_time%450)/150) in [1, 2]: # Essentially an every 132 millisecond timer
                 bossIcon = ICONDICT['BossIcon']
                 surf.blit(bossIcon, (left - 8, top - 8))
             if self.unit.TRV:
@@ -290,20 +301,19 @@ class UnitSprite(object):
             
         ### UPDATE IMAGE
         if gameStateObj.stateMachine.getState() == 'combat' and gameStateObj.combatInstance and \
-            (self.unit is gameStateObj.combatInstance.attacker or self.unit is gameStateObj.combatInstance.defender or \
-            (self.unit in gameStateObj.combatInstance.splash and gameStateObj.combatInstance.current_result and \
-             self.unit is gameStateObj.combatInstance.current_result.defender)):
-            if gameStateObj.combatInstance.current_result:
-                attacker = gameStateObj.combatInstance.current_result.attacker
-                defender = gameStateObj.combatInstance.current_result.defender
+            (self.unit is gameStateObj.combatInstance.p1 or self.unit is gameStateObj.combatInstance.p2 or \
+            (self.unit in gameStateObj.combatInstance.splash and self.unit in [result.defender for result in gameStateObj.combatInstance.results])):
+            if gameStateObj.combatInstance.results:
+                attacker = gameStateObj.combatInstance.results[0].attacker
+                defenders = [result.defender for result in gameStateObj.combatInstance.results]
             else:
-                attacker = gameStateObj.combatInstance.attacker
-                defender = gameStateObj.combatInstance.defender
+                attacker = gameStateObj.combatInstance.p1
+                defenders = [gameStateObj.combatInstance.p2]
             if self.unit is attacker:
-                if not defender or attacker is defender:
+                if not defenders or attacker in defenders:
                     self.state = 'active'
                 else:
-                    netposition = defender.position[0] - attacker.position[0], defender.position[1] - attacker.position[1]
+                    netposition = gameStateObj.cursor.position[0] - attacker.position[0], gameStateObj.cursor.position[1] - attacker.position[1]
                     self.handle_net_position(netposition)
                     if gameStateObj.combatInstance.combat_state == 'Anim':
                         self.spriteOffset[0] = Utility.clamp(netposition[0], -1, 1) * self.spriteMvm[self.spriteMvmindex]
@@ -318,9 +328,9 @@ class UnitSprite(object):
                         self.spriteMvmindex = 0
                         self.spriteOffset = [0, 0]
 
-            elif self.unit is defender:
+            elif self.unit in defenders:
                 #print(attacker, defender, attacker.position, defender.position)
-                netposition = attacker.position[0] - defender.position[0], attacker.position[1] - defender.position[1]
+                netposition = attacker.position[0] - self.unit.position[0], attacker.position[1] - self.unit.position[1]
                 self.handle_net_position(netposition)
 
         elif gameStateObj.stateMachine.getState() == 'status' and gameStateObj.status and gameStateObj.status.check_active(self.unit):
@@ -328,7 +338,7 @@ class UnitSprite(object):
         elif gameStateObj.cursor.currentSelectedUnit is self.unit and gameStateObj.stateMachine.getState() == 'menu' and not self.unit.hasAttacked:
             self.handle_net_position(self.old_sprite_offset)
             self.update_move_sprite_counter(currentTime, 80)
-        elif (gameStateObj.cursor.currentSelectedUnit is self.unit and gameStateObj.stateMachine.getState() in NETPOSITION_SET):
+        elif gameStateObj.cursor.currentSelectedUnit is self.unit and gameStateObj.stateMachine.getState() in NETPOSITION_SET:
             netposition = (gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1])
             if netposition == (0, 0):
                 netposition = self.old_sprite_offset

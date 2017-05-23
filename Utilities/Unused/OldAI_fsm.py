@@ -161,7 +161,7 @@ class Attack(AIState):
             if target_displacement in self.best_weapon.RNG:
                 self.unit.equip(self.best_weapon)
                 defender, splash = Interaction.convert_positions(gameStateObj, self.unit, self.target_unit.position, self.best_weapon)
-                gameStateObj.combatInstance = Interaction.Combat(self.unit, defender, splash, self.best_weapon)
+                gameStateObj.combatInstance = Interaction.start_combat(self.unit, defender, splash, self.best_weapon)
                 gameStateObj.stateMachine.changeState('combat')
                 if isinstance(defender, UnitObject.UnitObject) and self.unit.checkIfEnemy(defender):
                     self.unit.handle_fight_quote(defender, gameStateObj)
@@ -527,7 +527,7 @@ class AttackVillage(Attack):
             if target_displacement in self.best_weapon.RNG:
                 self.unit.equip(self.best_weapon)
                 defender, splash = Interaction.convert_positions(gameStateObj, self.unit, self.target_unit.position, self.best_weapon)
-                gameStateObj.combatInstance = Interaction.Combat(self.unit, defender, splash, self.best_weapon)
+                gameStateObj.combatInstance = Interaction.start_combat(self.unit, defender, splash, self.best_weapon)
                 gameStateObj.stateMachine.changeState('combat')
                 if isinstance(defender, UnitObject.UnitObject) and self.unit.checkIfEnemy(defender):
                     self.unit.handle_fight_quote(defender, gameStateObj)
@@ -571,7 +571,7 @@ class Unlock(Attack):
         if self.best_weapon:
             self.unit.equip(self.best_weapon)
             defender, splash = Interaction.convert_positions(gameStateObj, self.unit, self.target_unit.position, self.best_weapon)
-            gameStateObj.combatInstance = Interaction.Combat(self.unit, defender, splash, self.best_weapon)
+            gameStateObj.combatInstance = Interaction.start_combat(self.unit, defender, splash, self.best_weapon)
             gameStateObj.stateMachine.changeState('combat')
             if isinstance(defender, UnitObject.UnitObject) and self.unit.checkIfEnemy(defender):
                 self.unit.handle_fight_quote(defender, gameStateObj)

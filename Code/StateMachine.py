@@ -881,11 +881,11 @@ class MenuState(State):
                             else:
                                 skill_item = status.active.item
                                 main_defender, splash_units = Interaction.convert_positions(gameStateObj, cur_unit, cur_unit.position, cur_unit.position, skill_item)
-                                gameStateObj.combatInstance = Interaction.Combat(cur_unit, main_defender, cur_unit.position, splash_units, skill_item, status)
+                                gameStateObj.combatInstance = Interaction.start_combat(cur_unit, main_defender, cur_unit.position, splash_units, skill_item, status)
                                 gameStateObj.stateMachine.changeState('combat')
                                 cur_unit.current_skill = None
                         else: # Solo
-                            gameStateObj.combatInstance = Interaction.Combat(cur_unit, cur_unit, cur_unit.position, [], status.active.item, status)
+                            gameStateObj.combatInstance = Interaction.start_combat(cur_unit, cur_unit, cur_unit.position, [], status.active.item, status)
                             gameStateObj.stateMachine.changeState('combat')
                             cur_unit.current_skill = None
             elif selection == WORDS['Attack']:
@@ -1089,7 +1089,7 @@ class ItemChildState(State):
                     self.menu = None
                     gameStateObj.cursor.currentSelectedUnit.handle_booster(item, gameStateObj)
                 else: # Uses interaction object
-                    gameStateObj.combatInstance = Interaction.Combat(gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit.position, [], self.menu.owner)
+                    gameStateObj.combatInstance = Interaction.start_combat(gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit.position, [], self.menu.owner)
                     gameStateObj.activeMenu = None
                     gameStateObj.stateMachine.changeState('combat')
             elif selection == WORDS['Equip']:
@@ -1238,7 +1238,7 @@ class AttackState(State):
             SOUNDDICT['Select 1'].play()
             attacker = gameStateObj.cursor.currentSelectedUnit
             defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.position, attacker.getMainWeapon())
-            gameStateObj.combatInstance = Interaction.Combat(attacker, defender, gameStateObj.cursor.position, splash, attacker.getMainWeapon(), attacker.current_skill)
+            gameStateObj.combatInstance = Interaction.start_combat(attacker, defender, gameStateObj.cursor.position, splash, attacker.getMainWeapon(), attacker.current_skill)
             gameStateObj.stateMachine.changeState('combat')
             attacker.current_skill = None
             # Handle fight quote
@@ -1376,12 +1376,12 @@ class SpellState(State):
                 or (targets == 'Ally' and attacker.checkIfAlly(gameStateObj.cursor.currentHoveredUnit)) \
                 or targets == 'Unit':
                     defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.currentHoveredUnit.position, spell)
-                    gameStateObj.combatInstance = Interaction.Combat(attacker, defender, gameStateObj.cursor.currentHoveredUnit.position, splash, spell)
+                    gameStateObj.combatInstance = Interaction.start_combat(attacker, defender, gameStateObj.cursor.currentHoveredUnit.position, splash, spell)
                     gameStateObj.stateMachine.changeState('combat')
             elif targets == 'Tile':
                 defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.position, spell)
                 if not spell.hit or defender or splash:
-                    gameStateObj.combatInstance = Interaction.Combat(attacker, defender, gameStateObj.cursor.position, splash, spell)
+                    gameStateObj.combatInstance = Interaction.start_combat(attacker, defender, gameStateObj.cursor.position, splash, spell)
                     gameStateObj.stateMachine.changeState('combat')
 
         if event in ['DOWN', 'UP', 'LEFT', 'RIGHT']:
@@ -1465,7 +1465,7 @@ class SelectState(State):
                     main_defender = None
                 splash_units = [unit for unit in gameStateObj.allunits if unit.position in splash_positions] + [tile for position, tile in gameStateObj.map.tiles.iteritems() if position in splash_positions and tile.tilehp]
                 """
-                gameStateObj.combatInstance = Interaction.Combat(cur_unit, main_defender, gameStateObj.cursor.position, splash_units, skill_item, active_skill)
+                gameStateObj.combatInstance = Interaction.start_combat(cur_unit, main_defender, gameStateObj.cursor.position, splash_units, skill_item, active_skill)
                 gameStateObj.stateMachine.changeState('combat')
                 cur_unit.current_skill = None
             elif self.name == 'tradeselect':
@@ -1972,6 +1972,7 @@ class StatusState(State):
                 processing = False
             elif output == 'Waiting' or output == 'Death':
                 processing = False
+            #print(self.name, count, output, gameStateObj.status.current_unit.position)
             count += 1
 
     def draw(self, gameStateObj, metaDataObj):

@@ -12,6 +12,7 @@ support_points;12
 line_of_sight;1
 spell_line_of_sight;0
 aura_los;1
+simultaneous_aoe;1
 def_double;0
 casual;0
 support;0

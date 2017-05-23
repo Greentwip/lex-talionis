@@ -35,7 +35,6 @@ ToDo:
 - Add music for missing base scripts.
 - Test Base Scripts
 - Test Level 10+ (should Level 10 have infinite reinforcements after turn 4? Should Ulver's weapon auto-cleave?)
-- Add Simultaneous AOE (Rally, Wyrmsfire, Cleave)
 
 -- KNOWN ISSUES:
 - Music may not work or have major issues on Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)

@@ -1638,7 +1638,6 @@ class UnitObject(object):
         self.hasRunGeneralAI = False
         self.isActive = 0
         self.isMoving = False # Unit is moving
-        self.isAttacking = False # Unit is attacking
         self.isDying = False # Unit is dying
         self.path = []
         self.movement_left = self.stats['MOV']

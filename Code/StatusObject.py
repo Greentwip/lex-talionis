@@ -222,7 +222,7 @@ class Status_Processor(object):
         self.start_time_for_this_status = Engine.get_time()
 
         # Health bar
-        self.health_bar = Interaction.HealthBar('auto', None, None, time_for_change=self.time_spent_on_each_status)
+        self.health_bar = Interaction.HealthBar('splash', None, None)
 
         # Waiting timer
         self.wait_time = 200
@@ -278,8 +278,8 @@ class Status_Processor(object):
                     # Processing state handles animation and HP updating
                     if self.current_status.upkeep_animation or self.oldhp != self.newhp:
                         logger.debug('HP change: %s %s', self.oldhp, self.newhp)
-                        self.health_bar.update()
-                        self.start_time_for_this_status = current_time - self.health_bar.time_for_change
+                        #self.health_bar.update()
+                        #self.start_time_for_this_status = current_time + self.health_bar.time_for_change - 400
                         gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
                         self.state.changeState('processing')
                         gameStateObj.stateMachine.changeState('move_camera')
@@ -293,7 +293,7 @@ class Status_Processor(object):
         elif self.state.getState() == 'processing':
             self.health_bar.update()
             # Done waiting for status, process next one
-            if current_time - self.start_time_for_this_status > self.time_spent_on_each_status:
+            if current_time - self.start_time_for_this_status - self.health_bar.time_for_change + 400 > self.time_spent_on_each_status:
                 # handle death of a unit
                 if self.current_unit.currenthp <= 0:
                     self.current_unit.isDying = True

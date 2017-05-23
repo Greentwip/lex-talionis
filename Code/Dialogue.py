@@ -1298,7 +1298,7 @@ class Dialogue_Scene(object):
             logger.warning("Attacker does not have a valid item to use in first slot.")
             return
         defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, def_pos, item)
-        gameStateObj.combatInstance = Interaction.Combat(attacker, defender, def_pos, splash, item, event_combat=event_combat)
+        gameStateObj.combatInstance = Interaction.start_combat(attacker, defender, def_pos, splash, item, event_combat=event_combat)
         gameStateObj.stateMachine.changeState('combat')
         self.current_state = "Paused"
 

@@ -69,9 +69,9 @@ def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum
              'speed_to_double': 4, # How much AS is needed to double
              'normal_movement': 1, # How many movement points does a normal tile cost to traverse
-             'flying_mcost_column': 6, # What column flying units should use in mcost.txt
-             'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt
-             'num_levels': 7, # Number of levels in game
+             'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
+             'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)
+             'num_levels': 11, # Number of levels in game
              'exp_curve': 2.3, # How linear the exp curve is. Higher = less linear
              'exp_magnitude': 0.0125, # Higher the number, the more exp gotten for each interaction overall
              'exp_offset': 0, # The exp curve indirectly keeps the player characters near the enemy's level + 0. Change this to change the "+0"
@@ -84,9 +84,10 @@ def read_constants_file():
              'line_of_sight': 1, # Whether to use line of sight algorithm when choosing targets for weapons
              'spell_line_of_sight': 0, # Whether to use line of sight algorithm when choosing targets for spells
              'aura_los': 1, # Whether to use line of sight algorithm for auras
+             'simultaneous_aoe': 0, # Whether AOE attacks on many targets are resolved simultaneously or in order
              'def_double': 1, # Whether units on defense can double their attackers
              'support': 1, # Whether this game has supports
-             'casual': 0, # Whether player units die when they are killed
+             'casual': 0, # Whether player units die when they are killed (1 - casual, 0 - classic)
              'leveling': 'random', # How to level up units ('fixed', 'random', and 'hybrid' are valid choices) # Normal FE uses random
              'rng': 'true_hit', # How hits are calculated ('classic', 'true_hit', 'true_hit+', 'no_rng', 'hybrid') # FE6-13 uses true_hit
              'set_roll': 49, # used for 'no_rng' mode. Determines threshold at which attacks miss. Ex. Any attack with hitrate <= set_roll, misses
@@ -117,6 +118,7 @@ def read_constants_file():
     lines['line_of_sight'] = int(lines['line_of_sight'])
     lines['spell_line_of_sight'] = int(lines['spell_line_of_sight'])
     lines['aura_los'] = int(lines['aura_los'])
+    lines['simultaneous_aoe'] = int(lines['simultaneous_aoe'])
     lines['def_double'] = int(lines['def_double'])
     lines['support'] = int(lines['support'])
     lines['casual'] = int(lines['casual'])
@@ -128,6 +130,7 @@ def read_constants_file():
     return lines
 
 def read_growths_file():
+    # HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV
     lines = {'enemy_growths': '0,0,0,0,0,0,0,0,0,0',
              'player_growths': '0,0,0,0,0,0,0,0,0,0',
              'enemy_bases': '0,0,0,0,0,0,0,0,0,0',

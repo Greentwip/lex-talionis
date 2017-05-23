@@ -358,8 +358,8 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
     for pos, tile in all_tiles.iteritems():
         if tile.visibility == 'unknown':
             for s_pos in source_pos:
-                x_1, y_1 = s_pos
-                x_2, y_2 = pos
+                #x_1, y_1 = s_pos
+                #x_2, y_2 = pos
                 #if calculate_distance(pos, s_pos) <= max_range and any(get_line3((x_1*3+x, y_1*3+y), (x_2*3+1, y_2*3+1)) for (x, y) in [(0, 0), (2, 0), (0, 2), (2, 2)]):
                 if calculate_distance(pos, s_pos) <= max_range and get_line2(s_pos, pos):
                     tile.visibility = 'lit'
