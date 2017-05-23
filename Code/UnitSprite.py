@@ -164,12 +164,15 @@ class UnitSprite(object):
                             cut_off = 0
                         else:
                             cut_off = int((self.unit.currenthp/float(self.unit.stats['HP']))*12) + 1
-                        if current_time - self.lastUpdate > 32:
-                            self.lastUpdate = current_time
-                            if self.current_cut_off < cut_off:
-                                self.current_cut_off += 1
-                            elif self.current_cut_off > cut_off:
-                                self.current_cut_off -= 1
+                        if gameStateObj.combatInstance and self.unit in gameStateObj.combatInstance.health_bars:
+                            self.current_cut_off = int(float(gameStateObj.combatInstance.health_bars[self.unit].true_hp)/self.unit.stats['HP']*12) + 1
+                        else:
+                            if current_time - self.lastHPUpdate > 50:
+                                self.lastHPUpdate = current_time
+                                if self.current_cut_off < cut_off:
+                                    self.current_cut_off += 1
+                                elif self.current_cut_off > cut_off:
+                                    self.current_cut_off -= 1
 
                         surf.blit(health_outline, (left, top+13))
                         health_bar = Engine.subsurface(health_bar, (0, 0, self.current_cut_off, 1))

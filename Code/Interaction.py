@@ -19,7 +19,7 @@ class Result(object):
         self.def_status = [] # Status to the defender
         self.atk_movement = None # Movement to the attacker
         self.def_movement = None # Movement to the defender
-        self.summoning = []
+        self.summoning = None
 
 # Does not check legality of attack, that is for other functions to do. Assumes attacker can attack all defenders using item and skill
 class Solver(object):
@@ -834,7 +834,7 @@ class Map_Combat(Combat):
                 player.unlock_active()
 
     def draw(self, surf, gameStateObj):
-        for hp_bar in sorted(self.health_bars.values(), key=lambda hp: hp.get_draw_order(), reverse=True):
+        for hp_bar in self.health_bars.values():
             hp_bar.draw(surf, gameStateObj)
 
 class HealthBar(object):
@@ -848,9 +848,6 @@ class HealthBar(object):
         self.reset()
         self.fade_in()
         self.change_unit(unit, item, other, stats, draw_method, swap_stats)
-
-    def get_draw_order(self):
-        return self.true_position[1] if self.true_position else 0
 
     def force_position_update(self, gameStateObj):
         if self.unit:
@@ -920,9 +917,6 @@ class HealthBar(object):
             else:
                 blit_surf = Engine.subsurface(bg_surf, (0, height/2 - int(height*self.blinds/2), width, int(height*self.blinds)))
                 y_pos = self.true_position[1] + height/2 - int(height*self.blinds/2)
-            #if self.topleft == 'splash':
-            #    import Image_Modification
-            #    blit_surf = Image_Modification.flickerImageTranslucentColorKey(blit_surf, 50)
             surf.blit(blit_surf, (self.true_position[0], y_pos))
 
             # blit Gem
