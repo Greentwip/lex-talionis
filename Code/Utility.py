@@ -159,6 +159,82 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
         def __init__(self):
             self.visibility = 'unknown'
 
+    """
+    def get_line3(start, end):
+        # This one is to try and get more free results by tripling distance and checking 4 times instead of one, from each corner to middle
+        # still gets weird results
+        if start == end:
+            return True
+        #SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
+        # Setup initial conditions
+        x1, y1 = start
+        x2, y2 = end
+        dx = x2 - x1
+        dy = y2 - y1
+        x, y = x1, y1
+
+        xstep, ystep = 1, 1
+        if dy < 0:
+            ystep = -1
+            dy = -dy
+        if dx < 0:
+            xstep = -1
+            dx = -dx
+        ddy, ddx = 2*dy, 2*dx
+
+        if ddx >= ddy:
+            errorprev = error = dx
+            for i in range(dx):
+                x += xstep
+                error += ddy
+                # How far off the straight line to the right are you
+                if error > ddx:
+                    y += ystep
+                    error -= ddx
+                    if error + errorprev < ddx: # bottom square
+                        pos = x/3, (y - ystep)/3
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    elif error + errorprev > ddx: # left square
+                        pos = (x - xstep)/3, y/3
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    else:
+                        pos1, pos2 = (x/3, (y - ystep)/3), ((x - xstep)/3, y/3)
+                        if gameStateObj.map.tiles[pos1].opaque and gameStateObj.map.tiles[pos2].opaque:
+                            return False
+                pos = x/3, y/3
+                if (x, y) != end and gameStateObj.map.tiles[pos].opaque:
+                    return False
+                errorprev = error
+        else:
+            errorprev = error = dy
+            for i in range(dy):
+                y += ystep
+                error += ddx
+                if error > ddy:
+                    x += xstep
+                    error -= ddy
+                    if error + errorprev < ddy: # bottom square
+                        pos = (x - xstep)/3, y/3
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    elif error + errorprev > ddy: # left square
+                        pos = x/3, (y - ystep)/3
+                        if gameStateObj.map.tiles[pos].opaque:
+                            return False
+                    else:
+                        pos1, pos2 = (x/3, (y - ystep)/3), ((x - xstep)/3, y/3)
+                        if gameStateObj.map.tiles[pos1].opaque and gameStateObj.map.tiles[pos2].opaque:
+                            return False
+                pos = x/3, y/3
+                if (x, y) != end and gameStateObj.map.tiles[pos].opaque:
+                    return False
+                errorprev = error
+        assert x == x2 and y == y2
+        return True
+    """
+
     def get_line2(start, end):
         # This one is ~3-6 times faster than get_line1
         if start == end:
@@ -185,6 +261,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
             for i in range(dx):
                 x += xstep
                 error += ddy
+                # How far off the straight line to the right are you
                 if error > ddx:
                     y += ystep
                     error -= ddx
@@ -231,6 +308,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
         assert x == x2 and y == y2
         return True
 
+    """
     def get_line(start, end):
         #print('Start:', start, "End:", end)
         if start == end:
@@ -263,6 +341,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
             if rise_over_run((x, y), (e_x, e_y), end, d_x, d_y, d):
                 return True
     # End Func
+    """
 
     all_tiles = {}
     for pos in dest_pos:
@@ -279,6 +358,9 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
     for pos, tile in all_tiles.iteritems():
         if tile.visibility == 'unknown':
             for s_pos in source_pos:
+                x_1, y_1 = s_pos
+                x_2, y_2 = pos
+                #if calculate_distance(pos, s_pos) <= max_range and any(get_line3((x_1*3+x, y_1*3+y), (x_2*3+1, y_2*3+1)) for (x, y) in [(0, 0), (2, 0), (0, 2), (2, 2)]):
                 if calculate_distance(pos, s_pos) <= max_range and get_line2(s_pos, pos):
                     tile.visibility = 'lit'
                     break

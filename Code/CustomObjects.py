@@ -1131,6 +1131,7 @@ class CameraOffset(object):
             self.current_y = 0
         elif self.current_y > (gameStateObj.map.height - WINHEIGHT/TILEHEIGHT):
             self.current_y = (gameStateObj.map.height - WINHEIGHT/TILEHEIGHT)
+        #logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
 class Objective(object):
     def __init__(self, display_name, win_condition, loss_condition):

@@ -2041,6 +2041,9 @@ class UnitObject(object):
                 if not gameStateObj.cursor.camera_follow:
                     gameStateObj.cursor.camera_follow = self.id
                 if gameStateObj.cursor.camera_follow == self.id:
+                    # Don't do this for the AI -- Camera movement is handled by the AI state instead
+                    #if not gameStateObj.stateMachine.inList('ai'):
+                    #    logger.debug('Setting Position')
                     gameStateObj.cursor.setPosition(self.position, gameStateObj)
             else: # Path is empty, which means we are done
                 self.isMoving = False

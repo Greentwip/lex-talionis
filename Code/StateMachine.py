@@ -3,7 +3,7 @@ from GlobalConstants import *
 from configuration import *
 import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 import Interaction, LevelUp, StatusObject, ItemMethods
-import WorldMap, InputManager, Banner, Engine
+import WorldMap, InputManager, Banner, Engine, Utility
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1724,15 +1724,15 @@ class AIState(State):
                 did_something = gameStateObj.ai_current_unit.ai.act(gameStateObj)
                 # Center camera on the current unit
                 if did_something and gameStateObj.ai_current_unit.position:
+                    other_pos = gameStateObj.ai_current_unit.ai.target_to_interact_with
                     if gameStateObj.ai_current_unit.ai.position_to_move_to and gameStateObj.ai_current_unit.ai.position_to_move_to != gameStateObj.ai_current_unit.position:
                         gameStateObj.cameraOffset.center2(gameStateObj.ai_current_unit.position, gameStateObj.ai_current_unit.ai.position_to_move_to)      
-                    elif gameStateObj.ai_current_unit.ai.target_to_interact_with:
-                        other_pos = gameStateObj.ai_current_unit.ai.target_to_interact_with
+                    elif other_pos and Utility.calculate_distance(gameStateObj.ai_current_unit.position, other_pos) <= TILEY - 2: # Leeway
                         if isinstance(other_pos, tuple):
                             gameStateObj.cameraOffset.center2(gameStateObj.ai_current_unit.position, other_pos)
                         else:
                             gameStateObj.cameraOffset.center2(gameStateObj.ai_current_unit.position, other_pos.position)
-                    else:      
+                    else: 
                         gameStateObj.cursor.setPosition(gameStateObj.ai_current_unit.position, gameStateObj)
                     gameStateObj.stateMachine.changeState('move_camera')
                 if gameStateObj.ai_current_unit.hasRunAI():
