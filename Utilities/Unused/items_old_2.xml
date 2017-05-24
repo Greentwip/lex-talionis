@@ -74,6 +74,43 @@
 		<LVL>B</LVL>
     </item>
 
+    <item name="Rapier">
+        <id>Rapier</id>
+        <spritetype>Sword</spritetype>
+        <spriteid>4</spriteid>       
+        <components>weapon,uses,weight,ignore_half_def</components>
+        <weapontype>Sword</weapontype>
+ 
+        <uses>35</uses>
+        <value>16</value>
+        <RNG>1</RNG>
+        <desc>Ignores half of enemy's DEF.</desc>
+		<WT>2</WT>
+        
+		<MT>0</MT>
+		<HIT>100</HIT>
+		<LVL>D</LVL>
+    </item>
+
+    <item name="Poison Sword">
+        <id>Poison Sword</id>
+        <spritetype>Sword</spritetype>
+        <spriteid>5</spriteid>       
+        <components>weapon,uses,status,weight</components>
+        <weapontype>Sword</weapontype>
+ 
+        <uses>40</uses>
+        <value>12</value>
+        <RNG>1</RNG>
+        <desc>Inflicts poison on contact.</desc>
+        <status>Poison</status>
+		<WT>4</WT>
+        
+		<MT>2</MT>
+		<HIT>80</HIT>
+		<LVL>D</LVL>
+    </item>
+
     <item name="Great Sword">
         <id>Great Sword</id>
         <spritetype>Sword</spritetype>
@@ -257,6 +294,25 @@
 		<LVL>B</LVL>
     </item>
 
+    <item name="Athame">
+        <id>Athame</id>
+        <spritetype>Sword</spritetype>
+        <spriteid>19</spriteid>       
+        <components>weapon,uses,weight,status</components>
+        <weapontype>Sword</weapontype>
+ 
+        <uses>20</uses>
+        <value>100</value>
+        <RNG>1-2</RNG>
+        <desc>Weakens target on hit. Renae only.</desc>
+		<WT>2</WT>
+        <status>Weakened</status>
+        
+		<MT>6</MT>
+		<HIT>65</HIT>
+		<LVL>Renae</LVL>
+    </item>
+
     <!-- Lances -->
     <item name="Iron Lance">
         <id>Iron Lance</id>
@@ -273,6 +329,24 @@
         
 		<MT>5</MT>
 		<HIT>80</HIT>
+		<LVL>D</LVL>
+    </item>
+
+    <item name="Rusted Lance">
+        <id>Rusted Lance</id>
+        <spritetype>Lance</spritetype>
+        <spriteid>1</spriteid>       
+        <components>weapon,uses,weight</components>
+        <weapontype>Lance</weapontype>
+ 
+        <uses>20</uses>
+        <RNG>1</RNG>
+        <value>5</value>
+        <desc></desc>
+		<WT>4</WT>
+        
+		<MT>3</MT>
+		<HIT>75</HIT>
 		<LVL>D</LVL>
     </item>
 
@@ -327,6 +401,25 @@
         
 		<MT>3</MT>
 		<HIT>90</HIT>
+		<LVL>D</LVL>
+    </item>
+
+    <item name="Poison Lance">
+        <id>Poison Lance</id>
+        <spritetype>Lance</spritetype>
+        <spriteid>5</spriteid>       
+        <components>weapon,uses,status,weight</components>
+        <weapontype>Lance</weapontype>
+ 
+        <uses>40</uses>
+        <value>10</value>
+        <RNG>1</RNG>
+        <desc>Inflicts poison on contact.</desc>
+        <status>Poison</status>
+		<WT>5</WT>
+        
+		<MT>3</MT>
+		<HIT>70</HIT>
 		<LVL>D</LVL>
     </item>
 
@@ -400,6 +493,24 @@
 		<MT>11</MT>
 		<HIT>55</HIT>
 		<LVL>A</LVL>
+    </item>
+
+    <item name="Levin Lance">
+        <id>Levin Lance</id>
+        <spritetype>Lance</spritetype>
+        <spriteid>13</spriteid>       
+        <components>weapon,uses,weight,magic</components>
+        <weapontype>Lance</weapontype>
+ 
+        <uses>25</uses>
+        <value>50</value>
+        <RNG>1</RNG>
+        <desc>Uses MAG instead of STR to determine damage.</desc>
+		<WT>6</WT>
+        
+		<MT>5</MT>
+		<HIT>70</HIT>
+		<LVL>C</LVL>
     </item>
 
     <item name="Javelin">
@@ -565,6 +676,25 @@
 		<HIT>80</HIT>
 		<LVL>D</LVL>
     </item>
+
+    <item name="Poison Axe">
+        <id>Poison Axe</id>
+        <spritetype>Axe</spritetype>
+        <spriteid>5</spriteid>       
+        <components>weapon,uses,weight,status</components>
+        <weapontype>Axe</weapontype>
+ 
+        <uses>40</uses>
+        <RNG>1</RNG>
+        <value>8</value>
+        <desc>Inflicts poison on hit.</desc>
+		<WT>5</WT>
+        <status>Poison</status>
+        
+		<MT>3</MT>
+		<HIT>60</HIT>
+		<LVL>D</LVL>
+    </item>
         
     <item name="Great Axe">
         <id>Great Axe</id>
@@ -636,6 +766,24 @@
 		<MT>12</MT>
 		<HIT>45</HIT>
 		<LVL>A</LVL>
+    </item>
+
+    <item name="Levin Axe">
+        <id>Levin Axe</id>
+        <spritetype>Axe</spritetype>
+        <spriteid>13</spriteid>       
+        <components>weapon,uses,weight,magic</components>
+        <weapontype>Axe</weapontype>
+ 
+        <uses>25</uses>
+        <value>40</value>
+        <RNG>1</RNG>
+        <desc>Uses MAG instead of STR to determine damage.</desc>
+		<WT>7</WT>
+        
+		<MT>7</MT>
+		<HIT>60</HIT>
+		<LVL>C</LVL>
     </item>
     
     <item name="Hand Axe">
@@ -730,6 +878,24 @@
 		<LVL>D</LVL>
     </item>
 
+    <item name="Ruined Bow">
+        <id>Ruined Bow</id>
+        <spritetype>Bow</spritetype>
+        <spriteid>1</spriteid>       
+        <components>weapon,uses,weight</components>
+        <weapontype>Bow</weapontype>
+ 
+        <uses>20</uses>
+        <RNG>2</RNG>
+        <value>10</value>
+        <desc></desc>
+		<WT>3</WT>
+        
+		<MT>3</MT>
+		<HIT>80</HIT>
+		<LVL>D</LVL>
+    </item>
+
     <item name="Oak Bow">
         <id>Oak Bow</id>
         <spritetype>Bow</spritetype>
@@ -764,6 +930,24 @@
 		<MT>7</MT>
 		<HIT>80</HIT>
 		<LVL>B</LVL>
+    </item>
+
+    <item name="Short Bow">
+        <id>Short Bow</id>
+        <spritetype>Bow</spritetype>
+        <spriteid>4</spriteid>       
+        <components>weapon,uses,weight</components>
+        <weapontype>Bow</weapontype>
+ 
+        <uses>35</uses>
+        <RNG>2-3</RNG>
+        <value>16</value>
+        <desc></desc>
+		<WT>2</WT>
+        
+		<MT>2</MT>
+		<HIT>95</HIT>
+		<LVL>D</LVL>
     </item>
 
     <item name="Poison Bow">
@@ -819,6 +1003,24 @@
 		<MT>7</MT>
 		<HIT>70</HIT>
 		<LVL>A</LVL>
+    </item>
+
+    <item name="Levin Bow">
+        <id>Levin Bow</id>
+        <spritetype>Bow</spritetype>
+        <spriteid>13</spriteid>       
+        <components>weapon,uses,weight,magic</components>
+        <weapontype>Bow</weapontype>
+ 
+        <uses>25</uses>
+        <value>70</value>
+        <RNG>1</RNG>
+        <desc>Uses MAG instead of STR to determine damage.</desc>
+		<WT>6</WT>
+        
+		<MT>5</MT>
+		<HIT>75</HIT>
+		<LVL>B</LVL>
     </item>
 
     <item name="Longbow">
@@ -895,6 +1097,25 @@
 		<LVL>A</LVL>
     </item>
 
+    <item name="Net Bow">
+        <id>Net Bow</id>
+        <spritetype>Bow</spritetype>
+        <spriteid>19</spriteid>       
+        <components>weapon,uses,weight,status</components>
+        <weapontype>Bow</weapontype>
+ 
+        <uses>10</uses>
+        <RNG>2-3</RNG>
+        <value>100</value>
+        <desc>Immobilizes on hit.</desc>
+        <status>Immobilized</status>
+		<WT>7</WT>
+        
+		<MT>3</MT>
+		<HIT>70</HIT>
+		<LVL>C</LVL>
+    </item>
+
     <item name="Ballista">
         <id>Ballista</id>
         <spritetype>Bow</spritetype>
@@ -918,7 +1139,7 @@
         <id>Glimmer</id>
         <spritetype>Light</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,status,map_hit_color</components>
+        <components>weapon,uses,status</components>
         <weapontype>Light</weapontype>
  
         <uses>35</uses>
@@ -930,15 +1151,13 @@
 		<MT>2</MT>
 		<HIT>100</HIT>
 		<LVL>D</LVL>
-
-        <map_hit_color>248,248,128</map_hit_color>
     </item>
 
     <item name="Shine Ward">
         <id>Shine</id>
         <spritetype>Light</spritetype>
         <spriteid>1</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
+        <components>weapon,uses</components>
         <weapontype>Light</weapontype>
  
         <uses>25</uses>
@@ -949,15 +1168,13 @@
 		<MT>4</MT>
 		<HIT>90</HIT>
 		<LVL>C</LVL>
-
-        <map_hit_color>248,248,128</map_hit_color>
     </item>
 
     <item name="Corona Ward">
         <id>Corona</id>
         <spritetype>Light</spritetype>
         <spriteid>2</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
+        <components>weapon,uses</components>
         <weapontype>Light</weapontype>
  
         <uses>15</uses>
@@ -968,8 +1185,6 @@
 		<MT>8</MT>
 		<HIT>80</HIT>
 		<LVL>A</LVL>
-
-        <map_hit_color>248,248,128</map_hit_color>
     </item>
 
     <item name="Heal">
@@ -1029,6 +1244,56 @@
         <map_hit_color>96,144,232</map_hit_color>
     </item>
 
+    <item name="Unlock">
+        <id>Unlock</id>
+        <spritetype>Light</spritetype>
+        <spriteid>6</spriteid>       
+        <components>spell,uses,beneficial,unlock,no_ai</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>10</uses>
+        <RNG>0-5</RNG>
+        <value>150</value>
+        <desc>Opens locked doors and chests.</desc>
+        
+        <LVL>C</LVL>
+        <targets>Tile</targets>    
+    </item>
+
+    <item name="Bull Aspect">
+        <id>Bull Aspect</id>
+        <spritetype>Light</spritetype>
+        <spriteid>7</spriteid>       
+        <components>spell,uses,status,beneficial</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>15</uses>
+        <RNG>0-1</RNG>
+        <value>50</value>
+        <desc>Increases target's STR.</desc>
+        <status>Bull's Boon</status>
+        
+        <LVL>C</LVL>
+        <targets>Ally</targets>    
+    </item>
+
+    <item name="Eagle Aspect">
+        <id>Eagle Aspect</id>
+        <spritetype>Light</spritetype>
+        <spriteid>8</spriteid>       
+        <components>spell,uses,status,beneficial</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>15</uses>
+        <RNG>0-1</RNG>
+        <value>50</value>
+        <desc>Increases target's LCK.</desc>
+        <status>Eagle's Boon</status>
+        
+        <LVL>C</LVL>
+        <targets>Ally</targets>    
+    </item>
+
     <item name="Restore">
         <id>Restore</id>
         <spritetype>Light</spritetype>
@@ -1053,7 +1318,7 @@
         <id>Rescue</id>
         <spritetype>Light</spritetype>
         <spriteid>10</spriteid>       
-        <components>spell,uses,movement,beneficial,no_ai,map_hit_color</components>
+        <components>spell,uses,movement,beneficial,no_ai</components>
         <weapontype>Light</weapontype>
  
         <uses>5</uses>
@@ -1061,11 +1326,9 @@
         <value>600</value>
         <desc>Brings an ally near.</desc>
         
-        <LVL>B</LVL>
+        <LVL>A</LVL>
         <targets>Ally</targets>
         <movement>Rescue,0</movement>
-
-        <map_hit_color>-248,248,248</map_hit_color>
     </item>
 
     <item name="Refresh">
@@ -1084,7 +1347,41 @@
         <LVL>A</LVL>
         <targets>Ally</targets>
 
-        <map_hit_color>248,248,0</map_hit_color>    
+        <map_hit_color>248,0,248</map_hit_color>    
+    </item>
+
+    <item name="Snowsong">
+        <id>Snowsong</id>
+        <spritetype>Light</spritetype>
+        <spriteid>11</spriteid>       
+        <components>spell,uses,status,beneficial,detrimental</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>0</RNG>
+        <value>200</value>
+        <desc>Create RNG 4 aura that gives +4 MAG/SKL to allies, and -4 MAG/SKL to enemies.</desc>
+        <status>Snowsong,Frostburn</status>
+        
+        <LVL>B</LVL>
+        <targets>Ally</targets>    
+    </item>
+
+    <item name="Mage Shield">
+        <id>Mage Shield</id>
+        <spritetype>Light</spritetype>
+        <spriteid>12</spriteid>
+        <components>spell,uses,status,beneficial</components>
+        <weapontype>Light</weapontype>
+
+        <uses>10</uses>
+        <RNG>0-1</RNG>
+        <value>150</value>
+        <desc>Boost the target's resistance.</desc>
+        <status>Resistant</status>
+
+        <LVL>C</LVL>
+        <targets>Ally</targets>
     </item>
 
     <item name="Physic">
@@ -1186,7 +1483,7 @@
         <id>Fire</id>
         <spritetype>Anima</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
+        <components>weapon,uses</components>
         <weapontype>Anima</weapontype>
  
         <uses>30</uses>
@@ -1197,8 +1494,6 @@
 		<MT>5</MT>
 		<HIT>80</HIT>
 		<LVL>D</LVL>
-
-        <map_hit_color>224,96,-200</map_hit_color>
     </item>
 
     <item name="Aether Ward">
@@ -1217,6 +1512,23 @@
 		<MT>9</MT>
 		<HIT>100</HIT>
 		<LVL>A</LVL>
+    </item>
+
+    <item name="Windwall">
+        <id>Windwall</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>4</spriteid>       
+        <components>spell,uses,status,detrimental</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>10</uses>
+        <RNG>0-5</RNG>
+        <value>125</value>
+        <desc>Wind makes ranged weapons less accurate.</desc>
+        <status>Windwall</status>
+        
+        <LVL>C</LVL>
+        <targets>Unit</targets>    
     </item>
 
     <item name="Wyrmsfire">
@@ -1260,6 +1572,25 @@
         <targets>Tile</targets>
     </item>
 
+    <item name="Lightning Bolt">
+        <id>Lightning Bolt</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>6</spriteid>       
+        <components>spell,uses,aoe,hit,damage,detrimental</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>6</RNG>
+        <value>500</value>
+        <desc>Summons a line of lightning.</desc>
+        <aoe>Line,6</aoe>
+        
+		<damage>8</damage>
+		<hit>70</hit>
+        <LVL>B</LVL>
+        <targets>Tile</targets>
+    </item>
+
     <!-- Possibly just make this lower SPD -5? -->
     <item name="Blizzard">
         <id>Blizzard</id>
@@ -1271,14 +1602,14 @@
         <uses>5</uses>
         <RNG>4</RNG>
         <value>400</value>
-        <desc>Damages huge area. Inflicts SPD debuff.</desc>
+        <desc>Damages huge area. Lowers avoid.</desc>
         <aoe>Blast,3</aoe>
         
 		<damage>3</damage>
         <hit>80</hit>
         <LVL>B</LVL>
         <targets>Tile</targets>
-        <status>Frostbite</status>
+        <status>Chill</status>
     </item>
 
     <item name="Fly">
@@ -1303,7 +1634,7 @@
         <id>Conflagrate</id>
         <spritetype>Anima</spritetype>
         <spriteid>8</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color</components>
+        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up</components>
         <weapontype>Anima</weapontype>
  
         <uses>5</uses>
@@ -1316,15 +1647,13 @@
 		<hit>55</hit>
         <LVL>A</LVL>
         <targets>Tile</targets>
-
-        <map_hit_color>224,96,-200</map_hit_color>
     </item>
 
     <item name="Meteor">
         <id>Meteor</id>
         <spritetype>Anima</spritetype>
         <spriteid>11</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color</components>
+        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up</components>
         <weapontype>Anima</weapontype>
  
         <uses>3</uses>
@@ -1337,8 +1666,6 @@
         <hit>45</hit>
         <LVL>A</LVL>
         <targets>Tile</targets>
-
-        <map_hit_color>224,96,-200</map_hit_color>
     </item>
     
     <!-- Dark -->
@@ -1480,6 +1807,28 @@
         <map_hit_color>-248,0,-248</map_hit_color>
     </item>
 
+    <item name="Starfall">
+        <id>Starfall</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>7</spriteid>       
+        <components>spell,uses,hit,damage,status,detrimental,map_hit_color</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>1-7</RNG>
+        <value>600</value>
+        <desc>Immobilizes target.</desc>
+        
+		<damage>7</damage>
+		<hit>50</hit>
+        <LVL>B</LVL>
+        <targets>Enemy</targets>
+
+        <status>Immobilized</status>
+
+        <map_hit_color>-248,-248,-248</map_hit_color>
+    </item>
+
     <item name="Disintegrate">
         <id>Disintegrate</id>
         <spritetype>Dark</spritetype>
@@ -1498,6 +1847,41 @@
         <targets>Enemy</targets>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
+    </item>
+
+    <item name="Fade">
+        <id>Fade</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>9</spriteid>       
+        <components>spell,uses,beneficial,status</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>0-1</RNG>
+        <value>400</value>
+        <desc>Turns ally invisible.</desc>
+        
+        <LVL>B</LVL>
+        <targets>Ally</targets>
+        <status>Fade_Status</status>
+    </item>
+
+    <item name="Geas">
+        <id>Geas</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>10</spriteid>       
+        <components>spell,uses,hit,detrimental,status</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>1</RNG>
+        <value>5000</value>
+        <desc>Gain control over an enemy unit for 3 turns.</desc>
+        
+        <LVL>A</LVL>
+        <hit>50</hit>
+        <targets>Enemy</targets>
+        <status>Geas</status>
     </item>
 
     <!-- Neutral -->
@@ -1522,7 +1906,7 @@
         <id>Vulnerary</id>
         <spritetype>Consumable</spritetype>
         <spriteid>0</spriteid>       
-        <components>usable,heal,uses,beneficial,map_hit_color</components>
+        <components>usable,heal,uses,beneficial</components>
  
         <uses>3</uses>
         <RNG>0</RNG>
@@ -1530,15 +1914,13 @@
         <desc>Restores 10 HP.</desc>
         
         <heal>10</heal>
-
-        <map_hit_color>96,144,232</map_hit_color>
     </item>
     
     <item name="Potion">
         <id>Potion</id>
         <spritetype>Consumable</spritetype>
         <spriteid>1</spriteid>       
-        <components>usable,heal,uses,beneficial,map_hit_color</components>
+        <components>usable,heal,uses,beneficial</components>
  
         <uses>3</uses>
         <RNG>0</RNG>
@@ -1546,15 +1928,27 @@
         <desc>Restores 20 HP.</desc>
         
         <heal>20</heal> 
+    </item>
 
-        <map_hit_color>96,144,232</map_hit_color>
+    <item name="Concoction">
+        <id>Concoction</id>
+        <spritetype>Consumable</spritetype>
+        <spriteid>2</spriteid>       
+        <components>usable,heal,uses,beneficial</components>
+ 
+        <uses>3</uses>
+        <RNG>0</RNG>
+        <value>500</value>
+        <desc>Restores 40 HP.</desc>
+        
+        <heal>40</heal> 
     </item>
 
     <item name="Elixir">
         <id>Elixir</id>
         <spritetype>Consumable</spritetype>
         <spriteid>3</spriteid>       
-        <components>usable,heal,uses,beneficial,map_hit_color</components>
+        <components>usable,heal,uses,beneficial</components>
  
         <uses>3</uses>
         <RNG>0</RNG>
@@ -1562,38 +1956,46 @@
         <desc>Restores all HP.</desc>
         
         <heal>80</heal> 
-
-        <map_hit_color>96,144,232</map_hit_color>
     </item>
 
     <item name="Spiritbane">
         <id>Spiritbane</id>
         <spritetype>Consumable</spritetype>
         <spriteid>5</spriteid>
-        <components>usable,status,uses,beneficial,map_hit_color</components>
+        <components>usable,status,uses,beneficial</components>
 
         <uses>3</uses>
         <RNG>0</RNG>
         <value>300</value>
         <desc>A draught that boosts the user's RES.</desc>
         <status>Resistant</status>
-
-        <map_hit_color>96,144,232</map_hit_color>
     </item>
 
     <item name="Barkskin">
         <id>Barkskin</id>
         <spritetype>Consumable</spritetype>
         <spriteid>8</spriteid>
-        <components>usable,status,uses,beneficial,map_hit_color</components>
+        <components>usable,status,uses,beneficial</components>
 
         <uses>3</uses>
         <RNG>0</RNG>
         <value>300</value>
         <desc>A draught that boosts the user's DEF.</desc>
         <status>Barkskin</status>
+    </item>
 
-        <map_hit_color>96,144,232</map_hit_color>
+    <item name="Herbs">
+        <id>Herbs</id>
+        <spritetype>Consumable</spritetype>
+        <spriteid>7</spriteid>       
+        <components>usable,status,uses,beneficial</components>
+ 
+        <uses>3</uses>
+        <RNG>0</RNG>
+        <value>50</value>
+        <desc>User regenerates a fifth of its max hp for 5 turns.</desc>
+        
+        <status>Regeneration 5</status>
     </item>
 
     <item name="Skeleton Key">
@@ -1718,6 +2120,19 @@
         <desc>Grants Damage +2 and Damage Taken -2 against enemies with more HP.</desc>   
     </item>
 
+    <item name="Arms Scroll">
+        <id>Arms Scroll</id>
+        <spritetype>Boosters</spritetype>
+        <spriteid>10</spriteid>       
+        <components>usable,uses,wexp_increase,booster,beneficial</components>
+        
+        <wexp_increase>50</wexp_increase>
+        <uses>1</uses>
+        <RNG>0</RNG>
+        <value>4000</value>
+        <desc>Increases the user's weapon level.</desc>   
+    </item>
+
     <item name="Ruby">
         <id>Ruby</id>
         <spritetype>Valuable</spritetype>
@@ -1749,6 +2164,17 @@
         <RNG>0</RNG>
         <value>20000</value>
         <desc>An expensive gem worth 10000 gold.</desc>   
+    </item>
+
+    <item name="Money">
+        <id>Money</id>
+        <spritetype>Valuable</spritetype>
+        <spriteid>3</spriteid>       
+        <components>convoy_locked</components>
+        
+        <RNG>0</RNG>
+        <value>20000</value>
+        <desc>A heavy bag of money.</desc>   
     </item>
 
     <item name="Makara">
@@ -1870,7 +2296,7 @@
         <id>so_Rally</id>
         <spritetype>Skills</spritetype>
         <spriteid>10,1</spriteid>
-        <components>spell,status,virtual,beneficial,aoe,exp,map_hit_color</components>
+        <components>spell,status,virtual,beneficial,aoe,exp</components>
         <weapontype>None</weapontype>
 
         <value>1</value>
@@ -1881,8 +2307,6 @@
         <aoe>Blast,3</aoe>
         <LVL>D</LVL>
         <exp>-1</exp>
-
-        <map_hit_color>96,144,232</map_hit_color>
     </item>
 
     <item name="Summon_1">
@@ -1901,6 +2325,24 @@
         <summon_desc>A summoned phantom</summon_desc>
         <summon_ai>Pursue</summon_ai>
         <summon_s_id>Phantom</summon_s_id>
+    </item>
+
+    <item name="Summon_2">
+        <id>so_Summon_2</id>
+        <spritetype>Skills</spritetype>
+        <spriteid>9,2</spriteid>
+        <components>summon,virtual,beneficial</components>
+
+        <value>1</value>
+        <RNG>1</RNG>
+        <desc>Summons an animal companion.</desc>
+
+        <summon_klass>Tiger</summon_klass>
+        <summon_items>Fang</summon_items>
+        <summon_name>Tiger</summon_name>
+        <summon_desc>An envoy of the forest</summon_desc>
+        <summon_ai>Pursue</summon_ai>
+        <summon_s_id>Tiger</summon_s_id>
     </item>
     
 </item_catalog> 

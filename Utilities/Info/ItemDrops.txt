@@ -79,7 +79,7 @@ Lancereaver - Drop
 Mithril Lance - Drop
 Nyx - Drop
 Longbow - Drop
-Mage Shield - House
+Rescue - House
 
 Chapter 6:
 Rusted Sword - Coyote
@@ -103,7 +103,7 @@ Yew Bow - Rescue 4 Civilians
 
 Chapter 7:
 Yew Longbow - Ruin
-Starfall - Ruin
+Hex - Ruin
 Rescue - Ruin
 Howl - Base Conversation
 Secret Book - Boss Drop
@@ -149,4 +149,5 @@ Energy Ring
 Disintegrate
 Brave Lance
 Brave Bow
-More gold. Around beginning of Level 8 I started to run out. An extra 10000 at level9? 
+Fortune
+More gold. Around beginning of Level 8 I started to run out. An extra 10000 at level9? -- Sam says something about pulling out the old war chest in prebase 9?

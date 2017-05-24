@@ -385,6 +385,10 @@ def itemparser(itemstring):
                     my_components['custom_ai'] = item['custom_ai']
                 elif component == 'custom_ai_value':
                     my_components['custom_ai_value'] = item['custom_ai_value']
+                # Affects map animation
+                elif component == 'map_hit_color':
+                    my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
+                    assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
                 elif component == 'heal':
                     my_components['heal'] = item['heal']
                 elif component == 'damage':

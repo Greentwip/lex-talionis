@@ -77,17 +77,17 @@ class UnitSprite(object):
             image = Image_Modification.flickerImageTranslucentColorKey(image, self.transition_counter/(self.transition_time/100))
             if self.transition_counter <= 0:
                 self.transition_state = 'normal'
-        elif self.unit.flickerWhite:
-            total_time = self.unit.flickerWhite[1]
-            starting_time = self.unit.flickerWhite[0]
+        elif self.unit.flicker:
+            color = self.unit.flicker[2]
+            total_time = self.unit.flicker[1]
+            starting_time = self.unit.flicker[0]
             time_passed = Engine.get_time() - starting_time
             if time_passed >= total_time:
-                self.unit.end_flicker_white()
+                self.unit.end_flicker()
             else:
-                #whiteness = (total_time/2 - abs(time_passed - total_time/2))*255.0/(total_time/2)
-                whiteness = (total_time - time_passed)*255.0/total_time
-                #image = Image_Modification.flickerImageWhiteColorKey(image, whiteness)
-                image = Image_Modification.flickerImageWhite(image.convert_alpha(), whiteness)
+                color = ((total_time - time_passed)*float(c)/total_time for c in color)
+                #image = Image_Modification.flicker_image(image.convert_alpha(), color)
+                image = Image_Modification.change_image_color(image.convert_alpha(), color)
         elif any(status.unit_translucent for status in self.unit.status_effects):
             image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
         elif self.unit.flickerRed and gameStateObj.boundary_manager.draw_flag:
@@ -165,7 +165,7 @@ class UnitSprite(object):
                         else:
                             cut_off = int((self.unit.currenthp/float(self.unit.stats['HP']))*12) + 1
                         if gameStateObj.combatInstance and self.unit in gameStateObj.combatInstance.health_bars:
-                            self.current_cut_off = int(float(gameStateObj.combatInstance.health_bars[self.unit].true_hp)/self.unit.stats['HP']*12) + 1
+                            self.current_cut_off = int(float(gameStateObj.combatInstance.health_bars[self.unit].true_hp)/self.unit.stats['HP']*13)
                         else:
                             if current_time - self.lastHPUpdate > 50:
                                 self.lastHPUpdate = current_time

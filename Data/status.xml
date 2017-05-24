@@ -327,6 +327,16 @@
         <time>2</time>
     </status>
 
+    <status name="Frostbite">
+        <id>Frostbite</id>
+        <desc>Inflicts SPD -3.</desc>
+        <icon_index>5,3</icon_index>
+        <components>stat_change,time,negative</components>
+
+        <stat_change>0,0,0,0,-3,0,0,0,0,0</stat_change>
+        <time>2</time>
+    </status>
+
     <status name="Bloodletting">
         <id>Vampire</id>
         <desc>Heal 50% on a successful kill during your turn.</desc>

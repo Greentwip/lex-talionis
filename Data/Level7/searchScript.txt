@@ -3,10 +3,10 @@
 if;self.optionalunit2 == 'Nia'
 	set_tile_info;3,6
 	give_item;{unit};Yew Longbow
-# Give a Starfall
+# Give a Hex
 elif;self.optionalunit2 == 'Kayla'
 	set_tile_info;27,14
-	give_item;{unit};Starfall
+	give_item;{unit};Hex
 # Give a Rescue
 elif;self.optionalunit2 == 'Renae'
 	set_tile_info;23,21

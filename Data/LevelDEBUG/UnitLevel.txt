@@ -35,6 +35,7 @@ enemy;0;0;Fighter;1;Hatchet;15,6;Attack;Resistance
 #player;2;archer;Archer;Poison Bow;8,6;None;Resistance
 #enemy;0;0;Harold;8,8;None
 player;0;0;Berserker;20;Hatchet,Potion;12,7;None;Resistance
-player;0;0;Strategist;12;Glimmer,Mend;11,7;None;Resistance
+player;0;0;Strategist;12;Glimmer,Mend,Rescue;11,7;None;Resistance
 player;0;0;Berserker;10;Hatchet,Potion;9,6;None;Resistance
 #enemy;0;0;Warrior;14;Iron Axe;14,7;DoNothing;Resistance
+player;0;0;Shaman;10;Flux;13,7;None;Resistance

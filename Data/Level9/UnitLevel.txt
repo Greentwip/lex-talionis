@@ -82,7 +82,7 @@ enemy;0;p11_2;Dragoon;15;Adamant Lance,Long Spear;0,0;Pursue;Templar
 enemy;0;p11_3;Swordmaster;15;Adamant Sword,Mithril Knife;0,0;Pursue;Templar
 enemy;0;p11_4;Oracle;15;Corona,Silence,Physic;0,0;Pursue;Templar
 enemy;0;p11_5;Warrior;15;Adamant Axe,Yew Bow;0,0;Pursue;Templar
-enemy;0;p11_6;Warlock;15;Howl,Starfall;0,0;Pursue;Templar
+enemy;0;p11_6;Warlock;15;Howl,Stun;0,0;Pursue;Templar
 enemy;0;p11_7;Berserker;15;Adamant Axe,Tomahawk;0,0;Pursue;Templar
 enemy;0;p11_8;Ranger;15;Yew Longbow;0,0;Pursue;Templar
 

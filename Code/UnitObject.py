@@ -149,7 +149,7 @@ class UnitObject(object):
         self.sprite = UnitSprite.UnitSprite(self)
         self.arrowCounter = 0
         self.arrowAnim = [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2]
-        self.flickerWhite = None
+        self.flicker = None
         self.flickerRed = False
         self.loadSprites()
 
@@ -192,11 +192,11 @@ class UnitObject(object):
             self.bigportrait = UNITDICT['Generic_Portrait_' + self.klass]
             self.portrait = UNITDICT[self.faction + 'Emblem']
 
-    def begin_flicker_white(self, time):
-        self.flickerWhite = (Engine.get_time(), time)
+    def begin_flicker(self, time, color=(255,255,255)):
+        self.flicker = (Engine.get_time(), time, color)
 
-    def end_flicker_white(self):
-        self.flickerWhite = None
+    def end_flicker(self):
+        self.flicker = None
 
 # === MENUS ===================================================================
     def createPortrait(self, gameStateObj):

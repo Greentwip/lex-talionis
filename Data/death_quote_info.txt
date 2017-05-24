@@ -171,13 +171,8 @@ elif;self.optionalunit.name == 'Ulver'
 	r;Ulver
 end
 #
-# Level 3
-if;gameStateObj.counters['level'] == 3
-	if;any(item.name == 'Money' for item in self.optionalunit.items)
-		lose_game
-	end
 # Level 4
-elif;gameStateObj.counters['level'] == 4
+if;gameStateObj.counters['level'] == 4
 	if;self.optionalunit.klass == 'Wagon'
 		inc_counter;Dead_Wagons
 	end

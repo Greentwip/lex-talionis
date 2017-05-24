@@ -8,6 +8,12 @@ from imagesDict import getImages
 from GlobalConstants import *
 import Engine
 
+def flicker_image(image, color):
+    color = tuple(Utility.clamp(c, 0, 255) for c in color)
+    image = image.copy()
+    image.fill(color, None, pygame.BLEND_RGB_ADD)
+    return image
+
 def flickerImageWhite(image, white):
     """whiteness measured from 0 to 255"""
     white = Utility.clamp(white, 0, 255)

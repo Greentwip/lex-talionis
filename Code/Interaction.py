@@ -613,6 +613,7 @@ class Map_Combat(Combat):
         self.length_of_combat = 2000
         self.additional_time = 0
         self.combat_state = 'Pre_Init'
+        self.aoe_anim_flag = False # Have we shown the aoe animation yet?
 
         self.health_bars = {}
 
@@ -656,6 +657,15 @@ class Map_Combat(Combat):
                 if skip or current_time > self.length_of_combat/5:
                     gameStateObj.cursor.drawState = 0
                     gameStateObj.highlight_manager.remove_highlights()
+                    if self.item.aoe_anim and not self.aoe_anim_flag:
+                        self.aoe_anim_flag = True
+                        num_frames = 12
+                        image = IMAGESDICT['AOE_' + self.item.id]
+                        pos = gameStateObj.cursor.position[0], gameStateObj.cursor.position[1] - image.get_height()/num_frames/TILEHEIGHT/2 - 1
+                        #  - image.get_width()/num_frames/TILEWIDTH/2
+                        #print(gameStateObj.cursor.position, pos)
+                        anim = CustomObjects.Animation(IMAGESDICT['AOE_' + self.item.id], pos, (num_frames, 1), num_frames, 32)
+                        gameStateObj.allanimations.append(anim)
                     self.combat_state = '2'
 
             elif self.combat_state == '2':
@@ -668,7 +678,8 @@ class Map_Combat(Combat):
                         # TODO: Add offset to sound and animation
                         if result.outcome:
                             if isinstance(result.defender, UnitObject.UnitObject):
-                                result.defender.begin_flicker_white(self.length_of_combat/5)
+                                color = self.item.map_hit_color if self.item.map_hit_color else (255, 255, 255) # default to white
+                                result.defender.begin_flicker(self.length_of_combat/5, color)
                             if result.defender.currenthp - result.def_damage <= 0: # Lethal
                                 SOUNDDICT['Final Hit'].play()
                             elif result.def_damage < 0: # Heal
@@ -771,7 +782,7 @@ class Map_Combat(Combat):
         if result.def_movement:
             #print('DEF', self.current_result.def_movement)
             atk_position = result.attacker.position
-            result.defender.handle_forced_movement(atk_position, self.current_result.def_movement, gameStateObj)
+            result.defender.handle_forced_movement(atk_position, result.def_movement, gameStateObj)
         # Summoning
         if result.summoning:
             result.summoning.sprite.set_transition('warp_in')
