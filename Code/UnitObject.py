@@ -978,38 +978,41 @@ class UnitObject(object):
                            unit.team not in team_ignore and unit.name not in name_ignore]
             # Don't want this line, since AI does not consider tiles in the Primary AI
             #enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
-            for valid_move in valid_moves:
-                for unit_pos in enemy_units:
-                    if Utility.calculate_distance(valid_move, unit_pos) in item.RNG:
-                        targets.add(unit_pos)
+            while enemy_units:
+                current_pos = enemy_units.pop()
+                for valid_move in valid_moves:
+                    if Utility.calculate_distance(valid_move, current_pos) in item.RNG:
+                        targets.add(current_pos)
+                        break
         elif item.spell:
             if item.spell.targets == 'Tile':
                 for valid_move in valid_moves:
                     Utility.find_manhattan_spheres(targets, item.RNG, valid_move, gameStateObj)
-                if item.detrimental:
-                    targets = {target for target in targets if any(Interaction.convert_positions(gameStateObj, self, self.position, target, item))}
             elif item.beneficial:
                 ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and \
                               unit.team not in team_ignore and unit.name not in name_ignore]
-                for valid_move in valid_moves:
-                    for unit_pos in ally_units:
-                        if Utility.calculate_distance(valid_move, unit_pos) in item.RNG:
-                            targets.add(unit_pos)
+                while ally_units:
+                    current_pos = ally_units.pop()
+                    for valid_move in valid_moves:
+                        if Utility.calculate_distance(valid_move, current_pos) in item.RNG:
+                            targets.add(current_pos)
+                            break
             else:
                 enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and \
                                unit.team not in team_ignore and unit.name not in name_ignore]
                 # Don't want this line, since AI does not consider tiles in the Primary AI
                 #enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
-                for valid_move in valid_moves:
-                    for unit_pos in enemy_units:
-                        if Utility.calculate_distance(valid_move, unit_pos) in item.RNG:
-                            targets.add(unit_pos)
+                while enemy_units:
+                    current_pos = enemy_units.pop()
+                    for valid_move in valid_moves:
+                        if Utility.calculate_distance(valid_move, current_pos) in item.RNG:
+                            targets.add(current_pos)
+                            break
 
         # Handle line of sight if necessary
-        max_item_range = max(item.RNG)
         targets = list(targets)
-        if ((item.weapon and CONSTANTS['line_of_sight']) or (item.spell and CONSTANTS['spell_line_of_sight'])) and max_item_range > 1:
-            targets = [pos for pos in targets if Utility.line_of_sight(valid_moves, [pos], max_item_range, gameStateObj)]
+        if ((item.weapon and CONSTANTS['line_of_sight']) or (item.spell and CONSTANTS['spell_line_of_sight'])):
+            targets = Utility.line_of_sight(valid_moves, targets, max(item.RNG), gameStateObj)
         return targets
 
     def getStealTargets(self, gameStateObj, position=None):
@@ -1073,7 +1076,7 @@ class UnitObject(object):
             gameStateObj.highlight_manager.add_highlight(attack, 'splash')
 
     ### gets all possible positions the unit could use its spell on, given its main weapon or an optionally given main weapon
-    ### should be called after unit has moved. Does not attempt to determine if an enemy is actually in that specific place
+    ### should be called after unit has moved. !!! Does not attempt to determine if an enemy is actually in that specific place. !!!
     def getSpellAttacks(self, gameStateObj, spell=None):
         # Set-up
         if self.isDone() or self.hasAttacked:
@@ -1088,18 +1091,19 @@ class UnitObject(object):
         # calculate
         ValidAttacks = set()
         Utility.find_manhattan_spheres(ValidAttacks, my_spell.RNG, self.position, gameStateObj)
-        ValidAttacks = list(ValidAttacks) # Removes duplicates
 
         # Now filter based on target
         if my_spell.spell.targets == 'Ally':
-            enemy_unit_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)]
+            enemy_unit_positions = {unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)}
             ValidAttacks = [pos for pos in ValidAttacks if pos not in enemy_unit_positions]
         elif my_spell.spell.targets == "Enemy":
-            ally_unit_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit)]
+            ally_unit_positions = {unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit)}
             ValidAttacks = [pos for pos in ValidAttacks if pos not in ally_unit_positions]
 
         if CONSTANTS['spell_line_of_sight']:
-            ValidAttacks = Utility.line_of_sight([self.position], ValidAttacks, max(my_spell.RNG), gameStateObj)
+            ValidAttacks = Utility.line_of_sight([self.position], list(ValidAttacks), max(my_spell.RNG), gameStateObj)
+        else:
+            ValidAttacks = list(ValidAttacks)
         return ValidAttacks
 
     def displaySpellAttacks(self, gameStateObj, spell=None):
@@ -1119,14 +1123,12 @@ class UnitObject(object):
         if my_weapon == None:
             return []
 
-        validTargets = []
-        EnemyPositions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
-                         [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
-        for position in EnemyPositions:
-            if Utility.calculate_distance(position, self.position) in my_weapon.RNG and \
-            (not CONSTANTS['line_of_sight'] or Utility.line_of_sight([self.position], [position], max(my_weapon.RNG), gameStateObj)):
-                validTargets.append(position)
-        return validTargets
+        enemy_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
+                          [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
+        valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in my_weapon.RNG]                          
+        if CONSTANTS['line_of_sight']:
+            valid_targets = Utility.line_of_sight([self.position], valid_targets, max(my_weapon.RNG), gameStateObj)
+        return valid_targets
 
     # Finds all valid target positions given the main spell you are using
     # Gets all valid target positions given 1 main spell
@@ -1138,7 +1140,6 @@ class UnitObject(object):
             my_spell = spell
         if my_spell is None:
             return []
-        validSpellTargets = []
         if my_spell.spell.targets == 'Ally':
             if my_spell.heal:
                 # This is done more robustly to account for the interaction between healing effects and AOE
@@ -1165,24 +1166,38 @@ class UnitObject(object):
         elif my_spell.spell.targets == 'Unit':
             targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
         elif my_spell.spell.targets == 'Tile':
-            targetable_position = [position for position, tile in gameStateObj.map.tiles.iteritems() if Utility.calculate_distance(position, self.position) in my_spell.RNG]
+            #targetable_position = [position for position, tile in gameStateObj.map.tiles.iteritems() if Utility.calculate_distance(position, self.position) in my_spell.RNG]
+            targetable_position = Utility.find_manhattan_spheres(set(), my_spell.RNG, self.position, gameStateObj)
             if my_spell.unlock:
                 targetable_position = [position for position in targetable_position if 'Locked' in gameStateObj.map.tile_info_dict[position]]
+            """
             elif my_spell.hit:
-                results = [Interaction.convert_positions(gameStateObj, self, self.position, position, my_spell) for position in targetable_position]
-                if my_spell.detrimental:
-                    targetable_position = [position for index, position in enumerate(targetable_position) if \
-                                           (results[index][0] and not (isinstance(results[index][0], UnitObject) and self.checkIfAlly(results[index][0]))) or \
-                                           any(r for r in results[index][1] if not (isinstance(r, UnitObject) and self.checkIfAlly(r)))]
+                if len(targetable_position) < 20:
+                    results = [Interaction.convert_positions(gameStateObj, self, self.position, position, my_spell) for position in targetable_position]
+                    if my_spell.detrimental:
+                        targetable_position = [position for index, position in enumerate(targetable_position) if \
+                                               (results[index][0] and not self.checkIfAlly(results[index][0])) or \
+                                               any(r for r in results[index][1] if not self.checkIfAlly(r))]
+                    else:
+                        targetable_position = [position for index, position in enumerate(targetable_position) if results[index][0] or results[index][1]]
                 else:
-                    targetable_position = [position for index, position in enumerate(targetable_position) if results[index][0] or results[index][1]]
+                    if my_spell.detrimental:
+                        enemy_positions = set([unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
+                                             [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]])
+                        targetable_position = set(targetable_position)
+                        if my_spell.aoe.number > 0:
+                            additional_positions = set()
+                            for enemy in enemy_positions:
+                                for rng in range(my_spell.aoe.number):
+                                    additional_positions |= Utility.get_adjacent_positions(enemy, rng + 1)
+                            targetable_position |= additional_positions
+                        targetable_position = list(targetable_position)
+            """
 
-
-                
         if CONSTANTS['spell_line_of_sight']:
-            validSpellTargets = [position for position in targetable_position if Utility.line_of_sight([self.position], [position], max(my_spell.RNG), gameStateObj)]
+            validSpellTargets = Utility.line_of_sight([self.position], list(targetable_position), max(my_spell.RNG), gameStateObj)
         else:
-            validSpellTargets = targetable_position
+            validSpellTargets = list(targetable_position)
         return validSpellTargets
 
     # Finds all valid target positions given all weapons the unit has access to, as opposed to the just
@@ -1295,25 +1310,29 @@ class UnitObject(object):
         positions = [position for position in positions if gameStateObj.map.check_bounds(position)]
         return positions
 
-    def checkIfAlly(self, unit):
-        if self.team == 'player':
-            return True if (unit.team == 'player' or unit.team == 'other') else False
-        elif self.team == 'other':
-            return True if (unit.team == 'player' or unit.team == 'other') else False
-        elif self.team == 'enemy':
-            return True if (unit.team == 'enemy') else False
-        elif self.team == 'enemy2':
-            return True if (unit.team == 'enemy2') else False
+    def checkIfAlly(self, unit): 
+        if hasattr(unit, 'team'): # check if not a tile
+            if self.team == 'player':
+                return True if (unit.team == 'player' or unit.team == 'other') else False
+            elif self.team == 'other':
+                return True if (unit.team == 'player' or unit.team == 'other') else False
+            elif self.team == 'enemy':
+                return True if (unit.team == 'enemy') else False
+            elif self.team == 'enemy2':
+                return True if (unit.team == 'enemy2') else False
+        return False
 
     def checkIfEnemy(self, unit):
-        if self.team == 'player':
-            return True if (unit.team == 'enemy' or unit.team == 'enemy2') else False
-        elif self.team == 'other':
-            return True if (unit.team == 'enemy' or unit.team == 'enemy2') else False
-        elif self.team == 'enemy':
-            return True if (unit.team != 'enemy') else False
-        elif self.team == 'enemy2':
-            return True if (unit.team != 'enemy2') else False
+        if hasattr(unit, 'team'): # check if not a tile
+            if self.team == 'player':
+                return True if (unit.team == 'enemy' or unit.team == 'enemy2') else False
+            elif self.team == 'other':
+                return True if (unit.team == 'enemy' or unit.team == 'enemy2') else False
+            elif self.team == 'enemy':
+                return True if (unit.team != 'enemy') else False
+            elif self.team == 'enemy2':
+                return True if (unit.team != 'enemy2') else False
+        return True
 
     def handle_fight_quote(self, target_unit, gameStateObj):
         gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', target_unit, self, event_flag=False))

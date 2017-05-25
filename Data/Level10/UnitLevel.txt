@@ -65,8 +65,8 @@ enemy;0;l2;General;20;Great Sword,Adamant Lance;5,23;Pursue;Claw
 enemy;0;l3;Dracolord;20;Mithril Axe,Mithril Lance;4,22;Pursue;Claw
 enemy;0;l4;Dracolord;20;Mithril Axe,Mithril Lance;6,22;Pursue;Claw
 # Right - Sages and Warlocks
-enemy;0;r1;Sage;20;Aether,Conflagrate;18,22;Pursue;Claw
-enemy;0;r2;Sage;20;Aether,Conflagrate;20,22;Pursue;Claw
+enemy;0;r1;Sage;20;Aether,Fireball;18,22;Pursue;Claw
+enemy;0;r2;Sage;20;Aether,Fireball;20,22;Pursue;Claw
 enemy;0;r3;Warlock;20;Howl,Disintegrate;19,23;Pursue;Claw
 enemy;0;r4;Warlock;20;Howl,Disintegrate;19,21;Pursue;Claw
 ### Fourth Turn

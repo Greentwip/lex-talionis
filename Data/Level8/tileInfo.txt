@@ -13,7 +13,7 @@
 1,15:Shop=Restore,Refresh,Wyrmsfire,Sandblast,Ruin,Stun,Hex,Spiritbane,Barkskin
 2,21:Shop=Mithril Sword,Steel Knife,Mithril Lance,Short Spear,Mithril Axe,Short Axe,Yew Bow,Oak Longbow
 7,2:Shop=Levin Sword,Mithril Knife,Long Spear,Tomahawk,Yew Longbow
-20,1:Shop=Corona,Physic,Conflagrate,Fly,Howl,Disintegrate,Elixir
+20,1:Shop=Corona,Physic,Fireball,Fly,Howl,Disintegrate,Elixir
 4,11:Village=1
 7,17:Village=2
 15,11:Village=3

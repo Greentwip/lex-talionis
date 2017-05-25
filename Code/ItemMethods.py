@@ -377,22 +377,10 @@ def itemparser(itemstring):
                 elif component == 'aoe':
                     info_line = item['aoe'].split(',')
                     aoe = AOEComponent(info_line[0], int(info_line[1]))
-                # Affects both player and ai
-                elif component == 'target_restrict':
-                    my_components['target_restrict'] = item['target_restrict']
-                # Only affects ai
-                elif component == 'custom_ai':
-                    my_components['custom_ai'] = item['custom_ai']
-                elif component == 'custom_ai_value':
-                    my_components['custom_ai_value'] = item['custom_ai_value']
                 # Affects map animation
                 elif component == 'map_hit_color':
                     my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
                     assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
-                elif component == 'sfx_on_hit':
-                    my_components['sfx_on_hit'] = item['sfx_on_hit']
-                elif component == 'heal':
-                    my_components['heal'] = item['heal']
                 elif component == 'damage':
                     my_components['damage'] = int(item['damage'])
                 elif component == 'hit':
@@ -414,6 +402,8 @@ def itemparser(itemstring):
                     ai = item['summon_ai']
                     s_id = item['summon_s_id']
                     my_components['summon'] = SummonComponent(klass, items, name, desc, ai, s_id)
+                elif component in item:
+                    my_components[component] = item[component]
                 else:
                     my_components[component] = True
             currentItem = ItemObject(itemid, item['name'], item['spritetype'], item['spriteid'], my_components, \

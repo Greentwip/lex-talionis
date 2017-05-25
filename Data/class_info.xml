@@ -483,7 +483,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Futuresight;5,Luck_Aura;10,Revelation</skills>
+        <skills>1,Futuresight;5,Resistance_Aura;10,Revelation</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,15,40,55,45,60,15,65</growths>
 		<bases>14,0,3,3,2,0,3,6,4</bases>

@@ -98,3 +98,4 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - B: 20 hit, 2 damage
 - A: 25 hit, 2 damage
 - If you are on impassable terrain, take damage.
+- Add levelup quotes - optional - Because characters don't really matter for this game, probably not

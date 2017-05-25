@@ -13,6 +13,7 @@ credits;Custom Item Sprites;FE7x Team;LordGlenn;rainlash
 credits;Custom Class Cards;rainlash;Dei;MageKnight404
 credits;Custom Map Sprites;rainlash;FE7x Team;dondon151
 credits;Additional Spriting Resources;FE7x Team;Lexou
+credits;Additional Map Animations;Duelyst;Red Mystery Dungeon
 credits;Writing;rainlash
 credits;Sound Effects;Sounds-Resource
 credits;Music Arrangement;rainlash;WinstonJoe

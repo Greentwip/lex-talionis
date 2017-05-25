@@ -1618,8 +1618,8 @@
         <status>TempFlying</status>
     </item>
 
-    <item name="Conflagrate">
-        <id>Conflagrate</id>
+    <item name="Fireball">
+        <id>Fireball</id>
         <spritetype>Anima</spritetype>
         <spriteid>8</spriteid>       
         <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up</components>

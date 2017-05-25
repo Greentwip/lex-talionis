@@ -5,10 +5,10 @@
 # In Blazing Sword, difference between player and enemy growths (Speed and Def are sorely lacking in enemies...)
 # 4, 2, 2, 7, 15, --, 10, 5
 
-player_growths;10,15,10,20,10,0,20,0
-enemy_growths;5,20,20,30,40,0,40,25
+player_growths;5,10,5,15,5,0,15,0
+enemy_growths;5,15,15,20,30,0,30,15
 
-# To make enemy growths like POR without inflating player stats, use: '-5,5,10,10,30,0,20,25'
+# To make enemy growths like POR without inflating player stats, use: '0,5,10,5,25,0,15,15'
 
 # Bases
 player_bases;0,0,0,0,0,0,0,0

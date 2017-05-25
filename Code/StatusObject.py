@@ -588,15 +588,6 @@ def statusparser(s_id):
                         limit = int(limit)
                         my_components['endstep_rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)
                     # Combat changes
-                    elif component == 'avoid':
-                        avoid = status.find('avoid').text
-                        my_components['avoid'] = avoid
-                    elif component == 'hit':
-                        hit = status.find('hit').text
-                        my_components['hit'] = hit
-                    elif component == 'mt':
-                        mt = status.find('mt').text
-                        my_components['mt'] = mt
                     elif component == 'conditional_avoid':
                         avoid, conditional = status.find('conditional_avoid').text.split(';')
                         my_components['conditional_avoid'] = ConditionalComponent('conditional_avoid', avoid, conditional)
@@ -626,10 +617,6 @@ def statusparser(s_id):
                         my_components['rescue'] = RescueComponent()
                     elif component == 'count':
                         my_components['count'] = CountComponent(int(status.find('count').text))
-                    elif component == 'tether':
-                        my_components['tether'] = status.find('tether').text
-                    elif component == 'vampire':
-                        my_components['vampire'] = status.find('vampire').text
                     elif component == 'caretaker':
                         my_components['caretaker'] = int(status.find('caretaker').text)
                     elif component == 'remove_range':
@@ -655,18 +642,8 @@ def statusparser(s_id):
                         child = status.find('child').text
                         target = status.find('target').text
                         my_components['aura'] = ActiveSkill.Aura(aura_range, target, child)
-                    elif component == 'status_after_battle':
-                        child = status.find('status_after_battle').text
-                        my_components['status_after_battle'] = child
-                    elif component == 'status_after_help':
-                        child = status.find('status_after_help').text
-                        my_components['status_after_help'] = child
-                    elif component == 'status_on_complete':
-                        child = status.find('status_on_complete').text
-                        my_components['status_on_complete'] = child
-                    elif component == 'ai':
-                        ai = status.find('ai').text
-                        my_components['ai'] = ai
+                    elif status.find(component) is not None and status.find(component).text:
+                        my_components[component] = status.find(component).text
                     else:
                         my_components[component] = True
 

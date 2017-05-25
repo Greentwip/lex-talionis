@@ -697,11 +697,18 @@ class MenuState(State):
             ValidMoves = cur_unit.getValidMoves(gameStateObj)
         else:
             ValidMoves = [cur_unit.position]
+
         if not cur_unit.hasAttacked:
-            if cur_unit.getAllSpellTargetPositions(gameStateObj):
-                cur_unit.displayExcessSpellAttacks(gameStateObj, ValidMoves)
-            if cur_unit.canAttack(gameStateObj):
-                cur_unit.displayExcessAttacks(gameStateObj, ValidMoves)
+            spell_targets = cur_unit.getAllSpellTargetPositions(gameStateObj)
+            atk_targets = cur_unit.getAllTargetPositions(gameStateObj)
+        else:
+            spell_targets = None
+            atk_targets = None
+
+        if spell_targets:
+            cur_unit.displayExcessSpellAttacks(gameStateObj, ValidMoves)
+        if atk_targets:
+            cur_unit.displayExcessAttacks(gameStateObj, ValidMoves)
         if cur_unit.has_canto():
             # Shows the canto moves in the menu
             #if not gameStateObj.allhighlights:
@@ -735,6 +742,7 @@ class MenuState(State):
         adjunits = [unit for unit in gameStateObj.allunits if unit.position in adjpositions]
         adjallies = [unit for unit in adjunits if cur_unit.checkIfAlly(unit)]
         adjteammates = [unit for unit in adjunits if unit.team == 'player']
+
         # If the unit is standing on a throne
         if WORDS['Seize'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(WORDS['Seize'])
@@ -747,10 +755,10 @@ class MenuState(State):
         if WORDS['Switch'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(WORDS['Switch'])
         # If the unit has validTargets
-        if cur_unit.canAttack(gameStateObj):
+        if atk_targets:
             options.append(WORDS['Attack'])
         # If the unit has a spell
-        if cur_unit.getAllSpellTargetPositions(gameStateObj) and not cur_unit.hasAttacked:
+        if spell_targets:
             options.append(WORDS['Spells'])
         # Active Skills
         for status in cur_unit.status_effects:
@@ -1365,7 +1373,6 @@ class SpellState(State):
             gameStateObj.stateMachine.back()
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
             spell = attacker.getMainSpell()
             targets = spell.spell.targets
             gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
@@ -1378,11 +1385,18 @@ class SpellState(State):
                     defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.currentHoveredUnit.position, spell)
                     gameStateObj.combatInstance = Interaction.start_combat(attacker, defender, gameStateObj.cursor.currentHoveredUnit.position, splash, spell)
                     gameStateObj.stateMachine.changeState('combat')
+                    SOUNDDICT['Select 1'].play()
             elif targets == 'Tile':
                 defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.position, spell)
                 if not spell.hit or defender or splash:
-                    gameStateObj.combatInstance = Interaction.start_combat(attacker, defender, gameStateObj.cursor.position, splash, spell)
-                    gameStateObj.stateMachine.changeState('combat')
+                    if not spell.detrimental or (defender and attacker.checkIfEnemy(defender)) or any(attacker.checkIfEnemy(unit) for unit in splash):
+                        gameStateObj.combatInstance = Interaction.start_combat(attacker, defender, gameStateObj.cursor.position, splash, spell)
+                        gameStateObj.stateMachine.changeState('combat')
+                        SOUNDDICT['Select 1'].play()
+                    else:
+                        SOUNDDICT['Select 4'].play()
+                else:
+                    SOUNDDICT['Select 4'].play()
 
         if event in ['DOWN', 'UP', 'LEFT', 'RIGHT']:
             spell = attacker.getMainSpell()

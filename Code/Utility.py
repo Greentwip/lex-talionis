@@ -119,7 +119,6 @@ def get_adjacent_positions(c_pos, rng=1):
         for x in range(-r, r + 1):
             for y in [(r - abs(x)), -(r - abs(x))]:
                 pos.add((c_pos[0] + x, c_pos[1] + y))
-    pos = list(pos)
     return pos
 
 def find_manhattan_spheres(main_set, rng, c_pos, gameStateObj):
@@ -130,6 +129,7 @@ def find_manhattan_spheres(main_set, rng, c_pos, gameStateObj):
                 pos = c_pos[0] + x, c_pos[1] + y
                 if gameStateObj.map.check_bounds(pos):
                     main_set.add(pos)
+    return main_set
 
 def farthest_away_pos(unit, valid_moves, all_units):
     # get farthest away position from general direction of enemy units

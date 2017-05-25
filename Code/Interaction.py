@@ -654,7 +654,7 @@ class Map_Combat(Combat):
                     hp_bar.force_position_update(gameStateObj)
 
             elif self.combat_state == 'Init':
-                if skip or current_time > self.length_of_combat/5:
+                if skip or current_time > self.length_of_combat/5 + self.additional_time:
                     gameStateObj.cursor.drawState = 0
                     gameStateObj.highlight_manager.remove_highlights()
 
@@ -670,14 +670,17 @@ class Map_Combat(Combat):
                             gameStateObj.allanimations.append(anim)
                         else:
                             logger.warning('%s not in IMAGESDICT. Skipping Animation', 'AOE_' + self.item.id)
+                    # Weapons get extra time, spells and items do not need it, since they are one sided.
+                    if not self.item.weapon:
+                        self.additional_time -= self.length_of_combat/5
                     self.combat_state = '2'
 
             elif self.combat_state == '2':
-                if skip or current_time > 2*self.length_of_combat/5:
+                if skip or current_time > 2*self.length_of_combat/5 + self.additional_time:
                     self.combat_state = 'Anim'
 
             elif self.combat_state == 'Anim':
-                if skip or current_time > 3*self.length_of_combat/5:
+                if skip or current_time > 3*self.length_of_combat/5 + self.additional_time:
                     for result in self.results:
                         # TODO: Add offset to sound and animation
                         if result.outcome:
@@ -725,7 +728,7 @@ class Map_Combat(Combat):
                     # force update hp bars
                     for hp_bar in self.health_bars.values():
                         hp_bar.update()
-                    self.additional_time = max(hp_bar.time_for_change for hp_bar in self.health_bars.values()) if self.health_bars else self.length_of_combat/5
+                    self.additional_time += max(hp_bar.time_for_change for hp_bar in self.health_bars.values()) if self.health_bars else self.length_of_combat/5
                     self.combat_state = 'Clean'
 
             elif self.combat_state == 'Clean':
@@ -849,6 +852,7 @@ class Map_Combat(Combat):
         for player in players:
             if isinstance(player, UnitObject.UnitObject):
                 player.unlock_active()
+        self.additional_time = 0
 
     def draw(self, surf, gameStateObj):
         for hp_bar in self.health_bars.values():

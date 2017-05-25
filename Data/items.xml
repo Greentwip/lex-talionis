@@ -1223,7 +1223,7 @@
         <id>Wyrmsfire</id>
         <spritetype>Anima</spritetype>
         <spriteid>5</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color</components>
+        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim</components>
         <weapontype>Anima</weapontype>
  
         <uses>10</uses>
@@ -1244,7 +1244,7 @@
         <id>Sandblast</id>
         <spritetype>Anima</spritetype>
         <spriteid>9</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,status,ai_speed_up</components>
+        <components>spell,uses,aoe,hit,damage,detrimental,status,ai_speed_up,aoe_anim</components>
         <weapontype>Anima</weapontype>
  
         <uses>10</uses>
@@ -1265,7 +1265,7 @@
         <id>Blizzard</id>
         <spritetype>Anima</spritetype>
         <spriteid>10</spriteid>       
-        <components>spell,uses,aoe,hit,damage,status,detrimental,ai_speed_up</components>
+        <components>spell,uses,aoe,hit,damage,status,detrimental,ai_speed_up,aoe_anim</components>
         <weapontype>Anima</weapontype>
  
         <uses>5</uses>
@@ -1299,11 +1299,11 @@
         <status>TempFlying</status>
     </item>
 
-    <item name="Conflagrate">
-        <id>Conflagrate</id>
+    <item name="Fireball">
+        <id>Fireball</id>
         <spritetype>Anima</spritetype>
         <spriteid>8</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color</components>
+        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim</components>
         <weapontype>Anima</weapontype>
  
         <uses>5</uses>
@@ -1324,7 +1324,7 @@
         <id>Meteor</id>
         <spritetype>Anima</spritetype>
         <spriteid>11</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color</components>
+        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim</components>
         <weapontype>Anima</weapontype>
  
         <uses>3</uses>
@@ -1770,22 +1770,10 @@
     </item>
 
     <!-- Unobtainable Skill Only Items -->
-    <item name="Refresh">
-        <id>so_Refresh</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>3,9</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>0-1</RNG>
-        <desc>I done broked something.</desc>
-        <status>Refresh_Status</status>
-    </item>
-
     <item name="Rage">
         <id>so_Rage</id>
-        <spritetype>Consumable</spritetype>
-        <spriteid>0</spriteid>
+        <spritetype>Skills</spritetype>
+        <spriteid>8,10</spriteid>
         <components>status,virtual,beneficial</components>
 
         <value>1</value>
@@ -1796,26 +1784,14 @@
 
     <item name="Fade">
         <id>so_Fade</id>
-        <spritetype>Consumable</spritetype>
-        <spriteid>0</spriteid>
+        <spritetype>Skills</spritetype>
+        <spriteid>9,1</spriteid>
         <components>status,virtual,beneficial</components>
 
         <value>1</value>
         <RNG>0</RNG>
         <desc>I done broked something.</desc>
         <status>Fade_Status</status>
-    </item>
-
-    <item name="Command">
-        <id>so_Command</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>1,8</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>1-100</RNG>
-        <desc>I done broked something.</desc>
-        <status>Command_Status</status>
     </item>
 
     <item name="Shove">
@@ -1830,22 +1806,10 @@
         <movement>Shove,1</movement>
     </item>
 
-    <item name="Swap">
-        <id>so_Swap</id>
-        <spritetype>Consumable</spritetype>
-        <spriteid>0</spriteid>
-        <components>movement,self_movement,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>1</RNG>
-        <desc>I done broked something.</desc>
-        <movement>Swap,1</movement>
-    </item>
-
     <item name="Aegis">
         <id>so_Aegis</id>
-        <spritetype>Consumable</spritetype>
-        <spriteid>0</spriteid>
+        <spritetype>Skills</spritetype>
+        <spriteid>10,3</spriteid>
         <components>status,virtual,beneficial</components>
 
         <value>1</value>
@@ -1856,8 +1820,8 @@
 
     <item name="Revelation">
         <id>so_Revelation</id>
-        <spritetype>Consumable</spritetype>
-        <spriteid>0</spriteid>
+        <spritetype>Skills</spritetype>
+        <spriteid>8,3</spriteid>
         <components>status,virtual,beneficial</components>
 
         <value>1</value>

@@ -27,7 +27,8 @@ player;0;0;Fighter;1;Hatchet;12,6;Attack;Resistance
 enemy;0;0;Fighter;1;;15,5;Attack;Resistance
 enemy;0;0;Fighter;1;Iron Axe;15,7;Attack;Resistance
 enemy;0;0;Fighter;1;Hatchet;15,6;Attack;Resistance
-#enemy;0;Mage1;Mage;1;Blizzard,Elixir;12,6;Attack;Resistance
+player;0;0;Mage;1;Blizzard,Wyrmsfire,Sandblast,Fireball,Meteor;15,4;Attack;Resistance
+enemy;0;0;Mage;10;Meteor;18,6;Attack;Resistance
 #
 #player;0;0;Ballista;1;Ballista;14,14;None;Resistance
 #player;0;0;Ballista;1;Ballista;9,6;None;Resistance

@@ -95,8 +95,7 @@ class StartStart(StateMachine.State):
         if not self.started:
             gameStateObj.button_a = Button(4, (WINWIDTH - 64, WINHEIGHT - 16), 'key_SELECT')
             gameStateObj.button_b = Button(5, (WINWIDTH - 32, WINHEIGHT - 16), 'key_BACK')
-            #gameStateObj.logo = Logo(IMAGESDICT['LogoNew'], 28*2, (WINWIDTH/2, WINHEIGHT/2 - 28))
-            gameStateObj.logo = IMAGESDICT['LogoNew2']
+            gameStateObj.logo = IMAGESDICT['Logo']
             gameStateObj.press_start = Logo(IMAGESDICT['PressStart'], 16, (WINWIDTH/2, 4*WINHEIGHT/5))
             gameStateObj.fog_bg = MenuFunctions.MovieBackground('fog', 33)
             bounds = (-WINHEIGHT, WINWIDTH, WINHEIGHT, WINHEIGHT+16)
