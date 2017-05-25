@@ -38,7 +38,7 @@ ToDo:
 
 -- KNOWN ISSUES:
 - Music may not work or have major issues on Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)
-- Due to Windows 10 hogging of I/O or Disk, game may freeze for extended period of time on Windows 10 machines (when writing to Hard Drive)
+- Avast Antivirus or other Antiviruses may slow down certain actions. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- MAPMOVES ---

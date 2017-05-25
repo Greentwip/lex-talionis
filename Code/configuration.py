@@ -61,9 +61,12 @@ def read_config_file():
     return lines
 
 def write_config_file():
+    #with open('Data/config.txt', 'w') as config_file:
     with open('Data/config.txt', 'w') as config_file:
-        for name, value in OPTIONS.iteritems():
-            config_file.write(name + ';' + str(value) + '\n')
+        write_out = '\n'.join([name + ';' + str(value) for name, value in OPTIONS.iteritems()])
+        config_file.write(write_out)
+        #for name, value in OPTIONS.iteritems():
+        #    config_file.write(name + ';' + str(value) + '\n')
 
 def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum

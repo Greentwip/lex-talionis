@@ -657,15 +657,19 @@ class Map_Combat(Combat):
                 if skip or current_time > self.length_of_combat/5:
                     gameStateObj.cursor.drawState = 0
                     gameStateObj.highlight_manager.remove_highlights()
+
                     if self.item.aoe_anim and not self.aoe_anim_flag:
                         self.aoe_anim_flag = True
                         num_frames = 12
-                        image = IMAGESDICT['AOE_' + self.item.id]
-                        pos = gameStateObj.cursor.position[0], gameStateObj.cursor.position[1] - image.get_height()/num_frames/TILEHEIGHT/2 - 1
-                        #  - image.get_width()/num_frames/TILEWIDTH/2
-                        #print(gameStateObj.cursor.position, pos)
-                        anim = CustomObjects.Animation(IMAGESDICT['AOE_' + self.item.id], pos, (num_frames, 1), num_frames, 32)
-                        gameStateObj.allanimations.append(anim)
+                        if 'AOE_' + self.item.id in IMAGESDICT:
+                            image = IMAGESDICT['AOE_' + self.item.id]
+                            pos = gameStateObj.cursor.position[0] - image.get_width()/num_frames/TILEWIDTH/2 + 1, gameStateObj.cursor.position[1] - image.get_height()/TILEHEIGHT/2
+                            #  
+                            #print(gameStateObj.cursor.position, pos)
+                            anim = CustomObjects.Animation(IMAGESDICT['AOE_' + self.item.id], pos, (num_frames, 1), num_frames, 32)
+                            gameStateObj.allanimations.append(anim)
+                        else:
+                            logger.warning('%s not in IMAGESDICT. Skipping Animation', 'AOE_' + self.item.id)
                     self.combat_state = '2'
 
             elif self.combat_state == '2':
@@ -680,7 +684,9 @@ class Map_Combat(Combat):
                             if isinstance(result.defender, UnitObject.UnitObject):
                                 color = self.item.map_hit_color if self.item.map_hit_color else (255, 255, 255) # default to white
                                 result.defender.begin_flicker(self.length_of_combat/5, color)
-                            if result.defender.currenthp - result.def_damage <= 0: # Lethal
+                            if self.item.sfx_on_hit and self.item.sfx_on_hit in SOUNDDICT:
+                                SOUNDDICT[self.item.sfx_on_hit].play()
+                            elif result.defender.currenthp - result.def_damage <= 0: # Lethal
                                 SOUNDDICT['Final Hit'].play()
                             elif result.def_damage < 0: # Heal
                                 SOUNDDICT['heal'].play()

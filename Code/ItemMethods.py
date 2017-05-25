@@ -389,6 +389,8 @@ def itemparser(itemstring):
                 elif component == 'map_hit_color':
                     my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
                     assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
+                elif component == 'sfx_on_hit':
+                    my_components['sfx_on_hit'] = item['sfx_on_hit']
                 elif component == 'heal':
                     my_components['heal'] = item['heal']
                 elif component == 'damage':

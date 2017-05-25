@@ -1870,7 +1870,7 @@
         <id>so_Rally</id>
         <spritetype>Skills</spritetype>
         <spriteid>10,1</spriteid>
-        <components>spell,status,virtual,beneficial,aoe,exp,map_hit_color</components>
+        <components>spell,status,virtual,beneficial,aoe,exp,map_hit_color,aoe_anim,sfx_on_hit</components>
         <weapontype>None</weapontype>
 
         <value>1</value>
@@ -1882,7 +1882,8 @@
         <LVL>D</LVL>
         <exp>-1</exp>
 
-        <map_hit_color>96,144,232</map_hit_color>
+        <map_hit_color>-128,0,248</map_hit_color>
+        <sfx_on_hit>Rally</sfx_on_hit>
     </item>
 
     <item name="Summon_1">
