@@ -390,10 +390,16 @@ class UnitObject(object):
                 height += 16
             if self.getMainSpell().hit is not None:
                 height += 16
-            BGSurf = MenuFunctions.CreateBaseMenuSurf((80, height))
+            real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
+            BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
+            BGSurf.blit(real_surf, (2, 4))
+            BGSurf.blit(IMAGESDICT['SmallGem'], (0, 0))
+            shimmer = IMAGESDICT['Shimmer2']
+            BGSurf.blit(shimmer, (BGSurf.get_width() - shimmer.get_width() - 1, BGSurf.get_height() - shimmer.get_height() - 5))
+            BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
 
-            running_height = 4
+            running_height = 6
 
             FONT['text_white'].blit(otherunit.name, BGSurf, (25, running_height))
 
@@ -443,10 +449,16 @@ class UnitObject(object):
                 height += 16
             if self.getMainSpell().hit is not None:
                 height += 16
-            BGSurf = MenuFunctions.CreateBaseMenuSurf((80, height))
+            real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
+            BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
+            BGSurf.blit(real_surf, (2, 4))
+            BGSurf.blit(IMAGESDICT['SmallGem'], (0, 0))
+            shimmer = IMAGESDICT['Shimmer2']
+            BGSurf.blit(shimmer, (BGSurf.get_width() - shimmer.get_width() - 1, BGSurf.get_height() - shimmer.get_height() - 5))
+            BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
 
-            running_height = -12
+            running_height = -10
 
             if self.getMainSpell().damage is not None:
                 running_height += 16

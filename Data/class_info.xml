@@ -710,7 +710,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags></tags>
-        <skills>1,True Strike</skills>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,0,55,0,45,20,25</growths>
 		<bases>16,6,0,8,0,0,4,3,13</bases>

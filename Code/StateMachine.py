@@ -1211,6 +1211,8 @@ class AttackState(State):
         self.attacker.attack_info_offset = 80
         self.attacker.displaySingleAttack(gameStateObj, gameStateObj.cursor.position)
 
+        self.fluid_helper = InputManager.FluidScroll(OPTIONS['Cursor Speed'])
+
         # Play attack script if it exists
         attack_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/attackScript.txt'
         if gameStateObj.tutorial_mode and os.path.exists(attack_script_name):
@@ -1220,25 +1222,27 @@ class AttackState(State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
-        if event == 'DOWN':
+        self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
+        if 'DOWN' in directions:
             # Get closest unit in down position
             new_position = self.validTargets.get_down(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'UP':
+        elif 'UP' in directions:
             # Get closet unit in up position
             new_position = self.validTargets.get_up(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'LEFT':
+        if 'LEFT' in directions:
             # Get closest unit in left position
             new_position = self.validTargets.get_left(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'RIGHT':
+        elif 'RIGHT' in directions:
             # Get closest unit in right position
             new_position = self.validTargets.get_right(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
 
         # Go back to weapon choice
-        elif event == 'BACK':
+        if event == 'BACK':
             SOUNDDICT['Select 2'].play()
             gameStateObj.stateMachine.back()
 
@@ -1253,7 +1257,8 @@ class AttackState(State):
             if defender and isinstance(defender, UnitObject.UnitObject):
                 defender.handle_fight_quote(gameStateObj.cursor.currentSelectedUnit, gameStateObj)
 
-        if event in ['LEFT', 'RIGHT', 'UP', 'DOWN']:
+        #if event in ['LEFT', 'RIGHT', 'UP', 'DOWN']:
+        if directions:
             SOUNDDICT['Select 6'].play()
             gameStateObj.info_surf = None
             gameStateObj.highlight_manager.remove_highlights()
@@ -1342,28 +1347,32 @@ class SpellState(State):
         attacker.displaySpellAttacks(gameStateObj)
         attacker.displaySingleAttack(gameStateObj, gameStateObj.cursor.position, item=spell)
 
+        self.fluid_helper = InputManager.FluidScroll(OPTIONS['Cursor Speed'])
+
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
+        self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
         attacker = gameStateObj.cursor.currentSelectedUnit
-        if event == 'DOWN':
+        if 'DOWN' in directions:
             # Get closet unit in down position
             new_position = attacker.validSpellTargets.get_down(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'UP':
+        elif 'UP' in directions:
             # Get closet unit in up position
             new_position = attacker.validSpellTargets.get_up(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'LEFT':
+        if 'LEFT' in directions:
             # Get closest unit in left position
             new_position = attacker.validSpellTargets.get_left(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'RIGHT':
+        elif 'RIGHT' in directions:
             # Get closest unit in right position
             new_position = attacker.validSpellTargets.get_right(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
 
         # Show R unit status screen
-        elif event == 'INFO':
+        if event == 'INFO':
             pass
             # TODO Display information about spell
 
@@ -1398,7 +1407,8 @@ class SpellState(State):
                 else:
                     SOUNDDICT['Select 4'].play()
 
-        if event in ['DOWN', 'UP', 'LEFT', 'RIGHT']:
+        #if event in ['DOWN', 'UP', 'LEFT', 'RIGHT']:
+        if directions:
             spell = attacker.getMainSpell()
             SOUNDDICT['Select 6'].play()
             gameStateObj.info_surf = None
@@ -1429,27 +1439,30 @@ class SelectState(State):
         self.pennant = None
         if self.name in WORDS:
             self.pennant = Banner.Pennant(WORDS[self.name])
+        self.fluid_helper = InputManager.FluidScroll(OPTIONS['Cursor Speed'])
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         event = gameStateObj.input_manager.process_input(eventList)
+        self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
 
-        if event == 'DOWN':
+        if 'DOWN' in directions:
             SOUNDDICT['Select 6'].play()
             # Get closet unit in down position
             new_position = cur_unit.validPartners.get_down(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'UP':
+        elif 'UP' in directions:
             SOUNDDICT['Select 6'].play()
             # Get closet unit in up position
             new_position = cur_unit.validPartners.get_up(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'LEFT':
+        if 'LEFT' in directions:
             SOUNDDICT['Select 6'].play()
             # Get closest unit in left position
             new_position = cur_unit.validPartners.get_left(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
-        elif event == 'RIGHT':
+        elif 'RIGHT' in directions:
             SOUNDDICT['Select 6'].play()
             # Get closest unit in right position
             new_position = cur_unit.validPartners.get_right(gameStateObj.cursor.position)
@@ -1457,7 +1470,7 @@ class SelectState(State):
 
         # INFO button does nothing!
          # Go back to menu choice
-        elif event == 'BACK':
+        if event == 'BACK':
             SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.back()
 
