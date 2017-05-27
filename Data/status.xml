@@ -3,11 +3,11 @@
 	<!-- Ever-lasting Regeneration -->
 	<status name="Regeneration">
 		<id>Regeneration</id>
-		<desc>Regenerate a fifth of max HP every turn.</desc>
+		<desc>Regenerate HP every turn.</desc>
 		<icon_index>1,2</icon_index>
 		<components>hp_percentage,class_skill</components>
 
-		<hp_percentage>20</hp_percentage>
+		<hp_percentage>30</hp_percentage>
     </status>
     <!-- Regeneration from Forts -->
     <status name="Regeneration">
@@ -409,7 +409,7 @@
     </status>
 
     <status name="Resist Status">
-        <id>Resist Status</id>
+        <id>Resist_Status</id>
         <icon_index>2,9</icon_index>
         <desc>Ignore temporary status ailments after 1 turn.</desc>
         <components>shrug_off,class_skill</components>
@@ -512,10 +512,10 @@
     <status name="Heavy Hitter">
         <id>Heavy Hitter</id>
         <icon_index>8,1</icon_index>
-        <desc>Add half of weapon Wt to damage.</desc>
+        <desc>Add weapon Wt to damage.</desc>
         <components>mt,class_skill</components>
 
-        <mt>item.WT/2 if item.WT else 0</mt>
+        <mt>item.WT if item.WT else 0</mt>
     </status>
 
     <status name="Focus">

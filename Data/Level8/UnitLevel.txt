@@ -45,10 +45,10 @@ enemy;0;0;Dracoknight;10;Steel Lance;30,25;Pursue;Claw
 enemy;0;0;Dracoknight;10;Steel Lance;28,27;Pursue;Claw
 enemy;0;0;Dracolord;14;Javelin,dTalisman;29,26;Pursue;Claw
 # 4 Heroes, bottom near spawn
-enemy;0;0;Hero;12;Mithril Sword;5,19;Attack_4;Claw
-enemy;0;0;Hero;12;Mithril Sword;9,21;Attack_4;Claw
-enemy;0;0;Hero;12;Mithril Axe;10,19;Attack_4;Claw
-enemy;0;0;Hero;12;dBrave Sword;3,23;Attack_4;Claw
+enemy;0;0;Vanguard;12;Mithril Sword;5,19;Attack_4;Claw
+enemy;0;0;Vanguard;12;Mithril Sword;9,21;Attack_4;Claw
+enemy;0;0;Vanguard;12;Mithril Axe;10,19;Attack_4;Claw
+enemy;0;0;Vanguard;12;dBrave Sword;3,23;Attack_4;Claw
 # 4 Mages and a Sage in middle of Map
 enemy;0;0;Mage;10;Fire;15,15;Attack_2;Claw
 enemy;0;0;Mage;10;Earth;17,17;Attack_2;Claw
@@ -67,7 +67,7 @@ enemy;0;0;Cavalier;10;Steel Lance;15,8;Attack_1;Claw
 enemy;0;0;Cavalier;10;Steel Lance;18,22;Attack_5;Claw
 enemy;0;0;Cavalier;10;Steel Lance;19,21;Attack_5;Claw
 # A Bishop and a Ranger on top right
-enemy;0;0;Ranger;12;Yew Bow,Elixir;22,4;Attack;Claw
+enemy;0;0;Sniper;12;Yew Bow,Elixir;22,4;Attack;Claw
 enemy;0;0;Oracle;12;Shine,Physic;23,6;Attack;Claw
 # 1 Berserker guarding ballista
 enemy;0;0;Berserker;13;Mithril Axe,dMithril Mail;24,21;Attack;Claw
@@ -143,7 +143,7 @@ enemy;0;w10_1;Warrior;15;Mithril Axe,Oak Longbow;0,10;Pursue;Claw
 enemy;0;w10_2;Warrior;15;Mithril Axe,Oak Longbow;0,12;Pursue;Claw
 # Infinite Reinforcements
 enemy;2;i1;Warrior;Mithril Axe,Oak Bow;0,0;Pursue;Claw;Void_Curse
-enemy;2;i2;Ranger;Yew Bow;0,0;Pursue;Claw;Void_Curse
-enemy;2;i3;Hero;Mithril Sword,Steel Axe;0,0;Pursue;Claw;Void_Curse
+enemy;2;i2;Sniper;Yew Bow;0,0;Pursue;Claw;Void_Curse
+enemy;2;i3;Vanguard;Mithril Sword,Steel Axe;0,0;Pursue;Claw;Void_Curse
 enemy;2;i4;Sage;Fire,Water;0,0;Pursue;Claw;Void_Curse
 enemy;2;i5;Oracle;Shine,Mend;0,0;Pursue;Claw;Void_Curse

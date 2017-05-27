@@ -58,18 +58,18 @@ elif;self.optionalunit.name == 'Ophie' and self.optionalunit2.name == 'Coyote'
 	s;Ophie;Huh?{w};auto
 	s;Coyote;Your sword stance.{w}{br}Who taught you it?{w};auto
 	s;Ophie;Um... A monk.{w};auto
-	s;Coyote;A monk, eh?{w}{br}Well, you're doing your teacher a disservice.{w}{br}You're doing it wrong.{w};auto
+	s;Coyote;A monk, eh?{w}{br}Well, you're doing your teacher a disservice.{w};auto
 	s;Ophie;What! No, I'm not.{w}{br}I was taught by the best!{w};auto
-	s;Coyote;Perhaps, but I guess you didn't listen.{w}{br}Hold your wrist up higher.{w}{br}There.{w};auto
+	s;Coyote;I guess you didn't listen.{w}{br}Hold your wrist up higher.{w}{br}There.{w};auto
 	s;Ophie;Hmmm...{w};auto
 	s;Coyote;Feels better, right?{w};auto
 	s;Ophie;How'd you know how to do that?{w}{br}Were you a monk?{w};auto
-	s;Coyote;Now's no time for stories, kid.{w}{br}We'd best be getting back to the action.{w};auto
+	s;Coyote;Now's no time for stories, kid.{w};auto
 	r;Coyote
 	s;Ophie;What's up with him...{w};auto
 	r;Ophie
 	remove_talk;Ophie;Coyote
-	give_skill;Ophie;fStrength +2
+	exp_gain;Ophie;50
 end
 # If Coyote is not converted, convert him to player
 if;self.optionalunit2.name == 'Coyote' and self.optionalunit2.team == 'other'

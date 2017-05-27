@@ -5021,7 +5021,7 @@ S'M'
 sg95
 I0
 sg96
-S'Hero'
+S'Vanguard'
 p1051
 sg98
 I0
@@ -8118,7 +8118,7 @@ S'M'
 sg95
 I0
 sg96
-S'Hero'
+S'Vanguard'
 p1642
 sg98
 I0
@@ -8904,7 +8904,7 @@ S'M'
 sg95
 I0
 sg96
-S'Hero'
+S'Vanguard'
 p1791
 sg98
 I0

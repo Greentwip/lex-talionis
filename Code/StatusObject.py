@@ -472,13 +472,13 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
     # when you gain shrugg off, lower negative status ailments to 0
     if status.shrug_off:
         for status in unit.status_effects:
-            if status.time and status.negative and status.time.time_left > 2:
-                status.time.time_left = 2
+            if status.time and status.negative and status.time.time_left > 1:
+                status.time.time_left = 1
 
     # If you have shrug off, lower this ailment, if temporary, to 0
     if any(status.shrug_off for status in unit.status_effects):
-        if status.time and status.time > 2:
-            status.time.time_left = 2
+        if status.time and status.time > 1:
+            status.time.time_left = 1
 
     if status.affects_movement:
         if unit.team.startswith('enemy'):
@@ -653,6 +653,8 @@ def statusparser(s_id):
 
 def deserialize(s_dict, unit, gameStateObj):
     status = statusparser(s_dict['id'])
+    if not status:
+        return
     #status = HandleStatusAddition(status, unit, gameStateObj)
     if s_dict['time_left']:
         status.time.time_left = s_dict['time_left']

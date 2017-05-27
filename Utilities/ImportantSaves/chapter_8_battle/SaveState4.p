@@ -1033,7 +1033,7 @@ S'M'
 sg107
 I0
 sg108
-S'Ranger'
+S'Sniper'
 p278
 sg110
 I0
@@ -8917,7 +8917,7 @@ S'M'
 sg107
 I0
 sg108
-S'Hero'
+S'Vanguard'
 p1943
 sg110
 I76
@@ -10571,7 +10571,7 @@ S'F'
 sg107
 I0
 sg108
-S'Ranger'
+S'Sniper'
 p2283
 sg110
 I6
@@ -12757,7 +12757,7 @@ S'enemy'
 p2696
 aS'2'
 ag2694
-aS'Hero'
+aS'Vanguard'
 p2697
 aS'Mithril Sword,Steel Axe'
 p2698
@@ -12781,7 +12781,7 @@ S'enemy'
 p2707
 aS'2'
 ag2705
-aS'Ranger'
+aS'Sniper'
 p2708
 aS'Yew Bow'
 p2709

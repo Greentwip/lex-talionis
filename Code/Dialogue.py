@@ -4,7 +4,7 @@ import re, random, math, os, itertools
 from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
-import CustomObjects, MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters
+import CustomObjects, MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp
 import Interaction, TileObject, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner
 
 import logging
@@ -445,6 +445,20 @@ class Dialogue_Scene(object):
                             gameStateObj.stateMachine.changeState('itemgain')
                             self.current_state = "Paused"
                         break
+
+        # Give exp to a unit
+        elif line[0] == 'exp_gain':
+            exp = int(line[2])
+            c_unit = None
+            if line[1] == '{unit}' and self.optionalunit:
+                c_unit = self.optionalunit
+            else:
+                for unit in gameStateObj.allunits:
+                    if unit.name == line[1]:
+                        c_unit = unit
+            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=c_unit, exp=exp)) #Also handles actually adding the exp to the unit
+            gameStateObj.stateMachine.changeState('expgain')
+            self.current_state = "Paused"
 
         ### HANDLES UNITS ON MAP
         elif line[0] == 'add_unit':

@@ -16,27 +16,30 @@
 group;Resistance;Yep;Resistance;Nope
 #enemy;0;0;Ballista;1;Ballista;14,6;HardGuard;Resistance
 #enemy;0;0;Ballista;1;Ballista;14,3;HardGuard;Resistance
-#player;0;0;Nia;8,6;None
+player;0;0;Ophie;8,6;None
 #player;0;0;Thief;5;;7,6;None;Resistance
 #player;0;0;Prim;6,6;None
-#enemy;0;0;Ranger;20;Willow Bow;12,7;SoftGuard;Resistance
+#enemy;0;0;Sniper;20;Willow Bow;12,7;SoftGuard;Resistance
 #
 #enemy;0;0;Brigand;1;Iron Axe;4,16;Pursue;Resistance
-player;0;0;Mage;1;Wyrmsfire,Wind;13,6;Attack;Resistance
-player;0;0;Fighter;1;Hatchet;12,6;Attack;Resistance
-enemy;0;0;Fighter;1;;15,5;Attack;Resistance
-enemy;0;0;Fighter;1;Iron Axe;15,7;Attack;Resistance
-enemy;0;0;Fighter;1;Hatchet;15,6;Attack;Resistance
-player;0;0;Mage;1;Blizzard,Wyrmsfire,Sandblast,Fireball,Meteor;15,4;Attack;Resistance
-enemy;0;0;Mage;10;Meteor;18,6;Attack;Resistance
+#player;0;0;Mage;1;Wyrmsfire,Wind;13,6;Attack;Resistance
+#player;0;0;Fighter;1;Hatchet;12,6;Attack;Resistance
+#enemy;0;0;Fighter;1;;15,5;Attack;Resistance
+#enemy;0;0;Fighter;1;Iron Axe;15,7;Attack;Resistance
+#enemy;0;0;Fighter;1;Hatchet;15,6;Attack;Resistance
+#player;0;0;Mage;1;Blizzard,Wyrmsfire,Sandblast,Fireball,Meteor;15,4;Attack;Resistance
+#enemy;0;0;Mage;10;Meteor;18,6;Attack;Resistance
+player;0;0;Warlock;20;Hex;18,6;None;Resistance
+player;0;0;Fighter;1;Spiritbane;17,6;None;Resistance;Resist_Status
+enemy;0;0;Fighter;1;;14,6;None;Resistance;Resist_Status
 #
 #player;0;0;Ballista;1;Ballista;14,14;None;Resistance
 #player;0;0;Ballista;1;Ballista;9,6;None;Resistance
 #player;0;0;Mage;1;Wind;8,7;None;Resistance
 #player;2;archer;Archer;Poison Bow;8,6;None;Resistance
 #enemy;0;0;Harold;8,8;None
-player;0;0;Berserker;20;Hatchet,Potion;12,7;None;Resistance
-player;0;0;Strategist;12;Glimmer,Mend,Rescue;11,7;None;Resistance
-player;0;0;Berserker;10;Hatchet,Potion;9,6;None;Resistance
+#player;0;0;Berserker;20;Hatchet,Potion;12,7;None;Resistance
+#player;0;0;Strategist;12;Glimmer,Mend,Rescue;11,7;None;Resistance
+#player;0;0;Berserker;11;Hatchet,Potion;9,6;None;Resistance
 #enemy;0;0;Warrior;14;Iron Axe;14,7;DoNothing;Resistance
-player;0;0;Shaman;10;Flux;13,7;None;Resistance
+#player;0;0;Shaman;10;Flux;13,7;None;Resistance

@@ -98,6 +98,7 @@ class GameStateObj(object):
         map_info = load_info['map']
         self.playtime = load_info['playtime']
         self.convoy = [ItemMethods.deserialize(item_dict) for item_dict in load_info['convoy']]
+        self.convoy = [item for item in self.convoy if item]
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
         self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if isinstance(load_info['objective'], tuple) else load_info['objective']

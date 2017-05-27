@@ -266,7 +266,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
         cur_unit.position = u_i['position']
 
     # Status Effects and Skills
-    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, seed=sum(u_i['position']))
+    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False, seed=sum(u_i['position']))
 
     # Extra Skills
     if len(unitLine) == 10:
@@ -381,7 +381,7 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
     for index, klass in enumerate(classes):
         for level_needed, class_skill in class_dict[klass]['skills']:
             # If level is gte level needed for skill or gte max_level
-            if level%CONSTANTS['max_level'] >= level_needed or level/len(classes) >= CONSTANTS['max_level']:
+            if level%CONSTANTS['max_level'] >= level_needed or index < len(classes) - 1 or level%CONSTANTS['max_level'] == 0:
                 class_skills.append(class_skill)
     ### Handle Feats (Naive choice)
     if feat:

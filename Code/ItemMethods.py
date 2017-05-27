@@ -415,7 +415,9 @@ def itemparser(itemstring):
     return Items
 
 def deserialize(item_dict):
-    item = itemparser(item_dict['id'])[0]
+    items = itemparser(item_dict['id'])
+    if not items: return None
+    else: item = items[0]
     if 'owner' in item_dict:
         item.owner = item_dict['owner']
     if item_dict['droppable']:

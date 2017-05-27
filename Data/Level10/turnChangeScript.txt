@@ -10,21 +10,21 @@ if;gameStateObj.turncount == 1
 	u;Adjutant;Left
 	move_sprite;Ophie;24,0
 	s;Ophie;!{w};auto
-	s;Adjutant;Archon Ulver sends his regards to his honored guests.{w}{br}He regrets to inform you that he is occupied at the moment.{w};auto
+	s;Adjutant;Archon Ulver sends his regards.{w}{br}He regrets to inform you that he is occupied at the moment.{w};auto
 	u;Sam;MidRight
 	s;Sam;He knew we were coming?{w};auto
 	s;Adjutant;Archon Ulver is well aware of your plans.{w};auto
 	s;Ophie;But--{w};auto
-	s;Adjutant;My boy, do not fret.{w}{br}My lord has graciously decided to provide you with...{w}{br}alternative entertainment.{w};auto
+	s;Adjutant;My boy, do not fret.{w}{br}The Archon has graciously decided to provide you with...{w}{br}alternative entertainment.{w};auto
 	r;Adjutant;Ophie;Sam
 	set_cursor;12,8;force_hold
 	change_tile_sprite;10,7;top_gap
 	area_replace_tile;10,7;top_gap_data
-	wait;500
+	wait;1000
 	set_cursor;12,36;force_hold
 	change_tile_sprite;10,32;bottom_gap
 	area_replace_tile;10,32;bottom_gap_data
-	wait;500
+	wait;1000
 	set_cursor;18,27;force_hold
 	add_unit;br1;;warp;push
 	add_unit;br2;;warp;push
@@ -44,8 +44,8 @@ if;gameStateObj.turncount == 1
 	move_unit;Adjutant;11,3;warp
 	wait;1000
 	u;Sam;Right;u;Ophie;Left
-	s;Sam;Oh... I've blundered.{w}{br}To think we could take on the Archon.{w}{br}It was a pipe dream all along.{w}{br}I'm so sorry everyone...{w};auto
-	s;Ophie;Don't be, Sam.{w}{br}We can still make it out of this.{w}{br}We've made it this far together.{w}{br}What are a couple of Palace goons against the Resistance?{w};auto
+	s;Sam;Oh... I've blundered.{w}{br}To think we could take on the Archon.{w}{br}It was a pipe dream all along.{w};auto
+	s;Ophie;Don't give up yet, Sam.{w}{br}We can still make it out of this.{w}{br}We've made it this far together.{w}{br}What are a couple of Palace goons against the Resistance?{w};auto
 	r;Sam
 	# Now it cycles through remaining characters final quotes
 	if;not gameStateObj.check_dead('Prim')
@@ -55,7 +55,7 @@ if;gameStateObj.turncount == 1
 	end
 	if;not gameStateObj.check_dead('Joel')
 		u;Joel;Right
-		s;Joel;I'm not normally one for waxing sentimental,{w}{br}but it's not everyday you take on the might of the Empire.{w}{br}Being in the Resistance has not been easy,{w}{br}but I wouldn't trade it for anything.{w}{br}This has been the experience of a lifetime.{w};auto
+		s;Joel;I'm not one for waxing sentimental,{w}{br}but it's ain't everyday you take on the might of the Empire.{w}{br}Being in the Resistance ain't easy,{w}{br}but I wouldn't trade it for anything.{w};auto
 		r;Joel
 	end
 	if;not gameStateObj.check_dead('Nia')
@@ -95,7 +95,7 @@ if;gameStateObj.turncount == 1
 	end
 	if;not gameStateObj.check_dead('Coyote')
 		u;Coyote;Right
-		s;Coyote;I will repay my debts, through victory or through death.{w};auto
+		s;Coyote;...I will repay my debts.{w};auto
 		r;Coyote
 	end
 	s;Ophie;If we give it our all...{w}{br}Well, by the light, what are waiting for!{w}{br}Let's go!{w};auto

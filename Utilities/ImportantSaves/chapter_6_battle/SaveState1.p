@@ -1001,7 +1001,7 @@ S'M'
 sg215
 I0
 sg216
-S'Ranger'
+S'Sniper'
 p331
 sg218
 I0

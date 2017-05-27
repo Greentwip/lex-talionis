@@ -19,7 +19,7 @@ support;0
 max_level;10
 leveling;fixed
 rng;true_hit
-num_skills;5
+num_skills;6
 save_slots;3
 music_main;Helms Deep - Start
 music_game_over;Gate of Steiner

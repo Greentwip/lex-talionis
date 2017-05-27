@@ -1,1 +1,33 @@
 # Althea and Prim and Drake discuss Althea's return to the throne
+if;self.optionalunit == 'The Templars'
+	# Coyote and Sam discuss passage into Rajas
+	m;Toorimichi
+	b;TacticsRoom
+	t;2
+	u;Sam;Right
+	qu;Coyote;OffscreenLeft
+	move_sprite;Coyote;96,0;force_hold
+	s;Sam;... Coyote?{w}{br}Uh... what a... um... pleasant surprise.{w}{clear}You do know it's two in the morning?{w};auto
+	s;Coyote;I am aware.{w};auto
+	s;Sam;Okay then...
+	s;Coyote;Rumor has it you're planning to assault Rajas.
+	s;Sam;Why yes! Actually it's quite the complicated problem.{w}{br}Ulver has at least five hundred men stationed--{w}{clear}Wait. Back up. How'd did you find out?
+	s;Coyote;It doesn't matter.{w}{clear}Are you aware of the Order of the Templars?
+	s;Sam;Of course I'm aware.{w}{br}What do you take me for?{w}{br}They're just a historical myth.
+	s;Coyote;They're no myth.
+	s;Sam;You've met them?
+	s;Coyote;...
+	s;Sam;Let's see...{w}{br}The Templars were said to be the Sun King's most loyal protectors.{w}{br}They were to defend the throne with their lives.{w}{br}To snuff out dissent, they could appear anywhere in Rajas, at any time...{w}{br}...{w}{br}Are you suggesting--
+	s;Coyote;Tunnels. Under the city.{w}{br}
+	s;Sam;That's perfect!{w}{br}If we can find one of these tunnels...
+	move_sprite;Coyote;-24,0;force_hold
+	s;Coyote;I was never here. Got that?
+	s;Sam;Wait, what?
+	s;Coyote;I was never here.
+	r;Coyote
+	s;Sam;...Their is something very wrong with that man.{w}{br}...{w}{br}What's this?
+	give_item;Sam;Fortune
+	r;Sam
+	grey_base_convo;The Templars
+	t;1
+end

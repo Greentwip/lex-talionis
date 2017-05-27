@@ -53,7 +53,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Riposte;5,Vantage</skills>
+        <skills>1,Riposte;5,Vantage;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,35,55,55,40,20,25</growths>
 		<bases>11,3,1,6,7,0,1,1,5</bases>
@@ -73,7 +73,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Critical;5,Shimmer;10,Swordfaire</skills>
+        <skills>3,Feat;5,Critical;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,35,55,55,40,20,25</growths>
 		<bases>16,5,3,6,7,0,3,2,7</bases>
@@ -82,19 +82,19 @@
         <desc>Devotees of the sword. Possess incredible speed and skill.</desc>
     </class>
 
-    <!-- Mercenary -> Hero -->
+    <!-- Mercenary -> Vanguard -->
     <class name="Mercenary">
         <id>2</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Hero</turns_into>
+        <turns_into>Vanguard</turns_into>
         <movement>5</movement>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Initiative;5,Resist Status</skills>
+        <skills>1,Initiative;5,Poise;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
 		<growths>105,55,15,55,45,40,25,25</growths>
 		<bases>12,3,0,5,5,0,3,0,6</bases>
@@ -103,7 +103,7 @@
         <desc>Professional soldiers for hire. Well-balanced, with superior abilities all around.</desc>
     </class>
 
-    <class name="Hero">
+    <class name="Vanguard">
         <id>102</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
@@ -114,7 +114,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Poise;5,Feat;10,Sol</skills>
+        <skills>3,Feat;5,Sol;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,55,45,40,25,25</growths>
 		<bases>16,3,0,7,7,0,5,2,8</bases>
@@ -135,7 +135,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Locktouch;5,Steal</skills>
+        <skills>1,Locktouch;5,Steal;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,40,35,60,55,55,5,35</growths>
 		<bases>11,2,1,2,6,0,1,1,4</bases>
@@ -155,13 +155,13 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Ghost;5,Canto;10,Fade</skills>
+        <skills>3,Feat;5,Ghost;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,40,35,60,55,55,5,35</growths>
 		<bases>14,4,2,5,8,0,3,3,5</bases>
         <promotion>3,2,1,3,2,0,2,2,1</promotion>
 		<max>40,15,15,20,20,20,15,15,20</max>
-        <desc>Killers who hide in the shadows, waiting for the right time to strike.</desc>
+        <desc>Killers at home in the shadows.</desc>
     </class>
 
     <!-- Soldier -> Halberdier -->
@@ -176,7 +176,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Synergy;5,Feat</skills>
+        <skills>1,Synergy;5,Feat;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,65,15,65,60,35,35,20</growths>
 		<bases>13,2,0,4,0,0,0,0,5</bases>
@@ -196,7 +196,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags></tags>
-        <skills>1,Feat;5,Feat;10,Luna</skills>
+        <skills>3,Feat;5,Luna;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,65,15,65,60,35,35,20</growths>
 		<bases>17,4,1,6,2,0,5,2,10</bases>
@@ -217,7 +217,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags></tags>
-        <skills>1,Canto;5,Savior</skills>
+        <skills>1,Canto;5,Savior;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,20</growths>
 		<bases>13,3,0,2,3,0,4,0,11</bases>
@@ -237,7 +237,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags></tags>
-        <skills>1,Charisma;5,Feat;10,Celeste</skills>
+        <skills>3,Feat;5,Charisma;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,35</growths>
 		<bases>15,4,2,3,7,0,6,4,11</bases>
@@ -258,7 +258,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags></tags>
-        <skills>1,Provoke;5,Shove</skills>
+        <skills>1,Provoke;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,25</growths>
 		<bases>11,3,0,2,1,0,6,1,8</bases>
@@ -278,7 +278,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags></tags>
-        <skills>1,Slow;5,Feat;10,Aegis</skills>
+        <skills>3,Feat;5,Slow;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,35</growths>
 		<bases>15,5,0,4,4,0,8,4,11</bases>
@@ -299,7 +299,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Fleet_of_Foot;5,Evasion</skills>
+        <skills>1,Fleet_of_Foot;5,Evasion;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>85,45,35,55,105,45,15,45</growths>
 		<bases>9,2,2,3,4,0,1,2,4</bases>
@@ -319,7 +319,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Canto;5,Feat;10,Lancefaire</skills>
+        <skills>3,Feat;5,Canto_Plus;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>85,45,35,55,95,45,25,40</growths>
 		<bases>14,4,2,3,3,0,3,4,8</bases>
@@ -340,7 +340,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Cleave;5,Shove</skills>
+        <skills>1,Cleave;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>115,75,15,45,40,20,25,20</growths>
 		<bases>13,3,0,1,3,0,1,0,7</bases>
@@ -360,7 +360,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Heavy Hitter;5,Feat;10,Overwhelm</skills>
+        <skills>3,Feat;5,Heavy Hitter;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>115,75,15,45,40,20,25,20</growths>
 		<bases>18,4,0,3,3,0,4,2,12</bases>
@@ -369,19 +369,19 @@
         <desc>Determined fighters who relish battle.</desc>
     </class>
 
-    <!-- Archer -> Ranger -->
+    <!-- Archer -> Sniper -->
     <class name="Archer">
         <id>9</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,1,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Ranger</turns_into>
+        <turns_into>Sniper</turns_into>
         <movement>5</movement>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Prescience;5,Critical</skills>
+        <skills>1,Prescience;5,Critical;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,40,55,45,45,20,25</growths>
 		<bases>12,3,0,2,3,0,2,0,4</bases>
@@ -390,7 +390,7 @@
         <desc>Lightly armored soldiers armed with bows. Can attack from a distance.</desc>
     </class> 
 
-    <class name="Ranger">
+    <class name="Sniper">
         <id>110</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
@@ -401,7 +401,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Evasion;5,Feat;10,Longshot</skills>
+        <skills>3,Feat;5,Longshot;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,40,55,45,45,20,25</growths>
 		<bases>16,6,1,4,5,0,4,3,7</bases>
@@ -422,7 +422,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Inspiration;5,Skill_Aura</skills>
+        <skills>1,Inspiration;5,Skill_Aura;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>55,20,40,60,75,60,15,40</growths>
 		<bases>10,0,1,2,3,0,1,2,4</bases>
@@ -442,7 +442,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Rally;5,Feat;10,Command</skills>
+        <skills>3,Feat;5,Rally;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>55,20,40,60,75,60,15,40</growths>
 		<bases>13,0,3,3,3,0,3,5,5</bases>
@@ -463,7 +463,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Healtouch;5,Miracle</skills>
+        <skills>1,Healtouch;5,Miracle;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,15,40,55,45,60,15,65</growths>
 		<bases>11,0,1,1,1,0,0,4,3</bases>
@@ -483,7 +483,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Futuresight;5,Resistance_Aura;10,Revelation</skills>
+        <skills>3,Feat;5,Futuresight;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,15,40,55,45,60,15,65</growths>
 		<bases>14,0,3,3,2,0,3,6,4</bases>
@@ -504,7 +504,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Focus;5,Feat</skills>
+        <skills>1,Focus;5,Conductance;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>75,15,65,45,65,40,20,45</growths>
 		<bases>11,0,1,1,2,0,1,2,4</bases>
@@ -524,7 +524,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Conductance;5,Feat;10,Metamagic</skills>
+        <skills>3,Feat;5,Metamagic;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>75,15,65,45,65,40,20,45</growths>
 		<bases>14,0,2,2,2,0,4,5,5</bases>
@@ -545,7 +545,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Hex;5,Empowered</skills>
+        <skills>1,Hex;5,Empowered;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,20,65,45,40,25,25,55</growths>
 		<bases>11,1,2,1,1,0,1,3,5</bases>
@@ -565,7 +565,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Gate;5,Feat;10,Nosferatu</skills>
+        <skills>3,Feat;5,Metamagic;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,20,85,45,40,25,25,55</growths>
 		<bases>15,1,2,3,4,0,3,5,8</bases>
@@ -586,7 +586,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Prescience;5,Shove</skills>
+        <skills>1,Prescience;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,65,5,45,35,20,15,15</growths>
 		<bases>13,3,0,1,4,0,2,0,7</bases>
@@ -606,7 +606,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Regeneration;5,Rage;10,Axefaire</skills>
+        <skills>3,Feat;5,Regeneration;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,65,5,45,35,20,15,25</growths>
 		<bases>17,4,0,2,5,0,4,2,13</bases>
@@ -627,7 +627,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags>Flying</tags>
-        <skills>1,Flying;5,Empowered</skills>
+        <skills>1,Flying;5,Empowered;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,60,15,45,40,35,35,25</growths>
 		<bases>14,5,0,3,3,0,5,0,7</bases>
@@ -647,7 +647,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags>Flying</tags>
-        <skills>1,Defense_Aura;5,Feat;10,Terror</skills>
+        <skills>3,Feat;5,Defense_Aura;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,60,15,45,35,35,35,25</growths>
 		<bases>18,5,0,5,5,0,5,2,9</bases>
@@ -669,7 +669,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>1,Fleet_of_Foot;5,Shove</skills>
+        <skills>1,Fleet_of_Foot;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>110,65,0,40,25,20,15,15</growths>
 		<bases>13,3,0,1,3,0,2,0,8</bases>
@@ -690,7 +690,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags></tags>
-        <skills>1,Patience;5,Defense_Aura</skills>
+        <skills>1,Patience;5,Defense_Aura;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,15,25,35,25,40,35</growths>
 		<bases>13,5,0,3,1,0,5,0,9</bases>

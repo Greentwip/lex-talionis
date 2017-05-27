@@ -36,8 +36,8 @@ enemy;0;Boaz;Boaz;26,27;SoftGuard
 group;Templar;Templar;Templar;Guardians of the Keralan underworld
 # Swordmaster, Ranger, Dragoon, Sages, Warlock, Oracle, Warrior
 # Boaz's Bodyguards
-enemy;0;0;Ranger;15;Yew Bow;27,26;SoftGuard;Templar
-enemy;0;0;Ranger;15;Yew Bow;25,28;SoftGuard;Templar
+enemy;0;0;Sniper;15;Yew Bow;27,26;SoftGuard;Templar
+enemy;0;0;Sniper;15;Yew Bow;25,28;SoftGuard;Templar
 # Jakin's Bodyguards
 enemy;0;0;Thief;15;Mithril Knife;3,5;SoftGuard;Templar
 enemy;0;0;Thief;15;Mithril Knife;5,3;SoftGuard;Templar
@@ -65,7 +65,7 @@ enemy;0;p3_4;Oracle;15;Corona;0,0;Pursue;Templar
 enemy;0;p5_1;Warrior;15;Mithril Axe;0,0;Pursue;Templar
 enemy;0;p5_2;Warlock;15;Ruin;0,0;Pursue;Templar
 enemy;0;p5_3;Berserker;15;Mithril Axe;0,0;Pursue;Templar
-enemy;0;p5_4;Ranger;15;Yew Bow;0,0;Pursue;Templar
+enemy;0;p5_4;Sniper;15;Yew Bow;0,0;Pursue;Templar
 
 enemy;0;p7_1;Sage;15;Aether;0,0;Pursue;Templar
 enemy;0;p7_2;Dragoon;15;Mithril Lance;0,0;Pursue;Templar
@@ -75,7 +75,7 @@ enemy;0;p7_4;Oracle;15;Corona;0,0;Pursue;Templar
 enemy;0;p9_1;Warrior;15;Mithril Axe;0,0;Pursue;Templar
 enemy;0;p9_2;Warlock;15;Ruin;0,0;Pursue;Templar
 enemy;0;p9_3;Berserker;15;Mithril Axe;0,0;Pursue;Templar
-enemy;0;p9_4;Ranger;15;Yew Bow;0,0;Pursue;Templar
+enemy;0;p9_4;Sniper;15;Yew Bow;0,0;Pursue;Templar
 
 enemy;0;p11_1;Sage;15;Aether,Meteor;0,0;Pursue;Templar
 enemy;0;p11_2;Dragoon;15;Adamant Lance,Long Spear;0,0;Pursue;Templar
@@ -84,7 +84,7 @@ enemy;0;p11_4;Oracle;15;Corona,Silence,Physic;0,0;Pursue;Templar
 enemy;0;p11_5;Warrior;15;Adamant Axe,Yew Bow;0,0;Pursue;Templar
 enemy;0;p11_6;Warlock;15;Howl,Stun;0,0;Pursue;Templar
 enemy;0;p11_7;Berserker;15;Adamant Axe,Tomahawk;0,0;Pursue;Templar
-enemy;0;p11_8;Ranger;15;Yew Longbow;0,0;Pursue;Templar
+enemy;0;p11_8;Sniper;15;Yew Longbow;0,0;Pursue;Templar
 
 # Infinite Reinforcements
 enemy;2;w_Sage;Sage;Aether;0,0;Pursue;Templar
@@ -94,4 +94,4 @@ enemy;2;w_Oracle;Oracle;Corona;0,0;Pursue;Templar
 enemy;2;w_Warrior;Warrior;Adamant Axe;0,0;Pursue;Templar
 enemy;2;w_Warlock;Warlock;Howl;0,0;Pursue;Templar
 enemy;2;w_Berserker;Berserker;Adamant Axe;0,0;Pursue;Templar
-enemy;2;w_Ranger;Ranger;Yew Bow;0,0;Pursue;Templar
+enemy;2;w_Ranger;Sniper;Yew Bow;0,0;Pursue;Templar

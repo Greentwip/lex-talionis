@@ -987,7 +987,7 @@ S'F'
 sg101
 I0
 sg102
-S'Ranger'
+S'Sniper'
 p245
 sg104
 I16
@@ -2926,7 +2926,7 @@ S'M'
 sg101
 I0
 sg102
-S'Hero'
+S'Vanguard'
 p640
 sg104
 I50
