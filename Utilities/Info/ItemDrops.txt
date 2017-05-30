@@ -38,7 +38,7 @@ Steel Axe - Drop
 Willow Bow - Drop
 Mana Ring* - Drop
 Steel Sword - Drop
-Short Spear - Boss Drop
+Javelin - Boss Drop
 5000g - Chest
 2000g - Chest
 2000g - Chest
@@ -80,6 +80,7 @@ Mithril Lance - Drop
 Nyx - Drop
 Longbow - Drop
 Rescue - House
+Short Spear - Base Conversations
 
 Chapter 6:
 Rusted Sword - Coyote
@@ -106,7 +107,7 @@ Yew Longbow - Ruin
 Hex - Ruin
 Rescue - Ruin
 Howl - Base Conversation
-Secret Book - Boss Drop
+Refresh - Boss Drop
 Mithril Sword - Drop
 Great Lance - Drop
 Great Axe - Drop
@@ -141,12 +142,12 @@ Silence - Drop
 Superior Lance - Drop
 Meteor - Drop
 Energy Ring* - Base Conversation
+Secret Book* - Base Conversation
 
 Chapter 10:
 
 
 Can still ask for, in base conversations, etc.
-Refresh
 Disintegrate
 Brave Lance
 Brave Bow

@@ -12,7 +12,7 @@ ToDo:
 		- Theo Sphinx, Private Eye Pt. 1 (--)
 	- 5
 		- Theo Sphinx, Private Eye Pt. 2 (--)
-		Sam confronts Eliza - she's done listening to Sam -- Sam's actually okay with it though... Sam is reasonable dude.
+		- Sam confronts Eliza - she's done listening to Sam -- Sam's actually okay with it though... Sam is reasonable dude. (Short Spear)
 		Joel and Nia
 	- 6
 		- Theo Sphinx, Private Eye Pt. 3 (--)
@@ -30,7 +30,7 @@ ToDo:
 	- 9
 		Sam and Kayla
 		Theo and Eliza
-		Ophie and Althea - Energy Ring
+		Ophie and Althea - Energy Ring (althea's Charm)
 - General Testing
 - Add music for missing base scripts.
 - Test Base Scripts

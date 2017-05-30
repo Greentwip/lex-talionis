@@ -351,7 +351,7 @@
 		<bases>26,9,1,6,2,4,9,5</bases>
         <growths>100,50,0,50,0,50,50,50</growths>
         
-        <inventory>Steel Lance,dShort Spear</inventory>
+        <inventory>Steel Lance,dJavelin</inventory>
         
         <level>8</level>
         <class>Knight</class>
@@ -481,7 +481,7 @@
 		<bases>23,5,13,11,9,3,7,15</bases>
         <growths>100,50,100,50,50,0,0,100</growths>
         
-        <inventory>Corona,Physic,dSecret Book</inventory>
+        <inventory>Corona,Physic,dRefresh</inventory>
         
         <level>15</level>
         <class>Tactician,Strategist</class>
