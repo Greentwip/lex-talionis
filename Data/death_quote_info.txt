@@ -57,7 +57,11 @@ elif;self.optionalunit.name == 'Althea'
 		wait;200
 		lose_game
 	else
-		s;Althea;It seems... I couldn't run... forever...{w};auto
+		if;gameStateObj.counters['level'] >= 8
+			s;Althea;It seems... my best... was not good enough.{w};auto
+		else
+			s;Althea;It seems... I couldn't run... forever...{w};auto
+		end
 		if;not gameStateObj.check_dead('Drake')
 			u;Drake;Right
 			s;Drake;Althea! Fall back!{w}{br}You never should have been on this battlefield in the first place!{w};auto

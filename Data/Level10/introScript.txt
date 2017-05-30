@@ -1,4 +1,9 @@
 # Intro Script 10
+layer_tile_sprite;1;12,9;top_walkway2
+layer_tile_sprite;1;10,10;top_walkway
+layer_tile_sprite;2;10,7;top_gap
+layer_tile_sprite;3;10,32;bottom_gap
+show_layer;1;immediate
 m;Awakening - Know Peace
 t;2
 set_camera;8,0;16,0

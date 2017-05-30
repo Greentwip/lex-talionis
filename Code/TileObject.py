@@ -464,7 +464,7 @@ class MapObject(object):
         colorkey, width, height = self.build_color_key(Engine.image_load(tile_data_suffix))
         self.width = width
         self.height = height
-        self.populate_tiles()
+        self.populate_tiles(colorkey)
 
     def load_new_map_sprite(self, line, currentLevelIndex):
         map_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'

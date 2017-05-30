@@ -127,6 +127,7 @@ Long Spear - House
 Adamant Lance - House
 Angelic Robe* - House
 Magebane Bow - House
+Fortune - Base Conversation
 
 Chapter 9:
 Brave Axe - Boss Drop
@@ -139,15 +140,14 @@ Speedwings* - Drop
 Silence - Drop
 Superior Lance - Drop
 Meteor - Drop
+Energy Ring* - Base Conversation
 
 Chapter 10:
 
 
 Can still ask for, in base conversations, etc.
 Refresh
-Energy Ring
 Disintegrate
 Brave Lance
 Brave Bow
-Fortune
 More gold. Around beginning of Level 8 I started to run out. An extra 10000 at level9? -- Sam says something about pulling out the old war chest in prebase 9?

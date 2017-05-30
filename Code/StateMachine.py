@@ -623,7 +623,7 @@ class MoveState(State):
                   
             # If the cursor is on a validMove that is not contiguous with a unit
             elif gameStateObj.cursor.position in self.validMoves:
-                if not any(gameStateObj.cursor.position == unit.position for unit in gameStateObj.allunits):
+                if not gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position):
                     # SOUND - Footstep sounds but no select sound
                     if cur_unit.hasAttacked: # If we've already attacked, we're done. Move to free
                         """gameStateObj.stateMachine.clear()

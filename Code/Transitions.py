@@ -875,7 +875,7 @@ class GameOverState(StateMachine.State):
             if self.GOStateMachine.getState() == 'text_fade_in':
                 alpha = 255 - int(2.55*self.transparency)
                 Engine.fill(TextSurf, (255, 255, 255, alpha), 'RGBA_MULT')
-            pos = (WINWIDTH/2 - TextSurf.get_width(), WINHEIGHT/2 - TextSurf.get_height())
+            pos = (WINWIDTH/2 - TextSurf.get_width()/2, WINHEIGHT/2 - TextSurf.get_height()/2)
         
             surf.blit(TextSurf, pos)
 

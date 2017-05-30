@@ -208,7 +208,7 @@
         <weapontype>Sword</weapontype>
  
         <uses>10</uses>
-        <value>140</value>
+        <value>160</value>
         <RNG>1-2</RNG>
         <desc></desc>
 		<WT>3</WT>

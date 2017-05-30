@@ -6,6 +6,9 @@ add_to_market;Short Spear
 add_to_market;Oak Longbow
 add_to_market;Ruin
 add_to_market;Wyrmsfire
+if;not gameStateObj.check_dead('Coyote')
+    set_base_convo;Midnight Rendezvous
+end
 # Show room
 b;TacticsFloor;map
 wm_add;Sam;7,2

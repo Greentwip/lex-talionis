@@ -306,6 +306,16 @@
         <stat_change>0,0,0,0,0,0,0,2,0,0</stat_change>
     </status>
 
+    <!-- Used by Magebane weapons -->
+    <status name="Resistance +10">
+        <id>Resistance +10</id>
+        <desc>Grants RES +10.</desc>
+        <icon_index>9,10</icon_index>
+        <components>stat_change</components>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <stat_change>0,0,0,0,0,0,0,10,0,0</stat_change>
+    </status>
+
     <!-- Used by Prim's Charm -->
     <status name="Underdog">
         <id>Underdog</id>

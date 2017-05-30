@@ -420,8 +420,9 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         s_copy.parent_id = unit.id
         s_copy.already_reflected = True # So we don't get infinite reflections
         HandleStatusAddition(s_copy, p_unit, gameStateObj)
-            
-    unit.status_effects.append(status)
+           
+    if not status.momentary: 
+        unit.status_effects.append(status)
 
     if status.convert:
         status.original_team = unit.team
@@ -465,9 +466,6 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         for status in unit.status_effects:
             if status.time:
                 HandleStatusRemoval(status, unit, gameStateObj)
-
-    if status.momentary:
-        HandleStatusRemoval(status, unit, gameStateObj)
 
     # when you gain shrugg off, lower negative status ailments to 0
     if status.shrug_off:

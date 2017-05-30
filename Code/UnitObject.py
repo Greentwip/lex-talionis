@@ -2046,7 +2046,7 @@ class UnitObject(object):
                     status.count.count -= 1
                     miracle_status = status
                     break
-        StatusObject.HandleStatusAddition(StatusObject.statusparser('Clear'), self, gameStateObj)
+        #StatusObject.HandleStatusAddition(StatusObject.statusparser('Clear'), self, gameStateObj)
         gameStateObj.banners.append(Banner.miracleBanner(self, miracle_status))
         gameStateObj.stateMachine.changeState('itemgain')
                                 

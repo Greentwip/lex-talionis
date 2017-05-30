@@ -1,5 +1,5 @@
 # Althea and Prim and Drake discuss Althea's return to the throne
-if;self.optionalunit == 'The Templars'
+if;self.optionalunit == 'Midnight Rendezvous'
 	# Coyote and Sam discuss passage into Rajas
 	m;Toorimichi
 	b;TacticsRoom
@@ -28,6 +28,6 @@ if;self.optionalunit == 'The Templars'
 	s;Sam;...Their is something very wrong with that man.{w}{br}...{w}{br}What's this?
 	give_item;Sam;Fortune
 	r;Sam
-	grey_base_convo;The Templars
+	grey_base_convo;Midnight Rendezvous
 	t;1
 end

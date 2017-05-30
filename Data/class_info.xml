@@ -438,15 +438,15 @@
         <wexp_gain>0,0,0,0,10,0,0</wexp_gain>
         <promotes_from>Tactician</promotes_from>
         <turns_into></turns_into>
-        <movement>6</movement>
+        <movement>7</movement>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>5</movement_group>
+        <movement_group>3</movement_group>
         <tags></tags>
         <skills>3,Feat;5,Rally;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>55,20,40,60,75,60,15,40</growths>
-		<bases>13,0,3,3,3,0,3,5,5</bases>
-        <promotion>3,0,2,1,0,0,2,3,1</promotion>
+		<bases>13,0,3,3,3,0,3,5,11</bases>
+        <promotion>3,0,2,1,0,0,2,3,7</promotion>
 		<max>40,15,15,17,19,20,16,17,20</max>
         <desc>Scholars who've dedicated their lives to the study of warfare.</desc>
     </class>
@@ -731,7 +731,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags></tags>
-        <skills>1,Resist Status;5,Reflect</skills>
+        <skills>1,Resist_Status;5,Reflect</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,40,15,35,15,35,45,35</growths>
 		<bases>14,5,1,3,3,0,7,3,10</bases>
