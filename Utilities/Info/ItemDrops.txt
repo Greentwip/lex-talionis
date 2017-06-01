@@ -101,6 +101,7 @@ Restore - Chest
 Physic - Chest
 Barkskin - Rescue 2 Civilians
 Yew Bow - Rescue 4 Civilians
+Disintegrate - Base Conversation
 
 Chapter 7:
 Yew Longbow - Ruin
@@ -117,7 +118,6 @@ Mithril Axe - Drop
 
 Chapter 8:
 Talisman* - Drop
-Brave Sword - Drop
 Mithril Mail* - Drop
 Elixir - Drop
 Scathe - Drop
@@ -131,7 +131,7 @@ Magebane Bow - House
 Fortune - Base Conversation
 
 Chapter 9:
-Brave Axe - Boss Drop
+Adamant Axe - Boss Drop
 Adamant Sword - Boss Drop
 Stun - Drop
 Aether - Drop
@@ -143,12 +143,7 @@ Superior Lance - Drop
 Meteor - Drop
 Energy Ring* - Base Conversation
 Secret Book* - Base Conversation
+Althea's Charm - Base Conversation
 
 Chapter 10:
-
-
-Can still ask for, in base conversations, etc.
-Disintegrate
-Brave Lance
-Brave Bow
-More gold. Around beginning of Level 8 I started to run out. An extra 10000 at level9? -- Sam says something about pulling out the old war chest in prebase 9?
+Brave Weapons - Automatic

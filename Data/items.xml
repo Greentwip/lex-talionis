@@ -38,6 +38,26 @@
 		<LVL>D</LVL>
     </item>
 
+    <item name="Practice Blade">
+        <id>Practice Blade</id>
+        <spritetype>Sword</spritetype>
+        <spriteid>4</spriteid>       
+        <components>weapon,uses,weight,status_on_equip</components>
+        <weapontype>Sword</weapontype>
+ 
+        <uses>40</uses>
+        <value>8</value>
+        <RNG>1</RNG>
+        <WT>2</WT>
+        <desc>Grants DEF +2 while equipped</desc>
+        
+        <MT>1</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
+
+        <status_on_equip>Defense +2</status_on_equip>
+    </item>
+
     <item name="Steel Sword">
         <id>Steel Sword</id>
         <spritetype>Sword</spritetype>
@@ -1494,7 +1514,7 @@
         
 		<damage>11</damage>
 		<hit>40</hit>
-        <LVL>A</LVL>
+        <LVL>B</LVL>
         <targets>Enemy</targets>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
@@ -1718,6 +1738,18 @@
         <desc>Grants Damage +2 and Damage Taken -2 against enemies with more HP.</desc>   
     </item>
 
+    <item name="Althea's Charm">
+        <id>Althea's Charm</id>
+        <spritetype>Boosters</spritetype>
+        <spriteid>11</spriteid>       
+        <components>status_on_hold,beneficial</components>
+
+        <RNG>0</RNG>
+        <value>4000</value>
+        <status_on_hold>Luck +10</status_on_hold>
+        <desc>Grants LCK +10.</desc>   
+    </item>
+
     <item name="Ruby">
         <id>Ruby</id>
         <spritetype>Valuable</spritetype>
@@ -1755,7 +1787,7 @@
         <id>Makara</id>
         <spritetype>Lance</spritetype>
         <spriteid>17</spriteid>       
-        <components>weapon,weight,status</components>
+        <components>weapon,weight,status,map_hit_color</components>
         <weapontype>Sword,Lance,Axe</weapontype>
  
         <RNG>1-2</RNG>
@@ -1767,6 +1799,8 @@
 		<MT>13</MT>
 		<HIT>70</HIT>
 		<LVL>A</LVL>
+
+        <map_hit_color>-248,0,-248</map_hit_color>
     </item>
 
     <!-- Unobtainable Skill Only Items -->

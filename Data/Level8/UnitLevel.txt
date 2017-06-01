@@ -48,7 +48,7 @@ enemy;0;0;Dracolord;14;Javelin,dTalisman;29,26;Pursue;Claw
 enemy;0;0;Vanguard;12;Mithril Sword;5,19;Attack_4;Claw
 enemy;0;0;Vanguard;12;Mithril Sword;9,21;Attack_4;Claw
 enemy;0;0;Vanguard;12;Mithril Axe;10,19;Attack_4;Claw
-enemy;0;0;Vanguard;12;dBrave Sword;3,23;Attack_4;Claw
+enemy;0;0;Vanguard;12;Mithril Axe;3,23;Attack_4;Claw
 # 4 Mages and a Sage in middle of Map
 enemy;0;0;Mage;10;Fire;15,15;Attack_2;Claw
 enemy;0;0;Mage;10;Earth;17,17;Attack_2;Claw

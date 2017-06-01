@@ -525,7 +525,7 @@
 		<bases>39,18,1,13,12,11,7,6,</bases>
         <growths>200,50,0,100,100,0,0,0</growths>
         
-        <inventory>dBrave Axe,Tomahawk,Elixir</inventory>
+        <inventory>dAdamant Axe,Tomahawk,Elixir</inventory>
         
         <level>20</level>
         <class>Raider,Berserker</class>

@@ -18,6 +18,12 @@ add_talk;Sam;Coyote
 add_talk;Ophie;Coyote
 add_talk;Kayla;Coyote
 add_talk;Sam;Kiley
+if;not gameStateObj.check_dead('Renae') and not gameStateObj.check_dead('Drake')
+    set_base_convo;Guard Duty
+end
+if;not gameStateObj.check_dead('Kayla')
+    set_base_convo;Cipher
+end
 if;not gameStateObj.check_dead('Theo') and gameStateObj.counters.get('noir', 2) >= 2
     set_base_convo;Theo Sphinx, Pt. III
 end

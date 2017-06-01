@@ -286,7 +286,7 @@
         <stat_change>0,0,0,0,-2,0,0,0,0,0</stat_change>
     </status>
 
-    <!-- Used by Earth -->
+    <!-- Used by Earth, Practice Blade -->
     <status name="Defense +2">
         <id>Defense +2</id>
         <desc>Grants DEF +2.</desc>
@@ -325,6 +325,16 @@
 
         <conditional_mt>2;Utility.lt(self.currenthp, target.currenthp)</conditional_mt>
         <conditional_resist>2;Utility.lt(target.currenthp, self.currenthp)</conditional_resist>
+    </status>
+
+    <!-- Used by Althea's Charm -->
+    <status name="Luck +10">
+        <id>Luck +10</id>
+        <desc>Gain LCK +10.</desc>
+        <icon_index>11,9</icon_index>
+        <components>stat_change</components>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <stat_change>0,0,0,0,0,10,0,0,0,0</stat_change>
     </status>
 
     <!-- Used by Superior Weapons -->
