@@ -91,7 +91,8 @@ def read_constants_file():
              'def_double': 1, # Whether units on defense can double their attackers
              'support': 1, # Whether this game has supports
              'casual': 0, # Whether player units die when they are killed (1 - casual, 0 - classic)
-             'leveling': 'random', # How to level up units ('fixed', 'random', and 'hybrid' are valid choices) # Normal FE uses random
+             'player_leveling': 'random', # How to level up player units ('fixed', 'random', and 'hybrid' are valid choices) # Normal FE uses random
+             'enemy_leveling': 'fixed', # How to level up non-player units
              'rng': 'true_hit', # How hits are calculated ('classic', 'true_hit', 'true_hit+', 'no_rng', 'hybrid') # FE6-13 uses true_hit
              'set_roll': 49, # used for 'no_rng' mode. Determines threshold at which attacks miss. Ex. Any attack with hitrate <= set_roll, misses
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)

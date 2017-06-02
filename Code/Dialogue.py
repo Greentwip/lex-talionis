@@ -363,7 +363,12 @@ class Dialogue_Scene(object):
             name = self.optionalunit.name if line[1] == '{unit}' else line[1]
             if name in self.unit_sprites:
                 self.unit_sprites[name].mirror = not self.unit_sprites[name].mirror
-        
+        # Bop the unit sprite up and down
+        elif line[0] == 'bop':
+            name = self.optionalunit.name if line[1] == '{unit}' else line[1]
+            if name in self.unit_sprites:
+                self.unit_sprites[name].bop()
+
         ### MUSIC
         # Fade in this musical accompanienment
         elif line[0] == 'm':
@@ -1960,6 +1965,11 @@ class UnitPortrait(object):
         # Expression
         self.expression = expression
 
+        # For bop
+        self.bops_remaining = 0
+        self.bop_state = False
+        self.last_bop = None
+
     def talk(self):
         self.talking = True
 
@@ -1969,6 +1979,11 @@ class UnitPortrait(object):
     def move(self, new_position):
         self.new_position = self.new_position[0] + new_position[0], self.new_position[1] + new_position[1]
         self.isMoving = True
+
+    def bop(self):
+        self.bops_remaining = 2
+        self.bop_state = False
+        self.last_bop = Engine.get_time()
 
     def update(self):
         current_time = Engine.get_time()
@@ -2043,6 +2058,18 @@ class UnitPortrait(object):
                     self.position = updated_position
 
                 self.last_move_update = current_time
+
+        # Bop unit if he/she needs to be bopped
+        if self.bops_remaining:
+            if current_time - self.last_bop > 50:
+                self.last_bop = current_time
+                if self.bop_state:
+                    self.position = self.position[0], self.position[1] - 2
+                    self.bops_remaining -= 1
+                else:
+                    self.position = self.position[0], self.position[1] + 2
+                self.bop_state = not self.bop_state
+                
         return False
         
     def draw(self, surf):

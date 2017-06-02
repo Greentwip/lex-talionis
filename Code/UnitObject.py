@@ -794,16 +794,18 @@ class UnitObject(object):
         levelup_list = [0 for x in self.stats]
         if self.team == 'player':
             growths = [sum(x) for x in zip(self.growths, GROWTHS['player_growths'])]
+            leveling = CONSTANTS['player_leveling']
         else:
             growths = [sum(x) for x in zip(self.growths, GROWTHS['enemy_growths'])]
+            leveling = CONSTANTS['enemy_leveling']
 
-        if CONSTANTS['leveling'] in ['fixed', 'random']:
+        if leveling in ['fixed', 'random']:
             for index in range(8):
                 growth = growths[index]
-                if CONSTANTS['leveling'] == 'fixed':
+                if leveling == 'fixed':
                     levelup_list[index] = min((self.growth_points[index] + growth)/100, class_info['max'][index] - self.stats.values()[index].base_stat)
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
-                elif CONSTANTS['leveling'] == 'random':
+                elif leveling == 'random':
                     while growth > 0:
                         levelup_list[index] += 1 if random.randint(0, 99) < growth else 0
                         growth -= 100

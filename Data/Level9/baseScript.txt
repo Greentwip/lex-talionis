@@ -1,0 +1,35 @@
+if;self.optionalunit == 'Promises'
+    m;??
+    b;Study??
+    t;2
+    u;Kayla;Left;u;Sam;Right
+    s;Sam;Are you almost ready, Kayla?
+    s;Kayla;Tsk Tsk. A lady is ready precisely when she means to be, and no sooner.
+    s;Sam;I see...
+    s;Kayla;Hmmm... Is something wrong, dearest?
+    s;Sam;No... Well, its nothing you said.
+    s;Kayla;So?
+    s;Sam;This is our last mission...
+    s;Kayla;You worried we won't succeed?
+    s;Sam;To be honest, I am a bit worried. Even you have your limits, Kayla. 
+    s;Kayla;Haven't found them yet!
+    s;Sam;Anyways, thats not really my chief concern. It's our last mission... together. When this is over we'll split ways. The Resistance will be disbanded. So, there won't be much of a reason for the two of us to be together.
+    s;Kayla;Sam, say no more. You know my feelings toward you. Do you think I'll just leave?
+    s;Sam;No, but we each have jobs, responsibilities, ambitions. Those too can strand us apart. I don't want to look back on today with any regrets. 
+    s;Kayla;Nor do I.
+    s;Sam;Well, then,{w}{br}after this is over... if we're both still...{w}{br}around.{w}{br}I'd like to make this fling official.
+    bop;Kayla
+    s;Kayla;Ah! A ring?
+    s;Sam;I'd been meaning to give to you for a while...{w}{br}but I could never find the right time.{w}{br}So how 'bout it?
+    s;Kayla;Of course!{w}{br}You've got me as giddy as a maid on her first dance.
+    s;Sam;Phew!
+    s;Kayla;You thought I'd turn you down?
+    s;Sam;Never hurts to consider the possibilities.
+    s;Kayla;Well, thank you dearest. ...You know we're not going to die out there.
+    s;Sam;Hmmm...?
+    s;Kayla;Between the two of us, nothing can stand in our way.
+    r;Sam;Kayla
+    give_item;Kayla;Energy Ring
+    grey_base_convo;Promises
+    t;1
+end

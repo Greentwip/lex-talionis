@@ -406,13 +406,13 @@ def auto_level(bases, growths, level, max_stats):
     growths = [sum(x) for x in zip(growths, GROWTHS['enemy_growths'])]
     growth_points = [50 for growth in growths]
 
-    if CONSTANTS['leveling'] == 'fixed':
+    if CONSTANTS['enemy_leveling'] == 'fixed':
         for index, growth in enumerate(growths):
             growth_sum = growth * (level - 1)
             stats[index] += growth_sum/100
             growth_points[index] += growth_sum%100
 
-    elif CONSTANTS['leveling'] == 'random': # Random
+    elif CONSTANTS['enemy_leveling'] == 'random': # Random
         for index, growth in enumerate(growths):
             for _ in range(level - 1):
                 growth_rate = growth
@@ -420,7 +420,7 @@ def auto_level(bases, growths, level, max_stats):
                     stats[index] += 1 if random.randint(0, 99) < growth_rate else 0
                     growth_rate -= 100
 
-    elif CONSTANTS['leveling'] == 'hybrid': # Like Radiant Dawn Bonus Exp Method
+    elif CONSTANTS['enemy_leveling'] == 'hybrid': # Like Radiant Dawn Bonus Exp Method
         growths = [growth * (level - 1) if stats[index] < max_stats[index] else 0 for index, growth in enumerate(growths)]
         growth_sum = sum(growths)
         num_choice = growth_sum/100

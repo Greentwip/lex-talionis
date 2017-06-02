@@ -13,11 +13,11 @@ ToDo:
 	- 5
 		- Theo Sphinx, Private Eye Pt. 2 (--)
 		- Sam confronts Eliza - she's done listening to Sam -- Sam's actually okay with it though... Sam is reasonable dude. (Short Spear)
-		Joel and Nia (--)
+		- Joel and Nia (--)
 	- 6
 		- Theo Sphinx, Private Eye Pt. 3 (--)
-		Renae and Drake (--)
-		Sam and Kayla dissect Disintegrate (Disintegrate)
+		- Renae and Drake (--)
+		- Sam and Kayla dissect Disintegrate (Disintegrate)
 	- 7
 		- Theo Sphinx, Private Eye Pt. 4 (Howl)
 		Coyote and Ophie Training (Practice Blade)
@@ -98,3 +98,4 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - A: 25 hit, 2 damage
 - If you are on impassable terrain, take damage.
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
+- Add Turnwheel

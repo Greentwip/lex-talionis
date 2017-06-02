@@ -8,6 +8,9 @@ add_to_market;Corona
 add_to_market;Physic
 add_to_market;Elixir
 add_to_market;Hex
+if;not gameStateObj.check_dead('Kayla')
+    set_base_convo;Promises
+end
 # Set up layers
 # Layer - 1 - up and down bridges
 layer_tile_sprite;1;4,0;up_half
