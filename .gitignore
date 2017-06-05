@@ -6,6 +6,9 @@ Saves/*.p
 Saves/*.pmeta
 debug.log.?
 
+# Large Audio Files
+*.ogg
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
