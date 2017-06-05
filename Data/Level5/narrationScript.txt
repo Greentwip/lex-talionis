@@ -69,7 +69,7 @@ s;Sam;Wait, Nia!{w}{br}Let's hear her out!{w};auto
 # Nia moves back
 move_sprite;Nia;-24,0;force_hold
 s;Sam;Why are you sneaking around our base then?{w};auto
-s;Woman2;I'm not sneaking!{w}{br}I was just trying to meet with you.{w}{br}We need your help!{w};auto
+s;Woman2;I'm not sneaking!{w}{br}I was just trying to talk to you.{w}{br}We need your help!{w};auto
 s;Sam;We?{w};auto
 s;Woman2;I'm from Podoma.{w}{br}Your group defended our village.{w};auto
 r;Nia
@@ -88,7 +88,7 @@ r;Ophie;Althea
 u;Ophie;FarLeft
 s;Ophie;How can you be so heartless?{w};auto
 s;Sam;I'm just being rational.{w}{br}Let's take some time and think this through.{w}{br}Maybe we'll find a solution that doesn't require blindly walking into Vagnius' trap.{w};auto
-s;Ophie;We can't just sit here and do nothing!{w}{br}We're the Resistance, and we do what's right, no matter the cost!{w};auto
+s;Ophie;We can't just sit here and do nothing!{w}{br}We're the Resistance, and we do what's right!{w};auto
 u;Joel;MidRight
 s;Joel;Well said, lad.{w};auto
 s;Sam;Joel!{w};auto

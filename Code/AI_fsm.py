@@ -690,7 +690,6 @@ class Primary_AI(object):
             return 0
 
         # How far do I have to move -- really small. Only here to break ties
-        ### This is not wanted, since I actually might want the unit to move further, so others can move up also.?
         max_distance = self.unit.stats['MOV']/CONSTANTS['normal_movement']
         if max_distance > 0:
             distance_term = (max_distance - Utility.calculate_distance(move, self.orig_pos))/float(max_distance)
@@ -778,15 +777,14 @@ class Primary_AI(object):
                 logger.debug("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
                 return 0
 
-            # How far do I have to move -- really small. Only here to break ties
-            #max_distance = self.unit.stats['MOV']/CONSTANTS['normal_movement']
-            #distance_term = (max_distance - Utility.calculate_distance(move, self.orig_pos))/float(max_distance)
+            # Only here to break ties
+            closest_enemy_term = Utility.clamp(closest_enemy_distance/100.0, 0, 1)
+            terms.append((closest_enemy_term, 1))
 
             logger.debug("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
             terms.append((offensive_term, 60))
             terms.append((status_term, 20))
             terms.append((defensive_term, 20)) # Set to 1 since perfectly defended
-            #terms.append((distance_term, 1))
 
         return Utility.process_terms(terms)
 

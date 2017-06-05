@@ -6,6 +6,9 @@ add_to_market;Great Axe
 add_to_market;Great Bow
 add_to_market;Spiritbane
 add_to_market;Barkskin
+if;not gameStateObj.check_dead('Coyote')
+	set_base_convo;Training
+end
 if;not gameStateObj.check_dead('Theo') and gameStateObj.counters.get('noir', 3) >= 3
     set_base_convo;Theo Sphinx, Pt. IV
 end

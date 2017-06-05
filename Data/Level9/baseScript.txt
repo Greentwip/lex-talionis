@@ -1,6 +1,6 @@
 if;self.optionalunit == 'Promises'
-    m;??
-    b;Study??
+    m;Awakening - SSupport
+    b;GenericRoom
     t;2
     u;Kayla;Left;u;Sam;Right
     s;Sam;Are you almost ready, Kayla?

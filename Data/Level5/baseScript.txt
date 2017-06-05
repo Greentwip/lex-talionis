@@ -5,7 +5,7 @@ if;self.optionalunit == 'Theo Sphinx, Pt. II'
 	b;MainBase
 	t;2
 	u;Theo;Left
-	s;Theo;It was what folks called the dead of winter.{w}{br}The dirt mixed with the snow until the alleys were plastered in a crunchy, gritty brown.{w}{br}A fine complement to this cold case.{w}{br}I'd just stopped off at Joel's and ordered a good hot cup o' joe,{w}{br}when in comes a violet-haired vixen with an eerie smile--{w}{br}looking for me, as usual.{w};auto;noir
+	s;Theo;It was what folks called the dead of winter.{w}{br}The dirt mixed with the snow until the alleys were plastered in a gritty brown.{w}{br}A fine complement to this cold case.{w}{br}I'd just stopped off at Joel's and ordered a good hot cup o' joe,{w}{br}when in comes a violet-haired vixen with an eerie smile--{w}{br}looking for me, as usual.{w};auto;noir
 	u;Renae;Right
 	s;Renae;Rumor is you wanted to talk to me, Theo?{w}{br}What's up?{w};auto
 	s;Theo;I had little to go on, but this dame was my first lead.{w}{br}She might have looked enticing, but every rose has its thorns.{w}{br}Stolen many a bloke's heart--{w}{br}along with his money.{w}{br}She'd supposedly reformed, but I had my doubts.{w}{br}I asked her if she'd been around O'Halley's street anytime lately.{w}{br}Maybe the temptation of her past had proven too great?{w};auto;noir
@@ -26,23 +26,24 @@ elif;self.optionalunit == 'Apologies'
 	t;2
 	u;Sam;Right
 	u;Eliza;Left
-	s;Sam;Insubordination.{w}{br}Disobedience.{w}{br}Refusal to follow my direct orders.{w};autp
+	s;Sam;Insubordination.{w}{br}Disobedience.{w}{br}Refusal to follow my direct orders.{w};auto
 	s;Eliza;Sam,--
-	s;Sam;I'm not finished.{w}{clear}Do you know understand what you've done?{w}{br}I could expect this from Ophie or Prim, but from you?{w}{br}The Empire is at our doorstep. One misstep, one false move, and its over for us.{w};auto
-	s;Eliza,Sam, I can explain--
+	s;Sam;I'm not finished.{w}{clear}Do you know what you've done?{w}{br}I could expect this from Ophie or Prim, but from you?{w}{br}The Empire is at our doorstep!{w}{br}One misstep, one false move, and its over for us.{w};auto
+	s;Eliza;Sam, I can explain--
 	s;Sam;No need.{w}{br}I understand plenty, and I'm sorry.{w};auto
 	s;Eliza;You're sorry...?
-	s;Sam;I was blinded by my own past misgivings.{w}{br}I should have never brought you on that mission. You were too young and inexperienced, and you suffered for it.{w}{clear}But I've come to realize that you've changed since then.{w};auto
+	s;Sam;I was blinded by my own misgivings.{w}{br}I should have never brought you on that mission.{w}{br}You were too young and inexperienced, and you suffered for it.{w}{clear}But I've come to realize that you've changed since then.{w};auto
 	s;Eliza;...
-	s;Sam;You're much stronger now. I was wrong.{w}{br}I hope you can forgive my poor judgement
+	s;Sam;You're much stronger now. I was wrong.{w}{br}I hope you can forgive my poor judgement.
 	s;Eliza;...All this time, I thought you hated me... for my failure.
-	s;Sam;Of course not. You were my responsiblity, and I didn't want to repeat it.{w}{br}But you can handle yourself now, right?{w};auto
+	s;Sam;Of course not!{w}{br}You were my responsiblity. It was my own failure.{w}{br}But you can handle yourself now, right?{w};auto
+	set_expression;Eliza;Smiling
 	s;Eliza;R-Right!
 	s;Sam;Then, welcome back to the team, Eliza.
 	s;Eliza;I'll do my best!
 	s;Sam;But as a member of the Resistance...{w}{br}no more insubordination, got that?{w}{br}I must be confident my orders will be followed.
 	s;Eliza;...O-of course!
-	s;Sam;Here. I was saving this for when you could return.{w}{br}I expected it to be a couple more solstices, but...{w};auto
+	s;Sam;Here. I was saving this for your return.{w}{br}I expected it to be a couple more solstices, but...{w};auto
 	give_item;Eliza;Short Spear
 	s;Eliza;You won't regret this, Sam. Thank you.
 	r;Sam;Eliza
@@ -52,11 +53,9 @@ elif;self.optionalunit == 'Joel and Nia'
 	m;Awakening - Easy Now
 	b;ClearingSunrise
 	t;2
-	u;Nia;Left
-	wait;500
-	u;Joel;Right
+	u;Nia;Left;u;Joel;Right
 	s;Joel;Howdy, Nia! Yar up early.{w}{br}The sun's barely peaked o'er the horizon.{w}{br}Oh! And you already caught something? Rabbit, is it?{w};auto
-	s;Nia;...Sleeping... easier catch.
+	s;Nia;Mmm... Sleeping... easier catch.
 	set_expression;Nia;Smiling
 	s;Joel;Looks good. Thank you, Nia.
 	s;Nia;...
@@ -67,12 +66,14 @@ elif;self.optionalunit == 'Joel and Nia'
 	s;Nia;Mmm... hmmm.
 	s;Joel;Aaah.....{w}{br}Nothing like fresh breakfast at the crack of dawn...
 	s;Nia;...
-	s;Joel;You know, things are changin' mighty quick round here.{w}{br}Our little resistance grown leaps and bounds jus' in the past moon.{w}{br}Somethings brewing in ol' Sam's mind.{w}{br}A plan to end this struggle, one way or another...{w};auto
+	s;Joel;You know, Nia, the winds are changin' mighty quick round here.{w}{br}Our little resistance has grown leaps and bounds jus' in the past moon.{w}{br}Somethings brewin' in ol' Sam's mind.{w}{br}A plan to end this struggle, one way or another...{w};auto
 	s;Nia;...?
-	s;Joel;So what I mean to say is that these peaceful moments...{w}{br}they're gonna be few and far between.{w}{clear}Ah, hell, Nia. I just want ya to know that I might not be around as much.{w}{br}I know you survived alone before, but you're human.{w}{br}You could use a friend.{w}{clear}If I don't make it, Nia... try to at least talk to someone every once in a while, okay?{w};auto
+	s;Joel;So what I mean to say is that these peaceful moments...{w}{br}they're gonna be few and far between.{w}{clear}Ah, hell, Nia. I just want ya to know that I might not be around as much.{w}{br}I know you survived alone before, but you ARE human.{w}{br}You could use a friend.{w}{clear}If I don't make it, Nia... try to at least talk to someone every once in a while, okay?{w};auto
 	s;Nia;...O-kay, Joel.
-	s;Joel;...Well, I'm glad we could talk, Nia.{w}{br}But I suppose we've got to get ready for the day.{w}{br}So long.
+	s;Joel;...Well, I'm glad we could talk.{w}{br}But I suppose we've got to get ready for the day.{w}{br}So long.
+	r;Joel
 	s;Nia;...Bye, Joel.
+	r;Nia
 	grey_base_convo;Joel and Nia
 	t;1
 end

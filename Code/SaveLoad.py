@@ -433,6 +433,9 @@ def auto_level(bases, growths, level, max_stats):
             if stats[idx] >= max_stats[idx]:
                 num_choice -= growths[idx]/100
                 growths[idx] = 0
+
+    else:
+        debug.error('Unsupported leveling type %s', CONSTANTS['enemy_leveling'])
             
     return stats, growth_points
 

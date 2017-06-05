@@ -78,9 +78,6 @@ disp_cursor;0
 move_unit;Jules;5,14
 start_move
 set_cursor;Ophie;force_hold
-disp_cursor;1
-wait;500
-disp_cursor;0
 t;1
 b;Desert
 t;2
@@ -102,5 +99,7 @@ u;Ophie;Left
 s;Ophie;Come on. There's no time to waste!{w};auto
 r;Ophie
 t;1
+# There was movement, so reset that
+reset_units
 remove_background
 t;2

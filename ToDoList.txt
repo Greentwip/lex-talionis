@@ -21,14 +21,11 @@ ToDo:
 	- 7
 		- Theo Sphinx, Private Eye Pt. 4 (Howl)
 		Coyote and Ophie Training (Practice Blade)
-		??
 	- 8
-		Althea, Drake, Prim discuss Althea's potential rise to the Lion Throne. Althea is not sure she wants to. She's not sure she's ready. Why doesn't Sam take it. He's led us for so long. He's been a good leader. I don't think I have it in me to be a leader... 
-		I was the youngest of five. I was never supposed to take the throne. My older sister was trained from birth for the responsibility. But I ... I... I wasn't.
-		- Coyote returns from Kiley, informs Sam that preparations are going well. Tells Sam of a secret entrance underneath Rajas. (Fortune)
-		??
+		Althea and Prim talk about the future (??)
+		Coyote returns from Kiley, informs Sam that preparations are going well. Tells Sam of a secret entrance underneath Rajas. (Fortune)
 	- 9
-		Sam and Kayla (Energy Ring)
+		- Sam and Kayla (Energy Ring)
 		Theo and Eliza (Secret Book)
 		Ophie and Althea (Althea's Charm)
 - General Testing
@@ -66,7 +63,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Have Level up! match the way its done in fe7... (sound)
 - Improve Promotion... Add animation. Make sure exp works correctly.
 --- PICTURES --- 
-- Strategist Class Card
 - Wagon Class Card
 --- MUSIC ---
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(

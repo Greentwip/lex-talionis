@@ -68,8 +68,8 @@ elif;self.optionalunit == 'Guard Duty'
 	grey_base_convo;Guard Duty
 	t;1
 elif;self.optionalunit == 'Cipher'
-	m;??
-	b;Study??
+	m;Hum of the Streets
+	b;GenericRoom
 	t;2
 	u;Kayla;Left;u;Sam;Right
 	s;Sam;Kayla? You done packing?

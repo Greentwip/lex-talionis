@@ -886,10 +886,9 @@ class BaseMarketState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.cur_unit = gameStateObj.cursor.currentSelectedUnit
-            #cur_time = Engine.get_true_time()
+            cur_time = Engine.get_true_time()
             self.update_options(gameStateObj)
             items_for_sale = ItemMethods.itemparser(','.join(list(gameStateObj.market_items)))
-            #print(Engine.get_true_time() - cur_time)
             self.shop_menu = MenuFunctions.ConvoyMenu(None, items_for_sale, (WINWIDTH - 160 - 4, 40), disp_value="Buy")
             self.choice_menu = MenuFunctions.ChoiceMenu(None, [WORDS["Buy"], WORDS["Sell"]], (16, 16), gem=False, background='BrownBackgroundOpaque')
             self.buy_sure_menu = MenuFunctions.ChoiceMenu(None, [WORDS['Buy'], WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
@@ -924,7 +923,7 @@ class BaseMarketState(StateMachine.State):
         all_items = [item for item in gameStateObj.convoy]
         for unit in my_units:
             for item in unit.items:
-                all_items.append(item)
+                all_items.append(item)              
         if hasattr(self, 'my_menu'):
             self.my_menu.updateOptions(all_items)
         else:

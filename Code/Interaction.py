@@ -818,15 +818,16 @@ class Map_Combat(Combat):
                 d_stats = d_hit, d_mt
             else:
                 d_stats = None
+                d_weapon = None
 
             ### Build health bars
             # If the main defender is in this result
             if self.p2 in [result.attacker, result.defender]:
                 if not result.defender in self.health_bars:
-                    defender_hp = HealthBar('p1' if result.defender is self.p1 else 'p2', result.defender, result.defender.getMainWeapon(), other=result.attacker, stats=d_stats)
+                    defender_hp = HealthBar('p1' if result.defender is self.p1 else 'p2', result.defender, d_weapon, other=result.attacker, stats=d_stats)
                     self.health_bars[result.defender] = defender_hp
                 if not result.attacker in self.health_bars:
-                    attacker_hp = HealthBar('p1' if result.attacker is self.p1 else 'p2', result.attacker, result.attacker.getMainWeapon(), other=result.defender, stats=a_stats)
+                    attacker_hp = HealthBar('p1' if result.attacker is self.p1 else 'p2', result.attacker, a_weapon, other=result.defender, stats=a_stats)
                     self.health_bars[result.attacker] = attacker_hp
             else:
                 if not CONSTANTS['simultaneous_aoe']:

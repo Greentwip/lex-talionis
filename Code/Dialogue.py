@@ -2061,7 +2061,7 @@ class UnitPortrait(object):
 
         # Bop unit if he/she needs to be bopped
         if self.bops_remaining:
-            if current_time - self.last_bop > 50:
+            if current_time - self.last_bop > 150:
                 self.last_bop = current_time
                 if self.bop_state:
                     self.position = self.position[0], self.position[1] - 2
