@@ -81,9 +81,9 @@ Then, type:
 git clone https://github.com/rainlash/lex-talionis
 ```
 
-You will also need to download the audio files. On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQtnmwa?dl=0
+You will also need to download the audio files, which are not stored on Git because of their size. On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQtnmwa?dl=0. On the top right of the page, click "Download", then click "Direct Download".
 
-Once the audio files are downloaded, just move or copy the Audio folder to the lex-talionis directory (the directory that contains Main.py).
+Once the audio files are downloaded, extract the zip file and move or copy the Audio folder to the lex-talionis directory (the directory that contains Main.py).
 
 Once Lex Talionis has been cloned to your machine, from that same directory, you can run The Lion Throne by typing:
 
