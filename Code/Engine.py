@@ -82,6 +82,18 @@ def set_colorkey(surf, color, rleaccel=True):
     else:
         surf.set_colorkey(color)
 
+class BaseSound():
+    def play(self, loops=0, maxtime=0, fade_ms=0):
+        pass
+    def stop():
+        pass
+    def fadeout(time):
+        pass
+    def set_volume(value):
+        pass
+    def get_volume():
+        pass
+
 def create_sound(fp):
     return pygame.mixer.Sound(fp)
 

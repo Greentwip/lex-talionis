@@ -74,17 +74,18 @@ To run The Lion Throne, you will need to download and install the following:
 This section requires git.
 If you don't have git, install it from here: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git.
 
-You will also need git-lfs to download the assets (sprites and audio). Install it here: https://git-lfs.github.com
-
 To get the Lex Talionis engine code on your machine, create a new folder.
 Then, type:
 
 ```
-git lfs install
 git clone https://github.com/rainlash/lex-talionis
 ```
 
-Once Lex Talionis has been cloned to your machine, you can run The Lion Throne by typing:
+You will also need to download the audio files. On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQtnmwa?dl=0
+
+Once the audio files are downloaded, just move or copy the Audio folder to the lex-talionis directory (the directory that contains Main.py).
+
+Once Lex Talionis has been cloned to your machine, from that same directory, you can run The Lion Throne by typing:
 
 ```
 python main.py

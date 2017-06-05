@@ -40,17 +40,21 @@ def getImages():
 
 def getSounds():
     # SFX Sounds
+    class SoundDict(dict):
+        def __getitem__(self, key):
+            return dict.get(self, key, Engine.BaseSound())
+
     sfxnameList = [sfx[:-4] for sfx in os.listdir('./Audio/sfx/') if sfx.endswith('.wav') or sfx.endswith('.ogg')]
     sfxList = [Engine.create_sound('./Audio/sfx/' + sfx) for sfx in os.listdir('./Audio/sfx/') if sfx.endswith('.wav') or sfx.endswith('.ogg')]
-    SOUNDDICT = dict(zip(sfxnameList, sfxList))
+    SOUNDDICT = SoundDict(zip(sfxnameList, sfxList))
 
-    class NoneDict(dict):
+    class MusicDict(dict):
         def __getitem__(self, key):
             return dict.get(self, key)
 
     musicnameList = [music[:-4] for music in os.listdir('./Audio/music/') if music.endswith('.ogg')]
     musicList = [('./Audio/music/' + music) for music in os.listdir('./Audio/music/') if music.endswith('.ogg')]
-    MUSICDICT = NoneDict(zip(musicnameList, musicList))
+    MUSICDICT = MusicDict(zip(musicnameList, musicList))
 
     set_sound_volume(1.0, SOUNDDICT)
 
