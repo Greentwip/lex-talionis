@@ -31,8 +31,8 @@ def update_time():
     engine_constants['current_time'] = pygame.time.get_ticks()
     engine_constants['last_fps'] = engine_constants['current_time'] - engine_constants['last_time']
     if engine_constants['last_fps'] > 32:
-        print('Frame took too long! %s', engine_constants['last_fps'])
-        logger.debug('Frame took too long! %s', engine_constants['last_fps'])
+        print('Frame took too long! %s ms'%(engine_constants['last_fps']))
+        logger.debug('Frame took too long! %s ms', engine_constants['last_fps'])
     
 def get_time():
     return engine_constants['current_time']
