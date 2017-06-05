@@ -44,9 +44,13 @@ def getSounds():
     sfxList = [Engine.create_sound('./Audio/sfx/' + sfx) for sfx in os.listdir('./Audio/sfx/') if sfx.endswith('.wav') or sfx.endswith('.ogg')]
     SOUNDDICT = dict(zip(sfxnameList, sfxList))
 
+    class NoneDict(dict):
+        def __getitem__(self, key):
+            return dict.get(self, key)
+
     musicnameList = [music[:-4] for music in os.listdir('./Audio/music/') if music.endswith('.ogg')]
     musicList = [('./Audio/music/' + music) for music in os.listdir('./Audio/music/') if music.endswith('.ogg')]
-    MUSICDICT = dict(zip(musicnameList, musicList))
+    MUSICDICT = NoneDict(zip(musicnameList, musicList))
 
     set_sound_volume(1.0, SOUNDDICT)
 

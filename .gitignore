@@ -7,7 +7,7 @@ Saves/*.pmeta
 debug.log.?
 
 # Large Audio Files
-*.ogg
+Audio/
 
 # Windows image file caches
 Thumbs.db
