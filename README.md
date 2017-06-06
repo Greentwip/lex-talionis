@@ -8,7 +8,7 @@ Because this was coded entirely from scratch, I am not bound by the limitations 
 
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
-![TitleScreen](/Utilities/Screenshots/TitleScreen2.png) 
+![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
 ![Range](/Utilities/Screenshots/Range1.png)
 ![Skill](/Utilities/Screenshots/Skill1.png)
 ![Prep](/Utilities/Screenshots/Prep1.png)
@@ -81,17 +81,21 @@ Then, type:
 git clone https://github.com/rainlash/lex-talionis
 ```
 
-You will also need to download the audio files, which are not stored on Git because of their size. On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQtnmwa?dl=0. On the top right of the page, click "Download", then click "Direct Download".
+You will also need to download the audio files, which are not stored on Git because of their size. 
+
+On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQtnmwa?dl=0. 
+
+On the top right of the page, click "Download", then click "Direct Download".
 
 Once the audio files are downloaded, extract the zip file and move or copy the Audio folder to the lex-talionis directory (the directory that contains Main.py).
 
 Once Lex Talionis has been cloned to your machine, from that same directory, you can run The Lion Throne by typing:
 
 ```
-python main.py
+python Main.py
 ```
 
-A small screen should pop up on your computer, displaying the logo. Don't worry if it takes a minute or two the first time it is run. It is just taking the time to parse the code.
+A small screen should pop up on your computer, displaying the logo. Don't worry if it takes a minute or two the first time it is run. It is just taking the time to parse the code into compiled binary files.
 
 ## License
 

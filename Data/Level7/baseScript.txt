@@ -38,7 +38,7 @@ if;self.optionalunit == 'Theo Sphinx, Pt. IV'
 	grey_base_convo;Theo Sphinx, Pt. IV
 	t;1
 elif;self.optionalunit == 'Training'
-	m;Jazz Noir
+	m;Wild Arms Town
 	b;Clearing
 	t;2
 	u;Ophie;MidLeft;mirror
@@ -68,7 +68,7 @@ elif;self.optionalunit == 'Training'
 	s;Ophie;Damn! Where did that come from.
 	s;Coyote;You are too focused on your own movement.{w}{br}That is not the Rusonoon monks' style.
 	s;Ophie;What would you know of the Way of the Blade?{w}{br}It's a sacred art that only expresses itself clearly in self-defense!
-	s;Coyote;So you remember Master Yohn's words.
+	s;Coyote;So you remember Yohn's words.
 	s;Ophie;You knew Master Yohn?
 	s;Coyote;Many solstices ago...{w}{clear}As he would say, read your opponent's movements, and yours will follow.{w}{br}Combat is a dance.{w}{br}Turn your opponents energy against them...
 	s;Ophie;...And then strike!
