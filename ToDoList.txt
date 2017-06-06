@@ -1,35 +1,7 @@
 ToDo:
 - Scripts (Fix and finalize)
 - Map cleanup for 3 - 10
-- Base Scripts
-	- 3
-		- Prim Meets Eliza (--)
-		- Ophie Meets Renae (Iron Knife)
-		- Ophie Meets Theo (Secret Book)
-	- 4
-		- Prim brings Eliza along (Prim's Charm)
-		- Ophie confronts Sam (Levin Sword)
-		- Theo Sphinx, Private Eye Pt. 1 (--)
-	- 5
-		- Theo Sphinx, Private Eye Pt. 2 (--)
-		- Sam confronts Eliza - she's done listening to Sam -- Sam's actually okay with it though... Sam is reasonable dude. (Short Spear)
-		- Joel and Nia (--)
-	- 6
-		- Theo Sphinx, Private Eye Pt. 3 (--)
-		- Renae and Drake (--)
-		- Sam and Kayla dissect Disintegrate (Disintegrate)
-	- 7
-		- Theo Sphinx, Private Eye Pt. 4 (Howl)
-		- Coyote and Ophie Training (Practice Blade)
-	- 8
-		- Althea and Prim talk about the future (--)
-		- Coyote returns from Kiley, informs Sam that preparations are going well. Tells Sam of a secret entrance underneath Rajas. (Fortune)
-	- 9
-		- Sam and Kayla (Energy Ring)
-		Theo and Eliza (Secret Book)
-		Ophie and Althea (Althea's Charm)
 - General Testing
-- Add music for missing base scripts.
 - Test Base Scripts
 - Test Level 10+ (should Level 10 have infinite reinforcements after turn 4? Should Ulver's weapon auto-cleave?)
 
@@ -71,10 +43,9 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons)
 - Transparent dude moves with arrow
-- Pulsing arrow
+- Pulsing arrow (transparency and color)
 - Allow user to control arrow movement (option)
 - Allow quick attack on enemy, quick spell on ally (option)
-- Have on map combat match awakening, fe 7, fe 8
 --- EXTRA ---
 - Names for chapters??
 - Unit Menu ++

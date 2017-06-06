@@ -34,7 +34,7 @@ if;self.optionalunit == 'Promises'
     t;1
 elif;self.optionalunit == 'Althea and Ophie'
     m;Awakening - Easy Now
-    b;Study
+    b;BaseEntrance
     t;2
     u;Althea;Left;u;Ophie;Right
     s;Althea;Ah... greetings, Ophie.{w}{br}...You're already done with your preparations?
@@ -73,4 +73,54 @@ elif;self.optionalunit == 'Althea and Ophie'
     s;Ophie;Right...{w}{br}Well, I'll be off.
     r;Ophie;Althea
     grey_base_convo;Althea and Ophie
+    t;1
+elif;self.optionalunit == 'Theo and Eliza'
+    m;Midna's Theme
+    b;Study
+    t;2
+    u;Theo;Left;u;Eliza;Right
+    bop;Eliza
+    s;Eliza;Would you HURRY up already, Theo?{w}{br}You've been at this for hours!{w}{br}What more could you need to bring?!
+    s;Theo;One moment, please. I need some time to consider...
+    s;Eliza;Urgh!
+    move_sprite;Eliza;-48,0;force_hold
+    s;Eliza;We're not gonna need all this!{w}{br}This is just a day trip, Theo!
+    s;Theo;...
+    s;Eliza;What do you need all these potions for?
+    s;Theo;Someone could fall ill.
+    s;Eliza;This flint?
+    s;Theo;Always important to keep your weapons in tip-top shape.
+    s;Eliza;Tent?
+    s;Theo;Rain.
+    s;Eliza;Matches?
+    s;Theo;Light.
+    s;Eliza;Compass? Sextant?
+    s;Theo;Uh... We could get lost?
+    s;Eliza;We're not traveling by sea, Theo!
+    s;Theo;One can never be too prepared.
+    s;Eliza;And all these books!
+    s;Theo;Gentle! You'll bend the spine.
+    s;Eliza;Hmmph!
+    s;Theo;I never leave home bereft of a good read.
+    s;Eliza;Pah! You and your books.{w}{br}If Ophie's right about one thing, it's that they're no substitute for reality!
+    s;Theo;Hmm... Ironic, coming from you, Eliza.
+    s;Eliza;How so?
+    s;Theo;Aren't you calling the kettle black?{w}{br}I've seen you engrossed in one.
+    s;Eliza;What, you have?{w}{br}I mean... no you haven't.
+    s;Theo;Hmmm... Let's take a look then, shall we.{w}{br}Ahem.{w}{clear}''The crow has flown away--{w}{br}Swaying in the evening sun,{w}{br}A leafless tree.''
+    s;Eliza;...
+    s;Theo;It's quite good.{w}{br}I had no idea you were a poet, Eliza.
+    s;Eliza;My... uh... where'd you find that.
+    s;Theo;I picked it up by accident.{w}{br}But really, Eliza, I had no idea you wrote poetry.
+    s;Eliza;Hmmph! Not well.
+    s;Theo;I think it's quite good, quite good indeed.
+    s;Eliza;Don't you dare tell anyone else, you got that Theo!{w}{br}Or it'll be your head!
+    s;Theo;Gulp. I would never.
+    s;Eliza;Hmmph!
+    r;Eliza
+    s;Theo;Such clarity of expression hidden beneath such a passionate exterior.{w}{br}Truly marvelous... and a bit terrifying.
+    r;Theo
+    give_item;Eliza;Secret Book
+    grey_base_convo;Theo and Eliza
+    t;1
 end
