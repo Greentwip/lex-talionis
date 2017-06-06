@@ -61,7 +61,7 @@ elif;self.optionalunit == 'Guard Duty'
 	s;Drake;Urgh!!!{w}{br}Please. No more, Renae.{w}{br}I can't handle it. Just let me in.
 	s;Renae;Heehee! I'm just pulling your leg, Pate.{w};auto
 	s;Drake;What? This was all a practical joke?
-	s;Renae;Yep!{w}{br}Like Sam would ever assign ME guard duty!{w}{br}He'd have to be out of his mind!{w}{br}Hahaha!
+	s;Renae;Yep!{w}{br}Like Sam would ever assign ME guard duty!{w}{br}He'd have to be out of his mind!{w}{br}Hahaha! Ciao!
 	r;Renae
 	s;Drake;...
 	r;Drake

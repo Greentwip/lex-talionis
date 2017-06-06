@@ -32,4 +32,45 @@ if;self.optionalunit == 'Promises'
     give_item;Kayla;Energy Ring
     grey_base_convo;Promises
     t;1
+elif;self.optionalunit == 'Althea and Ophie'
+    m;Awakening - Easy Now
+    b;Study
+    t;2
+    u;Althea;Left;u;Ophie;Right
+    s;Althea;Ah... greetings, Ophie.{w}{br}...You're already done with your preparations?
+    s;Ophie;Yep. Honestly, I don't need to bring much. My trusty blade and some food go a long way. I like to travel light.
+    s;Althea;Hmmm...
+    s;Ophie;Althea?
+    s;Althea;Oh, sorry Ophie. I was listening. I'm just having trouble fitting this all in one bag...
+    s;Ophie;Let me take over.
+    s;Althea;Oh-- If you insist.
+    s;Ophie;I do.
+    move_sprite;Althea;-24,0
+    r;Ophie
+    u;Ophie;MidLeft
+    r;Althea
+    u;Althea;Right
+    s;Althea;I-I'm not very uh... very practical, like you. Between my magic tomes, spare robes, potions and other draughts... it's quite the hassle... So thank you.
+    s;Ophie;Oh, it's not hassle at all.
+    s;Althea;Well, I admire your practicality. Growing up I never got the chance to learn how to cook or clean or sew like most girls. I really feel quite useless compared to Prim or Eliza.
+    s;Ophie;There's always time to learn.
+    s;Althea;I wouldn't want to burden them with teaching me. I'd make a fool of myself.
+    set_expression;Ophie;Smiling
+    s;Ophe;Nonsense. I'm sure Prim would be happy to teach you how to sew. And I'm a pretty good cook myself. I could give you a few pointers.
+    set_expression;Althea;Smiling
+    s;Althea;That'd be nice...
+    set_expression;Ophie;Normal
+    s;Ophie;Anyhow, Althea, you shouldn't be so down on yourself. You've got... uh... other strengths.
+    s;Althea;Hmmm...?
+    s;Ophie;I-I mean, you may not know how to sew,{w}{br}but you're levelheaded... and fair... and smart... I couldn't stand to read all these tomes.
+    s;Althea;...Teehee. Thank you, Ophie. That makes me feel better.
+    s;Ophie;Well, uh, I'm all done here... so I'd better get going... I'm sure someone else could use help.
+    set_expression;Althea;Normal
+    s;Althea;Wait, Ophie. Before you go...
+    give_item;Ophie;Althea's Charm
+    s;Ophie;Uh... thanks Althea. You sure you want to give this to me?
+    s;Althea;Oh, its nothing. Take it.
+    s;Ophie;Right...{w}{br}Well, I'll be off.
+    r;Ophie;Althea
+    grey_base_convo;Althea and Ophie
 end
