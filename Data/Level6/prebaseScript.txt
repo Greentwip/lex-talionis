@@ -55,21 +55,18 @@ s;Joel;Aye, aye, Captain.{w};auto
 # Kayla arrives
 move_sprite;Kayla;120,0;force_hold
 s;Sam;Just wandering in Kayla?{w}{br}Welcome to the land of the living.{w};auto
-s;Kayla;Ah, buzz off, Sam.{w}{br}You all live in a cave!{w}{br}A dank, smelly, cave!{w};auto
-s;Joel;The smell is Theo's.{w};auto
-s;Kayla;Tsk, Tsk!{w}{br}How's a lady supposed to get her beauty sleep with these...{w}these...{w}{br}horrid accoutrements!{w};auto
+s;Kayla;Ah, buzz off, Sam.{w}{br}You all live in a cave!{w}{br}A dank, smelly, cave!{w}{br}How's a lady supposed to get her beauty sleep with these...{w}these...{w}{br}horrid accoutrements!{w};auto
 r;Joel
 s;Sam;Alright, we've all heard your gripes.{w}{br}If everyone would settle down, we could get down to business.{w}{br}Our next mission is our most important one yet.{w};auto
 u;Althea;FarLeft
 s;Althea;Don't you say that everytime, Sam?{w};auto
-s;Sam;Hmmm... Do I?{w}{br}Well, anyway, this time I mean it.{w}{br}The Resistance has achieved success through stealth.{w}{br}However, we're never going to be able to drive the Empire out with mere subterfuge.{w}{br}We need to be able to match the Empire's might on the battlefield.{w};auto
+s;Sam;Hmmm... Do I?{w}{br}Well, anyway, this time I mean it.{w}{br}The Resistance has so far achieved success through stealth.{w}{br}However, we're never going to drive the Empire out with mere subterfuge.{w}{br}We need to be able to match the Empire's might on the battlefield.{w};auto
 s;Althea;But how... They have an army...{w};auto
 s;Sam;That's why we're getting an army of our own.{w};auto
 move_sprite;Sam;-24,0
 u;Joel;FarRight
 s;Joel;Captain, I like where this is going.{w};auto
-s;Kayla;And I know just the place to find one!{w};auto
-s;Althea;Your Confederacy of Free States will help?{w}{br}They have an army, right?{w};auto
+s;Althea;Kayla, your Confederacy of Free States will help?{w}{br}They have an army, right?{w};auto
 r;Joel
 u;Ophie;FarRight
 s;Ophie;Pah... We'd just be trading one empire for another.{w};auto
@@ -89,7 +86,7 @@ u;Joel;FarLeft
 s;Joel;It sure is... ambitious, Captain.{w}{br}Do ya reckon' we can pull it off?{w};auto
 s;Sam;We don't have a choice. Subterfuge can only get us so far.{w}{br}We need to raise an army, and these prisoners are our best bet.{w}{br}They hate the Empire as much as we do.{w};auto
 s;Ophie;Do we have any more info?{w}{br}I don't want to go in blind.{w};auto
-s;Kayla;The Confederacy has been watching the area.{w}{br}There's a secret passage we can use to get straight into the heart of the prison.{w}{br}Once there, we do what we can to foment a prison riot.{w};auto
+s;Kayla;The Confederacy has been watching the area.{w}{br}There's a secret passage that leads straight into the heart of the prison.{w}{br}Once there, we do what we can to foment a prison riot.{w};auto
 s;Ophie;Hmmm...{w};auto
 s;Sam;If there are no more questions, then everyone gear up.{w}{br}It's a day's travel, and we're going straight into the heart of Imperial territory...{w};auto
 r;Joel;Prim;Ophie;Sam;Kayla

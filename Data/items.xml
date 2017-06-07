@@ -1514,7 +1514,7 @@
         
 		<damage>11</damage>
 		<hit>40</hit>
-        <LVL>B</LVL>
+        <LVL>A</LVL>
         <targets>Enemy</targets>
 
         <map_hit_color>-248,-248,-248</map_hit_color>

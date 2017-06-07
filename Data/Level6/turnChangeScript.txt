@@ -29,9 +29,7 @@ if;gameStateObj.turncount == 1
     set_cursor;Sam;force_hold
     u;Sam;Left
     u;Ophie;Right
-    s;Sam;Damn! We've been spotted.{w}{br}Okay, everyone, get a hold of yourself.{w}{br}We need to get across that chasm. {w};auto
-    s;Ophie;But there are those gates in the way.{w};auto
-    s;Sam;There should be switches somewhere around here that open the gates.{w}{br}We need to pull them or we're never getting across.{w};auto
+    s;Sam;Damn! We've been spotted.{w}{br}Okay, everyone, get a hold of yourself.{w}{br}We need to get across that chasm.{w}{br}There should be switches around here that open the gates.{w}{br}We need to pull them or we're never getting across.{w};auto
     s;Ophie;You got it!{w};auto
     r;Sam;Ophie
     set_cursor;Ophie;force_hold

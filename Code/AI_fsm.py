@@ -247,16 +247,16 @@ class AI(object):
                             item.droppable = False
                         self.item_to_use.droppable = True
                     self.unit.handle_steal_banner(self.item_to_use, gameStateObj)
-            elif isinstance(self.target_to_interact_with, TileObject.TileObject):
-                if 'Village' in gameStateObj.map.tile_info_dict[self.target_to_interact_with.position]:
-                    gameStateObj.map.destroy(self.target_to_interact_with, gameStateObj)
-                elif 'Locked' in gameStateObj.map.tile_info_dict[self.target_to_interact_with.position]:
-                    locked_num = gameStateObj.map.tile_info_dict[self.target_to_interact_with.position]['Locked']
-                    unlock_script = Dialogue.Dialogue_Scene('Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt', self.unit, locked_num, self.target_to_interact_with.position)
+            else:
+                if 'Village' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
+                    gameStateObj.map.destroy(gameStateObj.map.tiles[self.target_to_interact_with], gameStateObj)
+                elif 'Locked' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
+                    locked_num = gameStateObj.map.tile_info_dict[self.target_to_interact_with]['Locked']
+                    unlock_script = Dialogue.Dialogue_Scene('Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt', self.unit, locked_num, self.target_to_interact_with)
                     gameStateObj.message.append(unlock_script)
                     gameStateObj.stateMachine.changeState('dialogue')
-                elif 'Escape' or 'ThiefEscape' in gameStateObj.map.tile_info_dict[self.target_to_interact_with.position]:
-                    if self.unit.position != self.target_to_interact_with.position:
+                elif 'Escape' or 'ThiefEscape' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
+                    if self.unit.position != self.target_to_interact_with:
                         return # Didn't actually reach ThiefEscape point
                     self.unit.escape(gameStateObj)
 
@@ -290,7 +290,7 @@ class AI(object):
         if self.unit.my_mount and not any(status.fleet_of_foot for status in self.unit.status_effects):
             adjtiles = self.unit.getAdjacentTiles(gameStateObj)
             # Determine which tile is closest to target
-            closest_tile = sorted(adjtiles, key=lambda pos:Utility.calculate_distance(self.target_to_interact_with.position, pos.position))[0]
+            closest_tile = sorted(adjtiles, key=lambda pos:Utility.calculate_distance(self.target_to_interact_with, pos.position))[0]
             if closest_tile.name in ['River', 'Coast', 'Bank', 'Floor']:
                 self.unit.dismount(closest_tile.position, gameStateObj)
             elif all(adjtile.name in ['Floor', 'Throne', 'Wall'] for adjtile in adjtiles):
@@ -378,7 +378,7 @@ class AI(object):
             for target in available_targets:
                 # Adjacent
                 if any(pattern in gameStateObj.map.tile_info_dict[target.position] for pattern in ['Locked', 'HP']) and Utility.calculate_distance(move, target.position) == 1:
-                    self.target_to_interact_with = target
+                    self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     if target.name in 'HP':
                         self.item_to_use = self.unit.getMainWeapon()
@@ -387,7 +387,7 @@ class AI(object):
                 elif ('Locked' in gameStateObj.map.tile_info_dict[move] and target.name == 'Chest' or \
                       any(pattern in gameStateObj.map.tile_info_dict[move] for pattern in ['Village', 'Escape', 'ThiefEscape'])) \
                       and Utility.calculate_distance(move, target.position) == 0:
-                    self.target_to_interact_with = target
+                    self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     return True
 
@@ -834,6 +834,7 @@ class Secondary_AI(object):
                 return False
             # We found a path
             tp = self.compute_priority_secondary(target, gameStateObj, len(my_path))
+            logger.debug("Path to %s. -- %s", target.name, tp)
             if tp > self.max_tp:
                 self.max_tp = tp
                 self.best_target = target
@@ -850,6 +851,7 @@ class Secondary_AI(object):
             if Utility.calculate_distance(self.position_to_move_to, self.unit.position) <= 1 and not self.ally_flag:
                 logger.debug("Pathfinder is trying again, taking into account allies' positions")
                 self.ally_flag = True
+                self.widen_flag = False
                 self.reset()
                 return False
 

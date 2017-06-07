@@ -939,8 +939,10 @@ class Dialogue_Scene(object):
                 font = 'convo_white'
             num_lines = 2
             transition = True
-
-        self.dialog.append(Dialog(line[2], speaker, position, size, font, back_surf, tail, num_lines, waiting_cursor_flag = waiting_cursor, transition=transition, unit_sprites=self.unit_sprites if not 'thought_bubble' in line else {}))
+        self.dialog.append(Dialog(line[2], speaker, position, size, font, back_surf, tail, num_lines, \
+                                  waiting_cursor_flag = waiting_cursor, transition=transition, \
+                                  unit_sprites=self.unit_sprites if not 'thought_bubble' in line else {}, \
+                                  slow_flag=3 if 'slow' in line else 1))
 
         self.reset_unit_sprites()
         if self.dialog[-1].owner in self.unit_sprites:
@@ -1432,7 +1434,8 @@ class Dialog(object):
     def __init__(self, text, owner, position, size, font, \
                  background='MessageWindowBackground', \
                  message_tail=None, num_lines=2, hold=False, \
-                 waiting_cursor_flag=True, transition=False, unit_sprites={}):
+                 waiting_cursor_flag=True, transition=False, unit_sprites={}, \
+                 slow_flag=1):
         self.truetext = text # The actual text this dialog box will display
         self.position = position # The position of the dialog box on its surf
         self.owner = owner # who is saying this
@@ -1478,6 +1481,7 @@ class Dialog(object):
         self.dialog = False
 
         self.solo_flag = True # Only one of these on the screen at a time
+        self.slow_flag = slow_flag # Whether to print the characters out slower than normal
 
     def set_text(self):
         if self.truetext == '':
@@ -1666,7 +1670,7 @@ class Dialog(object):
                     self.unit_sprites[self.owner].talk()
         elif self.scroll_y > 0:
             self.scroll_y -= 2
-        elif current_time - self.last_update > OPTIONS['Text Speed']:
+        elif current_time - self.last_update > OPTIONS['Text Speed']*self.slow_flag:
             self._next_char()
 
             # handle the waiting markxzer's vertical offset

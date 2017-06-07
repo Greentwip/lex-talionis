@@ -28,18 +28,18 @@ if;not gameStateObj.check_dead("Theo")
 end
 if;not gameStateObj.check_dead("Joel")
     u;Joel;FarLeft
-    s;Joel;At least it should be warmer inside. I'm f-freezing!{w};auto
+    s;Joel;At least it'll be warmer inside. I'm f-freezing!{w};auto
 end
 r;Theo
 u;Kayla;MidLeft
 s;Kayla;Before we make our way in, a heads-up.{w}{br}The Confederacy has a man on the inside, posing as a prisoner.{w}{br}He goes by the code name 'Coyote'.{w}{br}But we lost contact with him.{w}{br}They must've have tightened up security.{w}{br}Honestly, he's probably dead.{w};auto 
 s;Kayla;But if he's still around, he could be a valuable resource.{w};auto
-s;Sam;We'll keep that in mind.{w}{clear}Our objective is to incapacitate the warden.{w}{br}If we can take out their chain of command, gaining control over the prison should follow.{w}{br}But on the way, we need to free as many prisoners as possible, in case we fail.{w};auto
+s;Sam;We'll keep that in mind.{w}{clear}Our objective is to incapacitate the warden.{w}{br}If we can take out their chain of command, the rest of the prison should follow.{w}{br}But on the way, we need to free as many prisoners as possible, in case we fail.{w};auto
 r;Joel
 u;Ophie;FarRight
 s;Ophie;Well, hopefully we won't.{w};auto
 u;Renae;FarLeft
-s;Renae;Okay, everyone, hush!{w}{br}We're nearing the passage. I'll lead from here.{w};auto
+s;Renae;Okay, everyone, hush!{w}{br}We're nearing the passage. I'll take it from here.{w};auto
 r;Sam;Kayla;Ophie;Renae
 t;1
 b;Castle

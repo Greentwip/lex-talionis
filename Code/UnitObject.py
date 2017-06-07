@@ -602,16 +602,17 @@ class UnitObject(object):
         # Path is backwards, goes from goal node to start node
 
     def leave(self, gameStateObj, serializing=False):
-        logger.debug('Leave %s %s %s', self, self.name, self.position)
-        if self.position and not serializing:
-            gameStateObj.grid_manager.set_unit_node(self.position, None)
-            gameStateObj.boundary_manager.leave(self, gameStateObj)
-        self.remove_tile_status(gameStateObj)
+        if self.position:
+            logger.debug('Leave %s %s %s', self, self.name, self.position)
+            if not serializing:
+                gameStateObj.grid_manager.set_unit_node(self.position, None)
+                gameStateObj.boundary_manager.leave(self, gameStateObj)
+            self.remove_tile_status(gameStateObj)
         self.remove_aura_status(gameStateObj, serializing=serializing)
 
     def arrive(self, gameStateObj, serializing=False):
-        logger.debug('Arrive %s %s %s', self, self.name, self.position)
         if self.position:
+            logger.debug('Arrive %s %s %s', self, self.name, self.position)
             if not serializing:
                 gameStateObj.grid_manager.set_unit_node(self.position, self.team)
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
@@ -619,14 +620,14 @@ class UnitObject(object):
             self.acquire_aura_status(gameStateObj, serializing=serializing)
 
     def remove_from_map(self, gameStateObj):
-        logger.debug('Remove %s %s %s', self, self.name, self.position)
         if self.position:
+            logger.debug('Remove %s %s %s', self, self.name, self.position)
             for s_id in gameStateObj.map.status_effects:
                 StatusObject.HandleStatusRemoval(s_id, self, gameStateObj)
 
     def place_on_map(self, gameStateObj):
-        logger.debug('Place %s %s %s', self, self.name, self.position)
         if self.position:
+            logger.debug('Place %s %s %s', self, self.name, self.position)
             for s_id in gameStateObj.map.status_effects:
                 StatusObject.HandleStatusAddition(s_id, self, gameStateObj)
 

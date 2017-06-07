@@ -66,7 +66,7 @@ class Grid_Manager(object):
             for y in range(self.gridHeight):
                 tile = tilemap.tiles[(x,y)]
                 tile_cost = tile.get_mcost(mode)
-                cells.append(Node(x, y, mode != 99, tile.get_mcost(mode)))
+                cells.append(Node(x, y, tile_cost != 99, tile_cost))
         return cells
 
     def update_tile(self, tile):

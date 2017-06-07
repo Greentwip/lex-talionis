@@ -130,6 +130,25 @@ class StartStart(StateMachine.State):
             gameStateObj.stateMachine.changeState('turn_change')
             gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
             return 'repeat'
+        # Load most recent save
+        elif event == 'INFO' and OPTIONS['debug']:
+            SOUNDDICT['Select 1'].play()
+            import glob
+            newest = max(glob.glob('Saves/*.pmeta'), key=os.path.getmtime)
+            print(newest)
+            selection = CustomObjects.SaveSlot(newest, 3)
+            # gameStateObj.activeMenu = None # Remove menu
+            logger.debug('Loading game...')
+            SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
+            if selection.kind == 'Start': # Restart
+                levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
+                # Load the first level
+                SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
+            gameStateObj.transition_from = WORDS['Load Game']
+            gameStateObj.stateMachine.changeState('start_wait')
+            gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
+            remove_suspend()
+            return 'repeat'
         elif event:
             SOUNDDICT['Start'].play()
             gameStateObj.stateMachine.changeState('start_option')

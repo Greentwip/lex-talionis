@@ -1,7 +1,7 @@
 debug;True
-screen_scale;1
+screen_scale;3
 Animation;0
-Unit Speed;45
+Unit Speed;60
 Text Speed;10
 Cursor Speed;80
 Show Terrain;1

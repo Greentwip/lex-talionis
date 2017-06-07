@@ -1755,10 +1755,7 @@ class AIState(State):
                     if gameStateObj.ai_current_unit.ai.position_to_move_to and gameStateObj.ai_current_unit.ai.position_to_move_to != gameStateObj.ai_current_unit.position:
                         gameStateObj.cameraOffset.center2(gameStateObj.ai_current_unit.position, gameStateObj.ai_current_unit.ai.position_to_move_to)      
                     elif other_pos and Utility.calculate_distance(gameStateObj.ai_current_unit.position, other_pos) <= TILEY - 2: # Leeway
-                        if isinstance(other_pos, tuple):
-                            gameStateObj.cameraOffset.center2(gameStateObj.ai_current_unit.position, other_pos)
-                        else:
-                            gameStateObj.cameraOffset.center2(gameStateObj.ai_current_unit.position, other_pos.position)
+                        gameStateObj.cameraOffset.center2(gameStateObj.ai_current_unit.position, other_pos)
                     else: 
                         gameStateObj.cursor.setPosition(gameStateObj.ai_current_unit.position, gameStateObj)
                     gameStateObj.stateMachine.changeState('move_camera')

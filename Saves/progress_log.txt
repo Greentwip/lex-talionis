@@ -1485,3 +1485,55 @@ Wexp: 0, 0, 0, 0, 0, 0, 41
 Items: Scathe 9, Flux Ward 31, Spiritbane 3
 *** Convoy:
 Items: Spiritbane 2, Secret Book 1, Angelic Robe 1, Mana Ring 1, Talisman 1, Heal 8, Hatchet 34, Magebane Swd 15, Wyrmsfire 7, Willow Bow 15, Great Lance 25, Speedwings 1, Rescue 5, Mend 15, Nyx Ward 21
+
+=== Level 6 === Money: 15475
+*** Ophie: Riposte,Vantage,Strength +2
+Lvl 11, Exp 64
+Wexp: 60, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 33, Steel Sword 23, Steel Knife 11, Great Lance 24, Potion 2
+*** Prim: Healtouch,Miracle,Maximum HP +5
+Lvl 8, Exp 37
+Wexp: 0, 0, 0, 0, 57, 0, 0
+Items: Shine Ward 6, Mend 6, Rescue 5, Fortune 10, Physic 15
+*** Joel: Cleave,Shove,Skill +3
+Lvl 9, Exp 67
+Wexp: 0, 0, 57, 0, 0, 0, 0
+Items: Iron Axe 27, Hand Axe 12
+*** Nia: Prescience,Critical,Maximum HP +5
+Lvl 10, Exp 39
+Wexp: 0, 0, 0, 54, 0, 0, 0
+Items: Willow Bow 32, Oak Bow 26, Longbow 16, Vulnerary 3
+*** Althea: Focus,Maximum HP +5,Magic +2
+Lvl 11, Exp 39
+Wexp: 0, 0, 0, 0, 0, 53, 0
+Items: Wyrmsfire 4, Wind Ward 27, Vulnerary 3, Skeleton Key 1
+*** Drake: Canto,Savior,Maximum HP +5
+Lvl 8, Exp 66
+Wexp: 26, 27, 0, 0, 0, 0, 0
+Items: Iron Knife 15, Javelin 14, Iron Lance 41, Steel Lance 30, Vulnerary 2
+*** Renae: Locktouch,Steal,Maximum HP +5
+Lvl 8, Exp 85
+Wexp: 40, 0, 0, 0, 0, 0, 0
+Items: Levin Sword 14, Steel Sword 28, Iron Sword 35, Vulnerary 2
+*** Theo: Provoke,Shove,Movement +1
+Lvl 9, Exp 59
+Wexp: 0, 44, 0, 0, 0, 0, 0
+Items: Iron Lance 37, Javelin 19, Vulnerary 3
+*** Eliza: Synergy,Defense +2,Underdog,Speed +2
+Lvl 8, Exp 89
+Wexp: 0, 43, 0, 0, 0, 0, 0
+Items: Iron Lance 15, Slim Lance 20, Short Spear 12, Vulnerary 1, Prim's Charm --
+*** Sam: Inspiration,Skill Aura,Maximum HP +5
+Lvl 10, Exp 77
+Wexp: 0, 0, 0, 0, 52, 0, 0
+Items: Glimmer Ward 22, Shine Ward 16, Mend 13, Heal 26, Short Spear 14
+*** Kayla: Hex,Empowered,Speed +2
+Lvl 10, Exp 3
+Wexp: 0, 0, 0, 0, 0, 0, 51
+Items: Scathe 3, Nyx Ward 18, Flux Ward 30, Vulnerary 2
+*** Coyote: Initiative,Poise,Maximum HP +5
+Lvl 9, Exp 84
+Wexp: 47, 0, 0, 0, 0, 0, 0
+Items: Rusted Sword 12, Superior Edge 9, Vulnerary 1
+*** Convoy:
+Items: Spiritbane 3, Secret Book 1, Angelic Robe 1, Mana Ring 1, Talisman 1, Magebane Swd 15, Great Lance 25, Speedwings 1, Mithril Lance 19, Lancereaver 15, Willow Bow 10, Hatchet 30, Spiritbane 2, Wind Ward 21, Disintegrate 3, Fire Ward 13, Swordreaver 14, Water Ward 21, Axereaver 14, Earth Ward 27, Energy Ring 1, Vulnerary 3, Restore 10, Hatchet 28, Steel Axe 24
