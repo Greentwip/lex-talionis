@@ -1150,6 +1150,9 @@ class Dialogue_Scene(object):
                 return
             u_id, position = context
             unit = gameStateObj.get_unit_from_id(u_id)
+            if unit.dead:
+                logger.warning('Unit %s is dead', u_id)
+                return
         if not unit:
             logger.error('Could not find unit %s', which_unit)
             return

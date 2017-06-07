@@ -58,18 +58,7 @@ remove_unit;Vagnius
 wait;500
 add_unit;Marduk
 # Vagnius leaves
-add_unit;Ophie
-add_unit;Prim
-add_unit;Kayla
-add_unit;Sam
-add_unit;Nia
-add_unit;Joel
-add_unit;Eliza
-add_unit;Theo
-add_unit;Althea
-add_unit;Renae
-add_unit;Drake
-add_unit;Coyote
+arrange_formation
 m;Airship Thunderchild
 wait;500
 set_cursor;27,0;force_hold

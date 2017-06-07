@@ -532,10 +532,10 @@
     <status name="Heavy Hitter">
         <id>Heavy Hitter</id>
         <icon_index>8,1</icon_index>
-        <desc>Add weapon Wt to damage.</desc>
+        <desc>Add half weapon Wt to damage.</desc>
         <components>mt,class_skill</components>
 
-        <mt>item.WT if item.WT else 0</mt>
+        <mt>item.WT/2 if item.WT else 0</mt>
     </status>
 
     <status name="Focus">

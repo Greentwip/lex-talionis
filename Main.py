@@ -31,12 +31,11 @@
 # === IMPORT MODULES ==========================================================
 import os, pygame, time, copy
 from pygame.locals import *
-import pygame.mixer
 
 # Custom imports
 import Code.imagesDict as imagesDict
 from Code.GlobalConstants import *
-from Code import CustomObjects, MenuFunctions, SaveLoad, Transitions, GameStateObj, Engine
+from Code import GameStateObj, Engine
     
 # === MAIN FUNCTION ===========================================================
 def main():

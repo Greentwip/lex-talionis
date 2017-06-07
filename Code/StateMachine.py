@@ -449,10 +449,10 @@ class FreeState(State):
         elif event == 'START':
             SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
+        elif OPTIONS['debug']:
+            handle_debug(eventList, gameStateObj, metaDataObj)
         # Moved down here so it is done last
         gameStateObj.cursor.take_input(eventList, gameStateObj)
-        if OPTIONS['debug']:
-            handle_debug(eventList, gameStateObj, metaDataObj)
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)

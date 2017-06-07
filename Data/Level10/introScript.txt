@@ -60,3 +60,8 @@ arrange_formation
 set_camera;8,18;16,26
 remove_background
 t;2
+# Give Brave Weapons
+give_item;Convoy;Brave Sword
+give_item;Convoy;Brave Lance
+give_item;Convoy;Brave Axe
+give_item;Convoy;Brave Bow

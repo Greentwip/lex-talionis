@@ -4,28 +4,28 @@ if;self.optionalunit == 'Midnight Rendezvous'
 	m;Toorimichi
 	b;TacticsRoom
 	t;2
-	u;Sam;Right
-	qu;Coyote;OffscreenLeft
-	move_sprite;Coyote;96,0;force_hold
+	u;Sam;Right;u;Coyote;Left
 	s;Sam;... Coyote?{w}{br}Uh... what a... um... pleasant surprise.{w}{clear}You do know it's two in the morning?{w};auto
 	s;Coyote;I am aware.{w};auto
 	s;Sam;Okay then...
 	s;Coyote;Rumor has it you're planning to assault Rajas.
 	s;Sam;Why yes! Actually it's quite the complicated problem.{w}{br}Ulver has at least five hundred men stationed--{w}{clear}Wait. Back up. How'd did you find out?
 	s;Coyote;It doesn't matter.{w}{clear}Are you aware of the Order of the Templars?
-	s;Sam;Of course I'm aware.{w}{br}What do you take me for?{w}{br}They're just a historical myth.
+	s;Sam;Of course I'm aware.{w}{br}What do you take me for?{w}{br}I've looked into them myself, but unfortunately they're just a historical myth.
 	s;Coyote;They're no myth.
 	s;Sam;You've met them?
 	s;Coyote;...
 	s;Sam;Let's see...{w}{br}The Templars were said to be the Sun King's most loyal protectors.{w}{br}They were to defend the throne with their lives.{w}{br}To snuff out dissent, they could appear anywhere in Rajas, at any time...{w}{br}...{w}{br}Are you suggesting--
-	s;Coyote;Tunnels. Under the city.{w}{br}
+	s;Coyote;Tunnels. Under the city.
 	s;Sam;That's perfect!{w}{br}If we can find one of these tunnels...
 	move_sprite;Coyote;-24,0;force_hold
 	s;Coyote;I was never here. Got that?
 	s;Sam;Wait, what?
 	s;Coyote;I was never here.
 	r;Coyote
-	s;Sam;...There is something very wrong with that man.{w}{br}...{w}{br}What's this?
+	s;Sam;...There is something very wrong with that man.{w}{br}...
+	move_sprite;Sam;-24,0;force_hold
+	s;Sam;What's this?
 	give_item;Sam;Fortune
 	r;Sam
 	grey_base_convo;Midnight Rendezvous
@@ -38,23 +38,27 @@ elif;self.optionalunit == 'Coronation'
 	s;Althea;...Ah...sniff...
 	u;Prim;Right
 	s;Prim;Hey... Althea? Can I come in?
+	mirror;Althea
 	s;Althea;O-oh Prim... ah...{w}{br}Just a m-moment...
 	s;Prim;...
-	mirror;Althea
 	move_sprite;Althea;24,0;force_hold
-	s;Althea;H-Hello, Prim. Here, please sit
-	s;Prim;You're face is all red.
+	s;Althea;H-Hello, Prim. Here, please sit.
+	s;Prim;Your face is all red.
 	s;Althea;It's nothing...
-	s;Prim;I nothiced you were... hesitant at the meeting today.{w}{br}Do you not want to be queen?
+	s;Prim;I noticed you were... hesitant at the meeting today.{w}{br}Is something wrong?
+	s;Althea;No, nothings wrong...
+	s;Prim;You know, Althea, you can talk to me.{w}{br}I won't tell anyone else if something's bothering you.
+	s;Althea;sniff... 
+	s;Prim;Althea, do you not want to be queen?
 	s;Althea;It's... It's not that I don't want to...{w}{br}Ah... I j-just can't...
 	s;Prim;What? Why couldn't you?{w}{br}You're the spitting image of your mother--
-	s;Althea;It's not that I can't be queen...{w}{br}I just won't be able to.{w}{br}I have no experience...{w}{br}My sister was the expected heir to the throne.{w}{br}She was the one everyone looked up to...{w}{br}She was so strong. I am but a shadow...
+	s;Althea;It's not that I can't be queen...{w}{br}I just won't be able to.{w}{br}I have no experience...{w}{br}My sister was the expected heir to the throne.{w}{br}She was the one everyone looked up to...{w}{br}She was so strong. I am but a shadow in comparison...
 	s;Prim;That doesn't matter, Althea--
 	s;Althea;It does! I'm... I'm too weak.{w}{br}Everyone will be relying on me.{w}{br}What if I fail? I-It's too much! 
 	move_sprite;Prim;-48,0;force_hold
-	s;Prim;There there.{w}{br}Slow down... you'll make yourself hysterical
+	s;Prim;There there.{w}{br}Slow down... you'll make yourself hysterical.
 	s;Althea;See I'm just weak...{w}{br}I have nothing of the royal strength in me.
-	s;Prim;That's untrue, Althea. You do have the makings of a queen.{w}{br}I may not know much about politics or government, but I have a knack for knowing a good person when I see one.{w}{br}And I know that you won't have to look far for strength.{w}{br}It's already present inside you.
+	s;Prim;That's untrue, Althea. You do have the makings of a queen.{w}{br}I may not know much about politics or government,{w}{br}but I have a knack for knowing a good person when I see one.{w}{br}And I know that you won't have to look far for strength.{w}{br}It's already present inside you.
 	s;Althea;Y-you really think so?
 	s;Prim;I believe in you, Althea.{w}{br}Also, there's something else you haven't thought of.
 	s;Althea;Hmmm...?
@@ -63,14 +67,15 @@ elif;self.optionalunit == 'Coronation'
 	r;Prim
 	move_sprite;Althea;-24,0
 	u;Prim;MidLeft
+	s;Prim;Drake?
 	s;Drake;My lady Althea... Your conduct at the meeting was concerning--{w}{br}Wait, you've been crying?{w}{br}I would not normally strike a lady, Prim, but you leave me no choice--
 	s;Althea;Haha... Drake, hold!
 	s;Drake;My lady?
-	s;Althea;Yes, I've been crying, but its nothing to be concerned with.{W}{br}Prim and I were just talking. She was very helpful.
+	s;Althea;Yes, I've been crying, but its nothing to be concerned with.{w}{br}Prim and I were just talking. She was very helpful.
 	s;Drake;Oh, is that all.{w}{br}My poor heart...
-	s;Althea;There's nothing to be worried about, Drake.{w}{br}I'll be queen.{w}{br}Well, I'll try my best at it.{w}{br}You'll be there for me, right Drake?
-	s;Drake;Of course, my lady...{w}{br}If you so wished I would never leave your side!
-	s;Prim;See, Althea. You won't have to shoulder this burden alone.{w}{br}Although you may wish you had after a couple of weeks of Drake.
+	s;Althea;There's nothing to be worried about, Drake.{w}{br}I'll be queen.{w}{br}Well, I'll try my best at it.{w}{br}You'll be there for me, right?
+	s;Drake;Of course, my lady...{w}{br}If you so wished it I would never leave your side!
+	s;Prim;See, Althea. You won't have to shoulder this burden alone.{w}{br}Although you may wish you had after a couple of weeks.
 	s;Althea;Heehee...
 	s;Drake;Eh?
 	r;Prim;Drake;Althea

@@ -1,6 +1,6 @@
 #! usr/bin/env python
 import random
-from collections import Counter
+from collections import Counter, OrderedDict
 
 # Custom imports
 import imagesDict
@@ -80,7 +80,7 @@ class GameStateObj(object):
         self.event_triggers = []
         self.metaDataObj_changes = []
         self.talk_options = []
-        self.base_conversations = {}
+        self.base_conversations = OrderedDict()
         self.message = []
         self.turncount = 0
 

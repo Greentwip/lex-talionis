@@ -191,11 +191,11 @@ class PrepFormationState(StateMachine.State):
             SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
 
-        gameStateObj.cursor.take_input(eventList, gameStateObj)
-
-        if OPTIONS['debug']:
+        elif OPTIONS['debug']:
             StateMachine.handle_debug(eventList, gameStateObj, metaDataObj)
 
+        gameStateObj.cursor.take_input(eventList, gameStateObj)
+            
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
         gameStateObj.highlight_manager.handle_hover(gameStateObj)

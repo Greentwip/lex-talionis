@@ -20,7 +20,7 @@ The Lion Throne has innovative objectives, powerful new items, custom classes, a
 
 # Lex Talionis
 
-Lex Talionis is the custom Fire Emblem engine that runs The Lion Throne. If you've wanted to make your own Fire Emblem fangame but were fed up with the hackery thats required to master ROM-hacking, or you just want to work with total control over the code itself, Lex Talionis is for you. 
+Lex Talionis is the custom Fire Emblem engine that runs The Lion Throne. If you've wanted to make your own Fire Emblem fangame but were fed up with the hackery that's required to master ROM-hacking, or you just want to work with total control over the code itself, Lex Talionis is for you. 
 
 Not interested in coding? That's fine -- one can create a whole new game with touching any code. Just modify the "Data" folder, which only contains sprites, text files, and xml files! But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
 

@@ -50,14 +50,14 @@ elif;self.optionalunit == 'Training'
 	s;Coyote;*cough*
 	mirror;Ophie
 	s;Ophie;Oh! Hey Coyote...{w}{br}What's up?
-	s;Coyote;I'm not here to chit-chat. 
+	s;Coyote;I'm not here to chit-chat, kid. 
 	s;Ophie;Okay...
-	s;Coyote;You are too aggressive
+	s;Coyote;You are too aggressive.
 	s;Ophie;Huh?
 	s;Coyote;You attack without plan... leaving yourself wide open.
 	s;Ophie;What! I can protect myself.
 	s;Coyote;Prove it.
-	s;Ophie;Then... If you're ready...
+	s;Ophie;Hah... If you're ready...
 	move_sprite;Ophie;48,0;force_hold
 	s;Ophie;Ha-aah!
 	move_sprite;Coyote;-24,0;force_hold
