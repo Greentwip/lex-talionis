@@ -522,7 +522,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,A,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>39,18,1,13,12,11,7,6,</bases>
+		<bases>39,18,1,13,12,11,7,6</bases>
         <growths>200,50,0,100,100,0,0,0</growths>
         
         <inventory>dAdamant Axe,Tomahawk,Elixir</inventory>
@@ -550,7 +550,7 @@
         
         <level>20</level>
         <class>Thief,Assassin</class>
-        <desc>An enigmatic masked man with a fascination for games.</desc>
+        <desc>An enigmatic masked man.</desc>
         <faction>Empire</faction>
         
         <tags>Boss</tags>

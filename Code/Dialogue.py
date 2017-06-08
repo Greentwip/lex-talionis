@@ -928,9 +928,10 @@ class Dialogue_Scene(object):
 
             else:
                 back_surf = 'MessageWindowBackground'
+            thought_bubble = True if 'thought_bubble' in line else False
             if 'noir' in line:
                 tail = None #IMAGESDICT['NoirMessageWindowTail'] if owner else None
-            elif 'thought_bubble' in line:
+            elif thought_bubble:
                 tail = IMAGESDICT['ThoughtWindowTail'] if owner else None
             else:
                 tail = IMAGESDICT['MessageWindowTail'] if owner else None
@@ -941,7 +942,7 @@ class Dialogue_Scene(object):
             transition = True
         self.dialog.append(Dialog(line[2], speaker, position, size, font, back_surf, tail, num_lines, \
                                   waiting_cursor_flag = waiting_cursor, transition=transition, \
-                                  unit_sprites=self.unit_sprites if not 'thought_bubble' in line else {}, \
+                                  unit_sprites=self.unit_sprites if thought_bubble else {}, \
                                   slow_flag=3 if 'slow' in line else 1))
 
         self.reset_unit_sprites()
@@ -1437,12 +1438,15 @@ class Dialog(object):
     def __init__(self, text, owner, position, size, font, \
                  background='MessageWindowBackground', \
                  message_tail=None, num_lines=2, hold=False, \
-                 waiting_cursor_flag=True, transition=False, unit_sprites={}, \
+                 waiting_cursor_flag=True, transition=False, unit_sprites=None, \
                  slow_flag=1):
         self.truetext = text # The actual text this dialog box will display
         self.position = position # The position of the dialog box on its surf
         self.owner = owner # who is saying this
-        self.unit_sprites = unit_sprites # Dictionary of all units on screen
+        if unit_sprites:
+            self.unit_sprites = unit_sprites # Dictionary of all units on screen
+        else:
+            self.unit_sprites = {} # Empty dictionary
         self.text = [] # A holding list for the individual characters that will be displayed
         self.text_lines = [] # A holding list for each line that will be displayed
         self.num_lines = num_lines # the max number of lines that may be displayed at a time
