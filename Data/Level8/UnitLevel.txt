@@ -14,18 +14,18 @@
 #
 # --------------------------------------------
 # Player Characters
-player;1;Ophie;Ophie;3,12;None
-player;1;Prim;Prim;3,14;None
-player;1;Joel;Joel;4,13;None
-player;1;Nia;Nia;4,15;None
-player;1;Althea;Althea;5,12;None
-player;1;Drake;Drake;5,14;None
-player;1;Renae;Renae;7,12;None
-player;1;Theo;Theo;7,14;None
-player;1;Eliza;Eliza;6,13;None
-player;1;Sam;Sam;8,13;None
-player;1;Kayla;Kayla;6,15;None
-player;1;Coyote;Coyote;8,15;None
+player;1;Ophie;Ophie;None;None
+player;1;Prim;Prim;None;None
+player;1;Joel;Joel;None;None
+player;1;Nia;Nia;None;None
+player;1;Althea;Althea;None;None
+player;1;Drake;Drake;None;None
+player;1;Renae;Renae;None;None
+player;1;Theo;Theo;None;None
+player;1;Eliza;Eliza;None;None
+player;1;Sam;Sam;None;None
+player;1;Kayla;Kayla;None;None
+player;1;Coyote;Coyote;None;None
 #
 # Enemies
 # Bosses
