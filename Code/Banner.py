@@ -54,9 +54,8 @@ class acquiredItemBanner(Banner):
         Banner.__init__(self) # Super
         self.unit = unit
         self.item = item
-        self.article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
-        self.banner = [unit.name, ' got ', self.article, ' ', item.name, '.']
-        self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
+        self.banner = [unit.name, ' got ', item.name, '.']
+        self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
         self.sound = SOUNDDICT['Item']
 
@@ -64,9 +63,8 @@ class sent_to_convoyBanner(Banner):
     def __init__(self, item):
         Banner.__init__(self) # Super
         self.item = item 
-        self.article = 'An' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'A'
-        self.banner = [self.article, ' ', item.name, ' sent to convoy.']
-        self.banner_font = ['text_white', 'text_white', 'text_blue', 'text_white']
+        self.banner = [item.name, ' sent to convoy.']
+        self.banner_font = ['text_blue', 'text_white']
         self.figure_out_size()
         self.sound = SOUNDDICT['Item']
 
@@ -75,7 +73,7 @@ class acquiredGoldBanner(Banner):
         Banner.__init__(self) # Super
         self.number = number
         self.banner = ['Got ', str(self.number), ' gold.']
-        self.banner_font = ['text_white', 'text_blue', 'text_blue']
+        self.banner_font = ['text_white', 'text_blue', 'text_white']
         self.figure_out_size()
         self.sound = SOUNDDICT['Item']
 
@@ -84,14 +82,13 @@ class brokenItemBanner(Banner):
         Banner.__init__(self) # Super
         self.unit = unit
         self.item = item
-        self.article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
         if item.booster:
-            self.banner = [unit.name, ' used ', self.article, ' ', item.name, '.']
+            self.banner = [unit.name, ' used ', item.name, '.']
             self.sound = SOUNDDICT['Item']
         else:
-            self.banner = [unit.name, ' broke ', self.article, ' ', item.name, '.']
+            self.banner = [unit.name, ' broke ', item.name, '.']
             self.sound = None
-        self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
+        self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
         self.sound = SOUNDDICT['Attack Miss 3']
 
@@ -101,7 +98,7 @@ class gainedWexpBanner(Banner):
         self.unit = unit
         self.item = CustomObjects.WeaponIcon(weapon_type)
         self.banner = [unit.name, ' reached rank ', CustomObjects.WEAPON_EXP.number_to_letter(wexp)]
-        self.banner_font = ['text_white', 'text_white', 'text_blue']
+        self.banner_font = ['text_blue', 'text_white', 'text_blue']
         self.figure_out_size()
         self.sound = SOUNDDICT['Item']
 
@@ -163,9 +160,8 @@ class stealBanner(Banner):
         Banner.__init__(self) # Super
         self.unit = unit
         self.item = item
-        self.article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
-        self.banner = [unit.name, ' stole ', self.article, ' ', item.name, '.']
-        self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
+        self.banner = [unit.name, ' stole ', item.name, '.']
+        self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
         self.sound = SOUNDDICT['Item']
 

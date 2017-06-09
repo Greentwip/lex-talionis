@@ -29,7 +29,7 @@
 # === CODE ====================================================================
 
 # === IMPORT MODULES ==========================================================
-import os, pygame, time, copy
+import os, pygame
 from pygame.locals import *
 
 # Custom imports

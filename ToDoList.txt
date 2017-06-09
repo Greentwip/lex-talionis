@@ -2,8 +2,7 @@ ToDo:
 - Scripts (Fix and finalize)
 - Map cleanup for 3 - 10
 - General Testing
-- Test Base Scripts
-- Test Level 10+ (should Level 10 have infinite reinforcements after turn 4? Should Ulver's weapon auto-cleave?)
+- Should Ulver wait one more turn...?
 
 -- KNOWN ISSUES:
 - Music may not work on or even crash Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)

@@ -201,7 +201,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             cur_unit = UnitObject.UnitObject(u_i)
 
             # Status Effects and Skills
-            get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False, seed=sum(u_i['position']))
+            get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
             personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []    ### Actually add statuses
             c_s = [StatusObject.statusparser(status) for status in personal_skills]
@@ -266,7 +266,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
         cur_unit.position = u_i['position']
 
     # Status Effects and Skills
-    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False, seed=sum(u_i['position']))
+    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
 
     # Extra Skills
     if len(unitLine) == 10:
@@ -307,7 +307,8 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     unit = UnitObject.UnitObject(u_i)
 
     # Status Effects and Skills
-    get_skills(class_dict, unit, classes, u_i['level'], gameStateObj, seed=sum(u_i['position']))
+    my_seed = sum(u_i['position']) if u_i['position'] else 0
+    get_skills(class_dict, unit, classes, u_i['level'], gameStateObj, seed=my_seed)
 
     return unit
 

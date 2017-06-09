@@ -437,7 +437,7 @@ class UnitObject(object):
             running_height += 16
             self.getMainSpell().draw(BGSurf, (4, running_height))
             name_width = FONT['text_white'].size(self.getMainSpell().name)[0]
-            FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (20 + 24 - name_width/2, running_height))
+            FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
 
             return BGSurf
 
@@ -482,7 +482,7 @@ class UnitObject(object):
             running_height += 16
             self.getMainSpell().draw(BGSurf, (4, running_height))
             name_width = FONT['text_white'].size(self.getMainSpell().name)[0]
-            FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (20 + 24 - name_width/2, running_height))
+            FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
 
             return BGSurf
 
@@ -589,7 +589,7 @@ class UnitObject(object):
     def beginMovement(self, gameStateObj, path=None):
         logger.debug('%s beginning movement', self.name)
         #gameStateObj.stateMachine.changeState('movement')
-        self.isMoving = True
+        gameStateObj.moving_units.add(self)
         self.lock_active()
         # Remove tile statuses
         self.leave(gameStateObj)
@@ -1671,7 +1671,6 @@ class UnitObject(object):
         self.hasRunAttackAI = False
         self.hasRunGeneralAI = False
         self.isActive = 0
-        self.isMoving = False # Unit is moving
         self.isDying = False # Unit is dying
         self.path = []
         self.movement_left = self.stats['MOV']
@@ -2063,7 +2062,7 @@ class UnitObject(object):
 
         ### GAMELOGIC
         ### MOVE
-        if self.isMoving and currentTime - self.lastMoveTime > CONSTANTS['Unit Speed'] and gameStateObj.stateMachine.getState() == 'movement':
+        if self in gameStateObj.moving_units and currentTime - self.lastMoveTime > CONSTANTS['Unit Speed'] and gameStateObj.stateMachine.getState() == 'movement':
             #logger.debug('Moving!')
             if self.path: #and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
                 new_position = self.path.pop()
@@ -2079,7 +2078,7 @@ class UnitObject(object):
                     #    logger.debug('Setting Position')
                     gameStateObj.cursor.setPosition(self.position, gameStateObj)
             else: # Path is empty, which means we are done
-                self.isMoving = False
+                gameStateObj.moving_units.discard(self)
                 self.unlock_active()
                 # Add status for new position
                 self.arrive(gameStateObj)

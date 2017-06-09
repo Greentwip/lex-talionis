@@ -48,12 +48,12 @@ if;gameStateObj.turncount == 1
 	wait;1000
 	u;Sam;Right;u;Ophie;Left
 	s;Sam;Oh... I've blundered.{w}{br}To think we could take on the Archon.{w}{br}It was a pipe dream all along.{w};auto
-	s;Ophie;Sam, I'm sorry I ever doubted you.{w}{br}We couldn't have made it this far without your leadership.{w}{br}But that means you can't give up now.{w}{br}Together, we'll finish this.{w};auto
+	s;Ophie;Sam, I doubted you once.{w}{br}But no longer.{w}{br}We couldn't have made it this far without your leadership.{w}{br}But that means you can't give up now.{w}{br}Together, we'll finish this.{w};auto
 	r;Sam
 	# Now it cycles through remaining characters final quotes
 	if;not gameStateObj.check_dead('Prim')
 		u;Prim;Right
-		s;Prim;Who could've imagined we could've come so far.{w}{br}I'll not give up hope.{w};auto
+		s;Prim;I'll not give up hope.{w};auto
 		r;Prim
 	end
 	if;not gameStateObj.check_dead('Joel')
@@ -129,7 +129,7 @@ elif;gameStateObj.turncount == 3
 	add_unit;r3;;warp;push
 	add_unit;r4;;warp;push
 	wait;500
-elif;gameStateObj.turncount == 4
+elif;gameStateObj.turncount == 5
 	change_ai;Ulver;Pursue
 	# Attack nearby units and move toward allies
 	change_ai;Adjutant;Support

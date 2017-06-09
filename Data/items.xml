@@ -49,7 +49,7 @@
         <value>8</value>
         <RNG>1</RNG>
         <WT>2</WT>
-        <desc>Grants DEF +2 while equipped</desc>
+        <desc>Grants DEF +2.</desc>
         
         <MT>1</MT>
         <HIT>80</HIT>
@@ -268,7 +268,7 @@
         <uses>10</uses>
         <value>200</value>
         <RNG>1</RNG>
-        <desc>Grants the wielder Swordbreaker.</desc>
+        <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
 		<WT>5</WT>
         <status_on_equip>Swordbreaker</status_on_equip>
         
@@ -486,7 +486,7 @@
         <uses>10</uses>
         <value>180</value>
         <RNG>1</RNG>
-        <desc>Grants the wielder Lancebreaker.</desc>
+        <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
 		<WT>8</WT>
         <status_on_equip>Lancebreaker</status_on_equip>
         
@@ -722,7 +722,7 @@
         <uses>10</uses>
         <value>160</value>
         <RNG>1</RNG>
-        <desc>Grants the wielder Axebreaker.</desc>
+        <desc>Grants Hit/Avoid +30 against enemies wielding Axes.</desc>
 		<WT>9</WT>
         <status_on_equip>Axebreaker</status_on_equip>
         

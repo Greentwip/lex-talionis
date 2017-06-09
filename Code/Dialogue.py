@@ -724,11 +724,11 @@ class Dialogue_Scene(object):
             gameStateObj.allunits = [unit for unit in gameStateObj.allunits if unit.team == 'player' or unit.name == exception]
         elif line[0] == 'kill_all':
             if len(line) > 1:
-                exception = line[1]
+                call_out = line[1]
             else:
-                exception = None
+                call_out = None
             for unit in gameStateObj.allunits:
-                if unit.position and not unit.name == exception:
+                if unit.position and unit.team == call_out:
                     unit.isDying = True
                     gameStateObj.stateMachine.changeState('dying')
         ### GAME CONSTANTS
@@ -883,6 +883,7 @@ class Dialogue_Scene(object):
         tail = None
         waiting_cursor = True
         transition = False
+        thought_bubble = False
         if 'hint' in line:
             if 'auto' in line:
                 position = WINWIDTH/4, WINHEIGHT/4
@@ -928,7 +929,7 @@ class Dialogue_Scene(object):
 
             else:
                 back_surf = 'MessageWindowBackground'
-            thought_bubble = True if 'thought_bubble' in line else False
+            if 'thought_bubble' in line: thought_bubble = True
             if 'noir' in line:
                 tail = None #IMAGESDICT['NoirMessageWindowTail'] if owner else None
             elif thought_bubble:
@@ -942,7 +943,7 @@ class Dialogue_Scene(object):
             transition = True
         self.dialog.append(Dialog(line[2], speaker, position, size, font, back_surf, tail, num_lines, \
                                   waiting_cursor_flag = waiting_cursor, transition=transition, \
-                                  unit_sprites=self.unit_sprites if thought_bubble else {}, \
+                                  unit_sprites=self.unit_sprites if not thought_bubble else {}, \
                                   slow_flag=3 if 'slow' in line else 1))
 
         self.reset_unit_sprites()
@@ -1004,7 +1005,7 @@ class Dialogue_Scene(object):
             elif owner.position[0] >= 24 and owner.position[0] < 56:
                 position = [40, 24]
             elif owner.position[0] <= 120 and owner.position[0] > 88:
-                position = [WINWIDTH - length - 40, 24]
+                position = [min(WINWIDTH - length - 40, 96), 24]
             else:
                 position = [120 - length/2, 24]
             # Error checking

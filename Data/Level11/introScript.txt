@@ -7,9 +7,9 @@ t;1
 b;Bedroom
 t;2
 u;AltheaQueen;Left;u;Prim;Right
-s;AltheaQueen;Do you think I look alright?{w}{br}I didn't forget a button, did I?{w};auto
-s;Prim;Althea, don't worry. You look great!{w}{br}Just, quit looking so nervous!{w}{br}This is your coronation!{w}{br}It's supposed to be a celebration.{w};auto  
-s;AltheaQueen;Easy for you to say.{w}{br}You don't have to become queen.{w}{br}Everyone's looking up to me.{w}{br}What happens if I forgot what I'm going to say?{w}{br}Or worse, what if I trip on my way the throne?{w};auto
+s;AltheaQueen;Prim, do you think I look alright?{w}{br}I didn't forget a button, did I?{w};auto
+s;Prim;Althea, don't worry. You look great!{w}{br}Don't be so nervous!{w}{br}This is your coronation!{w}{br}It's supposed to be a celebration.{w};auto  
+s;AltheaQueen;Easy for you to say.{w}{br}Everyone's looking up to me.{w}{br}What happens if I forgot what I'm going to say?{w}{br}Or worse, what if I trip on my way the throne?{w};auto
 s;Prim;You won't trip.{w}{br}Don't worry about it.{w};auto
 move_sprite;Prim;-24,0
 u;Sam;FarRight
@@ -17,25 +17,25 @@ s;Sam;Prim, please stop fussing over Althea.{w}{br}You're just going to make her
 s;AltheaQueen;Ah, Sam! You're back.{w};auto
 s;Sam;Yep. Just in time, too.{w}{br}Didn't want to miss your coronation.{w};auto
 s;AltheaQueen;How'd did the meeting go, Chancellor?{w};auto
-s;Sam;Well, being called Chancellor is going to take some getting used to.{w}{clear}Anyway, it went well.{w}{br}The Confederacy agreed to a formal defense pact.{w}{br}In no small part due to Kayla's armtwisting.{w};auto
+s;Sam;The Confederacy agreed to a formal defense pact.{w}{br}In no small part due to Kayla's armtwisting.{w};auto
 r;Prim
 move_sprite;AltheaQueen;-24,0
 u;Kayla;MidRight;u;Prim;MidLeft
 s;Kayla;What can I say, I'm very persuasive.{w};auto
-s;AltheaQueen;Thank you{w};auto
+s;AltheaQueen;Oh, thank you, Kayla!{w};auto
 s;Kayla;Tsk tsk, you don't have to thank me, your majesty.{w}{br}Success is its own reward.{w};auto
 s;Prim;It's only been a month, and yet everything's changing so fast.{w};auto
-s;Sam;I feel the same way.{w}{br}Without the Resistance--.{w}{br}Well, sometimes I feel like there's something missing.{w};auto
-s;Prim;But you have your new job.{w}{br}You're a chancellor, Althea's queen, Kiley is a general, Kayla's still a diplomat...{w};auto
+s;Sam;I feel the same way.{w}{br}Without the Resistance--{w}{br}Well, sometimes I feel like there's something missing.{w};auto
+s;Prim;But you have your new job.{w}{br}You're chancellor, Althea's queen, Kiley's a general, Kayla's chief diplomat...{w};auto
 s;Kayla;You don't know what you're going to do next?{w};auto
-s;Prim;I don't.{w}{br}Following in the footsteps of the matrons at the monastery was my dream.{w}{br}Then, it was to help the Resistance free Kerala.{w}{br}But now...{w};auto
+s;Prim;I don't.{w}{br}Following in the footsteps of the monks at the monastery was my dream.{w}{br}Then, it was to help the Resistance free Kerala.{w}{br}But now...{w};auto
 r;Kayla
 # Add Ophie
 u;Ophie;MidRight
 s;Prim;Ophie, you've been quiet.{w}{br}What are you planning to do?{w};auto
 s;Ophie; Huh? Oh me... well, actually I was planning on leaving.{w};auto
 s;Prim;Leaving?{w};auto
-s;Ophie;There's so much more out there... even beyond Kerala.{w}{br}I don't want to waste my life puttering around here... no offense.{w}{br}I want to see the world.{w};auto
+s;Ophie;There's so much more out there... even beyond Kerala.{w}{br}I want to see the world.{w};auto
 s;Prim;Oh...{w};auto
 s;Ophie;I'll be here through your coronation, Althea.{w}{br}And then I'm off... Coyote gave me a map.{w}{br}That man has contacts all over the place.{w}{br}It'll be an adventure!{w};auto
 s;Ophie;But don't worry, Prim.{w}{br}I'll be back again.{w};auto
@@ -58,7 +58,7 @@ s;Ophie;Sam.{w};auto
 s;Sam;In case I don't see you after the coronation,{w}{br}it's been an honor serving with you--{w};auto
 s;Ophie;No need to be so formal, Sam.{w}{br}With what we've been through...{w};auto
 s;Sam;Right.{w};auto
-s;Ophie;We'll see each other again.{w}{clear}I guarantee it.{w};auto
+s;Ophie;We'll see each other again.
 s;Sam;Don't rush on our account, Ophie.{w}{br}There's a whole world out there...{w}{br}and you've already done so much for Kerala.{w};auto
 s;Ophie;...{w};auto
 s;Sam;...{w};auto

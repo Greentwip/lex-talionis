@@ -171,8 +171,11 @@ elif;self.optionalunit.name == 'Adjutant'
 	r;Adjutant
 elif;self.optionalunit.name == 'Ulver'
 	u;Ulver;FarLeft
-	s;Ulver;No! I am strong! ...Strong!{w}{br}I will not go out like a commoner...{w}{br}Urgh...{w};auto
+	s;Ulver;No! I am strong! ...The strongest!{w}{br}I will not go out like a common--{w}{br}Urgh...{w};auto
 	r;Ulver
+	# Remove all enemies from the field
+	kill_all;enemy
+	wait;200
 end
 #
 # Level 4

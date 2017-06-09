@@ -1930,7 +1930,7 @@ class MovementState(State):
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
         # Only switch states if no other unit is moving
-        if not any(unit.isMoving for unit in gameStateObj.allunits):
+        if not gameStateObj.moving_units:
             gameStateObj.stateMachine.back()
             # If this was part of a cutscene and I am the last unit moving, head back to dialogue state
             if gameStateObj.stateMachine.getPreviousState() == 'dialogue' or gameStateObj.message: # The back should move us out of 'movement' state

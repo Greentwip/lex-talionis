@@ -289,7 +289,7 @@ class UnitSprite(object):
                 else: # Rescue
                     self.unit.leave(gameStateObj)
                     self.unit.position = None
-        elif self.unit.isMoving and gameStateObj.stateMachine.getState() == 'movement':
+        elif self.unit in gameStateObj.moving_units and gameStateObj.stateMachine.getState() == 'movement':
             if self.unit.path:
                 nextPosition = self.unit.path[-1]
                 netPosition = (nextPosition[0] - self.unit.position[0], nextPosition[1] - self.unit.position[1]) 
@@ -303,6 +303,7 @@ class UnitSprite(object):
                 self.transition_state = 'normal'
             
         ### UPDATE IMAGE
+        unit_moving = self.unit in gameStateObj.moving_units
         if gameStateObj.stateMachine.getState() == 'combat' and gameStateObj.combatInstance and \
             (self.unit is gameStateObj.combatInstance.p1 or self.unit is gameStateObj.combatInstance.p2 or \
             (self.unit in gameStateObj.combatInstance.splash and self.unit in [result.defender for result in gameStateObj.combatInstance.results])):
@@ -347,8 +348,8 @@ class UnitSprite(object):
                 netposition = self.old_sprite_offset
             self.handle_net_position(netposition)
             self.update_move_sprite_counter(currentTime, 80)
-        elif (self.unit.isMoving and gameStateObj.stateMachine.getState() == 'movement') or self.transition_state in ['fake_in', 'fake_out', 'rescue']:
-            if self.unit.isMoving:
+        elif (unit_moving and gameStateObj.stateMachine.getState() == 'movement') or self.transition_state in ['fake_in', 'fake_out', 'rescue']:
+            if unit_moving:
                 # Where is my path with respect to here
                 try:
                     newPosition = self.unit.path[-1]
@@ -360,7 +361,7 @@ class UnitSprite(object):
             if self.transition_state == 'fake_in':
                 netposition = (-netposition[0], -netposition[1])
             self.handle_net_position(netposition)
-            if self.unit.isMoving:
+            if unit_moving:
                 self.update_move_sprite_counter(currentTime, 80)
         # Unit can't be done in prep, and if you are we should ignore it. Can't ignore dialogue because if I do then units start flickering as death, fight and interact dialogues take place
         elif self.unit.isDone() and not self.unit.isDying and not self.unit.isActive \

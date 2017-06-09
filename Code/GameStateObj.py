@@ -185,6 +185,8 @@ class GameStateObj(object):
         self.ai_current_unit = None
         self.ai_unit_list = None
         self.ai_build_flag = True
+        # Movement manager
+        self.moving_units = set()
 
         # Handle cursor
         if any(unit.team == 'player' and unit.position for unit in self.allunits):

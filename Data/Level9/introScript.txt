@@ -81,4 +81,5 @@ r;Althea;Ophie;Sam
 t;1
 arrange_formation
 add_unit;load_me;;immediate
+reset_units
 t;2

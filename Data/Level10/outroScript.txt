@@ -7,7 +7,7 @@ u;Sam;FarRight
 s;Sam;It's over.{w}{clear}We won...{w};auto
 r;Sam
 u;Ophie;MidRight
-s;Ophie;I can't believe we did it.{w}{br}We defeated... the Archon{w};auto
+s;Ophie;I can't believe we did it.{w}{br}We defeated... the Archon.{w};auto
 u;Sam;Left
 s;Ophie;Did you feel that, Sam?{w}{br}It's like a great weight was lifted...{w};auto
 s;Sam;Let's regroup and make our way outside.{w}{br}We must tell Rajas--{w}{br}nay, all of Kerala.{w};auto
