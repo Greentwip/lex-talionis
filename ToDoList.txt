@@ -1,6 +1,5 @@
 ToDo:
 - Scripts (Fix and finalize)
-- Map cleanup for 9 - 10
 - General Testing
 
 -- KNOWN ISSUES:

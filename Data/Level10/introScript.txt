@@ -46,7 +46,7 @@ add_unit;Sam;12,36
 add_unit;Ophie;13,36
 wait;200
 u;Sam;Left;u;Ophie;Right
-s;Sam;It looks like we made it after all.{w}{br}Coyote's passage dropped us right in the center of the palace.{w}{br}Ulver should be right beyond those doors.{w};auto 
+s;Sam;It looks like we made it after all.{w}{br}Coyote's passage dropped us right in the center of the palace.{w}{br}Ulver should be beyond those doors.{w};auto 
 s;Ophie;Then what are we waiting for?{w};auto
 r;Ophie;Sam
 move_unit;Ophie;12,29
@@ -58,6 +58,8 @@ t;1
 b;BlackBackground
 arrange_formation
 set_camera;8,18;16,26
+reset_units
+wait;1000
 remove_background
 t;2
 # Give Brave Weapons
