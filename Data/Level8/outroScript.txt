@@ -1,6 +1,6 @@
 # outro 8
 # Remaining Soldiers Flee on Vagnius's death.
-m;Home Sweet Home
+m;One Summer's Day
 t;1
 b;TownDark
 t;2

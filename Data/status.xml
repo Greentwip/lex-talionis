@@ -5,9 +5,10 @@
 		<id>Regeneration</id>
 		<desc>Regenerate HP every turn.</desc>
 		<icon_index>1,2</icon_index>
-		<components>hp_percentage,class_skill</components>
+		<components>hp_percentage,class_skill,upkeep_animation</components>
 
 		<hp_percentage>30</hp_percentage>
+        <upkeep_animation>MapSmallHealTrans,5,4,16</upkeep_animation>
     </status>
     <!-- Regeneration from Forts -->
     <status name="Regeneration">

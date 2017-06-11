@@ -687,12 +687,25 @@ class Map_Combat(Combat):
                             if isinstance(result.defender, UnitObject.UnitObject):
                                 color = self.item.map_hit_color if self.item.map_hit_color else (255, 255, 255) # default to white
                                 result.defender.begin_flicker(self.length_of_combat/5, color)
+                            # Sound
                             if self.item.sfx_on_hit and self.item.sfx_on_hit in SOUNDDICT:
                                 SOUNDDICT[self.item.sfx_on_hit].play()
                             elif result.defender.currenthp - result.def_damage <= 0: # Lethal
                                 SOUNDDICT['Final Hit'].play()
                             elif result.def_damage < 0: # Heal
                                 SOUNDDICT['heal'].play()
+                            elif result.def_damage == 0 and (self.item.weapon or (self.item.spell and self.item.damage)): # No Damage if weapon or spell with damage!
+                                SOUNDDICT['No Damage'].play()
+                            else:
+                                sound_to_play = 'Attack Hit ' + str(random.randint(1,4)) # Choose a random hit sound
+                                SOUNDDICT[sound_to_play].play()
+                            # Animation
+                            if self.item.self_anim:
+                                name, x, y, num = self.item.self_anim.split(',')
+                                pos = (result.defender.position[0], result.defender.position[1] - 1)
+                                anim = CustomObjects.Animation(IMAGESDICT[name], pos, (int(x), int(y)), int(num), 24)
+                                gameStateObj.allanimations.append(anim)
+                            elif result.def_damage < 0: # Heal
                                 pos = (result.defender.position[0], result.defender.position[1] - 1)
                                 if result.def_damage <= -30:
                                    anim = CustomObjects.Animation(IMAGESDICT['MapBigHealTrans'], pos, (5, 4), 16, 24)
@@ -702,12 +715,8 @@ class Map_Combat(Combat):
                                     anim = CustomObjects.Animation(IMAGESDICT['MapSmallHealTrans'], pos, (5, 4), 16, 24)
                                 gameStateObj.allanimations.append(anim)
                             elif result.def_damage == 0 and (self.item.weapon or (self.item.spell and self.item.damage)): # No Damage if weapon or spell with damage!
-                                SOUNDDICT['No Damage'].play()
                                 pos = result.defender.position[0] - 0.5, result.defender.position[1]
                                 gameStateObj.allanimations.append(CustomObjects.Animation(IMAGESDICT['MapNoDamage'], pos, (1, 12)))
-                            else:
-                                sound_to_play = 'Attack Hit ' + str(random.randint(1,4)) # Choose a random hit sound
-                                SOUNDDICT[sound_to_play].play()
                         elif result.summoning:
                             SOUNDDICT['Summon 2'].play()
                         else:
@@ -823,10 +832,14 @@ class Map_Combat(Combat):
             ### Build health bars
             # If the main defender is in this result
             if self.p2 in [result.attacker, result.defender]:
-                if not result.defender in self.health_bars:
+                if result.defender in self.health_bars:
+                    self.health_bars[result.defender].update_stats(d_stats)
+                else:
                     defender_hp = HealthBar('p1' if result.defender is self.p1 else 'p2', result.defender, d_weapon, other=result.attacker, stats=d_stats)
                     self.health_bars[result.defender] = defender_hp
-                if not result.attacker in self.health_bars:
+                if result.attacker in self.health_bars:
+                    self.health_bars[result.attacker].update_stats(a_stats)
+                else:
                     attacker_hp = HealthBar('p1' if result.attacker is self.p1 else 'p2', result.attacker, a_weapon, other=result.defender, stats=a_stats)
                     self.health_bars[result.attacker] = attacker_hp
             else:
@@ -1031,16 +1044,16 @@ class HealthBar(object):
     def fade_out(self):
         pass
 
-    def update(self):
+    def update(self, status_obj=False):
         # Make blinds wider
         self.blinds = Utility.clamp(self.blinds, self.blinds + self.blind_speed, 1)
         # Handle HP bar
-        if self.unit:
+        if self.unit and self.blinds == 1:
             if self.true_hp != self.unit.currenthp and not self.transition_flag:
                 self.transition_flag = True
                 self.time_for_change = max(400, abs(self.true_hp - self.unit.currenthp)*32)
-                self.last_update = Engine.get_time()
-            if self.transition_flag:
+                self.last_update = Engine.get_time() + (200 if status_obj else 0)
+            if self.transition_flag and Engine.get_time() > self.last_update:
                 self.true_hp = Utility.easing(Engine.get_time() - self.last_update, self.oldhp, self.unit.currenthp - self.oldhp, self.time_for_change)
                 #print(self.true_hp, Engine.get_time(), self.oldhp, self.unit.currenthp, self.time_for_change)
                 if self.unit.currenthp - self.oldhp > 0 and self.true_hp > self.unit.currenthp:
@@ -1104,6 +1117,11 @@ class HealthBar(object):
         else:
             self.reset()
 
+
+    def update_stats(self, stats):
+        self.stats_surf = None
+        self.stats = stats
+        
     def reset(self):
         self.unit = None
         self.item = None

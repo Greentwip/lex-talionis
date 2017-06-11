@@ -653,7 +653,7 @@ class ArrowObject(object):
 # === GENERIC ANIMATION OBJECT ===================================
 # for miss and no damage animations
 class Animation(object):
-    def __init__(self, sprite, position, frames, total_num_frames = None, animation_speed=75, loop=False, hold=False, ignore_map = False):
+    def __init__(self, sprite, position, frames, total_num_frames = None, animation_speed=75, loop=False, hold=False, ignore_map = False, start_time=0, on=True):
         self.sprite = sprite
         self.position = position
         self.frame_x = frames[0]
@@ -663,13 +663,15 @@ class Animation(object):
         self.animation_speed = animation_speed
         self.loop = loop
         self.hold = hold
+        self.start_time = start_time
+        self.on = on
         self.ignore_map = ignore_map # Whether the position of the Animation sould be relative to the map
         self.lastUpdate = Engine.get_time()
 
         self.image = Engine.subsurface(self.sprite, (0, 0, self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y))
 
     def draw(self, surf, gameStateObj, blend=None):
-        if self.frameCount >= 0:
+        if self.on and self.frameCount >= 0 and Engine.get_time() > self.start_time:
             # The animation is too far to the right. Must move left. (" - 32")
             image = self.image
             x,y = self.position
@@ -683,7 +685,7 @@ class Animation(object):
 
     def update(self, gameStateObj):
         currentTime = Engine.get_time()
-        if currentTime - self.lastUpdate > self.animation_speed:
+        if self.on and currentTime > self.start_time and currentTime - self.lastUpdate > self.animation_speed:
             #print(self.frameCount)
             self.frameCount += int((currentTime - self.lastUpdate)/self.animation_speed) # 1
             self.lastUpdate = currentTime

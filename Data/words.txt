@@ -213,8 +213,8 @@ dropselect;Select which space to drop the unit into.
 stealselect;Select which unit to steal from.
 giveselect;Select which unit to receive the traveler.
 talkselect;Select which unit to talk to.
-Storage_info;Choose an item to move to convoy.
-Discard_info;Choose an item to discard.
+Storage_info;Your inventory is full. Select an item to send to convoy.
+Discard_info;Your inventory is full. Select an item to discard.
 Nothing;Nothing
 Mercenary;Merc.
 Skirmisher;Skirm.

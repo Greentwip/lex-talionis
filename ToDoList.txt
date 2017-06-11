@@ -1,5 +1,4 @@
 ToDo:
-- Scripts (Fix and finalize)
 - General Testing
 
 -- KNOWN ISSUES:
@@ -52,6 +51,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Build a GUI that builds levels... Unit Placement, TileInfo placement
 - Keep gameStateObj.allunits sorted by unit_id? (what is it currently sorted by?) (makes get unit by id faster. But its not that slow to begin with...)
 - Add Rescue/Warp/Rewarp handling (would include ability to select starting and ending positions - would allow time for warp animation) (both as staff and as ability)
+- Add correct warp animation
 - Add Fake arrival to Give/Take/Shove++
 - Scenic Maps (UnitLevel rework?) (Don't need to put previous saved units in UnitLevel.txt manually) (maybe have a load unit command? then a place loaded_units command?)++
 - Convert some of the very slow stuff (line of sight, AStar, Djikstra's) to a C module to make it faster.++

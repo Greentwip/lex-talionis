@@ -1237,6 +1237,12 @@ class UnitSelectMenu(Counters.CursorControl):
         self.lastArrowUpdate = 0
         Counters.CursorControl.__init__(self)
         self.cursor_y_offset = 0
+
+        # Build background
+        self.backsurf = CreateBaseMenuSurf(self.menu_size, 'BaseMenuBackgroundOpaque')
+        shimmer = IMAGESDICT['Shimmer2']
+        self.backsurf.blit(shimmer, (self.backsurf.get_width() - shimmer.get_width() - 1, self.backsurf.get_height() - shimmer.get_height() - 5))
+        self.backsurf = Image_Modification.flickerImageTranslucent(self.backsurf, 10)
     
     def updateOptions(self, options):
         self.options = options
@@ -1294,8 +1300,7 @@ class UnitSelectMenu(Counters.CursorControl):
                 self.arrowCounter = 0
 
     def draw(self, surf, gameStateObj):
-        backSurf = CreateBaseMenuSurf(self.menu_size, 'BaseMenuBackground')
-        surf.blit(backSurf, self.topleft)
+        surf.blit(self.backsurf, self.topleft)
 
         # Blit background highlight
         if self.highlight:

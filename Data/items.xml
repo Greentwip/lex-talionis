@@ -1590,7 +1590,7 @@
         <id>Spiritbane</id>
         <spritetype>Consumable</spritetype>
         <spriteid>5</spriteid>
-        <components>usable,status,uses,beneficial,map_hit_color</components>
+        <components>usable,status,uses,beneficial,map_hit_color,self_anim</components>
 
         <uses>3</uses>
         <RNG>0</RNG>
@@ -1599,6 +1599,7 @@
         <status>Resistant</status>
 
         <map_hit_color>96,144,232</map_hit_color>
+        <self_anim>MapSpiritbane,5,4,20</self_anim>
     </item>
 
     <item name="Barkskin">

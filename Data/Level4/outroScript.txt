@@ -1,5 +1,5 @@
 # outro script 3
-m;Home Sweet Home
+m;Fire Treasure
 t;1
 b;Clearing
 t;2

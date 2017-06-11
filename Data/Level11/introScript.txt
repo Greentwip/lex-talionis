@@ -65,7 +65,7 @@ s;Sam;...{w};auto
 s;Ophie;Well, what do I always say...{w}{br}No use waiting around! Let's go!{w};auto
 r;Sam;Ophie
 # Play credits
-m;One Summer's Day
+m;One Summer's Day (Extended)
 end_skip
 t;3
 roll_credits

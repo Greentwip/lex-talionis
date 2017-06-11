@@ -15,5 +15,5 @@
 # --------------------------------------------
 group;Resistance;Yep;Resistance;Nope
 player;0;0;Citizen;1;;11,10;None;Resistance
-enemy;0;0;Knight;1;Iron Lance;8,10;Pursue;Resistance
-player;0;0;Fighter;1;Iron Axe;23,3;None;Resistance
+enemy;0;0;Berserker;15;Iron Lance;8,10;None;Resistance
+player;0;0;Oracle;15;Rescue,Spiritbane;8,12;None;Resistance

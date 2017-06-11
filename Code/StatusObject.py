@@ -251,9 +251,6 @@ class Status_Processor(object):
                 #gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
                 #self.current_unit.isActive = True
                 self.state.changeState('new_status')
-                if any(status.upkeep_animation for status in self.current_unit_statuses):
-                    self.state.changeState('wait')
-                    self.started_waiting = current_time
             else: # This unit has no status to process. Return and get a new one
                 self.state.changeState('begin')
 
@@ -276,7 +273,7 @@ class Status_Processor(object):
                     self.newhp = output[1]
                     # If the hp_changed or the current status has a one time animation, run the process, otherwise, move onto next status
                     # Processing state handles animation and HP updating
-                    if self.current_status.upkeep_animation or self.oldhp != self.newhp:
+                    if self.oldhp != self.newhp:
                         logger.debug('HP change: %s %s', self.oldhp, self.newhp)
                         #self.health_bar.update()
                         #self.start_time_for_this_status = current_time + self.health_bar.time_for_change - 400
@@ -291,7 +288,10 @@ class Status_Processor(object):
                 self.state.changeState('begin')
 
         elif self.state.getState() == 'processing':
-            self.health_bar.update()
+            self.health_bar.update(status_obj=True)
+            # Turn on animations
+            for anim in gameStateObj.allanimations:
+                anim.on = True
             # Done waiting for status, process next one
             if current_time - self.start_time_for_this_status - self.health_bar.time_for_change + 400 > self.time_spent_on_each_status:
                 # handle death of a unit
@@ -342,6 +342,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
     if status.hp_percentage:
         hp_change = int(int(unit.stats['HP']) * status.hp_percentage.percentage/100.0)
         unit.currenthp += hp_change
+        unit.currenthp = Utility.clamp(unit.currenthp, 0, unit.stats['HP'])
 
     if status.upkeep_stat_change:
         unit.apply_stat_change(status.upkeep_stat_change.stat_change)
@@ -355,12 +356,12 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
         else:
             unit.apply_stat_change(status.rhythm_stat_change.change)
 
-    if status.upkeep_animation:
+    if status.upkeep_animation and unit.currenthp != oldhp:
         stota = status.upkeep_animation
         if not stota.sprite:
             logger.error('Missing upkeep animation sprite for %s', status.name)
         else:
-            gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, (unit.position[0], unit.position[1] - 1), (stota.x, stota.y), stota.num_frames))
+            gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, (unit.position[0], unit.position[1] - 1), (stota.x, stota.y), stota.num_frames, on=False))
 
     if status.upkeeps_movement:
         if unit.team.startswith('enemy'):

@@ -286,7 +286,9 @@ class PrepItemsState(StateMachine.State):
             self.buttons = [IMAGESDICT['Buttons'].subsurface(0, 165, 33, 9), IMAGESDICT['Buttons'].subsurface(0, 66, 14, 13)]
             self.font = FONT['text_white']
             self.commands = [WORDS['Optimize'], WORDS['Manage']]
-            self.quick_sort_disp = MenuFunctions.CreateBaseMenuSurf((33 + self.font.size(self.commands[0])[0] + 16, self.font.size(self.commands[0])[1]*len(self.commands) + 8))
+            pos = (33 + self.font.size(self.commands[0])[0] + 16, self.font.size(self.commands[0])[1]*len(self.commands) + 8)
+            self.quick_sort_disp = MenuFunctions.CreateBaseMenuSurf(pos, 'BrownBackgroundOpaque')
+            self.quick_sort_disp = Image_Modification.flickerImageTranslucent(self.quick_sort_disp, 10)
             for idx, button in enumerate(self.buttons):
                 self.quick_sort_disp.blit(button, (4 + 33/2 - button.get_width()/2, idx*self.font.height + 8 - button.get_height()/2 + 4))
             for idx, command in enumerate(self.commands):
@@ -339,7 +341,7 @@ class PrepItemsState(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         if gameStateObj.activeMenu:
-            MenuFunctions.drawUnitItems(surf, (16, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True)
+            MenuFunctions.drawUnitItems(surf, (16, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
         # Draw quick sort display
         surf.blit(self.quick_sort_disp, (WINWIDTH/2 + 12, WINHEIGHT/2))
         return surf
