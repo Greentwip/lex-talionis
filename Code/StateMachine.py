@@ -195,8 +195,8 @@ class StateMachine(object):
         self.process_temp_state(gameStateObj, metaDataObj)
         time_end = Engine.get_true_time() ###
         if time_end - time_start > 25:
-            print('StateMachine took too long:', state_name, 'Begin: %s, Input: %s, Update: %s, Draw: %s, End: %s' \
-                %(time_input - time_start, time_upkeep - time_input, time_update - time_upkeep, time_draw - time_update, time_end - time_draw))
+            logger.debug('StateMachine took too long: %s Begin: %s, Input: %s, Update: %s, Draw: %s, End: %s', state_name, \
+                time_input - time_start, time_upkeep - time_input, time_update - time_upkeep, time_draw - time_update, time_end - time_draw)
         return mapSurf, repeat_flag
 
     def begin(self, gameStateObj, metaDataObj):
@@ -322,9 +322,7 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                 gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
                 if gameStateObj.cursor.currentHoveredUnit:
                     gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    print(gameStateObj.cursor.currentHoveredUnit.wexp)
                     gameStateObj.cursor.currentHoveredUnit.increase_wexp(5, gameStateObj)
-                    print(gameStateObj.cursor.currentHoveredUnit.wexp)
 
 class TurnChangeState(State):
     def begin(self, gameStateObj, metaDataObj):

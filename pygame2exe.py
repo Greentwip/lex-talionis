@@ -45,30 +45,30 @@ class BuildExe:
         self.script = "Main.py"
  
         #Name of program
-        self.project_name = "Lex Talionis"
+        self.project_name = "The Lion Throne"
  
         #Project url
         self.project_url = "https://github.com/rainlash/lex-talionis"
  
         #Version of program
-        self.project_version = "0.HYPE"
+        self.project_version = "0.6"
  
         #License of the program
         self.license = "MIT License"
  
         #Auhor of program
         self.author_name = "rainlash"
-        self.author_email = "/u/rainlash"
-        self.copyright = "Copyright (c) 2016 rainlash."
+        self.author_email = "rain.pipe.ash@gmail.com"
+        self.copyright = "Copyright (c) 2017 rainlash."
  
         #Description
-        self.project_description = "Fire Emblem Fangame"
+        self.project_description = "Custom Fire Emblem Fangame and Engine"
  
         #Icon file (None will use pygame default icon)
-        self.icon_file = None
+        self.icon_file = "Sprites/General/main_icon.png"
  
         #Extra files/dirs copied to game
-        self.extra_datas = ['Audio', 'Data', 'Saves', 'Sprites']
+        self.extra_datas = ['Audio', 'Code', 'Data', 'Saves', 'Sprites']
  
         #Extra/excludes python modules
         self.extra_modules = []

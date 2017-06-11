@@ -56,7 +56,7 @@ pygame.display.set_icon(small_icon)
 
 FPSCLOCK = pygame.time.Clock()
 DISPLAYSURF = pygame.display.set_mode((WINWIDTH*OPTIONS['screen_scale'], WINHEIGHT*OPTIONS['screen_scale']))
-version = "0.4"
+version = "0.6"
 pygame.display.set_caption(''.join(["The Lion Throne - ", version]))
 
 IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT = imagesDict.getImages()

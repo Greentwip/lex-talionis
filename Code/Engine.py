@@ -31,7 +31,7 @@ def update_time():
     engine_constants['current_time'] = pygame.time.get_ticks()
     engine_constants['last_fps'] = engine_constants['current_time'] - engine_constants['last_time']
     if engine_constants['last_fps'] > 32:
-        print('Frame took too long! %s ms'%(engine_constants['last_fps']))
+        #print('Frame took too long! %s ms'%(engine_constants['last_fps']))
         logger.debug('Frame took too long! %s ms', engine_constants['last_fps'])
     
 def get_time():
@@ -55,12 +55,7 @@ def flip_vert(surf):
     return pygame.transform.flip(surf, 0, 1)
 
 def image_load(fp, convert=False, convert_alpha=False):
-    try:
-        image = pygame.image.load(fp)
-    except pygame.error:
-        print("ERROR! If you cloned this from source,\nYou didn't use Git LFS to bring down the sprites!\nGo install Git LFS!\n\n \
-               If this is just an executable, then you are missing files. Sorry!")
-        terminate()
+    image = pygame.image.load(fp)
     if convert:
         image = image.convert()
     elif convert_alpha:

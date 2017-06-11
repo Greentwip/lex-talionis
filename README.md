@@ -8,6 +8,8 @@ Because this was coded entirely from scratch, I am not bound by the limitations 
 
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
+**DOWNLOAD HERE**: https://www.dropbox.com/s/s707383vh8vl5cx/the_lion_throne.zip?dl=0 (release v0.6 - Windows only).
+
 ![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
 ![Range](/Utilities/Screenshots/Range1.png)
 ![Skill](/Utilities/Screenshots/Skill1.png)
@@ -26,12 +28,7 @@ Not interested in coding? That's fine -- one can create a whole new game with to
 
 I am planning to create a tutorial on how to use the Lex Talionis engine.
 
-Both the engine and the fangame are still in Alpha, so there may (and probably are) bugs in the code. Tread carefully.
-
-### More Screenshots (v0.1):
-![Screenshot 1](/Utilities/Screenshots/Attack.png) ![Screenshot 2](/Utilities/Screenshots/Chapter10.png)
-![Screenshot 3](/Utilities/Screenshots/InfoMenu.png) ![Screenshot 4](/Utilities/Screenshots/Chapter30.png)
-![Screenshot 5](/Utilities/Screenshots/Chapter20.png) ![Screenshot 6](/Utilities/Screenshots/Narration0.png)
+Both the engine and the game are still in Alpha, so there may (and probably are) bugs in the code. Tread carefully.
 
 ### More Screenshots (v0.2)
 ![Screenshot 7](/Utilities/Screenshots/Combat.png) ![Screenshot 8](/Utilities/Screenshots/TitleScreen.png)
@@ -56,9 +53,7 @@ These defaults can be changed within the game or in the Data/config.txt file
 
 ## Getting Started
 
-If you don't want to go through the hassle of running this with Python + Pygame, you can download this executable instead (Windows only, unfortunately).
-
-**DOWNLOAD HERE (old)**: http://www.mediafire.com/download/rgwn1xo9oepqpb2/lex-talionis-exe.zip (release v0.01).
+If you don't want to go through the hassle of running this with Python + Pygame, you can download the executable above instead.
 
 However, if you are familiar with Python, Pygame, and Git, read on to find out how to get a fully customizable version of this on your machine.
 

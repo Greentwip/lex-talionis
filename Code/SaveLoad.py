@@ -55,7 +55,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective)
 
-def create_map(levelfolder,overview_dict=None):
+def create_map(levelfolder, overview_dict=None):
     if not overview_dict:
         overview_filename = levelfolder + '/overview.txt'
         overview_dict = read_overview_file(overview_filename)
@@ -65,7 +65,9 @@ def create_map(levelfolder,overview_dict=None):
     currentMap = TileObject.MapObject(mapfilename, tilefilename, levelfolder, weather)
     return currentMap
 
-def get_metaDataObj(levelfolder, metaDataObj, changes=[]):
+def get_metaDataObj(levelfolder, metaDataObj, changes=None):
+    if not changes:
+        changes = []
     overview_filename = levelfolder + '/overview.txt'
     prebaseScript_filename = levelfolder + '/prebaseScript.txt'
     narrationScript_filename = levelfolder + '/narrationScript.txt'
@@ -103,7 +105,6 @@ def get_metaDataObj(levelfolder, metaDataObj, changes=[]):
     metaDataObj['lore'] = lore_dict
 
     for line in changes:
-        print(line)
         if line[1].endswith('Music'):
             line[2] = MUSICDICT[line[2]]
         metaDataObj[line[1]] = line[2]

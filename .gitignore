@@ -9,6 +9,11 @@ debug.log.?
 # Large Audio Files
 Audio/
 
+# Builds
+build/
+dist/
+*.spec
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

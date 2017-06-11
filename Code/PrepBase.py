@@ -1162,7 +1162,6 @@ class BaseMainState(StateMachine.State):
         # Play base script if it exists
         base_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/in_base_script.txt'
         if os.path.exists(base_script_name):
-            print('InBase')
             base_script = Dialogue.Dialogue_Scene(base_script_name, None, event_flag=False)
             gameStateObj.message.append(base_script)
             gameStateObj.stateMachine.changeState('transparent_dialogue')

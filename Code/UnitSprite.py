@@ -201,7 +201,7 @@ class UnitSprite(object):
         try:
             unit_stand_sprites, unit_move_sprites = self.get_sprites(self.unit.team)
         except KeyError as e:
-            print('KeyError. Trying Title Case', e)
+            logger.warning('KeyError. Trying Title Case %s', e)
             unit_stand_sprites, unit_move_sprites = self.get_sprites(self.unit.team.title())
         self.unit_sprites = self.formatSprite(unit_stand_sprites, unit_move_sprites)
 

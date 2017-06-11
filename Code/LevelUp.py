@@ -240,7 +240,7 @@ class levelUpScreen(object):
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)
             self.unit.apply_levelup(self.levelup_list)
-            print(self.levelup_list)
+            #print(self.levelup_list)
 
             self.state.changeState('levelScreen')
             self.state_time = currentTime # Reset time so that it doesn't skip right over LevelScreen

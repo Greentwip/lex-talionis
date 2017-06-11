@@ -1023,7 +1023,7 @@ class Dialogue_Scene(object):
                 return w + 16 # This is an extra buffer to account for waiting cursor
         # If we got here, it was too bug
         logger.warning('Text too big for dialog box!')
-        print('Text too big for dialog box!')
+        #print('Text too big for dialog box!')
         return WINWIDTH - 8*4
 
     def add_credits(self, line):
@@ -1380,7 +1380,7 @@ class Dialogue_Scene(object):
             else:
                 return None
         else:
-            print(placement)
+            logger.warning('%s placement not supported.', placement)
 
     def get_closest(self, new_pos, bad_pos, gameStateObj, flying=False):
         r = 0

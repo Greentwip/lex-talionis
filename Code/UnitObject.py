@@ -759,7 +759,7 @@ class UnitObject(object):
             if new_position:
                 self.position = new_position
         elif movement.mode == 'Rescue':
-            print(movement.mode, other_pos)
+            #print(movement.mode, other_pos)
             for pos in Utility.get_adjacent_positions(other_pos):
                 # IF in map and walkable and no other unit is there.
                 if gameStateObj.map.check_bounds(pos) and gameStateObj.map.tiles[pos].get_mcost(self) < self.stats['MOV'] and not gameStateObj.grid_manager.get_unit_node(pos):
