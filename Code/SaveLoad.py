@@ -34,7 +34,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     # Get objective
     starting_objective = CustomObjects.Objective(overview_dict['display_name'], overview_dict['win_condition'], overview_dict['loss_condition'])
 
-    # MetaDataObj holds unhanging information for the level
+    # MetaDataObj holds unchanging information for the level
     # And general abstraction information    
     get_metaDataObj(levelfolder, metaDataObj)
 
@@ -43,6 +43,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     gameStateObj.start_map(currentMap)
 
     # === Process unit data ===
+    current_mode = 15 # Defaults to all modes
     for line in unitcontent:
         # Process each line that was in the level file.
         line = line.strip()
@@ -51,7 +52,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
             continue
         # Process line
         unitLine = line.split(';')
-        parse_unit_line(unitLine, gameStateObj.allunits, gameStateObj.groups, reinforceUnits, prefabs, metaDataObj, gameStateObj)
+        current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.groups, reinforceUnits, prefabs, metaDataObj, gameStateObj)
     
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective)
 
@@ -117,43 +118,60 @@ def read_overview_file(overview_filename):
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
-def parse_unit_line(unitLine, allunits, groups, reinforceUnits, prefabs, metaDataObj, gameStateObj):
+def check_mode(modes_allowed, mode):
+    modes_allowed = bin(modes_allowed)[2:] # Get binary representation
+    # Pad w/ zeros (assumes not more than 10 modes)
+    modes_allowed = '0'*(4 - len(modes_allowed)) + modes_allowed
+    return (modes_allowed[-(mode+1)] == '1')
+
+def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, prefabs, metaDataObj, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
     # New Group
     if unitLine[0] == 'group':
         groups[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
-    # New Unit
-    elif unitLine[1] == "0":
-        if len(unitLine) > 7:
-            create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj)
-        else:
-            add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj)
-    elif unitLine[1] == "1":
-        for unit in allunits:
-            if unit.name == unitLine[3]: # Saved units use their name...\
-                if unitLine[4] == 'None':
-                    position = None
-                else:
-                    position = tuple([int(num) for num in unitLine[4].split(',')])
-                if unitLine[2] == "0": # Unit starts on board
-                    unit.position = position
-                else: # Unit does not start on board
-                    reinforceUnits[unitLine[2]] = (unit.id, position)
-    elif unitLine[1] == "2":
-        event_id = unitLine[2]
-        prefabs[unitLine[2]] = unitLine
+    elif unitLine[0] == 'mode':
+        current_mode = int(unitLine[1])
+    elif check_mode(current_mode, gameStateObj.mode['difficulty']):
+        # New Unit
+        if unitLine[1] == "0":
+            if len(unitLine) > 7:
+                create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj)
+            else:
+                add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj)
+        # Saved Unit
+        elif unitLine[1] == "1":
+            for unit in allunits:
+                if unit.name == unitLine[3]: # Saved units use their name...\
+                    if unitLine[4] == 'None':
+                        position = None
+                    else:
+                        position = tuple([int(num) for num in unitLine[5].split(',')])
+                    if unitLine[2] == "0": # Unit starts on board
+                        unit.position = position
+                    else: # Unit does not start on board
+                        reinforceUnits[unitLine[2]] = (unit.id, position)
+        # Created Unit
+        elif unitLine[1] == "2":
+            event_id = unitLine[2]
+            prefabs[unitLine[2]] = unitLine
+    else:
+        pass
+        # Unit is not used in this mode
+    return current_mode
 
 def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
-    assert len(unitLine) == 6 or len(unitLine) == 7, "unitLine %s must have length 6 or 7"%(unitLine)
+    assert len(unitLine) == 6, "unitLine %s must have length 6"%(unitLine)
+    legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
+              'unit_id': unitLine[3], 'position': unitLine[4], 'ai': unitLine[5]}
     class_dict = metaDataObj['class_dict']
     for unit in UNITDATA.getroot().findall('unit'):
-        if unit.find('id').text == unitLine[3]:
+        if unit.find('id').text == legend['unit_id']:
             u_i = {}
             u_i['u_id'] = unit.find('id').text
-            u_i['event_id'] = unitLine[2]
-            u_i['position'] = tuple([int(num) for num in unitLine[4].split(',')]) if ',' in unitLine[4] else None
+            u_i['event_id'] = legend['event_id']
+            u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
             u_i['name'] = unit.get('name')
-            u_i['team'] = unitLine[0]
+            u_i['team'] = legend['team']
 
             classes = unit.find('class').text.split(',')
             u_i['klass'] = classes[-1]
@@ -196,7 +214,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             personal_tags = unit.find('tags').text.split(',') if unit.find('tags') is not None and unit.find('tags').text is not None else []
             u_i['tags'] = class_tags + personal_tags
 
-            u_i['ai'] = unitLine[5]
+            u_i['ai'] = legend['ai']
             u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
             cur_unit = UnitObject.UnitObject(u_i)
@@ -222,6 +240,9 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
 
 def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj):
     assert len(unitLine) in [9, 10], "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
+    legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
+              'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
+              'position': unitLine[6], 'ai': unitLine[7], 'group': unitLine[8]}
     class_dict = metaDataObj['class_dict']
 
     u_i = {}
@@ -230,14 +251,14 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     U_ID += 1
     u_i['u_id'] = U_ID
 
-    u_i['team'] = unitLine[0]
-    u_i['event_id'] = unitLine[2]
-    if unitLine[3].endswith('F'):
-        unitLine[3] = unitLine[3][:-1] # strip off the F
+    u_i['team'] = legend['team']
+    u_i['event_id'] = legend['event_id']
+    if legend['class'].endswith('F'):
+        legend['class'] = legend['class'][:-1] # strip off the F
         u_i['gender'] = 'F'
     else:
         u_i['gender'] = 'M'
-    classes = unitLine[3].split(',')
+    classes = legend['class'].split(',')
     u_i['klass'] = classes[-1]
     # Give default previous class
     if class_dict[u_i['klass']]['tier'] > len(classes) and class_dict[u_i['klass']]['promotes_from']:
@@ -245,16 +266,16 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
         if prev_class not in classes:
             classes.insert(0, prev_class)
 
-    u_i['level'] = int(unitLine[4])
-    u_i['position'] = tuple([int(num) for num in unitLine[6].split(',')])
-    u_i['name'], u_i['faction'], u_i['desc'] = groups[unitLine[8]]
+    u_i['level'] = int(legend['level'])
+    u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
+    u_i['name'], u_i['faction'], u_i['desc'] = groups[legend['group']]
 
-    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], unitLine[5], gameStateObj)
+    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], legend['items'], gameStateObj)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
     u_i['tags'] = class_dict[u_i['klass']]['tags'].split(',') if class_dict[u_i['klass']]['tags'] else []
-    u_i['ai'] = unitLine[7]
+    u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
     cur_unit = UnitObject.UnitObject(u_i)

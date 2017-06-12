@@ -16,8 +16,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add screenshake etc on skill uses?? -- certain skills only - Metamagic, Critical, Sol, Luna
 --- MAP ---
 - Autotiles for chasm in level 6?
---- CUSTOMIZATION ---
-- Add ability to select at beginning of new game. (Make it a state, like battle_save), CASUAL/HYBRID(lose stats/levels?)/CLASSIC, NORMAL/HARD (LEVEL OF HARD), FIXED/RANDOM/HYBRID, RNG: 1, 2, 3, INFINITE (Selection 49 default), Skill*Str always hit -- Would need to make these saved in gameStateObj or optionStateObj or something similar.
 --- AI ---
 - Add support for summons (just append summons to end of ai_list.)
 - Have AI actually test equip items when making calculations ++ (not really important, since so few weapons give statuses..., could do it only if weapon has a status_equip?)
