@@ -249,7 +249,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     u_i['position'] = tuple([int(num) for num in unitLine[6].split(',')])
     u_i['name'], u_i['faction'], u_i['desc'] = groups[unitLine[8]]
 
-    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], unitLine[5])
+    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], unitLine[5], gameStateObj)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
@@ -303,7 +303,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['tags'].append('Summon_' + str(summon_info.s_id) + '_' + str(summoner.id)) # Add unique identifier
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
-    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], summon_info.item_line)
+    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj)
     u_i['stats'] = build_stat_dict(stats)
     unit = UnitObject.UnitObject(u_i)
 
@@ -341,13 +341,13 @@ def build_stat_dict_plus(stats):
     st['MOV'] = Stat(stats[9][0], stats[9][1])
     return st
 
-def get_unit_info(class_dict, klass, level, item_line):
+def get_unit_info(class_dict, klass, level, item_line, gameStateObj):
     # Handle stats
     movement = class_dict[klass]['movement']
     # hp, str, mag, skl, spd, lck, def, res, con
     growths = class_dict[klass]['growths'][:] # Using copies
     bases = class_dict[klass]['bases'][:] # Using copies
-    stats, growth_points = auto_level(bases, growths, level, class_dict[klass]['max'])
+    stats, growth_points = auto_level(bases, growths, level, class_dict[klass]['max'], gameStateObj)
     # Make sure we don't exceed max
     stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
     stats.append(movement)
@@ -403,18 +403,21 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
     # handle having a status that gives stats['HP']
     unit.currenthp = int(unit.stats['HP'])
 
-def auto_level(bases, growths, level, max_stats):
+def auto_level(bases, growths, level, max_stats, gameStateObj):
     stats = [sum(x) for x in zip(bases, GROWTHS['enemy_bases'])]
     growths = [sum(x) for x in zip(growths, GROWTHS['enemy_growths'])]
     growth_points = [50 for growth in growths]
+    leveling = CONSTANTS['enemy_leveling']
+    if leveling == 3:
+        leveling = gameStateObj.mode['growths']
 
-    if CONSTANTS['enemy_leveling'] == 'fixed':
+    if leveling == 1: # Fixed
         for index, growth in enumerate(growths):
             growth_sum = growth * (level - 1)
             stats[index] += growth_sum/100
             growth_points[index] += growth_sum%100
 
-    elif CONSTANTS['enemy_leveling'] == 'random': # Random
+    elif leveling == 0: # Random
         for index, growth in enumerate(growths):
             for _ in range(level - 1):
                 growth_rate = growth
@@ -422,7 +425,7 @@ def auto_level(bases, growths, level, max_stats):
                     stats[index] += 1 if random.randint(0, 99) < growth_rate else 0
                     growth_rate -= 100
 
-    elif CONSTANTS['enemy_leveling'] == 'hybrid': # Like Radiant Dawn Bonus Exp Method
+    elif leveling == 2: # Like Radiant Dawn Bonus Exp Method -- Hybrid
         growths = [growth * (level - 1) if stats[index] < max_stats[index] else 0 for index, growth in enumerate(growths)]
         growth_sum = sum(growths)
         num_choice = growth_sum/100
@@ -437,7 +440,7 @@ def auto_level(bases, growths, level, max_stats):
                 growths[idx] = 0
 
     else:
-        debug.error('Unsupported leveling type %s', CONSTANTS['enemy_leveling'])
+        logger.error('Unsupported leveling type %s', leveling)
             
     return stats, growth_points
 
@@ -523,7 +526,7 @@ def save_io(to_save, to_save_meta, old_slot, slot=None, hard_loc=None):
         save_loc = 'Saves/SaveState' + str(slot) + '.p'
         meta_loc = 'Saves/SaveState' + str(slot) + '.pmeta'
     
-    logging.info('Saving to %s', save_loc)
+    logger.info('Saving to %s', save_loc)
 
     with open(save_loc, 'wb') as suspendFile:
         pickle.dump(to_save, suspendFile)

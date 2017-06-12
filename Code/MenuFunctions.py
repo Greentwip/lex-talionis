@@ -425,6 +425,9 @@ class SimpleMenu(Counters.CursorControl):
         else:
             return None
 
+    def getSelectionIndex(self):
+        return self.currentSelection
+
     def setSelection(self, option):
         if option in self.options:
             idx = self.options.index(option)
@@ -904,6 +907,87 @@ class FeatChoiceMenu(ComplexMenu):
         FONT['text_white'].blit(label, bg_surf, (menu_width/2 - width/2, 4))
         surf.blit(bg_surf, (0, 0))
 
+class ModeSelectMenu(SimpleMenu):
+    def __init__(self, options, toggle, default=0):
+        self.options = options
+        self.toggle = toggle
+        self.currentSelection = default
+
+        self.label = CreateBaseMenuSurf((96, 88), 'BaseMenuBackgroundOpaque')
+        shimmer = IMAGESDICT['Shimmer2']
+        self.label.blit(shimmer, (96 - shimmer.get_width() - 1, 88 - shimmer.get_height() - 5))
+        self.label = Image_Modification.flickerImageTranslucent(self.label, 10)
+
+        self.cursor = IMAGESDICT['dragonCursor']
+        self.cursorCounter = 0 # Helper counter for cursor animation
+        self.cursorAnim = [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]
+        self.lastUpdate = Engine.get_time()
+        self.cursor_y_offset = 0
+
+    def isIndexValid(self, index):
+        return self.toggle[index]
+
+    def update(self):
+        currentTime = Engine.get_time()
+        if currentTime - self.lastUpdate > 100:
+            self.lastUpdate = currentTime
+            self.cursorCounter += 1
+            if self.cursorCounter > len(self.cursorAnim) - 1:
+                self.cursorCounter = 0
+
+    def moveDown(self):
+        self.currentSelection += 1
+        if self.currentSelection > len(self.options) - 1:
+            self.currentSelection = 0
+            if not self.isIndexValid(self.currentSelection):
+                self.currentSelection = len(self.options) - 1
+        else:
+            if not self.isIndexValid(self.currentSelection):
+                self.currentSelection -= 1
+                return
+            self.cursor_y_offset = -1
+
+    def moveUp(self):
+        self.currentSelection -= 1
+        if self.currentSelection < 0:
+            self.currentSelection = len(self.options) - 1
+            if not self.isIndexValid(self.currentSelection):
+                self.currentSelection = 0
+        else:
+            if not self.isIndexValid(self.currentSelection):
+                self.currentSelection += 1
+                return
+            self.cursor_y_offset = 1
+
+    def draw(self, surf):
+        top = 52 + (3-len(self.options))*16
+        for index, option in enumerate(self.options):
+            left = 8
+            if index == self.currentSelection:
+                background = IMAGESDICT['DarkMenuHighlightShort']
+            else:
+                background = IMAGESDICT['DarkMenuShort']
+            if self.isIndexValid(index):
+                font = FONT['chapter_grey']
+            else:
+                font = FONT['chapter_black']
+            width = background.get_width()
+            surf.blit(background, (left, top+index*32))
+            font.blit(option, surf, (left + width/2 - font.size(option)[0]/2, top+4+index*32))
+
+        # Draw cursor
+        height = top - 16 + self.currentSelection*32 + self.cursorAnim[self.cursorCounter] + self.cursor_y_offset*16
+        surf.blit(self.cursor, (0, height))
+        self.cursor_y_offset = 0 # Reset
+
+        # Draw gem
+        surf.blit(self.label, (142, 52))
+        surf.blit(IMAGESDICT['SmallGem'], (139, 48))
+        # Draw text
+        text = WORDS['mode_' + self.options[self.currentSelection]]
+        text_lines = line_wrap(line_chunk(text), 88, FONT['text_white'])
+        for index, line in enumerate(text_lines):
+            FONT['text_white'].blit(line, surf, (142 + 4, 52 + 4 + index*16))
 
 # Support Conversation Menu
 class SupportMenu(object):

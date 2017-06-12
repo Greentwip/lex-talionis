@@ -14,11 +14,9 @@ spell_line_of_sight;0
 aura_los;1
 simultaneous_aoe;1
 def_double;0
-casual;0
 support;0
 max_level;10
-player_leveling;fixed
-enemy_leveling;fixed
+enemy_leveling;3
 rng;true_hit
 num_skills;6
 save_slots;3

@@ -32,7 +32,7 @@ s;Sam;No need.{w}{br}Besides, it is not me you should be thanking.{w};auto
 move_sprite;Sam;-24,0
 u;Ophie;MidLeft
 s;Sam;Without my friend's stubborn insistence on doing what is right,{w}{br}we never would have succeeded.{w}{br}He led the charge.{w};auto
-s;Man1;Thank you.{w}{br}Finding and returning our children...{w}{br}It's like a miracle from out of the age of the Sun King.{w};auto
+s;Man1;Thank you.{w}{br}Finding and returning our children...{w}{br}It's like a miracle from out of the age of the Moon King.{w};auto
 s;Ophie;All in a days' work for the Resistance.{w}{br}We Keralans have to stick together.{w};auto
 s;Man1;Indeed.{w}{br}Thank you again, all of you, for your help.{w};auto
 r;Man1

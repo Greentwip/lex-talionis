@@ -88,6 +88,7 @@ class StateMachine(object):
                             'start_option': Transitions.StartOption,
                             'start_load': Transitions.StartLoad,
                             'start_restart': Transitions.StartRestart,
+                            'start_mode': Transitions.StartMode,
                             'start_new': Transitions.StartNew,
                             'start_newchild': Transitions.StartNewChild,
                             'start_extras': Transitions.StartExtras,
@@ -98,6 +99,7 @@ class StateMachine(object):
                             'transition_in': Transitions.TransitionInState,
                             'transition_out': Transitions.TransitionOutState,
                             'transition_pop': Transitions.TransitionPopState,
+                            'transition_clean': Transitions.TransitionCleanState,
                             'config_menu': OptionsMenu.OptionsMenu,
                             'status_menu': MenuFunctions.StatusMenu,
                             'info_menu': InfoMenu.InfoMenu}

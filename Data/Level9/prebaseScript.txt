@@ -67,7 +67,7 @@ t;2
 u;Sam;FarRight;u;Renae;FarLeft;u;Ophie;MidLeft
 s;Renae;So what's the plan, Sam?{w};auto
 s;Sam;If all goes well today, this'll be my last premission spiel.{w};auto
-s;Renae;Thank the Sun King!{w};auto
+s;Renae;Thank the light!{w};auto
 s;Sam;...{w};auto
 s;Renae;No offense.{w};auto
 s;Sam;Sure...{w}{br}Well, its something for you to look forward to, Renae.{w}{clear}Anyways, with Vagnius dead, there's only one obstacle left in our way.{w}{br}Archon Ulver himself.{w};auto

@@ -90,9 +90,7 @@ def read_constants_file():
              'simultaneous_aoe': 0, # Whether AOE attacks on many targets are resolved simultaneously or in order
              'def_double': 1, # Whether units on defense can double their attackers
              'support': 1, # Whether this game has supports
-             'casual': 0, # Whether player units die when they are killed (1 - casual, 0 - classic)
-             'player_leveling': 'random', # How to level up player units ('fixed', 'random', and 'hybrid' are valid choices) # Normal FE uses random
-             'enemy_leveling': 'fixed', # How to level up non-player units
+             'enemy_leveling': 1, # How to level up non-player units ('fixed', 'random', 'hybrid', 'match')
              'rng': 'true_hit', # How hits are calculated ('classic', 'true_hit', 'true_hit+', 'no_rng', 'hybrid') # FE6-13 uses true_hit
              'set_roll': 49, # used for 'no_rng' mode. Determines threshold at which attacks miss. Ex. Any attack with hitrate <= set_roll, misses
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
@@ -125,7 +123,7 @@ def read_constants_file():
     lines['simultaneous_aoe'] = int(lines['simultaneous_aoe'])
     lines['def_double'] = int(lines['def_double'])
     lines['support'] = int(lines['support'])
-    lines['casual'] = int(lines['casual'])
+    lines['enemy_leveling'] = int(lines['enemy_leveling'])
     lines['set_roll'] = int(lines['set_roll'])
     lines['num_skills'] = int(lines['num_skills'])
     lines['max_level'] = int(lines['max_level'])

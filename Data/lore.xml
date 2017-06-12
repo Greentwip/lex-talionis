@@ -92,13 +92,13 @@
 	<lore name="Podoma">
 		<long_name>Podoma</long_name>
 		<type>Location</type>
-		<desc>A middling, pastoral town near the Resistance base. The Resistance rescued Althea from her pursuit by the Empire here.</desc>
+		<desc>A middling, pastoral town near the Resistance base. The Resistance rescued Althea from the Empire here.</desc>
 	</lore>
 
 	<lore name="Rajas">
 		<long_name>Rajas</long_name>
 		<type>Location</type>
-		<desc>The bustling capitol of Kerala. In legends, it is said that the Sun King himself erected the palace out of heavenly stone. Of course, now it is the seat of power for Archon Ulver and the Imperial hold on Kerala.</desc>
+		<desc>The bustling capitol of Kerala. In legends, it is said that the Moon King himself erected the palace out of heavenly stone. Of course, now it is the seat of power for Archon Ulver and the Imperial hold on Kerala.</desc>
 	</lore>
 
 	<lore name="Tyrana">

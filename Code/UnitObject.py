@@ -791,22 +791,26 @@ class UnitObject(object):
         return False
 
     # Stat-specific levelup function
-    def level_up(self, class_info, apply_level=True):
+    def level_up(self, gameStateObj, class_info, apply_level=True):
         levelup_list = [0 for x in self.stats]
         if self.team == 'player':
             growths = [sum(x) for x in zip(self.growths, GROWTHS['player_growths'])]
-            leveling = CONSTANTS['player_leveling']
+            leveling = gameStateObj.mode['growths']
         else:
             growths = [sum(x) for x in zip(self.growths, GROWTHS['enemy_growths'])]
             leveling = CONSTANTS['enemy_leveling']
+            print(leveling)
+            if leveling == 3: # Match player method
+                leveling = gameStateObj.mode['growths']
+            print(leveling)
 
-        if leveling in ['fixed', 'random']:
+        if leveling in [0, 1]: # Fixed or Random
             for index in range(8):
                 growth = growths[index]
-                if leveling == 'fixed':
+                if leveling == 1: # Fixed
                     levelup_list[index] = min((self.growth_points[index] + growth)/100, class_info['max'][index] - self.stats.values()[index].base_stat)
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
-                elif leveling == 'random':
+                elif leveling == 0: # Random
                     while growth > 0:
                         levelup_list[index] += 1 if random.randint(0, 99) < growth else 0
                         growth -= 100
@@ -818,9 +822,9 @@ class UnitObject(object):
             self.growth_points[0] += growth_sum%100
             if self.growth_points[0] >= 100:
                 self.growth_points[0] -= 100
-                num_choice += 1
+                num_choices += 1
 
-            for _ in num_choices:
+            for _ in range(num_choices):
                 index = Utility.weighted_choice(growths)
                 levelup_list[index] += 1
                 growths[index] = max(0, growths[index] - 100)

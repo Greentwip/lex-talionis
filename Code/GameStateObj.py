@@ -30,6 +30,8 @@ class GameStateObj(object):
         self.info_surf = None
         # playtime
         self.playtime = 0
+        # mode options
+        self.mode = self.default_mode()
 
     # Things that change between levels always
     def start(self, allreinforcements, prefabs, objective):
@@ -75,6 +77,11 @@ class GameStateObj(object):
         self.sweep()
         self.generic()
 
+    def default_mode(self):
+        return {'difficulty': 1,
+                'death': 1,
+                'growths': 1}
+
     def sweep(self):
         # None of these are kept through different levels
         self.event_triggers = []
@@ -113,6 +120,7 @@ class GameStateObj(object):
         self.unlocked_lore = load_info['unlocked_lore']
         self.counters = load_info['counters']
         self.market_items = load_info.get('market_items', set())
+        self.mode = load_info.get('mode', self.default_mode())
 
         # Map
         self.map = SaveLoad.create_map('Data/Level' + str(self.counters['level']))
@@ -344,6 +352,7 @@ class GameStateObj(object):
                    'state_list': self.stateMachine.serialize(),
                    'statistics': self.statistics,
                    'market_items': self.market_items,
+                   'mode': self.mode,
                    'message': [message.serialize() for message in self.message],
                    'phase_info': (self.statedict['current_phase'], self.statedict['previous_phase'])}
         import time
@@ -381,7 +390,7 @@ class GameStateObj(object):
         # Handle player death
         for unit in reversed(self.allunits):
             if unit.dead:
-                if CONSTANTS['casual']:
+                if not self.mode['death']: # Casual
                     unit.dead = False
                 else:
                     for item in unit.items:

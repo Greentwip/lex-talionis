@@ -15,7 +15,7 @@ if;self.optionalunit == 'Midnight Rendezvous'
 	s;Coyote;They're no myth.
 	s;Sam;You've met them?
 	s;Coyote;...
-	s;Sam;Let's see...{w}{br}The Templars were said to be the Sun King's most loyal protectors.{w}{br}They were to defend the throne with their lives.{w}{br}To snuff out dissent, they could appear anywhere in Rajas, at any time...{w}{br}...{w}{br}Are you suggesting--
+	s;Sam;Let's see...{w}{br}The Templars were said to be the Lunarch's most loyal protectors.{w}{br}They were to defend the throne with their lives.{w}{br}To snuff out dissent, they could appear anywhere in Rajas, at any time...{w}{br}...{w}{br}Are you suggesting--
 	s;Coyote;Tunnels. Under the city.
 	s;Sam;That's perfect!{w}{br}If we can find one of these tunnels...
 	move_sprite;Coyote;-24,0;force_hold

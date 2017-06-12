@@ -232,6 +232,10 @@ class StartOption(StateMachine.State):
                     self.banner = MenuFunctions.CreateBaseMenuSurf((width, 24), 'DarkMenuBackground')
                     self.banner = Image_Modification.flickerImageTranslucent(self.banner, 10)
                     MenuFunctions.OutlineFont(BASICFONT, text, self.banner, colorDict['off_white'], colorDict['off_black'], position)
+                elif self.selection == WORDS['New Game']:
+                    self.banner = None
+                    gameStateObj.stateMachine.changeState('start_mode')
+                    gameStateObj.stateMachine.changeState('transition_out')
                 else:
                     self.banner = None
                     self.state = "transition_out"
@@ -265,7 +269,9 @@ class StartOption(StateMachine.State):
                 elif self.selection == WORDS['Extras']:
                     gameStateObj.stateMachine.changeState('start_extras')
                 elif self.selection == WORDS['New Game']:
-                    gameStateObj.stateMachine.changeState('start_new')
+                    #gameStateObj.stateMachine.changeState('start_new')
+                    gameStateObj.stateMachine.changeState('start_mode')
+                    gameStateObj.stateMachine.changeState('transition_out')
                 self.state = 'transition_in'
                 return 'repeat'
 
@@ -450,6 +456,84 @@ class StartRestart(StartLoad):
             else:
                 SOUNDDICT['Select 4'].play()
 
+class StartMode(StateMachine.State):
+    def begin(self, gameStateObj, metaDataObj):
+        if not self.started:
+            self.state = 0
+        else:
+            self.state += 1
+
+        if self.state == 0:
+            self.title_surf, self.title_pos = create_title(WORDS['Select Difficulty'])
+            options = ['Easy', 'Normal', 'Hard']
+            toggle = [False, True, False]
+            self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
+            self.mode_name = 'difficulty'
+            gameStateObj.stateMachine.changeState('transition_in')
+            return 'repeat'
+
+        elif self.state == 2:
+            self.title_surf, self.title_pos = create_title(WORDS['Select Mode'])
+            options = ['Casual', 'Classic']
+            toggle = [True, True]
+            self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
+            self.mode_name = 'death'
+            gameStateObj.stateMachine.changeState('transition_in')
+            return 'repeat'
+
+        elif self.state == 4:
+            self.title_surf, self.title_pos = create_title(WORDS['Select Growths'])
+            options = ['Random', 'Fixed', 'Hybrid']
+            toggle = [True, True, True]
+            self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
+            self.mode_name = 'growths'
+            gameStateObj.stateMachine.changeState('transition_in')
+            return 'repeat'
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)    
+        if event == 'DOWN':
+            SOUNDDICT['Select 6'].play()
+            self.menu.moveDown()
+        elif event == 'UP':
+            SOUNDDICT['Select 6'].play()
+            self.menu.moveUp()
+
+        elif event == 'BACK':
+            SOUNDDICT['Select 4'].play()
+            self.state -= 4
+            if self.state < -1:
+                #gameStateObj.stateMachine.changeState('start_option')
+                gameStateObj.stateMachine.changeState('transition_pop')
+            else:
+                gameStateObj.stateMachine.changeState('transition_clean')
+            return 'repeat'
+
+        elif event == 'SELECT':
+            SOUNDDICT['Select 1'].play()
+            gameStateObj.mode[self.mode_name] = self.menu.getSelectionIndex()
+            if self.state > 4:
+                gameStateObj.stateMachine.changeState('start_new')
+                gameStateObj.stateMachine.changeState('transition_out')
+            else:
+                gameStateObj.stateMachine.changeState('transition_clean')
+            return 'repeat'
+
+    def update(self, gameStateObj, metaDataObj):
+        self.menu.update()
+
+    def draw(self, gameStateObj, metaDataObj):
+        surf = gameStateObj.generic_surf
+        gameStateObj.fog_bg.draw(surf)
+        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.fog_particles.draw(surf)
+        self.menu.draw(surf)
+        surf.blit(self.title_surf, self.title_pos)
+        gameStateObj.button_a.draw(surf)
+        gameStateObj.button_b.draw(surf)
+
+        return surf
+
 class StartNew(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
@@ -531,7 +615,9 @@ class StartNew(StateMachine.State):
                 self.rel_title_pos_y -= 4
             if self.position_x >= 3*WINWIDTH/2:
                 self.position_x = 3*WINWIDTH/2
-                gameStateObj.stateMachine.back()
+                # gameStateObj.stateMachine.back()
+                gameStateObj.stateMachine.clear()
+                gameStateObj.stateMachine.changeState('start_option')
                 self.state = 'transition_in'
                 return 'repeat'
 
@@ -1015,6 +1101,7 @@ class ChapterTransitionState(StateMachine.State):
     def end(self, gameStateObj, metaDataObj):
         gameStateObj.background = None
 
+transition_speed = 10
 class TransitionInState(StateMachine.State):
     # Assumes there is a state directly under this state. Draw that state also
     def begin(self, gameStateObj, metaDataObj):
@@ -1028,7 +1115,7 @@ class TransitionInState(StateMachine.State):
         surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition)
-        self.transition += 10
+        self.transition += transition_speed
         if self.transition >= 100:
             gameStateObj.stateMachine.back()
         surf.blit(bb, (0, 0))
@@ -1051,7 +1138,7 @@ class TransitionOutState(StateMachine.State):
         surf = gameStateObj.stateMachine.state[-3].draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition)
-        self.transition -= 10
+        self.transition -= transition_speed
         if self.transition <= 0:
             gameStateObj.stateMachine.back()
         surf.blit(bb, (0, 0))
@@ -1069,9 +1156,24 @@ class TransitionPopState(StateMachine.State):
         surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition)
-        self.transition -= 10
+        self.transition -= transition_speed
         if self.transition <= 0:
             gameStateObj.stateMachine.back()
+            gameStateObj.stateMachine.back()
+        surf.blit(bb, (0, 0))
+        return surf
+
+class TransitionCleanState(TransitionOutState):
+    # Assumes there is a state directly under this state. Draw that state also.
+    def update(self, gameStateObj, metaDataObj):
+        gameStateObj.stateMachine.state[-2].update(gameStateObj, metaDataObj)
+
+    def draw(self, gameStateObj, metaDataObj):
+        surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        # Now draw black background
+        bb = Image_Modification.flickerImageTranslucent(self.background, self.transition)
+        self.transition -= transition_speed
+        if self.transition <= 0:
             gameStateObj.stateMachine.back()
         surf.blit(bb, (0, 0))
         return surf

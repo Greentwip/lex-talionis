@@ -82,7 +82,7 @@ u;Althea;FarLeft
 s;Althea;Even for the Empire, stealing children seems excessive.{w};auto
 u;Ophie;MidRight
 s;Ophie;It must be Vagnius's idea!{w}{br}That bastard!{w}{br}Where did he take them?{w};auto
-s;Woman2;H-he said he was taking them to the old Sun temple's ruins...{w};auto
+s;Woman2;H-he said he was taking them to the Sun temple's ruins...{w};auto
 s;Sam;A likely story...{w}{br}They must be trying to draw us out.{w}{br}Well, we won't give them the satisfaction.{w}{br}Sorry, but we're not just going to walk right into their trap.{w};auto
 r;Ophie;Althea
 u;Ophie;FarLeft

@@ -7,7 +7,7 @@ ToDo:
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- MAPMOVES ---
-- Have units keep their possible moves in memory... (may not be needed) ?? -- Is currently fast
+- Have units keep their possible moves in memory... (may not be needed) ?? -- Is currently fastish
 --- L Button ---
 - Add L button support to different states -- which ones?
 --- COMBAT ---
@@ -26,7 +26,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Red highlight appears over position of last enemy fought while using 'other' team AI
 - Add threading to AI - stick it on a separate thread - won't actually help much since Python's threading is kind of fake?
 --- DIALOGUE ---
-- Add Visual Novel like dialogue backlog...??** On R press
+- Add Awakening-style dialogue backlog...??** On R press
 --- LEVEL UP ---
 - Have Level up! match the way its done in fe7... (sound)
 - Improve Promotion... Add animation. Make sure exp works correctly.

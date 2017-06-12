@@ -103,7 +103,7 @@ class levelUpScreen(object):
                 else:
                     self.expSet = 0
                     self.unit.level += 1
-                    self.levelup_list = self.unit.level_up(metaDataObj['class_dict'][self.unit.klass])
+                    self.levelup_list = self.unit.level_up(gameStateObj, metaDataObj['class_dict'][self.unit.klass])
                     self.state.changeState('exp100')
                     # Do not reset state time
             # Extra time to account for end pause

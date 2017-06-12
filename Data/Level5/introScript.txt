@@ -63,7 +63,7 @@ u;Ophie;MidLeft
 u;Prim;FarLeft
 s;Ophie;The trail stops here.{w};auto
 s;Prim;Could we have lost them?{w}{br}A-are we... too late?{w};auto
-s;Ophie;No, they must be nearby.{w}{br}There's an old Sun temple over there.{w}{br}Maybe Vagnius is hiding there, like the snake he is...{w};auto
+s;Ophie;No, they must be nearby.{w}{br}There's an old temple over there.{w}{br}Maybe Vagnius is hiding there, like the snake he is...{w};auto
 r;Prim
 u;Eliza;FarLeft
 s;Eliza;Look alive, people!{w}{br}Bandits!{w};auto

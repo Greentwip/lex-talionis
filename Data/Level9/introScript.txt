@@ -76,7 +76,7 @@ move_unit;Boaz;26,27;warp
 wait;500
 u;Althea;MidLeft;u;Sam;FarLeft;u;Ophie;Right
 s;Ophie;Who the hell were those jokers...{w};auto
-s;Sam;Never mind that.{w}{br}We must be right under the Sun Palace.{w}{br}There should be an exit nearby.{w}{br}Stay together, and we might make it out of this 'game' alive.{w};auto
+s;Sam;Never mind that.{w}{br}We must be right under the palace.{w}{br}There should be an exit nearby.{w}{br}Stay together, and we might make it out of this 'game' alive.{w};auto
 r;Althea;Ophie;Sam
 t;1
 arrange_formation

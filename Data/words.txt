@@ -216,6 +216,17 @@ talkselect;Select which unit to talk to.
 Storage_info;Your inventory is full. Select an item to send to convoy.
 Discard_info;Your inventory is full. Select an item to discard.
 Nothing;Nothing
+Select Difficulty;Select Difficulty
+Select Mode;Select Mode
+Select Growths;Select Growths
+mode_Easy;filthy casul
+mode_Normal;Play the game as it was meant to be played.
+mode_Hard;For experienced players. No hints. Prepare to die.
+mode_Classic;Units killed are lost forever.
+mode_Casual;Your units don't die when they are killed.
+mode_Random;Each level-up is random. Classic Fire Emblem.
+mode_Fixed;Each level-up is fixed. Recommended.
+mode_Hybrid;Level-ups are still random, but you can't be stat-screwed.
 Mercenary;Merc.
 Skirmisher;Skirm.
 Dracoknight;Dr. Knight
