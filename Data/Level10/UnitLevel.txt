@@ -18,18 +18,18 @@
 #
 # --------------------------------------------
 # Player Characters
-player;1;Ophie;Ophie;0,0;None
-player;1;Prim;Prim;0,0;None
-player;1;Joel;Joel;0,0;None
-player;1;Nia;Nia;0,0;None
-player;1;Althea;Althea;0,0;None
-player;1;Drake;Drake;0,0;None
-player;1;Renae;Renae;0,0;None
-player;1;Theo;Theo;0,0;None
-player;1;Eliza;Eliza;0,0;None
-player;1;Sam;Sam;0,0;None
-player;1;Kayla;Kayla;0,0;None
-player;1;Coyote;Coyote;0,0;None
+player;1;Ophie;Ophie;None;None
+player;1;Prim;Prim;None;None
+player;1;Joel;Joel;None;None
+player;1;Nia;Nia;None;None
+player;1;Althea;Althea;None;None
+player;1;Drake;Drake;None;None
+player;1;Renae;Renae;None;None
+player;1;Theo;Theo;None;None
+player;1;Eliza;Eliza;None;None
+player;1;Sam;Sam;None;None
+player;1;Kayla;Kayla;None;None
+player;1;Coyote;Coyote;None;None
 #
 # Groups
 group;Claw;Claw;Empire;Archon Ulver's elite guard

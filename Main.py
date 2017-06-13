@@ -48,7 +48,10 @@ def main():
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
 
-    # === Main Game Loop ===
+    run(gameStateObj, metaDataObj)
+
+# === Main Game Loop ===
+def run(gameStateObj, metaDataObj):
     my_list = gameStateObj.stateMachine.state[-5:]
     while True:
         if OPTIONS['debug']:

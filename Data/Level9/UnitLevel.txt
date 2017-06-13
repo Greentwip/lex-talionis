@@ -4,6 +4,7 @@
 # Syntax:
 # New Units:
 # team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; unit_id; position; ai
 # - OR -
 # Saved units:
 # team; 1; event_id; unit_id; position; ai

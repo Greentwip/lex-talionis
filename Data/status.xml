@@ -822,17 +822,6 @@
         <child>Aura_Hex_Child</child>
     </status>
 
-    <status name="Terror">
-        <id>Terror</id>
-        <icon_index>5,10</icon_index>
-        <desc>Aura. Inflicts STR/MAG/SKL -4 on enemies.</desc>
-        <components>aura,negative,class_skill</components>
-
-        <range>3</range>
-        <target>Enemy</target>
-        <child>Aura_Terror_Child</child>
-    </status>
-
     <status name="Provoke">
         <id>Provoke</id>
         <icon_index>4,5</icon_index>
@@ -1014,16 +1003,6 @@
         <time>1</time>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,4,4,4,4,4,4,4,0,0</stat_change>
-    </status>
-
-    <status name="Terror">
-        <id>Aura_Terror_Child</id>
-        <desc>Inflicts STR/MAG/SKL -2.</desc>
-        <icon_index>5,10</icon_index>
-        <components>stat_change,always_animation,negative,aura_child</components>
-
-        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,-2,-2,-2,0,0,0,0,0,0</stat_change>
     </status>
 
     <!-- Non-aura Weaken Status -->

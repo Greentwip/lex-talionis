@@ -85,9 +85,7 @@ class ItemObject(object):
             sprite_id = (0, int(self.spriteid))
         # actually build
         self.image = Engine.subsurface(ITEMDICT[self.spritetype], (16*sprite_id[0], 16*sprite_id[1], 16, 16))
-
-        #self.image = Engine.subsurface(ITEMDICT[self.spritetype], (0, 16*int(self.spriteid), 16, 16))
-        self.help_box = self.get_help_box()
+        self.help_box = None
 
     def __str__(self):
         return self.name
@@ -99,6 +97,11 @@ class ItemObject(object):
         ownerunit.equip(self)
 
     def get_help_box(self):
+        if not self.help_box:
+            self.help_box = self.create_help_box()
+        return self.help_box
+
+    def create_help_box(self):
         if self.weapon or self.spell:
             font1 = FONT['text_blue']
             font2 = FONT['text_yellow']

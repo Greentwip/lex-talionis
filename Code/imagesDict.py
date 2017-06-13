@@ -3,38 +3,30 @@ import os, Engine
 COLORKEY = (128,160,128)
 def getImages():
     # General Sprites
-    spriteList, imageList = [], []
+    IMAGESDICT = {}
     for root, dirs, files in os.walk('./Sprites/General/'):
         for name in files:
             if name.endswith('.png'):
                 full_name = os.path.join(root, name)
-                spriteList.append(name[:-4])
-                imageList.append(Engine.image_load(full_name, convert_alpha=True))
-    IMAGESDICT = dict(zip(spriteList, imageList))
+                IMAGESDICT[name[:-4]] = Engine.image_load(full_name, convert_alpha=True)
 
     # Icon Sprites
-    iconList = [image[:-4] for image in os.listdir('./Sprites/Icons/') if image.endswith('.png')]
-    imageList = [Engine.image_load('./Sprites/Icons/' + image, convert_alpha=True) for image in os.listdir('./Sprites/Icons/') if image.endswith('.png')]
-    ICONDICT = dict(zip(iconList, imageList))
+    ICONDICT = {image[:-4]: Engine.image_load('./Sprites/Icons/' + image, convert_alpha=True) for image in os.listdir('./Sprites/Icons/') if image.endswith('.png')}
     
     # Item and Skill and Status sprites
-    itemList = [image[:-4] for image in os.listdir('./Data/Items/') if image.endswith('.png')]
-    imageList = [Engine.image_load('./Data/Items/' + image, convert=True) for image in os.listdir('./Data/Items/') if image.endswith('.png')]
-    for image in imageList:
+    ITEMDICT = {image[:-4]: Engine.image_load('./Data/Items/' + image, convert=True) for image in os.listdir('./Data/Items/') if image.endswith('.png')}
+    for image in ITEMDICT.values():
         Engine.set_colorkey(image, COLORKEY, rleaccel=True)
-    ITEMDICT = dict(zip(itemList, imageList))
 
     # Unit Sprites
-    unitnameList, imageList = [], []
+    UNITDICT = {}
     for root, dirs, files in os.walk('./Data/Characters/'):
         for name in files:
             if name.endswith('.png'):
                 full_name = os.path.join(root, name)
-                unitnameList.append(name[:-4])
                 image = Engine.image_load(full_name, convert=True)
                 Engine.set_colorkey(image, COLORKEY, rleaccel=True)
-                imageList.append(image)
-    UNITDICT = dict(zip(unitnameList, imageList))
+                UNITDICT[name[:-4]] = image
     
     return IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT
 

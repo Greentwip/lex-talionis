@@ -1826,7 +1826,7 @@ class DialogueState(State):
                     gameStateObj.counters['level'] += 1
 
                 gameStateObj.stateMachine.clear()
-                if (not isinstance(gameStateObj.counters['level'], int)) or gameStateObj.counters['level'] > CONSTANTS['num_levels']:
+                if (not isinstance(gameStateObj.counters['level'], int)) or gameStateObj.counters['level'] >= CONSTANTS['num_levels']:
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start')
                 else:
@@ -2595,7 +2595,7 @@ class ShopState(State):
                 menu = self.shopMenu
             selection = menu.getSelection()
             if selection:
-                help_surf = selection.help_box
+                help_surf = selection.get_help_box()
                 surf.blit(help_surf, (8, 16*menu.get_relative_index() + 32 - 4))
 
         return surf

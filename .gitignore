@@ -4,7 +4,7 @@
 # Save States
 Saves/*.p
 Saves/*.pmeta
-debug.log.?
+debug.log.*
 
 # Large Audio Files
 Audio/

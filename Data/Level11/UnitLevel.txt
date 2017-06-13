@@ -18,4 +18,4 @@
 #
 # --------------------------------------------
 # Player Characters
-player;0;Ophie;Ophie;None;None
+player;1;Ophie;Ophie;None;None

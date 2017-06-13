@@ -26,7 +26,7 @@ class Node(object):
         self.f = 0
 
     def __repr__(self):
-        return str(self.x) + ',' + str(self.y) + ' ; ' + str(self.reachable) + ' ' + str(self.cost)
+        return '%s,%s ; %s %s'%(self.x, self.y, self.reachable, self.cost)
 
 class Grid_Manager(object):
     def __init__(self, tilemap):

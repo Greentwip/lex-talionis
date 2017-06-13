@@ -1745,3 +1745,15 @@ Wexp: 79, 0, 38, 0, 0, 0, 0
 Items: Iron Sword 42, Superior Edge 9, Iron Axe 26, Hand Axe 11, Potion 2
 *** Convoy:
 Items: Skeleton Key 1, Javelin 20, Hatchet 35, Javelin 13, Wyrmsfire 4, Brave Lance 30, Brave Axe 30, Mend 4, Scathe 3, Vulnerary 2, Wind Ward 18, Hatchet 23, Restore 10, Vulnerary 3, Vulnerary 3, Glimmer Ward 22, Vulnerary 3, Iron Lance 45, Vulnerary 3, Vulnerary 3, Flux Ward 30, Nyx Ward 18, Vulnerary 3, Fire Ward 13, Great Lance 24, Wyrmsfire 9, Wind Ward 30, Water Ward 21
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 0
+Wexp: 8, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 45
+*** Prim: Healtouch
+Lvl 1, Exp 0
+Wexp: 0, 0, 0, 0, 1, 0, 0
+Items: Glimmer Ward 35, Heal 30
+*** Convoy:
+Items: 

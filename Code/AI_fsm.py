@@ -519,8 +519,7 @@ class Primary_AI(object):
         #logger.debug('%s %s %s %s', self.target_index, self.valid_targets, self.item_index, self.items)
         if self.target_index < len(self.valid_targets) and self.item_index < len(self.items):
             # Given an item and a target, find all positions in valid_moves that I can strike the target at.
-            a = set()
-            Utility.find_manhattan_spheres(a, self.items[self.item_index].RNG, self.valid_targets[self.target_index], gameStateObj)
+            a = Utility.find_manhattan_spheres(self.items[self.item_index].RNG, self.valid_targets[self.target_index])
             b = set(self.valid_moves)
             return list(a & b)
         else:

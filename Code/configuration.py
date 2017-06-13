@@ -152,7 +152,11 @@ def read_growths_file():
     return lines
 
 def read_words_file():
-    lines = {}
+    # Dictionary that returns key if its not present
+    class WordDict(dict):
+        def __getitem__(self, key):
+            return dict.get(self, key, key)
+    lines = WordDict()
     if os.path.isfile('Data/words.txt'):
         with open('Data/words.txt') as words_file:
             for line in words_file:

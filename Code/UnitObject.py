@@ -771,8 +771,8 @@ class UnitObject(object):
 
     def push_to_nearest_open_space(self, gameStateObj):
         for r in range(1, 15):
-            main_set = set()
-            Utility.find_manhattan_spheres(main_set, [r], self.position, gameStateObj)
+            main_set = Utility.find_manhattan_spheres([r], self.position)
+            main_set = [pos for pos in main_set if gameStateObj.map.check_bounds(pos)]
             for pos in main_set:
                 if not any(unit.position == pos for unit in gameStateObj.allunits):
                     self.leave(gameStateObj)
@@ -934,9 +934,8 @@ class UnitObject(object):
 
         ValidAttacks = set()
         for validmove in ValidMoves:
-            Utility.find_manhattan_spheres(ValidAttacks, potentialRange, validmove, gameStateObj)
-
-        ValidAttacks = list(ValidAttacks)
+            ValidAttacks.union(Utility.find_manhattan_spheres(potentialRange, validmove))
+        ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
         # Can't attack own team -- maybe not necessary?
         if not boundary:
             ValidAttacks = [pos for pos in ValidAttacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_unit_node(pos))]
@@ -958,8 +957,8 @@ class UnitObject(object):
 
         ValidAttacks = set()
         for validmove in ValidMoves:
-            Utility.find_manhattan_spheres(ValidAttacks, potentialRange, validmove, gameStateObj)
-        ValidAttacks = list(ValidAttacks) # Removes duplicates
+            ValidAttacks.union(Utility.find_manhattan_spheres(potentialRange, validmove))
+        ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
 
         # Now filter based on types of spells I've used
         # There are three types of spells, ALLY, ENEMY, TILE
@@ -1006,7 +1005,8 @@ class UnitObject(object):
         elif item.spell:
             if item.spell.targets == 'Tile':
                 for valid_move in valid_moves:
-                    Utility.find_manhattan_spheres(targets, item.RNG, valid_move, gameStateObj)
+                    targets.union(Utility.find_manhattan_spheres(item.RNG, valid_move))
+                targets = [pos for pos in targets if gameStateObj.map.check_bounds(pos)]
             elif item.beneficial:
                 ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and \
                               unit.team not in team_ignore and unit.name not in name_ignore]
@@ -1066,9 +1066,8 @@ class UnitObject(object):
             return [] # no valid weapon
 
         # calculate legal targets for cursor
-        attacks = set()
-        Utility.find_manhattan_spheres(attacks, my_weapon.RNG, self.position, gameStateObj)
-        attacks = list(attacks) # Removes duplicates
+        attacks = Utility.find_manhattan_spheres(my_weapon.RNG, self.position)
+        attacks = [pos for pos in attacks if gameStateObj.map.check_bounds(pos)]
         attacks = [pos for pos in attacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_unit_node(pos))]
         if CONSTANTS['line_of_sight']:
             attacks = Utility.line_of_sight([self.position], attacks, max(my_weapon.RNG), gameStateObj)
@@ -1108,8 +1107,8 @@ class UnitObject(object):
             return [] # no valid weapon
 
         # calculate
-        ValidAttacks = set()
-        Utility.find_manhattan_spheres(ValidAttacks, my_spell.RNG, self.position, gameStateObj)
+        ValidAttacks = Utility.find_manhattan_spheres(my_spell.RNG, self.position)
+        ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
 
         # Now filter based on target
         if my_spell.spell.targets == 'Ally':
@@ -1120,9 +1119,7 @@ class UnitObject(object):
             ValidAttacks = [pos for pos in ValidAttacks if pos not in ally_unit_positions]
 
         if CONSTANTS['spell_line_of_sight']:
-            ValidAttacks = Utility.line_of_sight([self.position], list(ValidAttacks), max(my_spell.RNG), gameStateObj)
-        else:
-            ValidAttacks = list(ValidAttacks)
+            ValidAttacks = Utility.line_of_sight([self.position], ValidAttacks, max(my_spell.RNG), gameStateObj)
         return ValidAttacks
 
     def displaySpellAttacks(self, gameStateObj, spell=None):
@@ -1162,8 +1159,7 @@ class UnitObject(object):
         if my_spell.spell.targets == 'Ally':
             if my_spell.heal:
                 # This is done more robustly to account for the interaction between healing effects and AOE
-                places_i_can_target = set()
-                Utility.find_manhattan_spheres(places_i_can_target, my_spell.RNG, self.position, gameStateObj)
+                places_i_can_target = Utility.find_manhattan_spheres(my_spell.RNG, self.position)
                 valid_pos = [unit.position for unit in gameStateObj.allunits if unit.position and unit.position in places_i_can_target and self.checkIfAlly(unit)]
                 targetable_position = []
                 for pos in valid_pos:
@@ -1186,10 +1182,12 @@ class UnitObject(object):
             targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
         elif my_spell.spell.targets == 'Tile':
             #targetable_position = [position for position, tile in gameStateObj.map.tiles.iteritems() if Utility.calculate_distance(position, self.position) in my_spell.RNG]
-            targetable_position = Utility.find_manhattan_spheres(set(), my_spell.RNG, self.position, gameStateObj)
+            targetable_position = Utility.find_manhattan_spheres(my_spell.RNG, self.position)
+            targetable_position = [pos for pos in targetable_position if gameStateObj.map.check_bounds(pos)]
             if my_spell.unlock:
                 targetable_position = [position for position in targetable_position if 'Locked' in gameStateObj.map.tile_info_dict[position]]
             """
+            # The old method -- takes forever
             elif my_spell.hit:
                 if len(targetable_position) < 20:
                     results = [Interaction.convert_positions(gameStateObj, self, self.position, position, my_spell) for position in targetable_position]
@@ -1214,9 +1212,9 @@ class UnitObject(object):
             """
 
         if CONSTANTS['spell_line_of_sight']:
-            validSpellTargets = Utility.line_of_sight([self.position], list(targetable_position), max(my_spell.RNG), gameStateObj)
+            validSpellTargets = Utility.line_of_sight([self.position], targetable_position, max(my_spell.RNG), gameStateObj)
         else:
-            validSpellTargets = list(targetable_position)
+            validSpellTargets = targetable_position
         return validSpellTargets
 
     # Finds all valid target positions given all weapons the unit has access to, as opposed to the just

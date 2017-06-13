@@ -1,5 +1,9 @@
 ToDo:
-- General Testing
+ToTest:
+- Saving
+- AI Battle
+- Dialogue
+- Portrait Coords
 
 -- KNOWN ISSUES:
 - Music may not work on or even crash Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)

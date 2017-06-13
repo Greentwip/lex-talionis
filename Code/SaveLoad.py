@@ -145,7 +145,7 @@ def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, pr
                     if unitLine[4] == 'None':
                         position = None
                     else:
-                        position = tuple([int(num) for num in unitLine[5].split(',')])
+                        position = tuple([int(num) for num in unitLine[4].split(',')])
                     if unitLine[2] == "0": # Unit starts on board
                         unit.position = position
                     else: # Unit does not start on board
@@ -204,7 +204,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             for index, wexp in enumerate(u_i['wexp'][:]):
                 if wexp in CustomObjects.WEAPON_EXP.wexp_dict:
                     u_i['wexp'][index] = CustomObjects.WEAPON_EXP.wexp_dict[wexp]
-            u_i['wexp'] = [int(_) for _ in u_i['wexp']]
+            u_i['wexp'] = [int(num) for num in u_i['wexp']]
 
             assert len(u_i['wexp']) == len(CustomObjects.WEAPON_TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
             
@@ -219,6 +219,12 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
 
             cur_unit = UnitObject.UnitObject(u_i)
 
+            if u_i['event_id'] != "0": # unit does not start on board
+                cur_unit.position = None
+                reinforceUnits[u_i['event_id']] = (u_i['u_id'], u_i['position'])
+            else: # Unit does start on board
+                cur_unit.position = u_i['position']
+
             # Status Effects and Skills
             get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
@@ -229,11 +235,6 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
                     StatusObject.HandleStatusAddition(status, cur_unit, gameStateObj)
             # handle having a status that gives stats['HP']
             cur_unit.currenthp = int(cur_unit.stats['HP'])
-            cur_unit.position = u_i['position'] # Reposition units
-
-            if u_i['event_id'] != "0": # unit does not start on board
-                cur_unit.position = None
-                reinforceUnits[u_i['event_id']] = (u_i['u_id'], u_i['position'])
 
             allunits.append(cur_unit)
     return allunits, reinforceUnits

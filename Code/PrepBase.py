@@ -605,10 +605,10 @@ class PrepUseItemState(StateMachine.State):
             position = None
             selection = self.menu.getSelection()
             if selection:
-                help_surf = selection.help_box
+                help_surf = selection.get_help_box()
                 height = 16*self.menu.currentSelection - help_surf.get_height() + 64
                 position = (16, height)
-                help_surf = selection.help_box
+                help_surf = selection.get_help_box()
                 mapSurf.blit(help_surf, position)
         return mapSurf
 
@@ -727,7 +727,7 @@ class PrepListState(StateMachine.State):
         if self.info:
             selection = self.menu.getSelection()
             if selection:
-                help_surf = selection.help_box
+                help_surf = selection.get_help_box()
                 height = 16*(self.menu.get_relative_index()+2) + 12 - help_surf.get_height()
                 if height < 0:
                     height = 16*(self.menu.get_relative_index()+4) - 4
@@ -860,13 +860,13 @@ class PrepTransferState(StateMachine.State):
             if self.state == WORDS["Give"]:
                 selection = self.owner_menu.getSelection()
                 if selection:
-                    help_surf = selection.help_box
+                    help_surf = selection.get_help_box()
                     height = 16*self.owner_menu.currentSelection - help_surf.get_height() + 64
                     position = (16, height)
             elif self.state == WORDS["Take"]:
                 selection = self.menu.getSelection()
                 if selection:
-                    help_surf = selection.help_box
+                    help_surf = selection.get_help_box()
                     height = 16*(self.menu.get_relative_index()+2) + 12 - help_surf.get_height()
                     if height < 0:
                         height = 16*(self.menu.get_relative_index()+4) - 4
@@ -875,7 +875,7 @@ class PrepTransferState(StateMachine.State):
                         left = WINWIDTH - help_surf.get_width() - 4
                     position = (left, height)
             if selection:
-                help_surf = selection.help_box
+                help_surf = selection.get_help_box()
                 mapSurf.blit(help_surf, position)
         return mapSurf
 
@@ -1107,7 +1107,7 @@ class BaseMarketState(StateMachine.State):
         if self.info:
             selection = self.current_menu.getSelection()
             if selection:
-                help_surf = selection.help_box
+                help_surf = selection.get_help_box()
                 height = 16*(self.current_menu.get_relative_index()+2) + 12 - help_surf.get_height()
                 if height < 0:
                     height = 16*(self.current_menu.get_relative_index()+4) - 4

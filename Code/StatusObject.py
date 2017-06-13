@@ -542,113 +542,111 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
 # === STATUS PARSER ======================================================
 # Takes one status id, as well as the database of status data, and outputs a status object.
 def statusparser(s_id):
-    Status = []
-    if s_id: # itemstring needs to exist
-        for status in STATUSDATA.getroot().findall('status'):
-            if status.find('id').text == s_id:
-                components = status.find('components').text
-                if components:
-                    components = components.split(',')
+    for status in STATUSDATA.getroot().findall('status'):
+        if status.find('id').text == s_id:
+            components = status.find('components').text
+            if components:
+                components = components.split(',')
+            else:
+                components = []
+            name = status.get('name')
+            desc = status.find('desc').text
+            icon_index = status.find('icon_index').text if status.find('icon_index') is not None else None
+            if icon_index:
+                icon_index = tuple(int(num) for num in icon_index.split(','))
+            else:
+                icon_index = (0,0)
+
+            my_components = {}
+            for component in components:
+                if component == 'time':
+                    time = status.find('time').text
+                    my_components['time'] = TimeComponent(time)
+                elif component == 'stat_change':
+                    my_components['stat_change'] = SaveLoad.intify_comma_list(status.find('stat_change').text)
+                elif component == 'upkeep_stat_change':
+                    stat_change = SaveLoad.intify_comma_list(status.find('upkeep_stat_change').text)
+                    my_components['upkeep_stat_change'] = UpkeepStatChangeComponent(stat_change)
+                elif component == 'endstep_stat_change':
+                    stat_change = SaveLoad.intify_comma_list(status.find('endstep_stat_change').text)
+                    my_components['endstep_stat_change'] = UpkeepStatChangeComponent(stat_change)
+                elif component == 'rhythm_stat_change':
+                    change, reset, init_count, limit = status.find('rhythm_stat_change').text.split(';')
+                    change = SaveLoad.intify_comma_list(change)
+                    reset = SaveLoad.intify_comma_list(reset)
+                    init_count = int(init_count)
+                    limit = int(limit)
+                    my_components['rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)
+                elif component == 'endstep_rhythm_stat_change':
+                    change, reset, init_count, limit = status.find('endstep_rhythm_stat_change').text.split(';')
+                    change = SaveLoad.intify_comma_list(change)
+                    reset = SaveLoad.intify_comma_list(reset)
+                    init_count = int(init_count)
+                    limit = int(limit)
+                    my_components['endstep_rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)
+                # Combat changes
+                elif component == 'conditional_avoid':
+                    avoid, conditional = status.find('conditional_avoid').text.split(';')
+                    my_components['conditional_avoid'] = ConditionalComponent('conditional_avoid', avoid, conditional)
+                elif component == 'conditional_hit':
+                    hit, conditional = status.find('conditional_hit').text.split(';')
+                    my_components['conditional_hit'] = ConditionalComponent('conditional_hit', hit, conditional)
+                elif component == 'conditional_mt':
+                    mt, conditional = status.find('conditional_mt').text.split(';')
+                    my_components['conditional_mt'] = ConditionalComponent('conditional_mt', mt, conditional)
+                elif component == 'conditional_resist':
+                    mt, conditional = status.find('conditional_resist').text.split(';')
+                    my_components['conditional_resist'] = ConditionalComponent('conditional_resist', mt, conditional)
+                elif component == 'dynamic_avoid':
+                    avoid, dynamic = status.find('dynamic_avoid').text.split(';')
+                    my_components['dynamic_avoid'] = ConditionalComponent('dynamic_avoid', avoid, dynamic)
+                elif component == 'dynamic_hit':
+                    hit, dynamic = status.find('dynamic_hit').text.split(';')
+                    my_components['dynamic_hit'] = ConditionalComponent('dynamic_hit', hit, dynamic)
+                elif component == 'dynamic_mt':
+                    mt, dynamic = status.find('dynamic_mt').text.split(';')
+                    my_components['dynamic_mt'] = ConditionalComponent('dynamic_mt', mt, dynamic)
+                elif component == 'weakness':
+                    damage_type, num = status.find('weakness').text.split(',')
+                    my_components['weakness'] = WeaknessComponent(damage_type, num)
+                # Others...
+                elif component == 'rescue':
+                    my_components['rescue'] = RescueComponent()
+                elif component == 'count':
+                    my_components['count'] = CountComponent(int(status.find('count').text))
+                elif component == 'caretaker':
+                    my_components['caretaker'] = int(status.find('caretaker').text)
+                elif component == 'remove_range':
+                    my_components['remove_range'] = int(status.find('remove_range').text)
+                elif component == 'hp_percentage':
+                    percentage = status.find('hp_percentage').text
+                    my_components['hp_percentage'] = HPPercentageComponent(percentage)
+                elif component == 'upkeep_animation':
+                    info_line = status.find('upkeep_animation').text
+                    split_line = info_line.split(',')
+                    my_components['upkeep_animation'] = UpkeepAnimationComponent(split_line[0], split_line[1], split_line[2], split_line[3])
+                elif component == 'always_animation':
+                    info_line = status.find('always_animation').text
+                    split_line = info_line.split(',')
+                    my_components['always_animation'] = AlwaysAnimationComponent(split_line[0], split_line[1], split_line[2], split_line[3])
+                elif component == 'active':
+                    charge = int(status.find('active').text)
+                    my_components['active'] = getattr(ActiveSkill, s_id)(name, charge)
+                elif component == 'passive':
+                    my_components['passive'] = getattr(ActiveSkill, s_id)(name)
+                elif component == 'aura':
+                    aura_range = int(status.find('range').text)
+                    child = status.find('child').text
+                    target = status.find('target').text
+                    my_components['aura'] = ActiveSkill.Aura(aura_range, target, child)
+                elif status.find(component) is not None and status.find(component).text:
+                    my_components[component] = status.find(component).text
                 else:
-                    components = []
-                name = status.get('name')
-                desc = status.find('desc').text
-                icon_index = status.find('icon_index').text if status.find('icon_index') is not None else None
-                if icon_index:
-                    icon_index = tuple(int(num) for num in icon_index.split(','))
-                else:
-                    icon_index = (0,0)
+                    my_components[component] = True
 
-                my_components = {}
-                for component in components:
-                    if component == 'time':
-                        time = status.find('time').text
-                        my_components['time'] = TimeComponent(time)
-                    elif component == 'stat_change':
-                        my_components['stat_change'] = SaveLoad.intify_comma_list(status.find('stat_change').text)
-                    elif component == 'upkeep_stat_change':
-                        stat_change = SaveLoad.intify_comma_list(status.find('upkeep_stat_change').text)
-                        my_components['upkeep_stat_change'] = UpkeepStatChangeComponent(stat_change)
-                    elif component == 'endstep_stat_change':
-                        stat_change = SaveLoad.intify_comma_list(status.find('endstep_stat_change').text)
-                        my_components['endstep_stat_change'] = UpkeepStatChangeComponent(stat_change)
-                    elif component == 'rhythm_stat_change':
-                        change, reset, init_count, limit = status.find('rhythm_stat_change').text.split(';')
-                        change = SaveLoad.intify_comma_list(change)
-                        reset = SaveLoad.intify_comma_list(reset)
-                        init_count = int(init_count)
-                        limit = int(limit)
-                        my_components['rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)
-                    elif component == 'endstep_rhythm_stat_change':
-                        change, reset, init_count, limit = status.find('endstep_rhythm_stat_change').text.split(';')
-                        change = SaveLoad.intify_comma_list(change)
-                        reset = SaveLoad.intify_comma_list(reset)
-                        init_count = int(init_count)
-                        limit = int(limit)
-                        my_components['endstep_rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)
-                    # Combat changes
-                    elif component == 'conditional_avoid':
-                        avoid, conditional = status.find('conditional_avoid').text.split(';')
-                        my_components['conditional_avoid'] = ConditionalComponent('conditional_avoid', avoid, conditional)
-                    elif component == 'conditional_hit':
-                        hit, conditional = status.find('conditional_hit').text.split(';')
-                        my_components['conditional_hit'] = ConditionalComponent('conditional_hit', hit, conditional)
-                    elif component == 'conditional_mt':
-                        mt, conditional = status.find('conditional_mt').text.split(';')
-                        my_components['conditional_mt'] = ConditionalComponent('conditional_mt', mt, conditional)
-                    elif component == 'conditional_resist':
-                        mt, conditional = status.find('conditional_resist').text.split(';')
-                        my_components['conditional_resist'] = ConditionalComponent('conditional_resist', mt, conditional)
-                    elif component == 'dynamic_avoid':
-                        avoid, dynamic = status.find('dynamic_avoid').text.split(';')
-                        my_components['dynamic_avoid'] = ConditionalComponent('dynamic_avoid', avoid, dynamic)
-                    elif component == 'dynamic_hit':
-                        hit, dynamic = status.find('dynamic_hit').text.split(';')
-                        my_components['dynamic_hit'] = ConditionalComponent('dynamic_hit', hit, dynamic)
-                    elif component == 'dynamic_mt':
-                        mt, dynamic = status.find('dynamic_mt').text.split(';')
-                        my_components['dynamic_mt'] = ConditionalComponent('dynamic_mt', mt, dynamic)
-                    elif component == 'weakness':
-                        damage_type, num = status.find('weakness').text.split(',')
-                        my_components['weakness'] = WeaknessComponent(damage_type, num)
-                    # Others...
-                    elif component == 'rescue':
-                        my_components['rescue'] = RescueComponent()
-                    elif component == 'count':
-                        my_components['count'] = CountComponent(int(status.find('count').text))
-                    elif component == 'caretaker':
-                        my_components['caretaker'] = int(status.find('caretaker').text)
-                    elif component == 'remove_range':
-                        my_components['remove_range'] = int(status.find('remove_range').text)
-                    elif component == 'hp_percentage':
-                        percentage = status.find('hp_percentage').text
-                        my_components['hp_percentage'] = HPPercentageComponent(percentage)
-                    elif component == 'upkeep_animation':
-                        info_line = status.find('upkeep_animation').text
-                        split_line = info_line.split(',')
-                        my_components['upkeep_animation'] = UpkeepAnimationComponent(split_line[0], split_line[1], split_line[2], split_line[3])
-                    elif component == 'always_animation':
-                        info_line = status.find('always_animation').text
-                        split_line = info_line.split(',')
-                        my_components['always_animation'] = AlwaysAnimationComponent(split_line[0], split_line[1], split_line[2], split_line[3])
-                    elif component == 'active':
-                        charge = int(status.find('active').text)
-                        my_components['active'] = getattr(ActiveSkill, s_id)(name, charge)
-                    elif component == 'passive':
-                        my_components['passive'] = getattr(ActiveSkill, s_id)(name)
-                    elif component == 'aura':
-                        aura_range = int(status.find('range').text)
-                        child = status.find('child').text
-                        target = status.find('target').text
-                        my_components['aura'] = ActiveSkill.Aura(aura_range, target, child)
-                    elif status.find(component) is not None and status.find(component).text:
-                        my_components[component] = status.find(component).text
-                    else:
-                        my_components[component] = True
+            currentStatus = StatusObject(s_id, name, my_components, desc, icon_index)
 
-                currentStatus = StatusObject(s_id, name, my_components, desc, icon_index)
-
-                return currentStatus
+            return currentStatus
 
 def deserialize(s_dict, unit, gameStateObj):
     status = statusparser(s_dict['id'])

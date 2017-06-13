@@ -4,7 +4,7 @@ speed_to_double;4
 normal_movement;1
 flying_mcost_column;6
 fleet_mcost_column;7
-num_levels;11
+num_levels;12
 exp_curve;0.22
 exp_magnitude;11.7
 kill_multiplier;2.5
