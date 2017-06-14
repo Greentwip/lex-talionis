@@ -1,5 +1,5 @@
 #! usr/bin/env python2.7
-import pygame, sys, time
+import pygame, sys
 from pygame.locals import *
 
 import configuration

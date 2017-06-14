@@ -199,20 +199,21 @@ class Cursor(object):
                 gameStateObj.cameraOffset.set_y(gameStateObj.cameraOffset.y + 1)
 
     def setPosition(self, newposition, gameStateObj):
-        if newposition:
-            logger.debug('Cursor new position %s', newposition)
-            self.position = newposition
-            # Recenter camera
-            if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
-                gameStateObj.cameraOffset.set_x(self.position[0] - 3) # Testing...
-            if self.position[0] >= (WINWIDTH/TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
-                gameStateObj.cameraOffset.set_x(self.position[0] + 4 - WINWIDTH/TILEWIDTH)
-            if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
-                gameStateObj.cameraOffset.set_y(self.position[1] - 2)
-            if self.position[1] >= (WINHEIGHT/TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
-                gameStateObj.cameraOffset.set_y(self.position[1] + 3 - WINHEIGHT/TILEHEIGHT)
-            # Remove unit display
-            self.remove_unit_display()
+        if not newposition:
+            return            
+        logger.debug('Cursor new position %s', newposition)
+        self.position = newposition
+        # Recenter camera
+        if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
+            gameStateObj.cameraOffset.set_x(self.position[0] - 3) # Testing...
+        if self.position[0] >= (WINWIDTH/TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
+            gameStateObj.cameraOffset.set_x(self.position[0] + 4 - WINWIDTH/TILEWIDTH)
+        if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
+            gameStateObj.cameraOffset.set_y(self.position[1] - 2)
+        if self.position[1] >= (WINHEIGHT/TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
+            gameStateObj.cameraOffset.set_y(self.position[1] + 3 - WINHEIGHT/TILEHEIGHT)
+        # Remove unit display
+        self.remove_unit_display()
 
     def autocursor(self, gameStateObj):
         player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and unit.position]
