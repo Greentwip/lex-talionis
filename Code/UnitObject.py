@@ -771,9 +771,9 @@ class UnitObject(object):
 
     def push_to_nearest_open_space(self, gameStateObj):
         for r in range(1, 15):
-            main_set = Utility.find_manhattan_spheres([r], self.position)
-            main_set = [pos for pos in main_set if gameStateObj.map.check_bounds(pos)]
-            for pos in main_set:
+            positions = Utility.find_manhattan_spheres([r], self.position)
+            positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
+            for pos in positions:
                 if not any(unit.position == pos for unit in gameStateObj.allunits):
                     self.leave(gameStateObj)
                     self.position = pos

@@ -20,7 +20,7 @@ class Dialogue_Scene(object):
                 self.scene_lines.append(line)
         if OPTIONS['debug']: 
             if not self.count_if_statements():
-                logger.error('ERROR: Incorrect number of if and end statements!')
+                logger.error('ERROR: Incorrect number of if and end statements! %s', scene)
 
         # Background sprite
         self.background = None
@@ -122,6 +122,7 @@ class Dialogue_Scene(object):
             self.scene_lines_index += 1
 
     def handle_if(self, line, gameStateObj, metaDataObj):
+        #return True # Just testing
         #if OPTIONS['debug']: print(line[0], self.if_stack)
         ### CONDITIONALS PARSING
         if line[0] == 'if':
@@ -279,6 +280,7 @@ class Dialogue_Scene(object):
                         break
                 else:
                     logger.warning("Couldn't find unit matching line: %s", line)
+                    return
             self.background.add_sprite(line[1], klass, gender, team, starting_position)
         elif line[0] == 'wm_remove_sprite' or line[0] == 'wm_remove':
             self.background.remove_sprite(line[1])

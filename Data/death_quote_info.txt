@@ -22,7 +22,7 @@ if;self.optionalunit.name == 'Ophie'
 elif;self.optionalunit.name == 'Prim'
 	u;Prim;FarLeft
 	if;gameStateObj.counters['level'] == 0
-		s;Prim;Is this... blood?{w}Hang on... I'm sure I can...{w}I can...{w};auto
+		s;Prim;Is this... blood?{w}{br}Hang on... I'm sure I can...{w}{br}I can...{w};auto
 		r;Prim
 		kill_unit;Prim
 		wait;200
@@ -33,7 +33,7 @@ elif;self.optionalunit.name == 'Prim'
 			u;Ophie;Right
 			s;Ophie;Prim!{w};auto
 		end
-		s;Prim;I'm sure I can fix this...{w}I can...{w}{br}T-this is too much...{w}{br}I-I have to retreat...{w};auto
+		s;Prim;I'm sure I can fix this...{w}{br}I can...{w}{br}T-this is too much...{w}{br}I-I have to retreat...{w};auto
 		r;Prim;Ophie
 	end
 elif;self.optionalunit.name == 'Joel'
@@ -95,14 +95,14 @@ elif;self.optionalunit.name == 'Theo'
 elif;self.optionalunit.name == 'Sam'
 	u;Sam;FarLeft
 	s;Sam;What! No!{w}{br}...{w};auto
-	s;Sam;I haven't... finished...{w};auto
+	s;Sam;I'm not done...{w}{br}Urgh...{w};auto
 	r;Sam
 	kill_unit;Sam
 	wait;200
 	lose_game
 elif;self.optionalunit.name == 'Eliza'
 	u;Eliza;FarLeft
-	s;Eliza;I-I shouldn't have tried... I am too weak...{w};auto
+	s;Eliza;I-I shouldn't have tried...{w}{br}I-I am too weak...{w};auto
 	r;Eliza
 elif;self.optionalunit.name == 'Coyote'
 	u;Coyote;FarLeft
@@ -125,7 +125,7 @@ elif;self.optionalunit.name == 'Harold'
 	u;Harold;FarLeft
 	s;Harold;... Is this my...{w};auto
 	set_expression;Harold;Full_Blink
-	s;Harold;... glorious end? Hmmph!{w};auto
+	s;Harold;...glorious end? Hmmph!{w};auto
 	r;Harold
 elif;self.optionalunit.name == 'Anders'
 	u;Anders;FarLeft
@@ -157,7 +157,7 @@ elif;self.optionalunit.name == 'Vagnius'
 	r;Vagnius
 elif;self.optionalunit.name == 'Jakin'
 	u;Jakin;FarLeft
-	s;Jakin;Proceed, my child, to your ultimate... dest..in...y...{w};auto
+	s;Jakin;Proceed, my child, to your ultimate destiny!{w};auto
 	r;Jakin
 	remove_unit;Jakin;warp
 elif;self.optionalunit.name == 'Boaz'

@@ -1,5 +1,5 @@
 #! usr/bin/env python2.7
-import pygame, sys
+import pygame, sys, time
 from pygame.locals import *
 
 import configuration
@@ -42,6 +42,9 @@ def get_last_time():
 
 def get_true_time():
     return pygame.time.get_ticks()
+
+def get_delta():
+    return engine_constants['last_fps']
 
 # assumes pygame surface
 def subsurface(surf, (x, y, width, height)):

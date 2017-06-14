@@ -24,24 +24,12 @@ s;Theo;The best thief should be sneaky, right?{w};auto
 s;Renae;I am sneaky!{w};auto
 s;Theo;So the best thief in Kerala should be someone nobody knows about...{w};auto
 s;Renae;Yet, here I am, living proof!{w}{br}La-dee-da!{w};auto
-s;Theo;...Theo, ol' chap, why do you even try...{w};auto;thought_bubble
-r;Theo;Renae
-u;Joel;MidLeft
-u;Ophie;FarRight
-s;Ophie;So why isn't Sam with us?{w};auto
-u;Renae;MidRight
-s;Renae;He thinks he's above us.{w};auto
-u;Theo;FarLeft
-s;Theo;Renae! Don't be so unkind.{w};auto
-s;Renae;What! I'm just speaking the truth.{w}{br}You'd think someone who calls himself our leader would actually be here...{w};auto 
-s;Theo;Sam is a tactician and a healer, not a fighter.{w}{br}He probably just wants some time to be alone and plan the Resistance's next move.{w}{br}I know I would...{w};auto
-s;Joel;He has been more secretive lately.{w}{br}With all this talk of his sources...{w};auto
-r;Renae;Theo
-u;Prim;MidRight
-s;Prim;Most of the guards have left.{w};auto
-s;Joel;Then now's the time to strike.{w}{br}I reckon' we've got less than half an hour.{w};auto
+move_sprite;Renae;24,0
+move_sprite;Theo;-24,0
+u;Joel;MidLeft;u;Ophie;MidRight
+s;Joel;Enough talk. Now's the time to strike.{w}{br}I reckon' we've got less than half an hour.{w};auto
 s;Ophie;Alright! Let's go!{w};auto
-r;Ophie;Prim;Joel
+r;Ophie;Joel
 end_skip
 t;1
 remove_background

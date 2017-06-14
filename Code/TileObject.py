@@ -386,7 +386,10 @@ class MapObject(object):
             pos = pos[1:]
         new_pos = tuple([int(num) for num in pos.split(',')])
         if offset:
-            return (self.custom_origin[0] + new_pos[0], self.custom_origin[1] + new_pos[1])
+            if self.custom_origin:
+                return (self.custom_origin[0] + new_pos[0], self.custom_origin[1] + new_pos[1])
+            else:
+                return (0, 0)
         else:
             return new_pos 
 

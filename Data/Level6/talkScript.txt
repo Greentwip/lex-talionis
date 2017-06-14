@@ -7,9 +7,9 @@ if;self.optionalunit.name == 'Sam' and self.optionalunit2.name == 'Kiley'
 	s;Kiley;Eh, wot, matey?{w}{br}I didn't catch yer. Speak up!{w}{br}All this commotion, y'hear.{w};auto
 	s;Sam;I said, you're in the charge of the prisoners here, right.{w};auto
 	s;Kiley;I might be.{w}{br}Who's asking?{w};auto
-	s;Sam;I'm Sam. The leader of the Resistance.{w}{br}The people who just freed you...{w};auto
+	s;Sam;I'm Sam. The leader of the Resistance.{w}{br}We just freed you.{w};auto
 	s;Kiley;Oy! And now you want something.{w}{br}Aye, matey, I catch yer drift.{w};auto
-	s;Sam;Yeah... I guess?{w}{br}We could use your help dealing with the rest of the guards.{w};auto
+	s;Sam;We could use your help dealing with the rest of the guards.{w};auto
 	s;Kiley;No can do, matey.{w}{br}I got me own crew.{w}{br}But come talk to me after the battle, and maybe we can hash out a deal.{w};auto
 	r;Kiley
 	s;Sam;I don't know why I thought this would be easier...{w};auto

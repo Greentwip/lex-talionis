@@ -1,4 +1,3 @@
-
 # bmpfont.py
 # By Paul Sidorsky - Freeware
 # Updated by rainlash May 2016, January 2017
@@ -64,8 +63,8 @@ class BmpFont:
 	# Parameters:  name - Name of the font.
 	def __init__(self, name):
 		# Setup default values.
-		self.alluppercase = 0
-		self.alllowercase = 0
+		self.alluppercase = False
+		self.alllowercase = False
 		self.chartable = {}
 		self.idxfile = "Sprites/Fonts/" + name.split('_')[0] + '.idx'
 		self.bmpfile = "Sprites/Fonts/" + name + '.png'
@@ -83,16 +82,15 @@ class BmpFont:
 
 			# Handle keywords.				
 			if words[0] == "alluppercase":
-				self.alluppercase = 1
+				self.alluppercase = True
 			elif words[0] == "alllowercase":
-				self.alllowercase = 1
+				self.alllowercase = True
 			elif words[0] == "width":
 				self.width = int(words[1])
 			elif words[0] == "height":
 				self.height = int(words[1])
 			elif words[0] == "transrgb":
-				self.transrgb = (int(words[1]), int(words[2]),
-								 int(words[3]))
+				self.transrgb = (int(words[1]), int(words[2]), int(words[3]))
 			else:  # Default to index entry.
 				if words[0] == "space": words[0] = ' '
 				if self.alluppercase: words[0] = words[0].upper()
@@ -133,24 +131,13 @@ class BmpFont:
 		# The commented out line is INCREDIBLY slow.
 		# NOT NECESSARY IF WE USE RGBA 
 		#fontsurf = self.surface.convert_alpha(surf)
-		fontsurf = self.surface
-
-
+		#fontsurf = self.surface
 
 		if self.alluppercase: string = string.upper()
 		if self.alllowercase: string = string.lower()
 
 		# Render the font.
 		for c in string:
-			# Perform automatic wrapping if we run off the edge of the
-			# surface.
-			# Don't do this right now
-			#if x >= surfwidth:
-			#	x -= surfwidth
-			#	y += self.height
-			#	if y >= surfheight:
-			#		y -= surfheight
-
 			try:
 				char_pos_x = self.chartable[c][0]
 				char_pos_y = self.chartable[c][1]
@@ -163,8 +150,7 @@ class BmpFont:
 				print("%s is not chartable"%(c))
 				print('string', string)
 
-			surf.blit(fontsurf, (x, y),
-					 ((char_pos_x, char_pos_y), (self.width, self.height))) # subsurface
+			surf.blit(self.surface, (x, y), ((char_pos_x, char_pos_y), (self.width, self.height))) # subsurface
 			x += char_width
 
 	# size() - Returns the length and height of a string (height will always be self.height)
@@ -173,7 +159,7 @@ class BmpFont:
 	def size(self, string):
 		"""Returns the length and width of a bitmapped string"""
 		length = 0
-		height = self.height
+		#height = self.height
 		if self.alluppercase: string = string.upper()
 		if self.alllowercase: string = string.lower()
 		for c in string:
@@ -184,4 +170,4 @@ class BmpFont:
 				print("%s is not chartable"%(c))
 				char_width = 4
 			length += char_width
-		return (length, height)
+		return (length, self.height)

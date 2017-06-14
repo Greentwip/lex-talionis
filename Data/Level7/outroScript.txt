@@ -99,7 +99,7 @@ s;Ulver;Vagnius, you are dismissed.{w};auto
 s;Vagnius;...{w};auto
 r;Vagnius
 u;Adjutant;Left
-s;Adjutant;Milord, is it wise to let him depart?{w}{br}He desires to steal your position.{w};auto
+s;Adjutant;Milord, is it wise to let him depart?{w}{br}He covets your position.{w};auto
 s;Ulver;Ha! Let the weasel plot.{w}{br}He has not the strength nor fortitude to challenge me.{w}{br}But, if he were to succeed, then it must be so.{w};auto
 s;Adjutant;Milord?{w};auto
 s;Ulver;''To the strongest.''{w}{br}Is this not the way of the Empire, Adjutant?{w};auto

@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 NETPOSITION_SET = {'weapon', 'attack', 'spellweapon', 'spell', 'select', 'skillselect', 'stealselect', \
                    'tradeselect', 'takeselect', 'dropselect', 'giveselect', 'rescueselect', 'talkselect', \
                    'unlockselect', 'trade', 'steal'}
+WARP_OUT_SET = {'warp_out', 'fade_out', 'fade_move', 'warp_move'}
 
 class UnitSprite(object):
     def __init__(self, unit):
@@ -55,7 +56,7 @@ class UnitSprite(object):
             topleft = (left - max(0, (active_icon.get_width() - 16)/2), top - max(0, (active_icon.get_height() - 16)/2))
             surf.blit(active_icon, topleft)
 
-        if self.transition_state in ['warp_out', 'fade_out', 'fade_move', 'warp_move']:
+        if self.transition_state in WARP_OUT_SET:
             if self.unit.deathCounter:
                 image = Image_Modification.flickerImageTranslucentColorKey(image, self.unit.deathCounter/2)
             else:
@@ -73,7 +74,7 @@ class UnitSprite(object):
                             self.set_transition('fade_in')
                         elif self.transition_state == 'warp_move':
                             self.set_transition('warp_in')
-        elif self.transition_state in ['warp_in', 'fade_in']:
+        elif self.transition_state == 'warp_in' or self.transition_state == 'fade_in':
             image = Image_Modification.flickerImageTranslucentColorKey(image, self.transition_counter/(self.transition_time/100))
             if self.transition_counter <= 0:
                 self.transition_state = 'normal'
@@ -88,10 +89,10 @@ class UnitSprite(object):
                 color = ((total_time - time_passed)*float(c)/total_time for c in color)
                 #image = Image_Modification.flicker_image(image.convert_alpha(), color)
                 image = Image_Modification.change_image_color(image.convert_alpha(), color)
-        elif any(status.unit_translucent for status in self.unit.status_effects):
-            image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
         elif self.unit.flickerRed and gameStateObj.boundary_manager.draw_flag:
             image = Image_Modification.flickerImageRed(image.convert_alpha(), 80)
+        if any(status.unit_translucent for status in self.unit.status_effects):
+            image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
         # What is this line even doing? - Something majorly important though
         # Each image has (self.image.get_width() - 32)/2 buffers on the left and right of it, to handle any off tile spriting
         # Without self.image.get_width() - 32)/2, we would output the left buffer along with the unit, and the unit would end up +left buffer width to the right of where he should be
@@ -140,7 +141,7 @@ class UnitSprite(object):
                 elif self.transition_state == 'warp_in':
                     self.transition_state = 'normal'
 
-        if gameStateObj and gameStateObj.cursor.currentSelectedUnit and (gameStateObj.cursor.currentSelectedUnit.name, self.unit.name) in gameStateObj.talk_options:
+        if gameStateObj.cursor.currentSelectedUnit and (gameStateObj.cursor.currentSelectedUnit.name, self.unit.name) in gameStateObj.talk_options:
             frame = (Engine.get_time()/100)%8
             topleft = (left + 6, top - 12)
             surf.blit(Engine.subsurface(IMAGESDICT['TalkMarker'], (frame*8, 0, 8, 16)), topleft)
@@ -222,7 +223,7 @@ class UnitSprite(object):
         return self.select_frame(self.unit_sprites[state].copy(), state)
 
     def select_frame(self, image, state):
-        if state in ['passive', 'gray']:
+        if state == 'passive' or state == 'gray':
             return Engine.subsurface(image, (PASSIVESPRITECOUNTER.count*64, 0, 64, 48))
         elif state == 'active':
             return Engine.subsurface(image, (ACTIVESPRITECOUNTER.count*64, 0, 64, 48))
@@ -255,8 +256,10 @@ class UnitSprite(object):
 
     def update(self, gameStateObj):
         currentTime = Engine.get_time()
-        self.transition_counter -= (currentTime - Engine.get_last_time())
+        self.transition_counter -= Engine.get_delta()
         self.transition_counter = max(0, self.transition_counter)
+
+        unit_moving = self.unit in gameStateObj.moving_units
 
         ### SPRITE OFFSET FOR MOVE - Positions unit at intervening positions based on spriteOffset
         if self.transition_state == 'fake_in':
@@ -289,7 +292,7 @@ class UnitSprite(object):
                 else: # Rescue
                     self.unit.leave(gameStateObj)
                     self.unit.position = None
-        elif self.unit in gameStateObj.moving_units and gameStateObj.stateMachine.getState() == 'movement':
+        elif unit_moving and gameStateObj.stateMachine.getState() == 'movement':
             if self.unit.path:
                 nextPosition = self.unit.path[-1]
                 netPosition = (nextPosition[0] - self.unit.position[0], nextPosition[1] - self.unit.position[1]) 
@@ -303,7 +306,6 @@ class UnitSprite(object):
                 self.transition_state = 'normal'
             
         ### UPDATE IMAGE
-        unit_moving = self.unit in gameStateObj.moving_units
         if gameStateObj.stateMachine.getState() == 'combat' and gameStateObj.combatInstance and \
             (self.unit is gameStateObj.combatInstance.p1 or self.unit is gameStateObj.combatInstance.p2 or \
             (self.unit in gameStateObj.combatInstance.splash and self.unit in [result.defender for result in gameStateObj.combatInstance.results])):

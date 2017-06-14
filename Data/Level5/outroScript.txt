@@ -8,25 +8,7 @@ unlock_lore;Kayla
 t;1
 b;Desert
 t;2
-u;Girl1;Left
-u;Woman1;Right
-s;Girl1;Mommy!{w};auto
-s;Woman1;Oh my darling! Come here.{w};auto
-move_sprite;Girl1;96,0;force_hold
-s;Woman1;I missed you...{w}{clear}Are you alright, dear?{w};auto
-s;Girl1;Yeah! They had candy and toys and hopskotch and a trampoline!{w};auto
-s;Woman1;...{w};auto
-s;Girl1;Can I go back to Mr. Vincent mama?{w}{br}I don't want to leave!{w};auto
-s;Woman1;Uh...{w};auto
-s;Girl1;Please?{w}{br}Pretty please with a cherry on top?{w};auto
-s;Woman1;Of course, dearest.{w};auto
-move_sprite;Girl1;-48,0;force_hold
-s;Girl1;Yay!{w};auto
-s;Woman1;But not right now. Come on, let's go talk to your father.{w};auto
-s;Girl1;Okey-dokey{w};auto
-r;Woman1;Girl1
-u;Sam;Left
-u;Man1;Right
+u;Sam;Left;u;Man1;Right
 s;Man1;Sir, I don't know how we can ever repay you.{w};auto
 s;Sam;No need.{w}{br}Besides, it is not me you should be thanking.{w};auto
 move_sprite;Sam;-24,0

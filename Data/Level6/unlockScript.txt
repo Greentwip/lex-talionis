@@ -11,8 +11,7 @@ if;self.optionalunit2 == 'Cell_1'
     t;1
     b;Prison
     t;2
-    u;Jack;MidLeft
-    u;Jeb;FarLeft
+    u;Jack;MidLeft;u;Jeb;FarLeft
     u;{unit};Right
     # A female opens the door
     if;self.optionalunit.gender == 'F'

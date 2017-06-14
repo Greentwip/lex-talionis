@@ -100,18 +100,10 @@ class InfoMenu(StateMachine.State):
             elif event == 'BACK':
                 self.back(gameStateObj)
                 return
-            #elif event == 'RIGHT':
             if 'RIGHT' in directions:
-                SOUNDDICT['Select 3'].play()
-                self.currentState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
-                self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
-            #elif event == 'LEFT':
+                self.move_right(gameStateObj, metaDataObj)
             elif 'LEFT' in directions:
-                SOUNDDICT['Select 3'].play()
-                self.last_fluid = currentTime
-                self.currentState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
-                self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
-            #elif event == 'DOWN': # go to next unit
+                self.move_left(gameStateObj, metaDataObj)
             elif 'DOWN' in directions:
                 self.last_fluid = currentTime
                 if self.hold_flag:
@@ -126,7 +118,6 @@ class InfoMenu(StateMachine.State):
                     self.scroll_offset = 9
                     self.reset_surfs()
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
-            #elif event == 'UP': # Go to previous unit
             elif 'UP' in directions:
                 self.last_fluid = currentTime
                 if self.hold_flag:
@@ -141,6 +132,18 @@ class InfoMenu(StateMachine.State):
                     self.scroll_offset = -9
                     self.reset_surfs()
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+
+    def move_left(self, gameStateObj, metaDataObj):
+        SOUNDDICT['Select 3'].play()
+        self.last_fluid = Engine.get_time()
+        self.currentState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
+        self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+
+    def move_right(self, gameStateObj, metaDataObj):
+        SOUNDDICT['Select 3'].play()
+        self.last_fluid = Engine.get_time()
+        self.currentState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
+        self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
 
     def update(self, gameStateObj, metaDataObj):
         if self.helpMenu.current:

@@ -208,8 +208,8 @@ class GameStateObj(object):
 
         # Handle cameraOffset
         # Track how much camera has moved in pixels:
-        self.cameraOffset = CustomObjects.CameraOffset(self.cursor.position[0] - (WINWIDTH/TILEWIDTH/2), self.cursor.position[1] - (WINHEIGHT/TILEHEIGHT/2))
-
+        #self.cameraOffset = CustomObjects.CameraOffset(self.cursor.position[0] - (WINWIDTH/TILEWIDTH/2), self.cursor.position[1] - (WINHEIGHT/TILEHEIGHT/2))
+        self.cameraOffset = CustomObjects.CameraOffset(self.cursor.position[0], self.cursor.position[1])
         # Other slots
         self.highlight_manager = CustomObjects.HighlightController()
         self.allarrows = []

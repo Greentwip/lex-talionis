@@ -16,6 +16,11 @@
         <blink>24,24</blink>
     </portrait>
 
+    <portrait name="Nia">
+        <mouth>24,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
     <portrait name="Drake">
         <mouth>16,42</mouth>
         <blink>16,26</blink>

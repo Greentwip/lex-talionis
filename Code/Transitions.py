@@ -57,6 +57,7 @@ class Logo(object):
         self.logo_counter = 0
         self.logo_anim = [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1]
         self.last_update = 0
+        self.image = Engine.subsurface(self.texture, (0, self.logo_anim[self.logo_counter]*self.height, self.texture.get_width(), self.height))
 
     def update(self):
         currentTime = Engine.get_time()
