@@ -134,7 +134,10 @@ class StartStart(StateMachine.State):
         elif event == 'INFO' and OPTIONS['debug']:
             SOUNDDICT['Select 1'].play()
             import glob
-            newest = max(glob.glob('Saves/*.pmeta'), key=os.path.getmtime)
+            fps = glob.glob('Saves/*.pmeta')
+            if not fps:
+                return
+            newest = max(fps, key=os.path.getmtime)
             print(newest)
             selection = CustomObjects.SaveSlot(newest, 3)
             # gameStateObj.activeMenu = None # Remove menu

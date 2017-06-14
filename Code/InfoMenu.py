@@ -753,7 +753,7 @@ class HelpGraph(object):
 
     def populate_equipment(self, metaDataObj):
         for index, item in enumerate(self.unit.items):
-            self.help_boxes["Item"+str(index)] = Help_Box("Item"+str(index), ((7*WINWIDTH/16) - 8, TILEHEIGHT*index + TILEHEIGHT + 4), item.help_box)
+            self.help_boxes["Item"+str(index)] = Help_Box("Item"+str(index), ((7*WINWIDTH/16) - 8, TILEHEIGHT*index + TILEHEIGHT + 4), item.get_help_box())
 
         self.help_boxes["Atk"] = Help_Box("Atk", (100, WINHEIGHT - TILEHEIGHT*2 - 2), create_help_box(WORDS['Atk_desc']))
         self.help_boxes["Hit"] = Help_Box("Hit", (100, WINHEIGHT - TILEHEIGHT - 2), create_help_box(WORDS['Hit_desc']))
