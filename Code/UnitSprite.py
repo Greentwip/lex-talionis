@@ -65,11 +65,17 @@ class UnitSprite(object):
                     if self.transition_state == 'fade_out':
                         self.transition_state = 'normal'
                         self.unit.die(gameStateObj, event=True)
-                    if self.transition_state in ['fade_move', 'warp_move']:
+                    elif self.transition_state == 'warp_out':
+                        gameStateObj.map.initiate_warp_flowers(self.unit.position)
+                        self.unit.die(gameStateObj, event=True)
+                        self.transition_state = 'normal'
+                    elif self.transition_state == 'fade_move' or self.transition_state == 'warp_move':
+                        gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.leave(gameStateObj)
                         self.unit.position = self.next_position
                         self.unit.arrive(gameStateObj)
                         self.next_position = None
+                        gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         if self.transition_state == 'fade_move':
                             self.set_transition('fade_in')
                         elif self.transition_state == 'warp_move':
@@ -118,29 +124,11 @@ class UnitSprite(object):
         if self.transition_state.startswith('warp'):
             num_frames = 12
             fps = self.transition_time/num_frames
-            #if self.transition_state == 'warp_out':
-            #    frame = self.transition_counter/fps
-            #elif self.transition_state == 'warp_in':
             frame = (self.transition_time - self.transition_counter)/fps
             if frame >= 0 and frame < num_frames:
                 warp_anim = Engine.subsurface(IMAGESDICT['Warp'], (frame*32, 0, 32, 48))
                 topleft = (left - max(0, (warp_anim.get_width() - 16)/2), top - max(0, (warp_anim.get_height() - 16)/2) - 4)
                 surf.blit(warp_anim, topleft)
-            elif frame >= num_frames:
-                if self.transition_state == 'warp_out':
-                    gameStateObj.map.initiate_warp_flowers(self.unit.position)
-                    self.unit.die(gameStateObj, event=True)
-                    self.transition_state = 'normal'
-                elif self.transition_state == 'warp_move':
-                    gameStateObj.map.initiate_warp_flowers(self.unit.position)
-                    self.unit.leave(gameStateObj)
-                    self.unit.position = self.next_position
-                    self.unit.arrive(gameStateObj)
-                    self.next_position = None
-                    self.set_transition('warp_in')
-                    gameStateObj.map.initiate_warp_flowers(self.unit.position)
-                elif self.transition_state == 'warp_in':
-                    self.transition_state = 'normal'
 
         if gameStateObj.cursor.currentSelectedUnit and (gameStateObj.cursor.currentSelectedUnit.name, self.unit.name) in gameStateObj.talk_options:
             frame = (Engine.get_time()/100)%8

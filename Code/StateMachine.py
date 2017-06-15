@@ -319,6 +319,7 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                     gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
                     for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if skill.active]:
                         skill.active.current_charge = skill.active.required_charge
+                        gameStateObj.cursor.currentHoveredUnit.tags.add('ActiveSkillCharged')
             # Increase all wexp by 5
             elif event.key == K_5:
                 gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]

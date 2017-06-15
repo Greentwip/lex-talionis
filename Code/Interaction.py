@@ -401,7 +401,9 @@ class Combat(object):
         # Handle skills that were used
         if self.skill_used:
             self.skill_used.active.current_charge = 0
-            self.p1.tags.discard('ActiveSkillCharged')
+            # If no other active skills, can remove active skill charged
+            if not any(skill.active and skill.active.current_charge >= skill.active.required_charge for skill in self.p1.status_effects):
+                self.p1.tags.discard('ActiveSkillCharged')
             if self.skill_used.active.mode == 'Attack':
                 self.skill_used.active.reverse_mod()
 
