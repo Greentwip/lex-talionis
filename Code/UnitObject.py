@@ -934,7 +934,7 @@ class UnitObject(object):
 
         ValidAttacks = set()
         for validmove in ValidMoves:
-            ValidAttacks.union(Utility.find_manhattan_spheres(potentialRange, validmove))
+            ValidAttacks |= Utility.find_manhattan_spheres(potentialRange, validmove)
         ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
         # Can't attack own team -- maybe not necessary?
         if not boundary:
@@ -957,7 +957,7 @@ class UnitObject(object):
 
         ValidAttacks = set()
         for validmove in ValidMoves:
-            ValidAttacks.union(Utility.find_manhattan_spheres(potentialRange, validmove))
+            ValidAttacks |= Utility.find_manhattan_spheres(potentialRange, validmove)
         ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
 
         # Now filter based on types of spells I've used
@@ -1005,7 +1005,7 @@ class UnitObject(object):
         elif item.spell:
             if item.spell.targets == 'Tile':
                 for valid_move in valid_moves:
-                    targets.union(Utility.find_manhattan_spheres(item.RNG, valid_move))
+                    targets |= Utility.find_manhattan_spheres(item.RNG, valid_move)
                 targets = [pos for pos in targets if gameStateObj.map.check_bounds(pos)]
             elif item.beneficial:
                 ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and \
@@ -1451,9 +1451,7 @@ class UnitObject(object):
     def charge(self): # charge active skills
         for status in self.status_effects:
             if status.active and status.active.current_charge < status.active.required_charge:
-                status.active.current_charge += self.stats['SKL']
-                if status.active.current_charge >= status.active.required_charge:
-                    status.active.current_charge = status.active.required_charge
+                status.active.increase_charge(self)
 
 # === COMBAT CALCULATIONS ====================================================
     # Gets bonuses from supports
@@ -1660,9 +1658,10 @@ class UnitObject(object):
 
     def unlock_active(self):
         self.isActive -= 1
-        if self.isActive < 0:
-            logger.error('Something let go of this unit without grabbing hold first!')
-            self.isActive = 0
+        self.isActive = max(0, self.isActive)
+        #if self.isActive < 0:
+            #logger.error('Something let go of this unit without grabbing hold first!')
+            #self.isActive = 0
         
     def reset(self):
         self.hasMoved = False # Controls whether unit has moved already. Unit can still move back.
@@ -2092,7 +2091,8 @@ class UnitObject(object):
                     gameStateObj.cursor.camera_follow = None
             self.lastMoveTime = currentTime
 
-        self.sprite.update(gameStateObj)
+        if self.position:
+            self.sprite.update(gameStateObj)
 
         ### UP and DOWN Arrow COUNTER logic - For itemAdvantageArrows
         if currentTime - self.lastArrowUpdate > 30:

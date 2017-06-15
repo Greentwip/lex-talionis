@@ -210,9 +210,9 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             
             u_i['desc'] = unit.find('desc').text
             # Tags
-            class_tags = class_dict[u_i['klass']]['tags'].split(',') if class_dict[u_i['klass']]['tags'] else []
-            personal_tags = unit.find('tags').text.split(',') if unit.find('tags') is not None and unit.find('tags').text is not None else []
-            u_i['tags'] = class_tags + personal_tags
+            class_tags = set(class_dict[u_i['klass']]['tags'].split(',')) if class_dict[u_i['klass']]['tags'] else set()
+            personal_tags = set(unit.find('tags').text.split(',')) if unit.find('tags') is not None and unit.find('tags').text is not None else set()
+            u_i['tags'] = class_tags | personal_tags
 
             u_i['ai'] = legend['ai']
             u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
@@ -275,7 +275,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
-    u_i['tags'] = class_dict[u_i['klass']]['tags'].split(',') if class_dict[u_i['klass']]['tags'] else []
+    u_i['tags'] = set(class_dict[u_i['klass']]['tags'].split(',')) if class_dict[u_i['klass']]['tags'] else set()
     u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
@@ -321,8 +321,8 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['name'] = summon_info.name
     u_i['desc'] = summon_info.desc
     u_i['ai'] = summon_info.ai
-    u_i['tags'] = class_dict[u_i['klass']]['tags'].split(',') if class_dict[u_i['klass']]['tags'] else []
-    u_i['tags'].append('Summon_' + str(summon_info.s_id) + '_' + str(summoner.id)) # Add unique identifier
+    u_i['tags'] = set(class_dict[u_i['klass']]['tags'].split(',')) if class_dict[u_i['klass']]['tags'] else set()
+    u_i['tags'].add('Summon_' + str(summon_info.s_id) + '_' + str(summoner.id)) # Add unique identifier
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj)

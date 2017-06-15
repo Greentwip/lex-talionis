@@ -7,7 +7,7 @@ market_flag;0
 transition_flag;1
 display_name;Defeat Boss
 win_condition;Defeat Brigham
-loss_condition;Ophie dies OR Althea dies,OR,Any three of your units are defeated
+loss_condition;Ophie dies OR Althea dies,OR,Party size falls below three
 player_phase_music;Airship Thunderchild
 enemy_phase_music;Brave Story 12
 other_phase_music;Brave Story 12

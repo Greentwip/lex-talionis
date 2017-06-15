@@ -548,7 +548,8 @@ class OptionChildState(State):
             if selection == WORDS['Yes']:
                 SOUNDDICT['Select 1'].play()
                 if gameStateObj.childMenu.owner == WORDS['End']:
-                    gameStateObj.stateMachine.changeState('turn_change')
+                    #gameStateObj.stateMachine.changeState('turn_change')
+                    gameStateObj.stateMachine.changeState('ai')
                 elif gameStateObj.childMenu.owner == WORDS['Suspend']:
                     gameStateObj.stateMachine.back() # Go all the way back if we choose YES
                     gameStateObj.stateMachine.back()

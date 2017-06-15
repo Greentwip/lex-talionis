@@ -30,7 +30,6 @@
 
 # === IMPORT MODULES ==========================================================
 import os, pygame
-from pygame.locals import *
 
 # Custom imports
 import Code.imagesDict as imagesDict

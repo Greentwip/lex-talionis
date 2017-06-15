@@ -14,6 +14,11 @@
 #
 # --------------------------------------------
 group;Resistance;Yep;Resistance;Nope
-player;0;0;Citizen;1;;11,10;None;Resistance
-enemy;0;0;Berserker;15;Iron Lance;8,10;None;Resistance
-player;0;0;Oracle;15;Rescue,Spiritbane;8,12;None;Resistance
+player;0;0;Myrmidon;1;Iron Sword;5,13;Pursue;Resistance
+player;0;0;Soldier;1;Iron Lance;4,12;Pursue;Resistance
+player;0;0;Archer;1;Willow Bow;4,15;Pursue;Resistance
+player;0;0;Fighter;1;Iron Axe;3,14;Pursue;Resistance
+enemy;0;0;Myrmidon;1;Iron Sword;17,3;Pursue;Resistance
+enemy;0;0;Soldier;1;Iron Lance;16,2;Pursue;Resistance
+enemy;0;0;Archer;1;Willow Bow;16,5;Pursue;Resistance
+enemy;0;0;Fighter;1;Iron Axe;15,4;Pursue;Resistance

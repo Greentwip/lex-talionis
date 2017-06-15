@@ -401,6 +401,7 @@ class Combat(object):
         # Handle skills that were used
         if self.skill_used:
             self.skill_used.active.current_charge = 0
+            self.p1.tags.discard('ActiveSkillCharged')
             if self.skill_used.active.mode == 'Attack':
                 self.skill_used.active.reverse_mod()
 
@@ -419,7 +420,10 @@ class Combat(object):
             gameStateObj.message[-1].current_state = "Processing"
         else:
             if self.p1.team == 'player':
-                if not self.p1.hasAttacked:
+                # Check if this is an ai controlled player
+                if gameStateObj.stateMachine.getPreviousState() == 'ai':
+                    pass
+                elif not self.p1.hasAttacked:
                     gameStateObj.stateMachine.changeState('menu')
                 elif self.p1.has_canto_plus() and not self.p1.isDying:
                     gameStateObj.stateMachine.changeState('move')

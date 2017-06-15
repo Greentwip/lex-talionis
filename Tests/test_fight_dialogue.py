@@ -23,21 +23,14 @@ def main():
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
     gameStateObj.build_new()
-    for num in range(0, GC.CONSTANTS['num_levels']):
-        print('Level: %s'%num)
-        levelfolder = 'Data/Level' + str(num)
-        SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
-        print('Num Units: %s  Map Size: %s'%(len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
-        for unit in gameStateObj.allunits:
-            run(gameStateObj, metaDataObj, unit)
-        gameStateObj.clean_up()
-        print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
+    levelfolder = 'Data/Level0'
+    SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
+    run(gameStateObj, metaDataObj)
+    gameStateObj.clean_up()
+    print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
 
-def run(gameStateObj, metaDataObj, unit):
-    print(unit.name)
-    unit.isDying = True
-    gameStateObj.stateMachine.changeState('dying')
-    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit, event_flag=False))
+def run(gameStateObj, metaDataObj):
+    gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', event_flag = False))
     gameStateObj.stateMachine.changeState('dialogue')
     counter = 0
     while gameStateObj.message:

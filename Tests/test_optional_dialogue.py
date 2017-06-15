@@ -5,6 +5,7 @@ import cProfile
 
 import pygame
 import pyautogui
+pyautogui.PAUSE = 0
 
 import Code.GlobalConstants as GC
 DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))

@@ -122,7 +122,6 @@ class Dialogue_Scene(object):
             self.scene_lines_index += 1
 
     def handle_if(self, line, gameStateObj, metaDataObj):
-        #return True # Just testing
         #if OPTIONS['debug']: print(line[0], self.if_stack)
         ### CONDITIONALS PARSING
         if line[0] == 'if':
@@ -810,7 +809,7 @@ class Dialogue_Scene(object):
             unit_specifier = self.get_id(line[1])
             for unit in gameStateObj.allunits:
                 if unit.name == unit_specifier or unit.event_id == unit_specifier or unit.position == unit_specifier:
-                    unit.tags.append(line[2])
+                    unit.tags.add(line[2])
 
         ### HANDLE TALKING
         elif line[0] == 'add_talk':

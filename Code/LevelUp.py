@@ -229,8 +229,7 @@ class levelUpScreen(object):
             self.unit.increase_wexp(new_class['wexp_gain'], gameStateObj)
             # Add any extra tags
             if new_class['tags']: # Add any necessary tags. Does not currently take away tags, although it may have to later
-                self.unit.tags.append(new_class['tags'].split(','))
-                self.unit.tags = list(set(self.unit.tags)) # Remove duplicates
+                self.unit.tags |= set(new_class['tags'].split(','))
             # Give promotion
             #self.levelup_list = self.unit.level_up(new_class, apply_level=False) # Level up once, then promote.
             #self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together

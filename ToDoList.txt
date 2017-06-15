@@ -1,9 +1,3 @@
-ToDo:
-ToTest:
-- Saving
-- AI Battle
-- Fight Quotes
-
 -- KNOWN ISSUES:
 - Music may not work on or even crash Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)
 - Avast Antivirus or other antiviruses may slow down certain actions that write to disk. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
@@ -64,3 +58,5 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - If you are on impassable terrain, take damage.
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
 - Add Turnwheel
+- Make UnitSprite use a state machine, instead of a series of if statements
+- Add clamp to unit sprite draw (only if you could actually see the unit on the map)

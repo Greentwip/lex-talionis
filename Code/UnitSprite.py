@@ -50,7 +50,7 @@ class UnitSprite(object):
         top = y * TILEHEIGHT + self.spriteOffset[1]
 
         # Active Skill Icon
-        if not self.unit.isDying and any(status.active and status.active.required_charge and status.active.current_charge >= status.active.required_charge for status in self.unit.status_effects):
+        if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
             active_icon = ICONDICT["ActiveSkill"]
             active_icon = Engine.subsurface(active_icon, (PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
             topleft = (left - max(0, (active_icon.get_width() - 16)/2), top - max(0, (active_icon.get_height() - 16)/2))
@@ -91,7 +91,8 @@ class UnitSprite(object):
                 image = Image_Modification.change_image_color(image.convert_alpha(), color)
         elif self.unit.flickerRed and gameStateObj.boundary_manager.draw_flag:
             image = Image_Modification.flickerImageRed(image.convert_alpha(), 80)
-        if any(status.unit_translucent for status in self.unit.status_effects):
+        #if any(status.unit_translucent for status in self.unit.status_effects):
+        if 'Translucent' in self.unit.tags:
             image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
         # What is this line even doing? - Something majorly important though
         # Each image has (self.image.get_width() - 32)/2 buffers on the left and right of it, to handle any off tile spriting
@@ -101,7 +102,7 @@ class UnitSprite(object):
 
         # =======
         # Status Aura Icon
-        if not self.unit.isDying and any(status.aura for status in self.unit.status_effects):
+        if not self.unit.isDying and 'hasAura' in self.unit.tags:
             aura_icon_name = self.unit.team + 'AuraIcon'
             aura_icon = IMAGESDICT[aura_icon_name] if aura_icon_name in IMAGESDICT else IMAGESDICT['AuraIcon']
             aura_icon = Engine.subsurface(aura_icon, (0, PASSIVESPRITECOUNTER.count*10, 32, 10))
@@ -211,24 +212,24 @@ class UnitSprite(object):
         self.image = None
 
     def formatSprite(self, standSprites, moveSprites):
-        return {'passive': Engine.subsurface(standSprites, (0, 0, standSprites.get_width(), 48)),
-                'gray': Engine.subsurface(standSprites, (0, TILEHEIGHT*3, standSprites.get_width(), 48)),
-                'active': Engine.subsurface(standSprites, (0, 2*TILEHEIGHT*3, standSprites.get_width(), 48)),
-                'down': Engine.subsurface(moveSprites, (0, 0, moveSprites.get_width(), 40)),
-                'left': Engine.subsurface(moveSprites, (0, 40, moveSprites.get_width(), 40)),
-                'right': Engine.subsurface(moveSprites, (0, 80, moveSprites.get_width(), 40)),
-                'up': Engine.subsurface(moveSprites, (0, 120, moveSprites.get_width(), 40))}
+        return {'passive': [Engine.subsurface(standSprites, (num*64, 0, 64, 48)) for num in xrange(3)],
+                'gray': [Engine.subsurface(standSprites, (num*64, 48, 64, 48)) for num in xrange(3)],
+                'active': [Engine.subsurface(standSprites, (num*64, 96, 64, 48)) for num in xrange(3)],
+                'down': [Engine.subsurface(moveSprites, (num*48, 0, 48, 40)) for num in xrange(4)],
+                'left': [Engine.subsurface(moveSprites, (num*48, 40, 48, 40)) for num in xrange(4)],
+                'right': [Engine.subsurface(moveSprites, (num*48, 80, 48, 40)) for num in xrange(4)],
+                'up': [Engine.subsurface(moveSprites, (num*48, 120, 48, 40)) for num in xrange(4)]}
 
     def create_image(self, state):
-        return self.select_frame(self.unit_sprites[state].copy(), state)
+        return self.select_frame(self.unit_sprites[state], state).copy()
 
     def select_frame(self, image, state):
         if state == 'passive' or state == 'gray':
-            return Engine.subsurface(image, (PASSIVESPRITECOUNTER.count*64, 0, 64, 48))
+            return image[PASSIVESPRITECOUNTER.count]
         elif state == 'active':
-            return Engine.subsurface(image, (ACTIVESPRITECOUNTER.count*64, 0, 64, 48))
+            return image[ACTIVESPRITECOUNTER.count]
         else:
-            return Engine.subsurface(image, (self.moveSpriteCounter*48, 0, 48, 40))
+            return image[self.moveSpriteCounter]
 
     def handle_net_position(self, pos):
         if abs(pos[0]) >= abs(pos[1]):
@@ -260,6 +261,7 @@ class UnitSprite(object):
         self.transition_counter = max(0, self.transition_counter)
 
         unit_moving = self.unit in gameStateObj.moving_units
+        current_state = gameStateObj.stateMachine.getState()
 
         ### SPRITE OFFSET FOR MOVE - Positions unit at intervening positions based on spriteOffset
         if self.transition_state == 'fake_in':
@@ -274,7 +276,7 @@ class UnitSprite(object):
 
             if self.spriteOffset[0] == 0 and self.spriteOffset[1] == 0:
                 self.transition_state = 'normal'
-        elif self.transition_state in ['fake_out', 'rescue']:
+        elif self.transition_state == 'fake_out' or self.transition_state == 'rescue':
             logger.debug('fake_removal')
             if self.spriteOffset[0] < 0:
                 self.spriteOffset[0] -= 2
@@ -292,7 +294,7 @@ class UnitSprite(object):
                 else: # Rescue
                     self.unit.leave(gameStateObj)
                     self.unit.position = None
-        elif unit_moving and gameStateObj.stateMachine.getState() == 'movement':
+        elif unit_moving and current_state == 'movement':
             if self.unit.path:
                 nextPosition = self.unit.path[-1]
                 netPosition = (nextPosition[0] - self.unit.position[0], nextPosition[1] - self.unit.position[1]) 
@@ -306,7 +308,7 @@ class UnitSprite(object):
                 self.transition_state = 'normal'
             
         ### UPDATE IMAGE
-        if gameStateObj.stateMachine.getState() == 'combat' and gameStateObj.combatInstance and \
+        if current_state == 'combat' and gameStateObj.combatInstance and \
             (self.unit is gameStateObj.combatInstance.p1 or self.unit is gameStateObj.combatInstance.p2 or \
             (self.unit in gameStateObj.combatInstance.splash and self.unit in [result.defender for result in gameStateObj.combatInstance.results])):
             if gameStateObj.combatInstance.results:
@@ -339,18 +341,18 @@ class UnitSprite(object):
                 netposition = attacker.position[0] - self.unit.position[0], attacker.position[1] - self.unit.position[1]
                 self.handle_net_position(netposition)
 
-        elif gameStateObj.stateMachine.getState() == 'status' and gameStateObj.status and gameStateObj.status.check_active(self.unit):
+        elif current_state == 'status' and gameStateObj.status and gameStateObj.status.check_active(self.unit):
             self.state = 'active'
-        elif gameStateObj.cursor.currentSelectedUnit is self.unit and gameStateObj.stateMachine.getState() == 'menu' and not self.unit.hasAttacked:
+        elif gameStateObj.cursor.currentSelectedUnit is self.unit and current_state == 'menu' and not self.unit.hasAttacked:
             self.handle_net_position(self.old_sprite_offset)
             self.update_move_sprite_counter(currentTime, 80)
-        elif gameStateObj.cursor.currentSelectedUnit is self.unit and gameStateObj.stateMachine.getState() in NETPOSITION_SET:
+        elif gameStateObj.cursor.currentSelectedUnit is self.unit and current_state in NETPOSITION_SET:
             netposition = (gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1])
             if netposition == (0, 0):
                 netposition = self.old_sprite_offset
             self.handle_net_position(netposition)
             self.update_move_sprite_counter(currentTime, 80)
-        elif (unit_moving and gameStateObj.stateMachine.getState() == 'movement') or self.transition_state in ['fake_in', 'fake_out', 'rescue']:
+        elif (unit_moving and current_state == 'movement') or self.transition_state in ['fake_in', 'fake_out', 'rescue']:
             if unit_moving:
                 # Where is my path with respect to here
                 try:
@@ -367,8 +369,7 @@ class UnitSprite(object):
                 self.update_move_sprite_counter(currentTime, 80)
         # Unit can't be done in prep, and if you are we should ignore it. Can't ignore dialogue because if I do then units start flickering as death, fight and interact dialogues take place
         elif self.unit.isDone() and not self.unit.isDying and not self.unit.isActive \
-        and not gameStateObj.stateMachine.getState().startswith('prep') and \
-        not gameStateObj.stateMachine.any_events():
+        and not current_state.startswith('prep') and not gameStateObj.stateMachine.any_events():
             self.state = 'gray'
         elif gameStateObj.cursor.currentSelectedUnit == self.unit and self.unit.team == 'player' and gameStateObj.cursor.drawState:
             self.state = 'down'

@@ -447,6 +447,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         activated_skills = [status for status in unit.status_effects if status.active]
         for activated_skill in activated_skills:
             activated_skill.active.current_charge = activated_skill.active.required_charge
+            unit.tags.add('ActiveSkillCharged')
 
     if status.name == "Clumsy":
         if any(status.horsemanship for status in unit.status_effects):
@@ -459,9 +460,15 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
     if status.flying:
         unit.remove_tile_status(gameStateObj, force=True)
 
+    if status.unit_translucent:
+        unit.tags.add('Translucent')
+
     if status.passive:
         for item in unit.items:
             status.passive.apply_mod(item)
+
+    if status.aura:
+        unit.tags.add('hasAura')
 
     if status.clear:
         for status in unit.status_effects:
@@ -519,10 +526,14 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
         unit.stats['SPD'].bonuses -= status.rescue.spd_penalty
     if status.flying:
         unit.acquire_tile_status(gameStateObj, force=True)
+    if status.unit_translucent:
+        unit.tags.discard('Translucent')
     if status.passive:
         for item in unit.items:
             status.passive.remove_mod(item)
     # Tell the parent status that it is not connected to me anymore
+    if status.aura:
+        unit.tags.discard('hasAura')
     if status.aura_child:
         status.parent_status.remove_child(unit)
     if status.tether:
