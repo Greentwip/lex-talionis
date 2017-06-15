@@ -234,13 +234,12 @@ class GameStateObj(object):
     def check_dead(self, name):
         return any(unit.name == name and unit.dead for unit in self.allunits)
 
+    def check_alive(self, name):
+        return any(unit.name == name and not unit.dead for unit in self.allunits)
+
     def get_unit_from_id(self, u_id):
         if isinstance(u_id, set):
-            units = set()
-            for unit in self.allunits:
-                if unit.id in u_id:
-                    units.add(unit)
-            return units
+            return {unit for unit in self.allunits if unit.id in u_id}
         else:
             for unit in self.allunits:
                 if unit.id == u_id:
@@ -248,11 +247,7 @@ class GameStateObj(object):
 
     def get_unit_from_pos(self, pos):
         if isinstance(pos, set):
-            units = set()
-            for unit in self.allunits:
-                if unit.position in pos:
-                    units.add(unit)
-            return units
+            return {unit for unit in self.allunits if unit.position in pos}
         else:
             for unit in self.allunits:
                 if unit.position == pos:
@@ -260,11 +255,7 @@ class GameStateObj(object):
 
     def get_unit_from_name(self, name):
         if isinstance(name, set):
-            units = set()
-            for unit in self.allunits:
-                if unit.name in name:
-                    units.add(unit)
-            return units
+            return {unit for unit in self.allunits if unit.name in name}
         else:
             for unit in self.allunits:
                 if unit.name == name:
@@ -272,11 +263,7 @@ class GameStateObj(object):
 
     def get_unit(self, any_id):
         if isinstance(any_id, set):
-            units = set()
-            for unit in self.allunits:
-                if unit.name in any_id or unit.id in any_id or unit.event_id in any_id:
-                    units.add(unit)
-            return units
+            return {unit for unit in self.allunits if unit.name in any_id or unit.id in any_id or unit.event_id in any_id}
         else:
             for unit in self.allunits:
                 if any_id in [unit.name, unit.id, unit.event_id]:
@@ -407,11 +394,12 @@ class GameStateObj(object):
         self.prefabs = []
         self.objective = None
 
+    player_team = {'player', 'other'}
     def compare_teams(self, team1, team2):
         # Returns True if allies, false if enemies
         if team1 == team2:
             return True
-        elif team1 in ['player', 'other'] and team2 in ['player', 'other']:
+        elif team1 in self.player_team and team2 in self.player_team:
             return True
         return False
 

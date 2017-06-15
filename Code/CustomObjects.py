@@ -514,8 +514,9 @@ class BoundaryManager(object):
             x, y = unit.position
             other_units = set()
             for key, grid in self.grids.iteritems():
-                # What other units were affecting that position
+                # What other units were affecting that position -- only enemies can affect position
                 other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
+                other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
             for other_unit in other_units:
@@ -531,7 +532,8 @@ class BoundaryManager(object):
             other_units = set()
             for key, grid in self.grids.iteritems():
                 # What other units were affecting that position -- only enemies can affect position
-                other_units |= {other_unit for other_unit in gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y]) if not gameStateObj.compare_teams(unit.team, other_unit.team)}
+                other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
+                other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
                 #print([(other_unit.name, other_unit.position, other_unit.event_id, other_unit.klass, x, y) for other_unit in other_units])
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
@@ -544,6 +546,7 @@ class BoundaryManager(object):
             if unit.position and unit.team.startswith('enemy'):
                 self._add_unit(unit, gameStateObj)
 
+    # Called when map changes
     def reset_pos(self, pos_group, gameStateObj):
         other_units = set()
         for key, grid in self.grids.iteritems():
@@ -582,7 +585,7 @@ class BoundaryManager(object):
                         continue
                     elif grid_name == 'all_spell' and not self.all_on_flag:
                         continue
-                    if grid_name in ['all_attack', 'attack']:
+                    if grid_name == 'all_attack' or grid_name == 'attack':
                         grid = self.grids['attack']
                     else:
                         grid = self.grids['spell']
