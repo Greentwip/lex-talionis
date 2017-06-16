@@ -37,7 +37,9 @@ class Grid_Manager(object):
         for num in range(len(MCOSTDATA['Normal'])):
             self.grids[num] = self.init_grid(num, tilemap) # For each movement type
 
+        self.team_map = self.init_unit_map()
         self.unit_map = self.init_unit_map()
+        self.aura_map = self.init_aura_map()
 
     def init_unit_map(self):
         cells = []
@@ -46,16 +48,40 @@ class Grid_Manager(object):
                 cells.append(None)
         return cells
 
-    def set_unit_node(self, pos, team):
-        self.unit_map[pos[0] * self.gridHeight + pos[1]] = team
+    def init_aura_map(self):
+        cells = []
+        for x in range(self.gridWidth):
+            for y in range(self.gridHeight):
+                cells.append(set())
+        return cells
+
+    def set_unit_node(self, pos, unit):
+        idx = pos[0] * self.gridHeight + pos[1]
+        self.unit_map[idx] = unit
+        if unit:
+            self.team_map[idx] = unit.team
+        else:
+            self.team_map[idx] = None
 
     def get_unit_node(self, pos):
         return self.unit_map[pos[0] * self.gridHeight + pos[1]]
 
+    def get_team_node(self, pos):
+        return self.team_map[pos[0] * self.gridHeight + pos[1]]
+
+    def add_aura_node(self, pos, aura):
+        self.aura_map[pos[0] * self.gridHeight + pos[1]].add(aura)
+
+    def remove_aura_node(self, pos, aura):
+        self.aura_map[pos[0] * self.gridHeight + pos[1]].discard(aura)
+
+    def get_aura_node(self, pos):
+        return self.aura_map[pos[0] * self.gridHeight + pos[1]]
+
     def get_grid(self, unit):
-        if unit.has_flying():
+        if 'Flying' in unit.tags:
             return self.grids[CONSTANTS['flying_mcost_column']]
-        elif unit.has_fleet_of_foot():
+        elif 'Fleet_of_Foot' in unit.tags:
             return self.grids[CONSTANTS['fleet_mcost_column']]
         else:
             return self.grids[unit.movement_group]
@@ -183,9 +209,9 @@ class AStar(object):
             # get adjacent cells for cell
             adj_cells = self.get_adjacent_cells(cell)
             for c in adj_cells:
-                unit_team = gameStateObj.grid_manager.get_unit_node((c.x, c.y))
+                unit_team = gameStateObj.grid_manager.get_team_node((c.x, c.y))
                 if c.reachable and c not in self.closed and \
-                    (not unit_team or (not ally_block and gameStateObj.compare_teams(self.unit.team, unit_team)) or self.unit.has_pass()):
+                    (not unit_team or (not ally_block and gameStateObj.compare_teams(self.unit.team, unit_team)) or 'Pass' in self.unit.tags):
                     if (c.f, c) in self.open:
                         # if adj cell in open list, check if current path is
                         # better than the one previously found for this adj
@@ -252,9 +278,9 @@ class Djikstra(object):
             # get adjacent cells for cell
             adj_cells = self.get_adjacent_cells(cell)
             for c in adj_cells:
-                unit_team = gameStateObj.grid_manager.get_unit_node((c.x, c.y))
+                unit_team = gameStateObj.grid_manager.get_team_node((c.x, c.y))
                 if c.reachable and c not in self.closed and \
-                    (not unit_team or gameStateObj.compare_teams(self.unit.team, unit_team) or self.unit.has_pass()):
+                    (not unit_team or gameStateObj.compare_teams(self.unit.team, unit_team) or 'Pass' in self.unit.tags):
                     if (c.g, c) in self.open:
                         # if adj cell in open list, check if current path is
                         # better than the one previously found for this adj

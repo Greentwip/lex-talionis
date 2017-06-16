@@ -1,4 +1,4 @@
-import random
+import random, time
 from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
@@ -602,22 +602,34 @@ class UnitObject(object):
         # Path is backwards, goes from goal node to start node
 
     def leave(self, gameStateObj, serializing=False):
+        time1 = time.clock()
         if self.position:
             logger.debug('Leave %s %s %s', self, self.name, self.position)
             if not serializing:
                 gameStateObj.grid_manager.set_unit_node(self.position, None)
+                time_bounds = time.clock()
                 gameStateObj.boundary_manager.leave(self, gameStateObj)
+                #print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
             self.remove_tile_status(gameStateObj)
+        time_aura = time.clock()
         self.remove_aura_status(gameStateObj, serializing=serializing)
+        #print('Aura: %s'%(1000*(time.clock() - time_aura)))
+        #print('=== Leave %s %s'%(self.name, 1000*(time.clock() - time1)))
 
     def arrive(self, gameStateObj, serializing=False):
+        time1 = time.clock()
         if self.position:
             logger.debug('Arrive %s %s %s', self, self.name, self.position)
             if not serializing:
-                gameStateObj.grid_manager.set_unit_node(self.position, self.team)
+                gameStateObj.grid_manager.set_unit_node(self.position, self)
+                time_bounds = time.clock()
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
+                #print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
             self.acquire_tile_status(gameStateObj)
+            time_aura = time.clock()
             self.acquire_aura_status(gameStateObj, serializing=serializing)
+            #print('Aura: %s'%(1000*(time.clock() - time_aura)))
+        #print('=== Arrive %s %s'%(self.name, 1000*(time.clock() - time1)))
 
     def remove_from_map(self, gameStateObj):
         if self.position:
@@ -799,10 +811,8 @@ class UnitObject(object):
         else:
             growths = [sum(x) for x in zip(self.growths, GROWTHS['enemy_growths'])]
             leveling = CONSTANTS['enemy_leveling']
-            print(leveling)
             if leveling == 3: # Match player method
                 leveling = gameStateObj.mode['growths']
-            print(leveling)
 
         if leveling in [0, 1]: # Fixed or Random
             for index in range(8):
@@ -929,16 +939,14 @@ class UnitObject(object):
     def getExcessAttacks(self, gameStateObj, ValidMoves, both=False, boundary=False):
         potentialRange = self.findPotentialRange(both=both)
 
-        # Get list of ally unit position
-        ally_unit_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit)]
-
+        # replace with get_shell that has been cythonized
         ValidAttacks = set()
         for validmove in ValidMoves:
             ValidAttacks |= Utility.find_manhattan_spheres(potentialRange, validmove)
         ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
         # Can't attack own team -- maybe not necessary?
         if not boundary:
-            ValidAttacks = [pos for pos in ValidAttacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_unit_node(pos))]
+            ValidAttacks = [pos for pos in ValidAttacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_team_node(pos))]
 
         if CONSTANTS['line_of_sight'] and potentialRange:
             ValidAttacks = Utility.line_of_sight(ValidMoves, ValidAttacks, max(potentialRange), gameStateObj)
@@ -1068,7 +1076,7 @@ class UnitObject(object):
         # calculate legal targets for cursor
         attacks = Utility.find_manhattan_spheres(my_weapon.RNG, self.position)
         attacks = [pos for pos in attacks if gameStateObj.map.check_bounds(pos)]
-        attacks = [pos for pos in attacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_unit_node(pos))]
+        attacks = [pos for pos in attacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_team_node(pos))]
         if CONSTANTS['line_of_sight']:
             attacks = Utility.line_of_sight([self.position], attacks, max(my_weapon.RNG), gameStateObj)
 
@@ -1436,15 +1444,6 @@ class UnitObject(object):
     def has_canto_plus(self):
         return any(status.canto_plus for status in self.status_effects)
 
-    def has_flying(self):
-        return any(status.flying for status in self.status_effects) 
-
-    def has_pass(self):
-        return any(status.pass_through for status in self.status_effects)
-
-    def has_fleet_of_foot(self):
-        return any(status.fleet_of_foot for status in self.status_effects)
-
     def isSummon(self):
         return any(component.startswith('Summon_') for component in self.tags)
 
@@ -1599,7 +1598,7 @@ class UnitObject(object):
             if status.dynamic_avoid and eval(status.dynamic_avoid.conditional, globals(), locals()):
                 base += int(eval(status.dynamic_avoid.value, globals(), locals()))
         if self.position:
-            base += (0 if self.has_flying() else gameStateObj.map.tiles[self.position].AVO)
+            base += (0 if 'Flying' in self.tags else gameStateObj.map.tiles[self.position].AVO)
         return base
                 
     def damage(self, gameStateObj, item=None):
@@ -1630,13 +1629,13 @@ class UnitObject(object):
         return damage
 
     def defense(self, gameStateObj):
-        return self.stats['DEF'] + self.get_support_bonuses(gameStateObj)[1] + (0 if self.has_flying() else gameStateObj.map.tiles[self.position].stats['DEF'])
+        return self.stats['DEF'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'Flying' in self.tags else gameStateObj.map.tiles[self.position].stats['DEF'])
 
     def resistance(self, gameStateObj):
         return self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1]
 
     def mixed_defense(self, gameStateObj):
-        return self.stats['DEF'] + self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1] + (0 if self.has_flying() else gameStateObj.map.tiles[self.position].stats['DEF'])
+        return self.stats['DEF'] + self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'Flying' in self.tags else gameStateObj.map.tiles[self.position].stats['DEF'])
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj):
@@ -1776,13 +1775,13 @@ class UnitObject(object):
         return serial_dict
 
     def acquire_tile_status(self, gameStateObj, force=False):
-        if self.position and (force or not self.has_flying()):
+        if self.position and (force or not 'Flying' in self.tags):
             for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
                 if status not in self.status_effects:
                     StatusObject.HandleStatusAddition(status, self, gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):
-        if self.position and (force or not self.has_flying()):
+        if self.position and (force or not 'Flying' in self.tags):
             for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
                 StatusObject.HandleStatusRemoval(status, self, gameStateObj)
 
@@ -1793,11 +1792,21 @@ class UnitObject(object):
                 self.pull_auras(gameStateObj)
 
             # Give other people my aura if it is within their range
-            for unit in gameStateObj.allunits:
-                for status in self.status_effects:
-                    if status.aura and unit.position and Utility.calculate_distance(unit.position, self.position) <= status.aura.aura_range and \
-                    (not CONSTANTS['aura_los'] or Utility.line_of_sight([self.position], [unit.position], status.aura.aura_range, gameStateObj)):
-                        status.aura.apply(self, unit, gameStateObj)
+            for status in self.status_effects:
+                if status.aura:
+                    self.propagate_aura(status.aura, gameStateObj)
+    
+    def propagate_aura(self, aura, gameStateObj):
+        # Get affected positions
+        if self.position:
+            positions = Utility.find_manhattan_spheres(range(1, aura.aura_range+1), self.position)
+            positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
+            for pos in positions:
+                if not CONSTANTS['aura_los'] or Utility.line_of_sight([self.position], [pos], aura.aura_range, gameStateObj):
+                    gameStateObj.grid_manager.add_aura_node(pos, aura)
+                    other_unit = gameStateObj.grid_manager.get_unit_node(pos)
+                    if other_unit:
+                        aura.apply(other_unit, gameStateObj)
 
     def remove_aura_status(self, gameStateObj, serializing=False):
         # Remove me from the effects of other auras
@@ -1805,27 +1814,33 @@ class UnitObject(object):
             if status.aura_child:
                 StatusObject.HandleStatusRemoval(status, self, gameStateObj)
 
-        # For all auras 
-        for aura_status in [status for status in self.status_effects if status.aura]:
-            # Remove all children of my auras
-            for u_id in reversed(aura_status.aura.children):
-                unit = gameStateObj.get_unit_from_id(u_id)
-                status = [status for status in unit.status_effects if status.id == aura_status.aura.child][0]
-                StatusObject.HandleStatusRemoval(status, unit, gameStateObj)
-                # Have affected units re-pull auras to get any auras that would apply but were stacked
-                if not serializing: # If we're saving, don't do that, since all auras should go away...
-                    unit.pull_auras(gameStateObj, excepting=self)
-            aura_status.aura.children = [] # Clean
-
-    def pull_auras(self, gameStateObj, excepting=None):
+        # Remove my auras
         if self.position:
-            # Get other peoples auras
-            for unit in gameStateObj.allunits:
-                if unit.position and unit is not excepting:
-                    for status in unit.status_effects:
-                        if status.aura and Utility.calculate_distance(unit.position, self.position) <= status.aura.aura_range and \
-                        (not CONSTANTS['aura_los'] or Utility.line_of_sight([unit.position], [self.position], status.aura.aura_range, gameStateObj)):
-                            status.aura.apply(unit, self, gameStateObj)
+            for status in self.status_effects:
+                if status.aura:
+                    positions = Utility.find_manhattan_spheres(range(1, status.aura.aura_range+1), self.position)
+                    positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
+                    for pos in positions:
+                        if not CONSTANTS['aura_los'] or Utility.line_of_sight([self.position], [pos], status.aura.aura_range, gameStateObj):
+                            gameStateObj.grid_manager.remove_aura_node(pos, status.aura)
+                            other_unit = gameStateObj.grid_manager.get_unit_node(pos)
+                            if other_unit:
+                                status.aura.remove(other_unit, gameStateObj)
+                                if not serializing:
+                                    other_unit.repull_aura(status.aura, gameStateObj)
+
+    def pull_auras(self, gameStateObj):
+        # Get other peoples auras
+        if self.position:
+            for aura in gameStateObj.grid_manager.get_aura_node(self.position):
+                aura.apply(self, gameStateObj)
+
+    def repull_aura(self, old_aura, gameStateObj):
+        # Get other auras like this aura
+        if self.position:
+            for aura in gameStateObj.grid_manager.get_aura_node(self.position):
+                if old_aura.child == aura.child:
+                    aura.apply(self, gameStateObj)
 
     def add_aura_highlights(self, gameStateObj):
         high_pos = []
@@ -2020,7 +2035,7 @@ class UnitObject(object):
             logger.debug('%s %s dies', self.name, self)
 
     def play_movement_sound(self, gameStateObj):
-        if self.has_flying():
+        if 'Flying' in self.tags:
             SOUNDDICT['Heavy Wing Flap'].play(-1)
         elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
             SOUNDDICT['Horse Steps'].play(-1)
@@ -2030,7 +2045,7 @@ class UnitObject(object):
             SOUNDDICT['Light Foot Steps 1'].play(-1)
 
     def stop_movement_sound(self, gameStateObj):
-        if self.has_flying():
+        if 'Flying' in self.tags:
             SOUNDDICT['Heavy Wing Flap'].stop()
         elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
             SOUNDDICT['Horse Steps'].stop()
@@ -2068,7 +2083,7 @@ class UnitObject(object):
             if self.path: #and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
                 new_position = self.path.pop()
                 if self.position != new_position:
-                    self.movement_left -= (CONSTANTS['normal_movement'] if self.has_flying() else gameStateObj.map.tiles[new_position].get_mcost(self))
+                    self.movement_left -= (CONSTANTS['normal_movement'] if 'Flying' in self.tags else gameStateObj.map.tiles[new_position].get_mcost(self))
                 self.position = new_position
                 # Camera auto-follow
                 if not gameStateObj.cursor.camera_follow:

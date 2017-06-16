@@ -20,6 +20,7 @@ class MapObject(object):
 
         self.tiles = {} # The mechanical information about the tile organized by position
         self.tile_sprites = {} # The sprite information about the tile organized by position
+        self.opacity_map = [False for _ in range(self.width*self.height)]
         self.command_list = [] # The commands that have been acted upon the map by scripts
         self.escape_highlights = {}
         self.formation_highlights = {}
@@ -66,9 +67,10 @@ class MapObject(object):
                     colorKey = terrain.find('color').text.split(',')
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
-                        self.tiles[(x,y)] = TileObject(terrain.get('name'), terrain.find('minimap').text, (x,y), \
-                                                       terrain.find('mtype').text, \
-                                                       [terrain.find('DEF').text, terrain.find('AVO').text])
+                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, (x,y), \
+                                              terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text])
+                        self.tiles[(x,y)] = new_tile
+                        self.opacity_map[x * self.height + y] = new_tile.opaque
                         if 'HP' in self.tile_info_dict[(x,y)]: # Tile hp is needed so apply that here
                             self.tiles[(x,y)].give_hp_stat(self.tile_info_dict[(x,y)]['HP'])
                         break
@@ -443,6 +445,7 @@ class MapObject(object):
         for coord in coords:
             self.tiles[coord] = self.get_tile_from_id(int(line[2]))
             self.tiles[coord].position = coord
+            self.opacity_map[coord[0] * self.height + coord[1]] = self.tiles[coord].opaque
             if grid_manager:
                 grid_manager.update_tile(self.tiles[coord])
             if 'HP' in self.tile_info_dict[coord]: # Tile hp is needed so apply that here
@@ -639,9 +642,9 @@ class TileObject(object):
     def get_mcost(self, unit):
         if isinstance(unit, int):
             return MCOSTDATA[self.mcost][unit]
-        elif unit.has_flying():
+        elif 'Flying' in unit.tags:
             return MCOSTDATA[self.mcost][CONSTANTS['flying_mcost_column']]
-        elif unit.has_fleet_of_foot():
+        elif 'Fleet_of_Foot' in unit.tags:
             return MCOSTDATA[self.mcost][CONSTANTS['fleet_mcost_column']]
         return MCOSTDATA[self.mcost][unit.movement_group]
 

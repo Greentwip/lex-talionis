@@ -18,18 +18,7 @@
 #
 # --------------------------------------------
 # Player Characters
-player;1;Ophie;Ophie;None;None
-player;1;Prim;Prim;None;None
-player;1;Joel;Joel;None;None
-player;1;Nia;Nia;None;None
-player;1;Althea;Althea;None;None
-player;1;Drake;Drake;None;None
-player;1;Renae;Renae;None;None
-player;1;Theo;Theo;None;None
-player;1;Eliza;Eliza;None;None
-player;1;Sam;Sam;None;None
-player;1;Kayla;Kayla;None;None
-player;1;Coyote;Coyote;None;None
+player_characters
 #
 # Groups
 group;Claw;Claw;Empire;Archon Ulver's elite guard
@@ -42,15 +31,15 @@ enemy;0;0;Adjutant;11,3;DoNothing
 # 13, 22 is center
 ### First Turn
 # Bottom Right - Halberdiers and Rangers
-enemy;0;br1;Halberdier;18;Great Lance,Long Spear;16,27;Pursue;Claw;fSkill +3
-enemy;0;br2;Halberdier;18;Great Lance,Long Spear;17,26;Pursue;Claw;fSkill +3
-enemy;0;br3;Sniper;18;Great Bow;17,28;Pursue;Claw;fSkill +3
-enemy;0;br4;Sniper;18;Great Bow;18,27;Pursue;Claw;fSkill +3
+enemy;0;br1;Halberdier;18;Mithril Lance,Long Spear;16,27;Pursue;Claw;fSkill +3
+enemy;0;br2;Halberdier;18;Mithril Lance,Long Spear;17,26;Pursue;Claw;fSkill +3
+enemy;0;br3;Sniper;18;Yew Bow;17,28;Pursue;Claw;fSkill +3
+enemy;0;br4;Sniper;18;Yew Bow;18,27;Pursue;Claw;fSkill +3
 # Top Left - Oracles and Paladins
 enemy;0;tl1;Oracle;18;Corona,Ruin,Physic;7,16;Pursue;Claw;fResistance +2
 enemy;0;tl2;Oracle;18;Corona,Ruin,Physic;6,17;Pursue;Claw;fResistance +2
-enemy;0;tl3;Paladin;18;Mithril Lance,Mithril Sword;8,17;Pursue;Claw;fResistance +2
-enemy;0;tl4;Paladin;18;Mithril Lance,Mithril Sword;7,18;Pursue;Claw;fResistance +2
+enemy;0;tl3;Paladin;18;Great Lance,Mithril Sword;8,17;Pursue;Claw;fResistance +2
+enemy;0;tl4;Paladin;18;Great Lance,Mithril Sword;7,18;Pursue;Claw;fResistance +2
 ### Second Turn
 # Bottom Left - Swordmasters and Dragoons
 enemy;0;bl1;Swordmaster;18;Adamant Sword;8,27;Pursue;Claw;fSpeed +2
@@ -60,8 +49,8 @@ enemy;0;bl4;Dragoon;18;Adamant Lance;7,26;Pursue;Claw;fSpeed +2
 # Top Right - Berserkers and Warriors
 enemy;0;tr1;Berserker;18;Great Axe,Tomahawk;18,17;Pursue;Claw;fStrength +2
 enemy;0;tr2;Berserker;18;Great Axe,Tomahawk;17,18;Pursue;Claw;fStrength +2
-enemy;0;tr3;Warrior;18;Adamant Axe,Yew Bow;16,17;Pursue;Claw;fStrength +2
-enemy;0;tr4;Warrior;18;Adamant Axe,Yew Bow;17,16;Pursue;Claw;fStrength +2
+enemy;0;tr3;Warrior;18;Adamant Axe,Great Bow;16,17;Pursue;Claw;fStrength +2
+enemy;0;tr4;Warrior;18;Adamant Axe,Great Bow;17,16;Pursue;Claw;fStrength +2
 ### Third Turn
 # Left - Generals and Dracolords
 enemy;0;l1;General;18;Great Sword,Adamant Lance;5,21;Pursue;Claw;fDefense +2

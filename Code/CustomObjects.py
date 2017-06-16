@@ -488,16 +488,21 @@ class BoundaryManager(object):
         self.surf = None
 
     def _add_unit(self, unit, gameStateObj):
+        #import time
+        #time1 = time.clock()*1000
         ValidMoves = unit.getValidMoves(gameStateObj, force=True)
+        #time2 = time.clock()*1000
         ValidAttacks, ValidSpells = [], []
         if unit.getMainWeapon():
             ValidAttacks = unit.getExcessAttacks(gameStateObj, ValidMoves, boundary=True)
         if unit.getMainSpell():
             ValidSpells = unit.getExcessSpellAttacks(gameStateObj, ValidMoves, boundary=True)
+        #time3 = time.clock()*1000
         self._set(ValidAttacks, 'attack', unit.id)
         self._set(ValidSpells, 'spell', unit.id)
         #print(unit.name, unit.position, unit.klass, unit.event_id)
         self.surf = None
+        #print(time2 - time1, time3 - time2, time.clock()*1000 - time3)
 
     def _remove_unit(self, unit, gameStateObj):
         for kind, grid in self.grids.iteritems():

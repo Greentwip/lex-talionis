@@ -202,7 +202,7 @@ class Status_Processor(object):
         self.upkeep = upkeep # Whether I'm running this on upkeep or on endstep
         self.current_phase = gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name
         self.previous_phase = gameStateObj.statedict['phases'][gameStateObj.statedict['previous_phase']].name
-        affected_units = [unit for unit in gameStateObj.allunits if unit.position and (unit.status_effects or 'Status' in gameStateObj.map.tile_info_dict[unit.position])]
+        affected_units = [unit for unit in gameStateObj.allunits if unit.position and unit.status_effects]
         if self.upkeep:
             self.units = [unit for unit in affected_units if unit.team == self.current_phase]
         else:
@@ -401,9 +401,9 @@ def HandleStatusEndStep(status, unit, gameStateObj):
     return oldhp, unit.currenthp
 
 def HandleStatusAddition(status, unit, gameStateObj=None):
-    logger.info('Adding Status %s to %s at %s', status.id, unit.name, unit.position)
     if not isinstance(unit, UnitObject.UnitObject):
         return
+    logger.info('Adding Status %s to %s at %s', status.id, unit.name, unit.position)
     # Check to see if we need to remove other statuses
     for other_status in unit.status_effects:
         # If this is a status that doesn't say it stacks, remove older versions of it
@@ -415,7 +415,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
                 return # Just ignore this new one
 
     # Check to see if we should reflect this status back at user
-    if not status.already_reflected and any(other_status.reflect for other_status in unit.status_effects) and status.parent_id and not status.aura_child:
+    if not status.already_reflected and status.parent_id and not status.aura_child and any(other_status.reflect for other_status in unit.status_effects):
         p_unit = gameStateObj.get_unit_from_id(status.parent_id)
         s_copy = copy.deepcopy(status) # Create a copy of this status
         s_copy.parent_id = unit.id
@@ -459,16 +459,22 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     if status.flying:
         unit.remove_tile_status(gameStateObj, force=True)
-
+        unit.tags.add('Flying')
     if status.unit_translucent:
         unit.tags.add('Translucent')
-
+    if status.fleet_of_foot:
+        unit.tags.add('Fleet_of_Foot')
+    if status.pass_through:
+        unit.tags.add('Pass')
     if status.passive:
         for item in unit.items:
             status.passive.apply_mod(item)
 
     if status.aura:
+        status.aura.set_parent_unit(unit)
         unit.tags.add('hasAura')
+        # Re-arrive at where you are at so you can give your friendos their status
+        unit.propagate_aura(status.aura, gameStateObj)
 
     if status.clear:
         for status in unit.status_effects:
@@ -526,8 +532,13 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
         unit.stats['SPD'].bonuses -= status.rescue.spd_penalty
     if status.flying:
         unit.acquire_tile_status(gameStateObj, force=True)
+        unit.tags.remove('Flying')
     if status.unit_translucent:
-        unit.tags.discard('Translucent')
+        unit.tags.remove('Translucent')
+    if status.fleet_of_foot:
+        unit.tags.remove('Fleet_of_Foot')
+    if status.pass_through:
+        unit.tags.remove('Pass')
     if status.passive:
         for item in unit.items:
             status.passive.remove_mod(item)
@@ -678,6 +689,8 @@ def deserialize(s_dict, unit, gameStateObj):
         status.children = s_dict['children']
     if s_dict.get('parent_id'):
         status.parent_id = s_dict['parent_id']
+    if status.aura:
+        status.aura.set_parent_unit(unit)
     # For rescue
     if s_dict.get('rescue'):
         status.rescue.skl_penalty = int(s_dict['rescue'][0])

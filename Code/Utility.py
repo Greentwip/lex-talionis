@@ -2,6 +2,19 @@
 import logging
 logger = logging.getLogger(__name__)
 
+try:
+    import manhattan_sphere
+    FAST_SPHERE = True
+except:
+    FAST_SPHERE = False
+    logger.warning('Fast manhattan sphere generation not available. Falling back on default Python implementation.')
+try:
+    import LOS
+    FAST_LOS = True
+except:
+    FAST_LOS = False
+    logger.warning('Fast line of sight calculation not available. Falling back on default Python implementation.')
+
 # === TAXICAB DISTANCE =================================================
 def calculate_distance(position1, position2):
     return (abs(position1[0] - position2[0]) + abs(position1[1] - position2[1]))
@@ -113,22 +126,32 @@ def weighted_choice(choices):
     assert False, "Shouldn't get here"
 
 def get_adjacent_positions(c_pos, rng=1):
-    pos = set()
-    for r in range(1, rng+1):
-        # Finds manhattan spheres of radius r
-        for x in range(-r, r + 1):
-            for y in [(r - abs(x)), -(r - abs(x))]:
-                pos.add((c_pos[0] + x, c_pos[1] + y))
-    return pos
+    if FAST_SPHERE:
+        return manhattan_sphere.find_manhattan_spheres(range(1, rng+1), c_pos[0], c_pos[1])
+    else:
+        _range = range
+        pos = set()
+        for r in _range(1, rng+1):
+            # Finds manhattan spheres of radius r
+            for x in _range(-r, r + 1):
+                pos_x = x if x >= 0 else -x
+                for y in [(r - pos_x), -(r - pos_x)]:
+                    pos.add((c_pos[0] + x, c_pos[1] + y))
+        return pos
 
 def find_manhattan_spheres(rng, c_pos):
-    main_set = set()
-    for r in rng:
-        # Finds manhattan spheres of radius r
-        for x in range(-r, r + 1):
-            for y in [(r - abs(x)), -(r - abs(x))]:
-                main_set.add((c_pos[0] + x, c_pos[1] + y))
-    return main_set
+    if FAST_SPHERE:
+        return manhattan_sphere.find_manhattan_spheres(rng, c_pos[0], c_pos[1])
+    else:
+        _range = range
+        main_set = set()
+        for r in rng:
+            # Finds manhattan spheres of radius r
+            for x in _range(-r, r + 1):
+                pos_x = x if x >= 0 else -x
+                for y in [(r - pos_x), -(r - pos_x)]:
+                    main_set.add((c_pos[0] + x, c_pos[1] + y))
+        return main_set
 
 def farthest_away_pos(unit, valid_moves, all_units):
     # get farthest away position from general direction of enemy units
@@ -148,6 +171,8 @@ def farthest_away_pos(unit, valid_moves, all_units):
         return None
 
 def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
+    if FAST_LOS:
+        return LOS.line_of_sight(source_pos, dest_pos, max_range, gameStateObj.map.opacity_map, gameStateObj.map.height)
     #print('Source:', len(source_pos), source_pos)
     #print('Dest:', len(dest_pos), dest_pos)
     #import time
@@ -369,3 +394,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
     lit_tiles = [pos for pos in dest_pos if all_tiles[pos].visibility != 'dark']
     #print(time.clock() - time1)
     return lit_tiles
+
+if __name__ == '__main__':
+    for _ in range(100000):
+        find_manhattan_spheres(range(10), (0, 0))

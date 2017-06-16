@@ -1,4 +1,5 @@
-- arrive and leave speed-up
+- arrive and leave speed-up (main culprits are getting valid moves, and placing and removing auras)
+- Missing Crisis in the North
 
 -- KNOWN ISSUES:
 - Music may not work on or even crash Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)
@@ -51,7 +52,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add correct warp animation
 - Add Fake arrival to Give/Take/Shove++
 - Scenic Maps (UnitLevel rework?) (Don't need to put previous saved units in UnitLevel.txt manually) (maybe have a load unit command? then a place loaded_units command?)++
-- Convert some of the very slow stuff (line of sight, AStar, Djikstra's) to a C module to make it faster.++
+- Convert some of the very slow stuff (AStar, Djikstra's) to a C module to make it faster.++
 - Consider upping effects of weapon triangle over time
 - D: 15 hit, 1 damage
 - C: 20 hit, 1 damage
@@ -62,3 +63,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Turnwheel
 - Make UnitSprite use a state machine, instead of a series of if statements
 - Add clamp to unit sprite draw (only if you could actually see the unit on the map)
+- Have status_effects be an ordered dict sorted by status.id. Also keep track of what components are present in a set so I don't have to do any(s.vantage for s in self.status_effects) all the time. If I do the latter, can remove many tags.
+- Have stats just be two lists and a couple of functions, rather than a meta'd class.
+- create get shell method for get excess attack and get excess spells

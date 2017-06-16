@@ -156,7 +156,7 @@ class GameStateObj(object):
 
             for unit in self.allunits:
                 if unit.position:
-                    self.grid_manager.set_unit_node(unit.position, unit.team)
+                    self.grid_manager.set_unit_node(unit.position, unit)
 
         self.generic()
         if 'phase_info' in load_info:
@@ -219,8 +219,9 @@ class GameStateObj(object):
         # And have the units arrive on map
         for unit in self.allunits:
             unit.resetUpdates()
-            unit.place_on_map(self)
-            unit.arrive(self, serializing=False)
+            if unit.position:
+                unit.place_on_map(self)
+                unit.arrive(self, serializing=False)
 
         self.info_menu_struct = {'current_state': 0,
                                  'scroll_units': [],

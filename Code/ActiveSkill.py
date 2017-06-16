@@ -547,25 +547,32 @@ class Aura(object):
     def __init__(self, aura_range, target, child):
         self.aura_range = int(aura_range)
         self.child = child
+        self.child_status = StatusObject.statusparser(child)
+        self.child_status.parent_status = self
         self.target = target
-        self.children = []
+        self.children = set()
+
+    def set_parent_unit(self, parent_unit):
+        self.parent_unit = parent_unit
+        self.child_status.parent_id = parent_unit.id
 
     def remove_child(self, affected_unit):
         logger.debug("Aura parent is removing a child.")
         l_c = len(self.children)
-        self.children = [u_id for u_id in self.children if u_id is not affected_unit.id]
+        self.children.discard(affected_unit.id)
         if l_c == len(self.children):
             print("Remove Child did not work!", affected_unit.name, affected_unit.position)
             print(self.children)
 
-    def apply(self, parent_unit, unit, gameStateObj):
-        if (self.target == 'Ally' and parent_unit.checkIfAlly(unit) and parent_unit is not unit) or \
-           (self.target == 'Enemy' and parent_unit.checkIfEnemy(unit)) or \
-           (self.target == 'Weakened_Enemy' and parent_unit.checkIfEnemy(unit) and unit.currenthp < unit.stats['HP']/2):
-            child_status = StatusObject.statusparser(self.child)
-            child_status.parent_status = self
-            child_status.parent_id = parent_unit.id
-            success = StatusObject.HandleStatusAddition(child_status, unit, gameStateObj)
+    def apply(self, unit, gameStateObj):
+        if (self.target == 'Ally' and self.parent_unit.checkIfAlly(unit) and self.parent_unit is not unit) or \
+           (self.target == 'Enemy' and self.parent_unit.checkIfEnemy(unit)):
+            success = StatusObject.HandleStatusAddition(self.child_status, unit, gameStateObj)
             if success:
-                self.children.append(unit.id)
-                logger.debug('Applying Aura %s to %s at %s', child_status.name, unit.name, unit.position)
+                self.children.add(unit.id)
+                logger.debug('Applying Aura %s to %s at %s', self.child_status.name, unit.name, unit.position)
+
+    def remove(self, unit, gameStateObj):
+        if unit.id in self.children:
+            StatusObject.HandleStatusRemoval(self.child_status, unit, gameStateObj)
+            # HandleStatusRemoval handles remove unit id from self.children

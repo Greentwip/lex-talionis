@@ -131,6 +131,10 @@ def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, pr
         groups[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
     elif unitLine[0] == 'mode':
         current_mode = int(unitLine[1])
+    elif unitLine[0] == 'player_characters':
+        for unit in allunits:
+            if unit.team == 'player' and not unit.dead:
+                reinforceUnits[unit.name] = (unit.id, None)
     elif check_mode(current_mode, gameStateObj.mode['difficulty']):
         # New Unit
         if unitLine[1] == "0":

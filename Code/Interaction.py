@@ -782,13 +782,9 @@ class Map_Combat(Combat):
         for status_obj in result.def_status:
             status_obj.parent_id = result.attacker.id
             StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
-            if status_obj.aura: # Re-arrive at where you are at so you can give your friendos their status
-                result.defender.arrive(gameStateObj)
         for status_obj in result.atk_status:
             status_obj.parent_id = result.defender.id
             StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
-            if status_obj.aura: # Re-arrive at where you are at so you can give your friendos their status
-                result.attacker.arrive(gameStateObj)
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP

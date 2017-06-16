@@ -205,9 +205,6 @@ class levelUpScreen(object):
                                 StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
                                 gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
                                 gameStateObj.stateMachine.changeState('itemgain')
-                                # Allow aura skills to propagate
-                                self.unit.leave(gameStateObj)
-                                self.unit.arrive(gameStateObj)
                 
                 return True
 

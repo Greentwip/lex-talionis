@@ -338,7 +338,7 @@ class InfoMenu(StateMachine.State):
         # Handle MountSymbols
         """if 'Dragon' in self.unit.tags:
             AidSurf = Engine.subsurface(ICONDICT['Aid'], (0,48,16,16))
-        elif self.unit.has_flying():
+        elif 'Flying' in self.unit.tags:
             AidSurf = Engine.subsurface(ICONDICT['Aid'], (0,32,16,16))
         elif 'Mounted' in self.unit.tags:
             AidSurf = Engine.subsurface(ICONDICT['Aid'], (0,16,16,16))
