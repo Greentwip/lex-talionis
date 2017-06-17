@@ -415,14 +415,16 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
                 return # Just ignore this new one
 
     # Check to see if we should reflect this status back at user
-    if not status.already_reflected and status.parent_id and not status.aura_child and any(other_status.reflect for other_status in unit.status_effects):
+    if not status.already_reflected and status.parent_id and not status.aura_child and 'reflect' in unit.status_bundle:
         p_unit = gameStateObj.get_unit_from_id(status.parent_id)
         s_copy = copy.deepcopy(status) # Create a copy of this status
         s_copy.parent_id = unit.id
         s_copy.already_reflected = True # So we don't get infinite reflections
         HandleStatusAddition(s_copy, p_unit, gameStateObj)
            
-    if not status.momentary: 
+    if not status.momentary:
+        # Actually Add!
+        unit.status_bundle.update(status.components.keys()) 
         unit.status_effects.append(status)
 
     if status.convert:
@@ -450,7 +452,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
             unit.tags.add('ActiveSkillCharged')
 
     if status.name == "Clumsy":
-        if any(status.horsemanship for status in unit.status_effects):
+        if 'horsemanship' in unit.status_bundle:
             HandleStatusRemoval(status, unit, gameStateObj)
     if status.horsemanship:
         for status in unit.status_effects:
@@ -459,20 +461,12 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     if status.flying:
         unit.remove_tile_status(gameStateObj, force=True)
-        unit.tags.add('Flying')
-    if status.unit_translucent:
-        unit.tags.add('Translucent')
-    if status.fleet_of_foot:
-        unit.tags.add('Fleet_of_Foot')
-    if status.pass_through:
-        unit.tags.add('Pass')
     if status.passive:
         for item in unit.items:
             status.passive.apply_mod(item)
 
     if status.aura:
         status.aura.set_parent_unit(unit)
-        unit.tags.add('hasAura')
         # Re-arrive at where you are at so you can give your friendos their status
         unit.propagate_aura(status.aura, gameStateObj)
 
@@ -488,7 +482,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
                 status.time.time_left = 1
 
     # If you have shrug off, lower this ailment, if temporary, to 0
-    if any(status.shrug_off for status in unit.status_effects):
+    if 'shrug_off' in unit.status_bundle:
         if status.time and status.time > 1:
             status.time.time_left = 1
 
@@ -517,6 +511,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
     logger.info('Removing status %s from %s at %s', status.id, unit.name, unit.position)
     if status in unit.status_effects:
         unit.status_effects.remove(status)
+        unit.status_bundle.subtract(status.components.keys())
     else:
         logger.warning('Status %s %s not present...', status.id, status.name)
         logger.warning(unit.status_effects)
@@ -532,19 +527,10 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
         unit.stats['SPD'].bonuses -= status.rescue.spd_penalty
     if status.flying:
         unit.acquire_tile_status(gameStateObj, force=True)
-        unit.tags.remove('Flying')
-    if status.unit_translucent:
-        unit.tags.remove('Translucent')
-    if status.fleet_of_foot:
-        unit.tags.remove('Fleet_of_Foot')
-    if status.pass_through:
-        unit.tags.remove('Pass')
     if status.passive:
         for item in unit.items:
             status.passive.remove_mod(item)
     # Tell the parent status that it is not connected to me anymore
-    if status.aura:
-        unit.tags.discard('hasAura')
     if status.aura_child:
         status.parent_status.remove_child(unit)
     if status.tether:
@@ -702,5 +688,6 @@ def deserialize(s_dict, unit, gameStateObj):
         for item in unit.items:
             status.passive.apply_mod(item)
     unit.status_effects.append(status)
+    unit.status_bundle.update(status.components.keys())
 
 feat_list = ['fStrength +2', 'fMagic +2', 'fSkill +3', 'fSpeed +2', 'fDefense +2', 'fResistance +2', 'fMovement +1', 'fConstitution +3', 'fMaximum HP +5', 'fLuck +4']

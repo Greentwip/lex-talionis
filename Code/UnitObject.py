@@ -1,4 +1,5 @@
 import random, time
+from collections import Counter
 from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
@@ -9,6 +10,9 @@ Utility, LevelUp, ItemMethods, Engine, Banner
 import logging
 logger = logging.getLogger(__name__)
 
+class Multiset(Counter):
+    def __contains__(self, item):
+        return self[item] > 0
 
 # === Helper component class for unit stats ===================================
 class Stat(object):
@@ -87,6 +91,7 @@ class UnitObject(object):
         # --- Optional tags and Skills
         self.tags = info['tags']
         self.status_effects = []
+        self.status_bundle = Multiset()
 
         if 'desc' in info and info['desc'] is not None:
             self.desc = info['desc']
@@ -375,7 +380,7 @@ class UnitObject(object):
                 Utility.calculate_distance(self.position, enemyunit.position) in e_wep.RNG:
                 if e_wep.brave:
                     e_num *= 2
-                if (CONSTANTS['def_double'] or any(status.def_double for status in enemyunit.status_effects)) and \
+                if (CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
                     enemyunit.attackspeed() - self.attackspeed() >= CONSTANTS['speed_to_double']:
                     e_num *= 2
             if e_num == 2:
@@ -609,12 +614,12 @@ class UnitObject(object):
                 gameStateObj.grid_manager.set_unit_node(self.position, None)
                 time_bounds = time.clock()
                 gameStateObj.boundary_manager.leave(self, gameStateObj)
-                #print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
+                print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
             self.remove_tile_status(gameStateObj)
         time_aura = time.clock()
         self.remove_aura_status(gameStateObj, serializing=serializing)
-        #print('Aura: %s'%(1000*(time.clock() - time_aura)))
-        #print('=== Leave %s %s'%(self.name, 1000*(time.clock() - time1)))
+        print('Aura: %s'%(1000*(time.clock() - time_aura)))
+        print('=== Leave %s %s'%(self.name, 1000*(time.clock() - time1)))
 
     def arrive(self, gameStateObj, serializing=False):
         time1 = time.clock()
@@ -624,12 +629,12 @@ class UnitObject(object):
                 gameStateObj.grid_manager.set_unit_node(self.position, self)
                 time_bounds = time.clock()
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
-                #print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
+                print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
             self.acquire_tile_status(gameStateObj)
             time_aura = time.clock()
             self.acquire_aura_status(gameStateObj, serializing=serializing)
-            #print('Aura: %s'%(1000*(time.clock() - time_aura)))
-        #print('=== Arrive %s %s'%(self.name, 1000*(time.clock() - time1)))
+            print('Aura: %s'%(1000*(time.clock() - time_aura)))
+        print('=== Arrive %s %s'%(self.name, 1000*(time.clock() - time1)))
 
     def remove_from_map(self, gameStateObj):
         if self.position:
@@ -674,9 +679,9 @@ class UnitObject(object):
         Now has support for hybrid weapons
         Now has support for no_weapons status
         """
-        if (item.weapon or item.spell) and any(status.no_weapons for status in self.status_effects):
+        if (item.weapon or item.spell) and 'no_weapons' in self.status_bundle:
             return False
-        if CustomObjects.WEAPON_TRIANGLE.isMagic(item) and any(status.no_magic_weapons for status in self.status_effects):
+        if CustomObjects.WEAPON_TRIANGLE.isMagic(item) and 'no_magic_weapons' in self.status_bundle:
             return False
         # if the item is a weapon
         if item.weapon:
@@ -1439,10 +1444,10 @@ class UnitObject(object):
         return True
 
     def has_canto(self):
-        return any((status.canto or status.canto_plus) for status in self.status_effects)
+        return 'canto' in self.status_bundle or 'canto_plus' in self.status_bundle
 
     def has_canto_plus(self):
-        return any(status.canto_plus for status in self.status_effects)
+        return 'canto_plus' in self.status_bundle
 
     def isSummon(self):
         return any(component.startswith('Summon_') for component in self.tags)
@@ -1598,7 +1603,7 @@ class UnitObject(object):
             if status.dynamic_avoid and eval(status.dynamic_avoid.conditional, globals(), locals()):
                 base += int(eval(status.dynamic_avoid.value, globals(), locals()))
         if self.position:
-            base += (0 if 'Flying' in self.tags else gameStateObj.map.tiles[self.position].AVO)
+            base += (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].AVO)
         return base
                 
     def damage(self, gameStateObj, item=None):
@@ -1613,12 +1618,8 @@ class UnitObject(object):
             damage += item.weapon.MT
             if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
                 damage += self.stats['MAG']
-                if any(status.ignis for status in self.status_effects):
-                    damage += self.stats['STR']/2
             else:
                 damage += self.stats['STR']
-                if any(status.ignis for status in self.status_effects):
-                    damage += self.stats['MAG']/2
             return damage
         elif item.spell:
             if item.damage:
@@ -1629,13 +1630,13 @@ class UnitObject(object):
         return damage
 
     def defense(self, gameStateObj):
-        return self.stats['DEF'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'Flying' in self.tags else gameStateObj.map.tiles[self.position].stats['DEF'])
+        return self.stats['DEF'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
 
     def resistance(self, gameStateObj):
         return self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1]
 
     def mixed_defense(self, gameStateObj):
-        return self.stats['DEF'] + self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'Flying' in self.tags else gameStateObj.map.tiles[self.position].stats['DEF'])
+        return self.stats['DEF'] + self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj):
@@ -1775,13 +1776,13 @@ class UnitObject(object):
         return serial_dict
 
     def acquire_tile_status(self, gameStateObj, force=False):
-        if self.position and (force or not 'Flying' in self.tags):
+        if self.position and (force or not 'flying' in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
                 if status not in self.status_effects:
                     StatusObject.HandleStatusAddition(status, self, gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):
-        if self.position and (force or not 'Flying' in self.tags):
+        if self.position and (force or not 'flying' in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
                 StatusObject.HandleStatusRemoval(status, self, gameStateObj)
 
@@ -1870,7 +1871,7 @@ class UnitObject(object):
             unit.leave(gameStateObj)
             unit.position = None
         self.hasAttacked = True
-        if not any(status.savior for status in self.status_effects):
+        if not 'savior' in self.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self, gameStateObj)
 
     def drop(self, position, gameStateObj):
@@ -1889,7 +1890,7 @@ class UnitObject(object):
         unit.TRV = self.TRV
         unit.strTRV = self.strTRV
         self.hasAttacked = True
-        if not any(status.savior for status in unit.status_effects):
+        if not 'savior' in self.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), unit, gameStateObj)
         self.unrescue(gameStateObj)
 
@@ -1897,7 +1898,7 @@ class UnitObject(object):
         self.TRV = unit.TRV
         self.strTRV = unit.strTRV
         self.hasTraded = True # Can no longer do everything
-        if not any(status.savior for status in self.status_effects):
+        if not 'savior' in self.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self, gameStateObj)
         unit.unrescue(gameStateObj)
 
@@ -1924,7 +1925,7 @@ class UnitObject(object):
         gameStateObj.stateMachine.changeState('dialogue')
 
         # Use up skeleton key if it was what was used
-        if not any(status.locktouch for status in self.status_effects):
+        if not 'locktouch' in self.status_bundle:
             for item in self.items:
                 if item.name == "Skeleton Key":
                     item.uses.decrement()
@@ -2035,7 +2036,7 @@ class UnitObject(object):
             logger.debug('%s %s dies', self.name, self)
 
     def play_movement_sound(self, gameStateObj):
-        if 'Flying' in self.tags:
+        if 'flying' in self.status_bundle:
             SOUNDDICT['Heavy Wing Flap'].play(-1)
         elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
             SOUNDDICT['Horse Steps'].play(-1)
@@ -2045,7 +2046,7 @@ class UnitObject(object):
             SOUNDDICT['Light Foot Steps 1'].play(-1)
 
     def stop_movement_sound(self, gameStateObj):
-        if 'Flying' in self.tags:
+        if 'flying' in self.status_bundle:
             SOUNDDICT['Heavy Wing Flap'].stop()
         elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
             SOUNDDICT['Horse Steps'].stop()
@@ -2083,7 +2084,7 @@ class UnitObject(object):
             if self.path: #and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
                 new_position = self.path.pop()
                 if self.position != new_position:
-                    self.movement_left -= (CONSTANTS['normal_movement'] if 'Flying' in self.tags else gameStateObj.map.tiles[new_position].get_mcost(self))
+                    self.movement_left -= (CONSTANTS['normal_movement'] if 'flying' in self.status_bundle else gameStateObj.map.tiles[new_position].get_mcost(self))
                 self.position = new_position
                 # Camera auto-follow
                 if not gameStateObj.cursor.camera_follow:

@@ -110,7 +110,7 @@ class AI(object):
                 self.state = 'Steal'
 
             elif self.state == 'Steal':
-                if not self.ai1_state in [0, 5, 6] and any(status.steal for status in self.unit.status_effects) and len(self.unit.items) < CONSTANTS['max_items']:
+                if not self.ai1_state in [0, 5, 6] and 'steal' in self.unit.status_bundle and len(self.unit.items) < CONSTANTS['max_items']:
                     success = self.run_steal_ai(gameStateObj, self.valid_moves)
                 self.state = 'Attack_Init'
 
@@ -237,7 +237,7 @@ class AI(object):
                     gameStateObj.stateMachine.changeState('combat')
                     if isinstance(defender, UnitObject.UnitObject) and self.unit.checkIfEnemy(defender):
                         self.unit.handle_fight_quote(defender, gameStateObj)
-                elif any(status.steal for status in self.unit.status_effects):
+                elif 'steal' in self.unit.status_bundle:
                     unit = gameStateObj.get_unit_from_pos(self.target_to_interact_with)
                     unit.remove_item(self.item_to_use)
                     self.unit.add_item(self.item_to_use)
@@ -287,7 +287,7 @@ class AI(object):
 
     def check_dismount(self, gameStateObj):
         """Determines if unit should dismount from land-based mount to traverse water"""
-        if self.unit.my_mount and not any(status.fleet_of_foot for status in self.unit.status_effects):
+        if self.unit.my_mount and not 'fleet_of_foot' in self.unit.status_bundle:
             adjtiles = self.unit.getAdjacentTiles(gameStateObj)
             # Determine which tile is closest to target
             closest_tile = sorted(adjtiles, key=lambda pos:Utility.calculate_distance(self.target_to_interact_with, pos.position))[0]

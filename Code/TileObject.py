@@ -642,9 +642,9 @@ class TileObject(object):
     def get_mcost(self, unit):
         if isinstance(unit, int):
             return MCOSTDATA[self.mcost][unit]
-        elif 'Flying' in unit.tags:
+        elif 'flying' in unit.status_bundle:
             return MCOSTDATA[self.mcost][CONSTANTS['flying_mcost_column']]
-        elif 'Fleet_of_Foot' in unit.tags:
+        elif 'fleet_of_foot' in unit.status_bundle:
             return MCOSTDATA[self.mcost][CONSTANTS['fleet_mcost_column']]
         return MCOSTDATA[self.mcost][unit.movement_group]
 

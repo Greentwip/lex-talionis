@@ -79,9 +79,9 @@ class Grid_Manager(object):
         return self.aura_map[pos[0] * self.gridHeight + pos[1]]
 
     def get_grid(self, unit):
-        if 'Flying' in unit.tags:
+        if 'flying' in unit.status_bundle:
             return self.grids[CONSTANTS['flying_mcost_column']]
-        elif 'Fleet_of_Foot' in unit.tags:
+        elif 'fleet_of_foot' in unit.status_bundle:
             return self.grids[CONSTANTS['fleet_mcost_column']]
         else:
             return self.grids[unit.movement_group]
@@ -211,7 +211,7 @@ class AStar(object):
             for c in adj_cells:
                 unit_team = gameStateObj.grid_manager.get_team_node((c.x, c.y))
                 if c.reachable and c not in self.closed and \
-                    (not unit_team or (not ally_block and gameStateObj.compare_teams(self.unit.team, unit_team)) or 'Pass' in self.unit.tags):
+                    (not unit_team or (not ally_block and gameStateObj.compare_teams(self.unit.team, unit_team)) or 'pass_through' in self.unit.status_bundle):
                     if (c.f, c) in self.open:
                         # if adj cell in open list, check if current path is
                         # better than the one previously found for this adj
@@ -280,7 +280,7 @@ class Djikstra(object):
             for c in adj_cells:
                 unit_team = gameStateObj.grid_manager.get_team_node((c.x, c.y))
                 if c.reachable and c not in self.closed and \
-                    (not unit_team or gameStateObj.compare_teams(self.unit.team, unit_team) or 'Pass' in self.unit.tags):
+                    (not unit_team or gameStateObj.compare_teams(self.unit.team, unit_team) or 'pass_through' in self.unit.status_bundle):
                     if (c.g, c) in self.open:
                         # if adj cell in open list, check if current path is
                         # better than the one previously found for this adj

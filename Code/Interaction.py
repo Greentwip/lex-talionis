@@ -68,7 +68,7 @@ class Solver(object):
 
         #if OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
         if self.item.weapon:
-            if roll < to_hit and not (defender in self.splash and (isinstance(defender, TileObject.TileObject) or any(status.evasion for status in defender.status_effects))):
+            if roll < to_hit and not (defender in self.splash and (isinstance(defender, TileObject.TileObject) or 'evasion' in defender.status_bundle)):
                 result.outcome = True
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
             # Missed but does half damage
@@ -170,7 +170,7 @@ class Solver(object):
 
     def defender_has_vantage(self):
         return isinstance(self.defender, UnitObject.UnitObject) and self.outspeed(self.defender, self.attacker) and \
-               any(status.vantage for status in self.defender.status_effects) and not self.item.cannot_be_countered and \
+               'vantage' in self.defender.status_bundle and not self.item.cannot_be_countered and \
                self.defender_can_counterattack() and self.item.weapon
 
     def outspeed(self, unit1, unit2):
@@ -178,7 +178,7 @@ class Solver(object):
         return unit1.attackspeed() >= unit2.attackspeed() + CONSTANTS['speed_to_double']
 
     def def_double(self):
-        return (CONSTANTS['def_double'] or any(status.vantage or status.def_double for status in self.defender.status_effects)) and self.def_rounds < 2 and self.outspeed(self.defender, self.attacker)
+        return (CONSTANTS['def_double'] or 'vantage' in self.defender.status_bundle or 'def_double' in self.defender.status_bundle) and self.def_rounds < 2 and self.outspeed(self.defender, self.attacker)
 
     def determine_state(self, gameStateObj):
         logger.debug('Interaction State 1: %s', self.state)
@@ -512,7 +512,7 @@ class Combat(object):
                             my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in other_unit.tags else 0)
                         else:
                             my_exp += normal_exp
-                        if any(status.no_exp for status in other_unit.status_effects):
+                        if 'no_exp' in other_unit.status_bundle:
                             my_exp = 0
                         logger.debug('Attacker gained %s exp', my_exp)
 
@@ -546,7 +546,7 @@ class Combat(object):
                             my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in self.p1.tags else 0)
                         else:
                             my_exp += normal_exp 
-                        if any(status.no_exp for status in self.p1.status_effects):
+                        if 'no_exp' in other_unit.status_bundle:
                             my_exp = 0
 
                     # No free exp for affecting myself or being affected by allies

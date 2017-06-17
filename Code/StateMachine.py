@@ -731,7 +731,7 @@ class MenuState(State):
         # Find adjacent positions
         gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
         ### Handle Stun ###
-        if any(status.stun for status in cur_unit.status_effects):
+        if 'stun' in cur_unit.status_bundle:
             gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('canto_wait')
             return 'repeat'
@@ -786,7 +786,7 @@ class MenuState(State):
                     options.append(WORDS['Vendor'])
             # If the unit is on or adjacent to an unlockable door or on a treasure chest
             if not cur_unit.hasAttacked:
-                if any(status.locktouch for status in cur_unit.status_effects) or 'Skeleton Key' in [item.name for item in cur_unit.items]:
+                if 'locktouch' in cur_unit.status_bundle or 'Skeleton Key' in [item.name for item in cur_unit.items]:
                     if WORDS['Locked'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
                         options.append(WORDS['Unlock'])
                     elif any([WORDS['Locked'] in gameStateObj.map.tile_info_dict[tile.position] for tile in adjtiles]):

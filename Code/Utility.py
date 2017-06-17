@@ -1,19 +1,16 @@
 # Utility Functions
-import logging
-logger = logging.getLogger(__name__)
-
 try:
     import manhattan_sphere
     FAST_SPHERE = True
 except:
     FAST_SPHERE = False
-    logger.warning('Fast manhattan sphere generation not available. Falling back on default Python implementation.')
+    print('Fast manhattan sphere generation not available. Falling back on default Python implementation.')
 try:
     import LOS
     FAST_LOS = True
 except:
     FAST_LOS = False
-    logger.warning('Fast line of sight calculation not available. Falling back on default Python implementation.')
+    print('Fast line of sight calculation not available. Falling back on default Python implementation.')
 
 # === TAXICAB DISTANCE =================================================
 def calculate_distance(position1, position2):

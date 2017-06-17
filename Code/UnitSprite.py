@@ -98,7 +98,7 @@ class UnitSprite(object):
         elif self.unit.flickerRed and gameStateObj.boundary_manager.draw_flag:
             image = Image_Modification.flickerImageRed(image.convert_alpha(), 80)
         #if any(status.unit_translucent for status in self.unit.status_effects):
-        if 'Translucent' in self.unit.tags:
+        if 'unit_translucent' in self.unit.status_bundle:
             image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
         # What is this line even doing? - Something majorly important though
         # Each image has (self.image.get_width() - 32)/2 buffers on the left and right of it, to handle any off tile spriting

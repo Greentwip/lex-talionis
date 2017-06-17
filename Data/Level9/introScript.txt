@@ -19,7 +19,6 @@ s;Sam;Coyote, you said this passage was abandoned.{w};auto
 s;Coyote;Old, not abandoned.{w};auto
 s;Sam;Urgh...{w}{br}Everyone, be on your guard.{w}{br}We don't want any surprises.{w};auto
 r;Joel;Nia;Sam;Coyote
-m;Crisis in the North
 set_cursor;0,30
 end_skip
 t;1
@@ -46,6 +45,7 @@ r;Joel
 u;Sam;FarLeft
 s;Sam;What could be the purpose of all this?{w};auto
 r;Sam;Althea
+m;Combat Theme 4
 add_unit;Jakin;6,26;warp
 add_unit;Boaz;6,28;warp
 set_cursor;Jakin;force_hold

@@ -1,5 +1,5 @@
 # Binary-compiled files
-*.py[cod]
+*.py[co]
 
 # Save States
 Saves/*.p
