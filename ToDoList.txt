@@ -63,6 +63,4 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Turnwheel
 - Make UnitSprite use a state machine, instead of a series of if statements
 - Add clamp to unit sprite draw (only if you could actually see the unit on the map)
-- Have status_effects be an ordered dict sorted by status.id.
-- Have stats just be two lists and a couple of functions, rather than a meta'd class.
 - create get shell method for get excess attack and get excess spells

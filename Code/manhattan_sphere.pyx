@@ -1,5 +1,6 @@
 # manhattan_spheres.py
-# cython
+# cython: boundscheck=False
+# cython: wraparound=False
 
 def find_manhattan_spheres(rng, int pos_x, int pos_y):
     cdef int r, x, y1, y2

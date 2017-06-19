@@ -1,5 +1,6 @@
 # line_of_sight.pyx
-# cython
+# cython: boundscheck=False
+# cython: wraparound=False
 
 cdef int get_pos(int x, int y, int grid_height):
     return x * grid_height + y
@@ -15,16 +16,19 @@ cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height)
         cdef int dx, dy, x, y, xstep, ystep, ddy, ddx, errorprev, error
         dx = x2 - x1
         dy = y2 - y1
-        x, y = x1, y1
+        x = x1
+        y = y1
 
-        xstep, ystep = 1, 1
+        xstep = 1
+        ystep = 1
         if dy < 0:
             ystep = -1
             dy = -dy
         if dx < 0:
             xstep = -1
             dx = -dx
-        ddy, ddx = 2*dy, 2*dx
+        ddy = 2*dy
+        ddx = 2*dx
 
         if ddx >= ddy:
             errorprev = error = dx
@@ -74,6 +78,7 @@ cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height)
 
 def line_of_sight(source_pos, dest_pos, int max_range, opacity_map, int grid_height):
     cdef int x1, y1, x2, y2
+    cdef tuple pos, s_pos
 
     # 0 is unknown, 1 is dark, 2 is lit
     all_tiles = {}

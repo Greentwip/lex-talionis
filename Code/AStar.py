@@ -40,6 +40,7 @@ class Grid_Manager(object):
         self.team_map = self.init_unit_map()
         self.unit_map = self.init_unit_map()
         self.aura_map = self.init_aura_map()
+        self.known_auras = {} # Key: Aura, Value: Set of positions
 
     def init_unit_map(self):
         cells = []
@@ -69,15 +70,24 @@ class Grid_Manager(object):
     def get_team_node(self, pos):
         return self.team_map[pos[0] * self.gridHeight + pos[1]]
 
+    # === For Auras ===
+    def reset_aura(self, aura):
+        self.known_auras[aura] = set()
+
     def add_aura_node(self, pos, aura):
         self.aura_map[pos[0] * self.gridHeight + pos[1]].add(aura)
+        self.known_auras[aura].add(pos)
 
     def remove_aura_node(self, pos, aura):
         self.aura_map[pos[0] * self.gridHeight + pos[1]].discard(aura)
 
+    def get_aura_positions(self, aura):
+        return self.known_auras[aura]
+
     def get_aura_node(self, pos):
         return self.aura_map[pos[0] * self.gridHeight + pos[1]]
 
+    # === For Movement ===
     def get_grid(self, unit):
         if 'flying' in unit.status_bundle:
             return self.grids[CONSTANTS['flying_mcost_column']]

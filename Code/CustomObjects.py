@@ -488,21 +488,21 @@ class BoundaryManager(object):
         self.surf = None
 
     def _add_unit(self, unit, gameStateObj):
-        #import time
-        #time1 = time.clock()*1000
+        import time
+        time1 = time.clock()*1000
         ValidMoves = unit.getValidMoves(gameStateObj, force=True)
-        #time2 = time.clock()*1000
+        time2 = time.clock()*1000
         ValidAttacks, ValidSpells = [], []
         if unit.getMainWeapon():
             ValidAttacks = unit.getExcessAttacks(gameStateObj, ValidMoves, boundary=True)
         if unit.getMainSpell():
             ValidSpells = unit.getExcessSpellAttacks(gameStateObj, ValidMoves, boundary=True)
-        #time3 = time.clock()*1000
+        time3 = time.clock()*1000
         self._set(ValidAttacks, 'attack', unit.id)
         self._set(ValidSpells, 'spell', unit.id)
         #print(unit.name, unit.position, unit.klass, unit.event_id)
         self.surf = None
-        #print(time2 - time1, time3 - time2, time.clock()*1000 - time3)
+        print(time2 - time1, time3 - time2)
 
     def _remove_unit(self, unit, gameStateObj):
         for kind, grid in self.grids.iteritems():
@@ -521,7 +521,7 @@ class BoundaryManager(object):
             for key, grid in self.grids.iteritems():
                 # What other units were affecting that position -- only enemies can affect position
                 other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
-                other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
+            other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
             for other_unit in other_units:
@@ -538,7 +538,7 @@ class BoundaryManager(object):
             for key, grid in self.grids.iteritems():
                 # What other units were affecting that position -- only enemies can affect position
                 other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
-                other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
+            other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
                 #print([(other_unit.name, other_unit.position, other_unit.event_id, other_unit.klass, x, y) for other_unit in other_units])
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
@@ -646,7 +646,7 @@ class BoundaryManager(object):
                     print('- '),
             print('\n'),
 
-# === GENERIC ARROW OBJECT ========================================
+# === GENERIC ARROW OBJECT ===================================================
 class ArrowObject(object):
     def __init__(self, sprite, (rindex, cindex), position, name):
         left = 1+((TILEWIDTH+2)*cindex)+(1*int(cindex/2))

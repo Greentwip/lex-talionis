@@ -875,6 +875,7 @@ class UnitObject(object):
     # For bonuses
     def apply_stat_change(self, levelup_list):
         logger.debug("Applying stat change %s to %s", levelup_list, self.name)
+        levelup_list_len = len(levelup_list)
         # Levelup_list should be a len(8) list.
         self.stats['HP'].bonuses += levelup_list[0]
         self.stats['STR'].bonuses += levelup_list[1]
@@ -885,10 +886,10 @@ class UnitObject(object):
         self.stats['DEF'].bonuses += levelup_list[6]
         self.stats['RES'].bonuses += levelup_list[7]
         # Handle CON increase
-        if len(levelup_list) > 8:
+        if levelup_list_len > 8:
             self.stats['CON'].bonuses += levelup_list[8]
         # Handle CON increase
-        if len(levelup_list) > 9:
+        if levelup_list_len > 9:
             self.stats['MOV'].bonuses += levelup_list[9]
 
         # Handle changed cases
@@ -899,15 +900,20 @@ class UnitObject(object):
 # === TILE ALGORITHMS ===
     # Kind of a wrapper around the recursive algorithm for finding movement
     def getValidMoves(self, gameStateObj, force=False):
+        import time
         if not force and self.hasMoved and (not self.has_canto() or self.finished): # No Valid moves once moved
             return []
         my_grid = gameStateObj.grid_manager.get_grid(self)
+        time1 = time.clock()*1000
         pathfinder = AStar.Djikstra(gameStateObj, self.position, my_grid, self)
+        time2 = time.clock()*1000
         # Run the pathfinder
         movement_left = self.movement_left if not force else self.stats['MOV']
         ValidMoves = pathfinder.process(gameStateObj, movement_left)
+        time3 = time.clock()*1000
         # Own position is always a valid move
         ValidMoves.add(self.position)
+        print(time2 - time1, time3 - time2)
         return ValidMoves
         
     def displayMoves(self, gameStateObj, ValidMoves, light=False):
@@ -1800,6 +1806,7 @@ class UnitObject(object):
     def propagate_aura(self, aura, gameStateObj):
         # Get affected positions
         if self.position:
+            gameStateObj.grid_manager.reset_aura(aura)
             positions = Utility.find_manhattan_spheres(range(1, aura.aura_range+1), self.position)
             positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
             for pos in positions:
@@ -1810,25 +1817,25 @@ class UnitObject(object):
                         aura.apply(other_unit, gameStateObj)
 
     def remove_aura_status(self, gameStateObj, serializing=False):
+        # for status in reversed(self.status_effects):
+            # if status.aura_child:
+                # StatusObject.HandleStatusRemoval(status, self, gameStateObj)
         # Remove me from the effects of other auras
-        for status in reversed(self.status_effects):
-            if status.aura_child:
-                StatusObject.HandleStatusRemoval(status, self, gameStateObj)
-
-        # Remove my auras
         if self.position:
+            for aura in gameStateObj.grid_manager.get_aura_node(self.position):
+                aura.remove(self, gameStateObj)
+
+            # Remove my auras
             for status in self.status_effects:
                 if status.aura:
-                    positions = Utility.find_manhattan_spheres(range(1, status.aura.aura_range+1), self.position)
-                    positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
-                    for pos in positions:
-                        if not CONSTANTS['aura_los'] or Utility.line_of_sight([self.position], [pos], status.aura.aura_range, gameStateObj):
-                            gameStateObj.grid_manager.remove_aura_node(pos, status.aura)
-                            other_unit = gameStateObj.grid_manager.get_unit_node(pos)
-                            if other_unit:
-                                status.aura.remove(other_unit, gameStateObj)
-                                if not serializing:
-                                    other_unit.repull_aura(status.aura, gameStateObj)
+                    for pos in gameStateObj.grid_manager.get_aura_positions(status.aura):
+                        gameStateObj.grid_manager.remove_aura_node(pos, status.aura)
+                        other_unit = gameStateObj.grid_manager.get_unit_node(pos)
+                        if other_unit:
+                            status.aura.remove(other_unit, gameStateObj)
+                            if not serializing:
+                                other_unit.repull_aura(status.aura, gameStateObj)
+                    gameStateObj.grid_manager.reset_aura(status.aura)
 
     def pull_auras(self, gameStateObj):
         # Get other peoples auras

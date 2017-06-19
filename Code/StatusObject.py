@@ -405,14 +405,15 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         return
     logger.info('Adding Status %s to %s at %s', status.id, unit.name, unit.position)
     # Check to see if we need to remove other statuses
-    for other_status in unit.status_effects:
+    if not status.stack:
         # If this is a status that doesn't say it stacks, remove older versions of it
-        if other_status.id == status.id and not status.stack:
-            logger.info('Status %s already present', status.id)
-            if status.time or status.remove_range:
-                HandleStatusRemoval(other_status, unit, gameStateObj)
-            if status.aura_child:
-                return # Just ignore this new one
+        for other_status in unit.status_effects:
+            if other_status.id == status.id:
+                logger.info('Status %s already present', status.id)
+                if status.time or status.remove_range:
+                    HandleStatusRemoval(other_status, unit, gameStateObj)
+                else:
+                    return # Just ignore this new one
 
     # Check to see if we should reflect this status back at user
     if not status.already_reflected and status.parent_id and not status.aura_child and 'reflect' in unit.status_bundle:
@@ -461,6 +462,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     if status.flying:
         unit.remove_tile_status(gameStateObj, force=True)
+        
     if status.passive:
         for item in unit.items:
             status.passive.apply_mod(item)
