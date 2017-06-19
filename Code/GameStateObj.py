@@ -395,12 +395,11 @@ class GameStateObj(object):
         self.prefabs = []
         self.objective = None
 
-    player_team = {'player', 'other'}
     def compare_teams(self, team1, team2):
         # Returns True if allies, false if enemies
         if team1 == team2:
             return True
-        elif team1 in self.player_team and team2 in self.player_team:
+        elif (team1 == 'player' and team2 == 'other') or (team2 == 'player' and team1 == 'other'):
             return True
         return False
 

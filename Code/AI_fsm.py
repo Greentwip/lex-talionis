@@ -797,7 +797,7 @@ class Secondary_AI(object):
         self.double_move = self.unit.stats['MOV']*2 + self.unit.getMaxRange()*CONSTANTS['normal_movement']
 
         self.grid = gameStateObj.grid_manager.get_grid(self.unit)
-        self.pathfinder = AStar.AStar(gameStateObj, self.unit.position, None, self.grid, self.unit)
+        self.pathfinder = AStar.AStar(self.unit.position, None, self.grid, gameStateObj.map.width, gameStateObj.map.height, self.unit.team, 'pass_through' in self.unit.status_bundle)
 
         # Flags so we don't do things twice
         self.widen_flag = False # Determines if we've already widened our search

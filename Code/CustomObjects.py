@@ -433,9 +433,11 @@ class BoundaryManager(object):
         self.gridHeight = tilemap.height
         self.gridWidth = tilemap.width
         self.grids = {'attack': self.init_grid(),
-                      'spell': self.init_grid()}
+                      'spell': self.init_grid(),
+                      'movement': self.init_grid()}
         self.dictionaries = {'attack': {},
-                             'spell': {}}
+                             'spell': {},
+                             'movement': {}}
         self.order = ['all_spell', 'all_attack', 'spell', 'attack']
 
         self.draw_flag = False
@@ -488,21 +490,17 @@ class BoundaryManager(object):
         self.surf = None
 
     def _add_unit(self, unit, gameStateObj):
-        import time
-        time1 = time.clock()*1000
         ValidMoves = unit.getValidMoves(gameStateObj, force=True)
-        time2 = time.clock()*1000
         ValidAttacks, ValidSpells = [], []
         if unit.getMainWeapon():
             ValidAttacks = unit.getExcessAttacks(gameStateObj, ValidMoves, boundary=True)
         if unit.getMainSpell():
             ValidSpells = unit.getExcessSpellAttacks(gameStateObj, ValidMoves, boundary=True)
-        time3 = time.clock()*1000
         self._set(ValidAttacks, 'attack', unit.id)
         self._set(ValidSpells, 'spell', unit.id)
+        self._set(ValidMoves, 'movement', unit.id)
         #print(unit.name, unit.position, unit.klass, unit.event_id)
         self.surf = None
-        print(time2 - time1, time3 - time2)
 
     def _remove_unit(self, unit, gameStateObj):
         for kind, grid in self.grids.iteritems():
@@ -517,10 +515,11 @@ class BoundaryManager(object):
         # Update ranges of other units that might be affected by my leaving
         if unit.position:
             x, y = unit.position
-            other_units = set()
-            for key, grid in self.grids.iteritems():
+            other_units = gameStateObj.get_unit_from_id(self.grids['movement'][x * self.gridHeight + y])
+            #other_units = set()
+            #for key, grid in self.grids.iteritems():
                 # What other units were affecting that position -- only enemies can affect position
-                other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
+            #    other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
             other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
@@ -534,10 +533,11 @@ class BoundaryManager(object):
 
             # Update ranges of other units that might be affected by my arrival
             x, y = unit.position
-            other_units = set()
-            for key, grid in self.grids.iteritems():
+            other_units = gameStateObj.get_unit_from_id(self.grids['movement'][x * self.gridHeight + y])
+            #other_units = set()
+            #for key, grid in self.grids.iteritems():
                 # What other units were affecting that position -- only enemies can affect position
-                other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
+            #    other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
             other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
                 #print([(other_unit.name, other_unit.position, other_unit.event_id, other_unit.klass, x, y) for other_unit in other_units])
             for other_unit in other_units:
@@ -555,8 +555,8 @@ class BoundaryManager(object):
     def reset_pos(self, pos_group, gameStateObj):
         other_units = set()
         for key, grid in self.grids.iteritems():
+            # What other units are affecting those positions -- need to check every grid because line of sight might change
             for (x, y) in pos_group:
-                # What other units were affecting that position
                 other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
         for other_unit in other_units:
             self._remove_unit(other_unit, gameStateObj)

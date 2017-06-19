@@ -1,11 +1,11 @@
-import random, time
+import random
 from collections import Counter
 from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
 import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject, \
 AI_fsm, Transitions, Image_Modification, Dialogue, UnitSprite, StatusObject, \
-Utility, LevelUp, ItemMethods, Engine, Banner
+Utility, LevelUp, ItemMethods, Engine, Banner, Djikstra
 
 import logging
 logger = logging.getLogger(__name__)
@@ -607,34 +607,22 @@ class UnitObject(object):
         # Path is backwards, goes from goal node to start node
 
     def leave(self, gameStateObj, serializing=False):
-        time1 = time.clock()
         if self.position:
             logger.debug('Leave %s %s %s', self, self.name, self.position)
             if not serializing:
                 gameStateObj.grid_manager.set_unit_node(self.position, None)
-                time_bounds = time.clock()
                 gameStateObj.boundary_manager.leave(self, gameStateObj)
-                print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
             self.remove_tile_status(gameStateObj)
-        time_aura = time.clock()
         self.remove_aura_status(gameStateObj, serializing=serializing)
-        print('Aura: %s'%(1000*(time.clock() - time_aura)))
-        print('=== Leave %s %s'%(self.name, 1000*(time.clock() - time1)))
 
     def arrive(self, gameStateObj, serializing=False):
-        time1 = time.clock()
         if self.position:
             logger.debug('Arrive %s %s %s', self, self.name, self.position)
             if not serializing:
                 gameStateObj.grid_manager.set_unit_node(self.position, self)
-                time_bounds = time.clock()
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
-                print('Bounds: %s'%(1000*(time.clock() - time_bounds)))
             self.acquire_tile_status(gameStateObj)
-            time_aura = time.clock()
             self.acquire_aura_status(gameStateObj, serializing=serializing)
-            print('Aura: %s'%(1000*(time.clock() - time_aura)))
-        print('=== Arrive %s %s'%(self.name, 1000*(time.clock() - time1)))
 
     def remove_from_map(self, gameStateObj):
         if self.position:
@@ -648,10 +636,10 @@ class UnitObject(object):
             for s_id in gameStateObj.map.status_effects:
                 StatusObject.HandleStatusAddition(s_id, self, gameStateObj)
 
-    # Pathfinding algorithm (shitty A* - not actually shitty anymore...)
+    # Pathfinding algorithm
     def getPath(self, gameStateObj, goalPosition, ally_block=False):
         my_grid = gameStateObj.grid_manager.get_grid(self)
-        pathfinder = AStar.AStar(gameStateObj, self.position, goalPosition, my_grid, self)
+        pathfinder = AStar.AStar(self.position, goalPosition, my_grid, gameStateObj.map.width, gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
         # Run the pathfinder
         pathfinder.process(gameStateObj, ally_block=ally_block)
         # return the path
@@ -900,20 +888,15 @@ class UnitObject(object):
 # === TILE ALGORITHMS ===
     # Kind of a wrapper around the recursive algorithm for finding movement
     def getValidMoves(self, gameStateObj, force=False):
-        import time
         if not force and self.hasMoved and (not self.has_canto() or self.finished): # No Valid moves once moved
             return []
         my_grid = gameStateObj.grid_manager.get_grid(self)
-        time1 = time.clock()*1000
-        pathfinder = AStar.Djikstra(gameStateObj, self.position, my_grid, self)
-        time2 = time.clock()*1000
+        pathfinder = AStar.Djikstra(self.position, my_grid, gameStateObj.map.width, gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
         # Run the pathfinder
         movement_left = self.movement_left if not force else self.stats['MOV']
-        ValidMoves = pathfinder.process(gameStateObj, movement_left)
-        time3 = time.clock()*1000
+        ValidMoves = pathfinder.process(gameStateObj.grid_manager.team_map, movement_left)
         # Own position is always a valid move
         ValidMoves.add(self.position)
-        print(time2 - time1, time3 - time2)
         return ValidMoves
         
     def displayMoves(self, gameStateObj, ValidMoves, light=False):
@@ -950,11 +933,7 @@ class UnitObject(object):
     def getExcessAttacks(self, gameStateObj, ValidMoves, both=False, boundary=False):
         potentialRange = self.findPotentialRange(both=both)
 
-        # replace with get_shell that has been cythonized
-        ValidAttacks = set()
-        for validmove in ValidMoves:
-            ValidAttacks |= Utility.find_manhattan_spheres(potentialRange, validmove)
-        ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
+        ValidAttacks = Utility.get_shell(ValidMoves, potentialRange, gameStateObj.map)
         # Can't attack own team -- maybe not necessary?
         if not boundary:
             ValidAttacks = [pos for pos in ValidAttacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_team_node(pos))]
@@ -974,10 +953,7 @@ class UnitObject(object):
     def getExcessSpellAttacks(self, gameStateObj, ValidMoves, boundary=False):
         potentialRange = self.findPotentialRange(spell=True, boundary=boundary)
 
-        ValidAttacks = set()
-        for validmove in ValidMoves:
-            ValidAttacks |= Utility.find_manhattan_spheres(potentialRange, validmove)
-        ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
+        ValidAttacks = Utility.get_shell(ValidMoves, potentialRange, gameStateObj.map)
 
         # Now filter based on types of spells I've used
         # There are three types of spells, ALLY, ENEMY, TILE
@@ -1023,9 +999,7 @@ class UnitObject(object):
                         break
         elif item.spell:
             if item.spell.targets == 'Tile':
-                for valid_move in valid_moves:
-                    targets |= Utility.find_manhattan_spheres(item.RNG, valid_move)
-                targets = [pos for pos in targets if gameStateObj.map.check_bounds(pos)]
+                targets = Utility.get_shell(valid_moves, item.RNG, gameStateObj.map)
             elif item.beneficial:
                 ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and \
                               unit.team not in team_ignore and unit.name not in name_ignore]
@@ -1809,12 +1783,13 @@ class UnitObject(object):
             gameStateObj.grid_manager.reset_aura(aura)
             positions = Utility.find_manhattan_spheres(range(1, aura.aura_range+1), self.position)
             positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
+            if CONSTANTS['aura_los']:
+                positions = Utility.line_of_sight([self.position], positions, aura.aura_range, gameStateObj)
             for pos in positions:
-                if not CONSTANTS['aura_los'] or Utility.line_of_sight([self.position], [pos], aura.aura_range, gameStateObj):
-                    gameStateObj.grid_manager.add_aura_node(pos, aura)
-                    other_unit = gameStateObj.grid_manager.get_unit_node(pos)
-                    if other_unit:
-                        aura.apply(other_unit, gameStateObj)
+                gameStateObj.grid_manager.add_aura_node(pos, aura)
+                other_unit = gameStateObj.grid_manager.get_unit_node(pos)
+                if other_unit:
+                    aura.apply(other_unit, gameStateObj)
 
     def remove_aura_status(self, gameStateObj, serializing=False):
         # for status in reversed(self.status_effects):
@@ -1851,17 +1826,11 @@ class UnitObject(object):
                     aura.apply(self, gameStateObj)
 
     def add_aura_highlights(self, gameStateObj):
-        high_pos = []
-        # Add Highlights
-        for status in [status for status in self.status_effects if status.aura]:
-            for r in range(0, status.aura.aura_range + 1):
-                # Finds manhattan spheres of radius r
-                for x in range(-r, r + 1):
-                    spaces = set([(r - abs(x)), -(r - abs(x))])
-                    for y in spaces:
-                        pos = self.position[0] + x, self.position[1] + y
-                        if not CONSTANTS['aura_los'] or (gameStateObj.map.check_bounds(pos) and Utility.line_of_sight([self.position], [pos], status.aura.aura_range, gameStateObj)):
-                            gameStateObj.highlight_manager.add_highlight(pos, 'aura', allow_overlap=True)
+        for status in self.status_effects:
+            if status.aura:
+                positions = gameStateObj.grid_manager.get_aura_positions(status.aura)
+                for pos in positions:
+                    gameStateObj.highlight_manager.add_highlight(pos, 'aura', allow_overlap=True)
 
     def remove_aura_highlights(self, gameStateObj):
         # Remove all highlights that share a name with my aura

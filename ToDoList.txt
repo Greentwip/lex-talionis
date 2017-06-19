@@ -1,5 +1,3 @@
-- arrive and leave speed-up (main culprits are getting valid moves, and placing and removing auras)
-
 -- KNOWN ISSUES:
 - Music may not work on or even crash Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)
 - Avast Antivirus or other antiviruses may slow down certain actions that write to disk. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
@@ -63,4 +61,3 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Turnwheel
 - Make UnitSprite use a state machine, instead of a series of if statements
 - Add clamp to unit sprite draw (only if you could actually see the unit on the map)
-- create get shell method for get excess attack and get excess spells

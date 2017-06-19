@@ -150,6 +150,15 @@ def find_manhattan_spheres(rng, c_pos):
                     main_set.add((c_pos[0] + x, c_pos[1] + y))
         return main_set
 
+def get_shell(ValidMoves, potentialRange, tile_map):
+    if FAST_SPHERE:
+        return manhattan_sphere.get_shell(ValidMoves, potentialRange, tile_map.width, tile_map.height)
+    else:
+        ValidAttacks = set()
+        for validmove in ValidMoves:
+            ValidAttacks |= Utility.find_manhattan_spheres(potentialRange, validmove)
+        return [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
+
 def farthest_away_pos(unit, valid_moves, all_units):
     # get farthest away position from general direction of enemy units
     if valid_moves:
