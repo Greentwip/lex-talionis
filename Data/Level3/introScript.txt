@@ -29,7 +29,7 @@ move_sprite;Theo;-24,0
 u;Joel;MidLeft;u;Ophie;MidRight
 s;Joel;Enough talk. Now's the time to strike.{w}{br}I reckon' we've got less than half an hour.{w};auto
 s;Ophie;Alright! Let's go!{w};auto
-r;Ophie;Joel
+r;Ophie;Joel;Renae;Theo
 end_skip
 t;1
 remove_background
