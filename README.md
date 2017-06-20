@@ -14,7 +14,7 @@ Double-click lion_throne.exe
 
 ### Screenshots
 ![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
-![Range](/Utilities/Screenshots/Range1.png)
+![Range](/Utilities/Screenshots/AOE.gif)
 ![Skill](/Utilities/Screenshots/Skill2.png)
 ![Prep](/Utilities/Screenshots/Prep1.png)
 ![Conversation](/Utilities/Screenshots/Conversation1.png) 
@@ -39,7 +39,7 @@ Both the engine and the game are still in Alpha, so there may (and probably are)
 ![TransitionScreen](/Utilities/Screenshots/TransitionScreen2.png)
 ![Combat](/Utilities/Screenshots/Combat1.png)
 ![Trade](/Utilities/Screenshots/Trade1.png)
-![AOE](/Utilities/Screenshots/AOE.gif)
+![AOE](/Utilities/Screenshots/Range1.png)
 
 ## Default Controls:
 
