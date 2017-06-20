@@ -1,10 +1,9 @@
 #! usr/bin/env python
 
 # Imports
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
-import CustomObjects, ItemMethods, MenuFunctions, Image_Modification, Engine, InputManager, StateMachine, Counters
+import CustomObjects, MenuFunctions, Engine, InputManager, StateMachine, Counters
 
 class InfoMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):

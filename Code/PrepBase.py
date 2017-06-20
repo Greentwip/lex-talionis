@@ -3,7 +3,7 @@
 # Custom imports
 from GlobalConstants import *
 from configuration import *
-import StateMachine, MenuFunctions, OptionsMenu, SaveLoad, ItemMethods, Banner
+import StateMachine, MenuFunctions, SaveLoad, ItemMethods, Banner
 import Image_Modification, CustomObjects, Dialogue, WorldMap, InputManager, Engine
 
 class PrepMainState(StateMachine.State):
@@ -191,7 +191,7 @@ class PrepFormationState(StateMachine.State):
             SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
 
-        elif OPTIONS['debug']:
+        elif OPTIONS['cheat']:
             StateMachine.handle_debug(eventList, gameStateObj, metaDataObj)
 
         gameStateObj.cursor.take_input(eventList, gameStateObj)

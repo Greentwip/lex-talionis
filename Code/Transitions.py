@@ -3,7 +3,6 @@
 import os, time
 
 # Custom imports
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
 import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue, Engine, Image_Modification, Weather
@@ -116,7 +115,7 @@ class StartStart(StateMachine.State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
-        if event == 'AUX' and OPTIONS['debug']:
+        if event == 'AUX' and OPTIONS['cheat']:
             SOUNDDICT['Start'].play()
             #selection = gameStateObj.save_slots[0]
             gameStateObj.build_new() # Make the gameStateObj ready for a new game
@@ -132,7 +131,7 @@ class StartStart(StateMachine.State):
             gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
             return 'repeat'
         # Load most recent save
-        elif event == 'INFO' and OPTIONS['debug']:
+        elif event == 'INFO' and OPTIONS['cheat']:
             SOUNDDICT['Select 1'].play()
             import glob
             fps = glob.glob('Saves/*.pmeta')

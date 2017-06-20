@@ -1,11 +1,11 @@
 import os, math
-from imagesDict import getImages, COLORKEY
+from imagesDict import COLORKEY
 from GlobalConstants import *
 from configuration import *
 from collections import OrderedDict
 
 # Custom imports
-import SaveLoad, MenuFunctions, StatusObject, CustomObjects, Dialogue, Image_Modification, Engine, Weather
+import StatusObject, CustomObjects, Dialogue, Image_Modification, Engine, Weather
 
 import logging
 logger = logging.getLogger(__name__)

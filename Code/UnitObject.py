@@ -1,10 +1,9 @@
 import random
 from collections import Counter
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
 import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject, \
-AI_fsm, Transitions, Image_Modification, Dialogue, UnitSprite, StatusObject, \
+AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject, \
 Utility, LevelUp, ItemMethods, Engine, Banner, Djikstra
 
 import logging

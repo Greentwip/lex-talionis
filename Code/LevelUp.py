@@ -1,16 +1,11 @@
 ### Display Unit Info function
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
-import CustomObjects, SaveLoad, Image_Modification
+import CustomObjects, Image_Modification
 import MenuFunctions, StatusObject, Banner
 
 ####################################################################
 ### Displays the level up screen
-### The leveling up portion of this is odd. Once you have leveled up, it breaks the update function into
-### essentially 8 different steps, one for each stats that could be leveled up, and processed those individually.
-### Instead, maybe it should run one levelUp function for the unit at the beginning, figure out which stats have been leveled up,
-### and handle the animations in the update function.
 class levelUpScreen(object):
     def __init__(self, gameStateObj, unit, exp, force_level=None):
         self.unit = unit

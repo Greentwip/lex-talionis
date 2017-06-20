@@ -1,9 +1,7 @@
 #! usr/bine/env python2.7
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
 import Image_Modification, Utility, Engine
-import copy
 
 import logging
 logger = logging.getLogger(__name__)
@@ -108,7 +106,7 @@ class UnitSprite(object):
 
         # =======
         # Status Aura Icon
-        if not self.unit.isDying and 'hasAura' in self.unit.tags:
+        if not self.unit.isDying and 'aura' in self.unit.status_bundle:
             aura_icon_name = self.unit.team + 'AuraIcon'
             aura_icon = IMAGESDICT[aura_icon_name] if aura_icon_name in IMAGESDICT else IMAGESDICT['AuraIcon']
             aura_icon = Engine.subsurface(aura_icon, (0, PASSIVESPRITECOUNTER.count*10, 32, 10))

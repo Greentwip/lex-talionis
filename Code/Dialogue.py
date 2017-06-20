@@ -1,11 +1,10 @@
 #! usr/bin/env
 import re, random, math, os, itertools
 # Custom imports
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
 import CustomObjects, MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp
-import Interaction, TileObject, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner
+import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner
 
 import logging
 logger = logging.getLogger(__name__)
@@ -306,11 +305,12 @@ class Dialogue_Scene(object):
         ### UNIT SPRITE
         # Add a unit to the scene
         elif line[0] == 'u':
+            # This is a complicated method of parsing unit lines using 'u' as delimeter
             spl = []; w = 'u'
             for x, y in itertools.groupby(line, lambda z: z == w):
                 if x: spl.append([])
                 spl[-1].extend(y)
-            #indices = [i for i, j in enumerate(line) if j == 'u']
+
             for sub_command in spl:
                 if self.add_unit_sprite(sub_command, metaDataObj, transition=True):
                     # Force wait after unit sprite is drawn to allow time to transition.

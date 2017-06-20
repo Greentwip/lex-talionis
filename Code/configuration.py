@@ -3,6 +3,7 @@ from collections import OrderedDict
 import os
 def read_config_file():
     lines = OrderedDict([('debug', True),
+                         ('cheat', True),
                          ('screen_scale', 2),
                          ('Animation', 0),
                          ('Unit Speed', 120),
@@ -35,6 +36,7 @@ def read_config_file():
                 lines[split_line[0]] = split_line[1]
 
     lines['debug'] = bool(lines['debug'])
+    lines['cheat'] = bool(lines['cheat'])
     lines['screen_scale'] = int(lines['screen_scale'])
     lines['Animation'] = int(lines['Animation'])
     lines['Unit Speed'] = int(lines['Unit Speed'])

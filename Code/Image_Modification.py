@@ -4,7 +4,6 @@ import pygame, math, Utility
 from pygame.locals import *
 
 # Custom imports
-from imagesDict import getImages
 from GlobalConstants import *
 import Engine
 

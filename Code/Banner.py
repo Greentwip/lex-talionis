@@ -1,6 +1,5 @@
 #! usr/bin/env python2.7
 
-from imagesDict import getImages
 from GlobalConstants import *
 
 import MenuFunctions, CustomObjects, Engine, Image_Modification

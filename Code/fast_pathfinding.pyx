@@ -174,7 +174,7 @@ class AStar(object):
 
     def set_goal_pos(self, goal_pos):
         self.goalposition = goal_pos
-        self.end = self.get_cell(self.goalposition)
+        self.end = self.get_cell(self.goalposition[0], self.goalposition[1])
         self.adj_end = self.get_adjacent_cells(self.end)
 
     def get_heuristic(self, Node cell):

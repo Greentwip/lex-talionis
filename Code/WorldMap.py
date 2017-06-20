@@ -3,7 +3,6 @@
 import pygame, math
 
 # Custom imports
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
 import Utility, Image_Modification, Engine

@@ -1,8 +1,7 @@
 # === Imports ==================================================================
 # Custom imports
-from imagesDict import getImages
 from GlobalConstants import *
-import CustomObjects, TileObject, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
+import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
 import copy
 
 import logging

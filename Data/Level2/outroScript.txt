@@ -1,4 +1,7 @@
 # Outro Script 2
+# Just in case
+convert;Althea;player
+convert;Drake;player
 m;Lady Eboshi
 t;1
 b;Podoma

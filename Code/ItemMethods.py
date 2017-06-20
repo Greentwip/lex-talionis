@@ -1,7 +1,5 @@
-from imagesDict import getImages
 from GlobalConstants import *
-import InfoMenu, MenuFunctions, StatusObject, SaveLoad, Image_Modification, Utility, CustomObjects, Engine, bmpfont
-import copy
+import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, CustomObjects, Engine
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):

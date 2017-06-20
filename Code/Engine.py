@@ -118,7 +118,7 @@ def build_event_list():
     for event in pygame.event.get():
         if event.type == QUIT:
             terminate()
-        if event.type == KEYUP and configuration.OPTIONS['debug']:
+        if event.type == KEYUP and configuration.OPTIONS['cheat']:
             if event.key == K_ESCAPE:
                 terminate()
         eventList.append(event)

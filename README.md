@@ -15,12 +15,12 @@ Double-click lion_throne.exe
 ### Screenshots
 ![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
 ![Range](/Utilities/Screenshots/Range1.png)
-![Skill](/Utilities/Screenshots/Skill1.png)
+![Skill](/Utilities/Screenshots/Skill2.png)
 ![Prep](/Utilities/Screenshots/Prep1.png)
 ![Conversation](/Utilities/Screenshots/Conversation1.png) 
-![Convoy](/Utilities/Screenshots/Convoy1.png)
+![Convoy](/Utilities/Screenshots/Convoy2.png)
 ![Item](/Utilities/Screenshots/Item1.png) 
-![Aura](/Utilities/Screenshots/Aura1.png)
+![Aura](/Utilities/Screenshots/Aura2.png)
 ![Base](/Utilities/Screenshots/Base2.png)
 
 # Lex Talionis
@@ -33,10 +33,13 @@ I am planning to create a tutorial on how to use the Lex Talionis engine.
 
 Both the engine and the game are still in Alpha, so there may (and probably are) bugs in the code. Tread carefully.
 
-### More Screenshots (v0.2)
-![Screenshot 7](/Utilities/Screenshots/Combat.png) ![Screenshot 8](/Utilities/Screenshots/TitleScreen.png)
-![Screenshot 9](/Utilities/Screenshots/HealShow.png) ![Screenshot 10](/Utilities/Screenshots/TransitionScreen.png)
-![Screenshot 11](/Utilities/Screenshots/FreeScreen.png) ![Screenshot 12](/Utilities/Screenshots/Narration1.png)
+### More Screenshots
+![InfoMenu](/Utilities/Screenshots/InfoMenu2.png)
+![Level5](/Utilities/Screenshots/Level5_2.png)
+![TransitionScreen](/Utilities/Screenshots/TransitionScreen2.png)
+![Combat](/Utilities/Screenshots/Combat1.png)
+![Trade](/Utilities/Screenshots/Trade1.png)
+![AOE](/Utilities/Screenshots/AOE.gif)
 
 ## Default Controls:
 

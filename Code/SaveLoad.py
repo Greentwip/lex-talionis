@@ -5,13 +5,12 @@ import cPickle as pickle
 from collections import OrderedDict
 
 # Custom imports
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
-import TileObject, ItemMethods, UnitObject, StatusObject, GameStateObj, CustomObjects, Utility
+import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility
 from UnitObject import Stat
 
-import logging # logging needs to be the last import that is done
+import logging
 logger = logging.getLogger(__name__)
 
 # === READS LEVEL FILE (BITMAP MODE) ==============================================================================

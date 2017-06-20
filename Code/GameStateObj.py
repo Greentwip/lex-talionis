@@ -1,9 +1,8 @@
 #! usr/bin/env python
 import random
-from collections import Counter, OrderedDict
+from collections import OrderedDict
 
 # Custom imports
-import imagesDict
 from GlobalConstants import *
 from configuration import *
 import CustomObjects, StateMachine, Dialogue, AStar, Support, Engine

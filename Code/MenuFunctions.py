@@ -1,5 +1,4 @@
-import datetime, collections, operator
-from imagesDict import getImages
+import datetime, collections
 from GlobalConstants import *
 from configuration import *
 import ItemMethods, Image_Modification, Utility, Engine, Counters

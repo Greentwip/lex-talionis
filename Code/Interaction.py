@@ -1,5 +1,4 @@
 import random, math
-from imagesDict import getImages
 from GlobalConstants import *
 from configuration import *
 import CustomObjects, UnitObject, Banner, TileObject
