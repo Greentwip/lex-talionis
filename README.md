@@ -2,9 +2,9 @@
 
 A fully custom Fire Emblem fangame created entirely in Python.
 
-Fire Emblem: The Lion Throne is a custom Fire Emblem fangame. Much of my inspiration for the game was drawn from the GBA and Tellius games. 
+Fire Emblem: The Lion Throne is a custom Fire Emblem fangame. Much of the inspiration for the game was drawn from the GBA and Tellius games. 
 
-Because this was coded entirely from scratch, I am not bound by the limitations of the GBA. 
+Because this was coded entirely from scratch, we are not bound by the limitations of the GBA. 
 
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
