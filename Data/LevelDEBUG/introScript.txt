@@ -8,5 +8,3 @@ r;Renae
 t;1
 remove_background
 t;2
-give_item;Althea;Wyrmsfire
-give_item;Althea;Wind

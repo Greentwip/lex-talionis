@@ -666,7 +666,7 @@ class Primary_AI(object):
             if double and target_damage >= 1:
                 double *= (1 - (target_accuracy*(1 - chance_i_kill_target_on_first))) # Chance that I actually get to double
 
-            offensive_term += 3 if my_damage*my_accuracy == 1 else my_damage*my_accuracy*(double+1) 
+            offensive_term += 3 if my_damage*my_accuracy >= 1 else my_damage*my_accuracy*(double+1) 
             status_term += my_status*min(1, my_accuracy*(double+1)) if my_status else 0
             defensive_term -= target_damage*target_accuracy*(1-chance_i_kill_target_on_first)
 
@@ -695,10 +695,11 @@ class Primary_AI(object):
         else:
             distance_term = 1
 
+        logger.debug("Damage: %s, Accuracy: %s", my_damage, my_accuracy)
         logger.debug("Offense: %s, Defense: %s, Status: %s, Distance: %s", offensive_term, defensive_term, status_term, distance_term)
-        terms.append((offensive_term, 60))
-        terms.append((status_term, 20))
-        terms.append((defensive_term, 20))
+        terms.append((offensive_term, 50))
+        terms.append((status_term, 10))
+        terms.append((defensive_term*offensive_term, 40)) # Defensive term is modified by offensive term so that just being hard to damage does not mean you should do useless things.
         terms.append((distance_term, 1))
 
         return Utility.process_terms(terms)
@@ -721,7 +722,7 @@ class Primary_AI(object):
                         missing_health = target.stats['HP'] - target.currenthp
                         help_term += Utility.clamp(missing_health/float(target.stats['HP']), 0, 1)
                         spell_heal = self.unit.compute_heal(target, gameStateObj, spell, 'Attack')
-                        heal_term += Utility.clamp(max(spell_heal, missing_health)/100.0, 0, 1)
+                        heal_term += Utility.clamp(min(spell_heal, missing_health)/float(target.stats['HP']), 0, 1)
 
                 logger.debug("Help: %s, Heal: %s", help_term, heal_term)
                 if help_term <= 0:
@@ -741,10 +742,10 @@ class Primary_AI(object):
                 logger.debug("Status: %s", status_term)
                 if status_term <= 0:
                     return 0
-                terms.append((status_term, 80)) # Status term
+                terms.append((status_term, 40)) # Status term
 
             closest_enemy_term = Utility.clamp(closest_enemy_distance/100.0, 0, 1)
-            terms.append((closest_enemy_term, 20))
+            terms.append((closest_enemy_term, 10))
 
         else:
             offensive_term = 0

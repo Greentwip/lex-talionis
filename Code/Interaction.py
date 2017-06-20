@@ -545,7 +545,7 @@ class Combat(object):
                             my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in self.p1.tags else 0)
                         else:
                             my_exp += normal_exp 
-                        if 'no_exp' in other_unit.status_bundle:
+                        if 'no_exp' in self.p1.status_bundle:
                             my_exp = 0
 
                     # No free exp for affecting myself or being affected by allies
@@ -878,7 +878,7 @@ class HealthBar(object):
         self.last_update = 0
         self.time_for_change = time_for_change
         self.transition_flag = False
-        self.blind_speed = 0.125 # 8 frames to fully transition
+        self.blind_speed = 1/8. # 8 frames to fully transition
         self.true_position = None
 
         self.reset()
