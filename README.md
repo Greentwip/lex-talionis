@@ -18,7 +18,7 @@ Double-click lion_throne.exe
 ![Skill](/Utilities/Screenshots/Skill2.png)
 ![Prep](/Utilities/Screenshots/Prep1.png)
 ![Conversation](/Utilities/Screenshots/Conversation1.png) 
-![Convoy](/Utilities/Screenshots/Convoy2.png)
+![Convoy](/Utilities/Screenshots/Convoy1.png)
 ![Item](/Utilities/Screenshots/Item1.png) 
 ![Aura](/Utilities/Screenshots/Aura2.png)
 ![Base](/Utilities/Screenshots/Base2.png)
