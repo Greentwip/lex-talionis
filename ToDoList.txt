@@ -4,8 +4,6 @@
 - Need to compile cython modules for Linux
 
 FOR FUTURE UPDATES TO THE ENGINE:
---- MAPMOVES ---
-- Have units keep their possible moves in memory... (may not be needed) ?? -- Is currently fastish
 --- L Button ---
 - Add L button support to different states -- which ones?
 --- COMBAT ---
@@ -20,7 +18,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Consider moving Recovery AI into main attack AI?? - maybe not
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells)
 - Red highlight appears over position of last enemy fought while using 'other' team AI
-- Add threading to AI - stick it on a separate thread - won't actually help much since Python's threading is kind of fake?
 --- DIALOGUE ---
 - Add Awakening-style dialogue backlog...??** On R press
 --- LEVEL UP ---
@@ -50,7 +47,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add correct warp animation
 - Add Fake arrival to Give/Take/Shove++
 - Scenic Maps (UnitLevel rework?) (Don't need to put previous saved units in UnitLevel.txt manually) (maybe have a load unit command? then a place loaded_units command?)++
-- Convert some of the very slow stuff (AStar, Djikstra's) to a C module to make it faster.++
 - Consider upping effects of weapon triangle over time
 - D: 15 hit, 1 damage
 - C: 20 hit, 1 damage

@@ -34,11 +34,11 @@ t;2
 u;Prim;Left
 s;Prim;That outburst was unlike Kayla.{w}{br}I wonder what's gotten into her...{w};auto
 u;Eliza;Right
-s;Eliza;Pah. You're so funny sometimes, Prim.{w};auto
+s;Eliza;Pah. You're so funny sometimes.{w};auto
 s;Prim;Huh?{w};auto
 s;Eliza;You really haven't figured it out, yet?{w};auto
 s;Prim;Figured what out yet?{w};auto
-s;Eliza;Kayla isn't just Sam's secret source.{w}{br}They're also secret... lovers.{w};auto
+s;Eliza;Kayla's not just Sam's secret source.{w}{br}They're also secret... lovers.{w};auto
 s;Prim;What! Really?{w};auto
 s;Eliza;It's obvious.{w}{br}I mean, they do a decent job of hiding it,{w}{br}but can't you just feel the tension in the air?{w};auto
 s;Prim;I guess...{w};auto
