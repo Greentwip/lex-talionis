@@ -83,9 +83,7 @@ u;Ophie;Right
 s;Prim;That man is taking on all those Imperial soldiers alone.{w};auto
 s;Ophie;It looks like he's protecting that girl.{w};auto
 s;Joel;Does he have a deathwish?{w}{br}He'll die alone against that horde.{w};auto
-s;Ophie;He won't be alone for long! Hiyaa!{w};auto
-mirror;Ophie
-move_sprite;Ophie;96,0;force_hold
+s;Ophie;He won't be alone for long!{w};auto
 r;Ophie;Prim;Joel
 # Pan to Boss
 m;Brave Story 27

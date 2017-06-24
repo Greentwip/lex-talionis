@@ -2,8 +2,8 @@
 from collections import OrderedDict
 import os
 def read_config_file():
-    lines = OrderedDict([('debug', True),
-                         ('cheat', True),
+    lines = OrderedDict([('debug', 1),
+                         ('cheat', 1),
                          ('screen_scale', 2),
                          ('Animation', 0),
                          ('Unit Speed', 120),
@@ -35,8 +35,8 @@ def read_config_file():
                 split_line = line.strip().split(';')
                 lines[split_line[0]] = split_line[1]
 
-    lines['debug'] = bool(lines['debug'])
-    lines['cheat'] = bool(lines['cheat'])
+    lines['debug'] = int(lines['debug'])
+    lines['cheat'] = int(lines['cheat'])
     lines['screen_scale'] = int(lines['screen_scale'])
     lines['Animation'] = int(lines['Animation'])
     lines['Unit Speed'] = int(lines['Unit Speed'])
@@ -97,6 +97,8 @@ def read_constants_file():
              'set_roll': 49, # used for 'no_rng' mode. Determines threshold at which attacks miss. Ex. Any attack with hitrate <= set_roll, misses
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
              'max_stat': 20, # Maximum value that a non-HP stat can be. Irrespective of class caps. 
+             'num_stats': 10, # Number of stats that a unit has (Includes HP, CON, and MOV)
+             'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without knowing what you are doing
              'max_level': 10} # Maximum Level for any class. Any higher and you auto-promote
 
     if os.path.isfile('Data/constants.txt'):
@@ -128,17 +130,19 @@ def read_constants_file():
     lines['enemy_leveling'] = int(lines['enemy_leveling'])
     lines['set_roll'] = int(lines['set_roll'])
     lines['num_skills'] = int(lines['num_skills'])
-    lines['max_level'] = int(lines['max_level'])
     lines['max_stat'] = int(lines['max_stat'])
+    lines['num_stats'] = int(lines['num_stats'])
+    lines['stat_names'] = lines['stat_names'].split(',')
+    lines['max_level'] = int(lines['max_level'])
 
     return lines
 
 def read_growths_file():
     # HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV
-    lines = {'enemy_growths': '0,0,0,0,0,0,0,0,0,0',
-             'player_growths': '0,0,0,0,0,0,0,0,0,0',
-             'enemy_bases': '0,0,0,0,0,0,0,0,0,0',
-             'player_bases': '0,0,0,0,0,0,0,0,0,0'}
+    lines = {'enemy_growths': ','.join(['0']*CONSTANTS['num_stats']),
+             'player_growths': ','.join(['0']*CONSTANTS['num_stats']),
+             'enemy_bases': ','.join(['0']*CONSTANTS['num_stats']),
+             'player_bases': ','.join(['0']*CONSTANTS['num_stats'])}
 
     if os.path.isfile('Data/growths.txt'):
         with open('Data/growths.txt') as growths_file:
@@ -150,6 +154,10 @@ def read_growths_file():
     lines['player_growths'] = [int(num) for num in lines['player_growths'].split(',')]
     lines['enemy_bases'] = [int(num) for num in lines['enemy_bases'].split(',')]
     lines['player_bases'] = [int(num) for num in lines['player_bases'].split(',')]
+    assert len(lines['enemy_growths']) == CONSTANTS['num_stats']
+    assert len(lines['player_growths']) == CONSTANTS['num_stats']
+    assert len(lines['enemy_bases']) == CONSTANTS['num_stats']
+    assert len(lines['player_bases']) == CONSTANTS['num_stats']
 
     return lines
 
@@ -175,5 +183,4 @@ if not __debug__:
 print('Debug: %s'%(OPTIONS['debug']))
 CONSTANTS = read_constants_file()
 CONSTANTS['Unit Speed'] = OPTIONS['Unit Speed']
-GROWTHS = read_growths_file()
 WORDS = read_words_file()

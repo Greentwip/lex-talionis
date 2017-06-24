@@ -53,8 +53,9 @@ class acquiredItemBanner(Banner):
         Banner.__init__(self) # Super
         self.unit = unit
         self.item = item
-        self.banner = [unit.name, ' got ', item.name, '.']
-        self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
+        self.article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
+        self.banner = [unit.name, ' got ', self.article, ' ', item.name, '.']
+        self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
         self.sound = SOUNDDICT['Item']
 

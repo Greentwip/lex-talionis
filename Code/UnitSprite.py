@@ -241,6 +241,10 @@ class UnitSprite(object):
                 self.moveSpriteCounter = 0
             self.lastUpdate = currentTime
 
+    def reset_sprite_offset(self):
+        self.spriteMvmindex = 0
+        self.spriteOffset = [0, 0]
+
     def update(self, gameStateObj):
         currentTime = Engine.get_time()
         self.transition_counter -= Engine.get_delta()
@@ -319,8 +323,7 @@ class UnitSprite(object):
                             self.lastSpriteUpdate = currentTime
                         self.update_move_sprite_counter(currentTime, 50)
                     else: # Reset spriteOffset
-                        self.spriteMvmindex = 0
-                        self.spriteOffset = [0, 0]
+                        self.reset_sprite_offset()
 
             elif self.unit in defenders:
                 #print(attacker, defender, attacker.position, defender.position)

@@ -944,8 +944,8 @@ class Dialogue_Scene(object):
             transition = True
         self.dialog.append(Dialog(line[2], speaker, position, size, font, back_surf, tail, num_lines, \
                                   waiting_cursor_flag = waiting_cursor, transition=transition, \
-                                  unit_sprites=self.unit_sprites if not thought_bubble else {}, \
-                                  slow_flag=3 if 'slow' in line else 1))
+                                  unit_sprites=self.unit_sprites, slow_flag=3 if 'slow' in line else 1, \
+                                  talk=not thought_bubble))
 
         self.reset_unit_sprites()
         if self.dialog[-1].owner in self.unit_sprites:
@@ -1131,7 +1131,7 @@ class Dialogue_Scene(object):
     def dialog_unpause(self):
         # Removes waiting from dialog
         if not self.dialog[-1].done and not self.dialog[-1].is_done():
-            if self.dialog[-1].owner in self.unit_sprites:
+            if self.dialog[-1].talk and self.dialog[-1].owner in self.unit_sprites:
                 self.unit_sprites[self.dialog[-1].owner].talk()
         self.dialog[-1].waiting = False
 
@@ -1441,7 +1441,7 @@ class Dialog(object):
                  background='MessageWindowBackground', \
                  message_tail=None, num_lines=2, hold=False, \
                  waiting_cursor_flag=True, transition=False, unit_sprites=None, \
-                 slow_flag=1):
+                 slow_flag=1, talk=True):
         self.truetext = text # The actual text this dialog box will display
         self.position = position # The position of the dialog box on its surf
         self.owner = owner # who is saying this
@@ -1478,6 +1478,7 @@ class Dialog(object):
 
         self.waiting = False
         self.done = False
+        self.talk = talk
 
         self.message_tail = message_tail
         self.hold = hold
@@ -1675,7 +1676,7 @@ class Dialog(object):
             if self.transition_transparency >= 10:
                 # Done transitioning
                 self.transition = False
-                if self.owner in self.unit_sprites:
+                if self.talk and self.owner in self.unit_sprites:
                     self.unit_sprites[self.owner].talk()
         elif self.scroll_y > 0:
             self.scroll_y -= 2
@@ -1759,6 +1760,7 @@ class Credits(object):
         self.done = True # Always ready to move on to next dialog object
         self.hold = True # Always show, even if waiting
         self.solo_flag = False # As many of these on the screen as possible
+        self.talk = False
 
     def populate_surface(self):
         index = 0
@@ -1846,6 +1848,7 @@ class EndingsDisplay(object):
         self.done = False # Not always ready to move on to next dialog object
         self.hold = True # Always show, even if waiting
         self.solo_flag = True # Not as many of these as possible
+        self.talk = False
 
     def populate_surface(self, name, stats):
         # Create surface

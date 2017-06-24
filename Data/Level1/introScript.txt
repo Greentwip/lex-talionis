@@ -8,8 +8,8 @@ u;Prim;Right
 s;Prim;...Ophie... slow down.{w};auto
 u;Ophie;Left
 s;Ophie;Prim, are you okay?{w};auto
-s;Prim;...yes... I just need to catch my breath...{w};auto
-s;Ophie; Okay. I guess we've made it far enough.{w}{br}We'll rest here for a little.{w};auto
+s;Prim;...I just need to catch my breath...{w};auto
+s;Ophie;I guess we've made it far enough.{w}{br}We'll rest here for a little.{w};auto
 r;Ophie;Prim
 t;1
 b;DeeperForest
@@ -45,6 +45,7 @@ s;???;We're uh.... rangers.{w}{br}Yeah, rangers... y'know... protecting the fore
 # Joel appears
 u;Joel;MidLeft
 s;Joel;Boy, ya'll look roughed up.{w};auto
+bop;Ophie
 s;Ophie;Ah!{w};auto
 s;Joel;Please stay calm.{w}{br}We mean you no harm.{w};auto
 s;Ophie;Well, you don't look Imperial...{w};auto

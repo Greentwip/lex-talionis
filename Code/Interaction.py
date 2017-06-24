@@ -689,24 +689,28 @@ class Map_Combat(Combat):
                     for result in self.results:
                         # TODO: Add offset to sound and animation
                         if result.outcome:
+                            if result.attacker is self.p1:
+                                item = self.item
+                            else:
+                                item = result.attacker.getMainWeapon()
                             if isinstance(result.defender, UnitObject.UnitObject):
-                                color = self.item.map_hit_color if self.item.map_hit_color else (255, 255, 255) # default to white
+                                color = item.map_hit_color if item.map_hit_color else (255, 255, 255) # default to white
                                 result.defender.begin_flicker(self.length_of_combat/5, color)
                             # Sound
-                            if self.item.sfx_on_hit and self.item.sfx_on_hit in SOUNDDICT:
+                            if item.sfx_on_hit and item.sfx_on_hit in SOUNDDICT:
                                 SOUNDDICT[self.item.sfx_on_hit].play()
                             elif result.defender.currenthp - result.def_damage <= 0: # Lethal
                                 SOUNDDICT['Final Hit'].play()
                             elif result.def_damage < 0: # Heal
                                 SOUNDDICT['heal'].play()
-                            elif result.def_damage == 0 and (self.item.weapon or (self.item.spell and self.item.damage)): # No Damage if weapon or spell with damage!
+                            elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
                                 SOUNDDICT['No Damage'].play()
                             else:
                                 sound_to_play = 'Attack Hit ' + str(random.randint(1,4)) # Choose a random hit sound
                                 SOUNDDICT[sound_to_play].play()
                             # Animation
                             if self.item.self_anim:
-                                name, x, y, num = self.item.self_anim.split(',')
+                                name, x, y, num = item.self_anim.split(',')
                                 pos = (result.defender.position[0], result.defender.position[1] - 1)
                                 anim = CustomObjects.Animation(IMAGESDICT[name], pos, (int(x), int(y)), int(num), 24)
                                 gameStateObj.allanimations.append(anim)
@@ -719,7 +723,7 @@ class Map_Combat(Combat):
                                 else:
                                     anim = CustomObjects.Animation(IMAGESDICT['MapSmallHealTrans'], pos, (5, 4), 16, 24)
                                 gameStateObj.allanimations.append(anim)
-                            elif result.def_damage == 0 and (self.item.weapon or (self.item.spell and self.item.damage)): # No Damage if weapon or spell with damage!
+                            elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
                                 pos = result.defender.position[0] - 0.5, result.defender.position[1]
                                 gameStateObj.allanimations.append(CustomObjects.Animation(IMAGESDICT['MapNoDamage'], pos, (1, 12)))
                         elif result.summoning:
@@ -760,6 +764,11 @@ class Map_Combat(Combat):
                 for hp_bar in self.health_bars.values():
                     hp_bar.update()
         return False
+
+    def skip(self):
+        self.p1.sprite.reset_sprite_offset()
+        if self.p2 and isinstance(self.p2, UnitObject.UnitObject):
+            self.p2.sprite.reset_sprite_offset()
 
     def calc_damage_done(self, result):
         if result.atk_damage > 0:
@@ -844,8 +853,8 @@ class Map_Combat(Combat):
                     attacker_hp = HealthBar('p1' if result.attacker is self.p1 else 'p2', result.attacker, a_weapon, other=result.defender, stats=a_stats)
                     self.health_bars[result.attacker] = attacker_hp
             else:
-                if not CONSTANTS['simultaneous_aoe']:
-                    self.health_bars = {} # Clear
+                #if not CONSTANTS['simultaneous_aoe']:
+                self.health_bars = {} # Clear
                 if not CONSTANTS['simultaneous_aoe'] or len(self.results) <= 1:
                     swap_stats = result.attacker.team if result.attacker.team != result.defender.team else None
                     a_stats = a_stats if result.attacker.team != result.defender.team else None

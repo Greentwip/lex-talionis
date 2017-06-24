@@ -188,18 +188,24 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             u_i['faction'] = unit.find('faction').text
 
             stats = intify_comma_list(unit.find('bases').text)
+            for n in xrange(len(stats), CONSTANTS['num_stats']):
+                stats.append(class_dict[u_i['klass']]['bases'][n])
             if u_i['team'] == 'player': # Modify stats
-                stats = [sum(x) for x in zip(stats, GROWTHS['player_bases'])]
+                bases = gameStateObj.modify_stats['player_bases']
+                growths = gameStateObj.modify_stats['player_growths']
             else:
-                stats = [sum(x) for x in zip(stats, GROWTHS['enemy_bases'])]
-            if len(stats) == 8: # Add con if not present
-                stats.append(int(class_dict[u_i['klass']]['bases'][8]))
-            assert len(stats) == 9, "bases %s must be exactly 9 integers long"%(stats)
-            stats.append(int(class_dict[u_i['klass']]['movement']))
+                bases = gameStateObj.modify_stats['enemy_bases']
+                growths = gameStateObj.modify_stats['enemy_growths']
+            stats = [sum(x) for x in zip(stats, bases)]
+            assert len(stats) == CONSTANTS['num_stats'], "bases %s must be exactly %s integers long"%(stats, CONSTANTS['num_stats'])
             u_i['stats'] = build_stat_dict(stats)
             logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
+
             u_i['growths'] = intify_comma_list(unit.find('growths').text)
-            u_i['growth_points'] = [50, 50, 50, 50, 50, 50, 50, 50]
+            u_i['growths'].extend([0] * (CONSTANTS['num_stats'] - len(u_i['growths'])))
+            u_i['growths'] = [sum(x) for x in zip(u_i['growths'], growths)]
+            assert len(u_i['growths']) == CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, CONSTANTS['num_stats'])
+            u_i['growth_points'] = [50]*CONSTANTS['num_stats']
 
             u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text)
             # Parse wexp
@@ -340,42 +346,28 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
 
 def build_stat_dict(stats):
     st = OrderedDict()
-    st['HP'] = Stat(stats[0])
-    st['STR'] = Stat(stats[1])
-    st['MAG'] = Stat(stats[2])
-    st['SKL'] = Stat(stats[3])
-    st['SPD'] = Stat(stats[4])
-    st['LCK'] = Stat(stats[5])
-    st['DEF'] = Stat(stats[6])
-    st['RES'] = Stat(stats[7])
-    st['CON'] = Stat(stats[8])
-    st['MOV'] = Stat(stats[9])
+    for idx, name in enumerate(CONSTANTS['stat_names']):
+        st[name] = Stat(stats[idx])
     return st
 
 def build_stat_dict_plus(stats):
     st = OrderedDict()
-    st['HP'] = Stat(stats[0][0], stats[0][1])
-    st['STR'] = Stat(stats[1][0], stats[1][1])
-    st['MAG'] = Stat(stats[2][0], stats[2][1])
-    st['SKL'] = Stat(stats[3][0], stats[3][1])
-    st['SPD'] = Stat(stats[4][0], stats[4][1])
-    st['LCK'] = Stat(stats[5][0], stats[5][1])
-    st['DEF'] = Stat(stats[6][0], stats[6][1])
-    st['RES'] = Stat(stats[7][0], stats[7][1])
-    st['CON'] = Stat(stats[8][0], stats[8][1])
-    st['MOV'] = Stat(stats[9][0], stats[9][1])
+    for idx, name in enumerate(CONSTANTS['stat_names']):
+        st[name] = Stat(stats[idx][0], stats[idx][1])
     return st
 
 def get_unit_info(class_dict, klass, level, item_line, gameStateObj):
     # Handle stats
-    movement = class_dict[klass]['movement']
-    # hp, str, mag, skl, spd, lck, def, res, con
+    # hp, str, mag, skl, spd, lck, def, res, con, mov
+    bases = class_dict[klass]['bases'][:] # Using copies    
     growths = class_dict[klass]['growths'][:] # Using copies
-    bases = class_dict[klass]['bases'][:] # Using copies
+
+    bases = [sum(x) for x in zip(bases, gameStateObj.modify_stats['enemy_bases'])]
+    growths = [sum(x) for x in zip(growths, gameStateObj.modify_stats['enemy_growths'])]
+
     stats, growth_points = auto_level(bases, growths, level, class_dict[klass]['max'], gameStateObj)
     # Make sure we don't exceed max
     stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
-    stats.append(movement)
 
     # Handle items
     items = ItemMethods.itemparser(item_line)
@@ -415,9 +407,9 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
         for status in class_skills:
             if status == 'Feat':
                 counter = 0
-                while StatusObject.feat_list[(seed + counter)%10] in class_skills:
+                while StatusObject.feat_list[(seed + counter)%len(StatusObject.feat_list)] in class_skills:
                     counter += 1
-                class_skills.append(StatusObject.feat_list[(seed + counter)%10])
+                class_skills.append(StatusObject.feat_list[(seed + counter)%len(StatusObject.feat_list)])
     class_skills = [status for status in class_skills if status != 'Feat']
     logger.debug('Class Skills %s', class_skills)
     ### Actually add statuses
@@ -429,8 +421,7 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
     unit.currenthp = int(unit.stats['HP'])
 
 def auto_level(bases, growths, level, max_stats, gameStateObj):
-    stats = [sum(x) for x in zip(bases, GROWTHS['enemy_bases'])]
-    growths = [sum(x) for x in zip(growths, GROWTHS['enemy_growths'])]
+    stats = bases[:]
     growth_points = [50 for growth in growths]
     leveling = CONSTANTS['enemy_leveling']
     if leveling == 3:
@@ -504,21 +495,24 @@ def create_class_dict():
     class_dict = {}
     # For each class
     for klass in CLASSDATA.getroot().findall('class'):
-        class_dict[klass.get('name')] = {'id': klass.find('id').text,
+        name = klass.get('name')
+        class_dict[name] = {'id': klass.find('id').text,
                                          'tier': klass.find('tier').text,
                                          'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                                          'promotes_from': klass.find('promotes_from').text.split(',') if klass.find('promotes_from').text is not None else [],
                                          'turns_into': klass.find('turns_into').text.split(',') if klass.find('turns_into').text is not None else [],
-                                         'movement': int(klass.find('movement').text),
                                          'movement_group': int(klass.find('movement_group').text),
                                          'tags': klass.find('tags').text,
                                          'skills': class_skill_parser(klass.find('skills').text),
                                          'growths': intify_comma_list(klass.find('growths').text),
                                          'bases': intify_comma_list(klass.find('bases').text),
-                                         'promotion': intify_comma_list(klass.find('promotion').text) if klass.find('promotion') is not None else [0,0,0,0,0,0,0,0],
-                                         'max': intify_comma_list(klass.find('max').text) if klass.find('max') is not None else [60, 20, 20, 20, 20, 20, 20, 20],
+                                         'promotion': intify_comma_list(klass.find('promotion').text) if klass.find('promotion') is not None else [0,0,0,0,0,0,0,0,0,0],
+                                         'max': intify_comma_list(klass.find('max').text) if klass.find('max') is not None else [60],
                                          'desc': klass.find('desc').text}
-
+        class_dict[name]['bases'].extend([0] * (CONSTANTS['num_stats'] - len(class_dict[name]['bases'])))
+        class_dict[name]['growths'].extend([0] * (CONSTANTS['num_stats'] - len(class_dict[name]['growths'])))
+        class_dict[name]['promotion'].extend([0] * (CONSTANTS['num_stats'] - len(class_dict[name]['promotion'])))
+        class_dict[name]['max'].extend([CONSTANTS['max_stat']] * (CONSTANTS['num_stats'] - len(class_dict[name]['max'])))
     return class_dict
 
 # === CREATE LORE DICTIONARY =================================================

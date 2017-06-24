@@ -797,11 +797,10 @@ class UnitObject(object):
     # Stat-specific levelup function
     def level_up(self, gameStateObj, class_info, apply_level=True):
         levelup_list = [0 for x in self.stats]
+        growths = self.growths
         if self.team == 'player':
-            growths = [sum(x) for x in zip(self.growths, GROWTHS['player_growths'])]
             leveling = gameStateObj.mode['growths']
         else:
-            growths = [sum(x) for x in zip(self.growths, GROWTHS['enemy_growths'])]
             leveling = CONSTANTS['enemy_leveling']
             if leveling == 3: # Match player method
                 leveling = gameStateObj.mode['growths']
@@ -841,20 +840,8 @@ class UnitObject(object):
     def apply_levelup(self, levelup_list, hp_up=False):
         logger.debug("Applying levelup %s to %s", levelup_list, self.name)
         # Levelup_list should be a len(8) list.
-        self.stats['HP'].base_stat += levelup_list[0]
-        self.stats['STR'].base_stat += levelup_list[1]
-        self.stats['MAG'].base_stat += levelup_list[2]
-        self.stats['SKL'].base_stat += levelup_list[3]
-        self.stats['SPD'].base_stat += levelup_list[4]
-        self.stats['LCK'].base_stat += levelup_list[5]
-        self.stats['DEF'].base_stat += levelup_list[6]
-        self.stats['RES'].base_stat += levelup_list[7]
-        # Handle CON increase
-        if len(levelup_list) > 8:
-            self.stats['CON'].base_stat += levelup_list[8]
-        # Handle MOV increase
-        if len(levelup_list) > 9:
-            self.stats['MOV'].base_stat += levelup_list[9]
+        for idx, name in enumerate(CONSTANTS['stat_names']):
+            self.stats[name].base_stat += levelup_list[idx]
         # Handle the case where this is done in base
         if hp_up:
             self.currenthp += levelup_list[0]
@@ -862,22 +849,8 @@ class UnitObject(object):
     # For bonuses
     def apply_stat_change(self, levelup_list):
         logger.debug("Applying stat change %s to %s", levelup_list, self.name)
-        levelup_list_len = len(levelup_list)
-        # Levelup_list should be a len(8) list.
-        self.stats['HP'].bonuses += levelup_list[0]
-        self.stats['STR'].bonuses += levelup_list[1]
-        self.stats['MAG'].bonuses += levelup_list[2]
-        self.stats['SKL'].bonuses += levelup_list[3]
-        self.stats['SPD'].bonuses += levelup_list[4]
-        self.stats['LCK'].bonuses += levelup_list[5]
-        self.stats['DEF'].bonuses += levelup_list[6]
-        self.stats['RES'].bonuses += levelup_list[7]
-        # Handle CON increase
-        if levelup_list_len > 8:
-            self.stats['CON'].bonuses += levelup_list[8]
-        # Handle CON increase
-        if levelup_list_len > 9:
-            self.stats['MOV'].bonuses += levelup_list[9]
+        for idx, name in enumerate(CONSTANTS['stat_names']):
+            self.stats[name].bonuses += levelup_list[idx]
 
         # Handle changed cases
         self.currenthp = min(self.currenthp, int(self.stats['HP']))

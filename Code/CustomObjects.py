@@ -214,13 +214,36 @@ class Cursor(object):
         # Remove unit display
         self.remove_unit_display()
 
-    def autocursor(self, gameStateObj):
+    def forcePosition(self, newposition, gameStateObj):
+        if not newposition:
+            return            
+        logger.debug('Cursor new position %s', newposition)
+        self.position = newposition
+        # Recenter camera
+        if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
+            gameStateObj.cameraOffset.force_x(self.position[0] - 3) # Testing...
+        if self.position[0] >= (WINWIDTH/TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
+            gameStateObj.cameraOffset.force_x(self.position[0] + 4 - WINWIDTH/TILEWIDTH)
+        if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
+            gameStateObj.cameraOffset.force_y(self.position[1] - 2)
+        if self.position[1] >= (WINHEIGHT/TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
+            gameStateObj.cameraOffset.force_y(self.position[1] + 3 - WINHEIGHT/TILEHEIGHT)
+        # Remove unit display
+        self.remove_unit_display()
+
+    def autocursor(self, gameStateObj, force=False):
         player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and unit.position]
         lord = [unit for unit in player_units if 'Lord' in unit.tags]
-        if lord:
-            gameStateObj.cursor.setPosition(lord[0].position, gameStateObj)
-        elif player_units:
-            gameStateObj.cursor.setPosition(player_units[0].position, gameStateObj)
+        if force:
+            if lord:
+                gameStateObj.cursor.forcePosition(lord[0].position, gameStateObj)
+            elif player_units:
+                gameStateObj.cursor.forcePosition(player_units[0].position, gameStateObj)
+        else:
+            if lord:
+                gameStateObj.cursor.setPosition(lord[0].position, gameStateObj)
+            elif player_units:
+                gameStateObj.cursor.setPosition(player_units[0].position, gameStateObj)
 
     def formatSprite(self, sprite):
         # Sprites are in 64 x 64 boxes
@@ -497,7 +520,9 @@ class BoundaryManager(object):
             ValidSpells = unit.getExcessSpellAttacks(gameStateObj, ValidMoves, boundary=True)
         self._set(ValidAttacks, 'attack', unit.id)
         self._set(ValidSpells, 'spell', unit.id)
-        self._set(ValidMoves, 'movement', unit.id)
+        area_of_influence = Utility.find_manhattan_spheres(range(1, unit.stats['MOV']), unit.position)
+        area_of_influence = {pos for pos in area_of_influence if gameStateObj.map.check_bounds(pos)}
+        self._set(area_of_influence, 'movement', unit.id)
         #print(unit.name, unit.position, unit.klass, unit.event_id)
         self.surf = None
 
@@ -1048,6 +1073,12 @@ class CameraOffset(object):
     def set_y(self, y):
         self.y = y
         self.old_y = y
+
+    def force_x(self, x):
+        self.current_x = self.x = x
+
+    def force_y(self, y):
+        self.current_y = self.y = y
 
     def set_xy(self, x, y):
         self.x = x

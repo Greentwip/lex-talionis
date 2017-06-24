@@ -573,15 +573,19 @@ def statusparser(s_id):
                     my_components['time'] = TimeComponent(time)
                 elif component == 'stat_change':
                     my_components['stat_change'] = SaveLoad.intify_comma_list(status.find('stat_change').text)
+                    my_components['stat_change'].extend([0] * (CONSTANTS['num_stats'] - len(my_components['stat_change'])))
                 elif component == 'upkeep_stat_change':
                     stat_change = SaveLoad.intify_comma_list(status.find('upkeep_stat_change').text)
+                    stat_change.extend([0] * (CONSTANTS['num_stats'] - len(stat_change)))
                     my_components['upkeep_stat_change'] = UpkeepStatChangeComponent(stat_change)
                 elif component == 'endstep_stat_change':
                     stat_change = SaveLoad.intify_comma_list(status.find('endstep_stat_change').text)
+                    stat_change.extend([0] * (CONSTANTS['num_stats'] - len(stat_change)))
                     my_components['endstep_stat_change'] = UpkeepStatChangeComponent(stat_change)
                 elif component == 'rhythm_stat_change':
                     change, reset, init_count, limit = status.find('rhythm_stat_change').text.split(';')
                     change = SaveLoad.intify_comma_list(change)
+                    change.extend([0] * (CONSTANTS['num_stats'] - len(change)))
                     reset = SaveLoad.intify_comma_list(reset)
                     init_count = int(init_count)
                     limit = int(limit)
@@ -589,6 +593,7 @@ def statusparser(s_id):
                 elif component == 'endstep_rhythm_stat_change':
                     change, reset, init_count, limit = status.find('endstep_rhythm_stat_change').text.split(';')
                     change = SaveLoad.intify_comma_list(change)
+                    change.extend([0] * (CONSTANTS['num_stats'] - len(change)))
                     reset = SaveLoad.intify_comma_list(reset)
                     init_count = int(init_count)
                     limit = int(limit)

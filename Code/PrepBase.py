@@ -10,6 +10,7 @@ class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         Engine.music_thread.fade_in(MUSICDICT[metaDataObj['prep_music']])
         gameStateObj.cursor.drawState = 0
+        gameStateObj.cursor.autocursor(gameStateObj)
         gameStateObj.boundary_manager.draw_flag = 0
         if gameStateObj.stateMachine.get_last_state() == 'prep_formation':
             fade = True
@@ -30,7 +31,6 @@ class PrepMainState(StateMachine.State):
 
         # Play prep script if it exists
         if not self.started:
-            gameStateObj.cursor.autocursor(gameStateObj)
             self.started = True
             prep_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/prepScript.txt'
             if os.path.exists(prep_script_name):
@@ -424,7 +424,7 @@ class PrepItemsChoicesState(StateMachine.State):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         self.menu.draw(surf)
         if gameStateObj.activeMenu:
-            MenuFunctions.drawUnitItems(surf, (16, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True)
+            MenuFunctions.drawUnitItems(surf, (16, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
         return surf
 
     def end(self, gameStateObj, metaDataObj):
@@ -474,8 +474,8 @@ class PrepTradeSelectState(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        MenuFunctions.drawUnitItems(mapSurf, (16, 8+16*4), self.selection, include_face=True)
-        MenuFunctions.drawUnitItems(mapSurf, (128, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, right=False)
+        MenuFunctions.drawUnitItems(mapSurf, (16, 8+16*4), self.selection, include_face=True, shimmer=2)
+        MenuFunctions.drawUnitItems(mapSurf, (128, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, right=False, shimmer=2)
         return mapSurf
 
 class ConvoyTrader(object):
@@ -751,7 +751,7 @@ class PrepTransferState(StateMachine.State):
             self.menu = MenuFunctions.ConvoyMenu(gameStateObj.cursor.currentSelectedUnit, all_items, (WINWIDTH - 120 - 4, 40))
             self.menu.set_take_input(False)
             self.choice_menu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, [WORDS["Give"], WORDS["Take"]], (60, 16), gem=False, background='BrownBackgroundOpaque')
-            self.owner_menu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit.items, (8, 72), limit=5, hard_limit=True, width=104, gem=False)
+            self.owner_menu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit.items, (8, 72), limit=5, hard_limit=True, width=104, gem=False, shimmer=2)
             self.owner_menu.takes_input = False
             self.owner_menu.draw_face = True
             self.state = "Free" # Can also be Give, Take

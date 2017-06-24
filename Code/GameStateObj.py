@@ -69,6 +69,7 @@ class GameStateObj(object):
         self.play_time = 0
         self.game_constants = []
         self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if CONSTANTS['support'] else None
+        self.modify_stats = read_growths_file() # from configuration
         self.unlocked_lore = []
         self.statistics = []
         self.market_items = set()
@@ -116,6 +117,7 @@ class GameStateObj(object):
         self.stateMachine = StateMachine.StateMachine(load_info['state_list'][0], load_info['state_list'][1])
         self.statistics = load_info['statistics']
         self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
+        self.modify_stats = load_info.get('modify_stats', read_growths_file())
         self.unlocked_lore = load_info['unlocked_lore']
         self.counters = load_info['counters']
         self.market_items = load_info.get('market_items', set())
@@ -207,8 +209,8 @@ class GameStateObj(object):
 
         # Handle cameraOffset
         # Track how much camera has moved in pixels:
-        #self.cameraOffset = CustomObjects.CameraOffset(self.cursor.position[0] - (WINWIDTH/TILEWIDTH/2), self.cursor.position[1] - (WINHEIGHT/TILEHEIGHT/2))
         self.cameraOffset = CustomObjects.CameraOffset(self.cursor.position[0], self.cursor.position[1])
+        self.cursor.autocursor(self, force=True)
         # Other slots
         self.highlight_manager = CustomObjects.HighlightController()
         self.allarrows = []
@@ -338,6 +340,7 @@ class GameStateObj(object):
                    'base_conversations': self.base_conversations,
                    'state_list': self.stateMachine.serialize(),
                    'statistics': self.statistics,
+                   'modify_stats': self.modify_stats,
                    'market_items': self.market_items,
                    'mode': self.mode,
                    'message': [message.serialize() for message in self.message],

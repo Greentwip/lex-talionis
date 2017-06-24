@@ -1896,6 +1896,7 @@ class CombatState(State):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'START':
             self.skip = True
+            gameStateObj.combatInstance.skip()
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)

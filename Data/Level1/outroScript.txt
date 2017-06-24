@@ -3,9 +3,7 @@ m;To A New Journey
 t;1
 b;Forest
 t;2
-u;Prim;MidRight
-u;Ophie;FarRight
-u;Joel;Left;Smiling
+u;Prim;MidRight;u;Ophie;FarRight;u;Joel;Left
 s;Joel;I reckon now would be the proper time for introductions.{w}{br}The name's Joel, and the sour face is my pardnah Nia.{w};auto
 s;Prim;I'm Prim and this is Ophie.{w}{br}Thanks for helping us out back there.{w};auto
 s;Joel;What did ya'll do to rouse Ulver's thugs after you?{w};auto
@@ -15,7 +13,7 @@ s;Joel;Lass... No use crying... yer safe now.{w}{br}Yer master's sacrifice had a
 s;Prim;Yeah...{w};auto
 s;Joel;I'll let ya'll in on a little secret.{w}{br}I reckon ya'll already figured that Nia and I ain't rangers.{w}{br}We're actually with the Resistance.{w};auto
 s;Prim;The Resistance?{w};auto
-s;Joel;We're... how does Sam phrase it...{w}{br}freedom fighters!{w}{br}The Empire's had its way with our country for too long.{w}{br}We're aiming to take it back!{w}{clear}Anyways, ya'll don't have anywhere to go.{w}{br}Why don't you head back with Nia and me?{w};auto
+s;Joel;We're... how does Sam phrase it...{w}{br}freedom fighters!{w}{br}The Empire's had its way with our country for too long.{w}{br}We're aimin' to take it back!{w}{clear}Anyways, ya'll don't have anywhere to go.{w}{br}Why don't ya'll head back with Nia and me?{w};auto
 s;Ophie;You're inviting us to join your Resistance?{w};auto
 s;Joel;Why not?{w}{br}We could always use new members.{w}{br}You're a competant swordsman.{w};auto
 set_expression;Ophie;Smiling

@@ -3253,3 +3253,63 @@ Wexp: 0, 0, 0, 0, 0, 0, 36
 Items: Flux Ward 35, Scathe 10, Spiritbane 3
 *** Convoy:
 Items: 
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 54
+Wexp: 10, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42
+*** Prim: Healtouch
+Lvl 1, Exp 24
+Wexp: 0, 0, 0, 0, 3, 0, 0
+Items: Glimmer Ward 33, Heal 29
+*** Convoy:
+Items: 
+
+=== Level 1 === Money: 1500
+*** Ophie: Riposte
+Lvl 3, Exp 65
+Wexp: 17, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 34
+*** Prim: Healtouch
+Lvl 2, Exp 29
+Wexp: 0, 0, 0, 0, 8, 0, 0
+Items: Glimmer Ward 30, Heal 27
+*** Joel: Cleave
+Lvl 4, Exp 5
+Wexp: 0, 0, 22, 0, 0, 0, 0
+Items: Iron Axe 39, Vulnerary 3
+*** Nia: Prescience
+Lvl 3, Exp 65
+Wexp: 0, 0, 0, 21, 0, 0, 0
+Items: Willow Bow 40, Vulnerary 3, Hand Axe 20
+*** Convoy:
+Items: 
+
+=== Level 2 === Money: 600
+*** Ophie: Riposte,Vantage
+Lvl 5, Exp 5
+Wexp: 20, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 30, Vulnerary 2, Steel Sword 30, Angelic Robe 1
+*** Prim: Healtouch
+Lvl 3, Exp 62
+Wexp: 0, 0, 0, 0, 16, 0, 0
+Items: Heal 23, Glimmer Ward 26, Heal 30
+*** Joel: Cleave,Shove
+Lvl 5, Exp 16
+Wexp: 0, 0, 29, 0, 0, 0, 0
+Items: Hand Axe 18, Iron Axe 33, Vulnerary 3
+*** Nia: Prescience,Critical
+Lvl 5, Exp 0
+Wexp: 0, 0, 0, 27, 0, 0, 0
+Items: Willow Bow 31, Ruby --, Vulnerary 3
+*** Althea: Focus
+Lvl 2, Exp 36
+Wexp: 0, 0, 0, 0, 0, 8, 0
+Items: Fire Ward 28, Vulnerary 3, Vulnerary 3
+*** Drake: Canto,Savior
+Lvl 5, Exp 42
+Wexp: 12, 19, 0, 0, 0, 0, 0
+Items: Iron Lance 42, Iron Sword 42, Potion 3, Spiritbane 3
+*** Convoy:
+Items: 

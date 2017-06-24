@@ -87,7 +87,7 @@ def load_restarts():
     return save_slots
 
 def remove_suspend():
-    if not OPTIONS['debug'] and os.path.exists(SUSPEND_LOC):
+    if not OPTIONS['cheat'] and os.path.exists(SUSPEND_LOC):
         os.remove(SUSPEND_LOC)
 
 class StartStart(StateMachine.State):

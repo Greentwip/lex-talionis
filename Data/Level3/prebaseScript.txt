@@ -54,7 +54,7 @@ u;Sam;Right
 u;Joel;FarLeft
 change_priority;Joel;10
 s;Sam;Ah, Joel. You're late.{w};auto
-s;Joel;Good to see you as well, partner.{w};auto
+s;Joel;Good to see you as well, pardnah.{w};auto
 u;Prim;MidLeft
 s;Sam;And you brought... guests?{w};auto
 s;Joel;Sure did. I'll have them explain.{w};auto
@@ -78,7 +78,7 @@ s;Drake;It is, sir.{w}{br}You see before you the last surviving heir to the Lion
 s;Sam;...{w};auto
 s;Althea;So... can they join your Resistance?{w};auto
 s;Sam;What?{w}{br}Oh... of course.{w}{br}Sorry, your highness. It's just surprising news.{w}{br}This changes everything. All my plans...{w}{br}But I'm getting ahead of myself...{w}{br}Your highness, please take a seat.{w};auto
-s;Althea;Please call me Althea.{w};auto
+s;Althea;Call me Althea.{w};auto
 s;Sam;Althea, then. We have a lot to discuss...{w};auto
 r;Drake;Sam;Althea
 t;1

@@ -24,7 +24,7 @@ elif;self.optionalunit2 == '2'
 	t;2
 	u;OldLady1;Left
 	u;{unit};Right
-	s;OldLady1;Oh is that you, Billy?{w}{br}Its been ages since I last saw you. How are ya doing, Billy?{w}{clear}You know me, I've been doing well - keeping to myself.{w}{br}Trying to keep the house clean, y'know.{w}{br}Have you heard about the weather recently? I've heard it might rain soon...{w}{clear}Oh but do you hear me go on! How are you and the missus?{w}{clear} Are you taking good care of Sally? She's such a darling grandniece.{w}{clear}Well don't let me keep ya. Here take this for the road.{w};auto
+	s;OldLady1;Oh is that you, Billy?{w}{br}Its been ages since I last saw you. How are ya doing, Billy?{w}{clear}You know me, I've been doing well -- keeping to myself.{w}{br}Trying to keep the house clean, y'know.{w}{br}Have you heard about the weather recently? I've heard it might rain soon...{w}{clear}Oh but do you hear me go on! How are you and the missus?{w}{clear} Are you taking good care of Sally? She's such a darling grandniece.{w}{clear}Well don't let me keep ya. Here take this for the road.{w};auto
 	r;{unit}
 	r;OldLady1
 	# Close the village
