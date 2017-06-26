@@ -520,9 +520,10 @@ class BoundaryManager(object):
             ValidSpells = unit.getExcessSpellAttacks(gameStateObj, ValidMoves, boundary=True)
         self._set(ValidAttacks, 'attack', unit.id)
         self._set(ValidSpells, 'spell', unit.id)
-        area_of_influence = Utility.find_manhattan_spheres(range(1, unit.stats['MOV']), unit.position)
-        area_of_influence = {pos for pos in area_of_influence if gameStateObj.map.check_bounds(pos)}
-        self._set(area_of_influence, 'movement', unit.id)
+        self._set(ValidMoves, 'movement', unit.id)
+        #area_of_influence = Utility.find_manhattan_spheres(range(1, unit.stats['MOV']), unit.position)
+        #area_of_influence = {pos for pos in area_of_influence if gameStateObj.map.check_bounds(pos)}
+        #self._set(area_of_influence, 'movement', unit.id)
         #print(unit.name, unit.position, unit.klass, unit.event_id)
         self.surf = None
 
@@ -569,12 +570,15 @@ class BoundaryManager(object):
             for other_unit in other_units:
                 self._add_unit(other_unit, gameStateObj)
 
+    # Called when map changes
     def reset(self, gameStateObj):
         self.clear()
         for unit in gameStateObj.allunits:
             if unit.position and unit.team.startswith('enemy'):
                 self._add_unit(unit, gameStateObj)
 
+    """
+    # Deprecated
     # Called when map changes
     def reset_pos(self, pos_group, gameStateObj):
         other_units = set()
@@ -586,6 +590,7 @@ class BoundaryManager(object):
             self._remove_unit(other_unit, gameStateObj)
         for other_unit in other_units:
             self._add_unit(other_unit, gameStateObj)
+    """
 
     def toggle_all_enemy_attacks(self, gameStateObj):
         if self.all_on_flag:

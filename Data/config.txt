@@ -1,5 +1,5 @@
-debug;True
-cheat;True
+debug;1
+cheat;1
 screen_scale;3
 Animation;0
 Unit Speed;60

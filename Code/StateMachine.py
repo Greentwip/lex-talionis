@@ -1808,6 +1808,9 @@ class DialogueState(State):
         logger.debug('Ending dialogue state')
         if self.message:
             gameStateObj.message.pop()
+        # Did any tiles change?
+        if self.message.reset_boundary_manager:
+            gameStateObj.boundary_manager.reset(gameStateObj)
         # HANDLE WINNING AND LOSING
         # Things done upon completion of level
         if gameStateObj.statedict['levelIsComplete'] == 'win':

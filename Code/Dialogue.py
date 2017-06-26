@@ -64,6 +64,7 @@ class Dialogue_Scene(object):
         self.do_skip = False
         self.battle_save_flag = False # Whether to enter the battle save state after this scene has completed
         self.reset_state_flag = False # Whether to reset state to free state after this scene has completed
+        self.reset_boundary_manager = False # Whether to reset the boundary manager after this scene has completed. Set to true when tiles are changed
 
         # Handle waiting
         self.last_wait_update = Engine.get_time()
@@ -653,14 +654,15 @@ class Dialogue_Scene(object):
         elif line[0] == 'replace_tile':
             coords = gameStateObj.map.replace_tile(line, gameStateObj.grid_manager)
             gameStateObj.map.command_list.append(line)
-            gameStateObj.boundary_manager.reset_pos(set(coords), gameStateObj)
+            self.reset_boundary_manager = True
+            #gameStateObj.boundary_manager.reset(gameStateObj)
         # Change area of tile (must include pic instead of id)
         elif line[0] == 'area_replace_tile':
             coord, size = gameStateObj.map.mass_replace_tile(line, gameStateObj.grid_manager)
             gameStateObj.map.command_list.append(line)
-            # Throw this on another thread?
-            width, height = size
-            gameStateObj.boundary_manager.reset_pos({(coord[0] + w, coord[1] + h) for w in range(width) for h in range(height)}, gameStateObj)
+            self.reset_boundary_manager = True
+            #width, height = size
+            #gameStateObj.boundary_manager.reset(gameStateObj)
         # Change one tile's information
         elif line[0] == 'set_tile_info':
             gameStateObj.map.set_tile_info(line)

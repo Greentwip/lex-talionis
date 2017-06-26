@@ -101,6 +101,7 @@ CON_desc;Constitution. Affects how well the unit can wield heavier weapons.
 Aid_desc;Max rescuing constitution. Units with greater Con cannot be rescued.
 Trv_desc;Who is this unit rescuing?
 Affin_desc;Determines bonuses given to other units in supports.
+Rat_desc;Holistic threat rating.
 Trv;Trv
 Aid;Aid
 Atk_desc;Amount of damage this weapon causes. Affected by defenses.

@@ -1589,6 +1589,9 @@ class UnitObject(object):
 
     def mixed_defense(self, gameStateObj):
         return self.stats['DEF'] + self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
+
+    def get_rating(self):
+        return (self.stats['HP'] - 10)/2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + self.stats['SPD'] + self.stats['LCK']/2 + self.stats['DEF'] + self.stats['RES']
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj):

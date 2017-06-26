@@ -348,10 +348,13 @@ class InfoMenu(StateMachine.State):
         menu_surf.blit(AidSurf, AidRect)"""
 
         # Handle Affinity
-        if CONSTANTS['support'] and self.unit.name in gameStateObj.support.node_dict:
-            gameStateObj.support.node_dict[self.unit.name].affinity.draw(menu_surf, (menu_surf.get_width()/2 + 32, TILEHEIGHT*5.5 + 4))
+        if CONSTANTS['support']:
+            if self.unit.name in gameStateObj.support.node_dict:
+                gameStateObj.support.node_dict[self.unit.name].affinity.draw(menu_surf, (menu_surf.get_width()/2 + 32, TILEHEIGHT*5.5 + 4))
+            else:
+                FONT['text_blue'].blit('--', menu_surf, (94, TILEHEIGHT*5.5 + 4)) # Blit No Affinity
         else:
-            FONT['text_blue'].blit('--', menu_surf, (94, TILEHEIGHT*5.5 + 4)) # Blit No Affinity
+            FONT['text_blue'].blit(str(self.unit.get_rating()), menu_surf, (94, TILEHEIGHT*5.5 + 4))
 
         return menu_surf
 
@@ -370,7 +373,10 @@ class InfoMenu(StateMachine.State):
             FONT['text_yellow'].blit('HP', menu_surf, (68, TILEHEIGHT*3.3+4)) # Blit Outlined Aid
         else:
             FONT['text_yellow'].blit(WORDS['Aid'], menu_surf, (68, TILEHEIGHT*3.3+4)) # Blit Outlined Aid
-        FONT['text_yellow'].blit(WORDS['Affin'], menu_surf, (68, TILEHEIGHT*5.5+4)) # Blit Outlined Affinity
+        if CONSTANTS['support']:
+            FONT['text_yellow'].blit(WORDS['Affin'], menu_surf, (68, TILEHEIGHT*5.5+4)) # Blit Outlined Affinity
+        else:
+            FONT['text_yellow'].blit(WORDS['Rat'], menu_surf, (68, TILEHEIGHT*5.5+4)) # Blit Outlined Rating
 
     def draw_personal_data_surf(self, surf):
         menu_position = (108, TILEHEIGHT + 16*self.scroll_offset)
@@ -683,7 +689,11 @@ class HelpGraph(object):
         else:
             self.help_boxes["Aid"] = Help_Box("Aid", (10*WINWIDTH/16 + 6, TILEHEIGHT*4.3 + 5), create_help_box(WORDS['Aid_desc']))
         self.help_boxes["Traveler"] = Help_Box("Traveler", (10*WINWIDTH/16 + 6, TILEHEIGHT*5.4 + 5), create_help_box(WORDS['Trv_desc']))
-        self.help_boxes["Affin"] = Help_Box("Affin", (10*WINWIDTH/16 + 6, TILEHEIGHT*6.5 + 5), create_help_box(WORDS['Affin_desc']))
+        if CONSTANTS['support']:
+            self.help_boxes["Affin"] = Help_Box("Affin", (10*WINWIDTH/16 + 6, TILEHEIGHT*6.5 + 5), create_help_box(WORDS['Affin_desc']))
+        else:
+            self.help_boxes["Affin"] = Help_Box("Affin", (10*WINWIDTH/16 + 6, TILEHEIGHT*6.5 + 5), create_help_box(WORDS['Rat_desc']))
+
 
         # Connect personal data
         self.help_boxes["Strength"].down = "Magic"
