@@ -3349,3 +3349,43 @@ Wexp: 0, 26, 0, 0, 0, 0, 0
 Items: Iron Lance 35, Vulnerary 3, Willow Bow 43
 *** Convoy:
 Items: Angelic Robe 1, Heal 23, Spiritbane 3, Vulnerary 3, Secret Book 1
+
+=== Level 4 === Money: 11270
+*** Ophie: Riposte,Vantage,Strength +2
+Lvl 8, Exp 53
+Wexp: 37, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 43, Levin Sword 23, Steel Sword 15, Iron Knife 9, Vulnerary 3
+*** Prim: Healtouch,Miracle
+Lvl 7, Exp 15
+Wexp: 0, 0, 0, 0, 36, 0, 0
+Items: Heal 26, Mend 14, Glimmer Ward 18, Sapphire --
+*** Joel: Cleave,Shove,Skill +3
+Lvl 8, Exp 56
+Wexp: 0, 0, 54, 0, 0, 0, 0
+Items: Hand Axe 10, Hatchet 32, Iron Axe 18, Steel Axe 28, Potion 2
+*** Nia: Prescience,Critical
+Lvl 6, Exp 98
+Wexp: 0, 0, 0, 41, 0, 0, 0
+Items: Willow Bow 40, Vulnerary 3
+*** Althea: Focus,Conductance
+Lvl 5, Exp 84
+Wexp: 0, 0, 0, 0, 0, 18, 0
+Items: Wyrmsfire 9, Wind Ward 27, Fire Ward 20, Water Ward 30, Hatchet 35
+*** Drake: Canto,Savior
+Lvl 7, Exp 34
+Wexp: 21, 29, 0, 0, 0, 0, 0
+Items: Iron Lance 22, Iron Sword 40, Vulnerary 1, Shine Ward 25, Great Lance 25
+*** Renae: Locktouch,Steal
+Lvl 5, Exp 80
+Wexp: 26, 0, 0, 0, 0, 0, 0
+Items: Steel Sword 28, Iron Knife 14, Iron Sword 11, Vulnerary 3, Steel Sword 30
+*** Theo: Provoke,Shove
+Lvl 7, Exp 20
+Wexp: 0, 34, 0, 0, 0, 0, 0
+Items: Iron Lance 41, Javelin 16, Vulnerary 2, Talisman 1, Ruby --
+*** Eliza: Synergy,Underdog
+Lvl 4, Exp 6
+Wexp: 0, 29, 0, 0, 0, 0, 0
+Items: Javelin 14, Iron Lance 43, Steel Lance 30, Prim's Charm --, Earth Ward 30
+*** Convoy:
+Items: Angelic Robe 1, Spiritbane 3, Secret Book 1, Willow Bow 14, Mana Ring 1, Heal 14, Steel Knife 15, Javelin 20, Magebane Swd 15

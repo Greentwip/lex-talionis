@@ -54,6 +54,8 @@ class acquiredItemBanner(Banner):
         self.unit = unit
         self.item = item
         self.article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
+        if "'" in self.item.name:
+            self.article = '' # No article for things like Prim's Charm, Ophie's Blade, etc.
         self.banner = [unit.name, ' got ', self.article, ' ', item.name, '.']
         self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()

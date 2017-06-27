@@ -1670,6 +1670,7 @@ class UnitObject(object):
                 status.active.current_charge = 0
             if status.tether:
                 status.remove_children(gameStateObj)
+        self.tags.discard('ActiveSkillCharged')
         # Items with chapter counts should be reset
         for item in self.items:
             if item.c_uses:

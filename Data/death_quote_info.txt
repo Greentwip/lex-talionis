@@ -129,7 +129,7 @@ elif;self.optionalunit.name == 'Harold'
 	r;Harold
 elif;self.optionalunit.name == 'Anders'
 	u;Anders;FarLeft
-	s;Anders;What? Blood? This blood?{w}{br}It's nothing... I will not dissapoint...{w};auto
+	s;Anders;What? Blood? This blood?{w}{br}It's nothing... I will not disappoint...{w};auto
 	r;Anders
 elif;self.optionalunit.name == 'Midas'
 	u;Midas;FarLeft

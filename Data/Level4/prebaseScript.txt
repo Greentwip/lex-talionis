@@ -51,8 +51,10 @@ m;Midna's Theme
 move_sprite;Prim;-24,0
 u;Eliza;MidLeft
 s;Sam;Eliza?{w};auto
-s;Eliza;Let me join this fight.{w}{br}I can do it. I know I can.{w};auto
-s;Sam;What? We've gone over this, Eliza.{w};auto
+s;Eliza;Can let me join this fight?{w};auto
+s;Sam;What? Out of the question, Eliza.{w}{br}You are not ready.{w};auto
+s;Eliza;I am ready!{w}{br}I can do it. I know I can.{w};auto
+s;Sam;We've been over this...{w};auto
 s;Eliza;Please, Sam. I've been training...{w}{br}I'm stronger than I was then. I won't get hurt.{w};auto
 s;Sam;No. And that's final.{w};auto
 s;Eliza;You really don't trust me anymore, do you!{w};auto

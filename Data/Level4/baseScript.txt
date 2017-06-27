@@ -12,10 +12,10 @@ if;self.optionalunit == 'An Uneasy Trust'
 	s;Sam;Ophie, do you have faith in the Resistance?{w};auto
 	s;Ophie;What?{w}{br}Where's this coming from?{w};auto
 	s;Sam;I heard about your outburst yesterday...{w}{br}So I'll ask again.{w}{br}Do you have faith in the Resistance?{w};auto
-	s;Ophie;Of course I have faith in the Resistance!{w}{br}I've got the most faith out of everybody!{w}{br}I lost my home to the Empire!{w}{br}I want to see the Empire crushed, same as you!{w}{br}Why else would I even be here?{w};auto
-	s;Sam;Hmmm...{w};auto
+	s;Ophie;Of course I have faith in the Resistance!{w}{br}I lost my home to the Empire!{w}{br}I want to see the Empire crushed, same as you!{w}{br}Why else would I even be here?{w};auto
+	s;Sam;...{w};auto
 	s;Ophie;Last night, I was tired.{w}{br}The plan failed and you weren't even there...{w}{br}My emotions got the better of me.{w};auto
-	s;Sam;I made a mistake. I fully admit it.{w}{br}It won't happen again.{w}{br}But you understand I can't have my soldiers doubting my orders.{w}{br}In battle, one hesitation, one mistake, and it's over.{w};auto
+	s;Sam;It was a mistake. I fully admit it.{w}{br}It won't happen again.{w}{br}But you understand I can't have my soldiers doubting my orders.{w}{br}In battle, one hesitation, one mistake, and it's over.{w};auto
 	s;Ophie;Well yeah...{w};auto
 	s;Sam;Then we understand one another?{w};auto
 	s;Ophie;Yeah.{w}{br}But if I'm going to follow your orders, I need to know...{w}{br}Who are your sources?{w}{br}And why don't you fight with us?{w};auto
@@ -51,13 +51,13 @@ elif;self.optionalunit == 'Strength'
 	qu;Prim;OffscreenRight
 	move_sprite;Prim;-96,0;force_hold
 	s;Prim;Hello?{w};auto
-	s;Eliza;What do you want?{w}{br}Come to gloat?{w}Feel free... Not like I could stop you anyhow...{w};auto
+	s;Eliza;What do you want?{w}{br}Come to gloat?{w}{br}Feel free... Not like I could stop you anyhow...{w};auto
 	s;Prim;Is that what you think?{w};auto
 	mirror;Eliza
-	s;Eliza;I get it. I've been replaced...{w}{br}With you all here, Sam will never need my help anymore.{w}{br}I really am weak.{w};auto
+	s;Eliza;I get it. I've been replaced...{w}{br}With you all here, Sam will never need my help.{w}{br}I really am weak.{w};auto
 	s;Prim;I don't think you're weak.{w}{br}I was just worried...{w};auto
 	s;Eliza;I don't need your pity.{w};auto
-	s;Prim;Good. Because I'm not interested in giving it.{w}{br}I've seen you out here training.{w};auto
+	s;Prim;I've seen you out here training.{w};auto
 	s;Eliza;Yeah, so?{w};auto
 	s;Prim;What happened between you and Sam?{w}{br}Why won't he let you fight?{w};auto
 	s;Eliza;Hmmph. It doesn't really matter.{w};auto
@@ -102,8 +102,6 @@ elif;self.optionalunit == "Theo Sphinx, Pt. I"
 	s;Theo;The dame prattled on, but I'd heard enough.{w}{br}I dusted off my jacket, lit up my last cigar, grabbed my hat and walked out,{w}{br}the scent of one too many drinks hanging on the cheap wallpaper.{w}{br}I had a meeting with destiny, and she was a cold mistress.{w};auto;noir
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. I
-	t;1
-	b;MainBase
-	t;2
 	inc_counter;noir
+	t;1
 end

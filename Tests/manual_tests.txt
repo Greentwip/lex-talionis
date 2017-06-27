@@ -1,2 +1,2 @@
 - AI Test (also Pathfinding/Combat)
-- Rescue/Drop/Give/Take Test (Also Canto)
+- Rescue/Drop/Give/Take Test (Also Canto) (Also saving of those effects and Savior)
