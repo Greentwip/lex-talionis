@@ -1,5 +1,3 @@
-- Solve issue with ActiveSkillCharged
-
 -- KNOWN ISSUES:
 - Music may not work on or even crash Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)
 - Avast Antivirus or other antiviruses may slow down certain actions that write to disk. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
@@ -42,6 +40,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Unit Menu ++
 - Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1) ++
 - Color blind mode ++ Allow switching of tile and unit colors (blue, red, green, yellow, purple, white, orange)
+- Have UnitSprite colors be generated on the fly instead of having different kinds for each
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Build a GUI that builds levels... Unit Placement, TileInfo placement
 - Keep gameStateObj.allunits sorted by unit_id? (what is it currently sorted by?) (makes get unit by id faster. But its not that slow to begin with...)
