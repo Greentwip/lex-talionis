@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 # === GET INFO FOR DIALOGUE SCENE ==================================================
 class Dialogue_Scene(object):
-    def __init__(self, scene, optionalunit=None, optionalunit2=None, tile_pos=None, event_flag=True):
+    def __init__(self, scene, optionalunit=None, optionalunit2=None, tile_pos=None, event_flag=True, if_flag=False):
         self.scene = scene
         self.scene_lines = []
         with open(scene, 'r') as scenefp: # Open this scene's file database
@@ -80,6 +80,8 @@ class Dialogue_Scene(object):
 
         # Does this count as an event
         self.event_flag = event_flag
+        # Assumes all "if" statements evaluate to True?
+        self.if_flag = if_flag
 
     def serialize(self):
         return self.scene
@@ -117,7 +119,7 @@ class Dialogue_Scene(object):
 
             line = line.split(';')
             #logger.debug(line)
-            if self.handle_if(line, gameStateObj, metaDataObj) and (not self.do_skip or not (line[0] in self.skippable_commands)):
+            if (self.if_flag or self.handle_if(line, gameStateObj, metaDataObj)) and (not self.do_skip or not (line[0] in self.skippable_commands)):
                 self.parse_line(line, gameStateObj, metaDataObj)
             self.scene_lines_index += 1
 
@@ -445,7 +447,7 @@ class Dialogue_Scene(object):
             else:
                 for unit in gameStateObj.allunits: # Find the unit this is supposed to go to
                     if unit.name == line[1]:
-                        print(unit.name)
+                        #print(unit.name)
                         StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
                         if not 'no_display' in line:
                             gameStateObj.banners.append(Banner.gainedSkillBanner(unit, skill))

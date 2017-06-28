@@ -39,7 +39,7 @@ def main():
 def run(gameStateObj, metaDataObj, fp):
     if os.path.exists(fp):
         print(fp)
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(fp, optionalunit=gameStateObj.allunits[0]))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(fp, optionalunit=gameStateObj.allunits[0], if_flag=True))
         gameStateObj.stateMachine.changeState('dialogue')
         counter = 0
         while gameStateObj.message:
