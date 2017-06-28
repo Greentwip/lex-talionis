@@ -1201,6 +1201,7 @@ class Dialogue_Scene(object):
         if self.do_skip:
             transition = 'immediate'
         # Now we have final pos
+        unit.position = final_pos
         if transition == 'warp':
             unit.sprite.set_transition('warp_in')
             gameStateObj.map.initiate_warp_flowers(final_pos)
@@ -1212,7 +1213,6 @@ class Dialogue_Scene(object):
                 unit.sprite.set_transition('fade_in')
         elif transition == 'immediate':
             pass
-        unit.position = final_pos
         unit.place_on_map(gameStateObj)
         unit.arrive(gameStateObj)
 

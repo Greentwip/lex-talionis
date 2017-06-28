@@ -6,15 +6,13 @@ import Image_Modification, Utility, Engine
 import logging
 logger = logging.getLogger(__name__)
 
-NETPOSITION_SET = {'weapon', 'attack', 'spellweapon', 'spell', 'select', 'skillselect', 'stealselect', \
-                   'tradeselect', 'takeselect', 'dropselect', 'giveselect', 'rescueselect', 'talkselect', \
-                   'unlockselect', 'trade', 'steal'}
 WARP_OUT_SET = {'warp_out', 'fade_out', 'fade_move', 'warp_move'}
 
 class UnitSprite(object):
     def __init__(self, unit):
         self.unit = unit
-        self.state = 'passive'
+        self.state = 'normal' # what state the unit sprite is in
+        self.image_state = 'passive' # What the image looks like
         self.transition_state = 'normal' # fade_in, fade_out, warp_in, warp_out, fake_in, fake_out
         self.transition_counter = 0
         self.transition_time = 400
@@ -24,6 +22,7 @@ class UnitSprite(object):
 
         self.loadSprites()
 
+        self.netposition = (0, 0)
         self.moveSpriteCounter = 0
         self.lastUpdate = 0
         self.spriteMvm = [1, 2, 3, 2, 1, 0]
@@ -36,13 +35,17 @@ class UnitSprite(object):
     def set_transition(self, new_state):
         self.transition_counter = self.transition_time
         self.transition_state = new_state
+        if self.transition_state == 'fake_in':
+            self.change_state('fake_transition_in')
+        elif self.transition_state == 'fake_out' or self.transition_state == 'rescue':
+            self.change_state('fake_transition_out')
 
     def set_next_position(self, new_pos):
         self.next_position = new_pos
 
     def draw(self, surf, gameStateObj):
         """Assumes image has already been developed."""
-        image = self.create_image(self.state)
+        image = self.create_image(self.image_state)
         x, y = self.unit.position
         left = x * TILEWIDTH + self.spriteOffset[0]
         top = y * TILEHEIGHT + self.spriteOffset[1]
@@ -58,15 +61,20 @@ class UnitSprite(object):
             if self.unit.deathCounter:
                 image = Image_Modification.flickerImageTranslucentColorKey(image, self.unit.deathCounter/2)
             else:
+                self.transition_counter -= Engine.get_delta()
+                if self.transition_counter < 0:
+                    self.transition_counter = 0
                 image = Image_Modification.flickerImageTranslucentColorKey(image, 100 - self.transition_counter/(self.transition_time/100))
                 if self.transition_counter <= 0:
                     if self.transition_state == 'fade_out':
                         self.transition_state = 'normal'
+                        self.change_state('normal', gameStateObj)
                         self.unit.die(gameStateObj, event=True)
                     elif self.transition_state == 'warp_out':
                         gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.die(gameStateObj, event=True)
                         self.transition_state = 'normal'
+                        self.change_state('normal', gameStateObj)
                     elif self.transition_state == 'fade_move' or self.transition_state == 'warp_move':
                         gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.leave(gameStateObj)
@@ -79,9 +87,13 @@ class UnitSprite(object):
                         elif self.transition_state == 'warp_move':
                             self.set_transition('warp_in')
         elif self.transition_state == 'warp_in' or self.transition_state == 'fade_in':
+            self.transition_counter -= Engine.get_delta()
+            if self.transition_counter < 0:
+                self.transition_counter = 0
             image = Image_Modification.flickerImageTranslucentColorKey(image, self.transition_counter/(self.transition_time/100))
             if self.transition_counter <= 0:
                 self.transition_state = 'normal'
+                self.change_state('normal', gameStateObj)
         elif self.unit.flicker:
             color = self.unit.flicker[2]
             total_time = self.unit.flicker[1]
@@ -166,7 +178,7 @@ class UnitSprite(object):
                         health_bar = Engine.subsurface(health_bar, (0, 0, self.current_cut_off, 1))
                         surf.blit(health_bar, (left+1, top+14))
             # Extra Icons
-            if 'Boss' in self.unit.tags and self.state in ['gray', 'passive'] and int((current_time%450)/150) in [1, 2]: # Essentially an every 132 millisecond timer
+            if 'Boss' in self.unit.tags and self.image_state in ['gray', 'passive'] and int((current_time%450)/150) in [1, 2]: # Essentially an every 132 millisecond timer
                 bossIcon = ICONDICT['BossIcon']
                 surf.blit(bossIcon, (left - 8, top - 8))
             if self.unit.TRV:
@@ -220,16 +232,16 @@ class UnitSprite(object):
     def handle_net_position(self, pos):
         if abs(pos[0]) >= abs(pos[1]):
             if pos[0] > 0:
-                self.state = 'right'
+                self.image_state = 'right'
             elif pos[0] < 0:
-                self.state = 'left'
+                self.image_state = 'left'
             else:
-                self.state = 'down' # default
+                self.image_state = 'down' # default
         else:
             if pos[1] < 0:
-                self.state = 'up'
+                self.image_state = 'up'
             else:
-                self.state = 'down'
+                self.image_state = 'down'
 
     def update_move_sprite_counter(self, currentTime, update_speed=50):
         ### MOVE SPRITE COUNTER LOGIC
@@ -245,16 +257,76 @@ class UnitSprite(object):
         self.spriteMvmindex = 0
         self.spriteOffset = [0, 0]
 
-    def update(self, gameStateObj):
+    def change_state(self, new_state, gameStateObj=None):
+        self.state = new_state
+        if self.state in {'combat_attacker', 'combat_anim'}:
+            self.netposition = gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1]
+            self.handle_net_position(self.netposition)
+            self.reset_sprite_offset()
+        elif self.state == {'combat_active', 'status_active'}:
+            self.image_state = 'active'
+        elif self.state == 'combat_defender':
+            attacker = gameStateObj.combatInstance.p1
+            self.netposition = attacker.position[0] - self.unit.position[0], attacker.position[1] - self.unit.position[1]
+            self.handle_net_position(self.netposition)
+        elif self.state == 'menu':
+            self.handle_net_position(self.old_sprite_offset)
+        elif self.state == 'fake_transition_in':
+            newPosition = (self.unit.position[0] + Utility.clamp(self.spriteOffset[0], -1, 1), self.unit.position[1] + Utility.clamp(self.spriteOffset[1], -1, 1))
+            self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
+            self.netposition = (-self.netposition[0], -self.netposition[1])
+            self.handle_net_position(self.netposition)
+        elif self.state == 'fake_transition_out':
+            newPosition = (self.unit.position[0] + Utility.clamp(self.spriteOffset[0], -1, 1), self.unit.position[1] + Utility.clamp(self.spriteOffset[1], -1, 1))
+            self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
+            self.handle_net_position(self.netposition)
+        elif self.state == 'selected':
+            self.image_state = 'down'
+
+    def update_state(self, gameStateObj):
         currentTime = Engine.get_time()
-        self.transition_counter -= Engine.get_delta()
-        self.transition_counter = max(0, self.transition_counter)
-
-        unit_moving = self.unit in gameStateObj.moving_units
-        current_state = gameStateObj.stateMachine.getState()
-
-        ### SPRITE OFFSET FOR MOVE - Positions unit at intervening positions based on spriteOffset
-        if self.transition_state == 'fake_in':
+        #if self.unit == gameStateObj.cursor.currentSelectedUnit:
+        #    print(self.state)
+        if self.state == 'normal':
+            if self.unit.finished and not self.unit.isDying and not self.unit.isActive:
+                self.image_state = 'gray'
+            elif gameStateObj.cursor.currentHoveredUnit == self.unit and self.unit.team == 'player' and gameStateObj.cursor.drawState:
+                self.image_state = 'active'
+            else:
+                self.image_state = 'passive'
+        elif self.state == 'combat_anim':
+            self.spriteOffset[0] = Utility.clamp(self.netposition[0], -1, 1) * self.spriteMvm[self.spriteMvmindex]
+            self.spriteOffset[1] = Utility.clamp(self.netposition[1], -1, 1) * self.spriteMvm[self.spriteMvmindex]
+            if currentTime - self.lastSpriteUpdate > 50:
+                self.spriteMvmindex += 1
+                if self.spriteMvmindex > len(self.spriteMvm) - 1:
+                    self.spriteMvmindex = len(self.spriteMvm) - 1
+                self.lastSpriteUpdate = currentTime
+            self.update_move_sprite_counter(currentTime, 50)
+        elif self.state in {'menu', 'selected'}:
+            self.update_move_sprite_counter(currentTime, 80)
+        elif self.state == 'chosen': # NETPOSITION SET
+            self.netposition = (gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1])
+            if self.netposition == (0, 0):
+                self.netposition = self.old_sprite_offset
+            self.handle_net_position(self.netposition)
+            self.update_move_sprite_counter(currentTime, 80)
+        elif self.state == 'moving':
+            try:
+                newPosition = self.unit.path[-1]
+            except IndexError:
+                if self.spriteOffset[0] != 0 or self.spriteOffset[1] != 0:
+                    self.old_sprite_offset = tuple(self.spriteOffset)
+                self.spriteOffset = [0, 0]
+                self.transition_state = 'normal'
+                #self.change_state('normal', gameStateObj)
+                return
+            self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
+            self.spriteOffset[0] = int(TILEWIDTH * (currentTime - self.unit.lastMoveTime) / CONSTANTS['Unit Speed'] * self.netposition[0])
+            self.spriteOffset[1] = int(TILEHEIGHT * (currentTime - self.unit.lastMoveTime) / CONSTANTS['Unit Speed'] * self.netposition[1])
+            self.handle_net_position(self.netposition)
+            self.update_move_sprite_counter(currentTime, 80)
+        elif self.state == 'fake_transition_in':
             if self.spriteOffset[0] > 0:
                 self.spriteOffset[0] -= 2
             elif self.spriteOffset[0] < 0:
@@ -266,8 +338,8 @@ class UnitSprite(object):
 
             if self.spriteOffset[0] == 0 and self.spriteOffset[1] == 0:
                 self.transition_state = 'normal'
-        elif self.transition_state == 'fake_out' or self.transition_state == 'rescue':
-            logger.debug('fake_removal')
+                self.change_state('normal', gameStateObj)
+        elif self.state == 'fake_transition_out':
             if self.spriteOffset[0] < 0:
                 self.spriteOffset[0] -= 2
             elif self.spriteOffset[0] > 0:
@@ -278,106 +350,29 @@ class UnitSprite(object):
                 self.spriteOffset[1] += 2
             if abs(self.spriteOffset[0]) >= TILEWIDTH or abs(self.spriteOffset[1]) >= TILEHEIGHT:
                 self.transition_state = 'normal'
+                self.change_state('normal', gameStateObj)
                 self.spriteOffset = [0, 0]
                 if self.transition_state == 'fake_out':
                     self.unit.die(gameStateObj, event=True)
                 else: # Rescue
                     self.unit.leave(gameStateObj)
                     self.unit.position = None
-        elif unit_moving and current_state == 'movement':
-            if self.unit.path:
-                nextPosition = self.unit.path[-1]
-                netPosition = (nextPosition[0] - self.unit.position[0], nextPosition[1] - self.unit.position[1]) 
-                self.spriteOffset[0] = int(TILEWIDTH * (currentTime - self.unit.lastMoveTime) / CONSTANTS['Unit Speed'] * netPosition[0])
-                self.spriteOffset[1] = int(TILEHEIGHT * (currentTime - self.unit.lastMoveTime) / CONSTANTS['Unit Speed'] * netPosition[1])
-            else:
-                # reset spriteOffset
-                if self.spriteOffset[0] != 0 or self.spriteOffset[1] != 0:
-                    self.old_sprite_offset = tuple(self.spriteOffset)
-                self.spriteOffset = [0, 0]
-                self.transition_state = 'normal'
+
+    def update(self, gameStateObj):
+        self.update_state(gameStateObj)
             
-        ### UPDATE IMAGE
-        if current_state == 'combat' and gameStateObj.combatInstance and \
-            (self.unit is gameStateObj.combatInstance.p1 or self.unit is gameStateObj.combatInstance.p2 or \
-            (self.unit in gameStateObj.combatInstance.splash and self.unit in [result.defender for result in gameStateObj.combatInstance.results])):
-            if gameStateObj.combatInstance.results:
-                attacker = gameStateObj.combatInstance.results[0].attacker
-                defenders = [result.defender for result in gameStateObj.combatInstance.results]
-            else:
-                attacker = gameStateObj.combatInstance.p1
-                defenders = [gameStateObj.combatInstance.p2]
-            if self.unit is attacker:
-                if not defenders or attacker in defenders:
-                    self.state = 'active'
-                else:
-                    netposition = gameStateObj.cursor.position[0] - attacker.position[0], gameStateObj.cursor.position[1] - attacker.position[1]
-                    self.handle_net_position(netposition)
-                    if gameStateObj.combatInstance.combat_state == 'Anim':
-                        self.spriteOffset[0] = Utility.clamp(netposition[0], -1, 1) * self.spriteMvm[self.spriteMvmindex]
-                        self.spriteOffset[1] = Utility.clamp(netposition[1], -1, 1) * self.spriteMvm[self.spriteMvmindex]
-                        if currentTime - self.lastSpriteUpdate > 50:
-                            self.spriteMvmindex += 1
-                            if self.spriteMvmindex > len(self.spriteMvm) - 1:
-                                self.spriteMvmindex = len(self.spriteMvm) - 1
-                            self.lastSpriteUpdate = currentTime
-                        self.update_move_sprite_counter(currentTime, 50)
-                    else: # Reset spriteOffset
-                        self.reset_sprite_offset()
-
-            elif self.unit in defenders:
-                #print(attacker, defender, attacker.position, defender.position)
-                netposition = attacker.position[0] - self.unit.position[0], attacker.position[1] - self.unit.position[1]
-                self.handle_net_position(netposition)
-
-        elif current_state == 'status' and gameStateObj.status and gameStateObj.status.check_active(self.unit):
-            self.state = 'active'
-        elif gameStateObj.cursor.currentSelectedUnit is self.unit and current_state == 'menu' and not self.unit.hasAttacked:
-            self.handle_net_position(self.old_sprite_offset)
-            self.update_move_sprite_counter(currentTime, 80)
-        elif gameStateObj.cursor.currentSelectedUnit is self.unit and current_state in NETPOSITION_SET:
-            netposition = (gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1])
-            if netposition == (0, 0):
-                netposition = self.old_sprite_offset
-            self.handle_net_position(netposition)
-            self.update_move_sprite_counter(currentTime, 80)
-        elif (unit_moving and current_state == 'movement') or self.transition_state in ['fake_in', 'fake_out', 'rescue']:
-            if unit_moving:
-                # Where is my path with respect to here
-                try:
-                    newPosition = self.unit.path[-1]
-                except IndexError:
-                    return # Just use previous image? Other options include keeping in memory lastPosition. Of course this whole thing will probably haveto be changed in the future... HAHAHA... Yeah right...
-            elif self.transition_state in ['fake_in', 'fake_out', 'rescue']:
-                newPosition = (self.unit.position[0] + Utility.clamp(self.spriteOffset[0], -1, 1), self.unit.position[1] + Utility.clamp(self.spriteOffset[1], -1, 1))
-            netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
-            if self.transition_state == 'fake_in':
-                netposition = (-netposition[0], -netposition[1])
-            self.handle_net_position(netposition)
-            if unit_moving:
-                self.update_move_sprite_counter(currentTime, 80)
-        # Unit can't be done in prep, and if you are we should ignore it. Can't ignore dialogue because if I do then units start flickering as death, fight and interact dialogues take place
-        elif self.unit.isDone() and not self.unit.isDying and not self.unit.isActive \
-        and not current_state.startswith('prep') and not gameStateObj.stateMachine.any_events():
-            self.state = 'gray'
-        elif gameStateObj.cursor.currentSelectedUnit == self.unit and self.unit.team == 'player' and gameStateObj.cursor.drawState:
-            self.state = 'down'
-            self.update_move_sprite_counter(currentTime, 80)
-        elif gameStateObj.cursor.currentHoveredUnit == self.unit and self.unit.team == 'player' and gameStateObj.cursor.drawState:
-            self.state = 'active'
-        else:
-            self.state = 'passive'
-
         # Update status effects
         # Status effects
-        for status in self.unit.status_effects:
-            if status.always_animation:
-                staa = status.always_animation
-                if currentTime - staa.lastUpdate > staa.animation_speed:
-                    staa.frameCount += int((currentTime - staa.lastUpdate)/staa.animation_speed) # 1
-                    staa.lastUpdate = currentTime
-                    if staa.frameCount >= staa.num_frames:
-                        staa.frameCount = 0
+        if 'always_animation' in self.unit.status_bundle:
+            for status in self.unit.status_effects:
+                if status.always_animation:
+                    staa = status.always_animation
+                    currentTime = Engine.get_time()
+                    if currentTime - staa.lastUpdate > staa.animation_speed:
+                        staa.frameCount += int((currentTime - staa.lastUpdate)/staa.animation_speed) # 1
+                        staa.lastUpdate = currentTime
+                        if staa.frameCount >= staa.num_frames:
+                            staa.frameCount = 0
 
-                indiv_width, indiv_height = staa.sprite.get_width()/staa.x, staa.sprite.get_height()/staa.y
-                staa.image = Engine.subsurface(staa.sprite, (staa.frameCount%staa.x * indiv_width, staa.frameCount/staa.x * indiv_height, indiv_width, indiv_height))
+                    indiv_width, indiv_height = staa.sprite.get_width()/staa.x, staa.sprite.get_height()/staa.y
+                    staa.image = Engine.subsurface(staa.sprite, (staa.frameCount%staa.x * indiv_width, staa.frameCount/staa.x * indiv_height, indiv_width, indiv_height))

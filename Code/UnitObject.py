@@ -4,7 +4,7 @@ from GlobalConstants import *
 from configuration import *
 import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject, \
 AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject, \
-Utility, LevelUp, ItemMethods, Engine, Banner, Djikstra
+Utility, LevelUp, ItemMethods, Engine, Banner
 
 import logging
 logger = logging.getLogger(__name__)
@@ -595,6 +595,7 @@ class UnitObject(object):
         #gameStateObj.stateMachine.changeState('movement')
         gameStateObj.moving_units.add(self)
         self.lock_active()
+        self.sprite.change_state('moving', gameStateObj)
         # Remove tile statuses
         self.leave(gameStateObj)
         if path is None:
@@ -861,7 +862,7 @@ class UnitObject(object):
     # Kind of a wrapper around the recursive algorithm for finding movement
     def getValidMoves(self, gameStateObj, force=False):
         if not force and self.hasMoved and (not self.has_canto() or self.finished): # No Valid moves once moved
-            return []
+            return set()
         my_grid = gameStateObj.grid_manager.get_grid(self)
         pathfinder = AStar.Djikstra(self.position, my_grid, gameStateObj.map.width, gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
         # Run the pathfinder
@@ -1601,6 +1602,7 @@ class UnitObject(object):
         self.hasRescued = True
         self.hasAttacked = True
         self.finished = True
+        self.sprite.change_state('normal')
         #if self.team.startswith('enemy'):
         #    gameStateObj.boundary_manager.arrive(self, gameStateObj)
         #self.isActive = 0 Causes problems with locking and unlocking...
@@ -2026,7 +2028,7 @@ class UnitObject(object):
     def __setstate__(self, d): self.__dict__.update(d)
 
 # === UPDATE ==================================================================       
-    def update(self, gameStateObj, metaDataObj):
+    def update(self, gameStateObj):
         currentTime = Engine.get_time()
 
         ### GAMELOGIC
@@ -2048,12 +2050,15 @@ class UnitObject(object):
                     gameStateObj.cursor.setPosition(self.position, gameStateObj)
             else: # Path is empty, which means we are done
                 gameStateObj.moving_units.discard(self)
+                #self.sprite.change_state('normal', gameStateObj)
                 self.unlock_active()
                 # Add status for new position
                 self.arrive(gameStateObj)
                 self.stop_movement_sound(gameStateObj)
                 if gameStateObj.stateMachine.getPreviousState() != 'dialogue':
                     self.hasMoved = True
+                else:
+                    self.sprite.change_state('normal', gameStateObj)
                 # End Camera Auto-follow
                 if gameStateObj.cursor.camera_follow == self.id:
                     gameStateObj.cursor.camera_follow = None

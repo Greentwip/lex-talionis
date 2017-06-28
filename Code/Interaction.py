@@ -410,10 +410,12 @@ class Combat(object):
         all_units = [unit for unit in self.splash] + [self.p1]
         if self.p2: all_units += [self.p2]
 
-        # Handle death
+        # Handle death and sprite changing
         for unit in all_units:
             if unit.currenthp <= 0:
                 unit.isDying = True
+            if isinstance(unit, UnitObject.UnitObject):
+                unit.sprite.change_state('normal', gameStateObj)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
@@ -644,6 +646,16 @@ class Map_Combat(Combat):
                     gameStateObj.cursor.setPosition(self.def_pos, gameStateObj)
                 else:
                     gameStateObj.cursor.setPosition(self.results[0].defender.position, gameStateObj)
+                # sprite changes
+                if self.results[0].defender == self.p1:
+                    self.p1.sprite.change_state('combat_active', gameStateObj)
+                else:
+                    self.p1.sprite.change_state('combat_attacker', gameStateObj)
+                    if isinstance(self.p2, UnitObject.UnitObject):
+                        self.p2.sprite.change_state('combat_defender', gameStateObj)
+                for unit in self.splash:
+                    if isinstance(unit, UnitObject.UnitObject):
+                        unit.sprite.change_state('combat_defender', gameStateObj)
                 if not skip:
                     gameStateObj.stateMachine.changeState('move_camera')
                 self.combat_state = 'Init1'
@@ -683,9 +695,11 @@ class Map_Combat(Combat):
             elif self.combat_state == '2':
                 if skip or current_time > 2*self.length_of_combat/5 + self.additional_time:
                     self.combat_state = 'Anim'
+                    self.results[0].attacker.sprite.change_state('combat_anim', gameStateObj)
 
             elif self.combat_state == 'Anim':
                 if skip or current_time > 3*self.length_of_combat/5 + self.additional_time:
+                    self.results[0].attacker.sprite.change_state('combat_attacker', gameStateObj)
                     for result in self.results:
                         # TODO: Add offset to sound and animation
                         if result.outcome:
@@ -842,6 +856,8 @@ class Map_Combat(Combat):
             ### Build health bars
             # If the main defender is in this result
             if self.p2 in [result.attacker, result.defender]:
+                if not result.attacker in self.health_bars and not result.defender in self.health_bars:
+                    self.health_bars = {} # Clear
                 if result.defender in self.health_bars:
                     self.health_bars[result.defender].update_stats(d_stats)
                 else:

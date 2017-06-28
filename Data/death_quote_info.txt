@@ -10,7 +10,7 @@ end
 # Player Death Quotes
 if;self.optionalunit.name == 'Ophie'
 	u;Ophie;FarLeft
-	if;gameStateObj.counters['level']%2 == 1
+	if;gameStateObj.counters['level'] in [1, 3, 5, 7, 9]
 		s;Ophie;No! I must... keep going...{w};auto
 	else
 		s;Ophie;Urgh... Master Yohn, I've let you down... {w};auto

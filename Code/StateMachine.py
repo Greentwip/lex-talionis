@@ -234,7 +234,7 @@ class State(object):
             gameStateObj.map.update(gameStateObj)
             gameStateObj.highlight_manager.update()
             for unit in gameStateObj.allunits:
-                unit.update(gameStateObj, metaDataObj)
+                unit.update(gameStateObj)
             gameStateObj.cursor.update(gameStateObj)
             for cursor in gameStateObj.fake_cursors:
                 cursor.update(gameStateObj)
@@ -409,8 +409,7 @@ class FreeState(State):
         if gameStateObj.background:
             gameStateObj.background.fade_out()
         # Remove any currentSelectedUnit
-        if gameStateObj.cursor.currentSelectedUnit:
-            gameStateObj.cursor.currentSelectedUnit = None
+        gameStateObj.cursor.currentSelectedUnit = None
         Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
         self.info_counter = 0
 
@@ -571,16 +570,18 @@ class OptionChildState(State):
 class MoveState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 1
+        cur_unit = gameStateObj.cursor.currentSelectedUnit
+        cur_unit.sprite.change_state('selected', gameStateObj)
         # Set moves
-        # gameStateObj.cursor.setPosition(gameStateObj.cursor.currentSelectedUnit.position, gameStateObj)
-        self.validMoves = gameStateObj.cursor.currentSelectedUnit.getValidMoves(gameStateObj)
-        if not gameStateObj.cursor.currentSelectedUnit.hasAttacked:
-            if gameStateObj.cursor.currentSelectedUnit.getMainSpell():
-                gameStateObj.cursor.currentSelectedUnit.displayExcessSpellAttacks(gameStateObj, self.validMoves)
-            if gameStateObj.cursor.currentSelectedUnit.getMainWeapon():
-                gameStateObj.cursor.currentSelectedUnit.displayExcessAttacks(gameStateObj, self.validMoves)
-        gameStateObj.cursor.currentSelectedUnit.displayMoves(gameStateObj, self.validMoves)
-        gameStateObj.cursor.currentSelectedUnit.add_aura_highlights(gameStateObj)
+        # gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
+        self.validMoves = cur_unit.getValidMoves(gameStateObj)
+        if not cur_unit.hasAttacked:
+            if cur_unit.getMainSpell():
+                cur_unit.displayExcessSpellAttacks(gameStateObj, self.validMoves)
+            if cur_unit.getMainWeapon():
+                cur_unit.displayExcessAttacks(gameStateObj, self.validMoves)
+        cur_unit.displayMoves(gameStateObj, self.validMoves)
+        cur_unit.add_aura_highlights(gameStateObj)
 
         gameStateObj.cursor.place_arrows(gameStateObj)
 
@@ -588,7 +589,7 @@ class MoveState(State):
         if not self.started:
             move_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/moveScript.txt'
             if gameStateObj.tutorial_mode and os.path.exists(move_script_name):
-                move_script = Dialogue.Dialogue_Scene(move_script_name, gameStateObj.cursor.currentSelectedUnit, event_flag=False)
+                move_script = Dialogue.Dialogue_Scene(move_script_name, cur_unit, event_flag=False)
                 gameStateObj.message.append(move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -608,6 +609,8 @@ class MoveState(State):
             SOUNDDICT['Select 4'].play()
             if cur_unit.hasAttacked or cur_unit.hasTraded: # If canto already attacked or traded, can't bizz out.
                 cur_unit.wait(gameStateObj)
+            else:
+                cur_unit.sprite.change_state('normal', gameStateObj)
             gameStateObj.stateMachine.clear()
             gameStateObj.stateMachine.changeState('free')
             # gameStateObj.stateMachine.back() does not work, cause sometimes the last state is actually menu, not free
@@ -654,6 +657,7 @@ class MoveState(State):
 class CantoWaitState(State):
     def begin(self, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
+        cur_unit.sprite.change_state('selected', gameStateObj)
         # Create menu
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(cur_unit, [WORDS['Wait']], 'auto', gameStateObj=gameStateObj)
 
@@ -701,9 +705,11 @@ class MenuState(State):
             ValidMoves = [cur_unit.position]
 
         if not cur_unit.hasAttacked:
+            cur_unit.sprite.change_state('menu', gameStateObj)
             spell_targets = cur_unit.getAllSpellTargetPositions(gameStateObj)
             atk_targets = cur_unit.getAllTargetPositions(gameStateObj)
         else:
+            cur_unit.sprite.change_state('selected', gameStateObj)
             spell_targets = None
             atk_targets = None
 
@@ -1137,6 +1143,7 @@ class WeaponState(State):
         gameStateObj.cursor.drawState = 0
         gameStateObj.info_surf = None
         cur_unit = gameStateObj.cursor.currentSelectedUnit
+        cur_unit.sprite.change_state('chosen', gameStateObj)
         options = [item for item in cur_unit.items if item.weapon and cur_unit.canWield(item)]      # Apply straining for skill
         if cur_unit.current_skill:
             options = cur_unit.current_skill.active.valid_weapons(options)
@@ -1284,6 +1291,7 @@ class SpellWeaponState(State):
         gameStateObj.cursor.drawState = 0
         gameStateObj.info_surf = None
         cur_unit = gameStateObj.cursor.currentSelectedUnit
+        cur_unit.sprite.change_state('chosen', gameStateObj)
         options = [item for item in cur_unit.items if item.spell]
         options = [item for item in options if cur_unit.canWield(item)]
         # Only shows options I can use
@@ -1438,6 +1446,8 @@ class SpellState(State):
 class SelectState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 2
+        cur_unit = gameStateObj.cursor.currentSelectedUnit
+        cur_unit.sprite.change_state('chosen', gameStateObj)
         self.pennant = None
         if self.name in WORDS:
             self.pennant = Banner.Pennant(WORDS[self.name])
@@ -1554,6 +1564,7 @@ class TradeState(State):
         gameStateObj.cursor.drawState = 0
         gameStateObj.info_surf = None
         initiator = gameStateObj.cursor.currentSelectedUnit
+        initiator.sprite.change_state('chosen', gameStateObj)
         partner = gameStateObj.cursor.getHoveredUnit(gameStateObj)
         options1 = initiator.items
         options2 = partner.items
@@ -1615,6 +1626,7 @@ class StealState(State):
         gameStateObj.cursor.drawState = 0
         gameStateObj.info_surf = None
         self.initiator = gameStateObj.cursor.currentSelectedUnit
+        self.initiator.change_state('chosen', gameStateObj)
         self.rube = gameStateObj.cursor.getHoveredUnit(gameStateObj)
         options = self.rube.getStealables()
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self.rube, options, 'auto', gameStateObj=gameStateObj)
@@ -1723,7 +1735,7 @@ class AIState(State):
 
         if gameStateObj.ai_build_flag:
             # Get list of units to process for this turn
-            gameStateObj.ai_unit_list = [unit for unit in gameStateObj.allunits if unit.position and unit.team == gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name]
+            gameStateObj.ai_unit_list = [unit for unit in gameStateObj.allunits if unit.position and not unit.isDone() and unit.team == gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name]
             # Sort by distance to closest enemy (ascending)
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.distance_to_closest_enemy(gameStateObj))
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.priority, reverse=True)

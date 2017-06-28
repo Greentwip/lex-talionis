@@ -277,6 +277,7 @@ class Status_Processor(object):
                         #self.health_bar.update()
                         #self.start_time_for_this_status = current_time + self.health_bar.time_for_change - 400
                         gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
+                        self.current_unit.sprite.change_state('status_active', gameStateObj)
                         self.state.changeState('processing')
                         gameStateObj.stateMachine.changeState('move_camera')
                         return "Waiting"
@@ -301,6 +302,7 @@ class Status_Processor(object):
                     return "Death"
                 else:
                     self.state.changeState('new_status')
+                self.current_unit.sprite.change_state('normal', gameStateObj)
             else:
                 return "Waiting"
 
