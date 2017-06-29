@@ -178,16 +178,14 @@ class UnitSprite(object):
                         health_bar = Engine.subsurface(health_bar, (0, 0, self.current_cut_off, 1))
                         surf.blit(health_bar, (left+1, top+14))
             # Extra Icons
-            if 'Boss' in self.unit.tags and self.image_state in ['gray', 'passive'] and int((current_time%450)/150) in [1, 2]: # Essentially an every 132 millisecond timer
+            if 'Boss' in self.unit.tags and self.image_state in {'gray', 'passive'} and int((current_time%450)/150) in {1, 2}: # Essentially an every 132 millisecond timer
                 bossIcon = ICONDICT['BossIcon']
                 surf.blit(bossIcon, (left - 8, top - 8))
             if self.unit.TRV:
-                # For now no rescue icon color change, because I would need to add in the gameStateObj...
-                """if self.unit.TRV.team == 'player':
+                if self.unit.TRV.team == 'player':
                     rescueIcon = ICONDICT['BlueRescueIcon']
                 else: # self.TRV.team == 'other':
-                    rescueIcon = ICONDICT['GreenRescueIcon']"""
-                rescueIcon = ICONDICT['BlueRescueIcon']
+                    rescueIcon = ICONDICT['GreenRescueIcon']
                 topleft = (left - max(0, (rescueIcon.get_width() - 16)/2), top - max(0, (rescueIcon.get_height() - 16)/2))
                 surf.blit(rescueIcon, topleft)
 
@@ -263,7 +261,7 @@ class UnitSprite(object):
             self.netposition = gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1]
             self.handle_net_position(self.netposition)
             self.reset_sprite_offset()
-        elif self.state == {'combat_active', 'status_active'}:
+        elif self.state in {'combat_active', 'status_active'}:
             self.image_state = 'active'
         elif self.state == 'combat_defender':
             attacker = gameStateObj.combatInstance.p1
@@ -303,7 +301,7 @@ class UnitSprite(object):
                     self.spriteMvmindex = len(self.spriteMvm) - 1
                 self.lastSpriteUpdate = currentTime
             self.update_move_sprite_counter(currentTime, 50)
-        elif self.state in {'menu', 'selected'}:
+        elif self.state == 'menu' or self.state == 'selected':
             self.update_move_sprite_counter(currentTime, 80)
         elif self.state == 'chosen': # NETPOSITION SET
             self.netposition = (gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1])

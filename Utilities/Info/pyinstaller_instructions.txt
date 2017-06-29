@@ -1,0 +1,8 @@
+Requirements: pyinstaller
+
+In the "lex-talionis" directory, on the command line, type "pyinstaller Main.spec"
+Then find or move the three ogg-vorbis libraries to the executables directory.
+    - libogg.dll
+    - libvorbis.dll
+    - libvorbisfile.dll
+In the config file, set "cheat" to 0 and set "Music Volume" to 0.2
