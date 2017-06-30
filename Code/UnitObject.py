@@ -1150,8 +1150,31 @@ class UnitObject(object):
             #targetable_position = [position for position, tile in gameStateObj.map.tiles.iteritems() if Utility.calculate_distance(position, self.position) in my_spell.RNG]
             targetable_position = Utility.find_manhattan_spheres(my_spell.RNG, self.position)
             targetable_position = [pos for pos in targetable_position if gameStateObj.map.check_bounds(pos)]
+            #print(targetable_position)
             if my_spell.unlock:
                 targetable_position = [position for position in targetable_position if 'Locked' in gameStateObj.map.tile_info_dict[position]]
+            # This might take a while
+            elif my_spell.aoe.mode == 'Blast' and len(my_spell.RNG) < 7:
+                #import time
+                #time1 = time.clock()
+                valid_positions = []
+                for pos in targetable_position:
+                    #print('%s, %s'%(pos))
+                    team = gameStateObj.grid_manager.get_team_node(pos)
+                    if team and not gameStateObj.compare_teams(self.team, team):
+                        valid_positions.append(pos)
+                    else:
+                        for x_pos in Utility.find_manhattan_spheres(range(1, my_spell.aoe.number + 1), pos):
+                            #print('-- %s, %s'%(x_pos))
+                            if gameStateObj.map.check_bounds(x_pos):
+                                team = gameStateObj.grid_manager.get_team_node(x_pos)
+                                if team and not gameStateObj.compare_teams(self.team, team):
+                                    valid_positions.append(pos)
+                                    break
+                targetable_position = valid_positions
+                #print(time.clock()*1000 - time1*1000)
+            #print(targetable_position)
+
             """
             # The old method -- takes forever
             elif my_spell.hit:

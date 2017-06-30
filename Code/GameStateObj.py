@@ -398,7 +398,7 @@ class GameStateObj(object):
         self.objective = None
 
     def compare_teams(self, team1, team2):
-        # Returns True if allies, false if enemies
+        # Returns True if allies, False if enemies
         if team1 == team2:
             return True
         elif (team1 == 'player' and team2 == 'other') or (team2 == 'player' and team1 == 'other'):

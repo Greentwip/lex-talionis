@@ -43,7 +43,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Have UnitSprite colors be generated on the fly instead of having different kinds for each
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Build a GUI that builds levels... Unit Placement, TileInfo placement
-- Keep gameStateObj.allunits sorted by unit_id? (what is it currently sorted by?) (makes get unit by id faster. But its not that slow to begin with...)
 - Add Rescue/Warp/Rewarp handling (would include ability to select starting and ending positions - would allow time for warp animation) (both as staff and as ability)
 - Add correct warp animation
 - Add Fake arrival to Give/Take/Shove++
@@ -56,5 +55,4 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - If you are on impassable terrain, take damage.
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
 - Add Turnwheel
-- Make UnitSprite use a state machine, instead of a series of if statements
 - Add clamp to unit sprite draw (only if you could actually see the unit on the map)
