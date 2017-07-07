@@ -5,34 +5,35 @@ add_unit;S2
 b;Forest
 t;2
 u;Joel;MidLeft;u;Ophie;MidRight;u;Prim;FarRight
-s;Joel;The Resistance base is a just little yonder.{w}{clear}Normally I'd stop at the village here for supplies,{w}{br}but I think getting ya'll to the base takes precedence.{w};auto
+s;Joel;The Resistance base is a little yonder.{w}{clear}Normally I'd stop at the village here for supplies,{w}{br}but I think gettin' ya'll to the base takes precedence.{w};auto
 s;Prim;Don't burden yourself on our account.{w};auto
 s;Joel;Its no burden, lass...{w};auto
-s;Ophie;So, what's the Resistance base like, anyway?
-s;Joel;Well, lad, we'll be coming upon a waterfall soon...{w};auto
-set_expression;Ophie;Smiling
-s;Ophie;Wait! Don't tell me the Resistance base is behind a waterfall!{w}{br}That's so cool!{w};auto
-s;Joel;Hahaha! Lad, we don't live behind a waterfall.{w}{br}I reckon that'd be mighty damp.{w}{br}Nah, beyond the waterfall is a nice, dry cavern.{w}{br}That's where we're heading.{w};auto
-set_expression;Ophie;Normal
-s;Ophie;Oh... {w};auto
-s;Joel;Though, I like your energy, lad--{w};auto
+s;Ophie;How come we've never heard of your Resistance before?{w}{br}The monks were no friends of the Empire either, but they never spoke of an organized resistance.
+s;Joel;Well, lad, it's complicated.
+s;Ophie;We got time.
+s;Prim;Ophie! Don't be so rude.
+s;Ophie;Prim, if we're joining this Resistance, I want to know everything about it.{w}{br}We're going to be putting our lives on the line!
+s;Joel;The lad's right, Prim. Ya'll deserve to know.{w}{br}Honestly, we ain't been so successful lately.{w}{br}We don't have the manpower to fight the Empire openly, and our latest missions have been turning up blanks.
+s;Ophie;Hmmph.
+s;Joel;But there's no cause for concern!{w}{br}Between ya'll and Sam's new allies, I reckon things are lookin' up for the Resistance!
 u;Nia;FarLeft
-s;Nia;J-Joel.{w};auto
+s;Nia;Hello, Joel!{w};auto
 set_expression;Joel;Normal
 s;Joel;Aah!{w}{br}Nia! You startled me.{w}{br}What did I tell ya 'bout creepin' up on people?{w};auto
-s;Nia;T-There's fighting... ...s-south.{w};auto
-s;Joel;Commotion in Podoma?{w}{br}We'd better skirt around the village, then.{w};auto
+bop;Nia
+s;Nia;No manners!{w}{br}But... big fight! South...{w};auto
+s;Joel;A ruckus in Podoma?{w}{br}We'd better skirt around the village, then.{w};auto
 r;Ophie
-s;Joel;Hey, Ophie! Lad!{w}{br}Where you going? Don't run off!{w};auto
+s;Joel;Hey, Ophie! Lad!{w}{br}Where you goin'? Don't run off!{w};auto
 u;Ophie;MidRight
 s;Ophie;Don't you want to see what's up?{w};auto
 s;Joel;That sounds... dangerous.{w}{br}I reckon we should do the smart thing and walk around the fighting.{w};auto
-s;Ophie;I thought you two were freedom fighters, not cowards.{w};auto
+s;Ophie;Hmmph. I thought you were freedom fighters, not cowards.{w};auto
 s;Joel;Lad, don't test me.{w};auto
-s;Prim;Ophie's right. Someone could be in trouble...{w};auto
+s;Prim;S-someone could be in trouble...{w};auto
 s;Ophie;Come on, Prim.{w}{br}Let's go see what's up. {w};auto
 r;Ophie;Prim
-s;Joel;Damn. 'Reckon somebody's gotta watch them... {w}{br}Let's follow them, Nia. This isn't going to end well.{w};auto
+s;Joel;Damn. 'Reckon somebody's gotta watch them...{w}{br}Let's follow them, Nia. This ain't goin' to end well.{w};auto
 r;Joel;Nia
 m;Brave Story 12
 t;1
@@ -47,10 +48,10 @@ interact_unit;S1;Drake
 u;Drake;MidLeft;u;Althea;FarLeft;u;Soldier2;Right
 s;Soldier2;Urgh...{w};auto
 r;Soldier2
-s;Althea;There's so many of them.{w};auto
+s;Althea;There's too many of them.{w};auto
 s;Drake;Milady, I'm sorry. {w}{br}In the end, my strength was not enough to protect you.{w};auto
 s;Althea;Drake, you've done so much for me.{w}{br}Run.... it's me they're after... you can save yourself.{w};auto
-s;Drake;Never!{w}{br}Death is no punishment compared to the shame of having failed you.{w}{br}Stay back, and allow me this last shred of dignity.{w};auto
+s;Drake;Never!{w}{br}Death is no punishment compared to the shame of failure.{w}{br}Stay back, and allow me this last shred of dignity.{w};auto
 r;Drake;Althea
 # Another fight!
 move_unit;S2;7,4
@@ -80,9 +81,9 @@ wait;500
 u;Prim;MidLeft
 u;Joel;FarLeft
 u;Ophie;Right
-s;Prim;That man is taking on all those Imperial soldiers alone.{w};auto
-s;Ophie;It looks like he's protecting that girl.{w};auto
-s;Joel;Does he have a deathwish?{w}{br}He'll die alone against that horde.{w};auto
+s;Ophie;He is taking on all those Imperials alone.{w};auto
+s;Prim;It looks like he's protecting that girl.{w};auto
+s;Joel;Does he have a deathwish?{w}{br}He's got no chance against that horde.{w};auto
 s;Ophie;He won't be alone for long!{w};auto
 r;Ophie;Prim;Joel
 # Pan to Boss

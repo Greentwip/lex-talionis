@@ -46,7 +46,7 @@ if;gameStateObj.counters['Civ_Escape'] >= 3
     end
 end
 s;Sam;So then...{w}{br}Our last few missions have been quite... challenging.{w};auto
-s;Joel;Yar tellin' me...{w};auto
+s;Joel;You're tellin' me...{w};auto
 s;Sam;Hopefully this next one will be easier.{w};auto
 if;not gameStateObj.check_dead('Coyote') and not gameStateObj.check_dead('Kayla')
 	s;Sam;Especially with Coyote and Kayla in our roster.{w};auto

@@ -58,12 +58,12 @@ if;gameStateObj.turncount == 1
 	end
 	if;not gameStateObj.check_dead('Joel')
 		u;Joel;Right
-		s;Joel;I'm not one for waxing sentimental,{w}{br}but it's ain't everyday you take on the might of the Empire.{w}{br}Being in the Resistance ain't easy,{w}{br}but I wouldn't trade it for anything.{w};auto
+		s;Joel;I ain't usually one for waxin' sentimental,{w}{br}but it's not everyday you take on the might of the Empire.{w}{br}Bein' in the Resistance ain't easy,{w}{br}but I wouldn't trade it for anythin'.{w};auto
 		r;Joel
 	end
 	if;not gameStateObj.check_dead('Nia')
 		u;Nia;Right
-		s;Nia;...I agree...{w};auto
+		s;Nia;Mmm... Yes!{w};auto
 		r;Nia
 	end
 	if;not gameStateObj.check_dead('Althea')

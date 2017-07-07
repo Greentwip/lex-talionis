@@ -30,7 +30,7 @@ def main():
     print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
 
 def run(gameStateObj, metaDataObj):
-    gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', event_flag = False))
+    gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', event_flag = False, if_flag=True))
     gameStateObj.stateMachine.changeState('dialogue')
     counter = 0
     while gameStateObj.message:

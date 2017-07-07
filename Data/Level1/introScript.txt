@@ -8,7 +8,7 @@ u;Prim;Right
 s;Prim;...Ophie... slow down.{w};auto
 u;Ophie;Left
 s;Ophie;Prim, are you okay?{w};auto
-s;Prim;...I just need to catch my breath...{w};auto
+s;Prim;...I just need to... c-catch my breath...{w};auto
 s;Ophie;I guess we've made it far enough.{w}{br}We'll rest here for a little.{w};auto
 r;Ophie;Prim
 t;1
@@ -16,9 +16,9 @@ b;DeeperForest
 t;2
 # Nia and Joel
 u;Nia;MidLeft
-s;Nia;...Just a little closer...{w}{br}...the perfect shot...{w};auto;thought_bubble
+wait;500
 u;Joel;FarLeft
-s;Joel;What're yer lookin' at, Nia?{w}{br}Wait Nia, those ain't Imperials! Hold yer fire!{w};auto
+s;Joel;What're yer lookin' at, Nia?{w}{br}Wait, those ain't Imperials! Hold your fire!{w};auto
 s;Narrator;Twang!{w};160;28;72
 s;Joel;Oops...{w};auto
 r;Joel;Nia
@@ -35,32 +35,31 @@ r;Ophie
 u;Ophie;FarRight
 s;Prim;...{w};auto
 s;Ophie;Hmm... No second shot?{w};auto
-s;???;Hey! You two!{w}{br}Sorry about that...{w}{br}My pardnah here has a bit of an itchy trigger finger.{w};04;28;160
-s;Prim;Oh!{w};auto
-s;Ophie;Stay down, Prim.{w}{br}It could be a trap.{w};auto
-s;???;Ya'll can get up now.{w}{br}We don't bite, I promise.{w};04;28;160
+s;???;Hey! You two!{w}{br}Sorry about that...{w}{br}My pardnah here's got a bit of an itchy trigger finger.{w};04;28;160
+s;Ophie;Stay down. It could be a trap.{w};auto
+s;???;We're friendly.{w}{br}We don't bite, I promise.{w};04;28;160
 s;Ophie;How do we know this isn't a trap?{w};auto
 s;Prim;Yeah, who are you, anyway?{w};auto
-s;???;We're uh.... rangers.{w}{br}Yeah, rangers... y'know... protecting the forest...{w};04;28;160
+s;???;We're uh.... rangers.{w}{br}Yeah, rangers... y'know... protectin' the forest...{w};04;28;160
 # Joel appears
 u;Joel;MidLeft
 s;Joel;Boy, ya'll look roughed up.{w};auto
 bop;Ophie
-s;Ophie;Ah!{w};auto
-s;Joel;Please stay calm.{w}{br}We mean you no harm.{w};auto
+s;Ophie;Don't come any closer!{w};auto
+s;Joel;Hey, no need for the blade, lad.{w}{br}We mean you no harm.{w};auto
 s;Ophie;Well, you don't look Imperial...{w};auto
 s;Joel;Is that who ya'll runnin' from?{w}{br}Them scum.{w};auto
-s;Prim;Yes...{w};auto
+s;Prim;Yes--{w};auto
 #Nia appears
 m;Combat Theme 4
 u;Nia;FarLeft
-s;Nia;Joel.{w}{br}A... Another group.{w}{br}...the east...{w};auto
+s;Nia;Hello, Joel.{w}{br}Hello, friends.{w}{br}More group! East...{w};auto
 s;Joel;Well, I reckon' ya'll could use some help...{w};auto
-s;Ophie;Hey, I can take them.{w}{br}I don't need your--{w};auto
-s;Prim;Ophie! Now's not the time for pride!{w};auto
+s;Ophie;I can take them.{w}{br}I don't need your--{w};auto
+s;Prim;Ophie! Now's not the time for pride!{w}{br}What would Master Yohn say?{w};auto
 s;Ophie;Hmmph.{w};auto
 s;Prim;Thank you, um... kind sir.{w};auto
-s;Joel;Ah, don't mention it, little lady.{w}{br}Dead imperials are good imperials in my book!{w};auto
+s;Joel;Ah, don't mention it, little lady.{w}{br}The only good imperial in my reckonin' is a dead one.{w};auto
 r;Ophie;Prim;Nia;Joel
 t;1
 remove_background
@@ -94,6 +93,6 @@ start_move
 set_cursor;Joel;force_hold
 u;Joel;FarLeft
 u;Sidney;FarRight
-s;Joel;Not without going through me first!{w};auto
-s;Sidney;Oh, so the mice found themselves some protectors!{w}{br}Well, bud, we'll show you what happens when you get on the Empire's bad side!{w};auto
+s;Joel;Not without goin' through me first!{w};auto
+s;Sidney;Boys, looks like we found another traitor!{w}{br}Well, bud, we'll show you what happens when you cross the Empire!{w};auto
 r;Joel;Sidney

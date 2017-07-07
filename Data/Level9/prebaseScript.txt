@@ -11,9 +11,10 @@ add_to_market;Hex
 if;not gameStateObj.check_dead('Kayla')
     set_base_convo;Promises
 end
-if;not gameStateObj.check_dead('Althea')
-    set_base_convo;Althea and Ophie
-end
+# Maybe not?
+#if;not gameStateObj.check_dead('Althea')
+#    set_base_convo;Althea and Ophie
+#end
 if;not gameStateObj.check_dead('Eliza') and not gameStateObj.check_dead('Theo')
     set_base_convo;Theo and Eliza
 end

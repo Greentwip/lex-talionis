@@ -143,7 +143,6 @@ Superior Lance - Drop
 Meteor - Drop
 Energy Ring* - Base Conversation
 Secret Book* - Base Conversation
-Althea's Charm - Base Conversation
 
 Chapter 10:
 Brave Weapons - Automatic

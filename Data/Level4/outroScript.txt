@@ -17,7 +17,7 @@ if;gameStateObj.check_alive('Nia')
 	u;Nia;Left
 	# Give Nia a new bow Oak Bow
 	give_item;Nia;Oak Bow
-	s;Nia;...Perfect...{w};auto
+	s;Nia;Pretty...{w};auto
 	r;Nia
 end
 if;gameStateObj.check_alive('Drake')
@@ -37,7 +37,7 @@ end
 if;gameStateObj.check_alive('Drake')
 	u;Joel;Right
 end
-s;Ophie;Joel, have you seen a sword like this before?{w}{br}It was wrapped up by itself in the back.{w};auto
+s;Ophie;Joel, you ever seen a sword like this before?{w}{br}It was wrapped up by itself in the back.{w};auto
 s;Joel;Well, lad, it's certainly ornate.{w}{br}How does it feel?{w};auto
 s;Ophie;Hmmm... Powerful.{w};auto
 move_sprite;Joel;24,0

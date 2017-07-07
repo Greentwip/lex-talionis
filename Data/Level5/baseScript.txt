@@ -54,14 +54,14 @@ elif;self.optionalunit == 'Joel and Nia'
 	b;ClearingSunrise
 	t;2
 	u;Nia;Left;u;Joel;Right
-	s;Joel;Howdy, Nia! Yar up early.{w}{br}The sun's barely peaked o'er the horizon.{w}{br}Oh! And you already caught something? Rabbit, is it?{w};auto
-	s;Nia;Mmm... Sleeping... easier catch.
+	s;Joel;Howdy, Nia! You're up early.{w}{br}The sun's barely peaked o'er the horizon.{w}{br}Oh! And you already caught something? Rabbit, is it?{w};auto
+	s;Nia;Mmm... Sleeping! Easy!
 	set_expression;Nia;Smiling
 	s;Joel;Looks good. Thank you, Nia.
 	s;Nia;...
 	set_expression;Nia;Normal
 	s;Joel;You remember what to say?
-	s;Nia;...You are welcome...{w}{br}Joel.
+	s;Nia;...You are welcome!{w}{br}Joel!
 	s;Joel;That's my girl.{w}{br}A few more years and I'll have you gossiping like a real high society gal.{w}{br}Just you wait.
 	s;Nia;Mmm... hmmm.
 	s;Joel;Aaah.....{w}{br}Nothing like fresh breakfast at the crack of dawn...

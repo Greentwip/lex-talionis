@@ -9,11 +9,11 @@ if;gameStateObj.turncount == 1 and OPTIONS['Display Hints']
 	disp_cursor;0
 	set_cursor;Joel;force_hold
 	disp_cursor;1
-	s;Narrator;Joel is a fighter who wields axes.{w}{br}He is strong and bulky but not very fast.{w}{br}If you remember from the weapon triangle, axes are strong versus lances but weaker versus swords.{w}{br}Use this to your advantage.{w};auto;hint
+	s;Narrator;Joel is a fighter who wields axes.{w}{br}He is strong and bulky but not very fast.{w}{br}His axes are strong vs. lances but weak vs. swords.{w}{br}Use this to your advantage.{w};auto;hint
 	disp_cursor;0
 	set_cursor;Nia;force_hold
 	disp_cursor;1
-	s;Narrator;Nia is an archer who wields bows.{w}{br}Archers can attack at very long ranges, up to 3 tiles away.{w}{br}However, they cannot fight if they are attacked by an adjacent enemy.{w};auto;hint
+	s;Narrator;Nia is an archer who wields bows.{w}{br}Archers can attack at long ranges, up to 3 tiles away.{w}{br}However, they cannot fight if they are attacked in melee.{w};auto;hint
 	disp_cursor;0
 	s;Narrator;Let's test out Nia's range now.{w}{br}Select Nia.{w};auto;hint
 # Turn 3

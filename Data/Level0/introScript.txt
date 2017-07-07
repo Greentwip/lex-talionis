@@ -23,18 +23,18 @@ u;OldMan1;MidLeft
 s;Soldier1;By order of Archon Ulver,{w}{br}at the behest of the Empress herself,{w}{br}this monastery is to be searched.{w};auto
 s;OldMan1;What gives you the right!{w};auto
 s;Man1;Yeah, we haven't done anything!{w};auto
-s;Soldier1;Ahem!{w}{br}Anyone who fails to comply will be punished in full accordance with the law.{w};auto
+s;Soldier1;Ahem!{w}{br}Anyone who resists will be punished in full accordance with the law.{w};auto
 s;Man1;Shove your full accordance--{w};auto
 move_sprite;Soldier1;24,0
 u;Vagnius;MidRight
-s;Vagnius;That's enough.{w}{br}Let's cut to the chase, shall we.{w}{br}We know you're harboring a fugitive.{w}{br}Hand her over and no one has to get hurt.{w};auto
+s;Vagnius;That's enough.{w}{br}Let's cut to the chase, shall we?{w}{br}We know your monastery is harboring a fugitive.{w}{br}Hand the girl over and no one has to get hurt.{w};auto
 s;OldMan1;Hmmph.{w};auto
 r;Soldier1
 s;Vagnius;Well? So eager before, and now you hesitate. A pity.{w}{br}Sidney?{w};auto
 u;Sidney;FarRight
 s;Sidney;Boss?{w};auto
-s;Vagnius;Let's see if we can jog their memories.{w};auto
-s;Sidney;My pleasure.{w};auto
+s;Vagnius;How about some additional... incentive.{w};auto
+s;Sidney;Heh. My pleasure.{w};auto
 r;Man1;OldMan1;Vagnius;Sidney
 # Move Sidney and two thugs to Man1
 move_unit;Sidney;16,3
@@ -51,7 +51,7 @@ r;OldMan1;Sidney
 # Combat
 interact_unit;F1;15,3
 u;OldMan1;Left
-s;OldMan1; Urgh!{w};auto
+s;OldMan1;Urgh!{w};auto
 r;OldMan1
 # Combat
 interact_unit;F2;15,3
@@ -64,7 +64,7 @@ u;Woman1;FarLeft
 s;Woman1;You monsters!{w};auto
 move_sprite;Sidney;24,0
 u;Vagnius;Right
-s;Vagnius;Let this be a sobering example to those who would defy the Empire's might.{w}{br}Now, hand over the fugitive, or more will end up like this traitor!{w};auto
+s;Vagnius;Let this be an example to those who would defy the Empire's might!{w}{br}Now, hand over the fugitive, or more will end up like this traitor!{w};auto
 r;Woman1;Sidney;Vagnius
 # Pan to bottom of screen
 m;Meet the Sage
@@ -79,18 +79,16 @@ t;1
 b;Monastery
 t;2
 u;Prim;MidLeft
-s;Prim;Master Yohn! Look! {wait}{br}Master Pasho's in trouble!{w};auto
+s;Prim;Master Yohn! Look!{w};auto
 u;Yohn;Right
 s;Yohn;It is best to direct your concern elsewhere, Prim.{w}{br}There's nothing we can do here and now.{w};auto
-s;Prim;Oh... {w}{br}Master Yohn, why is the Empire even here?{w}{br}We're not harboring any fugitives.{w}{br}Right?{w};auto
+s;Prim;Oh...{w}{br}W-why are they even here?{w}{br}We're not harboring any fugitives.{w};auto
 u;Ophie;FarLeft
-s;Ophie;The Empire will take any excuse for a fight.{w}{br}As if they haven't already done enough.{w};auto
-s;Yohn;I'm sorry, my child.{w}{br}I cannot explain why they've chosen to attack our peaceful monastery.{w}{br}But there will be bloodshed this day.{w}{br}So we must escape while we still can.{w};auto
-s;Ophie;They think they can just walk in here--{w};auto
+s;Ophie;Hmmph. The Empire will take any excuse for a fight.{w}{br}They think they can just walk in here--{w};auto
 s;Yohn;Anger is a natural feeling, Ophie.{w}{br}But now is not the time for anger.{w}{br}We must make haste. We can stay here no longer.{w};auto
 s;Ophie;But what about--{w};auto
 s;???;Hey! There's someone hiding back here!{w};8;28;224
-s;Yohn;They've found us!{w};auto
+s;Prim;Ah! They've found us!{w};auto
 r;Prim;Ophie;Yohn
 m;Venice Escape
 t;1
@@ -100,8 +98,8 @@ t;2
 set_cursor;Vagnius;force_hold
 u;Vagnius;Right
 u;Sidney;Left
-s;Sidney;Colonel... There's a group in the back...{w};auto
-s;Vagnius;What! You idiots! One of them could be our fugitive. Don't let them get away!{w};auto
+s;Sidney;Colonel... There's a group of them hiding in the back...{w};auto
+s;Vagnius;What! You idiots! One of them could be the fugitive.{w}{br}Don't let them get away!{w};auto
 r;Vagnius;Sidney
 # Pan over to Ophie, Prim, Master X
 set_cursor;Yohn;force_hold
@@ -113,7 +111,7 @@ convert;Yohn;other
 move_unit;Yohn;8,5
 start_move
 u;Prim;Left
-s;Prim;Master!{w};auto
+s;Prim;Master?{w};auto
 u;Yohn;Right
 s;Yohn;Run! And don't look back!{w};auto
 r;Yohn;Prim

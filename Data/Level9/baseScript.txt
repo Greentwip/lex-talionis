@@ -31,6 +31,7 @@ if;self.optionalunit == 'Promises'
     r;Sam;Kayla
     grey_base_convo;Promises
     t;1
+# Not available right now
 elif;self.optionalunit == 'Althea and Ophie'
     m;Awakening - Easy Now
     b;BaseEntrance

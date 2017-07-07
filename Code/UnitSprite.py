@@ -182,7 +182,7 @@ class UnitSprite(object):
                 bossIcon = ICONDICT['BossIcon']
                 surf.blit(bossIcon, (left - 8, top - 8))
             if self.unit.TRV:
-                if self.unit.TRV.team == 'player':
+                if gameStateObj.get_unit_from_id(self.unit.TRV).team == 'player':
                     rescueIcon = ICONDICT['BlueRescueIcon']
                 else: # self.TRV.team == 'other':
                     rescueIcon = ICONDICT['GreenRescueIcon']

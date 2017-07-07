@@ -7,8 +7,8 @@ elif;OPTIONS['Display Hints'] and gameStateObj.turncount == 2 and self.optionalu
 	tutorial_mode;Spells
 	u;Prim;Left
 	u;Ophie;Right
-	s;Prim;Ophie, you're hurt!{w};auto
-	s;Ophie;Don't worry. It's nothing.{w};auto
+	s;Prim;You're hurt!{w};auto
+	s;Ophie;I-it's nothing.{w};auto
 	s;Prim;Let me fix that.{w};auto
 	r;Ophie;Prim
 	s;Narrator;Prim is a light mage.{w}{br}Light mages can heal{red}themselves{black}and their{red}allies.{black}{w}{br}Select Prim and move her adjacent to Ophie.{w};auto;hint

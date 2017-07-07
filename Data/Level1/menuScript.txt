@@ -2,7 +2,7 @@
 if;OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 	if;self.optionalunit.name == 'Nia'
 		if;self.optionalunit.position == (5,6)
-			s;Narrator;Now select{red}Attack{black}to attack the soldier without fear of counterattack.{w};auto;hint
+			s;Narrator;Now select{red}Attack{black}to attack the soldier from afar.{w};auto;hint
 		else
 			reset_state
 			move_unit;Nia;1,5;immediate

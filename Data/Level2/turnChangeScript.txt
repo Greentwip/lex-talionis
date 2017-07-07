@@ -8,12 +8,12 @@ if;gameStateObj.turncount == 2
 	u;Althea;Left
 	u;Drake;Right
 	s;Althea;Drake! Look!{w};auto
-	s;Drake;Oh, its so beautiful...{w};auto
+	s;Drake;Oh... its so... beautiful...{w};auto
 	s;Althea;Drake, are you alright?{w}{br}You're crying...{w};auto
-	s;Drake;Do not worry youself, milady.{w}{br}The sight of your loyal subjects, defending Kerala's pride with their own lives...{w}{br}It would bring any man to tears.{w};auto
-	s;Althea;Well, while you do that,{w}{br}I'm going to help them out!{w};auto
-	s;Drake;What! Milady, please!{w}{br}You shouldn't fight!{w};auto
-	s;Althea;I'm tired of being protected.{w}{br}I can defend myself.{w}{br}You can help if you wish.{w};auto
+	s;Drake;Do not worry youself, milady.{w}{br}The sight of your loyal subjects, defending Kerala's pride with their lives...{w}{br}It would bring any man to tears.{w};auto
+	s;Althea;Well, while you do that,{w}{br}I'm going to help!{w};auto
+	s;Drake;Wait! Milady, please!{w}{br}You shouldn't fight!{w};auto
+	s;Althea;I can defend myself, Drake.{w}{br}You can help if you wish.{w};auto
 	r;Drake;Althea
 	convert;Althea;player
 	convert;Drake;player

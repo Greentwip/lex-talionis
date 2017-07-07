@@ -18,7 +18,7 @@ r;Joel
 u;Theo;Left
 s;Theo;I doubt that anybody refers to you as that, Renae.{w};auto
 s;Renae;They sure do.{w}{br}You probably just haven't heard them.{w}{br}Really, you need to get out more, Theo.{w};auto
-s;Theo;Wouldn't being called the best thief in Kerala implicitly falsify that statement?{w};auto
+s;Theo;Hmmm...{w}{br}Wouldn't being called the best thief in Kerala implicitly falsify that statement?{w};auto
 s;Renae;What now?{w};auto
 s;Theo;The best thief should be sneaky, right?{w};auto
 s;Renae;I am sneaky!{w};auto

@@ -36,11 +36,11 @@ u;Joel;Left
 u;Prim;MidRight
 u;Ophie;FarRight
 s;Joel;Well... we're here.{w};auto
-s;Ophie;This is the Resistance base? But it's so... small.{w};auto
+s;Ophie;This is the Resistance base?! But it's so... small.{w};auto
 s;Joel;It is rather cozy, ain't it?{w}{clear}Anyway, let's talk to Sam.{w}{br}He'll know what to do with the lot of you.{w};auto
 s;Prim;Sam?{w};auto
-s;Joel;Our tactician. The brains behind this whole operation.{w}{clear}Now, I must warn ya'll.{w}{br}Not every one of my esteemed colleagues is as friendly,{w} handsome,{w} and good-natured as I.{w};auto 
-s;Ophie;Uh-huh.{w};auto
+s;Joel;Our tactician. The brains behind this whole operation.{w}{clear}Now, I must warn ya'll.{w}{br}Not every one o' my esteemed colleagues is as friendly,{w} handsome,{w} and good-natured as I.{w};auto 
+s;Ophie;Uh huh.{w};auto
 s;Joel;It's a hard life in the Resistance.{w}{br}Just look at Nia.{w}{br}Nia?{w}{br}Damnation. She disappeared again.{w};auto
 s;Prim;Nia doesn't talk much, does she?{w};auto
 s;Joel;Nope. But I talk enough for the both of us.{w}{br}Besides, the lass has other ways of getting her point across...{w}{br}as ya'll almost found out.{w};auto
@@ -60,10 +60,10 @@ s;Sam;And you brought... guests?{w};auto
 s;Joel;Sure did. I'll have them explain.{w};auto
 r;Joel
 u;Ophie;FarLeft
-s;Prim;Sir, my name is Prim.{w}{br}We'd like to join your, ah, Resistance.{w};auto
+s;Prim;S-Sir, my name is Prim and this is Ophie.{w}{br}We'd like to join your, ah, Resistance.{w};auto
 s;Sam;Hmmph. You're barely more than children.{w}{br}What use are you to the Resistance?{w};auto
-s;Ophie;I can fight, sir!{w};auto
-s;Prim;And I can as well...{w}{br}Also, I am trained in the healing arts...{w};auto
+s;Ophie;I can fight!{w}{br}You will not find my blade lacking!{w};auto
+s;Prim;Also, I am trained in the healing arts...{w};auto
 r;Ophie
 u;Joel;FarLeft
 s;Joel;Sam, they have nowhere else to turn to.{w};auto
@@ -74,8 +74,8 @@ s;Althea;I can vouch for them.{w}{br}They saved me from a group of Imperial sold
 s;Sam;And who might you be, girl--{w}{clear}Wait. I recognize you.{w}{br}It can't be...{w};auto
 r;Joel
 u;Drake;FarLeft
-s;Drake;It is, sir.{w}{br}You see before you the last surviving heir to the Lion Throne.{w};auto
-s;Sam;...{w};auto
+s;Drake;It is, sir.{w}{br}You see before you the rightful heir to the Lion Throne.{w};auto
+s;Sam;...By the light...{w};auto
 s;Althea;So... can they join your Resistance?{w};auto
 s;Sam;What?{w}{br}Oh... of course.{w}{br}Sorry, your highness. It's just surprising news.{w}{br}This changes everything. All my plans...{w}{br}But I'm getting ahead of myself...{w}{br}Your highness, please take a seat.{w};auto
 s;Althea;Call me Althea.{w};auto
@@ -87,8 +87,6 @@ t;2
 u;Joel;Left
 u;Prim;FarRight
 u;Ophie;MidRight
-s;Joel;Well, come along then. I don't think Sam needs us anymore.{w};auto
-s;Ophie;Alright.{w};auto
-s;Joel;I reckon' ya'll could use a tour.{w}{br}I'll introduce you to the other members of this fine establishment...{w};auto
+s;Joel;Well, come along then. I don't think Sam needs us anymore.{w}{br}I reckon' ya'll could use a tour.{w}{br}I'll introduce you to the other members o' this fine establishment...{w};auto
 r;Joel;Prim;Ophie
 t;1

@@ -11,9 +11,9 @@ end
 if;self.optionalunit.name == 'Ophie'
 	u;Ophie;FarLeft
 	if;gameStateObj.counters['level'] in [1, 3, 5, 7, 9]
-		s;Ophie;No! I must... keep going...{w};auto
+		s;Ophie;No! I must... k-keep going...{w};auto
 	else
-		s;Ophie;Urgh... Master Yohn, I've let you down... {w};auto
+		s;Ophie;Urgh... M-master Yohn, I-I've failed... {w};auto
 	end
 	r;Ophie
 	kill_unit;Ophie
@@ -33,7 +33,7 @@ elif;self.optionalunit.name == 'Prim'
 			u;Ophie;Right
 			s;Ophie;Prim!{w};auto
 		end
-		s;Prim;I'm sure I can fix this...{w}{br}I can...{w}{br}T-this is too much...{w}{br}I-I have to retreat...{w};auto
+		s;Prim;I'm sure I can fix this...{w}{br}I-I c-can...{w}{br}T-this is too m-much...{w}{br}I-I have to retreat...{w};auto
 		r;Prim;Ophie
 	end
 elif;self.optionalunit.name == 'Joel'
@@ -42,7 +42,7 @@ elif;self.optionalunit.name == 'Joel'
 	r;Joel
 elif;self.optionalunit.name == 'Nia'
 	u;Nia;FarLeft
-	s;Nia;...{w};auto
+	s;Nia;Ahh! Goodbye...{w};auto
 	r;Nia
 elif;self.optionalunit.name == 'Althea'
 	u;Althea;FarLeft
@@ -50,7 +50,7 @@ elif;self.optionalunit.name == 'Althea'
 		s;Althea;It seems... I couldn't run... forever...{w};auto
 		if;not gameStateObj.check_dead('Drake')
 			u;Drake;Right
-			s;Drake;No! Althea!{w}{br}Hang on... please...{w};auto
+			s;Drake;No! Althea!{w}{br}Hang on... p-please...{w};auto
 		end
 		r;Althea;Drake
 		kill_unit;Althea
@@ -64,7 +64,7 @@ elif;self.optionalunit.name == 'Althea'
 		end
 		if;not gameStateObj.check_dead('Drake')
 			u;Drake;Right
-			s;Drake;Althea! Fall back!{w}{br}You never should have been on this battlefield in the first place!{w};auto
+			s;Drake;Althea! Fall back!{w}{br}You never should have been on this battlefield!{w};auto
 			s;Althea;Right... I'm always a burden...{w};auto
 			r;Althea
 			s;Drake;Hmmph.{w};auto
@@ -76,7 +76,7 @@ elif;self.optionalunit.name == 'Drake'
 	if;not gameStateObj.check_dead('Althea')
 		u;Althea;Right
 		s;Althea;Drake, you're wounded... You should fall back...{w};auto
-		s;Drake;No! I can't leave you here...{w};auto
+		s;Drake;Urgh... No! I can't leave you here...{w};auto
 		s;Althea;I can take care of myself!{w}{br}I order you to retreat!{w};auto
 		s;Drake;Then I am no use to anyone...{w}{br}I must depart...{w};auto
 	else
@@ -85,12 +85,11 @@ elif;self.optionalunit.name == 'Drake'
 	r;Drake;Althea
 elif;self.optionalunit.name == 'Renae'
 	u;Renae;FarLeft
-	s;Renae;Damn... messed up again...{w};auto
+	s;Renae;What! How?{w}{br}I'm the fastest...{w};auto
 	r;Renae
 elif;self.optionalunit.name == 'Theo'
 	u;Theo;FarLeft
-	s;Theo;Ah...{w}There's been a mistake...{w};auto
-	s;Theo;This wasn't... supposed to happen...{w};auto
+	s;Theo;Urgh! There's been a mistake...{w}{br}This wasn't... supposed to happen...{w};auto
 	r;Theo
 elif;self.optionalunit.name == 'Sam'
 	u;Sam;FarLeft
@@ -106,7 +105,7 @@ elif;self.optionalunit.name == 'Eliza'
 	r;Eliza
 elif;self.optionalunit.name == 'Coyote'
 	u;Coyote;FarLeft
-	s;Coyote;No wonder they were always afraid...{w};auto
+	s;Coyote;Urgh! No wonder they were always afraid...{w};auto
 	r;Coyote
 elif;self.optionalunit.name == 'Kayla'
 	u;Kayla;FarLeft

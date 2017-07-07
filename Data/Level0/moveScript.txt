@@ -14,7 +14,7 @@ if;OPTIONS['Display Hints']
 		if;not 'turn2_ophie' in gameStateObj.event_triggers
 			if;self.optionalunit.name == 'Ophie'
 				fake_cursor;3,5;5,5;4,6;4,4
-				s;Narrator;Ophie is a sword fighter.{w}{br}Swords have an advantage over axes.{w}{br}Move him adjacent to the enemy.{w};auto;hint
+				s;Narrator;Ophie is a sword fighter.{w}{br}Swords are strong vs. axes.{w}{br}Move Ophie next to the enemy.{w};auto;hint
 			elif;self.optionalunit.name == 'Prim'
 				u;Ophie;Right
 				s;Ophie;No, Prim. Let me handle this.{w}{br}I'm the one with training.{w};auto
