@@ -3885,3 +3885,15 @@ Wexp: 41, 0, 0, 0, 0, 0, 0
 Items: Rusted Sword 20, Vulnerary 3
 *** Convoy:
 Items: Brave Sword 30, Brave Lance 30, Brave Axe 30, Brave Bow 30
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 54
+Wexp: 10, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42
+*** Prim: Healtouch
+Lvl 1, Exp 24
+Wexp: 0, 0, 0, 0, 3, 0, 0
+Items: Glimmer Ward 33, Heal 29
+*** Convoy:
+Items: 

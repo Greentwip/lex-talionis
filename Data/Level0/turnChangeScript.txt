@@ -7,7 +7,7 @@ if;gameStateObj.turncount == 1
 		s;Narrator;Your units are blue.{w}{br}Enemy units are red.{w}{br}Ally units are green.{w}{br}To win this chapter, both of your blue units must escape.{w};auto;hint
 		# Show Highlight
 		display_cursor;1
-		s;Narrator;Select each of your units and move them as close as possible to the highlighted square.{w};auto;hint
+		s;Narrator;Select each of your units and move them as close as possible to the highlighted tile.{w};auto;hint
 		display_cursor;0
 	end
 	u;Prim;Right

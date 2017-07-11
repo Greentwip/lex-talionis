@@ -30,7 +30,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- GUI ---
 - Add cursor scroll to menus (Choice Menu), so you can just hold down the direction you want to go. ++
 --- AWAKENING UI ---
-- Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons)
+- Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow
 - Pulsing arrow (transparency and color)
 - Allow user to control arrow movement (option)
