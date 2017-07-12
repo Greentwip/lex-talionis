@@ -273,6 +273,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def drawConfig(self, surf):
         # Blit arrow... eventually
         # Blit text
+        slider_offset = [0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1]
         for index, option in enumerate(self.config[self.top_of_menu:self.top_of_menu + 6]):
             name, bounds, info, icon = option
             # Blit Icon
@@ -292,7 +293,8 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 slider_hold = IMAGESDICT['WaitingCursor']
                 slider_fraction = (current_option - bounds[0])/float((bounds[-1] - bounds[0]))
                 hold_offset = slider_fraction*(slider_bar.get_width() - 6)
-                topleft = (WINWIDTH/2 + 12 + hold_offset, self.start_offset + index*16 + 4)
+                slider_bop = slider_offset[self.cursorCounter] - 1 if index + self.top_of_menu == self.currentSelection else 0
+                topleft = (WINWIDTH/2 + 12 + hold_offset, self.start_offset + index*16 + 4 + slider_bop)
                 surf.blit(slider_hold, topleft)
             # Is a list of options
             else:

@@ -4,7 +4,7 @@ t;1
 b;Forest
 t;2
 u;Prim;MidRight;u;Ophie;FarRight;u;Joel;Left
-s;Joel;I reckon now would be the proper time for introductions.{w}{br}The name's Joel, and the sour face is my pardnah Nia.{w};auto
+s;Joel;I reckon now would be the proper time for introductions.{w}{br}The name's Joel, and the sour face is my partner Nia.{w};auto
 s;Prim;I'm Prim and this is Ophie.{w}{br}T-Thank you for helping us.{w};auto
 s;Joel;No problem, lass. Though I've been wonderin'...{w}{br}What did ya'll do to rouse Ulver's thugs after you?{w};auto
 s;Ophie;Hmmph! What did we do?!{w}{br}They're the ones that attacked us!{w}{br}They stormed the monastery, claiming we had some fugitive or something.{w}They'll pay for this!{w};auto

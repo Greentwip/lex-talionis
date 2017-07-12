@@ -121,6 +121,7 @@ class StateMachine(object):
                 for s in reversed(self.state):
                     if s.processed:
                         s.processed = False
+                        s.end(gameStateObj, metaDataObj)
                         s.finish(gameStateObj, metaDataObj)
                 self.state = []
             else:
@@ -409,7 +410,9 @@ class FreeState(State):
         if gameStateObj.background:
             gameStateObj.background.fade_out()
         # Remove any currentSelectedUnit
-        gameStateObj.cursor.currentSelectedUnit = None
+        if gameStateObj.cursor.currentSelectedUnit:
+            gameStateObj.cursor.currentSelectedUnit.sprite.change_state('normal')
+            gameStateObj.cursor.currentSelectedUnit = None
         Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
         self.info_counter = 0
 
@@ -836,6 +839,8 @@ class MenuState(State):
         if options:
             opt_color = ['text_green' if option not in self.normal_options else 'text_white' for option in options]
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(cur_unit, options, 'auto', limit=8, color_control=opt_color, gameStateObj=gameStateObj)
+        else:
+            logger.error('Somehow ended up in menu with no options!')
         
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)   

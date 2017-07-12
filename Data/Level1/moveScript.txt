@@ -3,7 +3,7 @@ if;OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 	if;not 'tutorial_nia' in gameStateObj.event_triggers
 		if;self.optionalunit.name == 'Nia'
 			fake_cursor;5,6
-			s;Narrator;Move Nia to the highlighted square.{w};auto;hint
+			s;Narrator;Move Nia to the highlighted tile.{w};auto;hint
 		else
 			reset_state
 			s;Narrator;Choose Nia first.{w};auto;hint

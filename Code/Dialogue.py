@@ -720,6 +720,13 @@ class Dialogue_Scene(object):
         elif line[0] == 'reset_units':
             for unit in gameStateObj.allunits:
                 unit.reset()
+        elif line[0] == 'reset_unit':
+            if line[1] == '{unit}':
+                self.optionalunit.reset()
+            else:
+                for unit in gameStateObj.allunits:
+                    if unit.id == line[1] or unit.event_id == line[1] or unit.name == line[1] or unit.team == line[1]:
+                        unit.reset()
         elif line[0] == 'remove_enemies':
             if len(line) > 1:
                 exception = line[1]

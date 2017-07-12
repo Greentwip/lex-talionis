@@ -5,7 +5,7 @@ t;2
 u;Joel;Left;u;Coyote;Right
 s;Joel;Are you sure we're going the right way, Coyote?{w};auto
 s;Coyote;Yes.{w};auto
-s;Joel;I mean, I don't want to cast doubt on your judgement, pardnah...{w}{br}But I reckon' I've seen that dead rat before.{w};auto
+s;Joel;I mean, I don't want to cast doubt on your judgement, partner...{w}{br}But I reckon' I've seen that dead rat before.{w};auto
 move_sprite;Joel;-24,0
 u;Sam;MidLeft
 # This line is bad

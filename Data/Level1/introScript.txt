@@ -19,6 +19,7 @@ u;Nia;MidLeft
 wait;500
 u;Joel;FarLeft
 s;Joel;What're yer lookin' at, Nia?{w}{br}Wait, those ain't Imperials! Hold your fire!{w};auto
+bop;Nia
 s;Narrator;Twang!{w};160;28;72
 s;Joel;Oops...{w};auto
 r;Joel;Nia
@@ -35,8 +36,8 @@ r;Ophie
 u;Ophie;FarRight
 s;Prim;...{w};auto
 s;Ophie;Hmm... No second shot?{w};auto
-s;???;Hey! You two!{w}{br}Sorry about that...{w}{br}My pardnah here's got a bit of an itchy trigger finger.{w};04;28;160
-s;Ophie;Stay down. It could be a trap.{w};auto
+s;???;Hey! You two!{w}{br}Sorry about that...{w}{br}My partner here's got a bit of an itchy trigger finger.{w};04;28;160
+s;Ophie;Prim, stay down. It could be a trap.{w};auto
 s;???;We're friendly.{w}{br}We don't bite, I promise.{w};04;28;160
 s;Ophie;How do we know this isn't a trap?{w};auto
 s;Prim;Yeah, who are you, anyway?{w};auto
@@ -53,14 +54,15 @@ s;Prim;Yes--{w};auto
 #Nia appears
 m;Combat Theme 4
 u;Nia;FarLeft
-s;Nia;Hello, Joel.{w}{br}Hello, friends.{w}{br}More group! East...{w};auto
+s;Nia;Hello, friends.{w}{br}More group! East...{w};auto
 s;Joel;Well, I reckon' ya'll could use some help...{w};auto
 s;Ophie;I can take them.{w}{br}I don't need your--{w};auto
 s;Prim;Ophie! Now's not the time for pride!{w}{br}What would Master Yohn say?{w};auto
 s;Ophie;Hmmph.{w};auto
 s;Prim;Thank you, um... kind sir.{w};auto
-s;Joel;Ah, don't mention it, little lady.{w}{br}The only good imperial in my reckonin' is a dead one.{w};auto
+s;Joel;Ah, don't mention it, little lady.{w}{br}The only good Imperial in my reckonin' is a dead one.{w};auto
 r;Ophie;Prim;Nia;Joel
+end_skip
 t;1
 remove_background
 t;2

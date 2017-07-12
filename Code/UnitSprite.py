@@ -68,13 +68,15 @@ class UnitSprite(object):
                 if self.transition_counter <= 0:
                     if self.transition_state == 'fade_out':
                         self.transition_state = 'normal'
-                        self.change_state('normal', gameStateObj)
+                        if self.state == 'fake_transition_out':
+                            self.change_state('normal', gameStateObj)
                         self.unit.die(gameStateObj, event=True)
                     elif self.transition_state == 'warp_out':
                         gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.die(gameStateObj, event=True)
                         self.transition_state = 'normal'
-                        self.change_state('normal', gameStateObj)
+                        if self.state == 'fake_transition_out':
+                            self.change_state('normal', gameStateObj)
                     elif self.transition_state == 'fade_move' or self.transition_state == 'warp_move':
                         gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.leave(gameStateObj)
@@ -93,7 +95,8 @@ class UnitSprite(object):
             image = Image_Modification.flickerImageTranslucentColorKey(image, self.transition_counter/(self.transition_time/100))
             if self.transition_counter <= 0:
                 self.transition_state = 'normal'
-                self.change_state('normal', gameStateObj)
+                if self.state == 'fake_transition_in':
+                    self.change_state('normal', gameStateObj)
         elif self.unit.flicker:
             color = self.unit.flicker[2]
             total_time = self.unit.flicker[1]
@@ -265,6 +268,10 @@ class UnitSprite(object):
             self.image_state = 'active'
         elif self.state == 'combat_defender':
             attacker = gameStateObj.combatInstance.p1
+            self.netposition = attacker.position[0] - self.unit.position[0], attacker.position[1] - self.unit.position[1]
+            self.handle_net_position(self.netposition)
+        elif self.state == 'combat_counter':
+            attacker = gameStateObj.combatInstance.p2
             self.netposition = attacker.position[0] - self.unit.position[0], attacker.position[1] - self.unit.position[1]
             self.handle_net_position(self.netposition)
         elif self.state == 'menu':

@@ -12,7 +12,7 @@ elif;OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 		trigger_event;tutorial_nia
 		tutorial_mode;Cleave
 	elif;self.optionalunit.name == 'Joel'
-		s;Narrator;Joel attacked both enemies at once.{w}{br}Activated skills give you powerful options in battle.{w}{br}Always be aware of what skills you have at your disposal.{w};auto;hint
+		s;Narrator;Joel attacked both enemies at once.{w}{br}Activated skills give you powerful options in battle.{w}{br}Always be aware of what skills you have at your disposal.{w}{br}Remember, to find more info on something, press the{red}R button.{black}{w};auto;hint
 		s;Narrator;You can now proceed through the rest of the chapter on your own.{w}{br}Good luck!{w};auto;hint
 		tutorial_mode;0
 	end

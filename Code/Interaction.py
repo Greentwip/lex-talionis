@@ -648,7 +648,10 @@ class Map_Combat(Combat):
                     gameStateObj.cursor.setPosition(self.results[0].defender.position, gameStateObj)
                 # sprite changes
                 if self.results[0].defender == self.p1:
-                    self.p1.sprite.change_state('combat_active', gameStateObj)
+                    if self.p2 and self.p1.checkIfEnemy(self.p2):
+                        self.p1.sprite.change_state('combat_counter', gameStateObj)
+                    else:
+                        self.p1.sprite.change_state('combat_active', gameStateObj)
                 else:
                     self.p1.sprite.change_state('combat_attacker', gameStateObj)
                     if isinstance(self.p2, UnitObject.UnitObject):
@@ -695,11 +698,13 @@ class Map_Combat(Combat):
             elif self.combat_state == '2':
                 if skip or current_time > 2*self.length_of_combat/5 + self.additional_time:
                     self.combat_state = 'Anim'
-                    self.results[0].attacker.sprite.change_state('combat_anim', gameStateObj)
+                    if self.results[0].attacker.sprite.state in {'combat_attacker', 'combat_defender'}:
+                        self.results[0].attacker.sprite.change_state('combat_anim', gameStateObj)
 
             elif self.combat_state == 'Anim':
                 if skip or current_time > 3*self.length_of_combat/5 + self.additional_time:
-                    self.results[0].attacker.sprite.change_state('combat_attacker', gameStateObj)
+                    if self.results[0].attacker.sprite.state == 'combat_anim':
+                        self.results[0].attacker.sprite.change_state('combat_attacker', gameStateObj)
                     for result in self.results:
                         # TODO: Add offset to sound and animation
                         if result.outcome:
