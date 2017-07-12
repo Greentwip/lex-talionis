@@ -63,7 +63,7 @@ if;gameStateObj.turncount == 1
 	end
 	if;not gameStateObj.check_dead('Nia')
 		u;Nia;Right
-		s;Nia;Mmm... Yes!{w};auto
+		s;Nia;Mmm...{w};auto
 		r;Nia
 	end
 	if;not gameStateObj.check_dead('Althea')

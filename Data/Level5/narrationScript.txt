@@ -56,7 +56,7 @@ b;TacticsRoomDay
 t;2
 u;Nia;FarLeft;u;Woman2;MidLeft;Full_Blink
 u;Sam;FarRight
-s;Nia;Hello Sam!{w}{br}Bad sneak here!{w};auto
+s;Nia;Err... H-hello...{w}{br}...B-bad sneak here!{w};auto
 s;Sam;A spy?{w};auto
 s;Woman2;Mrghghgl!{w};auto
 s;Sam;If the Empire's discovered our location...{w}{br}We need to leave right away...{w}{br}I wasn't expecting them to be able to track this--{w};auto

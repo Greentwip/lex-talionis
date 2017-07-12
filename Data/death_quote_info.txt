@@ -42,7 +42,7 @@ elif;self.optionalunit.name == 'Joel'
 	r;Joel
 elif;self.optionalunit.name == 'Nia'
 	u;Nia;FarLeft
-	s;Nia;Ahh! Goodbye...{w};auto
+	s;Nia;...{w};auto
 	r;Nia
 elif;self.optionalunit.name == 'Althea'
 	u;Althea;FarLeft

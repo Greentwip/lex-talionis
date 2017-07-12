@@ -61,7 +61,7 @@ elif;self.optionalunit == 'Joel and Nia'
 	s;Nia;...
 	set_expression;Nia;Normal
 	s;Joel;You remember what to say?
-	s;Nia;...You are welcome!{w}{br}Joel!
+	s;Nia;...Y-you are... welcome?
 	s;Joel;That's my girl.{w}{br}A few more years and I'll have you gossiping like a real high society gal.{w}{br}Just you wait.
 	s;Nia;Mmm... hmmm.
 	s;Joel;Aaah.....{w}{br}Nothing like fresh breakfast at the crack of dawn...
@@ -69,10 +69,10 @@ elif;self.optionalunit == 'Joel and Nia'
 	s;Joel;You know, Nia, the winds are changin' mighty quick round here.{w}{br}Our little resistance has grown leaps and bounds jus' in the past moon.{w}{br}Somethings brewin' in ol' Sam's mind.{w}{br}A plan to end this struggle, one way or another...{w};auto
 	s;Nia;...?
 	s;Joel;So what I mean to say is that these peaceful moments...{w}{br}they're gonna be few and far between.{w}{clear}Ah, hell, Nia. I just want ya to know that I might not be around as much.{w}{br}I know you survived alone before, but you ARE human.{w}{br}You could use a friend.{w}{clear}If I don't make it, Nia... try to at least talk to someone every once in a while, okay?{w};auto
-	s;Nia;...O-kay, Joel.
+	s;Nia;...O-kay.
 	s;Joel;...Well, I'm glad we could talk.{w}{br}But I suppose we've got to get ready for the day.{w}{br}So long.
 	r;Joel
-	s;Nia;...Bye, Joel.
+	s;Nia;...B-bye, Joel.
 	r;Nia
 	grey_base_convo;Joel and Nia
 	t;1

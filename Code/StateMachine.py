@@ -122,7 +122,7 @@ class StateMachine(object):
                     if s.processed:
                         s.processed = False
                         s.end(gameStateObj, metaDataObj)
-                        s.finish(gameStateObj, metaDataObj)
+                    s.finish(gameStateObj, metaDataObj)
                 self.state = []
             else:
                 new_state = self.all_states[state](state)
