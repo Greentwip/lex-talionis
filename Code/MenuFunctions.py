@@ -981,7 +981,7 @@ class ModeSelectMenu(SimpleMenu):
 
         # Draw gem
         surf.blit(self.label, (142, 52))
-        surf.blit(IMAGESDICT['SmallGem'], (139, 48))
+        #surf.blit(IMAGESDICT['SmallGem'], (139, 48))
         # Draw text
         text = WORDS['mode_' + self.options[self.currentSelection]]
         text_lines = line_wrap(line_chunk(text), 88, FONT['text_white'])
