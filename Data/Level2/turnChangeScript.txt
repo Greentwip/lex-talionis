@@ -27,7 +27,7 @@ if;gameStateObj.turncount == 2
 		disp_cursor;1
 		s;Narrator;Althea is an anima mage.{w}{br}Unlike light mages, anima mages cannot heal.{w}{br}They do have a variety of other spells at their disposal.{w};auto;hint
 		disp_cursor;0
-		s;Narrator;Remember if you're ever unsure of something, press the{red}R button{black} to get more information.{w}{br}Try pressing the{red}R button{black}on your newest units to learn more of their capabilities.{w};auto;hint
+		s;Narrator;Remember if you're ever unsure of something, press{red}{eval:Engine.get_key_name(OPTIONS['key_INFO'])}.{black} to get more information.{w}{br}Try pressing{red}{eval:Engine.get_key_name(OPTIONS['key_INFO'])}.{black}on your newest units to learn more of their capabilities.{w};auto;hint
 	end
 	add_talk;Ophie;Althea
 # Add turn 4 reinforcements

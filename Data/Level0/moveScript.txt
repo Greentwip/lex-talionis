@@ -4,11 +4,11 @@ if;OPTIONS['Display Hints']
 		if;self.optionalunit.name == 'Ophie'
 			s;Narrator;You've selected Ophie.{w}{br}Ophie can move anywhere within the blue area.{w};auto;hint
 			fake_cursor;7,6;6,7;5,8;4,9
-			s;Narrator;Move the cursor to one of the flashing spaces and press the{red}A button.{w};auto;hint
+			s;Narrator;Move the cursor to one of the flashing spaces and press{red}{eval:Engine.get_key_name(OPTIONS['key_SELECT'])}.{w};auto;hint
 		elif;self.optionalunit.name == 'Prim'
 			s;Narrator;You've selected Prim.{w}{br}Prim can move anywhere within the blue area.{w};auto;hint
 			fake_cursor;7,7;6,8;5,9
-			s;Narrator;Move the cursor to one of the flashing spaces and press the{red}A button.{w};auto;hint
+			s;Narrator;Move the cursor to one of the flashing spaces and press{red}{eval:Engine.get_key_name(OPTIONS['key_SELECT'])}.{w};auto;hint
 		end
 	elif;gameStateObj.turncount == 2
 		if;not 'turn2_ophie' in gameStateObj.event_triggers

@@ -140,8 +140,8 @@ elif;gameStateObj.turncount == 4
 	r;Prim;Ophie
 	change_ai;Vagnius;Pursue
 	if;OPTIONS['Display Hints']
-		s;Narrator;With their mentor dead, Ophie and Prim must now set out on their own.{w}{clear}To find more information on something, press the{red}R button.{black}{w};auto;hint
-		s;Narrator;If you are ever unsure of your goal,{w}{br}check your objective by pressing the{red}A button{black}on an unoccupied tile.{w}{br}Then select{red}Objective{black}from the Menu.{w};auto;hint
+		s;Narrator;With their mentor dead, Ophie and Prim must now set out on their own.{w}{clear}To find more information on something, press{red}{eval:Engine.get_key_name(OPTIONS['key_INFO'])}.{black}{w};auto;hint
+		s;Narrator;If you are ever unsure of your goal,{w}{br}check your objective by pressing the{red}{eval:Engine.get_key_name(OPTIONS['key_SELECT'])}.{black}on an unoccupied tile.{w}{br}Then select{red}Objective{black}from the Menu.{w};auto;hint
 		s;Narrator;If this isn't your first time playing,{w}{br}you can select{red}Options{black}from the Menu to turn off these hints.{w};auto;hint
 	end
 end
