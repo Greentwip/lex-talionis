@@ -54,7 +54,7 @@ s;Prim;Yes--{w};auto
 #Nia appears
 m;Combat Theme 4
 u;Nia;FarLeft
-s;Nia;Hello, friends.{w}{br}More group! East...{w};auto
+s;Nia;J-Joel... M-more group... to the east...{w};auto
 s;Joel;Well, I reckon' ya'll could use some help...{w};auto
 s;Ophie;I can take them.{w}{br}I don't need your--{w};auto
 s;Prim;Ophie! Now's not the time for pride!{w}{br}What would Master Yohn say?{w};auto

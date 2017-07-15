@@ -7,7 +7,7 @@ u;Joel;FarRight
 s;Ophie;Phew... I think we finally lost them.{w};auto
 s;Joel;Nia?{w};auto
 u;Nia;MidLeft
-s;Nia;Just us!{w};auto
+s;Nia;Err... J-just us...{w};auto
 r;Nia
 s;Joel;Okay, then we can rest here, but only for a little.{w}{br}It's a long walk back to the base.{w};auto
 s;Ophie;Hmmph. That was too close!{w}{br}Sam said we weren't going to have to worry about the guards!{w};auto

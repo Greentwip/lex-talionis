@@ -17,11 +17,11 @@ s;Joel;The lad's right, Prim. Ya'll deserve to know.{w}{br}Honestly, we ain't be
 s;Ophie;Hmmph.
 s;Joel;But there's no cause for concern!{w}{br}Between ya'll and Sam's new allies, I reckon things are lookin' up for the Resistance!
 u;Nia;FarLeft
-s;Nia;Hello, Joel!{w};auto
+s;Nia;J-Joel!{w};auto
 set_expression;Joel;Normal
 s;Joel;Aah!{w}{br}Nia! You startled me.{w}{br}What did I tell ya 'bout creepin' up on people?{w};auto
 bop;Nia
-s;Nia;No manners!{w}{br}But... big fight! South...{w};auto
+s;Nia;...N-no manners?{w}{br}B-but... big fight! Err... south...{w};auto
 s;Joel;A ruckus in Podoma?{w}{br}We'd better skirt around the village, then.{w};auto
 r;Ophie
 s;Joel;Hey, Ophie! Lad!{w}{br}Where you goin'? Don't run off!{w};auto
