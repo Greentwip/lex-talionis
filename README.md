@@ -16,7 +16,7 @@ release v0.6.3 - 64-bit Windows only
 *Mediafire:* http://www.mediafire.com/file/dzdpypzzuxb7j0a/the_lion_throne.zip
 
 #### To play:
-Double-click *lion_throne.exe*
+Un-zip the downloaded files, and then double-click *lion_throne.exe*
 
 ### Screenshots
 ![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
