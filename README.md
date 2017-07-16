@@ -8,9 +8,13 @@ Because this was coded entirely from scratch, we are not bound by the limitation
 
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
-## Downloads
-*Dropbox:* https://www.dropbox.com/s/s707383vh8vl5cx/the_lion_throne.zip?dl=0 (release v0.6.3 - 64-bit Windows only).
-Double-click lion_throne.exe
+# Downloads
+release v0.6.3 - 64-bit Windows only
+*Dropbox:* https://www.dropbox.com/s/s707383vh8vl5cx/the_lion_throne.zip?dl=0
+*Mediafire:* http://www.mediafire.com/file/dzdpypzzuxb7j0a/the_lion_throne.zip
+
+#### To play:
+Double-click *lion_throne.exe*
 
 ### Screenshots
 ![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
