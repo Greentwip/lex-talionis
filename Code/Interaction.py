@@ -396,10 +396,26 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
     else:
         return Map_Combat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
 
-# Abstract base class for combat - Handles clean up
+# Abstract base class for combat
 class Combat(object):
+    # Determines actual damage done
+    def calc_damage_done(self, result):
+        if result.atk_damage > 0:
+            result.atk_damage_done = min(result.atk_damage, result.attacker.currenthp)
+        elif result.atk_damage < 0:
+            result.atk_damage_done = min(-result.atk_damage, result.attacker.stats['HP'] - result.attacker.currenthp)
+        else:
+            result.atk_damage_done = 0
+
+        result.def_damage_done = 0
+        if result.defender:
+            if result.def_damage > 0:
+                result.def_damage_done = min(result.def_damage, result.defender.currenthp)
+            elif result.def_damage < 0:
+                result.def_damage_done = min(-result.def_damage, result.defender.stats['HP'] - result.defender.currenthp)
+
     # Clean up everything
-    def clean_up(self, gameStateObj, metaDataObj):
+    def clean_up(self, gameStateObj, metaDataObj, animation=False):
         # Remove combat state
         gameStateObj.stateMachine.back()
         # Reset states if you're not using a solo skill
@@ -623,6 +639,275 @@ class Combat(object):
         if d_broke_item:
             self.p2.remove_item(self.p2.getMainWeapon())
 
+class AnimationCombat(Combat):
+    def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat):
+        self.p1 = attacker
+        self.p2 = defender
+        # The attacker is always on the right unless the defender is a player and the attacker is not
+        if not self.p2.team == 'player' and self.p1.team != 'player':
+            self.right = self.p1
+            self.left = self.p2
+            self.right_item = item
+            self.left_item = self.left.getMainWeapon()
+        else:
+            self.right = self.p2
+            self.left = self.p1
+            self.right_item = self.right.getMainWeapon()
+            self.left_item = item
+        self.def_pos = def_pos
+        self.at_range = True if Utility.calculate_distance(self.p1.position, self.p2.position) > 1 else False 
+        self.item = item
+        self.skill_used = skill_used
+        self.event_combat = event_combat
+
+        self.solver = Solver(attacker, defender, def_pos, [], item, skill_used, event_combat)
+        self.results = []
+
+        self.left_stats, self.right_stats = None, None
+        self.left_hp_bar, self.right_hp_bar = SimpleHPBar(self.left), SimpleHPBar(self.right)
+
+        self.combat_state = 'Start' # Start, Fade, Entrance, (Pre_Init, Anim, HP_Change, Anim), (Init, Anim, Hp_Change, Anim)
+
+        # Since AnimationCombat always has exactly 2 participants
+        self.p1.lock_active()
+        self.p2.lock_active()
+
+        self.viewbox_clamp_state = 0
+        self.total_viewbox_clamp_states = 6
+        self.viewbox = None
+
+        self.name_offset = 0
+        self.bar_offset = 0
+        self.max_position_offset = 8
+
+    def init_draw(self, gameStateObj, metaDataObj):
+        # Left
+        left_color = 'Blue' if self.left.team == 'player' else 'Red'
+        # Name Tag
+        self.left_name = IMAGESDICT[left_color + 'LeftCombatName']
+        size_x = FONT['text_brown'].size(self.left.name)[0]
+        FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x/2, 9))
+        # Bar
+        self.left_bar = IMAGESDICT[left_color + 'LeftMainCombat']
+        size_x = FONT['text_brown'].size(self.left_item.name)[0]
+        FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x/2, 6))
+        # Platform
+        if self.at_range:
+            self.left_platform = IMAGESDICT['Plains-Ranged']
+        else:
+            self.left_platform = IMAGESDICT['Plains-Melee']
+
+        # Right
+        right_color = 'Blue' if self.right.team == 'player' else 'Red'
+        # Name Tag
+        self.right_name = IMAGESDICT[right_color + 'RightCombatName']
+        size_x = FONT['text_brown'].size(self.right.name)[0]
+        FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x/2, 9))
+        # Bar
+        self.right_bar = IMAGESDICT[right_color + 'RightMainCombat']
+        size_x = FONT['text_brown'].size(self.right_item.name)[0]
+        FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x/2, 6))
+        # Platform
+        if self.at_range:
+            self.right_platform = Engine.flip_horiz(IMAGESDICT['Plains-Ranged'])
+        else:
+            self.right_platform = Engine.flip_horiz(IMAGESDICT['Plains-Melee'])
+
+    def update(self, gameStateObj, metaDataObj, skip=False):
+        current_time = Engine.get_time()
+        if self.combat_state == 'Start':
+            self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
+            self.set_stats(gameStateObj)
+            self.results.append(self.current_result)
+            gameStateObj.cursor.setPosition(self.def_pos, gameStateObj)
+            self.init_draw(gameStateObj, metaDataObj)
+            self.combat_state = 'Fade'
+
+        elif self.combat_state == 'Fade':
+            # begin viewbox clamping
+            self.viewbox_clamp_state += 1
+            if self.viewbox_clamp_state <= self.total_viewbox_clamp_states:
+                self.build_viewbox()
+            else:
+                self.combat_state = 'Entrance'
+
+        elif self.combat_state == 'Entrance':
+            # Translate in names, stats, hp, and platforms
+            self.bar_offset += 1
+            self.name_offset += 1
+            if self.bar_offset >= self.max_position_offset:
+                self.bar_offset = self.max_position_offset
+                self.name_offset = self.max_position_offset
+                self.last_update = current_time
+                self.combat_state = 'Pre_Init'
+
+        elif self.combat_state == 'Pre_Init':
+            if current_time - self.last_update > 330: # 1/3 of a second
+                self.combat_state = 'Anim'
+                self.last_update = current_time
+                # Set up animation
+                self.current_animation = self.set_up_animation(self.current_result)
+
+        elif self.combat_state == 'Init':
+            self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
+            if self.current_result is None:
+                self.clean_up(gameStateObj, metaDataObj, True)
+                self.combat_state = 'Out1'
+            else:
+                self.set_stats(gameStateObj)
+                self.results.append(self.current_result)
+                self.combat_state = 'Anim'
+
+        elif self.combat_state == 'Anim':
+            break_for = self.play_animation(self.current_animation):
+            if break_for == 'Done':
+                self.combat_state = 'Init'
+            elif break_for == 'HP':
+                self.apply_result(self.current_result, gameStateObj)
+                self.combat_state = 'HP_Change'
+
+        elif self.combat_state == 'HP_Change':
+            if self.left_hp_bar.done() and self.right_hp_bar.done():
+                self.combat_state = 'Anim'
+
+        elif self.combat_state == 'Out1': # Nametags move out
+            self.name_offset -= 1
+            if self.name_offset <= 0:
+                self.name_offset = 0
+                self.combat_state = 'Out2'
+
+        elif self.combat_state == 'Out2': # Rest of the goods move out
+            self.bar_offset -= 1
+            if self.bar_offset <= 0:
+                self.bar_offset = 0
+                self.combat_state = 'FadeOut'
+
+        elif self.combat_state == 'FadeOut':
+            # end viewbox clamping
+            self.viewbox_clamp_state -= 1
+            if self.viewbox_clamp_state > 0:
+                self.build_viewbox()
+            else:
+                return True
+
+        self.left_hp_bar.update()
+        self.right_hp_bar.update()
+
+    def build_viewbox(self):
+        vb_multiplier = self.viewbox_clamp_state/float(self.total_viewbox_clamp_states)
+        # x, y, width, height
+        true_x, true_y = self.def_pos[0] - gameStateObj.cameraOffset.get_x(), self.def_pos[1] - gameStateObj.cameraOffset.get_y()
+        vb_x = vb_multiplier * true_x * TILEWIDTH
+        vb_y = vb_multiplier * true_y * TILEHEIGHT
+        vb_width = WINWIDTH - vb_x - (vb_multiplier * (TILEX - true_x)) * TILEWIDTH
+        vb_height = WINHEIGHT - vb_y - (vb_multiplier * (TILEY - true_y)) * TILEHEIGHT
+        self.viewbox = (vb_x, vb_y, vb_width, vb_height)
+
+    def set_stats(self, gameStateObj):
+        result = self.current_result
+        # Calc stats
+        a_mode = 'Attack' if result.attacker is self.p1 else 'Defense'
+        a_weapon = self.item if result.attacker is self.p1 else result.attacker.getMainWeapon()
+        a_hit = result.attacker.compute_hit(result.defender, gameStateObj, a_weapon, a_mode)
+        a_mt = result.attacker.compute_damage(result.defender, gameStateObj, a_weapon, a_mode)
+        a_stats = a_hit, a_mt
+
+        if self.item.weapon and self.solver.defender_can_counterattack():
+            d_mode = 'Defense' if result.attacker is self.p1 else 'Attack'
+            d_weapon = result.defender.getMainWeapon()
+            d_hit = result.defender.compute_hit(result.attacker, gameStateObj, d_weapon, d_mode)
+            d_mt = result.defender.compute_damage(result.attacker, gameStateObj, d_weapon, d_mode)
+            d_stats = d_hit, d_mt
+        else:
+            d_stats = None
+            d_weapon = None
+
+        ### Build stats
+        if result.attacker is self.right:
+            self.left_stats = d_stats
+            self.right_stats = a_stats
+        else:
+            self.left_stats = a_stats
+            self.right_stats = d_stats
+
+    def apply_result(self, result, gameStateObj):
+        # Status
+        for status_obj in result.def_status:
+            status_obj.parent_id = result.attacker.id
+            StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
+        for status_obj in result.atk_status:
+            status_obj.parent_id = result.defender.id
+            StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
+        # Calculate true damage done
+        self.calc_damage_done(result)
+        # HP
+        result.attacker.currenthp -= result.atk_damage
+        result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
+        if result.defender:
+            result.defender.currenthp -= result.def_damage
+            result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
+
+    def draw(self, surf, gameStateObj):
+        bar_multiplier = self.bar_offset/float(self.max_position_offset)
+        platform_trans = 100
+        # Platform
+        if self.at_range:
+            surf.blit(self.left_platform, (-23, 88 + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.right_platform, (-131, 88 + (platform_trans - bar_multiplier*platform_trans)))
+        else:
+            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width(), 88 + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.right_platform, (WINWIDTH/2, 88 + (platform_trans - bar_multiplier*platform_trans)))
+        # Animation
+        # Bar
+        left_bar = self.left_bar.copy()
+        right_bar = self.right_bar.copy()
+            # HP Bar
+        self.left_hp_bar.draw(left_bar, (8, 20))
+        self.right_hp_bar.draw(right_bar, (8, 20))
+            # Item
+        self.draw_item(left_bar, self.left_item, self.right_item self.left, self.right, (40, 4))
+        self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (4, 4))
+            # Stats
+        self.draw_stats(left_bar, self.left_stats, (12, 2))
+        self.draw_stats(right_bar, self.right_stats, (WINWIDTH/2 - 3 - 30, 2))
+
+        bar_trans = 80
+        left_pos = (-3, WINHEIGHT - self.left_bar.get_height() + 3 + (bar_trans - bar_multiplier*bar_trans))
+        right_pos = (WINWIDTH/2, WINHEIGHT - self.right_bar.get_height() + 3 + (bar_trans - bar_multiplier*bar_trans))
+        surf.blit(left_bar, left_pos)
+        surf.blit(right_bar, right_pos)
+        # Nametag
+        name_multiplier = self.name_offset/float(self.max_position_offset)
+        surf.blit(self.left_name, (-3, name_multiplier*60))
+        surf.blit(self.right_name, (WINWIDTH + 3 - self.right_name.get_width(), name_multiplier*60))
+
+    def draw_item(self, surf, item, other_item, unit, other, topleft):
+        white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \
+                any(status.weakness and status.weakness.damage_type in self.item.TYPE for status in other.status_effects) else False
+        item.draw(surf, (topleft[0] + 2, topleft[1] + 3), white)
+
+        # Blit advantage -- This must be blit every frame
+        if unit.checkIfEnemy(other):
+            advantage, e_advantage = CustomObjects.WEAPON_TRIANGLE.compute_advantage(item, other_item)
+            if advantage > 0:
+                UpArrow = Engine.subsurface(IMAGESDICT['ItemArrows'], (unit.arrowAnim[unit.arrowCounter]*7, 0, 7, 10))
+                surf.blit(UpArrow, (topleft[0] + 11, topleft[1] + 7))
+            elif advantage < 0:
+                DownArrow = Engine.subsurface(IMAGESDICT['ItemArrows'], (unit.arrowAnim[unit.arrowCounter]*7, 10, 7, 10))
+                surf.blit(DownArrow, (topleft[0] + 11, topleft[1] + 7))
+
+    def draw_stats(self, surf, stats, topleft):
+        # Blit Hit
+        hit = '--'
+        if stats is not None and stats[0] is not None:
+            hit = str(stats[0])
+        FONT['number_small2'].blit(hit, surf, topleft)
+        # Blit Damage
+        damage = '--'
+        if stats is not None and stats[1] is not None:
+            damage = str(stats[1])
+        FONT['number_small2'].blit(damage, surf, (topleft[0], topleft[1] + 1 + FONT['number_small2'].height))
+
 class Map_Combat(Combat):
     def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat):
         self.p1 = attacker
@@ -825,21 +1110,6 @@ class Map_Combat(Combat):
         if self.p2 and isinstance(self.p2, UnitObject.UnitObject):
             self.p2.sprite.reset_sprite_offset()
 
-    def calc_damage_done(self, result):
-        if result.atk_damage > 0:
-            result.atk_damage_done = min(result.atk_damage, result.attacker.currenthp)
-        elif result.atk_damage < 0:
-            result.atk_damage_done = min(-result.atk_damage, result.attacker.stats['HP'] - result.attacker.currenthp)
-        else:
-            result.atk_damage_done = 0
-
-        result.def_damage_done = 0
-        if result.defender:
-            if result.def_damage > 0:
-                result.def_damage_done = min(result.def_damage, result.defender.currenthp)
-            elif result.def_damage < 0:
-                result.def_damage_done = min(-result.def_damage, result.defender.stats['HP'] - result.defender.currenthp)
-
     def apply_result(self, result, gameStateObj):
         # Status
         for status_obj in result.def_status:
@@ -857,13 +1127,10 @@ class Map_Combat(Combat):
             result.defender.currenthp -= result.def_damage
             result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
         # Movement
-        #print(self.current_result)
         if result.atk_movement and result.defender.position:
-            #print('ATK', self.current_result.atk_movement)
             def_position = result.defender.position
             result.attacker.handle_forced_movement(def_position, result.atk_movement, gameStateObj)
         if result.def_movement:
-            #print('DEF', self.current_result.def_movement)
             atk_position = result.attacker.position
             result.defender.handle_forced_movement(atk_position, result.def_movement, gameStateObj)
         # Summoning
@@ -972,8 +1239,8 @@ class HealthBar(object):
             # Blit item -- Must be blit every frame
             if self.item:
                 if self.other and isinstance(self.other, UnitObject.UnitObject):
-                    white = True if (self.item.effective and any([comp in self.other.tags for comp in self.item.effective.against])) or \
-                    any([status.weakness and status.weakness.damage_type in self.item.TYPE for status in self.other.status_effects]) else False
+                    white = True if (self.item.effective and any(comp in self.other.tags for comp in self.item.effective.against)) or \
+                    any(status.weakness and status.weakness.damage_type in self.item.TYPE for status in self.other.status_effects) else False
                 else:
                     white = False
                 self.item.draw(bg_surf, (2, 3), white)
