@@ -720,6 +720,8 @@ class Map_Combat(Combat):
                                 SOUNDDICT[self.item.sfx_on_hit].play()
                             elif result.defender.currenthp - result.def_damage <= 0: # Lethal
                                 SOUNDDICT['Final Hit'].play()
+                                for health_bar in self.health_bars.values():
+                                    health_bar.shake(2)
                             elif result.def_damage < 0: # Heal
                                 SOUNDDICT['heal'].play()
                             elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
@@ -727,6 +729,8 @@ class Map_Combat(Combat):
                             else:
                                 sound_to_play = 'Attack Hit ' + str(random.randint(1,4)) # Choose a random hit sound
                                 SOUNDDICT[sound_to_play].play()
+                                for health_bar in self.health_bars.values():
+                                    health_bar.shake(1)
                             # Animation
                             if self.item.self_anim:
                                 name, x, y, num = item.self_anim.split(',')
@@ -983,16 +987,17 @@ class HealthBar(object):
             else:
                 blit_surf = Engine.subsurface(bg_surf, (0, height/2 - int(height*self.blinds/2), width, int(height*self.blinds)))
                 y_pos = self.true_position[1] + height/2 - int(height*self.blinds/2)
-            surf.blit(blit_surf, (self.true_position[0], y_pos))
+            surf.blit(blit_surf, (self.true_position[0] + self.shake_offset[0], y_pos + self.shake_offset[1]))
 
             # blit Gem
             if self.blinds == 1 and self.gem and self.order:
+                x, y = self.true_position[0] + self.shake_offset[0], self.true_position[1] + self.shake_offset[1]
                 if self.order == 'left':
-                    position = (self.true_position[0] + 2, self.true_position[1] - 3)
+                    position = (x + 2, y - 3)
                 elif self.order == 'right':
-                    position = (self.true_position[0] + 56, self.true_position[1] - 3)
+                    position = (x + 56, y - 3)
                 elif self.order == 'middle':
-                    position = (self.true_position[0] + 27, self.true_position[1] - 3)
+                    position = (x + 27, y - 3)
                 surf.blit(self.gem, position)
 
     def build_c_surf(self):
@@ -1075,11 +1080,24 @@ class HealthBar(object):
     def fade_out(self):
         pass
 
+    def shake(self, num):
+        self.current_shake = 1
+        if num == 1:
+            self.shake_set = [(-3, -3), (0, 0), (3, 3), (0, 0)]
+        elif num == 2:
+            self.shake_set = [(3, 3), (0, 0), (0, 0), (3, 3), (-3, -3), (3, 3), (-3, -3), (0, 0)]
+
     def update(self, status_obj=False):
         # Make blinds wider
         self.blinds = Utility.clamp(self.blinds, self.blinds + self.blind_speed, 1)
         # Handle HP bar
         if self.unit and self.blinds == 1:
+            # Handle shake
+            if self.current_shake:
+                self.shake_offset = self.shake_set[self.current_shake - 1]
+                self.current_shake += 1
+                if self.current_shake > len(self.shake_set):
+                    self.current_shake = 0
             if self.true_hp != self.unit.currenthp and not self.transition_flag:
                 self.transition_flag = True
                 self.time_for_change = max(400, abs(self.true_hp - self.unit.currenthp)*32)
@@ -1162,3 +1180,7 @@ class HealthBar(object):
         self.c_surf = None
         self.gem = None
         self.stats = None
+        # for shake
+        self.shake_set = [(0, 0)]
+        self.shake_offset = (0, 0)
+        self.current_shake = 0
