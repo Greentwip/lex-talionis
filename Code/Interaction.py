@@ -391,8 +391,9 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
 
 def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False):
     # Not implemented yet
-    if OPTIONS['Animation']:
-        pass
+    if OPTIONS['Animation'] and not splash and not skill_used and attacker is not defender and \
+        attacker.battle_anim.anim and defender.battle_anim.anim:
+        return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat)
     else:
         return Map_Combat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
 
@@ -730,6 +731,8 @@ class AnimationCombat(Combat):
                 self.build_viewbox()
             else:
                 self.combat_state = 'Entrance'
+                self.left.battle_anim.awake(self.right.battle_anim, False, self.at_range) # Stand
+                self.right.battle_anim.awake(self.left.battle_anim, True, self.at_range) # Stand
 
         elif self.combat_state == 'Entrance':
             # Translate in names, stats, hp, and platforms
@@ -759,7 +762,7 @@ class AnimationCombat(Combat):
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'Anim':
-            break_for = self.play_animation(self.current_animation):
+            break_for = self.play_animations():
             if break_for == 'Done':
                 self.combat_state = 'Init'
             elif break_for == 'HP':
@@ -768,6 +771,7 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'HP_Change':
             if self.left_hp_bar.done() and self.right_hp_bar.done():
+                self.current_result.battle_anim.resume()
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'Out1': # Nametags move out
@@ -847,6 +851,16 @@ class AnimationCombat(Combat):
             result.defender.currenthp -= result.def_damage
             result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
 
+    def set_up_animation(self, result):
+        if result.outcome:
+            result.attacker.battle_anim.start_anim('Attack')
+        else:
+            result.attacker.battle_anim.start_anim('Miss')
+
+    def play_animations(self):
+        self.left.battle_anim.update()
+        self.right.battle_anim.update()
+
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset/float(self.max_position_offset)
         platform_trans = 100
@@ -858,6 +872,13 @@ class AnimationCombat(Combat):
             surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width(), 88 + (platform_trans - bar_multiplier*platform_trans)))
             surf.blit(self.right_platform, (WINWIDTH/2, 88 + (platform_trans - bar_multiplier*platform_trans)))
         # Animation
+        if self.current_result:
+            self.current_result.attacker.battle_anim.draw_under(surf)
+            self.current_result.defender.battle_anim.draw(surf)
+            self.current_result.attacker.battle_anim.draw(surf)
+        else:
+            self.left.battle_anim.draw(surf)
+            self.right.battle_anim.draw(surf)
         # Bar
         left_bar = self.left_bar.copy()
         right_bar = self.right_bar.copy()
@@ -1065,12 +1086,12 @@ class Map_Combat(Combat):
                                 gameStateObj.allanimations.append(anim)
                             elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
                                 pos = result.defender.position[0] - 0.5, result.defender.position[1]
-                                gameStateObj.allanimations.append(CustomObjects.Animation(IMAGESDICT['MapNoDamage'], pos, (1, 12)))
+                                gameStateObj.allanimations.append(CustomObjects.Animation(IMAGESDICT['MapNoDamage'], pos, (1, 12), set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 10, 3, 3, 3)))
                         elif result.summoning:
                             SOUNDDICT['Summon 2'].play()
                         else:
                             SOUNDDICT['Attack Miss 2'].play()
-                            gameStateObj.allanimations.append(CustomObjects.Animation(IMAGESDICT['MapMiss'], result.defender.position, (1, 13)))
+                            gameStateObj.allanimations.append(CustomObjects.Animation(IMAGESDICT['MapMiss'], result.defender.position, (1, 13), set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 3, 3, 3)))
                         # Handle status one time animations
                         for status in result.def_status:
                             if status.one_time_animation:
@@ -1205,6 +1226,50 @@ class Map_Combat(Combat):
     def draw(self, surf, gameStateObj):
         for hp_bar in self.health_bars.values():
             hp_bar.draw(surf, gameStateObj)
+
+class SimpleHPBar(object):
+    full_hp_blip = IMAGESDICT['FullHPBlip']
+    empty_hp_blip = IMAGESDICT['EmptyHPBlip']
+    end_hp_blip = Engine.subsurface(full_hp_blip, (0, 0, 1, full_hp_blip.get_height()))
+    def __init__(self, unit):
+        self.unit = unit
+        self.desired_hp = unit.currenthp
+        self.currenthp = unit.currenthp
+        self.max_hp = unit.stats['HP']
+        self.last_update = 0
+        self.colors = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1]
+        self.color_tick = 0
+
+    def update(self):
+        current_time = Engine.get_time()
+        self.desired_hp = self.unit.currenthp
+        if self.currenthp < self.desired_hp and current_time - self.last_update > 32:
+            self.currenthp += 1
+            self.last_update = current_time
+        elif self.currenthp > self.desired_hp and current_time - self.last_update > 32:
+            self.currenthp -= 1
+            self.last_update = current_time
+        self.color_tick += 1
+        if self.color_tick >= len(self.colors):
+            self.color_tick = 0
+        return self.currenthp == self.desired_hp
+
+    def done(self):
+        return self.currenthp == self.desired_hp
+
+    def draw(self, surf, pos):
+        # Blit HP -- Must be blit every frame
+        font = FONT['number_small2']
+        if self.desired_hp != self.currenthp:
+            font = FONT['number_big2']
+        position = 11 - font.size(str(int(self.currenthp)))[0]/2, 0
+        font.blit(str(int(self.currenthp)), surf, position)
+        full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick]*2, 0, 2, self.full_hp_blip.get_height()))
+        for index in xrange(self.currenthp):
+            surf.blit(full_hp_blip, (index*2 + 20, 4))
+        for index in xrange(self.max_hp - self.currenthp):
+            surf.blit(self.empty_hp_blip, ((index+self.currenthp)*2 + 20, 4))
+        surf.blit(self.end_hp_blip, ((self.max_hp)*2 + 20, 4)) # End HP Blip
 
 class HealthBar(object):
     def __init__(self, draw_method, unit, item, other=None, stats=None, time_for_change=400, swap_stats=None):

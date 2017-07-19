@@ -1,4 +1,4 @@
-import os, Engine
+import os, glob, Engine
 
 COLORKEY = (128,160,128)
 def getImages():
@@ -27,8 +27,22 @@ def getImages():
                 image = Engine.image_load(full_name, convert=True)
                 Engine.set_colorkey(image, COLORKEY, rleaccel=True)
                 UNITDICT[name[:-4]] = image
-    
-    return IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT
+
+    # Battle Animations
+    ANIMDICT = {'image': {},
+                'index': {},
+                'script': {}}
+
+    for directory in os.listdir('./Data/Animations/'):
+        for image_fp in glob.glob(directory + '/*.png'):
+            full_name = './Data/Animations/' + directory + '/' + image_fp
+            image = Engine.image_load(full_name, convert=True)
+            Engine.set_colorkey(image, COLORKEY, rleaccel=True)
+            ANIMDICT['image'][image_fp[:-4]] = image
+        ANIMDICT['index'][directory] = './Data/Animations/' + directory + '/' + directory + 'Index.txt'
+        ANIMDICT['script'][directory] = './Data/Animations/' + directory + '/' + directory + 'Script.txt'
+
+    return IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT
 
 def getSounds():
     # SFX Sounds

@@ -745,6 +745,7 @@ class Animation(object):
                         elif self.hold:
                             self.frameCount = self.total_num_frames - 1
                         else:
+<<<<<<< 08c0c1574dbcee0ae7ce05be0f8db6d884905c21
                             if gameStateObj and self in gameStateObj.allanimations:
                                 gameStateObj.allanimations.remove(self)
                             return True
@@ -752,6 +753,15 @@ class Animation(object):
                         self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height))
             # Otherwise
             elif currentTime - self.lastUpdate > self.animation_speed:
+=======
+                            if self in gameStateObj.allanimations:
+                                gameStateObj.allanimations.remove(self)
+                            return True
+                    self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height))
+            # Otherwise
+            elif currentTime - self.lastUpdate > self.animation_speed:
+                #print(self.frameCount)
+>>>>>>> setting up animation
                 self.frameCount += int((currentTime - self.lastUpdate)/self.animation_speed) # 1
                 self.lastUpdate = currentTime
                 if self.frameCount >= self.total_num_frames:
@@ -760,6 +770,7 @@ class Animation(object):
                     elif self.hold:
                         self.frameCount = self.total_num_frames - 1 # Hold on last frame
                     else:
+<<<<<<< 08c0c1574dbcee0ae7ce05be0f8db6d884905c21
                         if gameStateObj and self in gameStateObj.allanimations:
                             gameStateObj.allanimations.remove(self)
                         return True
@@ -767,6 +778,14 @@ class Animation(object):
                     #print(self.indiv_width, self.indiv_height, self.frame_x, self.frame_y, self.frameCount, self.total_num_frames, currentTime, self.lastUpdate)
                     #print(self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height)
                     self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height))
+=======
+                        if self in gameStateObj.allanimations:
+                            gameStateObj.allanimations.remove(self)
+                        return True
+                indiv_width, indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y
+                #print(self.frameCount%self.frame_x * indiv_width, self.frameCount/self.frame_x *indiv_height, indiv_width, indiv_height)
+                self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height))
+>>>>>>> setting up animation
 
 # === PHASE OBJECT ============================================================
 class Phase(object):
