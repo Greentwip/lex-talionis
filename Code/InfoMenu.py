@@ -105,10 +105,8 @@ class InfoMenu(StateMachine.State):
                 self.move_left(gameStateObj, metaDataObj)
             elif 'DOWN' in directions:
                 self.last_fluid = currentTime
-                if self.hold_flag:
-                    SOUNDDICT['Select 2'].play()
-                else:
-                    SOUNDDICT['Attack Miss 2'].play()
+                SOUNDDICT['Status_Character'].play()
+                if not self.hold_flag:
                     index = self.scroll_units.index(self.unit)
                     if index < len(self.scroll_units) - 1:
                         self.unit = self.scroll_units[index+1]
@@ -119,10 +117,8 @@ class InfoMenu(StateMachine.State):
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
             elif 'UP' in directions:
                 self.last_fluid = currentTime
-                if self.hold_flag:
-                    SOUNDDICT['Select 2'].play()
-                else:
-                    SOUNDDICT['Attack Miss 2'].play()
+                SOUNDDICT['Status_Character'].play()
+                if not self.hold_flag:
                     index = self.scroll_units.index(self.unit)
                     if index > 0:
                         self.unit = self.scroll_units[index - 1]
@@ -133,13 +129,13 @@ class InfoMenu(StateMachine.State):
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
 
     def move_left(self, gameStateObj, metaDataObj):
-        SOUNDDICT['Select 3'].play()
+        SOUNDDICT['Status_Page_Change'].play()
         self.last_fluid = Engine.get_time()
         self.currentState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
         self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
 
     def move_right(self, gameStateObj, metaDataObj):
-        SOUNDDICT['Select 3'].play()
+        SOUNDDICT['Status_Page_Change'].play()
         self.last_fluid = Engine.get_time()
         self.currentState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
         self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
