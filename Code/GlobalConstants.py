@@ -59,7 +59,7 @@ DISPLAYSURF = pygame.display.set_mode((WINWIDTH*OPTIONS['screen_scale'], WINHEIG
 version = "0.6"
 pygame.display.set_caption(''.join(["The Lion Throne - ", version]))
 
-IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT = imagesDict.getImages()
+IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = imagesDict.getImages()
 SOUNDDICT, MUSICDICT = imagesDict.getSounds()
 
 # DATA

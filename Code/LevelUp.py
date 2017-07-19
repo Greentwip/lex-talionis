@@ -46,8 +46,8 @@ class levelUpScreen(object):
         # TIMING
         self.total_time_for_exp = self.expNew * 16 # exp rate is 16
         self.level_up_sound_played = False
-        self.LEVELANIMATIONTIME = 500
-        self.WAITTIME = 600
+        self.LEVELANIMATIONTIME = 400
+        self.WAITTIME = 730
         self.SPARKTIME = 300
         self.LEVELUPWAIT = 2500
 
