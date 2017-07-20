@@ -6,7 +6,7 @@ import CustomObjects, MenuFunctions, Image_Modification, InputManager, Engine, S
 class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.config = [('Animation', ['OFF'], WORDS['Animation_desc'], 0),
+            self.config = [('Animation', ['ON', 'OFF'], WORDS['Animation_desc'], 0),
                            ('Unit Speed', range(15, 180, 15), WORDS['Unit Speed_desc'], 1),
                            ('Text Speed', range(0, 110, 10), WORDS['Text Speed_desc'], 2),
                            ('Cursor Speed', range(0, 220, 20), WORDS['Cursor Speed_desc'], 8),

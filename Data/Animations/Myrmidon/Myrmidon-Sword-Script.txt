@@ -1,0 +1,10 @@
+pose;Stand
+f;4;Stand
+
+pose;Attack
+f;20;Stand
+hit
+f;10;Stand
+
+pose;Miss
+f;100;Stand

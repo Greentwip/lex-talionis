@@ -1,7 +1,7 @@
 debug;1
-cheat;0
+cheat;1
 screen_scale;3
-Animation;0
+Animation;1
 Unit Speed;60
 Text Speed;10
 Cursor Speed;80

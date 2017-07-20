@@ -1,4 +1,5 @@
-import os, glob, Engine
+import os
+import Engine, AnimationManager
 
 COLORKEY = (128,160,128)
 def getImages():
@@ -29,18 +30,7 @@ def getImages():
                 UNITDICT[name[:-4]] = image
 
     # Battle Animations
-    ANIMDICT = {'image': {},
-                'index': {},
-                'script': {}}
-
-    for directory in os.listdir('./Data/Animations/'):
-        for image_fp in glob.glob(directory + '/*.png'):
-            full_name = './Data/Animations/' + directory + '/' + image_fp
-            image = Engine.image_load(full_name, convert=True)
-            Engine.set_colorkey(image, COLORKEY, rleaccel=True)
-            ANIMDICT['image'][image_fp[:-4]] = image
-        ANIMDICT['index'][directory] = './Data/Animations/' + directory + '/' + directory + 'Index.txt'
-        ANIMDICT['script'][directory] = './Data/Animations/' + directory + '/' + directory + 'Script.txt'
+    ANIMDICT = AnimationManager.BattleAnimationManager(COLORKEY)
 
     return IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT
 
