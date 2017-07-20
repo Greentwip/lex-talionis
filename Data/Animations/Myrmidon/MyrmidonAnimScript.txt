@@ -1,7 +1,0 @@
-mode;Stand
-f;4;Stand
-
-mode;Attack
-f;20;Stand
-hit
-f;10;Stand

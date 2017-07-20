@@ -1,7 +1,7 @@
 import random, math
 from GlobalConstants import *
 from configuration import *
-import CustomObjects, UnitObject, Banner, TileObject
+import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
 import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Utility, Engine
 
 import logging
@@ -391,11 +391,28 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
 
 def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False):
     # Not implemented yet
-    if OPTIONS['Animation'] and not splash and not skill_used and attacker is not defender and \
-        attacker.battle_anim.anim and defender.battle_anim.anim:
-        return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat)
-    else:
-        return Map_Combat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+    if OPTIONS['Animation'] and not splash and not skill_used and attacker is not defender:
+        attacker_anim = ANIMDICT.partake(attacker, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item))
+        defender_item = defender.getMainWeapon()
+        if defender_item:
+            magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
+        else:
+            magic = False
+        defender_anim = ANIMDICT.partake(defender, defender.getMainWeapon(), magic)
+        if attacker_anim and defender_anim:
+            # Build attacker animation
+            attacker_script = attacker_anim['script']
+            attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
+            attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
+            attacker.battle_anim = BattleAnimation.BattleAnimation(attacker_frame_dir, attacker_script)
+            # Build defender animation
+            defender_script = defender_anim['script']
+            defender_color = 'Blue' if defender.team == 'player' else 'Red'
+            defender_frame_dir = defender_anim['images']['Generic' + defender_color]
+            defender.battle_anim = BattleAnimation.BattleAnimation(defender_frame_dir, defender_script)
+            return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat)
+    # default
+    return Map_Combat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
 
 # Abstract base class for combat
 class Combat(object):
@@ -645,7 +662,7 @@ class AnimationCombat(Combat):
         self.p1 = attacker
         self.p2 = defender
         # The attacker is always on the right unless the defender is a player and the attacker is not
-        if not self.p2.team == 'player' and self.p1.team != 'player':
+        if self.p2.team == 'player' and self.p1.team != 'player':
             self.right = self.p1
             self.left = self.p2
             self.right_item = item
@@ -681,17 +698,20 @@ class AnimationCombat(Combat):
         self.bar_offset = 0
         self.max_position_offset = 8
 
+        # To match MapCombat
+        self.health_bars = {}
+
     def init_draw(self, gameStateObj, metaDataObj):
         # Left
         left_color = 'Blue' if self.left.team == 'player' else 'Red'
         # Name Tag
         self.left_name = IMAGESDICT[left_color + 'LeftCombatName']
         size_x = FONT['text_brown'].size(self.left.name)[0]
-        FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x/2, 9))
+        FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x/2, 7))
         # Bar
         self.left_bar = IMAGESDICT[left_color + 'LeftMainCombat']
         size_x = FONT['text_brown'].size(self.left_item.name)[0]
-        FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x/2, 6))
+        FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x/2, 5))
         # Platform
         if self.at_range:
             self.left_platform = IMAGESDICT['Plains-Ranged']
@@ -703,11 +723,11 @@ class AnimationCombat(Combat):
         # Name Tag
         self.right_name = IMAGESDICT[right_color + 'RightCombatName']
         size_x = FONT['text_brown'].size(self.right.name)[0]
-        FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x/2, 9))
+        FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x/2, 7))
         # Bar
         self.right_bar = IMAGESDICT[right_color + 'RightMainCombat']
         size_x = FONT['text_brown'].size(self.right_item.name)[0]
-        FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x/2, 6))
+        FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x/2, 5))
         # Platform
         if self.at_range:
             self.right_platform = Engine.flip_horiz(IMAGESDICT['Plains-Ranged'])
@@ -728,7 +748,7 @@ class AnimationCombat(Combat):
             # begin viewbox clamping
             self.viewbox_clamp_state += 1
             if self.viewbox_clamp_state <= self.total_viewbox_clamp_states:
-                self.build_viewbox()
+                self.build_viewbox(gameStateObj)
             else:
                 self.combat_state = 'Entrance'
                 self.left.battle_anim.awake(self.right.battle_anim, False, self.at_range) # Stand
@@ -762,16 +782,15 @@ class AnimationCombat(Combat):
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'Anim':
-            break_for = self.play_animations():
-            if break_for == 'Done':
+            if self.current_result.attacker.battle_anim.tag == 'Done':
                 self.combat_state = 'Init'
-            elif break_for == 'HP':
+            elif self.current_result.attacker.battle_anim.tag == 'HP':
                 self.apply_result(self.current_result, gameStateObj)
                 self.combat_state = 'HP_Change'
 
         elif self.combat_state == 'HP_Change':
             if self.left_hp_bar.done() and self.right_hp_bar.done():
-                self.current_result.battle_anim.resume()
+                self.current_result.attacker.battle_anim.resume()
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'Out1': # Nametags move out
@@ -790,14 +809,16 @@ class AnimationCombat(Combat):
             # end viewbox clamping
             self.viewbox_clamp_state -= 1
             if self.viewbox_clamp_state > 0:
-                self.build_viewbox()
+                self.build_viewbox(gameStateObj)
             else:
                 return True
 
         self.left_hp_bar.update()
         self.right_hp_bar.update()
+        self.left.battle_anim.update()
+        self.right.battle_anim.update()
 
-    def build_viewbox(self):
+    def build_viewbox(self, gameStateObj):
         vb_multiplier = self.viewbox_clamp_state/float(self.total_viewbox_clamp_states)
         # x, y, width, height
         true_x, true_y = self.def_pos[0] - gameStateObj.cameraOffset.get_x(), self.def_pos[1] - gameStateObj.cameraOffset.get_y()
@@ -857,20 +878,17 @@ class AnimationCombat(Combat):
         else:
             result.attacker.battle_anim.start_anim('Miss')
 
-    def play_animations(self):
-        self.left.battle_anim.update()
-        self.right.battle_anim.update()
-
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset/float(self.max_position_offset)
         platform_trans = 100
+        platform_top = 88
         # Platform
         if self.at_range:
-            surf.blit(self.left_platform, (-23, 88 + (platform_trans - bar_multiplier*platform_trans)))
-            surf.blit(self.right_platform, (-131, 88 + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.left_platform, (-23, platform_top + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.right_platform, (-131, platform_top + (platform_trans - bar_multiplier*platform_trans)))
         else:
-            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width(), 88 + (platform_trans - bar_multiplier*platform_trans)))
-            surf.blit(self.right_platform, (WINWIDTH/2, 88 + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width(), platform_top + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.right_platform, (WINWIDTH/2, platform_top + (platform_trans - bar_multiplier*platform_trans)))
         # Animation
         if self.current_result:
             self.current_result.attacker.battle_anim.draw_under(surf)
@@ -883,24 +901,24 @@ class AnimationCombat(Combat):
         left_bar = self.left_bar.copy()
         right_bar = self.right_bar.copy()
             # HP Bar
-        self.left_hp_bar.draw(left_bar, (8, 20))
-        self.right_hp_bar.draw(right_bar, (8, 20))
+        self.left_hp_bar.draw(left_bar, (27, 30))
+        self.right_hp_bar.draw(right_bar, (25, 30))
             # Item
-        self.draw_item(left_bar, self.left_item, self.right_item self.left, self.right, (40, 4))
-        self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (4, 4))
+        self.draw_item(left_bar, self.left_item, self.right_item, self.left, self.right, (45, 2))
+        self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (1, 2))
             # Stats
-        self.draw_stats(left_bar, self.left_stats, (12, 2))
-        self.draw_stats(right_bar, self.right_stats, (WINWIDTH/2 - 3 - 30, 2))
+        self.draw_stats(left_bar, self.left_stats, (42, 1))
+        self.draw_stats(right_bar, self.right_stats, (WINWIDTH/2 - 3, 1))
 
         bar_trans = 80
-        left_pos = (-3, WINHEIGHT - self.left_bar.get_height() + 3 + (bar_trans - bar_multiplier*bar_trans))
-        right_pos = (WINWIDTH/2, WINHEIGHT - self.right_bar.get_height() + 3 + (bar_trans - bar_multiplier*bar_trans))
+        left_pos = (-3, WINHEIGHT - self.left_bar.get_height() + (bar_trans - bar_multiplier*bar_trans))
+        right_pos = (WINWIDTH/2, WINHEIGHT - self.right_bar.get_height() + (bar_trans - bar_multiplier*bar_trans))
         surf.blit(left_bar, left_pos)
         surf.blit(right_bar, right_pos)
         # Nametag
         name_multiplier = self.name_offset/float(self.max_position_offset)
-        surf.blit(self.left_name, (-3, name_multiplier*60))
-        surf.blit(self.right_name, (WINWIDTH + 3 - self.right_name.get_width(), name_multiplier*60))
+        surf.blit(self.left_name, (-3, -60 + name_multiplier*60))
+        surf.blit(self.right_name, (WINWIDTH + 3 - self.right_name.get_width(), -60 + name_multiplier*60))
 
     def draw_item(self, surf, item, other_item, unit, other, topleft):
         white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \
@@ -917,17 +935,64 @@ class AnimationCombat(Combat):
                 DownArrow = Engine.subsurface(IMAGESDICT['ItemArrows'], (unit.arrowAnim[unit.arrowCounter]*7, 10, 7, 10))
                 surf.blit(DownArrow, (topleft[0] + 11, topleft[1] + 7))
 
-    def draw_stats(self, surf, stats, topleft):
+    def draw_stats(self, surf, stats, topright):
+        right, top = topright
         # Blit Hit
         hit = '--'
         if stats is not None and stats[0] is not None:
             hit = str(stats[0])
-        FONT['number_small2'].blit(hit, surf, topleft)
+        FONT['number_small2'].blit(hit, surf, (right - FONT['number_small2'].size(hit)[0], top))
         # Blit Damage
         damage = '--'
         if stats is not None and stats[1] is not None:
             damage = str(stats[1])
-        FONT['number_small2'].blit(damage, surf, (topleft[0], topleft[1] + 1 + FONT['number_small2'].height))
+        FONT['number_small2'].blit(damage, surf, (right - FONT['number_small2'].size(damage)[0], top + 8))
+
+class SimpleHPBar(object):
+    full_hp_blip = IMAGESDICT['FullHPBlip']
+    empty_hp_blip = IMAGESDICT['EmptyHPBlip']
+    end_hp_blip = Engine.subsurface(full_hp_blip, (0, 0, 1, full_hp_blip.get_height()))
+    colors = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1]
+    def __init__(self, unit):
+        self.unit = unit
+        self.desired_hp = unit.currenthp
+        self.currenthp = unit.currenthp
+        self.max_hp = unit.stats['HP']
+        self.last_update = 0
+        self.color_tick = 0
+
+    def update(self):
+        current_time = Engine.get_time()
+        self.desired_hp = self.unit.currenthp
+        if self.currenthp < self.desired_hp and current_time - self.last_update > 32:
+            self.currenthp += 1
+            self.last_update = current_time
+        elif self.currenthp > self.desired_hp and current_time - self.last_update > 32:
+            self.currenthp -= 1
+            self.last_update = current_time
+        self.color_tick += 1
+        if self.color_tick >= len(self.colors):
+            self.color_tick = 0
+        return self.currenthp == self.desired_hp
+
+    def done(self):
+        return self.currenthp == self.desired_hp
+
+    def draw(self, surf, pos):
+        # Blit HP -- Must be blit every frame
+        font = FONT['number_small2']
+        top = pos[1] - 4
+        if self.desired_hp != self.currenthp:
+            font = FONT['number_big2']
+            top = pos[1]
+        position = pos[0] - font.size(str(int(self.currenthp)))[0], top
+        font.blit(str(int(self.currenthp)), surf, position)
+        full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick]*2, 0, 2, self.full_hp_blip.get_height()))
+        for index in xrange(self.currenthp):
+            surf.blit(full_hp_blip, (pos[0] + index*2 + 5, pos[1] + 1))
+        for index in xrange(self.max_hp - self.currenthp):
+            surf.blit(self.empty_hp_blip, (pos[0] + (index+self.currenthp)*2 + 5, pos[1] + 1))
+        surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp)*2 + 5, pos[1] + 1)) # End HP Blip
 
 class Map_Combat(Combat):
     def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat):
@@ -1226,50 +1291,6 @@ class Map_Combat(Combat):
     def draw(self, surf, gameStateObj):
         for hp_bar in self.health_bars.values():
             hp_bar.draw(surf, gameStateObj)
-
-class SimpleHPBar(object):
-    full_hp_blip = IMAGESDICT['FullHPBlip']
-    empty_hp_blip = IMAGESDICT['EmptyHPBlip']
-    end_hp_blip = Engine.subsurface(full_hp_blip, (0, 0, 1, full_hp_blip.get_height()))
-    def __init__(self, unit):
-        self.unit = unit
-        self.desired_hp = unit.currenthp
-        self.currenthp = unit.currenthp
-        self.max_hp = unit.stats['HP']
-        self.last_update = 0
-        self.colors = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1]
-        self.color_tick = 0
-
-    def update(self):
-        current_time = Engine.get_time()
-        self.desired_hp = self.unit.currenthp
-        if self.currenthp < self.desired_hp and current_time - self.last_update > 32:
-            self.currenthp += 1
-            self.last_update = current_time
-        elif self.currenthp > self.desired_hp and current_time - self.last_update > 32:
-            self.currenthp -= 1
-            self.last_update = current_time
-        self.color_tick += 1
-        if self.color_tick >= len(self.colors):
-            self.color_tick = 0
-        return self.currenthp == self.desired_hp
-
-    def done(self):
-        return self.currenthp == self.desired_hp
-
-    def draw(self, surf, pos):
-        # Blit HP -- Must be blit every frame
-        font = FONT['number_small2']
-        if self.desired_hp != self.currenthp:
-            font = FONT['number_big2']
-        position = 11 - font.size(str(int(self.currenthp)))[0]/2, 0
-        font.blit(str(int(self.currenthp)), surf, position)
-        full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick]*2, 0, 2, self.full_hp_blip.get_height()))
-        for index in xrange(self.currenthp):
-            surf.blit(full_hp_blip, (index*2 + 20, 4))
-        for index in xrange(self.max_hp - self.currenthp):
-            surf.blit(self.empty_hp_blip, ((index+self.currenthp)*2 + 20, 4))
-        surf.blit(self.end_hp_blip, ((self.max_hp)*2 + 20, 4)) # End HP Blip
 
 class HealthBar(object):
     def __init__(self, draw_method, unit, item, other=None, stats=None, time_for_change=400, swap_stats=None):

@@ -195,6 +195,9 @@ class UnitObject(object):
             self.generic_flag = True
             self.bigportrait = UNITDICT['Generic_Portrait_' + self.klass]
             self.portrait = UNITDICT[self.faction + 'Emblem']
+        # Generate Animation
+        ANIMDICT.generate(self.klass)
+        self.battle_anim = None
 
     def begin_flicker(self, time, color=(255,255,255)):
         self.flicker = (Engine.get_time(), time, color)
