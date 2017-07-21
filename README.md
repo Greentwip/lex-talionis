@@ -21,8 +21,8 @@ Un-zip the downloaded files, and then double-click *lion_throne.exe*
 ### Screenshots
 ![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
 ![Range](/Utilities/Screenshots/AOE.gif)
-![Skill](/Utilities/Screenshots/Skill2.png)
-![Prep](/Utilities/Screenshots/Prep1.png)
+![Skill](/Utilities/Screenshots/OphieSkill.gif)
+![Prep](/Utilities/Screenshots/TheoSearch.gif)
 ![Conversation](/Utilities/Screenshots/Conversation1.png) 
 ![Convoy](/Utilities/Screenshots/Convoy1.png)
 ![Item](/Utilities/Screenshots/Item1.png) 
