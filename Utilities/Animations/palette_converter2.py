@@ -1,9 +1,7 @@
-#! usr/bin/env python2.7
-import time
 from PIL import Image
 
 # Joshua
-palette_list = [(128, 160, 128), # Background
+joshua = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -12,7 +10,7 @@ palette_list = [(128, 160, 128), # Background
                 (160, 8, 8), # Med Hair
                 (104, 8, 16), # Dark Hair
                 (176, 208, 240), # Light Weapon/Leather
-                (112, 144, 176), # Med Weapon/Leather
+                (114, 146, 178), # Med Weapon/Leather
                 (64, 96, 128), # Dark Weapon/String
                 (128, 168, 168), # Light Clothes
                 (88, 128, 128), # LM Clothes
@@ -21,7 +19,7 @@ palette_list = [(128, 160, 128), # Background
                 (40, 40, 40)] # Outline
 
 # Generic Red
-enemy_palette = [(128, 160, 128), # Background
+enemy = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -39,7 +37,7 @@ enemy_palette = [(128, 160, 128), # Background
                 (40, 40, 40)] # Outline
 
 # Generic blue
-player_palette = [(128, 160, 128), # Background
+player = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -56,44 +54,18 @@ player_palette = [(128, 160, 128), # Background
                 (48, 40, 128), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-palette = player_palette
+p1 = joshua
+p2 = enemy
 
-index_swap = {1: 13,
-              2: 12,
-              3: 11,
-              4: 7,
-              5: 6,
-              6: 5,
-              7: 15,
-              8: 4,
-              9: 3,
-              10: 2,
-              11: 1,
-              12: 8,
-              13: 9,
-              14: 10,
-              15: 14
-              }
-assert len(palette_list) == 16
+conversion = {p1[i]: p2[i] for i in xrange(len(p1))}
+image_to_convert = 'new_spritesheet.png'
 
-fp = 'Myrmidon0.png'
-picture = Image.open(fp)
+image = Image.open(image_to_convert)
+width, height = image.size
 
-# Get the size of the image
-width, height = picture.size
+for x in xrange(width):
+        for y in xrange(height):
+                color = image.getpixel((x, y))
+                image.putpixel((x, y), conversion[color])
 
-# Change color
-time1 = time.clock()
-for x in range(width):
-    for y in range(height):
-    	current_color = picture.getpixel((x,y))
-        index = current_color[0]
-        if index == 0 and current_color[3] != 0:
-            index = 15
-        if index in index_swap:
-            index = index_swap[index]
-    	new_color = palette[index]
-    	picture.putpixel((x, y), new_color)
-print((time.clock() - time1)*1000)
-
-picture.save('Generic'+fp)
+image.save('fixed' + image_to_convert)

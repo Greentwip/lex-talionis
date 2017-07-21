@@ -714,7 +714,7 @@ class Animation(object):
 
         self.image = Engine.subsurface(self.sprite, (0, 0, self.indiv_width, self.indiv_height))
 
-    def draw(self, surf, gameStateObj, blend=None):
+    def draw(self, surf, gameStateObj=None, blend=None):
         if self.on and self.frameCount >= 0 and Engine.get_time() > self.start_time:
             # The animation is too far to the right. Must move left. (" - 32")
             image = self.image
@@ -727,7 +727,7 @@ class Animation(object):
                 image = Image_Modification.change_image_color(image, blend)
             surf.blit(image, topleft)
 
-    def update(self, gameStateObj):
+    def update(self, gameStateObj=None):
         currentTime = Engine.get_time()
         if self.on and currentTime > self.start_time:
             # If this animation has every frame's count defined
@@ -743,7 +743,7 @@ class Animation(object):
                         elif self.hold:
                             self.frameCount = self.total_num_frames - 1
                         else:
-                            if self in gameStateObj.allanimations:
+                            if gameStateObj and self in gameStateObj.allanimations:
                                 gameStateObj.allanimations.remove(self)
                             return True
                     self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height))
@@ -758,7 +758,7 @@ class Animation(object):
                     elif self.hold:
                         self.frameCount = self.total_num_frames - 1 # Hold on last frame
                     else:
-                        if self in gameStateObj.allanimations:
+                        if gameStateObj and self in gameStateObj.allanimations:
                             gameStateObj.allanimations.remove(self)
                         return True
                 indiv_width, indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y

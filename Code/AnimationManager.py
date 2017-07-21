@@ -33,7 +33,7 @@ class BattleAnimationManager(object):
                 frame_directory = {}
                 for name, anim in klass_directory[weapon]['images'].iteritems():
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)
-                print(frame_directory)
+                #print(frame_directory)
                 klass_directory[weapon]['images'] = frame_directory
                 klass_directory[weapon]['script'] = self.parse_script(klass_directory[weapon]['script'])
 
