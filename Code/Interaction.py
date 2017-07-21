@@ -663,15 +663,15 @@ class AnimationCombat(Combat):
         self.p2 = defender
         # The attacker is always on the right unless the defender is a player and the attacker is not
         if self.p2.team == 'player' and self.p1.team != 'player':
-            self.right = self.p1
-            self.left = self.p2
-            self.right_item = item
-            self.left_item = self.left.getMainWeapon()
-        else:
             self.right = self.p2
-            self.left = self.p1
             self.right_item = self.right.getMainWeapon()
+            self.left = self.p1
             self.left_item = item
+        else:
+            self.right = self.p1
+            self.right_item = item
+            self.left = self.p2
+            self.left_item = self.left.getMainWeapon()
         self.def_pos = def_pos
         self.at_range = True if Utility.calculate_distance(self.p1.position, self.p2.position) > 1 else False 
         self.item = item
@@ -679,7 +679,7 @@ class AnimationCombat(Combat):
         self.event_combat = event_combat
 
         self.solver = Solver(attacker, defender, def_pos, [], item, skill_used, event_combat)
-        self.results = []
+        self.old_results = []
 
         self.left_stats, self.right_stats = None, None
         self.left_hp_bar, self.right_hp_bar = SimpleHPBar(self.left), SimpleHPBar(self.right)
@@ -696,10 +696,16 @@ class AnimationCombat(Combat):
 
         self.name_offset = 0
         self.bar_offset = 0
-        self.max_position_offset = 8
+        self.max_position_offset = 16
+
+        # for shake
+        self.shake_set = [(0, 0)]
+        self.shake_offset = (0, 0)
+        self.current_shake = 0
 
         # To match MapCombat
         self.health_bars = {}
+        self.splash = []
 
     def init_draw(self, gameStateObj, metaDataObj):
         # Left
@@ -707,7 +713,7 @@ class AnimationCombat(Combat):
         # Name Tag
         self.left_name = IMAGESDICT[left_color + 'LeftCombatName']
         size_x = FONT['text_brown'].size(self.left.name)[0]
-        FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x/2, 7))
+        FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x/2, 8))
         # Bar
         self.left_bar = IMAGESDICT[left_color + 'LeftMainCombat']
         size_x = FONT['text_brown'].size(self.left_item.name)[0]
@@ -723,7 +729,7 @@ class AnimationCombat(Combat):
         # Name Tag
         self.right_name = IMAGESDICT[right_color + 'RightCombatName']
         size_x = FONT['text_brown'].size(self.right.name)[0]
-        FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x/2, 7))
+        FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x/2, 8))
         # Bar
         self.right_bar = IMAGESDICT[right_color + 'RightMainCombat']
         size_x = FONT['text_brown'].size(self.right_item.name)[0]
@@ -735,11 +741,12 @@ class AnimationCombat(Combat):
             self.right_platform = Engine.flip_horiz(IMAGESDICT['Plains-Melee'])
 
     def update(self, gameStateObj, metaDataObj, skip=False):
+        #print(self.combat_state)
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
             self.set_stats(gameStateObj)
-            self.results.append(self.current_result)
+            self.old_results.append(self.current_result)
             gameStateObj.cursor.setPosition(self.def_pos, gameStateObj)
             self.init_draw(gameStateObj, metaDataObj)
             self.combat_state = 'Fade'
@@ -751,8 +758,8 @@ class AnimationCombat(Combat):
                 self.build_viewbox(gameStateObj)
             else:
                 self.combat_state = 'Entrance'
-                self.left.battle_anim.awake(self.right.battle_anim, False, self.at_range) # Stand
-                self.right.battle_anim.awake(self.left.battle_anim, True, self.at_range) # Stand
+                self.left.battle_anim.awake(self, self.right.battle_anim, False, self.at_range) # Stand
+                self.right.battle_anim.awake(self, self.left.battle_anim, True, self.at_range) # Stand
 
         elif self.combat_state == 'Entrance':
             # Translate in names, stats, hp, and platforms
@@ -773,18 +780,21 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'Init':
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
+            print('Interaction: Getting a new result')
             if self.current_result is None:
-                self.clean_up(gameStateObj, metaDataObj, True)
                 self.combat_state = 'Out1'
             else:
                 self.set_stats(gameStateObj)
-                self.results.append(self.current_result)
+                self.old_results.append(self.current_result)
                 self.combat_state = 'Anim'
+                self.last_update = current_time
+                self.current_animation = self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'Anim':
-            if self.current_result.attacker.battle_anim.tag == 'Done':
+            message = self.current_result.attacker.battle_anim.tag
+            if message == 'Done':
                 self.combat_state = 'Init'
-            elif self.current_result.attacker.battle_anim.tag == 'HP':
+            elif message == 'HP':
                 self.apply_result(self.current_result, gameStateObj)
                 self.combat_state = 'HP_Change'
 
@@ -811,12 +821,21 @@ class AnimationCombat(Combat):
             if self.viewbox_clamp_state > 0:
                 self.build_viewbox(gameStateObj)
             else:
+                self.finish()
+                self.clean_up(gameStateObj, metaDataObj, True)
                 return True
 
         self.left_hp_bar.update()
         self.right_hp_bar.update()
         self.left.battle_anim.update()
         self.right.battle_anim.update()
+
+        # Handle shake
+        if self.current_shake:
+            self.shake_offset = self.shake_set[self.current_shake - 1]
+            self.current_shake += 1
+            if self.current_shake > len(self.shake_set):
+                self.current_shake = 0
 
     def build_viewbox(self, gameStateObj):
         vb_multiplier = self.viewbox_clamp_state/float(self.total_viewbox_clamp_states)
@@ -878,22 +897,33 @@ class AnimationCombat(Combat):
         else:
             result.attacker.battle_anim.start_anim('Miss')
 
+    def finish(self):
+        self.p1.unlock_active()
+        self.p2.unlock_active()
+
+    def shake(self, num):
+        self.current_shake = 1
+        if num == 1:
+            self.shake_set = [(3, 3), (3, 3), (3, 3), (0, 0)]
+        elif num == 2:
+            self.shake_set = [(3, 3), (0, 0), (0, 0), (3, 3), (-3, -3), (3, 3), (-3, -3), (0, 0)]
+
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset/float(self.max_position_offset)
         platform_trans = 100
         platform_top = 88
         # Platform
         if self.at_range:
-            surf.blit(self.left_platform, (-23, platform_top + (platform_trans - bar_multiplier*platform_trans)))
-            surf.blit(self.right_platform, (-131, platform_top + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.left_platform, (-23 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.right_platform, (-131 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         else:
-            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width(), platform_top + (platform_trans - bar_multiplier*platform_trans)))
-            surf.blit(self.right_platform, (WINWIDTH/2, platform_top + (platform_trans - bar_multiplier*platform_trans)))
+            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         # Animation
         if self.current_result:
-            self.current_result.attacker.battle_anim.draw_under(surf)
-            self.current_result.defender.battle_anim.draw(surf)
-            self.current_result.attacker.battle_anim.draw(surf)
+            self.current_result.attacker.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]))
+            self.current_result.defender.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]))
+            self.current_result.attacker.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]))
         else:
             self.left.battle_anim.draw(surf)
             self.right.battle_anim.draw(surf)
@@ -911,14 +941,14 @@ class AnimationCombat(Combat):
         self.draw_stats(right_bar, self.right_stats, (WINWIDTH/2 - 3, 1))
 
         bar_trans = 80
-        left_pos = (-3, WINHEIGHT - self.left_bar.get_height() + (bar_trans - bar_multiplier*bar_trans))
-        right_pos = (WINWIDTH/2, WINHEIGHT - self.right_bar.get_height() + (bar_trans - bar_multiplier*bar_trans))
+        left_pos = (-3 + self.shake_offset[0], WINHEIGHT - self.left_bar.get_height() + (bar_trans - bar_multiplier*bar_trans) + self.shake_offset[1])
+        right_pos = (WINWIDTH/2 + self.shake_offset[0], WINHEIGHT - self.right_bar.get_height() + (bar_trans - bar_multiplier*bar_trans) + self.shake_offset[1])
         surf.blit(left_bar, left_pos)
         surf.blit(right_bar, right_pos)
         # Nametag
         name_multiplier = self.name_offset/float(self.max_position_offset)
-        surf.blit(self.left_name, (-3, -60 + name_multiplier*60))
-        surf.blit(self.right_name, (WINWIDTH + 3 - self.right_name.get_width(), -60 + name_multiplier*60))
+        surf.blit(self.left_name, (-3 + self.shake_offset[0], -60 + name_multiplier*60 + self.shake_offset[1]))
+        surf.blit(self.right_name, (WINWIDTH + 3 - self.right_name.get_width() + self.shake_offset[0], -60 + name_multiplier*60 + self.shake_offset[1]))
 
     def draw_item(self, surf, item, other_item, unit, other, topleft):
         white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \

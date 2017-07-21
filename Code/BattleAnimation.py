@@ -1,5 +1,6 @@
 from GlobalConstants import *
-import Engine
+import Engine, Image_Modification
+import CustomObjects
 # Mode types:
 #* Attack 
 #* Attack2 - behind
@@ -20,8 +21,19 @@ class BattleAnimation(object):
         self.state = 'Inert' # Internal state
         self.tag = None # For others to read
         self.num_frames = 0 # How long this frame of animation should exist for (in frames)
+        self.animations = []
 
-    def awake(self, partner, right, at_range):
+        # flash frames
+        self.foreground = None
+        self.foreground_frames = 0
+        self.flash_color = None
+        self.flash_frames = 0
+
+        # Screen shake
+        self.screen_shake_counter = 0
+
+    def awake(self, owner, partner, right, at_range):
+        self.owner = owner
         self.partner = partner
         self.right = right
         self.at_range = at_range
@@ -43,10 +55,16 @@ class BattleAnimation(object):
                     self.end_current()
             self.frame_count += 1
         elif self.state == 'Wait':
-            pass
+            # Handle screen shake
+            if self.screen_shake_counter > 0:
+                self.screen_shake_counter -= 1
+                if self.screen_shake_counter <= 0:
+                    self.screen_shake_counter = 0
+                    self.owner.shake(1)
 
     def end_current(self):
-        self.current_pose = 'RandgedStand' if self.at_range else 'Stand'
+        #print('Animation: End Current')
+        self.current_pose = 'RangedStand' if self.at_range else 'Stand'
         self.state = 'Run'
         self.script_index = 0
         self.tag = 'Done'
@@ -67,32 +85,81 @@ class BattleAnimation(object):
         elif line[0] == 'sound':
             SOUNDDICT[line[1]].play()
         elif line[0] == 'hit':
+            self.current_frame = self.frame_directory[line[1]]
             self.state = 'Wait'
             self.processing = False
             self.tag = 'HP'
+            self.screen_shake_counter = 10
+        elif line[0] == 'enemy_flash_white':
+            num_frames = int(line[1])
+            self.partner.flash(num_frames, (248, 248, 248))
+        elif line[0] == 'screen_flash_white':
+            self.foreground_frames = int(line[1])
+            self.foreground = IMAGESDICT['BlackBackground'].copy()
+            self.foreground.fill((248, 248, 248))
+        elif line[0] == 'hit_spark':
+            if self.right:
+                position = (-110, -30)
+            else:
+                position = (-40, -30) # Enemy's position
+            image = IMAGESDICT['HitSparkTrans']
+            anim = CustomObjects.Animation(image, position, (3, 5), 14, ignore_map=True, 
+                                          set_timing=(2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1))
+            self.animations.append(anim)
 
     def start_anim(self, pose):
+        #print('Animation: Start')
         self.current_pose = pose
         self.script_index = 0
         self.reset()
 
     def resume(self):
+        #print('Animation: Resume')
         self.reset()
 
     def reset(self):
         self.state = 'Run'
         self.tag = None
         self.frame_count = 0
+        self.num_frames = 0
 
-    def draw(self, surf):
+    def flash(self, num, color):
+        self.flash_frames = num
+        self.flash_color = color
+
+    def draw(self, surf, shake=(0, 0)):
         if self.state != 'Inert':
             image = self.current_frame[0].copy()
             if not self.right:
                 image = Engine.flip_horiz(image)
             offset = self.current_frame[1]
             if not self.right:
-                offset = WINWIDTH - offset[0] - image.get_width(), offset[1]
+                offset = WINWIDTH - offset[0] - image.get_width() + shake[0], offset[1] + shake[1]
+
+            # Self flash
+            if self.flash_color:
+                image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color)
+                self.flash_frames -= 1
+                # If done
+                if self.flash_frames <= 0:
+                    self.flash_color = None
+                    self.flash_frames = 0
+
             surf.blit(image, offset)
 
-    def draw_under(self, surf):
+            # Update and draw animations
+            self.animations = [animation for animation in self.animations if not animation.update()]
+            for animation in self.animations:
+                animation.draw(surf)
+
+            # Screen flash
+            if self.foreground:
+                surf.blit(self.foreground, (0, 0))
+                self.foreground_frames -= 1
+                # If done
+                if self.flash_frames <= 0:
+                    self.foreground = None
+                    self.foreground_frames = 0
+
+    def draw_under(self, surf, shake=(0, 0)):
         pass

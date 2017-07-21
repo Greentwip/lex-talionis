@@ -13,7 +13,7 @@
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
-group;Resistance;Yep;Resistance;Nope
+group;Resistance;Bandit;Resistance;Nope
 player;0;0;Myrmidon;1;Iron Sword;5,13;Pursue;Resistance
 player;0;0;Soldier;1;Iron Lance;4,12;Pursue;Resistance
 player;0;0;Archer;1;Willow Bow;4,15;Pursue;Resistance
