@@ -29,9 +29,6 @@ class BattleAnimation(object):
         self.flash_color = None
         self.flash_frames = 0
 
-        # Screen shake
-        self.screen_shake_counter = 0
-
     def awake(self, owner, partner, right, at_range):
         self.owner = owner
         self.partner = partner
@@ -55,12 +52,7 @@ class BattleAnimation(object):
                     self.end_current()
             self.frame_count += 1
         elif self.state == 'Wait':
-            # Handle screen shake
-            if self.screen_shake_counter > 0:
-                self.screen_shake_counter -= 1
-                if self.screen_shake_counter <= 0:
-                    self.screen_shake_counter = 0
-                    self.owner.shake(1)
+            pass
 
     def end_current(self):
         #print('Animation: End Current')
@@ -89,7 +81,7 @@ class BattleAnimation(object):
             self.state = 'Wait'
             self.processing = False
             self.tag = 'HP'
-            self.screen_shake_counter = 10
+            self.owner.shake(1)
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1])
             self.partner.flash(num_frames, (248, 248, 248))

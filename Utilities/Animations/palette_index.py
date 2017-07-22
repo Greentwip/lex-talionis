@@ -1,6 +1,21 @@
-from PIL import Image
+### === MYRMIDON ===
+joshua_old = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (224, 48, 16), # Light Hair
+                (160, 8, 8), # Med Hair
+                (104, 8, 16), # Dark Hair
+                (152, 184, 216), # Light Weapon/Leather
+                (114, 146, 178), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (128, 168, 168), # Light Clothes
+                (88, 128, 128), # LM Clothes
+                (48, 88, 88), # MD Clothes
+                (24, 48, 48), # Dark Clothes
+                (40, 40, 40)] # Outline
 
-# Joshua
 joshua = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
@@ -10,7 +25,7 @@ joshua = [(128, 160, 128), # Background
                 (160, 8, 8), # Med Hair
                 (104, 8, 16), # Dark Hair
                 (176, 208, 240), # Light Weapon/Leather
-                (114, 146, 178), # Med Weapon/Leather
+                (112, 144, 176), # Med Weapon/Leather
                 (64, 96, 128), # Dark Weapon/String
                 (128, 168, 168), # Light Clothes
                 (88, 128, 128), # LM Clothes
@@ -18,8 +33,24 @@ joshua = [(128, 160, 128), # Background
                 (24, 48, 48), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-# Generic Red
-enemy = [(128, 160, 128), # Background
+guy = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (128, 184, 184), # Light Hair
+                (56, 120, 120), # Med Hair
+                (32, 80, 80), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (176, 216, 248), # Light Clothes
+                (64, 168, 232), # LM Clothes
+                (72, 96, 248), # MD Clothes
+                (48, 56, 176), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+myrmidon_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -36,8 +67,7 @@ enemy = [(128, 160, 128), # Background
                 (128, 0, 8), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-# Generic blue
-player = [(128, 160, 128), # Background
+myrmidon_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -53,19 +83,3 @@ player = [(128, 160, 128), # Background
                 (40, 40, 200), # MD Clothes
                 (48, 40, 128), # Dark Clothes
                 (40, 40, 40)] # Outline
-
-p1 = joshua
-p2 = enemy
-
-conversion = {p1[i]: p2[i] for i in xrange(len(p1))}
-image_to_convert = 'new_spritesheet.png'
-
-image = Image.open(image_to_convert)
-width, height = image.size
-
-for x in xrange(width):
-        for y in xrange(height):
-                color = image.getpixel((x, y))
-                image.putpixel((x, y), conversion[color])
-
-image.save('fixed' + image_to_convert)

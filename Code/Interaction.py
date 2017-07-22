@@ -904,7 +904,7 @@ class AnimationCombat(Combat):
     def shake(self, num):
         self.current_shake = 1
         if num == 1:
-            self.shake_set = [(3, 3), (3, 3), (3, 3), (0, 0)]
+            self.shake_set = [(3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (0, 0)]
         elif num == 2:
             self.shake_set = [(3, 3), (0, 0), (0, 0), (3, 3), (-3, -3), (3, 3), (-3, -3), (0, 0)]
 
@@ -990,29 +990,41 @@ class SimpleHPBar(object):
         self.max_hp = unit.stats['HP']
         self.last_update = 0
         self.color_tick = 0
+        self.big_number = False
 
     def update(self):
         current_time = Engine.get_time()
         self.desired_hp = self.unit.currenthp
-        if self.currenthp < self.desired_hp and current_time - self.last_update > 32:
-            self.currenthp += 1
-            self.last_update = current_time
-        elif self.currenthp > self.desired_hp and current_time - self.last_update > 32:
-            self.currenthp -= 1
-            self.last_update = current_time
+        if current_time - self.last_update > 32:
+            if self.currenthp < self.desired_hp:
+                self.big_number = True
+                self.currenthp += 1
+                if self.currenthp == self.desired_hp:
+                    self.last_update = current_time + 300 # Add an extra 20 frames
+                else:
+                    self.last_update = current_time
+            elif self.currenthp > self.desired_hp:
+                self.big_number = True
+                self.currenthp -= 1
+                if self.currenthp == self.desired_hp:
+                    self.last_update = current_time + 300
+                else:
+                    self.last_update = current_time
+            elif self.currenthp == self.desired_hp:
+                self.big_number = False
         self.color_tick += 1
         if self.color_tick >= len(self.colors):
             self.color_tick = 0
         return self.currenthp == self.desired_hp
 
     def done(self):
-        return self.currenthp == self.desired_hp
+        return not self.big_number
 
     def draw(self, surf, pos):
         # Blit HP -- Must be blit every frame
         font = FONT['number_small2']
         top = pos[1] - 4
-        if self.desired_hp != self.currenthp:
+        if self.big_number:
             font = FONT['number_big2']
             top = pos[1]
         position = pos[0] - font.size(str(int(self.currenthp)))[0], top

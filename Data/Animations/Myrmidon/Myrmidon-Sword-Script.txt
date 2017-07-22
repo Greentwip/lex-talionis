@@ -5,30 +5,49 @@ pose;Attack
 f;6;Stand
 f;2;Attack2
 f;4;Attack3
-f;6;Attack4
-f;2;Attack5
-f;10;Attack6
+f;2;Attack4
+# Sword in front
+f;6;Attack5
+f;2;Attack6
 f;2;Attack7
-f;4;Attack8
+f;9;Attack8
+# Move
+f;1;Attack9
+f;1;Attack10
+f;1;Attack11
+f;1;Attack12
 # Touch
-f;4;Attack9
-enemy_flash_white;10
-f;4;Attack10
-screen_flash_white;2
-# Hit Frame
-hit_spark
-# Screen shake in hit
-hit;Attack11
-f;18;Attack11
-# Spin
-f;2;Attack12
-f;4;Attack13
+f;2;Attack13
+# Broken Sword
 f;2;Attack14
-# Return
-f;4;Attack15
-f;2;Attack16
-f;4;Attack17
-f;10;Stand
+# Skipping 1 frame used by miss
+f;1;Attack16
+enemy_flash_white;8
+f;1;Attack16
+screen_flash_white;4
+f;4;Attack16
+# Hit Frame
+# Screen shake in hit
+# Skipping 3 frames used by miss
+hit_spark
+hit;Attack20
+f;3;Attack20
+f;2;Attack21
+# Spin
+f;1;Attack22
+f;1;Attack23
+f;1;Attack24
+f;1;Attack25
+f;1;Attack26
+f;1;Attack27
+f;2;Attack28
+# Land
+f;3;Attack29
+f;2;Attack30
+f;2;Attack31
+f;3;Attack32
+f;1;Stand
 
 pose;Miss
 f;100;Stand
+f;1;Stand
