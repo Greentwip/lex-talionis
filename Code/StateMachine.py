@@ -3,7 +3,7 @@ from GlobalConstants import *
 from configuration import *
 import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 import Interaction, LevelUp, StatusObject, ItemMethods
-import WorldMap, InputManager, Banner, Engine, Utility
+import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1908,9 +1908,11 @@ class DialogueState(State):
         CONSTANTS['Unit Speed'] = OPTIONS['Unit Speed']
 
 class CombatState(State):
+    fuzz_background = Image_Modification.flickerImageTranslucent255(IMAGESDICT['BlackBackground'], 56) 
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         self.skip = False
+        self.unit_surf = Engine.create_surface((gameStateObj.map.width * TILEWIDTH, gameStateObj.map.height * TILEHEIGHT), transparent=True)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
@@ -1928,9 +1930,51 @@ class CombatState(State):
             #gameStateObj.stateMachine.back() NOT NECESSARY! DONE BY the COMBAT INSTANCES CLEANUP!
 
     def draw(self, gameStateObj, metaDataObj):
-        mapSurf = State.draw(self, gameStateObj, metaDataObj)
-        if gameStateObj.combatInstance:
+        if gameStateObj.combatInstance and isinstance(gameStateObj.combatInstance, Interaction.AnimationCombat):
+            mapSurf = self.drawCombat(gameStateObj) # Creates mapSurf
+            gameStateObj.set_camera_limits()
+            mapSurf = Engine.subsurface(mapSurf, (gameStateObj.cameraOffset.get_x()*TILEWIDTH, gameStateObj.cameraOffset.get_y()*TILEHEIGHT, WINWIDTH, WINHEIGHT))
             gameStateObj.combatInstance.draw(mapSurf, gameStateObj)
+        else:
+            mapSurf = State.draw(self, gameStateObj, metaDataObj)
+            if gameStateObj.combatInstance:
+                gameStateObj.combatInstance.draw(mapSurf, gameStateObj)
+        return mapSurf
+
+    def drawCombat(self, gameStateObj):
+        """Draw the map to a Surface object."""
+
+        # mapSurf will be the single Surface object that the tiles are drawn
+        # on, so that is is easy to position the entire map on the DISPLAYSURF
+        # Surface object. First, the width and height must be calculated
+        mapSurf = gameStateObj.mapSurf
+        unit_surf = self.unit_surf.copy()
+        # Draw the tile sprites onto this surface
+        gameStateObj.map.draw(mapSurf, gameStateObj)
+        # Reorder units so they are drawn in correct order, from top to bottom, so that units on bottom are blit over top
+        ### Only draw units that will be in the camera's field of view
+        viewbox = gameStateObj.combatInstance.viewbox if gameStateObj.combatInstance.viewbox else (0, 0, WINWIDTH, WINHEIGHT)
+        viewbox_bg = self.fuzz_background.copy()
+        camera_x = int(gameStateObj.cameraOffset.get_x())
+        camera_y = int(gameStateObj.cameraOffset.get_y())
+        pos_x, pos_y = camera_x * TILEWIDTH, camera_y * TILEHEIGHT
+        if viewbox[2] > 0: # Width
+            viewbox_bg.fill((0, 0, 0, 0), viewbox) # Excise fuzz section on viewbox
+            culled_units = [unit for unit in gameStateObj.allunits if unit.position and \
+                            camera_x - 1 <= unit.position[0] <= camera_x + TILEX + 1 and \
+                            camera_y - 1 <= unit.position[1] <= camera_y + TILEY + 1]
+            draw_me = sorted(culled_units, key=lambda unit:unit.position[1])
+            for unit in draw_me:
+                unit.draw(unit_surf, gameStateObj)
+            for unit_hp in draw_me:
+                unit_hp.draw_hp(unit_surf, gameStateObj)
+
+            unit_surf = Engine.subsurface(unit_surf, (viewbox[0] + pos_x, viewbox[1] + pos_y, viewbox[2], viewbox[3]))
+            mapSurf.blit(unit_surf, (viewbox[0] + pos_x, viewbox[1] + pos_y))
+        # Draw weather
+        for particle in gameStateObj.map.weather:
+            particle.draw(mapSurf)
+        mapSurf.blit(viewbox_bg, (pos_x, pos_y))
         return mapSurf
 
 class CameraMoveState(State):
@@ -2686,7 +2730,14 @@ def drawMap(gameStateObj):
     for arrow in gameStateObj.allarrows:
         arrow.draw(mapSurf)
     # Reorder units so they are drawn in correct order, from top to bottom, so that units on bottom are blit over top
-    draw_me = sorted([unit for unit in gameStateObj.allunits if unit.position], key=lambda unit:unit.position[1])
+    ### Only draw units that will be in the camera's field of view
+    unitSurf = gameStateObj.generic_surf.copy()
+    camera_x = int(gameStateObj.cameraOffset.get_x())
+    camera_y = int(gameStateObj.cameraOffset.get_y())
+    culled_units = [unit for unit in gameStateObj.allunits if unit.position and \
+                    camera_x - 1 <= unit.position[0] <= camera_x + TILEX + 1 and \
+                    camera_y - 1 <= unit.position[1] <= camera_y + TILEY + 1]
+    draw_me = sorted(culled_units, key=lambda unit:unit.position[1])
     for unit in draw_me:
         unit.draw(mapSurf, gameStateObj)
     for unit_hp in draw_me:

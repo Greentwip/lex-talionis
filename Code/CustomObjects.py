@@ -1175,18 +1175,18 @@ class CameraOffset(object):
         gameStateObj.set_camera_limits()
         if self.current_x != self.x:
             if self.current_x > self.x:
-                self.current_x -= 0.12 if self.pan_flag else (self.current_x - self.x)/self.speed
+                self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)/self.speed
             elif self.current_x < self.x:
-                self.current_x += 0.12 if self.pan_flag else (self.x - self.current_x)/self.speed
+                self.current_x += 0.125 if self.pan_flag else (self.x - self.current_x)/self.speed
         if self.current_y != self.y:
             if self.current_y > self.y:
-                self.current_y -= 0.12 if self.pan_flag else (self.current_y - self.y)/self.speed
+                self.current_y -= 0.125 if self.pan_flag else (self.current_y - self.y)/self.speed
             elif self.current_y < self.y:
-                self.current_y += 0.12 if self.pan_flag else (self.y - self.current_y)/self.speed
+                self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)/self.speed
         # If they are close enough, make them so.
-        if abs(self.current_x - self.x) < 0.16:
+        if abs(self.current_x - self.x) < 0.125:
             self.current_x = self.x
-        if abs(self.current_y - self.y) < 0.16:
+        if abs(self.current_y - self.y) < 0.125:
             self.current_y = self.y
         # Move to next place on the list
         if self.pan_to and self.current_y == self.y and self.current_x == self.x:
@@ -1195,12 +1195,12 @@ class CameraOffset(object):
         # Make sure current_x and current_y do not go off screen
         if self.current_x < 0:
             self.current_x = 0
-        elif self.current_x > (gameStateObj.map.width - WINWIDTH/TILEWIDTH): # Need this minus to account for size of screen
-            self.current_x = (gameStateObj.map.width - WINWIDTH/TILEWIDTH)
+        elif self.current_x > (gameStateObj.map.width - TILEX): # Need this minus to account for size of screen
+            self.current_x = (gameStateObj.map.width - TILEX)
         if self.current_y < 0:
             self.current_y = 0
-        elif self.current_y > (gameStateObj.map.height - WINHEIGHT/TILEHEIGHT):
-            self.current_y = (gameStateObj.map.height - WINHEIGHT/TILEHEIGHT)
+        elif self.current_y > (gameStateObj.map.height - TILEY):
+            self.current_y = (gameStateObj.map.height - TILEY)
         #logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
 class Objective(object):
