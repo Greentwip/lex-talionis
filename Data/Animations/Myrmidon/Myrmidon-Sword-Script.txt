@@ -1,6 +1,12 @@
 pose;Stand
 f;4;Stand
 
+pose;Dodge
+f;4;Miss1
+f;27;Miss2
+f;6;Miss1
+f;1;Stand
+
 pose;Attack
 f;6;Stand
 f;2;Attack2
@@ -49,5 +55,44 @@ f;3;Attack32
 f;1;Stand
 
 pose;Miss
-f;100;Stand
+f;6;Stand
+f;2;Attack2
+f;4;Attack3
+f;2;Attack4
+# Sword in front
+f;6;Attack5
+f;2;Attack6
+f;2;Attack7
+f;9;Attack8
+# Move
+f;1;Attack9
+f;1;Attack10
+f;1;Attack11
+f;1;Attack12
+# Touch
+f;2;Attack13
+# Skipping 1 frame used by hit
+# Full Sword
+f;2;Attack15
+miss
+f;2;Attack16
+f;3;Attack17
+# Rest
+f;2;Attack18
+f;2;Attack19
+f;3;Attack20
+f;2;Attack21
+# Spin
+f;1;Attack22
+f;1;Attack23
+f;1;Attack24
+f;1;Attack25
+f;1;Attack26
+f;1;Attack27
+f;2;Attack28
+# Land
+f;3;Attack29
+f;2;Attack30
+f;2;Attack31
+f;3;Attack32
 f;1;Stand

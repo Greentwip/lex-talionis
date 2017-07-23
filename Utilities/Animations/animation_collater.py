@@ -8,7 +8,7 @@ COLORKEY = (128, 160, 128)
 
 count = 0
 index_lines = []
-for fp in sorted(glob.glob('fixed*.png')):
+for fp in sorted(glob.glob('*.png')):
     print(fp)
     count += 1
     name = 'Attack' + str(count) 
