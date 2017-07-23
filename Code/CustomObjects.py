@@ -708,6 +708,8 @@ class Animation(object):
         self.lastUpdate = Engine.get_time()
 
         self.set_timing = set_timing
+        if self.set_timing:
+            assert len(self.set_timing) == self.total_num_frames, '%s %s'%(len(self.set_timing), len(self.total_num_frames))
         self.timing_count = -1
 
         self.indiv_width, self.indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y

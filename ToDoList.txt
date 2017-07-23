@@ -9,7 +9,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- COMBAT ---
 - Full Combat Animations
 - Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
-- Add screenshake etc on skill uses?? -- certain skills only - Metamagic, Critical, Sol, Luna
 --- MAP ---
 - Autotiles for chasm in level 6?
 --- AI ---
@@ -18,41 +17,32 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Consider moving Recovery AI into main attack AI?? - maybe not
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells)
 - Red highlight appears over position of last enemy fought while using 'other' team AI
---- DIALOGUE ---
-- Add Awakening-style dialogue backlog...??** On R press
 --- LEVEL UP ---
 - Have Level up! match the way its done in fe7... (sound)
 - Improve Promotion... Add animation. Make sure exp works correctly.
 --- PICTURES --- 
 - Wagon Class Card
---- MUSIC ---
-- Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
 --- GUI ---
 - Add cursor scroll to menus (Choice Menu), so you can just hold down the direction you want to go. ++
---- AWAKENING UI ---
-- Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
-- Transparent dude moves with arrow
-- Pulsing arrow (transparency and color)
-- Allow user to control arrow movement (option)
-- Allow quick attack on enemy, quick spell on ally (option)
 --- EXTRA ---
 - Names for chapters??
 - Unit Menu ++
 - Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1) ++
 - Color blind mode ++ Allow switching of tile and unit colors (blue, red, green, yellow, purple, white, orange)
-- Have UnitSprite colors be generated on the fly instead of having different kinds for each
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Build a GUI that builds levels... Unit Placement, TileInfo placement
 - Add Rescue/Warp/Rewarp handling (would include ability to select starting and ending positions - would allow time for warp animation) (both as staff and as ability)
 - Add correct warp animation
 - Add Fake arrival to Give/Take/Shove++
 - Scenic Maps (UnitLevel rework?) (Don't need to put previous saved units in UnitLevel.txt manually) (maybe have a load unit command? then a place loaded_units command?)++
-- Consider upping effects of weapon triangle over time
-- D: 15 hit, 1 damage
-- C: 20 hit, 1 damage
-- B: 20 hit, 2 damage
-- A: 25 hit, 2 damage
 - If you are on impassable terrain, take damage.
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
 - Add Turnwheel
-- Add clamp to unit sprite draw (only if you could actually see the unit on the map)
+- Add Awakening-style dialogue backlog...??** On R press
+- Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
+--- AWAKENING UI ---
+- Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
+- Transparent dude moves with arrow
+- Pulsing arrow (transparency and color)
+- Allow user to control arrow movement (option)
+- Allow quick attack on enemy, quick spell on ally (option)

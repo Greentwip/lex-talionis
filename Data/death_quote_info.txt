@@ -9,7 +9,7 @@ if;self.optionalunit.team == 'player'
 end
 # Player Death Quotes
 if;self.optionalunit.name == 'Ophie'
-	u;Ophie;FarLeft
+	u;Ophie;FarRight
 	if;gameStateObj.counters['level'] in [1, 3, 5, 7, 9]
 		s;Ophie;No! I must... k-keep going...{w};auto
 	else
@@ -20,7 +20,7 @@ if;self.optionalunit.name == 'Ophie'
 	wait;200
 	lose_game
 elif;self.optionalunit.name == 'Prim'
-	u;Prim;FarLeft
+	u;Prim;FarRight
 	if;gameStateObj.counters['level'] == 0
 		s;Prim;Is this... blood?{w}{br}Hang on... I'm sure I can...{w}{br}I can...{w};auto
 		r;Prim
@@ -30,26 +30,26 @@ elif;self.optionalunit.name == 'Prim'
 	else
 		s;Prim;Is this... blood?{w}{br}Hang on...{w};auto
 		if;not gameStateObj.check_dead('Ophie')
-			u;Ophie;Right
+			u;Ophie;Left
 			s;Ophie;Prim!{w};auto
 		end
 		s;Prim;I'm sure I can fix this...{w}{br}I-I c-can...{w}{br}T-this is too m-much...{w}{br}I-I have to retreat...{w};auto
 		r;Prim;Ophie
 	end
 elif;self.optionalunit.name == 'Joel'
-	u;Joel;FarLeft
+	u;Joel;FarRight
 	s;Joel;Argh...{w}{br}Sorry captain...{w}{br}But I have to fall back...{w};auto
 	r;Joel
 elif;self.optionalunit.name == 'Nia'
-	u;Nia;FarLeft
+	u;Nia;FarRight
 	s;Nia;...{w};auto
 	r;Nia
 elif;self.optionalunit.name == 'Althea'
-	u;Althea;FarLeft
+	u;Althea;FarRight
 	if;gameStateObj.counters['level'] == 2
 		s;Althea;It seems... I couldn't run... forever...{w};auto
 		if;not gameStateObj.check_dead('Drake')
-			u;Drake;Right
+			u;Drake;Left
 			s;Drake;No! Althea!{w}{br}Hang on... p-please...{w};auto
 		end
 		r;Althea;Drake
@@ -63,7 +63,7 @@ elif;self.optionalunit.name == 'Althea'
 			s;Althea;It seems... I couldn't run... forever...{w};auto
 		end
 		if;not gameStateObj.check_dead('Drake')
-			u;Drake;Right
+			u;Drake;Left
 			s;Drake;Althea! Fall back!{w}{br}You never should have been on this battlefield!{w};auto
 			s;Althea;Right... I'm always a burden...{w};auto
 			r;Althea
@@ -72,9 +72,9 @@ elif;self.optionalunit.name == 'Althea'
 		r;Drake;Althea
 	end
 elif;self.optionalunit.name == 'Drake'
-	u;Drake;FarLeft
+	u;Drake;FarRight
 	if;not gameStateObj.check_dead('Althea')
-		u;Althea;Right
+		u;Althea;Left
 		s;Althea;Drake, you're wounded... You should fall back...{w};auto
 		s;Drake;Urgh... No! I can't leave you here...{w};auto
 		s;Althea;I can take care of myself!{w}{br}I order you to retreat!{w};auto
@@ -84,15 +84,15 @@ elif;self.optionalunit.name == 'Drake'
 	end
 	r;Drake;Althea
 elif;self.optionalunit.name == 'Renae'
-	u;Renae;FarLeft
-	s;Renae;What! How?{w}{br}I'm the fastest...{w};auto
+	u;Renae;FarRight
+	s;Renae;But how...?{w}{br}I'm the fastest...{w};auto
 	r;Renae
 elif;self.optionalunit.name == 'Theo'
-	u;Theo;FarLeft
+	u;Theo;FarRight
 	s;Theo;Urgh! There's been a mistake...{w}{br}This wasn't... supposed to happen...{w};auto
 	r;Theo
 elif;self.optionalunit.name == 'Sam'
-	u;Sam;FarLeft
+	u;Sam;FarRight
 	s;Sam;What! No!{w}{br}...{w};auto
 	s;Sam;I'm not done...{w}{br}Urgh...{w};auto
 	r;Sam
@@ -100,15 +100,15 @@ elif;self.optionalunit.name == 'Sam'
 	wait;200
 	lose_game
 elif;self.optionalunit.name == 'Eliza'
-	u;Eliza;FarLeft
+	u;Eliza;FarRight
 	s;Eliza;I-I shouldn't have tried...{w}{br}I-I am too weak...{w};auto
 	r;Eliza
 elif;self.optionalunit.name == 'Coyote'
-	u;Coyote;FarLeft
+	u;Coyote;FarRight
 	s;Coyote;Urgh! No wonder they were always afraid...{w};auto
 	r;Coyote
 elif;self.optionalunit.name == 'Kayla'
-	u;Kayla;FarLeft
+	u;Kayla;FarRight
 	s;Kayla;Hmph, I know when I've been beat.{w};auto
 	r;Kayla
 # Boss Death Quotes

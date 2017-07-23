@@ -31,14 +31,17 @@ class BattleAnimation(object):
         # Opacity
         self.opacity = 255
 
-    def awake(self, owner, partner, right, at_range):
+    def awake(self, owner, partner, right, at_range, init_speed, init_position):
         self.owner = owner
         self.partner = partner
         self.right = right
         self.at_range = at_range
+        self.init_speed = init_speed
+        self.entrance = init_speed
+        self.init_position = init_position
         self.current_pose = 'RangedStand' if self.at_range else 'Stand'
         self.script_index = 0
-        self.processing = True
+        #self.processing = True
         self.reset()
 
     def update(self):
@@ -53,6 +56,8 @@ class BattleAnimation(object):
                 else:
                     self.end_current()
             self.frame_count += 1
+            if self.entrance:
+                self.entrance -= 1
         elif self.state == 'Dying':
             if self.death_opacity:
                 opacity = self.death_opacity.pop()
@@ -63,6 +68,11 @@ class BattleAnimation(object):
                 self.opacity = opacity
             else:
                 self.state = 'Inert'
+        elif self.state == 'Leaving':
+            self.entrance += 1
+            if self.entrance > self.init_speed:
+                self.entrance = self.init_speed
+                self.state = 'Inert' # Done
         elif self.state == 'Wait':
             pass
 
@@ -72,6 +82,11 @@ class BattleAnimation(object):
         self.state = 'Run'
         self.script_index = 0
         self.tag = 'Done'
+
+    def finish(self):
+        self.current_pose = 'RangedStand' if self.at_range else 'Stand'
+        self.state = 'Leaving'
+        self.script_index = 0
 
     def read_script(self):
         script = self.poses[self.current_pose]
@@ -135,6 +150,7 @@ class BattleAnimation(object):
             anim = CustomObjects.Animation(image, position, (5, 4), ignore_map=True, 
                                           set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
                                                       1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
+            self.animations.append(anim)
 
     def start_anim(self, pose):
         #print('Animation: Start')
@@ -176,6 +192,14 @@ class BattleAnimation(object):
             offset = self.current_frame[1]
             if not self.right:
                 offset = WINWIDTH - offset[0] - image.get_width() + shake[0], offset[1] + shake[1]
+
+            # Move the animations in at the beginning and out at the end
+            if self.entrance:
+                progress = (self.init_speed - self.entrance)/float(self.init_speed)
+                image = Engine.transform_scale(image, (int(progress*image.get_width()), int(progress*image.get_height())))
+                diff_x = offset[0] - self.init_position[0]
+                diff_y = offset[1] - self.init_position[1]
+                offset = int(self.init_position[0] + progress*diff_x), int(self.init_position[1] + progress*diff_y)
 
             # Self flash
             if self.flash_color:

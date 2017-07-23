@@ -7,7 +7,7 @@ import MenuFunctions, StatusObject, Banner
 ####################################################################
 ### Displays the level up screen
 class levelUpScreen(object):
-    def __init__(self, gameStateObj, unit, exp, force_level=None):
+    def __init__(self, gameStateObj, unit, exp, force_level=None, in_combat=False):
         self.unit = unit
         # if OPTIONS['debug']:
         #     print('LevelUpScreen: ', exp)
@@ -17,10 +17,19 @@ class levelUpScreen(object):
         self.expSet = self.expOld
 
         self.force_level = force_level
+        self.in_combat = in_combat
 
         # spriting
         self.levelUpScreen = IMAGESDICT['LevelScreen']
-        self.levelUpAnimation = IMAGESDICT['LevelUpAnimation']
+        if self.in_combat:
+            topleft=(0, (WINHEIGHT - 100)/2)
+            timing = [1 for _ in xrange(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in xrange(13)] + [1 for _ in xrange(14)] 
+            self.levelUpAnimation = CustomObjects.Animation(IMAGESDICT['LevelUpBattle'], topleft, (5, 11), 52, ignore_map=True, set_timing=timing)
+        else:
+            x, y = unit.position
+            topleft = (x-gameStateObj.cameraOffset.x-2)*TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*TILEHEIGHT
+            timing = [1 for _ in xrange(24)] + [44]
+            self.levelUpAnimation = CustomObjects.Animation(IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True, set_timing=timing)
         self.statupanimation = IMAGESDICT['StatUpSpark']
         self.statunderline = IMAGESDICT['StatUnderline']
         self.uparrow = IMAGESDICT['LevelUpArrow']
@@ -32,22 +41,19 @@ class levelUpScreen(object):
         self.sparkCounter = -1 # Where we are in the levelScreen spark display section
         self.lastSparkUpdate = Engine.get_time()
         self.first_spark_flag = False
-        self.animationMarker = (0, 0)
         self.unit_scroll_offset = 80
         self.screen_scroll_offset = self.levelUpScreen.get_width() + 32
         self.underline_offset = 0
         self.state = CustomObjects.StateMachine('init')
         self.animations, self.arrow_animations, self.number_animations = [], [], []
         if force_level:
-            self.unit.apply_levelup(force_level, exp==0)
+            self.unit.apply_levelup(force_level, exp == 0)
             self.state.changeState('levelScreen')
             self.state_time = Engine.get_time()
 
         # TIMING
         self.total_time_for_exp = self.expNew * 16 # exp rate is 16
         self.level_up_sound_played = False
-        self.LEVELANIMATIONTIME = 400
-        self.WAITTIME = 730
         self.SPARKTIME = 300
         self.LEVELUPWAIT = 2500
 
@@ -65,7 +71,7 @@ class levelUpScreen(object):
 
         # Initiating State
         if self.state.getState() == 'init':
-            self.exp_bar = Exp_Bar(self.expSet) # Create exp_bar
+            self.exp_bar = Exp_Bar(self.expSet, not self.in_combat) # Create exp_bar
             self.state_time = currentTime
             self.state.changeState('exp_wait')
 
@@ -159,22 +165,10 @@ class levelUpScreen(object):
             if not self.level_up_sound_played:
                 SOUNDDICT['Level Up'].play()
                 self.level_up_sound_played = True
-            time = currentTime - self.state_time
-            if time >= self.LEVELANIMATIONTIME:
-                self.state.changeState('levelUpWait')
-                self.state_time = currentTime
-            else:
-                marker1 = min(4, int(time/(self.LEVELANIMATIONTIME/5)))
-                marker2 = min(4, int((time%(self.LEVELANIMATIONTIME/5))/(self.LEVELANIMATIONTIME/25)))
-                self.animationMarker = (marker1, marker2)
-
-        # Wait while the levelup animations last frame is displayed
-        elif self.state.getState() == 'levelUpWait':
-            if currentTime - self.state_time >= self.WAITTIME:
+            # Update it
+            if self.levelUpAnimation.update(gameStateObj):
                 self.state.changeState('levelScreen')
                 self.state_time = currentTime
-            else:
-                self.animationMarker = (4, 4) # Set to last frame
 
         # Display the level up stat screen
         elif self.state.getState() == 'levelScreen':
@@ -245,13 +239,16 @@ class levelUpScreen(object):
             if self.exp_bar:
                 self.exp_bar.draw(surf)
 
-        elif self.state.getState() in ['levelUp', 'levelUpWait']:
+        elif self.state.getState() == 'levelUp':
+            self.levelUpAnimation.draw(surf, gameStateObj)
+            """
             marker1 = self.animationMarker[0]
             marker2 = self.animationMarker[1]
             LvlSurf = Engine.subsurface(self.levelUpAnimation, (marker2*78, marker1*16, 78, 16))
             x, y = self.unit.position
             topleft = (x-gameStateObj.cameraOffset.x-2)*TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*TILEHEIGHT
             surf.blit(LvlSurf, topleft)
+            """
 
         elif self.state.getState() == 'levelScreen':
             # Highlight underline -- yellow, blue
@@ -425,7 +422,7 @@ class levelUpScreen(object):
             animation.draw(surf, gameStateObj)
 
 class Exp_Bar(object):
-    def __init__(self, expSet):
+    def __init__(self, expSet, center=True):
         self.background = Engine.subsurface(IMAGESDICT['ExpBar'], (0, 0, 136, 24))
         self.begin = Engine.subsurface(IMAGESDICT['ExpBar'], (0, 24, 3, 7))
         self.middle = Engine.subsurface(IMAGESDICT['ExpBar'], (3, 24, 1, 7))
@@ -435,7 +432,10 @@ class Exp_Bar(object):
         self.height = self.background.get_height()
         self.bg_surf = self.create_bg_surf()
 
-        self.pos = WINWIDTH/2 - self.width/2, WINHEIGHT/2 - self.height/2
+        if center:
+            self.pos = WINWIDTH/2 - self.width/2, WINHEIGHT/2 - self.height/2
+        else:
+            self.pos = WINWIDTH/2 - self.width/2, WINHEIGHT - self.height
 
         self.sprite_offset = self.height/2
         self.done = False
