@@ -695,7 +695,7 @@ class AnimationCombat(Combat):
         self.p2.lock_active()
 
         self.viewbox_clamp_state = 0
-        self.total_viewbox_clamp_states = 6
+        self.total_viewbox_clamp_states = 15
         self.viewbox = None
 
         self.name_offset = 0
