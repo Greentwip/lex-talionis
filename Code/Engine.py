@@ -57,6 +57,12 @@ def flip_horiz(surf):
 def flip_vert(surf):
     return pygame.transform.flip(surf, 0, 1)
 
+def transform_scale(surf, scale):
+    return pygame.transform.scale(surf, scale)
+
+def transform_rotate(surf, degrees):
+    return pygame.transform.rotate(surf, degrees)
+
 def image_load(fp, convert=False, convert_alpha=False):
     image = pygame.image.load(fp)
     if convert:
@@ -97,12 +103,6 @@ def create_sound(fp):
 
 def get_key_name(key_code):
     return pygame.key.name(key_code)
-
-def transform_scale(surf, scale):
-    return pygame.transform.scale(surf, scale)
-
-def transform_rotate(surf, degrees):
-    return pygame.transform.rotate(surf, degrees)
 
 def terminate():
     configuration.write_config_file() # Write last saved options to config file

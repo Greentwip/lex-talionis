@@ -441,188 +441,78 @@ class Combat(object):
             d_broke_item = True
         return a_broke_item, d_broke_item
 
-    # Clean up everything
-    def clean_up(self, gameStateObj, metaDataObj, animation=False):
-        # Remove combat state
-        gameStateObj.stateMachine.back()
-        # Reset states if you're not using a solo skill
-        if self.skill_used and self.skill_used.active and self.skill_used.active.mode == 'Solo':
-            self.p1.hasTraded = True # Can still attack, can't move
-            self.p1.hasAttacked = False
-        else:
-            self.p1.hasAttacked = True
-            if not self.p1.has_canto_plus() and not self.event_combat:
-                gameStateObj.stateMachine.changeState('wait') # Event combats do not cause unit to wait
+    def remove_broken_items(self, a_broke_item, d_broke_item):
+        if a_broke_item:
+            self.p1.remove_item(self.item)
+        if d_broke_item:
+            self.p2.remove_item(self.p2.getMainWeapon())
 
-        a_broke_item, d_broke_item = self.find_broken_items()
-
-        # Handle skills that were used
-        if self.skill_used:
-            self.skill_used.active.current_charge = 0
-            # If no other active skills, can remove active skill charged
-            if not any(skill.active and skill.active.required_charge > 0 and skill.active.current_charge >= skill.active.required_charge for skill in self.p1.status_effects):
-                self.p1.tags.discard('ActiveSkillCharged')
-            if self.skill_used.active.mode == 'Attack':
-                self.skill_used.active.reverse_mod()
-
-        # Create all_units list
-        all_units = [unit for unit in self.splash] + [self.p1]
-        if self.p2: all_units += [self.p2]
-
-        # Handle death and sprite changing
-        for unit in all_units:
-            if unit.currenthp <= 0:
-                unit.isDying = True
-            if isinstance(unit, UnitObject.UnitObject):
-                unit.sprite.change_state('normal', gameStateObj)
-
-        # === HANDLE STATE STACK ==
-        # Handle where we go at very end
-        if self.event_combat:
-            gameStateObj.message[-1].current_state = "Processing"
-        else:
-            if self.p1.team == 'player':
-                # Check if this is an ai controlled player
-                if gameStateObj.stateMachine.getPreviousState() == 'ai':
-                    pass
-                elif not self.p1.hasAttacked:
-                    gameStateObj.stateMachine.changeState('menu')
-                elif self.p1.has_canto_plus() and not self.p1.isDying:
-                    gameStateObj.stateMachine.changeState('move')
-                else:
-                    #self.p1.wait(gameStateObj)
-                    gameStateObj.stateMachine.clear()
-                    gameStateObj.stateMachine.changeState('free')
-                    gameStateObj.stateMachine.changeState('wait')
-            #else:
-                #gameStateObj.stateMachine.changeState('ai')
-
-        ### Handle interact_script
-        interact_script = Dialogue.Dialogue_Scene('Data/Level' + str(gameStateObj.counters['level']) + '/interactScript.txt', self.p1, self.p2 if self.p2 else None, event_flag=False)
-        gameStateObj.message.append(interact_script)
-        gameStateObj.stateMachine.changeState('dialogue')
-
-        # Handle miracle
-        for unit in all_units:
-            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
-                if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
-                    unit.handle_miracle(gameStateObj)
-
-        ### Handle item gain
-        for unit in all_units:
-            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
-                for item in unit.items:
-                    if item.droppable:
-                        item.droppable = False
-                        if unit in self.splash or unit is self.p2:
-                            self.p1.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p1, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
-                        elif self.p2:
-                            self.p2.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p2, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
-
-        ### Handle item loss
+    def summon_broken_item_banner(self, a_broke_item, d_broke_item):
         if a_broke_item and self.p1.team == 'player' and not self.p1.isDying:
             gameStateObj.banners.append(Banner.brokenItemBanner(self.p1, self.item))
             gameStateObj.stateMachine.changeState('itemgain')
         if d_broke_item and self.p2.team == 'player' and not self.p2.isDying:
             gameStateObj.banners.append(Banner.brokenItemBanner(self.p2, self.p2.getMainWeapon()))
             gameStateObj.stateMachine.changeState('itemgain')
+    
+    def calc_init_exp_p1(self, my_exp, other_unit, applicable_results):
+        damage_done = sum([result.def_damage_done for result in applicable_results])
+        if not self.item.heal:
+            self.p1.records['damage'] += damage_done
 
-        ### Handle exp and stat gain
-        if not self.event_combat and (self.item.weapon or self.item.spell):
-            attacker_results = [result for result in self.old_results if result.attacker is self.p1]
-            if not self.p1.isDying and attacker_results and not self.skill_used:
-                self.p1.charge()
+        if self.item.exp:
+            normal_exp = self.item.exp
+        elif self.item.weapon or not self.p1.checkIfAlly(other_unit):
+            level_diff = other_unit.level - self.p1.level + CONSTANTS['exp_offset']
+            normal_exp = int(CONSTANTS['exp_magnitude']*math.exp(level_diff*CONSTANTS['exp_curve']))
+        elif self.item.spell:
+            if self.item.heal:
+                # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
+                self.p1.records['healing'] += damage_done
+                normal_exp = max(5, int(CONSTANTS['heal_curve']*(damage_done-self.p1.level)+CONSTANTS['heal_magnitude']))
+            else: # Status (Fly, Mage Shield, etc.)
+                normal_exp = CONSTANTS['status_exp']
+        else:
+            normal_exp = 0
+            
+        if other_unit.isDying:
+            self.p1.records['kills'] += 1
+            my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in other_unit.tags else 0)
+        else:
+            my_exp += normal_exp
+        if 'no_exp' in other_unit.status_bundle:
+            my_exp = 0
+        logger.debug('Attacker gained %s exp', my_exp)
+        return my_exp
 
-            if self.p1.team == 'player' and not self.p1.isDying and not 'Mindless' in self.p1.tags and not self.p1.isSummon():
-                if attacker_results: #and result.outcome for result in self.old_results):
-                    self.p1.increase_wexp(self.item, gameStateObj)
-                    
+    def calc_init_exp_p2(self, defender_results):
+        my_exp = 0
+        applicable_results = [result for result in self.old_results if result.outcome and result.attacker is self.p2 \
+                              and result.defender is self.p1 and not result.def_damage <= 0]
+        if applicable_results:
+            damage_done = sum([result.def_damage_done for result in applicable_results])
+            self.p2.records['damage'] += damage_done
+            level_diff = self.p1.level - self.p2.level + CONSTANTS['exp_offset']
+            normal_exp = max(0, int(CONSTANTS['exp_magnitude']*math.exp(level_diff*CONSTANTS['exp_curve'])))
+            if self.p1.isDying:
+                self.p2.records['kills'] += 1
+                my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in self.p1.tags else 0)
+            else:
+                my_exp += normal_exp 
+            if 'no_exp' in self.p1.status_bundle:
                 my_exp = 0
-                for other_unit in self.splash + [self.p2]:
-                    applicable_results = [result for result in attacker_results if result.outcome and \
-                                          result.defender is other_unit]
-                    # Doesn't count if it did 0 damage
-                    applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
-                    if isinstance(other_unit, UnitObject.UnitObject) and applicable_results:
-                        damage_done = sum([result.def_damage_done for result in applicable_results])
-                        if not self.item.heal:
-                            self.p1.records['damage'] += damage_done
 
-                        if self.item.exp:
-                            normal_exp = self.item.exp
-                        elif self.item.weapon or not self.p1.checkIfAlly(other_unit):
-                            level_diff = other_unit.level - self.p1.level + CONSTANTS['exp_offset']
-                            normal_exp = int(CONSTANTS['exp_magnitude']*math.exp(level_diff*CONSTANTS['exp_curve']))
-                        elif self.item.spell:
-                            if self.item.heal:
-                                # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
-                                self.p1.records['healing'] += damage_done
-                                normal_exp = max(5, int(CONSTANTS['heal_curve']*(damage_done-self.p1.level)+CONSTANTS['heal_magnitude']))
-                            else: # Status (Fly, Mage Shield, etc.)
-                                normal_exp = CONSTANTS['status_exp']
-                        else:
-                            normal_exp = 0
-                            
-                        if other_unit.isDying:
-                            self.p1.records['kills'] += 1
-                            my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in other_unit.tags else 0)
-                        else:
-                            my_exp += normal_exp
-                        if 'no_exp' in other_unit.status_bundle:
-                            my_exp = 0
-                        logger.debug('Attacker gained %s exp', my_exp)
+        # No free exp for affecting myself or being affected by allies
+        if self.p1.checkIfAlly(self.p2):
+            my_exp = Utility.clamp(my_exp, 0, 100)
+        else:
+            my_exp = Utility.clamp(my_exp, 1, 100)
 
-                # No free exp for affecting myself or being affected by allies
-                if not isinstance(self.p2, UnitObject.UnitObject) or self.p1.checkIfAlly(self.p2):
-                    my_exp = int(Utility.clamp(my_exp, 0, 100))
-                else:
-                    my_exp = int(Utility.clamp(my_exp, 1, 100))
-
-                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp)) #Also handles actually adding the exp to the unit
-                gameStateObj.stateMachine.changeState('expgain')
-
-            if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and not self.p2.isDying and not self.p2 is self.p1:
-                defender_results = [result for result in self.old_results if result.attacker is self.p2]
-                if defender_results:
-                    self.p2.charge()
-                if self.p2.team == 'player' and not 'Mindless' in self.p2.tags and not self.p2.isSummon():
-                    if defender_results: # and result.outcome for result in self.old_results):
-                        self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
-                        
-                    my_exp = 0
-                    applicable_results = [result for result in self.old_results if result.outcome and result.attacker is self.p2 \
-                                          and result.defender is self.p1 and not result.def_damage <= 0]
-                    if applicable_results:
-                        damage_done = sum([result.def_damage_done for result in applicable_results])
-                        self.p2.records['damage'] += damage_done
-                        level_diff = self.p1.level - self.p2.level + CONSTANTS['exp_offset']
-                        normal_exp = max(0, int(CONSTANTS['exp_magnitude']*math.exp(level_diff*CONSTANTS['exp_curve'])))
-                        if self.p1.isDying:
-                            self.p2.records['kills'] += 1
-                            my_exp += int(CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in self.p1.tags else 0)
-                        else:
-                            my_exp += normal_exp 
-                        if 'no_exp' in self.p1.status_bundle:
-                            my_exp = 0
-
-                    # No free exp for affecting myself or being affected by allies
-                    if self.p1.checkIfAlly(self.p2):
-                        my_exp = Utility.clamp(my_exp, 0, 100)
-                    else:
-                        my_exp = Utility.clamp(my_exp, 1, 100)
-
-                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp)) #Also handles actually adding the exp to the unit
-                    gameStateObj.stateMachine.changeState('expgain')
-
-        # Handle after battle statuses
+    def handle_statuses(self):
         for status in self.p1.status_effects:
             if status.status_after_battle and not (self.p1.isDying and status.tether):
                 for unit in [self.p2] + self.splash:
-                    if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(unit) and not unit.isDying:
+                    if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(self.p2) and not unit.isDying:
                         applied_status = StatusObject.statusparser(status.status_after_battle)
                         if status.tether:
                             status.children.append(unit.id)
@@ -635,7 +525,7 @@ class Combat(object):
                         StatusObject.HandleStatusAddition(applied_status, unit, gameStateObj)
             if status.lost_on_attack and (self.item.weapon or self.item.detrimental):
                 StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
-        if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
+        if self.p2 and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
             for status in self.p2.status_effects:
                 if status.status_after_battle and not (status.tether and self.p2.isDying):
                     applied_status = StatusObject.statusparser(status.status_after_battle)
@@ -643,23 +533,6 @@ class Combat(object):
                         status.children.append(self.p1.id)
                         applied_status.parent_id = self.p2.id
                     StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
-
-        # Handle death
-        for unit in all_units:
-            if unit.isDying:
-                logger.debug('%s is dying.', unit.name)
-                if isinstance(unit, TileObject.TileObject):
-                    gameStateObj.map.destroy(unit, gameStateObj)
-                else:
-                    gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit, event_flag=False))
-                    gameStateObj.stateMachine.changeState('dialogue')
-
-        ### Actually remove items
-        if a_broke_item:
-            self.p1.remove_item(self.item)
-        if d_broke_item:
-            self.p2.remove_item(self.p2.getMainWeapon())
 
 class AnimationCombat(Combat):
     def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat):
@@ -700,7 +573,7 @@ class AnimationCombat(Combat):
 
         self.name_offset = 0
         self.bar_offset = 0
-        self.max_position_offset = 16
+        self.max_position_offset = 8
 
         # for shake
         self.shake_set = [(0, 0)]
@@ -708,7 +581,7 @@ class AnimationCombat(Combat):
         self.current_shake = 0
 
         # To match MapCombat
-        self.health_bars = {}
+        self.health_bars = {self.left: self.left_hp_bar, self.right: self.right_hp_bar}
         self.splash = []
 
     def init_draw(self, gameStateObj, metaDataObj):
@@ -762,8 +635,10 @@ class AnimationCombat(Combat):
                 self.build_viewbox(gameStateObj)
             else:
                 self.combat_state = 'Entrance'
-                self.left.battle_anim.awake(self, self.right.battle_anim, False, self.at_range) # Stand
-                self.right.battle_anim.awake(self, self.left.battle_anim, True, self.at_range) # Stand
+                left_pos = (self.left.position[0] - gameStateObj.cameraOffset.get_x())*TILEWIDTH, (self.left.position[1] - gameStateObj.cameraOffset.get_y())*TILEHEIGHT
+                right_pos = (self.right.position[0] - gameStateObj.cameraOffset.get_x())*TILEWIDTH, (self.right.position[1] - gameStateObj.cameraOffset.get_y())*TILEHEIGHT
+                self.left.battle_anim.awake(self, self.right.battle_anim, False, self.at_range, self.max_position_offset, left_pos) # Stand
+                self.right.battle_anim.awake(self, self.left.battle_anim, True, self.at_range, self.max_position_offset, right_pos) # Stand
 
         elif self.combat_state == 'Entrance':
             # Translate in names, stats, hp, and platforms
@@ -786,7 +661,10 @@ class AnimationCombat(Combat):
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
             print('Interaction: Getting a new result')
             if self.current_result is None:
-                self.combat_state = 'Out1'
+                self.p1.battle_anim.finish()
+                self.p2.battle_anim.finish()
+                self.handle_exp(gameStateObj)
+                self.combat_state = 'Exp'
             else:
                 self.set_stats(gameStateObj)
                 self.old_results.append(self.current_result)
@@ -805,11 +683,15 @@ class AnimationCombat(Combat):
         elif self.combat_state == 'HP_Change':
             if self.left_hp_bar.done() and self.right_hp_bar.done():
                 self.current_result.attacker.battle_anim.resume()
-                if self.left_hp_bar.currenthp <= 0:
+                if self.left_hp_bar.true_hp <= 0:
                     self.left.start_dying_animation()
-                if self.right_hp_bar.currenthp <= 0:
+                if self.right_hp_bar.true_hp <= 0:
                     self.right.start_dying_animation()
                 self.combat_state = 'Anim'
+
+        elif self.combat_state == 'Exp':
+            if not gameStateObj.levelUpScreen:
+                self.combat_state = 'Out1'
 
         elif self.combat_state == 'Out1': # Nametags move out
             self.name_offset -= 1
@@ -986,6 +868,128 @@ class AnimationCombat(Combat):
             damage = str(stats[1])
         FONT['number_small2'].blit(damage, surf, (right - FONT['number_small2'].size(damage)[0], top + 8))
 
+    def handle_exp(self, gameStateObj):
+        ### Handle exp and stat gain
+        if not self.event_combat and (self.item.weapon or self.item.spell):
+            attacker_results = [result for result in self.old_results if result.attacker is self.p1]
+            if not self.p1.isDying and attacker_results and not self.skill_used:
+                self.p1.charge()
+
+            if self.p1.team == 'player' and not self.p1.isDying and not 'Mindless' in self.p1.tags and not self.p1.isSummon():
+                if attacker_results: #and result.outcome for result in self.old_results):
+                    self.p1.increase_wexp(self.item, gameStateObj)
+                    
+                my_exp = 0
+                applicable_results = [result for result in attacker_results if result.outcome and \
+                                      result.defender is self.p2]
+                # Doesn't count if it did 0 damage
+                applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
+                if applicable_results:
+                    my_exp = self.calc_init_exp_p1(my_exp, self.p2, applicable_results)
+
+                # No free exp for affecting myself or being affected by allies
+                if self.p1.checkIfAlly(self.p2):
+                    my_exp = int(Utility.clamp(my_exp, 0, 100))
+                else:
+                    my_exp = int(Utility.clamp(my_exp, 1, 100))
+
+                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp, in_combat=True)) #Also handles actually adding the exp to the unit
+                gameStateObj.stateMachine.changeState('expgain')
+
+            if self.p2 and not self.p2.isDying:
+                defender_results = [result for result in self.old_results if result.attacker is self.p2]
+                if defender_results:
+                    self.p2.charge()
+                if self.p2.team == 'player' and not 'Mindless' in self.p2.tags and not self.p2.isSummon():
+                    if defender_results: # and result.outcome for result in self.old_results):
+                        self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
+                        
+                    my_exp = self.calc_init_exp_p2(defender_results)
+
+                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=True)) #Also handles actually adding the exp to the unit
+                    gameStateObj.stateMachine.changeState('expgain')
+
+    # Clean up everything
+    def clean_up(self, gameStateObj, metaDataObj, animation=False):
+        gameStateObj.stateMachine.back()
+        self.p1.hasAttacked = True
+        if not self.p1.has_canto_plus() and not self.event_combat:
+            gameStateObj.stateMachine.changeState('wait') # Event combats do not cause unit to wait
+
+        a_broke_item, d_broke_item = self.find_broken_items()
+
+        # Create all_units list
+        all_units = [self.p1, self.p2]
+
+        # Handle death and sprite changing
+        for unit in all_units:
+            if unit.currenthp <= 0:
+                unit.isDying = True
+
+        # === HANDLE STATE STACK ==
+        # Handle where we go at very end
+        if self.event_combat:
+            gameStateObj.message[-1].current_state = "Processing"
+        else:
+            if self.p1.team == 'player':
+                # Check if this is an ai controlled player
+                if gameStateObj.stateMachine.getPreviousState() == 'ai':
+                    pass
+                elif not self.p1.hasAttacked:
+                    gameStateObj.stateMachine.changeState('menu')
+                elif self.p1.has_canto_plus() and not self.p1.isDying:
+                    gameStateObj.stateMachine.changeState('move')
+                else:
+                    gameStateObj.stateMachine.clear()
+                    gameStateObj.stateMachine.changeState('free')
+                    gameStateObj.stateMachine.changeState('wait')
+
+        ### Handle interact_script
+        interact_script = Dialogue.Dialogue_Scene('Data/Level' + str(gameStateObj.counters['level']) + '/interactScript.txt', self.p1, self.p2, event_flag=False)
+        gameStateObj.message.append(interact_script)
+        gameStateObj.stateMachine.changeState('dialogue')
+
+        # Handle miracle
+        for unit in all_units:
+            if unit.isDying:
+                if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
+                    unit.handle_miracle(gameStateObj)
+
+        ### Handle item gain
+        for unit in all_units:
+            if unit.isDying:
+                for item in unit.items:
+                    if item.droppable:
+                        item.droppable = False
+                        if unit is self.p2:
+                            self.p1.add_item(item)
+                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p1, item))
+                            gameStateObj.stateMachine.changeState('itemgain')
+                        else:
+                            self.p2.add_item(item)
+                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p2, item))
+                            gameStateObj.stateMachine.changeState('itemgain')
+
+        ### Handle item loss
+        self.summon_broken_item_banner(a_broke_item, d_broke_item)
+
+        # Handle after battle statuses
+        self.handle_statuses()
+
+        # Handle death
+        for unit in all_units:
+            if unit.isDying:
+                logger.debug('%s is dying.', unit.name)
+                if isinstance(unit, TileObject.TileObject):
+                    gameStateObj.map.destroy(unit, gameStateObj)
+                else:
+                    gameStateObj.stateMachine.changeState('dying')
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit, event_flag=False))
+                    gameStateObj.stateMachine.changeState('dialogue')
+
+        ### Actually remove items
+        self.remove_broken_items(a_broke_item, d_broke_item)
+
 class SimpleHPBar(object):
     full_hp_blip = IMAGESDICT['FullHPBlip']
     empty_hp_blip = IMAGESDICT['EmptyHPBlip']
@@ -994,7 +998,7 @@ class SimpleHPBar(object):
     def __init__(self, unit):
         self.unit = unit
         self.desired_hp = unit.currenthp
-        self.currenthp = unit.currenthp
+        self.true_hp = unit.currenthp
         self.max_hp = unit.stats['HP']
         self.last_update = 0
         self.color_tick = 0
@@ -1004,26 +1008,26 @@ class SimpleHPBar(object):
         current_time = Engine.get_time()
         self.desired_hp = self.unit.currenthp
         if current_time - self.last_update > 32:
-            if self.currenthp < self.desired_hp:
+            if self.true_hp < self.desired_hp:
                 self.big_number = True
-                self.currenthp += 1
-                if self.currenthp == self.desired_hp:
+                self.true_hp += 1
+                if self.true_hp == self.desired_hp:
                     self.last_update = current_time + 300 # Add an extra 20 frames
                 else:
                     self.last_update = current_time
-            elif self.currenthp > self.desired_hp:
+            elif self.true_hp > self.desired_hp:
                 self.big_number = True
-                self.currenthp -= 1
-                if self.currenthp == self.desired_hp:
+                self.true_hp -= 1
+                if self.true_hp == self.desired_hp:
                     self.last_update = current_time + 300
                 else:
                     self.last_update = current_time
-            elif self.currenthp == self.desired_hp:
+            elif self.true_hp == self.desired_hp:
                 self.big_number = False
         self.color_tick += 1
         if self.color_tick >= len(self.colors):
             self.color_tick = 0
-        return self.currenthp == self.desired_hp
+        return self.true_hp == self.desired_hp
 
     def done(self):
         return not self.big_number
@@ -1035,13 +1039,13 @@ class SimpleHPBar(object):
         if self.big_number:
             font = FONT['number_big2']
             top = pos[1]
-        position = pos[0] - font.size(str(int(self.currenthp)))[0], top
-        font.blit(str(int(self.currenthp)), surf, position)
+        position = pos[0] - font.size(str(int(self.true_hp)))[0], top
+        font.blit(str(int(self.true_hp)), surf, position)
         full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick]*2, 0, 2, self.full_hp_blip.get_height()))
-        for index in xrange(self.currenthp):
+        for index in xrange(self.true_hp):
             surf.blit(full_hp_blip, (pos[0] + index*2 + 5, pos[1] + 1))
-        for index in xrange(self.max_hp - self.currenthp):
-            surf.blit(self.empty_hp_blip, (pos[0] + (index+self.currenthp)*2 + 5, pos[1] + 1))
+        for index in xrange(self.max_hp - self.true_hp):
+            surf.blit(self.empty_hp_blip, (pos[0] + (index+self.true_hp)*2 + 5, pos[1] + 1))
         surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp)*2 + 5, pos[1] + 1)) # End HP Blip
 
 class Map_Combat(Combat):
@@ -1342,6 +1346,149 @@ class Map_Combat(Combat):
         for hp_bar in self.health_bars.values():
             hp_bar.draw(surf, gameStateObj)
 
+    # Clean up everything
+    def clean_up(self, gameStateObj, metaDataObj, animation=False):
+        # Remove combat state
+        gameStateObj.stateMachine.back()
+        # Reset states if you're not using a solo skill
+        if self.skill_used and self.skill_used.active and self.skill_used.active.mode == 'Solo':
+            self.p1.hasTraded = True # Can still attack, can't move
+            self.p1.hasAttacked = False
+        else:
+            self.p1.hasAttacked = True
+            if not self.p1.has_canto_plus() and not self.event_combat:
+                gameStateObj.stateMachine.changeState('wait') # Event combats do not cause unit to wait
+
+        a_broke_item, d_broke_item = self.find_broken_items()
+
+        # Handle skills that were used
+        if self.skill_used:
+            self.skill_used.active.current_charge = 0
+            # If no other active skills, can remove active skill charged
+            if not any(skill.active and skill.active.required_charge > 0 and skill.active.current_charge >= skill.active.required_charge for skill in self.p1.status_effects):
+                self.p1.tags.discard('ActiveSkillCharged')
+            if self.skill_used.active.mode == 'Attack':
+                self.skill_used.active.reverse_mod()
+
+        # Create all_units list
+        all_units = [unit for unit in self.splash] + [self.p1]
+        if self.p2: all_units += [self.p2]
+
+        # Handle death and sprite changing
+        for unit in all_units:
+            if unit.currenthp <= 0:
+                unit.isDying = True
+            if isinstance(unit, UnitObject.UnitObject):
+                unit.sprite.change_state('normal', gameStateObj)
+
+        # === HANDLE STATE STACK ==
+        # Handle where we go at very end
+        if self.event_combat:
+            gameStateObj.message[-1].current_state = "Processing"
+        else:
+            if self.p1.team == 'player':
+                # Check if this is an ai controlled player
+                if gameStateObj.stateMachine.getPreviousState() == 'ai':
+                    pass
+                elif not self.p1.hasAttacked:
+                    gameStateObj.stateMachine.changeState('menu')
+                elif self.p1.has_canto_plus() and not self.p1.isDying:
+                    gameStateObj.stateMachine.changeState('move')
+                else:
+                    #self.p1.wait(gameStateObj)
+                    gameStateObj.stateMachine.clear()
+                    gameStateObj.stateMachine.changeState('free')
+                    gameStateObj.stateMachine.changeState('wait')
+            #else:
+                #gameStateObj.stateMachine.changeState('ai')
+
+        ### Handle interact_script
+        interact_script = Dialogue.Dialogue_Scene('Data/Level' + str(gameStateObj.counters['level']) + '/interactScript.txt', self.p1, self.p2 if self.p2 else None, event_flag=False)
+        gameStateObj.message.append(interact_script)
+        gameStateObj.stateMachine.changeState('dialogue')
+
+        # Handle miracle
+        for unit in all_units:
+            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
+                if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
+                    unit.handle_miracle(gameStateObj)
+
+        ### Handle item gain
+        for unit in all_units:
+            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
+                for item in unit.items:
+                    if item.droppable:
+                        item.droppable = False
+                        if unit in self.splash or unit is self.p2:
+                            self.p1.add_item(item)
+                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p1, item))
+                            gameStateObj.stateMachine.changeState('itemgain')
+                        elif self.p2:
+                            self.p2.add_item(item)
+                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p2, item))
+                            gameStateObj.stateMachine.changeState('itemgain')
+
+        ### Handle item loss
+        self.summon_broken_item_banner(a_broke_item, d_broke_item)
+
+        ### Handle exp and stat gain
+        if not self.event_combat and (self.item.weapon or self.item.spell):
+            attacker_results = [result for result in self.old_results if result.attacker is self.p1]
+            if not self.p1.isDying and attacker_results and not self.skill_used:
+                self.p1.charge()
+
+            if self.p1.team == 'player' and not self.p1.isDying and not 'Mindless' in self.p1.tags and not self.p1.isSummon():
+                if attacker_results: #and result.outcome for result in self.old_results):
+                    self.p1.increase_wexp(self.item, gameStateObj)
+                    
+                my_exp = 0
+                for other_unit in self.splash + [self.p2]:
+                    applicable_results = [result for result in attacker_results if result.outcome and \
+                                          result.defender is other_unit]
+                    # Doesn't count if it did 0 damage
+                    applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
+                    if isinstance(other_unit, UnitObject.UnitObject) and applicable_results:
+                        my_exp = calc_init_exp_p1(my_exp, other_unit, applicable_results)
+
+                # No free exp for affecting myself or being affected by allies
+                if not isinstance(self.p2, UnitObject.UnitObject) or self.p1.checkIfAlly(self.p2):
+                    my_exp = int(Utility.clamp(my_exp, 0, 100))
+                else:
+                    my_exp = int(Utility.clamp(my_exp, 1, 100))
+
+                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp)) #Also handles actually adding the exp to the unit
+                gameStateObj.stateMachine.changeState('expgain')
+
+            if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and not self.p2.isDying and not self.p2 is self.p1:
+                defender_results = [result for result in self.old_results if result.attacker is self.p2]
+                if defender_results:
+                    self.p2.charge()
+                if self.p2.team == 'player' and not 'Mindless' in self.p2.tags and not self.p2.isSummon():
+                    if defender_results: # and result.outcome for result in self.old_results):
+                        self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
+                        
+                    my_exp = self.calc_init_exp_p2(defender_results)
+
+                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp)) #Also handles actually adding the exp to the unit
+                    gameStateObj.stateMachine.changeState('expgain')
+
+        # Handle after battle statuses
+        self.handle_statuses()
+
+        # Handle death
+        for unit in all_units:
+            if unit.isDying:
+                logger.debug('%s is dying.', unit.name)
+                if isinstance(unit, TileObject.TileObject):
+                    gameStateObj.map.destroy(unit, gameStateObj)
+                else:
+                    gameStateObj.stateMachine.changeState('dying')
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit, event_flag=False))
+                    gameStateObj.stateMachine.changeState('dialogue')
+
+        ### Actually remove items
+        self.remove_broken_items(a_broke_item, d_broke_item)
+
 class HealthBar(object):
     def __init__(self, draw_method, unit, item, other=None, stats=None, time_for_change=400, swap_stats=None):
         self.last_update = 0
@@ -1517,9 +1664,9 @@ class HealthBar(object):
 
     def shake(self, num):
         self.current_shake = 1
-        if num == 1:
+        if num == 1: # Normal hit
             self.shake_set = [(-3, -3), (0, 0), (3, 3), (0, 0)]
-        elif num == 2:
+        elif num == 2: # Kill
             self.shake_set = [(3, 3), (0, 0), (0, 0), (3, 3), (-3, -3), (3, 3), (-3, -3), (0, 0)]
         elif num == 3:
             self.shake_set = [(3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (0, 0)]
