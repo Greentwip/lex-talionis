@@ -28,6 +28,8 @@ class BattleAnimation(object):
         self.foreground_frames = 0
         self.flash_color = None
         self.flash_frames = 0
+        # Opacity
+        self.opacity = 255
 
     def awake(self, owner, partner, right, at_range):
         self.owner = owner
@@ -51,6 +53,16 @@ class BattleAnimation(object):
                 else:
                     self.end_current()
             self.frame_count += 1
+        elif self.state == 'Dying':
+            if self.death_opacity:
+                opacity = self.death_opacity.pop()
+                if opacity == -1:
+                    opacity = 255
+                    self.flash_color = (248, 248, 248)
+                    self.flash_frames = 100 # Just a lot
+                self.opacity = opacity
+            else:
+                self.state = 'Inert'
         elif self.state == 'Wait':
             pass
 
@@ -81,7 +93,10 @@ class BattleAnimation(object):
             self.state = 'Wait'
             self.processing = False
             self.tag = 'HP'
-            self.owner.shake(1)
+            if self.owner.current_result.def_damage > 0:
+                self.owner.shake(1)
+            else: # No Damage
+                self.owner.shake(2)
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1])
             self.partner.flash(num_frames, (248, 248, 248))
@@ -90,14 +105,36 @@ class BattleAnimation(object):
             self.foreground = IMAGESDICT['BlackBackground'].copy()
             self.foreground.fill((248, 248, 248))
         elif line[0] == 'hit_spark':
-            if self.right:
-                position = (-110, -30)
-            else:
-                position = (-40, -30) # Enemy's position
-            image = IMAGESDICT['HitSparkTrans']
-            anim = CustomObjects.Animation(image, position, (3, 5), 14, ignore_map=True, 
-                                          set_timing=(2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1))
+            if self.owner.current_result.def_damage > 0:
+                if self.right:
+                    position = (-110, -30)
+                else:
+                    position = (-40, -30) # Enemy's position
+                image = IMAGESDICT['HitSparkTrans']
+                anim = CustomObjects.Animation(image, position, (3, 5), 14, ignore_map=True, 
+                                              set_timing=(2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1))
+            else: # No Damage
+                if self.right:
+                    position = (52, 20)
+                else:
+                    position = (110, 20) # Enemy's position
+                team = self.owner.right.team if self.right else self.owner.left.team
+                image = IMAGESDICT['NoDamageBlue' if team == 'player' else 'NoDamageRed']
+                anim = CustomObjects.Animation(image, position, (5, 5), ignore_map=True, 
+                                              set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
+                                                          1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                          1, 1, 1, 1, 48))
             self.animations.append(anim)
+        elif line[0] == 'miss':
+            if self.right:
+                position = (72, 20)
+            else:
+                position = (130, 20) # Enemy's position
+            team = self.owner.right.team if self.right else self.owner.left.team
+            image = IMAGESDICT['MissBlue' if team == 'player' else 'MissRed']
+            anim = CustomObjects.Animation(image, position, (5, 4), ignore_map=True, 
+                                          set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
+                                                      1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
 
     def start_anim(self, pose):
         #print('Animation: Start')
@@ -119,6 +156,18 @@ class BattleAnimation(object):
         self.flash_frames = num
         self.flash_color = color
 
+    def start_dying_animation(self):
+        self.state == 'Dying'
+        self.death_opacity = [0, 20, 20, 20, 20, 44, 44, 44, 44, 64,
+                              64, 64, 64, 84, 84, 84, 108, 108, 108, 108, 
+                              128, 128, 128, 128, 148, 148, 148, 148, 172, 172, 
+                              172, 192, 192, 192, 192, 212, 212, 212, 212, 236,
+                              236, 236, 236, 255, 255, 255, 0, 0, 0, 0,
+                              0, 0, -1, 0, 0, 0, 0, 0, 0, 255, 
+                              0, 0, 0, 0, 0, 0, 255, 0, 0, 0,
+                              0, 0, 0, 255, 0, 0, 0, 0, 0, 0,
+                              255, 0, 0, 0, 0, 0, 0]
+
     def draw(self, surf, shake=(0, 0)):
         if self.state != 'Inert':
             image = self.current_frame[0].copy()
@@ -136,6 +185,9 @@ class BattleAnimation(object):
                 if self.flash_frames <= 0:
                     self.flash_color = None
                     self.flash_frames = 0
+
+            if self.opacity != 255:
+                image = Image_Modification.flickerImageTranslucent255(image.convert_alpha(), self.opacity)
 
             surf.blit(image, offset)
 

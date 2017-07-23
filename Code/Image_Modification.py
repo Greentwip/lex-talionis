@@ -55,6 +55,13 @@ def flickerImageTranslucent(image, transparency):
 
     return image
 
+def flickerImageTranslucent255(image, alpha):
+    alpha = Utility.clamp(alpha, 0, 255)
+    image = image.copy()
+    image.fill((255, 255, 255, alpha), None, pygame.BLEND_RGBA_MULT)
+
+    return image
+
 def flickerImageTranslucentColorKey(image, transparency):
     # 100 is most transparent. 0 is opaque.
     alpha = 255 - int(2.55*transparency)

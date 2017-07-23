@@ -411,6 +411,15 @@ class Combat(object):
             elif result.def_damage < 0:
                 result.def_damage_done = min(-result.def_damage, result.defender.stats['HP'] - result.defender.currenthp)
 
+    def find_broken_items(self):
+        # Handle items that were used
+        a_broke_item, d_broke_item = False, False
+        if self.item.uses and self.item.uses.uses <= 0:
+            a_broke_item = True
+        if self.p2 and self.p2.getMainWeapon() and self.p2.getMainWeapon().uses and self.p2.getMainWeapon().uses.uses <= 0:
+            d_broke_item = True
+        return a_broke_item, d_broke_item
+
     # Clean up everything
     def clean_up(self, gameStateObj, metaDataObj, animation=False):
         # Remove combat state
@@ -424,12 +433,7 @@ class Combat(object):
             if not self.p1.has_canto_plus() and not self.event_combat:
                 gameStateObj.stateMachine.changeState('wait') # Event combats do not cause unit to wait
 
-        # Handle items that were used
-        a_broke_item, d_broke_item = False, False
-        if self.item.uses and self.item.uses.uses <= 0:
-            a_broke_item = True
-        if self.p2 and self.p2.getMainWeapon() and self.p2.getMainWeapon().uses and self.p2.getMainWeapon().uses.uses <= 0:
-            d_broke_item = True
+        a_broke_item, d_broke_item = self.find_broken_items()
 
         # Handle skills that were used
         if self.skill_used:
@@ -780,6 +784,10 @@ class AnimationCombat(Combat):
         elif self.combat_state == 'HP_Change':
             if self.left_hp_bar.done() and self.right_hp_bar.done():
                 self.current_result.attacker.battle_anim.resume()
+                if self.left_hp_bar.currenthp <= 0:
+                    self.left.start_dying_animation()
+                if self.right_hp_bar.currenthp <= 0:
+                    self.right.start_dying_animation()
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'Out1': # Nametags move out
@@ -882,10 +890,10 @@ class AnimationCombat(Combat):
 
     def shake(self, num):
         self.current_shake = 1
-        if num == 1:
+        if num == 1: # Normal Hit
             self.shake_set = [(3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (0, 0)]
-        elif num == 2:
-            self.shake_set = [(3, 3), (0, 0), (0, 0), (3, 3), (-3, -3), (3, 3), (-3, -3), (0, 0)]
+        elif num == 2: # No Damage
+            self.shake_set = [(1, 1), (1, 1), (1, 1), (-1, -1), (-1, -1), (-1, -1), (0, 0)]
 
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset/float(self.max_position_offset)
