@@ -3,14 +3,14 @@ import glob
 from palette_index import *
 
 ### === INPUTS ===
-p1 = joshua
-p2 = myrmidon_blue
-images_to_convert = 'new_spritesheet.png'
+p1 = plains
+p2 = snow
+images_to_convert = 'Plains-Ranged.png'
 
 def palette_convert(p1, p2, image_to_convert):
 	conversion = {p1[i]: p2[i] for i in xrange(len(p1))}
 
-	image = Image.open(image_to_convert)
+	image = Image.open(image_to_convert).convert('RGB')
 	width, height = image.size
 
 	for x in xrange(width):

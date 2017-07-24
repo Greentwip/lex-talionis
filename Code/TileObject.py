@@ -67,7 +67,7 @@ class MapObject(object):
                     colorKey = terrain.find('color').text.split(',')
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
-                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, (x,y), \
+                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x,y), \
                                               terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text])
                         self.tiles[(x,y)] = new_tile
                         self.opacity_map[x * self.height + y] = new_tile.opaque
@@ -235,8 +235,8 @@ class MapObject(object):
     def get_tile_from_id(self, tile_id):
         for terrain in TERRAINDATA.getroot().findall('terrain'):
             if tile_id == terrain.find('id').text or tile_id == int(terrain.find('id').text):
-                tile = TileObject(terrain.get('name'), terrain.find('minimap').text, None, \
-                                  terrain.find('mtype').text, \
+                tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, \
+                                  None, terrain.find('mtype').text, \
                                   [terrain.find('DEF').text, terrain.find('AVO').text])
                 return tile
         else:
@@ -605,9 +605,10 @@ class LayerSprite(object):
 
 # === GENERIC TILE OBJECT =======================================
 class TileObject(object):
-    def __init__(self, name, minimap, position, mcost, (DEF, AVO)):
+    def __init__(self, name, minimap, platform, position, mcost, (DEF, AVO)):
         self.name = name
         self.minimap = minimap
+        self.platform = platform
         self.mcost = mcost # terrain movement type
 
         # Stats
