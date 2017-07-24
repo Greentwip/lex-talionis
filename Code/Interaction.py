@@ -514,6 +514,7 @@ class Combat(object):
                     StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
 
 class AnimationCombat(Combat):
+    idle_poses = {'Stand', 'RangedStand'}
     def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat):
         self.p1 = attacker
         self.p2 = defender
@@ -630,7 +631,7 @@ class AnimationCombat(Combat):
                 self.combat_state = 'Pre_Init'
 
         elif self.combat_state == 'Pre_Init':
-            if current_time - self.last_update > 330: # 1/3 of a second
+            if current_time - self.last_update > 600: # 2/3 of a second
                 self.combat_state = 'Anim'
                 self.last_update = current_time
                 # Set up animation
@@ -640,10 +641,8 @@ class AnimationCombat(Combat):
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
             print('Interaction: Getting a new result')
             if self.current_result is None:
-                self.p1.battle_anim.finish()
-                self.p2.battle_anim.finish()
-                self.handle_exp(gameStateObj)
-                self.combat_state = 'Exp'
+                self.last_update = current_time
+                self.combat_state = 'ExpWait'
             else:
                 self.set_stats(gameStateObj)
                 self.old_results.append(self.current_result)
@@ -652,10 +651,10 @@ class AnimationCombat(Combat):
                 self.current_animation = self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'Anim':
-            message = self.current_result.attacker.battle_anim.tag
-            if message == 'Done':
+            a_message = self.current_result.attacker.battle_anim.tag
+            if self.left.battle_anim.current_pose in self.idle_poses and self.right.battle_anim.current_pose in self.idle_poses:
                 self.combat_state = 'Init'
-            elif message == 'HP':
+            elif a_message == 'HP':
                 self.apply_result(self.current_result, gameStateObj)
                 self.combat_state = 'HP_Change'
 
@@ -668,8 +667,20 @@ class AnimationCombat(Combat):
                     self.right.start_dying_animation()
                 self.combat_state = 'Anim'
 
+        elif self.combat_state == 'ExpWait':
+            if current_time - self.last_update > 450:
+                self.handle_exp(gameStateObj)
+                self.combat_state = 'Exp'
+
         elif self.combat_state == 'Exp':
             if not gameStateObj.levelUpScreen:
+                self.last_update = current_time
+                self.combat_state = 'OutWait'
+
+        elif self.combat_state == 'OutWait':
+            if current_time - self.last_update > 820:
+                self.p1.battle_anim.finish()
+                self.p2.battle_anim.finish()
                 self.combat_state = 'Out1'
 
         elif self.combat_state == 'Out1': # Nametags move out
@@ -1416,7 +1427,7 @@ class Map_Combat(Combat):
                     # Doesn't count if it did 0 damage
                     applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
                     if isinstance(other_unit, UnitObject.UnitObject) and applicable_results:
-                        my_exp = calc_init_exp_p1(my_exp, other_unit, applicable_results)
+                        my_exp = self.calc_init_exp_p1(my_exp, other_unit, applicable_results)
 
                 # No free exp for affecting myself or being affected by allies
                 if not isinstance(self.p2, UnitObject.UnitObject) or self.p1.checkIfAlly(self.p2):

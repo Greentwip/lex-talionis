@@ -1908,7 +1908,8 @@ class DialogueState(State):
         CONSTANTS['Unit Speed'] = OPTIONS['Unit Speed']
 
 class CombatState(State):
-    fuzz_background = Image_Modification.flickerImageTranslucent255(IMAGESDICT['BlackBackground'], 56) 
+    fuzz_background = Image_Modification.flickerImageTranslucent255(IMAGESDICT['BlackBackground'], 56)
+    dark_fuzz_background = Image_Modification.flickerImageTranslucent255(IMAGESDICT['BlackBackground'], 112) 
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         self.skip = False
@@ -1954,7 +1955,10 @@ class CombatState(State):
         # Reorder units so they are drawn in correct order, from top to bottom, so that units on bottom are blit over top
         ### Only draw units that will be in the camera's field of view
         viewbox = gameStateObj.combatInstance.viewbox if gameStateObj.combatInstance.viewbox else (0, 0, WINWIDTH, WINHEIGHT)
-        viewbox_bg = self.fuzz_background.copy()
+        if gameStateObj.levelUpScreen and gameStateObj.levelUpScreen[-1].state.getState() == 'levelUp':
+            viewbox_bg = self.dark_fuzz_background.copy()
+        else:
+            viewbox_bg = self.fuzz_background.copy()
         camera_x = int(gameStateObj.cameraOffset.get_x())
         camera_y = int(gameStateObj.cameraOffset.get_y())
         pos_x, pos_y = camera_x * TILEWIDTH, camera_y * TILEHEIGHT
@@ -2074,8 +2078,11 @@ class StatusState(State):
 class ExpGainState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
+        self.in_combat = False
         # Reset level time
         if gameStateObj.levelUpScreen:
+            if gameStateObj.levelUpScreen[-1].in_combat:
+                self.in_combat = True
             gameStateObj.levelUpScreen[-1].state_time = Engine.get_time()
 
     def update(self, gameStateObj, metaDataObj):
@@ -2089,7 +2096,10 @@ class ExpGainState(State):
             gameStateObj.stateMachine.back()
 
     def draw(self, gameStateObj, metaDataObj):
-        mapSurf = State.draw(self, gameStateObj, metaDataObj)
+        if self.in_combat:
+            mapSurf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        else:
+            mapSurf = State.draw(self, gameStateObj, metaDataObj)
         if gameStateObj.levelUpScreen:
             gameStateObj.levelUpScreen[-1].draw(mapSurf, gameStateObj)
         return mapSurf
