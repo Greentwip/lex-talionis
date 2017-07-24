@@ -14,6 +14,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Promotion
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Add options to OPTIONS MENU
+--- Platforms
 --- MAP ---
 - Autotiles for chasm in level 6?
 --- AI ---
