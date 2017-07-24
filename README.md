@@ -13,8 +13,6 @@ release v0.6.3 - 64-bit Windows only
 
 *Dropbox:* https://www.dropbox.com/s/s707383vh8vl5cx/the_lion_throne.zip?dl=0
 
-*Mediafire:* http://www.mediafire.com/file/dzdpypzzuxb7j0a/the_lion_throne.zip
-
 #### To play:
 Un-zip the downloaded files, and then double-click *lion_throne.exe*
 
