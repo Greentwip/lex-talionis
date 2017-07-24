@@ -13,13 +13,12 @@ import CustomObjects
 #* RangedStand
 
 class BattleAnimation(object):
-    loop_set = {'Stand', 'RangedStand'}
+    idle_poses = {'Stand', 'RangedStand'}
     def __init__(self, anim, script):
         self.frame_directory = anim
         self.poses = script
         self.current_pose = None
         self.state = 'Inert' # Internal state
-        self.tag = None # For others to read
         self.num_frames = 0 # How long this frame of animation should exist for (in frames)
         self.animations = []
 
@@ -51,7 +50,7 @@ class BattleAnimation(object):
                 self.read_script()
             if self.script_index >= len(self.poses[self.current_pose]):
                 # check whether we should loop or truly end
-                if self.current_pose in self.loop_set:
+                if self.current_pose in self.idle_poses:
                     self.script_index = 0
                 else:
                     self.end_current()
@@ -87,6 +86,9 @@ class BattleAnimation(object):
         self.state = 'Leaving'
         self.script_index = 0
 
+    def waiting_for_hp(self):
+        return self.state == 'Wait'
+
     def read_script(self):
         script = self.poses[self.current_pose]
         while(self.script_index < len(script) and self.processing):
@@ -106,7 +108,6 @@ class BattleAnimation(object):
             self.current_frame = self.frame_directory[line[1]]
             self.state = 'Wait'
             self.processing = False
-            self.tag = 'HP'
             if self.owner.current_result.def_damage > 0:
                 self.owner.shake(1)
             else: # No Damage
@@ -164,9 +165,11 @@ class BattleAnimation(object):
 
     def reset(self):
         self.state = 'Run'
-        self.tag = None
         self.frame_count = 0
         self.num_frames = 0
+
+    def done(self):
+        return self.state == 'Inert' or (self.state == 'Run' and self.current_pose in self.idle_poses)
 
     def dodge(self):
         if self.at_range:
@@ -179,7 +182,7 @@ class BattleAnimation(object):
         self.flash_color = color
 
     def start_dying_animation(self):
-        self.state == 'Dying'
+        self.state = 'Dying'
         self.death_opacity = [0, 20, 20, 20, 20, 44, 44, 44, 44, 64,
                               64, 64, 64, 84, 84, 84, 108, 108, 108, 108, 
                               128, 128, 128, 128, 148, 148, 148, 148, 172, 172, 
