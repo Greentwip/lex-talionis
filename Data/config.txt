@@ -8,7 +8,7 @@ Cursor Speed;80
 Show Terrain;1
 Show Objective;1
 Autocursor;1
-Music Volume;0.2
+Music Volume;0.0
 Sound Volume;0.1
 Autoend Turn;1
 Confirm End;1

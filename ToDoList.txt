@@ -8,7 +8,12 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add L button support to different states -- which ones?
 --- COMBAT ---
 - Full Combat Animations
-- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
+--- Custom Spell Animations
+--- Sounds
+--- All Necessary Animations
+--- Promotion
+--- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
+--- Add options to OPTIONS MENU
 --- MAP ---
 - Autotiles for chasm in level 6?
 --- AI ---

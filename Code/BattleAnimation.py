@@ -81,7 +81,6 @@ class BattleAnimation(object):
         self.current_pose = 'RangedStand' if self.at_range else 'Stand'
         self.state = 'Run'
         self.script_index = 0
-        self.tag = 'Done'
 
     def finish(self):
         self.current_pose = 'RangedStand' if self.at_range else 'Stand'
@@ -151,6 +150,7 @@ class BattleAnimation(object):
                                           set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, \
                                                       1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
             self.animations.append(anim)
+            self.partner.dodge()
 
     def start_anim(self, pose):
         #print('Animation: Start')
@@ -167,6 +167,12 @@ class BattleAnimation(object):
         self.tag = None
         self.frame_count = 0
         self.num_frames = 0
+
+    def dodge(self):
+        if self.at_range:
+            self.start_anim('RangedDodge')
+        else:
+            self.start_anim('Dodge')
 
     def flash(self, num, color):
         self.flash_frames = num
