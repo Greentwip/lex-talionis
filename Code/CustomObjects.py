@@ -691,7 +691,8 @@ class ArrowObject(object):
 # === GENERIC ANIMATION OBJECT ===================================
 # for miss and no damage animations
 class Animation(object):
-    def __init__(self, sprite, position, frames, total_num_frames = None, animation_speed=75, loop=False, hold=False, ignore_map = False, start_time=0, on=True):
+    def __init__(self, sprite, position, frames, total_num_frames = None, animation_speed=75, \
+                 loop=False, hold=False, ignore_map = False, start_time=0, on=True, set_timing=None):
         self.sprite = sprite
         self.position = position
         self.frame_x = frames[0]
@@ -706,9 +707,16 @@ class Animation(object):
         self.ignore_map = ignore_map # Whether the position of the Animation sould be relative to the map
         self.lastUpdate = Engine.get_time()
 
-        self.image = Engine.subsurface(self.sprite, (0, 0, self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y))
+        self.set_timing = set_timing
+        if self.set_timing:
+            assert len(self.set_timing) == self.total_num_frames, '%s %s'%(len(self.set_timing), len(self.total_num_frames))
+        self.timing_count = -1
 
-    def draw(self, surf, gameStateObj, blend=None):
+        self.indiv_width, self.indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y
+
+        self.image = Engine.subsurface(self.sprite, (0, 0, self.indiv_width, self.indiv_height))
+
+    def draw(self, surf, gameStateObj=None, blend=None):
         if self.on and self.frameCount >= 0 and Engine.get_time() > self.start_time:
             # The animation is too far to the right. Must move left. (" - 32")
             image = self.image
@@ -721,25 +729,44 @@ class Animation(object):
                 image = Image_Modification.change_image_color(image, blend)
             surf.blit(image, topleft)
 
-    def update(self, gameStateObj):
+    def update(self, gameStateObj=None):
         currentTime = Engine.get_time()
-        if self.on and currentTime > self.start_time and currentTime - self.lastUpdate > self.animation_speed:
-            #print(self.frameCount)
-            self.frameCount += int((currentTime - self.lastUpdate)/self.animation_speed) # 1
-            self.lastUpdate = currentTime
-            if self.frameCount >= self.total_num_frames:
-                if self.loop: # Reset framecount
-                    self.frameCount = 0
-                elif self.hold:
-                    self.frameCount = self.total_num_frames - 1 # Hold on last frame
-                else:
-                    if self in gameStateObj.allanimations:
-                        gameStateObj.allanimations.remove(self)
-                    return True
-            if self.frameCount >= 0:
-                indiv_width, indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y
-                #print(self.frameCount%self.frame_x * indiv_width, self.frameCount/self.frame_x *indiv_height, indiv_width, indiv_height)
-                self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * indiv_width, self.frameCount/self.frame_x * indiv_height, indiv_width, indiv_height))
+        if self.on and currentTime > self.start_time:
+            # If this animation has every frame's count defined
+            if self.set_timing:
+                num_frames = self.set_timing[self.frameCount]
+                self.timing_count += 1
+                if self.timing_count >= num_frames:
+                    self.timing_count = 0
+                    self.frameCount += 1
+                    if self.frameCount >= self.total_num_frames:
+                        if self.loop:
+                            self.frameCount = 0
+                        elif self.hold:
+                            self.frameCount = self.total_num_frames - 1
+                        else:
+                            if gameStateObj and self in gameStateObj.allanimations:
+                                gameStateObj.allanimations.remove(self)
+                            return True
+                    if self.frameCount >= 0:
+                        self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height))
+            # Otherwise
+            elif currentTime - self.lastUpdate > self.animation_speed:
+                self.frameCount += int((currentTime - self.lastUpdate)/self.animation_speed) # 1
+                self.lastUpdate = currentTime
+                if self.frameCount >= self.total_num_frames:
+                    if self.loop: # Reset framecount
+                        self.frameCount = 0
+                    elif self.hold:
+                        self.frameCount = self.total_num_frames - 1 # Hold on last frame
+                    else:
+                        if gameStateObj and self in gameStateObj.allanimations:
+                            gameStateObj.allanimations.remove(self)
+                        return True
+                if self.frameCount >= 0:
+                    #print(self.indiv_width, self.indiv_height, self.frame_x, self.frame_y, self.frameCount, self.total_num_frames, currentTime, self.lastUpdate)
+                    #print(self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height)
+                    self.image = Engine.subsurface(self.sprite, (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, self.indiv_width, self.indiv_height))
 
 # === PHASE OBJECT ============================================================
 class Phase(object):
@@ -1151,18 +1178,18 @@ class CameraOffset(object):
         gameStateObj.set_camera_limits()
         if self.current_x != self.x:
             if self.current_x > self.x:
-                self.current_x -= 0.12 if self.pan_flag else (self.current_x - self.x)/self.speed
+                self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)/self.speed
             elif self.current_x < self.x:
-                self.current_x += 0.12 if self.pan_flag else (self.x - self.current_x)/self.speed
+                self.current_x += 0.125 if self.pan_flag else (self.x - self.current_x)/self.speed
         if self.current_y != self.y:
             if self.current_y > self.y:
-                self.current_y -= 0.12 if self.pan_flag else (self.current_y - self.y)/self.speed
+                self.current_y -= 0.125 if self.pan_flag else (self.current_y - self.y)/self.speed
             elif self.current_y < self.y:
-                self.current_y += 0.12 if self.pan_flag else (self.y - self.current_y)/self.speed
+                self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)/self.speed
         # If they are close enough, make them so.
-        if abs(self.current_x - self.x) < 0.16:
+        if abs(self.current_x - self.x) < 0.125:
             self.current_x = self.x
-        if abs(self.current_y - self.y) < 0.16:
+        if abs(self.current_y - self.y) < 0.125:
             self.current_y = self.y
         # Move to next place on the list
         if self.pan_to and self.current_y == self.y and self.current_x == self.x:
@@ -1171,12 +1198,12 @@ class CameraOffset(object):
         # Make sure current_x and current_y do not go off screen
         if self.current_x < 0:
             self.current_x = 0
-        elif self.current_x > (gameStateObj.map.width - WINWIDTH/TILEWIDTH): # Need this minus to account for size of screen
-            self.current_x = (gameStateObj.map.width - WINWIDTH/TILEWIDTH)
+        elif self.current_x > (gameStateObj.map.width - TILEX): # Need this minus to account for size of screen
+            self.current_x = (gameStateObj.map.width - TILEX)
         if self.current_y < 0:
             self.current_y = 0
-        elif self.current_y > (gameStateObj.map.height - WINHEIGHT/TILEHEIGHT):
-            self.current_y = (gameStateObj.map.height - WINHEIGHT/TILEHEIGHT)
+        elif self.current_y > (gameStateObj.map.height - TILEY):
+            self.current_y = (gameStateObj.map.height - TILEY)
         #logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
 class Objective(object):
