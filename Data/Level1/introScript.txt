@@ -38,9 +38,8 @@ s;Prim;...{w};auto
 s;Ophie;Hmm... No second shot?{w};auto
 s;???;Hey! You two!{w}{br}Sorry about that...{w}{br}My partner here's got a bit of an itchy trigger finger.{w};04;28;160
 s;Ophie;Prim, stay down. It could be a trap.{w};auto
-s;???;We're friendly.{w}{br}We don't bite, I promise.{w};04;28;160
-s;Ophie;How do we know this isn't a trap?{w};auto
-s;Prim;Yeah, who are you, anyway?{w};auto
+s;Prim;Who are you, anyway?{w};auto
+s;Ophie;Prim!{w};auto
 s;???;We're uh.... rangers.{w}{br}Yeah, rangers... y'know... protectin' the forest...{w};04;28;160
 # Joel appears
 u;Joel;MidLeft
