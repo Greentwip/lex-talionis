@@ -45,6 +45,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Turnwheel
 - Add Awakening-style dialogue backlog...??** On R press
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
+- Have some menus (prep, options) match references.
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow
