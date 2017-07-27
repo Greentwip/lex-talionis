@@ -10,7 +10,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Full Combat Animations
 --- Custom Spell Animations
 --- Sounds
---- All Necessary Animations
+--- All Necessary Animations (Ranged, Spell, Unarmed)
 --- Promotion
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Add options to OPTIONS MENU
