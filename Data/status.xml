@@ -605,7 +605,7 @@
     <status name="Steal">
         <id>Steal</id>
         <icon_index>7,10</icon_index>
-        <desc>Can steal unequipped items from enemies.</desc>
+        <desc>Can steal unequipped items from enemies with lower speed.</desc>
         <components>steal,class_skill</components>
     </status>
 

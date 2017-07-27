@@ -1631,7 +1631,7 @@ class StealState(State):
         gameStateObj.cursor.drawState = 0
         gameStateObj.info_surf = None
         self.initiator = gameStateObj.cursor.currentSelectedUnit
-        self.initiator.change_state('chosen', gameStateObj)
+        self.initiator.sprite.change_state('chosen', gameStateObj)
         self.rube = gameStateObj.cursor.getHoveredUnit(gameStateObj)
         options = self.rube.getStealables()
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self.rube, options, 'auto', gameStateObj=gameStateObj)
