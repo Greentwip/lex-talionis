@@ -1454,7 +1454,7 @@ class UnitObject(object):
         return min(4, attack), min(4, defense), min(20, accuracy), min(20, avoid)
 
     # computes the damage dealt by me using this item
-    def compute_damage(self, target, gameStateObj, item, mode=None, hybrid=None):
+    def compute_damage(self, target, gameStateObj, item, mode=None, hybrid=None, crit=0):
         if not item:
             return None
         if item.spell and not item.damage:
@@ -1495,8 +1495,10 @@ class UnitObject(object):
                 if status.weakness and status.weakness.damage_type in item.TYPE:
                     damage += status.weakness.num
             
-        if item.crit:
+        if item.guaranteed_crit or crit == 1:
             damage += self.damage(gameStateObj)
+        elif crit == 2:
+            damage *= 3
 
         # Handle hybrid miss
         if hybrid:
@@ -1541,6 +1543,33 @@ class UnitObject(object):
             return Utility.clamp(hitrate, 0, 100)
         else:
             return 100
+
+    def compute_crit_hit(self, target, gameStateObj, item=None, mode=None):
+        if item:
+            my_item = item
+        else:
+            my_item = self.getMainWeapon()
+        if not my_item:
+            return None
+        if not isinstance(target, UnitObject):
+            return 0
+        if not my_item.crit:
+            return 0
+
+        # Calculations
+        if my_item.weapon or my_item.spell:
+            critrate = self.crit_accuracy(gameStateObj, my_item) - target.crit_avoid(gameStateObj)
+            for status in self.status_effects:
+                if status.conditional_crit_hit and eval(status.conditional_crit_hit.conditional, globals(), locals()):
+                    new_hit = int(eval(status.conditional_crit_hit.value, globals(), locals()))
+                    crtrate += new_hit
+            for status in target.status_effects:
+                if status.conditional_crit_avoid and eval(status.conditional_crit_avoid.conditional, globals(), locals()):
+                    new_avoid = int(eval(status.conditional_crit_avoid.value, globals(), locals()))
+                    critrate -= new_avoid
+            return Utility.clamp(critrate, 0, 100)
+        else:
+            return 0
 
     def attackspeed(self, item=None):
         if not item:
@@ -1604,6 +1633,32 @@ class UnitObject(object):
                 return 0
 
         return damage
+
+    def crit_accuracy(self, gameStateObj, item=None):
+        if not item:
+            if self.getMainWeapon():
+                item = self.getMainWeapon()
+            elif self.getMainSpell():
+                item = self.getMainSpell()
+            else:
+                return None
+        if item.crit and (item.weapon or item.spell):
+            accuracy = item.crit + self.stats['SKL']
+            accuracy += sum(int(eval(status.crit_hit, {}, locals())) for status in self.status_effects if status.crit_hit)
+            for status in self.status_effects:
+                if status.dynamic_crit_hit and eval(status.dynamic_crit_hit.conditional, globals(), locals()):
+                    accuracy += int(eval(status.dynamic_crit_hit.value, globals(), locals()))
+            return accuracy
+        else:
+            return 0
+
+    def crit_avoid(self, gameStateObj, item=None):
+        base = self.stats['LCK']*2
+        base += sum(int(eval(status.crit_avoid, {}, locals())) for status in self.status_effects if status.crit_avoid)
+        for status in self.status_effects:
+            if status.dynamic_crit_avoid and eval(status.dynamic_crit_avoid.conditional, globals(), locals()):
+                base += int(eval(status.dynamic_crit_avoid.value, globals(), locals()))
+        return base
 
     def defense(self, gameStateObj):
         return self.stats['DEF'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])

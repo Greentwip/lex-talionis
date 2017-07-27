@@ -11,7 +11,7 @@ class Result(object):
     def __init__(self, attacker, defender):
         self.attacker = attacker # Which phase this belongs to (actual reference to unit)
         self.defender = defender # Who this is affecting
-        self.outcome = False
+        self.outcome = 0 # 0 -- Miss, 1 -- Hit, 2 -- Crit
         self.atk_damage = 0 # Damage to the attacker
         self.def_damage = 0 # Damage to the defender
         self.atk_status = [] # Status to the attacker
@@ -54,6 +54,20 @@ class Solver(object):
             roll = (random.randint(0, 99) + random.randint(0, 99) + random.randint(0, 99))/3
         return roll
 
+    def generate_crit_roll(self):
+        if self.event_combat:
+            roll = 100
+        else:
+            roll = random.randint(0, 99)
+        return roll
+
+    def handle_crit(self, result, attacker, defender, item, mode, gameStateObj, hybrid):
+        to_crit = attacker.compute_crit_hit(defender, gameStateObj, item, mode=mode)
+        crit_roll = self.generate_crit_roll()
+        if crit_roll < to_crit and not (isinstance(defender, TileObject.TileObject) or 'ignore_crit' in defender.status_bundle):
+            result.outcome = 2
+            result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid, crit=CONSTANTS['crit'])
+
     def generate_attacker_phase(self, gameStateObj, metaDataObj, defender):
         result = Result(self.attacker, defender)
 
@@ -70,6 +84,9 @@ class Solver(object):
             if roll < to_hit and not (defender in self.splash and (isinstance(defender, TileObject.TileObject) or 'evasion' in defender.status_bundle)):
                 result.outcome = True
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
+                if CONSTANTS['crit']: 
+                    self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid)
+                    
             # Missed but does half damage
             elif self.item.half:
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)/2
@@ -79,6 +96,8 @@ class Solver(object):
                 result.outcome = True
                 if self.item.damage is not None:
                     result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
+                    if CONSTANTS['crit']: 
+                        self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid)
                 elif self.item.heal is not None:
                     result.def_damage = -self.attacker.compute_heal(defender, gameStateObj, self.item, mode='Attack')
                 if self.item.movement:
@@ -126,6 +145,8 @@ class Solver(object):
         if roll < to_hit:
             result.outcome = True
             result.def_damage = self.defender.compute_damage(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense", hybrid=hybrid)
+            if CONSTANTS['crit']: 
+                self.handle_crit(result, self.defender, self.attacker, self.defender.getMainWeapon(), "Defense", gameStateObj, hybrid)
 
         # Missed but does half damage
         elif self.defender.getMainWeapon().half:
@@ -720,17 +741,28 @@ class Map_Combat(Combat):
                                 SOUNDDICT[self.item.sfx_on_hit].play()
                             elif result.defender.currenthp - result.def_damage <= 0: # Lethal
                                 SOUNDDICT['Final Hit'].play()
-                                for health_bar in self.health_bars.values():
-                                    health_bar.shake(2)
+                                if result.outcome == 2: # Critical
+                                    for health_bar in self.health_bars.values():
+                                        health_bar.shake(3)
+                                else:
+                                    for health_bar in self.health_bars.values():
+                                        health_bar.shake(2)
                             elif result.def_damage < 0: # Heal
                                 SOUNDDICT['heal'].play()
                             elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
                                 SOUNDDICT['No Damage'].play()
                             else:
-                                sound_to_play = 'Attack Hit ' + str(random.randint(1,4)) # Choose a random hit sound
+                                if result.outcome == 2: # critical
+                                    sound_to_play = 'Critical Hit ' + str(random.randint(1,2))
+                                else:
+                                    sound_to_play = 'Attack Hit ' + str(random.randint(1,4)) # Choose a random hit sound
                                 SOUNDDICT[sound_to_play].play()
-                                for health_bar in self.health_bars.values():
-                                    health_bar.shake(1)
+                                if result.outcome == 2: # critical
+                                    for health_bar in self.health_bars.values():
+                                        health_bar.shake(3)
+                                else:
+                                    for health_bar in self.health_bars.values():
+                                        health_bar.shake(1)
                             # Animation
                             if self.item.self_anim:
                                 name, x, y, num = item.self_anim.split(',')
@@ -1086,6 +1118,8 @@ class HealthBar(object):
             self.shake_set = [(-3, -3), (0, 0), (3, 3), (0, 0)]
         elif num == 2:
             self.shake_set = [(3, 3), (0, 0), (0, 0), (3, 3), (-3, -3), (3, 3), (-3, -3), (0, 0)]
+        elif num == 3:
+            self.shake_set = [(3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (0, 0)]
 
     def update(self, status_obj=False):
         # Make blinds wider

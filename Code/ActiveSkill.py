@@ -39,10 +39,10 @@ class Critical(Active_Skill):
             self.reverse_mod()
         self.item = weapon
         self.orig_crit = weapon.crit
-        weapon.crit = True
+        weapon.guaranteed_crit = True
 
     def reverse_mod(self):
-        self.item.crit = self.orig_crit
+        self.item.guaranteed_crit = self.orig_crit
         self.item = None
 
 class Charge(Active_Skill):

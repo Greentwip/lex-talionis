@@ -25,8 +25,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Improve Promotion... Add animation. Make sure exp works correctly.
 --- PICTURES --- 
 - Wagon Class Card
---- MUSIC ---
-- Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
 --- GUI ---
 - Add cursor scroll to menus (Choice Menu), so you can just hold down the direction you want to go. ++
 --- AWAKENING UI ---

@@ -390,6 +390,8 @@ def itemparser(itemstring):
                     my_components['WT'] = int(item['WT'])
                 elif component == 'exp':
                     my_components['exp'] = int(item['exp'])
+                elif component == 'crit':
+                    my_components['crit'] = int(item['crit'])
                 elif component == 'wexp_increase':
                     my_components['wexp_increase'] = int(item['wexp_increase'])
                 elif component in ['movement', 'self_movement']:

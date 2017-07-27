@@ -74,6 +74,7 @@ def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum
              'speed_to_double': 4, # How much AS is needed to double
              'normal_movement': 1, # How many movement points does a normal tile cost to traverse
+             'crit': 2, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 3x damage minus 3x defense
              'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
              'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)
              'num_levels': 11, # Number of levels in game
@@ -110,6 +111,7 @@ def read_constants_file():
     lines['max_items'] = int(lines['max_items'])
     lines['speed_to_double'] = int(lines['speed_to_double'])
     lines['normal_movement'] = int(lines['normal_movement'])
+    lines['crit'] = int(lines['crit'])
     lines['flying_mcost_column'] = int(lines['flying_mcost_column'])
     lines['fleet_mcost_column'] = int(lines['fleet_mcost_column'])
     lines['num_levels'] = int(lines['num_levels'])
