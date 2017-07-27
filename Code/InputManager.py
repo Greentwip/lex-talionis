@@ -29,6 +29,8 @@ class InputManager(object):
         self.key_up_events = []
         self.key_down_events = []
 
+        self.unavailable_button = None
+
     # Set joystick information. 
     # The joystick needs to be plugged in before this method is called (see main() method) 
     def init_joystick(self):
@@ -77,7 +79,7 @@ class InputManager(object):
         self.joystick_config['UP'] = [('is_hat', 0, 'y', 1)]
         self.joystick_config['DOWN'] = [('is_hat', 0, 'y', -1)]
 
-    def process_input(self, eventList):
+    def process_input(self, eventList, all_keys=False):
         self.key_up_events = []
         self.key_down_events = []
         # Check keyboard
@@ -93,6 +95,9 @@ class InputManager(object):
                         self.key_up_events.append(button)
                     else:
                         self.key_down_events.append(button)
+                elif all_keys and event.type == KEYUP:
+                    self.unavailable_button = event.key
+                    return 'NEW'
 
         # Check game pad
         if self.joystick:

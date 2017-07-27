@@ -65,7 +65,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         gameStateObj.stateMachine.changeState('transition_pop')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
-        event = gameStateObj.input_manager.process_input(eventList)
+        event = gameStateObj.input_manager.process_input(eventList, all_keys=True)
         self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
 
@@ -167,16 +167,18 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 SOUNDDICT['Select 4'].play()
                 self.state.changeState("Controls")
 
-            elif event:
-                used_keys = [key for option, key in OPTIONS.iteritems() if option in self.control_order]
-                if event.key in used_keys:
-                    SOUNDDICT['Select 4'].play()
-                    # Not a legal option
-                    self.state.back()
-                    self.state.changeState("Invalid")
+            elif event == 'NEW':
                 SOUNDDICT['Select 1'].play()
                 self.state.back()
-                OPTIONS[self.control_order[self.currentSelection]] = event.key
+                OPTIONS[self.control_order[self.currentSelection]] = gameStateObj.input_manager.unavailable_button
+                gameStateObj.input_manager.update_key_map()
+                return
+
+            elif event:
+                SOUNDDICT['Select 4'].play()
+                # Not a legal option
+                self.state.back()
+                self.state.changeState("Invalid")
 
         elif self.state.getState() == "Invalid":
             if event:
