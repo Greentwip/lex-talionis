@@ -26,8 +26,11 @@ class levelUpScreen(object):
             timing = [1 for _ in xrange(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in xrange(13)] + [1 for _ in xrange(14)] 
             self.levelUpAnimation = CustomObjects.Animation(IMAGESDICT['LevelUpBattle'], topleft, (5, 11), 52, ignore_map=True, set_timing=timing)
         else:
-            x, y = unit.position
-            topleft = (x-gameStateObj.cameraOffset.x-2)*TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*TILEHEIGHT
+            if unit.position:
+                x, y = unit.position
+                topleft = (x-gameStateObj.cameraOffset.x-2)*TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*TILEHEIGHT
+            else:
+                topleft = WINWIDTH/2, WINHEIGHT/2
             timing = [1 for _ in xrange(24)] + [44]
             self.levelUpAnimation = CustomObjects.Animation(IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True, set_timing=timing)
         self.statupanimation = IMAGESDICT['StatUpSpark']

@@ -574,9 +574,17 @@ class PrepTradeState(StateMachine.State):
 
 class PrepUseItemState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        self.menu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit.items, (16, 72), limit=5, hard_limit=True, gem=False)
+        cur_unit = gameStateObj.cursor.currentSelectedUnit
+        self.menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (16, 72), limit=5, hard_limit=True, gem=False, shimmer=2, \
+                                             color_control = ['text_white' if item.booster else 'text_grey' for item in cur_unit.items], \
+                                             ignore = [False if item.booster else True for item in cur_unit.items])
         self.menu.draw_face = True
         self.info = False
+        # Move cursor to starting point
+        for index, item in enumerate(cur_unit.items):
+            if item.booster:
+                self.menu.moveTo(index)
+                break
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)

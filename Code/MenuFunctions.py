@@ -632,7 +632,10 @@ class ChoiceMenu(SimpleMenu):
                     option.draw(surf, (left + 2, top))
                     main_font = FONT['text_grey']
                     uses_font = FONT['text_grey']
-                    if self.owner.canWield(option):
+                    if self.color_control:
+                        main_font = FONT[self.color_control[index+self.scroll]]
+                        uses_font = FONT[self.color_control[index+self.scroll]]
+                    elif self.owner.canWield(option):
                         main_font = FONT['text_white']
                         uses_font = FONT['text_blue']
                     main_font.blit(str(option), surf, (left + 20, top))
@@ -867,6 +870,14 @@ class GreyMenu(ComplexMenu):
 
     def update_grey(self, index, value):
         self.grayed_out[index] = value
+        # Handle if the current Selection ends up on a grayed out index
+        orig_index = self.currentSelection
+        while not self.grayed_out[self.currentSelection]:
+            self.currentSelection -= 1
+            if self.currentSelection == orig_index:
+                break # Just give up
+            if self.currentSelection < 0:
+                self.currentSelection = len(self.options) - 1
 
 class FeatChoiceMenu(ComplexMenu):
     def __init__(self, owner, options):
