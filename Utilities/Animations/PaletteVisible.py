@@ -2,7 +2,7 @@
 
 from PIL import Image
 
-fp = 'Myrmidon0.png'
+fp = 'Mage0-Magic.png'
 picture = Image.open(fp)
 
 # Get the size of the image

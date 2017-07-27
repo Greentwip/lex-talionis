@@ -2,25 +2,9 @@
 
 import glob
 from PIL import Image
+import palette_index
 
-# Joshua
-palette_set = {(128, 160, 128), # Background
-                (248, 248, 248), # White
-                (248, 248, 208), # Light skin
-                (248, 192, 144), # Med skin
-                (112, 72, 48), # Dark skin
-                (224, 48, 16), # Light Hair
-                (160, 8, 8), # Med Hair
-                (104, 8, 16), # Dark Hair
-                (176, 208, 240), # Light Weapon/Leather
-                (112, 144, 176), # Med Weapon/Leather
-                (114, 146, 178), # Med Weapon/Leather
-                (64, 96, 128), # Dark Weapon/String
-                (128, 168, 168), # Light Clothes
-                (88, 128, 128), # LM Clothes
-                (48, 88, 88), # MD Clothes
-                (24, 48, 48), # Dark Clothes
-                (40, 40, 40)} # Outline
+palette_set = palette_index.ewan
 
 for fp in glob.glob('*.png'):
     print(fp)

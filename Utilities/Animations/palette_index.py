@@ -50,6 +50,23 @@ guy = [(128, 160, 128), # Background
                 (48, 56, 176), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+ewan = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (208, 64, 0), # Light Hair
+                (144, 24, 0), # Dark Hair
+                (248, 176, 56), # Light clothes
+                (208, 80, 16), # Dark clothes
+                (200, 136, 80), # Dark leather (paired with Med Skin)
+                (136, 216, 240), # Light Robe
+                (96, 152, 200), # Medium Robe
+                (32, 64, 112), # Dark Robe
+                (248, 192, 208), # Magic?
+                (40, 40, 40), # ?
+                (40, 40, 40)] # Outline
+
 myrmidon_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
