@@ -1841,6 +1841,18 @@
         <movement>Shove,1</movement>
     </item>
 
+    <item name="Refresh">
+        <id>so_Refresh</id>
+        <spritetype>Skills</spritetype>
+        <spriteid>3,9</spriteid>
+        <components>status,virtual,beneficial</components>
+
+        <value>1</value>
+        <RNG>1</RNG>
+        <desc>I done broked something.</desc>
+        <status>Refresh_Status</status>
+    </item>
+
     <item name="Aegis">
         <id>so_Aegis</id>
         <spritetype>Skills</spritetype>

@@ -642,6 +642,14 @@
         <active>0</active>
     </status>
 
+    <status name="Refresh">
+        <id>Refresh</id>
+        <icon_index>3,9</icon_index>
+        <desc>Activated. Adjacent unit is refreshed.</desc>
+        <components>active,class_skill</components>
+        <active>0</active>
+    </status>
+
     <status name="Rage">
         <id>Rage</id>
         <icon_index>8,10</icon_index>

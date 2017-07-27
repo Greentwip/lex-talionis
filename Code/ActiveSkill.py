@@ -328,6 +328,23 @@ class Swap(Active_Skill):
     def get_choices(self, cur_unit, gameStateObj):
         return [unit.position for unit in cur_unit.getAdjacentUnits(gameStateObj) if self.check_swap(cur_unit, unit, gameStateObj.map)]
 
+class Refresh(Active_Skill):
+    def __init__(self, name, required_charge):
+        Active_Skill.__init__(self, name, required_charge)
+        self.mode = 'Interact'
+        self.item = ItemMethods.itemparser('so_Refresh')[0]
+
+    def check_valid(self, unit, gameStateObj):
+        adj_units = unit.getTeamPartners(gameStateObj)
+        if not unit.hasAttacked and adj_units:
+            for adj_unit in adj_units:
+                if adj_unit.isDone():
+                    return True
+        return False
+
+    def get_choices(self, cur_unit, gameStateObj):
+        return [unit.position for unit in cur_unit.getTeamPartners(gameStateObj) if unit.isDone()]
+
 class Aegis(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
