@@ -206,8 +206,6 @@ class levelUpScreen(object):
             # Reset Level - Don't!
             self.unit.level += 1
             # Actually change class
-            # Reset movement speed
-            self.unit.stats['MOV'].base_stat = new_class['movement']
             # Reset movement group
             self.unit.movement_group = new_class['movement_group']
             # Add weapon exp gains from that class.
@@ -220,7 +218,7 @@ class levelUpScreen(object):
             #self.levelup_list = self.unit.level_up(new_class, apply_level=False) # Level up once, then promote.
             #self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together
             self.levelup_list = new_class['promotion'] # No two level ups, too much gain in one level...
-            current_stats = [self.unit.stats['HP'], self.unit.stats['STR'], self.unit.stats['MAG'], self.unit.stats['SKL'], self.unit.stats['SPD'], self.unit.stats['LCK'], self.unit.stats['DEF'], self.unit.stats['RES'], self.unit.stats['CON']]
+            current_stats = self.unit.stats.values()
             assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s"%(self.levelup_list, new_class['max'], current_stats)
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)

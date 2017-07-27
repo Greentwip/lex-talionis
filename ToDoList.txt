@@ -8,10 +8,10 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add L button support to different states -- which ones?
 --- COMBAT ---
 - Full Combat Animations
---- Custom Spell Animations
---- Sounds
---- All Necessary Animations (Ranged, Spell, Unarmed)
---- Promotion
+--- Custom Spell Animations (Split Video)
+--- Sounds (Video)
+--- All Necessary Animations (Split Video)
+--- Promotion (Split Video) --- probably going to have to rewrite this section as its own thing.
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Add options to OPTIONS MENU
 --- MAP ---
@@ -45,6 +45,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Turnwheel
 - Add Awakening-style dialogue backlog...??** On R press
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
+- Have some menus (prep, options) match references.
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow

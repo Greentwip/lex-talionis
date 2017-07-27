@@ -514,7 +514,6 @@ class Combat(object):
                     StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
 
 class AnimationCombat(Combat):
-    idle_poses = {'Stand', 'RangedStand'}
     def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat):
         self.p1 = attacker
         self.p2 = defender
@@ -575,11 +574,6 @@ class AnimationCombat(Combat):
         self.left_bar = IMAGESDICT[left_color + 'LeftMainCombat']
         size_x = FONT['text_brown'].size(self.left_item.name)[0]
         FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x/2, 5))
-        # Platform
-        if self.at_range:
-            self.left_platform = IMAGESDICT['Plains-Ranged']
-        else:
-            self.left_platform = IMAGESDICT['Plains-Melee']
 
         # Right
         right_color = 'Blue' if self.right.team == 'player' else 'Red'
@@ -591,11 +585,16 @@ class AnimationCombat(Combat):
         self.right_bar = IMAGESDICT[right_color + 'RightMainCombat']
         size_x = FONT['text_brown'].size(self.right_item.name)[0]
         FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x/2, 5))
-        # Platform
+
+        # Platforms
+        left_platform_type = gameStateObj.map.tiles[self.left.position].platform
+        right_platform_type = gameStateObj.map.tiles[self.right.position].platform
         if self.at_range:
-            self.right_platform = Engine.flip_horiz(IMAGESDICT['Plains-Ranged'])
+            suffix = '-Ranged'
         else:
-            self.right_platform = Engine.flip_horiz(IMAGESDICT['Plains-Melee'])
+            suffix = '-Melee'
+        self.left_platform = IMAGESDICT[left_platform_type + suffix]
+        self.right_platform = Engine.flip_horiz(IMAGESDICT[right_platform_type + suffix])
 
     def update(self, gameStateObj, metaDataObj, skip=False):
         #print(self.combat_state)
@@ -651,10 +650,9 @@ class AnimationCombat(Combat):
                 self.current_animation = self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'Anim':
-            a_message = self.current_result.attacker.battle_anim.tag
-            if self.left.battle_anim.current_pose in self.idle_poses and self.right.battle_anim.current_pose in self.idle_poses:
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
                 self.combat_state = 'Init'
-            elif a_message == 'HP':
+            elif self.current_result.attacker.battle_anim.waiting_for_hp():
                 self.apply_result(self.current_result, gameStateObj)
                 self.combat_state = 'HP_Change'
 
@@ -662,9 +660,9 @@ class AnimationCombat(Combat):
             if self.left_hp_bar.done() and self.right_hp_bar.done():
                 self.current_result.attacker.battle_anim.resume()
                 if self.left_hp_bar.true_hp <= 0:
-                    self.left.start_dying_animation()
+                    self.left.battle_anim.start_dying_animation()
                 if self.right_hp_bar.true_hp <= 0:
-                    self.right.start_dying_animation()
+                    self.right.battle_anim.start_dying_animation()
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'ExpWait':
