@@ -3,6 +3,10 @@
 - Avast Antivirus or other antiviruses may slow down certain actions that write to disk. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
 - Need to compile cython modules for Linux
 
+-- REPORTED ISSUES:
+- Moving really fast in the Stat Screen crashes game
+- Crashed on Suspend and Load another Saved Game?
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- L Button ---
 - Add L button support to different states -- which ones?

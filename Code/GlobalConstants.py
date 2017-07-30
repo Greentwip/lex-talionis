@@ -1,5 +1,4 @@
-import pygame, os
-from pygame.locals import *
+import os
 import bmpfont, Engine, imagesDict
 from configuration import *
 
@@ -44,20 +43,17 @@ colorDict = {'bright_blue': (0, 168, 248),
 U_ID = 100
 SUSPEND_LOC = 'Saves/Suspend.pmeta'
 
-#pygame.mixer.pre_init(44100, -16, 1, 512)
-pygame.mixer.pre_init(44100, -16, 2, 4096)
-pygame.init()
-pygame.mixer.init()
+Engine.init()
 
 # Icon
 small_icon = Engine.image_load('Sprites/General/main_icon.png')
 #Engine.set_colorkey(small_icon, (0, 0, 0), False)
-pygame.display.set_icon(small_icon)
+Engine.set_icon(small_icon)
 
-FPSCLOCK = pygame.time.Clock()
-DISPLAYSURF = pygame.display.set_mode((WINWIDTH*OPTIONS['screen_scale'], WINHEIGHT*OPTIONS['screen_scale']))
+FPSCLOCK = Engine.clock()
+DISPLAYSURF = Engine.build_display((WINWIDTH*OPTIONS['screen_scale'], WINHEIGHT*OPTIONS['screen_scale']))
 version = "0.6"
-pygame.display.set_caption(''.join(["The Lion Throne - ", version]))
+Engine.set_caption(''.join(["The Lion Throne - ", version]))
 
 IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = imagesDict.getImages()
 SOUNDDICT, MUSICDICT = imagesDict.getSounds()
@@ -102,8 +98,8 @@ for fp in os.listdir('Sprites/Fonts'):
         FONT[name] = bmpfont.BmpFont(fp)
 
 MAINFONT = "Sprites/Fonts/KhmerUI.ttf"
-BASICFONT = pygame.font.Font(MAINFONT, 10)
-BIGFONT = pygame.font.Font(MAINFONT, 12)
+BASICFONT = Engine.build_font(MAINFONT, 10)
+BIGFONT = Engine.build_font(MAINFONT, 12)
 
 import Counters
 PASSIVESPRITECOUNTER = Counters.generic3Counter()

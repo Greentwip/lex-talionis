@@ -1,6 +1,6 @@
 # World Map
 
-import pygame, math
+import math
 
 # Custom imports
 from GlobalConstants import *
@@ -705,5 +705,5 @@ class MiniMap(object):
         bg.blit(mask, (bg.get_width()/2 - mask.get_width()/2, bg.get_height()/2 - mask.get_height()/2))
 
         # Apply mask to surf
-        surf.blit(bg, bg.get_rect().topleft, bg.get_rect(), special_flags=pygame.BLEND_RGB_MULT)
+        Engine.blit(surf, bg, bg.get_rect().topleft, mask=bg.get_rect())
         return surf

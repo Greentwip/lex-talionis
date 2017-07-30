@@ -11,21 +11,37 @@ engine_constants = {'current_time': 0,
                     'last_time': 0,
                     'last_fps': 0}
 
-def create_surface(size, transparent=False, convert=False):
-    if transparent:
-        surf = pygame.Surface(size, pygame.SRCALPHA, 32)
-        if convert:
-            surf = surf.convert_alpha()
-        return surf
-    else:
-        surf = pygame.Surface(size)
-        if convert:
-            surf = surf.convert()
-        return surf
 
-def copy_surface(surf):
-    return surf.copy()
+# === INITIALIZING FUNCTIONS =================================================
+def init():
+    #pygame.mixer.pre_init(44100, -16, 1, 512)
+    pygame.mixer.pre_init(44100, -16, 2, 4096)
+    pygame.init()
+    pygame.mixer.init()
 
+def set_icon(icon):
+    pygame.display.set_icon(icon)
+
+def set_caption(text):
+    pygame.display.set_caption(text)
+
+def clock():
+    return pygame.time.Clock()
+
+def build_display(size):
+    return pygame.display.set_mode(size)
+
+def build_font(ttf, size):
+    return pygame.font.Font(ttf, size)
+
+def terminate():
+    configuration.write_config_file() # Write last saved options to config file
+    pygame.mixer.music.stop()
+    pygame.mixer.quit()
+    pygame.quit()
+    sys.exit()
+
+# === TIMING STUFF ===========================================================
 def update_time():
     engine_constants['last_time'] = engine_constants['current_time']
     engine_constants['current_time'] = pygame.time.get_ticks()
@@ -46,22 +62,32 @@ def get_true_time():
 def get_delta():
     return engine_constants['last_fps']
 
+# === DRAW STUFF =============================================================
+def blit(dest, source, pos=(0, 0), mask=None):
+    if mask:
+        dest.blit(source, pos, mask, pygame.BLEND_RGB_MULT)
+    else:
+        dest.blit(source, pos)
+        
+def create_surface(size, transparent=False, convert=False):
+    if transparent:
+        surf = pygame.Surface(size, pygame.SRCALPHA, 32)
+        if convert:
+            surf = surf.convert_alpha()
+        return surf
+    else:
+        surf = pygame.Surface(size)
+        if convert:
+            surf = surf.convert()
+        return surf
+
+def copy_surface(surf):
+    return surf.copy()
+
 # assumes pygame surface
 def subsurface(surf, (x, y, width, height)):
     #print(x, y, width, height)
     return surf.subsurface(x, y, width, height)
-
-def flip_horiz(surf):
-    return pygame.transform.flip(surf, 1, 0)
-
-def flip_vert(surf):
-    return pygame.transform.flip(surf, 0, 1)
-
-def transform_scale(surf, scale):
-    return pygame.transform.scale(surf, scale)
-
-def transform_rotate(surf, degrees):
-    return pygame.transform.rotate(surf, degrees)
 
 def image_load(fp, convert=False, convert_alpha=False):
     image = pygame.image.load(fp)
@@ -86,6 +112,37 @@ def set_colorkey(surf, color, rleaccel=True):
     else:
         surf.set_colorkey(color)
 
+# === TRANSFORMTATION STUFF ==================================================
+def flip_horiz(surf):
+    return pygame.transform.flip(surf, 1, 0)
+
+def flip_vert(surf):
+    return pygame.transform.flip(surf, 0, 1)
+
+def transform_scale(surf, scale):
+    return pygame.transform.scale(surf, scale)
+
+def transform_rotate(surf, degrees):
+    return pygame.transform.rotate(surf, degrees)
+
+# === EVENT STUFF ============================================================
+def get_key_name(key_code):
+    return pygame.key.name(key_code)
+
+def build_event_list():
+    # Get events
+    eventList = [] # Clear event list
+    # Only gets escape events!
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            terminate()
+        if event.type == KEYUP and configuration.OPTIONS['cheat']:
+            if event.key == K_ESCAPE:
+                terminate()
+        eventList.append(event)
+    return eventList
+
+### === SOUND STUFF =====================================================
 class BaseSound():
     def play(self, loops=0, maxtime=0, fade_ms=0):
         pass
@@ -100,29 +157,6 @@ class BaseSound():
 
 def create_sound(fp):
     return pygame.mixer.Sound(fp)
-
-def get_key_name(key_code):
-    return pygame.key.name(key_code)
-
-def terminate():
-    configuration.write_config_file() # Write last saved options to config file
-    pygame.mixer.music.stop()
-    pygame.mixer.quit()
-    pygame.quit()
-    sys.exit()
-
-def build_event_list():
-    # Get events
-    eventList = [] # Clear event list
-    # Only gets escape events!
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            terminate()
-        if event.type == KEYUP and configuration.OPTIONS['cheat']:
-            if event.key == K_ESCAPE:
-                terminate()
-        eventList.append(event)
-    return eventList
 
 ### === MUSIC STUFF =====================================================
 class Song(object):
@@ -285,3 +319,66 @@ class MusicThread(object):
                 #self.state = 'normal'
 
 music_thread = MusicThread()
+
+def handle_debug(eventList, gameStateObj, metaDataObj):
+### For debugging purposes only ###
+    for event in eventList:
+        if event.type == KEYUP:
+            # Win the game
+            if event.key == K_w:
+                gameStateObj.statedict['levelIsComplete'] = 'win'
+                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seize_triggers.txt'))
+                gameStateObj.stateMachine.changeState('dialogue')
+            # Do 2 damage to unit
+            elif event.key == K_d: # For debugging purposes only
+                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
+                if gameStateObj.cursor.currentHoveredUnit:
+                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
+                    gameStateObj.cursor.currentHoveredUnit.currenthp -= 2
+            # Lose the game
+            elif event.key == K_l:
+                gameStateObj.statedict['levelIsComplete'] = 'loss'
+                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escape_triggers.txt'))
+                gameStateObj.stateMachine.changeState('dialogue')
+            # Level up unit by 100 or by 14
+            elif event.key == K_u or event.key == K_j:
+                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
+                if gameStateObj.cursor.currentHoveredUnit:
+                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
+                    if event.key == K_j:
+                        exp = 14
+                    else:
+                        exp = 100
+                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=gameStateObj.cursor.currentHoveredUnit, exp=exp)) #Also handles actually adding the exp to the unit
+                    gameStateObj.stateMachine.changeState('expgain')
+                return
+            # Give unit ten exp
+            elif event.key == K_e: # For debugging purposes only
+                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
+                if gameStateObj.cursor.currentHoveredUnit:
+                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
+                    gameStateObj.cursor.currentHoveredUnit.exp += 10
+            # Kill unit
+            elif event.key == K_p:
+                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
+                if gameStateObj.cursor.currentHoveredUnit:
+                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
+                    gameStateObj.cursor.currentHoveredUnit.isDying = True
+                    gameStateObj.stateMachine.changeState('dying')
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], gameStateObj.cursor.currentHoveredUnit, event_flag=False))
+                    gameStateObj.stateMachine.changeState('dialogue')
+                return
+            # Charge all skills
+            elif event.key == K_t:
+                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
+                if gameStateObj.cursor.currentHoveredUnit:
+                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
+                    for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if skill.active]:
+                        skill.active.current_charge = skill.active.required_charge
+                        gameStateObj.cursor.currentHoveredUnit.tags.add('ActiveSkillCharged')
+            # Increase all wexp by 5
+            elif event.key == K_5:
+                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
+                if gameStateObj.cursor.currentHoveredUnit:
+                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
+                    gameStateObj.cursor.currentHoveredUnit.increase_wexp(5, gameStateObj)
