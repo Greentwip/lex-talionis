@@ -89,4 +89,6 @@ class BattleAnimationManager(object):
             poses['RangedDodge'] = poses['Dodge']
         if not 'RangedStand' in poses:
             poses['RangedStand'] = poses['Stand']
+        if not 'Miss' in poses:
+            poses['Miss'] = poses['Attack']
         return poses
