@@ -1,26 +1,30 @@
-def alphaize(desired_color, background_color):
-    r1 = background_color[0]
-    g1 = background_color[1]
-    b1 = background_color[2]
+x1, x2, x3 = 96, 152, 200 # Base Color
+z1, z2, z3 = 104, 200, 248 # Desired Color
+x4, x5, x6 = 40, 40, 40 # Base Color #2
+z4, z5, z6 = 48, 88, 248 # Desired Color #2
 
-    r2 = desired_color[0]
-    g2 = desired_color[1]
-    b2 = desired_color[2]
+min_diff = 255
+closest_color = (0, 0, 0, 0)
+for r in xrange(0, 255, 8):
+    print(r)
+    for g in xrange(0, 255, 8):
+        for b in xrange(0, 255, 8):
+            for a in xrange(0, 32):
+                p = (a/32.)
+                new_z1 = x1 + (r - x1)*p
+                new_z2 = x2 + (g - x2)*p
+                new_z3 = x3 + (b - x3)*p
+                new_z4 = x4 + (r - x4)*p
+                new_z5 = x5 + (g - x5)*p
+                new_z6 = x6 + (b - x6)*p
+                diff = abs(z1 - new_z1) + abs(z2 - new_z2) + abs(z3 - new_z3) + abs(z4 - new_z4) + abs(z5 - new_z5) + abs(z6 - new_z6)
+                if diff < min_diff:
+                    min_diff = diff
+                    closest_color = (r, g, b, a*8)
 
-    alpha = 0
-    r = -1
-    g = -1
-    b = -1
+print(min_diff)
+print(closest_color)
 
-    while alpha < 1 and (r < 0 or g < 0 or b < 0 or r > 255 or g > 255 or b > 255):
-        alpha += 1/256.0
-        inv = 1 / alpha
-        r = r2 * inv + r1 * (1 - inv)
-        g = g2 * inv + g1 * (1 - inv)
-        b = b2 * inv + b1 * (1 - inv)
 
-    return r, g, b, alpha
 
-desired_color = (48, 88, 248)
-background_color = (40, 40, 40)
-print(alphaize(desired_color, background_color))
+
