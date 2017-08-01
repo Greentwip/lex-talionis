@@ -1,0 +1,15 @@
+pose;Attack
+blend
+f;3;Pillar1
+f;2;Pillar2
+f;2;Pillar3
+f;2;Pillar4
+f;2;Pillar5
+f;2;Pillar6
+f;2;Pillar7
+f;2;Pillar8
+f;2;Pillar9
+f;3;Pillar10
+f;3;Pillar11
+f;3;Pillar12
+wait;1

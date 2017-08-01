@@ -65,7 +65,7 @@ def get_delta():
 # === DRAW STUFF =============================================================
 blend_dict = {'RGB_MULT': pygame.BLEND_RGB_MULT, 'RGB_ADD': pygame.BLEND_RGB_ADD, 'RGBA_ADD': pygame.BLEND_RGBA_ADD}
 def blit(dest, source, pos=(0, 0), mask=None, blend=None):
-    dest.blit(source, pos, mask, blend_dict[blend] if blend else None)
+    dest.blit(source, pos, mask, blend_dict[blend] if blend else 0)
         
 def create_surface(size, transparent=False, convert=False):
     if transparent:

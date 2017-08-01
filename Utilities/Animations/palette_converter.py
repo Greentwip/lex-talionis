@@ -3,9 +3,9 @@ import glob
 from palette_index import *
 
 ### === INPUTS ===
-p1 = plains
-p2 = snow
-images_to_convert = 'Plains-Ranged.png'
+p1 = generic
+p2 = ewan
+images_to_convert = 'Animation3.png'
 
 def palette_convert(p1, p2, image_to_convert):
 	conversion = {p1[i]: p2[i] for i in xrange(len(p1))}

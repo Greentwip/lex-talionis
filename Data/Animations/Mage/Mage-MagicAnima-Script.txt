@@ -2,7 +2,10 @@ pose;Stand
 f;4;Stand
 
 pose;Dodge
-f;4;Stand
+f;4;Dodge1
+f;27;Dodge2
+f;6;Dodge1
+f;1;Stand
 
 pose;Attack
 f;6;Stand
@@ -10,12 +13,12 @@ f;5;AttackBegin1
 f;4;AttackBegin2
 f;5;AttackBegin3
 f;5;AttackBegin4
-f;2;AttackBegin5
-# Magic starts appearing
-spell;GenericMage
-f;2;AttackBegin5
+# Start initial effect
+effect;MageInit
+f;4;AttackBegin5
 f;4;AttackBegin6
 f;8;AttackBegin7
+# MageInit ends 1 frame into this
 f;6;AttackBegin8
 # Start Main Spell
 spell

@@ -12,6 +12,11 @@ import CustomObjects
 #* Stand
 #* RangedStand
 
+class Loop(object):
+    def __init__(self, start):
+        self.start_index = start
+        self.end_index = 0
+
 class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
     def __init__(self, anim, script):
@@ -22,6 +27,11 @@ class BattleAnimation(object):
         self.num_frames = 0 # How long this frame of animation should exist for (in frames)
         self.animations = []
 
+        self.child_effect = None
+        self.loop = False
+
+        # For drawing
+        self.blend = None
         # flash frames
         self.foreground = None
         self.foreground_frames = 0
@@ -30,9 +40,10 @@ class BattleAnimation(object):
         # Opacity
         self.opacity = 255
 
-    def awake(self, owner, partner, right, at_range, init_speed, init_position):
+    def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
         self.owner = owner
         self.partner = partner
+        self.parent = parent
         self.right = right
         self.at_range = at_range
         self.init_speed = init_speed
@@ -75,10 +86,19 @@ class BattleAnimation(object):
         elif self.state == 'Wait':
             pass
 
+        # Handle spells
+        if self.child_effect:
+            self.child_effect.update()
+            if self.child_effect.state == 'Inert':
+                self.child_effect = None
+
     def end_current(self):
         #print('Animation: End Current')
-        self.current_pose = 'RangedStand' if self.at_range else 'Stand'
-        self.state = 'Run'
+        if 'Stand' in self.poses:
+            self.current_pose = 'RangedStand' if self.at_range else 'Stand'
+            self.state = 'Run'
+        else:
+            self.state = 'Inert'
         self.script_index = 0
 
     def finish(self):
@@ -87,7 +107,7 @@ class BattleAnimation(object):
         self.script_index = 0
 
     def waiting_for_hp(self):
-        return self.state == 'Wait'
+        return self.state == 'Wait' or (self.child_effect and self.child_effect.waiting_for_hp())
 
     def read_script(self):
         script = self.poses[self.current_pose]
@@ -97,13 +117,22 @@ class BattleAnimation(object):
             self.script_index += 1
 
     def parse_line(self, line):
+        #print(self.right, True if self.child_effect else False, line)
+        # === TIMING AND IMAGES ===
         if line[0] == 'f':
             self.frame_count = 0
             self.num_frames = int(line[1])
             self.current_frame = self.frame_directory[line[2]]
             self.processing = False
+        elif line[0] == 'wait':
+            self.frame_count = 0
+            self.num_frames = int(line[1])
+            self.current_frame = None
+            self.processing = False
+        # === SFX ===
         elif line[0] == 'sound':
             SOUNDDICT[line[1]].play()
+        # === COMBAT HIT ===
         elif line[0] == 'hit':
             self.current_frame = self.frame_directory[line[1]]
             self.state = 'Wait'
@@ -112,6 +141,17 @@ class BattleAnimation(object):
                 self.owner.shake(1)
             else: # No Damage
                 self.owner.shake(2)
+        elif line[0] == 'spell_hit':
+            self.current_frame = None
+            if len(line) > 1:
+                self.current_frame = self.frame_directory[line[1]]
+            self.state = 'Wait'
+            self.processing = False
+            if self.owner.current_result.def_damage > 0:
+                self.owner.shake(3)
+            else: # No Damage
+                self.owner.shake(2)
+        # === FLASHING ===
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1])
             self.partner.flash(num_frames, (248, 248, 248))
@@ -119,6 +159,11 @@ class BattleAnimation(object):
             self.foreground_frames = int(line[1])
             self.foreground = IMAGESDICT['BlackBackground'].copy()
             self.foreground.fill((248, 248, 248))
+        elif line[0] == 'darken':
+            self.owner.darken()
+        elif line[0] == 'lighten':
+            self.owner.lighten()
+        # === ANIMATIONS ===
         elif line[0] == 'hit_spark':
             if self.owner.current_result.def_damage > 0:
                 if self.right:
@@ -152,6 +197,44 @@ class BattleAnimation(object):
                                                       1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
             self.animations.append(anim)
             self.partner.dodge()
+        # === EFFECTS ===
+        elif line[0] == 'effect':
+            image, script = ANIMDICT.get_effect(line[1])
+            self.child_effect = BattleAnimation(image, script)
+            self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+            self.child_effect.start_anim(self.current_pose)
+        elif line[0] == 'blend':
+            self.blend = 'RGB_ADD'
+        elif line[0] == 'spell':
+            attacker = self.owner.current_result.attacker
+            image, script = ANIMDICT.get_effect(self.owner.right_item.id if attacker is self.owner.right else self.owner.left_item.id)
+            self.child_effect = BattleAnimation(image, script)
+            self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+            self.child_effect.start_anim(self.current_pose)
+        # === LOOPING ===
+        elif line[0] == 'start_loop':
+            self.loop = Loop(self.script_index)
+        elif line[0] == 'end_loop':
+            if self.loop:
+                self.loop.end_index = self.script_index
+                self.script_index = self.loop.start_index # re-loop
+        elif line[0] == 'end_parent_loop':
+            self.parent.end_loop()
+        # === CONDITIONALS ===
+        elif line[0] == 'if_range':
+            if not self.at_range:
+                self.script_index += int(line[1])
+        elif line[0] == 'nif_range':
+            if self.at_range:
+                self.script_index += int(line[1])
+        # === MOVEMENT ===
+        elif line[0] == 'pan':
+            self.owner.pan()
+
+    def end_loop(self):
+        if self.loop:
+            self.script_index = self.loop.end_index
+            self.loop = None
 
     def start_anim(self, pose):
         #print('Animation: Start')
@@ -161,7 +244,10 @@ class BattleAnimation(object):
 
     def resume(self):
         #print('Animation: Resume')
-        self.reset()
+        if self.state == 'Wait':
+            self.reset()
+        if self.child_effect:
+            self.child_effect.resume()
 
     def reset(self):
         self.state = 'Run'
@@ -195,34 +281,41 @@ class BattleAnimation(object):
 
     def draw(self, surf, shake=(0, 0)):
         if self.state != 'Inert':
-            image = self.current_frame[0].copy()
-            if not self.right:
-                image = Engine.flip_horiz(image)
-            offset = self.current_frame[1]
-            if not self.right:
-                offset = WINWIDTH - offset[0] - image.get_width() + shake[0], offset[1] + shake[1]
+            if self.current_frame is not None:
+                image = self.current_frame[0].copy()
+                if not self.right:
+                    image = Engine.flip_horiz(image)
+                offset = self.current_frame[1]
+                if self.right:
+                    offset = offset[0] + shake[0], offset[1] + shake[1]
+                else:
+                    offset = WINWIDTH - offset[0] - image.get_width() + shake[0], offset[1] + shake[1]
 
-            # Move the animations in at the beginning and out at the end
-            if self.entrance:
-                progress = (self.init_speed - self.entrance)/float(self.init_speed)
-                image = Engine.transform_scale(image, (int(progress*image.get_width()), int(progress*image.get_height())))
-                diff_x = offset[0] - self.init_position[0]
-                diff_y = offset[1] - self.init_position[1]
-                offset = int(self.init_position[0] + progress*diff_x), int(self.init_position[1] + progress*diff_y)
+                # Move the animations in at the beginning and out at the end
+                if self.entrance:
+                    progress = (self.init_speed - self.entrance)/float(self.init_speed)
+                    image = Engine.transform_scale(image, (int(progress*image.get_width()), int(progress*image.get_height())))
+                    diff_x = offset[0] - self.init_position[0]
+                    diff_y = offset[1] - self.init_position[1]
+                    offset = int(self.init_position[0] + progress*diff_x), int(self.init_position[1] + progress*diff_y)
 
-            # Self flash
-            if self.flash_color:
-                image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color)
-                self.flash_frames -= 1
-                # If done
-                if self.flash_frames <= 0:
-                    self.flash_color = None
-                    self.flash_frames = 0
+                # Self flash
+                if self.flash_color:
+                    image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color)
+                    self.flash_frames -= 1
+                    # If done
+                    if self.flash_frames <= 0:
+                        self.flash_color = None
+                        self.flash_frames = 0
 
-            if self.opacity != 255:
-                image = Image_Modification.flickerImageTranslucent255(image.convert_alpha(), self.opacity)
+                if self.opacity != 255:
+                    image = Image_Modification.flickerImageTranslucent255(image.convert_alpha(), self.opacity)
 
-            surf.blit(image, offset)
+                Engine.blit(surf, image, offset, None, self.blend)
+
+            # Handle child
+            if self.child_effect:
+                self.child_effect.draw(surf)
 
             # Update and draw animations
             self.animations = [animation for animation in self.animations if not animation.update()]
