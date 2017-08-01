@@ -704,12 +704,13 @@ class Animation(object):
         self.hold = hold
         self.start_time = start_time
         self.on = on
+        self.tint = False
         self.ignore_map = ignore_map # Whether the position of the Animation sould be relative to the map
         self.lastUpdate = Engine.get_time()
 
         self.set_timing = set_timing
         if self.set_timing:
-            assert len(self.set_timing) == self.total_num_frames, '%s %s'%(len(self.set_timing), len(self.total_num_frames))
+            assert len([timing for timing in self.set_timing if timing > 0]) == self.total_num_frames, '%s %s'%(len(self.set_timing), len(self.total_num_frames))
         self.timing_count = -1
 
         self.indiv_width, self.indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y
@@ -727,7 +728,10 @@ class Animation(object):
                 topleft = (x-gameStateObj.cameraOffset.x-1)*TILEWIDTH, (y-gameStateObj.cameraOffset.y)*TILEHEIGHT
             if blend:
                 image = Image_Modification.change_image_color(image, blend)
-            surf.blit(image, topleft)
+            if self.tint:
+                Engine.blit(surf, image, topleft, image.get_rect(), 'RGB_ADD')
+            else:
+                surf.blit(image, topleft)
 
     def update(self, gameStateObj=None):
         currentTime = Engine.get_time()
@@ -735,6 +739,11 @@ class Animation(object):
             # If this animation has every frame's count defined
             if self.set_timing:
                 num_frames = self.set_timing[self.frameCount]
+                # If you get a -1 on set timing, switch to blend tint
+                while num_frames < 0:
+                    self.tint = not self.tint 
+                    self.frameCount += 1
+                    num_frames = self.set_timing[self.frameCount]
                 self.timing_count += 1
                 if self.timing_count >= num_frames:
                     self.timing_count = 0

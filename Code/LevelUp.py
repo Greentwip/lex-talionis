@@ -22,8 +22,8 @@ class levelUpScreen(object):
         # spriting
         self.levelUpScreen = IMAGESDICT['LevelScreen']
         if self.in_combat:
-            topleft=(0, (WINHEIGHT - 100)/2)
-            timing = [1 for _ in xrange(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in xrange(13)] + [1 for _ in xrange(14)] 
+            topleft=(0, 6)
+            timing = [1 for _ in xrange(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in xrange(15)] + [-1] + [1 for _ in xrange(12)] 
             self.levelUpAnimation = CustomObjects.Animation(IMAGESDICT['LevelUpBattle'], topleft, (5, 11), 52, ignore_map=True, set_timing=timing)
         else:
             if unit.position:

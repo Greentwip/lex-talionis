@@ -90,13 +90,13 @@ RES;Res
 CON;Con
 MOV;Move
 STR_desc;Strength. The higher the number, the more damage you inflict.
-MAG_desc;Magical power. Magical power is akin to strength.
-SKL_desc;Fighting skill. A higher number improves the unit's accuracy.
+MAG_desc;Magical power. Increases ward and spell damage.
+SKL_desc;Fighting skill. A higher number improves accuracy.
 SPD_desc;This affects both evasion and attack speed.
 DEF_desc;Reduces damage from weapons.
 RES_desc;Reduces damage from magical attacks.
 LCK_desc;Luck affects accuracy and avoid.
-MOV_desc;The distance you can cross in 1 turn.
+MOV_desc;The distance you can cross in one turn.
 CON_desc;Constitution. Affects how well the unit can wield heavier weapons.
 Aid_desc;Max rescuing constitution. Units with greater Con cannot be rescued.
 Trv_desc;Who is this unit rescuing?
