@@ -705,5 +705,5 @@ class MiniMap(object):
         bg.blit(mask, (bg.get_width()/2 - mask.get_width()/2, bg.get_height()/2 - mask.get_height()/2))
 
         # Apply mask to surf
-        Engine.blit(surf, bg, bg.get_rect().topleft, mask=bg.get_rect())
+        Engine.blit(surf, bg, bg.get_rect().topleft, mask=bg.get_rect(), blend='RGB_MULT')
         return surf
