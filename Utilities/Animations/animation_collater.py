@@ -11,7 +11,7 @@ index_lines = []
 for fp in sorted(glob.glob('*.png')):
     print(fp)
     count += 1
-    name = 'Attack' + str(count) 
+    name = fp[:-4]
     image = Image.open(fp).convert('RGB')
 
     width, height = image.size

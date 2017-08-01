@@ -4,6 +4,7 @@ import Engine
 class BattleAnimationManager(object):
     def __init__(self, COLORKEY):
         self.generated_klasses = set()
+        # Class Animations
         self.directory = {}
         for root, dirs, files in os.walk('./Data/Animations/'):
             for name in files:
@@ -23,6 +24,22 @@ class BattleAnimationManager(object):
                     self.directory[klass][weapon]['script'] = full_name
                 elif name.endswith('Index.txt'):
                     self.directory[klass][weapon]['index'] = full_name
+        # Custom Spell Animations
+        self.generated_effects = set()
+        self.effects = {}
+        for root, dirs, files in os.walk('./Data/Effects/'):
+            for name in files:
+                effect, desc = name.split('-')
+                if effect not in self.effects:
+                    self.effects[effect] = {}
+                full_name = os.path.join(root, name)
+                if name.endswith('.png'):
+                    image = Engine.image_load(full_name, convert_alpha=True)
+                    self.effects[effect]['image'] = image
+                elif name.endswith('Script.txt'):
+                    self.effects[effect]['script'] = full_name
+                elif name.endswith('Index.txt'):
+                    self.effects[effect]['index'] = full_name
 
     def generate(self, klass):
         if klass in self.directory and klass not in self.generated_klasses:
@@ -36,6 +53,13 @@ class BattleAnimationManager(object):
                 #print(frame_directory)
                 klass_directory[weapon]['images'] = frame_directory
                 klass_directory[weapon]['script'] = self.parse_script(klass_directory[weapon]['script'])
+
+    def generate_effect(self, effect):
+        if effect in self.effects and effect not in self.generated_effects:
+            self.generated_effects.add(effect)
+            e_dict = self.effects[effect]
+            e_dict['image'] = self.format_index(e_dict['index'], e_dict['image'])
+            e_dict['script'] = self.parse_script(e_dict['script'])
 
     def partake(self, unit, item=None, magic=False):
         if unit.klass in self.directory:
@@ -54,6 +78,15 @@ class BattleAnimationManager(object):
                 return None
         else:
             return None
+
+    def get_effect(self, effect):
+        if effect in self.effects:
+            self.generate_effect(effect)
+            #print(self.effects[effect]['script'])
+            return self.effects[effect]['image'], self.effects[effect]['script']
+        else:
+            print('Effect %s not found in self.effects!'%(effect))
+            return None, None
 
     def format_index(self, index, anim):
         frame_directory = {}
@@ -82,13 +115,17 @@ class BattleAnimationManager(object):
             if line[0] == 'pose':
                 current_pose = line[1]
                 poses[line[1]] = []
+            elif line[0] == 'effect':
+                effect = line[1]
+                self.generate_effect(effect)
+                poses[current_pose].append(line)
             else:
                 poses[current_pose].append(line)
-        # Duplicate for ranged if not explicitly provided
-        if not 'RangedDodge' in poses:
+        # Duplicate for ranged and miss if not explicitly provided
+        if not 'RangedDodge' in poses and 'Dodge' in poses:
             poses['RangedDodge'] = poses['Dodge']
-        if not 'RangedStand' in poses:
+        if not 'RangedStand' in poses and 'Stand' in poses:
             poses['RangedStand'] = poses['Stand']
-        if not 'Miss' in poses:
+        if not 'Miss' in poses and 'Attack' in poses:
             poses['Miss'] = poses['Attack']
         return poses

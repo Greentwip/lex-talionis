@@ -2,7 +2,7 @@ import random, math
 from GlobalConstants import *
 from configuration import *
 import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
-import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Utility, Engine
+import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Utility, Engine, Image_Modification
 
 import logging
 logger = logging.getLogger(__name__)
@@ -571,9 +571,16 @@ class AnimationCombat(Combat):
         self.total_viewbox_clamp_states = 15
         self.viewbox = None
 
+        self.darken_background = 0
+
+        # For positioning UI
         self.name_offset = 0
         self.bar_offset = 0
         self.max_position_offset = 8
+
+        # for Panning platforms
+        self.pan_dir = 0
+        self.pan_offset = 0
 
         # for shake
         self.shake_set = [(0, 0)]
@@ -806,26 +813,73 @@ class AnimationCombat(Combat):
             self.shake_set = [(3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (0, 0)]
         elif num == 2: # No Damage
             self.shake_set = [(1, 1), (1, 1), (1, 1), (-1, -1), (-1, -1), (-1, -1), (0, 0)]
+        elif num == 3: # Spell Hit
+            self.shake_set = [(0, 0), (-3, -3), (0, 0), (0, 0), (0, 0), (3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (3, 3), (0, 0)]
+
+    def darken(self):
+        self.darken_background = 1
+
+    def lighten(self):
+        self.darken_background = -3
+
+    def pan(self):
+        if self.at_range:
+            if self.pan_offset != 0:
+                if self.current_result.attacker == self.right:
+                    self.pan_dir = -1
+                else:
+                    self.pan_dir = 1
+            else:
+                if self.current_result.attacker == self.right:
+                    self.pan_dir = 1
+                else:
+                    self.pan_dir = -1
 
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset/float(self.max_position_offset)
         platform_trans = 100
         platform_top = 88
+        if self.darken_background:
+            self.darken_background = min(self.darken_background, 4)
+            bg = Image_Modification.flickerImageTranslucent(IMAGESDICT['BlackBackground'], 100 - abs(int(self.darken_background*12.5)))
+            surf.blit(bg, (0, 0))
+            self.darken_background += 1
+        # Pan
+        if self.pan_dir != 0:
+            self.pan_offset += self.pan_dir
+            if self.pan_offset > 32:
+                self.pan_offset = 32
+                self.pan_dir = 0
+            elif self.pan_offset < -32:
+                self.pan_offset = -32
+                self.pan_dir = 0
+            elif self.pan_offset == 0:
+                self.pan_dir = 0
         # Platform
         if self.at_range:
-            surf.blit(self.left_platform, (-23 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
-            surf.blit(self.right_platform, (-131 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.left_platform, (-23 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.right_platform, (131 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         else:
             surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
             surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         # Animation
-        if self.current_result:
-            self.current_result.attacker.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]))
-            self.current_result.defender.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]))
-            self.current_result.attacker.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]))
+        if self.at_range:
+            right_range_offset = 23 + self.pan_offset
+            left_range_offset = -60 + self.pan_offset
         else:
-            self.left.battle_anim.draw(surf)
-            self.right.battle_anim.draw(surf)
+            right_range_offset, left_range_offset = 0, 0
+        if self.current_result:
+            if self.right is self.current_result.attacker:
+                self.right.battle_anim.draw_under(surf, (-self.shake_offset[0]*2 + right_range_offset, self.shake_offset[1]))
+                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2 + left_range_offset, self.shake_offset[1]))
+                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2 + right_range_offset, self.shake_offset[1]))
+            else:
+                self.left.battle_anim.draw_under(surf, (-self.shake_offset[0]*2 + left_range_offset, self.shake_offset[1]))
+                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2 + right_range_offset, self.shake_offset[1]))
+                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2 + left_range_offset, self.shake_offset[1]))
+        else:
+            self.left.battle_anim.draw(surf, (left_range_offset, 0))
+            self.right.battle_anim.draw(surf, (right_range_offset, 0))
         # Bar
         left_bar = self.left_bar.copy()
         right_bar = self.right_bar.copy()
