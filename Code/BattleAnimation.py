@@ -39,17 +39,20 @@ class BattleAnimation(object):
         self.flash_frames = 0
         # Opacity
         self.opacity = 255
+        # Offset
+        self.static = False
 
     def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
         self.owner = owner
         self.partner = partner
-        self.parent = parent
+        self.parent = parent if parent else self
         self.right = right
         self.at_range = at_range
         self.init_speed = init_speed
         self.entrance = init_speed
         self.init_position = init_position
         self.current_pose = 'RangedStand' if self.at_range else 'Stand'
+        self.current_frame = None
         self.script_index = 0
         #self.processing = True
         self.reset()
@@ -203,6 +206,12 @@ class BattleAnimation(object):
             self.child_effect = BattleAnimation(image, script)
             self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             self.child_effect.start_anim(self.current_pose)
+        elif line[0] == 'enemy_effect':
+            image, script = ANIMDICT.get_effect(line[1])
+            self.partner.child_effect = BattleAnimation(image, script)
+            # Opposite effects
+            self.partner.child_effect.awake(self.owner, self.parent, not self.right, self.at_range, parent=self.parent.partner)
+            self.partner.child_effect.start_anim(self.current_pose)
         elif line[0] == 'blend':
             self.blend = 'RGB_ADD'
         elif line[0] == 'spell':
@@ -211,6 +220,8 @@ class BattleAnimation(object):
             self.child_effect = BattleAnimation(image, script)
             self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             self.child_effect.start_anim(self.current_pose)
+        elif line[0] == 'static':
+            self.static = True
         # === LOOPING ===
         elif line[0] == 'start_loop':
             self.loop = Loop(self.script_index)
@@ -279,7 +290,7 @@ class BattleAnimation(object):
                               0, 0, 0, 255, 0, 0, 0, 0, 0, 0,
                               255, 0, 0, 0, 0, 0, 0]
 
-    def draw(self, surf, shake=(0, 0)):
+    def draw(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert':
             if self.current_frame is not None:
                 image = self.current_frame[0].copy()
@@ -287,9 +298,9 @@ class BattleAnimation(object):
                     image = Engine.flip_horiz(image)
                 offset = self.current_frame[1]
                 if self.right:
-                    offset = offset[0] + shake[0], offset[1] + shake[1]
+                    offset = offset[0] + shake[0] + range_offset + (pan_offset if not self.static else 0), offset[1] + shake[1]
                 else:
-                    offset = WINWIDTH - offset[0] - image.get_width() + shake[0], offset[1] + shake[1]
+                    offset = WINWIDTH - offset[0] - image.get_width() + shake[0] + range_offset + (pan_offset if not self.static else 0), offset[1] + shake[1]
 
                 # Move the animations in at the beginning and out at the end
                 if self.entrance:
@@ -315,7 +326,7 @@ class BattleAnimation(object):
 
             # Handle child
             if self.child_effect:
-                self.child_effect.draw(surf)
+                self.child_effect.draw(surf, (0, 0), range_offset, pan_offset)
 
             # Update and draw animations
             self.animations = [animation for animation in self.animations if not animation.update()]
@@ -331,5 +342,5 @@ class BattleAnimation(object):
                     self.foreground = None
                     self.foreground_frames = 0
 
-    def draw_under(self, surf, shake=(0, 0)):
+    def draw_under(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         pass
