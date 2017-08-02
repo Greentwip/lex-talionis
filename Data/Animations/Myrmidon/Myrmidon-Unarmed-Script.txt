@@ -1,0 +1,8 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;4;Miss1
+f;27;Miss2
+f;6;Miss1
+f;1;Stand

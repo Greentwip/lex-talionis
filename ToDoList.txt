@@ -18,6 +18,8 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Promotion (Split Video) --- probably going to have to rewrite this section as its own thing.
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Add options to OPTIONS MENU
+--- On LevelUp Animation Darken instead of using dark fuzz?
+--- On LevelUp StatScreen Darken Everything (Nametag, All UI, but not background)
 --- MAP ---
 - Autotiles for chasm in level 6?
 --- AI ---

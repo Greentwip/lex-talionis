@@ -402,13 +402,19 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
         if attacker_anim and defender_anim:
             # Build attacker animation
             attacker_script = attacker_anim['script']
-            attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
-            attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
+            if attacker.name in attacker_anim['images']:
+                attacker_frame_dir = attacker_anim['images'][attacker.name]
+            else:
+                attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
+                attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
             attacker.battle_anim = BattleAnimation.BattleAnimation(attacker_frame_dir, attacker_script)
             # Build defender animation
             defender_script = defender_anim['script']
-            defender_color = 'Blue' if defender.team == 'player' else 'Red'
-            defender_frame_dir = defender_anim['images']['Generic' + defender_color]
+            if defender.name in defender_anim['images']:
+                defender_frame_dir = defender_anim['images'][defender.name]
+            else:
+                defender_color = 'Blue' if defender.team == 'player' else 'Red'
+                defender_frame_dir = defender_anim['images']['Generic' + defender_color]
             defender.battle_anim = BattleAnimation.BattleAnimation(defender_frame_dir, defender_script)
             return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat)
     # default
@@ -600,8 +606,9 @@ class AnimationCombat(Combat):
         FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x/2, 8))
         # Bar
         self.left_bar = IMAGESDICT[left_color + 'LeftMainCombat']
-        size_x = FONT['text_brown'].size(self.left_item.name)[0]
-        FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x/2, 5))
+        if self.left_item:
+            size_x = FONT['text_brown'].size(self.left_item.name)[0]
+            FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x/2, 5))
 
         # Right
         right_color = 'Blue' if self.right.team == 'player' else 'Red'
@@ -611,8 +618,9 @@ class AnimationCombat(Combat):
         FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x/2, 8))
         # Bar
         self.right_bar = IMAGESDICT[right_color + 'RightMainCombat']
-        size_x = FONT['text_brown'].size(self.right_item.name)[0]
-        FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x/2, 5))
+        if self.right_item:
+            size_x = FONT['text_brown'].size(self.right_item.name)[0]
+            FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x/2, 5))
 
         # Platforms
         left_platform_type = gameStateObj.map.tiles[self.left.position].platform
@@ -887,8 +895,10 @@ class AnimationCombat(Combat):
         self.left_hp_bar.draw(left_bar, (27, 30))
         self.right_hp_bar.draw(right_bar, (25, 30))
             # Item
-        self.draw_item(left_bar, self.left_item, self.right_item, self.left, self.right, (45, 2))
-        self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (1, 2))
+        if self.left_item:
+            self.draw_item(left_bar, self.left_item, self.right_item, self.left, self.right, (45, 2))
+        if self.right_item:
+            self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (1, 2))
             # Stats
         self.draw_stats(left_bar, self.left_stats, (42, 1))
         self.draw_stats(right_bar, self.right_stats, (WINWIDTH/2 - 3, 1))
