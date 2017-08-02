@@ -84,7 +84,7 @@ enemy;0;0;Mercenary;10;Steel Sword;4,17;Attack;Soldier
 enemy;0;0;Mercenary;10;Steel Sword;4,21;Attack;Soldier
 enemy;0;0;Mercenary;10;Steel Sword;5,22;Attack;Soldier
 enemy;0;0;Vanguard;12;Steel Sword,Hand Axe;1,22;SoftGuard;Soldier
-enemy;0;0;Skirmisher,Dragoon;12;Steel Lance,Javelin;3,22;SoftGuard;Soldier
+enemy;0;0;Dragoon;12;Steel Lance,Javelin;3,22;SoftGuard;Soldier
 enemy;0;0;Sage;12;Fire,dBlizzard;2,17;SoftGuard;Soldier
 # 
 # Mercenary Reinforcements - When Bridges are crossed or Turn 3 happens

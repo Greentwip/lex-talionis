@@ -77,10 +77,3 @@ enemy;0;pack3_2;Soldier;6;Steel Lance;0,0;Pursue;Guard
 enemy;0;pack3_3;Archer;5;Oak Bow;0,0;Pursue;Guard
 enemy;0;pack3_4;Shaman;5;Nyx;0,0;Pursue;Guard
 enemy;0;pack3_5;Mage;5;Earth,Fire;0,0;Pursue;Guard
-# Infinite Reinforcements
-# 2 means prefab. No level
-#enemy;2;i1;Sentinel;Steel Axe,Hand Axe;0,0;Pursue;Guard;Void_Curse
-#enemy;2;i2;Soldier;Steel Lance,Javelin;0,0;Pursue;Guard;Void_Curse
-#enemy;2;i3;Mage;Fire;0,0;Pursue;Guard;Void_Curse
-#enemy;2;i4;Shaman;Nyx;0,0;Pursue;Guard;Void_Curse
-#enemy;2;i5;Archer;Oak Bow;0,0;Pursue;Guard;Void_Curse

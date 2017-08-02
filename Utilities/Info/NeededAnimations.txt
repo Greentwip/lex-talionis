@@ -1,0 +1,167 @@
+# Needed Animations
+
+Players
+=== Ophie ===
+MyrmidonUnarmed
+MyrmidonSword 
+MyrmidonMagicSword
+MyrmidonRangedSword ??
+SwordmasterUnarmed
+SwordmasterSword
+SwordmasterMagicSword
+SwordmasterRangedSword ??
+=== Prim ===
+ClericUnarmed ?? (Modify Serra Cleric?)
+ClericMagicLight ??
+BishopFUnarmed
+BishopFMagicLight
+BishopFMagicDark ??
+=== Joel ===
+FighterUnarmed
+FighterAxe
+FighterRangedAxe
+WarriorUnarmed
+WarriorAxe
+WarriorRangedAxe
+WarriorRangedBow
+=== Nia ===
+ArcherFUnarmed
+ArcherFRangedBow
+SniperFUnarmed
+SniperFRangedBow
+=== Althea ===
+MageFUnarmed
+MageFMagicAnima
+SageFUnarmed
+SageFMagicAnima
+=== Drake ===
+CavalierUnarmed
+CavalierSword
+CavalierMagicSword
+CavalierRangedSword ??
+CavalierLance
+CavalierRangedLance
+PaladinUnarmed
+PaladinSword
+PaladinMagicSword
+PaladinRangedSword ??
+PaladinLance
+PaladinRangedLance
+=== Theo ===
+KnightUnarmed
+KnightLance
+KnightRangedLance
+GeneralUnarmed
+GeneralLance
+GeneralRangedLance
+GeneralSword
+GeneralMagicSword
+GeneralRangedSword ??
+=== Renae ===
+ThiefFUnarmed
+ThiefFSword
+ThiefFMagicSword
+ThiefFRangedSword ??
+AssassinFUnarmed ??
+AssassinFSword ??
+AssassinFMagicSword ??
+AssassinFRangedSword ??
+AssassinFRangedBow ??
+=== Eliza ===
+SoldierFUnarmed ??
+SoldierFLance ??
+SoldierFRangedLance ??
+HalberdierFUnarmed ??
+HalberdierFLance ??
+HalberdierFRangedLance ??
+HalberdierFAxe ??
+HalberdierFRangedAxe ??
+=== Sam ===
+MonkUnarmed
+MonkMagicLight
+MageKnightUnarmed
+MageKnightMagicLight ??
+=== Kayla ===
+ShamanFUnarmed
+ShamanFMagicDark
+DruidFUnarmed
+DruidFMagicDark
+=== Coyote ===
+MercenaryUnarmed
+MercenarySword
+MercenaryMagicSword
+MercenaryRangedSword ??
+HeroUnarmed
+HeroSword
+HeroMagicSword
+HeroRangedSword ??
+HeroAxe
+HeroRangedAxe
+
+===== Other Animations Needed =====
+Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ~~, Sage, Archer, Sniper, Cleric, Bishop
+SentinelUnarmed ??
+SentinelAxe ??
+SwordmasterFUnarmed
+SwordmasterFSword
+SwordmasterFMagicSword
+SkirmisherUnarmed ??
+SkirmisherLance ?? 
+SkirmisherRangedLance ??
+PirateUnarmed
+PirateAxe
+PirateRangedAxe
+BrigandUnarmed
+BrigandAxe
+BrigandRangedAxe
+DragoonUnarmed ?? 
+DragoonLance ??
+DragoonRangedLance ??
+DracoknightUnarmed
+DracoknightLance
+DracoknightRangedLance
+DracoknightAxe ??
+DracoknightRangedAxe ??
+DracolordUnarmed
+DracolordLance
+DracolordRangedLance
+DracolordAxe
+DracolordRangedAxe
+BerserkerUnarmed
+BerserkerAxe
+BerserkerRangedAxe
+ArchonUnarmed
+ArchonLance
+ArchonMagicLance
+BallistaUnarmed
+BallistaRangedBow
+
+=== Items ===
+RangedAxes
+RangedLances
+RangedBows
+RangedBallista
+Levin Sword
+Glimmer
+Shine
+Corona
+Heal
+Physic
+Fortune
+Restore
+Refresh
+Silence
+Wind
+Water
+Earth
+Fire ~~
+Aether
+Fly
+Flux
+Nyx
+Ruin
+Howl
+Scathe
+Hex
+Stun
+Disintegrate
