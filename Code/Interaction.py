@@ -370,7 +370,7 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
 
 def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False):
     # Not implemented yet
-    if OPTIONS['Animation'] and not splash and not skill_used and attacker is not defender:
+    if OPTIONS['Animation'] and not splash and attacker is not defender:
         attacker_anim = ANIMDICT.partake(attacker, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item))
         defender_item = defender.getMainWeapon()
         if defender_item:

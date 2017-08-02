@@ -72,6 +72,8 @@ class Stat(object):
 
 # === GENERIC UNIT OBJECT =====================================================
 class UnitObject(object):
+    x_positions = [0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 5, 4, 3, 2, 1]
+    y_positions = [0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0]
 # === INITIALIZATION ==========================================================    
     def __init__(self, info):
         # --- Basic properties
@@ -159,8 +161,6 @@ class UnitObject(object):
 
         # For x2 counter
         self.x2_counter = 0
-        self.x_positions = [0, 2, 3, 5, 6, 5, 3, 2]
-        self.y_positions = [2, 1, 0, 1, 2, 3, 4, 3] # Circle movement achieved
 
         # --- Temporary Status
         self.reset()
@@ -350,8 +350,8 @@ class UnitObject(object):
                 
         # Blit doubling -- This gets blit every frame
         if isinstance(enemyunit, UnitObject):
-            x2_position_player = (topleft[0] + 67 + self.x_positions[self.x2_counter] - 4, topleft[1] + 40 + self.y_positions[self.x2_counter])
-            x2_position_enemy = (topleft[0] + 20 + self.x_positions[self.x2_counter], topleft[1] + 40 + self.y_positions[self.x2_counter])
+            x2_position_player = (topleft[0] + 63 + self.x_positions[self.x2_counter] - 4, topleft[1] + 38 + self.y_positions[self.x2_counter])
+            x2_position_enemy = (topleft[0] + 20 + self.x_positions[self.x2_counter], topleft[1] + 38 + self.y_positions[self.x2_counter])
             
             my_wep = self.getMainWeapon()
 
@@ -2101,7 +2101,7 @@ class UnitObject(object):
             self.lastArrowUpdate = currentTime
 
         ### Timer for x2 symbol movement
-        if currentTime - self.lastx2UpdateTime > 100:
+        if currentTime - self.lastx2UpdateTime > 50:
             self.lastx2UpdateTime = currentTime
             self.x2_counter += 1
             if self.x2_counter >= len(self.x_positions):
