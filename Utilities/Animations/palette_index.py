@@ -84,6 +84,24 @@ mage_red = [(128, 160, 128), # Background
                 (128, 0, 8), # Dark Robe
                 (40, 40, 40)] # Outline
 
+mage_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (152, 200, 248), # Light Hair
+                (128, 128, 248), # Dark Hair
+                (192, 192, 192), # Light clothes
+                (144, 152, 168), # Medium clothes
+                (96, 96, 136), # Dark clothes
+                (224, 224, 232), # Light leather
+                (144, 152, 168), # Dark leather
+                (64, 144, 248), # Light Robe
+                (40, 40, 216), # Medium Robe
+                (48, 40, 128), # Dark Robe
+                (40, 40, 40)] # Outline
+
+
 myrmidon_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin

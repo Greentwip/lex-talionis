@@ -64,15 +64,20 @@ class BattleAnimationManager(object):
     def partake(self, unit, item=None, magic=False):
         if unit.klass in self.directory:
             self.generate(unit.klass)
+            check_item = False
             if not item:
                 weapon = 'Unarmed'
             elif magic:
                 weapon = 'Magic' + item.spritetype
+                check_item = True
             elif max(item.RNG) > 1:
                 weapon = 'Ranged' + item.spritetype
+                check_item = True
             else:
                 weapon = item.spritetype
             if weapon in self.directory[unit.klass]:
+                if check_item and item.id not in self.effects:
+                    return None
                 return self.directory[unit.klass][weapon]
             else:
                 return None
