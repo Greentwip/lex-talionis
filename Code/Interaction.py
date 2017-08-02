@@ -864,22 +864,22 @@ class AnimationCombat(Combat):
             surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         # Animation
         if self.at_range:
-            right_range_offset = 23 + self.pan_offset
-            left_range_offset = -60 + self.pan_offset
+            right_range_offset = 23
+            left_range_offset = -60
         else:
             right_range_offset, left_range_offset = 0, 0
         if self.current_result:
             if self.right is self.current_result.attacker:
-                self.right.battle_anim.draw_under(surf, (-self.shake_offset[0]*2 + right_range_offset, self.shake_offset[1]))
-                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2 + left_range_offset, self.shake_offset[1]))
-                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2 + right_range_offset, self.shake_offset[1]))
+                self.right.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
             else:
-                self.left.battle_anim.draw_under(surf, (-self.shake_offset[0]*2 + left_range_offset, self.shake_offset[1]))
-                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2 + right_range_offset, self.shake_offset[1]))
-                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2 + left_range_offset, self.shake_offset[1]))
+                self.left.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
         else:
-            self.left.battle_anim.draw(surf, (left_range_offset, 0))
-            self.right.battle_anim.draw(surf, (right_range_offset, 0))
+            self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)
+            self.right.battle_anim.draw(surf, (0, 0), right_range_offset, self.pan_offset)
         # Bar
         left_bar = self.left_bar.copy()
         right_bar = self.right_bar.copy()

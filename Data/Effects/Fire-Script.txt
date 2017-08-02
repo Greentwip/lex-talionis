@@ -1,4 +1,5 @@
 pose;Attack
+static
 darken
 wait;1
 effect;FirePillars
@@ -21,7 +22,7 @@ nif_range;3
 # Pause
 wait;8
 enemy_flash_white;8
-effect;Explosion
+enemy_effect;Explosion
 spell_hit
 wait;8
 lighten
@@ -31,6 +32,7 @@ wait;14
 end_parent_loop
 
 pose;Miss
+static
 darken
 wait;1
 effect;FirePillars
@@ -52,7 +54,7 @@ nif_range;3
     f;2;Shoot4
 # Pause
 wait;8
-effect;Explosion
+enemy_effect;Explosion
 wait;8
 miss
 wait;20
