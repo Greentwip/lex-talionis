@@ -2,8 +2,10 @@ pose;Attack
 static
 darken
 wait;1
+sound;FireCharge
 effect;FirePillars
 wait;24
+sound;FireBall
 f;3;Ball1
 f;2;Ball2
 f;2;Ball3
