@@ -11,6 +11,10 @@ engine_constants = {'current_time': 0,
                     'last_time': 0,
                     'last_fps': 0}
 
+blend_dict = {'RGB_MULT': pygame.BLEND_RGB_MULT,
+              'RGBA_MULT': pygame.BLEND_RGBA_MULT, 
+              'RGB_ADD': pygame.BLEND_RGB_ADD, 
+              'RGBA_ADD': pygame.BLEND_RGBA_ADD}
 
 # === INITIALIZING FUNCTIONS =================================================
 def init():
@@ -63,7 +67,6 @@ def get_delta():
     return engine_constants['last_fps']
 
 # === DRAW STUFF =============================================================
-blend_dict = {'RGB_MULT': pygame.BLEND_RGB_MULT, 'RGB_ADD': pygame.BLEND_RGB_ADD, 'RGBA_ADD': pygame.BLEND_RGBA_ADD}
 def blit(dest, source, pos=(0, 0), mask=None, blend=None):
     dest.blit(source, pos, mask, blend_dict[blend] if blend else 0)
         
@@ -95,14 +98,8 @@ def image_load(fp, convert=False, convert_alpha=False):
         image = image.convert_alpha()
     return image
 
-def fill(surf, color, blend):
-    if blend == 'RGBA_MULT':
-        blend_mode = pygame.BLEND_RGBA_MULT
-    elif blend == 'RGB_ADD':
-        blend_mode = pygame.BLEND_RGB_ADD
-    else:
-        blend_mode = 0
-    surf.fill(color, None, blend_mode)
+def fill(surf, color, blend=None):
+    surf.fill(color, None, blend_dict[blend] if blend else 0)
 
 def set_colorkey(surf, color, rleaccel=True):
     if rleaccel:

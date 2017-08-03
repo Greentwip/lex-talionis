@@ -141,27 +141,31 @@ RangedAxes
 RangedLances
 RangedBows
 RangedBallista
-Levin Sword
-Glimmer
-Shine
-Corona
-Heal
-Physic
+Levin Sword - Wind Sword
+Glimmer - Lightning
+Shine - Shine
+Corona - Divine
+Heal - Heal
+Physic - Physic
 Fortune
-Restore
+Restore - Restore
 Refresh
-Silence
-Wind
+Silence - Silence
+Wind - Aircalibur
 Water
 Earth
-Fire ~~
-Aether
-Fly
-Flux
-Nyx
-Ruin
-Howl
-Scathe
-Hex
-Stun
-Disintegrate
+Fire ~~ - Fire
+Aether - Excalibur
+Fly - None?
+Flux - Flux
+Nyx - Luna
+Ruin - Fenrir
+Howl - Ereshkigal
+Scathe - Evil Eye
+Hex - Shadowshot
+Stun - Sleep
+Disintegrate - Demon Surge
+
+Possibly:
+Replace Iron Knife, Steel Knife, Mithril Knife with Levin Sword (Iron), Rune Sword (Nosferatu) (Steel), Light Brand (Mithril)
+Replace Water and Earth with Thunder (Inaccurate but strong. +2 DEF), (Fire gets +2 RES), (Aether gets +2 SPD in addition to its other stuff)
