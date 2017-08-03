@@ -346,7 +346,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
 
     def drawControlsCursor(self, surf):
         # Blit cursor
-        cursor_position = (32 - self.cursor.get_width() + self.cursorAnim[self.cursorCounter] - 4, 32 + (self.currentSelection - self.top_of_menu)*16)
+        cursor_position = (44 - self.cursor.get_width() + self.cursorAnim[self.cursorCounter] - 4, 36 + (self.currentSelection - self.top_of_menu)*16)
         surf.blit(self.cursor, cursor_position)
 
     def drawTopMenuCursor(self, surf):
