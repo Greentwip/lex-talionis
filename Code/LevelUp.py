@@ -167,6 +167,8 @@ class levelUpScreen(object):
                 self.level_up_sound_played = True
             # Update it
             if self.levelUpAnimation.update(gameStateObj):
+                if self.in_combat:
+                    self.in_combat.darken_ui()
                 self.state.changeState('levelScreen')
                 self.state_time = currentTime
 
@@ -175,6 +177,8 @@ class levelUpScreen(object):
             time_to_wait = self.LEVELUPWAIT + (self.get_num_sparks()+1)*self.SPARKTIME + 100
             # Am i Done displaying?
             if currentTime - self.state_time >= time_to_wait:
+                if self.in_combat:
+                    self.in_combat.lighten_ui()
                 # Handle EXP when the user levels up, if this is not a forced level
                 if not self.force_level:
                     self.unit.exp += self.expNew

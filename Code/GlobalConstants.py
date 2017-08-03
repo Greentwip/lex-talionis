@@ -102,6 +102,6 @@ BASICFONT = Engine.build_font(MAINFONT, 10)
 BIGFONT = Engine.build_font(MAINFONT, 12)
 
 import Counters
-PASSIVESPRITECOUNTER = Counters.generic3Counter()
-ACTIVESPRITECOUNTER = Counters.generic3Counter(280, 40)
-CURSORSPRITECOUNTER = Counters.generic3Counter(250, 0, 100)
+PASSIVESPRITECOUNTER = Counters.generic3Counter(int(32*FRAMERATE), int(4*FRAMERATE))
+ACTIVESPRITECOUNTER = Counters.generic3Counter(int(13*FRAMERATE), int(6*FRAMERATE))
+CURSORSPRITECOUNTER = Counters.generic3Counter(int(20*FRAMERATE), int(2*FRAMERATE), int(8*FRAMERATE))

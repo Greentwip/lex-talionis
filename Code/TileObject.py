@@ -303,9 +303,9 @@ class MapObject(object):
         self.weather = [weather for weather in self.weather if not weather.remove_me]
 
         if self.autotiles:
-            # Might also try 333? 
-            mod_time = current_time%(len(self.autotiles)*484) # 29 ticks
-            self.autotile_frame = mod_time/484
+            time = int(FRAMERATE*29)
+            mod_time = current_time%(len(self.autotiles)*time) # 29 ticks
+            self.autotile_frame = mod_time/time
             #self.autotile_frame += 1
             #if self.autotile_frame >= len(self.autotiles):
             #    self.autotile_frame = 0

@@ -65,7 +65,14 @@ class Cursor(object):
             topleft = topleft[0] - self.spriteOffset[0], topleft[1] - self.spriteOffset[1]
             surf.blit(self.image, topleft)
             # Reset sprite offset afterwards
-            self.spriteOffset = [0, 0]
+            if self.spriteOffset[0] > 0:
+                self.spriteOffset[0] -= 4
+            elif self.spriteOffset[0] < 0:
+                self.spriteOffset[0] += 4
+            if self.spriteOffset[1] > 0:
+                self.spriteOffset[1] -= 4
+            elif self.spriteOffset[1] < 0:
+                self.spriteOffset[1] += 4
 
     def getHoveredUnit(self, gameStateObj):
         for unit in gameStateObj.allunits:
@@ -115,9 +122,10 @@ class Cursor(object):
         self.place_arrows(gameStateObj)
         # Remove unit display
         self.remove_unit_display()
-        # Sprite Offset
-        self.spriteOffset[0] = 8*dx
-        self.spriteOffset[1] = 8*dy
+        # Sprite Offset -- but only if we're not traveling too fast
+        if OPTIONS['Cursor Speed'] >= 40:
+            self.spriteOffset[0] += 12*dx
+            self.spriteOffset[1] += 12*dy
 
     def place_arrows(self, gameStateObj):
         if gameStateObj.stateMachine.getState() == 'move' and gameStateObj.highlight_manager.check_arrow(self.position):
@@ -408,12 +416,9 @@ class HighlightController(object):
         self.highlights['aura'] = set()
 
     def update(self):
-        currentTime = Engine.get_time()
-        if currentTime - self.lasthighlightUpdate > 50:
-            self.lasthighlightUpdate = currentTime
-            self.updateIndex += 1
-            if self.updateIndex > 15:
-                self.updateIndex = 0
+        self.updateIndex += .25
+        if self.updateIndex >= 16:
+            self.updateIndex = 0
 
     def draw(self, surf):
         for name in self.highlights.keys():
@@ -422,7 +427,7 @@ class HighlightController(object):
                 transition -= 1
             self.types[name][1] = transition
             for pos in self.highlights[name]:
-                self.types[name][0].draw(surf, pos, self.updateIndex, transition)
+                self.types[name][0].draw(surf, pos, int(self.updateIndex), transition)
 
     def check_arrow(self, pos):
         if pos in self.highlights['move']:

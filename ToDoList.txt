@@ -4,7 +4,7 @@
 - Need to compile cython modules for Linux
 
 -- REPORTED ISSUES:
-- Moving really fast in the Stat Screen crashes game
+- Moving really fast in the Stat Screen crashes game?
 - Crashed on Suspend and Load another Saved Game?
 
 FOR FUTURE UPDATES TO THE ENGINE:
@@ -18,8 +18,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Promotion (Split Video) --- probably going to have to rewrite this section as its own thing.
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Add options to OPTIONS MENU
---- On LevelUp Animation Darken instead of using dark fuzz?
---- On LevelUp StatScreen Darken Everything (Nametag, All UI, but not background)
 --- MAP ---
 - Autotiles for chasm in level 6?
 --- AI ---
@@ -27,7 +25,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Have AI actually test equip items when making calculations ++ (not really important, since so few weapons give statuses..., could do it only if weapon has a status_equip?)
 - Consider moving Recovery AI into main attack AI?? - maybe not
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells)
-- Red highlight appears over position of last enemy fought while using 'other' team AI
+- Red highlight appears over position of last enemy fought while using 'other' team AI. Also when two AI units attack one another using an AnimationCombat
 --- LEVEL UP ---
 - Have Level up! match the way its done in fe7... (sound)
 - Improve Promotion... Add animation. Make sure exp works correctly.

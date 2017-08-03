@@ -492,6 +492,7 @@ class Combat(object):
             my_exp = Utility.clamp(my_exp, 0, 100)
         else:
             my_exp = Utility.clamp(my_exp, 1, 100)
+        return my_exp
 
     def handle_statuses(self):
         for status in self.p1.status_effects:
@@ -556,7 +557,10 @@ class AnimationCombat(Combat):
         self.total_viewbox_clamp_states = 15
         self.viewbox = None
 
+        # For darken backgrounds and drawing
         self.darken_background = 0
+        self.darken_ui_background = 0
+        self.combat_surf = Engine.create_surface((WINWIDTH, WINHEIGHT), transparent=True)
 
         # For positioning UI
         self.name_offset = 0
@@ -809,6 +813,12 @@ class AnimationCombat(Combat):
     def lighten(self):
         self.darken_background = -3
 
+    def darken_ui(self):
+        self.darken_ui_background = 1
+
+    def lighten_ui(self):
+        self.darken_ui_background = -3
+
     def pan(self):
         if self.at_range:
             if self.pan_offset != 0:
@@ -842,13 +852,15 @@ class AnimationCombat(Combat):
                 self.pan_dir = 0
             elif self.pan_offset == 0:
                 self.pan_dir = 0
+        # Make combat surf
+        combat_surf = Engine.copy_surface(self.combat_surf)
         # Platform
         if self.at_range:
-            surf.blit(self.left_platform, (-23 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
-            surf.blit(self.right_platform, (131 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            combat_surf.blit(self.left_platform, (-23 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            combat_surf.blit(self.right_platform, (131 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         else:
-            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
-            surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            combat_surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            combat_surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         # Animation
         if self.at_range:
             right_range_offset = 23
@@ -857,16 +869,16 @@ class AnimationCombat(Combat):
             right_range_offset, left_range_offset = 0, 0
         if self.current_result:
             if self.right is self.current_result.attacker:
-                self.right.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.right.battle_anim.draw_under(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
             else:
-                self.left.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.left.battle_anim.draw_under(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
         else:
-            self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)
-            self.right.battle_anim.draw(surf, (0, 0), right_range_offset, self.pan_offset)
+            self.left.battle_anim.draw(combat_surf, (0, 0), left_range_offset, self.pan_offset)
+            self.right.battle_anim.draw(combat_surf, (0, 0), right_range_offset, self.pan_offset)
         # Bar
         left_bar = self.left_bar.copy()
         right_bar = self.right_bar.copy()
@@ -885,12 +897,22 @@ class AnimationCombat(Combat):
         bar_trans = 80
         left_pos = (-3 + self.shake_offset[0], WINHEIGHT - self.left_bar.get_height() + (bar_trans - bar_multiplier*bar_trans) + self.shake_offset[1])
         right_pos = (WINWIDTH/2 + self.shake_offset[0], WINHEIGHT - self.right_bar.get_height() + (bar_trans - bar_multiplier*bar_trans) + self.shake_offset[1])
-        surf.blit(left_bar, left_pos)
-        surf.blit(right_bar, right_pos)
+        combat_surf.blit(left_bar, left_pos)
+        combat_surf.blit(right_bar, right_pos)
         # Nametag
         name_multiplier = self.name_offset/float(self.max_position_offset)
-        surf.blit(self.left_name, (-3 + self.shake_offset[0], -60 + name_multiplier*60 + self.shake_offset[1]))
-        surf.blit(self.right_name, (WINWIDTH + 3 - self.right_name.get_width() + self.shake_offset[0], -60 + name_multiplier*60 + self.shake_offset[1]))
+        combat_surf.blit(self.left_name, (-3 + self.shake_offset[0], -60 + name_multiplier*60 + self.shake_offset[1]))
+        combat_surf.blit(self.right_name, (WINWIDTH + 3 - self.right_name.get_width() + self.shake_offset[0], -60 + name_multiplier*60 + self.shake_offset[1]))
+
+        if self.darken_ui_background:
+            self.darken_ui_background = min(self.darken_ui_background, 4)
+            #bg = Image_Modification.flickerImageTranslucent(IMAGESDICT['BlackBackground'], 100 - abs(int(self.darken_ui_background*11.5)))
+            color = 255 - abs(self.darken_ui_background*24)
+            Engine.fill(combat_surf, (color, color, color), 'RGB_MULT')
+            #combat_surf.blit(bg, (0, 0))
+            self.darken_ui_background += 1
+
+        surf.blit(combat_surf, (0, 0))
 
     def draw_item(self, surf, item, other_item, unit, other, topleft):
         white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \
@@ -945,7 +967,7 @@ class AnimationCombat(Combat):
                 else:
                     my_exp = int(Utility.clamp(my_exp, 1, 100))
 
-                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp, in_combat=True)) #Also handles actually adding the exp to the unit
+                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp, in_combat=self)) #Also handles actually adding the exp to the unit
                 gameStateObj.stateMachine.changeState('expgain')
 
             if self.p2 and not self.p2.isDying:
@@ -958,7 +980,7 @@ class AnimationCombat(Combat):
                         
                     my_exp = self.calc_init_exp_p2(defender_results)
 
-                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=True)) #Also handles actually adding the exp to the unit
+                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=self)) #Also handles actually adding the exp to the unit
                     gameStateObj.stateMachine.changeState('expgain')
 
     # Clean up everything
