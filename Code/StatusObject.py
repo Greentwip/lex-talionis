@@ -417,11 +417,11 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
                     return # Just ignore this new one
 
     # Check to see if we should reflect this status back at user
-    if not status.already_reflected and status.parent_id and not status.aura_child and 'reflect' in unit.status_bundle:
+    if 'reflect' in unit.status_bundle and not status.already_reflected and status.parent_id and not status.aura_child:
         p_unit = gameStateObj.get_unit_from_id(status.parent_id)
-        s_copy = copy.deepcopy(status) # Create a copy of this status
+        s_copy = statusparser(status.id) # Create a copy of this status
         s_copy.parent_id = unit.id
-        s_copy.already_reflected = True # So we don't get infinite reflections
+        s_copy.already_reflected = True # So we don't get infinite reflections between two units with reflect
         HandleStatusAddition(s_copy, p_unit, gameStateObj)
            
     if not status.momentary:
