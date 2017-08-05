@@ -649,7 +649,7 @@ class AnimationCombat(Combat):
                 self.combat_state = 'Pre_Init'
 
         elif self.combat_state == 'Pre_Init':
-            if current_time - self.last_update > 600: # 2/3 of a second
+            if current_time - self.last_update > 410: # 25 frames
                 self.combat_state = 'Anim'
                 self.last_update = current_time
                 # Set up animation
