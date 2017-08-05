@@ -4,9 +4,9 @@ import glob
 from PIL import Image
 import palette_index
 
-palette_set = palette_index.ewan
+palette_set = palette_index.garcia
 
-for fp in glob.glob('*.png'):
+for idx, fp in enumerate(sorted(glob.glob('*.png'))):
     print(fp)
     image = Image.open(fp).convert('RGB')
     width, height = image.size
@@ -66,4 +66,4 @@ for fp in glob.glob('*.png'):
             if (x, y) not in discrete_images[which_count]:
                 image.putpixel((x, y), (128, 160, 128))
 
-    image.save('fixed_' + fp)
+    image.save('Attack' + str(idx) + '.png')

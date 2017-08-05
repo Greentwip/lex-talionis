@@ -136,6 +136,75 @@ myrmidon_blue = [(128, 160, 128), # Background
                 (48, 40, 128), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+garcia = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (232, 192, 136), # LM skin
+                (208, 144, 96), # M skin
+                (176, 112, 64), # DM skin
+                (128, 88, 56), # Dark skin
+                (128, 136, 152), # Light Hair
+                (72, 72, 112), # Dark Hair
+                (200, 232, 240), # Light Weapon
+                (160, 192, 224), # Dark Weapon
+                (120, 152, 184), # Weapon Highlight
+                (104, 168, 168), # Light Clothes
+                (48, 72, 176), # Med Clothes
+                (24, 24, 104), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+fighter_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (232, 192, 136), # LM skin
+                (208, 144, 96), # M skin
+                (176, 112, 64), # DM skin
+                (128, 88, 56), # Dark skin
+                (160, 96, 48), # Light Hair
+                (116, 80, 48), # Dark Hair
+                (200, 232, 240), # Light Weapon
+                (160, 192, 224), # Dark Weapon
+                (120, 152, 184), # Weapon Highlight
+                (248, 144, 64), # Light Clothes
+                (216, 0, 0), # Med Clothes
+                (128, 0, 8), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+fighter_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (232, 192, 136), # LM skin
+                (208, 144, 96), # M skin
+                (176, 112, 64), # DM skin
+                (128, 88, 56), # Dark skin
+                (160, 96, 48), # Light Hair
+                (116, 80, 48), # Dark Hair
+                (200, 232, 240), # Light Weapon
+                (160, 192, 224), # Dark Weapon
+                (120, 152, 184), # Weapon Highlight
+                (64, 144, 248), # Light Clothes
+                (40, 40, 216), # Med Clothes
+                (48, 40, 128), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+generic_fighter = [(255, 255, 255),
+                (128, 128, 128),
+                (255, 204, 153),
+                (43, 206, 72),
+                (157, 204, 0),
+                (148, 255, 181),
+                (143, 124, 0),
+                (25, 25, 25),
+                (76, 0, 92),
+                (0, 51, 128),
+                (255, 164, 5),
+                (194, 0, 136),
+                (153, 63, 0),
+                (0, 117, 220),
+                (240, 163, 255),
+                (0, 92, 49),
+                ]
+
 generic =  [(89, 0, 89), # Background
                 (249, 249, 249), # White
                 (248, 250, 210), # Light skin
