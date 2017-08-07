@@ -27,11 +27,11 @@ f;2;Attack13
 # Broken Sword
 f;2;Attack14
 # Skipping 1 frame used by miss
-f;1;Attack16
+f;1;Attack16;Miss
 enemy_flash_white;8
-f;1;Attack16
+f;1;Attack16;Miss
 screen_flash_white;4
-f;4;Attack16
+f;4;Attack16;Miss
 # Hit Frame
 # Screen shake in hit
 # Skipping 3 frames used by miss
@@ -73,7 +73,7 @@ f;1;Attack12
 f;2;Attack13
 # Skipping 1 frame used by hit
 # Full Sword
-f;2;Attack15
+f;2;Miss
 miss
 f;2;Attack16
 f;3;Attack17
