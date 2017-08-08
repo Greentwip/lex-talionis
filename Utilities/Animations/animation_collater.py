@@ -5,7 +5,7 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-folder = 'fighter_unarmed_frames'
+folder = 'swordmaster_unarmed_frames'
 count = 0
 index_lines = []
 for fp in sorted(glob.glob(folder + '/*.png')):

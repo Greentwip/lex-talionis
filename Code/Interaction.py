@@ -964,10 +964,11 @@ class AnimationCombat(Combat):
         FONT['number_small2'].blit(damage, surf, (right - FONT['number_small2'].size(damage)[0], top + 8))
 
     def handle_exp(self, gameStateObj):
+        self.check_death()
         ### Handle exp and stat gain
         if not self.event_combat and (self.item.weapon or self.item.spell):
             attacker_results = [result for result in self.old_results if result.attacker is self.p1]
-            if not self.p1.isDying and attacker_results and not self.skill_used:
+            if not self.p1.currenthp and attacker_results and not self.skill_used:
                 self.p1.charge()
 
             if self.p1.team == 'player' and not self.p1.isDying and not 'Mindless' in self.p1.tags and not self.p1.isSummon():
@@ -1004,6 +1005,14 @@ class AnimationCombat(Combat):
                     gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=self)) #Also handles actually adding the exp to the unit
                     gameStateObj.stateMachine.changeState('expgain')
 
+    def check_death(self):
+        if self.p1.currenthp <= 0:
+            self.p1.isDying = True
+            self.p1.sprite.change_state('normal')
+        if self.p2.currenthp <= 0:
+            self.p2.isDying = True
+            self.p2.sprite.change_state('normal')
+
     # Clean up everything
     def clean_up(self, gameStateObj, metaDataObj, animation=False):
         gameStateObj.stateMachine.back()
@@ -1017,9 +1026,7 @@ class AnimationCombat(Combat):
         all_units = [self.p1, self.p2]
 
         # Handle death and sprite changing
-        for unit in all_units:
-            if unit.currenthp <= 0:
-                unit.isDying = True
+        self.check_death()
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
@@ -1098,26 +1105,26 @@ class SimpleHPBar(object):
         self.last_update = 0
         self.color_tick = 0
         self.big_number = False
+        self.start_time = 0
 
     def update(self):
         current_time = Engine.get_time()
         self.desired_hp = self.unit.currenthp
         if current_time - self.last_update > 32:
             if self.true_hp < self.desired_hp:
+                if not self.start_time: self.start_time = current_time
                 self.big_number = True
-                self.true_hp += 1
+                self.true_hp += .5
                 if self.true_hp == self.desired_hp:
-                    self.last_update = current_time + 300 # Add an extra 20 frames
-                else:
-                    self.last_update = current_time
+                    self.last_update = self.start_time + 520 # Make sure at least 32 frames happen
             elif self.true_hp > self.desired_hp:
+                if not self.start_time: self.start_time = current_time
                 self.big_number = True
-                self.true_hp -= 1
+                self.true_hp -= .5
                 if self.true_hp == self.desired_hp:
-                    self.last_update = current_time + 300
-                else:
-                    self.last_update = current_time
+                    self.last_update = self.start_time + 520 # Make sure at least 32 frames happen
             elif self.true_hp == self.desired_hp:
+                self.start_time = 0
                 self.big_number = False
         self.color_tick += 1
         if self.color_tick >= len(self.colors):
@@ -1128,19 +1135,20 @@ class SimpleHPBar(object):
         return not self.big_number
 
     def draw(self, surf, pos):
+        t_hp = int(self.true_hp)
         # Blit HP -- Must be blit every frame
         font = FONT['number_small2']
         top = pos[1] - 4
         if self.big_number:
             font = FONT['number_big2']
             top = pos[1]
-        position = pos[0] - font.size(str(int(self.true_hp)))[0], top
-        font.blit(str(int(self.true_hp)), surf, position)
+        position = pos[0] - font.size(str(t_hp))[0], top
+        font.blit(str(t_hp), surf, position)
         full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick]*2, 0, 2, self.full_hp_blip.get_height()))
-        for index in xrange(self.true_hp):
+        for index in xrange(t_hp):
             surf.blit(full_hp_blip, (pos[0] + index*2 + 5, pos[1] + 1))
-        for index in xrange(self.max_hp - self.true_hp):
-            surf.blit(self.empty_hp_blip, (pos[0] + (index+self.true_hp)*2 + 5, pos[1] + 1))
+        for index in xrange(self.max_hp - t_hp):
+            surf.blit(self.empty_hp_blip, (pos[0] + (index+t_hp)*2 + 5, pos[1] + 1))
         surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp)*2 + 5, pos[1] + 1)) # End HP Blip
 
 class Map_Combat(Combat):

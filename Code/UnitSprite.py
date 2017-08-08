@@ -59,7 +59,8 @@ class UnitSprite(object):
 
         if self.transition_state in WARP_OUT_SET:
             if self.unit.deathCounter:
-                image = Image_Modification.flickerImageTranslucentColorKey(image, self.unit.deathCounter/2)
+                image = Image_Modification.flickerImageWhiteColorKey(image, 255)
+                image = Image_Modification.flickerImageTranslucentColorKey(image, int(100*self.unit.deathCounter/27))
             else:
                 self.transition_counter -= Engine.get_delta()
                 if self.transition_counter < 0:

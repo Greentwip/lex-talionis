@@ -42,7 +42,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     gameStateObj.start_map(currentMap)
 
     # === Process unit data ===
-    current_mode = 15 # Defaults to all modes
+    current_mode = 'HNE' # Defaults to all modes
     for line in unitcontent:
         # Process each line that was in the level file.
         line = line.strip()
@@ -118,10 +118,7 @@ def read_overview_file(overview_filename):
     return overview_lines
 
 def check_mode(modes_allowed, mode):
-    modes_allowed = bin(modes_allowed)[2:] # Get binary representation
-    # Pad w/ zeros (assumes not more than 10 modes)
-    modes_allowed = '0'*(4 - len(modes_allowed)) + modes_allowed
-    return (modes_allowed[-(mode+1)] == '1')
+    return mode in modes_allowed
 
 def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, prefabs, metaDataObj, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
@@ -129,12 +126,12 @@ def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, pr
     if unitLine[0] == 'group':
         groups[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
     elif unitLine[0] == 'mode':
-        current_mode = int(unitLine[1])
+        current_mode = unitLine[1]
     elif unitLine[0] == 'player_characters':
         for unit in allunits:
             if unit.team == 'player' and not unit.dead:
                 reinforceUnits[unit.name] = (unit.id, None)
-    elif check_mode(current_mode, gameStateObj.mode['difficulty']):
+    elif check_mode(current_mode, gameStateObj.difficulty_to_mode[gameStateObj.mode['difficulty']]):
         # New Unit
         if unitLine[1] == "0":
             if len(unitLine) > 7:

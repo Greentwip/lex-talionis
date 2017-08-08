@@ -55,7 +55,7 @@ class levelUpScreen(object):
             self.state_time = Engine.get_time()
 
         # TIMING
-        self.total_time_for_exp = self.expNew * 16 # exp rate is 16
+        self.total_time_for_exp = self.expNew * FRAMERATE # exp rate is 16
         self.level_up_sound_played = False
         self.SPARKTIME = 300
         self.LEVELUPWAIT = 2500
@@ -81,7 +81,7 @@ class levelUpScreen(object):
         # Wait before starting to increment exp
         elif self.state.getState() == 'exp_wait':
             self.exp_bar.update(self.expSet)
-            if currentTime - self.state_time > 350:
+            if currentTime - self.state_time > 400:
                 self.state.changeState('exp0')
                 self.state_time = currentTime
                 SOUNDDICT['Experience Gain'].play(-1)
@@ -111,7 +111,7 @@ class levelUpScreen(object):
                     self.state.changeState('exp100')
                     # Do not reset state time
             # Extra time to account for end pause
-            elif currentTime - self.state_time >= self.total_time_for_exp + 350:
+            elif currentTime - self.state_time >= self.total_time_for_exp + 500:
                 self.state.clear()
                 self.state.changeState('exp_leave')
                 self.state_time = currentTime

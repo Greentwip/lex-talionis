@@ -2,7 +2,8 @@ pose;Stand
 f;4;Stand
 
 pose;Dodge
-f;4;Dodge1
+f;1;Stand
+f;3;Dodge1
 f;27;Dodge2
-f;6;Dodge1
+f;4;Dodge1
 f;1;Stand

@@ -826,7 +826,7 @@ class Phase(object):
         currentTime = Engine.get_time()
         time_passed = currentTime - self.start_time
         if OPTIONS['debug'] and time_passed < 0:
-            logger.error('This phase has a negative time_passed! %s %s %S', time_passed, currentTime, self.start_time)
+            logger.error('This phase has a negative time_passed! %s %s %s', time_passed, currentTime, self.start_time)
         max_opaque = 160
 
         # Blit the banner
