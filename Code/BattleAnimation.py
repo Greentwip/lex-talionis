@@ -53,6 +53,7 @@ class BattleAnimation(object):
         self.init_position = init_position
         self.current_pose = 'RangedStand' if self.at_range else 'Stand'
         self.current_frame = None
+        self.under_frame = None
         self.script_index = 0
         #self.processing = True
         self.reset()
@@ -128,19 +129,29 @@ class BattleAnimation(object):
             self.num_frames = int(line[1])
             self.current_frame = self.frame_directory[line[2]]
             self.processing = False
+            if len(line) > 3: # Under frame
+                self.under_frame = self.frame_directory[line[3]]
+            else:
+                self.under_frame = None
         elif line[0] == 'wait':
             self.frame_count = 0
             self.num_frames = int(line[1])
             self.current_frame = None
+            self.under_frame = None
             self.processing = False
         # === SFX ===
         elif line[0] == 'sound':
             SOUNDDICT[line[1]].play()
         # === COMBAT HIT ===
         elif line[0] == 'hit':
-            self.current_frame = None
             if len(line) > 1:
                 self.current_frame = self.frame_directory[line[1]]
+            else:
+                self.current_frame = None
+            if len(line) > 2:
+                self.under_frame = self.frame_directory[line[2]]
+            else:
+                self.under_frame = None
             self.state = 'Wait'
             self.processing = False
             if self.owner.current_result.def_damage > 0:
@@ -148,9 +159,14 @@ class BattleAnimation(object):
             else: # No Damage
                 self.owner.shake(2)
         elif line[0] == 'spell_hit':
-            self.current_frame = None
             if len(line) > 1:
                 self.current_frame = self.frame_directory[line[1]]
+            else:
+                self.current_frame = None
+            if len(line) > 2:
+                self.under_frame = self.frame_directory[line[2]]
+            else:
+                self.under_frame = None
             self.state = 'Wait'
             self.processing = False
             if self.owner.current_result.def_damage > 0:
@@ -346,4 +362,14 @@ class BattleAnimation(object):
                     self.foreground_frames = 0
 
     def draw_under(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
-        pass
+        if self.state != 'Inert' and self.under_frame is not None:
+            image = self.under_frame[0].copy()
+            if not self.right:
+                image = Engine.flip_horiz(image)
+            offset = self.under_frame[1]
+            if self.right:
+                offset = offset[0] + shake[0] + range_offset + (pan_offset if not self.static else 0), offset[1] + shake[1]
+            else:
+                offset = WINWIDTH - offset[0] - image.get_width() + shake[0] + range_offset + (pan_offset if not self.static else 0), offset[1] + shake[1]
+            # Actually draw
+            Engine.blit(surf, image, offset, None, self.blend)
