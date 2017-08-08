@@ -138,7 +138,9 @@ class BattleAnimation(object):
             SOUNDDICT[line[1]].play()
         # === COMBAT HIT ===
         elif line[0] == 'hit':
-            self.current_frame = self.frame_directory[line[1]]
+            self.current_frame = None
+            if len(line) > 1:
+                self.current_frame = self.frame_directory[line[1]]
             self.state = 'Wait'
             self.processing = False
             if self.owner.current_result.def_damage > 0:
@@ -179,9 +181,9 @@ class BattleAnimation(object):
                                               set_timing=(2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1))
             else: # No Damage
                 if self.right:
-                    position = (52, 20)
+                    position = (52, 21)
                 else:
-                    position = (110, 20) # Enemy's position
+                    position = (110, 21) # Enemy's position
                 team = self.owner.right.team if self.right else self.owner.left.team
                 image = IMAGESDICT['NoDamageBlue' if team == 'player' else 'NoDamageRed']
                 anim = CustomObjects.Animation(image, position, (5, 5), ignore_map=True, 
@@ -191,9 +193,9 @@ class BattleAnimation(object):
             self.animations.append(anim)
         elif line[0] == 'miss':
             if self.right:
-                position = (72, 20)
+                position = (72, 21)
             else:
-                position = (130, 20) # Enemy's position
+                position = (128, 21) # Enemy's position
             team = self.owner.right.team if self.right else self.owner.left.team
             image = IMAGESDICT['MissBlue' if team == 'player' else 'MissRed']
             anim = CustomObjects.Animation(image, position, (5, 4), ignore_map=True, 

@@ -154,7 +154,7 @@ class UnitObject(object):
 
         self.sprite = UnitSprite.UnitSprite(self)
         self.arrowCounter = 0
-        self.arrowAnim = [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+        self.arrowAnim = [0, 1, 2]
         self.flicker = None
         self.flickerRed = False
         self.loadSprites()
@@ -2094,7 +2094,7 @@ class UnitObject(object):
             self.sprite.update(gameStateObj)
 
         ### UP and DOWN Arrow COUNTER logic - For itemAdvantageArrows
-        if currentTime - self.lastArrowUpdate > 30:
+        if currentTime - self.lastArrowUpdate > 130:
             self.arrowCounter += 1
             if self.arrowCounter >= len(self.arrowAnim):
                 self.arrowCounter = 0
@@ -2112,8 +2112,8 @@ class UnitObject(object):
             if self.deathCounter == 0: # If we just started dying
                 self.sprite.set_transition('fade_out')
                 SOUNDDICT['Death'].play()
-            self.deathCounter += 10
-            if self.deathCounter > 200: # DEAD
+            self.deathCounter += 1
+            if self.deathCounter > 27: # DEAD
                 self.die(gameStateObj)
-                self.deathCounter == 0 # Reset deathCounter. Otherwise characters never leaves death process.
+                self.deathCounter = 0 # Reset deathCounter. Otherwise characters never leaves death process.
 # === END UNIT ================================================================

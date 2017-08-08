@@ -77,6 +77,7 @@ class GameStateObj(object):
         self.sweep()
         self.generic()
 
+    difficulty_to_mode = {0: 'E', 1: 'N', 2: 'H'}
     def default_mode(self):
         return {'difficulty': 1, # 0 is Easy, 1 is Normal, 2 is Hard
                 'death': 1, # 0 is Casual, 1 is Classic

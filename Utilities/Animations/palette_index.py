@@ -205,6 +205,75 @@ generic_fighter = [(255, 255, 255),
                 (0, 92, 49),
                 ]
 
+joshua_swordmaster = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (224, 168, 104), # Med skin
+                (136, 96, 72), # Dark skin
+                (224, 48, 16), # Light Hair
+                (160, 8, 8), # Med Hair
+                (104, 8, 16), # Dark Hair
+                (176, 216, 248), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (128, 168, 168), # Light Clothes
+                (88, 128, 128), # LM Clothes
+                (48, 88, 88), # MD Clothes
+                (24, 48, 48), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+swordmaster_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (224, 168, 104), # Med skin
+                (136, 96, 72), # Dark skin
+                (168, 168, 160), # Light Hair
+                (112, 112, 104), # Med Hair
+                (80, 88, 64), # Dark Hair
+                (176, 216, 248), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (248, 208, 144), # Light Clothes
+                (248, 112, 48), # LM Clothes
+                (192, 0, 0), # MD Clothes
+                (96, 8, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+swordmaster_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (224, 168, 104), # Med skin
+                (136, 96, 72), # Dark skin
+                (168, 168, 160), # Light Hair
+                (112, 112, 104), # Med Hair
+                (80, 88, 64), # Dark Hair
+                (176, 216, 248), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (144, 208, 248), # Light Clothes
+                (48, 112, 248), # LM Clothes
+                (40, 40, 192), # MD Clothes
+                (40, 48, 96), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+generic_swordmaster = [(255, 255, 255),
+                (143, 124, 0),
+                (128, 128, 128),
+                (157, 204, 0),
+                (148, 255, 181),
+                (43, 206, 72),
+                (0, 92, 49),
+                (25, 25, 25),
+                (255, 164, 5),
+                (0, 51, 128),
+                (194, 0, 136),
+                (76, 0, 92),
+                (153, 63, 0),
+                (0, 117, 220),
+                (240, 163, 255),
+                (255, 204, 153),
+                ]
+
 generic =  [(89, 0, 89), # Background
                 (249, 249, 249), # White
                 (248, 250, 210), # Light skin
