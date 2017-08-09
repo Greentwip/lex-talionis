@@ -62,8 +62,11 @@ class BattleAnimationManager(object):
             e_dict['script'] = self.parse_script(e_dict['script'])
 
     def partake(self, unit, item=None, magic=False):
-        if unit.klass in self.directory:
-            self.generate(unit.klass)
+        klass = unit.klass
+        if unit.gender == 'F':
+            klass = unit.klass + 'F' if unit.klass + 'F' in self.directory else unit.klass
+        if klass in self.directory:
+            self.generate(klass)
             check_item = False
             if not item:
                 weapon = 'Unarmed'
@@ -75,10 +78,10 @@ class BattleAnimationManager(object):
                 check_item = True
             else:
                 weapon = item.spritetype
-            if weapon in self.directory[unit.klass]:
+            if weapon in self.directory[klass]:
                 if check_item and item.id not in self.effects:
                     return None
-                return self.directory[unit.klass][weapon]
+                return self.directory[klass][weapon]
             else:
                 return None
         else:

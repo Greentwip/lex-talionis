@@ -552,6 +552,7 @@ class AnimationCombat(Combat):
         # Since AnimationCombat always has exactly 2 participants
         self.p1.lock_active()
         self.p2.lock_active()
+        self.p1.sprite.change_state('selected')
 
         self.viewbox_clamp_state = 0
         self.total_viewbox_clamp_states = 15
@@ -987,10 +988,8 @@ class AnimationCombat(Combat):
     def check_death(self):
         if self.p1.currenthp <= 0:
             self.p1.isDying = True
-            self.p1.sprite.change_state('normal')
         if self.p2.currenthp <= 0:
             self.p2.isDying = True
-            self.p2.sprite.change_state('normal')
 
     # Clean up everything
     def clean_up(self, gameStateObj, metaDataObj, animation=False):
@@ -1092,8 +1091,8 @@ class SimpleHPBar(object):
         if current_time - self.last_update > 32:
             if self.true_hp < self.desired_hp:
                 if not self.start_time: self.start_time = current_time
-                self.big_number = True
-                self.true_hp += .5
+                self.big_number = False # No big number on up
+                self.true_hp += .25 # Every 4 frames
                 if self.true_hp == self.desired_hp:
                     self.last_update = self.start_time + 520 # Make sure at least 32 frames happen
             elif self.true_hp > self.desired_hp:
