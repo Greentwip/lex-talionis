@@ -24,6 +24,6 @@ player;0;0;Cavalier;1;Iron Sword,Iron Lance;5,14;Pursue;Resistance
 enemy;0;0;Myrmidon;1;Iron Sword;17,3;Pursue;Resistance
 enemy;0;0;Soldier;1;Iron Lance;16,2;Pursue;Resistance
 enemy;0;0;Archer;1;Willow Bow;16,5;Pursue;Resistance
-enemy;0;0;Myrmidon;20;Iron Sword,Vulnerary;3,15;Pursue;Resistance;Reflect
+enemy;0;0;Myrmidon;1;Iron Sword,Vulnerary;3,15;Pursue;Resistance;Reflect
 enemy;0;0;Tactician;1;Glimmer,Heal;16,4;Support;Resistance
 enemy;0;0;Mage;1;Fire;16,3;Pursue;Resistance

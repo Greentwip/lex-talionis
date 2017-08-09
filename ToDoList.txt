@@ -37,14 +37,16 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- DIALOG SYSTEM ---
 - Functions
 - Use Dictionary instead of if/elif system?
+--- ENGINE ---
+- Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle
+- Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)
+- Dialogue Editor
 --- EXTRA ---
 - Names for chapters??
 - Unit Menu ++
 - Color blind mode ++ Allow switching of tile and unit colors (blue, red, green, yellow, purple, white, orange)
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1) ++
-- Build a GUI that builds levels... Unit Placement, TileInfo placement
-- Create GUI that builds units, classes
 - Add Rescue/Warp/Rewarp handling (would include ability to select starting and ending positions - would allow time for warp animation) (both as staff and as ability)
 - Add correct warp animation
 - Add Fake arrival to Give/Take/Shove++

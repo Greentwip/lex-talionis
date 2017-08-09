@@ -2,14 +2,12 @@
 
 Players
 === Ophie ===
-MyrmidonUnarmed
-MyrmidonSword 
+MyrmidonUnarmed ++
+MyrmidonSword ++
 MyrmidonMagicSword
-MyrmidonRangedSword ??
-SwordmasterUnarmed
-SwordmasterSword
+SwordmasterUnarmed ++
+SwordmasterSword ++
 SwordmasterMagicSword
-SwordmasterRangedSword ??
 === Prim ===
 ClericUnarmed ?? (Modify Serra Cleric?)
 ClericMagicLight ??
@@ -17,8 +15,8 @@ BishopFUnarmed
 BishopFMagicLight
 BishopFMagicDark ??
 === Joel ===
-FighterUnarmed
-FighterAxe
+FighterUnarmed ++
+FighterAxe ++
 FighterRangedAxe
 WarriorUnarmed
 WarriorAxe
@@ -38,13 +36,11 @@ SageFMagicAnima
 CavalierUnarmed
 CavalierSword
 CavalierMagicSword
-CavalierRangedSword ??
 CavalierLance
 CavalierRangedLance
 PaladinUnarmed
 PaladinSword
 PaladinMagicSword
-PaladinRangedSword ??
 PaladinLance
 PaladinRangedLance
 === Theo ===
@@ -56,16 +52,13 @@ GeneralLance
 GeneralRangedLance
 GeneralSword
 GeneralMagicSword
-GeneralRangedSword ??
 === Renae ===
 ThiefFUnarmed
 ThiefFSword
 ThiefFMagicSword
-ThiefFRangedSword ??
 AssassinFUnarmed ??
 AssassinFSword ??
 AssassinFMagicSword ??
-AssassinFRangedSword ??
 AssassinFRangedBow ??
 === Eliza ===
 SoldierFUnarmed ??
@@ -90,16 +83,14 @@ DruidFMagicDark
 MercenaryUnarmed
 MercenarySword
 MercenaryMagicSword
-MercenaryRangedSword ??
 HeroUnarmed
 HeroSword
 HeroMagicSword
-HeroRangedSword ??
 HeroAxe
 HeroRangedAxe
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ~~, Sage, Archer, Sniper, Cleric, Bishop
+Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ++, Sage, Archer, Sniper, Cleric, Bishop
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed
@@ -152,9 +143,7 @@ Restore - Restore
 Refresh
 Silence - Silence
 Wind - Aircalibur
-Water
-Earth
-Fire ~~ - Fire
+Fire << - Fire
 Aether - Excalibur
 Fly - None?
 Flux - Flux

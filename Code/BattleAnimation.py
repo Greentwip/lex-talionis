@@ -29,6 +29,7 @@ class BattleAnimation(object):
 
         self.child_effect = None
         self.loop = False
+        self.deferred_commands = []
 
         # For drawing
         self.blend = None
@@ -60,6 +61,11 @@ class BattleAnimation(object):
 
     def update(self):
         if self.state == 'Run':
+            for num_frames, line in self.deferred_commands:
+                num_frames -= 1
+                if num_frames <= 0:
+                    self.parse_line(line)
+            self.deferred_commands = [c for c in self.deferred_commands if c[0] > 0]
             if self.frame_count >= self.num_frames:
                 self.processing = True
                 self.read_script()
@@ -249,6 +255,10 @@ class BattleAnimation(object):
                 self.script_index = self.loop.start_index # re-loop
         elif line[0] == 'end_parent_loop':
             self.parent.end_loop()
+        elif line[0] == 'defer':
+            num_frames = int(line[1])
+            rest_of_line = line[2:]
+            self.deferred_commands.append([num_frames, rest_of_line])
         # === CONDITIONALS ===
         elif line[0] == 'if_range':
             if not self.at_range:

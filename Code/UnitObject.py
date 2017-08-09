@@ -392,11 +392,12 @@ class UnitObject(object):
 
     def create_spell_info(self, gameStateObj, otherunit):
         if self.getMainSpell().spell.targets in ['Ally', 'Enemy', 'Unit']:
-            height = 56
+            height = 2
             if self.getMainSpell().damage is not None:
-                height += 16
+                height += 1
             if self.getMainSpell().hit is not None:
-                height += 16
+                height += 1
+            """
             real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
             BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
             BGSurf.blit(real_surf, (2, 4))
@@ -405,14 +406,18 @@ class UnitObject(object):
             BGSurf.blit(shimmer, (BGSurf.get_width() - shimmer.get_width() - 1, BGSurf.get_height() - shimmer.get_height() - 5))
             BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
+            """
+            BGSurf = IMAGESDICT['Spell_Window' + str(height)]
+            BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
+            width, height = BGSurf.get_width(), BGSurf.get_height()
 
-            running_height = 6
+            running_height = 8
 
-            FONT['text_white'].blit(otherunit.name, BGSurf, (25, running_height))
+            FONT['text_white'].blit(otherunit.name, BGSurf, (30, running_height))
 
             running_height += 16
             # Blit HP
-            FONT['text_yellow'].blit('HP', BGSurf, (5, running_height))
+            FONT['text_yellow'].blit('HP', BGSurf, (9, running_height))
             # Blit /
             FONT['text_yellow'].blit('/', BGSurf, (width - 25, running_height))
             # Blit stats['HP']
@@ -425,13 +430,13 @@ class UnitObject(object):
             if self.getMainSpell().damage is not None:
                 running_height += 16
                 mt = self.compute_damage(otherunit, gameStateObj, self.getMainSpell(), 'Attack')
-                FONT['text_yellow'].blit('Mt', BGSurf, (5, running_height))
+                FONT['text_yellow'].blit('Mt', BGSurf, (9, running_height))
                 mt_size = FONT['text_blue'].size(str(mt))[0]
                 FONT['text_blue'].blit(str(mt), BGSurf, (width - 5 - mt_size, running_height))
 
             if self.getMainSpell().hit is not None:
                 running_height += 16
-                FONT['text_yellow'].blit('Hit', BGSurf, (5, running_height))
+                FONT['text_yellow'].blit('Hit', BGSurf, (9, running_height))
                 hit = self.compute_hit(otherunit, gameStateObj, self.getMainSpell(), 'Attack')
                 if hit >= 100:
                     BGSurf.blit(IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
@@ -442,7 +447,7 @@ class UnitObject(object):
 
             # Blit name
             running_height += 16
-            self.getMainSpell().draw(BGSurf, (4, running_height))
+            self.getMainSpell().draw(BGSurf, (8, running_height))
             name_width = FONT['text_white'].size(self.getMainSpell().name)[0]
             FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
 
@@ -499,7 +504,7 @@ class UnitObject(object):
             if not gameStateObj.info_surf:
                 return
         
-        # Blit otherunit's name and passive Sprite
+        # Blit otherunit's passive Sprite
         width = gameStateObj.info_surf.get_width()
         if otherunit:
             unit_surf = otherunit.sprite.create_image('passive')
@@ -507,11 +512,11 @@ class UnitObject(object):
         if gameStateObj.cursor.position[0] > HALF_WINWIDTH/TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1: #Right - I believe this has RIGHT precedence
             topleft = (4, 4)
             if otherunit:
-                u_topleft = (12 - max(0, (unit_surf.get_width() - 16)/2), 8 - max(0, (unit_surf.get_width() - 16)/2))
+                u_topleft = (16 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
         else:
             topleft = (WINWIDTH - 4 - width, 4)
             if otherunit:
-                u_topleft = (WINWIDTH - 4 - width + 8 - max(0, (unit_surf.get_width() - 16)/2), 8 - max(0, (unit_surf.get_width() - 16)/2))
+                u_topleft = (WINWIDTH - width + 8 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
 
         surf.blit(gameStateObj.info_surf, topleft)
         if otherunit:
