@@ -7,13 +7,13 @@ u;Prim;MidRight;u;Ophie;FarRight;u;Joel;Left
 s;Joel;I reckon now would be the proper time for introductions.{w}{br}The name's Joel, and the sour face is my partner Nia.{w};auto
 s;Prim;I'm Prim and this is Ophie.{w}{br}T-Thank you for helping us.{w};auto
 s;Joel;No problem, lass. Though I've been wonderin'...{w}{br}What did ya'll do to rouse Ulver's thugs after you?{w};auto
-s;Ophie;Hmmph! What did we do?!{w}{br}They're the ones that attacked us!{w}{br}They stormed the monastery, claiming we had some fugitive or something.{w}They'll pay for this!{w};auto
+s;Ophie;Hmmph! What did we do?!{w}{br}They're the ones that attacked us!{w}{br}They stormed the monastery, claiming we had some fugitive or something.{w}{br}They'll pay for this!{w};auto
 s;Prim;M-master Yohn, Ophie, and I tried to escape...{w}{br}Bu-But Master Yohn went back... t-to hold them off...{w}{br}H-He died for us.{w};auto
 s;Joel;Lass... you're safe now.{w}{br}Your master's sacrifice had a purpose, right?{w};auto
 s;Prim;*sniff* Y-yeah...{w};auto
 s;Joel;I'll let ya'll in on a little secret.{w}{br}I reckon ya'll already figured that Nia and I ain't rangers.{w}{br}We're actually with the Resistance.{w};auto
 s;Prim;The Resistance?{w};auto
-s;Joel;We're... how does Sam phrase it...{w}{br}freedom fighters!{w}{br}The Empire's had its way with our country for too long.{w}{br}We're aimin' to take it back!{w}{clear}Anyways, ya'll don't have anywhere to go.{w}{br}Why don't ya'll head back with Nia and me?{w};auto
+s;Joel;We're... daggumit, how does Sam phrase it...{w}{br}freedom fighters!{w}{br}The Empire's had its way with our country for too long.{w}{br}We're aimin' to take it back!{w}{clear}Anyways, ya'll don't have anywhere to go.{w}{br}Why don't ya'll head back with Nia and me?{w};auto
 s;Ophie;You fight against the Empire?{w};auto
 s;Joel;You bet!{w}{br}And we could always use new members.{w}{br}You're a competant swordsman.{w};auto
 set_expression;Ophie;Smiling
