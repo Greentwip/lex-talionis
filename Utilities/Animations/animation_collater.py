@@ -5,10 +5,28 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-folder = 'swordmaster_sword_frames'
+folder = 'heal'
 count = 0
 index_lines = []
-for fp in sorted(glob.glob(folder + '/*.png')):
+
+files = glob.glob(folder + '/*.png')
+
+new_files = []
+for idx, fp in enumerate(files):
+    sign = fp[:-4]
+    first_digit = 0
+    for i, c in enumerate(sign):
+        if c.isdigit():
+            first_digit = i
+            break
+    if first_digit:
+        name, number = sign[:i], int(sign[i:])
+        new_files.append((name, number, idx))
+    else:
+        new_files.append((l, 0, idx))
+
+for name, number, idx in sorted(new_files):
+    fp = files[idx]
     print(fp)
     count += 1
     name = fp[:-4]

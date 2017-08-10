@@ -54,8 +54,8 @@ class levelUpScreen(object):
         # TIMING
         self.total_time_for_exp = self.expNew * FRAMERATE # exp rate is 16
         self.level_up_sound_played = False
-        self.SPARKTIME = 300
-        self.LEVELUPWAIT = 2500
+        self.SPARKTIME = 320
+        self.LEVELUPWAIT = 1660
 
     def get_num_sparks(self):
         if self.levelup_list:
@@ -153,7 +153,7 @@ class levelUpScreen(object):
             if self.expNew + self.expOld - 100 <= self.expSet:
                 SOUNDDICT['Experience Gain'].stop() 
             # Extra time to account for pause at end
-            if currentTime - self.state_time >= self.total_time_for_exp + 350:
+            if currentTime - self.state_time >= self.total_time_for_exp + 500:
                 self.state.clear()
                 self.state.changeState('levelUp')
                 self.state.changeState('exp_leave')
@@ -174,7 +174,7 @@ class levelUpScreen(object):
 
         # Display the level up stat screen
         elif self.state.getState() == 'levelScreen':
-            time_to_wait = self.LEVELUPWAIT + (self.get_num_sparks()+1)*self.SPARKTIME + 100
+            time_to_wait = self.LEVELUPWAIT + (self.get_num_sparks()+1)*self.SPARKTIME + 500
             # Am i Done displaying?
             if currentTime - self.state_time >= time_to_wait:
                 if self.in_combat:
@@ -256,13 +256,13 @@ class levelUpScreen(object):
             # Highlight underline -- yellow, blue
             new_color = Image_Modification.color_transition2((88, 16, -40), (-80, -32, 40))
             # Scroll out
-            if currentTime - self.state_time > self.LEVELUPWAIT + (self.get_num_sparks()+1)*self.SPARKTIME +100 - 200:
+            if currentTime - self.state_time > self.LEVELUPWAIT + (self.get_num_sparks()+1)*self.SPARKTIME + 300:
                 self.unit_scroll_offset += 10
                 self.screen_scroll_offset += 20
                 self.animations = []
             else: # scroll in
                 if self.unit_scroll_offset:
-                    self.lastSparkUpdate = currentTime - 100 # add 100 extra milliseconds of waiting at beginning
+                    self.lastSparkUpdate = currentTime - 300 # add 300 extra milliseconds of waiting at beginning
                 self.unit_scroll_offset -= 10
                 self.unit_scroll_offset = max(0, self.unit_scroll_offset)
                 self.screen_scroll_offset -= 20
