@@ -60,16 +60,11 @@ f;2;Attack8
 f;10;Attack9
 f;4;Attack10
 # Blur
-f;3;Attack11
-f;2;Miss
 miss
+f;3;Attack11
+f;38;TrueMiss
 # Retreat
-f;3;Attack13
-# Down
-f;2;Attack14
-f;1;Attack15
-f;1;Attack16
-f;2;Attack17
+f;3;TrueMiss2
 f;4;Attack18
 f;16;Attack19
 f;7;Attack20

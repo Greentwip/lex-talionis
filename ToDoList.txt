@@ -34,6 +34,8 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Wagon Class Card
 --- GUI ---
 - Add cursor scroll to menus (Choice Menu), so you can just hold down the direction you want to go. ++
+- Screen size in options menu
+- Unit Menu
 --- DIALOG SYSTEM ---
 - Functions
 - Use Dictionary instead of if/elif system?
@@ -41,6 +43,11 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle
 - Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)
 - Dialogue Editor
+- Android Support
+- Mac Support
+- Fix Dialog Speed to be faster than one per frame
+--- DIFFICULTY ---
+- Add in Easy and Hard modes (Easy, player growths up, no infinite reinforcements, less complex) (Hard, player (a little) and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
 --- EXTRA ---
 - Names for chapters??
 - Unit Menu ++
