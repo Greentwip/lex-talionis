@@ -576,6 +576,9 @@ class AnimationCombat(Combat):
         self.shake_set = [(0, 0)]
         self.shake_offset = (0, 0)
         self.current_shake = 0
+        self.platform_shake_set = [(0, 0)]
+        self.platform_shake_offset = (0, 0)
+        self.platform_current_shake = 0
 
         # To match MapCombat
         self.health_bars = {self.left: self.left_hp_bar, self.right: self.right_hp_bar}
@@ -585,11 +588,11 @@ class AnimationCombat(Combat):
         # Left
         left_color = 'Blue' if self.left.team == 'player' else 'Red'
         # Name Tag
-        self.left_name = IMAGESDICT[left_color + 'LeftCombatName']
+        self.left_name = IMAGESDICT[left_color + 'LeftCombatName'].copy()
         size_x = FONT['text_brown'].size(self.left.name)[0]
         FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x/2, 8))
         # Bar
-        self.left_bar = IMAGESDICT[left_color + 'LeftMainCombat']
+        self.left_bar = IMAGESDICT[left_color + 'LeftMainCombat'].copy()
         if self.left_item:
             size_x = FONT['text_brown'].size(self.left_item.name)[0]
             FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x/2, 5))
@@ -597,11 +600,11 @@ class AnimationCombat(Combat):
         # Right
         right_color = 'Blue' if self.right.team == 'player' else 'Red'
         # Name Tag
-        self.right_name = IMAGESDICT[right_color + 'RightCombatName']
+        self.right_name = IMAGESDICT[right_color + 'RightCombatName'].copy()
         size_x = FONT['text_brown'].size(self.right.name)[0]
         FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x/2, 8))
         # Bar
-        self.right_bar = IMAGESDICT[right_color + 'RightMainCombat']
+        self.right_bar = IMAGESDICT[right_color + 'RightMainCombat'].copy()
         if self.right_item:
             size_x = FONT['text_brown'].size(self.right_item.name)[0]
             FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x/2, 5))
@@ -613,8 +616,8 @@ class AnimationCombat(Combat):
             suffix = '-Ranged'
         else:
             suffix = '-Melee'
-        self.left_platform = IMAGESDICT[left_platform_type + suffix]
-        self.right_platform = Engine.flip_horiz(IMAGESDICT[right_platform_type + suffix])
+        self.left_platform = IMAGESDICT[left_platform_type + suffix].copy()
+        self.right_platform = Engine.flip_horiz(IMAGESDICT[right_platform_type + suffix].copy())
 
     def update(self, gameStateObj, metaDataObj, skip=False):
         #print(self.combat_state)
@@ -684,6 +687,8 @@ class AnimationCombat(Combat):
                     self.left.battle_anim.start_dying_animation()
                 if self.right_hp_bar.true_hp <= 0:
                     self.right.battle_anim.start_dying_animation()
+                if self.left_hp_bar.true_hp <= 0 or self.right_hp_bar.true_hp <= 0 and self.current_result.attacker.battle_anim.state != 'Dying':
+                    self.current_result.attacker.battle_anim.wait_for_dying()
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'ExpWait':
@@ -735,6 +740,11 @@ class AnimationCombat(Combat):
             self.current_shake += 1
             if self.current_shake > len(self.shake_set):
                 self.current_shake = 0
+        if self.platform_current_shake:
+            self.platform_shake_offset = self.platform_shake_set[self.platform_current_shake - 1]
+            self.platform_current_shake += 1
+            if self.platform_current_shake > len(self.platform_shake_set):
+                self.platform_current_shake = 0
 
     def build_viewbox(self, gameStateObj):
         vb_multiplier = self.viewbox_clamp_state/float(self.total_viewbox_clamp_states)
@@ -809,6 +819,10 @@ class AnimationCombat(Combat):
         elif num == 3: # Spell Hit
             self.shake_set = [(0, 0), (-3, -3), (0, 0), (0, 0), (0, 0), (3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (3, 3), (0, 0)]
 
+    def platform_shake(self):
+        self.platform_current_shake = 1
+        self.platform_shake_set = [(0, 1), (0, 0), (0, -1), (0, 0), (0, 1), (0, 0), (-1, -1), (0, 1), (0, 0)]
+
     def darken(self):
         self.darken_background = 1
 
@@ -854,13 +868,15 @@ class AnimationCombat(Combat):
                 self.pan_dir = 0
             elif self.pan_offset == 0:
                 self.pan_dir = 0
+        total_shake_x = self.shake_offset[0] + self.platform_shake_offset[0]
+        total_shake_y = self.shake_offset[1] + self.platform_shake_offset[1]
         # Platform
         if self.at_range:
-            surf.blit(self.left_platform, (-23 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
-            surf.blit(self.right_platform, (131 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.left_platform, (-23 + total_shake_x + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + total_shake_y))
+            surf.blit(self.right_platform, (131 + total_shake_x + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + total_shake_y))
         else:
-            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
-            surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + total_shake_x, platform_top + (platform_trans - bar_multiplier*platform_trans) + total_shake_y))
+            surf.blit(self.right_platform, (WINWIDTH/2 + total_shake_x, platform_top + (platform_trans - bar_multiplier*platform_trans) + total_shake_y))
         # Animation
         if self.at_range:
             right_range_offset = 23
@@ -869,13 +885,13 @@ class AnimationCombat(Combat):
             right_range_offset, left_range_offset = 0, 0
         if self.current_result:
             if self.right is self.current_result.attacker:
-                self.right.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.right.battle_anim.draw_under(surf, (-total_shake_x*2, total_shake_y), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-total_shake_x*2, total_shake_y), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-total_shake_x*2, total_shake_y), right_range_offset, self.pan_offset)
             else:
-                self.left.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.left.battle_anim.draw_under(surf, (-total_shake_x*2, total_shake_y), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-total_shake_x*2, total_shake_y), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-total_shake_x*2, total_shake_y), left_range_offset, self.pan_offset)
         else:
             self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)
             self.right.battle_anim.draw(surf, (0, 0), right_range_offset, self.pan_offset)
@@ -1098,14 +1114,14 @@ class SimpleHPBar(object):
                 self.is_done = False
                 self.true_hp += .25 # Every 4 frames
                 if self.true_hp == self.desired_hp:
-                    self.last_update = self.start_time + 520 # Make sure at least 32 frames happen
+                    self.last_update = self.start_time + 450 # Make sure at least 25 frames happen
             elif self.true_hp > self.desired_hp:
                 if not self.start_time: self.start_time = current_time
                 self.is_done = False
                 self.big_number = True
                 self.true_hp -= .5
                 if self.true_hp == self.desired_hp:
-                    self.last_update = self.start_time + 520 # Make sure at least 32 frames happen
+                    self.last_update = self.start_time + 450 # Make sure at least 25 frames happen
             elif self.true_hp == self.desired_hp:
                 self.start_time = 0
                 self.is_done = True

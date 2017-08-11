@@ -5,7 +5,7 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-folder = 'heal'
+folder = 'fighter_axe_frames'
 count = 0
 index_lines = []
 
@@ -23,7 +23,7 @@ for idx, fp in enumerate(files):
         name, number = sign[:i], int(sign[i:])
         new_files.append((name, number, idx))
     else:
-        new_files.append((l, 0, idx))
+        new_files.append((sign, 0, idx))
 
 for name, number, idx in sorted(new_files):
     fp = files[idx]

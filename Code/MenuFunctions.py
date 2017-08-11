@@ -2102,7 +2102,7 @@ def drawTradePreview(surf, gameStateObj, steal=False):
 
     FONT['text_white'].blit(unit.name, BGSurf, (32, 8))
 
-    if position[0] > HALF_WINWIDTH/TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1: #Right - I believe this has RIGHT precedence
+    if position[0] > TILEX/2 + gameStateObj.cameraOffset.get_x() - 1: #Right - I believe this has RIGHT precedence
         b_topleft = (0, 0)
         u_topleft = (12 - max(0, (unit_surf.get_width() - 16)/2), 8 - max(0, (unit_surf.get_width() - 16)/2))
     else:
@@ -2111,6 +2111,32 @@ def drawTradePreview(surf, gameStateObj, steal=False):
 
     surf.blit(BGSurf, b_topleft)
     surf.blit(unit_surf, u_topleft)
+
+def drawRescuePreview(surf, gameStateObj):
+    rescuer = gameStateObj.cursor.currentSelectedUnit
+    rescuee = gameStateObj.cursor.getHoveredUnit(gameStateObj)
+    window = IMAGESDICT['RescueWindow'].copy()
+    width, height = window.get_width(), window.get_height()
+    con = str(rescuee.stats['CON'])
+    aid = str(rescuer.getAid())
+    num_font = FONT['text_blue']
+    num_font.blit(con, window, (width - num_font.size(con)[0] - 3, 72))
+    num_font.blit(aid, window, (width - num_font.size(aid)[0] - 3, 24))
+    rescuer_surf = rescuer.sprite.create_image('passive')
+    rescuee_surf = rescuee.sprite.create_image('passive')
+    left = 12 - max(0, (rescuer_surf.get_width() - 16)/2) 
+    top = 8 - max(0, (rescuer_surf.get_width() - 16)/2)
+    window.blit(rescuer_surf, (left, top))
+    window.blit(rescuee_surf, (left, top + 48))
+    FONT['text_white'].blit(rescuer.name, window, (32, 8))
+    FONT['text_white'].blit(rescuee.name, window, (32, 56))
+
+    if rescuer.position[0] > TILEX/2 + gameStateObj.cameraOffset.get_x() - 1: #Right - I believe this has RIGHT precedence
+        topleft = (0, 0)
+    else:
+        topleft = (WINWIDTH - 4 - width, 0)
+
+    surf.blit(window, topleft)
 
 class RecordsDisplay(ChoiceMenu):
     def __init__(self, stats):

@@ -50,6 +50,75 @@ guy = [(128, 160, 128), # Background
                 (48, 56, 176), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+gerik = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 184), # Light skin
+                (248, 192, 144), # Med skin
+                (176, 112, 64), # DM skin
+                (112, 80, 48), # Dark skin
+                (176, 232, 80), # Light Hair
+                (136, 168, 56), # Med Hair
+                (96, 128, 16), # Dark Hair
+                (192, 224, 232), # Light Weapon/Leather
+                (152, 184, 216), # Med Weapon/Leather
+                (96, 128, 160), # Dark Weapon/String
+                (184, 112, 160), # Light Clothes
+                (136, 40, 128), # Med Clothes
+                (80, 24, 80), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+mercenary_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 184), # Light skin
+                (248, 192, 144), # Med skin
+                (176, 112, 64), # DM skin
+                (112, 80, 48), # Dark skin
+                (176, 192, 224), # Light Hair
+                (108, 152, 184), # Med Hair
+                (96, 96, 144), # Dark Hair
+                (192, 224, 232), # Light Weapon/Leather
+                (152, 184, 216), # Med Weapon/Leather
+                (96, 128, 160), # Dark Weapon/String
+                (248, 160, 72), # Light Clothes
+                (248, 56, 16), # Med Clothes
+                (144, 0, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+mercenary_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 184), # Light skin
+                (248, 192, 144), # Med skin
+                (176, 112, 64), # DM skin
+                (112, 80, 48), # Dark skin
+                (176, 192, 224), # Light Hair
+                (108, 152, 184), # Med Hair
+                (96, 96, 144), # Dark Hair
+                (192, 224, 232), # Light Weapon/Leather
+                (152, 184, 216), # Med Weapon/Leather
+                (96, 128, 160), # Dark Weapon/String
+                (72, 160, 248), # Light Clothes
+                (56, 56, 248), # Med Clothes
+                (40, 40, 144), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+generic_mercenary = [(255, 255, 255),
+                (157, 204, 0),
+                (255, 204, 153),
+                (128, 128, 128),
+                (143, 124, 0),
+                (148, 255, 181),
+                (0, 92, 49),
+                (25, 25, 25),
+                (76, 0, 92),
+                (0, 51, 128),
+                (255, 164, 5),
+                (194, 0, 136),
+                (153, 63, 0),
+                (0, 117, 220),
+                (240, 163, 255),
+                (43, 206, 72),
+                ]
+
 ewan = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin

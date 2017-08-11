@@ -210,3 +210,5 @@ class Pennant(object):
                 counter += self.text_width + 24
 
         self.text_counter -= 1
+        if self.text_counter <= -(self.text_width + 24):
+            self.text_counter = 0

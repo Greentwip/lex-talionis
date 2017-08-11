@@ -1562,6 +1562,8 @@ class SelectState(State):
             MenuFunctions.drawTradePreview(mapSurf, gameStateObj)
         elif self.name == 'stealselect':
             MenuFunctions.drawTradePreview(mapSurf, gameStateObj, steal=True)
+        elif self.name == 'rescueselect':
+            MenuFunctions.drawRescuePreview(mapSurf, gameStateObj)
         return mapSurf
 
 class TradeState(State):

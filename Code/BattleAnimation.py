@@ -199,6 +199,8 @@ class BattleAnimation(object):
             self.owner.darken()
         elif line[0] == 'lighten':
             self.owner.lighten()
+        elif line[0] == 'platform_shake':
+            self.owner.platform_shake()
         # === ANIMATIONS ===
         elif line[0] == 'hit_spark':
             if self.owner.current_result.def_damage > 0:
@@ -329,6 +331,9 @@ class BattleAnimation(object):
                               0, 0, 0, 0, 0, 0, 255, 0, 0, 0,
                               0, 0, 0, 255, 0, 0, 0, 0, 0, 0,
                               255, 0, 0, 0, 0, 0, 0]
+
+    def wait_for_dying(self):
+        self.num_frames = 35 # wait how long it takes dying sound to appear
 
     def draw(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert':

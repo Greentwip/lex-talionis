@@ -43,14 +43,10 @@ class generic3Counter(object):
 class CursorControl(object):
     def __init__(self):
         self.cursorCounter = 0 # Helper counter for cursor animation
-        self.cursorAnim = [0, 0, 0, 1, 2, 3, 4, 4, 5, 5, 5, 4, 4, 3, 2, 1]
-        self.lastUpdate = Engine.get_time()
+        self.cursorAnim = [0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
         self.cursor = IMAGESDICT['menuHand']
 
     def update(self):
-        currentTime = Engine.get_time()
-        if currentTime - self.lastUpdate > 30:
-            self.lastUpdate = currentTime
-            self.cursorCounter += 1
-            if self.cursorCounter > len(self.cursorAnim) - 1:
-                self.cursorCounter = 0
+        self.cursorCounter += 1
+        if self.cursorCounter > len(self.cursorAnim) - 1:
+            self.cursorCounter = 0
