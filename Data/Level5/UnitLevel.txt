@@ -45,7 +45,7 @@ enemy;0;0;Vincent;20,2;HardGuard
 enemy;0;0;Jules;9,13;Attack
 enemy;0;0;Vagnius;23,2;HardGuard
 # 
-# 3 Brigands, 4 Shamans, 4 Skirmishers, 4 Archers, 4 Myrmidons, 1 Mystic, 6 Mages, 2 Sentinels = 28 enemies
+# 3 Brigands, 4 Shamans, 4 Skirmishers, 4 Archers, 4 Myrmidons, 1 Cleric, 6 Mages, 2 Sentinels = 28 enemies
 # 3 Brigands in Left
 enemy;0;0;Brigand;6;Iron Axe;0,2;Attack_5;Bandit
 enemy;0;0;Brigand;6;Steel Axe;1,3;Attack_5;Bandit
@@ -83,7 +83,7 @@ enemy;0;0;Fighter;8;Steel Axe;21,6;Attack;Claw
 enemy;0;N1;Shaman;10;Flux;21,0;HardGuard;Claw
 enemy;0;N2;Shaman;10;Flux;19,0;HardGuard;Claw
 # Ruins
-enemy;0;0;Mystic;6;Glimmer,Heal;23,12;SoftGuard_1;Claw
+enemy;0;0;Cleric;6;Glimmer,Heal;23,12;SoftGuard_1;Claw
 enemy;0;0;Shaman;7;Flux;22,13;SoftGuard_1;Claw
 enemy;0;0;Shaman;7;Flux;24,13;SoftGuard_1;Claw
 # 3 Brigands, 1 Mage

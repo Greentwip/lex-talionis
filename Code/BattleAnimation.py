@@ -19,10 +19,11 @@ class Loop(object):
 
 class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
-    def __init__(self, anim, script):
+    def __init__(self, anim, script, name=None):
         self.frame_directory = anim
         self.poses = script
         self.current_pose = None
+        self.name = name
         self.state = 'Inert' # Internal state
         self.num_frames = 0 # How long this frame of animation should exist for (in frames)
         self.animations = []
@@ -43,6 +44,10 @@ class BattleAnimation(object):
         # Offset
         self.static = False
 
+        # Awake stuff
+        self.owner = None
+        self.parent = None
+
     def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
         self.owner = owner
         self.partner = partner
@@ -60,12 +65,15 @@ class BattleAnimation(object):
         self.reset()
 
     def update(self):
-        if self.state == 'Run':
+        if self.state != 'Inert':
+            # Handle deferred commands
+            self.deferred_commands = [(num_frames - 1, line) for num_frames, line in self.deferred_commands if num_frames > 0]
             for num_frames, line in self.deferred_commands:
-                num_frames -= 1
                 if num_frames <= 0:
                     self.parse_line(line)
-            self.deferred_commands = [c for c in self.deferred_commands if c[0] > 0]
+
+        if self.state == 'Run':
+            # Handle reading script
             if self.frame_count >= self.num_frames:
                 self.processing = True
                 self.read_script()
@@ -177,7 +185,7 @@ class BattleAnimation(object):
             self.processing = False
             if self.owner.current_result.def_damage > 0:
                 self.owner.shake(3)
-            else: # No Damage
+            elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
         # === FLASHING ===
         elif line[0] == 'enemy_flash_white':
@@ -198,9 +206,9 @@ class BattleAnimation(object):
                     position = (-110, -30)
                 else:
                     position = (-40, -30) # Enemy's position
-                image = IMAGESDICT['HitSparkTrans']
+                image = IMAGESDICT['HitSpark']
                 anim = CustomObjects.Animation(image, position, (3, 5), 14, ignore_map=True, 
-                                              set_timing=(2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1))
+                                              set_timing=(-1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1))
             else: # No Damage
                 if self.right:
                     position = (52, 21)
@@ -228,12 +236,12 @@ class BattleAnimation(object):
         # === EFFECTS ===
         elif line[0] == 'effect':
             image, script = ANIMDICT.get_effect(line[1])
-            self.child_effect = BattleAnimation(image, script)
+            self.child_effect = BattleAnimation(image, script, line[1])
             self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             self.child_effect.start_anim(self.current_pose)
         elif line[0] == 'enemy_effect':
             image, script = ANIMDICT.get_effect(line[1])
-            self.partner.child_effect = BattleAnimation(image, script)
+            self.partner.child_effect = BattleAnimation(image, script, line[1])
             # Opposite effects
             self.partner.child_effect.awake(self.owner, self.parent, not self.right, self.at_range, parent=self.parent.partner)
             self.partner.child_effect.start_anim(self.current_pose)
@@ -241,12 +249,15 @@ class BattleAnimation(object):
             self.blend = 'RGB_ADD'
         elif line[0] == 'spell':
             attacker = self.owner.current_result.attacker
-            image, script = ANIMDICT.get_effect(self.owner.right_item.id if attacker is self.owner.right else self.owner.left_item.id)
-            self.child_effect = BattleAnimation(image, script)
+            item_id = self.owner.right_item.id if attacker is self.owner.right else self.owner.left_item.id
+            image, script = ANIMDICT.get_effect(item_id)
+            self.child_effect = BattleAnimation(image, script, item_id)
             self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             self.child_effect.start_anim(self.current_pose)
         elif line[0] == 'static':
             self.static = True
+        elif line[0] == 'opacity':
+            self.opacity = int(line[1])
         # === LOOPING ===
         elif line[0] == 'start_loop':
             self.loop = Loop(self.script_index)
@@ -259,7 +270,7 @@ class BattleAnimation(object):
         elif line[0] == 'defer':
             num_frames = int(line[1])
             rest_of_line = line[2:]
-            self.deferred_commands.append([num_frames, rest_of_line])
+            self.deferred_commands.append((num_frames, rest_of_line))
         # === CONDITIONALS ===
         elif line[0] == 'if_range':
             if not self.at_range:

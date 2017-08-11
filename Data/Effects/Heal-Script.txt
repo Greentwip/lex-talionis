@@ -36,11 +36,11 @@ f;2;Heal32
 f;2;Heal33
 f;1;Heal34
 wait;3
-effect;HealOrb
+effect;HealOrbHigh
 wait;58
 pan
 wait;3
-effect;EnemyHealOrb
+enemy_effect;HealOrbLow
 wait;51
 wait;3
 defer;13;lighten

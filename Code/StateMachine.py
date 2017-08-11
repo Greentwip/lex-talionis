@@ -2097,6 +2097,7 @@ class ExpGainState(State):
 
     def draw(self, gameStateObj, metaDataObj):
         if self.in_combat:
+            assert isinstance(gameStateObj.stateMachine.state[-2], CombatState)
             mapSurf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
         else:
             mapSurf = State.draw(self, gameStateObj, metaDataObj)

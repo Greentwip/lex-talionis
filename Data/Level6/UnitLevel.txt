@@ -70,8 +70,8 @@ enemy;0;0;Fighter;9;Iron Axe;7,10;Attack_3;Guard
 enemy;0;0;Fighter;9;Iron Axe;17,10;Attack_3;Guard
 # Further Behind Doors
 enemy;0;0;Myrmidon;9;Mithril Sword,dEnergy Ring;12,8;Attack;Guard
-enemy;0;0;Mystic;8;Glimmer,Mend;2,8;Attack;Guard
-enemy;0;0;Mystic;8;Glimmer,Fortune;22,8;Attack;Guard
+enemy;0;0;Cleric;8;Glimmer,Mend;2,8;Attack;Guard
+enemy;0;0;Cleric;8;Glimmer,Fortune;22,8;Attack;Guard
 ### Bottom - 23 at bottom
 # Guarding doors
 enemy;0;0;Knight;7;Iron Lance,dSkeleton Key;6,24;SoftGuard;Guard
