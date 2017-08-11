@@ -679,7 +679,7 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'Init':
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
-            print('Interaction: Getting a new result')
+            #print('Interaction: Getting a new result')
             if self.current_result is None:
                 self.last_update = current_time
                 self.combat_state = 'ExpWait'
@@ -699,6 +699,7 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'HP_Change':
             if self.left_hp_bar.done() and self.right_hp_bar.done():
+                #print('HP Bar Done!')
                 self.current_result.attacker.battle_anim.resume()
                 if self.left_hp_bar.true_hp <= 0:
                     self.left.battle_anim.start_dying_animation()
@@ -874,15 +875,13 @@ class AnimationCombat(Combat):
                 self.pan_dir = 0
             elif self.pan_offset == 0:
                 self.pan_dir = 0
-        # Make combat surf
-        combat_surf = Engine.copy_surface(self.combat_surf)
         # Platform
         if self.at_range:
-            combat_surf.blit(self.left_platform, (-23 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
-            combat_surf.blit(self.right_platform, (131 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.left_platform, (-23 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.right_platform, (131 + self.shake_offset[0] + self.pan_offset, platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         else:
-            combat_surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
-            combat_surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.left_platform, (WINWIDTH/2 - self.left_platform.get_width() + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
+            surf.blit(self.right_platform, (WINWIDTH/2 + self.shake_offset[0], platform_top + (platform_trans - bar_multiplier*platform_trans) + self.shake_offset[1]))
         # Animation
         if self.at_range:
             right_range_offset = 23
@@ -891,16 +890,19 @@ class AnimationCombat(Combat):
             right_range_offset, left_range_offset = 0, 0
         if self.current_result:
             if self.right is self.current_result.attacker:
-                self.right.battle_anim.draw_under(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.right.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
             else:
-                self.left.battle_anim.draw_under(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(combat_surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.left.battle_anim.draw_under(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-self.shake_offset[0]*2, self.shake_offset[1]), left_range_offset, self.pan_offset)
         else:
-            self.left.battle_anim.draw(combat_surf, (0, 0), left_range_offset, self.pan_offset)
-            self.right.battle_anim.draw(combat_surf, (0, 0), right_range_offset, self.pan_offset)
+            self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)
+            self.right.battle_anim.draw(surf, (0, 0), right_range_offset, self.pan_offset)
+
+        # Make combat surf
+        combat_surf = Engine.copy_surface(self.combat_surf)
         # Bar
         left_bar = self.left_bar.copy()
         right_bar = self.right_bar.copy()
@@ -990,8 +992,9 @@ class AnimationCombat(Combat):
                 else:
                     my_exp = int(Utility.clamp(my_exp, 1, 100))
 
-                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp, in_combat=self)) #Also handles actually adding the exp to the unit
-                gameStateObj.stateMachine.changeState('expgain')
+                if my_exp > 0:
+                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp, in_combat=self)) #Also handles actually adding the exp to the unit
+                    gameStateObj.stateMachine.changeState('expgain')
 
             if self.p2 and not self.p2.isDying:
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
@@ -1002,9 +1005,9 @@ class AnimationCombat(Combat):
                         self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
                         
                     my_exp = self.calc_init_exp_p2(defender_results)
-
-                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=self)) #Also handles actually adding the exp to the unit
-                    gameStateObj.stateMachine.changeState('expgain')
+                    if my_exp > 0:
+                        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=self)) #Also handles actually adding the exp to the unit
+                        gameStateObj.stateMachine.changeState('expgain')
 
     def check_death(self):
         if self.p1.currenthp <= 0:
@@ -1103,6 +1106,7 @@ class SimpleHPBar(object):
         self.max_hp = unit.stats['HP']
         self.last_update = 0
         self.color_tick = 0
+        self.is_done = True
         self.big_number = False
         self.start_time = 0
 
@@ -1112,18 +1116,20 @@ class SimpleHPBar(object):
         if current_time - self.last_update > 32:
             if self.true_hp < self.desired_hp:
                 if not self.start_time: self.start_time = current_time
-                self.big_number = False # No big number on up
+                self.is_done = False
                 self.true_hp += .25 # Every 4 frames
                 if self.true_hp == self.desired_hp:
                     self.last_update = self.start_time + 520 # Make sure at least 32 frames happen
             elif self.true_hp > self.desired_hp:
                 if not self.start_time: self.start_time = current_time
+                self.is_done = False
                 self.big_number = True
                 self.true_hp -= .5
                 if self.true_hp == self.desired_hp:
                     self.last_update = self.start_time + 520 # Make sure at least 32 frames happen
             elif self.true_hp == self.desired_hp:
                 self.start_time = 0
+                self.is_done = True
                 self.big_number = False
         self.color_tick += 1
         if self.color_tick >= len(self.colors):
@@ -1131,7 +1137,7 @@ class SimpleHPBar(object):
         return self.true_hp == self.desired_hp
 
     def done(self):
-        return not self.big_number
+        return self.is_done
 
     def draw(self, surf, pos):
         t_hp = int(self.true_hp)
