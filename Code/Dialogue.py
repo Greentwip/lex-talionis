@@ -1491,10 +1491,10 @@ class Dialog(object):
         self.done = False
         self.talk = talk
 
+        self.total_num_updates = 0
+
         self.message_tail = message_tail
         self.hold = hold
-
-        self.last_update = Engine.get_time()
 
         # To match dialogue scene, so it can be used in the same place.
         self.transition = transition
@@ -1691,15 +1691,20 @@ class Dialog(object):
                     self.unit_sprites[self.owner].talk()
         elif self.scroll_y > 0:
             self.scroll_y -= 2
-        elif current_time - self.last_update > OPTIONS['Text Speed']*self.slow_flag:
-            self._next_char()
+        else:
+            num_updates = Engine.get_delta() / float(OPTIONS['Text Speed']*self.slow_flag)
+            self.total_num_updates += num_updates
+            if self.total_num_updates >= 1:
+                # handle the waiting markxzer's vertical offset
+                self.waiting_cursor_offset_index += 1
+                if self.waiting_cursor_offset_index > len(self.waiting_cursor_offset) - 1:
+                    self.waiting_cursor_offset_index = 0
 
-            # handle the waiting markxzer's vertical offset
-            self.waiting_cursor_offset_index += 1
-            if self.waiting_cursor_offset_index > len(self.waiting_cursor_offset) - 1:
-                self.waiting_cursor_offset_index = 0
-                
-            self.last_update = current_time
+            while self.total_num_updates >= 1:
+                self.total_num_updates -= 1
+                if self._next_char():
+                    self.total_num_updates = 0
+                    break
 
     def draw(self, surf, unit_sprites):
         text_surf = self.text_surf.copy()

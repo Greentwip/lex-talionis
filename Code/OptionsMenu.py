@@ -7,9 +7,10 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.config = [('Animation', ['ON', 'OFF'], WORDS['Animation_desc'], 0),
-                           ('Unit Speed', range(15, 180, 15), WORDS['Unit Speed_desc'], 1),
-                           ('Text Speed', range(0, 110, 10), WORDS['Text Speed_desc'], 2),
-                           ('Cursor Speed', range(0, 220, 20), WORDS['Cursor Speed_desc'], 8),
+                           ('temp_Screen Size', ['1', '2', '3', '4', '5'], WORDS['temp_Screen Size_desc'], 18),
+                           ('Unit Speed', list(reversed(range(15, 180, 15))), WORDS['Unit Speed_desc'], 1),
+                           ('Text Speed', [1, 5, 10, 15, 20, 30, 40, 50, 75, 100, 150], WORDS['Text Speed_desc'], 2),
+                           ('Cursor Speed', list(reversed(range(0, 220, 20))), WORDS['Cursor Speed_desc'], 8),
                            ('Show Terrain', ['ON', 'OFF'], WORDS['Show Terrain_desc'], 7),
                            ('Show Objective', ['ON', 'OFF'], WORDS['Show Objective_desc'], 6),
                            ('Autocursor', ['ON', 'OFF'], WORDS['Autocursor_desc'], 13),
@@ -189,7 +190,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         if OPTIONS[section] == 'ON':
             OPTIONS[section] = 1
         elif OPTIONS[section] == 'OFF':
-            OPTIONS[section] = 0 
+            OPTIONS[section] = 0
 
     def update(self, gameStateObj, metaDataObj):
         # Determine if we need to move the top of the menu
@@ -275,16 +276,19 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def drawConfig(self, surf):
         # Blit arrow... eventually
         # Blit text
-        slider_offset = [0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 1, 1]
         for index, option in enumerate(self.config[self.top_of_menu:self.top_of_menu + 6]):
             name, bounds, info, icon = option
+            if name.startswith('temp_'):
+                display_name = name[5:]
+            else:
+                display_name = name
             # Blit Icon
             icon_position = (15, self.start_offset + index*16)
             icon_surf = Engine.subsurface(ICONDICT['Options_Icons'], (0, icon*16, 16, 16))
             surf.blit(icon_surf, icon_position)
             # Blit name
             name_position = (32, self.start_offset + 1 + index*16)
-            FONT['text_white'].blit(WORDS[name], surf, name_position)
+            FONT['text_white'].blit(WORDS[display_name], surf, name_position)
             current_option = OPTIONS[name]
             # Blit Options
             # Is a slider
@@ -293,16 +297,19 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 surf.blit(slider_bar, (WINWIDTH/2 + 12, self.start_offset + index*16 + 4))
 
                 slider_hold = IMAGESDICT['WaitingCursor']
-                slider_fraction = (current_option - bounds[0])/float((bounds[-1] - bounds[0]))
+                if current_option in bounds:
+                    slider_fraction = bounds.index(current_option)/float(len(bounds) - 1)
+                else:
+                    slider_fraction = (current_option - bounds[0])/float((bounds[-1] - bounds[0]))
                 hold_offset = slider_fraction*(slider_bar.get_width() - 6)
-                slider_bop = slider_offset[self.cursorCounter] - 1 if index + self.top_of_menu == self.currentSelection else 0
+                slider_bop = self.cursorAnim[self.cursorCounter]/2 - 1 if index + self.top_of_menu == self.currentSelection else 0
                 topleft = (WINWIDTH/2 + 12 + hold_offset, self.start_offset + index*16 + 4 + slider_bop)
                 surf.blit(slider_hold, topleft)
             # Is a list of options
             else:
                 word_index = 0
                 for choice in bounds:
-                    if choice == current_option or (choice == 'ON' and current_option) or (choice == 'OFF' and not current_option):
+                    if choice == current_option or (choice == 'ON' and current_option) or (choice == 'OFF' and not current_option) or (isinstance(choice, str) and str(current_option) == choice):
                         font = FONT['text_blue']
                     else:
                         font = FONT['text_grey']
@@ -328,6 +335,8 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 return choices.index('ON')
             else:  
                 return choices.index('OFF')
+        elif isinstance(choices[0], str):
+            return choices.index(str(option))
         else:
             return choices.index(option)
 

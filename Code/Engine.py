@@ -39,6 +39,7 @@ def build_font(ttf, size):
     return pygame.font.Font(ttf, size)
 
 def terminate():
+    configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
     configuration.write_config_file() # Write last saved options to config file
     pygame.mixer.music.stop()
     pygame.mixer.quit()

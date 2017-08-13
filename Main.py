@@ -75,7 +75,7 @@ def run(gameStateObj, metaDataObj):
         # Update global music thread
         Engine.music_thread.update(eventList)
         
-        pygame.transform.scale(mapSurf, (WINWIDTH*OPTIONS['screen_scale'], WINHEIGHT*OPTIONS['screen_scale']), DISPLAYSURF)
+        pygame.transform.scale(mapSurf, (WINWIDTH*OPTIONS['Screen Size'], WINHEIGHT*OPTIONS['Screen Size']), DISPLAYSURF)
         # Keep gameloop (update, renders, etc) ticking
         pygame.display.update()
         gameStateObj.playtime += FPSCLOCK.tick(FPS)
