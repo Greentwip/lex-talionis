@@ -51,7 +51,7 @@ small_icon = Engine.image_load('Sprites/General/main_icon.png')
 Engine.set_icon(small_icon)
 
 FPSCLOCK = Engine.clock()
-DISPLAYSURF = Engine.build_display((WINWIDTH*OPTIONS['screen_scale'], WINHEIGHT*OPTIONS['screen_scale']))
+DISPLAYSURF = Engine.build_display((WINWIDTH*OPTIONS['Screen Size'], WINHEIGHT*OPTIONS['Screen Size']))
 version = "0.6"
 Engine.set_caption(''.join(["The Lion Throne - ", version]))
 

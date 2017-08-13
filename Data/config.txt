@@ -1,6 +1,6 @@
 debug;1
 cheat;1
-screen_scale;3
+Screen Size;3
 Animation;1
 Unit Speed;75
 Text Speed;10
@@ -24,3 +24,4 @@ key_RIGHT;275
 key_UP;273
 key_DOWN;274
 key_START;115
+temp_Screen Size;3

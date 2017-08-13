@@ -156,12 +156,13 @@ Map;Map
 Records;Records
 Animation;Animation
 Animation_desc;Show combat animations
+temp_Screen Size_desc;Restart for change to take effect
 Unit Speed;Unit Speed
-Unit Speed_desc;Set unit movement speed (fast - slow)
+Unit Speed_desc;Set unit movement speed
 Text Speed;Text Speed
-Text Speed_desc;Set message speed (fast - slow)
+Text Speed_desc;Set message speed
 Cursor Speed;Cursor Speed
-Cursor Speed_desc;Set cursor speed (fast - slow)
+Cursor Speed_desc;Set cursor speed
 Show Terrain;Show Terrain
 Show Terrain_desc;Set Terrain window display
 Show Objective;Show Objective
