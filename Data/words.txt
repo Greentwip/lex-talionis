@@ -1,53 +1,8 @@
-New Game;New Game
-Resume Chapter;Resume Chapter
-Resume Game;Resume Game
-Restart Chapter;Restart Chapter
-Restart Game;Restart Game
-Restart Level;Restart Level
-Save Game;Save Game
-Load Game;Load Game
-Extras;Extras
-Options;Options
-Credits;Credits
-Suspend;Suspend
-Save;Save
-End;End
-Objective;Objective
+Unit_desc;Display a chart of all units on the field.
 Objective_desc;Current objective and overall status.
 Options_desc;Change settings and controls.
 Suspend_desc;Save the game for later. On reload, save is deleted.
 End_desc;Pass the turn.
-Seize;Seize
-Escape;Escape
-Arrive;Arrive
-Switch;Switch
-Talk;Talk
-Attack;Attack
-Spells;Spells
-Steal;Steal
-Mount;Mount
-Dismount;Dismount
-Visit;Visit
-Armory;Armory
-Vendor;Vendor
-Unlock;Unlock
-Search;Search
-Drop;Drop
-Trade;Trade
-Rescue;Rescue
-Give;Give
-Take;Take
-Item;Item
-Items;Items
-Wait;Wait
-Equip;Equip
-Use;Use
-Storage;Storage
-Discard;Discard
-Change;Change
-Cancel;Cancel
-Yes;Yes
-No;No
 Armory_opener;This is an armory. {wait}{clear}Buy something, would ya?
 Armory_buy;What do ya need?
 Armory_back;Anything else?
@@ -62,8 +17,6 @@ Shop_max;Your hands are full. {wait}{clear}If you had a convoy, I could send it 
 Shop_no_money;Sorry. You don't have enough money.
 Shop_check;Are you sure?
 Shop_no_value;You can't sell that here.
-Buy;Buy
-Sell;Sell
 Win Conditions;Win Conditions
 Loss Conditions;Loss Conditions
 Character;Character

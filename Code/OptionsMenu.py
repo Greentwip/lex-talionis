@@ -283,7 +283,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             else:
                 display_name = name
             # Blit Icon
-            icon_position = (15, self.start_offset + index*16)
+            icon_position = (16, self.start_offset + index*16)
             icon_surf = Engine.subsurface(ICONDICT['Options_Icons'], (0, icon*16, 16, 16))
             surf.blit(icon_surf, icon_position)
             # Blit name
@@ -315,7 +315,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                         font = FONT['text_grey']
                     option_position = (WINWIDTH/2 + 8 + word_index, self.start_offset + index*16)
                     font.blit(WORDS[choice], surf, option_position)
-                    word_index += font.size(WORDS[choice] + '    ')[0]
+                    word_index += font.size(WORDS[choice] + '   ')[0]
 
         self.drawScrollArrows(surf, self.config)
 
@@ -346,11 +346,11 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         bounds = self.config[self.currentSelection][1]
         if not isinstance(bounds[0], int) and not isinstance(bounds[0], float):
             bound_index = self.get_index(bounds, OPTIONS[self.config[self.currentSelection][0]])
-            left_position = FONT['text_white'].size('    '.join(bounds[:bound_index]) + ('    ' if bound_index > 0 else ''))[0] + WINWIDTH/2 - 8
+            left_position = FONT['text_white'].size('   '.join(bounds[:bound_index]) + ('   ' if bound_index > 0 else ''))[0] + WINWIDTH/2 - 8
             top_position = 32 + (self.currentSelection - self.top_of_menu)*16
             surf.blit(self.cursor, (left_position + self.cursorAnim[self.cursorCounter], top_position))
         # Blit still cursor
-        still_cursor_position = (15 - self.cursor.get_width(), 32 + (self.currentSelection - self.top_of_menu)*16)
+        still_cursor_position = (19 - self.cursor.get_width(), 35 + (self.currentSelection - self.top_of_menu)*16)
         surf.blit(self.cursor, still_cursor_position)
 
     def drawControlsCursor(self, surf):

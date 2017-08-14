@@ -34,7 +34,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Wagon Class Card
 --- GUI ---
 - Add cursor scroll to menus (Choice Menu), so you can just hold down the direction you want to go. ++
-- Unit Menu
+- Unit Menu (Left Right Arrows, Up Down Scroll Bar, Sorting, Titles descriptions)
 --- DIALOG SYSTEM ---
 - Functions
 - Use Dictionary instead of if/elif system?
@@ -44,12 +44,10 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Dialogue Editor
 - Android Support
 - Mac Support
-- Fix Dialog Speed to be faster than one per frame
 --- DIFFICULTY ---
-- Add in Easy and Hard modes (Easy, player growths up, no infinite reinforcements, less complex) (Hard, player (a little) and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
+- Add in Easy and Hard modes (Easy, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Hard, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
 --- EXTRA ---
 - Names for chapters??
-- Unit Menu ++
 - Color blind mode ++ Allow switching of tile and unit colors (blue, red, green, yellow, purple, white, orange)
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1) ++
