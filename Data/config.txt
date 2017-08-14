@@ -1,10 +1,10 @@
 debug;1
 cheat;1
 Screen Size;3
-Animation;0
+Animation;1
 Unit Speed;75
 Text Speed;10
-Cursor Speed;60
+Cursor Speed;80
 Show Terrain;1
 Show Objective;1
 Autocursor;1

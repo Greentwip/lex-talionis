@@ -515,7 +515,7 @@ class Combat(object):
             my_exp = Utility.clamp(my_exp, 1, 100)
         return my_exp
 
-    def handle_statuses(self):
+    def handle_statuses(self, gameStateObj):
         for status in self.p1.status_effects:
             if status.status_after_battle and not (self.p1.isDying and status.tether):
                 for unit in [self.p2] + self.splash:
@@ -1094,7 +1094,7 @@ class AnimationCombat(Combat):
         self.summon_broken_item_banner(a_broke_item, d_broke_item)
 
         # Handle after battle statuses
-        self.handle_statuses()
+        self.handle_statuses(gameStateObj)
 
         # Handle death
         for unit in all_units:
@@ -1597,7 +1597,7 @@ class Map_Combat(Combat):
                     gameStateObj.stateMachine.changeState('expgain')
 
         # Handle after battle statuses
-        self.handle_statuses()
+        self.handle_statuses(gameStateObj)
 
         # Handle death
         for unit in all_units:

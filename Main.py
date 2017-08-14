@@ -91,10 +91,18 @@ def handle_debug_logs():
             else:
                 os.rename(fp, ''.join(['./Saves/debug.log.', str(counter + 1)]))
         counter -= 1
+
+def inform_error():
+    print("=== === === === === ===")
+    print('Damn. Another bug :(')
+    print("Quick! Copy this error log and send it to rainlash!")
+    print('Or send the file "Saves/debug.log.1" to rainlash!')
+    print('Thank you!')
+    print("=== === === === === === \n")
 # ____________________________________________________________________________#
 # === START === START === START  === START ===  START === START === START === #
 if __name__ == '__main__':
-    import logging
+    import logging, traceback
     try:
         handle_debug_logs()
     except WindowsError:
@@ -105,5 +113,18 @@ if __name__ == '__main__':
     else:
         my_level = logging.WARNING
     logging.basicConfig(filename='./Saves/debug.log.1', filemode='w', level=my_level, disable_existing_loggers=False, format='%(levelname)8s:%(module)20s: %(message)s')
-    main()
+    try:
+        main()
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.exception(e)
+        inform_error()
+        print('Main Crash {0}'.format(str(e)))
+        # Now print exception to screen
+        import time
+        time.sleep(0.5)
+        traceback.print_exc()
+        time.sleep(0.5)
+        inform_error()
+        time.sleep(20)
 # === END === END === END === END === END === END === END === END === END === #

@@ -5,9 +5,9 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-palette_set = palette_index.gerik
+palette_set = palette_index.gilliam
 
-folder = 'mercenary_sword_frames/'
+folder = 'knight_lance_frames/'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
