@@ -8,7 +8,11 @@
 - Crashed on Suspend and Load another Saved Game?
 - Some music doesn't loop?
 
+- Bug with Provoke Status
+
 FOR FUTURE UPDATES TO THE ENGINE:
+--- Balance ---
+- Fix Level4 Balance - End on killing last remaining wagon if Boss is dead, otherwise end on Boss death
 --- L Button ---
 - Add L button support to different states -- which ones?
 --- COMBAT ---
@@ -46,6 +50,8 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Mac Support
 --- DIFFICULTY ---
 - Add in Easy and Hard modes (Easy, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Hard, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
+--- MUSIC ---
+- Open-Source Music - Especially Ghibli
 --- EXTRA ---
 - Names for chapters??
 - Color blind mode ++ Allow switching of tile and unit colors (blue, red, green, yellow, purple, white, orange)
