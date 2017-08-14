@@ -289,47 +289,23 @@ class InfoMenu(StateMachine.State):
 
         fgs_mid = IMAGESDICT['StatGrooveFill']
 
-        stats = [self.unit.stats['STR'].base_stat, self.unit.stats['MAG'].base_stat, self.unit.stats['SKL'].base_stat, self.unit.stats['SPD'].base_stat, self.unit.stats['DEF'].base_stat, self.unit.stats['RES'].base_stat]
         max_stats = metaDataObj['class_dict'][self.unit.klass]['max']
-        maximum = [max_stats[1], max_stats[2], max_stats[3], max_stats[4], max_stats[6], max_stats[7]]
         offset = FONT['text_yellow'].size('Mag')[0] + 4
         # For each left stat
-        for index, stat in enumerate(stats):
-            #print(index, stat/float(maximum[index]))
-            self.build_groove(menu_surf, (offset - 1, TILEHEIGHT*1.1*index + 10), int(maximum[index]/float(CONSTANTS['max_stat'])*44), stat/float(maximum[index]))
+        stats = ['STR', 'MAG', 'SKL', 'SPD', 'DEF', 'RES']
+        for idx, stat in enumerate(stats):
+            index = CONSTANTS['stat_names'].index(stat)
+            self.build_groove(menu_surf, (offset - 1, TILEHEIGHT*1.1*idx + 10), int(max_stats[index]/float(CONSTANTS['max_stat'])*44), self.unit.stats[stat].base_stat/float(max_stats[index]))
+            self.unit.stats[stat].draw(menu_surf, self.unit, (43, TILEHEIGHT*1.1*idx + 4), metaDataObj)
 
         self.blit_stat_titles(menu_surf)
 
-        for index, stat in enumerate(stats):
-            if stat >= maximum[index]:
-                font = FONT['text_green']
-            else:
-                font = FONT['text_blue']
-            font.blit(str(stat), menu_surf, (43 - font.size(str(stat))[0],TILEHEIGHT*1.1*index + 4))
-        FONT['text_blue'].blit(str(self.unit.stats['LCK'].base_stat), menu_surf, (108 - FONT['text_blue'].size(str(self.unit.stats['LCK'].base_stat))[0], 4)) # Blit Outlined Luck
-        FONT['text_blue'].blit(str(self.unit.stats['MOV'].base_stat), menu_surf, (108 - FONT['text_blue'].size(str(self.unit.stats['MOV'].base_stat))[0], TILEHEIGHT*1.1+4)) # Blit Outlined Movement
-        FONT['text_blue'].blit(str(self.unit.stats['CON'].base_stat), menu_surf, (108 - FONT['text_blue'].size(str(self.unit.stats['CON'].base_stat))[0], TILEHEIGHT*2.2+4)) # Blit Outlined Constitution
+        self.unit.stats['LCK'].draw(menu_surf, self.unit, (108, 4), metaDataObj)
+        self.unit.stats['MOV'].draw(menu_surf, self.unit, (108, TILEHEIGHT*1.1+4), metaDataObj)
+        self.unit.stats['CON'].draw(menu_surf, self.unit, (108, TILEHEIGHT*2.2+4), metaDataObj)
         FONT['text_blue'].blit(str(self.unit.strTRV), menu_surf, (92, TILEHEIGHT*4.4+4)) # Blit Outlined Traveler
         FONT['text_blue'].blit(str(self.unit.getAid()), menu_surf, (108 - FONT['text_blue'].size(str(self.unit.getAid()))[0], TILEHEIGHT*3.3+4)) # Blit Outlined Aid
 
-        for index, stat in enumerate([self.unit.stats['STR'], self.unit.stats['MAG'], self.unit.stats['SKL'], self.unit.stats['SPD'], self.unit.stats['DEF'], self.unit.stats['RES']]):
-            output = ""
-            if stat.bonuses > 0:
-                output = "+" + str(stat.bonuses)
-                FONT['small_green'].blit(output, menu_surf, (44, 16*1.1*index+4))
-            elif stat.bonuses < 0:
-                output = str(stat.bonuses)
-                FONT['small_red'].blit(output, menu_surf, (44, 16*1.1*index+4))
-        for index, stat in enumerate([self.unit.stats['LCK'], self.unit.stats['MOV'], self.unit.stats['CON']]):
-            output = ""
-            if stat.bonuses > 0:
-                output = "+" + str(stat.bonuses)
-                FONT['small_green'].blit(output, menu_surf, (menu_surf.get_width()/2 + 44, 16*1.1*index+4))
-            elif stat.bonuses < 0:
-                output = str(stat.bonuses)
-                FONT['small_red'].blit(output, menu_surf, (menu_surf.get_width()/2 + 44, 16*1.1*index+4))
-
-            
         # Handle MountSymbols
         """if 'Dragon' in self.unit.tags:
             AidSurf = Engine.subsurface(ICONDICT['Aid'], (0,48,16,16))
@@ -927,6 +903,7 @@ class HelpGraph(object):
 
 class Help_Box(Counters.CursorControl):
     def __init__(self, name, cursor_position, help_surf):
+        self.name = name
         self.cursor_position = cursor_position
         self.help_surf = help_surf
         # Determine help_topleft position
@@ -947,9 +924,10 @@ class Help_Box(Counters.CursorControl):
 
         Counters.CursorControl.__init__(self)
 
-    def draw(self, surf):
+    def draw(self, surf, info=True):
         surf.blit(self.cursor, (self.cursor_position[0] + 2*self.cursorAnim[self.cursorCounter], self.cursor_position[1]))
-        surf.blit(self.help_surf, self.help_topleft)
+        if info:
+            surf.blit(self.help_surf, self.help_topleft)
 
 def create_help_box(description, num_lines=2, name=False):
     font = FONT['convo_black']

@@ -885,6 +885,9 @@ class Weapon_Triangle(object):
 
         self.parse_file('Data/weapon_triangle.txt')
 
+    def number(self):
+        return len(self.types)
+
     def parse_file(self, fp):
         lines = []
         with open(fp) as w_fp:
@@ -1348,7 +1351,8 @@ class WeaponIcon(object):
             weaponIcons = ITEMDICT['Gray_Wexp_Icons']
         else:
             weaponIcons = ITEMDICT['Wexp_Icons']
-        surf.blit(Engine.subsurface(weaponIcons, (0, 16*WEAPON_TRIANGLE.type_to_index[self.name], 16, 16)), topleft)
+        new_surf = Engine.subsurface(weaponIcons, (0, 16*WEAPON_TRIANGLE.type_to_index[self.name], 16, 16))
+        surf.blit(new_surf, topleft)
 
 class LevelStatistic(object):
     def __init__(self, gameStateObj, metaDataObj):

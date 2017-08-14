@@ -2,7 +2,7 @@ import datetime, collections
 from GlobalConstants import *
 from configuration import *
 import ItemMethods, Image_Modification, Utility, Engine, Counters
-import StateMachine
+import StateMachine, InfoMenu
 
 def OutlineFont(FONTNAME, text, surf, innercolor, outercolor, position):
     """ renders and blits outlined text based on the position.

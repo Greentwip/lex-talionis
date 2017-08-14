@@ -344,13 +344,13 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
 def build_stat_dict(stats):
     st = OrderedDict()
     for idx, name in enumerate(CONSTANTS['stat_names']):
-        st[name] = Stat(stats[idx])
+        st[name] = Stat(idx, stats[idx])
     return st
 
 def build_stat_dict_plus(stats):
     st = OrderedDict()
     for idx, name in enumerate(CONSTANTS['stat_names']):
-        st[name] = Stat(stats[idx][0], stats[idx][1])
+        st[name] = Stat(idx, stats[idx][0], stats[idx][1])
     return st
 
 def get_unit_info(class_dict, klass, level, item_line, gameStateObj):

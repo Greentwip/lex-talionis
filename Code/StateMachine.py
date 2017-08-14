@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 # === Finite State Machine Object ===============================
 class StateMachine(object):
     def __init__(self, state_list=[], temp_state=[]):
-        import PrepBase, Transitions, OptionsMenu, InfoMenu
+        import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu
         self.all_states = {'free': FreeState,
                             'turn_change': TurnChangeState,
                             'move': MoveState,
@@ -102,7 +102,8 @@ class StateMachine(object):
                             'transition_clean': Transitions.TransitionCleanState,
                             'config_menu': OptionsMenu.OptionsMenu,
                             'status_menu': MenuFunctions.StatusMenu,
-                            'info_menu': InfoMenu.InfoMenu}
+                            'info_menu': InfoMenu.InfoMenu,
+                            'unit_menu': UnitMenu.UnitMenu}
         self.state = []
         for state_name in state_list:
             self.state.append(self.all_states[state_name](state_name))
@@ -473,8 +474,8 @@ class FreeState(State):
 class OptionsMenuState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
-        options = [WORDS['Objective'], WORDS['Options']]
-        info_desc = [WORDS['Objective_desc'], WORDS['Options_desc']]
+        options = [WORDS['Unit'], WORDS['Objective'], WORDS['Options']]
+        info_desc = [WORDS['Unit_desc'], WORDS['Objective_desc'], WORDS['Options_desc']]
         if not gameStateObj.tutorial_mode:
             options.append(WORDS['Suspend'])
             info_desc.append(WORDS['Suspend_desc'])
@@ -519,6 +520,9 @@ class OptionsMenuState(State):
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == WORDS['Options']:
                 gameStateObj.stateMachine.changeState('config_menu')
+                gameStateObj.stateMachine.changeState('transition_out')
+            elif selection == WORDS['Unit']:
+                gameStateObj.stateMachine.changeState('unit_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
 
         elif event == 'INFO':

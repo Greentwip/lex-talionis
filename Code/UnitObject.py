@@ -15,7 +15,8 @@ class Multiset(Counter):
 
 # === Helper component class for unit stats ===================================
 class Stat(object):
-    def __init__(self, stat, bonus=0):
+    def __init__(self, idx, stat, bonus=0):
+        self.idx = idx
         self.base_stat = int(stat)
         self.bonuses = bonus
 
@@ -69,6 +70,20 @@ class Stat(object):
 
     def serialize(self):
         return (self.base_stat, self.bonuses)
+
+    def draw(self, surf, unit, topright, metaDataObj):
+        value = self.base_stat
+        if value >= metaDataObj['class_dict'][unit.klass]['max'][self.idx]:
+            FONT['text_green'].blit(str(value), surf, (topright[0] - FONT['text_green'].size(str(value))[0], topright[1]))
+        else:
+            FONT['text_blue'].blit(str(value), surf, (topright[0] - FONT['text_blue'].size(str(value))[0], topright[1]))
+        output = ""
+        if self.bonuses > 0:
+            output = "+" + str(self.bonuses)
+            FONT['small_green'].blit(output, surf, (topright[0], topright[1] + 4))
+        elif self.bonuses < 0:
+            output = str(self.bonuses)
+            FONT['small_red'].blit(output, surf, (topright[0], topright[1] + 4))
 
 # === GENERIC UNIT OBJECT =====================================================
 class UnitObject(object):
@@ -1593,6 +1608,8 @@ class UnitObject(object):
     def damage(self, gameStateObj, item=None):
         if not item:
             item = self.getMainWeapon()
+        if not item:
+            return 0
 
         damage = self.get_support_bonuses(gameStateObj)[0]
         for status in self.status_effects:
