@@ -158,13 +158,14 @@ class BattleAnimation(object):
             SOUNDDICT[line[1]].play()
         # === COMBAT HIT ===
         elif line[0] == 'hit':
+            if len(line) > 1:
+                self.current_frame = self.frame_directory[line[1]]
+            else:
+                self.current_frame = None
             if len(line) > 2:
                 self.under_frame = self.frame_directory[line[2]]
             else:
                 self.under_frame = None
-            self.current_frame = None
-            if len(line) > 1:
-                self.current_frame = self.frame_directory[line[1]]
             self.state = 'Wait'
             self.processing = False
             if self.owner.current_result.def_damage > 0:

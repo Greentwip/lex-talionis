@@ -3898,6 +3898,7 @@ Items: Glimmer Ward 33, Heal 29
 *** Convoy:
 Items: 
 
+<<<<<<< HEAD
 <<<<<<< dfc863f8a2b508b10e6b368d9b5bf09070e98864
 === Level 0 === Money: 1500
 *** Ophie: Riposte
@@ -3928,33 +3929,5 @@ Items: Iron Axe 45, Vulnerary 3
 Lvl 3, Exp 0
 Wexp: 0, 0, 0, 16, 0, 0, 0
 Items: Willow Bow 45, Vulnerary 3
-*** Convoy:
-Items: 
-
-=== Level 2 === Money: 1500
-*** Ophie: Riposte
-Lvl 1, Exp 0
-Wexp: 8, 0, 0, 0, 0, 0, 0
-Items: Iron Sword 45
-*** Prim: Healtouch
-Lvl 1, Exp 0
-Wexp: 0, 0, 0, 0, 1, 0, 0
-Items: Glimmer Ward 35, Heal 30
-*** Joel: Cleave
-Lvl 3, Exp 0
-Wexp: 0, 0, 16, 0, 0, 0, 0
-Items: Iron Axe 45, Vulnerary 3
-*** Nia: Prescience
-Lvl 3, Exp 0
-Wexp: 0, 0, 0, 16, 0, 0, 0
-Items: Willow Bow 45, Vulnerary 3
-*** Althea: Focus
-Lvl 2, Exp 0
-Wexp: 0, 0, 0, 0, 0, 6, 0
-Items: Fire Ward 30, Vulnerary 3
-*** Drake: Canto,Savior
-Lvl 5, Exp 0
-Wexp: 11, 16, 0, 0, 0, 0, 0
-Items: Iron Sword 43, Iron Lance 45
 *** Convoy:
 Items: 
