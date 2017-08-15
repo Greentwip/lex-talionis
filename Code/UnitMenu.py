@@ -3,6 +3,7 @@ from GlobalConstants import *
 from configuration import *
 import Engine, InputManager, StateMachine, Counters
 import Image_Modification, MenuFunctions, CustomObjects, InfoMenu
+import GUIObjects
 
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -35,6 +36,8 @@ class UnitMenu(StateMachine.State):
             self.weapon_icons = [CustomObjects.WeaponIcon(weapon) for weapon in CustomObjects.WEAPON_TRIANGLE.types]
             self.help_boxes = []
             self.info = False
+
+            self.scroll_bar = GUIObjects.ScrollBar((233, 59))
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -78,7 +81,7 @@ class UnitMenu(StateMachine.State):
             self.prev_state_index = self.state_index
             self.state_index += 1
             self.scroll_direction = -1
-            self.banner_index = 0
+            self.banner_index = 1
             self.help_boxes = []
 
     def prev_state(self):
@@ -95,8 +98,9 @@ class UnitMenu(StateMachine.State):
             self.next_state()
 
     def prev_banner(self):
-        self.banner_index -= 1
-        if self.banner_index < 0:
+        if self.banner_index > 0:
+            self.banner_index -= 1
+        if self.banner_index < 1:
             self.prev_state()
 
     def move_up(self):
@@ -136,6 +140,7 @@ class UnitMenu(StateMachine.State):
         self.draw_banner(surf)
         self.draw_page_numbers(surf)
         self.draw_cursor(surf)
+        self.scroll_bar.draw(surf, self.scroll_index - 1, 6, len(self.units))
 
         return surf
 
@@ -320,5 +325,6 @@ class UnitMenu(StateMachine.State):
 
     def summon_help_boxes(self, titles, offsets):
         if not self.help_boxes:
+            self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.create_help_box('Name desc')))
             for idx in xrange(len(titles)):
-                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], (offsets[idx] + 64 - 15, 40), InfoMenu.create_help_box(titles[idx])))
+                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], (offsets[idx] + 64 - 15, 40), InfoMenu.create_help_box(titles[idx] + ' desc')))

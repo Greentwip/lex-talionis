@@ -2,7 +2,7 @@ import datetime, collections
 from GlobalConstants import *
 from configuration import *
 import ItemMethods, Image_Modification, Utility, Engine, Counters
-import StateMachine, InfoMenu
+import StateMachine, InfoMenu, GUIObjects
 
 def OutlineFont(FONTNAME, text, surf, innercolor, outercolor, position):
     """ renders and blits outlined text based on the position.
@@ -501,12 +501,10 @@ class ChoiceMenu(SimpleMenu):
         # For Scroll Bar
         self.limit = limit
         self.scroll = 0
-        self.arrowCounter = 0
-        self.num_arrows = 6
-        self.arrowSpeed = 25
-        self.lastArrowUpdate = Engine.get_time()
 
         self.get_topleft(gameStateObj)
+
+        self.scroll_bar = GUIObjects.ScrollBar((self.menu_width + self.topleft[0], self.topleft[1]))
 
     def getMenuWidth(self):
         longest_width_needed = 16
@@ -621,7 +619,7 @@ class ChoiceMenu(SimpleMenu):
         if self.takes_input:
             self.draw_highlight(surf, self.currentSelection-self.scroll)
         if self.limit and len(self.options) > self.limit:
-            self.drawScrollBar(surf)
+            self.scroll_bar.draw(surf, self.scroll, self.limit, len(self.options))
         if self.options:
             choices = self.options[self.scroll:self.scroll+self.limit] if self.limit else self.options
             for index, option in enumerate(choices):
@@ -678,35 +676,6 @@ class ChoiceMenu(SimpleMenu):
         option_left = sum(FONT['text_white'].size(option)[0] for option in left_options) + sum(FONT['text_white'].size('  ')[0] for option in left_options)
         topleft = (self.topleft[0] - 16 + option_left + self.cursorAnim[self.cursorCounter], self.topleft[1] + 5)
         surf.blit(self.cursor, topleft)
-
-    def drawScrollBar(self, surf):
-        if self.options:
-            # Load parts
-            top_of_scroll_bar = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 0, 7, 1))
-            bottom_of_scroll_bar = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 2, 7, 1))
-            middle_of_scroll_bar = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 1, 7, 1))
-            scroll_bar_fill = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 3, 7, 1))
-            # Draw parts
-            surf.blit(top_of_scroll_bar, (self.topleft[0] + self.menu_width - 8, self.topleft[1] + 4))
-            surf.blit(bottom_of_scroll_bar, (self.topleft[0] + self.menu_width - 8, self.topleft[1] + 16*self.limit + 2))
-            for num in xrange(4+1, 16*self.limit+2):
-                surf.blit(middle_of_scroll_bar, (self.topleft[0] + self.menu_width - 8, self.topleft[1] + num))
-            # Draw bar
-            bar_length = int((float(self.limit)/len(self.options))*self.limit*16)
-            bar_position = int((float(self.scroll)/len(self.options))*self.limit*16)
-            for num in xrange(bar_position, bar_length+bar_position):
-                surf.blit(scroll_bar_fill, (self.topleft[0] + self.menu_width - 8, self.topleft[1] + num + 4))
-            # Update arrows
-            if Engine.get_time() > self.lastArrowUpdate + self.arrowSpeed:
-                self.arrowCounter += 1
-                if self.arrowCounter > self.num_arrows - 1:
-                    self.arrowCounter = 0
-                self.lastArrowUpdate = Engine.get_time()
-            # Draw arrows
-            top_arrow = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (8, 4 + self.arrowCounter*6, 8, 6))
-            bottom_arrow = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 4 + self.arrowCounter*6, 8 ,6))
-            surf.blit(top_arrow, (self.topleft[0] + self.menu_width - 9, self.topleft[1]))
-            surf.blit(bottom_arrow, (self.topleft[0] + self.menu_width - 9, self.topleft[1] + 16*self.limit + 2))
 
 class ItemUseMenu(SimpleMenu):
     def __init__(self, owner, option, topleft, background='BaseMenuBackground'):
@@ -1326,9 +1295,7 @@ class UnitSelectMenu(Counters.CursorControl):
         self.menu_size = self.getMenuSize()
         self.menu_width = self.menu_size[0]
 
-        self.arrowCounter = 0
-        self.num_arrows = 6
-        self.lastArrowUpdate = 0
+        self.scroll_bar = GUIObjects.ScrollBar((self.topleft[0] + self.menu_width, self.topleft[1]))
         Counters.CursorControl.__init__(self)
         self.cursor_y_offset = 0
 
@@ -1387,11 +1354,6 @@ class UnitSelectMenu(Counters.CursorControl):
     def update(self):
         Counters.CursorControl.update(self)
         currentTime = Engine.get_time()
-        if currentTime - self.lastArrowUpdate > 50:
-            self.lastArrowUpdate = currentTime
-            self.arrowCounter += 1
-            if self.arrowCounter > self.num_arrows - 1:
-                self.arrowCounter = 0
 
     def draw(self, surf, gameStateObj):
         surf.blit(self.backsurf, self.topleft)
@@ -1437,7 +1399,7 @@ class UnitSelectMenu(Counters.CursorControl):
             self.draw_extra_cursor(surf)
 
         if len(self.options) > self.units_per_row*self.num_rows:
-            self.drawScrollBar(surf)
+            self.scroll_bar.draw(surf, self.scroll, self.num_rows, len(self.options)/self.units_per_row + 1)
 
     def set_extra_marker(self, selection):
         self.draw_extra_marker = selection
@@ -1459,30 +1421,6 @@ class UnitSelectMenu(Counters.CursorControl):
         left = self.topleft[0] - 8 + selection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
         top = self.topleft[1] + 4 + (selection-self.scroll)/self.units_per_row*self.option_height
         surf.blit(self.cursor, (left, top))
-
-    def drawScrollBar(self, surf):
-        # Load parts
-        top_of_scroll_bar = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 0, 7, 1))
-        bottom_of_scroll_bar = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 2, 7, 1))
-        middle_of_scroll_bar = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 1, 7, 1))
-        scroll_bar_fill = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 3, 7, 1))
-        # Draw parts
-        left = self.topleft[0] + self.menu_width - 6
-        surf.blit(top_of_scroll_bar, (left, self.topleft[1] + 4))
-        surf.blit(bottom_of_scroll_bar, (left, self.topleft[1] + 16*self.num_rows + 2))
-        for num in xrange(4+1, 16*self.num_rows+2):
-            surf.blit(middle_of_scroll_bar, (left, self.topleft[1] + num))
-        # Draw bar
-        total_num_rows = len(self.options)/self.units_per_row + 1
-        bar_length = int((float(self.num_rows)/total_num_rows)*self.num_rows*16)
-        bar_position = int((float(self.scroll)/total_num_rows)*self.num_rows*16)
-        for num in xrange(bar_position, bar_length+bar_position+2):
-            surf.blit(scroll_bar_fill, (left, self.topleft[1] + num + 1))
-        # Draw arrows
-        top_arrow = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (8, 4 + self.arrowCounter*6, 8, 6))
-        bottom_arrow = Engine.subsurface(IMAGESDICT['Scroll_Bar'], (0, 4 + self.arrowCounter*6, 8 ,6))
-        surf.blit(top_arrow, (left - 1, self.topleft[1]))
-        surf.blit(bottom_arrow, (left - 1, self.topleft[1] + 16*self.num_rows + 2))
 
 def drawUnitItems(surf, topleft, unit, include_top=False, include_face=False, right=True, shimmer=0):
     if include_top:
@@ -1831,7 +1769,7 @@ class ShopMenu(ChoiceMenu):
 
         if self.limit == 7: # Base Market Convoy menu
             if len(self.options) > self.limit:
-                self.drawScrollBar(surf)
+                self.scroll_bar.draw(surf, self.scroll, self.limit, len(self.options))
         else:
             self.draw_arrows(surf)
 
@@ -2272,7 +2210,7 @@ class RecordsDisplay(ChoiceMenu):
         self.draw_highlight(back_surf, self.currentSelection - self.scroll)
         # Draw scroll bar
         if len(self.options) > self.limit:
-            self.drawScrollBar(back_surf)
+            self.scroll_bar.draw(back_surf, self.scroll, self.limit, len(self.options))
 
         # Blit titles
         FONT['text_yellow'].blit(WORDS['Records Header'], back_surf, (4,4))
@@ -2313,7 +2251,7 @@ class UnitStats(RecordsDisplay):
 
         # Draw scroll bar
         if len(self.options) > self.limit:
-            self.drawScrollBar(back_surf)
+            self.scroll_bar.draw(back_surf, self.scroll, self.limit, len(self.options))
 
         # Blit titles
         FONT['text_yellow'].blit(WORDS['UnitStat Header'], back_surf, (4,4))
@@ -2365,7 +2303,7 @@ class MVPDisplay(RecordsDisplay):
 
         # Draw scroll bar
         if len(self.options) > self.limit:
-            self.drawScrollBar(back_surf)
+            self.scroll_bar.draw(back_surf, self.scroll, self.limit, len(self.options))
 
         # Blit titles
         FONT['text_yellow'].blit(WORDS['MVP Header'], back_surf, (4,4))

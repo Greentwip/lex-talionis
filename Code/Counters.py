@@ -50,3 +50,16 @@ class CursorControl(object):
         self.cursorCounter += 1
         if self.cursorCounter > len(self.cursorAnim) - 1:
             self.cursorCounter = 0
+
+class ArrowCounter(object):
+    def __init__(self):
+        self.arrow_counter = 0 # Helper counter for cursor animation
+        self.arrow_anim = [0, 1, 2, 3, 4, 5]
+
+    def update(self):
+        self.arrow_counter += 0.125
+        if self.arrow_counter >= len(self.arrow_anim):
+            self.arrow_counter = 0
+
+    def get(self):
+        return self.arrow_anim[int(self.arrow_counter)]
