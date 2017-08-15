@@ -50,6 +50,75 @@ guy = [(128, 160, 128), # Background
                 (48, 56, 176), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+kyle = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 176), # Light skin
+                (232, 192, 136), # LM skin
+                (176, 136, 96), # Horse Skin
+                (160, 120, 96), # DM skin
+                (112, 80, 56), # Dark skin
+                (104, 208, 72), # Light Hair
+                (80, 144, 64), # Dark Hair
+                (136, 184, 216), # Light Pennant
+                (88, 136, 168), # Dark Pennant
+                (208, 216, 128), # Light Clothes
+                (152, 160, 72), # LM Clothes
+                (88, 112, 40), # DM Clothes
+                (56, 72, 16), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+cavalier_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 176), # Light skin
+                (232, 192, 136), # LM skin
+                (176, 136, 96), # Horse Skin
+                (160, 120, 96), # DM skin
+                (112, 80, 56), # Dark skin
+                (168, 184, 216), # Light Hair
+                (96, 136, 168), # Dark Hair
+                (248, 120, 72), # Light Pennant
+                (200, 8, 8), # Dark Pennant
+                (248, 208, 168), # Light Clothes
+                (240, 128, 80), # LM Clothes
+                (200, 8, 8), # DM Clothes
+                (128, 0, 8), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+cavalier_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 176), # Light skin
+                (232, 192, 136), # LM skin
+                (176, 136, 96), # Horse Skin
+                (160, 120, 96), # DM skin
+                (112, 80, 56), # Dark skin
+                (168, 184, 216), # Light Hair
+                (96, 136, 168), # Dark Hair
+                (72, 120, 248), # Light Pennant
+                (48, 48, 200), # Dark Pennant
+                (168, 208, 248), # Light Clothes
+                (80, 128, 240), # LM Clothes
+                (48, 48, 200), # DM Clothes
+                (48, 40, 128), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+generic_cavalier = [(255, 255, 255),
+                (0, 51, 128),
+                (148, 255, 181),
+                (194, 0, 136),
+                (255, 164, 5),
+                (143, 124, 0),
+                (157, 204, 0),
+                (255, 204, 153),
+                (43, 206, 72),
+                (0, 92, 49),
+                (25, 25, 25),
+                (76, 0, 92),
+                (153, 63, 0),
+                (0, 117, 220),
+                (240, 163, 255),
+                (128, 128, 128),
+                ]
+
 gerik = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 240, 184), # Light skin
