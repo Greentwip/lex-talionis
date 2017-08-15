@@ -3,7 +3,7 @@ f;4;Stand
 
 pose;Dodge
 f;1;Stand
-f;31;Dodge2
+f;31;Dodge1
 f;1;Stand
 
 pose;Attack

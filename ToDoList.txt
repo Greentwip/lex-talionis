@@ -8,8 +8,6 @@
 - Crashed on Suspend and Load another Saved Game?
 - Some music doesn't loop?
 
-- Bug with Provoke Status
-
 FOR FUTURE UPDATES TO THE ENGINE:
 --- Balance ---
 - Fix Level4 Balance - End on killing last remaining wagon if Boss is dead, otherwise end on Boss death
@@ -22,7 +20,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- All Necessary Animations (Split Video)
 --- Promotion (Split Video) --- probably going to have to rewrite this section as its own thing.
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
---- Add options to OPTIONS MENU
+--- Add animation options to OPTIONS MENU
 --- MAP ---
 - Autotiles for chasm in level 6?
 --- AI ---
@@ -66,7 +64,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Turnwheel
 - Add Awakening-style dialogue backlog...??** On R press
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
-- Have some menus (prep, options) match references.
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow

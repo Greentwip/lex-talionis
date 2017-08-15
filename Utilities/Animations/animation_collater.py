@@ -5,7 +5,7 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-folder = 'knight_lance_frames'
+folder = 'swordmaster_magicsword_frames'
 count = 0
 index_lines = []
 

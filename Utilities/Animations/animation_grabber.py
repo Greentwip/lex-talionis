@@ -7,7 +7,7 @@ import palette_index
 COLORKEY = (128, 160, 128)
 palette_set = palette_index.gilliam
 
-folder = 'knight_lance_frames/'
+folder = 'sm_magicsword_frames/'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
