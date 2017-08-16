@@ -1,7 +1,7 @@
 import imagesDict
 from GlobalConstants import *
 from configuration import *
-import CustomObjects, MenuFunctions, Image_Modification, InputManager, Engine, StateMachine, Counters
+import CustomObjects, MenuFunctions, Image_Modification, InputManager, Engine, StateMachine, Counters, GUIObjects
 
 class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def begin(self, gameStateObj, metaDataObj):
@@ -45,11 +45,8 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             self.fluid_helper = InputManager.FluidScroll(100)
 
             Counters.CursorControl.__init__(self)
-            self.up_arrows = IMAGESDICT['ScrollArrows']
-            self.down_arrows = Engine.flip_vert(IMAGESDICT['ScrollArrows'])
-            self.arrowCounter = 0
-            self.arrowMax = 5
-            self.lastArrowUpdate = 0
+            self.up_arrow = GUIObjects.ScrollArrow('up', (WINWIDTH/2 - 7, self.start_offset - 4), 0)
+            self.down_arrow = GUIObjects.ScrollArrow('down', (WINWIDTH/2 - 7, self.start_offset + 6*16 - 1), 0.5)
 
             self.backSurf = gameStateObj.generic_surf
 
@@ -196,8 +193,10 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         # Determine if we need to move the top of the menu
         if self.currentSelection <= self.top_of_menu:
             self.top_of_menu = self.currentSelection - 1
+            self.up_arrow.pulse()
         elif self.currentSelection > self.top_of_menu + 4:
             self.top_of_menu = self.currentSelection - 4
+            self.down_arrow.pulse()
         if self.top_of_menu < 0:
             self.top_of_menu = 0
         if self.state.getState() == "Config":
@@ -209,12 +208,6 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
 
         # Handle Cursor
         Counters.CursorControl.update(self)
-        currentTime = Engine.get_time()
-        if currentTime - self.lastArrowUpdate > 50:
-            self.lastArrowUpdate = currentTime
-            self.arrowCounter += 1
-            if self.arrowCounter > self.arrowMax:
-                self.arrowCounter = 0
 
         # Update music volume...
         Engine.music_thread.set_volume(OPTIONS['Music Volume'])
@@ -225,6 +218,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         self.background.draw(surf)
         self.drawSlide(surf)
 
+        self.drawInfo(surf)
         if self.state.getState() == "Config" or (self.state.getState() == "TopMenu" and self.currentSelection == 0):
             self.drawConfig(surf)
             if self.state.getState() == "Config":
@@ -235,7 +229,6 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 self.drawControlsCursor(surf)
         if self.state.getState() == "TopMenu":
             self.drawTopMenuCursor(surf)
-        self.drawInfo(surf)
 
         if self.state.getState() == "Invalid":
             self.drawInvalid(surf)
@@ -271,11 +264,9 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             key_position = (WINWIDTH/2 + 8, self.start_offset + index*16 + 2)
             key_font.blit(Engine.get_key_name(OPTIONS[control]), surf, key_position)
 
-        self.drawScrollArrows(surf, self.control_order)            
+        self.drawScrollArrows(surf, self.control_order)
 
     def drawConfig(self, surf):
-        # Blit arrow... eventually
-        # Blit text
         for index, option in enumerate(self.config[self.top_of_menu:self.top_of_menu + 6]):
             name, bounds, info, icon = option
             if name.startswith('temp_'):
@@ -321,11 +312,9 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
 
     def drawScrollArrows(self, surf, menu):
         if self.top_of_menu > 0:
-            position = WINWIDTH/2 - 8, self.start_offset - 4
-            surf.blit(Engine.subsurface(self.up_arrows, (0,self.arrowCounter*8,16,8)), position)
+            self.up_arrow.draw(surf)
         if self.top_of_menu + 6 < len(menu):
-            position = WINWIDTH/2 - 8, self.start_offset + 6*16 - 1
-            surf.blit(Engine.subsurface(self.down_arrows, (0,self.arrowCounter*8,16,8)), position)
+            self.down_arrow.draw(surf)
 
     def get_index(self, choices, option):
         if len(choices) == 1:

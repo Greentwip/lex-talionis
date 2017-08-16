@@ -432,19 +432,25 @@ class SimpleMenu(Counters.CursorControl):
             idx = self.options.index(option)
             self.currentSelection = idx
 
-    def moveDown(self):
-        self.currentSelection += 1
-        if self.currentSelection > len(self.options) - 1:
-            self.currentSelection = 0
+    def moveDown(self, push=False):
+        if push:
+            self.currentSelection = min(self.currentSelection + 1, len(self.options) - 1)
         else:
-            self.cursor_y_offset = -1
+            self.currentSelection += 1
+            if self.currentSelection > len(self.options) - 1:
+                self.currentSelection = 0
+            else:
+                self.cursor_y_offset = -1  
 
-    def moveUp(self):
-        self.currentSelection -= 1
-        if self.currentSelection < 0:
-            self.currentSelection = len(self.options) - 1
+    def moveUp(self, push=False):
+        if push:
+            self.currentSelection = max(self.currentSelection - 1, 0)
         else:
-            self.cursor_y_offset = 1
+            self.currentSelection -= 1
+            if self.currentSelection < 0:
+                self.currentSelection = len(self.options) - 1
+            else:
+                self.cursor_y_offset = 1       
 
     def updateOptions(self, options):
         self.options = options
@@ -504,7 +510,7 @@ class ChoiceMenu(SimpleMenu):
 
         self.get_topleft(gameStateObj)
 
-        self.scroll_bar = GUIObjects.ScrollBar((self.menu_width + self.topleft[0], self.topleft[1]))
+        self.scroll_bar = GUIObjects.ScrollBar((self.menu_width + self.topleft[0], self.topleft[1] + 6))
 
     def getMenuWidth(self):
         longest_width_needed = 16
@@ -536,8 +542,8 @@ class ChoiceMenu(SimpleMenu):
     def toggle_info(self):
         self.info_flag = not self.info_flag
 
-    def moveDown(self):
-        SimpleMenu.moveDown(self)
+    def moveDown(self, push=False):
+        SimpleMenu.moveDown(self, push)
         if self.limit:
             if self.currentSelection >= self.scroll + self.limit - 1:
                 self.scroll += 1
@@ -552,8 +558,8 @@ class ChoiceMenu(SimpleMenu):
             self.scroll = 0
             self.currentSelection = 0
 
-    def moveUp(self):
-        SimpleMenu.moveUp(self)
+    def moveUp(self, push=False):
+        SimpleMenu.moveUp(self, push)
         if self.limit:
             if self.currentSelection < self.scroll + 1:
                 self.scroll -= 1
@@ -684,16 +690,22 @@ class ItemUseMenu(SimpleMenu):
         self.true_selection = 0
         self.currentSelection = self.legal_indices[self.true_selection]
 
-    def moveUp(self):
-        self.true_selection += 1
-        if self.true_selection > len(legal_indices) - 1:
-            self.true_selection = 0
+    def moveUp(self, push=False):
+        if self.push:
+            self.true_selection = min(self.true_selection + 1, len(legal_indices) - 1)
+        else:
+            self.true_selection += 1
+            if self.true_selection > len(legal_indices) - 1:
+                self.true_selection = 0
         self.currentSelection = self.legal_indices[self.true_selection]
 
-    def moveDown(self):
-        self.true_selection -= 1
-        if self.true_selection < 0:
-            self.true_selection = len(legal_indices) - 1
+    def moveDown(self, push=False):
+        if self.push:
+            self.true_selection = max(self.true_selection - 1, 0)
+        else:
+            self.true_selection -= 1
+            if self.true_selection < 0:
+                self.true_selection = len(legal_indices) - 1
         self.currentSelection = self.legal_indices[self.true_selection]
 
     def draw(self, surf):
@@ -1562,10 +1574,11 @@ class ConvoyMenu(object):
         self.selection_index = 0
 
         # Handle arrows
-        self.arrow_surf = IMAGESDICT['PageArrows']
-        self.arrowCounter = 0
-        self.lastArrowUpdate = Engine.get_time()
-        self.arrowSpeed = 125
+        self.left_arrow = GUIObjects.ScrollArrow('left', (self.topleft[0] - 4, self.topleft[1] - 14))
+        menu_width = 120
+        if self.disp_value:
+            menu_width = 160
+        self.right_arrow = GUIObjects.ScrollArrow('right', (self.topleft[0] + menu_width - 4, self.topleft[1] - 14), 0.5)
 
     def get_sorted_dict(self, options):
         sorted_dict = {}
@@ -1609,21 +1622,25 @@ class ConvoyMenu(object):
         for menu in self.menus.values():
             menu.takes_input = takes_input
 
-    def moveDown(self):
-        self.menus[self.order[self.selection_index]].moveDown()
+    def moveDown(self, push=False):
+        self.menus[self.order[self.selection_index]].moveDown(push)
 
-    def moveUp(self):
-        self.menus[self.order[self.selection_index]].moveUp()
+    def moveUp(self, push=False):
+        self.menus[self.order[self.selection_index]].moveUp(push)
 
     def moveLeft(self):
         self.selection_index -= 1
         if self.selection_index < 0:
             self.selection_index = len(self.order) - 1
+        else:
+            self.left_arrow.pulse()
 
     def moveRight(self):
         self.selection_index += 1
         if self.selection_index > len(self.order) - 1:
             self.selection_index = 0
+        else:
+            self.right_arrow.pulse()
 
     def goto(self, item):
         if item.TYPE:
@@ -1661,21 +1678,8 @@ class ConvoyMenu(object):
         self.drawTopArrows(surf)
 
     def drawTopArrows(self, surf):
-        currentTime = Engine.get_time()
-        #--Increment arrow counter
-        if currentTime - self.lastArrowUpdate > self.arrowSpeed:
-            self.arrowCounter += 1
-            if self.arrowCounter >= 6: # Num arrows - 1
-                self.arrowCounter = 0
-            self.lastArrowUpdate = currentTime
-        LeftScrollArrow = Engine.subsurface(self.arrow_surf, (8*self.arrowCounter,0,8,16))
-        #-- Flip horizontally
-        RightScrollArrow = Engine.flip_horiz(LeftScrollArrow)
-        surf.blit(LeftScrollArrow, (self.topleft[0] - 4, self.topleft[1] - 14))
-        menu_width = 120
-        if self.disp_value:
-            menu_width = 160
-        surf.blit(RightScrollArrow, (self.topleft[0] + menu_width - 4, self.topleft[1] - 14))
+        self.left_arrow.draw(surf)
+        self.right_arrow.draw(surf)
 
 # Simple shop menu
 class ShopMenu(ChoiceMenu):
@@ -1690,10 +1694,11 @@ class ShopMenu(ChoiceMenu):
         self.takes_input = False
 
         self.lastUpdate = Engine.get_time()
-        self.up_arrows = IMAGESDICT['ScrollArrows']
-        self.down_arrows = Engine.flip_vert(IMAGESDICT['ScrollArrows'])
-        self.arrowCounter = 0
-        self.arrowMax = 5
+
+        self.old_scroll = self.scroll
+        self.up_arrow = GUIObjects.ScrollArrow('up', (self.topleft[0] + self.menu_width/2 - 7, self.topleft[1] - 4))
+        self.down_arrow = GUIObjects.ScrollArrow('down', (self.topleft[0] + self.menu_width/2 - 7, self.topleft[1] + 16*5 + 4), 0.5)
+
         self.shimmer = shimmer
 
     def draw(self, surf, money):
@@ -1774,19 +1779,16 @@ class ShopMenu(ChoiceMenu):
             self.draw_arrows(surf)
 
     def draw_arrows(self, surf):
+        if self.old_scroll < self.scroll:
+            self.down_arrow.pulse()
+        elif self.old_scroll > self.scroll:
+            self.up_arrow.pulse()
+        self.old_scroll = self.scroll
         if len(self.options) > self.limit:
-            currentTime = Engine.get_time()
-            if currentTime - self.lastUpdate > 50:
-                self.lastUpdate = currentTime
-                self.arrowCounter += 1
-                if self.arrowCounter > self.arrowMax:
-                    self.arrowCounter = 0
             if self.scroll > 0:
-                position = self.topleft[0] + self.menu_width/2 - 8, self.topleft[1] - 4
-                surf.blit(Engine.subsurface(self.up_arrows, (0,self.arrowCounter*8,16,8)), position)
+                self.up_arrow.draw(surf)
             if self.scroll + self.limit < len(self.options):
-                position = self.topleft[0] + self.menu_width/2 - 8, self.topleft[1] + 16*5 + 4
-                surf.blit(Engine.subsurface(self.down_arrows, (0,self.arrowCounter*8,16,8)), position)
+                self.down_arrow.draw(surf)
 
     def getMenuWidth(self):
         return 160 # Recommended width of shopmenu
@@ -2115,18 +2117,14 @@ class RecordsDisplay(ChoiceMenu):
         self.ignore = None
         self.menu_width = 224
 
-        # Handle arrows
-        self.arrow_surf = IMAGESDICT['PageArrows']
-        self.num_arrows = 6
-        self.arrowCounter = 0
-        self.lastArrowUpdate = 0
-        self.arrowSpeed = 125
-
         Counters.CursorControl.__init__(self)
         self.cursor_y_offset = 0
 
         # Not really -- only used for scroll bar
         self.topleft = (0, 16)
+
+        self.left_arrow = GUIObjects.ScrollArrow('left', (self.topleft[0] + 4 + 1, self.topleft[1] - 7))
+        self.right_Arrow = GUIObjects.ScrollArrow('right', (self.topleft[0] + 8 + self.menu_width - 1, self.topleft[1] - 7))
 
     def formula(self, record):
         return record['kills']*CONSTANTS['kill_worth'] + record['damage'] + record['healing']
@@ -2151,19 +2149,8 @@ class RecordsDisplay(ChoiceMenu):
         return mvp_dict
 
     def drawTopArrows(self, surf):
-        currentTime = Engine.get_time()
-        #--Increment arrow counter
-        if currentTime - self.lastArrowUpdate > self.arrowSpeed:
-            self.arrowCounter += 1
-            if self.arrowCounter >= self.num_arrows:
-                self.arrowCounter = 0
-            self.lastArrowUpdate = currentTime
-        LeftScrollArrow = Engine.subsurface(self.arrow_surf, (8*self.arrowCounter,0,8,16))
-        #-- Flip horizontally
-        RightScrollArrow = Engine.flip_horiz(LeftScrollArrow)
-        width = 8
-        surf.blit(LeftScrollArrow, (self.topleft[0] + 8 - width + 1, self.topleft[1] - 6))
-        surf.blit(RightScrollArrow, (self.topleft[0] + 8 + self.menu_width - 1, self.topleft[1] - 6))
+        self.left_arrow.draw(surf)
+        self.right_arrow.draw(surf)
 
     def draw_cursor(self, surf, index):
         x_position = self.topleft[0] - 8 + self.cursorAnim[self.cursorCounter]

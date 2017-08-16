@@ -3,7 +3,7 @@
 # Imports
 from GlobalConstants import *
 from configuration import *
-import CustomObjects, MenuFunctions, Engine, InputManager, StateMachine, Counters
+import CustomObjects, MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects
 
 class InfoMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -31,9 +31,8 @@ class InfoMenu(StateMachine.State):
             # Counters
             self.background = MenuFunctions.MovingBackground(IMAGESDICT['StatusBackground'])
             #self.background = MenuFunctions.MovieBackground('fog', 33) # This looks odd in comparison...
-            self.arrowCounter = 0
-            self.lastArrowUpdate = Engine.get_time()
-            self.arrowSpeed = 125
+            self.left_arrow = GUIObjects.ScrollArrow('left', (108, 1))
+            self.right_arrow = GUIObjects.ScrollArrow('right', (WINWIDTH - 13, 1), 0.5)
             self.scroll_offset = 0
 
             self.hold_flag = gameStateObj.info_menu_struct['one_unit_only']
@@ -57,6 +56,7 @@ class InfoMenu(StateMachine.State):
     def back(self, gameStateObj):
         SOUNDDICT['Select 4'].play()
         gameStateObj.info_menu_struct['current_state'] = self.currentState
+        gameStateObj.info_menu_struct['chosen_unit'] = self.unit
         if not gameStateObj.info_menu_struct['one_unit_only'] and self.unit.position:
             gameStateObj.cursor.setPosition(self.unit.position, gameStateObj)
         gameStateObj.stateMachine.changeState('transition_pop')
@@ -133,12 +133,14 @@ class InfoMenu(StateMachine.State):
         self.last_fluid = Engine.get_time()
         self.currentState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
         self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+        self.left_arrow.pulse()
 
     def move_right(self, gameStateObj, metaDataObj):
         SOUNDDICT['Status_Page_Change'].play()
         self.last_fluid = Engine.get_time()
         self.currentState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
         self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+        self.right_arrow.pulse()
 
     def update(self, gameStateObj, metaDataObj):
         if self.helpMenu.current:
@@ -229,19 +231,8 @@ class InfoMenu(StateMachine.State):
         return UnitInfoSurface
 
     def drawTopArrows(self, surf):
-        currentTime = Engine.get_time()
-        #--Increment arrow counter
-        if currentTime - self.lastArrowUpdate > self.arrowSpeed:
-            self.arrowCounter += 1
-            if self.arrowCounter >= 6: # Num arrows - 1
-                self.arrowCounter = 0
-            self.lastArrowUpdate = currentTime
-        ScrollArrowSurf = IMAGESDICT['PageArrows']
-        LeftScrollArrow = Engine.subsurface(ScrollArrowSurf, (8*self.arrowCounter,0,8,16))
-        #-- Flip horizontally
-        RightScrollArrow = Engine.flip_horiz(LeftScrollArrow)
-        surf.blit(LeftScrollArrow, (108, 16*self.scroll_offset + 1))
-        surf.blit(RightScrollArrow, (WINWIDTH - 13, 16*self.scroll_offset + 1))
+        self.left_arrow.draw(surf)
+        self.right_arrow.draw(surf)
 
     def drawSlide(self, surf, gameStateObj, metaDataObj):
         # blit title of menu

@@ -52,14 +52,21 @@ class CursorControl(object):
             self.cursorCounter = 0
 
 class ArrowCounter(object):
-    def __init__(self):
-        self.arrow_counter = 0 # Helper counter for cursor animation
+    def __init__(self, offset=0):
+        self.arrow_counter = offset # Helper counter for cursor animation
         self.arrow_anim = [0, 1, 2, 3, 4, 5]
+        self.increment = []
 
     def update(self):
-        self.arrow_counter += 0.125
+        if self.increment:
+            self.arrow_counter += self.increment.pop()
+        else:
+            self.arrow_counter += 0.125
         if self.arrow_counter >= len(self.arrow_anim):
             self.arrow_counter = 0
 
     def get(self):
         return self.arrow_anim[int(self.arrow_counter)]
+
+    def pulse(self):
+        self.increment = [1, 1, 1, 1, 1, 1, 1, 1, .5, .5, .5, .5, .25, .25, .25]

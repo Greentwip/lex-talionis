@@ -188,3 +188,16 @@ Dracoknight;Dr. Knight
 Dracolord;Dr. Lord
 Strategist;Strtgst.
 Swordmaster;Swd. Mstr.
+Name_desc;Name of the unit.
+Class_desc;The unit's class. Each class possesses unique traits.
+Lv_desc;Unit level. The unit becomes stronger as it gains levels.
+Max_desc;Current Max HP.
+Equip_desc;Weapon or magical ward being used.
+Sword_desc;Sword mastery level.
+Lance_desc;Lance mastery level.
+Axe_desc;Axe mastery level.
+Bow_desc;Bow mastery level.
+Staff_desc;Staff mastery level.
+Light_desc;Light magic mastery level.
+Anima_desc;Anima magic mastery level.
+Dark_desc;Dark magic mastery level.
