@@ -533,40 +533,49 @@
     <status name="Heavy Hitter">
         <id>Heavy Hitter</id>
         <icon_index>8,1</icon_index>
-        <desc>Add half weapon Wt to damage.</desc>
+        <desc>Adds half weapon Wt to damage.</desc>
         <components>mt,class_skill</components>
 
         <mt>item.WT/2 if item.WT else 0</mt>
+    </status>
+
+    <status name="Charge">
+        <id>Charge</id>
+        <icon_index>6,3</icon_index>
+        <desc>Adds (distance moved - 2) this turn to damage.</desc>
+        <components>mt,class_skill</components>
+
+        <mt>max(0, Utility.calculate_distance(self.position, self.previous_position) - 2) if self.position else 0</mt>
     </status>
 
     <status name="Focus">
         <id>Focus</id>
         <icon_index>2,0</icon_index>
         <desc>Grants Hit/Avoid +20 if no allies are within 3 tiles.</desc>
-        <components>dynamic_hit,dynamic_avoid,class_skill</components>
+        <components>hit,avoid,class_skill</components>
 
-        <dynamic_hit>20;self.check_focus(gameStateObj)</dynamic_hit>
-        <dynamic_avoid>20;self.check_focus(gameStateObj)</dynamic_avoid>
+        <hit>20 if self.check_focus(gameStateObj) else 0</hit>
+        <avoid>20 if self.check_focus(gameStateObj) else 0</avoid>
     </status>
 
     <status name="Synergy">
         <id>Synergy</id>
         <icon_index>10,7</icon_index>
         <desc>Grants Hit/Avoid +10 if an ally is within 3 tiles.</desc>
-        <components>dynamic_hit,dynamic_avoid,class_skill</components>
+        <components>hit,avoid,class_skill</components>
 
-        <dynamic_hit>10;not self.check_focus(gameStateObj)</dynamic_hit>
-        <dynamic_avoid>10;not self.check_focus(gameStateObj)</dynamic_avoid>
+        <hit>10 if not self.check_focus(gameStateObj) else 0</hit>
+        <avoid>10 if not self.check_focus(gameStateObj) else 0</avoid>
     </status>
 
     <status name="Futuresight">
         <id>Futuresight</id>
         <icon_index>8,8</icon_index>
         <desc>Grants Hit/Avoid +30 if HP is under half.</desc>
-        <components>dynamic_avoid,dynamic_hit,class_skill</components>
+        <components>avoid,hit,class_skill</components>
 
-        <dynamic_hit>30;Utility.lt(self.currenthp, self.stats['HP']/2)</dynamic_hit>
-        <dynamic_avoid>30;Utility.lt(self.currenthp, self.stats['HP']/2)</dynamic_avoid>
+        <hit>30 if Utility.lt(self.currenthp, self.stats['HP']/2.) else 0</hit>
+        <avoid>30 if Utility.lt(self.currenthp, self.stats['HP']/2.) else 0</avoid>
     </status>
 
     <status name="Conductance">

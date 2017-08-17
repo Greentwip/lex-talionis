@@ -5,7 +5,8 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-folder = 'cavalier_lance_frames'
+WIDTH_LIMIT = 1024
+folder = 'hero_unarmed_frames'
 count = 0
 index_lines = []
 
@@ -57,16 +58,37 @@ for name, number, idx in sorted(new_files):
 
 index_script = open('New-Index.txt', 'w')
 
-total_width = sum(i[2] for i in index_lines)
-max_height = max(i[3] for i in index_lines)
+# Organize
+x = 0
+row = []
+row_height = []
+for image, name, width, height, offset in index_lines:
+    if x + width > WIDTH_LIMIT:
+        row_height.append(max(r for r in row))
+        x = width
+        row = [height]
+    else:
+        x += width
+        row.append(height)
+row_height.append(max(r for r in row))
+
+print(row_height)
+total_width = min(WIDTH_LIMIT, sum(i[2] for i in index_lines))
+max_height = sum(r for r in row_height)
 
 sprite_sheet = Image.new('RGB', (total_width, max_height))
 
+# Paste
 x = 0
+current_row = 0
 for image, name, width, height, offset in index_lines:
+    if x + width > WIDTH_LIMIT:
+        x = 0
+        current_row += 1
     print(name)
-    sprite_sheet.paste(image, (x, 0))
-    index_script.write(name + ';' + str(x) + ',0;' + str(width) + ',' + str(height) + ';' + str(offset[0]) + ',' + str(offset[1]) + '\n')
+    y = sum(row_height[:current_row+1]) - height
+    sprite_sheet.paste(image, (x, y))
+    index_script.write(name + ';' + str(x) + ',' + str(y) + ';' + str(width) + ',' + str(height) + ';' + str(offset[0]) + ',' + str(offset[1]) + '\n')
     x += width
 
 # Now convert 0, 0, 0 back to colorkey

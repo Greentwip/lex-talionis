@@ -5,9 +5,9 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-palette_set = palette_index.kyle
+palette_set = palette_index.caellach
 
-folder = 'unique_cav/'
+folder = 'unique_hero_frames/'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')

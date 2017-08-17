@@ -294,7 +294,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills>3,Feat;5,Canto_Plus;8,Feat</skills>
+        <skills>3,Feat;5,Charge;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>85,45,35,55,95,45,25,40</growths>
 		<bases>14,4,2,3,3,0,3,4,8,7</bases>

@@ -1604,10 +1604,7 @@ class UnitObject(object):
         return attackspeed
 
     def accuracy(self, gameStateObj, item=None):
-        accuracy = self.get_support_bonuses(gameStateObj)[2] + sum(int(eval(status.hit, {}, locals())) for status in self.status_effects if status.hit)
-        for status in self.status_effects:
-            if status.dynamic_hit and eval(status.dynamic_hit.conditional, globals(), locals()):
-                accuracy += int(eval(status.dynamic_hit.value, globals(), locals()))
+        accuracy = self.get_support_bonuses(gameStateObj)[2] + sum(int(eval(status.hit, globals(), locals())) for status in self.status_effects if status.hit)
         if not item:
             if self.getMainWeapon():
                 item = self.getMainWeapon()
@@ -1626,10 +1623,7 @@ class UnitObject(object):
     def avoid(self, gameStateObj, item=None):
         base = self.attackspeed(item) * 3 + self.stats['LCK']
         base += self.get_support_bonuses(gameStateObj)[3]
-        base += sum(int(eval(status.avoid, {}, locals())) for status in self.status_effects if status.avoid)
-        for status in self.status_effects:
-            if status.dynamic_avoid and eval(status.dynamic_avoid.conditional, globals(), locals()):
-                base += int(eval(status.dynamic_avoid.value, globals(), locals()))
+        base += sum(int(eval(status.avoid, globals(), locals())) for status in self.status_effects if status.avoid)
         if self.position:
             base += (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].AVO)
         return base
@@ -1669,20 +1663,14 @@ class UnitObject(object):
                 return None
         if item.crit and (item.weapon or item.spell):
             accuracy = item.crit + self.stats['SKL']
-            accuracy += sum(int(eval(status.crit_hit, {}, locals())) for status in self.status_effects if status.crit_hit)
-            for status in self.status_effects:
-                if status.dynamic_crit_hit and eval(status.dynamic_crit_hit.conditional, globals(), locals()):
-                    accuracy += int(eval(status.dynamic_crit_hit.value, globals(), locals()))
+            accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             return accuracy
         else:
             return 0
 
     def crit_avoid(self, gameStateObj, item=None):
         base = self.stats['LCK']*2
-        base += sum(int(eval(status.crit_avoid, {}, locals())) for status in self.status_effects if status.crit_avoid)
-        for status in self.status_effects:
-            if status.dynamic_crit_avoid and eval(status.dynamic_crit_avoid.conditional, globals(), locals()):
-                base += int(eval(status.dynamic_crit_avoid.value, globals(), locals()))
+        base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         return base
 
     def defense(self, gameStateObj):

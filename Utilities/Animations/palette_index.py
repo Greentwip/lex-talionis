@@ -188,6 +188,74 @@ generic_mercenary = [(255, 255, 255),
                 (43, 206, 72),
                 ]
 
+caellach = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # LM skin
+                (184, 136, 88), # DM skin
+                (112, 72, 56), # Dark skin
+                (184, 120, 96), # Light Hair
+                (152, 88, 72), # Med Hair
+                (120, 56, 48), # Dark Hair
+                (192, 224, 232), # Light Weapon/Leather
+                (152, 184, 216), # Med Weapon/Leather
+                (112, 144, 176), # Dark Weapon/String
+                (136, 112, 192), # Light Clothes
+                (88, 40, 160), # Med Clothes
+                (32, 24, 112), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+hero_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # LM skin
+                (184, 136, 88), # DM skin
+                (112, 72, 56), # Dark skin
+                (176, 192, 224), # Light Hair
+                (108, 152, 184), # Med Hair
+                (96, 96, 144), # Dark Hair
+                (192, 224, 232), # Light Weapon/Leather
+                (152, 184, 216), # Med Weapon/Leather
+                (112, 144, 176), # Dark Weapon/String
+                (248, 160, 72), # Light Clothes
+                (248, 56, 16), # Med Clothes
+                (144, 0, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+hero_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # LM skin
+                (184, 136, 88), # DM skin
+                (112, 72, 56), # Dark skin
+                (176, 192, 224), # Light Hair
+                (108, 152, 184), # Med Hair
+                (96, 96, 144), # Dark Hair
+                (192, 224, 232), # Light Weapon/Leather
+                (152, 184, 216), # Med Weapon/Leather
+                (112, 144, 176), # Dark Weapon/String
+                (72, 160, 248), # Light Clothes
+                (56, 56, 248), # Med Clothes
+                (40, 40, 144), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+generic_hero = [(255, 255, 255),
+                (143, 124, 0),
+                (128, 128, 128),
+                (255, 204, 153),
+                (148, 255, 181),
+                (0, 51, 128),
+                (0, 92, 49),
+                (25, 25, 25),
+                (76, 0, 92),
+                (157, 204, 0),
+                (194, 0, 136),
+                (255, 164, 5),
+                (153, 63, 0),
+                (0, 117, 220),
+                (240, 163, 255),
+                (43, 206, 72)]
+
 gilliam = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (208, 232, 224), # Armor 1 Light

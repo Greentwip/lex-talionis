@@ -343,9 +343,11 @@ class BattleAnimation(object):
                     image = Engine.flip_horiz(image)
                 offset = self.current_frame[1]
                 if self.right:
-                    offset = offset[0] + shake[0] + range_offset + (pan_offset if not self.static else 0), offset[1] + shake[1]
+                    offset = offset[0] + shake[0] + range_offset + (pan_offset if not self.static else 0), \
+                             offset[1] + shake[1]
                 else:
-                    offset = WINWIDTH - offset[0] - image.get_width() + shake[0] + range_offset + (pan_offset if not self.static else 0), offset[1] + shake[1]
+                    offset = WINWIDTH - offset[0] - image.get_width() + shake[0] + range_offset + (pan_offset if not self.static else 0), \
+                             offset[1] + shake[1]
 
                 # Move the animations in at the beginning and out at the end
                 if self.entrance:

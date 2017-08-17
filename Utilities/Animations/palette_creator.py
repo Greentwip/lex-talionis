@@ -2,7 +2,7 @@ from PIL import Image
 import palette_index
 
 # creates a palette based on two exact pictures who only differ in palette
-palette1 = palette_index.kyle
+palette1 = palette_index.caellach
 palette2 = [(0, 0, 0) for _ in xrange(16)]
 im1 = Image.open('palette1.png').convert('RGB')
 im2 = Image.open('palette2.png').convert('RGB')
