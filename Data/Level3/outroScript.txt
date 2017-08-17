@@ -14,10 +14,10 @@ s;Ophie;Hmmph. That was too close!{w}{br}Sam said we weren't going to have to wo
 u;Althea;MidLeft
 u;Prim;MidRight
 s;Althea;I wonder what went wrong.{w};auto
-s;Ophie;That asshole's plan nearly got us killed.{w}{br}And he didn't even have the decency to show up!{w}{br}Who does he think he is?{w};auto
-s;Prim;I-I'm sure he had a good reason, Ophie.{w}{br}He just made a mistake.{w}{br}I'm sure this is just a fluke, right?{w};auto
+s;Ophie;That asshole's plan nearly got us killed.{w}{br}And he doesn't even show up!{w}{br}Who does he think he is?{w};auto
+s;Prim;I-I'm sure he had a good reason, Ophie.{w}{br}He just made a mistake.{w}{br}This is just a fluke, right?{w};auto
 s;Joel;Uh... yeah!{w};auto
-s;Ophie;Sam gets one more chance.{w}{br}If our so-called tactician's plan fails yet again, Prim and I are done.{w};auto
+s;Ophie;Sam gets one more chance.{w}{br}If our so-called tactician's plan fails again, Prim and I are done.{w};auto
 r;Ophie
 s;Prim;...{w};auto
 r;Prim

@@ -38,10 +38,17 @@ class UnitMenu(StateMachine.State):
             self.info = False
 
             self.scroll_bar = GUIObjects.ScrollBar((233, 59))
+            self.left_arrow = GUIObjects.ScrollArrow('left', (7, 41))
+            self.right_arrow = GUIObjects.ScrollArrow('right', (WINWIDTH - 7 - 8, 41), 0.5)
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
             return 'repeat'
+        else:
+            chosen_unit = gameStateObj.info_menu_struct['chosen_unit']
+            if chosen_unit:
+                self.move_to_unit(chosen_unit)
+            gameStateObj.info_menu_struct['chosen_unit'] = None
 
     def back(self, gameStateObj):
         SOUNDDICT['Select 4'].play()
@@ -56,7 +63,7 @@ class UnitMenu(StateMachine.State):
 
         if event == 'INFO':
             if self.unit_index:
-                StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, self.units[self.unit_index])
+                StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, self.units[self.unit_index-1])
             else:
                 self.info = not self.info
         elif event == 'BACK' or event == 'SELECT':
@@ -83,6 +90,7 @@ class UnitMenu(StateMachine.State):
             self.scroll_direction = -1
             self.banner_index = 1
             self.help_boxes = []
+            self.right_arrow.pulse()
 
     def prev_state(self):
         if self.state_index > 0:
@@ -91,14 +99,17 @@ class UnitMenu(StateMachine.State):
             self.scroll_direction = 1
             self.banner_index = 10
             self.help_boxes = []
+            self.left_arrow.pulse()
 
     def next_banner(self):
         self.banner_index += 1
+        self.right_arrow.pulse()
         if self.banner_index >= len(self.help_boxes):
             self.next_state()
 
     def prev_banner(self):
         if self.banner_index > 0:
+            self.left_arrow.pulse()
             self.banner_index -= 1
         if self.banner_index < 1:
             self.prev_state()
@@ -115,6 +126,15 @@ class UnitMenu(StateMachine.State):
             self.info = False
         if self.scroll_index <= self.unit_index - self.num_per_page + 1 and self.scroll_index <= len(self.units) - self.num_per_page:
             self.scroll_index += 1
+
+    def move_to_unit(self, unit):
+        new_unit_index = self.units.index(unit) + 1
+        if new_unit_index > self.unit_index:
+            for num in xrange(new_unit_index - self.unit_index):
+                self.move_down()
+        elif new_unit_index < self.unit_index:
+            for num in xrange(self.unit_index - new_unit_index):
+                self.move_up()
 
     def update(self, gameStateObj, metaDataObj):
         if self.scroll_direction > 0:
@@ -139,8 +159,12 @@ class UnitMenu(StateMachine.State):
         self.draw_state(surf, gameStateObj, metaDataObj, self.state_scroll)
         self.draw_banner(surf)
         self.draw_page_numbers(surf)
-        self.draw_cursor(surf)
         self.scroll_bar.draw(surf, self.scroll_index - 1, 6, len(self.units))
+        if self.state_index > 0:
+            self.left_arrow.draw(surf)
+        if self.state_index < len(self.states) - 1:
+            self.right_arrow.draw(surf)
+        self.draw_cursor(surf)
 
         return surf
 
@@ -281,7 +305,7 @@ class UnitMenu(StateMachine.State):
 
     def draw_personal_data_state(self, surf, metaDataObj):
         font = FONT['text_white']
-        titles = ['Move', 'Con', 'Aid', 'Rat', 'Trv']
+        titles = ['MOV', 'CON', 'Aid', 'Rat', 'Trv']
         offsets = [4, 33, 60, 82, 106]
         for idx in xrange(len(titles)):
             font.blit(WORDS[titles[idx]], surf, (offsets[idx], 0))
@@ -325,6 +349,6 @@ class UnitMenu(StateMachine.State):
 
     def summon_help_boxes(self, titles, offsets):
         if not self.help_boxes:
-            self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.create_help_box('Name desc')))
+            self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.create_help_box(WORDS['Name_desc'])))
             for idx in xrange(len(titles)):
-                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], (offsets[idx] + 64 - 15, 40), InfoMenu.create_help_box(titles[idx] + ' desc')))
+                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], (offsets[idx] + 64 - 15, 40), InfoMenu.create_help_box(WORDS[titles[idx] + '_desc'])))
