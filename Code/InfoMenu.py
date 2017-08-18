@@ -916,7 +916,7 @@ class Help_Box(Counters.CursorControl):
         Counters.CursorControl.__init__(self)
 
     def draw(self, surf, info=True):
-        surf.blit(self.cursor, (self.cursor_position[0] + 2*self.cursorAnim[self.cursorCounter], self.cursor_position[1]))
+        surf.blit(self.cursor, (self.cursor_position[0] + self.cursorAnim[self.cursorCounter], self.cursor_position[1]))
         if info:
             surf.blit(self.help_surf, self.help_topleft)
 

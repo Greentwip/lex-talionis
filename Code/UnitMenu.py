@@ -16,13 +16,13 @@ class UnitMenu(StateMachine.State):
             self.title_bg = Image_Modification.flickerImageTranslucent(IMAGESDICT['TitleBar'], 10)
             self.background = MenuFunctions.MovingBackground(IMAGESDICT['RuneBackground'])
 
-            self.states = ['Character',
-                           'Fighting Skill',
-                           'Equipment',
-                           'Personal Data',
-                           'Weapon Level']
+            self.states = [('Character', ['Class', 'Lv', 'Exp', 'HP', 'Max'], [4, 66, 89, 113, 133]),
+                           ('Fighting Skill', ['STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES'], [4, 26, 48, 71, 94, 119, 142]),
+                           ('Equipment', ['Equip', 'Atk', 'Hit', 'Avoid'], [16, 72, 103, 136]),
+                           ('Personal Data', ['MOV', 'CON', 'Aid', 'Rat', 'Trv'], [4, 33, 60, 82, 106]),
+                           ('Weapon Level', CustomObjects.WEAPON_TRIANGLE.types, [9 + idx*16 for idx in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))])]
             if CONSTANTS['support']:
-                self.states.append('Support Chance')
+                self.states.append(('Support Chance', ['Ally'], [0]))
             self.state_index = 0
             self.prev_state_index = 0
             self.unit_index = 1 # 0 means on banner
@@ -40,6 +40,15 @@ class UnitMenu(StateMachine.State):
             self.scroll_bar = GUIObjects.ScrollBar((233, 59))
             self.left_arrow = GUIObjects.ScrollArrow('left', (7, 41))
             self.right_arrow = GUIObjects.ScrollArrow('right', (WINWIDTH - 7 - 8, 41), 0.5)
+
+            # For sort
+            self.current_sort = 'Name'
+            self.descending = False
+            self.sort_surf = MenuFunctions.CreateBaseMenuSurf((64, 24))
+            self.sort_surf = Image_Modification.flickerImageTranslucent(self.sort_surf, 10)
+            self.sort_arrow_counter = Counters.ArrowCounter()
+            self.sort_arrow_counter.arrow_anim = [0, 1, 2]
+            self.sort()
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -66,8 +75,19 @@ class UnitMenu(StateMachine.State):
                 StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, self.units[self.unit_index-1])
             else:
                 self.info = not self.info
-        elif event == 'BACK' or event == 'SELECT':
+        elif event == 'BACK':
             self.back(gameStateObj)
+        elif event == 'SELECT':
+            if self.unit_index == 0: # On banner
+                if self.banner_index == 0:
+                    new_sort = 'Name'
+                else:
+                    new_sort = self.states[self.state_index][1][self.banner_index - 1]
+                if new_sort == self.current_sort:
+                    self.descending = not self.descending
+                else:
+                    self.current_sort = new_sort
+                self.sort(gameStateObj)
         elif 'RIGHT' in directions:
             if self.unit_index:
                 self.next_state()
@@ -158,6 +178,7 @@ class UnitMenu(StateMachine.State):
             self.draw_state(surf, gameStateObj, metaDataObj, self.state_scroll, prev=True)
         self.draw_state(surf, gameStateObj, metaDataObj, self.state_scroll)
         self.draw_banner(surf)
+        self.draw_sort(surf)
         self.draw_page_numbers(surf)
         self.scroll_bar.draw(surf, self.scroll_index - 1, 6, len(self.units))
         if self.state_index > 0:
@@ -189,12 +210,13 @@ class UnitMenu(StateMachine.State):
 
     def draw_banner(self, surf):
         surf.blit(self.title_bg, (0, 0))
-        title = self.states[self.state_index]
+        title = self.states[self.state_index][0]
         FONT['text_brown'].blit(title, surf, (64 - FONT['text_brown'].size(title)[0]/2, 8))
 
     def draw_cursor(self, surf):
         self.banner_index = min(self.banner_index, len(self.help_boxes) - 1)
         if self.help_boxes and self.unit_index == 0:
+            self.help_boxes[self.banner_index].update()
             self.help_boxes[self.banner_index].draw(surf, self.info)
 
     def draw_page_numbers(self, surf):
@@ -202,24 +224,34 @@ class UnitMenu(StateMachine.State):
         FONT['text_white'].blit('/', surf, (217, 24))
         FONT['text_blue'].blit(str(len(self.states)), surf, (224, 24))
 
+    def draw_sort(self, surf):
+        self.sort_arrow_counter.update()
+        surf.blit(self.sort_surf, (170, 4))
+        if self.descending:
+            surf.blit(Engine.flip_vert(IMAGESDICT['GreenArrow']), (225, 9 + self.sort_arrow_counter.get()))
+        else:
+            surf.blit(IMAGESDICT['GreenArrow'], (225, 9 + self.sort_arrow_counter.get()))
+        FONT['text_white'].blit('Sort: ' + self.current_sort, surf, (173, 8))
+
     def draw_state(self, surf, gameStateObj, metaDataObj, scroll=0, prev=False):
         state_surf = Engine.create_surface((160, 112), transparent=True)
         if prev:
-            state = self.states[self.prev_state_index]
+            idx = self.prev_state_index
         else:
-            state = self.states[self.state_index]
+            idx = self.state_index
+        state = self.states[idx][0]
         if state == 'Character':
-            titles, offsets = self.draw_character_state(state_surf, metaDataObj)
+            titles, offsets = self.draw_character_state(state_surf, idx, metaDataObj)
         elif state == 'Fighting Skill':
-            titles, offsets = self.draw_fighting_skill_state(state_surf, metaDataObj)
+            titles, offsets = self.draw_fighting_skill_state(state_surf, idx, metaDataObj)
         elif state == 'Equipment':
-            titles, offsets = self.draw_equipment_state(state_surf, gameStateObj)
+            titles, offsets = self.draw_equipment_state(state_surf, idx, gameStateObj)
         elif state == 'Personal Data':
-            titles, offsets = self.draw_personal_data_state(state_surf, metaDataObj)
+            titles, offsets = self.draw_personal_data_state(state_surf, idx, metaDataObj)
         elif state == 'Weapon Level':
-            titles, offsets = self.draw_weapon_level_state(state_surf)
+            titles, offsets = self.draw_weapon_level_state(state_surf, idx)
         elif state == 'Support Chance':
-            titles, offsets = self.draw_support_chance_state(state_surf)
+            titles, offsets = self.draw_support_chance_state(state_surf, idx)
 
         if not prev:
             self.summon_help_boxes(titles, offsets)
@@ -246,11 +278,11 @@ class UnitMenu(StateMachine.State):
     def avail_units(self):
         return self.units[self.scroll_index-1:self.scroll_index-1+self.num_per_page]
 
-    def draw_character_state(self, surf, metaDataObj):
+    def draw_character_state(self, surf, idx, metaDataObj):
         # draw title
+        titles = self.states[idx][1]
+        offsets = self.states[idx][2]
         font = FONT['text_white']
-        titles = ['Class', 'Lv', 'Exp', 'HP', 'Max']
-        offsets = [4, 66, 89, 113, 133]
         for idx in xrange(len(titles)):
             font.blit(WORDS[titles[idx]], surf, (offsets[idx], 0))
 
@@ -266,10 +298,10 @@ class UnitMenu(StateMachine.State):
 
         return titles, offsets
 
-    def draw_fighting_skill_state(self, surf, metaDataObj):
+    def draw_fighting_skill_state(self, surf, idx, metaDataObj):
+        titles = self.states[idx][1]
+        offsets = self.states[idx][2]
         font = FONT['text_white']
-        titles = ['STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES']
-        offsets = [4, 26, 48, 71, 94, 119, 142]
         for idx in xrange(len(titles)):
             font.blit(WORDS[titles[idx]], surf, (offsets[idx], 0))
 
@@ -281,10 +313,10 @@ class UnitMenu(StateMachine.State):
 
         return titles, offsets
 
-    def draw_equipment_state(self, surf, gameStateObj):
+    def draw_equipment_state(self, surf, idx, gameStateObj):
+        titles = self.states[idx][1]
+        offsets = self.states[idx][2]
         font = FONT['text_white']
-        titles = ['Equip', 'Atk', 'Hit', 'Avoid']
-        offsets = [16, 72, 103, 136]
         for idx in xrange(len(titles)):
             font.blit(WORDS[titles[idx]], surf, (offsets[idx], 0))
 
@@ -303,10 +335,10 @@ class UnitMenu(StateMachine.State):
 
         return titles, offsets
 
-    def draw_personal_data_state(self, surf, metaDataObj):
+    def draw_personal_data_state(self, surf, idx, metaDataObj):
+        titles = self.states[idx][1]
+        offsets = self.states[idx][2]
         font = FONT['text_white']
-        titles = ['MOV', 'CON', 'Aid', 'Rat', 'Trv']
-        offsets = [4, 33, 60, 82, 106]
         for idx in xrange(len(titles)):
             font.blit(WORDS[titles[idx]], surf, (offsets[idx], 0))
 
@@ -322,9 +354,9 @@ class UnitMenu(StateMachine.State):
 
         return titles, offsets
 
-    def draw_weapon_level_state(self, surf):
-        titles = CustomObjects.WEAPON_TRIANGLE.types
-        offsets = [9 + idx*16 for idx in xrange(len(titles))]
+    def draw_weapon_level_state(self, surf, idx):
+        titles = self.states[idx][1]
+        offsets = self.states[idx][2]
 
         for idx, weapon_icon in enumerate(self.weapon_icons):
             weapon_icon.draw(surf, (offsets[idx], 0))
@@ -341,9 +373,9 @@ class UnitMenu(StateMachine.State):
 
         return titles, offsets
 
-    def draw_support_chance_state(self, surf):
-        titles = ['Ally']
-        offsets = [0]
+    def draw_support_chance_state(self, surf, idx):
+        titles = self.states[idx][1]
+        offsets = self.states[idx][2]
 
         return titles, offsets
 
@@ -351,4 +383,41 @@ class UnitMenu(StateMachine.State):
         if not self.help_boxes:
             self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.create_help_box(WORDS['Name_desc'])))
             for idx in xrange(len(titles)):
-                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], (offsets[idx] + 64 - 15, 40), InfoMenu.create_help_box(WORDS[titles[idx] + '_desc'])))
+                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], (offsets[idx] + 64 - 15 - 2, 40), InfoMenu.create_help_box(WORDS[titles[idx] + '_desc'])))
+
+    fighting_stats = {'STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES', 'CON', 'MOV'}
+    ['MOV', 'CON', 'Aid', 'Rat', 'Trv']
+    def sort(self, gameStateObj=None):
+        if self.current_sort == 'Name':
+            comp = lambda unit: unit.name
+        elif self.current_sort == 'Class':
+            comp = lambda unit: unit.klass
+        elif self.current_sort == 'Lv':
+            comp = lambda unit: unit.level
+        elif self.current_sort == 'Exp':
+            comp = lambda unit: unit.exp
+        elif self.current_sort == 'HP':
+            comp = lambda unit: unit.currenthp
+        elif self.current_sort == 'Max':
+            comp = lambda unit: unit.stats['HP']
+        elif self.current_sort in self.fighting_stats:
+            comp = lambda unit: unit.stats[self.current_sort]
+        elif self.current_sort == 'Aid':
+            comp = lambda unit: unit.getAid()
+        elif self.current_sort == 'Rat':
+            comp = lambda unit: unit.get_rating()
+        elif self.current_sort == 'Trv':
+            comp = lambda unit: unit.strTRV
+        elif self.current_sort == 'Atk':
+            comp = lambda unit: unit.damage(gameStateObj)
+        elif self.current_sort == 'Hit':
+            comp = lambda unit: unit.accuracy(gameStateObj)
+        elif self.current_sort == 'Avoid':
+            comp = lambda unit: unit.avoid(gameStateObj)
+        elif self.current_sort in CustomObjects.WEAPON_TRIANGLE.types:
+            comp = lambda unit: unit.wexp[CustomObjects.WEAPON_TRIANGLE.types.index(self.current_sort)]
+        elif self.current_sort == 'Equip':
+            comp = lambda unit: ITEMDATA[unit.getMainWeapon().id]['num'] if unit.getMainWeapon() else 1000
+
+        self.units = sorted(self.units, key=comp, reverse=self.descending)
+

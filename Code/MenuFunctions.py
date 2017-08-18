@@ -432,25 +432,25 @@ class SimpleMenu(Counters.CursorControl):
             idx = self.options.index(option)
             self.currentSelection = idx
 
-    def moveDown(self, push=False):
-        if push:
-            self.currentSelection = min(self.currentSelection + 1, len(self.options) - 1)
-        else:
+    def moveDown(self, first_push=True):
+        if first_push:
             self.currentSelection += 1
             if self.currentSelection > len(self.options) - 1:
                 self.currentSelection = 0
             else:
                 self.cursor_y_offset = -1  
-
-    def moveUp(self, push=False):
-        if push:
-            self.currentSelection = max(self.currentSelection - 1, 0)
         else:
+            self.currentSelection = min(self.currentSelection + 1, len(self.options) - 1)
+
+    def moveUp(self, first_push=True):
+        if first_push:
             self.currentSelection -= 1
             if self.currentSelection < 0:
                 self.currentSelection = len(self.options) - 1
             else:
-                self.cursor_y_offset = 1       
+                self.cursor_y_offset = 1  
+        else:
+            self.currentSelection = max(self.currentSelection - 1, 0)     
 
     def updateOptions(self, options):
         self.options = options
@@ -542,8 +542,8 @@ class ChoiceMenu(SimpleMenu):
     def toggle_info(self):
         self.info_flag = not self.info_flag
 
-    def moveDown(self, push=False):
-        SimpleMenu.moveDown(self, push)
+    def moveDown(self, first_push=True):
+        SimpleMenu.moveDown(self, first_push)
         if self.limit:
             if self.currentSelection >= self.scroll + self.limit - 1:
                 self.scroll += 1
@@ -558,8 +558,8 @@ class ChoiceMenu(SimpleMenu):
             self.scroll = 0
             self.currentSelection = 0
 
-    def moveUp(self, push=False):
-        SimpleMenu.moveUp(self, push)
+    def moveUp(self, first_push=True):
+        SimpleMenu.moveUp(self, first_push)
         if self.limit:
             if self.currentSelection < self.scroll + 1:
                 self.scroll -= 1
@@ -690,22 +690,22 @@ class ItemUseMenu(SimpleMenu):
         self.true_selection = 0
         self.currentSelection = self.legal_indices[self.true_selection]
 
-    def moveUp(self, push=False):
-        if self.push:
-            self.true_selection = min(self.true_selection + 1, len(legal_indices) - 1)
-        else:
+    def moveUp(self, first_push=True):
+        if first_push:
             self.true_selection += 1
             if self.true_selection > len(legal_indices) - 1:
                 self.true_selection = 0
+        else:
+            self.true_selection = min(self.true_selection + 1, len(legal_indices) - 1)
         self.currentSelection = self.legal_indices[self.true_selection]
 
-    def moveDown(self, push=False):
-        if self.push:
-            self.true_selection = max(self.true_selection - 1, 0)
-        else:
+    def moveDown(self, first_push=True):
+        if first_push:
             self.true_selection -= 1
             if self.true_selection < 0:
                 self.true_selection = len(legal_indices) - 1
+        else:
+            self.true_selection = max(self.true_selection - 1, 0)
         self.currentSelection = self.legal_indices[self.true_selection]
 
     def draw(self, surf):
@@ -1622,11 +1622,11 @@ class ConvoyMenu(object):
         for menu in self.menus.values():
             menu.takes_input = takes_input
 
-    def moveDown(self, push=False):
-        self.menus[self.order[self.selection_index]].moveDown(push)
+    def moveDown(self, first_push=True):
+        self.menus[self.order[self.selection_index]].moveDown(first_push)
 
-    def moveUp(self, push=False):
-        self.menus[self.order[self.selection_index]].moveUp(push)
+    def moveUp(self, first_push=True):
+        self.menus[self.order[self.selection_index]].moveUp(first_push)
 
     def moveLeft(self):
         self.selection_index -= 1
