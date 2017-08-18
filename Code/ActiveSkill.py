@@ -1,4 +1,3 @@
-from GlobalConstants import *
 import ItemMethods, Utility, StatusObject, CustomObjects
 
 import logging
@@ -51,9 +50,9 @@ class Charge(Active_Skill):
         self.mode = 'Attack'
 
     def check_valid(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons([item for item in unit.items if weapon.weapon])
+        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
         if not unit.hasAttacked and valid_weapons:
-            enemy_positions = [unit.position for unit in gameStateObj.allunits if self.checkIfEnemy(unit)] + \
+            enemy_positions = [u.position for u in gameStateObj.allunits if self.checkIfEnemy(u)] + \
                               [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
             if any(Utility.calculate_distance(position, unit.position) == 1 for position in enemy_positions):
                 return True
@@ -83,7 +82,7 @@ class Knock_Out(Active_Skill):
         self.mode = 'Attack'
 
     def check_valid(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons([item for item in unit.items if weapon.weapon])
+        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
         if unit.canAttack(gameStateObj) and valid_weapons:
             return True
         return False
@@ -255,8 +254,11 @@ class Refresh(Active_Skill):
         self.item = ItemMethods.itemparser('so_Refresh')[0]
 
     def check_valid(self, unit, gameStateObj):
-        if not unit.hasAttacked and any(Utility.calculate_distance(ally_unit.position, unit.position) == 1 for ally_unit in gameStateObj.allunits if ally_unit.position and unit.team == ally_unit.team and ally_unit.isDone()):
-            return True
+        adj_units = unit.getTeamPartners(gameStateObj)
+        if not unit.hasAttacked:
+            for adj_unit in adj_units:
+                if adj_unit.isDone():
+                    return True
         return False
 
     def get_choices(self, cur_unit, gameStateObj):
@@ -283,7 +285,9 @@ class Heal(Active_Skill):
         self.item = ItemMethods.itemparser('so_Heal')[0]
 
     def check_valid(self, unit, gameStateObj):
-        if not unit.hasAttacked and any(Utility.calculate_distance(ally_unit.position, unit.position) == 1 and ally_unit.currenthp < ally_unit.stats['HP'] for ally_unit in gameStateObj.allunits if ally_unit.position and unit.team == ally_unit.team):
+        if not unit.hasAttacked and any(Utility.calculate_distance(ally_unit.position, unit.position) == 1 and
+                                        ally_unit.currenthp < ally_unit.stats['HP'] for ally_unit in gameStateObj.allunits
+                                        if ally_unit.position and unit.team == ally_unit.team):
             return True
         return False
 
@@ -323,27 +327,10 @@ class Swap(Active_Skill):
 
     def check_swap(self, unit1, unit2, tile_map):
         return tile_map[unit2.position].get_mcost(unit1) <= unit1.stats['MOV'] and \
-               tile_map[unit1.position].get_mcost(unit2) <= unit2.stats['MOV']
+            tile_map[unit1.position].get_mcost(unit2) <= unit2.stats['MOV']
 
     def get_choices(self, cur_unit, gameStateObj):
         return [unit.position for unit in cur_unit.getAdjacentUnits(gameStateObj) if self.check_swap(cur_unit, unit, gameStateObj.map)]
-
-class Refresh(Active_Skill):
-    def __init__(self, name, required_charge):
-        Active_Skill.__init__(self, name, required_charge)
-        self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Refresh')[0]
-
-    def check_valid(self, unit, gameStateObj):
-        adj_units = unit.getTeamPartners(gameStateObj)
-        if not unit.hasAttacked and adj_units:
-            for adj_unit in adj_units:
-                if adj_unit.isDone():
-                    return True
-        return False
-
-    def get_choices(self, cur_unit, gameStateObj):
-        return [unit.position for unit in cur_unit.getTeamPartners(gameStateObj) if unit.isDone()]
 
 class Aegis(Active_Skill):
     def __init__(self, name, required_charge):
@@ -394,7 +381,8 @@ class Gate(Active_Skill):
         self.item = ItemMethods.itemparser('so_Summon_1')[0]
 
     def get_choices(self, summoner, gameStateObj):
-        return [position for position in summoner.getAdjacentPositions(gameStateObj) if not any(position == a_unit.position for a_unit in gameStateObj.allunits)]
+        return [position for position in summoner.getAdjacentPositions(gameStateObj)
+                if not any(position == a_unit.position for a_unit in gameStateObj.allunits)]
 
     def check_valid(self, summoner, gameStateObj):
         if not summoner.hasAttacked and self.get_choices(summoner, gameStateObj):
@@ -416,7 +404,8 @@ class Wildcall(Active_Skill):
         return False
 
     def get_choices(self, summoner, gameStateObj):
-        return [position for position in summoner.getAdjacentPositions(gameStateObj) if not any(position == a_unit.position for a_unit in gameStateObj.allunits)]
+        return [position for position in summoner.getAdjacentPositions(gameStateObj)
+                if not any(position == a_unit.position for a_unit in gameStateObj.allunits)]
 
     def check_valid(self, summoner, gameStateObj):
         all_summons = [unit for unit in gameStateObj.allunits if unit.position and any(tag.startswith('Summon_') for tag in unit.tags)]

@@ -20,7 +20,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- All Necessary Animations (Split Video)
 --- Promotion (Split Video) --- probably going to have to rewrite this section as its own thing.
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
---- Add animation options to OPTIONS MENU
+--- Add animation options to cf.OPTIONS MENU
 --- MAP ---
 - Autotiles for chasm in level 6?
 --- AI ---
@@ -47,6 +47,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Dialogue Editor
 - Android Support
 - Mac Support
+- Comment many of the functions with purposes
 --- DIFFICULTY ---
 - Add in Easy and Hard modes (Easy, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Hard, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
 --- MUSIC ---

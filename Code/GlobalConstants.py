@@ -1,11 +1,11 @@
 import os
 import bmpfont, Engine, imagesDict
-from configuration import *
+import configuration as cf
 
 import logging
 logger = logging.getLogger(__name__)
 
-# === GLOBAL CONSTANTS ===========================================
+# === GLOBAL cf.CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000/FPS
 TILEY = 10
@@ -14,11 +14,9 @@ TILEWIDTH = 16
 TILEHEIGHT = 16
 WINWIDTH = TILEWIDTH * TILEX
 WINHEIGHT = TILEHEIGHT * TILEY
-HALF_WINWIDTH = WINWIDTH/2
-HALF_WINHEIGHT = WINHEIGHT/2
 
 # Colors
-colorDict = {'bright_blue': (0, 168, 248),
+COLORDICT = {'bright_blue': (0, 168, 248),
              'black': (0, 0, 0),
              'white': (248, 248, 248),
              'gold': (248, 240, 136),
@@ -47,11 +45,11 @@ Engine.init()
 
 # Icon
 small_icon = Engine.image_load('Sprites/General/main_icon.png')
-#Engine.set_colorkey(small_icon, (0, 0, 0), False)
+# Engine.set_colorkey(small_icon, (0, 0, 0), False)
 Engine.set_icon(small_icon)
 
 FPSCLOCK = Engine.clock()
-DISPLAYSURF = Engine.build_display((WINWIDTH*OPTIONS['Screen Size'], WINHEIGHT*OPTIONS['Screen Size']))
+DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
 version = "0.6"
 Engine.set_caption(''.join(["The Lion Throne - ", version]))
 
@@ -101,7 +99,7 @@ MAINFONT = "Sprites/Fonts/KhmerUI.ttf"
 BASICFONT = Engine.build_font(MAINFONT, 10)
 BIGFONT = Engine.build_font(MAINFONT, 12)
 
-import Counters
+import Counters # noqa
 PASSIVESPRITECOUNTER = Counters.generic3Counter(int(32*FRAMERATE), int(4*FRAMERATE))
 ACTIVESPRITECOUNTER = Counters.generic3Counter(int(13*FRAMERATE), int(6*FRAMERATE))
 CURSORSPRITECOUNTER = Counters.generic3Counter(int(20*FRAMERATE), int(2*FRAMERATE), int(8*FRAMERATE))

@@ -1,6 +1,5 @@
 #! usr/bin/env python2.7
 import pygame, sys
-from pygame.locals import *
 
 import configuration
 
@@ -11,14 +10,15 @@ engine_constants = {'current_time': 0,
                     'last_time': 0,
                     'last_fps': 0}
 
-blend_dict = {'RGB_MULT': pygame.BLEND_RGB_MULT,
-              'RGBA_MULT': pygame.BLEND_RGBA_MULT, 
-              'RGB_ADD': pygame.BLEND_RGB_ADD, 
-              'RGBA_ADD': pygame.BLEND_RGBA_ADD}
+BLEND_RGB_ADD = pygame.BLEND_RGB_ADD
+BLEND_RGB_SUB = pygame.BLEND_RGB_SUB
+BLEND_RGB_MULT = pygame.BLEND_RGB_MULT
+BLEND_RGBA_ADD = pygame.BLEND_RGBA_ADD
+BLEND_RGBA_MULT = pygame.BLEND_RGBA_MULT
 
 # === INITIALIZING FUNCTIONS =================================================
 def init():
-    #pygame.mixer.pre_init(44100, -16, 1, 512)
+    # pygame.mixer.pre_init(44100, -16, 1, 512)
     pygame.mixer.pre_init(44100, -16, 2, 4096)
     pygame.init()
     pygame.mixer.init()
@@ -52,7 +52,7 @@ def update_time():
     engine_constants['current_time'] = pygame.time.get_ticks()
     engine_constants['last_fps'] = engine_constants['current_time'] - engine_constants['last_time']
     if engine_constants['last_fps'] > 32:
-        #print('Frame took too long! %s ms'%(engine_constants['last_fps']))
+        # print('Frame took too long! %s ms'%(engine_constants['last_fps']))
         logger.debug('Frame took too long! %s ms', engine_constants['last_fps'])
     
 def get_time():
@@ -68,8 +68,8 @@ def get_delta():
     return engine_constants['last_fps']
 
 # === DRAW STUFF =============================================================
-def blit(dest, source, pos=(0, 0), mask=None, blend=None):
-    dest.blit(source, pos, mask, blend_dict[blend] if blend else 0)
+def blit(dest, source, pos=(0, 0), mask=None, blend=0):
+    dest.blit(source, pos, mask, blend)
         
 def create_surface(size, transparent=False, convert=False):
     if transparent:
@@ -87,8 +87,8 @@ def copy_surface(surf):
     return surf.copy()
 
 # assumes pygame surface
-def subsurface(surf, (x, y, width, height)):
-    #print(x, y, width, height)
+def subsurface(surf, rect):
+    x, y, width, height = rect
     return surf.subsurface(x, y, width, height)
 
 def image_load(fp, convert=False, convert_alpha=False):
@@ -99,8 +99,14 @@ def image_load(fp, convert=False, convert_alpha=False):
         image = image.convert_alpha()
     return image
 
-def fill(surf, color, blend=None):
-    surf.fill(color, None, blend_dict[blend] if blend else 0)
+def fill(surf, color, mask=None, blend=0):
+    surf.fill(color, mask, blend)
+
+def set_alpha(surf, alpha, rleaccel=False):
+    if rleaccel:
+        surf.set_alpha(alpha, pygame.RLEACCEL)
+    else:
+        surf.set_alpha(alpha)
 
 def set_colorkey(surf, color, rleaccel=True):
     if rleaccel:
@@ -130,33 +136,46 @@ def build_event_list():
     eventList = [] # Clear event list
     # Only gets escape events!
     for event in pygame.event.get():
-        if event.type == QUIT:
+        if event.type == pygame.QUIT:
             terminate()
-        if event.type == KEYUP and configuration.OPTIONS['cheat']:
-            if event.key == K_ESCAPE:
+        if event.type == pygame.KEYUP and configuration.OPTIONS['cheat']:
+            if event.key == pygame.K_ESCAPE:
                 terminate()
         eventList.append(event)
     return eventList
 
-key_map = {'w': K_w, 'j': K_j, '5': K_5, 'u': K_u, 'p': K_p, 'l': K_l, 'e': K_e, 't': K_t, 'd': K_d}
+KEYUP = pygame.KEYUP
+key_map = {'w': pygame.K_w,
+           'j': pygame.K_j,
+           '5': pygame.K_5, 
+           'u': pygame.K_u,
+           'p': pygame.K_p,
+           'l': pygame.K_l,
+           'e': pygame.K_e,
+           't': pygame.K_t,
+           'd': pygame.K_d}
 
-### === SOUND STUFF =====================================================
+# === SOUND STUFF =====================================================
 class BaseSound():
     def play(self, loops=0, maxtime=0, fade_ms=0):
         pass
+
     def stop():
         pass
+
     def fadeout(time):
         pass
+
     def set_volume(value):
         pass
+
     def get_volume():
         pass
 
 def create_sound(fp):
     return pygame.mixer.Sound(fp)
 
-### === MUSIC STUFF =====================================================
+# === MUSIC STUFF =====================================================
 class Song(object):
     def __init__(self, song, num_plays=-1, time=0):
         self.song = song
@@ -215,7 +234,7 @@ class MusicThread(object):
             self.fade_in(metaDataObj['otherPhaseMusic'])
         else:
             logging.error('Unsupported phase name: %s', phase_name)
-        #self.music_stack = [] # Clear the stack
+        # self.music_stack = [] # Clear the stack
 
     def fade_in(self, next, num_plays=-1, time=0):
         logger.info('Music: Fade in')
@@ -280,9 +299,9 @@ class MusicThread(object):
             print('--')
             self.debug = current_time
         """
-        #logger.debug(current_time)
+        # logger.debug(current_time)
 
-        ### Take Input
+        # === Take Input
         for event in eventList:
             if event.type == self.end_song:
                 if self.state == 'normal':
@@ -298,7 +317,7 @@ class MusicThread(object):
                     logger.debug('Music: Fade Event')
                     self.state = 'normal' # catches the stop from fade
 
-        ### Update
+        # === Update
         if self.state == 'normal':
             pass
 
@@ -308,12 +327,12 @@ class MusicThread(object):
                 self.current = self.next
                 if pygame.mixer.music.get_busy():
                     self.fade_out_update = current_time
-                #self.next = None
+                # self.next = None
                 pygame.mixer.music.set_volume(self.volume)
                 pygame.mixer.music.stop()
                 pygame.mixer.music.load(self.current.song)
                 pygame.mixer.music.play(0, self.current.current_time)
-                #self.fade_out_update = current_time
-                #self.state = 'normal'
+                # self.fade_out_update = current_time
+                # self.state = 'normal'
 
 music_thread = MusicThread()

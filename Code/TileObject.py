@@ -1,7 +1,7 @@
 import os, math
 from imagesDict import COLORKEY
-from GlobalConstants import *
-from configuration import *
+import GlobalConstants as GC
+import configuration as cf
 from collections import OrderedDict
 
 # Custom imports
@@ -55,24 +55,24 @@ class MapObject(object):
             mapObj.append([])
         for y in range(height):
             for x in range(width):
-                mapObj[x].append(tiledata.get_at((x,y))) # appends [r,g,b,t] value
+                mapObj[x].append(tiledata.get_at((x, y))) # appends [r,g,b,t] value
 
         return mapObj, width, height
 
-    def populate_tiles(self, colorKeyObj, offset=(0,0)):
+    def populate_tiles(self, colorKeyObj, offset=(0, 0)):
         for x in range(offset[0], offset[0]+len(colorKeyObj)):
             for y in range(offset[1], offset[1]+len(colorKeyObj[x-offset[0]])):
                 cur = colorKeyObj[x-offset[0]][y-offset[1]]
-                for terrain in TERRAINDATA.getroot().findall('terrain'):
+                for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
                     colorKey = terrain.find('color').text.split(',')
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
-                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x,y), \
+                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
                                               terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text])
-                        self.tiles[(x,y)] = new_tile
-                        self.opacity_map[x * self.height + y] = new_tile.opaque
-                        if 'HP' in self.tile_info_dict[(x,y)]: # Tile hp is needed so apply that here
-                            self.tiles[(x,y)].give_hp_stat(self.tile_info_dict[(x,y)]['HP'])
+                        self.tiles[(x, y)] = new_tile
+                        self.opacity_map[x*self.height + y] = new_tile.opaque
+                        if 'HP' in self.tile_info_dict[(x, y)]: # Tile hp is needed so apply that here
+                            self.tiles[(x, y)].give_hp_stat(self.tile_info_dict[(x, y)]['HP'])
                         break
                 else: # Never found terrain...
                     logger.error('Terrain matching colorkey %s never found.', cur)
@@ -84,28 +84,27 @@ class MapObject(object):
             # Remember to update the grid also
             for x in range(coord[0], coord[0]+width):
                 for y in range(coord[1], coord[1]+height):
-                    grid_manager.update_tile(self.tiles[(x,y)])
+                    grid_manager.update_tile(self.tiles[(x, y)])
         return width, height
 
     def change_tile_sprites(self, coord, image_filename, transition=None):
         image = self.loose_tile_sprites[image_filename]
-        size = image.get_width()/TILEWIDTH, image.get_height()/TILEHEIGHT
+        size = image.get_width()/GC.TILEWIDTH, image.get_height()/GC.TILEHEIGHT
         for x in range(coord[0], coord[0]+size[0]):
             for y in range(coord[1], coord[1]+size[1]):
                 pos = (x - coord[0], y - coord[1])
-                self.tile_sprites[(x,y)] = TileSprite(None, (x, y), self)
-                #print(pos)
+                self.tile_sprites[(x, y)] = TileSprite(None, (x, y), self)
                 if transition:
-                    self.tile_sprites[(x,y)].new_image_name = image_filename
-                    self.tile_sprites[(x,y)].new_position = pos
-                    self.tile_sprites[(x,y)].loadNewSprites()
+                    self.tile_sprites[(x, y)].new_image_name = image_filename
+                    self.tile_sprites[(x, y)].new_position = pos
+                    self.tile_sprites[(x, y)].loadNewSprites()
                     if transition == 'destroy':
                         # To be moved to global during next update
-                        self.animations.append(CustomObjects.Animation(IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed = DESTRUCTION_ANIM_TIME/(13*5)))
+                        self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
                 else:
-                    self.tile_sprites[(x,y)].image_name = image_filename
-                    self.tile_sprites[(x,y)].position = pos
-                    self.tile_sprites[(x,y)].loadSprites()
+                    self.tile_sprites[(x, y)].image_name = image_filename
+                    self.tile_sprites[(x, y)].position = pos
+                    self.tile_sprites[(x, y)].loadSprites()
 
     # If you change the map, you also need to reset their position to their normal position, and their image name to none,
     # so the tile sprites reference the new map sprite...
@@ -168,9 +167,9 @@ class MapObject(object):
             # Re-add escape highlights if necessary
             for position, tile_values in self.tile_info_dict.iteritems():
                 if "Escape" in tile_values or "Arrive" in tile_values:
-                    self.escape_highlights[position] = CustomObjects.Highlight(IMAGESDICT["YellowHighlight"])
+                    self.escape_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
                 if "Formation" in tile_values:
-                    self.formation_highlights[position] = CustomObjects.Highlight(IMAGESDICT["BlueHighlight"])
+                    self.formation_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
 
             # Re-add associated status sprites
             for position, value in self.tile_info_dict.iteritems():
@@ -233,10 +232,10 @@ class MapObject(object):
         return [adj_pos for adj_pos in [(pos[0], pos[1] - 1), (pos[0] - 1, pos[1]), (pos[0] + 1, pos[1]), (pos[0], pos[1] + 1)] if self.check_bounds(adj_pos)]
         
     def get_tile_from_id(self, tile_id):
-        for terrain in TERRAINDATA.getroot().findall('terrain'):
+        for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
             if tile_id == terrain.find('id').text or tile_id == int(terrain.find('id').text):
-                tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, \
-                                  None, terrain.find('mtype').text, \
+                tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text,
+                                  None, terrain.find('mtype').text,
                                   [terrain.find('DEF').text, terrain.find('AVO').text])
                 return tile
         else:
@@ -248,7 +247,7 @@ class MapObject(object):
         self.tile_info_dict = {}
         for x in range(self.width):
             for y in range(self.height):
-                self.tile_info_dict[(x,y)] = {'Status': []}
+                self.tile_info_dict[(x, y)] = {'Status': []}
 
         if not os.path.isfile(tile_info_location):
             return None
@@ -284,9 +283,9 @@ class MapObject(object):
                         status_list.append(StatusObject.statusparser(status))
                     property_value = status_list
                 elif property_name in ["Escape", "Arrive"]:
-                    self.escape_highlights[coord] = CustomObjects.Highlight(IMAGESDICT["YellowHighlight"])
+                    self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
                 elif property_name == "Formation":
-                    self.formation_highlights[coord] = CustomObjects.Highlight(IMAGESDICT["BlueHighlight"])
+                    self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
                 self.tile_info_dict[coord][property_name] = property_value
         else:
             self.tile_info_dict[coord] = {'Status': []} # Empty Dictionary
@@ -303,17 +302,14 @@ class MapObject(object):
         self.weather = [weather for weather in self.weather if not weather.remove_me]
 
         if self.autotiles:
-            time = int(FRAMERATE*29)
+            time = int(GC.FRAMERATE*29)
             mod_time = current_time%(len(self.autotiles)*time) # 29 ticks
             self.autotile_frame = mod_time/time
-            #self.autotile_frame += 1
-            #if self.autotile_frame >= len(self.autotiles):
-            #    self.autotile_frame = 0
 
     def initiate_warp_flowers(self, center_pos):
         self.weather.append(Weather.Weather('Warp_Flower', -1, (-1, -1, -1, -1), (self.width, self.height)))
         angle_frac = math.pi/8
-        true_pos = center_pos[0] * TILEWIDTH + TILEWIDTH/2, center_pos[1] * TILEHEIGHT + TILEHEIGHT/2
+        true_pos = center_pos[0] * GC.TILEWIDTH + GC.TILEWIDTH/2, center_pos[1] * GC.TILEHEIGHT + GC.TILEHEIGHT/2
         for speed in [2.0, 2.5]:
             for num in range(0, 16):
                 angle = num*angle_frac + angle_frac/2
@@ -419,7 +415,7 @@ class MapObject(object):
             if transition == 'destroy':
                 for sprite in self.layers[layer]:
                     x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed = DESTRUCTION_ANIM_TIME/(13*5)))
+                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
         else:
             self.layers[layer].show = True
             self.layers[layer].fade = 100          
@@ -432,7 +428,7 @@ class MapObject(object):
             if transition == 'destroy':
                 for sprite in self.layers[layer]:
                     x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed = DESTRUCTION_ANIM_TIME/(13*5)))
+                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
         else:
             self.layers[layer].show = False
             self.layers[layer].fade = 0
@@ -484,22 +480,22 @@ class MapObject(object):
     # Init weather
     def add_weather(self, weather):
         if weather == "Rain":
-            bounds = (-self.height*TILEHEIGHT/4, self.width*TILEWIDTH, -16, -8)
+            bounds = (-self.height*GC.TILEHEIGHT/4, self.width*GC.TILEWIDTH, -16, -8)
             self.weather.append(Weather.Weather('Rain', .1, bounds, (self.width, self.height)))
         elif weather == "Snow":
-            bounds = (-self.height*TILEHEIGHT, self.width*TILEWIDTH, -16, -8)
+            bounds = (-self.height*GC.TILEHEIGHT, self.width*GC.TILEWIDTH, -16, -8)
             self.weather.append(Weather.Weather('Snow', .125, bounds, (self.width, self.height)))
         elif weather == "Sand":
-            bounds = (-2*self.height*TILEHEIGHT, self.width*TILEWIDTH, self.height*TILEHEIGHT+16, self.height*TILEHEIGHT+32)
+            bounds = (-2*self.height*GC.TILEHEIGHT, self.width*GC.TILEWIDTH, self.height*GC.TILEHEIGHT+16, self.height*GC.TILEHEIGHT+32)
             self.weather.append(Weather.Weather('Sand', .075, bounds, (self.width, self.height)))
         elif weather == "Smoke":
-            bounds = (-self.height*TILEHEIGHT, self.width*TILEWIDTH, self.height*TILEHEIGHT, self.height*TILEHEIGHT+16)
+            bounds = (-self.height*GC.TILEHEIGHT, self.width*GC.TILEWIDTH, self.height*GC.TILEHEIGHT, self.height*GC.TILEHEIGHT+16)
             self.weather.append(Weather.Weather('Smoke', .075, bounds, (self.width, self.height)))
         elif weather == "Light":
-            bounds = (0, self.width*TILEWIDTH, 0, self.height*TILEHEIGHT)
+            bounds = (0, self.width*GC.TILEWIDTH, 0, self.height*GC.TILEHEIGHT)
             self.weather.append(Weather.Weather('Light', .04, bounds, (self.width, self.height)))
         elif weather == "Dark":
-            bounds = (0, self.width*TILEWIDTH, 0, self.height*TILEHEIGHT)
+            bounds = (0, self.width*GC.TILEWIDTH, 0, self.height*GC.TILEHEIGHT)
             self.weather.append(Weather.Weather('Dark', .04, bounds, (self.width, self.height)))
 
     def remove_weather(self, name):
@@ -514,6 +510,7 @@ class MapObject(object):
 # === GENERIC TILE SPRITE =====================================================
 class TileSprite(object):
     transition_speed = 5
+
     def __init__(self, image_name, position, parent_map):
         self.image_name = image_name
         self.position = position
@@ -530,22 +527,21 @@ class TileSprite(object):
         self.fade = 0
 
     def loadSprites(self):
+        rect = (self.position[0]*GC.TILEWIDTH, self.position[1]*GC.TILEHEIGHT, GC.TILEWIDTH, GC.TILEHEIGHT)
         if self.image_name is None:
-            self.image = Engine.subsurface(self.map_reference.map_image, (self.position[0]*TILEWIDTH, self.position[1]*TILEHEIGHT, TILEWIDTH, TILEHEIGHT))
+            self.image = Engine.subsurface(self.map_reference.map_image, rect)
         else:
-            self.image = Engine.subsurface(self.map_reference.loose_tile_sprites[self.image_name], (self.position[0]*TILEWIDTH, self.position[1]*TILEHEIGHT, TILEWIDTH, TILEHEIGHT))
+            self.image = Engine.subsurface(self.map_reference.loose_tile_sprites[self.image_name], rect)
 
     def removeSprites(self):
         self.image = None
 
     def loadNewSprites(self):
-        #print(self.new_position)
-        rect = (self.new_position[0]*TILEWIDTH, self.new_position[1]*TILEHEIGHT, TILEWIDTH, TILEHEIGHT)
-        #print(rect)
+        rect = (self.new_position[0]*GC.TILEWIDTH, self.new_position[1]*GC.TILEHEIGHT, GC.TILEWIDTH, GC.TILEHEIGHT)
         self.new_image = Engine.subsurface(self.map_reference.loose_tile_sprites[self.new_image_name], rect)
 
     def draw(self, surf, position):
-        pos = (position[0] * TILEWIDTH, position[1] * TILEHEIGHT)
+        pos = (position[0] * GC.TILEWIDTH, position[1] * GC.TILEHEIGHT)
         surf.blit(self.image, pos)
         if self.new_image:
             self.fade += self.transition_speed
@@ -560,6 +556,7 @@ class TileSprite(object):
 # === GENERIC LAYER SPRITE ======================================
 class Layer(object):
     transition_speed = 5
+
     def __init__(self):
         self.sprites = []
         self.show = False
@@ -600,12 +597,13 @@ class LayerSprite(object):
         self.image = None
 
     def draw(self, surf):
-        pos = (self.position[0] * TILEWIDTH, self.position[1] * TILEHEIGHT)
+        pos = (self.position[0] * GC.TILEWIDTH, self.position[1] * GC.TILEHEIGHT)
         surf.blit(self.image, pos)
 
 # === GENERIC TILE OBJECT =======================================
 class TileObject(object):
-    def __init__(self, name, minimap, platform, position, mcost, (DEF, AVO)):
+    def __init__(self, name, minimap, platform, position, mcost, stats):
+        DEF, AVO = stats 
         self.name = name
         self.minimap = minimap
         self.platform = platform
@@ -642,32 +640,33 @@ class TileObject(object):
 
     def get_mcost(self, unit):
         if isinstance(unit, int):
-            return MCOSTDATA[self.mcost][unit]
+            return GC.MCOSTDATA[self.mcost][unit]
         elif 'flying' in unit.status_bundle:
-            return MCOSTDATA[self.mcost][CONSTANTS['flying_mcost_column']]
+            return GC.MCOSTDATA[self.mcost][cf.CONSTANTS['flying_mcost_column']]
         elif 'fleet_of_foot' in unit.status_bundle:
-            return MCOSTDATA[self.mcost][CONSTANTS['fleet_mcost_column']]
-        return MCOSTDATA[self.mcost][unit.movement_group]
+            return GC.MCOSTDATA[self.mcost][cf.CONSTANTS['fleet_mcost_column']]
+        return GC.MCOSTDATA[self.mcost][unit.movement_group]
 
     def getMainWeapon(self):
         return None
 
     def create_display(self, gameStateObj):
         if self.tilehp:
-            back_surf = IMAGESDICT['DestructibleTileInfo'].copy()
-            at_icon = ICONDICT['Attackable_Terrain_Icon']
+            back_surf = GC.IMAGESDICT['DestructibleTileInfo'].copy()
+            at_icon = GC.ICONDICT['Attackable_Terrain_Icon']
             back_surf.blit(at_icon, (7, back_surf.get_height() - 7 - at_icon.get_height()))
-            FONT['small_white'].blit(str(self.currenthp), back_surf, (back_surf.get_width() - FONT['small_white'].size(str(self.currenthp))[0] - 9, 24))
+            GC.FONT['small_white'].blit(str(self.currenthp), back_surf, (back_surf.get_width() - GC.FONT['small_white'].size(str(self.currenthp))[0] - 9, 24))
         else:
-            back_surf = IMAGESDICT['QuickTileInfo'].copy()
+            back_surf = GC.IMAGESDICT['QuickTileInfo'].copy()
             if self.mcost != 'Wall':
                 # Blit DEF Text
-                position = back_surf.get_width() - FONT['small_white'].size(str(self.stats['DEF']))[0] - 3, 17
-                FONT['small_white'].blit(str(self.stats['DEF']), back_surf, position)
+                position = back_surf.get_width() - GC.FONT['small_white'].size(str(self.stats['DEF']))[0] - 3, 17
+                GC.FONT['small_white'].blit(str(self.stats['DEF']), back_surf, position)
                 # Blit AVO Text
-                position = back_surf.get_width() - FONT['small_white'].size(str(self.AVO))[0] - 3, 25
-                FONT['small_white'].blit(str(self.AVO), back_surf,  position)
-        FONT['text_white'].blit(self.name, back_surf, (back_surf.get_width()/2 - FONT['text_white'].size(self.name)[0]/2, 22 - FONT['text_white'].size(self.name)[1]))
+                position = back_surf.get_width() - GC.FONT['small_white'].size(str(self.AVO))[0] - 3, 25
+                GC.FONT['small_white'].blit(str(self.AVO), back_surf, position)
+        pos = (back_surf.get_width()/2 - GC.FONT['text_white'].size(self.name)[0]/2, 22 - GC.FONT['text_white'].size(self.name)[1])
+        GC.FONT['text_white'].blit(self.name, back_surf, pos)
         self.display_surface = back_surf
 
     def getDisplay(self, gameStateObj):
@@ -677,6 +676,3 @@ class TileObject(object):
             self.expected_tilehp = self.tilehp
 
         return self.display_surface
-
-if __name__ == '__main__':
-    print('Use Main.py instead')

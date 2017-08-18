@@ -1,6 +1,6 @@
 #! usr/bin/env python2.7
 
-from GlobalConstants import *
+import GlobalConstants as GC
 
 import MenuFunctions, CustomObjects, Engine, Image_Modification
 
@@ -15,7 +15,7 @@ class Banner(object):
         self.surf = None
 
     def figure_out_size(self):
-        self.bannerlen = FONT['text_white'].size(''.join(self.banner))[0] + (16 if self.item else 0) # Only need width
+        self.bannerlen = GC.FONT['text_white'].size(''.join(self.banner))[0] + (16 if self.item else 0) # Only need width
         self.font_height = 16
         self.size = (self.bannerlen + 18, 24)
 
@@ -25,7 +25,7 @@ class Banner(object):
             bg_surf = MenuFunctions.CreateBaseMenuSurf(self.size, 'BaseMenuBackgroundOpaque')
             self.surf = Engine.create_surface((self.size[0] + 2, self.size[1] + 4), convert=True, transparent=True)
             self.surf.blit(bg_surf, (2, 4))
-            self.surf.blit(IMAGESDICT['SmallGem'], (0, 0))
+            self.surf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
             Image_Modification.flickerImageTranslucent(self.surf, 10)
         BGSurf = self.surf.copy()
 
@@ -33,8 +33,8 @@ class Banner(object):
         pos = surf.get_width()/2 - self.size[0]/2 - 2, surf.get_height()/2 - self.size[1]/2 - 4
         # Blit words
         for index, word in enumerate(self.banner):
-            word_width = FONT[self.banner_font[index]].size(word)[0]
-            FONT[self.banner_font[index]].blit(word, BGSurf, (self.write_index, self.size[1]/2 - self.font_height/2 + 4))
+            word_width = GC.FONT[self.banner_font[index]].size(word)[0]
+            GC.FONT[self.banner_font[index]].blit(word, BGSurf, (self.write_index, self.size[1]/2 - self.font_height/2 + 4))
             self.write_index += word_width
         # Blit item icon
         if self.item:
@@ -59,7 +59,7 @@ class acquiredItemBanner(Banner):
         self.banner = [unit.name, ' got ', self.article, ' ', item.name, '.']
         self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class sent_to_convoyBanner(Banner):
     def __init__(self, item):
@@ -68,7 +68,7 @@ class sent_to_convoyBanner(Banner):
         self.banner = [item.name, ' sent to convoy.']
         self.banner_font = ['text_blue', 'text_white']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class acquiredGoldBanner(Banner):
     def __init__(self, number):
@@ -77,7 +77,7 @@ class acquiredGoldBanner(Banner):
         self.banner = ['Got ', str(self.number), ' gold.']
         self.banner_font = ['text_white', 'text_blue', 'text_white']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class brokenItemBanner(Banner):
     def __init__(self, unit, item):
@@ -86,13 +86,13 @@ class brokenItemBanner(Banner):
         self.item = item
         if item.booster:
             self.banner = [unit.name, ' used ', item.name, '.']
-            self.sound = SOUNDDICT['Item']
+            self.sound = GC.SOUNDDICT['Item']
         else:
             self.banner = [unit.name, ' broke ', item.name, '.']
             self.sound = None
         self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Attack Miss 3']
+        self.sound = GC.SOUNDDICT['Attack Miss 3']
 
 class gainedWexpBanner(Banner):
     def __init__(self, unit, wexp, weapon_type):
@@ -102,7 +102,7 @@ class gainedWexpBanner(Banner):
         self.banner = [unit.name, ' reached rank ', CustomObjects.WEAPON_EXP.number_to_letter(wexp)]
         self.banner_font = ['text_blue', 'text_white', 'text_blue']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class foundNothingBanner(Banner):
     def __init__(self, unit):
@@ -111,7 +111,7 @@ class foundNothingBanner(Banner):
         self.banner = [unit.name, ' found nothing of note.']
         self.banner_font = ['text_blue', 'text_white']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Attack Miss 3']
+        self.sound = GC.SOUNDDICT['Attack Miss 3']
 
 class switchPulledBanner(Banner):
     def __init__(self):
@@ -119,7 +119,7 @@ class switchPulledBanner(Banner):
         self.banner = ['Switch pulled!']
         self.banner_font = ['text_white']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class miracleBanner(Banner):
     def __init__(self, unit, skill):
@@ -129,7 +129,7 @@ class miracleBanner(Banner):
         self.banner = [skill.name, ' activated!']
         self.banner_font = ['text_blue', 'text_white']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class tooFewUnitsBanner(Banner):
     def __init__(self):
@@ -145,7 +145,7 @@ class gameSavedBanner(Banner):
         self.banner = ['Progress Saved.']
         self.banner_font = ['text_white']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class gainedSkillBanner(Banner):
     def __init__(self, unit, skill):
@@ -155,7 +155,7 @@ class gainedSkillBanner(Banner):
         self.banner = [unit.name, ' learned ', skill.name, '.']
         self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class stealBanner(Banner):
     def __init__(self, unit, item):
@@ -165,7 +165,7 @@ class stealBanner(Banner):
         self.banner = [unit.name, ' stole ', item.name, '.']
         self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Item']
+        self.sound = GC.SOUNDDICT['Item']
 
 class warningContinueBanner(Banner):
     def __init__(self):
@@ -173,20 +173,20 @@ class warningContinueBanner(Banner):
         self.banner = ['Loading a game will remove suspend!']
         self.banner_font = ['text_white']
         self.figure_out_size()
-        self.sound = SOUNDDICT['Select 2']
+        self.sound = GC.SOUNDDICT['Select 2']
 
 # Lower banner that scrolls across bottom of screen
 class Pennant(object):
     def __init__(self, text):
         self.text = text
-        self.font = FONT['convo_white']
+        self.font = GC.FONT['convo_white']
         self.text_width = self.font.size(self.text)[0]
 
         self.sprite_offset = 32
 
-        self.width = WINWIDTH
-        self.height = TILEHEIGHT
-        self.back_surf = IMAGESDICT['PennantBG']
+        self.width = GC.WINWIDTH
+        self.height = GC.TILEHEIGHT
+        self.back_surf = GC.IMAGESDICT['PennantBG']
 
         self.text_counter = 0
 
@@ -204,9 +204,9 @@ class Pennant(object):
                 self.font.blit(self.text, surf, (counter, 0 - self.sprite_offset))
                 counter += self.text_width + 24
         else:
-            surf.blit(self.back_surf, (0, WINHEIGHT - self.height + self.sprite_offset))
+            surf.blit(self.back_surf, (0, GC.WINHEIGHT - self.height + self.sprite_offset))
             while counter < self.width:
-                self.font.blit(self.text, surf, (counter, WINHEIGHT - self.height + self.sprite_offset))
+                self.font.blit(self.text, surf, (counter, GC.WINHEIGHT - self.height + self.sprite_offset))
                 counter += self.text_width + 24
 
         self.text_counter -= 1

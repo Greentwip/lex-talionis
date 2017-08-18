@@ -1,10 +1,10 @@
 import random
 from collections import Counter
-from GlobalConstants import *
-from configuration import *
-import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject, \
-AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject, \
-Utility, LevelUp, ItemMethods, Engine, Banner
+import GlobalConstants as GC
+import configuration as cf
+import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject
+import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
+import Utility, LevelUp, ItemMethods, Engine, Banner
 
 import logging
 logger = logging.getLogger(__name__)
@@ -74,21 +74,22 @@ class Stat(object):
     def draw(self, surf, unit, topright, metaDataObj):
         value = self.base_stat
         if value >= metaDataObj['class_dict'][unit.klass]['max'][self.idx]:
-            FONT['text_green'].blit(str(value), surf, (topright[0] - FONT['text_green'].size(str(value))[0], topright[1]))
+            GC.FONT['text_green'].blit(str(value), surf, (topright[0] - GC.FONT['text_green'].size(str(value))[0], topright[1]))
         else:
-            FONT['text_blue'].blit(str(value), surf, (topright[0] - FONT['text_blue'].size(str(value))[0], topright[1]))
+            GC.FONT['text_blue'].blit(str(value), surf, (topright[0] - GC.FONT['text_blue'].size(str(value))[0], topright[1]))
         output = ""
         if self.bonuses > 0:
             output = "+" + str(self.bonuses)
-            FONT['small_green'].blit(output, surf, (topright[0], topright[1] + 4))
+            GC.FONT['small_green'].blit(output, surf, (topright[0], topright[1] + 4))
         elif self.bonuses < 0:
             output = str(self.bonuses)
-            FONT['small_red'].blit(output, surf, (topright[0], topright[1] + 4))
+            GC.FONT['small_red'].blit(output, surf, (topright[0], topright[1] + 4))
 
 # === GENERIC UNIT OBJECT =====================================================
 class UnitObject(object):
     x_positions = [0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 5, 4, 3, 2, 1]
     y_positions = [0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0]
+
 # === INITIALIZATION ==========================================================    
     def __init__(self, info):
         # --- Basic properties
@@ -204,17 +205,17 @@ class UnitObject(object):
         self.generic_flag = False
         try:
             # Ex: HectorPortrait
-            self.bigportrait = Engine.subsurface(UNITDICT[self.name + 'Portrait'], (0, 0, 96, 80))
-            self.portrait = Engine.subsurface(UNITDICT[self.name + 'Portrait'], (96, 16, 32, 32))
+            self.bigportrait = Engine.subsurface(GC.UNITDICT[self.name + 'Portrait'], (0, 0, 96, 80))
+            self.portrait = Engine.subsurface(GC.UNITDICT[self.name + 'Portrait'], (96, 16, 32, 32))
         except KeyError:
             self.generic_flag = True
-            self.bigportrait = UNITDICT['Generic_Portrait_' + self.klass]
-            self.portrait = UNITDICT[self.faction + 'Emblem']
+            self.bigportrait = GC.UNITDICT['Generic_Portrait_' + self.klass]
+            self.portrait = GC.UNITDICT[self.faction + 'Emblem']
         # Generate Animation
-        # ANIMDICT.generate(self.klass)
+        # GC.ANIMDICT.generate(self.klass)
         self.battle_anim = None
 
-    def begin_flicker(self, time, color=(255,255,255)):
+    def begin_flicker(self, time, color=(255, 255, 255)):
         self.flicker = (Engine.get_time(), time, color)
 
     def end_flicker(self):
@@ -226,7 +227,7 @@ class UnitObject(object):
         PortraitWidth, PortraitHeight = PortraitDimensions
         # Create Surface to be blitted
         # Blit background of surface
-        PortraitSurface = IMAGESDICT['PortraitInfo'].copy()
+        PortraitSurface = GC.IMAGESDICT['PortraitInfo'].copy()
         top = 4
         left = 6
         # Blit Portrait
@@ -236,25 +237,25 @@ class UnitObject(object):
         # If generic, include level in name
         if self.generic_flag:
             klass_name = self.klass
-            if klass_name in WORDS:
-                klass_name = WORDS[klass_name]
+            if klass_name in cf.WORDS:
+                klass_name = cf.WORDS[klass_name]
             name = klass_name + ' ' + str(self.level)
-        position = (left + PortraitWidth/2 + 6 - FONT['info_grey'].size(name)[0]/2, top + 4)
-        FONT['info_grey'].blit(name, PortraitSurface, position)
+        position = (left + PortraitWidth/2 + 6 - GC.FONT['info_grey'].size(name)[0]/2, top + 4)
+        GC.FONT['info_grey'].blit(name, PortraitSurface, position)
         # Blit Health Text
-        PortraitSurface.blit(IMAGESDICT['InfoHP'], (34 + left, PortraitHeight - 20 + top))
-        PortraitSurface.blit(IMAGESDICT['InfoSlash'], (68 + left, PortraitHeight - 19 + top))
+        PortraitSurface.blit(GC.IMAGESDICT['InfoHP'], (34 + left, PortraitHeight - 20 + top))
+        PortraitSurface.blit(GC.IMAGESDICT['InfoSlash'], (68 + left, PortraitHeight - 19 + top))
         current_hp = str(self.currenthp)
         max_hp = str(self.stats['HP'])
-        FONT['info_grey'].blit(current_hp, PortraitSurface, (66 + left - FONT['info_grey'].size(current_hp)[0], 16 + top))
-        FONT['info_grey'].blit(max_hp, PortraitSurface, (90 + left - FONT['info_grey'].size(max_hp)[0], 16 + top))
+        GC.FONT['info_grey'].blit(current_hp, PortraitSurface, (66 + left - GC.FONT['info_grey'].size(current_hp)[0], 16 + top))
+        GC.FONT['info_grey'].blit(max_hp, PortraitSurface, (90 + left - GC.FONT['info_grey'].size(max_hp)[0], 16 + top))
         # Blit Health Bar Background
-        HealthBGSurf = IMAGESDICT['HealthBar2BG']
+        HealthBGSurf = GC.IMAGESDICT['HealthBar2BG']
         topleft = (36 + left, PortraitHeight - 10 + top)
         PortraitSurface.blit(HealthBGSurf, topleft)
         # Blit Health Bar
-        indexpixel = int((max(0, self.currenthp/float(self.stats['HP'])))*IMAGESDICT['HealthBar2'].get_width())
-        HealthSurf = Engine.subsurface(IMAGESDICT['HealthBar2'], (0,0,indexpixel, 2))
+        indexpixel = int((max(0, self.currenthp/float(self.stats['HP'])))*GC.IMAGESDICT['HealthBar2'].get_width())
+        HealthSurf = Engine.subsurface(GC.IMAGESDICT['HealthBar2'], (0, 0, indexpixel, 2))
         topleft = (37 + left, PortraitHeight - 9 + top)
         PortraitSurface.blit(HealthSurf, topleft)
 
@@ -265,58 +266,59 @@ class UnitObject(object):
         return PortraitSurface
 
     def create_attack_info(self, gameStateObj, enemyunit):
-        surf = IMAGESDICT['QuickAttackInfo'].copy()
+        surf = GC.IMAGESDICT['QuickAttackInfo'].copy()
 
         # Blit my name
-        size = FONT['text_white'].size(self.name)
+        size = GC.FONT['text_white'].size(self.name)
         position = 43 - size[0]/2, 3
-        FONT['text_white'].blit(self.name, surf, position)
+        GC.FONT['text_white'].blit(self.name, surf, position)
         # Blit enemy name
-        size = FONT['text_white'].size(enemyunit.name)
+        size = GC.FONT['text_white'].size(enemyunit.name)
         position = 26 - size[0]/2, 68
-        FONT['text_white'].blit(enemyunit.name, surf, position)
+        GC.FONT['text_white'].blit(enemyunit.name, surf, position)
         # Blit name of enemy weapon
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
-            size = FONT['text_white'].size(enemyunit.getMainWeapon().name)
+            size = GC.FONT['text_white'].size(enemyunit.getMainWeapon().name)
             position = 32 - size[0]/2, 84
-            FONT['text_white'].blit(enemyunit.getMainWeapon().name, surf, position)
+            GC.FONT['text_white'].blit(enemyunit.getMainWeapon().name, surf, position)
         # Blit self HP
-        size = FONT['text_blue'].size(str(self.currenthp))
+        size = GC.FONT['text_blue'].size(str(self.currenthp))
         position = 64 - size[0], 19
-        FONT['text_blue'].blit(str(self.currenthp), surf, position)
+        GC.FONT['text_blue'].blit(str(self.currenthp), surf, position)
         # Blit enemy hp
-        size = FONT['text_blue'].size(str(enemyunit.currenthp))
+        size = GC.FONT['text_blue'].size(str(enemyunit.currenthp))
         position = 20 - size[0], 19
-        FONT['text_blue'].blit(str(enemyunit.currenthp), surf, position)
+        GC.FONT['text_blue'].blit(str(enemyunit.currenthp), surf, position)
         # Blit my MT
         mt = self.compute_damage(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-        size = FONT['text_blue'].size(str(mt))
+        size = GC.FONT['text_blue'].size(str(mt))
         position = 64 - size[0], 35
-        FONT['text_blue'].blit(str(mt), surf, position)
+        GC.FONT['text_blue'].blit(str(mt), surf, position)
         # Blit my Hit
         hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
         if hit == 100:
-            surf.blit(IMAGESDICT['blue_100'], (48, 51))
+            surf.blit(GC.IMAGESDICT['blue_100'], (48, 51))
         else:
-            size = FONT['text_blue'].size(str(hit))
+            size = GC.FONT['text_blue'].size(str(hit))
             position = 64 - size[0], 51
-            FONT['text_blue'].blit(str(hit), surf, position)
+            GC.FONT['text_blue'].blit(str(hit), surf, position)
         # Blit enemy hit and mt
-        if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().RNG:
+        if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
+                Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().RNG:
             e_mt = enemyunit.compute_damage(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
             e_hit = enemyunit.compute_hit(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
         else:
             e_mt = '--'
             e_hit = '--'
-        size = FONT['text_blue'].size(str(e_mt))
+        size = GC.FONT['text_blue'].size(str(e_mt))
         position = 20 - size[0], 35
-        FONT['text_blue'].blit(str(e_mt), surf, position)
+        GC.FONT['text_blue'].blit(str(e_mt), surf, position)
         if e_hit == 100:
-            surf.blit(IMAGESDICT['blue_100'], (4, 51))
+            surf.blit(GC.IMAGESDICT['blue_100'], (4, 51))
         else:
-            size = FONT['text_blue'].size(str(e_hit))
+            size = GC.FONT['text_blue'].size(str(e_hit))
             position = 20 - size[0], 51
-            FONT['text_blue'].blit(str(e_hit), surf, position)
+            GC.FONT['text_blue'].blit(str(e_hit), surf, position)
 
         return surf
 
@@ -325,11 +327,11 @@ class UnitObject(object):
             gameStateObj.info_surf = self.create_attack_info(gameStateObj, enemyunit)
 
         # Find topleft
-        if gameStateObj.cursor.position[0] > HALF_WINWIDTH/TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
-            topleft = TILEWIDTH/2, TILEHEIGHT/4
+        if gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
+            topleft = GC.TILEWIDTH/2, GC.TILEHEIGHT/4
             topleft = (topleft[0] - self.attack_info_offset, topleft[1])
         else:
-            topleft = WINWIDTH - 69 - TILEWIDTH/2, TILEHEIGHT/4
+            topleft = GC.WINWIDTH - 69 - GC.TILEWIDTH/2, GC.TILEHEIGHT/4
             topleft = (topleft[0] + self.attack_info_offset, topleft[1])
         if self.attack_info_offset > 0:
             self.attack_info_offset -= 20
@@ -340,20 +342,23 @@ class UnitObject(object):
         white = False
         if isinstance(enemyunit, UnitObject):
             if (self.getMainWeapon().effective and any([comp in enemyunit.tags for comp in self.getMainWeapon().effective.against])) or \
-            any([status.weakness and status.weakness.damage_type in self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
+                    any([status.weakness and status.weakness.damage_type in self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
                 white = True
         self.getMainWeapon().draw(surf, (topleft[0] + 2, topleft[1] + 4), white)
         # Blit enemy item
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
-            white = True if (enemyunit.getMainWeapon().effective and any([comp in self.tags for comp in enemyunit.getMainWeapon().effective.against])) or \
-            any([status.weakness and status.weakness.damage_type in enemyunit.getMainWeapon().TYPE for status in self.status_effects]) else False
+            white = False
+            if (enemyunit.getMainWeapon().effective and any([comp in self.tags for comp in enemyunit.getMainWeapon().effective.against])):
+                white = True
+            elif any([status.weakness and status.weakness.damage_type in enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
+                white = True
             enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, topleft[1] + 67), white)
 
         # Blit advantage -- This must be blit every frame
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
             advantage, e_advantage = CustomObjects.WEAPON_TRIANGLE.compute_advantage(self.getMainWeapon(), enemyunit.getMainWeapon())
-            UpArrow = Engine.subsurface(IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 0, 7, 10))
-            DownArrow = Engine.subsurface(IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 10, 7, 10))
+            UpArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 0, 7, 10))
+            DownArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 10, 7, 10))
             if advantage > 0:
                 surf.blit(UpArrow, (topleft[0] + 13, topleft[1] + 8))
             elif advantage < 0:
@@ -374,7 +379,7 @@ class UnitObject(object):
             if not my_wep.no_double:
                 if my_wep.brave:
                     my_num *= 2
-                if self.attackspeed() - enemyunit.attackspeed() >= CONSTANTS['speed_to_double']:
+                if self.attackspeed() - enemyunit.attackspeed() >= cf.CONSTANTS['speed_to_double']:
                     my_num *= 2
                 if my_wep.uses or my_wep.c_uses:
                     if my_wep.uses:
@@ -383,27 +388,27 @@ class UnitObject(object):
                         my_num = min(my_num, my_wep.c_uses.uses)
 
             if my_num == 2:
-                surf.blit(IMAGESDICT['x2'], x2_position_player)
+                surf.blit(GC.IMAGESDICT['x2'], x2_position_player)
             elif my_num == 3:
-                surf.blit(IMAGESDICT['x3'], x2_position_player)
+                surf.blit(GC.IMAGESDICT['x3'], x2_position_player)
             elif my_num == 4:
-                surf.blit(IMAGESDICT['x4'], x2_position_player)
+                surf.blit(GC.IMAGESDICT['x4'], x2_position_player)
 
             e_wep = enemyunit.getMainWeapon()
 
             # Check enemy vs player
             e_num = 1
             if e_wep and not e_wep.no_double and isinstance(enemyunit, UnitObject) and \
-                Utility.calculate_distance(self.position, enemyunit.position) in e_wep.RNG:
+                    Utility.calculate_distance(self.position, enemyunit.position) in e_wep.RNG:
                 if e_wep.brave:
                     e_num *= 2
-                if (CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
-                    enemyunit.attackspeed() - self.attackspeed() >= CONSTANTS['speed_to_double']:
+                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
+                        enemyunit.attackspeed() - self.attackspeed() >= cf.CONSTANTS['speed_to_double']:
                     e_num *= 2
             if e_num == 2:
-                surf.blit(IMAGESDICT['x2'], x2_position_enemy)
+                surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
             elif e_num == 4:
-                surf.blit(IMAGESDICT['x4'], x2_position_enemy)
+                surf.blit(GC.IMAGESDICT['x4'], x2_position_enemy)
 
     def create_spell_info(self, gameStateObj, otherunit):
         if self.getMainSpell().spell.targets in ['Ally', 'Enemy', 'Unit']:
@@ -416,55 +421,55 @@ class UnitObject(object):
             real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
             BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
             BGSurf.blit(real_surf, (2, 4))
-            BGSurf.blit(IMAGESDICT['SmallGem'], (0, 0))
-            shimmer = IMAGESDICT['Shimmer2']
+            BGSurf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
+            shimmer = GC.IMAGESDICT['Shimmer2']
             BGSurf.blit(shimmer, (BGSurf.get_width() - shimmer.get_width() - 1, BGSurf.get_height() - shimmer.get_height() - 5))
             BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
             """
-            BGSurf = IMAGESDICT['Spell_Window' + str(height)]
+            BGSurf = GC.IMAGESDICT['Spell_Window' + str(height)]
             BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
 
             running_height = 8
 
-            FONT['text_white'].blit(otherunit.name, BGSurf, (30, running_height))
+            GC.FONT['text_white'].blit(otherunit.name, BGSurf, (30, running_height))
 
             running_height += 16
             # Blit HP
-            FONT['text_yellow'].blit('HP', BGSurf, (9, running_height))
+            GC.FONT['text_yellow'].blit('HP', BGSurf, (9, running_height))
             # Blit /
-            FONT['text_yellow'].blit('/', BGSurf, (width - 25, running_height))
+            GC.FONT['text_yellow'].blit('/', BGSurf, (width - 25, running_height))
             # Blit stats['HP']
-            maxhp_size = FONT['text_blue'].size(str(otherunit.stats['HP']))
-            FONT['text_blue'].blit(str(otherunit.stats['HP']), BGSurf, (width - 5 - maxhp_size[0], running_height))
+            maxhp_size = GC.FONT['text_blue'].size(str(otherunit.stats['HP']))
+            GC.FONT['text_blue'].blit(str(otherunit.stats['HP']), BGSurf, (width - 5 - maxhp_size[0], running_height))
             # Blit currenthp
-            currenthp_size = FONT['text_blue'].size(str(otherunit.currenthp))
-            FONT['text_blue'].blit(str(otherunit.currenthp), BGSurf, (width - 26 - currenthp_size[0], running_height))
+            currenthp_size = GC.FONT['text_blue'].size(str(otherunit.currenthp))
+            GC.FONT['text_blue'].blit(str(otherunit.currenthp), BGSurf, (width - 26 - currenthp_size[0], running_height))
 
             if self.getMainSpell().damage is not None:
                 running_height += 16
                 mt = self.compute_damage(otherunit, gameStateObj, self.getMainSpell(), 'Attack')
-                FONT['text_yellow'].blit('Mt', BGSurf, (9, running_height))
-                mt_size = FONT['text_blue'].size(str(mt))[0]
-                FONT['text_blue'].blit(str(mt), BGSurf, (width - 5 - mt_size, running_height))
+                GC.FONT['text_yellow'].blit('Mt', BGSurf, (9, running_height))
+                mt_size = GC.FONT['text_blue'].size(str(mt))[0]
+                GC.FONT['text_blue'].blit(str(mt), BGSurf, (width - 5 - mt_size, running_height))
 
             if self.getMainSpell().hit is not None:
                 running_height += 16
-                FONT['text_yellow'].blit('Hit', BGSurf, (9, running_height))
+                GC.FONT['text_yellow'].blit('Hit', BGSurf, (9, running_height))
                 hit = self.compute_hit(otherunit, gameStateObj, self.getMainSpell(), 'Attack')
                 if hit >= 100:
-                    BGSurf.blit(IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
+                    BGSurf.blit(GC.IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
                 else:
-                    hit_size = FONT['text_blue'].size(str(hit))[0]
+                    hit_size = GC.FONT['text_blue'].size(str(hit))[0]
                     position = width - 5 - hit_size, running_height
-                    FONT['text_blue'].blit(str(hit), BGSurf, position)
+                    GC.FONT['text_blue'].blit(str(hit), BGSurf, position)
 
             # Blit name
             running_height += 16
             self.getMainSpell().draw(BGSurf, (8, running_height))
-            name_width = FONT['text_white'].size(self.getMainSpell().name)[0]
-            FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
+            name_width = GC.FONT['text_white'].size(self.getMainSpell().name)[0]
+            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
 
             return BGSurf
 
@@ -479,8 +484,8 @@ class UnitObject(object):
             real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
             BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
             BGSurf.blit(real_surf, (2, 4))
-            BGSurf.blit(IMAGESDICT['SmallGem'], (0, 0))
-            shimmer = IMAGESDICT['Shimmer2']
+            BGSurf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
+            shimmer = GC.IMAGESDICT['Shimmer2']
             BGSurf.blit(shimmer, (BGSurf.get_width() - shimmer.get_width() - 1, BGSurf.get_height() - shimmer.get_height() - 5))
             BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
@@ -490,26 +495,26 @@ class UnitObject(object):
             if self.getMainSpell().damage is not None:
                 running_height += 16
                 mt = self.damage(gameStateObj, self.getMainSpell())
-                FONT['text_yellow'].blit('Mt', BGSurf, (5, running_height))
-                mt_size = FONT['text_blue'].size(str(mt))[0]
-                FONT['text_blue'].blit(str(mt), BGSurf, (width - 5 - mt_size, running_height))
+                GC.FONT['text_yellow'].blit('Mt', BGSurf, (5, running_height))
+                mt_size = GC.FONT['text_blue'].size(str(mt))[0]
+                GC.FONT['text_blue'].blit(str(mt), BGSurf, (width - 5 - mt_size, running_height))
 
             if self.getMainSpell().hit is not None:
                 running_height += 16
-                FONT['text_yellow'].blit('Hit', BGSurf, (5, running_height))
+                GC.FONT['text_yellow'].blit('Hit', BGSurf, (5, running_height))
                 hit = self.accuracy(gameStateObj, self.getMainSpell())
                 if hit >= 100:
-                    BGSurf.blit(IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
+                    BGSurf.blit(GC.IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
                 else:
-                    hit_size = FONT['text_blue'].size(str(hit))[0]
+                    hit_size = GC.FONT['text_blue'].size(str(hit))[0]
                     position = width - 5 - hit_size, running_height
-                    FONT['text_blue'].blit(str(hit), BGSurf, position)
+                    GC.FONT['text_blue'].blit(str(hit), BGSurf, position)
 
             # Blit name
             running_height += 16
             self.getMainSpell().draw(BGSurf, (4, running_height))
-            name_width = FONT['text_white'].size(self.getMainSpell().name)[0]
-            FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
+            name_width = GC.FONT['text_white'].size(self.getMainSpell().name)[0]
+            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
 
             return BGSurf
 
@@ -524,14 +529,14 @@ class UnitObject(object):
         if otherunit:
             unit_surf = otherunit.sprite.create_image('passive')
 
-        if gameStateObj.cursor.position[0] > HALF_WINWIDTH/TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1: #Right - I believe this has RIGHT precedence
+        if gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
             topleft = (4, 4)
             if otherunit:
                 u_topleft = (16 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
         else:
-            topleft = (WINWIDTH - 4 - width, 4)
+            topleft = (GC.WINWIDTH - 4 - width, 4)
             if otherunit:
-                u_topleft = (WINWIDTH - width + 8 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
+                u_topleft = (GC.WINWIDTH - width + 8 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
 
         surf.blit(gameStateObj.info_surf, topleft)
         if otherunit:
@@ -547,31 +552,31 @@ class UnitObject(object):
         real_surf = MenuFunctions.CreateBaseMenuSurf((width, height), 'BaseMenuBackgroundOpaque')
         BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
         BGSurf.blit(real_surf, (2, 4))
-        BGSurf.blit(IMAGESDICT['SmallGem'], (0, 0))
+        BGSurf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
         # Now make translucent
         BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
 
         if item.weapon and self.canWield(item):
             top = 4
             left = 2
-            FONT['text_white'].blit('Affin', BGSurf, (width/2 - FONT['text_white'].size('Affin')[0] + left, 4 + top))
-            FONT['text_white'].blit('Atk', BGSurf, (5 + left, 20 + top))
-            FONT['text_white'].blit('AS', BGSurf, (width/2 + 5 + left, 20 + top))
-            FONT['text_white'].blit('Hit', BGSurf, (5 + left, 36 + top))
-            FONT['text_white'].blit('Avo', BGSurf, (width/2 + 5 + left, 36 + top))
+            GC.FONT['text_white'].blit('Affin', BGSurf, (width/2 - GC.FONT['text_white'].size('Affin')[0] + left, 4 + top))
+            GC.FONT['text_white'].blit('Atk', BGSurf, (5 + left, 20 + top))
+            GC.FONT['text_white'].blit('AS', BGSurf, (width/2 + 5 + left, 20 + top))
+            GC.FONT['text_white'].blit('Hit', BGSurf, (5 + left, 36 + top))
+            GC.FONT['text_white'].blit('Avo', BGSurf, (width/2 + 5 + left, 36 + top))
         
             dam = str(self.damage(gameStateObj, item))
             acc = str(self.accuracy(gameStateObj, item))
             avo = str(self.avoid(gameStateObj, item))
             atkspd = str(self.attackspeed(item))
-            AtkWidth = FONT['text_blue'].size(dam)[0]
-            HitWidth = FONT['text_blue'].size(acc)[0]
-            AvoidWidth = FONT['text_blue'].size(avo)[0]
-            ASWidth = FONT['text_blue'].size(atkspd)[0] 
-            FONT['text_blue'].blit(dam, BGSurf, (width/2 - 4 - AtkWidth + left, 20 + top))
-            FONT['text_blue'].blit(atkspd, BGSurf, (width - 8 - ASWidth + left, 20 + top))
-            FONT['text_blue'].blit(acc, BGSurf, (width/2 - 4 - HitWidth + left, 36 + top))
-            FONT['text_blue'].blit(avo, BGSurf, (width - 8 - AvoidWidth + left, 36 + top))
+            AtkWidth = GC.FONT['text_blue'].size(dam)[0]
+            HitWidth = GC.FONT['text_blue'].size(acc)[0]
+            AvoidWidth = GC.FONT['text_blue'].size(avo)[0]
+            ASWidth = GC.FONT['text_blue'].size(atkspd)[0] 
+            GC.FONT['text_blue'].blit(dam, BGSurf, (width/2 - 4 - AtkWidth + left, 20 + top))
+            GC.FONT['text_blue'].blit(atkspd, BGSurf, (width - 8 - ASWidth + left, 20 + top))
+            GC.FONT['text_blue'].blit(acc, BGSurf, (width/2 - 4 - HitWidth + left, 36 + top))
+            GC.FONT['text_blue'].blit(avo, BGSurf, (width - 8 - AvoidWidth + left, 36 + top))
 
             item.drawType(BGSurf, width/2 + 8 + left, 3 + top)
 
@@ -580,14 +585,14 @@ class UnitObject(object):
                 words_in_item_desc = item.desc
             else:
                 words_in_item_desc = "Cannot wield."
-            lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(words_in_item_desc), width - 8, FONT['text_white'])
+            lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(words_in_item_desc), width - 8, GC.FONT['text_white'])
 
             for index, line in enumerate(lines):
-                FONT['text_white'].blit(line, BGSurf, (4 + 2, 4+index*16 + 4))
+                GC.FONT['text_white'].blit(line, BGSurf, (4 + 2, 4+index*16 + 4))
 
         surf.blit(BGSurf, (0, 76))
 
-        if gameStateObj.cursor.position[0] > WINWIDTH/TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+        if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
             rightflag = True
         else:
             rightflag = False
@@ -605,17 +610,16 @@ class UnitObject(object):
         if not gameStateObj.info_surf:
             gameStateObj.info_surf = self.create_item_description(gameStateObj)
 
-        if gameStateObj.cursor.position[0] > WINWIDTH/TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
-            topleft = (WINWIDTH - 8 - gameStateObj.info_surf.get_width(), WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
+        if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+            topleft = (GC.WINWIDTH - 8 - gameStateObj.info_surf.get_width(), GC.WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
         else:
-            topleft = (8, WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
+            topleft = (8, GC.WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
 
         surf.blit(gameStateObj.info_surf, topleft)
 
 # === TARGETING AND OTHER UTILITY FUNCTIONS ===================================
     def beginMovement(self, gameStateObj, path=None):
         logger.debug('%s beginning movement', self.name)
-        #gameStateObj.stateMachine.changeState('movement')
         gameStateObj.moving_units.add(self)
         self.lock_active()
         self.sprite.change_state('moving', gameStateObj)
@@ -662,7 +666,8 @@ class UnitObject(object):
     # Pathfinding algorithm
     def getPath(self, gameStateObj, goalPosition, ally_block=False):
         my_grid = gameStateObj.grid_manager.get_grid(self)
-        pathfinder = AStar.AStar(self.position, goalPosition, my_grid, gameStateObj.map.width, gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
+        pathfinder = AStar.AStar(self.position, goalPosition, my_grid, gameStateObj.map.width,
+                                 gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
         # Run the pathfinder
         pathfinder.process(gameStateObj, ally_block=ally_block)
         # return the path
@@ -675,7 +680,6 @@ class UnitObject(object):
         return next((item for item in self.items if item.spell and self.canWield(item)), None)
 
     def hasRunAI(self):
-        #return self.hasRunAttackAI and self.hasRunMoveAI
         return self.hasRunGeneralAI
 
     def getAid(self):
@@ -703,11 +707,11 @@ class UnitObject(object):
             return True # does not have a level so it can be used
 
         for itemType in item.TYPE:
-            #print(itemType)
+            # print(itemType)
             idx = CustomObjects.WEAPON_TRIANGLE.type_to_index[itemType]
-            #print(idx)
-            #print(self.name)
-            #print(self.wexp)
+            # print(idx)
+            # print(self.name)
+            # print(self.wexp)
             unitwexp = self.wexp[idx]
             if itemLvl in CustomObjects.WEAPON_EXP.wexp_dict and unitwexp >= CustomObjects.WEAPON_EXP.wexp_dict[itemLvl]:
                 continue
@@ -748,8 +752,10 @@ class UnitObject(object):
 
     def handle_booster(self, item, gameStateObj):
         # Handle uses
-        if item.uses: item.uses.decrement()
-        if item.c_uses: item.c_uses.decrement()
+        if item.uses:
+            item.uses.decrement()
+        if item.c_uses:
+            item.c_uses.decrement()
         if item.uses and item.uses.uses <= 0:
             gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
             gameStateObj.stateMachine.changeState('itemgain')
@@ -787,10 +793,11 @@ class UnitObject(object):
             if new_position:
                 self.position = new_position
         elif movement.mode == 'Rescue':
-            #print(movement.mode, other_pos)
+            # print(movement.mode, other_pos)
             for pos in Utility.get_adjacent_positions(other_pos):
-                # IF in map and walkable and no other unit is there.
-                if gameStateObj.map.check_bounds(pos) and gameStateObj.map.tiles[pos].get_mcost(self) < self.stats['MOV'] and not gameStateObj.grid_manager.get_unit_node(pos):
+                # If in map and walkable and no other unit is there.
+                if gameStateObj.map.check_bounds(pos) and gameStateObj.map.tiles[pos].get_mcost(self) < self.stats['MOV'] and \
+                        not gameStateObj.grid_manager.get_unit_node(pos):
                     self.position = pos
         elif movement.mode == 'Swap': # This simple thing will actually probably work
             self.position = other_pos
@@ -813,9 +820,9 @@ class UnitObject(object):
         new_position = self.position[0] + pos_offset[0]*move_mag, self.position[1] + pos_offset[1]*move_mag
 
         if gameStateObj.map.check_bounds(new_position) and \
-           not any(unit.position == new_position for unit in gameStateObj.allunits) and \
-           gameStateObj.map.tiles[new_position].get_mcost(0) < 5: 
-           return new_position
+                not any(unit.position == new_position for unit in gameStateObj.allunits) and \
+                gameStateObj.map.tiles[new_position].get_mcost(0) < 5: 
+            return new_position
         return False
 
     # Stat-specific levelup function
@@ -825,7 +832,7 @@ class UnitObject(object):
         if self.team == 'player':
             leveling = gameStateObj.mode['growths']
         else:
-            leveling = CONSTANTS['enemy_leveling']
+            leveling = cf.CONSTANTS['enemy_leveling']
             if leveling == 3: # Match player method
                 leveling = gameStateObj.mode['growths']
 
@@ -864,7 +871,7 @@ class UnitObject(object):
     def apply_levelup(self, levelup_list, hp_up=False):
         logger.debug("Applying levelup %s to %s", levelup_list, self.name)
         # Levelup_list should be a len(8) list.
-        for idx, name in enumerate(CONSTANTS['stat_names']):
+        for idx, name in enumerate(cf.CONSTANTS['stat_names']):
             self.stats[name].base_stat += levelup_list[idx]
         # Handle the case where this is done in base
         if hp_up:
@@ -873,7 +880,7 @@ class UnitObject(object):
     # For bonuses
     def apply_stat_change(self, levelup_list):
         logger.debug("Applying stat change %s to %s", levelup_list, self.name)
-        for idx, name in enumerate(CONSTANTS['stat_names']):
+        for idx, name in enumerate(cf.CONSTANTS['stat_names']):
             self.stats[name].bonuses += levelup_list[idx]
 
         # Handle changed cases
@@ -934,7 +941,7 @@ class UnitObject(object):
         if not boundary:
             ValidAttacks = [pos for pos in ValidAttacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_team_node(pos))]
 
-        if CONSTANTS['line_of_sight'] and potentialRange:
+        if cf.CONSTANTS['line_of_sight'] and potentialRange:
             ValidAttacks = Utility.line_of_sight(ValidMoves, ValidAttacks, max(potentialRange), gameStateObj)
         return ValidAttacks
 
@@ -963,7 +970,7 @@ class UnitObject(object):
                 ally_unit_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit)]
                 ValidAttacks = [pos for pos in ValidAttacks if pos not in ally_unit_positions]
 
-        if CONSTANTS['spell_line_of_sight'] and potentialRange:
+        if cf.CONSTANTS['spell_line_of_sight'] and potentialRange:
             ValidAttacks = Utility.line_of_sight(ValidMoves, ValidAttacks, max(potentialRange), gameStateObj)
 
         return ValidAttacks
@@ -981,12 +988,12 @@ class UnitObject(object):
         targets = set()
         if not valid_moves:
             valid_moves = {self.position}
-        #calculate
+
         if item.weapon:
-            enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and \
+            enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and
                            unit.team not in team_ignore and unit.name not in name_ignore]
             # Don't want this line, since AI does not consider tiles in the Primary AI
-            #enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
+            # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
             while enemy_units:
                 current_pos = enemy_units.pop()
                 for valid_move in valid_moves:
@@ -997,7 +1004,7 @@ class UnitObject(object):
             if item.spell.targets == 'Tile':
                 targets = Utility.get_shell(valid_moves, item.RNG, gameStateObj.map)
             elif item.beneficial:
-                ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and \
+                ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and
                               unit.team not in team_ignore and unit.name not in name_ignore]
                 while ally_units:
                     current_pos = ally_units.pop()
@@ -1006,10 +1013,10 @@ class UnitObject(object):
                             targets.add(current_pos)
                             break
             else:
-                enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and \
+                enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and
                                unit.team not in team_ignore and unit.name not in name_ignore]
                 # Don't want this line, since AI does not consider tiles in the Primary AI
-                #enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
+                # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
                 while enemy_units:
                     current_pos = enemy_units.pop()
                     for valid_move in valid_moves:
@@ -1019,7 +1026,7 @@ class UnitObject(object):
 
         # Handle line of sight if necessary
         targets = list(targets)
-        if ((item.weapon and CONSTANTS['line_of_sight']) or (item.spell and CONSTANTS['spell_line_of_sight'])):
+        if ((item.weapon and cf.CONSTANTS['line_of_sight']) or (item.spell and cf.CONSTANTS['spell_line_of_sight'])):
             targets = Utility.line_of_sight(valid_moves, targets, max(item.RNG), gameStateObj)
         return targets
 
@@ -1027,8 +1034,8 @@ class UnitObject(object):
         # Set-up
         if position is None:
             position = self.position
-        #calculate
-        return [unit for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and (Utility.calculate_distance(unit.position, position) == 1) and unit.getStealables() and self.stats['SPD'] > unit.stats['SPD']]
+        return [unit for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and 
+                (Utility.calculate_distance(unit.position, position) == 1) and unit.getStealables() and self.stats['SPD'] > unit.stats['SPD']]
 
     # Given an item and a position, returns a list of valid tiles to attack
     def getWalls(self, gameStateObj, item, position=None):
@@ -1041,8 +1048,8 @@ class UnitObject(object):
                 targets.append(tile)
         return targets
         
-    ### gets all possible positions the unit could attack, given one main weapon or an optionally given main weapon
-    ### should be called after unit has moved. Does not attempt to determine if an enemy is actually in that specific place
+    # gets all possible positions the unit could attack, given one main weapon or an optionally given main weapon
+    # should be called after unit has moved. Does not attempt to determine if an enemy is actually in that specific place
     def getAttacks(self, gameStateObj, weapon=None):
         # Set-up
         if self.isDone() or self.hasAttacked:
@@ -1058,16 +1065,16 @@ class UnitObject(object):
         attacks = Utility.find_manhattan_spheres(my_weapon.RNG, self.position)
         attacks = [pos for pos in attacks if gameStateObj.map.check_bounds(pos)]
         attacks = [pos for pos in attacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_team_node(pos))]
-        if CONSTANTS['line_of_sight']:
+        if cf.CONSTANTS['line_of_sight']:
             attacks = Utility.line_of_sight([self.position], attacks, max(my_weapon.RNG), gameStateObj)
 
         # Now actually find true and splash attack positions
         true_attacks = []
         splash_attacks = []
         for position in attacks:
-            attack, splash = my_weapon.aoe.get_positions(self.position, position, gameStateObj.map)
+            attack, splash_pos = my_weapon.aoe.get_positions(self.position, position, gameStateObj.map)
             true_attacks.append(attack)
-            splash_attacks += splash
+            splash_attacks += splash_pos
         true_attacks = list(set(true_attacks))
         splash_attacks = list(set(splash_attacks))
         splash_attacks = [splash for splash in splash_attacks if splash not in true_attacks]
@@ -1082,8 +1089,8 @@ class UnitObject(object):
         for attack in splash_attacks:
             gameStateObj.highlight_manager.add_highlight(attack, 'splash')
 
-    ### gets all possible positions the unit could use its spell on, given its main weapon or an optionally given main weapon
-    ### should be called after unit has moved. !!! Does not attempt to determine if an enemy is actually in that specific place. !!!
+    # gets all possible positions the unit could use its spell on, given its main weapon or an optionally given main weapon
+    # should be called after unit has moved. !!! Does not attempt to determine if an enemy is actually in that specific place. !!!
     def getSpellAttacks(self, gameStateObj, spell=None):
         # Set-up
         if self.isDone() or self.hasAttacked:
@@ -1107,7 +1114,7 @@ class UnitObject(object):
             ally_unit_positions = {unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit)}
             ValidAttacks = [pos for pos in ValidAttacks if pos not in ally_unit_positions]
 
-        if CONSTANTS['spell_line_of_sight']:
+        if cf.CONSTANTS['spell_line_of_sight']:
             ValidAttacks = Utility.line_of_sight([self.position], ValidAttacks, max(my_spell.RNG), gameStateObj)
         return ValidAttacks
 
@@ -1121,17 +1128,17 @@ class UnitObject(object):
     # Finds the positions of all valid targets given the main weapon you are using
     # Only gives positions that enemy units occupy
     def getValidTargetPositions(self, gameStateObj, weapon=None):
-        if weapon == None:
+        if weapon is None:
             my_weapon = self.getMainWeapon()
         else:
             my_weapon = weapon
-        if my_weapon == None:
+        if my_weapon is None:
             return []
 
         enemy_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
                           [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
         valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in my_weapon.RNG]                          
-        if CONSTANTS['line_of_sight']:
+        if cf.CONSTANTS['line_of_sight']:
             valid_targets = Utility.line_of_sight([self.position], valid_targets, max(my_weapon.RNG), gameStateObj)
         return valid_targets
 
@@ -1149,54 +1156,57 @@ class UnitObject(object):
             if my_spell.heal:
                 # This is done more robustly to account for the interaction between healing effects and AOE
                 places_i_can_target = Utility.find_manhattan_spheres(my_spell.RNG, self.position)
-                valid_pos = [unit.position for unit in gameStateObj.allunits if unit.position and unit.position in places_i_can_target and self.checkIfAlly(unit)]
+                valid_pos = [unit.position for unit in gameStateObj.allunits if unit.position and 
+                             unit.position in places_i_can_target and self.checkIfAlly(unit)]
                 targetable_position = []
                 for pos in valid_pos:
                     defender, splash = Interaction.convert_positions(gameStateObj, self, self.position, pos, my_spell)
                     if (defender and defender.currenthp < defender.stats['HP']) or any(self.checkIfAlly(s) and s.currenthp < s.stats['HP'] for s in splash):
                         targetable_position.append(pos)
 
-                #targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and unit.currenthp < unit.stats['HP'] and Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
+                # targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and 
+                #                        unit.currenthp < unit.stats['HP'] and Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
             elif my_spell.target_restrict:
-                targetable_position = [target.position for target in gameStateObj.allunits if target.position and \
-                                       self.checkIfAlly(target) and Utility.calculate_distance(target.position, self.position) in my_spell.RNG \
-                                       and eval(my_spell.target_restrict)]
+                targetable_position = [target.position for target in gameStateObj.allunits if target.position and
+                                       self.checkIfAlly(target) and Utility.calculate_distance(target.position, self.position) in my_spell.RNG and 
+                                       eval(my_spell.target_restrict)]
             else:
-                targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
+                targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and
+                                       Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
         elif my_spell.spell.targets == 'Enemy':
-            targetable_position = [target.position for target in gameStateObj.allunits if target.position and self.checkIfEnemy(target) and \
-                                   Utility.calculate_distance(target.position, self.position) in my_spell.RNG and \
+            targetable_position = [target.position for target in gameStateObj.allunits if target.position and self.checkIfEnemy(target) and
+                                   Utility.calculate_distance(target.position, self.position) in my_spell.RNG and
                                    (not my_spell.target_restrict or eval(my_spell.target_restrict))]
         elif my_spell.spell.targets == 'Unit':
-            targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
+            targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and
+                                   Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
         elif my_spell.spell.targets == 'Tile':
-            #targetable_position = [position for position, tile in gameStateObj.map.tiles.iteritems() if Utility.calculate_distance(position, self.position) in my_spell.RNG]
             targetable_position = Utility.find_manhattan_spheres(my_spell.RNG, self.position)
             targetable_position = [pos for pos in targetable_position if gameStateObj.map.check_bounds(pos)]
-            #print(targetable_position)
+            # print(targetable_position)
             if my_spell.unlock:
                 targetable_position = [position for position in targetable_position if 'Locked' in gameStateObj.map.tile_info_dict[position]]
             # This might take a while
             elif my_spell.aoe.mode == 'Blast' and len(my_spell.RNG) < 7:
-                #import time
-                #time1 = time.clock()
+                # import time
+                # time1 = time.clock()
                 valid_positions = []
                 for pos in targetable_position:
-                    #print('%s, %s'%(pos))
+                    # print('%s, %s'%(pos))
                     team = gameStateObj.grid_manager.get_team_node(pos)
                     if team and not gameStateObj.compare_teams(self.team, team):
                         valid_positions.append(pos)
                     else:
                         for x_pos in Utility.find_manhattan_spheres(range(1, my_spell.aoe.number + 1), pos):
-                            #print('-- %s, %s'%(x_pos))
+                            # print('-- %s, %s'%(x_pos))
                             if gameStateObj.map.check_bounds(x_pos):
                                 team = gameStateObj.grid_manager.get_team_node(x_pos)
                                 if team and not gameStateObj.compare_teams(self.team, team):
                                     valid_positions.append(pos)
                                     break
                 targetable_position = valid_positions
-                #print(time.clock()*1000 - time1*1000)
-            #print(targetable_position)
+                # print(time.clock()*1000 - time1*1000)
+            # print(targetable_position)
 
             """
             # The old method -- takes forever
@@ -1223,7 +1233,7 @@ class UnitObject(object):
                         targetable_position = list(targetable_position)
             """
 
-        if CONSTANTS['spell_line_of_sight']:
+        if cf.CONSTANTS['spell_line_of_sight']:
             validSpellTargets = Utility.line_of_sight([self.position], targetable_position, max(my_spell.RNG), gameStateObj)
         else:
             validSpellTargets = targetable_position
@@ -1252,7 +1262,6 @@ class UnitObject(object):
 
         allTargets = []
         for spell in allSpells:
-            #self.equip(spell)
             validTargets = self.getValidSpellTargetPositions(gameStateObj, spell=spell)
             allTargets += validTargets
 
@@ -1290,7 +1299,8 @@ class UnitObject(object):
 
     # Finds all adjacent units who have things that can be stolen
     def getStealPartners(self, gameStateObj, rng=1):
-        return [unit for unit in self.getAdjacentUnits(gameStateObj, rng) if self.checkIfEnemy(unit) and self.stats['SPD'] > unit.stats['SPD'] and unit.getStealables()]
+        return [unit for unit in self.getAdjacentUnits(gameStateObj, rng) if self.checkIfEnemy(unit) and
+                self.stats['SPD'] > unit.stats['SPD'] and unit.getStealables()]
 
     def getStealables(self):
         if len(self.items) <= 0:
@@ -1468,7 +1478,7 @@ class UnitObject(object):
             for name, edge in gameStateObj.support.node_dict[self.name].adjacent.iteritems():
                 for unit in gameStateObj.allunits:
                     if unit.name == name and unit.position and Utility.calculate_distance(unit.position, self.position) <= 3:
-                        support_level = edge.current_value/CONSTANTS['support_points']
+                        support_level = edge.current_value/cf.CONSTANTS['support_points']
                         affinity = gameStateObj.support.node_dict[name].affinity
                         attack += affinity.attack * support_level
                         defense += affinity.defense * support_level
@@ -1525,7 +1535,7 @@ class UnitObject(object):
 
         # Handle hybrid miss
         if hybrid:
-            damage = int(damage * to_hit/100.0) 
+            damage = int(damage * hybrid/100.0) 
 
         # Can't do negative damage
         return max(0, damage)
@@ -1585,7 +1595,7 @@ class UnitObject(object):
             for status in self.status_effects:
                 if status.conditional_crit_hit and eval(status.conditional_crit_hit.conditional, globals(), locals()):
                     new_hit = int(eval(status.conditional_crit_hit.value, globals(), locals()))
-                    crtrate += new_hit
+                    critrate += new_hit
             for status in target.status_effects:
                 if status.conditional_crit_avoid and eval(status.conditional_crit_avoid.conditional, globals(), locals()):
                     new_avoid = int(eval(status.conditional_crit_avoid.value, globals(), locals()))
@@ -1674,16 +1684,23 @@ class UnitObject(object):
         return base
 
     def defense(self, gameStateObj):
-        return self.stats['DEF'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
+        defense = self.stats['DEF'] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
+        if cf.CONSTANTS['support']:
+            defense += self.get_support_bonuses(gameStateObj)[1]
+        return defense
 
     def resistance(self, gameStateObj):
         return self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1]
 
     def mixed_defense(self, gameStateObj):
-        return self.stats['DEF'] + self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
+        defense = self.stats['DEF'] + self.stats['RES'] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
+        if cf.CONSTANTS['support']:
+            defense += self.get_support_bonuses(gameStateObj)[1] 
+        return defense
 
     def get_rating(self):
-        return (self.stats['HP'] - 10)/2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + self.stats['SPD'] + self.stats['LCK']/2 + self.stats['DEF'] + self.stats['RES']
+        return (self.stats['HP'] - 10)/2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \
+            self.stats['SPD'] + self.stats['LCK']/2 + self.stats['DEF'] + self.stats['RES']
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj):
@@ -1694,9 +1711,6 @@ class UnitObject(object):
         self.hasAttacked = True
         self.finished = True
         self.sprite.change_state('normal')
-        #if self.team.startswith('enemy'):
-        #    gameStateObj.boundary_manager.arrive(self, gameStateObj)
-        #self.isActive = 0 Causes problems with locking and unlocking...
 
     def isDone(self):
         return self.finished
@@ -1707,9 +1721,9 @@ class UnitObject(object):
     def unlock_active(self):
         self.isActive -= 1
         self.isActive = max(0, self.isActive)
-        #if self.isActive < 0:
-            #logger.error('Something let go of this unit without grabbing hold first!')
-            #self.isActive = 0
+        # if self.isActive < 0:
+        #     logger.error('Something let go of this unit without grabbing hold first!')
+        #     self.isActive = 0
         
     def reset(self):
         self.hasMoved = False # Controls whether unit has moved already. Unit can still move back.
@@ -1770,7 +1784,7 @@ class UnitObject(object):
                 item.c_uses.uses = item.c_uses.total_uses
         # Units should have their positions NULLED
         self.position = None
-        #self.records = self.default_records()
+        # self.records = self.default_records()
         # Units should be reset
         self.reset()
 
@@ -1819,19 +1833,19 @@ class UnitObject(object):
                        'stats': [stat.serialize() for name, stat in self.stats.iteritems()],
                        'movement_group': self.movement_group}
         # Return all extraneous statuses
-        #for item in items:
+        # for item in items:
         #    self.add_item(item)
-        #self.arrive(gameStateObj, serializing=True)
+        # self.arrive(gameStateObj, serializing=True)
         return serial_dict
 
     def acquire_tile_status(self, gameStateObj, force=False):
-        if self.position and (force or not 'flying' in self.status_bundle):
+        if self.position and (force or 'flying' not in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
                 if status not in self.status_effects:
                     StatusObject.HandleStatusAddition(status, self, gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):
-        if self.position and (force or not 'flying' in self.status_bundle):
+        if self.position and (force or 'flying' not in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
                 StatusObject.HandleStatusRemoval(status, self, gameStateObj)
 
@@ -1852,7 +1866,7 @@ class UnitObject(object):
             gameStateObj.grid_manager.reset_aura(aura)
             positions = Utility.find_manhattan_spheres(range(1, aura.aura_range+1), self.position)
             positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
-            if CONSTANTS['aura_los']:
+            if cf.CONSTANTS['aura_los']:
                 positions = Utility.line_of_sight([self.position], positions, aura.aura_range, gameStateObj)
             for pos in positions:
                 gameStateObj.grid_manager.add_aura_node(pos, aura)
@@ -1916,7 +1930,7 @@ class UnitObject(object):
             unit.leave(gameStateObj)
             unit.position = None
         self.hasAttacked = True
-        if not 'savior' in self.status_bundle:
+        if 'savior' not in self.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self, gameStateObj)
 
     def drop(self, position, gameStateObj):
@@ -1928,14 +1942,14 @@ class UnitObject(object):
         TRVunit.arrive(gameStateObj)
         if Utility.calculate_distance(self.position, position) == 1:
             TRVunit.sprite.set_transition('fake_in')
-            TRVunit.sprite.spriteOffset = [(self.position[0] - position[0])*TILEWIDTH, (self.position[1] - position[1])*TILEHEIGHT]
+            TRVunit.sprite.spriteOffset = [(self.position[0] - position[0])*GC.TILEWIDTH, (self.position[1] - position[1])*GC.TILEHEIGHT]
         self.unrescue(gameStateObj)
 
     def give(self, unit, gameStateObj):
         unit.TRV = self.TRV
         unit.strTRV = self.strTRV
         self.hasAttacked = True
-        if not 'savior' in self.status_bundle:
+        if 'savior' not in self.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), unit, gameStateObj)
         self.unrescue(gameStateObj)
 
@@ -1943,7 +1957,7 @@ class UnitObject(object):
         self.TRV = unit.TRV
         self.strTRV = unit.strTRV
         self.hasTraded = True # Can no longer do everything
-        if not 'savior' in self.status_bundle:
+        if 'savior' not in self.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self, gameStateObj)
         unit.unrescue(gameStateObj)
 
@@ -1970,9 +1984,9 @@ class UnitObject(object):
         gameStateObj.stateMachine.changeState('dialogue')
 
         # Use up skeleton key if it was what was used
-        if not 'locktouch' in self.status_bundle:
+        if 'locktouch' not in self.status_bundle:
             for item in self.items:
-                if item.name == "Skeleton Key":
+                if item.unlock:
                     item.uses.decrement()
                     if item.uses.uses <= 0:
                         self.remove_item(item)
@@ -2082,23 +2096,23 @@ class UnitObject(object):
 
     def play_movement_sound(self, gameStateObj):
         if 'flying' in self.status_bundle:
-            SOUNDDICT['Heavy Wing Flap'].play(-1)
+            GC.SOUNDDICT['Heavy Wing Flap'].play(-1)
         elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
-            SOUNDDICT['Horse Steps'].play(-1)
+            GC.SOUNDDICT['Horse Steps'].play(-1)
         elif 'Armor' in self.tags or self.movement_group == 1:
-            SOUNDDICT['Heavy Foot Steps 1'].play(-1)
+            GC.SOUNDDICT['Heavy Foot Steps 1'].play(-1)
         else:
-            SOUNDDICT['Light Foot Steps 1'].play(-1)
+            GC.SOUNDDICT['Light Foot Steps 1'].play(-1)
 
     def stop_movement_sound(self, gameStateObj):
         if 'flying' in self.status_bundle:
-            SOUNDDICT['Heavy Wing Flap'].stop()
+            GC.SOUNDDICT['Heavy Wing Flap'].stop()
         elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
-            SOUNDDICT['Horse Steps'].stop()
-        elif 'Armor' in self.tags  or self.movement_group == 1:
-            SOUNDDICT['Heavy Foot Steps 1'].stop()
+            GC.SOUNDDICT['Horse Steps'].stop()
+        elif 'Armor' in self.tags or self.movement_group == 1:
+            GC.SOUNDDICT['Heavy Foot Steps 1'].stop()
         else:
-            SOUNDDICT['Light Foot Steps 1'].stop()
+            GC.SOUNDDICT['Light Foot Steps 1'].stop()
 
     def handle_miracle(self, gameStateObj):
         self.isDying = False
@@ -2110,38 +2124,42 @@ class UnitObject(object):
                     status.count.count -= 1
                     miracle_status = status
                     break
-        #StatusObject.HandleStatusAddition(StatusObject.statusparser('Clear'), self, gameStateObj)
+        # StatusObject.HandleStatusAddition(StatusObject.statusparser('Clear'), self, gameStateObj)
         gameStateObj.banners.append(Banner.miracleBanner(self, miracle_status))
         gameStateObj.stateMachine.changeState('itemgain')
                                 
     # This obviously has some important purpose. Should write that purpose when I remember why i did this.
-    def __getstate__(self): return self.__dict__
-    def __setstate__(self, d): self.__dict__.update(d)
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
 
 # === UPDATE ==================================================================       
     def update(self, gameStateObj):
         currentTime = Engine.get_time()
 
-        ### GAMELOGIC
-        ### MOVE
-        if self in gameStateObj.moving_units and currentTime - self.lastMoveTime > CONSTANTS['Unit Speed'] and gameStateObj.stateMachine.getState() == 'movement':
-            #logger.debug('Moving!')
-            if self.path: #and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
+        # === GAMELOGIC ===
+        # === MOVE ===
+        if self in gameStateObj.moving_units and currentTime - self.lastMoveTime > cf.CONSTANTS['Unit Speed'] and \
+                gameStateObj.stateMachine.getState() == 'movement':
+            # logger.debug('Moving!')
+            if self.path: # and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
                 new_position = self.path.pop()
                 if self.position != new_position:
-                    self.movement_left -= (CONSTANTS['normal_movement'] if 'flying' in self.status_bundle else gameStateObj.map.tiles[new_position].get_mcost(self))
+                    self.movement_left -= (cf.CONSTANTS['normal_movement'] if 'flying' in self.status_bundle else gameStateObj.map.tiles[new_position].get_mcost(self))
                 self.position = new_position
                 # Camera auto-follow
                 if not gameStateObj.cursor.camera_follow:
                     gameStateObj.cursor.camera_follow = self.id
                 if gameStateObj.cursor.camera_follow == self.id:
                     # Don't do this for the AI -- Camera movement is handled by the AI state instead
-                    #if not gameStateObj.stateMachine.inList('ai'):
+                    # if not gameStateObj.stateMachine.inList('ai'):
                     #    logger.debug('Setting Position')
                     gameStateObj.cursor.setPosition(self.position, gameStateObj)
             else: # Path is empty, which means we are done
                 gameStateObj.moving_units.discard(self)
-                #self.sprite.change_state('normal', gameStateObj)
+                # self.sprite.change_state('normal', gameStateObj)
                 self.unlock_active()
                 # Add status for new position
                 self.arrive(gameStateObj)
@@ -2158,14 +2176,14 @@ class UnitObject(object):
         if self.position:
             self.sprite.update(gameStateObj)
 
-        ### UP and DOWN Arrow COUNTER logic - For itemAdvantageArrows
+        # === UP and DOWN Arrow COUNTER logic - For itemAdvantageArrows
         if currentTime - self.lastArrowUpdate > 130:
             self.arrowCounter += 1
             if self.arrowCounter >= len(self.arrowAnim):
                 self.arrowCounter = 0
             self.lastArrowUpdate = currentTime
 
-        ### Timer for x2 symbol movement
+        # === Timer for x2 symbol movement
         if currentTime - self.lastx2UpdateTime > 50:
             self.lastx2UpdateTime = currentTime
             self.x2_counter += 1
@@ -2176,7 +2194,7 @@ class UnitObject(object):
         if self.isDying and gameStateObj.stateMachine.getState() == 'dying':
             if self.deathCounter == 0: # If we just started dying
                 self.sprite.set_transition('fade_out')
-                SOUNDDICT['Death'].play()
+                GC.SOUNDDICT['Death'].play()
             self.deathCounter += 1
             if self.deathCounter > 27: # DEAD
                 self.die(gameStateObj)

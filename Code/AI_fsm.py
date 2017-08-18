@@ -28,9 +28,9 @@
     - 1: Look up to my Movement*2 + maximum range of item away
     - 2: Look at entire map
 """
-from GlobalConstants import *
-from configuration import *
-import UnitObject, TileObject, Interaction, Dialogue, Utility, AStar, Engine
+import GlobalConstants as GC
+import configuration as cf
+import UnitObject, Interaction, Dialogue, Utility, AStar, Engine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -41,8 +41,8 @@ logger = logging.getLogger(__name__)
 QUICK_MOVE = True
 
 class AI(object):
-    def __init__(self, unit, ai1=0, ai2=0, team_ignore=[], name_ignore=[], \
-        view_range=1, ai_priority=20, ai_group=0):
+    def __init__(self, unit, ai1=0, ai2=0, team_ignore=[], name_ignore=[],
+                 view_range=1, ai_priority=20, ai_group=0):
         self.unit = unit
         self.ai1_state = 0
         self.ai2_state = 0
@@ -91,12 +91,13 @@ class AI(object):
 
         # Can do more than one pass through if it doesn't take much time (half of a frame)
         logger.debug('AI Thinking...')
-        while Engine.get_true_time() - time1 < FRAMERATE/2:
+        while Engine.get_true_time() - time1 < GC.FRAMERATE/2:
             logger.debug('Current State: %s', self.state)
 
             if self.state == 'Init':
                 self.start_time = Engine.get_time()
-                logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, Range: %s', self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.range)
+                logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, Range: %s', 
+                             self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.range)
                 self.clean_up()
                 if self.ai1_state == 2:
                     self.valid_moves = {self.unit.position}
@@ -110,12 +111,12 @@ class AI(object):
                 self.state = 'Steal'
 
             elif self.state == 'Steal':
-                if not self.ai1_state in [0, 5, 6] and 'steal' in self.unit.status_bundle and len(self.unit.items) < CONSTANTS['max_items']:
+                if self.ai1_state not in (0, 5, 6) and 'steal' in self.unit.status_bundle and len(self.unit.items) < cf.CONSTANTS['max_items']:
                     success = self.run_steal_ai(gameStateObj, self.valid_moves)
                 self.state = 'Attack_Init'
 
             elif self.state == 'Attack_Init':
-                if not self.ai1_state in [0, 4, 5, 6]:
+                if not self.ai1_state not in (0, 4, 5, 6):
                     self.inner_ai = Primary_AI(self.unit, self.valid_moves, self.team_ignore, self.name_ignore, gameStateObj)
                     if self.inner_ai.skip_flag:
                         self.state = 'Loot'
@@ -133,7 +134,7 @@ class AI(object):
                     self.state = 'Loot'
             
             elif self.state == 'Loot':
-                if self.ai1_state in [3, 4, 5, 6, 7]:
+                if self.ai1_state in (3, 4, 5, 6, 7):
                     success = self.run_loot_ai(gameStateObj, self.valid_moves)
                 self.state = 'Secondary_Init'
 
@@ -141,21 +142,30 @@ class AI(object):
                 if self.ai2_state == 0:
                     self.available_targets = []
                 elif self.ai2_state == 1:
-                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfEnemy(unit) and unit.team not in self.team_ignore and unit.name not in self.name_ignore]
+                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfEnemy(unit) and 
+                                              unit.team not in self.team_ignore and unit.name not in self.name_ignore]
                 elif self.ai2_state == 2:
-                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfAlly(unit) and unit is not self.unit and unit.team not in self.team_ignore and unit.name not in self.name_ignore]
+                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfAlly(unit) and
+                                              unit is not self.unit and unit.team not in self.team_ignore and unit.name not in self.name_ignore]
                 elif self.ai2_state == 3:
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() if 'Village' in gameStateObj.map.tile_info_dict[position] or 'HP' in gameStateObj.map.tile_info_dict[position]]
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                                              if 'Village' in gameStateObj.map.tile_info_dict[position] or
+                                              'HP' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 4: 
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() if 'Locked' in gameStateObj.map.tile_info_dict[position]]
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                                              if 'Locked' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 5:
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() if 'Escape' in gameStateObj.map.tile_info_dict[position]]
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() 
+                                              if 'Escape' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 6:
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() if 'ThiefEscape' in gameStateObj.map.tile_info_dict[position]]
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                                              if 'ThiefEscape' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 7:
-                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and 'Boss' in unit.tags and unit.team not in self.team_ignore and unit.name not in self.name_ignore]
+                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and 'Boss' in unit.tags and
+                                              unit.team not in self.team_ignore and unit.name not in self.name_ignore]
                 else:
-                    self.available_targets = [unit for unit in gameStateObj.allunits if (unit.name == self.ai2_state or unit.event_id == self.ai2_state) and unit.position]
+                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and
+                                              (unit.name == self.ai2_state or unit.event_id == self.ai2_state)]
 
                 self.inner_ai = Secondary_AI(self.available_targets, self.unit, self.range, gameStateObj)
                 self.state = 'Secondary'
@@ -173,18 +183,13 @@ class AI(object):
                 # Filter using range
                 if self.range == 0 or self.range == 1:
                     self.available_targets = []
-                #elif self.range == 1:
-                #    unit_range = self.unit.movement*2/CONSTANTS['normal_movement'] + self.unit.getMaxRange()
-                #    self.available_targets = [unit for unit in self.available_targets if Utility.calculate_distance(unit.position, self.unit.position) <= unit_range]
-                #else:
-                #    self.available_targets = self.available_targets
                 success = self.run_tertiary_ai(self.valid_moves, self.available_targets, gameStateObj)
                 self.state = 'Done'
 
-            #if OPTIONS['debug']: print('AI Time Taken:', Engine.get_time() - time1)
+            # if cf.OPTIONS['debug']: print('AI Time Taken:', Engine.get_time() - time1)
 
             if success or self.state == 'Done':
-                #print('AI Time Taken:', Engine.get_time() - self.start_time)
+                # print('AI Time Taken:', Engine.get_time() - self.start_time)
                 self.did_something = success
                 self.state = 'Init'
                 return True
@@ -232,7 +237,7 @@ class AI(object):
                     if self.item_to_use.weapon or self.item_to_use.spell:
                         self.unit.displaySingleAttack(gameStateObj, self.target_to_interact_with, self.item_to_use)
                     defender, splash = Interaction.convert_positions(gameStateObj, self.unit, self.unit.position, self.target_to_interact_with, self.item_to_use)
-                    #print('AI', self.unit, defender, self.unit.position, defender.position)
+                    # print('AI', self.unit, defender, self.unit.position, defender.position)
                     gameStateObj.combatInstance = Interaction.start_combat(self.unit, defender, self.target_to_interact_with, splash, self.item_to_use)
                     gameStateObj.stateMachine.changeState('combat')
                     if isinstance(defender, UnitObject.UnitObject) and self.unit.checkIfEnemy(defender):
@@ -252,7 +257,8 @@ class AI(object):
                     gameStateObj.map.destroy(gameStateObj.map.tiles[self.target_to_interact_with], gameStateObj)
                 elif 'Locked' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
                     locked_num = gameStateObj.map.tile_info_dict[self.target_to_interact_with]['Locked']
-                    unlock_script = Dialogue.Dialogue_Scene('Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt', self.unit, locked_num, self.target_to_interact_with)
+                    script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt'
+                    unlock_script = Dialogue.Dialogue_Scene(script_name, self.unit, locked_num, self.target_to_interact_with)
                     gameStateObj.message.append(unlock_script)
                     gameStateObj.stateMachine.changeState('dialogue')
                 elif 'Escape' or 'ThiefEscape' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
@@ -287,10 +293,10 @@ class AI(object):
 
     def check_dismount(self, gameStateObj):
         """Determines if unit should dismount from land-based mount to traverse water"""
-        if self.unit.my_mount and not 'fleet_of_foot' in self.unit.status_bundle:
+        if self.unit.my_mount and 'fleet_of_foot' not in self.unit.status_bundle:
             adjtiles = self.unit.getAdjacentTiles(gameStateObj)
             # Determine which tile is closest to target
-            closest_tile = sorted(adjtiles, key=lambda pos:Utility.calculate_distance(self.target_to_interact_with, pos.position))[0]
+            closest_tile = sorted(adjtiles, key=lambda pos: Utility.calculate_distance(self.target_to_interact_with, pos.position))[0]
             if closest_tile.name in ['River', 'Coast', 'Bank', 'Floor']:
                 self.unit.dismount(closest_tile.position, gameStateObj)
             elif all(adjtile.name in ['Floor', 'Throne', 'Wall'] for adjtile in adjtiles):
@@ -333,7 +339,8 @@ class AI(object):
     def run_steal_ai(self, gameStateObj, valid_moves):
         max_tp = 0
         for move in valid_moves:
-            valid_targets = [unit for unit in self.unit.getStealTargets(gameStateObj, move) if self.unit.checkIfEnemy(unit) and unit.team not in self.team_ignore and unit.name not in self.name_ignore]
+            valid_targets = [unit for unit in self.unit.getStealTargets(gameStateObj, move) if self.unit.checkIfEnemy(unit) and
+                             unit.team not in self.team_ignore and unit.name not in self.name_ignore]
             for target in valid_targets:
                 for item in target.getStealables():
                     tp = (item.value * item.uses.uses) if item.uses else item.value 
@@ -345,8 +352,8 @@ class AI(object):
 
         if max_tp > 0:
             # If we've stolen everything possible, escape time -- team ignore is used to set limit
-            if len(self.unit.items) >= CONSTANTS['max_items'] or \
-                (self.team_ignore and len(self.unit.items) >= self.team_ignore[0]):
+            if len(self.unit.items) >= cf.CONSTANTS['max_items'] or \
+                    (self.team_ignore and len(self.unit.items) >= self.team_ignore[0]):
                 self.change_ai(6, 6)
             return True
         return False
@@ -354,22 +361,22 @@ class AI(object):
     # === LOOT AI ===
     def run_loot_ai(self, gameStateObj, valid_moves):
         if self.ai1_state == 3: # Village/HP terrain
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() \
-                                 if 'Village' in gameStateObj.map.tile_info_dict[position] \
-                                 or 'HP' in gameStateObj.map.tile_info_dict[position]]
+            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                                 if 'Village' in gameStateObj.map.tile_info_dict[position] or
+                                 'HP' in gameStateObj.map.tile_info_dict[position]]
             if not available_targets:
                 self.change_ai(1, 1)
         elif self.ai1_state == 4: # Chests/Doors
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() \
+            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
                                  if 'Locked' in gameStateObj.map.tile_info_dict[position]]
-            if not available_targets or len(self.unit.items) >= CONSTANTS['max_items'] \
+            if not available_targets or len(self.unit.items) >= cf.CONSTANTS['max_items'] \
                and (not self.team_ignore or len(self.unit.items) >= self.team_ignore[0]): # Leave
                 self.change_ai(6, 6)
         elif self.ai1_state == 5: # Escape
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() \
+            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
                                  if 'Escape' in gameStateObj.map.tile_info_dict[position]]
         if self.ai1_state in [6, 7]: # ThiefEscape
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() \
+            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
                                  if 'ThiefEscape' in gameStateObj.map.tile_info_dict[position]]
             if not available_targets:
                 self.change_ai(1, 1)
@@ -377,16 +384,17 @@ class AI(object):
         for move in valid_moves:
             for target in available_targets:
                 # Adjacent
-                if any(pattern in gameStateObj.map.tile_info_dict[target.position] for pattern in ['Locked', 'HP']) and Utility.calculate_distance(move, target.position) == 1:
+                if any(pattern in gameStateObj.map.tile_info_dict[target.position] for pattern in ('Locked', 'HP')) and \
+                        Utility.calculate_distance(move, target.position) == 1:
                     self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     if target.name in 'HP':
                         self.item_to_use = self.unit.getMainWeapon()
                     return True
                 # On top of
-                elif ('Locked' in gameStateObj.map.tile_info_dict[move] and target.name == 'Chest' or \
+                elif ('Locked' in gameStateObj.map.tile_info_dict[move] and target.name == 'Chest' or
                       any(pattern in gameStateObj.map.tile_info_dict[move] for pattern in ['Village', 'Escape', 'ThiefEscape'])) \
-                      and Utility.calculate_distance(move, target.position) == 0:
+                        and Utility.calculate_distance(move, target.position) == 0:
                     self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     return True
@@ -405,7 +413,7 @@ class AI(object):
                     avg_position[1] += unit.position[1]
                 avg_position[0] = avg_position[0]/len(available_targets)
                 avg_position[1] = avg_position[1]/len(available_targets)
-                self.position_to_move_to = sorted(valid_moves, key=lambda move:Utility.calculate_distance(avg_position, move))[0]
+                self.position_to_move_to = sorted(valid_moves, key=lambda move: Utility.calculate_distance(avg_position, move))[0]
                 return True
 """
 # === ATTACK AI ===
@@ -445,7 +453,7 @@ class Primary_AI(object):
 
         self.items = [item for item in self.unit.items if (item.weapon or item.spell) and self.unit.canWield(item) and not item.no_ai]
 
-        ### Determine if I can skip this unit's AI
+        # Determine if I can skip this unit's AI
         # Remove any items that only give statuses if there are no enemies nearby
         self.items = [i for i in self.items if not (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'])]
         # Remove any items that heal if there are no allies in need of healing nearby
@@ -455,9 +463,9 @@ class Primary_AI(object):
         if self.determine_skip(gameStateObj, closest_enemy_distance):
             self.skip_flag = True
             return
-        ### I guess I must proceed
+        # I guess I must proceed
 
-        ### Must have determined which mode you are using by now
+        # Must have determined which mode you are using by now
         self.item_index = 0
 
         self.valid_moves = list(valid_moves)
@@ -486,7 +494,7 @@ class Primary_AI(object):
             return True
         detrimental_items = [item for item in self.unit.items if (item.weapon or (item.spell and item.detrimental)) and self.unit.canWield(item)]
         if len(detrimental_items) == len(self.items):
-            max_range = max(max(item.RNG) for item in detrimental_items) + self.unit.stats['MOV']/CONSTANTS['normal_movement']
+            max_range = max(max(item.RNG) for item in detrimental_items) + self.unit.stats['MOV']/cf.CONSTANTS['normal_movement']
             if closest_enemy_distance > max_range:
                 return True
         return False
@@ -503,20 +511,22 @@ class Primary_AI(object):
     def get_valid_targets(self, gameStateObj):
         if self.item_index < len(self.items) and self.move_index < len(self.valid_moves):
             move = self.valid_moves[self.move_index]
-            self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], [move], team_ignore=self.team_ignore, name_ignore=self.name_ignore)
+            self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], [move], 
+                                                      team_ignore=self.team_ignore, name_ignore=self.name_ignore)
             if not QUICK_MOVE and 0 in self.items[self.item_index].RNG:
                 self.valid_targets.append(self.unit.position) # Hack to target self
         else:
             self.valid_targets = []
 
     def get_all_valid_targets(self, gameStateObj):
-        self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], self.valid_moves, team_ignore=self.team_ignore, name_ignore=self.name_ignore)
+        self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], self.valid_moves,
+                                                  team_ignore=self.team_ignore, name_ignore=self.name_ignore)
         if not QUICK_MOVE and 0 in self.items[self.item_index].RNG:
             self.valid_targets.append(self.unit.position) # Hack to target self
         logger.debug('Valid Targets: %s', self.valid_targets)
 
     def get_possible_moves(self, gameStateObj):
-        #logger.debug('%s %s %s %s', self.target_index, self.valid_targets, self.item_index, self.items)
+        # logger.debug('%s %s %s %s', self.target_index, self.valid_targets, self.item_index, self.items)
         if self.target_index < len(self.valid_targets) and self.item_index < len(self.items):
             # Given an item and a target, find all positions in valid_moves that I can strike the target at.
             a = Utility.find_manhattan_spheres(self.items[self.item_index].RNG, self.valid_targets[self.target_index])
@@ -566,7 +576,7 @@ class Primary_AI(object):
         return (False, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
 
     def run_2(self, gameStateObj):
-        #logger.debug('%s %s %s %s %s %s', self.move_index, self.target_index, self.item_index, self.possible_moves, self.valid_targets, self.items)
+        # logger.debug('%s %s %s %s %s %s', self.move_index, self.target_index, self.item_index, self.possible_moves, self.valid_targets, self.items)
         if self.item_index >= len(self.items):
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj, test=True)
@@ -581,7 +591,7 @@ class Primary_AI(object):
             self.move_index = 0
             self.target_index += 1
             self.possible_moves = self.get_possible_moves(gameStateObj)
-            #logger.debug('Possible Moves %s', self.possible_moves)
+            # logger.debug('Possible Moves %s', self.possible_moves)
         else:
             # Only check one move for each target if using an item with ai_speed_up
             # Otherwise it spends way too long trying every possible position to strike from
@@ -591,18 +601,18 @@ class Primary_AI(object):
                 move = self.possible_moves[self.move_index]
             target = self.valid_targets[self.target_index]
             item = self.items[self.item_index]
-            #logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
+            # logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
             # Only if we have line of sight, since we get every possible position to strike from
             # Determine whether we need line of sight
             los_flag = False
             if item.spell:
-                if CONSTANTS['spell_line_of_sight']:
+                if cf.CONSTANTS['spell_line_of_sight']:
                     if Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
                         los_flag = True
                 else:
                     los_flag = True
             else:
-                if CONSTANTS['line_of_sight']:
+                if cf.CONSTANTS['line_of_sight']:
                     if Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
                         los_flag = True
                 else:
@@ -660,7 +670,7 @@ class Primary_AI(object):
                 target_damage = Utility.clamp(target.compute_damage(self.unit, gameStateObj, target.getMainWeapon(), 'Defense')/float(self.unit.currenthp), 0, 1)
                 target_accuracy = Utility.clamp(target.compute_hit(self.unit, gameStateObj, target.getMainWeapon(), 'Defense')/100.0, 0, 1)
 
-            double = 1 if self.unit.stats['SPD'] >= target.stats['SPD'] + CONSTANTS['speed_to_double'] else 0
+            double = 1 if self.unit.stats['SPD'] >= target.stats['SPD'] + cf.CONSTANTS['speed_to_double'] else 0
             chance_i_kill_target_on_first = my_damage*my_accuracy if my_damage == 1 else 0
 
             if double and target_damage >= 1:
@@ -689,7 +699,7 @@ class Primary_AI(object):
             return 0
 
         # How far do I have to move -- really small. Only here to break ties
-        max_distance = self.unit.stats['MOV']/CONSTANTS['normal_movement']
+        max_distance = self.unit.stats['MOV']/cf.CONSTANTS['normal_movement']
         if max_distance > 0:
             distance_term = (max_distance - Utility.calculate_distance(move, self.orig_pos))/float(max_distance)
         else:
@@ -699,7 +709,8 @@ class Primary_AI(object):
         logger.debug("Offense: %s, Defense: %s, Status: %s, Distance: %s", offensive_term, defensive_term, status_term, distance_term)
         terms.append((offensive_term, 50))
         terms.append((status_term, 10))
-        terms.append((defensive_term*offensive_term, 40)) # Defensive term is modified by offensive term so that just being hard to damage does not mean you should do useless things.
+        # Defensive term is modified by offensive term so that just being hard to damage does not mean you should do useless things.
+        terms.append((defensive_term*offensive_term, 40))
         terms.append((distance_term, 1))
 
         return Utility.process_terms(terms)
@@ -795,10 +806,11 @@ class Secondary_AI(object):
 
         self.unit = unit
         self.range = view_range
-        self.double_move = self.unit.stats['MOV']*2 + self.unit.getMaxRange()*CONSTANTS['normal_movement']
+        self.double_move = self.unit.stats['MOV']*2 + self.unit.getMaxRange()*cf.CONSTANTS['normal_movement']
 
         self.grid = gameStateObj.grid_manager.get_grid(self.unit)
-        self.pathfinder = AStar.AStar(self.unit.position, None, self.grid, gameStateObj.map.width, gameStateObj.map.height, self.unit.team, 'pass_through' in self.unit.status_bundle)
+        self.pathfinder = AStar.AStar(self.unit.position, None, self.grid, gameStateObj.map.width, gameStateObj.map.height,
+                                      self.unit.team, 'pass_through' in self.unit.status_bundle)
 
         # Flags so we don't do things twice
         self.widen_flag = False # Determines if we've already widened our search
@@ -820,7 +832,7 @@ class Secondary_AI(object):
         """
         if self.available_targets:
             target = self.available_targets.pop()
-            #time1 = Engine.get_time()
+            # time1 = Engine.get_time()
             # Find a path to target
             my_path = None
             limit = self.double_move if not self.widen_flag else None
@@ -828,9 +840,9 @@ class Secondary_AI(object):
             # We didn't find a path, or the path was longer than double move, so ignore target and continue
             if not my_path:
                 logger.debug("No valid path to %s.", target.name)
-                # if OPTIONS['debug']: print("No valid path to this target.", target.name)
-                #time2 = Engine.get_time()
-                #print('No Path - Secondary AI Time', time2 - time1)
+                # if cf.OPTIONS['debug']: print("No valid path to this target.", target.name)
+                # time2 = Engine.get_time()
+                # print('No Path - Secondary AI Time', time2 - time1)
                 return False
             # We found a path
             tp = self.compute_priority_secondary(target, gameStateObj, len(my_path))
@@ -839,8 +851,8 @@ class Secondary_AI(object):
                 self.max_tp = tp
                 self.best_target = target
                 self.best_path = my_path
-            #time2 = Engine.get_time()
-            #print('Found Path - Secondary AI Time', time2 - time1)
+            # time2 = Engine.get_time()
+            # print('Found Path - Secondary AI Time', time2 - time1)
 
         elif self.best_target:
             # So we have the position I will move to.

@@ -32,11 +32,13 @@ def easing(current_time, begin, change, total_time):
 
 # === FINDS MAX VALUE ==================================================
 def key_with_max_val(d):
-     """ a) create a list of the dict's keys and values; 
-         b) return the key with the max value"""  
-     v=list(d.values())
-     k=list(d.keys())
-     return k[v.index(max(v))]
+    """
+    a) create a list of the dict's keys and values; 
+    b) return the key with the max value
+    """  
+    v = list(d.values())
+    k = list(d.keys())
+    return k[v.index(max(v))]
 
 # === GREATER THAN OR EQUAL ============================================
 def gte(a, b):
@@ -49,7 +51,9 @@ def gt(a, b):
     return a > b
 
 # === RAYTRACE ALGORITHM FOR TAXICAB GRID ==============================
-def raytrace((x0, y0), (x1, y1)):
+def raytrace(old, new):
+    x0, y0 = old
+    x1, y1 = new
     tiles = []
     dx = abs(x1 - x0)
     dy = abs(y1 - y0)
@@ -107,7 +111,7 @@ def process_terms(terms):
     weight_sum = sum([term[1] for term in terms])
     if weight_sum <= 0:
         return 0
-    #if OPTIONS['debug']:
+    # if cf.OPTIONS['debug']:
     #    print('Processed Terms: ', [term[0] for term in terms])
     return sum([float(term[0]*term[1]) for term in terms])/weight_sum 
 
@@ -156,8 +160,8 @@ def get_shell(ValidMoves, potentialRange, tile_map):
     else:
         ValidAttacks = set()
         for validmove in ValidMoves:
-            ValidAttacks |= Utility.find_manhattan_spheres(potentialRange, validmove)
-        return [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
+            ValidAttacks |= find_manhattan_spheres(potentialRange, validmove)
+        return [pos for pos in ValidAttacks if tile_map.check_bounds(pos)]
 
 def farthest_away_pos(unit, valid_moves, all_units):
     # get farthest away position from general direction of enemy units
@@ -179,10 +183,6 @@ def farthest_away_pos(unit, valid_moves, all_units):
 def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
     if FAST_LOS:
         return LOS.line_of_sight(source_pos, dest_pos, max_range, gameStateObj.map.opacity_map, gameStateObj.map.height)
-    #print('Source:', len(source_pos), source_pos)
-    #print('Dest:', len(dest_pos), dest_pos)
-    #import time
-    #time1 = time.clock()
 
     # This is important so we can change the values of this while we iterate over it.
     class SimpleTile(object):
@@ -269,7 +269,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
         # This one is ~3-6 times faster than get_line1
         if start == end:
             return True
-        #SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
+        # SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
         # Setup initial conditions
         x1, y1 = start
         x2, y2 = end
@@ -388,9 +388,6 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
     for pos, tile in all_tiles.iteritems():
         if tile.visibility == 'unknown':
             for s_pos in source_pos:
-                #x_1, y_1 = s_pos
-                #x_2, y_2 = pos
-                #if calculate_distance(pos, s_pos) <= max_range and any(get_line3((x_1*3+x, y_1*3+y), (x_2*3+1, y_2*3+1)) for (x, y) in [(0, 0), (2, 0), (0, 2), (2, 2)]):
                 if calculate_distance(pos, s_pos) <= max_range and get_line2(s_pos, pos):
                     tile.visibility = 'lit'
                     break
@@ -398,7 +395,7 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
                 tile.visibility = 'dark'
 
     lit_tiles = [pos for pos in dest_pos if all_tiles[pos].visibility != 'dark']
-    #print(time.clock() - time1)
+    # print(time.clock() - time1)
     return lit_tiles
 
 if __name__ == '__main__':

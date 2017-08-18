@@ -1,31 +1,33 @@
 # Tests mandatory Dialogue
-import os, time
+import os
 import pstats
 import cProfile
 
 import pygame
 import pyautogui
-pyautogui.PAUSE = 0
 
 import Code.GlobalConstants as GC
-DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))
 import Code.SaveLoad as SaveLoad
 import Code.GameStateObj as GameStateObj
-import Code.StateMachine as StateMachine
 import Code.Dialogue as Dialogue
 import Code.Engine as Engine
 
 import logging
+
+pyautogui.PAUSE = 0
+GC.DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))
+
 my_level = logging.DEBUG
-logging.basicConfig(filename='Tests/debug.log.test', filemode='w', level=my_level, disable_existing_loggers=False, format='%(levelname)8s:%(module)20s: %(message)s')
+logging.basicConfig(filename='Tests/debug.log.test', filemode='w', level=my_level,
+                    disable_existing_loggers=False, format='%(levelname)8s:%(module)20s: %(message)s')
 
 def main():
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
     gameStateObj.build_new()
-    scripts = ['preBase', 'in_base_', 'narration', 'intro', 'prep', 'turnChange', 'move', \
+    scripts = ['preBase', 'in_base_', 'narration', 'intro', 'prep', 'turnChange', 'move',
                'menu', 'attack', 'interact']
-    for num in range(0, GC.CONSTANTS['num_levels']):
+    for num in range(0, GC.cf.CONSTANTS['num_levels']):
         print('Level: %s'%num)
         levelfolder = 'Data/Level' + str(num)
         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
@@ -58,7 +60,7 @@ def run(gameStateObj, metaDataObj, fp):
             mapSurf, repeat = gameStateObj.stateMachine.update(eventList, gameStateObj, metaDataObj)
             while repeat:
                 mapSurf, repeat = gameStateObj.stateMachine.update(eventList, gameStateObj, metaDataObj)
-            DISPLAYSURF.blit(mapSurf, (0, 0))
+            GC.DISPLAYSURF.blit(mapSurf, (0, 0))
             pygame.display.update()
 
 if __name__ == '__main__':

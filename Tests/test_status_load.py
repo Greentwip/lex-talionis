@@ -3,7 +3,6 @@ import os
 import pstats
 import cProfile
 
-#pygame.display.set_mode((600, 400))
 import Code.GlobalConstants as GC
 import Code.StatusObject as StatusObject
 

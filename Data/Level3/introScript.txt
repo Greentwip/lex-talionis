@@ -37,7 +37,7 @@ remove_background
 t;2
 map_pan
 set_cursor;Ophie;force_hold
-if;OPTIONS['Display Hints']
+if;cf.OPTIONS['Display Hints']
 	s;Narrator;You have gained two new allies, Theo and Renae.{w};auto;hint
 	set_cursor;Theo;force_hold
 	disp_cursor;1

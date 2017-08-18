@@ -1,5 +1,5 @@
 # moveScript 1
-if;OPTIONS['Display Hints'] and gameStateObj.turncount == 1
+if;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 	if;not 'tutorial_nia' in gameStateObj.event_triggers
 		if;self.optionalunit.name == 'Nia'
 			fake_cursor;5,6

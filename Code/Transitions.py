@@ -3,31 +3,34 @@
 import os, time
 
 # Custom imports
-from GlobalConstants import *
-from configuration import *
+import GlobalConstants as GC
+import configuration as cf
 import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue, Engine, Image_Modification, Weather
 
+import logging
+logger = logging.getLogger(__name__)
+
 def create_title(text, background='DarkMenu'):
-    title_surf = IMAGESDICT[background].copy()
-    title_pos = WINWIDTH/2 - title_surf.get_width()/2, 21 - title_surf.get_height()/2
-    center_pos = title_surf.get_width()/2 - BASICFONT.size(text)[0]/2, title_surf.get_height()/2 - BASICFONT.size(text)[1]/2
-    MenuFunctions.OutlineFont(BASICFONT, text, title_surf, colorDict['off_white'], colorDict['off_black'], center_pos)
+    title_surf = GC.IMAGESDICT[background].copy()
+    title_pos = GC.WINWIDTH/2 - title_surf.get_width()/2, 21 - title_surf.get_height()/2
+    center_pos = title_surf.get_width()/2 - GC.BASICFONT.size(text)[0]/2, title_surf.get_height()/2 - GC.BASICFONT.size(text)[1]/2
+    MenuFunctions.OutlineFont(GC.BASICFONT, text, title_surf, GC.COLORDICT['off_white'], GC.COLORDICT['off_black'], center_pos)
     return title_surf, title_pos
 
 class Button(object):
     def __init__(self, height, pos, key):
-        self.image = Engine.subsurface(IMAGESDICT['Buttons'], (0, height*16, 16, 16))
+        self.image = Engine.subsurface(GC.IMAGESDICT['Buttons'], (0, height*16, 16, 16))
         self.pos = pos
         self.key = key
 
     def draw(self, surf):
         surf.blit(self.image, self.pos)
-        FONT['text_blue'].blit(Engine.get_key_name(OPTIONS[self.key]), surf, (self.pos[0] + 18, self.pos[1]))
+        GC.FONT['text_blue'].blit(Engine.get_key_name(cf.OPTIONS[self.key]), surf, (self.pos[0] + 18, self.pos[1]))
 
 class TimeDisplay(object):
     def __init__(self):
         self.image = MenuFunctions.CreateBaseMenuSurf((128, 24), 'NoirMessageWindow')
-        self.pos = [-128, WINHEIGHT-24]
+        self.pos = [-128, GC.WINHEIGHT-24]
         self.state = 'right'
 
     def draw(self, surf, real_time):
@@ -44,7 +47,7 @@ class TimeDisplay(object):
         if not self.state == 'dead':
             surf.blit(self.image, self.pos)
             str_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(real_time))
-            FONT['text_white'].blit(str_time, surf, (self.pos[0] + 4, self.pos[1] + 4))
+            GC.FONT['text_white'].blit(str_time, surf, (self.pos[0] + 4, self.pos[1] + 4))
 
 class Logo(object):
     def __init__(self, image, height, center):
@@ -72,7 +75,7 @@ class Logo(object):
 
 def load_saves():
     save_slots = []
-    for num in range(0, int(CONSTANTS['save_slots'])):
+    for num in range(0, int(cf.CONSTANTS['save_slots'])):
         meta_fp = 'Saves/SaveState' + str(num) + '.pmeta'
         ss = CustomObjects.SaveSlot(meta_fp, num)
         save_slots.append(ss)
@@ -80,34 +83,34 @@ def load_saves():
 
 def load_restarts():
     save_slots = []
-    for num in range(0, int(CONSTANTS['save_slots'])):
+    for num in range(0, int(cf.CONSTANTS['save_slots'])):
         meta_fp = 'Saves/Restart' + str(num) + '.pmeta'
         ss = CustomObjects.SaveSlot(meta_fp, num)
         save_slots.append(ss)
     return save_slots
 
 def remove_suspend():
-    if not OPTIONS['cheat'] and os.path.exists(SUSPEND_LOC):
-        os.remove(SUSPEND_LOC)
+    if not cf.OPTIONS['cheat'] and os.path.exists(GC.SUSPEND_LOC):
+        os.remove(GC.SUSPEND_LOC)
 
 class StartStart(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            gameStateObj.button_a = Button(4, (WINWIDTH - 64, WINHEIGHT - 16), 'key_SELECT')
-            gameStateObj.button_b = Button(5, (WINWIDTH - 32, WINHEIGHT - 16), 'key_BACK')
-            gameStateObj.logo = IMAGESDICT['Logo']
-            gameStateObj.press_start = Logo(IMAGESDICT['PressStart'], 16, (WINWIDTH/2, 4*WINHEIGHT/5))
+            gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
+            gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
+            gameStateObj.logo = GC.IMAGESDICT['Logo']
+            gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], 16, (GC.WINWIDTH/2, 4*GC.WINHEIGHT/5))
             gameStateObj.fog_bg = MenuFunctions.MovieBackground('fog', 33)
-            bounds = (-WINHEIGHT, WINWIDTH, WINHEIGHT, WINHEIGHT+16)
-            gameStateObj.fog_particles = Weather.Weather('Smoke', .075, bounds, (TILEX, TILEY))
+            bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
+            gameStateObj.fog_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
             # Wait until saving thread has finished
             if hasattr(gameStateObj, 'saving_thread'):
                 gameStateObj.saving_thread.join()
-            #if not hasattr(gameStateObj, 'save_slots') or not gameStateObj.save_slots:
+            # if not hasattr(gameStateObj, 'save_slots') or not gameStateObj.save_slots:
             gameStateObj.save_slots = load_saves()
             gameStateObj.restart_slots = load_restarts()
             # Start music
-            Engine.music_thread.fade_in(MUSICDICT[CONSTANTS['music_main']])
+            Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_main']])
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -115,9 +118,9 @@ class StartStart(StateMachine.State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
-        if event == 'AUX' and OPTIONS['cheat']:
-            SOUNDDICT['Start'].play()
-            #selection = gameStateObj.save_slots[0]
+        if event == 'AUX' and cf.OPTIONS['cheat']:
+            GC.SOUNDDICT['Start'].play()
+            # selection = gameStateObj.save_slots[0]
             gameStateObj.build_new() # Make the gameStateObj ready for a new game
             gameStateObj.save_slot = 'DEBUG'
             gameStateObj.counters['level'] = 'DEBUG'
@@ -125,14 +128,14 @@ class StartStart(StateMachine.State):
             # Load the first level
             SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
             # Hardset the name of the first level
-            #gameStateObj.saveSlot = selection
+            # gameStateObj.saveSlot = selection
             gameStateObj.stateMachine.clear()
             gameStateObj.stateMachine.changeState('turn_change')
             gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
             return 'repeat'
         # Load most recent save
-        elif event == 'INFO' and OPTIONS['cheat']:
-            SOUNDDICT['Select 1'].play()
+        elif event == 'INFO' and cf.OPTIONS['cheat']:
+            GC.SOUNDDICT['Select 1'].play()
             import glob
             fps = glob.glob('Saves/*.pmeta')
             if not fps:
@@ -147,19 +150,19 @@ class StartStart(StateMachine.State):
                 levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
                 # Load the first level
                 SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
-            gameStateObj.transition_from = WORDS['Load Game']
+            gameStateObj.transition_from = cf.WORDS['Load Game']
             gameStateObj.stateMachine.changeState('start_wait')
             gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
             remove_suspend()
             return 'repeat'
         elif event:
-            SOUNDDICT['Start'].play()
+            GC.SOUNDDICT['Start'].play()
             gameStateObj.stateMachine.changeState('start_option')
             gameStateObj.stateMachine.changeState('transition_out')
             return
 
     def update(self, gameStateObj, metaDataObj):
-        #gameStateObj.logo.update()
+        # gameStateObj.logo.update()
         gameStateObj.press_start.update()
 
     def draw(self, gameStateObj, metaDataObj):
@@ -169,12 +172,12 @@ class StartStart(StateMachine.State):
         gameStateObj.fog_particles.draw(surf)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
-        #gameStateObj.logo.draw(surf)
-        surf.blit(gameStateObj.logo, (WINWIDTH/2 - gameStateObj.logo.get_width()/2, WINHEIGHT/2 - gameStateObj.logo.get_height()/2 - 20))
+        # gameStateObj.logo.draw(surf)
+        surf.blit(gameStateObj.logo, (GC.WINWIDTH/2 - gameStateObj.logo.get_width()/2, GC.WINHEIGHT/2 - gameStateObj.logo.get_height()/2 - 20))
         gameStateObj.press_start.draw(surf)
-        #pos = (WINWIDTH/2 - FONT['text_white'].size(CONSTANTS['attribution'])[0]/2, WINHEIGHT - 16)
-        #FONT['text_white'].blit(CONSTANTS['attribution'], surf, pos)
-        FONT['text_white'].blit(CONSTANTS['attribution'], surf, (4, WINHEIGHT - 16))
+        # pos = (GC.WINWIDTH/2 - GC.FONT['text_white'].size(cf.CONSTANTS['attribution'])[0]/2, GC.WINHEIGHT - 16)
+        # GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, pos)
+        GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, (4, GC.WINHEIGHT - 16))
         return surf
 
 class StartOption(StateMachine.State):
@@ -184,18 +187,18 @@ class StartOption(StateMachine.State):
             self.selection = None
             self.state = "transition_in"
             self.banner = None
-            self.position_x = -WINWIDTH/2
+            self.position_x = -GC.WINWIDTH/2
 
-            self.background = IMAGESDICT['BlackBackground']
+            self.background = GC.IMAGESDICT['BlackBackground']
             self.transition = 100
 
-            options = [WORDS['New Game'], WORDS['Extras']]
+            options = [cf.WORDS['New Game'], cf.WORDS['Extras']]
             # If there are any games to load...
             if any(ss.kind for ss in gameStateObj.save_slots):
-                options.insert(0, WORDS['Restart Level'])
-                options.insert(0, WORDS['Load Game'])
-            if os.path.exists(SUSPEND_LOC):
-                options.insert(0, WORDS['Continue'])
+                options.insert(0, cf.WORDS['Restart Level'])
+                options.insert(0, cf.WORDS['Load Game'])
+            if os.path.exists(GC.SUSPEND_LOC):
+                options.insert(0, cf.WORDS['Continue'])
             self.menu = MenuFunctions.MainMenu(options, 'DarkMenu')
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -206,25 +209,26 @@ class StartOption(StateMachine.State):
             event = gameStateObj.input_manager.process_input(eventList)
                             
             if event == 'DOWN':
-                SOUNDDICT['Select 6'].play()
+                GC.SOUNDDICT['Select 6'].play()
                 self.menu.moveDown()
             elif event == 'UP':
-                SOUNDDICT['Select 6'].play()
+                GC.SOUNDDICT['Select 6'].play()
                 self.menu.moveUp()
 
             elif event == 'BACK':
-                SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.changeState('start_start')
                 gameStateObj.stateMachine.changeState('transition_out')
 
             elif event == 'SELECT':
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
                 self.selection = self.menu.getSelection()
-                if self.selection == WORDS['Continue']:
+                if self.selection == cf.WORDS['Continue']:
                     self.state = 'wait'
-                elif os.path.exists(SUSPEND_LOC) and not self.banner and self.selection in [WORDS['Load Game'], WORDS['Restart Level'], WORDS['New Game']]:
-                    SOUNDDICT['Select 2'].play()
-                    if self.selection == WORDS['New Game']:
+                elif os.path.exists(GC.SUSPEND_LOC) and not self.banner and \
+                        self.selection in (cf.WORDS['Load Game'], cf.WORDS['Restart Level'], cf.WORDS['New Game']):
+                    GC.SOUNDDICT['Select 2'].play()
+                    if self.selection == cf.WORDS['New Game']:
                         text = 'Starting a new game will remove suspend!'
                         width = 200
                         position = (6, 6)
@@ -234,45 +238,39 @@ class StartOption(StateMachine.State):
                         position = (4, 6)
                     self.banner = MenuFunctions.CreateBaseMenuSurf((width, 24), 'DarkMenuBackground')
                     self.banner = Image_Modification.flickerImageTranslucent(self.banner, 10)
-                    MenuFunctions.OutlineFont(BASICFONT, text, self.banner, colorDict['off_white'], colorDict['off_black'], position)
-                elif self.selection == WORDS['New Game']:
+                    MenuFunctions.OutlineFont(GC.BASICFONT, text, self.banner, GC.COLORDICT['off_white'], GC.COLORDICT['off_black'], position)
+                elif self.selection == cf.WORDS['New Game']:
                     self.banner = None
                     gameStateObj.stateMachine.changeState('start_mode')
                     gameStateObj.stateMachine.changeState('transition_out')
                 else:
                     self.banner = None
                     self.state = "transition_out"
-                #elif self.selection == WORDS['New Game']:
-                #    self.state = "wait"
-
-                    #gameStateObj.stateMachine.changeState('start_wait')
-                    #gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
-                    #return 'repeat'
             
     def update(self, gameStateObj, metaDataObj):
-        #gameStateObj.logo.update()
+        # gameStateObj.logo.update()
         if self.menu:
             self.menu.update()
 
         # Transition out
         if self.state == 'transition_in':
             self.position_x += 20
-            if self.position_x >= WINWIDTH/2:
-                self.position_x = WINWIDTH/2
+            if self.position_x >= GC.WINWIDTH/2:
+                self.position_x = GC.WINWIDTH/2
                 self.state = "normal"
 
         elif self.state == 'transition_out':
             self.position_x -= 20
-            if self.position_x <= -WINWIDTH/2:
-                self.position_x = -WINWIDTH/2
-                if self.selection == WORDS['Load Game']:
+            if self.position_x <= -GC.WINWIDTH/2:
+                self.position_x = -GC.WINWIDTH/2
+                if self.selection == cf.WORDS['Load Game']:
                     gameStateObj.stateMachine.changeState('start_load')
-                elif self.selection == WORDS['Restart Level']:
+                elif self.selection == cf.WORDS['Restart Level']:
                     gameStateObj.stateMachine.changeState('start_restart')
-                elif self.selection == WORDS['Extras']:
+                elif self.selection == cf.WORDS['Extras']:
                     gameStateObj.stateMachine.changeState('start_extras')
-                elif self.selection == WORDS['New Game']:
-                    #gameStateObj.stateMachine.changeState('start_new')
+                elif self.selection == cf.WORDS['New Game']:
+                    # gameStateObj.stateMachine.changeState('start_new')
                     gameStateObj.stateMachine.changeState('start_mode')
                     gameStateObj.stateMachine.changeState('transition_out')
                 self.state = 'transition_in'
@@ -286,36 +284,29 @@ class StartOption(StateMachine.State):
 
     def continue_suspend(self, gameStateObj, metaDataObj):
         # gameStateObj.activeMenu = None # Remove menu
-        suspend = CustomObjects.SaveSlot(SUSPEND_LOC, 'suspend')
+        suspend = CustomObjects.SaveSlot(GC.SUSPEND_LOC, 'suspend')
         logger.debug('Loading game...')
         SaveLoad.loadGame(gameStateObj, metaDataObj, suspend)
-        #gameStateObj.stateMachine.changeState('start_wait')
-        #gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
 
     def load_most_recent_game(self, gameStateObj, metaDataObj):
-        selection = max(gameStateObj.save_slots, key=lambda x:x.realtime)
+        selection = max(gameStateObj.save_slots, key=lambda x: x.realtime)
         SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
         if selection.kind == 'Start': # Restart
             levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
             # Load the level
             SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
-        #gameStateObj.stateMachine.changeState('start_wait')
-        #gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
-        #gameStateObj.stateMachine.changeState('transition_out')
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.fog_bg.draw(surf)
         gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
         gameStateObj.fog_particles.draw(surf)
-        #gameStateObj.logo.draw(surf)
-        #FONT['text_white'].blit(CONSTANTS['attribution'], surf, (4, WINHEIGHT - 16))
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         if self.menu:
-            self.menu.draw(surf, center=(self.position_x, WINHEIGHT/2), show_cursor= (self.state == "normal"))
+            self.menu.draw(surf, center=(self.position_x, GC.WINHEIGHT/2), show_cursor=(self.state == "normal"))
         if self.banner and self.state == 'normal':
-            surf.blit(self.banner, (WINWIDTH/2 - self.banner.get_width()/2, WINHEIGHT/2 - self.banner.get_height()/2))
+            surf.blit(self.banner, (GC.WINWIDTH/2 - self.banner.get_width()/2, GC.WINHEIGHT/2 - self.banner.get_height()/2))
 
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition)
@@ -329,35 +320,35 @@ class StartLoad(StateMachine.State):
             # For transition
             self.selection = None
             self.state = "transition_in"
-            self.position_x = 3*WINWIDTH/2
-            self.title_surf, self.title_pos = create_title(WORDS['Load Game'])
+            self.position_x = 3*GC.WINWIDTH/2
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Load Game'])
             self.rel_title_pos_y = -40
             options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
             gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
             # Default to most recent
-            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x:x.realtime))
-            #self.time_display = TimeDisplay()
+            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x: x.realtime))
+            # self.time_display = TimeDisplay()
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
                         
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
 
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.activeMenu = None # Remove menu
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.activeMenu = None # Remove menu
             self.state = 'transition_out'
-            #self.time_display.state = 'left'
+            # self.time_display.state = 'left'
 
         elif event == 'SELECT':
             selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
             if selection.kind:
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
 
                 # gameStateObj.activeMenu = None # Remove menu
                 logger.debug('Loading game...')
@@ -366,12 +357,12 @@ class StartLoad(StateMachine.State):
                     levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
                     # Load the first level
                     SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
-                gameStateObj.transition_from = WORDS['Load Game']
+                gameStateObj.transition_from = cf.WORDS['Load Game']
                 gameStateObj.stateMachine.changeState('start_wait')
                 gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
                 remove_suspend()
             else:
-                SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Select 4'].play()
 
     def update(self, gameStateObj, metaDataObj):
         if gameStateObj.activeMenu:
@@ -379,8 +370,8 @@ class StartLoad(StateMachine.State):
 
         if self.state == 'transition_in':
             self.position_x -= 20
-            if self.position_x <= WINWIDTH/2:
-                self.position_x = WINWIDTH/2
+            if self.position_x <= GC.WINWIDTH/2:
+                self.position_x = GC.WINWIDTH/2
                 self.state = "normal"
             if self.rel_title_pos_y < 0:
                 self.rel_title_pos_y += 4 
@@ -389,8 +380,8 @@ class StartLoad(StateMachine.State):
             self.position_x += 20
             if self.rel_title_pos_y > -40:
                 self.rel_title_pos_y -= 4
-            if self.position_x >= 3*WINWIDTH/2:
-                self.position_x = 3*WINWIDTH/2
+            if self.position_x >= 3*GC.WINWIDTH/2:
+                self.position_x = 3*GC.WINWIDTH/2
                 gameStateObj.stateMachine.back()
                 self.state = 'transition_in'
                 return 'repeat'
@@ -401,12 +392,12 @@ class StartLoad(StateMachine.State):
         gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
         gameStateObj.fog_particles.draw(surf)
         if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.draw(surf, center=[self.position_x, WINHEIGHT/2])
+            gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT/2])
         surf.blit(self.title_surf, (self.title_pos[0], self.title_pos[1] + self.rel_title_pos_y))
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
-        #selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
-        #self.time_display.draw(surf, selection.realtime)
+        # selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
+        # self.time_display.draw(surf, selection.realtime)
 
         return surf
 
@@ -416,35 +407,35 @@ class StartRestart(StartLoad):
             # For transition
             self.selection = None
             self.state = "transition_in"
-            self.position_x = 3*WINWIDTH/2
-            self.title_surf, self.title_pos = create_title(WORDS['Restart Level'])
+            self.position_x = 3*GC.WINWIDTH/2
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Restart Level'])
             self.rel_title_pos_y = -40
             options = [save_slot.get_name() for save_slot in gameStateObj.save_slots]
             gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
             # Default to most recent
-            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x:x.realtime))
-            #self.time_display = TimeDisplay()
+            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x: x.realtime))
+            # self.time_display = TimeDisplay()
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
                         
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
 
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.activeMenu = None # Remove menu
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.activeMenu = None # Remove menu
             self.state = 'transition_out'
-            #self.time_display.state = 'left'
+            # self.time_display.state = 'left'
 
         elif event == 'SELECT':
             selection = gameStateObj.restart_slots[gameStateObj.activeMenu.getSelectionIndex()]
             if selection.kind:
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
 
                 # gameStateObj.activeMenu = None # Remove menu
                 logger.debug('Restarting Level...')
@@ -452,12 +443,12 @@ class StartRestart(StartLoad):
                 # Always Restart
                 levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
                 SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
-                gameStateObj.transition_from = WORDS['Restart Level']
+                gameStateObj.transition_from = cf.WORDS['Restart Level']
                 gameStateObj.stateMachine.changeState('start_wait')
                 gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
                 remove_suspend()
             else:
-                SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Select 4'].play()
 
 class StartMode(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -467,7 +458,7 @@ class StartMode(StateMachine.State):
             self.state += 1
 
         if self.state == 0:
-            self.title_surf, self.title_pos = create_title(WORDS['Select Difficulty'])
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])
             options = ['Easy', 'Normal', 'Hard']
             toggle = [False, True, False]
             self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
@@ -476,7 +467,7 @@ class StartMode(StateMachine.State):
             return 'repeat'
 
         elif self.state == 2:
-            self.title_surf, self.title_pos = create_title(WORDS['Select Mode'])
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Select Mode'])
             options = ['Casual', 'Classic']
             toggle = [True, True]
             self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
@@ -485,7 +476,7 @@ class StartMode(StateMachine.State):
             return 'repeat'
 
         elif self.state == 4:
-            self.title_surf, self.title_pos = create_title(WORDS['Select Growths'])
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Select Growths'])
             options = ['Random', 'Fixed', 'Hybrid']
             toggle = [True, True, True]
             self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
@@ -496,24 +487,24 @@ class StartMode(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)    
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveUp()
 
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             self.state -= 4
             if self.state < -1:
-                #gameStateObj.stateMachine.changeState('start_option')
+                # gameStateObj.stateMachine.changeState('start_option')
                 gameStateObj.stateMachine.changeState('transition_pop')
             else:
                 gameStateObj.stateMachine.changeState('transition_clean')
             return 'repeat'
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             gameStateObj.mode[self.mode_name] = self.menu.getSelectionIndex()
             if self.state > 4:
                 gameStateObj.stateMachine.changeState('start_new')
@@ -543,39 +534,39 @@ class StartNew(StateMachine.State):
             # For transition
             self.selection = None
             self.state = "transition_in"
-            self.position_x = 3*WINWIDTH/2
-            self.title_surf, self.title_pos = create_title(WORDS['New Game'])
+            self.position_x = 3*GC.WINWIDTH/2
+            self.title_surf, self.title_pos = create_title(cf.WORDS['New Game'])
             self.rel_title_pos_y = -40
             options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
             gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
             # Default to oldest
-            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(min(gameStateObj.save_slots, key=lambda x:x.realtime))
-            #self.time_display = TimeDisplay()
-        #self.time_display.state = 'right'
+            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(min(gameStateObj.save_slots, key=lambda x: x.realtime))
+            # self.time_display = TimeDisplay()
+        # self.time_display.state = 'right'
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)    
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
 
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.activeMenu = None # Remove menu
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.activeMenu = None # Remove menu
             self.state = 'transition_out'
-            #self.time_display.state = 'left'
+            # self.time_display.state = 'left'
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
             if selection.kind:
-                options = [WORDS['Overwrite'], WORDS['Back']]
-                gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, (TILEWIDTH/2, WINHEIGHT - TILEHEIGHT * 1.5), horizontal=True)
+                options = [cf.WORDS['Overwrite'], cf.WORDS['Back']]
+                gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, (GC.TILEWIDTH/2, GC.WINHEIGHT - GC.TILEHEIGHT * 1.5), horizontal=True)
                 gameStateObj.stateMachine.changeState('start_newchild')
-                #self.time_display.state = 'left'
+                # self.time_display.state = 'left'
             else:
                 self.build_new_game(gameStateObj, metaDataObj)
     
@@ -593,8 +584,8 @@ class StartNew(StateMachine.State):
         gameStateObj.activeMenu.options[gameStateObj.save_slot] = metaDataObj['name']
         gameStateObj.stateMachine.clear()
         gameStateObj.stateMachine.changeState('turn_change')
-        #gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
-        gameStateObj.transition_from = WORDS['New Game']
+        # gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
+        gameStateObj.transition_from = cf.WORDS['New Game']
         gameStateObj.stateMachine.changeState('start_wait')
         remove_suspend()
 
@@ -606,8 +597,8 @@ class StartNew(StateMachine.State):
 
         if self.state == 'transition_in':
             self.position_x -= 20
-            if self.position_x <= WINWIDTH/2:
-                self.position_x = WINWIDTH/2
+            if self.position_x <= GC.WINWIDTH/2:
+                self.position_x = GC.WINWIDTH/2
                 self.state = "normal"
             if self.rel_title_pos_y < 0:
                 self.rel_title_pos_y += 4 
@@ -616,8 +607,8 @@ class StartNew(StateMachine.State):
             self.position_x += 20
             if self.rel_title_pos_y > -40:
                 self.rel_title_pos_y -= 4
-            if self.position_x >= 3*WINWIDTH/2:
-                self.position_x = 3*WINWIDTH/2
+            if self.position_x >= 3*GC.WINWIDTH/2:
+                self.position_x = 3*GC.WINWIDTH/2
                 # gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('start_option')
@@ -630,9 +621,9 @@ class StartNew(StateMachine.State):
         gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
         gameStateObj.fog_particles.draw(surf)
         if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.draw(surf, center=[self.position_x, WINHEIGHT/2])
-        selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
-        #self.time_display.draw(surf, selection.realtime)
+            gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT/2])
+        # selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
+        # self.time_display.draw(surf, selection.realtime)
         if gameStateObj.childMenu:
             gameStateObj.childMenu.draw(surf)
         surf.blit(self.title_surf, (self.title_pos[0], self.title_pos[1] + self.rel_title_pos_y))
@@ -643,30 +634,30 @@ class StartNew(StateMachine.State):
 
 class StartNewChild(StartNew):
     def begin(self, gameStateObj, metaDataObj):
-        self.title_surf, self.title_pos = create_title(WORDS['New Game'])
+        self.title_surf, self.title_pos = create_title(cf.WORDS['New Game'])
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
                         
         if event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveDown()
         elif event == 'LEFT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveUp()
 
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.childMenu = None # Remove menu
             gameStateObj.stateMachine.back()
 
         elif event == 'SELECT':
             selection = gameStateObj.childMenu.getSelection()
             if selection == 'Overwrite':
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
                 self.build_new_game(gameStateObj, metaDataObj)
             elif selection == 'Back':
-                SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.back()
 
     def update(self, gameStateObj, metaDataObj):
@@ -683,51 +674,51 @@ class StartExtras(StateMachine.State):
         # For transition
         self.selection = None
         self.state = "transition_in"
-        self.position_x = 3*WINWIDTH/2
+        self.position_x = 3*GC.WINWIDTH/2
 
-        options = [WORDS['Options'], WORDS['Credits']]
+        options = [cf.WORDS['Options'], cf.WORDS['Credits']]
         gameStateObj.activeMenu = MenuFunctions.MainMenu(options, 'DarkMenu')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
                         
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
 
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.activeMenu = None # Remove menu
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.activeMenu = None # Remove menu
             self.state = 'transition_out'
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
-            if selection == WORDS['Credits']:
+            if selection == cf.WORDS['Credits']:
                 gameStateObj.stateMachine.changeState('credits')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Options']:
+            elif selection == cf.WORDS['Options']:
                 gameStateObj.stateMachine.changeState('config_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
 
     def update(self, gameStateObj, metaDataObj):
-        #gameStateObj.logo.update()
+        # gameStateObj.logo.update()
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.update()
 
         if self.state == 'transition_in':
             self.position_x -= 20
-            if self.position_x <= WINWIDTH/2:
-                self.position_x = WINWIDTH/2
+            if self.position_x <= GC.WINWIDTH/2:
+                self.position_x = GC.WINWIDTH/2
                 self.state = "normal"
 
         elif self.state == 'transition_out':
             self.position_x += 20
-            if self.position_x >= 3*WINWIDTH/2:
-                self.position_x = 3*WINWIDTH/2
+            if self.position_x >= 3*GC.WINWIDTH/2:
+                self.position_x = 3*GC.WINWIDTH/2
                 gameStateObj.stateMachine.back()
                 self.state = 'transition_in'
                 return 'repeat'
@@ -737,12 +728,12 @@ class StartExtras(StateMachine.State):
         gameStateObj.fog_bg.draw(surf)
         gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
         gameStateObj.fog_particles.draw(surf)
-        #FONT['text_white'].blit(CONSTANTS['attribution'], surf, (4, WINHEIGHT - 16))
-        #gameStateObj.logo.draw(surf)
+        # GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, (4, GC.WINHEIGHT - 16))
+        # gameStateObj.logo.draw(surf)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.draw(surf, center=(self.position_x, WINHEIGHT/2))
+            gameStateObj.activeMenu.draw(surf, center=(self.position_x, GC.WINHEIGHT/2))
         return surf
 
 class StartWait(StateMachine.State):
@@ -755,7 +746,7 @@ class StartWait(StateMachine.State):
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.update()
         if not self.wait_flag and hasattr(self, 'wait_time') and Engine.get_time() - self.wait_time > 750:
-            #gameStateObj.stateMachine.back()
+            # gameStateObj.stateMachine.back()
             self.wait_flag = True
             gameStateObj.stateMachine.changeState('transition_pop')
 
@@ -782,25 +773,25 @@ class StartWait(StateMachine.State):
 
 class StartSave(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        #self.selection = None
+        # self.selection = None
         if self.started:
             self.leave_flag = False
     
         if not self.started:
-            gameStateObj.button_a = Button(4, (WINWIDTH - 64, WINHEIGHT - 16), 'key_SELECT')
-            gameStateObj.button_b = Button(5, (WINWIDTH - 32, WINHEIGHT - 16), 'key_BACK')
+            gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
+            gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.fog_bg = MenuFunctions.MovieBackground('fog', 33)
-            bounds = (-WINHEIGHT, WINWIDTH, WINHEIGHT, WINHEIGHT+16)
-            gameStateObj.fog_particles = Weather.Weather('Smoke', .075, bounds, (TILEX, TILEY))
-            #self.time_display = TimeDisplay()
-            #if not hasattr(gameStateObj, 'save_slots') or not gameStateObj.save_slots:
+            bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
+            gameStateObj.fog_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
+            # self.time_display = TimeDisplay()
+            # if not hasattr(gameStateObj, 'save_slots') or not gameStateObj.save_slots:
             gameStateObj.save_slots = load_saves()
-            self.title_surf, self.title_pos = create_title(WORDS['Save Game'])
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Save Game'])
 
             options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
             gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
             # Default to most recent
-            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x:x.realtime))
+            gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x: x.realtime))
 
             gameStateObj.stateMachine.changeState('transition_in')
             return 'repeat'
@@ -809,14 +800,14 @@ class StartSave(StateMachine.State):
         event = gameStateObj.input_manager.process_input(eventList)
         if not hasattr(self, 'wait_time'):       
             if event == 'DOWN':
-                SOUNDDICT['Select 6'].play()
+                GC.SOUNDDICT['Select 6'].play()
                 gameStateObj.activeMenu.moveDown()
             elif event == 'UP':
-                SOUNDDICT['Select 6'].play()
+                GC.SOUNDDICT['Select 6'].play()
                 gameStateObj.activeMenu.moveUp()
 
             elif event == 'BACK':
-                SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Select 4'].play()
                 if gameStateObj.save_kind == 'Start':
                     current_states = gameStateObj.stateMachine.state
                     levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
@@ -826,8 +817,8 @@ class StartSave(StateMachine.State):
                     gameStateObj.stateMachine.state = current_states
                 gameStateObj.stateMachine.changeState('transition_pop')
             elif event == 'SELECT':
-                SOUNDDICT['Select 1'].play()
-                #self.selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
+                GC.SOUNDDICT['Select 1'].play()
+                # self.selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
                 # Rename thing
                 name = SaveLoad.read_overview_file('Data/Level' + str(gameStateObj.counters['level']) + '/overview.txt')['name']
                 gameStateObj.activeMenu.options[gameStateObj.activeMenu.getSelectionIndex()] = name
@@ -838,7 +829,7 @@ class StartSave(StateMachine.State):
             gameStateObj.activeMenu.update()
         # Time must be greater than time needed to transition in
         if hasattr(self, 'wait_time') and Engine.get_time() - self.wait_time > 1250 and not self.leave_flag:
-            #gameStateObj.stateMachine.back()
+            # gameStateObj.stateMachine.back()
             self.leave_flag = True
 
             current_states = gameStateObj.stateMachine.state
@@ -866,8 +857,8 @@ class StartSave(StateMachine.State):
         surf.blit(self.title_surf, self.title_pos)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
-        selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
-        #self.time_display.draw(surf, selection.realtime)
+        # selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
+        # self.time_display.draw(surf, selection.realtime)
         return surf
 
     def finish(self, gameStateObj, metaDataObj):
@@ -887,7 +878,7 @@ class CreditsState(StateMachine.State):
         if event:
             if self.message.current_state == "Displaying" and self.message.dialog:
                 if self.message.dialog.waiting:
-                    SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['Select 1'].play()
                     self.message.dialog_unpause()
                 else:
                     while not self.message.dialog._next_char():
@@ -900,7 +891,7 @@ class CreditsState(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        surf.fill(colorDict['black'])
+        surf.fill(GC.COLORDICT['black'])
         self.message.draw(surf)
         return surf
 
@@ -915,15 +906,15 @@ class GameOverState(StateMachine.State):
 
         self.transparency = 100
         self.backgroundCounter = 0
-        Engine.music_thread.fade_in(MUSICDICT[CONSTANTS['music_game_over']], 1)
+        Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_game_over']], 1)
 
         # Make background
         self.MovingSurf = Engine.create_surface((256, 256), transparent=True, convert=True)
-        self.MovingSurf.blit(IMAGESDICT['GameOverBackground'], (0,0))
-        self.MovingSurf.blit(IMAGESDICT['GameOverBackground'], (0,128))
-        self.MovingSurf.blit(IMAGESDICT['GameOverBackground'], (128,0))
-        self.MovingSurf.blit(IMAGESDICT['GameOverBackground'], (128,128))
-        self.MovingSurf = Engine.subsurface(self.MovingSurf, (0, 0, WINWIDTH, 256))
+        self.MovingSurf.blit(GC.IMAGESDICT['GameOverBackground'], (0, 0))
+        self.MovingSurf.blit(GC.IMAGESDICT['GameOverBackground'], (0, 128))
+        self.MovingSurf.blit(GC.IMAGESDICT['GameOverBackground'], (128, 0))
+        self.MovingSurf.blit(GC.IMAGESDICT['GameOverBackground'], (128, 128))
+        self.MovingSurf = Engine.subsurface(self.MovingSurf, (0, 0, GC.WINWIDTH, 256))
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         if self.GOStateMachine.getState() == 'stasis':
@@ -958,11 +949,11 @@ class GameOverState(StateMachine.State):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
 
         # Black Background
-        s = IMAGESDICT['BlackBackground'].copy()
+        s = GC.IMAGESDICT['BlackBackground'].copy()
         if self.GOStateMachine.getState() == 'initial_transition':
             alpha = 255 - int(2.55*self.transparency)
-            s.fill((0,0,0,alpha))
-        surf.blit(s, (0,0))
+            s.fill((0, 0, 0, alpha))
+        surf.blit(s, (0, 0))
 
         # Game Over Background
         if self.GOStateMachine.getState() in ['bg_fade_in', 'stasis']:
@@ -970,33 +961,33 @@ class GameOverState(StateMachine.State):
             # Flicker image transparent
             if self.GOStateMachine.getState() == 'bg_fade_in':
                 alpha = 255 - int(2.55*self.transparency)
-                Engine.fill(GOSurf, (255, 255, 255, alpha), 'RGBA_MULT')
+                Engine.fill(GOSurf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
 
             # blit moving background image
             top = -int(self.backgroundCounter)
             surf.blit(GOSurf, (0, top))
-            if 256 + top < WINHEIGHT:
+            if 256 + top < GC.WINHEIGHT:
                 surf.blit(GOSurf, (0, 256+top))
 
         if self.GOStateMachine.getState() in ['text_fade_in', 'bg_fade_in', 'stasis']:
-            TextSurf = IMAGESDICT['GameOverText'].copy()
+            TextSurf = GC.IMAGESDICT['GameOverText'].copy()
             if self.GOStateMachine.getState() == 'text_fade_in':
                 alpha = 255 - int(2.55*self.transparency)
-                Engine.fill(TextSurf, (255, 255, 255, alpha), 'RGBA_MULT')
-            pos = (WINWIDTH/2 - TextSurf.get_width()/2, WINHEIGHT/2 - TextSurf.get_height()/2)
+                Engine.fill(TextSurf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
+            pos = (GC.WINWIDTH/2 - TextSurf.get_width()/2, GC.WINHEIGHT/2 - TextSurf.get_height()/2)
         
             surf.blit(TextSurf, pos)
 
-            surf.blit(IMAGESDICT['GameOverFade'], (0,0))
+            surf.blit(GC.IMAGESDICT['GameOverFade'], (0, 0))
 
         return surf
 
 class ChapterTransitionState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        gameStateObj.background = TransitionBackground(IMAGESDICT['chapterTransitionBackground'])
+        gameStateObj.background = TransitionBackground(GC.IMAGESDICT['chapterTransitionBackground'])
         self.name = metaDataObj['name'] # Lol -- this is why some states show up as Chapter I
         self.show_map = False
-        Engine.music_thread.fade_in(MUSICDICT['Chapter Sound'], 1)
+        Engine.music_thread.fade_in(GC.MUSICDICT['Chapter Sound'], 1)
         self.CTStateMachine = CustomObjects.StateMachine('transition_in')
 
         self.transition_in = 0
@@ -1005,7 +996,7 @@ class ChapterTransitionState(StateMachine.State):
         self.banner_grow_y = 6
         self.banner_fade = 0
 
-        self.ribbon = IMAGESDICT['chapterTransitionRibbon']
+        self.ribbon = GC.IMAGESDICT['chapterTransitionRibbon']
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
@@ -1015,7 +1006,7 @@ class ChapterTransitionState(StateMachine.State):
 
     def update(self, gameStateObj, metaDataObj):
         currentTime = Engine.get_time()
-        #gameStateObj.cameraOffset.update(gameStateObj)
+        # gameStateObj.cameraOffset.update(gameStateObj)
 
         if self.CTStateMachine.getState() == 'transition_in':
             self.transition_in += 2
@@ -1031,8 +1022,8 @@ class ChapterTransitionState(StateMachine.State):
 
         elif self.CTStateMachine.getState() == 'banner_grow_x':
             self.banner_grow_x += 10
-            if self.banner_grow_x >= WINWIDTH:
-                self.banner_grow_x = WINWIDTH
+            if self.banner_grow_x >= GC.WINWIDTH:
+                self.banner_grow_x = GC.WINWIDTH
                 self.CTStateMachine.changeState('banner_grow_y')
 
         elif self.CTStateMachine.getState() == 'banner_grow_y':
@@ -1075,29 +1066,29 @@ class ChapterTransitionState(StateMachine.State):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
 
         # Draw blackbackground
-        BlackTransitionSurf = Image_Modification.flickerImageTranslucent(IMAGESDICT['BlackBackground'], self.transition_in)
+        BlackTransitionSurf = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], self.transition_in)
         mapSurf.blit(BlackTransitionSurf, (0, 0))
 
         # Draw sigil
-        sigil_outline = Image_Modification.flickerImageTranslucent(IMAGESDICT['chapterTransitionSigil'], self.sigil_fade)
-        sigil_middle = Image_Modification.flickerImageTranslucent(IMAGESDICT['chapterTransitionSigil2'], self.sigil_fade)
-        center_x = (WINWIDTH/2 - sigil_outline.get_width()/2)
-        center_y = (WINHEIGHT/2 - sigil_outline.get_height()/2)
+        sigil_outline = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['chapterTransitionSigil'], self.sigil_fade)
+        sigil_middle = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['chapterTransitionSigil2'], self.sigil_fade)
+        center_x = (GC.WINWIDTH/2 - sigil_outline.get_width()/2)
+        center_y = (GC.WINHEIGHT/2 - sigil_outline.get_height()/2)
         mapSurf.blit(sigil_outline, (center_x + 1, center_y + 1))
         mapSurf.blit(sigil_middle, (center_x, center_y))
 
         # Draw Ribbon
         if self.CTStateMachine.getState() in ['ribbon_fade_in', 'wait', 'ribbon_close', 'fade_out']:
             new_ribbon = self.ribbon.copy()
-            position = (WINWIDTH/2 - FONT['chapter_yellow'].size(self.name)[0]/2, self.ribbon.get_height()/2 - 6)
-            FONT['chapter_yellow'].blit(self.name, new_ribbon, position)
+            position = (GC.WINWIDTH/2 - GC.FONT['chapter_yellow'].size(self.name)[0]/2, self.ribbon.get_height()/2 - 6)
+            GC.FONT['chapter_yellow'].blit(self.name, new_ribbon, position)
             new_ribbon = Engine.subsurface(new_ribbon, (0, (self.ribbon.get_height() - self.banner_grow_y)/2, self.ribbon.get_width(), self.banner_grow_y))
-            mapSurf.blit(new_ribbon, (WINWIDTH/2 - self.ribbon.get_width()/2, WINHEIGHT/2 - new_ribbon.get_height()/2))
+            mapSurf.blit(new_ribbon, (GC.WINWIDTH/2 - self.ribbon.get_width()/2, GC.WINHEIGHT/2 - new_ribbon.get_height()/2))
 
         # Draw Banner
-        banner = Image_Modification.flickerImageTranslucent(IMAGESDICT['chapterTransitionBanner'], self.banner_fade)
+        banner = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['chapterTransitionBanner'], self.banner_fade)
         banner = Engine.subsurface(banner, (0, 0, self.banner_grow_x, self.banner_grow_y))
-        mapSurf.blit(banner, (WINWIDTH/2 - banner.get_width()/2, WINHEIGHT/2 - banner.get_height()/2))
+        mapSurf.blit(banner, (GC.WINWIDTH/2 - banner.get_width()/2, GC.WINHEIGHT/2 - banner.get_height()/2))
 
         return mapSurf
 
@@ -1108,7 +1099,7 @@ transition_speed = 10
 class TransitionInState(StateMachine.State):
     # Assumes there is a state directly under this state. Draw that state also
     def begin(self, gameStateObj, metaDataObj):
-        self.background = IMAGESDICT['BlackBackground']
+        self.background = GC.IMAGESDICT['BlackBackground']
         self.transition = 0
 
     def update(self, gameStateObj, metaDataObj):
@@ -1131,7 +1122,7 @@ class TransitionOutState(StateMachine.State):
     # New State
     # This state
     def begin(self, gameStateObj, metaDataObj):
-        self.background = IMAGESDICT['BlackBackground']
+        self.background = GC.IMAGESDICT['BlackBackground']
         self.transition = 100
 
     def update(self, gameStateObj, metaDataObj):
@@ -1149,7 +1140,7 @@ class TransitionOutState(StateMachine.State):
 
 class TransitionPopState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        self.background = IMAGESDICT['BlackBackground']
+        self.background = GC.IMAGESDICT['BlackBackground']
         self.transition = 100
 
     def update(self, gameStateObj, metaDataObj):
@@ -1200,13 +1191,13 @@ class TransitionBackground(object):
             self.lastBackgroundUpdate = currentTime
 
         xindex, yindex = -self.backgroundCounter, -self.backgroundCounter
-        while xindex < WINWIDTH:
+        while xindex < GC.WINWIDTH:
             yindex = -self.backgroundCounter
-            while yindex < WINHEIGHT:
+            while yindex < GC.WINHEIGHT:
                 left = self.backgroundCounter if xindex < 0 else 0
                 top = self.backgroundCounter if yindex < 0 else 0
-                right = self.width - min(0, max(self.height, (xindex + self.width - WINWIDTH))) if xindex > WINWIDTH else self.width
-                bottom = self.height - min(0, max(self.height, (yindex + self.height - WINHEIGHT))) if yindex > WINHEIGHT else self.height
+                right = self.width - min(0, max(self.height, (xindex + self.width - GC.WINWIDTH))) if xindex > GC.WINWIDTH else self.width
+                bottom = self.height - min(0, max(self.height, (yindex + self.height - GC.WINHEIGHT))) if yindex > GC.WINHEIGHT else self.height
                 disp_surf = Engine.subsurface(self.BGSurf, (left, top, right - left, bottom - top))
                 rect_left = xindex if xindex >= 0 else 0
                 rect_top = yindex if yindex >= 0 else 0

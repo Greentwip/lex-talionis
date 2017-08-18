@@ -1,15 +1,15 @@
-### Display Unit Info function
-from GlobalConstants import *
-from configuration import *
-import CustomObjects, Image_Modification
+# Display Unit Info function
+import GlobalConstants as GC
+import configuration as cf
+import CustomObjects, Image_Modification, Engine
 import MenuFunctions, StatusObject, Banner
 
 ####################################################################
-### Displays the level up screen
+# Displays the level up screen
 class levelUpScreen(object):
     def __init__(self, gameStateObj, unit, exp, force_level=None, in_combat=False):
         self.unit = unit
-        # if OPTIONS['debug']:
+        # if cf.OPTIONS['debug']:
         #     print('LevelUpScreen: ', exp)
             
         self.expNew = min(100, exp)
@@ -20,23 +20,23 @@ class levelUpScreen(object):
         self.in_combat = in_combat
 
         # spriting
-        self.levelUpScreen = IMAGESDICT['LevelScreen']
+        self.levelUpScreen = GC.IMAGESDICT['LevelScreen']
         if self.in_combat:
             topleft=(0, 6)
             timing = [1 for _ in xrange(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in xrange(15)] + [-1] + [1 for _ in xrange(12)] 
-            self.levelUpAnimation = CustomObjects.Animation(IMAGESDICT['LevelUpBattle'], topleft, (5, 11), 52, ignore_map=True, set_timing=timing)
+            self.levelUpAnimation = CustomObjects.Animation(GC.IMAGESDICT['LevelUpBattle'], topleft, (5, 11), 52, ignore_map=True, set_timing=timing)
         else:
             if unit.position:
                 x, y = unit.position
-                topleft = (x-gameStateObj.cameraOffset.x-2)*TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*TILEHEIGHT
+                topleft = (x-gameStateObj.cameraOffset.x-2)*GC.TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*GC.TILEHEIGHT
             else:
-                topleft = WINWIDTH/2, WINHEIGHT/2
+                topleft = GC.WINWIDTH/2, GC.WINHEIGHT/2
             timing = [1 for _ in xrange(24)] + [44]
-            self.levelUpAnimation = CustomObjects.Animation(IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True, set_timing=timing)
-        self.statupanimation = IMAGESDICT['StatUpSpark']
-        self.statunderline = IMAGESDICT['StatUnderline']
-        self.uparrow = IMAGESDICT['LevelUpArrow']
-        self.numbers = IMAGESDICT['LevelUpNumber']
+            self.levelUpAnimation = CustomObjects.Animation(GC.IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True, set_timing=timing)
+        self.statupanimation = GC.IMAGESDICT['StatUpSpark']
+        self.statunderline = GC.IMAGESDICT['StatUnderline']
+        self.uparrow = GC.IMAGESDICT['LevelUpArrow']
+        self.numbers = GC.IMAGESDICT['LevelUpNumber']
 
         self.exp_bar = None
 
@@ -55,7 +55,7 @@ class levelUpScreen(object):
             self.state_time = Engine.get_time()
 
         # TIMING
-        self.total_time_for_exp = self.expNew * FRAMERATE # exp rate is 16
+        self.total_time_for_exp = self.expNew * GC.FRAMERATE # exp rate is 16
         self.level_up_sound_played = False
         self.SPARKTIME = 320
         self.LEVELUPWAIT = 1660
@@ -67,7 +67,8 @@ class levelUpScreen(object):
 
     def update(self, gameStateObj, metaDataObj):
         # Don't do this if there is no exp change
-        if not self.force_level and self.expNew == 0 or (self.unit.level%CONSTANTS['max_level'] == 0 and metaDataObj['class_dict'][self.unit.klass]['turns_into'] is None):
+        if not self.force_level and self.expNew == 0 or \
+                (self.unit.level%cf.CONSTANTS['max_level'] == 0 and metaDataObj['class_dict'][self.unit.klass]['turns_into'] is None):
             return True # We're done here
 
         currentTime = Engine.get_time()
@@ -84,7 +85,7 @@ class levelUpScreen(object):
             if currentTime - self.state_time > 400:
                 self.state.changeState('exp0')
                 self.state_time = currentTime
-                SOUNDDICT['Experience Gain'].play(-1)
+                GC.SOUNDDICT['Experience Gain'].play(-1)
 
         # Increment exp until done or 100 exp is reached
         elif self.state.getState() == 'exp0':
@@ -94,11 +95,11 @@ class levelUpScreen(object):
             self.exp_bar.update(self.expSet)
             # transitions
             if self.expNew + self.expOld <= self.expSet:
-                SOUNDDICT['Experience Gain'].stop() 
+                GC.SOUNDDICT['Experience Gain'].stop() 
 
             if self.expSet >= 100:
-                if self.unit.level%CONSTANTS['max_level'] == 0: # If I would promote because I am level 20
-                    SOUNDDICT['Experience Gain'].stop()
+                if self.unit.level%cf.CONSTANTS['max_level'] == 0: # If I would promote because I am level 20
+                    GC.SOUNDDICT['Experience Gain'].stop()
                     self.state.clear()
                     self.state.changeState('prepare_promote')
                     self.state.changeState('exp_leave')
@@ -154,7 +155,7 @@ class levelUpScreen(object):
             self.expSet = int(min(self.expNew + self.expOld - 100, self.expSet))
             self.exp_bar.update(self.expSet)
             if self.expNew + self.expOld - 100 <= self.expSet:
-                SOUNDDICT['Experience Gain'].stop() 
+                GC.SOUNDDICT['Experience Gain'].stop() 
             # Extra time to account for pause at end
             if currentTime - self.state_time >= self.total_time_for_exp + 500:
                 self.state.clear()
@@ -166,7 +167,7 @@ class levelUpScreen(object):
         # Display the level up animation initial
         elif self.state.getState() == 'levelUp':
             if not self.level_up_sound_played:
-                SOUNDDICT['Level Up'].play()
+                GC.SOUNDDICT['Level Up'].play()
                 self.level_up_sound_played = True
             # Update it
             if self.levelUpAnimation.update(gameStateObj):
@@ -192,7 +193,7 @@ class levelUpScreen(object):
                 # check for skill gain if not a forced level
                 if not self.force_level:
                     for level_needed, class_skill in metaDataObj['class_dict'][self.unit.klass]['skills']:
-                        if self.unit.level%CONSTANTS['max_level'] == level_needed:
+                        if self.unit.level%cf.CONSTANTS['max_level'] == level_needed:
                             if class_skill == 'Feat':
                                 gameStateObj.cursor.currentSelectedUnit = self.unit
                                 gameStateObj.stateMachine.changeState('feat_choice')
@@ -222,15 +223,15 @@ class levelUpScreen(object):
             if new_class['tags']: # Add any necessary tags. Does not currently take away tags, although it may have to later
                 self.unit.tags |= set(new_class['tags'].split(','))
             # Give promotion
-            #self.levelup_list = self.unit.level_up(new_class, apply_level=False) # Level up once, then promote.
-            #self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together
+            # self.levelup_list = self.unit.level_up(new_class, apply_level=False) # Level up once, then promote.
+            # self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together
             self.levelup_list = new_class['promotion'] # No two level ups, too much gain in one level...
             current_stats = self.unit.stats.values()
             assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s"%(self.levelup_list, new_class['max'], current_stats)
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)
             self.unit.apply_levelup(self.levelup_list)
-            #print(self.levelup_list)
+            # print(self.levelup_list)
 
             self.state.changeState('levelScreen')
             self.state_time = currentTime # Reset time so that it doesn't skip right over LevelScreen
@@ -251,7 +252,7 @@ class levelUpScreen(object):
             marker2 = self.animationMarker[1]
             LvlSurf = Engine.subsurface(self.levelUpAnimation, (marker2*78, marker1*16, 78, 16))
             x, y = self.unit.position
-            topleft = (x-gameStateObj.cameraOffset.x-2)*TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*TILEHEIGHT
+            topleft = (x-gameStateObj.cameraOffset.x-2)*GC.TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*GC.TILEHEIGHT
             surf.blit(LvlSurf, topleft)
             """
 
@@ -280,13 +281,13 @@ class levelUpScreen(object):
             LevelUpSurface.blit(LevelSurf, (0, 0))
 
             # Render top banner text
-            FONT['text_white'].blit(str(self.unit.klass).replace('_', ' '), LevelUpSurface, (12, 3))
-            FONT['text_yellow'].blit(WORDS['Lv'], LevelUpSurface, (LevelUpSurface.get_width()/2+12, 3))
+            GC.FONT['text_white'].blit(str(self.unit.klass).replace('_', ' '), LevelUpSurface, (12, 3))
+            GC.FONT['text_yellow'].blit(cf.WORDS['Lv'], LevelUpSurface, (LevelUpSurface.get_width()/2+12, 3))
             if self.first_spark_flag or self.force_level:
                 level = str(self.unit.level)
             else:
                 level = str(self.unit.level - 1)
-            FONT['text_blue'].blit(level, LevelUpSurface, (LevelUpSurface.get_width()/2+50-FONT['text_blue'].size(level)[0], 3))
+            GC.FONT['text_blue'].blit(level, LevelUpSurface, (LevelUpSurface.get_width()/2+50-GC.FONT['text_blue'].size(level)[0], 3))
 
             # Blit first spark
             if self.force_level and not self.first_spark_flag:
@@ -294,12 +295,12 @@ class levelUpScreen(object):
                 self.lastSparkUpdate = currentTime
             elif self.screen_scroll_offset == 0 and not self.first_spark_flag and currentTime - self.lastSparkUpdate > self.SPARKTIME:
                 position = (87, 27)
-                spark_animation = CustomObjects.Animation(self.statupanimation, position, (11, 1), animation_speed=32, ignore_map = True)
+                spark_animation = CustomObjects.Animation(self.statupanimation, position, (11, 1), animation_speed=32, ignore_map=True)
                 self.animations.append(spark_animation)
                 self.first_spark_flag = True
                 self.lastSparkUpdate = currentTime
                 # Sound
-                # SOUNDDICT['Stat Up'].play()"""
+                # GC.SOUNDDICT['Stat Up'].play()"""
             
             # Add sparks to animation list one at a time
             if self.first_spark_flag and currentTime - self.lastSparkUpdate > self.SPARKTIME:
@@ -322,14 +323,15 @@ class levelUpScreen(object):
                     # Add animations and Sound
                     # Animations
                     if self.sparkCounter >= 4:
-                        position = (88, (self.sparkCounter - 4)*TILEHEIGHT + 61)
+                        position = (88, (self.sparkCounter - 4)*GC.TILEHEIGHT + 61)
                     else:
-                        position = (24, self.sparkCounter*TILEHEIGHT + 61)
+                        position = (24, self.sparkCounter*GC.TILEHEIGHT + 61)
                     arrow_animation = CustomObjects.Animation(self.uparrow, (position[0]+31, position[1]-37), (10, 1), animation_speed=32, ignore_map=True, hold=True)
                     self.arrow_animations.append(arrow_animation) 
                     spark_animation = CustomObjects.Animation(self.statupanimation, position, (11, 1), animation_speed=32, ignore_map=True)
                     self.animations.append(spark_animation)
-                    assert 7 > self.levelup_list[self.sparkCounter] > 0, "%s %s"%(self.levelup_list, self.levelup_list[self.sparkCounter]) # Only 1-6 are allowed increases for a levelup right now
+                    # Only 1-6 are allowed increases for a levelup right now
+                    assert 7 > self.levelup_list[self.sparkCounter] > 0, "%s %s"%(self.levelup_list, self.levelup_list[self.sparkCounter])
                     if self.levelup_list[self.sparkCounter] == 1:
                         row = Engine.subsurface(self.numbers, (0, (self.levelup_list[self.sparkCounter] - 1)*24, 10*24, 24))
                         number_animation = CustomObjects.Animation(row, (position[0]+31, position[1]+23), (10, 1), animation_speed=32, ignore_map=True, hold=True)
@@ -339,7 +341,7 @@ class levelUpScreen(object):
                     number_animation.frameCount = -5 # delay this animation for 5 frames
                     self.animations.append(number_animation)
                     # Sound
-                    SOUNDDICT['Stat Up'].play()
+                    GC.SOUNDDICT['Stat Up'].play()
 
                 self.lastSparkUpdate = currentTime # Reset the last update time.
 
@@ -348,18 +350,19 @@ class levelUpScreen(object):
             for num in range(len(self.levelup_list[0:self.sparkCounter+1])):
                 if self.levelup_list[num] > 0: # IE it should be updated, since it leveled up
                     if num == self.sparkCounter: 
-                        new_underline_surf = Engine.subsurface(new_underline_surf, (self.underline_offset, 0, new_underline_surf.get_width() - self.underline_offset, 3))
+                        rect = (self.underline_offset, 0, new_underline_surf.get_width() - self.underline_offset, 3)
+                        new_underline_surf = Engine.subsurface(new_underline_surf, rect)
                         self.underline_offset -= 6
                         self.underline_offset = max(0, self.underline_offset)
                         if num >= 4:
-                            topleft = (76 + self.underline_offset/2, 45 + TILEHEIGHT * (num - 4))
+                            topleft = (76 + self.underline_offset/2, 45 + GC.TILEHEIGHT * (num - 4))
                         else:
-                            topleft = (12 + self.underline_offset/2, 45 + TILEHEIGHT * (num))
+                            topleft = (12 + self.underline_offset/2, 45 + GC.TILEHEIGHT * (num))
                     else:
                         if num >= 4:
-                            topleft = (76, 45 + TILEHEIGHT * (num - 4))
+                            topleft = (76, 45 + GC.TILEHEIGHT * (num - 4))
                         else:
-                            topleft = (12, 45 + TILEHEIGHT * (num))
+                            topleft = (12, 45 + GC.TILEHEIGHT * (num))
                     LevelUpSurface.blit(new_underline_surf, topleft)
 
             # Update and draw arrow animations
@@ -371,14 +374,14 @@ class levelUpScreen(object):
             for animation in self.number_animations:
                 animation.draw(LevelUpSurface, gameStateObj, blend=new_color)
 
-            FONT['text_yellow'].blit('HP', LevelUpSurface, (10, 35))
-            FONT['text_yellow'].blit(WORDS['STR'], LevelUpSurface, (10, TILEHEIGHT + 35))
-            FONT['text_yellow'].blit(WORDS['MAG'], LevelUpSurface, (10, TILEHEIGHT*2+35))
-            FONT['text_yellow'].blit(WORDS['SKL'], LevelUpSurface, (10, TILEHEIGHT*3+35))
-            FONT['text_yellow'].blit(WORDS['SPD'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, 35))
-            FONT['text_yellow'].blit(WORDS['LCK'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, TILEHEIGHT+35))
-            FONT['text_yellow'].blit(WORDS['DEF'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, TILEHEIGHT*2+35))
-            FONT['text_yellow'].blit(WORDS['RES'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, TILEHEIGHT*3+35))
+            GC.FONT['text_yellow'].blit('HP', LevelUpSurface, (10, 35))
+            GC.FONT['text_yellow'].blit(cf.WORDS['STR'], LevelUpSurface, (10, GC.TILEHEIGHT + 35))
+            GC.FONT['text_yellow'].blit(cf.WORDS['MAG'], LevelUpSurface, (10, GC.TILEHEIGHT*2+35))
+            GC.FONT['text_yellow'].blit(cf.WORDS['SKL'], LevelUpSurface, (10, GC.TILEHEIGHT*3+35))
+            GC.FONT['text_yellow'].blit(cf.WORDS['SPD'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, 35))
+            GC.FONT['text_yellow'].blit(cf.WORDS['LCK'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, GC.TILEHEIGHT+35))
+            GC.FONT['text_yellow'].blit(cf.WORDS['DEF'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, GC.TILEHEIGHT*2+35))
+            GC.FONT['text_yellow'].blit(cf.WORDS['RES'], LevelUpSurface, (LevelUpSurface.get_width()/2+8, GC.TILEHEIGHT*3+35))
 
             hp_text = self.unit.stats['HP'].base_stat - (self.levelup_list[0] if self.sparkCounter < 0 else 0)
             str_text = self.unit.stats['STR'].base_stat - (self.levelup_list[1] if self.sparkCounter < 1 else 0)
@@ -389,14 +392,14 @@ class levelUpScreen(object):
             def_text = self.unit.stats['DEF'].base_stat - (self.levelup_list[6] if self.sparkCounter < 6 else 0)
             res_text = self.unit.stats['RES'].base_stat - (self.levelup_list[7] if self.sparkCounter < 7 else 0)
 
-            FONT['text_blue'].blit(str(hp_text), LevelUpSurface, (50 - FONT['text_blue'].size(str(hp_text))[0], 35))
-            FONT['text_blue'].blit(str(str_text), LevelUpSurface, (50 - FONT['text_blue'].size(str(str_text))[0], TILEHEIGHT+35))
-            FONT['text_blue'].blit(str(mag_text), LevelUpSurface, (50 - FONT['text_blue'].size(str(mag_text))[0], TILEHEIGHT*2+35))
-            FONT['text_blue'].blit(str(skl_text), LevelUpSurface, (50 - FONT['text_blue'].size(str(skl_text))[0], TILEHEIGHT*3+35))
-            FONT['text_blue'].blit(str(spd_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-FONT['text_blue'].size(str(spd_text))[0], 35))
-            FONT['text_blue'].blit(str(lck_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-FONT['text_blue'].size(str(lck_text))[0], TILEHEIGHT+35))
-            FONT['text_blue'].blit(str(def_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-FONT['text_blue'].size(str(def_text))[0], TILEHEIGHT*2+35))
-            FONT['text_blue'].blit(str(res_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-FONT['text_blue'].size(str(res_text))[0], TILEHEIGHT*3+35))
+            GC.FONT['text_blue'].blit(str(hp_text), LevelUpSurface, (50 - GC.FONT['text_blue'].size(str(hp_text))[0], 35))
+            GC.FONT['text_blue'].blit(str(str_text), LevelUpSurface, (50 - GC.FONT['text_blue'].size(str(str_text))[0], GC.TILEHEIGHT+35))
+            GC.FONT['text_blue'].blit(str(mag_text), LevelUpSurface, (50 - GC.FONT['text_blue'].size(str(mag_text))[0], GC.TILEHEIGHT*2+35))
+            GC.FONT['text_blue'].blit(str(skl_text), LevelUpSurface, (50 - GC.FONT['text_blue'].size(str(skl_text))[0], GC.TILEHEIGHT*3+35))
+            GC.FONT['text_blue'].blit(str(spd_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-GC.FONT['text_blue'].size(str(spd_text))[0], 35))
+            GC.FONT['text_blue'].blit(str(lck_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-GC.FONT['text_blue'].size(str(lck_text))[0], GC.TILEHEIGHT+35))
+            GC.FONT['text_blue'].blit(str(def_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-GC.FONT['text_blue'].size(str(def_text))[0], GC.TILEHEIGHT*2+35))
+            GC.FONT['text_blue'].blit(str(res_text), LevelUpSurface, (LevelUpSurface.get_width()/2+48-GC.FONT['text_blue'].size(str(res_text))[0], GC.TILEHEIGHT*3+35))
 
             """
             # HP, Str, Mag, Skl, Spd, Luck, Def, Res
@@ -404,23 +407,22 @@ class levelUpScreen(object):
                 if self.levelup_list[num] != 0: # IE it should be updated, since it leveled up
                     # Blit number
                     if num >= 4:
-                        topleft = (LevelUpSurface.get_width()/2+50, TILEHEIGHT * (num - 4) + 33)
+                        topleft = (LevelUpSurface.get_width()/2+50, GC.TILEHEIGHT * (num - 4) + 33)
                     else:
-                        topleft = (52, TILEHEIGHT * num + 33)
+                        topleft = (52, GC.TILEHEIGHT * num + 33)
                     change = str(self.levelup_list[num])
                     if self.levelup_list[num] > 0:
                         change = '+' + change
-                    FONT['stat_white'].blit(change, LevelUpSurface, topleft)
+                    GC.FONT['stat_white'].blit(change, LevelUpSurface, topleft)
             """
-            pos = (6 - self.screen_scroll_offset, WINHEIGHT - 8 - LevelUpSurface.get_height())
+            pos = (6 - self.screen_scroll_offset, GC.WINHEIGHT - 8 - LevelUpSurface.get_height())
             surf.blit(LevelUpSurface, pos)
 
             # Blit unit's pic
             BigPortraitSurf = self.unit.bigportrait
-            pos = (WINWIDTH - BigPortraitSurf.get_width() - 4, WINHEIGHT + self.unit_scroll_offset - BigPortraitSurf.get_height())
+            pos = (GC.WINWIDTH - BigPortraitSurf.get_width() - 4, GC.WINHEIGHT + self.unit_scroll_offset - BigPortraitSurf.get_height())
             surf.blit(BigPortraitSurf, pos)
 
-        ### ALL ###
         # Update and draw animations
         self.animations = [animation for animation in self.animations if not animation.update(gameStateObj)]
         for animation in self.animations:
@@ -428,19 +430,19 @@ class levelUpScreen(object):
 
 class Exp_Bar(object):
     def __init__(self, expSet, center=True):
-        self.background = Engine.subsurface(IMAGESDICT['ExpBar'], (0, 0, 136, 24))
-        self.begin = Engine.subsurface(IMAGESDICT['ExpBar'], (0, 24, 3, 7))
-        self.middle = Engine.subsurface(IMAGESDICT['ExpBar'], (3, 24, 1, 7))
-        self.end = Engine.subsurface(IMAGESDICT['ExpBar'], (4, 24, 2, 7))
+        self.background = Engine.subsurface(GC.IMAGESDICT['ExpBar'], (0, 0, 136, 24))
+        self.begin = Engine.subsurface(GC.IMAGESDICT['ExpBar'], (0, 24, 3, 7))
+        self.middle = Engine.subsurface(GC.IMAGESDICT['ExpBar'], (3, 24, 1, 7))
+        self.end = Engine.subsurface(GC.IMAGESDICT['ExpBar'], (4, 24, 2, 7))
 
         self.width = self.background.get_width()
         self.height = self.background.get_height()
         self.bg_surf = self.create_bg_surf()
 
         if center:
-            self.pos = WINWIDTH/2 - self.width/2, WINHEIGHT/2 - self.height/2
+            self.pos = GC.WINWIDTH/2 - self.width/2, GC.WINHEIGHT/2 - self.height/2
         else:
-            self.pos = WINWIDTH/2 - self.width/2, WINHEIGHT - self.height
+            self.pos = GC.WINWIDTH/2 - self.width/2, GC.WINHEIGHT - self.height
 
         self.sprite_offset = self.height/2
         self.done = False
@@ -451,7 +453,7 @@ class Exp_Bar(object):
         # Create surf
         surf = Engine.create_surface((self.width, self.height), transparent=True, convert=True)
         # Blit background
-        surf.blit(self.background, (0,0))
+        surf.blit(self.background, (0, 0))
         # Blit beginning sprite
         surf.blit(self.begin, (7, 9))
         return surf
@@ -470,7 +472,7 @@ class Exp_Bar(object):
 
     def draw(self, surf):
         new_surf = Engine.create_surface((self.width, self.height))
-        new_surf.blit(self.bg_surf, (0,0))
+        new_surf.blit(self.bg_surf, (0, 0))
 
         # Blit the correct number of sprites for the middle of the EXP bar
         indexpixel = int((max(0, self.num)))
@@ -481,8 +483,8 @@ class Exp_Bar(object):
         new_surf.blit(self.end, (10 + indexpixel, 9))
 
         # Blit current amount of exp
-        position = (self.width - FONT['number_small3'].size(str(self.num))[0] - 4, 4)
-        FONT['number_small3'].blit(str(self.num), new_surf, position)
+        position = (self.width - GC.FONT['number_small3'].size(str(self.num))[0] - 4, 4)
+        GC.FONT['number_small3'].blit(str(self.num), new_surf, position)
 
         new_surf = Engine.subsurface(new_surf, (0, self.sprite_offset, self.width, self.height - self.sprite_offset*2))
 

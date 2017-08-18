@@ -1,15 +1,15 @@
 # === Imports ==================================================================
 # Custom imports
-from GlobalConstants import *
+import GlobalConstants as GC
+import configuration as cf
 import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
-import copy
 
 import logging
 logger = logging.getLogger(__name__)
 
 # === New Status Object ========================================================
 class StatusObject(object):
-    def __init__(self, s_id, name, components, desc, icon_index=(0,0)):
+    def __init__(self, s_id, name, components, desc, icon_index=(0, 0)):
         self.id = s_id
         self.name = name
         self.desc = desc
@@ -41,8 +41,8 @@ class StatusObject(object):
             self.active.item.removeSprites()
 
     def loadSprites(self):
-        self.icon = Engine.subsurface(ITEMDICT['Skills'], (16*self.icon_index[0], 16*self.icon_index[1], 16, 16)) if self.icon_index else None
-        self.cooldown = IMAGESDICT['IconCooldown']
+        self.icon = Engine.subsurface(GC.ITEMDICT['Skills'], (16*self.icon_index[0], 16*self.icon_index[1], 16, 16)) if self.icon_index else None
+        self.cooldown = GC.IMAGESDICT['IconCooldown']
         if self.upkeep_animation:
             self.upkeep_animation.loadSprites()
         if self.always_animation:
@@ -82,7 +82,7 @@ class StatusObject(object):
         if index >= 8:
             pass
         else:
-            chosen_cooldown = Engine.subsurface(self.cooldown, (16*index,0,16,16))
+            chosen_cooldown = Engine.subsurface(self.cooldown, (16*index, 0, 16, 16))
             surf.blit(chosen_cooldown, topleft) 
 
     def get_help_box(self):
@@ -105,8 +105,11 @@ class StatusObject(object):
             return super(StatusObject, self).__getattr__(attr)
         return None
 
-    def __getstate__(self): return self.__dict__
-    def __setstate__(self, d): self.__dict__.update(d)
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
 
 class TimeComponent(object):
     def __init__(self, time_left):
@@ -173,7 +176,7 @@ class UpkeepAnimationComponent(object):
         self.sprite = None
 
     def loadSprites(self):
-        self.sprite = IMAGESDICT[self.animation_name]
+        self.sprite = GC.IMAGESDICT[self.animation_name]
 
 class AlwaysAnimationComponent(object):
     def __init__(self, animation_name, x, y, num_frames):
@@ -191,8 +194,8 @@ class AlwaysAnimationComponent(object):
         self.sprite = None
 
     def loadSprites(self):
-        self.sprite = IMAGESDICT[self.animation_name]
-        self.image = Engine.subsurface(self.sprite, (0,0,self.sprite.get_width()/self.x, self.sprite.get_height()/self.y))
+        self.sprite = GC.IMAGESDICT[self.animation_name]
+        self.image = Engine.subsurface(self.sprite, (0, 0, self.sprite.get_width()/self.x, self.sprite.get_height()/self.y))
 
 # === STATUS PROCESSOR =========================================================
 class Status_Processor(object):
@@ -247,8 +250,6 @@ class Status_Processor(object):
             # Get status
             if self.current_unit_statuses:
                 self.health_bar.change_unit(self.current_unit, None)
-                #gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
-                #self.current_unit.isActive = True
                 self.state.changeState('new_status')
             else: # This unit has no status to process. Return and get a new one
                 self.state.changeState('begin')
@@ -274,8 +275,8 @@ class Status_Processor(object):
                     # Processing state handles animation and HP updating
                     if self.oldhp != self.newhp:
                         logger.debug('HP change: %s %s', self.oldhp, self.newhp)
-                        #self.health_bar.update()
-                        #self.start_time_for_this_status = current_time + self.health_bar.time_for_change - 400
+                        # self.health_bar.update()
+                        # self.start_time_for_this_status = current_time + self.health_bar.time_for_change - 400
                         gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
                         self.current_unit.sprite.change_state('status_active', gameStateObj)
                         self.state.changeState('processing')
@@ -284,7 +285,6 @@ class Status_Processor(object):
                     else:
                         self.state.changeState('new_status')
             else: # This unit has no more status to process. Return and get a new unit
-                #self.current_unit.isActive = False
                 self.state.changeState('begin')
 
         elif self.state.getState() == 'processing':
@@ -362,7 +362,8 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
         if not stota.sprite:
             logger.error('Missing upkeep animation sprite for %s', status.name)
         else:
-            gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, (unit.position[0], unit.position[1] - 1), (stota.x, stota.y), stota.num_frames, on=False))
+            anim = CustomObjects.Animation(stota.sprite, (unit.position[0], unit.position[1] - 1), (stota.x, stota.y), stota.num_frames, on=False)
+            gameStateObj.allanimations.append(anim)
 
     if status.upkeeps_movement:
         if unit.team.startswith('enemy'):
@@ -448,7 +449,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         unit.reset()
 
     if status.skill_restore:
-        activated_skills = [status for status in unit.status_effects if status.active]
+        activated_skills = [s for s in unit.status_effects if s.active]
         for activated_skill in activated_skills:
             activated_skill.active.current_charge = activated_skill.active.required_charge
             unit.tags.add('ActiveSkillCharged')
@@ -553,7 +554,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
 # === STATUS PARSER ======================================================
 # Takes one status id, as well as the database of status data, and outputs a status object.
 def statusparser(s_id):
-    for status in STATUSDATA.getroot().findall('status'):
+    for status in GC.STATUSDATA.getroot().findall('status'):
         if status.find('id').text == s_id:
             components = status.find('components').text
             if components:
@@ -566,7 +567,7 @@ def statusparser(s_id):
             if icon_index:
                 icon_index = tuple(int(num) for num in icon_index.split(','))
             else:
-                icon_index = (0,0)
+                icon_index = (0, 0)
 
             my_components = {}
             for component in components:
@@ -575,19 +576,19 @@ def statusparser(s_id):
                     my_components['time'] = TimeComponent(time)
                 elif component == 'stat_change':
                     my_components['stat_change'] = SaveLoad.intify_comma_list(status.find('stat_change').text)
-                    my_components['stat_change'].extend([0] * (CONSTANTS['num_stats'] - len(my_components['stat_change'])))
+                    my_components['stat_change'].extend([0] * (cf.CONSTANTS['num_stats'] - len(my_components['stat_change'])))
                 elif component == 'upkeep_stat_change':
                     stat_change = SaveLoad.intify_comma_list(status.find('upkeep_stat_change').text)
-                    stat_change.extend([0] * (CONSTANTS['num_stats'] - len(stat_change)))
+                    stat_change.extend([0] * (cf.CONSTANTS['num_stats'] - len(stat_change)))
                     my_components['upkeep_stat_change'] = UpkeepStatChangeComponent(stat_change)
                 elif component == 'endstep_stat_change':
                     stat_change = SaveLoad.intify_comma_list(status.find('endstep_stat_change').text)
-                    stat_change.extend([0] * (CONSTANTS['num_stats'] - len(stat_change)))
+                    stat_change.extend([0] * (cf.CONSTANTS['num_stats'] - len(stat_change)))
                     my_components['endstep_stat_change'] = UpkeepStatChangeComponent(stat_change)
                 elif component == 'rhythm_stat_change':
                     change, reset, init_count, limit = status.find('rhythm_stat_change').text.split(';')
                     change = SaveLoad.intify_comma_list(change)
-                    change.extend([0] * (CONSTANTS['num_stats'] - len(change)))
+                    change.extend([0] * (cf.CONSTANTS['num_stats'] - len(change)))
                     reset = SaveLoad.intify_comma_list(reset)
                     init_count = int(init_count)
                     limit = int(limit)
@@ -595,7 +596,7 @@ def statusparser(s_id):
                 elif component == 'endstep_rhythm_stat_change':
                     change, reset, init_count, limit = status.find('endstep_rhythm_stat_change').text.split(';')
                     change = SaveLoad.intify_comma_list(change)
-                    change.extend([0] * (CONSTANTS['num_stats'] - len(change)))
+                    change.extend([0] * (cf.CONSTANTS['num_stats'] - len(change)))
                     reset = SaveLoad.intify_comma_list(reset)
                     init_count = int(init_count)
                     limit = int(limit)
@@ -659,10 +660,10 @@ def deserialize(s_dict, unit, gameStateObj):
     status = statusparser(s_dict['id'])
     if not status:
         return
-    #status = HandleStatusAddition(status, unit, gameStateObj)
+    # status = HandleStatusAddition(status, unit, gameStateObj)
     if s_dict['time_left']:
         status.time.time_left = s_dict['time_left']
-    if s_dict.get('count') != None:
+    if s_dict.get('count') is not None:
         status.count.count = s_dict['count']
     if s_dict['upkeep_sc_count']:
         status.upkeep_stat_change.count = s_dict['upkeep_sc_count']
@@ -689,4 +690,5 @@ def deserialize(s_dict, unit, gameStateObj):
     unit.status_effects.append(status)
     unit.status_bundle.update(status.components.keys())
 
-feat_list = ['fStrength +2', 'fMagic +2', 'fSkill +3', 'fSpeed +2', 'fDefense +2', 'fResistance +2', 'fMovement +1', 'fConstitution +3', 'fMaximum HP +5', 'fLuck +4']
+feat_list = ['fStrength +2', 'fMagic +2', 'fSkill +3', 'fSpeed +2', 'fDefense +2', 
+             'fResistance +2', 'fMovement +1', 'fConstitution +3', 'fMaximum HP +5', 'fLuck +4']

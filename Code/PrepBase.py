@@ -1,14 +1,15 @@
 # Preparations Menu and Base Menu States
+import os
 
 # Custom imports
-from GlobalConstants import *
-from configuration import *
-import StateMachine, MenuFunctions, SaveLoad, ItemMethods, Banner
+import GlobalConstants as GC
+import configuration as cf
+import StateMachine, MenuFunctions, ItemMethods
 import Image_Modification, CustomObjects, Dialogue, WorldMap, InputManager, Engine
 
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        Engine.music_thread.fade_in(MUSICDICT[metaDataObj['prep_music']])
+        Engine.music_thread.fade_in(GC.MUSICDICT[metaDataObj['prep_music']])
         gameStateObj.cursor.drawState = 0
         gameStateObj.cursor.autocursor(gameStateObj)
         gameStateObj.boundary_manager.draw_flag = 0
@@ -16,11 +17,11 @@ class PrepMainState(StateMachine.State):
             fade = True
         else:
             fade = False
-        gameStateObj.background = MenuFunctions.StaticBackground(IMAGESDICT['FocusFade'], fade=fade)
+        gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=fade)
         if not self.started:
-            options = [WORDS['Manage'], WORDS['Formation'], WORDS['Options'], WORDS['Save'], WORDS['Fight']]
+            options = [cf.WORDS['Manage'], cf.WORDS['Formation'], cf.WORDS['Options'], cf.WORDS['Save'], cf.WORDS['Fight']]
             if metaDataObj['pickFlag']:
-                options.insert(0, WORDS['Pick Units'])
+                options.insert(0, cf.WORDS['Pick Units'])
             self.menu = MenuFunctions.ChoiceMenu(self, options, 'center', gameStateObj=gameStateObj)
 
         # Transition in:
@@ -41,37 +42,37 @@ class PrepMainState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveUp()
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = self.menu.getSelection()
-            if selection == WORDS['Pick Units']:
+            if selection == cf.WORDS['Pick Units']:
                 gameStateObj.stateMachine.changeState('prep_pick_units')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Manage']:
-                #self.menu = None
+            elif selection == cf.WORDS['Manage']:
+                # self.menu = None
                 gameStateObj.stateMachine.changeState('prep_items')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Formation']:
-                #self.menu = None
+            elif selection == cf.WORDS['Formation']:
+                # self.menu = None
                 gameStateObj.background = None
                 gameStateObj.stateMachine.changeState('prep_formation')
-            elif selection == WORDS['Options']:
+            elif selection == cf.WORDS['Options']:
                 gameStateObj.stateMachine.changeState('config_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Save']:
-                #SaveLoad.suspendGame(gameStateObj, 'Prep')
+            elif selection == cf.WORDS['Save']:
+                # SaveLoad.suspendGame(gameStateObj, 'Prep')
                 gameStateObj.save_kind = 'Prep'
                 gameStateObj.stateMachine.changeState('start_save')
                 gameStateObj.stateMachine.changeState('transition_out')
-                #gameStateObj.banners.append(Banner.gameSavedBanner())
-                #gameStateObj.stateMachine.changeState('itemgain')
-            elif selection == WORDS['Fight']:
-                #self.menu = None
+                # gameStateObj.banners.append(Banner.gameSavedBanner())
+                # gameStateObj.stateMachine.changeState('itemgain')
+            elif selection == cf.WORDS['Fight']:
+                # self.menu = None
                 gameStateObj.background = None
                 gameStateObj.stateMachine.back()
 
@@ -82,7 +83,7 @@ class PrepMainState(StateMachine.State):
 
     def finish(self, gameStateObj, metaDataObj):
         gameStateObj.background = None
-        #self.menu = None
+        # self.menu = None
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
@@ -96,7 +97,7 @@ class PrepPickUnitsState(StateMachine.State):
             units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
             units = sorted(units, key=lambda unit: unit.position, reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 2, 6, (110, 24))
-            gameStateObj.background = MenuFunctions.MovingBackground(IMAGESDICT['StatusBackground'])
+            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -105,31 +106,31 @@ class PrepPickUnitsState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
         elif event == 'LEFT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveLeft()
         elif event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveRight()
 
         elif event == 'SELECT':
             selection = gameStateObj.activeMenu.getSelection()
             if selection.position:
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
                 selection.position = None
             else:
                 possible_position = gameStateObj.check_formation_spots()
                 if possible_position:
-                    SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['Select 1'].play()
                     selection.position = possible_position
                     selection.reset() # Make sure unit is not 'wait'...
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.back()
         elif event == 'INFO':
             StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
@@ -147,8 +148,8 @@ class PrepPickUnitsState(StateMachine.State):
         pick_font = ['text_white', 'text_blue', 'text_white', 'text_blue', 'text_white', 'text_blue']
         word_index = 8
         for index, word in enumerate(pick_string):
-            FONT[pick_font[index]].blit(word, backSurf, (word_index, 4))
-            word_index += FONT[pick_font[index]].size(word)[0]
+            GC.FONT[pick_font[index]].blit(word, backSurf, (word_index, 4))
+            word_index += GC.FONT[pick_font[index]].size(word)[0]
         surf.blit(backSurf, topleft)
 
         return surf
@@ -175,23 +176,23 @@ class PrepFormationState(StateMachine.State):
         elif event == 'SELECT':
             gameStateObj.cursor.currentSelectedUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
             if gameStateObj.cursor.currentSelectedUnit:
-                if WORDS['Formation'] in gameStateObj.map.tile_info_dict[gameStateObj.cursor.position]:
-                    SOUNDDICT['Select 1'].play()
+                if cf.WORDS['Formation'] in gameStateObj.map.tile_info_dict[gameStateObj.cursor.position]:
+                    GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.stateMachine.changeState('prep_formation_select')
                 else:
-                    SOUNDDICT['Select 2'].play()
+                    GC.SOUNDDICT['Select 2'].play()
                     if gameStateObj.cursor.currentSelectedUnit.team.startswith('enemy'):
                         gameStateObj.boundary_manager.toggle_unit(gameStateObj.cursor.currentSelectedUnit, gameStateObj)
 
         elif event == 'BACK':
-            SOUNDDICT['Select 3'].play()
+            GC.SOUNDDICT['Select 3'].play()
             gameStateObj.stateMachine.back()
 
         elif event == 'START':
-            SOUNDDICT['Select 5'].play()
+            GC.SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
 
-        elif OPTIONS['cheat']:
+        elif cf.OPTIONS['cheat']:
             StateMachine.handle_debug(eventList, gameStateObj, metaDataObj)
 
         gameStateObj.cursor.take_input(eventList, gameStateObj)
@@ -210,7 +211,7 @@ class PrepFormationState(StateMachine.State):
 
 class PrepFormationSelectState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        self.marker = IMAGESDICT['menuHandRotated']
+        self.marker = GC.IMAGESDICT['menuHandRotated']
         self.dynamic_marker_offset = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1]
         self.lastUpdate = Engine.get_time()
         self.counter = 0
@@ -219,8 +220,8 @@ class PrepFormationSelectState(StateMachine.State):
         event = gameStateObj.input_manager.process_input(eventList)
         # Swap unit positions       
         if event == 'SELECT':
-            if WORDS['Formation'] in gameStateObj.map.tile_info_dict[gameStateObj.cursor.position]: 
-                SOUNDDICT['Select 1'].play()
+            if cf.WORDS['Formation'] in gameStateObj.map.tile_info_dict[gameStateObj.cursor.position]: 
+                GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 cur_unit = gameStateObj.cursor.currentSelectedUnit
                 if gameStateObj.cursor.currentHoveredUnit:
@@ -239,10 +240,10 @@ class PrepFormationSelectState(StateMachine.State):
                 # Remove unit display
                 gameStateObj.cursor.remove_unit_display()
             else:
-                SOUNDDICT['Select 3'].play()
+                GC.SOUNDDICT['Select 3'].play()
 
         elif event == 'BACK':
-            SOUNDDICT['Select 3'].play()
+            GC.SOUNDDICT['Select 3'].play()
             gameStateObj.stateMachine.back()
 
         gameStateObj.cursor.take_input(eventList, gameStateObj)
@@ -253,20 +254,20 @@ class PrepFormationSelectState(StateMachine.State):
         # blit static hand
         if gameStateObj.cursor.currentSelectedUnit:
             current_pos = gameStateObj.cursor.currentSelectedUnit.position
-            s_x_pos = (current_pos[0] - gameStateObj.cameraOffset.get_x()) * TILEWIDTH + 2
-            s_y_pos = (current_pos[1] - gameStateObj.cameraOffset.get_y() - 1) * TILEHEIGHT
+            s_x_pos = (current_pos[0] - gameStateObj.cameraOffset.get_x()) * GC.TILEWIDTH + 2
+            s_y_pos = (current_pos[1] - gameStateObj.cameraOffset.get_y() - 1) * GC.TILEHEIGHT
             mapSurf.blit(self.marker, (s_x_pos, s_y_pos))
 
         # blit dynamic hand
-        if WORDS['Formation'] in gameStateObj.map.tile_info_dict[gameStateObj.cursor.position]:
+        if cf.WORDS['Formation'] in gameStateObj.map.tile_info_dict[gameStateObj.cursor.position]:
             dynamic_marker_position = gameStateObj.cursor.position
             if Engine.get_time() - 50 > self.lastUpdate:
                 self.lastUpdate = Engine.get_time()
                 self.counter += 1
                 if self.counter > len(self.dynamic_marker_offset) - 1:
                     self.counter = 0
-            x_pos = (dynamic_marker_position[0] - gameStateObj.cameraOffset.get_x()) * TILEWIDTH + 2
-            y_pos = (dynamic_marker_position[1] - gameStateObj.cameraOffset.get_y() - 1) * TILEHEIGHT + self.dynamic_marker_offset[self.counter]
+            x_pos = (dynamic_marker_position[0] - gameStateObj.cameraOffset.get_x()) * GC.TILEWIDTH + 2
+            y_pos = (dynamic_marker_position[1] - gameStateObj.cameraOffset.get_y() - 1) * GC.TILEHEIGHT + self.dynamic_marker_offset[self.counter]
             mapSurf.blit(self.marker, (x_pos, y_pos))
         return mapSurf
 
@@ -283,9 +284,9 @@ class PrepItemsState(StateMachine.State):
             if self.name == 'base_items' or self.name == 'base_armory_pick':
                 gameStateObj.activeMenu.mode = 'items'
             # for display
-            self.buttons = [IMAGESDICT['Buttons'].subsurface(0, 165, 33, 9), IMAGESDICT['Buttons'].subsurface(0, 66, 14, 13)]
-            self.font = FONT['text_white']
-            self.commands = [WORDS['Optimize'], WORDS['Manage']]
+            self.buttons = [GC.IMAGESDICT['Buttons'].subsurface(0, 165, 33, 9), GC.IMAGESDICT['Buttons'].subsurface(0, 66, 14, 13)]
+            self.font = GC.FONT['text_white']
+            self.commands = [cf.WORDS['Optimize'], cf.WORDS['Manage']]
             pos = (33 + self.font.size(self.commands[0])[0] + 16, self.font.size(self.commands[0])[1]*len(self.commands) + 8)
             self.quick_sort_disp = MenuFunctions.CreateBaseMenuSurf(pos, 'BrownBackgroundOpaque')
             self.quick_sort_disp = Image_Modification.flickerImageTranslucent(self.quick_sort_disp, 10)
@@ -295,7 +296,7 @@ class PrepItemsState(StateMachine.State):
                 self.font.blit(command, self.quick_sort_disp, (38, idx*self.font.height + 4))
 
         if not gameStateObj.background:
-            gameStateObj.background = MenuFunctions.MovingBackground(IMAGESDICT['StatusBackground'])
+            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
 
         # Transition in:
         if gameStateObj.stateMachine.from_transition():
@@ -305,33 +306,33 @@ class PrepItemsState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
         elif event == 'LEFT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveLeft()
         elif event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveRight()
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
             gameStateObj.cursor.currentSelectedUnit = selection
             if self.name == 'base_armory_pick':
                 gameStateObj.hidden_active = gameStateObj.activeMenu
-                #gameStateObj.activeMenu = None
+                # gameStateObj.activeMenu = None
                 gameStateObj.stateMachine.changeState('market')
                 gameStateObj.stateMachine.changeState('transition_out')
             else:
                 gameStateObj.stateMachine.changeState('prep_items_choices')
-                #gameStateObj.stateMachine.changeState('transition_out')
+                # gameStateObj.stateMachine.changeState('transition_out')
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.stateMachine.back()
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
             CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
@@ -343,7 +344,7 @@ class PrepItemsState(StateMachine.State):
         if gameStateObj.activeMenu:
             MenuFunctions.drawUnitItems(surf, (16, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
         # Draw quick sort display
-        surf.blit(self.quick_sort_disp, (WINWIDTH/2 + 12, WINHEIGHT/2))
+        surf.blit(self.quick_sort_disp, (GC.WINWIDTH/2 + 12, GC.WINHEIGHT/2))
         return surf
 
     def finish(self, gameStateObj, metaDataObj):
@@ -358,13 +359,13 @@ class PrepItemsChoicesState(StateMachine.State):
                 grayed_out = [True, False, True, True, True, False]
             if metaDataObj['marketFlag']:
                 grayed_out[5] = True
-            options = [WORDS['Trade'], WORDS['Use'], WORDS['List'], WORDS['Transfer'], WORDS['Give All'], WORDS['Market']]
+            options = [cf.WORDS['Trade'], cf.WORDS['Use'], cf.WORDS['List'], cf.WORDS['Transfer'], cf.WORDS['Give All'], cf.WORDS['Market']]
             self.menu = MenuFunctions.GreyMenu(gameStateObj.cursor.currentSelectedUnit, options, (128, 80), grayed_out=grayed_out)
 
         if hasattr(gameStateObj, 'hidden_item_child_option'):
             self.menu.setSelection(gameStateObj.hidden_item_child_option)
         if not gameStateObj.background:
-            gameStateObj.background = MenuFunctions.MovingBackground(IMAGESDICT['StatusBackground'])
+            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.set_extra_marker(False)
         if any(item.usable and item.booster for item in gameStateObj.cursor.currentSelectedUnit.items):
@@ -380,40 +381,40 @@ class PrepItemsChoicesState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveUp()
         elif event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveRight()
         elif event == 'LEFT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveLeft()
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = self.menu.getSelection()
-            if selection == WORDS['Trade']:
+            if selection == cf.WORDS['Trade']:
                 gameStateObj.stateMachine.changeState('prep_trade_select')
-            elif selection == WORDS['Use']:
+            elif selection == cf.WORDS['Use']:
                 gameStateObj.stateMachine.changeState('prep_use_item')
-            elif selection == WORDS['Transfer']:
+            elif selection == cf.WORDS['Transfer']:
                 gameStateObj.stateMachine.changeState('prep_transfer')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Give All']:
+            elif selection == cf.WORDS['Give All']:
                 for item in reversed(gameStateObj.cursor.currentSelectedUnit.items):
                     gameStateObj.cursor.currentSelectedUnit.remove_item(item)
                     gameStateObj.convoy.append(item)
-            elif selection == WORDS['List']:
+            elif selection == cf.WORDS['List']:
                 gameStateObj.stateMachine.changeState('prep_list')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Market']:
+            elif selection == cf.WORDS['Market']:
                 gameStateObj.stateMachine.changeState('base_market')
                 gameStateObj.stateMachine.changeState('transition_out')
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.back()
 
     def update(self, gameStateObj, metaDataObj):
@@ -429,7 +430,7 @@ class PrepItemsChoicesState(StateMachine.State):
 
     def end(self, gameStateObj, metaDataObj):
         gameStateObj.hidden_item_child_option = self.menu.getSelection()
-        #self.menu = None
+        # self.menu = None
 
 class PrepTradeSelectState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -447,26 +448,26 @@ class PrepTradeSelectState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
         elif event == 'LEFT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveLeft()
         elif event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveRight()
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
             gameStateObj.cursor.secondSelectedUnit = selection
             gameStateObj.stateMachine.changeState('prep_trade')
             gameStateObj.stateMachine.changeState('transition_out')
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.activeMenu.currentSelection = self.currentSelection
             gameStateObj.stateMachine.back()
         elif event == 'INFO':
@@ -493,7 +494,6 @@ class ConvoyTrader(object):
         self.convoy.append(item)
 
     def remove_item(self, item):
-        item_index = self.items.index(item)
         self.items.remove(item)
         item.owner = 0
         if item != "Empty Slot":
@@ -509,9 +509,9 @@ class PrepTradeState(StateMachine.State):
             self.menu = MenuFunctions.TradeMenu(self.initiator, self.partner, self.initiator.items, self.partner.items)
             # Hide active menu -- if it exists
             self.hidden_active = gameStateObj.activeMenu
-            #self.hidden_child = gameStateObj.childMenu
+            # self.hidden_child = gameStateObj.childMenu
             gameStateObj.activeMenu = None
-            #gameStateObj.childMenu = None
+            # gameStateObj.childMenu = None
 
             self.fluid_helper = InputManager.FluidScroll()
 
@@ -526,29 +526,29 @@ class PrepTradeState(StateMachine.State):
         self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
         if 'DOWN' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveDown()
         elif 'UP' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveUp()
         elif event == 'RIGHT':
             if self.menu.moveRight():
-                SOUNDDICT['Select 6'].play() # TODO NOT the exact SOuND
+                GC.SOUNDDICT['Select 6'].play() # TODO NOT the exact SOuND
         elif event == 'LEFT':
             if self.menu.moveLeft():
-                SOUNDDICT['Select 6'].play()
+                GC.SOUNDDICT['Select 6'].play()
 
         elif event == 'BACK':
             if self.menu.selection2 is not None:
-                SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Select 4'].play()
                 self.menu.selection2 = None
             else:
-                SOUNDDICT['Select 2'].play()
-                #gameStateObj.stateMachine.back()
+                GC.SOUNDDICT['Select 2'].play()
+                # gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.changeState('transition_pop')
                                               
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             if self.menu.selection2 is not None:
                 self.menu.tradeItems()
             else:
@@ -575,9 +575,9 @@ class PrepTradeState(StateMachine.State):
 class PrepUseItemState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
-        self.menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (16, 72), limit=5, hard_limit=True, gem=False, shimmer=2, \
-                                             color_control = ['text_white' if item.booster else 'text_grey' for item in cur_unit.items], \
-                                             ignore = [False if item.booster else True for item in cur_unit.items])
+        self.menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (16, 72), limit=5, hard_limit=True, gem=False, shimmer=2,
+                                             color_control=['text_white' if item.booster else 'text_grey' for item in cur_unit.items],
+                                             ignore=[False if item.booster else True for item in cur_unit.items])
         self.menu.draw_face = True
         self.info = False
         # Move cursor to starting point
@@ -589,14 +589,14 @@ class PrepUseItemState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveUp()
 
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = self.menu.getSelection()
             gameStateObj.stateMachine.back()
             gameStateObj.cursor.currentSelectedUnit.handle_booster(selection, gameStateObj)
@@ -638,7 +638,7 @@ class PrepListState(StateMachine.State):
         if hasattr(self, 'menu'):
             self.menu.updateOptions(all_items)
         else:
-            self.menu = MenuFunctions.ConvoyMenu(gameStateObj.cursor.currentSelectedUnit, all_items, (WINWIDTH - 120 - 4, 40))
+            self.menu = MenuFunctions.ConvoyMenu(gameStateObj.cursor.currentSelectedUnit, all_items, (GC.WINWIDTH - 120 - 4, 40))
         self.fluid_helper = InputManager.FluidScroll()
 
         # Transition in:
@@ -659,32 +659,32 @@ class PrepListState(StateMachine.State):
         self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
         if 'DOWN' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveDown()
         elif 'UP' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveUp()
         elif 'RIGHT' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveRight()
         elif 'LEFT' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveLeft()
 
         elif event == 'SELECT':
             selection = self.menu.getSelection()
             if selection and not self.info:
                 if selection.owner:
-                    SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.stateMachine.changeState('prep_trade')
                     gameStateObj.stateMachine.changeState('transition_out')
                     gameStateObj.cursor.secondSelectedUnit = gameStateObj.get_unit_from_id(selection.owner)
-                elif len(gameStateObj.cursor.currentSelectedUnit.items) < CONSTANTS['max_items']:
-                    SOUNDDICT['Select 1'].play()
+                elif len(gameStateObj.cursor.currentSelectedUnit.items) < cf.CONSTANTS['max_items']:
+                    GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.cursor.currentSelectedUnit.add_item(selection)
                     gameStateObj.convoy.remove(selection)
                 else: # Unit has too many items -- Trade with convoy instead
-                    SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.stateMachine.changeState('prep_trade')
                     gameStateObj.stateMachine.changeState('transition_out')
                     gameStateObj.cursor.secondSelectedUnit = selection
@@ -693,11 +693,10 @@ class PrepListState(StateMachine.State):
             # Re-update options
             self.menu.updateOptions(self.calc_all_items(gameStateObj))
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             if self.info:
                 self.info = False
             else:
-                #gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
             self.info = not self.info
@@ -715,9 +714,9 @@ class PrepListState(StateMachine.State):
         height = min(face_image.get_height(), 72)
         surf.blit(Engine.subsurface(face_image, (0, 0, face_image.get_width(), height)), (12, 0))
         # Draw name
-        surf.blit(self.name_surf, (-2,0))
-        name_position = (24 - FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]/2, 4)
-        FONT['text_white'].blit(gameStateObj.cursor.currentSelectedUnit.name, surf, name_position)
+        surf.blit(self.name_surf, (-2, 0))
+        name_position = (24 - GC.FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]/2, 4)
+        GC.FONT['text_white'].blit(gameStateObj.cursor.currentSelectedUnit.name, surf, name_position)
         # Draw owner
         surf.blit(self.owner_surf, (156, 0))
         item_owner = None
@@ -727,8 +726,8 @@ class PrepListState(StateMachine.State):
             item_owner = item_owner.name
         else:
             item_owner = "---"
-        owner_string = WORDS["Owner"] + ": " + item_owner
-        FONT['text_white'].blit(owner_string, surf, (156+4, 4))
+        owner_string = cf.WORDS["Owner"] + ": " + item_owner
+        GC.FONT['text_white'].blit(owner_string, surf, (156+4, 4))
         # Draw units items
         MenuFunctions.drawUnitItems(surf, (4, 72), gameStateObj.cursor.currentSelectedUnit, include_top=False, shimmer=2)
         # Draw current info
@@ -740,8 +739,8 @@ class PrepListState(StateMachine.State):
                 if height < 0:
                     height = 16*(self.menu.get_relative_index()+4) - 4
                 left = 64
-                if help_surf.get_width() > WINWIDTH - 64 - 4:
-                    left = WINWIDTH - help_surf.get_width() - 4
+                if help_surf.get_width() > GC.WINWIDTH - 64 - 4:
+                    left = GC.WINWIDTH - help_surf.get_width() - 4
                 surf.blit(help_surf, (left, height))
 
         return surf
@@ -756,10 +755,11 @@ class PrepTransferState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll()
         if not self.started:
             all_items = gameStateObj.convoy
-            self.menu = MenuFunctions.ConvoyMenu(gameStateObj.cursor.currentSelectedUnit, all_items, (WINWIDTH - 120 - 4, 40))
+            self.menu = MenuFunctions.ConvoyMenu(gameStateObj.cursor.currentSelectedUnit, all_items, (GC.WINWIDTH - 120 - 4, 40))
             self.menu.set_take_input(False)
-            self.choice_menu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, [WORDS["Give"], WORDS["Take"]], (60, 16), gem=False, background='BrownBackgroundOpaque')
-            self.owner_menu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, gameStateObj.cursor.currentSelectedUnit.items, (8, 72), limit=5, hard_limit=True, width=104, gem=False, shimmer=2)
+            cur_unit = gameStateObj.cursor.currentSelectedUnit
+            self.choice_menu = MenuFunctions.ChoiceMenu(cur_unit, [cf.WORDS["Give"], cf.WORDS["Take"]], (60, 16), gem=False, background='BrownBackgroundOpaque')
+            self.owner_menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (8, 72), limit=5, hard_limit=True, width=104, gem=False, shimmer=2)
             self.owner_menu.takes_input = False
             self.owner_menu.draw_face = True
             self.state = "Free" # Can also be Give, Take
@@ -779,42 +779,42 @@ class PrepTransferState(StateMachine.State):
         self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
         if 'DOWN' in directions:
-            SOUNDDICT['Select 6'].play()
-            if self.state == WORDS['Give']:
+            GC.SOUNDDICT['Select 6'].play()
+            if self.state == cf.WORDS['Give']:
                 self.owner_menu.moveDown()
-            elif self.state == WORDS['Take']:
+            elif self.state == cf.WORDS['Take']:
                 self.menu.moveDown()
             else:
                 self.choice_menu.moveDown()
         elif 'UP' in directions:
-            SOUNDDICT['Select 6'].play()
-            if self.state == WORDS['Give']:
+            GC.SOUNDDICT['Select 6'].play()
+            if self.state == cf.WORDS['Give']:
                 self.owner_menu.moveUp()
-            elif self.state == WORDS['Take']:
+            elif self.state == cf.WORDS['Take']:
                 self.menu.moveUp()
             else:
                 self.choice_menu.moveUp()
         elif 'RIGHT' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveRight()
         elif 'LEFT' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.menu.moveLeft()
 
         elif event == 'SELECT':
-            if self.state == WORDS['Give']:
+            if self.state == cf.WORDS['Give']:
                 selection = self.owner_menu.getSelection()
                 if selection:
-                    SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.cursor.currentSelectedUnit.remove_item(selection)
                     gameStateObj.convoy.append(selection)
                     self.menu.updateOptions(gameStateObj.convoy)
                     self.menu.goto(selection)
                     # Goto the item in self.menu
                     self.owner_menu.updateOptions(gameStateObj.cursor.currentSelectedUnit.items)
-            elif self.state == WORDS['Take']:
-                if len(gameStateObj.cursor.currentSelectedUnit.items) < CONSTANTS['max_items']:
-                    SOUNDDICT['Select 1'].play()
+            elif self.state == cf.WORDS['Take']:
+                if len(gameStateObj.cursor.currentSelectedUnit.items) < cf.CONSTANTS['max_items']:
+                    GC.SOUNDDICT['Select 1'].play()
                     selection = self.menu.getSelection()
                     if selection:
                         gameStateObj.convoy.remove(selection)
@@ -822,16 +822,16 @@ class PrepTransferState(StateMachine.State):
                     self.menu.updateOptions(gameStateObj.convoy)
                     self.owner_menu.updateOptions(gameStateObj.cursor.currentSelectedUnit.items)
             else:
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
                 selection = self.choice_menu.getSelection()
                 self.state = selection
-                if self.state == WORDS['Give']:
+                if self.state == cf.WORDS['Give']:
                     self.owner_menu.takes_input = True
                 else:
                     self.menu.set_take_input(True)
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            if self.state == WORDS['Give'] or self.state == WORDS['Take']:
+            GC.SOUNDDICT['Select 4'].play()
+            if self.state == cf.WORDS['Give'] or self.state == cf.WORDS['Take']:
                 if self.info:
                     self.info = False
                 else:
@@ -839,17 +839,16 @@ class PrepTransferState(StateMachine.State):
                     self.owner_menu.takes_input = False
                     self.menu.set_take_input(False)
             else:
-                #gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
-            if self.state == WORDS['Give'] or self.state == WORDS['Take']:
+            if self.state == cf.WORDS['Give'] or self.state == cf.WORDS['Take']:
                 self.info = not self.info
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
-        if self.state == WORDS["Give"]:
+        if self.state == cf.WORDS["Give"]:
             self.owner_menu.update()
-        elif self.state == WORDS["Take"]:
+        elif self.state == cf.WORDS["Take"]:
             self.menu.update()
         else:
             self.choice_menu.update()
@@ -860,18 +859,18 @@ class PrepTransferState(StateMachine.State):
         self.owner_menu.draw(mapSurf)
         self.menu.draw(mapSurf)
         # Draw supply portrait
-        mapSurf.blit(IMAGESDICT['SupplyPortrait'], (0, 0))
+        mapSurf.blit(GC.IMAGESDICT['SupplyPortrait'], (0, 0))
         # Draw current info
         if self.info:
             selection = None
             position = None
-            if self.state == WORDS["Give"]:
+            if self.state == cf.WORDS["Give"]:
                 selection = self.owner_menu.getSelection()
                 if selection:
                     help_surf = selection.get_help_box()
                     height = 16*self.owner_menu.currentSelection - help_surf.get_height() + 64
                     position = (16, height)
-            elif self.state == WORDS["Take"]:
+            elif self.state == cf.WORDS["Take"]:
                 selection = self.menu.getSelection()
                 if selection:
                     help_surf = selection.get_help_box()
@@ -879,8 +878,8 @@ class PrepTransferState(StateMachine.State):
                     if height < 0:
                         height = 16*(self.menu.get_relative_index()+4) - 4
                     left = 64
-                    if help_surf.get_width() > WINWIDTH - 64 - 4:
-                        left = WINWIDTH - help_surf.get_width() - 4
+                    if help_surf.get_width() > GC.WINWIDTH - 64 - 4:
+                        left = GC.WINWIDTH - help_surf.get_width() - 4
                     position = (left, height)
             if selection:
                 help_surf = selection.get_help_box()
@@ -896,13 +895,12 @@ class BaseMarketState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.cur_unit = gameStateObj.cursor.currentSelectedUnit
-            cur_time = Engine.get_true_time()
             self.update_options(gameStateObj)
             items_for_sale = ItemMethods.itemparser(','.join(list(gameStateObj.market_items)))
-            self.shop_menu = MenuFunctions.ConvoyMenu(None, items_for_sale, (WINWIDTH - 160 - 4, 40), disp_value="Buy")
-            self.choice_menu = MenuFunctions.ChoiceMenu(None, [WORDS["Buy"], WORDS["Sell"]], (16, 16), gem=False, background='BrownBackgroundOpaque')
-            self.buy_sure_menu = MenuFunctions.ChoiceMenu(None, [WORDS['Buy'], WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
-            self.sell_sure_menu = MenuFunctions.ChoiceMenu(None, [WORDS['Sell'], WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
+            self.shop_menu = MenuFunctions.ConvoyMenu(None, items_for_sale, (GC.WINWIDTH - 160 - 4, 40), disp_value="Buy")
+            self.choice_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS["Buy"], cf.WORDS["Sell"]], (16, 16), gem=False, background='BrownBackgroundOpaque')
+            self.buy_sure_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS['Buy'], cf.WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
+            self.sell_sure_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS['Sell'], cf.WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
             self.state = "Free" # Can also be Buy, Sell, Buy_Sure, Sell_Sure
             self.info = False
             self.current_menu = self.shop_menu
@@ -910,14 +908,14 @@ class BaseMarketState(StateMachine.State):
 
             # Create money surf
             self.money_surf = MenuFunctions.CreateBaseMenuSurf((56, 24))
-            g_surf = Engine.subsurface(IMAGESDICT['GoldenWords'], (40, 50, 9, 9))
+            g_surf = Engine.subsurface(GC.IMAGESDICT['GoldenWords'], (40, 50, 9, 9))
             self.money_surf.blit(g_surf, (45, 8))
 
             # Create owner surf
             self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
 
             if not gameStateObj.background:
-                gameStateObj.background = MenuFunctions.MovingBackground(IMAGESDICT['StatusBackground'])
+                gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
 
             # Hide active menu
             gameStateObj.childMenu = gameStateObj.activeMenu
@@ -937,18 +935,18 @@ class BaseMarketState(StateMachine.State):
         if hasattr(self, 'my_menu'):
             self.my_menu.updateOptions(all_items)
         else:
-            self.my_menu = MenuFunctions.ConvoyMenu(self.cur_unit, all_items, (WINWIDTH - 160 - 4, 40), disp_value="Sell")
+            self.my_menu = MenuFunctions.ConvoyMenu(self.cur_unit, all_items, (GC.WINWIDTH - 160 - 4, 40), disp_value="Sell")
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
         if 'DOWN' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state == "Free":
                 self.choice_menu.moveDown()
                 selection = self.choice_menu.getSelection()
-                if selection == WORDS['Buy']:
+                if selection == cf.WORDS['Buy']:
                     self.current_menu = self.shop_menu
                 else:
                     self.current_menu = self.my_menu
@@ -959,11 +957,11 @@ class BaseMarketState(StateMachine.State):
             else:
                 self.current_menu.moveDown()
         elif 'UP' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state == "Free":
                 self.choice_menu.moveUp()
                 selection = self.choice_menu.getSelection()
-                if selection == WORDS['Buy']:
+                if selection == cf.WORDS['Buy']:
                     self.current_menu = self.shop_menu
                 else:
                     self.current_menu = self.my_menu
@@ -974,7 +972,7 @@ class BaseMarketState(StateMachine.State):
             else:
                 self.current_menu.moveUp()
         elif 'RIGHT' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state == 'Buy_Sure':
                 self.buy_sure_menu.moveDown()
             elif self.state == 'Sell_Sure':
@@ -983,7 +981,7 @@ class BaseMarketState(StateMachine.State):
                 self.my_menu.moveRight()
                 self.shop_menu.moveRight()
         elif 'LEFT' in directions:
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state == 'Buy_Sure':
                 self.buy_sure_menu.moveUp()
             elif self.state == 'Sell_Sure':
@@ -993,25 +991,25 @@ class BaseMarketState(StateMachine.State):
                 self.shop_menu.moveLeft()
 
         elif event == 'SELECT':
-            if self.state == WORDS['Buy']:
+            if self.state == cf.WORDS['Buy']:
                 selection = self.current_menu.getSelection()
                 if selection:
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                     if gameStateObj.counters['money'] - value >= 0:
                         self.state = 'Buy_Sure'
-                        SOUNDDICT['Select 1'].play()
+                        GC.SOUNDDICT['Select 1'].play()
                     else:
                         # You don't have enough money
-                        SOUNDDICT['Select 4'].play()
+                        GC.SOUNDDICT['Select 4'].play()
                 else:
                     # You didn't choose anything to buy
-                    SOUNDDICT['Select 4'].play()
+                    GC.SOUNDDICT['Select 4'].play()
             elif self.state == 'Buy_Sure':
                 selection = self.buy_sure_menu.getSelection()
-                if selection == WORDS['Buy']:
-                    SOUNDDICT['Select 1'].play()
+                if selection == cf.WORDS['Buy']:
+                    GC.SOUNDDICT['Select 1'].play()
                     item = ItemMethods.itemparser(str(self.current_menu.getSelection().id))[0] # Create a copy
-                    if self.cur_unit and len(self.cur_unit.items) < CONSTANTS['max_items']:
+                    if self.cur_unit and len(self.cur_unit.items) < cf.CONSTANTS['max_items']:
                         self.cur_unit.add_item(item)
                     else:
                         gameStateObj.convoy.append(item)
@@ -1019,24 +1017,24 @@ class BaseMarketState(StateMachine.State):
                     gameStateObj.counters['money'] -= value
                     self.update_options(gameStateObj)
                 else:
-                    SOUNDDICT['Select 4'].play()
-                self.state = WORDS['Buy']
-            elif self.state == WORDS['Sell']:
+                    GC.SOUNDDICT['Select 4'].play()
+                self.state = cf.WORDS['Buy']
+            elif self.state == cf.WORDS['Sell']:
                 selection = self.current_menu.getSelection()
                 if selection:
                     if selection.value:
-                        SOUNDDICT['Select 1'].play()
+                        GC.SOUNDDICT['Select 1'].play()
                         self.state = 'Sell_Sure'
                     else:
                         # No value, can't be sold
-                        SOUNDDICT['Select 4'].play()
+                        GC.SOUNDDICT['Select 4'].play()
                 else:
                     # You didn't choose anything to sell
-                    SOUNDDICT['Select 4'].play()
+                    GC.SOUNDDICT['Select 4'].play()
             elif self.state == 'Sell_Sure':
                 selection = self.sell_sure_menu.getSelection()
-                if selection == WORDS['Sell']:
-                    SOUNDDICT['Select 1'].play()
+                if selection == cf.WORDS['Sell']:
+                    GC.SOUNDDICT['Select 1'].play()
                     item = self.current_menu.getSelection()
                     value = (item.value * item.uses.uses)/2 if item.uses else item.value/2
                     gameStateObj.counters['money'] += value
@@ -1047,34 +1045,33 @@ class BaseMarketState(StateMachine.State):
                         gameStateObj.convoy.remove(item)
                     self.update_options(gameStateObj)
                 else:
-                    SOUNDDICT['Select 4'].play()
-                self.state = WORDS['Sell']
+                    GC.SOUNDDICT['Select 4'].play()
+                self.state = cf.WORDS['Sell']
             else:
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
                 selection = self.choice_menu.getSelection()
                 self.state = selection
-                if self.state == WORDS['Buy']:
+                if self.state == cf.WORDS['Buy']:
                     self.current_menu = self.shop_menu
                 else:
                     self.current_menu = self.my_menu
                 self.current_menu.set_take_input(True)
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            if self.state == WORDS['Buy'] or self.state == WORDS['Sell']:
+            GC.SOUNDDICT['Select 4'].play()
+            if self.state == cf.WORDS['Buy'] or self.state == cf.WORDS['Sell']:
                 if self.info:
                     self.info = False
                 else:
                     self.state = "Free"
                     self.current_menu.set_take_input(False)
             elif self.state == 'Buy_Sure':
-                self.state = WORDS['Buy']
+                self.state = cf.WORDS['Buy']
             elif self.state == 'Sell_Sure':
-                self.state = WORDS['Sell']
+                self.state = cf.WORDS['Sell']
             else:
-                #gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
-            if self.state == WORDS['Buy'] or self.state == WORDS['Sell']:
+            if self.state == cf.WORDS['Buy'] or self.state == cf.WORDS['Sell']:
                 self.info = not self.info
 
     def update(self, gameStateObj, metaDataObj):
@@ -1094,8 +1091,8 @@ class BaseMarketState(StateMachine.State):
         self.choice_menu.draw(mapSurf, gameStateObj)
         
         # Draw Money
-        mapSurf.blit(self.money_surf, (10, WINHEIGHT - 24))
-        FONT['text_blue'].blit(str(gameStateObj.counters['money']), mapSurf, (16, WINHEIGHT - 20))
+        mapSurf.blit(self.money_surf, (10, GC.WINHEIGHT - 24))
+        GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), mapSurf, (16, GC.WINHEIGHT - 20))
 
         # Draw owner
         mapSurf.blit(self.owner_surf, (156, 0))
@@ -1104,12 +1101,12 @@ class BaseMarketState(StateMachine.State):
             item_owner = gameStateObj.get_unit_from_id(self.current_menu.getSelection().owner)
         if item_owner:
             item_owner = item_owner.name
-        elif self.state == WORDS["Sell"] or (self.state == "Free" and self.choice_menu.getSelection() == WORDS['Sell']):
+        elif self.state == cf.WORDS["Sell"] or (self.state == "Free" and self.choice_menu.getSelection() == cf.WORDS['Sell']):
             item_owner = "Convoy"
         else:
             item_owner = "Market"
-        owner_string = WORDS["Owner"] + ": " + item_owner
-        FONT['text_white'].blit(owner_string, mapSurf, (156+4, 4))
+        owner_string = cf.WORDS["Owner"] + ": " + item_owner
+        GC.FONT['text_white'].blit(owner_string, mapSurf, (156+4, 4))
 
         # Draw current info
         if self.info:
@@ -1120,8 +1117,8 @@ class BaseMarketState(StateMachine.State):
                 if height < 0:
                     height = 16*(self.current_menu.get_relative_index()+4) - 4
                 left = 64
-                if help_surf.get_width() > WINWIDTH - 64 - 4:
-                    left = WINWIDTH - help_surf.get_width() - 4
+                if help_surf.get_width() > GC.WINWIDTH - 64 - 4:
+                    left = GC.WINWIDTH - help_surf.get_width() - 4
                 mapSurf.blit(help_surf, (left, height))
 
         if self.state == 'Buy_Sure':
@@ -1138,20 +1135,20 @@ class BaseMarketState(StateMachine.State):
 
 class BaseMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        Engine.music_thread.fade_in(MUSICDICT[metaDataObj['base_music']])
+        Engine.music_thread.fade_in(GC.MUSICDICT[metaDataObj['base_music']])
         self.done = False
         self.show_map = False
         gameStateObj.cursor.drawState = 0
-        background_image = IMAGESDICT[metaDataObj['baseFlag']]
+        background_image = GC.IMAGESDICT[metaDataObj['baseFlag']]
         gameStateObj.background = MenuFunctions.StaticBackground(background_image, fade=False)
         if gameStateObj.main_menu:
             gameStateObj.activeMenu = gameStateObj.main_menu
             gameStateObj.main_menu = None
         elif not gameStateObj.activeMenu:
-            options = [WORDS['Items'], WORDS['Market'], WORDS['Info'], WORDS['Codex'], WORDS['Save'], WORDS['Continue']]
+            options = [cf.WORDS['Items'], cf.WORDS['Market'], cf.WORDS['Info'], cf.WORDS['Codex'], cf.WORDS['Save'], cf.WORDS['Continue']]
             color_control = ['text_white', 'text_grey', 'text_grey', 'text_white', 'text_white', 'text_white']
             if gameStateObj.support:
-                options.insert(3, WORDS['Supports'])
+                options.insert(3, cf.WORDS['Supports'])
                 color_control.insert(3, 'text_grey')
             if metaDataObj['marketFlag']:
                 color_control[1] = 'text_white'
@@ -1159,7 +1156,7 @@ class BaseMainState(StateMachine.State):
                 color_control[2] = 'text_white'
             if gameStateObj.support and 'AllowSupports' in gameStateObj.game_constants:
                 color_control[3] = 'text_white'
-            topleft = 4, WINHEIGHT/2 - (len(options)*16 + 8)/2
+            topleft = 4, GC.WINHEIGHT/2 - (len(options)*16 + 8)/2
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, shimmer=2, gem=False)
 
         # Transition in:
@@ -1178,51 +1175,51 @@ class BaseMainState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
         elif event == 'SELECT':
             selection = gameStateObj.activeMenu.getSelection()
             if gameStateObj.activeMenu.color_control[gameStateObj.activeMenu.currentSelection] == 'text_grey':
                 pass
-            elif selection == WORDS['Items']:
-                SOUNDDICT['Select 1'].play()
+            elif selection == cf.WORDS['Items']:
+                GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.main_menu = gameStateObj.activeMenu
-                #gameStateObj.activeMenu = None
+                # gameStateObj.activeMenu = None
                 gameStateObj.stateMachine.changeState('base_items')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Market']:
-                SOUNDDICT['Select 1'].play()
+            elif selection == cf.WORDS['Market']:
+                GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.cursor.currentSelectedUnit = None
                 gameStateObj.stateMachine.changeState('base_market')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Info']:
-                SOUNDDICT['Select 1'].play()
+            elif selection == cf.WORDS['Info']:
+                GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.stateMachine.changeState('base_info')
-            elif selection == WORDS['Supports']:
-                SOUNDDICT['Select 1'].play()
+            elif selection == cf.WORDS['Supports']:
+                GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.stateMachine.changeState('base_support_child')
-            elif selection == WORDS['Codex']:
-                SOUNDDICT['Select 1'].play()
+            elif selection == cf.WORDS['Codex']:
+                GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.stateMachine.changeState('base_codex_child')
-            elif selection == WORDS['Save']:
-                SOUNDDICT['Select 1'].play()
-                #SaveLoad.suspendGame(gameStateObj, 'Base')
+            elif selection == cf.WORDS['Save']:
+                GC.SOUNDDICT['Select 1'].play()
+                # SaveLoad.suspendGame(gameStateObj, 'Base')
                 gameStateObj.save_kind = 'Base'
                 gameStateObj.stateMachine.changeState('start_save')
                 gameStateObj.stateMachine.changeState('transition_out')
-                #gameStateObj.banners.append(Banner.gameSavedBanner())
-                #gameStateObj.stateMachine.changeState('itemgain')
-            elif selection == WORDS['Continue']:
-                SOUNDDICT['Select 1'].play()
+                # gameStateObj.banners.append(Banner.gameSavedBanner())
+                # gameStateObj.stateMachine.changeState('itemgain')
+            elif selection == cf.WORDS['Continue']:
+                GC.SOUNDDICT['Select 1'].play()
                 self.done = True
-                #gameStateObj.stateMachine.back()
+                # gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.changeState('transition_pop')
 
     def finish(self, gameStateObj, metaDataObj):
-        #if self.done:
+        # if self.done:
         gameStateObj.background = None
         gameStateObj.activeMenu = None
 
@@ -1241,22 +1238,22 @@ class BaseInfoState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveUp()
         elif event == 'SELECT':
             selection = gameStateObj.childMenu.getSelection()
             if gameStateObj.childMenu.color_control[gameStateObj.childMenu.currentSelection] == 'text_white':
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
                 dialogue_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/baseScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(dialogue_script, selection))
                 gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.stateMachine.changeState('transition_out')
             return
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.back()
 
     def finish(self, gameStateObj, metaDataObj):
@@ -1271,7 +1268,7 @@ class BaseSupportChildState(StateMachine.State):
             gameStateObj.hidden_child = None
 
         if not gameStateObj.childMenu:
-            options = [WORDS['Pairings'], WORDS['Conversations']]
+            options = [cf.WORDS['Pairings'], cf.WORDS['Conversations']]
             topleft = 4 + gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.topleft[1] + 3*16
             gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft)
 
@@ -1283,25 +1280,25 @@ class BaseSupportChildState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveUp()
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.childMenu.getSelection()
-            if selection == WORDS['Pairings']:
+            if selection == cf.WORDS['Pairings']:
                 gameStateObj.stateMachine.changeState('base_pairing')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Conversations']:
+            elif selection == cf.WORDS['Conversations']:
                 gameStateObj.stateMachine.changeState('base_support_convos')
                 gameStateObj.stateMachine.changeState('transition_out')
             gameStateObj.hidden_active = gameStateObj.activeMenu
             gameStateObj.hidden_child = gameStateObj.childMenu
             gameStateObj.activeMenu = None
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.back()
 
     def finish(self, gameStateObj, metaDataObj):
@@ -1309,8 +1306,8 @@ class BaseSupportChildState(StateMachine.State):
 
 class BasePairingState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and unit.name in gameStateObj.support.node_dict \
-                 and any(o_unit.name in gameStateObj.support.node_dict[unit.name].adjacent for o_unit in gameStateObj.allunits)]
+        self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and unit.name in gameStateObj.support.node_dict and
+                      any(o_unit.name in gameStateObj.support.node_dict[unit.name].adjacent for o_unit in gameStateObj.allunits)]
         if not gameStateObj.activeMenu:
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 3, 3, 'center')
             gameStateObj.activeMenu.mode = 'support'
@@ -1323,19 +1320,19 @@ class BasePairingState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
         elif event == 'LEFT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveLeft()
         elif event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveRight()
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
             gameStateObj.cursor.currentSelectedUnit = selection
             gameStateObj.stateMachine.changeState('base_pairing_select')
@@ -1343,8 +1340,8 @@ class BasePairingState(StateMachine.State):
             gameStateObj.pair_menu = gameStateObj.activeMenu
             gameStateObj.activeMenu = None
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.stateMachine.back()
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
             StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
@@ -1365,19 +1362,19 @@ class BasePairingSelectState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
         elif event == 'LEFT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveLeft()
         elif event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveRight()
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
             # Re-pair
             gameStateObj.support.pair(selection.name, self.selection.name)
@@ -1385,7 +1382,7 @@ class BasePairingSelectState(StateMachine.State):
             # Unhide
             gameStateObj.activeMenu = gameStateObj.pair_menu
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.back()
             # Unhide
             gameStateObj.activeMenu = gameStateObj.pair_menu
@@ -1414,7 +1411,7 @@ class BaseSupportConvoState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state:
                 gameStateObj.childMenu.moveDown()
             else:
@@ -1422,7 +1419,7 @@ class BaseSupportConvoState(StateMachine.State):
                 gameStateObj.childMenu.owner = gameStateObj.activeMenu.getSelection()
                 gameStateObj.childMenu.updateOptions(gameStateObj)
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state:
                 gameStateObj.childMenu.moveUp()
             else:
@@ -1431,11 +1428,11 @@ class BaseSupportConvoState(StateMachine.State):
                 gameStateObj.childMenu.updateOptions(gameStateObj)
         elif event == 'LEFT':
             if self.state:
-                SOUNDDICT['Select 6'].play()
+                GC.SOUNDDICT['Select 6'].play()
                 self.state = gameStateObj.childMenu.moveLeft()
                 gameStateObj.childMenu.cursor_flag = self.state
         elif event == 'RIGHT':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state:
                 gameStateObj.childMenu.moveRight()
             else:
@@ -1444,12 +1441,12 @@ class BaseSupportConvoState(StateMachine.State):
         elif event == 'SELECT':
             # Play conversation
             if self.state:
-                SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Select 1'].play()
                 unit, level = gameStateObj.childMenu.getSelection()
                 owner = gameStateObj.childMenu.owner
                 edge = gameStateObj.support.node_dict[owner.name].adjacent[unit.name]
-                support_level = edge.current_value/CONSTANTS['support_points']
-                # if OPTIONS['debug']:
+                support_level = edge.current_value/cf.CONSTANTS['support_points']
+                # if cf.OPTIONS['debug']:
                 #     print(level, support_level)
                 if level < support_level:
                     if level == 0:
@@ -1465,10 +1462,9 @@ class BaseSupportConvoState(StateMachine.State):
                     gameStateObj.stateMachine.changeState('transition_out')
                     edge.unread = False
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.activeMenu = None
             gameStateObj.childMenu = None
-            #gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
             StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
@@ -1476,11 +1472,11 @@ class BaseSupportConvoState(StateMachine.State):
 class BaseCodexChildState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not gameStateObj.childMenu:
-            options = [WORDS['Library']]
+            options = [cf.WORDS['Library']]
             if 'WorldMap' in gameStateObj.game_constants:
-                options.append(WORDS['Map'])
+                options.append(cf.WORDS['Map'])
             if gameStateObj.statistics:
-                options.append(WORDS['Records'])
+                options.append(cf.WORDS['Records'])
             topleft = 4 + gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.topleft[1] + (4*16 if gameStateObj.support else 3*16)
             gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft, gem=False)
 
@@ -1492,25 +1488,25 @@ class BaseCodexChildState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.childMenu.moveUp()
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.childMenu.getSelection()
-            if selection == WORDS['Library'] and gameStateObj.unlocked_lore:
+            if selection == cf.WORDS['Library'] and gameStateObj.unlocked_lore:
                 gameStateObj.stateMachine.changeState('base_library')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Map']:
+            elif selection == cf.WORDS['Map']:
                 gameStateObj.stateMachine.changeState('base_map')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == WORDS['Records']:
+            elif selection == cf.WORDS['Records']:
                 gameStateObj.stateMachine.changeState('base_records')
                 gameStateObj.stateMachine.changeState('transition_out')
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.childMenu = None
             gameStateObj.stateMachine.back()
 
@@ -1520,7 +1516,7 @@ class BaseMapState(StateMachine.State):
         gameStateObj.activeMenu = None
 
         gameStateObj.old_background = gameStateObj.background
-        gameStateObj.background = WorldMap.WorldMapBackground(IMAGESDICT['WorldMap'])
+        gameStateObj.background = WorldMap.WorldMapBackground(GC.IMAGESDICT['WorldMap'])
 
         # Set up cursor
         self.moveUp = False
@@ -1537,8 +1533,7 @@ class BaseMapState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.stateMachine.back()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.changeState('transition_pop')
             return
 
@@ -1604,7 +1599,7 @@ class BaseLibraryState(StateMachine.State):
                     ignore.append(False)
                     color_control.append('text_white')
 
-            gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, (4,4), limit=9, hard_limit=True, ignore=ignore, color_control=color_control)
+            gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, (4, 4), limit=9, hard_limit=True, ignore=ignore, color_control=color_control)
             gameStateObj.activeMenu.moveDown()
             self.menu = MenuFunctions.Lore_Display(metaDataObj['lore'][gameStateObj.activeMenu.getSelection()])
 
@@ -1616,16 +1611,15 @@ class BaseLibraryState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown()
             self.menu.update_entry(metaDataObj['lore'][gameStateObj.activeMenu.getSelection()])
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp()
             self.menu.update_entry(metaDataObj['lore'][gameStateObj.activeMenu.getSelection()])
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
-            #gameStateObj.stateMachine.back()
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.changeState('transition_pop')
 
     def draw(self, gameStateObj, metaDataObj):
@@ -1652,7 +1646,7 @@ class BaseRecordsState(StateMachine.State):
             self.name_dict = {}
             for level in gameStateObj.statistics:
                 for unit, record in level.stats.iteritems():
-                    if not unit in self.name_dict:
+                    if unit not in self.name_dict:
                         self.name_dict[unit] = []
                     self.name_dict[unit].append((level.name, record))
             self.name_list = [(k, v) for (k, v) in self.name_dict.iteritems()]
@@ -1671,21 +1665,21 @@ class BaseRecordsState(StateMachine.State):
                 gameStateObj.stateMachine.changeState("transition_in")
                 return 'repeat'
             elif gameStateObj.stateMachine.get_last_state() == 'dialogue':
-                self.current_offset_y = WINHEIGHT
+                self.current_offset_y = GC.WINHEIGHT
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.current_menu.moveDown()
         elif event == 'UP':
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             self.current_menu.moveUp()
         elif event == 'LEFT':
             self.prev_menu = self.current_menu
-            self.current_offset_x = -WINWIDTH
+            self.current_offset_x = -GC.WINWIDTH
             self.prev_offset_x = 1
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state == 'records':
                 self.state = "mvp"
                 self.current_menu = self.mvp
@@ -1700,9 +1694,9 @@ class BaseRecordsState(StateMachine.State):
                 self.current_menu = self.unit_stats[self.mvp.currentSelection]
         elif event == 'RIGHT':
             self.prev_menu = self.current_menu
-            self.current_offset_x = WINWIDTH
+            self.current_offset_x = GC.WINWIDTH
             self.prev_offset_x = -1
-            SOUNDDICT['Select 6'].play()
+            GC.SOUNDDICT['Select 6'].play()
             if self.state == 'records':
                 self.state = "mvp"
                 self.current_menu = self.mvp
@@ -1716,10 +1710,10 @@ class BaseRecordsState(StateMachine.State):
                 self.mvp.moveDown()
                 self.current_menu = self.unit_stats[self.mvp.currentSelection]
         elif event == 'SELECT':
-            SOUNDDICT['Select 1'].play()
+            GC.SOUNDDICT['Select 1'].play()
             if self.state in {'records', 'mvp'}:
                 self.prev_menu = self.current_menu
-                self.current_offset_y = WINHEIGHT
+                self.current_offset_y = GC.WINHEIGHT
                 self.prev_offset_y = -1
             if self.state == 'records':
                 self.state = "chapter"
@@ -1728,12 +1722,12 @@ class BaseRecordsState(StateMachine.State):
                 self.state = "unit"
                 self.current_menu = self.unit_stats[self.current_menu.currentSelection]
         elif event == 'BACK':
-            SOUNDDICT['Select 4'].play()
+            GC.SOUNDDICT['Select 4'].play()
             if self.state == 'records' or self.state == 'mvp':
                 gameStateObj.stateMachine.changeState('transition_pop')
             else:
                 self.prev_menu = self.current_menu
-                self.current_offset_y = -WINHEIGHT
+                self.current_offset_y = -GC.WINHEIGHT
                 self.prev_offset_y = 1
 
             if self.state == 'unit':
@@ -1757,7 +1751,7 @@ class BaseRecordsState(StateMachine.State):
                 self.prev_offset_x += 16
             elif self.prev_offset_x < 0:
                 self.prev_offset_x -= 16
-            if self.prev_offset_x > WINWIDTH or self.prev_offset_x < -WINWIDTH:
+            if self.prev_offset_x > GC.WINWIDTH or self.prev_offset_x < -GC.WINWIDTH:
                 self.prev_offset_x = 0
                 self.prev_menu = None
         # Y axis
@@ -1770,7 +1764,7 @@ class BaseRecordsState(StateMachine.State):
                 self.prev_offset_y += 16
             elif self.prev_offset_y < 0:
                 self.prev_offset_y -= 16
-            if self.prev_offset_y > WINHEIGHT or self.prev_offset_y < -WINHEIGHT:
+            if self.prev_offset_y > GC.WINHEIGHT or self.prev_offset_y < -GC.WINHEIGHT:
                 self.prev_offset_y = 0
                 self.prev_menu = None
 

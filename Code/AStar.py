@@ -1,10 +1,10 @@
 # A* implementation
 import heapq
-from GlobalConstants import *
-from configuration import *
+import GlobalConstants as GC
+import configuration as cf
 
 try:
-    import fast_pathfinding
+    import fast_pathfinding # noqa
     FAST_PATHFINDING = True
 except:
     FAST_PATHFINDING = False
@@ -25,6 +25,7 @@ else:
 
     class Node(object):
         __slots__ = ['reachable', 'cost', 'x', 'y', 'parent', 'g', 'h', 'f']
+        
         def __init__(self, x, y, reachable, cost):
             """
             Initialize new cell
@@ -51,12 +52,13 @@ else:
 
     class Grid_Manager(object):
         __slots__ = ['gridHeight', 'gridWidth', 'grids', 'team_map', 'unit_map', 'aura_map', 'known_auras']
+
         def __init__(self, tilemap):
             self.gridHeight = tilemap.height
             self.gridWidth = tilemap.width
             self.grids = {}
 
-            for num in range(len(MCOSTDATA['Normal'])):
+            for num in range(len(GC.MCOSTDATA['Normal'])):
                 self.grids[num] = self.init_grid(num, tilemap) # For each movement type
 
             self.team_map = self.init_unit_map()
@@ -112,9 +114,9 @@ else:
         # === For Movement ===
         def get_grid(self, unit):
             if 'flying' in unit.status_bundle:
-                return self.grids[CONSTANTS['flying_mcost_column']]
+                return self.grids[cf.CONSTANTS['flying_mcost_column']]
             elif 'fleet_of_foot' in unit.status_bundle:
-                return self.grids[CONSTANTS['fleet_mcost_column']]
+                return self.grids[cf.CONSTANTS['fleet_mcost_column']]
             else:
                 return self.grids[unit.movement_group]
 
@@ -122,7 +124,7 @@ else:
             cells = []
             for x in range(self.gridWidth):
                 for y in range(self.gridHeight):
-                    tile = tilemap.tiles[(x,y)]
+                    tile = tilemap.tiles[(x, y)]
                     tile_cost = tile.get_mcost(mode)
                     cells.append(Node(x, y, tile_cost != 99, tile_cost))
             return cells
@@ -130,7 +132,7 @@ else:
         def update_tile(self, tile):
             x = tile.position[0]
             y = tile.position[1]
-            for num in range(len(MCOSTDATA['Normal'])):
+            for num in range(len(GC.MCOSTDATA['Normal'])):
                 cost = tile.get_mcost(num)
                 self.grids[num][x * self.gridHeight + y] = Node(x, y, cost != 99, cost)
 
@@ -260,6 +262,7 @@ else:
     # THIS ACTUALLY WORKS!!!
     class Djikstra(object):
         __slots__ = ['open', 'closed', 'cells', 'gridHeight', 'gridWidth', 'startposition', 'start', 'unit_team', 'pass_through']
+
         def __init__(self, startposition, grid, grid_width, grid_height, unit_team, pass_through):
             self.open = []
             heapq.heapify(self.open)

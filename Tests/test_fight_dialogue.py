@@ -1,23 +1,25 @@
 # Tests death Dialogue
-import os, time
+import os
 import pstats
 import cProfile
 
 import pygame
 import pyautogui
-pyautogui.PAUSE = 0
 
 import Code.GlobalConstants as GC
-DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))
 import Code.SaveLoad as SaveLoad
 import Code.GameStateObj as GameStateObj
-import Code.StateMachine as StateMachine
 import Code.Dialogue as Dialogue
 import Code.Engine as Engine
 
 import logging
+
+pyautogui.PAUSE = 0
+GC.DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))
+
 my_level = logging.DEBUG
-logging.basicConfig(filename='Tests/debug.log.test', filemode='w', level=my_level, disable_existing_loggers=False, format='%(levelname)8s:%(module)20s: %(message)s')
+logging.basicConfig(filename='Tests/debug.log.test', filemode='w', level=my_level,
+                    disable_existing_loggers=False, format='%(levelname)8s:%(module)20s: %(message)s')
 
 def main():
     gameStateObj = GameStateObj.GameStateObj()
@@ -30,7 +32,7 @@ def main():
     print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
 
 def run(gameStateObj, metaDataObj):
-    gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', event_flag = False, if_flag=True))
+    gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', event_flag=False, if_flag=True))
     gameStateObj.stateMachine.changeState('dialogue')
     counter = 0
     while gameStateObj.message:
@@ -42,7 +44,7 @@ def run(gameStateObj, metaDataObj):
         mapSurf, repeat = gameStateObj.stateMachine.update(eventList, gameStateObj, metaDataObj)
         while repeat:
             mapSurf, repeat = gameStateObj.stateMachine.update(eventList, gameStateObj, metaDataObj)
-        DISPLAYSURF.blit(mapSurf, (0, 0))
+        GC.DISPLAYSURF.blit(mapSurf, (0, 0))
         pygame.display.update()
 
 if __name__ == '__main__':

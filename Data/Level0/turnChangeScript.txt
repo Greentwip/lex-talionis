@@ -1,7 +1,7 @@
 # Turn Change Script
 # Turn 2
 if;gameStateObj.turncount == 1
-	if;OPTIONS['Display Hints']
+	if;cf.OPTIONS['Display Hints']
 		tutorial_mode;Wait
 		set_cursor;0,0
 		s;Narrator;Your units are blue.{w}{br}Enemy units are red.{w}{br}Ally units are green.{w}{br}To win this chapter, both of your blue units must escape.{w};auto;hint
@@ -53,7 +53,7 @@ elif;gameStateObj.turncount == 2
 	s;Ophie;Behind me, Prim.{w}{br}This one's mine!{w};auto
 	r;Bandit1;Ophie;Prim
 	# Hint
-	if;OPTIONS['Display Hints']
+	if;cf.OPTIONS['Display Hints']
 		tutorial_mode;Attack
 		set_cursor;E1;force_hold
 		disp_cursor;1
@@ -100,7 +100,7 @@ elif;gameStateObj.turncount == 3
 	s;Ophie;Never! Out of our way!{w}{br}Prim, stay behind me!{w};auto
 	s;Prim;No! I can fight too!{w}{br}You stay behind me!{w};auto
 	r;Ophie;Prim;Soldier4
-	if;OPTIONS['Display Hints']
+	if;cf.OPTIONS['Display Hints']
 		s;Narrator;Just as swords are strong vs. axes,{w}{br}axes are strong vs. lances,{w}{br}and lances are strong vs. swords.{w}{br}This enemy soldier wields lances.{w}{br}Lances have advantage over Ophie's swords.{w};auto;hint
 		s;Narrator;Luckily, as a light mage, Prim can also engage in combat.{w}{br}Magic is special. It can be used at range.{w}{br}Prim doesn't have to be next to enemies to fight.{w};auto;hint
 		s;Narrator;Try moving Prim two tiles away from the soldier and selecting{red}Attack.{black}{w}{br}This way, she can weaken him.{w}{br}Then, Ophie can finish him without fear of a counterattack.{w};auto;hint
@@ -137,9 +137,9 @@ elif;gameStateObj.turncount == 4
 	s;Ophie;... Damn it!{w}{br}Come on then. Master Yohn's sacrifice should not be in vain.{w};auto
 	r;Prim;Ophie
 	change_ai;Vagnius;Pursue
-	if;OPTIONS['Display Hints']
-		s;Narrator;With their mentor dead, Ophie and Prim must now set out on their own.{w}{clear}To find more information on something, press{red}{eval:Engine.get_key_name(OPTIONS['key_INFO'])}.{black}{w};auto;hint
-		s;Narrator;If you are ever unsure of your goal,{w}{br}check your objective by pressing{red}{eval:Engine.get_key_name(OPTIONS['key_SELECT'])}{black}on an unoccupied tile.{w}{br}Then select{red}Objective{black}from the Menu.{w};auto;hint
+	if;cf.OPTIONS['Display Hints']
+		s;Narrator;With their mentor dead, Ophie and Prim must now set out on their own.{w}{clear}To find more information on something, press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_INFO'])}.{black}{w};auto;hint
+		s;Narrator;If you are ever unsure of your goal,{w}{br}check your objective by pressing{red}{eval:Engine.get_key_name(cf.OPTIONS['key_SELECT'])}{black}on an unoccupied tile.{w}{br}Then select{red}Objective{black}from the Menu.{w};auto;hint
 		s;Narrator;If this isn't your first time playing,{w}{br}you can select{red}Options{black}from the Menu to turn off these hints.{w};auto;hint
 	end
 end

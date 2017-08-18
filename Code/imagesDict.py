@@ -1,7 +1,8 @@
 import os
+import glob
 import Engine, AnimationManager
 
-COLORKEY = (128,160,128)
+COLORKEY = (128, 160, 128)
 def getImages():
     # General Sprites
     IMAGESDICT = {}
@@ -12,7 +13,7 @@ def getImages():
                 IMAGESDICT[name[:-4]] = Engine.image_load(full_name, convert_alpha=True)
 
     # Icon Sprites
-    ICONDICT = {image[:-4]: Engine.image_load('./Sprites/Icons/' + image, convert_alpha=True) for image in os.listdir('./Sprites/Icons/') if image.endswith('.png')}
+    ICONDICT = {image[:-4]: Engine.image_load(image, convert_alpha=True) for image in glob.glob('./Sprites/Icons/*.png')}
     
     # Item and Skill and Status sprites
     ITEMDICT = {image[:-4]: Engine.image_load('./Data/Items/' + image, convert=True) for image in os.listdir('./Data/Items/') if image.endswith('.png')}

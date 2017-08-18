@@ -5,7 +5,7 @@ from GlobalConstants import IMAGESDICT
 
 # Helper global object for passive sprite animations
 class generic3Counter(object):
-    def __init__(self, first_time = 440, second_time = 50, third_time = None):
+    def __init__(self, first_time=440, second_time=50, third_time=None):
         self.count = 0
         self.lastUpdate = Engine.get_time()
         self.lastcount = 1

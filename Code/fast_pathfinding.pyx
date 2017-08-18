@@ -1,8 +1,8 @@
 # fast_pathfinding.pyx
 # cython
 import heapq
-from GlobalConstants import *
-from configuration import *
+import GlobalConstants as GC
+import configuration as cf
 
 cdef bint compare_teams(str team1, str team2):
     # Returns True if allies, false if enemies

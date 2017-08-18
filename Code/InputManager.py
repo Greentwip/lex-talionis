@@ -1,11 +1,8 @@
 #! usr/bin/env python2.7
 
-import time
 import pygame
-from pygame.locals import *
 
-from GlobalConstants import *
-from configuration import *
+import configuration as cf
 import Engine
 
 class InputManager(object):
@@ -54,23 +51,24 @@ class InputManager(object):
 
     def update_key_map(self):
         self.key_map = {}
-        self.key_map['UP'] = OPTIONS['key_UP']
-        self.key_map['LEFT'] = OPTIONS['key_LEFT']
-        self.key_map['RIGHT'] = OPTIONS['key_RIGHT']
-        self.key_map['DOWN'] = OPTIONS['key_DOWN']
-        self.key_map['SELECT'] = OPTIONS['key_SELECT']
-        self.key_map['START'] = OPTIONS['key_START']
-        self.key_map['BACK'] = OPTIONS['key_BACK']
-        self.key_map['AUX'] = OPTIONS['key_AUX']
-        self.key_map['INFO'] = OPTIONS['key_INFO']
+        self.key_map['UP'] = cf.OPTIONS['key_UP']
+        self.key_map['LEFT'] = cf.OPTIONS['key_LEFT']
+        self.key_map['RIGHT'] = cf.OPTIONS['key_RIGHT']
+        self.key_map['DOWN'] = cf.OPTIONS['key_DOWN']
+        self.key_map['SELECT'] = cf.OPTIONS['key_SELECT']
+        self.key_map['START'] = cf.OPTIONS['key_START']
+        self.key_map['BACK'] = cf.OPTIONS['key_BACK']
+        self.key_map['AUX'] = cf.OPTIONS['key_AUX']
+        self.key_map['INFO'] = cf.OPTIONS['key_INFO']
 
         self.map_keys = {v: k for k, v in self.key_map.iteritems()}
 
     def update_joystick_config(self):
         self.joystick_config = {}
+        # Don't use [('is_button', 6), ('is_button', 7)] # Select/Start, since they fire up events even when pressed 
         self.joystick_config['SELECT'] = [('is_button', 0)] # A
         self.joystick_config['BACK'] = [('is_button', 1)] # B
-        self.joystick_config['START'] = [('is_button', 3)] # Y Don't use these, since they fire up events even when pressed # [('is_button', 6), ('is_button', 7)] # Select/Start
+        self.joystick_config['START'] = [('is_button', 3)] # Y
         self.joystick_config['INFO'] = [('is_button', 5)] # RB
         self.joystick_config['AUX'] = [('is_button', 4)] # LB
         # hat
@@ -85,17 +83,17 @@ class InputManager(object):
         # Check keyboard
         for event in eventList:
             # Check keys
-            if event.type == KEYUP or event.type == KEYDOWN:
+            if event.type == pygame.KEYUP or event.type == pygame.KEYDOWN:
                 button = self.map_keys.get(event.key)
-                key_up = event.type == KEYUP
-                #print(button, key_up)
+                key_up = event.type == pygame.KEYUP
+                # print(button, key_up)
                 if button:
                     self.keys_pressed[button] = not key_up
                     if key_up:
                         self.key_up_events.append(button)
                     else:
                         self.key_down_events.append(button)
-                elif all_keys and event.type == KEYUP:
+                elif all_keys and event.type == pygame.KEYUP:
                     self.unavailable_button = event.key
                     return 'NEW'
 
@@ -111,7 +109,7 @@ class InputManager(object):
         if self.key_up_events:
             return self.key_up_events[-1]
 
-        #self.print_key_pressed()
+        # self.print_key_pressed()
         
     def handle_joystick(self):
         for button in self.buttons:

@@ -7,7 +7,7 @@ MyrmidonSword ++
 MyrmidonMagicSword
 SwordmasterUnarmed ++
 SwordmasterSword ++
-SwordmasterMagicSword
+SwordmasterMagicSword ++
 === Prim ===
 ClericUnarmed ?? (Modify Serra Cleric?)
 ClericMagicLight ??
@@ -36,7 +36,7 @@ SageFMagicAnima
 CavalierUnarmed
 CavalierSword
 CavalierMagicSword
-CavalierLance
+CavalierLance ++
 CavalierRangedLance
 PaladinUnarmed
 PaladinSword
@@ -44,8 +44,8 @@ PaladinMagicSword
 PaladinLance
 PaladinRangedLance
 === Theo ===
-KnightUnarmed
-KnightLance
+KnightUnarmed ++
+KnightLance ++
 KnightRangedLance
 GeneralUnarmed
 GeneralLance
@@ -80,11 +80,11 @@ ShamanFMagicDark
 DruidFUnarmed
 DruidFMagicDark
 === Coyote ===
-MercenaryUnarmed
-MercenarySword
+MercenaryUnarmed ++
+MercenarySword ++
 MercenaryMagicSword
-HeroUnarmed
-HeroSword
+HeroUnarmed ++
+HeroSword ++
 HeroMagicSword
 HeroAxe
 HeroRangedAxe

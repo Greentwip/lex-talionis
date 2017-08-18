@@ -1,5 +1,5 @@
 # moveScript
-if;OPTIONS['Display Hints']
+if;cf.OPTIONS['Display Hints']
 	if;gameStateObj.turncount == 1
 		remove_fake_cursors
 		if;self.optionalunit.name == 'Ophie' and not self.optionalunit.position in [(7,6),(6,7),(5,8),(4,9)]

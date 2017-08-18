@@ -3,8 +3,8 @@ import random
 from collections import OrderedDict
 
 # Custom imports
-from GlobalConstants import *
-from configuration import *
+import GlobalConstants as GC
+import configuration as cf
 import CustomObjects, StateMachine, Dialogue, AStar, Support, Engine
 import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
 
@@ -17,7 +17,7 @@ class GameStateObj(object):
         self.counters = {}
         self.counters['level'] = 0
         # Set up blitting surfaces
-        self.generic_surf = Engine.create_surface((WINWIDTH, WINHEIGHT))
+        self.generic_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT))
         # Build starting stateMachine
         self.stateMachine = StateMachine.StateMachine(['start_start'], [])
         self.input_manager = InputManager.InputManager()
@@ -46,8 +46,8 @@ class GameStateObj(object):
         self.map = tilemap
 
         # Set up blitting surface
-        mapSurfWidth = self.map.width * TILEWIDTH
-        mapSurfHeight = self.map.height * TILEHEIGHT
+        mapSurfWidth = self.map.width * GC.TILEWIDTH
+        mapSurfHeight = self.map.height * GC.TILEHEIGHT
         self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
         self.grid_manager = AStar.Grid_Manager(self.map)
@@ -68,8 +68,8 @@ class GameStateObj(object):
         self.counters['money'] = 0
         self.play_time = 0
         self.game_constants = []
-        self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if CONSTANTS['support'] else None
-        self.modify_stats = read_growths_file() # from configuration
+        self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if cf.CONSTANTS['support'] else None
+        self.modify_stats = cf.read_growths_file()
         self.unlocked_lore = []
         self.statistics = []
         self.market_items = set()
@@ -78,6 +78,7 @@ class GameStateObj(object):
         self.generic()
 
     difficulty_to_mode = {0: 'E', 1: 'N', 2: 'H'}
+
     def default_mode(self):
         return {'difficulty': 1, # 0 is Easy, 1 is Normal, 2 is Hard
                 'death': 1, # 0 is Casual, 1 is Classic
@@ -118,7 +119,7 @@ class GameStateObj(object):
         self.stateMachine = StateMachine.StateMachine(load_info['state_list'][0], load_info['state_list'][1])
         self.statistics = load_info['statistics']
         self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
-        self.modify_stats = load_info.get('modify_stats', read_growths_file())
+        self.modify_stats = load_info.get('modify_stats', cf.read_growths_file())
         self.unlocked_lore = load_info['unlocked_lore']
         self.counters = load_info['counters']
         self.market_items = load_info.get('market_items', set())
@@ -130,7 +131,7 @@ class GameStateObj(object):
             self.map.replay_commands(map_info['command_list'], self.counters['level'])
             self.map.command_list = map_info['command_list']
             for position, current_hp in map_info['HP']:
-                self.map.tiles[position].currenthp = currenthp
+                self.map.tiles[position].currenthp = current_hp
 
         # Statuses
         for index, info in enumerate(load_info['allunits']):
@@ -141,7 +142,7 @@ class GameStateObj(object):
                     self.allunits[index].status_effects.append(s_dict)
 
         # Support
-        if CONSTANTS['support']:
+        if cf.CONSTANTS['support']:
             self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt')
             self.support.deserialize(support_dict)
         else:
@@ -149,8 +150,8 @@ class GameStateObj(object):
 
         # Set up blitting surface
         if self.map:
-            mapSurfWidth = self.map.width * TILEWIDTH
-            mapSurfHeight = self.map.height * TILEHEIGHT
+            mapSurfWidth = self.map.width * GC.TILEWIDTH
+            mapSurfHeight = self.map.height * GC.TILEHEIGHT
             self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
             self.grid_manager = AStar.Grid_Manager(self.map)
@@ -172,8 +173,8 @@ class GameStateObj(object):
         phases.append(CustomObjects.Phase('enemy2', 'Enemy2TurnBanner', 800))
         phases.append(CustomObjects.Phase('other', 'OtherTurnBanner', 800))
         lord_units = [unit for unit in self.allunits if unit.position and 'Lord' in unit.tags and unit.team == 'player']
-        lord_position = lord_units[0].position if lord_units else (0,0)
-        #Certain variables change if this is being initialized at beginning of game, and not a save state
+        lord_position = lord_units[0].position if lord_units else (0, 0)
+        # Certain variables change if this is being initialized at beginning of game, and not a save state
         self.statedict = {'phases': phases,
                           'current_phase': len(phases) - 1 if self.turncount == 0 else 0,
                           'previous_phase': 0,
@@ -200,7 +201,7 @@ class GameStateObj(object):
 
         # Handle cursor
         if any(unit.team == 'player' and unit.position for unit in self.allunits):
-            #cursor_position = [unit.position for unit in self.allunits if unit.team == 'player' and unit.position][0]
+            # cursor_position = [unit.position for unit in self.allunits if unit.team == 'player' and unit.position][0]
             cursor_position = lord_position
         else:
             cursor_position = (0, 0)
@@ -283,15 +284,15 @@ class GameStateObj(object):
         return None
 
     def set_camera_limits(self):
-        #Set limits on cameraOffset
+        # Set limits on cameraOffset
         if self.cameraOffset.x < 0:
             self.cameraOffset.set_x(0)
         if self.cameraOffset.y < 0:
             self.cameraOffset.set_y(0)
-        if self.cameraOffset.x > (self.map.width - WINWIDTH/TILEWIDTH): # Need this minus to account for size of screen
-            self.cameraOffset.set_x(self.map.width - WINWIDTH/TILEWIDTH)
-        if self.cameraOffset.y > (self.map.height - WINHEIGHT/TILEHEIGHT):
-            self.cameraOffset.set_y(self.map.height - WINHEIGHT/TILEHEIGHT)
+        if self.cameraOffset.x > (self.map.width - GC.WINWIDTH/GC.TILEWIDTH): # Need this minus to account for size of screen
+            self.cameraOffset.set_x(self.map.width - GC.WINWIDTH/GC.TILEWIDTH)
+        if self.cameraOffset.y > (self.map.height - GC.WINHEIGHT/GC.TILEHEIGHT):
+            self.cameraOffset.set_y(self.map.height - GC.WINHEIGHT/GC.TILEHEIGHT)
 
     def remove_fake_cursors(self):
         self.fake_cursors = []
@@ -308,7 +309,7 @@ class GameStateObj(object):
                 item.removeSprites()
             for status in unit.status_effects:
                 status.removeSprites()
-        #if self.map:
+        # if self.map:
         #    self.map.removeSprites() I don't think this is actually necessary..., since we save a serialized version of the map now
         if self.objective:
             self.objective.removeSprites()
@@ -366,7 +367,7 @@ class GameStateObj(object):
             item.loadSprites()
 
     def clean_up(self):
-         # Units should leave (first, because clean_up removes position)
+        # Units should leave (first, because clean_up removes position)
         for unit in self.allunits:
             unit.leave(self)
             unit.remove_from_map(self)
@@ -440,7 +441,7 @@ class GameStateObj(object):
         logger.debug("Quicksorting Inventories")
         my_units = [unit for unit in units if unit.team == 'player' and not unit.dead]
         random.shuffle(my_units)
-        #print([my_unit.name for my_unit in my_units])
+        # print([my_unit.name for my_unit in my_units])
         # First, give all
         for unit in my_units:
             for item in reversed(unit.items):
@@ -451,36 +452,39 @@ class GameStateObj(object):
         # For item in convoy
         # Distribute Weapons
         weapons = sorted([item for item in self.convoy if item.weapon], key=lambda i: (i.weapon.LVL, 100 - i.uses.uses if i.uses else 0))
-        #weapons = sorted(weapons, key=lambda i: i.uses.uses if i.uses else 100, reverse=True) # Now sort by uses, so we use weapons with more uses first
-        #print(weapons)
+        # weapons = sorted(weapons, key=lambda i: i.uses.uses if i.uses else 100, reverse=True) # Now sort by uses, so we use weapons with more uses first
+        # print(weapons)
         for weapon in weapons:
-            units_that_can_wield = sorted([unit for unit in my_units if len(unit.items) < CONSTANTS['max_items'] - 1 and \
-                                    unit.canWield(weapon) and not weapon.id in [item.id for item in unit.items]], key=lambda u: len(u.items), reverse=True)
-            #print([unit.name for unit in units_that_can_wield])
+            units_that_can_wield = [unit for unit in my_units if len(unit.items) < cf.CONSTANTS['max_items'] - 1 and
+                                    unit.canWield(weapon) and weapon.id not in [item.id for item in unit.items]]
+            units_that_can_wield = sorted(units_that_can_wield, key=lambda u: len(u.items), reverse=True)
+            # print([unit.name for unit in units_that_can_wield])
             if units_that_can_wield:
                 # Give randomly
                 unit = units_that_can_wield.pop()
                 unit.add_item(weapon)
                 self.convoy.remove(weapon)
-                #print(unit.name, weapon)
+                # print(unit.name, weapon)
         # Distribute spells
         spells = sorted([item for item in self.convoy if item.spell], key=lambda i: (i.spell.LVL, 100 - i.uses.uses if i.uses else 0))
-        #print(spells)
+        # print(spells)
         for spell in spells:
-            units_that_can_wield = sorted([unit for unit in my_units if len(unit.items) < CONSTANTS['max_items'] - 1 and \
-                                    unit.canWield(spell) and not spell.id in [item.id for item in unit.items]], key=lambda u: len(u.items), reverse=True)
-            #print([unit.name for unit in units_that_can_wield])
+            units_that_can_wield = [u for u in my_units if len(u.items) < cf.CONSTANTS['max_items'] - 1 and
+                                    u.canWield(spell) and spell.id not in [item.id for item in u.items]]
+            units_that_can_wield = sorted(units_that_can_wield, key=lambda u: len(u.items), reverse=True)
+            # print([unit.name for unit in units_that_can_wield])
             if units_that_can_wield:
                 # Give randomly
                 unit = units_that_can_wield.pop()
                 unit.add_item(spell)
                 self.convoy.remove(spell)
-                #print(unit.name, spell)
+                # print(unit.name, spell)
         # Distribute healing items
         healing_items = sorted([item for item in self.convoy if item.usable and item.heal], key=lambda i: (i.heal, i.uses.uses if i.uses else 100))
-        #print(healing_items)
+        # print(healing_items)
         # Sort by max hp
-        units_that_can_wield = sorted([unit for unit in my_units if len(unit.items) < CONSTANTS['max_items'] and not any(item.heal for item in unit.items)], key=lambda u: u.stats['HP'])
+        units_that_can_wield = [u for u in my_units if len(unit.items) < cf.CONSTANTS['max_items'] and not any(item.heal for item in u.items)]
+        units_that_can_wield = sorted(units_that_can_wield, key=lambda u: u.stats['HP'])
         for healing_item in reversed(healing_items):
             if units_that_can_wield:
                 unit = units_that_can_wield.pop()

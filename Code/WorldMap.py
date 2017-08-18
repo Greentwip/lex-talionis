@@ -3,8 +3,8 @@
 import math
 
 # Custom imports
-from GlobalConstants import *
-from configuration import *
+import GlobalConstants as GC
+import configuration as cf
 import Utility, Image_Modification, Engine
 
 class WorldMapBackground(object):
@@ -41,12 +41,12 @@ class WorldMapBackground(object):
                 split_line = line.strip().split(';')
                 coord = (int(split_line[1]), int(split_line[2]))
                 if split_line[3] == '1':
-                    font = FONT['chapter_yellow']
+                    font = GC.FONT['chapter_yellow']
                 else:
-                    font = FONT['chapter_green']
+                    font = GC.FONT['chapter_green']
                 self.add_label(split_line[0], coord, font)
 
-    def add_label(self, name, position, font=FONT['chapter_yellow']):
+    def add_label(self, name, position, font=GC.FONT['chapter_yellow']):
         self.wm_labels.append(WMLabel(name, position, font))
 
     def clear_labels(self):
@@ -69,7 +69,7 @@ class WorldMapBackground(object):
     def move_sprite(self, name, new_pos):
         if name in self.wm_sprites:
             self.wm_sprites[name].move(new_pos)
-        elif OPTIONS['debug']:
+        elif cf.OPTIONS['debug']:
             print('Error! ', name, ' not in self.wm_sprites')
 
     def quick_move(self, new_pos):
@@ -89,8 +89,8 @@ class WorldMapBackground(object):
         self.target_x, self.target_y = self.bound(self.target_x, self.target_y)
 
     def bound(self, x, y):
-        x = Utility.clamp(x, 0, self.sprite.get_width() - WINWIDTH)
-        y = Utility.clamp(y, 0, self.sprite.get_height() - WINHEIGHT)
+        x = Utility.clamp(x, 0, self.sprite.get_width() - GC.WINWIDTH)
+        y = Utility.clamp(y, 0, self.sprite.get_height() - GC.WINHEIGHT)
         return x, y
 
     def create_cursor(self, coord):
@@ -101,7 +101,7 @@ class WorldMapBackground(object):
         self.cursor = None
 
     def draw(self, surf):
-        ### UPDATE
+        # === UPDATE ===
         # Handle easing
         current_time = Engine.get_time()
         if self.easing_flag:
@@ -115,7 +115,7 @@ class WorldMapBackground(object):
                 self.x = self.target_x
                 self.y = self.target_y
 
-        ### DRAW
+        # === DRAW ===
         image = Engine.copy_surface(self.sprite)
         # Highlights
         for highlight in self.wm_highlights:
@@ -125,21 +125,21 @@ class WorldMapBackground(object):
         for label in self.wm_labels:
             label.draw(image)
         # Update world_map_sprites
-        for key,wm_unit in self.wm_sprites.iteritems():
+        for key, wm_unit in self.wm_sprites.iteritems():
             wm_unit.update()
         # World map sprites
-        for key,wm_unit in self.wm_sprites.iteritems():
+        for key, wm_unit in self.wm_sprites.iteritems():
             wm_unit.draw(image)
         # Cursor
         if self.cursor:
-            self.cursor.image = Engine.subsurface(self.cursor.passivesprite, (CURSORSPRITECOUNTER.count*TILEWIDTH*2, 0, TILEWIDTH*2, TILEHEIGHT*2))
+            self.cursor.image = Engine.subsurface(self.cursor.passivesprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
             self.cursor.draw(image)
 
-        image = Engine.subsurface(image, (self.x, self.y, WINWIDTH, WINHEIGHT))
+        image = Engine.subsurface(image, (self.x, self.y, GC.WINWIDTH, GC.WINHEIGHT))
         surf.blit(image, (0, 0))
 
 class WMLabel(object):
-    def __init__(self, name, position, font=FONT['chapter_yellow']):
+    def __init__(self, name, position, font=GC.FONT['chapter_yellow']):
         self.name = name
         self.font = font
         self.position = position
@@ -200,7 +200,7 @@ class WMSprite(object):
         topleft = x - max(0, (self.image.get_width() - 16)/2), y - max(0, self.image.get_height() - 16)
         surf.blit(self.image, topleft)
 
-    def move(self,new_pos):
+    def move(self, new_pos):
         target = self.new_position[0] + new_pos[0], self.new_position[1] + new_pos[1]
         self.new_position = target
         self.isMoving = True
@@ -208,7 +208,7 @@ class WMSprite(object):
     def update(self):
         currentTime = Engine.get_time()
 
-        ### MOVE SPRITE COUNTER LOGIC
+        # === MOVE SPRITE COUNTER LOGIC ===
         if currentTime - self.lastUpdate > 100:
             self.moveSpriteCounter += 1
             if self.moveSpriteCounter >= 4:
@@ -219,7 +219,7 @@ class WMSprite(object):
         if self.isMoving:
             if currentTime - self.last_move_update > 50:
                 # Finds difference between new_position and position
-                unit_speed = 2 ### NEEDS TESTING
+                unit_speed = 2
                 diff_pos = (self.new_position[0] - self.position[0], self.new_position[1] - self.position[1])
                 # No longer moving if difference of position is small
                 if diff_pos[0] <= unit_speed and diff_pos[0] >= -unit_speed and diff_pos[1] <= unit_speed and diff_pos[1] >= -unit_speed:
@@ -229,32 +229,32 @@ class WMSprite(object):
                 else:
                     angle = math.atan2(diff_pos[1], diff_pos[0])
                     if angle >= -math.pi/4 and angle <= math.pi/4:
-                        self.image = Engine.subsurface(self.moveRight, (self.moveSpriteCounter*TILEWIDTH*3, 0, TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveRight, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
                     elif angle <= -3*math.pi/4 or angle >= 3*math.pi/4:
-                        self.image = Engine.subsurface(self.moveLeft, (self.moveSpriteCounter*TILEWIDTH*3, 0, TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveLeft, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
                     elif angle <= -math.pi/4:
-                        self.image = Engine.subsurface(self.moveUp, (self.moveSpriteCounter*TILEWIDTH*3, 0, TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveUp, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
                     else:
-                        self.image = Engine.subsurface(self.moveDown, (self.moveSpriteCounter*TILEWIDTH*3, 0, TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveDown, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
                     updated_position = (self.position[0] + unit_speed * math.cos(angle), self.position[1] + unit_speed * math.sin(angle))
                     self.position = updated_position
 
                 self.last_move_update = currentTime
 
         else:
-            self.image = Engine.subsurface(self.passiveSprite, (PASSIVESPRITECOUNTER.count*TILEWIDTH*4, 0, TILEWIDTH*4, 40))
+            self.image = Engine.subsurface(self.passiveSprite, (GC.PASSIVESPRITECOUNTER.count*GC.TILEWIDTH*4, 0, GC.TILEWIDTH*4, 40))
 
     def loadSprites(self):
         # Load sprites
-        standsprites = UNITDICT[self.standspritesName]
-        movesprites = UNITDICT[self.movespritesName]
+        standsprites = GC.UNITDICT[self.standspritesName]
+        movesprites = GC.UNITDICT[self.movespritesName]
         self.passiveSprite, self.graySprite, self.activeSprite, self.moveLeft, self.moveRight, self.moveDown, self.moveUp = self.formatSprite(standsprites, movesprites)
-        self.image = Engine.subsurface(self.passiveSprite, (0, 0, TILEWIDTH*4, 40))
+        self.image = Engine.subsurface(self.passiveSprite, (0, 0, GC.TILEWIDTH*4, 40))
 
     def formatSprite(self, standSprites, moveSprites):
-        passiveSprites = Engine.subsurface(standSprites, (0, 0, standSprites.get_width(), TILEHEIGHT*3))
-        graySprites = Engine.subsurface(standSprites, (0, TILEHEIGHT*3, standSprites.get_width(), TILEHEIGHT*3))
-        activeSprites = Engine.subsurface(standSprites, (0, 2*TILEHEIGHT*3, standSprites.get_width(), TILEHEIGHT*3))
+        passiveSprites = Engine.subsurface(standSprites, (0, 0, standSprites.get_width(), GC.TILEHEIGHT*3))
+        graySprites = Engine.subsurface(standSprites, (0, GC.TILEHEIGHT*3, standSprites.get_width(), GC.TILEHEIGHT*3))
+        activeSprites = Engine.subsurface(standSprites, (0, 2*GC.TILEHEIGHT*3, standSprites.get_width(), GC.TILEHEIGHT*3))
         moveDown = Engine.subsurface(moveSprites, (0, 0, moveSprites.get_width(), 40))
         moveLeft = Engine.subsurface(moveSprites, (0, 40, moveSprites.get_width(), 40))
         moveRight = Engine.subsurface(moveSprites, (0, 80, moveSprites.get_width(), 40))
@@ -329,15 +329,15 @@ class Cliff_Manager(object):
         for link in self.unexplored:
             # If you are at a diagonal and you are not adjacent to anything I am already adjacent to
             if link.position in [(pos[0] - 1, pos[1] - 1), (pos[0] - 1, pos[1] + 1), (pos[0] + 1, pos[1] - 1), (pos[0] + 1, pos[1] + 1)] and \
-                not any(self.is_adjacent(a.position, link.position) for a in adj):
+                    not any(self.is_adjacent(a.position, link.position) for a in adj):
                 adj.add(link)
         return adj
 
     def place_chain(self, chain):
         if len(chain) == 1:
-            link = next(iter(chain))
-            link.orientation = 1
-            x, y = link.position
+            c_link = next(iter(chain))
+            c_link.orientation = 1
+            x, y = c_link.position
             self.orientation_grid[x + y*self.width] = 1
             return
         # Look for endings links (ie, have only one adjacency)
@@ -381,7 +381,6 @@ class Cliff_Manager(object):
             self.orientation_grid[x + y*self.width] = link.orientation
 
     def find_orientation(self, prev, current, next):
-        p_o = prev.orientation
         pdx, pdy = self.get_difference(prev, current)
         ndx, ndy = self.get_difference(current, next)
         tdx, tdy = self.get_difference(prev, next)
@@ -428,7 +427,8 @@ class Cliff_Manager(object):
         dy = b.position[1] - a.position[1]
         return dx, dy
 
-    def get_orientation(self, (x, y)):
+    def get_orientation(self, pos):
+        x, y = pos
         orientation = self.orientation_grid[x + y*self.width]
         if orientation == 2:
             return (9, 6)
@@ -442,27 +442,27 @@ class Cliff_Manager(object):
 # Minimap
 class MiniMap(object):
     # Constants
-    minimap_tiles = IMAGESDICT['Minimap_Tiles']
-    minimap_units = IMAGESDICT['Minimap_Sprites']
-    minimap_cursor = IMAGESDICT['Minimap_Cursor']
-    single_map =  {'Grass': (1, 0),
-                   'House': (2, 0),
-                   'Shop': (3, 0),
-                   'Switch': (4, 0),
-                   'Fort': (5, 0),
-                   'Ruins': (6, 0),
-                   'Forest': (8, 0),
-                   'Thicket': (9, 0),
-                   'Hill': (11, 0),
-                   'Floor': (12, 0),
-                   'Pillar': (13, 0),
-                   'Throne': (14, 0),
-                   'Chest': (15, 0),
-                   'Mountain': (4, 1),
-                   'Desert': (10, 0),
-                   'Snow': (12,1),
-                   'Dark_Snow': (13,1),
-                   'Pier': (14,1)}
+    minimap_tiles = GC.IMAGESDICT['Minimap_Tiles']
+    minimap_units = GC.IMAGESDICT['Minimap_Sprites']
+    minimap_cursor = GC.IMAGESDICT['Minimap_Cursor']
+    single_map = {'Grass': (1, 0),
+                  'House': (2, 0),
+                  'Shop': (3, 0),
+                  'Switch': (4, 0),
+                  'Fort': (5, 0),
+                  'Ruins': (6, 0),
+                  'Forest': (8, 0),
+                  'Thicket': (9, 0),
+                  'Hill': (11, 0),
+                  'Floor': (12, 0),
+                  'Pillar': (13, 0),
+                  'Throne': (14, 0),
+                  'Chest': (15, 0),
+                  'Mountain': (4, 1),
+                  'Desert': (10, 0),
+                  'Snow': (12, 1),
+                  'Dark_Snow': (13, 1),
+                  'Pier': (14, 1)}
     complex_map = ['Wall', 'River', 'Sand', 'Sea']
     scale_factor = 4
 
@@ -470,7 +470,7 @@ class MiniMap(object):
         self.tile_map = tile_map
         self.width = self.tile_map.width
         self.height = self.tile_map.height
-        self.colorkey = (0,0,0)
+        self.colorkey = (0, 0, 0)
         self.surf = Engine.create_surface((self.width*self.scale_factor, self.height*self.scale_factor))
         Engine.set_colorkey(self.surf, self.colorkey, rleaccel=False) # black is transparent
         self.pin_surf = Engine.create_surface((self.width*self.scale_factor, self.height*self.scale_factor), transparent=True)
@@ -482,7 +482,7 @@ class MiniMap(object):
         new_height = int(self.width*self.scale_factor*self.starting_scale)
         self.base_mask = Engine.create_surface((new_width, new_height))
         Engine.set_colorkey(self.base_mask, self.colorkey, rleaccel=False)
-        Engine.fill(self.base_mask, (255,255,255), None)
+        Engine.fill(self.base_mask, (255, 255, 255), None)
 
         # Handle cliffs
         cliff_positions = set()
@@ -497,23 +497,23 @@ class MiniMap(object):
         for x in range(self.width):
             for y in range(self.height):
                 key = self.tile_map.tiles[(x, y)].minimap
-                sprite = self.handle_key(key, (x,y))
+                sprite = self.handle_key(key, (x, y))
                 self.surf.blit(sprite, (x*self.scale_factor, y*self.scale_factor))
 
         # Build units
         self.build_units(units)
         
     def handle_key(self, key, position):
-        #print(key)
+        # print(key)
         # Normal keys
         if key in self.single_map:
             return self.get_sprite(self.single_map[key])
         # Bridge
         elif key == 'Bridge':
             if self.bridge_left_right(position):
-                return self.get_sprite((0,1))
+                return self.get_sprite((0, 1))
             else:
-                return self.get_sprite((8,1))
+                return self.get_sprite((8, 1))
         # Door
         elif key == 'Door':
             return self.door_type(position)
@@ -671,7 +671,7 @@ class MiniMap(object):
             image = self.occlude(Engine.copy_surface(image), progress)
 
         # TODO make minimaps work with even bigger maps (current limit is 60x40)
-        pos = (WINWIDTH/2 - image.get_width()/2, WINHEIGHT/2 - image.get_height()/2)
+        pos = (GC.WINWIDTH/2 - image.get_width()/2, GC.WINHEIGHT/2 - image.get_height()/2)
         surf.blit(image, pos)
         x = camera_offset.x
         y = camera_offset.y
@@ -705,5 +705,5 @@ class MiniMap(object):
         bg.blit(mask, (bg.get_width()/2 - mask.get_width()/2, bg.get_height()/2 - mask.get_height()/2))
 
         # Apply mask to surf
-        Engine.blit(surf, bg, bg.get_rect().topleft, mask=bg.get_rect(), blend='RGB_MULT')
+        Engine.blit(surf, bg, bg.get_rect().topleft, bg.get_rect(), Engine.BLEND_RGB_MULT)
         return surf

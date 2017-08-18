@@ -1,5 +1,5 @@
 # menuScript
-if;OPTIONS['Display Hints'] and gameStateObj.turncount == 1
+if;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 	if;self.optionalunit.name == 'Nia'
 		if;self.optionalunit.position == (5,6)
 			s;Narrator;Now select{red}Attack{black}to attack the soldier from afar.{w};auto;hint

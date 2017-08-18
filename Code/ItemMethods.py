@@ -1,10 +1,10 @@
-from GlobalConstants import *
+import GlobalConstants as GC
 import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, CustomObjects, Engine
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):
-    def __init__(self, i_id, name, spritetype, spriteid, components, value, RNG, \
-                 desc, aoe, weapontype, status, status_on_hold, status_on_equip, \
+    def __init__(self, i_id, name, spritetype, spriteid, components, value, RNG,
+                 desc, aoe, weapontype, status, status_on_hold, status_on_equip,
                  droppable=False, locked=False, event_combat=False):
         self.spritetype = spritetype # Consumable, Sword, Used for spriting in list of sprites
         self.spriteid = spriteid # Number of sprite to be picked from spritesheet list
@@ -55,17 +55,20 @@ class ItemObject(object):
             return super(ItemObject, self).__getattr__(attr)
         return None
 
-    def __getstate__(self): return self.__dict__
-    def __setstate__(self, d): self.__dict__.update(d)
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
         
     def draw(self, surf, topleft, white=False, cooldown=False):
         ItemSurf = self.image
         if white:
             ItemSurf = Image_Modification.flickerImageWhite(ItemSurf.convert_alpha(), 255)
-            #ItemSurf = Image_Modification.transition_image_white(ItemSurf)
+            # ItemSurf = Image_Modification.transition_image_white(ItemSurf)
         surf.blit(ItemSurf, topleft)
-        #if self.locked:
-        #    locked_icon = IMAGESDICT['LockedIcon']
+        # if self.locked:
+        #    locked_icon = GC.IMAGESDICT['LockedIcon']
         #    locked_rect = locked_icon.get_rect()
         #    locked_rect.bottomright = (ItemRect.right - 1, ItemRect.bottom - 1)
         #    surf.blit(locked_icon, locked_rect)
@@ -82,7 +85,7 @@ class ItemObject(object):
         else:
             sprite_id = (0, int(self.spriteid))
         # actually build
-        self.image = Engine.subsurface(ITEMDICT[self.spritetype], (16*sprite_id[0], 16*sprite_id[1], 16, 16))
+        self.image = Engine.subsurface(GC.ITEMDICT[self.spritetype], (16*sprite_id[0], 16*sprite_id[1], 16, 16))
         self.help_box = None
 
     def __str__(self):
@@ -101,8 +104,8 @@ class ItemObject(object):
 
     def create_help_box(self):
         if self.weapon or self.spell:
-            font1 = FONT['text_blue']
-            font2 = FONT['text_yellow']
+            font1 = GC.FONT['text_blue']
+            font2 = GC.FONT['text_yellow']
 
             if self.weapon:
                 first_line_text = [' ', self.weapon.LVL, ' Mt ', str(self.weapon.MT), ' Hit ', str(self.weapon.HIT)]
@@ -128,7 +131,7 @@ class ItemObject(object):
 
             first_line_length = max(font1.size(''.join(first_line_text))[0] + 16 * len(self.TYPE) + 4, 112) # 112 was 96
             if self.desc:
-                output_desc_lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(self.desc), first_line_length, FONT['convo_black']) 
+                output_desc_lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
             else:
                 output_desc_lines = ''
             size_x = first_line_length + 16
@@ -143,7 +146,7 @@ class ItemObject(object):
                 word_index += first_line_font[index].size(word)[0]
             
             for index, line in enumerate(output_desc_lines):
-                FONT['convo_black'].blit(''.join(line), help_surf, (4, FONT['convo_black'].height*index + 4 + 16))  
+                GC.FONT['convo_black'].blit(''.join(line), help_surf, (4, GC.FONT['convo_black'].height*index + 4 + 16))  
 
             return help_surf
 
@@ -207,7 +210,8 @@ class CUsesComponent(object):
         self.uses = max(self.uses, 0)
                
 class WeaponComponent(object):
-    def __init__(self, (MT, HIT, LVL)):
+    def __init__(self, stats):
+        MT, HIT, LVL = stats
         self.name = 'weapon'
         self.MT = int(MT)
         self.HIT = int(HIT)
@@ -240,8 +244,8 @@ class AOEComponent(object):
             return cursor_position, splash_positions
         elif self.mode == 'Cleave':
             p = unit_position
-            other_position = [(p[0] - 1, p[1] - 1), (p[0], p[1] - 1), (p[0] + 1, p[1] - 1), \
-                              (p[0] - 1, p[1]), (p[0] + 1, p[1]), \
+            other_position = [(p[0] - 1, p[1] - 1), (p[0], p[1] - 1), (p[0] + 1, p[1] - 1),
+                              (p[0] - 1, p[1]), (p[0] + 1, p[1]),
                               (p[0] - 1, p[1] + 1), (p[0], p[1] + 1), (p[0] + 1, p[1] + 1)]
             splash_positions = {position for position in other_position if tileMap.check_bounds(position)}
             return cursor_position, list(splash_positions - {cursor_position})
@@ -315,7 +319,7 @@ def itemparser(itemstring):
                 itemid = itemid[1:]
                 event_combat = True
             try:
-                item = ITEMDATA[itemid]
+                item = GC.ITEMDATA[itemid]
             except KeyError as e:
                 print("Key Error %s. %s cannot be found in items.xml"%(e, itemid))
                 continue
@@ -409,9 +413,9 @@ def itemparser(itemstring):
                     my_components[component] = item[component]
                 else:
                     my_components[component] = True
-            currentItem = ItemObject(itemid, item['name'], item['spritetype'], item['spriteid'], my_components, \
-                                     item['value'], item['RNG'], item['desc'], \
-                                     aoe, weapontype, status, status_on_hold, status_on_equip, \
+            currentItem = ItemObject(itemid, item['name'], item['spritetype'], item['spriteid'], my_components,
+                                     item['value'], item['RNG'], item['desc'],
+                                     aoe, weapontype, status, status_on_hold, status_on_equip,
                                      droppable=droppable, locked=locked, event_combat=event_combat)
 
             Items.append(currentItem)          
@@ -419,8 +423,11 @@ def itemparser(itemstring):
 
 def deserialize(item_dict):
     items = itemparser(item_dict['id'])
-    if not items: return None
-    else: item = items[0]
+    if not items:
+        return None
+    else:
+        item = items[0]
+
     if 'owner' in item_dict:
         item.owner = item_dict['owner']
     if item_dict['droppable']:

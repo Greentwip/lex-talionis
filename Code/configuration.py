@@ -63,12 +63,11 @@ def read_config_file():
     return lines
 
 def write_config_file():
-    #with open('Data/config.txt', 'w') as config_file:
     with open('Data/config.txt', 'w') as config_file:
         write_out = '\n'.join([name + ';' + str(value) for name, value in OPTIONS.iteritems()])
         config_file.write(write_out)
-        #for name, value in OPTIONS.iteritems():
-        #    config_file.write(name + ';' + str(value) + '\n')
+        # for name, value in cf.OPTIONS.iteritems():
+        #     config_file.write(name + ';' + str(value) + '\n')
 
 def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum
@@ -99,7 +98,7 @@ def read_constants_file():
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
              'max_stat': 20, # Maximum value that a non-HP stat can be. Irrespective of class caps. 
              'num_stats': 10, # Number of stats that a unit has (Includes HP, CON, and MOV)
-             'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without knowing what you are doing
+             'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'max_level': 10} # Maximum Level for any class. Any higher and you auto-promote
 
     if os.path.isfile('Data/constants.txt'):
@@ -141,10 +140,10 @@ def read_constants_file():
 
 def read_growths_file():
     # HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV
-    lines = {'enemy_growths': ','.join(['0']*CONSTANTS['num_stats']),
-             'player_growths': ','.join(['0']*CONSTANTS['num_stats']),
-             'enemy_bases': ','.join(['0']*CONSTANTS['num_stats']),
-             'player_bases': ','.join(['0']*CONSTANTS['num_stats'])}
+    lines = {'enemy_growths': ','.join(['0'] * CONSTANTS['num_stats']),
+             'player_growths': ','.join(['0'] * CONSTANTS['num_stats']),
+             'enemy_bases': ','.join(['0'] * CONSTANTS['num_stats']),
+             'player_bases': ','.join(['0'] * CONSTANTS['num_stats'])}
 
     if os.path.isfile('Data/growths.txt'):
         with open('Data/growths.txt') as growths_file:
@@ -182,7 +181,7 @@ def read_words_file():
 OPTIONS = read_config_file()
 if not __debug__:
     OPTIONS['debug'] = False
-print('Debug: %s'%(OPTIONS['debug']))
+print('Debug: %s' % (OPTIONS['debug']))
 CONSTANTS = read_constants_file()
 CONSTANTS['Unit Speed'] = OPTIONS['Unit Speed']
 WORDS = read_words_file()

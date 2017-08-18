@@ -1,6 +1,6 @@
 #! usr/bine/env python2.7
-from GlobalConstants import *
-from configuration import *
+import GlobalConstants as GC
+import configuration as cf
 import Image_Modification, Utility, Engine
 
 import logging
@@ -47,13 +47,13 @@ class UnitSprite(object):
         """Assumes image has already been developed."""
         image = self.create_image(self.image_state)
         x, y = self.unit.position
-        left = x * TILEWIDTH + self.spriteOffset[0]
-        top = y * TILEHEIGHT + self.spriteOffset[1]
+        left = x * GC.TILEWIDTH + self.spriteOffset[0]
+        top = y * GC.TILEHEIGHT + self.spriteOffset[1]
 
         # Active Skill Icon
         if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
-            active_icon = ICONDICT["ActiveSkill"]
-            active_icon = Engine.subsurface(active_icon, (PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
+            active_icon = GC.ICONDICT["ActiveSkill"]
+            active_icon = Engine.subsurface(active_icon, (GC.PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
             topleft = (left - max(0, (active_icon.get_width() - 16)/2), top - max(0, (active_icon.get_height() - 16)/2))
             surf.blit(active_icon, topleft)
 
@@ -107,16 +107,17 @@ class UnitSprite(object):
                 self.unit.end_flicker()
             else:
                 color = ((total_time - time_passed)*float(c)/total_time for c in color)
-                #image = Image_Modification.flicker_image(image.convert_alpha(), color)
+                #  image = Image_Modification.flicker_image(image.convert_alpha(), color)
                 image = Image_Modification.change_image_color(image.convert_alpha(), color)
         elif self.unit.flickerRed and gameStateObj.boundary_manager.draw_flag:
             image = Image_Modification.flickerImageRed(image.convert_alpha(), 80)
-        #if any(status.unit_translucent for status in self.unit.status_effects):
+        # if any(status.unit_translucent for status in self.unit.status_effects):
         if 'unit_translucent' in self.unit.status_bundle:
             image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
         # What is this line even doing? - Something majorly important though
         # Each image has (self.image.get_width() - 32)/2 buffers on the left and right of it, to handle any off tile spriting
-        # Without self.image.get_width() - 32)/2, we would output the left buffer along with the unit, and the unit would end up +left buffer width to the right of where he should be
+        # Without self.image.get_width() - 32)/2, we would output the left buffer along with the unit, 
+        # and the unit would end up +left buffer width to the right of where it should be
         topleft = left - max(0, (image.get_width() - 16)/2), top - 24
         surf.blit(image, topleft)
 
@@ -124,15 +125,15 @@ class UnitSprite(object):
         # Status Aura Icon
         if not self.unit.isDying and 'aura' in self.unit.status_bundle:
             aura_icon_name = self.unit.team + 'AuraIcon'
-            aura_icon = IMAGESDICT[aura_icon_name] if aura_icon_name in IMAGESDICT else IMAGESDICT['AuraIcon']
-            aura_icon = Engine.subsurface(aura_icon, (0, PASSIVESPRITECOUNTER.count*10, 32, 10))
+            aura_icon = GC.IMAGESDICT[aura_icon_name] if aura_icon_name in GC.IMAGESDICT else GC.IMAGESDICT['AuraIcon']
+            aura_icon = Engine.subsurface(aura_icon, (0, GC.PASSIVESPRITECOUNTER.count*10, 32, 10))
             topleft = (left - max(0, (aura_icon.get_width() - 16)/2), top - max(0, (aura_icon.get_height() - 16)/2) + 8)
             surf.blit(aura_icon, topleft)
         # Status always animationss
         for status in self.unit.status_effects:
             if status.always_animation:
-                x,y = self.unit.position
-                topleft = (x-1) * TILEWIDTH + self.spriteOffset[0], (y-1) * TILEHEIGHT + self.spriteOffset[1]
+                x, y = self.unit.position
+                topleft = (x-1) * GC.TILEWIDTH + self.spriteOffset[0], (y-1) * GC.TILEHEIGHT + self.spriteOffset[1]
                 surf.blit(status.always_animation.image, topleft)
 
         if self.transition_state.startswith('warp'):
@@ -140,28 +141,31 @@ class UnitSprite(object):
             fps = self.transition_time/num_frames
             frame = (self.transition_time - self.transition_counter)/fps
             if frame >= 0 and frame < num_frames:
-                warp_anim = Engine.subsurface(IMAGESDICT['Warp'], (frame*32, 0, 32, 48))
+                warp_anim = Engine.subsurface(GC.IMAGESDICT['Warp'], (frame*32, 0, 32, 48))
                 topleft = (left - max(0, (warp_anim.get_width() - 16)/2), top - max(0, (warp_anim.get_height() - 16)/2) - 4)
                 surf.blit(warp_anim, topleft)
 
         if gameStateObj.cursor.currentSelectedUnit and (gameStateObj.cursor.currentSelectedUnit.name, self.unit.name) in gameStateObj.talk_options:
             frame = (Engine.get_time()/100)%8
             topleft = (left + 6, top - 12)
-            surf.blit(Engine.subsurface(IMAGESDICT['TalkMarker'], (frame*8, 0, 8, 16)), topleft)
+            surf.blit(Engine.subsurface(GC.IMAGESDICT['TalkMarker'], (frame*8, 0, 8, 16)), topleft)
 
     def draw_hp(self, surf, gameStateObj):
         current_time = Engine.get_time()
         if self.transition_state == 'normal':
-            #print('draw_hp')
+            # print('draw_hp')
             x, y = self.unit.position
-            left = x * TILEWIDTH + self.spriteOffset[0]
-            top = y * TILEHEIGHT + self.spriteOffset[1]
+            left = x * GC.TILEWIDTH + self.spriteOffset[0]
+            top = y * GC.TILEHEIGHT + self.spriteOffset[1]
             # Health Bar
             if not self.unit.isDying:
-                if (OPTIONS['HP Map Team'] == 'All') or (OPTIONS['HP Map Team'] == 'Ally' and self.unit.team in ['player', 'other']) or (OPTIONS['HP Map Team'] == 'Enemy' and self.unit.team.startswith('enemy')):
-                    if (OPTIONS['HP Map Cull'] == 'All') or (OPTIONS['HP Map Cull'] == 'Wounded' and (self.unit.currenthp < self.unit.stats['HP'] or self.current_cut_off != 13)):
-                        health_outline = IMAGESDICT['Map_Health_Outline']
-                        health_bar = IMAGESDICT['Map_Health_Bar']
+                if (cf.OPTIONS['HP Map Team'] == 'All') or \
+                   (cf.OPTIONS['HP Map Team'] == 'Ally' and self.unit.team in ['player', 'other']) or \
+                   (cf.OPTIONS['HP Map Team'] == 'Enemy' and self.unit.team.startswith('enemy')):
+                    if (cf.OPTIONS['HP Map Cull'] == 'All') or \
+                       (cf.OPTIONS['HP Map Cull'] == 'Wounded' and (self.unit.currenthp < self.unit.stats['HP'] or self.current_cut_off != 13)):
+                        health_outline = GC.IMAGESDICT['Map_Health_Outline']
+                        health_bar = GC.IMAGESDICT['Map_Health_Bar']
                         if(self.unit.currenthp >= int(self.unit.stats['HP'])):
                             cut_off = 13
                         elif self.unit.currenthp <= 0:
@@ -182,20 +186,21 @@ class UnitSprite(object):
                         health_bar = Engine.subsurface(health_bar, (0, 0, self.current_cut_off, 1))
                         surf.blit(health_bar, (left+1, top+14))
             # Extra Icons
-            if 'Boss' in self.unit.tags and self.image_state in {'gray', 'passive'} and int((current_time%450)/150) in {1, 2}: # Essentially an every 132 millisecond timer
-                bossIcon = ICONDICT['BossIcon']
+            # Essentially an every 132 millisecond timer
+            if 'Boss' in self.unit.tags and self.image_state in {'gray', 'passive'} and int((current_time%450)/150) in {1, 2}:
+                bossIcon = GC.ICONDICT['BossIcon']
                 surf.blit(bossIcon, (left - 8, top - 8))
             if self.unit.TRV:
                 if gameStateObj.get_unit_from_id(self.unit.TRV).team == 'player':
-                    rescueIcon = ICONDICT['BlueRescueIcon']
+                    rescueIcon = GC.ICONDICT['BlueRescueIcon']
                 else: # self.TRV.team == 'other':
-                    rescueIcon = ICONDICT['GreenRescueIcon']
+                    rescueIcon = GC.ICONDICT['GreenRescueIcon']
                 topleft = (left - max(0, (rescueIcon.get_width() - 16)/2), top - max(0, (rescueIcon.get_height() - 16)/2))
                 surf.blit(rescueIcon, topleft)
 
     def get_sprites(self, team):
-        unit_stand_sprites = UNITDICT[team + self.unit.klass + self.unit.gender]
-        unit_move_sprites = UNITDICT[team + self.unit.klass + self.unit.gender + '_move']
+        unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + self.unit.gender]
+        unit_move_sprites = GC.UNITDICT[team + self.unit.klass + self.unit.gender + '_move']
         return unit_stand_sprites, unit_move_sprites
 
     def loadSprites(self):
@@ -225,9 +230,9 @@ class UnitSprite(object):
 
     def select_frame(self, image, state):
         if state == 'passive' or state == 'gray':
-            return image[PASSIVESPRITECOUNTER.count]
+            return image[GC.PASSIVESPRITECOUNTER.count]
         elif state == 'active':
-            return image[ACTIVESPRITECOUNTER.count]
+            return image[GC.ACTIVESPRITECOUNTER.count]
         else:
             return image[self.moveSpriteCounter]
 
@@ -246,7 +251,7 @@ class UnitSprite(object):
                 self.image_state = 'down'
 
     def update_move_sprite_counter(self, currentTime, update_speed=50):
-        ### MOVE SPRITE COUNTER LOGIC
+        # === MOVE SPRITE COUNTER LOGIC ===
         if self.moveSpriteCounter == 0 or self.moveSpriteCounter == 2:
             update_speed *= 2
         if currentTime - self.lastUpdate > update_speed:
@@ -278,12 +283,14 @@ class UnitSprite(object):
         elif self.state == 'menu':
             self.handle_net_position(self.old_sprite_offset)
         elif self.state == 'fake_transition_in':
-            newPosition = (self.unit.position[0] + Utility.clamp(self.spriteOffset[0], -1, 1), self.unit.position[1] + Utility.clamp(self.spriteOffset[1], -1, 1))
+            newPosition = (self.unit.position[0] + Utility.clamp(self.spriteOffset[0], -1, 1), 
+                           self.unit.position[1] + Utility.clamp(self.spriteOffset[1], -1, 1))
             self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
             self.netposition = (-self.netposition[0], -self.netposition[1])
             self.handle_net_position(self.netposition)
         elif self.state == 'fake_transition_out':
-            newPosition = (self.unit.position[0] + Utility.clamp(self.spriteOffset[0], -1, 1), self.unit.position[1] + Utility.clamp(self.spriteOffset[1], -1, 1))
+            newPosition = (self.unit.position[0] + Utility.clamp(self.spriteOffset[0], -1, 1), 
+                           self.unit.position[1] + Utility.clamp(self.spriteOffset[1], -1, 1))
             self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
             self.handle_net_position(self.netposition)
         elif self.state == 'selected':
@@ -291,7 +298,7 @@ class UnitSprite(object):
 
     def update_state(self, gameStateObj):
         currentTime = Engine.get_time()
-        #if self.unit == gameStateObj.cursor.currentSelectedUnit:
+        # if self.unit == gameStateObj.cursor.currentSelectedUnit:
         #    print(self.state)
         if self.state == 'normal':
             if self.unit.finished and not self.unit.isDying and not self.unit.isActive:
@@ -325,11 +332,11 @@ class UnitSprite(object):
                     self.old_sprite_offset = tuple(self.spriteOffset)
                 self.spriteOffset = [0, 0]
                 self.transition_state = 'normal'
-                #self.change_state('normal', gameStateObj)
+                # self.change_state('normal', gameStateObj)
                 return
             self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
-            self.spriteOffset[0] = int(TILEWIDTH * (currentTime - self.unit.lastMoveTime) / CONSTANTS['Unit Speed'] * self.netposition[0])
-            self.spriteOffset[1] = int(TILEHEIGHT * (currentTime - self.unit.lastMoveTime) / CONSTANTS['Unit Speed'] * self.netposition[1])
+            self.spriteOffset[0] = int(GC.TILEWIDTH * (currentTime - self.unit.lastMoveTime) / cf.CONSTANTS['Unit Speed'] * self.netposition[0])
+            self.spriteOffset[1] = int(GC.TILEHEIGHT * (currentTime - self.unit.lastMoveTime) / cf.CONSTANTS['Unit Speed'] * self.netposition[1])
             self.handle_net_position(self.netposition)
             self.update_move_sprite_counter(currentTime, 80)
         elif self.state == 'fake_transition_in':
@@ -354,7 +361,7 @@ class UnitSprite(object):
                 self.spriteOffset[1] -= 2
             elif self.spriteOffset[1] > 0:
                 self.spriteOffset[1] += 2
-            if abs(self.spriteOffset[0]) >= TILEWIDTH or abs(self.spriteOffset[1]) >= TILEHEIGHT:
+            if abs(self.spriteOffset[0]) >= GC.TILEWIDTH or abs(self.spriteOffset[1]) >= GC.TILEHEIGHT:
                 self.transition_state = 'normal'
                 self.change_state('normal', gameStateObj)
                 self.spriteOffset = [0, 0]
@@ -381,4 +388,5 @@ class UnitSprite(object):
                             staa.frameCount = 0
 
                     indiv_width, indiv_height = staa.sprite.get_width()/staa.x, staa.sprite.get_height()/staa.y
-                    staa.image = Engine.subsurface(staa.sprite, (staa.frameCount%staa.x * indiv_width, staa.frameCount/staa.x * indiv_height, indiv_width, indiv_height))
+                    rect = (staa.frameCount%staa.x * indiv_width, staa.frameCount/staa.x * indiv_height, indiv_width, indiv_height)
+                    staa.image = Engine.subsurface(staa.sprite, rect)
