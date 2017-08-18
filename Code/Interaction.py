@@ -698,10 +698,12 @@ class AnimationCombat(Combat):
                 self.combat_state = 'Init'
             elif self.current_result.attacker.battle_anim.waiting_for_hp():
                 self.apply_result(self.current_result, gameStateObj)
+                self.last_update = current_time
                 self.combat_state = 'HP_Change'
 
         elif self.combat_state == 'HP_Change':
-            if self.left_hp_bar.done() and self.right_hp_bar.done():
+            # Wait at least 20 frames
+            if current_time - self.last_update > 450 and self.left_hp_bar.done() and self.right_hp_bar.done():
                 #print('HP Bar Done!')
                 self.current_result.attacker.battle_anim.resume()
                 if self.left_hp_bar.true_hp <= 0:
@@ -909,6 +911,7 @@ class AnimationCombat(Combat):
                 self.right.battle_anim.draw_under(surf, (-total_shake_x*2, total_shake_y), right_range_offset, self.pan_offset)
                 self.left.battle_anim.draw(surf, (-total_shake_x*2, total_shake_y), left_range_offset, self.pan_offset)
                 self.right.battle_anim.draw(surf, (-total_shake_x*2, total_shake_y), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw_over(surf, (-total_shake_x*2, total_shake_y), right_range_offset, self.pan_offset)
             else:
                 self.left.battle_anim.draw_under(surf, (-total_shake_x*2, total_shake_y), left_range_offset, self.pan_offset)
                 self.right.battle_anim.draw(surf, (-total_shake_x*2, total_shake_y), right_range_offset, self.pan_offset)
@@ -1124,29 +1127,20 @@ class SimpleHPBar(object):
         self.color_tick = 0
         self.is_done = True
         self.big_number = False
-        self.start_time = 0
+
 
     def update(self):
-        current_time = Engine.get_time()
         self.desired_hp = self.unit.currenthp
-        if current_time - self.last_update > 32:
-            if self.true_hp < self.desired_hp:
-                if not self.start_time: self.start_time = current_time
-                self.is_done = False
-                self.true_hp += .25 # Every 4 frames
-                if self.true_hp == self.desired_hp:
-                    self.last_update = self.start_time + 450 # Make sure at least 25 frames happen
-            elif self.true_hp > self.desired_hp:
-                if not self.start_time: self.start_time = current_time
-                self.is_done = False
-                self.big_number = True
-                self.true_hp -= .5
-                if self.true_hp == self.desired_hp:
-                    self.last_update = self.start_time + 450 # Make sure at least 25 frames happen
-            elif self.true_hp == self.desired_hp:
-                self.start_time = 0
-                self.is_done = True
-                self.big_number = False
+        if self.true_hp < self.desired_hp:
+            self.is_done = False
+            self.true_hp += .25 # Every 4 frames
+        elif self.true_hp > self.desired_hp:
+            self.is_done = False
+            self.big_number = True
+            self.true_hp -= .5
+        elif self.true_hp == self.desired_hp:
+            self.is_done = True
+            self.big_number = False
         self.color_tick += 1
         if self.color_tick >= len(self.colors):
             self.color_tick = 0

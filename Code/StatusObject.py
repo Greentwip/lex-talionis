@@ -613,15 +613,6 @@ def statusparser(s_id):
                 elif component == 'conditional_resist':
                     mt, conditional = status.find('conditional_resist').text.split(';')
                     my_components['conditional_resist'] = ConditionalComponent('conditional_resist', mt, conditional)
-                elif component == 'dynamic_avoid':
-                    avoid, dynamic = status.find('dynamic_avoid').text.split(';')
-                    my_components['dynamic_avoid'] = ConditionalComponent('dynamic_avoid', avoid, dynamic)
-                elif component == 'dynamic_hit':
-                    hit, dynamic = status.find('dynamic_hit').text.split(';')
-                    my_components['dynamic_hit'] = ConditionalComponent('dynamic_hit', hit, dynamic)
-                elif component == 'dynamic_mt':
-                    mt, dynamic = status.find('dynamic_mt').text.split(';')
-                    my_components['dynamic_mt'] = ConditionalComponent('dynamic_mt', mt, dynamic)
                 elif component == 'weakness':
                     damage_type, num = status.find('weakness').text.split(',')
                     my_components['weakness'] = WeaknessComponent(damage_type, num)
