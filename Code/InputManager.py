@@ -152,7 +152,7 @@ class FluidScroll(object):
         self.moveRight = False
         self.moveUp = False
         self.moveDown = False
-        self.last_update = 0
+        self.left_update, self.right_update, self.up_update, self.down_update = 0, 0, 0, 0
         self.fast_speed = speed
         self.slow_speed = speed*slow_speed if slow_speed else speed
         self.move_counter = 0
@@ -182,8 +182,17 @@ class FluidScroll(object):
         else:
             self.moveDown = False
 
-        if any(direction in gameStateObj.input_manager.key_down_events for direction in ['LEFT', 'RIGHT', 'UP', 'DOWN']):
-            self.last_update = 0
+        if 'LEFT' in gameStateObj.input_manager.key_down_events:
+            self.left_update = 0
+        if 'RIGHT' in gameStateObj.input_manager.key_down_events:
+            self.right_update = 0
+        if 'DOWN' in gameStateObj.input_manager.key_down_events:
+            self.down_update = 0
+        if 'UP' in gameStateObj.input_manager.key_down_events:
+            self.up_update = 0
+
+        if any(direction in gameStateObj.input_manager.key_down_events for direction in ('LEFT', 'RIGHT', 'UP', 'DOWN')):
+            self.move_counter = 0
             return True
         return False
 
@@ -194,23 +203,33 @@ class FluidScroll(object):
             speed = self.fast_speed
         else:
             speed = self.slow_speed
-        if currentTime - self.last_update > speed:
-            if self.moveLeft:
-                directions.append('LEFT')
-            elif self.moveRight:
-                directions.append('RIGHT')
-            if self.moveUp:
-                directions.append('UP')
-            elif self.moveDown:
-                directions.append('DOWN')
-            if self.moveLeft or self.moveRight or self.moveUp or self.moveDown:
-                self.move_counter += 1
-                self.last_update = currentTime
-            else:
-                self.move_counter = 0
-                self.last_update = 0
+        
+        if self.moveLeft and currentTime - self.left_update > speed:
+            directions.append('LEFT')
+            # self.set_all_updates(currentTime)
+        if self.moveRight and currentTime - self.right_update > speed:
+            directions.append('RIGHT')
+            # self.set_all_updates(currentTime)
+        if self.moveDown and currentTime - self.down_update > speed:
+            directions.append('DOWN')
+            # self.set_all_updates(currentTime)
+        if self.moveUp and currentTime - self.up_update > speed:
+            directions.append('UP')
+            # self.set_all_updates(currentTime)
+
+        if directions:
+            self.set_all_updates(currentTime)
+            self.move_counter += 1
+        elif not (self.moveLeft or self.moveRight or self.moveUp or self.moveDown):
+            self.move_counter = 0
         return directions
 
     def update_speed(self, speed=100, slow_speed=2.5):
         self.fast_speed = speed
         self.slow_speed = speed*slow_speed
+
+    def set_all_updates(self, time):
+        self.left_update = time
+        self.right_update = time
+        self.down_update = time
+        self.up_update = time
