@@ -36,8 +36,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Wagon Class Card
 --- GUI ---
 - Add cursor scroll to menus (OptionsMenu, ItemMenu, AttackMenu), so you can just hold down the direction you want to go. Make sure it doesn't loop over to top on hold
-- Unit Menu (Sorting)
-- Make sure shop menu still works after changes
 --- DIALOG SYSTEM ---
 - Functions
 - Use Dictionary instead of if/elif system?

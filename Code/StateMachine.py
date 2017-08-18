@@ -2438,7 +2438,7 @@ class ShopState(State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList) 
-        self.fluid_helper.update(gameStateObj)
+        first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
         if self.stateMachine.getState() == 'open':
             if self.display_message.done:
@@ -2480,10 +2480,10 @@ class ShopState(State):
         elif self.stateMachine.getState() == 'buy':
             if 'DOWN' in directions:
                 GC.SOUNDDICT['Select 6'].play()
-                self.shopMenu.moveDown()
+                self.shopMenu.moveDown(first_push)
             elif 'UP' in directions:
                 GC.SOUNDDICT['Select 6'].play()
-                self.shopMenu.moveUp()
+                self.shopMenu.moveUp(first_push)
             elif event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
                 if self.info:

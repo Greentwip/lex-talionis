@@ -184,6 +184,8 @@ class FluidScroll(object):
 
         if any(direction in gameStateObj.input_manager.key_down_events for direction in ['LEFT', 'RIGHT', 'UP', 'DOWN']):
             self.last_update = 0
+            return True
+        return False
 
     def get_directions(self):
         directions = []
@@ -211,4 +213,4 @@ class FluidScroll(object):
 
     def update_speed(self, speed=100, slow_speed=2.5):
         self.fast_speed = speed
-        self.slow_speed = speed*slow_speed if slow_speed else speed
+        self.slow_speed = speed*slow_speed

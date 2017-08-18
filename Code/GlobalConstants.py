@@ -66,9 +66,11 @@ except ImportError:
 def create_item_dict():
     item_dict = {}
     # For each lore
-    for entry in ET.parse('Data/items.xml').getroot().findall('item'):
-        item_dict[entry.find('id').text] = {c.tag: c.text for c in entry}
-        item_dict[entry.find('id').text].update(entry.attrib)
+    for idx, entry in enumerate(ET.parse('Data/items.xml').getroot().findall('item')):
+        name = entry.find('id').text
+        item_dict[name] = {c.tag: c.text for c in entry}
+        item_dict[name].update(entry.attrib)
+        item_dict[name]['num'] = idx
     return item_dict
 ITEMDATA = create_item_dict() # This is done differently because I thought the ET was slow. Turns out its not slow. Creating ItemObjects is slow.
 STATUSDATA = ET.parse('Data/status.xml')
