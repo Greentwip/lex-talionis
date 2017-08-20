@@ -32,8 +32,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- LEVEL UP ---
 - Have Level up! match the way its done in fe7... (sound)
 - Improve Promotion... Add animation. Make sure exp works correctly.
---- PICTURES --- 
-- Wagon Class Card
 --- GUI ---
 - Add cursor scroll to menus (OptionsMenu, ItemMenu, AttackMenu), so you can just hold down the direction you want to go. Make sure it doesn't loop over to top on hold
 --- DIALOG SYSTEM ---
