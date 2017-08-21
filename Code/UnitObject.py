@@ -2033,7 +2033,7 @@ class UnitObject(object):
                 new_status = StatusObject.statusparser(status_on_equip)
                 StatusObject.HandleStatusAddition(new_status, self)
             # apply passive item skill
-            #for status in self.status_effects:
+            # for status in self.status_effects:
             #    if status.passive:
             #        status.passive.apply_mod(self.items[0])
 

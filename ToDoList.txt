@@ -19,7 +19,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Add animation options to Options Menu
 --- AI ---
 - Test that AI uses vulneraries etc correctly now
-- Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells)
+- Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells?) --- Cleave, Critical, Sol, Luna, Shove, Rally, Metamagic
 - Red highlight appears over position of last enemy fought while using 'other' team AI. Also when two AI units attack one another using an AnimationCombat
 - Have Start Skip or Massivily Speed-up AI State
 --- LEVEL UP ---

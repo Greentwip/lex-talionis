@@ -380,7 +380,7 @@ class AI(object):
 """
 # === ATTACK AI ===
 # There are two different orderings for the Primary AI
-# Choose between them by setting or resetting 'self.second_mode'
+# Choose between them by setting or resetting ATTACK_MODE
 
 # === ATTACK AI 1 ===
 # Pseudocode
@@ -404,6 +404,9 @@ class AI(object):
 #             unit.quick_move(valid_move)
 #             tp = determine_utility(valid_move, item, target)
 """ 
+ATTACK_MODE = True  # Determines which order to use the ATTACK AI
+EQUIP = True  # Determines whether to equip the weapons you are testing or not
+
 class Primary_AI(object):
     def __init__(self, unit, valid_moves, team_ignore, name_ignore, gameStateObj):
         self.unit = unit
@@ -411,14 +414,14 @@ class Primary_AI(object):
         self.orig_item = self.unit.items[0] if self.unit.items else None
         self.max_tp = 0
         self.skip_flag = False
-        self.second_mode = True
         closest_enemy_distance = self.unit.distance_to_closest_enemy(gameStateObj)
 
         self.items = [item for item in self.unit.items if self.unit.canWield(item) and not item.no_ai]
 
         # Determine if I can skip this unit's AI
         # Remove any items that only give statuses if there are no enemies nearby
-        self.items = [i for i in self.items if not (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'] + 2)]
+        self.items = [i for i in self.items if not 
+                      (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'] + 2)]
         # Remove any items that heal if there are no allies in need of healing nearby
         if any(item.heal for item in self.items):
             distance_to_heal = self.distance_to_closest_ally_in_need_of_healing(gameStateObj)
@@ -434,7 +437,7 @@ class Primary_AI(object):
         self.valid_moves = list(valid_moves)
         self.possible_moves = []
         self.move_index = 0
-        if not self.second_mode and QUICK_MOVE and self.valid_moves:
+        if not ATTACK_MODE and QUICK_MOVE and self.valid_moves:
             self.quick_move(self.valid_moves[self.move_index], gameStateObj, test=True)
 
         self.target_to_interact_with = None
@@ -445,7 +448,7 @@ class Primary_AI(object):
         self.name_ignore = name_ignore
 
         self.target_index = 0
-        if self.second_mode:
+        if ATTACK_MODE:
             self.get_all_valid_targets(gameStateObj)
             self.possible_moves = self.get_possible_moves(gameStateObj)
         else:
@@ -506,7 +509,7 @@ class Primary_AI(object):
         self.unit.arrive(gameStateObj, serializing=test)
 
     def run(self, gameStateObj):
-        if self.second_mode:
+        if ATTACK_MODE:
             return self.run_2(gameStateObj)
         return self.run_1(gameStateObj)
 
@@ -515,7 +518,7 @@ class Primary_AI(object):
         if self.move_index > len(self.valid_moves) - 1:
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj, test=True)
-            if self.orig_item:
+            if self.orig_item and EQUIP:
                 self.unit.equip(self.orig_item)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
         # Iterated through every weapon at this move?
@@ -531,6 +534,8 @@ class Primary_AI(object):
             self.target_index = 0
             self.item_index += 1
             if self.item_index < len(self.items):
+                if EQUIP:
+                    self.unit.equip(self.items[self.item_index])
                 self.get_valid_targets(gameStateObj)
         else:
             move = self.valid_moves[self.move_index]
@@ -547,17 +552,15 @@ class Primary_AI(object):
         if self.item_index >= len(self.items):
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj, test=True)
-            if self.orig_item:
+            if self.orig_item and EQUIP:
                 self.unit.equip(self.orig_item)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
         elif self.target_index >= len(self.valid_targets):
             self.target_index = 0
             self.item_index += 1
             if self.item_index < len(self.items):
-                # Equip the item if we need to know how its statuses effect us
-                item = self.items[self.item_index]
-                if item.status_on_equip:
-                    self.unit.equip(item)
+                if EQUIP:
+                    self.unit.equip(self.items[self.item_index])
                 self.get_all_valid_targets(gameStateObj)
                 self.possible_moves = self.get_possible_moves(gameStateObj)
         elif self.move_index >= len(self.possible_moves):
