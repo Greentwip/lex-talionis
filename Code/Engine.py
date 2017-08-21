@@ -144,7 +144,10 @@ def build_event_list():
         eventList.append(event)
     return eventList
 
+# === CONTROLS STUFF =========================================================
+QUIT = pygame.QUIT
 KEYUP = pygame.KEYUP
+KEYDOWN = pygame.KEYDOWN
 key_map = {'w': pygame.K_w,
            'j': pygame.K_j,
            '5': pygame.K_5, 
@@ -155,7 +158,13 @@ key_map = {'w': pygame.K_w,
            't': pygame.K_t,
            'd': pygame.K_d}
 
-# === SOUND STUFF =====================================================
+def joystick_avail():
+    return pygame.joystick.get_count()
+
+def get_joystick():
+    return pygame.joystick.Joystick(0)
+    
+# === SOUND STUFF ============================================================
 class BaseSound():
     def play(self, loops=0, maxtime=0, fade_ms=0):
         pass

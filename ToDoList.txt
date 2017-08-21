@@ -16,11 +16,9 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- All Necessary Animations (Split Video)
 --- Promotion (Split Video) --- probably going to have to rewrite this section as its own thing.
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
---- Add animation options to cf.OPTIONS MENU
+--- Add animation options to Options Menu
 --- AI ---
-- Add support for summons (just append summons to end of ai_list.)
-- Have AI actually test equip items when making calculations ++ (not really important, since so few weapons give statuses..., could do it only if weapon has a status_equip?)
-- Consider moving Recovery AI into main attack AI?? - maybe not
+- Test that AI uses vulneraries etc correctly now
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells)
 - Red highlight appears over position of last enemy fought while using 'other' team AI. Also when two AI units attack one another using an AnimationCombat
 - Have Start Skip or Massivily Speed-up AI State
@@ -41,9 +39,10 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add in Easy and Hard modes (Easy, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Hard, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
 --- MUSIC ---
 - Replace with Open-Source Music - Especially Ghibli (they are especially litigious)
+- Replace with Fire Emblem 6-8 music?
+- Replace with Own Music?
 --- EXTRA ---
 - Names for chapters??
-- Color blind mode ++ Allow switching of tile and unit colors (blue, red, green, yellow, purple, white, orange)
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1) ++
 - Add Rescue/Warp/Rewarp handling (would include ability to select starting and ending positions - would allow time for warp animation) (both as staff and as ability)

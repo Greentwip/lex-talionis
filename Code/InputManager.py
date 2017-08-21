@@ -1,7 +1,5 @@
 #! usr/bin/env python2.7
 
-import pygame
-
 import configuration as cf
 import Engine
 
@@ -31,8 +29,8 @@ class InputManager(object):
     # Set joystick information. 
     # The joystick needs to be plugged in before this method is called (see main() method) 
     def init_joystick(self):
-        if pygame.joystick.get_count():
-            joystick = pygame.joystick.Joystick(0)
+        if Engine.joystick_avail():
+            joystick = Engine.get_joystick()
             joystick.init()
             self.joystick = joystick
             self.joystick_name = joystick.get_name()
@@ -83,9 +81,9 @@ class InputManager(object):
         # Check keyboard
         for event in eventList:
             # Check keys
-            if event.type == pygame.KEYUP or event.type == pygame.KEYDOWN:
+            if event.type == Engine.KEYUP or event.type == Engine.KEYDOWN:
                 button = self.map_keys.get(event.key)
-                key_up = event.type == pygame.KEYUP
+                key_up = event.type == Engine.KEYUP
                 # print(button, key_up)
                 if button:
                     self.keys_pressed[button] = not key_up
@@ -93,7 +91,7 @@ class InputManager(object):
                         self.key_up_events.append(button)
                     else:
                         self.key_down_events.append(button)
-                elif all_keys and event.type == pygame.KEYUP:
+                elif all_keys and event.type == Engine.KEYUP:
                     self.unavailable_button = event.key
                     return 'NEW'
 

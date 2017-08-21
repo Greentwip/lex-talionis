@@ -80,10 +80,10 @@ class Stat(object):
         output = ""
         if self.bonuses > 0:
             output = "+" + str(self.bonuses)
-            GC.FONT['small_green'].blit(output, surf, (topright[0], topright[1] + 4))
+            GC.FONT['small_green'].blit(output, surf, (topright[0], topright[1]))
         elif self.bonuses < 0:
             output = str(self.bonuses)
-            GC.FONT['small_red'].blit(output, surf, (topright[0], topright[1] + 4))
+            GC.FONT['small_red'].blit(output, surf, (topright[0], topright[1]))
 
 # === GENERIC UNIT OBJECT =====================================================
 class UnitObject(object):
@@ -1614,7 +1614,11 @@ class UnitObject(object):
         return attackspeed
 
     def accuracy(self, gameStateObj, item=None):
-        accuracy = self.get_support_bonuses(gameStateObj)[2] + sum(int(eval(status.hit, globals(), locals())) for status in self.status_effects if status.hit)
+        accuracy = self.get_support_bonuses(gameStateObj)[2]
+        # Cannot convert the following into a list comprehension, since the scoping ruins globals and locals
+        for status in self.status_effects:
+            if status.hit:
+                accuracy += int(eval(status.hit, globals(), locals()))
         if not item:
             if self.getMainWeapon():
                 item = self.getMainWeapon()
@@ -1633,7 +1637,9 @@ class UnitObject(object):
     def avoid(self, gameStateObj, item=None):
         base = self.attackspeed(item) * 3 + self.stats['LCK']
         base += self.get_support_bonuses(gameStateObj)[3]
-        base += sum(int(eval(status.avoid, globals(), locals())) for status in self.status_effects if status.avoid)
+        for status in self.status_effects:
+            if status.avoid:
+                base += int(eval(status.avoid, globals(), locals()))
         if self.position:
             base += (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].AVO)
         return base
@@ -1997,10 +2003,8 @@ class UnitObject(object):
     # Wrapper around way of inserting item
     def equip(self, item):
         # Moves the item to the top and makes it mainweapon
-        if item in self.items:
-            if self.items.index(item) == 0:
-                return # Don't need to do anything
-            self.remove_item(item)
+        if item in self.items and self.items.index(item) == 0:
+            return  # Don't need to do anything
         self.insert_item(0, item)
 
     # Wrappers around way of inserting item
@@ -2024,24 +2028,22 @@ class UnitObject(object):
             if status.passive:
                 status.passive.reverse_mod(item)
         # There may be a new item equipped
-        if self.items and item_index == 0 and self.canWield(self.items[0]):
-            for status_on_equip in self.items[0].status_on_equip:
+        if item_index == 0 and self.getMainWeapon():
+            for status_on_equip in self.getMainWeapon().status_on_equip:
                 new_status = StatusObject.statusparser(status_on_equip)
                 StatusObject.HandleStatusAddition(new_status, self)
             # apply passive item skill
-            for status in self.status_effects:
-                if status.passive:
-                    status.passive.apply_mod(self.items[0])
+            #for status in self.status_effects:
+            #    if status.passive:
+            #        status.passive.apply_mod(self.items[0])
 
     # This does the adding and subtracting of statuses
     def insert_item(self, index, item):
         logger.debug("Inserting %s to %s items at index %s.", item, self.name, index)
-        self.items.insert(index, item)
-        item.owner = self.id
-        if item is not "EmptySlot":
-            for status_on_hold in item.status_on_hold:
-                new_status = StatusObject.statusparser(status_on_hold)
-                StatusObject.HandleStatusAddition(new_status, self)
+        # Are we just reordering our items?
+        if item in self.items:
+            self.items.remove(item)
+            self.items.insert(index, item)
             if index == 0: # If new mainweapon...
                 # You unequipped a different item, so remove its status.
                 if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
@@ -2052,10 +2054,28 @@ class UnitObject(object):
                     for status_on_equip in item.status_on_equip:
                         new_status = StatusObject.statusparser(status_on_equip)
                         StatusObject.HandleStatusAddition(new_status, self)
-            # apply passive item skill
-            for status in self.status_effects:
-                if status.passive:
-                    status.passive.apply_mod(item)
+        else:
+            self.items.insert(index, item)
+            item.owner = self.id
+            if item is not "EmptySlot":
+                # apply passive item skill
+                for status in self.status_effects:
+                    if status.passive:
+                        status.passive.apply_mod(item)
+                # Item statuses      
+                for status_on_hold in item.status_on_hold:
+                    new_status = StatusObject.statusparser(status_on_hold)
+                    StatusObject.HandleStatusAddition(new_status, self)
+                if index == 0: # If new mainweapon...
+                    # You unequipped a different item, so remove its status.
+                    if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
+                        for status_on_equip in self.items[1].status_on_equip:
+                            StatusObject.HandleStatusRemoval(status_on_equip, self)
+                    # Now add yours
+                    if self.canWield(item):
+                        for status_on_equip in item.status_on_equip:
+                            new_status = StatusObject.statusparser(status_on_equip)
+                            StatusObject.HandleStatusAddition(new_status, self)
 
     def changeTeams(self, new_team, gameStateObj):
         self.leave(gameStateObj)

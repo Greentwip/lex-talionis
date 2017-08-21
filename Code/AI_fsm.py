@@ -103,11 +103,6 @@ class AI(object):
                     self.valid_moves = {self.unit.position}
                 elif self.ai1_state != 0: 
                     self.valid_moves = self.get_true_valid_moves(gameStateObj)
-                self.state = 'Recovery'
-
-            elif self.state == 'Recovery':
-                if self.unit.currenthp < self.unit.stats['HP']/2:
-                    success = self.run_recovery_ai(gameStateObj, self.valid_moves)
                 self.state = 'Steal'
 
             elif self.state == 'Steal':
@@ -302,39 +297,6 @@ class AI(object):
             elif all(adjtile.name in ['Floor', 'Throne', 'Wall'] for adjtile in adjtiles):
                 self.unit.dismount(closest_tile.position, gameStateObj)
 
-    # === RECOVERY AI ===
-    def run_recovery_ai(self, gameStateObj, valid_moves):
-        max_tp = 0
-        healing_items = [item for item in self.unit.items if item.heal and 0 in item.RNG]
-
-        for item in healing_items:
-            for move in valid_moves:
-                tp = self.compute_priority_heal(move, item, gameStateObj)
-                if tp > max_tp:
-                    self.target_to_interact_with = move
-                    self.position_to_move_to = move
-                    self.item_to_use = item
-                    max_tp = tp
-
-        if max_tp > 0:
-            return True
-        else:
-            # TODO: Add retreat to nearest healer or fort routine
-            return False
-
-    # TODO: Calculate healing of allies with MEND?
-    def compute_priority_heal(self, move, item, gameStateObj):
-        terms = []
-        missing_health = self.unit.stats['HP'] - self.unit.currenthp
-        healing_amount = max(int(item.heal), missing_health)
-        healing_term = Utility.clamp(healing_amount/100.0, 0, 1)
-        terms.append((healing_term, 10))
-
-        closest_enemy_term = Utility.clamp(self.unit.distance_to_closest_enemy(gameStateObj, move)/100.0, 0, 1)
-        terms.append((closest_enemy_term, 30))
-
-        return Utility.process_terms(terms)
-
     # === STEAL AI ===
     def run_steal_ai(self, gameStateObj, valid_moves):
         max_tp = 0
@@ -446,16 +408,17 @@ class Primary_AI(object):
     def __init__(self, unit, valid_moves, team_ignore, name_ignore, gameStateObj):
         self.unit = unit
         self.orig_pos = self.unit.position
+        self.orig_item = self.unit.items[0] if self.unit.items else None
         self.max_tp = 0
         self.skip_flag = False
         self.second_mode = True
         closest_enemy_distance = self.unit.distance_to_closest_enemy(gameStateObj)
 
-        self.items = [item for item in self.unit.items if (item.weapon or item.spell) and self.unit.canWield(item) and not item.no_ai]
+        self.items = [item for item in self.unit.items if self.unit.canWield(item) and not item.no_ai]
 
         # Determine if I can skip this unit's AI
         # Remove any items that only give statuses if there are no enemies nearby
-        self.items = [i for i in self.items if not (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'])]
+        self.items = [i for i in self.items if not (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'] + 2)]
         # Remove any items that heal if there are no allies in need of healing nearby
         if any(item.heal for item in self.items):
             distance_to_heal = self.distance_to_closest_ally_in_need_of_healing(gameStateObj)
@@ -492,6 +455,8 @@ class Primary_AI(object):
         # Determine if there is really no enemies around, so just can skip
         if not self.items:
             return True
+        if self.unit.currenthp < self.unit.stats['HP']:
+            return False
         detrimental_items = [item for item in self.unit.items if (item.weapon or (item.spell and item.detrimental)) and self.unit.canWield(item)]
         if len(detrimental_items) == len(self.items):
             max_range = max(max(item.RNG) for item in detrimental_items) + self.unit.stats['MOV']/cf.CONSTANTS['normal_movement']
@@ -550,6 +515,8 @@ class Primary_AI(object):
         if self.move_index > len(self.valid_moves) - 1:
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj, test=True)
+            if self.orig_item:
+                self.unit.equip(self.orig_item)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
         # Iterated through every weapon at this move?
         elif self.item_index > len(self.items) - 1:
@@ -580,11 +547,17 @@ class Primary_AI(object):
         if self.item_index >= len(self.items):
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj, test=True)
+            if self.orig_item:
+                self.unit.equip(self.orig_item)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
         elif self.target_index >= len(self.valid_targets):
             self.target_index = 0
             self.item_index += 1
             if self.item_index < len(self.items):
+                # Equip the item if we need to know how its statuses effect us
+                item = self.items[self.item_index]
+                if item.status_on_equip:
+                    self.unit.equip(item)
                 self.get_all_valid_targets(gameStateObj)
                 self.possible_moves = self.get_possible_moves(gameStateObj)
         elif self.move_index >= len(self.possible_moves):
@@ -604,19 +577,12 @@ class Primary_AI(object):
             # logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
             # Only if we have line of sight, since we get every possible position to strike from
             # Determine whether we need line of sight
-            los_flag = False
-            if item.spell:
-                if cf.CONSTANTS['spell_line_of_sight']:
-                    if Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
-                        los_flag = True
-                else:
-                    los_flag = True
-            else:
-                if cf.CONSTANTS['line_of_sight']:
-                    if Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
-                        los_flag = True
-                else:
-                    los_flag = True
+            los_flag = True
+            if item.spell and cf.CONSTANTS['spell_line_of_sight'] and not Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
+                los_flag = False
+            elif item.weapon and cf.CONSTANTS['line_of_sight'] and not Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
+                los_flag = False
+            # Actually finding the utility here
             if los_flag:
                 self.determine_utility(move, target, item, gameStateObj)
             self.move_index += 1
@@ -633,8 +599,10 @@ class Primary_AI(object):
                 self.quick_move(move, gameStateObj, test=True)
             if item.spell:
                 tp = self.compute_priority_spell(defender, splash, move, item, gameStateObj)
-            else:
+            elif item.weapon:
                 tp = self.compute_priority_weapon(defender, splash, move, item, gameStateObj)
+            else:
+                tp = self.compute_priority_item(defender, splash, move, item, gameStateObj)
             unit = gameStateObj.get_unit_from_pos(target)
             if unit:
                 name = unit.name
@@ -798,6 +766,23 @@ class Primary_AI(object):
             terms.append((defensive_term, 20)) # Set to 1 since perfectly defended
 
         return Utility.process_terms(terms)
+
+    # Currently only computes utility correctly for healing items
+    def compute_priority_item(self, defender, splash, move, item, gameStateObj):
+        if item.heal:
+            terms = []
+            missing_health = self.unit.stats['HP'] - self.unit.currenthp
+            if missing_health <= 0:
+                return 0
+            healing_term = Utility.clamp(item.heal/float(missing_health), 0, 1)
+            terms.append((healing_term, 10))
+
+            closest_enemy_term = Utility.clamp(self.unit.distance_to_closest_enemy(gameStateObj, move)/100.0, 0, 1)
+            terms.append((closest_enemy_term, 10))
+
+            return Utility.process_terms(terms)
+        else:
+            return 0
 
 # === SECONDARY AI ===
 class Secondary_AI(object):

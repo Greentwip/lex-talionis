@@ -3,8 +3,8 @@ cheat;1
 Screen Size;3
 Animation;1
 Unit Speed;75
-Text Speed;1
-Cursor Speed;80
+Text Speed;40
+Cursor Speed;60
 Show Terrain;1
 Show Objective;1
 Autocursor;1
