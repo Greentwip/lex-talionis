@@ -91,15 +91,13 @@ elif;gameStateObj.turncount == 4
 	s;Anders;Soldier! Ignore that order!{w};auto
 	u;Soldier1;MidRight
 	s;Midas;W-What!?{w};auto
-	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Archon.{w}{br}We will lay down our lives for this cargo!{w};auto
+	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Archon.{w}{br}We will lay down our lives in his name!{w};auto
 	s;Midas;A-Are you sure there isn't another way?{w};auto
 	if;gameStateObj.counters['Dead_Wagons'] > 1
 		s;Midas;They've already struck down some of my best wagons!{w};auto
 	end
 	s;Anders;You sniveling craven.{w}{br}Out of my way!{w};auto
-	r;Midas
-	s;Anders;Men, listen up!{w}{br}We run this gauntlet.{w}{br}It is your Imperial duty to protect these caravans!{w};auto
-	r;Anders;Soldier1
+	r;Midas;Anders;Soldier1
 elif;gameStateObj.turncount == 5
 	set_cursor;0,0;force_hold
 	add_unit;Wagon_9;r0;;closest
@@ -122,7 +120,4 @@ elif;gameStateObj.turncount == 6
 	add_unit;pack12_1;r1
 	add_unit;pack12_2;r1
 	wait;500
-# Else if all wagons have been destroyed or escaped...
-elif;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
-	win_game
 end

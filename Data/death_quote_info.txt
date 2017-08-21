@@ -130,6 +130,9 @@ elif;self.optionalunit.name == 'Anders'
 	u;Anders;FarLeft
 	s;Anders;What? Blood? This blood?{w}{br}It's nothing... I will not disappoint...{w};auto
 	r;Anders
+	if;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
+		win_game
+	end
 elif;self.optionalunit.name == 'Midas'
 	u;Midas;FarLeft
 	s;Midas;Please... I'll give you everything... all the gold I...{w};auto
@@ -181,6 +184,17 @@ end
 if;gameStateObj.counters['level'] == 4
 	if;self.optionalunit.klass == 'Wagon'
 		inc_counter;Dead_Wagons
+	end
+	# If no more wagons and Anders is dead win
+	if;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
+		if;gameStateObj.check_dead('Anders')
+			win_game
+		else
+			set_cursor;Anders;force_hold
+			u;Anders;FarLeft
+			s;Anders;You haven't won yet, Resistance scum.{w}{br}I'll take your scalps back to the Archon myself!
+			r;Anders
+		end
 	end
 # Level 9
 elif;gameStateObj.counters['level'] == 9

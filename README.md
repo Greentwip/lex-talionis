@@ -92,12 +92,12 @@ On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQ
 
 On the top right of the page, click "Download", then click "Direct Download".
 
-Once the audio files are downloaded, extract the zip file and move or copy the Audio folder to the lex-talionis directory (the directory that contains Main.py).
+Once the audio files are downloaded, extract the zip file and move or copy the Audio folder to the lex-talionis directory (the directory that contains main.py).
 
 Once Lex Talionis has been cloned to your machine, from that same directory, you can run The Lion Throne by typing:
 
 ```
-python Main.py
+python main.py
 ```
 
 A small screen should pop up on your computer, displaying the logo. Don't worry if it takes a minute or two the first time it is run. It is just taking the time to parse the code into compiled binary files.

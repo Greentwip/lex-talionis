@@ -8,7 +8,6 @@ import GUIObjects
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.fluid_helper = InputManager.FluidScroll(64)
             # Get units to display
             self.units = [unit for unit in gameStateObj.allunits if unit.position and unit.team == 'player']
 

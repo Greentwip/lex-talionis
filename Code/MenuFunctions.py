@@ -762,7 +762,7 @@ class ComplexMenu(SimpleMenu):
 
         return (longest_width_needed - longest_width_needed%8 + 16)
 
-    def moveUp(self):
+    def moveUp(self, first_push=True):
         split_num = len(self.options)/2
         if self.currentSelection < split_num and self.currentSelection > 0:
             next_selection = self.currentSelection - 1
@@ -779,7 +779,7 @@ class ComplexMenu(SimpleMenu):
                     return
             self.currentSelection = next_selection
 
-    def moveDown(self):
+    def moveDown(self, first_push=True):
         split_num = len(self.options)/2
         if self.currentSelection < split_num - 1:
             next_selection = self.currentSelection + 1
@@ -796,7 +796,7 @@ class ComplexMenu(SimpleMenu):
                     return
             self.currentSelection = next_selection
 
-    def moveRight(self):
+    def moveRight(self, first_push=True):
         split_num = len(self.options)/2
         if self.currentSelection < split_num:
             next_selection = self.currentSelection + split_num
@@ -804,7 +804,7 @@ class ComplexMenu(SimpleMenu):
             if valid_indices:
                 self.currentSelection = min(valid_indices, key=lambda x: abs(x-next_selection))
 
-    def moveLeft(self):
+    def moveLeft(self, first_push=True):
         split_num = len(self.options)/2
         if self.currentSelection > split_num - 1:
             next_selection = self.currentSelection - split_num
@@ -1003,22 +1003,28 @@ class SupportMenu(object):
 
         self.cursor_flag = False
 
-    def moveDown(self):
+    def moveDown(self, first_push=True):
         self.currentSelection += 1
         if self.currentSelection > len(self.options) - 1:
-            self.currentSelection = 0
+            if first_push:
+                self.currentSelection = 0
+            else:
+                self.currentSelection -= 1
 
-    def moveUp(self):
+    def moveUp(self, first_push=True):
         self.currentSelection -= 1
         if self.currentSelection < 0:
-            self.currentSelection = len(self.options) - 1
+            if first_push:
+                self.currentSelection = len(self.options) - 1
+            else:
+                self.currentSelection += 1
 
-    def moveRight(self):
+    def moveRight(self, first_push=True):
         self.currentLevel += 1
         limit = self.options[self.currentSelection][4]
         self.currentLevel = min(self.currentLevel, limit)
 
-    def moveLeft(self):
+    def moveLeft(self, first_push=True):
         self.currentLevel -= 1
         if self.currentLevel < 0:
             self.currentLevel = 0
@@ -1344,7 +1350,7 @@ class UnitSelectMenu(Counters.CursorControl):
         else:
             return None
 
-    def moveDown(self):
+    def moveDown(self, first_push=True):
         self.currentSelection += self.units_per_row
         if self.currentSelection > len(self.options) - 1:
             self.currentSelection -= self.units_per_row
@@ -1354,7 +1360,7 @@ class UnitSelectMenu(Counters.CursorControl):
             self.scroll += 1
             self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options)/self.units_per_row - self.num_rows + 1))
 
-    def moveUp(self):
+    def moveUp(self, first_push=True):
         self.currentSelection -= self.units_per_row
         if self.currentSelection < 0:
             self.currentSelection += self.units_per_row
@@ -1364,11 +1370,11 @@ class UnitSelectMenu(Counters.CursorControl):
             self.scroll -= 1
             self.scroll = max(self.scroll, 0) # Scroll cannot go negative
 
-    def moveLeft(self):
+    def moveLeft(self, first_push=True):
         if self.currentSelection%self.units_per_row != 0:
             self.currentSelection -= 1
 
-    def moveRight(self):
+    def moveRight(self, first_push=True):
         if (self.currentSelection+1)%self.units_per_row != 0:
             self.currentSelection += 1
             if self.currentSelection > len(self.options) - 1:
@@ -1637,17 +1643,23 @@ class ConvoyMenu(object):
     def moveUp(self, first_push=True):
         self.menus[self.order[self.selection_index]].moveUp(first_push)
 
-    def moveLeft(self):
+    def moveLeft(self, first_push=True):
         self.selection_index -= 1
         if self.selection_index < 0:
-            self.selection_index = len(self.order) - 1
+            if first_push:
+                self.selection_index = len(self.order) - 1
+            else:
+                self.selection_index += 1
         else:
             self.left_arrow.pulse()
 
-    def moveRight(self):
+    def moveRight(self, first_push = True):
         self.selection_index += 1
         if self.selection_index > len(self.order) - 1:
-            self.selection_index = 0
+            if first_push:
+                self.selection_index = 0
+            else:
+                self.selection_index -= 1
         else:
             self.right_arrow.pulse()
 
@@ -1982,27 +1994,27 @@ class TradeMenu(Counters.CursorControl):
     def toggle_info(self):
         self.info_flag = not self.info_flag
 
-    def moveDown(self):
+    def moveDown(self, first_push=True):
         if self.selection1 < cf.CONSTANTS['max_items']-1 or (self.selection1 > cf.CONSTANTS['max_items']-1 and self.selection1 < cf.CONSTANTS['max_items']*2-1):
             self.selection1 += 1
             self.cursor_y_offset = -1
             return True
         return False
 
-    def moveUp(self):
+    def moveUp(self, first_push=True):
         if (self.selection1 > 0 and self.selection1 < cf.CONSTANTS['max_items']) or self.selection1 > cf.CONSTANTS['max_items']:
             self.selection1 -= 1
             self.cursor_y_offset = 1
             return True
         return False
 
-    def moveLeft(self):
+    def moveLeft(self, first_push=True):
         if self.selection1 > cf.CONSTANTS['max_items']-1:
             self.selection1 -= 5
             return True
         return False
 
-    def moveRight(self):
+    def moveRight(self, first_push=True):
         if self.selection1 < cf.CONSTANTS['max_items']:
             self.selection1 += 5
             return True

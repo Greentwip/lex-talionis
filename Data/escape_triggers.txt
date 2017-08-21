@@ -10,13 +10,20 @@ if;gameStateObj.counters['level'] == 4
 		lose_game
 	# If the number of escaped wagons plus the number of dead wagons is gte than the total number of wagons, win
 	elif;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
-		win_game
+		if;gameStateObj.check_dead('Anders')
+			win_game
+		else
+			set_cursor;Anders;force_hold
+			u;Anders;FarLeft
+			s;Anders;You haven't won yet, Resistance scum.{w}{br}I'll take your scalps back to the Archon myself!
+			r;Anders
+		end
 	end
 # Level 6
 elif;gameStateObj.counters['level'] == 6
 	if;self.optionalunit.name == 'Kiley'
 		u;Kiley;Right
-		s;Kiley;Aye, I'd love to help, but it looks like this Resistance can handle itself.{w}{br}I'd best be following me crew.{w}{br}They get mighty rowdy without their captain to steer 'em straight{w};auto
+		s;Kiley;Aye, looks like this Resistance can handle itself.{w}{br}I'd best be following me crew.{w}{br}They get mighty rowdy without their captain to steer 'em straight{w};auto
 		r;Kiley
 	elif;self.optionalunit.name == 'Prisoner'
 		inc_counter;Civ_Escape

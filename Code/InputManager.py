@@ -147,7 +147,7 @@ class InputManager(object):
                 print('Joy Down', joy)
 
 class FluidScroll(object):
-    def __init__(self, speed=66, slow_speed=3):
+    def __init__(self, speed=64, slow_speed=3):
         self.moveLeft = False
         self.moveRight = False
         self.moveUp = False
@@ -224,7 +224,7 @@ class FluidScroll(object):
             self.move_counter = 0
         return directions
 
-    def update_speed(self, speed=100, slow_speed=2.5):
+    def update_speed(self, speed=64, slow_speed=3):
         self.fast_speed = speed
         self.slow_speed = speed*slow_speed
 
