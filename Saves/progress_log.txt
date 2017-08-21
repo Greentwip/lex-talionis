@@ -3931,3 +3931,35 @@ Wexp: 0, 0, 0, 16, 0, 0, 0
 Items: Willow Bow 45, Vulnerary 3
 *** Convoy:
 Items: 
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 0
+Wexp: 8, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 45
+*** Prim: Healtouch
+Lvl 1, Exp 0
+Wexp: 0, 0, 0, 0, 1, 0, 0
+Items: Glimmer Ward 35, Heal 30
+*** Convoy:
+Items: 
+
+=== Level 1 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 0
+Wexp: 8, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 45
+*** Prim: Healtouch
+Lvl 1, Exp 0
+Wexp: 0, 0, 0, 0, 1, 0, 0
+Items: Glimmer Ward 35, Heal 30
+*** Joel: Cleave
+Lvl 3, Exp 0
+Wexp: 0, 0, 16, 0, 0, 0, 0
+Items: Iron Axe 45, Vulnerary 3
+*** Nia: Prescience
+Lvl 3, Exp 0
+Wexp: 0, 0, 0, 16, 0, 0, 0
+Items: Willow Bow 45, Vulnerary 3
+*** Convoy:
+Items: 

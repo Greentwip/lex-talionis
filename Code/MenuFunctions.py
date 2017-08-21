@@ -622,7 +622,7 @@ class ChoiceMenu(SimpleMenu):
         face_image = Engine.flip_horiz(face_image)
         face_image = Image_Modification.flickerImageTranslucentColorKey(face_image, 50)
         left = self.topleft[0] + self.bg_surf.get_width()/2 - face_image.get_width()/2
-        top = self.topleft[1] + 3
+        top = self.topleft[1] + self.bg_surf.get_height()/2 - face_image.get_height()/2 - 3
         surf.blit(face_image, (left, top))
 
     def vert_draw(self, surf):
@@ -646,6 +646,8 @@ class ChoiceMenu(SimpleMenu):
                     if self.color_control:
                         main_font = GC.FONT[self.color_control[index+self.scroll]]
                         uses_font = GC.FONT[self.color_control[index+self.scroll]]
+                        if uses_font == GC.FONT['text_white']:
+                            uses_font = GC.FONT['text_blue']
                     elif self.owner.canWield(option):
                         main_font = GC.FONT['text_white']
                         uses_font = GC.FONT['text_blue']
@@ -1316,13 +1318,16 @@ class UnitSelectMenu(Counters.CursorControl):
         self.scroll = 0
 
         if topleft == 'center':
-            self.option_length = 72
-            self.topleft = (8, 0)
-
+            self.option_length = 64
+            self.topleft = (6, 0)
+            self.menu_size = GC.WINWIDTH - 16, self.option_height*self.num_rows + 8
+        else:
+            self.menu_size = self.getMenuSize()
+        
+        self.menu_width = self.menu_size[0]
         self.highlight = True
         self.draw_extra_marker = None
-        self.menu_size = self.getMenuSize()
-        self.menu_width = self.menu_size[0]
+
 
         self.scroll_bar = GUIObjects.ScrollBar((self.topleft[0] + self.menu_width, self.topleft[1]))
         Counters.CursorControl.__init__(self)
@@ -1408,18 +1413,18 @@ class UnitSelectMenu(Counters.CursorControl):
                 unit_image = unit.sprite.create_image('gray')
             elif unit == self.options[self.currentSelection]:
                 unit_image = unit.sprite.create_image('active')
-            topleft = (self.topleft[0] - 16 - 4 + left*self.option_length, self.topleft[1] + 2 + (top+1)*self.option_height - unit_image.get_height() + 8)
+            topleft = (self.topleft[0] - 16 - 4 + 16 + left*self.option_length, self.topleft[1] + 2 + (top+1)*self.option_height - unit_image.get_height() + 8)
             surf.blit(unit_image, topleft)
 
             # Blit name
             font = GC.FONT['text_white']
             if self.mode == 'position' and not unit.position:
                 font = GC.FONT['text_grey']
-            position = (self.topleft[0] + 20 + 1 + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)
+            position = (self.topleft[0] + 20 + 1 + 16 + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)
             font.blit(unit.name, surf, position)
 
         # Blit cursor
-        left = self.topleft[0] - 8 + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
+        left = self.topleft[0] + 8 + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
         top = self.topleft[1] + 4 + (self.currentSelection-self.scroll*self.units_per_row)/self.units_per_row*self.option_height + self.cursor_y_offset*8
         self.cursor_y_offset = 0 # Reset
         surf.blit(self.cursor, (left, top))
@@ -1450,48 +1455,49 @@ class UnitSelectMenu(Counters.CursorControl):
         top = self.topleft[1] + 4 + (selection-self.scroll)/self.units_per_row*self.option_height
         surf.blit(self.cursor, (left, top))
 
-def drawUnitItems(surf, topleft, unit, include_top=False, include_face=False, right=True, shimmer=0):
+def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, include_face=False, right=True, shimmer=0):
     if include_top:
-        white_backSurf = CreateBaseMenuSurf((96, 40), 'WhiteMenuBackgroundOpaque')
-        surf.blit(white_backSurf, (topleft[0], topleft[1] - 40))
-        surf.blit(unit.portrait, (topleft[0] + 2, topleft[1] - 37))
-        GC.FONT['text_white'].blit(unit.name, surf, (topleft[0] + 44, topleft[1] - 40 + 4))
-        GC.FONT['text_yellow'].blit('<>', surf, (topleft[0] + 37, topleft[1] - 20))
-        GC.FONT['text_yellow'].blit('$', surf, (topleft[0] + 69, topleft[1] - 20))
-        GC.FONT['text_blue'].blit(str(unit.level), surf, (topleft[0] + 67 - GC.FONT['text_blue'].size(str(unit.level))[0], topleft[1] - 20))
-        GC.FONT['text_blue'].blit(str(unit.exp), surf, (topleft[0] + 92 - GC.FONT['text_blue'].size(str(unit.exp))[0], topleft[1] - 20))
+        white_backSurf = GC.IMAGESDICT['PrepTop']
+        surf.blit(white_backSurf, (topleft[0] - 6, topleft[1] - white_backSurf.get_height()))
+        surf.blit(unit.portrait, (topleft[0] + 3, topleft[1] - 35))
+        GC.FONT['text_white'].blit(unit.name, surf, (topleft[0] + 68 - GC.FONT['text_white'].size(unit.name)[0]/2, topleft[1] - 40 + 5))
+        # GC.FONT['text_yellow'].blit('<>', surf, (topleft[0] + 37, topleft[1] - 20))
+        # GC.FONT['text_yellow'].blit('$', surf, (topleft[0] + 69, topleft[1] - 20))
+        GC.FONT['text_blue'].blit(str(unit.level), surf, (topleft[0] + 72 - GC.FONT['text_blue'].size(str(unit.level))[0], topleft[1] - 19))
+        GC.FONT['text_blue'].blit(str(unit.exp), surf, (topleft[0] + 97 - GC.FONT['text_blue'].size(str(unit.exp))[0], topleft[1] - 19))
 
-    blue_backSurf = CreateBaseMenuSurf((104, 16*cf.CONSTANTS['max_items']+8), 'BaseMenuBackgroundOpaque')
-    if shimmer:
-        img = GC.IMAGESDICT['Shimmer' + str(shimmer)]
-        blue_backSurf.blit(img, (blue_backSurf.get_width() - img.get_width() - 1, blue_backSurf.get_height() - img.get_height() - 5))
-    blue_backSurf = Image_Modification.flickerImageTranslucent(blue_backSurf, 10)
-    surf.blit(blue_backSurf, topleft)
+    if include_bottom:
+        blue_backSurf = CreateBaseMenuSurf((104, 16*cf.CONSTANTS['max_items']+8), 'BaseMenuBackgroundOpaque')
+        if shimmer:
+            img = GC.IMAGESDICT['Shimmer' + str(shimmer)]
+            blue_backSurf.blit(img, (blue_backSurf.get_width() - img.get_width() - 1, blue_backSurf.get_height() - img.get_height() - 5))
+        blue_backSurf = Image_Modification.flickerImageTranslucent(blue_backSurf, 10)
+        surf.blit(blue_backSurf, topleft)
 
-    if include_face:
-        face_image = unit.bigportrait.copy()
-        if right:
-            face_image = Engine.flip_horiz(face_image)
-        face_image = Image_Modification.flickerImageTranslucentColorKey(face_image, 50)
-        left = topleft[0] + blue_backSurf.get_width()/2 - face_image.get_width()/2 + 1
-        top = topleft[1] + blue_backSurf.get_height()/2 - face_image.get_height()/2 - 1
-        pos = left, top
-        surf.blit(face_image, pos)
+        if include_face:
+            face_image = unit.bigportrait.copy()
+            if right:
+                face_image = Engine.flip_horiz(face_image)
+            face_image = Image_Modification.flickerImageTranslucentColorKey(face_image, 50)
+            left = topleft[0] + blue_backSurf.get_width()/2 - face_image.get_width()/2 + 1
+            top = topleft[1] + blue_backSurf.get_height()/2 - face_image.get_height()/2 - 1
+            pos = left, top
+            surf.blit(face_image, pos)
 
-    for index, item in enumerate(unit.items):
-        item.draw(surf, (topleft[0] + 2, topleft[1] + index*16 + 4))
-        name_font = GC.FONT['text_grey']
-        use_font = GC.FONT['text_grey']
-        if unit.canWield(item):
-            name_font = GC.FONT['text_white']
-            use_font = GC.FONT['text_blue']
-        name_font.blit(item.name, surf, (topleft[0] + 4 + 16, topleft[1] + index*16 + 4))
-        uses_string = "--"
-        if item.uses:
-            uses_string = str(item.uses)
-        elif item.c_uses:
-            uses_string = str(item.c_uses)
-        use_font.blit(uses_string, surf, (topleft[0] + 104 - 4 - use_font.size(uses_string)[0], topleft[1] + index*16 + 4))
+        for index, item in enumerate(unit.items):
+            item.draw(surf, (topleft[0] + 2, topleft[1] + index*16 + 4))
+            name_font = GC.FONT['text_grey']
+            use_font = GC.FONT['text_grey']
+            if unit.canWield(item):
+                name_font = GC.FONT['text_white']
+                use_font = GC.FONT['text_blue']
+            name_font.blit(item.name, surf, (topleft[0] + 4 + 16, topleft[1] + index*16 + 4))
+            uses_string = "--"
+            if item.uses:
+                uses_string = str(item.uses)
+            elif item.c_uses:
+                uses_string = str(item.c_uses)
+            use_font.blit(uses_string, surf, (topleft[0] + 104 - 4 - use_font.size(uses_string)[0], topleft[1] + index*16 + 4))
 
 def drawUnitSupport(surf, unit1, unit2, gameStateObj):
     # Draw face one

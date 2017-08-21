@@ -101,7 +101,7 @@ class PrepPickUnitsState(StateMachine.State):
             units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
             units = sorted(units, key=lambda unit: unit.position, reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 2, 6, (110, 24))
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
+            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -284,6 +284,17 @@ class PrepFormationSelectState(StateMachine.State):
             mapSurf.blit(self.marker, (x_pos, y_pos))
         return mapSurf
 
+def draw_funds(surf, gameStateObj):
+    # Draw R: Info display
+    helper = Engine.get_key_name(cf.OPTIONS['key_INFO']).upper()
+    GC.FONT['text_yellow'].blit(helper, surf, (123, 143))
+    GC.FONT['text_white'].blit(': Info', surf, (123 + GC.FONT['text_blue'].size(helper)[0], 143))
+    # Draw Funds display
+    surf.blit(GC.IMAGESDICT['FundsDisplay'], (168, 137))
+    money = str(gameStateObj.counters['money'])
+    size = GC.FONT['text_blue'].size(money)[0]
+    GC.FONT['text_blue'].blit(money, surf, (219 - size, 140))
+
 class PrepItemsState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         self.show_map = False
@@ -309,7 +320,7 @@ class PrepItemsState(StateMachine.State):
                 self.font.blit(command, self.quick_sort_disp, (38, idx*self.font.height + 4))
 
         if not gameStateObj.background:
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
+            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
         # Transition in:
         if gameStateObj.stateMachine.from_transition():
@@ -358,9 +369,11 @@ class PrepItemsState(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         if gameStateObj.activeMenu:
-            MenuFunctions.drawUnitItems(surf, (16, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
+            MenuFunctions.drawUnitItems(surf, (6, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
         # Draw quick sort display
-        surf.blit(self.quick_sort_disp, (GC.WINWIDTH/2 + 12, GC.WINHEIGHT/2))
+        surf.blit(self.quick_sort_disp, (GC.WINWIDTH/2 + 10, GC.WINHEIGHT/2 + 9))
+        draw_funds(surf, gameStateObj)
+
         return surf
 
     def finish(self, gameStateObj, metaDataObj):
@@ -381,7 +394,7 @@ class PrepItemsChoicesState(StateMachine.State):
         if hasattr(gameStateObj, 'hidden_item_child_option'):
             self.menu.setSelection(gameStateObj.hidden_item_child_option)
         if not gameStateObj.background:
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
+            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.set_extra_marker(False)
         if any(item.usable and item.booster for item in gameStateObj.cursor.currentSelectedUnit.items):
@@ -444,7 +457,8 @@ class PrepItemsChoicesState(StateMachine.State):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         self.menu.draw(surf)
         if gameStateObj.activeMenu:
-            MenuFunctions.drawUnitItems(surf, (16, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
+            MenuFunctions.drawUnitItems(surf, (6, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, include_top=True, shimmer=2)
+        draw_funds(surf, gameStateObj)
         return surf
 
     def end(self, gameStateObj, metaDataObj):
@@ -497,8 +511,8 @@ class PrepTradeSelectState(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        MenuFunctions.drawUnitItems(mapSurf, (16, 8+16*4), self.selection, include_face=True, shimmer=2)
-        MenuFunctions.drawUnitItems(mapSurf, (128, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, right=False, shimmer=2)
+        MenuFunctions.drawUnitItems(mapSurf, (6, 8+16*4), self.selection, include_face=True, shimmer=2)
+        MenuFunctions.drawUnitItems(mapSurf, (126, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, right=False, shimmer=2)
         return mapSurf
 
 class ConvoyTrader(object):
@@ -595,7 +609,7 @@ class PrepTradeState(StateMachine.State):
 class PrepUseItemState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
-        self.menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (16, 72), limit=5, hard_limit=True, gem=False, shimmer=2,
+        self.menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (6, 72), limit=5, hard_limit=True, gem=False, shimmer=2,
                                              color_control=['text_white' if item.booster else 'text_grey' for item in cur_unit.items],
                                              ignore=[False if item.booster else True for item in cur_unit.items])
         self.menu.draw_face = True
@@ -631,6 +645,8 @@ class PrepUseItemState(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         self.menu.draw(mapSurf, gameStateObj)
+        MenuFunctions.drawUnitItems(mapSurf, (6, 8+16*4), self.menu.owner, include_top=True, include_bottom=False)
+        self.draw_use_desc(mapSurf, self.menu.getSelection().desc)
         if self.info:
             selection = None
             position = None
@@ -642,6 +658,16 @@ class PrepUseItemState(StateMachine.State):
                 help_surf = selection.get_help_box()
                 mapSurf.blit(help_surf, position)
         return mapSurf
+
+    def draw_use_desc(self, surf, desc):
+        topleft = (110, 80)
+        back_surf = MenuFunctions.CreateBaseMenuSurf((136, 64), 'SharpClearMenuBG')
+        surf.blit(back_surf, topleft)
+
+        font = GC.FONT['text_white']
+        text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), GC.WINWIDTH - topleft[0] - 8, font)
+        for idx, line in enumerate(text):
+            font.blit(line, surf, (topleft[0] + 4, font.height * idx + 4 + topleft[1]))
 
     def end(self, gameStateObj, metaDataObj):
         self.menu = None
@@ -780,7 +806,7 @@ class PrepTransferState(StateMachine.State):
             self.menu.set_take_input(False)
             cur_unit = gameStateObj.cursor.currentSelectedUnit
             self.choice_menu = MenuFunctions.ChoiceMenu(cur_unit, [cf.WORDS["Give"], cf.WORDS["Take"]], (60, 16), gem=False, background='BrownBackgroundOpaque')
-            self.owner_menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (8, 72), limit=5, hard_limit=True, width=104, gem=False, shimmer=2)
+            self.owner_menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (6, 72), limit=5, hard_limit=True, width=104, gem=False, shimmer=2)
             self.owner_menu.takes_input = False
             self.owner_menu.draw_face = True
             self.state = "Free" # Can also be Give, Take
@@ -936,7 +962,7 @@ class BaseMarketState(StateMachine.State):
             self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
 
             if not gameStateObj.background:
-                gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
+                gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
             # Hide active menu
             gameStateObj.childMenu = gameStateObj.activeMenu

@@ -3,7 +3,7 @@ import GlobalConstants as GC
 import configuration as cf
 import Engine, InputManager, StateMachine
 import Image_Modification, MenuFunctions, CustomObjects, InfoMenu
-import GUIObjects
+import GUIObjects, Counters
 
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -224,10 +224,10 @@ class UnitMenu(StateMachine.State):
         self.sort_arrow_counter.update()
         surf.blit(self.sort_surf, (170, 4))
         if self.descending:
-            surf.blit(Engine.flip_vert(IMAGESDICT['GreenArrow']), (225, 9 + self.sort_arrow_counter.get()))
+            surf.blit(Engine.flip_vert(GC.IMAGESDICT['GreenArrow']), (225, 9 + self.sort_arrow_counter.get()))
         else:
-            surf.blit(IMAGESDICT['GreenArrow'], (225, 9 + self.sort_arrow_counter.get()))
-        FONT['text_white'].blit('Sort: ' + self.current_sort, surf, (173, 8))
+            surf.blit(GC.IMAGESDICT['GreenArrow'], (225, 9 + self.sort_arrow_counter.get()))
+        GC.FONT['text_white'].blit('Sort: ' + self.current_sort, surf, (173, 8))
 
     def draw_state(self, surf, gameStateObj, metaDataObj, scroll=0, prev=False):
         state_surf = Engine.create_surface((160, 112), transparent=True)
@@ -415,6 +415,6 @@ class UnitMenu(StateMachine.State):
         elif self.current_sort in CustomObjects.WEAPON_TRIANGLE.types:
             comp = lambda unit: unit.wexp[CustomObjects.WEAPON_TRIANGLE.types.index(self.current_sort)]
         elif self.current_sort == 'Equip':
-            comp = lambda unit: ITEMDATA[unit.getMainWeapon().id]['num'] if unit.getMainWeapon() else 1000
+            comp = lambda unit: GC.ITEMDATA[unit.getMainWeapon().id]['num'] if unit.getMainWeapon() else 1000
 
         self.units = sorted(self.units, key=comp, reverse=self.descending)

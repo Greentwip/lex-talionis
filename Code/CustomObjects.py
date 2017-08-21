@@ -376,7 +376,9 @@ class Highlight(object):
         self.image = Engine.subsurface(self.sprite, (0, 0, GC.TILEWIDTH, GC.TILEHEIGHT)) # First image
 
     def draw(self, surf, position, updateIndex, transition):
-        self.image = Engine.subsurface(self.sprite, (updateIndex*GC.TILEWIDTH+transition, transition, GC.TILEWIDTH-transition, GC.TILEHEIGHT-transition))
+        updateIndex = int(updateIndex)  # Confirm int
+        rect = (updateIndex*GC.TILEWIDTH + transition, transition, GC.TILEWIDTH - transition, GC.TILEHEIGHT - transition)
+        self.image = Engine.subsurface(self.sprite, rect)
         x, y = position
         topleft = x * GC.TILEWIDTH, y * GC.TILEHEIGHT
         surf.blit(self.image, topleft)
@@ -432,7 +434,7 @@ class HighlightController(object):
                 transition -= 1
             self.types[name][1] = transition
             for pos in self.highlights[name]:
-                self.types[name][0].draw(surf, pos, int(self.updateIndex), transition)
+                self.types[name][0].draw(surf, pos, self.updateIndex, transition)
 
     def check_arrow(self, pos):
         if pos in self.highlights['move']:

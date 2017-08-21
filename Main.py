@@ -133,5 +133,5 @@ if __name__ == '__main__':
         traceback.print_exc()
         time.sleep(0.5)
         inform_error()
-        time.sleep(20)
+        time.sleep(10)
 # === END === END === END === END === END === END === END === END === END === #

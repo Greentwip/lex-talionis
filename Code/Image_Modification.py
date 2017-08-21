@@ -66,7 +66,7 @@ def flickerImageTranslucentColorKey(image, transparency):
     alpha = 255 - int(2.55*transparency)
     alpha = Utility.clamp(alpha, 0, 255)
     image = Engine.copy_surface(image)
-    Engine.set_alpha(image, alpha, relaccel=True)
+    Engine.set_alpha(image, alpha, rleaccel=True)
 
     return image
 
