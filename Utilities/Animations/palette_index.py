@@ -85,21 +85,21 @@ cavalier_red = [(128, 160, 128), # Background
                 (40, 40, 40)] # Outline
 
 cavalier_blue = [(128, 160, 128), # Background
-                (248, 248, 248), # White
-                (248, 248, 176), # Light skin
-                (232, 192, 136), # LM skin
-                (176, 136, 96), # Horse Skin
-                (160, 120, 96), # DM skin
-                (112, 80, 56), # Dark skin
-                (168, 184, 216), # Light Hair
-                (96, 136, 168), # Dark Hair
-                (72, 120, 248), # Light Pennant
-                (48, 48, 200), # Dark Pennant
-                (168, 208, 248), # Light Clothes
-                (80, 128, 240), # LM Clothes
-                (48, 48, 200), # DM Clothes
-                (48, 40, 128), # Dark Clothes
-                (40, 40, 40)] # Outline
+                 (248, 248, 248), # White
+                 (248, 248, 176), # Light skin
+                 (232, 192, 136), # LM skin
+                 (176, 136, 96), # Horse Skin
+                 (160, 120, 96), # DM skin
+                 (112, 80, 56), # Dark skin
+                 (168, 184, 216), # Light Hair
+                 (96, 136, 168), # Dark Hair
+                 (72, 120, 248), # Light Pennant
+                 (48, 48, 200), # Dark Pennant
+                 (168, 208, 248), # Light Clothes
+                 (80, 128, 240), # LM Clothes
+                 (48, 48, 200), # DM Clothes
+                 (48, 40, 128), # Dark Clothes
+                 (40, 40, 40)] # Outline
 
 generic_cavalier = [(255, 255, 255),
                 (0, 51, 128),
@@ -391,6 +391,40 @@ saleh = [(128, 160, 128), # Background
                 (176, 224, 176), # Light Robe
                 (152, 192, 152), # Medium Robe
                 (88, 112, 88), # Dark Robe
+                (40, 40, 40)] # Outline
+
+sage_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (200, 232, 104), # Light Hair
+                (72, 216, 48), # Med Hair
+                (56, 120, 0), # Dark Hair
+                (192, 192, 200), # Light clothes
+                (152, 152, 176), # Medium clothes
+                (96, 96, 136), # Dark clothes
+                (232, 192, 128), # Lightest Robe
+                (232, 128, 56), # Light Robe
+                (192, 0, 0), # Medium Robe
+                (104, 0, 0), # Dark Robe
+                (40, 40, 40)] # Outline
+
+sage_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (200, 232, 104), # Light Hair
+                (72, 216, 48), # Med Hair
+                (56, 120, 0), # Dark Hair
+                (192, 192, 200), # Light clothes
+                (152, 152, 176), # Medium clothes
+                (96, 96, 136), # Dark clothes
+                (128, 192, 232), # Lightest Robe
+                (56, 128, 232), # Light Robe
+                (40, 40, 192), # Medium Robe
+                (40, 40, 104), # Dark Robe
                 (40, 40, 40)] # Outline
 
 generic_sage = [(255, 255, 255),
