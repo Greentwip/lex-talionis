@@ -397,14 +397,14 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
 
 def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False):
     # Not implemented yet
-    if cf.OPTIONS['Animation'] and not splash and attacker is not defender:
-        attacker_anim = GC.ANIMDICT.partake(attacker, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item))
+    if cf.OPTIONS['Animation'] and not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject):
+        attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item))
         defender_item = defender.getMainWeapon()
         if defender_item:
             magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
         else:
             magic = False
-        defender_anim = GC.ANIMDICT.partake(defender, defender.getMainWeapon(), magic)
+        defender_anim = GC.ANIMDICT.partake(defender.klass, defender.gender, defender.getMainWeapon(), magic)
         if attacker_anim and defender_anim:
             # Build attacker animation
             attacker_script = attacker_anim['script']

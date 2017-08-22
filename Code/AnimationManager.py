@@ -50,7 +50,7 @@ class BattleAnimationManager(object):
                 frame_directory = {}
                 for name, anim in klass_directory[weapon]['images'].iteritems():
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)
-                #print(frame_directory)
+                # print(frame_directory)
                 klass_directory[weapon]['images'] = frame_directory
                 klass_directory[weapon]['script'] = self.parse_script(klass_directory[weapon]['script'])
 
@@ -61,10 +61,9 @@ class BattleAnimationManager(object):
             e_dict['image'] = self.format_index(e_dict['index'], e_dict['image'])
             e_dict['script'] = self.parse_script(e_dict['script'])
 
-    def partake(self, unit, item=None, magic=False):
-        klass = unit.klass
-        if unit.gender == 'F':
-            klass = unit.klass + 'F' if unit.klass + 'F' in self.directory else unit.klass
+    def partake(self, klass, gender='M', item=None, magic=False):
+        if gender == 'F':
+            klass = klass + 'F' if klass + 'F' in self.directory else klass
         if klass in self.directory:
             self.generate(klass)
             check_item = False

@@ -5,7 +5,7 @@ import os
 import GlobalConstants as GC
 import configuration as cf
 import StateMachine, MenuFunctions, ItemMethods
-import Image_Modification, CustomObjects, Dialogue, WorldMap, InputManager, Engine
+import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine
 
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -675,7 +675,8 @@ class PrepUseItemState(StateMachine.State):
 class PrepListState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.name_surf = MenuFunctions.CreateBaseMenuSurf((56, 24), 'TransMenuBackground60')
+            # self.name_surf = MenuFunctions.CreateBaseMenuSurf((56, 24), 'TransMenuBackground60')
+            self.name_surf = GC.IMAGESDICT['TradeName']
             self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
             self.info = False
 
@@ -756,15 +757,15 @@ class PrepListState(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         self.menu.draw(surf)
+        # Draw name
+        surf.blit(self.name_surf, (-2, -1))
+        name_position = (24 - GC.FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]/2, 0)
+        GC.FONT['text_white'].blit(gameStateObj.cursor.currentSelectedUnit.name, surf, name_position)
         # Draw face image
         face_image = gameStateObj.cursor.currentSelectedUnit.bigportrait.copy()
         face_image = Engine.flip_horiz(face_image)
         height = min(face_image.get_height(), 72)
         surf.blit(Engine.subsurface(face_image, (0, 0, face_image.get_width(), height)), (12, 0))
-        # Draw name
-        surf.blit(self.name_surf, (-2, 0))
-        name_position = (24 - GC.FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]/2, 4)
-        GC.FONT['text_white'].blit(gameStateObj.cursor.currentSelectedUnit.name, surf, name_position)
         # Draw owner
         surf.blit(self.owner_surf, (156, 0))
         item_owner = None

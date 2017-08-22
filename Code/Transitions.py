@@ -1158,6 +1158,20 @@ class TransitionPopState(StateMachine.State):
         surf.blit(bb, (0, 0))
         return surf
 
+class TransitionDoublePopState(TransitionPopState):
+    # Used when you you want to transition from current state, immediately skip the state under it, and go to the state under that one
+    def draw(self, gameStateObj, metaDataObj):
+        surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        # Now draw black background
+        bb = Image_Modification.flickerImageTranslucent(self.background, self.transition*12.5)
+        self.transition -= transition_speed
+        if self.transition <= 0:
+            gameStateObj.stateMachine.back()
+            gameStateObj.stateMachine.back()
+            gameStateObj.stateMachine.back()
+        surf.blit(bb, (0, 0))
+        return surf
+
 class TransitionCleanState(TransitionOutState):
     # Assumes there is a state directly under this state. Draw that state also.
     def update(self, gameStateObj, metaDataObj):

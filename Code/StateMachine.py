@@ -5,6 +5,7 @@ import configuration as cf
 import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 import Interaction, LevelUp, StatusObject, ItemMethods
 import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
+import BattleAnimation
 
 import logging
 logger = logging.getLogger(__name__)
@@ -50,8 +51,8 @@ class StateMachine(object):
                            'status': StatusState,
                            'end_step': StatusState,
                            'expgain': ExpGainState,
-                           'levelpromotechild': LevelPromoteChildState,
-                           'levelpromote': LevelPromoteState,
+                           'promotion_choice': PromotionChoiceState,
+                           'promotion': PromotionState,
                            'feat_choice': FeatChoiceState,
                            'ai': AIState,
                            'vendor': ShopState,
@@ -100,6 +101,7 @@ class StateMachine(object):
                            'transition_in': Transitions.TransitionInState,
                            'transition_out': Transitions.TransitionOutState,
                            'transition_pop': Transitions.TransitionPopState,
+                           'transition_double_pop': Transitions.TransitionDoublePopState,
                            'transition_clean': Transitions.TransitionCleanState,
                            'config_menu': OptionsMenu.OptionsMenu,
                            'status_menu': MenuFunctions.StatusMenu,
@@ -153,7 +155,7 @@ class StateMachine(object):
         return self.last_state
 
     def from_transition(self):
-        return self.get_last_state() == 'transition_out' or self.get_last_state() == 'transition_pop'
+        return self.get_last_state() in ('transition_out', 'transition_pop', 'transition_double_pop', 'transition_clean')
 
     def inList(self, state_name):
         return any([state_name == state.name for state in self.state]) or any([state_name == temp_state for temp_state in self.temp_state])
@@ -2137,67 +2139,246 @@ class ExpGainState(State):
             gameStateObj.levelUpScreen[-1].draw(mapSurf, gameStateObj)
         return mapSurf
 
-class LevelPromoteState(State):
+class PromotionChoiceState(State):
+    def begin(self, gameStateObj, metaDataObj):
+        if not self.started:
+            self.show_map = False
+
+            self.unit = gameStateObj.cursor.currentSelectedUnit
+            class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
+            self.menu = MenuFunctions.ChoiceMenu(self.unit, class_options, (14, 13), width=80)
+
+            self.on_child_menu = False
+            self.child_menu = None
+
+            # Animations
+            self.animations = []
+            for option in class_options:
+                anim = GC.ANIMDICT.partake(option, self.unit.gender)
+                if anim:
+                    # Build animation
+                    script = anim['script']
+                    if self.unit.name in anim['images']:
+                        frame_dir = anim['images'][self.unit.name]
+                    else:
+                        color = 'Blue' if self.unit.team == 'player' else 'Red'
+                        frame_dir = anim['images']['Generic' + color]
+                    anim = BattleAnimation.BattleAnimation(frame_dir, script)
+                    anim.awake(owner=self, parent=None, right=True, at_range=False) # Stand
+                self.animations.append(anim)
+
+            # Platforms
+            platform_type = gameStateObj.map.tiles[self.unit.position].platform if self.unit.position else 'Floor'
+            suffix = '-Melee'
+            self.left_platform = GC.IMAGESDICT[platform_type + suffix].copy()
+            self.right_platform = Engine.flip_horiz(self.left_platform.copy())
+
+            self.anim_offset = 120
+            self.target_anim_offset = False
+
+            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+
+            # Transition in:
+            if gameStateObj.stateMachine.from_transition():
+                gameStateObj.stateMachine.changeState("transition_in")
+                return 'repeat'
+
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveDown()
+            if self.on_child_menu:
+                self.child_menu.moveDown()
+            else:
+                self.menu.moveDown()
+                self.target_anim_offset = True
         elif event == 'UP':
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveUp()
-
-        elif event == 'BACK':
-            pass # Can't go back...
-        
-        elif event == 'SELECT':
-            GC.SOUNDDICT['Select 1'].play()
-            selection = gameStateObj.activeMenu.getSelection()
-            # Create child menu with additional options
-            options = [cf.WORDS['Change'], cf.WORDS['Cancel']]
-            gameStateObj.childMenu = MenuFunctions.ChocieMenu(gameStateObj, selection, options, 'child')
-            gameStateObj.stateMachine.changeState('levelpromotechild')
-
-    def draw(self, gameStateObj, metaDataObj):
-        mapSurf = State.draw(self, gameStateObj, metaDataObj)
-        MenuFunctions.drawClassDescription(mapSurf, gameStateObj, metaDataObj)
-        return mapSurf
-
-class LevelPromoteChildState(State):
-    def take_input(self, eventList, gameStateObj, metaDataObj):
-        event = gameStateObj.input_manager.process_input(eventList)
-        if event == 'DOWN':
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.childMenu.moveDown()
-        elif event == 'UP':
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.childMenu.moveUp()
+            if self.on_child_menu:
+                self.child_menu.moveDown()
+            else:
+                self.menu.moveUp()
+                self.target_anim_offset = True
 
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.stateMachine.back()
+            if self.on_child_menu:
+                self.on_child_menu = False
+                self.child_menu = None
+            else:
+                pass # Can't go back...
         
         elif event == 'SELECT':
-            selection = gameStateObj.childMenu.getSelection()
-            # Create child menu with additional options
-            if selection == cf.WORDS['Change']:
+            if self.on_child_menu:
+                selection = self.child_menu.getSelection()
+                if selection == cf.WORDS['Change']:
+                    self.unit.new_klass = self.menu.getSelection()
+                    GC.SOUNDDICT['Select 1'].play()
+                    gameStateObj.stateMachine.changeState('promote')
+                    gameStateObj.stateMachine.changeState('transition_out')
+                else:
+                    GC.SOUNDDICT['Select 4'].play()
+                    self.on_child_menu = False
+                    self.child_menu = None
+            else:
                 GC.SOUNDDICT['Select 1'].play()
-                gameStateObj.activeMenu.owner.level += 1
-                gameStateObj.activeMenu.owner.changeClass(gameStateObj.childMenu.owner, gameStateObj) # Actually change the class of the unit
-                gameStateObj.stateMachine.back()
-                gameStateObj.stateMachine.back() # Head back to level gain now that we've chosen and changed the class, it will handle the change
-                gameStateObj.activeMenu = None
-            elif selection == cf.WORDS['Cancel']:
-                GC.SOUNDDICT['Select 4'].play()
-                gameStateObj.stateMachine.back()
+                selection = self.menu.getSelection()
+                # Create child menu with additional options
+                options = [cf.WORDS['Change'], cf.WORDS['Cancel']]
+                self.child_menu = MenuFunctions.ChocieMenu(selection, options, (72, 32 + self.menu.currentSelection*16))
 
-    def end(self, gameStateObj, metaDataObj):
-        gameStateObj.childMenu = None
+    def update(self, gameStateObj, metaDataObj):
+        StateMachine.State.update(self, gameStateObj, metaDataObj)
+        self.menu.update()
+        if self.child_menu:
+            self.child_menu.update()
+
+        if self.target_anim_offset:
+            self.anim_offset += 8
+            if self.anim_offset > 120:
+                self.target_anim_offset = False
+                self.anim_offset = 120
+        else:
+            self.anim_offset -= 8
+            if self.anim_offset < 0:
+                self.anim_offset = 0
 
     def draw(self, gameStateObj, metaDataObj):
-        mapSurf = State.draw(self, gameStateObj, metaDataObj)
-        MenuFunctions.drawClassDescription(mapSurf, gameStateObj, metaDataObj)
-        return mapSurf
+        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        # Anim
+        top = 88
+        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + self.anim_offset, top))
+        surf.blit(self.right_platform, (GC.WINWIDTH / 2 + self.anim_offset, top))
+        anim = self.animations[self.menu.currentSelection]
+        if anim:
+            anim.draw(surf, (self.anim_offset, 0))
+
+        # Menus
+        self.menu.draw(surf, gameStateObj)
+        if self.child_menu:
+            self.child_menu.draw(surf, gameStateObj)
+
+        surf.blit(GC.IMAGESDICT['PromotionDescription'], (6, 112))
+
+        # Description
+        font = GC.FONT['convo_white']
+        desc = metaDataObj['class_dict'][self.menu.getSelection()]['desc']
+        text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), 208, font)
+        for idx, line in enumerate(text):
+            font.blit(line, surf, (14, font.height * idx + 4 + 120))
+
+        # Class Reel
+        GC.FONT['class_purple'].blit(self.menu.getSelection(), surf, (114, 7))
+
+    def end(self, gameStateObj):
+        self.menu = None
+        self.child_menu = None
+
+class PromotionState(State):
+    def begin(self, gameStateObj, metaDataObj):
+        if not self.started:
+            self.unit = gameStateObj.cursor.currentSelectedUnit
+            color = 'Blue' if self.unit.team == 'player' else 'Red'
+
+            # Old - Right - Animation
+            right_anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender)
+            if right_anim:
+                # Build animation
+                script = right_anim['script']
+                if self.unit.name in right_anim['images']:
+                    frame_dir = right_anim['images'][self.unit.name]
+                else:
+                    frame_dir = right_anim['images']['Generic' + color]
+                right_anim = BattleAnimation.BattleAnimation(frame_dir, script)
+                right_anim.awake(owner=self, parent=None, right=True, at_range=False) # Stand
+            # New - Left - Animation
+            left_anim = GC.ANIMDICT.partake(self.unit.new_klass, self.unit.gender)
+            if left_anim:
+                # Build animation
+                script = left_anim['script']
+                if self.unit.name in left_anim['images']:
+                    frame_dir = left_anim['images'][self.unit.name]
+                else:
+                    frame_dir = left_anim['images']['Generic' + color]
+                left_anim = BattleAnimation.BattleAnimation(frame_dir, script)
+                left_anim.awake(owner=self, parent=None, right=False, at_range=False) # Stand
+
+            self.current_anim = right_anim
+
+            # Platforms
+            platform = 'Floor-Melee'
+            self.left_platform = GC.IMAGESDICT[platform].copy()
+            self.right_platform = Engine.flip_horiz(self.left_platform.copy())
+
+            gameStateObj.background = GC.IMAGESDICT['Promotion']
+
+            # Name Tag
+            self.name_tag = GC.IMAGESDICT[color + 'RightCombatName'].copy()
+            size_x = GC.FONT['text_brown'].size(self.right.name)[0]
+            GC.FONT['text_brown'].blit(self.unit.name, self.name_tag, (36 - size_x / 2, 8))
+
+            self.current_state = 'Init'
+
+            # Transition in:
+            if gameStateObj.stateMachine.from_transition():
+                gameStateObj.stateMachine.changeState("transition_in")
+                return 'repeat'
+
+        self.last_update = Engine.get_time()
+
+    def update(self, gameStateObj, metaDataObj):
+        StateMachine.State.update(self, gameStateObj, metaDataObj)
+
+        current_time = Engine.get_time()
+        if self.current_state == 'Init':
+            if current_time - self.last_update > 410:  # 25 frames
+                self.current_state = 'Right'
+                self.last_update = current_time
+                self.start_right_anim()
+
+        elif self.current_state == 'Right':
+            if self.promotion_animation.done():
+                self.current_anim = None  # Don't draw anybody once you move to 'Mid'
+                self.current_state = 'Mid'
+                self.last_update = current_time
+                self.start_mid_anim()
+
+        elif self.current_state == 'Mid':
+            if self.promotion_animation.done():
+                self.current_anim = self.left_anim  # Draw the left dude
+                self.current_state = 'Left'
+                self.last_update = current_time
+                self.start_left_anim()
+
+        elif self.current_state == 'Left':
+            if self.promotion_animation.done():
+                self.current_state = 'Wait'
+                self.last_update = current_time
+
+        elif self.current_state == 'Wait':
+            if current_time - self.last_update > 1660:  # 100 frames
+                self.current_state = 'Level_Up'
+                self.last_update = current_time
+                next_level = LevelUp.levelUpScreen(gameStateObj, self.unit, 0, in_combat=self)
+                next_level.state.changeState('promote')  # Hack to start in promotion
+                gameStateObj.levelUpScreen.append(next_level)
+                gameStateObj.stateMachine.changeState('level_up')
+
+        elif self.current_state == 'Level_Up':
+            # Leave
+            gameStateObj.stateMachine.changeState('transition_double_pop')
+
+    def draw(self, gameStateObj, metaDataObj):
+        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        # Anim
+        top = 88
+        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
+        surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
+        if self.current_anim:
+            self.current_anim.draw(surf, (0, 0))
+
+        # Name Tag
+        surf.blit(self.name_tag, (GC.WINWIDTH + 3 - self.name_tag.get_width(), 0))
 
 class DyingState(State):
     def begin(self, gameStateObj, metaDataObj):

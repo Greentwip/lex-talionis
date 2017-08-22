@@ -267,54 +267,6 @@ def CreateBaseMenuSurf((width, height), baseimage='BaseMenuBackground', top_left
 
     return MainMenuSurface
 
-def drawClassDescription(surf, gameStateObj, metaDataObj):
-    # Get basic info
-    unit = gameStateObj.activeMenu.owner
-    selection = gameStateObj.activeMenu.getSelection()
-    class_dict = metaDataObj['class_dict']
-    # Get class desc
-    class_desc = class_dict[selection]['desc']
-    text_lines = ['']
-
-    # start the drawing process
-    BGSurf = CreateBaseMenuSurf((GC.WINWIDTH - 16, 48))
-    BG_pos = (8, GC.WINHEIGHT - 4 - BGSurf.get_height())
-
-    # write the text
-    for word in class_desc.split():
-        word_width = GC.FONT['text_white'].size(word)[0]
-        line_width = GC.FONT['text_white'].size(text_lines[-1])[0]
-
-        # If we've exceeded width
-        if line_width + word_width >= BGSurf.get_width() - 40:
-            text_lines.append('')
-        text_lines[-1] += word + ' ' # add space
-
-    # So now we have text_lines
-    text_surf = Engine.create_surface((BGSurf.get_width() - 12, BGSurf.get_height() - 12), transparent=True)
-    for index, line in enumerate(text_lines[:2]):
-        line = line.lstrip()
-        GC.FONT['text_white'].blit(line, text_surf, (0, index * 16))
-
-    # Actually blit
-    text_pos = BG_pos[0] + BGSurf.get_width()/2 - text_surf.get_width()/2, BG_pos[1] + BGSurf.get_height()/2 - text_surf.get_height()/2
-    surf.blit(BGSurf, BG_pos)
-    surf.blit(text_surf, text_pos)
-
-    # Also draw active sprite of the unit we have selected
-    # Blit the white status platform
-    PlatSurf = GC.IMAGESDICT['StatusPlatform']
-    left = GC.WINWIDTH - 8 - PlatSurf.get_width()
-    top = GC.WINHEIGHT - 12 - PlatSurf.get_height()
-    surf.blit(PlatSurf, (left, top))
-    # Blit the unit's new active sprite if its klass had changed
-    standSpriteName = selection + unit.gender # Ex. MercenaryM
-    standSprite = GC.UNITDICT[standSpriteName]
-    activeSprites = Engine.subsurface(standSprite, (0, 2*GC.TILEHEIGHT*3, standSprite.get_width(), GC.TILEHEIGHT*3))
-    activeSpriteSurf = Engine.subsurface(activeSprites, (GC.ACTIVESPRITECOUNTER.count*GC.TILEWIDTH*4, 0, GC.TILEWIDTH*4, 40))
-    pos = (left + 9 - max(0, (activeSpriteSurf.get_width() - 16)/2), top - max(0, (activeSpriteSurf.get_width() - 16)/2))
-    surf.blit(activeSpriteSurf, pos)
-
 class Lore_Display(object):
     def __init__(self, starting_entry):
         self.topleft = (72, 4)
@@ -685,7 +637,7 @@ class ChoiceMenu(SimpleMenu):
 
         # Blit options
         GC.FONT['text_white'].blit('  '.join(self.options), surf, (self.topleft[0] + 4, self.topleft[1] + 4))
-  
+
         # blit cursor
         left_options = self.options[:self.currentSelection]
         option_left = sum(GC.FONT['text_white'].size(option)[0] for option in left_options) + \
@@ -1328,7 +1280,6 @@ class UnitSelectMenu(Counters.CursorControl):
         self.highlight = True
         self.draw_extra_marker = None
 
-
         self.scroll_bar = GUIObjects.ScrollBar((self.topleft[0] + self.menu_width, self.topleft[1]))
         Counters.CursorControl.__init__(self)
         self.cursor_y_offset = 0
@@ -1659,7 +1610,7 @@ class ConvoyMenu(object):
         else:
             self.left_arrow.pulse()
 
-    def moveRight(self, first_push = True):
+    def moveRight(self, first_push=True):
         self.selection_index += 1
         if self.selection_index > len(self.order) - 1:
             if first_push:
