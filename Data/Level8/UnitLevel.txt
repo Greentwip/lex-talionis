@@ -55,9 +55,8 @@ enemy;0;0;Vanguard;12;Mithril Axe;10,19;Attack_4;Claw
 enemy;0;0;Vanguard;12;Mithril Axe;3,23;Attack_4;Claw
 # 4 Mages and a Sage in middle of Map
 enemy;0;0;Mage;10;Fire;15,15;Attack_2;Claw
-enemy;0;0;Mage;10;Earth;17,17;Attack_2;Claw
-enemy;0;0;Mage;10;Wind;15,17;Attack_2;Claw
-enemy;0;0;Mage;10;Water;17,15;Attack_2;Claw
+enemy;0;0;Mage;10;Thunder;17,17;Attack_2;Claw
+enemy;0;0;Mage;10;Wind;17,15;Attack_2;Claw
 enemy;0;0;Sage;12;Blizzard,dElixir;16,16;Attack_2;Claw
 # 2 Warriors above spawn, along with 1 Tactician and 1 Shaman
 enemy;0;0;Warrior;11;Mithril Axe,Oak Bow;4,3;Attack_3;Claw
@@ -149,5 +148,5 @@ enemy;0;w10_2;Warrior;15;Mithril Axe,Oak Longbow;0,12;Pursue;Claw
 enemy;2;i1;Warrior;Mithril Axe,Oak Bow;0,0;Pursue;Claw;Void_Curse
 enemy;2;i2;Sniper;Yew Bow;0,0;Pursue;Claw;Void_Curse
 enemy;2;i3;Vanguard;Mithril Sword,Steel Axe;0,0;Pursue;Claw;Void_Curse
-enemy;2;i4;Sage;Fire,Water;0,0;Pursue;Claw;Void_Curse
+enemy;2;i4;Sage;Fire;0,0;Pursue;Claw;Void_Curse
 enemy;2;i5;Oracle;Shine,Mend;0,0;Pursue;Claw;Void_Curse

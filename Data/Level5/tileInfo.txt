@@ -13,4 +13,4 @@
 18,4:Status=tile_Regeneration
 23,2:Status=tile_Regeneration,Rex_Aegis;Seize=1
 1,0:Village=Abandon
-5,1:Shop=Great Sword,Iron Knife,Great Lance,Javelin,Great Axe,Hand Axe,Great Bow,Wind,Fire,Earth,Shine,Mend,Flux
+5,1:Shop=Great Sword,Iron Knife,Great Lance,Javelin,Great Axe,Hand Axe,Great Bow,Wind,Fire,Thunder,Shine,Mend,Flux

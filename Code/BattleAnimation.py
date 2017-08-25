@@ -49,6 +49,8 @@ class BattleAnimation(object):
         self.owner = None
         self.parent = None
 
+        self.speed = 1
+
     def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
         self.owner = owner
         self.partner = partner
@@ -139,11 +141,11 @@ class BattleAnimation(object):
             self.script_index += 1
 
     def parse_line(self, line):
-        # print(self.right, True if self.child_effect else False, line)
+        print(self.right, True if self.child_effect else False, line)
         # === TIMING AND IMAGES ===
         if line[0] == 'f':
             self.frame_count = 0
-            self.num_frames = int(line[1])
+            self.num_frames = int(line[1]) * self.speed
             self.current_frame = self.frame_directory[line[2]]
             self.processing = False
             if len(line) > 3:  # Under frame
@@ -153,14 +155,14 @@ class BattleAnimation(object):
             self.over_frame = None
         elif line[0] == 'of':
             self.frame_count = 0
-            self.num_frames = int(line[1])
+            self.num_frames = int(line[1]) * self.speed
             self.current_frame = None
             self.under_frame = None
             self.processing = False
             self.over_frame = self.frame_directory[line[2]]
         elif line[0] == 'wait':
             self.frame_count = 0
-            self.num_frames = int(line[1])
+            self.num_frames = int(line[1]) * self.speed
             self.current_frame = None
             self.under_frame = None
             self.over_frame = None
@@ -201,12 +203,16 @@ class BattleAnimation(object):
                 self.owner.shake(2)
         # === FLASHING ===
         elif line[0] == 'enemy_flash_white':
-            num_frames = int(line[1])
+            num_frames = int(line[1]) * self.speed
             self.partner.flash(num_frames, (248, 248, 248))
         elif line[0] == 'screen_flash_white':
-            self.foreground_frames = int(line[1])
+            self.owner.flash_white(int(line[1]) * self.speed)
+        elif line[0] == 'foreground_blend':
+            color = tuple([int(num) for num in line[1].split(',')])
+            print(color)
+            self.foreground_frames = int(line[2]) * self.speed
             self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
-            self.foreground.fill((248, 248, 248))
+            self.foreground.fill(color)
         elif line[0] == 'darken':
             self.owner.darken()
         elif line[0] == 'lighten':
@@ -396,10 +402,10 @@ class BattleAnimation(object):
 
             # Screen flash
             if self.foreground:
-                surf.blit(self.foreground, (0, 0))
+                Engine.blit(surf, self.foreground, (0, 0), None, Engine.BLEND_RGB_ADD)
                 self.foreground_frames -= 1
                 # If done
-                if self.flash_frames <= 0:
+                if self.foreground_frames <= 0:
                     self.foreground = None
                     self.foreground_frames = 0
 

@@ -1166,55 +1166,38 @@
 		<LVL>D</LVL>
     </item>
 
-    <item name="Water Ward">
-        <id>Water</id>
+    <item name="Thunder Ward">
+        <id>Thunder</id>
         <spritetype>Anima</spritetype>
-        <spriteid>1</spriteid>       
+        <spriteid>13</spriteid>       
         <components>weapon,uses,status_on_equip</components>
         <weapontype>Anima</weapontype>
  
         <uses>30</uses>
         <RNG>1-2</RNG>
-        <value>20</value>
-        <desc>Grants wielder RES +2.</desc>
-        <status_on_equip>Resistance +2</status_on_equip>
+        <value>32</value>
+        <desc>Grants wielder DEF +2.</desc>
+        <status_on_equip>Defense +2</status_on_equip>
 
-		<MT>3</MT>
-		<HIT>90</HIT>
-		<LVL>D</LVL>
-    </item>
-
-    <item name="Earth Ward">
-        <id>Earth</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>2</spriteid>       
-        <components>weapon,uses,status_on_equip</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>30</uses>
-        <RNG>1-2</RNG>
-        <value>28</value>
-        <desc>Grants wielder DEF +2 but inflicts SPD -2.</desc>
-        <status_on_equip>Speed -2,Defense +2</status_on_equip>
-
-		<MT>6</MT>
-		<HIT>70</HIT>
-		<LVL>D</LVL>
+        <MT>6</MT>
+        <HIT>60</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Fire Ward">
         <id>Fire</id>
         <spritetype>Anima</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
+        <components>weapon,uses,map_hit_color,status_on_equip</components>
         <weapontype>Anima</weapontype>
  
         <uses>30</uses>
         <RNG>1-2</RNG>
         <value>24</value>
-        <desc></desc>
+        <desc>Grants wielder RES +2.</desc>
+        <status_on_equip>Resistance +2</status_on_equip>
 
-		<MT>5</MT>
+		<MT>4</MT>
 		<HIT>80</HIT>
 		<LVL>D</LVL>
 
@@ -1231,10 +1214,10 @@
         <uses>15</uses>
         <RNG>1-2</RNG>
         <value>300</value>
-        <desc>Grants wielder +2 DEF/RES</desc>
-        <status_on_equip>Defense +2,Resistance +2</status_on_equip>
+        <desc>Grants wielder +2 SPD/DEF/RES</desc>
+        <status_on_equip>Speed +2,Defense +2,Resistance +2</status_on_equip>
 
-		<MT>9</MT>
+		<MT>8</MT>
 		<HIT>100</HIT>
 		<LVL>A</LVL>
     </item>

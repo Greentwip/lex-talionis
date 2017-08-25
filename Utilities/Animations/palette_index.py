@@ -393,6 +393,23 @@ saleh = [(128, 160, 128), # Background
                 (88, 112, 88), # Dark Robe
                 (40, 40, 40)] # Outline
 
+saleh_f = [(128, 160, 128), # Background
+                (112, 72, 48), # Dark skin
+                (248, 248, 248), # White
+                (248, 192, 144), # Med skin
+                (248, 248, 208), # Light skin
+                (168, 248, 248), # Lightest Robe
+                (216, 208, 208), # Light Hair
+                (176, 152, 152), # Med Hair
+                (136, 112, 112), # Dark Hair
+                (152, 152, 176), # Light clothes
+                (112, 112, 144), # Medium clothes
+                (64, 64, 104), # Dark clothes
+                (176, 224, 176), # Light Robe
+                (152, 192, 152), # Medium Robe
+                (88, 112, 88), # Dark Robe
+                (40, 40, 40)] # Outline
+
 sage_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin

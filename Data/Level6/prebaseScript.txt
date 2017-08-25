@@ -5,8 +5,7 @@ unlock_lore;Tyrana
 add_to_market;Iron Knife
 add_to_market;Javelin
 add_to_market;Hand Axe
-add_to_market;Water
-add_to_market;Earth
+add_to_market;Thunder
 add_to_market;Flux
 add_to_market;Nyx
 add_to_market;Scathe

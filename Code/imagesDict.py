@@ -2,27 +2,28 @@ import os
 import Engine, AnimationManager
 
 COLORKEY = (128, 160, 128)
-def getImages():
+def getImages(home='./'):
     # General Sprites
     IMAGESDICT = {}
-    for root, dirs, files in os.walk('Sprites/General/'):
+    for root, dirs, files in os.walk(home + 'Sprites/General/'):
         for name in files:
             if name.endswith('.png'):
                 full_name = os.path.join(root, name)
                 IMAGESDICT[name[:-4]] = Engine.image_load(full_name, convert_alpha=True)
 
     # Icon Sprites
-    loc = 'Sprites/Icons/'
+    loc = home + 'Sprites/Icons/'
     ICONDICT = {image[:-4]: Engine.image_load(loc + image, convert_alpha=True) for image in os.listdir(loc) if image.endswith('.png')}
     
     # Item and Skill and Status sprites
-    ITEMDICT = {image[:-4]: Engine.image_load('Data/Items/' + image, convert=True) for image in os.listdir('Data/Items/') if image.endswith('.png')}
+    loc = home + 'Data/Items/'
+    ITEMDICT = {image[:-4]: Engine.image_load(loc + image, convert=True) for image in os.listdir(loc) if image.endswith('.png')}
     for image in ITEMDICT.values():
         Engine.set_colorkey(image, COLORKEY, rleaccel=True)
 
     # Unit Sprites
     UNITDICT = {}
-    for root, dirs, files in os.walk('Data/Characters/'):
+    for root, dirs, files in os.walk(home + 'Data/Characters/'):
         for name in files:
             if name.endswith('.png'):
                 full_name = os.path.join(root, name)
@@ -31,7 +32,7 @@ def getImages():
                 UNITDICT[name[:-4]] = image
 
     # Battle Animations
-    ANIMDICT = AnimationManager.BattleAnimationManager(COLORKEY)
+    ANIMDICT = AnimationManager.BattleAnimationManager(COLORKEY, home)
 
     return IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT
 

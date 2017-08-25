@@ -89,8 +89,8 @@ enemy;0;0;Mercenary;8;Iron Sword;6,25;Attack_1;Guard
 enemy;0;0;Mercenary;8;Iron Sword;7,25;Attack_1;Guard
 enemy;0;0;Mercenary;8;Iron Sword;9,24;Attack_1;Guard
 # At Front
-enemy;0;0;Mage;8;Wind,Water;6,31;Attack;Guard
-enemy;0;0;Mage;8;Wind,Water;18,31;Attack;Guard
+enemy;0;0;Mage;8;Wind;6,31;Attack;Guard
+enemy;0;0;Mage;8;Wind;18,31;Attack;Guard
 #
 # Guarding Switches
 enemy;0;0;Knight;7;Javelin;1,24;HardGuard;Guard
@@ -130,20 +130,20 @@ enemy;0;pack_r7_1;Soldier;8;Iron Lance;17,0;Pursue;Guard
 enemy;0;pack_r7_2;Soldier;8;Javelin;19,0;Pursue;Guard
 # Next Turn
 enemy;0;pack_l8_1;Soldier;9;Iron Lance;5,0;Pursue;Guard
-enemy;0;pack_l8_2;Mage;8;Wind,Water;7,0;Pursue;Guard
+enemy;0;pack_l8_2;Mage;8;Wind;7,0;Pursue;Guard
 #
 enemy;0;pack_r8_1;Soldier;9;Iron Lance;19,0;Pursue;Guard
-enemy;0;pack_r8_2;Mage;8;Wind,Water;17,0;Pursue;Guard
+enemy;0;pack_r8_2;Mage;8;Wind;17,0;Pursue;Guard
 # Next Turn
-enemy;0;pack_l9_1;Mage;9;Wind,Water;7,0;Pursue;Guard
-enemy;0;pack_l9_2;Mage;9;Wind,Water;5,0;Pursue;Guard
+enemy;0;pack_l9_1;Mage;9;Wind;7,0;Pursue;Guard
+enemy;0;pack_l9_2;Mage;9;Wind;5,0;Pursue;Guard
 #
-enemy;0;pack_r9_1;Mage;9;Wind,Water;17,0;Pursue;Guard
-enemy;0;pack_r9_2;Mage;9;Wind,Water;19,0;Pursue;Guard
+enemy;0;pack_r9_1;Mage;9;Wind;17,0;Pursue;Guard
+enemy;0;pack_r9_2;Mage;9;Wind;19,0;Pursue;Guard
 # Thieves
 enemy;0;pack_lt_1;Thief;8;Iron Knife;6,0;Unlock2;Thief
 enemy;0;pack_rt_1;Thief;8;Iron Knife;18,0;Unlock2;Thief
 #
 # Infinite Reinforcements -
 enemy;2;i1;Knight;Mithril Lance,Short Spear;0,0;Pursue;Guard;Void_Curse
-enemy;2;i2;Mage;Wind,Water;0,0;Pursue;Guard;Void_Curse
+enemy;2;i2;Mage;Wind;0,0;Pursue;Guard;Void_Curse

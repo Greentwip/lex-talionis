@@ -41,10 +41,10 @@ enemy;0;Wagon_2;Wagon;5;dSteel Lance;0,0;ThiefEscape;Wagon
 enemy;0;pack2_1;Cavalier;3;Iron Sword;0,0;Pursue;Soldier
 enemy;0;pack2_2;Raider;4;Iron Axe;0,0;FollowWagon;Soldier
 # Turn 2
-enemy;0;Wagon_3;Wagon;5;dWater;0,0;ThiefEscape;Wagon
+enemy;0;Wagon_3;Wagon;5;dFire;0,0;ThiefEscape;Wagon
 enemy;0;pack3_1;Raider;5;Iron Axe;0,0;FollowWagon;Soldier
 enemy;0;pack3_2;Archer;3;Willow Bow;0,0;FollowWagon;Soldier
-enemy;0;Wagon_4;Wagon;5;dEarth;0,0;ThiefEscape;Wagon
+enemy;0;Wagon_4;Wagon;5;dThunder;0,0;ThiefEscape;Wagon
 enemy;0;pack4_1;Raider;5;Iron Axe;0,0;FollowWagon;Soldier
 enemy;0;pack4_2;Archer;3;Willow Bow;0,0;FollowWagon;Soldier
 # Turn 3

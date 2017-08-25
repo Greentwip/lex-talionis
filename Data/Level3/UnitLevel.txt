@@ -70,10 +70,10 @@ enemy;0;pack2_1;Sentinel;5;Iron Axe;0,0;Pursue;Guard
 enemy;0;pack2_2;Soldier;5;Iron Lance;0,0;Pursue;Guard
 enemy;0;pack2_3;Archer;4;Willow Bow;0,0;Pursue;Guard
 enemy;0;pack2_4;Shaman;4;Flux;0,0;Pursue;Guard
-enemy;0;pack2_5;Mage;4;Fire,Wind;0,0;Pursue;Guard
+enemy;0;pack2_5;Mage;4;Fire;0,0;Pursue;Guard
 # Reinforcement, wave 3
 enemy;0;pack3_1;Soldier;6;Steel Lance;0,0;Pursue;Guard
 enemy;0;pack3_2;Soldier;6;Steel Lance;0,0;Pursue;Guard
 enemy;0;pack3_3;Archer;5;Oak Bow;0,0;Pursue;Guard
 enemy;0;pack3_4;Shaman;5;Nyx;0,0;Pursue;Guard
-enemy;0;pack3_5;Mage;5;Earth,Fire;0,0;Pursue;Guard
+enemy;0;pack3_5;Mage;5;Fire;0,0;Pursue;Guard

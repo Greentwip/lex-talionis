@@ -2,14 +2,14 @@ import os
 import Engine
 
 class BattleAnimationManager(object):
-    def __init__(self, COLORKEY):
+    def __init__(self, COLORKEY, home='./'):
         self.generated_klasses = set()
         # Class Animations
         self.directory = {}
-        for root, dirs, files in os.walk('./Data/Animations/'):
+        for root, dirs, files in os.walk(home + 'Data/Animations/'):
             for name in files:
                 klass, weapon, desc = name.split('-')
-                #print(klass, weapon, desc)
+                # print(klass, weapon, desc)
                 if klass not in self.directory:
                     self.directory[klass] = {}
                 if weapon not in self.directory[klass]:
@@ -27,7 +27,7 @@ class BattleAnimationManager(object):
         # Custom Spell Animations
         self.generated_effects = set()
         self.effects = {}
-        for root, dirs, files in os.walk('./Data/Effects/'):
+        for root, dirs, files in os.walk(home + 'Data/Effects/'):
             for name in files:
                 effect, desc = name.split('-')
                 if effect not in self.effects:
@@ -58,7 +58,10 @@ class BattleAnimationManager(object):
         if effect in self.effects and effect not in self.generated_effects:
             self.generated_effects.add(effect)
             e_dict = self.effects[effect]
-            e_dict['image'] = self.format_index(e_dict['index'], e_dict['image'])
+            if 'image' in e_dict:
+                e_dict['image'] = self.format_index(e_dict['index'], e_dict['image'])
+            else:
+                e_dict['image'] = None
             e_dict['script'] = self.parse_script(e_dict['script'])
 
     def partake(self, klass, gender='M', item=None, magic=False):

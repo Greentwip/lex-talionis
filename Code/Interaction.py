@@ -587,6 +587,8 @@ class AnimationCombat(Combat):
         # For darken backgrounds and drawing
         self.darken_background = 0
         self.darken_ui_background = 0
+        self.foreground = None
+        self.foreground_frames = 0
         self.combat_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
 
         # For positioning UI
@@ -858,6 +860,11 @@ class AnimationCombat(Combat):
         self.platform_current_shake = 1
         self.platform_shake_set = [(0, 1), (0, 0), (0, -1), (0, 0), (0, 1), (0, 0), (-1, -1), (0, 1), (0, 0)]
 
+    def flash_white(self, num_frames):
+        self.foreground_frames = num_frames
+        self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
+        self.foreground.fill((248, 248, 248))
+
     def darken(self):
         self.darken_background = 1
 
@@ -921,15 +928,15 @@ class AnimationCombat(Combat):
             right_range_offset, left_range_offset = 0, 0
         if self.current_result:
             if self.right is self.current_result.attacker:
-                self.right.battle_anim.draw_under(surf, (-total_shake_x * 2, total_shake_y), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(surf, (-total_shake_x * 2, total_shake_y), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(surf, (-total_shake_x * 2, total_shake_y), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw_over(surf, (-total_shake_x * 2, total_shake_y), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw_under(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw_over(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
             else:
-                self.left.battle_anim.draw_under(surf, (-total_shake_x * 2, total_shake_y), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw(surf, (-total_shake_x * 2, total_shake_y), right_range_offset, self.pan_offset)
-                self.left.battle_anim.draw(surf, (-total_shake_x * 2, total_shake_y), left_range_offset, self.pan_offset)
-                self.right.battle_anim.draw_over(surf, (-total_shake_x * 2, total_shake_y), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw_under(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
+                self.left.battle_anim.draw(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
+                self.right.battle_anim.draw_over(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
         else:
             self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)
             self.right.battle_anim.draw(surf, (0, 0), right_range_offset, self.pan_offset)
@@ -972,6 +979,15 @@ class AnimationCombat(Combat):
             self.darken_ui_background += 1
 
         surf.blit(combat_surf, (0, 0))
+
+        # Screen flash
+        if self.foreground:
+            surf.blit(self.foreground, (0, 0))
+            self.foreground_frames -= 1
+            # If done
+            if self.foreground_frames <= 0:
+                self.foreground = None
+                self.foreground_frames = 0
 
     def draw_item(self, surf, item, other_item, unit, other, topleft):
         white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \

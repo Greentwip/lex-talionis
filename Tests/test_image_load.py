@@ -7,7 +7,7 @@ import Code.imagesDict as images
 pygame.display.set_mode((600, 400))
 
 def main():
-    IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT = images.getImages()
+    IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = images.getImages()
     assert len(IMAGESDICT) > 0
     assert len(UNITDICT) > 0
     assert len(ICONDICT) > 0
