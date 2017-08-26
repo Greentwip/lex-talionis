@@ -33,7 +33,8 @@ f;1;Attack18
 screen_flash_white;4
 f;4;Attack19;Miss
 hit_spark
-hit;Attack19;Miss
+start_hit
+wait_for_hit;Attack19;Miss
 f;9;Attack19;Miss
 f;2;Attack21;Miss2
 f;3;Attack22

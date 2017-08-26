@@ -29,7 +29,8 @@ screen_flash_white;4
 wait;4
 # Gone!
 hit_spark
-hit
+start_hit
+wait_for_hit
 wait;18
 # Arrives from sky
 f;3;Attack14

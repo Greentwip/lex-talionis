@@ -6,7 +6,7 @@ from PIL import Image
 
 COLORKEY = (128, 160, 128)
 WIDTH_LIMIT = 1024
-folder = 'cavalier_unarmed_frames'
+folder = 'hero_rangedaxe_frames'
 count = 0
 index_lines = []
 

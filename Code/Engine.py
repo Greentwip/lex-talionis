@@ -8,7 +8,8 @@ logger = logging.getLogger(__name__)
 
 engine_constants = {'current_time': 0,
                     'last_time': 0,
-                    'last_fps': 0}
+                    'last_fps': 0,
+                    'home': './'}
 
 BLEND_RGB_ADD = pygame.BLEND_RGB_ADD
 BLEND_RGB_SUB = pygame.BLEND_RGB_SUB
@@ -23,6 +24,9 @@ def init():
     pygame.init()
     pygame.mixer.init()
 
+def simple_init():
+    pygame.init()
+
 def set_icon(icon):
     pygame.display.set_icon(icon)
 
@@ -34,6 +38,9 @@ def clock():
 
 def build_display(size):
     return pygame.display.set_mode(size)
+
+def remove_display():
+    pygame.display.quit()
 
 def build_font(ttf, size):
     return pygame.font.Font(ttf, size)

@@ -36,22 +36,24 @@ def getImages(home='./'):
 
     return IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT
 
-def getSounds():
+def getSounds(home='./'):
     # SFX Sounds
     class SoundDict(dict):
         def __getitem__(self, key):
             return dict.get(self, key, Engine.BaseSound())
 
-    sfxnameList = [sfx[:-4] for sfx in os.listdir('./Audio/sfx/') if sfx.endswith('.wav') or sfx.endswith('.ogg')]
-    sfxList = [Engine.create_sound('./Audio/sfx/' + sfx) for sfx in os.listdir('./Audio/sfx/') if sfx.endswith('.wav') or sfx.endswith('.ogg')]
+    loc = home + 'Audio/sfx/'
+    sfxnameList = [sfx[:-4] for sfx in os.listdir(loc) if sfx.endswith('.wav') or sfx.endswith('.ogg')]
+    sfxList = [Engine.create_sound(loc + sfx) for sfx in os.listdir(loc) if sfx.endswith('.wav') or sfx.endswith('.ogg')]
     SOUNDDICT = SoundDict(zip(sfxnameList, sfxList))
 
     class MusicDict(dict):
         def __getitem__(self, key):
             return dict.get(self, key)
 
-    musicnameList = [music[:-4] for music in os.listdir('./Audio/music/') if music.endswith('.ogg')]
-    musicList = [('./Audio/music/' + music) for music in os.listdir('./Audio/music/') if music.endswith('.ogg')]
+    loc = home + 'Audio/music/'
+    musicnameList = [music[:-4] for music in os.listdir(loc) if music.endswith('.ogg')]
+    musicList = [(loc + music) for music in os.listdir(loc) if music.endswith('.ogg')]
     MUSICDICT = MusicDict(zip(musicnameList, musicList))
 
     set_sound_volume(1.0, SOUNDDICT)

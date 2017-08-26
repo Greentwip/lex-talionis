@@ -74,10 +74,9 @@ class BattleAnimationManager(object):
                 weapon = 'Unarmed'
             elif magic:
                 weapon = 'Magic' + item.spritetype
-                check_item = True
+                check_item = True # Make sure that we have the spell also
             elif max(item.RNG) > 1:
                 weapon = 'Ranged' + item.spritetype
-                check_item = True
             else:
                 weapon = item.spritetype
             if weapon in self.directory[klass]:

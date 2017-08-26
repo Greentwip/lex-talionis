@@ -29,7 +29,8 @@ screen_flash_white;4
 # Screen shake in hit
 f;4;Attack11
 hit_spark
-hit;Attack12;Miss
+start_hit
+wait_for_hit;Attack12;Miss
 f;3;Attack12;Miss
 # Retreat
 f;3;Attack13
