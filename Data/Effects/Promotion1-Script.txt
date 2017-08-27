@@ -1,0 +1,22 @@
+pose;Attack
+# 1697 - 1845
+darken
+effect;PromoDustUp
+f;40;Stand
+effect;PromoBoltSlow
+f;80;Stand
+effect;PromoBubbles
+f;19;Stand
+flash_screen_white;10
+wait;10
+# 1846 - 1989
+effect;PromoRing
+wait;66
+# On left side of screen
+enemy_effect;PromoDustDown
+wait;44
+effect;PromoYellowReticule
+wait;26
+flash_screen_white;8
+wait;8
+wait;1

@@ -2277,33 +2277,37 @@ class PromotionChoiceState(State):
 class PromotionState(State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
+            self.show_map = False
+
             self.unit = gameStateObj.cursor.currentSelectedUnit
             color = 'Blue' if self.unit.team == 'player' else 'Red'
 
             # Old - Right - Animation
-            right_anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender)
-            if right_anim:
+            self.right_anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender)
+            if self.right_anim:
                 # Build animation
-                script = right_anim['script']
-                if self.unit.name in right_anim['images']:
-                    frame_dir = right_anim['images'][self.unit.name]
+                script = self.right_anim['script']
+                if self.unit.name in self.right_anim['images']:
+                    frame_dir = self.right_anim['images'][self.unit.name]
                 else:
-                    frame_dir = right_anim['images']['Generic' + color]
-                right_anim = BattleAnimation.BattleAnimation(frame_dir, script)
-                right_anim.awake(owner=self, parent=None, right=True, at_range=False) # Stand
+                    frame_dir = self.right_anim['images']['Generic' + color]
+                self.right_anim = BattleAnimation.BattleAnimation(frame_dir, script)
             # New - Left - Animation
-            left_anim = GC.ANIMDICT.partake(self.unit.new_klass, self.unit.gender)
-            if left_anim:
+            self.left_anim = GC.ANIMDICT.partake(self.unit.new_klass, self.unit.gender)
+            if self.left_anim:
                 # Build animation
-                script = left_anim['script']
-                if self.unit.name in left_anim['images']:
-                    frame_dir = left_anim['images'][self.unit.name]
+                script = self.left_anim['script']
+                if self.unit.name in self.left_anim['images']:
+                    frame_dir = self.left_anim['images'][self.unit.name]
                 else:
-                    frame_dir = left_anim['images']['Generic' + color]
-                left_anim = BattleAnimation.BattleAnimation(frame_dir, script)
-                left_anim.awake(owner=self, parent=None, right=False, at_range=False) # Stand
+                    frame_dir = self.left_anim['images']['Generic' + color]
+                self.left_anim = BattleAnimation.BattleAnimation(frame_dir, script)
+            if self.right_anim:
+                self.right_anim.awake(owner=self, parent=None, partner=self.left_anim if self.left_anim else None, right=True, at_range=False) # Stand
+            if self.left_anim:
+                self.left_anim.awake(owner=self, parent=None, partner=self.right_anim if self.right_anim else None, right=False, at_range=False) # Stand
 
-            self.current_anim = right_anim
+            self.current_anim = self.right_anim
 
             # Platforms
             platform = 'Floor-Melee'
@@ -2317,6 +2321,12 @@ class PromotionState(State):
             size_x = GC.FONT['text_brown'].size(self.right.name)[0]
             GC.FONT['text_brown'].blit(self.unit.name, self.name_tag, (36 - size_x / 2, 8))
 
+            # For darken backgrounds and drawing
+            self.darken_background = 0
+            self.darken_ui_background = 0
+            self.foreground = MenuFunctions.Foreground()
+            self.combat_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
+
             self.current_state = 'Init'
 
             # Transition in:
@@ -2326,6 +2336,28 @@ class PromotionState(State):
 
         self.last_update = Engine.get_time()
 
+    def flash_white(self, num_frames, fade_out=0):
+        self.foreground.flash(num_frames, fade_out)
+
+    def darken(self):
+        self.darken_background = 1
+
+    def lighten(self):
+        self.darken_background = -3
+
+    def darken_ui(self):
+        self.darken_ui_background = 1
+
+    def lighten_ui(self):
+        self.darken_ui_background = -3
+
+    def start_anim(self, effect):
+        anim = self.current_anim
+        image, script = GC.ANIMDICT.get_effect(effect)
+        anim.child_effect = BattleAnimation(image, script, 'Promotion1')
+        anim.child_effect.awake(anim.owner, anim.partner, anim.right, anim.at_range, parent=anim)
+        anim.child_effect.start_anim('Attack')
+
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
 
@@ -2334,24 +2366,17 @@ class PromotionState(State):
             if current_time - self.last_update > 410:  # 25 frames
                 self.current_state = 'Right'
                 self.last_update = current_time
-                self.start_right_anim()
+                self.start_anim('Promotion1')
 
         elif self.current_state == 'Right':
-            if self.promotion_animation.done():
-                self.current_anim = None  # Don't draw anybody once you move to 'Mid'
-                self.current_state = 'Mid'
-                self.last_update = current_time
-                self.start_mid_anim()
-
-        elif self.current_state == 'Mid':
-            if self.promotion_animation.done():
-                self.current_anim = self.left_anim  # Draw the left dude
+            if self.current_anim.child_effect.done():
+                self.current_anim = self.left_anim
                 self.current_state = 'Left'
                 self.last_update = current_time
-                self.start_left_anim()
+                self.start_anim('Promotion2')
 
         elif self.current_state == 'Left':
-            if self.promotion_animation.done():
+            if self.current_anim.child_effect.done():
                 self.current_state = 'Wait'
                 self.last_update = current_time
 
@@ -2365,20 +2390,46 @@ class PromotionState(State):
                 gameStateObj.stateMachine.changeState('level_up')
 
         elif self.current_state == 'Level_Up':
-            # Leave
-            gameStateObj.stateMachine.changeState('transition_double_pop')
+            self.last_update = current_time
+            self.current_state = 'Leave'
+
+        elif self.current_State == 'Leave':
+            if current_time - self.last_update > 160:  # 10 frames
+                gameStateObj.stateMachine.changeState('transition_double_pop')
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+
+        if self.darken_background:
+            self.darken_background = min(self.darken_background, 4)
+            bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - abs(int(self.darken_background * 12.5)))
+            surf.blit(bg, (0, 0))
+            self.darken_background += 1
+
+        # Make combat surf
+        combat_surf = Engine.copy_surface(self.combat_surf)
         # Anim
         top = 88
-        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
-        surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
+        combat_surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
+        combat_surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
         if self.current_anim:
-            self.current_anim.draw(surf, (0, 0))
+            self.current_anim.draw(combat_surf, (0, 0))
 
         # Name Tag
-        surf.blit(self.name_tag, (GC.WINWIDTH + 3 - self.name_tag.get_width(), 0))
+        combat_surf.blit(self.name_tag, (GC.WINWIDTH + 3 - self.name_tag.get_width(), 0))
+
+        if self.darken_ui_background:
+            self.darken_ui_background = min(self.darken_ui_background, 4)
+            # bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - abs(int(self.darken_ui_background*11.5)))
+            color = 255 - abs(self.darken_ui_background * 24)
+            Engine.fill(combat_surf, (color, color, color), None, Engine.BLEND_RGB_MULT)
+            # combat_surf.blit(bg, (0, 0))
+            self.darken_ui_background += 1
+
+        surf.blit(combat_surf, (0, 0))
+
+        # Screen flash
+        self.foreground.draw(surf)
 
 class DyingState(State):
     def begin(self, gameStateObj, metaDataObj):

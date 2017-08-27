@@ -5,8 +5,9 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
+COLORKEY = (0, 0, 0)
 WIDTH_LIMIT = 1024
-folder = 'cavalier_unarmed_frames'
+folder = 'promo_bolt_fast'
 count = 0
 index_lines = []
 
@@ -46,6 +47,7 @@ for name, number, idx in sorted(new_files):
 
     # Now get bbox
     left, upper, right, lower = image.getbbox()
+    # left, upper, right, lower = 0, 0, 240, 160
     # x, y on sprite_sheet
     # Width, Height
     width, height = right - left, lower - upper

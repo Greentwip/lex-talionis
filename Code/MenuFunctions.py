@@ -97,6 +97,39 @@ class MovieBackground(object):
         image = GC.IMAGESDICT[self.movie_prefix + str(self.counter)]
         surf.blit(image, (0, 0))
 
+class Foreground(object):
+    def __init__(self):
+        self.foreground = None
+        self.foreground_frames = 0
+        self.fade_out = False
+        self.fade_out_frames = 0
+
+    def flash(self, num_frames, fade_out):
+        self.foreground_frames = num_frames
+        self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
+        self.foreground.fill((248, 248, 248))
+        self.fade_out_frames = fade_out
+
+    def draw(self, surf):
+        # Screen flash
+        if self.foreground or self.fade_out_frames:
+            if self.fade_out:
+                foreground = Image_Modification.flickerImageTranslucent(self.foreground, self.foreground_frames/float(self.fade_out_frames))
+            else:
+                foreground = self.foreground
+            surf.blit(foreground, (0, 0))
+            self.foreground_frames -= 1
+            # If done
+            if self.foreground_frames <= 0:
+                if self.fade_out_frames and not self.fade_out:
+                    self.foreground_frames = self.fade_out_frames
+                    self.fade_out = True
+                else:
+                    self.fade_out_frames = 0
+                    self.foreground_frames = 0
+                    self.foreground = None
+                    self.fade_out = False
+
 class StatusMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:

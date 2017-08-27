@@ -1,0 +1,12 @@
+pose;Attack
+blend
+f;2;bolt1
+wait;40
+f;2;bolt2
+wait;20
+f;2;bolt3
+wait;8
+f;2;bolt2
+wait;2
+f;2;bolt1
+wait;1

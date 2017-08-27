@@ -3,6 +3,7 @@ import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
 import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
+import MenuFunctions
 
 import logging
 logger = logging.getLogger(__name__)
@@ -587,8 +588,7 @@ class AnimationCombat(Combat):
         # For darken backgrounds and drawing
         self.darken_background = 0
         self.darken_ui_background = 0
-        self.foreground = None
-        self.foreground_frames = 0
+        self.foreground = MenuFunctions.Foreground()
         self.combat_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
 
         # For positioning UI
@@ -860,10 +860,8 @@ class AnimationCombat(Combat):
         self.platform_current_shake = 1
         self.platform_shake_set = [(0, 1), (0, 0), (0, -1), (0, 0), (0, 1), (0, 0), (-1, -1), (0, 1), (0, 0)]
 
-    def flash_white(self, num_frames):
-        self.foreground_frames = num_frames
-        self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
-        self.foreground.fill((248, 248, 248))
+    def flash_white(self, num_frames, fade_out=0):
+        self.foreground.flash(num_frames, fade_out)
 
     def darken(self):
         self.darken_background = 1
@@ -980,14 +978,7 @@ class AnimationCombat(Combat):
 
         surf.blit(combat_surf, (0, 0))
 
-        # Screen flash
-        if self.foreground:
-            surf.blit(self.foreground, (0, 0))
-            self.foreground_frames -= 1
-            # If done
-            if self.foreground_frames <= 0:
-                self.foreground = None
-                self.foreground_frames = 0
+        self.foreground.draw(surf)
 
     def draw_item(self, surf, item, other_item, unit, other, topleft):
         white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \

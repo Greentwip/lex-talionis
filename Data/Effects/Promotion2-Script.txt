@@ -1,0 +1,15 @@
+pose;Attack
+# 1990 - 2150
+self_flash_white;20
+f;1;Stand
+effect;PromoBoltFast
+f;14;Stand
+effect;PromoWhiteOrb
+f;5;Stand
+lighten
+screen_flash_white;15;65
+f;15;Stand
+f;8;Stand
+effect;PromoRing
+f;117;Stand
+f;1;Stand

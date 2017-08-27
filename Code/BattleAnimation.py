@@ -49,7 +49,7 @@ class BattleAnimation(object):
         self.owner = None
         self.parent = None
 
-        self.speed = 1
+        self.speed = 10
 
     def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
         self.owner = owner
@@ -202,11 +202,19 @@ class BattleAnimation(object):
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
         # === FLASHING ===
+        elif line[0] == 'self_flash_white':
+            num_frames = int(line[1]) * self.speed
+            self.flash(num_frames, (248, 248, 248))
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1]) * self.speed
             self.partner.flash(num_frames, (248, 248, 248))
         elif line[0] == 'screen_flash_white':
-            self.owner.flash_white(int(line[1]) * self.speed)
+            num_frames = int(line[1]) * self.speed
+            if len(line) > 2:
+                fade_out = int(line[2]) * self.speed
+            else:
+                fade_out = 0
+            self.owner.flash_white(num_frames, fade_out)
         elif line[0] == 'foreground_blend':
             color = tuple([int(num) for num in line[1].split(',')])
             print(color)

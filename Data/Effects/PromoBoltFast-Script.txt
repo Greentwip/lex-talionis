@@ -1,0 +1,10 @@
+pose;Attack
+blend
+f;2;bolt4
+wait;2
+f;2;bolt5
+wait;2
+f;2;bolt4
+wait;2
+f;2;bolt6
+wait;1
