@@ -887,7 +887,7 @@ class Phase(object):
 
 # === WEAPON TRIANGLE OBJECT ==================================================
 class Weapon_Triangle(object):
-    def __init__(self):
+    def __init__(self, fp):
         self.types = []
         self.advantage = {}
         self.disadvantage = {}
@@ -895,7 +895,7 @@ class Weapon_Triangle(object):
         self.index_to_type = {}
         self.magic_types = []
 
-        self.parse_file('Data/weapon_triangle.txt')
+        self.parse_file(fp)
 
     def number(self):
         return len(self.types)
@@ -956,10 +956,10 @@ class Weapon_Triangle(object):
         return False
 
 class Weapon_Exp(object):
-    def __init__(self):
+    def __init__(self, fp):
         self.wexp_dict = {}
         self.sorted_list = []
-        self.parse_file('Data/weapon_exp.txt')
+        self.parse_file(fp)
 
     def parse_file(self, fp):
         lines = []
@@ -1364,5 +1364,5 @@ class LevelStatistic(object):
                 records[unit.name] = unit.records
         return records
 
-WEAPON_TRIANGLE = Weapon_Triangle()
-WEAPON_EXP = Weapon_Exp()
+WEAPON_TRIANGLE = Weapon_Triangle(Engine.engine_constants['home'] + "Data/weapon_triangle.txt")
+WEAPON_EXP = Weapon_Exp(Engine.engine_constants['home'] + "Data/weapon_exp.txt")

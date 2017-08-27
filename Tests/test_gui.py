@@ -1,7 +1,7 @@
 from PyQt4 import QtGui
-import pygame
 import sys
 sys.path.append('../')
+import Code.Engine as Engine
 import Code.imagesDict as images
 
 class ImageWidget(QtGui.QWidget):
@@ -23,16 +23,15 @@ class MainWindow(QtGui.QMainWindow):
         super(MainWindow, self).__init__(parent)
         self.setCentralWidget(ImageWidget(surface))
 
-pygame.init()
+Engine.simple_init()
 # Display creation is necessary to use convert and convert alpha
-surf = pygame.display.set_mode((640, 480))
+surf = Engine.build_display((240, 160))
 IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = images.getImages(home='../')
-pygame.display.quit()
+Engine.remove_display()
 
-surf = pygame.Surface((640, 480))
-surf.fill((64, 128, 192, 224))
-surf.blit(IMAGESDICT['Clearing'], (0, 0))
-# pygame.draw.circle(s, (255, 255, 255, 255), (100, 100), 50)
+surf = Engine.create_surface((640, 480))
+Engine.fill(surf, (64, 128, 192, 224))
+Engine.blit(surf, IMAGESDICT['Clearing'], (0, 0))
 
 app = QtGui.QApplication(sys.argv)
 window = MainWindow(surf)
@@ -45,5 +44,6 @@ b1.setText("Button1")
 b1.move(50, 20)
 b1.clicked.connect(b1_clicked)
 
+window.setGeometry(100, 100, 640, 480)
 window.show()
 app.exec_()

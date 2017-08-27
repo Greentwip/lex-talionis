@@ -20,7 +20,8 @@ class Loop(object):
 class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
 
-    def __init__(self, anim, script, name=None):
+    def __init__(self, unit, anim, script, name=None):
+        self.unit = unit
         self.frame_directory = anim
         self.poses = script
         self.current_pose = None
@@ -44,6 +45,7 @@ class BattleAnimation(object):
         self.opacity = 255
         # Offset
         self.static = False
+        self.ignore_range_offset = False
 
         # Awake stuff
         self.owner = None
@@ -99,6 +101,7 @@ class BattleAnimation(object):
                     self.flash_color = (248, 248, 248)
                     self.flash_frames = 100  # Just a lot
                     GC.SOUNDDICT['Death'].play()  # Play death sound now
+                    self.unit.deathCounter = 1  # Skip sound
                 self.opacity = opacity
             else:
                 self.state = 'Inert'
@@ -130,9 +133,6 @@ class BattleAnimation(object):
         self.state = 'Leaving'
         self.script_index = 0
 
-    def waiting_for_hp(self):
-        return self.state == 'Wait' or (self.child_effect and self.child_effect.waiting_for_hp())
-
     def read_script(self):
         script = self.poses[self.current_pose]
         while(self.script_index < len(script) and self.processing):
@@ -141,7 +141,7 @@ class BattleAnimation(object):
             self.script_index += 1
 
     def parse_line(self, line):
-        print(self.right, True if self.child_effect else False, line)
+        # print(self.right, True if self.child_effect else False, line)
         # === TIMING AND IMAGES ===
         if line[0] == 'f':
             self.frame_count = 0
@@ -171,7 +171,13 @@ class BattleAnimation(object):
         elif line[0] == 'sound':
             GC.SOUNDDICT[line[1]].play()
         # === COMBAT HIT ===
-        elif line[0] == 'hit':
+        elif line[0] == 'start_hit':
+            if self.owner.current_result.def_damage > 0:
+                self.owner.shake(1)
+            else:  # No Damage
+                self.owner.shake(2)
+            self.owner.start_hit()
+        elif line[0] == 'wait_for_hit':
             if len(line) > 1:
                 self.current_frame = self.frame_directory[line[1]]
             else:
@@ -182,10 +188,6 @@ class BattleAnimation(object):
                 self.under_frame = None
             self.state = 'Wait'
             self.processing = False
-            if self.owner.current_result.def_damage > 0:
-                self.owner.shake(1)
-            else:  # No Damage
-                self.owner.shake(2)
         elif line[0] == 'spell_hit':
             if len(line) > 1:
                 self.current_frame = self.frame_directory[line[1]]
@@ -195,6 +197,7 @@ class BattleAnimation(object):
                 self.under_frame = self.frame_directory[line[2]]
             else:
                 self.under_frame = None
+            self.owner.start_hit()
             self.state = 'Wait'
             self.processing = False
             if self.owner.current_result.def_damage > 0:
@@ -264,12 +267,12 @@ class BattleAnimation(object):
         # === EFFECTS ===
         elif line[0] == 'effect':
             image, script = GC.ANIMDICT.get_effect(line[1])
-            self.child_effect = BattleAnimation(image, script, line[1])
+            self.child_effect = BattleAnimation(self.unit, image, script, line[1])
             self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             self.child_effect.start_anim(self.current_pose)
         elif line[0] == 'enemy_effect':
             image, script = GC.ANIMDICT.get_effect(line[1])
-            self.partner.child_effect = BattleAnimation(image, script, line[1])
+            self.partner.child_effect = BattleAnimation(self.partner.unit, image, script, line[1])
             # Opposite effects
             self.partner.child_effect.awake(self.owner, self.parent, not self.right,
                                             self.at_range, parent=self.parent.partner)
@@ -280,11 +283,13 @@ class BattleAnimation(object):
             attacker = self.owner.current_result.attacker
             item_id = self.owner.right_item.id if attacker is self.owner.right else self.owner.left_item.id
             image, script = GC.ANIMDICT.get_effect(item_id)
-            self.child_effect = BattleAnimation(image, script, item_id)
+            self.child_effect = BattleAnimation(self.unit, image, script, item_id)
             self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             self.child_effect.start_anim(self.current_pose)
         elif line[0] == 'static':
-            self.static = True
+            self.static = not self.static
+        elif line[0] == 'ignore_range_offset':
+            self.ignore_range_offset = not self.ignore_range_offset
         elif line[0] == 'opacity':
             self.opacity = int(line[1])
         # === LOOPING ===
@@ -334,6 +339,11 @@ class BattleAnimation(object):
         self.frame_count = 0
         self.num_frames = 0
 
+    def can_proceed(self):
+        if self.loop or self.state == 'Wait':
+            return True
+        return False
+
     def done(self):
         return self.state == 'Inert' or (self.state == 'Run' and self.current_pose in self.idle_poses)
 
@@ -360,7 +370,7 @@ class BattleAnimation(object):
                               255, 0, 0, 0, 0, 0, 0]
 
     def wait_for_dying(self):
-        self.num_frames = 35  # wait how long it takes dying sound to appear
+        self.num_frames = 35 * self.speed # wait how long it takes dying sound to appear
 
     def draw(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert':
@@ -369,7 +379,7 @@ class BattleAnimation(object):
                 if not self.right:
                     image = Engine.flip_horiz(image)
                 offset = self.current_frame[1]
-                left = shake[0] + range_offset + (pan_offset if not self.static else 0)
+                left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
                 if self.right:
                     offset = offset[0] + shake[0] + left, offset[1] + shake[1]
                 else:
@@ -423,7 +433,7 @@ class BattleAnimation(object):
             if not self.right:
                 image = Engine.flip_horiz(image)
             offset = self.under_frame[1]
-            left = shake[0] + range_offset + (pan_offset if not self.static else 0)
+            left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
             if self.right:
                 offset = offset[0] + left, offset[1] + shake[1]
             else:
@@ -437,7 +447,7 @@ class BattleAnimation(object):
             if not self.right:
                 image = Engine.flip_horiz(image)
             offset = self.over_frame[1]
-            left = shake[0] + range_offset + (pan_offset if not self.static else 0)
+            left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
             if self.right:
                 offset = offset[0] + left, offset[1] + shake[1]
             else:

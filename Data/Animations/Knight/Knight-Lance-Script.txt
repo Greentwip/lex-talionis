@@ -25,7 +25,8 @@ f;4;Attack7;Miss
 # Hit Frame
 # Screen shake in hit
 hit_spark
-hit;Attack7;Miss
+start_hit
+wait_for_hit;Attack7;Miss
 f;9;Attack7;Miss
 f;4;Attack8
 f;4;Attack9

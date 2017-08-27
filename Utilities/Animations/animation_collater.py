@@ -8,7 +8,6 @@ COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 WIDTH_LIMIT = 1024
 folder = 'promo_bolt_fast'
-count = 0
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

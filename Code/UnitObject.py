@@ -2213,8 +2213,9 @@ class UnitObject(object):
         # Death + the right state for processing it
         if self.isDying and gameStateObj.stateMachine.getState() == 'dying':
             if self.deathCounter == 0: # If we just started dying
-                self.sprite.set_transition('fade_out')
                 GC.SOUNDDICT['Death'].play()
+            elif self.deathCounter == 1:
+                self.sprite.set_transition('fade_out')
             self.deathCounter += 1
             if self.deathCounter > 27: # DEAD
                 self.die(gameStateObj)

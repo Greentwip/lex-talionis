@@ -414,7 +414,7 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
             else:
                 attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
                 attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
-            attacker.battle_anim = BattleAnimation.BattleAnimation(attacker_frame_dir, attacker_script)
+            attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script)
             # Build defender animation
             defender_script = defender_anim['script']
             if defender.name in defender_anim['images']:
@@ -422,7 +422,7 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
             else:
                 defender_color = 'Blue' if defender.team == 'player' else 'Red'
                 defender_frame_dir = defender_anim['images']['Generic' + defender_color]
-            defender.battle_anim = BattleAnimation.BattleAnimation(defender_frame_dir, defender_script)
+            defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script)
             return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat)
     # default
     return Map_Combat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
@@ -613,6 +613,7 @@ class AnimationCombat(Combat):
         self.splash = []
 
     def init_draw(self, gameStateObj, metaDataObj):
+        self.gameStateObj = gameStateObj # Dependency Injection
         # Left
         left_color = 'Blue' if self.left.team == 'player' else 'Red'
         # Name Tag
@@ -707,14 +708,11 @@ class AnimationCombat(Combat):
         elif self.combat_state == 'Anim':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
                 self.combat_state = 'Init'
-            elif self.current_result.attacker.battle_anim.waiting_for_hp():
-                self.apply_result(self.current_result, gameStateObj)
-                self.last_update = current_time
-                self.combat_state = 'HP_Change'
 
         elif self.combat_state == 'HP_Change':
+            proceed = self.current_result.attacker.battle_anim.can_proceed()
             # Wait at least 20 frames
-            if current_time - self.last_update > 450 and self.left_hp_bar.done() and self.right_hp_bar.done():
+            if current_time - self.last_update > 450 and self.left_hp_bar.done() and self.right_hp_bar.done() and proceed:
                 # print('HP Bar Done!')
                 self.current_result.attacker.battle_anim.resume()
                 if self.left_hp_bar.true_hp <= 0:
@@ -779,6 +777,11 @@ class AnimationCombat(Combat):
             self.platform_current_shake += 1
             if self.platform_current_shake > len(self.platform_shake_set):
                 self.platform_current_shake = 0
+
+    def start_hit(self):
+        self.apply_result(self.current_result, self.gameStateObj)
+        self.last_update = Engine.get_time()
+        self.combat_state = 'HP_Change'
 
     def build_viewbox(self, gameStateObj):
         vb_multiplier = self.viewbox_clamp_state / float(self.total_viewbox_clamp_states)

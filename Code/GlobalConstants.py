@@ -44,7 +44,7 @@ SUSPEND_LOC = 'Saves/Suspend.pmeta'
 Engine.init()
 
 # Icon
-small_icon = Engine.image_load('Sprites/General/main_icon.png')
+small_icon = Engine.image_load(Engine.engine_constants['home'] + 'Sprites/General/main_icon.png')
 # Engine.set_colorkey(small_icon, (0, 0, 0), False)
 Engine.set_icon(small_icon)
 
@@ -53,8 +53,8 @@ DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGH
 version = "0.6"
 Engine.set_caption(''.join(["The Lion Throne - ", version]))
 
-IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = imagesDict.getImages()
-SOUNDDICT, MUSICDICT = imagesDict.getSounds()
+IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = imagesDict.getImages(Engine.engine_constants['home'])
+SOUNDDICT, MUSICDICT = imagesDict.getSounds(Engine.engine_constants['home'])
 
 # DATA
 try:
@@ -63,22 +63,23 @@ except ImportError:
     import xml.etree.ElementTree as ET
 # Outside data
 # === CREATE ITEM DICTIONARY =================================================
+loc = Engine.engine_constants['home']
 def create_item_dict():
     item_dict = {}
     # For each lore
-    for idx, entry in enumerate(ET.parse('Data/items.xml').getroot().findall('item')):
+    for idx, entry in enumerate(ET.parse(loc + 'Data/items.xml').getroot().findall('item')):
         name = entry.find('id').text
         item_dict[name] = {c.tag: c.text for c in entry}
         item_dict[name].update(entry.attrib)
         item_dict[name]['num'] = idx
     return item_dict
 ITEMDATA = create_item_dict() # This is done differently because I thought the ET was slow. Turns out its not slow. Creating ItemObjects is slow.
-STATUSDATA = ET.parse('Data/status.xml')
-UNITDATA = ET.parse('Data/units.xml')
-CLASSDATA = ET.parse('Data/class_info.xml')
-LOREDATA = ET.parse('Data/lore.xml')
-PORTRAITDATA = ET.parse('Data/portrait_coords.xml')
-TERRAINDATA = ET.parse('Data/terrain.xml')
+STATUSDATA = ET.parse(loc + 'Data/status.xml')
+UNITDATA = ET.parse(loc + 'Data/units.xml')
+CLASSDATA = ET.parse(loc + 'Data/class_info.xml')
+LOREDATA = ET.parse(loc + 'Data/lore.xml')
+PORTRAITDATA = ET.parse(loc + 'Data/portrait_coords.xml')
+TERRAINDATA = ET.parse(loc + 'Data/terrain.xml')
 def create_mcost_dict(fp):
     mcost_dict = {}
     with open(fp, 'r') as mcost_data:
@@ -88,16 +89,16 @@ def create_mcost_dict(fp):
             s_line = line.strip().split()
             mcost_dict[s_line[0]] = [int(s) if s != '-' else 99 for s in s_line[1:]]
     return mcost_dict
-MCOSTDATA = create_mcost_dict('Data/mcost.txt')
+MCOSTDATA = create_mcost_dict(loc + 'Data/mcost.txt')
 
 FONT = {}
-for fp in os.listdir('Sprites/Fonts'):
+for fp in os.listdir(loc + 'Sprites/Fonts'):
     if fp.endswith('.png'):
         fp = fp[:-4]
         name = fp.lower()
         FONT[name] = bmpfont.BmpFont(fp)
 
-MAINFONT = "Sprites/Fonts/KhmerUI.ttf"
+MAINFONT = loc + "Sprites/Fonts/KhmerUI.ttf"
 BASICFONT = Engine.build_font(MAINFONT, 10)
 BIGFONT = Engine.build_font(MAINFONT, 12)
 

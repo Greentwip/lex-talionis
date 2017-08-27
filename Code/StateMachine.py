@@ -2163,7 +2163,7 @@ class PromotionChoiceState(State):
                     else:
                         color = 'Blue' if self.unit.team == 'player' else 'Red'
                         frame_dir = anim['images']['Generic' + color]
-                    anim = BattleAnimation.BattleAnimation(frame_dir, script)
+                    anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
                     anim.awake(owner=self, parent=None, right=True, at_range=False) # Stand
                 self.animations.append(anim)
 
@@ -2291,7 +2291,7 @@ class PromotionState(State):
                     frame_dir = self.right_anim['images'][self.unit.name]
                 else:
                     frame_dir = self.right_anim['images']['Generic' + color]
-                self.right_anim = BattleAnimation.BattleAnimation(frame_dir, script)
+                self.right_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
             # New - Left - Animation
             self.left_anim = GC.ANIMDICT.partake(self.unit.new_klass, self.unit.gender)
             if self.left_anim:
@@ -2301,7 +2301,7 @@ class PromotionState(State):
                     frame_dir = self.left_anim['images'][self.unit.name]
                 else:
                     frame_dir = self.left_anim['images']['Generic' + color]
-                self.left_anim = BattleAnimation.BattleAnimation(frame_dir, script)
+                self.left_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
             if self.right_anim:
                 self.right_anim.awake(owner=self, parent=None, partner=self.left_anim if self.left_anim else None, right=True, at_range=False) # Stand
             if self.left_anim:
