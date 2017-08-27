@@ -46,7 +46,7 @@ def flickerImageWhiteColorKey(image, white, colorkey=(128, 160, 128)):
     return image
 
 def flickerImageTranslucent(image, transparency):
-    """transparency measured from 0 to 100"""
+    """transparency measured from 0% transparent to 100% transparent"""
     alpha = 255 - int(2.55*transparency)
     alpha = Utility.clamp(alpha, 0, 255)
     image = Engine.copy_surface(image)

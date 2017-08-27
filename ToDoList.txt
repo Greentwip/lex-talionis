@@ -14,7 +14,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Custom Spell Animations (Split Video)
 --- Sounds (Video)
 --- All Necessary Animations (Split Video)
---- Promotion (Split Video) --- probably going to have to rewrite this section as its own thing.
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Add animation options to Options Menu
 --- AI ---
@@ -23,10 +22,14 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Red highlight appears over position of last enemy fought while using 'other' team AI. Also when two AI units attack one another using an AnimationCombat
 - Have Start Skip or Massivily Speed-up AI State
 --- LEVEL UP ---
-- Have Level up! match the way its done in fe7... (sound)
+- Have Level up! match the way its done in fe8... (sound)
+- Have Promotion sound match the way its done in fe8
+- Add other numbers to Level Up (2 - 6)
 --- PROMOTION ---
-- Create an unblending script
-- Continue working on promotion
+- Test Promotion Choices
+- Test getting a new weapon on promotion
+- Test getting a new skill on promotion
+- Add Green Blend to end of promotion
 --- DIALOG SYSTEM ---
 - Functions
 - Use Dictionary instead of if/elif system?

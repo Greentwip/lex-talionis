@@ -21,6 +21,7 @@ class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
 
     def __init__(self, unit, anim, script, name=None):
+        # print('Init:', name, anim)
         self.unit = unit
         self.frame_directory = anim
         self.poses = script
@@ -51,9 +52,10 @@ class BattleAnimation(object):
         self.owner = None
         self.parent = None
 
-        self.speed = 10
+        self.speed = 1
 
     def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
+        # print('Awake')
         self.owner = owner
         self.partner = partner
         self.parent = parent if parent else self
@@ -205,9 +207,9 @@ class BattleAnimation(object):
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
         # === FLASHING ===
-        elif line[0] == 'self_flash_white':
+        elif line[0] == 'parent_flash_white':
             num_frames = int(line[1]) * self.speed
-            self.flash(num_frames, (248, 248, 248))
+            self.parent.flash(num_frames, (248, 248, 248))
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1]) * self.speed
             self.partner.flash(num_frames, (248, 248, 248))
@@ -220,7 +222,6 @@ class BattleAnimation(object):
             self.owner.flash_white(num_frames, fade_out)
         elif line[0] == 'foreground_blend':
             color = tuple([int(num) for num in line[1].split(',')])
-            print(color)
             self.foreground_frames = int(line[2]) * self.speed
             self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
             self.foreground.fill(color)
@@ -267,6 +268,7 @@ class BattleAnimation(object):
         # === EFFECTS ===
         elif line[0] == 'effect':
             image, script = GC.ANIMDICT.get_effect(line[1])
+            # print('Effect', script)
             self.child_effect = BattleAnimation(self.unit, image, script, line[1])
             self.child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             self.child_effect.start_anim(self.current_pose)
@@ -292,6 +294,8 @@ class BattleAnimation(object):
             self.ignore_range_offset = not self.ignore_range_offset
         elif line[0] == 'opacity':
             self.opacity = int(line[1])
+        elif line[0] == 'set_parent_opacity':
+            self.parent.opacity = int(line[1])
         # === LOOPING ===
         elif line[0] == 'start_loop':
             self.loop = Loop(self.script_index)
@@ -322,7 +326,6 @@ class BattleAnimation(object):
             self.loop = None
 
     def start_anim(self, pose):
-        # print('Animation: Start')
         self.current_pose = pose
         self.script_index = 0
         self.reset()

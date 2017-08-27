@@ -2131,7 +2131,8 @@ class ExpGainState(State):
 
     def draw(self, gameStateObj, metaDataObj):
         if self.in_combat:
-            assert isinstance(gameStateObj.stateMachine.state[-2], CombatState)
+            assert isinstance(gameStateObj.stateMachine.state[-2], CombatState) or \
+                isinstance(gameStateObj.stateMachine.state[-2], PromotionState), "%s"%(gameStateObj.stateMachine.state)
             mapSurf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
         else:
             mapSurf = State.draw(self, gameStateObj, metaDataObj)
@@ -2228,7 +2229,7 @@ class PromotionChoiceState(State):
                 self.child_menu = MenuFunctions.ChocieMenu(selection, options, (72, 32 + self.menu.currentSelection*16))
 
     def update(self, gameStateObj, metaDataObj):
-        StateMachine.State.update(self, gameStateObj, metaDataObj)
+        State.update(self, gameStateObj, metaDataObj)
         self.menu.update()
         if self.child_menu:
             self.child_menu.update()
@@ -2244,7 +2245,7 @@ class PromotionChoiceState(State):
                 self.anim_offset = 0
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        surf = State.draw(self, gameStateObj, metaDataObj)
         # Anim
         top = 88
         surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + self.anim_offset, top))
@@ -2270,12 +2271,16 @@ class PromotionChoiceState(State):
         # Class Reel
         GC.FONT['class_purple'].blit(self.menu.getSelection(), surf, (114, 7))
 
+        return surf
+
     def end(self, gameStateObj):
         self.menu = None
         self.child_menu = None
 
 class PromotionState(State):
     def begin(self, gameStateObj, metaDataObj):
+        self.last_update = Engine.get_time()
+
         if not self.started:
             self.show_map = False
 
@@ -2314,11 +2319,11 @@ class PromotionState(State):
             self.left_platform = GC.IMAGESDICT[platform].copy()
             self.right_platform = Engine.flip_horiz(self.left_platform.copy())
 
-            gameStateObj.background = GC.IMAGESDICT['Promotion']
+            gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['Promotion'], fade=False)
 
             # Name Tag
             self.name_tag = GC.IMAGESDICT[color + 'RightCombatName'].copy()
-            size_x = GC.FONT['text_brown'].size(self.right.name)[0]
+            size_x = GC.FONT['text_brown'].size(self.unit.name)[0]
             GC.FONT['text_brown'].blit(self.unit.name, self.name_tag, (36 - size_x / 2, 8))
 
             # For darken backgrounds and drawing
@@ -2333,8 +2338,6 @@ class PromotionState(State):
             if gameStateObj.stateMachine.from_transition():
                 gameStateObj.stateMachine.changeState("transition_in")
                 return 'repeat'
-
-        self.last_update = Engine.get_time()
 
     def flash_white(self, num_frames, fade_out=0):
         self.foreground.flash(num_frames, fade_out)
@@ -2354,12 +2357,13 @@ class PromotionState(State):
     def start_anim(self, effect):
         anim = self.current_anim
         image, script = GC.ANIMDICT.get_effect(effect)
-        anim.child_effect = BattleAnimation(image, script, 'Promotion1')
+        anim.child_effect = BattleAnimation.BattleAnimation(self.unit, image, script, effect)
         anim.child_effect.awake(anim.owner, anim.partner, anim.right, anim.at_range, parent=anim)
         anim.child_effect.start_anim('Attack')
 
     def update(self, gameStateObj, metaDataObj):
-        StateMachine.State.update(self, gameStateObj, metaDataObj)
+        State.update(self, gameStateObj, metaDataObj)
+        # print(self.current_state)
 
         current_time = Engine.get_time()
         if self.current_state == 'Init':
@@ -2369,14 +2373,14 @@ class PromotionState(State):
                 self.start_anim('Promotion1')
 
         elif self.current_state == 'Right':
-            if self.current_anim.child_effect.done():
+            if not self.current_anim.child_effect:
                 self.current_anim = self.left_anim
                 self.current_state = 'Left'
                 self.last_update = current_time
                 self.start_anim('Promotion2')
 
         elif self.current_state == 'Left':
-            if self.current_anim.child_effect.done():
+            if not self.current_anim.child_effect:
                 self.current_state = 'Wait'
                 self.last_update = current_time
 
@@ -2387,18 +2391,23 @@ class PromotionState(State):
                 next_level = LevelUp.levelUpScreen(gameStateObj, self.unit, 0, in_combat=self)
                 next_level.state.changeState('promote')  # Hack to start in promotion
                 gameStateObj.levelUpScreen.append(next_level)
-                gameStateObj.stateMachine.changeState('level_up')
+                gameStateObj.stateMachine.changeState('expgain')
+                self.unit.klass = self.unit.new_klass
 
         elif self.current_state == 'Level_Up':
             self.last_update = current_time
             self.current_state = 'Leave'
 
-        elif self.current_State == 'Leave':
+        elif self.current_state == 'Leave':
             if current_time - self.last_update > 160:  # 10 frames
                 gameStateObj.stateMachine.changeState('transition_double_pop')
+                self.current_state = 'Done'  # Inert state
+
+        if self.current_anim:
+            self.current_anim.update()
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        surf = State.draw(self, gameStateObj, metaDataObj)
 
         if self.darken_background:
             self.darken_background = min(self.darken_background, 4)
@@ -2408,12 +2417,11 @@ class PromotionState(State):
 
         # Make combat surf
         combat_surf = Engine.copy_surface(self.combat_surf)
-        # Anim
+
+        # Platforms
         top = 88
-        combat_surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
-        combat_surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
-        if self.current_anim:
-            self.current_anim.draw(combat_surf, (0, 0))
+        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
+        surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
 
         # Name Tag
         combat_surf.blit(self.name_tag, (GC.WINWIDTH + 3 - self.name_tag.get_width(), 0))
@@ -2428,8 +2436,13 @@ class PromotionState(State):
 
         surf.blit(combat_surf, (0, 0))
 
+        # Anim
+        if self.current_anim:
+            self.current_anim.draw(surf, (0, 0))
         # Screen flash
         self.foreground.draw(surf)
+
+        return surf
 
 class DyingState(State):
     def begin(self, gameStateObj, metaDataObj):
@@ -2463,8 +2476,14 @@ class ItemGainState(State):
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
-        if gameStateObj.message:
+        # To handle promotion
+        under_state = gameStateObj.stateMachine.state[-2]
+        if under_state and isinstance(under_state, ExpGainState):
+            mapSurf = under_state.draw(gameStateObj, metaDataObj)
+        # For Dialogue
+        elif gameStateObj.message:
             gameStateObj.message[-1].draw(mapSurf)
+        # Banner draw
         if gameStateObj.banners:
             gameStateObj.banners[-1].draw(mapSurf, gameStateObj)
         return mapSurf

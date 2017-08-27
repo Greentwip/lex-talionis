@@ -7,7 +7,7 @@ from PIL import Image
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 WIDTH_LIMIT = 1024
-folder = 'promo_bolt_fast'
+folder = 'promo_white_orb'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
@@ -29,7 +29,6 @@ for idx, fp in enumerate(files):
 for name, number, idx in sorted(new_files):
     fp = files[idx]
     print(fp)
-    count += 1
     name = fp[:-4]
     if '\\' in name:
         name = name.split('\\')[1]

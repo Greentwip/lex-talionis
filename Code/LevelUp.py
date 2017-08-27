@@ -2,7 +2,7 @@
 import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, Image_Modification, Engine
-import MenuFunctions, StatusObject, Banner
+import StatusObject, Banner
 
 ####################################################################
 # Displays the level up screen
@@ -178,9 +178,11 @@ class levelUpScreen(object):
                                 gameStateObj.stateMachine.changeState('feat_choice')
                             else:
                                 skill = StatusObject.statusparser(class_skill)
-                                StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
-                                gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
-                                gameStateObj.stateMachine.changeState('itemgain')
+                                # If we don't already have this skill
+                                if skill.stack or skill.id not in (s.id for s in self.unit.status_effects):
+                                    StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
+                                    gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
+                                    gameStateObj.stateMachine.changeState('itemgain')
                 
                 return True
 
@@ -196,11 +198,15 @@ class levelUpScreen(object):
                         gameStateObj.cursor.currentSelectedUnit = self.unit
                         gameStateObj.stateMachine.changeState('promotion_choice')
                         gameStateObj.stateMachine.changeState('transition_out')
+                        self.state.changeState('wait')
+                        self.state_time = currentTime
                     elif len(class_options) == 1:
+                        gameStateObj.cursor.currentSelectedUnit = self.unit
                         self.unit.new_klass = class_options[0]
                         gameStateObj.stateMachine.changeState('promotion')
                         gameStateObj.stateMachine.changeState('transition_out')
                         self.state.changeState('promote')
+                        self.state.changeState('wait')
                         self.state_time = currentTime
                     else:
                         self.unit.exp = 99
@@ -208,6 +214,11 @@ class levelUpScreen(object):
                 else: # Unit is at the highest point it can be. No more.
                     self.unit.exp = 99
                     return True # Done
+
+        elif self.state.getState() == 'wait':
+            if currentTime - self.state_time > 1000:  # Wait a while
+                self.state.back()
+                self.state_time = currentTime
 
         elif self.state.getState() == 'promote':
             # Class should already have been changed by now in the levelpromote state
@@ -236,6 +247,8 @@ class levelUpScreen(object):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)
             self.unit.apply_levelup(self.levelup_list)
             # print(self.levelup_list)
+            if self.in_combat:
+                self.in_combat.darken_ui()
 
             self.state.changeState('levelScreen')
             self.state_time = currentTime # Reset time so that it doesn't skip right over LevelScreen

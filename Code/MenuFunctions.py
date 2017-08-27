@@ -114,7 +114,8 @@ class Foreground(object):
         # Screen flash
         if self.foreground or self.fade_out_frames:
             if self.fade_out:
-                foreground = Image_Modification.flickerImageTranslucent(self.foreground, self.foreground_frames/float(self.fade_out_frames))
+                alpha = 100 - self.foreground_frames/float(self.fade_out_frames)*100
+                foreground = Image_Modification.flickerImageTranslucent(self.foreground, alpha)
             else:
                 foreground = self.foreground
             surf.blit(foreground, (0, 0))

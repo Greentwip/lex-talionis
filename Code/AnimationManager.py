@@ -131,10 +131,10 @@ class BattleAnimationManager(object):
             else:
                 poses[current_pose].append(line)
         # Duplicate for ranged and miss if not explicitly provided
-        if not 'RangedDodge' in poses and 'Dodge' in poses:
+        if 'RangedDodge' not in poses and 'Dodge' in poses:
             poses['RangedDodge'] = poses['Dodge']
-        if not 'RangedStand' in poses and 'Stand' in poses:
+        if 'RangedStand' not in poses and 'Stand' in poses:
             poses['RangedStand'] = poses['Stand']
-        if not 'Miss' in poses and 'Attack' in poses:
+        if 'Miss' not in poses and 'Attack' in poses:
             poses['Miss'] = poses['Attack']
         return poses
