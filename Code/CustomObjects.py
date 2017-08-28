@@ -1338,8 +1338,13 @@ def handle_aux_key(gameStateObj):
 handle_aux_key.counter = 0
 
 class WeaponIcon(object):
-    def __init__(self, name, grey=False):
-        self.name = name
+    def __init__(self, name=None, idx=None, grey=False):
+        if name:
+            self.name = name
+            self.idx = WEAPON_TRIANGLE.type_to_index[self.name]
+        else:
+            self.name = None
+            self.idx = idx
         self.grey = grey
 
     def draw(self, surf, topleft, cooldown=False):
@@ -1348,7 +1353,7 @@ class WeaponIcon(object):
             weaponIcons = GC.ITEMDICT['Gray_Wexp_Icons']
         else:
             weaponIcons = GC.ITEMDICT['Wexp_Icons']
-        new_surf = Engine.subsurface(weaponIcons, (0, 16*WEAPON_TRIANGLE.type_to_index[self.name], 16, 16))
+        new_surf = Engine.subsurface(weaponIcons, (0, 16*self.idx, 16, 16))
         surf.blit(new_surf, topleft)
 
 class LevelStatistic(object):

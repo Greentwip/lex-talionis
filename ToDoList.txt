@@ -23,13 +23,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Have Start Skip or Massivily Speed-up AI State
 --- LEVEL UP ---
 - Have Level up! match the way its done in fe8... (sound)
-- Have Promotion sound match the way its done in fe8
-- Add other numbers to Level Up (2 - 6)
---- PROMOTION ---
-- Test Promotion Choices
-- Test getting a new weapon on promotion
-- Test getting a new skill on promotion
-- Add Green Blend to end of promotion
+- Have Promotion Sound match the way its done in fe8
 --- DIALOG SYSTEM ---
 - Functions
 - Use Dictionary instead of if/elif system?
@@ -61,6 +55,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Turnwheel
 - Add Awakening-style dialogue backlog...??** On R press
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
+- Add other numbers to Level Up Numbers (5 - 7)
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow

@@ -2,7 +2,7 @@
 import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, Image_Modification, Engine
-import StatusObject, Banner
+import StatusObject, Banner, Utility
 
 ####################################################################
 # Displays the level up screen
@@ -18,6 +18,7 @@ class levelUpScreen(object):
 
         self.force_level = force_level
         self.in_combat = in_combat
+        self.new_wexp = None  # For promotion
 
         # spriting
         self.levelUpScreen = GC.IMAGESDICT['LevelScreen']
@@ -66,6 +67,7 @@ class levelUpScreen(object):
         return 0
 
     def update(self, gameStateObj, metaDataObj):
+        # print(self.state.getState())
         # Don't do this if there is no exp change
         if not self.force_level and self.expNew == 0 or \
                 (self.unit.level%cf.CONSTANTS['max_level'] == 0 and metaDataObj['class_dict'][self.unit.klass]['turns_into'] is None):
@@ -169,6 +171,9 @@ class levelUpScreen(object):
                         self.unit.exp = self.expNew - (100 - self.expOld)
                 # Remove animations
                 self.animations = []
+                # check for weapon gain
+                if self.new_wexp:
+                    self.unit.increase_wexp(self.new_wexp, gameStateObj)
                 # check for skill gain if not a forced level
                 if not self.force_level:
                     for level_needed, class_skill in metaDataObj['class_dict'][self.unit.klass]['skills']:
@@ -205,7 +210,7 @@ class levelUpScreen(object):
                         self.unit.new_klass = class_options[0]
                         gameStateObj.stateMachine.changeState('promotion')
                         gameStateObj.stateMachine.changeState('transition_out')
-                        self.state.changeState('promote')
+                        # self.state.changeState('promote')
                         self.state.changeState('wait')
                         self.state_time = currentTime
                     else:
@@ -217,8 +222,7 @@ class levelUpScreen(object):
 
         elif self.state.getState() == 'wait':
             if currentTime - self.state_time > 1000:  # Wait a while
-                self.state.back()
-                self.state_time = currentTime
+                return True
 
         elif self.state.getState() == 'promote':
             # Class should already have been changed by now in the levelpromote state
@@ -233,7 +237,7 @@ class levelUpScreen(object):
             self.unit.movement_group = new_class['movement_group']
             # Add weapon exp gains from that class.
             # This right here!
-            self.unit.increase_wexp(new_class['wexp_gain'], gameStateObj)
+            self.new_wexp = new_class['wexp_gain']
             # Add any extra tags
             if new_class['tags']: # Add any necessary tags. Does not currently take away tags, although it may have to later
                 self.unit.tags |= set(new_class['tags'].split(','))
@@ -246,7 +250,7 @@ class levelUpScreen(object):
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)
             self.unit.apply_levelup(self.levelup_list)
-            # print(self.levelup_list)
+
             if self.in_combat:
                 self.in_combat.darken_ui()
 
@@ -347,14 +351,14 @@ class levelUpScreen(object):
                     self.arrow_animations.append(arrow_animation) 
                     spark_animation = CustomObjects.Animation(self.statupanimation, position, (11, 1), animation_speed=32, ignore_map=True)
                     self.animations.append(spark_animation)
-                    # Only 1-6 are allowed increases for a levelup right now
-                    assert 7 > self.levelup_list[self.sparkCounter] > 0, "%s %s"%(self.levelup_list, self.levelup_list[self.sparkCounter])
-                    if self.levelup_list[self.sparkCounter] == 1:
-                        row = Engine.subsurface(self.numbers, (0, (self.levelup_list[self.sparkCounter] - 1)*24, 10*24, 24))
-                        number_animation = CustomObjects.Animation(row, (position[0]+31, position[1]+23), (10, 1), animation_speed=32, ignore_map=True, hold=True)
+                    # Only 1-7 are supported increases for a levelup right now
+                    # assert 8 > self.levelup_list[self.sparkCounter] > 0, "%s %s"%(self.levelup_list, self.levelup_list[self.sparkCounter])
+                    if 1 <= self.levelup_list[self.sparkCounter] <= 4:
+                        row = Engine.subsurface(self.numbers, (0, (self.levelup_list[self.sparkCounter] - 1)*24, 10*28, 24))
+                        number_animation = CustomObjects.Animation(row, (position[0]+29, position[1]+23), (10, 1), animation_speed=32, ignore_map=True, hold=True)
                     else:
-                        row = Engine.subsurface(self.numbers, (0, (self.levelup_list[self.sparkCounter] - 1)*24, 2*24, 24))
-                        number_animation = CustomObjects.Animation(row, (position[0]+31, position[1]+23), (2, 1), animation_speed=32, ignore_map=True, hold=True)
+                        row = Engine.subsurface(self.numbers, (0, (Utility.clamp(self.levelup_list[self.sparkCounter], 1, 7) - 1)*24, 2*28, 24))
+                        number_animation = CustomObjects.Animation(row, (position[0]+29, position[1]+23), (2, 1), animation_speed=32, ignore_map=True, hold=True)
                     number_animation.frameCount = -5 # delay this animation for 5 frames
                     self.animations.append(number_animation)
                     # Sound

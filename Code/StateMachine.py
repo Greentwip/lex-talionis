@@ -151,6 +151,13 @@ class StateMachine(object):
         if len(self.state) >= 2:
             return self.state[-2].name
 
+    def get_under_state(self, state, under=1):
+        idx = self.state.index(state)
+        if idx > 0:
+            return self.state[idx - under]
+        else:
+            return 0
+
     def get_last_state(self):
         return self.last_state
 
@@ -168,6 +175,7 @@ class StateMachine(object):
 
     # Keeps track of the state at every tick
     def update(self, eventList, gameStateObj, metaDataObj):
+        # print(self.state)
         time_start = Engine.get_true_time()
         state_name = self.state[-1].name
         repeat_flag = False # Determines whether we run the state machine again in the same frame
@@ -1913,8 +1921,8 @@ class DialogueState(State):
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
         # Handle state transparency
-        if self.name == 'transparent_dialogue' and gameStateObj.stateMachine.getPreviousState():
-            gameStateObj.stateMachine.state[-2].update(gameStateObj, metaDataObj)
+        if self.name == 'transparent_dialogue' and gameStateObj.stateMachine.get_under_state(self):
+            gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
         if self.message:
             self.message.update(gameStateObj, metaDataObj)
         else:
@@ -1926,8 +1934,8 @@ class DialogueState(State):
             return self.end_dialogue_state(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):
-        if self.name == 'transparent_dialogue' and gameStateObj.stateMachine.getPreviousState():
-            mapSurf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        if self.name == 'transparent_dialogue' and gameStateObj.stateMachine.get_under_state(self):
+            mapSurf = gameStateObj.stateMachine.get_under_state(self).draw(gameStateObj, metaDataObj)
         elif not self.message or not self.message.background:
             mapSurf = State.draw(self, gameStateObj, metaDataObj)
         else:
@@ -2117,7 +2125,7 @@ class ExpGainState(State):
         if gameStateObj.levelUpScreen:
             if gameStateObj.levelUpScreen[-1].in_combat:
                 self.in_combat = True
-            gameStateObj.levelUpScreen[-1].state_time = Engine.get_time()
+            # gameStateObj.levelUpScreen[-1].state_time = Engine.get_time()
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
@@ -2128,12 +2136,13 @@ class ExpGainState(State):
                 return 'repeat'
         else:
             gameStateObj.stateMachine.back()
+            return 'repeat'
 
     def draw(self, gameStateObj, metaDataObj):
         if self.in_combat:
-            assert isinstance(gameStateObj.stateMachine.state[-2], CombatState) or \
-                isinstance(gameStateObj.stateMachine.state[-2], PromotionState), "%s"%(gameStateObj.stateMachine.state)
-            mapSurf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+            under_state = gameStateObj.stateMachine.get_under_state(self)
+            assert isinstance(under_state, CombatState) or isinstance(under_state, PromotionState), "%s"%(gameStateObj.stateMachine.state)
+            mapSurf = under_state.draw(gameStateObj, metaDataObj)
         else:
             mapSurf = State.draw(self, gameStateObj, metaDataObj)
         if gameStateObj.levelUpScreen:
@@ -2154,6 +2163,7 @@ class PromotionChoiceState(State):
 
             # Animations
             self.animations = []
+            self.weapon_icons = []
             for option in class_options:
                 anim = GC.ANIMDICT.partake(option, self.unit.gender)
                 if anim:
@@ -2165,8 +2175,14 @@ class PromotionChoiceState(State):
                         color = 'Blue' if self.unit.team == 'player' else 'Red'
                         frame_dir = anim['images']['Generic' + color]
                     anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
-                    anim.awake(owner=self, parent=None, right=True, at_range=False) # Stand
+                    anim.awake(owner=self, parent=None, partner=None, right=True, at_range=False) # Stand
                 self.animations.append(anim)
+                # Build weapon icons
+                weapons = []
+                for idx, wexp in enumerate(metaDataObj['class_dict'][option]['wexp_gain']):
+                    if wexp > 0:
+                        weapons.append(CustomObjects.WeaponIcon(idx=idx))
+                self.weapon_icons.append(weapons)
 
             # Platforms
             platform_type = gameStateObj.map.tiles[self.unit.position].platform if self.unit.position else 'Floor'
@@ -2215,7 +2231,7 @@ class PromotionChoiceState(State):
                 if selection == cf.WORDS['Change']:
                     self.unit.new_klass = self.menu.getSelection()
                     GC.SOUNDDICT['Select 1'].play()
-                    gameStateObj.stateMachine.changeState('promote')
+                    gameStateObj.stateMachine.changeState('promotion')
                     gameStateObj.stateMachine.changeState('transition_out')
                 else:
                     GC.SOUNDDICT['Select 4'].play()
@@ -2226,7 +2242,8 @@ class PromotionChoiceState(State):
                 selection = self.menu.getSelection()
                 # Create child menu with additional options
                 options = [cf.WORDS['Change'], cf.WORDS['Cancel']]
-                self.child_menu = MenuFunctions.ChocieMenu(selection, options, (72, 32 + self.menu.currentSelection*16))
+                self.child_menu = MenuFunctions.ChoiceMenu(selection, options, (72, 32 + self.menu.currentSelection*16))
+                self.on_child_menu = True
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
@@ -2244,15 +2261,26 @@ class PromotionChoiceState(State):
             if self.anim_offset < 0:
                 self.anim_offset = 0
 
+        anim = self.animations[self.menu.currentSelection]
+        if anim:
+            anim.update()
+
     def draw(self, gameStateObj, metaDataObj):
         surf = State.draw(self, gameStateObj, metaDataObj)
         # Anim
         top = 88
-        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + self.anim_offset, top))
-        surf.blit(self.right_platform, (GC.WINWIDTH / 2 + self.anim_offset, top))
+        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + self.anim_offset + 52, top))
+        surf.blit(self.right_platform, (GC.WINWIDTH / 2 + self.anim_offset + 52, top))
         anim = self.animations[self.menu.currentSelection]
         if anim:
-            anim.draw(surf, (self.anim_offset, 0))
+            anim.draw(surf, (self.anim_offset + 12, 0))
+
+        # Class Reel
+        GC.FONT['class_purple'].blit(self.menu.getSelection(), surf, (114, 5), space_offset=-2)
+
+        # Weapon Icons
+        for idx, weapon in enumerate(self.weapon_icons[self.menu.currentSelection]):
+            weapon.draw(surf, (130 + 16*idx, 32))
 
         # Menus
         self.menu.draw(surf, gameStateObj)
@@ -2266,16 +2294,9 @@ class PromotionChoiceState(State):
         desc = metaDataObj['class_dict'][self.menu.getSelection()]['desc']
         text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), 208, font)
         for idx, line in enumerate(text):
-            font.blit(line, surf, (14, font.height * idx + 4 + 120))
-
-        # Class Reel
-        GC.FONT['class_purple'].blit(self.menu.getSelection(), surf, (114, 7))
+            font.blit(line, surf, (14, font.height * idx + 120))
 
         return surf
-
-    def end(self, gameStateObj):
-        self.menu = None
-        self.child_menu = None
 
 class PromotionState(State):
     def begin(self, gameStateObj, metaDataObj):
@@ -2388,7 +2409,8 @@ class PromotionState(State):
             if current_time - self.last_update > 1660:  # 100 frames
                 self.current_state = 'Level_Up'
                 self.last_update = current_time
-                next_level = LevelUp.levelUpScreen(gameStateObj, self.unit, 0, in_combat=self)
+                # 1 exp is placeholder
+                next_level = LevelUp.levelUpScreen(gameStateObj, self.unit, 1, in_combat=self)
                 next_level.state.changeState('promote')  # Hack to start in promotion
                 gameStateObj.levelUpScreen.append(next_level)
                 gameStateObj.stateMachine.changeState('expgain')
@@ -2402,6 +2424,7 @@ class PromotionState(State):
             if current_time - self.last_update > 160:  # 10 frames
                 gameStateObj.stateMachine.changeState('transition_double_pop')
                 self.current_state = 'Done'  # Inert state
+                return 'repeat'
 
         if self.current_anim:
             self.current_anim.update()
@@ -2420,8 +2443,8 @@ class PromotionState(State):
 
         # Platforms
         top = 88
-        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
-        surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
+        combat_surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
+        combat_surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
 
         # Name Tag
         combat_surf.blit(self.name_tag, (GC.WINWIDTH + 3 - self.name_tag.get_width(), 0))
@@ -2477,8 +2500,8 @@ class ItemGainState(State):
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
         # To handle promotion
-        under_state = gameStateObj.stateMachine.state[-2]
-        if under_state and isinstance(under_state, ExpGainState):
+        under_state = gameStateObj.stateMachine.get_under_state(self)
+        if under_state and isinstance(under_state, ExpGainState) or isinstance(under_state, ItemGainState):
             mapSurf = under_state.draw(gameStateObj, metaDataObj)
         # For Dialogue
         elif gameStateObj.message:
@@ -2601,7 +2624,7 @@ class ItemDiscardChildState(State):
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
         # Draw ItemDiscard's pennant
-        gameStateObj.stateMachine.state[-2].pennant.draw(mapSurf, gameStateObj)
+        gameStateObj.stateMachine.get_under_state(self).pennant.draw(mapSurf, gameStateObj)
         if gameStateObj.activeMenu:
             gameStateObj.cursor.currentSelectedUnit.drawItemDescription(mapSurf, gameStateObj)
         if self.menu:

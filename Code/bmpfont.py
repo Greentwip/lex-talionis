@@ -124,7 +124,7 @@ class BmpFont:
     #                          font width and height.  If false, pos is
     #                          specified in pixels, allowing for precise
     #                          text positioning.
-    def blit(self, string, surf, pos=(0, 0), usetextxy=False):
+    def blit(self, string, surf, pos=(0, 0), usetextxy=False, space_offset=0):
         """Draw a string to a surface using the bitmapped font."""
         x, y = pos
         if usetextxy:
@@ -157,7 +157,7 @@ class BmpFont:
                 print('string', string)
 
             surf.blit(self.surface, (x, y), ((char_pos_x, char_pos_y), (self.width, self.height))) # subsurface
-            x += char_width
+            x += char_width + space_offset
 
     # size() - Returns the length and height of a string (height will always be self.height)
     # Parameters:  string     - the string that is to be measured. All characters must

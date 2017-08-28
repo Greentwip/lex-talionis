@@ -207,9 +207,14 @@ class BattleAnimation(object):
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
         # === FLASHING ===
-        elif line[0] == 'parent_flash_white':
+        elif line[0] == 'parent_tint_loop':
             num_frames = int(line[1]) * self.speed
-            self.parent.flash(num_frames, (248, 248, 248))
+            color = [tuple([int(num) for num in color.split(',')]) for color in line[2:]]
+            self.parent.flash(num_frames, color)
+        elif line[0] == 'parent_tint':
+            num_frames = int(line[1]) * self.speed
+            color = tuple([int(num) for num in line[2].split(',')])
+            self.parent.flash(num_frames, color)
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1]) * self.speed
             self.partner.flash(num_frames, (248, 248, 248))
@@ -221,8 +226,8 @@ class BattleAnimation(object):
                 fade_out = 0
             self.owner.flash_white(num_frames, fade_out)
         elif line[0] == 'foreground_blend':
-            color = tuple([int(num) for num in line[1].split(',')])
-            self.foreground_frames = int(line[2]) * self.speed
+            self.foreground_frames = int(line[1]) * self.speed
+            color = tuple([int(num) for num in line[2].split(',')])
             self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
             self.foreground.fill(color)
         elif line[0] == 'darken':
@@ -400,7 +405,10 @@ class BattleAnimation(object):
 
                 # Self flash
                 if self.flash_color:
-                    image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color)
+                    if isinstance(self.flash_color, list):
+                        image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color[self.flash_frames%len(self.flash_color)])
+                    else:
+                        image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color)
                     self.flash_frames -= 1
                     # If done
                     if self.flash_frames <= 0:

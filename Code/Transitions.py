@@ -1104,10 +1104,10 @@ class TransitionInState(StateMachine.State):
         self.transition = 0
 
     def update(self, gameStateObj, metaDataObj):
-        gameStateObj.stateMachine.state[-2].update(gameStateObj, metaDataObj)
+        gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        surf = gameStateObj.stateMachine.get_under_state(self).draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition*12.5)
         self.transition += transition_speed
@@ -1127,10 +1127,10 @@ class TransitionOutState(StateMachine.State):
         self.transition = transition_max
 
     def update(self, gameStateObj, metaDataObj):
-        gameStateObj.stateMachine.state[-3].update(gameStateObj, metaDataObj)
+        gameStateObj.stateMachine.get_under_state(self, 2).update(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = gameStateObj.stateMachine.state[-3].draw(gameStateObj, metaDataObj)
+        surf = gameStateObj.stateMachine.get_under_state(self, 2).draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition*12.5)
         self.transition -= transition_speed
@@ -1145,10 +1145,10 @@ class TransitionPopState(StateMachine.State):
         self.transition = transition_max
 
     def update(self, gameStateObj, metaDataObj):
-        gameStateObj.stateMachine.state[-2].update(gameStateObj, metaDataObj)
+        gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        surf = gameStateObj.stateMachine.get_under_state(self).draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition*12.5)
         self.transition -= transition_speed
@@ -1161,7 +1161,7 @@ class TransitionPopState(StateMachine.State):
 class TransitionDoublePopState(TransitionPopState):
     # Used when you you want to transition from current state, immediately skip the state under it, and go to the state under that one
     def draw(self, gameStateObj, metaDataObj):
-        surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        surf = gameStateObj.stateMachine.get_under_state(self).draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition*12.5)
         self.transition -= transition_speed
@@ -1175,10 +1175,10 @@ class TransitionDoublePopState(TransitionPopState):
 class TransitionCleanState(TransitionOutState):
     # Assumes there is a state directly under this state. Draw that state also.
     def update(self, gameStateObj, metaDataObj):
-        gameStateObj.stateMachine.state[-2].update(gameStateObj, metaDataObj)
+        gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = gameStateObj.stateMachine.state[-2].draw(gameStateObj, metaDataObj)
+        surf = gameStateObj.stateMachine.get_under_state(self).draw(gameStateObj, metaDataObj)
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition*12.5)
         self.transition -= transition_speed
