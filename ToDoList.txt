@@ -36,7 +36,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Comment many of the functions with purposes
 - Switch how gender works? Instead of M and F, try 0-4 is male, 5-9 is female?
 --- DIFFICULTY ---
-- Add in Easy and Hard modes (Easy, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Hard, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
+- Add in Normal and Lunatic modes (Normal, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Lunatic, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
 --- MUSIC ---
 - Replace with Open-Source Music - Especially Ghibli (they are especially litigious)
 - Replace with Fire Emblem 6-8 music?

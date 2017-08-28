@@ -459,7 +459,7 @@ class StartMode(StateMachine.State):
 
         if self.state == 0:
             self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])
-            options = ['Easy', 'Normal', 'Hard']
+            options = ['Normal', 'Hard', 'Lunatic']
             toggle = [False, True, False]
             self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
             self.mode_name = 'difficulty'

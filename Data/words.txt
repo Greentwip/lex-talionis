@@ -174,14 +174,14 @@ Nothing;Nothing
 Select Difficulty;Select Difficulty
 Select Mode;Select Mode
 Select Growths;Select Growths
-mode_Easy;filthy casul
-mode_Normal;Play the game as it was meant to be played.
-mode_Hard;For experienced players. No hints. Prepare to die.
+mode_Normal;Recommended for newcomers.
+mode_Hard;For seasoned Fire Emblem veterans. 
+mode_Lunatic;No casuls allowed. Prepare to lose. A lot.
 mode_Classic;Units killed are lost forever.
 mode_Casual;Your units don't die when they are killed.
 mode_Random;Each level-up is random. Classic Fire Emblem.
 mode_Fixed;Each level-up is fixed. Recommended.
-mode_Hybrid;Level-ups are still random, but you can't be stat-screwed.
+mode_Hybrid;Level-ups are random, but you can't be stat-screwed.
 Mercenary;Merc.
 Skirmisher;Skirm.
 Dracoknight;Dr. Knight
