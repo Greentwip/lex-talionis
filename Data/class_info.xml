@@ -2,7 +2,7 @@
 <!-- Tier 0 Classes -->
     <class name="Citizen">
         <id>0</id>
-        <tier>0</tier>
+        <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
@@ -20,7 +20,7 @@
 
     <class name="Wagon">
         <id>0</id>
-        <tier>0</tier>
+        <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
@@ -30,8 +30,8 @@
         <tags></tags>
         <skills>1,Ghost</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>15,0,0,0,0,0,0,15</growths>
-		<bases>10,0,0,2,2,0,2,0,17,6</bases>
+		<growths>15,0,0,0,0,0,0,0</growths>
+		<bases>10,0,0,2,2,0,2,0,5,6</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>A merchant's wagon.</desc>
     </class>
@@ -50,7 +50,7 @@
         <tags></tags>
         <skills>1,Riposte;5,Vantage;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,35,55,55,40,20,25</growths>
+		<growths>95,45,35,55,55,40,20,35</growths>
 		<bases>11,3,1,6,7,0,1,1,5,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Swordfighters with superior speed and skill.</desc>
@@ -68,8 +68,8 @@
         <tags></tags>
         <skills>3,Feat;5,Critical;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,35,55,55,40,20,25</growths>
-		<bases>16,5,3,6,7,0,3,2,7,6</bases>
+		<growths>95,45,35,55,55,40,20,35</growths>
+		<bases>16,5,2,6,7,0,3,2,7,6</bases>
         <promotion>5,2,1,0,0,0,2,1,2,1</promotion>
 		<max>40,16,15,19,20,20,15,17,20</max>
         <desc>Devotees of the sword. Possess incredible speed and skill.</desc>
@@ -88,8 +88,8 @@
         <tags></tags>
         <skills>1,Initiative;5,Poise;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<growths>105,55,15,55,45,40,25,25</growths>
-		<bases>12,3,0,5,5,0,3,0,6,5</bases>
+		<growths>105,60,15,55,45,40,25,15</growths>
+		<bases>14,3,0,5,5,0,3,0,6,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Professional soldiers for hire. Well-balanced, with superior abilities all around.</desc>
     </class>
@@ -106,10 +106,10 @@
         <tags></tags>
         <skills>3,Feat;5,Sol;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,55,15,55,45,40,25,25</growths>
-		<bases>16,3,0,7,7,0,5,2,8,6</bases>
-        <promotion>4,0,0,2,2,0,2,2,2,1</promotion>
-		<max>40,17,15,19,17,20,17,16,20</max>
+		<growths>105,60,15,55,45,40,25,15</growths>
+		<bases>18,4,0,7,7,0,5,2,8,6</bases>
+        <promotion>4,1,0,2,2,0,2,2,2,1</promotion>
+		<max>40,17,15,19,17,20,17,15,20</max>
         <desc>Veteran warriors expert in all fields of combat.</desc>
     </class>
 
@@ -165,7 +165,7 @@
         <skills>1,Synergy;5,Feat;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,65,15,65,60,35,35,20</growths>
-		<bases>13,2,0,4,0,0,0,0,5,5</bases>
+		<bases>13,2,0,4,0,0,0,0,6,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Well-rounded combatants who rely on their exceptional skill.</desc>
     </class>
@@ -184,7 +184,7 @@
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,65,15,65,60,35,35,20</growths>
 		<bases>17,4,1,6,2,0,5,2,10,6</bases>
-        <promotion>4,2,1,2,2,0,5,2,5,1</promotion>
+        <promotion>4,2,1,2,2,0,5,2,4,1</promotion>
 		<max>40,17,15,20,17,20,19,17,20</max>
         <desc>Veteran frontliners who wield axe and lance</desc>
     </class>
@@ -199,11 +199,11 @@
         <turns_into>Paladin</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags></tags>
+        <tags>Mounted</tags>
         <skills>1,Canto;5,Savior;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,30</growths>
-		<bases>13,3,0,2,3,0,4,0,11,7</bases>
+		<bases>13,3,0,2,3,0,4,0,8,7</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Mounted knights with superior movement.</desc>
     </class>   
@@ -217,12 +217,12 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags></tags>
+        <tags>Mounted</tags>
         <skills>3,Feat;5,Charisma;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,30</growths>
-		<bases>15,4,2,3,7,0,6,5,11,8</bases>
-        <promotion>2,1,2,1,4,0,2,5,0,1</promotion>
+		<bases>15,4,2,3,7,0,6,5,9,8</bases>
+        <promotion>2,1,2,1,4,0,2,5,1,1</promotion>
 		<max>40,17,15,18,17,20,17,17,20</max>
         <desc>Veteran horse knights.</desc>
     </class>
@@ -241,7 +241,7 @@
         <skills>1,Provoke;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,35</growths>
-		<bases>11,3,0,2,1,0,6,1,8,4</bases>
+		<bases>11,3,0,2,1,0,6,1,10,4</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Heavily armored knights with superior defense but poor movement.</desc>
     </class>
@@ -259,8 +259,8 @@
         <skills>3,Feat;5,Slow;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,35</growths>
-		<bases>15,5,0,4,4,0,8,4,11,5</bases>
-        <promotion>4,2,0,2,3,0,2,3,3,1</promotion>
+		<bases>17,6,0,4,4,0,8,4,12,5</bases>
+        <promotion>6,3,0,2,3,0,2,3,2,1</promotion>
 		<max>40,19,15,18,15,20,20,17,20</max>
         <desc>Defensive stalwarts able to take a hit.</desc>
     </class>
@@ -317,7 +317,7 @@
         <skills>1,Cleave;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>115,75,15,45,40,20,25,20</growths>
-		<bases>13,3,0,1,3,0,1,0,7,5</bases>
+		<bases>13,3,0,1,3,0,1,0,9,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Axe-wielding powerhouses.</desc>
     </class>
@@ -335,8 +335,8 @@
         <skills>3,Feat;5,Heavy Hitter;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>115,75,15,45,40,20,25,20</growths>
-		<bases>18,4,0,3,3,0,4,2,12,6</bases>
-        <promotion>3,1,0,2,0,0,3,2,5,1</promotion>
+		<bases>18,4,0,3,3,0,4,2,13,6</bases>
+        <promotion>3,1,0,2,0,0,3,2,4,1</promotion>
 		<max>40,20,15,19,17,20,17,15,20</max>
         <desc>Determined fighters who relish battle.</desc>
     </class>
@@ -355,7 +355,7 @@
         <skills>1,Prescience;5,Critical;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,40,55,45,45,20,25</growths>
-		<bases>12,3,0,2,3,0,2,0,4,5</bases>
+		<bases>12,3,0,2,3,0,2,0,5,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Lightly armored soldiers armed with bows. Can attack from a distance.</desc>
     </class> 
@@ -373,7 +373,7 @@
         <skills>3,Feat;5,Longshot;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,40,55,45,45,20,25</growths>
-		<bases>16,6,1,4,5,0,4,3,7,6</bases>
+		<bases>16,6,1,4,5,0,4,3,8,6</bases>
         <promotion>4,3,1,2,2,0,2,3,3,1</promotion>
 		<max>40,17,15,20,19,20,17,16,20</max>
         <desc>Devotees of the bow. Possess incredible range.</desc>
@@ -392,7 +392,7 @@
         <tags></tags>
         <skills>1,Inspiration;5,Skill_Aura;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>55,20,40,60,75,60,15,40</growths>
+		<growths>55,20,40,60,75,50,15,40</growths>
 		<bases>10,0,1,2,3,0,1,2,4,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Scholars trained to lead.</desc>
@@ -407,12 +407,12 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>3</movement_group>
-        <tags></tags>
+        <tags>Mounted</tags>
         <skills>3,Feat;5,Rally;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>55,20,40,60,75,60,15,40</growths>
-		<bases>13,0,3,3,3,0,3,5,11,7</bases>
-        <promotion>3,0,2,1,0,0,2,3,7,2</promotion>
+		<growths>55,20,40,60,75,50,15,40</growths>
+		<bases>13,0,3,3,3,0,3,5,6,7</bases>
+        <promotion>3,0,2,1,0,0,2,3,2,2</promotion>
 		<max>40,15,15,17,19,20,16,17,20</max>
         <desc>Scholars who've dedicated their lives to the study of warfare.</desc>
     </class>
@@ -430,15 +430,15 @@
         <tags></tags>
         <skills>1,Healtouch;5,Miracle;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,15,40,55,45,60,15,65</growths>
-		<bases>11,0,1,1,1,0,0,4,3,5</bases>
+		<growths>65,15,40,55,45,70,15,65</growths>
+		<bases>11,0,1,1,1,0,0,4,4,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Kind-hearted healers.</desc>
     </class>
 
     <class name="Oracle">
         <id>15</id>
-        <tier>1</tier>
+        <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,1,0,16</wexp_gain>
         <promotes_from>Cleric</promotes_from>
@@ -448,8 +448,8 @@
         <tags></tags>
         <skills>3,Feat;5,Futuresight;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,15,40,55,45,60,15,65</growths>
-		<bases>14,0,3,3,2,0,3,6,4,6</bases>
+		<growths>65,15,40,55,45,70,15,65</growths>
+		<bases>14,0,3,3,2,0,3,6,5,6</bases>
         <promotion>3,0,2,2,1,0,3,2,1,1</promotion>
 		<max>40,15,17,19,17,20,15,20,20</max>
         <desc>Mages gifted with visions of the future.</desc>
@@ -525,8 +525,8 @@
         <skills>3,Feat;5,Metamagic;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,20,65,45,40,25,25,55</growths>
-		<bases>15,1,4,3,4,0,3,5,8,5</bases>
-        <promotion>4,0,2,2,3,0,2,2,3,1</promotion>
+		<bases>15,1,4,3,4,0,3,5,7,5</bases>
+        <promotion>4,0,2,2,3,0,2,2,2,1</promotion>
 		<max>40,15,19,17,17,20,15,19,20</max>
         <desc>War shaman capable of incredible feats of magic.</desc>
     </class>
@@ -544,8 +544,8 @@
         <tags></tags>
         <skills>1,Prescience;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>100,65,5,45,35,20,15,15</growths>
-		<bases>13,3,0,1,4,0,2,0,7,5</bases>
+		<growths>100,65,5,35,45,20,15,15</growths>
+		<bases>15,3,0,1,4,0,2,0,7,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Untrained but fanatical combatant.</desc>
     </class>
@@ -562,9 +562,9 @@
         <tags></tags>
         <skills>3,Feat;5,Regeneration;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>100,65,5,45,35,20,15,15</growths>
-		<bases>17,4,0,2,6,0,4,4,11,6</bases>
-        <promotion>4,1,0,1,2,0,2,4,4,1</promotion>
+		<growths>100,65,5,35,45,20,15,15</growths>
+		<bases>19,4,0,2,7,0,4,4,13,6</bases>
+        <promotion>4,1,0,1,3,0,2,4,6,1</promotion>
 		<max>40,20,15,19,19,20,15,15,20</max>
         <desc>Devotees of the axe. Relentless savages that deliver devastating stikes.</desc>
     </class>
@@ -579,11 +579,11 @@
         <turns_into>Dracolord</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags>Flying</tags>
+        <tags>Flying,Mounted</tags>
         <skills>1,Flying;5,Empowered;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,60,15,45,40,35,35,25</growths>
-		<bases>14,5,0,3,3,0,5,0,11,6</bases>
+		<bases>14,5,0,3,3,0,5,0,8,6</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>An elite warrior mounted on the back of a wyvern.</desc>
     </class>
@@ -597,12 +597,12 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags>Flying</tags>
+        <tags>Flying,Mounted</tags>
         <skills>3,Feat;5,Defense_Aura;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,60,15,45,40,35,35,25</growths>
-		<bases>18,5,0,5,4,0,5,2,11,7</bases>
-        <promotion>4,0,0,2,1,0,0,2,0,1</promotion>
+		<bases>19,6,0,6,4,0,6,2,11,7</bases>
+        <promotion>5,1,0,3,1,0,1,2,3,1</promotion>
 		<max>40,18,15,17,16,20,19,15,20</max>
         <desc>Lords who command the battlefield on their draconic mounts.</desc>
     </class>
@@ -622,7 +622,7 @@
         <skills>1,Fleet_of_Foot;5,Shove;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>110,65,0,40,25,20,15,15</growths>
-		<bases>13,3,0,1,3,0,2,0,8,5</bases>
+		<bases>13,3,0,1,3,0,2,0,10,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Ruffians with a strong offense but poor defense.</desc>
     </class>
@@ -677,9 +677,9 @@
         <tags></tags>
         <skills>1,Resist_Status;5,Reflect</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>100,40,15,35,15,35,45,35</growths>
-		<bases>14,5,1,3,3,0,7,3,10,6</bases>
-        <promotion>4,2,0,2,3,0,2,3,3,1</promotion>
+		<growths>105,55,15,40,20,35,55,35</growths>
+		<bases>15,5,0,4,4,0,8,4,13,6</bases>
+        <promotion>0,0,0,0,0,0,0,0,0,1</promotion>
 		<max>80,20,20,20,20,20,20,20,20</max>
         <desc>One of the twelve Imperial Archons, demons of combat.</desc>
     </class>

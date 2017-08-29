@@ -1,6 +1,7 @@
 max_items;5
 max_stat;20
 speed_to_double;4
+mounted_aid;15
 crit;0
 normal_movement;1
 flying_mcost_column;6

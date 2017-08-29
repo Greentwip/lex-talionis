@@ -684,7 +684,7 @@ class UnitObject(object):
 
     def getAid(self):
         if 'Mounted' in self.tags:
-            return max(0, 25 - self.stats['CON'])
+            return max(0, cf.CONSTANTS['mounted_aid'] - self.stats['CON'])
         else:
             return max(0, self.stats['CON'] - 1)
 
