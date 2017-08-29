@@ -3,7 +3,6 @@ m;The Task at Hand
 add_to_market;Great Sword
 add_to_market;Great Lance
 add_to_market;Great Axe
-add_to_market;Great Bow
 add_to_market;Spiritbane
 add_to_market;Barkskin
 if;not gameStateObj.check_dead('Coyote')

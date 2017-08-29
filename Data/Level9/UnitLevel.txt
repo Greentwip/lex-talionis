@@ -89,7 +89,7 @@ enemy;0;p11_4;Oracle;15;Corona,Silence,Physic;0,0;Pursue;Templar
 enemy;0;p11_5;Warrior;15;Adamant Axe,Yew Bow;0,0;Pursue;Templar
 enemy;0;p11_6;Warlock;15;Howl,Stun;0,0;Pursue;Templar
 enemy;0;p11_7;Berserker;15;Adamant Axe,Tomahawk;0,0;Pursue;Templar
-enemy;0;p11_8;Sniper;15;Yew Longbow;0,0;Pursue;Templar
+enemy;0;p11_8;Sniper;15;Great Bow;0,0;Pursue;Templar
 
 # Infinite Reinforcements
 enemy;2;w_Sage;Sage;Aether;0,0;Pursue;Templar

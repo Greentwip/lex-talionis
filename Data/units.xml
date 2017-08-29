@@ -546,7 +546,7 @@
 		<bases>26,9,7,17,20,9,4,9</bases>
         <growths>100,50,50,50,0,0,0,50</growths>
         
-        <inventory>Yew Longbow,dAdamant Sword</inventory>
+        <inventory>Longbow,dAdamant Sword</inventory>
         
         <level>20</level>
         <class>Thief,Assassin</class>

@@ -69,7 +69,7 @@
         <value>20</value>
         <RNG>1</RNG>
         <desc></desc>
-		<WT>5</WT>
+		<WT>6</WT>
         
 		<MT>5</MT>
 		<HIT>75</HIT>
@@ -87,7 +87,7 @@
         <value>75</value>
         <RNG>1</RNG>
         <desc></desc>
-		<WT>4</WT>
+		<WT>5</WT>
 
 		<MT>8</MT>
 		<HIT>80</HIT>
@@ -105,7 +105,7 @@
         <value>40</value>
         <RNG>1</RNG>
         <desc></desc>
-		<WT>7</WT>
+		<WT>8</WT>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -118,7 +118,7 @@
         <spriteid>10</spriteid>       
         <components>weapon,uses,reverse,weight</components>
         <weapontype>Sword</weapontype>
-		<WT>5</WT>
+		<WT>6</WT>
  
         <uses>15</uses>
         <RNG>1</RNG>
@@ -177,7 +177,7 @@
         <value>50</value>
         <RNG>1-2</RNG>
         <desc>Uses MAG instead of STR to determine damage.</desc>
-		<WT>5</WT>
+		<WT>6</WT>
         
 		<MT>4</MT>
 		<HIT>80</HIT>
@@ -231,7 +231,7 @@
         <value>160</value>
         <RNG>1-2</RNG>
         <desc></desc>
-		<WT>3</WT>
+		<WT>2</WT>
         
 		<MT>5</MT>
 		<HIT>70</HIT>
@@ -269,7 +269,7 @@
         <value>200</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
-		<WT>5</WT>
+		<WT>7</WT>
         <status_on_equip>Swordbreaker</status_on_equip>
         
 		<MT>7</MT>
@@ -307,7 +307,7 @@
         <RNG>1</RNG>
         <value>16</value>
         <desc></desc>
-		<WT>7</WT>
+		<WT>8</WT>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -325,7 +325,7 @@
         <RNG>1</RNG>
         <value>60</value>
         <desc></desc>
-		<WT>6</WT>
+		<WT>7</WT>
         
 		<MT>9</MT>
 		<HIT>75</HIT>
@@ -379,7 +379,7 @@
         <RNG>1</RNG>
         <value>130</value>
         <desc>Reverses the weapon triangle.</desc>
-		<WT>7</WT>
+		<WT>8</WT>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -415,7 +415,7 @@
         <uses>15</uses>
         <value>120</value>
         <desc></desc>
-		<WT>11</WT>
+		<WT>10</WT>
         
 		<MT>11</MT>
 		<HIT>55</HIT>
@@ -451,7 +451,7 @@
         <RNG>1-2</RNG>
         <value>50</value>
         <desc></desc>
-		<WT>7</WT>
+		<WT>8</WT>
         
 		<MT>6</MT>
 		<HIT>60</HIT>
@@ -487,7 +487,7 @@
         <value>180</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
-		<WT>8</WT>
+		<WT>6</WT>
         <status_on_equip>Lancebreaker</status_on_equip>
         
 		<MT>9</MT>
@@ -615,7 +615,7 @@
         <RNG>1</RNG>
         <value>140</value>
         <desc>Reverses the weapon triangle.</desc>
-		<WT>7</WT>
+		<WT>8</WT>
         
 		<MT>7</MT>
 		<HIT>65</HIT>
@@ -651,7 +651,7 @@
         <uses>15</uses>
         <value>100</value>
         <desc></desc>
-		<WT>13</WT>
+		<WT>12</WT>
         
 		<MT>12</MT>
 		<HIT>45</HIT>
@@ -705,7 +705,7 @@
         <RNG>1-2</RNG>
         <value>200</value>
         <desc></desc>
-		<WT>11</WT>
+		<WT>10</WT>
         
 		<MT>10</MT>
 		<HIT>40</HIT>
@@ -805,24 +805,6 @@
 		<LVL>D</LVL>
     </item>
 
-    <item name="Great Bow">
-        <id>Great Bow</id>
-        <spritetype>Bow</spritetype>
-        <spriteid>6</spriteid>       
-        <components>weapon,uses,weight</components>
-        <weapontype>Bow</weapontype>
- 
-        <uses>25</uses>
-        <RNG>2-3</RNG>
-        <value>50</value>
-        <desc></desc>
-		<WT>8</WT>
-        
-		<MT>8</MT>
-		<HIT>65</HIT>
-		<LVL>B</LVL>
-    </item>
-
     <item name="Brave Bow">
         <id>Brave Bow</id>
         <spritetype>Bow</spritetype>
@@ -859,40 +841,22 @@
 		<LVL>C</LVL>
     </item>
 
-    <item name="Oak Longbow">
-        <id>Oak Longbow</id>
+    <item name="Great Bow">
+        <id>Great Bow</id>
         <spritetype>Bow</spritetype>
-        <spriteid>15</spriteid>       
+        <spriteid>6</spriteid>       
         <components>weapon,uses,weight</components>
         <weapontype>Bow</weapontype>
  
-        <uses>15</uses>
+        <uses>25</uses>
         <RNG>2-4</RNG>
         <value>100</value>
         <desc></desc>
-		<WT>9</WT>
+        <WT>9</WT>
         
-		<MT>5</MT>
-		<HIT>55</HIT>
-		<LVL>B</LVL>
-    </item>
-
-    <item name="Yew Longbow">
-        <id>Yew Longbow</id>
-        <spritetype>Bow</spritetype>
-        <spriteid>16</spriteid>       
-        <components>weapon,uses,,weight</components>
-        <weapontype>Bow</weapontype>
- 
-        <uses>10</uses>
-        <RNG>2-4</RNG>
-        <value>150</value>
-        <desc></desc>
-		<WT>8</WT>
-        
-		<MT>6</MT>
-		<HIT>60</HIT>
-		<LVL>A</LVL>
+        <MT>6</MT>
+        <HIT>60</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Magebane Bow">
@@ -926,7 +890,7 @@
         <RNG>3-10</RNG>
         <value>400</value>
         <desc></desc>
-		<WT>13</WT>
+		<WT>12</WT>
         
 		<MT>5</MT>
 		<HIT>65</HIT>

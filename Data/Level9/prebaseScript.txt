@@ -4,6 +4,7 @@ add_to_market;Mithril Sword
 add_to_market;Mithril Lance
 add_to_market;Mithril Axe
 add_to_market;Yew Bow
+add_to_market;Great Bow
 add_to_market;Corona
 add_to_market;Physic
 add_to_market;Elixir

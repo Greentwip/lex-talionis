@@ -142,8 +142,8 @@ enemy;0;w8_2;Warrior;13;Great Axe,Yew Bow;0,12;Pursue;Claw
 enemy;0;w9_1;Warrior;14;Mithril Axe,Yew Bow;0,10;Pursue;Claw
 enemy;0;w9_2;Warrior;14;Mithril Axe,Yew Bow;0,12;Pursue;Claw
 # 
-enemy;0;w10_1;Warrior;15;Mithril Axe,Oak Longbow;0,10;Pursue;Claw
-enemy;0;w10_2;Warrior;15;Mithril Axe,Oak Longbow;0,12;Pursue;Claw
+enemy;0;w10_1;Warrior;15;Mithril Axe,Great Bow;0,10;Pursue;Claw
+enemy;0;w10_2;Warrior;15;Mithril Axe,Great Bow;0,12;Pursue;Claw
 # Infinite Reinforcements
 enemy;2;i1;Warrior;Mithril Axe,Oak Bow;0,0;Pursue;Claw;Void_Curse
 enemy;2;i2;Sniper;Yew Bow;0,0;Pursue;Claw;Void_Curse
