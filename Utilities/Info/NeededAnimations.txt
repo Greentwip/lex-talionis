@@ -33,7 +33,7 @@ MageFMagicAnima
 SageFUnarmed
 SageFMagicAnima
 === Drake ===
-CavalierUnarmed
+CavalierUnarmed ++
 CavalierSword
 CavalierMagicSword
 CavalierLance ++
@@ -85,12 +85,12 @@ MercenarySword ++
 MercenaryMagicSword
 HeroUnarmed ++
 HeroSword ++
-HeroMagicSword
-HeroAxe
-HeroRangedAxe
+HeroMagicSword ++
+HeroAxe ++
+HeroRangedAxe ++
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ++, Sage, Archer, Sniper, Cleric, Bishop
+Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper, Cleric, Bishop
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed
@@ -128,7 +128,7 @@ BallistaUnarmed
 BallistaRangedBow
 
 === Items ===
-RangedAxes
+RangedAxes <<
 RangedLances
 RangedBows
 RangedBallista
@@ -136,7 +136,7 @@ Levin Sword - Wind Sword
 Glimmer - Lightning
 Shine - Shine
 Corona - Divine
-Heal - Heal
+Heal << - Heal
 Physic - Physic
 Fortune
 Restore - Restore
@@ -144,6 +144,7 @@ Refresh
 Silence - Silence
 Wind - Aircalibur
 Fire << - Fire
+Thunder << - Thunder
 Aether - Excalibur
 Fly - None?
 Flux - Flux
@@ -157,4 +158,3 @@ Disintegrate - Demon Surge
 
 Possibly:
 Replace Iron Knife, Steel Knife, Mithril Knife with Levin Sword (Iron), Rune Sword (Nosferatu) (Steel), Light Brand (Mithril)
-Replace Water and Earth with Thunder (Inaccurate but strong. +2 DEF), (Fire gets +2 RES), (Aether gets +2 SPD in addition to its other stuff)

@@ -84,7 +84,7 @@ for name, klass in class_dict.iteritems():
         fp.write('20,' + ','.join([str(i) for i in get_stats(klass, 20)]) + '\n')
     fp.write('\n')
     if any(num != 0 for num in klass['promotion']):
-        fp.write('PROMOTE,' + ','.join([str(i) for i in klass['promotion']]) + '\n')
+        fp.write('PROMOTE,' + ','.join([str(i) for i in klass['promotion']]) + ',' + str(sum(klass['promotion'])) + '\n')
         fp.write('CAPS,' + ','.join([str(i) for i in klass['max']]) + '\n')
         fp.write('\n')
 fp.close()
@@ -136,7 +136,7 @@ for unit in UNITDATA.getroot().findall('unit'):
         new_klass = class_dict[klass['turns_into'][0]]
     else:
         new_klass = klass
-    fp.write('PROMOTE,' + ','.join([str(i) for i in new_klass['promotion']]) + '\n')
+    fp.write('PROMOTE,' + ','.join([str(i) for i in new_klass['promotion']]) + ',' + str(sum(new_klass['promotion'])) + '\n')
     fp.write('CAPS,' + ','.join([str(i) for i in new_klass['max']]) + '\n')
     fp.write('\n')
 fp.close()

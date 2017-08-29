@@ -7,7 +7,7 @@ from PIL import Image
 COLORKEY = (128, 160, 128)
 # COLORKEY = (0, 0, 0)
 WIDTH_LIMIT = 1024
-folder = 'hero_axe_frames'
+folder = 'hero_magic_sword_frames'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

@@ -838,7 +838,7 @@ class MenuState(State):
                 # If the unit does not have a traveler
                 if not cur_unit.TRV and not cur_unit.hasAttacked:
                     # AID has to be higher than CON
-                    if any((adjally.stats['CON'] <= cur_unit.getAid() and not adjally.TRV) for adjally in adjallies):
+                    if any((adjally.stats['CON'] <= cur_unit.getAid() and not adjally.TRV and 'Mounted' not in adjally.tags) for adjally in adjallies):
                         options.append(cf.WORDS['Rescue'])
                     if any((adjally.TRV and gameStateObj.get_unit_from_id(adjally.TRV).stats['CON'] <= cur_unit.getAid()) for adjally in adjallies):
                         options.append(cf.WORDS['Take'])
@@ -953,7 +953,8 @@ class MenuState(State):
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
                 gameStateObj.stateMachine.changeState('stealselect')
             elif selection == cf.WORDS['Rescue']:
-                good_positions = [unit.position for unit in cur_unit.getValidPartners(gameStateObj) if unit.stats['CON'] <= cur_unit.getAid() and not unit.TRV]
+                good_positions = [unit.position for unit in cur_unit.getValidPartners(gameStateObj)
+                                  if unit.stats['CON'] <= cur_unit.getAid() and not unit.TRV and 'Mounted' not in unit.tags]
                 cur_unit.validPartners = CustomObjects.MapSelectHelper(good_positions)
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)

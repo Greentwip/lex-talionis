@@ -378,7 +378,7 @@ class BattleAnimation(object):
                               255, 0, 0, 0, 0, 0, 0]
 
     def wait_for_dying(self):
-        self.num_frames = 35 * self.speed # wait how long it takes dying sound to appear
+        self.num_frames = 42 * self.speed
 
     def draw(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert':

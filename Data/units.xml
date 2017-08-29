@@ -114,7 +114,7 @@
         <wexp>11,C,0,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
 		<bases>17,6,1,6,5,7,5,3</bases>
-		<growths>95,65,5,60,60,40,55,40</growths>
+		<growths>95,65,5,60,40,40,55,40</growths>
         
         <inventory>Iron Sword,Iron Lance</inventory>
         
