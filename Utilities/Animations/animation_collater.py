@@ -5,9 +5,9 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
+COLORKEY = (0, 0, 0)
 WIDTH_LIMIT = 1024
-folder = 'hero_magic_sword_frames'
+folder = 'nosferatu_down'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

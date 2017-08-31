@@ -30,6 +30,7 @@ class BattleAnimation(object):
         self.state = 'Inert'  # Internal state
         self.num_frames = 0  # How long this frame of animation should exist for (in frames)
         self.animations = []
+        self.base_state = False  # Whether the animation is in a basic state (normally Stand or wait_for_hit)
 
         self.child_effect = None
         self.loop = False
@@ -118,6 +119,7 @@ class BattleAnimation(object):
         # Handle spells
         if self.child_effect:
             self.child_effect.update()
+            # Remove child_effect
             if self.child_effect.state == 'Inert':
                 self.child_effect = None
 
@@ -144,12 +146,15 @@ class BattleAnimation(object):
 
     def parse_line(self, line):
         # print(self.right, True if self.child_effect else False, line)
+        self.base_state = False
         # === TIMING AND IMAGES ===
         if line[0] == 'f':
             self.frame_count = 0
             self.num_frames = int(line[1]) * self.speed
             self.current_frame = self.frame_directory[line[2]]
             self.processing = False
+            if line[2] == 'Stand':
+                self.base_state = True
             if len(line) > 3:  # Under frame
                 self.under_frame = self.frame_directory[line[3]]
             else:
@@ -190,6 +195,7 @@ class BattleAnimation(object):
                 self.under_frame = None
             self.state = 'Wait'
             self.processing = False
+            self.base_state = True
         elif line[0] == 'spell_hit':
             if len(line) > 1:
                 self.current_frame = self.frame_directory[line[1]]
@@ -206,6 +212,7 @@ class BattleAnimation(object):
                 self.owner.shake(3)
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
+                self.no_damage()
         # === FLASHING ===
         elif line[0] == 'parent_tint_loop':
             num_frames = int(line[1]) * self.speed
@@ -246,18 +253,9 @@ class BattleAnimation(object):
                 image = GC.IMAGESDICT['HitSpark']
                 anim = CustomObjects.Animation(image, position, (3, 5), 14, ignore_map=True, 
                                                set_timing=(-1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1))
+                self.animations.append(anim)
             else:  # No Damage
-                if self.right:
-                    position = (52, 21)
-                else:
-                    position = (110, 21)  # Enemy's position
-                team = self.owner.right.team if self.right else self.owner.left.team
-                image = GC.IMAGESDICT['NoDamageBlue' if team == 'player' else 'NoDamageRed']
-                anim = CustomObjects.Animation(image, position, (5, 5), ignore_map=True, 
-                                               set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                           1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                           1, 1, 1, 1, 48))
-            self.animations.append(anim)
+                self.no_damage()
         elif line[0] == 'miss':
             if self.right:
                 position = (72, 21)
@@ -285,7 +283,10 @@ class BattleAnimation(object):
                                             self.at_range, parent=self.parent.partner)
             self.partner.child_effect.start_anim(self.current_pose)
         elif line[0] == 'blend':
-            self.blend = Engine.BLEND_RGB_ADD
+            if self.blend:
+                self.blend = None
+            else:
+                self.blend = Engine.BLEND_RGB_ADD
         elif line[0] == 'spell':
             attacker = self.owner.current_result.attacker
             item_id = self.owner.right_item.id if attacker is self.owner.right else self.owner.left_item.id
@@ -365,6 +366,19 @@ class BattleAnimation(object):
         self.flash_frames = num
         self.flash_color = color
 
+    def no_damage(self):
+        if self.right:
+            position = (52, 21)
+        else:
+            position = (110, 21)  # Enemy's position
+        team = self.owner.right.team if self.right else self.owner.left.team
+        image = GC.IMAGESDICT['NoDamageBlue' if team == 'player' else 'NoDamageRed']
+        anim = CustomObjects.Animation(image, position, (5, 5), ignore_map=True, 
+                                       set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                   1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                   1, 1, 1, 1, 48))
+        self.animations.append(anim)
+
     def start_dying_animation(self):
         self.state = 'Dying'
         self.death_opacity = [0, 20, 20, 20, 20, 44, 44, 44, 44, 64,
@@ -378,21 +392,25 @@ class BattleAnimation(object):
                               255, 0, 0, 0, 0, 0, 0]
 
     def wait_for_dying(self):
-        self.num_frames = 42 * self.speed
+        if self.base_state:
+            self.num_frames = 42 * self.speed
+
+    def get_image(self, frame, shake, range_offset, pan_offset):
+        image = frame[0].copy()
+        if not self.right:
+            image = Engine.flip_horiz(image)
+        offset = frame[1]
+        left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
+        if self.right:
+            offset = offset[0] + shake[0] + left, offset[1] + shake[1]
+        else:
+            offset = GC.WINWIDTH - offset[0] - image.get_width() + left, offset[1] + shake[1]
+        return image, offset
 
     def draw(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert':
             if self.current_frame is not None:
-                image = self.current_frame[0].copy()
-                if not self.right:
-                    image = Engine.flip_horiz(image)
-                offset = self.current_frame[1]
-                left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
-                if self.right:
-                    offset = offset[0] + shake[0] + left, offset[1] + shake[1]
-                else:
-                    offset = GC.WINWIDTH - offset[0] - image.get_width() + left, offset[1] + shake[1]
-
+                image, offset = self.get_image(self.current_frame, shake, range_offset, pan_offset)
                 # Move the animations in at the beginning and out at the end
                 if self.entrance:
                     progress = (self.init_speed - self.entrance) / float(self.init_speed)
@@ -440,28 +458,12 @@ class BattleAnimation(object):
 
     def draw_under(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert' and self.under_frame is not None:
-            image = self.under_frame[0].copy()
-            if not self.right:
-                image = Engine.flip_horiz(image)
-            offset = self.under_frame[1]
-            left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
-            if self.right:
-                offset = offset[0] + left, offset[1] + shake[1]
-            else:
-                offset = GC.WINWIDTH - offset[0] - image.get_width() + left, offset[1] + shake[1]
+            image, offset = self.get_image(self.under_frame, shake, range_offset, pan_offset)
             # Actually draw
             Engine.blit(surf, image, offset, None, self.blend)
 
     def draw_over(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert' and self.over_frame is not None:
-            image = self.over_frame[0].copy()
-            if not self.right:
-                image = Engine.flip_horiz(image)
-            offset = self.over_frame[1]
-            left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
-            if self.right:
-                offset = offset[0] + left, offset[1] + shake[1]
-            else:
-                offset = GC.WINWIDTH - offset[0] - image.get_width() + left, offset[1] + shake[1]
+            image, offset = self.get_image(self.over_frame, shake, range_offset, pan_offset)
             # Actually draw
             Engine.blit(surf, image, offset, None, self.blend)
