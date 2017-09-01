@@ -43,7 +43,7 @@ f;20;Attack1
 f;6;Attack2
 f;2;Miss
 miss
-f;16;Attack3;Miss
+f;30;Miss
 f;2;Attack5
 f;2;Attack6
 f;6;Attack7

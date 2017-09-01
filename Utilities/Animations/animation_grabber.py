@@ -5,9 +5,9 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-palette_set = palette_index.throwing_axe
+palette_set = palette_index.orson
 
-folder = 'hero_frames/'
+folder = 'unique_paladin_sword/'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
@@ -81,7 +81,7 @@ for idx, fp in enumerate(sorted(images)):
             for y in xrange(height):
                 my_color = image.getpixel((x, y))
                 bg_color = background.getpixel((x, y))
-                if my_color == bg_color or y > 120 or my_color not in palette_set:
+                if my_color == bg_color or y > 112 or my_color not in palette_set:
                     image.putpixel((x, y), COLORKEY)
 
 

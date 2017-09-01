@@ -75,6 +75,7 @@ f;2;Attack13
 # Full Sword
 f;2;Miss
 miss
+f;20;Miss
 f;2;Attack16
 f;3;Attack17
 # Rest

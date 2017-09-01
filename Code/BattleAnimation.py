@@ -48,6 +48,7 @@ class BattleAnimation(object):
         # Offset
         self.static = False
         self.ignore_range_offset = False
+        self.lr_offset = []
 
         # Awake stuff
         self.owner = None
@@ -163,10 +164,13 @@ class BattleAnimation(object):
         elif line[0] == 'of':
             self.frame_count = 0
             self.num_frames = int(line[1]) * self.speed
-            self.current_frame = None
             self.under_frame = None
             self.processing = False
             self.over_frame = self.frame_directory[line[2]]
+            if line(line) > 3:  # Current frame
+                self.current_frame = self.frame_directory[line[3]]
+            else:
+                self.current_frame = None
         elif line[0] == 'wait':
             self.frame_count = 0
             self.num_frames = int(line[1]) * self.speed
@@ -378,6 +382,8 @@ class BattleAnimation(object):
                                                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                    1, 1, 1, 1, 48))
         self.animations.append(anim)
+        # Also offset self by [-1, -2, -3, -2, -1]
+        self.lr_offset = [-1, -2, -3, -2, -1]
 
     def start_dying_animation(self):
         self.state = 'Dying'
@@ -400,6 +406,10 @@ class BattleAnimation(object):
         if not self.right:
             image = Engine.flip_horiz(image)
         offset = frame[1]
+        # Handle own offset
+        if self.lr_offset:
+            offset = offset[0] + self.lr_offset.pop(), offset[1]
+        
         left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
         if self.right:
             offset = offset[0] + shake[0] + left, offset[1] + shake[1]

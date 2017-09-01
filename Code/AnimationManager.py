@@ -64,7 +64,7 @@ class BattleAnimationManager(object):
                 e_dict['image'] = None
             e_dict['script'] = self.parse_script(e_dict['script'])
 
-    def partake(self, klass, gender='M', item=None, magic=False):
+    def partake(self, klass, gender='M', item=None, magic=False, distance=1):
         if gender == 'F':
             klass = klass + 'F' if klass + 'F' in self.directory else klass
         if klass in self.directory:
@@ -75,7 +75,8 @@ class BattleAnimationManager(object):
             elif magic:
                 weapon = 'Magic' + item.spritetype
                 check_item = True # Make sure that we have the spell also
-            elif max(item.RNG) > 1:
+            elif max(item.RNG) > 1 and (item.spritetype != 'Lance' or distance > 1):
+                # Ranged Lances use Melee animation if adjacent
                 weapon = 'Ranged' + item.spritetype
             else:
                 weapon = item.spritetype

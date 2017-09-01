@@ -399,13 +399,14 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
 def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False):
     # Not implemented yet
     if cf.OPTIONS['Animation'] and not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject):
-        attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item))
+        distance = Utility.calculate_distance(attacker.position, def_pos)
+        attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item), distance)
         defender_item = defender.getMainWeapon()
         if defender_item:
             magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
         else:
             magic = False
-        defender_anim = GC.ANIMDICT.partake(defender.klass, defender.gender, defender.getMainWeapon(), magic)
+        defender_anim = GC.ANIMDICT.partake(defender.klass, defender.gender, defender.getMainWeapon(), magic, distance)
         if attacker_anim and defender_anim:
             # Build attacker animation
             attacker_script = attacker_anim['script']
@@ -923,7 +924,7 @@ class AnimationCombat(Combat):
             surf.blit(self.right_platform, (GC.WINWIDTH / 2 + total_shake_x, top))
         # Animation
         if self.at_range:
-            right_range_offset = 23
+            right_range_offset = 24  # Tested
             left_range_offset = -60
         else:
             right_range_offset, left_range_offset = 0, 0
@@ -932,11 +933,13 @@ class AnimationCombat(Combat):
                 self.right.battle_anim.draw_under(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
                 self.left.battle_anim.draw(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
                 self.right.battle_anim.draw(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
+                self.right.battle_anim.draw_over(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
                 self.left.battle_anim.draw_over(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
             else:
                 self.left.battle_anim.draw_under(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
                 self.right.battle_anim.draw(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
                 self.left.battle_anim.draw(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
+                self.left.battle_anim.draw_over(surf, (-total_shake_x, total_shake_y), left_range_offset, self.pan_offset)
                 self.right.battle_anim.draw_over(surf, (-total_shake_x, total_shake_y), right_range_offset, self.pan_offset)
         else:
             self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)

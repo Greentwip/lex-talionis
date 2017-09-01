@@ -72,6 +72,7 @@ f;3;Attack11
 f;5;Attack12
 f;2;Miss
 miss
+f;10;Miss
 f;2;Run1
 f;1;Run2
 f;2;Run3

@@ -119,6 +119,75 @@ generic_cavalier = [(255, 255, 255),
                 (128, 128, 128),
                 ]
 
+orson = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 216), # Light skin
+                (240, 168, 112), # Med skin
+                (136, 112, 96), # Dark skin
+                (232, 232, 248), # Light Horse
+                (168, 176, 200), # Med Horse
+                (112, 128, 152), # Dark Horse
+                (248, 240, 72), # Trim
+                (200, 248, 208), # Light Armor
+                (168, 208, 160), # LM Armor
+                (112, 160, 88), # Med Armor
+                (64, 88, 72), # Dark Armor
+                (96, 160, 72), # Light Shield
+                (48, 96, 40), # Dark Shield
+                (40, 40, 40)] # Outline
+
+paladin_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 216), # Light skin
+                (224, 192, 88), # Med skin
+                (136, 104, 88), # Dark skin
+                (232, 232, 248), # Light Horse
+                (168, 176, 200), # Med Horse
+                (112, 128, 152), # Dark Horse
+                (248, 248, 0), # Trim
+                (248, 192, 128), # Light Armor
+                (232, 144, 56), # LM Armor
+                (200, 0, 0), # Med Armor
+                (128, 0, 8), # Dark Armor
+                (200, 0, 0), # Light Shield
+                (144, 16, 24), # Dark Shield
+                (40, 40, 40)] # Outline
+
+paladin_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 216), # Light skin
+                (224, 192, 88), # Med skin
+                (136, 104, 88), # Dark skin
+                (232, 232, 248), # Light Horse
+                (168, 176, 200), # Med Horse
+                (112, 128, 152), # Dark Horse
+                (248, 248, 80), # Trim
+                (128, 192, 248), # Light Armor
+                (56, 144, 232), # LM Armor
+                (40, 40, 200), # Med Armor
+                (48, 40, 128), # Dark Armor
+                (40, 40, 200), # Light Shield
+                (64, 56, 144), # Dark Shield
+                (40, 40, 40)] # Outline
+
+generic_paladin = [(255, 255, 255),
+                (194, 0, 136),
+                (128, 128, 128),
+                (255, 204, 153),
+                (43, 206, 72),
+                (255, 164, 5),
+                (157, 204, 0),
+                (0, 51, 128),
+                (148, 255, 181),
+                (76, 0, 92),
+                (153, 63, 0),
+                (0, 117, 220),
+                (240, 163, 255),
+                (0, 92, 49),
+                (25, 25, 25),
+                (143, 124, 0),
+                ]
+
 gerik = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 240, 184), # Light skin

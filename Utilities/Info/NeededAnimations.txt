@@ -38,9 +38,9 @@ CavalierSword
 CavalierMagicSword
 CavalierLance ++
 CavalierRangedLance
-PaladinUnarmed
-PaladinSword
-PaladinMagicSword
+PaladinUnarmed ++
+PaladinSword ++
+PaladinMagicSword ++
 PaladinLance
 PaladinRangedLance
 === Theo ===
