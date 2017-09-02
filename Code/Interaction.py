@@ -15,6 +15,7 @@ class Result(object):
         self.outcome = 0  # 0 -- Miss, 1 -- Hit, 2 -- Crit
         self.atk_damage = 0  # Damage to the attacker
         self.def_damage = 0  # Damage to the defender
+        self.def_damage_done = 0  # Actual damage done to the defender (could be less than damage if the enemy's health is low)
         self.atk_status = []  # Status to the attacker
         self.def_status = []  # Status to the defender
         self.atk_movement = None  # Movement to the attacker

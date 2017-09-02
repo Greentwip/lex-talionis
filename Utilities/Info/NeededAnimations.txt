@@ -142,7 +142,7 @@ Fortune
 Restore - Restore
 Refresh
 Silence - Silence
-Wind - Aircalibur
+Wind << - Arch's Wind
 Fire << - Fire
 Thunder << - Thunder
 Aether - Excalibur
