@@ -15,7 +15,7 @@
 # --------------------------------------------
 group;Resistance;Bandit;Resistance;Nope
 player;0;0;Myrmidon;10;Iron Sword;5,13;Pursue;Resistance
-player;0;0;Knight;1;Iron Lance;4,12;Pursue;Resistance
+player;0;0;Knight;1;Iron Lance,Javelin;4,12;Pursue;Resistance
 player;0;0;Mage;1;Wind,Fire,Thunder,Vulnerary;4,15;Pursue;Resistance
 player;0;0;Vanguard;10;Iron Axe,Vulnerary,Angelic Robe;3,14;Pursue;Resistance
 player;0;0;ClericF;1;Glimmer,Heal;4,14;Support;Resistance

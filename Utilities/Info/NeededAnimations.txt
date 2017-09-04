@@ -46,7 +46,7 @@ PaladinRangedLance
 === Theo ===
 KnightUnarmed ++
 KnightLance ++
-KnightRangedLance
+KnightRangedLance ++
 GeneralUnarmed
 GeneralLance
 GeneralRangedLance
