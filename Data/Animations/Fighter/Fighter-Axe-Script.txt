@@ -31,7 +31,7 @@ f;4;Attack11
 hit_spark
 start_hit
 wait_for_hit;Attack12;Miss
-f;3;Attack12;Miss
+f;4;Attack12;Miss
 # Retreat
 f;3;Attack13
 # Down
@@ -63,7 +63,7 @@ f;4;Attack10
 # Blur
 miss
 f;3;Attack11
-f;38;TrueMiss
+f;30;TrueMiss
 # Retreat
 f;3;TrueMiss2
 f;4;Attack18

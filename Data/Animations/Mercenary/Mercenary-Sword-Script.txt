@@ -35,7 +35,7 @@ f;4;Attack19;Miss
 hit_spark
 start_hit
 wait_for_hit;Attack19;Miss
-f;9;Attack19;Miss
+f;4;Attack19;Miss
 f;2;Attack21;Miss2
 f;3;Attack22
 f;2;Attack23

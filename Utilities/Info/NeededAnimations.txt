@@ -34,10 +34,10 @@ SageFUnarmed
 SageFMagicAnima
 === Drake ===
 CavalierUnarmed ++
-CavalierSword
+CavalierSword ++
 CavalierMagicSword
 CavalierLance ++
-CavalierRangedLance
+CavalierRangedLance ++
 PaladinUnarmed ++
 PaladinSword ++
 PaladinMagicSword ++

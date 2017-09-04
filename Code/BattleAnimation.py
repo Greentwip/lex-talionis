@@ -188,6 +188,8 @@ class BattleAnimation(object):
             else:  # No Damage
                 self.owner.shake(2)
             self.owner.start_hit()
+            # Also offset partner by [-1, -2, -3, -2, -1]
+            self.partner.lr_offset = [-1, -2, -3, -2, -1]
         elif line[0] == 'wait_for_hit':
             if len(line) > 1:
                 self.current_frame = self.frame_directory[line[1]]

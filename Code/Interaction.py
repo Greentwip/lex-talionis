@@ -884,14 +884,14 @@ class AnimationCombat(Combat):
         if self.at_range:
             if self.pan_offset != 0:
                 if self.current_result.attacker == self.right:
-                    self.pan_dir = -1
+                    self.pan_dir = -4
                 else:
-                    self.pan_dir = 1
+                    self.pan_dir = 4
             else:
                 if self.current_result.attacker == self.right:
-                    self.pan_dir = 1
+                    self.pan_dir = 4
                 else:
-                    self.pan_dir = -1
+                    self.pan_dir = -4
 
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset / float(self.max_position_offset)

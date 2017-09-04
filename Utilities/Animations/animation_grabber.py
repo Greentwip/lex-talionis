@@ -5,9 +5,9 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-palette_set = palette_index.orson
+palette_set = palette_index.kyle
 
-folder = 'unique_paladin_sword/'
+folder = 'cavalier_javelin_unique/'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
