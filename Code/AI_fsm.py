@@ -422,10 +422,15 @@ class Primary_AI(object):
         # Remove any items that only give statuses if there are no enemies nearby
         self.items = [i for i in self.items if not 
                       (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'] + 2)]
-        # Remove any items that heal if there are no allies in need of healing nearby
+        # Remove any items that heal only me if I don't need healing
+        if self.unit.currenthp >= self.unit.stats['HP']:
+            self.items = [i for i in self.items if not (i.heal and max(i.RNG) == 0)]
+
+        # Remove any items that heal others if there are no allies in need of healing nearby
         if any(item.heal for item in self.items):
             distance_to_heal = self.distance_to_closest_ally_in_need_of_healing(gameStateObj)
             self.items = [i for i in self.items if not (i.heal and distance_to_heal > self.unit.stats['MOV'] + max(i.RNG))]
+
         if self.determine_skip(gameStateObj, closest_enemy_distance):
             self.skip_flag = True
             return
@@ -481,7 +486,7 @@ class Primary_AI(object):
             move = self.valid_moves[self.move_index]
             self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], [move], 
                                                       team_ignore=self.team_ignore, name_ignore=self.name_ignore)
-            if not QUICK_MOVE and 0 in self.items[self.item_index].RNG:
+            if 0 in self.items[self.item_index].RNG:
                 self.valid_targets.append(self.unit.position) # Hack to target self
         else:
             self.valid_targets = []
@@ -489,8 +494,9 @@ class Primary_AI(object):
     def get_all_valid_targets(self, gameStateObj):
         self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], self.valid_moves,
                                                   team_ignore=self.team_ignore, name_ignore=self.name_ignore)
-        if not QUICK_MOVE and 0 in self.items[self.item_index].RNG:
-            self.valid_targets.append(self.unit.position) # Hack to target self
+        if 0 in self.items[self.item_index].RNG:
+            self.valid_targets += self.valid_moves # Hack to target self in all valid positions
+            self.valid_targets = list(set(self.valid_targets))  # Only uniques
         logger.debug('Valid Targets: %s', self.valid_targets)
 
     def get_possible_moves(self, gameStateObj):
@@ -541,6 +547,8 @@ class Primary_AI(object):
             move = self.valid_moves[self.move_index]
             target = self.valid_targets[self.target_index]
             item = self.items[self.item_index]
+            if QUICK_MOVE and self.unit.position != move:
+                self.quick_move(move, gameStateObj, test=False)
             self.determine_utility(move, target, item, gameStateObj)
             self.target_index += 1
 
@@ -575,6 +583,8 @@ class Primary_AI(object):
                 move = Utility.farthest_away_pos(self.unit, self.possible_moves, gameStateObj.allunits)
             else:   
                 move = self.possible_moves[self.move_index]
+            if QUICK_MOVE and self.unit.position != move:
+                self.quick_move(move, gameStateObj, test=False)
             target = self.valid_targets[self.target_index]
             item = self.items[self.item_index]
             # logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
@@ -598,8 +608,8 @@ class Primary_AI(object):
     def determine_utility(self, move, target, item, gameStateObj):
         defender, splash = Interaction.convert_positions(gameStateObj, self.unit, move, target, item)
         if defender or splash:
-            if QUICK_MOVE and self.unit.position != move: # Just in case... This is needed!
-                self.quick_move(move, gameStateObj, test=True)
+            # if QUICK_MOVE and self.unit.position != move: # Just in case... This is needed!
+            #     self.quick_move(move, gameStateObj, test=True)
             if item.spell:
                 tp = self.compute_priority_spell(defender, splash, move, item, gameStateObj)
             elif item.weapon:
@@ -774,16 +784,18 @@ class Primary_AI(object):
     def compute_priority_item(self, defender, splash, move, item, gameStateObj):
         if item.heal:
             terms = []
-            missing_health = self.unit.stats['HP'] - self.unit.currenthp
+            missing_health = defender.stats['HP'] - defender.currenthp
             if missing_health <= 0:
                 return 0
-            healing_term = Utility.clamp(item.heal/float(missing_health), 0, 1)
+            healing_term = Utility.clamp(int(eval(item.heal))/float(missing_health), 0, 1)
+            help_term = Utility.clamp(missing_health/float(defender.stats['HP']), 0, 1)
             terms.append((healing_term, 10))
+            terms.append((help_term, 20))
 
-            closest_enemy_term = Utility.clamp(self.unit.distance_to_closest_enemy(gameStateObj, move)/100.0, 0, 1)
-            terms.append((closest_enemy_term, 10))
+            closest_enemy_term = Utility.clamp(defender.distance_to_closest_enemy(gameStateObj, move)/100.0, 0, 1)
+            terms.append((closest_enemy_term, 5))
 
-            return Utility.process_terms(terms)
+            return Utility.process_terms(terms)/2  # Divide by two to make it less likely to make this choice
         else:
             return 0
 
