@@ -330,7 +330,7 @@ class BattleAnimation(object):
                 self.script_index += int(line[1])
         # === MOVEMENT ===
         elif line[0] == 'pan':
-            self.owner.pan()
+            self.owner.pan(swap=True)
 
     def end_loop(self):
         if self.loop:

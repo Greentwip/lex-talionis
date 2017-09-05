@@ -904,18 +904,22 @@ class Secondary_AI(object):
             # Damage Term: How much damage can I inflict on the target (fraction of total HP)?
             # Mutiliply that by the chance I hit
             max_damage = 0
+            status_term = 0
             for item in self.unit.items:
-                if item.weapon:
+                if item.status:
+                    status_term = 1
+                if item.weapon or item.spell:
                     raw_damage = self.unit.compute_damage(target, gameStateObj, item)
                     chance_to_hit = Utility.clamp(self.unit.compute_hit(target, gameStateObj, item)/100.0, 0, 1)
                     true_damage = raw_damage*chance_to_hit
                     if true_damage > max_damage:
                         max_damage = true_damage
 
-            if max_damage <= 0:
+            if max_damage <= 0 and status_term <= 0:
                 return 0 # If no damage could be dealt, ignore.
             damage_term = min(float(max_damage)/float(target.stats['HP']), 1.0)
             terms.append((damage_term, 30))
             terms.append((weakness_term, 30))
+            terms.append((status_term, 20))
 
         return Utility.process_terms(terms)
