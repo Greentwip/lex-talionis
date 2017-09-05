@@ -1159,7 +1159,8 @@ class CameraOffset(object):
         return self.current_y
 
     def center2(self, old, new):
-        x1, y1, x2, y2 = old, new
+        x1, y1 = old
+        x2, y2 = new
         # logger.debug('Camera Center: %s %s %s %s', (x1, y1), (x2, y2), self.x, self.y)
         max_x = max(x1, x2)
         max_y = max(y1, y2)

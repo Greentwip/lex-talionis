@@ -1995,6 +1995,7 @@ class CombatState(State):
         unit_surf = self.unit_surf.copy()
         # Draw the tile sprites onto this surface
         gameStateObj.map.draw(mapSurf, gameStateObj)
+
         # Reorder units so they are drawn in correct order, from top to bottom, so that units on bottom are blit over top
         # Only draw units that will be in the camera's field of view
         viewbox = gameStateObj.combatInstance.viewbox if gameStateObj.combatInstance.viewbox else (0, 0, GC.WINWIDTH, GC.WINHEIGHT)
@@ -2018,6 +2019,9 @@ class CombatState(State):
 
             unit_surf = Engine.subsurface(unit_surf, (viewbox[0] + pos_x, viewbox[1] + pos_y, viewbox[2], viewbox[3]))
             mapSurf.blit(unit_surf, (viewbox[0] + pos_x, viewbox[1] + pos_y))
+        # Draw cursor
+        if gameStateObj.cursor:
+            gameStateObj.cursor.draw(mapSurf)
         # Draw weather
         for particle in gameStateObj.map.weather:
             particle.draw(mapSurf)

@@ -397,7 +397,7 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
     logger.debug('Main Defender: %s, Splash: %s', main_defender, splash_units)
     return main_defender, splash_units
 
-def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False):
+def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False, ai_combat=False):
     # Not implemented yet
     if cf.OPTIONS['Animation'] and not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject):
         distance = Utility.calculate_distance(attacker.position, def_pos)
@@ -425,9 +425,9 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
                 defender_color = 'Blue' if defender.team == 'player' else 'Red'
                 defender_frame_dir = defender_anim['images']['Generic' + defender_color]
             defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script)
-            return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat)
+            return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
     # default
-    return Map_Combat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
 
 # Abstract base class for combat
 class Combat(object):
@@ -551,7 +551,7 @@ class Combat(object):
                     StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
 
 class AnimationCombat(Combat):
-    def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat):
+    def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat, ai_combat):
         self.p1 = attacker
         self.p2 = defender
         # The attacker is always on the right unless the defender is a player and the attacker is not
@@ -570,6 +570,7 @@ class AnimationCombat(Combat):
         self.item = item
         self.skill_used = skill_used
         self.event_combat = event_combat
+        self.ai_combat = ai_combat
 
         self.solver = Solver(attacker, defender, def_pos, [], item, skill_used, event_combat)
         self.old_results = []
@@ -657,9 +658,29 @@ class AnimationCombat(Combat):
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
             self.set_stats(gameStateObj)
             self.old_results.append(self.current_result)
+            # set up
             gameStateObj.cursor.setPosition(self.def_pos, gameStateObj)
+            self.p1.sprite.change_state('combat_attacker', gameStateObj)
+            self.p2.sprite.change_state('combat_defender', gameStateObj)
+            if not skip:
+                gameStateObj.stateMachine.changeState('move_camera')
+
             self.init_draw(gameStateObj, metaDataObj)
-            self.combat_state = 'Fade'
+            if self.ai_combat:
+                self.combat_state = 'RedOverlay_Init'
+            else:
+                self.combat_state = 'Fade'
+
+        elif self.combat_state == 'RedOverlay_Init':
+            gameStateObj.cursor.drawState = 2
+            self.last_update = current_time
+            self.combat_state = 'RedOverlay'
+
+        elif self.combat_state == 'RedOverlay':
+            if skip or current_time - self.last_update > 400:
+                gameStateObj.cursor.drawState = 0
+                gameStateObj.highlight_manager.remove_highlights()
+                self.combat_state = 'Fade'
 
         elif self.combat_state == 'Fade':
             # begin viewbox clamping
@@ -1080,6 +1101,8 @@ class AnimationCombat(Combat):
 
         # Handle death and sprite changing
         self.check_death()
+        if not self.p2.isDying:
+            self.p2.sprite.change_state('normal', gameStateObj)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
@@ -1199,7 +1222,7 @@ class SimpleHPBar(object):
             surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp) * 2 + 5, pos[1] + 1))
         surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp) * 2 + 5, pos[1] + 1)) # End HP Blip
 
-class Map_Combat(Combat):
+class MapCombat(Combat):
     def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat):
         self.p1 = attacker
         self.p2 = defender
