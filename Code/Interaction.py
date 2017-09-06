@@ -621,6 +621,7 @@ class AnimationCombat(Combat):
 
     def init_draw(self, gameStateObj, metaDataObj):
         self.gameStateObj = gameStateObj # Dependency Injection
+        self.metaDataObj = metaDataObj  # Dependency Injection
         # Left
         left_color = 'Blue' if self.left.team == 'player' else 'Red'
         # Name Tag
@@ -660,6 +661,7 @@ class AnimationCombat(Combat):
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
+            self.next_result = None
             self.set_stats(gameStateObj)
             self.old_results.append(self.current_result)
             # set up
@@ -720,17 +722,15 @@ class AnimationCombat(Combat):
                 self.current_animation = self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'Init':
-            self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
+            # self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
+            self.current_result = self.next_result
+            self.next_result = None
             # print('Interaction: Getting a new result')
             if self.current_result is None:
                 self.last_update = current_time
                 self.combat_state = 'ExpWait'
-                # Handle pan
-                if self.p1.team == 'player':
-                    self.focus_right = True
-                elif self.p2.team == 'player':
-                    self.focus_right = False
-                self.pan()
+                self.focus_exp()
+                self.move_camera()
             else:
                 self.set_stats(gameStateObj)
                 self.old_results.append(self.current_result)
@@ -812,7 +812,7 @@ class AnimationCombat(Combat):
                 self.platform_current_shake = 0
 
     def start_hit(self):
-        self.apply_result(self.current_result, self.gameStateObj)
+        self.apply_result(self.current_result, self.gameStateObj, self.metaDataObj)
         self.last_update = Engine.get_time()
         self.combat_state = 'HP_Change'
 
@@ -853,7 +853,7 @@ class AnimationCombat(Combat):
             self.left_stats = a_stats
             self.right_stats = d_stats
 
-    def apply_result(self, result, gameStateObj):
+    def apply_result(self, result, gameStateObj, metaDataObj):
         # Status
         for status_obj in result.def_status:
             status_obj.parent_id = result.attacker.id
@@ -870,6 +870,9 @@ class AnimationCombat(Combat):
             result.defender.currenthp -= result.def_damage
             result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
 
+        # Get next result in preparation for next combat
+        self.next_result = self.solver.get_a_result(gameStateObj, metaDataObj)
+
     def set_up_animation(self, result):
         if result.outcome:
             result.attacker.battle_anim.start_anim('Attack')
@@ -880,7 +883,7 @@ class AnimationCombat(Combat):
             self.focus_right = True
         else:
             self.focus_right = False
-        self.pan()
+        self.move_camera()
 
     def finish(self):
         self.p1.unlock_active()
@@ -917,9 +920,25 @@ class AnimationCombat(Combat):
     def lighten_ui(self):
         self.darken_ui_background = -3
 
-    def pan(self, swap=False):
-        if swap:
-            self.focus_right = not self.focus_right
+    def pan_away(self):
+        self.focus_right = not self.focus_right
+        self.move_camera()
+
+    def pan_back(self):
+        if self.next_result:
+            self.focus_right = (self.next_result.attacker == self.right)
+        else:
+            self.focus_exp()
+        self.move_camera()
+
+    def focus_exp(self):
+        # Handle pan
+        if self.p1.team == 'player':
+            self.focus_right = (self.p1 == self.right)
+        elif self.p2.team == 'player':
+            self.focus_right = (self.p2 == self.right)
+
+    def move_camera(self):
         if self.at_range:
             if self.focus_right and self.pan_offset != -16:
                 self.pan_dir = -4

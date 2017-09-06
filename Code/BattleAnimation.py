@@ -50,6 +50,7 @@ class BattleAnimation(object):
         self.static = False
         self.over_static = False
         self.ignore_pan = False
+        self.pan_away = False
         self.lr_offset = []
 
         # Awake stuff
@@ -336,7 +337,11 @@ class BattleAnimation(object):
                 self.script_index += int(line[1])
         # === MOVEMENT ===
         elif line[0] == 'pan':
-            self.owner.pan(swap=True)
+            self.pan_away = not self.pan_away
+            if self.pan_away:
+                self.owner.pan_away()
+            else:
+                self.owner.pan_back()
 
     def end_loop(self):
         if self.loop:

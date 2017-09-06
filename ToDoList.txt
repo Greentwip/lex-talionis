@@ -17,7 +17,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Add animation options to Options Menu
 --- Have Pan support Range 3+
---- Have Pan not constantly travel back and forth, if next animation is by partner
 --- AI ---
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells?) --- Cleave, Critical, Sol, Luna, Shove, Rally, Metamagic
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
