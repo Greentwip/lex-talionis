@@ -1,6 +1,5 @@
 pose;Attack
 static
-ignore_range_offset
 f;1;Attack0
 f;1;AttackMiss1
 f;2;AttackMiss2

@@ -602,9 +602,10 @@ class AnimationCombat(Combat):
         # for Panning platforms
         self.focus_right = True if self.p1 == self.right else False
         self.pan_dir = 0
-        self.pan_offset = 0
-        if not self.focus_right:
-            self.pan_offset = 32
+        if self.focus_right: # For range 2
+            self.pan_offset = -16
+        else:
+            self.pan_offset = 16
 
         # for shake
         self.shake_set = [(0, 0)]
@@ -920,9 +921,9 @@ class AnimationCombat(Combat):
         if swap:
             self.focus_right = not self.focus_right
         if self.at_range:
-            if self.focus_right and self.pan_offset != 0:
+            if self.focus_right and self.pan_offset != -16:
                 self.pan_dir = -4
-            elif not self.focus_right and self.pan_offset != 32:
+            elif not self.focus_right and self.pan_offset != 16:
                 self.pan_dir = 4
 
     def draw(self, surf, gameStateObj):
@@ -937,28 +938,26 @@ class AnimationCombat(Combat):
         # Pan
         if self.pan_dir != 0:
             self.pan_offset += self.pan_dir
-            if self.pan_offset > 32:
-                self.pan_offset = 32
+            if self.pan_offset > 16:
+                self.pan_offset = 16
                 self.pan_dir = 0
-            elif self.pan_offset < -32:
-                self.pan_offset = -32
-                self.pan_dir = 0
-            elif self.pan_offset == 0:
+            elif self.pan_offset < -16:
+                self.pan_offset = -16
                 self.pan_dir = 0
         total_shake_x = self.shake_offset[0] + self.platform_shake_offset[0]
         total_shake_y = self.shake_offset[1] + self.platform_shake_offset[1]
         # Platform
         top = platform_top + (platform_trans - bar_multiplier * platform_trans) + total_shake_y
         if self.at_range:
-            surf.blit(self.left_platform, (-23 + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
-            surf.blit(self.right_platform, (131 + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
+            surf.blit(self.left_platform, (-7 + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
+            surf.blit(self.right_platform, (147 + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
         else:
             surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + total_shake_x, top))
             surf.blit(self.right_platform, (GC.WINWIDTH / 2 + total_shake_x, top))
         # Animation
         if self.at_range:
-            right_range_offset = 24  # Tested
-            left_range_offset = -60
+            right_range_offset = 40  # Tested
+            left_range_offset = -40
         else:
             right_range_offset, left_range_offset = 0, 0
         if self.current_result:

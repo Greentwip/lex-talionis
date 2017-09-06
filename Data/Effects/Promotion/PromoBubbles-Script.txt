@@ -1,5 +1,4 @@
 pose;Attack
-ignore_range_offset
 static
 blend
 f;2;Bubble1

@@ -15,6 +15,7 @@ f;8;Attack2
 f;6;Attack3
 f;15;Attack4
 enemy_flash_white;8
+static
 f;1;Javelin1;Attack5
 screen_flash_white;4
 f;1;Javelin2;Attack5
@@ -28,6 +29,7 @@ f;2;Javelin6;Attack6
 f;1;Javelin7;Attack6
 f;2;Javelin8;Attack6
 f;1;Javelin9;Attack6
+static
 wait_for_hit;Attack6
 f;4;Attack6
 f;4;Attack7
@@ -42,6 +44,7 @@ f;3;Attack1
 f;8;Attack2
 f;6;Attack3
 f;15;Attack4
+static
 f;1;Javelin1;Attack5
 f;1;Javelin2;Attack5
 f;1;Javelin3;Attack5
@@ -54,6 +57,7 @@ f;1;Javelin6;Attack6
 f;1;Javelin7;Attack6
 f;2;Javelin8;Attack6
 f;1;Javelin9;Attack6
+static
 f;30;Attack6
 f;4;Attack7
 f;2;Stand

@@ -41,8 +41,8 @@ CavalierRangedLance ++
 PaladinUnarmed ++
 PaladinSword ++
 PaladinMagicSword ++
-PaladinLance
-PaladinRangedLance
+PaladinLance ++ 
+PaladinRangedLance ++
 === Theo ===
 KnightUnarmed ++
 KnightLance ++

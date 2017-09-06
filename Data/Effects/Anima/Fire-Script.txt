@@ -1,5 +1,5 @@
 pose;Attack
-static
+ignore_pan
 darken
 wait;1
 sound;FireCharge
@@ -34,7 +34,7 @@ wait;14
 end_parent_loop
 
 pose;Miss
-static
+ignore_pan
 darken
 wait;1
 effect;FirePillars

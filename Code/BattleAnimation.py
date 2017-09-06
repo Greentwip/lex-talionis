@@ -46,8 +46,10 @@ class BattleAnimation(object):
         # Opacity
         self.opacity = 255
         # Offset
+        self.under_static = False
         self.static = False
-        self.ignore_range_offset = False
+        self.over_static = False
+        self.ignore_pan = False
         self.lr_offset = []
 
         # Awake stuff
@@ -302,8 +304,12 @@ class BattleAnimation(object):
             self.child_effect.start_anim(self.current_pose)
         elif line[0] == 'static':
             self.static = not self.static
-        elif line[0] == 'ignore_range_offset':
-            self.ignore_range_offset = not self.ignore_range_offset
+        elif line[0] == 'over_static':
+            self.over_static = not self.over_static
+        elif line[0] == 'under_static':
+            self.under_static = not self.under_static
+        elif line[0] == 'ignore_pan':
+            self.ignore_pan = not self.ignore_pan
         elif line[0] == 'opacity':
             self.opacity = int(line[1])
         elif line[0] == 'set_parent_opacity':
@@ -403,7 +409,7 @@ class BattleAnimation(object):
         if self.base_state:
             self.num_frames = 42 * self.speed
 
-    def get_image(self, frame, shake, range_offset, pan_offset):
+    def get_image(self, frame, shake, range_offset, pan_offset, static):
         image = frame[0].copy()
         if not self.right:
             image = Engine.flip_horiz(image)
@@ -412,7 +418,12 @@ class BattleAnimation(object):
         if self.lr_offset:
             offset = offset[0] + self.lr_offset.pop(), offset[1]
         
-        left = (shake[0] + range_offset if not self.ignore_range_offset else 0) + (pan_offset if not self.static else 0)
+        left = 0
+        if not static:
+            left += shake[0] + range_offset
+        if self.at_range and not self.ignore_pan and not static:
+            left += pan_offset
+
         if self.right:
             offset = offset[0] + shake[0] + left, offset[1] + shake[1]
         else:
@@ -422,7 +433,7 @@ class BattleAnimation(object):
     def draw(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert':
             if self.current_frame is not None:
-                image, offset = self.get_image(self.current_frame, shake, range_offset, pan_offset)
+                image, offset = self.get_image(self.current_frame, shake, range_offset, pan_offset, self.static)
                 # Move the animations in at the beginning and out at the end
                 if self.entrance:
                     progress = (self.init_speed - self.entrance) / float(self.init_speed)
@@ -470,12 +481,12 @@ class BattleAnimation(object):
 
     def draw_under(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert' and self.under_frame is not None:
-            image, offset = self.get_image(self.under_frame, shake, range_offset, pan_offset)
+            image, offset = self.get_image(self.under_frame, shake, range_offset, pan_offset, self.under_static)
             # Actually draw
             Engine.blit(surf, image, offset, None, self.blend)
 
     def draw_over(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert' and self.over_frame is not None:
-            image, offset = self.get_image(self.over_frame, shake, range_offset, pan_offset)
+            image, offset = self.get_image(self.over_frame, shake, range_offset, pan_offset, self.over_static)
             # Actually draw
             Engine.blit(surf, image, offset, None, self.blend)
