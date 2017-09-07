@@ -30,14 +30,12 @@
 
 # === IMPORT MODULES ==========================================================
 import os
-import pygame
 
 # Custom imports
 import Code.imagesDict as imagesDict
 import Code.GlobalConstants as GC
 import Code.configuration as cf
 from Code import GameStateObj, Engine
-
 
 # === MAIN FUNCTION ===========================================================
 def main():
@@ -79,9 +77,9 @@ def run(gameStateObj, metaDataObj):
         Engine.music_thread.update(eventList)
 
         new_size = (GC.WINWIDTH * cf.OPTIONS['Screen Size'], GC.WINHEIGHT * cf.OPTIONS['Screen Size'])
-        pygame.transform.scale(mapSurf, new_size, GC.DISPLAYSURF)
+        Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
         # Keep gameloop (update, renders, etc) ticking
-        pygame.display.update()
+        Engine.update_display()
         gameStateObj.playtime += GC.FPSCLOCK.tick(GC.FPS)
     # === END OF MAIN GAME LOOP ===
 

@@ -13,7 +13,7 @@ ClericUnarmed ?? (Modify Serra Cleric?)
 ClericMagicLight ??
 BishopFUnarmed
 BishopFMagicLight
-BishopFMagicDark ??
+BishopFMagicDark ?? (same as light)
 === Joel ===
 FighterUnarmed ++
 FighterAxe ++
@@ -47,11 +47,11 @@ PaladinRangedLance ++
 KnightUnarmed ++
 KnightLance ++
 KnightRangedLance ++
-GeneralUnarmed
-GeneralLance
-GeneralRangedLance
-GeneralSword
-GeneralMagicSword
+GeneralUnarmed ++
+GeneralLance ++
+GeneralRangedLance ++
+GeneralSword ++ 
+GeneralMagicSword ++
 === Renae ===
 ThiefFUnarmed
 ThiefFSword

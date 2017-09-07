@@ -25,8 +25,8 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Have Level up! match the way its done in fe8... (sound)
 - Have Promotion Sound match the way its done in fe8
 --- DIALOG SYSTEM ---
-- Functions
-- Use Dictionary instead of if/elif system?
+- Functions - may be needed for Normal, Hard, Lunatic differentiation
+- Use Dictionary instead of if/elif system? -- premature optimization?
 --- ENGINE ---
 - Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle
 - Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)

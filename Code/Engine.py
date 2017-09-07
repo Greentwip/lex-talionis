@@ -39,6 +39,12 @@ def clock():
 def build_display(size):
     return pygame.display.set_mode(size)
 
+def push_display(surf, size, new_surf):
+    pygame.transform.scale(surf, size, new_surf)
+
+def update_display():
+    pygame.display.update()
+
 def remove_display():
     pygame.display.quit()
 

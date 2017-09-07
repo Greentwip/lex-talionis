@@ -124,7 +124,9 @@ class BattleAnimationManager(object):
         for line in all_lines:
             if line[0] == 'pose':
                 current_pose = line[1]
-                poses[line[1]] = []
+                if current_pose in poses:
+                    print('Warning! Pose %s already present in %s'%(current_pose, script))
+                poses[current_pose] = []
             elif line[0] == 'effect':
                 effect = line[1]
                 self.generate_effect(effect)

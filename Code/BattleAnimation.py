@@ -134,6 +134,10 @@ class BattleAnimation(object):
             self.state = 'Run'
         else:
             self.state = 'Inert'
+        # Make sure to return to correct pan if we somehow didn't
+        if self.pan_away:
+            self.pan_away = False
+            self.owner.pan_back()
         self.script_index = 0
 
     def finish(self):
@@ -170,7 +174,7 @@ class BattleAnimation(object):
             self.under_frame = None
             self.processing = False
             self.over_frame = self.frame_directory[line[2]]
-            if line(line) > 3:  # Current frame
+            if len(line) > 3:  # Current frame
                 self.current_frame = self.frame_directory[line[3]]
             else:
                 self.current_frame = None
@@ -276,6 +280,7 @@ class BattleAnimation(object):
                                            set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
             self.animations.append(anim)
+            self.owner.start_miss()
             self.partner.dodge()
         # === EFFECTS ===
         elif line[0] == 'effect':
