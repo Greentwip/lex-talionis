@@ -61,6 +61,13 @@ def flickerImageTranslucent255(image, alpha):
     
     return image
 
+def flickerImageTranslucentBlend(image, alpha):
+    alpha = Utility.clamp(alpha, 0, 255)
+    image = Engine.copy_surface(image)
+    Engine.fill(image, (alpha, alpha, alpha), None, Engine.BLEND_RGB_MULT)
+    
+    return image
+
 def flickerImageTranslucentColorKey(image, transparency):
     # 100 is most transparent. 0 is opaque.
     alpha = 255 - int(2.55*transparency)

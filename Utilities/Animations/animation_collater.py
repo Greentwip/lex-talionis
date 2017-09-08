@@ -5,9 +5,10 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
+COLORKEY = (0, 0, 0)
+FIND_COLORKEY = False
 WIDTH_LIMIT = 1024
-folder = 'general_magicsword_frames'
+folder = 'aircalibur'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
@@ -40,6 +41,8 @@ for name, number, idx in sorted(new_files):
     for x in xrange(width):
         for y in xrange(height):
             color = image.getpixel((x, y))
+            if FIND_COLORKEY and x == 0 and y == 0:
+                COLORKEY = color
             if color == COLORKEY:
                 image.putpixel((x, y), (0, 0, 0))
 
@@ -92,10 +95,12 @@ for image, name, width, height, offset in index_lines:
     x += width
 
 # Now convert 0, 0, 0 back to colorkey
+if FIND_COLORKEY:
+    COLORKEY = (0, 0, 0)
 for x in xrange(total_width):
     for y in xrange(max_height):
         color = sprite_sheet.getpixel((x, y))
-        if color == (0, 0, 0):
+        if color == (0, 0, 0):                
             sprite_sheet.putpixel((x, y), COLORKEY)
 
 sprite_sheet.save('new_spritesheet.png')
