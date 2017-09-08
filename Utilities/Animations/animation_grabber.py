@@ -6,12 +6,12 @@ import palette_index
 
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
-YLIMIT = False
-palette_set = palette_index.shine
+YLIMIT = True
+palette_set = palette_index.sleep_dust
 
-folder = 'shine/'
+folder = 'sleep_dust_unique/'
 name = 'Attack'
-name = 'Shine'
+name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')

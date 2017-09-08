@@ -566,7 +566,8 @@ class AnimationCombat(Combat):
             self.left = self.p2
             self.left_item = self.left.getMainWeapon()
         self.def_pos = def_pos
-        self.at_range = True if Utility.calculate_distance(self.p1.position, self.p2.position) > 1 else False 
+        distance = Utility.calculate_distance(self.p1.position, self.p2.position)
+        self.at_range = distance - 1 if distance > 1 else 0 
         self.item = item
         self.skill_used = skill_used
         self.event_combat = event_combat
@@ -602,10 +603,24 @@ class AnimationCombat(Combat):
         # for Panning platforms
         self.focus_right = True if self.p1 == self.right else False
         self.pan_dir = 0
-        if self.focus_right: # For range 2
-            self.pan_offset = -16
+
+        if self.at_range == 1:
+            self.pan_max = 16
+            self.pan_move = 4
+        elif self.at_range == 2:
+            self.pan_max = 32
+            self.pan_move = 8
+        elif self.at_range >= 3:
+            self.pan_max = 120
+            self.pan_move = 20
         else:
-            self.pan_offset = 16
+            self.pan_max = 0
+            self.pan_move = 0
+
+        if self.focus_right: # For range 2
+            self.pan_offset = -self.pan_max
+        else:
+            self.pan_offset = self.pan_max
 
         # for shake
         self.shake_set = [(0, 0)]
@@ -940,11 +955,10 @@ class AnimationCombat(Combat):
             self.focus_right = (self.p2 == self.right)
 
     def move_camera(self):
-        if self.at_range:
-            if self.focus_right and self.pan_offset != -16:
-                self.pan_dir = -4
-            elif not self.focus_right and self.pan_offset != 16:
-                self.pan_dir = 4
+        if self.focus_right and self.pan_offset != -self.pan_max:
+            self.pan_dir = -self.pan_move
+        elif not self.focus_right and self.pan_offset != self.pan_max:
+            self.pan_dir = self.pan_move
 
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset / float(self.max_position_offset)
@@ -958,26 +972,26 @@ class AnimationCombat(Combat):
         # Pan
         if self.pan_dir != 0:
             self.pan_offset += self.pan_dir
-            if self.pan_offset > 16:
-                self.pan_offset = 16
+            if self.pan_offset > self.pan_max:
+                self.pan_offset = self.pan_max
                 self.pan_dir = 0
-            elif self.pan_offset < -16:
-                self.pan_offset = -16
+            elif self.pan_offset < -self.pan_max:
+                self.pan_offset = -self.pan_max
                 self.pan_dir = 0
         total_shake_x = self.shake_offset[0] + self.platform_shake_offset[0]
         total_shake_y = self.shake_offset[1] + self.platform_shake_offset[1]
         # Platform
         top = platform_top + (platform_trans - bar_multiplier * platform_trans) + total_shake_y
         if self.at_range:
-            surf.blit(self.left_platform, (-7 + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
-            surf.blit(self.right_platform, (147 + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
+            surf.blit(self.left_platform, (9 - self.pan_max + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
+            surf.blit(self.right_platform, (131 + self.pan_max + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
         else:
             surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + total_shake_x, top))
             surf.blit(self.right_platform, (GC.WINWIDTH / 2 + total_shake_x, top))
         # Animation
         if self.at_range:
-            right_range_offset = 40  # Tested
-            left_range_offset = -40
+            right_range_offset = 24 + self.pan_max  # Tested
+            left_range_offset = -24 - self.pan_max
         else:
             right_range_offset, left_range_offset = 0, 0
         if self.current_result:

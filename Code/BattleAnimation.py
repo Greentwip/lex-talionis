@@ -227,7 +227,8 @@ class BattleAnimation(object):
                 self.owner.shake(3)
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
-                self.no_damage()
+                if self.owner.item.damage:
+                    self.no_damage()
         elif line[0] == 'miss':
             if self.right:
                 position = (72, 21)
@@ -250,6 +251,10 @@ class BattleAnimation(object):
             num_frames = int(line[1]) * self.speed
             color = tuple([int(num) for num in line[2].split(',')])
             self.parent.flash(num_frames, color)
+        elif line[0] == 'enemy_tint':
+            num_frames = int(line[1]) * self.speed
+            color = tuple([int(num) for num in line[2].split(',')])
+            self.partner.flash(num_frames, color)
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1]) * self.speed
             self.partner.flash(num_frames, (248, 248, 248))
@@ -302,7 +307,7 @@ class BattleAnimation(object):
             child_effect = BattleAnimation(self.partner.unit, image, script, line[1])
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
-                                            self.at_range, parent=self.parent.partner)
+                               self.at_range, parent=self.parent.partner)
             child_effect.start_anim(self.current_pose)
             self.partner.children.append(child_effect)
         elif line[0] == 'blend':

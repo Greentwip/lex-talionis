@@ -8,7 +8,7 @@ COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
 WIDTH_LIMIT = 1024
-folder = 'shine'
+folder = 'enemy_sleep_dust'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
