@@ -606,6 +606,75 @@ generic_sage = [(255, 255, 255),
                 (143, 124, 0),
                 ]
 
+riev = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (232, 240, 200), # Light skin
+                (232, 200, 136), # Med skin
+                (120, 72, 48), # Dark skin
+                (192, 64, 88), # Light Hair
+                (120, 32, 64), # Dark Hair
+                (232, 216, 224), # Light clothes
+                (200, 160, 168), # Dark clothes
+                (168, 224, 240), # Light Blue
+                (128, 176, 200), # Dark Blue
+                (248, 168, 120), # Accent 1
+                (184, 120, 208), # Light Robe
+                (128, 88, 136), # Medium Robe
+                (88, 48, 96), # Dark Robe
+                (40, 40, 40)] # Outline
+
+bishop_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 184, 96), # Med skin
+                (120, 72, 48), # Dark skin
+                (200, 152, 32), # Light Hair
+                (136, 104, 24), # Dark Hair
+                (248, 184, 144), # Light clothes
+                (224, 88, 16), # Dark clothes
+                (144, 248, 208), # Light Blue
+                (104, 200, 168), # Dark Blue
+                (248, 248, 16), # Accent 1
+                (208, 64, 8), # Light Robe
+                (168, 56, 8), # Medium Robe
+                (96, 8, 0), # Dark Robe
+                (40, 40, 40)] # Outline
+
+bishop_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 184, 96), # Med skin
+                (120, 72, 48), # Dark skin
+                (200, 152, 32), # Light Hair
+                (136, 104, 24), # Dark Hair
+                (144, 184, 248), # Light clothes
+                (56, 88, 224), # Dark clothes
+                (144, 248, 208), # Light Blue
+                (104, 200, 168), # Dark Blue
+                (248, 248, 16), # Accent 1
+                (48, 64, 208), # Light Robe
+                (48, 56, 168), # Medium Robe
+                (40, 48, 96), # Dark Robe
+                (40, 40, 40)] # Outline
+
+generic_bishop = [(255, 255, 255),
+                (0, 51, 128),
+                (157, 204, 0),
+                (143, 124, 0),
+                (194, 0, 136),
+                (128, 128, 128),
+                (255, 204, 153),
+                (25, 25, 25),
+                (76, 0, 92),
+                (43, 206, 72),
+                (0, 92, 49),
+                (255, 164, 5),
+                (153, 63, 0),
+                (0, 117, 220),
+                (240, 163, 255),
+                (148, 255, 181),
+                ]
+
 myrmidon_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
@@ -884,3 +953,6 @@ aircalibur = [(248, 248, 248),
               (120, 200, 120),
               (48, 176, 48),
             ]
+
+shine = [(248, 248, 200),
+        (248, 160, 16)]

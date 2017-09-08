@@ -7,8 +7,8 @@ effect;Gust
 wait;62
 effect;WindWave
 wait;48
-enemy_effect;WindFlash1
 enemy_effect;Aircalibur
+enemy_effect;WindFlash1
 wait;33
 enemy_flash_white;8
 screen_flash_white;5
@@ -29,8 +29,8 @@ effect;Gust
 wait;62
 effect;WindWave
 wait;48
-enemy_effect;WindFlash1
 enemy_effect;Aircalibur
+enemy_effect;WindFlash1
 wait;33
 wait;4
 miss

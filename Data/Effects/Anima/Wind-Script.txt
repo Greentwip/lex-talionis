@@ -1,5 +1,4 @@
 pose;Attack
-blend
 wait;4
 darken
 wait;4
@@ -20,7 +19,6 @@ wait;4
 end_parent_loop
 
 pose;Miss
-blend
 wait;4
 darken
 wait;4

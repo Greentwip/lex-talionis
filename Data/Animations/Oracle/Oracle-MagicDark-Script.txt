@@ -1,0 +1,36 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;7;Attack1
+# Flash back and forth
+f;2;Attack2
+f;2;Attack3
+f;2;Attack2
+f;2;Attack3
+f;2;Attack2
+f;4;Attack4
+spell
+f;2;Attack5
+f;1;Attack6
+f;2;Attack7
+f;1;Attack6
+f;1;Attack8
+f;2;Attack6
+f;3;Attack9
+f;4;Attack10
+start_loop
+	f;4;Attack11
+end_loop
+f;2;Attack12
+f;2;Attack13
+f;5;Attack14
+f;1;Stand

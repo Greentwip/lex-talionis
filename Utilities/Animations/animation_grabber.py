@@ -6,9 +6,12 @@ import palette_index
 
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
-palette_set = palette_index.aircalibur
+YLIMIT = False
+palette_set = palette_index.shine
 
-folder = 'aircalibur/'
+folder = 'shine/'
+name = 'Attack'
+name = 'Shine'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
@@ -82,8 +85,8 @@ for idx, fp in enumerate(sorted(images)):
             for y in xrange(height):
                 my_color = image.getpixel((x, y))
                 bg_color = background.getpixel((x, y))
-                if my_color == bg_color or my_color not in palette_set:
+                if my_color == bg_color or (YLIMIT and y > 112) or my_color not in palette_set:
                     image.putpixel((x, y), COLORKEY)
 
 
-    image.save('Attack' + str(idx) + '.png')
+    image.save(name + str(idx) + '.png')
