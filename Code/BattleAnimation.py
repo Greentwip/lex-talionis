@@ -226,6 +226,19 @@ class BattleAnimation(object):
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
                 self.no_damage()
+        elif line[0] == 'miss':
+            if self.right:
+                position = (72, 21)
+            else:
+                position = (128, 21)  # Enemy's position
+            team = self.owner.right.team if self.right else self.owner.left.team
+            image = GC.IMAGESDICT['MissBlue' if team == 'player' else 'MissRed']
+            anim = CustomObjects.Animation(image, position, (5, 4), ignore_map=True, 
+                                           set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                                       1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
+            self.animations.append(anim)
+            self.owner.start_hit()
+            self.partner.dodge()
         # === FLASHING ===
         elif line[0] == 'parent_tint_loop':
             num_frames = int(line[1]) * self.speed
@@ -269,19 +282,6 @@ class BattleAnimation(object):
                 self.animations.append(anim)
             else:  # No Damage
                 self.no_damage()
-        elif line[0] == 'miss':
-            if self.right:
-                position = (72, 21)
-            else:
-                position = (128, 21)  # Enemy's position
-            team = self.owner.right.team if self.right else self.owner.left.team
-            image = GC.IMAGESDICT['MissBlue' if team == 'player' else 'MissRed']
-            anim = CustomObjects.Animation(image, position, (5, 4), ignore_map=True, 
-                                           set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                                                       1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
-            self.animations.append(anim)
-            self.owner.start_miss()
-            self.partner.dodge()
         # === EFFECTS ===
         elif line[0] == 'effect':
             image, script = GC.ANIMDICT.get_effect(line[1])

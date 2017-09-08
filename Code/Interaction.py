@@ -813,11 +813,9 @@ class AnimationCombat(Combat):
 
     def start_hit(self):
         self.apply_result(self.current_result, self.gameStateObj, self.metaDataObj)
-        self.last_update = Engine.get_time()
-        self.combat_state = 'HP_Change'
-
-    def start_miss(self):
-        self.apply_result(self.current_result, self.gameStateObj, self.metaDataObj)
+        if self.current_result.outcome or self.current_result.def_damage != 0 or self.current_result.atk_damage != 0:
+            self.last_update = Engine.get_time()
+            self.combat_state = 'HP_Change'
 
     def build_viewbox(self, gameStateObj):
         vb_multiplier = self.viewbox_clamp_state / float(self.total_viewbox_clamp_states)
