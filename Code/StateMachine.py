@@ -2383,9 +2383,10 @@ class PromotionState(State):
     def start_anim(self, effect):
         anim = self.current_anim
         image, script = GC.ANIMDICT.get_effect(effect)
-        anim.child_effect = BattleAnimation.BattleAnimation(self.unit, image, script, effect)
-        anim.child_effect.awake(anim.owner, anim.partner, anim.right, anim.at_range, parent=anim)
-        anim.child_effect.start_anim('Attack')
+        child_effect = BattleAnimation.BattleAnimation(self.unit, image, script, effect)
+        child_effect.awake(anim.owner, anim.partner, anim.right, anim.at_range, parent=anim)
+        child_effect.start_anim('Attack')
+        anim.children.append(child_effect)
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
@@ -2399,14 +2400,14 @@ class PromotionState(State):
                 self.start_anim('Promotion1')
 
         elif self.current_state == 'Right':
-            if not self.current_anim.child_effect:
+            if not self.current_anim.children:
                 self.current_anim = self.left_anim
                 self.current_state = 'Left'
                 self.last_update = current_time
                 self.start_anim('Promotion2')
 
         elif self.current_state == 'Left':
-            if not self.current_anim.child_effect:
+            if not self.current_anim.children:
                 self.current_state = 'Wait'
                 self.last_update = current_time
 

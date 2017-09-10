@@ -102,6 +102,7 @@ class levelUpScreen(object):
             if self.expSet >= 100:
                 if self.unit.level%cf.CONSTANTS['max_level'] == 0: # If I would promote because I am level 20
                     GC.SOUNDDICT['Experience Gain'].stop()
+                    GC.SOUNDDICT['Level Up'].play()
                     self.state.clear()
                     self.state.changeState('prepare_promote')
                     self.state.changeState('exp_leave')
@@ -314,14 +315,14 @@ class levelUpScreen(object):
             if self.force_level and not self.first_spark_flag:
                 self.first_spark_flag = True
                 self.lastSparkUpdate = currentTime
-            elif self.screen_scroll_offset == 0 and not self.first_spark_flag and currentTime - self.lastSparkUpdate > self.SPARKTIME:
+            elif self.screen_scroll_offset == 0 and not self.first_spark_flag and currentTime - self.lastSparkUpdate > self.SPARKTIME + 500:
                 position = (87, 27)
                 spark_animation = CustomObjects.Animation(self.statupanimation, position, (11, 1), animation_speed=32, ignore_map=True)
                 self.animations.append(spark_animation)
                 self.first_spark_flag = True
                 self.lastSparkUpdate = currentTime
                 # Sound
-                # GC.SOUNDDICT['Stat Up'].play()"""
+                GC.SOUNDDICT['Level_Up_Level'].play()
             
             # Add sparks to animation list one at a time
             if self.first_spark_flag and currentTime - self.lastSparkUpdate > self.SPARKTIME:
