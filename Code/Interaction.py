@@ -411,19 +411,23 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
         if attacker_anim and defender_anim:
             # Build attacker animation
             attacker_script = attacker_anim['script']
+            attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
             if attacker.name in attacker_anim['images']:
                 attacker_frame_dir = attacker_anim['images'][attacker.name]
-            else:
-                attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
+            elif 'Generic' + attacker_color in attacker_anim['images']:
                 attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
+            else:  # Just a map combat
+                return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
             attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script)
             # Build defender animation
             defender_script = defender_anim['script']
+            defender_color = 'Blue' if defender.team == 'player' else 'Red'
             if defender.name in defender_anim['images']:
                 defender_frame_dir = defender_anim['images'][defender.name]
-            else:
-                defender_color = 'Blue' if defender.team == 'player' else 'Red'
+            elif 'Generic' + defender_color in defender_anim['images']:
                 defender_frame_dir = defender_anim['images']['Generic' + defender_color]
+            else:
+                return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
             defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script)
             return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
     # default

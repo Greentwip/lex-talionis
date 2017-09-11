@@ -101,7 +101,7 @@ class UnitObject(object):
         self.team = info['team']
         self.faction = info['faction']
         self.klass = info['klass']
-        self.gender = info['gender']
+        self.gender = int(info['gender'])
         self.level = int(info['level'])
         self.exp = info['exp'] if 'exp' in info else 0
         

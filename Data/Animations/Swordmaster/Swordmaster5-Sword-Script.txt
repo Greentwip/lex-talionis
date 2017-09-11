@@ -1,0 +1,100 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;31;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;4;Attack1
+f;4;Attack2
+f;3;Attack3
+f;4;Attack5
+f;4;Attack6
+f;8;Attack7
+# blur
+f;2;Attack8
+f;1;Attack9
+wait;25
+f;1;Attack10
+f;3;Attack11
+# Hit
+f;5;Attack12
+f;7;Attack13;Miss
+enemy_flash_white;8
+f;1;Attack13;Miss
+screen_flash_white;4
+wait;4
+# Gone!
+hit_spark
+start_hit
+wait_for_hit
+wait;18
+# Arrives from sky
+f;3;Attack14
+f;2;Attack15
+f;2;Attack16
+f;2;Attack17
+f;2;Attack18
+f;1;Attack19
+f;1;Attack20
+f;1;Attack21
+f;1;Attack22
+f;1;Attack23
+f;1;Attack24
+f;2;Attack25
+# Land
+f;1;Attack26
+f;2;Attack27
+f;1;Attack28
+f;1;Attack29
+f;2;Attack30
+f;4;Attack31
+f;1;Stand
+
+pose;Miss
+f;6;Stand
+f;4;Attack1
+f;4;Attack2
+f;3;Attack3
+f;4;Attack5
+f;4;Attack6
+f;8;Attack7
+# blur
+f;2;Attack8
+f;1;Attack9
+wait;25
+f;1;Attack10
+f;3;Attack11
+# Miss
+f;5;Attack12
+f;2;Miss
+miss
+f;10;Miss
+f;2;Run1
+f;1;Run2
+f;2;Run3
+wait;18
+# Arrives from sky
+f;3;Attack14
+f;2;Attack15
+f;2;Attack16
+f;2;Attack17
+f;2;Attack18
+f;1;Attack19
+f;1;Attack20
+f;1;Attack21
+f;1;Attack22
+f;1;Attack23
+f;1;Attack24
+f;2;Attack25
+# Land
+f;1;Attack26
+f;2;Attack27
+f;1;Attack28
+f;1;Attack29
+f;2;Attack30
+f;4;Attack31
+f;1;Stand

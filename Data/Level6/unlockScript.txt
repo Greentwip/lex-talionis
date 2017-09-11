@@ -14,7 +14,7 @@ if;self.optionalunit2 == 'Cell_1'
     u;Jack;MidLeft;u;Jeb;FarLeft
     u;{unit};Right
     # A female opens the door
-    if;self.optionalunit.gender == 'F'
+    if;self.optionalunit.gender >= 5
         s;Jeb;Thanks, gal.{w}{br}It's not everyday I'm rescued by such a beauty!{w};auto
         s;Jack;Quit mooning, Jeb.{w}{br}Let's get out of here while we still can.{w};auto
         r;Jack

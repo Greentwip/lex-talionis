@@ -795,6 +795,23 @@ joshua_swordmaster = [(128, 160, 128), # Background
                 (24, 48, 48), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+marisa = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 152), # Light skin
+                (224, 184, 88), # Med skin
+                (136, 96, 72), # Dark skin
+                (240, 144, 224), # Light Hair
+                (200, 80, 200), # Med Hair
+                (152, 40, 168), # Dark Hair
+                (176, 216, 248), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (240, 240, 240), # Light Clothes
+                (88, 112, 136), # LM Clothes
+                (48, 72, 96), # MD Clothes
+                (24, 32, 56), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 swordmaster_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 240, 168), # Light skin

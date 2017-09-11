@@ -180,7 +180,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
                 prev_class = class_dict[u_i['klass']]['promotes_from'][0]
                 if prev_class not in classes:
                     classes.insert(0, prev_class)
-            u_i['gender'] = unit.find('gender').text
+            u_i['gender'] = int(unit.find('gender').text)
             u_i['level'] = int(unit.find('level').text)
             u_i['faction'] = unit.find('faction').text
 
@@ -261,9 +261,9 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     u_i['event_id'] = legend['event_id']
     if legend['class'].endswith('F'):
         legend['class'] = legend['class'][:-1] # strip off the F
-        u_i['gender'] = 'F'
+        u_i['gender'] = 5  # Default female gender is 5
     else:
-        u_i['gender'] = 'M'
+        u_i['gender'] = 0  # Default male gender is 0
     classes = legend['class'].split(',')
     u_i['klass'] = classes[-1]
     # Give default previous class
@@ -318,7 +318,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['position'] = position
     u_i['team'] = summoner.team
     u_i['event_id'] = 0
-    u_i['gender'] = 'M'
+    u_i['gender'] = 0
     classes = classes[:summoner.level/cf.CONSTANTS['max_level']+1]
     u_i['klass'] = classes[-1]
     u_i['faction'] = summoner.faction

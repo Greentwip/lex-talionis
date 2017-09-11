@@ -3,7 +3,7 @@
     <!-- Player Characters -->
     <unit name="Ophie">
         <id>Ophie</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>8,0,0,0,0,0,0</wexp>
@@ -24,7 +24,7 @@
 
     <unit name="Prim">
         <id>Prim</id>
-        <gender>F</gender>
+        <gender>5</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,D,0,0</wexp>
@@ -45,7 +45,7 @@
 
     <unit name="Joel">
         <id>Joel</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,C,0,0,0,0</wexp>
@@ -66,7 +66,7 @@
 
     <unit name="Nia">
         <id>Nia</id>
-        <gender>F</gender>
+        <gender>5</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,C,0,0,0</wexp>
@@ -87,7 +87,7 @@
 
     <unit name="Althea">
         <id>Althea</id>
-        <gender>F</gender>
+        <gender>5</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,0,6,0</wexp>
@@ -108,7 +108,7 @@
 
     <unit name="Drake">
         <id>Drake</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>11,C,0,0,0,0,0</wexp>
@@ -129,7 +129,7 @@
 
     <unit name="Renae">
         <id>Renae</id>
-        <gender>F</gender>
+        <gender>5</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>C,0,0,0,0,0,0</wexp>
@@ -150,7 +150,7 @@
 
     <unit name="Theo">
         <id>Theo</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,C,0,0,0,0,0</wexp>
@@ -171,7 +171,7 @@
 
     <unit name="Eliza">
         <id>Eliza</id>
-        <gender>F</gender>
+        <gender>5</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,21,0,0,0,0,0</wexp>
@@ -192,7 +192,7 @@
 
     <unit name="Sam">
         <id>Sam</id>
-        <gender>M</gender>
+        <gender>0</gender>
 
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,31,0,0</wexp>
@@ -213,7 +213,7 @@
 
     <unit name="Coyote">
         <id>Coyote</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>B,0,0,0,0,0,0</wexp>
@@ -234,7 +234,7 @@
 
     <unit name="Kayla">
         <id>Kayla</id>
-        <gender>F</gender>
+        <gender>5</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,0,0,36</wexp>
@@ -256,7 +256,7 @@
     <!-- Named NPC Characters/Bosses -->
     <unit name="Yohn">
         <id>Yohn</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>A,0,0,0,0,0,0</wexp>
@@ -277,7 +277,7 @@
 
     <unit name="Kiley">
         <id>Kiley</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,A,0,0,0,0</wexp>
@@ -299,7 +299,7 @@
     <!-- Level 1 Boss -->
     <unit name="Sidney">
         <id>Sidney</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,D,0,0,0,0</wexp>
@@ -321,7 +321,7 @@
     <!-- Level 2 Boss -->
     <unit name="Brigham">
         <id>Brigham</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,0,0,D</wexp>
@@ -343,7 +343,7 @@
     <!-- Level 3 Boss -->
     <unit name="Harold">
         <id>Harold</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,C,0,0,0,0,0</wexp>
@@ -365,7 +365,7 @@
     <!-- Level 4 Boss -->
     <unit name="Anders">
         <id>Anders</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,B,0,0,0,0</wexp>
@@ -386,7 +386,7 @@
 
     <unit name="Midas">
         <id>Midas</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,0,0,0</wexp>
@@ -408,7 +408,7 @@
     <!-- Level 5 boss -->
     <unit name="Jules">
         <id>Jules</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,B,0,0,0,0</wexp>
@@ -429,7 +429,7 @@
 
     <unit name="Vincent">
         <id>Vincent</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,B,0,0,0,0</wexp>
@@ -451,7 +451,7 @@
     <!-- Level 6 Boss -->
     <unit name="Razia">
         <id>Razia</id>
-        <gender>F</gender>
+        <gender>5</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>A,0,0,0,0,0,0</wexp>
@@ -473,7 +473,7 @@
     <!-- Level 7 Boss -->
     <unit name="Marduk">
         <id>Marduk</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,A,0,0</wexp>
@@ -495,7 +495,7 @@
     <!-- Level 8 Boss -->
     <unit name="Vagnius">
         <id>Vagnius</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,0,0,A</wexp>
@@ -517,7 +517,7 @@
     <!-- Level 9 Boss -->
     <unit name="Boaz">
         <id>Boaz</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,A,0,0,0,0</wexp>
@@ -538,7 +538,7 @@
 
     <unit name="Jakin">
         <id>Jakin</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>A,0,0,A,0,0,0</wexp>
@@ -560,7 +560,7 @@
     <!-- Level 10 Boss -->
     <unit name="Adjutant">
         <id>Adjutant</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,A,0,0</wexp>
@@ -580,7 +580,7 @@
     </unit>
     <unit name="Ulver">
         <id>Ulver</id>
-        <gender>M</gender>
+        <gender>0</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>A,A,A,0,0,0,0</wexp>

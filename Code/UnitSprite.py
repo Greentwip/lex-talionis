@@ -199,8 +199,9 @@ class UnitSprite(object):
                 surf.blit(rescueIcon, topleft)
 
     def get_sprites(self, team):
-        unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + self.unit.gender]
-        unit_move_sprites = GC.UNITDICT[team + self.unit.klass + self.unit.gender + '_move']
+        gender = 'M' if self.unit.gender < 5 else 'F'
+        unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
+        unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
         return unit_stand_sprites, unit_move_sprites
 
     def loadSprites(self):

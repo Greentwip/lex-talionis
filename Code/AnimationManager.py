@@ -9,7 +9,6 @@ class BattleAnimationManager(object):
         for root, dirs, files in os.walk(home + 'Data/Animations/'):
             for name in files:
                 klass, weapon, desc = name.split('-')
-                # print(klass, weapon, desc)
                 if klass not in self.directory:
                     self.directory[klass] = {}
                 if weapon not in self.directory[klass]:
@@ -64,9 +63,8 @@ class BattleAnimationManager(object):
                 e_dict['image'] = None
             e_dict['script'] = self.parse_script(e_dict['script'])
 
-    def partake(self, klass, gender='M', item=None, magic=False, distance=1):
-        if gender == 'F':
-            klass = klass + 'F' if klass + 'F' in self.directory else klass
+    def partake(self, klass, gender=0, item=None, magic=False, distance=1):
+        klass = klass + str(gender)
         if klass in self.directory:
             self.generate(klass)
             check_item = False
