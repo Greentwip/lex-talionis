@@ -93,9 +93,9 @@ HeroRangedAxe ++
 Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper, Cleric, Bishop ++
 SentinelUnarmed ??
 SentinelAxe ??
-SwordmasterFUnarmed
-SwordmasterFSword
-SwordmasterFMagicSword
+SwordmasterFUnarmed ++
+SwordmasterFSword ++
+SwordmasterFMagicSword ++
 SkirmisherUnarmed ??
 SkirmisherLance ?? 
 SkirmisherRangedLance ??
@@ -132,12 +132,13 @@ RangedAxes <<
 RangedLances
 RangedBows
 RangedBallista
-Levin Sword << - Wind Sword
+Levin Sword << - Thunder
+Light Brand - Light Brand
 Glimmer - Lightning
 Shine << - Shine
 Corona - Divine
 Heal << - Heal
-Physic - Physic
+Physic << - Physic
 Fortune
 Restore - Restore
 Refresh
@@ -145,7 +146,7 @@ Silence - Silence
 Wind << - Arch's Wind
 Fire << - Fire
 Thunder << - Thunder
-Aether - Excalibur
+Aether - Rainbow Excalibur ? (Wind Sword palette shift)
 Fly - None?
 Flux - Flux
 Nyx - Luna

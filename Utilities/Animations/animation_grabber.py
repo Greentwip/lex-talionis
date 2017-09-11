@@ -7,9 +7,9 @@ import palette_index
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 YLIMIT = True
-palette_set = palette_index.sleep_dust
+palette_set = palette_index.physic_dust
 
-folder = 'sleep_dust_unique/'
+folder = 'physic_dust/'
 name = 'Attack'
 name = 'Dust'
 
