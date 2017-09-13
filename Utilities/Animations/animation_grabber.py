@@ -5,13 +5,13 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
+# COLORKEY = (0, 0, 0)
 YLIMIT = True
-palette_set = palette_index.physic_dust
+palette_set = palette_index.gerik
 
-folder = 'physic_dust/'
+folder = 'merc_magicsword/'
 name = 'Attack'
-name = 'Dust'
+# name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')

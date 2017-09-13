@@ -17,7 +17,7 @@ BishopFMagicDark ?? (same as light)
 === Joel ===
 FighterUnarmed ++
 FighterAxe ++
-FighterRangedAxe
+FighterRangedAxe ++
 WarriorUnarmed
 WarriorAxe
 WarriorRangedAxe
@@ -82,7 +82,7 @@ DruidFMagicDark
 === Coyote ===
 MercenaryUnarmed ++
 MercenarySword ++
-MercenaryMagicSword
+MercenaryMagicSword ++
 HeroUnarmed ++
 HeroSword ++
 HeroMagicSword ++
