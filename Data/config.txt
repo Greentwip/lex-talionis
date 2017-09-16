@@ -3,12 +3,12 @@ cheat;1
 Screen Size;3
 Animation;1
 Unit Speed;75
-Text Speed;50
+Text Speed;40
 Cursor Speed;60
 Show Terrain;1
 Show Objective;1
 Autocursor;1
-Music Volume;0.0
+Music Volume;0.3
 Sound Volume;0.3
 Autoend Turn;1
 Confirm End;1

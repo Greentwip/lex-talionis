@@ -20,12 +20,6 @@
 # Massive Unit Object
 # Super-serializable save states
 
-# --- Missing Sounds ---
-# Error sound when you try and move somewhere you should not be able to move
-# Chapter Intro Name Sound?
-# Sound made when moving the trade menu from one unit to another. Whenever you press left or right while trading
-# R Button sound in R Button Menu
-# Sound made when pressing Left or Right in R Button Menu
 # === CODE ====================================================================
 
 # === IMPORT MODULES ==========================================================

@@ -534,6 +534,10 @@ class ChoiceMenu(SimpleMenu):
 
     def toggle_info(self):
         self.info_flag = not self.info_flag
+        if self.info_flag:
+            GC.SOUNDDICT['Info In'].play()
+        else:
+            GC.SOUNDDICT['Info Out'].play()
 
     def moveDown(self, first_push=True):
         SimpleMenu.moveDown(self, first_push)

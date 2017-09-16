@@ -654,7 +654,9 @@ class MoveState(State):
                   
             # If the cursor is on a validMove that is not contiguous with a unit
             elif gameStateObj.cursor.position in self.validMoves:
-                if not gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position):
+                if gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position):
+                    GC.SOUNDDICT['Error'].play()
+                else:
                     # SOUND - Footstep sounds but no select sound
                     if cur_unit.hasAttacked: # If we've already attacked, we're done. Move to free
                         """gameStateObj.stateMachine.clear()
@@ -668,6 +670,9 @@ class MoveState(State):
                         gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('movement')
                     cur_unit.beginMovement(gameStateObj)
+
+            else:
+                GC.SOUNDDICT['Error'].play()
 
     def end(self, gameStateObj, metaDataObj):
         gameStateObj.allarrows = []
@@ -1624,17 +1629,17 @@ class TradeState(State):
 
         if event == 'RIGHT':
             if gameStateObj.activeMenu.moveRight():
-                GC.SOUNDDICT['Select 6'].play() # TODO NOT the exact SOuND
+                GC.SOUNDDICT['TradeRight'].play() # TODO NOT the exact SOuND
         elif event == 'LEFT':
             if gameStateObj.activeMenu.moveLeft():
-                GC.SOUNDDICT['Select 6'].play()
+                GC.SOUNDDICT['TradeRight'].play()
 
         elif event == 'BACK':
             if gameStateObj.activeMenu.selection2 is not None:
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.activeMenu.selection2 = None
             else:
-                GC.SOUNDDICT['Select 2'].play()
+                GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.activeMenu = None
                 if initiator.hasTraded:
                     initiator.hasMoved = True
@@ -2308,6 +2313,8 @@ class PromotionState(State):
         self.last_update = Engine.get_time()
 
         if not self.started:
+            # Start music
+            Engine.music_thread.fade_in(GC.MUSICDICT['To A Higher Place'])
             self.show_map = False
 
             self.unit = gameStateObj.cursor.currentSelectedUnit
@@ -2430,6 +2437,7 @@ class PromotionState(State):
             if current_time - self.last_update > 160:  # 10 frames
                 gameStateObj.stateMachine.changeState('transition_double_pop')
                 self.current_state = 'Done'  # Inert state
+                Engine.music_thread.fade_back()
                 return 'repeat'
 
         if self.current_anim:
