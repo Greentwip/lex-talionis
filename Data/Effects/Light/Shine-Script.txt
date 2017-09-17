@@ -5,6 +5,7 @@ pan
 wait;12
 screen_flash_white;10
 wait;11
+sound;Shine
 enemy_effect;LightClover
 wait;11
 screen_flash_white;5
@@ -28,6 +29,7 @@ pan
 wait;12
 screen_flash_white;10
 wait;11
+sound;Shine
 enemy_effect;LightClover
 wait;11
 screen_flash_white;5
