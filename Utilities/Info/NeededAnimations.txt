@@ -139,9 +139,9 @@ Shine << - Shine
 Corona - Divine
 Heal << - Heal
 Physic << - Physic
-Fortune
+Fortune << - Barrier
 Restore - Restore
-Refresh
+Refresh - Dance
 Silence - Silence
 Wind << - Arch's Wind
 Fire << - Fire

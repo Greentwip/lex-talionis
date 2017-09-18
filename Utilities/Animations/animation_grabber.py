@@ -5,12 +5,13 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
-YLIMIT = True
-palette_set = palette_index.gerik
+COLORKEY = (0, 0, 0)
+YLIMIT = 116
+XLIMIT = 0
+palette_set = palette_index.barrier_dust
 
-folder = 'merc_magicsword/'
-name = 'Attack'
+folder = 'barrier_dust_unique/'
+name = 'Dust'
 # name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
@@ -85,7 +86,7 @@ for idx, fp in enumerate(sorted(images)):
             for y in xrange(height):
                 my_color = image.getpixel((x, y))
                 bg_color = background.getpixel((x, y))
-                if my_color == bg_color or (YLIMIT and y > 112) or my_color not in palette_set:
+                if my_color == bg_color or (YLIMIT and y > YLIMIT) or (XLIMIT and x > XLIMIT) or my_color not in palette_set:
                     image.putpixel((x, y), COLORKEY)
 
 
