@@ -70,7 +70,7 @@ class InfoMenu(StateMachine.State):
 
         if self.helpMenu.current:
             if event == 'INFO' or event == 'BACK':
-                GC.SOUNDDICT['Select 4'].play() # TODO. Needs different sound
+                GC.SOUNDDICT['Info Out'].play()
                 self.helpMenu.current = None
             if 'RIGHT' in directions:
                 if self.helpMenu.help_boxes[self.helpMenu.current].right:
@@ -90,7 +90,7 @@ class InfoMenu(StateMachine.State):
                     self.helpMenu.current = self.helpMenu.help_boxes[self.helpMenu.current].down
         else:
             if event == 'INFO':
-                GC.SOUNDDICT['Select 1'].play() # TODO. Needs different sound
+                GC.SOUNDDICT['Info In'].play()
                 self.helpMenu.current = self.helpMenu.initial
             elif event == 'SELECT':
                 if self.states[self.currentState] == cf.WORDS["Personal Data"] and self.unit.team == "player":

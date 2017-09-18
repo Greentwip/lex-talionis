@@ -348,7 +348,7 @@ class StartLoad(StateMachine.State):
         elif event == 'SELECT':
             selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
             if selection.kind:
-                GC.SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Save'].play()
 
                 # gameStateObj.activeMenu = None # Remove menu
                 logger.debug('Loading game...')
@@ -362,7 +362,7 @@ class StartLoad(StateMachine.State):
                 gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
                 remove_suspend()
             else:
-                GC.SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Error'].play()
 
     def update(self, gameStateObj, metaDataObj):
         if gameStateObj.activeMenu:
@@ -435,7 +435,7 @@ class StartRestart(StartLoad):
         elif event == 'SELECT':
             selection = gameStateObj.restart_slots[gameStateObj.activeMenu.getSelectionIndex()]
             if selection.kind:
-                GC.SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Save'].play()
 
                 # gameStateObj.activeMenu = None # Remove menu
                 logger.debug('Restarting Level...')
@@ -448,7 +448,7 @@ class StartRestart(StartLoad):
                 gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
                 remove_suspend()
             else:
-                GC.SOUNDDICT['Select 4'].play()
+                GC.SOUNDDICT['Error'].play()
 
 class StartMode(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -560,14 +560,15 @@ class StartNew(StateMachine.State):
             # self.time_display.state = 'left'
 
         elif event == 'SELECT':
-            GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
             if selection.kind:
+                GC.SOUNDDICT['Select 1'].play()
                 options = [cf.WORDS['Overwrite'], cf.WORDS['Back']]
                 gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, (GC.TILEWIDTH/2, GC.WINHEIGHT - GC.TILEHEIGHT * 1.5), horizontal=True)
                 gameStateObj.stateMachine.changeState('start_newchild')
                 # self.time_display.state = 'left'
             else:
+                GC.SOUNDDICT['Save'].play()
                 self.build_new_game(gameStateObj, metaDataObj)
     
     def build_new_game(self, gameStateObj, metaDataObj):
@@ -654,7 +655,7 @@ class StartNewChild(StartNew):
         elif event == 'SELECT':
             selection = gameStateObj.childMenu.getSelection()
             if selection == 'Overwrite':
-                GC.SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Save'].play()
                 self.build_new_game(gameStateObj, metaDataObj)
             elif selection == 'Back':
                 GC.SOUNDDICT['Select 4'].play()
@@ -817,7 +818,7 @@ class StartSave(StateMachine.State):
                     gameStateObj.stateMachine.state = current_states
                 gameStateObj.stateMachine.changeState('transition_pop')
             elif event == 'SELECT':
-                GC.SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['Save'].play()
                 # self.selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
                 # Rename thing
                 name = SaveLoad.read_overview_file('Data/Level' + str(gameStateObj.counters['level']) + '/overview.txt')['name']

@@ -14,7 +14,7 @@
 #
 # --------------------------------------------
 group;Resistance;Bandit;Resistance;Nope
-player;0;0;Myrmidon;10;Iron Sword,Levin Sword;5,13;Pursue;Resistance
+player;0;0;Swordmaster;10;Iron Sword,Levin Sword;5,13;Pursue;Resistance
 player;0;0;General;1;Iron Lance,Javelin,Vulnerary,Iron Sword,Long Spear;4,12;Pursue;Resistance
 player;0;0;Mage;1;Wind,Fire,Thunder,Vulnerary;4,15;Pursue;Resistance
 player;0;0;Mercenary;10;Levin Sword,Iron Axe,Vulnerary,Angelic Robe;3,14;Pursue;Resistance
@@ -24,6 +24,6 @@ player;0;0;Cavalier;1;Iron Sword,Iron Lance,Javelin;5,14;Pursue;Resistance
 enemy;0;0;Myrmidon;1;Iron Sword;17,3;Pursue;Resistance
 enemy;0;0;Soldier;1;Iron Lance;16,2;Pursue;Resistance
 enemy;0;0;Archer;1;Willow Bow;16,5;Pursue;Resistance
-enemy;0;0;Mage;10;Fire,Vulnerary;3,15;Pursue;Resistance
+enemy;0;0;Mage;1;Fire,Vulnerary;3,15;Pursue;Resistance
 enemy;0;0;Tactician;1;Glimmer,Heal;16,4;Support;Resistance
 enemy;0;0;Mage;1;Fire;16,3;Pursue;Resistance

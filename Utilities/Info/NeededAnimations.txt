@@ -135,7 +135,7 @@ RangedBallista
 Levin Sword << - Thunder
 Light Brand - Light Brand
 Glimmer - Lightning
-Shine << - Shine
+Shine <<< - Shine
 Corona - Divine
 Heal << - Heal
 Physic << - Physic
