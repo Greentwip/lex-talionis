@@ -4,6 +4,7 @@ enemy_effect;BarrierRise
 wait;1
 enemy_effect;BarrierCurtain
 wait;5
+sound;Barrier
 enemy_effect;BarrierDust
 pan
 wait;35
@@ -26,6 +27,7 @@ enemy_effect;BarrierRise
 wait;1
 enemy_effect;BarrierCurtain
 wait;5
+sound;Barrier
 enemy_effect;BarrierDust
 pan
 wait;35

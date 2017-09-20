@@ -3,8 +3,10 @@ darken
 wait;4
 pan
 wait;14
+sound;Gust
 effect;Gust
 wait;62
+sound;WindWave
 effect;WindWave
 wait;48
 enemy_effect;Aircalibur

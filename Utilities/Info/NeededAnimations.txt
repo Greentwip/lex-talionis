@@ -2,10 +2,10 @@
 
 Players
 === Ophie ===
-MyrmidonUnarmed ++
+MyrmidonUnarmed +++
 MyrmidonSword ++
 MyrmidonMagicSword
-SwordmasterUnarmed ++
+SwordmasterUnarmed +++
 SwordmasterSword ++
 SwordmasterMagicSword ++
 === Prim ===
@@ -15,7 +15,7 @@ BishopFUnarmed
 BishopFMagicLight
 BishopFMagicDark ?? (same as light)
 === Joel ===
-FighterUnarmed ++
+FighterUnarmed +++
 FighterAxe ++
 FighterRangedAxe ++
 WarriorUnarmed
@@ -33,21 +33,21 @@ MageFMagicAnima
 SageFUnarmed
 SageFMagicAnima
 === Drake ===
-CavalierUnarmed ++
+CavalierUnarmed +++
 CavalierSword ++
 CavalierMagicSword
 CavalierLance ++
 CavalierRangedLance ++
-PaladinUnarmed ++
+PaladinUnarmed +++
 PaladinSword ++
 PaladinMagicSword ++
 PaladinLance ++ 
 PaladinRangedLance ++
 === Theo ===
-KnightUnarmed ++
+KnightUnarmed +++
 KnightLance ++
 KnightRangedLance ++
-GeneralUnarmed ++
+GeneralUnarmed +++
 GeneralLance ++
 GeneralRangedLance ++
 GeneralSword ++ 
@@ -80,10 +80,10 @@ ShamanFMagicDark
 DruidFUnarmed
 DruidFMagicDark
 === Coyote ===
-MercenaryUnarmed ++
-MercenarySword ++
+MercenaryUnarmed +++
+MercenarySword +++
 MercenaryMagicSword ++
-HeroUnarmed ++
+HeroUnarmed +++
 HeroSword ++
 HeroMagicSword ++
 HeroAxe ++
@@ -139,7 +139,7 @@ Shine <<< - Shine
 Corona - Divine
 Heal << - Heal
 Physic << - Physic
-Fortune << - Barrier
+Fortune <<< - Barrier
 Restore - Restore
 Refresh - Dance
 Silence - Silence

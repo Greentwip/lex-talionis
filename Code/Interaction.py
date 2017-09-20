@@ -418,7 +418,7 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
                 attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
             else:  # Just a map combat
                 return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
-            attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script)
+            attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, item=item)
             # Build defender animation
             defender_script = defender_anim['script']
             defender_color = 'Blue' if defender.team == 'player' else 'Red'
@@ -428,7 +428,7 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
                 defender_frame_dir = defender_anim['images']['Generic' + defender_color]
             else:
                 return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
-            defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script)
+            defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script, item=defender.getMainWeapon())
             return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
     # default
     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
@@ -830,12 +830,30 @@ class AnimationCombat(Combat):
             if self.platform_current_shake > len(self.platform_shake_set):
                 self.platform_current_shake = 0
 
-    def start_hit(self):
+    def start_hit(self, sound=True, miss=False):
         self.apply_result(self.current_result, self.gameStateObj, self.metaDataObj)
         if self.current_result.outcome or self.current_result.def_damage != 0 or self.current_result.atk_damage != 0:
             self.last_update = Engine.get_time()
             self.combat_state = 'HP_Change'
+        # Sound
+        if sound:
+            if miss:
+                GC.SOUNDDICT['Attack Miss 2'].play()
+            else:
+                self.play_hit_sound()
 
+    def play_hit_sound(self):
+        if self.current_result.defender.currenthp <= 0:
+            GC.SOUNDDICT['Final Hit'].play()
+        elif self.current_result.def_damage == 0 and (self.item.weapon or (self.item.spell and self.item.damage)):
+            GC.SOUNDDICT['No Damage'].play()
+        else:
+            if self.current_result.outcome == 2: # critical
+                sound_to_play = 'Critical Hit ' + str(random.randint(1, 2))
+            else:
+                sound_to_play = 'Attack Hit ' + str(random.randint(1, 5)) # Choose a random hit sound
+                GC.SOUNDDICT[sound_to_play].play()
+                                
     def build_viewbox(self, gameStateObj):
         vb_multiplier = self.viewbox_clamp_state / float(self.total_viewbox_clamp_states)
         # x, y, width, height
@@ -1403,7 +1421,7 @@ class MapCombat(Combat):
                                 if result.outcome == 2: # critical
                                     sound_to_play = 'Critical Hit ' + str(random.randint(1, 2))
                                 else:
-                                    sound_to_play = 'Attack Hit ' + str(random.randint(1, 4)) # Choose a random hit sound
+                                    sound_to_play = 'Attack Hit ' + str(random.randint(1, 5)) # Choose a random hit sound
                                 GC.SOUNDDICT[sound_to_play].play()
                                 if result.outcome == 2: # critical
                                     for health_bar in self.health_bars.values():

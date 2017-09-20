@@ -1,3 +1,5 @@
+import random
+
 import GlobalConstants as GC
 import Engine, Image_Modification
 import CustomObjects
@@ -20,9 +22,10 @@ class Loop(object):
 class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
 
-    def __init__(self, unit, anim, script, name=None):
+    def __init__(self, unit, anim, script, name=None, item=None):
         # print('Init:', name, anim)
         self.unit = unit
+        self.item = item
         self.frame_directory = anim
         self.poses = script
         self.current_pose = None
@@ -190,14 +193,15 @@ class BattleAnimation(object):
             self.processing = False
         # === SFX ===
         elif line[0] == 'sound':
-            GC.SOUNDDICT[line[1]].play()
+            sound = random.choice(line[1:])
+            GC.SOUNDDICT[sound].play()
         # === COMBAT HIT ===
         elif line[0] == 'start_hit':
             if self.owner.current_result.def_damage > 0:
                 self.owner.shake(1)
             else:  # No Damage
                 self.owner.shake(2)
-            self.owner.start_hit()
+            self.owner.start_hit('no_sound' not in line)
             # Also offset partner by [-1, -2, -3, -2, -1]
             self.partner.lr_offset = [-1, -2, -3, -2, -1]
         elif line[0] == 'wait_for_hit':
@@ -221,14 +225,14 @@ class BattleAnimation(object):
                 self.under_frame = self.frame_directory[line[2]]
             else:
                 self.under_frame = None
-            self.owner.start_hit()
+            self.owner.start_hit('no_sound' not in line)
             self.state = 'Wait'
             self.processing = False
             if self.owner.current_result.def_damage > 0:
                 self.owner.shake(3)
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
-                if self.owner.item.damage:
+                if self.item and self.item.damage:
                     self.no_damage()
         elif line[0] == 'miss':
             if self.right:
@@ -241,7 +245,7 @@ class BattleAnimation(object):
                                            set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
             self.animations.append(anim)
-            self.owner.start_hit()
+            self.owner.start_hit('no_sound' not in line, True)  # Miss
             self.partner.dodge()
         # === FLASHING ===
         elif line[0] == 'parent_tint_loop':
@@ -408,6 +412,7 @@ class BattleAnimation(object):
         self.flash_color = color
 
     def no_damage(self):
+        print('No Damage!')
         if self.right:
             position = (52, 21)
         else:
