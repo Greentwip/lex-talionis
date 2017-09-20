@@ -84,13 +84,13 @@ MercenaryUnarmed +++
 MercenarySword +++
 MercenaryMagicSword ++
 HeroUnarmed +++
-HeroSword ++
+HeroSword +++
 HeroMagicSword ++
 HeroAxe ++
 HeroRangedAxe ++
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper, Cleric, Bishop ++
+Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage +++, Sage ++, Archer, Sniper, Cleric, Bishop ++
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed ++

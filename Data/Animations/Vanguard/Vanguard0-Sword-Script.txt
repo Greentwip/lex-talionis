@@ -14,6 +14,7 @@ f;2;Attack1
 f;1;Attack2
 f;1;Attack3
 f;3;Attack4
+sound;Unsheathe
 f;2;Attack5
 f;5;Attack6
 f;3;Attack7
@@ -25,6 +26,7 @@ f;1;Attack12
 f;1;Attack13
 f;1;Attack14
 f;4;Attack15
+sound;Weapon Pull
 f;5;Attack16
 enemy_flash_white;8
 f;1;Attack16
@@ -54,6 +56,7 @@ f;1;Attack33
 f;1;Attack34
 f;1;Attack35
 f;2;Attack36
+sound;Sheathe
 f;4;Attack37
 f;2;Attack38
 f;2;Attack39
@@ -76,6 +79,7 @@ f;2;Attack55
 f;1;Attack56
 f;1;Attack57
 f;1;Attack58
+sound;Step Back 1
 f;3;Attack59
 platform_shake
 f;5;Attack60
@@ -93,6 +97,7 @@ f;2;Attack1
 f;1;Attack2
 f;1;Attack3
 f;3;Attack4
+sound;Unsheathe
 f;2;Attack5
 f;5;Attack6
 f;3;Attack7
@@ -104,6 +109,7 @@ f;1;Attack12
 f;1;Attack13
 f;1;Attack14
 f;4;Attack15
+sound;Weapon Pull
 f;6;Attack16
 of;2;Attack17;Miss
 miss
@@ -128,6 +134,7 @@ f;1;Attack33
 f;1;Attack34
 f;1;Attack35
 f;2;Attack36
+sound;Sheathe
 f;4;Attack37
 f;2;Attack38
 f;2;Attack39
@@ -150,6 +157,7 @@ f;2;Attack55
 f;1;Attack56
 f;1;Attack57
 f;1;Attack58
+sound;Step Back 1
 f;3;Attack59
 platform_shake
 f;5;Attack60

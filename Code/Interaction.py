@@ -838,7 +838,7 @@ class AnimationCombat(Combat):
         # Sound
         if sound:
             if miss:
-                GC.SOUNDDICT['Attack Miss 2'].play()
+                GC.SOUNDDICT['Miss'].play()
             else:
                 self.play_hit_sound()
 

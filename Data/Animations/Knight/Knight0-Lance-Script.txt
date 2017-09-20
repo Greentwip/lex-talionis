@@ -10,6 +10,7 @@ f;1;Stand
 
 pose;Attack
 f;6;Stand
+sound;KnightMove
 f;4;Attack1
 f;5;Attack2
 f;5;Attack3
@@ -35,6 +36,7 @@ f;4;Attack11
 f;4;Attack12
 f;4;Attack13
 f;10;Attack14
+sound;KnightMove
 f;4;Attack15
 f;5;Attack16
 platform_shake
@@ -47,6 +49,7 @@ f;1;Stand
 
 pose;Miss
 f;6;Stand
+sound;KnightMove
 f;4;Attack1
 f;5;Attack2
 f;5;Attack3
@@ -64,6 +67,7 @@ f;4;Attack11
 f;4;Attack12
 f;4;Attack13
 f;10;Attack14
+sound;KnightMove
 f;4;Attack15
 f;5;Attack16
 platform_shake

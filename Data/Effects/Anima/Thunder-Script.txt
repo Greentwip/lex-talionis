@@ -3,6 +3,7 @@ blend
 darken
 pan
 wait;1
+sound;Thunder
 enemy_effect;ThunderMagic
 wait;2
 enemy_flash_white;8
@@ -22,6 +23,7 @@ blend
 darken
 pan
 wait;1
+sound;Thunder
 enemy_effect;ThunderMagic
 wait;10
 miss

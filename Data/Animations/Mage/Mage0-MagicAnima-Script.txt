@@ -11,8 +11,10 @@ f;1;Stand
 pose;Attack
 f;6;Stand
 f;5;AttackBegin1
+sound;Foot Step
 f;4;AttackBegin2
 f;5;AttackBegin3
+sound;Foot Step
 f;5;AttackBegin4
 # Start initial effect
 effect;MageInit
@@ -21,6 +23,7 @@ f;4;AttackBegin6
 f;8;AttackBegin7
 # MageInit ends 1 frame into this
 f;6;AttackBegin8
+sound;Foot Step
 # Start Main Spell
 spell
 f;3;AttackBegin9
@@ -38,7 +41,9 @@ f;2;AttackEnd2
 f;2;AttackEnd3
 f;8;AttackEnd4
 f;2;AttackEnd5
+sound;Foot Step
 f;4;AttackEnd6
 f;6;AttackEnd7
+sound;Foot Step
 f;7;AttackEnd8
 f;1;Stand
