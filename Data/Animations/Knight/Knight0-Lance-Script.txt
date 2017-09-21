@@ -10,13 +10,15 @@ f;1;Stand
 
 pose;Attack
 f;6;Stand
-sound;KnightMove
+sound;Knight Step
 f;4;Attack1
 f;5;Attack2
 f;5;Attack3
 f;5;Attack4
 platform_shake
-f;12;Attack5
+f;9;Attack5
+sound;Knight Step
+f;3;Attack5
 f;6;Attack6
 f;2;Attack7;Miss
 enemy_flash_white;8
@@ -36,26 +38,29 @@ f;4;Attack11
 f;4;Attack12
 f;4;Attack13
 f;10;Attack14
-sound;KnightMove
 f;4;Attack15
+sound;Knight Step
 f;5;Attack16
 platform_shake
 f;2;Attack16
 f;10;Attack17
 f;7;Attack18
 platform_shake
+sound;Knight Step
 f;6;Attack19
 f;1;Stand
 
 pose;Miss
 f;6;Stand
-sound;KnightMove
+sound;Knight Step
 f;4;Attack1
 f;5;Attack2
 f;5;Attack3
 f;5;Attack4
 platform_shake
-f;12;Attack5
+f;9;Attack5
+sound;Knight Step
+f;3;Attack5
 f;6;Attack6
 f;2;Miss
 miss
@@ -67,13 +72,14 @@ f;4;Attack11
 f;4;Attack12
 f;4;Attack13
 f;10;Attack14
-sound;KnightMove
 f;4;Attack15
+sound;Knight Step
 f;5;Attack16
 platform_shake
 f;2;Attack16
 f;10;Attack17
 f;7;Attack18
 platform_shake
+sound;Knight Step
 f;6;Attack19
 f;1;Stand

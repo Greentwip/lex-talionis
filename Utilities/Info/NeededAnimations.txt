@@ -45,11 +45,11 @@ PaladinLance ++
 PaladinRangedLance ++
 === Theo ===
 KnightUnarmed +++
-KnightLance ++
+KnightLance +++
 KnightRangedLance ++
 GeneralUnarmed +++
 GeneralLance ++
-GeneralRangedLance ++
+GeneralRangedLance +++
 GeneralSword ++ 
 GeneralMagicSword ++
 === Renae ===
@@ -132,7 +132,7 @@ RangedAxes <<
 RangedLances
 RangedBows
 RangedBallista
-Levin Sword << - Thunder
+Levin Sword <<< - Thunder
 Light Brand - Light Brand
 Glimmer - Lightning
 Shine <<< - Shine
