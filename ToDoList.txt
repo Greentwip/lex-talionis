@@ -9,8 +9,6 @@
 - Some music doesn't loop?
 
 --- SOUNDS
-- Knight Move
-- Thunder
 - Hand Axe
 - Wind Sword Whoosh
 
@@ -31,7 +29,9 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Functions - may be needed for Normal, Hard, Lunatic differentiation
 - Use Dictionary instead of if/elif system? -- premature optimization?
 --- ENGINE ---
-- Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle
+- Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle, supports, portrait position
+	- Units:
+		- Items, Personal Skills, Unit Face, Wexp Icons, Add Unit, Remove Unit, Save to File, Color Coded Growths & Bases?
 - Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)
 - Dialogue Editor
 - Android Support

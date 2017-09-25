@@ -140,6 +140,12 @@ def transition_image_white(image):
 
     return image
 
+def print_image(image):
+    for row in xrange(image.get_width()):
+        for col in xrange(image.get_height()):
+            color = image.get_at((row, col))
+            print(color)
+
 def resize(image, scale):
     x_scale, y_scale = scale
     """scale is a float from 0 to 1"""
