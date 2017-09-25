@@ -18,24 +18,6 @@
         <desc>An ordinary commoner.</desc>
     </class>
 
-    <class name="Wagon">
-        <id>0</id>
-        <tier>1</tier>
-        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,0,0,0</wexp_gain>
-        <promotes_from></promotes_from>
-        <turns_into></turns_into>
-        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>2</movement_group>
-        <tags></tags>
-        <skills>1,Ghost</skills>
-        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>15,0,0,0,0,0,0,0</growths>
-		<bases>10,0,0,2,2,0,2,0,5,6</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
-        <desc>A merchant's wagon.</desc>
-    </class>
-
 <!-- Normal Classes -->
     <!-- Myrmidon -> Swordmaster -->
     <class name="Myrmidon">
@@ -209,7 +191,7 @@
     </class>   
 
     <class name="Paladin">
-        <id>6</id>
+        <id>105</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,1,0,0,0,0,0</wexp_gain>
@@ -343,7 +325,7 @@
 
     <!-- Archer -> Sniper -->
     <class name="Archer">
-        <id>9</id>
+        <id>10</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,1,0,0,0</wexp_gain>
@@ -399,7 +381,7 @@
     </class>
 
     <class name="Strategist">
-        <id>122</id>
+        <id>114</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,10,0,0</wexp_gain>
@@ -475,7 +457,7 @@
     </class>
 
     <class name="Sage">
-        <id>127</id>
+        <id>117</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,10,0</wexp_gain>
@@ -513,7 +495,7 @@
     </class>
 
     <class name="Warlock">
-        <id>126</id>
+        <id>119</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,0,10</wexp_gain>
@@ -533,7 +515,7 @@
 
     <!-- Raider -> Berserker -->
     <class name="Raider">
-        <id>8</id>
+        <id>9</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -551,7 +533,7 @@
     </class>
 
     <class name="Berserker">
-        <id>108</id>
+        <id>109</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,10,0,0,0,0</wexp_gain>
@@ -571,7 +553,7 @@
 
     <!-- Dracoknight -> Dracolord -->
     <class name="Dracoknight">
-        <id>9</id>
+        <id>11</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,1,0,0,0,0</wexp_gain>
@@ -589,7 +571,7 @@
     </class>
 
     <class name="Dracolord">
-        <id>109</id>
+        <id>111</id>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,1,0,0,0,0</wexp_gain>
@@ -610,7 +592,7 @@
 <!-- Enemy Only Classes -->
     <!-- Brigand -> ??? -->
     <class name="Brigand">
-        <id>11</id>
+        <id>12</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -629,7 +611,7 @@
         
     <!-- Sentinel -->
     <class name="Sentinel">
-        <id>12</id>
+        <id>13</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -647,7 +629,7 @@
     </class>  
 
     <class name="Ballista">
-        <id>13</id>
+        <id>14</id>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,1,0,0,0</wexp_gain>
@@ -666,7 +648,7 @@
 
     <!-- Archon -->
         <class name="Archon">
-        <id>201</id>
+        <id>206</id>
         <tier>3</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,1,1,0,0,0,0</wexp_gain>
@@ -701,5 +683,23 @@
 		<bases>13,3,0,1,3,0,0,0,8,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>A summoned phantom.</desc>
+    </class>
+
+    <class name="Wagon">
+        <id>30</id>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp_gain>0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>2</movement_group>
+        <tags></tags>
+        <skills>1,Ghost</skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>15,0,0,0,0,0,0,0</growths>
+        <bases>10,0,0,2,2,0,2,0,5,6</bases>
+        <max>40,15,15,15,15,20,15,15,20</max>
+        <desc>A merchant's wagon.</desc>
     </class>
 </class_info>

@@ -2015,8 +2015,9 @@ class UnitPortrait(object):
         self.bop_state = False
         self.last_bop = Engine.get_time()
 
-    def update(self):
-        current_time = Engine.get_time()
+    def update(self, current_time=None):
+        if not current_time:
+            current_time = Engine.get_time()
         # update mouth
         if self.talking and current_time - self.last_talk_update > self.next_talk_update:
             self.last_talk_update = current_time
@@ -2101,8 +2102,8 @@ class UnitPortrait(object):
                 self.bop_state = not self.bop_state
                 
         return False
-        
-    def draw(self, surf):
+
+    def create_image(self):
         if self.blinking == 2:
             if self.blink_counter.count == 0:
                 if self.expression == "Full_Blink":
@@ -2134,7 +2135,9 @@ class UnitPortrait(object):
                 self.image.blit(self.opensmile, self.mouth_position) 
             else:
                 self.image.blit(self.openmouth, self.mouth_position)
-            
+        
+    def draw(self, surf):
+        self.create_image()    
         # === MODS ===
         image_sprite = self.image.copy()
 

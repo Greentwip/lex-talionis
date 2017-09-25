@@ -31,9 +31,10 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- ENGINE ---
 - Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle, supports, portrait position
 	- Units:
-		- Items, Personal Skills, Unit Face, Wexp Icons, Add Unit, Remove Unit, Save to File, Color Coded Growths & Bases?
+		- Unit Face (Have spin boxes affect position), Save to File, Color Coded Growths & Bases?, Status Bar
 - Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)
 - Dialogue Editor
+- Combat Animation Editor
 - Android Support
 - Mac Support
 - Comment many of the functions with purposes

@@ -13,17 +13,22 @@ class generic3Counter(object):
         self.second_time = second_time
         self.third_time = self.first_time if third_time is None else third_time
         
-    def update(self):
-        current_time = Engine.get_time()
+    def update(self, current_time=None):
+        if not current_time:
+            current_time = Engine.get_time()
         if self.count == 1 and current_time - self.lastUpdate > self.second_time:
             self.increment()
             self.lastUpdate = current_time
+            return True
         elif self.count == 0 and current_time - self.lastUpdate > self.first_time:
             self.increment()
             self.lastUpdate = current_time
+            return True
         elif self.count == 2 and current_time - self.lastUpdate > self.third_time:
             self.increment()
             self.lastUpdate = current_time
+            return True
+        return False
 
     def increment(self):
         if self.count == 0:

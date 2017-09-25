@@ -490,7 +490,8 @@ def create_class_dict():
     # For each class
     for klass in GC.CLASSDATA.getroot().findall('class'):
         name = klass.get('name')
-        class_dict[name] = {'id': klass.find('id').text,
+        class_dict[name] = {'id': int(klass.find('id').text),
+                            'name': klass.get('name'),
                             'tier': klass.find('tier').text,
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                             'promotes_from': klass.find('promotes_from').text.split(',') if klass.find('promotes_from').text is not None else [],

@@ -1346,16 +1346,22 @@ class WeaponIcon(object):
         else:
             self.name = None
             self.idx = idx
-        self.grey = grey
+        self.set_grey(grey)
 
-    def draw(self, surf, topleft, cooldown=False):
+    def set_grey(self, grey):
+        self.grey = grey
+        self.create_image()
+
+    def create_image(self):
         # Weapon Icons Pictures
         if self.grey:
             weaponIcons = GC.ITEMDICT['Gray_Wexp_Icons']
         else:
             weaponIcons = GC.ITEMDICT['Wexp_Icons']
-        new_surf = Engine.subsurface(weaponIcons, (0, 16*self.idx, 16, 16))
-        surf.blit(new_surf, topleft)
+        self.image = Engine.subsurface(weaponIcons, (0, 16*self.idx, 16, 16))
+
+    def draw(self, surf, topleft, cooldown=False):
+        surf.blit(self.image, topleft)
 
 class LevelStatistic(object):
     def __init__(self, gameStateObj, metaDataObj):
