@@ -1,0 +1,395 @@
+<?xml version="1.0" ?>
+<unit_catalog>
+    <unit name="Ophie">
+        <id>Ophie</id>
+        <gender>0</gender>
+        <wexp>8,0,0,0,0,0,0</wexp>
+        <bases>12,3,1,5,7,2,1,1,5,5</bases>
+        <growths>105,55,35,75,80,80,40,40,0,0</growths>
+        <inventory>Iron Sword</inventory>
+        <level>1</level>
+        <class>Myrmidon</class>
+        <desc>A strong-hearted renegade who often acts before he thinks.</desc>
+        <faction>Resistance</faction>
+        <tags>Lord</tags>
+        <skills/>
+    </unit>
+    <unit name="Prim">
+        <id>Prim</id>
+        <gender>5</gender>
+        <wexp>0,0,0,0,1,0,0</wexp>
+        <bases>11,0,2,3,5,4,1,4,4,5</bases>
+        <growths>65,15,65,40,55,80,25,80,0,0</growths>
+        <inventory>Glimmer,Heal</inventory>
+        <level>1</level>
+        <class>Cleric</class>
+        <desc>A shy but kind-hearted young woman. Has an affinity with the spiritual.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Joel">
+        <id>Joel</id>
+        <gender>0</gender>
+        <wexp>0,0,16,0,0,0,0</wexp>
+        <bases>21,5,0,3,4,3,3,0,8,5</bases>
+        <growths>105,80,5,60,55,45,35,20,0,0</growths>
+        <inventory>Iron Axe,Vulnerary</inventory>
+        <level>3</level>
+        <class>Fighter</class>
+        <desc>A jovial former sailor. Always ready for a new adventure.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Nia">
+        <id>Nia</id>
+        <gender>5</gender>
+        <wexp>0,0,0,16,0,0,0</wexp>
+        <bases>13,4,2,5,5,3,2,1,5,5</bases>
+        <growths>80,55,35,80,80,25,20,40,0,0</growths>
+        <inventory>Willow Bow,Vulnerary</inventory>
+        <level>3</level>
+        <class>Archer</class>
+        <desc>A quiet archer most at home in the wilderness.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Althea">
+        <id>Althea</id>
+        <gender>5</gender>
+        <wexp>0,0,0,0,0,6,0</wexp>
+        <bases>11,1,5,4,5,5,2,3,4,5</bases>
+        <growths>60,15,85,40,60,60,20,55,0,0</growths>
+        <inventory>Fire,Vulnerary</inventory>
+        <level>2</level>
+        <class>Mage</class>
+        <desc>A forthright but elegant and refined sorceress.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Drake">
+        <id>Drake</id>
+        <gender>0</gender>
+        <wexp>11,16,0,0,0,0,0</wexp>
+        <bases>17,6,1,6,5,7,5,3,7,7</bases>
+        <growths>95,65,5,60,40,40,55,40,0,0</growths>
+        <inventory>Iron Sword,Iron Lance</inventory>
+        <level>5</level>
+        <class>Cavalier</class>
+        <desc>A disgraced Imperial knight now in Althea's service.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Renae">
+        <id>Renae</id>
+        <gender>5</gender>
+        <wexp>16,0,0,0,0,0,0</wexp>
+        <bases>13,3,3,5,9,3,2,3,4,6</bases>
+        <growths>95,40,60,55,95,65,35,55,0,0</growths>
+        <inventory>Iron Sword,Iron Knife,Vulnerary</inventory>
+        <level>4</level>
+        <class>Thief</class>
+        <desc>An energetic thief with a kleptomanic streak.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Theo">
+        <id>Theo</id>
+        <gender>0</gender>
+        <wexp>0,16,0,0,0,0,0</wexp>
+        <bases>18,9,0,7,3,3,8,2,9,4</bases>
+        <growths>120,55,25,40,40,45,75,40,0,0</growths>
+        <inventory>Iron Lance,Vulnerary</inventory>
+        <level>4</level>
+        <class>Knight</class>
+        <desc>An avid scholar. Interested in esoteric philosophy.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Eliza">
+        <id>Eliza</id>
+        <gender>5</gender>
+        <wexp>0,21,0,0,0,0,0</wexp>
+        <bases>13,3,0,4,6,3,3,1,7,5</bases>
+        <growths>75,65,65,80,65,35,65,35,0,0</growths>
+        <inventory>Iron Lance,Javelin</inventory>
+        <level>1</level>
+        <class>Soldier</class>
+        <desc>A moody, sarcastic soldier.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Sam">
+        <id>Sam</id>
+        <gender>0</gender>
+        <wexp>0,0,0,0,31,0,0</wexp>
+        <bases>18,3,7,8,9,7,3,7,4,5</bases>
+        <growths>65,15,35,45,55,55,40,65,0,0</growths>
+        <inventory>Shine,Mend,Fortune</inventory>
+        <level>7</level>
+        <class>Tactician</class>
+        <desc>The resistance's leader. Ambitious and inquisitive.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Coyote">
+        <id>Coyote</id>
+        <gender>0</gender>
+        <wexp>41,0,0,0,0,0,0</wexp>
+        <bases>20,9,0,11,9,4,5,2,6,5</bases>
+        <growths>120,65,5,55,40,20,35,20,0,0</growths>
+        <inventory>Rusted Sword,Vulnerary</inventory>
+        <level>9</level>
+        <class>Mercenary</class>
+        <desc>A troubled wandererer with a mysterious past.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills>fMaximum HP +5</skills>
+    </unit>
+    <unit name="Kayla">
+        <id>Kayla</id>
+        <gender>5</gender>
+        <wexp>0,0,0,0,0,0,36</wexp>
+        <bases>19,1,9,8,5,6,5,7,5,4</bases>
+        <growths>55,5,65,55,45,35,40,55,0,0</growths>
+        <inventory>Flux,Scathe,Spiritbane</inventory>
+        <level>8</level>
+        <class>Shaman</class>
+        <desc>A scheming diplomat from the Confederacy.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills>fSpeed +2</skills>
+    </unit>
+    <unit name="Yohn">
+        <id>Yohn</id>
+        <gender>0</gender>
+        <wexp>76,0,0,0,0,0,0</wexp>
+        <bases>25,9,5,12,13,5,6,6,6,6</bases>
+        <growths>0,0,0,0,0,0,0,0,0,0</growths>
+        <inventory>Mithril Sword</inventory>
+        <level>14</level>
+        <class>Swordmaster</class>
+        <desc>A devoted monk. Ophie's mentor in the way of the blade.</desc>
+        <faction>Neutral</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Kiley">
+        <id>Kiley</id>
+        <gender>0</gender>
+        <wexp>0,0,76,0,0,0,0</wexp>
+        <bases>27,12,1,9,8,6,5,3,10,6</bases>
+        <growths>0,0,0,0,0,0,0,0,0,0</growths>
+        <inventory>Rusted Axe</inventory>
+        <level>12</level>
+        <class>Berserker</class>
+        <desc>Jovial leader by acclamation of the Tyrana prisoners.</desc>
+        <faction>Resistance</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Sidney">
+        <id>Sidney</id>
+        <gender>0</gender>
+        <wexp>0,0,1,0,0,0,0</wexp>
+        <bases>17,5,0,3,3,0,3,0,8,5</bases>
+        <growths>100,50,0,50,0,0,0,0,0,0</growths>
+        <inventory>Hand Axe,Iron Axe</inventory>
+        <level>4</level>
+        <class>Fighter</class>
+        <desc>A cruel Imperial lieutenant.</desc>
+        <faction>Empire</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Brigham">
+        <id>Brigham</id>
+        <gender>0</gender>
+        <wexp>0,0,0,0,0,0,1</wexp>
+        <bases>19,1,7,5,4,5,3,6,5,4</bases>
+        <growths>100,0,100,50,50,50,0,50,0,0</growths>
+        <inventory>Flux,Angelic Robe</inventory>
+        <level>6</level>
+        <class>Shaman</class>
+        <desc>Tasked with hunting down the Empire's fugitives.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Harold">
+        <id>Harold</id>
+        <gender>0</gender>
+        <wexp>0,16,0,0,0,0,0</wexp>
+        <bases>26,9,1,6,2,4,9,5,9,4</bases>
+        <growths>100,50,0,50,0,50,50,50,0,0</growths>
+        <inventory>Steel Lance,Javelin</inventory>
+        <level>8</level>
+        <class>Knight</class>
+        <desc>Captain in the Imperial Army. Ulver's sworn man.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Anders">
+        <id>Anders</id>
+        <gender>0</gender>
+        <wexp>0,0,41,0,0,0,0</wexp>
+        <bases>23,7,0,5,6,2,5,1,7,5</bases>
+        <growths>100,50,0,0,50,0,0,0,0,0</growths>
+        <inventory>Great Axe,Hand Axe</inventory>
+        <level>8</level>
+        <class>Raider</class>
+        <desc>First lieutanent at the Tyrana Mines.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Midas">
+        <id>Midas</id>
+        <gender>0</gender>
+        <wexp>0,0,0,0,0,0,0</wexp>
+        <bases>17,0,0,3,5,0,3,2,5,6</bases>
+        <growths>0,0,0,0,0,0,0,0,0,0</growths>
+        <inventory>Sapphire</inventory>
+        <level>5</level>
+        <class>Wagon</class>
+        <desc>A greedy Imperial merchant.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Jules">
+        <id>Jules</id>
+        <gender>0</gender>
+        <wexp>0,0,41,0,0,0,0</wexp>
+        <bases>28,10,5,9,9,4,5,7,9,5</bases>
+        <growths>65,35,0,15,15,15,15,0,0,0</growths>
+        <inventory>Swordreaver,Steel Axe,Elixir</inventory>
+        <level>10</level>
+        <class>Brigand</class>
+        <desc>Boss of the Ghat mountain bandits.</desc>
+        <faction>Bandit</faction>
+        <tags>Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Vincent">
+        <id>Vincent</id>
+        <gender>0</gender>
+        <wexp>0,0,41,0,0,0,0</wexp>
+        <bases>29,11,0,7,7,1,7,5,9,5</bases>
+        <growths>0,0,0,0,0,0,0,0,0,0</growths>
+        <inventory>Great Axe,Short Axe,Energy Ring</inventory>
+        <level>10</level>
+        <class>Brigand</class>
+        <desc>Boss of the Ghat mountain bandits</desc>
+        <faction>Bandit</faction>
+        <tags>Zero_Move,Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Razia">
+        <id>Razia</id>
+        <gender>5</gender>
+        <wexp>76,0,0,0,0,0,0</wexp>
+        <bases>27,8,6,11,12,5,6,7,6,6</bases>
+        <growths>100,50,50,50,50,50,0,50,0,0</growths>
+        <inventory>Mithril Sword,Levin Sword</inventory>
+        <level>14</level>
+        <class>Swordmaster</class>
+        <desc>Harsh warden of the Tyrana Prison.</desc>
+        <faction>Empire</faction>
+        <tags>Zero_Move,Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Marduk">
+        <id>Marduk</id>
+        <gender>0</gender>
+        <wexp>0,0,0,0,76,0,0</wexp>
+        <bases>23,5,13,11,9,3,7,15,5,7</bases>
+        <growths>100,50,100,50,50,0,0,100,0,0</growths>
+        <inventory>Corona,Physic,Refresh</inventory>
+        <level>15</level>
+        <class>Strategist</class>
+        <desc>A member of the Empire's elite cadre of tacticians.</desc>
+        <faction>Empire</faction>
+        <tags>Zero_Move,Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Vagnius">
+        <id>Vagnius</id>
+        <gender>0</gender>
+        <wexp>0,0,0,0,0,0,76</wexp>
+        <bases>34,3,17,14,13,7,11,13,6,5</bases>
+        <growths>100,0,50,50,50,100,0,100,0,0</growths>
+        <inventory>Ruin,Mana Ring</inventory>
+        <level>18</level>
+        <class>Warlock</class>
+        <desc>Ruthless and cunning Imperial warlock.</desc>
+        <faction>Empire</faction>
+        <tags/>
+        <skills/>
+    </unit>
+    <unit name="Boaz">
+        <id>Boaz</id>
+        <gender>0</gender>
+        <wexp>0,0,76,0,0,0,0</wexp>
+        <bases>39,18,1,13,12,11,7,6,10,6</bases>
+        <growths>200,50,0,100,100,0,0,0,0,0</growths>
+        <inventory>Adamant Axe,Tomahawk,Elixir</inventory>
+        <level>20</level>
+        <class>Berserker</class>
+        <desc>An acclaimed hunter of rare beasts.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Jakin">
+        <id>Jakin</id>
+        <gender>0</gender>
+        <wexp>76,0,0,76,0,0,0</wexp>
+        <bases>26,9,7,17,20,9,4,9,5,7</bases>
+        <growths>100,50,50,50,0,0,0,50,0,0</growths>
+        <inventory>Longbow,Adamant Sword</inventory>
+        <level>20</level>
+        <class>Assassin</class>
+        <desc>An enigmatic masked man.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills/>
+    </unit>
+    <unit name="Adjutant">
+        <id>Adjutant</id>
+        <gender>0</gender>
+        <wexp>0,0,0,0,76,0,0</wexp>
+        <bases>34,3,11,15,13,7,11,13,5,7</bases>
+        <growths>0,0,100,0,0,0,0,0,0,0</growths>
+        <inventory>Corona,Physic</inventory>
+        <level>20</level>
+        <class>Strategist</class>
+        <desc>Archon Ulver's loyal assistant.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills>Imperial Wards</skills>
+    </unit>
+    <unit name="Ulver">
+        <id>Ulver</id>
+        <gender>0</gender>
+        <wexp>76,76,76,0,0,0,0</wexp>
+        <bases>80,19,7,20,16,13,20,18,11,6</bases>
+        <growths>0,0,0,0,0,0,0,0,0,0</growths>
+        <inventory>Makara</inventory>
+        <level>25</level>
+        <class>Archon</class>
+        <desc>Hard-nosed Imperial Archon occupying Kerala.</desc>
+        <faction>Empire</faction>
+        <tags>Boss</tags>
+        <skills>Imperial Wards</skills>
+    </unit>
+</unit_catalog>

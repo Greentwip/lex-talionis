@@ -1949,7 +1949,11 @@ class EndingsDisplay(object):
 
 class UnitPortrait(object):
     def __init__(self, portrait_name, blink_position, mouth_position, position, priority=0, mirror=False, transition=False, expression='Normal'):
-        portrait_sprite = GC.UNITDICT[portrait_name + 'Portrait'].copy()
+        self.name = portrait_name
+        try:
+            portrait_sprite = GC.UNITDICT[portrait_name + 'Portrait'].copy()
+        except KeyError:
+            raise KeyError
         self.halfblink = Engine.subsurface(portrait_sprite, (96, 48, 32, 16))
         self.fullblink = Engine.subsurface(portrait_sprite, (96, 64, 32, 16))
         self.openmouth = Engine.subsurface(portrait_sprite, (0, 96, 32, 16))
@@ -2059,7 +2063,7 @@ class UnitPortrait(object):
             self.talk_state = 0
 
         if self.blinking == 2:
-            self.blink_counter.update()
+            self.blink_counter.update(current_time)
 
         if self.transition:
             if self.transition == 'trans2color':
@@ -2119,6 +2123,8 @@ class UnitPortrait(object):
                     self.image.blit(self.halfblink, self.blink_position)
             elif self.blink_counter.count == 2:
                 self.image.blit(self.fullblink, self.blink_position)
+        elif self.blinking == 1:
+            self.image.blit(self.fullblink, self.blink_position)
 
         if self.talk_state == 0:
             if self.expression == "Smiling":

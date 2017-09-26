@@ -434,7 +434,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,B,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>29,11,0,7,7,1,7,5</bases>
+		<bases>29,11,0,7,7,1,7,5,9,0</bases>
         <growths>0,0,0,0,0,0,0,0</growths>
         
         <inventory>Great Axe,Short Axe,Energy Ring</inventory>
@@ -444,7 +444,7 @@
         <desc>Boss of the Ghat mountain bandits</desc>
         <faction>Bandit</faction>
         
-        <tags>Boss,Zero_Move</tags>
+        <tags>Boss</tags>
         <skills></skills>
     </unit>
 
@@ -456,7 +456,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>A,0,0,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>27,8,6,11,12,5,6,7</bases>
+		<bases>27,8,6,11,12,5,6,7,6,0</bases>
         <growths>100,50,50,50,50,50,0,50</growths>
         
         <inventory>Mithril Sword,Levin Sword</inventory>
@@ -466,7 +466,7 @@
         <desc>Harsh warden of the Tyrana Prison.</desc>
         <faction>Empire</faction>
         
-        <tags>Boss,Zero_Move</tags>
+        <tags>Boss</tags>
         <skills></skills>
     </unit>
 
@@ -478,7 +478,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,A,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>23,5,13,11,9,3,7,15</bases>
+		<bases>23,5,13,11,9,3,7,15,5,0</bases>
         <growths>100,50,100,50,50,0,0,100</growths>
         
         <inventory>Corona,Physic,dRefresh</inventory>
@@ -488,7 +488,7 @@
         <desc>A member of the Empire's elite cadre of tacticians.</desc>
         <faction>Empire</faction>
         
-        <tags>Boss,Zero_Move</tags>
+        <tags>Boss</tags>
         <skills></skills>
     </unit>
 

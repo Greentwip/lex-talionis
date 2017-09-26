@@ -29,9 +29,13 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Functions - may be needed for Normal, Hard, Lunatic differentiation
 - Use Dictionary instead of if/elif system? -- premature optimization?
 --- ENGINE ---
-- Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle, supports, portrait position
+- Create a GUI that build units, class, items, statuses, terrain, lore, constants, weapon triangle, supports
 	- Units:
-		- Unit Face (Have spin boxes affect position), Save to File, Color Coded Growths & Bases?, Status Bar
+		- Color Coded Growths & Bases?, Status Bar, Hover over items, skills, classes gives info?, average stats and total stats, growths, bases section
+	- Portraits:
+		portraits affect units, can't remove unit's portraits, removing a unit removes his/her portrait, adding a unit adds a portrait, remove dependence on order for portraits
+	- General:
+		prompt for save when closed
 - Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)
 - Dialogue Editor
 - Combat Animation Editor

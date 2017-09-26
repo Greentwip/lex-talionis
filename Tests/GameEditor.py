@@ -15,7 +15,7 @@ import Code.StatusObject as StatusObject
 import Code.UnitSprite as UnitSprite
 from Code.Dialogue import UnitPortrait
 
-# DATA
+# DATA XML
 try:
     import xml.etree.cElementTree as ET
 except ImportError:
@@ -26,6 +26,11 @@ try:
     PRETTY = True
 except ImportError:
     PRETTY = False
+
+def prettify(elem):
+    rough_string = ET.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="    ")
 
 # === DATA IMPORTING ===
 def build_units(class_dict, portrait_data):
@@ -98,18 +103,18 @@ class Unit(object):
 
         self.team = 'player'
         
-        blink_pos = (0, 0)
-        mouth_pos = (0, 0)
+        # blink_pos = (0, 0)
+        # mouth_pos = (0, 0)
         try:
-            # Ex: HectorPortrait
-            if self.name in portrait_data:
-                blink_pos = portrait_data[self.name]['blink']
-                mouth_pos = portrait_data[self.name]['mouth']
-            self.portrait = UnitPortrait(self.name, blink_pos, mouth_pos, (0, 0))
-            self.chibi = Engine.subsurface(GC.UNITDICT[self.name + 'Portrait'], (96, 16, 32, 32)).convert_alpha()
+            # # Ex: HectorPortrait
+            # if self.name in portrait_data:
+            #     blink_pos = portrait_data[self.name]['blink']
+            #     mouth_pos = portrait_data[self.name]['mouth']
+            # self.portrait = UnitPortrait(self.name, blink_pos, mouth_pos, (0, 0))
+            self.image = Engine.subsurface(GC.UNITDICT[self.name + 'Portrait'], (96, 16, 32, 32)).convert_alpha()
         except KeyError:
-            self.portrait = UnitPortrait('Generic', blink_pos, mouth_pos, (0, 0))
-            self.chibi = GC.UNITDICT[self.faction + 'Emblem'].convert_alpha()
+            # self.portrait = UnitPortrait('Generic', blink_pos, mouth_pos, (0, 0))
+            self.image = GC.UNITDICT[self.faction + 'Emblem'].convert_alpha()
         # self.chibi = Engine.transform_scale(self.chibi, (64, 64))
 
 # === A new unit when created ===
@@ -173,9 +178,18 @@ def create_pixmap(image, window):
     icon = QtGui.QPixmap(icon.image)
     return icon
 
-class UnitView(QtGui.QWidget):
-    teams = ['player', 'other', 'enemy', 'enemy2']
+def stretch(grid):
+    box_h = QtGui.QHBoxLayout()
+    box_h.addStretch(1)
+    box_h.addLayout(grid)
+    box_h.addStretch(1)
+    box_v = QtGui.QVBoxLayout()
+    box_v.addStretch(1)
+    box_v.addLayout(box_h)
+    box_v.addStretch(1)
+    return box_v
 
+class UnitView(QtGui.QWidget):
     def __init__(self, window):
         super(UnitView, self).__init__(window)
         self.grid = QtGui.QGridLayout()
@@ -189,37 +203,19 @@ class UnitView(QtGui.QWidget):
         self.portrait = QtGui.QLabel()
         face_grid.addWidget(self.portrait, 0, 0, 4, 4, QtCore.Qt.AlignCenter)
 
-        self.smile_button = QtGui.QPushButton('Smile')
-        self.smile_button.setCheckable(True)
-        self.smile_button.clicked.connect(self.smile)
-        self.talk_button = QtGui.QPushButton('Talk')
-        self.talk_button.setCheckable(True)
-        self.talk_button.clicked.connect(self.talk)
-        face_grid.addWidget(self.smile_button, 4, 0, 1, 2)
-        face_grid.addWidget(self.talk_button, 4, 2, 1, 2)
-
-        blink_label = QtGui.QLabel('Blink Pos. (x, y)')
-        mouth_label = QtGui.QLabel('Mouth Pos. (x, y)')
-        face_grid.addWidget(blink_label, 5, 0, 1, 2)
-        face_grid.addWidget(mouth_label, 5, 2, 1, 2)
-        self.portrait_pos_boxes = []
-        for num in xrange(4):
-            box = QtGui.QSpinBox()
-            box.setMinimum(0)
-            box.setMaximum(96)
-            face_grid.addWidget(box, 6, num)
-            self.portrait_pos_boxes.append(box)
-
         # === Character Data ===
         char_grid = QtGui.QGridLayout()
 
         # Name
         name_label = QtGui.QLabel('Name:')
-        char_grid.addWidget(name_label, 0, 0, 1, 2)
+        char_grid.addWidget(name_label, 0, 0)
         self.name = QtGui.QLineEdit()
         self.name.setMaxLength(12)
         self.name.setStatusTip("Change name")
         char_grid.addWidget(self.name, 0, 1, 1, 2)
+        self.set_name_button = QtGui.QPushButton('Change Name')
+        self.set_name_button.clicked.connect(self.change_name)
+        char_grid.addWidget(self.set_name_button, 0, 3)
         # Level
         level_label = QtGui.QLabel('Level:')
         char_grid.addWidget(level_label, 1, 0)
@@ -244,6 +240,7 @@ class UnitView(QtGui.QWidget):
                 self.klass.addItem(klass['icon'], klass['name'])
             else:
                 self.klass.addItem(klass['name'])
+        self.klass.currentIndexChanged.connect(self.class_change)
         char_grid.addWidget(self.klass, 2, 1, 1, 3)
 
         # Faction
@@ -262,6 +259,7 @@ class UnitView(QtGui.QWidget):
         desc_label = QtGui.QLabel('Desc:')
         char_grid.addWidget(desc_label, 5, 0)
         self.desc = QtGui.QTextEdit()
+        self.desc.setFixedHeight(48)
         char_grid.addWidget(self.desc, 5, 1, 2, 3)
 
         # === Stats ===
@@ -360,34 +358,18 @@ class UnitView(QtGui.QWidget):
         self.clear_skills()
 
         # === Final gridding ===
-        self.grid.addLayout(self.stretch(face_grid), 0, 0)
-        self.grid.addLayout(self.stretch(char_grid), 0, 1)
-        self.grid.addLayout(self.stretch(stat_grid), 1, 0, 1, 2)
-        self.grid.addLayout(self.stretch(wexp_grid), 2, 0, 1, 2)
-        # item_frame = QtGui.QFrame()
-        # item_frame.setFrameStyle(QtGui.QFrame.StyledPanel)
-        # item_frame.setLineWidth(0)
-        # item_frame.setLayout(self.stretch(item_grid))
-        self.grid.addLayout(self.stretch(item_grid), 3, 0)
-        self.grid.addLayout(self.stretch(skill_grid), 3, 1)
+        self.grid.addLayout(face_grid, 0, 0)
+        self.grid.addLayout(stretch(char_grid), 0, 1)
+        self.grid.addLayout(stretch(stat_grid), 1, 0, 1, 2)
+        self.grid.addLayout(stretch(wexp_grid), 2, 0, 1, 2)
+        self.grid.addLayout(stretch(item_grid), 3, 0)
+        self.grid.addLayout(stretch(skill_grid), 3, 1)
 
-        # === Timing ===
-        self.main_timer = QtCore.QTimer()
-        self.main_timer.timeout.connect(self.tick)
-        self.main_timer.start(33) # 30 FPS
-        self.elapsed_timer = QtCore.QElapsedTimer()
-        self.elapsed_timer.start()
-
-    def stretch(self, grid):
-        box_h = QtGui.QHBoxLayout()
-        box_h.addStretch(1)
-        box_h.addLayout(grid)
-        box_h.addStretch(1)
-        box_v = QtGui.QVBoxLayout()
-        box_v.addStretch(1)
-        box_v.addLayout(box_h)
-        box_v.addStretch(1)
-        return box_v
+    def change_name(self):
+        if self.current_unit:
+            new_name = str(self.name.text())
+            self.current_unit.name = new_name
+            self.window.reset_name()
 
     # Item functions
     def clear_items(self):
@@ -461,33 +443,21 @@ class UnitView(QtGui.QWidget):
                 skill_box.addItem(skill.name)
         return skill_box
 
-    # For face
-    def smile(self):
-        if self.smile_button.isChecked():
-            self.current_unit.portrait.expression ='Smiling'
-        else:
-            self.current_unit.portrait.expression = 'Normal'
-
-    def talk(self):
-        if self.talk_button.isChecked():
-            self.current_unit.portrait.talk()
-        else:
-            self.current_unit.portrait.stop_talking()
+    def class_change(self, new):
+        # Set which wexps are valid
+        valid_weapons = class_data[new]['wexp_gain']
+        for index in xrange(len(self.wexp)):
+            enable = valid_weapons[index]
+            self.wexp[index].setEnabled(enable)
+            if enable:
+                self.wexp[index].setMinimum(1)
+            else:
+                self.wexp[index].setMinimum(0)
+                self.wexp[index].setValue(0)
 
     # Displaying functions
-    def disp_unit(self, unit):
+    def display(self, unit):
         self.current_unit = unit
-
-        # Face
-        self.smile()  # Check these
-        self.talk() 
-        unit.portrait.create_image()
-        pixmap = create_pixmap(Engine.transform_scale(unit.portrait.image.convert_alpha(), (96*2, 80*2)), self.window)
-        self.portrait.setPixmap(pixmap)
-        self.portrait_pos_boxes[0].setValue(unit.portrait.blink_position[0])
-        self.portrait_pos_boxes[1].setValue(unit.portrait.blink_position[1])
-        self.portrait_pos_boxes[2].setValue(unit.portrait.mouth_position[0])
-        self.portrait_pos_boxes[3].setValue(unit.portrait.mouth_position[1])
 
         # Char data
         self.name.setText(unit.name)
@@ -521,9 +491,14 @@ class UnitView(QtGui.QWidget):
             skill_box = self.skills[index]
             skill_box.setCurrentIndex([s.id for s in skill_data].index(skill.id))
 
-    def save_current_unit(self):
+        portrait = portrait_data[unit_data.index(unit)]
+        portrait.create_image()
+        pixmap = create_pixmap(Engine.transform_scale(portrait.image.convert_alpha(), (96*2, 80*2)), self.window)
+        self.portrait.setPixmap(pixmap)
+
+    def save_current(self):
         if self.current_unit:
-            self.current_unit.name = str(self.name.text())
+            # self.current_unit.name = str(self.name.text())
             # self.current_unit.team = str(self.team.currentText())
             self.current_unit.gender = int(self.gender.value())
             self.current_unit.level = int(self.level.value())
@@ -552,104 +527,233 @@ class UnitView(QtGui.QWidget):
             for index, skill_box in enumerate(self.skills[:self.num_skills]):
                 self.current_unit.skills.append(skill_data[skill_box.currentIndex()])
 
-    def tick(self):
-        # Update global sprite counters
-        current_time = self.elapsed_timer.elapsed()
-        
+    def tick(self, current_time):
         if GC.PASSIVESPRITECOUNTER.update(current_time):
             for index, klass in enumerate(class_data):
                 klass['icon'] = create_icon(klass['images'][GC.PASSIVESPRITECOUNTER.count], window)
                 self.klass.setItemIcon(index, klass['icon'])
 
-        if self.current_unit:
-            self.current_unit.portrait.update(current_time)
-            self.current_unit.portrait.create_image()
-            pixmap = create_pixmap(Engine.transform_scale(self.current_unit.portrait.image.convert_alpha(), (96*2, 80*2)), self.window)
+class PortraitView(QtGui.QWidget):
+    def __init__(self, window):
+        super(PortraitView, self).__init__(window)
+        self.grid = QtGui.QGridLayout()
+        self.window = window
+        # window.setLayout(self.grid)
+        self.current_portrait = None
+
+        # === Unit Face Display ===
+        face_grid = QtGui.QGridLayout()
+
+        self.portrait = QtGui.QLabel()
+        face_grid.addWidget(self.portrait, 0, 0, 4, 4, QtCore.Qt.AlignCenter)
+
+        face2_grid = QtGui.QHBoxLayout()
+        self.blink_button = QtGui.QPushButton('Blink')
+        self.blink_button.setCheckable(True)
+        self.blink_button.clicked.connect(self.blink)
+        self.smile_button = QtGui.QPushButton('Smile')
+        self.smile_button.setCheckable(True)
+        self.smile_button.clicked.connect(self.smile)
+        self.talk_button = QtGui.QPushButton('Talk')
+        self.talk_button.setCheckable(True)
+        self.talk_button.clicked.connect(self.talk)
+        face2_grid.addWidget(self.blink_button)
+        face2_grid.addWidget(self.smile_button)
+        face2_grid.addWidget(self.talk_button)
+        face_grid.addLayout(face2_grid, 4, 0, 1, 4)
+
+        blink_label = QtGui.QLabel('Blink Pos. (x, y)')
+        mouth_label = QtGui.QLabel('Mouth Pos. (x, y)')
+        face_grid.addWidget(blink_label, 5, 0, 1, 2)
+        face_grid.addWidget(mouth_label, 5, 2, 1, 2)
+        self.pos_boxes = []
+        self.portrait_change = True
+        for num in xrange(4):
+            box = QtGui.QSpinBox()
+            box.setMinimum(0)
+            box.setMaximum(96)
+            box.valueChanged.connect(self.spin_box_change)
+            face_grid.addWidget(box, 6, num)
+            self.pos_boxes.append(box)
+
+        # Name
+        char_grid = QtGui.QGridLayout()
+        name_label = QtGui.QLabel('Name:')
+        char_grid.addWidget(name_label, 0, 0)
+        self.name = QtGui.QLineEdit()
+        self.name.setMaxLength(12)
+        self.name.setStatusTip("Change name")
+        char_grid.addWidget(self.name, 0, 1)
+        reload_button = QtGui.QPushButton('Find')
+        reload_button.clicked.connect(self.reload_current)
+        char_grid.addWidget(reload_button, 0, 2)
+
+        self.grid.addLayout(face_grid, 0, 0)
+        self.grid.addLayout(char_grid, 1, 0)
+            
+    # For face
+    def blink(self):
+        if self.blink_button.isChecked():
+            self.current_portrait.blinking = 1
+        else:
+            self.current_portrait.blinking = 2
+
+    def smile(self):
+        if self.smile_button.isChecked():
+            self.current_portrait.expression ='Smiling'
+        else:
+            self.current_portrait.expression = 'Normal'
+
+    def talk(self):
+        if self.talk_button.isChecked():
+            self.current_portrait.talk()
+        else:
+            self.current_portrait.stop_talking()
+
+    def reload_current(self):
+        if self.current_portrait:
+            name = str(self.name.text())
+            try:
+                new_portrait = UnitPortrait(name, self.current_portrait.blink_position, self.current_portrait.mouth_position, (0, 0))
+                self.window.data[self.window.list.currentRow()] = new_portrait
+                self.current_portrait = new_portrait
+            except KeyError:
+                # Show pop-up
+                message_box = QtGui.QMessageBox()
+                message_box.setText("No png file named %s found in Data/Characters/" % (name + 'Portrait.png'))
+                message_box.exec_()
+            self.window.reset_name()
+            self.window.reset_icon()
+
+    def spin_box_change(self):
+        if self.portrait_change:
+            self.current_portrait.blink_position = self.pos_boxes[0].value(), self.pos_boxes[1].value()
+            self.current_portrait.mouth_position = self.pos_boxes[2].value(), self.pos_boxes[3].value()
+
+    # Displaying functions
+    def display(self, portrait):
+        self.current_portrait = portrait
+
+        # Name
+        self.name.setText(portrait.name)
+
+        # Face
+        self.smile()  # Check these
+        self.talk() 
+        portrait.create_image()
+        pixmap = create_pixmap(Engine.transform_scale(portrait.image.convert_alpha(), (96*2, 80*2)), self.window)
+        self.portrait.setPixmap(pixmap)
+        self.portrait_change = False
+        self.pos_boxes[0].setValue(portrait.blink_position[0])
+        self.pos_boxes[1].setValue(portrait.blink_position[1])
+        self.pos_boxes[2].setValue(portrait.mouth_position[0])
+        self.pos_boxes[3].setValue(portrait.mouth_position[1])
+        self.portrait_change = True
+
+    def save_current(self):
+        pass
+
+    def tick(self, current_time):
+        if self.current_portrait:
+            self.current_portrait.update(current_time)
+            self.current_portrait.create_image()
+            pixmap = create_pixmap(Engine.transform_scale(self.current_portrait.image.convert_alpha(), (96*2, 80*2)), self.window)
             self.portrait.setPixmap(pixmap)
 
-class UnitMenu(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super(UnitMenu, self).__init__(parent)
+class GenericMenu(QtGui.QWidget):
+    def __init__(self, data, kind, view, parent=None):
+        super(GenericMenu, self).__init__(parent)
 
+        self.data = data
+        self.kind = kind
         # Create list
-        self.unit_list = QtGui.QListWidget(self)
-        self.unit_list.setMinimumSize(128, 320)
-        self.unit_list.uniformItemSizes = True
-        self.unit_list.setDragDropMode(self.unit_list.InternalMove)
-        self.unit_list.setIconSize(QtCore.QSize(32, 32))
+        self.list = QtGui.QListWidget(self)
+        self.list.setMinimumSize(128, 320)
+        self.list.uniformItemSizes = True
+        self.list.setDragDropMode(self.list.InternalMove)
+        self.list.setIconSize(QtCore.QSize(32, 32))
 
-        for index, unit in enumerate(unit_data):
-            icon = create_icon(unit.chibi, self)
-            item = QtGui.QListWidgetItem(unit.name)
+        for index, datum in enumerate(data):
+            icon = create_icon(datum.image, self)
+            item = QtGui.QListWidgetItem(datum.name)
             item.setIcon(icon)
-            self.unit_list.addItem(item)
+            self.list.addItem(item)
 
-        self.unit_list.currentItemChanged.connect(self.on_item_changed)
-        self.unit_list.model().rowsMoved.connect(self.on_reorder)
+        self.list.currentItemChanged.connect(self.on_item_changed)
+        self.list.model().rowsMoved.connect(self.on_reorder)
 
-        self.add_unit_button = QtGui.QPushButton("Add Unit")
-        self.add_unit_button.clicked.connect(self.add_unit)
-        self.add_unit_button.setStatusTip("Insert a new unit")
-        self.remove_unit_button = QtGui.QPushButton("Remove Unit")
-        self.remove_unit_button.clicked.connect(self.remove_unit)
-        self.remove_unit_button.setStatusTip("Remove selected unit")
+        self.add_button = QtGui.QPushButton("Add " + kind)
+        self.add_button.clicked.connect(self.add)
+        self.add_button.setStatusTip("Insert a new " + kind.lower())
+        self.remove_button = QtGui.QPushButton("Remove " + kind)
+        self.remove_button.clicked.connect(self.remove)
+        self.remove_button.setStatusTip("Remove selected " + kind.lower() + " data")
         self.save_button = QtGui.QPushButton("Save to File")
-        self.save_button.clicked.connect(self.save_to_file)
-        self.save_button.setStatusTip("Write out current characters to file")
+        self.save_button.clicked.connect(self.save)
+        self.save_button.setStatusTip("Write out current " + kind.lower() + " data to file")
         button_grid = QtGui.QGridLayout()
-        button_grid.addWidget(self.add_unit_button, 0, 0)
-        button_grid.addWidget(self.remove_unit_button, 1, 0)
+        button_grid.addWidget(self.add_button, 0, 0)
+        button_grid.addWidget(self.remove_button, 1, 0)
         button_grid.addWidget(self.save_button, 2, 0)
 
         # Create view
-        self.unit_view = UnitView(self)
+        self.view = view(self)
 
         # Create layout
         self.grid = QtGui.QGridLayout()
         self.setLayout(self.grid)
 
-        self.grid.addWidget(self.unit_list, 0, 0)
+        self.grid.addWidget(self.list, 0, 0)
         self.grid.addLayout(button_grid, 1, 0)
-        self.grid.addLayout(self.unit_view.grid, 0, 1, 2, 1)
+        self.grid.addLayout(self.view.grid, 0, 1, 2, 1)
+
+    def tick(self, current_time):
+        self.view.tick(current_time)
 
     def on_item_changed(self, curr, prev):
-        current_idx = self.unit_list.row(curr)
-        unit = unit_data[current_idx]
-        self.unit_view.save_current_unit()
-        self.unit_view.disp_unit(unit)
+        current_idx = self.list.row(curr)
+        d = self.data[current_idx]
+        self.view.save_current()
+        self.view.display(d)
 
     def on_reorder(self, row, old_idx, new_idx):
-        moved_unit = unit_data.pop(old_idx)
-        new_idx = self.unit_list.currentRow()
-        unit_data.insert(new_idx, moved_unit)
+        moved_d = self.data.pop(old_idx)
+        new_idx = self.list.currentRow()
+        self.data.insert(new_idx, moved_d)
 
-    def add_unit(self):
+    def remove(self):
+        idx = self.list.currentRow()
+        del self.data[idx]
+        self.list.takeItem(idx)
+        if idx < len(self.data):
+            new = self.data[idx]
+            self.view.display(new)
+        else:
+            self.view.display(self.data[-1])
+
+    def reset_name(self):
+        idx = self.list.currentRow()
+        item = self.list.currentItem()
+        item.setText(self.data[idx].name)
+
+    def reset_icon(self):
+        idx = self.list.currentRow()
+        item = self.list.currentItem()
+        item.setIcon(create_icon(self.data[idx].image.convert_alpha(), self))
+
+class UnitMenu(GenericMenu):
+    def add(self):
         unit = DefaultUnit()
-        current_idx = self.unit_list.currentRow()
+        current_idx = self.list.currentRow()
         unit_data.insert(current_idx + 1, unit)
-        icon = create_icon(unit.chibi, self)
+        icon = create_icon(unit.image, self)
         item = QtGui.QListWidgetItem(unit.name)
         item.setIcon(icon)
-        self.unit_list.insertItem(current_idx + 1, item)
+        self.list.insertItem(current_idx + 1, item)
 
-    def remove_unit(self):
-        idx = self.unit_list.currentRow()
-        del unit_data[idx]
-        self.unit_list.takeItem(idx)
-        if idx < len(unit_data):
-            new_current_unit = unit_data[idx]
-            self.unit_view.disp_unit(new_current_unit)
-        else:
-            self.unit_view.disp_unit(unit_data[-1])
-
-    def save_to_file(self):
-        def prettify(elem):
-            rough_string = ET.tostring(elem, 'utf-8')
-            reparsed = minidom.parseString(rough_string)
-            return reparsed.toprettyxml(indent="    ")
-
+    def save(self):
         root = ET.Element("unit_catalog")
-        for u in unit_data:
+        for u in self.data:
             unit = ET.SubElement(root, "unit", name=u.name)
             ET.SubElement(unit, "id").text = u.name
             ET.SubElement(unit, "gender").text = str(u.gender)
@@ -676,6 +780,35 @@ class UnitMenu(QtGui.QWidget):
         message_box.setText("Saved to units.xml")
         message_box.exec_()
 
+class PortraitMenu(GenericMenu):
+    def add(self):
+        portrait = UnitPortrait('Generic', (0, 0), (0, 0), (0, 0))
+        current_idx = self.list.currentRow()
+        self.data.insert(current_idx + 1, portrait)
+        icon = create_icon(portrait.image, self)
+        item = QtGui.QListWidgetItem(portrait.name)
+        item.setIcon(icon)
+        self.list.insertItem(current_idx + 1, item)
+
+    def save(self):
+        root = ET.Element("portrait_info")
+        for p in self.data:
+            unit = ET.SubElement(root, "portrait", name=p.name)
+            ET.SubElement(unit, "blink").text = ','.join([str(pos) for pos in p.blink_position])
+            ET.SubElement(unit, "mouth").text = ','.join([str(pos) for pos in p.mouth_position])
+
+        if PRETTY:
+            with open("portrait_coords.xml", 'w') as fp:
+                fp.write(prettify(root))
+        else:
+            tree = ET.ElementTree(root)
+            tree.write("portrait_coords.xml")
+
+        # Show pop-up
+        message_box = QtGui.QMessageBox()
+        message_box.setText("Saved to portrait_coords.xml")
+        message_box.exec_()
+
 class MainEditor(QtGui.QMainWindow):
     def __init__(self):
         super(MainEditor, self).__init__()
@@ -693,23 +826,47 @@ class MainEditor(QtGui.QMainWindow):
         self.item_tab = QtGui.QWidget()
         self.skill_tab = QtGui.QWidget()
         self.lore_tab = QtGui.QWidget()
+        self.portrait_tab = QtGui.QWidget()
         self.tabs.addTab(self.unit_tab, "Units")
         self.tabs.addTab(self.class_tab, "Classes")
         self.tabs.addTab(self.item_tab, "Items")
         self.tabs.addTab(self.skill_tab, "Skills")
         self.tabs.addTab(self.lore_tab, "Lore")
+        self.tabs.addTab(self.portrait_tab, "Portraits")
+        self.tab_list = []
 
         self.tabs.currentChanged.connect(self.page_swap)
 
+        # === Timing ===
+        self.main_timer = QtCore.QTimer()
+        self.main_timer.timeout.connect(self.tick)
+        self.main_timer.start(33) # 30 FPS
+        self.elapsed_timer = QtCore.QElapsedTimer()
+        self.elapsed_timer.start()
+
     def start(self):
         self.load_unit_tab()
+        self.load_portrait_tab()
 
-    def page_swap(self, prev, new):
+    def tick(self):
+        current_time = self.elapsed_timer.elapsed()
+        for tab in self.tab_list:
+            if hasattr(tab, 'tick'):
+                tab.tick(current_time)
+
+    def page_swap(self, new):
+        # new is index of tab
         pass
 
     def load_unit_tab(self):
-        self.unit_menu = UnitMenu()
+        self.unit_menu = UnitMenu(unit_data, 'Unit', UnitView)
         self.unit_tab.setLayout(self.unit_menu.grid)
+        self.tab_list.append(self.unit_menu)
+
+    def load_portrait_tab(self):
+        self.portrait_menu = PortraitMenu(portrait_data, 'Portrait', PortraitView)
+        self.portrait_tab.setLayout(self.portrait_menu.grid)
+        self.tab_list.append(self.portrait_menu)
 
 def load_data(window):
     item_data = [ItemMethods.itemparser(item)[0] for item in GC.ITEMDATA]
@@ -722,14 +879,26 @@ def load_data(window):
     for skill in skill_data:
         if skill.icon:
             skill.icon = create_icon(skill.icon.convert_alpha(), window)
-    portrait_data = SaveLoad.create_portrait_dict()
+    portrait_dict = SaveLoad.create_portrait_dict()
+    
     class_dict = SaveLoad.create_class_dict()
     for klass in class_dict.values():
         generic_unit = GenericUnit(klass['name'])
         klass['images'] = (generic_unit.image1, generic_unit.image2, generic_unit.image3)
         klass['icon'] = create_icon(klass['images'][0], window)
     class_data = sorted([klass for klass in class_dict.values()], key=lambda x: (x['id']%100, x['id']))
-    unit_data = build_units(class_dict, portrait_data)
+    unit_data = build_units(class_dict, portrait_dict)
+    unit_names = {unit.name for unit in unit_data}
+    # Setting up portrait data
+    portrait_data = []
+    for unit in unit_data:
+        portrait_data.append(UnitPortrait(unit.name, portrait_dict[unit.name]['blink'], portrait_dict[unit.name]['mouth'], (0, 0)))
+    for name, portrait in portrait_dict.items():
+        if name not in unit_names:
+            portrait_data.append(UnitPortrait(name, portrait['blink'], portrait['mouth'], (0, 0)))
+    for portrait in portrait_data:
+        portrait.create_image()
+        portrait.image = portrait.image.convert_alpha()
 
     return unit_data, class_dict, class_data, item_data, skill_data, portrait_data
 

@@ -525,7 +525,7 @@ def create_lore_dict():
 
 # === CREATE PORTRAIT_DICTIONARY =============================================
 def create_portrait_dict():
-    portrait_dict = {}
+    portrait_dict = OrderedDict()
     for portrait in GC.PORTRAITDATA.getroot().findall('portrait'):
         portrait_dict[portrait.get('name')] = {'mouth': [int(coord) for coord in portrait.find('mouth').text.split(',')],
                                                'blink': [int(coord) for coord in portrait.find('blink').text.split(',')]}

@@ -139,9 +139,9 @@ class UnitObject(object):
         self.wexp = info['wexp']
 
         # Check if this unit should not be able to move
-        if 'Zero_Move' in self.tags:
-            self.stats['MOV'] = Stat(0)
-            self.movement_left = 0
+        # if 'Zero_Move' in self.tags:
+        #     self.stats['MOV'] = Stat(0)
+        #     self.movement_left = 0
 
         # --- Item list
         # --- ADD ITEMS ---
