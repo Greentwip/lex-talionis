@@ -486,7 +486,7 @@ def class_skill_parser(skill_text):
 
 # === CREATE CLASS DICTIONARY ================================================
 def create_class_dict():
-    class_dict = {}
+    class_dict = OrderedDict()
     # For each class
     for klass in GC.CLASSDATA.getroot().findall('class'):
         name = klass.get('name')
@@ -494,10 +494,10 @@ def create_class_dict():
                             'name': klass.get('name'),
                             'tier': klass.find('tier').text,
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
-                            'promotes_from': klass.find('promotes_from').text.split(',') if klass.find('promotes_from').text is not None else [],
+                            'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
                             'turns_into': klass.find('turns_into').text.split(',') if klass.find('turns_into').text is not None else [],
                             'movement_group': int(klass.find('movement_group').text),
-                            'tags': klass.find('tags').text,
+                            'tags': set(klass.find('tags').text.split(',')) if klass.find('tags').text is not None else set(),
                             'skills': class_skill_parser(klass.find('skills').text),
                             'growths': intify_comma_list(klass.find('growths').text),
                             'bases': intify_comma_list(klass.find('bases').text),

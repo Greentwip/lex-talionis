@@ -9,11 +9,11 @@ logger = logging.getLogger(__name__)
 
 # === New Status Object ========================================================
 class StatusObject(object):
-    def __init__(self, s_id, name, components, desc, icon_index=(0, 0)):
+    def __init__(self, s_id, name, components, desc, image_index=(0, 0)):
         self.id = s_id
         self.name = name
         self.desc = desc
-        self.icon_index = icon_index
+        self.image_index = image_index
 
         self.children = []
 
@@ -31,7 +31,7 @@ class StatusObject(object):
         return self.name
 
     def removeSprites(self):
-        self.icon = None
+        self.image = None
         self.cooldown = None
         if self.upkeep_animation:
             self.upkeep_animation.removeSprites()
@@ -41,7 +41,7 @@ class StatusObject(object):
             self.active.item.removeSprites()
 
     def loadSprites(self):
-        self.icon = Engine.subsurface(GC.ITEMDICT['Skills'], (16*self.icon_index[0], 16*self.icon_index[1], 16, 16)) if self.icon_index else None
+        self.image = Engine.subsurface(GC.ITEMDICT['Skills'], (16*self.image_index[0], 16*self.image_index[1], 16, 16)) if self.image_index else None
         self.cooldown = GC.IMAGESDICT['IconCooldown']
         if self.upkeep_animation:
             self.upkeep_animation.loadSprites()
@@ -65,8 +65,8 @@ class StatusObject(object):
         return serial_dict
 
     def draw(self, surf, topleft, cooldown=True):
-        if self.icon:
-            surf.blit(self.icon, topleft)
+        if self.image:
+            surf.blit(self.image, topleft)
 
         # Cooldown
         if cooldown:
@@ -563,11 +563,11 @@ def statusparser(s_id):
                 components = []
             name = status.get('name')
             desc = status.find('desc').text
-            icon_index = status.find('icon_index').text if status.find('icon_index') is not None else None
-            if icon_index:
-                icon_index = tuple(int(num) for num in icon_index.split(','))
+            image_index = status.find('image_index').text if status.find('image_index') is not None else None
+            if image_index:
+                image_index = tuple(int(num) for num in image_index.split(','))
             else:
-                icon_index = (0, 0)
+                image_index = (0, 0)
 
             my_components = {}
             for component in components:
@@ -652,7 +652,7 @@ def statusparser(s_id):
                 else:
                     my_components[component] = True
 
-            currentStatus = StatusObject(s_id, name, my_components, desc, icon_index)
+            currentStatus = StatusObject(s_id, name, my_components, desc, image_index)
 
             return currentStatus
 

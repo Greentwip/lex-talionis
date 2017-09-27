@@ -1,5 +1,6 @@
 max_items;5
 max_stat;20
+max_promotions;10
 speed_to_double;4
 mounted_aid;15
 crit;0

@@ -1,10 +1,17 @@
 <status_catalog>
     <!-- STATUS -->
+    <status name="Feat">
+        <id>Feat</id>
+        <desc>Generic Feat placeholder</desc>
+        <image_index>0,0</image_index>
+        <components>hidden</components>
+    </status>
+
 	<!-- Ever-lasting Regeneration -->
 	<status name="Regeneration">
 		<id>Regeneration</id>
 		<desc>Regenerate HP every turn.</desc>
-		<icon_index>1,2</icon_index>
+		<image_index>1,2</image_index>
 		<components>hp_percentage,class_skill,upkeep_animation</components>
 
 		<hp_percentage>30</hp_percentage>
@@ -14,7 +21,7 @@
     <status name="Regeneration">
         <id>tile_Regeneration</id>
         <desc>Regenerate a fifth of max HP every turn.</desc>
-        <icon_index>1,2</icon_index>
+        <image_index>1,2</image_index>
         <components>hp_percentage</components>
 
         <hp_percentage>20</hp_percentage>
@@ -24,7 +31,7 @@
 	<status name="Poisoned">
 		<id>Poison</id>
 		<desc>All stats lowered by 2.</desc>
-		<icon_index>3,4</icon_index>
+		<image_index>3,4</image_index>
 		<components>stat_change,always_animation,time,negative</components>
 
 		<time>6</time>
@@ -38,7 +45,7 @@
 	<status name="Resistant">
 		<id>Resistant</id>
 		<desc>Grants increased magical resistance.</desc>
-		<icon_index>5,5</icon_index>
+		<image_index>5,5</image_index>
 		<components>stat_change,upkeep_stat_change,time</components>
 
 		<time>5</time>
@@ -51,7 +58,7 @@
 	<status name="Barkskin">
 		<id>Barkskin</id>
 		<desc>Grants DEF +5, but inflicts SPD -4.</desc>
-		<icon_index>9,8</icon_index>
+		<image_index>9,8</image_index>
 		<components>stat_change,time</components>
 
 		<time>5</time>
@@ -63,7 +70,7 @@
 	<status name="Stun">
 		<id>Stun</id>
 		<desc>Paralyzed. Cannot move, attack, or counterattack.</desc>
-		<icon_index>9,7</icon_index>
+		<image_index>9,7</image_index>
 		<components>stat_change,no_weapons,always_animation,time,negative,stun,affects_movement</components>
 
 		<time>2</time>
@@ -77,7 +84,7 @@
     <status name="Silence">
         <id>Silence</id>
         <desc>Cannot use magic.</desc>
-        <icon_index>7,0</icon_index>
+        <image_index>7,0</image_index>
         <components>no_magic_weapons,always_animation,time,negative</components>
 
         <time>2</time>
@@ -89,7 +96,7 @@
     <status name="Ephemeral">
         <id>Ephemeral</id>
         <desc>This unit dissapears when this status is removed.</desc>
-        <icon_index>9,3</icon_index>
+        <image_index>9,3</image_index>
         <components>time,negative,ephemeral</components>
 
         <time>5</time>
@@ -99,7 +106,7 @@
     <status name="Good Fortune">
         <id>Fortune</id>
         <desc>Grants hit +50.</desc>
-        <icon_index>10,2</icon_index>
+        <image_index>10,2</image_index>
         <components>hit,time</components>
 
         <time>1</time>
@@ -110,7 +117,7 @@
     <status name="Clear">
     	<id>Clear</id>
     	<desc>Removes most negative statuses.</desc>
-		<icon_index>0,0</icon_index>
+		<image_index>0,0</image_index>
     	<components>clear,momentary</components>
     </status>
 
@@ -118,7 +125,7 @@
     <status name="Reflect">
         <id>Reflect</id>
         <desc>Negative statuses are reflected back at the attacker.</desc>
-        <icon_index>7,7</icon_index>
+        <image_index>7,7</image_index>
         <components>reflect,class_skill</components>
     </status>
 
@@ -126,14 +133,14 @@
     <status name="Skill Restore">
         <id>Skill_Restore</id>
         <desc>Fully charges all activated skills.</desc>
-        <icon_index>0,0</icon_index>
+        <image_index>0,0</image_index>
         <components>skill_restore,momentary</components>
     </status>
 
     <status name="Dazzled">
         <id>Dazzle</id>
         <desc>Inflicts Hit -10.</desc>
-        <icon_index>2,2</icon_index>
+        <image_index>2,2</image_index>
         <components>hit,time,negative</components>
 
         <hit>-10</hit>
@@ -143,7 +150,7 @@
     <status name="Blinded">
         <id>Blinded</id>
         <desc>Inflicts Hit -100.</desc>
-        <icon_index>9,6</icon_index>
+        <image_index>9,6</image_index>
         <components>hit,time,negative,always_animation</components>
 
         <hit>-100</hit>
@@ -155,7 +162,7 @@
     <status name="Chilled">
         <id>Chill</id>
         <desc>Inflicts Avoid -10.</desc>
-        <icon_index>2,4</icon_index>
+        <image_index>2,4</image_index>
         <components>avoid,time,negative</components>
 
         <avoid>-10</avoid>
@@ -165,7 +172,7 @@
     <status name="Frostbite">
         <id>Frostbite</id>
         <desc>Inflicts SPD -3.</desc>
-        <icon_index>5,3</icon_index>
+        <image_index>5,3</image_index>
         <components>stat_change,time,negative,always_animation</components>
 
         <stat_change>0,0,0,0,-3,0,0,0,0,0</stat_change>
@@ -179,7 +186,7 @@
     <status name="Strength +2">
         <id>fStrength +2</id>
         <desc>Grants STR +2.</desc>
-        <icon_index>0,1</icon_index>
+        <image_index>0,1</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,2,0,0,0,0,0,0,0,0</stat_change>
@@ -188,7 +195,7 @@
     <status name="Magic +2">
         <id>fMagic +2</id>
         <desc>Grants MAG +2.</desc>
-        <icon_index>0,2</icon_index>
+        <image_index>0,2</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,2,0,0,0,0,0,0,0</stat_change>
@@ -197,7 +204,7 @@
     <status name="Skill +3">
         <id>fSkill +3</id>
         <desc>Grants SKL +3.</desc>
-        <icon_index>0,3</icon_index>
+        <image_index>0,3</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,3,0,0,0,0,0,0</stat_change>
@@ -206,7 +213,7 @@
     <status name="Speed +2">
         <id>fSpeed +2</id>
         <desc>Grants SPD +2.</desc>
-        <icon_index>0,4</icon_index>
+        <image_index>0,4</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,2,0,0,0,0,0</stat_change>
@@ -215,7 +222,7 @@
     <status name="Defense +2">
         <id>fDefense +2</id>
         <desc>Grants DEF +2.</desc>
-        <icon_index>0,5</icon_index>
+        <image_index>0,5</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,2,0,0,0</stat_change>
@@ -224,7 +231,7 @@
     <status name="Resistance +2">
         <id>fResistance +2</id>
         <desc>Grants RES +2.</desc>
-        <icon_index>0,6</icon_index>
+        <image_index>0,6</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,2,0,0</stat_change>
@@ -233,7 +240,7 @@
     <status name="Constitution +3">
         <id>fConstitution +3</id>
         <desc>Grants CON +3.</desc>
-        <icon_index>0,10</icon_index>
+        <image_index>0,10</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,0,3,0</stat_change>
@@ -242,7 +249,7 @@
     <status name="Movement +1">
         <id>fMovement +1</id>
         <desc>Grants MOV +1.</desc>
-        <icon_index>0,8</icon_index>
+        <image_index>0,8</image_index>
         <components>stat_change,class_skill,affects_movement</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,0,0,1</stat_change>
@@ -251,7 +258,7 @@
     <status name="Maximum HP +5">
         <id>fMaximum HP +5</id>
         <desc>Grants HP +5.</desc>
-        <icon_index>0,7</icon_index>
+        <image_index>0,7</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>5,0,0,0,0,0,0,0,0,0</stat_change>
@@ -260,7 +267,7 @@
     <status name="Luck +4">
         <id>fLuck +4</id>
         <desc>Grants LCK +4.</desc>
-        <icon_index>0,9</icon_index>
+        <image_index>0,9</image_index>
         <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,4,0,0,0,0</stat_change>
@@ -271,7 +278,7 @@
     <status name="Speed +2">
         <id>Speed +2</id>
         <desc>Grants SPD +2.</desc>
-        <icon_index>0,4</icon_index>
+        <image_index>0,4</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,2,0,0,0,0,0</stat_change>
@@ -281,7 +288,7 @@
     <status name="Speed -2">
         <id>Speed -2</id>
         <desc>Inflicts SPD -2.</desc>
-        <icon_index>9,4</icon_index>
+        <image_index>9,4</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,-2,0,0,0,0,0</stat_change>
@@ -291,7 +298,7 @@
     <status name="Defense +2">
         <id>Defense +2</id>
         <desc>Grants DEF +2.</desc>
-        <icon_index>0,5</icon_index>
+        <image_index>0,5</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,2,0,0,0</stat_change>
@@ -301,7 +308,7 @@
     <status name="Resistance +2">
         <id>Resistance +2</id>
         <desc>Grants RES +2.</desc>
-        <icon_index>0,6</icon_index>
+        <image_index>0,6</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,2,0,0</stat_change>
@@ -311,7 +318,7 @@
     <status name="Resistance +10">
         <id>Resistance +10</id>
         <desc>Grants RES +10.</desc>
-        <icon_index>9,10</icon_index>
+        <image_index>9,10</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,10,0,0</stat_change>
@@ -320,7 +327,7 @@
     <!-- Used by Prim's Charm -->
     <status name="Underdog">
         <id>Underdog</id>
-        <icon_index>9,5</icon_index>
+        <image_index>9,5</image_index>
         <desc>Grants Damage +2 and Damage Taken -2 against enemies with greater HP.</desc>
         <components>conditional_mt,conditional_resist</components>
 
@@ -332,7 +339,7 @@
     <status name="Luck +10">
         <id>Luck +10</id>
         <desc>Gain LCK +10.</desc>
-        <icon_index>11,9</icon_index>
+        <image_index>11,9</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,10,0,0,0,0</stat_change>
@@ -341,7 +348,7 @@
     <!-- Used by Superior Weapons -->
     <status name="Swordbreaker">
         <id>Swordbreaker</id>
-        <icon_index>6,9</icon_index>
+        <image_index>6,9</image_index>
         <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
         <components>conditional_avoid,conditional_hit</components>
 
@@ -351,7 +358,7 @@
 
     <status name="Lancebreaker">
         <id>Lancebreaker</id>
-        <icon_index>6,7</icon_index>
+        <image_index>6,7</image_index>
         <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
         <components>conditional_avoid,conditional_hit</components>
 
@@ -361,7 +368,7 @@
 
     <status name="Axebreaker">
         <id>Axebreaker</id>
-        <icon_index>6,8</icon_index>
+        <image_index>6,8</image_index>
         <desc>Grants Hit/Avoid +30 against enemies wielding Axes.</desc>
         <components>conditional_avoid,conditional_hit</components>
 
@@ -373,7 +380,7 @@
     <status name="Imperial Wards">
         <id>Imperial Wards</id>
         <desc>Grants STR/MAG/SKL/SPD/DEF/RES +5.</desc>
-        <icon_index>10,9</icon_index>
+        <image_index>10,9</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,5,5,5,5,0,5,5,0,0</stat_change>
@@ -382,20 +389,20 @@
     <status name="Canto">
     	<id>Canto</id>
     	<desc>Can move again after taking certain actions.</desc>
-        <icon_index>3,1</icon_index>
+        <image_index>3,1</image_index>
     	<components>canto,class_skill</components>
     </status>
 
     <status name="Canto+">
         <id>Canto_Plus</id>
         <desc>Can move again after taking an action.</desc>
-        <icon_index>10,10</icon_index>
+        <image_index>10,10</image_index>
         <components>canto_plus,class_skill</components>
     </status>
 
     <status name="Rescuing">
         <id>Rescue</id>
-        <icon_index>3,2</icon_index>
+        <image_index>3,2</image_index>
         <desc>Halves SKL/SPD.</desc>
         <components>rescue,negative</components>
     </status>
@@ -403,49 +410,49 @@
     <!-- CLASS SKILLS -->
     <status name="Locktouch">
     	<id>Locktouch</id>
-        <icon_index>1,0</icon_index>
+        <image_index>1,0</image_index>
     	<desc>Open doors and chests without a key.</desc>
     	<components>locktouch,class_skill</components>
     </status>
 
     <status name="Savior">
         <id>Savior</id>
-        <icon_index>1,10</icon_index>
+        <image_index>1,10</image_index>
         <desc>Rescue without penalty.</desc>
         <components>savior,class_skill</components>
     </status>
 
     <status name="Ghost">
         <id>Ghost</id>
-        <icon_index>1,4</icon_index>
+        <image_index>1,4</image_index>
         <desc>Move through enemy units.</desc>
         <components>pass_through,class_skill,affects_movement</components>
     </status>
 
     <status name="Fleet of Foot">
         <id>Fleet_of_Foot</id>
-        <icon_index>3,10</icon_index>
+        <image_index>3,10</image_index>
         <desc>Ignore some terrain movement penalties.</desc>
         <components>fleet_of_foot,class_skill,affects_movement</components>
     </status>
 
     <status name="Resist Status">
         <id>Resist_Status</id>
-        <icon_index>2,9</icon_index>
+        <image_index>2,9</image_index>
         <desc>Ignore temporary status ailments after 1 turn.</desc>
         <components>shrug_off,class_skill</components>
     </status>
 
     <status name="Evasion">
         <id>Evasion</id>
-        <icon_index>3,3</icon_index>
+        <image_index>3,3</image_index>
         <desc>Area of Effect attacks always miss this unit.</desc>
         <components>evasion,class_skill</components>
     </status>
 
     <status name="Prescience">
         <id>Prescience</id>
-        <icon_index>1,5</icon_index>
+        <image_index>1,5</image_index>
         <desc>If attacking, grants Hit/Avoid +15 and Damage +1.</desc>
         <components>conditional_avoid,conditional_hit,conditional_mt,class_skill</components>
         <!-- avoid is swapped because it is only taken into account when being counterattacked -->
@@ -456,7 +463,7 @@
 
     <status name="Patience">
         <id>Patience</id>
-        <icon_index>1,6</icon_index>
+        <image_index>1,6</image_index>
         <desc>If attacked, grants Hit/Avoid +15 and Damage +1.</desc>
         <components>conditional_avoid,conditional_hit,conditional_mt,class_skill</components>
 
@@ -467,7 +474,7 @@
 
     <status name="Riposte">
         <id>Riposte</id>
-        <icon_index>8,2</icon_index>
+        <image_index>8,2</image_index>
         <desc>If attacked, grants Damage +3.</desc>
         <components>conditional_mt,class_skill</components>
 
@@ -476,7 +483,7 @@
 
     <status name="Initiative">
         <id>Initiative</id>
-        <icon_index>3,8</icon_index>
+        <image_index>3,8</image_index>
         <desc>If attacking, grants Avoid +30.</desc>
         <components>conditional_avoid,class_skill</components>
         <!-- avoid is swapped because it is only taken into account when being counterattacked -->
@@ -485,7 +492,7 @@
 
     <status name="Overwhelm">
         <id>Overwhelm</id>
-        <icon_index>8,5</icon_index>
+        <image_index>8,5</image_index>
         <desc>If attacking and damage would defeat enemy, grants Hit +30.</desc>
         <components>conditional_hit,class_skill</components>
         <!-- avoid is swapped because it is only taken into account when being counterattacked -->
@@ -494,7 +501,7 @@
 
     <status name="Poise">
         <id>Poise</id>
-        <icon_index>10,5</icon_index>
+        <image_index>10,5</image_index>
         <desc>If attacking, DEF/RES +5.</desc>
         <components>conditional_resist,class_skill</components>
         <!-- resist is swapped because it is only taken into account when being counterattacked -->
@@ -503,7 +510,7 @@
 
     <status name="Empowered">
         <id>Empowered</id>
-        <icon_index>4,9</icon_index>
+        <image_index>4,9</image_index>
         <desc>If attacking, Damage +3.</desc>
         <components>conditional_mt,class_skill</components>
         
@@ -512,7 +519,7 @@
 
     <status name="Shimmer">
         <id>Shimmer</id>
-        <icon_index>10,6</icon_index>
+        <image_index>10,6</image_index>
         <desc>Grants Avoid +30 against non-adjacent attackers.</desc>
         <components>conditional_avoid,class_skill</components>
 
@@ -522,7 +529,7 @@
 
     <status name="Rex Aegis">
         <id>Rex_Aegis</id>
-        <icon_index>10,9</icon_index>
+        <image_index>10,9</image_index>
         <desc>Grants Avoid +500 and Defense +100 against enemies further than two tiles away.</desc>
         <components>conditional_avoid,conditional_resist</components>
 
@@ -532,7 +539,7 @@
 
     <status name="Heavy Hitter">
         <id>Heavy Hitter</id>
-        <icon_index>8,1</icon_index>
+        <image_index>8,1</image_index>
         <desc>Adds half weapon Wt to damage.</desc>
         <components>mt,class_skill</components>
 
@@ -541,7 +548,7 @@
 
     <status name="Charge">
         <id>Charge</id>
-        <icon_index>6,3</icon_index>
+        <image_index>6,3</image_index>
         <desc>Adds (distance moved - 2) this turn to damage.</desc>
         <components>mt,class_skill</components>
 
@@ -550,7 +557,7 @@
 
     <status name="Focus">
         <id>Focus</id>
-        <icon_index>2,0</icon_index>
+        <image_index>2,0</image_index>
         <desc>Grants Hit/Avoid +20 if no allies are within 3 tiles.</desc>
         <components>hit,avoid,class_skill</components>
 
@@ -560,7 +567,7 @@
 
     <status name="Synergy">
         <id>Synergy</id>
-        <icon_index>10,7</icon_index>
+        <image_index>10,7</image_index>
         <desc>Grants Hit/Avoid +10 if an ally is within 3 tiles.</desc>
         <components>hit,avoid,class_skill</components>
 
@@ -570,7 +577,7 @@
 
     <status name="Futuresight">
         <id>Futuresight</id>
-        <icon_index>8,8</icon_index>
+        <image_index>8,8</image_index>
         <desc>Grants Hit/Avoid +30 if HP is under half.</desc>
         <components>avoid,hit,class_skill</components>
 
@@ -580,7 +587,7 @@
 
     <status name="Conductance">
         <id>Conductance</id>
-        <icon_index>4,6</icon_index>
+        <image_index>4,6</image_index>
         <desc>Grants Hit +15 and Damage +1 against enemies wielding Swords, Lances, or Axes.</desc>
         <components>conditional_mt,conditional_hit,class_skill</components>
 
@@ -590,7 +597,7 @@
 
     <status name="Miracle">
         <id>Miracle</id>
-        <icon_index>1,3</icon_index>
+        <image_index>1,3</image_index>
         <desc>Once per chapter, if this unit would die, instead they survive with 1 HP.</desc>
         <components>miracle,count,class_skill</components>
         <count>1</count>
@@ -598,7 +605,7 @@
 
     <status name="Healtouch">
         <id>Healtouch</id>
-        <icon_index>2,6</icon_index>
+        <image_index>2,6</image_index>
         <desc>Heal +5 HP when healing another.</desc>
         <components>caretaker,class_skill</components>
         <caretaker>5</caretaker>
@@ -606,14 +613,14 @@
 
     <status name="Vantage">
         <id>Vantage</id>
-        <icon_index>1,7</icon_index>
+        <image_index>1,7</image_index>
         <desc>If 4 more attack speed than enemy, double counterattack while defending.</desc>
         <components>def_double,class_skill</components>
     </status>
 
     <status name="Steal">
         <id>Steal</id>
-        <icon_index>7,10</icon_index>
+        <image_index>7,10</image_index>
         <desc>Can steal unequipped items from enemies with lower speed.</desc>
         <components>steal,class_skill</components>
     </status>
@@ -621,7 +628,7 @@
     <!-- Activated Skills -->
     <status name="Critical">
         <id>Critical</id>
-        <icon_index>3,5</icon_index>
+        <image_index>3,5</image_index>
         <desc>Activated. Doubles total damage.</desc>
         <components>active,class_skill</components>
         <active>30</active>
@@ -629,7 +636,7 @@
 
     <status name="Cleave">
         <id>Cleave</id>
-        <icon_index>2,7</icon_index>
+        <image_index>2,7</image_index>
         <desc>Activated. Prereq: Axe. Damages all adjacent enemy units.</desc>
         <components>active,class_skill</components>
         <active>15</active>
@@ -637,7 +644,7 @@
 
     <status name="Metamagic">
         <id>Metamagic</id>
-        <icon_index>8,7</icon_index>
+        <image_index>8,7</image_index>
         <desc>Activated. Increases area of blast +1.</desc>
         <components>active,class_skill</components>
         <active>40</active>
@@ -645,7 +652,7 @@
 
     <status name="Shove">
         <id>Shove</id>
-        <icon_index>4,4</icon_index>
+        <image_index>4,4</image_index>
         <desc>Activated. Push a unit one square away.</desc>
         <components>class_skill,active</components>
         <active>0</active>
@@ -653,7 +660,7 @@
 
     <status name="Refresh">
         <id>Refresh</id>
-        <icon_index>3,9</icon_index>
+        <image_index>3,9</image_index>
         <desc>Activated. Adjacent unit is refreshed.</desc>
         <components>active,class_skill</components>
         <active>0</active>
@@ -661,7 +668,7 @@
 
     <status name="Rage">
         <id>Rage</id>
-        <icon_index>8,10</icon_index>
+        <image_index>8,10</image_index>
         <desc>Activated. Grants STR/SKL/SPD/RES +5 for 3 turns. Then inflicts weakness.</desc>
         <components>active,class_skill</components>
         <active>0</active>
@@ -669,7 +676,7 @@
 
     <status name="Fade">
         <id>Fade</id>
-        <icon_index>9,1</icon_index>
+        <image_index>9,1</image_index>
         <desc>Activated. Grants Avoid +100 for 5 turns or until you next attack.</desc>
         <components>active,class_skill</components>
         <active>30</active>
@@ -677,7 +684,7 @@
 
     <status name="Aegis">
         <id>Aegis</id>
-        <icon_index>10,3</icon_index>
+        <image_index>10,3</image_index>
         <desc>Activated. RNG: 1. Grant ally DEF/RES +15 until next turn.</desc>
         <components>active,class_skill</components>
         <active>60</active>
@@ -685,7 +692,7 @@
 
     <status name="Revelation">
         <id>Revelation</id>
-        <icon_index>8,3</icon_index>
+        <image_index>8,3</image_index>
         <desc>Activated. RNG: 1. Grants ally Hit/Avoid +100 until next turn.</desc>
         <components>active,class_skill</components>
         <active>60</active>
@@ -693,7 +700,7 @@
 
     <status name="Rally">
         <id>Rally</id>
-        <icon_index>10,1</icon_index>
+        <image_index>10,1</image_index>
         <desc>Activated. Grant all allies within a 3 tile radius +4 to all stats for one Turn.</desc>
         <components>active,class_skill</components>
         <active>60</active>
@@ -701,7 +708,7 @@
 
     <status name="Sol">
         <id>Sol</id>
-        <icon_index>4,2</icon_index>
+        <image_index>4,2</image_index>
         <desc>Activated. Recover HP equal to half damage dealt to the enemy.</desc>
         <components>active,class_skill</components>
         <active>40</active>
@@ -709,7 +716,7 @@
 
     <status name="Summon">
         <id>Gate</id>
-        <icon_index>9,0</icon_index>
+        <image_index>9,0</image_index>
         <desc>Activated. Summons a dark phantom to aid you.</desc>
         <components>active,class_skill</components>
         <active>40</active>
@@ -717,7 +724,7 @@
 
     <status name="Luna">
         <id>Luna</id>
-        <icon_index>4,3</icon_index>
+        <image_index>4,3</image_index>
         <desc>Activated. Ignores enemy's Defense or Resistance.</desc>
         <components>active,class_skill</components>
         <active>40</active>
@@ -725,42 +732,42 @@
 
     <status name="Swordfaire">
         <id>Swordfaire</id>
-        <icon_index>5,6</icon_index>
+        <image_index>5,6</image_index>
         <desc>While wielding a sword, it gains the brave property.</desc>
         <components>passive,class_skill</components>
     </status>
 
     <status name="Lancefaire">
         <id>Lancefaire</id>
-        <icon_index>5,7</icon_index>
+        <image_index>5,7</image_index>
         <desc>While wielding a lance, cannot be counterattacked.</desc>
         <components>passive,class_skill</components>
     </status>
 
     <status name="Axefaire">
         <id>Axefaire</id>
-        <icon_index>5,8</icon_index>
+        <image_index>5,8</image_index>
         <desc>While wielding an axe, ignore half enemy's Defense or Resistance.</desc>
         <components>passive,class_skill</components>
     </status>
 
     <status name="Longshot">
         <id>Longshot</id>
-        <icon_index>5,9</icon_index>
+        <image_index>5,9</image_index>
         <desc>While wielding a bow, attack range +1.</desc>
         <components>passive,class_skill</components>
     </status>
 
     <status name="Celeste">
         <id>Celeste</id>
-        <icon_index>4,10</icon_index>
+        <image_index>4,10</image_index>
         <desc>Weaken enemies struck by your weapons.</desc>
         <components>passive,class_skill</components>
     </status>
 
     <status name="Slow">
         <id>Slow</id>
-        <icon_index>2,10</icon_index>
+        <image_index>2,10</image_index>
         <desc>Slow enemies struck by your weapons.</desc>
         <components>passive,class_skill</components>
     </status>
@@ -768,14 +775,14 @@
     <status name="Nosferatu">
         <id>Nosferatu</id>
         <desc>Damage dealt restores health.</desc>
-        <icon_index>4,8</icon_index>
+        <image_index>4,8</image_index>
         <components>passive,class_skill</components>
     </status>
 
     <!-- Aura Skills -->
     <status name="Skill Aura">
         <id>Skill_Aura</id>
-        <icon_index>7,2</icon_index>
+        <image_index>7,2</image_index>
         <desc>Aura. Grants allies SKL +3.</desc>
         <components>aura,class_skill</components>
 
@@ -786,7 +793,7 @@
 
     <status name="Defense Aura">
         <id>Defense_Aura</id>
-        <icon_index>7,4</icon_index>
+        <image_index>7,4</image_index>
         <desc>Aura. Grants allies DEF +2.</desc>
         <components>aura,class_skill</components>
 
@@ -797,7 +804,7 @@
 
     <status name="Resistance Aura">
         <id>Resistance_Aura</id>
-        <icon_index>7,5</icon_index>
+        <image_index>7,5</image_index>
         <desc>Aura. Grants allies RES +2.</desc>
         <components>aura,class_skill</components>
 
@@ -808,7 +815,7 @@
 
     <status name="Inspiration">
         <id>Inspiration</id>
-        <icon_index>10,4</icon_index>
+        <image_index>10,4</image_index>
         <desc>Aura. Grants allies Damage +1 and Damage Taken -1.</desc>
         <components>aura,class_skill</components>
 
@@ -819,7 +826,7 @@
 
     <status name="Charisma">
         <id>Charisma</id>
-        <icon_index>1,9</icon_index>
+        <image_index>1,9</image_index>
         <desc>Aura. Grants allies Hit/Avoid +15.</desc>
         <components>aura,class_skill</components>
 
@@ -830,7 +837,7 @@
 
     <status name="Hex">
         <id>Hex</id>
-        <icon_index>10,8</icon_index>
+        <image_index>10,8</image_index>
         <desc>Aura. Inflicts Avoid -15 on enemies.</desc>
         <components>aura,class_skill</components>
 
@@ -841,7 +848,7 @@
 
     <status name="Provoke">
         <id>Provoke</id>
-        <icon_index>4,5</icon_index>
+        <image_index>4,5</image_index>
         <desc>After battle, inflicts Hit -30 and Damage -2 when attacking other units.</desc>
         <components>status_after_battle,class_skill,tether</components>
 
@@ -851,7 +858,7 @@
 
     <status name="Command">
         <id>Command</id>
-        <icon_index>1,8</icon_index>
+        <image_index>1,8</image_index>
         <desc>Your spells strengthen affected allies.</desc>
         <components>status_after_help,class_skill</components>
         <status_after_help>Command_Child</status_after_help>
@@ -859,14 +866,14 @@
 
     <status name="Refreshed">
         <id>Refresh_Status</id>
-        <icon_index>3,9</icon_index>
+        <image_index>3,9</image_index>
         <desc>Refreshed.</desc>
         <components>refresh,momentary</components>
     </status>
 
     <status name="Raging">
         <id>Rage_Status</id>
-        <icon_index>8,10</icon_index>
+        <image_index>8,10</image_index>
         <desc>Raging. Grants STR/SKL/SPD/RES +4</desc>
         <components>time,stat_change,status_on_complete</components>
 
@@ -877,7 +884,7 @@
 
     <status name="Faded">
         <id>Fade_Status</id>
-        <icon_index>9,1</icon_index>
+        <image_index>9,1</image_index>
         <desc>Faded. Grants Avoid +100. Lost on attack.</desc>
         <components>time,avoid,lost_on_attack,unit_translucent</components>
 
@@ -887,7 +894,7 @@
 
     <status name="Aegis">
         <id>Aegis_Status</id>
-        <icon_index>10,3</icon_index>
+        <image_index>10,3</image_index>
         <desc>Grants DEF/RES +15.</desc>
         <components>stat_change,time</components>
 
@@ -897,7 +904,7 @@
 
     <status name="Revelation">
         <id>Revelation_Status</id>
-        <icon_index>8,3</icon_index>
+        <image_index>8,3</image_index>
         <desc>Grants Hit/Avoid +100.</desc>
         <components>hit,avoid,time</components>
 
@@ -908,14 +915,14 @@
 
     <status name="Flying">
         <id>Flying</id>
-        <icon_index>3,10</icon_index>
+        <image_index>3,10</image_index>
         <desc>Grants flying.</desc>
         <components>flying,pass_through,class_skill,affects_movement</components>
     </status>
 
     <status name="Flying">
         <id>TempFlying</id>
-        <icon_index>3,10</icon_index>
+        <image_index>3,10</image_index>
         <desc>Grants flying.</desc>
         <components>time,flying,pass_through,always_animation,affects_movement</components>
         <time>5</time>
@@ -927,7 +934,7 @@
     <!-- Aura Children Statuses -->
     <status name="Skill +3">
         <id>Aura_Skill_Child</id>
-        <icon_index>0,3</icon_index>
+        <image_index>0,3</image_index>
         <desc>Grants SKL +3.</desc>
         <components>stat_change,aura_child</components>
         <stat_change>0,0,0,3,0,0,0,0,0,0</stat_change>
@@ -935,7 +942,7 @@
 
     <status name="Defense +2">
         <id>Aura_Defense_Child</id>
-        <icon_index>0,5</icon_index>
+        <image_index>0,5</image_index>
         <desc>Grants DEF +2.</desc>
         <components>stat_change,aura_child</components>
         <stat_change>0,0,0,0,0,0,2,0,0,0</stat_change>
@@ -943,7 +950,7 @@
 
     <status name="Resistance +2">
         <id>Aura_Resistance_Child</id>
-        <icon_index>0,6</icon_index>
+        <image_index>0,6</image_index>
         <desc>Grants RES +2.</desc>
         <components>stat_change,aura_child</components>
         <stat_change>0,0,0,0,0,0,0,2,0,0</stat_change>
@@ -951,7 +958,7 @@
 
     <status name="Inspired">
         <id>Aura_Inspiration_Child</id>
-        <icon_index>10,4</icon_index>
+        <image_index>10,4</image_index>
         <desc>Grants Damage +1 and Damage Taken -1.</desc>
         <components>mt,conditional_resist,aura_child</components>
         <mt>1</mt>
@@ -960,7 +967,7 @@
 
     <status name="Charisma">
         <id>Aura_Charisma_Child</id>
-        <icon_index>1,9</icon_index>
+        <image_index>1,9</image_index>
         <desc>Grants Hit/Avoid +15.</desc>
         <components>hit,avoid,aura_child</components>
         <hit>15</hit>
@@ -969,7 +976,7 @@
 
     <status name="Hexed">
         <id>Aura_Hex_Child</id>
-        <icon_index>10,8</icon_index>
+        <image_index>10,8</image_index>
         <desc>Inflicts Avoid -15.</desc>
         <components>avoid,aura_child,negative</components>
         <avoid>-15</avoid>
@@ -977,7 +984,7 @@
 
     <status name="Provoked">
         <id>Provoke_Child</id>
-        <icon_index>4,5</icon_index>
+        <image_index>4,5</image_index>
         <desc>Inflicts Hit -30 and Damage -2 when attacking units other than the one provoking it.</desc>
         <components>conditional_mt,conditional_hit,negative,remove_range,always_animation</components>
 
@@ -990,7 +997,7 @@
 
     <status name="Commanded">
         <id>Command_Child</id>
-        <icon_index>1,8</icon_index>
+        <image_index>1,8</image_index>
         <desc>Grants Damage +5.</desc>
         <components>mt,time</components>
         <mt>5</mt>
@@ -1001,7 +1008,7 @@
     <status name="Slowed">
         <id>Slowed</id>
         <desc>Inflicts MOV -6.</desc>
-        <icon_index>3,0</icon_index>
+        <image_index>3,0</image_index>
         <components>stat_change,always_animation,negative,time,affects_movement</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,0,0,-3</stat_change>
@@ -1014,7 +1021,7 @@
     <status name="Rallied">
         <id>Rally_Child</id>
         <desc>Grants +4 to all stats.</desc>
-        <icon_index>10,1</icon_index>
+        <image_index>10,1</image_index>
         <components>stat_change,time</components>
 
         <time>1</time>
@@ -1026,7 +1033,7 @@
     <status name="Weakened">
         <id>Weakened</id>
         <desc>All stats lowered.</desc>
-        <icon_index>8,9</icon_index>
+        <image_index>8,9</image_index>
         <components>stat_change,upkeep_stat_change,always_animation,negative,time</components>
 
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
@@ -1041,7 +1048,7 @@
     <status name="Enervated">
         <id>Enervated</id>
         <desc>All stats lowered.</desc>
-        <icon_index>7,9</icon_index>
+        <image_index>7,9</image_index>
         <components>stat_change,upkeep_stat_change,always_animation,negative,time</components>
 
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
@@ -1055,7 +1062,7 @@
     <status name="Void Curse">
         <id>Void_Curse</id>
         <desc>Enemies earn no EXP from this unit.</desc>
-        <icon_index>10,0</icon_index>
+        <image_index>10,0</image_index>
         <components>no_exp</components>
     </status>
 
@@ -1072,7 +1079,7 @@
     <status name="Maximum HP -5">
         <id>Maximum HP -5</id>
         <desc>Inflicts HP -5.</desc>
-        <icon_index>0,0</icon_index>
+        <image_index>0,0</image_index>
         <components>stat_change,hidden,negative</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>-5,0,0,0,0,0,0,0,0,0</stat_change>
