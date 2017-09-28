@@ -12,6 +12,7 @@ pose;Attack
 f;6;Stand
 f;10;Attack1
 f;7;Attack2
+sound;Horse Step 3
 f;6;Attack3
 f;2;Attack4
 f;5;Attack5
@@ -19,6 +20,7 @@ f;4;Attack6
 f;7;Attack7
 f;8;Attack8
 f;5;Attack9
+sound;Throw 1;Throw 2;Throw 3
 static
 enemy_flash_white;8
 f;1;Javelin1;Attack10
@@ -38,6 +40,7 @@ f;1;Javelin8;Attack10
 static
 wait_for_hit;Attack10
 f;4;Attack10
+sound;Horse Step 1
 f;7;Attack11
 f;6;Attack12
 pan
@@ -49,6 +52,7 @@ pose;Miss
 f;6;Stand
 f;10;Attack1
 f;7;Attack2
+sound;Horse Step 3
 f;6;Attack3
 f;2;Attack4
 f;5;Attack5
@@ -56,6 +60,7 @@ f;4;Attack6
 f;7;Attack7
 f;8;Attack8
 f;5;Attack9
+sound;Throw 1;Throw 2;Throw 3
 static
 f;1;Javelin1;Attack10
 f;1;Javelin1;Attack10
@@ -71,6 +76,7 @@ f;2;Javelin7;Attack10
 f;1;Javelin8;Attack10
 static
 f;30;Attack10
+sound;Horse Step 1
 f;7;Attack11
 f;6;Attack12
 pan

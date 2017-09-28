@@ -1,0 +1,484 @@
+<?xml version="1.0" ?>
+<class_info>
+    <class name="Citizen">
+        <wexp>0,0,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into/>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills/>
+        <bases>7,0,0,0,0,0,0,0,3,4</bases>
+        <growths>65,0,0,0,0,0,0,0,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>An ordinary commoner.</desc>
+    </class>
+    <class name="Myrmidon">
+        <wexp>1,0,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Swordmaster</turns_into>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>1,Riposte;5,Vantage;8,Feat</skills>
+        <bases>11,3,1,6,7,0,1,1,5,5</bases>
+        <growths>95,45,35,65,60,60,20,35,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Swordfighters with superior speed and skill.</desc>
+    </class>
+    <class name="Swordmaster">
+        <wexp>10,0,0,0,0,0,0</wexp>
+        <promotes_from>Myrmidon</promotes_from>
+        <turns_into/>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Critical;8,Feat</skills>
+        <bases>16,5,2,6,7,0,3,2,6,6</bases>
+        <growths>95,45,35,65,60,60,20,35,0,0</growths>
+        <promotion>5,2,1,0,0,0,2,1,1,1</promotion>
+        <max>40,16,15,19,20,20,15,17,20,20</max>
+        <desc>Devotees of the sword. Possess incredible speed and skill.</desc>
+    </class>
+    <class name="Mercenary">
+        <wexp>1,0,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Vanguard</turns_into>
+        <movement_group>4</movement_group>
+        <tags/>
+        <skills>1,Initiative;5,Poise;8,Feat</skills>
+        <bases>14,3,0,5,5,0,3,0,6,5</bases>
+        <growths>105,60,15,55,45,40,25,15,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Professional soldiers for hire. Well-balanced, with superior abilities all around.</desc>
+    </class>
+    <class name="Vanguard">
+        <wexp>10,0,16,0,0,0,0</wexp>
+        <promotes_from>Mercenary</promotes_from>
+        <turns_into/>
+        <movement_group>4</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Sol;8,Feat</skills>
+        <bases>18,4,0,7,7,0,5,2,8,6</bases>
+        <growths>105,60,15,55,45,40,25,15,0,0</growths>
+        <promotion>4,1,0,2,2,0,2,2,2,1</promotion>
+        <max>40,17,15,19,17,20,17,15,20,20</max>
+        <desc>Veteran warriors expert in all fields of combat.</desc>
+    </class>
+    <class name="Thief">
+        <wexp>1,0,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Assassin</turns_into>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>1,Locktouch;5,Steal;8,Feat</skills>
+        <bases>11,2,1,2,6,0,1,1,4,6</bases>
+        <growths>65,40,35,60,65,55,5,35,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Expert in stealth and subterfuge. Possess weak attacks but many other skills.</desc>
+    </class>
+    <class name="Assassin">
+        <wexp>1,0,0,16,0,0,0</wexp>
+        <promotes_from>Thief</promotes_from>
+        <turns_into/>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Ghost;8,Feat</skills>
+        <bases>14,4,2,5,8,0,3,3,5,7</bases>
+        <growths>65,40,35,60,65,55,5,35,0,0</growths>
+        <promotion>3,2,1,3,2,0,2,2,1,1</promotion>
+        <max>40,15,15,20,20,20,15,15,20,20</max>
+        <desc>Killers at home in the shadows.</desc>
+    </class>
+    <class name="Soldier">
+        <wexp>0,1,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Halberdier</turns_into>
+        <movement_group>4</movement_group>
+        <tags/>
+        <skills>1,Synergy;5,Feat;8,Feat</skills>
+        <bases>13,2,0,4,0,0,0,0,7,5</bases>
+        <growths>105,65,15,65,60,35,35,20,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Well-rounded combatants who rely on their exceptional skill.</desc>
+    </class>
+    <class name="Halberdier">
+        <wexp>0,1,16,0,0,0,0</wexp>
+        <promotes_from>Soldier</promotes_from>
+        <turns_into/>
+        <movement_group>1</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Luna;8,Feat</skills>
+        <bases>17,3,1,6,2,0,5,2,9,6</bases>
+        <growths>105,65,15,65,60,35,35,20,0,0</growths>
+        <promotion>4,1,1,2,2,0,5,2,2,1</promotion>
+        <max>40,18,15,20,17,20,19,17,20,20</max>
+        <desc>Veteran frontliners who wield axe and lance</desc>
+    </class>
+    <class name="Cavalier">
+        <wexp>1,1,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Paladin</turns_into>
+        <movement_group>2</movement_group>
+        <tags>Mounted</tags>
+        <skills>1,Canto;5,Savior;8,Feat</skills>
+        <bases>12,3,0,2,3,0,4,0,7,7</bases>
+        <growths>100,45,5,55,35,40,20,30,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Mounted knights with superior movement.</desc>
+    </class>
+    <class name="Paladin">
+        <wexp>1,1,0,0,0,0,0</wexp>
+        <promotes_from>Cavalier</promotes_from>
+        <turns_into/>
+        <movement_group>2</movement_group>
+        <tags>Mounted</tags>
+        <skills>3,Feat;5,Charisma;8,Feat</skills>
+        <bases>14,4,0,4,5,0,6,5,8,8</bases>
+        <growths>100,45,5,55,35,40,20,30,0,0</growths>
+        <promotion>2,1,0,2,2,0,2,5,1,1</promotion>
+        <max>40,17,15,18,17,20,17,18,20,20</max>
+        <desc>Veteran horse knights.</desc>
+    </class>
+    <class name="Knight">
+        <wexp>0,1,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>General</turns_into>
+        <movement_group>1</movement_group>
+        <tags/>
+        <skills>1,Provoke;5,Shove;8,Feat</skills>
+        <bases>11,3,0,2,1,0,6,1,9,4</bases>
+        <growths>105,55,15,40,20,35,55,35,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Heavily armored knights with superior defense but poor movement.</desc>
+    </class>
+    <class name="General">
+        <wexp>16,1,0,0,0,0,0</wexp>
+        <promotes_from>Knight</promotes_from>
+        <turns_into/>
+        <movement_group>1</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Slow;8,Feat</skills>
+        <bases>17,6,0,4,4,0,8,4,10,5</bases>
+        <growths>105,55,15,40,20,35,55,35,0,0</growths>
+        <promotion>6,3,0,2,3,0,2,3,1,1</promotion>
+        <max>40,19,15,18,15,20,20,17,20,20</max>
+        <desc>Defensive stalwarts able to take a hit.</desc>
+    </class>
+    <class name="Skirmisher">
+        <wexp>0,1,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Dragoon</turns_into>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>1,Fleet_of_Foot;5,Evasion;8,Feat</skills>
+        <bases>9,2,2,3,4,0,1,2,4,6</bases>
+        <growths>85,45,35,55,105,45,20,45,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Swift-moving, lightly-armored soldiers of fortune.</desc>
+    </class>
+    <class name="Dragoon">
+        <wexp>0,10,0,0,0,0,0</wexp>
+        <promotes_from>Skirmisher</promotes_from>
+        <turns_into/>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Charge;8,Feat</skills>
+        <bases>14,4,2,3,4,0,4,4,7,7</bases>
+        <growths>85,45,35,55,105,45,20,45,0,0</growths>
+        <promotion>5,2,0,0,0,0,2,2,3,1</promotion>
+        <max>40,17,15,17,20,20,15,15,20,20</max>
+        <desc>Devotees of the lance. Fast-moving vanguards that excel behind enemy lines.</desc>
+    </class>
+    <class name="Fighter">
+        <wexp>0,0,1,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Warrior</turns_into>
+        <movement_group>4</movement_group>
+        <tags/>
+        <skills>1,Cleave;5,Shove;8,Feat</skills>
+        <bases>13,3,0,1,3,0,1,0,8,5</bases>
+        <growths>120,75,15,45,40,20,25,20,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Axe-wielding powerhouses.</desc>
+    </class>
+    <class name="Warrior">
+        <wexp>0,0,1,16,0,0,0</wexp>
+        <promotes_from>Fighter</promotes_from>
+        <turns_into/>
+        <movement_group>4</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Heavy Hitter;8,Feat</skills>
+        <bases>18,4,0,3,3,0,4,2,10,6</bases>
+        <growths>120,75,15,45,40,20,25,20,0,0</growths>
+        <promotion>3,1,0,2,0,0,3,2,2,1</promotion>
+        <max>40,20,15,19,17,20,17,15,20,20</max>
+        <desc>Determined fighters who relish battle.</desc>
+    </class>
+    <class name="Archer">
+        <wexp>0,0,0,1,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Sniper</turns_into>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>1,Prescience;5,Critical;8,Feat</skills>
+        <bases>12,3,0,2,3,0,2,0,5,5</bases>
+        <growths>95,45,40,55,45,45,20,25,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Lightly armored soldiers armed with bows. Can attack from a distance.</desc>
+    </class>
+    <class name="Sniper">
+        <wexp>0,0,0,10,0,0,0</wexp>
+        <promotes_from>Archer</promotes_from>
+        <turns_into/>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Longshot;8,Feat</skills>
+        <bases>16,6,1,4,5,0,4,3,6,6</bases>
+        <growths>95,45,40,55,45,45,20,25,0,0</growths>
+        <promotion>4,3,1,2,2,0,2,3,1,1</promotion>
+        <max>40,17,15,20,19,20,17,16,20,20</max>
+        <desc>Devotees of the bow. Possess incredible range.</desc>
+    </class>
+    <class name="Tactician">
+        <wexp>0,0,0,0,1,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Strategist</turns_into>
+        <movement_group>5</movement_group>
+        <tags/>
+        <skills>1,Inspiration;5,Skill_Aura;8,Feat</skills>
+        <bases>10,0,1,2,3,0,1,2,4,5</bases>
+        <growths>55,20,40,60,75,50,15,40,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Scholars trained to lead.</desc>
+    </class>
+    <class name="Strategist">
+        <wexp>0,0,0,0,10,0,0</wexp>
+        <promotes_from>Tactician</promotes_from>
+        <turns_into/>
+        <movement_group>3</movement_group>
+        <tags>Mounted</tags>
+        <skills>3,Feat;5,Rally;8,Feat</skills>
+        <bases>13,0,3,3,3,0,3,5,5,7</bases>
+        <growths>55,20,40,60,75,50,15,40,0,0</growths>
+        <promotion>3,0,2,1,0,0,2,3,1,2</promotion>
+        <max>40,15,15,17,19,20,16,17,20,20</max>
+        <desc>Scholars who've dedicated their lives to the study of warfare.</desc>
+    </class>
+    <class name="Cleric">
+        <wexp>0,0,0,0,1,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Oracle</turns_into>
+        <movement_group>5</movement_group>
+        <tags/>
+        <skills>1,Healtouch;5,Miracle;8,Feat</skills>
+        <bases>11,0,1,1,1,0,0,4,4,5</bases>
+        <growths>65,15,40,55,45,70,15,65,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Kind-hearted healers.</desc>
+    </class>
+    <class name="Oracle">
+        <wexp>0,0,0,0,1,0,16</wexp>
+        <promotes_from>Cleric</promotes_from>
+        <turns_into/>
+        <movement_group>5</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Futuresight;8,Feat</skills>
+        <bases>14,0,3,3,2,0,3,6,5,6</bases>
+        <growths>65,15,40,55,45,70,15,65,0,0</growths>
+        <promotion>3,0,2,2,1,0,3,2,1,1</promotion>
+        <max>40,15,17,19,17,20,15,20,20,20</max>
+        <desc>Mages gifted with visions of the future.</desc>
+    </class>
+    <class name="Mage">
+        <wexp>0,0,0,0,0,1,0</wexp>
+        <promotes_from/>
+        <turns_into>Sage</turns_into>
+        <movement_group>5</movement_group>
+        <tags/>
+        <skills>1,Focus;5,Conductance;8,Feat</skills>
+        <bases>11,0,1,1,2,0,1,2,4,5</bases>
+        <growths>75,15,65,45,65,40,20,45,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Curious practioners of anima magic.</desc>
+    </class>
+    <class name="Sage">
+        <wexp>0,0,0,0,0,10,0</wexp>
+        <promotes_from>Mage</promotes_from>
+        <turns_into/>
+        <movement_group>5</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Metamagic;8,Feat</skills>
+        <bases>15,0,3,2,2,0,4,5,5,6</bases>
+        <growths>75,15,65,45,65,40,20,45,0,0</growths>
+        <promotion>4,0,2,1,0,0,3,3,1,1</promotion>
+        <max>40,15,19,17,18,20,15,18,20,20</max>
+        <desc>Advanced wielders of the natural magics.</desc>
+    </class>
+    <class name="Shaman">
+        <wexp>0,0,0,0,0,0,1</wexp>
+        <promotes_from/>
+        <turns_into>Warlock</turns_into>
+        <movement_group>5</movement_group>
+        <tags/>
+        <skills>1,Hex;5,Empowered;8,Feat</skills>
+        <bases>11,1,2,1,1,0,1,3,5,4</bases>
+        <growths>65,20,65,45,40,25,25,55,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Impulsive mages with a tenous grasp on their magic.</desc>
+    </class>
+    <class name="Warlock">
+        <wexp>0,0,0,0,0,0,10</wexp>
+        <promotes_from>Shaman</promotes_from>
+        <turns_into/>
+        <movement_group>5</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Metamagic;8,Feat</skills>
+        <bases>15,1,4,3,4,0,3,5,6,5</bases>
+        <growths>65,20,65,45,40,25,25,55,0,0</growths>
+        <promotion>4,0,2,2,3,0,2,2,1,1</promotion>
+        <max>40,15,19,17,17,20,15,19,20,20</max>
+        <desc>War shaman capable of incredible feats of magic.</desc>
+    </class>
+    <class name="Raider">
+        <wexp>0,0,1,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Berserker</turns_into>
+        <movement_group>4</movement_group>
+        <tags/>
+        <skills>1,Prescience;5,Shove;8,Feat</skills>
+        <bases>15,3,0,1,4,0,2,0,7,5</bases>
+        <growths>100,65,5,35,45,20,15,15,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Untrained but fanatical combatant.</desc>
+    </class>
+    <class name="Berserker">
+        <wexp>0,0,10,0,0,0,0</wexp>
+        <promotes_from>Raider</promotes_from>
+        <turns_into/>
+        <movement_group>4</movement_group>
+        <tags/>
+        <skills>3,Feat;5,Regeneration;8,Feat</skills>
+        <bases>19,4,0,2,7,0,4,4,10,6</bases>
+        <growths>100,65,5,35,45,20,15,15,0,0</growths>
+        <promotion>4,1,0,1,3,0,2,4,3,1</promotion>
+        <max>40,20,15,19,19,20,15,15,20,20</max>
+        <desc>Devotees of the axe. Relentless savages that deliver devastating stikes.</desc>
+    </class>
+    <class name="Dracoknight">
+        <wexp>0,1,1,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Dracolord</turns_into>
+        <movement_group>2</movement_group>
+        <tags>Mounted,Flying</tags>
+        <skills>1,Flying;5,Empowered;8,Feat</skills>
+        <bases>14,5,0,3,3,0,5,0,7,6</bases>
+        <growths>105,60,15,45,40,35,35,25,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>An elite warrior mounted on the back of a wyvern.</desc>
+    </class>
+    <class name="Dracolord">
+        <wexp>0,1,1,0,0,0,0</wexp>
+        <promotes_from>Dracoknight</promotes_from>
+        <turns_into/>
+        <movement_group>2</movement_group>
+        <tags>Mounted,Flying</tags>
+        <skills>3,Feat;5,Defense_Aura;8,Feat</skills>
+        <bases>19,6,0,6,4,0,6,2,9,7</bases>
+        <growths>105,60,15,45,40,35,35,25,0,0</growths>
+        <promotion>5,1,0,3,1,0,1,2,2,1</promotion>
+        <max>40,18,15,17,16,20,19,15,20,20</max>
+        <desc>Lords who command the battlefield on their draconic mounts.</desc>
+    </class>
+    <class name="Brigand">
+        <wexp>0,0,1,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into/>
+        <movement_group>0</movement_group>
+        <tags/>
+        <skills>1,Fleet_of_Foot;5,Shove;8,Feat</skills>
+        <bases>13,3,0,1,3,0,2,0,9,5</bases>
+        <growths>110,65,0,40,25,20,15,15,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Ruffians with a strong offense but poor defense.</desc>
+    </class>
+    <class name="Sentinel">
+        <wexp>0,0,1,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into/>
+        <movement_group>1</movement_group>
+        <tags/>
+        <skills>1,Patience;5,Defense_Aura;8,Feat</skills>
+        <bases>13,5,0,3,1,0,5,0,9,4</bases>
+        <growths>100,45,15,25,35,25,40,35,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>Armored bruisers who work well on a team.</desc>
+    </class>
+    <class name="Ballista">
+        <wexp>0,0,0,1,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into/>
+        <movement_group>1</movement_group>
+        <tags/>
+        <skills/>
+        <bases>16,6,0,8,0,0,4,3,12,0</bases>
+        <growths>95,45,0,55,0,45,20,25,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,17,15,20,15,20,17,16,20,20</max>
+        <desc>Long-range immobile siege weapons.</desc>
+    </class>
+    <class name="Archon">
+        <wexp>1,1,1,0,0,0,0</wexp>
+        <promotes_from>General</promotes_from>
+        <turns_into/>
+        <movement_group>1</movement_group>
+        <tags/>
+        <skills>1,Resist_Status;5,Reflect</skills>
+        <bases>15,5,0,4,4,0,8,4,11,6</bases>
+        <growths>105,55,15,40,20,35,55,35,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,1</promotion>
+        <max>80,20,20,20,20,20,20,20,20,20</max>
+        <desc>One of the twelve Imperial Archons, demons of combat.</desc>
+    </class>
+    <class name="Phantom">
+        <wexp>0,0,1,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into>Phantom</turns_into>
+        <movement_group>0</movement_group>
+        <tags>Mindless</tags>
+        <skills>1,Ephemeral</skills>
+        <bases>13,3,0,1,3,0,0,0,8,5</bases>
+        <growths>95,75,0,45,60,0,20,20,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>A summoned phantom.</desc>
+    </class>
+    <class name="Wagon">
+        <wexp>0,0,0,0,0,0,0</wexp>
+        <promotes_from/>
+        <turns_into/>
+        <movement_group>2</movement_group>
+        <tags/>
+        <skills>1,Ghost</skills>
+        <bases>10,0,0,2,2,0,2,0,5,6</bases>
+        <growths>15,0,0,0,0,0,0,0,0,0</growths>
+        <promotion>0,0,0,0,0,0,0,0,0,0</promotion>
+        <max>40,15,15,15,15,20,15,15,20,20</max>
+        <desc>A merchant's wagon.</desc>
+    </class>
+</class_info>

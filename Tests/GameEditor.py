@@ -399,7 +399,14 @@ class UnitView(QtGui.QWidget):
         if self.current:
             new_name = str(self.name.text())
             self.current.name = new_name
-            self.current.image = create_chibi(new_name)
+            try:
+                self.current.image = create_chibi(new_name)
+            except KeyError:
+                # Show pop-up
+                message_box = QtGui.QMessageBox()
+                message_box.setText("No png file named %s found in Data/Characters/" % (new_name + 'Portrait.png'))
+                message_box.exec_()
+                self.current.image = create_chibi('Generic')
             portrait = find(portrait_data, new_name)
             if portrait:
                 self.current.portrait = portrait
@@ -1104,7 +1111,10 @@ class GenericMenu(QtGui.QWidget):
         idx = self.list.currentRow()
         item = self.list.currentItem()
         item.setText(self.data[idx].name)
-        item.setIcon(create_icon(self.data[idx].image.convert_alpha()))
+        if self.data[idx].image:
+            item.setIcon(create_icon(self.data[idx].image.convert_alpha()))
+        else:
+            item.setIcon(QtGui.QIcon())
 
 class UnitMenu(GenericMenu):
     def add(self):
@@ -1164,7 +1174,7 @@ class ClassMenu(GenericMenu):
             ET.SubElement(klass, "turns_into").text = ','.join(u.promotes_to)
             ET.SubElement(klass, "movement_group").text = str(u.movement_group)
             ET.SubElement(klass, "tags").text = ','.join(u.tags)
-            skills = zip([str(l) for l in u.skill_level], [s.id for s in u.skills])
+            skills = zip([str(l) for l in u.skill_levels], u.skills)
             ET.SubElement(klass, "skills").text = ';'.join([','.join(s) for s in skills])            
             ET.SubElement(klass, "bases").text = ','.join([str(b) for b in u.bases])
             ET.SubElement(klass, "growths").text = ','.join([str(g) for g in u.growths])

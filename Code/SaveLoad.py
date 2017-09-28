@@ -159,6 +159,13 @@ def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, pr
         # Unit is not used in this mode
     return current_mode
 
+def default_previous_classes(cur_class, classes, class_dict):
+    while class_dict[cur_class]['tier'] > len(classes) and class_dict[cur_class]['promotes_from']:
+        prev_class = class_dict[cur_class]['promotes_from']
+        if prev_class not in classes:
+            classes.insert(0, prev_class)
+            cur_class = prev_class
+
 def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
     assert len(unitLine) == 6, "unitLine %s must have length 6"%(unitLine)
     legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
@@ -176,10 +183,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             classes = unit.find('class').text.split(',')
             u_i['klass'] = classes[-1]
             # Give default previous class
-            if class_dict[u_i['klass']]['tier'] > len(classes) and class_dict[u_i['klass']]['promotes_from']:
-                prev_class = class_dict[u_i['klass']]['promotes_from'][0]
-                if prev_class not in classes:
-                    classes.insert(0, prev_class)
+            default_previous_classes(u_i['klass'], classes, class_dict)
             u_i['gender'] = int(unit.find('gender').text)
             u_i['level'] = int(unit.find('level').text)
             u_i['faction'] = unit.find('faction').text
@@ -267,10 +271,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     classes = legend['class'].split(',')
     u_i['klass'] = classes[-1]
     # Give default previous class
-    if class_dict[u_i['klass']]['tier'] > len(classes) and class_dict[u_i['klass']]['promotes_from']:
-        prev_class = class_dict[u_i['klass']]['promotes_from'][0]
-        if prev_class not in classes:
-            classes.insert(0, prev_class)
+    default_previous_classes(u_i['klass'], classes, class_dict)
 
     u_i['level'] = int(legend['level'])
     u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
@@ -319,7 +320,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['team'] = summoner.team
     u_i['event_id'] = 0
     u_i['gender'] = 0
-    classes = classes[:summoner.level/cf.CONSTANTS['max_level']+1]
+    classes = classes[:summoner.level/cf.CONSTANTS['max_level'] + 1]
     u_i['klass'] = classes[-1]
     u_i['faction'] = summoner.faction
     u_i['name'] = summon_info.name

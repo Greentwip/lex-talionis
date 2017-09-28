@@ -1607,8 +1607,8 @@ class UnitObject(object):
     def attackspeed(self, item=None):
         if not item:
             item = self.getMainWeapon()
-        if item and item.WT:
-            attackspeed = self.stats['SPD'] - max(0, item.WT - self.stats['CON'])
+        if item and item.weight:
+            attackspeed = self.stats['SPD'] - max(0, item.weight - self.stats['CON'])
         else:
             attackspeed = self.stats['SPD']
         return attackspeed

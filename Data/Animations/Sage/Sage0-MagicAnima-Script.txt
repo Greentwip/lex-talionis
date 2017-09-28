@@ -12,6 +12,7 @@ pose;Attack
 f;6;Stand
 f;5;Attack1
 effect;SageInit
+sound;SageRune
 f;1;Attack1
 f;9;Attack2
 f;7;Attack3
@@ -32,9 +33,11 @@ f;4;Attack13
 f;4;Attack14
 f;4;Attack15
 f;5;Attack16
+sound;Sage Step
 f;3;Attack17
 f;3;Attack18
 f;3;Attack19
+sound;Sage Step
 f;3;Attack20
 f;3;Attack21
 f;8;Attack22

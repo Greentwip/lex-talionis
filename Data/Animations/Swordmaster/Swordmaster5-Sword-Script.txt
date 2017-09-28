@@ -19,6 +19,7 @@ f;2;Attack8
 f;1;Attack9
 wait;25
 f;1;Attack10
+sound;Weapon Pull
 f;3;Attack11
 # Hit
 f;5;Attack12
@@ -46,6 +47,7 @@ f;1;Attack23
 f;1;Attack24
 f;2;Attack25
 # Land
+sound;Step Back 1
 f;1;Attack26
 f;2;Attack27
 f;1;Attack28
@@ -64,6 +66,7 @@ f;4;Attack6
 f;8;Attack7
 # blur
 f;2;Attack8
+sound;Weapon Pull
 f;1;Attack9
 wait;25
 f;1;Attack10
@@ -91,6 +94,7 @@ f;1;Attack23
 f;1;Attack24
 f;2;Attack25
 # Land
+sound;Step Back 1
 f;1;Attack26
 f;2;Attack27
 f;1;Attack28

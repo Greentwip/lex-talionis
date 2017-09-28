@@ -540,10 +540,10 @@
     <status name="Heavy Hitter">
         <id>Heavy Hitter</id>
         <image_index>8,1</image_index>
-        <desc>Adds half weapon Wt to damage.</desc>
+        <desc>Adds half weapon weight to damage.</desc>
         <components>mt,class_skill</components>
 
-        <mt>item.WT/2 if item.WT else 0</mt>
+        <mt>item.weight/2 if item.weight else 0</mt>
     </status>
 
     <status name="Charge">

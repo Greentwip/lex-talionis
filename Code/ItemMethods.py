@@ -109,11 +109,11 @@ class ItemObject(object):
 
             if self.weapon:
                 first_line_text = [' ', self.weapon.LVL, ' Mt ', str(self.weapon.MT), ' Hit ', str(self.weapon.HIT)]
-                if self.WT:
-                    first_line_text += [' Wt ', str(self.WT)]
+                if self.weight:
+                    first_line_text += [' Wt ', str(self.weight)]
                 first_line_text += [' Rng ', self.strRNG]
                 first_line_font = [font1, font1, font2, font1, font2, font1]
-                if self.WT:
+                if self.weight:
                     first_line_font += [font2, font1]
                 first_line_font += [font2, font1]
 
@@ -386,18 +386,8 @@ def itemparser(itemstring):
                 elif component == 'map_hit_color':
                     my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
                     assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
-                elif component == 'damage':
-                    my_components['damage'] = int(item['damage'])
-                elif component == 'hit':
-                    my_components['hit'] = int(item['hit'])
-                elif component == 'weight':
-                    my_components['WT'] = int(item['WT'])
-                elif component == 'exp':
-                    my_components['exp'] = int(item['exp'])
-                elif component == 'crit':
-                    my_components['crit'] = int(item['crit'])
-                elif component == 'wexp_increase':
-                    my_components['wexp_increase'] = int(item['wexp_increase'])
+                elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase'):
+                    my_components[component] = int(item[component])
                 elif component in ['movement', 'self_movement']:
                     mode, magnitude = item[component].split(',')
                     my_components[component] = MovementComponent(mode, magnitude)

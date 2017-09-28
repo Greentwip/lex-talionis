@@ -12,7 +12,7 @@
         <uses>45</uses>
         <value>10</value>
         <RNG>1</RNG>
-		<WT>3</WT>
+		<weight>3</weight>
         <desc></desc>
         
 		<MT>3</MT>
@@ -30,7 +30,7 @@
         <uses>20</uses>
         <value>6</value>
         <RNG>1</RNG>
-		<WT>3</WT>
+		<weight>3</weight>
         <desc></desc>
         
 		<MT>2</MT>
@@ -48,7 +48,7 @@
         <uses>40</uses>
         <value>8</value>
         <RNG>1</RNG>
-        <WT>2</WT>
+        <weight>2</weight>
         <desc>Grants DEF +2.</desc>
         
         <MT>1</MT>
@@ -69,7 +69,7 @@
         <value>20</value>
         <RNG>1</RNG>
         <desc></desc>
-		<WT>6</WT>
+		<weight>6</weight>
         
 		<MT>5</MT>
 		<HIT>75</HIT>
@@ -87,7 +87,7 @@
         <value>75</value>
         <RNG>1</RNG>
         <desc></desc>
-		<WT>5</WT>
+		<weight>5</weight>
 
 		<MT>8</MT>
 		<HIT>80</HIT>
@@ -105,7 +105,7 @@
         <value>40</value>
         <RNG>1</RNG>
         <desc></desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -118,7 +118,7 @@
         <spriteid>10</spriteid>       
         <components>weapon,uses,reverse,weight</components>
         <weapontype>Sword</weapontype>
-		<WT>6</WT>
+		<weight>6</weight>
  
         <uses>15</uses>
         <RNG>1</RNG>
@@ -141,7 +141,7 @@
         <RNG>1</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>6</MT>
 		<HIT>75</HIT>
@@ -159,7 +159,7 @@
         <uses>15</uses>
         <value>150</value>
         <desc></desc>
-		<WT>9</WT>
+		<weight>9</weight>
         
 		<MT>9</MT>
 		<HIT>65</HIT>
@@ -177,7 +177,7 @@
         <value>50</value>
         <RNG>1-2</RNG>
         <desc>Uses MAG instead of STR to determine damage.</desc>
-		<WT>6</WT>
+		<weight>6</weight>
         
 		<MT>4</MT>
 		<HIT>80</HIT>
@@ -195,7 +195,7 @@
         <value>25</value>
         <RNG>1-2</RNG>
         <desc></desc>
-		<WT>1</WT>
+		<weight>1</weight>
         
 		<MT>1</MT>
 		<HIT>75</HIT>
@@ -213,7 +213,7 @@
         <value>40</value>
         <RNG>1-2</RNG>
         <desc></desc>
-		<WT>3</WT>
+		<weight>3</weight>
         
 		<MT>3</MT>
 		<HIT>65</HIT>
@@ -231,7 +231,7 @@
         <value>160</value>
         <RNG>1-2</RNG>
         <desc></desc>
-		<WT>2</WT>
+		<weight>2</weight>
         
 		<MT>5</MT>
 		<HIT>70</HIT>
@@ -249,7 +249,7 @@
         <value>220</value>
         <RNG>1</RNG>
         <desc>A sword which devours magic.</desc>
-		<WT>5</WT>
+		<weight>5</weight>
         <status_on_equip>Resistance +10</status_on_equip>
         <status>Silence</status>
         
@@ -269,7 +269,7 @@
         <value>200</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
-		<WT>7</WT>
+		<weight>7</weight>
         <status_on_equip>Swordbreaker</status_on_equip>
         
 		<MT>7</MT>
@@ -289,7 +289,7 @@
         <RNG>1</RNG>
         <value>8</value>
         <desc></desc>
-		<WT>5</WT>
+		<weight>5</weight>
         
 		<MT>5</MT>
 		<HIT>80</HIT>
@@ -307,7 +307,7 @@
         <RNG>1</RNG>
         <value>16</value>
         <desc></desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -325,7 +325,7 @@
         <RNG>1</RNG>
         <value>60</value>
         <desc></desc>
-		<WT>7</WT>
+		<weight>7</weight>
         
 		<MT>9</MT>
 		<HIT>75</HIT>
@@ -343,7 +343,7 @@
         <value>14</value>
         <RNG>1</RNG>
         <desc></desc>
-		<WT>3</WT>
+		<weight>3</weight>
         
 		<MT>3</MT>
 		<HIT>90</HIT>
@@ -361,7 +361,7 @@
         <RNG>1</RNG>
         <value>35</value>
         <desc></desc>
-		<WT>9</WT>
+		<weight>9</weight>
         
 		<MT>9</MT>
 		<HIT>60</HIT>
@@ -379,7 +379,7 @@
         <RNG>1</RNG>
         <value>130</value>
         <desc>Reverses the weapon triangle.</desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -397,7 +397,7 @@
         <RNG>1</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<WT>9</WT>
+		<weight>9</weight>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -415,7 +415,7 @@
         <uses>15</uses>
         <value>120</value>
         <desc></desc>
-		<WT>10</WT>
+		<weight>10</weight>
         
 		<MT>11</MT>
 		<HIT>55</HIT>
@@ -433,7 +433,7 @@
         <RNG>1-2</RNG>
         <value>20</value>
         <desc></desc>
-		<WT>7</WT>
+		<weight>7</weight>
         
 		<MT>3</MT>
 		<HIT>65</HIT>
@@ -451,7 +451,7 @@
         <RNG>1-2</RNG>
         <value>50</value>
         <desc></desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>6</MT>
 		<HIT>60</HIT>
@@ -469,7 +469,7 @@
         <RNG>1-2</RNG>
         <value>120</value>
         <desc></desc>
-		<WT>9</WT>
+		<weight>9</weight>
         
 		<MT>8</MT>
 		<HIT>50</HIT>
@@ -487,7 +487,7 @@
         <value>180</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
-		<WT>6</WT>
+		<weight>6</weight>
         <status_on_equip>Lancebreaker</status_on_equip>
         
 		<MT>9</MT>
@@ -507,7 +507,7 @@
         <RNG>1</RNG>
         <value>6</value>
         <desc></desc>
-		<WT>6</WT>
+		<weight>6</weight>
         
 		<MT>6</MT>
 		<HIT>70</HIT>
@@ -525,7 +525,7 @@
         <RNG>1</RNG>
         <value>4</value>
         <desc></desc>
-		<WT>5</WT>
+		<weight>5</weight>
         
 		<MT>5</MT>
 		<HIT>65</HIT>
@@ -543,7 +543,7 @@
         <RNG>1</RNG>
         <value>12</value>
         <desc></desc>
-		<WT>9</WT>
+		<weight>9</weight>
         
 		<MT>9</MT>
 		<HIT>60</HIT>
@@ -561,7 +561,7 @@
         <RNG>1</RNG>
         <value>50</value>
         <desc></desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>9</MT>
 		<HIT>65</HIT>
@@ -579,7 +579,7 @@
         <RNG>1</RNG>
         <value>10</value>
         <desc></desc>
-		<WT>3</WT>
+		<weight>3</weight>
         
 		<MT>3</MT>
 		<HIT>80</HIT>
@@ -597,7 +597,7 @@
         <RNG>1</RNG>
         <value>40</value>
         <desc></desc>
-		<WT>11</WT>
+		<weight>11</weight>
         
 		<MT>11</MT>
 		<HIT>50</HIT>
@@ -615,7 +615,7 @@
         <RNG>1</RNG>
         <value>140</value>
         <desc>Reverses the weapon triangle.</desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>7</MT>
 		<HIT>65</HIT>
@@ -633,7 +633,7 @@
         <RNG>1</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<WT>11</WT>
+		<weight>11</weight>
         
 		<MT>7</MT>
 		<HIT>65</HIT>
@@ -651,7 +651,7 @@
         <uses>15</uses>
         <value>100</value>
         <desc></desc>
-		<WT>12</WT>
+		<weight>12</weight>
         
 		<MT>12</MT>
 		<HIT>45</HIT>
@@ -669,7 +669,7 @@
         <RNG>1-2</RNG>
         <value>15</value>
         <desc></desc>
-		<WT>8</WT>
+		<weight>8</weight>
         
 		<MT>4</MT>
 		<HIT>55</HIT>
@@ -687,7 +687,7 @@
         <RNG>1-2</RNG>
         <value>40</value>
         <desc></desc>
-		<WT>9</WT>
+		<weight>9</weight>
         
 		<MT>7</MT>
 		<HIT>55</HIT>
@@ -705,7 +705,7 @@
         <RNG>1-2</RNG>
         <value>200</value>
         <desc></desc>
-		<WT>10</WT>
+		<weight>10</weight>
         
 		<MT>10</MT>
 		<HIT>40</HIT>
@@ -723,7 +723,7 @@
         <value>160</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Axes.</desc>
-		<WT>9</WT>
+		<weight>9</weight>
         <status_on_equip>Axebreaker</status_on_equip>
         
 		<MT>10</MT>
@@ -743,7 +743,7 @@
         <RNG>2-3</RNG>
         <value>12</value>
         <desc></desc>
-		<WT>3</WT>
+		<weight>3</weight>
         
 		<MT>4</MT>
 		<HIT>85</HIT>
@@ -761,7 +761,7 @@
         <RNG>2-3</RNG>
         <value>24</value>
         <desc></desc>
-		<WT>6</WT>
+		<weight>6</weight>
         
 		<MT>6</MT>
 		<HIT>75</HIT>
@@ -779,7 +779,7 @@
         <RNG>2-3</RNG>
         <value>80</value>
         <desc></desc>
-		<WT>4</WT>
+		<weight>4</weight>
         
 		<MT>7</MT>
 		<HIT>80</HIT>
@@ -798,7 +798,7 @@
         <value>15</value>
         <desc>Inflicts poison on hit.</desc>
         <status>Poison</status>
-		<WT>4</WT>
+		<weight>4</weight>
         
 		<MT>4</MT>
 		<HIT>75</HIT>
@@ -816,7 +816,7 @@
         <RNG>2-3</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<WT>9</WT>
+		<weight>9</weight>
         
 		<MT>7</MT>
 		<HIT>70</HIT>
@@ -834,7 +834,7 @@
         <RNG>2-4</RNG>
         <value>50</value>
         <desc></desc>
-		<WT>7</WT>
+		<weight>7</weight>
         
 		<MT>3</MT>
 		<HIT>65</HIT>
@@ -852,7 +852,7 @@
         <RNG>2-4</RNG>
         <value>100</value>
         <desc></desc>
-        <WT>9</WT>
+        <weight>9</weight>
         
         <MT>6</MT>
         <HIT>60</HIT>
@@ -870,7 +870,7 @@
         <value>150</value>
         <RNG>2-3</RNG>
         <desc>A bow which devours magic.</desc>
-		<WT>6</WT>
+		<weight>6</weight>
         <status_on_equip>Resistance +10</status_on_equip>
         <status>Silence</status>
         
@@ -890,7 +890,7 @@
         <RNG>3-10</RNG>
         <value>400</value>
         <desc></desc>
-		<WT>12</WT>
+		<weight>12</weight>
         
 		<MT>5</MT>
 		<HIT>65</HIT>
@@ -1741,7 +1741,7 @@
         <RNG>1-2</RNG>
         <value>100000</value>
         <desc>An Imperial Witchblade. Enervates enemies.</desc>
-		<WT>12</WT>
+		<weight>12</weight>
         <status>Enervated</status>
         
 		<MT>13</MT>

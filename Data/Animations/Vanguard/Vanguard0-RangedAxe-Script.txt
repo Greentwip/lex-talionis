@@ -10,9 +10,11 @@ f;1;Stand
 
 pose;Attack
 f;6;Stand
+sound;Weapon Push
 f;3;Attack1
 f;14;Attack2
 f;4;Attack3
+sound;Hand Axe 1;Hand Axe 2
 enemy_flash_white;8
 effect;ThrowingAxe
 f;1;Attack4
@@ -34,9 +36,11 @@ f;1;Stand
 
 pose;Miss
 f;6;Stand
+sound;Weapon Push
 f;3;Attack1
 f;14;Attack2
 f;4;Attack3
+sound;Hand Axe 1;Hand Axe 2
 effect;ThrowingAxe
 f;1;Attack4
 f;4;Attack4

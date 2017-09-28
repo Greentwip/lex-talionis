@@ -10,6 +10,7 @@ f;1;Stand
 
 pose;Attack
 f;6;Stand
+sound;Horse Step 1
 f;20;Attack1
 f;5;Attack2
 enemy_flash_white;8
@@ -21,9 +22,11 @@ hit_spark
 start_hit
 wait_for_hit;Attack3;Miss
 f;4;Attack3;Miss
+sound;Weapon Pull
 f;2;Attack5
 f;2;Attack6
 f;6;Attack7
+sound;Horse Step 2
 f;3;Attack8
 f;13;Attack9
 f;3;Attack10
@@ -31,6 +34,7 @@ f;3;Attack11
 f;1;Attack12
 f;1;Attack13
 f;21;Attack14
+sound;Horse Step 3
 f;7;Attack15
 f;3;Attack16
 f;12;Attack17
@@ -39,14 +43,17 @@ f;1;Stand
 
 pose;Miss
 f;6;Stand
+sound;Horse Step 1
 f;20;Attack1
 f;6;Attack2
 f;2;Miss
 miss
 f;30;Miss
+sound;Weapon Pull
 f;2;Attack5
 f;2;Attack6
 f;6;Attack7
+sound;Horse Step 2
 f;3;Attack8
 f;13;Attack9
 f;3;Attack10
@@ -54,6 +61,7 @@ f;3;Attack11
 f;1;Attack12
 f;1;Attack13
 f;21;Attack14
+sound;Horse Step 3
 f;7;Attack15
 f;3;Attack16
 f;12;Attack17

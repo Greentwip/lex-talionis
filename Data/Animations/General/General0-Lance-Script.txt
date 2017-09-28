@@ -4,6 +4,7 @@ f;4;Stand
 pose;Dodge
 f;4;Dodge1
 f;27;Dodge2
+sound;ArmorShift
 f;6;Dodge1
 f;1;Stand
 
@@ -14,10 +15,12 @@ f;5;Attack2
 f;5;Attack3
 f;7;Attack4
 f;6;Attack5
+sound;Knight Step
 platform_shake
 f;5;Attack6
 f;30;Attack7
 f;10;Attack8
+sound;Weapon Push
 f;3;Attack9
 f;5;Attack10;Miss
 enemy_flash_white;8
@@ -31,9 +34,11 @@ f;4;Attack11;Miss
 f;4;Attack12;Miss
 f;4;Attack13;Miss
 f;7;Attack14;Miss
+sound;General Step
 f;6;Attack15;Miss
 f;6;Attack16;Miss
 f;21;Attack17;Miss
+sound;Weapon Push
 f;6;Attack18;Miss
 f;4;Attack19;Miss
 # flip back and forth
@@ -46,11 +51,13 @@ f;1;Attack21;Miss
 f;1;Attack20;Miss
 f;1;Attack21;Miss
 f;8;Attack22;Miss
+sound;Knight Step
 platform_shake
 f;7;Attack23
 f;20;Attack24
 f;4;Attack25
 f;5;Attack26
+sound;Knight Step
 platform_shake
 f;11;Attack27
 f;9;Attack28
@@ -64,10 +71,12 @@ f;5;Attack2
 f;5;Attack3
 f;7;Attack4
 f;6;Attack5
+sound;Knight Step
 platform_shake
 f;5;Attack6
 f;30;Attack7
 f;10;Attack8
+sound;Weapon Push
 f;3;Attack9
 of;2;Attack10;Miss
 miss
@@ -78,9 +87,11 @@ of;30;Attack11;Miss
 of;4;Attack12;Miss
 of;4;Attack13;Miss
 of;7;Attack14;Miss
+sound;General Step
 of;6;Attack15;Miss
 of;6;Attack16;Miss
 of;21;Attack17;Miss
+sound;Weapon Push
 of;6;Attack18;Miss
 of;4;Attack19;Miss
 # flip back and forth
@@ -93,11 +104,13 @@ of;1;Attack21;Miss
 of;1;Attack20;Miss
 of;1;Attack21;Miss
 of;8;Attack22;Miss
+sound;Knight Step
 platform_shake
 f;7;Attack23
 f;20;Attack24
 f;4;Attack25
 f;5;Attack26
+sound;Knight Step
 platform_shake
 f;11;Attack27
 f;9;Attack28

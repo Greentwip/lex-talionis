@@ -10,6 +10,7 @@ f;1;Stand
 
 pose;Attack
 f;6;Stand
+sound;Unsheathe
 f;3;Attack1
 # Start Main Spell
 spell

@@ -2,10 +2,10 @@
 
 Players
 === Ophie ===
-MyrmidonUnarmed +++
-MyrmidonSword ++
+MyrmidonUnarmed ++
+MyrmidonSword +
 MyrmidonMagicSword
-SwordmasterUnarmed +++
+SwordmasterUnarmed ++
 SwordmasterSword ++
 SwordmasterMagicSword ++
 === Prim ===
@@ -15,9 +15,9 @@ BishopFUnarmed
 BishopFMagicLight
 BishopFMagicDark ?? (same as light)
 === Joel ===
-FighterUnarmed +++
+FighterUnarmed ++
 FighterAxe ++
-FighterRangedAxe ++
+FighterRangedAxe +?
 WarriorUnarmed
 WarriorAxe
 WarriorRangedAxe
@@ -33,24 +33,24 @@ MageFMagicAnima
 SageFUnarmed
 SageFMagicAnima
 === Drake ===
-CavalierUnarmed +++
+CavalierUnarmed ++
 CavalierSword ++
 CavalierMagicSword
 CavalierLance ++
-CavalierRangedLance ++
-PaladinUnarmed +++
+CavalierRangedLance +
+PaladinUnarmed ++
 PaladinSword ++
 PaladinMagicSword ++
-PaladinLance ++ 
+PaladinLance ++
 PaladinRangedLance ++
 === Theo ===
-KnightUnarmed +++
-KnightLance +++
-KnightRangedLance ++
-GeneralUnarmed +++
+KnightUnarmed ++
+KnightLance ++
+KnightRangedLance +
+GeneralUnarmed ++
 GeneralLance ++
-GeneralRangedLance +++
-GeneralSword ++ 
+GeneralRangedLance ++
+GeneralSword ++
 GeneralMagicSword ++
 === Renae ===
 ThiefFUnarmed
@@ -80,22 +80,22 @@ ShamanFMagicDark
 DruidFUnarmed
 DruidFMagicDark
 === Coyote ===
-MercenaryUnarmed +++
-MercenarySword +++
-MercenaryMagicSword ++
-HeroUnarmed +++
-HeroSword +++
+MercenaryUnarmed ++
+MercenarySword ++
+MercenaryMagicSword +
+HeroUnarmed ++
+HeroSword ++
 HeroMagicSword ++
 HeroAxe ++
-HeroRangedAxe ++
+HeroRangedAxe +?
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage +++, Sage ++, Archer, Sniper, Cleric, Bishop ++
+Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper, Cleric, Bishop +
 SentinelUnarmed ??
 SentinelAxe ??
-SwordmasterFUnarmed ++
-SwordmasterFSword ++
-SwordmasterFMagicSword ++
+SwordmasterFUnarmed +
+SwordmasterFSword +
+SwordmasterFMagicSword +
 SkirmisherUnarmed ??
 SkirmisherLance ?? 
 SkirmisherRangedLance ??
@@ -158,4 +158,4 @@ Stun << - Sleep
 Disintegrate - Demon Surge
 
 Possibly:
-Replace Iron Knife, Steel Knife, Mithril Knife with Levin Sword (Iron), Rune Sword (Nosferatu) (Steel), Light Brand (Mithril)
+Replace Iron Knife, Steel Knife, Mithril Knife with Levin Sword (Iron), Rune Sword (Nosferatu) (Steel), Light Brand (Mithril), Rapier (targets SPD instead)

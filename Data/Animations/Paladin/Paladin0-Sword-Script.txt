@@ -12,9 +12,11 @@ pose;Attack
 f;6;Stand
 f;10;Attack0
 f;7;Attack1
+sound;Horse Step 3
 f;7;Attack2
 f;16;Attack3
 f;5;Attack4
+sound;Weapon Push
 f;5;Attack5
 platform_shake
 f;1;Attack5
@@ -26,9 +28,11 @@ hit_spark
 start_hit
 wait_for_hit;Attack6;Miss
 f;4;Attack6;Miss
+sound;Weapon Pull
 f;3;Attack7
 f;2;Attack8
 f;2;Attack9
+sound;Horse Step 2
 f;4;Attack10
 f;6;Attack11
 f;1;Attack12
@@ -39,12 +43,14 @@ f;7;Attack16
 f;2;Attack17
 f;1;Attack18
 f;2;Attack19
+sound;Horse Step 3
 platform_shake
 f;3;Attack20
 f;5;Attack21
 f;5;Attack22
 f;5;Attack23
 f;6;Attack24
+sound;Horse Step 1
 f;8;Attack25
 f;8;Attack26
 f;7;Attack27
@@ -54,9 +60,11 @@ pose;Miss
 f;6;Stand
 f;10;Attack0
 f;7;Attack1
+sound;Horse Step 3
 f;7;Attack2
 f;16;Attack3
 f;5;Attack4
+sound;Weapon Push
 f;5;Attack5
 platform_shake
 f;1;Attack5
@@ -64,9 +72,11 @@ f;1;Attack5
 f;2;Miss
 miss
 f;30;Miss
+sound;Weapon Pull
 f;3;Attack7
 f;2;Attack8
 f;2;Attack9
+sound;Horse Step 2
 f;4;Attack10
 f;6;Attack11
 f;1;Attack12
@@ -77,12 +87,14 @@ f;7;Attack16
 f;2;Attack17
 f;1;Attack18
 f;2;Attack19
+sound;Horse Step 3
 platform_shake
 f;3;Attack20
 f;5;Attack21
 f;5;Attack22
 f;5;Attack23
 f;6;Attack24
+sound;Horse Step 1
 f;8;Attack25
 f;8;Attack26
 f;7;Attack27
