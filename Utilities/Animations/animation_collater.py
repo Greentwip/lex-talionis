@@ -5,10 +5,10 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
+# COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
 WIDTH_LIMIT = 1024
-folder = 'barrier_dust'
+folder = 'sagef_anima_frames'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

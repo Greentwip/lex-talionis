@@ -28,10 +28,10 @@ ArcherFRangedBow
 SniperFUnarmed
 SniperFRangedBow
 === Althea ===
-MageFUnarmed
-MageFMagicAnima
-SageFUnarmed
-SageFMagicAnima
+MageFUnarmed ++
+MageFMagicAnima ++
+SageFUnarmed ++
+SageFMagicAnima ++
 === Drake ===
 CavalierUnarmed ++
 CavalierSword ++

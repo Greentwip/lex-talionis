@@ -520,6 +520,75 @@ mage_blue = [(128, 160, 128), # Background
                 (48, 40, 128), # Dark Robe
                 (40, 40, 40)] # Outline
 
+
+lute = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (224, 144, 248), # Light Hair
+                (192, 88, 224), # Med Hair
+                (136, 40, 176), # Dark Hair
+                (120, 104, 216), # Light clothes
+                (112, 80, 152), # Medium clothes
+                (80, 48, 128), # Dark clothes
+                (0, 0, 0), # ???
+                (72, 216, 248), # Light Robe
+                (80, 128, 248), # Medium Robe
+                (56, 56, 192), # Dark Robe
+                (40, 40, 40)] # Outline
+
+nino = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (168, 240, 112), # Light Hair
+                (64, 200, 72), # Med Hair
+                (56, 128, 64), # Dark Hair
+                (48, 184, 208), # Light clothes
+                (24, 128, 192), # Medium clothes
+                (0, 16, 144), # Dark clothes
+                (0, 0, 0), # ???
+                (208, 168, 240), # Light Robe
+                (160, 96, 168), # Medium Robe
+                (96, 56, 120), # Dark Robe
+                (40, 40, 40)] # Outline
+
+nino_sage = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (168, 240, 112), # Light Hair
+                (64, 200, 72), # Med Hair
+                (48, 120, 56), # Dark Hair
+                (144, 200, 224), # Lightest clothes
+                (48, 184, 208), # Light clothes
+                (24, 128, 192), # Medium clothes
+                (0, 16, 144), # Dark clothes
+                (184, 152, 216), # Light Robe
+                (152, 96, 160), # Medium Robe
+                (80, 56, 112), # Dark Robe
+                (40, 40, 40)] # Outline
+
+lute_sage = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (224, 144, 248), # Light Hair
+                (192, 88, 224), # Med Hair
+                (136, 40, 176), # Dark Hair
+                (248, 184, 184), # Lightest clothes
+                (112, 120, 232), # Light clothes
+                (72, 80, 168), # Medium clothes
+                (64, 40, 104), # Dark clothes
+                (72, 216, 248), # Light Robe
+                (80, 128, 248), # Medium Robe
+                (56, 56, 192), # Dark Robe
+                (40, 40, 40)] # Outline
+
 saleh = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
