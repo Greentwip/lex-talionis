@@ -9,7 +9,7 @@ f;4;Dodge1
 f;1;Stand
 
 pose;Attack
-f;1;Stand
+f;6;Stand
 f;2;Attack1
 f;2;Attack2
 f;2;Attack3
@@ -54,7 +54,7 @@ f;7;Attack24
 f;1;Stand
 
 pose;Miss
-f;1;Stand
+f;6;Stand
 f;2;Attack1
 f;2;Attack2
 f;2;Attack3

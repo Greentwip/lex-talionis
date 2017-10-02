@@ -8,10 +8,10 @@ COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 YLIMIT = 116
 XLIMIT = 0
-palette_set = palette_index.barrier_dust
+palette_set = palette_index.ross_warrior
 
-folder = 'barrier_dust_unique/'
-name = 'Dust'
+folder = 'warrior_unique/'
+name = 'Attack'
 # name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):

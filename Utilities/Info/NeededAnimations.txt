@@ -132,8 +132,9 @@ RangedAxes <<
 RangedLances
 RangedBows
 RangedBallista
-Levin Sword <<< - Thunder
-Light Brand - Light Brand
+Bolt Sword <<< - Thunder
+Levin Sword <<< - Arch's Wind
+Flare Sword <<< - Fire
 Glimmer - Lightning
 Shine <<< - Shine
 Corona - Divine
@@ -147,7 +148,7 @@ Wind << - Arch's Wind
 Fire << - Fire
 Thunder << - Thunder
 Aether - Rainbow Excalibur ? (Wind Sword palette shift)
-Fly - None?
+Fly <<< - None
 Flux - Flux
 Nyx - Luna
 Ruin - Fenrir
