@@ -675,6 +675,57 @@ generic_sage = [(255, 255, 255),
                 (143, 124, 0),
                 ]
 
+canas_shaman = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (232, 200, 240), # Light clothes
+                (184, 80, 240), # Medium clothes
+                (96, 40, 136), # Dark clothes
+                (232, 224, 48), # Highlight L
+                (248, 168, 56), # Highlight D
+                (144, 160, 192), # Light Robe
+                (104, 120, 136), # Medium Robe
+                (80, 96, 120), # Dark Robe
+                (48, 56, 72), # Darkest Robe
+                (40, 40, 40), # ???
+                (40, 40, 40)] # Outline
+
+shaman_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 176, 88), # Med skin
+                (112, 72, 48), # Dark skin
+                (248, 152, 96), # Light clothes
+                (232, 64, 16), # Medium clothes
+                (104, 0, 0), # Dark clothes
+                (216, 216, 48), # Highlight L
+                (208, 136, 40), # Highlight D
+                (112, 128, 152), # Light Robe
+                (72, 80, 96), # Medium Robe
+                (48, 64, 80), # Dark Robe
+                (16, 24, 32), # Darkest Robe
+                (40, 40, 40), # ???
+                (40, 40, 40)] # Outline
+
+shaman_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (96, 152, 248), # Light clothes
+                (56, 64, 232), # Medium clothes
+                (40, 40, 104), # Dark clothes
+                (232, 224, 48), # Highlight L
+                (248, 168, 56), # Highlight D
+                (144, 160, 192), # Light Robe
+                (104, 120, 136), # Medium Robe
+                (80, 96, 120), # Dark Robe
+                (48, 56, 72), # Darkest Robe
+                (40, 40, 40), # ???
+                (40, 40, 40)] # Outline   
+
 riev = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (232, 240, 200), # Light skin

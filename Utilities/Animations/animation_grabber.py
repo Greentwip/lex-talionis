@@ -5,12 +5,12 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
+# COLORKEY = (0, 0, 0)
 YLIMIT = 116
 XLIMIT = 0
-palette_set = palette_index.ross_warrior
+palette_set = palette_index.canas_shaman
 
-folder = 'warrior_unique/'
+folder = 'shaman_unique/'
 name = 'Attack'
 # name = 'Dust'
 
