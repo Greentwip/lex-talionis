@@ -675,6 +675,23 @@ generic_sage = [(255, 255, 255),
                 (143, 124, 0),
                 ]
 
+sophia_shaman = [(128, 160, 128), # Background
+                 (248, 248, 248), # White
+                 (248, 248, 208), # Light skin
+                 (248, 176, 88), # Med skin
+                 (112, 72, 48), # Dark skin
+                 (224, 192, 248), # Light clothes
+                 (192, 136, 224), # Medium clothes
+                 (88, 56, 160), # Dark clothes
+                 (176, 120, 240), # Light robe
+                 (128, 80, 208), # M robe
+                 (96, 72, 160), # Dark robe
+                 (56, 0, 112), # Super dark robe outline clothes
+                 (248, 240, 56), # Highlight
+                 (192, 152, 216), # Headress
+                 (232, 200, 248), # Headress highlight
+                 (40, 40, 40)] # Outline
+
 canas_shaman = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin

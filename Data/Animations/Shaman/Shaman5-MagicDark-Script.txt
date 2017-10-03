@@ -64,15 +64,16 @@ f;2;Attack48
 f;2;Attack49
 f;2;Attack50
 f;2;Attack51
-f;1;Attack52
-f;4;Attack53
-spell
+f;2;Attack52
 f;1;Attack53
+f;4;Attack54
+spell
+f;1;Attack54
 # Start True Loop
 start_loop
-	f;5;Loop2
 	f;5;Loop3
 	f;6;Loop1
+	f;5;Loop2
 end_loop
 f;6;End1
 f;6;End2

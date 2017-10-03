@@ -8,9 +8,9 @@ COLORKEY = (128, 160, 128)
 # COLORKEY = (0, 0, 0)
 YLIMIT = 116
 XLIMIT = 0
-palette_set = palette_index.canas_shaman
+palette_set = palette_index.sophia_shaman
 
-folder = 'shaman_unique/'
+folder = 'unique_shamanf/'
 name = 'Attack'
 # name = 'Dust'
 

@@ -75,8 +75,8 @@ MonkMagicLight
 MageKnightUnarmed
 MageKnightMagicLight ??
 === Kayla ===
-ShamanFUnarmed
-ShamanFMagicDark
+ShamanFUnarmed ++
+ShamanFMagicDark ++
 DruidFUnarmed
 DruidFMagicDark
 === Coyote ===
@@ -90,7 +90,7 @@ HeroAxe ++
 HeroRangedAxe +?
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman, Druid, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper, Cleric, Bishop +
+Male versions of Soldier, Halberdier, Shaman ++, Druid, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper, Cleric, Bishop +
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed +
@@ -132,9 +132,9 @@ RangedAxes <<
 RangedLances
 RangedBows
 RangedBallista
-Bolt Sword <<< - Thunder
-Levin Sword <<< - Arch's Wind
-Flare Sword <<< - Fire
+Boltblade <<< - Thunder
+Gustblade <<< - Arch's Wind
+Flareblade <<< - Fire
 Glimmer - Lightning
 Shine <<< - Shine
 Corona - Divine
