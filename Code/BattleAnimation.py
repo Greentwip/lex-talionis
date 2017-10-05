@@ -23,7 +23,6 @@ class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
 
     def __init__(self, unit, anim, script, name=None, item=None):
-        # print('Init:', name, anim)
         self.unit = unit
         self.item = item
         self.frame_directory = anim
@@ -36,6 +35,7 @@ class BattleAnimation(object):
         self.base_state = False  # Whether the animation is in a basic state (normally Stand or wait_for_hit)
 
         self.children = []
+        self.under_children = []
         self.loop = False
         self.deferred_commands = []
 
@@ -129,9 +129,12 @@ class BattleAnimation(object):
         # Handle spells
         for child in self.children:
             child.update()
+        for child in self.under_children:
+            child.update()
 
         # Remove completed child_effects
         self.children = [child for child in self.children if child.state != 'Inert']
+        self.under_children = [child for child in self.under_children if child.state != 'Inert']
 
     def end_current(self):
         # print('Animation: End Current')
@@ -184,6 +187,13 @@ class BattleAnimation(object):
                 self.current_frame = self.frame_directory[line[3]]
             else:
                 self.current_frame = None
+        elif line[0] == 'uf':
+            self.frame_count = 0
+            self.num_frames = int(line[1]) * self.speed
+            self.current_frame = None
+            self.over_frame = None
+            self.under_frame = self.frame_directory[line[2]]
+            self.processing = False
         elif line[0] == 'wait':
             self.frame_count = 0
             self.num_frames = int(line[1]) * self.speed
@@ -232,7 +242,7 @@ class BattleAnimation(object):
                 self.owner.shake(3)
             elif self.owner.current_result.def_damage == 0:
                 self.owner.shake(2)
-                if self.item and self.item.damage:
+                if self.item and (self.item.weapon or (self.item.spell and self.item.damage)):
                     self.no_damage()
         elif line[0] == 'miss':
             if self.right:
@@ -303,28 +313,42 @@ class BattleAnimation(object):
         elif line[0] == 'effect':
             image, script = GC.ANIMDICT.get_effect(line[1])
             # print('Effect', script)
-            child_effect = BattleAnimation(self.unit, image, script, line[1])
+            child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             child_effect.start_anim(self.current_pose)
             self.children.append(child_effect)
+        elif line[0] == 'under_effect':
+            image, script = GC.ANIMDICT.get_effect(line[1])
+            # print('Effect', script)
+            child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
+            child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+            child_effect.start_anim(self.current_pose)
+            self.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
             image, script = GC.ANIMDICT.get_effect(line[1])
-            child_effect = BattleAnimation(self.partner.unit, image, script, line[1])
+            child_effect = BattleAnimation(self.partner.unit, image, script, line[1], self.item)
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
                                self.at_range, parent=self.parent.partner)
             child_effect.start_anim(self.current_pose)
             self.partner.children.append(child_effect)
+        elif line[0] == 'enemy_under_effect':
+            image, script = GC.ANIMDICT.get_effect(line[1])
+            child_effect = BattleAnimation(self.partner.unit, image, script, line[1], self.item)
+            # Opposite effects
+            child_effect.awake(self.owner, self.parent, not self.right,
+                               self.at_range, parent=self.parent.partner)
+            child_effect.start_anim(self.current_pose)
+            self.partner.under_children.append(child_effect)
         elif line[0] == 'blend':
             if self.blend:
                 self.blend = None
             else:
                 self.blend = Engine.BLEND_RGB_ADD
         elif line[0] == 'spell':
-            attacker = self.owner.current_result.attacker
-            item_id = self.owner.right_item.id if attacker is self.owner.right else self.owner.left_item.id
+            item_id = self.item.id
             image, script = GC.ANIMDICT.get_effect(item_id)
-            child_effect = BattleAnimation(self.unit, image, script, item_id)
+            child_effect = BattleAnimation(self.unit, image, script, item_id, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             child_effect.start_anim(self.current_pose)
             self.children.append(child_effect)
@@ -386,6 +410,9 @@ class BattleAnimation(object):
             self.reset()
         if self.children:
             for child in self.children:
+                child.resume()
+        if self.under_children:
+            for child in self.under_children:
                 child.resume()
 
     def reset(self):
@@ -455,8 +482,15 @@ class BattleAnimation(object):
         left = 0
         if not static:
             left += shake[0] + range_offset
-        if self.at_range and not self.ignore_pan and not static:
-            left += pan_offset
+        if self.at_range and not static:
+            if self.ignore_pan:
+                if self.right:
+                    pan_max = range_offset - 24
+                else:
+                    pan_max = range_offset + 24
+                left -= pan_max
+            else:
+                left += pan_offset
 
         if self.right:
             offset = offset[0] + shake[0] + left, offset[1] + shake[1]
@@ -469,6 +503,10 @@ class BattleAnimation(object):
             # Screen flash
             if self.background and not self.blend:
                 Engine.blit(surf, self.background, (0, 0), None, Engine.BLEND_RGB_ADD)
+
+            # Handle under children
+            for child in self.under_children:
+                child.draw(surf, (0, 0), range_offset, pan_offset)
 
             if self.current_frame is not None:
                 image, offset = self.get_image(self.current_frame, shake, range_offset, pan_offset, self.static)
@@ -530,7 +568,6 @@ class BattleAnimation(object):
                 if self.background_frames <= 0:
                     self.background = None
                     self.background_frames = 0
-
 
     def draw_under(self, surf, shake=(0, 0), range_offset=0, pan_offset=0):
         if self.state != 'Inert' and self.under_frame is not None:

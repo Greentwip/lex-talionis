@@ -28,7 +28,10 @@ class BattleAnimationManager(object):
         self.effects = {}
         for root, dirs, files in os.walk(home + 'Data/Effects/'):
             for name in files:
-                effect, desc = name.split('-')
+                try:
+                    effect, desc = name.split('-')
+                except ValueError:
+                    print('Error loading in %s' % name)
                 if effect not in self.effects:
                     self.effects[effect] = {}
                 full_name = os.path.join(root, name)

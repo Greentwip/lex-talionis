@@ -10,5 +10,5 @@ for fp in glob.glob('*-Index.txt'):
             x, y = [int(n) for n in pos.split(',')]
             width, height = [int(n) for n in size.split(',')]
             offset_x, offset_y = [int(n) for n in offset.split(',')]
-            offset_x -= 24
+            offset_x += 8
             index_script.write(name + ';' + str(x) + ',' + str(y) + ';' + str(width) + ',' + str(height) + ';' + str(offset_x) + ',' + str(offset_y) + '\n')

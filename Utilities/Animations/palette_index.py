@@ -741,7 +741,92 @@ shaman_blue = [(128, 160, 128), # Background
                 (80, 96, 120), # Dark Robe
                 (48, 56, 72), # Darkest Robe
                 (40, 40, 40), # ???
-                (40, 40, 40)] # Outline   
+                (40, 40, 40)] # Outline 
+
+sophia_druid = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # L Skin
+                (240, 160, 48), # M Skin
+                (96, 56, 24), # D Skin
+                (248, 120, 248), # Light highlight
+                (224, 80, 208), # Med highlight
+                (80, 224, 248), # Light clothes
+                (56, 136, 248), # Medium clothes
+                (56, 24, 152), # Dark clothes
+                (184, 128, 240), # Light Robe
+                (136, 88, 208), # Medium Robe
+                (104, 56, 160), # Dark Robe
+                (80, 24, 120), # Darkest Robe
+                (40, 40, 40), # ???
+                (40, 40, 40)] # Outline  
+
+canas_druid = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # L Skin
+                (112, 72, 48), # D Skin
+                (208, 224, 40), # Light highlight
+                (168, 176, 24), # Med highlight
+                (96, 104, 16), # Dark highlight
+                (232, 200, 240), # Light clothes
+                (184, 80, 240), # Medium clothes
+                (96, 40, 136), # Dark clothes
+                (144, 160, 192), # Light Robe
+                (104, 120, 136), # Medium Robe
+                (80, 96, 120), # Dark Robe
+                (48, 56, 72), # Darkest Robe
+                (80, 96, 120), # Dark Robe 2
+                (40, 40, 40)] # Outline
+
+ewan_druid = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # L Skin
+                (112, 72, 48), # D Skin
+                (248, 248, 48), # Light highlight
+                (240, 160, 48), # Med highlight
+                (144, 80, 16), # Dark highlight
+                (248, 152, 32), # Light clothes
+                (208, 64, 0), # Medium clothes
+                (144, 24, 0), # Dark clothes
+                (136, 216, 240), # Light Robe
+                (96, 152, 200), # Medium Robe
+                (80, 96, 120), # Dark Robe
+                (32, 64, 112), # Darkest Robe
+                (64, 112, 160), # Dark Robe 2
+                (40, 40, 40)] # Outline
+
+druid_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # L Skin
+                (112, 72, 48), # D Skin
+                (192, 216, 40), # Light highlight
+                (136, 152, 16), # Med highlight
+                (56, 72, 0), # Dark highlight
+                (248, 152, 96), # Light clothes
+                (232, 64, 16), # Medium clothes
+                (104, 0, 0), # Dark clothes
+                (112, 128, 152), # Light Robe
+                (72, 80, 96), # Medium Robe
+                (48, 64, 80), # Dark Robe
+                (16, 24, 32), # Darkest Robe
+                (48, 64, 80), # Dark Robe 2
+                (40, 40, 40)] # Outline
+
+druid_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # L Skin
+                (112, 72, 48), # D Skin
+                (208, 224, 40), # Light highlight
+                (168, 176, 24), # Med highlight
+                (96, 104, 16), # Dark highlight
+                (96, 152, 248), # Light clothes
+                (56, 64, 232), # Medium clothes
+                (40, 40, 104), # Dark clothes
+                (144, 160, 192), # Light Robe
+                (104, 120, 136), # Medium Robe
+                (80, 96, 120), # Dark Robe
+                (48, 56, 72), # Darkest Robe
+                (80, 96, 120), # Dark Robe 2
+                (40, 40, 40)] # Outline
 
 riev = [(128, 160, 128), # Background
                 (248, 248, 248), # White
@@ -1195,3 +1280,9 @@ barrier_dust = [(248, 248, 248),
                 (72, 168, 48)]
 
 white = [(248, 248, 248)]
+
+flux_slime = [(248, 136, 184),
+              (216, 104, 168),
+              (168, 88, 136),
+              (120, 24, 96),
+              (56, 8, 56)]

@@ -132,9 +132,9 @@ RangedAxes <<
 RangedLances
 RangedBows
 RangedBallista
-Boltblade <<< - Thunder
-Gustblade <<< - Arch's Wind
-Flareblade <<< - Fire
+Boltblade - Thunder
+Gustblade - Arch's Wind
+Flareblade - Fire
 Glimmer - Lightning
 Shine <<< - Shine
 Corona - Divine
@@ -145,11 +145,11 @@ Restore - Restore
 Refresh - Dance
 Silence - Silence
 Wind << - Arch's Wind
-Fire << - Fire
-Thunder << - Thunder
+Fire <<< - Fire
+Thunder <<< - Thunder
 Aether - Rainbow Excalibur ? (Wind Sword palette shift)
 Fly <<< - None
-Flux - Flux
+Flux <<< - Flux
 Nyx - Luna
 Ruin - Fenrir
 Howl - Ereshkigal

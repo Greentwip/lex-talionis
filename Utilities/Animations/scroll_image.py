@@ -1,7 +1,7 @@
 import glob
 from PIL import Image
 
-lr_scroll = -32
+lr_scroll = -1
 ud_scroll = 0
 
 for image in glob.glob('*.png'):

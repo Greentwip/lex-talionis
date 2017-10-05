@@ -5,13 +5,13 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
-YLIMIT = 116
+COLORKEY = (0, 0, 0)
+YLIMIT = 160
 XLIMIT = 0
-palette_set = palette_index.sophia_shaman
+palette_set = None
 
-folder = 'unique_shamanf/'
-name = 'Attack'
+folder = 'flux_tendrils/'
+name = 'Flux'
 # name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
@@ -86,7 +86,7 @@ for idx, fp in enumerate(sorted(images)):
             for y in xrange(height):
                 my_color = image.getpixel((x, y))
                 bg_color = background.getpixel((x, y))
-                if my_color == bg_color or (YLIMIT and y > YLIMIT) or (XLIMIT and x > XLIMIT) or my_color not in palette_set:
+                if my_color == bg_color or (YLIMIT and y > YLIMIT) or (XLIMIT and x > XLIMIT) or (palette_set and my_color not in palette_set):
                     image.putpixel((x, y), COLORKEY)
 
 
