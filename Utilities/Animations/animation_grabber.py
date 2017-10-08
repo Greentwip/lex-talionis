@@ -6,12 +6,12 @@ import palette_index
 
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
-YLIMIT = 160
+YLIMIT = 140
 XLIMIT = 0
-palette_set = None
+palette_set = palette_index.fenrir_ray
 
-folder = 'flux_tendrils/'
-name = 'Flux'
+folder = 'fenrir_ray/'
+name = 'Ray'
 # name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
