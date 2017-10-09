@@ -1017,6 +1017,23 @@ ross_warrior = [(128, 160, 128), # Background
                 (128, 128, 136), # Dark Armor
                 (40, 40, 40)] # Outline
 
+geitz_warrior = [(255, 255, 255),
+                (248, 248, 248),
+                (248, 248, 208),
+                (248, 184, 136),
+                (208, 144, 96),
+                (176, 112, 64),
+                (112, 72, 48),
+                (192, 224, 248),
+                (136, 176, 200),
+                (96, 128, 160),
+                (224, 96, 96),
+                (192, 8, 88),
+                (88, 8, 40),
+                (216, 192, 184),
+                (152, 120, 112),
+                (40, 40, 40)]
+
 warrior_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
@@ -1224,6 +1241,57 @@ generic =  [(89, 0, 89), # Background
                 (254, 188, 254), # Light Robe
                 (255, 40, 24), # Medium Robe
                 (130, 0, 8), # Dark Robe
+                (40, 40, 40)] # Outline
+
+wil_sniper = [(255, 255, 255), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (216, 168, 88), # Light Hair
+                (184, 104, 16), # Med Hair
+                (112, 64, 0), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (216, 248, 248), # Light Clothes
+                (112, 224, 224), # LM Clothes
+                (32, 168, 176), # MD Clothes
+                (16, 104, 120), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+sniper_red = [(255, 255, 255), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (200, 192, 248), # Light Hair
+                (168, 160, 248), # Med Hair
+                (112, 96, 200), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (248, 208, 168), # Light Clothes
+                (248, 128, 56), # LM Clothes
+                (232, 40, 24), # MD Clothes
+                (128, 0, 8), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+sniper_blue = [(255, 255, 255), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (200, 192, 248), # Light Hair
+                (168, 160, 248), # Med Hair
+                (112, 96, 200), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (168, 208, 248), # Light Clothes
+                (56, 128, 248), # LM Clothes
+                (40, 40, 232), # MD Clothes
+                (48, 40, 128), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 ### Plains-Melee

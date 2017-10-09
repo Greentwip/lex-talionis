@@ -5,13 +5,13 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
-YLIMIT = 140
+# COLORKEY = (0, 0, 0)
+YLIMIT = 160
 XLIMIT = 0
-palette_set = palette_index.fenrir_ray
+palette_set = None
 
-folder = 'fenrir_ray/'
-name = 'Ray'
+folder = 'unique_sniper/'
+name = 'Attack'
 # name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
@@ -25,7 +25,7 @@ for idx, fp in enumerate(sorted(images)):
     print(fp)
     image = Image.open(fp).convert('RGB')
     width, height = image.size
-    if not background:
+    if not background and palette_set:
         grid = [False for _ in xrange(width*height)]
         for x in xrange(width):
             for y in xrange(height):
@@ -81,7 +81,7 @@ for idx, fp in enumerate(sorted(images)):
             for y in xrange(height):
                 if (x, y) not in discrete_images[which_count]:
                     image.putpixel((x, y), COLORKEY)
-    else:
+    elif background:
         for x in xrange(width):
             for y in xrange(height):
                 my_color = image.getpixel((x, y))
