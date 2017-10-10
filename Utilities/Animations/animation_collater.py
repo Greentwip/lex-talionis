@@ -6,9 +6,10 @@ from PIL import Image
 
 COLORKEY = (128, 160, 128)
 # COLORKEY = (0, 0, 0)
-FIND_COLORKEY = False
+FIND_COLORKEY = True
+NEW_COLORKEY = (128, 160, 128)
 WIDTH_LIMIT = 1024
-folder = 'warrior_bow'
+folder = 'archer_unarmed'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
@@ -96,7 +97,7 @@ for image, name, width, height, offset in index_lines:
 
 # Now convert 0, 0, 0 back to colorkey
 if FIND_COLORKEY:
-    COLORKEY = (0, 0, 0)
+    COLORKEY = NEW_COLORKEY
 for x in xrange(total_width):
     for y in xrange(max_height):
         color = sprite_sheet.getpixel((x, y))
