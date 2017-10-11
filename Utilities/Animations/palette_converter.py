@@ -3,8 +3,8 @@ import glob
 from palette_index import *
 
 ### === INPUTS ===
-p1 = wil_archer
-p2 = archer_blue
+p1 = wil_sniper
+p2 = sniper_red
 images_to_convert = '*.png'
 
 def palette_convert(p1, p2, image_to_convert):

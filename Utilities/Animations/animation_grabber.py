@@ -10,7 +10,7 @@ YLIMIT = 160
 XLIMIT = 0
 palette_set = None
 
-folder = 'archer_crit/'
+folder = 'sniper_unique_crit/'
 name = 'Crit'
 # name = 'Dust'
 
