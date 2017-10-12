@@ -309,6 +309,16 @@ class BattleAnimation(object):
                 self.animations.append(anim)
             else:  # No Damage
                 self.no_damage()
+        elif line[0] == 'crit_spark':
+            if self.owner.current_result.def_damage > 0:
+                image = GC.IMAGESDICT['CritSpark']
+                if not self.right:
+                    image = Engine.flip_horiz(image)  # If on the left, then need to swap so enemy can have it
+                anim = CustomObjects.Animation(image, (-40, -30), (3, 5), 15, ignore_map=True, 
+                                               set_timing=(-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1))
+                self.animations.append(anim)
+            else:  # No Damage
+                self.no_damage()
         # === EFFECTS ===
         elif line[0] == 'effect':
             image, script = GC.ANIMDICT.get_effect(line[1])
