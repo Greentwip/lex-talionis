@@ -10,8 +10,8 @@ YLIMIT = 160
 XLIMIT = 0
 palette_set = None
 
-folder = 'sniper_unique_crit/'
-name = 'Crit'
+folder = 'sniperf_bow/'
+name = 'Attack'
 # name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):

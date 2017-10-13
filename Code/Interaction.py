@@ -844,7 +844,10 @@ class AnimationCombat(Combat):
 
     def play_hit_sound(self):
         if self.current_result.defender.currenthp <= 0:
-            GC.SOUNDDICT['Final Hit'].play()
+            if self.current_result.outcome == 2: # critical
+                GC.SOUNDDICT['Critical Kill'].play()
+            else:
+                GC.SOUNDDICT['Final Hit'].play()
         elif self.current_result.def_damage == 0 and (self.item.weapon or (self.item.spell and self.item.damage)):
             GC.SOUNDDICT['No Damage'].play()
         else:
@@ -938,6 +941,11 @@ class AnimationCombat(Combat):
             self.shake_set = [(0, 0), (-3, -3), (0, 0), (0, 0), (0, 0), (3, 3), (0, 0), (0, 0), (-3, -3), (0, 0),
                               (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (3, 3), 
                               (0, 0)]
+        elif num == 4: # Critical Hit
+            self.shake_set = [(-6, -6), (0, 0), (0, 0), (0, 0), (6, 6), (0, 0), (0, 0), (-6, -6), (0, 0), (0, 0),
+                              (6, 6), (0, 0), (-6, -6), (0, 0), (6, 6), (0, 0), (4, 4), (0, 0), (-4, -4), (0, 0),
+                              (4, 4), (0, 0), (-4, -4), (0, 0), (4, 4), (0, 0), (-2, -2), (0, 0), (2, 2), (0, 0),
+                              (-2, -2), (0, 0), (2, 2), (0, 0), (-1, -1), (0, 0), (1, 1), (0, 0)]
 
     def platform_shake(self):
         self.platform_current_shake = 1

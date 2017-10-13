@@ -4,7 +4,7 @@ from palette_index import *
 
 ### === INPUTS ===
 p1 = wil_sniper
-p2 = sniper_red
+p2 = sniper_blue
 images_to_convert = '*.png'
 
 def palette_convert(p1, p2, image_to_convert):

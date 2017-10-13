@@ -54,7 +54,11 @@ class BattleAnimationManager(object):
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)
                 # print(frame_directory)
                 klass_directory[weapon]['images'] = frame_directory
-                klass_directory[weapon]['script'] = self.parse_script(klass_directory[weapon]['script'])
+                if 'script' in klass_directory[weapon]:
+                    klass_directory[weapon]['script'] = self.parse_script(klass_directory[weapon]['script'])
+                else: # Search default klass
+                    default_script = self.directory[klass[:-1] + '0'][weapon]['script']
+                    klass_directory[weapon]['script'] = self.parse_script(default_script)
 
     def generate_effect(self, effect):
         if effect in self.effects and effect not in self.generated_effects:

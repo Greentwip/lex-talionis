@@ -1363,6 +1363,40 @@ sniper_blue = [(255, 255, 255), # Background
                 (48, 40, 128), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+neimi_sniper = [(255, 255, 255), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (248, 112, 232), # Light Hair
+                (240, 80, 184), # Med Hair
+                (200, 40, 136), # Dark Hair
+                (184, 232, 112), # Light Weapon/Leather
+                (128, 176, 72), # Med Weapon/Leather
+                (96, 112, 48), # Dark Weapon/String
+                (240, 184, 176), # Light Clothes
+                (200, 96, 144), # LM Clothes
+                (152, 56, 72), # MD Clothes
+                (88, 64, 64), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+louise_sniper = [(255, 255, 255), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (248, 248, 144), # Light Hair
+                (240, 184, 80), # Med Hair
+                (176, 112, 16), # Dark Hair
+                (208, 232, 248), # Light Weapon/Leather
+                (152, 176, 200), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (248, 184, 192), # Light Clothes
+                (240, 64, 136), # LM Clothes
+                (168, 48, 88), # MD Clothes
+                (120, 0, 40), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 ### Plains-Melee
 plains = [(104, 144, 120),
                 (120, 184, 120),

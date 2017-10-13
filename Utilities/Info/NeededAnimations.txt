@@ -25,8 +25,8 @@ WarriorRangedBow
 === Nia ===
 ArcherFUnarmed
 ArcherFRangedBow
-SniperFUnarmed
-SniperFRangedBow
+SniperFUnarmed ++
+SniperFRangedBow ++
 === Althea ===
 MageFUnarmed ++
 MageFMagicAnima ++
@@ -90,7 +90,7 @@ HeroAxe ++
 HeroRangedAxe +?
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper, Cleric, Bishop +
+Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer, Sniper ++, Cleric, Bishop +
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed +

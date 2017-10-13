@@ -207,7 +207,9 @@ class BattleAnimation(object):
             GC.SOUNDDICT[sound].play()
         # === COMBAT HIT ===
         elif line[0] == 'start_hit':
-            if self.owner.current_result.def_damage > 0:
+            if self.owner.current_result.outcome == 2:
+                self.owner.shake(4)  # Critical
+            elif self.owner.current_result.def_damage > 0:
                 self.owner.shake(1)
             else:  # No Damage
                 self.owner.shake(2)
