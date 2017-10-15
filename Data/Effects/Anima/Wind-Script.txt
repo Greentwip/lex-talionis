@@ -4,6 +4,7 @@ darken
 wait;4
 pan
 wait;8
+sound;Wind
 enemy_effect;WindRings
 # Wait length of first 22 frames of wind rings
 wait;64
@@ -24,6 +25,7 @@ darken
 wait;4
 pan
 wait;8
+sound;Wind
 enemy_effect;WindRings
 # Wait length of first 22 frames of wind rings
 wait;64

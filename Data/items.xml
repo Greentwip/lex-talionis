@@ -905,7 +905,7 @@
         <components>weapon,uses,status,map_hit_color</components>
         <weapontype>Light</weapontype>
  
-        <uses>35</uses>
+        <uses>30</uses>
         <RNG>1-2</RNG>
         <value>15</value>
         <desc>Lowers enemy accuracy slightly on hit.</desc>
@@ -925,7 +925,7 @@
         <components>weapon,uses,map_hit_color</components>
         <weapontype>Light</weapontype>
  
-        <uses>25</uses>
+        <uses>20</uses>
         <RNG>1-2</RNG>
         <value>30</value>
         <desc></desc>
@@ -944,7 +944,7 @@
         <components>weapon,uses,map_hit_color</components>
         <weapontype>Light</weapontype>
  
-        <uses>15</uses>
+        <uses>10</uses>
         <RNG>1-2</RNG>
         <value>220</value>
         <desc></desc>
@@ -1313,13 +1313,14 @@
         <id>Flux</id>
         <spritetype>Dark</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
+        <components>weapon,uses,status,map_hit_color</components>
         <weapontype>Dark</weapontype>
  
-        <uses>35</uses>
+        <uses>30</uses>
         <RNG>1-2</RNG>
         <value>20</value>
-        <desc></desc>
+        <desc>Lowers enemy avoid slightly on hit.</desc>
+        <status>Chill</status>
 
 		<MT>5</MT>
 		<HIT>80</HIT>
@@ -1332,14 +1333,13 @@
         <id>Nyx</id>
         <spritetype>Dark</spritetype>
         <spriteid>1</spriteid>       
-        <components>weapon,uses,status,map_hit_color</components>
+        <components>weapon,uses,map_hit_color,half_lifelink</components>
         <weapontype>Dark</weapontype>
  
-        <uses>25</uses>
+        <uses>20</uses>
         <RNG>1-2</RNG>
-        <value>40</value>
-        <desc>Lowers enemy avoid slightly on hit.</desc>
-        <status>Chill</status>
+        <value>80</value>
+        <desc>Recover HP equal to half damage dealt.</desc>
 
 		<MT>7</MT>
 		<HIT>60</HIT>
@@ -1357,7 +1357,7 @@
  
         <uses>15</uses>
         <RNG>1-2</RNG>
-        <value>100</value>
+        <value>120</value>
         <desc>Does half damage even on miss.</desc>
 
 		<MT>8</MT>
@@ -1376,7 +1376,7 @@
  
         <uses>10</uses>
         <RNG>1-2</RNG>
-        <value>200</value>
+        <value>250</value>
         <desc></desc>
 
 		<MT>11</MT>

@@ -129,6 +129,8 @@ class Solver(object):
         if result.def_damage > 0:
             if self.item.lifelink:
                 result.atk_damage -= result.def_damage
+            if self.item.half_lifelink:
+                result.atk_damage -= result.def_damage/2
             # Handle Vampire Status
             for status in self.attacker.status_effects:
                 if status.vampire and defender.currenthp - result.def_damage <= 0 and \

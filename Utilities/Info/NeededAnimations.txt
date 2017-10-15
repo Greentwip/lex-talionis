@@ -144,15 +144,15 @@ Fortune <<< - Barrier
 Restore - Restore
 Refresh - Dance
 Silence - Silence
-Wind << - Arch's Wind
+Wind <<< - Arch's Wind
 Fire <<< - Fire
 Thunder <<< - Thunder
-Aether - Rainbow Excalibur ? (Wind Sword palette shift)
+Aether <<< - Wind Sword palette shift
 Fly <<< - None
 Flux <<< - Flux
-Nyx - Luna
-Ruin - Fenrir
-Howl - Ereshkigal
+Nyx <<< - Nosferatu
+Ruin <<< - Fenrir
+Howl - Gleipnir? Ereshkigal?
 Scathe - Evil Eye
 Hex - Shadowshot
 Stun << - Sleep

@@ -5,11 +5,11 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
-FIND_COLORKEY = True
+COLORKEY = (0, 0, 0)
+FIND_COLORKEY = False
 NEW_COLORKEY = (128, 160, 128)
 WIDTH_LIMIT = 1024
-folder = 'sniperf_unarmed'
+folder = 'fenrir_torch'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

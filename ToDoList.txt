@@ -8,10 +8,6 @@
 - Crashed on Suspend and Load another Saved Game?
 - Some music doesn't loop?
 
---- SOUNDS
-- Hand Axe
-- Wind Sword Whoosh
-
 FOR FUTURE UPDATES TO THE ENGINE:
 --- COMBAT ---
 - Full Combat Animations
