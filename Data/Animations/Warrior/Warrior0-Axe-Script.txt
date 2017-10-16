@@ -40,6 +40,7 @@ f;3;Attack17
 f;5;Attack18
 f;5;Attack19
 f;7;Attack20
+f;1;Stand
 
 pose;Miss
 f;6;Stand
@@ -52,12 +53,13 @@ f;2;Attack5
 f;8;Attack6
 f;4;Attack7
 sound;Axe Push
-f;3;Attack8
+f;1;Attack8
+miss
+f;2;Attack8
 platform_shake
 f;1;Attack8
-f;2;Miss
-miss
-f;20;Miss
+f;3;MissDown1
+f;27;MissDown2
 f;2;Miss2
 f;2;Miss3
 sound;General Step
@@ -70,3 +72,4 @@ f;3;Attack17
 f;5;Attack18
 f;5;Attack19
 f;7;Attack20
+f;1;Stand

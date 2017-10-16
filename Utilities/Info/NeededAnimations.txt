@@ -18,10 +18,10 @@ BishopFMagicDark ?? (same as light)
 FighterUnarmed ++
 FighterAxe ++
 FighterRangedAxe +?
-WarriorUnarmed
-WarriorAxe
+WarriorUnarmed ++
+WarriorAxe ++
 WarriorRangedAxe
-WarriorRangedBow
+WarriorRangedBow ++
 === Nia ===
 ArcherFUnarmed ++
 ArcherFRangedBow ++
@@ -93,9 +93,9 @@ HeroRangedAxe +?
 Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric, Bishop +
 SentinelUnarmed ??
 SentinelAxe ??
-SwordmasterFUnarmed +
-SwordmasterFSword +
-SwordmasterFMagicSword +
+SwordmasterFUnarmed ++
+SwordmasterFSword ++
+SwordmasterFMagicSword ++
 SkirmisherUnarmed ??
 SkirmisherLance ?? 
 SkirmisherRangedLance ??
@@ -122,16 +122,9 @@ BerserkerUnarmed
 BerserkerAxe
 BerserkerRangedAxe
 ArchonUnarmed
-ArchonLance
-ArchonMagicLance
-BallistaUnarmed
-BallistaRangedBow
+ArchonLance (also Archon RangedLance)
 
 === Items ===
-RangedAxes <<
-RangedLances
-RangedBows
-RangedBallista
 Boltblade - Thunder
 Gustblade - Arch's Wind
 Flareblade - Fire

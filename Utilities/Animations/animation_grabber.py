@@ -5,14 +5,14 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
+COLORKEY = (0, 0, 0)
 YLIMIT = 160
 XLIMIT = 0
-palette_set = None
+palette_set = palette_index.dance_dust
 
-folder = 'archerf_bow/'
+folder = 'dance_small_dust/'
 name = 'Attack'
-# name = 'Dust'
+name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')

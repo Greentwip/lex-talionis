@@ -6,10 +6,10 @@ from PIL import Image
 
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
-FIND_COLORKEY = True
+FIND_COLORKEY = False
 NEW_COLORKEY = (128, 160, 128)
 WIDTH_LIMIT = 1024
-folder = 'archerf_hat_bow'
+folder = 'dance_small_dust'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

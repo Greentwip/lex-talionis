@@ -28,9 +28,9 @@ f;4;Attack14
 enemy_flash_white;8
 of;1;Arrow1;Attack15
 screen_flash_white;4
-of;1;Arrow1;Attack15
 of;1;Arrow2;Attack15
 of;2;Arrow3;Attack15
+f;1;Attack15
 pan
 hit_spark
 start_hit
@@ -59,17 +59,16 @@ f;7;Attack12
 f;10;Attack13
 f;4;Attack14
 of;1;Arrow1;Attack15
-of;1;Arrow1;Attack15
 of;1;Arrow2;Attack15
+sound;Bow Miss
+miss;no_sound
 of;2;Arrow3;Attack15
 pan
 f;2;Attack15
-sound;Bow Miss
-miss;no_sound
 f;30;Attack15
-pan
-f;15;Attack15
 f;5;Attack16
+pan
+f;6;Stand
 f;1;Stand
 
 pose;Critical
