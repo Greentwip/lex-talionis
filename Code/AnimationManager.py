@@ -73,6 +73,9 @@ class BattleAnimationManager(object):
     def partake(self, klass, gender=0, item=None, magic=False, distance=1):
         klass = klass + str(gender)
         if klass in self.directory:
+            gender = gender/5  # Get nearest default
+            klass = klass + str(gender)
+        if klass in self.directory:
             self.generate(klass)
             check_item = False
             if not item:

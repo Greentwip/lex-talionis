@@ -16,14 +16,15 @@ f;6;Stand
 f;2;Attack1
 f;2;Attack2
 f;2;Attack3
-f;1;Attack4
+f;2;Attack4
 f;2;Attack5
 f;2;Attack6
 f;2;Attack7
 f;2;Attack8
-f;1;Attack9
+f;2;Attack9
 f;2;Attack10
 f;4;Attack11
+sound;Bow
 f;5;Attack12
 f;20;Attack13
 f;3;Attack14
@@ -37,8 +38,10 @@ pan
 hit_spark
 start_hit
 wait_for_hit;Attack15
-pan
+wait;16
 f;4;Attack16
+pan
+f;8;Stand
 f;1;Stand
 
 pose;Miss
@@ -46,14 +49,15 @@ f;6;Stand
 f;2;Attack1
 f;2;Attack2
 f;2;Attack3
-f;1;Attack4
+f;2;Attack4
 f;2;Attack5
 f;2;Attack6
 f;2;Attack7
 f;2;Attack8
-f;1;Attack9
+f;2;Attack9
 f;2;Attack10
 f;4;Attack11
+sound;Bow
 f;5;Attack12
 f;20;Attack13
 f;3;Attack14
@@ -65,8 +69,9 @@ pan
 f;2;Attack15
 miss
 f;30;Attack15
-pan
 f;4;Attack16
+pan
+f;8;Stand
 f;1;Stand
 
 # add crit spark
@@ -82,27 +87,32 @@ f;2;Attack1
 f;2;Attack2
 f;2;Attack3
 f;2;Attack4
+sound;Throw 2
 f;2;Crit8
 f;2;Crit9
 f;3;Crit10
+sound;Throw 2
 f;2;Crit8
 f;1;Crit9
 f;2;Crit10
 f;2;Attack10
 f;3;Attack11
+sound;Bow
 f;6;Attack12
 f;25;Attack13
 f;3;Attack14
 enemy_flash_white;8
 of;1;Arrow1;Attack15
-screen_flash_white;2
+foreground_blend;2;248,248,248
+start_hit
 of;1;Arrow1;Attack15
 of;1;Arrow2;Attack15
-of;2;Arrow3;Attack15
-pan
 crit_spark
-start_hit
-wait_for_hit;Attack15
 pan
+of;1;Arrow3;Attack15
+wait_for_hit;Attack15
+wait;16
 f;4;Attack16
+pan
+f;8;Stand
 f;1;Stand

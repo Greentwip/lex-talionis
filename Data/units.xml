@@ -66,7 +66,7 @@
 
     <unit name="Nia">
         <id>Nia</id>
-        <gender>5</gender>
+        <gender>6</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,C,0,0,0</wexp>

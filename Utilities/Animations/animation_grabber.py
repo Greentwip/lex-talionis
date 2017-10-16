@@ -5,13 +5,13 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
+# COLORKEY = (0, 0, 0)
 YLIMIT = 160
 XLIMIT = 0
 palette_set = None
 
-folder = 'fenrir_explosion/'
-name = 'E'
+folder = 'archerf_bow/'
+name = 'Attack'
 # name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):

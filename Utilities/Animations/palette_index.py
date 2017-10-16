@@ -1312,6 +1312,23 @@ generic_archer = [(255, 255, 255),
                 (148, 255, 181),
                 ]
 
+dorothy_archer = [(255, 255, 255), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (232, 192, 120), # Light Hair
+                (192, 120, 0), # Med Hair
+                (144, 88, 16), # Dark Hair
+                (248, 232, 160), # Light Weapon/Leather
+                (208, 176, 120), # Med Weapon/Leather
+                (184, 216, 248), # Bowstring
+                (248, 216, 144), # Light Clothes
+                (248, 184, 72), # LM Clothes
+                (248, 128, 40), # MD Clothes
+                (144, 64, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 wil_sniper = [(255, 255, 255), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
