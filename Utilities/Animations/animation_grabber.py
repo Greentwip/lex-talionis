@@ -8,11 +8,10 @@ COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 YLIMIT = 160
 XLIMIT = 0
-palette_set = palette_index.dance_dust
+palette_set = palette_index.joshua_swordmaster
 
-folder = 'dance_small_dust/'
+folder = 'myrmidon_magic_sword/'
 name = 'Attack'
-name = 'Dust'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')

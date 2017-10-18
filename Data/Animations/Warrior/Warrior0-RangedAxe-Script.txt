@@ -8,22 +8,17 @@ f;27;Dodge2
 f;4;Dodge1
 f;1;Stand
 
-# when is pan
-# when is sound
-# is timing correct
-# Is dodge timing correct
-
 pose;Attack
 f;6;Stand
 f;2;Attack1
 f;2;Attack2
 f;2;Attack3
-f;3;Attack4
-f;3;Attack5
-f;10;Attack6
+f;4;Attack4
+sound;Weapon Pull
+f;2;Attack5
+f;11;Attack6
 f;3;Attack7
 f;4;Attack8
-sound;Hand Axe 1;Hand Axe 2
 enemy_flash_white;8
 effect;ThrowingAxe
 f;1;Attack9
@@ -36,8 +31,11 @@ f;23;Attack9
 f;1;Attack10
 f;3;Attack11
 wait_for_hit;Attack12
-pan
+f;23;Attack12
 f;5;Attack13
+f;5;Stand
+pan
+f;5;Stand
 f;1;Stand
 
 pose;Miss
@@ -45,22 +43,23 @@ f;6;Stand
 f;2;Attack1
 f;2;Attack2
 f;2;Attack3
-f;3;Attack4
-f;3;Attack5
-f;10;Attack6
+f;4;Attack4
+sound;Weapon Pull
+f;2;Attack5
+f;11;Attack6
 f;3;Attack7
 f;4;Attack8
-sound;Hand Axe 1;Hand Axe 2
 effect;ThrowingAxe
-f;1;Attack9
-f;4;Attack9
-pan
 f;2;Attack9
 miss
-f;23;Attack9
+f;2;Attack9
+pan
+f;2;Attack9
+f;22;Attack9
 f;1;Attack10
 f;3;Attack11
-f;18;Attack12
+f;50;Attack12
 pan
+f;13;Attack12
 f;5;Attack13
 f;1;Stand

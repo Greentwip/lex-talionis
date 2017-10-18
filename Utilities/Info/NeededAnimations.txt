@@ -3,8 +3,8 @@
 Players
 === Ophie ===
 MyrmidonUnarmed ++
-MyrmidonSword +
-MyrmidonMagicSword
+MyrmidonSword ++
+MyrmidonMagicSword ++
 SwordmasterUnarmed ++
 SwordmasterSword ++
 SwordmasterMagicSword ++
@@ -17,10 +17,10 @@ BishopFMagicDark ?? (same as light)
 === Joel ===
 FighterUnarmed ++
 FighterAxe ++
-FighterRangedAxe +?
+FighterRangedAxe ++
 WarriorUnarmed ++
 WarriorAxe ++
-WarriorRangedAxe
+WarriorRangedAxe ++
 WarriorRangedBow ++
 === Nia ===
 ArcherFUnarmed ++
@@ -87,7 +87,7 @@ HeroUnarmed ++
 HeroSword ++
 HeroMagicSword ++
 HeroAxe ++
-HeroRangedAxe +?
+HeroRangedAxe ++
 
 ===== Other Animations Needed =====
 Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric, Bishop +

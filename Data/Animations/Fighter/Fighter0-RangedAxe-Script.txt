@@ -11,14 +11,13 @@ f;1;Stand
 pose;Attack
 f;6;Stand
 enemy_flash_white;8
-sound;Hand Axe 1;Hand Axe 2
 effect;ThrowingAxe
 f;1;Attack1
 screen_flash_white;4
 f;4;Attack1
 pan
 hit_spark
-start_hit;no_sound
+start_hit
 f;23;Attack2
 f;4;Attack3
 f;3;Attack4
@@ -30,14 +29,13 @@ f;1;Stand
 
 pose;Miss
 f;6;Stand
-sound;Hand Axe 1;Hand Axe 2
 effect;ThrowingAxe
-f;1;Attack1
-f;4;Attack1
+f;2;Attack1
+miss
+f;2;Attack1
 pan
 f;2;Attack2
-miss
-f;21;Attack2
+f;22;Attack2
 f;4;Attack3
 f;3;Attack4
 f;20;Stand

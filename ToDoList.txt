@@ -24,6 +24,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- DIALOG SYSTEM ---
 - Functions - may be needed for Normal, Hard, Lunatic differentiation
 - Use Dictionary instead of if/elif system? -- premature optimization?
+- Use getattr() instead of dictionary or if/elif system
 --- ENGINE ---
 - Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)
 - Dialogue Tester
