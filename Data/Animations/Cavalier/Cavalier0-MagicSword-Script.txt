@@ -10,14 +10,17 @@ f;1;Stand
 
 pose;Attack
 f;6;Stand
+sound;Weapon Pull
 f;4;Attack1
-f;6;Attack2
-f;5;Attack3
-f;5;Attack4
+f;5;Attack2
 # Start Main Spell
 spell
+f;1;Attack2
 start_loop
-    f;5;Attack5
+	f;4;Attack3
 end_loop
-f;5;Attack6
+f;30;Attack3
+sound;Weapon Push
+f;3;Attack2
+f;4;Attack1
 f;1;Stand

@@ -14,10 +14,12 @@ f;6;Stand
 f;4;Attack1
 f;4;Attack2
 f;5;Attack3
+sound;ArmorShift
 platform_shake
 f;1;Attack3
 f;20;Attack4
 f;4;Attack5
+sound;Throw 1;Throw 2;Throw 3
 enemy_flash_white;8
 static
 f;1;Javelin1;Attack6
@@ -47,10 +49,12 @@ f;6;Stand
 f;4;Attack1
 f;4;Attack2
 f;5;Attack3
+sound;ArmorShift
 platform_shake
 f;1;Attack3
 f;20;Attack4
 f;4;Attack5
+sound;Throw 1;Throw 2;Throw 3
 static
 f;1;Javelin1;Attack6
 f;1;Javelin2;Attack6

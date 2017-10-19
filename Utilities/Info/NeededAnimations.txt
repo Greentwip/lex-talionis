@@ -35,9 +35,9 @@ SageFMagicAnima ++
 === Drake ===
 CavalierUnarmed ++
 CavalierSword ++
-CavalierMagicSword
+CavalierMagicSword ++
 CavalierLance ++
-CavalierRangedLance +
+CavalierRangedLance ++
 PaladinUnarmed ++
 PaladinSword ++
 PaladinMagicSword ++
@@ -46,7 +46,7 @@ PaladinRangedLance ++
 === Theo ===
 KnightUnarmed ++
 KnightLance ++
-KnightRangedLance +
+KnightRangedLance ++
 GeneralUnarmed ++
 GeneralLance ++
 GeneralRangedLance ++
@@ -73,7 +73,7 @@ HalberdierFRangedAxe ??
 MonkUnarmed
 MonkMagicLight
 MageKnightUnarmed
-MageKnightMagicLight ??
+MageKnightMagicLight
 === Kayla ===
 ShamanFUnarmed ++
 ShamanFMagicDark ++
@@ -82,7 +82,7 @@ DruidFMagicDark ++
 === Coyote ===
 MercenaryUnarmed ++
 MercenarySword ++
-MercenaryMagicSword +
+MercenaryMagicSword ++
 HeroUnarmed ++
 HeroSword ++
 HeroMagicSword ++
@@ -90,7 +90,7 @@ HeroAxe ++
 HeroRangedAxe ++
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric, Bishop +
+Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric +, Bishop +
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed ++

@@ -8,9 +8,9 @@ COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 YLIMIT = 160
 XLIMIT = 0
-palette_set = palette_index.joshua_swordmaster
+palette_set = palette_index.cleric_m_blue
 
-folder = 'myrmidon_magic_sword/'
+folder = 'cleric_m_staff/'
 name = 'Attack'
 
 if os.path.exists(folder + 'Background.png'):

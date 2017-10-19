@@ -5,11 +5,11 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
+# COLORKEY = (0, 0, 0)
 FIND_COLORKEY = True
 NEW_COLORKEY = (128, 160, 128)
 WIDTH_LIMIT = 1024
-folder = 'myrmidon_magic_sword'
+folder = 'cleric_m_staff'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
