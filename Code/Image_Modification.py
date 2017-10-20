@@ -38,12 +38,20 @@ def flickerImageWhiteColorKey(image, white, colorkey=(128, 160, 128)):
             color = image.get_at((row, col))
             if color != colorkey: # ie, my transparent color
                 color = (min(255, color[0] + white), min(255, color[1] + white), min(255, color[2] + white))
-            image.set_at((row, col), color)
+                image.set_at((row, col), color)
     
     # Basically none of the below actually work. None respect the color key when blending...
     # image.fill((white, white, white), None, pygame.BLEND_RGB_ADD)
 
     return image
+
+def gray_image(image, colorkey=(128, 160, 128)):
+    for row in range(image.get_width()):
+        for col in range(image.get_height()):
+            color = image.get_at((row, col))
+            if color != colorkey:
+                avg = (color[0] + color[1] + color[2]) / 3
+                image.set_at((row, col), avg)
 
 def flickerImageTranslucent(image, transparency):
     """transparency measured from 0% transparent to 100% transparent"""

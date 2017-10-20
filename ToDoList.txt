@@ -18,6 +18,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Add animation options to Options Menu
 --- Add button to speed up animations? self.speed = 0.5?
 --- Critical Animation for Critical (Archer/Sniper/Swordmaster), Sol (Vanguard), Luna (Halberdier)
+--- Add Critical option to Engine Interaction UI in AnimationCombat
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
 - Have Start Skip or Massivily Speed-up AI State
@@ -35,8 +36,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add Rescue/Warp/Rewarp handling (would include ability to select starting and ending positions - would allow time for warp animation) (both as staff and as ability)
 - Add fake arrival to shove - could be as easy as changing the sprite offset in the right direction
 - Comment many of the functions with purposes
---- DIFFICULTY ---
-- Add in Normal and Lunatic modes (Normal, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Lunatic, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
 --- MUSIC ---
 - Replace with Open-Source Music - Especially Ghibli (they are especially litigious)
 - Replace with Fire Emblem 6-8 music?
@@ -60,3 +59,5 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Pulsing arrow (transparency and color)
 - Allow user to control arrow movement (option)
 - Allow quick attack on enemy, quick spell on ally (option)
+--- DIFFICULTY ---
+- Add in Normal and Lunatic modes (Normal, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Lunatic, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))

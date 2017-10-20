@@ -48,6 +48,7 @@ class BattleAnimation(object):
         self.background_frames = 0
         self.flash_color = None
         self.flash_frames = 0
+        self.flash_image = None
         # Opacity
         self.opacity = 255
         # Offset
@@ -272,6 +273,9 @@ class BattleAnimation(object):
             num_frames = int(line[1]) * self.speed
             color = tuple([int(num) for num in line[2].split(',')])
             self.partner.flash(num_frames, color)
+        elif line[0] == 'enemy_gray':
+            num_frames = int(line[1]) * self.speed
+            self.partner.flash(num_frames, 'gray')
         elif line[0] == 'enemy_flash_white':
             num_frames = int(line[1]) * self.speed
             self.partner.flash(num_frames, (248, 248, 248))
@@ -534,15 +538,20 @@ class BattleAnimation(object):
 
                 # Self flash
                 if self.flash_color:
-                    if isinstance(self.flash_color, list):
-                        image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color[self.flash_frames%len(self.flash_color)])
-                    else:
-                        image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color)
+                    if not self.flash_image or isinstance(self.flash_color, list):
+                        if self.flash_color == 'gray':
+                            self.flash_image = Image_Modification.gray_image(image.convert_alpha())
+                        elif isinstance(self.flash_color, list):
+                            self.flash_image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color[self.flash_frames%len(self.flash_color)])
+                        else:
+                            self.flash_image = Image_Modification.flicker_image(image.convert_alpha(), self.flash_color)
                     self.flash_frames -= 1
+                    image = self.flash_image
                     # If done
                     if self.flash_frames <= 0:
                         self.flash_color = None
                         self.flash_frames = 0
+                        self.flash_image = None
 
                 if self.opacity != 255:
                     if self.blend:

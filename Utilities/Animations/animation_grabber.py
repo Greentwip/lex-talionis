@@ -6,12 +6,13 @@ import palette_index
 
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
+FIND_COLORKEY = False
 YLIMIT = 160
 XLIMIT = 0
-palette_set = palette_index.cleric_m_blue
+palette_set = None
 
-folder = 'cleric_m_staff/'
-name = 'Attack'
+folder = 'lightning_disc/'
+name = 'Disc'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
@@ -87,6 +88,12 @@ for idx, fp in enumerate(sorted(images)):
                 bg_color = background.getpixel((x, y))
                 if my_color == bg_color or (YLIMIT and y > YLIMIT) or (XLIMIT and x > XLIMIT) or (palette_set and my_color not in palette_set):
                     image.putpixel((x, y), COLORKEY)
-
+    elif FIND_COLORKEY:
+        COLORKEY = image.getpixel((0, 0))
+        for x in xrange(width):
+            for y in xrange(height):
+                my_color = image.getpixel((x, y))
+                if my_color == COLORKEY or (YLIMIT and y > YLIMIT) or (XLIMIT and x > XLIMIT):
+                    image.putpixel((x, y), COLORKEY)
 
     image.save(name + str(idx) + '.png')

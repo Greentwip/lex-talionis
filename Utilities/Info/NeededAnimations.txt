@@ -70,8 +70,8 @@ HalberdierFRangedLance ??
 HalberdierFAxe ??
 HalberdierFRangedAxe ??
 === Sam ===
-MonkUnarmed
-MonkMagicLight
+MonkUnarmed ++
+MonkMagicLight ++
 MageKnightUnarmed
 MageKnightMagicLight
 === Kayla ===
@@ -128,27 +128,27 @@ ArchonLance (also Archon RangedLance)
 Boltblade - Thunder
 Gustblade - Arch's Wind
 Flareblade - Fire
-Glimmer - Lightning
-Shine <<< - Shine
+Glimmer << - Lightning
+Shine << - Shine
 Corona - Divine
-Heal << - Heal
-Physic << - Physic
-Fortune <<< - Barrier
+Heal < - Heal
+Physic < - Physic
+Fortune << - Barrier
 Restore - Restore
-Refresh - Dance
+Refresh << - Dance
 Silence - Silence
-Wind <<< - Arch's Wind
-Fire <<< - Fire
-Thunder <<< - Thunder
-Aether <<< - Wind Sword palette shift
-Fly <<< - None
-Flux <<< - Flux
-Nyx <<< - Nosferatu
-Ruin <<< - Fenrir
+Wind << - Arch's Wind
+Fire << - Fire
+Thunder << - Thunder
+Aether << - Wind Sword palette shift
+Fly << - None
+Flux << - Flux
+Nyx << - Nosferatu
+Ruin << - Fenrir
 Howl - Gleipnir? Ereshkigal?
 Scathe - Evil Eye
 Hex - Shadowshot
-Stun << - Sleep
+Stun < - Sleep
 Disintegrate - Demon Surge
 
 Possibly:
