@@ -29,7 +29,8 @@ class Critical(Active_Skill):
         self.mode = "Attack"
 
     def check_valid(self, unit, gameStateObj):
-        if unit.canAttack(gameStateObj):
+        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
+        if unit.canAttack(gameStateObj) and valid_weapons:
             return True
         return False
 
@@ -44,6 +45,9 @@ class Critical(Active_Skill):
         self.item.guaranteed_crit = self.orig_crit
         self.item = None
 
+    def valid_weapons(self, weapons):
+        return [weapon for weapon in weapons if not weapon.magic]
+
 class Charge(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
@@ -51,7 +55,7 @@ class Charge(Active_Skill):
 
     def check_valid(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
-        if not unit.hasAttacked and valid_weapons:
+        if unit.canAttack(gameStateObj) and valid_weapons:
             enemy_positions = [u.position for u in gameStateObj.allunits if self.checkIfEnemy(u)] + \
                               [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
             if any(Utility.calculate_distance(position, unit.position) == 1 for position in enemy_positions):

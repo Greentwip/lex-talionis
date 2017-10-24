@@ -5,11 +5,11 @@ import glob
 from PIL import Image
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
+# COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
 NEW_COLORKEY = (0, 0, 0)
 WIDTH_LIMIT = 1024
-folder = 'lightning_disc'
+folder = 'swordmasterf_sword_frames'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

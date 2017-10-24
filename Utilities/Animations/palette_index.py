@@ -1121,6 +1121,23 @@ joshua_swordmaster = [(128, 160, 128), # Background
                 (24, 48, 48), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+karel_swordmaster = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (224, 168, 104), # Med skin
+                (136, 96, 72), # Dark skin
+                (168, 168, 160), # Light Hair
+                (112, 112, 104), # Med Hair
+                (80, 80, 64), # Dark Hair
+                (176, 216, 248), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (176, 248, 248), # Light Clothes
+                (80, 152, 232), # LM Clothes
+                (16, 96, 200), # MD Clothes
+                (0, 48, 120), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 marisa = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 240, 152), # Light skin
@@ -1136,6 +1153,23 @@ marisa = [(128, 160, 128), # Background
                 (88, 112, 136), # LM Clothes
                 (48, 72, 96), # MD Clothes
                 (24, 32, 56), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+karla = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 152), # Light skin
+                (224, 184, 88), # Med skin
+                (136, 96, 72), # Dark skin
+                (168, 168, 160), # Light Hair
+                (112, 112, 104), # Med Hair
+                (80, 80, 64), # Dark Hair
+                (176, 216, 248), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (240, 240, 240), # Light Clothes
+                (192, 240, 232), # LM Clothes
+                (144, 192, 184), # MD Clothes
+                (48, 64, 64), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 swordmaster_red = [(128, 160, 128), # Background

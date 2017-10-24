@@ -6,13 +6,13 @@ import palette_index
 
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
-FIND_COLORKEY = False
+FIND_COLORKEY = (128, 160, 128)
 YLIMIT = 160
 XLIMIT = 0
 palette_set = None
 
-folder = 'lightning_disc/'
-name = 'Disc'
+folder = 'swordmasterf_crit/'
+name = 'Crit'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
@@ -94,6 +94,6 @@ for idx, fp in enumerate(sorted(images)):
             for y in xrange(height):
                 my_color = image.getpixel((x, y))
                 if my_color == COLORKEY or (YLIMIT and y > YLIMIT) or (XLIMIT and x > XLIMIT):
-                    image.putpixel((x, y), COLORKEY)
+                    image.putpixel((x, y), FIND_COLORKEY)
 
     image.save(name + str(idx) + '.png')
