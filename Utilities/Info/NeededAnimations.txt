@@ -8,9 +8,12 @@ MyrmidonMagicSword ++
 SwordmasterUnarmed ++
 SwordmasterSword ++
 SwordmasterMagicSword ++
+Jacket Myrm
+Jacket Swordmaster
+Bald Swordmaster
 === Prim ===
-ClericUnarmed ?? (Modify Serra Cleric?)
-ClericMagicLight ??
+ClericUnarmed ++
+ClericMagicLight ++
 BishopFUnarmed
 BishopFMagicLight
 BishopFMagicDark ?? (same as light)
@@ -27,6 +30,7 @@ ArcherFUnarmed ++
 ArcherFRangedBow ++
 SniperFUnarmed ++
 SniperFRangedBow ++
+Sniper Cap
 === Althea ===
 MageFUnarmed ++
 MageFMagicAnima ++
@@ -90,7 +94,7 @@ HeroAxe ++
 HeroRangedAxe ++
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric +, Bishop +
+Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric ++, Bishop +
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed ++

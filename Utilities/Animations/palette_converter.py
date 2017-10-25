@@ -3,8 +3,8 @@ import glob
 from palette_index import *
 
 ### === INPUTS ===
-p1 = karla
-p2 = marisa
+p1 = serra
+p2 = tamiko
 images_to_convert = '*.png'
 
 def palette_convert(p1, p2, image_to_convert):
@@ -23,7 +23,7 @@ def palette_convert(p1, p2, image_to_convert):
                         continue
                     image.putpixel((x, y), new_color)
 
-    image.save('fixed_' + image_to_convert)
+    image.save(image_to_convert)
 
 for fp in glob.glob(images_to_convert):
     print(fp)

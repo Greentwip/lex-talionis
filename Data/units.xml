@@ -24,7 +24,7 @@
 
     <unit name="Prim">
         <id>Prim</id>
-        <gender>5</gender>
+        <gender>7</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,D,0,0</wexp>
