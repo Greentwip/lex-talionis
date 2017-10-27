@@ -5,14 +5,14 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
-FIND_COLORKEY = (128, 160, 128)
+# COLORKEY = (0, 0, 0)
+FIND_COLORKEY = None
 YLIMIT = 160
 XLIMIT = 0
 palette_set = None
 
-folder = 'swordmasterf_crit/'
-name = 'Crit'
+folder = 'thief_unarmed/'
+name = 'Frame'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
@@ -25,6 +25,11 @@ for idx, fp in enumerate(sorted(images)):
     print(fp)
     image = Image.open(fp).convert('RGB')
     width, height = image.size
+    # Remove palette info
+    if width == 248:
+        image = image.crop((0, 0, 240, 160))
+        width, height = image.size
+
     if not background and palette_set:
         grid = [False for _ in xrange(width*height)]
         for x in xrange(width):

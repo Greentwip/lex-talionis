@@ -1,0 +1,24 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+of;3;Dodge1
+of;27;Dodge2
+of;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;1;Frame1
+f;1;Frame2
+f;1;Frame3
+f;4;Frame4
+f;5;Frame31
+spell
+start_loop
+	f;4;Frame32
+end_loop
+f;4;Frame32
+f;4;Frame35
+f;1;Stand

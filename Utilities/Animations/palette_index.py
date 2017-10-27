@@ -1610,6 +1610,57 @@ louise_sniper = [(255, 255, 255), # Background
                 (120, 0, 40), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+thief_gba_colors = [(128, 160, 128), # Background
+                (255, 255, 255), # White
+                (255, 255, 214), # Light skin
+                (255, 198, 148), # Med skin
+                (115, 74, 49), # Dark skin
+                (222, 255, 132), # Light Hair
+                (165, 206, 41), # Med Hair
+                (82, 132, 0), # Dark Hair
+                (181, 214, 247), # Light Weapon/Leather
+                (123, 156, 189), # Med Weapon/Leather
+                (66, 99, 132), # Dark Weapon/String
+                (189, 140, 115), # Cloak
+                (255, 198, 148), # Light Cloak
+                (90, 140, 255), # Light Clothes
+                (57, 57, 214), # Dark Clothes
+                (41, 41, 41)] # Outline
+
+thief_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (216, 248, 128), # Light Hair
+                (160, 200, 40), # Med Hair
+                (80, 128, 0), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (64, 96, 128), # Dark Weapon/String
+                (184, 136, 112), # Cloak
+                (248, 192, 144), # Light Cloak
+                (88, 136, 248), # Light Clothes
+                (56, 56, 208), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+thief_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (200, 192, 248), # Light Hair
+                (168, 160, 248), # Med Hair
+                (112, 96, 200), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (64, 96, 128), # Dark Weapon/String
+                (184, 136, 112), # Cloak
+                (248, 192, 144), # Light Cloak
+                (240, 32, 16), # Light Clothes
+                (160, 24, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 ### Plains-Melee
 plains = [(104, 144, 120),
                 (120, 184, 120),

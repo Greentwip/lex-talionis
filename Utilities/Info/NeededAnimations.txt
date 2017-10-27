@@ -14,9 +14,9 @@ Bald Swordmaster
 === Prim ===
 ClericUnarmed ++
 ClericMagicLight ++
-BishopFUnarmed
-BishopFMagicLight
-BishopFMagicDark ?? (same as light)
+BishopFUnarmed ++
+BishopFMagicLight ++
+BishopFMagicDark ++
 === Joel ===
 FighterUnarmed ++
 FighterAxe ++
@@ -94,7 +94,7 @@ HeroAxe ++
 HeroRangedAxe ++
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric ++, Bishop +
+Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief ++, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric ++, Bishop ++
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed ++

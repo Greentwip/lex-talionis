@@ -17,8 +17,8 @@ f;2;Attack4
 f;6;Attack5
 f;2;Attack6
 f;2;Attack7
-sound;Weapon Pull
 f;9;Attack8
+sound;Weapon Pull
 # Move
 f;1;Attack9
 f;1;Attack10

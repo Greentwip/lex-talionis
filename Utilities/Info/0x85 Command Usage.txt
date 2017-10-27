@@ -1,0 +1,168 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mode list
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Animations have 12 modes that need to be completed for the animation data to be complete.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Part 1: Normal attack
+	Layered in front of the enemy
+Part 2: Called with normal attack - mimicks sound effects and uses blank frames to keep the timing
+	Layered behind the enemy
+Part 3: Critical attack
+	Layered in front of the enemy
+Part 4: See mode 2; this is for critical attacks, however
+	Layered behind the enemy
+Part 5: Magic attack
+Part 6: Critical magic attack
+Part 7: Close range dodge
+Part 8: Ranged dodge
+Part 9: Standing "animation"
+	Can have more than one frame - they actually play, too!
+	Must have at LEAST one frame, or the game will crash, though
+	These get to play about the first 16 frames of the animation before they are interrupted
+Part 10: Standing "animation" 2
+	Should be same as previous (could probably get more creative though)
+Part 11: Ranged standing "animation"
+	Can be the same as the previous two standing animations
+Part 12: Dodged attack
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mode requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Below are descriptions of the format of the different modes; items marked by "*" are required;
+items named "frames" are optional animation frames. Terminators are implicitly required.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Normal and critical attacks:
+03*, 07*, standing frame, frames, 04*, 1A for normal hit/08 for critical hit*, frames, 01, frames,
+06*, frames, 0D*, terminator
+
+Magic attacks:
+03*, 07*, frames, 05*, frames, 01, frame, 06*, frames, 0D*, terminator
+
+Dodging animations:
+02*, Dodging frames, 0E*, frame(s) for being out of the way, 01*, return to standing frame, 0D*,
+terminator
+
+Standing animations:
+Standing frame*, 01*, terminator
+
+Dodged attack:
+03*, 07*, standing frame, frames, 04*, frames, 01, frames, 06*, frames, 0D*, terminator
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Important note about attack animations:
+
+If more than one hit is used and the second hit doesn't land before the target's health depletes,
+it will stick the game's health handling routine into a permanent state of raising the target's
+HP, causing the game to freeze if the target counter attacks to queue another HP decrease.
+It is recommended command 0x51 (81) be used as a short white flash signifying a hit, rather
+than an actual hit, when multiple hits are desired.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Command list
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+0x00 NOP
+0x01 Wait for HP to deplete (freezes if no HP depletion is occurring/has occurred)
+	(should be used even in missed attack) (should end standing animations)
+0x02 Start of dodge
+0x03 Start attack animation; should be followed by 0x07; should head "dodged attack"
+	(melee that will miss)
+0x04 Prepare HP depletion routine; needed to animate return to standing frame after hit
+0x05 Call spell associated with equipped weapon
+0x06 Begin opponent's turn after hit
+0x07 Start attack animation; should be preceeded by 0x03
+0x08 Critical hit
+0x09 Critical hit
+0x0A Critical hit
+0x0B Critical hit
+0x0C Critical hit
+0x0D End of dodge animation (should have an 0x01 command before it and after a preceding 0x0E)
+	(should be used just before 00 00 00 80 and should end missed attack as well)
+0x0E Start of dodging frames (should go after standing frame and before dodging animation)
+0x0F Unused; does nothing
+0x10 Unused; does nothing
+0x11 Unused; does nothing
+0x12 Unused; does nothing
+0x13 ? (ranged attack - hand axe for Hector)
+0x14 Heavy vibration of screen
+0x15 Slight vibration of screen
+0x16 Unused; does nothing
+0x17 Unused; does nothing
+0x18 Use this instead of 0x02 to dodge toward the foreground instead of toward the background
+0x19 Play bow pulling SFE
+0x1A Normal hit
+0x1B Play quick "heavy step" SFE
+0x1C Play light horse stepping SFE; pitch decreases
+0x1D Play light horse stepping SFE; pitch increases
+0x1E Similar to 0x1D; a bit louder
+0x1F Play hit SFE (sounds like Eliwood with sword's hit)
+	(Will be normal hit sound during normal attack and critical hit sound during critical
+	attack)
+0x20 Play hit SFE (sounds like Knight Lord with Durandal's hit) (see previous note)
+0x21 Play hit SFE (sounds like Knight Lord with sword's hit) (see previous note)
+0x22 Play short sword swinging SFE - Weapon Pull
+0x23 Play shorter sword swinging SFE - Weapon Push
+0x24 Play sword slashing air SFE
+0x25 Play wing flap SFE
+0x26 Sword toss; VERY hardcoded (uses 32x32 at linear sheet index 0x1C from current sheet)
+0x27 Shield toss; while this command is used for shield tossing,
+	it is actually just a copy of command 0x26
+0x28 Play electrical charging SFE (Used by Shamans)
+0x29 Kills BGM
+0x2A Kills BGM
+0x2B Play armored unit "leaping" SFE
+0x2C Show fire (that envelopes Sealed Sword; contains all Sealed Sword fire frames) animation
+	Slashing frames missing in FE 7/8!
+0x2D ? (Assassin critical) (Lethality activator that is dependent on other commands?)
+0x2E Show sage's normal magic rune drawing animation
+0x2F Show sage's critical magic rune drawing animation
+0x30 Show dirt kicking (as from dashing forward) animation
+0x31 Show small dirt wave moving forward animation (starts about mid screen)
+0x32 Show medium sized dirt wave moving backward animation (starts from feet of attacker)
+0x33 Play battle cry SFE (REALLY stupid)
+0x34 Play heavy stepping SFE - Step Back 1
+0x35 Play longer wing flapping SFE
+0x36 Play sword unsheathing SFE
+0x37 Play sword clicking SFE
+0x38 Play heavy spear spinning SFE
+0x39 Pauses the attacker, makes them flash white and makes the screen flash white
+	Essentially makes it look as though the attacker was hit, but without
+		blue sparks
+0x3A Play dancer magic release SFE
+0x3B Play bard song SFE
+0x3C Play sword "whooshing" SFE (done by Nomads; sounds like wing flap)
+0x3D Show Nergal's dark aura animation - FE 7 only!
+0x3E Play burning SFE
+0x3F Play alternate arrow firing SFE?
+0x40 Kills BGM
+0x41 Play short axe swinging SFE
+0x42 Play long axe swinging SFE
+0x43 Play weapon stance SFE (Clicking noise)
+0x44 Play short "light emission" SFE (I seriously don't know a better way to describe this)
+0x45 Play horse neighing SFE
+0x46 Play dropped axe crashing onto ground SFE
+0x47 Show cape flowing animation; VERY hardcoded
+0x48 Kills BGM
+0x49 Play sage's magic firing SFE
+0x4A Play valkyrie's magic charging SFE (Pretty much the same as the shaman's)
+0x4B Play monk's magic casting SFE
+0x4C Play Athos' magic casting SFE
+0x4D Play Athos' critical glint SFE
+0x4E Show dirt wave (as from horse kicking forward from ground) animation
+0x4F Play druid critical charging SFE
+0x50 ? (Nergal's critical)
+0x51 Show brief white flash animation
+0x52 See command 0x2D
+0x53 through 0xFF - Unused
+
+Massive thanks to these people for documentation help:
+Nintenlord
+Fire Blazer
+Kate
