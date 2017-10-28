@@ -30,7 +30,6 @@ ArcherFUnarmed ++
 ArcherFRangedBow ++
 SniperFUnarmed ++
 SniperFRangedBow ++
-Sniper Cap
 === Althea ===
 MageFUnarmed ++
 MageFMagicAnima ++
@@ -64,6 +63,8 @@ AssassinFUnarmed ??
 AssassinFSword ??
 AssassinFMagicSword ??
 AssassinFRangedBow ??
+(Fix Body of Female Assassin)
+(Add AssassinM Bow and AssassinF Bow Anim)
 === Eliza ===
 SoldierFUnarmed ??
 SoldierFLance ??
@@ -76,8 +77,8 @@ HalberdierFRangedAxe ??
 === Sam ===
 MonkUnarmed ++
 MonkMagicLight ++
-MageKnightUnarmed
-MageKnightMagicLight
+MageKnightUnarmed ++
+MageKnightMagicLight ++
 === Kayla ===
 ShamanFUnarmed ++
 ShamanFMagicDark ++

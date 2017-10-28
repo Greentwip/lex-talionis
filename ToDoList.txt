@@ -19,6 +19,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- Add button to speed up animations? self.speed = 0.5?
 --- Critical Animation for Critical (Archer/Sniper/Swordmaster), Sol (Vanguard), Luna (Halberdier)
 --- Add Critical option to Engine Interaction UI in AnimationCombat
+--- Have Classes use an actual ID, Long Name, Short Name system
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
 - Have Start Skip or Massivily Speed-up AI State

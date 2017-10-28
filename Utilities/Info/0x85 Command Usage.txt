@@ -110,7 +110,7 @@ Command list
 0x22 Play short sword swinging SFE - Weapon Pull
 0x23 Play shorter sword swinging SFE - Weapon Push
 0x24 Play sword slashing air SFE
-0x25 Play wing flap SFE
+0x25 Play wing flap SFE - Heavy Wing Flap ?
 0x26 Sword toss; VERY hardcoded (uses 32x32 at linear sheet index 0x1C from current sheet)
 0x27 Shield toss; while this command is used for shield tossing,
 	it is actually just a copy of command 0x26
@@ -129,8 +129,8 @@ Command list
 0x33 Play battle cry SFE (REALLY stupid)
 0x34 Play heavy stepping SFE - Step Back 1
 0x35 Play longer wing flapping SFE
-0x36 Play sword unsheathing SFE
-0x37 Play sword clicking SFE
+0x36 Play sword unsheathing SFE - Unsheathe
+0x37 Play sword clicking SFE - Sheathe
 0x38 Play heavy spear spinning SFE
 0x39 Pauses the attacker, makes them flash white and makes the screen flash white
 	Essentially makes it look as though the attacker was hit, but without
@@ -161,6 +161,8 @@ Command list
 0x51 Show brief white flash animation
 0x52 See command 0x2D
 0x53 through 0xFF - Unused
+
+0x79 - Mage Knight Rune Sound
 
 Massive thanks to these people for documentation help:
 Nintenlord

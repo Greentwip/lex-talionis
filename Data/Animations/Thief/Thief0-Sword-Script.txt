@@ -24,6 +24,7 @@ f;4;Frame6;Miss1
 hit_spark
 start_hit
 wait_for_hit;Frame6;Miss1
+f;3;Frame6;Miss1
 f;8;Frame7;Miss2
 f;10;Frame8;Miss3
 sound;Weapon Push
@@ -40,8 +41,7 @@ f;5;Frame17
 sound;Step Back 1
 f;4;Frame18
 f;7;Frame19
-f;2;Frame20
-f;3;Frame20
+f;5;Frame20
 f;4;Frame21
 f;1;Stand
 
@@ -56,6 +56,7 @@ f;2;Frame4
 f;2;Frame5
 f;2;Miss1
 miss
+f;3;Miss1
 f;8;Miss2
 f;10;Miss3
 sound;Weapon Push
@@ -72,7 +73,6 @@ f;5;Frame17
 sound;Step Back 1
 f;4;Frame18
 f;7;Frame19
-f;2;Frame20
-f;3;Frame20
+f;5;Frame20
 f;4;Frame21
 f;1;Stand

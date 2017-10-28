@@ -11,7 +11,7 @@ YLIMIT = 160
 XLIMIT = 0
 palette_set = None
 
-folder = 'thief_unarmed/'
+folder = 'mage_knight_magic/'
 name = 'Frame'
 
 if os.path.exists(folder + 'Background.png'):

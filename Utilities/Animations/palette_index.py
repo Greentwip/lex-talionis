@@ -1439,6 +1439,40 @@ monk_generic = [       (255, 255, 255),
         (240, 163, 255),
         ]
 
+mage_knight_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (232, 176, 112), # Med skin
+                (112, 80, 56), # Dark skin
+                (224, 248, 24), # Light Hair
+                (184, 120, 24), # Dark Hair
+                (128, 208, 240), # L Banner
+                (88, 144, 208), # M Banner
+                (56, 72, 136), # D Banner
+                (176, 128, 88), # Horse
+                (160, 88, 200), # Light Clothes
+                (104, 48, 144), # Dark Clothes
+                (216, 64, 24), # Light Cape
+                (144, 32, 8), # Dark Cape
+                (40, 40, 40)] # Outline
+
+mage_knight_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (232, 176, 112), # Med skin
+                (112, 80, 56), # Dark skin
+                (224, 248, 24), # Light Hair
+                (184, 120, 24), # Dark Hair
+                (248, 120, 72), # L Banner
+                (232, 0, 0), # M Banner
+                (176, 0, 8), # D Banner
+                (176, 128, 88), # Horse
+                (160, 88, 200), # Light Clothes
+                (104, 48, 144), # Dark Clothes
+                (216, 64, 24), # Light Cape
+                (144, 32, 8), # Dark Cape
+                (40, 40, 40)] # Outline
+
 wil_archer = [(255, 255, 255), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
@@ -1659,6 +1693,40 @@ thief_red = [(128, 160, 128), # Background
                 (248, 192, 144), # Light Cloak
                 (240, 32, 16), # Light Clothes
                 (160, 24, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+assassin_jaffar = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (232, 224, 184), # Light skin
+                (216, 184, 136), # Med skin
+                (168, 136, 112), # Boots
+                (208, 56, 48), # Light Hair
+                (120, 32, 24), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (192, 200, 192), # Light Cloak
+                (144, 152, 144), # Med Cloak
+                (96, 80, 48), # Dark Cloak
+                (160, 160, 160), # Light Clothes
+                (120, 120, 120), # Med Clothes
+                (72, 72, 72), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+assassin_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (232, 224, 184), # Light skin
+                (216, 184, 136), # Med skin
+                (168, 136, 112), # Boots
+                (208, 56, 48), # Light Hair
+                (120, 32, 24), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (192, 200, 192), # Light Cloak
+                (144, 152, 144), # Med Cloak
+                (96, 80, 48), # Dark Cloak
+                (248, 88, 80), # Light Clothes
+                (208, 56, 48), # Med Clothes
+                (120, 32, 24), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 ### Plains-Melee
