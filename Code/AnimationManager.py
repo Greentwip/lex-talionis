@@ -50,6 +50,7 @@ class BattleAnimationManager(object):
 
             for weapon in klass_directory:
                 frame_directory = {}
+                print(weapon)
                 for name, anim in klass_directory[weapon]['images'].iteritems():
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)
                 # print(frame_directory)
@@ -72,9 +73,10 @@ class BattleAnimationManager(object):
 
     def partake(self, klass, gender=0, item=None, magic=False, distance=1):
         klass = klass + str(gender)
-        if klass in self.directory:
+        print(klass)
+        if klass not in self.directory:
             gender = gender/5  # Get nearest default
-            klass = klass + str(gender)
+            klass = klass[:-1] + str(gender)
         if klass in self.directory:
             self.generate(klass)
             check_item = False
