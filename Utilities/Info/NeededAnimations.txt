@@ -56,15 +56,16 @@ GeneralRangedLance ++
 GeneralSword ++
 GeneralMagicSword ++
 === Renae ===
-ThiefFUnarmed
-ThiefFSword
-ThiefFMagicSword
+ThiefFUnarmed ++
+ThiefFSword ++ 
+ThiefFMagicSword ++
 AssassinFUnarmed ??
 AssassinFSword ??
 AssassinFMagicSword ??
 AssassinFRangedBow ??
 (Fix Body of Female Assassin)
 (Add AssassinM Bow and AssassinF Bow Anim)
+For Assassin Bow: Remove picking up bow in beginning & add one more frame of movement between final step and stand
 === Eliza ===
 SoldierFUnarmed ??
 SoldierFLance ??
