@@ -104,28 +104,26 @@ SwordmasterFMagicSword ++
 SkirmisherUnarmed ??
 SkirmisherLance ?? 
 SkirmisherRangedLance ??
-PirateUnarmed
-PirateAxe
-PirateRangedAxe
-BrigandUnarmed
-BrigandAxe
-BrigandRangedAxe
+PirateUnarmed ++
+PirateAxe ++
+PirateRangedAxe ++
+BrigandUnarmed ++
+BrigandAxe ++
+BrigandRangedAxe ++
 DragoonUnarmed ?? 
 DragoonLance ??
 DragoonRangedLance ??
-DracoknightUnarmed
-DracoknightLance
-DracoknightRangedLance
-DracoknightAxe ??
-DracoknightRangedAxe ??
+DracoknightUnarmed ++
+DracoknightLance + 
+DracoknightRangedLance ++
 DracolordUnarmed
 DracolordLance
 DracolordRangedLance
 DracolordAxe
 DracolordRangedAxe
-BerserkerUnarmed
-BerserkerAxe
-BerserkerRangedAxe
+BerserkerUnarmed ++
+BerserkerAxe ++
+BerserkerRangedAxe ++
 ArchonUnarmed
 ArchonLance (also Archon RangedLance)
 

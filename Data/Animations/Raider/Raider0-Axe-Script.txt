@@ -1,0 +1,49 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+sound;Axe Pull
+f;21;Frame1
+sound;Axe Push
+effect;DirtKick
+f;4;Frame2
+f;4;Frame3;Frame4
+sound;Step Back 1
+enemy_flash_white;8
+f;1;Frame3;Frame4
+screen_flash_white;4
+f;4;Frame5;Frame6
+hit_spark
+start_hit
+wait_for_hit;Frame5;Frame6
+sound;Step Back 1
+f;3;Frame7
+f;5;Frame8
+sound;Step Back 1
+f;1;Stand
+
+pose;Miss
+f;6;Stand
+sound;Axe Pull
+f;21;Frame1
+sound;Axe Push
+effect;DirtKick
+f;4;Frame2
+f;4;Frame14
+sound;Step Back 1
+f;2;Frame15
+miss
+f;30;Frame15
+sound;Step Back 1
+f;3;Frame7
+f;5;Frame8
+sound;Step Back 1
+f;1;Stand

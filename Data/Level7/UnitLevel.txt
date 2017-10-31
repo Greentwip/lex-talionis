@@ -103,21 +103,21 @@ enemy;0;bandit7;Brigand;10;Steel Axe;26,23;Pursue;Bandit
 enemy;0;bandit8;Brigand;10;dMithril Axe;25,23;Pursue;Bandit
 # Dracoknight Reinforcements - When 3/4 point is crossed or Turn 14 happens
 enemy;0;wr1_1;Dracoknight;10;Steel Lance;1,0;Pursue;Soldier
-enemy;0;wr1_2;Dracoknight;10;Iron Axe;2,0;Pursue;Soldier
+enemy;0;wr1_2;Dracoknight;10;Iron Lance;2,0;Pursue;Soldier
 enemy;0;wr1_3;Dracoknight;10;Javelin;0,1;Pursue;Soldier
-enemy;0;wr1_4;Dracoknight;10;Iron Axe;0,2;Pursue;Soldier
+enemy;0;wr1_4;Dracoknight;10;Iron Lance;0,2;Pursue;Soldier
 enemy;0;wr2_1;Dracoknight;10;Steel Lance;26,0;Pursue;Soldier
-enemy;0;wr2_2;Dracoknight;10;Iron Axe;25,0;Pursue;Soldier
+enemy;0;wr2_2;Dracoknight;10;Iron Lance;25,0;Pursue;Soldier
 enemy;0;wr2_3;Dracoknight;10;Javelin;27,1;Pursue;Soldier
-enemy;0;wr2_4;Dracoknight;10;Iron Axe;27,2;Pursue;Soldier
+enemy;0;wr2_4;Dracoknight;10;Iron Lance;27,2;Pursue;Soldier
 enemy;0;wr3_1;Dracoknight;10;Steel Lance;27,22;Pursue;Soldier
-enemy;0;wr3_2;Dracoknight;10;Iron Axe;27,21;Pursue;Soldier
+enemy;0;wr3_2;Dracoknight;10;Iron Lance;27,21;Pursue;Soldier
 enemy;0;wr3_3;Dracoknight;10;Javelin;26,23;Pursue;Soldier
-enemy;0;wr3_4;Dracoknight;10;Iron Axe;25,23;Pursue;Soldier
+enemy;0;wr3_4;Dracoknight;10;Iron Lance;25,23;Pursue;Soldier
 #enemy;0;wr4_1;Dracoknight;10;Steel Lance;0,21;Pursue;Soldier
-#enemy;0;wr4_2;Dracoknight;10;Iron Axe;0,22;Pursue;Soldier
+#enemy;0;wr4_2;Dracoknight;10;Iron Lance;0,22;Pursue;Soldier
 #enemy;0;wr4_3;Dracoknight;10;Javelin;1,23;Pursue;Soldier
-#enemy;0;wr4_4;Dracoknight;10;Iron Axe;2,23;Pursue;Soldier
+#enemy;0;wr4_4;Dracoknight;10;Iron Lance;2,23;Pursue;Soldier
 # Infinite Reinforcements -
-enemy;2;w1;Dracoknight;Mithril Axe;0,0;Pursue;Soldier;Void_Curse
+enemy;2;w1;Dracoknight;Mithril Lance;0,0;Pursue;Soldier;Void_Curse
 enemy;2;w2;Dracoknight;Mithril Lance;0,0;Pursue;Soldier;Void_Curse

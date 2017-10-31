@@ -21,7 +21,7 @@ f;2;Attack8
 f;10;Attack9
 f;4;Attack10
 # Blur
-sound;Weapon Push
+sound;Axe Push
 f;3;Attack11
 enemy_flash_white;8
 f;1;Attack11
@@ -65,7 +65,7 @@ f;2;Attack7
 f;2;Attack8
 f;10;Attack9
 f;4;Attack10
-sound;Weapon Push
+sound;Axe Push
 # Blur
 miss
 f;3;Attack11

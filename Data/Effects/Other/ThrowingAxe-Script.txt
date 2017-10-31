@@ -1,6 +1,6 @@
 pose;Attack
 static
-sound;Hand Axe
+sound;Axe Pull
 f;1;Attack0
 f;1;AttackMiss1
 f;2;AttackMiss2

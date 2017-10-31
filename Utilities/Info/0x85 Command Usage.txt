@@ -98,7 +98,7 @@ Command list
 0x18 Use this instead of 0x02 to dodge toward the foreground instead of toward the background
 0x19 Play bow pulling SFE
 0x1A Normal hit
-0x1B Play quick "heavy step" SFE
+0x1B Play quick "heavy step" SFE - Step Back 1
 0x1C Play light horse stepping SFE; pitch decreases
 0x1D Play light horse stepping SFE; pitch increases
 0x1E Similar to 0x1D; a bit louder
@@ -123,7 +123,7 @@ Command list
 0x2D ? (Assassin critical) (Lethality activator that is dependent on other commands?)
 0x2E Show sage's normal magic rune drawing animation
 0x2F Show sage's critical magic rune drawing animation
-0x30 Show dirt kicking (as from dashing forward) animation
+0x30 Show dirt kicking (as from dashing forward) animation - DirtKick
 0x31 Show small dirt wave moving forward animation (starts about mid screen)
 0x32 Show medium sized dirt wave moving backward animation (starts from feet of attacker)
 0x33 Play battle cry SFE (REALLY stupid)
@@ -142,8 +142,8 @@ Command list
 0x3E Play burning SFE
 0x3F Play alternate arrow firing SFE?
 0x40 Kills BGM
-0x41 Play short axe swinging SFE
-0x42 Play long axe swinging SFE
+0x41 Play short axe swinging SFE - Axe Pull
+0x42 Play long axe swinging SFE - Axe Push
 0x43 Play weapon stance SFE (Clicking noise)
 0x44 Play short "light emission" SFE (I seriously don't know a better way to describe this)
 0x45 Play horse neighing SFE

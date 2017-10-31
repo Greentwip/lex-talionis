@@ -1,0 +1,113 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;4;Frame1
+f;8;Frame2
+sound;Weapon Push
+f;5;Frame3
+enemy_flash_white;8
+f;1;Frame4;Frame38
+screen_flash_white;4
+f;2;Frame4;Frame38
+f;2;Frame5;Frame39
+# Hit Frame
+hit_spark
+start_hit
+wait_for_hit;Frame6;Frame40
+f;2;Frame7;Frame41
+sound;Weapon Pull
+f;2;Frame8
+f;2;Frame9
+f;9;Frame10
+sound;Heavy Wing Flap
+f;5;Frame11
+f;9;Frame12
+f;7;Frame13
+sound;Heavy Wing Flap
+f;4;Frame14
+f;8;Frame15
+f;8;Frame16
+sound;Long Wing Flap?
+f;3;Frame17
+f;2;Frame18
+f;2;Frame19
+f;1;Frame20
+f;2;Frame21
+f;1;Frame22
+f;4;Frame23
+platform_shake
+f;1;Stand
+
+pose;Miss
+f;6;Stand
+f;4;Frame1
+f;8;Frame2
+sound;Weapon Push
+f;5;Frame3
+enemy_flash_white;8
+f;2;Frame42
+f;2;Frame43
+# Hit Frame
+hit_spark
+start_hit
+f;24;Frame44
+f;2;Frame45
+sound;Weapon Pull
+f;2;Frame8
+f;2;Frame9
+f;9;Frame10
+sound;Heavy Wing Flap
+f;5;Frame11
+f;9;Frame12
+f;7;Frame13
+sound;Heavy Wing Flap
+f;4;Frame14
+f;8;Frame15
+f;8;Frame16
+sound;Long Wing Flap?
+f;3;Frame17
+f;2;Frame18
+f;2;Frame19
+f;1;Frame20
+f;2;Frame21
+f;1;Frame22
+f;4;Frame23
+platform_shake
+f;1;Stand
+
+
+
+f;6;Stand
+sound;Horse Step 1
+f;20;Frame1
+f;6;Frame2
+f;2;Miss
+miss
+f;30;Miss
+sound;Weapon Pull
+f;2;Frame5
+f;2;Frame6
+f;6;Frame7
+sound;Horse Step 2
+f;3;Frame8
+f;13;Frame9
+f;3;Frame10
+f;3;Frame11
+f;1;Frame12
+f;1;Frame13
+f;21;Frame14
+sound;Horse Step 3
+f;7;Frame15
+f;3;Frame16
+f;12;Frame17
+f;4;Frame18
+f;1;Stand
