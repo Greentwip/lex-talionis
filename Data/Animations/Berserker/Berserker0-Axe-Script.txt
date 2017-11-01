@@ -11,7 +11,7 @@ f;1;Stand
 pose;Attack
 f;6;Stand
 sound;Axe Pull
-sound;Step Back 1
+sound;Foot Step
 f;3;Frame1
 f;8;Frame2
 sound;Axe Push
@@ -28,7 +28,7 @@ wait_for_hit;Frame5;Frame6
 f;5;Frame7;Frame8
 sound;Axe Pull
 f;7;Frame9
-sound;Step Back 1
+sound;Foot Step
 f;5;Stand
 f;7;Frame10
 f;1;Stand
@@ -36,7 +36,7 @@ f;1;Stand
 pose;Miss
 f;6;Stand
 sound;Axe Pull
-sound;Step Back 1
+sound;Foot Step
 f;3;Frame1
 f;6;Frame2
 sound;Axe Push
@@ -47,7 +47,7 @@ f;24;Frame38
 f;5;Frame39
 sound;Axe Pull
 f;7;Frame9
-sound;Step Back 1
+sound;Foot Step
 f;5;Stand
 f;7;Frame10
 f;1;Stand

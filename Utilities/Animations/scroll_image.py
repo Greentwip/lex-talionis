@@ -1,8 +1,8 @@
 import glob
 from PIL import Image
 
-lr_scroll = -24
-ud_scroll = 0
+lr_scroll = -0
+ud_scroll = 1
 
 for image in glob.glob('*.png'):
     print(image)

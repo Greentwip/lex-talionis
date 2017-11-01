@@ -13,7 +13,7 @@ f;6;Stand
 f;3;Frame1
 f;3;Frame2
 f;4;Frame3
-f;4;Frame4
+f;10;Frame4
 sound;Heavy Wing Flap
 f;1;Frame5
 f;3;Frame6
@@ -51,8 +51,9 @@ f;4;Frame25
 pan
 f;6;Frame26
 sound;Foot Step
-f;9;Frame27
-f;10;Frame28
+f;7;Frame27
+f;5;Frame28
+f;10;Frame29
 f;1;Stand
 
 pose;Miss

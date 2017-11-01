@@ -16,7 +16,7 @@ sound;Axe Push
 effect;DirtKick
 f;4;Frame2
 f;4;Frame3;Frame4
-sound;Step Back 1
+sound;Foot Step
 enemy_flash_white;8
 f;1;Frame3;Frame4
 screen_flash_white;4
@@ -24,10 +24,10 @@ f;4;Frame5;Frame6
 hit_spark
 start_hit
 wait_for_hit;Frame5;Frame6
-sound;Step Back 1
+sound;Foot Step
 f;3;Frame7
 f;5;Frame8
-sound;Step Back 1
+sound;Foot Step
 f;1;Stand
 
 pose;Miss
@@ -38,12 +38,12 @@ sound;Axe Push
 effect;DirtKick
 f;4;Frame2
 f;4;Frame14
-sound;Step Back 1
+sound;Foot Step
 f;2;Frame15
 miss
 f;30;Frame15
-sound;Step Back 1
+sound;Foot Step
 f;3;Frame7
 f;5;Frame8
-sound;Step Back 1
+sound;Foot Step
 f;1;Stand

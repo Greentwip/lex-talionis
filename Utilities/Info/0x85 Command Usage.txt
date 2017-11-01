@@ -98,7 +98,7 @@ Command list
 0x18 Use this instead of 0x02 to dodge toward the foreground instead of toward the background
 0x19 Play bow pulling SFE
 0x1A Normal hit
-0x1B Play quick "heavy step" SFE - Step Back 1
+0x1B Play quick "heavy step" SFE - Foot Step
 0x1C Play light horse stepping SFE; pitch decreases
 0x1D Play light horse stepping SFE; pitch increases
 0x1E Similar to 0x1D; a bit louder

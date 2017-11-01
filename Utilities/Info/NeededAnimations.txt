@@ -59,13 +59,10 @@ GeneralMagicSword ++
 ThiefFUnarmed ++
 ThiefFSword ++ 
 ThiefFMagicSword ++
-AssassinFUnarmed ??
-AssassinFSword ??
-AssassinFMagicSword ??
-AssassinFRangedBow ??
-(Fix Body of Female Assassin)
-(Add AssassinM Bow and AssassinF Bow Anim)
-For Assassin Bow: Remove picking up bow in beginning & add one more frame of movement between final step and stand
+AssassinFUnarmed ++
+AssassinFSword ++
+AssassinFMagicSword ++
+AssassinFRangedBow ++
 === Eliza ===
 SoldierFUnarmed ??
 SoldierFLance ??
@@ -96,7 +93,7 @@ HeroAxe ++
 HeroRangedAxe ++
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief ++, Assassin, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric ++, Bishop ++
+Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief ++, Assassin ++, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric ++, Bishop ++
 SentinelUnarmed ??
 SentinelAxe ??
 SwordmasterFUnarmed ++

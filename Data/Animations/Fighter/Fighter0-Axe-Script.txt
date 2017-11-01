@@ -41,15 +41,15 @@ f;1;Attack15
 f;1;Attack16
 f;2;Attack17
 f;4;Attack18
-sound;Step Back 1
+sound;Foot Step
 f;16;Attack19
-sound;Step Back 1
+sound;Foot Step
 f;7;Attack20
 f;3;Attack21
-sound;Step Back 1
+sound;Foot Step
 f;7;Attack22
 f;5;Attack23
-sound;Step Back 1
+sound;Foot Step
 f;7;Attack24
 f;1;Stand
 
@@ -73,14 +73,14 @@ f;30;TrueMiss
 # Retreat
 f;3;TrueMiss2
 f;4;Attack18
-sound;Step Back 1
+sound;Foot Step
 f;16;Attack19
-sound;Step Back 1
+sound;Foot Step
 f;7;Attack20
 f;3;Attack21
-sound;Step Back 1
+sound;Foot Step
 f;7;Attack22
 f;5;Attack23
-sound;Step Back 1
+sound;Foot Step
 f;7;Attack24
 f;1;Stand
