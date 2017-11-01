@@ -8,9 +8,6 @@ MyrmidonMagicSword ++
 SwordmasterUnarmed ++
 SwordmasterSword ++
 SwordmasterMagicSword ++
-Jacket Myrm
-Jacket Swordmaster
-Bald Swordmaster
 === Prim ===
 ClericUnarmed ++
 ClericMagicLight ++
