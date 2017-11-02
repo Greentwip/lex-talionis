@@ -407,6 +407,9 @@ def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, eve
         defender_item = defender.getMainWeapon()
         if defender_item:
             magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
+            # Not magic animation at close combat for a magic at range item
+            if magic and defender_item.magic_at_range and distance <= 1:
+                magic = False
         else:
             magic = False
         defender_anim = GC.ANIMDICT.partake(defender.klass, defender.gender, defender.getMainWeapon(), magic, distance)

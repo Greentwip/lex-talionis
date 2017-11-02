@@ -29,10 +29,10 @@ def read_config_file():
                          ('key_DOWN', 274),
                          ('key_START', 115)])
 
-    if os.path.isfile('Data/config.txt'):
-        with open('Data/config.txt') as config_file:
+    if os.path.isfile('Data/config.ini'):
+        with open('Data/config.ini') as config_file:
             for line in config_file:
-                split_line = line.strip().split(';')
+                split_line = line.strip().split('=')
                 lines[split_line[0]] = split_line[1]
 
     lines['debug'] = int(lines['debug'])
@@ -64,10 +64,8 @@ def read_config_file():
 
 def write_config_file():
     with open('Data/config.txt', 'w') as config_file:
-        write_out = '\n'.join([name + ';' + str(value) for name, value in OPTIONS.iteritems()])
+        write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.iteritems()])
         config_file.write(write_out)
-        # for name, value in cf.OPTIONS.iteritems():
-        #     config_file.write(name + ';' + str(value) + '\n')
 
 def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum
@@ -103,10 +101,10 @@ def read_constants_file():
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'max_level': 10} # Maximum Level for any class. Any higher and you auto-promote
 
-    if os.path.isfile('Data/constants.txt'):
-        with open('Data/constants.txt') as constants_file:
+    if os.path.isfile('Data/constants.ini'):
+        with open('Data/constants.ini') as constants_file:
             for line in constants_file:
-                split_line = line.strip().split(';')
+                split_line = line.strip().split('=')
                 lines[split_line[0]] = split_line[1]
 
     lines['max_items'] = int(lines['max_items'])

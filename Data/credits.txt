@@ -14,12 +14,12 @@ credits;Custom Class Cards;rainlash;Dei;MageKnight404
 credits;Custom Map Sprites;rainlash;FE7x Team;dondon151
 credits;Additional Spriting Resources;FE7x Team;Lexou
 credits;Additional Map Animations;Duelyst;Red Mystery Dungeon
-credits;Custom Combat Animations;rainlash;Fe7x Team;Keeks;Temp
+credits;Custom Combat Animations;rainlash;AstraLunaSol;Dei;Fe7x Team;Keeks;Temp
 credits;Custom Spell Animations;Arch
 credits;Writing;rainlash
 credits;Music Arrangement;rainlash;WinstonJoe
 credits;Music;Assassin's Creed II;Brave Story New Traveler;Darksiders II;FE Awakening;FE Fates;FE Radiant Dawn;Full Metal Alchemist Brotherhood;Gundatsch;Heroes of Might and Magic III;Joe Hisaishi;Mostly Autumn;Nicholas Payton;Ori and the Blind Forest;Otto Halmen;Paper Mario;Pirates of the Caribbean;Steins-Gate;Super Mario 64 HD;To the Moon;Twilight Princess;Wild Arms;Yuji Ohno
-credits;Additional Tools;Python;Pygame;GIMP;Audacity;Tiled;Sublime Text Editor
+credits;Additional Tools;Python;Pygame;GIMP;Audacity;FFmpeg;Tiled;Sublime Text Editor
 wait;2000
 credits;;The Lion Throne is a non-profit fangame, released for free, and developed using Python, Pygame and the Lex Talionis engine. Many assets are copyrighted or trademarked by their respective owners.;wait;center
 t;3

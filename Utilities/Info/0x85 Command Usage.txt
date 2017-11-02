@@ -128,7 +128,7 @@ Command list
 0x32 Show medium sized dirt wave moving backward animation (starts from feet of attacker)
 0x33 Play battle cry SFE (REALLY stupid)
 0x34 Play heavy stepping SFE - Step Back 1
-0x35 Play longer wing flapping SFE
+0x35 Play longer wing flapping SFE - Long Wing Flap??
 0x36 Play sword unsheathing SFE - Unsheathe
 0x37 Play sword clicking SFE - Sheathe
 0x38 Play heavy spear spinning SFE

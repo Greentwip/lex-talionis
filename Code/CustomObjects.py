@@ -951,7 +951,7 @@ class Weapon_Triangle(object):
             return (weapon1_advantage, weapon2_advantage)
 
     def isMagic(self, item):
-        if item.magic or any(w_type in self.magic_types for w_type in item.TYPE):
+        if item.magic or item.magic_at_range or any(w_type in self.magic_types for w_type in item.TYPE):
             return True
         return False
 

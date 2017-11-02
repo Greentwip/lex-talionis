@@ -1493,7 +1493,8 @@ class UnitObject(object):
         if item.spell and not item.damage:
             return 0
 
-        damage = self.damage(gameStateObj, item)
+        adj = Utility.calculate_distance(self.position, target.position) <= 1
+        damage = self.damage(gameStateObj, item, adj)
 
         if isinstance(target, TileObject.TileObject):
             pass
@@ -1501,19 +1502,18 @@ class UnitObject(object):
         else:
             damage += CustomObjects.WEAPON_TRIANGLE.compute_advantage(item, target.getMainWeapon())[0]
             if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
-                if item.ignore_def:
-                    pass
-                elif item.ignore_half_def:
-                    damage -= target.resistance(gameStateObj)/2
+                if item.magic_at_range and adj:
+                    defense_function = target.defense
                 else:
-                    damage -= target.resistance(gameStateObj)
+                    defense_function = target.resistance
             else:
-                if item.ignore_def:
-                    pass
-                elif item.ignore_half_def:
-                    damage -= target.defense(gameStateObj)/2
-                else:
-                    damage -= target.defense(gameStateObj)
+                defense_function = target.defense
+            if item.ignore_def:
+                pass
+            elif item.ignore_half_def:
+                damage -= defense_function(gameStateObj)/2
+            else:
+                damage -= defense_function(gameStateObj)
 
             for status in self.status_effects:
                 if status.conditional_mt and eval(status.conditional_mt.conditional, globals(), locals()):
@@ -1529,7 +1529,7 @@ class UnitObject(object):
                     damage += status.weakness.num
             
         if item.guaranteed_crit or crit == 1:
-            damage += self.damage(gameStateObj)
+            damage += self.damage(gameStateObj, item, Utility.calculate_distance(self.position, target.position) <= 1)
         elif crit == 2:
             damage *= 3
 
@@ -1644,7 +1644,7 @@ class UnitObject(object):
             base += (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].AVO)
         return base
                 
-    def damage(self, gameStateObj, item=None):
+    def damage(self, gameStateObj, item=None, adj=True):
         if not item:
             item = self.getMainWeapon()
         if not item:
@@ -1657,7 +1657,10 @@ class UnitObject(object):
         if item.weapon:
             damage += item.weapon.MT
             if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
-                damage += self.stats['MAG']
+                if item.magic_at_range and adj:
+                    damage += self.stats['STR']
+                else:  # Normal
+                    damage += self.stats['MAG']
             else:
                 damage += self.stats['STR']
             return damage

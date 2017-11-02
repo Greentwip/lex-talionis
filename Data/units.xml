@@ -585,7 +585,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>A,A,A,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>80,19,7,20,16,13,20,18</bases>
+		<bases>80,19,12,20,16,13,20,18</bases>
         <growths>0,0,0,0,0,0,0,0</growths>
         
         <inventory>Makara</inventory>

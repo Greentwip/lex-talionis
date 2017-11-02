@@ -240,6 +240,40 @@ dracoknight_blue = [(128, 160, 128), # Background
                 (240, 192, 144), # Other Armor
                 (40, 40, 40)] # Outline
 
+dracolord_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (216, 216, 160), # Light skin
+                (152, 152, 104), # Dark skin
+                (216, 152, 160), # Light Wyvern
+                (160, 112, 112), # Med Wyvern
+                (120, 80, 80), # Dark Wyvern
+                (104, 56, 56), # DarkDark Wyvern
+                (128, 104, 88), # Light Saddle
+                (64, 48, 32), # Dark Saddle
+                (184, 168, 248), # Wings
+                (240, 192, 144), # Extra Armor
+                (192, 128, 112), # Wood
+                (248, 0, 0), # Light Blue
+                (192, 0, 0), # Blue
+                (40, 40, 40)] # Outline
+
+dracolord_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (216, 216, 160), # Light skin
+                (152, 152, 104), # Dark skin
+                (120, 232, 208), # Light Wyvern
+                (72, 184, 152), # Med Wyvern
+                (64, 136, 104), # Dark Wyvern
+                (40, 96, 80), # DarkDark Wyvern
+                (128, 104, 88), # Light Saddle
+                (64, 48, 32), # Dark Saddle
+                (200, 192, 144), # Wings
+                (240, 192, 144), # Extra Armor
+                (192, 128, 112), # Wood
+                (40, 184, 248), # Light Blue
+                (56, 104, 224), # Blue
+                (40, 40, 40)] # Outline
+
 gerik = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 240, 184), # Light skin
@@ -451,6 +485,40 @@ generic_knight = [(255, 255, 255),
                 (0, 0, 0),
                 (0, 0, 0),
                 ]
+
+soldier_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light Skin
+                (248, 192, 144), # Med Skin
+                (112, 72, 48), # Dark Skin
+                (248, 168, 112), # Light Armor
+                (240, 48, 40), # LM Armor
+                (176, 48, 32), # DM Armor
+                (88, 0, 8), # Dark Armor
+                (192, 224, 232), # Shield 1
+                (152, 184, 216), # Shield 2
+                (96, 120, 160), # Shield 3
+                (216, 184, 120), # Light Leather
+                (176, 152, 96), # Mid Leather
+                (120, 96, 24), # Dark Leather
+                (40, 40, 40)] # Outline
+
+soldier_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light Skin
+                (248, 192, 144), # Med Skin
+                (112, 72, 48), # Dark Skin
+                (168, 248, 248), # Light Armor
+                (88, 152, 248), # LM Armor
+                (64, 104, 240), # DM Armor
+                (32, 32, 168), # Dark Armor
+                (192, 224, 232), # Shield 1
+                (152, 184, 216), # Shield 2
+                (96, 120, 160), # Shield 3
+                (216, 184, 120), # Light Leather
+                (176, 152, 96), # Mid Leather
+                (120, 96, 24), # Dark Leather
+                (40, 40, 40)] # Outline
 
 fado = [(128, 160, 128), # Background
                 (248, 248, 248), # White

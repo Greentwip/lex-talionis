@@ -90,9 +90,10 @@ HeroAxe ++
 HeroRangedAxe ++
 
 ===== Other Animations Needed =====
-Male versions of Soldier, Halberdier, Shaman ++, Druid ++, Thief ++, Assassin ++, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric ++, Bishop ++
+Male versions of Soldier ++, Halberdier, Shaman ++, Druid ++, Thief ++, Assassin ++, Mage ++, Sage ++, Archer ++, Sniper ++, Cleric ++, Bishop ++
 SentinelUnarmed ??
 SentinelAxe ??
+SentinelRangedAxe ??
 SwordmasterFUnarmed ++
 SwordmasterFSword ++
 SwordmasterFMagicSword ++
@@ -109,13 +110,13 @@ DragoonUnarmed ??
 DragoonLance ??
 DragoonRangedLance ??
 DracoknightUnarmed ++
-DracoknightLance + 
+DracoknightLance + (Long Wing Flap)
 DracoknightRangedLance ++
-DracolordUnarmed
-DracolordLance
-DracolordRangedLance
-DracolordAxe
-DracolordRangedAxe
+DracolordUnarmed ++
+DracolordLance + (Long Wing Flap)
+DracolordRangedLance ++
+DracolordAxe + (Long Wing Flap)
+DracolordRangedAxe ++
 BerserkerUnarmed ++
 BerserkerAxe ++
 BerserkerRangedAxe ++

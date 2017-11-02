@@ -1,0 +1,72 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+sound;Weapon Pull
+f;5;Frame21
+f;5;Frame22
+f;12;Frame23
+sound;Heavy Wing Flap
+f;5;Frame24
+sound;Throw 1;Throw 2;Throw 3
+enemy_flash_white;8
+static
+f;1;Javelin1;Frame25
+screen_flash_white;4
+f;1;Javelin2;Frame25
+f;1;Javelin3;Frame25
+f;1;Javelin4;Frame25
+pan
+f;1;Javelin4;Frame25
+hit_spark
+start_hit
+f;1;Javelin5;Frame25
+f;2;Javelin6;Frame25
+f;2;Javelin7;Frame25
+f;1;Javelin8;Frame25
+static
+wait_for_hit;Frame25
+f;7;Frame23
+f;4;Frame22
+pan
+f;3;Frame21
+f;4;Frame20
+f;1;Stand
+
+pose;Miss
+f;6;Stand
+sound;Weapon Pull
+f;5;Frame21
+f;5;Frame22
+f;12;Frame23
+sound;Heavy Wing Flap
+f;5;Frame24
+sound;Throw 1;Throw 2;Throw 3
+static
+f;1;Javelin1;Frame25
+f;1;Javelin2;Frame25
+f;1;Javelin3;Frame25
+f;1;Javelin4;Frame25
+pan
+f;1;Javelin4;Frame25
+miss
+f;1;Javelin5;Frame25
+f;2;Javelin6;Frame25
+f;2;Javelin7;Frame25
+f;1;Javelin8;Frame25
+static
+f;30;Frame25
+f;7;Frame23
+f;4;Frame22
+pan
+f;3;Frame21
+f;4;Frame20
+f;1;Stand
