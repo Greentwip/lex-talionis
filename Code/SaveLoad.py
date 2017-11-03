@@ -42,7 +42,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     gameStateObj.start_map(currentMap)
 
     # === Process unit data ===
-    current_mode = 'HNE' # Defaults to all modes
+    current_mode = '0123456789' # Defaults to all modes
     for line in unitcontent:
         # Process each line that was in the level file.
         line = line.strip()
@@ -117,9 +117,6 @@ def read_overview_file(overview_filename):
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
-def check_mode(modes_allowed, mode):
-    return mode in modes_allowed
-
 def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, prefabs, metaDataObj, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
     # New Group
@@ -131,7 +128,7 @@ def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, pr
         for unit in allunits:
             if unit.team == 'player' and not unit.dead:
                 reinforceUnits[unit.name] = (unit.id, None)
-    elif check_mode(current_mode, gameStateObj.difficulty_to_mode[gameStateObj.mode['difficulty']]):
+    elif str(gameStateObj.mode['difficulty']) in current_mode:
         # New Unit
         if unitLine[1] == "0":
             if len(unitLine) > 7:
@@ -490,9 +487,9 @@ def create_class_dict():
     class_dict = OrderedDict()
     # For each class
     for klass in GC.CLASSDATA.getroot().findall('class'):
-        name = klass.get('name')
-        class_dict[name] = {'id': klass.find('id').text,
-                            'name': klass.get('name'),
+        c_id = klass.get('id')
+        class_dict[c_id] = {'name': klass.find('name').text,
+                            'id': klass.get('id'),
                             'tier': klass.find('tier').text,
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                             'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
@@ -505,10 +502,10 @@ def create_class_dict():
                             'promotion': intify_comma_list(klass.find('promotion').text) if klass.find('promotion') is not None else [0]*10,
                             'max': intify_comma_list(klass.find('max').text) if klass.find('max') is not None else [60],
                             'desc': klass.find('desc').text}
-        class_dict[name]['bases'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[name]['bases'])))
-        class_dict[name]['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[name]['growths'])))
-        class_dict[name]['promotion'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[name]['promotion'])))
-        class_dict[name]['max'].extend([cf.CONSTANTS['max_stat']] * (cf.CONSTANTS['num_stats'] - len(class_dict[name]['max'])))
+        class_dict[c_id]['bases'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['bases'])))
+        class_dict[c_id]['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['growths'])))
+        class_dict[c_id]['promotion'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['promotion'])))
+        class_dict[c_id]['max'].extend([cf.CONSTANTS['max_stat']] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['max'])))
     return class_dict
 
 # === CREATE LORE DICTIONARY =================================================

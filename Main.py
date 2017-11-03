@@ -41,6 +41,7 @@ def main():
 
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
+    gameStateObj.metaDataObj = metaDataObj
 
     run(gameStateObj, metaDataObj)
 

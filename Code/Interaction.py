@@ -65,7 +65,7 @@ class Solver(object):
         return roll
 
     def handle_crit(self, result, attacker, defender, item, mode, gameStateObj, hybrid):
-        to_crit = attacker.compute_crit_hit(defender, gameStateObj, item, mode=mode)
+        to_crit = attacker.compute_crit(defender, gameStateObj, item, mode=mode)
         crit_roll = self.generate_crit_roll()
         if crit_roll < to_crit and not (isinstance(defender, TileObject.TileObject) or 'ignore_crit' in defender.status_bundle):
             result.outcome = 2
@@ -399,9 +399,12 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
     logger.debug('Main Defender: %s, Splash: %s', main_defender, splash_units)
     return main_defender, splash_units
 
-def start_combat(attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False, ai_combat=False):
-    # Not implemented yet
-    if cf.OPTIONS['Animation'] and not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject):
+def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False, ai_combat=False):
+    if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject)) and \
+       (cf.OPTIONS['Animation'] == 'Always' or
+       (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
+       (cf.OPTIONS['Animation'] == 'Combat Only' and attacker.checkIfEnemy(defender))):
+       
         distance = Utility.calculate_distance(attacker.position, def_pos)
         attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item), distance)
         defender_item = defender.getMainWeapon()
@@ -646,6 +649,7 @@ class AnimationCombat(Combat):
     def init_draw(self, gameStateObj, metaDataObj):
         self.gameStateObj = gameStateObj # Dependency Injection
         self.metaDataObj = metaDataObj  # Dependency Injection
+        crit = 'Crit' if cf.CONSTANTS['crit'] else ''
         # Left
         left_color = 'Blue' if self.left.team == 'player' else 'Red'
         # Name Tag
@@ -653,7 +657,7 @@ class AnimationCombat(Combat):
         size_x = GC.FONT['text_brown'].size(self.left.name)[0]
         GC.FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x / 2, 8))
         # Bar
-        self.left_bar = GC.IMAGESDICT[left_color + 'LeftMainCombat'].copy()
+        self.left_bar = GC.IMAGESDICT[left_color + 'LeftMainCombat' + crit].copy()
         if self.left_item:
             size_x = GC.FONT['text_brown'].size(self.left_item.name)[0]
             GC.FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x / 2, 5))
@@ -665,7 +669,7 @@ class AnimationCombat(Combat):
         size_x = GC.FONT['text_brown'].size(self.right.name)[0]
         GC.FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x / 2, 8))
         # Bar
-        self.right_bar = GC.IMAGESDICT[right_color + 'RightMainCombat'].copy()
+        self.right_bar = GC.IMAGESDICT[right_color + 'RightMainCombat' + crit].copy()
         if self.right_item:
             size_x = GC.FONT['text_brown'].size(self.right_item.name)[0]
             GC.FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x / 2, 5))
@@ -879,14 +883,22 @@ class AnimationCombat(Combat):
         a_weapon = self.item if result.attacker is self.p1 else result.attacker.getMainWeapon()
         a_hit = result.attacker.compute_hit(result.defender, gameStateObj, a_weapon, a_mode)
         a_mt = result.attacker.compute_damage(result.defender, gameStateObj, a_weapon, a_mode)
-        a_stats = a_hit, a_mt
+        if cf.CONSTANTS['crit']:
+            a_crit = result.attacker.compute_crit(result.defender, gameStateObj, a_weapon, a_mode)
+        else:
+            a_crit = 0
+        a_stats = a_hit, a_mt, a_crit
 
         if self.item.weapon and self.solver.defender_can_counterattack():
             d_mode = 'Defense' if result.attacker is self.p1 else 'Attack'
             d_weapon = result.defender.getMainWeapon()
             d_hit = result.defender.compute_hit(result.attacker, gameStateObj, d_weapon, d_mode)
             d_mt = result.defender.compute_damage(result.attacker, gameStateObj, d_weapon, d_mode)
-            d_stats = d_hit, d_mt
+            if cf.CONSTANTS['crit']:
+                d_crit = result.defender.compute_crit(result.attacker, gameStateObj, d_weapon, d_mode)
+            else:
+                d_crit = 0
+            d_stats = d_hit, d_mt, d_crit
         else:
             d_stats = None
             d_weapon = None
@@ -1051,14 +1063,15 @@ class AnimationCombat(Combat):
         # Bar
         left_bar = self.left_bar.copy()
         right_bar = self.right_bar.copy()
+        crit = 7 if cf.CONSTANTS['crit'] else 0
         # HP Bar
-        self.left_hp_bar.draw(left_bar, (27, 30))
-        self.right_hp_bar.draw(right_bar, (25, 30))
+        self.left_hp_bar.draw(left_bar, (27, 30 + crit))
+        self.right_hp_bar.draw(right_bar, (25, 30 + crit))
         # Item
         if self.left_item:
-            self.draw_item(left_bar, self.left_item, self.right_item, self.left, self.right, (45, 2))
+            self.draw_item(left_bar, self.left_item, self.right_item, self.left, self.right, (45, 2 + crit))
         if self.right_item:
-            self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (1, 2))
+            self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (1, 2 + crit))
         # Stats
         self.draw_stats(left_bar, self.left_stats, (42, 1))
         self.draw_stats(right_bar, self.right_stats, (GC.WINWIDTH / 2 - 3, 1))
@@ -1114,6 +1127,11 @@ class AnimationCombat(Combat):
         if stats is not None and stats[1] is not None:
             damage = str(stats[1])
         GC.FONT['number_small2'].blit(damage, surf, (right - GC.FONT['number_small2'].size(damage)[0], top + 8))
+        if cf.CONSTANTS['crit']:
+            crit = '--'
+            if stats is not None and stats[2] is not None:
+                crit = str(stats[2])
+            GC.FONT['number_small2'].blit(crit, surf, (right - GC.FONT['number_small2'].size(crit)[0], top + 16))
 
     def handle_exp(self, gameStateObj):
         self.check_death()

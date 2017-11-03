@@ -233,7 +233,7 @@ class AI(object):
                         self.unit.displaySingleAttack(gameStateObj, self.target_to_interact_with, self.item_to_use)
                     defender, splash = Interaction.convert_positions(gameStateObj, self.unit, self.unit.position, self.target_to_interact_with, self.item_to_use)
                     # print('AI', self.unit, defender, self.unit.position, defender.position)
-                    gameStateObj.combatInstance = Interaction.start_combat(self.unit, defender, self.target_to_interact_with, splash, self.item_to_use, ai_combat=True)
+                    gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, self.unit, defender, self.target_to_interact_with, splash, self.item_to_use, ai_combat=True)
                     gameStateObj.stateMachine.changeState('combat')
                     if isinstance(defender, UnitObject.UnitObject) and self.unit.checkIfEnemy(defender):
                         self.unit.handle_fight_quote(defender, gameStateObj)

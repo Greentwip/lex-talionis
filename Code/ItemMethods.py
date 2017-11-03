@@ -1,4 +1,5 @@
 import GlobalConstants as GC
+import configuration as cf
 import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, CustomObjects, Engine
 
 # === GENERIC ITEM OBJECT ========================================
@@ -109,10 +110,14 @@ class ItemObject(object):
 
             if self.weapon:
                 first_line_text = [' ', self.weapon.LVL, ' Mt ', str(self.weapon.MT), ' Hit ', str(self.weapon.HIT)]
+                if cf.CONSTANTS['crit']:
+                    first_line_text += [' Crit ', str(self.crit)]
                 if self.weight:
                     first_line_text += [' Wt ', str(self.weight)]
                 first_line_text += [' Rng ', self.strRNG]
                 first_line_font = [font1, font1, font2, font1, font2, font1]
+                if cf.CONSTANTS['crit']:
+                    first_line_font += [font2, font1]
                 if self.weight:
                     first_line_font += [font2, font1]
                 first_line_font += [font2, font1]
@@ -125,6 +130,9 @@ class ItemObject(object):
                     first_line_font += [font2, font1]
                 if self.hit is not None:
                     first_line_text += [' Hit ', str(self.hit)]
+                    first_line_font += [font2, font1]
+                if cf.CONSTANTS['crit'] and self.crit is not None:
+                    first_line_text += [' Crit ', str(self.crit)]
                     first_line_font += [font2, font1]
                 first_line_text += [' Rng ', self.strRNG]
                 first_line_font += [font2, font1]

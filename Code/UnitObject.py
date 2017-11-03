@@ -138,11 +138,6 @@ class UnitObject(object):
         # --- Weapon experience points
         self.wexp = info['wexp']
 
-        # Check if this unit should not be able to move
-        # if 'Zero_Move' in self.tags:
-        #     self.stats['MOV'] = Stat(0)
-        #     self.movement_left = 0
-
         # --- Item list
         # --- ADD ITEMS ---
         self.items = []
@@ -236,9 +231,7 @@ class UnitObject(object):
         name = self.name
         # If generic, include level in name
         if self.generic_flag:
-            klass_name = self.klass
-            if klass_name in cf.WORDS:
-                klass_name = cf.WORDS[klass_name]
+            klass_name = gameStateObj.metaDataObj['class_dict'][self.klass]['name']
             name = klass_name + ' ' + str(self.level)
         position = (left + PortraitWidth/2 + 6 - GC.FONT['info_grey'].size(name)[0]/2, top + 4)
         GC.FONT['info_grey'].blit(name, PortraitSurface, position)
@@ -266,7 +259,18 @@ class UnitObject(object):
         return PortraitSurface
 
     def create_attack_info(self, gameStateObj, enemyunit):
-        surf = GC.IMAGESDICT['QuickAttackInfo'].copy()
+        def blit_num(surf, num, x_pos, y_pos):
+            if num >= 100:
+                surf.blit(GC.IMAGESDICT['blue_100'], (x_pos - 16, y_pos))
+            else:
+                size = GC.FONT['text_blue'].size(str(num))
+                position = x_pos - size[0], y_pos
+                GC.FONT['text_blue'].blit(str(num), surf, position)
+
+        if cf.CONSTANTS['crit']:
+            surf = GC.IMAGESDICT['QuickAttackInfoCrit'].copy()
+        else:
+            surf = GC.IMAGESDICT['QuickAttackInfo'].copy()
 
         # Blit my name
         size = GC.FONT['text_white'].size(self.name)
@@ -274,51 +278,46 @@ class UnitObject(object):
         GC.FONT['text_white'].blit(self.name, surf, position)
         # Blit enemy name
         size = GC.FONT['text_white'].size(enemyunit.name)
-        position = 26 - size[0]/2, 68
+        y_pos = 84 if cf.CONSTANTS['crit'] else 68
+        position = 26 - size[0]/2, y_pos
         GC.FONT['text_white'].blit(enemyunit.name, surf, position)
         # Blit name of enemy weapon
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
             size = GC.FONT['text_white'].size(enemyunit.getMainWeapon().name)
-            position = 32 - size[0]/2, 84
+            y_pos = 100 if cf.CONSTANTS['crit'] else 84
+            position = 32 - size[0]/2, y_pos
             GC.FONT['text_white'].blit(enemyunit.getMainWeapon().name, surf, position)
         # Blit self HP
-        size = GC.FONT['text_blue'].size(str(self.currenthp))
-        position = 64 - size[0], 19
-        GC.FONT['text_blue'].blit(str(self.currenthp), surf, position)
+        blit_num(surf, self.currenthp, 64, 19)
         # Blit enemy hp
-        size = GC.FONT['text_blue'].size(str(enemyunit.currenthp))
-        position = 20 - size[0], 19
-        GC.FONT['text_blue'].blit(str(enemyunit.currenthp), surf, position)
+        blit_num(surf, enemyunit.currenthp, 20, 19)
         # Blit my MT
         mt = self.compute_damage(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-        size = GC.FONT['text_blue'].size(str(mt))
-        position = 64 - size[0], 35
-        GC.FONT['text_blue'].blit(str(mt), surf, position)
+        blit_num(surf, mt, 64, 35)
         # Blit my Hit
         hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-        if hit == 100:
-            surf.blit(GC.IMAGESDICT['blue_100'], (48, 51))
-        else:
-            size = GC.FONT['text_blue'].size(str(hit))
-            position = 64 - size[0], 51
-            GC.FONT['text_blue'].blit(str(hit), surf, position)
+        blit_num(surf, hit, 64, 51)
+        # Blit crit, if applicable
+        if cf.CONSTANTS['crit']:
+            crit = self.compute_crit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
+            blit_num(surf, crit, 64, 67)
         # Blit enemy hit and mt
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
                 Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().RNG:
             e_mt = enemyunit.compute_damage(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
             e_hit = enemyunit.compute_hit(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
+            if cf.CONSTANTS['crit']:
+                e_crit = enemyunit.compute_crit(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
+            else:
+                e_crit = 0
         else:
             e_mt = '--'
             e_hit = '--'
-        size = GC.FONT['text_blue'].size(str(e_mt))
-        position = 20 - size[0], 35
-        GC.FONT['text_blue'].blit(str(e_mt), surf, position)
-        if e_hit == 100:
-            surf.blit(GC.IMAGESDICT['blue_100'], (4, 51))
-        else:
-            size = GC.FONT['text_blue'].size(str(e_hit))
-            position = 20 - size[0], 51
-            GC.FONT['text_blue'].blit(str(e_hit), surf, position)
+            e_crit = '--'
+        blit_num(surf, e_mt, 20, 35)
+        blit_num(surf, e_hit, 20, 51)
+        if cf.CONSTANTS['crit']:
+            blit_num(surf, e_crit, 20, 67)
 
         return surf
 
@@ -352,7 +351,7 @@ class UnitObject(object):
                 white = True
             elif any([status.weakness and status.weakness.damage_type in enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
                 white = True
-            enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, topleft[1] + 67), white)
+            enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, topleft[1] + 67 + (16 if cf.CONSTANTS['crit'] else 0)), white)
 
         # Blit advantage -- This must be blit every frame
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
@@ -364,9 +363,9 @@ class UnitObject(object):
             elif advantage < 0:
                 surf.blit(DownArrow, (topleft[0] + 13, topleft[1] + 8))
             if e_advantage > 0:
-                surf.blit(UpArrow, (topleft[0] + 61, topleft[1] + 73))
+                surf.blit(UpArrow, (topleft[0] + 61, topleft[1] + 73 + (16 if cf.CONSTANTS['crit'] else 0)))
             elif e_advantage < 0:
-                surf.blit(DownArrow, (topleft[0] + 61, topleft[1] + 73))
+                surf.blit(DownArrow, (topleft[0] + 61, topleft[1] + 73 + (16 if cf.CONSTANTS['crit'] else 0)))
                 
         # Blit doubling -- This gets blit every frame
         if isinstance(enemyunit, UnitObject):
@@ -417,16 +416,7 @@ class UnitObject(object):
                 height += 1
             if self.getMainSpell().hit is not None:
                 height += 1
-            """
-            real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
-            BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
-            BGSurf.blit(real_surf, (2, 4))
-            BGSurf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
-            shimmer = GC.IMAGESDICT['Shimmer2']
-            BGSurf.blit(shimmer, (BGSurf.get_width() - shimmer.get_width() - 1, BGSurf.get_height() - shimmer.get_height() - 5))
-            BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
-            width, height = BGSurf.get_width(), BGSurf.get_height()
-            """
+
             BGSurf = GC.IMAGESDICT['Spell_Window' + str(height)]
             BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
@@ -465,6 +455,17 @@ class UnitObject(object):
                     position = width - 5 - hit_size, running_height
                     GC.FONT['text_blue'].blit(str(hit), BGSurf, position)
 
+            if cf.CONSTANTS['crit'] and self.getMainSpell().crit is not None:
+                running_height += 16
+                GC.FONT['text_yellow'].blit('Crit', BGSurf, (9, running_height))
+                crit = self.compute_crit(otherunit, gameStateObj, self.getMainSpell(), 'Attack')
+                if crit >= 100:
+                    BGSurf.blit(GC.IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
+                else:
+                    hit_size = GC.FONT['text_blue'].size(str(crit))[0]
+                    position = width - 5 - hit_size, running_height
+                    GC.FONT['text_blue'].blit(str(crit), BGSurf, position)
+
             # Blit name
             running_height += 16
             self.getMainSpell().draw(BGSurf, (8, running_height))
@@ -499,16 +500,16 @@ class UnitObject(object):
                 mt_size = GC.FONT['text_blue'].size(str(mt))[0]
                 GC.FONT['text_blue'].blit(str(mt), BGSurf, (width - 5 - mt_size, running_height))
 
-            if self.getMainSpell().hit is not None:
-                running_height += 16
-                GC.FONT['text_yellow'].blit('Hit', BGSurf, (5, running_height))
-                hit = self.accuracy(gameStateObj, self.getMainSpell())
-                if hit >= 100:
-                    BGSurf.blit(GC.IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
-                else:
-                    hit_size = GC.FONT['text_blue'].size(str(hit))[0]
-                    position = width - 5 - hit_size, running_height
-                    GC.FONT['text_blue'].blit(str(hit), BGSurf, position)
+            # if self.getMainSpell().hit is not None:
+            #     running_height += 16
+            #     GC.FONT['text_yellow'].blit('Hit', BGSurf, (5, running_height))
+            #     hit = self.accuracy(gameStateObj, self.getMainSpell())
+            #     if hit >= 100:
+            #         BGSurf.blit(GC.IMAGESDICT['blue_100'], (width - 5 - 16, running_height))
+            #     else:
+            #         hit_size = GC.FONT['text_blue'].size(str(hit))[0]
+            #         position = width - 5 - hit_size, running_height
+            #         GC.FONT['text_blue'].blit(str(hit), BGSurf, position)
 
             # Blit name
             running_height += 16
@@ -1577,7 +1578,7 @@ class UnitObject(object):
         else:
             return 100
 
-    def compute_crit_hit(self, target, gameStateObj, item=None, mode=None):
+    def compute_crit(self, target, gameStateObj, item=None, mode=None):
         if item:
             my_item = item
         else:

@@ -5,7 +5,7 @@ def read_config_file():
     lines = OrderedDict([('debug', 1),
                          ('cheat', 1),
                          ('Screen Size', 2),
-                         ('Animation', 0),
+                         ('Animation', 'Always'),
                          ('Unit Speed', 120),
                          ('Text Speed', 10),
                          ('Cursor Speed', 80),
@@ -38,7 +38,6 @@ def read_config_file():
     lines['debug'] = int(lines['debug'])
     lines['cheat'] = int(lines['cheat'])
     lines['Screen Size'] = int(lines['Screen Size'])
-    lines['Animation'] = int(lines['Animation'])
     lines['Unit Speed'] = int(lines['Unit Speed'])
     lines['Text Speed'] = int(lines['Text Speed'])
     lines['Cursor Speed'] = int(lines['Cursor Speed'])
@@ -63,7 +62,7 @@ def read_config_file():
     return lines
 
 def write_config_file():
-    with open('Data/config.txt', 'w') as config_file:
+    with open('Data/config.ini', 'w') as config_file:
         write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.iteritems()])
         config_file.write(write_out)
 
@@ -89,7 +88,7 @@ def read_constants_file():
              'line_of_sight': 1, # Whether to use line of sight algorithm when choosing targets for weapons
              'spell_line_of_sight': 0, # Whether to use line of sight algorithm when choosing targets for spells
              'aura_los': 1, # Whether to use line of sight algorithm for auras
-             'simultaneous_aoe': 0, # Whether AOE attacks on many targets are resolved simultaneously or in order
+             'simultaneous_aoe': 1, # Whether AOE attacks on many targets are resolved simultaneously or in order
              'def_double': 1, # Whether units on defense can double their attackers
              'support': 1, # Whether this game has supports
              'enemy_leveling': 1, # How to level up non-player units ('fixed', 'random', 'hybrid', 'match')
@@ -104,8 +103,9 @@ def read_constants_file():
     if os.path.isfile('Data/constants.ini'):
         with open('Data/constants.ini') as constants_file:
             for line in constants_file:
-                split_line = line.strip().split('=')
-                lines[split_line[0]] = split_line[1]
+                if not line.startswith(';'):
+                    split_line = line.strip().split('=')
+                    lines[split_line[0]] = split_line[1]
 
     lines['max_items'] = int(lines['max_items'])
     lines['max_promotions'] = int(lines['max_promotions'])

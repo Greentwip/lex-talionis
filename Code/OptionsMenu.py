@@ -6,7 +6,7 @@ import CustomObjects, MenuFunctions, Image_Modification, InputManager, Engine, S
 class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.config = [('Animation', ['ON', 'OFF'], cf.WORDS['Animation_desc'], 0),
+            self.config = [('Animation', ['Always', 'Your Turn', 'Combat Only', 'Never'], cf.WORDS['Animation_desc'], 0),
                            ('temp_Screen Size', ['1', '2', '3', '4', '5'], cf.WORDS['temp_Screen Size_desc'], 18),
                            ('Unit Speed', list(reversed(range(15, 180, 15))), cf.WORDS['Unit Speed_desc'], 1),
                            ('Text Speed', cf.text_speed_options, cf.WORDS['Text Speed_desc'], 2),
@@ -45,6 +45,8 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             Counters.CursorControl.__init__(self)
             self.up_arrow = GUIObjects.ScrollArrow('up', (GC.WINWIDTH/2 - 7, self.start_offset - 4), 0)
             self.down_arrow = GUIObjects.ScrollArrow('down', (GC.WINWIDTH/2 - 7, self.start_offset + 6*16 - 1), 0.5)
+            self.left_arrow = GUIObjects.ScrollArrow('left', (0, 0), 0)
+            self.right_arrow = GUIObjects.ScrollArrow('right', (0, 0), 0.5)
 
             self.backSurf = gameStateObj.generic_surf
 
@@ -117,23 +119,31 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             elif event == 'RIGHT':
                 GC.SOUNDDICT['Select 6'].play()
                 current_section = self.config[self.currentSelection] # Gives me what section we are on
+                bounds = current_section[1]
+                special = len(''.join(bounds)) > 15 if isinstance(bounds[0], str) else False
+                if special:
+                    self.right_arrow.pulse()
                 current_choice = cf.OPTIONS[current_section[0]] # Gives me what the current option that is selected is
-                current_index = self.get_index(current_section[1], current_choice)
+                current_index = self.get_index(bounds, current_choice)
                 current_index += 1 # Move that option 1 to the right
-                if current_index >= len(current_section[1]): # Make sure we have not gone too far over
-                    current_index = len(current_section[1]) - 1
-                cf.OPTIONS[current_section[0]] = current_section[1][current_index] # Set the new option[index] as new option constant
+                if current_index >= len(bounds): # Make sure we have not gone too far over
+                    current_index = 0 if special else len(bounds) - 1
+                cf.OPTIONS[current_section[0]] = bounds[current_index] # Set the new option[index] as new option constant
                 self.convert_options(current_section[0])
-
+                
             elif event == 'LEFT':
                 GC.SOUNDDICT['Select 6'].play()
                 current_section = self.config[self.currentSelection]
+                bounds = current_section[1]
+                special = len(''.join(bounds)) > 15 if isinstance(bounds[0], str) else False
+                if special:
+                    self.left_arrow.pulse()
                 current_choice = cf.OPTIONS[current_section[0]]
-                current_index = self.get_index(current_section[1], current_choice)
+                current_index = self.get_index(bounds, current_choice)
                 current_index -= 1
                 if current_index < 0:
-                    current_index = 0
-                cf.OPTIONS[current_section[0]] = current_section[1][current_index]
+                    current_index = len(bounds) - 1 if special else 0
+                cf.OPTIONS[current_section[0]] = bounds[current_index]
                 self.convert_options(current_section[0])
 
         elif self.state.getState() == "Controls":
@@ -297,16 +307,23 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 surf.blit(slider_hold, topleft)
             # Is a list of options
             else:
-                word_index = 0
-                for choice in bounds:
-                    if choice == current_option or (choice == 'ON' and current_option) or (choice == 'OFF' and not current_option) or \
-                            (isinstance(choice, str) and str(current_option) == choice):
-                        font = GC.FONT['text_blue']
-                    else:
-                        font = GC.FONT['text_grey']
-                    option_position = (GC.WINWIDTH/2 + 8 + word_index, self.start_offset + index*16)
-                    font.blit(cf.WORDS[choice], surf, option_position)
-                    word_index += font.size(cf.WORDS[choice] + '   ')[0]
+                if len(''.join(bounds)) > 15:
+                    font = GC.FONT['text_blue']
+                    size = font.size(cf.WORDS[current_option])
+                    option_position = (3*GC.WINWIDTH/4 - 4 - size[0]/2, self.start_offset + index*16)
+                    font.blit(cf.WORDS[current_option], surf, option_position)
+                    self.drawSideArrows(surf, self.start_offset + index*16)
+                else:
+                    word_index = 0
+                    for choice in bounds:
+                        if choice == current_option or (choice == 'ON' and current_option) or (choice == 'OFF' and not current_option) or \
+                                (isinstance(choice, str) and str(current_option) == choice):
+                            font = GC.FONT['text_blue']
+                        else:
+                            font = GC.FONT['text_grey']
+                        option_position = (GC.WINWIDTH/2 + 8 + word_index, self.start_offset + index*16)
+                        font.blit(cf.WORDS[choice], surf, option_position)
+                        word_index += font.size(cf.WORDS[choice] + '   ')[0]
 
         self.drawScrollArrows(surf, self.config)
 
@@ -315,6 +332,14 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             self.up_arrow.draw(surf)
         if self.top_of_menu + 6 < len(menu):
             self.down_arrow.draw(surf)
+
+    def drawSideArrows(self, surf, y_pos):
+        self.left_arrow.x = GC.WINWIDTH/2 + 5
+        self.right_arrow.x = GC.WINWIDTH - 20
+        self.left_arrow.y = y_pos
+        self.right_arrow.y = y_pos
+        self.left_arrow.draw(surf)
+        self.right_arrow.draw(surf)
 
     def get_index(self, choices, option):
         if len(choices) == 1:
@@ -333,7 +358,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         # Blit cursor (s)
         # Blit moving cursor
         bounds = self.config[self.currentSelection][1]
-        if not isinstance(bounds[0], int) and not isinstance(bounds[0], float):
+        if not isinstance(bounds[0], int) and not isinstance(bounds[0], float) and len(''.join(bounds)) <= 15:
             bound_index = self.get_index(bounds, cf.OPTIONS[self.config[self.currentSelection][0]])
             left_position = GC.FONT['text_white'].size('   '.join(bounds[:bound_index]) + ('   ' if bound_index > 0 else ''))[0] + GC.WINWIDTH/2 - 8
             top_position = 32 + (self.currentSelection - self.top_of_menu)*16

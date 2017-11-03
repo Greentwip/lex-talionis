@@ -161,6 +161,10 @@ Wounded;Wounded
 None;None
 Ally;Ally
 Enemy;Enemy
+Always;Always
+Never;Never
+Your Turn;Your Turn
+Combat Only;Combat Only
 rescueselect;Select a unit to rescue.
 tradeselect;Select which unit to trade with.
 takeselect;Select which unit to receive the traveler.
@@ -182,12 +186,6 @@ mode_Casual;Your units don't die when they are killed.
 mode_Random;Each level-up is random. Classic Fire Emblem.
 mode_Fixed;Each level-up is fixed. Recommended.
 mode_Hybrid;Level-ups are random, but you can't be stat-screwed.
-Mercenary;Merc.
-Skirmisher;Skirm.
-Dracoknight;Dr. Knight
-Dracolord;Dr. Lord
-Strategist;Strtgst.
-Swordmaster;Swd. Mstr.
 Name_desc;Name of the unit.
 Class_desc;The unit's class. Each class possesses unique traits.
 Lv_desc;Unit level. The unit becomes stronger as it gains levels.
