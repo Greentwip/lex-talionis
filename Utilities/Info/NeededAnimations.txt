@@ -120,8 +120,8 @@ DracolordRangedAxe ++
 BerserkerUnarmed ++
 BerserkerAxe ++
 BerserkerRangedAxe ++
-ArchonUnarmed
-ArchonLance (also Archon RangedLance)
+DukeUnarmed
+DukeLance (also Duke RangedLance)
 
 === Items ===
 Boltblade - Thunder
@@ -149,6 +149,7 @@ Scathe - Evil Eye
 Hex - Shadowshot
 Stun < - Sleep
 Disintegrate - Demon Surge
+Makara - ??
 
 Possibly:
 Replace Iron Knife, Steel Knife, Mithril Knife with Levin Sword (Iron), Rune Sword (Nosferatu) (Steel), Light Brand (Mithril), Rapier (targets SPD instead)

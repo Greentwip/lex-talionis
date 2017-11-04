@@ -8,7 +8,7 @@ b;Clearing
 t;2
 u;Sam;Left
 u;Kayla;Right
-s;Sam;Hmmm.... There's a lot of them.{w}{br}Archon Ulver has this place locked down.{w};auto
+s;Sam;Hmmm.... There's a lot of them.{w}{br}Duke Ulver has this place locked down.{w};auto
 s;Kayla;And look who's leading them!{w};auto
 s;Sam;Huh?{w};auto
 s;Kayla;See that black banner flying above the fort?{w};auto

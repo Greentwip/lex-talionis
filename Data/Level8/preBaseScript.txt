@@ -46,8 +46,8 @@ s;Sam;That tome held a trove of information.{w}{br}It's no wonder the Empire wen
 u;Kayla;MidRight
 s;Kayla;My pleasure, Sam.{w}{br}The Confederacy has reinforced their northern front.{w}{br}We were hoping to force the Empire to commit some of their own armies there as well.{w}{br}However, we didn't expect the Empire to react so strongly.{w};auto
 s;Ophie;They're going to attack the Confederacy directly!?{w};auto
-s;Kayla;Tsk Tsk. Even the Empire would not be so bold.{w}{br}However, the Empress has commandeered nearly four-fifths of Archon Ulver's army.{w}{br}They are to reinforce that front.{w};auto
-s;Ophie;So that leaves Archon Ulver's force in Rajas... {w};auto
+s;Kayla;Tsk Tsk. Even the Empire would not be so bold.{w}{br}However, the Empress has commandeered nearly four-fifths of Duke Ulver's army.{w}{br}They are to reinforce that front.{w};auto
+s;Ophie;So that leaves Duke Ulver's force in Rajas... {w};auto
 s;Kayla;Very, very weak.{w};auto
 s;Ophie;When does Ulver's army leave?{w};auto
 s;Kayla;They've already started.{w};auto
@@ -57,7 +57,7 @@ s;Sam;We only have three days before the new army arrives.{w};auto
 s;Ophie;So, what's our plan?{w};auto
 s;Sam;Simply put, we finish this.{w}{br}We take back Kerala.{w}{br}We put the rightful heir back on the Lion Throne.{w};auto
 s;Althea;...{w};auto
-s;Sam;With the Imperial army weakened, we can attack Rajas directly.{w}{br}Kiley's army, along with a host of loyalists, will assault the front gates.{w}{br}In the meantime, we will sneak into the Sun Palace and capture or kill Archon Ulver,{w}{br}cutting the Imperial head off the proverbial snake.{w}{br}With their leader deposed, the remaining Imperials should be easily routed.{w};auto
+s;Sam;With the Imperial army weakened, we can attack Rajas directly.{w}{br}Kiley's army, along with a host of loyalists, will assault the front gates.{w}{br}In the meantime, we will sneak into the Sun Palace and capture or kill Duke Ulver,{w}{br}cutting the Imperial head off the proverbial snake.{w}{br}With their leader deposed, the remaining Imperials should be easily routed.{w};auto
 s;Ophie;Then Althea can take the throne.{w}{br}Kerala will be free of foreign rule.{w};auto
 s;Sam;And we'll have the Confederacy's support.{w}{br}We'll announce Althea's presence after our victory.{w}{br}She looks just like her mother, so no accusations of a pretender are likely.{w}{br}The Empire will be unlikely to challenge us after the Confederacy's moves,{w}{br}and we'll have the support of all of Kerala.{w};auto
 r;Althea;Kayla

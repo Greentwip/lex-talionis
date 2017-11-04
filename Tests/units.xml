@@ -373,7 +373,7 @@
         <inventory>Corona,Physic</inventory>
         <level>20</level>
         <class>Strategist</class>
-        <desc>Archon Ulver's loyal assistant.</desc>
+        <desc>Duke Ulver's loyal assistant.</desc>
         <faction>Empire</faction>
         <tags>Boss</tags>
         <skills>Imperial Wards</skills>
@@ -386,8 +386,8 @@
         <growths>0,0,0,0,0,0,0,0,0,0</growths>
         <inventory>Makara</inventory>
         <level>25</level>
-        <class>Archon</class>
-        <desc>Hard-nosed Imperial Archon occupying Kerala.</desc>
+        <class>Duke</class>
+        <desc>Hard-nosed Imperial Duke occupying Kerala.</desc>
         <faction>Empire</faction>
         <tags>Boss</tags>
         <skills>Imperial Wards</skills>

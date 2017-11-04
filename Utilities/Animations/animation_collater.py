@@ -9,7 +9,7 @@ COLORKEY = (128, 160, 128)
 FIND_COLORKEY = False
 NEW_COLORKEY = (0, 0, 0)
 WIDTH_LIMIT = 1024
-folder = 'soldier_rangedlance'
+folder = 'duke_lance'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

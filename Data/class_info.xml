@@ -646,9 +646,9 @@
         <desc>Long-range immobile siege weapons.</desc>
     </class> 
 
-    <!-- Archon -->
-        <class id="Archon">
-        <name>Archon</name>
+    <!-- Duke -->
+        <class id="Duke">
+        <name>Duke</name>
         <tier>3</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,1,1,0,0,0,0</wexp_gain>
@@ -663,7 +663,7 @@
 		<bases>15,5,0,4,4,0,8,4,11,6</bases>
         <promotion>0,0,0,0,0,0,0,0,0,1</promotion>
 		<max>80,20,20,20,20,20,20,20,20</max>
-        <desc>One of the twelve Imperial Archons, demons of combat.</desc>
+        <desc>One of the twelve Imperial Dukes, demons of combat.</desc>
     </class>
 
 <!-- Summoned only classes -->

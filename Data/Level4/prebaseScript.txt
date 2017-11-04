@@ -40,7 +40,7 @@ else
 	s;Renae;You're telling me!{w};auto
 	s;Sam;...There is good news, though.{w};auto
 end
-s;Sam;My sources have new information.{w}{br}There is an Imperial weapon shipment due to reach the capital.{w}{br}We cannot allow those weapons to reach Archon Ulver.{w};auto
+s;Sam;My sources have new information.{w}{br}There is an Imperial weapon shipment due to reach the capital.{w}{br}We cannot allow those weapons to reach Duke Ulver.{w};auto
 r;Renae
 u;Prim;Left
 s;Prim;Won't the caravans be guarded?{w}{br};auto

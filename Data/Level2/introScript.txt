@@ -96,7 +96,7 @@ u;Brigham;Right
 u;Soldier1;Left
 s;Brigham;What! More traitors come out of the woodwork!{w}{br}Who would've thought that Keralan loyalty to the old crown would've held this long...{w}{br}Men, kill them all! Take no prisoners!{w};auto
 s;Soldier1;Even the girl, sir?{w};auto
-s;Brigham;Yes, you idiot!{w}{br}Do you think the Archon wants to keep her as a reminder of his failings?{w};auto
+s;Brigham;Yes, you idiot!{w}{br}Do you think the Duke wants to keep her as a reminder of his failings?{w};auto
 s;Soldier1;Of course not, sir!{w};auto
 r;Soldier1
 s;Brigham;When this day is done, the Empire's hold in Kerala will finally be secured!{w};auto

@@ -9,9 +9,9 @@ Level0:
 	PreBase: None
 	Base: None
 	Narration: Short blurb about state of world
-	Intro: Scene opens with view of monastery under assault by Archon Ulver's soldiers. We know you're harboring fugitives... Hand her over, or your will all die for your troubles... What are they talking about? Hey, take your sister and get out of here while you can. I'm not leaving. No takers. Corporal, why don't you take a few of these tough guys and teach them a lesson. Go now. Protect each other... Hey, Sergeant... There's somebody fleeing in the back! Stop them! Out of my way! Don't let them escape! 
+	Intro: Scene opens with view of monastery under assault by Duke Ulver's soldiers. We know you're harboring fugitives... Hand her over, or your will all die for your troubles... What are they talking about? Hey, take your sister and get out of here while you can. I'm not leaving. No takers. Corporal, why don't you take a few of these tough guys and teach them a lesson. Go now. Protect each other... Hey, Sergeant... There's somebody fleeing in the back! Stop them! Out of my way! Don't let them escape! 
 	TurnChange: None
-	Outro: Kill them all and burn the monastery down. The Emperor does not tolerate traitors. I'm going after them. Sir, what harm could they possibly pose to the Emperor? You idiot, what if that girl is the prin - the one we're looking for? Once your done, report back to Archon Ulver. Aye, Aye, sir. Dude 1 survives, Dude 2 goes on to Level1 and dies.
+	Outro: Kill them all and burn the monastery down. The Emperor does not tolerate traitors. I'm going after them. Sir, what harm could they possibly pose to the Emperor? You idiot, what if that girl is the prin - the one we're looking for? Once your done, report back to Duke Ulver. Aye, Aye, sir. Dude 1 survives, Dude 2 goes on to Level1 and dies.
 Level1:
 	Summary: Prot and Renae flee from the Empire's soldiers and Sidney. Joel and Nia show up and save their asses.
 	Objective: Defeat Boss
@@ -35,7 +35,7 @@ Level2:
 	Narration: Prot, Renae, and his companions head for the Resistance base of operations... But they soon become sidetracked....
 	Intro: We're gonna come around this village, and then the Resistance is just on the other side... Do you hear that? Sounds like fighting... Maybe someone's in trouble... Let's go check it out. Well, are you guys Resistance or not? Yeah, but you can't go saving everyone... Ah, hell. Let's go Nia. Pan over to Village under attack... Enemy soldiers are felling green units left and right. In the middle is Drake and Althea. Drake and Althea have a conversation. Please Drake. No more fighting. I'm done. I'll not have anyone else die for me. I would have nothing less, milady. Now, stay here. I'll handle this. What, is he insane, he's going against them all alone! Not for long! Hiyaa!
 	TurnChange: Conversation between Drake and the Resistance
-	Outro: Thanks for rescuing us. Any enemy of the Empire is a friend of our, but what'd you do to get those soldiers all riled up. Wait, I recognize you. You're the Sun King's daughter... Not for long... I'm sorry to have to do this, you seem like fine folks. But I can't have her identity being revealed. No please, Drake. No more. Really, we're on your side. Everyone's figured you're dead. Yeah, and its the only reason she's not yet. So you're who Archon Ulver's been looking for. Yeah, he figures if he can find me, he'll be promoted to the Emperor's side.... Well, you can't stay out here. the Empire will find you. Travel with us, and you'll be safe. You can hide with the Resistance. Oh what, a boon. Sam is gonna flip when he finds out your still alive.
+	Outro: Thanks for rescuing us. Any enemy of the Empire is a friend of our, but what'd you do to get those soldiers all riled up. Wait, I recognize you. You're the Sun King's daughter... Not for long... I'm sorry to have to do this, you seem like fine folks. But I can't have her identity being revealed. No please, Drake. No more. Really, we're on your side. Everyone's figured you're dead. Yeah, and its the only reason she's not yet. So you're who Duke Ulver's been looking for. Yeah, he figures if he can find me, he'll be promoted to the Emperor's side.... Well, you can't stay out here. the Empire will find you. Travel with us, and you'll be safe. You can hide with the Resistance. Oh what, a boon. Sam is gonna flip when he finds out your still alive.
 Level3:
 	Summary: PRNJAD return to the Resistance Base. Meet Sam, the tactician and leader. Along with some of the other grunts in the mess hall. Ophie and Tak. About weakening the empire in any way possible Joel relays the first mission to them. A trade caravan is passing through the Haagara canyons... That's when we strike. 
 	Objective: Capture at least X trade carts.
@@ -59,7 +59,7 @@ Level4:
 	Narration: With the plan in mind, the company travels to 
 	Intro: It's a lot more well-guarded then we expected. Oh, last time I was here these windows opened! Looks like we have to call this one quits guys. What. I'm no quitter. There aren't too many of them... We can take 'em. Boy, are you out of your mind? Nope, just confident that we can see this one through. Come on Renae, we can take 'em. Hell, I'm willing to try it. What's the point of coming out here if we're just going to return empty handed... There aren't too many of them. Well, let's make this quick.
 	TurnChange: They call for help. Later, a bunch of reinforcements show up.
-	Outro: Phew... I think we lost 'em. That was stupid. But it worked, right! Look at all this gold. I bet Archon Ulver is gonna shit himself when he hears that we got his money. Yeah, from now on, we'd better watch out... Come one everyone, let's head back
+	Outro: Phew... I think we lost 'em. That was stupid. But it worked, right! Look at all this gold. I bet Duke Ulver is gonna shit himself when he hears that we got his money. Yeah, from now on, we'd better watch out... Come one everyone, let's head back
 Level5!!:
 	Summary: With this new influx of cash, the resistance can keep afloat. Thanks. Save our children. Please. Assault on fort. Your plan didn't go that well last time. We'll do this ourselves....
 	Whenever you arrive at the goal, it's a trap? Sam shows up at the same time. Escape?
@@ -110,7 +110,7 @@ Level8:
 	TurnChange: Hey! That's Vagnius. From the Monastery! I'm gonna kill that bastard...
 	Outro: ???
 Level9: 
-	Summary: There's only one obstacle in our way, and the Free Cities will back us.... Archon Ulver himself. The rebellion army that coyote runs with assault the city, but it will be a distraction for our assination attempt. Assassinate him, and we can achieve victory. The first part is fighting in the castle ruins. Grab special weapons here, and need to zoom around area for the 3? keys to open the gate. Enemy army also down here, hellbent on stopping you.
+	Summary: There's only one obstacle in our way, and the Free Cities will back us.... Duke Ulver himself. The rebellion army that coyote runs with assault the city, but it will be a distraction for our assination attempt. Assassinate him, and we can achieve victory. The first part is fighting in the castle ruins. Grab special weapons here, and need to zoom around area for the 3? keys to open the gate. Enemy army also down here, hellbent on stopping you.
 	Objective: Reach Castle Main
 	Map: Rugged Mazelike. A dungeon crawl. Sewers... Fog of War?
 	Recruitable: None
@@ -120,7 +120,7 @@ Level9:
 	Narration: Explains purpose of mission, and moves characters to the right place. Coyote sent his prisoners to distract the main bulk of Ulver's army, while the Resistance attempts to assassination Ulver
 	Intro:
 Level10:
-	Summary: Assault on castle. And then final battle with Archon Ulver himself.
+	Summary: Assault on castle. And then final battle with Duke Ulver himself.
 	Objective: Defeat boss
 	Map: Big Castle
 	Recruitable: None

@@ -3218,7 +3218,7 @@ sg49
 S'Empire'
 p707
 sg51
-S'Hard-nosed Imperial Archon occupying Kerala.'
+S'Hard-nosed Imperial Duke occupying Kerala.'
 p708
 sg53
 (lp709
@@ -3332,7 +3332,7 @@ S'M'
 sg97
 I0
 sg98
-S'Archon'
+S'Duke'
 p733
 sg100
 I0
@@ -3427,7 +3427,7 @@ sg49
 S'Empire'
 p755
 sg51
-S"Archon Ulver's elite guard"
+S"Duke Ulver's elite guard"
 p756
 sg53
 (lp757
@@ -3585,7 +3585,7 @@ sg49
 S'Empire'
 p788
 sg51
-S"Archon Ulver's loyal assistant."
+S"Duke Ulver's loyal assistant."
 p789
 sg53
 (lp790
@@ -10825,7 +10825,7 @@ sS'objective'
 p2263
 (S'Defeat Ulver'
 p2264
-S'Defeat Archon Ulver'
+S'Defeat Duke Ulver'
 p2265
 S'Ophie dies,OR,Sam dies'
 p2266

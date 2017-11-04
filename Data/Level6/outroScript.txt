@@ -21,7 +21,7 @@ s;Kiley;I ain't normally one for 'rithmetic, but if I had to take a gander...{w}
 s;Sam;So, I would guess you don't harbor any love for the Empire?{w};auto
 s;Kiley;You pulling my leg?{w}{br}Why, if the Empress were standing before right now I wouldn't be kissing her, mate.{w};auto
 s;Sam;Uh... Well we can't induct all of your...{w}crew into the Resistance.{w}{br}You're too many.{w};auto
-s;Kayla;But with this many at our back,{w}{br}the Resistance could finally fight toe to toe with Archon Ulver's army.{w};auto
+s;Kayla;But with this many at our back,{w}{br}the Resistance could finally fight toe to toe with Duke Ulver's army.{w};auto
 s;Kiley;Hmmph! Me and my boys ain't exactly subtle, y'know.{w};auto
 s;Kayla;Well, the Confederacy has prepared a hiding place for such an eventuality.{w}{br}We can keep your crew hidden.{w}{br}You'll be a reserve for when the Resistance needs the firepower.{w};auto
 s;Sam;Kiley, if you agree,{w}{br}you'll be in charge of the First Revolutionary Army of Kerala.{w}{br}A force to fight the Empire when and where it is needed most.{w};auto

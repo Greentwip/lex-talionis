@@ -72,7 +72,7 @@
 	</lore>
 
 	<lore name="Ulver">
-		<long_name>Archon Ulver</long_name>
+		<long_name>Duke Ulver</long_name>
 		<type>Character</type>
 		<desc>Second only to the Empress herself, Ulver rules the Empire's colony of Kerala with an iron fist. He is strong-willed and stubborn, but extremely loyal to the Empire.</desc>
 	</lore>
@@ -80,7 +80,7 @@
 	<lore name="Vagnius">
 		<long_name>Colonel Vagnius</long_name>
 		<type>Character</type>
-		<desc>Archon Ulver's right-hand man. Unknown to Ulver, Vagnius harbors aspirations of his own. Conniving and ambitious, he is willing to do anything to achieve his goals.</desc>
+		<desc>Duke Ulver's right-hand man. Unknown to Ulver, Vagnius harbors aspirations of his own. Conniving and ambitious, he is willing to do anything to achieve his goals.</desc>
 	</lore>
 
 	<lore name="Kerala">
@@ -98,7 +98,7 @@
 	<lore name="Rajas">
 		<long_name>Rajas</long_name>
 		<type>Location</type>
-		<desc>The bustling capitol of Kerala. In legends, it is said that the Moon King himself erected the palace out of heavenly stone. Of course, now it is the seat of power for Archon Ulver and the Imperial hold on Kerala.</desc>
+		<desc>The bustling capitol of Kerala. In legends, it is said that the Moon King himself erected the palace out of heavenly stone. Of course, now it is the seat of power for Duke Ulver and the Imperial hold on Kerala.</desc>
 	</lore>
 
 	<lore name="Tyrana">

@@ -11,7 +11,7 @@ YLIMIT = 160
 XLIMIT = 0
 palette_set = None
 
-folder = 'soldier_unarmed/'
+folder = 'king/'
 name = 'Frame'
 
 if os.path.exists(folder + 'Background.png'):

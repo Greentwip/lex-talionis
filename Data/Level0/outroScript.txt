@@ -26,6 +26,6 @@ bop;Vagnius
 s;Vagnius;What!! After them, you fool.{w}{br}One of them could be the fugitive!{w};auto
 s;Sidney;Right away, sir!{w};auto
 r;Sidney
-s;Vagnius;What incompetents...{w}{br}The Archon will not pleased.{w};auto
+s;Vagnius;What incompetents...{w}{br}The Duke will not pleased.{w};auto
 r;Vagnius
 t;1

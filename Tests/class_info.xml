@@ -442,7 +442,7 @@
         <max>40,17,15,20,15,20,17,16,20,20</max>
         <desc>Long-range immobile siege weapons.</desc>
     </class>
-    <class name="Archon">
+    <class name="Duke">
         <wexp>1,1,1,0,0,0,0</wexp>
         <promotes_from>General</promotes_from>
         <turns_into/>
@@ -453,7 +453,7 @@
         <growths>105,55,15,40,20,35,55,35,0,0</growths>
         <promotion>0,0,0,0,0,0,0,0,0,1</promotion>
         <max>80,20,20,20,20,20,20,20,20,20</max>
-        <desc>One of the twelve Imperial Archons, demons of combat.</desc>
+        <desc>One of the twelve Imperial Dukes, demons of combat.</desc>
     </class>
     <class name="Phantom">
         <wexp>0,0,1,0,0,0,0</wexp>

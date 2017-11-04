@@ -55,7 +55,7 @@ r;Joel
 u;Ophie;MidLeft
 s;Ophie;We know who your sources are, Sam.{w}{br}You don't have to be secretive.{w}{br}She's standing right here.{w};auto
 s;Kayla;Tsk tsk. Don't go ruining Sam's fun, Ophie.{w}{br}You know playing at spymaster is the only thing he has left--{w};auto
-s;Sam;Ahem.{w}{br}As I was saying, my sources, that is, the Confederacy,{w}{br}determined the location of Archon Ulver's upcoming military plans.{w}{br}Details of Imperial logistics would be an invaluable asset to the Confederacy.{w};auto
+s;Sam;Ahem.{w}{br}As I was saying, my sources, that is, the Confederacy,{w}{br}determined the location of Duke Ulver's upcoming military plans.{w}{br}Details of Imperial logistics would be an invaluable asset to the Confederacy.{w};auto
 s;Ophie;Why can't the Confederacy do their own work for once?{w}{br}We didn't ask to be at their beck and call.{w};auto
 s;Sam;Well, this information has value for both parties.{w}{clear}And to answer your question,{w}{br}the Confederacy has been so far unsuccessful using clandestine means.{w}{br}So... we're going to capture the plans by force!{w};auto
 s;Ophie;Of course...{w};auto

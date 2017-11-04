@@ -10,12 +10,12 @@ if;gameStateObj.turncount == 1
 	u;Adjutant;Left
 	move_sprite;Ophie;24,0
 	s;Ophie;!{w};auto
-	s;Adjutant;Archon Ulver sends his regards.{w}{br}He regrets to inform you that he is occupied at the moment.{w};auto
+	s;Adjutant;Duke Ulver sends his regards.{w}{br}He regrets to inform you that he is occupied at the moment.{w};auto
 	u;Sam;MidRight
 	s;Sam;He knew we were coming?{w};auto
-	s;Adjutant;Archon Ulver is well aware of your plans.{w};auto
+	s;Adjutant;Duke Ulver is well aware of your plans.{w};auto
 	s;Ophie;But--{w};auto
-	s;Adjutant;My boy, do not fret.{w}{br}The Archon has graciously decided to provide you with...{w}{br}alternative entertainment.{w};auto
+	s;Adjutant;My boy, do not fret.{w}{br}The Duke has graciously decided to provide you with...{w}{br}alternative entertainment.{w};auto
 	r;Adjutant;Ophie;Sam
 	set_cursor;12,8;force_hold
 	#change_tile_sprite;10,7;top_gap
@@ -42,12 +42,12 @@ if;gameStateObj.turncount == 1
 	wait;1000
 	u;Sam;FarRight;u;Adjutant;Left;u;Ophie;MidRight
 	s;Sam;It's a trap!{w};auto
-	s;Adjutant;How astute.{w}{br}With that kind of acumen, it's no wonder you've come so far.{w}{clear}Well, I'm off to more important matters.{w}{br}The Archon will see you in a bit...{w}{br}If you can survive that long.{w};auto
+	s;Adjutant;How astute.{w}{br}With that kind of acumen, it's no wonder you've come so far.{w}{clear}Well, I'm off to more important matters.{w}{br}The Duke will see you in a bit...{w}{br}If you can survive that long.{w};auto
 	r;Sam;Adjutant;Ophie
 	move_unit;Adjutant;11,3;warp
 	wait;1000
 	u;Sam;Right;u;Ophie;Left
-	s;Sam;Oh... I've blundered.{w}{br}To think we could take on the Archon.{w}{br}It was a pipe dream all along.{w};auto
+	s;Sam;Oh... I've blundered.{w}{br}To think we could take on the Duke.{w}{br}It was a pipe dream all along.{w};auto
 	s;Ophie;Sam, I doubted you once.{w}{br}But no longer.{w}{br}We couldn't have made it this far without your leadership.{w}{br}But that means you can't give up now.{w}{br}Together, we'll finish this.{w};auto
 	r;Sam
 	# Now it cycles through remaining characters final quotes

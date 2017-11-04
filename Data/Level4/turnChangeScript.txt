@@ -91,7 +91,7 @@ elif;gameStateObj.turncount == 4
 	s;Anders;Soldier! Ignore that order!{w};auto
 	u;Soldier1;MidRight
 	s;Midas;W-What!?{w};auto
-	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Archon.{w}{br}We will lay down our lives in his name!{w};auto
+	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Duke.{w}{br}We will lay down our lives in his name!{w};auto
 	s;Midas;A-Are you sure there isn't another way?{w};auto
 	if;gameStateObj.counters['Dead_Wagons'] > 1
 		s;Midas;They've already struck down some of my best wagons!{w};auto

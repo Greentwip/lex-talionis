@@ -21,7 +21,7 @@
 player_characters
 #
 # Groups
-group;Claw;Claw;Empire;Archon Ulver's elite guard
+group;Claw;Claw;Empire;Duke Ulver's elite guard
 # Enemies
 # Bosses
 enemy;0;0;Ulver;12,3;DoNothing

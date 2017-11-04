@@ -192,7 +192,7 @@ if;gameStateObj.counters['level'] == 4
 		else
 			set_cursor;Anders;force_hold
 			u;Anders;FarLeft
-			s;Anders;You haven't won yet, Resistance scum.{w}{br}I'll take your scalps back to the Archon myself!
+			s;Anders;You haven't won yet, Resistance scum.{w}{br}I'll take your scalps back to the Duke myself!
 			r;Anders
 		end
 	end

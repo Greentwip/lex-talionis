@@ -29,7 +29,7 @@ s;Althea;No, Drake. I can handle myself.{w}{br}...That's my mother you recognize
 s;Prim;The queen?{w}{br}Then... you're the queen's daughter?{w};auto
 s;Ophie;All of the royalty were executed after the invasion.{w};auto
 s;Althea;They were, except me.{w}{br}With Drake's aid, I managed to escape.{w}{br}...I, alone among my family, survived the purge, for all the good that's done.{w}{br}Drake and I have been on the run ever since.{w};auto
-s;Ophie;So you're the one the Archon's been looking for!{w}{br}You're the fugitive!{w};auto
+s;Ophie;So you're the one the Duke's been looking for!{w}{br}You're the fugitive!{w};auto
 s;Drake;Yes. Capturing Princess Althea would finalize the Empire's hold on Kerala.{w};auto
 s;Ophie;Then, we can't let them capture you!{w}{br}You have to come with us.{w}{br}We'll get you to the Resistance base.{w};auto
 s;Althea;The Resistance base?{w};auto

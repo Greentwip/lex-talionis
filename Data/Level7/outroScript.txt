@@ -54,7 +54,7 @@ s;Theo;Yes...?{w};auto
 s;Prim;You know a lot about the Empire.{w};auto
 s;Theo;Uh... well... I don't know if that's true.{w}{br}There's always more to learn.{w};auto
 s;Prim;Well, do you know who that man was?{w};auto
-s;Theo;He definitely didn't seem like one of the Archon's normal lieutenants.{w}{br}That ward he used signified that much.{w}{br}I would guess he was sent here on the Empress's orders.{w}{br}Whatever's in this information must be important...{w};auto
+s;Theo;He definitely didn't seem like one of the Duke's normal lieutenants.{w}{br}That ward he used signified that much.{w}{br}I would guess he was sent here on the Empress's orders.{w}{br}Whatever's in this information must be important...{w};auto
 s;Prim;Hmmm...{w};auto
 r;Theo;Prim
 u;Sam;OffscreenLeft
@@ -73,7 +73,7 @@ s;Vagnius;Keeping ME waiting... He will pay for this insult.{w};auto;thought_bub
 wait;500
 qu;Adjutant;OffscreenRight
 move_sprite;Adjutant;-96,0;force_hold
-s;Adjutant;The Archon will see you now. Follow me.{w};auto
+s;Adjutant;The Duke will see you now. Follow me.{w};auto
 s;Vagnius;Finally.{w};auto
 r;Adjutant
 r;Vagnius

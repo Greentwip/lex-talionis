@@ -572,7 +572,7 @@
         
         <level>20</level>
         <class>Tactician,Strategist</class>
-        <desc>Archon Ulver's loyal assistant.</desc>
+        <desc>Duke Ulver's loyal assistant.</desc>
         <faction>Empire</faction>
         
         <tags>Boss</tags>
@@ -591,8 +591,8 @@
         <inventory>Makara</inventory>
         
         <level>25</level>
-        <class>Knight,General,Archon</class>
-        <desc>Hard-nosed Imperial Archon occupying Kerala.</desc>
+        <class>Knight,General,Duke</class>
+        <desc>Hard-nosed Imperial Duke occupying Kerala.</desc>
         <faction>Empire</faction>
         
         <tags>Boss</tags>
