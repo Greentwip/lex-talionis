@@ -110,7 +110,7 @@ Command list
 0x22 Play short sword swinging SFE - Weapon Pull
 0x23 Play shorter sword swinging SFE - Weapon Push
 0x24 Play sword slashing air SFE
-0x25 Play wing flap SFE - Heavy Wing Flap ?
+0x25 Play wing flap SFE - Heavy Wing Flap
 0x26 Sword toss; VERY hardcoded (uses 32x32 at linear sheet index 0x1C from current sheet)
 0x27 Shield toss; while this command is used for shield tossing,
 	it is actually just a copy of command 0x26
@@ -128,7 +128,7 @@ Command list
 0x32 Show medium sized dirt wave moving backward animation (starts from feet of attacker)
 0x33 Play battle cry SFE (REALLY stupid)
 0x34 Play heavy stepping SFE - Step Back 1
-0x35 Play longer wing flapping SFE - Long Wing Flap??
+0x35 Play longer wing flapping SFE - Long Wing Flap
 0x36 Play sword unsheathing SFE - Unsheathe
 0x37 Play sword clicking SFE - Sheathe
 0x38 Play heavy spear spinning SFE
@@ -137,7 +137,7 @@ Command list
 		blue sparks
 0x3A Play dancer magic release SFE
 0x3B Play bard song SFE
-0x3C Play sword "whooshing" SFE (done by Nomads; sounds like wing flap)
+0x3C Play sword "whooshing" SFE (done by Nomads; sounds like wing flap) - Sword Whoosh
 0x3D Show Nergal's dark aura animation - FE 7 only!
 0x3E Play burning SFE
 0x3F Play alternate arrow firing SFE?

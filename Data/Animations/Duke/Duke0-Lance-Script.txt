@@ -21,7 +21,7 @@ platform_shake
 f;20;Frame7
 f;6;Frame8
 f;5;Frame9
-sound;SOMETHING
+sound;Legendary Weapon
 f;3;Frame10
 f;2;Frame11
 f;2;Frame12
@@ -111,7 +111,6 @@ f;6;Frame53
 f;4;Frame54
 f;4;Frame55
 f;5;Frame56
-sound;SOMETHING?
 f;2;Frame75
 f;4;Frame57
 platform_shake
@@ -132,7 +131,7 @@ platform_shake
 f;20;Frame7
 f;6;Frame8
 f;5;Frame9
-sound;SOMETHING
+sound;Legendary Weapon
 f;3;Frame10
 f;2;Frame11
 f;2;Frame12
@@ -214,7 +213,6 @@ f;6;Frame53
 f;4;Frame54
 f;4;Frame55
 f;5;Frame56
-sound;SOMETHING?
 f;2;Frame75
 f;4;Frame57
 platform_shake

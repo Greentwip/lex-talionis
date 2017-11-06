@@ -110,18 +110,19 @@ DragoonUnarmed ??
 DragoonLance ??
 DragoonRangedLance ??
 DracoknightUnarmed ++
-DracoknightLance + (Long Wing Flap)
+DracoknightLance ++
 DracoknightRangedLance ++
 DracolordUnarmed ++
-DracolordLance + (Long Wing Flap)
+DracolordLance ++
 DracolordRangedLance ++
-DracolordAxe + (Long Wing Flap)
+DracolordAxe ++
 DracolordRangedAxe ++
 BerserkerUnarmed ++
 BerserkerAxe ++
 BerserkerRangedAxe ++
-DukeUnarmed
-DukeLance (also Duke RangedLance)
+DukeUnarmed ++
+DukeLance ++
+DukeMagicLance ++
 
 === Items ===
 Boltblade - Thunder
