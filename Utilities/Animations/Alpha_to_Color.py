@@ -2,7 +2,7 @@ import glob
 from PIL import Image
 import numpy as np
 
-loc = 'king/'
+loc = 'dragoon_rangedlance/'
 # Get all sprites
 imageList = [im for im in glob.glob(loc + '*.png')]
 
