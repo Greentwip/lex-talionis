@@ -1386,31 +1386,13 @@ class UnitObject(object):
         gameStateObj.stateMachine.changeState('itemgain')
 
     def get_ai(self, ai_line):
-        ai_dict = {'None': [0, 0, [], [], 0, 20],
-                   'DoNothing': [0, 0, [], [], 0, 20], # yes, these are the same
-                   'Attack': [1, 1, [], [], 1, 20],
-                   'Pursue': [1, 1, [], [], 2, 20],
-                   'SoftGuard': [1, 0, [], [], 0, 20],
-                   'HardGuard': [2, 0, [], [], 0, 20],
-                   'Unlock': [4, 4, [], [], 2, 30],
-                   'Escape': [5, 5, [], [], 2, 30],
-                   'ThiefEscape': [6, 6, [], [], 2, 30],
-                   'Unlock2': [4, 4, [2], [], 2, 30], # 2 is num of items to hold. Then wil leave
-                   'AttackThiefEscape': [7, 6, [], [], 2, 30],
-                   'PursueIgnoreOther': [1, 1, ['other'], [], 2, 20],
-                   'SoftGuardIgnoreOther': [1, 0, ['other'], [], 0, 20],
-                   'PursueVillage': [3, 3, [], [], 2, 20],
-                   'Support': [1, 2, [], [], 2, 10],
-                   'FollowBoss': [1, 7, [], [], 2, 15],
-                   'FollowWagon': [1, 'Wagon', [], [], 2, 20]}
-
         if '_' in ai_line:
             ai_line, self.ai_group = ai_line.split('_')
         else:
             self.ai_group = 0
 
-        if ai_line in ai_dict:
-            ai_stat = ai_dict[ai_line]
+        if ai_line in GC.AIDATA:
+            ai_stat = GC.AIDATA[ai_line]
             self.ai = AI_fsm.AI(self, ai_stat[0], ai_stat[1], ai_stat[2], ai_stat[3], ai_stat[4], ai_stat[5], self.ai_group)
 
         else:
@@ -1421,8 +1403,8 @@ class UnitObject(object):
                 ai2 = int(ai2)
             except ValueError:
                 pass
-            team_ignore = split_line[2].split(',') if split_line[2] else []
-            name_ignore = split_line[3].split(',') if split_line[3] else []
+            team_ignore = split_line[2].split(',') if split_line[2] and split_line[2] != '-' else []
+            name_ignore = split_line[3].split(',') if split_line[3] and split_line[3] != '-' else []
             view_range = int(split_line[4])
             priority = int(split_line[5])
 

@@ -100,9 +100,9 @@ class StartStart(StateMachine.State):
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.logo = GC.IMAGESDICT['Logo']
             gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], 16, (GC.WINWIDTH/2, 4*GC.WINHEIGHT/5))
-            gameStateObj.fog_bg = MenuFunctions.MovieBackground('fog', 33)
+            gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background', 33)
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
-            gameStateObj.fog_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
+            gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
             # Wait until saving thread has finished
             if hasattr(gameStateObj, 'saving_thread'):
                 gameStateObj.saving_thread.join()
@@ -167,9 +167,9 @@ class StartStart(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         # gameStateObj.logo.draw(surf)
@@ -298,9 +298,9 @@ class StartOption(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         if self.menu:
@@ -388,9 +388,9 @@ class StartLoad(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT/2])
         surf.blit(self.title_surf, (self.title_pos[0], self.title_pos[1] + self.rel_title_pos_y))
@@ -458,30 +458,44 @@ class StartMode(StateMachine.State):
             self.state += 1
 
         if self.state == 0:
-            self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])
-            options = ['Normal', 'Hard', 'Lunatic']
-            toggle = [False, True, False]
-            self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
-            self.mode_name = 'difficulty'
-            gameStateObj.stateMachine.changeState('transition_in')
+            if cf.CONSTANTS['difficulties'][-1] == 0:
+                self.state += 2
+            else:
+                self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])
+                options = cf.CONSTANTS['difficulties'][:-1]
+                if cf.CONSTANTS['only_difficulty'] >= 0:
+                    toggle = [False for o in options]
+                    toggle[cf.CONSTANTS['only_difficulty']] = True
+                else:
+                    toggle = [True for o in options]
+                self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
+                self.mode_name = 'difficulty'
+                gameStateObj.stateMachine.changeState('transition_in')
             return 'repeat'
 
         elif self.state == 2:
-            self.title_surf, self.title_pos = create_title(cf.WORDS['Select Mode'])
-            options = ['Casual', 'Classic']
-            toggle = [True, True]
-            self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
-            self.mode_name = 'death'
-            gameStateObj.stateMachine.changeState('transition_in')
+            if cf.CONSTANTS['death'] != 2:
+                self.state += 2
+            else:
+                self.title_surf, self.title_pos = create_title(cf.WORDS['Select Mode'])
+                options = ['Casual', 'Classic']
+                toggle = [True, True]
+                self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
+                self.mode_name = 'death'
+                gameStateObj.stateMachine.changeState('transition_in')
             return 'repeat'
 
         elif self.state == 4:
-            self.title_surf, self.title_pos = create_title(cf.WORDS['Select Growths'])
-            options = ['Random', 'Fixed', 'Hybrid']
-            toggle = [True, True, True]
-            self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
-            self.mode_name = 'growths'
-            gameStateObj.stateMachine.changeState('transition_in')
+            if cf.CONSTANTS['growths'] != 3:
+                gameStateObj.stateMachine.changeState('start_new')
+                gameStateObj.stateMachine.changeState('transition_out')
+            else:
+                self.title_surf, self.title_pos = create_title(cf.WORDS['Select Growths'])
+                options = ['Random', 'Fixed', 'Hybrid']
+                toggle = [True, True, True]
+                self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
+                self.mode_name = 'growths'
+                gameStateObj.stateMachine.changeState('transition_in')
             return 'repeat'
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -518,9 +532,9 @@ class StartMode(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         self.menu.draw(surf)
         surf.blit(self.title_surf, self.title_pos)
         gameStateObj.button_a.draw(surf)
@@ -618,9 +632,9 @@ class StartNew(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT/2])
         # selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
@@ -726,9 +740,9 @@ class StartExtras(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         # GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, (4, GC.WINHEIGHT - 16))
         # gameStateObj.logo.draw(surf)
         gameStateObj.button_a.draw(surf)
@@ -753,9 +767,9 @@ class StartWait(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             currentTime = Engine.get_time()
             if hasattr(self, 'wait_time') and currentTime - self.wait_time > 100 and currentTime - self.wait_time < 200:
@@ -769,8 +783,8 @@ class StartWait(StateMachine.State):
 
     def finish(self, gameStateObj, metaDataObj):
         gameStateObj.activeMenu = None
-        gameStateObj.fog_bg = None
-        gameStateObj.fog_particles = None
+        gameStateObj.title_bg = None
+        gameStateObj.title_particles = None
 
 class StartSave(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -781,9 +795,9 @@ class StartSave(StateMachine.State):
         if not self.started:
             gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
-            gameStateObj.fog_bg = MenuFunctions.MovieBackground('fog', 33)
+            gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
-            gameStateObj.fog_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
+            gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
             # self.time_display = TimeDisplay()
             # if not hasattr(gameStateObj, 'save_slots') or not gameStateObj.save_slots:
             gameStateObj.save_slots = load_saves()
@@ -846,9 +860,9 @@ class StartSave(StateMachine.State):
             
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        gameStateObj.fog_bg.draw(surf)
-        gameStateObj.fog_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.fog_particles.draw(surf)
+        gameStateObj.title_bg.draw(surf)
+        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+        gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             currentTime = Engine.get_time()
             if hasattr(self, 'wait_time') and currentTime - self.wait_time > 100 and currentTime - self.wait_time < 200:
@@ -864,8 +878,8 @@ class StartSave(StateMachine.State):
 
     def finish(self, gameStateObj, metaDataObj):
         gameStateObj.activeMenu = None
-        gameStateObj.fog_bg = None
-        gameStateObj.fog_particles = None
+        gameStateObj.title_bg = None
+        gameStateObj.title_particles = None
 
 # === DISPLAY CREDITS SCREEN
 class CreditsState(StateMachine.State):

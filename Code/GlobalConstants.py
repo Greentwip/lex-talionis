@@ -90,6 +90,24 @@ def create_mcost_dict(fp):
             mcost_dict[s_line[0]] = [int(s) if s != '-' else 99 for s in s_line[1:]]
     return mcost_dict
 MCOSTDATA = create_mcost_dict(loc + 'Data/mcost.txt')
+def create_ai_dict(fp):
+    ai_dict = {}
+    with open(fp, 'r') as ai_data:
+        for line in ai_data.readlines():
+            if line.startswith('#'):
+                continue
+            s_line = line.strip().split()
+            ai_dict[s_line[0]] = []
+            for obj in s_line[1:]:
+                if obj == '-':
+                    obj = []
+                elif ',' in obj:
+                    obj = obj.split(',')
+                elif obj.isdigit():
+                    obj = int(obj)
+                ai_dict[s_line[0]].append(obj)
+    return ai_dict
+AIDATA = create_ai_dict(loc + 'Data/ai_presets.txt')
 
 FONT = {}
 for fp in os.listdir(loc + 'Sprites/Fonts'):

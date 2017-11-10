@@ -79,8 +79,8 @@ class GameStateObj(object):
 
     def default_mode(self):
         return {'difficulty': 1,
-                'death': 1, # 0 is Casual, 1 is Classic
-                'growths': 1} # 0 is Random, 1 is Fixed, 2 is Hybrid
+                'death': cf.CONSTANTS['death'], # 0 is Casual, 1 is Classic
+                'growths': cf.CONSTANTS['growths']} # 0 is Random, 1 is Fixed, 2 is Hybrid
 
     def sweep(self):
         # None of these are kept through different levels

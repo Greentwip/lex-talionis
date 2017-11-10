@@ -19,18 +19,7 @@
 #
 # --------------------------------------------
 # Player Characters
-player;1;Ophie;Ophie;None;None
-player;1;Prim;Prim;None;None
-player;1;Joel;Joel;None;None
-player;1;Nia;Nia;None;None
-player;1;Althea;Althea;None;None
-player;1;Drake;Drake;None;None
-player;1;Renae;Renae;None;None
-player;1;Theo;Theo;None;None
-player;1;Eliza;Eliza;None;None
-player;1;Sam;Sam;None;None
-player;1;Kayla;Kayla;None;None
-player;1;Coyote;Coyote;None;None
+load_player_characters
 #
 # Enemies
 # Bosses

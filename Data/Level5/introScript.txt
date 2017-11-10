@@ -49,15 +49,8 @@ t;1
 b;Desert
 t;2
 # Add player units
-add_unit;Ophie
-add_unit;Prim
-add_unit;Theo
-add_unit;Nia
-add_unit;Eliza
-add_unit;Drake
-add_unit;Althea
-add_unit;Renae
-add_unit;Joel
+add_unit;Ophie;3,15
+arrange_formation
 set_cursor;Ophie
 u;Ophie;MidLeft
 u;Prim;FarLeft

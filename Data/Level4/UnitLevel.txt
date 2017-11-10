@@ -18,14 +18,7 @@
 #
 # --------------------------------------------
 # Player Characters
-player;1;0;Ophie;None;None
-player;1;0;Prim;None;None
-player;1;0;Joel;None;None
-player;1;0;Nia;None;None
-player;1;0;Althea;None;None
-player;1;0;Drake;None;None
-player;1;0;Theo;None;None
-player;1;0;Renae;None;None
+load_player_characters
 #
 other;0;0;Eliza;0,0;None
 #

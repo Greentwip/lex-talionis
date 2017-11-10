@@ -710,11 +710,20 @@ class Dialogue_Scene(object):
 
         # === CLEANUP
         elif line[0] == 'arrange_formation':
-            player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
-            formation_spots = [position for position, value in gameStateObj.map.tile_info_dict.iteritems() if 'Formation' in value]
+            if len(line) > 1:  # force arrange
+                player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and
+                                not unit.dead]
+                formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.iteritems()
+                                   if 'Formation' in value]
+            else:
+                player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and
+                                not unit.dead and not unit.position]
+                formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.iteritems()
+                                   if 'Formation' in value and not gameStateObj.grid_manager.get_unit_node(pos)]
             for index, unit in enumerate(player_units[:len(formation_spots)]):
-                unit.leave(gameStateObj)
-                unit.remove_from_map(gameStateObj)
+                if len(line) > 1:
+                    unit.leave(gameStateObj)
+                    unit.remove_from_map(gameStateObj)
                 unit.position = formation_spots[index]
                 # print(unit.name, unit.position)
                 unit.place_on_map(gameStateObj)

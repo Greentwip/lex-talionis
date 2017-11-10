@@ -73,6 +73,7 @@ def read_constants_file():
              'normal_movement': 1, # How many movement points does a normal tile cost to traverse
              'mounted_aid': 15, # What a mounted units CON is subtracted from to determine AID
              'crit': 2, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 3x damage minus 3x defense
+             'death': 2,
              'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
              'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)
              'num_levels': 11, # Number of levels in game
@@ -91,13 +92,16 @@ def read_constants_file():
              'simultaneous_aoe': 1, # Whether AOE attacks on many targets are resolved simultaneously or in order
              'def_double': 1, # Whether units on defense can double their attackers
              'support': 1, # Whether this game has supports
-             'enemy_leveling': 1, # How to level up non-player units ('fixed', 'random', 'hybrid', 'match')
+             'enemy_leveling': 1, # How to level up non-player units
+             'growths': 3,
              'rng': 'true_hit', # How hits are calculated ('classic', 'true_hit', 'true_hit+', 'no_rng', 'hybrid') # FE6-13 uses true_hit
              'set_roll': 49, # used for 'no_rng' mode. Determines threshold at which attacks miss. Ex. Any attack with hitrate <= set_roll, misses
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
              'max_stat': 20, # Maximum value that a non-HP stat can be. Irrespective of class caps. 
              'num_stats': 10, # Number of stats that a unit has (Includes HP, CON, and MOV)
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
+             'difficulties': 'Normal,Hard,Lunatic',
+             'only_difficulty': -1,
              'max_level': 10} # Maximum Level for any class. Any higher and you auto-promote
 
     if os.path.isfile('Data/constants.ini'):
@@ -113,6 +117,7 @@ def read_constants_file():
     lines['normal_movement'] = int(lines['normal_movement'])
     lines['mounted_aid'] = int(lines['mounted_aid'])
     lines['crit'] = int(lines['crit'])
+    lines['death'] = int(lines['death'])
     lines['flying_mcost_column'] = int(lines['flying_mcost_column'])
     lines['fleet_mcost_column'] = int(lines['fleet_mcost_column'])
     lines['num_levels'] = int(lines['num_levels'])
@@ -131,11 +136,15 @@ def read_constants_file():
     lines['def_double'] = int(lines['def_double'])
     lines['support'] = int(lines['support'])
     lines['enemy_leveling'] = int(lines['enemy_leveling'])
+    lines['growths'] = int(lines['growths'])
     lines['set_roll'] = int(lines['set_roll'])
     lines['num_skills'] = int(lines['num_skills'])
     lines['max_stat'] = int(lines['max_stat'])
     lines['num_stats'] = int(lines['num_stats'])
     lines['stat_names'] = lines['stat_names'].split(',')
+    lines['difficulties'] = lines['difficulties'].split(',')
+    lines['difficulties'][-1] = int(lines['difficulties'][-1])
+    lines['only_difficulty'] = int(lines['only_difficulty'])
     lines['max_level'] = int(lines['max_level'])
 
     return lines

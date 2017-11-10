@@ -80,10 +80,10 @@ class StaticBackground(object):
         self.state = "Out"
 
 class MovieBackground(object):
-    def __init__(self, movie_prefix, num_frames):
+    def __init__(self, movie_prefix):
         self.counter = 0
-        self.num_frames = num_frames
         self.movie_prefix = movie_prefix
+        self.num_frames = len([image_name for image_name in GC.IMAGESDICT if image_name.startswith(movie_prefix)])
 
         self.last_update = 0
         self.speed = 125

@@ -74,16 +74,15 @@ add_unit;Ophie;1,0
 move_unit;Prim;0,1
 move_unit;Ophie;1,1
 start_move
-start_move
-add_unit;Nia
-add_unit;Joel
+add_unit;Nia;0,0
+add_unit;Joel;1,0
 wait;500
 u;Prim;MidLeft
 u;Joel;FarLeft
 u;Ophie;Right
 s;Ophie;He is taking on all those Imperials alone.{w};auto
 s;Prim;It looks like he's protecting that girl.{w};auto
-s;Joel;Does he have a deathwish?{w}{br}He's got no chance against that horde.{w};auto
+s;Joel;Does he have a death wish?{w}{br}He's got no chance against that horde.{w};auto
 s;Ophie;He won't be alone for long!{w};auto
 r;Ophie;Prim;Joel
 # Pan to Boss
@@ -94,7 +93,7 @@ wait;1000
 disp_cursor;0
 u;Brigham;Right
 u;Soldier1;Left
-s;Brigham;What! More traitors come out of the woodwork!{w}{br}Who would've thought that Keralan loyalty to the old crown would've held this long...{w}{br}Men, kill them all! Take no prisoners!{w};auto
+s;Brigham;What! More traitors come out of the woodwork!{w}{br}Who would've thought that Keralan loyalty to the old crown would've held this long...{w}{br}Bah, kill them all! And take no prisoners!{w};auto
 s;Soldier1;Even the girl, sir?{w};auto
 s;Brigham;Yes, you idiot!{w}{br}Do you think the Duke wants to keep her as a reminder of his failings?{w};auto
 s;Soldier1;Of course not, sir!{w};auto
