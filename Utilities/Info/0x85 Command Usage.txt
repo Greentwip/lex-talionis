@@ -131,7 +131,7 @@ Command list
 0x35 Play longer wing flapping SFE - Long Wing Flap
 0x36 Play sword unsheathing SFE - Unsheathe
 0x37 Play sword clicking SFE - Sheathe
-0x38 Play heavy spear spinning SFE
+0x38 Play heavy spear spinning SFE - Heavy Spear Spin
 0x39 Pauses the attacker, makes them flash white and makes the screen flash white
 	Essentially makes it look as though the attacker was hit, but without
 		blue sparks

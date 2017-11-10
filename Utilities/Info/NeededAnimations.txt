@@ -106,9 +106,9 @@ PirateRangedAxe ++
 BrigandUnarmed ++
 BrigandAxe ++
 BrigandRangedAxe ++
-DragoonUnarmed ?? 
-DragoonLance ??
-DragoonRangedLance ??
+DragoonUnarmed ++
+DragoonLance ++
+DragoonRangedLance ++
 DracoknightUnarmed ++
 DracoknightLance ++
 DracoknightRangedLance ++

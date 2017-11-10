@@ -520,6 +520,36 @@ soldier_blue = [(128, 160, 128), # Background
                 (120, 96, 24), # Dark Leather
                 (40, 40, 40)] # Outline
 
+dragoon_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # LL Skin
+                (240, 200, 152), # Light Skin
+                (200, 136, 72), # Med Skin
+                (112, 72, 48), # Dark Skin
+                (208, 200, 224), # Light Armor
+                (160, 152, 200), # LM Armor
+                (96, 88, 144), # DM Armor
+                (56, 56, 96), # Dark Armor
+                (200, 120, 112), # Accent 1
+                (168, 80, 88), # Accent 2
+                (96, 64, 72), # Accent 3
+                (40, 40, 40)] # Outline
+
+dragoon_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # LL Skin
+                (240, 200, 152), # Light Skin
+                (200, 136, 72), # Med Skin
+                (112, 72, 48), # Dark Skin
+                (224, 176, 176), # Light Armor
+                (208, 104, 104), # LM Armor
+                (136, 48, 48), # DM Armor
+                (88, 24, 24), # Dark Armor
+                (36, 248, 96), # Accent 1
+                (0, 176, 48), # Accent 2
+                (0, 96, 24), # Accent 3
+                (40, 40, 40)] # Outline
+
 fado = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (128, 216, 112), # Armor 1 Light
