@@ -100,7 +100,7 @@ class StartStart(StateMachine.State):
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.logo = GC.IMAGESDICT['Logo']
             gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], 16, (GC.WINWIDTH/2, 4*GC.WINHEIGHT/5))
-            gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background', 33)
+            gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
             gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
             # Wait until saving thread has finished
@@ -458,7 +458,7 @@ class StartMode(StateMachine.State):
             self.state += 1
 
         if self.state == 0:
-            if cf.CONSTANTS['difficulties'][-1] == 0:
+            if cf.CONSTANTS['difficulties'][0] == '0':
                 self.state += 2
             else:
                 self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])

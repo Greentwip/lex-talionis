@@ -792,6 +792,8 @@ class UnitObject(object):
         elif movement.mode == 'Shove':
             new_position = self.check_shove(other_pos, 1, gameStateObj)
             if new_position:
+                self.sprite.set_transition('fake_in')
+                self.sprite.spriteOffset = [(self.position[0] - new_position[0])*GC.TILEWIDTH, (self.position[1] - new_position[1])*GC.TILEHEIGHT]
                 self.position = new_position
         elif movement.mode == 'Rescue':
             # print(movement.mode, other_pos)

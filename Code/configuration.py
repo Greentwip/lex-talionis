@@ -143,7 +143,6 @@ def read_constants_file():
     lines['num_stats'] = int(lines['num_stats'])
     lines['stat_names'] = lines['stat_names'].split(',')
     lines['difficulties'] = lines['difficulties'].split(',')
-    lines['difficulties'][-1] = int(lines['difficulties'][-1])
     lines['only_difficulty'] = int(lines['only_difficulty'])
     lines['max_level'] = int(lines['max_level'])
 

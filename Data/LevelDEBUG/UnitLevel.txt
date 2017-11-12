@@ -15,7 +15,7 @@
 # --------------------------------------------
 group;Resistance;Bandit;Resistance;Nope
 player;0;0;Assassin;10;Willow Bow,Iron Sword,Levin Sword;5,13;Pursue;Resistance
-player;0;0;Fighter;1;Hand Axe;4,12;Pursue;Resistance
+player;0;0;Fighter;5;Hand Axe;4,12;Pursue;Resistance
 player;0;0;Mage;1;Aether,Wind,Fire,Thunder,Vulnerary;4,15;Pursue;Resistance
 player;0;0;Mercenary;10;Levin Sword,Iron Sword,Vulnerary,Angelic Robe;3,14;Pursue;Resistance
 player;0;0;Oracle;10;Shine,Glimmer,Heal,Fortune,Physic;4,14;Support;Resistance

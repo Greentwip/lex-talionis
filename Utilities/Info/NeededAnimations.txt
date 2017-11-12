@@ -130,7 +130,7 @@ Gustblade - Arch's Wind
 Flareblade - Fire
 Glimmer << - Lightning
 Shine << - Shine
-Corona - Divine
+Corona - Aura
 Heal < - Heal
 Physic < - Physic
 Fortune << - Barrier
@@ -145,12 +145,12 @@ Fly << - None
 Flux << - Flux
 Nyx << - Nosferatu
 Ruin << - Fenrir
-Howl - Gleipnir? Ereshkigal?
+Howl - Gleipnir
 Scathe - Evil Eye
 Hex - Shadowshot
 Stun < - Sleep
 Disintegrate - Demon Surge
-Makara - ??
+Makara - Divine
 
 Possibly:
 Replace Iron Knife, Steel Knife, Mithril Knife with Levin Sword (Iron), Rune Sword (Nosferatu) (Steel), Light Brand (Mithril), Rapier (targets SPD instead)

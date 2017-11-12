@@ -1,4 +1,4 @@
-#! usr/bine/env python2.7
+#! usr/bin/env python2.7
 import GlobalConstants as GC
 import configuration as cf
 import Image_Modification, Utility, Engine
@@ -13,7 +13,7 @@ class UnitSprite(object):
         self.unit = unit
         self.state = 'normal' # what state the unit sprite is in
         self.image_state = 'passive' # What the image looks like
-        self.transition_state = 'normal' # fade_in, fade_out, warp_in, warp_out, fake_in, fake_out
+        self.transition_state = 'normal' # fade_in, fade_out, warp_in, warp_out, fake_in, fake_out, rescue
         self.transition_counter = 0
         self.transition_time = 400
         self.next_position = None
