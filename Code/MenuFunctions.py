@@ -104,21 +104,22 @@ class Foreground(object):
         self.fade_out = False
         self.fade_out_frames = 0
 
-    def flash(self, num_frames, fade_out):
+    def flash(self, num_frames, fade_out, color=(248, 248, 248)):
         self.foreground_frames = num_frames
         self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
-        self.foreground.fill((248, 248, 248))
+        Engine.fill(self.foreground, color)
         self.fade_out_frames = fade_out
 
-    def draw(self, surf):
+    def draw(self, surf, blend=False):
         # Screen flash
         if self.foreground or self.fade_out_frames:
             if self.fade_out:
                 alpha = 100 - self.foreground_frames/float(self.fade_out_frames)*100
                 foreground = Image_Modification.flickerImageTranslucent(self.foreground, alpha)
             else:
-                foreground = self.foreground
-            surf.blit(foreground, (0, 0))
+                foreground = self.foreground\
+            # Always additive blend
+            Engine.blit(surf, foreground, (0, 0), blend=Engine.BLEND_RGB_ADD)
             self.foreground_frames -= 1
             # If done
             if self.foreground_frames <= 0:

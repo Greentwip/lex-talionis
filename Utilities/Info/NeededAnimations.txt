@@ -145,7 +145,7 @@ Fly << - None
 Flux << - Flux
 Nyx << - Nosferatu
 Ruin << - Fenrir
-Howl - Gleipnir
+Howl << - Gleipnir
 Scathe - Evil Eye
 Hex - Shadowshot
 Stun < - Sleep

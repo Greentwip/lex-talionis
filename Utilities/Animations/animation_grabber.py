@@ -5,14 +5,14 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
-FIND_COLORKEY = None
-YLIMIT = 160
+COLORKEY = (0, 0, 0)
+FIND_COLORKEY = False
+YLIMIT = 120
 XLIMIT = 0
 palette_set = None
 
-folder = 'dragoon_rangedlance/'
-name = 'Frame'
+folder = 'gleipnir_whirl/'
+name = 'Whirl'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
@@ -95,6 +95,7 @@ for idx, fp in enumerate(sorted(images)):
                     image.putpixel((x, y), COLORKEY)
     elif FIND_COLORKEY:
         COLORKEY = image.getpixel((0, 0))
+        print(COLORKEY)
         for x in xrange(width):
             for y in xrange(height):
                 my_color = image.getpixel((x, y))

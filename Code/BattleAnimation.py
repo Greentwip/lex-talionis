@@ -58,6 +58,8 @@ class BattleAnimation(object):
         self.ignore_pan = False
         self.pan_away = False
         self.lr_offset = []
+        self.effect_offset = (0, 0)
+        self.personal_offset = (0, 0)
 
         # Awake stuff
         self.owner = None
@@ -173,11 +175,13 @@ class BattleAnimation(object):
             self.processing = False
             if line[2] == 'Stand':
                 self.base_state = True
-            if len(line) > 3:  # Under frame
+            if len(line) > 3 and line[3]:  # Under frame
                 self.under_frame = self.frame_directory[line[3]]
             else:
                 self.under_frame = None
             self.over_frame = None
+            if len(line) > 4 and line[4]:
+                self.personal_offset = tuple(int(num) for num in line[4].split(','))
         elif line[0] == 'of':
             self.frame_count = 0
             self.num_frames = int(line[1]) * self.speed
@@ -195,6 +199,8 @@ class BattleAnimation(object):
             self.over_frame = None
             self.under_frame = self.frame_directory[line[2]]
             self.processing = False
+            if len(line) > 3:
+                self.personal_offset = tuple(int(num) for num in line[3].split(','))
         elif line[0] == 'wait':
             self.frame_count = 0
             self.num_frames = int(line[1]) * self.speed
@@ -285,7 +291,11 @@ class BattleAnimation(object):
                 fade_out = int(line[2]) * self.speed
             else:
                 fade_out = 0
-            self.owner.flash_white(num_frames, fade_out)
+            self.owner.flash_color(num_frames, fade_out, color=(248, 248, 248))
+        elif line[0] == 'screen_blend':
+            num_frames = int(line[1]) * self.speed
+            color = tuple(int(num) for num in line[2].split(','))
+            self.owner.flash_color(num_frames, color=color)
         elif line[0] == 'foreground_blend':
             self.foreground_frames = int(line[1]) * self.speed
             color = tuple([int(num) for num in line[2].split(',')])
@@ -331,6 +341,8 @@ class BattleAnimation(object):
             # print('Effect', script)
             child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+            if len(line) > 2:
+                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.children.append(child_effect)
         elif line[0] == 'under_effect':
@@ -338,6 +350,8 @@ class BattleAnimation(object):
             # print('Effect', script)
             child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+            if len(line) > 2:
+                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
@@ -346,6 +360,8 @@ class BattleAnimation(object):
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
                                self.at_range, parent=self.parent.partner)
+            if len(line) > 2:
+                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.partner.children.append(child_effect)
         elif line[0] == 'enemy_under_effect':
@@ -354,6 +370,8 @@ class BattleAnimation(object):
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
                                self.at_range, parent=self.parent.partner)
+            if len(line) > 2:
+                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.partner.under_children.append(child_effect)
         elif line[0] == 'blend':
@@ -494,6 +512,10 @@ class BattleAnimation(object):
         # Handle own offset
         if self.lr_offset:
             offset = offset[0] + self.lr_offset.pop(), offset[1]
+        if self.effect_offset:
+            offset = offset[0] + self.effect_offset[0], offset[1] + self.effect_offset[1]
+        if self.personal_offset:
+            offset = offset[0] + self.personal_offset[0], offset[1] + self.personal_offset[1]
         
         left = 0
         if not static:

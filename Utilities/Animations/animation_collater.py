@@ -4,12 +4,12 @@
 import glob
 from PIL import Image
 
-COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
+# COLORKEY = (128, 160, 128)
+COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
 NEW_COLORKEY = (0, 0, 0)
-WIDTH_LIMIT = 1024
-folder = 'dragoon_unarmed'
+WIDTH_LIMIT = 240*5
+folder = 'gleipnir_gust'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
@@ -44,6 +44,7 @@ for name, number, idx in sorted(new_files):
             color = image.getpixel((x, y))
             if FIND_COLORKEY and x == 0 and y == 0:
                 COLORKEY = color
+                print(COLORKEY)
             if color == COLORKEY:
                 image.putpixel((x, y), (0, 0, 0))
 

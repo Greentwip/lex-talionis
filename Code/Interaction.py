@@ -603,6 +603,7 @@ class AnimationCombat(Combat):
 
         # For darken backgrounds and drawing
         self.darken_background = 0
+        self.target_dark = 0
         self.darken_ui_background = 0
         self.foreground = MenuFunctions.Foreground()
         self.combat_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
@@ -968,14 +969,14 @@ class AnimationCombat(Combat):
         self.platform_current_shake = 1
         self.platform_shake_set = [(0, 1), (0, 0), (0, -1), (0, 0), (0, 1), (0, 0), (-1, -1), (0, 1), (0, 0)]
 
-    def flash_white(self, num_frames, fade_out=0):
-        self.foreground.flash(num_frames, fade_out)
+    def flash_color(self, num_frames, fade_out=0, color=(248, 248, 248)):
+        self.foreground.flash(num_frames, fade_out, color)
 
     def darken(self):
-        self.darken_background = 1
+        self.target_dark += 4
 
     def lighten(self):
-        self.darken_background = -3
+        self.target_dark -= 4
 
     def darken_ui(self):
         self.darken_ui_background = 1
@@ -1011,11 +1012,13 @@ class AnimationCombat(Combat):
         bar_multiplier = self.bar_offset / float(self.max_position_offset)
         platform_trans = 100
         platform_top = 88
-        if self.darken_background:
-            self.darken_background = min(self.darken_background, 4)
-            bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - abs(int(self.darken_background * 12.5)))
+        if self.darken_background or self.target_dark:
+            bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - int(self.darken_background * 12.5))
             surf.blit(bg, (0, 0))
-            self.darken_background += 1
+            if self.target_dark > self.darken_background:
+                self.darken_background += 1
+            elif self.target_dark < self.darken_background:
+                self.darken_background -= 1
         # Pan
         if self.pan_dir != 0:
             self.pan_offset += self.pan_dir
