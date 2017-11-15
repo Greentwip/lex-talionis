@@ -1551,7 +1551,7 @@ class MapCombat(Combat):
             result.attacker.handle_forced_movement(def_position, result.atk_movement, gameStateObj)
         if result.def_movement:
             atk_position = result.attacker.position
-            result.defender.handle_forced_movement(atk_position, result.def_movement, gameStateObj)
+            result.defender.handle_forced_movement(atk_position, result.def_movement, gameStateObj, self.def_pos)
         # Summoning
         if result.summoning:
             result.summoning.sprite.set_transition('warp_in')

@@ -1037,7 +1037,7 @@
         <id>Rescue</id>
         <spritetype>Light</spritetype>
         <spriteid>10</spriteid>       
-        <components>spell,uses,movement,beneficial,no_ai,map_hit_color</components>
+        <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color</components>
         <weapontype>Light</weapontype>
  
         <uses>5</uses>
@@ -1047,7 +1047,9 @@
         
         <LVL>B</LVL>
         <targets>Ally</targets>
-        <movement>Rescue,0</movement>
+        <movement>Warp,0</movement>
+
+        <extra_select>1,Tile</extra_select>
 
         <map_hit_color>-248,248,248</map_hit_color>
     </item>
@@ -1465,6 +1467,27 @@
         <targets>Enemy</targets>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
+    </item>
+
+    <item name="Warp">
+        <id>Warp</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>10</spriteid>       
+        <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>0-1</RNG>
+        <value>1000</value>
+        <desc>Teleports a nearby unit.</desc>
+        
+        <LVL>A</LVL>
+        <targets>Unit</targets>
+        <movement>Warp,0</movement>
+
+        <extra_select>1-10,Tile</extra_select>
+
+        <map_hit_color>128,-248,248</map_hit_color>
     </item>
 
     <!-- Neutral -->

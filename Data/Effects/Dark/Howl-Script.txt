@@ -82,7 +82,9 @@ effect;GleipnirBigRay;80,0
 wait;16
 # === End Gleipnir Rays
 lighten
+clear_all_effects
 screen_flash_white;10
+wait;10
 spell_hit
 enemy_effect;GleipnirFlash
 wait;36
@@ -175,7 +177,9 @@ wait;3
 effect;GleipnirBigRay;80,0
 wait;16
 # === End Gleipnir Rays
+clear_all_effects
 screen_flash_white;2
+wait;2
 lighten
 miss
 wait;36

@@ -416,10 +416,11 @@ def auto_level(bases, growths, level, max_stats, gameStateObj):
     stats = bases[:]
     growth_points = [50 for growth in growths]
     leveling = cf.CONSTANTS['enemy_leveling']
+
     if leveling == 3:
         leveling = gameStateObj.mode['growths']
 
-    if leveling == 1: # Fixed
+    if leveling == 1 or leveling == 3: # Fixed -- 3 if not chosen
         for index, growth in enumerate(growths):
             growth_sum = growth * (level - 1)
             stats[index] += growth_sum/100

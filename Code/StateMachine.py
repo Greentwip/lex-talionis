@@ -1341,8 +1341,7 @@ class SpellWeaponState(State):
         gameStateObj.info_surf = None
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         cur_unit.sprite.change_state('chosen', gameStateObj)
-        options = [item for item in cur_unit.items if item.spell]
-        options = [item for item in options if cur_unit.canWield(item)]
+        options = [item for item in cur_unit.items if item.spell and cur_unit.canWield(item)]
         # Only shows options I can use
         options = [item for item in options if cur_unit.getValidSpellTargetPositions(gameStateObj, item)]
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, options, 'auto', gameStateObj=gameStateObj)
@@ -1449,24 +1448,41 @@ class SpellState(State):
             gameStateObj.cursor.currentHoveredTile = gameStateObj.map.tiles[gameStateObj.cursor.position]
             if targets in ['Enemy', 'Ally', 'Unit'] and gameStateObj.cursor.currentHoveredUnit:
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                if (targets == 'Enemy' and attacker.checkIfEnemy(gameStateObj.cursor.currentHoveredUnit)) \
-                        or (targets == 'Ally' and attacker.checkIfAlly(gameStateObj.cursor.currentHoveredUnit)) \
+                cur_unit = gameStateObj.cursor.currentHoveredUnit
+                if (targets == 'Enemy' and attacker.checkIfEnemy(cur_unit)) \
+                        or (targets == 'Ally' and attacker.checkIfAlly(cur_unit)) \
                         or targets == 'Unit':
-                    defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.currentHoveredUnit.position, spell)
-                    gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, gameStateObj.cursor.currentHoveredUnit.position, splash, spell)
-                    gameStateObj.stateMachine.changeState('combat')
-                    GC.SOUNDDICT['Select 1'].play()
-            elif targets == 'Tile':
-                defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.position, spell)
-                if not spell.hit or defender or splash:
-                    if not spell.detrimental or (defender and attacker.checkIfEnemy(defender)) or any(attacker.checkIfEnemy(unit) for unit in splash):
-                        gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, gameStateObj.cursor.position, splash, spell)
+                    if spell.extra_select and spell.extra_select_index < len(spell.extra_select):
+                        self.handle_extra_select(gameStateObj, spell)
+                        spell.extra_select_targets.append(cur_unit)  # Must be done after handle_extra_select
+                    else:
+                        self.reapply_old_values(spell)
+                        defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, cur_unit.position, spell)
+                        if spell.extra_select:
+                            splash += spell.extra_select_targets
+                            spell.extra_select_targets = []
+                        gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, cur_unit.position, splash, spell)
                         gameStateObj.stateMachine.changeState('combat')
                         GC.SOUNDDICT['Select 1'].play()
+            elif targets == 'Tile':
+                if spell.extra_select and spell.extra_select_index < len(spell.extra_select):
+                    self.handle_extra_select(gameStateObj, spell)
+                    spell.extra_select_targets.append(gameStateObj.cursor.position)
+                else:
+                    self.reapply_old_values(spell)
+                    defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.position, spell)
+                    if spell.extra_select:
+                        splash += spell.extra_select_targets
+                        spell.extra_select_targets = []
+                    if not spell.hit or defender or splash:
+                        if not spell.detrimental or (defender and attacker.checkIfEnemy(defender)) or any(attacker.checkIfEnemy(unit) for unit in splash):
+                            gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, gameStateObj.cursor.position, splash, spell)
+                            gameStateObj.stateMachine.changeState('combat')
+                            GC.SOUNDDICT['Select 1'].play()
+                        else:
+                            GC.SOUNDDICT['Select 4'].play()
                     else:
                         GC.SOUNDDICT['Select 4'].play()
-                else:
-                    GC.SOUNDDICT['Select 4'].play()
 
         if directions:
             spell = attacker.getMainSpell()
@@ -1476,6 +1492,24 @@ class SpellState(State):
             gameStateObj.highlight_manager.remove_highlights('splash')
             gameStateObj.highlight_manager.remove_highlights('spell2')
             attacker.displaySingleAttack(gameStateObj, gameStateObj.cursor.position, item=spell)
+
+    def handle_extra_select(self, gameStateObj, spell):
+        idx = spell.extra_select_index
+        if idx == 0:  # Save true values so we can re-apply them later
+            spell.true_targets = spell.spell.targets
+            spell.true_RNG = spell.RNG
+            spell.extra_select_targets = []
+        spell.RNG = spell.extra_select[idx].RNG
+        spell.spell.targets = spell.extra_select[idx].targets
+        spell.extra_select_index += 1
+        gameStateObj.stateMachine.changeState('spell')
+        GC.SOUNDDICT['Select 1'].play()
+
+    def reapply_old_values(self, spell):
+        if spell.extra_select:  # Time to re-apply old values
+            spell.extra_select_index = 0
+            spell.spell.targets = spell.true_targets
+            spell.RNG = spell.true_RNG
 
     def end(self, gameStateObj, metaDataObj):
         gameStateObj.highlight_manager.remove_highlights()

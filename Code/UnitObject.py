@@ -486,7 +486,7 @@ class UnitObject(object):
             BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
             BGSurf.blit(real_surf, (2, 4))
             BGSurf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
-            shimmer = GC.IMAGESDICT['Shimmer2']
+            shimmer = GC.IMAGESDICT['Shimmer1']
             BGSurf.blit(shimmer, (BGSurf.get_width() - shimmer.get_width() - 1, BGSurf.get_height() - shimmer.get_height() - 5))
             BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
             width, height = BGSurf.get_width(), BGSurf.get_height()
@@ -769,7 +769,7 @@ class UnitObject(object):
         elif item.wexp_increase:
             self.increase_wexp(item.wexp_increase, gameStateObj)
 
-    def handle_forced_movement(self, other_pos, movement, gameStateObj):
+    def handle_forced_movement(self, other_pos, movement, gameStateObj, def_pos=None):
         # Remove tile statuses
         self.leave(gameStateObj)
         move_mag = int(eval(movement.magnitude))
@@ -804,6 +804,8 @@ class UnitObject(object):
                     self.position = pos
         elif movement.mode == 'Swap': # This simple thing will actually probably work
             self.position = other_pos
+        elif movement.mode == 'Warp':
+            self.position = def_pos
 
         self.arrive(gameStateObj)
 
@@ -1147,7 +1149,7 @@ class UnitObject(object):
 
     # Finds all valid target positions given the main spell you are using
     # Gets all valid target positions given 1 main spell
-    def getValidSpellTargetPositions(self, gameStateObj, spell=None):
+    def getValidSpellTargetPositions(self, gameStateObj, spell=None, targets=None, rng=None):
         # Assumes targetable
         if spell is None:
             my_spell = self.getMainSpell()

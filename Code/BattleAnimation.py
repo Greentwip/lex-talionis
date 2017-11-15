@@ -139,6 +139,14 @@ class BattleAnimation(object):
         self.children = [child for child in self.children if child.state != 'Inert']
         self.under_children = [child for child in self.under_children if child.state != 'Inert']
 
+    def clear_all_effects(self):
+        for child in self.children:
+            child.clear_all_effects()
+        for child in self.under_children:
+            child.clear_all_effects()
+        self.children = []
+        self.under_children = []
+
     def end_current(self):
         # print('Animation: End Current')
         if 'Stand' in self.poses:
@@ -374,6 +382,8 @@ class BattleAnimation(object):
                 child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.partner.under_children.append(child_effect)
+        elif line[0] == 'clear_all_effects':
+            self.clear_all_effects()
         elif line[0] == 'blend':
             if self.blend:
                 self.blend = None

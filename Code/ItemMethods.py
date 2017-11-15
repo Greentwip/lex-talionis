@@ -14,7 +14,7 @@ class ItemObject(object):
         self.owner = 0
         self.name = str(name)
         self.value = int(value) # Value for one use of item, or for an infinite item
-        self.RNG = self.parseRNG(RNG) # Comes in the form of looking like '1-2' or '1' or '2-3' or '3-10'
+        self.RNG = parseRNG(RNG) # Comes in the form of looking like '1-2' or '1' or '2-3' or '3-10'
         self.strRNG = RNG # string version of RNG for display
         self.event_combat = event_combat
         self.droppable = droppable # Whether this item is given to its owner's killer upon death
@@ -165,14 +165,6 @@ class ItemObject(object):
         for index, icon in enumerate(self.icons):    
             icon.draw(surf, (left + index*16, top))
 
-    def parseRNG(self, RNG):
-        # Should output a list of integers corresponding to acceptable ranges
-        if '-' in RNG:
-            rngsplit = RNG.split('-')
-            return range(int(rngsplit[0]), int(rngsplit[1]) + 1)
-        else:
-            return [int(RNG)]
-
     def get_str_RNG(self):
         max_rng = max(self.RNG)
         min_rng = min(self.RNG)
@@ -180,6 +172,14 @@ class ItemObject(object):
             return str(max_rng)
         else:
             return ''.join([str(min_rng), '-', str(max_rng)])
+
+def parseRNG(RNG):
+    # Should output a list of integers corresponding to acceptable ranges
+    if '-' in RNG:
+        rngsplit = RNG.split('-')
+        return range(int(rngsplit[0]), int(rngsplit[1]) + 1)
+    else:
+        return [int(RNG)]
 
 # A subclass of int so that if the int is negative, it will instead output "--"
 class NonNegative(int):
@@ -225,6 +225,12 @@ class WeaponComponent(object):
         self.HIT = int(HIT)
         self.LVL = LVL
         self.strLVL = self.LVL if self.LVL in ['A', 'B', 'C', 'D', 'E', 'S', 'SS'] else 'Prf' # Display Prf if Lvl is weird
+
+class ExtraSelectComponent(object):
+    def __init__(self, RNG, targets):
+        self.strRNG = RNG
+        self.RNG = parseRNG(RNG)
+        self.targets = targets
 
 class AOEComponent(object):
     def __init__(self, mode, number):
@@ -369,6 +375,10 @@ def itemparser(itemstring):
                     my_components['usable'] = UsableComponent()
                 elif component == 'spell':
                     my_components['spell'] = SpellComponent(item['LVL'], item['targets'])
+                elif component == 'extra_select':
+                    my_components['extra_select'] = [ExtraSelectComponent(*c.split(',')) for c in item['extra_select'].split(';')]
+                    my_components['extra_select_index'] = 0
+                    my_components['extra_select_targets'] = []
                 elif component == 'status':
                     statusid = item['status'].split(',')
                     for s_id in statusid:
