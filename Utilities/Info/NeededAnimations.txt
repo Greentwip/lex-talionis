@@ -131,8 +131,8 @@ Flareblade - Fire
 Glimmer << - Lightning
 Shine << - Shine
 Corona - Aura
-Heal < - Heal
-Physic < - Physic
+Heal << - Heal
+Physic << - Physic
 Fortune << - Barrier
 Restore - Restore
 Refresh << - Dance

@@ -1,11 +1,14 @@
 pose;Attack
 darken
+sound;HealInit
 effect;HealDust
 wait;54
+sound;Heal1
 effect;HealOrbHigh
 wait;58
 pan
 wait;3
+sound;Heal2
 enemy_effect;HealOrbLow
 wait;51
 wait;3

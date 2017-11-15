@@ -113,7 +113,7 @@ wait;10
 enemy_effect;Boulders
 wait;99
 enemy_effect;GleipnirGust
-sound;Gleipnir1
+sound;Gleipnir2
 wait;10
 # === Here are the Gleipnir Rays - Frame 302
 under_effect;GleipnirSmallRay;-16,0
@@ -177,7 +177,8 @@ wait;3
 effect;GleipnirBigRay;80,0
 wait;16
 # === End Gleipnir Rays
-clear_all_effects
+clear_all_effect
+stop_sound;Gleipnir1
 screen_flash_white;2
 wait;2
 lighten

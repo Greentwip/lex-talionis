@@ -660,8 +660,11 @@ class AnimationCombat(Combat):
         # Bar
         self.left_bar = GC.IMAGESDICT[left_color + 'LeftMainCombat' + crit].copy()
         if self.left_item:
-            size_x = GC.FONT['text_brown'].size(self.left_item.name)[0]
-            GC.FONT['text_brown'].blit(self.left_item.name, self.left_bar, (91 - size_x / 2, 5))
+            name = self.left_item.name
+            if name.endswith(' Ward'):
+                name = name[:-5]
+            size_x = GC.FONT['text_brown'].size(name)[0]
+            GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x / 2, 5))
 
         # Right
         right_color = 'Blue' if self.right.team == 'player' else 'Red'
@@ -672,8 +675,11 @@ class AnimationCombat(Combat):
         # Bar
         self.right_bar = GC.IMAGESDICT[right_color + 'RightMainCombat' + crit].copy()
         if self.right_item:
-            size_x = GC.FONT['text_brown'].size(self.right_item.name)[0]
-            GC.FONT['text_brown'].blit(self.right_item.name, self.right_bar, (47 - size_x / 2, 5))
+            name = self.right_item.name
+            if name.endswith(' Ward'):
+                name = name[:-5]
+            size_x = GC.FONT['text_brown'].size(name)[0]
+            GC.FONT['text_brown'].blit(name, self.right_bar, (47 - size_x / 2, 5))
 
         # Platforms
         left_platform_type = gameStateObj.map.tiles[self.left.position].platform
@@ -1290,6 +1296,8 @@ class SimpleHPBar(object):
         if self.true_hp < self.desired_hp:
             self.is_done = False
             self.true_hp += .25 # Every 4 frames
+            if self.true_hp == int(self.true_hp):  # Every four frames, play sound
+                GC.SOUNDDICT['HealBoop'].play()
         elif self.true_hp > self.desired_hp:
             self.is_done = False
             self.big_number = True
