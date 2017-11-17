@@ -11,8 +11,8 @@ YLIMIT = 120
 XLIMIT = 0
 palette_set = None
 
-folder = 'gleipnir_whirl/'
-name = 'Whirl'
+folder = 'divine_star/'
+name = 'Star'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')

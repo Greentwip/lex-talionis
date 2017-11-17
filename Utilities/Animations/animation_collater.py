@@ -7,9 +7,9 @@ from PIL import Image
 # COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
-NEW_COLORKEY = (0, 0, 0)
+NEW_COLORKEY = None
 WIDTH_LIMIT = 240*5
-folder = 'gleipnir_gust'
+folder = 'divine_star'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
