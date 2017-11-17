@@ -7,11 +7,11 @@ import palette_index
 COLORKEY = (128, 160, 128)
 COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
-YLIMIT = 120
+YLIMIT = 110
 XLIMIT = 0
 palette_set = None
 
-folder = 'divine_star/'
+folder = 'silence_star/'
 name = 'Star'
 
 if os.path.exists(folder + 'Background.png'):

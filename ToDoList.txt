@@ -16,6 +16,7 @@
 - Demon Surge (Disintegrate)
 - Evil Eye (Scathe)
 - Shadowshot (Hex)
+- Restore (Restore)
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- COMBAT ---

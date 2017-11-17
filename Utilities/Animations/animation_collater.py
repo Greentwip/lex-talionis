@@ -9,7 +9,7 @@ COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
 NEW_COLORKEY = None
 WIDTH_LIMIT = 240*5
-folder = 'divine_star'
+folder = 'silence_star'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

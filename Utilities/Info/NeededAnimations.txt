@@ -130,13 +130,13 @@ Gustblade - Arch's Wind
 Flareblade - Fire
 Glimmer << - Lightning
 Shine << - Shine
-Corona - Aura
+Corona << - Aura
 Heal << - Heal
 Physic << - Physic
 Fortune << - Barrier
 Restore - Restore
 Refresh << - Dance
-Silence - Silence
+Silence << - Silence
 Wind << - Arch's Wind
 Fire << - Fire
 Thunder << - Thunder
