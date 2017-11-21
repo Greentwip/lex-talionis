@@ -232,6 +232,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             else: # Unit does start on board
                 cur_unit.position = u_i['position']
 
+
             # Status Effects and Skills
             get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
@@ -244,6 +245,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             cur_unit.currenthp = int(cur_unit.stats['HP'])
 
             allunits.append(cur_unit)
+            break
     return allunits, reinforceUnits
 
 def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj):
@@ -491,7 +493,7 @@ def create_class_dict():
         c_id = klass.get('id')
         class_dict[c_id] = {'name': klass.find('name').text,
                             'id': klass.get('id'),
-                            'tier': klass.find('tier').text,
+                            'tier': int(klass.find('tier').text),
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                             'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
                             'turns_into': klass.find('turns_into').text.split(',') if klass.find('turns_into').text is not None else [],

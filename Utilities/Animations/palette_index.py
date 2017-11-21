@@ -50,6 +50,23 @@ guy = [(128, 160, 128), # Background
                 (48, 56, 176), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+ophie = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (160, 120, 72), # Light Hair
+                (96, 72, 56), # Med Hair
+                (80, 56, 32), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (112, 144, 176), # Med Weapon/Leather
+                (64, 96, 128), # Dark Weapon/String
+                (168, 216, 120), # Light Clothes
+                (144, 176, 96), # LM Clothes
+                (96, 112, 48), # MD Clothes
+                (72, 80, 8), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 kyle = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 176), # Light skin
@@ -1372,7 +1389,7 @@ karel_swordmaster = [(128, 160, 128), # Background
 
 marisa = [(128, 160, 128), # Background
                 (248, 248, 248), # White
-                (248, 240, 152), # Light skin
+                (248, 248, 152), # Light skin
                 (224, 184, 88), # Med skin
                 (136, 96, 72), # Dark skin
                 (240, 144, 224), # Light Hair
@@ -1401,6 +1418,23 @@ karla = [(128, 160, 128), # Background
                 (240, 240, 240), # Light Clothes
                 (192, 240, 232), # LM Clothes
                 (144, 192, 184), # MD Clothes
+                (48, 64, 64), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+razia = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 184), # Light skin
+                (224, 184, 88), # Med skin
+                (136, 96, 72), # Dark skin
+                (88, 144, 208), # Light Hair
+                (56, 104, 168), # Med Hair
+                (72, 72, 136), # Dark Hair
+                (176, 216, 248), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (80, 112, 144), # Dark Weapon/String
+                (240, 240, 240), # Light Clothes
+                (216, 232, 232), # LM Clothes
+                (184, 200, 200), # MD Clothes
                 (48, 64, 64), # Dark Clothes
                 (40, 40, 40)] # Outline
 

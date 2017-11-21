@@ -21,9 +21,6 @@
 FOR FUTURE UPDATES TO THE ENGINE:
 --- COMBAT ---
 - Full Combat Animations
---- Custom Spell Animations (Split Video)
---- Sounds (Video)
---- All Necessary Animations (Split Video)
 --- Add button to hold to toggle between full combat animations (Add speed up button also... (skip button is START)) (AUX, INFO, BACK, SELECT are all available)
 --- Test animation options in Options Menu
 --- Add button to speed up animations? self.speed = 0.5?

@@ -156,7 +156,9 @@ class BmpFont:
                 print("%s is not chartable"%(c))
                 print('string', string)
 
-            surf.blit(self.surface, (x, y), ((char_pos_x, char_pos_y), (self.width, self.height))) # subsurface
+            subsurf = Engine.subsurface(self.surface, (char_pos_x, char_pos_y, self.width, self.height))
+            Engine.blit(surf, subsurf, (x, y))
+            # surf.blit(self.surface, (x, y), ((char_pos_x, char_pos_y), (self.width, self.height))) # subsurface
             x += char_width + space_offset
 
     # size() - Returns the length and height of a string (height will always be self.height)

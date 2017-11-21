@@ -3,7 +3,7 @@
     <!-- Player Characters -->
     <unit name="Ophie">
         <id>Ophie</id>
-        <gender>1</gender>
+        <gender>2</gender>
         
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>8,0,0,0,0,0,0</wexp>

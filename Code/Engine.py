@@ -1,5 +1,10 @@
 #! usr/bin/env python2.7
-import pygame, sys
+PYGAME_SDL2 = False
+if PYGAME_SDL2:
+    import pygame_sdl2
+    pygame_sdl2.import_as_pygame()
+import pygame
+import sys
 
 import configuration
 
@@ -20,9 +25,11 @@ BLEND_RGBA_MULT = pygame.BLEND_RGBA_MULT
 # === INITIALIZING FUNCTIONS =================================================
 def init():
     # pygame.mixer.pre_init(44100, -16, 1, 512)
-    pygame.mixer.pre_init(44100, -16, 2, 4096)
+    if not PYGAME_SDL2:
+        pygame.mixer.pre_init(44100, -16, 2, 4096)
     pygame.init()
-    pygame.mixer.init()
+    if not PYGAME_SDL2:
+        pygame.mixer.init()
 
 def simple_init():
     pygame.init()
@@ -49,13 +56,16 @@ def remove_display():
     pygame.display.quit()
 
 def build_font(ttf, size):
+    if PYGAME_SDL2:
+        size += 2
     return pygame.font.Font(ttf, size)
 
 def terminate():
     configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
     configuration.write_config_file() # Write last saved options to config file
-    pygame.mixer.music.stop()
-    pygame.mixer.quit()
+    if PYGAME_SDL2:
+        pygame.mixer.music.stop()
+        pygame.mixer.quit()
     pygame.quit()
     sys.exit()
 
@@ -213,6 +223,30 @@ class Song(object):
         self.song = self.loop[:]
         self.loop = None
 
+class NoMusicThread(object):
+    def __init__(self):
+        pass
+    def clear(self):
+        pass
+    def pause(self):
+        pass
+    def resume(self):
+        pass
+    def set_volume(self, volume):
+        pass
+    def fade_to_normal(self, gameStateObj, metaDataObj):
+        pass
+    def fade_in(self, next, num_plays=-1, time=0):
+        pass
+    def fade_back(self):
+        pass
+    def fade_out(self, time=400):
+        pass
+    def stop(self):
+        pass
+    def update(self, eventList):
+        pass
+
 class MusicThread(object):
     def __init__(self):
         self.song_stack = []
@@ -357,4 +391,7 @@ class MusicThread(object):
                 # self.fade_out_update = current_time
                 # self.state = 'normal'
 
-music_thread = MusicThread()
+if PYGAME_SDL2:
+    music_thread = NoMusicThread()
+else:
+    music_thread = MusicThread()

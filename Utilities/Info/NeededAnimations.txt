@@ -124,6 +124,36 @@ DukeUnarmed ++
 DukeLance ++
 DukeMagicLance ++
 
+=== Palettes ===
+Ophie
+Prim
+Joel
+Nia
+Althea
+Drake
+Theo
+Renae
+Eliza
+Sam
+Kayla
+Coyote
+---
+Yohn
+Kiley
+Sidney
+Brigham
+Harold
+Anders
+Jules
+Vincent
+Razia <<
+Marduk
+Vagnius
+Boaz
+Jakin
+Adjutant
+Ulver
+
 === Items ===
 Boltblade - Thunder
 Gustblade - Arch's Wind
@@ -148,7 +178,7 @@ Ruin << - Fenrir
 Howl << - Gleipnir
 Scathe - Evil Eye
 Hex - Shadowshot
-Stun < - Sleep
+Stun << - Sleep
 Disintegrate - Demon Surge
 Makara << - Divine
 
