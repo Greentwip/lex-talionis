@@ -144,8 +144,8 @@ Sidney
 Brigham
 Harold
 Anders
-Jules
-Vincent
+Jules <<
+Vincent <<
 Razia <<
 Marduk
 Vagnius

@@ -1287,6 +1287,40 @@ brigand_blue = [(128, 160, 128), # Background
                 (56, 56, 208), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+vincent = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 168), # Light skin
+                (232, 192, 136), # LM skin
+                (208, 144, 96), # M skin
+                (176, 112, 64), # DM skin
+                (112, 72, 48), # Dark skin
+                (160, 96, 48), # Light Hair
+                (120, 80, 48), # Dark Hair
+                (200, 232, 240), # Light Weapon
+                (160, 192, 224), # Med Weapon
+                (120, 152, 184), # Dark Weapon
+                (88, 128, 128), # Light Clothes
+                (48, 88, 88), # Med Clothes
+                (24, 48, 48), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+jules = [(128, 160, 128), # Background
+                (224, 160, 104), # Light skin
+                (192, 128, 80), # LM skin
+                (160, 104, 56), # M skin
+                (120, 80, 56), # DM skin
+                (104, 72, 48), # Dark skin
+                (88, 64, 40), # Darkest skin
+                (160, 96, 48), # Light Hair
+                (120, 80, 48), # Dark Hair
+                (200, 232, 240), # Light Weapon
+                (160, 192, 224), # Med Weapon
+                (120, 152, 184), # Dark Weapon
+                (88, 128, 128), # Light Clothes
+                (48, 88, 88), # Med Clothes
+                (24, 48, 48), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 berserker_red = [(128, 160, 128), # Background
                  (248, 248, 248), # White
                  (248, 248, 208), # Light skin
