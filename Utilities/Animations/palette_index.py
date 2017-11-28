@@ -309,21 +309,38 @@ gerik = [(128, 160, 128), # Background
                 (40, 40, 40)] # Outline
 
 mercenary_red = [(128, 160, 128), # Background
-                (248, 248, 248), # White
-                (248, 240, 184), # Light skin
-                (248, 192, 144), # Med skin
-                (176, 112, 64), # DM skin
-                (112, 80, 48), # Dark skin
-                (176, 192, 224), # Light Hair
-                (108, 152, 184), # Med Hair
-                (96, 96, 144), # Dark Hair
-                (192, 224, 232), # Light Weapon/Leather
-                (152, 184, 216), # Med Weapon/Leather
-                (96, 128, 160), # Dark Weapon/String
-                (248, 160, 72), # Light Clothes
-                (248, 56, 16), # Med Clothes
-                (144, 0, 0), # Dark Clothes
-                (40, 40, 40)] # Outline
+                 (248, 248, 248), # White
+                 (248, 240, 184), # Light skin
+                 (248, 192, 144), # Med skin
+                 (176, 112, 64), # DM skin
+                 (112, 80, 48), # Dark skin
+                 (176, 192, 224), # Light Hair
+                 (108, 152, 184), # Med Hair
+                 (96, 96, 144), # Dark Hair
+                 (192, 224, 232), # Light Weapon/Leather
+                 (152, 184, 216), # Med Weapon/Leather
+                 (96, 128, 160), # Dark Weapon/String
+                 (248, 160, 72), # Light Clothes
+                 (248, 56, 16), # Med Clothes
+                 (144, 0, 0), # Dark Clothes
+                 (40, 40, 40)] # Outline
+
+mercenary_coyote = [(128, 160, 128), # Background
+                 (248, 248, 248), # White
+                 (248, 240, 184), # Light skin
+                 (248, 192, 144), # Med skin
+                 (176, 112, 64), # DM skin
+                 (112, 80, 48), # Dark skin
+                 (168, 160, 160), # Light Hair
+                 (128, 112, 120), # Med Hair
+                 (80, 72, 72), # Dark Hair
+                 (192, 224, 232), # Light Weapon/Leather
+                 (152, 184, 216), # Med Weapon/Leather
+                 (96, 128, 160), # Dark Weapon/String
+                 (168, 88, 88), # Light Clothes
+                 (104, 64, 64), # Med Clothes
+                 (48, 40, 40), # Dark Clothes
+                 (40, 40, 40)] # Outline
 
 mercenary_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
@@ -398,6 +415,23 @@ hero_red = [(128, 160, 128), # Background
                 (248, 160, 72), # Light Clothes
                 (248, 56, 16), # Med Clothes
                 (144, 0, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+hero_coyote = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # LM skin
+                (184, 136, 88), # DM skin
+                (112, 72, 56), # Dark skin
+                (168, 160, 160), # Light Hair
+                (128, 112, 120), # Med Hair
+                (80, 72, 72), # Dark Hair
+                (192, 224, 232), # Light Weapon/Leather
+                (152, 184, 216), # Med Weapon/Leather
+                (112, 144, 176), # Dark Weapon/String
+                (168, 88, 88), # Light Clothes
+                (104, 64, 64), # Med Clothes
+                (48, 40, 40), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 hero_blue = [(128, 160, 128), # Background
@@ -954,6 +988,23 @@ sophia_druid = [(128, 160, 128), # Background
                 (80, 224, 248), # Light clothes
                 (56, 136, 248), # Medium clothes
                 (56, 24, 152), # Dark clothes
+                (184, 128, 240), # Light Robe
+                (136, 88, 208), # Medium Robe
+                (104, 56, 160), # Dark Robe
+                (80, 24, 120), # Darkest Robe
+                (40, 40, 40), # ???
+                (40, 40, 40)] # Outline  
+
+kayla_druid = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # L Skin
+                (240, 160, 48), # M Skin
+                (96, 56, 24), # D Skin
+                (248, 224, 56), # Light highlight
+                (240, 200, 0), # Med highlight
+                (224, 160, 216), # Light clothes
+                (192, 64, 168), # Medium clothes
+                (56, 16, 48), # Dark clothes
                 (184, 128, 240), # Light Robe
                 (136, 88, 208), # Medium Robe
                 (104, 56, 160), # Dark Robe
@@ -1873,6 +1924,24 @@ monk_red = [(255, 255, 255), # Background
                 (128, 24, 16), # Dark Robe
                 (40, 40, 40)] # Outline
 
+monk_sam = [(255, 255, 255), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 208, 128), # Med skin
+                (136, 96, 72), # Dark skin
+                (224, 224, 224), # Light Hair
+                (160, 160, 160), # Med Hair
+                (88, 88, 88), # Dark Hair
+                (168, 136, 80), # Shoe Skin D
+                (216, 184, 120), # Shoe Skin L
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (248, 168, 144), # Light Robe
+                (240, 136, 112), # LM Robe
+                (208, 68, 32), # DM Robe
+                (136, 40, 16), # Dark Robe
+                (40, 40, 40)] # Outline
+
 monk_generic = [       (255, 255, 255),
         (143, 124, 0),
         (148, 255, 181),
@@ -1940,6 +2009,23 @@ adjutant = [(128, 160, 128), # Background
                 (56, 56, 136), # Dark Clothes
                 (216, 216, 24), # Light Cape
                 (160, 144, 8), # Dark Cape
+                (40, 40, 40)] # Outline
+
+mage_knight_sam = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (232, 176, 112), # Med skin
+                (112, 80, 56), # Dark skin
+                (216, 216, 216), # Light Hair
+                (112, 112, 112), # Dark Hair
+                (160, 208, 224), # L Banner
+                (72, 168, 192), # M Banner
+                (32, 88, 104), # D Banner
+                (176, 128, 88), # Horse
+                (64, 112, 120), # Light Clothes
+                (40, 64, 72), # Dark Clothes
+                (200, 64, 24), # Light Cape
+                (128, 40, 16), # Dark Cape
                 (40, 40, 40)] # Outline
 
 wil_archer = [(255, 255, 255), # Background
