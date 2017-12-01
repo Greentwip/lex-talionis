@@ -2250,6 +2250,40 @@ thief_red = [(128, 160, 128), # Background
                 (160, 24, 0), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+thief_cath = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 192, 144), # Med skin
+                (112, 72, 48), # Dark skin
+                (248, 200, 80), # Light Hair
+                (248, 136, 48), # Med Hair
+                (192, 80, 8), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (64, 96, 128), # Dark Weapon/String
+                (184, 136, 112), # Cloak
+                (88, 208, 248), # Lightest Clothes
+                (88, 136, 248), # Light Clothes
+                (56, 56, 208), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+thief_renae = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (36, 128, 160), # Med skin
+                (16, 48, 64), # Dark skin
+                (240, 120, 160), # Light Hair
+                (224, 40, 112), # Med Hair
+                (152, 16, 64), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (64, 96, 128), # Dark Weapon/String
+                (24, 88, 112), # Cloak
+                (88, 208, 248), # Lightest Clothes
+                (88, 136, 248), # Light Clothes
+                (56, 56, 208), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 assassin_jaffar = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (232, 224, 184), # Light skin
