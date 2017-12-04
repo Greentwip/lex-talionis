@@ -118,6 +118,23 @@ cavalier_blue = [(128, 160, 128), # Background
                  (48, 40, 128), # Dark Clothes
                  (40, 40, 40)] # Outline
 
+cavalier_drake = [(128, 160, 128), # Background
+                  (248, 248, 248), # White
+                  (248, 248, 176), # Light skin
+                  (232, 192, 136), # LM skin
+                  (176, 136, 96), # Horse Skin
+                  (160, 120, 96), # DM skin
+                  (112, 80, 56), # Dark skin
+                  (232, 64, 48), # Light Hair
+                  (168, 56, 48), # Dark Hair
+                  (200, 224, 240), # Light Pennant
+                  (144, 144, 160), # Dark Pennant
+                  (232, 248, 248), # Light Clothes
+                  (192, 200, 240), # LM Clothes
+                  (144, 144, 160), # DM Clothes
+                  (96, 64, 0), # Dark Clothes
+                  (40, 40, 40)] # Outline
+
 generic_cavalier = [(255, 255, 255),
                 (0, 51, 128),
                 (148, 255, 181),
@@ -204,6 +221,27 @@ paladin_blue = [(128, 160, 128), # Background
                 (40, 40, 200), # Light Shield
                 (64, 56, 144), # Dark Shield
                 (40, 40, 40)] # Outline
+
+black_3 =  [(168, 144, 152), # Light Horse
+                 (112, 88, 96), # Med Horse
+                 (64, 48, 64)] # Dark Horse
+
+paladin_drake = [(128, 160, 128), # Background
+                 (248, 248, 248), # White
+                 (248, 248, 216), # Light skin
+                 (224, 192, 88), # Med skin
+                 (136, 104, 88), # Dark skin
+                 (232, 232, 248), # Light Horse
+                 (168, 176, 200), # Med Horse
+                 (112, 128, 152), # Dark Horse
+                 (248, 248, 80), # Trim
+                 (232, 248, 248), # Light Clothes
+                 (192, 200, 240), # LM Clothes
+                 (144, 144, 160), # DM Clothes
+                 (96, 64, 0), # Dark Clothes
+                 (200, 0, 0), # Light Shield
+                 (144, 16, 24), # Dark Shield
+                 (40, 40, 40)] # Outline
 
 generic_paladin = [(255, 255, 255),
                 (194, 0, 136),
@@ -519,6 +557,23 @@ knight_blue = [(128, 160, 128), # Background
                 (40, 40, 40), # ??
                 (40, 40, 40)] # Outline
 
+knight_theo = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (184, 208, 248), # Armor 1 Light
+                (128, 200, 248), # Armor shine
+                (112, 168, 248), # Armor 2
+                (72, 144, 184), # Armor 3
+                (40, 104, 176), # Armor 4
+                (80, 112, 200), # Armor 5
+                (48, 56, 144), # Armor 6
+                (248, 216, 128), # Light Leather
+                (208, 144, 96), # Mid Leather
+                (152, 112, 80), # Dark Leather
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (40, 40, 40)] # Outline
+
 harold = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (232, 224, 232), # Armor 1 Light
@@ -666,7 +721,24 @@ general_blue = [(128, 160, 128), # Background
                 (112, 152, 176), # Weapon 2
                 (80, 104, 128), # Weapon 3
                 (40, 40, 40), # Weapon 4
-                (136, 184, 238), # Armor 0
+                (136, 184, 232), # Armor 0
+                (40, 40, 40)] # Outline
+
+general_theo = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (96, 152, 248), # Armor 1 Light
+                (64, 96, 216), # Armor 2
+                (40, 48, 606), # Armor 3
+                (208, 240, 232), # Light Trim
+                (152, 192, 192), # Mid Trim
+                (96, 152, 104), # Dark Trim
+                (96, 152, 112), # Light Accent
+                (64, 120, 64), # Dark Accent
+                (200, 208, 200), # Weapon 1
+                (112, 152, 176), # Weapon 2
+                (80, 104, 128), # Weapon 3
+                (40, 40, 40), # Weapon 4
+                (136, 184, 248), # Armor 0
                 (40, 40, 40)] # Outline
 
 generic_general = [(255, 255, 255),
@@ -2299,6 +2371,23 @@ assassin_jaffar = [(128, 160, 128), # Background
                 (160, 160, 160), # Light Clothes
                 (120, 120, 120), # Med Clothes
                 (72, 72, 72), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+assassin_renae = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 176), # Light skin
+                (248, 192, 112), # Med skin
+                (168, 136, 112), # Boots
+                (292, 64, 112), # Light Hair
+                (152, 16, 64), # Dark Hair
+                (176, 208, 240), # Light Weapon/Leather
+                (120, 152, 184), # Med Weapon/Leather
+                (40, 128, 160), # Light Cloak
+                (24, 88, 112), # Med Cloak
+                (16, 48, 64), # Dark Cloak
+                (72, 144, 192), # Light Clothes
+                (48, 104, 208), # Med Clothes
+                (48, 48, 176), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 jakin = [(128, 160, 128), # Background
