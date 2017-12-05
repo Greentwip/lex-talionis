@@ -125,11 +125,11 @@ DukeLance ++
 DukeMagicLance ++
 
 === Palettes ===
-Ophie
-Prim
-Joel
-Nia
-Althea
+Ophie <<
+Prim <<
+Joel <<
+Nia <<
+Althea <<
 Drake <<
 Theo <<
 Renae <<
@@ -155,9 +155,9 @@ Adjutant <<
 Ulver <<
 
 === Items ===
-Boltblade - Thunder
-Gustblade - Arch's Wind
-Flareblade - Fire
+Boltblade << - Thunder
+Gustblade << - Arch's Wind
+Flareblade << - Fire
 Glimmer << - Lightning
 Shine << - Shine
 Corona << - Aura
