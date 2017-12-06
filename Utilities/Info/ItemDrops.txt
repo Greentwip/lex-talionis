@@ -25,12 +25,11 @@ Angelic Robe* - Boss Drop
 
 Chapter 3:
 Iron Sword - Renae
-Iron Knife - Renae
 Vulnerary - Renae
 Iron Lance - Theo
 Vulnerary - Theo
 Secret Book* - Base Conversation
-Iron Knife - Base Conversation
+Rapier - Base Conversation
 Mend - Drop
 Skeleton Key - Drop
 Skeleton Key - Drop
@@ -48,13 +47,13 @@ Chapter 4:
 Iron Lance - Eliza
 Javelin - Eliza
 Prim's Charm - Base Conversation
-Levin Sword - Base Conversation
+Flareblade - Base Conversation
 Wyrmsfire - Ruin
 Mithril Mail* - Drop
-Steel Knife - Drop
+Rapier - Drop
 Steel Lance - Drop
-Water - Drop
-Earth - Drop
+Fire - Drop
+Thunder - Drop
 Talisman* - Drop
 Javelin - Drop
 Shine - Drop
@@ -79,8 +78,8 @@ Lancereaver - Drop
 Mithril Lance - Drop
 Nyx - Drop
 Longbow - Drop
-Rescue - House
-Short Spear - Base Conversations
+Gustblade - House
+Short Spear - Base Conversation
 
 Chapter 6:
 Rusted Sword - Coyote
@@ -108,6 +107,7 @@ Great Bow - Ruin
 Hex - Ruin
 Rescue - Ruin
 Howl - Base Conversation
+Rapier - Base Conversation
 Refresh - Boss Drop
 Mithril Sword - Drop
 Great Lance - Drop
@@ -136,7 +136,7 @@ Adamant Sword - Boss Drop
 Stun - Drop
 Aether - Drop
 Stun - Drop
-Mithril Knife - Drop
+Boltblade - Drop
 Speedwings* - Drop
 Silence - Drop
 Superior Lance - Drop

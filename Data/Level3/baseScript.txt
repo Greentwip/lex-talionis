@@ -30,11 +30,11 @@ if;self.optionalunit == 'Ophie meets Renae'
 	bop;Ophie
 	s;Ophie;Ah!{w}{br}What the hell was that for?{w};auto
 	s;Renae;Don't act so grouchy...{w}{br}Just testing your reflexes.{w};auto
-	s;Ophie;With a knife?!{w};auto
+	s;Ophie;With a sword?!{w};auto
 	s;Renae;Yeah! Luckily, you passed.{w}{br}Here take this.{w};auto
-	give_item;Ophie;Iron Knife
-	s;Ophie;The knife?{w};auto
-	s;Renae;Well, you can't exactly throw a sword now can you?{w}{br}Knives, though, are perfect for getting the jump on somebody.{w};auto
+	give_item;Ophie;Rapier
+	s;Ophie;The sword?{w};auto
+	s;Renae;Hey! This is no ordinary sword!{w}{br}This baby'll cut through the toughest armor like its butter! It'll come in handy.{w};auto
 	s;Ophie;Thanks, I think?{w};auto
 	s;Renae;Well, now, off you go!{w}{br}Let me finish my goulash in peace!{w};auto
 	s;Ophie;Uh... right...{w};auto

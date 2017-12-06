@@ -399,45 +399,51 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
     logger.debug('Main Defender: %s, Splash: %s', main_defender, splash_units)
     return main_defender, splash_units
 
-def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False, ai_combat=False):
-    if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject)) and \
-       (cf.OPTIONS['Animation'] == 'Always' or
-       (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
-       (cf.OPTIONS['Animation'] == 'Combat Only' and attacker.checkIfEnemy(defender))):
-       
-        distance = Utility.calculate_distance(attacker.position, def_pos)
-        attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item), distance)
-        defender_item = defender.getMainWeapon()
-        if defender_item:
-            magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
-            # Not magic animation at close combat for a magic at range item
-            if magic and defender_item.magic_at_range and distance <= 1:
-                magic = False
-        else:
-            magic = False
-        defender_anim = GC.ANIMDICT.partake(defender.klass, defender.gender, defender.getMainWeapon(), magic, distance)
-        if attacker_anim and defender_anim:
-            # Build attacker animation
-            attacker_script = attacker_anim['script']
-            attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
-            if attacker.name in attacker_anim['images']:
-                attacker_frame_dir = attacker_anim['images'][attacker.name]
-            elif 'Generic' + attacker_color in attacker_anim['images']:
-                attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
-            else:  # Just a map combat
-                return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
-            attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, item=item)
-            # Build defender animation
-            defender_script = defender_anim['script']
-            defender_color = 'Blue' if defender.team == 'player' else 'Red'
-            if defender.name in defender_anim['images']:
-                defender_frame_dir = defender_anim['images'][defender.name]
-            elif 'Generic' + defender_color in defender_anim['images']:
-                defender_frame_dir = defender_anim['images']['Generic' + defender_color]
+def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False, ai_combat=False, toggle_anim=False):
+    def animation_wanted(attacker, defender):
+        return (cf.OPTIONS['Animation'] == 'Always' or
+               (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
+               (cf.OPTIONS['Animation'] == 'Combat Only' and attacker.checkIfEnemy(defender)))
+
+    toggle_anim = gameStateObj.input_manager.is_pressed('AUX')
+    # Whether animation combat is even allowed
+    if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject) and \
+        not item.movement and not item.self_movement):
+        # XOR below
+        if animation_wanted(attacker, defender) != toggle_anim:
+            distance = Utility.calculate_distance(attacker.position, def_pos)
+            attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item), distance)
+            defender_item = defender.getMainWeapon()
+            if defender_item:
+                magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
+                # Not magic animation at close combat for a magic at range item
+                if magic and defender_item.magic_at_range and distance <= 1:
+                    magic = False
             else:
-                return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
-            defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script, item=defender.getMainWeapon())
-            return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
+                magic = False
+            defender_anim = GC.ANIMDICT.partake(defender.klass, defender.gender, defender.getMainWeapon(), magic, distance)
+            if attacker_anim and defender_anim:
+                # Build attacker animation
+                attacker_script = attacker_anim['script']
+                attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
+                if attacker.name in attacker_anim['images']:
+                    attacker_frame_dir = attacker_anim['images'][attacker.name]
+                elif 'Generic' + attacker_color in attacker_anim['images']:
+                    attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
+                else:  # Just a map combat
+                    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+                attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, item=item)
+                # Build defender animation
+                defender_script = defender_anim['script']
+                defender_color = 'Blue' if defender.team == 'player' else 'Red'
+                if defender.name in defender_anim['images']:
+                    defender_frame_dir = defender_anim['images'][defender.name]
+                elif 'Generic' + defender_color in defender_anim['images']:
+                    defender_frame_dir = defender_anim['images']['Generic' + defender_color]
+                else:
+                    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+                defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script, item=defender.getMainWeapon())
+                return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
     # default
     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
 
@@ -725,6 +731,9 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'Fade':
             # begin viewbox clamping
+            if skip:
+                self.viewbox_clamp_state = self.total_viewbox_clamp_states
+                self.build_viewbox(gameStateObj)
             self.viewbox_clamp_state += 1
             if self.viewbox_clamp_state <= self.total_viewbox_clamp_states:
                 self.build_viewbox(gameStateObj)
@@ -743,14 +752,14 @@ class AnimationCombat(Combat):
             # Translate in names, stats, hp, and platforms
             self.bar_offset += 1
             self.name_offset += 1
-            if self.bar_offset >= self.max_position_offset:
+            if skip or self.bar_offset >= self.max_position_offset:
                 self.bar_offset = self.max_position_offset
                 self.name_offset = self.max_position_offset
                 self.last_update = current_time
                 self.combat_state = 'Pre_Init'
 
         elif self.combat_state == 'Pre_Init':
-            if current_time - self.last_update > 410: # 25 frames
+            if skip or current_time - self.last_update > 410: # 25 frames
                 self.combat_state = 'Anim'
                 self.last_update = current_time
                 # Set up animation
@@ -792,7 +801,7 @@ class AnimationCombat(Combat):
                 self.combat_state = 'Anim'
 
         elif self.combat_state == 'ExpWait':
-            if current_time - self.last_update > 450:
+            if skip or current_time - self.last_update > 450:
                 self.handle_exp(gameStateObj)
                 self.combat_state = 'Exp'
 
@@ -802,35 +811,39 @@ class AnimationCombat(Combat):
                 self.combat_state = 'OutWait'
 
         elif self.combat_state == 'OutWait':
-            if current_time - self.last_update > 820:
+            if skip or current_time - self.last_update > 820:
                 self.p1.battle_anim.finish()
                 self.p2.battle_anim.finish()
                 self.combat_state = 'Out1'
 
         elif self.combat_state == 'Out1': # Nametags move out
             self.name_offset -= 1
-            if self.name_offset <= 0:
+            if skip or self.name_offset <= 0:
                 self.name_offset = 0
                 self.combat_state = 'Out2'
 
         elif self.combat_state == 'Out2': # Rest of the goods move out
             self.bar_offset -= 1
-            if self.bar_offset <= 0:
+            if skip or self.bar_offset <= 0:
                 self.bar_offset = 0
                 self.combat_state = 'FadeOut'
 
         elif self.combat_state == 'FadeOut':
             # end viewbox clamping
+            if skip:
+                self.viewbox_clamp_state = 0
+                self.build_viewbox(gameStateObj)
             self.viewbox_clamp_state -= 1
             if self.viewbox_clamp_state > 0:
                 self.build_viewbox(gameStateObj)
             else:
                 self.finish()
-                self.clean_up(gameStateObj, metaDataObj, True)
+                self.clean_up(gameStateObj, metaDataObj)
+                self.end_skip()
                 return True
 
-        self.left_hp_bar.update()
-        self.right_hp_bar.update()
+        self.left_hp_bar.update(skip)
+        self.right_hp_bar.update(skip)
         self.left.battle_anim.update()
         self.right.battle_anim.update()
 
@@ -845,6 +858,12 @@ class AnimationCombat(Combat):
             self.platform_current_shake += 1
             if self.platform_current_shake > len(self.platform_shake_set):
                 self.platform_current_shake = 0
+
+    def skip(self):
+        BattleAnimation.speed = 0.25
+
+    def end_skip(self):
+        BattleAnimation.speed = 1
 
     def start_hit(self, sound=True, miss=False):
         self.apply_result(self.current_result, self.gameStateObj, self.metaDataObj)
@@ -1194,7 +1213,7 @@ class AnimationCombat(Combat):
             self.p2.isDying = True
 
     # Clean up everything
-    def clean_up(self, gameStateObj, metaDataObj, animation=False):
+    def clean_up(self, gameStateObj, metaDataObj):
         gameStateObj.stateMachine.back()
         self.p1.hasAttacked = True
         if not self.p1.has_canto_plus() and not self.event_combat:
@@ -1291,8 +1310,10 @@ class SimpleHPBar(object):
         self.is_done = True
         self.big_number = False
 
-    def update(self):
+    def update(self, skip=False):
         self.desired_hp = self.unit.currenthp
+        if skip:
+            self.true_hp = self.desired_hp
         if self.true_hp < self.desired_hp:
             self.is_done = False
             self.true_hp += .25 # Every 4 frames
@@ -1634,7 +1655,7 @@ class MapCombat(Combat):
             hp_bar.draw(surf, gameStateObj)
 
     # Clean up everything
-    def clean_up(self, gameStateObj, metaDataObj, animation=False):
+    def clean_up(self, gameStateObj, metaDataObj):
         # Remove combat state
         gameStateObj.stateMachine.back()
         # Reset states if you're not using a solo skill

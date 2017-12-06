@@ -27,7 +27,7 @@ group;Soldier;Soldier;Empire;An imperial soldier
 group;Wagon;Wagon;Empire;A wagon carrying an Imperial weapon shipment
 # Enemies
 # Turn 1 Enemies
-enemy;0;Wagon_1;Wagon;5;dSteel Knife;0,0;ThiefEscape;Wagon
+enemy;0;Wagon_1;Wagon;5;dRapier;0,0;ThiefEscape;Wagon
 enemy;0;pack1_1;Cavalier;3;Iron Sword;0,0;Pursue;Soldier
 enemy;0;pack1_2;Raider;4;Iron Axe;0,0;FollowWagon;Soldier
 enemy;0;Wagon_2;Wagon;5;dSteel Lance;0,0;ThiefEscape;Wagon

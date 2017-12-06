@@ -2,7 +2,6 @@
 # Kayla is now on the team
 m;The Task at Hand
 unlock_lore;Tyrana
-add_to_market;Iron Knife
 add_to_market;Javelin
 add_to_market;Hand Axe
 add_to_market;Thunder

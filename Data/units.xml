@@ -137,7 +137,7 @@
 		<bases>13,3,3,5,9,3,2,3</bases>
 		<growths>95,40,60,55,95,65,35,55</growths>
         
-        <inventory>Iron Sword,Iron Knife,Vulnerary</inventory>
+        <inventory>Iron Sword,Vulnerary</inventory>
         
         <level>4</level>
         <class>Thief</class>
@@ -459,7 +459,7 @@
 		<bases>27,8,6,11,12,5,6,7,6,0</bases>
         <growths>100,50,50,50,50,50,0,50</growths>
         
-        <inventory>Mithril Sword,Levin Sword</inventory>
+        <inventory>Mithril Sword,Boltblade</inventory>
         
         <level>14</level>
         <class>Myrmidon,Swordmaster</class>

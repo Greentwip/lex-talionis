@@ -14,6 +14,8 @@ import CustomObjects
 # * Stand
 # * RangedStand
 
+speed = 1
+
 class Loop(object):
     def __init__(self, start):
         self.start_index = start
@@ -64,8 +66,6 @@ class BattleAnimation(object):
         # Awake stuff
         self.owner = None
         self.parent = None
-
-        self.speed = 1
 
     def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
         # print('Awake')
@@ -165,6 +165,9 @@ class BattleAnimation(object):
         self.state = 'Leaving'
         self.script_index = 0
 
+    def get_frames(self, num):
+        return max(1, int(int(num) * speed))
+
     def read_script(self):
         script = self.poses[self.current_pose]
         while(self.script_index < len(script) and self.processing):
@@ -178,7 +181,7 @@ class BattleAnimation(object):
         # === TIMING AND IMAGES ===
         if line[0] == 'f':
             self.frame_count = 0
-            self.num_frames = int(line[1]) * self.speed
+            self.num_frames = self.get_frames(line[1])
             self.current_frame = self.frame_directory[line[2]]
             self.processing = False
             if line[2] == 'Stand':
@@ -192,7 +195,7 @@ class BattleAnimation(object):
                 self.personal_offset = tuple(int(num) for num in line[4].split(','))
         elif line[0] == 'of':
             self.frame_count = 0
-            self.num_frames = int(line[1]) * self.speed
+            self.num_frames = self.get_frames(line[1])
             self.under_frame = None
             self.processing = False
             self.over_frame = self.frame_directory[line[2]]
@@ -202,7 +205,7 @@ class BattleAnimation(object):
                 self.current_frame = None
         elif line[0] == 'uf':
             self.frame_count = 0
-            self.num_frames = int(line[1]) * self.speed
+            self.num_frames = self.get_frames(line[1])
             self.current_frame = None
             self.over_frame = None
             self.under_frame = self.frame_directory[line[2]]
@@ -211,7 +214,7 @@ class BattleAnimation(object):
                 self.personal_offset = tuple(int(num) for num in line[3].split(','))
         elif line[0] == 'wait':
             self.frame_count = 0
-            self.num_frames = int(line[1]) * self.speed
+            self.num_frames = self.get_frames(line[1])
             self.current_frame = None
             self.under_frame = None
             self.over_frame = None
@@ -279,41 +282,41 @@ class BattleAnimation(object):
             self.partner.dodge()
         # === FLASHING ===
         elif line[0] == 'parent_tint_loop':
-            num_frames = int(line[1]) * self.speed
+            num_frames = self.get_frames(line[1])
             color = [tuple([int(num) for num in color.split(',')]) for color in line[2:]]
             self.parent.flash(num_frames, color)
         elif line[0] == 'parent_tint':
-            num_frames = int(line[1]) * self.speed
+            num_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
             self.parent.flash(num_frames, color)
         elif line[0] == 'enemy_tint':
-            num_frames = int(line[1]) * self.speed
+            num_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
             self.partner.flash(num_frames, color)
         elif line[0] == 'enemy_gray':
-            num_frames = int(line[1]) * self.speed
+            num_frames = self.get_frames(line[1])
             self.partner.flash(num_frames, 'gray')
         elif line[0] == 'enemy_flash_white':
-            num_frames = int(line[1]) * self.speed
+            num_frames = self.get_frames(line[1])
             self.partner.flash(num_frames, (248, 248, 248))
         elif line[0] == 'screen_flash_white':
-            num_frames = int(line[1]) * self.speed
+            num_frames = self.get_frames(line[1])
             if len(line) > 2:
-                fade_out = int(line[2]) * self.speed
+                fade_out = self.get_frames(line[2])
             else:
                 fade_out = 0
             self.owner.flash_color(num_frames, fade_out, color=(248, 248, 248))
         elif line[0] == 'screen_blend':
-            num_frames = int(line[1]) * self.speed
+            num_frames = self.get_frames(line[1])
             color = tuple(int(num) for num in line[2].split(','))
             self.owner.flash_color(num_frames, color=color)
         elif line[0] == 'foreground_blend':
-            self.foreground_frames = int(line[1]) * self.speed
+            self.foreground_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
             self.foreground = GC.IMAGESDICT['BlackBackground'].copy()
             self.foreground.fill(color)
         elif line[0] == 'background_blend':
-            self.background_frames = int(line[1]) * self.speed
+            self.background_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
             self.background = GC.IMAGESDICT['BlackBackground'].copy()
             self.background.fill(color)
@@ -515,7 +518,7 @@ class BattleAnimation(object):
 
     def wait_for_dying(self):
         if self.base_state:
-            self.num_frames = 42 * self.speed
+            self.num_frames = int(42 * speed)
 
     def get_image(self, frame, shake, range_offset, pan_offset, static):
         image = frame[0].copy()

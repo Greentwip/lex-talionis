@@ -38,26 +38,6 @@
 		<LVL>D</LVL>
     </item>
 
-    <item name="Practice Blade">
-        <id>Practice Blade</id>
-        <spritetype>Sword</spritetype>
-        <spriteid>4</spriteid>       
-        <components>weapon,uses,weight,status_on_equip</components>
-        <weapontype>Sword</weapontype>
- 
-        <uses>40</uses>
-        <value>8</value>
-        <RNG>1</RNG>
-        <weight>2</weight>
-        <desc>Grants DEF +2.</desc>
-        
-        <MT>1</MT>
-        <HIT>80</HIT>
-        <LVL>D</LVL>
-
-        <status_on_equip>Defense +2</status_on_equip>
-    </item>
-
     <item name="Steel Sword">
         <id>Steel Sword</id>
         <spritetype>Sword</spritetype>
@@ -165,77 +145,84 @@
 		<HIT>65</HIT>
 		<LVL>A</LVL>
     </item>
-    
-    <item name="Levin Sword">
-        <id>Levin Sword</id>
+
+    <item name="Gustblade">
+        <id>Gustblade</id>
         <spritetype>Sword</spritetype>
-        <spriteid>13</spriteid>       
-        <components>weapon,uses,weight,magic</components>
+        <spriteid>16</spriteid>       
+        <components>weapon,uses,weight,magic,status_on_equip</components>
         <weapontype>Sword</weapontype>
  
         <uses>25</uses>
-        <value>50</value>
         <RNG>1-2</RNG>
-        <desc>Uses MAG instead of STR to determine damage.</desc>
-		<weight>6</weight>
-        
-		<MT>4</MT>
-		<HIT>80</HIT>
-		<LVL>C</LVL>
+        <value>60</value>
+        <weight>6</weight>
+        <desc>Uses MAG to determine damage. Grants wielder SPD +2.</desc>
+        <status_on_equip>Speed +2</status_on_equip>
+
+        <MT>2</MT>
+        <HIT>100</HIT>
+        <LVL>D</LVL>
     </item>
 
-    <item name="Iron Knife">
-        <id>Iron Knife</id>
-        <spritetype>Sword</spritetype>
-        <spriteid>14</spriteid>       
-        <components>weapon,uses,weight</components>
-        <weapontype>Sword</weapontype>
- 
-        <uses>20</uses>
-        <value>25</value>
-        <RNG>1-2</RNG>
-        <desc></desc>
-		<weight>1</weight>
-        
-		<MT>1</MT>
-		<HIT>75</HIT>
-		<LVL>D</LVL>
-    </item>
-
-    <item name="Steel Knife">
-        <id>Steel Knife</id>
+    <item name="Flareblade">
+        <id>Flareblade</id>
         <spritetype>Sword</spritetype>
         <spriteid>15</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,magic,map_hit_color,status_on_equip</components>
         <weapontype>Sword</weapontype>
  
-        <uses>15</uses>
-        <value>40</value>
+        <uses>25</uses>
         <RNG>1-2</RNG>
-        <desc></desc>
-		<weight>3</weight>
-        
-		<MT>3</MT>
-		<HIT>65</HIT>
-		<LVL>C</LVL>
+        <value>60</value>
+        <weight>6</weight>
+        <desc>Uses MAG to determine damage. Grants wielder RES +2.</desc>
+        <status_on_equip>Resistance +2</status_on_equip>
+
+        <MT>4</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
+
+        <map_hit_color>224,96,-200</map_hit_color>
     </item>
 
-    <item name="Mithril Knife">
-        <id>Mithril Knife</id>
+    <item name="Boltblade">
+        <id>Boltblade</id>
         <spritetype>Sword</spritetype>
-        <spriteid>16</spriteid>       
-        <components>weapon,uses,weight</components>
+        <spriteid>13</spriteid>       
+        <components>weapon,uses,weight,magic,status_on_equip</components>
         <weapontype>Sword</weapontype>
  
-        <uses>10</uses>
-        <value>160</value>
+        <uses>25</uses>
         <RNG>1-2</RNG>
-        <desc></desc>
-		<weight>2</weight>
-        
-		<MT>5</MT>
-		<HIT>70</HIT>
-		<LVL>A</LVL>
+        <value>60</value>
+        <weight>6</weight>
+        <desc>Uses MAG to determine damage. Grants wielder DEF +2.</desc>
+        <status_on_equip>Defense +2</status_on_equip>
+
+        <MT>6</MT>
+        <HIT>60</HIT>
+        <LVL>D</LVL>
+    </item>
+
+    <item name="Rapier">
+        <id>Rapier</id>
+        <spritetype>Sword</spritetype>
+        <spriteid>9</spriteid>
+        <components>weapon,uses,weight,alternate_defense</components>
+        <weapontype>Sword</weapontype>
+
+        <uses>20</uses>
+        <value>50</value>
+        <RNG>1</RNG>
+        <desc>Ignores DEF. Targets enemy's SPD instead.</desc>
+        <weight>2</weight>
+
+        <alternate_defense>SPD</alternate_defense>
+
+        <MT>1</MT>
+        <HIT>75</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Magebane Swd">

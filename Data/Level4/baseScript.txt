@@ -26,8 +26,8 @@ if;self.optionalunit == 'An Uneasy Trust'
 	s;Sam;I know what it's like to lose everything to the Empire.{w}{br}Even now, the memories still burn a hole in my gut.{w}{br}So I know what you're going through...{w}{br}But if you can trust me, I promise we will have our revenge.{w};auto
 	s;Ophie;Hmmm...{w};auto
 	s;Sam;Don't let it be said that I've never given you anything.{w}{br}Since you're here...{w};auto
-	# Give Ophie Levin Sword
-	add_item;Ophie;Levin Sword
+	# Give Ophie Flareblade
+	add_item;Ophie;Flareblade
 	s;Ophie;What's this?{w};auto
 	s;Sam;A gift from... my sources.{w}{br}Take it or leave it, I don't care.{w}{br}I've no use for it.{w}{br}Perhaps it'll come in handy on this next mission.{w};auto
 	s;Ophie;Thanks, I guess.{w};auto

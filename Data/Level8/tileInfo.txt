@@ -11,8 +11,8 @@
 8,13:Formation=0
 8,15:Formation=0
 1,15:Shop=Restore,Refresh,Wyrmsfire,Sandblast,Ruin,Stun,Hex,Spiritbane,Barkskin
-2,21:Shop=Mithril Sword,Steel Knife,Mithril Lance,Short Spear,Mithril Axe,Short Axe,Yew Bow
-7,2:Shop=Levin Sword,Mithril Knife,Long Spear,Tomahawk,Great Bow
+2,21:Shop=Mithril Sword,Rapier,Mithril Lance,Short Spear,Mithril Axe,Short Axe,Yew Bow
+7,2:Shop=Gustblade,Flareblade,Boltblade,Long Spear,Tomahawk,Great Bow
 20,1:Shop=Corona,Physic,Fireball,Fly,Howl,Disintegrate,Elixir
 4,11:Village=1
 7,17:Village=2

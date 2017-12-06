@@ -79,7 +79,7 @@ elif;self.optionalunit == 'Training'
 	s;Coyote;Huff.
 	s;Ophie;Ah! I did it.
 	s;Coyote;Catch.
-	give_item;Ophie;Practice Blade
+	give_item;Ophie;Rapier
 	s;Coyote;Attacking trees will not improve your swordsmanship.{w}{br}Meet me here tomorrow when the sun is halfway down the western sky.
 	r;Coyote
 	s;Ophie;Uh... Yeah.{w}{br}Sure, I guess!{w}{br}I'll be ready!

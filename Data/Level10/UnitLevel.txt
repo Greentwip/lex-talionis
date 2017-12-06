@@ -67,7 +67,7 @@ enemy;0;r4;Warlock;18;Howl,Disintegrate;19,21;Pursue;Claw;fMagic +2
 # Bottom - Hero and Assassins
 enemy;0;b1;Vanguard;18;Adamant Sword,Short Axe;7,17;Pursue;Claw;fMovement +1
 enemy;0;b2;Vanguard;18;Adamant Sword,Short Axe;17,17;Pursue;Claw;fMovement +1
-enemy;0;b3;Assassin;18;Mithril Sword,Levin Sword;7,27;Pursue;Claw;fMovement +1
-enemy;0;b4;Assassin;18;Mithril Sword,Levin Sword;17,27;Pursue;Claw;fMovement +1
+enemy;0;b3;Assassin;18;Mithril Sword,Flareblade;7,27;Pursue;Claw;fMovement +1
+enemy;0;b4;Assassin;18;Mithril Sword,Flareblade;17,27;Pursue;Claw;fMovement +1
 enemy;0;s1;Strategist;18;Corona,Physic,Silence;12,29;Support;Claw
 ### Infinite Reinforcements every turn after?

@@ -53,7 +53,7 @@ class UnitMenu(StateMachine.State):
             return 'repeat'
         else:
             chosen_unit = gameStateObj.info_menu_struct['chosen_unit']
-            if chosen_unit:
+            if chosen_unit and chosen_unit in self.units:
                 self.move_to_unit(chosen_unit)
             gameStateObj.info_menu_struct['chosen_unit'] = None
 
@@ -305,7 +305,7 @@ class UnitMenu(StateMachine.State):
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
             for idx, stat in enumerate(titles):
-                unit.stats[stat].draw(surf, unit, (value_offsets[idx] - 1, top), metaDataObj)
+                unit.stats[stat].draw(surf, unit, (value_offsets[idx] - 1, top), metaDataObj, compact=True)
 
         return titles, offsets
 

@@ -71,19 +71,31 @@ class Stat(object):
     def serialize(self):
         return (self.base_stat, self.bonuses)
 
-    def draw(self, surf, unit, topright, metaDataObj):
-        value = self.base_stat
-        if value >= metaDataObj['class_dict'][unit.klass]['max'][self.idx]:
-            GC.FONT['text_green'].blit(str(value), surf, (topright[0] - GC.FONT['text_green'].size(str(value))[0], topright[1]))
+    def draw(self, surf, unit, topright, metaDataObj, compact=False):
+        if compact:
+            if self.base_stat >= metaDataObj['class_dict'][unit.klass]['max'][self.idx]:
+                font = GC.FONT['text_yellow']
+            elif self.bonuses > 0: 
+                font = GC.FONT['text_green']
+            elif self.bonuses < 0:
+                font = GC.FONT['text_red']
+            else:
+                font = GC.FONT['text_blue']
+            value = self.base_stat + self.bonuses
+            font.blit(str(value), surf, (topright[0] - font.size(str(value))[0], topright[1]))
         else:
-            GC.FONT['text_blue'].blit(str(value), surf, (topright[0] - GC.FONT['text_blue'].size(str(value))[0], topright[1]))
-        output = ""
-        if self.bonuses > 0:
-            output = "+" + str(self.bonuses)
-            GC.FONT['small_green'].blit(output, surf, (topright[0], topright[1]))
-        elif self.bonuses < 0:
-            output = str(self.bonuses)
-            GC.FONT['small_red'].blit(output, surf, (topright[0], topright[1]))
+            value = self.base_stat
+            if value >= metaDataObj['class_dict'][unit.klass]['max'][self.idx]:
+                GC.FONT['text_yellow'].blit(str(value), surf, (topright[0] - GC.FONT['text_green'].size(str(value))[0], topright[1]))
+            else:
+                GC.FONT['text_blue'].blit(str(value), surf, (topright[0] - GC.FONT['text_blue'].size(str(value))[0], topright[1]))
+            output = ""
+            if self.bonuses > 0:
+                output = "+" + str(self.bonuses)
+                GC.FONT['small_green'].blit(output, surf, (topright[0], topright[1]))
+            elif self.bonuses < 0:
+                output = str(self.bonuses)
+                GC.FONT['small_red'].blit(output, surf, (topright[0], topright[1]))
 
 # === GENERIC UNIT OBJECT =====================================================
 class UnitObject(object):
@@ -1490,17 +1502,19 @@ class UnitObject(object):
             damage += CustomObjects.WEAPON_TRIANGLE.compute_advantage(item, target.getMainWeapon())[0]
             if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
-                    defense_function = target.defense
+                    stat = 'DEF'
                 else:
-                    defense_function = target.resistance
+                    stat = 'RES'
+            elif item.alternate_defense:
+                stat = item.alternate_defense
             else:
-                defense_function = target.defense
+                stat = 'DEF'
             if item.ignore_def:
                 pass
             elif item.ignore_half_def:
-                damage -= defense_function(gameStateObj)/2
+                damage -= target.defense(gameStateObj, stat)/2
             else:
-                damage -= defense_function(gameStateObj)
+                damage -= target.defense(gameStateObj, stat)
 
             for status in self.status_effects:
                 if status.conditional_mt and eval(status.conditional_mt.conditional, globals(), locals()):
@@ -1679,6 +1693,15 @@ class UnitObject(object):
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         return base
 
+    def defense(self, gameStateObj, stat='DEF'):
+        defense = self.stats[stat]
+        if 'flying' not in self.status_bundle:
+            defense += gameStateObj.map.tiles[self.position].stats['DEF']
+        if cf.CONSTANTS['support']:
+            defense += self.get_support_bonuses(gameStateObj)[1]
+        return defense
+
+    """
     def defense(self, gameStateObj):
         defense = self.stats['DEF'] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
         if cf.CONSTANTS['support']:
@@ -1693,6 +1716,7 @@ class UnitObject(object):
         if cf.CONSTANTS['support']:
             defense += self.get_support_bonuses(gameStateObj)[1] 
         return defense
+    """
 
     def get_rating(self):
         return (self.stats['HP'] - 10)/2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \

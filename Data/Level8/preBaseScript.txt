@@ -1,6 +1,6 @@
 # prebaseScript 8
 m;Comfort's Call
-add_to_market;Steel Knife
+add_to_market;Rapier
 add_to_market;Short Axe
 add_to_market;Short Spear
 add_to_market;Ruin

@@ -131,8 +131,8 @@ enemy;0;pack_l9_2;Mage;9;Wind;5,0;Pursue;Guard
 enemy;0;pack_r9_1;Mage;9;Wind;17,0;Pursue;Guard
 enemy;0;pack_r9_2;Mage;9;Wind;19,0;Pursue;Guard
 # Thieves
-enemy;0;pack_lt_1;Thief;8;Iron Knife;6,0;Unlock2;Thief
-enemy;0;pack_rt_1;Thief;8;Iron Knife;18,0;Unlock2;Thief
+enemy;0;pack_lt_1;Thief;8;Rapier;6,0;Unlock2;Thief
+enemy;0;pack_rt_1;Thief;8;Rapier;18,0;Unlock2;Thief
 #
 # Infinite Reinforcements -
 enemy;2;i1;Knight;Mithril Lance,Short Spear;0,0;Pursue;Guard;Void_Curse

@@ -10,7 +10,7 @@
 25,3:Formation=0
 27,3:Formation=0
 26,4:Formation=0
-21,1:Shop=Mithril Sword,Steel Knife,Mithril Lance,Short Spear,Mithril Axe,Short Axe,Longbow,Yew Bow
+21,1:Shop=Mithril Sword,Rapier,Mithril Lance,Short Spear,Mithril Axe,Short Axe,Longbow,Yew Bow
 23,6:Shop=Corona,Physic,Wyrmsfire,Blizzard,Ruin,Stun,Potion,Spiritbane,Barkskin
 2,16:Status=tile_Regeneration
 4,17:Status=tile_Regeneration

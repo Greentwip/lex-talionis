@@ -1995,6 +1995,7 @@ class CombatState(State):
         gameStateObj.cursor.drawState = 0
         self.skip = False
         self.unit_surf = Engine.create_surface((gameStateObj.map.width * GC.TILEWIDTH, gameStateObj.map.height * GC.TILEHEIGHT), transparent=True)
+        self.animation_combat = isinstance(gameStateObj.combatInstance, Interaction.AnimationCombat)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
@@ -2005,14 +2006,14 @@ class CombatState(State):
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
         combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj, self.skip)
-        while self.skip and not combatisover:
+        while self.skip and not combatisover and not self.animation_combat:
             combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj, self.skip)
         if combatisover: # State changing is handled in combat's clean_up function
             gameStateObj.combatInstance = None
             # gameStateObj.stateMachine.back() NOT NECESSARY! DONE BY the COMBAT INSTANCES CLEANUP!
 
     def draw(self, gameStateObj, metaDataObj):
-        if gameStateObj.combatInstance and isinstance(gameStateObj.combatInstance, Interaction.AnimationCombat):
+        if gameStateObj.combatInstance and self.animation_combat:
             mapSurf = self.drawCombat(gameStateObj) # Creates mapSurf
             gameStateObj.set_camera_limits()
             rect = (gameStateObj.cameraOffset.get_x()*GC.TILEWIDTH, gameStateObj.cameraOffset.get_y()*GC.TILEHEIGHT, GC.WINWIDTH, GC.WINHEIGHT)

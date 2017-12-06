@@ -181,6 +181,3 @@ Hex - Shadowshot
 Stun << - Sleep
 Disintegrate - Demon Surge
 Makara << - Divine
-
-Possibly:
-Replace Iron Knife, Steel Knife, Mithril Knife with Levin Sword (Iron), Rune Sword (Nosferatu) (Steel), Light Brand (Mithril), Rapier (targets SPD instead)
