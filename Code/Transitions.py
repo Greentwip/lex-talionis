@@ -451,18 +451,28 @@ class StartRestart(StartLoad):
                 GC.SOUNDDICT['Error'].play()
 
 class StartMode(StateMachine.State):
+    def no_difficulty_choice(self):
+        return cf.CONSTANTS['difficulties'][0] == '0'
+
+    def no_death_choice(self):
+        return cf.CONSTANTS['death'] != 2
+
+    def no_growth_choice(self):
+        return cf.CONSTANTS['growths'] != 3
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.state = 0
-        else:
-            self.state += 1
+            self.menu = None
+            self.state = 'difficulty_setup'
+            self.started = True
 
-        if self.state == 0:
-            if cf.CONSTANTS['difficulties'][0] == '0':
-                self.state += 2
+        if self.state == 'difficulty_setup':
+            if self.no_difficulty_choice():
+                self.state = 'death_setup'
+                return self.begin(gameStateObj, metaDataObj)
             else:
                 self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])
-                options = cf.CONSTANTS['difficulties'][:-1]
+                options = cf.CONSTANTS['difficulties']
                 if cf.CONSTANTS['only_difficulty'] >= 0:
                     toggle = [False for o in options]
                     toggle[cf.CONSTANTS['only_difficulty']] = True
@@ -471,11 +481,13 @@ class StartMode(StateMachine.State):
                 self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
                 self.mode_name = 'difficulty'
                 gameStateObj.stateMachine.changeState('transition_in')
-            return 'repeat'
+                self.state = 'difficulty_wait'
+                return 'repeat'
 
-        elif self.state == 2:
-            if cf.CONSTANTS['death'] != 2:
-                self.state += 2
+        elif self.state == 'death_setup':
+            if self.no_death_choice():
+                self.state = 'growth_setup'
+                return self.begin(gameStateObj, metaDataObj)
             else:
                 self.title_surf, self.title_pos = create_title(cf.WORDS['Select Mode'])
                 options = ['Casual', 'Classic']
@@ -483,10 +495,11 @@ class StartMode(StateMachine.State):
                 self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
                 self.mode_name = 'death'
                 gameStateObj.stateMachine.changeState('transition_in')
-            return 'repeat'
+                self.state = 'death_wait'
+                return 'repeat'
 
-        elif self.state == 4:
-            if cf.CONSTANTS['growths'] != 3:
+        elif self.state == 'growth_setup':
+            if self.no_growth_choice():
                 gameStateObj.stateMachine.changeState('start_new')
                 gameStateObj.stateMachine.changeState('transition_out')
             else:
@@ -496,6 +509,7 @@ class StartMode(StateMachine.State):
                 self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
                 self.mode_name = 'growths'
                 gameStateObj.stateMachine.changeState('transition_in')
+                self.state = 'growth_wait'
             return 'repeat'
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -509,37 +523,54 @@ class StartMode(StateMachine.State):
 
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            self.state -= 4
-            if self.state < -1:
-                # gameStateObj.stateMachine.changeState('start_option')
+            if self.state == 'difficulty_wait':
                 gameStateObj.stateMachine.changeState('transition_pop')
-            else:
-                gameStateObj.stateMachine.changeState('transition_clean')
+            elif self.state == 'death_wait':
+                if self.no_difficulty_choice():
+                    gameStateObj.stateMachine.changeState('transition_pop')
+                else:
+                    self.state = 'difficulty_setup'
+                    gameStateObj.stateMachine.changeState('transition_clean')
+            elif self.state == 'growth_wait':
+                if self.no_death_choice():
+                    if self.no_difficulty_choice():
+                        gameStateObj.stateMachine.changeState('transition_pop')
+                    else:
+                        self.state = 'difficulty_setup'
+                        gameStateObj.stateMachine.changeState('transition_clean')
+                else:
+                    self.state = 'death_setup'
+                    gameStateObj.stateMachine.changeState('transition_clean')
             return 'repeat'
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
             gameStateObj.mode[self.mode_name] = self.menu.getSelectionIndex()
-            if self.state > 4:
+            if self.state == 'growth_wait':
                 gameStateObj.stateMachine.changeState('start_new')
                 gameStateObj.stateMachine.changeState('transition_out')
-            else:
+            elif self.state == 'death_wait':
+                self.state = 'growth_setup'
+                gameStateObj.stateMachine.changeState('transition_clean')
+            elif self.state == 'difficulty_wait':
+                self.state = 'death_setup'
                 gameStateObj.stateMachine.changeState('transition_clean')
             return 'repeat'
 
     def update(self, gameStateObj, metaDataObj):
-        self.menu.update()
+        if self.menu:
+            self.menu.update()
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
         gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
         gameStateObj.title_particles.draw(surf)
-        self.menu.draw(surf)
-        surf.blit(self.title_surf, self.title_pos)
+        if self.menu:
+            self.menu.draw(surf)
+            surf.blit(self.title_surf, self.title_pos)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
-
         return surf
 
 class StartNew(StateMachine.State):

@@ -86,7 +86,7 @@ class Solver(object):
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
         if self.item.weapon:
             if roll < to_hit and not (defender in self.splash and (isinstance(defender, TileObject.TileObject) or 'evasion' in defender.status_bundle)):
-                result.outcome = True
+                result.outcome = (2 if self.item.guaranteed_crit else 1)
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
                 if cf.CONSTANTS['crit']: 
                     self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid)
@@ -97,7 +97,7 @@ class Solver(object):
 
         elif self.item.spell:
             if not self.item.hit or roll < to_hit:
-                result.outcome = True
+                result.outcome = (2 if self.item.guaranteed_crit else 1)
                 if self.item.damage is not None:
                     result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
                     if cf.CONSTANTS['crit']: 
@@ -107,7 +107,7 @@ class Solver(object):
                 if self.item.movement:
                     result.def_movement = self.item.movement
         else:
-            result.outcome = True
+            result.outcome = 1
             result.def_damage = -int(eval(self.item.heal)) if self.item.heal else 0
             if self.attacker is not defender and self.item.heal:
                 result.def_damage -= sum(status.caretaker for status in self.attacker.status_effects if status.caretaker)
@@ -149,7 +149,7 @@ class Solver(object):
         hybrid = to_hit if cf.CONSTANTS['rng'] == 'hybrid' else None
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
         if roll < to_hit:
-            result.outcome = True
+            result.outcome = (2 if self.item.guaranteed_crit else 1)
             result.def_damage = self.defender.compute_damage(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense", hybrid=hybrid)
             if cf.CONSTANTS['crit']: 
                 self.handle_crit(result, self.defender, self.attacker, self.defender.getMainWeapon(), "Defense", gameStateObj, hybrid)
@@ -407,8 +407,8 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
 
     toggle_anim = gameStateObj.input_manager.is_pressed('AUX')
     # Whether animation combat is even allowed
-    if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject) and \
-        not item.movement and not item.self_movement):
+    if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject) and not item.movement and not item.self_movement):
+        
         # XOR below
         if animation_wanted(attacker, defender) != toggle_anim:
             distance = Utility.calculate_distance(attacker.position, def_pos)
@@ -670,7 +670,7 @@ class AnimationCombat(Combat):
             if name.endswith(' Ward'):
                 name = name[:-5]
             size_x = GC.FONT['text_brown'].size(name)[0]
-            GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x / 2, 5))
+            GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
         # Right
         right_color = 'Blue' if self.right.team == 'player' else 'Red'
@@ -685,7 +685,7 @@ class AnimationCombat(Combat):
             if name.endswith(' Ward'):
                 name = name[:-5]
             size_x = GC.FONT['text_brown'].size(name)[0]
-            GC.FONT['text_brown'].blit(name, self.right_bar, (47 - size_x / 2, 5))
+            GC.FONT['text_brown'].blit(name, self.right_bar, (47 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
         # Platforms
         left_platform_type = gameStateObj.map.tiles[self.left.position].platform
@@ -958,7 +958,10 @@ class AnimationCombat(Combat):
         self.next_result = self.solver.get_a_result(gameStateObj, metaDataObj)
 
     def set_up_animation(self, result):
-        if result.outcome:
+        print(result.outcome)
+        if result.outcome == 2:
+            result.attacker.battle_anim.start_anim('Critical')
+        elif result.outcome:
             result.attacker.battle_anim.start_anim('Attack')
         else:
             result.attacker.battle_anim.start_anim('Miss')

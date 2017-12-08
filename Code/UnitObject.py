@@ -853,7 +853,7 @@ class UnitObject(object):
             if leveling == 3: # Match player method
                 leveling = gameStateObj.mode['growths']
 
-        if leveling in [0, 1]: # Fixed or Random
+        if leveling in (0, 1): # Fixed or Random
             for index in range(8):
                 growth = growths[index]
                 if leveling == 1: # Fixed

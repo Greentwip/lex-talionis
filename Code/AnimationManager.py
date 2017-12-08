@@ -148,4 +148,6 @@ class BattleAnimationManager(object):
             poses['RangedStand'] = poses['Stand']
         if 'Miss' not in poses and 'Attack' in poses:
             poses['Miss'] = poses['Attack']
+        if 'Critical' not in poses and 'Attack' in poses:
+            poses['Critical'] = poses['Attack']
         return poses

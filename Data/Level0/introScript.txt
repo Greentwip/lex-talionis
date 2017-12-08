@@ -20,7 +20,7 @@ disp_cursor;0
 u;Soldier1;Right
 u;Man1;FarLeft
 u;OldMan1;MidLeft
-s;Soldier1;By order of Duke Ulver,{w}{br}at the behest of the Empress herself,{w}{br}this monastery is to be searched.{w};auto
+s;Soldier1;By order of the Duke,{w}{br}at the behest of the Empress herself,{w}{br}this monastery is to be searched.{w};auto
 s;OldMan1;What gives you the right!{w};auto
 s;Man1;Yeah, we haven't done anything!{w};auto
 s;Soldier1;Ahem!{w}{br}Anyone who resists will be punished in full accordance with the law.{w};auto

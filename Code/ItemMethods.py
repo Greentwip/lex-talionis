@@ -111,7 +111,7 @@ class ItemObject(object):
             if self.weapon:
                 first_line_text = [' ', self.weapon.LVL, ' Mt ', str(self.weapon.MT), ' Hit ', str(self.weapon.HIT)]
                 if cf.CONSTANTS['crit']:
-                    first_line_text += [' Crit ', str(self.crit)]
+                    first_line_text += [' Crit ', str(self.crit) if self.crit else '--']
                 if self.weight:
                     first_line_text += [' Wt ', str(self.weight)]
                 first_line_text += [' Rng ', self.strRNG]

@@ -19,8 +19,6 @@
 - Restore (Restore)
 
 FOR FUTURE UPDATES TO THE ENGINE:
---- COMBAT ---
---- Test Critical option to Engine Interaction UI in AnimationCombat
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
 - Have Start Skip or Massivily Speed-up AI State
@@ -31,7 +29,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Android Support (pygame_sdl2)
 - Mac/Linux Support
 - Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1, 2) ++
-- Test new changes to main menu (No difficulty select, etc.)
 =============
 --- EXTRA ---
 =============
