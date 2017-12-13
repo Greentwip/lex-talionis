@@ -272,7 +272,7 @@ class UnitObject(object):
 
     def create_attack_info(self, gameStateObj, enemyunit):
         def blit_num(surf, num, x_pos, y_pos):
-            if num >= 100:
+            if not isinstance(num, str) and num >= 100:
                 surf.blit(GC.IMAGESDICT['blue_100'], (x_pos - 16, y_pos))
             else:
                 size = GC.FONT['text_blue'].size(str(num))

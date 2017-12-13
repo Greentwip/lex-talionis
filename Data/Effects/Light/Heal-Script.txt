@@ -13,7 +13,7 @@ enemy_effect;HealOrbLow
 wait;51
 wait;3
 defer;13;lighten
-spell_hit
+spell_hit;no_sound
 pan
 wait;4
 end_parent_loop

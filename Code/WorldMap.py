@@ -618,11 +618,11 @@ class MiniMap(object):
         left_pos = position[0] - 1, position[1]
         right_pos = position[0] + 1, position[1]
         if self.tile_map.check_bounds(left_pos) and self.tile_map.tiles[left_pos].minimap == 'Door':
-            return self.get_sprite((7,1))
+            return self.get_sprite((7, 1))
         elif self.tile_map.check_bounds(right_pos) and self.tile_map.tiles[right_pos].minimap == 'Door':
-            return self.get_sprite((6,1))
+            return self.get_sprite((6, 1))
         else:
-            return self.get_sprite((7,0))
+            return self.get_sprite((7, 0))
 
     def complex_shape(self, key, position):
         column = self.complex_map.index(key) + 2
@@ -665,7 +665,7 @@ class MiniMap(object):
         if current_time > 1600:
             whiteness = 2.55 * (100 - abs(current_time - 1800)/2)
             units = Image_Modification.flickerImageWhite(units, whiteness)
-        image.blit(units, (0,0))
+        image.blit(units, (0, 0))
 
         if progress != 1:
             image = self.occlude(Engine.copy_surface(image), progress)

@@ -15,12 +15,12 @@ if;self.optionalunit.team == 'player'
 			s;Sidney;Caught you! You're not getting away this time, little mouse.{w};auto
 			s;Prim;How could you be so cruel?{w}{br}Our home...{w};auto
 			s;Sidney;Hah! You've got no home anymore, girly!{w};auto
-			s;Prim;...You'll pay for what you've done!{w};auto
+			s;Prim;...Y-You'll pay for what you've done!{w};auto
 			r;Sidney;Prim
 			trigger_event;SidneyPrim
 		elif;self.optionalunit.name not in ['Ophie', 'Prim'] and not 'SidneyDefault' in gameStateObj.event_triggers
 			u;Sidney;Left	
-			s;Sidney;What! How'd you manage to get past my men?{w};auto
+			s;Sidney;What! How'd you manage to get past me men?{w};auto
 			r;Sidney
 			trigger_event;SidneyDefault
 		end
@@ -97,13 +97,13 @@ if;self.optionalunit.team == 'player'
 		if;gameStateObj.counters['level'] == 0
 			if;self.optionalunit.name == 'Prim' and not 'Vagnius0Prim' in gameStateObj.event_triggers
 				u;Vagnius;Left;u;Prim;Right
-				s;Prim;Please, stop! We don't have any fugitives!{w};auto
-				s;Vagnius;Well, you don't look like the fugitive girl...{w}{br}But better safe than sorry...{w};auto
+				s;Prim;P-Please, stop! You have to listen!{w}{br}We're not harboring any fugitive.{w};auto
+				s;Vagnius;Well, you don't look like the fugitive girl.{w}{br}But better safe than sorry...{w};auto
 				r;Prim;Vagnius
 				trigger_event;Vagnius0Prim
 			elif;self.optionalunit.name == 'Ophie' and not 'Vagnius0Ophie' in gameStateObj.event_triggers
 				u;Vagnius;Left;u;Ophie;Right
-				s;Vagnius;Hmmph! You're not the fugitive!{w}{br}Out of my way!{w};auto
+				s;Vagnius;Hmmph! You're not the one I seek!{w}{br}Out of my way!{w};auto
 				r;Ophie;Vagnius
 				trigger_event;Vagnius0Ophie
 			end

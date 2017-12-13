@@ -44,6 +44,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add other numbers to Level Up Numbers (5 - 7)
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells?) --- Cleave, Critical, Sol, Luna, Shove, Rally, Metamagic
 - Comment many of the functions with purposes
+- Add damage numbers on hit to both map combat and animation combat
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow

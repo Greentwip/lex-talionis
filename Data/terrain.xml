@@ -133,6 +133,18 @@
         
         <mtype>Ruins</mtype>
     </terrain>
+
+    <terrain name="Floor">
+        <id>13</id>
+        <color>92,92,92</color>
+        <minimap>Grass</minimap>
+        <platform>Ruins</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
 	
 	<terrain name="River">
         <id>14</id>

@@ -548,7 +548,7 @@ class Primary_AI(object):
             target = self.valid_targets[self.target_index]
             item = self.items[self.item_index]
             if QUICK_MOVE and self.unit.position != move:
-                self.quick_move(move, gameStateObj, test=False)
+                self.quick_move(move, gameStateObj, test=True)
             self.determine_utility(move, target, item, gameStateObj)
             self.target_index += 1
 
@@ -584,7 +584,7 @@ class Primary_AI(object):
             else:   
                 move = self.possible_moves[self.move_index]
             if QUICK_MOVE and self.unit.position != move:
-                self.quick_move(move, gameStateObj, test=False)
+                self.quick_move(move, gameStateObj, test=True)
             target = self.valid_targets[self.target_index]
             item = self.items[self.item_index]
             # logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)

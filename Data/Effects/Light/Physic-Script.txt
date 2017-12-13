@@ -22,7 +22,7 @@ enemy_effect;PhysicDust2
 wait;29
 wait;3
 defer;8;lighten
-spell_hit
+spell_hit;no_sound
 wait;12
 pan
 wait;12

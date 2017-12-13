@@ -209,7 +209,7 @@
         <id>Rapier</id>
         <spritetype>Sword</spritetype>
         <spriteid>9</spriteid>
-        <components>weapon,uses,weight,alternate_defense,crit</components>
+        <components>weapon,uses,weight,alternate_defense</components>
         <weapontype>Sword</weapontype>
 
         <uses>20</uses>

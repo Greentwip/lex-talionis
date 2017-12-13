@@ -9,7 +9,7 @@ wait;13
 enemy_effect;LightClover
 wait;8
 enemy_flash_white;8
-screen;flash_white;4
+screen_flash_white;4
 wait;4
 sound;Lightning2
 enemy_effect;LightningDisc

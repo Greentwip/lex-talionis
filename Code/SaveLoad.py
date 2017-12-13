@@ -217,7 +217,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             
             u_i['desc'] = unit.find('desc').text
             # Tags
-            class_tags = set(class_dict[u_i['klass']]['tags'].split(',')) if class_dict[u_i['klass']]['tags'] else set()
+            class_tags = class_dict[u_i['klass']]['tags']
             personal_tags = set(unit.find('tags').text.split(',')) if unit.find('tags') is not None and unit.find('tags').text is not None else set()
             u_i['tags'] = class_tags | personal_tags
 
@@ -280,7 +280,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
-    u_i['tags'] = set(class_dict[u_i['klass']]['tags'].split(',')) if class_dict[u_i['klass']]['tags'] else set()
+    u_i['tags'] = class_dict[u_i['klass']]['tags']
     u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 

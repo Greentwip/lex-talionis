@@ -2186,7 +2186,8 @@ class ExpGainState(State):
     def draw(self, gameStateObj, metaDataObj):
         if self.in_combat:
             under_state = gameStateObj.stateMachine.get_under_state(self)
-            assert isinstance(under_state, CombatState) or isinstance(under_state, PromotionState), "%s"%(gameStateObj.stateMachine.state)
+            assert isinstance(under_state, CombatState) or isinstance(under_state, PromotionState) \
+                or isinstance(under_state, ItemGainState), "%s"%(gameStateObj.stateMachine.state)
             mapSurf = under_state.draw(gameStateObj, metaDataObj)
         else:
             mapSurf = State.draw(self, gameStateObj, metaDataObj)

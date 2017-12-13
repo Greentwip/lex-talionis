@@ -15,7 +15,7 @@ NUM_LAYERS = 4
 
 # === GENERIC MAP OBJECT
 class MapObject(object):
-    def __init__(self, mapfilename, tilefilename, levelfolder, weather=[]):
+    def __init__(self, mapfilename, tilefilename, levelfolder, weather=None):
         colorkey, self.width, self.height = self.build_color_key(Engine.image_load(tilefilename, convert=True))
 
         self.tiles = {} # The mechanical information about the tile organized by position
@@ -31,8 +31,9 @@ class MapObject(object):
         self.parse_tile_info(self.levelfolder + '/' + 'tileInfo.txt')
 
         self.weather = []
-        for name in weather:
-            self.add_weather(name)
+        if weather:
+            for name in weather:
+                self.add_weather(name)
         self.status_effects = set() # Status ids, not the statuses themselves
 
         # Populate tiles

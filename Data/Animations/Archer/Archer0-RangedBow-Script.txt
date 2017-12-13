@@ -33,7 +33,7 @@ of;1;Arrow1;Attack15
 screen_flash_white;4
 of;1;Arrow2;Attack15
 of;2;Arrow3;Attack15
-f;Attack15
+f;1;Attack15
 pan
 hit_spark
 start_hit

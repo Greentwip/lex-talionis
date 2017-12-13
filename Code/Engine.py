@@ -63,7 +63,7 @@ def build_font(ttf, size):
 def terminate():
     configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
     configuration.write_config_file() # Write last saved options to config file
-    if PYGAME_SDL2:
+    if not PYGAME_SDL2:
         pygame.mixer.music.stop()
         pygame.mixer.quit()
     pygame.quit()
@@ -257,8 +257,8 @@ class MusicThread(object):
 
         self.state = 'normal'
 
-        self.end_song = pygame.USEREVENT + 1
-        pygame.mixer.music.set_endevent(self.end_song)
+        self.end_song_event = pygame.USEREVENT + 1
+        pygame.mixer.music.set_endevent(self.end_song_event)
 
         self.current = None
         self.next = None
@@ -292,28 +292,28 @@ class MusicThread(object):
             logging.error('Unsupported phase name: %s', phase_name)
         # self.music_stack = [] # Clear the stack
 
-    def fade_in(self, next, num_plays=-1, time=0):
+    def fade_in(self, next_song, num_plays=-1, time=0):
         logger.info('Music: Fade in')
         # Confirm thats its not already at the top of the stack
-        if self.song_stack and self.song_stack[-1].song == next:
+        if self.song_stack and self.song_stack[-1].song == next_song:
             logger.info('Music: Already Present')
             return
         # Determine if song is in stack
         for song in self.song_stack:
             # If so, move to top of stack
-            if song.song == next:
+            if song.song == next_song:
                 logger.info('Music: Pull Up')
                 self.song_stack.remove(song)
                 self.song_stack.append(song)
                 break
         else:
-            logger.info('Music: New')
-            new_song = Song(next, num_plays, time)
+            logger.info('Music: New Song')
+            new_song = Song(next_song, num_plays, time)
             self.song_stack.append(new_song)
 
         # Update the current one -- so we know where to head back to
         if self.current:
-            self.current.current_time += pygame.mixer.music.get_pos()/1000
+            self.current.current_time += pygame.mixer.music.get_pos()
 
         # This is where we are going to
         self.next = self.song_stack[-1]
@@ -359,7 +359,7 @@ class MusicThread(object):
 
         # === Take Input
         for event in eventList:
-            if event.type == self.end_song:
+            if event.type == self.end_song_event:
                 if self.state == 'normal':
                     logger.debug('Music: Normal Event')
                     if self.current.loop:
@@ -369,15 +369,12 @@ class MusicThread(object):
                     elif self.current.num_plays == -1:
                         pygame.mixer.music.play(0)
                     self.current.current_time = 0
-                elif self.state == 'fade':
-                    logger.debug('Music: Fade Event')
-                    self.state = 'normal' # catches the stop from fade
+                elif self.state == 'fade_catch':
+                    logger.debug('Music: Fade Catch Event')
+                    self.state = 'normal' # catches the stop from fade and returns to normal
 
         # === Update
-        if self.state == 'normal':
-            pass
-
-        elif self.state == 'fade':
+        if self.state == 'fade':
             if current_time - self.fade_out_update > self.fade_out_time:
                 logger.debug('Music: Actual Fade in!')
                 self.current = self.next
@@ -386,10 +383,11 @@ class MusicThread(object):
                 # self.next = None
                 pygame.mixer.music.set_volume(self.volume)
                 pygame.mixer.music.stop()
+                # This takes 50 ms or so each time :(
                 pygame.mixer.music.load(self.current.song)
-                pygame.mixer.music.play(0, self.current.current_time)
+                pygame.mixer.music.play(0, self.current.current_time/1000)
                 # self.fade_out_update = current_time
-                # self.state = 'normal'
+                self.state = 'fade_catch'
 
 if PYGAME_SDL2:
     music_thread = NoMusicThread()

@@ -5,7 +5,7 @@ if;gameStateObj.turncount == 1 and cf.OPTIONS['Display Hints']
 	s;Narrator;Each chapter has a different challenge.{w};auto;hint
 	set_cursor;Sidney;force_hold
 	disp_cursor;1
-	s;Narrator;In this chapter, your goal is to defeat the boss, Sidney.{w}{br}Luckily, you'll also find new allies along the way.{w};auto;hint
+	s;Narrator;In this chapter, your goal is to defeat the boss, Sidney.{w}{br}Luckily, you'll also find new allies.{w};auto;hint
 	disp_cursor;0
 	set_cursor;Joel;force_hold
 	disp_cursor;1

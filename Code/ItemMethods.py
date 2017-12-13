@@ -405,7 +405,8 @@ def itemparser(itemstring):
                     my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
                     assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
                 elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase'):
-                    my_components[component] = int(item[component])
+                    if component in item:
+                        my_components[component] = int(item[component])
                 elif component in ['movement', 'self_movement']:
                     mode, magnitude = item[component].split(',')
                     my_components[component] = MovementComponent(mode, magnitude)

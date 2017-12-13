@@ -49,7 +49,7 @@ elif;gameStateObj.turncount == 2
 	u;Bandit1;Left
 	u;Ophie;MidRight
 	u;Prim;FarRight
-	s;Bandit1;Heh! You two aren't getting away!{w};auto
+	s;Bandit1;Heh! Caught ya!{w};auto
 	s;Ophie;Behind me, Prim.{w}{br}This one's mine!{w};auto
 	r;Bandit1;Ophie;Prim
 	# Hint
@@ -69,7 +69,7 @@ elif;gameStateObj.turncount == 3
 	start_move
 	u;Soldier1;Right
 	u;Yohn;Left
-	s;Soldier1;You Keralans need to learn your place!{w};auto
+	s;Soldier1;You need to learn your place!{w};auto
 	r;Soldier1;Yohn
 	# Combat1
 	interact_unit;S2;Yohn
@@ -115,7 +115,7 @@ elif;gameStateObj.turncount == 4
 	start_move
 	u;Yohn;Left
 	u;Vagnius;Right
-	s;Vagnius;Imbeciles!{w}{br}I will deal with this one myself.{w};auto
+	s;Vagnius;Imbeciles!{w}{br}I'll deal with this one myself.{w};auto
 	s;Yohn;You may find that easier said than done.{w};auto
 	s;Vagnius;Hah. You prideful fool...{w};auto
 	r;Vagnius;Yohn
@@ -132,9 +132,12 @@ elif;gameStateObj.turncount == 4
 	u;Prim;FarLeft
 	mirror;Ophie
 	s;Prim;O-Ophie! He said not to look back!{w};auto
-	s;Ophie;Argh!... B-But...{w}{br}How can I...?{w};auto
-	s;Prim;Ophie, think about it!{w}{br}What w-would Master Yohn have wanted?{w};auto
-	s;Ophie;... Damn it!{w}{br}Come on then. Master Yohn's sacrifice should not be in vain.{w};auto
+	s;Ophie;Argh!... B-But...{w};auto
+	s;Prim;Ophie...{w};auto
+	s;Ophie;How can I...?{w};auto
+	bop;Prim
+	s;Prim;Snap out of it!{w}{br}Just think! What w-would Master Yohn have wanted?{w};auto
+	s;Ophie;... Damn it!{w}{br}Come on then. Our master's sacrifice will not be in vain.{w};auto
 	r;Prim;Ophie
 	change_ai;Vagnius;Pursue
 	if;cf.OPTIONS['Display Hints']

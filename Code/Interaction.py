@@ -654,11 +654,19 @@ class AnimationCombat(Combat):
         self.splash = []
 
     def init_draw(self, gameStateObj, metaDataObj):
+        def get_color(team):
+            if team == 'player':
+                return 'Blue'
+            elif team == 'other':
+                return 'Green'
+            else:
+                return 'Red'
+
         self.gameStateObj = gameStateObj # Dependency Injection
         self.metaDataObj = metaDataObj  # Dependency Injection
         crit = 'Crit' if cf.CONSTANTS['crit'] else ''
         # Left
-        left_color = 'Blue' if self.left.team == 'player' else 'Red'
+        left_color = get_color(self.left.team)
         # Name Tag
         self.left_name = GC.IMAGESDICT[left_color + 'LeftCombatName'].copy()
         size_x = GC.FONT['text_brown'].size(self.left.name)[0]
@@ -673,7 +681,7 @@ class AnimationCombat(Combat):
             GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
         # Right
-        right_color = 'Blue' if self.right.team == 'player' else 'Red'
+        right_color = get_color(self.right.team)
         # Name Tag
         self.right_name = GC.IMAGESDICT[right_color + 'RightCombatName'].copy()
         size_x = GC.FONT['text_brown'].size(self.right.name)[0]
@@ -958,7 +966,7 @@ class AnimationCombat(Combat):
         self.next_result = self.solver.get_a_result(gameStateObj, metaDataObj)
 
     def set_up_animation(self, result):
-        print(result.outcome)
+        # print(result.outcome)
         if result.outcome == 2:
             result.attacker.battle_anim.start_anim('Critical')
         elif result.outcome:
@@ -1236,6 +1244,8 @@ class AnimationCombat(Combat):
         # Handle where we go at very end
         if self.event_combat:
             gameStateObj.message[-1].current_state = "Processing"
+            if not self.p1.isDying:
+                self.p1.sprite.change_state('normal', gameStateObj)
         else:
             if self.p1.team == 'player':
                 # Check if this is an ai controlled player

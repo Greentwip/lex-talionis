@@ -1,5 +1,5 @@
 # Outro Script 0
-m;Venice Escape
+m;Flight over Venice
 t;1
 b;Clearing
 t;2
@@ -15,15 +15,15 @@ t;2
 # Vagnius and Page
 u;Soldier1;Left
 u;Vagnius;Right
-s;Vagnius;Kill the traitors. Burn it all.{w}{br}The Empire does not tolerate dissent!{w};auto
+s;Vagnius;Kill the traitors. Burn it all.{w}{br}They will know the Empire does not tolerate dissent!{w};auto
 s;Soldier1;Right away, sir.{w};auto
 r;Soldier1
 u;Sidney;Left
-s;Sidney;Colonel Vagnius?{w};auto
+s;Sidney;Uh, Boss?{w};auto
 s;Vagnius;What is it?{w};auto
-s;Sidney;Sir, um, two of the... uh... monks, well they...{w}{br}Two of them escaped, sir.{w};auto
+s;Sidney;Sir, um, two of the... uh... monks, well they...{w}{br}They escaped, sir.{w};auto
 bop;Vagnius
-s;Vagnius;What!! After them, you fool.{w}{br}One of them could be the fugitive!{w};auto
+s;Vagnius;What!! After them, you fool!{w}{br}One of them could be the fugitive!{w};auto
 s;Sidney;Right away, sir!{w};auto
 r;Sidney
 s;Vagnius;What incompetents...{w}{br}The Duke will not pleased.{w};auto

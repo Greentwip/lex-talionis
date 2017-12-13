@@ -250,14 +250,6 @@ class BattleAnimation(object):
             self.processing = False
             self.base_state = True
         elif line[0] == 'spell_hit':
-            if len(line) > 1:
-                self.current_frame = self.frame_directory[line[1]]
-            else:
-                self.current_frame = None
-            if len(line) > 2:
-                self.under_frame = self.frame_directory[line[2]]
-            else:
-                self.under_frame = None
             self.owner.start_hit('no_sound' not in line)
             self.state = 'Wait'
             self.processing = False
@@ -489,7 +481,7 @@ class BattleAnimation(object):
         self.flash_color = color
 
     def no_damage(self):
-        print('No Damage!')
+        # print('No Damage!')
         if self.right:
             position = (52, 21)
         else:

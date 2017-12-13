@@ -27,7 +27,7 @@ s;Soldier1;Ahem!{w}{br}Anyone who resists will be punished in full accordance wi
 s;Man1;Shove your full accordance--{w};auto
 move_sprite;Soldier1;24,0
 u;Vagnius;MidRight
-s;Vagnius;That's enough.{w}{br}Let's cut to the chase, shall we?{w}{br}We know your monastery is harboring a fugitive.{w}{br}Hand the girl over and no one has to get hurt.{w};auto
+s;Vagnius;That's enough.{w}{br}Let's cut to the chase, shall we?{w}{br}We know you're harboring a fugitive.{w}{br}Hand the girl over and no one has to get hurt.{w};auto
 s;OldMan1;Hmmph.{w};auto
 r;Soldier1
 s;Vagnius;Well? So eager before, and now you hesitate. A pity.{w}{br}Sidney?{w};auto
@@ -85,9 +85,9 @@ u;Ophie;FarLeft
 s;Ophie;Hmmph. The Empire will take any excuse for a fight.{w}{br}They think they can just walk in here--{w};auto
 s;Yohn;Anger is a natural feeling, Ophie.{w}{br}But now is not the time for anger.{w}{br}We must make haste. We can stay here no longer--{w};auto
 s;???;Hey! There's someone hiding back here!{w};8;28;224
-s;Prim;Ah! They've found us!{w};auto
+s;Prim;Eep! They've found us!{w};auto
 r;Prim;Ophie;Yohn
-m;Venice Escape
+m;Flight over Venice
 t;1
 remove_background
 t;2
@@ -129,7 +129,7 @@ remove_unit;14,0
 remove_unit;15,0
 remove_unit;16,0
 u;Vagnius;Right
-s;Vagnius;Don't just stand there, Sidney! After the rest of them!{w}{br}I'll handle this one.{w};auto
+s;Vagnius;Don't just stand there! After the rest of them!{w}{br}I'll handle this one.{w};auto
 r;Vagnius
 u;Sidney;Right
 s;Sidney;You heard the commander! Kill anyone who stands in our way!{w};auto

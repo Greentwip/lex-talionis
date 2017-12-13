@@ -46,11 +46,12 @@ class BattleAnimationManager(object):
     def generate(self, klass):
         if klass in self.directory and klass not in self.generated_klasses:
             klass_directory = self.directory[klass]
-            self.generated_klasses.add(klass) # Don't generate twice
 
             for weapon in klass_directory:
                 frame_directory = {}
                 for name, anim in klass_directory[weapon]['images'].iteritems():
+                    if 'index' not in klass_directory[weapon]:
+                        return False
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)
                 # print(frame_directory)
                 klass_directory[weapon]['images'] = frame_directory
@@ -58,7 +59,13 @@ class BattleAnimationManager(object):
                     klass_directory[weapon]['script'] = self.parse_script(klass_directory[weapon]['script'])
                 else: # Search default klass
                     default_script = self.directory[klass[:-1] + '0'][weapon]['script']
-                    klass_directory[weapon]['script'] = self.parse_script(default_script)
+                    if isinstance(default_script, dict):  # Already parsed
+                        klass_directory[weapon]['script'] = default_script
+                    else:
+                        klass_directory[weapon]['script'] = self.parse_script(default_script)
+            
+            self.generated_klasses.add(klass)  # Don't generate twice
+        return True
 
     def generate_effect(self, effect):
         if effect in self.effects and effect not in self.generated_effects:
@@ -76,7 +83,8 @@ class BattleAnimationManager(object):
             gender = gender/5  # Get nearest default
             klass = klass[:-1] + str(gender)
         if klass in self.directory:
-            self.generate(klass)
+            if not self.generate(klass):
+                return None
             check_item = False
             if not item:
                 weapon = 'Unarmed'
