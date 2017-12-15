@@ -2035,6 +2035,8 @@ class CombatState(State):
         unit_surf = self.unit_surf.copy()
         # Draw the tile sprites onto this surface
         gameStateObj.map.draw(mapSurf, gameStateObj)
+        # Draw the boundary manager so it doesn't flicker on and off during animation
+        gameStateObj.boundary_manager.draw(mapSurf, (mapSurf.get_width(), mapSurf.get_height()))
 
         # Reorder units so they are drawn in correct order, from top to bottom, so that units on bottom are blit over top
         # Only draw units that will be in the camera's field of view
@@ -2554,7 +2556,8 @@ class ItemGainState(State):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
         # To handle promotion
         under_state = gameStateObj.stateMachine.get_under_state(self)
-        if under_state and isinstance(under_state, ExpGainState) or isinstance(under_state, ItemGainState):
+        if under_state and isinstance(under_state, ExpGainState) or isinstance(under_state, ItemGainState) \
+           or isinstance(under_state, CombatState) or isinstance(under_state, PromotionState):
             mapSurf = under_state.draw(gameStateObj, metaDataObj)
         # For Dialogue
         elif gameStateObj.message:
@@ -2571,7 +2574,7 @@ class ItemDiscardState(State):
         if 'Convoy' in gameStateObj.game_constants:
             self.pennant = Banner.Pennant(cf.WORDS['Storage_info'])
         else:
-            self.pennent = Banner.Pennant(cf.WORDS['Discard'])
+            self.pennant = Banner.Pennant(cf.WORDS['Discard'])
         options = gameStateObj.cursor.currentSelectedUnit.items
         if not gameStateObj.activeMenu:
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, options, 'auto', gameStateObj=gameStateObj)

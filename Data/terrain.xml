@@ -114,7 +114,7 @@
         <id>12</id>
         <color>162,150,162</color>
         <minimap>Bridge</minimap>
-        <platform>River</platform>
+        <platform>Bridge</platform>
         
         <DEF>0</DEF>
         <AVO>0</AVO>

@@ -389,6 +389,12 @@ class MusicThread(object):
                 # self.fade_out_update = current_time
                 self.state = 'fade_catch'
 
+        # If there's no music currently playing, make it so that music does play
+        if self.current and not pygame.mixer.music.get_busy():
+            logger.debug('Music: Music not playing!')
+            pygame.mixer.music.load(self.current.song)
+            pygame.mixer.music.play(0)
+
 if PYGAME_SDL2:
     music_thread = NoMusicThread()
 else:

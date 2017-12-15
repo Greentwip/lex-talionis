@@ -850,8 +850,8 @@ class AnimationCombat(Combat):
                 self.end_skip()
                 return True
 
-        self.left_hp_bar.update(skip)
-        self.right_hp_bar.update(skip)
+        self.left_hp_bar.update(skip or self.combat_state == 'Exp')
+        self.right_hp_bar.update(skip or self.combat_state == 'Exp')
         self.left.battle_anim.update()
         self.right.battle_anim.update()
 

@@ -532,7 +532,7 @@ class BoundaryManager(object):
         self._set(ValidAttacks, 'attack', unit.id)
         self._set(ValidSpells, 'spell', unit.id)
         # self._set(ValidMoves, 'movement', unit.id)
-        area_of_influence = Utility.find_manhattan_spheres(range(1, unit.stats['MOV']), unit.position)
+        area_of_influence = Utility.find_manhattan_spheres(range(1, unit.stats['MOV'] + 1), unit.position)
         area_of_influence = {pos for pos in area_of_influence if gameStateObj.map.check_bounds(pos)}
         self._set(area_of_influence, 'movement', unit.id)
         # print(unit.name, unit.position, unit.klass, unit.event_id)

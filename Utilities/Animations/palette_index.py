@@ -1424,7 +1424,7 @@ sidney = [(128, 160, 128), # Background
                 (104, 56, 64), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-fighter_joel = [(128, 160, 128), # Background
+fighter_joel_old = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 224, 184), # Light skin
                 (240, 184, 136), # LM skin
@@ -1439,6 +1439,23 @@ fighter_joel = [(128, 160, 128), # Background
                 (216, 88, 40), # Light Clothes
                 (168, 56, 16), # Med Clothes
                 (128, 0, 8), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+fighter_joel = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 224, 184), # Light skin
+                (240, 184, 136), # LM skin
+                (208, 144, 96), # M skin
+                (176, 112, 64), # DM skin
+                (128, 88, 56), # Dark skin
+                (232, 168, 32), # Light Hair
+                (152, 112, 64), # Dark Hair
+                (200, 232, 240), # Light Weapon
+                (160, 192, 224), # Dark Weapon
+                (120, 152, 184), # Weapon Highlight
+                (144, 128, 216), # Light Clothes
+                (88, 72, 200), # Med Clothes
+                (56, 48, 120), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 generic_fighter = [(255, 255, 255),
@@ -1510,7 +1527,7 @@ warrior_red = [(128, 160, 128), # Background
                 (128, 128, 136), # Dark Armor
                 (40, 40, 40)] # Outline
 
-warrior_joel = [(128, 160, 128), # Background
+warrior_joel_old = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 224, 184), # Light skin
                 (240, 184, 136), # LM skin
@@ -1523,6 +1540,23 @@ warrior_joel = [(128, 160, 128), # Background
                 (216, 88, 40), # Light Clothes
                 (168, 56, 16), # Med Clothes
                 (128, 0, 8), # Dark Clothes
+                (208, 216, 208), # Light Armor
+                (128, 128, 136), # Dark Armor
+                (40, 40, 40)] # Outline
+
+warrior_joel = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 224, 184), # Light skin
+                (240, 184, 136), # LM skin
+                (208, 144, 96), # M skin
+                (176, 112, 64), # DM skin
+                (112, 72, 48), # Dark skin
+                (192, 224, 248), # Light Weapon
+                (136, 176, 200), # Medium Weapon
+                (96, 128, 160), # Dark Weapon
+                (144, 128, 216), # Light Clothes
+                (88, 72, 200), # Med Clothes
+                (56, 48, 120), # Dark Clothes
                 (208, 216, 208), # Light Armor
                 (128, 128, 136), # Dark Armor
                 (40, 40, 40)] # Outline
