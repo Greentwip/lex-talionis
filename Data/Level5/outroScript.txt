@@ -1,11 +1,11 @@
 # Outro Script Level 5
 # Change Sam and Kayla to player controlled
-m;Good Theme
 convert;Sam;player
 convert;Kayla;player
 unlock_lore;CFS
 unlock_lore;Kayla
-t;1
+victory_screen
+m;Good Theme
 b;Desert
 t;2
 u;Sam;Left;u;Man1;Right

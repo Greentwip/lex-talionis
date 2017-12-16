@@ -2114,7 +2114,7 @@ class RecordsDisplay(ChoiceMenu):
         for level in stats:
             name = level.name
             turncount = level.turncount
-            mvp = self.get_mvp(level.stats)
+            mvp = level.get_mvp()
             self.options.append((name, turncount, mvp))
 
         self.set_up()
@@ -2145,26 +2145,13 @@ class RecordsDisplay(ChoiceMenu):
         self.left_arrow = GUIObjects.ScrollArrow('left', (self.topleft[0] + 4 + 1, self.topleft[1] - 7))
         self.right_Arrow = GUIObjects.ScrollArrow('right', (self.topleft[0] + 8 + self.menu_width - 1, self.topleft[1] - 7))
 
-    def formula(self, record):
-        return record['kills']*cf.CONSTANTS['kill_worth'] + record['damage'] + record['healing']
-
-    def get_mvp(self, records):
-        tp = 0
-        current_mvp = 'Ophie'
-        for unit, record in records.iteritems():
-            if self.formula(record) > tp:
-                tp = self.formula(record)
-                current_mvp = unit 
-
-        return current_mvp
-
     def get_game_mvp_dict(self, stats):
         mvp_dict = collections.Counter()
         for level in stats:
             # print('')
             for unit, record in level.stats.iteritems():
                 # print(unit, record),
-                mvp_dict[unit] += self.formula(record)
+                mvp_dict[unit] += CustomObjects.LevelStatistic.formula(record)
         return mvp_dict
 
     def drawTopArrows(self, surf):
@@ -2282,8 +2269,8 @@ class MVPDisplay(RecordsDisplay):
                     self.mvp_dict[unit] = {k: v for (k, v) in record.iteritems()}
 
         # Now convert to list and sort
-        self.options = [(k, v) for (k, v) in self.mvp_dict.iteritems()]
-        self.options = sorted(self.options, key=lambda x: self.formula(x[1]), reverse=True)
+        self.options = self.mvp_dict.iteritems()
+        self.options = sorted(self.options, key=lambda unit, record: CustomObjects.LevelStatistic.formula(record), reverse=True)
 
         self.set_up()
 
@@ -2329,8 +2316,8 @@ class ChapterStats(MVPDisplay):
         self.mvp_dict = level.stats
 
         # Now convert to list and sort
-        self.options = [(k, v) for (k, v) in self.mvp_dict.iteritems()]
-        self.options = sorted(self.options, key=lambda x: self.formula(x[1]), reverse=True)
+        self.options = self.mvp_dict.iteritems()
+        self.options = sorted(self.options, key=lambda unit, record: CustomObjects.LevelStatistic.formula(record), reverse=True)
 
         self.set_up()
 

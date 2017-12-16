@@ -1,6 +1,6 @@
 # outro script 7
+victory_screen
 m;Awakening - Easy Now
-t;1
 b;OutsideFort
 t;2
 u;Sam;Left;u;Drake;Right

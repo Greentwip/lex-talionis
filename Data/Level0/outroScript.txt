@@ -1,6 +1,6 @@
 # Outro Script 0
+victory_screen
 m;Flight over Venice
-t;1
 b;Clearing
 t;2
 u;Ophie;Left

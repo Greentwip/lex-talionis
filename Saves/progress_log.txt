@@ -4023,3 +4023,23 @@ Wexp: 13, 3, 0, 0, 0, 0, 0
 Items: Iron Sword 41, Iron Lance 44, Potion 3, Heal 30, Vulnerary 3
 *** Convoy:
 Items: Spiritbane 3
+
+=== Level 1 === Money: 1500
+*** Ophie: Riposte
+Lvl 2, Exp 61
+Wexp: 15, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 34
+*** Prim: Healtouch
+Lvl 1, Exp 89
+Wexp: 0, 0, 0, 0, 7, 0, 0
+Items: Heal 27, Glimmer Ward 26
+*** Joel: Cleave
+Lvl 4, Exp 31
+Wexp: 0, 0, 23, 0, 0, 0, 0
+Items: Iron Axe 38, Vulnerary 3
+*** Nia: Prescience
+Lvl 3, Exp 44
+Wexp: 0, 0, 0, 20, 0, 0, 0
+Items: Willow Bow 40, Vulnerary 3, Hand Axe 20
+*** Convoy:
+Items: 

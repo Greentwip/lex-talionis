@@ -1376,5 +1376,20 @@ class LevelStatistic(object):
                 records[unit.name] = unit.records
         return records
 
+    @staticmethod
+    def formula(record):
+        return record['kills']*cf.CONSTANTS['kill_worth'] + record['damage'] + record['healing']
+
+    def get_mvp(self):
+        tp = 0
+        current_mvp = 'Ophie'
+        for unit, record in self.stats.iteritems():
+            test = self.formula(record)
+            if test > tp:
+                tp = test
+                current_mvp = unit 
+
+        return current_mvp
+
 WEAPON_TRIANGLE = Weapon_Triangle(Engine.engine_constants['home'] + "Data/weapon_triangle.txt")
 WEAPON_EXP = Weapon_Exp(Engine.engine_constants['home'] + "Data/weapon_exp.txt")

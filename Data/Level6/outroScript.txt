@@ -1,11 +1,11 @@
 # OutroScript
 # Main Prison Leader is Kiley. Speaks like a pirate
 # Coyote is recruited if not already
+victory_screen
 m;Wild Arms Town
 if;not gameStateObj.check_dead('Coyote')
 	convert;Coyote;player
 end
-t;1
 b;Wastes
 t;2
 u;Sam;FarLeft

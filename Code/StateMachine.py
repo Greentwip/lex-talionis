@@ -44,6 +44,7 @@ class StateMachine(object):
                            'steal': StealState,
                            'dialogue': DialogueState,
                            'transparent_dialogue': DialogueState,
+                           'victory': VictoryState,
                            'itemgain': ItemGainState,
                            'itemdiscard': ItemDiscardState,
                            'itemdiscardchild': ItemDiscardChildState,
@@ -1918,6 +1919,7 @@ class DialogueState(State):
         # Things done upon completion of level
         if gameStateObj.statedict['levelIsComplete'] == 'win':
             logger.info('Player wins!')
+            gameStateObj.update_statistics(metaDataObj)
             # Run the outro_script
             if not gameStateObj.statedict['outroScriptDone']:
                 # Run the outro script
@@ -1926,8 +1928,9 @@ class DialogueState(State):
                     gameStateObj.message.append(outro_script)
                     gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.statedict['outroScriptDone'] = True
+                # if metaDataObj['victoryFlag']:
+                    # gameStateObj.stateMachine.changeState('victory')
             else:
-                gameStateObj.update_statistics(metaDataObj)
                 gameStateObj.clean_up()
                 gameStateObj.output_progress()
                 if isinstance(gameStateObj.counters['level'], int):
@@ -1986,6 +1989,74 @@ class DialogueState(State):
 
     def finish(self, gameStateObj, metaDataObj):
         cf.CONSTANTS['Unit Speed'] = cf.OPTIONS['Unit Speed']
+
+class VictoryState(State):
+    victory_surf = GC.IMAGESDICT['Victory1']
+    vic_width, vic_height = victory_surf.get_size()
+    num_transition_frames = 20
+
+    def begin(self, gameStateObj, metaDataObj):
+        gameStateObj.cursor.drawState = 0
+        gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=True)
+        level_statistic = gameStateObj.statistics[-1]
+        self.state = 'init'
+        self.stat_surf = self.create_stat_surf(level_statistic)
+        self.stat_surf_target = self.stat_surf.get_height() + 4
+        self.num_frame = 0
+        # Engine.music_thread.stop()
+        Engine.music_thread.lower()
+        GC.SOUNDDICT['StageClear'].play()
+
+    def create_stat_surf(self, stats):
+        turns = str(stats.turncount)
+        mvp = stats.get_mvp()
+        menu_width = 96
+        bg = MenuFunctions.CreateBaseMenuSurf((menu_width, 40), 'BaseMenuBackgroundOpaque')
+        img = GC.IMAGESDICT['Shimmer2']
+        bg.blit(img, (bg.get_width() - 1 - img.get_width(), bg.get_height() - 5 - img.get_height()))
+        bg = Image_Modification.flickerImageTranslucent(bg, 10)
+
+        GC.FONT['text_yellow'].blit('Turns', bg, (4, 4))
+        GC.FONT['text_yellow'].blit('MVP', bg, (4, 20))
+        turns_size = GC.FONT['text_blue'].size(turns)[0]
+        mvp_size = GC.FONT['text_blue'].size(mvp)[0]
+        GC.FONT['text_blue'].blit(turns, bg, (menu_width - 40 - turns_size/2, 4))
+        GC.FONT['text_blue'].blit(mvp, bg, (menu_width - 40 - mvp_size/2, 20))
+
+        return bg
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+        if self.state == 'allow_input' and (event == 'SELECT' or event == 'START' or event == 'BACK'):
+            self.state = 'leave'
+            Engine.music_thread.unmute()
+            gameStateObj.background.fade_out()
+            gameStateObj.stateMachine.changeState('transition_pop')
+            return 'repeat'
+
+    def update(self, gameStateObj, metaDataObj):
+        State.update(self, gameStateObj, metaDataObj)
+        if self.state == 'init':
+            self.num_frame += 1
+            if self.num_frame >= self.num_transition_frames:
+                self.num_frame = self.num_transition_frames
+                self.state = 'allow_input'
+
+    def draw(self, gameStateObj, metaDataObj):
+        mapSurf = State.draw(self, gameStateObj, metaDataObj)
+        offset = self.num_frame/float(self.num_transition_frames)
+
+        # Stat surf draw
+        pos = (GC.WINWIDTH/2 - self.stat_surf.get_width()/2, GC.WINHEIGHT - (offset * self.stat_surf_target))
+        mapSurf.blit(self.stat_surf, pos)
+        # Victory draw
+        vic_surf = Engine.copy_surface(self.victory_surf)
+        vic_surf = Image_Modification.flickerImageTranslucent(vic_surf, 100 - (offset * 100))
+        height = int(self.vic_height * offset)
+        vic_surf = Engine.transform_scale(vic_surf, (GC.WINWIDTH, height))
+        mapSurf.blit(vic_surf, (0, self.victory_surf.get_height()/2 - height/2))
+
+        return mapSurf
 
 class CombatState(State):
     fuzz_background = Image_Modification.flickerImageTranslucent255(GC.IMAGESDICT['BlackBackground'], 56)

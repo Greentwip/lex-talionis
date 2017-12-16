@@ -1,7 +1,7 @@
 # outro 8
 # Remaining Soldiers Flee on Vagnius's death.
+victory_screen
 m;One Summer's Day
-t;1
 b;TownDark
 t;2
 u;Sam;Left

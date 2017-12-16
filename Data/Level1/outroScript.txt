@@ -1,6 +1,6 @@
 # Outro 1
+victory_screen
 m;To A New Journey
-t;1
 b;Forest
 t;2
 u;Prim;MidRight;u;Ophie;FarRight;u;Joel;Left

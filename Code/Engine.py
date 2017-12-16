@@ -232,6 +232,12 @@ class NoMusicThread(object):
         pass
     def resume(self):
         pass
+    def mute(self):
+        pass
+    def lower(self):
+        pass
+    def unmute(self):
+        pass
     def set_volume(self, volume):
         pass
     def fade_to_normal(self, gameStateObj, metaDataObj):
@@ -274,6 +280,15 @@ class MusicThread(object):
 
     def resume(self):
         pygame.mixer.music.unpause()
+
+    def mute(self):
+        pygame.mixer.music.set_volume(0)
+
+    def lower(self):
+        pygame.mixer.music.set_volume(0.5*self.volume)
+
+    def unmute(self):
+        pygame.mixer.music.set_volume(self.volume)
 
     def set_volume(self, volume):
         self.volume = volume
@@ -341,6 +356,8 @@ class MusicThread(object):
         pygame.mixer.music.fadeout(time)
 
     def stop(self):
+        if self.current:
+            self.current.current_time += pygame.mixer.music.get_pos()
         pygame.mixer.music.stop()
 
     def update(self, eventList):

@@ -1,6 +1,6 @@
 # outro script 3
+victory_screen
 m;Fire Treasure
-t;1
 b;Clearing
 t;2
 u;Ophie;Left

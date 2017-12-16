@@ -1,5 +1,5 @@
+victory_screen
 m;Young Man from the East
-t;1
 b;ClearingDark
 t;2
 u;Ophie;FarLeft

@@ -1,6 +1,6 @@
 # Outro Script 9
+victory_screen
 m;Young Man from the East
-t;1
 b;Palace_Door
 t;2
 u;Sam;Right;u;Ophie;Left

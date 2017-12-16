@@ -1,6 +1,6 @@
 # Outro Script 10
+victory_screen
 m;Fire Treasure
-t;1
 b;FinalArena
 t;2
 u;Sam;FarRight

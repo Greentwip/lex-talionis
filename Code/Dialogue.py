@@ -608,7 +608,7 @@ class Dialogue_Scene(object):
             self.battle_save_flag = True
         elif line[0] == 'reset_state':
             self.reset_state_flag = True
-            
+
         # === HANDLE TILE CHANGES -- These get put in the command list
         elif line[0] == 'set_custom_origin':
             if len(line) > 1:
@@ -866,6 +866,10 @@ class Dialogue_Scene(object):
             if self.dialog:
                 self.dialog.pop()
 
+        # === Show Victory Screen
+        elif line[0] == 'victory_screen':
+            gameStateObj.stateMachine.changeState('victory')
+            self.current_state = 'Paused'
         # === ROLL CREDITS
         elif line[0] == 'roll_credits':
             gameStateObj.stateMachine.changeState('credits')

@@ -2,8 +2,8 @@
 # Just in case
 convert;Althea;player
 convert;Drake;player
+victory_screen
 m;Lady Eboshi
-t;1
 b;Podoma
 t;2
 u;Drake;FarRight
