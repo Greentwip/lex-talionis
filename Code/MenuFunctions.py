@@ -2142,8 +2142,8 @@ class RecordsDisplay(ChoiceMenu):
         # Not really -- only used for scroll bar
         self.topleft = (0, 16)
 
-        self.left_arrow = GUIObjects.ScrollArrow('left', (self.topleft[0] + 4 + 1, self.topleft[1] - 7))
-        self.right_Arrow = GUIObjects.ScrollArrow('right', (self.topleft[0] + 8 + self.menu_width - 1, self.topleft[1] - 7))
+        self.left_arrow = GUIObjects.ScrollArrow('left', (self.topleft[0] + 2, self.topleft[1] - 7))
+        self.right_arrow = GUIObjects.ScrollArrow('right', (self.topleft[0] + 8 + self.menu_width - 1, self.topleft[1] - 7))
 
     def get_game_mvp_dict(self, stats):
         mvp_dict = collections.Counter()
@@ -2270,7 +2270,7 @@ class MVPDisplay(RecordsDisplay):
 
         # Now convert to list and sort
         self.options = self.mvp_dict.iteritems()
-        self.options = sorted(self.options, key=lambda unit, record: CustomObjects.LevelStatistic.formula(record), reverse=True)
+        self.options = sorted(self.options, key=lambda record: CustomObjects.LevelStatistic.formula(record[1]), reverse=True)
 
         self.set_up()
 
@@ -2317,7 +2317,7 @@ class ChapterStats(MVPDisplay):
 
         # Now convert to list and sort
         self.options = self.mvp_dict.iteritems()
-        self.options = sorted(self.options, key=lambda unit, record: CustomObjects.LevelStatistic.formula(record), reverse=True)
+        self.options = sorted(self.options, key=lambda record: CustomObjects.LevelStatistic.formula(record[1]), reverse=True)
 
         self.set_up()
 

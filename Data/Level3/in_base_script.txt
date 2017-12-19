@@ -2,5 +2,5 @@
 if;cf.OPTIONS['Display Hints'] and not 'tutorial_base' in gameStateObj.event_triggers
 #b;MainBase
 	trigger_event;tutorial_base
-	s;Narrator;This is the{red}base screen.{black}{w}{clear}Here you can trade and equip weapons, buy and sell items, check your combat logs and much more.{w}{br}Each chapter will also have new{red}Info{black}conversations.{w}{br}They may give you new items or hints for the upcoming battle.{w};auto;hint
+	s;Narrator;This is the{red}base screen.{black}{w}{clear}Here you can trade and equip weapons, buy and sell items, check your combat logs and more.{w}{br}Each chapter will also have new{red}Info{black}conversations.{w}{br}They may give you new items or hints for the upcoming battle.{w};auto;hint
 end
