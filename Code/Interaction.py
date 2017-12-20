@@ -631,7 +631,7 @@ class AnimationCombat(Combat):
             self.pan_move = 8
         elif self.at_range >= 3:
             self.pan_max = 120
-            self.pan_move = 20
+            self.pan_move = 25
         else:
             self.pan_max = 0
             self.pan_move = 0
@@ -1177,10 +1177,11 @@ class AnimationCombat(Combat):
         # Handle exp and stat gain
         if not self.event_combat and (self.item.weapon or self.item.spell):
             attacker_results = [result for result in self.old_results if result.attacker is self.p1]
-            if not self.p1.currenthp and attacker_results and not self.skill_used:
+            if not self.p1.isDying and attacker_results and not self.skill_used:
                 self.p1.charge()
 
-            if self.p1.team == 'player' and not self.p1.isDying and 'Mindless' not in self.p1.tags and not self.p1.isSummon():
+            if self.p1.team == 'player' and not self.p1.isDying and 'Mindless' not in self.p1.tags \
+               and not self.p1.isSummon():
                 if attacker_results: # and result.outcome for result in self.old_results):
                     self.p1.increase_wexp(self.item, gameStateObj)
                     

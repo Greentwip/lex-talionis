@@ -55,13 +55,13 @@ enemy;0;0;Mage;3;Fire;15,7;Attack;Guard
 # 2 Sentinels, 5 Soldiers, 3 Archers, 2 Shaman, 3 Mages
 # 3 Waves
 # Reinforcement, wave 1
-enemy;0;pack1_1;Sentinel;4;Iron Axe;0,0;Pursue;Guard
-enemy;0;pack1_2;Soldier;4;Iron Lance;0,0;Pursue;Guard
-enemy;0;pack1_3;Soldier;4;Iron Lance;0,0;Pursue;Guard
+enemy;0;pack1_1;Sentinel;3;Iron Axe;0,0;Pursue;Guard
+enemy;0;pack1_2;Soldier;3;Iron Lance;0,0;Pursue;Guard
+enemy;0;pack1_3;Soldier;3;Iron Lance;0,0;Pursue;Guard
 enemy;0;pack1_4;Mage;3;Fire;0,0;Pursue;Guard
-enemy;0;pack1_5;Archer;4;Willow Bow;0,0;Pursue;Guard
+enemy;0;pack1_5;Archer;3;Willow Bow;0,0;Pursue;Guard
 # Reinforcement, wave 2
-enemy;0;pack2_1;Sentinel;5;Iron Axe;0,0;Pursue;Guard
+enemy;0;pack2_1;Sentinel;4;Iron Axe;0,0;Pursue;Guard
 enemy;0;pack2_2;Soldier;5;Iron Lance;0,0;Pursue;Guard
 enemy;0;pack2_3;Archer;4;Willow Bow;0,0;Pursue;Guard
 enemy;0;pack2_4;Shaman;4;Flux;0,0;Pursue;Guard

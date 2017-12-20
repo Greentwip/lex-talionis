@@ -25,12 +25,12 @@ u;Sam;Right
 u;Joel;Left
 s;Sam;Good morning everyone.{w};auto
 s;Sam;As you all can see, we have some new members.{w}{br}I foresee good fortune in our future.{w}{br}Now, we'll be able to take the fight to the Imperial interlopers!{w};auto
-s;Joel;Yeah, yeah, Sam.{w}{br}You give us the same prep talk before every mission.{w}{br}Just tell us what we're supposed to do.{w};auto
-s;Sam;Fine. I'll tell it to you straight.{w}{clear}Theo has informed me that we're running low on funds.{w}{br}We need money for repairs, new armor, and so on.{w}{br}So... we're gonna rob the Imperial Bank.{w};auto
+s;Joel;Yeah, yeah, Sam.{w}{br}You give us the same prep talk before every mission.{w}{br}Just tell it to us straight.{w};auto
+s;Sam;Fine. Theo has informed me that we're running low on funds.{w}{br}We need money for repairs, new armor, and so on.{w}{br}So...{w} we're gonna rob the Imperial Bank.{w};auto
 move_sprite;Joel;-24,0
 u;Drake;MidLeft
 s;Drake;Rob a bank? We'll be regarded as nothing more than common thugs.{w}{br}What honor can be found in that?{w};auto
-s;Sam;This is no ordinary bank.{w}{br}The Empire imposes harsh taxes on the Keralan people.{w}{br}Their blood money is stored in Fort Kosheen before being sent to the Empire proper.{w}{br}We'll be... liberating this unearned revenue from the Empire.{w}{br}Surely you can see the honor in that, Drake?{w};auto
+s;Sam;This is no ordinary bank.{w}{br}The Empire imposes harsh taxes on the Keralan people.{w}{br}Their blood money is kept in Fort Kosheen before being sent to the Empire proper.{w}{br}We'll be... liberating this unearned revenue from the Empire.{w}{br}Surely you can see the honor in that, Drake?{w};auto
 s;Drake;Hmmm...{w};auto
 r;Drake
 u;Ophie;MidLeft

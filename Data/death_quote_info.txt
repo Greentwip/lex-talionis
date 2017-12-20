@@ -87,6 +87,11 @@ elif;self.optionalunit.name == 'Renae'
 	u;Renae;FarRight
 	s;Renae;But how...?{w}{br}I'm the fastest...{w};auto
 	r;Renae
+	if;gameStateObj.counters['level'] == 3
+		kill_unit;Renae
+		wait;200
+		lose_game
+	end
 elif;self.optionalunit.name == 'Theo'
 	u;Theo;FarRight
 	s;Theo;Urgh! There's been a mistake...{w}{br}This wasn't... supposed to happen...{w};auto

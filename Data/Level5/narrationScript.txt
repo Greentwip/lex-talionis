@@ -25,7 +25,7 @@ u;Sam;FarRight
 u;Renae;Left
 s;Sam;Welcome back, everyone.{w}{br}The last mission went better than expected, so congratulations.{w}{br}In thanks for a job well done, I'm giving you all a day off.{w};auto
 s;Renae;You're kidding?{w};auto
-s;Sam;No, I'm serious.{w}{br}But don't go expecting this to happen often, now--{w};auto
+s;Sam;Don't go expecting this to happen often, now--{w};auto
 m;Mount Briggs
 r;Renae;Sam
 # Show room
@@ -56,7 +56,7 @@ b;TacticsRoomDay
 t;2
 u;Nia;FarLeft;u;Woman2;MidLeft;Full_Blink
 u;Sam;FarRight
-s;Nia;Err... H-hello...{w}{br}...B-bad sneak here!{w};auto
+s;Nia;Err... B-bad sneak here!{w};auto
 s;Sam;A spy?{w};auto
 s;Woman2;Mrghghgl!{w};auto
 s;Sam;If the Empire's discovered our location...{w}{br}We need to leave right away...{w}{br}I wasn't expecting them to be able to track this--{w};auto
@@ -65,16 +65,16 @@ s;Nia;!{w};auto
 s;Woman2;No! I'm not a spy!{w};auto
 # Nia moves
 move_sprite;Nia;24,0;force_hold
-s;Sam;Wait, Nia!{w}{br}Let's hear her out!{w};auto
+s;Sam;Hold!{w}{br}Let's hear her out!{w};auto
 # Nia moves back
 move_sprite;Nia;-24,0;force_hold
-s;Sam;Why are you sneaking around our base then?{w};auto
-s;Woman2;I'm not sneaking!{w}{br}I was just trying to talk to you.{w}{br}We need your help!{w};auto
+s;Sam;So you say you're no spy...{w}{br}Why are you here then?{w};auto
+s;Woman2;I was just trying to speak to you.{w}{br}We need your help!{w};auto
 s;Sam;We?{w};auto
 s;Woman2;I'm from Podoma.{w}{br}Your group defended our village.{w};auto
 r;Nia
 s;Sam;Go on...{w};auto
-s;Woman2;Because of the drought, our harvest was poor.{w}{br}W-we couldn't pay the Empire's absurd taxes.{w}{br}So they sent one of their warlocks...{w};auto
+s;Woman2;Because of the drought, our last harvest was poor.{w}{br}W-we couldn't pay the Empire's absurd taxes.{w}{br}So they sent one of their warlocks...{w};auto
 u;Ophie;MidRight
 s;Ophie;Vagnius!{w};auto
 s;Woman2;He took the only thing we had left...{w}{br}our children...{w}{br}Please, you have to help us!{w}{br}I can't bear to lose my son!{w};auto
@@ -87,7 +87,7 @@ s;Sam;A likely story...{w}{br}They must be trying to draw us out.{w}{br}Well, we
 r;Ophie;Althea
 u;Ophie;FarLeft
 s;Ophie;How can you be so heartless?{w};auto
-s;Sam;I'm just being rational.{w}{br}Let's take some time and think this through.{w}{br}Maybe we'll find a solution that doesn't require blindly walking into Vagnius' trap.{w};auto
+s;Sam;I'm just being rational.{w}{br}Let's take some time and think this through.{w}{br}We'll find a plan that doesn't require blindly walking into Vagnius's trap.{w};auto
 s;Ophie;We can't just sit here and do nothing!{w}{br}We're the Resistance, and we do what's right!{w};auto
 u;Joel;MidRight
 s;Joel;Well said, lad.{w};auto

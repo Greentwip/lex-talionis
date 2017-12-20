@@ -28,13 +28,13 @@ elif;self.optionalunit == 'Apologies'
 	u;Eliza;Left
 	s;Sam;Insubordination.{w}{br}Disobedience.{w}{br}Refusal to follow my direct orders.{w};auto
 	s;Eliza;Sam,--
-	s;Sam;I'm not finished.{w}{clear}Do you know what you've done?{w}{br}I could expect this from Ophie or Prim, but from you?{w}{br}The Empire is at our doorstep!{w}{br}One misstep, one false move, and its over for us.{w};auto
+	s;Sam;I'm not finished.{w}{clear}Do you know what you've done?{w}{br}I could expect this from Ophie or Prim, but from you?{w}{br}The Empire is at our doorstep!{w}{br}One misstep, one false move, and it's over for us.{w};auto
 	s;Eliza;Sam, I can explain--
 	s;Sam;No need.{w}{br}I understand plenty, and I'm sorry.{w};auto
-	s;Eliza;You're sorry...?
-	s;Sam;I was blinded by my own misgivings.{w}{br}I should have never brought you on that mission.{w}{br}You were too young and inexperienced, and you suffered for it.{w}{clear}But I've come to realize that you've changed since then.{w};auto
+	s;Eliza;Huh? You're sorry...?
+	s;Sam;I should have never brought you on that mission.{w}{br}You were too inexperienced, and you suffered for it.{w}{clear}But I've come to realize that you've changed.{w};auto
 	s;Eliza;...
-	s;Sam;You're much stronger now. I was wrong.{w}{br}I hope you can forgive my poor judgement.
+	s;Sam;You're much stronger now. I was wrong to keep you caged up here.{w}{br}I hope you can forgive my poor judgement.
 	s;Eliza;...All this time, I thought you hated me... for my failure.
 	s;Sam;Of course not!{w}{br}You were my responsiblity. It was my own failure.{w}{br}But you can handle yourself now, right?{w};auto
 	set_expression;Eliza;Smiling
@@ -55,7 +55,7 @@ elif;self.optionalunit == 'Joel and Nia'
 	t;2
 	u;Nia;Left;u;Joel;Right
 	s;Joel;Howdy, Nia! You're up early.{w}{br}The sun's barely peaked o'er the horizon.{w}{br}Oh! And you already caught something? Rabbit, is it?{w};auto
-	s;Nia;Mmm... Sleeping! Easy!
+	s;Nia;Mmm... 'twas sleeping! Easy!
 	set_expression;Nia;Smiling
 	s;Joel;Looks good. Thank you, Nia.
 	s;Nia;...
@@ -67,7 +67,7 @@ elif;self.optionalunit == 'Joel and Nia'
 	s;Joel;Aaah.....{w}{br}Nothing like fresh breakfast at the crack of dawn...
 	s;Nia;...
 	s;Joel;You know, Nia, the winds are changin' mighty quick round here.{w}{br}Our little resistance has grown leaps and bounds jus' in the past moon.{w}{br}Somethings brewin' in ol' Sam's mind.{w}{br}A plan to end this struggle, one way or another...{w};auto
-	s;Nia;...?
+	s;Nia;...
 	s;Joel;So what I mean to say is that these peaceful moments...{w}{br}they're gonna be few and far between.{w}{clear}Ah, hell, Nia. I just want ya to know that I might not be around as much.{w}{br}I know you survived alone before, but you ARE human.{w}{br}You could use a friend.{w}{clear}If I don't make it, Nia... try to at least talk to someone every once in a while, okay?{w};auto
 	s;Nia;...O-kay.
 	s;Joel;...Well, I'm glad we could talk.{w}{br}But I suppose we've got to get ready for the day.{w}{br}So long.

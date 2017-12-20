@@ -276,7 +276,7 @@ class Dialogue_Scene(object):
                 for unit in gameStateObj.allunits:
                     if unit.name == line[1]:
                         klass = unit.klass
-                        gender = unit.gender
+                        gender = 'M' if unit.gender < 5 else 'F'
                         team = unit.team
                         break
                 else:

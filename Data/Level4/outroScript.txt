@@ -10,7 +10,7 @@ s;Joel;With this many weapons, the Resistance should be set for quite a while.{w
 if;gameStateObj.check_alive('Nia')
 	r;Ophie
 	u;Nia;Left
-	s;Joel;So Nia, anything catching yar eye?{w};auto
+	s;Joel;So Nia, anything catching you're eye?{w};auto
 	s;Nia;Hmmm...{w};auto
 	r;Nia
 	wait;200
@@ -50,7 +50,7 @@ u;Althea;MidLeft
 s;Althea;So do I...{w};auto
 s;Joel;I reckon' I've heard of this blade before.{w}{br}This is ancient magic.{w}{br}Lad, what you hold in your hands is a Magebane Sword.{w};auto
 s;Ophie;A Magebane Sword?{w};auto
-s;Joel;A sword that devours magic.{w}{br}That must be why Althea and Prim feel sick.{w};auto
+s;Joel;A blade that devours magic.{w}{br}That must be why Althea and Prim feel sick.{w};auto
 s;Prim;Please, Ophie, now that we know what it is, can you put it back?{w}{br}I feel like I'm going to throw up.{w};auto
 s;Ophie;Oh, sorry...{w};auto
 s;Joel;Don't throw it away though, lad.{w}{br}A sword like that could come in handy.{w};auto

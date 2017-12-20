@@ -30,7 +30,7 @@ elif;gameStateObj.turncount == 2
 	s;Midas;Ah! T-There are bandits to the south!{w}{br}My precious cargo...{w};auto
 	mirror;Midas
 	s;Midas;Anders, what do we do?!{w};auto
-	s;Anders;Those are no ordinary bandits.{w}{br}It's the Resistance! To arms, men!{w};auto
+	s;Anders;Hmph! Those are no ordinary bandits.{w}{br}It's the Resistance! To arms, men!{w};auto
 	s;Midas;To arms...?{w};auto
 	s;Anders;We cannot allow the Resistance to capture this cargo.{w}{br}This is Imperial property!{w}{br}Defend this cargo with your lives!{w};auto
 	r;Midas;Anders
@@ -82,17 +82,17 @@ elif;gameStateObj.turncount == 4
 	u;Midas;FarRight
 	change_priority;Midas;10
 	u;Anders;FarLeft
-	s;Midas;Anders, this isn't working!{w}{br}You, soldier, attend me!{w};auto
+	s;Midas;This isn't working!{w}{br}You, soldier, attend me!{w};auto
 	u;Soldier1;MidLeft
 	s;Soldier1;Aye, sir?{w};auto
 	s;Midas;We have to retreat. Order everyone back.{w};auto
 	s;Soldier1;Right away, sir.{w};auto
 	r;Soldier1
-	s;Anders;Soldier! Ignore that order!{w};auto
+	s;Anders;Soldier! Belay that!{w};auto
 	u;Soldier1;MidRight
 	s;Midas;W-What!?{w};auto
 	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Duke.{w}{br}We will lay down our lives in his name!{w};auto
-	s;Midas;A-Are you sure there isn't another way?{w};auto
+	s;Midas;T-There has to be another way!{w};auto
 	if;gameStateObj.counters['Dead_Wagons'] > 1
 		s;Midas;They've already struck down some of my best wagons!{w};auto
 	end

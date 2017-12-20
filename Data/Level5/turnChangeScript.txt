@@ -14,10 +14,8 @@ if;gameStateObj.check_dead('Jules') and not 'Rein1' in gameStateObj.event_trigge
 		wait;500
 		disp_cursor;0
 		u;Prim;Left
-		s;Prim;Oh no... There are more bandits...{w};auto
-		u;Ophie;Right
-		s;Ophie;Don't worry, Prim.{w}{br}Judging by the last couple, I'm sure they won't be any real trouble for us.{w}{br}We just need to make it to that temple!{w};auto
-		r;Prim;Ophie
+		s;Prim;Oh no... More of them...{w};auto
+		r;Prim
 	end
 end
 # Sam and Kayla arrive
@@ -40,9 +38,9 @@ if;gameStateObj.turncount == 8
 	set_cursor;Sam;force_hold
 	u;Sam;Left;u;Kayla;Right
 	s;Sam;Looks like we're not too late...{w};auto
-	s;Kayla;I'd certainly hope not... dragging me out here on such short notice,{w}{br}there'd better be something to see.{w};auto
+	s;Kayla;I'd certainly hope not... dragging me out here on such short notice.{w}{br}There'd better be something to see.{w};auto
 	s;Sam;Look! They're making their way up the switchbacks.{w};auto
-	s;Kayla;Oh. How romantic!{w}{br}Our heroes dashing through the sweltering desert, bandits on their tail.{w}{br}It's like a novel!{w};auto
+	s;Kayla;Oh, how romantic!{w}{br}Our heroes dashing through the sweltering desert, bandits on their tail.{w}{br}It's like a novel!{w};auto
 	s;Sam;We're not here to discuss literature, Kayla.{w};auto
 	s;Kayla;Tsk Tsk. A lady needs time to prepare, you know.{w}{br}But if you're in such a rush...{w}{br}Men, into formation! Spread out and take the ridge!{w};auto
 	r;Sam;Kayla
@@ -54,13 +52,13 @@ if;gameStateObj.turncount == 8
 	wait;1000
 elif;gameStateObj.turncount == 16 or gameStateObj.turncount == 18 or gameStateObj.turncount >= 20
 	set_cursor;0,0;force_hold
-	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2;force
-	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2;force
-	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2;force
+	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
+	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
+	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
 	wait;500
 	set_cursor;18,16
-	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16;force
-	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16;force
-	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16;force
+	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16
+	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16
+	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16
 	wait;500
 end

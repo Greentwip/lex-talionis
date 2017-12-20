@@ -317,7 +317,12 @@ class InfoMenu(StateMachine.State):
             else:
                 GC.FONT['text_blue'].blit('--', menu_surf, (94, GC.TILEHEIGHT*5.5 + 4)) # Blit No Affinity
         else:
-            GC.FONT['text_blue'].blit(str(self.unit.get_rating()), menu_surf, (94, GC.TILEHEIGHT*5.5 + 4))
+            rat = str(self.unit.get_rating())
+            if len(rat) < 3:
+                rat_size = GC.FONT['text_blue'].size(rat)[0]
+                GC.FONT['text_blue'].blit(rat, menu_surf, (108 - rat_size, GC.TILEHEIGHT*5.5 + 4))
+            else:
+                GC.FONT['text_blue'].blit(rat, menu_surf, (92, GC.TILEHEIGHT*5.5 + 4))
 
         return menu_surf
 

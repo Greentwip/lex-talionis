@@ -41,7 +41,7 @@ if;self.optionalunit.team == 'player'
 	elif;self.optionalunit2.name == 'Midas'
 		if;not 'MidasDefault' in gameStateObj.event_triggers
 			u;Midas;Left
-			s;Midas;Ah! T-the bandits!{w}{br}Guards, attack!{w}{br}Protect me!{w};auto
+			s;Midas;Ah! B-Bandits!{w}{br}Guards, attack!{w}{br}Protect m-me!{w};auto
 			r;Midas
 			trigger_event;MidasDefault
 		end
@@ -60,7 +60,7 @@ if;self.optionalunit.team == 'player'
 			trigger_event;JulesDefault
 		elif;self.optionalunit.name == 'Ophie' and not 'JulesOphie' in gameStateObj.event_triggers
 			u;Jules;Left;u;Ophie;Right
-			s;Jules;I hate to shatter your ego, but this is not the first time I've crossed swords, kid.{w};auto
+			s;Jules;I hate to shatter your ego,{w}{br}but this is not the first time I've crossed swords, kid.{w};auto
 			s;Ophie;But it's gonna be your last.{w};auto
 			r;Jules;Ophie
 			trigger_event;JulesOphie
@@ -68,10 +68,11 @@ if;self.optionalunit.team == 'player'
 	elif;self.optionalunit2.name == 'Vincent'
 		if;gameStateObj.check_dead('Jules') and not 'VincentJulesDead' in gameStateObj.event_triggers
 			u;Vincent;Left
-			s;Vincent;You dun' killed Jules!{w}{br}You killed my b-brother! ARGH!{w};auto
+			s;Vincent;You dun' killed Jules!{w}{br}You killed my b-brother! ARGH!!!{w};auto
 			r;Vincent
 			change_ai;Vincent;Pursue
 			trigger_event;VincentJulesDead
+			trigger_event;VincentDefault
 		elif;not 'VincentDefault' in gameStateObj.event_triggers
 			u;Vincent;Left
 			s;Vincent;Ah shit, man...{w};auto
@@ -111,16 +112,16 @@ if;self.optionalunit.team == 'player'
 			u;Vagnius;Left;u;Sam;Right
 			s;Vagnius;Ah!{br}The leader of the rag-tag Resistance.{w}{clear}I was hoping I'd be the one to kill you.{w};auto
 			s;Sam;... {w};auto
-			s;Vagnius;Not talkative I see...{w}{br}Well no matter...{w}{br}I can already smell your charred remains.{w}{br}Your smoking corpse will make for a fine trophy at my victory celebration!{w};auto
+			s;Vagnius;Not talkative I see...{w}{br}Well no matter...{w}{br}Your smoking corpse will make for a fine trophy at my victory celebration!{w};auto
 			r;Sam
 			r;Vagnius
 			trigger_event;VagniusSam
 		elif;self.optionalunit.name == "Ophie" and not 'VagniusOphie' in gameStateObj.event_triggers
 			u;Vagnius;Left;u;Ophie;Right
-			s;Vagnius;Hah! This is the best you Keralans have to offer?{w}{br}A child? This is who the Resistance sends to fight?{w};auto
+			s;Vagnius;Hah! This is the best you Keralans have to offer?{w}{br}A child?{w};auto
 			s;Ophie;I am no child.{w};auto
 			s;Vagnius;Pah. Out of my way, boy.{w};auto
-			s;Ophie;I am your death, Vagnius.{w}{br}This is for Yohn!{w};auto
+			s;Ophie;This is for Master Yohn!{w};auto
 			r;Ophie;Vagnius
 			trigger_event;VagniusOphie
 		elif;self.optionalunit.name == "Prim" and not 'VagniusPrim' in gameStateObj.event_triggers
@@ -128,12 +129,12 @@ if;self.optionalunit.team == 'player'
 			s;Prim;How could you do this... These people are innocent!{w};auto
 			s;Vagnius;Innocence?{w}{br}Hah. The morals of a child.{w}{br}I care not for your innocence.{w}{br}Power. That is all I seek.{w};auto
 			s;Prim;But...{w};auto
-			s;Vagnius;Spare me your bleatings and die.{w};auto
+			s;Vagnius;Spare me your bleatings and die!{w};auto
 			r;Prim;Vagnius
 			trigger_event;VagniusPrim
 		elif;self.optionalunit.name not in ["Sam", "Ophie", "Prim"] and not 'VagniusDefault' in gameStateObj.event_triggers
 			u;Vagnius;Left
-			s;Vagnius;So everyone else has failed me. No matter.{w}{br}Nothing can stand in my way! You least of all!{w}{br}You should thank me for putting you out of your misery!{w};auto
+			s;Vagnius;So everyone else has failed me. No matter.{w}{br}Nothing can stand in my way! You least of all!{w};auto
 			r;Vagnius
 			trigger_event;VagniusDefault
 		end
@@ -147,7 +148,7 @@ if;self.optionalunit.team == 'player'
 	elif;self.optionalunit2.name == 'Boaz'
 		if;not 'BoazDefault' in gameStateObj.event_triggers
 			u;Boaz;Left
-			s;Boaz;I've slain many beast and men alike.{w}{br}You shall not pose any greater challenge!{w};auto
+			s;Boaz;I've slain many, beast and men alike.{w}{br}You shall not pose any greater challenge.{w};auto
 			r;Boaz
 			trigger_event;BoazDefault
 		end

@@ -19,6 +19,7 @@ class Active_Skill(object):
         if self.current_charge > self.required_charge:
             self.current_charge = self.required_charge
             unit.tags.add('ActiveSkillCharged')
+        logger.debug('%s increased charge to %s', self.name, self.current_charge)
 
     def valid_weapons(self, weapons):
         return weapons
