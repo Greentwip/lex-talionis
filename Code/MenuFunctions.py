@@ -132,6 +132,40 @@ class Foreground(object):
                     self.foreground = None
                     self.fade_out = False
 
+class MoneyCounterDisplay(object):
+    def __init__(self, topright):
+        self.topright = topright
+        self.update_num = -200
+
+    def start(self, money):
+        self.update_num = 100
+        if money >= 0:
+            font = GC.FONT['text_green']
+        else:
+            font = GC.FONT['text_red']
+        money_str = str(money)
+        if money >= 0:
+            money_str = '+' + money_str
+        money_size = font.size(money_str)[0]
+        self.surf = Engine.create_surface((money_size + 8, 16), transparent=True)
+        self.width = self.surf.get_width()
+        font.blit(money_str, self.surf, (0, 0))
+
+    def draw(self, surf):
+        if self.update_num > -200:
+            self.update_num -= 5
+            # Fade in and move up
+            if self.update_num > 0:
+                my_surf = Image_Modification.flickerImageTranslucent(self.surf, self.update_num)
+                surf.blit(my_surf, (self.topright[0] - self.width, self.topright[1] + self.update_num/5))
+            # Fade out
+            else: 
+                if self.update_num < -100:
+                    my_surf = Image_Modification.flickerImageTranslucent(self.surf, -self.update_num - 100)
+                else:
+                    my_surf = self.surf
+                surf.blit(my_surf, (self.topright[0] - self.width, self.topright[1]))
+
 class StatusMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
@@ -2141,6 +2175,7 @@ class RecordsDisplay(ChoiceMenu):
 
         # Not really -- only used for scroll bar
         self.topleft = (0, 16)
+        self.scroll_bar = GUIObjects.ScrollBar((self.topleft[0] + self.menu_width, self.topleft[1]))
 
         self.left_arrow = GUIObjects.ScrollArrow('left', (self.topleft[0] + 2, self.topleft[1] - 7))
         self.right_arrow = GUIObjects.ScrollArrow('right', (self.topleft[0] + 8 + self.menu_width - 1, self.topleft[1] - 7))

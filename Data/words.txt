@@ -100,7 +100,7 @@ Give All;Give All
 Market;Market
 Owner;Owner
 Codex;Codex
-Info;Info
+Convos;Convos
 Continue;Continue
 Pairings;Pairings
 Conversation;Conversation

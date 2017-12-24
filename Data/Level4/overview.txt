@@ -6,9 +6,9 @@ base_flag;MainBase
 base_music;The Journey to the West
 market_flag;1
 transition_flag;1
-display_name;Destroy all Wagons,{gameStateObj.counters['Dead_Wagons']}/12 destroyed.
-win_condition;Destroy at least 9 wagons {gameStateObj.counters['Dead_Wagons']}/12 destroyed.
+display_name;Destroy all Wagons,{gameStateObj.counters['Dead_Wagons']}/10 destroyed.
+win_condition;Destroy at least 7 wagons {gameStateObj.counters['Dead_Wagons']}/10 destroyed.
 loss_condition;Ophie dies OR 4 or more wagons escape,OR,Party size falls below 5. Currently {gameStateObj.get_total_party_members()}
-player_phase_music;Chariot Chase
-enemy_phase_music;In the Midst
+player_phase_music;In the Midst
+enemy_phase_music;Chariot Chase
 weather;Light

@@ -13,7 +13,7 @@ if;self.optionalunit == 'An Uneasy Trust'
 	s;Ophie;Huh?
 	s;Sam;Do you have faith?
 	s;Ophie;Uh... what's that supposed to mean?{w}{br}The monks taught me all about--
-	s;Sam;No, boy.{w}{br}Do you faith in the Resistance?{w}{br}Do you believe that we can succeed?{w}{br}That we can cleanse these Imperial scum from our land?{w};auto
+	s;Sam;No, boy.{w}{br}Do you have faith in the Resistance?{w}{br}Do you believe that we can succeed?{w}{br}That we can cleanse these Imperial scum from our land?{w};auto
 	s;Ophie;What?{w}{br}Where's this coming from?{w};auto
 	s;Sam;I was made aware of your outburst yesterday...{w}{br}So I'll ask again.{w}{br}Do you have faith?{w};auto
 	s;Ophie;...No.{w}{br}I guess I don't have faith in your Resistance...{w}{br}But I want to see the Empire crushed, same as you!{w}{br}I lost my home to the Empire!{w}{br}Why else would I even be here?{w};auto
@@ -66,18 +66,20 @@ elif;self.optionalunit == 'Strength'
 	s;Prim;What happened between you and Sam?{w}{br}Why won't he let you fight?{w};auto
 	s;Eliza;Hmmph. It doesn't really matter.{w};auto
 	s;Prim;So tell me, then.{w};auto
-	s;Eliza;Fine, if it'll get you off my back.{w}{clear}On one of the Resistance's first missions, I made a mistake.{w}{br}A nearly fatal mistake.{w}{br}Sam tried his best to heal me,{w}{br}but there was nothing more he could do.{w}{br}No more missions after that.{w};auto
+	s;Eliza;...If it'll get you off my back.{w}{clear}On one of the Resistance's first missions, I made a mistake.{w}{br}A nearly fatal mistake.{w}{br}Sam tried his best to heal me,{w}{br}but there was nothing more he could do.{w}{br}No more missions after that.{w};auto
 	s;Prim;But you ARE better now!{w};auto
-	s;Eliza;No, I'm still weak.{w}{br}I thought that maybe one day...{w}{br}But then, you all showed up.{w}{br}Now I'll never have a chance to prove myself.{w};auto
+	s;Eliza;I'm still weak.{w}{br}I thought that maybe one day...{w}{br}But then, you all showed up.{w}{br}Now I'll never have a chance to prove myself.{w};auto
 	s;Prim;I didn't realize...{w};auto
 	s;Eliza;Of course.{w}{br}Let me get back to training.{w};auto
 	move_sprite;Eliza;-24,0;force_hold
 	s;Prim;I think you've done enough training for today.{w}{br}Come on.{w};auto
 	move_sprite;Prim;-24,0;force_hold
 	s;Eliza;Huh?{w};auto
-	s;Prim;Well, don't you want to put that training to good use?{w}{br}Let's go catch up to the others.{w};auto
+	s;Prim;Well, don't you want to put that training to use?{w}{br}Let's go catch up to the others.{w};auto
 	s;Eliza;B-But... Sam told me not to go...{w};auto
-	s;Prim;I may not have been here long,{w}{br}but I've come to realize that Sam has his own weakness.{w}{br}He is afraid to lose you under his command.{w}{br}But he doesn't know how strong you are now.{w}{br}And he'll never know if you don't show him that you aren't weak anymore.{w}{clear}Take this.{w};auto
+	s;Prim;I may not have been here long,{w}{br}but I've come to realize that Sam has his own weakness.{w}{br}He is afraid to lose you.{w}{br}But he doesn't know how strong you are now.{w}{br}And he'll never know if you don't show him that you aren't weak anymore.{w};auto
+	s;Eliza;Hmmm...
+	s;Prim;Take this.
 	add_item;Eliza;Prim's Charm
 	s;Eliza;What is this?{w};auto
 	s;Prim;Just a simple good luck charm.{w}{br}Now let's go. They're probably halfway to Rajas by now.{w};auto
@@ -103,7 +105,7 @@ elif;self.optionalunit == "Theo Sphinx, Pt. I"
 	s;Theo;I agreed, reluctantly--{w}{br}for the sake of the past.{w};auto;noir
 	s;Prim;Oh you don't have to go through the trouble, I was just wondering if...{w};auto
 	r;Prim
-	s;Theo;The dame prattled on, but I'd heard enough.{w}{br}I dusted off my jacket, lit up my last cigar, grabbed my hat and walked out,{w}{br}the scent of one too many drinks hanging on the cheap wallpaper.{w}{br}I had a meeting with destiny, and she was a cold mistress.{w};auto;noir
+	s;Theo;The dame prattled on, but I'd heard enough.{w}{br}I dusted off my jacket, lit up my last cigar, grabbed my hat and walked out,{w}{br}the scent of one too many cheap drinks hanging on the wallpaper.{w}{br}I had a meeting with destiny, and she was a cold mistress.{w};auto;noir
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. I
 	inc_counter;noir

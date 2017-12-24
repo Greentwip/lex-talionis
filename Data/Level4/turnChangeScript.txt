@@ -51,20 +51,26 @@ elif;gameStateObj.turncount == 3
 	set_cursor;0,0;force_hold
 	add_unit;Wagon_5;r0;;closest
 	add_unit;pack5_1;r0
-	add_unit;pack5_2;r0
+	#add_unit;pack5_2;r0
 	wait;500
 	set_cursor;0,16;force_hold
 	add_unit;Wagon_6;r1;;closest
 	add_unit;pack6_1;r1
-	add_unit;pack6_2;r1
+	#add_unit;pack6_2;r1
 	wait;500
+# Skip a turn
 elif;gameStateObj.turncount == 4
-	m;Combat Theme 4
 	if;not gameStateObj.check_dead('Joel')
 		u;Joel;Right
-		s;Joel;More wagons to the west!{w}{br}Don't let a single one through!{w};auto
+		s;Joel;Look alive! Wyverns to the west!{w};auto
 		r;Joel
 	end
+	set_cursor;0,10;force_hold
+	add_unit;Wyvern_1;0,10;;closest
+	add_unit;Wyvern_2;0,11;;closest
+	wait;500
+elif;gameStateObj.turncount == 5
+	m;Combat Theme 4
 	set_cursor;0,0;force_hold
 	add_unit;Wagon_7;r0;;closest
 	add_unit;pack7_1;r0
@@ -98,17 +104,17 @@ elif;gameStateObj.turncount == 4
 	end
 	s;Anders;You sniveling craven.{w}{br}Out of my way!{w};auto
 	r;Midas;Anders;Soldier1
-elif;gameStateObj.turncount == 5
-	set_cursor;0,0;force_hold
-	add_unit;Wagon_9;r0;;closest
-	add_unit;pack9_1;r0
-	add_unit;pack9_2;r0
-	wait;500
-	set_cursor;0,16;force_hold
-	add_unit;Wagon_10;r1;;closest
-	add_unit;pack10_1;r1
-	add_unit;pack10_2;r1
-	wait;500
+#elif;gameStateObj.turncount == 6
+#	set_cursor;0,0;force_hold
+#	add_unit;Wagon_9;r0;;closest
+#	add_unit;pack9_1;r0
+#	add_unit;pack9_2;r0
+#	wait;500
+#	set_cursor;0,16;force_hold
+#	add_unit;Wagon_10;r1;;closest
+#	add_unit;pack10_1;r1
+#	add_unit;pack10_2;r1
+#	wait;500
 elif;gameStateObj.turncount == 6
 	set_cursor;0,0;force_hold
 	add_unit;Wagon_11;r0;;closest

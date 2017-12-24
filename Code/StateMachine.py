@@ -1919,9 +1919,9 @@ class DialogueState(State):
         # Things done upon completion of level
         if gameStateObj.statedict['levelIsComplete'] == 'win':
             logger.info('Player wins!')
-            gameStateObj.update_statistics(metaDataObj)
             # Run the outro_script
             if not gameStateObj.statedict['outroScriptDone']:
+                gameStateObj.update_statistics(metaDataObj)
                 # Run the outro script
                 if os.path.exists(metaDataObj['outroScript']):
                     outro_script = Dialogue.Dialogue_Scene(metaDataObj['outroScript'])
@@ -2620,7 +2620,7 @@ class ItemGainState(State):
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
-        if gameStateObj.banners:
+        if gameStateObj.banners and gameStateObj.stateMachine.state[-1] is self:
             gameStateObj.banners[-1].update(gameStateObj)
 
     def draw(self, gameStateObj, metaDataObj):
@@ -2633,8 +2633,8 @@ class ItemGainState(State):
         # For Dialogue
         elif gameStateObj.message:
             gameStateObj.message[-1].draw(mapSurf)
-        # Banner draw
-        if gameStateObj.banners:
+        # Banner draw -- if top
+        if gameStateObj.banners and gameStateObj.stateMachine.state[-1] is self:
             gameStateObj.banners[-1].draw(mapSurf, gameStateObj)
         return mapSurf
 
@@ -2878,6 +2878,8 @@ class ShopState(State):
         moneyBGSurf = GC.IMAGESDICT['MoneyBG']
         self.draw_surfaces.append((moneyBGSurf, (172, 48)))
 
+        self.money_counter_disp = MenuFunctions.MoneyCounterDisplay((223, 32))
+
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList) 
         first_push = self.fluid_helper.update(gameStateObj)
@@ -3010,6 +3012,7 @@ class ShopState(State):
                     else:
                         gameStateObj.convoy.append(ItemMethods.itemparser(str(selection.id))[0])
                     gameStateObj.counters['money'] -= value
+                    self.money_counter_disp.start(-value)
                     self.display_message = self.get_dialog('Buying anything else?')
                     self.unit.hasAttacked = True
                     self.myMenu.updateOptions(self.unit.items)
@@ -3041,6 +3044,7 @@ class ShopState(State):
                     self.myMenu.currentSelection = 0 # Reset selection
                     value = (selection.value * selection.uses.uses)/2 if selection.uses else selection.value/2 # Divide by 2 because selling
                     gameStateObj.counters['money'] += value
+                    self.money_counter_disp.start(value)
                     self.display_message = self.get_dialog(self.back_message)
                     self.unit.hasAttacked = True
                     self.myMenu.updateOptions(self.unit.items)
@@ -3104,6 +3108,7 @@ class ShopState(State):
             surf.blit(simple_surf, rect)
 
         GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), surf, (223 - GC.FONT['text_yellow'].size(str(gameStateObj.counters['money']))[0], 48))
+        self.money_counter_disp.draw(surf)
 
         # Draw current info
         if self.info:

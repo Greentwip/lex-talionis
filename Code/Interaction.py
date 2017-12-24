@@ -568,6 +568,16 @@ class Combat(object):
                         applied_status.parent_id = self.p2.id
                     StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
 
+    def handle_skill_used(self):
+        if self.skill_used and self.skill_used.active:
+            self.skill_used.active.current_charge = 0
+            # If no other active skills, can remove active skill charged
+            if not any(skill.active and skill.active.required_charge > 0 and 
+                       skill.active.current_charge >= skill.active.required_charge for skill in self.p1.status_effects):
+                self.p1.tags.discard('ActiveSkillCharged')
+            if self.skill_used.active.mode == 'Attack':
+                self.skill_used.active.reverse_mod()
+
 class AnimationCombat(Combat):
     def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat, ai_combat):
         self.p1 = attacker
@@ -1233,6 +1243,9 @@ class AnimationCombat(Combat):
 
         a_broke_item, d_broke_item = self.find_broken_items()
 
+        # Handle skills that were used
+        self.handle_skill_used()
+
         # Create all_units list
         all_units = [self.p1, self.p2]
 
@@ -1289,7 +1302,8 @@ class AnimationCombat(Combat):
                             gameStateObj.stateMachine.changeState('itemgain')
 
         # Handle item loss
-        self.summon_broken_item_banner(a_broke_item, d_broke_item, gameStateObj)
+        if self.p1 is not self.p2:
+            self.summon_broken_item_banner(a_broke_item, d_broke_item, gameStateObj)
 
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)
@@ -1684,14 +1698,7 @@ class MapCombat(Combat):
         a_broke_item, d_broke_item = self.find_broken_items()
 
         # Handle skills that were used
-        if self.skill_used:
-            self.skill_used.active.current_charge = 0
-            # If no other active skills, can remove active skill charged
-            if not any(skill.active and skill.active.required_charge > 0 and 
-                       skill.active.current_charge >= skill.active.required_charge for skill in self.p1.status_effects):
-                self.p1.tags.discard('ActiveSkillCharged')
-            if self.skill_used.active.mode == 'Attack':
-                self.skill_used.active.reverse_mod()
+        self.handle_skill_used()
 
         # Create all_units list
         all_units = [unit for unit in self.splash] + [self.p1]
@@ -1754,7 +1761,8 @@ class MapCombat(Combat):
                             gameStateObj.stateMachine.changeState('itemgain')
 
         # Handle item loss
-        self.summon_broken_item_banner(a_broke_item, d_broke_item, gameStateObj)
+        if self.p1 is not self.p2:
+            self.summon_broken_item_banner(a_broke_item, d_broke_item, gameStateObj)
 
         # Handle exp and stat gain
         if not self.event_combat and (self.item.weapon or self.item.spell):
@@ -1817,9 +1825,9 @@ class MapCombat(Combat):
         self.remove_broken_items(a_broke_item, d_broke_item)
 
 class HealthBar(object):
-    def __init__(self, draw_method, unit, item, other=None, stats=None, time_for_change=400, swap_stats=None):
+    def __init__(self, draw_method, unit, item, other=None, stats=None, swap_stats=None):
         self.last_update = 0
-        self.time_for_change = time_for_change
+        self.time_for_change = 200
         self.transition_flag = False
         self.blind_speed = 1/8. # 8 frames to fully transition
         self.true_position = None
@@ -2012,8 +2020,12 @@ class HealthBar(object):
                     self.current_shake = 0
             if self.true_hp != self.unit.currenthp and not self.transition_flag:
                 self.transition_flag = True
-                self.time_for_change = max(400, abs(self.true_hp - self.unit.currenthp)*32)
-                self.last_update = Engine.get_time() + (200 if status_obj else 0)
+                if status_obj:
+                    self.time_for_change = max(400, abs(self.true_hp - self.unit.currenthp)*4*GC.FRAMERATE)
+                    self.last_update = Engine.get_time() + 200
+                else: # Combat
+                    self.time_for_change = max(200, abs(self.true_hp - self.unit.currenthp)*2*GC.FRAMERATE)
+                    self.last_update = Engine.get_time()
             if self.transition_flag and Engine.get_time() > self.last_update:
                 self.true_hp = Utility.easing(Engine.get_time() - self.last_update, self.oldhp, self.unit.currenthp - self.oldhp, self.time_for_change)
                 # print(self.true_hp, Engine.get_time(), self.oldhp, self.unit.currenthp, self.time_for_change)

@@ -40,7 +40,7 @@ else
 	s;Renae;You're telling me!{w};auto
 	s;Sam;...There is good news, though.{w};auto
 end
-s;Sam;My sources have new information.{w}{br}There is an Imperial weapon shipment due to reach the capital.{w}{br}We cannot allow those weapons to reach Duke Ulver.{w};auto
+s;Sam;According to my sources, a weapon shipment is due to reach the Imperials.{w}{br}We cannot allow those weapons to reach Duke Ulver.{w};auto
 r;Renae
 u;Prim;Left
 s;Prim;Won't the caravans be guarded?{w}{br};auto
@@ -51,8 +51,9 @@ m;Midna's Theme
 move_sprite;Prim;-24,0
 u;Eliza;MidLeft
 s;Sam;Eliza?{w};auto
-s;Eliza;Can let me join this fight?{w};auto
+s;Eliza;Can you let me join this fight?{w};auto
 s;Sam;What? Out of the question, Eliza.{w}{br}You are not ready.{w};auto
+bop;Eliza
 s;Eliza;I am ready!{w}{br}I can do it. I know I can.{w};auto
 s;Sam;We've been over this...{w};auto
 s;Eliza;Please, Sam. I've been training...{w}{br}I'm stronger than I was then. I won't get hurt.{w};auto
@@ -62,7 +63,7 @@ s;Eliza;You really don't trust me anymore, do you!{w};auto
 r;Eliza
 s;Sam;...{w};auto
 u;Althea;MidLeft
-s;Althea;Well, um, this has been an eventful meeting, but,{w}{br}uh...{w}if we're going to catch those caravans, we'd better get ready, right?{w};auto
+s;Althea;Well, um,{w}{br}this has been an eventful meeting, but,{w} uh...{w}{br}if we're going to catch those caravans, we'd better get ready, right?{w};auto
 r;Althea;Sam;Prim
 # Prim and Ophie conversation
 t;1

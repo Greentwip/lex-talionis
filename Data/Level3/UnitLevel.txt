@@ -29,14 +29,15 @@ group;Guard;Guard;Empire;Fort Kosheen guard
 enemy;0;Harold;Harold;6,18;Pursue
 # Boss Group
 enemy;0;G1;Tactician;6;Glimmer,dMend;5,18;FollowBoss;Guard
-enemy;0;G2;Sentinel;7;Steel Axe;7,18;Pursue;Guard
+enemy;0;G2;Sentinel;6;Iron Axe;7,18;Pursue;Guard
 #
 # 3 Sentinels, 4 Soldiers, 2 Knights, 2 Mercenaries, 1 Archers, 2 Shaman
 # Starting Enemies
-enemy;0;0;Soldier;4;Iron Lance;5,10;SoftGuard;Guard
-enemy;0;0;Sentinel;3;Iron Axe;7,10;SoftGuard;Guard
-enemy;0;0;Knight;2;Iron Lance;8,11;SoftGuard;Guard
-enemy;0;0;Soldier;4;Iron Lance,Potion;8,13;SoftGuard;Guard
+#enemy;0;0;Soldier;4;Iron Lance;5,10;SoftGuard;Guard
+enemy;0;0;Sentinel;3;Iron Axe;7,10;SoftGuard_1;Guard
+enemy;0;0;Sentinel;3;Iron Axe;8,11;SoftGuard_1;Guard
+#enemy;0;0;Soldier;4;Iron Lance,Potion;8,13;SoftGuard;Guard
+# Next enemies
 enemy;0;S4;Soldier;4;Iron Lance;18,4;HardGuard;Guard
 enemy;0;S3;Soldier;4;Iron Lance;18,4;HardGuard;Guard
 enemy;0;S2;Soldier;4;Iron Lance;18,5;HardGuard;Guard
@@ -44,6 +45,7 @@ enemy;0;S1;Soldier;5;Iron Lance;18,12;HardGuard;Guard
 enemy;0;0;Knight;3;Iron Lance,dSkeleton Key;8,5;Attack;Guard
 enemy;0;0;Mercenary;4;Iron Sword,dSkeleton Key;15,11;Attack;Guard
 enemy;0;0;Sentinel;5;dSteel Axe;11,14;SoftGuard;Guard
+enemy;0;0;Soldier;4;Iron Lance,Potion;15,16;SoftGuard;Guard
 enemy;0;0;Shaman;2;Flux;15,13;Attack;Guard
 enemy;0;0;Archer;3;dWillow Bow;11,4;Attack;Guard
 #enemy;0;0;Sentinel;4;Iron Axe,Potion;3,8;Attack;Guard

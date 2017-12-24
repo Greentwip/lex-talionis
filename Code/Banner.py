@@ -53,11 +53,14 @@ class acquiredItemBanner(Banner):
         Banner.__init__(self) # Super
         self.unit = unit
         self.item = item
-        self.article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
+        article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
         if "'" in self.item.name:
-            self.article = '' # No article for things like Prim's Charm, Ophie's Blade, etc.
-        self.banner = [unit.name, ' got ', self.article, ' ', item.name, '.']
-        self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
+            # No article for things like Prim's Charm, Ophie's Blade, etc.
+            self.banner = [unit.name, ' got ', item.name, '.']
+            self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
+        else:
+            self.banner = [unit.name, ' got ', article, ' ', item.name, '.']
+            self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
         self.sound = GC.SOUNDDICT['Item']
 
@@ -89,11 +92,10 @@ class brokenItemBanner(Banner):
             self.sound = GC.SOUNDDICT['Item']
         else:
             self.banner = [unit.name, ' broke ', item.name, '.']
-            self.sound = None
+            self.sound = GC.SOUNDDICT['ItemBreak']
         self.banner_font = ['text_blue', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
-        self.sound = GC.SOUNDDICT['Attack Miss 3']
-
+        
 class gainedWexpBanner(Banner):
     def __init__(self, unit, wexp, weapon_type):
         Banner.__init__(self)
@@ -111,7 +113,7 @@ class foundNothingBanner(Banner):
         self.banner = [unit.name, ' found nothing of note.']
         self.banner_font = ['text_blue', 'text_white']
         self.figure_out_size()
-        self.sound = GC.SOUNDDICT['Attack Miss 3']
+        self.sound = GC.SOUNDDICT['ItemBreak']
 
 class switchPulledBanner(Banner):
     def __init__(self):

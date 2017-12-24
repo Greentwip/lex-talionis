@@ -126,5 +126,8 @@ if __name__ == '__main__':
         traceback.print_exc()
         time.sleep(0.5)
         inform_error()
-        time.sleep(10)
+        if cf.OPTIONS['cheat']:
+            time.sleep(10)
+        else:
+            time.sleep(20)
 # === END === END === END === END === END === END === END === END === END === #

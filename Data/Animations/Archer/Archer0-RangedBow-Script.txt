@@ -109,6 +109,7 @@ of;1;Arrow3;Attack15
 crit_spark
 pan
 of;1;Arrow3;Attack15
+f;1;Attack15
 wait_for_hit;Attack15
 wait;16
 f;4;Attack16

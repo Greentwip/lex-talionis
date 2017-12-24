@@ -982,6 +982,7 @@ class BaseMarketState(StateMachine.State):
             self.money_surf = MenuFunctions.CreateBaseMenuSurf((56, 24))
             g_surf = Engine.subsurface(GC.IMAGESDICT['GoldenWords'], (40, 50, 9, 9))
             self.money_surf.blit(g_surf, (45, 8))
+            self.money_counter_disp = MenuFunctions.MoneyCounterDisplay((66, GC.WINHEIGHT - 40))
 
             # Create owner surf
             self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
@@ -1087,6 +1088,7 @@ class BaseMarketState(StateMachine.State):
                         gameStateObj.convoy.append(item)
                     value = (item.value * item.uses.uses) if item.uses else item.value
                     gameStateObj.counters['money'] -= value
+                    self.money_counter_disp.start(-value)
                     self.update_options(gameStateObj)
                 else:
                     GC.SOUNDDICT['Select 4'].play()
@@ -1110,6 +1112,7 @@ class BaseMarketState(StateMachine.State):
                     item = self.current_menu.getSelection()
                     value = (item.value * item.uses.uses)/2 if item.uses else item.value/2
                     gameStateObj.counters['money'] += value
+                    self.money_counter_disp.start(value)
                     if item.owner:
                         owner = gameStateObj.get_unit_from_id(item.owner)
                         owner.remove_item(item)
@@ -1169,6 +1172,8 @@ class BaseMarketState(StateMachine.State):
         # Draw Money
         mapSurf.blit(self.money_surf, (10, GC.WINHEIGHT - 24))
         GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), mapSurf, (16, GC.WINHEIGHT - 20))
+        # Draw money counter display
+        self.money_counter_disp.draw(mapSurf)
 
         # Draw owner
         mapSurf.blit(self.owner_surf, (156, 0))
@@ -1222,7 +1227,7 @@ class BaseMainState(StateMachine.State):
             gameStateObj.activeMenu = gameStateObj.main_menu
             gameStateObj.main_menu = None
         elif not gameStateObj.activeMenu:
-            options = [cf.WORDS['Items'], cf.WORDS['Market'], cf.WORDS['Info'], cf.WORDS['Codex'], cf.WORDS['Save'], cf.WORDS['Continue']]
+            options = [cf.WORDS['Items'], cf.WORDS['Market'], cf.WORDS['Convos'], cf.WORDS['Codex'], cf.WORDS['Save'], cf.WORDS['Continue']]
             color_control = ['text_white', 'text_grey', 'text_grey', 'text_white', 'text_white', 'text_white']
             if gameStateObj.support:
                 options.insert(3, cf.WORDS['Supports'])
@@ -1276,7 +1281,7 @@ class BaseMainState(StateMachine.State):
                 gameStateObj.cursor.currentSelectedUnit = None
                 gameStateObj.stateMachine.changeState('base_market')
                 gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == cf.WORDS['Info']:
+            elif selection == cf.WORDS['Convos']:
                 GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.stateMachine.changeState('base_info')
             elif selection == cf.WORDS['Supports']:

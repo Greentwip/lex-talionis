@@ -135,7 +135,9 @@ elif;self.optionalunit.name == 'Anders'
 	u;Anders;FarLeft
 	s;Anders;What? Blood? This blood?{w}{br}It's nothing... I will not disappoint...{w};auto
 	r;Anders
-	if;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
+	if;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 10
+		kill_unit;Anders
+		wait;200
 		win_game
 	end
 elif;self.optionalunit.name == 'Midas'
@@ -191,8 +193,10 @@ if;gameStateObj.counters['level'] == 4
 		inc_counter;Dead_Wagons
 	end
 	# If no more wagons and Anders is dead win
-	if;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 12
+	if;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 10
 		if;gameStateObj.check_dead('Anders')
+			kill_unit;{unit}
+			wait;200
 			win_game
 		else
 			set_cursor;Anders;force_hold
