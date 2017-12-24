@@ -908,7 +908,7 @@ class AnimationCombat(Combat):
                 sound_to_play = 'Critical Hit ' + str(random.randint(1, 2))
             else:
                 sound_to_play = 'Attack Hit ' + str(random.randint(1, 5)) # Choose a random hit sound
-                GC.SOUNDDICT[sound_to_play].play()
+            GC.SOUNDDICT[sound_to_play].play()
                                 
     def build_viewbox(self, gameStateObj):
         vb_multiplier = self.viewbox_clamp_state / float(self.total_viewbox_clamp_states)

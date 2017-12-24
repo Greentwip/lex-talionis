@@ -556,7 +556,7 @@
         <name>Dr. knight</name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
-        <wexp_gain>0,1,1,0,0,0,0</wexp_gain>
+        <wexp_gain>0,1,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
         <turns_into>Dracolord</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->

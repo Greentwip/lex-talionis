@@ -1413,14 +1413,14 @@ class Dialogue_Scene(object):
 
     def get_closest(self, new_pos, bad_pos, gameStateObj, flying=False):
         r = 0
-        while r<10:
+        while r < 10:
             for x in range(-r, r + 1):
                 for y in [(r - abs(x)), -(r - abs(x))]:
                     for pos in new_pos:
                         check_pos = pos[0] + x, pos[1] + y
                         if check_pos not in bad_pos and gameStateObj.map.check_bounds(check_pos) and \
                            (gameStateObj.map.tiles[check_pos].get_mcost(0) < 5 or
-                           (flying and gameStateObj.map.tiles[check_pos].get_mcost(cf.CONSTANTS['flying_mcost_col']) < 5)):
+                           (flying and gameStateObj.map.tiles[check_pos].get_mcost(cf.CONSTANTS['flying_mcost_column']) < 5)):
                             return check_pos
             r += 1
 

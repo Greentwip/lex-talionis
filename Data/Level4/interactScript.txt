@@ -3,4 +3,15 @@ if;gameStateObj.get_total_party_members() < 5
 	add_minimum_number_banner
 	lose_game
 	t;1
+# If no more wagons and Anders is dead win
+elif;gameStateObj.counters['Escaped_Wagons'] + gameStateObj.counters['Dead_Wagons'] >= 10
+	if;gameStateObj.check_dead('Anders')
+		win_game
+	elif;not 'AndersThreat' in gameStateObj.event_triggers
+		set_cursor;Anders;force_hold
+		u;Anders;FarLeft
+		s;Anders;You haven't won yet, Resistance scum.{w}{br}I'll take your scalps back to the Duke myself!
+		r;Anders
+		trigger_event;AndersThreat
+	end
 end

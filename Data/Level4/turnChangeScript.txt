@@ -62,12 +62,12 @@ elif;gameStateObj.turncount == 3
 elif;gameStateObj.turncount == 4
 	if;not gameStateObj.check_dead('Joel')
 		u;Joel;Right
-		s;Joel;Look alive! Wyverns to the west!{w};auto
+		s;Joel;Look out! Wyverns to the west!{w};auto
 		r;Joel
 	end
 	set_cursor;0,10;force_hold
-	add_unit;Wyvern_1;0,10;;closest
-	add_unit;Wyvern_2;0,11;;closest
+	add_unit;Wyvern_1;0,11;;closest_f
+	add_unit;Wyvern_2;0,12;;closest_f
 	wait;500
 elif;gameStateObj.turncount == 5
 	m;Combat Theme 4

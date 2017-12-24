@@ -57,8 +57,7 @@ enemy_flash_white;8
 f;2;Frame42
 f;2;Frame43
 # Hit Frame
-hit_spark
-start_hit
+miss
 f;24;Frame44
 f;2;Frame45
 sound;Weapon Pull

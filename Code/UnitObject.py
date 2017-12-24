@@ -864,7 +864,7 @@ class UnitObject(object):
                         levelup_list[index] += 1 if random.randint(0, 99) < growth else 0
                         growth -= 100
                     levelup_list[index] = min(levelup_list[index], class_info['max'][index] - self.stats.values()[index].base_stat)
-        else: # Hybrid
+        else: # Hybrid and Default
             growths = [growth if self.stats.values()[index].base_stat < class_info['max'][index] else 0 for index, growth in enumerate(growths)]
             growth_sum = sum(growths)
             num_choices = growth_sum/100
