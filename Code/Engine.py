@@ -296,7 +296,7 @@ class MusicThread(object):
     
     def fade_to_normal(self, gameStateObj, metaDataObj):
         logger.info('Music: Fade to Normal')
-        phase_name = gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name
+        phase_name = gameStateObj.phase.get_current_phase()
         if phase_name == 'player':
             self.fade_in(metaDataObj['playerPhaseMusic'])
         elif phase_name.startswith('enemy'):
@@ -323,8 +323,9 @@ class MusicThread(object):
                 break
         else:
             logger.info('Music: New Song')
-            new_song = Song(next_song, num_plays, time)
-            self.song_stack.append(new_song)
+            if next_song:
+                new_song = Song(next_song, num_plays, time)
+                self.song_stack.append(new_song)
 
         # Update the current one -- so we know where to head back to
         if self.current:

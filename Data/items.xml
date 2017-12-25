@@ -1244,9 +1244,9 @@
         <components>spell,uses,status,beneficial,custom_ai</components>
         <weapontype>Anima</weapontype>
  
-        <uses>15</uses>
+        <uses>5</uses>
         <RNG>0-1</RNG>
-        <value>150</value>
+        <value>300</value>
         <desc>Grants ally flying for 5 turns.</desc>
         <custom_ai>not 'Rex_Aegis' in [s.id for s in target.status_effects]</custom_ai> 
         

@@ -161,22 +161,15 @@ class GameStateObj(object):
 
         self.generic()
         if 'phase_info' in load_info:
-            self.statedict['current_phase'], self.statedict['previous_phase'] = load_info['phase_info']
+            self.phase.current, self.phase.previous = load_info['phase_info']
 
     def generic(self):
         logger.info("Generic")
-        phases = []
-        phases.append(CustomObjects.Phase('player', 'PlayerTurnBanner', 800))
-        phases.append(CustomObjects.Phase('enemy', 'EnemyTurnBanner', 800))
-        phases.append(CustomObjects.Phase('enemy2', 'Enemy2TurnBanner', 800))
-        phases.append(CustomObjects.Phase('other', 'OtherTurnBanner', 800))
         lord_units = [unit for unit in self.allunits if unit.position and 'Lord' in unit.tags and unit.team == 'player']
         lord_position = lord_units[0].position if lord_units else (0, 0)
         # Certain variables change if this is being initialized at beginning of game, and not a save state
-        self.statedict = {'phases': phases,
-                          'current_phase': len(phases) - 1 if self.turncount == 0 else 0,
-                          'previous_phase': 0,
-                          'previous_cursor_position': lord_position,
+        self.phase = CustomObjects.Phase(self)
+        self.statedict = {'previous_cursor_position': lord_position,
                           'levelIsComplete': False, # Whether the level is complete
                           'outroScriptDone': False} # Whether the outro script has been played
         # For hiding menus
@@ -344,7 +337,7 @@ class GameStateObj(object):
                    'market_items': self.market_items,
                    'mode': self.mode,
                    'message': [message.serialize() for message in self.message],
-                   'phase_info': (self.statedict['current_phase'], self.statedict['previous_phase'])}
+                   'phase_info': (self.phase.current, self.phase.previous)}
         import time
         to_save_meta = {'playtime': self.playtime,
                         'realtime': time.time()}

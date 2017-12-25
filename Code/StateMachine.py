@@ -348,7 +348,7 @@ class TurnChangeState(State):
     def begin(self, gameStateObj, metaDataObj):
         # gameStateObj.boundary_manager.draw_flag = 0
         # If player phase, save last position of cursor
-        if gameStateObj.statedict['current_phase'] == 0:
+        if gameStateObj.phase.get_current_phase() == 'player':
             gameStateObj.statedict['previous_cursor_position'] = gameStateObj.cursor.position
         # Clear all previous states in stateMachine except me - Loose the memory.
         current_state = gameStateObj.stateMachine.state[-1]
@@ -359,22 +359,9 @@ class TurnChangeState(State):
 
     def end(self, gameStateObj, metaDataObj):
         # Replace previous phase
-        gameStateObj.statedict['previous_phase'] = gameStateObj.statedict['current_phase']
-        # Actually change phase
-        if gameStateObj.allunits:
-            gameStateObj.statedict['current_phase'] += 1
-            if gameStateObj.statedict['current_phase'] >= len(gameStateObj.statedict['phases']):
-                gameStateObj.statedict['current_phase'] = 0
-            current_phase = gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']]
-            while not any(current_phase.name == unit.team for unit in gameStateObj.allunits if unit.position) \
-                    and gameStateObj.statedict['current_phase'] != 0: # Also, never skip player phase
-                gameStateObj.statedict['current_phase'] += 1
-                if gameStateObj.statedict['current_phase'] >= len(gameStateObj.statedict['phases']):
-                    gameStateObj.statedict['current_phase'] = 0 
-        else:
-            gameStateObj.statedict['current_phase'] = 0 # If no units at all, just default to player phase?
+        gameStateObj.phase.next(gameStateObj)
 
-        if gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name == 'player':
+        if gameStateObj.phase.get_current_phase() == 'player':
             gameStateObj.turncount += 1
             gameStateObj.stateMachine.changeState('free')
             gameStateObj.stateMachine.changeState('status')
@@ -1762,7 +1749,7 @@ class FeatChoiceState(State):
         options = []
         for feat in StatusObject.feat_list:
             options.append(StatusObject.statusparser(feat))
-        gameStateObj.activeMenu = MenuFunctions.FeatChoiceMenu(initiator, options)
+        self.menu = MenuFunctions.FeatChoiceMenu(initiator, options)
         self.info = False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -1772,16 +1759,16 @@ class FeatChoiceState(State):
 
         if 'DOWN' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveDown(first_push)
+            self.menu.moveDown(first_push)
         elif 'UP' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveUp(first_push)
+            self.menu.moveUp(first_push)
         if 'RIGHT' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveRight(first_push)
+            self.menu.moveRight(first_push)
         elif 'LEFT' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveLeft(first_push)
+            self.menu.moveLeft(first_push)
 
         # Show R unit status screen
         if event == 'BACK':
@@ -1793,19 +1780,29 @@ class FeatChoiceState(State):
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
-            selection = gameStateObj.activeMenu.getSelection()
+            selection = self.menu.getSelection()
             gameStateObj.stateMachine.back()
             StatusObject.HandleStatusAddition(selection, gameStateObj.cursor.currentSelectedUnit, gameStateObj)
             gameStateObj.banners.append(Banner.gainedSkillBanner(gameStateObj.cursor.currentSelectedUnit, selection))
             gameStateObj.stateMachine.changeState('itemgain')
-            gameStateObj.activeMenu = None
+            self.menu = None
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
+
+        # To handle combat and promotion
+        under_state = gameStateObj.stateMachine.get_under_state(self)
+        if under_state and isinstance(under_state, ExpGainState) or isinstance(under_state, PromotionState):
+            mapSurf = under_state.draw(gameStateObj, metaDataObj)
+
+        # Draw Menu
+        if self.menu:
+            self.menu.draw(mapSurf, gameStateObj)
+
         # Draw current info
-        if self.info and gameStateObj.activeMenu:
-            selection = gameStateObj.activeMenu.getSelection()
-            position = (16, 16*gameStateObj.activeMenu.currentSelection%5 + 48)
+        if self.info and self.menu:
+            selection = self.menu.getSelection()
+            position = (16, 16*self.menu.currentSelection%5 + 48)
             help_surf = selection.get_help_box()
             mapSurf.blit(help_surf, position)
         return mapSurf
@@ -1817,7 +1814,7 @@ class AIState(State):
         if gameStateObj.ai_build_flag:
             # Get list of units to process for this turn
             gameStateObj.ai_unit_list = [unit for unit in gameStateObj.allunits if unit.position and not unit.isDone() and 
-                                         unit.team == gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name]
+                                         unit.team == gameStateObj.phase.get_current_phase()]
             # Sort by distance to closest enemy (ascending)
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.distance_to_closest_enemy(gameStateObj))
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.priority, reverse=True)
@@ -2178,31 +2175,31 @@ class PhaseChangeState(State):
             #    gameStateObj.boundary_manager.arrive(unit, gameStateObj)
         gameStateObj.cursor.drawState = 0
         gameStateObj.activeMenu = None
-        gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].begin(gameStateObj)
+        gameStateObj.phase.slide_in(gameStateObj)
 
     def end(self, gameStateObj, metaDataObj):
         logger.debug('Phase End')
         Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
         # If debug, save state at beginning of each turn
         if cf.OPTIONS['debug']:
-            if gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name == 'player':
+            if gameStateObj.phase.get_current_phase() == 'player':
                 logger.debug("Saving as we enter player phase!")
                 name = 'L' + str(gameStateObj.counters['level']) + 'T' + str(gameStateObj.turncount)
                 SaveLoad.suspendGame(gameStateObj, 'TurnChange', hard_loc=name)
-            elif gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name == 'enemy':
+            elif gameStateObj.phase.get_current_phase() == 'enemy':
                 logger.debug("Saving as we enter enemy phase!")
                 name = 'L' + str(gameStateObj.counters['level']) + 'T' + str(gameStateObj.turncount) + 'b'
                 SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange', hard_loc=name)
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
-        isDone = gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].update()
+        isDone = gameStateObj.phase.update()
         if isDone:
             gameStateObj.stateMachine.back()
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
-        gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].draw(mapSurf)
+        gameStateObj.phase.draw(mapSurf)
         return mapSurf
 
 class StatusState(State):

@@ -425,7 +425,7 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
             if attacker_anim and defender_anim:
                 # Build attacker animation
                 attacker_script = attacker_anim['script']
-                attacker_color = 'Blue' if attacker.team == 'player' else 'Red'
+                attacker_color = Utility.get_color(attacker.team)
                 if attacker.name in attacker_anim['images']:
                     attacker_frame_dir = attacker_anim['images'][attacker.name]
                 elif 'Generic' + attacker_color in attacker_anim['images']:
@@ -435,7 +435,7 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                 attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, item=item)
                 # Build defender animation
                 defender_script = defender_anim['script']
-                defender_color = 'Blue' if defender.team == 'player' else 'Red'
+                defender_color = Utility.get_color(defender.team)
                 if defender.name in defender_anim['images']:
                     defender_frame_dir = defender_anim['images'][defender.name]
                 elif 'Generic' + defender_color in defender_anim['images']:
@@ -664,19 +664,11 @@ class AnimationCombat(Combat):
         self.splash = []
 
     def init_draw(self, gameStateObj, metaDataObj):
-        def get_color(team):
-            if team == 'player':
-                return 'Blue'
-            elif team == 'other':
-                return 'Green'
-            else:
-                return 'Red'
-
         self.gameStateObj = gameStateObj # Dependency Injection
         self.metaDataObj = metaDataObj  # Dependency Injection
         crit = 'Crit' if cf.CONSTANTS['crit'] else ''
         # Left
-        left_color = get_color(self.left.team)
+        left_color = Utility.get_color(self.left.team)
         # Name Tag
         self.left_name = GC.IMAGESDICT[left_color + 'LeftCombatName'].copy()
         size_x = GC.FONT['text_brown'].size(self.left.name)[0]
@@ -691,7 +683,7 @@ class AnimationCombat(Combat):
             GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
         # Right
-        right_color = get_color(self.right.team)
+        right_color = Utility.get_color(self.right.team)
         # Name Tag
         self.right_name = GC.IMAGESDICT[right_color + 'RightCombatName'].copy()
         size_x = GC.FONT['text_brown'].size(self.right.name)[0]

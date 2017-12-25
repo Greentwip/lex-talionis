@@ -413,10 +413,10 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,B,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>28,10,5,9,9,4,5,7</bases>
+		<bases>28,7,5,11,8,6,5,7</bases>
 		<growths>65,35,0,15,15,15,15,0</growths>
         
-        <inventory>Swordreaver,Steel Axe,Elixir</inventory>
+        <inventory>Steel Axe,Elixir</inventory>
         
         <level>10</level>
         <class>Brigand</class>

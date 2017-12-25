@@ -45,16 +45,16 @@ enemy;0;0;Brigand;6;Iron Axe;2,2;Attack_5;Bandit
 # Shaman by Armory
 enemy;0;0;Shaman;4;Scathe,Vulnerary;6,1;Attack;Claw
 # Mages on Cliff
-enemy;0;0;Mage;4;Fire;5,5;SoftGuard;Bandit
-enemy;0;0;Mage;4;Wind,dSpeedwings;6,7;Attack;Bandit
+enemy;0;0;Mage;5;Fire;5,5;SoftGuard;Bandit
+enemy;0;0;Mage;5;Wind,dFly;6,7;Attack;Bandit
 # Lower pit enemies
 enemy;0;0;Myrmidon;5;Iron Sword;7,14;SoftGuard_4;Bandit
 enemy;0;0;Skirmisher;5;Iron Lance;9,12;Attack_4;Bandit
 enemy;0;0;Skirmisher;5;Iron Lance;10,13;Attack_4;Bandit
 enemy;0;0;Mage;5;Wind,Sandblast;11,14;Attack_4;Bandit
-enemy;0;0;Myrmidon;5;dLancereaver;10,10;Attack_4;Bandit
+enemy;0;0;Myrmidon;6;Steel Sword;10,10;Attack_4;Bandit
 # Upper Area enemies
-enemy;0;0;Mage;6;Wind,Fly;12,2;SoftGuard;Bandit
+enemy;0;0;Mage;6;Wind,dSpeedwings;12,2;SoftGuard;Bandit
 enemy;0;0;Archer;4;Willow Bow;10,7;SoftGuard;Bandit
 enemy;0;0;Mage;4;Wind,Sandblast;14,1;Attack;Bandit
 # 2 Myrmidons

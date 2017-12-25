@@ -1,6 +1,6 @@
 # Base Script Level 4
 if;self.optionalunit == 'An Uneasy Trust'
-	# Gives Ophie Lancereaver
+	# Gives Ophie Flareblade
 	m;Toorimichi
 	b;TacticsRoomDay
 	t;2

@@ -397,6 +397,23 @@ mercenary_blue = [(128, 160, 128), # Background
                 (40, 40, 144), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+mercenary_green = [(128, 160, 128), # Background
+                 (248, 248, 248), # White
+                 (248, 240, 184), # Light skin
+                 (248, 192, 144), # Med skin
+                 (176, 112, 64), # DM skin
+                 (112, 80, 48), # Dark skin
+                 (176, 192, 224), # Light Hair
+                 (108, 152, 184), # Med Hair
+                 (96, 96, 144), # Dark Hair
+                 (192, 224, 232), # Light Weapon/Leather
+                 (152, 184, 216), # Med Weapon/Leather
+                 (96, 128, 160), # Dark Weapon/String
+                 (64, 208, 144), # Light Clothes
+                 (8, 176, 48), # Med Clothes
+                 (0, 144, 0), # Dark Clothes
+                 (40, 40, 40)] # Outline
+
 generic_mercenary = [(255, 255, 255),
                 (157, 204, 0),
                 (255, 204, 153),
@@ -1630,6 +1647,23 @@ brigand_blue = [(128, 160, 128), # Background
                 (56, 56, 208), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+brigand_green = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (232, 192, 136), # LM skin
+                (208, 144, 96), # M skin
+                (176, 112, 64), # DM skin
+                (112, 72, 48), # Dark skin
+                (160, 96, 48), # Light Hair
+                (120, 80, 48), # Dark Hair
+                (200, 232, 240), # Light Weapon
+                (160, 192, 224), # Med Weapon
+                (120, 152, 184), # Dark Weapon
+                (56, 224, 128), # Light Clothes
+                (0, 184, 0), # Med Clothes
+                (0, 128, 8), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 vincent = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 168), # Light skin
@@ -1777,6 +1811,23 @@ raider_blue = [(128, 160, 128), # Background
                 (104, 232, 248), # Light Clothes
                 (88, 136, 248), # Med Clothes
                 (56, 56, 208), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+raider_green = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (232, 192, 136), # LM skin
+                (200, 136, 88), # M skin
+                (168, 104, 56), # DM skin
+                (112, 72, 48), # Dark skin
+                (160, 96, 48), # ??
+                (120, 80, 48), # ??
+                (192, 224, 232), # Light Weapon
+                (152, 184, 216), # Med Weapon
+                (112, 144, 176), # Dark Weapon
+                (56, 224, 128), # Light Clothes
+                (0, 184, 0), # Med Clothes
+                (0, 128, 8), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 joshua_swordmaster = [(128, 160, 128), # Background

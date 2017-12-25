@@ -4195,3 +4195,51 @@ Wexp: 0, 27, 0, 0, 0, 0, 0
 Items: Javelin 16, Iron Lance 45, Slim Lance 31, Vulnerary 3, Rapier 20
 *** Convoy:
 Items: Secret Book 1, Angelic Robe 1, Mana Ring 1, Heal 14, Spiritbane 3, Prim's Charm --, Willow Bow 18, Fire Ward 30, Sapphire --, Ruby --, Mithril Mail 1, Magebane Swd 15
+
+=== Level 5 === Money: 10355
+*** Ophie: Riposte,Vantage,Movement +1,Regeneration,Rex Aegis
+Lvl 8, Exp 45
+Wexp: 35, 0, 0, 0, 0, 0, 0
+Items: Steel Sword 22, Iron Sword 45, Rapier 16, Gustblade 21, Vulnerary 3
+*** Prim: Healtouch,Miracle
+Lvl 6, Exp 92
+Wexp: 0, 0, 0, 0, 43, 0, 0
+Items: Heal 22, Shine Ward 19, Glimmer Ward 14
+*** Joel: Cleave,Shove,Movement +1
+Lvl 10, Exp 40
+Wexp: 0, 0, 56, 0, 0, 0, 0
+Items: Hand Axe 2, Hatchet 26, Steel Axe 25, Iron Axe 27, Potion 2
+*** Nia: Prescience,Critical,Maximum HP +5
+Lvl 8, Exp 95
+Wexp: 0, 0, 0, 46, 0, 0, 0
+Items: Willow Bow 39, Oak Bow 28, Vulnerary 3
+*** Althea: Focus,Conductance
+Lvl 7, Exp 46
+Wexp: 0, 0, 0, 0, 0, 29, 0
+Items: Fly 10, Wind Ward 26, Fire Ward 29, Thunder Ward 30, Wyrmsfire 8
+*** Drake: Canto,Savior
+Lvl 7, Exp 61
+Wexp: 17, 13, 0, 0, 0, 0, 0
+Items: Iron Lance 23, Iron Sword 42, Javelin 15, Slim Lance 31, Vulnerary 2
+*** Renae: Locktouch,Steal,Resistance +2
+Lvl 6, Exp 32
+Wexp: 28, 0, 0, 0, 0, 0, 0
+Items: Flareblade 14, Steel Sword 24, Iron Sword 7, Rapier 20, Vulnerary 3
+*** Theo: Provoke,Shove,Movement +1
+Lvl 8, Exp 2
+Wexp: 0, 35, 0, 0, 0, 0, 0
+Items: Iron Lance 44, Short Spear 10, Javelin 20, Vulnerary 3, Mithril Lance 19
+*** Eliza: Synergy,Maximum HP +5
+Lvl 6, Exp 11
+Wexp: 0, 33, 0, 0, 0, 0, 0
+Items: Javelin 18, Iron Lance 39, Steel Lance 29, Vulnerary 3, Nyx Ward 19
+*** Sam: Inspiration,Skill Aura
+Lvl 7, Exp 70
+Wexp: 0, 0, 0, 0, 35, 0, 0
+Items: Mend 14, Shine Ward 16, Fortune 10
+*** Kayla: Hex,Empowered,Speed +2
+Lvl 8, Exp 70
+Wexp: 0, 0, 0, 0, 0, 0, 40
+Items: Flux Ward 24, Scathe 10, Spiritbane 3
+*** Convoy:
+Items: Secret Book 1, Angelic Robe 1, Mana Ring 1, Spiritbane 3, Prim's Charm --, Sapphire --, Ruby --, Mithril Mail 1, Magebane Swd 15, Great Lance 25, Willow Bow 9, Heal 9, Talisman 1, Fire Ward 15, Speedwings 1, Mend 15, Hand Axe 20, Great Sword 25, Longbow 20

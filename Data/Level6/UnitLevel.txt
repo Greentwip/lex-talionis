@@ -65,7 +65,7 @@ enemy;0;0;Cleric;8;Glimmer,Fortune;22,8;Attack;Guard
 ### Bottom - 23 at bottom
 # Guarding doors
 enemy;0;0;Knight;7;Iron Lance,dSkeleton Key;6,24;SoftGuard;Guard
-enemy;0;0;Knight;7;dAxereaver,Potion;7,24;SoftGuard;Guard
+enemy;0;0;Knight;7;Great Lance,Potion;7,24;SoftGuard;Guard
 enemy;0;0;Knight;7;Iron Lance,dSkeleton Key;18,24;SoftGuard;Guard
 enemy;0;0;Knight;7;dGreat Lance,Potion;17,24;SoftGuard;Guard
 # Right Door - 4 Fighters
@@ -92,9 +92,9 @@ enemy;0;0;Knight;7;Javelin,dSkeleton Key;12,27;HardGuard;Guard
 #
 # From Left
 enemy;0;0;Fighter;7;Hand Axe;1,27;Attack_1;Guard
-enemy;0;0;Fighter;7;dSwordreaver;1,28;Attack_1;Guard
+enemy;0;0;Fighter;7;Hand Axe;1,28;Attack_1;Guard
 # From Right
-enemy;0;0;Soldier;7;Iron Lance;23,27;Attack_2;Guard
+enemy;0;0;Soldier;7;Javelin;23,27;Attack_2;Guard
 enemy;0;0;Soldier;7;Javelin;23,28;Attack_2;Guard
 # Reinforcements - 
 # Turn 2

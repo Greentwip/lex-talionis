@@ -50,6 +50,15 @@ def lt(a, b):
 def gt(a, b):
     return a > b
 
+# === GET COLOR FROM TEAM ==============================================
+def get_color(team):
+    if team == 'player':
+        return 'Blue'
+    elif team == 'other':
+        return 'Green'
+    else:
+        return 'Red'
+
 # === RAYTRACE ALGORITHM FOR TAXICAB GRID ==============================
 def raytrace(old, new):
     x0, y0 = old

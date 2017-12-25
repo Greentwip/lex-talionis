@@ -450,7 +450,7 @@
         <tags></tags>
         <skills>1,Focus;5,Conductance;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>75,15,65,45,65,40,20,45</growths>
+		<growths>75,15,75,45,65,40,20,45</growths>
 		<bases>11,0,1,1,2,0,1,2,4,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Curious practioners of anima magic.</desc>
@@ -468,9 +468,9 @@
         <tags></tags>
         <skills>3,Feat;5,Metamagic;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>75,15,65,45,65,40,20,45</growths>
-		<bases>15,0,3,2,2,0,4,5,5,6</bases>
-        <promotion>4,0,2,1,0,0,3,3,1,1</promotion>
+		<growths>75,15,75,45,65,40,20,45</growths>
+		<bases>15,0,2,2,2,0,4,5,5,6</bases>
+        <promotion>4,0,1,1,0,0,3,3,1,1</promotion>
 		<max>40,15,19,17,18,20,15,18,20</max>
         <desc>Advanced wielders of the natural magics.</desc>
     </class>

@@ -21,7 +21,7 @@ r;Man1
 r;Ophie
 u;Ophie;MidRight
 s;Ophie;So, I guess I should thank you.{w}{br}You arrived in the nick of time.{w};auto
-s;Sam;No, actually I should apologize to you.{w}{br}You were right.{w}{br}We can't keep hiding in the shadows and expect to accomplish anything substantial.{w};auto
+s;Sam;No, actually I should apologize to you.{w}{br}You were right.{w}{br}We can't hide in the shadows and expect to accomplish anything substantial.{w};auto
 s;Ophie;Well, I'm glad you came around.{w};auto
 m;Hum of the Streets
 u;Kayla;MidLeft
@@ -33,14 +33,12 @@ s;Sam;...Kayla is a liason from the Confederacy of Free Cities.{w};auto
 s;Ophie;The Confederacy of what now?{w};auto
 s;Sam;The Confederacy of Free Cities.{w};auto
 s;Ophie;Which is?{w};auto
-s;Sam;Really, you don't know?{w};auto
-s;Ophie;No...{w}{br}I never cared much for geography.{w};auto
 s;Sam;The Confederacy is a group of free city states to the east.{w}{br}They've banded together to protect themselves against the Empire's ambition.{w};auto
 s;Kayla;Indeed. I'm with the Confederacy's... diplomacy bureau.{w};auto
 s;Sam;She's one of the reasons the Resistance has had such success lately.{w}{br}There are many Confederacy spies in the ranks of the Empire.{w}{br}They relay back important information about where the Empire is weak,{w}{br}and when would be a good time to strike.{w};auto
 s;Ophie;So you're Sam's mysterious source.{w}{br}This is who you've been trusting, Sam?{w}{clear}Kayla, your 'information' nearly got us killed at Fort Kosheen.{w};auto
 s;Kayla;Ah yes, one of our spies fed us false information.{w}{br}Tsk Tsk.{w}{br}Don't worry, he was dealt with.{w}{br}Harshly.{w};auto
-s;Sam;There's no need to be suspicious.{w}{br}Like we always say, any enemy of the Empire is a friend of ours.{w}{br}The Confederacy's been struggling against the Empire for many solstices.{w}{br}They're interested in Kerala's freedom just as much as we are.{w};auto
+s;Sam;There's no need to be suspicious.{w}{br}Any enemy of the Empire is a friend of ours.{w}{br}The Confederacy's been struggling against the Empire for many solstices.{w}{br}They're interested in Kerala's freedom just as much as we are.{w};auto
 s;Kayla;Lately, the Confederacy's decided to take a more active approach.{w}{br}I'll be accompanying you all on your missions from now on.{w}{br}How exciting!{w}{br}You should know I've never really done anything so hands-on before.{w}{br}Freedom fighters, nighttime raids, disguised princesses...{w}{br}Oh, how romantic!{w};auto
 s;Ophie;Yeah, we'll see how you like it after the next mission, eh?{w};auto
 r;Sam

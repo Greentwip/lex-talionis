@@ -796,6 +796,49 @@ class Animation(object):
 
 # === PHASE OBJECT ============================================================
 class Phase(object):
+    def __init__(self, gameStateObj):
+        self.phase_in = []
+        self.phase_in.append(PhaseIn('player', 'PlayerTurnBanner', 800))
+        self.phase_in.append(PhaseIn('enemy', 'EnemyTurnBanner', 800))
+        self.phase_in.append(PhaseIn('enemy2', 'Enemy2TurnBanner', 800))
+        self.phase_in.append(PhaseIn('other', 'OtherTurnBanner', 800))
+        self.order = ('player', 'enemy', 'enemy2', 'other')
+
+        self.current = 3 if gameStateObj.turncount == 0 else 0
+        self.previous = 0
+
+    def get_current_phase(self):
+        return self.order[self.current]
+
+    def get_previous_phase(self):
+        return self.order[self.previous]
+
+    def _next(self):
+        self.current += 1
+        if self.current >= len(self.order):
+            self.current = 0
+
+    def next(self, gameStateObj):
+        self.previous = self.current
+        # Actually change phase
+        if gameStateObj.allunits:
+            self._next()
+            while not any(self.get_current_phase() == unit.team for unit in gameStateObj.allunits if unit.position) \
+                    and self.current != 0: # Also, never skip player phase
+                self._next()
+        else:
+            self.current = 0 # If no units at all, just default to player phase?
+
+    def slide_in(self, gameStateObj):
+        self.phase_in[self.current].begin(gameStateObj)
+
+    def update(self):
+        return self.phase_in[self.current].update()
+
+    def draw(self, surf):
+        self.phase_in[self.current].draw(surf)
+
+class PhaseIn(object):
     def __init__(self, name, spritename, display_time):
         self.name = name
         self.spritename = spritename

@@ -202,8 +202,8 @@ class Status_Processor(object):
     def __init__(self, gameStateObj, upkeep=True):
         # Initial setup
         self.upkeep = upkeep # Whether I'm running this on upkeep or on endstep
-        self.current_phase = gameStateObj.statedict['phases'][gameStateObj.statedict['current_phase']].name
-        self.previous_phase = gameStateObj.statedict['phases'][gameStateObj.statedict['previous_phase']].name
+        self.current_phase = gameStateObj.phase.get_current_phase()
+        self.previous_phase = gameStateObj.phase.get_previous_phase()
         affected_units = [unit for unit in gameStateObj.allunits if unit.position and unit.status_effects]
         if self.upkeep:
             self.units = [unit for unit in affected_units if unit.team == self.current_phase]
