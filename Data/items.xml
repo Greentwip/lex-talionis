@@ -245,7 +245,7 @@
 		<LVL>A</LVL>
     </item>
 
-    <item name="Superior Edge">
+    <item name="Master Edge">
         <id>Superior Edge</id>
         <spritetype>Sword</spritetype>
         <spriteid>18</spriteid>       
@@ -463,7 +463,7 @@
 		<LVL>A</LVL>
     </item>
 
-    <item name="Superior Lance">
+    <item name="Master Lance">
         <id>Superior Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>13</spriteid>       
@@ -699,7 +699,7 @@
 		<LVL>A</LVL>
     </item>
 
-    <item name="Superior Axe">
+    <item name="Master Axe">
         <id>Superior Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>17</spriteid>       
@@ -1244,9 +1244,9 @@
         <components>spell,uses,status,beneficial,custom_ai</components>
         <weapontype>Anima</weapontype>
  
-        <uses>5</uses>
+        <uses>10</uses>
         <RNG>0-1</RNG>
-        <value>300</value>
+        <value>200</value>
         <desc>Grants ally flying for 5 turns.</desc>
         <custom_ai>not 'Rex_Aegis' in [s.id for s in target.status_effects]</custom_ai> 
         

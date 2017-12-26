@@ -854,8 +854,10 @@ class AnimationCombat(Combat):
 
         self.left_hp_bar.update(skip or self.combat_state == 'Exp')
         self.right_hp_bar.update(skip or self.combat_state == 'Exp')
-        self.left.battle_anim.update()
-        self.right.battle_anim.update()
+        if self.left.battle_anim:
+            self.left.battle_anim.update()
+        if self.right.battle_anim:
+            self.right.battle_anim.update()
 
         # Handle shake
         if self.current_shake:

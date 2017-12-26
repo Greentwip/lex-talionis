@@ -24,7 +24,7 @@ s;Sam;Uh... Well we can't induct all of your...{w}crew into the Resistance.{w}{b
 s;Kayla;But with this many at our back,{w}{br}the Resistance could finally fight toe to toe with Duke Ulver's army.{w};auto
 s;Kiley;Hmmph! Me and my boys ain't exactly subtle, y'know.{w};auto
 s;Kayla;Well, the Confederacy has prepared a hiding place for such an eventuality.{w}{br}We can keep your crew hidden.{w}{br}You'll be a reserve for when the Resistance needs the firepower.{w};auto
-s;Sam;Kiley, if you agree,{w}{br}you'll be in charge of the First Revolutionary Army of Kerala.{w}{br}A force to fight the Empire when and where it is needed most.{w};auto
+s;Sam;Kiley, if you agree,{w}{br}you'll be in charge of the Revolutionary Army of Kerala.{w}{br}A force to fight the Empire when and where it is needed most.{w};auto
 s;Kiley;Aye...{w}{br}Commander of an army....{w}{br}Sounds like a lot of responsibilities...{w}{clear}But, if me country needs me, what can I say?{w}{br}Plus me boys wouldn't know what to do without me.{w}{br}Joinin' the military might do 'em some good.{w};auto
 s;Sam;Great!{w};auto
 move_sprite;Kiley;24,0

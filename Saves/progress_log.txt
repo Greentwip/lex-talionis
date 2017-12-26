@@ -4243,3 +4243,55 @@ Wexp: 0, 0, 0, 0, 0, 0, 40
 Items: Flux Ward 24, Scathe 10, Spiritbane 3
 *** Convoy:
 Items: Secret Book 1, Angelic Robe 1, Mana Ring 1, Spiritbane 3, Prim's Charm --, Sapphire --, Ruby --, Mithril Mail 1, Magebane Swd 15, Great Lance 25, Willow Bow 9, Heal 9, Talisman 1, Fire Ward 15, Speedwings 1, Mend 15, Hand Axe 20, Great Sword 25, Longbow 20
+
+=== Level 6 === Money: 10055
+*** Ophie: Riposte,Vantage,Movement +1,Swordbreaker
+Lvl 11, Exp 74
+Wexp: 61, 0, 0, 0, 0, 0, 0
+Items: Master Edge 6, Gustblade 15, Steel Sword 12, Rapier 6, Vulnerary 2
+*** Prim: Healtouch,Miracle,Defense +2
+Lvl 9, Exp 74
+Wexp: 0, 0, 0, 0, 56, 0, 0
+Items: Glimmer Ward 13, Shine Ward 15, Mend 8, Fortune 9
+*** Joel: Cleave,Shove,Movement +1
+Lvl 11, Exp 63
+Wexp: 0, 0, 66, 16, 0, 0, 0
+Items: Steel Axe 21, Hatchet 22, Hand Axe 20, Potion 2, Vulnerary 1
+*** Nia: Prescience,Critical,Maximum HP +5
+Lvl 10, Exp 29
+Wexp: 0, 0, 0, 54, 0, 0, 0
+Items: Willow Bow 39, Oak Bow 27, Longbow 16, Vulnerary 3
+*** Althea: Focus,Conductance,Maximum HP +5
+Lvl 10, Exp 19
+Wexp: 0, 0, 0, 0, 0, 40, 0
+Items: Wyrmsfire 3, Wind Ward 22, Thunder Ward 30, Fire Ward 25
+*** Drake: Canto,Savior,Defense +2
+Lvl 9, Exp 49
+Wexp: 19, 19, 0, 0, 0, 0, 0
+Items: Iron Lance 12, Javelin 17, Physic 15, Iron Sword 43, Vulnerary 2
+*** Renae: Locktouch,Steal,Resistance +2
+Lvl 7, Exp 63
+Wexp: 32, 0, 0, 0, 0, 0, 0
+Items: Flareblade 11, Rapier 20, Iron Sword 41, Vulnerary 3, Steel Sword 30
+*** Theo: Provoke,Shove,Movement +1
+Lvl 9, Exp 46
+Wexp: 0, 43, 0, 0, 0, 0, 0
+Items: Javelin 12, Iron Lance 42, Slim Lance 29
+*** Eliza: Synergy,Maximum HP +5,Movement +1
+Lvl 9, Exp 68
+Wexp: 0, 44, 0, 0, 0, 0, 0
+Items: Iron Lance 36, Short Spear 5, Javelin 20, Vulnerary 3
+*** Sam: Inspiration,Skill Aura,Movement +1
+Lvl 9, Exp 98
+Wexp: 0, 0, 0, 0, 50, 0, 0
+Items: Heal 25, Mend 13, Shine Ward 6, Short Spear 14
+*** Kayla: Hex,Empowered,Speed +2
+Lvl 9, Exp 97
+Wexp: 0, 0, 0, 0, 0, 0, 51
+Items: Flux Ward 21, Nyx Ward 17, Scathe 4, Vulnerary 2, Steel Lance 27
+*** Coyote: Initiative,Poise,Maximum HP +5
+Lvl 9, Exp 91
+Wexp: 46, 0, 0, 0, 0, 0, 0
+Items: Fly 10, Rusted Sword 17, Vulnerary 3, Energy Ring 1
+*** Convoy:
+Items: Secret Book 1, Angelic Robe 1, Mana Ring 1, Spiritbane 3, Prim's Charm --, Sapphire --, Ruby --, Mithril Mail 1, Magebane Swd 15, Great Lance 25, Talisman 1, Speedwings 1, Great Sword 25, Disintegrate 3, Spiritbane 3, Hand Axe 2, Fire Ward 14, Willow Bow 3, Mithril Lance 19, Great Lance 24, Iron Axe 23, Restore 10, Diamond --

@@ -1788,7 +1788,9 @@ class UnitObject(object):
         # Create copy so we can iterate it over without messing around with stuff...
         for status in self.status_effects[:]:
             if status.time or status.remove_range:
-                StatusObject.HandleStatusRemoval(status, self, gameStateObj)
+                # Without clean_up parameter, certain statuses can give out other status on removal, statuses we don't want
+                # Like if you remove flying, you can get tile statuses, which you obviously don't want at this point
+                StatusObject.HandleStatusRemoval(status, self, gameStateObj, clean_up=True)
         # Units with status_counts should have theirs reset
         for status in self.status_effects:
             if status.count:

@@ -301,6 +301,8 @@ class AI(object):
     def run_steal_ai(self, gameStateObj, valid_moves):
         max_tp = 0
         for move in valid_moves:
+            if isinstance(self.team_ignore, int):
+                self.team_ignore = [self.team_ignore]
             valid_targets = [unit for unit in self.unit.getStealTargets(gameStateObj, move) if self.unit.checkIfEnemy(unit) and
                              unit.team not in self.team_ignore and unit.name not in self.name_ignore]
             for target in valid_targets:

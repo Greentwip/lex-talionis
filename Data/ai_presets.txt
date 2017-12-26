@@ -28,14 +28,15 @@
 # Priority:
 # 		Higher priority units move first
 # Teams to Ignore:
-# 		If Primary AI is 4, Teams to Ignore can be an integer. It will then define not what teams to #       ignore but rather how many items the thief will hold before atttempting to escape
+# 		If Primary AI is 4, Teams to Ignore's first value should be an integer. It will then define not what teams to 
+#       ignore but rather how many items the thief will hold before atttempting to escape
 #
 # For entry
 # Enter values separated by spaces
 # AI Name - Primary AI State - Secondary AI State - Teams to ignore - Names to ignore - Viewing Range - AI Priority
 # Example:
 # Pursue 1 1 - - 2 20
-# AttackOther 1 2 player,enemy,enemy2 - 2 10
+# AttackOther 1 2 [player,enemy,enemy2] - 2 10
 #
 None 					0 0 - - 0 20
 DoNothing   			0 0 - - 0 20
@@ -46,10 +47,10 @@ HardGuard   			2 0 - - 0 20
 Unlock      			4 4 - - 2 30
 Escape      			5 5 - - 2 30
 ThiefEscape 			6 6 - - 2 30
-Unlock2         		4 4 2 - 2 30
+Unlock2         		4 4 [2] - 2 30
 AttackThiefEscape   	7 6 - - 2 30
-PursueIgnoreOther   	1 1 other - 2 20
-SoftGuardIgnoreOther	1 0 other - 0 20
+PursueIgnoreOther   	1 1 [other] - 2 20
+SoftGuardIgnoreOther	1 0 [other] - 0 20
 PursueVillage			3 3 - - 2 20
 Support					1 2 - - 2 10
 FollowBoss				1 7 - - 2 15

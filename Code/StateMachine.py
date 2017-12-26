@@ -329,7 +329,7 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], gameStateObj.cursor.currentHoveredUnit, event_flag=False))
                     gameStateObj.stateMachine.changeState('dialogue')
                 return
-            # Charge all skills
+            # Charge all skills and remove all non-class skills
             elif event.key == Engine.key_map['t']:
                 gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
                 if gameStateObj.cursor.currentHoveredUnit:
@@ -337,6 +337,8 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                     for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if skill.active]:
                         skill.active.current_charge = skill.active.required_charge
                         gameStateObj.cursor.currentHoveredUnit.tags.add('ActiveSkillCharged')
+                    for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if not skill.class_skill]:
+                        StatusObject.HandleStatusRemoval(skill, gameStateObj.cursor.currentHoveredUnit, gameStateObj)
             # Increase all wexp by 5
             elif event.key == Engine.key_map['5']:
                 gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
@@ -1598,7 +1600,7 @@ class SelectState(State):
             elif self.name == 'talkselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
-                    cur_unit.hasAttacked = True
+                    cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
                     talk_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/talkScript.txt'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, cur_unit, gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
@@ -2542,7 +2544,12 @@ class PromotionState(State):
 
         elif self.current_state == 'Leave':
             if current_time - self.last_update > 160:  # 10 frames
-                gameStateObj.stateMachine.changeState('transition_double_pop')
+                if isinstance(gameStateObj.combatInstance, Interaction.AnimationCombat):
+                    gameStateObj.stateMachine.back()
+                    gameStateObj.stateMachine.back()
+                    gameStateObj.background = None
+                else:
+                    gameStateObj.stateMachine.changeState('transition_double_pop')
                 self.current_state = 'Done'  # Inert state
                 Engine.music_thread.fade_back()
                 return 'repeat'

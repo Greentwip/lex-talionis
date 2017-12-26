@@ -229,8 +229,24 @@ class levelUpScreen(object):
             # Class should already have been changed by now in the levelpromote state
             # Here's where I change all the important information
             new_class = metaDataObj['class_dict'][self.unit.klass]
+            old_anim = self.unit.battle_anim
             self.unit.removeSprites()
             self.unit.loadSprites()
+            # Reseed the combat animation
+            if self.in_combat and old_anim:
+                anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender, self.unit.getMainWeapon())
+                if anim:
+                    # Build animation
+                    script = anim['script']
+                    if self.unit.name in anim['images']:
+                        frame_dir = anim['images'][self.unit.name]
+                    else:
+                        frame_dir = anim['images']['Generic' + Utility.get_color(self.unit.team)]
+                    import BattleAnimation
+                    self.unit.battle_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
+                    self.unit.battle_anim.awake(owner=old_anim.owner, parent=old_anim.parent, partner=old_anim.partner,
+                                                right=old_anim.right, at_range=old_anim.at_range, init_speed=old_anim.entrance,
+                                                init_position=old_anim.init_position)
             # Reset Level - Don't!
             self.unit.level += 1
             # Actually change class

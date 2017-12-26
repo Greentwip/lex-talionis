@@ -45,8 +45,8 @@ other;0;C2_3;Citizen;5;;24,32;None;Prisoner
 enemy;0;0;Razia;12,2;SoftGuard
 # Generics
 # Razia's Guards
-enemy;0;0;Shaman;10;Nyx,Stun;6,3;SoftGuard;Guard
-enemy;0;0;Shaman;10;Nyx,Stun;18,3;SoftGuard;Guard
+enemy;0;0;Shaman;10;Flux,Stun;6,3;SoftGuard;Guard
+enemy;0;0;Shaman;10;Flux,Stun;18,3;SoftGuard;Guard
 enemy;0;0;Sniper;11;Yew Bow;12,5;SoftGuard;Guard
 ### Top - 14 at top
 # At Door

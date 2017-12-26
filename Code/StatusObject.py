@@ -500,7 +500,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
     # current status effects affecting them and check if any have always animations. If they do, they draw them...
     return status
 
-def HandleStatusRemoval(status, unit, gameStateObj=None):
+def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
     if not isinstance(status, StatusObject):
         # Must be a unique id
         for s in unit.status_effects:
@@ -529,7 +529,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
     if status.rescue:
         unit.stats['SKL'].bonuses -= status.rescue.skl_penalty
         unit.stats['SPD'].bonuses -= status.rescue.spd_penalty
-    if status.flying:
+    if status.flying and not clean_up:
         unit.acquire_tile_status(gameStateObj, force=True)
     if status.passive:
         for item in unit.items:
@@ -539,7 +539,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None):
         status.parent_status.remove_child(unit)
     if status.tether:
         status.remove_children()
-    if status.status_on_complete:
+    if status.status_on_complete and not clean_up:
         HandleStatusAddition(statusparser(status.status_on_complete), unit, gameStateObj)
     if status.ephemeral:
         unit.isDying = True

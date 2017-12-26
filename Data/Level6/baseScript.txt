@@ -44,7 +44,7 @@ elif;self.optionalunit == 'Guard Duty'
 	s;Renae;This is the Resistance base, y'know, and we can't have just anybody walk in!{w}{br}That's why Sam entrusted me with guarding the entrance!
 	s;Drake;But... I don't know the password.
 	s;Renae;Then, Hank, you're out of luck!{w}{br}Come back another day!
-	s;Drake;I do solemnly swear on my knightly honor, I am a full-fledged member of the Resistance.
+	s;Drake;I swear on my knightly honor that I am a full-fledged member of the Resistance.
 	s;Renae;You sure about that, Nate?{w}{br}'Cause I think I would recognize a member of the Resistance.
 	s;Drake;It's Drake, and also I'm quite sure.{w}{br}Don't you remember when we attacked Fort Kosheen?{w}{br}I held off those guards.
 	s;Renae;Hmm... Nothing's coming to me.
@@ -87,8 +87,8 @@ elif;self.optionalunit == 'Cipher'
 	s;Sam;Exactly. 
 	s;Kayla;...
 	s;Sam;...
-	s;Kayla;Sam, take a look at this pattern.{w}{br}This symbol shows up all over the place.
-	s;Sam;Hmmm... Maybe its the key?{w}{br}It shows up on page two, three, five, seven, eleven...{w}{br}...{w}{br}I got it! Primes!
+	s;Kayla;Take a look at this pattern.{w}{br}This symbol shows up all over the place.
+	s;Sam;Hmmm... Maybe its the key?{w}{br}It shows up on page two, three, five, seven, eleven...{w}{br}...{w}{br}Primes!
 	s;Kayla;Primes? You sure?
 	s;Sam;Try it.{w}{br}Read only the prime characters on the page.
 	s;Kayla;Gebo... Naudiz... Fehu... Ehwaz...{w};auto;slow
@@ -104,8 +104,8 @@ elif;self.optionalunit == 'Cipher'
 	u;Sam;Right
 	s;Sam;Ah... Seems I let the time get ahead of me.
 	s;Kayla;Tsk Tsk. Time enjoyed is never time wasted.{w}{br}Thanks for your help, dearest.
-	s;Sam;No problem.{w}{br}It's not everyday you meet someone who shares the same fascination with the magical arts...
-	s;Kayla;And it's not everyday a spell's cipher is solved that quickly.{w}{br}I think I'll stick around, handsome.
+	s;Sam;No problem.{w}{br}It's not everyday I find someone who shares my fascination with the magical arts...
+	s;Kayla;And it's not everyday a spell's cipher is solved that quickly, handsome.{w}{br}Now be on your way.{w}{br}A lady needs time to prepare.
 	r;Sam;Kayla
 	give_item;Kayla;Disintegrate
 	grey_base_convo;Cipher

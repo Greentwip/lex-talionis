@@ -63,29 +63,27 @@ s;Althea;But how... They have an army...{w};auto
 s;Sam;That's why we're getting an army of our own.{w};auto
 move_sprite;Sam;-24,0
 u;Joel;FarRight
-s;Joel;Captain, I like where this is going.{w};auto
+s;Joel;I like where this is going.{w};auto
 s;Althea;Kayla, your Confederacy of Free States will help?{w}{br}They have an army, right?{w};auto
 r;Joel
 u;Ophie;FarRight
 s;Ophie;Pah... We'd just be trading one empire for another.{w};auto
 s;Kayla;No... the Confederacy wants to remain hands off for now.{w};auto
 s;Althea;Then where do you intend to find an army?{w};auto
-s;Sam;Allow me to explain, Kayla?{w};auto
-s;Kayla;Of course, dear.{w};auto
 s;Sam;I'm sure everyone here has heard of Tyrana Prison.{w};auto
 s;Althea;Uh-huh...{w};auto
 r;Althea
 u;Prim;FarLeft
 s;Prim;Tyrana prison...{w}{br}What's that?{w};auto
-s;Sam;Monks don't get out much, do they?{w}{clear}Anyway, Tyrana Prison is a brutal work camp.{w}{br}Political prisoners and other Imperial dissidents are forced to labor in the mines.{w};auto
+s;Sam;Monks don't get out much, do they?{w}{clear}Anyway, Tyrana Prison is a brutal work camp.{w}{br}Political prisoners and other dissidents are forced to labor in the mines.{w};auto
 s;Kayla;We're going to break those prisoners out.{w}{br}They'll form the backbone of our revolutionary army.{w};auto
 r;Prim
 u;Joel;FarLeft
 s;Joel;It sure is... ambitious, Captain.{w}{br}Do ya reckon' we can pull it off?{w};auto
 s;Sam;We don't have a choice. Subterfuge can only get us so far.{w}{br}We need to raise an army, and these prisoners are our best bet.{w}{br}They hate the Empire as much as we do.{w};auto
 s;Ophie;Do we have any more info?{w}{br}I don't want to go in blind.{w};auto
-s;Kayla;The Confederacy has been watching the area.{w}{br}There's a secret passage that leads straight into the heart of the prison.{w}{br}Once there, we do what we can to foment a prison riot.{w};auto
+s;Kayla;The Confederacy has been watching the area.{w}{br}There's a secret passage that leads straight into the prison's heart.{w}{br}Once there, we do what we can to foment a prison riot.{w};auto
 s;Ophie;Hmmm...{w};auto
-s;Sam;If there are no more questions, then everyone gear up.{w}{br}It's a day's travel, and we're going straight into the heart of Imperial territory...{w};auto
+s;Sam;If there are no more questions, then everyone gear up.{w}{br}We're going straight into the heart of Imperial territory...{w};auto
 r;Joel;Prim;Ophie;Sam;Kayla
 t;1

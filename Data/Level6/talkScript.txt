@@ -74,4 +74,5 @@ end
 # If Coyote is not converted, convert him to player
 if;self.optionalunit2.name == 'Coyote' and self.optionalunit2.team == 'other'
 	convert;Coyote;player
+	change_ai;Coyote;None
 end

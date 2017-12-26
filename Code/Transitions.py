@@ -1191,6 +1191,7 @@ class TransitionPopState(StateMachine.State):
         self.transition = transition_max
 
     def update(self, gameStateObj, metaDataObj):
+        # logger.debug('%s %s', self, self.transition)
         gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):
