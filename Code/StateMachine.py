@@ -2426,7 +2426,7 @@ class PromotionState(State):
             self.show_map = False
 
             self.unit = gameStateObj.cursor.currentSelectedUnit
-            color = 'Blue' if self.unit.team == 'player' else 'Red'
+            color = Utility.get_color(self.unit.team)
 
             # Old - Right - Animation
             self.right_anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender)
@@ -2476,8 +2476,9 @@ class PromotionState(State):
 
             self.current_state = 'Init'
 
-            # Transition in:
-            if gameStateObj.stateMachine.from_transition():
+            if not self.right_anim or not self.left_anim:
+                self.finalize(Engine.get_time(), gameStateObj)
+            elif gameStateObj.stateMachine.from_transition():
                 gameStateObj.stateMachine.changeState("transition_in")
                 return 'repeat'
 
@@ -2504,6 +2505,16 @@ class PromotionState(State):
         child_effect.start_anim('Attack')
         anim.children.append(child_effect)
 
+    def finalize(self, current_time, gameStateObj):
+        self.current_state = 'Level_Up'
+        self.last_update = current_time
+        # 1 exp is placeholder
+        next_level = LevelUp.levelUpScreen(gameStateObj, self.unit, 1, in_combat=self)
+        next_level.state.changeState('promote')  # Hack to start in promotion
+        gameStateObj.levelUpScreen.append(next_level)
+        gameStateObj.stateMachine.changeState('expgain')
+        self.unit.klass = self.unit.new_klass
+
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)
         # print(self.current_state)
@@ -2529,14 +2540,7 @@ class PromotionState(State):
 
         elif self.current_state == 'Wait':
             if current_time - self.last_update > 1660:  # 100 frames
-                self.current_state = 'Level_Up'
-                self.last_update = current_time
-                # 1 exp is placeholder
-                next_level = LevelUp.levelUpScreen(gameStateObj, self.unit, 1, in_combat=self)
-                next_level.state.changeState('promote')  # Hack to start in promotion
-                gameStateObj.levelUpScreen.append(next_level)
-                gameStateObj.stateMachine.changeState('expgain')
-                self.unit.klass = self.unit.new_klass
+                self.finalize(current_time, gameStateObj)
 
         elif self.current_state == 'Level_Up':
             self.last_update = current_time
@@ -2550,6 +2554,7 @@ class PromotionState(State):
                     gameStateObj.background = None
                 else:
                     gameStateObj.stateMachine.changeState('transition_double_pop')
+                    gameStateObj.background.fade_out()
                 self.current_state = 'Done'  # Inert state
                 Engine.music_thread.fade_back()
                 return 'repeat'
@@ -2953,14 +2958,14 @@ class ShopState(State):
                     else:
                         self.display_message = self.get_dialog(cf.WORDS['Shop_check'])
                     self.shopMenu.takes_input = False
+                elif (gameStateObj.counters['money'] - value) < 0:
+                    GC.SOUNDDICT['Select 4'].play()
+                    self.display_message = self.get_dialog(cf.WORDS['Shop_no_money'])
                 elif len(self.unit.items) >= cf.CONSTANTS['max_items']:
                     GC.SOUNDDICT['Select 4'].play()
                     self.display_message = self.get_dialog(cf.WORDS['Shop_max'])
                     self.shopMenu.takes_input = False
                     self.stateMachine.changeState('choice')
-                elif (gameStateObj.counters['money'] - value) < 0:
-                    GC.SOUNDDICT['Select 4'].play()
-                    self.display_message = self.get_dialog(cf.WORDS['Shop_no_money'])
             elif event == 'INFO':
                 self.info = not self.info
 

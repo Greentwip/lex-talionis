@@ -1,5 +1,6 @@
 pose;Attack
 blend
+static
 f;2;Fire0
 f;2;Fire1
 f;2;Fire2

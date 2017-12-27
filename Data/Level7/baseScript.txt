@@ -22,7 +22,7 @@ if;self.optionalunit == 'Theo Sphinx, Pt. IV'
 	u;Kayla;Right
 	s;Kayla;Tsk Tsk. So you've finally arrived, Theo.{w}{br}I was wondering if you'd ever manage to track me down.{w}{br}How'd you find the place?{w};auto
 	s;Theo;The silver-haired dame was all business.{w};auto;noir
-	s;Kayla;No, don't tell me, Nia told you.{w}{br}That girl!{w};auto
+	s;Kayla;No, don't tell me.{w}{br}That damned girl!{w};auto
 	s;Theo;Your game is up, Kayla.{w}{br}Hand over the tome.{w};auto
 	s;Theo;Sad to see such a pretty girl turning herself to a life a crime.{w};auto;noir
 	s;Kayla;The tome, what?{w};auto

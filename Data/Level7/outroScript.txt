@@ -14,40 +14,7 @@ s;Narrator;30 minutes later...{w};auto;narration
 t;1
 b;OutsideFort
 t;2
-u;Ophie;Right
-s;Ophie;Damn, what's taking Sam so long...{w}{br}How hard can it be to find some scraps of paper!{w};auto
-u;Kayla;Left
-s;Kayla;Ophie, it's time we had a little chat.{w}{br}I'm getting sick and tired of your constant harassment of Sam.{w};auto
-s;Ophie;Huh?{w};auto
-s;Kayla;You don't know the half of what Sam does for you and your country.{w}{br}He raised this Resistance from nothing.{w}{br}He's the only reason you have a bed to sleep on.{w}{br}So lay off!{w}{br}Sam might not stick up for himself, but I will.{w};auto
-s;Ophie;...{w};auto
-s;Kayla;Are we clear?{w};auto
-s;Ophie;Yeah...{w};auto
-s;Kayla;Great!{w}{br}I'm going to go help Sam look for the information.{w}{br}Keep your eyes open for any more reinforcements.{w}{br}Even in death, that commander may have left us some surprises.{w};auto
-r;Kayla
-s;Ophie;Harrumph...{w}{br}Who does she think she is...{w};auto
-r;Ophie
-end_skip
-t;1
-b;OutsideFort
-t;2
-u;Prim;Left
-s;Prim;That outburst was unlike Kayla.{w}{br}I wonder what's gotten into her...{w};auto
-u;Eliza;Right
-s;Eliza;Pah. You're so funny sometimes.{w};auto
-s;Prim;Huh?{w};auto
-s;Eliza;You really haven't figured it out, yet?{w};auto
-s;Prim;Figured what out yet?{w};auto
-s;Eliza;Kayla's not just Sam's secret source.{w}{br}They're also secret... lovers.{w};auto
-s;Prim;What! Really?{w};auto
-s;Eliza;It's obvious.{w}{br}I mean, they do a decent job of hiding it,{w}{br}but can't you just feel the tension in the air?{w};auto
-s;Prim;I guess...{w};auto
-s;Eliza;Kayla just had enough of Ophie's ragging.{w}{br}He needs to learn some respect, and Sam is too kind to correct him.{w};auto
-s;Prim;Oh...{w};auto
-s;Eliza;Hee hee hee.{w}{br}You crack me up sometimes, Prim.{w};auto
-r;Eliza
-s;Prim;...{w};auto
-u;Theo;Right
+u;Prim;Left;u;Theo;Right
 s;Theo;Everything alright, Prim?{w};auto
 s;Prim;...Theo?{w};auto
 s;Theo;Yes...?{w};auto
@@ -60,8 +27,8 @@ r;Theo;Prim
 u;Sam;OffscreenLeft
 move_sprite;Sam;96,0;force_hold
 u;Joel;Right
-s;Joel;Sam!{w}{br}Took you long enough.{w}{br}You look beat up.{w};auto
-s;Sam;The Empire really didn't want anyone getting their hands on this.{w}{br}Anyway, we've got what we came for. Let's go.{w};auto
+s;Joel;Captain!{w}{br}Took you long enough.{w};auto
+s;Sam;It wasn't as easy to find as I'd been led to believe.{w}{br}Anyway, we've got what we came for. Let's go.{w};auto
 r;Joel;Sam
 t;3
 end_skip
@@ -85,10 +52,12 @@ u;Ulver;Right
 s;Vagnius;Milord.{w};auto
 s;Ulver;Vagnius.{w};auto
 s;Vagnius;How noble of you to grace me with your--{w};auto
-s;Ulver;Vagnius.{w}{br}I care not for your ingratiations.{w}{br}What of the Resistance?{w};auto
+s;Ulver;Vagnius.{w}{br}Spare me your ingratiations.{w}{br}What of the Resistance?{w};auto
 s;Vagnius;Marduk... has failed, milord.{w}{br}The Resistance lives.{w};auto
 s;Ulver;Hmmph!{w};auto
 s;Vagnius;But we were close this time, milord. So very, very close!{w}{br}Give me one more chance.{w};auto
+s;Ulver;Hmmm... Second chances are not the Imperial way.{w}{br}Nor a taste for failure.
+s;Vagnius;Milord?
 s;Ulver;...{w}{br}What is your plan this time?{w};auto
 s;Vagnius;The village of Podoma, milord.{w}{br}The Resistance will not ignore the feverish pleas of their own countrymen.{w}{br}I can draw them into the open and eliminate them once and for all.{w};auto
 s;Ulver;How... ignoble.{w};auto

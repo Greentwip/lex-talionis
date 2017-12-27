@@ -328,11 +328,11 @@
     <status name="Underdog">
         <id>Underdog</id>
         <image_index>9,5</image_index>
-        <desc>Grants Damage +2 and Damage Taken -2 against enemies with greater HP.</desc>
+        <desc>Grants Damage +2 and Damage Taken -2 against enemies with greater max HP.</desc>
         <components>conditional_mt,conditional_resist</components>
 
-        <conditional_mt>2;Utility.lt(self.currenthp, target.currenthp)</conditional_mt>
-        <conditional_resist>2;Utility.lt(target.currenthp, self.currenthp)</conditional_resist>
+        <conditional_mt>2;Utility.lt(self.stats['HP'], target.stats['HP'])</conditional_mt>
+        <conditional_resist>2;Utility.lt(target.stats['HP'], self.stats['HP'])</conditional_resist>
     </status>
 
     <!-- Used by Althea's Charm -->

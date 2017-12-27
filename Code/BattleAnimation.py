@@ -246,6 +246,7 @@ class BattleAnimation(object):
                 self.under_frame = self.frame_directory[line[2]]
             else:
                 self.under_frame = None
+            self.over_frame = None
             self.state = 'Wait'
             self.processing = False
             self.base_state = True

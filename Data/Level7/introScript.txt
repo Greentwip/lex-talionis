@@ -14,7 +14,7 @@ s;Sam;Huh?{w};auto
 s;Kayla;See that black banner flying above the fort?{w};auto
 s;Sam;I don't recognize it...{w};auto
 s;Kayla;Tsk Tsk.{w}{br}It's the flag of the elite Imperial tacticians.{w}{br}This wasn't in the report. We'd better be on our guard.{w};auto
-s;Sam;Strange that the Empire would post someone of this caliber to simple guard duty.{w};auto
+s;Sam;Strange to see someone of that caliber posted to simple guard duty.{w};auto
 s;Kayla;All the more reason to get that information.{w};auto
 s;Sam;I just hope its worth the effort.{w};auto
 s;Kayla;Oh, it will be. Trust me.{w};auto

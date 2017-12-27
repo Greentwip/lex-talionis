@@ -1,5 +1,6 @@
 pose;Attack
 blend
+static
 f;3;Shine0
 f;1;Shine1
 f;1;Shine2

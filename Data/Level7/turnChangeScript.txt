@@ -35,8 +35,8 @@ elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.event_
 	u;Marduk;Left
 	u;Soldier2;Right
 	s;Soldier2;Sir, the Resistance has advanced further into our territory.{w}{br}What do we do now?{w};auto
-	s;Marduk;This so-called Resistance. I did not give them enough credit.{w}{br}But no matter,{w}{br}this next phase of my master plan will wipe them out once and for all!{w}{br}Send in... Team Omega Vincent! {w};auto
-	s;Soldier2;Team Omega Vincent, sir?{w};auto
+	s;Marduk;This so-called Resistance. I did not give them enough credit.{w}{br}But no matter,{w}{br}the next phase of my master plan will wipe them out once and for all!{w}{br}Send in... Team Omega! {w};auto
+	s;Soldier2;Team Omega, sir?{w};auto
 	s;Marduk;Uh... must you....{w}{br}Just...{w}{br}Just send in those bandits we hired.{w};auto
 	s;Soldier2;Right away, sir.{w};auto
 	r;Soldier2

@@ -30,7 +30,7 @@ group;Soldier;Soldier;Empire;An imperial soldier
 group;Bandit;Bandit;Bandit;A Bandit hailing from the Ghat mountains
 # Ballista
 enemy;0;0;Ballista;10;Ballista;7,22;HardGuard;Soldier
-enemy;0;0;Ballista;10;Ballista;5,20;HardGuard;Soldier
+#enemy;0;0;Ballista;10;Ballista;5,20;HardGuard;Soldier
 enemy;0;0;Ballista;10;Ballista;3,17;HardGuard;Soldier
 # 16 Mercs, 10 Raiders, 8 Brigands (dMithril Axe, dTomahawk), 7 Skirmishers, 16 Dracoknights, 3 Dragoons (dMithril Lance), 3 Heros (dMithril Sword), 1 Sage (dBlizzard)
 # Original on map is 37 units
