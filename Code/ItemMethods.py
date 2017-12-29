@@ -237,7 +237,7 @@ class AOEComponent(object):
         self.mode = mode
         self.number = number
 
-    def get_positions(self, unit_position, cursor_position, tileMap):
+    def get_positions(self, unit_position, cursor_position, tileMap, item):
         if self.mode == 'Normal':
             return cursor_position, []
         elif self.mode == 'Cleave_Old':
@@ -264,16 +264,12 @@ class AOEComponent(object):
             splash_positions = {position for position in other_position if tileMap.check_bounds(position)}
             return cursor_position, list(splash_positions - {cursor_position})
         elif self.mode == 'Blast':
-            splash_positions = [(cursor_position)]
-            for r in range(1, self.number + 1):
-                # Finds manhattan spheres of radius r
-                for x in range(-r, r + 1):
-                    for y in [(r - abs(x)), -(r - abs(x))]:
-                        splash_positions.append((cursor_position[0] + x, cursor_position[1] + y))
-            splash_positions = [position for position in splash_positions if tileMap.check_bounds(position)]
-            # remove dupes
-            splash_positions = list(set(splash_positions))
-            return None, splash_positions
+            splash_positions = Utility.find_manhattan_spheres(range(self.number + 1), cursor_position)
+            splash_positions = {position for position in splash_positions if tileMap.check_bounds(position)}
+            if item.weapon:
+                return cursor_position, list(splash_positions - {cursor_position})
+            else:
+                return None, list(splash_positions)
         elif self.mode == 'Line':
             splash_positions = Utility.raytrace(unit_position, cursor_position)
             splash_positions = [position for position in splash_positions if position != unit_position]

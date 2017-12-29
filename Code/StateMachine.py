@@ -337,8 +337,8 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                     for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if skill.active]:
                         skill.active.current_charge = skill.active.required_charge
                         gameStateObj.cursor.currentHoveredUnit.tags.add('ActiveSkillCharged')
-                    for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if not skill.class_skill]:
-                        StatusObject.HandleStatusRemoval(skill, gameStateObj.cursor.currentHoveredUnit, gameStateObj)
+                    # for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if not skill.class_skill]:
+                    #     StatusObject.HandleStatusRemoval(skill, gameStateObj.cursor.currentHoveredUnit, gameStateObj)
             # Increase all wexp by 5
             elif event.key == Engine.key_map['5']:
                 gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
@@ -912,7 +912,7 @@ class MenuState(State):
                         cur_unit.current_skill = status
                         if status.active.mode == 'Attack':
                             gameStateObj.stateMachine.changeState('weapon')
-                        elif status.active.mode in ['Interact', 'Tile']:
+                        elif status.active.mode in ('Interact', 'Tile'):
                             valid_choices = status.active.get_choices(cur_unit, gameStateObj)
                             if valid_choices:
                                 cur_unit.validPartners = CustomObjects.MapSelectHelper(valid_choices)
@@ -1182,7 +1182,7 @@ class WeaponState(State):
         gameStateObj.info_surf = None
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         cur_unit.sprite.change_state('chosen', gameStateObj)
-        options = [item for item in cur_unit.items if item.weapon and cur_unit.canWield(item)]      # Apply straining for skill
+        options = [item for item in cur_unit.items if item.weapon and cur_unit.canWield(item)]  # Apply straining for skill
         if cur_unit.current_skill:
             options = cur_unit.current_skill.active.valid_weapons(options)
         # Only shows options I can use now

@@ -161,33 +161,27 @@ class Cleave(Active_Skill):
     def valid_weapons(self, weapons):
         return [weapon for weapon in weapons if any(TYPE in ['Axe', 'Sword'] for TYPE in weapon.TYPE) and 1 in weapon.RNG]
 
-class Metamagic(Active_Skill):
+class Rage(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
-        self.mode = 'Attack'
+        self.mode = 'Solo'
+        self.item = ItemMethods.itemparser('so_Rage')[0]
 
     def check_valid(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon or item.spell])
-        if not unit.hasAttacked and valid_weapons:
+        if not unit.hasAttacked and not any(status.id in ['Weakened', 'Rage_Status'] for status in unit.status_effects):
             return True
         return False
 
-    def apply_mod(self, unit, weapon, gameStateObj):
-        if self.item:
-            self.reverse_mod()
-        self.item = weapon
-        self.original_aoe = weapon.aoe
-        if self.original_aoe:
-            weapon.aoe.num += 1
-        else:
-            weapon.aoe = ItemMethods.AOEComponent('Blast', 1)
+class Metamagic(Active_Skill):
+    def __init__(self, name, required_charge):
+        Active_Skill.__init__(self, name, required_charge)
+        self.mode = 'Solo'
+        self.item = ItemMethods.itemparser('so_Metamagic')[0]
 
-    def reverse_mod(self):
-        self.item.aoe = self.original_aoe
-        self.item = None
-
-    def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if CustomObjects.WEAPON_TRIANGLE.isMagic(weapon) and (not weapon.aoe or weapon.aoe.mode == 'Blast')]
+    def check_valid(self, unit, gameStateObj):
+        if not unit.hasAttacked and not any(status.id == 'Metamagic_Status' for status in unit.status_effects):
+            return True
+        return False
 
 class True_Strike(Active_Skill):
     def __init__(self, name, required_charge):
@@ -552,6 +546,19 @@ class Nosferatu(PassiveSkill):
         if item.nosferatu:
             item.lifelink = item.old_lifelink
             item.nosferatu = False
+
+class Metamagic_Status(PassiveSkill):
+    def apply_mod(self, item):
+        self.reverse_mod(item)
+        if CustomObjects.WEAPON_TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast'):
+            item.overcharged = True
+            item.orig_aoe = item.aoe
+            item.aoe = ItemMethods.AOEComponent('Blast', item.orig_aoe.number + 1)
+
+    def reverse_mod(self, item):
+        if item.overcharged:
+            item.overcharged = False
+            item.aoe = item.orig_aoe
 
 # AURAS
 class Aura(object):

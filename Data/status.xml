@@ -645,7 +645,7 @@
     <status name="Metamagic">
         <id>Metamagic</id>
         <image_index>8,7</image_index>
-        <desc>Activated. Increases area of blast +1.</desc>
+        <desc>Activated. Next attack has increased area of blast +1.</desc>
         <components>active,class_skill</components>
         <active>40</active>
     </status>
@@ -777,6 +777,14 @@
         <desc>Damage dealt restores health.</desc>
         <image_index>4,8</image_index>
         <components>passive,class_skill</components>
+    </status>
+
+    <status name="Overcharged">
+        <id>Metamagic_Status</id>
+        <image_index>8,7</image_index>
+        <desc>Next attack or spell has increased area of effect.</desc>
+        <components>passive,lost_on_interact,time</components>
+        <time>1</time>
     </status>
 
     <!-- Aura Skills -->

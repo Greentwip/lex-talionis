@@ -6,7 +6,7 @@ t;2
 u;Sam;Right;u;Ophie;Left
 s;Ophie;Phew... Those jokers would not let up.{w}{br}Who were they anyway, Sam?{w};auto
 s;Sam;Now is not the time for conjecture.{w}{br}Duke Ulver himself is beyond these doors.{w};auto
-s;Ophie;Right. We're the Resistance!{w}{br}Ulver will rue the day he reckoned with us.{w};auto
+s;Ophie;Ulver will rue the day he reckoned with us.{w};auto
 s;Sam;Let's go then. Our final battle awaits.{w};auto
 r;Sam;Ophie
 t;1

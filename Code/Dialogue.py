@@ -707,6 +707,8 @@ class Dialogue_Scene(object):
                 gameStateObj.map.command_list = [command for command in gameStateObj.map.command_list if command[0] != line[1]]
             else:
                 gameStateObj.map.command_list = []
+        elif line[0] == 'clear_command_list_except':
+            gameStateObj.map.command_list = [command for command in gameStateObj.map.command_list if command[0] == line[1]]
 
         # === CLEANUP
         elif line[0] == 'arrange_formation':

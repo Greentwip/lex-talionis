@@ -533,7 +533,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
         unit.acquire_tile_status(gameStateObj, force=True)
     if status.passive:
         for item in unit.items:
-            status.passive.remove_mod(item)
+            status.passive.reverse_mod(item)
     # Tell the parent status that it is not connected to me anymore
     if status.aura_child:
         status.parent_status.remove_child(unit)

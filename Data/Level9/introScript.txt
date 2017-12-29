@@ -79,7 +79,7 @@ s;Ophie;Who the hell were those jokers...{w};auto
 s;Sam;Never mind that.{w}{br}We must be right under the palace.{w}{br}There should be an exit nearby.{w}{br}Stay together, and we might make it out of this 'game' alive.{w};auto
 r;Althea;Ophie;Sam
 t;1
-arrange_formation
+arrange_formation;force
 add_unit;load_me;;immediate
 reset_units
 t;2

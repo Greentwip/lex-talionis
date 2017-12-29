@@ -290,7 +290,7 @@ class UnitMenu(StateMachine.State):
             c_hp = str(unit.currenthp)
             GC.FONT['text_blue'].blit(c_hp, surf, (128 - GC.FONT['text_blue'].size(c_hp)[0], top))
             font.blit('/', surf, (130, top))
-            unit.stats['HP'].draw(surf, unit, (152, top), metaDataObj)
+            unit.stats['HP'].draw(surf, unit, (152, top), metaDataObj, compact=True)
 
         return titles, offsets
 
@@ -340,8 +340,8 @@ class UnitMenu(StateMachine.State):
 
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
-            unit.stats['MOV'].draw(surf, unit, (24, top), metaDataObj)
-            unit.stats['CON'].draw(surf, unit, (48, top), metaDataObj)
+            unit.stats['MOV'].draw(surf, unit, (24, top), metaDataObj, compact=True)
+            unit.stats['CON'].draw(surf, unit, (48, top), metaDataObj, compact=True)
             aid = str(unit.getAid())
             GC.FONT['text_blue'].blit(aid, surf, (72 - GC.FONT['text_blue'].size(aid)[0], top))
             rat = str(unit.get_rating())

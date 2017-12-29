@@ -74,7 +74,6 @@ Flux - Kayla
 Scathe - Kayla
 Spiritbane - Kayla
 Speedwings* - Drop
-Lancereaver - Drop
 Mithril Lance - Drop
 Nyx - Drop
 Longbow - Drop
@@ -91,8 +90,6 @@ Skeleton Key - Drop
 Skeleton Key - Drop
 Great Lance - Drop
 Great Sword - Drop
-Axereaver - Drop
-Swordreaver - Drop
 Energy Ring* - Drop
 Short Spear - Drop
 Restore - Chest

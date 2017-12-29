@@ -7,8 +7,9 @@ enemy_effect;DanceSmallDust
 wait;1
 enemy_effect;DanceLargeDust
 wait;100
+spell_hit;no_sound;no_shake
 # No longer gray
-wait;60
+wait;20
 pan
 wait;20
 end_parent_loop

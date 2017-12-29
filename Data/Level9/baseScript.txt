@@ -6,11 +6,11 @@ if;self.optionalunit == 'Promises'
     s;Sam;Are you almost ready, Kayla?
     s;Kayla;Tsk Tsk. A lady is ready precisely when she means to be, and no sooner.
     s;Sam;I see...
-    s;Kayla;Hmmm... Is something wrong, dearest?
+    s;Kayla;Is something wrong, dearest?
     s;Sam;No... Well, its nothing you said.
     s;Kayla;So?
     s;Sam;This is our last mission...
-    s;Kayla;You worried we won't succeed?
+    s;Kayla;You worry we won't succeed?
     s;Sam;To be honest, I am a bit worried. Even you have your limits, Kayla. 
     s;Kayla;Haven't found them yet!
     s;Sam;Anyways, thats not really my chief concern.{w}{br}It's our last mission together.{w}{br}When this is over we'll split ways.{w}{br}The Resistance will be disbanded.{w}{br}So, there won't be much of a reason... for the two of us.

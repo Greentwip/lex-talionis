@@ -1,6 +1,6 @@
 # Level 9 Switch Script
 # Master switch is only switch
-clear_command_list
+clear_command_list_except;layer_tile_sprite
 set_custom_origin
 show_layer;1
 show_layer;2

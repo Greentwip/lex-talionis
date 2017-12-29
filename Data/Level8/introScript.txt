@@ -1,32 +1,32 @@
 # Intro Script 8
 # 
 # A villager arrives, telling that they're under attack. Everyone get ready.
+m;Mount Briggs
 set_cursor;Vagnius
 b;TacticsRoom
 t;2
 u;Sam;Left;u;Woman2;Right
 s;Woman2;Uh... Mister...{w};auto
 s;Sam;You again?{w}{br}We can't afford any security breaches at a time like this!{w}{br}If the Empire raids us now...{w};auto
-s;Woman2;Please! You have to help.{w};auto
+s;Woman2;Please! You have to help us!{w};auto
 s;Sam;What is it then?{w};auto
 s;Woman2;Podoma is under attack.{w}{br}It's that man from before.{w}{br}And this time he brought an army!{w};auto
 move_sprite;Sam;-24,0
 u;Ophie;MidLeft
 s;Ophie;Vagnius! The bastard!{w};auto
-s;Woman2;Our entire village will be destroyed...{w}{br}You're our only chance for help...{w};auto
+s;Woman2;Our entire village will be destroyed...{w}{br}You're our only hope...{w};auto
 s;Ophie;Don't worry. We'll help.{w}{br}Right, Sam?{w};auto
-s;Sam;Uh...{w}{br}Yes. Of course we'll help.{w}{br}Okay, Ophie, get everyone together.{w}{br}We need to book it to Podoma, before Vagnius digs in.{w};auto
+s;Sam;Uh...{w}{br}Yes. Of course.{w}{br}Okay, Ophie, get everyone together.{w}{br}We need to book it to Podoma, before Vagnius digs in.{w};auto
 s;Ophie;Right!{w};auto
 r;Ophie
 s;Woman2;Oh thank you so much.{w}{br}I don't know how we can repay you.{w};auto
-s;Sam;Don't worry about that now.{w}{br}Head back to Podoma, and inform everyone to stay indoors.{w}{br}I don't want additional casualties on our hands.{w}{br}We'll be there as soon as we can...{w};auto
+s;Sam;Don't worry about that now.{w}{br}Head back to Podoma, and tell everyone to stay indoors.{w}{br}I don't want additional casualties on our hands.{w}{br}We'll be there as soon as we can...{w};auto
 r;Woman2
 s;Sam;Of course... more complications.{w}{br}Why can't anything just go according to plan for once...{w};auto;thought_bubble
 r;Sam
 t;1
 remove_background
 t;2
-m;Mount Briggs
 map_pan
 set_cursor;Vagnius;force_hold
 disp_cursor;1

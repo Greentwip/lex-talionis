@@ -325,6 +325,7 @@ class MapObject(object):
     # === SCRIPT COMMANDS ===
     def replay_commands(self, command_list, currentLevelIndex):
         for line in command_list:
+            logger.debug('Replaying Command: %s', line)
             # Set a custom origin point
             if line[0] == 'set_custom_origin':
                 self.custom_origin = line[1]

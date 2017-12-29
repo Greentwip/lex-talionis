@@ -492,8 +492,8 @@ class UnitObject(object):
             height = 24
             if self.getMainSpell().damage is not None:
                 height += 16
-            if self.getMainSpell().hit is not None:
-                height += 16
+            # if self.getMainSpell().hit is not None:
+            #     height += 16
             real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
             BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
             BGSurf.blit(real_surf, (2, 4))
@@ -786,7 +786,6 @@ class UnitObject(object):
         self.leave(gameStateObj)
         move_mag = int(eval(movement.magnitude))
         
-        # Only push is supported for now
         if movement.mode == 'Push':
             # Get all positions on infinite raytraced vector from other_pos to self.position
             # This section is irrespective of the actual confines of the map
@@ -820,6 +819,7 @@ class UnitObject(object):
             self.position = def_pos
 
         self.arrive(gameStateObj)
+        self.previous_position = self.position
 
     def push_to_nearest_open_space(self, gameStateObj):
         for r in range(1, 15):
@@ -1089,8 +1089,9 @@ class UnitObject(object):
         true_attacks = []
         splash_attacks = []
         for position in attacks:
-            attack, splash_pos = my_weapon.aoe.get_positions(self.position, position, gameStateObj.map)
-            true_attacks.append(attack)
+            attack, splash_pos = my_weapon.aoe.get_positions(self.position, position, gameStateObj.map, my_weapon)
+            if attack:
+                true_attacks.append(attack)
             splash_attacks += splash_pos
         true_attacks = list(set(true_attacks))
         splash_attacks = list(set(splash_attacks))
@@ -1288,7 +1289,7 @@ class UnitObject(object):
     def displaySingleAttack(self, gameStateObj, position, item=None):
         if not item:
             item = self.getMainWeapon()
-        true_position, splash_positions = item.aoe.get_positions(self.position, position, gameStateObj.map)
+        true_position, splash_positions = item.aoe.get_positions(self.position, position, gameStateObj.map, item)
         if item.beneficial:
             if true_position:
                 gameStateObj.highlight_manager.add_highlight(true_position, 'spell2', allow_overlap=True)
@@ -1730,6 +1731,7 @@ class UnitObject(object):
         self.hasRescued = True
         self.hasAttacked = True
         self.finished = True
+        self.previous_position = self.position
         self.sprite.change_state('normal')
 
     def isDone(self):

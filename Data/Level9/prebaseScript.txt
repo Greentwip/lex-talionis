@@ -72,10 +72,10 @@ s;Sam;If all goes well today, this'll be my last premission spiel.{w};auto
 s;Renae;Thank the light!{w};auto
 s;Sam;...{w};auto
 s;Renae;No offense.{w};auto
-s;Sam;Sure...{w}{br}Well, its something for you to look forward to, Renae.{w}{clear}Anyways, with Vagnius dead, there's only one obstacle left in our way.{w}{br}Duke Ulver himself.{w};auto
+s;Sam;Anyways, with Vagnius dead, there's only one obstacle left in our way.{w}{br}Duke Ulver himself.{w};auto
 u;Kayla;MidRight
 s;Kayla;Once he's been captured, and Althea takes the throne,{w}{br}Kerala will be independent once more.{w};auto
-s;Sam;Everything we've dreamed of.{w}{br}Everything we've fought for.{w}{br}It all comes down to today.{w}{br}Kiley's army assaults the gates of Rajas at dawn.{w}{br}While the main Imperial garrison is occupied,{w}{br}we few will sneak into the Palace and eliminate the Duke.{w};auto
+s;Sam;Everything we've dreamed of.{w}{br}Everything we've fought for.{w}{br}It all comes down to today.{w}{br}Kiley's army assaults the gates of Rajas at dawn.{w}{br}While the main Imperial garrison is occupied,{w}{br}we will sneak into the Palace and eliminate the Duke.{w};auto
 s;Kayla;With their leader incapacitated, and Kerala rising up in rebellion around them,{w}{br}the remaining Imperials will be forced to surrender.{w};auto
 s;Ophie;Okay... But how are we going to sneak in?{w}{br}Ulver has Rajas locked down tight.{w};auto
 s;Sam;Luckily, Coyote knows of a secret passage below Rajas,{w}{br}built during the time of the Sun King.{w}{br}According to him, the passage leads directly to the Lion Throne.{w}{br}It's been so long since anyone's used it, I'm sure it'll be abandoned.{w};auto

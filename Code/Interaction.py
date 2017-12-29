@@ -94,6 +94,7 @@ class Solver(object):
             # Missed but does half damage
             elif self.item.half:
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid) / 2
+                # print(result.def_damage)
 
         elif self.item.spell:
             if not self.item.hit or roll < to_hit:
@@ -371,7 +372,7 @@ class Solver(object):
 def convert_positions(gameStateObj, attacker, atk_position, position, item):
     logger.debug('attacker position: %s, position: %s, item: %s', atk_position, position, item)
     if item.weapon or item.spell:
-        def_position, splash_positions = item.aoe.get_positions(atk_position, position, gameStateObj.map)
+        def_position, splash_positions = item.aoe.get_positions(atk_position, position, gameStateObj.map, item)
     else:
         def_position, splash_positions = position, []
     logger.debug('def pos: %s, splash pos: %s', def_position, splash_positions)
@@ -408,7 +409,6 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
     toggle_anim = gameStateObj.input_manager.is_pressed('AUX')
     # Whether animation combat is even allowed
     if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject) and not item.movement and not item.self_movement):
-        
         # XOR below
         if animation_wanted(attacker, defender) != toggle_anim:
             distance = Utility.calculate_distance(attacker.position, def_pos)
@@ -464,6 +464,24 @@ class Combat(object):
                 result.def_damage_done = min(result.def_damage, result.defender.currenthp)
             elif result.def_damage < 0:
                 result.def_damage_done = min(-result.def_damage, result.defender.stats['HP'] - result.defender.currenthp)
+
+    def _apply_result(self, result, gameStateObj):
+        # Status
+        for status_obj in result.def_status:
+            status_obj.parent_id = result.attacker.id
+            StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
+        for status_obj in result.atk_status:
+            status_obj.parent_id = result.defender.id
+            StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
+        # Calculate true damage done
+        self.calc_damage_done(result)
+        # HP
+        result.attacker.currenthp -= result.atk_damage
+        result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
+        if result.defender:
+            result.defender.currenthp -= result.def_damage
+            # print(result.defender.currenthp, result.def_damage)
+            result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
 
     def find_broken_items(self):
         # Handle items that were used
@@ -558,6 +576,8 @@ class Combat(object):
                         applied_status = StatusObject.statusparser(status.status_after_help)
                         StatusObject.HandleStatusAddition(applied_status, unit, gameStateObj)
             if status.lost_on_attack and (self.item.weapon or self.item.detrimental):
+                StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
+            elif status.lost_on_interact and (self.item.weapon or self.item.spell):
                 StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
         if self.p2 and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
             for status in self.p2.status_effects:
@@ -664,6 +684,12 @@ class AnimationCombat(Combat):
         self.splash = []
 
     def init_draw(self, gameStateObj, metaDataObj):
+        def mod_name(name):
+            if name.endswith(' Ward'):
+                name = name[:-5]
+            if name.startswith('Magebane'):
+                name = 'Magebane'
+            return name
         self.gameStateObj = gameStateObj # Dependency Injection
         self.metaDataObj = metaDataObj  # Dependency Injection
         crit = 'Crit' if cf.CONSTANTS['crit'] else ''
@@ -677,8 +703,7 @@ class AnimationCombat(Combat):
         self.left_bar = GC.IMAGESDICT[left_color + 'LeftMainCombat' + crit].copy()
         if self.left_item:
             name = self.left_item.name
-            if name.endswith(' Ward'):
-                name = name[:-5]
+            name = mod_name(name)
             size_x = GC.FONT['text_brown'].size(name)[0]
             GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
@@ -692,8 +717,7 @@ class AnimationCombat(Combat):
         self.right_bar = GC.IMAGESDICT[right_color + 'RightMainCombat' + crit].copy()
         if self.right_item:
             name = self.right_item.name
-            if name.endswith(' Ward'):
-                name = name[:-5]
+            name = mod_name(name)
             size_x = GC.FONT['text_brown'].size(name)[0]
             GC.FONT['text_brown'].blit(name, self.right_bar, (47 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
@@ -708,7 +732,7 @@ class AnimationCombat(Combat):
         self.right_platform = Engine.flip_horiz(GC.IMAGESDICT[right_platform_type + suffix].copy())
 
     def update(self, gameStateObj, metaDataObj, skip=False):
-        # print(self.combat_state)
+        logger.debug(self.combat_state)
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
@@ -950,21 +974,7 @@ class AnimationCombat(Combat):
             self.right_stats = d_stats
 
     def apply_result(self, result, gameStateObj, metaDataObj):
-        # Status
-        for status_obj in result.def_status:
-            status_obj.parent_id = result.attacker.id
-            StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
-        for status_obj in result.atk_status:
-            status_obj.parent_id = result.defender.id
-            StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
-        # Calculate true damage done
-        self.calc_damage_done(result)
-        # HP
-        result.attacker.currenthp -= result.atk_damage
-        result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
-        if result.defender:
-            result.defender.currenthp -= result.def_damage
-            result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
+        self._apply_result(result, gameStateObj)
 
         # Get next result in preparation for next combat
         self.next_result = self.solver.get_a_result(gameStateObj, metaDataObj)
@@ -1581,21 +1591,7 @@ class MapCombat(Combat):
             self.p2.sprite.reset_sprite_offset()
 
     def apply_result(self, result, gameStateObj):
-        # Status
-        for status_obj in result.def_status:
-            status_obj.parent_id = result.attacker.id
-            StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
-        for status_obj in result.atk_status:
-            status_obj.parent_id = result.defender.id
-            StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
-        # Calculate true damage done
-        self.calc_damage_done(result)
-        # HP
-        result.attacker.currenthp -= result.atk_damage
-        result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
-        if result.defender:
-            result.defender.currenthp -= result.def_damage
-            result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
+        self._apply_result(result, gameStateObj)
         # Movement
         if result.atk_movement and result.defender.position:
             def_position = result.defender.position
@@ -1621,7 +1617,7 @@ class MapCombat(Combat):
             a_mt = result.attacker.compute_damage(result.defender, gameStateObj, a_weapon, a_mode)
             a_stats = a_hit, a_mt
 
-            if self.p2 in [result.attacker, result.defender] and self.item.weapon and self.solver.defender_can_counterattack():
+            if self.p2 in (result.attacker, result.defender) and self.item.weapon and self.solver.defender_can_counterattack():
                 d_mode = 'Defense' if result.attacker is self.p1 else 'Attack'
                 d_weapon = result.defender.getMainWeapon()
                 d_hit = result.defender.compute_hit(result.attacker, gameStateObj, d_weapon, d_mode)
@@ -1633,7 +1629,7 @@ class MapCombat(Combat):
 
             # Build health bars
             # If the main defender is in this result
-            if self.p2 in [result.attacker, result.defender]:
+            if self.p2 in (result.attacker, result.defender):
                 if result.attacker not in self.health_bars and result.defender not in self.health_bars:
                     self.health_bars = {}  # Clear
                 if result.defender in self.health_bars:
@@ -1643,6 +1639,8 @@ class MapCombat(Combat):
                     self.health_bars[result.defender] = defender_hp
                 if result.attacker in self.health_bars:
                     self.health_bars[result.attacker].update_stats(a_stats)
+                    if result.attacker is result.defender:
+                        self.health_bars[result.attacker].item = a_weapon  # Update item
                 else:
                     attacker_hp = HealthBar('p1' if result.attacker is self.p1 else 'p2', result.attacker, a_weapon, other=result.defender, stats=a_stats)
                     self.health_bars[result.attacker] = attacker_hp
@@ -1774,6 +1772,9 @@ class MapCombat(Combat):
                                           result.defender is other_unit]
                     # Doesn't count if it did 0 damage
                     applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
+                    # Doesn't count if you attacked an ally
+                    applicable_results = [result for result in applicable_results if not 
+                                          ((self.item.weapon or self.item.detrimental) and result.attacker.checkIfAlly(result.defender))]
                     if isinstance(other_unit, UnitObject.UnitObject) and applicable_results:
                         my_exp = self.calc_init_exp_p1(my_exp, other_unit, applicable_results)
 
@@ -2037,7 +2038,6 @@ class HealthBar(object):
         if draw_method:
             self.topleft = draw_method
             self.true_position = None # Reset true position
-
         if unit: 
             if unit != self.unit or other != self.other: # Only if truly new...
                 self.fade_in()

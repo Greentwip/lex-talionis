@@ -24,13 +24,13 @@ t;2
 u;Ophie;Right
 wait;500
 u;Prim;Left
-s;Ophie;Prim, what are you doing here?{w}{br}Aren't you supposed to be accompanying Althea?{w};auto
+s;Ophie;Prim, aren't you supposed to be with Althea?{w};auto
 s;Prim;She's got Drake to take care of her.{w}{br}Besides she's doing great.{w}{br}You should see how she handles herself around the townsfolk.{w}{br}Even though she's just a girl, really...{w}{br}she definitely has the makings of a queen.{w};auto
 s;Ophie;...{w};auto
 s;Prim;Are you alright, Ophie?{w};auto
 s;Ophie;I'm fine...{w};auto
 s;Prim;What's wrong? You can talk to me.{w};auto
-s;Ophie;When Vagnius struck down Master Yohn, I thought he was some incarnation of pure evil,{w}{br}like a devil out of a storybook.{w}{br}But really he was just an ordinary man.{w}{br}Twisted, sure.{w}{br}But he died just the same as the rest...{w};auto
+s;Ophie;I thought Vagnius was some... incarnation of pure evil,{w}{br}like a devil out of a storybook.{w}{br}But really he was just an ordinary man.{w}{br}Twisted, sure.{w}{br}But he died just the same as the rest...{w};auto
 s;Prim;So... do you feel any better?{w}{br}Now that he's gone.{w};auto
 s;Ophie;Kind of?{w}{br}...I wish Master Yohn were here...{w};auto
 s;Prim;He is--{w}{br}in your heart and in your memories...{w};auto

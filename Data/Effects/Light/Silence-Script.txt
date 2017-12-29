@@ -32,6 +32,7 @@ wait;1
 enemy_tint;1;216,216,216
 wait;1
 enemy_flash_white;20
+spell_hit;no_sound;no_shake
 wait;16
 pan
 wait;2

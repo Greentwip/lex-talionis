@@ -90,7 +90,7 @@ elif;gameStateObj.turncount == 11
 	set_cursor;next;force_hold
 	add_unit;p9_4;next;warp
 	wait;500
-elif;gameStateObj.turncount == 13
+elif;gameStateObj.turncount == 14
 	set_next_position;r0;closest
 	set_cursor;next;force_hold
 	add_unit;p11_1;next;warp
@@ -123,7 +123,7 @@ elif;gameStateObj.turncount == 13
 	set_cursor;next;force_hold
 	add_unit;p11_8;next;warp
 	wait;500
-elif;gameStateObj.turncount >= 14
+elif;gameStateObj.turncount >= 16
 	# Infinite Reinforcements start
 	if;gameStateObj.turncount%2
 		create_unit;w_Sage;gameStateObj.turncount;r0;warp;closest

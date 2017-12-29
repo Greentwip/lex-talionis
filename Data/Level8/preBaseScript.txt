@@ -32,33 +32,29 @@ b;TacticsRoomDay
 t;2
 u;Sam;FarRight
 s;Sam;Gather round everyone.{w}{br}I have an important announcement to make...{w};auto
-u;Renae;MidLeft;u;Althea;FarLeft
+u;Ophie;MidLeft;u;Althea;FarLeft
 s;Sam;I hope everyone had a restful sleep, because it may be your last for a while.{w};auto
-s;Sam;Kayla, Theo, and I have spent the last few days decrypting the Empire's code... {w}{br}Now, getting the information out from that tome was not easy.{w}{br}All the data was encrypted with a...{w}{br}Well, actually, it was a variant of an advanced Vigarde cipher, really quite something--{w};auto
-s;Renae;Out with it, Sam!{w}{br}What did you find?{w};auto
-s;Sam;Right... well...{w}{br}let's just say our timetable's been moved up.{w};auto
+s;Sam;Kayla, Theo, and I have spent the last few days decrypting the Empire's code...{w}{br}Now, getting the information out from that tome was not easy.{w}{br}All the data was encrypted with a...{w}{br}Well, it doesn't actually matter.{w}{clear}What does matter is... well...{w}{br}Let's just say our timetable's been moved up.{w};auto
 s;Althea;Our timetable?{w};auto
 s;Sam;For putting you on the throne.{w};auto
-r;Renae
-u;Ophie;MidLeft
 s;Ophie;No more beating around the bush, Sam.{w}{br}What did you discover?{w};auto
 s;Sam;That tome held a trove of information.{w}{br}It's no wonder the Empire went to such lengths to protect it.{w}{br}Kayla, why don't you explain it?{w};auto
 u;Kayla;MidRight
-s;Kayla;My pleasure, Sam.{w}{br}The Confederacy has reinforced their northern front.{w}{br}We were hoping to force the Empire to commit some of their own armies there as well.{w}{br}However, we didn't expect the Empire to react so strongly.{w};auto
+s;Kayla;My pleasure, Sam.{w}{br}The Confederacy has reinforced their northern front.{w}{br}We were hoping to force the Empire to commit some of their armies there.{w}{br}However, we didn't expect the Empire to react so strongly.{w};auto
 s;Ophie;They're going to attack the Confederacy directly!?{w};auto
-s;Kayla;Tsk Tsk. Even the Empire would not be so bold.{w}{br}However, the Empress has commandeered nearly four-fifths of Duke Ulver's army.{w}{br}They are to reinforce that front.{w};auto
+s;Kayla;Tsk Tsk. Even the Empire would not be so bold.{w}{br}However, the Empress has commandeered nearly four-fifths of Duke Ulver's army.{w}{br}They are off to reinforce that front.{w};auto
 s;Ophie;So that leaves Duke Ulver's force in Rajas... {w};auto
 s;Kayla;Very, very weak.{w};auto
 s;Ophie;When does Ulver's army leave?{w};auto
-s;Kayla;They've already started.{w};auto
+s;Kayla;They've already left.{w};auto
 s;Ophie;So Ulver's guard is down!{w};auto
-s;Kayla;Another army of recruits from the Imperial heartlands will reinforce Ulver soon.{w};auto
+s;Kayla;However, another army from the Imperial heartlands will reinforce Ulver soon.{w};auto
 s;Sam;We only have three days before the new army arrives.{w};auto
 s;Ophie;So, what's our plan?{w};auto
 s;Sam;Simply put, we finish this.{w}{br}We take back Kerala.{w}{br}We put the rightful heir back on the Lion Throne.{w};auto
 s;Althea;...{w};auto
-s;Sam;With the Imperial army weakened, we can attack Rajas directly.{w}{br}Kiley's army, along with a host of loyalists, will assault the front gates.{w}{br}In the meantime, we will sneak into the Sun Palace and capture or kill Duke Ulver,{w}{br}cutting the Imperial head off the proverbial snake.{w}{br}With their leader deposed, the remaining Imperials should be easily routed.{w};auto
-s;Ophie;Then Althea can take the throne.{w}{br}Kerala will be free of foreign rule.{w};auto
+s;Sam;With the Imperial army weakened, we can attack Rajas directly.{w}{br}Kiley's army, along with a host of loyalists, will assault the front gates.{w}{br}In the meantime, we will sneak into the Sun Palace and capture or kill the Duke,{w}{br}cutting the Imperial head off the proverbial snake.{w}{br}With their leader deposed, the remaining Imperials should be easily routed.{w};auto
+s;Ophie;Then Althea can take the throne.{w}{br}Kerala will be free from foreign rule.{w};auto
 s;Sam;And we'll have the Confederacy's support.{w}{br}We'll announce Althea's presence after our victory.{w}{br}She looks just like her mother, so no accusations of a pretender are likely.{w}{br}The Empire will be unlikely to challenge us after the Confederacy's moves,{w}{br}and we'll have the support of all of Kerala.{w};auto
 r;Althea;Kayla
 u;Joel;FarLeft

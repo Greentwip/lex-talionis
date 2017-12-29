@@ -1045,7 +1045,7 @@
         <id>Refresh</id>
         <spritetype>Light</spritetype>
         <spriteid>6</spriteid>       
-        <components>spell,uses,beneficial,status,no_ai</components>
+        <components>spell,uses,beneficial,status,no_ai,target_restrict</components>
         <weapontype>Light</weapontype>
  
         <uses>10</uses>
@@ -1053,6 +1053,7 @@
         <value>400</value>
         <desc>Allows a unit to move again.</desc>
         <status>Refresh_Status</status>
+        <target_restrict>target.isDone()</target_restrict>
         
         <LVL>A</LVL>
         <targets>Ally</targets>
@@ -1852,6 +1853,18 @@
 
         <map_hit_color>-128,0,248</map_hit_color>
         <sfx_on_hit>Rally</sfx_on_hit>
+    </item>
+
+    <item name="Metamagic">
+        <id>so_Metamagic</id>
+        <spritetype>Skills</spritetype>
+        <spriteid>8,7</spriteid>
+        <components>status,virtual,beneficial</components>
+
+        <value>1</value>
+        <RNG>0</RNG>
+        <desc>I done broked something.</desc>
+        <status>Metamagic_Status</status>
     </item>
 
     <item name="Summon_1">

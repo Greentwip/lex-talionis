@@ -228,12 +228,13 @@ class BattleAnimation(object):
             GC.SOUNDDICT[sound].stop()
         # === COMBAT HIT ===
         elif line[0] == 'start_hit':
-            if self.owner.current_result.outcome == 2:
-                self.owner.shake(4)  # Critical
-            elif self.owner.current_result.def_damage > 0:
-                self.owner.shake(1)
-            else:  # No Damage
-                self.owner.shake(2)
+            if 'no_shake' not in line:
+                if self.owner.current_result.outcome == 2:
+                    self.owner.shake(4)  # Critical
+                elif self.owner.current_result.def_damage > 0:
+                    self.owner.shake(1)
+                else:  # No Damage -- Hit spark handles anim
+                    self.owner.shake(2)
             self.owner.start_hit('no_sound' not in line)
             # Also offset partner by [-1, -2, -3, -2, -1]
             self.partner.lr_offset = [-1, -2, -3, -2, -1]
@@ -251,15 +252,19 @@ class BattleAnimation(object):
             self.processing = False
             self.base_state = True
         elif line[0] == 'spell_hit':
-            self.owner.start_hit('no_sound' not in line)
-            self.state = 'Wait'
-            self.processing = False
-            if self.owner.current_result.def_damage > 0:
-                self.owner.shake(3)
-            elif self.owner.current_result.def_damage == 0:
-                self.owner.shake(2)
-                if self.item and (self.item.weapon or (self.item.spell and self.item.damage)):
-                    self.no_damage()
+            # To handle ruin item
+            if not self.item.half or self.owner.current_result.def_damage > 0:
+                self.owner.start_hit('no_sound' not in line, self.owner.current_result.outcome == 0)
+                self.state = 'Wait'
+                self.processing = False
+                if self.owner.current_result.def_damage > 0:
+                    if 'no_shake' not in line:
+                        self.owner.shake(3)
+                elif self.owner.current_result.def_damage == 0:
+                    if 'no_shake' not in line:
+                        self.owner.shake(2)
+                    if self.item and (self.item.weapon or (self.item.spell and self.item.damage)):
+                        self.no_damage()
         elif line[0] == 'miss':
             if self.right:
                 position = (72, 21)
@@ -271,7 +276,8 @@ class BattleAnimation(object):
                                            set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                                                        1, 1, 1, 1, 1, 1, 1, 1, 1, 23))
             self.animations.append(anim)
-            self.owner.start_hit('no_sound' not in line, True)  # Miss
+            if not self.item.half:  # Spell hit handles this
+                self.owner.start_hit('no_sound' not in line, True)  # Miss
             self.partner.dodge()
         # === FLASHING ===
         elif line[0] == 'parent_tint_loop':
@@ -562,6 +568,8 @@ class BattleAnimation(object):
                     progress = (self.init_speed - self.entrance) / float(self.init_speed)
                     new_size = (int(progress * image.get_width()), int(progress * image.get_height()))
                     image = Engine.transform_scale(image, new_size)
+                    if self.flash_color and self.flash_image:  # Make sure that flash image uses resized image
+                        self.flash_image = image
                     diff_x = offset[0] - self.init_position[0]
                     diff_y = offset[1] - self.init_position[1]
                     offset = int(self.init_position[0] + progress * diff_x), \
@@ -591,8 +599,9 @@ class BattleAnimation(object):
                         image = Image_Modification.flickerImageTranslucent255(image.convert_alpha(), self.opacity)
 
                 if self.background and self.blend:
-                    Engine.blit(self.background, image, offset)
-                    Engine.blit(surf, self.background, (0, 0), None, self.blend)
+                    old_bg = self.background.copy()
+                    Engine.blit(old_bg, image, offset)
+                    Engine.blit(surf, old_bg, (0, 0), None, self.blend)
                 else:
                     Engine.blit(surf, image, offset, None, self.blend)
 

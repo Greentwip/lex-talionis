@@ -45,13 +45,14 @@ def flickerImageWhiteColorKey(image, white, colorkey=(128, 160, 128)):
 
     return image
 
-def gray_image(image, colorkey=(128, 160, 128)):
+def gray_image(image):
     for row in range(image.get_width()):
         for col in range(image.get_height()):
             color = image.get_at((row, col))
-            if color != colorkey:
+            if color[3] != 0:
                 avg = (color[0] + color[1] + color[2]) / 3
-                image.set_at((row, col), avg)
+                image.set_at((row, col), (avg, avg, avg))
+    return image
 
 def flickerImageTranslucent(image, transparency):
     """transparency measured from 0% transparent to 100% transparent"""
