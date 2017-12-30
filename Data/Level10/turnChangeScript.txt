@@ -6,6 +6,7 @@ if;gameStateObj.turncount == 1
 	s;Ophie;Now where is he!{w};auto
 	# Adjutant appears
 	move_unit;Adjutant;12,18;warp
+	#start_move
 	wait;1000
 	u;Adjutant;Left
 	move_sprite;Ophie;24,0

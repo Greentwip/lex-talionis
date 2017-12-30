@@ -2735,6 +2735,23 @@ king = [(128, 160, 128), # Background
                 (24, 48, 152), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+red_king = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # Light skin
+                (224, 152, 104), # LM skin
+                (160, 96, 64), # DM skin
+                (96, 56, 32), # Dark skin
+                (240, 240, 0), # Yellow
+                (0, 120, 16), # Green
+                (176, 208, 240), # Light Weapon
+                (104, 136, 168), # Med Weapon
+                (72, 96, 120), # Dark Weapon
+                (248, 96, 24), # Light Clothess
+                (248, 56, 0), # LM Clothes
+                (224, 40, 0), # DM Clothes
+                (152, 8, 0), # Dark Clothes
+                (40, 40, 40)] # Outline
+
 ulver = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 88), # Light skin

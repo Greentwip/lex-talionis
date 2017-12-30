@@ -676,9 +676,10 @@ class PrepUseItemState(StateMachine.State):
         surf.blit(back_surf, topleft)
 
         font = GC.FONT['text_white']
-        text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), GC.WINWIDTH - topleft[0] - 8, font)
-        for idx, line in enumerate(text):
-            font.blit(line, surf, (topleft[0] + 4, font.height * idx + 4 + topleft[1]))
+        if desc:
+            text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), GC.WINWIDTH - topleft[0] - 8, font)
+            for idx, line in enumerate(text):
+                font.blit(line, surf, (topleft[0] + 4, font.height * idx + 4 + topleft[1]))
 
     def end(self, gameStateObj, metaDataObj):
         self.menu = None

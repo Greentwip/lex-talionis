@@ -43,6 +43,10 @@ class UnitSprite(object):
     def set_next_position(self, new_pos):
         self.next_position = new_pos
 
+    # Normally drawing units is culled to those on the screen. Unit sprites matching this will be drawn anyway
+    def draw_anyway(self):
+        return self.transition_state != 'normal'
+
     def draw(self, surf, gameStateObj):
         """Assumes image has already been developed."""
         image = self.create_image(self.image_state)
@@ -78,7 +82,7 @@ class UnitSprite(object):
                         self.transition_state = 'normal'
                         if self.state == 'fake_transition_out':
                             self.change_state('normal', gameStateObj)
-                    elif self.transition_state == 'fade_move' or self.transition_state == 'warp_move':
+                    elif self.transition_state in ('fade_move', 'warp_move'):
                         gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.leave(gameStateObj)
                         self.unit.position = self.next_position

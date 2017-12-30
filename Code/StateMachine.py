@@ -3200,8 +3200,9 @@ def drawMap(gameStateObj):
     camera_x = int(gameStateObj.cameraOffset.get_x())
     camera_y = int(gameStateObj.cameraOffset.get_y())
     culled_units = [unit for unit in gameStateObj.allunits if unit.position and
-                    camera_x - 1 <= unit.position[0] <= camera_x + GC.TILEX + 1 and
-                    camera_y - 1 <= unit.position[1] <= camera_y + GC.TILEY + 1]
+                    ((camera_x - 1 <= unit.position[0] <= camera_x + GC.TILEX + 1 and
+                     camera_y - 1 <= unit.position[1] <= camera_y + GC.TILEY + 1) or
+                     unit.sprite.draw_anyway())]
     draw_me = sorted(culled_units, key=lambda unit: unit.position[1])
     for unit in draw_me:
         unit.draw(mapSurf, gameStateObj)

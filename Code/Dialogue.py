@@ -553,8 +553,11 @@ class Dialogue_Scene(object):
             pos1 = self.parse_pos(line[1])
             pos2 = self.parse_pos(line[2])
             gameStateObj.cameraOffset.center2(pos1, pos2)
-            gameStateObj.stateMachine.changeState('move_camera')      
-            self.current_state = "Paused"
+            if len(line) > 3 and line[3] == 'force':  # Force
+                pass
+            else:
+                gameStateObj.stateMachine.changeState('move_camera')      
+                self.current_state = "Paused"
         elif line[0] == 'tutorial_mode':
             if line[1] == '0':
                 gameStateObj.tutorial_mode_off()

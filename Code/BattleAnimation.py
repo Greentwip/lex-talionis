@@ -298,6 +298,9 @@ class BattleAnimation(object):
         elif line[0] == 'enemy_flash_white':
             num_frames = self.get_frames(line[1])
             self.partner.flash(num_frames, (248, 248, 248))
+        elif line[0] == 'self_flash_white':
+            num_frames = self.get_frames(line[1])
+            self.flash(num_frames, (248, 248, 248))
         elif line[0] == 'screen_flash_white':
             num_frames = self.get_frames(line[1])
             if len(line) > 2:
@@ -325,6 +328,8 @@ class BattleAnimation(object):
             self.owner.lighten()
         elif line[0] == 'platform_shake':
             self.owner.platform_shake()
+        elif line[0] == 'screen_shake':
+            self.owner.shake(1)
         # === ANIMATIONS ===
         elif line[0] == 'hit_spark':
             if self.owner.current_result.def_damage > 0:

@@ -46,7 +46,6 @@ class BattleAnimationManager(object):
     def generate(self, klass):
         if klass in self.directory and klass not in self.generated_klasses:
             klass_directory = self.directory[klass]
-
             for weapon in klass_directory:
                 frame_directory = {}
                 for name, anim in klass_directory[weapon]['images'].iteritems():

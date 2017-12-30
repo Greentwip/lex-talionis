@@ -88,7 +88,7 @@ f;1;Frame38
 f;2;Frame108;Frame116
 enemy_flash_white;8
 f;1;Frame109;Frame117
-screen_flash_white
+screen_flash_white;4
 f;2;Frame111;Frame118
 f;2;Frame115;Frame119
 hit_spark
