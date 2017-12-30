@@ -9,7 +9,7 @@ t;2
 u;AltheaQueen;Left;u;Prim;Right
 s;AltheaQueen;Prim, do you think I look alright?{w}{br}I didn't forget a button, did I?{w};auto
 s;Prim;Althea, don't worry. You look great!{w}{br}Don't be so nervous!{w}{br}This is your coronation!{w}{br}It's supposed to be a celebration.{w};auto  
-s;AltheaQueen;Easy for you to say.{w}{br}Everyone's looking up to me.{w}{br}What happens if I forgot what I'm going to say?{w}{br}Or worse, what if I trip on my way the throne?{w};auto
+s;AltheaQueen;Easy for you to say.{w}{br}Everyone's looking up to me.{w}{br}What happens if I forget what I'm going to say?{w}{br}Or worse, what if I trip on my way the throne?{w};auto
 s;Prim;You won't trip.{w}{br}Don't worry about it.{w};auto
 move_sprite;Prim;-24,0
 u;Sam;FarRight
@@ -26,9 +26,9 @@ s;AltheaQueen;Oh, thank you, Kayla!{w};auto
 s;Kayla;Tsk tsk, you don't have to thank me, your majesty.{w}{br}Success is its own reward.{w};auto
 s;Prim;It's only been a month, and yet everything's changing so fast.{w};auto
 s;Sam;I feel the same way.{w}{br}Without the Resistance--{w}{br}Well, sometimes I feel like there's something missing.{w};auto
-s;Prim;But you have your new job.{w}{br}You're chancellor, Althea's queen, Kiley's a general, Kayla's chief diplomat...{w};auto
+s;Prim;But you have your new job.{w}{br}You're our chancellor, Althea's our queen,{w}{br}Kiley's a general, Kayla's our chief diplomat...{w};auto
 s;Kayla;You don't know what you're going to do next?{w};auto
-s;Prim;I don't.{w}{br}Following in the footsteps of the monks at the monastery was my dream.{w}{br}Then, it was to help the Resistance free Kerala.{w}{br}But now...{w};auto
+s;Prim;For so long,{w}{br}following in the footsteps of the monks was my dream.{w}{br}Then, it was to help the Resistance free Kerala.{w}{br}But now...{w};auto
 r;Kayla
 # Add Ophie
 u;Ophie;MidRight
@@ -125,7 +125,6 @@ endings;Ophie;Ophie, Unruly Blade;Although hailed as a hero in Kerala, Ophie soo
 # etc.
 # Play fin
 t;1
-mf
 pop_dialog
 end_skip
 b;Fin

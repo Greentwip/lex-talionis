@@ -1375,10 +1375,23 @@ class SimpleHPBar(object):
         if self.big_number:
             font = GC.FONT['number_big2']
             top = pos[1]
-        position = pos[0] - font.size(str(t_hp))[0], top
-        font.blit(str(t_hp), surf, position)
+        if t_hp <= 80:
+            position = pos[0] - font.size(str(t_hp))[0], top
+            font.blit(str(t_hp), surf, position)
+        else:
+            position = pos[0] - font.size('??')[0], top
+            font.blit('??', surf, position)
         full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick] * 2, 0, 2, self.full_hp_blip.get_height()))
-        if self.max_hp <= 40:
+        if self.max_hp > 80:
+            # First 40 hp
+            for index in xrange(40):
+                surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 4))
+            surf.blit(self.end_hp_blip, (pos[0] + 40 * 2 + 5, pos[1] + 4)) # End HP Blip
+            # Second 40 hp
+            for index in xrange(40):
+                surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] - 4))
+            surf.blit(self.end_hp_blip, (pos[0] + 40 * 2 + 5, pos[1] - 4)) # End HP Blip
+        elif self.max_hp <= 40:
             for index in xrange(t_hp):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 1))
             for index in xrange(self.max_hp - t_hp):
@@ -1498,6 +1511,13 @@ class MapCombat(Combat):
                     self.combat_state = 'Anim'
                     if self.results[0].attacker.sprite.state in {'combat_attacker', 'combat_defender'}:
                         self.results[0].attacker.sprite.change_state('combat_anim', gameStateObj)
+                    for result in self.results:
+                        if result.attacker is self.p1:
+                            item = self.item
+                        else:
+                            item = result.attacker.getMainWeapon()
+                        if item.sfx_on_cast and item.sfx_on_cast in GC.SOUNDDICT:
+                            GC.SOUNDDICT[item.sfx_on_cast].play()
 
             elif self.combat_state == 'Anim':
                 if skip or current_time > 3 * self.length_of_combat / 5 + self.additional_time:
@@ -1515,7 +1535,7 @@ class MapCombat(Combat):
                                 result.defender.begin_flicker(self.length_of_combat / 5, color)
                             # Sound
                             if item.sfx_on_hit and item.sfx_on_hit in GC.SOUNDDICT:
-                                GC.SOUNDDICT[self.item.sfx_on_hit].play()
+                                GC.SOUNDDICT[item.sfx_on_hit].play()
                             elif result.defender.currenthp - result.def_damage <= 0: # Lethal
                                 GC.SOUNDDICT['Final Hit'].play()
                                 if result.outcome == 2: # Critical

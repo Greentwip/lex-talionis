@@ -1909,7 +1909,7 @@ class DialogueState(State):
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):
         logger.debug('Ending dialogue state')
-        if self.message:
+        if self.message and gameStateObj.message:
             gameStateObj.message.pop()
         # Did any tiles change?
         if self.message.reset_boundary_manager:

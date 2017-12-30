@@ -1,4 +1,10 @@
 # Event script that is called every time the player's turn starts. Normally handles reinforcements
+if;gameStateObj.turncount == 1
+    set_cursor;3,15;force_hold
+    wait;500
+    move_unit;3,15;3,17;warp
+    wait;2000
+end
 if;gameStateObj.turncount == 4
     set_cursor;0,0;force_hold
     wait;500

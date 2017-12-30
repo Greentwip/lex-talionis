@@ -1281,7 +1281,7 @@
         <id>Meteor</id>
         <spritetype>Anima</spritetype>
         <spriteid>11</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim</components>
+        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim,sfx_on_cast</components>
         <weapontype>Anima</weapontype>
  
         <uses>3</uses>
@@ -1296,6 +1296,7 @@
         <targets>Tile</targets>
 
         <map_hit_color>224,96,-200</map_hit_color>
+        <sfx_on_cast>FireCharge</sfx_on_cast>
     </item>
     
     <!-- Dark -->

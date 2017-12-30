@@ -565,7 +565,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>0,0,0,0,A,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>34,3,11,15,13,7,11,13</bases>
+		<bases>34,3,15,12,13,13,12,14</bases>
         <growths>0,0,100,0,0,0,0,0</growths>
         
         <inventory>Corona,Physic</inventory>
@@ -585,7 +585,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp>A,A,A,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<bases>80,19,12,20,16,8,20,18</bases>
+		<bases>80,19,12,20,12,8,18,16</bases>
         <growths>0,0,0,0,0,0,0,0</growths>
         
         <inventory>Makara</inventory>

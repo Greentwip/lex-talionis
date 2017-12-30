@@ -37,8 +37,12 @@ class UnitSprite(object):
         self.transition_state = new_state
         if self.transition_state == 'fake_in':
             self.change_state('fake_transition_in')
-        elif self.transition_state == 'fake_out' or self.transition_state == 'rescue':
+        elif self.transition_state in ('fake_out', 'rescue'):
             self.change_state('fake_transition_out')
+        elif self.transition_state == 'warp_in':
+            GC.SOUNDDICT['WarpEnd'].play()
+        elif self.transition_state in ('warp_out', 'warp_move'):
+            GC.SOUNDDICT['Warp'].play()
 
     def set_next_position(self, new_pos):
         self.next_position = new_pos

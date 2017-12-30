@@ -18,10 +18,6 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Regeneration needs a sound
-- Warping in needs a sound (on reinforce)
-- Meteor Sound
-
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.

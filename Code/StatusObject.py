@@ -342,8 +342,11 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
 
     if status.hp_percentage:
         hp_change = int(int(unit.stats['HP']) * status.hp_percentage.percentage/100.0)
+        old_hp = unit.currenthp
         unit.currenthp += hp_change
         unit.currenthp = Utility.clamp(unit.currenthp, 0, unit.stats['HP'])
+        if unit.currenthp > old_hp:
+            GC.SOUNDDICT['heal'].play()
 
     if status.upkeep_stat_change:
         unit.apply_stat_change(status.upkeep_stat_change.stat_change)

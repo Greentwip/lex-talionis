@@ -1911,10 +1911,10 @@ class EndingsDisplay(object):
         GC.FONT['text_blue'].blit(str(kills), self.surface, (144, 8))
         dam = str(damage)
         if damage >= 1000:
-            dam = dam[:-2] + 'h'
+            dam = dam[:-3] + '.' + dam[-3] + 'k'
         heal = str(healing)
         if healing >= 1000:
-            heal = heal[:-2] + 'h'
+            heal = heal[:-3] + '.' + dam[-3] + 'k'
         GC.FONT['text_blue'].blit(dam, self.surface, (176, 8))
         GC.FONT['text_blue'].blit(heal, self.surface, (208, 8))
 
