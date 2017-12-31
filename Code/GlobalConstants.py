@@ -50,7 +50,7 @@ Engine.set_icon(small_icon)
 
 FPSCLOCK = Engine.clock()
 DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
-version = "0.6"
+version = "0.7"
 Engine.set_caption(''.join(["The Lion Throne - ", version]))
 
 IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = imagesDict.getImages(Engine.engine_constants['home'])

@@ -9,9 +9,13 @@ Because this was coded entirely from scratch, we are not bound by the limitation
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
 # Downloads
-release v0.6.3 - 64-bit Windows only
+release v0.7.0 - 64-bit Windows only
 
 *Dropbox:* https://www.dropbox.com/s/s707383vh8vl5cx/the_lion_throne.zip?dl=0
+
+release v0.6.3 - 64-bit Windows only
+
+*Dropbox:* https://www.dropbox.com/s/s707383vh8vl5cx/the_lion_throne-0.6.zip?dl=0
 
 #### To play:
 Un-zip the downloaded files, and then double-click *lion_throne.exe*
@@ -31,7 +35,7 @@ Un-zip the downloaded files, and then double-click *lion_throne.exe*
 
 Lex Talionis is the custom Fire Emblem engine that runs The Lion Throne. If you've wanted to make your own Fire Emblem fangame but were fed up with the hackery that's required to master ROM-hacking, or you just want to work with total control over the code itself, Lex Talionis is for you. 
 
-Not interested in coding? That's fine -- one can create a whole new game with touching any code. Just modify the "Data" folder, which only contains sprites, text files, and xml files! But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
+Not interested in coding? That's fine -- you can create a whole new game with touching any code. Just modify the "Data" folder, which only contains sprites, text files, and xml files! But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
 
 I am planning to create a tutorial on how to use the Lex Talionis engine.
 
