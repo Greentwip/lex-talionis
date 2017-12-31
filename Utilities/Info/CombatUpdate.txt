@@ -1,0 +1,106 @@
+# Major Feature Updates:
+Full Combat Animations:
+List of supported animations
+Interactions between exactly 2 units are handled with the animation combat (other interactions (vulnerary use, aoe, for example), are still handled by map Combat)
+Uses a simple scripting language to create animations
+- AnimationManager Module (responsible for loading and formatting animation-related files)
+- BattleAnimation Module (responsible for playing and displaying animations)
+- Interaction Module (updated to handle Animation Combats)
+Added animation option toggle to OptionsMenu
+Animation toggle implemented. Hold whatever key 'AUX' is mapped to when an animation starts (when you select attack) to toggle whatever the default is
+Press whatever key 'START' is mapped to to speed up Animations
+Several Utility Python scripts added to Utilities/Animations to make the process of creating animations easier
+
+Better debugging information:
+Game now pauses for 20 seconds after crashing
+You can find better more detailed error logs in debug.log.1 or output to the terminal
+If you do encounter an error, send the logs to me along with a brief description of what action you were taking and I will try my best to fix it. Thank you.
+Also, if you are reading this, a helpful hint. Lex Talionis saves the state of the game every turn change. You can find those saves in Saves. Find the most recent one (like L3T5.p) (Level 3- Turn 5) and rename it SaveState0.p and its meta file to SaveState0.pmeta to load it up on the main menu screen under Load Game. (SaveState1.p and SaveState2.p also work)
+
+Unit Menu:
+Now has Unit Menu (relatively untested) -- since I never use it
+
+Promotion Animations Implemented:
+- Two new states added to handle this. Promotion choices implemented as well (but not used in the Lion Throne)
+
+# QoL Feature Updates:
+Sounds made in Info Menu, Promotion, TradeMenu, etc.
+x2 symbols now move more similarly to GBA games (square rather than circle)
+Cursor movement improved at different speeds
+Unit MapSprites speeds now better match GBA games
+Added Rescue Preview Window
+Improved Text Speed options
+Now allows you to switch screen size from within the game. However, a restart is still required for change to take effect.
+Added fast scrolling to many of the menus, so you can hold down to go down a list of options, rather than pressing down repeatedly
+AI is now 'smarter' about using its recovery items
+AI will now take into account any statuses it gains for equipping an item (like Wind Ward, etc.)
+Using stat boosting items in Prep or Base now works better
+Buying or selling items now displays amount of money lost or gained for a short period of time
+Info option renamed to Convos (to better get across that it is not a tutorial -- playtesters often ignored it)
+Reflecting statuses back (as the Final Boss does) now functions correctly
+
+# Enhancements:
+Units who are not on the screen are no longer drawn to the screen (some exceptions). This speeds up the drawing process.
+All pygame related junk is now confined to the Engine.py file. No other file imports pygame. So if you want to change the Engine from using pygame, it is now as easy as reimplementing Engine.py
+Pennent drawing works better now if held open for a long time
+Removed dynamic combat changes (dynamic avoid, etc.), since regular combat changes did the same and more using eval statements
+Reformatted lots of the code to match PEP8 Standards. Most importantly, all imports now use namespaces. For instance, all Global Constants are imported as GC (import GlobalConstants as GC).
+Gender now no longer M, F but rather 0-4 for Males and 5-9 for females to allow for different animations for each gender
+Added support for weapons that use physical stats in melee, but magical stats at range
+Lex Talionis Engine now supports Critical Hits, as in normal Fire Emblem. Not used in The Lion Throne
+AI options are now exposed to the user under ai_presets.txt
+Added support for double selection spells (Warp staff which selects a unit and then a tile to send the unit to)
+Added Awakening-style Victory screen
+Metamagic now actually works!
+
+# Gameplay
+Dialogue and Images:
+Some dialogue changed or removed for flow
+Mystic renamed to Cleric
+Archon renamed to Duke
+Wagon Class Card Added
+Joel's sprite updated and palette swapped
+Easy, Normal, Hard -> Normal, Hard, Lunatic to better prepare the player for the relative difficulty of this game
+
+Balancing:
+Playtesting revealed that Chapters 3 and 4 were too hard in comparison to earlier chapters
+They have been made easier:
+Chapter 3:
+    Removed infinite reinforcements
+    Nerfed remaining reinforcements
+    Removed some enemies from the Entrance cluster
+    Boss nerfed (+5 HP, -2 STR, -2 DEF, -2 RES)
+Chapter 4:
+    Wave 3 has two less mages in it
+    Wave 4-6 have been moved back one turn
+    New Wave of two Dracoknights has been inserted between Wave 3 and Wave 4 so the player can catch their breath
+    Wave 5 removed (Only need 7 out of 10 wagons now, instead of 9 out of 12)
+Chapter 5 First Boss nerfed
+One Ballista removed from Chapter 7
+Many reinforcements removed from Chapter 8
+Infinite Reinforcements start two turns earlier in Chapter 8
+Some reinforcements pushed back a turn in Chapter 9
+Final Boss nerfed (-5 LCK, -4 SPD, -2 DEF, -2 RES)
+Dragoon now has Charge (Adds (distance moved - 2) this turn to damage) rather than Canto+ as their level 15 skill
+Removed Earth Ward and Water Ward
+Added Thunder Ward (6 mt, 60 hit, +2 DEF while equipped)
+Changed Fire Ward to (4 mt, 80 hit, +2 RES while equipped)
+Changed Wind Ward to (2 mt, 100 hit, +2 SPD while equipped)
+Small changes to many classes growths, bases, caps and promotion bonuses
+Changed the Weights (+/- 1) of many weapons
+Removed Oak Longbow and Yew Longbow
+Changed Great Bow to function more like Yew Longbow (a heavier, more powerful, less accurate Longbow)
+Can no longer rescue mounted units
+Mounted units can no longer walk on pillars
+Dracoknights can no longer wield Axes, only Lances
+Removed Iron Knife, Steel Knife, Mithril Knife
+Added Gustblade, Flareblade, & Boltblade
+Added Rapier (which uses SPD as DEF)
+Removed Reaver weapons
+Removed Practice Blade
+
+
+What's Next:
+Level Editor and Tutorial (I have considered a fully-fledged Graphical GUI (the beginnings are present under GameEditor.py in Tests), but there is so much customizable options (especially for Items and Statuses) that a graphical GUI could not cover. Will show how to do everything using text in Tutorial. However, a Level Editor for individual levels will be useful)
+Mac/Linux Exectuble creation (It works on most Macs and Linux boxes if you have Python 2.7+ and Pygame 1.9.2+) Going to have to borrow a mac and linux box to create executables for those OSs
+Android Support (Managed to get game to appear on an Android emulator using PygameSDL2 instead of Pygame. Not currently working on this, since I do not have an Android device)

@@ -43,6 +43,7 @@ class Solver(object):
         self.def_rounds = 0
 
         self.uses_count = 0
+        self.index = 0
 
     def generate_roll(self):
         if self.event_combat or cf.CONSTANTS['rng'] == 'hybrid':
@@ -250,15 +251,19 @@ class Solver(object):
                 self.state = 'Splash'
             elif self.item.brave and self.item_uses(self.item):
                 if self.defender and self.defender.currenthp > 0:
+                    self.index = 0
                     self.state = 'AttackerBrave'
                 else:
+                    self.index = 0
                     self.state = 'SplashBrave'
             elif (self.def_rounds < 1 or self.def_double()) and \
                     self.item.weapon and self.defender and isinstance(self.defender, UnitObject.UnitObject) and \
                     self.defender.currenthp > 0 and self.defender_can_counterattack() and not self.item.cannot_be_countered:
+                self.index = 0
                 self.state = 'Defender'
             elif self.defender and self.atk_rounds < 2 and self.outspeed(self.attacker, self.defender) and \
                     self.item_uses(self.item) and self.defender.currenthp > 0:
+                self.index = 0
                 self.state = 'Attacker'
             else:
                 self.state = 'Done'
@@ -1444,6 +1449,8 @@ class MapCombat(Combat):
                 return True
             self.results.append(next_result)
             if cf.CONSTANTS['simultaneous_aoe']:
+                if self.solver.state == 'Attacker' and self.solver.index < len(self.solver.splash):
+                    self.results.append(self.solver.get_a_result(gameStateObj, metaDataObj))
                 while self.solver.state == 'Splash' and self.solver.index < len(self.solver.splash):
                     self.results.append(self.solver.get_a_result(gameStateObj, metaDataObj))
 
