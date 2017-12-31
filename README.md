@@ -11,7 +11,7 @@ The Lion Throne has innovative objectives, powerful new items, custom classes, a
 # Downloads
 release v0.7.0 - 64-bit Windows only
 
-*Dropbox:* https://www.dropbox.com/s/s707383vh8vl5cx/the_lion_throne.zip?dl=0
+*Dropbox:* https://www.dropbox.com/s/1ikh26td9d68z5n/the_lion_throne.zip?dl=0
 
 release v0.6.3 - 64-bit Windows only
 
