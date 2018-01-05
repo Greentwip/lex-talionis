@@ -218,6 +218,8 @@ class MainView(QtGui.QGraphicsView):
         self.scene = QtGui.QGraphicsScene(self)
         self.setScene(self.scene)
 
+        self.setMinimumSize(15*16, 10*16)
+
     def set_new_image(self, image):
         image = QtGui.QImage(image)
 
@@ -494,8 +496,9 @@ class TileInfo(object):
 
 class MusicBox(QtGui.QWidget):
     def __init__(self, label, music='', window=None):
-        super(ChooseBox, self).__init__(window)
+        super(MusicBox, self).__init__(window)
         self.grid = QtGui.QGridLayout()
+        self.setLayout(self.grid)
         self.window = window
 
         self.label = QtGui.QLabel(label)
@@ -503,16 +506,24 @@ class MusicBox(QtGui.QWidget):
         self.button = QtGui.QPushButton('...')
         self.button.clicked.connect(self.change)
 
+        self.grid.addWidget(self.label, 0, 0)
+        self.grid.addWidget(self.text, 0, 1)
+        self.grid.addWidget(self.button, 0, 2)
+
     def change(self):
         starting_path = QtCore.QDir.currentPath() + '/../Audio/music'
         print(starting_path)
-        music_file = QtGui.QFileDialog.getOpenFilename(self, "Select Music File", starting_path,
+        music_file = QtGui.QFileDialog.getOpenFileName(self, "Select Music File", starting_path,
                                                        "OGG Files (*.ogg);;All Files (*)")
-        head, tail = os.path.split(music_file)
-        print(head)
-        if not os.path.samefile(head, starting_path):
-            shutil.copy(music_file, starting_path)
-        self.text.setText(music_file)
+        if music_file:
+            music_file = str(music_file)
+            starting_path = str(starting_path)
+            head, tail = os.path.split(music_file)
+            print(head)
+            if os.path.normpath(head) != os.path.normpath(starting_path):
+                print('Copying ' + music_file + ' to ' + starting_path)
+                shutil.copy(music_file, starting_path)
+            self.text.setText(tail.split('.')[0])
 
     def get_text(self):
         return self.text.text()
@@ -524,6 +535,7 @@ class ImageBox(QtGui.QWidget):
     def __init__(self, label, image='', window=None):
         super(ImageBox, self).__init__(window)
         self.grid = QtGui.QGridLayout()
+        self.setLayout(self.grid)
         self.window = window
 
         self.label = QtGui.QLabel(label)
@@ -531,20 +543,28 @@ class ImageBox(QtGui.QWidget):
         self.button = QtGui.QPushButton('...')
         self.button.clicked.connect(self.change)
 
+        self.grid.addWidget(self.label, 0, 0)
+        self.grid.addWidget(self.text, 0, 1)
+        self.grid.addWidget(self.button, 0, 2)
+
     def change(self):
         starting_path = QtCore.QDir.currentPath() + '/../Sprites/General/Panoramas'
         print(starting_path)
-        image_file = QtGui.QFileDialog.getOpenFilename(self, "Select Image File", starting_path,
+        image_file = QtGui.QFileDialog.getOpenFileName(self, "Select Image File", starting_path,
                                                        "PNG Files (*.png);;All Files (*)")
-        image = QtGui.QImage(image_file)
-        if image.width() != 240 or image.heigth() != 160:
-            QtGui.QErrorMessage().showMessage("Image chosen is not 240 pixels wide by 160 pixels high!")
-            return
-        head, tail = os.path.split(image_file)
-        print(head)
-        if not os.path.samefile(head, starting_path):
-            shutil.copy(image_file, starting_path)
-        self.text.setText(image_file)
+        if image_file:
+            image = QtGui.QImage(image_file)
+            if image.width() != 240 or image.height() != 160:
+                QtGui.QErrorMessage().showMessage("Image chosen is not 240 pixels wide by 160 pixels high!")
+                return
+            image_file = str(image_file)
+            starting_path = str(starting_path)
+            head, tail = os.path.split(image_file)
+            print(head)
+            if os.path.normpath(head) != os.path.normpath(starting_path):
+                print('Copying ' + image_file + ' to ' + starting_path)
+                shutil.copy(image_file, starting_path)
+            self.text.setText(tail.split('.')[0])
 
     def get_text(self):
         return self.text.text()
@@ -556,6 +576,7 @@ class StringBox(QtGui.QWidget):
     def __init__(self, label, text='', max_length=None, window=None):
         super(StringBox, self).__init__(window)
         self.grid = QtGui.QGridLayout()
+        self.setLayout(self.grid)
         self.window = window
 
         label = QtGui.QLabel(label)
@@ -571,37 +592,35 @@ class StringBox(QtGui.QWidget):
     def setText(self, text):
         self.text.setText(text)
 
-class BoolBox(QtGui.QCheckBox):
-    def __init__(self, label, window=None):
-        super(BoolBox, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
-        self.window = window
-
-        label = QtGui.QLabel(label)
-        self.grid.addWidget(label, 0, 0)
-        self.grid.addWidget(self, 0, 1)
+def add_line(grid, row):
+    line = QtGui.QFrame()
+    line.setFrameStyle(QtGui.QFrame.HLine)
+    line.setLineWidth(0)
+    grid.addWidget(line, row, 0)
 
 class PropertyMenu(QtGui.QWidget):
-    def __init__(self, window):
+    def __init__(self, window=None):
         super(PropertyMenu, self).__init__(window)
         self.grid = QtGui.QGridLayout()
+        #self.grid.setVerticalSpacing(1)
+        self.setLayout(self.grid)
         self.window = window
 
         self.name = StringBox('Chapter Name')
         self.grid.addWidget(self.name, 0, 0)
 
-        self.prep = BoolBox('Show Prep Menu?')
+        self.prep = QtGui.QCheckBox('Show Prep Menu?')
         self.grid.addWidget(self.prep, 1, 0)
 
         self.prep_music = MusicBox('Prep Music')
         self.grid.addWidget(self.prep_music, 2, 0)
 
-        self.pick = BoolBox('Allow Pick Units?')
+        self.pick = QtGui.QCheckBox('Allow Pick Units?')
         self.grid.addWidget(self.pick, 3, 0)
 
-        self.prep.stateChanged.connect(self.pick_enable)
+        self.prep.stateChanged.connect(self.prep_enable)
 
-        self.base = BoolBox('Show Base Menu?')
+        self.base = QtGui.QCheckBox('Show Base Menu?')
         self.grid.addWidget(self.base, 4, 0)
 
         self.base_music = MusicBox('Base Music')
@@ -612,43 +631,51 @@ class PropertyMenu(QtGui.QWidget):
 
         self.base.stateChanged.connect(self.base_enable)
 
-        self.market = BoolBox('Allow Prep/Base Market?')
+        self.market = QtGui.QCheckBox('Allow Prep/Base Market?')
         self.grid.addWidget(self.market, 7, 0)
 
-        self.transition = BoolBox('Show Chpt. Transition?')
+        self.transition = QtGui.QCheckBox('Show Chpt. Transition?')
         self.grid.addWidget(self.transition, 8, 0)
 
+        # Main music
+        music_grid = QtGui.QGridLayout()
+        self.grid.addLayout(music_grid, 10, 0)
+        music_grid.setVerticalSpacing(0)
+
+        add_line(music_grid, 0)
         self.player_music = MusicBox('Player Phase Music')
-        self.grid.addWidget(self.player_music, 9, 0)
-
+        music_grid.addWidget(self.player_music, 1, 0)
         self.enemy_music = MusicBox('Enemy Phase Music')
-        self.grid.addWidget(self.enemy_music, 10, 0)
-
+        music_grid.addWidget(self.enemy_music, 2, 0)
         self.other_music = MusicBox('Other Phase Music')
-        self.grid.addWidget(self.other_music, 11, 0)
+        music_grid.addWidget(self.other_music, 3, 0)
+        add_line(music_grid, 4)
 
         self.create_weather(12)
-        self.create_objective(14)
+        add_line(self.grid, 14)
+        self.create_objective(15)
+
+        self.update()
 
     def create_weather(self, row):
         grid = QtGui.QGridLayout()
         weather = QtGui.QLabel('Weather')
         grid.addWidget(weather, 1, 0)
 
-        self.weathers = ['Light', 'Dark', 'Rain', 'Sand', 'Snow']
+        self.weathers = ('Light', 'Dark', 'Rain', 'Sand', 'Snow')
         self.weather_boxes = []
         for idx, weather in enumerate(self.weathers):
             label = QtGui.QLabel(weather)
-            grid.addWidget(label, 0, idx + 1)
+            grid.addWidget(label, 0, idx + 1, alignment=QtCore.Qt.AlignHCenter)
             check_box = QtGui.QCheckBox()
-            grid.addWidget(check_box, 1, idx + 1)
+            grid.addWidget(check_box, 1, idx + 1, alignment=QtCore.Qt.AlignHCenter)
             self.weather_boxes.append(check_box)
 
         self.grid.addLayout(grid, row, 0, 2, 1)
 
     def create_objective(self, row):
-        label = QtGui.QLabel('Win Condition')
-        self.grid.addWidget(label, row, 0)
+        label = QtGui.QLabel('WIN CONDITION')
+        self.grid.addWidget(label, row, 0, alignment=QtCore.Qt.AlignHCenter)
 
         self.simple_display = StringBox('Simple Display')
         self.grid.addWidget(self.simple_display, row + 1, 0)
@@ -659,13 +686,17 @@ class PropertyMenu(QtGui.QWidget):
         self.loss_condition = StringBox('Loss Condition')
         self.grid.addWidget(self.loss_condition, row + 3, 0)
 
-    def pick_enable(self, b):
-        self.prep_music.setEnabled(b.isChecked())
-        self.pick.setEnabled(b.isChecked())
+    def prep_enable(self, b):
+        self.prep_music.setEnabled(b)
+        self.pick.setEnabled(b)
 
     def base_enable(self, b):
-        self.base_music.setEnabled(b.isChecked())
-        self.base_bg.setEnabled(b.isChecked())
+        self.base_music.setEnabled(b)
+        self.base_bg.setEnabled(b)
+
+    def update(self):
+        self.prep_enable(self.prep.isChecked())
+        self.base_enable(self.base.isChecked())
 
     def new(self):
         self.name.setText('Example Name')
@@ -677,7 +708,7 @@ class PropertyMenu(QtGui.QWidget):
         self.enemy_music.setText('')
         self.other_music.setText('')
         self.prep_music.setText('')
-        self.pick.setdown(True)
+        self.pick.setDown(True)
         self.base_music.setText('')
         self.base_bg.setText('')
 
@@ -753,7 +784,7 @@ class MainEditor(QtGui.QMainWindow):
         self.create_menus()
         self.create_dock_windows()
 
-        self.resize(640, 480)
+        # self.resize(640, 480)
 
         # Data
         self.tile_data = TileData()
@@ -775,10 +806,17 @@ class MainEditor(QtGui.QMainWindow):
             self.new_level()
 
     def new_level(self):
-        self.view.clear_image()
-        image = QtGui.QFileDialog.getOpenFilename(self, "Choose Map PNG", QtCore.QDir.currentPath(),
+        image_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Map PNG", QtCore.QDir.currentPath(),
                                                   "PNG Files (*.png);;All Files (*)")
-        self.view.set_new_image(image)
+        if image_file:
+            image = QtGui.QImage(image_file)
+            if image.width() % 16 != 0 or image.height() % 16 != 0:
+                QtGui.QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
+                return
+            self.view.clear_image()
+            self.view.set_new_image(image_file)
+
+            self.properties_menu.new()
 
     def open(self):
         if self.maybe_save():
@@ -789,11 +827,17 @@ class MainEditor(QtGui.QMainWindow):
             directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose Level", starting_path,
                                                                QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
             if directory:
+                # Get the current level num
+                if 'Data/Level' in str(directory):
+                    idx = directory.index('Level')
+                    num = directory[idx + 5:]
+                    print('Level num')
+                    print(num)
+                    self.current_level_num = num
                 self.load_level(directory)
 
     def load_level(self, directory):
-        self.clear_data()
-
+        self.view.clear_image()
         image = directory + '/MapSprite.png'
         self.view.set_new_image(image)
 
@@ -812,6 +856,13 @@ class MainEditor(QtGui.QMainWindow):
         self.unit_data.clear()
         self.unit_data.load(unit_level_filename)
 
+        print('Loaded Level' + self.current_level_num)
+
+    def write_overview(self, fp):
+        with open(fp, 'w') as overview:
+            for k, v in self.overview_dict:
+                overview.write(k + ';' + v + '\n')
+
     def save(self):
         # Find what the next unused num is 
         if not self.current_level_num:
@@ -819,7 +870,15 @@ class MainEditor(QtGui.QMainWindow):
         self.save_level(self.current_level_num)
 
     def save_level(self, num):
-        pass
+        data_directory = QtCore.QDir.currentPath() + '/../Data'
+        level_directory = data_directory + '/Level' + num
+        if not os.path.exists(level_directory):
+            os.mkdir(level_directory)
+
+        overview_filename = level_directory + '/overview.txt'
+        self.write_overview(overview_filename)
+
+        print('Saved Level' + num)
 
     def create_actions(self):
         self.new_act = QtGui.QAction("&New...", self, shortcut="Ctrl+N", triggered=self.new)
