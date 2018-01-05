@@ -102,7 +102,16 @@ def read_constants_file():
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'difficulties': 'Normal,Hard,Lunatic',
              'only_difficulty': -1,
-             'max_level': 10} # Maximum Level for any class. Any higher and you auto-promote
+             'max_level': 10, # Maximum Level for any class. Any higher and you auto-promote
+             'damage_str_coef': 1.0,
+             'damage_mag_coef': 1.0,
+             'avoid_speed_coef': 2.0,
+             'avoid_luck_coef': 1.0,
+             'accuracy_skill_coef': 2.0,
+             'accuracy_luck_coef': 0.5,
+             'crit_accuracy_skill_coef': 1.0,
+             'crit_avoid_luck_coef': 1.0,
+             'defense_coef': 1.0}
 
     if os.path.isfile('Data/constants.ini'):
         with open('Data/constants.ini') as constants_file:
@@ -145,6 +154,15 @@ def read_constants_file():
     lines['difficulties'] = lines['difficulties'].split(',')
     lines['only_difficulty'] = int(lines['only_difficulty'])
     lines['max_level'] = int(lines['max_level'])
+    lines['damage_str_coef'] = float(lines['damage_str_coef'])
+    lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
+    lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])
+    lines['avoid_luck_coef'] = float(lines['avoid_luck_coef'])
+    lines['accuracy_skill_coef'] = float(lines['accuracy_skill_coef'])
+    lines['accuracy_luck_coef'] = float(lines['accuracy_luck_coef'])
+    lines['crit_accuracy_skill_coef'] = float(lines['crit_accuracy_skill_coef'])
+    lines['crit_avoid_luck_coef'] = float(lines['crit_avoid_luck_coef'])
+    lines['defense_coef'] = float(lines['defense_coef'])
 
     return lines
 

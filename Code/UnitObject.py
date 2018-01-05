@@ -1629,15 +1629,18 @@ class UnitObject(object):
             else:
                 return None
         if item.weapon:
-            accuracy += item.weapon.HIT + self.stats['SKL']*3 + self.stats['LCK']
+            accuracy += item.weapon.HIT + self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] + \
+                self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef']
         elif item.spell and item.hit:
-            accuracy += item.hit + self.stats['SKL']*3 + self.stats['LCK']
+            accuracy += item.hit + self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] + \
+                self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef']
         else:
             accuracy = 10000
         return accuracy
 
     def avoid(self, gameStateObj, item=None):
-        base = self.attackspeed(item) * 3 + self.stats['LCK']
+        base = self.attackspeed(item) * cf.CONSTANTS['avoid_speed_coef'] + \
+            self.stats['LCK'] * cf.CONSTANTS['avoid_luck_coef']
         base += self.get_support_bonuses(gameStateObj)[3]
         for status in self.status_effects:
             if status.avoid:
@@ -1660,15 +1663,15 @@ class UnitObject(object):
             damage += item.weapon.MT
             if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
-                    damage += self.stats['STR']
+                    damage += self.stats['STR'] * cf.CONSTANTS['damage_str_coef']
                 else:  # Normal
-                    damage += self.stats['MAG']
+                    damage += self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef']
             else:
-                damage += self.stats['STR']
+                damage += self.stats['STR'] * cf.CONSTANTS['damage_str_coef']
             return damage
         elif item.spell:
             if item.damage:
-                damage += item.damage + self.stats['MAG']
+                damage += item.damage + self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef']
             else:
                 return 0
 
@@ -1683,19 +1686,19 @@ class UnitObject(object):
             else:
                 return None
         if item.crit and (item.weapon or item.spell):
-            accuracy = item.crit + self.stats['SKL']
+            accuracy = item.crit + self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef']
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             return accuracy
         else:
             return 0
 
     def crit_avoid(self, gameStateObj, item=None):
-        base = self.stats['LCK']*2
+        base = self.stats['LCK'] * cf.CONSTANTS['crit_avoid_luck_coef']
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         return base
 
     def defense(self, gameStateObj, stat='DEF'):
-        defense = self.stats[stat]
+        defense = self.stats[stat] * cf.CONSTANTS['defense_coef']
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
         if cf.CONSTANTS['support']:
