@@ -1,9 +1,8 @@
 name;DEBUG
 prep_flag;0
-prep_music;Brave Story 61
+pick_flag;0
 base_flag;0
 market_flag;0
-pick_flag;0
 transition_flag;0
 display_name;Survive Ambush,{6 - gameStateObj.turncount} turns left
 win_condition;Reach turn 6

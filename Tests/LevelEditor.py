@@ -502,12 +502,12 @@ class MusicBox(QtGui.QWidget):
         self.window = window
 
         self.label = QtGui.QLabel(label)
-        self.text = QtGui.QLineEdit(music)
+        self.txt = QtGui.QLineEdit(music)
         self.button = QtGui.QPushButton('...')
         self.button.clicked.connect(self.change)
 
         self.grid.addWidget(self.label, 0, 0)
-        self.grid.addWidget(self.text, 0, 1)
+        self.grid.addWidget(self.txt, 0, 1)
         self.grid.addWidget(self.button, 0, 2)
 
     def change(self):
@@ -525,11 +525,11 @@ class MusicBox(QtGui.QWidget):
                 shutil.copy(music_file, starting_path)
             self.text.setText(tail.split('.')[0])
 
-    def get_text(self):
-        return self.text.text()
+    def text(self):
+        return self.txt.text()
 
     def setText(self, text):
-        self.text.setText(text)
+        self.txt.setText(text)
 
 class ImageBox(QtGui.QWidget):
     def __init__(self, label, image='', window=None):
@@ -539,12 +539,12 @@ class ImageBox(QtGui.QWidget):
         self.window = window
 
         self.label = QtGui.QLabel(label)
-        self.text = QtGui.QLineEdit(image)
+        self.txt = QtGui.QLineEdit(image)
         self.button = QtGui.QPushButton('...')
         self.button.clicked.connect(self.change)
 
         self.grid.addWidget(self.label, 0, 0)
-        self.grid.addWidget(self.text, 0, 1)
+        self.grid.addWidget(self.txt, 0, 1)
         self.grid.addWidget(self.button, 0, 2)
 
     def change(self):
@@ -566,11 +566,11 @@ class ImageBox(QtGui.QWidget):
                 shutil.copy(image_file, starting_path)
             self.text.setText(tail.split('.')[0])
 
-    def get_text(self):
-        return self.text.text()
+    def text(self):
+        return self.txt.text()
 
     def setText(self, text):
-        self.text.setText(text)
+        self.txt.setText(text)
 
 class StringBox(QtGui.QWidget):
     def __init__(self, label, text='', max_length=None, window=None):
@@ -581,16 +581,16 @@ class StringBox(QtGui.QWidget):
 
         label = QtGui.QLabel(label)
         self.grid.addWidget(label, 0, 0)
-        self.text = QtGui.QLineEdit(text)
+        self.txt = QtGui.QLineEdit(text)
         if max_length:
-            self.text.setMaxLength(max_length)
-        self.grid.addWidget(self.text, 0, 1)
+            self.txt.setMaxLength(max_length)
+        self.grid.addWidget(self.txt, 0, 1)
 
     def text(self):
-        self.text.text()
+        return self.txt.text()
 
     def setText(self, text):
-        self.text.setText(text)
+        self.txt.setText(text)
 
 def add_line(grid, row):
     line = QtGui.QFrame()
@@ -700,20 +700,20 @@ class PropertyMenu(QtGui.QWidget):
 
     def new(self):
         self.name.setText('Example Name')
-        self.prep.setDown(False)
-        self.base.setDown(False)
-        self.market.setDown(False)
-        self.transition.setDown(True)
+        self.prep.setChecked(False)
+        self.base.setChecked(False)
+        self.market.setChecked(False)
+        self.transition.setChecked(True)
         self.player_music.setText('')
         self.enemy_music.setText('')
         self.other_music.setText('')
         self.prep_music.setText('')
-        self.pick.setDown(True)
+        self.pick.setChecked(True)
         self.base_music.setText('')
         self.base_bg.setText('')
 
         for box in self.weather_boxes:
-            box.setDown(False)
+            box.setChecked(False)
 
         self.simple_display.setText('Defeat Boss')
         self.win_condition.setText('Defeat Boss')
@@ -721,49 +721,51 @@ class PropertyMenu(QtGui.QWidget):
 
     def load(self, overview):
         self.name.setText(overview['name'])
-        self.prep.setDown(bool(int(overview['prep_flag'])))
-        self.base.setDown(overview['base_flag'] != '0')
-        self.market.setDown(bool(int(overview['market_flag'])))
-        self.transition.setDown(bool(int(overview['transition_flag'])))
+        self.prep.setChecked(bool(int(overview['prep_flag'])))
+        self.base.setChecked(overview['base_flag'] != '0')
+        self.market.setChecked(bool(int(overview['market_flag'])))
+        self.transition.setChecked(bool(int(overview['transition_flag'])))
         self.player_music.setText(overview['player_phase_music'])
         self.enemy_music.setText(overview['enemy_phase_music'])
         self.other_music.setText(overview['other_phase_music'] if 'other_phase_music' in overview else '')
         self.prep_music.setText(overview['prep_music'] if self.prep.isChecked() else '')
-        self.pick.setDown(bool(int(overview['pick_flag'])))
+        self.pick.setChecked(bool(int(overview['pick_flag'])))
         self.base_music.setText(overview['base_music'] if self.base.isChecked() else '')
         self.base_bg.setText(overview['base_flag'] if self.base.isChecked() else '')
 
         weather = overview['weather'].split(',') if 'weather' in overview else []
         for box in self.weather_boxes:
-            box.setDown(False)
+            box.setChecked(False)
         for name in weather:
             if name in self.weathers:
                 idx = self.weathers.index(name)
-                self.weather_boxes[idx].setDown(True)
+                print(name)
+                self.weather_boxes[idx].setChecked(True)
 
         self.simple_display.setText(overview['display_name'])
         self.win_condition.setText(overview['win_condition'])
         self.loss_condition.setText(overview['loss_condition'])
 
     def save(self):
-        overview = {}
+        overview = OrderedDict()
         overview['name'] = self.name.text()
         overview['prep_flag'] = '1' if self.prep.isChecked() else '0'
-        overview['market_flag'] = '1' if self.market.isChecked() else '0'
-        overview['transition_flag'] = '1' if self.transition.isChecked() else '0'
-        overview['player_phase_music'] = self.player_music.text()
-        overview['enemy_phase_music'] = self.enemy_music.text()
-        overview['other_phase_music'] = self.other_music.text()
         overview['prep_music'] = self.prep_music.text()
         overview['pick_flag'] = '1' if self.pick.isChecked() else '0'
-        overview['base_music'] = self.base_music.text()
         overview['base_flag'] = self.base_bg.text() if self.base.isChecked() else '0'
-
-        overview['weather'] = ','.join([w for i, w in enumerate(self.weathers) if self.weather_boxes[i].isChecked()])
-
+        overview['base_music'] = self.base_music.text()
+        overview['market_flag'] = '1' if self.market.isChecked() else '0'
+        overview['transition_flag'] = '1' if self.transition.isChecked() else '0'
+        
         overview['display_name'] = self.simple_display.text()
         overview['win_condition'] = self.win_condition.text()
         overview['loss_condition'] = self.loss_condition.text()
+
+        overview['player_phase_music'] = self.player_music.text()
+        overview['enemy_phase_music'] = self.enemy_music.text()
+        overview['other_phase_music'] = self.other_music.text()
+
+        overview['weather'] = ','.join([w for i, w in enumerate(self.weathers) if self.weather_boxes[i].isChecked()])
 
         return overview
 
@@ -789,7 +791,7 @@ class MainEditor(QtGui.QMainWindow):
         # Data
         self.tile_data = TileData()
         self.tile_info = TileInfo()
-        self.overview_dict = dict()
+        self.overview_dict = OrderedDict()
         self.unit_data = UnitData()
 
         # Whether anything has changed since the last save
@@ -828,9 +830,9 @@ class MainEditor(QtGui.QMainWindow):
                                                                QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
             if directory:
                 # Get the current level num
-                if 'Data/Level' in str(directory):
-                    idx = directory.index('Level')
-                    num = directory[idx + 5:]
+                if 'Level' in str(directory):
+                    idx = str(directory).index('Level')
+                    num = str(directory)[idx + 5:]
                     print('Level num')
                     print(num)
                     self.current_level_num = num
@@ -856,12 +858,14 @@ class MainEditor(QtGui.QMainWindow):
         self.unit_data.clear()
         self.unit_data.load(unit_level_filename)
 
-        print('Loaded Level' + self.current_level_num)
+        if self.current_level_num:
+            print('Loaded Level' + self.current_level_num)
 
     def write_overview(self, fp):
         with open(fp, 'w') as overview:
-            for k, v in self.overview_dict:
-                overview.write(k + ';' + v + '\n')
+            for k, v in self.overview_dict.iteritems():
+                if v:
+                    overview.write(k + ';' + v + '\n')
 
     def save(self):
         # Find what the next unused num is 
@@ -876,6 +880,7 @@ class MainEditor(QtGui.QMainWindow):
             os.mkdir(level_directory)
 
         overview_filename = level_directory + '/overview.txt'
+        self.overview_dict = self.properties_menu.save()
         self.write_overview(overview_filename)
 
         print('Saved Level' + num)
