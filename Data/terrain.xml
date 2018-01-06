@@ -412,7 +412,7 @@
 
     <!--Sea Cliff-->
     <terrain name="Cliff">
-        <id>2</id>
+        <id>36</id>
         <color>136,144,104</color>
         <minimap>Coast</minimap>
         <platform>Cliff</platform>
@@ -445,18 +445,6 @@
         <AVO>0</AVO>
         
         <mtype>Normal</mtype>
-    </terrain>
-
-    <terrain name="Mast">
-        <id>38</id>
-        <color>248,240,176</color>
-        <minimap>Wall</minimap>
-        <platform>Deck</platform>
-        
-        <DEF>0</DEF>
-        <AVO>0</AVO>
-        
-        <mtype>Wall</mtype>
     </terrain>
 
     <terrain name="Stairs">
@@ -586,7 +574,7 @@
 
     <!-- Snow Cliff-->
     <terrain name="Cliff">
-        <id>48</id>
+        <id>49</id>
         <color>248,208,208</color>
         <minimap>Snow_Cliff</minimap>
         <platform>Cliff</platform>
@@ -595,5 +583,17 @@
         <AVO>30</AVO>
         
         <mtype>Cliff</mtype>
+    </terrain>
+
+    <terrain name="Mast">
+        <id>50</id>
+        <color>248,240,176</color>
+        <minimap>Wall</minimap>
+        <platform>Deck</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Wall</mtype>
     </terrain>
 </terrain_data>
