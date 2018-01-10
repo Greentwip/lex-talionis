@@ -1,0 +1,122 @@
+FE7 Lyn Mode
+Prologue:
+- MyrmidonF
+1:
+- CavalierM (Strong, Luck, Defense)
+- CavalierM (HP, Skill, Speed, Res)
+2:
+3:
+- Pegasus KnightF
+- ArcherM
+4:
+- FighterM
+5:
+- ClericF
+- MageM
+6:
+- NomadM
+- ThiefM (Village)
+7:
+- BardM
+- MonkM
+7x:
+8:
+9:
+- KnightM
+10:
+
+LT:
+Prologue:
+- MyrmidonM
+- ClericF
+1:
+- FighterM
+- ArcherF
+2:
+- CavalierM
+- MageF
+3:
+- KnightM
+- ThiefF
+4:
+- SoldierF
+5:
+- TacticianM
+- ShamanF
+6:
+- MercenaryM
+7:
+8:
+9:
+10:
+
+FE7 Eliwood/Hector Mode
+11-12 Combined:
+- LordM (Swords) (Average)
+- LordM (Axes) (Strong, Defense)
+- PaladinM (Jagen)
+- CavalierM
+- ArcherF
+- FighterM
+- FighterM
+- ClericF
+- ThiefM
+- KnightM
+13:
+- MyrmidonM
+13x:
+- Convoy
+14:
+- MageM (Recruit)
+- TroubadourF (Village)
+15:
+16:
+- MyrmidonF
+- CavalierM
+- CavalierM
+- ArcherM
+- Peg. KnightF
+17:
+- MercenaryM (Recruit)
+- MonkM (Recruit)
+17x:
+- ShamanM (Village)
+18:
+19:
+- RaiderM
+- Peg. KnightF (Recruit)
+19x:
+19xx:
+20:
+- ThiefM (Recruit)
+21:
+- DancerF
+22:
+- PaladinF
+- NomadM (Recruit)
+- Wyvern KnightM (Recruit)
+23:
+- BerserkerM (Recruit)
+23x:
+24:
+- WarriorM -OR- GeneralM (Recruit)
+25:
+- Peg. KnightF (Recruit)
+26:
+- SageM
+- SniperF
+27:
+- HeroM -OR- SwordmasterM (Recruit)
+28:
+- MageF (Recruit)
+28x:
+- AssassinM (Recruit)
+29:
+- Wyvern LordF (Recruit)
+30:
+31:
+32:
+- BishopM (Village)
+32x:
+33:
+- ArchsageM

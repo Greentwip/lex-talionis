@@ -42,7 +42,8 @@ class TileData(object):
         for y in range(height):
             for x in range(width):
                 pos = QtCore.QPoint(x, y)
-                mapObj[x].append(QtGui.QColor.fromRgb(tiledata.pixel(pos))) # appends [r,g,b,t] value
+                color = QtGui.QColor.fromRgb(tiledata.pixel(pos))
+                mapObj[x].append((color.red(), color.green(), color.blue()))
 
         return mapObj, width, height
 

@@ -14,51 +14,113 @@ import ParsedData
 import PropertyMenu, TerrainMenu
 
 class MainView(QtGui.QGraphicsView):
-    def __init__(self):
+    def __init__(self, tile_data, window=None):
         QtGui.QGraphicsView.__init__(self)
+        self.window = window
         self.scene = QtGui.QGraphicsScene(self)
         self.setScene(self.scene)
 
         self.setMinimumSize(15*16, 10*16)
+        self.setMouseTracking(True)
 
         self.image = None
+        self.menu = None
+        self.tile_data = tile_data
+
+        self.screen_scale = 1
+
+    def tile_width(self):
+        return 16 * self.screen_scale
+
+    def tile_height(self):
+        return 16 * self.screen_scale
 
     def set_new_image(self, image):
         self.image = QtGui.QImage(image)
-        self.disp_main_map()
+
+    def set_menu(self, menu):
+        self.menu = menu
 
     def disp_main_map(self):
-        self.scene.addPixmap(QtGui.QPixmap.fromImage(self.image))
+        if self.image:
+            self.clear_image()
+            self.scene.addPixmap(QtGui.QPixmap.fromImage(self.image))
 
     def clear_image(self):
         self.scene.clear()
 
-    def add_image(self):
-        levelfolder = '../Data/LevelDEBUG'
-        self.image = QtGui.QImage(levelfolder + '/MapSprite.png')
-        self.disp_main_map()
+    def disp_tile_data(self):
+        if self.image:
+            self.clear_image()
+            new_image = self.image.copy()
 
-    def disp_tile_data(self, tile_data):
-        self.clear_image()
+            painter = QtGui.QPainter()
+            painter.begin(new_image)
+            for coord, color in self.tile_data.tiles.iteritems():
+                write_color = QtGui.QColor(color[0], color[1], color[2])
+                write_color.setAlpha(192)
+                painter.fillRect(coord[0] * 16, coord[1] * 16, 16, 16, write_color)
+            painter.end()
 
-        new_image = self.image.copy()
+            self.scene.addPixmap(QtGui.QPixmap.fromImage(new_image))
 
-        painter = QtGui.QPainter()
-        painter.begin(new_image)
-        for coord, color in tile_data.iteritems():
-            color = QtGui.QColor(color)
-            color.setAlpha(192)
-            painter.fillRect(coord[0] * 16, coord[1] * 16, 16, 16, color)
-        painter.end()
+    def mousePressEvent(self, event):
+        if self.window.dock_visibility['Terrain']:
+            scene_pos = self.mapToScene(event.pos())
+            pixmap = self.scene.itemAt(scene_pos)
+            pos = int(scene_pos.x() / self.tile_width()), int(scene_pos.y() / self.tile_height())
+            # print('Press:', pos)
+            if pixmap and pos in self.tile_data.tiles:
+                if event.button() == QtCore.Qt.LeftButton:
+                    current_color = self.menu.get_current_color()
+                    self.tile_data.tiles[pos] = current_color
+                    self.window.update_view()
+                elif event.button() == QtCore.Qt.RightButton:
+                    current_color = self.tile_data.tiles[pos]
+                    self.menu.set_current_color(current_color)
 
-        self.scene.addPixmap(QtGui.QPixmap.fromImage(new_image))
+    def mouseMoveEvent(self, event):
+        if self.window.dock_visibility['Terrain']:
+            scene_pos = self.mapToScene(event.pos())
+            pixmap = self.scene.itemAt(scene_pos)
+            pos = int(scene_pos.x() / self.tile_width()), int(scene_pos.y() / self.tile_height())
+            if pixmap and pos in self.tile_data.tiles:
+                hovered_color = self.tile_data.tiles[pos]
+                # print('Hover', pos, hovered_color)
+                info = self.menu.get_info_str(hovered_color)
+                self.window.status_bar.showMessage(info)
+
+    def wheelEvent(self, event):
+        if event.delta() > 0 and self.screen_scale < 4:
+            self.screen_scale += 1
+            self.scale(2, 2)
+        elif event.delta() < 0 and self.screen_scale > 1:
+            self.screen_scale -= 1
+            self.scale(0.5, 0.5)
+
+class Dock(QtGui.QDockWidget):
+    def __init__(self, title, parent):
+        super(Dock, self).__init__(title, parent)
+        self.main_editor = parent
+        self.visibilityChanged.connect(self.visible)
+
+    def visible(self, visible):
+        # print("%s's Visibility Changed to %s" %(self.windowTitle(), visible))
+        self.main_editor.dock_visibility[str(self.windowTitle())] = visible
+        self.main_editor.update_view()
 
 class MainEditor(QtGui.QMainWindow):
     def __init__(self):
         super(MainEditor, self).__init__()
         self.setWindowTitle('Lex Talionis Level Editor v0.7.0')
 
-        self.view = MainView()
+        # Data
+        self.tile_data = ParsedData.TileData()
+        self.tile_info = ParsedData.TileInfo()
+        self.overview_dict = OrderedDict()
+        self.unit_data = ParsedData.UnitData()
+
+        self.view = MainView(self.tile_data, self)
         self.setCentralWidget(self.view)
 
         self.status_bar = self.statusBar()
@@ -70,14 +132,6 @@ class MainEditor(QtGui.QMainWindow):
         self.create_menus()
         self.create_dock_windows()
 
-        # self.resize(640, 480)
-
-        # Data
-        self.tile_data = ParsedData.TileData()
-        self.tile_info = ParsedData.TileInfo()
-        self.overview_dict = OrderedDict()
-        self.unit_data = ParsedData.UnitData()
-
         # Whether anything has changed since the last save
         self.modified = False
 
@@ -86,6 +140,12 @@ class MainEditor(QtGui.QMainWindow):
             event.accept()
         else:
             event.ignore()
+
+    def update_view(self):
+        if self.dock_visibility['Terrain']:
+            self.view.disp_tile_data()
+        else:
+            self.view.disp_main_map()
 
     def new(self):
         if self.maybe_save():
@@ -108,8 +168,6 @@ class MainEditor(QtGui.QMainWindow):
         if self.maybe_save():
             # "Levels (Level*);;All Files (*)",
             starting_path = QtCore.QDir.currentPath() + '/../Data'
-            print('Starting Path')
-            print(starting_path)
             directory = QtGui.QFileDialog.getExistingDirectory(self, "Choose Level", starting_path,
                                                                QtGui.QFileDialog.ShowDirsOnly | QtGui.QFileDialog.DontResolveSymlinks)
             if directory:
@@ -145,14 +203,24 @@ class MainEditor(QtGui.QMainWindow):
         if self.current_level_num:
             print('Loaded Level' + self.current_level_num)
 
-        self.view.clear_image()
-        self.view.disp_tile_data(self.tile_data.get_tile_data())
+        self.update_view()
 
     def write_overview(self, fp):
         with open(fp, 'w') as overview:
             for k, v in self.overview_dict.iteritems():
                 if v:
                     overview.write(k + ';' + v + '\n')
+
+    def write_tile_data(self, fp):
+        image = QtGui.QImage(self.tile_data.width, self.tile_data.height, QtGui.QImage.Format_RGB32)
+        painter = QtGui.QPainter()
+        painter.begin(image)
+        for coord, color in self.tile_data.tiles.iteritems():
+            write_color = QtGui.QColor(color[0], color[1], color[2])
+            painter.fillRect(coord[0], coord[1], 1, 1, write_color)
+        painter.end()
+        pixmap = QtGui.QPixmap.fromImage(image)
+        pixmap.save(fp, 'png')
 
     def save(self):
         # Find what the next unused num is 
@@ -170,6 +238,9 @@ class MainEditor(QtGui.QMainWindow):
         self.overview_dict = self.properties_menu.save()
         self.write_overview(overview_filename)
 
+        tile_data_filename = level_directory + '/TileData.png'
+        self.write_tile_data(tile_data_filename)
+
         print('Saved Level' + num)
 
     def create_actions(self):
@@ -177,6 +248,7 @@ class MainEditor(QtGui.QMainWindow):
         self.open_act = QtGui.QAction("&Open...", self, shortcut="Ctrl+O", triggered=self.open)
         self.save_act = QtGui.QAction("&Save...", self, shortcut="Ctrl+S", triggered=self.save)
         self.exit_act = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q", triggered=self.close)
+        self.about_act = QtGui.QAction("&About", self, triggered=self.about)
 
     def create_menus(self):
         file_menu = QtGui.QMenu("&File", self)
@@ -189,50 +261,55 @@ class MainEditor(QtGui.QMainWindow):
         self.view_menu = QtGui.QMenu("&View", self)
 
         help_menu = QtGui.QMenu("&Help", self)
+        help_menu.addAction(self.about_act)
 
         self.menuBar().addMenu(file_menu)
         self.menuBar().addMenu(self.view_menu)
         self.menuBar().addMenu(help_menu)
 
     def create_dock_windows(self):
-        self.properties_dock = QtGui.QDockWidget("Properties", self)
-        self.properties_dock.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        self.properties_menu = PropertyMenu.PropertyMenu()
-        self.properties_dock.setWidget(self.properties_menu)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.properties_dock)
-        self.view_menu.addAction(self.properties_dock.toggleViewAction())
+        self.docks = {}
+        self.docks['Properties'] = Dock("Properties", self)
+        self.docks['Properties'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.properties_menu = PropertyMenu.PropertyMenu(self)
+        self.docks['Properties'].setWidget(self.properties_menu)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.docks['Properties'])
+        self.view_menu.addAction(self.docks['Properties'].toggleViewAction())
 
-        self.terrain_dock = QtGui.QDockWidget("Terrain", self)
-        self.terrain_dock.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        self.terrain_menu = TerrainMenu.TerrainMenu(GC.TERRAINDATA)
-        self.terrain_dock.setWidget(self.terrain_menu)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.terrain_dock)
-        self.view_menu.addAction(self.terrain_dock.toggleViewAction())
+        self.docks['Terrain'] = Dock("Terrain", self)
+        self.docks['Terrain'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.terrain_menu = TerrainMenu.TerrainMenu(GC.TERRAINDATA, self.view, self)
+        self.docks['Terrain'].setWidget(self.terrain_menu)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Terrain'])
+        self.view_menu.addAction(self.docks['Terrain'].toggleViewAction())
+        self.view.set_menu(self.terrain_menu)
 
-        self.tile_info_dock = QtGui.QDockWidget("Tile Info", self)
-        self.tile_info_dock.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Tile Info'] = Dock("Tile Info", self)
+        self.docks['Tile Info'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         label = QtGui.QLabel("Choose Tile Information Here")
-        self.tile_info_dock.setWidget(label)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.tile_info_dock)
-        self.view_menu.addAction(self.tile_info_dock.toggleViewAction())
+        self.docks['Tile Info'].setWidget(label)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Tile Info'])
+        self.view_menu.addAction(self.docks['Tile Info'].toggleViewAction())
 
-        self.group_dock = QtGui.QDockWidget("Groups", self)
-        self.group_dock.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Groups'] = Dock("Groups", self)
+        self.docks['Groups'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         label = QtGui.QLabel("Create Groups Here")
-        self.group_dock.setWidget(label)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.group_dock)
-        self.view_menu.addAction(self.group_dock.toggleViewAction())
+        self.docks['Groups'].setWidget(label)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Groups'])
+        self.view_menu.addAction(self.docks['Groups'].toggleViewAction())
 
-        self.unit_dock = QtGui.QDockWidget("Units", self)
-        self.unit_dock.setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Units'] = Dock("Units", self)
+        self.docks['Units'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         label = QtGui.QLabel("Create Units Here")
-        self.unit_dock.setWidget(label)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.unit_dock)
-        self.view_menu.addAction(self.unit_dock.toggleViewAction())
+        self.docks['Units'].setWidget(label)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Units'])
+        self.view_menu.addAction(self.docks['Units'].toggleViewAction())
 
-        self.tabifyDockWidget(self.terrain_dock, self.tile_info_dock)
-        self.tabifyDockWidget(self.tile_info_dock, self.group_dock)
-        self.tabifyDockWidget(self.group_dock, self.unit_dock)
+        self.tabifyDockWidget(self.docks['Terrain'], self.docks['Tile Info'])
+        self.tabifyDockWidget(self.docks['Tile Info'], self.docks['Groups'])
+        self.tabifyDockWidget(self.docks['Groups'], self.docks['Units'])
+
+        self.dock_visibility = {k: False for k in self.docks.keys()}
 
     def maybe_save(self):
         if self.modified:
@@ -245,6 +322,14 @@ class MainEditor(QtGui.QMainWindow):
                 return False
 
         return True
+
+    def about(self):
+        QtGui.QMessageBox.about(self, "About Lex Talionis",
+            "<p>This is the <b>Lex Talionis</b> Engine Level Editor."
+            "Check out https://www.github.com/rainlash/lex-talionis "
+            "for more information and helpful tutorials.</p>"
+            "<p>This program has been freely distributed under the MIT License.</p>"
+            "<p>Copyright 2014-2018 rainlash.</p>")
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
