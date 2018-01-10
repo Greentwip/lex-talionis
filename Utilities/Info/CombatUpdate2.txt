@@ -1,0 +1,101 @@
+It's a Christmas Miracle!
+
+Version 0.7 of The Lion Throne is out now. The OP has been updated with the download link. Also, you can download it here
+Full Combat Animations
+
+
+
+It's a long time coming folks, but Full Combat Animations are now supported!
+
+Full Combat Animations took up the bulk of my time on this project, but there are other improvements as well. If you care, they can be found in the spoiler tags below.
+
+Spoiler
+Major Feature Updates:
+
+Full Combat Animations:
+
+Animation option in the Options Menu now works (can change between Always, Your Turn, Combat Only, and Never for Full Animations).
+You can press whatever your AUX key is mapped to (default: a) to toggle Full Animation.
+You can press whatever your START key is mapped to (default: s) to speed up Full Animation.
+Missing several animations:
+Spoiler
+Spell Animations:
+Restore
+Evil Eye
+Shadowshot
+Demon Surge
+
+Unit Animations:
+Female Soldier
+Male Halberdier (Lance and Axe)
+Female Halberdier (Lance and Axe)
+Skirmisher (Lance)
+Sentinel (Axe)
+
+
+Better debugging information:
+
+Game now pauses for 20 seconds after crashing. Take a screenshot!
+Detailed error logs are output to the terminal and saved in  debug.log.1.
+Unit Menu (relatively untested since I never use it) (but its there)
+
+
+
+Promotion Animations
+
+Also added in promotion choices (so you can select between two different options a la Sacred Stones). This is not utilized by The Lion Throne
+
+Spoiler
+Gameplay Balancing
+
+Chapters 3 and 4 have been made easier. Playtesting revealed the difficulty jump between Chapter 2 and Chapter 3 was too harsh.
+Chapters 5, 7, 8, and 9 have also been made slightly easier.
+The Final Boss has been nerfed. Dealing with him if you were unprepared was essentially impossible. This makes it slightly possible.
+In general, many items have been removed. 
+Iron Knife, Steel Knife, Mithril Knife, Oak Longbow, Yew Longbow, Practice Blade, Lancereaver, Axereaver, Swordreaver, Earth Ward, Water Ward
+Some items have been added or changed dramatically.
+Thunder Ward, Gustblade, Flareblade, Boltblade, Rapier, Great Bow
+Small changes to many classes' growths, bases, caps, and promotion gains.
+Small changes to item weights.
+Can no longer rescue mounted units.
+Mounted units can no longer walk on pillars.
+
+Spoiler
+Miscellaneous changes
+
+Some dialogue removed or changed for flow.
+Joel's palette and sprite updated.
+Archon renamed Duke.
+Mystic renamed Cleric.
+Units who are not on the screen are no longer drawn to the screen (some exceptions). This speeds up the drawing process.
+Gender now no longer M, F but rather 0-4 for Males and 5-9 for females to allow for different animations for each gender.
+Added support for weapons that use physical stats in melee, but magical stats at range.
+The Lex Talionis engine now supports Critical Hits, as in normal Fire Emblem. This is not utilized by The Lion Throne.
+AI options are now exposed to the user under ai_presets.txt.
+Added support for double selection spells (Warp staff which selects a unit and then a tile to send the unit to).
+Added Awakening-style Victory screen.
+Many new sounds added.
+x2 symbols now move more similarly to GBA games (square rather than circle).
+Cursor movement improved at different speeds.
+Unit MapSprites speeds now better match GBA games.
+Added Rescue Preview Window.
+Improved Text Speed options.
+Now allows you to switch screen size from within the game. However, a restart is still required for change to take effect.
+Added fast scrolling to many of the menus, so you can hold down to go down a list of options, rather than pressing down repeatedly.
+AI is now 'smarter' about using its recovery items.
+AI will now take into account any statuses it gains for equipping an item (like Wind Ward, etc.).
+Using stat boosting items in Prep or Base now works better.
+Buying or selling items now displays amount of money lost or gained for a short period of time.
+Info option renamed to Convos (to better get across that it is not a tutorial -- playtesters often ignored it).
+Reflecting statuses back on the caster (as the Final Boss does) now functions correctly.
+Metamagic now actually works! (probably)
+
+A few caveats before you venture forth:
+
+As always, I am only one man and cannot find every bug in this behemoth of a codebase. Even while finishing testing I was still finding bugs here and there. So if you encounter a bug, please send me a PM or comment here. Also attach your Saves/debug.log.1 if you can, since it has useful information that will help me find the bug and squash it.
+You cannot use the saves you have from previous versions. It will break. Don't do it. You must start a new game. Really.
+What's Next?
+
+I plan to write a tutorial on how to create your own custom scenarios and fangames using the Lex Talionis engine. Accompanying this will be a graphical Level Editor to make developing individual chapters easy and fluid.
+
+Also, if anyone has any Android development experience and owns an Android device, I would be interested in talking to them about porting this to Android. PM me. Thank you!
