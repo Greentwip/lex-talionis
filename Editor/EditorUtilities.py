@@ -9,12 +9,11 @@ import Code.GlobalConstants as GC
 
 # === VIEW AND CONTROLLER METHODS ============================================
 class ImageWidget(QtGui.QWidget):
-    def __init__(self, surface, parent=None, x=0):
+    def __init__(self, surface, parent=None):
         super(ImageWidget, self).__init__(parent)
         w = surface.get_width()
         h = surface.get_height()
         self.data = surface.get_buffer().raw
-        self.x = x
         # self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_RGB32)
         self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_ARGB32)
         self.resize(w, h)

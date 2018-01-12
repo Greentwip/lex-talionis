@@ -11,7 +11,7 @@ import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
 import ParsedData
-import PropertyMenu, TerrainMenu, TileInfoMenu
+import PropertyMenu, TerrainMenu, TileInfo
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, window=None):
@@ -88,9 +88,11 @@ class MainView(QtGui.QGraphicsView):
         elif self.window.dock_visibility['Tile Info'] and self.tool == 'Tile Info':
             if pixmap:
                 if event.button() == QtCore.Qt.LeftButton:
-                    ans = self.window.tile_info_menu.start_dialog()
-                    self.tile_info.set(pos, ans)
-                    self.window.update_view()
+                    name = self.window.tile_info_menu.get_current_name()
+                    value = self.window.tile_info_menu.start_dialog()
+                    if value:
+                        self.tile_info.set(pos, name, value)
+                        self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
                     self.tile_info.delete(pos)
 
@@ -134,7 +136,7 @@ class MainEditor(QtGui.QMainWindow):
 
         # Data
         self.tile_data = ParsedData.TileData()
-        self.tile_info = ParsedData.TileInfo()
+        self.tile_info = TileInfo.TileInfo()
         self.overview_dict = OrderedDict()
         self.unit_data = ParsedData.UnitData()
 
@@ -303,7 +305,7 @@ class MainEditor(QtGui.QMainWindow):
 
         self.docks['Tile Info'] = Dock("Tile Info", self)
         self.docks['Tile Info'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        self.tile_info_menu = TileInfoMenu.TileInfoMenu(self.view, self)
+        self.tile_info_menu = TileInfo.TileInfoMenu(self.view, self)
         self.docks['Tile Info'].setWidget(self.tile_info_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Tile Info'])
         self.view_menu.addAction(self.docks['Tile Info'].toggleViewAction())
