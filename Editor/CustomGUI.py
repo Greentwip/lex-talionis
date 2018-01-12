@@ -99,3 +99,12 @@ class StringBox(QtGui.QWidget):
 
     def setText(self, text):
         self.txt.setText(text)
+
+class SignalList(QtGui.QListWidget):
+    def __init__(self, parent=None):
+        self.parent = parent
+        self.currentItemChanged.connect(self.trigger)
+        self.itemActived.connect(self.trigger)
+
+    def trigger(self, *args, **kwargs):
+        self.parent.trigger()

@@ -11,10 +11,10 @@ import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
 import ParsedData
-import PropertyMenu, TerrainMenu
+import PropertyMenu, TerrainMenu, TileInfoMenu
 
 class MainView(QtGui.QGraphicsView):
-    def __init__(self, tile_data, window=None):
+    def __init__(self, tile_data, tile_info, window=None):
         QtGui.QGraphicsView.__init__(self)
         self.window = window
         self.scene = QtGui.QGraphicsScene(self)
@@ -24,8 +24,11 @@ class MainView(QtGui.QGraphicsView):
         self.setMouseTracking(True)
 
         self.image = None
-        self.menu = None
+        self.working_image = None
+        self.tool = None
+        # Data
         self.tile_data = tile_data
+        self.tile_info = tile_info
 
         self.screen_scale = 1
 
@@ -38,53 +41,68 @@ class MainView(QtGui.QGraphicsView):
     def set_new_image(self, image):
         self.image = QtGui.QImage(image)
 
-    def set_menu(self, menu):
-        self.menu = menu
+    def clear_scene(self):
+        self.scene.clear()
+
+    def show_image(self):
+        if self.working_image:
+            self.clear_scene()
+            self.scene.addPixmap(QtGui.QPixmap.fromImage(self.working_image))
 
     def disp_main_map(self):
         if self.image:
-            self.clear_image()
-            self.scene.addPixmap(QtGui.QPixmap.fromImage(self.image))
-
-    def clear_image(self):
-        self.scene.clear()
+            self.working_image = self.image.copy()
 
     def disp_tile_data(self):
-        if self.image:
-            self.clear_image()
-            new_image = self.image.copy()
-
+        if self.working_image:
             painter = QtGui.QPainter()
-            painter.begin(new_image)
+            painter.begin(self.working_image)
             for coord, color in self.tile_data.tiles.iteritems():
                 write_color = QtGui.QColor(color[0], color[1], color[2])
                 write_color.setAlpha(192)
                 painter.fillRect(coord[0] * 16, coord[1] * 16, 16, 16, write_color)
             painter.end()
 
-            self.scene.addPixmap(QtGui.QPixmap.fromImage(new_image))
+    def disp_tile_info(self):
+        if self.working_image:
+            painter = QtGui.QPainter()
+            painter.begin(self.working_image)
+            for coord, image in self.tile_info.get_images():
+                painter.draw(image, coord[0] * 16, coord[1] * 16, 16, 16)
+            painter.end()
 
     def mousePressEvent(self, event):
-        if self.window.dock_visibility['Terrain']:
-            scene_pos = self.mapToScene(event.pos())
-            pixmap = self.scene.itemAt(scene_pos)
-            pos = int(scene_pos.x() / self.tile_width()), int(scene_pos.y() / self.tile_height())
-            # print('Press:', pos)
+        scene_pos = self.mapToScene(event.pos())
+        pixmap = self.scene.itemAt(scene_pos)
+        pos = int(scene_pos.x() / self.tile_width()), int(scene_pos.y() / self.tile_height())
+        # print('Press:', pos)
+        if self.window.dock_visibility['Terrain'] and self.tool == 'Terrain':
             if pixmap and pos in self.tile_data.tiles:
                 if event.button() == QtCore.Qt.LeftButton:
-                    current_color = self.menu.get_current_color()
+                    current_color = self.window.terrain_menu.get_current_color()
                     self.tile_data.tiles[pos] = current_color
                     self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
                     current_color = self.tile_data.tiles[pos]
-                    self.menu.set_current_color(current_color)
+                    self.window.terrain_menu.set_current_color(current_color)
+        elif self.window.dock_visibility['Tile Info'] and self.tool == 'Tile Info':
+            if pixmap:
+                if event.button() == QtCore.Qt.LeftButton:
+                    ans = self.window.tile_info_menu.start_dialog()
+                    self.tile_info.set(pos, ans)
+                    self.window.update_view()
+                elif event.button() == QtCore.Qt.RightButton:
+                    self.tile_info.delete(pos)
 
     def mouseMoveEvent(self, event):
-        if self.window.dock_visibility['Terrain']:
-            scene_pos = self.mapToScene(event.pos())
-            pixmap = self.scene.itemAt(scene_pos)
+        scene_pos = self.mapToScene(event.pos())
+        pixmap = self.scene.itemAt(scene_pos)
+        if pixmap:
             pos = int(scene_pos.x() / self.tile_width()), int(scene_pos.y() / self.tile_height())
-            if pixmap and pos in self.tile_data.tiles:
+            if self.window.dock_visibility['Tile Info'] and self.tile_info.get(pos):
+                info = self.tile_info.get_str(pos)
+                self.window.status_bar.showMessage(info)
+            elif self.window.dock_visibility['Terrain'] and pos in self.tile_data.tiles:
                 hovered_color = self.tile_data.tiles[pos]
                 # print('Hover', pos, hovered_color)
                 info = self.menu.get_info_str(hovered_color)
@@ -120,7 +138,7 @@ class MainEditor(QtGui.QMainWindow):
         self.overview_dict = OrderedDict()
         self.unit_data = ParsedData.UnitData()
 
-        self.view = MainView(self.tile_data, self)
+        self.view = MainView(self.tile_data, self.tile_info, self)
         self.setCentralWidget(self.view)
 
         self.status_bar = self.statusBar()
@@ -142,10 +160,12 @@ class MainEditor(QtGui.QMainWindow):
             event.ignore()
 
     def update_view(self):
+        self.view.disp_main_map()
         if self.dock_visibility['Terrain']:
             self.view.disp_tile_data()
-        else:
-            self.view.disp_main_map()
+        if self.dock_visibility['Tile Info']:
+            self.view.disp_tile_info()
+        self.view.show_image()
 
     def new(self):
         if self.maybe_save():
@@ -186,8 +206,7 @@ class MainEditor(QtGui.QMainWindow):
         self.view.set_new_image(image)
 
         tilefilename = directory + '/TileData.png'
-        print(tilefilename)
-        self.tile_data.set_tile_data(tilefilename)
+        self.tile_data.load(tilefilename)
 
         overview_filename = directory + '/overview.txt'
         self.overview_dict = SaveLoad.read_overview_file(overview_filename)
@@ -197,7 +216,6 @@ class MainEditor(QtGui.QMainWindow):
         self.tile_info.load(tile_info_filename)
 
         unit_level_filename = directory + '/UnitLevel.txt'
-        self.unit_data.clear()
         self.unit_data.load(unit_level_filename)
 
         if self.current_level_num:
@@ -282,12 +300,11 @@ class MainEditor(QtGui.QMainWindow):
         self.docks['Terrain'].setWidget(self.terrain_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Terrain'])
         self.view_menu.addAction(self.docks['Terrain'].toggleViewAction())
-        self.view.set_menu(self.terrain_menu)
 
         self.docks['Tile Info'] = Dock("Tile Info", self)
         self.docks['Tile Info'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        label = QtGui.QLabel("Choose Tile Information Here")
-        self.docks['Tile Info'].setWidget(label)
+        self.tile_info_menu = TileInfoMenu.TileInfoMenu(self.view, self)
+        self.docks['Tile Info'].setWidget(self.tile_info_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Tile Info'])
         self.view_menu.addAction(self.docks['Tile Info'].toggleViewAction())
 
@@ -310,6 +327,7 @@ class MainEditor(QtGui.QMainWindow):
         self.tabifyDockWidget(self.docks['Groups'], self.docks['Units'])
 
         self.dock_visibility = {k: False for k in self.docks.keys()}
+        self.view.set_menus(self.terrain_menu, self.tile_info_menu)
 
     def maybe_save(self):
         if self.modified:
