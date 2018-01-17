@@ -10,7 +10,6 @@ import Code.GlobalConstants as GC
 
 import Code.ItemMethods as ItemMethods
 import Code.CustomObjects as CustomObjects
-import Code.StatusObject as StatusObject
 
 from Code.UnitObject import Stat
 import Code.Utility as Utility
@@ -52,52 +51,6 @@ class TileData(object):
             for y in range(len(colorKeyObj[x])):
                 cur = colorKeyObj[x][y]
                 self.tiles[(x, y)] = cur
-
-class TileInfo(object):
-    def __init__(self):
-        self.clear()
-
-    def clear(self):
-        self.tile_info_dict = dict()
-        self.formation_highlights = dict()
-        self.escape_highlights = dict()
-
-    def load(self, tile_info_location):
-        self.clear()
-        with open(tile_info_location) as fp:
-            tile_info = fp.readlines()
-
-        for line in tile_info:
-            line = line.strip().split(':') # Should split in 2. First half being coordinate. Second half being properties
-            coord = line[0].split(',')
-            x1 = int(coord[0])
-            y1 = int(coord[1])
-            if len(coord) > 2:
-                x2 = int(coord[2])
-                y2 = int(coord[3])
-                for i in range(x1, x2+1):
-                    for j in range(y1, y2+1):
-                        self.parse_tile_line((i, j), line[1].split(';'))
-            else:
-                self.parse_tile_line((x1, y1), line[1].split(';'))
-
-    def parse_tile_line(self, coord, property_list):
-        if coord not in self.tile_info_dict:
-            self.tile_info_dict[coord] = {}
-        for tile_property in property_list:
-            property_name, property_value = tile_property.split('=')
-            # Handle special cases...
-            if property_name == 'Status': # Treasure does not need to be split. It is split by the itemparser function itself.
-                # Turn these string of ids into a list of status objects
-                status_list = []
-                for status in property_value.split(','):
-                    status_list.append(StatusObject.statusparser(status))
-                property_value = status_list
-            elif property_name in ("Escape", "Arrive"):
-                self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
-            elif property_name == "Formation":
-                self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
-            self.tile_info_dict[coord][property_name] = property_value
 
 class UnitData(object):
     def __init__(self):

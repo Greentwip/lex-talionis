@@ -32,12 +32,6 @@ class MainView(QtGui.QGraphicsView):
 
         self.screen_scale = 1
 
-    def tile_width(self):
-        return 16 * self.screen_scale
-
-    def tile_height(self):
-        return 16 * self.screen_scale
-
     def set_new_image(self, image):
         self.image = QtGui.QImage(image)
 
@@ -67,14 +61,14 @@ class MainView(QtGui.QGraphicsView):
         if self.working_image:
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
-            for coord, image in self.tile_info.get_images():
-                painter.draw(image, coord[0] * 16, coord[1] * 16, 16, 16)
+            for coord, image in self.tile_info.get_images().iteritems():
+                painter.drawImage(coord[0] * 16, coord[1] * 16, image)
             painter.end()
 
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
-        pos = int(scene_pos.x() / self.tile_width()), int(scene_pos.y() / self.tile_height())
+        pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
         # print('Press:', pos)
         if self.window.dock_visibility['Terrain'] and self.tool == 'Terrain':
             if pixmap and pos in self.tile_data.tiles:
@@ -95,20 +89,22 @@ class MainView(QtGui.QGraphicsView):
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
                     self.tile_info.delete(pos)
+                    self.window.update_view()
 
     def mouseMoveEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
         if pixmap:
-            pos = int(scene_pos.x() / self.tile_width()), int(scene_pos.y() / self.tile_height())
+            pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
             if self.window.dock_visibility['Tile Info'] and self.tile_info.get(pos):
                 info = self.tile_info.get_str(pos)
                 self.window.status_bar.showMessage(info)
             elif self.window.dock_visibility['Terrain'] and pos in self.tile_data.tiles:
                 hovered_color = self.tile_data.tiles[pos]
                 # print('Hover', pos, hovered_color)
-                info = self.menu.get_info_str(hovered_color)
-                self.window.status_bar.showMessage(info)
+                info = self.window.terrain_menu.get_info_str(hovered_color)
+                message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
+                self.window.status_bar.showMessage(message)
 
     def wheelEvent(self, event):
         if event.delta() > 0 and self.screen_scale < 4:
@@ -197,13 +193,10 @@ class MainEditor(QtGui.QMainWindow):
                 if 'Level' in str(directory):
                     idx = str(directory).index('Level')
                     num = str(directory)[idx + 5:]
-                    print('Level num')
-                    print(num)
                     self.current_level_num = num
                 self.load_level(directory)
 
     def load_level(self, directory):
-        self.view.clear_image()
         image = directory + '/MapSprite.png'
         self.view.set_new_image(image)
 
@@ -221,7 +214,7 @@ class MainEditor(QtGui.QMainWindow):
         self.unit_data.load(unit_level_filename)
 
         if self.current_level_num:
-            print('Loaded Level' + self.current_level_num)
+            self.status_bar.showMessage('Loaded Level' + self.current_level_num)
 
         self.update_view()
 
@@ -329,7 +322,6 @@ class MainEditor(QtGui.QMainWindow):
         self.tabifyDockWidget(self.docks['Groups'], self.docks['Units'])
 
         self.dock_visibility = {k: False for k in self.docks.keys()}
-        self.view.set_menus(self.terrain_menu, self.tile_info_menu)
 
     def maybe_save(self):
         if self.modified:
@@ -345,8 +337,8 @@ class MainEditor(QtGui.QMainWindow):
 
     def about(self):
         QtGui.QMessageBox.about(self, "About Lex Talionis",
-            "<p>This is the <b>Lex Talionis</b> Engine Level Editor."
-            "Check out https://www.github.com/rainlash/lex-talionis "
+            "<p>This is the <b>Lex Talionis</b> Engine Level Editor.</p>"
+            "<p>Check out https://www.github.com/rainlash/lex-talionis "
             "for more information and helpful tutorials.</p>"
             "<p>This program has been freely distributed under the MIT License.</p>"
             "<p>Copyright 2014-2018 rainlash.</p>")

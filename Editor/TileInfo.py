@@ -11,14 +11,15 @@ import Code.StatusObject as StatusObject
 import Code.CustomObjects as CustomObjects
 
 import EditorUtilities
-from CustomGUI import SignalList
+from CustomGUI import SignalList, CheckableComboBox
+import DataImport
 
 class InfoKind(object):
     def __init__(self, num, name, kind):
         self.num = num
         self.name = name
         self.kind = kind
-        self.image = Engine.subsurface(GC.IMAGEDICT['TileInfoIcon'], 0, num * 16, 16, 16)
+        self.image = Engine.subsurface(GC.ICONDICT['TileInfoIcons'], (0, num * 16, 16, 16))
 
 info_kinds = [('Status', 'Status'),
               ('Formation', None),
@@ -44,14 +45,25 @@ class TileInfo(object):
         self.formation_highlights = dict()
         self.escape_highlights = dict()
 
+    def get(self, coord):
+        if coord in self.tile_info_dict:
+            return self.tile_info_dict[coord]
+        else:
+            return None
+
     def get_str(self, coord):
-        if self.tile_info_dict[coord]:
+        if coord in self.tile_info_dict and self.tile_info_dict[coord]:
             return ';'.join([(name + '=' + value) for name, value in self.tile_info_dict[coord].iteritems()])
         else:
             return None
 
     def set(self, coord, name, value):
+        if coord not in self.tile_info_dict:
+            self.tile_info_dict[coord] = {}
         self.tile_info_dict[coord][name] = value
+
+    def delete(self, coord):
+        self.tile_info_dict[coord] = {}
 
     def load(self, tile_info_location):
         self.clear()
@@ -95,8 +107,52 @@ class TileInfo(object):
         # Returns a dictionary of coordinates mapped to images to display
         for coord, properties in self.tile_info_dict.iteritems():
             for name, value in properties.iteritems():
-                image_coords[coord] = EditorUtilities.ImageWidget(kinds[name].image)
+                image_coords[coord] = EditorUtilities.ImageWidget(kinds[name].image).image
         return image_coords
+
+class ComboDialog(QtGui.QDialog):
+    def __init__(self, instruction, items, item_list=[], parent=None):
+        super(ComboDialog, self).__init__(parent)
+        self.form = QtGui.QFormLayout(self)
+        self.form.addRow(QtGui.QLabel(instruction))
+
+        self.items = items
+
+        # Create item combo box
+        self.item_box = CheckableComboBox()
+        self.item_box.uniformItemSizes = True
+        self.item_box.setIconSize(QtCore.QSize(16, 16))
+        for idx, item in enumerate(self.items):
+            if item.image:
+                self.item_box.addItem(EditorUtilities.create_icon(item.icon), item.name)
+            else:
+                self.item_box.addItem(item.name)
+            row = self.item_box.model().item(idx, 0)
+            if self.item_box.text(idx) in item_list:
+                row.setCheckState(QtCore.Qt.Checked)
+            else:
+                row.setCheckState(QtCore.Qt.Unchecked)
+        self.form.addRow(self.item_box)
+
+        self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
+        self.form.addRow(self.buttonbox)
+        self.buttonbox.accepted.connect(self.accept)
+        self.buttonbox.rejected.connect(self.reject)
+
+    def getCheckedItems(self):
+        item_list = []
+        for idx, item in enumerate(self.items):
+            if self.item_box.model().itemData(idx, QtCore.Qt.CheckStateRole).toInt():
+                item_list.append(item.name)
+        return item_list
+
+    @staticmethod
+    def getItems(parent, title, instruction, items, item_list=[]):
+        dialog = ComboDialog(instruction, items, item_list, parent)
+        dialog.setWindowTitle(title)
+        result = dialog.exec_()
+        items = dialog.getCheckedItems()
+        return items, result == QtGui.QDialog.Accepted
 
 class TileInfoMenu(QtGui.QWidget):
     def __init__(self, view, window=None):
@@ -115,7 +171,7 @@ class TileInfoMenu(QtGui.QWidget):
         # Ingest Data
         self.info = sorted(kinds.values(), key=lambda x: x.num)
         for info in self.info:
-            image = Engine.transform_scale(info.image, 2)
+            image = Engine.transform_scale(info.image, (32, 32))
             pixmap = EditorUtilities.create_pixmap(image)
 
             item = QtGui.QListWidgetItem(info.name)
@@ -123,6 +179,9 @@ class TileInfoMenu(QtGui.QWidget):
             self.list.addItem(item)
 
         self.grid.addWidget(self.list, 0, 0)
+
+        self.item_list = []
+        self.status_list = []
 
         self.update()
 
@@ -132,14 +191,19 @@ class TileInfoMenu(QtGui.QWidget):
     def start_dialog(self):
         kind = self.info[self.list.currentRow()].kind
         if kind == 'Status':
-            pass
-        elif kind == 'Item':
-            all_items = []
-            items, ok = QtGui.QInputDialog.getItem(self, "Shop Items", "Select Items:", all_items, 0, False)
+            statuses, ok = ComboDialog.getItems(self, "Tile Status Effects", "Select Status:", DataImport.skill_data, self.status_list)
             if ok:
+                self.status_list = statuses
+                return ','.join(statuses)
+            else:
+                return None
+        elif kind == 'Item':
+            items, ok = ComboDialog.getItems(self, "Shop Items", "Select Items:", DataImport.item_data, self.item_list)
+            if ok:
+                self.item_list = items
                 return ','.join(items)
             else:
-                None
+                return None
         elif kind == 'string':
             text, ok = QtGui.QInputDialog.getText(self, self.get_current_name(), 'Enter ID to use:')
             if ok:
