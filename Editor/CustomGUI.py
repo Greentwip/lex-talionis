@@ -31,7 +31,7 @@ class MusicBox(QtGui.QWidget):
             if os.path.normpath(head) != os.path.normpath(starting_path):
                 print('Copying ' + music_file + ' to ' + starting_path)
                 shutil.copy(music_file, starting_path)
-            self.text.setText(tail.split('.')[0])
+            self.setText(tail.split('.')[0])
 
     def text(self):
         return self.txt.text()
@@ -72,7 +72,7 @@ class ImageBox(QtGui.QWidget):
             if os.path.normpath(head) != os.path.normpath(starting_path):
                 print('Copying ' + image_file + ' to ' + starting_path)
                 shutil.copy(image_file, starting_path)
-            self.text.setText(tail.split('.')[0])
+            self.setText(tail.split('.')[0])
 
     def text(self):
         return self.txt.text()

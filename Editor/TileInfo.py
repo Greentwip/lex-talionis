@@ -60,7 +60,7 @@ class TileInfo(object):
     def set(self, coord, name, value):
         if coord not in self.tile_info_dict:
             self.tile_info_dict[coord] = {}
-        self.tile_info_dict[coord][name] = value
+        self.tile_info_dict[coord][str(name)] = str(value)
 
     def delete(self, coord):
         self.tile_info_dict[coord] = {}
@@ -124,11 +124,11 @@ class ComboDialog(QtGui.QDialog):
         self.item_box.setIconSize(QtCore.QSize(16, 16))
         for idx, item in enumerate(self.items):
             if item.image:
-                self.item_box.addItem(EditorUtilities.create_icon(item.icon), item.name)
+                self.item_box.addItem(EditorUtilities.create_icon(item.image), item.name)
             else:
                 self.item_box.addItem(item.name)
             row = self.item_box.model().item(idx, 0)
-            if self.item_box.text(idx) in item_list:
+            if str(self.item_box.itemText(idx)) in item_list:
                 row.setCheckState(QtCore.Qt.Checked)
             else:
                 row.setCheckState(QtCore.Qt.Unchecked)
@@ -142,8 +142,9 @@ class ComboDialog(QtGui.QDialog):
     def getCheckedItems(self):
         item_list = []
         for idx, item in enumerate(self.items):
-            if self.item_box.model().itemData(idx, QtCore.Qt.CheckStateRole).toInt():
-                item_list.append(item.name)
+            row = self.item_box.model().item(idx, 0)
+            if row.checkState() == QtCore.Qt.Checked:
+                item_list.append(str(self.item_box.itemText(idx)))
         return item_list
 
     @staticmethod

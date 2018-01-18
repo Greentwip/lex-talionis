@@ -98,7 +98,8 @@ class MainView(QtGui.QGraphicsView):
             pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
             if self.window.dock_visibility['Tile Info'] and self.tile_info.get(pos):
                 info = self.tile_info.get_str(pos)
-                self.window.status_bar.showMessage(info)
+                message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
+                self.window.status_bar.showMessage(message)
             elif self.window.dock_visibility['Terrain'] and pos in self.tile_data.tiles:
                 hovered_color = self.tile_data.tiles[pos]
                 # print('Hover', pos, hovered_color)
