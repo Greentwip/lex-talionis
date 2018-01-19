@@ -234,7 +234,9 @@ class levelUpScreen(object):
             self.unit.loadSprites()
             # Reseed the combat animation
             if self.in_combat and old_anim:
-                anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender, self.unit.getMainWeapon())
+                item = self.unit.getMainWeapon()
+                magic = CustomObjects.WEAPON_TRIANGLE.isMagic(item) if item else False
+                anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender, item, magic)
                 if anim:
                     # Build animation
                     script = anim['script']
@@ -247,6 +249,8 @@ class levelUpScreen(object):
                     self.unit.battle_anim.awake(owner=old_anim.owner, parent=old_anim.parent, partner=old_anim.partner,
                                                 right=old_anim.right, at_range=old_anim.at_range, init_speed=old_anim.entrance,
                                                 init_position=old_anim.init_position)
+                else:
+                    self.unit.battle_anim = old_anim
             # Reset Level - Don't!
             self.unit.level += 1
             # Actually change class
