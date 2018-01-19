@@ -481,12 +481,14 @@ class Combat(object):
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP
-        result.attacker.currenthp -= result.atk_damage
-        result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
+        result.attacker.change_hp(-result.atk_damage)
+        # result.attacker.currenthp -= result.atk_damage
+        # result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
         if result.defender:
-            result.defender.currenthp -= result.def_damage
+            result.defender.change_hp(-result.def_damage)
+            # result.defender.currenthp -= result.def_damage
             # print(result.defender.currenthp, result.def_damage)
-            result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
+            # result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
 
     def find_broken_items(self):
         # Handle items that were used

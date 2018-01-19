@@ -129,7 +129,7 @@ class GameStateObj(object):
             self.map.replay_commands(map_info['command_list'], self.counters['level'])
             self.map.command_list = map_info['command_list']
             for position, current_hp in map_info['HP']:
-                self.map.tiles[position].currenthp = current_hp
+                self.map.tiles[position].set_hp(current_hp)
 
         # Statuses
         for index, info in enumerate(load_info['allunits']):

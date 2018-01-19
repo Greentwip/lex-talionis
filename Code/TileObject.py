@@ -5,7 +5,7 @@ import configuration as cf
 from collections import OrderedDict
 
 # Custom imports
-import StatusObject, CustomObjects, Dialogue, Image_Modification, Engine, Weather
+import StatusObject, CustomObjects, Dialogue, Image_Modification, Engine, Weather, Utility
 
 import logging
 logger = logging.getLogger(__name__)
@@ -639,6 +639,14 @@ class TileObject(object):
     def give_hp_stat(self, hp):
         self.tilehp = True
         self.stats['HP'] = self.currenthp = int(hp)
+
+    def change_hp(self, dhp):
+        self.currenthp += int(dhp)
+        self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
+
+    def set_hp(self, hp):
+        self.currenthp = int(hp)
+        self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
 
     def get_mcost(self, unit):
         if isinstance(unit, int):

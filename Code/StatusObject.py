@@ -343,8 +343,9 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
     if status.hp_percentage:
         hp_change = int(int(unit.stats['HP']) * status.hp_percentage.percentage/100.0)
         old_hp = unit.currenthp
-        unit.currenthp += hp_change
-        unit.currenthp = Utility.clamp(unit.currenthp, 0, unit.stats['HP'])
+        unit.change_hp(hp_change)
+        # unit.currenthp += hp_change
+        # unit.currenthp = Utility.clamp(unit.currenthp, 0, unit.stats['HP'])
         if unit.currenthp > old_hp:
             GC.SOUNDDICT['heal'].play()
 
@@ -374,8 +375,9 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
             if unit.position:
                 gameStateObj.boundary_manager._add_unit(unit, gameStateObj)
 
-    if unit.currenthp > int(unit.stats['HP']):
-        unit.currenthp = int(unit.stats['HP'])
+    unit.change_hp(0)  # Just check bounds
+    # if unit.currenthp > int(unit.stats['HP']):
+    #     unit.currenthp = int(unit.stats['HP'])
     if unit.movement_left > int(unit.stats['MOV']):
         unit.movement_left = max(0, int(unit.stats['MOV']))
 
@@ -546,7 +548,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
         HandleStatusAddition(statusparser(status.status_on_complete), unit, gameStateObj)
     if status.ephemeral:
         unit.isDying = True
-        unit.currenthp = 0
+        unit.set_hp(0)
         gameStateObj.stateMachine.changeState('dying')
     if status.affects_movement:
         if unit.team.startswith('enemy'):

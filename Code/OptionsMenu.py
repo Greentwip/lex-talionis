@@ -1,7 +1,7 @@
 import imagesDict
 import GlobalConstants as GC
 import configuration as cf
-import CustomObjects, MenuFunctions, Image_Modification, InputManager, Engine, StateMachine, Counters, GUIObjects
+import CustomObjects, MenuFunctions, Image_Modification, Engine, StateMachine, Counters, GUIObjects
 
 class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def begin(self, gameStateObj, metaDataObj):

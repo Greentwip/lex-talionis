@@ -294,7 +294,7 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                 gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
                 if gameStateObj.cursor.currentHoveredUnit:
                     gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.currenthp -= 2
+                    gameStateObj.cursor.currentHoveredUnit.change_hp(-2)
             # Lose the game
             elif event.key == Engine.key_map['l']:
                 gameStateObj.statedict['levelIsComplete'] = 'loss'
