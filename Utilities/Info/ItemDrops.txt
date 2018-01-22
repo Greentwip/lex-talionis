@@ -49,7 +49,7 @@ Javelin - Eliza
 Prim's Charm - Base Conversation
 Flareblade - Base Conversation
 Wyrmsfire - Ruin
-Mithril Mail* - Drop
+Mithril Mail* - Ruin
 Rapier - Drop
 Steel Lance - Drop
 Fire - Drop
