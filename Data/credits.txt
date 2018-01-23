@@ -3,7 +3,7 @@ foreground;GameOverFade
 t;2
 credits;A Game By;rainlash;wait 
 credits;Lex Talionis Engine;rainlash;wait
-credits;Alpha Testing;rainlash;WinstonJoe
+credits;Alpha Testing;rainlash;WinstonJoe;Joytis;Lynx
 credits;Map Design;rainlash
 credits;Map Spriting Resources;Feaw;Primefusion
 credits;Information Resources;Serenes Forest
