@@ -10,8 +10,7 @@ Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
-import ParsedData
-import PropertyMenu, TerrainMenu, TileInfo
+import PropertyMenu, Terrain, TileInfo, UnitData
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, window=None):
@@ -83,7 +82,7 @@ class MainView(QtGui.QGraphicsView):
             if pixmap:
                 if event.button() == QtCore.Qt.LeftButton:
                     name = self.window.tile_info_menu.get_current_name()
-                    value = self.window.tile_info_menu.start_dialog()
+                    value = self.window.tile_info_menu.start_dialog(self.tile_info.get(pos))
                     if value:
                         self.tile_info.set(pos, name, value)
                         self.window.update_view()
@@ -129,13 +128,13 @@ class Dock(QtGui.QDockWidget):
 class MainEditor(QtGui.QMainWindow):
     def __init__(self):
         super(MainEditor, self).__init__()
-        self.setWindowTitle('Lex Talionis Level Editor v0.7.0')
+        self.setWindowTitle('Lex Talionis Level Editor v' + GC.version)
 
         # Data
-        self.tile_data = ParsedData.TileData()
+        self.tile_data = Terrain.TileData()
         self.tile_info = TileInfo.TileInfo()
         self.overview_dict = OrderedDict()
-        self.unit_data = ParsedData.UnitData()
+        self.unit_data = UnitData.UnitData()
 
         self.view = MainView(self.tile_data, self.tile_info, self)
         self.setCentralWidget(self.view)
@@ -213,6 +212,7 @@ class MainEditor(QtGui.QMainWindow):
 
         unit_level_filename = directory + '/UnitLevel.txt'
         self.unit_data.load(unit_level_filename)
+        self.group_menu.load(self.unit_data)
 
         if self.current_level_num:
             self.status_bar.showMessage('Loaded Level' + self.current_level_num)
@@ -292,7 +292,7 @@ class MainEditor(QtGui.QMainWindow):
 
         self.docks['Terrain'] = Dock("Terrain", self)
         self.docks['Terrain'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        self.terrain_menu = TerrainMenu.TerrainMenu(GC.TERRAINDATA, self.view, self)
+        self.terrain_menu = Terrain.TerrainMenu(GC.TERRAINDATA, self.view, self)
         self.docks['Terrain'].setWidget(self.terrain_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Terrain'])
         self.view_menu.addAction(self.docks['Terrain'].toggleViewAction())
@@ -306,8 +306,8 @@ class MainEditor(QtGui.QMainWindow):
 
         self.docks['Groups'] = Dock("Groups", self)
         self.docks['Groups'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        label = QtGui.QLabel("Create Groups Here")
-        self.docks['Groups'].setWidget(label)
+        self.group_menu = UnitData.GroupMenu(self.unit_data, self.view, self)
+        self.docks['Groups'].setWidget(self.group_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Groups'])
         self.view_menu.addAction(self.docks['Groups'].toggleViewAction())
 

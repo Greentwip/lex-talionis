@@ -89,14 +89,7 @@ class TileInfo(object):
             self.tile_info_dict[coord] = {}
         for tile_property in property_list:
             property_name, property_value = tile_property.split('=')
-            # Handle special cases...
-            if property_name == 'Status': # Treasure does not need to be split. It is split by the itemparser function itself.
-                # Turn these string of ids into a list of status objects
-                status_list = []
-                for status in property_value.split(','):
-                    status_list.append(StatusObject.statusparser(status))
-                property_value = status_list
-            elif property_name in ("Escape", "Arrive"):
+            if property_name in ("Escape", "Arrive"):
                 self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
             elif property_name == "Formation":
                 self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
@@ -128,7 +121,7 @@ class ComboDialog(QtGui.QDialog):
             else:
                 self.item_box.addItem(item.name)
             row = self.item_box.model().item(idx, 0)
-            if str(self.item_box.itemText(idx)) in item_list:
+            if item.name in item_list:
                 row.setCheckState(QtCore.Qt.Checked)
             else:
                 row.setCheckState(QtCore.Qt.Unchecked)
@@ -144,7 +137,7 @@ class ComboDialog(QtGui.QDialog):
         for idx, item in enumerate(self.items):
             row = self.item_box.model().item(idx, 0)
             if row.checkState() == QtCore.Qt.Checked:
-                item_list.append(str(self.item_box.itemText(idx)))
+                item_list.append(item.name)
         return item_list
 
     @staticmethod
@@ -181,27 +174,24 @@ class TileInfoMenu(QtGui.QWidget):
 
         self.grid.addWidget(self.list, 0, 0)
 
-        self.item_list = []
-        self.status_list = []
-
-        self.update()
-
     def trigger(self):
         self.view.tool = 'Tile Info'
 
-    def start_dialog(self):
+    def start_dialog(self, tile_info_at_pos):
         kind = self.info[self.list.currentRow()].kind
         if kind == 'Status':
-            statuses, ok = ComboDialog.getItems(self, "Tile Status Effects", "Select Status:", DataImport.skill_data, self.status_list)
+            current_statuses = tile_info_at_pos.get('Status') if tile_info_at_pos else None
+            current_statuses = current_statuses.split(',') if current_statuses else None
+            statuses, ok = ComboDialog.getItems(self, "Tile Status Effects", "Select Status:", DataImport.skill_data, current_statuses)
             if ok:
-                self.status_list = statuses
                 return ','.join(statuses)
             else:
                 return None
         elif kind == 'Item':
-            items, ok = ComboDialog.getItems(self, "Shop Items", "Select Items:", DataImport.item_data, self.item_list)
+            current_shop = tile_info_at_pos.get('Shop') if tile_info_at_pos else None
+            current_shop = current_shop.split(',') if current_shop else None
+            items, ok = ComboDialog.getItems(self, "Shop Items", "Select Items:", DataImport.item_data, current_shop)
             if ok:
-                self.item_list = items
                 return ','.join(items)
             else:
                 return None
@@ -216,15 +206,3 @@ class TileInfoMenu(QtGui.QWidget):
 
     def get_current_name(self):
         return self.info[self.list.currentRow()].name
-
-    def update(self):
-        pass
-
-    def new(self):
-        pass
-
-    def load(self, overview):
-        pass
-
-    def save(self):
-        pass

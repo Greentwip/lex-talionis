@@ -4,6 +4,41 @@ from PyQt4 import QtGui, QtCore
 
 from CustomGUI import SignalList
 
+class TileData(object):
+    def __init__(self):
+        self.tiles = {}
+
+    def get_tile_data(self):
+        return self.tiles
+
+    def load(self, tilefp):
+        self.tiles = {}
+        tiledata = QtGui.QImage(tilefp)
+        colorkey, self.width, self.height = self.build_color_key(tiledata)
+        self.populate_tiles(colorkey)
+
+    def build_color_key(self, tiledata):
+        width = tiledata.width()
+        height = tiledata.height()
+        mapObj = [] # Array of map data
+    
+        # Convert to a mapObj
+        for x in range(width):
+            mapObj.append([])
+        for y in range(height):
+            for x in range(width):
+                pos = QtCore.QPoint(x, y)
+                color = QtGui.QColor.fromRgb(tiledata.pixel(pos))
+                mapObj[x].append((color.red(), color.green(), color.blue()))
+
+        return mapObj, width, height
+
+    def populate_tiles(self, colorKeyObj):
+        for x in range(len(colorKeyObj)):
+            for y in range(len(colorKeyObj[x])):
+                cur = colorKeyObj[x][y]
+                self.tiles[(x, y)] = cur
+
 class TerrainMenu(QtGui.QWidget):
     def __init__(self, terrain_data, view, window=None):
         super(TerrainMenu, self).__init__(window)

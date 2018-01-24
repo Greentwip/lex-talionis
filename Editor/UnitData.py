@@ -1,6 +1,7 @@
 from collections import OrderedDict
-from PyQt4 import QtGui, QtCore
 import sys
+from PyQt4 import QtGui, QtCore
+
 sys.path.append('../')
 import Code.configuration as cf
 import Code.Engine as Engine
@@ -15,42 +16,15 @@ from Code.UnitObject import Stat
 import Code.Utility as Utility
 
 import EditorUtilities
+from CustomGUI import SignalList
 import DataImport
 
-class TileData(object):
-    def __init__(self):
-        self.tiles = {}
-
-    def get_tile_data(self):
-        return self.tiles
-
-    def load(self, tilefp):
-        self.tiles = {}
-        tiledata = QtGui.QImage(tilefp)
-        colorkey, self.width, self.height = self.build_color_key(tiledata)
-        self.populate_tiles(colorkey)
-
-    def build_color_key(self, tiledata):
-        width = tiledata.width()
-        height = tiledata.height()
-        mapObj = [] # Array of map data
-    
-        # Convert to a mapObj
-        for x in range(width):
-            mapObj.append([])
-        for y in range(height):
-            for x in range(width):
-                pos = QtCore.QPoint(x, y)
-                color = QtGui.QColor.fromRgb(tiledata.pixel(pos))
-                mapObj[x].append((color.red(), color.green(), color.blue()))
-
-        return mapObj, width, height
-
-    def populate_tiles(self, colorKeyObj):
-        for x in range(len(colorKeyObj)):
-            for y in range(len(colorKeyObj[x])):
-                cur = colorKeyObj[x][y]
-                self.tiles[(x, y)] = cur
+class Group(object):
+    def __init__(self, group_id, unit_name, faction, desc):
+        self.group_id = group_id
+        self.unit_name = unit_name
+        self.faction = faction
+        self.desc = desc
 
 class UnitData(object):
     def __init__(self):
@@ -79,7 +53,7 @@ class UnitData(object):
 
     def parse_unit_line(self, unitLine, current_mode):
         if unitLine[0] == 'group':
-            self.groups[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
+            self.groups[unitLine[1]] = Group(unitLine[1], unitLine[2], unitLine[3], unitLine[4])
         elif unitLine[0] == 'mode':
             current_mode = unitLine[1]
         elif unitLine[0] == 'load_player_characters':
@@ -142,7 +116,11 @@ class UnitData(object):
 
         u_i['level'] = int(legend['level'])
         u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
-        u_i['name'], u_i['faction'], u_i['desc'] = self.groups[legend['group']]
+
+        group = self.groups[legend['group']]
+        u_i['name'] = group.unit_name
+        u_i['faction'] = group.faction
+        u_i['desc'] = group.desc
 
         stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = \
             self.get_unit_info(DataImport.class_dict, u_i['klass'], u_i['level'], legend['items'])
@@ -229,3 +207,130 @@ class UnitData(object):
             growth_points[index] += growth_sum%100
 
         return stats, growth_points
+
+class GroupDialog(QtGui.QDialog):
+    def __init__(self, instruction, group=None, parent=None):
+        super(GroupDialog, self).__init__(parent)
+        self.form = QtGui.QFormLayout(self)
+        self.form.addRow(QtGui.QLabel(instruction))
+
+        self.id_line_edit = QtGui.QLineEdit()
+        self.unit_name_line_edit = QtGui.QLineEdit()
+        self.faction_line_edit = QtGui.QLineEdit()
+        self.desc_text_edit = QtGui.QTextEdit()
+        self.desc_text_edit.setFixedHeight(48)
+
+        if group:
+            self.id_line_edit.setText(group.group_id)
+            self.unit_name_line_edit.setText(group.unit_name)
+            self.faction_line_edit.setText(group.faction)
+            self.desc_text_edit.setPlainText(group.desc)
+
+        self.form.addRow("Group ID:", self.id_line_edit)
+        self.form.addRow("Unit Name:", self.unit_name_line_edit)
+        self.form.addRow("Faction:", self.faction_line_edit)
+        self.form.addRow("Description:", self.desc_text_edit)
+
+        self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
+        self.form.addRow(self.buttonbox)
+        self.buttonbox.accepted.connect(self.accept)
+        self.buttonbox.rejected.connect(self.reject)
+
+    def build_group(self):
+        return Group(str(self.id_line_edit.text()), str(self.unit_name_line_edit.text()),
+                     str(self.faction_line_edit.text()), str(self.desc_text_edit.toPlainText()))
+
+    @staticmethod
+    def getGroup(parent, title, instruction, group):
+        dialog = GroupDialog(instruction, group, parent)
+        dialog.setWindowTitle(title)
+        result = dialog.exec_()
+        group_obj = dialog.build_group()
+        return group_obj, result == QtGui.QDialog.Accepted
+
+class GroupMenu(QtGui.QWidget):
+    def __init__(self, unit_data, view, window=None):
+        super(GroupMenu, self).__init__(window)
+        self.grid = QtGui.QGridLayout()
+        self.setLayout(self.grid)
+        self.window = window
+        self.view = view
+
+        self.load_player_characters = QtGui.QCheckBox('Load saved player characters?')
+        self.load_player_characters.stateChanged.connect(self.set_load_player_characters)
+
+        self.list = SignalList(self)
+        self.list.setMinimumSize(128, 320)
+        self.list.uniformItemSizes = True
+        self.list.setIconSize(QtCore.QSize(32, 32))
+
+        self.load(unit_data)
+
+        self.list.itemDoubleClicked.connect(self.modify_group)
+
+        self.add_group_button = QtGui.QPushButton('Add Group')
+        self.add_group_button.clicked.connect(self.add_group)
+
+        self.grid.addWidget(self.load_player_characters, 0, 0)
+        self.grid.addWidget(self.list, 1, 0)
+        self.grid.addWidget(self.add_group_button, 2, 0)
+
+    def trigger(self):
+        self.view.tool = 'Groups'
+
+    def create_item(self, group):
+        item = QtGui.QListWidgetItem(group.group_id)
+
+        image = GC.UNITDICT.get(group.faction + 'Emblem')
+        print(group.faction + 'Emblem', image)
+        if image:
+            class ImageWidget(QtGui.QWidget):
+                def __init__(self, surface, parent=None):
+                    super(ImageWidget, self).__init__(parent)
+                    w = surface.get_width()
+                    h = surface.get_height()
+                    self.data = surface.get_buffer().raw
+                    self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_RGB32)
+                    # self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_ARGB32)
+                    self.resize(w, h)
+
+            def create_icon(image):
+                icon = ImageWidget(image)
+                icon = QtGui.QPixmap(icon.image)
+                icon = QtGui.QIcon(icon)
+                return icon
+            
+            item.setIcon(create_icon(image))
+            # item.setIcon(EditorUtilities.create_icon(image))
+        print(item.icon())
+
+        return item
+
+    def add_group(self):
+        group_obj, ok = GroupDialog.getGroup(self, "Groups", "Enter New Group Values:")
+        if ok:
+            self.list.addItem(self.create_item(group_obj))
+            self.groups.append(group_obj)
+
+    def modify_group(self, item):
+        group_obj, ok = GroupDialog.getGroup(self, "Groups", "Modify Group Values:", self.get_current_group())
+        if ok:
+            cur_row = self.list.currentRow()
+            self.list.takeItem(cur_row)
+            self.list.insertItem(cur_row, self.create_item(group_obj))
+            self.groups[cur_row] = group_obj
+
+    def set_load_player_characters(self, state):
+        self.unit_data.load_player_characters = bool(state)
+
+    def get_current_group(self):
+        return self.groups[self.list.currentRow()]
+
+    def load(self, unit_data):
+        self.unit_data = unit_data
+        # Convert to list
+        self.groups = sorted(self.unit_data.groups.values(), key=lambda x: x.group_id)
+        # Ingest Data
+        for group in self.groups:
+            self.list.addItem(self.create_item(group))
+        self.load_player_characters.setChecked(self.unit_data.load_player_characters)
