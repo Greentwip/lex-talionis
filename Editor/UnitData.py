@@ -270,10 +270,13 @@ class GroupMenu(QtGui.QWidget):
 
         self.add_group_button = QtGui.QPushButton('Add Group')
         self.add_group_button.clicked.connect(self.add_group)
+        self.remove_group_button = QtGui.QPushButton('Remove Group')
+        self.remove_group_button.clicked.connect(self.remove_group)
 
         self.grid.addWidget(self.load_player_characters, 0, 0)
         self.grid.addWidget(self.list, 1, 0)
         self.grid.addWidget(self.add_group_button, 2, 0)
+        self.grid.addWidget(self.remove_group_button, 3, 0)
 
     def trigger(self):
         self.view.tool = 'Groups'
@@ -284,24 +287,8 @@ class GroupMenu(QtGui.QWidget):
         image = GC.UNITDICT.get(group.faction + 'Emblem')
         print(group.faction + 'Emblem', image)
         if image:
-            class ImageWidget(QtGui.QWidget):
-                def __init__(self, surface, parent=None):
-                    super(ImageWidget, self).__init__(parent)
-                    w = surface.get_width()
-                    h = surface.get_height()
-                    self.data = surface.get_buffer().raw
-                    self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_RGB32)
-                    # self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_ARGB32)
-                    self.resize(w, h)
-
-            def create_icon(image):
-                icon = ImageWidget(image)
-                icon = QtGui.QPixmap(icon.image)
-                icon = QtGui.QIcon(icon)
-                return icon
-            
-            item.setIcon(create_icon(image))
-            # item.setIcon(EditorUtilities.create_icon(image))
+            image = image.convert_alpha()
+            item.setIcon(EditorUtilities.create_icon(image))
         print(item.icon())
 
         return item
@@ -319,6 +306,11 @@ class GroupMenu(QtGui.QWidget):
             self.list.takeItem(cur_row)
             self.list.insertItem(cur_row, self.create_item(group_obj))
             self.groups[cur_row] = group_obj
+
+    def remove_group(self):
+        cur_row = self.list.currentRow()
+        self.list.takeItem(cur_row)
+        self.groups.pop(cur_row)
 
     def set_load_player_characters(self, state):
         self.unit_data.load_player_characters = bool(state)
