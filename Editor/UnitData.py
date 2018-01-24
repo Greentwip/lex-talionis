@@ -74,9 +74,9 @@ class UnitData(object):
         assert len(unitLine) == 6, "unitLine %s must have length 6"%(unitLine)
         legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
                   'unit_id': unitLine[3], 'position': unitLine[4], 'ai': unitLine[5]}
-        self.add_unit(legend)
+        self.add_unit_from_legend(legend)
 
-    def add_unit(self, legend):
+    def add_unit_from_legend(self, legend):
         cur_unit = EditorUtilities.find(DataImport.unit_data, legend['unit_id'])
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         if legend['event_id'] != "0": # unit does not start on board
@@ -95,9 +95,9 @@ class UnitData(object):
         legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
                   'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
                   'position': unitLine[6], 'ai': unitLine[7], 'group': unitLine[8]}
-        self.create_unit(legend)
+        self.create_unit_from_legend(legend)
 
-    def create_unit(self, legend):
+    def create_unit_from_legend(self, legend):
         GC.U_ID += 1
 
         u_i = {}

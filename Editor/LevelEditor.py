@@ -13,7 +13,7 @@ import Code.SaveLoad as SaveLoad
 import PropertyMenu, Terrain, TileInfo, UnitData
 
 class MainView(QtGui.QGraphicsView):
-    def __init__(self, tile_data, tile_info, window=None):
+    def __init__(self, tile_data, tile_info, unit_data, window=None):
         QtGui.QGraphicsView.__init__(self)
         self.window = window
         self.scene = QtGui.QGraphicsScene(self)
@@ -28,6 +28,7 @@ class MainView(QtGui.QGraphicsView):
         # Data
         self.tile_data = tile_data
         self.tile_info = tile_info
+        self.unit_data = unit_data
 
         self.screen_scale = 1
 
@@ -64,13 +65,21 @@ class MainView(QtGui.QGraphicsView):
                 painter.drawImage(coord[0] * 16, coord[1] * 16, image)
             painter.end()
 
+    def disp_units(self):
+        if self.working_image:
+            painter = QtGui.QPainter()
+            painter.begin(self.working_image)
+            for coord, unit_image in self.unit_data.get_unit_images().iteritems():
+                painter.drawImage(coord[0] * 16, coord[1] * 16, unit_image)
+            painter.end()
+
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
         pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
-        # print('Press:', pos)
-        if self.window.dock_visibility['Terrain'] and self.tool == 'Terrain':
-            if pixmap and pos in self.tile_data.tiles:
+        if pixmap and pos in self.tile_data.tiles:
+            # print('Press:', pos)
+            if self.window.dock_visibility['Terrain'] and self.tool == 'Terrain':
                 if event.button() == QtCore.Qt.LeftButton:
                     current_color = self.window.terrain_menu.get_current_color()
                     self.tile_data.tiles[pos] = current_color
@@ -78,8 +87,7 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     current_color = self.tile_data.tiles[pos]
                     self.window.terrain_menu.set_current_color(current_color)
-        elif self.window.dock_visibility['Tile Info'] and self.tool == 'Tile Info':
-            if pixmap:
+            elif self.window.dock_visibility['Tile Info'] and self.tool == 'Tile Info':
                 if event.button() == QtCore.Qt.LeftButton:
                     name = self.window.tile_info_menu.get_current_name()
                     value = self.window.tile_info_menu.start_dialog(self.tile_info.get(pos))
@@ -89,13 +97,27 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     self.tile_info.delete(pos)
                     self.window.update_view()
+            elif self.window.dock_visibility['Units'] and self.tool == 'Units':
+                if event.button() == QtCore.Qt.LeftButton:
+                    current_unit = self.unit_data.get_unit(pos)
+                    value = self.window.unit_menu.start_dialog(current_unit)
+                    if value:
+                        self.unit_data.add_unit(value)
+                        self.window.update_view()
+                elif event.button() == QtCore.Qt.RightButton:
+                    self.unit_data.remove_unit(pos)
+                    self.window.update_view()
 
     def mouseMoveEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
         if pixmap:
             pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
-            if self.window.dock_visibility['Tile Info'] and self.tile_info.get(pos):
+            if self.window.dock_visibility['Units'] and self.unit_data.get_unit(pos):
+                info = self.unit_data.get_unit_str(pos)
+                message = str(pos[0]) + ',' + str(pos[1]) + ': ' + info
+                self.window.status_bar.showMessage(message)
+            elif self.window.dock_visibility['Tile Info'] and self.tile_info.get(pos):
                 info = self.tile_info.get_str(pos)
                 message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
                 self.window.status_bar.showMessage(message)
@@ -136,7 +158,7 @@ class MainEditor(QtGui.QMainWindow):
         self.overview_dict = OrderedDict()
         self.unit_data = UnitData.UnitData()
 
-        self.view = MainView(self.tile_data, self.tile_info, self)
+        self.view = MainView(self.tile_data, self.tile_info, self.unit_data, self)
         self.setCentralWidget(self.view)
 
         self.status_bar = self.statusBar()
@@ -163,6 +185,8 @@ class MainEditor(QtGui.QMainWindow):
             self.view.disp_tile_data()
         if self.dock_visibility['Tile Info']:
             self.view.disp_tile_info()
+        if self.dock_visibility['Units']:
+            self.view.disp_units()
         self.view.show_image()
 
     def new(self):
@@ -313,8 +337,8 @@ class MainEditor(QtGui.QMainWindow):
 
         self.docks['Units'] = Dock("Units", self)
         self.docks['Units'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        label = QtGui.QLabel("Create Units Here")
-        self.docks['Units'].setWidget(label)
+        self.unit_menu = UnitData.UnitMenu(self.unit_data, self.view, self)
+        self.docks['Units'].setWidget(self.unit_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Units'])
         self.view_menu.addAction(self.docks['Units'].toggleViewAction())
 
