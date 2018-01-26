@@ -7,7 +7,6 @@ import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
-import Code.StatusObject as StatusObject
 import Code.CustomObjects as CustomObjects
 
 import EditorUtilities

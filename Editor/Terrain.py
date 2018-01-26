@@ -71,8 +71,6 @@ class TerrainMenu(QtGui.QWidget):
 
         self.grid.addWidget(self.list, 0, 0)
 
-        self.update()
-
     def get_current_color(self):
         color = self.terrain.keys()[self.list.currentRow()]
         print(color)
@@ -91,15 +89,3 @@ class TerrainMenu(QtGui.QWidget):
 
     def trigger(self):
         self.view.tool = 'Terrain'
-
-    def update(self):
-        pass
-
-    def new(self):
-        pass
-
-    def load(self, overview):
-        pass
-
-    def save(self):
-        pass

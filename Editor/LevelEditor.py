@@ -99,14 +99,15 @@ class MainView(QtGui.QGraphicsView):
                     self.window.update_view()
             elif self.window.dock_visibility['Units'] and self.tool == 'Units':
                 if event.button() == QtCore.Qt.LeftButton:
-                    current_unit = self.unit_data.get_unit(pos)
-                    value = self.window.unit_menu.start_dialog(current_unit)
-                    if value:
-                        self.unit_data.add_unit(value)
+                    current_unit = self.window.unit_menu.new_current_unit()
+                    if current_unit:
+                        self.window.unit_menu.add_unit(current_unit)
+                        self.unit_data.add_unit(current_unit)
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
-                    self.unit_data.remove_unit(pos)
-                    self.window.update_view()
+                    current_unit = self.unit_data.get_unit_from_pos(pos)
+                    if current_unit:
+                        self.window.unit_menu.set_current_unit(current_unit)
 
     def mouseMoveEvent(self, event):
         scene_pos = self.mapToScene(event.pos())

@@ -23,6 +23,7 @@ def build_units(class_dict):
         u_i = {}
         u_i['id'] = unit.find('id').text
         u_i['name'] = unit.get('name')
+        u_i['generic'] = False
 
         classes = unit.find('class').text.split(',')
         u_i['klass'] = classes[-1]
@@ -69,23 +70,25 @@ class Unit(object):
         if info:
             self.id = info['id']
             self.name = info['name']
+            self.generic = info['generic']
 
             self.position = None
             self.level = int(info['level'])
             self.gender = int(info['gender'])
             self.faction = info['faction']
             self.klass = info['klass']
-            self.tags = info['tags']
+            self.tags = info.get('tags', [])
             self.desc = info['desc']
 
-            self.stats = info['stats']
-            self.growths = info['growths']
+            self.stats = info.get('stats', None)
+            self.growths = info.get('growths', None)
 
-            self.wexp = info['wexp']
+            self.wexp = info.get('wexp', [])
             self.items = info['items']
-            self.skills = info['skills']
+            self.skills = info.get('skills', [])
 
-            self.team = info['team'] if 'team' in info else 'player' 
+            self.team = info.get('team', 'player')
+            self.ai = info.get('ai', None)
             try:
                 self.image = EditorUtilities.create_chibi(self.name)
             except KeyError:
@@ -93,6 +96,7 @@ class Unit(object):
         else:
             self.id = 0
             self.name = ''
+            self.generic = True
             self.position = None
             self.level = 1
             self.gender = 0
@@ -107,7 +111,9 @@ class Unit(object):
             self.skills = []
             self.wexp = [0 for n in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))]
             self.team = 'player'
+            self.ai = 'None'
             self.image = None
+        self.saved = False
 
 class Klass(object):
     def __init__(self, info):
