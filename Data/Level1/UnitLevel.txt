@@ -5,7 +5,7 @@
 # New Units:
 # team; 0; event_id; class; level; items; position; ai; group; status (optional)
 # - OR -
-# Saved units:
+# Named units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:

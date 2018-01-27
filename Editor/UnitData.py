@@ -19,8 +19,6 @@ import EditorUtilities
 from CustomGUI import SignalList, CheckableComboBox
 import DataImport
 
-teams = ('player', 'enemy', 'other', 'enemy2')
-
 class Group(object):
     def __init__(self, group_id, unit_name, faction, desc):
         self.group_id = group_id
@@ -52,6 +50,29 @@ class UnitData(object):
                 # Process line
                 unitLine = line.split(';')
                 current_mode = self.parse_unit_line(unitLine, current_mode)
+
+    def get_unit_images(self):
+        return {unit.position: EditorUtilities.create_image(EditorUtilities.find(DataImport.class_data, unit.klass).get_image(unit.team))
+                for unit in self.units if unit.position}
+
+    def get_unit_from_pos(self, pos):
+        for unit in self.units:
+            if unit.position == pos:
+                return unit
+        #print('Could not find unit at %s, %s' % (pos[0], pos[1]))
+
+    def get_idx_from_pos(self, pos):
+        for idx, unit in enumerate(self.units):
+            if unit.position == pos:
+                return idx
+        #print('Could not find unit at %s, %s' % (pos[0], pos[1]))
+        return -1
+
+    def get_unit_str(self, pos):
+        for unit in self.units:
+            if unit.position == pos:
+                return unit.name + ': ' + unit.klass + ' ' + str(unit.level) + ' -- ' + ','.join([item.name for item in unit.items])
+        return ''
 
     def parse_unit_line(self, unitLine, current_mode):
         if unitLine[0] == 'group':
@@ -88,6 +109,18 @@ class UnitData(object):
             cur_unit.position = position
 
         self.units.append(cur_unit)
+
+    def add_unit(self, unit):
+        self.units.append(unit)
+
+    def remove_unit_from_idx(self, unit_idx):
+        if self.units:
+            self.units.pop(unit_idx)
+
+    def replace_unit(self, unit_idx, unit):
+        if self.units:
+            self.units.pop(unit_idx)
+        self.units.insert(unit_idx, unit)
 
     def saved_unit_from_line(self, unitLine):
         self.add_unit_from_line(unitLine)
@@ -132,6 +165,7 @@ class UnitData(object):
         u_i['ai'] = legend['ai']
         u_i['movement_group'] = DataImport.class_dict[u_i['klass']]['movement_group']
         u_i['skills'] = []
+        u_i['generic'] = True
 
         cur_unit = DataImport.Unit(u_i)
 
@@ -215,9 +249,37 @@ def setComboBox(combo_box, value):
     if i >= 0:
         combo_box.setCurrentIndex(i)
 
+class GenderBox(QtGui.QGroupBox):
+    def __init__(self):
+        super(GenderBox, self).__init__()
+
+        radios = (QtGui.QRadioButton("Male:"), QtGui.QRadioButton("Female:"))
+        radios[0].setChecked(True)
+        self.gender = 0
+
+        hbox = QtGui.QHBoxLayout()
+
+        self.gender_buttons = QtGui.QButtonGroup()
+        for idx, radio in enumerate(radios):
+            hbox.addWidget(radio)
+            self.gender_buttons.addButton(radio, idx)
+            radio.clicked.connect(self.radio_button_clicked)
+
+        self.setLayout(hbox)
+
+    def radio_button_clicked(self):
+        self.gender = int(self.gender_buttons.checkedId())
+
+    def value(self):
+        return self.gender
+
+    def setValue(self, value):
+        self.radios[0].setChecked(not value)
+        self.radios[1].setChecked(value)
+
 class LoadUnitDialog(QtGui.QDialog):
     def __init__(self, instruction, parent):
-        super(LoadUnitDialog).__init__(parent)
+        super(LoadUnitDialog, self).__init__(parent)
         self.form = QtGui.QFormLayout(self)
         self.form.addRow(QtGui.QLabel(instruction))
 
@@ -237,7 +299,7 @@ class LoadUnitDialog(QtGui.QDialog):
         # Team
         self.team_box = QtGui.QComboBox()
         self.team_box.uniformItemSizes = True
-        for team in teams:
+        for team in DataImport.teams:
             self.team_box.addItem(team)
         self.team_box.activated.connect(self.team_changed)
 
@@ -269,12 +331,8 @@ class LoadUnitDialog(QtGui.QDialog):
         self.current_unit = self.unit_data[idx]
 
     def team_changed(self, item):
-        if str(item) == 'player':
-            self.saved_checkbox.setEnabled(True)
-            self.ai_select.setEnabled(False)
-        else:
-            self.saved_checkbox.setEnabled(False)
-            self.ai_select.setEnabled(True)
+        self.saved_checkbox.setEnabled(str(item) == 'player')
+        self.ai_select.setEnabled(str(item) != 'player')
 
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'
@@ -291,49 +349,9 @@ class LoadUnitDialog(QtGui.QDialog):
         unit.saved = bool(dialog.saved_checkbox.isChecked())
         return unit, result == QtGui.QDialog.Accepted
 
-class SimpleUnit(object):
-    def __init__(self, info):
-        self.team = info['team']
-        self.klass = info['klass']
-        self.level = info['level']
-        self.gender = info['gender']
-        self.ai = info['ai']
-        self.items = info['items']
-        self.group = info['group']
-        self.saved = False
-        self.generic = True
-
-class GenderBox(QtGui.QGroupBox):
-    def __init__(self):
-        super(GenderBox, self).__init__()
-
-        radios = (QtGui.QRadioButton("Male:"), QtGui.QRadioButton("Female:"))
-        radios[0].setChecked(True)
-        self.gender = 0
-
-        hbox = QtGui.QHBoxLayout()
-
-        self.gender_buttons = QtGui.QButtonGroup()
-        for idx, radio in enumerate(radios):
-            hbox.addWidget(radio)
-            self.gender_buttons.addButton(radio, idx)
-            radio.clicked.connect(self.radio_button_clicked)
-
-        self.setLayout(hbox)
-
-    def radio_button_clicked(self):
-        self.gender = int(self.gender_buttons.checkedId())
-
-    def value(self):
-        return self.gender
-        
-    def setValue(self, value):
-        self.radios[0].setChecked(not value)
-        self.radios[1].setChecked(value)
-
 class CreateUnitDialog(QtGui.QDialog):
     def __init__(self, instruction, unit_data, parent):
-        super(LoadUnitDialog).__init__(parent)
+        super(CreateUnitDialog, self).__init__(parent)
         self.form = QtGui.QFormLayout(self)
         self.form.addRow(QtGui.QLabel(instruction))
         self.unit_data = unit_data
@@ -341,7 +359,7 @@ class CreateUnitDialog(QtGui.QDialog):
         # Team
         self.team_box = QtGui.QComboBox()
         self.team_box.uniformItemSizes = True
-        for team in teams:
+        for team in DataImport.teams:
             self.team_box.addItem(team)
         self.team_box.activated.connect(self.team_changed)
 
@@ -372,9 +390,6 @@ class CreateUnitDialog(QtGui.QDialog):
             else:
                 self.item_box.addItem(item.name)
             row = self.item_box.model().item(idx, 0)
-            # if item.name in item_list:
-            #     row.setCheckState(QtCore.Qt.Checked)
-            # else:
             row.setCheckState(QtCore.Qt.Unchecked)
         self.form.addRow('Items: ', self.item_box)   
 
@@ -409,7 +424,7 @@ class CreateUnitDialog(QtGui.QDialog):
         setComboBox(self.team_box, unit.team)
         setComboBox(self.class_box, unit.klass)
         setComboBox(self.ai_select, unit.ai)
-        item_list = unit.items.split(',')
+        item_list = [item.id for item in unit.items]
         for idx, item in enumerate(DataImport.item_data):
             row = self.item_box.model().item(idx, 0)
             if item.id in item_list:
@@ -420,7 +435,9 @@ class CreateUnitDialog(QtGui.QDialog):
     def team_changed(self, item):
         # Change class box to use sprites of that team
         # And also turn off AI
-        pass
+        self.ai_select.setEnabled(str(item) == 'player')
+        for idx, klass in enumerate(DataImport.class_data):
+            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.images[0]))
 
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'
@@ -430,19 +447,24 @@ class CreateUnitDialog(QtGui.QDialog):
         for idx, item in enumerate(DataImport.item_data):
             row = self.item_box.model().item(idx, 0)
             if row.checkState() == QtCore.Qt.Checked:
-                item_list.append(item.id)
+                item_list.append(item)
         return item_list
 
     def create_unit(self):
         info = {}
         info['group'] = str(self.group_select.currentText)
+        group = self.unit_data[info['group']]
+        if group:
+            info['name'] = group.unit_name
+            info['faction'] = group.faction
+            info['desc'] = group.desc
         info['level'] = int(self.level.value())
         info['gender'] = int(self.gender.value())
         info['klass'] = str(self.class_box.currentText())
-        info['items'] = ','.join(self.getCheckedItems())
+        info['items'] = self.getCheckedItems()
         info['ai'] = self.get_ai()
         info['team'] = str(self.team_box.currentText())
-        created_unit = SimpleUnit(info)
+        created_unit = DataImport.Unit(info)
         return created_unit
 
     @staticmethod
@@ -469,6 +491,7 @@ class UnitMenu(QtGui.QWidget):
         self.list.setIconSize(QtCore.QSize(32, 32))
 
         self.load(unit_data)
+        self.list.itemDoubleClicked.connect(self.modify_unit)
 
         self.load_unit_button = QtGui.QPushButton('Load Unit')
         self.load_unit_button.clicked.connect(self.load_unit)
@@ -485,12 +508,19 @@ class UnitMenu(QtGui.QWidget):
     def trigger(self):
         self.view.tool = 'Units'
 
+    def get_current_unit(self):
+        return self.list.item(self.list.currentRow())
+
+    def set_current_idx(self, idx):
+        self.list.setCurrentRow(idx)
+
     def load(self, unit_data):
         self.unit_data = unit_data
         # Ingest Data
         for unit in self.unit_data.units:
             self.list.addItem(self.create_item(unit))
 
+    # TODO: Need to use text color to show whether unit has a position set
     def create_item(self, unit):
         if unit.generic:
             item = QtGui.QListWidgetItem(str(unit.klass) + ': L' + str(unit.level))
@@ -498,20 +528,42 @@ class UnitMenu(QtGui.QWidget):
             item = QtGui.QListWidgetItem(unit.name)
         klass = EditorUtilities.find(DataImport.class_data, unit.klass)
         if klass:
-            item.setIcon(EditorUtilities.create_icon(klass.image))
+            item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team)))
         return item
 
     def load_unit(self):
         loaded_unit, ok = LoadUnitDialog.getUnit(self, "Load Unit", "Select unit:")
         if ok:
-            self.list.addItem(self.create_item(loaded_unit))
+            self.add_unit(loaded_unit)
             self.unit_data.add_unit(loaded_unit)
 
     def create_unit(self):
         created_unit, ok = CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
         if ok:
-            self.list.addItem(self.create_item(created_unit))
+            self.add_unit(created_unit)
             self.unit_data.add_unit(created_unit)
+
+    def remove_unit(self):
+        unit_idx = self.list.currentRow()
+        self.list.takeItem(unit_idx)
+        self.unit_data.remove_unit_from_idx(unit_idx)
+
+    def modify_unit(self, unit):
+        idx = self.list.row(unit)
+        if unit.generic:
+            modified_unit, ok = LoadUnitDialog.getUnit(self, "Load Unit", "Select unit:", unit)
+        else:
+            modified_unit, ok = CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:", unit)
+        if ok:
+            modified_unit.position = unit.position
+            # Replace unit
+            self.list.takeItem(idx)
+            self.list.insertItem(idx, self.create_item(modified_unit))
+            self.unit_data.replace_unit(idx, modified_unit)
+
+    def add_unit(self, unit):
+        self.list.addItem(self.create_item(unit))
+        self.list.setCurrentRow(self.list.count() - 1)
 
 class GroupDialog(QtGui.QDialog):
     def __init__(self, instruction, group=None, parent=None):

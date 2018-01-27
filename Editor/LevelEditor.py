@@ -10,7 +10,12 @@ Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
-import PropertyMenu, Terrain, TileInfo, UnitData
+import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities
+
+# TODO: Load new Map button
+# TODO: Refresh button (also on losing and gaining focus)
+# TODO: Highlight current unit
+# TODO: Add Del key to Units
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -70,7 +75,8 @@ class MainView(QtGui.QGraphicsView):
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
             for coord, unit_image in self.unit_data.get_unit_images().iteritems():
-                painter.drawImage(coord[0] * 16, coord[1] * 16, unit_image)
+                if unit_image:
+                    painter.drawImage(coord[0] * 16, coord[1] * 16, unit_image)
             painter.end()
 
     def mousePressEvent(self, event):
@@ -99,22 +105,29 @@ class MainView(QtGui.QGraphicsView):
                     self.window.update_view()
             elif self.window.dock_visibility['Units'] and self.tool == 'Units':
                 if event.button() == QtCore.Qt.LeftButton:
-                    current_unit = self.window.unit_menu.new_current_unit()
+                    current_unit = self.window.unit_menu.get_current_unit()
                     if current_unit:
-                        self.window.unit_menu.add_unit(current_unit)
-                        self.unit_data.add_unit(current_unit)
+                        under_unit = self.unit_data.get_unit_from_pos(pos)
+                        if under_unit:
+                            under_unit.position = None
+                        if current_unit.position:
+                            new_unit = current_unit.copy()
+                            self.unit_data.add_unit(new_unit)
+                            self.window.unit_menu.add_unit(new_unit)
+                        else:
+                            current_unit.position = pos
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
-                    current_unit = self.unit_data.get_unit_from_pos(pos)
-                    if current_unit:
-                        self.window.unit_menu.set_current_unit(current_unit)
+                    current_idx = self.unit_data.get_idx_from_pos(pos)
+                    if current_idx >= 0:
+                        self.window.unit_menu.set_current_idx(current_idx)
 
     def mouseMoveEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
         if pixmap:
             pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
-            if self.window.dock_visibility['Units'] and self.unit_data.get_unit(pos):
+            if self.window.dock_visibility['Units'] and self.unit_data.get_unit_from_pos(pos):
                 info = self.unit_data.get_unit_str(pos)
                 message = str(pos[0]) + ',' + str(pos[1]) + ': ' + info
                 self.window.status_bar.showMessage(message)
@@ -238,6 +251,7 @@ class MainEditor(QtGui.QMainWindow):
         unit_level_filename = directory + '/UnitLevel.txt'
         self.unit_data.load(unit_level_filename)
         self.group_menu.load(self.unit_data)
+        self.unit_menu.load(self.unit_data)
 
         if self.current_level_num:
             self.status_bar.showMessage('Loaded Level' + self.current_level_num)
@@ -261,6 +275,66 @@ class MainEditor(QtGui.QMainWindow):
         pixmap = QtGui.QPixmap.fromImage(image)
         pixmap.save(fp, 'png')
 
+    def write_tile_info(self, fp):
+        with open(fp, 'w') as tile_info:
+            for coord, properties in self.tile_info.tile_info_dict.iteritems():
+                tile_info.write(coord[0] + ',' + coord[1] + ':')
+                value = self.tile_info.get_info_str(coord)
+                if value:
+                    tile_info.write(value + '\n')
+
+    def write_unit_level(self, fp):
+        def get_item_str(item):
+            item_str = item.id
+            if item.droppable:
+                item_str = 'd' + item_str
+            elif item.event:
+                item_str = 'e' + item_str
+
+        def write_unit_line(unit):
+            pos_str = ','.join(str(p) for p in unit.position)
+            if unit.generic:
+                item_strs = ','.join(get_item_str(item) for item in unit.items)
+                klass_str = unit.klass + unit.gender 
+                order = (unit.team, '0', '0', klass_str, str(unit.level), item_strs, pos_str, unit.ai, unit.group)
+            else:
+                order = (unit.team, '1' if unit.saved else '0', '0', unit.name, pos_str, unit.ai)
+            unit_level.write(';'.join(order) + '\n')
+
+        with open(fp, 'w') as unit_level:
+            unit_level.write(EditorUtilities.unit_level_header)
+            groups = self.unit_data.groups
+            if self.unit_data.load_all_player_characters:
+                unit_level.write('load_all_player_characters\n')
+            for group in groups:
+                unit_level.write('group;' + group.group_id + ';' + group.unit_name + 
+                                 ';' + group.faction + ';' + group.desc + '\n')
+            # Units
+            units = [unit for unit in self.unit_data if unit.position]
+            # Player units
+            player_units = [unit for unit in units if unit.team == 'player' and unit.position]
+            unit_level.write('# Player Characters\n')
+            for unit in player_units:
+                write_unit_line(unit)
+            # Other units
+            other_units = [unit for unit in self.unit if unit.team == 'other']
+            if other_units:
+                unit_level.write('# Other Characters\n')
+                for unit in other_units:
+                    write_unit_line(unit)
+            # Named enemy characters
+            unit_level.write('# Enemies')
+            named_enemies = [unit for unit in units if unit.team == 'enemy' and not unit.generic]
+            if named_enemies:
+                unit_level.write('# Bosses\n')
+                for unit in named_enemies:
+                    write_unit_line(unit)
+            # Generic enemy characters
+            generic_enemies = [unit for unit in units if unit.team == 'enemy' and not unit.generic]
+            unit_level.write('# Generics\n')
+            for unit in generic_enemies:
+                write_unit_line(unit)
+
     def save(self):
         # Find what the next unused num is 
         if not self.current_level_num:
@@ -279,6 +353,12 @@ class MainEditor(QtGui.QMainWindow):
 
         tile_data_filename = level_directory + '/TileData.png'
         self.write_tile_data(tile_data_filename)
+
+        tile_info_filename = level_directory + '/TileInfo.txt'
+        self.write_tile_info(tile_info_filename)
+
+        unit_level_filename = level_directory + '/UnitLevel.txt'
+        self.write_unit_data(unit_level_filename)
 
         print('Saved Level' + num)
 

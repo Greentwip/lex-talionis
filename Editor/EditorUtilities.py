@@ -29,12 +29,19 @@ def create_pixmap(image):
     icon = QtGui.QPixmap(icon.image)
     return icon
 
+def create_image(image):
+    image = ImageWidget(image)
+    return image.image
+
 def create_chibi(name):
     return Engine.subsurface(GC.UNITDICT[name + 'Portrait'], (96, 16, 32, 32)).convert_alpha()
 
 # === DATA ===
 def find(data, name):
     return next((x for x in data if x.name == name), None)
+
+def find_id(data, uid):
+    return next((x for x in data if x.id == uid), None)
 
 # === MAKE PRETTY ===
 def stretch(grid):
@@ -53,3 +60,25 @@ def add_line(grid, row):
     line.setFrameStyle(QtGui.QFrame.HLine)
     line.setLineWidth(0)
     grid.addWidget(line, row, 0)
+
+unit_level_header = """
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; group; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+"""

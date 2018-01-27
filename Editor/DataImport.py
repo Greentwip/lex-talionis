@@ -16,6 +16,8 @@ from Code.Dialogue import UnitPortrait
 
 import EditorUtilities
 
+teams = ('player', 'enemy', 'other', 'enemy2')
+
 # === DATA IMPORTING ===
 def build_units(class_dict):
     units = []
@@ -68,9 +70,10 @@ def build_units(class_dict):
 class Unit(object):
     def __init__(self, info):
         if info:
-            self.id = info['id']
+            self.id = info.get('id', 100)
+            self.group = info.get('group')
             self.name = info['name']
-            self.generic = info['generic']
+            self.generic = info.get('generic', False)
 
             self.position = None
             self.level = int(info['level'])
@@ -146,15 +149,24 @@ class Klass(object):
             self.max = [40, 15, 15, 15, 15, 20, 15, 15, 20]
             self.desc = ''
 
-        self.unit = GenericUnit(self.name)
-        self.images = (self.unit.image1, self.unit.image2, self.unit.image3)
-        self.image = self.images[0]
+        self.units = []
+        for team in teams:
+            try:
+                unit = GenericUnit(self.name, team)
+                self.units.append(unit)
+            except KeyError as e:
+                print('KeyError: %s' % e)
+                continue
+        self.images = {unit.team: (unit.image1, unit.image2, unit.image3) for unit in self.units}
+
+    def get_image(self, team):
+        return self.images[team][0]
 
 # === For use by class object ===
 class GenericUnit(object):
-    def __init__(self, klass, gender=0):
+    def __init__(self, klass, team, gender=0):
         self.gender = gender
-        self.team = 'player'
+        self.team = team
         self.klass = klass
         self.stats = {}
         self.stats['HP'] = 1
