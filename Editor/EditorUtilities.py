@@ -36,6 +36,12 @@ def create_image(image):
 def create_chibi(name):
     return Engine.subsurface(GC.UNITDICT[name + 'Portrait'], (96, 16, 32, 32)).convert_alpha()
 
+def create_cursor():
+    sprite = GC.IMAGESDICT['Cursor']
+    # Sprites are in 64 x 64 boxes
+    activesprite = Engine.subsurface(sprite, (0, 64, 32, 32)).convert_alpha()
+    return create_image(activesprite)
+
 # === DATA ===
 def find(data, name):
     return next((x for x in data if x.name == name), None)

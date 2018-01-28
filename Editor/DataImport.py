@@ -34,26 +34,26 @@ def build_units(class_dict):
         u_i['level'] = int(unit.find('level').text)
         u_i['faction'] = unit.find('faction').text
 
-        stats = SaveLoad.intify_comma_list(unit.find('bases').text)
-        for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
-            stats.append(class_dict[u_i['klass']]['bases'][n])
-        assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
-        u_i['stats'] = SaveLoad.build_stat_dict(stats)
-        # print("%s's stats: %s", u_i['name'], u_i['stats'])
+        # stats = SaveLoad.intify_comma_list(unit.find('bases').text)
+        # for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
+        #     stats.append(class_dict[u_i['klass']]['bases'][n])
+        # assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
+        # u_i['stats'] = SaveLoad.build_stat_dict(stats)
+        # # print("%s's stats: %s", u_i['name'], u_i['stats'])
 
-        u_i['growths'] = SaveLoad.intify_comma_list(unit.find('growths').text)
-        u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
-        assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
+        # u_i['growths'] = SaveLoad.intify_comma_list(unit.find('growths').text)
+        # u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
+        # assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
 
         u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text)
-        # Parse wexp
-        u_i['wexp'] = unit.find('wexp').text.split(',')
-        for index, wexp in enumerate(u_i['wexp'][:]):
-            if wexp in CustomObjects.WEAPON_EXP.wexp_dict:
-                u_i['wexp'][index] = CustomObjects.WEAPON_EXP.wexp_dict[wexp]
-        u_i['wexp'] = [int(num) for num in u_i['wexp']]
+        # # Parse wexp
+        # u_i['wexp'] = unit.find('wexp').text.split(',')
+        # for index, wexp in enumerate(u_i['wexp'][:]):
+        #     if wexp in CustomObjects.WEAPON_EXP.wexp_dict:
+        #         u_i['wexp'][index] = CustomObjects.WEAPON_EXP.wexp_dict[wexp]
+        # u_i['wexp'] = [int(num) for num in u_i['wexp']]
 
-        assert len(u_i['wexp']) == len(CustomObjects.WEAPON_TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
+        # assert len(u_i['wexp']) == len(CustomObjects.WEAPON_TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
         
         u_i['desc'] = unit.find('desc').text
         # Tags
@@ -83,10 +83,7 @@ class Unit(object):
             self.tags = info.get('tags', [])
             self.desc = info['desc']
 
-            self.stats = info.get('stats', None)
-            self.growths = info.get('growths', None)
-
-            self.wexp = info.get('wexp', [])
+            # self.wexp = info.get('wexp', [])
             self.items = info['items']
             self.skills = info.get('skills', [])
 
@@ -98,6 +95,7 @@ class Unit(object):
                 self.image = GC.UNITDICT[self.faction + 'Emblem'].convert_alpha()
         else:
             self.id = 0
+            self.group = None
             self.name = ''
             self.generic = True
             self.position = None
@@ -107,16 +105,33 @@ class Unit(object):
             self.klass = 'Citizen'
             self.tags = set()
             self.desc = ''
-            current_class = EditorUtilities.find(class_data, self.klass)
-            self.stats = SaveLoad.build_stat_dict(current_class.bases)
-            self.growths = [0 for n in xrange(cf.CONSTANTS['num_stats'])]
+            # current_class = EditorUtilities.find(class_data, self.klass)
             self.items = []
             self.skills = []
-            self.wexp = [0 for n in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))]
+            # self.wexp = [0 for n in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))]
             self.team = 'player'
             self.ai = 'None'
             self.image = None
         self.saved = False
+
+    def copy(self):
+        new_unit = Unit()
+        new_unit.id = self.id
+        new_unit.group = self.group
+        new_unit.name = self.name
+        new_unit.generic = self.generic
+        new_unit.saved = self.saved
+        new_unit.position = None
+        new_unit.gender = self.gender
+        new_unit.klass = self.klass
+        new_unit.tags = self.tags
+        new_unit.faction = self.faction
+        new_unit.desc = self.desc
+        new_unit.team = self.team
+        new_unit.items = [ItemMethods.itemparser(item.id) for item in self.items]
+        new_unit.ai = self.ai
+        new_unit.image = self.image
+        return new_unit
 
 class Klass(object):
     def __init__(self, info):
@@ -155,7 +170,7 @@ class Klass(object):
                 unit = GenericUnit(self.name, team)
                 self.units.append(unit)
             except KeyError as e:
-                print('KeyError: %s' % e)
+                # print('KeyError: %s' % e)
                 continue
         self.images = {unit.team: (unit.image1, unit.image2, unit.image3) for unit in self.units}
 

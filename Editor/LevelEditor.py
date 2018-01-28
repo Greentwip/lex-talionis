@@ -10,12 +10,18 @@ Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
-import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities
+import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group
 
+# TODO: Reinforcements
+# TODO: Created Units
 # TODO: Load new Map button
 # TODO: Refresh button (also on losing and gaining focus)
 # TODO: Highlight current unit
+# TODO: Add color to text when unit isn't positioned
 # TODO: Add Del key to Units
+# TODO: Add Autotile support to map
+# TODO: Add Weather to map
+# TODO: Droppable and Equippable Item support
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -26,6 +32,7 @@ class MainView(QtGui.QGraphicsView):
 
         self.setMinimumSize(15*16, 10*16)
         self.setMouseTracking(True)
+        self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
 
         self.image = None
         self.working_image = None
@@ -77,6 +84,10 @@ class MainView(QtGui.QGraphicsView):
             for coord, unit_image in self.unit_data.get_unit_images().iteritems():
                 if unit_image:
                     painter.drawImage(coord[0] * 16, coord[1] * 16, unit_image)
+            # Highlight current unit
+            current_unit = self.window.unit_menu.get_current_unit()
+            if current_unit and current_unit.position:
+                painter.drawImage(current_unit.position[0] * 16 - 4, current_unit.position[1] * 16, EditorUtilities.create_cursor())
             painter.end()
 
     def mousePressEvent(self, event):
@@ -123,6 +134,9 @@ class MainView(QtGui.QGraphicsView):
                         self.window.unit_menu.set_current_idx(current_idx)
 
     def mouseMoveEvent(self, event):
+        # Do the parent's version
+        QtGui.QGraphicsView.mouseMoveEvent(self, event)
+        # Mine
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
         if pixmap:
@@ -150,6 +164,10 @@ class MainView(QtGui.QGraphicsView):
             self.screen_scale -= 1
             self.scale(0.5, 0.5)
 
+    def center_on_pos(self, pos):
+        self.centerOn(pos[0] * 16, pos[1] * 16)
+        self.window.update_view()
+
 class Dock(QtGui.QDockWidget):
     def __init__(self, title, parent):
         super(Dock, self).__init__(title, parent)
@@ -165,6 +183,7 @@ class MainEditor(QtGui.QMainWindow):
     def __init__(self):
         super(MainEditor, self).__init__()
         self.setWindowTitle('Lex Talionis Level Editor v' + GC.version)
+        self.installEventFilter(self)
 
         # Data
         self.tile_data = Terrain.TileData()
@@ -411,7 +430,7 @@ class MainEditor(QtGui.QMainWindow):
 
         self.docks['Groups'] = Dock("Groups", self)
         self.docks['Groups'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        self.group_menu = UnitData.GroupMenu(self.unit_data, self.view, self)
+        self.group_menu = Group.GroupMenu(self.unit_data, self.view, self)
         self.docks['Groups'].setWidget(self.group_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Groups'])
         self.view_menu.addAction(self.docks['Groups'].toggleViewAction())
@@ -440,6 +459,17 @@ class MainEditor(QtGui.QMainWindow):
                 return False
 
         return True
+
+    def eventFilter(self, obj, event):
+        if event.type() == QtCore.QEvent.WindowActivate:
+            print "widget window has gained focus"
+        elif event.type() == QtCore.QEvent.WindowDeactivate:
+            print "widget window has lost focus"
+        elif event.type() == QtCore.QEvent.FocusIn:
+            print "widget has gained keyboard focus"
+        elif event.type() == QtCore.QEvent.FocusOut:
+            print "widget has lost keyboard focus"
+        return super(MainEditor, self).eventFilter(obj, event)
 
     def about(self):
         QtGui.QMessageBox.about(self, "About Lex Talionis",
