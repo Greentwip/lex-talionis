@@ -71,6 +71,7 @@ class InfoMenu(StateMachine.State):
             if event == 'INFO' or event == 'BACK':
                 GC.SOUNDDICT['Info Out'].play()
                 self.helpMenu.current = None
+                return
             if 'RIGHT' in directions:
                 if self.helpMenu.help_boxes[self.helpMenu.current].right:
                     GC.SOUNDDICT['Select 6'].play()
