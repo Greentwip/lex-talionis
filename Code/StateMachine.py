@@ -1902,9 +1902,9 @@ class DialogueState(State):
             if cf.OPTIONS['Text Speed'] in cf.text_speed_options:
                 GC.SOUNDDICT['Select 4'].play()
                 current_index = cf.text_speed_options.index(cf.OPTIONS['Text Speed'])
-                current_index -= 1
-                if current_index < 0:
-                    current_index = len(cf.text_speed_options) - 1
+                current_index += 1
+                if current_index >= len(cf.text_speed_options):
+                    current_index = 0
                 cf.OPTIONS['Text Speed'] = cf.text_speed_options[current_index]
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):
