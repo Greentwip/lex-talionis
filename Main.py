@@ -117,7 +117,6 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        # Copy most recent current turn to 
         logger.exception(e)
         inform_error()
         print('Main Crash {0}'.format(str(e)))
