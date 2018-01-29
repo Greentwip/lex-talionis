@@ -144,7 +144,8 @@ class UnitData(object):
         u_i['level'] = int(legend['level'])
         u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
 
-        group = self.groups[legend['group']]
+        u_i['group'] = legend['group']
+        group = self.groups[u_i['group']]
         u_i['name'] = group.unit_name
         u_i['faction'] = group.faction
         u_i['desc'] = group.desc
@@ -407,10 +408,13 @@ class LoadUnitDialog(QtGui.QDialog):
             dialog.load(current_unit)
         dialog.setWindowTitle(title)
         result = dialog.exec_()
-        unit = DataImport.unit_data[dialog.unit_box.currentIndex()]
-        unit.ai = dialog.get_ai()
-        unit.saved = bool(dialog.saved_checkbox.isChecked())
-        return unit, result == QtGui.QDialog.Accepted
+        if result == QtGui.QDialog.Accepted:
+            unit = DataImport.unit_data[dialog.unit_box.currentIndex()]
+            unit.ai = dialog.get_ai()
+            unit.saved = bool(dialog.saved_checkbox.isChecked())
+            return unit, True
+        else:
+            return None, False
 
 class CreateUnitDialog(QtGui.QDialog):
     def __init__(self, instruction, unit_data, parent):
@@ -425,6 +429,7 @@ class CreateUnitDialog(QtGui.QDialog):
         for team in DataImport.teams:
             self.team_box.addItem(team)
         self.team_box.activated.connect(self.team_changed)
+        self.form.addRow('Team:', self.team_box)
 
         # Class
         self.class_box = QtGui.QComboBox()
@@ -440,21 +445,12 @@ class CreateUnitDialog(QtGui.QDialog):
         self.form.addRow('Level:', self.level)
 
         # Gender
-        self.gender_box = GenderBox()
-        self.form.addRow('Gender:', self.gender_box)
+        self.gender = GenderBox(self)
+        self.form.addRow('Gender:', self.gender)
 
         # Items
-        self.item_box = CheckableComboBox()
-        self.item_box.uniformItemSizes = True
-        self.item_box.setIconSize(QtCore.QSize(16, 16))
-        for idx, item in enumerate(DataImport.item_data):
-            if item.image:
-                self.item_box.addItem(EditorUtilities.create_icon(item.image), item.name)
-            else:
-                self.item_box.addItem(item.name)
-            row = self.item_box.model().item(idx, 0)
-            row.setCheckState(QtCore.Qt.Unchecked)
-        self.form.addRow('Items: ', self.item_box)   
+        item_grid = self.set_up_items()
+        self.form.addRow('Items: ', item_grid)   
 
         # AI
         self.ai_select = QtGui.QComboBox()
@@ -466,13 +462,14 @@ class CreateUnitDialog(QtGui.QDialog):
         # Group
         self.group_select = QtGui.QComboBox()
         self.group_select.uniformItemSizes = True
+        self.group_select.setIconSize(QtCore.QSize(32, 32))
         for group_name, group in unit_data.groups.iteritems():
-            item = QtGui.QListWidgetItem(group.group_id)
             image = GC.UNITDICT.get(group.faction + 'Emblem')
             if image:
-                image = image.convert_alpha()
-                item.setIcon(EditorUtilities.create_icon(image))
-            self.group_select.addItem(item)
+                self.group_select.addItem(EditorUtilities.create_icon(image.convert_alpha()), group.group_id)
+            else:
+                self.group_select.addItem(group.group_id)
+
         self.form.addRow('Group:', self.group_select)
 
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
@@ -487,13 +484,72 @@ class CreateUnitDialog(QtGui.QDialog):
         setComboBox(self.team_box, unit.team)
         setComboBox(self.class_box, unit.klass)
         setComboBox(self.ai_select, unit.ai)
-        item_list = [item.id for item in unit.items]
+        # === Items ===
+        self.clear_item_box()
+        for index, item in enumerate(unit.items):
+            self.add_item_box()
+            item_box, drop_box, event_box = self.item_boxes[index]
+            drop_box.setChecked(item.droppable)
+            event_box.setChecked(item.event_combat)
+            item_box.setCurrentIndex([i.id for i in DataImport.item_data].index(item.id))
+
+    def set_up_items(self):
+        item_grid = QtGui.QGridLayout()
+        self.add_item_button = QtGui.QPushButton('Add Item')
+        self.add_item_button.clicked.connect(self.add_item_box)
+        self.remove_item_button = QtGui.QPushButton('Remove Item')
+        self.remove_item_button.clicked.connect(self.remove_item_box)
+        self.remove_item_button.setEnabled(False)
+
+        self.item_boxes = []
+        for num in xrange(cf.CONSTANTS['max_items']):
+            self.item_boxes.append((self.create_item_combo_box(), QtGui.QCheckBox(), QtGui.QCheckBox()))
+        for index, item in enumerate(self.item_boxes):
+            item_box, drop, event = item
+            item_grid.addWidget(item_box, index + 1, 0, 1, 2, QtCore.Qt.AlignTop)
+            item_grid.addWidget(drop, index + 1, 2, QtCore.Qt.AlignTop)
+            item_grid.addWidget(event, index + 1, 3, QtCore.Qt.AlignTop)
+
+        item_grid.addWidget(QtGui.QLabel('Name:'), 0, 0, 1, 2, QtCore.Qt.AlignTop)
+        item_grid.addWidget(QtGui.QLabel('Drop?'), 0, 2, QtCore.Qt.AlignTop)
+        item_grid.addWidget(QtGui.QLabel('Event?'), 0, 3, QtCore.Qt.AlignTop)
+        item_grid.addWidget(self.add_item_button, cf.CONSTANTS['max_items'] + 2, 0, 1, 2, QtCore.Qt.AlignBottom)
+        item_grid.addWidget(self.remove_item_button, cf.CONSTANTS['max_items'] + 2, 2, 1, 2, QtCore.Qt.AlignBottom)
+        self.clear_item_box()
+        return item_grid
+
+    # Item functions
+    def clear_item_box(self):
+        for index, (item_box, drop, event) in enumerate(self.item_boxes):
+            item_box.hide(); drop.hide(); event.hide()
+        self.num_items = 0
+
+    def add_item_box(self):
+        self.num_items += 1
+        self.remove_item_button.setEnabled(True)
+        item_box, drop, event = self.item_boxes[self.num_items - 1]
+        item_box.show(); drop.show(); event.show()
+        if self.num_items >= cf.CONSTANTS['max_items']:
+            self.add_item_button.setEnabled(False)
+
+    def remove_item_box(self):
+        self.num_items -= 1
+        self.add_item_button.setEnabled(True)
+        item_box, drop, event = self.item_boxes[self.num_items]
+        item_box.hide(); drop.hide(); event.hide()
+        if self.num_items <= 0:
+            self.remove_item_button.setEnabled(False)
+
+    def create_item_combo_box(self):
+        item_box = QtGui.QComboBox()
+        item_box.uniformItemSizes = True
+        item_box.setIconSize(QtCore.QSize(16, 16))
         for idx, item in enumerate(DataImport.item_data):
-            row = self.item_box.model().item(idx, 0)
-            if item.id in item_list:
-                row.setCheckState(QtCore.Qt.Checked)
+            if item.image:
+                item_box.addItem(EditorUtilities.create_icon(item.image), item.name)
             else:
-                row.setCheckState(QtCore.Qt.Unchecked)
+                item_box.addItem(item.name)
+        return item_box
 
     def team_changed(self, item):
         # Change class box to use sprites of that team
@@ -502,6 +558,9 @@ class CreateUnitDialog(QtGui.QDialog):
         self.ai_select.setEnabled(team == 'player')
         for idx, klass in enumerate(DataImport.class_data):
             self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team)))
+
+    def gender_changed(self, gender):
+        print("Gender changed to %s" % gender)
 
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'
@@ -516,8 +575,8 @@ class CreateUnitDialog(QtGui.QDialog):
 
     def create_unit(self):
         info = {}
-        info['group'] = str(self.group_select.currentText)
-        group = self.unit_data[info['group']]
+        info['group'] = str(self.group_select.currentText())
+        group = self.unit_data.groups[info['group']]
         if group:
             info['name'] = group.unit_name
             info['faction'] = group.faction
@@ -538,5 +597,8 @@ class CreateUnitDialog(QtGui.QDialog):
             dialog.load(current_unit)
         dialog.setWindowTitle(title)
         result = dialog.exec_()
-        unit = dialog.create_unit()
-        return unit, result == QtGui.QDialog.Accepted
+        if result == QtGui.QDialog.Accepted:
+            unit = dialog.create_unit()
+            return unit, True
+        else:
+            return None, False

@@ -124,17 +124,18 @@ class CheckableComboBox(QtGui.QComboBox):
             item.setCheckState(QtCore.Qt.Checked)
 
 class GenderBox(QtGui.QGroupBox):
-    def __init__(self):
+    def __init__(self, window=None):
         super(GenderBox, self).__init__()
+        self.window = window
 
-        radios = (QtGui.QRadioButton("Male:"), QtGui.QRadioButton("Female:"))
-        radios[0].setChecked(True)
+        self.radios = (QtGui.QRadioButton("Male:"), QtGui.QRadioButton("Female:"))
+        self.radios[0].setChecked(True)
         self.gender = 0
 
         hbox = QtGui.QHBoxLayout()
 
         self.gender_buttons = QtGui.QButtonGroup()
-        for idx, radio in enumerate(radios):
+        for idx, radio in enumerate(self.radios):
             hbox.addWidget(radio)
             self.gender_buttons.addButton(radio, idx)
             radio.clicked.connect(self.radio_button_clicked)
@@ -143,6 +144,8 @@ class GenderBox(QtGui.QGroupBox):
 
     def radio_button_clicked(self):
         self.gender = int(self.gender_buttons.checkedId())
+        if self.window:
+            self.window.gender_changed(self.gender)
 
     def value(self):
         return self.gender
@@ -150,4 +153,3 @@ class GenderBox(QtGui.QGroupBox):
     def setValue(self, value):
         self.radios[0].setChecked(not value)
         self.radios[1].setChecked(value)
-        

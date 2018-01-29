@@ -1,4 +1,5 @@
 import os
+from collections import OrderedDict
 import bmpfont, Engine, imagesDict
 import configuration as cf
 
@@ -91,7 +92,7 @@ def create_mcost_dict(fp):
     return mcost_dict
 MCOSTDATA = create_mcost_dict(loc + 'Data/mcost.txt')
 def create_ai_dict(fp):
-    ai_dict = {}
+    ai_dict = OrderedDict()
     with open(fp, 'r') as ai_data:
         for line in ai_data.readlines():
             if line.startswith('#'):
