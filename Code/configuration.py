@@ -29,7 +29,13 @@ def read_config_file():
                          ('key_DOWN', 274),
                          ('key_START', 115)])
 
-    if os.path.isfile('Data/config.ini'):
+    # Try saves folder first
+    if os.path.isfile('Saves/config.ini'):
+        with open('Saves/config.ini') as config_file:
+            for line in config_file:
+                split_line = line.strip().split('=')
+                lines[split_line[0]] = split_line[1]
+    elif os.path.isfile('Data/config.ini'):
         with open('Data/config.ini') as config_file:
             for line in config_file:
                 split_line = line.strip().split('=')
@@ -62,7 +68,7 @@ def read_config_file():
     return lines
 
 def write_config_file():
-    with open('Data/config.ini', 'w') as config_file:
+    with open('Saves/config.ini', 'w') as config_file:
         write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.iteritems()])
         config_file.write(write_out)
 
@@ -195,4 +201,4 @@ print('Debug: %s' % (OPTIONS['debug']))
 CONSTANTS = read_constants_file()
 CONSTANTS['Unit Speed'] = OPTIONS['Unit Speed']
 WORDS = read_words_file()
-text_speed_options = reversed([1, 5, 10, 15, 20, 30, 40, 50, 75, 100, 150])
+text_speed_options = list(reversed([1, 5, 10, 15, 20, 30, 40, 50, 75, 100, 150]))

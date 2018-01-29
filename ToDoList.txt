@@ -18,7 +18,8 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Make defender and splash happen at the same time
+- Autosave loading
+- Data/config.ini moved to Saves/config.ini
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---

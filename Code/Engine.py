@@ -61,13 +61,33 @@ def build_font(ttf, size):
     return pygame.font.Font(ttf, size)
 
 def terminate():
-    configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
-    configuration.write_config_file() # Write last saved options to config file
+    final()
     if not PYGAME_SDL2:
         pygame.mixer.music.stop()
         pygame.mixer.quit()
     pygame.quit()
     sys.exit()
+
+def final():
+    configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
+    configuration.write_config_file() # Write last saved options to config file
+    create_crash_save()
+
+def create_crash_save():
+    import os, glob
+    from shutil import copyfile
+    # Get newest *.pmeta file in Saves/
+    save_metas = glob.glob(engine_constants['home'] + 'Saves/*.pmeta')
+    latest_file = max(save_metas, key=os.path.getmtime)
+    pmeta_name = os.path.split(latest_file)[1]
+    # If newest *.pmeta file is not called SaveState* or Suspend*
+    if not (pmeta_name.startswith('SaveState') or pmeta_name.startswith('Suspend')):
+        # Copy newest *.p and *.pmeta file and call them Suspend.p and Suspend.pmeta
+        p_file = latest_file[:-6] + '.p'
+        copyfile(p_file, engine_constants['home'] + 'Saves/Suspend.p')
+        copyfile(latest_file, engine_constants['home'] + 'Saves/Suspend.pmeta')
+        print('Created save point at last turn change! Select Continue in Main Menu to load!')
+        logger.debug('Created save point from %s', p_file)
 
 # === TIMING STUFF ===========================================================
 def update_time():

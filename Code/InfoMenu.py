@@ -68,6 +68,7 @@ class InfoMenu(StateMachine.State):
         currentTime = Engine.get_time()
 
         if self.helpMenu.current:
+            raise KeyError
             if event == 'INFO' or event == 'BACK':
                 GC.SOUNDDICT['Info Out'].play()
                 self.helpMenu.current = None
