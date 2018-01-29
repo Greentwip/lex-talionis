@@ -81,7 +81,7 @@ def create_crash_save():
     latest_file = max(save_metas, key=os.path.getmtime)
     pmeta_name = os.path.split(latest_file)[1]
     # If newest *.pmeta file is not called SaveState* or Suspend*
-    if not (pmeta_name.startswith('SaveState') or pmeta_name.startswith('Suspend')):
+    if not (pmeta_name.startswith('SaveState') or pmeta_name.startswith('Suspend') or pmeta_name.startswith('Restart')):
         # Copy newest *.p and *.pmeta file and call them Suspend.p and Suspend.pmeta
         p_file = latest_file[:-6] + '.p'
         copyfile(p_file, engine_constants['home'] + 'Saves/Suspend.p')
