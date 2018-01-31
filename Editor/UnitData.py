@@ -155,7 +155,10 @@ class UnitData(object):
         u_i['stats'] = self.build_stat_dict(stats)
         
         u_i['tags'] = DataImport.class_dict[u_i['klass']]['tags']
-        u_i['ai'] = legend['ai']
+        if '_' in legend['ai']:
+            u_i['ai'], u_i['ai_group'] = legend['ai'].split('_')
+        else:
+            u_i['ai'], u_i['ai_group'] = legend['ai'], None
         u_i['movement_group'] = DataImport.class_dict[u_i['klass']]['movement_group']
         u_i['skills'] = []
         u_i['generic'] = True
@@ -300,6 +303,8 @@ class UnitMenu(QtGui.QWidget):
         klass = EditorUtilities.find(DataImport.class_data, unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team)))
+        if not unit.position:
+            item.setTextColor(QtGui.QColor("red"))
         return item
 
     def load_unit(self):
@@ -383,6 +388,10 @@ class LoadUnitDialog(QtGui.QDialog):
         self.ai_select.setEnabled(False)
         self.form.addRow('Select AI:', self.ai_select)
 
+        # AI Group
+        self.ai_group = QtGui.QLineEdit()
+        self.form.addRow('AI Group:', self.ai_group)
+
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
         self.buttonbox.accepted.connect(self.accept)
@@ -393,10 +402,13 @@ class LoadUnitDialog(QtGui.QDialog):
         setComboBox(self.team_box, unit.team)
         self.saved_checkbox.setChecked(unit.saved)
         setComboBox(self.ai_select, unit.ai)
+        if unit.ai_group:
+            self.ai_group.setText(str(unit.ai_group))
 
     def team_changed(self, item):
         self.saved_checkbox.setEnabled(str(item) == 'player')
         self.ai_select.setEnabled(str(item) != 'player')
+        self.ai_group.setEnabled(str(item) != 'player')
 
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'
@@ -412,6 +424,7 @@ class LoadUnitDialog(QtGui.QDialog):
             unit = DataImport.unit_data[dialog.unit_box.currentIndex()]
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
+            unit.ai_group = dialog.ai_group.text()
             return unit, True
         else:
             return None, False
@@ -459,6 +472,10 @@ class CreateUnitDialog(QtGui.QDialog):
             self.ai_select.addItem(ai_name)
         self.form.addRow('AI:', self.ai_select)
 
+        # AI Group
+        self.ai_group = QtGui.QLineEdit()
+        self.form.addRow('AI Group:', self.ai_group)
+
         # Group
         self.group_select = QtGui.QComboBox()
         self.group_select.uniformItemSizes = True
@@ -484,6 +501,8 @@ class CreateUnitDialog(QtGui.QDialog):
         setComboBox(self.team_box, unit.team)
         setComboBox(self.class_box, unit.klass)
         setComboBox(self.ai_select, unit.ai)
+        if unit.ai_group:
+            self.ai_group.setText(str(unit.ai_group))
         # === Items ===
         self.clear_item_box()
         for index, item in enumerate(unit.items):
@@ -586,6 +605,7 @@ class CreateUnitDialog(QtGui.QDialog):
         info['klass'] = str(self.class_box.currentText())
         info['items'] = self.getCheckedItems()
         info['ai'] = self.get_ai()
+        info['ai_group'] = str(self.ai_group.text())
         info['team'] = str(self.team_box.currentText())
         created_unit = DataImport.Unit(info)
         return created_unit

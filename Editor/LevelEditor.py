@@ -22,6 +22,8 @@ import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group
 # TODO: Add Autotile support to map
 # TODO: Add Weather to map
 # TODO: Droppable and Equippable Item support
+# TODO: Class sprites move
+# TODO: Highlight dances
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -127,6 +129,8 @@ class MainView(QtGui.QGraphicsView):
                             self.window.unit_menu.add_unit(new_unit)
                         else:
                             current_unit.position = pos
+                            # Reset the color
+                            self.window.unit_menu.get_current_item().setTextColor(QtGui.QColor("black"))
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
                     current_idx = self.unit_data.get_idx_from_pos(pos)
@@ -312,12 +316,13 @@ class MainEditor(QtGui.QMainWindow):
 
         def write_unit_line(unit):
             pos_str = ','.join(str(p) for p in unit.position)
+            ai_str = unit.ai + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
-                klass_str = unit.klass + unit.gender 
-                order = (unit.team, '0', '0', klass_str, str(unit.level), item_strs, pos_str, unit.ai, unit.group)
+                klass_str = unit.klass + unit.gender
+                order = (unit.team, '0', '0', klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.group)
             else:
-                order = (unit.team, '1' if unit.saved else '0', '0', unit.name, pos_str, unit.ai)
+                order = (unit.team, '1' if unit.saved else '0', '0', unit.name, pos_str, ai_str)
             unit_level.write(';'.join(order) + '\n')
 
         with open(fp, 'w') as unit_level:

@@ -89,6 +89,7 @@ class Unit(object):
 
             self.team = info.get('team', 'player')
             self.ai = info.get('ai', None)
+            self.ai_group = info.get('ai_group', None)
             try:
                 self.image = EditorUtilities.create_chibi(self.name)
             except KeyError:
@@ -111,6 +112,7 @@ class Unit(object):
             # self.wexp = [0 for n in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))]
             self.team = 'player'
             self.ai = 'None'
+            self.ai_group = None
             self.image = None
         self.saved = False
 
