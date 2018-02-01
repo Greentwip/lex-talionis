@@ -143,7 +143,7 @@ class GenderBox(QtGui.QGroupBox):
         self.setLayout(hbox)
 
     def radio_button_clicked(self):
-        self.gender = int(self.gender_buttons.checkedId())
+        self.gender = int(self.gender_buttons.checkedId()) * 5
         if self.window:
             self.window.gender_changed(self.gender)
 

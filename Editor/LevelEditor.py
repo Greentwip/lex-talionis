@@ -201,6 +201,7 @@ class MainEditor(QtGui.QMainWindow):
         self.status_bar = self.statusBar()
         self.status_bar.showMessage('Ready')
 
+        self.directory = None
         self.current_level_num = None
 
         self.create_actions()
@@ -226,22 +227,32 @@ class MainEditor(QtGui.QMainWindow):
             self.view.disp_units()
         self.view.show_image()
 
+    def set_image(self, image_file):
+        image = QtGui.QImage(image_file)
+        if image.width() % 16 != 0 or image.height() % 16 != 0:
+            QtGui.QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
+            return
+        self.view.clear_image()
+        self.view.set_new_image(image_file)
+
     def new(self):
         if self.maybe_save():
             self.new_level()
 
     def new_level(self):
-        image_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Map PNG", QtCore.QDir.currentPath(),
-                                                  "PNG Files (*.png);;All Files (*)")
-        if image_file:
-            image = QtGui.QImage(image_file)
-            if image.width() % 16 != 0 or image.height() % 16 != 0:
-                QtGui.QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
-                return
-            self.view.clear_image()
-            self.view.set_new_image(image_file)
+        if self.maybe_save():
+            image_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Map PNG", QtCore.QDir.currentPath(),
+                                                           "PNG Files (*.png);;All Files (*)")
+            if image_file:
+                self.set_image(image_file)
+                self.properties_menu.new()
 
-            self.properties_menu.new()
+    def import_new_map(self):
+        image_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Map PNG", QtCore.QDir.currentPath(),
+                                                       "PNG Files (*.png);;All Files (*)")
+        if image_file:
+            self.set_image(image_file)
+            self.update_view()
 
     def open(self):
         if self.maybe_save():
@@ -255,23 +266,24 @@ class MainEditor(QtGui.QMainWindow):
                     idx = str(directory).index('Level')
                     num = str(directory)[idx + 5:]
                     self.current_level_num = num
-                self.load_level(directory)
+                self.directory = directory
+                self.load_level()
 
-    def load_level(self, directory):
-        image = directory + '/MapSprite.png'
+    def load_level(self):
+        image = self.directory + '/MapSprite.png'
         self.view.set_new_image(image)
 
-        tilefilename = directory + '/TileData.png'
+        tilefilename = self.directory + '/TileData.png'
         self.tile_data.load(tilefilename)
 
-        overview_filename = directory + '/overview.txt'
+        overview_filename = self.directory + '/overview.txt'
         self.overview_dict = SaveLoad.read_overview_file(overview_filename)
         self.properties_menu.load(self.overview_dict)
 
-        tile_info_filename = directory + '/tileInfo.txt'
+        tile_info_filename = self.directory + '/tileInfo.txt'
         self.tile_info.load(tile_info_filename)
 
-        unit_level_filename = directory + '/UnitLevel.txt'
+        unit_level_filename = self.directory + '/UnitLevel.txt'
         self.unit_data.load(unit_level_filename)
         self.group_menu.load(self.unit_data)
         self.unit_menu.load(self.unit_data)
@@ -391,6 +403,8 @@ class MainEditor(QtGui.QMainWindow):
         self.open_act = QtGui.QAction("&Open...", self, shortcut="Ctrl+O", triggered=self.open)
         self.save_act = QtGui.QAction("&Save...", self, shortcut="Ctrl+S", triggered=self.save)
         self.exit_act = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q", triggered=self.close)
+        self.import_act = QtGui.QAction("&Import Map...", self, shortcut="Ctrl+I", triggered=self.import_new_map)
+        self.reload_act = QtGui.QAction("&Reload", self, shortcut="Ctrl+R", triggered=self.load_level)
         self.about_act = QtGui.QAction("&About", self, triggered=self.about)
 
     def create_menus(self):
@@ -398,6 +412,9 @@ class MainEditor(QtGui.QMainWindow):
         file_menu.addAction(self.new_act)
         file_menu.addAction(self.open_act)
         file_menu.addAction(self.save_act)
+        file_menu.addSeparator()
+        file_menu.addAction(self.import_act)
+        file_menu.addAction(self.reload_act)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_act)
 

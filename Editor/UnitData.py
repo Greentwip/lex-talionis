@@ -16,7 +16,7 @@ from Code.UnitObject import Stat
 import Code.Utility as Utility
 
 import EditorUtilities, DataImport, Group
-from CustomGUI import SignalList, CheckableComboBox, GenderBox
+from CustomGUI import SignalList, GenderBox
 
 class UnitData(object):
     def __init__(self):
@@ -44,7 +44,7 @@ class UnitData(object):
                 current_mode = self.parse_unit_line(unitLine, current_mode)
 
     def get_unit_images(self):
-        return {unit.position: EditorUtilities.create_image(EditorUtilities.find(DataImport.class_data, unit.klass).get_image(unit.team))
+        return {unit.position: EditorUtilities.create_image(EditorUtilities.find(DataImport.class_data, unit.klass).get_image(unit.team, unit.gender))
                 for unit in self.units if unit.position}
 
     def get_unit_from_pos(self, pos):
@@ -302,7 +302,7 @@ class UnitMenu(QtGui.QWidget):
             item = QtGui.QListWidgetItem(unit.name)
         klass = EditorUtilities.find(DataImport.class_data, unit.klass)
         if klass:
-            item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team)))
+            item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
         if not unit.position:
             item.setTextColor(QtGui.QColor("red"))
         return item
@@ -449,7 +449,7 @@ class CreateUnitDialog(QtGui.QDialog):
         self.class_box.uniformItemSizes = True
         self.class_box.setIconSize(QtCore.QSize(48, 32))
         for klass in DataImport.class_data:
-            self.class_box.addItem(EditorUtilities.create_icon(klass.get_image('player')), klass.name)
+            self.class_box.addItem(EditorUtilities.create_icon(klass.get_image('player', 0)), klass.name)
         self.form.addRow('Class:', self.class_box)
 
         # Level
@@ -570,27 +570,30 @@ class CreateUnitDialog(QtGui.QDialog):
                 item_box.addItem(item.name)
         return item_box
 
+    def getItems(self):
+        items = []
+        for index, (item_box, drop_box, event_box) in enumerate(self.item_boxes[:self.num_items]):
+            item = DataImport.item_data[item_box.currentIndex()]
+            item.droppable = drop_box.isChecked()
+            item.event_combat = event_box.isChecked()
+            items.append(item)
+        return items
+
     def team_changed(self, item):
         # Change class box to use sprites of that team
         # And also turn off AI
         team = str(item)
         self.ai_select.setEnabled(team == 'player')
         for idx, klass in enumerate(DataImport.class_data):
-            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team)))
+            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team, self.gender.value())))
 
     def gender_changed(self, gender):
         print("Gender changed to %s" % gender)
+        for idx, klass in enumerate(DataImport.class_data):
+            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(self.team_box.currentText(), gender)))
 
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'
-
-    def getCheckedItems(self):
-        item_list = []
-        for idx, item in enumerate(DataImport.item_data):
-            row = self.item_box.model().item(idx, 0)
-            if row.checkState() == QtCore.Qt.Checked:
-                item_list.append(item)
-        return item_list
 
     def create_unit(self):
         info = {}
@@ -603,7 +606,7 @@ class CreateUnitDialog(QtGui.QDialog):
         info['level'] = int(self.level.value())
         info['gender'] = int(self.gender.value())
         info['klass'] = str(self.class_box.currentText())
-        info['items'] = self.getCheckedItems()
+        info['items'] = self.getItems()
         info['ai'] = self.get_ai()
         info['ai_group'] = str(self.ai_group.text())
         info['team'] = str(self.team_box.currentText())

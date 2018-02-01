@@ -166,18 +166,31 @@ class Klass(object):
             self.max = [40, 15, 15, 15, 15, 20, 15, 15, 20]
             self.desc = ''
 
-        self.units = []
+        # Set up images
+        units = []
         for team in teams:
             try:
                 unit = GenericUnit(self.name, team)
-                self.units.append(unit)
+                units.append(unit)
             except KeyError as e:
                 # print('KeyError: %s' % e)
                 continue
-        self.images = {unit.team: (unit.image1, unit.image2, unit.image3) for unit in self.units}
+        self.male_images = {unit.team: (unit.image1, unit.image2, unit.image3) for unit in units}
+        units = []
+        for team in teams:
+            try:
+                unit = GenericUnit(self.name, team, gender=5)
+                units.append(unit)
+            except KeyError as e:
+                # print('KeyError: %s' % e)
+                continue
+        self.female_images = {unit.team: (unit.image1, unit.image2, unit.image3) for unit in units}
 
-    def get_image(self, team):
-        return self.images[team][0]
+    def get_image(self, team, gender):
+        if gender < 5:
+            return self.male_images[team][0]
+        else:
+            return self.female_images[team][0]
 
 # === For use by class object ===
 class GenericUnit(object):
