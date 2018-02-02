@@ -78,6 +78,8 @@ def create_crash_save():
     from shutil import copyfile
     # Get newest *.pmeta file in Saves/
     save_metas = glob.glob(engine_constants['home'] + 'Saves/*.pmeta')
+    if not save_metas:
+        return
     latest_file = max(save_metas, key=os.path.getmtime)
     pmeta_name = os.path.split(latest_file)[1]
     # If newest *.pmeta file is not called SaveState* or Suspend*
