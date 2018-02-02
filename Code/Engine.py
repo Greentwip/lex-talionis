@@ -88,7 +88,7 @@ def create_crash_save():
         p_file = latest_file[:-6] + '.p'
         copyfile(p_file, engine_constants['home'] + 'Saves/Suspend.p')
         copyfile(latest_file, engine_constants['home'] + 'Saves/Suspend.pmeta')
-        print('Created save point at last turn change! Select Continue in Main Menu to load!')
+        print('\nCreated save point at last turn change! Select Continue in Main Menu to load!\n')
         logger.debug('Created save point from %s', p_file)
 
 # === TIMING STUFF ===========================================================

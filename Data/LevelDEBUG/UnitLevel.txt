@@ -19,13 +19,13 @@ player;0;0;Archer;4;Willow Bow,Iron Sword,Boltblade,Angelic Robe,Barkskin;5,13;P
 player;0;0;Fighter;10;Iron Axe,Hand Axe;4,12;Pursue;Resistance
 player;0;0;Sage;15;Aether,Meteor,Sandblast,Wyrmsfire,Fly;4,15;Pursue;Resistance
 player;0;0;Swordmaster;15;Flareblade,Iron Sword,Vulnerary,Angelic Robe;3,14;Pursue;Resistance
-player;0;0;Cleric;10;Shine,Glimmer,Heal,Refresh,Physic;4,14;Support;Resistance
+player;0;0;OracleF;15;Nyx,Glimmer,Heal,Refresh,Physic;4,14;Support;Resistance
 player;0;0;Shaman;10;Nyx,Flux,Warp,Wyrmsfire,Howl;4,13;Pursue;Resistance
 player;0;0;Dragoon;15;Iron Sword,Iron Lance,Javelin,Speedwings,Speedwings;5,14;Pursue;Resistance
 enemy;0;0;Myrmidon;1;Iron Sword;17,3;Pursue;Resistance
 enemy;0;0;Soldier;1;Iron Lance;16,2;Pursue;Resistance
 enemy;0;0;Archer;1;Willow Bow;16,5;Pursue;Resistance
-enemy;0;0;Skirmisher;5;Slim Lance,dFire,Vulnerary;3,15;Pursue;Resistance
+enemy;0;0;Sage;5;Slim Lance,dFire,Vulnerary;3,15;Pursue;Resistance
 enemy;0;0;Skirmisher;5;Slim Lance,dFire,Vulnerary;3,16;Pursue;Resistance
 enemy;0;0;Tactician;1;Glimmer,Heal;16,4;Support;Resistance
 enemy;0;0;Mage;1;Fire;16,3;Pursue;Resistance
