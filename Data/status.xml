@@ -353,7 +353,7 @@
         <components>conditional_avoid,conditional_hit</components>
 
         <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Sword' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;target.getMainWeapon() and any(TYPE == 'Sword' for TYPE in target.getMainWeapon().TYPE)</conditional_avoid>
+        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Sword' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
     </status>
 
     <status name="Lancebreaker">
@@ -363,7 +363,7 @@
         <components>conditional_avoid,conditional_hit</components>
 
         <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Lance' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;target.getMainWeapon() and any(TYPE == 'Lance' for TYPE in target.getMainWeapon().TYPE)</conditional_avoid>
+        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Lance' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
     </status>
 
     <status name="Axebreaker">
@@ -373,7 +373,7 @@
         <components>conditional_avoid,conditional_hit</components>
 
         <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Axe' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;target.getMainWeapon() and any(TYPE == 'Axe' for TYPE in target.getMainWeapon().TYPE)</conditional_avoid>
+        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Axe' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
     </status>
 
     <!-- Used by Final Boss -->
