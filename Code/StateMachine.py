@@ -1372,6 +1372,8 @@ class SpellWeaponState(State):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
         if gameStateObj.activeMenu:
             gameStateObj.cursor.currentSelectedUnit.drawItemDescription(mapSurf, gameStateObj)
+        if gameStateObj.activeMenu:
+            gameStateObj.activeMenu.drawInfo(mapSurf)
         return mapSurf
 
     def end(self, gameStateObj, metaDataObj):
