@@ -115,6 +115,7 @@ class Unit(object):
             self.ai_group = None
             self.image = None
         self.saved = False
+        self.klass_image = False
 
     def copy(self):
         new_unit = Unit()
@@ -188,9 +189,9 @@ class Klass(object):
 
     def get_image(self, team, gender):
         if gender < 5:
-            return self.male_images[team][0]
+            return self.male_images[team][GC.PASSIVESPRITECOUNTER.count]
         else:
-            return self.female_images[team][0]
+            return self.female_images[team][GC.PASSIVESPRITECOUNTER.count]
 
 # === For use by class object ===
 class GenericUnit(object):

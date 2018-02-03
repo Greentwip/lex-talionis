@@ -44,7 +44,8 @@ class UnitData(object):
                 current_mode = self.parse_unit_line(unitLine, current_mode)
 
     def get_unit_images(self):
-        return {unit.position: EditorUtilities.create_image(EditorUtilities.find(DataImport.class_data, unit.klass).get_image(unit.team, unit.gender))
+        return {unit.position: EditorUtilities.create_image(unit.klass_image) if unit.klass_image else 
+                EditorUtilities.create_image(EditorUtilities.find(DataImport.class_data, unit.klass).get_image(unit.team, unit.gender))
                 for unit in self.units if unit.position}
 
     def get_unit_from_pos(self, pos):
@@ -345,6 +346,14 @@ class UnitMenu(QtGui.QWidget):
     def add_unit(self, unit):
         self.list.addItem(self.create_item(unit))
         self.list.setCurrentRow(self.list.count() - 1)
+
+    def tick(self, current_time):
+        if GC.PASSIVESPRITECOUNTER.update(current_time):
+            for idx, unit in enumerate(self.unit_data.units):
+                klass = EditorUtilities.find(DataImport.class_data, unit.klass)
+                klass_image = klass.get_image(unit.team, unit.gender)
+                self.list.item(idx).setIcon(EditorUtilities.create_icon(klass_image))
+                unit.klass_image = klass_image
 
 def setComboBox(combo_box, value):
     i = combo_box.findText(value)

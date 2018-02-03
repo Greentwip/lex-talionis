@@ -211,6 +211,19 @@ class MainEditor(QtGui.QMainWindow):
         # Whether anything has changed since the last save
         self.modified = False
 
+        # === Timing ===
+        self.main_timer = QtCore.QTimer()
+        self.main_timer.timeout.connect(self.tick)
+        self.main_timer.start(33)  # 30 FPS
+        self.elapsed_timer = QtCore.QElapsedTimer()
+        self.elapsed_timer.start()
+
+    def tick(self):
+        current_time = self.elapsed_timer.elapsed()
+        if self.dock_visibility['Units']:
+            self.unit_menu.tick(current_time)
+            self.update_view()
+
     def closeEvent(self, event):
         if self.maybe_save():
             event.accept()
