@@ -14,15 +14,15 @@ import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group
 
 # TODO: Reinforcements
 # TODO: Created Units
-# TODO: Load new Map button
+# TODO: Load new Map button -- impl
 # TODO: Refresh button (also on losing and gaining focus)
-# TODO: Highlight current unit
-# TODO: Add color to text when unit isn't positioned
+# TODO: Highlight current unit -- impl
+# TODO: Add color to text when unit isn't positioned -- impl
 # TODO: Add Del key to Units
 # TODO: Add Autotile support to map
 # TODO: Add Weather to map
-# TODO: Droppable and Equippable Item support
-# TODO: Class sprites move
+# TODO: Droppable and Equippable Item support -- impl
+# TODO: Class sprites move -- in comboboxes to
 # TODO: Highlight dances
 
 class MainView(QtGui.QGraphicsView):
@@ -283,28 +283,29 @@ class MainEditor(QtGui.QMainWindow):
                 self.load_level()
 
     def load_level(self):
-        image = self.directory + '/MapSprite.png'
-        self.view.set_new_image(image)
+        if self.directory:
+            image = self.directory + '/MapSprite.png'
+            self.view.set_new_image(image)
 
-        tilefilename = self.directory + '/TileData.png'
-        self.tile_data.load(tilefilename)
+            tilefilename = self.directory + '/TileData.png'
+            self.tile_data.load(tilefilename)
 
-        overview_filename = self.directory + '/overview.txt'
-        self.overview_dict = SaveLoad.read_overview_file(overview_filename)
-        self.properties_menu.load(self.overview_dict)
+            overview_filename = self.directory + '/overview.txt'
+            self.overview_dict = SaveLoad.read_overview_file(overview_filename)
+            self.properties_menu.load(self.overview_dict)
 
-        tile_info_filename = self.directory + '/tileInfo.txt'
-        self.tile_info.load(tile_info_filename)
+            tile_info_filename = self.directory + '/tileInfo.txt'
+            self.tile_info.load(tile_info_filename)
 
-        unit_level_filename = self.directory + '/UnitLevel.txt'
-        self.unit_data.load(unit_level_filename)
-        self.group_menu.load(self.unit_data)
-        self.unit_menu.load(self.unit_data)
+            unit_level_filename = self.directory + '/UnitLevel.txt'
+            self.unit_data.load(unit_level_filename)
+            self.group_menu.load(self.unit_data)
+            self.unit_menu.load(self.unit_data)
 
-        if self.current_level_num:
-            self.status_bar.showMessage('Loaded Level' + self.current_level_num)
+            if self.current_level_num:
+                self.status_bar.showMessage('Loaded Level' + self.current_level_num)
 
-        self.update_view()
+            self.update_view()
 
     def write_overview(self, fp):
         with open(fp, 'w') as overview:
@@ -498,6 +499,7 @@ class MainEditor(QtGui.QMainWindow):
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.WindowActivate:
             print "widget window has gained focus"
+            self.load_level()
         elif event.type() == QtCore.QEvent.WindowDeactivate:
             print "widget window has lost focus"
         elif event.type() == QtCore.QEvent.FocusIn:

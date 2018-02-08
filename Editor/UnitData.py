@@ -592,14 +592,18 @@ class CreateUnitDialog(QtGui.QDialog):
         # Change class box to use sprites of that team
         # And also turn off AI
         team = str(item)
+        print("Team changed to %s" % team)
         self.ai_select.setEnabled(team == 'player')
         for idx, klass in enumerate(DataImport.class_data):
-            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team, self.gender.value())))
+            gender = str(self.gender.value())
+            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team, gender)))
 
-    def gender_changed(self, gender):
+    def gender_changed(self, item):
+        gender = str(item)
         print("Gender changed to %s" % gender)
         for idx, klass in enumerate(DataImport.class_data):
-            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(self.team_box.currentText(), gender)))
+            team = str(self.team_box.currentText())
+            self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team, gender)))
 
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'

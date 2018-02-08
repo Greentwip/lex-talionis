@@ -172,19 +172,19 @@ class Klass(object):
         for team in teams:
             try:
                 unit = GenericUnit(self.name, team)
-                units.append(unit)
             except KeyError as e:
                 # print('KeyError: %s' % e)
-                continue
+                unit = GenericUnit('Citizen', team)
+            units.append(unit)
         self.male_images = {unit.team: (unit.image1, unit.image2, unit.image3) for unit in units}
         units = []
         for team in teams:
             try:
                 unit = GenericUnit(self.name, team, gender=5)
-                units.append(unit)
             except KeyError as e:
                 # print('KeyError: %s' % e)
-                continue
+                unit = GenericUnit('Citizen', team, gender=5)
+            units.append(unit)
         self.female_images = {unit.team: (unit.image1, unit.image2, unit.image3) for unit in units}
 
     def get_image(self, team, gender):
