@@ -15,7 +15,9 @@ import Code.CustomObjects as CustomObjects
 from Code.UnitObject import Stat
 import Code.Utility as Utility
 
-import EditorUtilities, DataImport, Group
+import DataImport
+from DataImport import Data
+import EditorUtilities, Group
 from CustomGUI import SignalList, GenderBox
 
 class UnitData(object):
@@ -45,7 +47,7 @@ class UnitData(object):
 
     def get_unit_images(self):
         return {unit.position: EditorUtilities.create_image(unit.klass_image) if unit.klass_image else 
-                EditorUtilities.create_image(EditorUtilities.find(DataImport.class_data, unit.klass).get_image(unit.team, unit.gender))
+                EditorUtilities.create_image(Data.class_data[unit.klass].get_image(unit.team, unit.gender))
                 for unit in self.units if unit.position}
 
     def get_unit_from_pos(self, pos):
@@ -93,7 +95,7 @@ class UnitData(object):
         self.add_unit_from_legend(legend)
 
     def add_unit_from_legend(self, legend):
-        cur_unit = EditorUtilities.find(DataImport.unit_data, legend['unit_id'])
+        cur_unit = Data.unit_data[legend['unit_id']]
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         if legend['event_id'] != "0": # unit does not start on board
             cur_unit.position = None
@@ -152,15 +154,15 @@ class UnitData(object):
         u_i['desc'] = group.desc
 
         stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = \
-            self.get_unit_info(DataImport.class_dict, u_i['klass'], u_i['level'], legend['items'])
+            self.get_unit_info(Data.class_dict, u_i['klass'], u_i['level'], legend['items'])
         u_i['stats'] = self.build_stat_dict(stats)
         
-        u_i['tags'] = DataImport.class_dict[u_i['klass']]['tags']
+        u_i['tags'] = Data.class_dict[u_i['klass']]['tags']
         if '_' in legend['ai']:
             u_i['ai'], u_i['ai_group'] = legend['ai'].split('_')
         else:
             u_i['ai'], u_i['ai_group'] = legend['ai'], None
-        u_i['movement_group'] = DataImport.class_dict[u_i['klass']]['movement_group']
+        u_i['movement_group'] = Data.class_dict[u_i['klass']]['movement_group']
         u_i['skills'] = []
         u_i['generic'] = True
 
@@ -301,7 +303,7 @@ class UnitMenu(QtGui.QWidget):
             item = QtGui.QListWidgetItem(str(unit.klass) + ': L' + str(unit.level))
         else:
             item = QtGui.QListWidgetItem(unit.name)
-        klass = EditorUtilities.find(DataImport.class_data, unit.klass)
+        klass = Data.class_data.get(unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
         if not unit.position:
@@ -350,7 +352,7 @@ class UnitMenu(QtGui.QWidget):
     def tick(self, current_time):
         if GC.PASSIVESPRITECOUNTER.update(current_time):
             for idx, unit in enumerate(self.unit_data.units):
-                klass = EditorUtilities.find(DataImport.class_data, unit.klass)
+                klass = Data.class_data[unit.klass]
                 klass_image = klass.get_image(unit.team, unit.gender)
                 self.list.item(idx).setIcon(EditorUtilities.create_icon(klass_image))
                 unit.klass_image = klass_image
@@ -370,7 +372,7 @@ class LoadUnitDialog(QtGui.QDialog):
         self.unit_box = QtGui.QComboBox()
         self.unit_box.uniformItemSizes = True
         self.unit_box.setIconSize(QtCore.QSize(32, 32))
-        self.unit_data = DataImport.unit_data
+        self.unit_data = Data.unit_data.values()
         for idx, unit in enumerate(self.unit_data):
             if unit.image:
                 self.unit_box.addItem(EditorUtilities.create_icon(unit.image), unit.name)
@@ -430,7 +432,7 @@ class LoadUnitDialog(QtGui.QDialog):
         dialog.setWindowTitle(title)
         result = dialog.exec_()
         if result == QtGui.QDialog.Accepted:
-            unit = DataImport.unit_data[dialog.unit_box.currentIndex()]
+            unit = Data.unit_data.values()[dialog.unit_box.currentIndex()]
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = dialog.ai_group.text()
@@ -457,7 +459,7 @@ class CreateUnitDialog(QtGui.QDialog):
         self.class_box = QtGui.QComboBox()
         self.class_box.uniformItemSizes = True
         self.class_box.setIconSize(QtCore.QSize(48, 32))
-        for klass in DataImport.class_data:
+        for klass in Data.class_data.values():
             self.class_box.addItem(EditorUtilities.create_icon(klass.get_image('player', 0)), klass.name)
         self.form.addRow('Class:', self.class_box)
 
@@ -519,7 +521,7 @@ class CreateUnitDialog(QtGui.QDialog):
             item_box, drop_box, event_box = self.item_boxes[index]
             drop_box.setChecked(item.droppable)
             event_box.setChecked(item.event_combat)
-            item_box.setCurrentIndex([i.id for i in DataImport.item_data].index(item.id))
+            item_box.setCurrentIndex(Data.item_data.keys().index(item.id))
 
     def set_up_items(self):
         item_grid = QtGui.QGridLayout()
@@ -572,7 +574,7 @@ class CreateUnitDialog(QtGui.QDialog):
         item_box = QtGui.QComboBox()
         item_box.uniformItemSizes = True
         item_box.setIconSize(QtCore.QSize(16, 16))
-        for idx, item in enumerate(DataImport.item_data):
+        for item in Data.item_data.values():
             if item.image:
                 item_box.addItem(EditorUtilities.create_icon(item.image), item.name)
             else:
@@ -582,7 +584,7 @@ class CreateUnitDialog(QtGui.QDialog):
     def getItems(self):
         items = []
         for index, (item_box, drop_box, event_box) in enumerate(self.item_boxes[:self.num_items]):
-            item = DataImport.item_data[item_box.currentIndex()]
+            item = Data.item_data.values()[item_box.currentIndex()]
             item.droppable = drop_box.isChecked()
             item.event_combat = event_box.isChecked()
             items.append(item)
@@ -594,14 +596,14 @@ class CreateUnitDialog(QtGui.QDialog):
         team = str(item)
         print("Team changed to %s" % team)
         self.ai_select.setEnabled(team == 'player')
-        for idx, klass in enumerate(DataImport.class_data):
-            gender = str(self.gender.value())
+        for idx, klass in enumerate(Data.class_data.values()):
+            gender = int(self.gender.value())
             self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team, gender)))
 
     def gender_changed(self, item):
-        gender = str(item)
+        gender = int(item)
         print("Gender changed to %s" % gender)
-        for idx, klass in enumerate(DataImport.class_data):
+        for idx, klass in enumerate(Data.class_data.values()):
             team = str(self.team_box.currentText())
             self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team, gender)))
 
@@ -623,6 +625,7 @@ class CreateUnitDialog(QtGui.QDialog):
         info['ai'] = self.get_ai()
         info['ai_group'] = str(self.ai_group.text())
         info['team'] = str(self.team_box.currentText())
+        info['generic'] = True
         created_unit = DataImport.Unit(info)
         return created_unit
 

@@ -42,13 +42,6 @@ def create_cursor():
     activesprite = Engine.subsurface(sprite, (0, 64, 32, 32)).convert_alpha()
     return create_image(activesprite)
 
-# === DATA ===
-def find(data, name):
-    return next((x for x in data if x.name == name), None)
-
-def find_id(data, uid):
-    return next((x for x in data if x.id == uid), None)
-
 # === MAKE PRETTY ===
 def stretch(grid):
     box_h = QtGui.QHBoxLayout()

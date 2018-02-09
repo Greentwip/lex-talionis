@@ -11,7 +11,7 @@ import Code.CustomObjects as CustomObjects
 
 import EditorUtilities
 from CustomGUI import SignalList, CheckableComboBox
-import DataImport
+from DataImport import Data
 
 class InfoKind(object):
     def __init__(self, num, name, kind):
@@ -181,7 +181,7 @@ class TileInfoMenu(QtGui.QWidget):
         if kind == 'Status':
             current_statuses = tile_info_at_pos.get('Status') if tile_info_at_pos else None
             current_statuses = current_statuses.split(',') if current_statuses else None
-            statuses, ok = ComboDialog.getItems(self, "Tile Status Effects", "Select Status:", DataImport.skill_data, current_statuses)
+            statuses, ok = ComboDialog.getItems(self, "Tile Status Effects", "Select Status:", Data.skill_data, current_statuses)
             if ok:
                 return ','.join(statuses)
             else:
@@ -189,7 +189,7 @@ class TileInfoMenu(QtGui.QWidget):
         elif kind == 'Item':
             current_shop = tile_info_at_pos.get('Shop') if tile_info_at_pos else None
             current_shop = current_shop.split(',') if current_shop else None
-            items, ok = ComboDialog.getItems(self, "Shop Items", "Select Items:", DataImport.item_data, current_shop)
+            items, ok = ComboDialog.getItems(self, "Shop Items", "Select Items:", Data.item_data, current_shop)
             if ok:
                 return ','.join(items)
             else:

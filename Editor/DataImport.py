@@ -1,4 +1,5 @@
 import sys
+from collections import OrderedDict
 sys.path.append('../')
 import Code.configuration as cf
 import Code.Engine as Engine
@@ -20,7 +21,7 @@ teams = ('player', 'enemy', 'other', 'enemy2')
 
 # === DATA IMPORTING ===
 def build_units(class_dict):
-    units = []
+    units = OrderedDict()
     for unit in GC.UNITDATA.getroot().findall('unit'):
         u_i = {}
         u_i['id'] = unit.find('id').text
@@ -63,12 +64,12 @@ def build_units(class_dict):
         personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []
         u_i['skills'] = [StatusObject.statusparser(status) for status in personal_skills]
 
-        units.append(Unit(u_i))
+        units[u_i['id']] = Unit(u_i)
     return units
 
 # === MODEL CLASS ===
 class Unit(object):
-    def __init__(self, info):
+    def __init__(self, info=None):
         if info:
             self.id = info.get('id', 100)
             self.group = info.get('group')
@@ -213,30 +214,57 @@ class GenericUnit(object):
     def get_images(self):
         self.images = (self.image1, self.image2, self.image3)
 
-def load_data():
-    item_data = [ItemMethods.itemparser(item)[0] for item in GC.ITEMDATA]
-    item_data = sorted(item_data, key=lambda item: GC.ITEMDATA[item.id]['num'])
-    item_data = [item for item in item_data if not item.virtual]
-    for item in item_data:
-        if item.image:
-            item.image = item.image.convert_alpha()
-    skill_data = [StatusObject.statusparser(skill.find('id').text) for skill in GC.STATUSDATA.getroot().findall('status')]
-    for skill in skill_data:
-        if skill.image:
-            skill.image = skill.image.convert_alpha()
-    portrait_dict = SaveLoad.create_portrait_dict()
-    
-    class_dict = SaveLoad.create_class_dict()
-    class_data = [Klass(v) for v in class_dict.values()]
-    unit_data = build_units(class_dict)
-    # Setting up portrait data
-    portrait_data = []
-    for name, portrait in portrait_dict.items():
-        portrait_data.append(UnitPortrait(name, portrait['blink'], portrait['mouth'], (0, 0)))
-    for portrait in portrait_data:
-        portrait.create_image()
-        portrait.image = portrait.image.convert_alpha()
+class GlobalData(object):
+    def __init__(self):
+        self.load_data()
 
-    return unit_data, class_dict, class_data, item_data, skill_data, portrait_data
+    def load_data(self):
+        # === Terrain Data ===
+        # Saved dictionary of terrains 2-tuple {color: (id, name)}
+        self.terrain_data = OrderedDict()
+        # Ingest terrain_data
+        for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
+            color = tuple(int(num) for num in terrain.find('color').text.split(','))
+            tid = terrain.find('id').text
+            name = terrain.get('name')
+            self.terrain_data[color] = (tid, name)
 
-unit_data, class_dict, class_data, item_data, skill_data, portrait_data = load_data()
+        # === Item Data ===
+        self.item_data = OrderedDict()
+        items = [ItemMethods.itemparser(item)[0] for item in GC.ITEMDATA]
+        items = sorted(items, key=lambda item: GC.ITEMDATA[item.id]['num'])
+        items = [item for item in items if not item.virtual]
+        for item in items:
+            if item.image:
+                item.image = item.image.convert_alpha()
+            self.item_data[item.id] = item
+
+        # === Skill Data ===
+        self.skill_data = OrderedDict()
+        skills = [StatusObject.statusparser(skill.find('id').text) for skill in GC.STATUSDATA.getroot().findall('status')]
+        for skill in skills:
+            if skill.image:
+                skill.image = skill.image.convert_alpha()
+            self.skill_data[skill.id] = skill
+
+        # === Protrait Data ===
+        # Has mouth and blink positions by name
+        portrait_dict = SaveLoad.create_portrait_dict()
+        # Setting up portrait data
+        self.portrait_data = OrderedDict()
+        for name, portrait in portrait_dict.items():
+            self.portrait_data[name] = UnitPortrait(name, portrait['blink'], portrait['mouth'], (0, 0))
+        for portrait in self.portrait_data.values():
+            portrait.create_image()
+            portrait.image = portrait.image.convert_alpha()
+        
+        # === Class Data ===
+        self.class_dict = SaveLoad.create_class_dict()
+        self.class_data = OrderedDict()
+        for klass_id, klass in self.class_dict.items():
+            self.class_data[klass_id] = Klass(klass)
+
+        # === Loaded Preset Unit Data ===
+        self.unit_data = build_units(self.class_dict)
+
+Data = GlobalData()

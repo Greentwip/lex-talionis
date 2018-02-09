@@ -11,6 +11,7 @@ import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
 import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group
+from DataImport import Data
 
 # TODO: Reinforcements
 # TODO: Created Units
@@ -33,8 +34,8 @@ class MainView(QtGui.QGraphicsView):
         self.setScene(self.scene)
 
         self.setMinimumSize(15*16, 10*16)
-        self.setMouseTracking(True)
-        self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
+        # self.setMouseTracking(True)
+        # self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
 
         self.image = None
         self.working_image = None
@@ -307,6 +308,10 @@ class MainEditor(QtGui.QMainWindow):
 
             self.update_view()
 
+    def load_data(self):
+        Data.load_data()
+        self.update_view()
+
     def write_overview(self, fp):
         with open(fp, 'w') as overview:
             for k, v in self.overview_dict.iteritems():
@@ -418,7 +423,7 @@ class MainEditor(QtGui.QMainWindow):
         self.save_act = QtGui.QAction("&Save...", self, shortcut="Ctrl+S", triggered=self.save)
         self.exit_act = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q", triggered=self.close)
         self.import_act = QtGui.QAction("&Import Map...", self, shortcut="Ctrl+I", triggered=self.import_new_map)
-        self.reload_act = QtGui.QAction("&Reload", self, shortcut="Ctrl+R", triggered=self.load_level)
+        self.reload_act = QtGui.QAction("&Reload", self, shortcut="Ctrl+R", triggered=self.load_data)
         self.about_act = QtGui.QAction("&About", self, triggered=self.about)
 
     def create_menus(self):
@@ -452,7 +457,7 @@ class MainEditor(QtGui.QMainWindow):
 
         self.docks['Terrain'] = Dock("Terrain", self)
         self.docks['Terrain'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        self.terrain_menu = Terrain.TerrainMenu(GC.TERRAINDATA, self.view, self)
+        self.terrain_menu = Terrain.TerrainMenu(self.view, self)
         self.docks['Terrain'].setWidget(self.terrain_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Terrain'])
         self.view_menu.addAction(self.docks['Terrain'].toggleViewAction())
@@ -499,7 +504,7 @@ class MainEditor(QtGui.QMainWindow):
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.WindowActivate:
             print "widget window has gained focus"
-            self.load_level()
+            # self.load_data()
         elif event.type() == QtCore.QEvent.WindowDeactivate:
             print "widget window has lost focus"
         elif event.type() == QtCore.QEvent.FocusIn:

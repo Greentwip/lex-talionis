@@ -2,6 +2,7 @@
 from collections import OrderedDict
 from PyQt4 import QtGui, QtCore
 
+from DataImport import Data
 from CustomGUI import SignalList
 
 class TileData(object):
@@ -53,15 +54,9 @@ class TerrainMenu(QtGui.QWidget):
         self.list.uniformItemSizes = True
         self.list.setIconSize(QtCore.QSize(32, 32))
 
-        # Saved dictionary of terrains 2-tuple {color: (id, name)}
-        self.terrain = OrderedDict()
         # Ingest terrain_data
-        for terrain in terrain_data.getroot().findall('terrain'):
-            color = tuple(int(num) for num in terrain.find('color').text.split(','))
-            tid = terrain.find('id').text
-            name = terrain.get('name')
-            self.terrain[color] = (tid, name)
-
+        for color, terrain in Data.terrain_data.iteritems():
+            tid, name = terrain
             pixmap = QtGui.QPixmap(32, 32)
             pixmap.fill(QtGui.QColor(color[0], color[1], color[2]))
 
