@@ -279,7 +279,10 @@ class UnitMenu(QtGui.QWidget):
         return self.list.item(self.list.currentRow())
 
     def get_current_unit(self):
-        return self.unit_data.units[self.list.currentRow()]
+        if self.unit_data.units:
+            return self.unit_data.units[self.list.currentRow()]
+        else:
+            return None
 
     def set_current_idx(self, idx):
         self.list.setCurrentRow(idx)

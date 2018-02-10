@@ -114,7 +114,7 @@ class ComboDialog(QtGui.QDialog):
         self.item_box = CheckableComboBox()
         self.item_box.uniformItemSizes = True
         self.item_box.setIconSize(QtCore.QSize(16, 16))
-        for idx, item in enumerate(self.items):
+        for idx, item in enumerate(self.items.values()):
             if item.image:
                 self.item_box.addItem(EditorUtilities.create_icon(item.image), item.name)
             else:

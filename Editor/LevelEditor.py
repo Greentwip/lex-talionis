@@ -117,24 +117,28 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     self.tile_info.delete(pos)
                     self.window.update_view()
-            elif self.window.dock_visibility['Units'] and self.tool == 'Units':
+            elif self.window.dock_visibility['Units'] and self.tool not in ('Terrain', 'Tile Info'):
                 if event.button() == QtCore.Qt.LeftButton:
                     current_unit = self.window.unit_menu.get_current_unit()
                     if current_unit:
                         under_unit = self.unit_data.get_unit_from_pos(pos)
                         if under_unit:
+                            print('Removing Unit')
                             under_unit.position = None
                         if current_unit.position:
+                            print('Copy')
                             new_unit = current_unit.copy()
                             self.unit_data.add_unit(new_unit)
                             self.window.unit_menu.add_unit(new_unit)
                         else:
+                            print('Place Unit')
                             current_unit.position = pos
                             # Reset the color
                             self.window.unit_menu.get_current_item().setTextColor(QtGui.QColor("black"))
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
                     current_idx = self.unit_data.get_idx_from_pos(pos)
+                    print(current_idx)
                     if current_idx >= 0:
                         self.window.unit_menu.set_current_idx(current_idx)
 
@@ -332,8 +336,8 @@ class MainEditor(QtGui.QMainWindow):
     def write_tile_info(self, fp):
         with open(fp, 'w') as tile_info:
             for coord, properties in self.tile_info.tile_info_dict.iteritems():
-                tile_info.write(coord[0] + ',' + coord[1] + ':')
-                value = self.tile_info.get_info_str(coord)
+                tile_info.write(str(coord[0]) + ',' + str(coord[1]) + ':')
+                value = self.tile_info.get_str(coord)
                 if value:
                     tile_info.write(value + '\n')
 
@@ -359,8 +363,8 @@ class MainEditor(QtGui.QMainWindow):
         with open(fp, 'w') as unit_level:
             unit_level.write(EditorUtilities.unit_level_header)
             groups = self.unit_data.groups
-            if self.unit_data.load_all_player_characters:
-                unit_level.write('load_all_player_characters\n')
+            if self.unit_data.load_player_characters:
+                unit_level.write('load_player_characters\n')
             for group in groups:
                 unit_level.write('group;' + group.group_id + ';' + group.unit_name + 
                                  ';' + group.faction + ';' + group.desc + '\n')
@@ -413,7 +417,7 @@ class MainEditor(QtGui.QMainWindow):
         self.write_tile_info(tile_info_filename)
 
         unit_level_filename = level_directory + '/UnitLevel.txt'
-        self.write_unit_data(unit_level_filename)
+        self.write_unit_level(unit_level_filename)
 
         print('Saved Level' + num)
 

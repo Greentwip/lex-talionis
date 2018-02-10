@@ -132,7 +132,7 @@ class Unit(object):
         new_unit.faction = self.faction
         new_unit.desc = self.desc
         new_unit.team = self.team
-        new_unit.items = [ItemMethods.itemparser(item.id) for item in self.items]
+        new_unit.items = [ItemMethods.itemparser(item.id)[0] for item in self.items]
         new_unit.ai = self.ai
         new_unit.image = self.image
         return new_unit
