@@ -23,8 +23,8 @@ from DataImport import Data
 # TODO: Add Autotile support to map
 # TODO: Add Weather to map
 # TODO: Droppable and Equippable Item support -- impl
-# TODO: Class sprites move -- in comboboxes to
-# TODO: Highlight dances
+# TODO: Class sprites move -- impl
+# TODO: Highlight dances -- maybe not
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -348,13 +348,14 @@ class MainEditor(QtGui.QMainWindow):
                 item_str = 'd' + item_str
             elif item.event:
                 item_str = 'e' + item_str
+            return item_str
 
         def write_unit_line(unit):
             pos_str = ','.join(str(p) for p in unit.position)
             ai_str = unit.ai + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
-                klass_str = unit.klass + unit.gender
+                klass_str = unit.klass + ('F' if unit.gender >= 5 else '')
                 order = (unit.team, '0', '0', klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.group)
             else:
                 order = (unit.team, '1' if unit.saved else '0', '0', unit.name, pos_str, ai_str)
@@ -365,34 +366,36 @@ class MainEditor(QtGui.QMainWindow):
             groups = self.unit_data.groups
             if self.unit_data.load_player_characters:
                 unit_level.write('load_player_characters\n')
-            for group in groups:
+            for group in groups.values():
                 unit_level.write('group;' + group.group_id + ';' + group.unit_name + 
                                  ';' + group.faction + ';' + group.desc + '\n')
             # Units
-            units = [unit for unit in self.unit_data if unit.position]
+            units = [unit for unit in self.unit_data.units if unit.position]
             # Player units
             player_units = [unit for unit in units if unit.team == 'player' and unit.position]
             unit_level.write('# Player Characters\n')
             for unit in player_units:
                 write_unit_line(unit)
             # Other units
-            other_units = [unit for unit in self.unit if unit.team == 'other']
+            other_units = [unit for unit in units if unit.team == 'other']
             if other_units:
                 unit_level.write('# Other Characters\n')
                 for unit in other_units:
                     write_unit_line(unit)
-            # Named enemy characters
-            unit_level.write('# Enemies')
-            named_enemies = [unit for unit in units if unit.team == 'enemy' and not unit.generic]
-            if named_enemies:
-                unit_level.write('# Bosses\n')
-                for unit in named_enemies:
+            # Enemies
+            unit_level.write('# Enemies\n')
+            for team in ('enemy', 'enemy2'):
+                # Named enemy characters
+                named_enemies = [unit for unit in units if unit.team == team and not unit.generic]
+                if named_enemies:
+                    unit_level.write('# Bosses\n')
+                    for unit in named_enemies:
+                        write_unit_line(unit)
+                # Generic enemy characters
+                generic_enemies = [unit for unit in units if unit.team == team and unit.generic]
+                unit_level.write('# Generics\n')
+                for unit in generic_enemies:
                     write_unit_line(unit)
-            # Generic enemy characters
-            generic_enemies = [unit for unit in units if unit.team == 'enemy' and not unit.generic]
-            unit_level.write('# Generics\n')
-            for unit in generic_enemies:
-                write_unit_line(unit)
 
     def save(self):
         # Find what the next unused num is 
