@@ -190,9 +190,11 @@ class Klass(object):
 
     def get_image(self, team, gender):
         if gender < 5:
-            return self.male_images[team][GC.PASSIVESPRITECOUNTER.count]
+            team_images = self.male_images[team]
+            return team_images[GC.PASSIVESPRITECOUNTER.count]
         else:
-            return self.female_images[team][GC.PASSIVESPRITECOUNTER.count]
+            team_images = self.female_images[team]
+            return team_images[GC.PASSIVESPRITECOUNTER.count]
 
 # === For use by class object ===
 class GenericUnit(object):

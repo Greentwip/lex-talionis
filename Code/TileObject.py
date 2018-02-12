@@ -184,7 +184,7 @@ class MapObject(object):
             tile.removeSprites()
         self.map_image = None
         self.loose_tile_sprites = {}
-        self.autotiles = {}
+        self.autotiles = []
         self.layers = [Layer() for _ in range(NUM_LAYERS)]
         # Clear tile_sprites...
         for position, value in self.tile_sprites.iteritems():

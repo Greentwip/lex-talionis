@@ -251,7 +251,7 @@ class UnitMenu(QtGui.QWidget):
         self.window = window
         self.view = view
 
-        self.list = SignalList(self)
+        self.list = SignalList(self, del_func=self.remove_unit)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
         self.list.setIconSize(QtCore.QSize(32, 32))
@@ -259,6 +259,8 @@ class UnitMenu(QtGui.QWidget):
         self.load(unit_data)
         self.list.currentItemChanged.connect(self.center_on_unit)
         self.list.itemDoubleClicked.connect(self.modify_unit)
+        # delete_key = QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.list)
+        # self.connect(delete_key, QtCore.SIGNAL('activated()'), self.remove_unit)
 
         self.load_unit_button = QtGui.QPushButton('Load Unit')
         self.load_unit_button.clicked.connect(self.load_unit)
@@ -283,6 +285,9 @@ class UnitMenu(QtGui.QWidget):
             return self.unit_data.units[self.list.currentRow()]
         else:
             return None
+
+    def get_item_from_unit(self, unit):
+        return self.list.item(self.unit_data.units.index(unit))
 
     def set_current_idx(self, idx):
         self.list.setCurrentRow(idx)

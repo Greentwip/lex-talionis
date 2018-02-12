@@ -16,12 +16,12 @@ from DataImport import Data
 # TODO: Reinforcements
 # TODO: Created Units
 # TODO: Load new Map button -- impl
-# TODO: Refresh button (also on losing and gaining focus)
+# TODO: Refresh button (also on losing and gaining focus) -- needs to be uncommented
 # TODO: Highlight current unit -- impl
 # TODO: Add color to text when unit isn't positioned -- impl
-# TODO: Add Del key to Units
-# TODO: Add Autotile support to map
-# TODO: Add Weather to map
+# TODO: Add Del key to Units -- impl
+# TODO: Add Autotile support to map -- needs testing
+# TODO: Add Weather to map -- impl
 # TODO: Droppable and Equippable Item support -- impl
 # TODO: Class sprites move -- impl
 # TODO: Highlight dances -- maybe not
@@ -60,7 +60,15 @@ class MainView(QtGui.QGraphicsView):
 
     def disp_main_map(self):
         if self.image:
-            self.working_image = self.image.copy()
+            image = self.window.autotiles.draw()
+            if image:
+                painter = QtGui.QPainter(image)
+                painter.begin(image)
+                painter.drawImage(0, 0, self.image.copy())
+                painter.end()
+                self.working_image = image
+            else:
+                self.working_image = self.image.copy()
 
     def disp_weather(self):
         if self.working_image:
@@ -135,9 +143,11 @@ class MainView(QtGui.QGraphicsView):
                         if under_unit:
                             print('Removing Unit')
                             under_unit.position = None
+                            self.window.unit_menu.get_item_from_unit(under_unit).setTextColor(QtGui.QColor("red"))
                         if current_unit.position:
-                            print('Copy')
+                            print('Copy & Place Unit')
                             new_unit = current_unit.copy()
+                            new_unit.position = pos
                             self.unit_data.add_unit(new_unit)
                             self.window.unit_menu.add_unit(new_unit)
                         else:
@@ -210,6 +220,7 @@ class MainEditor(QtGui.QMainWindow):
         self.overview_dict = OrderedDict()
         self.unit_data = UnitData.UnitData()
         self.weather = []
+        self.autotiles = Terrain.Autotiles()
 
         self.view = MainView(self.tile_data, self.tile_info, self.unit_data, self)
         self.setCentralWidget(self.view)
@@ -240,6 +251,8 @@ class MainEditor(QtGui.QMainWindow):
             self.unit_menu.tick(current_time)
         for weather in self.weather:
             weather.update(current_time, self.tile_data)
+        if self.autotiles:
+            self.autotiles.update(current_time)
         self.update_view()
 
     def closeEvent(self, event):
@@ -310,6 +323,9 @@ class MainEditor(QtGui.QMainWindow):
 
             tilefilename = self.directory + '/TileData.png'
             self.tile_data.load(tilefilename)
+
+            auto_loc = self.directory + '/Autotiles/'
+            self.autotiles.load(auto_loc)
 
             overview_filename = self.directory + '/overview.txt'
             self.overview_dict = SaveLoad.read_overview_file(overview_filename)

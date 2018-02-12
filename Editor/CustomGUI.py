@@ -101,14 +101,19 @@ class StringBox(QtGui.QWidget):
         self.txt.setText(text)
 
 class SignalList(QtGui.QListWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, del_func=None):
         super(SignalList, self).__init__()
         self.parent = parent
+        self.del_func = del_func
         self.currentItemChanged.connect(self.trigger)
         self.itemActivated.connect(self.trigger)
 
     def trigger(self, *args, **kwargs):
         self.parent.trigger()
+
+    def keyPressEvent(self, event):
+        if self.del_func and event.key() == QtCore.Qt.Key_Delete:
+            self.del_func()
 
 class CheckableComboBox(QtGui.QComboBox):
     def __init__(self):

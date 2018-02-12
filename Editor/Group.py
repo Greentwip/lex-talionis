@@ -67,7 +67,7 @@ class GroupMenu(QtGui.QWidget):
         self.load_player_characters = QtGui.QCheckBox('Load saved player characters?')
         self.load_player_characters.stateChanged.connect(self.set_load_player_characters)
 
-        self.list = SignalList(self)
+        self.list = SignalList(self, del_func=self.remove_group)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
         self.list.setIconSize(QtCore.QSize(32, 32))

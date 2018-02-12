@@ -1,8 +1,44 @@
+import os
 # Terrain Data Menu
 from PyQt4 import QtGui, QtCore
 
+import Code.Engine as Engine
+# So that the code basically starts looking in the parent directory
+Engine.engine_constants['home'] = '../'
+from Code.imagesDict import COLORKEY
+
+import EditorUtilities
 from DataImport import Data
 from CustomGUI import SignalList
+
+class Autotiles(object):
+    def __init__(self):
+        self.autotiles = []
+        self.autotile_frame = 0
+
+    def load(self, auto_loc):
+        # Auto-tiles
+        self.autotile_frame = 0
+        if os.path.exists(auto_loc):
+            files = sorted([fp for fp in os.listdir(auto_loc) if fp.startswith('autotile') and fp.endswith('.png')], key=lambda x: int(x[8:-4]))
+            imageList = [Engine.image_load(auto_loc + image, convert=True) for image in files]
+            for image in imageList:
+                Engine.set_colorkey(image, COLORKEY, rleaccel=True)
+            self.autotiles = imageList
+
+    def update(self, current_time):
+        time = 483.  # 29 ticks
+        mod_time = current_time % int(len(self.autotiles) * time) # 29 ticks
+        self.autotile_frame = mod_time / time
+
+    def draw(self):
+        if self.autotiles:
+            return EditorUtilities.create_image(self.autotiles[self.autotile_frame])
+        else:
+            return None
+
+    def __nonzero__(self):
+        return bool(self.autotiles)
 
 class TileData(object):
     def __init__(self):
