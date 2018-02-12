@@ -1,5 +1,4 @@
 # Terrain Data Menu
-from collections import OrderedDict
 from PyQt4 import QtGui, QtCore
 
 from DataImport import Data

@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 import sys
 sys.path.append('../')
 import Code.Engine as Engine
@@ -41,6 +41,18 @@ def create_cursor():
     # Sprites are in 64 x 64 boxes
     activesprite = Engine.subsurface(sprite, (0, 64, 32, 32)).convert_alpha()
     return create_image(activesprite)
+
+def setOpacity(image, opacity):
+    new_img = QtGui.QImage(image.size(), QtGui.QImage.Format_ARGB32)
+    new_img.fill(QtCore.Qt.transparent)
+
+    painter = QtGui.QPainter()
+    painter.begin(new_img)
+    painter.setOpacity(opacity)
+    painter.drawImage(QtCore.QRect(0, 0, image.width(), image.height()), image)
+    painter.end()
+
+    return new_img
 
 # === MAKE PRETTY ===
 def stretch(grid):

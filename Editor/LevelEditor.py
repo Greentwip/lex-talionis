@@ -10,7 +10,7 @@ Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
-import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group
+import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group, QtWeather
 from DataImport import Data
 
 # TODO: Reinforcements
@@ -61,6 +61,16 @@ class MainView(QtGui.QGraphicsView):
     def disp_main_map(self):
         if self.image:
             self.working_image = self.image.copy()
+
+    def disp_weather(self):
+        if self.working_image:
+            painter = QtGui.QPainter()
+            painter.begin(self.working_image)
+            for weather in self.window.weather:
+                particles = weather.draw()
+                for image, coord in particles:
+                    painter.drawImage(coord[0], coord[1], image)
+            painter.end()
 
     def disp_tile_data(self):
         if self.working_image:
@@ -199,6 +209,7 @@ class MainEditor(QtGui.QMainWindow):
         self.tile_info = TileInfo.TileInfo()
         self.overview_dict = OrderedDict()
         self.unit_data = UnitData.UnitData()
+        self.weather = []
 
         self.view = MainView(self.tile_data, self.tile_info, self.unit_data, self)
         self.setCentralWidget(self.view)
@@ -227,7 +238,9 @@ class MainEditor(QtGui.QMainWindow):
         current_time = self.elapsed_timer.elapsed()
         if self.dock_visibility['Units']:
             self.unit_menu.tick(current_time)
-            self.update_view()
+        for weather in self.weather:
+            weather.update(current_time, self.tile_data)
+        self.update_view()
 
     def closeEvent(self, event):
         if self.maybe_save():
@@ -243,8 +256,11 @@ class MainEditor(QtGui.QMainWindow):
             self.view.disp_tile_info()
         if self.dock_visibility['Units']:
             self.view.disp_units()
+        if self.weather:
+            self.view.disp_weather()
         self.view.show_image()
 
+    # === Loading Data ===
     def set_image(self, image_file):
         image = QtGui.QImage(image_file)
         if image.width() % 16 != 0 or image.height() % 16 != 0:
@@ -316,6 +332,33 @@ class MainEditor(QtGui.QMainWindow):
         Data.load_data()
         self.update_view()
 
+    # === Weather ===
+    def add_weather(self, weather):
+        if not self.tile_data or not hasattr(self.tile_data, 'width'):
+            return
+        width, height = self.tile_data.width, self.tile_data.height
+        print('Add Weather')
+        print(weather)
+        if weather == "Rain":
+            bounds = (-height*GC.TILEHEIGHT/4, width*GC.TILEWIDTH, -16, -8)
+            self.weather.append(QtWeather.Weather('Rain', .1, bounds, (width, height)))
+        elif weather == "Snow":
+            bounds = (-height*GC.TILEHEIGHT, width*GC.TILEWIDTH, -16, -8)
+            self.weather.append(QtWeather.Weather('Snow', .125, bounds, (width, height)))
+        elif weather == "Sand":
+            bounds = (-2*height*GC.TILEHEIGHT, width*GC.TILEWIDTH, height*GC.TILEHEIGHT+16, height*GC.TILEHEIGHT+32)
+            self.weather.append(QtWeather.Weather('Sand', .075, bounds, (width, height)))
+        elif weather == "Light":
+            bounds = (0, width*GC.TILEWIDTH, 0, height*GC.TILEHEIGHT)
+            self.weather.append(QtWeather.Weather('Light', .04, bounds, (width, height)))
+        elif weather == "Dark":
+            bounds = (0, width*GC.TILEWIDTH, 0, height*GC.TILEHEIGHT)
+            self.weather.append(QtWeather.Weather('Dark', .04, bounds, (width, height)))
+
+    def remove_weather(self, name):
+        self.weather = [weather for weather in self.weather if weather.name != name]
+
+    # === Save ===
     def write_overview(self, fp):
         with open(fp, 'w') as overview:
             for k, v in self.overview_dict.iteritems():
@@ -424,6 +467,7 @@ class MainEditor(QtGui.QMainWindow):
 
         print('Saved Level' + num)
 
+    # === Create Menu ===
     def create_actions(self):
         self.new_act = QtGui.QAction("&New...", self, shortcut="Ctrl+N", triggered=self.new)
         self.open_act = QtGui.QAction("&Open...", self, shortcut="Ctrl+O", triggered=self.open)

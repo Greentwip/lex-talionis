@@ -70,15 +70,30 @@ class PropertyMenu(QtGui.QWidget):
         grid.addWidget(weather, 1, 0)
 
         self.weathers = ('Light', 'Dark', 'Rain', 'Sand', 'Snow')
+        # This stupidity is necessary for some reason
+        self.functions = (self.light_check, self.dark_check, self.rain_check, self.sand_check, self.snow_check)
         self.weather_boxes = []
         for idx, weather in enumerate(self.weathers):
             label = QtGui.QLabel(weather)
             grid.addWidget(label, 0, idx + 1, alignment=QtCore.Qt.AlignHCenter)
             check_box = QtGui.QCheckBox()
+            check_box.stateChanged.connect(self.functions[idx])
             grid.addWidget(check_box, 1, idx + 1, alignment=QtCore.Qt.AlignHCenter)
             self.weather_boxes.append(check_box)
 
         self.grid.addLayout(grid, row, 0, 2, 1)
+
+    def weather_check(self, idx):
+        if self.weather_boxes[idx].isChecked():
+            self.window.add_weather(self.weathers[idx])
+        else:
+            self.window.remove_weather(self.weathers[idx])
+
+    def light_check(self): self.weather_check(0)
+    def dark_check(self): self.weather_check(1)
+    def rain_check(self): self.weather_check(2)
+    def sand_check(self): self.weather_check(3)
+    def snow_check(self): self.weather_check(4)
 
     def create_objective(self, row):
         label = QtGui.QLabel('WIN CONDITION')
@@ -100,6 +115,9 @@ class PropertyMenu(QtGui.QWidget):
     def base_enable(self, b):
         self.base_music.setEnabled(b)
         self.base_bg.setEnabled(b)
+
+    def get_weather_strings(self):
+        return [w for i, w in enumerate(self.weathers) if self.weather_boxes[i].isChecked()]
 
     def update(self):
         self.prep_enable(self.prep.isChecked())
@@ -172,6 +190,6 @@ class PropertyMenu(QtGui.QWidget):
         overview['enemy_phase_music'] = self.enemy_music.text()
         overview['other_phase_music'] = self.other_music.text()
 
-        overview['weather'] = ','.join([w for i, w in enumerate(self.weathers) if self.weather_boxes[i].isChecked()])
+        overview['weather'] = ','.join(self.get_weather_strings())
 
         return overview
