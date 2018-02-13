@@ -125,6 +125,7 @@ class GroupMenu(QtGui.QWidget):
         return self.groups[self.list.currentRow()]
 
     def load(self, unit_data):
+        self.clear()
         self.unit_data = unit_data
         # Convert to list
         self.groups = sorted(self.unit_data.groups.values(), key=lambda x: x.group_id)
@@ -132,3 +133,8 @@ class GroupMenu(QtGui.QWidget):
         for group in self.groups:
             self.list.addItem(self.create_item(group))
         self.load_player_characters.setChecked(self.unit_data.load_player_characters)
+
+    def clear(self):
+        self.groups = []
+        self.list.clear()
+        self.load_player_characters.setChecked(False)

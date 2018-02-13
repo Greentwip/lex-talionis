@@ -300,10 +300,14 @@ class UnitMenu(QtGui.QWidget):
             self.view.center_on_pos(unit.position)
 
     def load(self, unit_data):
+        self.clear()
         self.unit_data = unit_data
         # Ingest Data
         for unit in self.unit_data.units:
             self.list.addItem(self.create_item(unit))
+
+    def clear(self):
+        self.list.clear()
 
     # TODO: Need to use text color to show whether unit has a position set
     def create_item(self, unit):

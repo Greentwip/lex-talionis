@@ -182,7 +182,7 @@ mode_Normal;Recommended for newcomers.
 mode_Hard;For seasoned Fire Emblem veterans. 
 mode_Lunatic;No casuls allowed. Prepare to lose. A lot.
 mode_Classic;Units killed are lost forever.
-mode_Casual;Your units don't die when they are killed.
+mode_Casual;Your units will live to fight another day.
 mode_Random;Each level-up is random. Classic Fire Emblem.
 mode_Fixed;Each level-up is fixed. Recommended.
 mode_Hybrid;Level-ups are random, but you can't be stat-screwed.

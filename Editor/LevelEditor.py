@@ -9,6 +9,7 @@ import Code.Engine as Engine
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
+from Code.imagesDict import COLORKEY
 
 import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group, QtWeather
 from DataImport import Data
@@ -20,7 +21,7 @@ from DataImport import Data
 # TODO: Highlight current unit -- impl
 # TODO: Add color to text when unit isn't positioned -- impl
 # TODO: Add Del key to Units -- impl
-# TODO: Add Autotile support to map -- needs testing
+# TODO: Add Autotile support to map -- impl
 # TODO: Add Weather to map -- impl
 # TODO: Droppable and Equippable Item support -- impl
 # TODO: Class sprites move -- impl
@@ -49,6 +50,13 @@ class MainView(QtGui.QGraphicsView):
 
     def set_new_image(self, image):
         self.image = QtGui.QImage(image)
+        # Handle colorkey
+        qCOLORKEY = QtGui.qRgb(*COLORKEY)
+        new_color = QtGui.qRgba(0, 0, 0, 0)
+        for x in xrange(self.image.width()):
+            for y in xrange(self.image.height()):
+                if self.image.pixel(x, y) == qCOLORKEY:
+                    self.image.setPixel(x, y, new_color)
 
     def clear_scene(self):
         self.scene.clear()
@@ -62,7 +70,8 @@ class MainView(QtGui.QGraphicsView):
         if self.image:
             image = self.window.autotiles.draw()
             if image:
-                painter = QtGui.QPainter(image)
+                image = image.copy()
+                painter = QtGui.QPainter()
                 painter.begin(image)
                 painter.drawImage(0, 0, self.image.copy())
                 painter.end()
@@ -95,7 +104,7 @@ class MainView(QtGui.QGraphicsView):
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
             for coord, image in self.tile_info.get_images().iteritems():
-                painter.drawImage(coord[0] * 16, coord[1] * 16, image)
+                painter.drawImage(coord[0] * 16 + 1, coord[1] * 16, image)
             painter.end()
 
     def disp_units(self):
@@ -104,11 +113,11 @@ class MainView(QtGui.QGraphicsView):
             painter.begin(self.working_image)
             for coord, unit_image in self.unit_data.get_unit_images().iteritems():
                 if unit_image:
-                    painter.drawImage(coord[0] * 16, coord[1] * 16, unit_image)
+                    painter.drawImage(coord[0] * 16 - 4, coord[1] * 16 - 6, unit_image)
             # Highlight current unit
             current_unit = self.window.unit_menu.get_current_unit()
             if current_unit and current_unit.position:
-                painter.drawImage(current_unit.position[0] * 16 - 4, current_unit.position[1] * 16, EditorUtilities.create_cursor())
+                painter.drawImage(current_unit.position[0] * 16 - 8, current_unit.position[1] * 16 - 5, EditorUtilities.create_cursor())
             painter.end()
 
     def mousePressEvent(self, event):
@@ -215,12 +224,7 @@ class MainEditor(QtGui.QMainWindow):
         self.installEventFilter(self)
 
         # Data
-        self.tile_data = Terrain.TileData()
-        self.tile_info = TileInfo.TileInfo()
-        self.overview_dict = OrderedDict()
-        self.unit_data = UnitData.UnitData()
-        self.weather = []
-        self.autotiles = Terrain.Autotiles()
+        self.init_data()
 
         self.view = MainView(self.tile_data, self.tile_info, self.unit_data, self)
         self.setCentralWidget(self.view)
@@ -244,6 +248,14 @@ class MainEditor(QtGui.QMainWindow):
         self.main_timer.start(33)  # 30 FPS
         self.elapsed_timer = QtCore.QElapsedTimer()
         self.elapsed_timer.start()
+
+    def init_data(self):
+        self.tile_data = Terrain.TileData()
+        self.tile_info = TileInfo.TileInfo()
+        self.overview_dict = OrderedDict()
+        self.unit_data = UnitData.UnitData()
+        self.weather = []
+        self.autotiles = Terrain.Autotiles()
 
     def tick(self):
         current_time = self.elapsed_timer.elapsed()
@@ -279,7 +291,7 @@ class MainEditor(QtGui.QMainWindow):
         if image.width() % 16 != 0 or image.height() % 16 != 0:
             QtGui.QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
             return
-        self.view.clear_image()
+        self.view.clear_scene()
         self.view.set_new_image(image_file)
 
     def new(self):
@@ -292,7 +304,18 @@ class MainEditor(QtGui.QMainWindow):
                                                            "PNG Files (*.png);;All Files (*)")
             if image_file:
                 self.set_image(image_file)
+                self.tile_data.clear()
+                self.autotiles.clear()
+                self.overview_dict = OrderedDict()
                 self.properties_menu.new()
+                self.tile_info.clear()
+                self.unit_data.clear()
+                self.group_menu.clear()
+                self.unit_menu.clear()
+
+                self.status_bar.showMessage('Created New Level')
+
+                self.update_view()
 
     def import_new_map(self):
         image_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Map PNG", QtCore.QDir.currentPath(),
@@ -319,7 +342,7 @@ class MainEditor(QtGui.QMainWindow):
     def load_level(self):
         if self.directory:
             image = self.directory + '/MapSprite.png'
-            self.view.set_new_image(image)
+            self.set_image(image)
 
             tilefilename = self.directory + '/TileData.png'
             self.tile_data.load(tilefilename)
