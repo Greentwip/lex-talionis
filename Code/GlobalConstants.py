@@ -6,6 +6,7 @@ import configuration as cf
 import logging
 logger = logging.getLogger(__name__)
 
+version = "0.7.4"
 # === GLOBAL cf.CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000/FPS
@@ -51,8 +52,8 @@ Engine.set_icon(small_icon)
 
 FPSCLOCK = Engine.clock()
 DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
-version = "0.7"
 Engine.set_caption(''.join(["The Lion Throne - ", version]))
+print('Version: v%s' % version)
 
 IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = imagesDict.getImages(Engine.engine_constants['home'])
 SOUNDDICT, MUSICDICT = imagesDict.getSounds(Engine.engine_constants['home'])

@@ -294,7 +294,7 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                 gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
                 if gameStateObj.cursor.currentHoveredUnit:
                     gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.currenthp -= 2
+                    gameStateObj.cursor.currentHoveredUnit.change_hp(-2)
             # Lose the game
             elif event.key == Engine.key_map['l']:
                 gameStateObj.statedict['levelIsComplete'] = 'loss'
@@ -1372,6 +1372,8 @@ class SpellWeaponState(State):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
         if gameStateObj.activeMenu:
             gameStateObj.cursor.currentSelectedUnit.drawItemDescription(mapSurf, gameStateObj)
+        if gameStateObj.activeMenu:
+            gameStateObj.activeMenu.drawInfo(mapSurf)
         return mapSurf
 
     def end(self, gameStateObj, metaDataObj):
@@ -1902,9 +1904,9 @@ class DialogueState(State):
             if cf.OPTIONS['Text Speed'] in cf.text_speed_options:
                 GC.SOUNDDICT['Select 4'].play()
                 current_index = cf.text_speed_options.index(cf.OPTIONS['Text Speed'])
-                current_index -= 1
-                if current_index < 0:
-                    current_index = len(cf.text_speed_options) - 1
+                current_index += 1
+                if current_index >= len(cf.text_speed_options):
+                    current_index = 0
                 cf.OPTIONS['Text Speed'] = cf.text_speed_options[current_index]
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):

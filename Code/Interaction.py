@@ -86,7 +86,7 @@ class Solver(object):
 
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
         if self.item.weapon:
-            if roll < to_hit and not (defender in self.splash and (isinstance(defender, TileObject.TileObject) or 'evasion' in defender.status_bundle)):
+            if roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle):
                 result.outcome = (2 if self.item.guaranteed_crit else 1)
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
                 if cf.CONSTANTS['crit']: 
@@ -98,7 +98,7 @@ class Solver(object):
                 # print(result.def_damage)
 
         elif self.item.spell:
-            if not self.item.hit or roll < to_hit:
+            if not self.item.hit or (roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle)):
                 result.outcome = (2 if self.item.guaranteed_crit else 1)
                 if self.item.damage is not None:
                     result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
@@ -169,6 +169,8 @@ class Solver(object):
         if result.def_damage > 0:
             if self.defender.getMainWeapon().lifelink:
                 result.atk_damage -= result.def_damage
+            if self.defender.getMainWeapon().half_lifelink:
+                result.atk_damage -= result.def_damage/2
             # Handle Vampire Status
             for status in self.defender.status_effects:
                 if status.vampire and self.attacker.currenthp - result.def_damage <= 0 and \
@@ -417,7 +419,10 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
         # XOR below
         if animation_wanted(attacker, defender) != toggle_anim:
             distance = Utility.calculate_distance(attacker.position, def_pos)
-            attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, CustomObjects.WEAPON_TRIANGLE.isMagic(item), distance)
+            magic = CustomObjects.WEAPON_TRIANGLE.isMagic(item)
+            if magic and item.magic_at_range and distance <= 1:
+                magic = False
+            attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, magic, distance)
             defender_item = defender.getMainWeapon()
             if defender_item:
                 magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
@@ -481,12 +486,14 @@ class Combat(object):
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP
-        result.attacker.currenthp -= result.atk_damage
-        result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
+        result.attacker.change_hp(-result.atk_damage)
+        # result.attacker.currenthp -= result.atk_damage
+        # result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
         if result.defender:
-            result.defender.currenthp -= result.def_damage
+            result.defender.change_hp(-result.def_damage)
+            # result.defender.currenthp -= result.def_damage
             # print(result.defender.currenthp, result.def_damage)
-            result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
+            # result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
 
     def find_broken_items(self):
         # Handle items that were used

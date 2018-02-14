@@ -31,8 +31,12 @@ class Critical(Active_Skill):
 
     def check_valid(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
-        if unit.canAttack(gameStateObj) and valid_weapons:
-            return True
+        # Needs to be done this way to handle the case where you have a weapon that can crit
+        # and a weapon that can't crit, but only the weapon that can't crit can reach an enemy unit
+        if not unit.hasAttacked:
+            for weapon in valid_weapons:
+                if unit.getValidTargetPositions(gameStateObj, weapon):
+                    return True
         return False
 
     def apply_mod(self, unit, weapon, gameStateObj):
@@ -56,11 +60,13 @@ class Charge(Active_Skill):
 
     def check_valid(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
-        if unit.canAttack(gameStateObj) and valid_weapons:
-            enemy_positions = [u.position for u in gameStateObj.allunits if self.checkIfEnemy(u)] + \
-                              [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
-            if any(Utility.calculate_distance(position, unit.position) == 1 for position in enemy_positions):
-                return True
+        if not unit.hasAttacked:
+            for weapon in valid_weapons:
+                # Essentially get valid targets
+                enemy_positions = [u.position for u in gameStateObj.allunits if self.checkIfEnemy(u)] + \
+                                  [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
+                if any(Utility.calculate_distance(position, unit.position) == 1 for position in enemy_positions):
+                    return True
         return False
 
     def apply_mod(self, unit, weapon, gameStateObj):
@@ -88,8 +94,10 @@ class Knock_Out(Active_Skill):
 
     def check_valid(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
-        if unit.canAttack(gameStateObj) and valid_weapons:
-            return True
+        if not unit.hasAttacked:
+            for weapon in valid_weapons:
+                if unit.getValidTargetPositions(gameStateObj, weapon):
+                    return True
         return False
 
     def apply_mod(self, unit, weapon, gameStateObj):
@@ -135,6 +143,7 @@ class Cleave(Active_Skill):
     def check_valid(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
         if not unit.hasAttacked and valid_weapons:
+            # Essentially get valid targets
             enemy_positions = [enemy.position for enemy in gameStateObj.allunits if enemy.position and unit.checkIfEnemy(enemy)] + \
                               [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
             if any(Utility.calculate_distance(position, unit.position) == 1 for position in enemy_positions):

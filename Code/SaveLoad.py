@@ -242,7 +242,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
                 if status:
                     StatusObject.HandleStatusAddition(status, cur_unit, gameStateObj)
             # handle having a status that gives stats['HP']
-            cur_unit.currenthp = int(cur_unit.stats['HP'])
+            cur_unit.set_hp(int(cur_unit.stats['HP']))
 
             allunits.append(cur_unit)
             break
@@ -412,7 +412,7 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
         if status:
             StatusObject.HandleStatusAddition(status, unit, gameStateObj)
     # handle having a status that gives stats['HP']
-    unit.currenthp = int(unit.stats['HP'])
+    unit.set_hp(int(unit.stats['HP']))
 
 def auto_level(bases, growths, level, max_stats, gameStateObj):
     stats = bases[:]

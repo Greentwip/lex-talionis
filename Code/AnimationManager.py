@@ -8,7 +8,11 @@ class BattleAnimationManager(object):
         self.directory = {}
         for root, dirs, files in os.walk(home + 'Data/Animations/'):
             for name in files:
-                klass, weapon, desc = name.split('-')
+                try:
+                    klass, weapon, desc = name.split('-')
+                except ValueError as e:
+                    print('%s: Error loading in %s' % (e, name))
+                    continue
                 if klass not in self.directory:
                     self.directory[klass] = {}
                 if weapon not in self.directory[klass]:
@@ -32,6 +36,7 @@ class BattleAnimationManager(object):
                     effect, desc = name.split('-')
                 except ValueError:
                     print('Error loading in %s' % name)
+                    continue
                 if effect not in self.effects:
                     self.effects[effect] = {}
                 full_name = os.path.join(root, name)

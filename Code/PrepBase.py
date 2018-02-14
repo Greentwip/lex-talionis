@@ -439,6 +439,8 @@ class PrepItemsChoicesState(StateMachine.State):
                 for item in reversed(gameStateObj.cursor.currentSelectedUnit.items):
                     gameStateObj.cursor.currentSelectedUnit.remove_item(item)
                     gameStateObj.convoy.append(item)
+                # Can no longer use items
+                self.menu.update_grey(1, False)
             elif selection == cf.WORDS['List']:
                 gameStateObj.stateMachine.changeState('prep_list')
                 gameStateObj.stateMachine.changeState('transition_out')
@@ -656,8 +658,11 @@ class PrepUseItemState(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         self.menu.draw(mapSurf, gameStateObj)
+        # Just to draw the top
         MenuFunctions.drawUnitItems(mapSurf, (6, 8+16*4), self.menu.owner, include_top=True, include_bottom=False)
-        self.draw_use_desc(mapSurf, self.menu.getSelection().desc)
+        selection = self.menu.getSelection()
+        if selection:
+            self.draw_use_desc(mapSurf, selection.desc)
         if self.info:
             selection = None
             position = None

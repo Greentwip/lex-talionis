@@ -137,7 +137,7 @@ class UnitObject(object):
         else:
             self.stats = info['stats']
         self.currenthp = info.get('currenthp') or int(self.stats['HP'])
-        self.currenthp = min(self.currenthp, int(self.stats['HP']))
+        self.change_hp(0)  # Just checking bounds
 
         # --- handle movement
         self.movement_left = self.stats['MOV']
@@ -259,10 +259,12 @@ class UnitObject(object):
         topleft = (36 + left, PortraitHeight - 10 + top)
         PortraitSurface.blit(HealthBGSurf, topleft)
         # Blit Health Bar
-        indexpixel = int((max(0, self.currenthp/float(self.stats['HP'])))*GC.IMAGESDICT['HealthBar2'].get_width())
-        HealthSurf = Engine.subsurface(GC.IMAGESDICT['HealthBar2'], (0, 0, indexpixel, 2))
-        topleft = (37 + left, PortraitHeight - 9 + top)
-        PortraitSurface.blit(HealthSurf, topleft)
+        hp_ratio = Utility.clamp(self.currenthp/float(self.stats['HP']), 0, 1)
+        if hp_ratio > 0:
+            indexpixel = int(hp_ratio*GC.IMAGESDICT['HealthBar2'].get_width())
+            HealthSurf = Engine.subsurface(GC.IMAGESDICT['HealthBar2'], (0, 0, indexpixel, 2))
+            topleft = (37 + left, PortraitHeight - 9 + top)
+            PortraitSurface.blit(HealthSurf, topleft)
 
         # Blit weapon icon
         current_weapon = self.getMainWeapon()
@@ -763,6 +765,14 @@ class UnitObject(object):
                     gameStateObj.stateMachine.changeState('itemgain')
                     break
 
+    def change_hp(self, dhp):
+        self.currenthp += int(dhp)
+        self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
+
+    def set_hp(self, hp):
+        self.currenthp = int(hp)
+        self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
+
     def handle_booster(self, item, gameStateObj):
         # Handle uses
         if item.uses:
@@ -892,7 +902,7 @@ class UnitObject(object):
             self.stats[name].base_stat += levelup_list[idx]
         # Handle the case where this is done in base
         if hp_up:
-            self.currenthp += levelup_list[0]
+            self.change_hp(levelup_list[0])
 
     # For bonuses
     def apply_stat_change(self, levelup_list):
@@ -901,7 +911,7 @@ class UnitObject(object):
             self.stats[name].bonuses += levelup_list[idx]
 
         # Handle changed cases
-        self.currenthp = min(self.currenthp, int(self.stats['HP']))
+        self.change_hp(0)
         if self.movement_left > int(self.stats['MOV']):
             self.movement_left = max(0, int(self.stats['MOV']))
         
@@ -1788,7 +1798,7 @@ class UnitObject(object):
         if self.TRV and not event:
             self.unrescue(gameStateObj)
         # Units should have full health
-        self.currenthp = self.stats['HP']
+        self.set_hp(self.stats['HP'])
         # Units should have their temporary statuses removed
         # Create copy so we can iterate it over without messing around with stuff...
         for status in self.status_effects[:]:
@@ -1995,8 +2005,7 @@ class UnitObject(object):
         # Remove rescue penalty
 
     def regenerate(self, hp):
-        self.currenthp += int(hp/float(100) * self.stats['HP'])
-        self.currenthp = min(self.currenthp, self.stats['HP'])
+        self.change_hp(int(hp/float(100) * self.stats['HP']))
 
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
@@ -2157,7 +2166,7 @@ class UnitObject(object):
 
     def handle_miracle(self, gameStateObj):
         self.isDying = False
-        self.currenthp = 1
+        self.set_hp(1)
         miracle_status = None
         for status in self.status_effects:
             if status.miracle:
