@@ -57,7 +57,7 @@ class GameStateObj(object):
     def build_new(self):
         logger.info("Build New")
         self.allunits = []
-        self.groups = {}
+        self.factions = {}
         self.allreinforcements = {}
         self.prefabs = []
         self.objective = None
@@ -99,7 +99,7 @@ class GameStateObj(object):
         logger.info("Load")
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
-        self.groups = load_info['groups'] if 'groups' in load_info else {}
+        self.factions = load_info['factions'] if 'factions' in load_info else (load_info['groups'] if 'groups' in load_info else {})
         self.allreinforcements = load_info['allreinforcements'] 
         self.prefabs = load_info['prefabs']
         map_info = load_info['map']
@@ -315,7 +315,7 @@ class GameStateObj(object):
         for unit in self.allunits:
             unit.arrive(self, serializing=True)
         to_save = {'allunits': ser_units,
-                   'groups': self.groups,
+                   'factions': self.factions,
                    'allreinforcements': self.allreinforcements,
                    'prefabs': self.prefabs,
                    'map': self.map.serialize() if self.map else None,
@@ -385,7 +385,7 @@ class GameStateObj(object):
         # Remove unnecessary information between levels
         self.sweep()
         self.map = None
-        self.groups = {}
+        self.factions = {}
         self.allreinforcements = {}
         self.prefabs = []
         self.objective = None

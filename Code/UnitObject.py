@@ -111,11 +111,11 @@ class UnitObject(object):
         self.previous_position = self.position
         self.name = info['name']
         self.team = info['team']
-        self.faction = info['faction']
+        self.faction_icon = info.get('faction_icon', 'Neutral')
         self.klass = info['klass']
         self.gender = int(info['gender'])
         self.level = int(info['level'])
-        self.exp = info['exp'] if 'exp' in info else 0
+        self.exp = info.get('exp', 0)
         
         # --- Optional tags and Skills
         self.tags = info['tags']
@@ -144,7 +144,7 @@ class UnitObject(object):
         self.movement_group = info['movement_group']
 
         # --- Rescue
-        self.TRV = info['TRV'] if 'TRV' in info else 0
+        self.TRV = info.get('TRV', 0)
         self.strTRV = "---"
 
         # --- Weapon experience points
@@ -166,13 +166,13 @@ class UnitObject(object):
         self.get_ai(info['ai'])
 
         # --- Stats -- this level
-        self.records = info['records'] if 'records' in info else self.default_records()
+        self.records = info.get('records', self.default_records())
 
         # --- Other Properties (Update related normally)
         self.validPartners = [] # Used by selection algorithms
         self.current_skill = None
 
-        self.dead = info['dead'] if 'dead' in info else False
+        self.dead = info.get('dead', False)
         self.deathCounter = 0
 
         self.sprite = UnitSprite.UnitSprite(self)
@@ -187,7 +187,7 @@ class UnitObject(object):
 
         # --- Temporary Status
         self.reset()
-        self.finished = info['finished'] if 'finished' in info else False
+        self.finished = info.get('finished', False)
 
         self.resetUpdates()
     
@@ -217,7 +217,7 @@ class UnitObject(object):
         except KeyError:
             self.generic_flag = True
             self.bigportrait = GC.UNITDICT['Generic_Portrait_' + self.klass]
-            self.portrait = GC.UNITDICT[self.faction + 'Emblem']
+            self.portrait = GC.UNITDICT[self.faction_icon + 'Emblem']
         # Generate Animation
         # GC.ANIMDICT.generate(self.klass)
         self.battle_anim = None
@@ -1849,7 +1849,7 @@ class UnitObject(object):
                        'position': self.position,
                        'name': self.name,
                        'team': self.team,
-                       'faction': self.faction,
+                       'faction_icon': self.faction_icon,
                        'klass': self.klass,
                        'gender': self.gender,
                        'level': self.level,

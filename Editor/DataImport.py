@@ -33,7 +33,7 @@ def build_units(class_dict):
 
         u_i['gender'] = unit.find('gender').text
         u_i['level'] = int(unit.find('level').text)
-        u_i['faction'] = unit.find('faction').text
+        u_i['faction_icon'] = unit.find('faction').text
 
         # stats = SaveLoad.intify_comma_list(unit.find('bases').text)
         # for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
@@ -72,14 +72,14 @@ class Unit(object):
     def __init__(self, info=None):
         if info:
             self.id = info.get('id', 100)
-            self.group = info.get('group')
+            self.faction = info.get('faction')
             self.name = info['name']
             self.generic = info.get('generic', False)
 
             self.position = None
             self.level = int(info['level'])
             self.gender = int(info['gender'])
-            self.faction = info['faction']
+            self.faction_icon = info['faction_icon']
             self.klass = info['klass']
             self.tags = info.get('tags', [])
             self.desc = info['desc']
@@ -97,13 +97,13 @@ class Unit(object):
                 self.image = GC.UNITDICT[self.faction + 'Emblem'].convert_alpha()
         else:
             self.id = 0
-            self.group = None
+            self.faction = None
             self.name = ''
             self.generic = True
             self.position = None
             self.level = 1
             self.gender = 0
-            self.faction = ''
+            self.faction_icon = 'Neutral'
             self.klass = 'Citizen'
             self.tags = set()
             self.desc = ''
@@ -121,7 +121,7 @@ class Unit(object):
     def copy(self):
         new_unit = Unit()
         new_unit.id = self.id
-        new_unit.group = self.group
+        new_unit.faction = self.faction
         new_unit.name = self.name
         new_unit.generic = self.generic
         new_unit.saved = self.saved
@@ -129,7 +129,7 @@ class Unit(object):
         new_unit.gender = self.gender
         new_unit.klass = self.klass
         new_unit.tags = self.tags
-        new_unit.faction = self.faction
+        new_unit.faction_icon = self.faction_icon
         new_unit.desc = self.desc
         new_unit.team = self.team
         new_unit.items = [ItemMethods.itemparser(item.id)[0] for item in self.items]

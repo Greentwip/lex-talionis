@@ -3,13 +3,13 @@
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
 # Named units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file
@@ -27,7 +27,7 @@ player;0;0;Nia;1,5;None
 # Boss
 enemy;0;Sidney;Sidney;17,7;SoftGuard
 # Sidney's Thugs
-group;Soldier;Soldier;Empire;An imperial soldier
+faction;Soldier;Soldier;Empire;An imperial soldier
 # 3 Fighters, 3 Soldiers, 1 Archer
 enemy;0;F1;Fighter;1;Iron Axe;0,0;Attack;Soldier
 enemy;0;F2;Fighter;1;Iron Axe;0,0;Attack;Soldier

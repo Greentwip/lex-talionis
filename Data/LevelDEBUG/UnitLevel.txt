@@ -3,13 +3,13 @@
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
 # Named units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file
@@ -17,10 +17,10 @@
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
-group;Althea;Althea;Resistance;Nope
-group;Resistance;Bandit;Resistance;Nope
+faction;Althea;Althea;Resistance;Nope
+faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Archer;4;Willow Bow,Iron Sword,Boltblade,Angelic Robe,Barkskin;5,13;Pursue;Resistance
+player;0;0;Archer;4;Magebane Bow,Yew Bow,Boltblade,Angelic Robe,Barkskin;5,13;Pursue;Resistance
 player;0;0;Sentinel;10;Iron Axe,Hand Axe;4,12;Pursue;Resistance
 player;0;0;Mage;5;Wind;4,15;Pursue;Resistance
 player;0;0;HalberdierF;10;Superior Edge;3,14;Pursue;Resistance

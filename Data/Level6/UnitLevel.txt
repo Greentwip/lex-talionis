@@ -3,13 +3,13 @@
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
 # Saved units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file
@@ -20,10 +20,10 @@
 # Player Characters
 load_player_characters
 #
-# Groups
-group;Prisoner;Prisoner;Neutral;Captive of the Tyrana prison
-group;Guard;Guard;Empire;Guard at the Tyrana Prison
-group;Thief;Thief;Empire;Just doing some... uh... inventory management
+# Factions
+faction;Prisoner;Prisoner;Neutral;Captive of the Tyrana prison
+faction;Guard;Guard;Empire;Guard at the Tyrana Prison
+faction;Thief;Thief;Empire;Just doing some... uh... inventory management
 # Other
 # Cage 4
 other;0;0;Coyote;13,36;None

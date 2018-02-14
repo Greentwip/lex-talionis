@@ -78,13 +78,13 @@ unit_level_header = """
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
 # Named units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file

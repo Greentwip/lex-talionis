@@ -11,13 +11,13 @@ import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 from Code.imagesDict import COLORKEY
 
-import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Group, QtWeather
+import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Faction, QtWeather
 from DataImport import Data
 
 # TODO: Reinforcements
 # TODO: Created Units
 # TODO: Load new Map button -- impl
-# TODO: Refresh button (also on losing and gaining focus) -- needs to be uncommented
+# TODO: Refresh button (also on losing and gaining focus) -- impl
 # TODO: Highlight current unit -- impl
 # TODO: Add color to text when unit isn't positioned -- impl
 # TODO: Add Del key to Units -- impl
@@ -26,6 +26,8 @@ from DataImport import Data
 # TODO: Droppable and Equippable Item support -- impl
 # TODO: Class sprites move -- impl
 # TODO: Highlight dances -- maybe not
+# TODO: Items displyed next to unit names in Units and Reinforcements
+# TODO: Update status bar
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -310,7 +312,7 @@ class MainEditor(QtGui.QMainWindow):
                 self.properties_menu.new()
                 self.tile_info.clear()
                 self.unit_data.clear()
-                self.group_menu.clear()
+                self.faction_menu.clear()
                 self.unit_menu.clear()
 
                 self.status_bar.showMessage('Created New Level')
@@ -359,7 +361,7 @@ class MainEditor(QtGui.QMainWindow):
 
             unit_level_filename = self.directory + '/UnitLevel.txt'
             self.unit_data.load(unit_level_filename)
-            self.group_menu.load(self.unit_data)
+            self.faction_menu.load(self.unit_data)
             self.unit_menu.load(self.unit_data)
 
             if self.current_level_num:
@@ -405,15 +407,16 @@ class MainEditor(QtGui.QMainWindow):
                     overview.write(k + ';' + v + '\n')
 
     def write_tile_data(self, fp):
-        image = QtGui.QImage(self.tile_data.width, self.tile_data.height, QtGui.QImage.Format_RGB32)
-        painter = QtGui.QPainter()
-        painter.begin(image)
-        for coord, color in self.tile_data.tiles.iteritems():
-            write_color = QtGui.QColor(color[0], color[1], color[2])
-            painter.fillRect(coord[0], coord[1], 1, 1, write_color)
-        painter.end()
-        pixmap = QtGui.QPixmap.fromImage(image)
-        pixmap.save(fp, 'png')
+        if self.tile_data.width:
+            image = QtGui.QImage(self.tile_data.width, self.tile_data.height, QtGui.QImage.Format_RGB32)
+            painter = QtGui.QPainter()
+            painter.begin(image)
+            for coord, color in self.tile_data.tiles.iteritems():
+                write_color = QtGui.QColor(color[0], color[1], color[2])
+                painter.fillRect(coord[0], coord[1], 1, 1, write_color)
+            painter.end()
+            pixmap = QtGui.QPixmap.fromImage(image)
+            pixmap.save(fp, 'png')
 
     def write_tile_info(self, fp):
         with open(fp, 'w') as tile_info:
@@ -438,19 +441,19 @@ class MainEditor(QtGui.QMainWindow):
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
                 klass_str = unit.klass + ('F' if unit.gender >= 5 else '')
-                order = (unit.team, '0', '0', klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.group)
+                order = (unit.team, '0', '0', klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.faction)
             else:
                 order = (unit.team, '1' if unit.saved else '0', '0', unit.name, pos_str, ai_str)
             unit_level.write(';'.join(order) + '\n')
 
         with open(fp, 'w') as unit_level:
             unit_level.write(EditorUtilities.unit_level_header)
-            groups = self.unit_data.groups
+            factions = self.unit_data.factions
             if self.unit_data.load_player_characters:
                 unit_level.write('load_player_characters\n')
-            for group in groups.values():
-                unit_level.write('group;' + group.group_id + ';' + group.unit_name + 
-                                 ';' + group.faction + ';' + group.desc + '\n')
+            for faction in factions.values():
+                unit_level.write('faction;' + faction.faction_id + ';' + faction.unit_name + 
+                                 ';' + faction.faction_icon + ';' + faction.desc + '\n')
             # Units
             units = [unit for unit in self.unit_data.units if unit.position]
             # Player units
@@ -475,9 +478,10 @@ class MainEditor(QtGui.QMainWindow):
                         write_unit_line(unit)
                 # Generic enemy characters
                 generic_enemies = [unit for unit in units if unit.team == team and unit.generic]
-                unit_level.write('# Generics\n')
-                for unit in generic_enemies:
-                    write_unit_line(unit)
+                if generic_enemies:
+                    unit_level.write('# Generics\n')
+                    for unit in generic_enemies:
+                        write_unit_line(unit)
 
     def save(self):
         # Find what the next unused num is 
@@ -559,12 +563,12 @@ class MainEditor(QtGui.QMainWindow):
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Tile Info'])
         self.view_menu.addAction(self.docks['Tile Info'].toggleViewAction())
 
-        self.docks['Groups'] = Dock("Groups", self)
-        self.docks['Groups'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
-        self.group_menu = Group.GroupMenu(self.unit_data, self.view, self)
-        self.docks['Groups'].setWidget(self.group_menu)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Groups'])
-        self.view_menu.addAction(self.docks['Groups'].toggleViewAction())
+        self.docks['Factions'] = Dock("Factions", self)
+        self.docks['Factions'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.faction_menu = Faction.FactionMenu(self.unit_data, self.view, self)
+        self.docks['Factions'].setWidget(self.faction_menu)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.docks['Factions'])
+        self.view_menu.addAction(self.docks['Factions'].toggleViewAction())
 
         self.docks['Units'] = Dock("Units", self)
         self.docks['Units'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
@@ -573,9 +577,22 @@ class MainEditor(QtGui.QMainWindow):
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Units'])
         self.view_menu.addAction(self.docks['Units'].toggleViewAction())
 
+        self.docks['Reinforcements'] = Dock("Reinforcements", self)
+        self.docks['Reinforcements'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.reinforcement_menu = UnitData.ReinforcementMenu(self.unit_data, self.view, self)
+        self.docks['Reinforcements'].setWidget(self.reinforcement_menu)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Reinforcements'])
+        self.view_menu.addAction(self.docks['Reinforcements'].toggleViewAction())
+
+        # Left
+        self.tabifyDockWidget(self.docks['Properties'], self.docks['Factions'])
+        self.docks['Factions'].raise_()  # GODDAMN FINDING THIS FUNCTION TOOK A LONG TIME
+
+        # Right
         self.tabifyDockWidget(self.docks['Terrain'], self.docks['Tile Info'])
-        self.tabifyDockWidget(self.docks['Tile Info'], self.docks['Groups'])
-        self.tabifyDockWidget(self.docks['Groups'], self.docks['Units'])
+        self.tabifyDockWidget(self.docks['Tile Info'], self.docks['Units'])
+        self.tabifyDockWidget(self.docks['Units'], self.docks['Reinforcements'])
+        self.docks['Units'].raise_()
 
         self.dock_visibility = {k: False for k in self.docks.keys()}
 
@@ -594,7 +611,7 @@ class MainEditor(QtGui.QMainWindow):
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.WindowActivate:
             print "widget window has gained focus"
-            # self.load_data()
+            self.load_data()
         elif event.type() == QtCore.QEvent.WindowDeactivate:
             print "widget window has lost focus"
         elif event.type() == QtCore.QEvent.FocusIn:

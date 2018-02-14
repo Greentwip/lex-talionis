@@ -3,14 +3,14 @@
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # team; 0; event_id; unit_id; position; ai
 # - OR -
 # Saved units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file
@@ -26,8 +26,8 @@ load_player_characters
 enemy;0;Jakin;Jakin;4,4;SoftGuard
 enemy;0;Boaz;Boaz;26,27;SoftGuard
 # Generics
-# Group
-group;Templar;Templar;Templar;Guardians of the Keralan underworld
+# Faction
+faction;Templar;Templar;Templar;Guardians of the Keralan underworld
 # Swordmaster, Ranger, Dragoon, Sages, Warlock, Oracle, Warrior
 # Boaz's Bodyguards
 enemy;0;0;Sniper;15;Yew Bow;27,26;SoftGuard;Templar

@@ -3,13 +3,13 @@
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
 # Saved units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file
@@ -27,9 +27,9 @@ player;0;Yohn;Yohn;8,9;None
 enemy;0;0;Vagnius;19,5;DoNothing
 enemy;0;0;Sidney;18,4;DoNothing
 # Generics (already on field)
-# Groups
-group;Soldier;Soldier;Empire;An imperial soldier
-group;Monk;Monk;Neutral;A monk at this monastery
+# Factions
+faction;Soldier;Soldier;Empire;An imperial soldier
+faction;Monk;Monk;Neutral;A monk at this monastery
 #
 # Vagnius's soldiers
 enemy;0;S1;Soldier;7;Iron Lance;18,5;SoftGuard;Soldier

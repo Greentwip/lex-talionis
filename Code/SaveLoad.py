@@ -51,7 +51,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
             continue
         # Process line
         unitLine = line.split(';')
-        current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.groups, reinforceUnits, prefabs, metaDataObj, gameStateObj)
+        current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, reinforceUnits, prefabs, metaDataObj, gameStateObj)
     
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective)
 
@@ -117,11 +117,11 @@ def read_overview_file(overview_filename):
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
-def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, prefabs, metaDataObj, gameStateObj):
+def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, metaDataObj, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
-    # New Group
-    if unitLine[0] == 'group':
-        groups[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
+    # New Faction
+    if unitLine[0] == 'faction':
+        factions[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
     elif unitLine[0] == 'mode':
         current_mode = unitLine[1]
     elif unitLine[0] == 'load_player_characters':
@@ -132,7 +132,7 @@ def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, pr
         # New Unit
         if unitLine[1] == "0":
             if len(unitLine) > 7:
-                create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj)
+                create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameStateObj)
             else:
                 add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj)
         # Saved Unit
@@ -183,7 +183,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             default_previous_classes(u_i['klass'], classes, class_dict)
             u_i['gender'] = int(unit.find('gender').text)
             u_i['level'] = int(unit.find('level').text)
-            u_i['faction'] = unit.find('faction').text
+            u_i['faction_icon'] = unit.find('faction').text
 
             stats = intify_comma_list(unit.find('bases').text)
             for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
@@ -248,11 +248,11 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             break
     return allunits, reinforceUnits
 
-def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj):
+def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameStateObj):
     assert len(unitLine) in [9, 10], "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
     legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
               'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
-              'position': unitLine[6], 'ai': unitLine[7], 'group': unitLine[8]}
+              'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
     class_dict = metaDataObj['class_dict']
 
     u_i = {}
@@ -274,7 +274,7 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
 
     u_i['level'] = int(legend['level'])
     u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
-    u_i['name'], u_i['faction'], u_i['desc'] = groups[legend['group']]
+    u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], legend['items'], gameStateObj)
     u_i['stats'] = build_stat_dict(stats)
@@ -321,7 +321,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['gender'] = 0
     classes = classes[:summoner.level/cf.CONSTANTS['max_level'] + 1]
     u_i['klass'] = classes[-1]
-    u_i['faction'] = summoner.faction
+    u_i['faction_icon'] = summoner.faction_icon
     u_i['name'] = summon_info.name
     u_i['desc'] = summon_info.desc
     u_i['ai'] = summon_info.ai

@@ -3,13 +3,13 @@
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
 # Saved units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file
@@ -25,9 +25,9 @@ load_player_characters
 enemy;0;Marduk;Marduk;2,21;HardGuard
 enemy;0;Vagnius;Vagnius;2,21;None
 # Generics
-# Groups
-group;Soldier;Soldier;Empire;An imperial soldier
-group;Bandit;Bandit;Bandit;A Bandit hailing from the Ghat mountains
+# Factions
+faction;Soldier;Soldier;Empire;An imperial soldier
+faction;Bandit;Bandit;Bandit;A Bandit hailing from the Ghat mountains
 # Ballista
 enemy;0;0;Ballista;10;Ballista;7,22;HardGuard;Soldier
 #enemy;0;0;Ballista;10;Ballista;5,20;HardGuard;Soldier

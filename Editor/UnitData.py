@@ -17,7 +17,7 @@ import Code.Utility as Utility
 
 import DataImport
 from DataImport import Data
-import EditorUtilities, Group
+import EditorUtilities, Faction
 from CustomGUI import SignalList, GenderBox
 
 class UnitData(object):
@@ -27,7 +27,7 @@ class UnitData(object):
     def clear(self):
         self.units = []
         self.reinforcements = {}
-        self.groups = {}
+        self.factions = {}
         self.load_player_characters = False
 
     def load(self, fp):
@@ -70,8 +70,8 @@ class UnitData(object):
         return ''
 
     def parse_unit_line(self, unitLine, current_mode):
-        if unitLine[0] == 'group':
-            self.groups[unitLine[1]] = Group.Group(unitLine[1], unitLine[2], unitLine[3], unitLine[4])
+        if unitLine[0] == 'faction':
+            self.factions[unitLine[1]] = Faction.Faction(unitLine[1], unitLine[2], unitLine[3], unitLine[4])
         elif unitLine[0] == 'mode':
             current_mode = unitLine[1]
         elif unitLine[0] == 'load_player_characters':
@@ -124,7 +124,7 @@ class UnitData(object):
         assert len(unitLine) in [9, 10], "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
         legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
                   'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
-                  'position': unitLine[6], 'ai': unitLine[7], 'group': unitLine[8]}
+                  'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
         self.create_unit_from_legend(legend)
 
     def create_unit_from_legend(self, legend):
@@ -147,11 +147,11 @@ class UnitData(object):
         u_i['level'] = int(legend['level'])
         u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
 
-        u_i['group'] = legend['group']
-        group = self.groups[u_i['group']]
-        u_i['name'] = group.unit_name
-        u_i['faction'] = group.faction
-        u_i['desc'] = group.desc
+        u_i['faction'] = legend['faction']
+        faction = self.factions[u_i['faction']]
+        u_i['name'] = faction.unit_name
+        u_i['faction_icon'] = faction.faction_icon
+        u_i['desc'] = faction.desc
 
         stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = \
             self.get_unit_info(Data.class_dict, u_i['klass'], u_i['level'], legend['items'])
@@ -243,6 +243,20 @@ class UnitData(object):
 
         return stats, growth_points
 
+# This allows for drawing the units items to the right of the unit on the list menu
+class ItemDelegate(QtGui.QStyledItemDelegate):
+    def __init__(self, unit_data=None):
+        super(ItemDelegate, self).__init__()
+        self.unit_data = unit_data
+
+    def paint(self, painter, option, index):
+        super(ItemDelegate, self).paint(painter, option, index)
+        current_unit = self.unit_data.units[index.row()]
+        for idx, item in enumerate(current_unit.items):
+            image = Data.item_data[item.id].image
+            rect = option.rect
+            painter.drawImage(rect.right() - ((idx + 1) * 16), rect.center().y() - 8, EditorUtilities.create_image(image))
+
 class UnitMenu(QtGui.QWidget):
     def __init__(self, unit_data, view, window):
         super(UnitMenu, self).__init__(window)
@@ -255,6 +269,8 @@ class UnitMenu(QtGui.QWidget):
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
         self.list.setIconSize(QtCore.QSize(32, 32))
+        self.delegate = ItemDelegate(unit_data)
+        self.list.setItemDelegate(self.delegate)
 
         self.load(unit_data)
         self.list.currentItemChanged.connect(self.center_on_unit)
@@ -499,18 +515,18 @@ class CreateUnitDialog(QtGui.QDialog):
         self.ai_group = QtGui.QLineEdit()
         self.form.addRow('AI Group:', self.ai_group)
 
-        # Group
-        self.group_select = QtGui.QComboBox()
-        self.group_select.uniformItemSizes = True
-        self.group_select.setIconSize(QtCore.QSize(32, 32))
-        for group_name, group in unit_data.groups.iteritems():
-            image = GC.UNITDICT.get(group.faction + 'Emblem')
+        # Faction
+        self.faction_select = QtGui.QComboBox()
+        self.faction_select.uniformItemSizes = True
+        self.faction_select.setIconSize(QtCore.QSize(32, 32))
+        for faction_name, faction in unit_data.factions.iteritems():
+            image = GC.UNITDICT.get(faction.faction_icon + 'Emblem')
             if image:
-                self.group_select.addItem(EditorUtilities.create_icon(image.convert_alpha()), group.group_id)
+                self.faction_select.addItem(EditorUtilities.create_icon(image.convert_alpha()), faction.faction_id)
             else:
-                self.group_select.addItem(group.group_id)
+                self.faction_select.addItem(faction.faction_id)
 
-        self.form.addRow('Group:', self.group_select)
+        self.form.addRow('Faction:', self.faction_select)
 
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
@@ -518,7 +534,7 @@ class CreateUnitDialog(QtGui.QDialog):
         self.buttonbox.rejected.connect(self.reject)
 
     def load(self, unit):
-        setComboBox(self.group_select, unit.group)
+        setComboBox(self.faction_select, unit.faction)
         self.level.setValue(unit.level)
         self.gender.setValue(unit.gender)
         setComboBox(self.team_box, unit.team)
@@ -624,12 +640,12 @@ class CreateUnitDialog(QtGui.QDialog):
 
     def create_unit(self):
         info = {}
-        info['group'] = str(self.group_select.currentText())
-        group = self.unit_data.groups[info['group']]
-        if group:
-            info['name'] = group.unit_name
-            info['faction'] = group.faction
-            info['desc'] = group.desc
+        info['faction'] = str(self.faction_select.currentText())
+        faction = self.unit_data.factions[info['faction']]
+        if faction:
+            info['name'] = faction.unit_name
+            info['faction_icon'] = faction.faction_icon
+            info['desc'] = faction.desc
         info['level'] = int(self.level.value())
         info['gender'] = int(self.gender.value())
         info['klass'] = str(self.class_box.currentText())
@@ -653,3 +669,129 @@ class CreateUnitDialog(QtGui.QDialog):
             return unit, True
         else:
             return None, False
+
+class ReinforcementMenu(QtGui.QWidget):
+    def __init__(self, unit_data, view, window):
+        super(ReinforcementMenu, self).__init__(window)
+        self.grid = QtGui.QGridLayout()
+        self.setLayout(self.grid)
+        self.window = window
+        self.view = view
+
+        self.list = SignalList(self, del_func=self.remove_unit)
+        self.list.setMinimumSize(128, 320)
+        self.list.uniformItemSizes = True
+        self.list.setIconSize(QtCore.QSize(32, 32))
+
+        self.load(unit_data)
+        self.list.currentItemChanged.connect(self.center_on_unit)
+        self.list.itemDoubleClicked.connect(self.modify_unit)
+        # delete_key = QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.list)
+        # self.connect(delete_key, QtCore.SIGNAL('activated()'), self.remove_unit)
+
+        self.load_unit_button = QtGui.QPushButton('Load Unit')
+        self.load_unit_button.clicked.connect(self.load_unit)
+        self.create_unit_button = QtGui.QPushButton('Create Unit')
+        self.create_unit_button.clicked.connect(self.create_unit)
+        self.remove_unit_button = QtGui.QPushButton('Remove Unit')
+        self.remove_unit_button.clicked.connect(self.remove_unit)
+
+        self.grid.addWidget(self.list, 0, 0)
+        self.grid.addWidget(self.load_unit_button, 1, 0)
+        self.grid.addWidget(self.create_unit_button, 2, 0)
+        self.grid.addWidget(self.remove_unit_button, 3, 0)
+
+    def trigger(self):
+        self.view.tool = 'Units'
+
+    def get_current_item(self):
+        return self.list.item(self.list.currentRow())
+
+    def get_current_unit(self):
+        if self.unit_data.units:
+            return self.unit_data.units[self.list.currentRow()]
+        else:
+            return None
+
+    def get_item_from_unit(self, unit):
+        return self.list.item(self.unit_data.units.index(unit))
+
+    def set_current_idx(self, idx):
+        self.list.setCurrentRow(idx)
+
+    def center_on_unit(self, item, prev):
+        idx = self.list.row(item)
+        # idx = int(idx)
+        unit = self.unit_data.units[idx]
+        if unit.position:
+            self.view.center_on_pos(unit.position)
+
+    def load(self, unit_data):
+        self.clear()
+        self.unit_data = unit_data
+        # Ingest Data
+        for unit in self.unit_data.units:
+            self.list.addItem(self.create_item(unit))
+
+    def clear(self):
+        self.list.clear()
+
+    # TODO: Need to use text color to show whether unit has a position set
+    def create_item(self, unit):
+        if unit.generic:
+            item = QtGui.QListWidgetItem(str(unit.klass) + ': L' + str(unit.level))
+        else:
+            item = QtGui.QListWidgetItem(unit.name)
+        klass = Data.class_data.get(unit.klass)
+        if klass:
+            item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
+        if not unit.position:
+            item.setTextColor(QtGui.QColor("red"))
+        return item
+
+    def load_unit(self):
+        loaded_unit, ok = LoadUnitDialog.getUnit(self, "Load Unit", "Select unit:")
+        if ok:
+            self.add_unit(loaded_unit)
+            self.unit_data.add_unit(loaded_unit)
+            self.window.update_view()
+
+    def create_unit(self):
+        created_unit, ok = CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
+        if ok:
+            self.add_unit(created_unit)
+            self.unit_data.add_unit(created_unit)
+            self.window.update_view()
+
+    def remove_unit(self):
+        unit_idx = self.list.currentRow()
+        self.list.takeItem(unit_idx)
+        self.unit_data.remove_unit_from_idx(unit_idx)
+        self.window.update_view()
+
+    def modify_unit(self, item):
+        idx = self.list.row(item)
+        unit = self.unit_data.units[idx]
+        if unit.generic:
+            modified_unit, ok = CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:", unit)
+        else:
+            modified_unit, ok = LoadUnitDialog.getUnit(self, "Load Unit", "Select unit:", unit)
+        if ok:
+            modified_unit.position = unit.position
+            # Replace unit
+            self.list.takeItem(idx)
+            self.list.insertItem(idx, self.create_item(modified_unit))
+            self.unit_data.replace_unit(idx, modified_unit)
+            self.window.update_view()
+
+    def add_unit(self, unit):
+        self.list.addItem(self.create_item(unit))
+        self.list.setCurrentRow(self.list.count() - 1)
+
+    def tick(self, current_time):
+        if GC.PASSIVESPRITECOUNTER.update(current_time):
+            for idx, unit in enumerate(self.unit_data.units):
+                klass = Data.class_data[unit.klass]
+                klass_image = klass.get_image(unit.team, unit.gender)
+                self.list.item(idx).setIcon(EditorUtilities.create_icon(klass_image))
+                unit.klass_image = klass_image
