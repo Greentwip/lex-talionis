@@ -60,18 +60,19 @@ def build_font(ttf, size):
         size += 2
     return pygame.font.Font(ttf, size)
 
-def terminate():
-    final()
+def terminate(crash=False):
+    final(crash)
     if not PYGAME_SDL2:
         pygame.mixer.music.stop()
         pygame.mixer.quit()
     pygame.quit()
     sys.exit()
 
-def final():
+def final(crash=False):
     configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
     configuration.write_config_file() # Write last saved options to config file
-    create_crash_save()
+    if crash:
+        create_crash_save()
 
 def create_crash_save():
     import os, glob
