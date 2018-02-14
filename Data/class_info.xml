@@ -146,7 +146,7 @@
         <tags></tags>
         <skills>1,Synergy;5,Feat;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,65,15,65,60,35,35,20</growths>
+		<growths>105,65,15,65,60,35,40,20</growths>
 		<bases>13,2,0,4,0,0,0,0,7,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Well-rounded combatants who rely on their exceptional skill.</desc>
@@ -164,9 +164,9 @@
         <tags></tags>
         <skills>3,Feat;5,Luna;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,65,15,65,60,35,35,20</growths>
+		<growths>105,65,15,65,60,35,40,20</growths>
 		<bases>17,3,1,6,2,0,5,2,9,6</bases>
-        <promotion>4,1,1,2,2,0,5,2,2,1</promotion>
+        <promotion>4,1,1,2,2,0,4,2,2,1</promotion>
 		<max>40,18,15,20,17,20,19,17,20</max>
         <desc>Veteran frontliners who wield axe and lance</desc>
     </class>

@@ -27,8 +27,8 @@ def create_class_dict():
     class_dict = collections.OrderedDict()
     # For each class
     for klass in CLASSDATA.getroot().findall('class'):
-        name = klass.get('name')
-        class_dict[name] = {'id': klass.find('id').text,
+        name = klass.get('id')
+        class_dict[name] = {'name': klass.find('name').text,
                             'tier': klass.find('tier').text,
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                             'promotes_from': klass.find('promotes_from').text.split(',') if klass.find('promotes_from').text is not None else [],
