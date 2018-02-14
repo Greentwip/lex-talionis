@@ -1639,18 +1639,18 @@ class UnitObject(object):
             else:
                 return None
         if item.weapon:
-            accuracy += item.weapon.HIT + self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] + \
-                self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef']
+            accuracy += item.weapon.HIT + int(self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] +
+                                              self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef'])
         elif item.spell and item.hit:
-            accuracy += item.hit + self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] + \
-                self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef']
+            accuracy += item.hit + int(self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] +
+                                       self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef'])
         else:
             accuracy = 10000
         return accuracy
 
     def avoid(self, gameStateObj, item=None):
-        base = self.attackspeed(item) * cf.CONSTANTS['avoid_speed_coef'] + \
-            self.stats['LCK'] * cf.CONSTANTS['avoid_luck_coef']
+        base = int(self.attackspeed(item) * cf.CONSTANTS['avoid_speed_coef'] +
+                   self.stats['LCK'] * cf.CONSTANTS['avoid_luck_coef'])
         base += self.get_support_bonuses(gameStateObj)[3]
         for status in self.status_effects:
             if status.avoid:
@@ -1673,15 +1673,15 @@ class UnitObject(object):
             damage += item.weapon.MT
             if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
-                    damage += self.stats['STR'] * cf.CONSTANTS['damage_str_coef']
+                    damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
                 else:  # Normal
-                    damage += self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef']
+                    damage += int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
             else:
-                damage += self.stats['STR'] * cf.CONSTANTS['damage_str_coef']
+                damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
             return damage
         elif item.spell:
             if item.damage:
-                damage += item.damage + self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef']
+                damage += item.damage + int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
             else:
                 return 0
 
@@ -1696,19 +1696,19 @@ class UnitObject(object):
             else:
                 return None
         if item.crit and (item.weapon or item.spell):
-            accuracy = item.crit + self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef']
+            accuracy = item.crit + int(self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef'])
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             return accuracy
         else:
             return 0
 
     def crit_avoid(self, gameStateObj, item=None):
-        base = self.stats['LCK'] * cf.CONSTANTS['crit_avoid_luck_coef']
+        base = int(self.stats['LCK'] * cf.CONSTANTS['crit_avoid_luck_coef'])
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         return base
 
     def defense(self, gameStateObj, stat='DEF'):
-        defense = self.stats[stat] * cf.CONSTANTS['defense_coef']
+        defense = int(self.stats[stat] * cf.CONSTANTS['defense_coef'])
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
         if cf.CONSTANTS['support']:
@@ -2045,12 +2045,12 @@ class UnitObject(object):
     # This does the adding and subtracting of statuses
     def remove_item(self, item):
         logger.debug("Removing %s from %s items.", item, self.name)
-        item_index = self.items.index(item)
+        was_mainweapon = self.getMainWeapon() == item
         self.items.remove(item)
         item.owner = 0
         for status_on_hold in item.status_on_hold:
             StatusObject.HandleStatusRemoval(status_on_hold, self)
-        if item_index == 0 and self.canWield(item):
+        if was_mainweapon and self.canWield(item):
             for status_on_equip in item.status_on_equip:
                 StatusObject.HandleStatusRemoval(status_on_equip, self)
         # remove passive item skill
@@ -2058,7 +2058,7 @@ class UnitObject(object):
             if status.passive:
                 status.passive.reverse_mod(item)
         # There may be a new item equipped
-        if item_index == 0 and self.getMainWeapon():
+        if was_mainweapon and self.getMainWeapon():
             for status_on_equip in self.getMainWeapon().status_on_equip:
                 new_status = StatusObject.statusparser(status_on_equip)
                 StatusObject.HandleStatusAddition(new_status, self)
@@ -2074,7 +2074,7 @@ class UnitObject(object):
         if item in self.items:
             self.items.remove(item)
             self.items.insert(index, item)
-            if index == 0: # If new mainweapon...
+            if self.getMainWeapon() == item: # If new mainweapon...
                 # You unequipped a different item, so remove its status.
                 if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                     for status_on_equip in self.items[1].status_on_equip:
@@ -2096,7 +2096,7 @@ class UnitObject(object):
                 for status_on_hold in item.status_on_hold:
                     new_status = StatusObject.statusparser(status_on_hold)
                     StatusObject.HandleStatusAddition(new_status, self)
-                if index == 0: # If new mainweapon...
+                if self.getMainWeapon() == item: # If new mainweapon...
                     # You unequipped a different item, so remove its status.
                     if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                         for status_on_equip in self.items[1].status_on_equip:
