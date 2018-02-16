@@ -321,10 +321,10 @@ class UnitMenu(QtGui.QWidget):
         self.remove_unit_button = QtGui.QPushButton('Remove Unit')
         self.remove_unit_button.clicked.connect(self.remove_unit)
 
-        self.grid.addWidget(self.list, 0, 0)
-        self.grid.addWidget(self.load_unit_button, 1, 0)
-        self.grid.addWidget(self.create_unit_button, 2, 0)
-        self.grid.addWidget(self.remove_unit_button, 3, 0)
+        self.grid.addWidget(self.list, 1, 0)
+        self.grid.addWidget(self.load_unit_button, 2, 0)
+        self.grid.addWidget(self.create_unit_button, 3, 0)
+        self.grid.addWidget(self.remove_unit_button, 4, 0)
 
     def trigger(self):
         self.view.tool = 'Units'
@@ -427,8 +427,10 @@ class ReinforcementMenu(UnitMenu):
         self.pack_view_combobox = QtGui.QComboBox()
         self.packs = []
 
-        self.grid.addWidget(self.pack_view_label, 0, 0)
-        self.grid.addWidget(self.pack_view_combobox, 0, 1)
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(self.pack_view_label)
+        hbox.addWidget(self.pack_view_combobox)
+        self.grid.addLayout(hbox, 0, 0)
 
     def trigger(self):
         self.view.tool = 'Reinforcements'
