@@ -54,6 +54,11 @@ def setOpacity(image, opacity):
 
     return new_img
 
+def setComboBox(combo_box, value):
+    i = combo_box.findText(value)
+    if i >= 0:
+        combo_box.setCurrentIndex(i)
+
 # === MAKE PRETTY ===
 def stretch(grid):
     box_h = QtGui.QHBoxLayout()

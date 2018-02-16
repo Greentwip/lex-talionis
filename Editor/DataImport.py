@@ -72,6 +72,11 @@ class Unit(object):
     def __init__(self, info=None):
         if info:
             self.id = info.get('id', 100)
+            self.event_id = info.get('event_id')
+            if self.event_id and '_' in self.event_id:
+                self.pack, self.event_id = self.event_id.split('_')
+            else:
+                self.pack = info.get('pack')
             self.faction = info.get('faction')
             self.name = info['name']
             self.generic = info.get('generic', False)
@@ -97,6 +102,8 @@ class Unit(object):
                 self.image = GC.UNITDICT[self.faction + 'Emblem'].convert_alpha()
         else:
             self.id = 0
+            self.event_id = None
+            self.pack = None
             self.faction = None
             self.name = ''
             self.generic = True

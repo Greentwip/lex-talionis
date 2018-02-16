@@ -122,6 +122,19 @@ class MainView(QtGui.QGraphicsView):
                 painter.drawImage(current_unit.position[0] * 16 - 8, current_unit.position[1] * 16 - 5, EditorUtilities.create_cursor())
             painter.end()
 
+    def disp_reinforcements(self):
+        if self.working_image:
+            painter = QtGui.QPainter()
+            painter.begin(self.working_image)
+            for coord, unit_image in self.unit_data.get_reinforcement_images(self.window.reinforcement_menu.current_pack()).iteritems():
+                if unit_image:
+                    painter.drawImage(coord[0] * 16 - 4, coord[1] * 16 - 6, unit_image)
+            # Highlight current unit
+            current_unit = self.window.reinforcement_menu.get_current_unit()
+            if current_unit and current_unit.position:
+                painter.drawImage(current_unit.position[0] * 16 - 8, current_unit.position[1] * 16 - 5, EditorUtilities.create_cursor())
+            painter.end()
+
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
@@ -146,7 +159,7 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     self.tile_info.delete(pos)
                     self.window.update_view()
-            elif self.window.dock_visibility['Units'] and self.tool not in ('Terrain', 'Tile Info'):
+            elif self.window.dock_visibility['Units'] and self.tool not in ('Terrain', 'Tile Info', 'Reinforcements'):
                 if event.button() == QtCore.Qt.LeftButton:
                     current_unit = self.window.unit_menu.get_current_unit()
                     if current_unit:
@@ -172,6 +185,27 @@ class MainView(QtGui.QGraphicsView):
                     print(current_idx)
                     if current_idx >= 0:
                         self.window.unit_menu.set_current_idx(current_idx)
+            elif self.window.dock_visibility['Reinforcements'] and self.tool == 'Reinforcements':
+                if event.button() == QtCore.Qt.LeftButton:
+                    current_unit = self.window.reinforcement_menu.get_current_unit()
+                    if current_unit:
+                        if current_unit.position:
+                            print('Copy & Place Unit')
+                            new_unit = current_unit.copy()
+                            new_unit.position = pos
+                            self.unit_data.add_reinforcement(new_unit)
+                            self.window.reinforcement_menu.add_unit(new_unit)
+                        else:
+                            print('Place Unit')
+                            current_unit.position = pos
+                            # Reset the color
+                            self.window.reinforcement_menu.get_current_item().setTextColor(QtGui.QColor("black"))
+                        self.window.update_view()
+                elif event.button() == QtCore.Qt.RightButton:
+                    current_idx = self.unit_data.get_ridx_from_pos(pos, self.window.reinforcement_menu.current_pack())
+                    print(current_idx)
+                    if current_idx >= 0:
+                        self.window.reinforcement_menu.set_current_idx(current_idx)
 
     def mouseMoveEvent(self, event):
         # Do the parent's version
@@ -181,19 +215,22 @@ class MainView(QtGui.QGraphicsView):
         pixmap = self.scene.itemAt(scene_pos)
         if pixmap:
             pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
+            message = None
             if self.window.dock_visibility['Units'] and self.unit_data.get_unit_from_pos(pos):
                 info = self.unit_data.get_unit_str(pos)
                 message = str(pos[0]) + ',' + str(pos[1]) + ': ' + info
-                self.window.status_bar.showMessage(message)
+            elif self.window.dock_visibility['Reinforcements'] and self.unit_data.get_rein_from_pos(pos, self.window.reinforcement_menu.current_pack()):
+                info = self.unit_data.get_reinforcement_str(pos, self.window.reinforcement_menu.current_pack())
+                message = str(pos[0]) + ',' + str(pos[1]) + ': ' + info
             elif self.window.dock_visibility['Tile Info'] and self.tile_info.get(pos):
                 info = self.tile_info.get_str(pos)
                 message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
-                self.window.status_bar.showMessage(message)
             elif self.window.dock_visibility['Terrain'] and pos in self.tile_data.tiles:
                 hovered_color = self.tile_data.tiles[pos]
                 # print('Hover', pos, hovered_color)
                 info = self.window.terrain_menu.get_info_str(hovered_color)
                 message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
+            if message:
                 self.window.status_bar.showMessage(message)
 
     def wheelEvent(self, event):
@@ -263,6 +300,8 @@ class MainEditor(QtGui.QMainWindow):
         current_time = self.elapsed_timer.elapsed()
         if self.dock_visibility['Units']:
             self.unit_menu.tick(current_time)
+        if self.dock_visibility['Reinforcements']:
+            self.reinforcement_menu.tick(current_time)
         for weather in self.weather:
             weather.update(current_time, self.tile_data)
         if self.autotiles:
@@ -283,6 +322,8 @@ class MainEditor(QtGui.QMainWindow):
             self.view.disp_tile_info()
         if self.dock_visibility['Units']:
             self.view.disp_units()
+        if self.dock_visibility['Reinforcements']:
+            self.view.disp_reinforcements()
         if self.weather:
             self.view.disp_weather()
         self.view.show_image()
@@ -314,6 +355,7 @@ class MainEditor(QtGui.QMainWindow):
                 self.unit_data.clear()
                 self.faction_menu.clear()
                 self.unit_menu.clear()
+                self.reinforcement_menu.clear()
 
                 self.status_bar.showMessage('Created New Level')
 
@@ -363,6 +405,7 @@ class MainEditor(QtGui.QMainWindow):
             self.unit_data.load(unit_level_filename)
             self.faction_menu.load(self.unit_data)
             self.unit_menu.load(self.unit_data)
+            self.reinforcement_menu.load(self.unit_data)
 
             if self.current_level_num:
                 self.status_bar.showMessage('Loaded Level' + self.current_level_num)
@@ -438,12 +481,13 @@ class MainEditor(QtGui.QMainWindow):
         def write_unit_line(unit):
             pos_str = ','.join(str(p) for p in unit.position)
             ai_str = unit.ai + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
+            event_id_str = (unit.pack + '_' + unit.event_id if unit.pack else unit.event_id) if unit.event_id else '0'
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
                 klass_str = unit.klass + ('F' if unit.gender >= 5 else '')
-                order = (unit.team, '0', '0', klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.faction)
+                order = (unit.team, '0', event_id_str, klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.faction)
             else:
-                order = (unit.team, '1' if unit.saved else '0', '0', unit.name, pos_str, ai_str)
+                order = (unit.team, '1' if unit.saved else '0', event_id_str, unit.name, pos_str, ai_str)
             unit_level.write(';'.join(order) + '\n')
 
         with open(fp, 'w') as unit_level:
