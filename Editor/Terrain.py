@@ -102,20 +102,20 @@ class TerrainMenu(QtGui.QWidget):
         self.grid.addWidget(self.list, 0, 0)
 
     def get_current_color(self):
-        color = self.terrain.keys()[self.list.currentRow()]
+        color = Data.terrain_data.keys()[self.list.currentRow()]
         print(color)
         return color
 
     def set_current_color(self, color):
-        idx = self.terrain.keys().index(color)
+        idx = Data.terrain_data.keys().index(color)
         self.list.setCurrentRow(idx)
 
     def get_info(self, color):
-        return self.terrain[color]
+        return Data.terrain_data[color]
 
     def get_info_str(self, color):
-        tid, name = self.terrain[color]
+        tid, name = Data.terrain_data[color]
         return str(tid) + " - " + str(name)
 
-    def trigger(self):
-        self.view.tool = 'Terrain'
+    # def trigger(self):
+    #     self.view.tool = 'Terrain'

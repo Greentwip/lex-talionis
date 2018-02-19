@@ -29,13 +29,13 @@ enemy;0;Sidney;Sidney;17,7;SoftGuard
 # Sidney's Thugs
 faction;Soldier;Soldier;Empire;An imperial soldier
 # 3 Fighters, 3 Soldiers, 1 Archer
-enemy;0;F1;Fighter;1;Iron Axe;0,0;Attack;Soldier
-enemy;0;F2;Fighter;1;Iron Axe;0,0;Attack;Soldier
-enemy;0;F3;Fighter;2;Iron Axe;0,0;Attack;Soldier
-enemy;0;S1;Soldier;1;Iron Lance;0,0;SoftGuard;Soldier
-enemy;0;S2;Soldier;1;Iron Lance;0,0;SoftGuard;Soldier
-enemy;0;S3;Soldier;5;eIron Lance;0,0;Attack;Soldier
-enemy;0;A1;Archer;1;Willow Bow;0,0;SoftGuard;Soldier
+enemy;0;F1;Fighter;1;Iron Axe;None;Attack;Soldier
+enemy;0;F2;Fighter;1;Iron Axe;None;Attack;Soldier
+enemy;0;F3;Fighter;2;Iron Axe;None;Attack;Soldier
+enemy;0;S1;Soldier;1;Iron Lance;None;SoftGuard;Soldier
+enemy;0;S2;Soldier;1;Iron Lance;None;SoftGuard;Soldier
+enemy;0;S3;Soldier;5;eIron Lance;None;Attack;Soldier
+enemy;0;A1;Archer;1;Willow Bow;None;SoftGuard;Soldier
 # Reinforcements
 # 2 Fighters, 1 Soldier
 enemy;0;pack1_1;Fighter;1;Iron Axe;0,6;Pursue;Soldier

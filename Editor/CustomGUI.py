@@ -105,11 +105,11 @@ class SignalList(QtGui.QListWidget):
         super(SignalList, self).__init__()
         self.parent = parent
         self.del_func = del_func
-        self.currentItemChanged.connect(self.trigger)
-        self.itemActivated.connect(self.trigger)
+    #     self.currentItemChanged.connect(self.trigger)
+    #     self.itemActivated.connect(self.trigger)
 
-    def trigger(self, *args, **kwargs):
-        self.parent.trigger()
+    # def trigger(self, *args, **kwargs):
+    #     self.parent.trigger()
 
     def keyPressEvent(self, event):
         if self.del_func and event.key() == QtCore.Qt.Key_Delete:

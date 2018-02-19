@@ -14,8 +14,8 @@ from Code.imagesDict import COLORKEY
 import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Faction, QtWeather
 from DataImport import Data
 
-# TODO: Reinforcements
-# TODO: Created Units
+# TODO: Reinforcements -- impl
+# TODO: Created Units -- maybe not
 # TODO: Load new Map button -- impl
 # TODO: Refresh button (also on losing and gaining focus) -- impl
 # TODO: Highlight current unit -- impl
@@ -26,7 +26,7 @@ from DataImport import Data
 # TODO: Droppable and Equippable Item support -- impl
 # TODO: Class sprites move -- impl
 # TODO: Highlight dances -- maybe not
-# TODO: Items displyed next to unit names in Units and Reinforcements
+# TODO: Items displyed next to unit names in Units and Reinforcements -- impl
 # TODO: Update status bar
 
 class MainView(QtGui.QGraphicsView):
@@ -37,12 +37,12 @@ class MainView(QtGui.QGraphicsView):
         self.setScene(self.scene)
 
         self.setMinimumSize(15*16, 10*16)
-        # self.setMouseTracking(True)
+        self.setMouseTracking(True)
         # self.setDragMode(QtGui.QGraphicsView.ScrollHandDrag)
 
         self.image = None
         self.working_image = None
-        self.tool = None
+        # self.tool = None
         # Data
         self.tile_data = tile_data
         self.tile_info = tile_info
@@ -140,8 +140,9 @@ class MainView(QtGui.QGraphicsView):
         pixmap = self.scene.itemAt(scene_pos)
         pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
         if pixmap and pos in self.tile_data.tiles:
-            # print('Press:', pos)
-            if self.window.dock_visibility['Terrain'] and self.tool == 'Terrain':
+            # print('mousePress Tool: %s' % self.tool)
+            # if self.window.dock_visibility['Terrain'] and self.tool == 'Terrain':
+            if self.window.dock_visibility['Terrain']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_color = self.window.terrain_menu.get_current_color()
                     self.tile_data.tiles[pos] = current_color
@@ -149,7 +150,8 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     current_color = self.tile_data.tiles[pos]
                     self.window.terrain_menu.set_current_color(current_color)
-            elif self.window.dock_visibility['Tile Info'] and self.tool == 'Tile Info':
+            # elif self.window.dock_visibility['Tile Info'] and self.tool == 'Tile Info':
+            elif self.window.dock_visibility['Tile Info']:
                 if event.button() == QtCore.Qt.LeftButton:
                     name = self.window.tile_info_menu.get_current_name()
                     value = self.window.tile_info_menu.start_dialog(self.tile_info.get(pos))
@@ -159,7 +161,8 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     self.tile_info.delete(pos)
                     self.window.update_view()
-            elif self.window.dock_visibility['Units'] and self.tool not in ('Terrain', 'Tile Info', 'Reinforcements'):
+            # elif self.window.dock_visibility['Units'] and self.tool not in ('Terrain', 'Tile Info', 'Reinforcements'):
+            elif self.window.dock_visibility['Units']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_unit = self.window.unit_menu.get_current_unit()
                     if current_unit:
@@ -182,10 +185,11 @@ class MainView(QtGui.QGraphicsView):
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
                     current_idx = self.unit_data.get_idx_from_pos(pos)
-                    print(current_idx)
+                    print('Current IDX %s' % current_idx)
                     if current_idx >= 0:
                         self.window.unit_menu.set_current_idx(current_idx)
-            elif self.window.dock_visibility['Reinforcements'] and self.tool == 'Reinforcements':
+            # elif self.window.dock_visibility['Reinforcements'] and self.tool == 'Reinforcements':
+            elif self.window.dock_visibility['Reinforcements']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_unit = self.window.reinforcement_menu.get_current_unit()
                     if current_unit:
@@ -215,22 +219,20 @@ class MainView(QtGui.QGraphicsView):
         pixmap = self.scene.itemAt(scene_pos)
         if pixmap:
             pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
-            message = None
+            info = None
             if self.window.dock_visibility['Units'] and self.unit_data.get_unit_from_pos(pos):
                 info = self.unit_data.get_unit_str(pos)
-                message = str(pos[0]) + ',' + str(pos[1]) + ': ' + info
             elif self.window.dock_visibility['Reinforcements'] and self.unit_data.get_rein_from_pos(pos, self.window.reinforcement_menu.current_pack()):
                 info = self.unit_data.get_reinforcement_str(pos, self.window.reinforcement_menu.current_pack())
-                message = str(pos[0]) + ',' + str(pos[1]) + ': ' + info
             elif self.window.dock_visibility['Tile Info'] and self.tile_info.get(pos):
                 info = self.tile_info.get_str(pos)
-                message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
             elif self.window.dock_visibility['Terrain'] and pos in self.tile_data.tiles:
                 hovered_color = self.tile_data.tiles[pos]
                 # print('Hover', pos, hovered_color)
                 info = self.window.terrain_menu.get_info_str(hovered_color)
+            # print('mouseMove: %s' % info)
+            if info:
                 message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
-            if message:
                 self.window.status_bar.showMessage(message)
 
     def wheelEvent(self, event):
@@ -575,13 +577,13 @@ class MainEditor(QtGui.QMainWindow):
         file_menu.addSeparator()
         file_menu.addAction(self.exit_act)
 
-        self.view_menu = QtGui.QMenu("&View", self)
+        # self.view_menu = QtGui.QMenu("&View", self)
 
         help_menu = QtGui.QMenu("&Help", self)
         help_menu.addAction(self.about_act)
 
         self.menuBar().addMenu(file_menu)
-        self.menuBar().addMenu(self.view_menu)
+        # self.menuBar().addMenu(self.view_menu)
         self.menuBar().addMenu(help_menu)
 
     def create_dock_windows(self):
@@ -591,46 +593,46 @@ class MainEditor(QtGui.QMainWindow):
         self.properties_menu = PropertyMenu.PropertyMenu(self)
         self.docks['Properties'].setWidget(self.properties_menu)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.docks['Properties'])
-        self.view_menu.addAction(self.docks['Properties'].toggleViewAction())
+        # self.view_menu.addAction(self.docks['Properties'].toggleViewAction())
 
         self.docks['Terrain'] = Dock("Terrain", self)
         self.docks['Terrain'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         self.terrain_menu = Terrain.TerrainMenu(self.view, self)
         self.docks['Terrain'].setWidget(self.terrain_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Terrain'])
-        self.view_menu.addAction(self.docks['Terrain'].toggleViewAction())
+        # self.view_menu.addAction(self.docks['Terrain'].toggleViewAction())
 
         self.docks['Tile Info'] = Dock("Tile Info", self)
         self.docks['Tile Info'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         self.tile_info_menu = TileInfo.TileInfoMenu(self.view, self)
         self.docks['Tile Info'].setWidget(self.tile_info_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Tile Info'])
-        self.view_menu.addAction(self.docks['Tile Info'].toggleViewAction())
+        # self.view_menu.addAction(self.docks['Tile Info'].toggleViewAction())
 
         self.docks['Factions'] = Dock("Factions", self)
         self.docks['Factions'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         self.faction_menu = Faction.FactionMenu(self.unit_data, self.view, self)
         self.docks['Factions'].setWidget(self.faction_menu)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.docks['Factions'])
-        self.view_menu.addAction(self.docks['Factions'].toggleViewAction())
+        # self.view_menu.addAction(self.docks['Factions'].toggleViewAction())
 
         self.docks['Units'] = Dock("Units", self)
         self.docks['Units'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         self.unit_menu = UnitData.UnitMenu(self.unit_data, self.view, self)
         self.docks['Units'].setWidget(self.unit_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Units'])
-        self.view_menu.addAction(self.docks['Units'].toggleViewAction())
+        # self.view_menu.addAction(self.docks['Units'].toggleViewAction())
 
         self.docks['Reinforcements'] = Dock("Reinforcements", self)
         self.docks['Reinforcements'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
         self.reinforcement_menu = UnitData.ReinforcementMenu(self.unit_data, self.view, self)
         self.docks['Reinforcements'].setWidget(self.reinforcement_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Reinforcements'])
-        self.view_menu.addAction(self.docks['Reinforcements'].toggleViewAction())
+        # self.view_menu.addAction(self.docks['Reinforcements'].toggleViewAction())
 
         # Left
         self.tabifyDockWidget(self.docks['Properties'], self.docks['Factions'])
-        self.docks['Factions'].raise_()  # GODDAMN FINDING THIS FUNCTION TOOK A LONG TIME
+        self.docks['Properties'].raise_()  # GODDAMN FINDING THIS FUNCTION TOOK A LONG TIME
 
         # Right
         self.tabifyDockWidget(self.docks['Terrain'], self.docks['Tile Info'])
@@ -639,6 +641,10 @@ class MainEditor(QtGui.QMainWindow):
         self.docks['Units'].raise_()
 
         self.dock_visibility = {k: False for k in self.docks.keys()}
+
+        # Remove ability for docks to be moved.
+        for name, dock in self.docks.iteritems():
+            dock.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
 
     def maybe_save(self):
         if self.modified:
@@ -655,7 +661,7 @@ class MainEditor(QtGui.QMainWindow):
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.WindowActivate:
             print "widget window has gained focus"
-            self.load_data()
+            # self.load_data()
         elif event.type() == QtCore.QEvent.WindowDeactivate:
             print "widget window has lost focus"
         elif event.type() == QtCore.QEvent.FocusIn:

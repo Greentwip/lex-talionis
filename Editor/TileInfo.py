@@ -173,8 +173,8 @@ class TileInfoMenu(QtGui.QWidget):
 
         self.grid.addWidget(self.list, 0, 0)
 
-    def trigger(self):
-        self.view.tool = 'Tile Info'
+    # def trigger(self):
+    #     self.view.tool = 'Tile Info'
 
     def start_dialog(self, tile_info_at_pos):
         kind = self.info[self.list.currentRow()].kind

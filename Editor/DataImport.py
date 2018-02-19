@@ -99,7 +99,7 @@ class Unit(object):
             try:
                 self.image = EditorUtilities.create_chibi(self.name)
             except KeyError:
-                self.image = GC.UNITDICT[self.faction + 'Emblem'].convert_alpha()
+                self.image = GC.UNITDICT[self.faction_icon + 'Emblem'].convert_alpha()
         else:
             self.id = 0
             self.event_id = None

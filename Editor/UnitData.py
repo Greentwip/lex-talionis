@@ -26,7 +26,7 @@ class UnitData(object):
 
     def clear(self):
         self.units = []
-        self.reinforcements = []
+        self.reinforcements = []  # Should always be sorted by pack and then by event_id
         self.factions = OrderedDict()
         self.load_player_characters = False
 
@@ -44,6 +44,7 @@ class UnitData(object):
                 # Process line
                 unitLine = line.split(';')
                 current_mode = self.parse_unit_line(unitLine, current_mode)
+        self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))  # First sort
 
     def get_unit_images(self):
         return {unit.position: EditorUtilities.create_image(unit.klass_image) if unit.klass_image else 
@@ -90,7 +91,8 @@ class UnitData(object):
     def get_reinforcement_str(self, pos, pack):
         for rein in self.reinforcements:
             if rein.position == pos and rein.pack == pack:
-                return rein.pack + '_' + rein.event_id + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
+                pack_str = pack if pack else 'None'
+                return pack_str + '_' + rein.event_id + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
         return ''
 
     def parse_unit_line(self, unitLine, current_mode):
@@ -122,6 +124,7 @@ class UnitData(object):
         cur_unit = Data.unit_data[legend['unit_id']]
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         cur_unit.position = position
+        cur_unit.ai = legend['ai']
         if legend['event_id'] != "0": # unit does not start on board
             if '_' in legend['event_id']:
                 cur_unit.pack, cur_unit.event_id = legend['event_id'].split('_')
@@ -136,6 +139,8 @@ class UnitData(object):
 
     def add_reinforcement(self, rein):
         self.reinforcements.append(rein)
+        self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))
+        return self.reinforcements.index(rein)
 
     def remove_unit_from_idx(self, unit_idx):
         if self.units:
@@ -153,7 +158,10 @@ class UnitData(object):
     def replace_reinforcement(self, rein_idx, rein):
         if self.reinforcements:
             self.reinforcements.pop(rein_idx)
-        self.reinforcements.insert(rein_idx, rein)
+        # self.reinforcements.insert(rein_idx, rein)
+        self.reinforcements.append(rein)
+        self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))
+        return self.reinforcements.index(rein)        
 
     def saved_unit_from_line(self, unitLine):
         self.add_unit_from_line(unitLine)
@@ -183,7 +191,7 @@ class UnitData(object):
         # default_previous_classes(u_i['klass'], classes, class_dict)
 
         u_i['level'] = int(legend['level'])
-        u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
+        u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
 
         u_i['faction'] = legend['faction']
         faction = self.factions[u_i['faction']]
@@ -281,13 +289,17 @@ class UnitData(object):
 
 # This allows for drawing the units items to the right of the unit on the list menu
 class ItemDelegate(QtGui.QStyledItemDelegate):
-    def __init__(self, unit_data=None):
+    def __init__(self, unit_data=None, rein=False):
         super(ItemDelegate, self).__init__()
         self.unit_data = unit_data
+        self.rein = rein
 
     def paint(self, painter, option, index):
         super(ItemDelegate, self).paint(painter, option, index)
-        current_unit = self.unit_data.units[index.row()]
+        if self.rein:
+            current_unit = self.unit_data.reinforcements[index.row()]
+        else:
+            current_unit = self.unit_data.units[index.row()]
         for idx, item in enumerate(current_unit.items):
             image = Data.item_data[item.id].image
             rect = option.rect
@@ -326,8 +338,8 @@ class UnitMenu(QtGui.QWidget):
         self.grid.addWidget(self.create_unit_button, 3, 0)
         self.grid.addWidget(self.remove_unit_button, 4, 0)
 
-    def trigger(self):
-        self.view.tool = 'Units'
+    # def trigger(self):
+    #     self.view.tool = 'Units'
 
     def get_current_item(self):
         return self.list.item(self.list.currentRow())
@@ -423,6 +435,9 @@ class UnitMenu(QtGui.QWidget):
 class ReinforcementMenu(UnitMenu):
     def __init__(self, unit_data, view, window):
         UnitMenu.__init__(self, unit_data, view, window)
+        self.delegate = ItemDelegate(unit_data, rein=True)
+        self.list.setItemDelegate(self.delegate)
+
         self.pack_view_label = QtGui.QLabel("Group to display:")
         self.pack_view_combobox = QtGui.QComboBox()
         self.packs = []
@@ -431,6 +446,8 @@ class ReinforcementMenu(UnitMenu):
         hbox.addWidget(self.pack_view_label)
         hbox.addWidget(self.pack_view_combobox)
         self.grid.addLayout(hbox, 0, 0)
+
+        self.list.setSortingEnabled(True)
 
     def trigger(self):
         self.view.tool = 'Reinforcements'
@@ -447,9 +464,10 @@ class ReinforcementMenu(UnitMenu):
     def center_on_unit(self, item, prev):
         idx = self.list.row(item)
         # idx = int(idx)
-        unit = self.unit_data.units[idx]
+        unit = self.unit_data.reinforcements[idx]
         if unit.position:
-            EditorUtilities.setComboBox(self.pack_view_combobox, unit.pack)
+            pack = unit.pack if unit.pack else 'None'
+            EditorUtilities.setComboBox(self.pack_view_combobox, pack)
             self.view.center_on_pos(unit.position)
 
     def current_pack(self):
@@ -517,21 +535,24 @@ class ReinforcementMenu(UnitMenu):
         idx = self.list.row(item)
         unit = self.unit_data.reinforcements[idx]
         if unit.generic:
-            modified_unit, ok = UnitDialogs.CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:", unit, rein=True)
+            modified_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:", unit)
         else:
-            modified_unit, ok = UnitDialogs.LoadUnitDialog.getUnit(self, "Load Unit", "Select unit:", unit, rein=True)
+            modified_unit, ok = UnitDialogs.ReinLoadUnitDialog.getUnit(self, "Load Unit", "Select unit:", unit)
         if ok:
             modified_unit.position = unit.position
             # Replace unit
             self.list.takeItem(idx)
             self.check_remove_pack(unit)
-            self.list.insertItem(idx, self.create_item(modified_unit))
+            item = self.create_item(modified_unit)
+            self.list.insertItem(idx, item)
+            self.list.setCurrentRow(self.list.row(item))
             self.unit_data.replace_reinforcement(idx, modified_unit)
             self.window.update_view()
 
     def add_unit(self, unit):
-        self.list.addItem(self.create_item(unit))
-        self.list.setCurrentRow(self.list.count() - 1)
+        item = self.create_item(unit)
+        self.list.addItem(item)
+        self.list.setCurrentRow(self.list.row(item))
 
     def tick(self, current_time):
         if GC.PASSIVESPRITECOUNTER.update(current_time):

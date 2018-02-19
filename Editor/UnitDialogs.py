@@ -14,7 +14,7 @@ import EditorUtilities
 from CustomGUI import GenderBox
 
 class LoadUnitDialog(QtGui.QDialog):
-    def __init__(self, instruction, parent, rein):
+    def __init__(self, instruction, parent):
         super(LoadUnitDialog, self).__init__(parent)
         self.form = QtGui.QFormLayout(self)
         self.form.addRow(QtGui.QLabel(instruction))
@@ -96,7 +96,7 @@ class LoadUnitDialog(QtGui.QDialog):
             return None, False
 
 class ReinLoadUnitDialog(LoadUnitDialog):
-    def __init__(self, instruction, parent, rein):
+    def __init__(self, instruction, parent):
         super(LoadUnitDialog, self).__init__(parent)
         self.form = QtGui.QFormLayout(self)
         self.form.addRow(QtGui.QLabel(instruction))
@@ -114,6 +114,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         EditorUtilities.setComboBox(self.unit_box, unit.name)
         EditorUtilities.setComboBox(self.team_box, unit.team)
         self.saved_checkbox.setChecked(unit.saved)
+        print(unit.ai)
         EditorUtilities.setComboBox(self.ai_select, unit.ai)
         if unit.ai_group:
             self.ai_group.setText(str(unit.ai_group))

@@ -273,7 +273,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     default_previous_classes(u_i['klass'], classes, class_dict)
 
     u_i['level'] = int(legend['level'])
-    u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
+    u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
     u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], legend['items'], gameStateObj)
