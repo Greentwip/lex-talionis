@@ -483,7 +483,7 @@ class MainEditor(QtGui.QMainWindow):
         def write_unit_line(unit):
             pos_str = ','.join(str(p) for p in unit.position)
             ai_str = unit.ai + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
-            event_id_str = (unit.pack + '_' + unit.event_id if unit.pack else unit.event_id) if unit.event_id else '0'
+            event_id_str = (unit.pack + '_' + unit.event_id if unit.pack != 'None' else unit.event_id) if unit.event_id else '0'
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
                 klass_str = unit.klass + ('F' if unit.gender >= 5 else '')

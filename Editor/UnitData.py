@@ -91,8 +91,7 @@ class UnitData(object):
     def get_reinforcement_str(self, pos, pack):
         for rein in self.reinforcements:
             if rein.position == pos and rein.pack == pack:
-                pack_str = pack if pack else 'None'
-                return pack_str + '_' + rein.event_id + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
+                return pack + '_' + rein.event_id + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
         return ''
 
     def parse_unit_line(self, unitLine, current_mode):
@@ -125,11 +124,12 @@ class UnitData(object):
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         cur_unit.position = position
         cur_unit.ai = legend['ai']
+        cur_unit.team = legend['team']
         if legend['event_id'] != "0": # unit does not start on board
             if '_' in legend['event_id']:
                 cur_unit.pack, cur_unit.event_id = legend['event_id'].split('_')
             else:
-                cur_unit.event_id = legend['event_id']
+                cur_unit.pack, cur_unit.event_id = 'None', legend['event_id']
             self.reinforcements.append(cur_unit)
         else: # Unit does start on board
             self.units.append(cur_unit)
@@ -449,8 +449,8 @@ class ReinforcementMenu(UnitMenu):
 
         self.list.setSortingEnabled(True)
 
-    def trigger(self):
-        self.view.tool = 'Reinforcements'
+    # def trigger(self):
+    #     self.view.tool = 'Reinforcements'
 
     def get_current_unit(self):
         if self.unit_data.reinforcements:
@@ -466,16 +466,11 @@ class ReinforcementMenu(UnitMenu):
         # idx = int(idx)
         unit = self.unit_data.reinforcements[idx]
         if unit.position:
-            pack = unit.pack if unit.pack else 'None'
-            EditorUtilities.setComboBox(self.pack_view_combobox, pack)
+            EditorUtilities.setComboBox(self.pack_view_combobox, unit.pack)
             self.view.center_on_pos(unit.position)
 
     def current_pack(self):
-        pack = self.pack_view_combobox.currentText()
-        if pack == 'None':
-            return None
-        else:
-            return pack
+        return self.pack_view_combobox.currentText()
 
     def load(self, unit_data):
         self.clear()
@@ -485,19 +480,19 @@ class ReinforcementMenu(UnitMenu):
             self.list.addItem(self.create_item(unit))
 
     def create_item(self, unit):
-        pack = unit.pack if unit.pack else 'None'
         if unit.generic:
-            item = QtGui.QListWidgetItem(pack + ': ' + unit.event_id + ' -- L' + str(unit.level))
+            item = QtGui.QListWidgetItem(unit.pack + ': ' + unit.event_id + ' -- L' + str(unit.level))
         else:
-            item = QtGui.QListWidgetItem(pack + ': ' + unit.event_id + ' -- ' + unit.name)
+            item = QtGui.QListWidgetItem(unit.pack + ': ' + unit.event_id + ' -- ' + unit.name)
         klass = Data.class_data.get(unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
         if not unit.position:
             item.setTextColor(QtGui.QColor("red"))
-        if pack not in self.packs:
-            self.packs.append(pack)
-            self.pack_view_combobox.addItem(pack)
+        if unit.pack not in self.packs:
+            self.packs.append(unit.pack)
+            self.pack_view_combobox.addItem(unit.pack)
+            self.pack_view_combobox.setCurrentIndex(self.pack_view_combobox.count() - 1)
         return item
 
     def load_unit(self):
@@ -547,6 +542,7 @@ class ReinforcementMenu(UnitMenu):
             self.list.insertItem(idx, item)
             self.list.setCurrentRow(self.list.row(item))
             self.unit_data.replace_reinforcement(idx, modified_unit)
+            print(idx, self.list.row(item))
             self.window.update_view()
 
     def add_unit(self, unit):

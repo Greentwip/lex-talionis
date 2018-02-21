@@ -76,7 +76,7 @@ class Unit(object):
             if self.event_id and '_' in self.event_id:
                 self.pack, self.event_id = self.event_id.split('_')
             else:
-                self.pack = info.get('pack')
+                self.pack = info.get('pack', 'None')
             self.faction = info.get('faction')
             self.name = info['name']
             self.generic = info.get('generic', False)

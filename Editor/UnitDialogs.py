@@ -22,6 +22,14 @@ class LoadUnitDialog(QtGui.QDialog):
         self.create_menus()
 
     def create_menus(self):
+        # Team
+        self.team_box = QtGui.QComboBox()
+        self.team_box.uniformItemSizes = True
+        for team in DataImport.teams:
+            self.team_box.addItem(team)
+        self.team_box.activated.connect(self.team_changed)
+        self.form.addRow('Team:', self.team_box)
+
         # Unit Select
         self.unit_box = QtGui.QComboBox()
         self.unit_box.uniformItemSizes = True
@@ -33,13 +41,6 @@ class LoadUnitDialog(QtGui.QDialog):
             else:
                 self.unit_box.addItem(unit.name)
         self.form.addRow(self.unit_box)
-
-        # Team
-        self.team_box = QtGui.QComboBox()
-        self.team_box.uniformItemSizes = True
-        for team in DataImport.teams:
-            self.team_box.addItem(team)
-        self.team_box.activated.connect(self.team_changed)
 
         # Saved
         self.saved_checkbox = QtGui.QCheckBox('Load from last level?')
