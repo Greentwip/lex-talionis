@@ -235,7 +235,7 @@
         <uses>15</uses>
         <value>220</value>
         <RNG>1</RNG>
-        <desc>A sword which devours magic.</desc>
+        <desc>Grants wielder RES +10. Silences on hit.</desc>
 		<weight>5</weight>
         <status_on_equip>Resistance +10</status_on_equip>
         <status>Silence</status>
@@ -856,7 +856,7 @@
         <uses>15</uses>
         <value>150</value>
         <RNG>2-3</RNG>
-        <desc>A bow which devours magic.</desc>
+        <desc>Grants wielder RES +10. Silences on hit.</desc>
 		<weight>6</weight>
         <status_on_equip>Resistance +10</status_on_equip>
         <status>Silence</status>

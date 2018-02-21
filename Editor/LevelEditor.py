@@ -492,18 +492,9 @@ class MainEditor(QtGui.QMainWindow):
                 order = (unit.team, '1' if unit.saved else '0', event_id_str, unit.name, pos_str, ai_str)
             unit_level.write(';'.join(order) + '\n')
 
-        with open(fp, 'w') as unit_level:
-            unit_level.write(EditorUtilities.unit_level_header)
-            factions = self.unit_data.factions
-            if self.unit_data.load_player_characters:
-                unit_level.write('load_player_characters\n')
-            for faction in factions.values():
-                unit_level.write('faction;' + faction.faction_id + ';' + faction.unit_name + 
-                                 ';' + faction.faction_icon + ';' + faction.desc + '\n')
-            # Units
-            units = [unit for unit in self.unit_data.units if unit.position]
+        def write_units(units):
             # Player units
-            player_units = [unit for unit in units if unit.team == 'player' and unit.position]
+            player_units = [unit for unit in units if unit.team == 'player']
             unit_level.write('# Player Characters\n')
             for unit in player_units:
                 write_unit_line(unit)
@@ -528,6 +519,21 @@ class MainEditor(QtGui.QMainWindow):
                     unit_level.write('# Generics\n')
                     for unit in generic_enemies:
                         write_unit_line(unit)
+
+        with open(fp, 'w') as unit_level:
+            unit_level.write(EditorUtilities.unit_level_header)
+            factions = self.unit_data.factions
+            if self.unit_data.load_player_characters:
+                unit_level.write('load_player_characters\n')
+            for faction in factions.values():
+                unit_level.write('faction;' + faction.faction_id + ';' + faction.unit_name + 
+                                 ';' + faction.faction_icon + ';' + faction.desc + '\n')
+            # Units
+            units = [unit for unit in self.unit_data.units if unit.position]
+            reinforcements = [rein for rein in self.unit_data.reinforcements]
+            write_units(units)
+            unit_level.write('# === Reinforcements ===\n')
+            write_units(reinforcements)
 
     def save(self):
         # Find what the next unused num is 
