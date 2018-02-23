@@ -274,7 +274,7 @@ class MainEditor(QtGui.QMainWindow):
         self.status_bar.showMessage('Ready')
 
         self.directory = None
-        self.current_level_num = None
+        self.current_level_name = None
 
         self.create_actions()
         self.create_menus()
@@ -349,7 +349,6 @@ class MainEditor(QtGui.QMainWindow):
                                                            "PNG Files (*.png);;All Files (*)")
             if image_file:
                 self.set_image(image_file)
-                self.tile_data.clear()
                 self.autotiles.clear()
                 self.overview_dict = OrderedDict()
                 self.properties_menu.new()
@@ -358,6 +357,7 @@ class MainEditor(QtGui.QMainWindow):
                 self.faction_menu.clear()
                 self.unit_menu.clear()
                 self.reinforcement_menu.clear()
+                self.tile_data.new(image_file)
 
                 self.status_bar.showMessage('Created New Level')
 
@@ -368,6 +368,7 @@ class MainEditor(QtGui.QMainWindow):
                                                        "PNG Files (*.png);;All Files (*)")
         if image_file:
             self.set_image(image_file)
+            self.tile_data.new(image_file)
             self.update_view()
 
     def open(self):
@@ -381,7 +382,7 @@ class MainEditor(QtGui.QMainWindow):
                 if 'Level' in str(directory):
                     idx = str(directory).index('Level')
                     num = str(directory)[idx + 5:]
-                    self.current_level_num = num
+                    self.current_level_name = num
                 self.directory = directory
                 self.load_level()
 
@@ -409,8 +410,8 @@ class MainEditor(QtGui.QMainWindow):
             self.unit_menu.load(self.unit_data)
             self.reinforcement_menu.load(self.unit_data)
 
-            if self.current_level_num:
-                self.status_bar.showMessage('Loaded Level' + self.current_level_num)
+            if self.current_level_name:
+                self.status_bar.showMessage('Loaded Level' + self.current_level_name)
 
             self.update_view()
 
@@ -536,16 +537,26 @@ class MainEditor(QtGui.QMainWindow):
             write_units(reinforcements)
 
     def save(self):
-        # Find what the next unused num is 
-        if not self.current_level_num:
-            self.current_level_num = 'test'
-        self.save_level(self.current_level_num)
+        new = False
+        if not self.current_level_name:
+            text, ok = QtGui.QInputDialog.getText(self, "Level Editor", "Enter Level Number:")
+            if ok:
+                self.current_level_name = text
+            else:
+                return
+            new = True
 
-    def save_level(self, num):
         data_directory = QtCore.QDir.currentPath() + '/../Data'
-        level_directory = data_directory + '/Level' + num
-        if not os.path.exists(level_directory):
-            os.mkdir(level_directory)
+        level_directory = data_directory + '/Level' + self.current_level_name
+        if new:
+            if os.path.exists(level_directory):
+                ret = QtGui.QMessageBox.warning(self, "Level Editor", "A level with that number already exists!\n"
+                                                "Do you want to overwrite it?",
+                                                QtGui.QMessageBox.Save | QtGui.QMessageBox.Cancel)
+                if ret == QtGui.QMessageBox.Cancel:
+                    return
+            else:
+                os.mkdir(level_directory)
 
         overview_filename = level_directory + '/overview.txt'
         self.overview_dict = self.properties_menu.save()
@@ -560,7 +571,7 @@ class MainEditor(QtGui.QMainWindow):
         unit_level_filename = level_directory + '/UnitLevel.txt'
         self.write_unit_level(unit_level_filename)
 
-        print('Saved Level' + num)
+        print('Saved Level' + self.current_level_name)
 
     # === Create Menu ===
     def create_actions(self):

@@ -11,6 +11,9 @@ from CustomGUI import SignalList
 
 class Autotiles(object):
     def __init__(self):
+        self.clear()
+
+    def clear(self):
         self.autotiles = []
         self.autotile_frame = 0
 
@@ -38,8 +41,11 @@ class Autotiles(object):
         return bool(self.autotiles)
 
 class TileData(object):
+    GRASS_TILE = (192, 224, 48)
+
     def __init__(self):
         self.tiles = {}
+        self.width, self.height = 0, 0
 
     def clear(self):
         self.tiles = {}
@@ -52,6 +58,21 @@ class TileData(object):
         tiledata = QtGui.QImage(tilefp)
         colorkey, self.width, self.height = self.build_color_key(tiledata)
         self.populate_tiles(colorkey)
+
+    def new(self, image_file):
+        self.clear()
+        image = QtGui.QImage(image_file)
+        self.width, self.height = image.width() / 16, image.height() / 16
+
+        mapObj = []
+        for x in range(self.width):
+            mapObj.append([])
+        for y in range(self.height):
+            for x in range(self.width):
+                color = QtGui.QColor.fromRgb(*self.GRASS_TILE)
+                mapObj[x].append((color.red(), color.green(), color.blue()))
+
+        self.populate_tiles(mapObj)
 
     def build_color_key(self, tiledata):
         width = tiledata.width()
