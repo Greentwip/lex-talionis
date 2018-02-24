@@ -155,7 +155,7 @@ class InfoMenu(StateMachine.State):
         surf = gameStateObj.generic_surf
         surf.fill(GC.COLORDICT['black'])
         self.background.draw(surf)
-        self.draw_portrait(surf)
+        self.draw_portrait(surf, metaDataObj)
         self.drawSlide(surf, gameStateObj, metaDataObj)
 
         if self.helpMenu.current:
@@ -163,10 +163,10 @@ class InfoMenu(StateMachine.State):
 
         return surf
 
-    def draw_portrait(self, surf):
+    def draw_portrait(self, surf, metaDataObj):
         # Only create if we don't have one in memory
         if not self.portrait_surf:
-            self.portrait_surf = self.create_portrait()
+            self.portrait_surf = self.create_portrait(metaDataObj)
 
         # Stick it on the surface
         surf.blit(self.portrait_surf, (0, 16*self.scroll_offset))
@@ -177,7 +177,7 @@ class InfoMenu(StateMachine.State):
                GC.WINHEIGHT - GC.TILEHEIGHT*3.5 + 18 - max(0, (activeSpriteSurf.get_width() - 16)/2))
         surf.blit(activeSpriteSurf, (pos[0], pos[1] + 16*self.scroll_offset))
 
-    def create_portrait(self):
+    def create_portrait(self, metaDataObj):
         UnitInfoSurface = Engine.create_surface((7*GC.WINWIDTH/16, GC.WINHEIGHT), transparent=True)
         UnitInfoSurface = UnitInfoSurface.convert_alpha()
         # Blit Background of Character Portrait
@@ -201,7 +201,8 @@ class InfoMenu(StateMachine.State):
         position = (p_left + PortraitNameSurf.get_width()/2 - NameSize[0]/2, p_top + PortraitNameSurf.get_height()/2 - NameSize[1]/2)
         GC.FONT['text_white'].blit(self.unit.name, UnitInfoSurface, position) 
         # Blit the unit's class on the simple info block
-        GC.FONT['text_white'].blit(self.unit.klass.replace('_', ' '), UnitInfoSurface, (GC.TILEWIDTH/2, GC.WINHEIGHT - GC.TILEHEIGHT * 3.25 - 1))
+        long_name = metaDataObj['class_dict'][self.unit.klass]['long_name']
+        GC.FONT['text_white'].blit(long_name, UnitInfoSurface, (GC.TILEWIDTH/2, GC.WINHEIGHT - GC.TILEHEIGHT * 3.25 - 1))
         # Blit the unit's level on the simple info block
         LevelSize = GC.FONT['text_blue'].size(str(self.unit.level))
         position = (GC.TILEWIDTH*2.5 - LevelSize[0] - 1, GC.WINHEIGHT - GC.TILEHEIGHT*2.5)

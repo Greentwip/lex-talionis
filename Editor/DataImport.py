@@ -33,7 +33,6 @@ def build_units(class_dict):
 
         u_i['gender'] = unit.find('gender').text
         u_i['level'] = int(unit.find('level').text)
-        u_i['faction_icon'] = unit.find('faction').text
 
         # stats = SaveLoad.intify_comma_list(unit.find('bases').text)
         # for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
@@ -84,7 +83,7 @@ class Unit(object):
             self.position = None
             self.level = int(info['level'])
             self.gender = int(info['gender'])
-            self.faction_icon = info['faction_icon']
+            self.faction_icon = info.get('faction_icon', 'Neutral')
             self.klass = info['klass']
             self.tags = info.get('tags', [])
             self.desc = info['desc']
@@ -262,7 +261,10 @@ class GlobalData(object):
         # Setting up portrait data
         self.portrait_data = OrderedDict()
         for name, portrait in portrait_dict.items():
-            self.portrait_data[name] = UnitPortrait(name, portrait['blink'], portrait['mouth'], (0, 0))
+            try:
+                self.portrait_data[name] = UnitPortrait(name, portrait['blink'], portrait['mouth'], (0, 0))
+            except KeyError as e:
+                print('%s: %s portrait not found' % (e, name))
         for portrait in self.portrait_data.values():
             portrait.create_image()
             portrait.image = portrait.image.convert_alpha()

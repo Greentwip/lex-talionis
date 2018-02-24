@@ -56,6 +56,7 @@ class LoadUnitDialog(QtGui.QDialog):
 
         # AI Group
         self.ai_group = QtGui.QLineEdit()
+        self.ai_group.setEnabled(False)
         self.form.addRow('AI Group:', self.ai_group)
 
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
@@ -91,7 +92,6 @@ class LoadUnitDialog(QtGui.QDialog):
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = dialog.ai_group.text()
-            unit.pack, unit.event_id = dialog.pack.text(), dialog.event_id.text()
             return unit, True
         else:
             return None, False

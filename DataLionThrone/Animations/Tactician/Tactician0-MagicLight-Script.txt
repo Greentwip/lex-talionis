@@ -1,0 +1,53 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+sound;MonkRune
+f;4;Attack1
+f;3;Attack2
+f;2;Attack3
+f;3;Attack4
+f;2;Attack5
+f;2;Attack6
+# Default
+f;3;Attack7
+f;3;Attack8
+f;3;Attack7
+f;2;Attack9
+f;2;Attack7
+f;3;Attack10
+f;3;Attack7
+f;2;Attack11
+f;16;Attack7
+# move back
+sound;Throw 2
+f;3;Attack12
+sound;Foot Step
+f;5;Attack13
+f;4;Attack14
+f;3;Attack15
+f;2;Attack16
+f;9;Attack17
+# spin
+sound;Throw 2
+f;4;Attack18
+spell
+f;1;Attack18
+sound;Foot Step
+f;6;Attack19
+f;5;Attack20
+f;3;Attack21
+start_loop
+    f;4;Attack22
+end_loop
+f;4;Attack23
+f;5;Attack24
+f;1;Stand

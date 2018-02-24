@@ -1,0 +1,27 @@
+# Outro 1
+victory_screen
+m;To A New Journey
+b;Forest
+t;2
+u;Prim;MidRight;u;Ophie;FarRight;u;Joel;Left
+s;Joel;I reckon now would be the proper time for introductions.{w}{br}The name's Joel, and the sour face is my partner Nia.{w};auto
+s;Prim;I'm Prim and this is Ophie.{w}{br}T-Thank you for helping us.{w};auto
+s;Joel;No problem, lass. Though, if you don't mind my pryin'...{w}{br}I've been wonderin'...{w}{br}What in the hell did ya'll do to rouse Ulver's thugs after you?{w};auto
+s;Ophie;Hmmph! What did we do?!{w}{br}They're the ones that attacked us!{w}{br}They stormed the monastery, claiming we had some fugitive or something.{w};auto
+s;Prim;M-master Yohn, Ophie, and I tried to escape...{w}{br}Bu-But Master Yohn went back... t-to hold them off...{w}{br}H-He died for us.{w};auto
+s;Joel;Lass... you're safe now.{w}{br}Your master's sacrifice had a purpose, right?{w};auto
+s;Prim;*sniff* Y-yeah...{w};auto
+s;Joel;I'll let ya'll in on a little secret.{w}{br}I reckon ya'll already figured that Nia and I ain't rangers.{w}{br}We're actually with the Resistance.{w};auto
+s;Prim;The Resistance?{w};auto
+s;Joel;We're... daggumit, how does Sam phrase it...{w}{br}freedom fighters!{w}{br}The Empire's had its way with our country for too long.{w}{br}We're aimin' to take it back!{w}{clear}Anyways, since ya'll don't have anywhere to go, why don't ya'll head back with me?{w};auto
+s;Ophie;You fight against the Empire?{w};auto
+s;Joel;You bet!{w}{br}And we could always use new members.{w}{br}You're a competant swordsman.{w};auto
+set_expression;Ophie;Smiling
+s;Joel;And, lassie, we could certainly use a healer.{w}{br}Sam has his hands full as it is.{w};auto
+s;Ophie;Count me in!{w}{br}Prim, what do you say?{w}{br}This could be our chance to avenge Master Yohn!{w};auto
+s;Prim;W-we don't have anywhere else to go, and if we'll be helping Kerala...{w};auto
+set_expression;Prim;Smiling
+s;Prim;Then, how can I say no?{w};auto
+s;Joel;Sounds like a plan!{w}{br}I'll get Nia, and we'll be off!{w};auto
+r;Prim;Ophie;Joel
+t;1

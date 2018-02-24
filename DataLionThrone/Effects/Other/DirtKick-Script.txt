@@ -1,0 +1,6 @@
+pose;Attack
+f;3;Dirt1
+f;2;Dirt2
+f;2;Dirt3
+f;1;Dirt4
+wait;1

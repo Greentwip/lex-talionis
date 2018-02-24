@@ -6,6 +6,11 @@
         <blink>24,32</blink>
     </portrait>
 
+    <portrait name="Franz">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
     <portrait name="Prim">
         <mouth>20,48</mouth>
         <blink>20,32</blink>

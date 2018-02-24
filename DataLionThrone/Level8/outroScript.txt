@@ -1,0 +1,51 @@
+# outro 8
+# Remaining Soldiers Flee on Vagnius's death.
+victory_screen
+m;One Summer's Day
+b;TownDark
+t;2
+u;Sam;Left
+u;Kayla;Right
+s;Kayla;The rest have turned tail and run.{w};auto
+s;Sam;Good riddance.{w}{br}I guess we can consider this another victory then.{w};auto
+s;Kayla;Tsk tsk. You sound so down.{w}{br}This was a victory!{w};auto
+s;Sam;There's still so much to do, and so little time.{w};auto
+s;Kayla;If we succeed, by tomorrow evening Althea will be on throne,{w}{br}Duke Ulver will have been defeated, and Kerala will be free.{w};auto
+s;Sam;And the Resistance... it will be no more.{w};auto
+s;Kayla;Ah... feeling wistful already Sam?{w}{br}This was the Resistance's purpose, was it not?{w}{br}It can't last forever. It shouldn't.{w};auto
+s;Sam;I know.{w}{br}This chapter will end, and a new chapter of our lives will begin.{w};auto
+s;Kayla;A better one. For all the people of Kerala.{w};auto
+s;Sam;So we hope.{w};auto
+r;Sam;Kayla
+t;1
+b;Inn
+t;2
+# Fade to Ophie
+u;Ophie;Right
+wait;500
+u;Prim;Left
+s;Ophie;Prim, aren't you supposed to be with Althea?{w};auto
+s;Prim;She's got Drake to take care of her.{w}{br}Besides she's doing great.{w}{br}You should see how she handles herself around the townsfolk.{w}{br}Even though she's just a girl, really...{w}{br}she definitely has the makings of a queen.{w};auto
+s;Ophie;...{w};auto
+s;Prim;Are you alright, Ophie?{w};auto
+s;Ophie;I'm fine...{w};auto
+s;Prim;What's wrong? You can talk to me.{w};auto
+s;Ophie;I thought Vagnius was some... incarnation of pure evil,{w}{br}like a devil out of a storybook.{w}{br}But really he was just an ordinary man.{w}{br}Twisted, sure.{w}{br}But he died just the same as the rest...{w};auto
+s;Prim;So... do you feel any better?{w}{br}Now that he's gone.{w};auto
+s;Ophie;Kind of?{w}{br}...I wish Master Yohn were here...{w};auto
+s;Prim;He is--{w}{br}in your heart and in your memories...{w};auto
+s;Ophie;I just keep looking for him...{w}{br}I miss him.{w};auto
+s;Prim;I do too...{w};auto
+r;Prim;Ophie
+m;Young Man from the East
+t;1
+b;TownDark
+t;2
+u;Sam;Left
+u;Joel;Right
+s;Joel;So now what, captain?{w};auto
+s;Sam;For now, we rest.{w}{br}Tomorrow is the final act.{w}{br}If we succeed, our long quest will finally be over.{w}{br}The Empire defeated.{w}{br}Althea on the throne.{w}{br}Kerala finally free.{w};auto
+s;Joel;It all comes down to tomorrow, then.{w};auto
+s;Sam;It all comes down to tomorrow.{w};auto
+r;Joel;Sam
+t;1

@@ -1,0 +1,30 @@
+pose;Attack
+darken
+sound;HealInit
+effect;HealDust
+wait;54
+# Lasts 58 frames
+sound;Heal1
+effect;HealOrbHigh
+wait;4
+# Lasts 50 frames
+effect;PhysicDust1
+wait;50
+wait;4
+wait;20
+pan
+wait;30
+sound;Heal2
+enemy_effect;HealOrbLow
+wait;22
+# Lasts 36 frames
+enemy_effect;PhysicDust2
+wait;29
+wait;3
+defer;8;lighten
+spell_hit;no_sound
+wait;12
+pan
+wait;12
+end_parent_loop
+wait;1

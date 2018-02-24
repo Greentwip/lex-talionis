@@ -323,7 +323,8 @@ class levelUpScreen(object):
             LevelUpSurface.blit(LevelSurf, (0, 0))
 
             # Render top banner text
-            GC.FONT['text_white'].blit(str(self.unit.klass).replace('_', ' '), LevelUpSurface, (12, 3))
+            long_name = gameStateObj.metaDataObj['class_dict'][self.unit.klass]['long_name']
+            GC.FONT['text_white'].blit(long_name, LevelUpSurface, (12, 3))
             GC.FONT['text_yellow'].blit(cf.WORDS['Lv'], LevelUpSurface, (LevelUpSurface.get_width()/2+12, 3))
             if self.first_spark_flag or self.force_level:
                 level = str(self.unit.level)

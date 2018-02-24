@@ -1,0 +1,58 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;5;Frame1
+sound;Foot Step
+f;4;Frame2
+f;9;Frame3
+enemy_flash_white;8
+f;1;Frame4;Miss
+screen_flash_white;4
+f;4;Frame4;Miss
+# Hit Frame
+# Screen shake in hit
+hit_spark
+start_hit
+wait_for_hit;Frame4;Miss
+f;5;Frame6;Miss
+sound;Weapon Pull
+f;2;Frame7
+f;6;Frame8
+sound;Foot Step
+f;3;Frame9
+f;6;Frame11
+sound;Foot Step
+f;6;Frame12
+f;9;Frame13
+f;1;Stand
+
+pose;Miss
+f;6;Stand
+f;5;Frame1
+sound;Foot Step
+f;4;Frame2
+f;8;Frame3
+sound;Weapon Push
+f;2;Frame26
+miss
+f;30;Frame26
+f;5;Frame27
+sound;Weapon Pull
+f;2;Frame7
+f;6;Frame8
+sound;Foot Step
+f;3;Frame9
+f;6;Frame11
+sound;Foot Step
+f;6;Frame12
+f;9;Frame13
+f;1;Stand

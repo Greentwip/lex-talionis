@@ -1,7 +1,7 @@
 # Imports
 import GlobalConstants as GC
 import configuration as cf
-import Engine, InputManager, StateMachine
+import Engine, StateMachine
 import Image_Modification, MenuFunctions, CustomObjects, InfoMenu
 import GUIObjects, Counters
 
@@ -284,7 +284,8 @@ class UnitMenu(StateMachine.State):
 
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
-            font.blit(unit.klass, surf, (4, top))
+            long_name = metaDataObj['class_dict'][unit.klass]['long_name']
+            font.blit(long_name, surf, (4, top))
             GC.FONT['text_blue'].blit(str(unit.level), surf, (80 - GC.FONT['text_blue'].size(str(unit.level))[0], top))
             GC.FONT['text_blue'].blit(str(unit.exp), surf, (100 - GC.FONT['text_blue'].size(str(unit.exp))[0], top))
             c_hp = str(unit.currenthp)

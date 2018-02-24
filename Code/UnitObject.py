@@ -243,8 +243,8 @@ class UnitObject(object):
         name = self.name
         # If generic, include level in name
         if self.generic_flag:
-            klass_name = gameStateObj.metaDataObj['class_dict'][self.klass]['name']
-            name = klass_name + ' ' + str(self.level)
+            short_name = gameStateObj.metaDataObj['class_dict'][self.klass]['short_name']
+            name = short_name + ' ' + str(self.level)
         position = (left + PortraitWidth/2 + 6 - GC.FONT['info_grey'].size(name)[0]/2, top + 4)
         GC.FONT['info_grey'].blit(name, PortraitSurface, position)
         # Blit Health Text

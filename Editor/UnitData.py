@@ -388,15 +388,15 @@ class UnitMenu(QtGui.QWidget):
     def load_unit(self):
         loaded_unit, ok = UnitDialogs.LoadUnitDialog.getUnit(self, "Load Unit", "Select unit:")
         if ok:
-            self.add_unit(loaded_unit)
             self.unit_data.add_unit(loaded_unit)
+            self.add_unit(loaded_unit)
             self.window.update_view()
 
     def create_unit(self):
         created_unit, ok = UnitDialogs.CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
         if ok:
-            self.add_unit(created_unit)
             self.unit_data.add_unit(created_unit)
+            self.add_unit(created_unit)
             self.window.update_view()
 
     def remove_unit(self):
@@ -498,15 +498,15 @@ class ReinforcementMenu(UnitMenu):
     def load_unit(self):
         loaded_unit, ok = UnitDialogs.ReinLoadUnitDialog.getUnit(self, "Load Unit", "Select unit:")
         if ok:
-            self.add_unit(loaded_unit)
             self.unit_data.add_reinforcement(loaded_unit)
+            self.add_unit(loaded_unit)
             self.window.update_view()
 
     def create_unit(self):
         created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
         if ok:
-            self.add_unit(created_unit)
             self.unit_data.add_reinforcement(created_unit)
+            self.add_unit(created_unit)            
             self.window.update_view()
 
     def remove_unit(self):

@@ -1,0 +1,103 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;10;Attack1
+f;7;Attack2
+sound;Horse Step 3
+f;6;Attack3
+f;16;Attack4
+f;5;Attack5
+f;5;Attack6
+sound;Weapon Push
+platform_shake
+f;1;Attack6
+enemy_flash_white;8
+f;1;Attack6
+screen_flash_white;4
+f;4;Attack7;Miss
+hit_spark
+start_hit
+wait_for_hit;Attack7;Miss
+f;4;Attack7;Miss
+sound;Weapon Pull
+f;6;Attack8
+f;3;Attack9
+f;3;Attack10
+sound;Horse Step 2
+f;4;Attack11
+f;4;Attack12
+f;1;Attack13
+f;1;Attack14
+f;5;Attack15
+f;1;Attack16
+f;2;Attack17
+f;1;Attack18
+f;4;Attack19
+sound;Horse Step 3
+platform_shake
+f;3;Attack20
+f;5;Attack21
+f;5;Attack22
+f;5;Attack23
+f;6;Attack24
+f;4;Attack25
+f;16;Attack26
+sound;Horse Step 1
+f;6;Attack27
+f;7;Attack28
+f;7;Attack29
+f;1;Stand
+
+pose;Miss
+f;6;Stand
+f;10;Attack1
+f;7;Attack2
+sound;Horse Step 3
+f;6;Attack3
+f;16;Attack4
+f;5;Attack5
+f;5;Attack6
+sound;Weapon Push
+platform_shake
+f;1;Attack6
+f;1;Attack6
+f;2;Miss
+miss
+f;30;Miss
+sound;Weapon Pull
+f;6;Attack8
+f;3;Attack9
+f;3;Attack10
+sound;Horse Step 2
+f;4;Attack11
+f;4;Attack12
+f;1;Attack13
+f;1;Attack14
+f;5;Attack15
+f;1;Attack16
+f;2;Attack17
+f;1;Attack18
+f;4;Attack19
+sound;Horse Step 3
+platform_shake
+f;3;Attack20
+f;5;Attack21
+f;5;Attack22
+f;5;Attack23
+f;6;Attack24
+f;4;Attack25
+f;16;Attack26
+sound;Horse Step 1
+f;6;Attack27
+f;7;Attack28
+f;7;Attack29
+f;1;Stand

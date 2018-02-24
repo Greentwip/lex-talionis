@@ -1,0 +1,13 @@
+pose;Attack
+f;6;Star0
+f;1;Star1
+f;6;Star0
+f;1;Star1
+f;6;Star2
+f;6;Star0
+f;3;Star3
+f;4;Star4
+f;2;Star5
+f;4;Star6
+f;2;Star7
+wait;1

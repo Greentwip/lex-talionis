@@ -183,7 +183,6 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             default_previous_classes(u_i['klass'], classes, class_dict)
             u_i['gender'] = int(unit.find('gender').text)
             u_i['level'] = int(unit.find('level').text)
-            u_i['faction_icon'] = unit.find('faction').text
 
             stats = intify_comma_list(unit.find('bases').text)
             for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
@@ -491,8 +490,9 @@ def create_class_dict():
     # For each class
     for klass in GC.CLASSDATA.getroot().findall('class'):
         c_id = klass.get('id')
-        class_dict[c_id] = {'name': klass.find('name').text,
-                            'id': klass.get('id'),
+        class_dict[c_id] = {'short_name': klass.find('short_name').text,
+                            'long_name': klass.find('long_name').text,
+                            'id': c_id,
                             'tier': int(klass.find('tier').text),
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                             'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,

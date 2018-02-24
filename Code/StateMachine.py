@@ -424,7 +424,8 @@ class FreeState(State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         # Check to see if all ally units have completed their turns and no unit is active and the game is in the free state.
-        if cf.OPTIONS['Autoend Turn'] and all([unit.isDone() for unit in gameStateObj.allunits if unit.position and unit.team == 'player']):
+        if cf.OPTIONS['Autoend Turn'] and any(unit.position for unit in gameStateObj.allunits) and \
+                all(unit.isDone() for unit in gameStateObj.allunits if unit.position and unit.team == 'player'):
             # End the turn
             logger.info('Autoending turn.')
             gameStateObj.stateMachine.changeState('turn_change')

@@ -1,0 +1,64 @@
+# Level 4 Switch Script
+# Universal things
+inc_counter;switches
+set_custom_origin
+set_tile_info;o0,0
+change_tile_sprite;o0,0;pulled_switch
+# Switch 1
+if;self.optionalunit2 == '1'
+	set_cursor;o0,1;force_hold
+	disp_cursor;1
+	wait;500
+	disp_cursor;0
+	change_tile_sprite;o0,1;stairs
+	change_tile_sprite;o-1,1;wall_left
+	change_tile_sprite;o0,2;vault_floor
+	replace_tile;o0,1;39
+	switch_pulled_banner
+# Switch 2
+elif;self.optionalunit2 == '2'
+	set_cursor;18,14;force_hold
+	disp_cursor;1
+	wait;500
+	disp_cursor;0
+	change_tile_sprite;18,14;left_vault_floor
+	change_tile_sprite;17,14;wall_left
+	change_tile_sprite;18,15;vault_floor
+	replace_tile;18,14;9
+	switch_pulled_banner
+# Switch 3
+elif;self.optionalunit2 == '3'
+	set_cursor;10,3;force_hold
+	disp_cursor;1
+	wait;500
+	disp_cursor;0
+	change_tile_sprite;10,3;left_vault_floor
+	change_tile_sprite;9,3;wall_left
+	change_tile_sprite;10,4;floor
+	replace_tile;10,3;9
+	switch_pulled_banner
+# Check if we've pulled all three switches
+if;gameStateObj.counters['switches'] >= 3
+	# Open Gates
+	set_cursor;10,8;force_hold
+	wait;500
+	# Replace with open floor
+	replace_tile;10,6;9
+	replace_tile;10,10;9
+	change_sprite;10,6;left_vault_floor
+	change_sprite;9,6;wall_left
+	change_sprite;10,10;left_vault_floor
+	change_sprite;9,10;wall_left
+	change_sprite;10,7;vault_floor
+	change_sprite;10,11;floor
+	# To Renae
+	set_cursur;Renae;force_hold
+	u;Joel;MidRight
+	u;Renae;Left
+	s;Joel;Ok Renae, you're up.{w};auto
+	s;Renae;Yeah, yeah! Lockpicking isn't as easy as I make it look.{w};auto
+	u;Althea;FarRight
+	s;Althea;Hurry, we don't have much time!{w};auto
+	r;Joel;Althea;Renae
+	set_cursor;{unit};force_hold
+end

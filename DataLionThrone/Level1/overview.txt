@@ -1,0 +1,12 @@
+name;Chapter I
+prep_flag;0
+pick_flag;0
+base_flag;0
+market_flag;0
+transition_flag;1
+display_name;Defeat Boss
+win_condition;Defeat Sidney
+loss_condition;Ophie dies,OR,Any two of your units are defeated
+player_phase_music;Airship Thunderchild
+enemy_phase_music;Brave Story 12
+weather;Light

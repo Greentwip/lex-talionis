@@ -1,0 +1,62 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;3;Dodge1
+sound;Sword Whoosh
+f;27;Dodge2
+f;5;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;6;Frame57
+f;3;Frame58
+sound;Sword Whoosh
+f;2;Frame59
+f;8;Frame60
+f;2;Frame64
+f;2;Frame65
+f;2;Frame66
+f;3;Frame61
+f;2;Frame67
+f;2;Frame61
+f;2;Frame68
+f;2;Frame61
+f;2;Frame69
+f;2;Frame61
+f;2;Frame70
+f;2;Frame60
+f;2;Frame71
+f;2;Frame72
+f;2;Frame73
+f;5;Frame61
+sound;Legendary Weapon
+self_flash_white;8
+f;1;Frame61
+screen_flash_white;4
+sound;Sound 43?
+f;4;Frame61
+screen_shake
+f;3;Frame62
+f;3;Frame63
+# Repeat this a bit
+f;3;Frame62
+f;3;Frame63
+f;3;Frame62
+f;3;Frame63
+f;3;Frame62
+f;3;Frame63
+f;3;Frame62
+f;3;Frame63
+spell
+f;3;Frame62
+f;3;Frame63
+start_loop
+	f;4;Frame60
+end_loop
+f;2;Frame60
+f;3;Frame59
+f;3;Frame58
+f;6;Frame57
+f;1;Stand

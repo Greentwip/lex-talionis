@@ -1,5 +1,5 @@
 from collections import OrderedDict
-import sys, os
+import sys, os, shutil
 
 from PyQt4 import QtGui, QtCore
 
@@ -28,6 +28,7 @@ from DataImport import Data
 # TODO: Highlight dances -- maybe not
 # TODO: Items displyed next to unit names in Units and Reinforcements -- impl
 # TODO: Update status bar
+# TODO: Switching tab displays help information in status bar
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -275,6 +276,7 @@ class MainEditor(QtGui.QMainWindow):
 
         self.directory = None
         self.current_level_name = None
+        self.image = None
 
         self.create_actions()
         self.create_menus()
@@ -332,8 +334,8 @@ class MainEditor(QtGui.QMainWindow):
 
     # === Loading Data ===
     def set_image(self, image_file):
-        image = QtGui.QImage(image_file)
-        if image.width() % 16 != 0 or image.height() % 16 != 0:
+        self.image = QtGui.QImage(image_file)
+        if self.image.width() % 16 != 0 or self.image.height() % 16 != 0:
             QtGui.QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
             return
         self.view.clear_scene()
@@ -536,6 +538,17 @@ class MainEditor(QtGui.QMainWindow):
             unit_level.write('# === Reinforcements ===\n')
             write_units(reinforcements)
 
+    def clear_directory(self, directory):
+        for fp in os.listdir(directory):
+            file_path = os.path.join(directory, fp)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(e)
+
     def save(self):
         new = False
         if not self.current_level_name:
@@ -546,14 +559,16 @@ class MainEditor(QtGui.QMainWindow):
                 return
             new = True
 
-        data_directory = QtCore.QDir.currentPath() + '/../Data'
-        level_directory = data_directory + '/Level' + self.current_level_name
+        data_directory = str(QtCore.QDir.currentPath() + '/../Data')
+        level_directory = str(data_directory + '/Level' + self.current_level_name)
         if new:
             if os.path.exists(level_directory):
                 ret = QtGui.QMessageBox.warning(self, "Level Editor", "A level with that number already exists!\n"
                                                 "Do you want to overwrite it?",
                                                 QtGui.QMessageBox.Save | QtGui.QMessageBox.Cancel)
-                if ret == QtGui.QMessageBox.Cancel:
+                if ret == QtGui.QMessageBox.Save:
+                    self.clear_directory(level_directory)
+                else:
                     return
             else:
                 os.mkdir(level_directory)
@@ -561,6 +576,10 @@ class MainEditor(QtGui.QMainWindow):
         overview_filename = level_directory + '/overview.txt'
         self.overview_dict = self.properties_menu.save()
         self.write_overview(overview_filename)
+
+        map_sprite_filename = level_directory + '/MapSprite.png'
+        pixmap = QtGui.QPixmap.fromImage(self.image)
+        pixmap.save(map_sprite_filename, 'png')
 
         tile_data_filename = level_directory + '/TileData.png'
         self.write_tile_data(tile_data_filename)

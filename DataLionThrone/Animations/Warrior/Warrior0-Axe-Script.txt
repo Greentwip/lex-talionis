@@ -1,0 +1,75 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;2;Attack1
+f;1;Attack2
+f;2;Attack3
+sound;Axe Pull
+f;2;Attack4
+f;2;Attack5
+f;8;Attack6
+f;4;Attack7
+sound;Axe Push
+f;3;Attack8
+enemy_flash_white;8
+platform_shake
+f;1;Attack8
+screen_flash_white;4
+f;4;Attack9;Miss
+hit_spark
+start_hit
+wait_for_hit;Attack9;Miss
+f;2;Attack10;Miss2
+f;2;Attack11;Miss3
+sound;General Step
+f;2;Attack12;Miss4
+f;2;Attack13
+f;2;Attack14
+f;2;Attack15
+f;2;Attack16
+f;3;Attack17
+f;5;Attack18
+f;5;Attack19
+f;7;Attack20
+f;1;Stand
+
+pose;Miss
+f;6;Stand
+f;2;Attack1
+f;1;Attack2
+f;2;Attack3
+sound;Axe Pull
+f;2;Attack4
+f;2;Attack5
+f;8;Attack6
+f;4;Attack7
+sound;Axe Push
+f;1;Attack8
+miss
+f;2;Attack8
+platform_shake
+f;1;Attack8
+f;3;MissDown1
+f;27;MissDown2
+f;2;Miss2
+f;2;Miss3
+sound;General Step
+f;2;Miss4
+f;2;Attack13
+f;2;Attack14
+f;2;Attack15
+f;2;Attack16
+f;3;Attack17
+f;5;Attack18
+f;5;Attack19
+f;7;Attack20
+f;1;Stand
