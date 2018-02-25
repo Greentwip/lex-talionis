@@ -1,0 +1,31 @@
+
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+player;0;0;Franz;6,0;None
+player;0;0;Eirika;12,8;None
+player;0;0;Seth;14,8;None
+player;0;0;Gilliam;7,0;None
+# Enemies
+# Bosses
+enemy;0;0;Breguet;2,2;HardGuard
+# === Reinforcements ===
+# Player Characters
+# Enemies
