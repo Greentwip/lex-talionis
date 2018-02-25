@@ -59,6 +59,9 @@ class LoadUnitDialog(QtGui.QDialog):
         self.ai_group.setEnabled(False)
         self.form.addRow('AI Group:', self.ai_group)
 
+        self.ai_select.setEnabled(str(self.team.currentText()) != 'player')
+        self.ai_group.setEnabled(str(self.team.currentText()) != 'player')
+
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
         self.buttonbox.accepted.connect(self.accept)
@@ -80,6 +83,9 @@ class LoadUnitDialog(QtGui.QDialog):
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'
 
+    def get_team(self):
+        return str(self.team_box.currentText())
+
     @staticmethod
     def getUnit(parent, title, instruction, current_unit=None):
         dialog = LoadUnitDialog(instruction, parent)
@@ -89,6 +95,7 @@ class LoadUnitDialog(QtGui.QDialog):
         result = dialog.exec_()
         if result == QtGui.QDialog.Accepted:
             unit = Data.unit_data.values()[dialog.unit_box.currentIndex()]
+            unit.team = dialog.get_team()
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = dialog.ai_group.text()

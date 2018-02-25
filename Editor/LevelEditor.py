@@ -114,7 +114,7 @@ class MainView(QtGui.QGraphicsView):
         if self.working_image:
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
-            for coord, unit_image in self.unit_data.get_unit_images().iteritems():
+            for coord, unit_image in self.unit_data.get_unit_images().items():
                 if unit_image:
                     painter.drawImage(coord[0] * 16 - 4, coord[1] * 16 - 6, unit_image)
             # Highlight current unit
@@ -127,7 +127,7 @@ class MainView(QtGui.QGraphicsView):
         if self.working_image:
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
-            for coord, unit_image in self.unit_data.get_reinforcement_images(self.window.reinforcement_menu.current_pack()).iteritems():
+            for coord, unit_image in self.unit_data.get_reinforcement_images(self.window.reinforcement_menu.current_pack()).items():
                 if unit_image:
                     painter.drawImage(coord[0] * 16 - 4, coord[1] * 16 - 6, unit_image)
             # Highlight current unit
@@ -173,11 +173,15 @@ class MainView(QtGui.QGraphicsView):
                             under_unit.position = None
                             self.window.unit_menu.get_item_from_unit(under_unit).setTextColor(QtGui.QColor("red"))
                         if current_unit.position:
-                            print('Copy & Place Unit')
-                            new_unit = current_unit.copy()
-                            new_unit.position = pos
-                            self.unit_data.add_unit(new_unit)
-                            self.window.unit_menu.add_unit(new_unit)
+                            if current_unit.generic:
+                                print('Copy & Place Unit')
+                                new_unit = current_unit.copy()
+                                new_unit.position = pos
+                                self.unit_data.add_unit(new_unit)
+                                self.window.unit_menu.add_unit(new_unit)
+                            else:
+                                print('Move Unit')
+                                current_unit.position = pos
                         else:
                             print('Place Unit')
                             current_unit.position = pos

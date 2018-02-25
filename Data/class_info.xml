@@ -60,6 +60,25 @@
         <desc>Devotees of the sword. Possess incredible speed and skill.</desc>
     </class>
 
+    <class id="Lord">
+        <short_name>Lord</short_name>
+        <long_name>Lord</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>0</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>90,45,0,40,45,40,15,15</growths>
+        <bases>16,4,0,8,9,0,3,1,5,5</bases>
+        <max>60,20,20,20,20,30,20,20,20</max>
+        <desc>??</desc>
+    </class>
+
     <!-- Mercenary -> Vanguard -->
     <class id="Mercenary">
         <short_name>Merc.</short_name>

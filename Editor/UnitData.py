@@ -48,12 +48,12 @@ class UnitData(object):
 
     def get_unit_images(self):
         return {unit.position: EditorUtilities.create_image(unit.klass_image) if unit.klass_image else 
-                EditorUtilities.create_image(Data.class_data[unit.klass].get_image(unit.team, unit.gender))
+                EditorUtilities.create_image(Data.class_data.get(unit.klass, Data.class_data['Citizen']).get_image(unit.team, unit.gender))
                 for unit in self.units if unit.position}
 
     def get_reinforcement_images(self, pack):
         return {rein.position: EditorUtilities.create_image(rein.klass_image) if rein.klass_image else 
-                EditorUtilities.create_image(Data.class_data[rein.klass].get_image(rein.team, rein.gender))
+                EditorUtilities.create_image(Data.class_data.get(rein.klass, Data.class_data['Citizen']).get_image(rein.team, rein.gender))
                 for rein in self.reinforcements if rein.position and rein.pack == pack}
 
     def get_unit_from_pos(self, pos):
@@ -427,7 +427,10 @@ class UnitMenu(QtGui.QWidget):
     def tick(self, current_time):
         if GC.PASSIVESPRITECOUNTER.update(current_time):
             for idx, unit in enumerate(self.unit_data.units):
-                klass = Data.class_data[unit.klass]
+                if unit.klass in Data.class_data:
+                    klass = Data.class_data[unit.klass]
+                else:
+                    klass = Data.class_data['Citizen']
                 klass_image = klass.get_image(unit.team, unit.gender)
                 self.list.item(idx).setIcon(EditorUtilities.create_icon(klass_image))
                 unit.klass_image = klass_image

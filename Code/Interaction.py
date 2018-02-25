@@ -1,4 +1,4 @@
-import random, math
+import random, math, os
 import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
@@ -1293,9 +1293,10 @@ class AnimationCombat(Combat):
 
         # Handle interact_script
         script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/interactScript.txt'
-        interact_script = Dialogue.Dialogue_Scene(script_name, self.p1, self.p2, event_flag=False)
-        gameStateObj.message.append(interact_script)
-        gameStateObj.stateMachine.changeState('dialogue')
+        if os.path.exists(script_name):
+            interact_script = Dialogue.Dialogue_Scene(script_name, self.p1, self.p2, event_flag=False)
+            gameStateObj.message.append(interact_script)
+            gameStateObj.stateMachine.changeState('dialogue')
 
         # Handle miracle
         for unit in all_units:
