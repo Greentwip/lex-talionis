@@ -737,7 +737,7 @@ class UnitObject(object):
 
         return True
 
-    # Given an item or a 10-list or an int, increase my wexp based on the types of the weapon
+    # Given an item or a list or an int, increase my wexp based on the types of the weapon
     def increase_wexp(self, item, gameStateObj):
         old_wexp = [num for num in self.wexp]
         if item is None:
@@ -749,10 +749,11 @@ class UnitObject(object):
             for index, num in enumerate(old_wexp):
                 if num > 0:
                     self.wexp[index] += item
-        else:
+        else:  # Normal item
+            increase = item.wexp if item.wexp else 1
             for TYPE in item.TYPE:
                 if TYPE in CustomObjects.WEAPON_TRIANGLE.type_to_index:
-                    self.wexp[CustomObjects.WEAPON_TRIANGLE.type_to_index[TYPE]] += 1
+                    self.wexp[CustomObjects.WEAPON_TRIANGLE.type_to_index[TYPE]] += increase
 
         self.add_wexp_banner(old_wexp, self.wexp, gameStateObj)
 

@@ -49,7 +49,7 @@ class FactionDialog(QtGui.QDialog):
                        str(self.faction_line_edit.text()), str(self.desc_text_edit.toPlainText()))
 
     @staticmethod
-    def getFaction(parent, title, instruction, faction):
+    def getFaction(parent, title, instruction, faction=None):
         dialog = FactionDialog(instruction, faction, parent)
         dialog.setWindowTitle(title)
         result = dialog.exec_()
@@ -72,6 +72,7 @@ class FactionMenu(QtGui.QWidget):
         self.list.uniformItemSizes = True
         self.list.setIconSize(QtCore.QSize(32, 32))
 
+        self.unit_data = unit_data
         self.load(unit_data)
 
         self.list.itemDoubleClicked.connect(self.modify_faction)
@@ -86,8 +87,8 @@ class FactionMenu(QtGui.QWidget):
         self.grid.addWidget(self.add_faction_button, 2, 0)
         self.grid.addWidget(self.remove_faction_button, 3, 0)
 
-    def trigger(self):
-        self.view.tool = 'Factions'
+    # def trigger(self):
+    #     self.view.tool = 'Factions'
 
     def create_item(self, faction):
         item = QtGui.QListWidgetItem(faction.faction_id)
@@ -103,7 +104,7 @@ class FactionMenu(QtGui.QWidget):
         faction_obj, ok = FactionDialog.getFaction(self, "Factions", "Enter New Faction Values:")
         if ok:
             self.list.addItem(self.create_item(faction_obj))
-            self.factions.append(faction_obj)
+            self.unit_data.factions[faction_obj.id] = faction_obj
 
     def modify_faction(self, item):
         faction_obj, ok = FactionDialog.getFaction(self, "Factions", "Modify Faction Values:", self.get_current_faction())
@@ -111,30 +112,27 @@ class FactionMenu(QtGui.QWidget):
             cur_row = self.list.currentRow()
             self.list.takeItem(cur_row)
             self.list.insertItem(cur_row, self.create_item(faction_obj))
-            self.factions[cur_row] = faction_obj
+            self.unit_data.factions[faction_obj.id] = faction_obj
 
     def remove_faction(self):
         cur_row = self.list.currentRow()
         self.list.takeItem(cur_row)
-        self.factions.pop(cur_row)
+        del self.unit_data.factions[self.unit_data.factions.key()[cur_row]]
 
     def set_load_player_characters(self, state):
         self.unit_data.load_player_characters = bool(state)
 
     def get_current_faction(self):
-        return self.factions[self.list.currentRow()]
+        return self.unit_data.factions.values()[self.list.currentRow()]
 
     def load(self, unit_data):
         self.clear()
         self.unit_data = unit_data
-        # Convert to list
-        self.factions = sorted(self.unit_data.factions.values(), key=lambda x: x.faction_id)
         # Ingest Data
-        for faction in self.factions:
+        for faction in self.unit_data.factions.values():
             self.list.addItem(self.create_item(faction))
         self.load_player_characters.setChecked(self.unit_data.load_player_characters)
 
     def clear(self):
-        self.factions = []
         self.list.clear()
         self.load_player_characters.setChecked(False)

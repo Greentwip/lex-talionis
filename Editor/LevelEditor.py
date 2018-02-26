@@ -27,8 +27,7 @@ from DataImport import Data
 # TODO: Class sprites move -- impl
 # TODO: Highlight dances -- maybe not
 # TODO: Items displyed next to unit names in Units and Reinforcements -- impl
-# TODO: Update status bar
-# TODO: Switching tab displays help information in status bar
+# TODO: Switching tab displays help information in status bar -- impl
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -260,7 +259,20 @@ class Dock(QtGui.QDockWidget):
 
     def visible(self, visible):
         # print("%s's Visibility Changed to %s" %(self.windowTitle(), visible))
-        self.main_editor.dock_visibility[str(self.windowTitle())] = visible
+        title = str(self.windowTitle())
+        self.main_editor.dock_visibility[title] = visible
+        message = None
+        if title == 'Terrain':
+            message = 'L-click to place selected color. R-click to select color.'
+        elif title == 'Tile Info':
+            message = 'L-click to place selected event tile. R-click to delete event tile.'
+        elif title == 'Units':
+            message = 'L-click to place selected unit. R-click to select unit.'
+        elif title == 'Reinforcements':
+            message = 'L-click to place selected unit. R-click to select unit.'
+
+        if message:
+            self.main_editor.status_bar.showMessage(message)
         self.main_editor.update_view()
 
 class MainEditor(QtGui.QMainWindow):
@@ -295,6 +307,9 @@ class MainEditor(QtGui.QMainWindow):
         self.main_timer.start(33)  # 30 FPS
         self.elapsed_timer = QtCore.QElapsedTimer()
         self.elapsed_timer.start()
+
+        # === Auto-open ===
+        self.auto_open()
 
     def init_data(self):
         self.tile_data = Terrain.TileData()
@@ -391,6 +406,18 @@ class MainEditor(QtGui.QMainWindow):
                     self.current_level_name = num
                 self.directory = directory
                 self.load_level()
+
+    def auto_open(self):
+        starting_path = str(QtCore.QDir.currentPath() + '/le_config.txt')
+        if os.path.exists(starting_path):
+            with open(starting_path, 'r') as fp:
+                self.directory = fp.readline().strip()
+            # Get the current level num
+            if 'Level' in str(self.directory):
+                idx = str(self.directory).index('Level')
+                num = str(self.directory)[idx + 5:]
+                self.current_level_name = num
+            self.load_level()
 
     def load_level(self):
         if self.directory:
@@ -594,6 +621,10 @@ class MainEditor(QtGui.QMainWindow):
         unit_level_filename = level_directory + '/UnitLevel.txt'
         self.write_unit_level(unit_level_filename)
 
+        level_editor_config = str(QtCore.QDir.currentPath() + '/le_config.txt')
+        with open(level_editor_config, 'w') as fp:
+            fp.write(self.directory)
+
         print('Saved Level' + self.current_level_name)
 
     # === Create Menu ===
@@ -698,17 +729,17 @@ class MainEditor(QtGui.QMainWindow):
 
         return True
 
-    def eventFilter(self, obj, event):
-        if event.type() == QtCore.QEvent.WindowActivate:
-            print "widget window has gained focus"
-            # self.load_data()
-        elif event.type() == QtCore.QEvent.WindowDeactivate:
-            print "widget window has lost focus"
-        elif event.type() == QtCore.QEvent.FocusIn:
-            print "widget has gained keyboard focus"
-        elif event.type() == QtCore.QEvent.FocusOut:
-            print "widget has lost keyboard focus"
-        return super(MainEditor, self).eventFilter(obj, event)
+    # def eventFilter(self, obj, event):
+    #     if event.type() == QtCore.QEvent.WindowActivate:
+    #         print "widget window has gained focus"
+    #         # self.load_data()
+    #     elif event.type() == QtCore.QEvent.WindowDeactivate:
+    #         print "widget window has lost focus"
+    #     elif event.type() == QtCore.QEvent.FocusIn:
+    #         print "widget has gained keyboard focus"
+    #     elif event.type() == QtCore.QEvent.FocusOut:
+    #         print "widget has lost keyboard focus"
+    #     return super(MainEditor, self).eventFilter(obj, event)
 
     def about(self):
         QtGui.QMessageBox.about(self, "About Lex Talionis",

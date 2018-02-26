@@ -19,10 +19,10 @@
 #
 # --------------------------------------------
 # Player Characters
-player;0;0;Franz;6,0;None
+player;0;0;Franz;5,1;None
 player;0;0;Eirika;12,8;None
 player;0;0;Seth;14,8;None
-player;0;0;Gilliam;7,0;None
+player;0;0;Gilliam;6,1;None
 # Enemies
 # Bosses
 enemy;0;0;Breguet;2,2;HardGuard

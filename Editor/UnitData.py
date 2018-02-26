@@ -393,11 +393,15 @@ class UnitMenu(QtGui.QWidget):
             self.window.update_view()
 
     def create_unit(self):
-        created_unit, ok = UnitDialogs.CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
-        if ok:
-            self.unit_data.add_unit(created_unit)
-            self.add_unit(created_unit)
-            self.window.update_view()
+        if self.unit_data.factions:
+            created_unit, ok = UnitDialogs.CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
+            if ok:
+                self.unit_data.add_unit(created_unit)
+                self.add_unit(created_unit)
+                self.window.update_view()
+        else:
+            # Show pop-up
+            QtGui.QMessageBox.critical(self, "No Factions!", "Must create at least one faction to use generic units!")
 
     def remove_unit(self):
         unit_idx = self.list.currentRow()
@@ -506,11 +510,17 @@ class ReinforcementMenu(UnitMenu):
             self.window.update_view()
 
     def create_unit(self):
-        created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
-        if ok:
-            self.unit_data.add_reinforcement(created_unit)
-            self.add_unit(created_unit)            
-            self.window.update_view()
+        if self.unit_data.factions:
+            created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
+            if ok:
+                self.unit_data.add_reinforcement(created_unit)
+                self.add_unit(created_unit)            
+                self.window.update_view()
+        else:
+            # Show pop-up
+            message_box = QtGui.QMessageBox()
+            message_box.setText("Must create at least one faction to use generic units!")
+            message_box.exec_()
 
     def remove_unit(self):
         unit_idx = self.list.currentRow()

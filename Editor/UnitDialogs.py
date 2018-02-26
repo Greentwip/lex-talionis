@@ -51,12 +51,10 @@ class LoadUnitDialog(QtGui.QDialog):
         self.ai_select.uniformItemSizes = True
         for ai_name in GC.AIDATA:
             self.ai_select.addItem(ai_name)
-        self.ai_select.setEnabled(False)
         self.form.addRow('Select AI:', self.ai_select)
 
         # AI Group
         self.ai_group = QtGui.QLineEdit()
-        self.ai_group.setEnabled(False)
         self.form.addRow('AI Group:', self.ai_group)
 
         self.ai_select.setEnabled(str(self.team.currentText()) != 'player')
@@ -197,6 +195,9 @@ class CreateUnitDialog(QtGui.QDialog):
         self.ai_group = QtGui.QLineEdit()
         self.form.addRow('AI Group:', self.ai_group)
 
+        self.ai_select.setEnabled(str(self.team_box.currentText()) != 'player')
+        self.ai_group.setEnabled(str(self.team_box.currentText()) != 'player')
+
         # Faction
         self.faction_select = QtGui.QComboBox()
         self.faction_select.uniformItemSizes = True
@@ -300,12 +301,13 @@ class CreateUnitDialog(QtGui.QDialog):
             items.append(item)
         return items
 
-    def team_changed(self, item):
+    def team_changed(self, idx):
         # Change class box to use sprites of that team
         # And also turn off AI
-        team = str(item)
+        team = str(self.team_box.currentText())
         print("Team changed to %s" % team)
-        self.ai_select.setEnabled(team == 'player')
+        self.ai_select.setEnabled(team != 'player')
+        self.ai_group.setEnabled(team != 'player')
         for idx, klass in enumerate(Data.class_data.values()):
             gender = int(self.gender.value())
             self.class_box.setItemIcon(idx, EditorUtilities.create_icon(klass.get_image(team, gender)))
