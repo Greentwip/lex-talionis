@@ -397,7 +397,7 @@ class PrepItemsChoicesState(StateMachine.State):
             gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.set_extra_marker(False)
-        if any(item.usable and item.booster for item in gameStateObj.cursor.currentSelectedUnit.items):
+        if any(self.can_use(item, gameStateObj) for item in gameStateObj.cursor.currentSelectedUnit.items):
             self.menu.update_grey(1, True)
         else:
             self.menu.update_grey(1, False)
@@ -406,6 +406,17 @@ class PrepItemsChoicesState(StateMachine.State):
         if gameStateObj.stateMachine.from_transition():
             gameStateObj.stateMachine.changeState("transition_in")
             return 'repeat'
+
+    def can_use(self, item, gameStateObj):
+        current_unit = gameStateObj.cursor.currentSelectedUnit
+        if item.usable and item.booster:
+            if item.promotion:
+                if (current_unit.level >= cf.CONSTANTS['max_level']/2 and 
+                        len(gameStateObj.metaDataObj['class_dict'][current_unit.klass]['turns_into']) >= 1 and 
+                        current_unit.klass in item.promotion):
+                    return True
+                return False
+            return True
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)

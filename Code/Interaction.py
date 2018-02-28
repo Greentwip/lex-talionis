@@ -540,7 +540,7 @@ class Combat(object):
             
         if other_unit.isDying:
             self.p1.records['kills'] += 1
-            my_exp += int(cf.CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in other_unit.tags else 0)
+            my_exp += int(cf.CONSTANTS['kill_multiplier']*normal_exp) + (cf.CONSTANTS['boss_bonus'] if 'Boss' in other_unit.tags else 0)
         else:
             my_exp += normal_exp
         if 'no_exp' in other_unit.status_bundle:
@@ -559,7 +559,7 @@ class Combat(object):
             normal_exp = max(0, int(cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve'])))
             if self.p1.isDying:
                 self.p2.records['kills'] += 1
-                my_exp += int(cf.CONSTANTS['kill_multiplier']*normal_exp) + (40 if 'Boss' in self.p1.tags else 0)
+                my_exp += int(cf.CONSTANTS['kill_multiplier']*normal_exp) + (cf.CONSTANTS['boss_bonus'] if 'Boss' in self.p1.tags else 0)
             else:
                 my_exp += normal_exp 
             if 'no_exp' in self.p1.status_bundle:

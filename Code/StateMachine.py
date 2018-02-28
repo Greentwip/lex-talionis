@@ -1092,13 +1092,22 @@ class ItemChildState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.info_surf = None
         selection = gameStateObj.activeMenu.getSelection()
+        current_unit = gameStateObj.cursor.currentSelectedUnit
         # Create child menu with additional options
         options = []
-        if selection.weapon and gameStateObj.cursor.currentSelectedUnit.canWield(selection):
+        if selection.weapon and current_unit.canWield(selection):
             options.append(cf.WORDS['Equip'])
         if selection.usable:
-            if not selection.heal or gameStateObj.cursor.currentSelectedUnit.currenthp < gameStateObj.cursor.currentSelectedUnit.stats['HP'] and \
-                    (not selection.c_uses or selection.c_uses.uses > 0):
+            use = True
+            if selection.heal and current_unit.currenthp >= current_unit.stats['HP']:
+                use = False
+            elif selection.c_uses and selection.c_uses.uses <= 0:
+                use = False
+            elif selection.promotion and (current_unit.level < cf.CONSTANTS['max_level']/2 or 
+                                          len(metaDataObj['class_dict'][current_unit.klass]['turns_into']) < 1 or 
+                                          current_unit.klass not in selection.promotion):
+                use = False
+            if use:
                 options.append(cf.WORDS['Use'])
         # Why does this even exist? When would you want to discard your items in battle?
         if 'Convoy' in gameStateObj.game_constants:
@@ -1930,8 +1939,6 @@ class DialogueState(State):
                     gameStateObj.message.append(outro_script)
                     gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.statedict['outroScriptDone'] = True
-                # if metaDataObj['victoryFlag']:
-                    # gameStateObj.stateMachine.changeState('victory')
             else:
                 gameStateObj.clean_up()
                 gameStateObj.output_progress()
@@ -1939,7 +1946,19 @@ class DialogueState(State):
                     gameStateObj.counters['level'] += 1
 
                 gameStateObj.stateMachine.clear()
-                if (not isinstance(gameStateObj.counters['level'], int)) or gameStateObj.counters['level'] >= cf.CONSTANTS['num_levels']:
+                ### Determines the number of levels in the game
+                num_levels = 0
+                level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
+                print(level_directories)
+                for directory in level_directories:
+                    try:
+                        num = int(os.path.split(directory)[1][5:])
+                        if num > num_levels:
+                            num_levels = num
+                    except:
+                        continue
+                ###
+                if (not isinstance(gameStateObj.counters['level'], int)) or gameStateObj.counters['level'] >= num_levels:
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start')
                 else:

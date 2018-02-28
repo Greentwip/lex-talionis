@@ -7,7 +7,7 @@ import StatusObject, Banner, Utility
 ####################################################################
 # Displays the level up screen
 class levelUpScreen(object):
-    def __init__(self, gameStateObj, unit, exp, force_level=None, in_combat=False):
+    def __init__(self, gameStateObj, unit, exp, force_level=None, force_promotion=False, in_combat=False):
         self.unit = unit
         # if cf.OPTIONS['debug']:
         #     print('LevelUpScreen: ', exp)
@@ -54,6 +54,9 @@ class levelUpScreen(object):
             self.unit.apply_levelup(force_level, exp == 0)
             self.state.changeState('levelScreen')
             self.state_time = Engine.get_time()
+        if force_promotion:
+            self.state.changeState('item_promote')
+            self.state_time = Engine.get_time()
 
         # TIMING
         self.total_time_for_exp = self.expNew * GC.FRAMERATE # exp rate is 16
@@ -63,7 +66,7 @@ class levelUpScreen(object):
 
     def get_num_sparks(self):
         if self.levelup_list:
-            return sum([min(num, 1) for num in self.levelup_list])
+            return sum(min(num, 1) for num in self.levelup_list)
         return 0
 
     def update(self, gameStateObj, metaDataObj):
@@ -197,7 +200,7 @@ class levelUpScreen(object):
             self.expSet = 99
             self.exp_bar.update(self.expSet)
             if currentTime - self.state_time > 100:
-                if metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                if cf.CONSTANTS['auto_promote'] and metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
                     self.expSet = 0
                     class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
                     if len(class_options) > 1:
@@ -220,6 +223,30 @@ class levelUpScreen(object):
                 else: # Unit is at the highest point it can be. No more.
                     self.unit.exp = 99
                     return True # Done
+
+        elif self.state.getState() == 'item_promote':
+            if metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
+                if len(class_options) > 1:
+                    gameStateObj.cursor.currentSelectedUnit = self.unit
+                    gameStateObj.stateMachine.changeState('promotion_choice')
+                    gameStateObj.stateMachine.changeState('transition_out')
+                    self.state.changeState('wait')
+                    self.state_time = currentTime
+                elif len(class_options) == 1:
+                    gameStateObj.cursor.currentSelectedUnit = self.unit
+                    self.unit.new_klass = class_options[0]
+                    gameStateObj.stateMachine.changeState('promotion')
+                    gameStateObj.stateMachine.changeState('transition_out')
+                    # self.state.changeState('promote')
+                    self.state.changeState('wait')
+                    self.state_time = currentTime
+                else:
+                    self.unit.exp = 99
+                    return True # Done
+            else: # Unit is at the highest point it can be. No more.
+                self.unit.exp = 99
+                return True # Done
 
         elif self.state.getState() == 'wait':
             if currentTime - self.state_time > 1000:  # Wait a while

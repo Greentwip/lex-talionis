@@ -220,6 +220,7 @@ class CreateUnitDialog(QtGui.QDialog):
         EditorUtilities.setComboBox(self.faction_select, unit.faction)
         self.level.setValue(unit.level)
         self.gender.setValue(unit.gender)
+        print(unit.team)
         EditorUtilities.setComboBox(self.team_box, unit.team)
         EditorUtilities.setComboBox(self.class_box, unit.klass)
         EditorUtilities.setComboBox(self.ai_select, unit.ai)
@@ -233,6 +234,9 @@ class CreateUnitDialog(QtGui.QDialog):
             drop_box.setChecked(item.droppable)
             event_box.setChecked(item.event_combat)
             item_box.setCurrentIndex(Data.item_data.keys().index(item.id))
+
+        self.team_changed(0)
+        self.gender_changed(unit.gender)
 
     def set_up_items(self):
         item_grid = QtGui.QGridLayout()

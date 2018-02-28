@@ -6,12 +6,12 @@ It has knights and heroes...
 
 7 plot safe characters
 - Prot
-- Waif
-- Friend
-- Jade
-- PseudoJagen
-- Dark
-- Drake
+- Waif (shy, mysterious, broken)
+- Friend (assertive, forthright, active)
+- Jade (knowledgeable, steady, strong)
+- Slate (snarky, sarcastic, but with a heart of gold)
+- Dark (brooding, aggressive, sometimes jovial)
+- Drake (honorable, depressed, reasonable)
 
 Prot is kept as ward of neighboring kingdom, Mercia
 - Prot: Sword Lord
@@ -37,7 +37,8 @@ Encounter men from Locke's Black Army, under Mercian uniforms looting a village,
 As they near Athria, Waif refuses to go inside
 Prot meets with Bert, they missed the funeral.
 The king was a cripple from the waist down
-The king's body is gone, the King's new wife Jade has been locked up... apparently beside herself in grief (I wouldn't disturb her)
+The king is dead, the King's new wife Jade has been locked up... apparently beside herself in grief (I wouldn't disturb her)
+They also find out the blood seal has been given to Locke
 Deal with a couple of things for Bert, ostensibly bandits, actually monsters - notice recent ritual circles. (6)
 Before:
 - Asser: a learned-monk: Mage
@@ -51,56 +52,58 @@ They plan a daring rescue of Jade, and flee for Mercia. (8)
 In the chaos, Bert kills Red.
 - Jade: Troubadour
 Drake (Locke's son & Wyvern Lord), pursues them
-Fight Athrian Army, where Drake lets them escape (9)
+Fight monsters (9)
+- Ash - Cleric Summoner - on the run from Umbria
+Fight Athrian Army, where Drake lets them escape (10)
 Locke berates Drake for letting him down.
 Drake, hoping to make it up in his father's eyes, tells him about Waif
 Make it into Mercia, where they meet with Warrior King to make plans.
-Locke attacks during the knight, with magic and monsters. (10)
+Locke attacks during the knight, with magic and monsters. (11)
 Warrior King is killed.
 Waif, Dark, and Prot are captured, but everyone else escapes to ~.
 Interogated by Locke, but left to stew. Some of his plans are laid bare. So much death, a pity. I want my wife back.
-Slate's crew busts them out -- need waif and three kings for his own ritual (11)
+Slate's crew busts them out (12)
  - Slate: Mercenary
  - Chatter: Thief
  - Green: Skirmisher
  - Isail: Dark Mage (second hint that Umbria is also experimenting with this)
-They escape, Drake meets with them and attacks Waif (12)
+They escape, Drake meets with them and attacks Waif (13)
  - Kara: Myrmidon
  - Tender: Brigand
  - ??: Nomad
-Eventually, they are reunited with rest of army, (who are under attack by Bert, Bert escapes) (13)
+ Maybe a chapter 11x (with the rest of the army fighting monsters/and/or Locke and/or/Bert)
+Eventually, they are reunited with rest of army, (who are under attack by Bert, Bert escapes) (14)
 Drake and Bert reunite with Locke. 
 Can we trust Umbria? A land of spies and thieves
 Travel to Umbria (Fight, monsters/bandits) (14)
 - Pegasus Knight
 Umbria welcomes them, where they find out Slate is Umbrian royalty, and his sister is that pegasus knight from before
-Deal with a merchant rebellion... (15) + Intrigue in the city (more plot here?)
+Deal with a peasant rebellion... (15) + Intrigue in the city (people going missing in the city)
 - Halberdier?
 - Great Knight?
-Drake goes on covert mission to get Waif for ritual
-Locke and Bert attack Umbria with monsters (16)
+Drake goes on a covert mission to get Waif for the ritual, is apprehended. The army appears. (16)
+Locke and Bert attack Umbria with monsters (17)
 In the chaos, Drake turns, unwilling to be part of these monstrous attacks
 - Sage
 - Wyvern Lord
 Umbria unleashes a superweapon of there own (sacrificing Jade?'s sister -- then they attempt to bring her back through the gate, but it fails -- horribly)
 Which destroys most of the city
-However, in the chaos, the waif is captured by Bert.
-Monster fight (17)
-Prot escapes, and pursues Bert. Bert is totally insane at this point. Dark slays him (18)
-But he'd already passed the waif to Locke.
-They venture to the City of the Dead (19)
- - Cleric
-In the City, they fight Locke's army. (20)
-
+Monster fight (18)
+Prot pursues Bert. Bert is totally insane at this point. Dark slays him (19)
+They venture to the City of the Dead (20)
+ - Cleric GOTOH
+In the City, they fight Locke's army. (21)
+In which they think they have succeeded, but its actually a trap, and Prot, Dark, and Slate are killed.
 There's actually 2 rituals (3 kings for unsealing gate). And The Waif bangs on the door.
-No closer, or the waif dies. You'd kill her anyway. No, she was but a first attempt. Why would I kill her out of hand. I want no more death here than you. Please, the three of you unseal the vessel. It was sealed long ago by the blood of three kings, and can only be opened the same way. I'd rather it be the living blood. No, there must be a good reason for it to be sealed. They didn't know what they were dealing with. I do. I can release the gate. The dead can come back.
+It was sealed long ago by the blood of three kings, and can only be opened the same way. I'd rather it be the living blood. No, there must be a good reason for it to be sealed. They didn't know what they were dealing with. I do. I can release the gate. The dead can come back.
 No, it doesn't work. They tried in Umbria. She came back, but she wasn't the same...
-Of course not. The gate was still sealed. Now, girl, shudder. She shudders and the gates swing open. 
-The gate is opened and Locke's wife comes out. But she's not right. Bert. Others start pouring out of the gate, and they have to seal it back up by spilling the blood of three kings. Or destroy the gate for good. The dead and the living cannot linger, the world is now slowly dying. Locke is killed, and he and his wife disintegrate. The Rot continues, so they have to finish fast. (21)
+The waif is captured, and told to knock on the gate, but she refuses.
+He orders them killed
+Now, girl, shudder, if you want them back. She shudders and the gates swing open. 
+They are resurrected, their souls not having left the earthly plane
+The gate is opened and Locke's wife comes out. But she's not right. Bert. Others start pouring out of the gate, and they have to seal it back up by spilling the blood of three kings. Or destroy the gate for good. The dead and the living cannot linger, the world is now slowly dying. Locke is killed, and he and his wife disintegrate. The Rot continues, so they have to finish fast. (22)
 Any of your dead units also respawn.
-When they defeat it, if true ending, Waif is resurrected by life returning to the world, since she was but a vessel. If not true ending, then well, gg. Waif dies, world is still saved.
 
-- Need to think about how seal and unseal works (Why Locke would need Kings alive, why invade, but also why he would need waif)
 - Need to consider what intrigue happens to prepare the reader for Umbrian superweapon. 
 
 x2 Sword Lords (?/F)
@@ -119,6 +122,7 @@ Axe Cavalier (M)
 Archer (F)
 Nomad (M)
 x2 Cleric (F/F)
+Cleric Summoner (F)
 Troubadour (F)
 x2 Mage (M/M)
 Dark Mage (F)

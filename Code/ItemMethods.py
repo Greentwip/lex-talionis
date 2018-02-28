@@ -111,7 +111,7 @@ class ItemObject(object):
             if self.weapon:
                 first_line_text = [' ', self.weapon.LVL, ' Mt ', str(self.weapon.MT), ' Hit ', str(self.weapon.HIT)]
                 if cf.CONSTANTS['crit']:
-                    first_line_text += [' Crit ', str(self.crit) if self.crit else '--']
+                    first_line_text += [' Crit ', str(self.crit) if self.crit is not None else '--']
                 if self.weight:
                     first_line_text += [' Wt ', str(self.weight)]
                 first_line_text += [' Rng ', self.strRNG]
@@ -393,6 +393,9 @@ def itemparser(itemstring):
                 elif component == 'permanent_stat_increase':
                     stat_increase = SaveLoad.intify_comma_list(item['stat_increase'])
                     my_components['permanent_stat_increase'] = PermanentStatIncreaseComponent(stat_increase)
+                elif component == 'promotion':
+                    legal_classes = item['promotion'].split(',')
+                    my_components['promotion'] = legal_classes
                 elif component == 'aoe':
                     info_line = item['aoe'].split(',')
                     aoe = AOEComponent(info_line[0], int(info_line[1]))
@@ -403,7 +406,7 @@ def itemparser(itemstring):
                 elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase', 'wexp'):
                     if component in item:
                         my_components[component] = int(item[component])
-                elif component in ['movement', 'self_movement']:
+                elif component in ('movement', 'self_movement'):
                     mode, magnitude = item[component].split(',')
                     my_components[component] = MovementComponent(mode, magnitude)
                 elif component == 'summon':

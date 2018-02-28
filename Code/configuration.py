@@ -76,20 +76,19 @@ def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum
              'speed_to_double': 4, # How much AS is needed to double
              'max_promotions': 10, # Allowed number of promotion options for a unit
-             'normal_movement': 1, # How many movement points does a normal tile cost to traverse
              'mounted_aid': 15, # What a mounted units CON is subtracted from to determine AID
              'crit': 2, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 3x damage minus 3x defense
              'death': 2,
              'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
              'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)
-             'num_levels': 11, # Number of levels in game
              'exp_curve': 2.3, # How linear the exp curve is. Higher = less linear
              'exp_magnitude': 0.0125, # Higher the number, the more exp gotten for each interaction overall
              'exp_offset': 0, # The exp curve indirectly keeps the player characters near the enemy's level + 0. Change this to change the "+0"
              'status_exp': 15, # How much exp is gotten for using a status spell
-             'heal_curve': 1.0, # How much to multiply the amount healed by.
+             'heal_curve': 1.0, # How much to multiply the amount healed by
              'heal_magnitude': 7, # Added to total amount healed 
              'kill_multiplier': 2.5, # Normal exp is multiplied by this when you get a kill (Normal FE = 3.0)
+             'boss_bonus': 40, # Added to total exp on killing a boss
              'kill_worth': 20, # How much damage is worth a kill in the Records
              'support_points': 12, # Number of points needed for one level of support
              'line_of_sight': 1, # Whether to use line of sight algorithm when choosing targets for weapons
@@ -108,7 +107,8 @@ def read_constants_file():
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'difficulties': 'Normal,Hard,Lunatic',
              'only_difficulty': -1,
-             'max_level': 10, # Maximum Level for any class. Any higher and you auto-promote
+             'max_level': 10, # Maximum Level for any class.
+             'auto_promote': 0, # Promote after max-level?
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
              'avoid_speed_coef': 2.0,
@@ -129,13 +129,11 @@ def read_constants_file():
     lines['max_items'] = int(lines['max_items'])
     lines['max_promotions'] = int(lines['max_promotions'])
     lines['speed_to_double'] = int(lines['speed_to_double'])
-    lines['normal_movement'] = int(lines['normal_movement'])
     lines['mounted_aid'] = int(lines['mounted_aid'])
     lines['crit'] = int(lines['crit'])
     lines['death'] = int(lines['death'])
     lines['flying_mcost_column'] = int(lines['flying_mcost_column'])
     lines['fleet_mcost_column'] = int(lines['fleet_mcost_column'])
-    lines['num_levels'] = int(lines['num_levels'])
     lines['exp_curve'] = float(lines['exp_curve'])
     lines['exp_magnitude'] = float(lines['exp_magnitude'])
     lines['exp_offset'] = int(lines['exp_offset'])
@@ -158,8 +156,8 @@ def read_constants_file():
     lines['num_stats'] = int(lines['num_stats'])
     lines['stat_names'] = lines['stat_names'].split(',')
     lines['difficulties'] = lines['difficulties'].split(',')
-    lines['only_difficulty'] = int(lines['only_difficulty'])
     lines['max_level'] = int(lines['max_level'])
+    lines['auto_promote'] = int(lines['auto_promote'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
     lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
     lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])

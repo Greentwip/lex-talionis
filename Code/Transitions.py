@@ -473,11 +473,7 @@ class StartMode(StateMachine.State):
             else:
                 self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])
                 options = cf.CONSTANTS['difficulties']
-                if cf.CONSTANTS['only_difficulty'] >= 0:
-                    toggle = [False for o in options]
-                    toggle[cf.CONSTANTS['only_difficulty']] = True
-                else:
-                    toggle = [True for o in options]
+                toggle = [True for o in options]
                 self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
                 self.mode_name = 'difficulty'
                 gameStateObj.stateMachine.changeState('transition_in')

@@ -104,7 +104,7 @@ class FactionMenu(QtGui.QWidget):
         faction_obj, ok = FactionDialog.getFaction(self, "Factions", "Enter New Faction Values:")
         if ok:
             self.list.addItem(self.create_item(faction_obj))
-            self.unit_data.factions[faction_obj.id] = faction_obj
+            self.unit_data.factions[faction_obj.faction_id] = faction_obj
 
     def modify_faction(self, item):
         faction_obj, ok = FactionDialog.getFaction(self, "Factions", "Modify Faction Values:", self.get_current_faction())
@@ -112,7 +112,7 @@ class FactionMenu(QtGui.QWidget):
             cur_row = self.list.currentRow()
             self.list.takeItem(cur_row)
             self.list.insertItem(cur_row, self.create_item(faction_obj))
-            self.unit_data.factions[faction_obj.id] = faction_obj
+            self.unit_data.factions[faction_obj.faction_id] = faction_obj
 
     def remove_faction(self):
         cur_row = self.list.currentRow()

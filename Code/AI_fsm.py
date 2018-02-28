@@ -469,7 +469,7 @@ class Primary_AI(object):
             return False
         detrimental_items = [item for item in self.unit.items if (item.weapon or (item.spell and item.detrimental)) and self.unit.canWield(item)]
         if len(detrimental_items) == len(self.items):
-            max_range = max(max(item.RNG) for item in detrimental_items) + self.unit.stats['MOV']/cf.CONSTANTS['normal_movement']
+            max_range = max(max(item.RNG) for item in detrimental_items) + self.unit.stats['MOV']
             if closest_enemy_distance > max_range:
                 return True
         return False
@@ -682,7 +682,7 @@ class Primary_AI(object):
             return 0
 
         # How far do I have to move -- really small. Only here to break ties
-        max_distance = self.unit.stats['MOV']/cf.CONSTANTS['normal_movement']
+        max_distance = self.unit.stats['MOV']
         if max_distance > 0:
             distance_term = (max_distance - Utility.calculate_distance(move, self.orig_pos))/float(max_distance)
         else:
@@ -808,7 +808,7 @@ class Secondary_AI(object):
 
         self.unit = unit
         self.range = view_range
-        self.double_move = self.unit.stats['MOV']*2 + self.unit.getMaxRange()*cf.CONSTANTS['normal_movement']
+        self.double_move = self.unit.stats['MOV']*2 + self.unit.getMaxRange()
 
         self.grid = gameStateObj.grid_manager.get_grid(self.unit)
         self.pathfinder = AStar.AStar(self.unit.position, None, self.grid, gameStateObj.map.width, gameStateObj.map.height,

@@ -18,6 +18,8 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
+- Test promotion and item promotion, both in game and in prep.
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.

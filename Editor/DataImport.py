@@ -133,6 +133,7 @@ class Unit(object):
         new_unit.saved = self.saved
         new_unit.position = None
         new_unit.gender = self.gender
+        new_unit.level = self.level
         new_unit.klass = self.klass
         new_unit.tags = self.tags
         new_unit.faction_icon = self.faction_icon

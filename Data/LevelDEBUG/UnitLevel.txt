@@ -18,14 +18,22 @@
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
+faction;Soldier;Soldier;Neutral;Grado Soldier
 # Player Characters
 player;0;0;Franz;5,1;None
-player;0;0;Eirika;12,8;None
-player;0;0;Seth;14,8;None
+player;0;0;Eirika;12,9;None
+player;0;0;Seth;13,8;None
 player;0;0;Gilliam;6,1;None
 # Enemies
 # Bosses
 enemy;0;0;Breguet;2,2;HardGuard
+# Generics
+enemy;0;0;Soldier;3;Iron Lance;8,3;Attack;Soldier
+enemy;0;0;Soldier;2;Iron Lance;3,3;Attack;Soldier
+enemy;0;0;Soldier;2;Iron Lance;1,3;Attack;Soldier
+enemy;0;0;Fighter;2;Iron Axe;9,5;Attack;Soldier
+enemy;0;0;Fighter;2;Iron Axe;4,7;Attack;Soldier
+enemy;0;0;Fighter;2;Iron Axe;2,8;Attack;Soldier
 # === Reinforcements ===
 # Player Characters
 # Enemies

@@ -791,6 +791,9 @@ class UnitObject(object):
             gameStateObj.stateMachine.changeState('expgain')
         elif item.wexp_increase:
             self.increase_wexp(item.wexp_increase, gameStateObj)
+        elif item.promotion:
+            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self, exp=0, force_promote=True))
+            gameStateObj.stateMachine.changeState('expgain')
 
     def handle_forced_movement(self, other_pos, movement, gameStateObj, def_pos=None):
         # Remove tile statuses
@@ -1599,7 +1602,7 @@ class UnitObject(object):
             return None
         if not isinstance(target, UnitObject):
             return 0
-        if not my_item.crit:
+        if my_item.crit is None:
             return 0
 
         # Calculations
@@ -1696,7 +1699,7 @@ class UnitObject(object):
                 item = self.getMainSpell()
             else:
                 return None
-        if item.crit and (item.weapon or item.spell):
+        if item.crit is not None and (item.weapon or item.spell):
             accuracy = item.crit + int(self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef'])
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             return accuracy
@@ -2198,7 +2201,7 @@ class UnitObject(object):
             if self.path: # and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
                 new_position = self.path.pop()
                 if self.position != new_position:
-                    self.movement_left -= (cf.CONSTANTS['normal_movement'] if 'flying' in self.status_bundle else gameStateObj.map.tiles[new_position].get_mcost(self))
+                    self.movement_left -= gameStateObj.map.tiles[new_position].get_mcost(self)
                 self.position = new_position
                 # Camera auto-follow
                 if not gameStateObj.cursor.camera_follow:
