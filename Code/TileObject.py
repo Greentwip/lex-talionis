@@ -24,7 +24,7 @@ class MapObject(object):
         self.command_list = [] # The commands that have been acted upon the map by scripts
         self.escape_highlights = {}
         self.formation_highlights = {}
-        self.custom_origin = None
+        self.origin = None
 
         self.levelfolder = levelfolder
         self.mapfilename = mapfilename
@@ -202,7 +202,7 @@ class MapObject(object):
 
     def destroy(self, tile, gameStateObj):
         destroy_index = self.tile_info_dict[tile.position]['Destructible']
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(self.levelfolder + '/destroyScript.txt', destroy_index, tile_pos=tile.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(self.levelfolder + '/destroyScript.txt', name=destroy_index, tile_pos=tile.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def check_bounds(self, pos):
@@ -327,8 +327,8 @@ class MapObject(object):
         for line in command_list:
             logger.debug('Replaying Command: %s', line)
             # Set a custom origin point
-            if line[0] == 'set_custom_origin':
-                self.custom_origin = line[1]
+            if line[0] == 'set_origin':
+                self.origin = line[1]
             # Change tile sprites
             elif line[0] == 'change_tile_sprite' or line[0] == 'change_sprite':
                 self.change_sprite(line)
@@ -386,8 +386,8 @@ class MapObject(object):
             pos = pos[1:]
         new_pos = tuple([int(num) for num in pos.split(',')])
         if offset:
-            if self.custom_origin:
-                return (self.custom_origin[0] + new_pos[0], self.custom_origin[1] + new_pos[1])
+            if self.origin:
+                return (self.origin[0] + new_pos[0], self.origin[1] + new_pos[1])
             else:
                 return (0, 0)
         else:

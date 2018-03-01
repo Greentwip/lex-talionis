@@ -2,7 +2,7 @@
 if;cf.OPTIONS['Display Hints']
 	if;gameStateObj.turncount == 1
 		remove_fake_cursors
-		if;self.optionalunit.name == 'Ophie' and not self.optionalunit.position in [(7,6),(6,7),(5,8),(4,9)]
+		if;self.unit.name == 'Ophie' and not self.unit.position in [(7,6),(6,7),(5,8),(4,9)]
 			move_unit;Ophie;9,9;immediate
 			reset_state
 			reset_unit;{unit}
@@ -12,7 +12,7 @@ if;cf.OPTIONS['Display Hints']
 			s;Ophie;I heard him too, Prim.{w};auto
 			s;Prim;S-sorry...{w};auto
 			r;Ophie;Prim
-		elif;self.optionalunit.name == 'Prim' and not self.optionalunit.position in [(7,7), (6,8), (5,9)]
+		elif;self.unit.name == 'Prim' and not self.unit.position in [(7,7), (6,8), (5,9)]
 			move_unit;Prim;10,9;immediate
 			reset_state
 			reset_unit;{unit}
@@ -27,7 +27,7 @@ if;cf.OPTIONS['Display Hints']
 	elif;gameStateObj.turncount == 2
 		if;not 'turn2_ophie' in gameStateObj.event_triggers
 			remove_fake_cursors
-			if;self.optionalunit.position in [(3,5), (5,5), (4,6), (4,4)]
+			if;self.unit.position in [(3,5), (5,5), (4,6), (4,4)]
 				s;Narrator;Now select{red}Attack!{w};auto;hint
 			else
 				move_unit;Ophie;prev_pos;immediate
@@ -37,9 +37,9 @@ if;cf.OPTIONS['Display Hints']
 				s;Narrator;Ophie needs to be adjacent to the enemy to attack.{w};auto
 			end
 		# Prim is adjacent to Ophie
-		elif;Utility.calculate_distance(self.optionalunit.position, [unit.position for unit in gameStateObj.allunits if unit.name == 'Ophie'][0]) == 1
+		elif;Utility.calculate_distance(self.unit.position, [unit.position for unit in gameStateObj.allunits if unit.name == 'Ophie'][0]) == 1
 			s;Narrator;Now select{red}Spells{black}and choose your healing tome to heal Ophie.{w};auto;hint
-		elif;self.optionalunit.name == 'Prim'
+		elif;self.unit.name == 'Prim'
 			u;Prim;Right
 			s;Prim;I need to be next to Ophie to heal him...{w};auto
 			r;Prim

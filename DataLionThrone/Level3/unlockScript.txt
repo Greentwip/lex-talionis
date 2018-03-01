@@ -1,28 +1,28 @@
 # Level 3 Locked script
-set_custom_origin
-if;self.optionalunit2 == '3'
+set_origin
+if;self.name == '3'
 	replace_tile;6,6;9
 	change_tile_sprite;6,6;left_floor
 	change_tile_sprite;6,7;floor
 	set_tile_info;6,6
-elif;self.optionalunit2 == '4'
+elif;self.name == '4'
 	replace_tile;14,10;9
 	change_tile_sprite;14,10;left_floor
 	change_tile_sprite;14,11;floor
 	set_tile_info;14,10
-elif;self.optionalunit2 == 'Left'
+elif;self.name == 'Left'
 	change_tile_sprite;o0,0;open_chest_green
 	set_tile_info;o0,0
 	gold;2000
-elif;self.optionalunit2 == 'Middle'
+elif;self.name == 'Middle'
 	change_tile_sprite;o0,0;open_chest_green
 	set_tile_info;o0,0
 	gold;2000
-elif;self.optionalunit2 == 'Right'
+elif;self.name == 'Right'
 	change_tile_sprite;o0,0;open_chest_green
 	set_tile_info;o0,0
 	gold;2000
-elif;self.optionalunit2 == 'Money'
+elif;self.name == 'Money'
 	change_tile_sprite;o0,0;open_chest
 	set_tile_info;o0,0
 	gold;5000

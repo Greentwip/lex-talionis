@@ -1,4 +1,4 @@
-if;self.optionalunit == 'Promises'
+if;self.name == 'Promises'
     m;Awakening - SSupport
     b;GenericRoom
     t;2
@@ -32,7 +32,7 @@ if;self.optionalunit == 'Promises'
     grey_base_convo;Promises
     t;1
 # Not available right now
-elif;self.optionalunit == 'Althea and Ophie'
+elif;self.name == 'Althea and Ophie'
     m;Awakening - Easy Now
     b;BaseEntrance
     t;2
@@ -74,7 +74,7 @@ elif;self.optionalunit == 'Althea and Ophie'
     r;Ophie;Althea
     grey_base_convo;Althea and Ophie
     t;1
-elif;self.optionalunit == 'Theo and Eliza'
+elif;self.name == 'Theo and Eliza'
     m;Midna's Theme
     b;Study
     t;2

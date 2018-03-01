@@ -1,5 +1,5 @@
 # Base Script Level 6
-if;self.optionalunit == 'Theo Sphinx, Pt. III'
+if;self.name == 'Theo Sphinx, Pt. III'
 	# Episode 3
 	m;Jazz Noir
 	b;TacticsRoomDay
@@ -22,7 +22,7 @@ if;self.optionalunit == 'Theo Sphinx, Pt. III'
 	grey_base_convo;Theo Sphinx, Pt. III
 	inc_counter;noir
 	t;1
-elif;self.optionalunit == 'Guard Duty'
+elif;self.name == 'Guard Duty'
 	m;Brave Story - Hare
 	b;Cave
 	t;2
@@ -67,7 +67,7 @@ elif;self.optionalunit == 'Guard Duty'
 	r;Drake
 	grey_base_convo;Guard Duty
 	t;1
-elif;self.optionalunit == 'Cipher'
+elif;self.name == 'Cipher'
 	m;Hum of the Streets
 	b;GenericRoom
 	t;2

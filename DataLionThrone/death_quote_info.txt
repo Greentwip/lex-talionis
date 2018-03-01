@@ -4,11 +4,11 @@
 # Level Specific on bottom
 #
 # Universal
-if;self.optionalunit.team == 'player'
+if;self.unit.team == 'player'
 	m;Brave Story 61
 end
 # Player Death Quotes
-if;self.optionalunit.name == 'Ophie'
+if;self.unit.name == 'Ophie'
 	u;Ophie;FarRight
 	if;gameStateObj.counters['level'] in [1, 3, 5, 7, 9]
 		s;Ophie;No! I must... k-keep going...{w};auto
@@ -19,7 +19,7 @@ if;self.optionalunit.name == 'Ophie'
 	kill_unit;Ophie
 	wait;200
 	lose_game
-elif;self.optionalunit.name == 'Prim'
+elif;self.unit.name == 'Prim'
 	u;Prim;FarRight
 	if;gameStateObj.counters['level'] == 0
 		s;Prim;Is this... blood?{w}{br}Hang on... I'm sure I can...{w}{br}I can...{w};auto
@@ -36,15 +36,15 @@ elif;self.optionalunit.name == 'Prim'
 		s;Prim;I'm sure I can fix this...{w}{br}I-I c-can...{w}{br}T-this is too m-much...{w}{br}I-I have to retreat...{w};auto
 		r;Prim;Ophie
 	end
-elif;self.optionalunit.name == 'Joel'
+elif;self.unit.name == 'Joel'
 	u;Joel;FarRight
 	s;Joel;Argh...{w}{br}Sorry captain...{w}{br}But I have to fall back...{w};auto
 	r;Joel
-elif;self.optionalunit.name == 'Nia'
+elif;self.unit.name == 'Nia'
 	u;Nia;FarRight
 	s;Nia;...{w};auto
 	r;Nia
-elif;self.optionalunit.name == 'Althea'
+elif;self.unit.name == 'Althea'
 	u;Althea;FarRight
 	if;gameStateObj.counters['level'] == 2
 		s;Althea;It seems... I couldn't run... forever...{w};auto
@@ -71,7 +71,7 @@ elif;self.optionalunit.name == 'Althea'
 		end
 		r;Drake;Althea
 	end
-elif;self.optionalunit.name == 'Drake'
+elif;self.unit.name == 'Drake'
 	u;Drake;FarRight
 	if;not gameStateObj.check_dead('Althea')
 		u;Althea;Left
@@ -83,7 +83,7 @@ elif;self.optionalunit.name == 'Drake'
 		s;Drake;I am of no use to anyone in this condition...{w}{br}I must... fall back...{w};auto
 	end
 	r;Drake;Althea
-elif;self.optionalunit.name == 'Renae'
+elif;self.unit.name == 'Renae'
 	u;Renae;FarRight
 	s;Renae;But how...?{w}{br}I'm the fastest...{w};auto
 	r;Renae
@@ -92,11 +92,11 @@ elif;self.optionalunit.name == 'Renae'
 		wait;200
 		lose_game
 	end
-elif;self.optionalunit.name == 'Theo'
+elif;self.unit.name == 'Theo'
 	u;Theo;FarRight
 	s;Theo;Urgh! There's been a mistake...{w}{br}This wasn't... supposed to happen...{w};auto
 	r;Theo
-elif;self.optionalunit.name == 'Sam'
+elif;self.unit.name == 'Sam'
 	u;Sam;FarRight
 	s;Sam;What! No!{w}{br}...{w};auto
 	s;Sam;I'm not done...{w}{br}Urgh...{w};auto
@@ -104,76 +104,76 @@ elif;self.optionalunit.name == 'Sam'
 	kill_unit;Sam
 	wait;200
 	lose_game
-elif;self.optionalunit.name == 'Eliza'
+elif;self.unit.name == 'Eliza'
 	u;Eliza;FarRight
 	s;Eliza;I-I shouldn't have tried...{w}{br}I-I am too weak...{w};auto
 	r;Eliza
-elif;self.optionalunit.name == 'Coyote'
+elif;self.unit.name == 'Coyote'
 	u;Coyote;FarRight
 	s;Coyote;Urgh! No wonder they were always afraid...{w};auto
 	r;Coyote
-elif;self.optionalunit.name == 'Kayla'
+elif;self.unit.name == 'Kayla'
 	u;Kayla;FarRight
 	s;Kayla;Hmph, I know when I've been beat.{w};auto
 	r;Kayla
 # Boss Death Quotes
-elif;self.optionalunit.name == 'Sidney'
+elif;self.unit.name == 'Sidney'
 	u;Sidney;FarLeft
 	s;Sidney;Huh?! This was supposed to be... easy...{w};auto
 	r;Sidney
-elif;self.optionalunit.name == 'Brigham'
+elif;self.unit.name == 'Brigham'
 	u;Brigham;FarLeft
 	s;Brigham;What... No! I was so close...{w};auto
 	r;Brigham
-elif;self.optionalunit.name == 'Harold'
+elif;self.unit.name == 'Harold'
 	u;Harold;FarLeft
 	s;Harold;... Is this my...{w};auto
 	set_expression;Harold;Full_Blink
 	s;Harold;...glorious end? Hmmph!{w};auto
 	r;Harold
-elif;self.optionalunit.name == 'Anders'
+elif;self.unit.name == 'Anders'
 	u;Anders;FarLeft
 	s;Anders;What? Blood? This blood?{w}{br}It's nothing... I will not disappoint...{w};auto
 	r;Anders
-elif;self.optionalunit.name == 'Midas'
+elif;self.unit.name == 'Midas'
 	u;Midas;FarLeft
 	s;Midas;Please... I'll give you everything... all the gold I...{w};auto
 	r;Midas
-elif;self.optionalunit.name == 'Jules'
+elif;self.unit.name == 'Jules'
 	u;Jules;FarLeft
 	s;Jules;...'Tis only a scratch, nothing more...{w}{br}Urgh...{w};auto
 	r;Jules
-elif;self.optionalunit.name == 'Vincent'
+elif;self.unit.name == 'Vincent'
 	u;Vincent;FarLeft
 	s;Vincent;Oh Damn....{w}{br}I'm in big fucking trouble here...{w};auto
 	r;Vincent
-elif;self.optionalunit.name == 'Razia'
+elif;self.unit.name == 'Razia'
 	u;Razia;FarLeft
 	s;Razia;Hmmph! You've fought well, Keralan...{w}{br}Not many have... tested my blade and lived...{w};auto
 	r;Razia
-elif;self.optionalunit.name == 'Marduk'
+elif;self.unit.name == 'Marduk'
 	u;Marduk;FarLeft
 	s;Marduk;But my plan... was perfect...{w};auto
 	r;Marduk
-elif;self.optionalunit.name == 'Vagnius'
+elif;self.unit.name == 'Vagnius'
 	u;Vagnius;FarLeft
 	s;Vagnius;Is this... truly the extent of my... ambition?{w}{br}Urgh...{w};auto
 	r;Vagnius
-elif;self.optionalunit.name == 'Jakin'
+elif;self.unit.name == 'Jakin'
 	u;Jakin;FarLeft
 	s;Jakin;Proceed, my child, to your ultimate destiny!{w};auto
 	r;Jakin
 	remove_unit;Jakin;warp
-elif;self.optionalunit.name == 'Boaz'
+elif;self.unit.name == 'Boaz'
 	u;Boaz;FarLeft
 	s;Boaz;Hah! The hunter becomes the hunted!{w}{br}You were a worthy opponent! Well done!{w};auto
 	r;Boaz
 	remove_unit;Boaz;warp
-elif;self.optionalunit.name == 'Adjutant'
+elif;self.unit.name == 'Adjutant'
 	u;Adjutant;FarLeft
 	s;Adjutant;Oh... 'Tis a pity... {w};auto
 	r;Adjutant
-elif;self.optionalunit.name == 'Ulver'
+elif;self.unit.name == 'Ulver'
 	u;Ulver;FarLeft
 	s;Ulver;No! I am strong! ...The strongest!{w}{br}I will not go out like a common--{w}{br}Urgh...{w};auto
 	r;Ulver
@@ -184,7 +184,7 @@ end
 #
 # Level 4
 if;gameStateObj.counters['level'] == 4
-	if;self.optionalunit.klass == 'Wagon'
+	if;self.unit.klass == 'Wagon'
 		inc_counter;Dead_Wagons
 	end
 # Level 9
@@ -237,7 +237,7 @@ elif;gameStateObj.counters['level'] == 9
 			replace_tile;0,4.1,4.21,4.22,4.23,4.7,12.8,12.9,12.7,19.8,19.9,19.21,27.22,27.23,27;12
 			wait;20
 		end
-		if;self.optionalunit.generic_flag and not 'first_death' in gameStateObj.event_triggers
+		if;self.unit.generic_flag and not 'first_death' in gameStateObj.event_triggers
 			trigger_event;first_death
 			u;Ophie;Left
 			s;Ophie;Well that did something alright.{w}{br}Is this what they meant by a game?{w};auto

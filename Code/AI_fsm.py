@@ -251,9 +251,9 @@ class AI(object):
                 if 'Village' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
                     gameStateObj.map.destroy(gameStateObj.map.tiles[self.target_to_interact_with], gameStateObj)
                 elif 'Locked' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
-                    locked_num = gameStateObj.map.tile_info_dict[self.target_to_interact_with]['Locked']
+                    locked_name = gameStateObj.map.tile_info_dict[self.target_to_interact_with]['Locked']
                     script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt'
-                    unlock_script = Dialogue.Dialogue_Scene(script_name, self.unit, locked_num, self.target_to_interact_with)
+                    unlock_script = Dialogue.Dialogue_Scene(script_name, unit=self.unit, name=locked_name, tile_pos=self.target_to_interact_with)
                     gameStateObj.message.append(unlock_script)
                     gameStateObj.stateMachine.changeState('dialogue')
                 elif 'Escape' or 'ThiefEscape' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:

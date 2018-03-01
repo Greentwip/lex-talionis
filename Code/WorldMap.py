@@ -554,32 +554,32 @@ class MiniMap(object):
         a, b, c, d = None, None, None, None
         up_pos = position[0], position[1] - 1
         if up_pos not in self.tile_map.tiles or self.tile_map.tiles[up_pos].minimap in sea_keys:
-            a = {0, 1, 2, 3, 5, 6}
+            a = {0, 1, 5, 6, 7, 9, 10}
         elif self.tile_map.tiles[up_pos].minimap == 'Coast':
-            a = {0, 1, 2, 3, 5, 6, 7, 8}
+            a = {0, 1, 5, 6, 7, 9, 10, 11, 12}
         else:
-            a = {4, 7, 8, 9}
+            a = {2, 3, 4, 8, 11, 12, 13}
         left_pos = position[0] - 1, position[1]
         if left_pos not in self.tile_map.tiles or self.tile_map.tiles[left_pos].minimap in sea_keys:
-            b = {0, 1, 2, 4, 5, 7}
+            b = {0, 2, 5, 6, 8, 9, 11}
         elif self.tile_map.tiles[left_pos].minimap == 'Coast':
-            b = {0, 1, 2, 4, 5, 6, 7, 8}
+            b = {0, 2, 5, 6, 8, 9, 10, 11, 12}
         else:
-            b = {3, 6, 8, 9}
+            b = {1, 3, 4, 7, 10, 12, 13}
         right_pos = position[0] + 1, position[1]
         if right_pos not in self.tile_map.tiles or self.tile_map.tiles[right_pos].minimap in sea_keys:
-            c = {0, 1, 3, 4, 6, 8}
+            c = {0, 3, 5, 7, 8, 10, 12}
         elif self.tile_map.tiles[right_pos].minimap == 'Coast':
-            c = {0, 1, 3, 4, 5, 6, 7, 8}
+            c = {0, 3, 5, 7, 8, 9, 10, 11, 12}
         else:
-            c = {2, 5, 7, 9}
+            c = {1, 2, 4, 6, 9, 11, 13}
         down_pos = position[0], position[1] + 1
         if down_pos not in self.tile_map.tiles or self.tile_map.tiles[down_pos].minimap in sea_keys:
-            d = {0, 2, 3, 4, 7, 8}
+            d = {0, 4, 6, 7, 8, 11, 12}
         elif self.tile_map.tiles[down_pos].minimap == 'Coast':
-            d = {0, 2, 3, 4, 5, 6, 7, 8}
+            d = {0, 4, 6, 7, 8, 9, 10, 11, 12}
         else:
-            d = {1, 5, 6, 9}
+            d = {1, 2, 3, 5, 9, 10, 13}
         intersection = list(a & b & c & d)
         if len(intersection) == 0:
             value = 9
@@ -590,22 +590,30 @@ class MiniMap(object):
         if value == 0:
             row, column = 0, 7
         elif value == 1:
-            row, column = 4, 6
+            row, column = 1, 7
         elif value == 2:
-            row, column = 6, 6
+            row, column = 2, 7
         elif value == 3:
-            row, column = 2, 6
+            row, column = 3, 7
         elif value == 4:
-            row, column = 0, 6
+            row, column = 4, 7
         elif value == 5:
-            row, column = 5, 6
+            row, column = 4, 6
         elif value == 6:
-            row, column = 3, 6
+            row, column = 6, 6
         elif value == 7:
-            row, column = 7, 6
+            row, column = 2, 6
         elif value == 8:
-            row, column = 1, 6
+            row, column = 0, 6
         elif value == 9:
+            row, column = 5, 6
+        elif value == 10:
+            row, column = 3, 6
+        elif value == 11:
+            row, column = 7, 6
+        elif value == 12:
+            row, column = 1, 6
+        elif value == 13:
             row, column = 0, 5
 
         return self.get_sprite((row, column))

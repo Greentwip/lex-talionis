@@ -116,7 +116,7 @@ class GameStateObj(object):
         self.base_conversations = load_info['base_conversations']
         self.stateMachine = StateMachine.StateMachine(load_info['state_list'][0], load_info['state_list'][1])
         self.statistics = load_info['statistics']
-        self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
+        # self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
         self.modify_stats = load_info.get('modify_stats', cf.read_growths_file())
         self.unlocked_lore = load_info['unlocked_lore']
         self.counters = load_info['counters']
@@ -336,7 +336,7 @@ class GameStateObj(object):
                    'modify_stats': self.modify_stats,
                    'market_items': self.market_items,
                    'mode': self.mode,
-                   'message': [message.serialize() for message in self.message],
+                   # 'message': [message.serialize() for message in self.message],
                    'phase_info': (self.phase.current, self.phase.previous)}
         import time
         to_save_meta = {'playtime': self.playtime,

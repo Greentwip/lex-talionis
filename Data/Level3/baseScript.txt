@@ -1,6 +1,6 @@
 # Base Script Level 3
 # Base Conversation 3 - 1 Renae
-if;self.optionalunit == 'Ophie meets Renae'
+if;self.name == 'Ophie meets Renae'
 	m;Brave Story - Hare
 	b;MainBase
 	t;2
@@ -41,7 +41,7 @@ if;self.optionalunit == 'Ophie meets Renae'
 	r;Renae;Joel;Ophie
 	grey_base_convo;Ophie meets Renae
 	t;1
-elif;self.optionalunit == 'Prim meets Eliza'
+elif;self.name == 'Prim meets Eliza'
 	m;Midna's Theme
 	b;Clearing
 	t;2
@@ -85,7 +85,7 @@ elif;self.optionalunit == 'Prim meets Eliza'
 	r;Eliza
 	grey_base_convo;Prim meets Eliza
 	t;1
-elif;self.optionalunit == 'Ophie meets Theo'
+elif;self.name == 'Ophie meets Theo'
 	m;Lady Eboshi
 	b;BaseEntrance
 	t;2

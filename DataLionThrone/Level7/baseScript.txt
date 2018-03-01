@@ -1,5 +1,5 @@
 # Base Script Level 7
-if;self.optionalunit == 'Theo Sphinx, Pt. IV'
+if;self.name == 'Theo Sphinx, Pt. IV'
 	# Episode 4
 	m;Jazz Noir
 	b;Snow_Forest_Clearing
@@ -37,7 +37,7 @@ if;self.optionalunit == 'Theo Sphinx, Pt. IV'
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. IV
 	t;1
-elif;self.optionalunit == 'Training'
+elif;self.name == 'Training'
 	m;Wild Arms Town
 	b;Clearing
 	t;2

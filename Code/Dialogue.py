@@ -11,12 +11,10 @@ logger = logging.getLogger(__name__)
 
 # === GET INFO FOR DIALOGUE SCENE ==================================================
 class Dialogue_Scene(object):
-    def __init__(self, scene, optionalunit=None, optionalunit2=None, tile_pos=None, event_flag=True, if_flag=False):
+    def __init__(self, scene, unit=None, unit2=None, name=None, tile_pos=None, event_flag=True, if_flag=False):
         self.scene = scene
-        self.scene_lines = []
         with open(scene, 'r') as scenefp: # Open this scene's file database
-            for line in scenefp: # Get lines
-                self.scene_lines.append(line)
+            self.scene_lines = scenefp.readlines()
         if cf.OPTIONS['debug']: 
             if not self.count_if_statements():
                 logger.error('ERROR: Incorrect number of if and end statements! %s', scene)
@@ -30,14 +28,16 @@ class Dialogue_Scene(object):
         self.dialog = []
         
         # Optional unit
-        self.optionalunit = optionalunit
-        if self.optionalunit and isinstance(self.optionalunit, UnitObject.UnitObject):
-            # logger.debug('locking %s', self.optionalunit)
-            self.optionalunit.lock_active()
-        self.optionalunit2 = optionalunit2
-        if self.optionalunit2 and isinstance(self.optionalunit2, UnitObject.UnitObject):
-            # logger.debug('locking %s', self.optionalunit2)
-            self.optionalunit2.lock_active()
+        self.unit = unit
+        if self.unit and isinstance(self.unit, UnitObject.UnitObject):
+            # logger.debug('locking %s', self.unit)
+            self.unit.lock_active()
+        self.unit2 = unit2
+        if self.unit2 and isinstance(self.unit2, UnitObject.UnitObject):
+            # logger.debug('locking %s', self.unit2)
+            self.unit2.lock_active()
+        # Name -- What is the given event name for this tile
+        self.name = name
         # Tile Pos -- What tile is being acted on, if any (applied in unlock, switch, village, destroy, search, etc. scripts)
         self.tile_pos = tile_pos
         # Next Position -- Saves a position
@@ -82,9 +82,6 @@ class Dialogue_Scene(object):
         self.event_flag = event_flag
         # Assumes all "if" statements evaluate to True?
         self.if_flag = if_flag
-
-    def serialize(self):
-        return self.scene
 
     def count_if_statements(self):
         if_count = 0
@@ -215,12 +212,12 @@ class Dialogue_Scene(object):
 
     def end(self):
         self.done = True
-        if self.optionalunit and isinstance(self.optionalunit, UnitObject.UnitObject):
-            # logger.debug('Unlocking %s', self.optionalunit)
-            self.optionalunit.unlock_active()
-        if self.optionalunit2 and isinstance(self.optionalunit2, UnitObject.UnitObject):
-            # logger.debug('Unlocking %s', self.optionalunit2)
-            self.optionalunit2.unlock_active()
+        if self.unit and isinstance(self.unit, UnitObject.UnitObject):
+            # logger.debug('Unlocking %s', self.unit)
+            self.unit.unlock_active()
+        if self.unit2 and isinstance(self.unit2, UnitObject.UnitObject):
+            # logger.debug('Unlocking %s', self.unit2)
+            self.unit2.unlock_active()
         return
 
     def parse_line(self, line, gameStateObj=None, metaDataObj=None):
@@ -331,7 +328,7 @@ class Dialogue_Scene(object):
         # Remove a unit from the scene
         elif line[0] == 'r':
             for name in line[1:]:
-                unit_name = self.optionalunit.name if name == '{unit}' else name
+                unit_name = self.unit.name if name == '{unit}' else name
                 if unit_name in self.unit_sprites:
                     self.unit_sprites[unit_name].remove()
                     # Force wait after unit sprite is drawn to allow time to transition.
@@ -340,22 +337,22 @@ class Dialogue_Scene(object):
                     self.current_state = "Waiting"
         elif line[0] == 'qr': # No transition plox
             for name in line[1:]:
-                unit_name = self.optionalunit.name if name == '{unit}' else name
+                unit_name = self.unit.name if name == '{unit}' else name
                 if unit_name in self.unit_sprites:
                     self.unit_sprites.pop(unit_name)
         # Change a units position
         elif line[0] == 'c':
-            name = self.optionalunit.name if line[1] == '{unit}' else line[1]
+            name = self.unit.name if line[1] == '{unit}' else line[1]
             self.unit_sprites.pop(name) # Remove line
             self.add_unit_sprite(line, metaDataObj, transition=False)
         # Change the priority of a unit
         elif line[0] == 'change_priority':
-            name = self.optionalunit.name if line[1] == '{unit}' else line[1]
+            name = self.unit.name if line[1] == '{unit}' else line[1]
             if name in self.unit_sprites:
                 self.unit_sprites[name].priority = int(line[2])
         # Move a unit sprite
         elif line[0] == 'move_sprite':
-            name = self.optionalunit.name if line[1] == '{unit}' else line[1]
+            name = self.unit.name if line[1] == '{unit}' else line[1]
             if name in self.unit_sprites:
                 new_position = self.parse_pos(line[2])
                 self.unit_sprites[name].move(new_position)
@@ -366,12 +363,12 @@ class Dialogue_Scene(object):
                     self.current_state = "Waiting"
         # Mirror the unit sprite
         elif line[0] == 'mirror':
-            name = self.optionalunit.name if line[1] == '{unit}' else line[1]
+            name = self.unit.name if line[1] == '{unit}' else line[1]
             if name in self.unit_sprites:
                 self.unit_sprites[name].mirror = not self.unit_sprites[name].mirror
         # Bop the unit sprite up and down
         elif line[0] == 'bop':
-            name = self.optionalunit.name if line[1] == '{unit}' else line[1]
+            name = self.unit.name if line[1] == '{unit}' else line[1]
             if name in self.unit_sprites:
                 self.unit_sprites[name].bop()
 
@@ -391,8 +388,8 @@ class Dialogue_Scene(object):
         # Give the optional unit an item or give the unit named in the line the item
         elif line[0] == 'give_item' or line[0] == 'add_item':
             # Find receiver
-            if line[1] == '{unit}' and self.optionalunit:
-                receiver = self.optionalunit
+            if line[1] == '{unit}' and self.unit:
+                receiver = self.unit
             elif line[1] == 'Convoy':
                 receiver = None
             else:
@@ -409,7 +406,7 @@ class Dialogue_Scene(object):
         # Has the unit equip an item in their inventory if and only if that item is in their inventory by name
         elif line[0] == 'equip_item':
             if line[1] == '{unit}':
-                name = self.optionalunit.name
+                name = self.unit.name
             else:
                 name = line[1]
             for unit in gameStateObj.allunits:
@@ -428,22 +425,22 @@ class Dialogue_Scene(object):
 
         elif line[0] == 'remove_item':
             if line[1] == '{unit}':
-                item = [item for item in self.optionalunit.items if item.name == line[2] or item.id == line[2]][0]
-                self.optionalunit.remove_item(item)
+                item = [item for item in self.unit.items if item.name == line[2] or item.id == line[2]][0]
+                self.unit.remove_item(item)
             else:
                 for unit in gameStateObj.allunits:
                     if unit.name == line[1]:
-                        item = [item for item in self.optionalunit.items if item.name == line[2] or item.id == line[2]][0]
+                        item = [item for item in self.unit.items if item.name == line[2] or item.id == line[2]][0]
                         unit.remove_item(item)
                         break
 
         # Add a skill/status to a unit
         elif line[0] == 'give_skill':
             skill = StatusObject.statusparser(line[2])
-            if line[1] == '{unit}' and self.optionalunit:
-                StatusObject.HandleStatusAddition(skill, self.optionalunit, gameStateObj)
+            if line[1] == '{unit}' and self.unit:
+                StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
                 if 'no_display' not in line:
-                    gameStateObj.banners.append(Banner.gainedSkillBanner(self.optionalunit, skill))
+                    gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
                     gameStateObj.stateMachine.changeState('itemgain')
                     self.current_state = "Paused"
             else:
@@ -461,8 +458,8 @@ class Dialogue_Scene(object):
         elif line[0] == 'exp_gain':
             exp = int(line[2])
             c_unit = None
-            if line[1] == '{unit}' and self.optionalunit:
-                c_unit = self.optionalunit
+            if line[1] == '{unit}' and self.unit:
+                c_unit = self.unit
             else:
                 for unit in gameStateObj.allunits:
                     if unit.name == line[1]:
@@ -522,14 +519,14 @@ class Dialogue_Scene(object):
         elif line[0] in ['set_cursor', 'move_cursor']:
             if line[1].startswith('o') and "," in line[1]:
                 coord = self.parse_pos(line[1][1:])
-                if gameStateObj.map.custom_origin:
-                    coord = coord[0] + gameStateObj.map.custom_origin[0], coord[1] + gameStateObj.map.custom_origin[1]
+                if gameStateObj.map.origin:
+                    coord = coord[0] + gameStateObj.map.origin[0], coord[1] + gameStateObj.map.origin[1]
             elif "," in line[1]: # If is a coordinate
                 coord = self.parse_pos(line[1])
             elif line[1] == 'next' and self.next_position:
                 coord = self.next_position
-            elif line[1] == '{unit}' and self.optionalunit:
-                    coord = self.optionalunit.position
+            elif line[1] == '{unit}' and self.unit:
+                    coord = self.unit.position
             else:
                 for unit in gameStateObj.allunits:
                     if (unit.name == line[1] or unit.event_id == line[1]) and unit.position:
@@ -613,12 +610,12 @@ class Dialogue_Scene(object):
             self.reset_state_flag = True
 
         # === HANDLE TILE CHANGES -- These get put in the command list
-        elif line[0] == 'set_custom_origin':
+        elif line[0] == 'set_origin':
             if len(line) > 1:
-                gameStateObj.map.custom_origin = self.parse_pos(line[1])
+                gameStateObj.map.origin = self.parse_pos(line[1])
                 line = [line[0], self.parse_pos(line[1])]
             else:
-                gameStateObj.map.custom_origin = self.tile_pos
+                gameStateObj.map.origin = self.tile_pos
                 line.append(self.tile_pos)
             gameStateObj.map.command_list.append(line)
         # Change tile sprites. - command, pos, tile_sprite, size, transition
@@ -738,7 +735,7 @@ class Dialogue_Scene(object):
                 unit.reset()
         elif line[0] == 'reset_unit':
             if line[1] == '{unit}':
-                self.optionalunit.reset()
+                self.unit.reset()
             else:
                 for unit in gameStateObj.allunits:
                     if unit.id == line[1] or unit.event_id == line[1] or unit.name == line[1] or unit.team == line[1]:
@@ -911,7 +908,7 @@ class Dialogue_Scene(object):
         return line[2]
 
     def add_dialog(self, line):
-        speaker = self.optionalunit.name if line[1] == '{unit}' else line[1]
+        speaker = self.unit.name if line[1] == '{unit}' else line[1]
         tail = None
         waiting_cursor = True
         transition = False
@@ -1127,7 +1124,7 @@ class Dialogue_Scene(object):
         surf.blit(s, (0, 0))
 
     def add_unit_sprite(self, line, metaDataObj, transition=False):
-        name = self.optionalunit.name if line[1] == '{unit}' else line[1]
+        name = self.unit.name if line[1] == '{unit}' else line[1]
         if name in self.unit_sprites and not self.unit_sprites[name].remove_flag:
             return False
         hardset_positions = {'OffscreenLeft': -96, 'FarLeft': -24, 'Left': 0, 'MidLeft': 24,
@@ -1248,7 +1245,7 @@ class Dialogue_Scene(object):
     def move_unit(self, gameStateObj, metaDataObj, which_unit, new_pos, transition, placement, shuffle=True):
         # Find unit
         if which_unit == '{unit}':
-            unit = self.optionalunit
+            unit = self.unit
         elif ',' in which_unit:
             unit = gameStateObj.get_unit_from_pos(self.parse_pos(which_unit))
         else:
@@ -1310,7 +1307,7 @@ class Dialogue_Scene(object):
     def remove_unit(self, gameStateObj, which_unit, transition, event=True):
         # Find unit
         if which_unit == '{unit}':
-            unit = self.optionalunit
+            unit = self.unit
         elif ',' in which_unit:
             unit = gameStateObj.get_unit_from_pos(self.parse_pos(which_unit))
         else:

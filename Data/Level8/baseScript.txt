@@ -1,5 +1,5 @@
 # Althea and Prim and Drake discuss Althea's return to the throne
-if;self.optionalunit == 'Midnight Rendezvous'
+if;self.name == 'Midnight Rendezvous'
 	# Coyote and Sam discuss passage into Rajas
 	m;Toorimichi
 	b;TacticsRoom
@@ -32,7 +32,7 @@ if;self.optionalunit == 'Midnight Rendezvous'
 	r;Sam
 	grey_base_convo;Midnight Rendezvous
 	t;1
-elif;self.optionalunit == 'Coronation'
+elif;self.name == 'Coronation'
 	m;Lady Eboshi
 	b;GenericRoom
 	t;2

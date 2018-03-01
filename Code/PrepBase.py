@@ -35,7 +35,7 @@ class PrepMainState(StateMachine.State):
             self.started = True
             prep_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/prepScript.txt'
             if os.path.exists(prep_script_name):
-                prep_script = Dialogue.Dialogue_Scene(prep_script_name, None, event_flag=False)
+                prep_script = Dialogue.Dialogue_Scene(prep_script_name, event_flag=False)
                 gameStateObj.message.append(prep_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -1266,7 +1266,7 @@ class BaseMainState(StateMachine.State):
         # Play base script if it exists
         base_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/in_base_script.txt'
         if os.path.exists(base_script_name):
-            base_script = Dialogue.Dialogue_Scene(base_script_name, None, event_flag=False)
+            base_script = Dialogue.Dialogue_Scene(base_script_name, event_flag=False)
             gameStateObj.message.append(base_script)
             gameStateObj.stateMachine.changeState('transparent_dialogue')
             return 'repeat'
@@ -1351,7 +1351,7 @@ class BaseInfoState(StateMachine.State):
             if gameStateObj.childMenu.color_control[gameStateObj.childMenu.currentSelection] == 'text_white':
                 GC.SOUNDDICT['Select 1'].play()
                 dialogue_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/baseScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(dialogue_script, selection))
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(dialogue_script, name=selection))
                 gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.stateMachine.changeState('transition_out')
             return
@@ -1573,7 +1573,7 @@ class BaseSupportConvoState(StateMachine.State):
                         level = 'A'
                     elif level == 3:
                         level = 'S'
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, level))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, unit=unit, name=level))
                     gameStateObj.stateMachine.changeState('dialogue')
                     gameStateObj.stateMachine.changeState('transition_out')
                     edge.unread = False

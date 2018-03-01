@@ -1,11 +1,11 @@
 # Level 4 Switch Script
 # Universal things
 inc_counter;switches
-set_custom_origin
+set_origin
 set_tile_info;o0,0
 change_tile_sprite;o0,0;pulled_switch
 # Switch 1
-if;self.optionalunit2 == '1'
+if;self.name == '1'
 	set_cursor;o0,1;force_hold
 	disp_cursor;1
 	wait;500
@@ -16,7 +16,7 @@ if;self.optionalunit2 == '1'
 	replace_tile;o0,1;39
 	switch_pulled_banner
 # Switch 2
-elif;self.optionalunit2 == '2'
+elif;self.name == '2'
 	set_cursor;18,14;force_hold
 	disp_cursor;1
 	wait;500
@@ -27,7 +27,7 @@ elif;self.optionalunit2 == '2'
 	replace_tile;18,14;9
 	switch_pulled_banner
 # Switch 3
-elif;self.optionalunit2 == '3'
+elif;self.name == '3'
 	set_cursor;10,3;force_hold
 	disp_cursor;1
 	wait;500

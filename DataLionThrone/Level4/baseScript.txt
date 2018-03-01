@@ -1,5 +1,5 @@
 # Base Script Level 4
-if;self.optionalunit == 'An Uneasy Trust'
+if;self.name == 'An Uneasy Trust'
 	# Gives Ophie Flareblade
 	m;Toorimichi
 	b;TacticsRoomDay
@@ -41,7 +41,7 @@ if;self.optionalunit == 'An Uneasy Trust'
 	r;Ophie
 	grey_base_convo;An Uneasy Trust
 	t;1
-elif;self.optionalunit == 'Strength'
+elif;self.name == 'Strength'
 	# Gives Eliza Prim's charm
 	convert;Eliza;player
 	m;Midna's Theme
@@ -89,7 +89,7 @@ elif;self.optionalunit == 'Strength'
 	grey_base_convo;Strength
 	t;1
 # Theo's Noir Adventures
-elif;self.optionalunit == "Theo Sphinx, Pt. I"
+elif;self.name == "Theo Sphinx, Pt. I"
 	# Episode 1
 	m;Jazz Noir
 	b;Study

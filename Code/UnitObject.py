@@ -1406,10 +1406,10 @@ class UnitObject(object):
         return True
 
     def handle_fight_quote(self, target_unit, gameStateObj):
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', target_unit, self, event_flag=False))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', unit=target_unit, unit2=self, event_flag=False))
         gameStateObj.stateMachine.changeState('dialogue')
         # And again, the other way round
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', self, target_unit, event_flag=False))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', unit=self, unit2=target_unit, event_flag=False))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_steal_banner(self, item, gameStateObj):
@@ -2013,14 +2013,14 @@ class UnitObject(object):
 
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escape_triggers.txt', self, tile_pos=self.position, event_flag=False))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, tile_pos=self.position, event_flag=False))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, gameStateObj):
         self.hasAttacked = True
         locked_name = gameStateObj.map.tile_info_dict[pos]['Locked']
         unlock_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt'
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, self, locked_name, pos))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
         gameStateObj.stateMachine.changeState('dialogue')
 
         # Use up skeleton key if it was what was used

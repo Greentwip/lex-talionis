@@ -1,12 +1,12 @@
-set_custom_origin
+set_origin
 inc_counter;switches
 # Switch Left
-if;self.optionalunit2 == 'Left'
+if;self.name == 'Left'
     set_tile_info;o0,0
     change_tile_sprite;o0,0;switch_pulled
     switch_pulled_banner
 # Switch 2
-elif;self.optionalunit2 == 'Right'
+elif;self.name == 'Right'
     set_tile_info;o0,0
     change_tile_sprite;o0,0;switch_pulled
     switch_pulled_banner
@@ -21,13 +21,13 @@ if;gameStateObj.counters['switches'] == 2
     set_camera;6,11;18,12
     wait;500
     # Replace with open areas
-    set_custom_origin;6,11
+    set_origin;6,11
     change_tile_sprite;o0,0;wall_topleft
     replace_tile;o0,0;9
     replace_tile;o0,1;9
     replace_tile;o1,0;9
     replace_tile;o1,1;9
-    set_custom_origin;17,11
+    set_origin;17,11
     change_tile_sprite;o0,0;wall_topright
     replace_tile;o0,0;9
     replace_tile;o0,1;9
@@ -36,13 +36,13 @@ if;gameStateObj.counters['switches'] == 2
     wait;500
     set_camera;6,22;18,23
     wait;500
-    set_custom_origin;6,22
+    set_origin;6,22
     change_tile_sprite;o0,0;wall_topright
     replace_tile;o0,0;9
     replace_tile;o0,1;9
     replace_tile;o1,0;9
     replace_tile;o1,1;9
-    set_custom_origin;17,22
+    set_origin;17,22
     change_tile_sprite;o0,0;wall_topright
     replace_tile;o0,0;9
     replace_tile;o0,1;9

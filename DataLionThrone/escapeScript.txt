@@ -3,7 +3,7 @@
 # Level Specific
 # Level 4
 if;gameStateObj.counters['level'] == 4
-	if;self.optionalunit.klass == 'Wagon'
+	if;self.unit.klass == 'Wagon'
 		inc_counter;Escaped_Wagons
 	end
 	if;gameStateObj.counters['Escaped_Wagons'] >= 4
@@ -21,11 +21,11 @@ if;gameStateObj.counters['level'] == 4
 	end
 # Level 6
 elif;gameStateObj.counters['level'] == 6
-	if;self.optionalunit.name == 'Kiley'
+	if;self.unit.name == 'Kiley'
 		u;Kiley;Right
 		s;Kiley;Aye, looks like this Resistance can handle itself.{w}{br}I'd best be following me crew.{w}{br}They get mighty rowdy without their captain to steer 'em straight{w};auto
 		r;Kiley
-	elif;self.optionalunit.name == 'Prisoner'
+	elif;self.unit.name == 'Prisoner'
 		inc_counter;Civ_Escape
 	end
 end
@@ -33,6 +33,6 @@ end
 # Universal
 remove_unit;{unit}
 wait;200
-if;not any(unit.team in ["player", "other"] for unit in gameStateObj.allunits if unit.position)
+if;not any(unit.team in ("player", "other") for unit in gameStateObj.allunits if unit.position)
 	win_game
 end

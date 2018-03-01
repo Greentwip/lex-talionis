@@ -1,11 +1,11 @@
 # Base Script Level 7
-if;self.optionalunit == 'Theo Sphinx, Pt. IV'
+if;self.name == 'Theo Sphinx, Pt. IV'
 	# Episode 4
 	m;Jazz Noir
 	b;Snow_Forest_Clearing
 	t;2
 	u;Theo;FarLeft
-	s;Theo;Snow.{w}{br}Since when the hell did it snow around here?{w}{br}And it was coming down in buckets.{w}{clear}So this was it, my last lead in this godforsaken case.{w}{br}The hour crawled by like a sick cockroach.{w}{br}I'd almost given up hope when out of the dark strutted a raven-haired dame.{w}{br}She had a wild glint in her eyes.{w}{br}Before she could scamper off, I cornered her.{w};auto;noir
+	s;Theo;Snow.{w}{br}Since when did it snow around here?{w}{br}And it was coming down in buckets.{w}{clear}So this was it, my last lead in this godforsaken case.{w}{br}The hour crawled by like a sick cockroach.{w}{br}I'd almost given up hope when out of the dark strutted a raven-haired dame.{w}{br}She had a wild glint in her eyes.{w}{br}Before she could scamper off, I cornered her.{w};auto;noir
 	u;Nia;Right
 	move_sprite;Theo;24,0
 	s;Nia;...{w};auto
@@ -37,7 +37,7 @@ if;self.optionalunit == 'Theo Sphinx, Pt. IV'
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. IV
 	t;1
-elif;self.optionalunit == 'Training'
+elif;self.name == 'Training'
 	m;Wild Arms Town
 	b;Clearing
 	t;2

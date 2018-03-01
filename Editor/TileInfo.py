@@ -103,12 +103,14 @@ class TileInfo(object):
         return image_coords
 
 class ComboDialog(QtGui.QDialog):
-    def __init__(self, instruction, items, item_list=[], parent=None):
+    def __init__(self, instruction, items, item_list=None, parent=None):
         super(ComboDialog, self).__init__(parent)
         self.form = QtGui.QFormLayout(self)
         self.form.addRow(QtGui.QLabel(instruction))
 
         self.items = items
+        if item_list is None:
+            item_list = []
 
         # Create item combo box
         self.item_box = CheckableComboBox()
@@ -116,11 +118,11 @@ class ComboDialog(QtGui.QDialog):
         self.item_box.setIconSize(QtCore.QSize(16, 16))
         for idx, item in enumerate(self.items.values()):
             if item.image:
-                self.item_box.addItem(EditorUtilities.create_icon(item.image), item.name)
+                self.item_box.addItem(EditorUtilities.create_icon(item.image), item.id)
             else:
-                self.item_box.addItem(item.name)
+                self.item_box.addItem(item.id)
             row = self.item_box.model().item(idx, 0)
-            if item.name in item_list:
+            if item.id in item_list:
                 row.setCheckState(QtCore.Qt.Checked)
             else:
                 row.setCheckState(QtCore.Qt.Unchecked)
@@ -136,7 +138,7 @@ class ComboDialog(QtGui.QDialog):
         for idx, item in enumerate(self.items):
             row = self.item_box.model().item(idx, 0)
             if row.checkState() == QtCore.Qt.Checked:
-                item_list.append(item.name)
+                item_list.append(item)
         return item_list
 
     @staticmethod

@@ -1,5 +1,5 @@
 # Tomahawk
-if;self.optionalunit2 == '1'
+if;self.name == '1'
 	t;1
 	b;House
 	t;2
@@ -16,7 +16,7 @@ if;self.optionalunit2 == '1'
 	t;2
 	give_item;{unit};Tomahawk
 # Superior Axe
-elif;self.optionalunit2 == '2'
+elif;self.name == '2'
 	t;1
 	b;House
 	t;2
@@ -33,7 +33,7 @@ elif;self.optionalunit2 == '2'
 	t;2
 	give_item;{unit};Superior Axe
 # Long Spear
-elif;self.optionalunit2 == '3'
+elif;self.name == '3'
 	t;1
 	b;House
 	t;2
@@ -50,7 +50,7 @@ elif;self.optionalunit2 == '3'
 	t;2
 	give_item;{unit};Long Spear
 # Adamant Lance
-elif;self.optionalunit2 == '4'
+elif;self.name == '4'
 	t;1
 	b;House
 	t;2
@@ -67,7 +67,7 @@ elif;self.optionalunit2 == '4'
 	t;2
 	give_item;{unit};Adamant Lance
 # Angelic Robe
-elif;self.optionalunit2 == '5'
+elif;self.name == '5'
 	# Boring Conversation
 	t;1
 	b;House
@@ -86,7 +86,7 @@ elif;self.optionalunit2 == '5'
 	t;2
 	give_item;{unit};Angelic Robe
 # Magebane Bow
-elif;self.optionalunit2 == '6'
+elif;self.name == '6'
 	t;1
 	b;House
 	t;2

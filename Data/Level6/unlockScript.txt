@@ -1,7 +1,7 @@
 # Level 6 Locked script
 # Cell_1 Door
-set_custom_origin
-if;self.optionalunit2 == 'Cell_1'
+set_origin
+if;self.name == 'Cell_1'
     change_tile_sprite;o0,0;floor_left
     change_tile_sprite;o0,1;floor
     replace_tile;o0,0;9
@@ -14,7 +14,7 @@ if;self.optionalunit2 == 'Cell_1'
     u;Jack;MidLeft;u;Jeb;FarLeft
     u;{unit};Right
     # A female opens the door
-    if;self.optionalunit.gender >= 5
+    if;self.unit.gender >= 5
         s;Jeb;Thanks, gal.{w}{br}It's not everyday I'm rescued by such a beauty!{w};auto
         s;Jack;Quit mooning, Jeb.{w}{br}Let's get out of here while we still can.{w};auto
         r;Jack
@@ -36,7 +36,7 @@ if;self.optionalunit2 == 'Cell_1'
     move_unit;C1_3;2,31
     start_move
 # Cell_2 Door
-elif;self.optionalunit2 == 'Cell_2'
+elif;self.name == 'Cell_2'
     change_tile_sprite;o0,0;floor_left
     change_tile_sprite;o0,1;floor
     replace_tile;o0,0;9
@@ -60,12 +60,12 @@ elif;self.optionalunit2 == 'Cell_2'
     remove_background
     t;2
 # Cell_3 Door
-elif;self.optionalunit2 == 'Cell_3'
+elif;self.name == 'Cell_3'
     change_tile_sprite;o0,0;floor_left
     replace_tile;o0,0;9
     set_tile_info;o0,0
 # Cell_4 Door
-elif;self.optionalunit2 == 'Cell_4'
+elif;self.name == 'Cell_4'
     change_tile_sprite;o0,0;floor_left
     change_tile_sprite;o0,1;floor
     replace_tile;o0,0;9
@@ -74,27 +74,27 @@ elif;self.optionalunit2 == 'Cell_4'
     change_ai;C2_2;ThiefEscape
     change_ai;C2_3;ThiefEscape
 # Cell_5 Door
-elif;self.optionalunit2 == 'Cell_5'
+elif;self.name == 'Cell_5'
     change_tile_sprite;o0,0;floor_left
     replace_tile;o0,0;9
     set_tile_info;o0,0
 # Cell_6 Door
-elif;self.optionalunit2 == 'Cell_6'
+elif;self.name == 'Cell_6'
     change_tile_sprite;o0,0;floor_left
     replace_tile;o0,0;9
     set_tile_info;o0,0
 # Chest_1 Chest 10,000 g
-elif;self.optionalunit2 == 'Chest_1'
+elif;self.name == 'Chest_1'
     change_tile_sprite;o0,0;chest_open
     set_tile_info;o0,0
     give_item;{unit};Diamond
 # Chest_2 Chest Restore
-elif;self.optionalunit2 == 'Chest_2'
+elif;self.name == 'Chest_2'
     change_tile_sprite;o0,0;chest_open
     set_tile_info;o0,0
     give_item;{unit};Restore
 # Chest_3 Chest Physic
-elif;self.optionalunit2 == 'Chest_3'
+elif;self.name == 'Chest_3'
     change_tile_sprite;o0,0;chest_open
     set_tile_info;o0,0
     give_item;{unit};Physic

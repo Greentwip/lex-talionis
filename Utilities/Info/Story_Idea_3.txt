@@ -3,15 +3,23 @@ Story Idea 3
 Themes: 
 Earthier and Grungier than most... Low-magic setting
 It has knights and heroes...
+However the world does seem to be slowly dying. It's getting worse and worse. People are getting sick. There's reports of monsters in the far reaches. Crops don't grow as well. People are dying in their 30s
+So when a Lorian shows up, claiming he can fix this... well maybe some listen.
+Locke calls their land Thanatia, the Land of the Dead. The Isle of the Damned.
+Main countries:
+Athria - Southern land of beaches and forests, famous for its libraries. Has the best tacticians
+Mercia - Middle land of hills and mountains -- a land of warriors, yet often plagued by bandits from the West
+Umbria - Northern land of swamps, marshes, and coves -- a land of thieves and spies. Athria and Mercia lost diplomatic contact with Umbria many years ago.
+Loria - A mystical land across the water. Lorians conquered this land a nearly 600 years ago, but left unexpectedly in the past 200 years. Famous for its mages and wyverns, which were brought to Thanatia.
 
 7 plot safe characters
 - Prot
-- Waif (shy, mysterious, broken)
-- Friend (assertive, forthright, active)
-- Jade (knowledgeable, steady, strong)
-- Slate (snarky, sarcastic, but with a heart of gold)
-- Dark (brooding, aggressive, sometimes jovial)
-- Drake (honorable, depressed, reasonable)
+- Waif (shy, mysterious, broken) - Dancer 
+- Friend (assertive, forthright, active) - Sword
+- Jade (knowledgeable, steady, strong) - Light
+- Slate (snarky, sarcastic, but with a heart of gold) - Sword
+- PseudoJagen (reasonable, calm, protective) - Lance
+- Drake (honorable, brooding, aggressive) - Dark/Axe
 
 Prot is kept as ward of neighboring kingdom, Mercia
 - Prot: Sword Lord
@@ -21,7 +29,7 @@ Prot is kept as ward of neighboring kingdom, Mercia
 Prot deals with Bandits (1 through 3)
 - Fighter: Bandit with a heart of gold
 Prot rescues or is rescued by Red, his/her older sister (3?)
-- Red: Paladin
+- Red: Paladin -- who is sick throughout most of the game
 - Dark, Red's Husband, Friend's older brother: Wyvern Rider
 Prot hears that his/her father has died or is dying from Red
 They make to travel back to Mercia -- but are sent out with companions
