@@ -87,8 +87,10 @@ def read_constants_file():
              'status_exp': 15, # How much exp is gotten for using a status spell
              'heal_curve': 1.0, # How much to multiply the amount healed by
              'heal_magnitude': 7, # Added to total amount healed 
+             'heal_min': 5, # Minimum amount gained for healing
              'kill_multiplier': 2.5, # Normal exp is multiplied by this when you get a kill (Normal FE = 3.0)
              'boss_bonus': 40, # Added to total exp on killing a boss
+             'min_exp': 1, # Minimum amount of experience gained for just existing in combat
              'kill_worth': 20, # How much damage is worth a kill in the Records
              'support_points': 12, # Number of points needed for one level of support
              'line_of_sight': 1, # Whether to use line of sight algorithm when choosing targets for weapons
@@ -140,7 +142,10 @@ def read_constants_file():
     lines['status_exp'] = int(lines['status_exp'])
     lines['heal_curve'] = float(lines['heal_curve'])
     lines['heal_magnitude'] = float(lines['heal_magnitude'])
+    lines['heal_min'] = float(lines['heal_min'])
     lines['kill_multiplier'] = float(lines['kill_multiplier'])
+    lines['boss_bonus'] = float(lines['boss_bonus'])
+    lines['min_exp'] = int(lines['min_exp'])
     lines['support_points'] = int(lines['support_points'])
     lines['line_of_sight'] = int(lines['line_of_sight'])
     lines['spell_line_of_sight'] = int(lines['spell_line_of_sight'])

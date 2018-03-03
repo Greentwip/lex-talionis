@@ -7,7 +7,7 @@ if;self.name == 'An Uneasy Trust'
 	# Ophie confronts Sam.
 	u;Sam;Right
 	qu;Ophie;OffscreenLeft
-	move_sprite;Ophie;96,0;force_hold
+	move_sprite;Ophie;96,0
 	s;Ophie;Hey, Sam--{w};auto
 	s;Sam;Ophie.
 	s;Ophie;Huh?
@@ -49,11 +49,11 @@ elif;self.name == 'Strength'
 	t;2
 	u;Eliza;MidLeft;mirror
 	wait;1000
-	move_sprite;Eliza;-24,0;force_hold
+	move_sprite;Eliza;-24,0
 	s;Eliza;Hmph.{w};auto
-	move_sprite;Eliza;24,0;force_hold
+	move_sprite;Eliza;24,0
 	qu;Prim;OffscreenRight
-	move_sprite;Prim;-96,0;force_hold
+	move_sprite;Prim;-96,0
 	s;Prim;H-Hello? Eliza?{w};auto
 	s;Eliza;What do you want?{w}{br}Come to gloat?{w}{br}Feel free... Not like I could stop you anyhow...{w};auto
 	s;Prim;Is that what you think?{w};auto
@@ -71,9 +71,9 @@ elif;self.name == 'Strength'
 	s;Eliza;I'm still weak.{w}{br}I thought that maybe one day...{w}{br}But then, you all showed up.{w}{br}Now I'll never have a chance to prove myself.{w};auto
 	s;Prim;I didn't realize...{w};auto
 	s;Eliza;Of course.{w}{br}Let me get back to training.{w};auto
-	move_sprite;Eliza;-24,0;force_hold
+	move_sprite;Eliza;-24,0
 	s;Prim;I think you've done enough training for today.{w}{br}Come on.{w};auto
-	move_sprite;Prim;-24,0;force_hold
+	move_sprite;Prim;-24,0
 	s;Eliza;Huh?{w};auto
 	s;Prim;Well, don't you want to put that training to use?{w}{br}Let's go catch up to the others.{w};auto
 	s;Eliza;B-But... Sam told me not to go...{w};auto

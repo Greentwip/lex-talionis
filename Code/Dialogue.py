@@ -9,6 +9,9 @@ import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner
 import logging
 logger = logging.getLogger(__name__)
 
+hardset_positions = {'OffscreenLeft': -96, 'FarLeft': -24, 'Left': 0, 'MidLeft': 24,
+                     'MidRight': 120, 'Right': 144, 'FarRight': 168, 'OffscreenRight': 240}
+
 # === GET INFO FOR DIALOGUE SCENE ==================================================
 class Dialogue_Scene(object):
     def __init__(self, scene, unit=None, unit2=None, name=None, tile_pos=None, event_flag=True, if_flag=False):
@@ -351,14 +354,20 @@ class Dialogue_Scene(object):
             if name in self.unit_sprites:
                 self.unit_sprites[name].priority = int(line[2])
         # Move a unit sprite
-        elif line[0] == 'move_sprite':
+        elif line[0] == 'move_sprite' or line[0] == 'qmove_sprite':
             name = self.unit.name if line[1] == '{unit}' else line[1]
             if name in self.unit_sprites:
-                new_position = self.parse_pos(line[2])
-                self.unit_sprites[name].move(new_position)
-                # Force wait after unit sprite is moved to allow time to transition
-                if 'force_hold' in line:
-                    self.waittime = abs(new_position[0]/self.unit_sprites[name].unit_speed*self.unit_sprites[name].update_time)+200
+                unit_sprite = self.unit_sprites[name]
+                if line[2] in hardset_positions:
+                    new_x = hardset_positions[line[2]]
+                    current_x = unit_sprite.position[0]
+                    new_position = (new_x - current_x, 0)
+                else:
+                    new_position = self.parse_pos(line[2])
+                unit_sprite.move(new_position)
+                # Wait after unit sprite is moved to allow time to transition
+                if line[0] == 'move_sprite':
+                    self.waittime = abs(new_position[0] / unit_sprite.unit_speed * unit_sprite.update_time) + 200
                     self.last_wait_update = Engine.get_time()
                     self.current_state = "Waiting"
         # Mirror the unit sprite
@@ -1127,8 +1136,6 @@ class Dialogue_Scene(object):
         name = self.unit.name if line[1] == '{unit}' else line[1]
         if name in self.unit_sprites and not self.unit_sprites[name].remove_flag:
             return False
-        hardset_positions = {'OffscreenLeft': -96, 'FarLeft': -24, 'Left': 0, 'MidLeft': 24,
-                             'MidRight': 120, 'Right': 144, 'FarRight': 168, 'OffscreenRight': 240}
         if line[2] in hardset_positions:
             position = [hardset_positions[line[2]], 80]
             priority = self.priority_counter

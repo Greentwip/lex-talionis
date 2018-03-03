@@ -27,7 +27,7 @@ s;Kayla;Well, the Confederacy has prepared a hiding place for such an eventualit
 s;Sam;Kiley, if you agree,{w}{br}you'll be in charge of the Revolutionary Army of Kerala.{w}{br}A force to fight the Empire when and where it is needed most.{w};auto
 s;Kiley;Aye...{w}{br}Commander of an army....{w}{br}Sounds like a lot of responsibilities...{w}{clear}But, if me country needs me, what can I say?{w}{br}Plus me boys wouldn't know what to do without me.{w}{br}Joinin' the military might do 'em some good.{w};auto
 s;Sam;Great!{w};auto
-move_sprite;Kiley;24,0
+qmove_sprite;Kiley;24,0
 u;Coyote;MidRight
 s;Kayla;Coyote, you'll be coming with us.{w};auto
 s;Kiley;Eh?{w}{br}Coyote's me first mate!{w};auto

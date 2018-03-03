@@ -29,7 +29,7 @@ s;Vagnius;Holding children hostage isn't exactly lauded by the international com
 s;Vincent;Oh, I get ya, boss.{w}{br}Not a word of it will pass my lips!{w};auto
 # End cuttable setion here
 mirror;Vagnius
-move_sprite;Vagnius;24,0;force_hold
+move_sprite;Vagnius;24,0
 s;Vincent;Hey! Where you going, boss?{w};auto 
 mirror;Vagnius
 s;Vincent;Don't you want to see the fireworks?{w};auto

@@ -25,7 +25,7 @@ s;OldMan1;What gives you the right!{w};auto
 s;Man1;Yeah, we haven't done anything!{w};auto
 s;Soldier1;Ahem!{w}{br}Anyone who resists will be punished in full accordance with the law.{w};auto
 s;Man1;Shove your full accordance--{w};auto
-move_sprite;Soldier1;24,0
+qmove_sprite;Soldier1;24,0
 u;Vagnius;MidRight
 s;Vagnius;That's enough.{w}{br}Let's cut to the chase, shall we?{w}{br}We know you're harboring a fugitive.{w}{br}Hand the girl over and no one has to get hurt.{w};auto
 s;OldMan1;Hmmph.{w};auto
@@ -60,7 +60,7 @@ s;OldMan1;...{w};auto
 r;OldMan1
 # Man dies
 r;OldMan1
-move_sprite;Sidney;24,0
+qmove_sprite;Sidney;24,0
 u;Vagnius;Right
 s;Vagnius;Let this be an example to those who would defy the Empire's might!{w}{br}Now, hand over the fugitive, or more will end up like this traitor!{w};auto
 r;Sidney;Vagnius

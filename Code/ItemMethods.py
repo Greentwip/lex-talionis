@@ -283,9 +283,10 @@ class UsableComponent(object):
         self.name = 'usable'
 
 class EffectiveComponent(object):
-    def __init__(self, effective_against):
+    def __init__(self, effective_against, bonus):
         # List of types its effective against
         self.against = effective_against
+        self.bonus = bonus
 
 class PermanentStatIncreaseComponent(object):
     def __init__(self, stat_increase):
@@ -388,8 +389,12 @@ def itemparser(itemstring):
                     for s_id in statusid:
                         status_on_equip.append(s_id)
                 elif component == 'effective':
-                    effective_against = item['effective'].split(',')
-                    my_components['effective'] = EffectiveComponent(effective_against)
+                    try:
+                        effective_against, bonus = item['effective'].split(';')
+                        effective_against = effective_against.split(',')
+                        my_components['effective'] = EffectiveComponent(effective_against, int(bonus))
+                    except:
+                        continue
                 elif component == 'permanent_stat_increase':
                     stat_increase = SaveLoad.intify_comma_list(item['stat_increase'])
                     my_components['permanent_stat_increase'] = PermanentStatIncreaseComponent(stat_increase)

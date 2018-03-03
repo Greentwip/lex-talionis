@@ -6,11 +6,11 @@ u;Joel;Left;u;Coyote;Right
 s;Joel;Are you sure we're going the right way, Coyote?{w};auto
 s;Coyote;Yes.{w};auto
 s;Joel;I mean, I don't want to cast doubt on your judgement, partner...{w}{br}But I reckon' I've seen that dead rat before.{w};auto
-move_sprite;Joel;-24,0
+qmove_sprite;Joel;-24,0
 u;Sam;MidLeft
 # This line is bad
 s;Sam;Joel, quit your whining and stay alert.{w}{br}Our exit should be nearby.{w}{br}Once we're there, I'll--{w};auto
-move_sprite;Coyote;24,0
+qmove_sprite;Coyote;24,0
 u;Nia;MidRight
 s;Sam;Hmm, Nia?{w};auto
 s;Nia;S-Someone else...{w}{br}Someone else here...{w};auto
@@ -60,10 +60,10 @@ s;Boaz;No time for philosophy, my friend. Prey is afoot!{w};auto
 s;Althea;Who are you...{w}{br}What is this...{w};auto
 s;Boaz;Hmm? Did you hear something, Jakin?{w};auto
 s;Jakin;...{w};auto
-move_sprite;Boaz;-48,0
-move_sprite;Jakin;48,0;force_hold
+qmove_sprite;Boaz;-48,0
+move_sprite;Jakin;48,0
 s;Boaz;What's a nice girl like you doing in the undercity?{w};auto
-move_sprite;Althea;12,0;force_hold
+move_sprite;Althea;12,0
 s;Althea;O-Out of our way!{w}{br}We need to get to the palace!{w};auto
 s;Boaz;Hahaha! Such vigor!{w}{br}I'll take pity on you, little girl.{w}{br}You want to cross these waters, you have to play our game.{w}{br}There's only one rule.{w}{br}If you can make it by us alive, then you're free.{w}{br}Otherwise, well... Hahaha!.{w};auto
 s;Althea;What sort of sick game is this...{w};auto

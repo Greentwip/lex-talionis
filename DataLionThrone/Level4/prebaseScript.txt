@@ -48,7 +48,7 @@ s;Sam;Yes, but it should only be a token force.{w}{br}The Empire is keeping thes
 s;Prim;Oh...{w};auto
 s;Sam;If no one else has any comments...{w};auto
 m;Midna's Theme
-move_sprite;Prim;-24,0
+qmove_sprite;Prim;-24,0
 u;Eliza;MidLeft
 s;Sam;Eliza?{w};auto
 s;Eliza;Can you let me join this fight?{w};auto

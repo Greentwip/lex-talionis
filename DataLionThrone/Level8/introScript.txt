@@ -11,7 +11,7 @@ s;Sam;You again?{w}{br}We can't afford any security breaches at a time like this
 s;Woman2;Please! You have to help us!{w};auto
 s;Sam;What is it then?{w};auto
 s;Woman2;Podoma is under attack.{w}{br}It's that man from before.{w}{br}And this time he brought an army!{w};auto
-move_sprite;Sam;-24,0
+qmove_sprite;Sam;-24,0
 u;Ophie;MidLeft
 s;Ophie;Vagnius! The bastard!{w};auto
 s;Woman2;Our entire village will be destroyed...{w}{br}You're our only hope...{w};auto
@@ -50,8 +50,8 @@ arrange_formation
 set_cursor;Ophie
 u;Sam;OffscreenLeft
 u;Ophie;OffscreenLeft
-move_sprite;Sam;72,0
-move_sprite;Ophie;120,0;force_hold
+qmove_sprite;Sam;72,0
+move_sprite;Ophie;120,0
 s;Sam;Well the town's still standing.{w}{br}We're not too late.{w};auto
 r;Sam
 s;Ophie;Master Yohn, you have not been forgotten.{w}{br}Vagnius dies today, this I swear.{w};auto

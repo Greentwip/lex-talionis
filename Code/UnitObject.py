@@ -1514,6 +1514,11 @@ class UnitObject(object):
             pass
             
         else:
+            # Determine effective
+            if item.effective:
+                if any((unit_tag in item.effective.against) for unit_tag in target.tags):
+                    damage += item.effective.bonus
+            # Weapon Triangle
             damage += CustomObjects.WEAPON_TRIANGLE.compute_advantage(item, target.getMainWeapon())[0]
             if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:

@@ -128,7 +128,7 @@ elif;gameStateObj.turncount == 4
 	set_cursor;Ophie;force_hold
 	u;Ophie;MidLeft
 	s;Ophie;NO!! Master Yohn!{w};auto
-	move_sprite;Ophie;144,0;force_hold
+	move_sprite;Ophie;144,0
 	u;Prim;FarLeft
 	mirror;Ophie
 	s;Prim;O-Ophie! He said not to look back!{w};auto

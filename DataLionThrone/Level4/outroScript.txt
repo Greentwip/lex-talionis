@@ -40,12 +40,12 @@ end
 s;Ophie;Joel, you ever seen a sword like this before?{w}{br}It was wrapped up by itself in the back.{w};auto
 s;Joel;Well, lad, it's certainly ornate.{w}{br}How does it feel?{w};auto
 s;Ophie;Hmmm... Powerful.{w};auto
-move_sprite;Joel;24,0
+qmove_sprite;Joel;24,0
 u;Prim;MidRight
 s;Prim;I don't like the look of it. {w};auto
 s;Ophie;What?{w}{br}Wait... are you jealous, Prim?{w};auto
 s;Prim;No... I just have a bad feeling.{w};auto
-move_sprite;Ophie;-24,0
+qmove_sprite;Ophie;-24,0
 u;Althea;MidLeft
 s;Althea;So do I...{w};auto
 s;Joel;I reckon' I've heard of this blade before.{w}{br}This is ancient magic.{w}{br}Lad, what you hold in your hands is a Magebane Sword.{w};auto

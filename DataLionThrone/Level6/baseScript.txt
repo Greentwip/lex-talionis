@@ -29,9 +29,9 @@ elif;self.name == 'Guard Duty'
 	u;Renae;Left
 	wait;500
 	qu;Drake;OffscreenRight
-	move_sprite;Drake;-108,0;force_hold
+	move_sprite;Drake;-108,0
 	s;Renae;Hey!
-	move_sprite;Drake;12,0;force_hold
+	move_sprite;Drake;12,0
 	s;Drake;Ah!
 	s;Renae;Not so fast there, stranger!
 	s;Drake;Huh? Miss, are you addressing me?
@@ -80,7 +80,7 @@ elif;self.name == 'Cipher'
 	s;Kayla;I'm certain. Can't you sense the aura?
 	s;Sam;You know I've no talent for that.{w}{br}Anyway, I think I do recognize some of this script.{w}{br}Here. Move over.
 	r;Sam
-	move_sprite;Kayla;-24,0
+	qmove_sprite;Kayla;-24,0
 	u;Sam;MidLeft
 	s;Sam;This section is total gibberish, but this right here.{w}{br}It almost looks like a legend or guide.
 	s;Kayla;You're thinking it's encoded?

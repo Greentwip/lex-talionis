@@ -9,7 +9,7 @@ if;gameStateObj.turncount == 1
 	#start_move
 	wait;1000
 	u;Adjutant;Left
-	move_sprite;Ophie;24,0
+	qmove_sprite;Ophie;24,0
 	s;Ophie;!{w};auto
 	s;Adjutant;Duke Ulver sends his regards.{w}{br}He regrets to inform you that he is occupied at the moment.{w};auto
 	u;Sam;MidRight

@@ -7,7 +7,7 @@ if;self.name == 'Theo Sphinx, Pt. IV'
 	u;Theo;FarLeft
 	s;Theo;Snow.{w}{br}Since when did it snow around here?{w}{br}And it was coming down in buckets.{w}{clear}So this was it, my last lead in this godforsaken case.{w}{br}The hour crawled by like a sick cockroach.{w}{br}I'd almost given up hope when out of the dark strutted a raven-haired dame.{w}{br}She had a wild glint in her eyes.{w}{br}Before she could scamper off, I cornered her.{w};auto;noir
 	u;Nia;Right
-	move_sprite;Theo;24,0
+	qmove_sprite;Theo;24,0
 	s;Nia;...{w};auto
 	s;Theo;She looked tenser than a minister in a ten-cent whorehouse.{w}{br}I asked her if she'd heard anything about Miss Prim's problem.{w}{br}She shook her head, but I wasn't having it.{w}{br}I grabbed her by the collar and demanded the truth about the missing tome--{w}{br}I've still got the scratches to prove it.{w}{br}To my surprise, her expression softened.{w}{br}She beckoned me down 79th street and I followed.{w}{br}After what seemed like a dozen twists and turns through this concrete jungle,{w}{br}we arrived at a run-down shack on the outskirts of the East Side.{w};auto;noir
 	r;Nia;Theo
@@ -44,7 +44,7 @@ elif;self.name == 'Training'
 	u;Ophie;MidLeft;mirror
 	bop;Ophie
 	s;Ophie;Ha-aah!
-	move_sprite;Ophie;-24,0
+	qmove_sprite;Ophie;-24,0
 	s;Ophie;I've got you now, Ulver!{w}{br}Your evil will be vanquished from this earth!
 	u;Coyote;Right
 	s;Coyote;*cough*
@@ -58,12 +58,12 @@ elif;self.name == 'Training'
 	s;Ophie;What! I can protect myself.
 	s;Coyote;Prove it.
 	s;Ophie;Hah... If you're ready...
-	move_sprite;Ophie;48,0;force_hold
+	move_sprite;Ophie;48,0
 	s;Ophie;Ha-aah!
-	move_sprite;Coyote;-24,0;force_hold
-	move_sprite;Coyote;24,0;force_hold
+	move_sprite;Coyote;-24,0
+	move_sprite;Coyote;24,0
 	s;Ophie;Oof!
-	move_sprite;Ophie;-24,0;force_hold
+	move_sprite;Ophie;-24,0
 	s;Coyote;Still so sure?
 	s;Ophie;Damn! Where did that come from.
 	s;Coyote;You are too focused on your own movement.{w}{br}That is not the Rusonoon monks' style.
@@ -73,9 +73,9 @@ elif;self.name == 'Training'
 	s;Coyote;Many solstices ago...{w}{clear}As he would say, read your opponent's movements, and yours will follow.{w}{br}Combat is a dance.{w}{br}Turn your opponents energy against them...
 	s;Ophie;...And then strike!
 	s;Coyote;Here. Pay attention to me, not your sword.
-	move_sprite;Coyote;-48,0;force_hold
+	move_sprite;Coyote;-48,0
 	s;Ophie;Hah Ah!
-	move_sprite;Coyote;24,0;force_hold
+	move_sprite;Coyote;24,0
 	s;Coyote;Huff.
 	s;Ophie;Ah! I did it.
 	s;Coyote;Catch.

@@ -40,7 +40,7 @@ elif;self.unit.name == 'Kayla' and self.unit2.name == 'Coyote'
 	s;Coyote;It's something of an occupational hazard.{w};auto
 	s;Kayla;Well, I'll be keeping a better eye on you from now on.{w};auto
 	s;Coyote;I don't need the Confederacy breathing down my neck.{w};auto
-	move_sprite;Kayla;-24,0
+	qmove_sprite;Kayla;-24,0
 	s;Kayla;Oh, don't worry. This is personal.{w};auto
 	s;Coyote;I work better alone.{w};auto
 	s;Kayla;Tsk Tsk. Don't get so bent out of shape, Coyote.{w}{br}I'm sure you could use a break from that loner persona.{w};auto

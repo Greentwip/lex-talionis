@@ -569,7 +569,7 @@ class Combat(object):
         if self.p1.checkIfAlly(self.p2):
             my_exp = Utility.clamp(my_exp, 0, 100)
         else:
-            my_exp = Utility.clamp(my_exp, 1, 100)
+            my_exp = Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100)
         return my_exp
 
     def handle_statuses(self, gameStateObj):
@@ -1224,7 +1224,7 @@ class AnimationCombat(Combat):
                 if self.p1.checkIfAlly(self.p2):
                     my_exp = int(Utility.clamp(my_exp, 0, 100))
                 else:
-                    my_exp = int(Utility.clamp(my_exp, 1, 100))
+                    my_exp = int(Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100))
 
                 if my_exp > 0:
                     # Also handles actually adding the exp to the unit
@@ -1833,7 +1833,7 @@ class MapCombat(Combat):
                 if not isinstance(self.p2, UnitObject.UnitObject) or self.p1.checkIfAlly(self.p2):
                     my_exp = int(Utility.clamp(my_exp, 0, 100))
                 else:
-                    my_exp = int(Utility.clamp(my_exp, 1, 100))
+                    my_exp = int(Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100))
 
                 # Also handles actually adding the exp to the unit
                 gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp)) 

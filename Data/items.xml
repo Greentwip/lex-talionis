@@ -220,7 +220,7 @@
         <desc>Eirika only, effective against horseback and armoured units</desc>
         <weight>2</weight>
 
-        <effective>Mounted,Armor</effective>
+        <effective>Mounted,Armor;14</effective>
 
         <MT>7</MT>
         <HIT>95</HIT>
