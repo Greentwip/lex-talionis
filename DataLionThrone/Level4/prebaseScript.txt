@@ -10,7 +10,6 @@ set_base_convo;An Uneasy Trust
 if;not gameStateObj.check_dead('Theo')
 	set_base_convo;Theo Sphinx, Pt. I
 end
-set_counter;noir
 # Show room
 b;TacticsFloor;map
 wm_add;customSam;7,2;Tactician;M;player
@@ -32,7 +31,7 @@ t;1
 b;TacticsRoomDay
 t;2
 u;Sam;FarRight
-if;gameStateObj.counters['switches'] >= 2
+if;gameStateObj.game_constants['switches'] >= 2
 	s;Sam;Well done everyone.{w}{br}Thanks to your valiant efforts, we have the funds we need to keep our struggle alive.{w}{br}But we can't stop now.{w};auto
 else
 	s;Sam;I know the last mission did not go as well as we had hoped.{w};auto

@@ -1,6 +1,6 @@
 # TurnChange Script 7
 # Turn 3
-if;not gameStateObj.check_dead('Marduk') and not 'MercRein' in gameStateObj.event_triggers and (gameStateObj.turncount == 3 or any(unit.position[0] - unit.position[1] < 15 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
+if;not gameStateObj.check_dead('Marduk') and not 'MercRein' in gameStateObj.level_constants and (gameStateObj.turncount == 3 or any(unit.position[0] - unit.position[1] < 15 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
 	m;Brave Story 27
 	set_cursor;0,27;force_hold
 	set_cursor;Marduk
@@ -22,9 +22,9 @@ if;not gameStateObj.check_dead('Marduk') and not 'MercRein' in gameStateObj.even
 	add_unit;merc3
 	add_unit;merc4
 	wait;1000
-	trigger_event;MercRein
+	set_level_constant;MercRein
 # Turn 7
-elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.event_triggers and not 'BanditRein' in gameStateObj.event_triggers and (gameStateObj.turncount >= 8 or any(unit.position[0] - unit.position[1] < 6 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
+elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.level_constants and not 'BanditRein' in gameStateObj.level_constants and (gameStateObj.turncount >= 8 or any(unit.position[0] - unit.position[1] < 6 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
 	m;Brave Story 27
 	set_cursor;0,27;force_hold
 	set_cursor;Marduk
@@ -56,8 +56,8 @@ elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.event_
 	add_unit;bandit7
 	add_unit;bandit8
 	wait;1000
-	trigger_event;BanditRein
-elif;not gameStateObj.check_dead('Marduk') and 'BanditRein' in gameStateObj.event_triggers and not 'WyvernRein' in gameStateObj.event_triggers and (gameStateObj.turncount >= 14 or any(unit.position[0] - unit.position[1] < -7 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
+	set_level_constant;BanditRein
+elif;not gameStateObj.check_dead('Marduk') and 'BanditRein' in gameStateObj.level_constants and not 'WyvernRein' in gameStateObj.level_constants and (gameStateObj.turncount >= 14 or any(unit.position[0] - unit.position[1] < -7 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
 	m;Brave Story 27
 	set_cursor;0,27;force_hold
 	set_cursor;Marduk
@@ -107,7 +107,7 @@ elif;not gameStateObj.check_dead('Marduk') and 'BanditRein' in gameStateObj.even
 	#add_unit;wr4_3
 	#add_unit;wr4_4
 	#wait;500
-	trigger_event;WyvernRein
+	set_level_constant;WyvernRein
 	battle_save
 elif;gameStateObj.turncount >= 15 and gameStateObj.turncount%2
     set_cursor;27,0;force_hold

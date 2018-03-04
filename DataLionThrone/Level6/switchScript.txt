@@ -1,5 +1,5 @@
 set_origin
-inc_counter;switches
+inc_game_constant;switches
 # Switch Left
 if;self.name == 'Left'
     set_tile_info;o0,0
@@ -12,8 +12,8 @@ elif;self.name == 'Right'
     switch_pulled_banner
 end
 # Check if we've pulled both switches
-if;gameStateObj.counters['switches'] == 2
-    trigger_event;BothSwitchesPulled1
+if;gameStateObj.game_constants['switches'] == 2
+    set_level_constant;BothSwitchesPulled1
     u;Sam;Right
     s;Sam;We've done it! Everyone, forward, across the chasm!{w};auto
     r;Sam

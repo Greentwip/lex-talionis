@@ -99,7 +99,7 @@ elif;gameStateObj.turncount == 5
 	s;Midas;W-What!?{w};auto
 	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Duke.{w}{br}We will lay down our lives in his name!{w};auto
 	s;Midas;T-There has to be another way!{w};auto
-	if;gameStateObj.counters['Dead_Wagons'] > 1
+	if;gameStateObj.game_constants['Dead_Wagons'] > 1
 		s;Midas;They've already struck down some of my best wagons!{w};auto
 	end
 	s;Anders;You sniveling craven.{w}{br}Out of my way!{w};auto

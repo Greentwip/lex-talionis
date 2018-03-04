@@ -16,6 +16,6 @@ wait;20
 # Turn tiles into bridges
 replace_tile;0,4.1,4.21,4.22,4.23,4.7,12.8,12.9,12.7,19.8,19.9,19.21,27.22,27.23,27;12
 # Finalize
-trigger_event;master_switch
+set_level_constant;master_switch
 set_tile_info;o0,0
 switch_pulled_banner

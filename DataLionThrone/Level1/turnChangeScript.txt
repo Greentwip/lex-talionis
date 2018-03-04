@@ -25,5 +25,5 @@ elif;gameStateObj.turncount == 3
 	u;Soldier2;FarLeft
 	s;Soldier2;We've managed to outflank them! Hurry and we'll see victory!{w};auto
 	r;Soldier2
-	trigger_event;reinforceEvent
+	set_level_constant;reinforceEvent
 end

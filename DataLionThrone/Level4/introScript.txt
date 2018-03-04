@@ -1,8 +1,6 @@
 # Intro Script 3
 m;Awakening - Easy Now
 convert;Eliza;player
-set_counter;Escaped_Wagons
-set_counter;Dead_Wagons
 arrange_formation
 # Center
 set_cursor;10,7

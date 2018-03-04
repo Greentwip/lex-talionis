@@ -8,7 +8,7 @@ if;gameStateObj.turncount == 1
 	# Turn tiles into bridges
 	replace_tile;4,7.4,8.4,9.26,7.26,8.26,9.12,22.12,23.12,24.18,22.18,23.18,24.4,30.4,31.26,30.26,31;12
 	wait;100
-	set_counter;switches;1
+	set_game_constant;switches;1
 	map_pan
 	set_cursor;Ophie;force_hold
 	u;Ophie;Left;u;Sam;Right

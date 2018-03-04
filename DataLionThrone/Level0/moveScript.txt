@@ -11,7 +11,7 @@ if;cf.OPTIONS['Display Hints']
 			s;Narrator;Move the cursor to one of the flashing spaces and press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_SELECT'])}.{black}{w}{br}Or press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_BACK'])}{black}to cancel the action.{w};auto;hint
 		end
 	elif;gameStateObj.turncount == 2
-		if;not 'turn2_ophie' in gameStateObj.event_triggers
+		if;not 'turn2_ophie' in gameStateObj.level_constants
 			if;self.unit.name == 'Ophie'
 				fake_cursor;3,5;5,5;4,6;4,4
 				s;Narrator;Ophie is a sword fighter.{w}{br}Swords are strong vs. axes.{w}{br}Move Ophie next to the enemy.{w};auto;hint

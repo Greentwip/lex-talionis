@@ -1,7 +1,6 @@
 # narration Script 3
 # Set switches
 m;The Task at Hand
-set_counter;switches
 # Show room
 b;TacticsFloor;map
 wm_add;customSam;7,2;Tactician;M;player

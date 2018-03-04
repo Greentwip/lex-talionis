@@ -1,5 +1,5 @@
 # Turn Change for Level 5
-if;gameStateObj.check_dead('Jules') and not 'Rein1' in gameStateObj.event_triggers
+if;gameStateObj.check_dead('Jules') and not 'Rein1' in gameStateObj.level_constants
 	set_cursor;0,0;force_hold
 	add_unit;pack1_1
 	add_unit;pack1_2
@@ -7,7 +7,7 @@ if;gameStateObj.check_dead('Jules') and not 'Rein1' in gameStateObj.event_trigge
 	add_unit;pack1_4
 	wait;500
 	# Reinforcements
-	trigger_event;Rein1
+	set_level_constant;Rein1
 	if;not gameStateObj.check_dead('Prim')
 		set_cursor;Prim;force_hold
 		disp_cursor;1

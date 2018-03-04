@@ -8,7 +8,7 @@ add_to_market;Barkskin
 if;not gameStateObj.check_dead('Coyote')
 	set_base_convo;Training
 end
-if;not gameStateObj.check_dead('Theo') and gameStateObj.counters.get('noir', 3) >= 3
+if;not gameStateObj.check_dead('Theo') and gameStateObj.game_constants['noir'] >= 3
     set_base_convo;Theo Sphinx, Pt. IV
 end
 # Show room
@@ -37,10 +37,10 @@ u;Sam;Right
 s;Sam;Ahem. Gather round everyone...{w};auto
 u;Joel;MidLeft
 u;Kayla;FarLeft
-if;gameStateObj.counters['Civ_Escape'] >= 3
+if;gameStateObj.game_constants['Civ_Escape'] >= 3
     s;Sam;We've received some spoils from our last mission.{w};auto
     give_item;Convoy;Barkskin
-    if;gameStateObj.counters['Civ_Escape'] >= 5
+    if;gameStateObj.game_constants['Civ_Escape'] >= 5
     	give_item;Convoy;Yew Bow
     end
 end

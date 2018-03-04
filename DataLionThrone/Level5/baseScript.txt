@@ -18,7 +18,7 @@ if;self.name == 'Theo Sphinx, Pt. II'
 	s;Theo;She made like a skydiver with a broken parachute and hit the road,{w}{br}leaving me to my thoughts.{w}{br}This case was a real stumper.{w}{br}But I knew who to turn to next,{w}{br}an old friend on the force who might have some answers...{w};auto;noir
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. II
-	inc_counter;noir
+	inc_game_constant;noir
 	t;1
 elif;self.name == 'Apologies'
 	m;Midna's Theme

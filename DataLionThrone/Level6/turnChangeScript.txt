@@ -136,9 +136,9 @@ elif;gameStateObj.turncount >= 16
     wait;500
 end
 # Crossing the line at y = 10
-if;not 'line_cross1' in gameStateObj.event_triggers and any(unit.position[1] < 10 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position)
-    trigger_event;line_cross1
-    set_counter;line_cross;gameStateObj.turncount
+if;not 'line_cross1' in gameStateObj.level_constants and any(unit.position[1] < 10 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position)
+    set_level_constant;line_cross1
+    set_game_constant;line_cross;gameStateObj.turncount
     set_camera;5,0;7,0
     wait;200
     add_unit;pack_l7_1
@@ -150,7 +150,7 @@ if;not 'line_cross1' in gameStateObj.event_triggers and any(unit.position[1] < 1
     add_unit;pack_r7_2
     wait;1000
 end
-if;gameStateObj.turncount == gameStateObj.counters['line_cross'] + 1
+if;gameStateObj.turncount == gameStateObj.game_constants['line_cross'] + 1
     set_camera;5,0;7,0
     wait;200
     add_unit;pack_l8_1
@@ -161,7 +161,7 @@ if;gameStateObj.turncount == gameStateObj.counters['line_cross'] + 1
     add_unit;pack_r8_1
     add_unit;pack_r8_2
     wait;1000
-elif;gameStateObj.turncount == gameStateObj.counters['line_cross'] + 2
+elif;gameStateObj.turncount == gameStateObj.game_constants['line_cross'] + 2
     set_camera;5,0;7,0
     wait;200
     add_unit;pack_l9_1
@@ -174,8 +174,8 @@ elif;gameStateObj.turncount == gameStateObj.counters['line_cross'] + 2
     add_unit;pack_r8_3
     wait;1000
 end
-if;'BothSwitchesPulled1' in gameStateObj.event_triggers and not 'BothSwitchesPulled2' in gameStateObj.event_triggers
-    trigger_event;BothSwitchesPulled2
+if;'BothSwitchesPulled1' in gameStateObj.level_constants and not 'BothSwitchesPulled2' in gameStateObj.level_constants
+    set_level_constant;BothSwitchesPulled2
     # Prompt to save
     battle_save
 end
