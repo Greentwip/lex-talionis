@@ -213,9 +213,9 @@ class StatusMenu(StateMachine.State):
         GC.FONT['text_blue'].blit(str(gameStateObj.turncount), turn_count_surf, (0, 0))
         surfaces.append((turn_count_surf, (GC.WINWIDTH/3 - 16 - turn_count_surf.get_width(), 38)))                    
         # MoneySurf
-        money_size = (GC.FONT['text_blue'].size(str(gameStateObj.counters['money']))[0] + 1, GC.FONT['text_blue'].height)
+        money_size = (GC.FONT['text_blue'].size(str(gameStateObj.game_constants['money']))[0] + 1, GC.FONT['text_blue'].height)
         money_surf = Engine.create_surface(money_size, transparent=True, convert=True)
-        GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), money_surf, (0, 0))
+        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), money_surf, (0, 0))
         surfaces.append((money_surf, (2*GC.WINWIDTH/3 - 8 - 4 - money_surf.get_width(), 38)))
 
         # Get win and loss conditions
@@ -1708,7 +1708,7 @@ class ConvoyMenu(object):
         dist = int(120/len(self.order)) - 1
         if self.disp_value:
             dist = int(160/len(self.order)) - 1
-            self.menus[self.order[self.selection_index]].draw(surf, gameStateObj.counters['money'])
+            self.menus[self.order[self.selection_index]].draw(surf, gameStateObj.game_constants['money'])
         else:
             self.menus[self.order[self.selection_index]].draw(surf)
         # Draw item icons

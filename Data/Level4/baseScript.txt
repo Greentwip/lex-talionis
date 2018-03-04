@@ -108,6 +108,6 @@ elif;self.name == "Theo Sphinx, Pt. I"
 	s;Theo;The dame prattled on, but I'd heard enough.{w}{br}I dusted off my jacket, lit up my last cigar, grabbed my hat and walked out,{w}{br}the scent of one too many cheap drinks hanging on the wallpaper.{w}{br}I had a meeting with destiny, and she was a cold mistress.{w};auto;noir
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. I
-	inc_counter;noir
+	inc_game_constant;noir
 	t;1
 end

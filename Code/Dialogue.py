@@ -427,7 +427,7 @@ class Dialogue_Scene(object):
                 break
         # Give the gameStateObj GC.COLORDICT['gold']!
         elif line[0] == 'gold':
-            gameStateObj.counters['money'] += int(line[1])
+            gameStateObj.game_constants['money'] += int(line[1])
             gameStateObj.banners.append(Banner.acquiredGoldBanner(int(line[1])))
             gameStateObj.stateMachine.changeState('itemgain')
             self.current_state = "Paused"
@@ -682,12 +682,12 @@ class Dialogue_Scene(object):
             gameStateObj.map.command_list.append(line)
         # Changing whole map tile data!
         elif line[0] == 'load_new_map_tiles':
-            gameStateObj.map.load_new_map_tiles(line, gameStateObj.counters['level'])
+            gameStateObj.map.load_new_map_tiles(line, gameStateObj.game_constants['level'])
             gameStateObj.map.command_list.append(line)
             gameStateObj.boundary_manager.reset(gameStateObj)
         # Changing whole map's sprites!
         elif line[0] == 'load_new_map_sprite':
-            gameStateObj.map.load_new_map_sprite(line, gameStateObj.counters['level'])
+            gameStateObj.map.load_new_map_sprite(line, gameStateObj.game_constants['level'])
             gameStateObj.map.command_list.append(line)
         # Reset whole map's tile_info!
         elif line[0] == 'reset_map_tile_info':
@@ -765,33 +765,43 @@ class Dialogue_Scene(object):
                 if unit.position and unit.team == call_out:
                     unit.isDying = True
                     gameStateObj.stateMachine.changeState('dying')
+
         # === GAME CONSTANTS
         # should be remembered for map
-        elif line[0] == 'trigger_event':
-            gameStateObj.event_triggers.append(line[1])
-        elif line[0] == 'resolve_event':
-            if line[1] in gameStateObj.event_triggers:
-                gameStateObj.event_triggers.remove(line[1])
+        elif line[0] == 'set_level_constant':
+            if len(line) > 2:
+                gameStateObj.level_constants[line[1]] = int(eval(line[2]))
+                if not gameStateObj.level_constants[line[1]]:
+                    del gameStateObj.level_constants[line[1]]
+            else:
+                gameStateObj.level_constants[line[1]] = 1
+        elif line[0] == 'inc_level_constant':
+            if len(line) > 2:
+                gameStateObj.level_constants[line[1]] += int(eval(line[2]))
+                if not gameStateObj.level_constants[line[1]]:
+                    del gameStateObj.level_constants[line[1]]
+            else:
+                gameStateObj.level_constants[line[1]] += 1
         # should be remembered for all game
-        elif line[0] == 'add_game_constant' or line[0] == 'set_game_constant':
-            gameStateObj.game_constants.append(line[1])
+        elif line[0] == 'set_game_constant':
+            if len(line) > 2:
+                gameStateObj.game_constants[line[1]] = int(eval(line[2]))
+                if not gameStateObj.game_constants[line[1]]:
+                    del gameStateObj.game_constants[line[1]]
+            else:
+                gameStateObj.game_constants[line[1]] = 1
+        elif line[0] == 'inc_game_constant':
+            if len(line) > 2:
+                gameStateObj.game_constants[line[1]] += int(eval(line[2]))
+                if not gameStateObj.game_constants[line[1]]:
+                    del gameStateObj.game_constants[line[1]]
+            else:
+                gameStateObj.game_constants[line[1]] += 1
         elif line[0] == 'unlock_lore':
             gameStateObj.unlocked_lore.append(line[1])
         elif line[0] == 'remove_lore':
             if line[1] in gameStateObj.unlocked_lore:
                 del gameStateObj.unlocked_lore[line[1]]
-        elif line[0] == 'set_counter':
-            gameStateObj.counters[line[1]] = 0
-            if len(line) > 2:
-                gameStateObj.counters[line[1]] = int(eval(line[2]))
-        elif line[0] == 'inc_counter':
-            if line[1] in gameStateObj.counters:
-                if len(line) > 2:
-                    gameStateObj.counters[line[1]] += int(eval(line[2]))
-                else:
-                    gameStateObj.counters[line[1]] += 1
-            else:
-                logger.warning('No counter named %s found in gameStateObj.counters! Did you remember to set it?', line[1])
         elif line[0] == 'metaDataObj':
             gameStateObj.metaDataObj_changes.append(line)
             metaDataObj[line[1]] = line[2]

@@ -580,7 +580,7 @@ def suspendGame(gameStateObj, kind, slot=None, hard_loc=None):
     # gameStateObj.removeSprites()
     to_save, to_save_meta = gameStateObj.save()
     to_save_meta['kind'] = kind
-    to_save_meta['name'] = read_overview_file('Data/Level' + str(gameStateObj.counters['level']) + '/overview.txt')['name']
+    to_save_meta['name'] = read_overview_file('Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
 
     gameStateObj.saving_thread = threading.Thread(target=save_io, args=(copy.deepcopy(to_save), copy.deepcopy(to_save_meta), old_slot, slot, hard_loc))
     gameStateObj.saving_thread.start()
@@ -595,7 +595,7 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
     gameStateObj.load(to_save)
     gameStateObj.save_slot = saveSlot.number
 
-    levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
+    levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
     get_metaDataObj(levelfolder, metaDataObj, gameStateObj.metaDataObj_changes) 
 
     gameStateObj.loadSprites()

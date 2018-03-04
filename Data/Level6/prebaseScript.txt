@@ -22,7 +22,7 @@ end
 if;not gameStateObj.check_dead('Kayla')
     set_base_convo;Cipher
 end
-if;not gameStateObj.check_dead('Theo') and gameStateObj.counters.get('noir', 2) >= 2
+if;not gameStateObj.check_dead('Theo') and gameStateObj.game_constants['noir'] >= 2
     set_base_convo;Theo Sphinx, Pt. III
 end
 # Show room

@@ -38,5 +38,5 @@ elif;self.name == 'Money'
 	# Set escape tiles
 	set_tile_info;17,0;Escape=0
 	set_tile_info;18,0;Escape=0
-	trigger_event;MoneyLooted
+	set_level_constant;MoneyLooted
 end

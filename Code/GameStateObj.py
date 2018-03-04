@@ -1,6 +1,6 @@
 #! usr/bin/env python
 import random
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 
 # Custom imports
 import GlobalConstants as GC
@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 class GameStateObj(object):
     # needed for main menu
     def __init__(self):
-        self.counters = {}
-        self.counters['level'] = 0
+        self.game_constants = Counter()
+        self.game_constants['level'] = 0
         # Set up blitting surfaces
         self.generic_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT))
         # Build starting stateMachine
@@ -62,12 +62,11 @@ class GameStateObj(object):
         self.prefabs = []
         self.objective = None
         self.map = None
-        self.counters = {}
-        self.counters['level'] = 0
+        self.game_constants = Counter()
+        self.game_constants['level'] = 0
+        self.game_constants['money'] = 0
         self.convoy = []
-        self.counters['money'] = 0
         self.play_time = 0
-        self.game_constants = []
         self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if cf.CONSTANTS['support'] else None
         self.modify_stats = cf.read_growths_file()
         self.unlocked_lore = []
@@ -84,7 +83,7 @@ class GameStateObj(object):
 
     def sweep(self):
         # None of these are kept through different levels
-        self.event_triggers = []
+        self.level_constants = Counter()
         self.metaDataObj_changes = []
         self.talk_options = []
         self.base_conversations = OrderedDict()
@@ -96,6 +95,27 @@ class GameStateObj(object):
             print(unit.name, unit.event_id, unit.position)
 
     def load(self, load_info):
+        # These are needed to keep old saves working
+        def get_level_constants(load_info):
+            if 'level_constants' in load_info:
+                return load_info['load_info']
+            else:
+                level_constants = Counter()
+                for constant in load_info['event_triggers']:
+                    level_constants[constant] = 1
+                return level_constants
+
+        def get_game_constants(load_info):
+            if 'counters' in load_info:
+                game_constants = Counter()
+                for constant in load_info['game_constants']:
+                    game_constants[constant] = 1
+                for name, value in load_info['counters'].items():
+                    game_constants[name] = value
+                return game_constants
+            else:
+                return load_info['game_constants']
+
         logger.info("Load")
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
@@ -107,10 +127,10 @@ class GameStateObj(object):
         self.convoy = [ItemMethods.deserialize(item_dict) for item_dict in load_info['convoy']]
         self.convoy = [item for item in self.convoy if item]
         self.turncount = load_info['turncount']
-        self.game_constants = load_info['game_constants']
+        self.game_constants = get_game_constants(load_info)
+        self.level_constants = get_level_constants(load_info)
         self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if isinstance(load_info['objective'], tuple) else load_info['objective']
         support_dict = load_info['support']
-        self.event_triggers = load_info['event_triggers']
         self.metaDataObj_changes = load_info.get('metaDataObj_changes', [])
         self.talk_options = load_info['talk_options']
         self.base_conversations = load_info['base_conversations']
@@ -119,14 +139,13 @@ class GameStateObj(object):
         # self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
         self.modify_stats = load_info.get('modify_stats', cf.read_growths_file())
         self.unlocked_lore = load_info['unlocked_lore']
-        self.counters = load_info['counters']
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
 
         # Map
-        self.map = SaveLoad.create_map('Data/Level' + str(self.counters['level']))
+        self.map = SaveLoad.create_map('Data/Level' + str(self.game_constants['level']))
         if map_info:
-            self.map.replay_commands(map_info['command_list'], self.counters['level'])
+            self.map.replay_commands(map_info['command_list'], self.game_constants['level'])
             self.map.command_list = map_info['command_list']
             for position, current_hp in map_info['HP']:
                 self.map.tiles[position].set_hp(current_hp)
@@ -325,10 +344,9 @@ class GameStateObj(object):
                    'objective': self.objective.serialize() if self.objective else None,
                    'support': self.support.serialize() if self.support else None,
                    'game_constants': self.game_constants,
+                   'level_constants': self.level_constants,
                    'metaDataObj_changes': self.metaDataObj_changes,
-                   'event_triggers': self.event_triggers,
                    'unlocked_lore': self.unlocked_lore,
-                   'counters': self.counters,
                    'talk_options': self.talk_options,
                    'base_conversations': self.base_conversations,
                    'state_list': self.stateMachine.serialize(),
@@ -486,7 +504,7 @@ class GameStateObj(object):
     def output_progress(self):
         with open('Saves/progress_log.txt', 'a') as p_log:
             p_log.write('\n')
-            p_log.write('\n=== Level ' + str(self.counters['level']) + ' === Money: ' + str(self.counters['money']))
+            p_log.write('\n=== Level ' + str(self.game_constants['level']) + ' === Money: ' + str(self.game_constants['money']))
             for unit in self.allunits:
                 p_log.write('\n*** ' + unit.name + ': ' + ','.join([skill.name for skill in unit.status_effects]))
                 p_log.write('\nLvl ' + str(unit.level) + ', Exp ' + str(unit.exp))

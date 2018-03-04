@@ -20,7 +20,7 @@ if;self.name == 'Theo Sphinx, Pt. III'
 	s;Theo;Clearly, Sam was not going to be any more help.{w}{br}He didn't know a thing--{w}{br}no surprise.{w}{br}After I roughed him up a bit, he made like a rat on a sinking ship and bailed.{w}{br}But I had one more lead, and I was going to make it count.{w};auto;noir
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. III
-	inc_counter;noir
+	inc_game_constant;noir
 	t;1
 elif;self.name == 'Guard Duty'
 	m;Brave Story - Hare

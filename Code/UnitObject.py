@@ -2024,7 +2024,7 @@ class UnitObject(object):
     def unlock(self, pos, gameStateObj):
         self.hasAttacked = True
         locked_name = gameStateObj.map.tile_info_dict[pos]['Locked']
-        unlock_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt'
+        unlock_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
         gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
         gameStateObj.stateMachine.changeState('dialogue')
 

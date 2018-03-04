@@ -1,6 +1,6 @@
 # moveScript 1
 if;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
-	if;not 'tutorial_nia' in gameStateObj.event_triggers
+	if;not 'tutorial_nia' in gameStateObj.level_constants
 		if;self.unit.name == 'Nia'
 			fake_cursor;5,6
 			s;Narrator;Move Nia to the highlighted tile.{w};auto;hint
@@ -8,7 +8,7 @@ if;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 			reset_state
 			s;Narrator;Choose Nia first.{w};auto;hint
 		end
-	elif;not 'tutorial_joel' in gameStateObj.event_triggers
+	elif;not 'tutorial_joel' in gameStateObj.level_constants
 		if;self.unit.name == 'Joel'
 			fake_cursor;6,7
 			u;Joel;Left

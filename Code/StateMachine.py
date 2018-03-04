@@ -369,7 +369,7 @@ class TurnChangeState(State):
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
-            turn_event_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/turnChangeScript.txt'
+            turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
             if os.path.isfile(turn_event_script):
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(turn_event_script))
                 gameStateObj.stateMachine.changeState('dialogue')
@@ -604,7 +604,7 @@ class MoveState(State):
 
         # Play move script if it exists
         if not self.started:
-            move_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/moveScript.txt'
+            move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
             if gameStateObj.tutorial_mode and os.path.exists(move_script_name):
                 move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit, event_flag=False)
                 gameStateObj.message.append(move_script)
@@ -748,7 +748,7 @@ class MenuState(State):
 
         # Play menu script if it exists
         if not self.started:
-            menu_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/menuScript.txt'
+            menu_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
             if gameStateObj.tutorial_mode and os.path.exists(menu_script_name):
                 menu_script = Dialogue.Dialogue_Scene(menu_script_name, unit=cur_unit, event_flag=False)
                 gameStateObj.message.append(menu_script)
@@ -982,7 +982,7 @@ class MenuState(State):
                 gameStateObj.stateMachine.changeState('giveselect')
             elif selection == cf.WORDS['Visit']:
                 village_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Village']]
-                village_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/villageScript.txt'
+                village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position, event_flag=False))
                 gameStateObj.stateMachine.changeState('dialogue')
                 cur_unit.hasAttacked = True
@@ -1003,7 +1003,7 @@ class MenuState(State):
             elif selection == cf.WORDS['Switch']:
                 cur_unit.hasAttacked = True
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
-                switch_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/switchScript.txt'
+                switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
             elif selection == cf.WORDS['Unlock']:
@@ -1019,7 +1019,7 @@ class MenuState(State):
                     logger.error('Made a mistake in allowing unit to access Unlock!')
             elif selection == cf.WORDS['Search']:
                 search_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Search']]
-                search_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/searchScript.txt'
+                search_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, unit=cur_unit, name=search_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
                 cur_unit.hasAttacked = True
@@ -1273,7 +1273,7 @@ class AttackState(State):
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
 
         # Play attack script if it exists
-        attack_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/attackScript.txt'
+        attack_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
         if gameStateObj.tutorial_mode and os.path.exists(attack_script_name):
             attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker, event_flag=False)
             gameStateObj.message.append(attack_script)
@@ -1613,7 +1613,7 @@ class SelectState(State):
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
                     cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
-                    talk_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/talkScript.txt'
+                    talk_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -1942,8 +1942,8 @@ class DialogueState(State):
             else:
                 gameStateObj.clean_up()
                 gameStateObj.output_progress()
-                if isinstance(gameStateObj.counters['level'], int):
-                    gameStateObj.counters['level'] += 1
+                if isinstance(gameStateObj.game_constants['level'], int):
+                    gameStateObj.game_constants['level'] += 1
 
                 gameStateObj.stateMachine.clear()
                 ### Determines the number of levels in the game
@@ -1958,7 +1958,7 @@ class DialogueState(State):
                     except:
                         continue
                 ###
-                if (not isinstance(gameStateObj.counters['level'], int)) or gameStateObj.counters['level'] >= num_levels:
+                if (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] >= num_levels:
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start')
                 else:
@@ -2208,11 +2208,11 @@ class PhaseChangeState(State):
         if cf.OPTIONS['debug']:
             if gameStateObj.phase.get_current_phase() == 'player':
                 logger.debug("Saving as we enter player phase!")
-                name = 'L' + str(gameStateObj.counters['level']) + 'T' + str(gameStateObj.turncount)
+                name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount)
                 SaveLoad.suspendGame(gameStateObj, 'TurnChange', hard_loc=name)
             elif gameStateObj.phase.get_current_phase() == 'enemy':
                 logger.debug("Saving as we enter enemy phase!")
-                name = 'L' + str(gameStateObj.counters['level']) + 'T' + str(gameStateObj.turncount) + 'b'
+                name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount) + 'b'
                 SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange', hard_loc=name)
 
     def update(self, gameStateObj, metaDataObj):

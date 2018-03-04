@@ -33,7 +33,7 @@ class PrepMainState(StateMachine.State):
         # Play prep script if it exists
         if not self.started:
             self.started = True
-            prep_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/prepScript.txt'
+            prep_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/prepScript.txt'
             if os.path.exists(prep_script_name):
                 prep_script = Dialogue.Dialogue_Scene(prep_script_name, event_flag=False)
                 gameStateObj.message.append(prep_script)
@@ -291,7 +291,7 @@ def draw_funds(surf, gameStateObj):
     GC.FONT['text_white'].blit(': Info', surf, (123 + GC.FONT['text_blue'].size(helper)[0], 143))
     # Draw Funds display
     surf.blit(GC.IMAGESDICT['FundsDisplay'], (168, 137))
-    money = str(gameStateObj.counters['money'])
+    money = str(gameStateObj.game_constants['money'])
     size = GC.FONT['text_blue'].size(money)[0]
     GC.FONT['text_blue'].blit(money, surf, (219 - size, 140))
 
@@ -1085,7 +1085,7 @@ class BaseMarketState(StateMachine.State):
                 selection = self.current_menu.getSelection()
                 if selection:
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
-                    if gameStateObj.counters['money'] - value >= 0:
+                    if gameStateObj.game_constants['money'] - value >= 0:
                         self.state = 'Buy_Sure'
                         GC.SOUNDDICT['Select 1'].play()
                     else:
@@ -1104,7 +1104,7 @@ class BaseMarketState(StateMachine.State):
                     else:
                         gameStateObj.convoy.append(item)
                     value = (item.value * item.uses.uses) if item.uses else item.value
-                    gameStateObj.counters['money'] -= value
+                    gameStateObj.game_constants['money'] -= value
                     self.money_counter_disp.start(-value)
                     self.update_options(gameStateObj)
                 else:
@@ -1128,7 +1128,7 @@ class BaseMarketState(StateMachine.State):
                     GC.SOUNDDICT['Select 1'].play()
                     item = self.current_menu.getSelection()
                     value = (item.value * item.uses.uses)/2 if item.uses else item.value/2
-                    gameStateObj.counters['money'] += value
+                    gameStateObj.game_constants['money'] += value
                     self.money_counter_disp.start(value)
                     if item.owner:
                         owner = gameStateObj.get_unit_from_id(item.owner)
@@ -1188,7 +1188,7 @@ class BaseMarketState(StateMachine.State):
         
         # Draw Money
         mapSurf.blit(self.money_surf, (10, GC.WINHEIGHT - 24))
-        GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), mapSurf, (16, GC.WINHEIGHT - 20))
+        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), mapSurf, (16, GC.WINHEIGHT - 20))
         # Draw money counter display
         self.money_counter_disp.draw(mapSurf)
 
@@ -1264,7 +1264,7 @@ class BaseMainState(StateMachine.State):
             return 'repeat'
 
         # Play base script if it exists
-        base_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/in_base_script.txt'
+        base_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/in_base_script.txt'
         if os.path.exists(base_script_name):
             base_script = Dialogue.Dialogue_Scene(base_script_name, event_flag=False)
             gameStateObj.message.append(base_script)
@@ -1350,7 +1350,7 @@ class BaseInfoState(StateMachine.State):
             selection = gameStateObj.childMenu.getSelection()
             if gameStateObj.childMenu.color_control[gameStateObj.childMenu.currentSelection] == 'text_white':
                 GC.SOUNDDICT['Select 1'].play()
-                dialogue_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/baseScript.txt'
+                dialogue_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/baseScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(dialogue_script, name=selection))
                 gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.stateMachine.changeState('transition_out')

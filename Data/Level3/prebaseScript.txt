@@ -1,7 +1,7 @@
 # Prebase Script 3
 # Base Entrance background
 m;Toorimichi
-add_game_constant;Convoy
+set_game_constant;Convoy
 set_base_convo;Ophie meets Renae
 set_base_convo;Ophie meets Theo
 set_base_convo;Prim meets Eliza

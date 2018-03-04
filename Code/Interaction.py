@@ -1292,7 +1292,7 @@ class AnimationCombat(Combat):
                     gameStateObj.stateMachine.changeState('wait')
 
         # Handle interact_script
-        script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/interactScript.txt'
+        script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
         if os.path.exists(script_name):
             interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=self.p2, event_flag=False)
             gameStateObj.message.append(interact_script)
@@ -1777,7 +1777,7 @@ class MapCombat(Combat):
                 # gameStateObj.stateMachine.changeState('ai')
 
         # Handle interact_script
-        script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/interactScript.txt'
+        script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
         interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None), event_flag=False)
         gameStateObj.message.append(interact_script)
         gameStateObj.stateMachine.changeState('dialogue')
