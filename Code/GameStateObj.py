@@ -84,6 +84,7 @@ class GameStateObj(object):
     def sweep(self):
         # None of these are kept through different levels
         self.level_constants = Counter()
+        self.triggers = {}
         self.metaDataObj_changes = []
         self.talk_options = []
         self.base_conversations = OrderedDict()
@@ -122,6 +123,7 @@ class GameStateObj(object):
         self.factions = load_info['factions'] if 'factions' in load_info else (load_info['groups'] if 'groups' in load_info else {})
         self.allreinforcements = load_info['allreinforcements'] 
         self.prefabs = load_info['prefabs']
+        self.triggers = load_info.get('triggers', dict())
         map_info = load_info['map']
         self.playtime = load_info['playtime']
         self.convoy = [ItemMethods.deserialize(item_dict) for item_dict in load_info['convoy']]
@@ -280,7 +282,7 @@ class GameStateObj(object):
             return {unit for unit in self.allunits if unit.name in any_id or unit.id in any_id or unit.event_id in any_id}
         else:
             for unit in self.allunits:
-                if any_id in [unit.name, unit.id, unit.event_id]:
+                if any_id in (unit.name, unit.id, unit.event_id):
                     return unit
 
     def check_formation_spots(self):
@@ -337,6 +339,7 @@ class GameStateObj(object):
                    'factions': self.factions,
                    'allreinforcements': self.allreinforcements,
                    'prefabs': self.prefabs,
+                   'triggers': self.triggers,
                    'map': self.map.serialize() if self.map else None,
                    'playtime': self.playtime,
                    'turncount': self.turncount,

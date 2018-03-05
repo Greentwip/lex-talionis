@@ -9,6 +9,8 @@ import Code.GlobalConstants as GC
 import EditorUtilities
 from CustomGUI import SignalList
 
+all_faction_icons = [key[:-6] for key in GC.UNITDICT if key.endswith('Emblem')]
+
 class Faction(object):
     def __init__(self, faction_id, unit_name, faction_icon, desc):
         self.faction_id = faction_id
@@ -24,19 +26,26 @@ class FactionDialog(QtGui.QDialog):
 
         self.id_line_edit = QtGui.QLineEdit()
         self.unit_name_line_edit = QtGui.QLineEdit()
-        self.faction_line_edit = QtGui.QLineEdit()
+        self.faction_icon_box = QtGui.QComboBox()
+        self.faction_icon_box.setIconSize(QtCore.QSize(32, 32))
         self.desc_text_edit = QtGui.QTextEdit()
         self.desc_text_edit.setFixedHeight(48)
+
+        for faction_icon in all_faction_icons:
+            self.faction_icon_box.addItem(EditorUtilities.create_icon(GC.UNITDICT[faction_icon + "Emblem"].convert_alpha()), faction_icon)
 
         if faction:
             self.id_line_edit.setText(faction.faction_id)
             self.unit_name_line_edit.setText(faction.unit_name)
-            self.faction_line_edit.setText(faction.faction_icon)
+            if faction.faction_icon in all_faction_icons:
+                self.faction_icon_box.setCurrentIndex(all_faction_icons.index(faction.faction_icon))
+            else:
+                self.faction_icon_box.setCurrentIndex(all_faction_icons.index('Neutral'))
             self.desc_text_edit.setPlainText(faction.desc)
 
         self.form.addRow("Faction ID:", self.id_line_edit)
         self.form.addRow("Unit Name:", self.unit_name_line_edit)
-        self.form.addRow("Faction Icon:", self.faction_line_edit)
+        self.form.addRow("Faction Icon:", self.faction_icon_box)
         self.form.addRow("Description:", self.desc_text_edit)
 
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
@@ -46,7 +55,7 @@ class FactionDialog(QtGui.QDialog):
 
     def build_faction(self):
         return Faction(str(self.id_line_edit.text()), str(self.unit_name_line_edit.text()),
-                       str(self.faction_line_edit.text()), str(self.desc_text_edit.toPlainText()))
+                       str(self.faction_icon_box.currentText()), str(self.desc_text_edit.toPlainText()))
 
     @staticmethod
     def getFaction(parent, title, instruction, faction=None):
@@ -87,9 +96,6 @@ class FactionMenu(QtGui.QWidget):
         self.grid.addWidget(self.add_faction_button, 2, 0)
         self.grid.addWidget(self.remove_faction_button, 3, 0)
 
-    # def trigger(self):
-    #     self.view.tool = 'Factions'
-
     def create_item(self, faction):
         item = QtGui.QListWidgetItem(faction.faction_id)
 
@@ -115,9 +121,9 @@ class FactionMenu(QtGui.QWidget):
             self.unit_data.factions[faction_obj.faction_id] = faction_obj
 
     def remove_faction(self):
-        cur_row = self.list.currentRow()
-        self.list.takeItem(cur_row)
-        del self.unit_data.factions[self.unit_data.factions.key()[cur_row]]
+        idx = self.list.currentRow()
+        self.list.takeItem(idx)
+        del self.unit_data.factions[self.unit_data.factions.key()[idx]]
 
     def set_load_player_characters(self, state):
         self.unit_data.load_player_characters = bool(state)

@@ -68,9 +68,15 @@ def build_units(class_dict):
 
 # === MODEL CLASS ===
 class Unit(object):
+    g_id = 100
+    
     def __init__(self, info=None):
         if info:
-            self.id = info.get('id', 100)
+            if 'id' in info:
+                self.id = info['id']
+            else:
+                self.id = Unit.g_id
+                Unit.g_id += 1
             self.event_id = info.get('event_id')
             if self.event_id and '_' in self.event_id:
                 self.pack, self.event_id = self.event_id.split('_')

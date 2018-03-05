@@ -37,3 +37,6 @@ enemy;0;0;Fighter;2;Iron Axe;2,8;Attack;Soldier
 # === Reinforcements ===
 # Player Characters
 # Enemies
+# === Triggers ===
+trigger;Enemy;Breguet;2,4;2,2
+trigger;Enemy;3,3;3,5;3,3

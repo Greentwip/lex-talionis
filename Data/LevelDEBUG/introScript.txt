@@ -3,6 +3,7 @@ t;2
 # TODO: Enemy units appear
 # Hover cursor over castle
 set_cursor;2,2
+trigger;Enemy
 # Flicker cursor
 disp_cursor;1
 wait;1000

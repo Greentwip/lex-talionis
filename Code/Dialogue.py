@@ -523,6 +523,20 @@ class Dialogue_Scene(object):
             placement = line[2] if len(line) > 2 else 'give_up'
             order = True if len(line) > 3 else False
             self.find_next_position(gameStateObj, to_which_position, placement, shuffle=not order)
+        elif line[0] == 'trigger':
+            if line[1] in gameStateObj.triggers:
+                trigger = gameStateObj.triggers[line[1]]
+                for unit_id, (start, end) in trigger.units.items():
+                    # First see if the unit is in reinforcements
+                    if unit_id in gameStateObj.allreinforcements:
+                        self.add_unit(gameStateObj, metaDataObj, unit_id, None, 'fade', 'stack')
+                        self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
+                    else:
+                        self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
+                if trigger.units:
+                    # Start move
+                    self.current_state = "Paused"
+                    gameStateObj.stateMachine.changeState('movement')
 
         # === HANDLE CURSOR
         elif line[0] in ['set_cursor', 'move_cursor']:
@@ -1211,6 +1225,8 @@ class Dialogue_Scene(object):
         # If none, then use position in load
         if not new_pos:
             new_pos = [position]
+        elif isinstance(new_pos, tuple):
+            new_pos = [new_pos]
         # Using prev defined reinforcement positions
         elif new_pos.startswith('r'):
             new_pos = self.get_rein_position(new_pos[1:], gameStateObj)
@@ -1263,6 +1279,8 @@ class Dialogue_Scene(object):
         # Find unit
         if which_unit == '{unit}':
             unit = self.unit
+        elif isinstance(which_unit, int):
+            unit = gameStateObj.get_unit_from_id(which_unit)
         elif ',' in which_unit:
             unit = gameStateObj.get_unit_from_pos(self.parse_pos(which_unit))
         else:
@@ -1278,7 +1296,9 @@ class Dialogue_Scene(object):
 
         # Determine available positions to move to
         # Using prev defined reinforcement positions
-        if new_pos.startswith('r'):
+        if isinstance(new_pos, tuple):
+            new_pos = [new_pos]
+        elif new_pos.startswith('r'):
             new_pos = self.get_rein_position(new_pos[1:], gameStateObj)
         # Using next position
         elif new_pos == 'next':

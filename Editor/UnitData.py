@@ -14,6 +14,7 @@ import Code.CustomObjects as CustomObjects
 
 from Code.UnitObject import Stat
 import Code.Utility as Utility
+from Code.SaveLoad import Trigger
 
 import DataImport
 from DataImport import Data
@@ -28,6 +29,7 @@ class UnitData(object):
         self.units = []
         self.reinforcements = []  # Should always be sorted by pack and then by event_id
         self.factions = OrderedDict()
+        self.triggers = OrderedDict()
         self.load_player_characters = False
 
     def load(self, fp):
@@ -55,6 +57,22 @@ class UnitData(object):
         return {rein.position: EditorUtilities.create_image(rein.klass_image) if rein.klass_image else 
                 EditorUtilities.create_image(Data.class_data.get(rein.klass, Data.class_data['Citizen']).get_image(rein.team, rein.gender))
                 for rein in self.reinforcements if rein.position and rein.pack == pack}
+
+    def get_unit_from_id(self, e_id):
+        for unit in self.units:
+            if unit.id == e_id:
+                return unit
+        return None
+
+    def get_rein_from_id(self, e_id):
+        for rein in self.reinforcements:
+            if rein.id == e_id:
+                return rein
+            else:
+                true_event_id = rein.pack + '_' + rein.event_id if rein.pack != 'None' else rein.event_id
+                if true_event_id == e_id:
+                    return rein
+        return None
 
     def get_unit_from_pos(self, pos):
         for unit in self.units:
@@ -95,12 +113,28 @@ class UnitData(object):
         return ''
 
     def parse_unit_line(self, unitLine, current_mode):
+        def read_trigger_line(unitLine):
+            if ',' in unitLine[2]:
+                position = tuple(int(n) for n in unitLine[2].split(','))
+                return self.get_unit_from_pos(position)
+            else:
+                unit = self.get_unit_from_id(unitLine[2])
+                if unit:
+                    return unit
+                else:
+                    return self.get_rein_from_id(unitLine[2])
+
         if unitLine[0] == 'faction':
             self.factions[unitLine[1]] = Faction.Faction(unitLine[1], unitLine[2], unitLine[3], unitLine[4])
         elif unitLine[0] == 'mode':
             current_mode = unitLine[1]
         elif unitLine[0] == 'load_player_characters':
             self.load_player_characters = True
+        elif unitLine[0] == 'trigger':
+            unit = read_trigger_line(unitLine)
+            if unitLine[1] not in self.triggers:
+                self.triggers[unitLine[1]] = Trigger()
+            self.triggers[unitLine[1]].add_unit(unit, unitLine[3], unitLine[4])
         else: # For now it just loads every unit, irrespective of mode
             # New Unit
             if unitLine[1] == "0":
@@ -161,7 +195,21 @@ class UnitData(object):
         # self.reinforcements.insert(rein_idx, rein)
         self.reinforcements.append(rein)
         self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))
-        return self.reinforcements.index(rein)        
+        return self.reinforcements.index(rein)
+
+    def add_trigger(self, trigger_name):
+        self.triggers[trigger_name] = Trigger()
+
+    def remove_trigger(self, idx):
+        trigger_name = self.triggers.keys()[idx]
+        del self.triggers[trigger_name]   
+
+    def get_trigger(self, idx):
+        trigger_name = self.triggers.keys()[idx]
+        return self.triggers[trigger_name]
+
+    def get_trigger_name(self, idx):
+        return self.triggers.keys()[idx]
 
     def saved_unit_from_line(self, unitLine):
         self.add_unit_from_line(unitLine)

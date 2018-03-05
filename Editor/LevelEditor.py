@@ -1,5 +1,5 @@
 from collections import OrderedDict
-import sys, os, shutil
+import sys, os, shutil, math
 
 from PyQt4 import QtGui, QtCore
 
@@ -11,7 +11,7 @@ import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 from Code.imagesDict import COLORKEY
 
-import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Faction, QtWeather
+import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Faction, Triggers, QtWeather
 from DataImport import Data
 
 # TODO: Reinforcements -- impl
@@ -135,14 +135,93 @@ class MainView(QtGui.QGraphicsView):
                 painter.drawImage(current_unit.position[0] * 16 - 8, current_unit.position[1] * 16 - 5, EditorUtilities.create_cursor())
             painter.end()
 
+    def disp_triggers(self):
+        def draw_arrow(painter, start, end, color):
+            angle = math.atan2(end[1] - start[1], end[0] - start[0]) + math.pi
+            left_angle, right_angle = angle - math.pi/6, angle + math.pi/6
+            left_x = end[0] + (.5 * math.cos(left_angle))
+            left_y = end[1] + (.5 * math.sin(left_angle))
+            right_x = end[0] + (.5 * math.cos(right_angle))
+            right_y = end[1] + (.5 * math.sin(right_angle))
+            path = QtGui.QPainterPath()
+            path.moveTo(end[0] * 16 + 7, end[1] * 16 + 7)
+            path.lineTo(left_x * 16 + 7, left_y * 16 + 7)
+            path.lineTo(right_x * 16 + 7, right_y * 16 + 7)
+            painter.setPen(QtCore.Qt.NoPen)
+            painter.fillPath(path, QtGui.QBrush(color))
+
+            # painter.drawLine(end[0] * 16 + 7, end[1] * 16 + 7, left_x * 16 + 7, left_y * 16 + 7)
+            # painter.drawLine(end[0] * 16 + 7, end[1] * 16 + 7, right_x * 16 + 7, right_y * 16 + 7)
+
+        def draw(painter, start, end, unit, alpha):
+            if unit.team == 'enemy':
+                color = QtGui.QColor(200, 0, 0, alpha)
+            else:
+                color = QtGui.QColor(0, 0, 200, alpha)
+            pen.setColor(color)
+            painter.setPen(pen)
+            painter.drawLine(start[0] * 16 + 7, start[1] * 16 + 7, end[0] * 16 + 7, end[1] * 16 + 7)
+            draw_arrow(painter, start, end, color)
+
+        if self.working_image:
+            current_trigger_name = self.window.trigger_menu.get_current_trigger_name()
+            painter = QtGui.QPainter()
+            painter.begin(self.working_image)
+            pen = QtGui.QPen(QtCore.Qt.blue, 2, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap)
+            for trigger_name, trigger in self.unit_data.triggers.items():
+                alpha = 255 if current_trigger_name == trigger_name else 120
+                for unit, (start, end) in trigger.units.items():
+                    draw(painter, start, end, unit, alpha)    
+            # Draw current
+            current_arrow = self.window.trigger_menu.get_current_arrow()
+            if current_arrow:
+                unit, old_pos = current_arrow
+                scene_pos = self.mapToScene(self.mapFromGlobal(QtGui.QCursor.pos()))
+                pixmap = self.scene.itemAt(scene_pos)
+                pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
+                if pixmap and pos in self.tile_data.tiles:
+                    draw(painter, pos, old_pos, unit, 255)
+                    
+            painter.end()
+
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
         pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
         if pixmap and pos in self.tile_data.tiles:
             # print('mousePress Tool: %s' % self.tool)
-            # if self.window.dock_visibility['Terrain'] and self.tool == 'Terrain':
-            if self.window.dock_visibility['Terrain']:
+            if self.window.dock_visibility['Move Triggers'] and (self.window.dock_visibility['Units'] or self.window.dock_visibility['Reinforcements']):
+                if self.window.dock_visibility['Units']:
+                    if event.button() == QtCore.Qt.LeftButton:
+                        current_trigger = self.window.trigger_menu.get_current_trigger()
+                        if current_trigger:
+                            current_arrow = self.window.trigger_menu.get_current_arrow()
+                            if current_arrow:
+                                unit, old_pos = current_arrow
+                                if pos != old_pos:
+                                    current_trigger.units[unit] = (pos, old_pos)
+                                self.window.trigger_menu.clear_current_arrow()
+                            else:                            
+                                current_unit = self.unit_data.get_unit_from_pos(pos)
+                                if current_unit:
+                                    self.window.trigger_menu.set_current_arrow(current_unit, pos)
+                                else:
+                                    current_trigger_name = self.window.trigger_menu.get_current_trigger_name()
+                                    for trigger_name, trigger in self.unit_data.triggers.items():
+                                        if trigger_name == current_trigger_name:
+                                            continue
+                                        for unit, (start, end) in trigger.units.items():
+                                            if start == pos:
+                                                current_unit = unit
+                                                self.window.trigger_menu.set_current_arrow(current_unit, pos)
+                                                return
+                        else:
+                            self.window.status_bar.showMessage('Select a trigger to use!')
+                    elif event.button() == QtCore.Qt.RightButton:
+                        self.window.trigger_menu.clear_current_arrow()
+                else:  # Reinforcements
+                    pass
+            elif self.window.dock_visibility['Terrain']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_color = self.window.terrain_menu.get_current_color()
                     self.tile_data.tiles[pos] = current_color
@@ -150,7 +229,6 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     current_color = self.tile_data.tiles[pos]
                     self.window.terrain_menu.set_current_color(current_color)
-            # elif self.window.dock_visibility['Event Tiles'] and self.tool == 'Event Tiles':
             elif self.window.dock_visibility['Event Tiles']:
                 if event.button() == QtCore.Qt.LeftButton:
                     name = self.window.tile_info_menu.get_current_name()
@@ -161,7 +239,6 @@ class MainView(QtGui.QGraphicsView):
                 elif event.button() == QtCore.Qt.RightButton:
                     self.tile_info.delete(pos)
                     self.window.update_view()
-            # elif self.window.dock_visibility['Units'] and self.tool not in ('Terrain', 'Event Tiles', 'Reinforcements'):
             elif self.window.dock_visibility['Units']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_unit = self.window.unit_menu.get_current_unit()
@@ -192,7 +269,6 @@ class MainView(QtGui.QGraphicsView):
                     print('Current IDX %s' % current_idx)
                     if current_idx >= 0:
                         self.window.unit_menu.set_current_idx(current_idx)
-            # elif self.window.dock_visibility['Reinforcements'] and self.tool == 'Reinforcements':
             elif self.window.dock_visibility['Reinforcements']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_unit = self.window.reinforcement_menu.get_current_unit()
@@ -349,6 +425,8 @@ class MainEditor(QtGui.QMainWindow):
             self.view.disp_units()
         if self.dock_visibility['Reinforcements']:
             self.view.disp_reinforcements()
+        if self.dock_visibility['Move Triggers'] and (self.dock_visibility['Units'] or self.dock_visibility['Reinforcements']):
+            self.view.disp_triggers()
         if self.weather:
             self.view.disp_weather()
         self.view.show_image()
@@ -444,6 +522,7 @@ class MainEditor(QtGui.QMainWindow):
             self.faction_menu.load(self.unit_data)
             self.unit_menu.load(self.unit_data)
             self.reinforcement_menu.load(self.unit_data)
+            self.trigger_menu.load(self.unit_data)
 
             if self.current_level_name:
                 self.status_bar.showMessage('Loaded Level' + self.current_level_name)
@@ -570,6 +649,20 @@ class MainEditor(QtGui.QMainWindow):
             write_units(units)
             unit_level.write('# === Reinforcements ===\n')
             write_units(reinforcements)
+            # Triggers
+            unit_level.write('# === Triggers ===\n')
+            for trigger_name, trigger in self.unit_data.triggers.items():
+                for unit, (start, end) in trigger.units.items():
+                    start_str = str(start[0]) + ',' + str(start[1])
+                    end_str = str(end[0]) + ',' + str(end[1])
+                    if unit.generic and unit in self.unit_data.units:
+                        unit_id = str(unit.position[0]) + ',' + str(unit.position[1])
+                    elif unit in self.unit_data.reinforcements:
+                        unit_id = unit.pack + '_' + unit.event_id if unit.pack != 'None' else unit.event_id
+                    else:
+                        unit_id = str(unit.id)
+                    trigger_str = ';'.join(['trigger', str(trigger_name), unit_id, start_str, end_str])
+                    unit_level.write(trigger_str + '\n')
 
     def clear_directory(self, directory):
         for fp in os.listdir(directory):
@@ -625,7 +718,7 @@ class MainEditor(QtGui.QMainWindow):
 
         level_editor_config = str(QtCore.QDir.currentPath() + '/le_config.txt')
         with open(level_editor_config, 'w') as fp:
-            fp.write(self.directory)
+            fp.write(os.path.relpath(self.directory))
 
         print('Saved Level' + self.current_level_name)
 
@@ -650,61 +743,59 @@ class MainEditor(QtGui.QMainWindow):
         file_menu.addSeparator()
         file_menu.addAction(self.exit_act)
 
-        # self.view_menu = QtGui.QMenu("&View", self)
-
         help_menu = QtGui.QMenu("&Help", self)
         help_menu.addAction(self.about_act)
 
         self.menuBar().addMenu(file_menu)
-        # self.menuBar().addMenu(self.view_menu)
         self.menuBar().addMenu(help_menu)
 
     def create_dock_windows(self):
         self.docks = {}
         self.docks['Properties'] = Dock("Properties", self)
-        self.docks['Properties'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Properties'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
         self.properties_menu = PropertyMenu.PropertyMenu(self)
         self.docks['Properties'].setWidget(self.properties_menu)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.docks['Properties'])
-        # self.view_menu.addAction(self.docks['Properties'].toggleViewAction())
 
         self.docks['Terrain'] = Dock("Terrain", self)
-        self.docks['Terrain'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Terrain'].setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
         self.terrain_menu = Terrain.TerrainMenu(self.view, self)
         self.docks['Terrain'].setWidget(self.terrain_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Terrain'])
-        # self.view_menu.addAction(self.docks['Terrain'].toggleViewAction())
 
         self.docks['Event Tiles'] = Dock("Event Tiles", self)
-        self.docks['Event Tiles'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Event Tiles'].setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
         self.tile_info_menu = TileInfo.TileInfoMenu(self.view, self)
         self.docks['Event Tiles'].setWidget(self.tile_info_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Event Tiles'])
-        # self.view_menu.addAction(self.docks['Event Tiles'].toggleViewAction())
 
         self.docks['Factions'] = Dock("Factions", self)
-        self.docks['Factions'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Factions'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
         self.faction_menu = Faction.FactionMenu(self.unit_data, self.view, self)
         self.docks['Factions'].setWidget(self.faction_menu)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.docks['Factions'])
-        # self.view_menu.addAction(self.docks['Factions'].toggleViewAction())
 
         self.docks['Units'] = Dock("Units", self)
-        self.docks['Units'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Units'].setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
         self.unit_menu = UnitData.UnitMenu(self.unit_data, self.view, self)
         self.docks['Units'].setWidget(self.unit_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Units'])
-        # self.view_menu.addAction(self.docks['Units'].toggleViewAction())
 
         self.docks['Reinforcements'] = Dock("Reinforcements", self)
-        self.docks['Reinforcements'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea | QtCore.Qt.RightDockWidgetArea)
+        self.docks['Reinforcements'].setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
         self.reinforcement_menu = UnitData.ReinforcementMenu(self.unit_data, self.view, self)
         self.docks['Reinforcements'].setWidget(self.reinforcement_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Reinforcements'])
-        # self.view_menu.addAction(self.docks['Reinforcements'].toggleViewAction())
+
+        self.docks['Move Triggers'] = Dock("Move Triggers", self)
+        self.docks['Move Triggers'].setAllowedAreas(QtCore.Qt.LeftDockWidgetArea)
+        self.trigger_menu = Triggers.TriggerMenu(self.unit_data, self.view, self)
+        self.docks['Move Triggers'].setWidget(self.trigger_menu)
+        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.docks['Move Triggers'])
 
         # Left
         self.tabifyDockWidget(self.docks['Properties'], self.docks['Factions'])
+        self.tabifyDockWidget(self.docks['Factions'], self.docks['Move Triggers'])
         self.docks['Properties'].raise_()  # GODDAMN FINDING THIS FUNCTION TOOK A LONG TIME
 
         # Right

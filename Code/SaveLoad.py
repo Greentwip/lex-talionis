@@ -51,8 +51,10 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
             continue
         # Process line
         unitLine = line.split(';')
-        current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, reinforceUnits, prefabs, metaDataObj, gameStateObj)
+        current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, 
+                                       reinforceUnits, prefabs, gameStateObj.triggers, metaDataObj, gameStateObj)
     
+    handle_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective)
 
 def create_map(levelfolder, overview_dict=None):
@@ -117,7 +119,69 @@ def read_overview_file(overview_filename):
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
-def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, metaDataObj, gameStateObj):
+# === TRIGGER STUFF ===
+class Trigger(object):
+    def __init__(self):
+        self.units = {}
+        self.kind = 'normal'
+
+    def add_unit(self, unit_id, pos1, pos2):
+        if ',' in pos1:
+            pos1 = tuple(int(n) for n in pos1.split(','))
+        if ',' in pos2:
+            pos2 = tuple(int(n) for n in pos2.split(','))
+        self.units[unit_id] = (pos1, pos2)
+
+def read_trigger_line(unitLine, allunits, reinforceUnits):
+    if ',' in unitLine[2]:
+        position = tuple(int(n) for n in unitLine[2].split(','))
+        for unit in allunits:
+            if unit.position == position:
+                return unit.id
+    else:
+        for unit in allunits:
+            if unit.id == unitLine[2]:
+                return unit.id
+        for event_id, (unit_id, position) in reinforceUnits.items():
+            if event_id == unitLine[2] or unit_id == unitLine[2]:
+                return unit_id
+    return None
+
+def handle_triggers(allunits, reinforceUnits, triggers, level_map):
+    def determine_first_position(unit, trigger_list):
+        queue = [t for t in trigger_list]
+        current_pos = unit.position
+        counter = 0
+        while queue and counter < 10:
+            start, end = queue.pop()
+            if end == current_pos:
+                current_pos = start
+                counter = 0
+            else:
+                queue.insert(0, (start, end))
+                counter += 1
+        if not current_pos or level_map.on_border(current_pos):
+            unit.position = None
+            reinforceUnits[unit.id] = (unit.id, current_pos)
+        else:
+            unit.position = current_pos
+
+    # create a new object with unit id as main and triggers in dict
+    unit_triggers = {}
+    for trigger_name, trigger in triggers.items():
+        for unit_id, (start, end) in trigger.units.items():
+            if unit_id not in unit_triggers:
+                unit_triggers[unit_id] = []
+            unit_triggers[unit_id].append((start, end))
+
+    # Now for each unit id in unit_triggers, set the position correctly
+    for unit_id, trigger_list in unit_triggers.items():
+        for unit in allunits:
+            if unit_id == unit.id:
+                determine_first_position(unit, trigger_list)
+                break
+
+def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, triggers, metaDataObj, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
     # New Faction
     if unitLine[0] == 'faction':
@@ -128,6 +192,12 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
         for unit in allunits:
             if unit.team == 'player' and not unit.dead:
                 reinforceUnits[unit.name] = (unit.id, None)
+    elif unitLine[0] == 'trigger':
+        if unitLine[1] not in triggers:
+            triggers[unitLine[1]] = Trigger()
+        unit_id = read_trigger_line(unitLine, allunits, reinforceUnits)
+        if unit_id:
+            triggers[unitLine[1]].add_unit(unit_id, unitLine[3], unitLine[4])
     elif str(gameStateObj.mode['difficulty']) in current_mode:
         # New Unit
         if unitLine[1] == "0":
