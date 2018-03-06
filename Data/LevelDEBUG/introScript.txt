@@ -67,7 +67,7 @@ move_sprite;Tana;MidRight
 s;Tana;St-stop right there!{w}{br}Call off your forces and turn back, or you'll have me to deal with!
 s;Breguet;Is that so? And who might you be?
 s;Tana;Who--? I am Tana, Princess of Frelia.{w}{br}I will not permit you to abuse my country any longer.
-s;Breguet;Frelia's royal brat, huh? How convenient.
+s;Breguet;Frelia's royal brat, huh? How convenient...
 s;Tana;Leave this castle immediately.{w}{br}If you harm me, my father and brother will chase you to the earth's end.
 s;Breguet;Yes, I've heard how King Hayden dotes on his precious little daughter.{w}{br}Let's see how true that is. You'll make us a fine hostage, my dear.{w}{br}Seize the girl and lock her up!
 u;Soldier2;FarRight

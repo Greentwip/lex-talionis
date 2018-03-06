@@ -1058,12 +1058,14 @@ class Dialogue_Scene(object):
             length = longest_dialogue_size + 8*2
             desired_center = self.determine_desired_center(owner.position[0])
             pos_x = Utility.clamp(desired_center - length/2, 8, GC.WINWIDTH - 8 - length)
+            if pos_x % 8 != 0:
+                pos_x += 4
             pos_y = 24
         return (pos_x, pos_y), (length, 48)
 
     def determine_width(self, text, num_lines):
         chunks = MenuFunctions.line_chunk(text)
-        if len(chunks) <= 3 and sum(len(c) for c in chunks) <= 15:
+        if len(chunks) <= 5 and sum(len(c) for c in chunks) <= 22:
             num_lines = 1  # Try just 1 line if 3 or less words
         for w in range(32, GC.WINWIDTH - 8*4, 8):
             # print('width', w)
@@ -1088,7 +1090,7 @@ class Dialogue_Scene(object):
         elif position > 120:  # Right
             return 152
         elif position > 96:  # MidRight
-            return 136
+            return 128
         else:
             return 120
 
@@ -1643,7 +1645,7 @@ class Dialog(object):
         else:
             both_width = self._get_width(word)
             # print(letter, previous_lines, word[::-1], both_width, self.text_width)
-            if both_width >= self.text_width: # if we've exceeded width
+            if both_width > self.text_width: # if we've exceeded width
                 self._next_line()
                 if letter != ' ':
                     self._add_letter(letter)
@@ -1704,7 +1706,7 @@ class Dialog(object):
             tail_surf = self.message_tail
         y_position = dialogue_position[1] + self.dlog_box.get_height() - 2
         # Solve for x_position
-        x_position = unit_position[0] + 72 if mirror else unit_position[0] + 16
+        x_position = unit_position[0] + 68 if mirror else unit_position[0] + 12
         # If we wouldn't actually be on the dialogue box
         if x_position > self.dlog_box.get_width() + self.topleft[0] - 24:
             x_position = self.topleft[0] + self.dlog_box.get_width() - 24
