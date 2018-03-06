@@ -171,7 +171,9 @@ class MainView(QtGui.QGraphicsView):
             for trigger_name, trigger in self.unit_data.triggers.items():
                 alpha = 255 if current_trigger_name == trigger_name else 120
                 for unit, (start, end) in trigger.units.items():
-                    draw(painter, start, end, unit, alpha)    
+                    if (self.window.dock_visibility['Units'] and unit in self.unit_data.units) or \
+                       (self.window.dock_visibility['Reinforcements'] and unit in self.unit_data.reinforcements):
+                            draw(painter, start, end, unit, alpha)    
             # Draw current
             current_arrow = self.window.trigger_menu.get_current_arrow()
             if current_arrow:
@@ -184,6 +186,46 @@ class MainView(QtGui.QGraphicsView):
                     
             painter.end()
 
+    def trigger_mouse_press(self, event, pos):
+        current_arrow = self.window.trigger_menu.get_current_arrow()
+        current_trigger = self.window.trigger_menu.get_current_trigger()
+        current_trigger_name = self.window.trigger_menu.get_current_trigger_name()
+        if event.button() == QtCore.Qt.LeftButton:
+            if current_trigger:
+                if current_arrow:
+                    unit, old_pos = current_arrow
+                    if pos != old_pos:
+                        current_trigger.units[unit] = (pos, old_pos)
+                    self.window.trigger_menu.clear_current_arrow()
+                else:
+                    if self.window.dock_visibility['Units']:                            
+                        current_unit = self.unit_data.get_unit_from_pos(pos)
+                    elif self.window.dock_visibility['Reinforcements']:
+                        current_pack = self.window.reinforcement_menu.current_pack()
+                        current_unit = self.unit_data.get_rein_from_pos(pos, current_pack)
+                    if current_unit:
+                        self.window.trigger_menu.set_current_arrow(current_unit, pos)
+                    else:
+                        for trigger_name, trigger in self.unit_data.triggers.items():
+                            if trigger_name == current_trigger_name:
+                                continue
+                            for unit, (start, end) in trigger.units.items():
+                                if start == pos:
+                                    current_unit = unit
+                                    self.window.trigger_menu.set_current_arrow(current_unit, pos)
+                                    return
+            else:
+                self.window.status_bar.showMessage('Select a trigger to use!')
+        elif event.button() == QtCore.Qt.RightButton:
+            if current_arrow:
+                self.window.trigger_menu.clear_current_arrow()
+            elif current_trigger:
+                # Remove unit lines if they overlap with position
+                current_trigger.units = {unit: (start, end) for unit, (start, end) in current_trigger.units.items() if 
+                                         start != pos and end != pos}
+            else:
+                self.window.status_bar.showMessage('Select a trigger to use!')
+
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
@@ -191,36 +233,7 @@ class MainView(QtGui.QGraphicsView):
         if pixmap and pos in self.tile_data.tiles:
             # print('mousePress Tool: %s' % self.tool)
             if self.window.dock_visibility['Move Triggers'] and (self.window.dock_visibility['Units'] or self.window.dock_visibility['Reinforcements']):
-                if self.window.dock_visibility['Units']:
-                    if event.button() == QtCore.Qt.LeftButton:
-                        current_trigger = self.window.trigger_menu.get_current_trigger()
-                        if current_trigger:
-                            current_arrow = self.window.trigger_menu.get_current_arrow()
-                            if current_arrow:
-                                unit, old_pos = current_arrow
-                                if pos != old_pos:
-                                    current_trigger.units[unit] = (pos, old_pos)
-                                self.window.trigger_menu.clear_current_arrow()
-                            else:                            
-                                current_unit = self.unit_data.get_unit_from_pos(pos)
-                                if current_unit:
-                                    self.window.trigger_menu.set_current_arrow(current_unit, pos)
-                                else:
-                                    current_trigger_name = self.window.trigger_menu.get_current_trigger_name()
-                                    for trigger_name, trigger in self.unit_data.triggers.items():
-                                        if trigger_name == current_trigger_name:
-                                            continue
-                                        for unit, (start, end) in trigger.units.items():
-                                            if start == pos:
-                                                current_unit = unit
-                                                self.window.trigger_menu.set_current_arrow(current_unit, pos)
-                                                return
-                        else:
-                            self.window.status_bar.showMessage('Select a trigger to use!')
-                    elif event.button() == QtCore.Qt.RightButton:
-                        self.window.trigger_menu.clear_current_arrow()
-                else:  # Reinforcements
-                    pass
+                self.trigger_mouse_press(event, pos)
             elif self.window.dock_visibility['Terrain']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_color = self.window.terrain_menu.get_current_color()

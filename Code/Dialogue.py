@@ -530,6 +530,7 @@ class Dialogue_Scene(object):
                     # First see if the unit is in reinforcements
                     if unit_id in gameStateObj.allreinforcements:
                         self.add_unit(gameStateObj, metaDataObj, unit_id, None, 'fade', 'stack')
+                        del gameStateObj.allreinforcements[unit_id]  # So we just move the unit now
                         self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
                     else:
                         self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
@@ -988,7 +989,6 @@ class Dialogue_Scene(object):
                 size = int(line[5]) if len(line) > 5 else 144, 48
             if 'noir' in line:
                 back_surf = 'NoirMessageWindow'
-
             else:
                 back_surf = 'MessageWindowBackground'
             if 'thought_bubble' in line:
@@ -1018,7 +1018,6 @@ class Dialogue_Scene(object):
         self.current_state = "Displaying"
 
     def auto_dialog_box(self, dialogue, owner):
-        position = [8, 104]
         length = GC.WINWIDTH - 8*2
         num_lines = 2
         if owner:
@@ -1057,37 +1056,41 @@ class Dialogue_Scene(object):
                 longest_dialogue_size = width
 
             length = longest_dialogue_size + 8*2
-            if owner.position[0] < 0:
-                position = [8, 24]
-            elif owner.position[0] < 24:
-                position = [24, 24]
-            elif owner.position[0] > 144:
-                position = [GC.WINWIDTH - length - 8, 24]
-            elif owner.position[0] > 120:
-                position = [GC.WINWIDTH - length - 24, 24]
-            elif owner.position[0] >= 24 and owner.position[0] < 56:
-                position = [40, 24]
-            elif owner.position[0] <= 120 and owner.position[0] > 88:
-                position = [min(GC.WINWIDTH - length - 40, 96), 24]
-            else:
-                position = [120 - length/2, 24]
-            # Error checking
-            if position[0] < 8:
-                position[0] = 8
-            if position[0] + length > GC.WINWIDTH - 8:
-                length = GC.WINWIDTH - 8 - position[0]
-        return position, (length, 48)
+            desired_center = self.determine_desired_center(owner.position[0])
+            pos_x = Utility.clamp(desired_center - length/2, 8, GC.WINWIDTH - 8 - length)
+            pos_y = 24
+        return (pos_x, pos_y), (length, 48)
 
     def determine_width(self, text, num_lines):
-        for w in range(32, GC.WINWIDTH - 8*5, 8):
+        chunks = MenuFunctions.line_chunk(text)
+        if len(chunks) <= 3 and sum(len(c) for c in chunks) <= 15:
+            num_lines = 1  # Try just 1 line if 3 or less words
+        for w in range(32, GC.WINWIDTH - 8*4, 8):
             # print('width', w)
             output_lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(text), w, GC.FONT['convo_black'], test=True)
+            # print(w, output_lines)
             if len(output_lines) <= num_lines:
-                return w + 16 # This is an extra buffer to account for waiting cursor
+                return w # This is an extra buffer to account for waiting cursor
         # If we got here, it was too bug
         logger.warning('Text too big for dialog box!')
         # print('Text too big for dialog box!')
         return GC.WINWIDTH - 8*4
+
+    def determine_desired_center(self, position):
+        if position < 0:  # FarLeft
+            return 8
+        elif position < 24:  # Left
+            return 80
+        elif position < 56:  # MidLeft
+            return 104
+        elif position > 144:  # FarRight
+            return 232
+        elif position > 120:  # Right
+            return 152
+        elif position > 96:  # MidRight
+            return 136
+        else:
+            return 120
 
     def add_credits(self, line):
         title = line[1]

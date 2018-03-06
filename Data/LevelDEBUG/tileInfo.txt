@@ -1,5 +1,5 @@
 13,6:Village=right
 2,2:Status=tile_Regeneration;Seize=win
-10,4:Village=left
-7,2:Status=tile_Regeneration
 7,7:Status=tile_Regeneration
+7,2:Status=tile_Regeneration
+10,4:Village=left

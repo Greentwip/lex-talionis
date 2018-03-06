@@ -374,10 +374,13 @@ def line_chunk(text):
     chunks = filter(None, chunks) # Remove empty chunks
     return chunks
 
+# This is such an awful algorithm :(
 def line_wrap(chunks, width, font, test=False):
     lines = []
     chunks.reverse()
     space_length = font.size(' ')[0]
+    if test:
+        chunks.insert(0, '   ')
 
     while chunks:
         cur_line = []
@@ -388,7 +391,7 @@ def line_wrap(chunks, width, font, test=False):
             # print(cur_line, chunks[-1], cur_len, length, width)
             if length > width:
                 if test:
-                    return 'Too big!'
+                    return 'One word is too wide for line!'  # Which has a huge length, always failing length check
                 # else
                 if cur_line:
                     lines.append(' '.join(cur_line))
