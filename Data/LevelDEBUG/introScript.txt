@@ -53,6 +53,7 @@ wait;1000
 disp_cursor;0
 u;Breguet;Left
 s;Breguet;Ha! That's what happens when you face my lance!
+r;Breguet
 # TODO: Units move to their final positions
 set_cursor;Breguet
 disp_cursor;1
