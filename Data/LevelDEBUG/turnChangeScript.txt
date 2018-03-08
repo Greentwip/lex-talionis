@@ -1,5 +1,4 @@
 # Franz says "Are you okay? *Pause* Are you feeling will?" and Eirika replies "Oh no!"
-win_game
 u;Eirika;Right;u;Franz;Left
 s;Franz;Are you okay?{w}{br}Are you feeling well?
 s;Eirika;Oh no!
