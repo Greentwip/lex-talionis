@@ -148,12 +148,12 @@ elif;gameStateObj.turncount == 13
 elif;gameStateObj.turncount >= 14 and not gameStateObj.turncount%2
 	# Infinite Reinforcements
 	set_camera;0,10;0,12
-	create_unit;i3;gameStateObj.turncount;0,11;;push
-	create_unit;i5;gameStateObj.turncount;0,10;;push
-	create_unit;i2;gameStateObj.turncount;0,12;;push
+	create_unit;i3;gameStateObj.turncount - 10;0,11;;push
+	create_unit;i5;gameStateObj.turncount - 10;0,10;;push
+	create_unit;i2;gameStateObj.turncount - 10;0,12;;push
 	wait;500
 	set_camera;13,0;15,0
-	create_unit;i1;gameStateObj.turncount;14,0;;push
-	create_unit;i4;gameStateObj.turncount;13,0;;push
+	create_unit;i1;gameStateObj.turncount - 10;14,0;;push
+	create_unit;i4;gameStateObj.turncount - 10;13,0;;push
 	wait;500
 end

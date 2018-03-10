@@ -518,7 +518,7 @@ class Combat(object):
             gameStateObj.banners.append(Banner.brokenItemBanner(self.p2, self.p2.getMainWeapon()))
             gameStateObj.stateMachine.changeState('itemgain')
     
-    def calc_init_exp_p1(self, my_exp, other_unit, applicable_results):
+    def calc_init_exp_p1(self, my_exp, other_unit, applicable_results, gameStateObj):
         damage_done = sum([result.def_damage_done for result in applicable_results])
         if not self.item.heal:
             self.p1.records['damage'] += damage_done
@@ -526,13 +526,13 @@ class Combat(object):
         if self.item.exp:
             normal_exp = self.item.exp
         elif self.item.weapon or not self.p1.checkIfAlly(other_unit):
-            level_diff = other_unit.level - self.p1.level + cf.CONSTANTS['exp_offset']
+            level_diff = other_unit.get_true_level(gameStateObj.metaDataObj) - self.p1.get_true_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
             normal_exp = int(cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve']))
         elif self.item.spell:
             if self.item.heal:
                 # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
                 self.p1.records['healing'] += damage_done
-                normal_exp = max(5, int(cf.CONSTANTS['heal_curve']*(damage_done-self.p1.level)+cf.CONSTANTS['heal_magnitude']))
+                normal_exp = max(5, int(cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_true_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
                 normal_exp = cf.CONSTANTS['status_exp']
         else:
@@ -548,14 +548,14 @@ class Combat(object):
         logger.debug('Attacker gained %s exp', my_exp)
         return my_exp
 
-    def calc_init_exp_p2(self, defender_results):
+    def calc_init_exp_p2(self, defender_results, gameStateObj):
         my_exp = 0
         applicable_results = [result for result in self.old_results if result.outcome and result.attacker is self.p2 and
                               result.defender is self.p1 and not result.def_damage <= 0]
         if applicable_results:
             damage_done = sum([result.def_damage_done for result in applicable_results])
             self.p2.records['damage'] += damage_done
-            level_diff = self.p1.level - self.p2.level + cf.CONSTANTS['exp_offset']
+            level_diff = self.p1.get_true_level(gameStateObj.metaDataObj) - self.p2.get_true_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
             normal_exp = max(0, int(cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve'])))
             if self.p1.isDying:
                 self.p2.records['kills'] += 1
@@ -1218,7 +1218,7 @@ class AnimationCombat(Combat):
                 # Doesn't count if it did 0 damage
                 applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
                 if applicable_results:
-                    my_exp = self.calc_init_exp_p1(my_exp, self.p2, applicable_results)
+                    my_exp = self.calc_init_exp_p1(my_exp, self.p2, applicable_results, gameStateObj)
 
                 # No free exp for affecting myself or being affected by allies
                 if self.p1.checkIfAlly(self.p2):
@@ -1239,7 +1239,7 @@ class AnimationCombat(Combat):
                     if defender_results: # and result.outcome for result in self.old_results):
                         self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
                         
-                    my_exp = self.calc_init_exp_p2(defender_results)
+                    my_exp = self.calc_init_exp_p2(defender_results, gameStateObj)
                     if my_exp > 0:
                         # Also handles actually adding the exp to the unit
                         gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=self))
@@ -1827,7 +1827,7 @@ class MapCombat(Combat):
                     applicable_results = [result for result in applicable_results if not 
                                           ((self.item.weapon or self.item.detrimental) and result.attacker.checkIfAlly(result.defender))]
                     if isinstance(other_unit, UnitObject.UnitObject) and applicable_results:
-                        my_exp = self.calc_init_exp_p1(my_exp, other_unit, applicable_results)
+                        my_exp = self.calc_init_exp_p1(my_exp, other_unit, applicable_results, gameStateObj)
 
                 # No free exp for affecting myself or being affected by allies
                 if not isinstance(self.p2, UnitObject.UnitObject) or self.p1.checkIfAlly(self.p2):
@@ -1847,7 +1847,7 @@ class MapCombat(Combat):
                     if defender_results: # and result.outcome for result in self.old_results):
                         self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
                         
-                    my_exp = self.calc_init_exp_p2(defender_results)
+                    my_exp = self.calc_init_exp_p2(defender_results, gameStateObj)
 
                     # Also handles actually adding the exp to the unit
                     gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp)) 

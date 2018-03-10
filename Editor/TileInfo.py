@@ -23,6 +23,7 @@ class InfoKind(object):
 info_kinds = [('Status', 'Status'),
               ('Formation', None),
               ('Seize', 'string'),
+              ('Lord_Seize', 'string'),
               ('Escape', 'string'),
               ('Arrive', 'string'),
               ('Shop', 'Item'),

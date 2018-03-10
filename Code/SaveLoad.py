@@ -388,7 +388,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['team'] = summoner.team
     u_i['event_id'] = 0
     u_i['gender'] = 0
-    classes = classes[:summoner.level/cf.CONSTANTS['max_level'] + 1]
+    classes = classes[:class_dict[summoner.klass]['tier'] + 1]
     u_i['klass'] = classes[-1]
     u_i['faction_icon'] = summoner.faction_icon
     u_i['name'] = summon_info.name
@@ -429,7 +429,8 @@ def get_unit_info(class_dict, klass, level, item_line, gameStateObj):
     bases = [sum(x) for x in zip(bases, gameStateObj.modify_stats['enemy_bases'])]
     growths = [sum(x) for x in zip(growths, gameStateObj.modify_stats['enemy_growths'])]
 
-    stats, growth_points = auto_level(bases, growths, level, class_dict[klass]['max'], gameStateObj)
+    mod_level = level + (class_dict[klass]['tier'] - 1) * cf.CONSTANTS['max_level']
+    stats, growth_points = auto_level(bases, growths, mod_level, class_dict[klass]['max'], gameStateObj)
     # Make sure we don't exceed max
     stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
 
@@ -463,7 +464,7 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
     for index, klass in enumerate(classes):
         for level_needed, class_skill in class_dict[klass]['skills']:
             # If level is gte level needed for skill or gte max_level
-            if level%cf.CONSTANTS['max_level'] >= level_needed or index < len(classes) - 1 or level%cf.CONSTANTS['max_level'] == 0:
+            if level >= level_needed or index < len(classes) - 1:
                 class_skills.append(class_skill)
     # === Handle Feats (Naive choice)
     if feat:

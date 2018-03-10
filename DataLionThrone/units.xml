@@ -254,7 +254,7 @@
         
         <inventory>Mithril Sword</inventory>
         
-        <level>14</level>
+        <level>4</level>
         <class>Myrmidon,Swordmaster</class>
         <desc>A devoted monk. Ophie's mentor in the way of the blade.</desc>
         
@@ -274,7 +274,7 @@
         
         <inventory>Rusted Axe</inventory>
         
-        <level>12</level>
+        <level>2</level>
         <class>Raider,Berserker</class>
         <desc>Jovial leader by acclamation of the Tyrana prisoners.</desc>
         
@@ -440,7 +440,7 @@
         
         <inventory>Mithril Sword,Boltblade</inventory>
         
-        <level>14</level>
+        <level>4</level>
         <class>Myrmidon,Swordmaster</class>
         <desc>Harsh warden of the Tyrana Prison.</desc>
         
@@ -461,7 +461,7 @@
         
         <inventory>Corona,Physic,dRefresh</inventory>
         
-        <level>15</level>
+        <level>5</level>
         <class>Tactician,Strategist</class>
         <desc>A member of the Empire's elite cadre of tacticians.</desc>
         
@@ -482,7 +482,7 @@
         
         <inventory>Ruin,dMana Ring</inventory>
         
-        <level>18</level>
+        <level>8</level>
         <class>Shaman,Warlock</class>
         <desc>Ruthless and cunning Imperial warlock.</desc>
         
@@ -503,7 +503,7 @@
         
         <inventory>dAdamant Axe,Tomahawk,Elixir</inventory>
         
-        <level>20</level>
+        <level>10</level>
         <class>Raider,Berserker</class>
         <desc>An acclaimed hunter of rare beasts.</desc>
         
@@ -523,7 +523,7 @@
         
         <inventory>Longbow,dAdamant Sword</inventory>
         
-        <level>20</level>
+        <level>10</level>
         <class>Thief,Assassin</class>
         <desc>An enigmatic masked man.</desc>
         
@@ -544,7 +544,7 @@
         
         <inventory>Corona,Physic</inventory>
         
-        <level>20</level>
+        <level>10</level>
         <class>Tactician,Strategist</class>
         <desc>Duke Ulver's loyal assistant.</desc>
         
@@ -563,7 +563,7 @@
         
         <inventory>Makara</inventory>
         
-        <level>25</level>
+        <level>5</level>
         <class>Knight,General,Duke</class>
         <desc>Hard-nosed Imperial Duke occupying Kerala.</desc>
         

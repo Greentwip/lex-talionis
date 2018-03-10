@@ -18,6 +18,7 @@ class levelUpScreen(object):
 
         self.force_level = force_level
         self.in_combat = in_combat
+        self.prev_level = self.unit.level
         self.new_wexp = None  # For promotion
 
         # spriting
@@ -73,7 +74,7 @@ class levelUpScreen(object):
         # print(self.state.getState())
         # Don't do this if there is no exp change
         if not self.force_level and self.expNew == 0 or \
-                (self.unit.level%cf.CONSTANTS['max_level'] == 0 and metaDataObj['class_dict'][self.unit.klass]['turns_into'] is None):
+                (self.unit.level >= cf.CONSTANTS['max_level'] and metaDataObj['class_dict'][self.unit.klass]['turns_into'] is None):
             return True # We're done here
 
         currentTime = Engine.get_time()
@@ -103,7 +104,7 @@ class levelUpScreen(object):
                 GC.SOUNDDICT['Experience Gain'].stop() 
 
             if self.expSet >= 100:
-                if self.unit.level%cf.CONSTANTS['max_level'] == 0: # If I would promote because I am level 20
+                if self.unit.level >= cf.CONSTANTS['max_level']: # If I would promote because I am level 20
                     GC.SOUNDDICT['Experience Gain'].stop()
                     GC.SOUNDDICT['Level Up'].play()
                     self.state.clear()
@@ -181,7 +182,7 @@ class levelUpScreen(object):
                 # check for skill gain if not a forced level
                 if not self.force_level:
                     for level_needed, class_skill in metaDataObj['class_dict'][self.unit.klass]['skills']:
-                        if self.unit.level%cf.CONSTANTS['max_level'] == level_needed:
+                        if self.unit.level == level_needed:
                             if class_skill == 'Feat':
                                 gameStateObj.cursor.currentSelectedUnit = self.unit
                                 gameStateObj.stateMachine.changeState('feat_choice')
@@ -278,8 +279,8 @@ class levelUpScreen(object):
                                                 init_position=old_anim.init_position)
                 else:
                     self.unit.battle_anim = old_anim
-            # Reset Level - Don't!
-            self.unit.level += 1
+            # Reset Level
+            self.unit.level = 1
             # Actually change class
             # Reset movement group
             self.unit.movement_group = new_class['movement_group']
@@ -294,7 +295,7 @@ class levelUpScreen(object):
             # self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together
             self.levelup_list = new_class['promotion'] # No two level ups, too much gain in one level...
             current_stats = self.unit.stats.values()
-            assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s"%(self.levelup_list, new_class['max'], current_stats)
+            assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s" % (self.levelup_list, new_class['max'], current_stats)
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)
             self.unit.apply_levelup(self.levelup_list)
@@ -355,6 +356,8 @@ class levelUpScreen(object):
             GC.FONT['text_yellow'].blit(cf.WORDS['Lv'], LevelUpSurface, (LevelUpSurface.get_width()/2+12, 3))
             if self.first_spark_flag or self.force_level:
                 level = str(self.unit.level)
+            elif self.unit.level == 1:
+                level = str(self.prev_level)
             else:
                 level = str(self.unit.level - 1)
             GC.FONT['text_blue'].blit(level, LevelUpSurface, (LevelUpSurface.get_width()/2+50-GC.FONT['text_blue'].size(level)[0], 3))

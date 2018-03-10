@@ -774,6 +774,9 @@ class UnitObject(object):
         self.currenthp = int(hp)
         self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
 
+    def get_true_level(self, metaDataObj):
+        return self.level + (metaDataObj['class_dict'][self.klass]['tier'] - 1) * cf.CONSTANTS['max_level']
+
     def handle_booster(self, item, gameStateObj):
         # Handle uses
         if item.uses:

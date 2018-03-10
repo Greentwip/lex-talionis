@@ -109,7 +109,7 @@ def read_constants_file():
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'difficulties': 'Normal,Hard,Lunatic',
              'only_difficulty': -1,
-             'max_level': 10, # Maximum Level for any class.
+             'max_level': 20, # Maximum Level for any class.
              'auto_promote': 0, # Promote after max-level?
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,

@@ -404,6 +404,12 @@ class TurnChangeState(State):
             gameStateObj.stateMachine.changeState('ai')
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')
+            # === TURN EVENT SCRIPT ===
+            if gameStateObj.phase.get_current_phase() == 'enemy':
+                enemy_turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
+                if os.path.isfile(enemy_turn_event_script):
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(enemy_turn_event_script))
+                    gameStateObj.stateMachine.changeState('dialogue')
             gameStateObj.stateMachine.changeState('end_step')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -773,15 +779,17 @@ class MenuState(State):
         adjallies = [unit for unit in adjunits if cur_unit.checkIfAlly(unit)]
 
         # If the unit is standing on a throne
-        if cf.WORDS['Seize'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        if 'Seize' in gameStateObj.map.tile_info_dict[cur_unit.position]:
+            options.append(cf.WORDS['Seize'])
+        elif 'Lord_Seize' in gameStateObj.map.tile_info_dict[cur_unit.position] and 'Lord' in cur_unit.tags:
             options.append(cf.WORDS['Seize'])
         # If the unit is standing on an escape tile
-        if cf.WORDS['Escape'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        if 'Escape' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Escape'])
-        elif cf.WORDS['Arrive'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        elif 'Arrive' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Arrive'])
         # If the unit is standing on a switch
-        if cf.WORDS['Switch'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        if 'Switch' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Switch'])
         # If the unit has validTargets
         if atk_targets:
@@ -803,10 +811,10 @@ class MenuState(State):
                     options.append(cf.WORDS['Talk'])
                     break
             # If the unit is on a village tile
-            if cf.WORDS['Village'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+            if 'Village' in gameStateObj.map.tile_info_dict[cur_unit.position]:
                 options.append(cf.WORDS['Visit'])
             # If the unit is on a shop tile
-            if cf.WORDS['Shop'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+            if 'Shop' in gameStateObj.map.tile_info_dict[cur_unit.position]:
                 if gameStateObj.map.tiles[cur_unit.position].name == cf.WORDS['Armory']:
                     options.append(cf.WORDS['Armory'])
                 else:
@@ -819,7 +827,7 @@ class MenuState(State):
                     elif any([cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[tile.position] for tile in adjtiles]):
                         options.append(cf.WORDS['Unlock'])
             # If the unit is on a searchable tile
-            if cf.WORDS['Search'] in gameStateObj.map.tile_info_dict[cur_unit.position] and not cur_unit.hasAttacked:
+            if 'Search' in gameStateObj.map.tile_info_dict[cur_unit.position] and not cur_unit.hasAttacked:
                 options.append(cf.WORDS['Search'])
             # If the unit has a traveler
             if cur_unit.TRV and not cur_unit.hasAttacked: # (len(set(adjposition) | set(current_unit_positions)) > len(set(current_unit_positions)))
