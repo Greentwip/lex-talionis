@@ -1,4 +1,4 @@
-import random
+import random, os
 from collections import Counter
 import GlobalConstants as GC
 import configuration as cf
@@ -1406,11 +1406,13 @@ class UnitObject(object):
         return True
 
     def handle_fight_quote(self, target_unit, gameStateObj):
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', unit=target_unit, unit2=self, event_flag=False))
-        gameStateObj.stateMachine.changeState('dialogue')
-        # And again, the other way round
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', unit=self, unit2=target_unit, event_flag=False))
-        gameStateObj.stateMachine.changeState('dialogue')
+        fight_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/fightScript.txt'
+        if os.path.exists(fight_script_name):
+            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=target_unit, unit2=self, event_flag=False))
+            gameStateObj.stateMachine.changeState('dialogue')
+            # And again, the other way round
+            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=self, unit2=target_unit, event_flag=False))
+            gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_steal_banner(self, item, gameStateObj):
         gameStateObj.banners.append(Banner.stealBanner(self, item))

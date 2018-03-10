@@ -269,3 +269,80 @@ Pegasus Knight (F) (Recruit)
 13 females
 33 playable Characters
 Can get all in a playthrough
+12 Swords
+12 Lances
+4 Axes
+2 Bows
+3 Light
+3 Anima
+1 Dark
+7 Mages / 26 Physicals
+10 Mounted / 23 Unmounted
+
+PMM:
+Prologue: Ambush by Bandits
+- Lord (M)
+- Myrmidon (F)
+- Cavalier (M) (Lances)
+- Cleric (F)
+1: Forest Investigation
+- Knight (M)
+- Archer (F)
+2: Save the Village
+- Fighter (M) (Axes)
+- Troubadour (F)
+3: Monsters! -- MONSTERS
+- Dancer (F)
+4: The Lorians are raiding? -- not strong...
+- Cavalier (M) (Axes)
+- Thief (F)
+5: Monster Circles -- MONSTERS
+- Cleric (Monk) (M)
+- Pegasus Knight (F)
+- Cavalier (M) (Swords)
+6: Drake helps (Made aware of Jade)
+7: Escape!
+- Cleric (F)
+8: Monsters -- MONSTERS
+9: Drake Pursues
+- Wyvern Knight (F)
+- Sentinel (M)
+10: Attack on Mercia
+10x: Escape
+11: Prison Break
+- Mercenary (M)
+- Thief (M)
+- Skirmisher (F)
+- Shaman (F)
+12: Drake Pursues
+- Swordmaster (F)
+- Fighter (M)
+- Nomad (M)
+13: Reunite -- MONSTERS
+14: Enter Umbria
+- Falco Knight (F)
+15: Intrigue, People going missing
+- Halberdier (F)
+- Great Knight (M)
+16: The Army appears (Intrigue ends, they discover the plot)
+- Warlock (M)
+17:  Umbrian superweapn unleashed, Drake turns, helps fight monsters -- MONSTERS
+- Wyvern Lord (M)
+18: Bert attacks
+19: Head for the City -- MONSTERs
+- Cleric (F) (Gotoh) (Dark/Light)
+20: Enter city -- MONSTERS
+21: Final battle -- MONSTERS
+
+15 males
+15 females
+30 playable characters
+
+9 Swords
+8 Lances
+7 Axes
+2 Bows
+4 Light
+4 Dark
+8 Mages / 22 Physicals
+9 Mounted / 21 Unmounted

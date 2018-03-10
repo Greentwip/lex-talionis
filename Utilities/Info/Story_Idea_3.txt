@@ -12,29 +12,38 @@ Mercia - Middle land of hills and mountains -- a land of warriors, yet often pla
 Umbria - Northern land of swamps, marshes, and coves -- a land of thieves and spies. Athria and Mercia lost diplomatic contact with Umbria many years ago.
 Loria - A mystical land across the water. Lorians conquered this land a nearly 600 years ago, but left unexpectedly in the past 200 years. Famous for its mages and wyverns, which were brought to Thanatia.
 
+Only Dark and Light Magic, which are effective versus one another
+Dark Magic does debuffs, AOE attacks, and weird effects (like summons, warping). Less Accurate more damage spells.
+Light Magic does healing, buffs, and single target long range damage. More accurate, less damage spells.
+
+Thieves don't steal, rather they do debuffs when attacking
+Skirmishers debuff also.
+
 7 plot safe characters
-- Prot
-- Waif (shy, mysterious, broken) - Dancer 
+- Prot (smart, well-spoken, not aggressive) - Sword (command spell)
+- Waif (shy, mysterious, broken) - Dancer
 - Friend (assertive, forthright, active) - Sword
-- Jade (knowledgeable, steady, strong) - Light
+- Jade (knowledgeable, steady, calm) - Dark
 - Slate (snarky, sarcastic, but with a heart of gold) - Sword
-- PseudoJagen (reasonable, calm, protective) - Lance
-- Drake (honorable, brooding, aggressive) - Dark/Axe
+- Dark (jovial, protective -> brooding, aggressive) - Lance
+- Drake (honorable) - Axe
 
 Prot is kept as ward of neighboring kingdom, Mercia
 - Prot: Sword Lord
-- PseudoJagen: Lance Cavalier
-- PseudoJagen's younger sister: Cleric
+- Dark, Friend's older brother: Lance Cavalier
+- ???: Cleric
 - Friend: Sword Girl
 Prot deals with Bandits (1 through 3)
+On beginning of 2:
+- Jovial Knight Boy
+- Sarcastic Archer Girl
+Possible rescue in 3:
 - Fighter: Bandit with a heart of gold
 Prot rescues or is rescued by Red, his/her older sister (3?)
 - Red: Paladin -- who is sick throughout most of the game
-- Dark, Red's Husband, Friend's older brother: Wyvern Rider
+- ??: Troubadour, Red's friend
 Prot hears that his/her father has died or is dying from Red
 They make to travel back to Mercia -- but are sent out with companions
-- Jovial Knight Boy
-- Sarcastic Archer Girl
 Prot rescues Waif from Monsters/Bandits (4)
 Later on, also hears that Bert, Prot's older brother has returned from exile with an army at his back and a mysterious benefactor (Locke)
 Waif exclaims surprise, but keeps quiet
@@ -49,7 +58,7 @@ The king is dead, the King's new wife Jade has been locked up... apparently besi
 They also find out the blood seal has been given to Locke
 Deal with a couple of things for Bert, ostensibly bandits, actually monsters - notice recent ritual circles. (6)
 Before:
-- Asser: a learned-monk: Mage
+- Asser: a learned-monk: Cleric?
 During:
 - Umbrian Pegasus Girl
 - Umbrian Sword Cavalier
@@ -58,15 +67,16 @@ Meeting clandestinely with Jade, they find out her husband was killed, poisoned.
 At some point, they meet Drake, Locke's son. (7)
 They plan a daring rescue of Jade, and flee for Mercia. (8)
 In the chaos, Bert kills Red.
-- Jade: Troubadour
+- Jade: Cleric
 Drake (Locke's son & Wyvern Lord), pursues them
 Fight monsters (9)
-- Ash - Cleric Summoner - on the run from Umbria
 Fight Athrian Army, where Drake lets them escape (10)
 Locke berates Drake for letting him down.
 Drake, hoping to make it up in his father's eyes, tells him about Waif
 Make it into Mercia, where they meet with Warrior King to make plans.
 Locke attacks during the knight, with magic and monsters. (11)
+- King Mercia's bodyguard: Wyvern Knight (F)
+- King Mercia's bodyguard: Sentinel (M)
 Warrior King is killed.
 Waif, Dark, and Prot are captured, but everyone else escapes to ~.
 Interogated by Locke, but left to stew. Some of his plans are laid bare. So much death, a pity. I want my wife back.
@@ -84,7 +94,7 @@ Eventually, they are reunited with rest of army, (who are under attack by Bert, 
 Drake and Bert reunite with Locke. 
 Can we trust Umbria? A land of spies and thieves
 Travel to Umbria (Fight, monsters/bandits) (14)
-- Pegasus Knight
+- Princess: Pegasus Knight
 Umbria welcomes them, where they find out Slate is Umbrian royalty, and his sister is that pegasus knight from before
 Deal with a peasant rebellion... (15) + Intrigue in the city (people going missing in the city)
 - Halberdier?
@@ -92,14 +102,14 @@ Deal with a peasant rebellion... (15) + Intrigue in the city (people going missi
 Drake goes on a covert mission to get Waif for the ritual, is apprehended. The army appears. (16)
 Locke and Bert attack Umbria with monsters (17)
 In the chaos, Drake turns, unwilling to be part of these monstrous attacks
-- Sage
-- Wyvern Lord
+- Warlock
+- Drake: Wyvern Lord
 Umbria unleashes a superweapon of there own (sacrificing Jade?'s sister -- then they attempt to bring her back through the gate, but it fails -- horribly)
 Which destroys most of the city
 Monster fight (18)
 Prot pursues Bert. Bert is totally insane at this point. Dark slays him (19)
 They venture to the City of the Dead (20)
- - Cleric GOTOH
+- Cleric GOTOH (Light and Dark)
 In the City, they fight Locke's army. (21)
 In which they think they have succeeded, but its actually a trap, and Prot, Dark, and Slate are killed.
 There's actually 2 rituals (3 kings for unsealing gate). And The Waif bangs on the door.
@@ -114,26 +124,185 @@ Any of your dead units also respawn.
 
 - Need to consider what intrigue happens to prepare the reader for Umbrian superweapon. 
 
-x2 Sword Lords (?/F)
-Mercenary (M)
-Myrmidon (F)
-x2 Thief (M/F)
-Sword Cavalier (M)
-Skirmisher (F)
-Soldier (F)
-Knight (M)
-Lance Cavalier (M)
-Brigand (M)
-Fighter (M)
-Sentinel (M)
-Axe Cavalier (M)
-Archer (F)
-Nomad (M)
-x2 Cleric (F/F)
-Cleric Summoner (F)
-Troubadour (F)
-x2 Mage (M/M)
-Dark Mage (F)
-Dancer (Dark Magic) (F)
-x2 Pegasus Knight (F/F)
-x2 Wyvern Knight (M/M)
+
+- Classes
+- Thief (Sword) -> Assassin (Sword/Bow)
+    Low HP, Low STR, High SKL and SPD, Low DEF and RES
+    Deals ability damage on attack
+    Can move through enemies
+    Does not get counterattacked
+    Can Warp adjacent to enemies
+- Myrmidon (Sword) -> Swordmaster (Sword)
+    Low STR, High SKL and SPD, Low DEF, High RES
+    +Chance of Crit
+    Can Double on Defense
+    Does extra damage on defense
+    +Avoid against non-adjacent enemies
+- Mercenary (Sword) -> Vanguard (Sword/Axe)
+    Med STR, High SKL, Med SPD, Med DEF, Low RES
+    +Damage and Resistance while attacking
+    Extra Feats
+    Lifelink
+    ??
+- Skirmisher (Lance) -> Dragoon (Lance)
+    Med Str, Med SKL, High SPD, Low DEF, High RES
+    Deals ability damage on attack
+    Ignores Terrain
+    Evades AOE
+    Does extra damage based on movement
+- Soldier (Lance) -> Halberdier (Lance/Axe)
+    Med STR, High SKL, Low SPD, Med DEF, Med REs
+    Extra Feats
+    Can Ignore Enemy Defenses
+    ??
+    ??
+- Knight (Lance) -> General (Lance/Sword)
+    Med STR, Med SKL, Low SPD, High DEF, Med RES
+    Provoke
+    Smite (pushes enemy away and takes their place)
+    Slow
+    ??
+- Brigand (Axe) -> Berserker (Axe)
+    High HP, High STR, Low SKL, Med SPD, Low DEF, low RES
+    Regeneration
+    Rage (+Stats, +Movement, AI-controlled)
+    +Chance of Crit
+    ??
+- Fighter (Axe) -> Warrior (Axe/Bow)
+    High HP, High STR, Med SKL, Low SPD, Med DEF, Low RES
+    Cleave
+    Deals extra damage based on weight of weapon
+    Extra Feats
+    ??
+- Sentinel (Axe) -> Great Knight (Axe/Lance)
+    High STR, Low SKL, Low SPD, High DEF, Low RES
+    Defensive Aura
+    ??
+    ??
+    ??
+- Archer (Bow) -> Sniper (Bow)
+    Med STR, High SKL, Med SPD, Low DEF, Low RES
+    +Damage and Accuracy on attacking
+    +Chance of Crit
+    +1 Range with Bows
+    ??
+- Cavalier (??) -> Paladin (?? + ??)
+    Med STR, Med SKL, Med SPD, Med DEF, Med RES
+    Canto
+    Avoid Aura
+    ??
+    ??
+- Nomad (Bow) -> Ranger (Bow/Sword)
+    Med STR, Med SKL, High SPD, Low DEF, Med RES
+    Canto
+    ??
+    ??
+    ??
+- Pegasus Knight (Lance) -> Falco Knight (Lance/Sword)
+    Low STR, Med SKL, High SPD, Low DEF, High RES
+    Canto + Flying
+    Can move twice instead of attacking (Dash)
+    ??
+    ??
+- Wyvern Knight (Axe) -> Wyvern Lord (Axe/Lance)
+    High STR, Low SKL, Med SPD, High DEF, Low RES
+    Canto + Flying
+    +Damage when attacking
+    Savage Blow on finishing move
+    ??
+- Lord (Sword) -> Great Lord (Sword/??)
+    Med STR, High SKL, Med SPD, Med DEF, Med RES
+    Command (another unit gains Offensive bonus this turn)
+    ??
+    ??
+    ??
+- Waif () -> Mystic (Dark)
+    Low MAG, Med SKL, High SPD, Low DEF, High RES
+    Refresh
+    ??
+    ??
+    ??
+- Cleric (Light) -> Bishop (Light)
+    Med MAG, High SKL, Med SPD, Low DEF, High RES
+    Heals extra with light magic
+    Miracle
+    AOE Heal allies and Damage monsters
+    ??
+- Troubadour (Light) -> Valkyrie (Light)
+    Med MAG, Med SKL, High SPD, Low DEF, Med RES
+    Canto
+    Rally allies
+    ??
+    ??
+- Shaman (Dark) -> Warlock (Dark)
+    High MAG, Low SKL, Low SPD, Med DEF, Med RES
+    +Damage when attacking
+    +1 RNG on AOE effects
+    ??
+    ??
+- ?? -> Oracle (Dark/Light)
+    Med MAG, Med SKL, Low SPD, High DEF, Low RES
+    + Luck Avoid and Accuracy when under 50% HP
+    ??
+    ??
+    ??
+
+=== Enemy only ===
+Channeler
+    High MAG, High SKL, Low SPD, Low DEF, Low RES
+    Must setup to attack, targets an area
+
+Ballista
+    Med STR, Low SKL, Low SPD, Low DEF, Low RES
+    Long-Range
+
+Zombie
+    High HP, High STR, Low SKL, Low SPD, Low DEF, Low RES
+    Regenerates
+
+Skeleton
+    Low HP, Med STR, Med SKL, High SPD, Med DEF, Low RES
+
+Mauthedoog
+    Low STR, High SKL, High SPD, Low DEF, Med RES
+
+Wizard Eye
+    Med Mag, Med SKL, Med SPD, Low DEF, High RES
+    Flying
+
+Gargoyle
+    Med STR, Med SKL, Med SPD, Med Def, Med RES
+    Flying
+
+Tarvos
+    Med STR, Med SKL, High SPD, Med DEF, Low RES
+    Cleave
+
+Spider
+    High STR, Low SKL, Low SPD, High DEf, Low RES
+    Can move through any terrain
+    Ability Drain on hit
+
+Gorgon
+    High Mag, Low SKL, High SPD, Low DEF, High RES
+    Aura that both buffs monsters and debuffs your units
+    Summons pillars that damage enemies
+
+Cyclops
+    High HP, High STR, Low SKL, Low SPD, Med DEF, Med RES
+    Automatically Cleaves whenever hit
+
+Dracozombie
+    High HP, Med MAG, --, Low SPD, Med DEF, High RES
+    Ignores defenses. Attack's can't be blocked
+    Does AOE cone damage
+
+Demon
+    High HP, High STR, High MAG, Med SKL, Med SPD, Med DEF, High RES
+    Summons enemies
+    Enervates those it hits (Permanent Level Drain)
+    Aura that debuffs your units
+
+
+
+
