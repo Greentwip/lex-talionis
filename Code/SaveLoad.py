@@ -160,9 +160,20 @@ def handle_triggers(allunits, reinforceUnits, triggers, level_map):
             else:
                 queue.insert(0, (start, end))
                 counter += 1
-        if not current_pos or level_map.on_border(current_pos):
+        if not current_pos:
             unit.position = None
             reinforceUnits[unit.id] = (unit.id, current_pos)
+        elif current_pos not in level_map.tiles:
+            unit.position = None
+            if current_pos[0] >= level_map.width:
+                spawn_pos = level_map.width - 1, current_pos[1]
+            elif current_pos[1] >= level_map.height:
+                spawn_pos = current_pos[0], level_map.height - 1
+            elif current_pos[0] < 0:
+                spawn_pos = 0, current_pos[1]
+            elif current_pos[1] < 0:
+                spawn_pos = current_pos[0], 0
+            reinforceUnits[unit.id] = (unit.id, spawn_pos)
         else:
             unit.position = current_pos
 

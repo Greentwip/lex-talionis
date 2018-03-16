@@ -155,9 +155,9 @@ class MainView(QtGui.QGraphicsView):
 
         def draw(painter, start, end, unit, alpha):
             if unit.team == 'enemy':
-                color = QtGui.QColor(200, 0, 0, alpha)
+                color = QtGui.QColor(248, 72, 0, alpha)
             else:
-                color = QtGui.QColor(0, 0, 200, alpha)
+                color = QtGui.QColor(0, 248, 248, alpha)
             pen.setColor(color)
             painter.setPen(pen)
             painter.drawLine(start[0] * 16 + 7, start[1] * 16 + 7, end[0] * 16 + 7, end[1] * 16 + 7)
@@ -181,8 +181,9 @@ class MainView(QtGui.QGraphicsView):
                 scene_pos = self.mapToScene(self.mapFromGlobal(QtGui.QCursor.pos()))
                 pixmap = self.scene.itemAt(scene_pos)
                 pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
-                if pixmap and pos in self.tile_data.tiles:
-                    draw(painter, pos, old_pos, unit, 255)
+                # print(pixmap, pos)
+                # if pixmap and pos in self.tile_data.tiles:
+                draw(painter, pos, old_pos, unit, 255)
                     
             painter.end()
 
@@ -230,11 +231,12 @@ class MainView(QtGui.QGraphicsView):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
         pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
-        if pixmap and pos in self.tile_data.tiles:
+
+        if self.window.dock_visibility['Move Triggers'] and (self.window.dock_visibility['Units'] or self.window.dock_visibility['Reinforcements']):
+            self.trigger_mouse_press(event, pos)
+        elif pixmap and pos in self.tile_data.tiles:
             # print('mousePress Tool: %s' % self.tool)
-            if self.window.dock_visibility['Move Triggers'] and (self.window.dock_visibility['Units'] or self.window.dock_visibility['Reinforcements']):
-                self.trigger_mouse_press(event, pos)
-            elif self.window.dock_visibility['Terrain']:
+            if self.window.dock_visibility['Terrain']:
                 if event.button() == QtCore.Qt.LeftButton:
                     current_color = self.window.terrain_menu.get_current_color()
                     self.tile_data.tiles[pos] = current_color
@@ -611,7 +613,7 @@ class MainEditor(QtGui.QMainWindow):
         def write_unit_line(unit):
             pos_str = ','.join(str(p) for p in unit.position)
             ai_str = unit.ai + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
-            event_id_str = (unit.pack + '_' + unit.event_id if unit.pack != 'None' else unit.event_id) if unit.event_id else '0'
+            event_id_str = (unit.pack + '_' + str(unit.event_id) if unit.pack else str(unit.event_id)) if unit.event_id else '0'
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
                 klass_str = unit.klass + ('F' if unit.gender >= 5 else '')
@@ -671,7 +673,7 @@ class MainEditor(QtGui.QMainWindow):
                     if unit.generic and unit in self.unit_data.units:
                         unit_id = str(unit.position[0]) + ',' + str(unit.position[1])
                     elif unit in self.unit_data.reinforcements:
-                        unit_id = unit.pack + '_' + unit.event_id if unit.pack != 'None' else unit.event_id
+                        unit_id = unit.pack + '_' + str(unit.event_id) if unit.pack else str(unit.event_id)
                     else:
                         unit_id = str(unit.id)
                     trigger_str = ';'.join(['trigger', str(trigger_name), unit_id, start_str, end_str])

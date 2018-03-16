@@ -12,11 +12,17 @@ Mercia - Middle land of hills and mountains -- a land of warriors, yet often pla
 Umbria - Northern land of swamps, marshes, and coves -- a land of thieves and spies. Athria and Mercia lost diplomatic contact with Umbria many years ago.
 Loria - A mystical land across the water. Lorians conquered this land a nearly 600 years ago, but left unexpectedly in the past 200 years. Famous for its mages and wyverns, which were brought to Thanatia.
 
-Only Dark and Light Magic, which are effective versus one another
+Only Dark and Light Magic, which are effective versus one another and uneffective versus the same
 Dark Magic does debuffs, AOE attacks, and weird effects (like summons, warping). Less Accurate more damage spells.
 Light Magic does healing, buffs, and single target long range damage. More accurate, less damage spells.
 
-Main protagonist's internal conflict is about death. Throughout the first 2/3rds, he always tries to find a way to keep everyone alive -- using and abusing the Waif's power to return his comrades to life. But, he eventually realizes that this is not good. He has been furthering the destruction of the natural balance and increasing the Rot. He comes to accept that death must be accepted on its own -- which is in opposition to Locke's psychological need to defeat death at any cost.
+Main protagonist's internal conflict is about death. Throughout the first 2/3rds, he always tries to find a way to keep everyone alive -- using and abusing the Waif's power to return his comrades to life. But, he eventually realizes that this is not good. He has been furthering the destruction of the natural balance and increasing the Rot. He comes to accept that death must be accepted on its own -- which is in opposition to Locke's psychological need to defeat death at any cost -- even if the life granted is not worth living
+
+Environment vision is pre-medieval to medieval Britain. Green meadows, rolling hills, ancient forests -- but contrasted by the Rot... dead land, Lorian ruins.
+Colors greens and browns, small yellow, blue for background. Gray, black, dark brown, white, red, purple for rot.
+
+Character vision
+Clothing should be scrappy, ragged, even for lords. The world is dying -- we're just living in it.
 
 7 plot safe characters
 - Prot (smart, well-spoken, not aggressive) - Sword (command spell)
@@ -24,7 +30,7 @@ Main protagonist's internal conflict is about death. Throughout the first 2/3rds
 - Friend (assertive, forthright, active) - Sword
 - Jade (knowledgeable, steady, calm) - Dark
 - Slate (snarky, sarcastic, but with a heart of gold) - Sword
-- Dark (jovial, protective -> brooding, aggressive) - Lance
+- Dark/Jagen (jovial, protective -> brooding, aggressive) - Lance
 - Drake (honorable) - Axe
 
 Prot is kept as ward of neighboring kingdom, Mercia

@@ -77,11 +77,8 @@ class Unit(object):
             else:
                 self.id = Unit.g_id
                 Unit.g_id += 1
-            self.event_id = info.get('event_id')
-            if self.event_id and '_' in self.event_id:
-                self.pack, self.event_id = self.event_id.split('_')
-            else:
-                self.pack = info.get('pack', 'None')
+            self.pack = info.get('pack')  # What reinforcement pack am I in
+            self.event_id = info.get('event_id')  # Number within the pack
             self.faction = info.get('faction')
             self.name = info['name']
             self.generic = info.get('generic', False)

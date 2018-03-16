@@ -69,8 +69,8 @@ class UnitData(object):
             if rein.id == e_id:
                 return rein
             else:
-                true_event_id = rein.pack + '_' + rein.event_id if rein.pack != 'None' else rein.event_id
-                if true_event_id == e_id:
+                written_event_id = rein.pack + '_' + str(rein.event_id) if rein.pack else str(rein.event_id)
+                if written_event_id == e_id:
                     return rein
         return None
 
@@ -78,19 +78,19 @@ class UnitData(object):
         for unit in self.units:
             if unit.position == pos:
                 return unit
-        #print('Could not find unit at %s, %s' % (pos[0], pos[1]))
+        # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
 
     def get_rein_from_pos(self, pos, pack):
         for rein in self.reinforcements:
             if rein.position == pos and rein.pack == pack:
                 return rein
-        #print('Could not find unit at %s, %s' % (pos[0], pos[1]))
+        # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
 
     def get_idx_from_pos(self, pos):
         for idx, unit in enumerate(self.units):
             if unit.position == pos:
                 return idx
-        #print('Could not find unit at %s, %s' % (pos[0], pos[1]))
+        # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
         return -1
 
     def get_ridx_from_pos(self, pos, pack):
@@ -109,7 +109,7 @@ class UnitData(object):
     def get_reinforcement_str(self, pos, pack):
         for rein in self.reinforcements:
             if rein.position == pos and rein.pack == pack:
-                return pack + '_' + rein.event_id + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
+                return pack + '_' + str(rein.event_id) + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
         return ''
 
     def parse_unit_line(self, unitLine, current_mode):
@@ -163,7 +163,7 @@ class UnitData(object):
             if '_' in legend['event_id']:
                 cur_unit.pack, cur_unit.event_id = legend['event_id'].split('_')
             else:
-                cur_unit.pack, cur_unit.event_id = 'None', legend['event_id']
+                cur_unit.pack, cur_unit.event_id = legend['event_id'], 1
             self.reinforcements.append(cur_unit)
         else: # Unit does start on board
             self.units.append(cur_unit)
@@ -536,9 +536,9 @@ class ReinforcementMenu(UnitMenu):
 
     def create_item(self, unit):
         if unit.generic:
-            item = QtGui.QListWidgetItem(unit.pack + ': ' + unit.event_id + ' -- L' + str(unit.level))
+            item = QtGui.QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- L' + str(unit.level))
         else:
-            item = QtGui.QListWidgetItem(unit.pack + ': ' + unit.event_id + ' -- ' + unit.name)
+            item = QtGui.QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- ' + unit.name)
         klass = Data.class_data.get(unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))

@@ -38,6 +38,17 @@ enemy;0;0;Fighter;2;Iron Axe;2,8;Attack;Soldier
 # Player Characters
 # Enemies
 # === Triggers ===
-trigger;Enemy;Breguet;2,9;2,2
-trigger;Enemy;3,3;3,5;3,3
-trigger;Enemy2;3,3;0,9;3,5
+trigger;Boss1;Breguet;2,5;2,2
+trigger;Enemy1;8,3;2,7;8,3
+trigger;Enemy1;4,7;3,8;4,7
+trigger;Enemy1;3,3;3,6;3,3
+trigger;Enemy1;2,8;2,9;2,8
+trigger;Enemy1;9,5;1,8;9,5
+trigger;Enemy1;1,3;1,6;1,3
+trigger;EnemySpawn;8,3;2,10;2,7
+trigger;EnemySpawn;Breguet;2,10;2,5
+trigger;EnemySpawn;4,7;3,11;3,8
+trigger;EnemySpawn;3,3;3,10;3,6
+trigger;EnemySpawn;2,8;2,10;2,9
+trigger;EnemySpawn;9,5;1,10;1,8
+trigger;EnemySpawn;1,3;1,10;1,6

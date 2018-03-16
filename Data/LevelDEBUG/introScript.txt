@@ -1,10 +1,9 @@
 # Fade in
 t;2
 # TODO: Enemy units appear
+trigger;EnemySpawn
 # Hover cursor over castle
 set_cursor;2,2
-trigger;Enemy2
-trigger;Enemy
 # Flicker cursor
 disp_cursor;1
 wait;1000
@@ -46,7 +45,9 @@ t;1
 qr;Soldier2;Breguet
 remove_background
 t;2
+end_skip
 # TODO: Breguet moves and attacks Green Mercenary. He crits the mercenary.
+trigger;Boss1
 set_cursor;Breguet
 disp_cursor;1
 wait;1000
@@ -55,6 +56,7 @@ u;Breguet;Left
 s;Breguet;Ha! That's what happens when you face my lance!
 r;Breguet
 # TODO: Units move to their final positions
+trigger;Enemy1
 set_cursor;Breguet
 disp_cursor;1
 wait;1000

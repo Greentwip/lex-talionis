@@ -1,4 +1,5 @@
 import sys
+from itertools import count
 from PyQt4 import QtGui, QtCore
 
 sys.path.append('../')
@@ -12,6 +13,11 @@ import DataImport
 from DataImport import Data
 import EditorUtilities
 from CustomGUI import GenderBox
+
+def next_available_event_id(reinforcements):
+    for num in count(start=0):
+        if not any(rein.event_id == num for rein in reinforcements):
+            return num
 
 class LoadUnitDialog(QtGui.QDialog):
     def __init__(self, instruction, parent):
@@ -110,9 +116,6 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         # Pack
         self.pack = QtGui.QLineEdit()
         self.form.addRow('Pack:', self.pack)
-        # Event ID
-        self.event_id = QtGui.QLineEdit()
-        self.form.addRow('Event ID:', self.event_id)
 
         self.create_menus()
 
@@ -126,7 +129,6 @@ class ReinLoadUnitDialog(LoadUnitDialog):
             self.ai_group.setText(str(unit.ai_group))
         if unit.pack:
             self.pack.setText(unit.pack)
-        self.event_id.setText(unit.event_id)
 
     @staticmethod
     def getUnit(parent, title, instruction, current_unit=None):
@@ -140,7 +142,8 @@ class ReinLoadUnitDialog(LoadUnitDialog):
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = str(dialog.ai_group.text())
-            unit.pack, unit.event_id = str(dialog.pack.text()), str(dialog.event_id.text())
+            unit.pack = str(dialog.pack.text())
+            unit.event_id = next_available_event_id([rein for rein in dialog.unit_data.reinforcements if rein.pack == unit.pack])
             return unit, True
         else:
             return None, False
@@ -368,9 +371,6 @@ class ReinCreateUnitDialog(CreateUnitDialog):
         # Pack
         self.pack = QtGui.QLineEdit()
         self.form.addRow('Pack:', self.pack)
-        # Event ID
-        self.event_id = QtGui.QLineEdit()
-        self.form.addRow('Event ID:', self.event_id)
 
         self.create_menus()
 
@@ -385,7 +385,6 @@ class ReinCreateUnitDialog(CreateUnitDialog):
             self.ai_group.setText(str(unit.ai_group))
         if unit.pack:
             self.pack.setText(unit.pack)
-        self.event_id.setText(unit.event_id)
         # === Items ===
         self.clear_item_box()
         for index, item in enumerate(unit.items):
@@ -409,8 +408,8 @@ class ReinCreateUnitDialog(CreateUnitDialog):
         info['items'] = self.getItems()
         info['ai'] = self.get_ai()
         info['ai_group'] = str(self.ai_group.text())
-        info['event_id'] = str(self.event_id.text())
         info['pack'] = str(self.pack.text())
+        info['event_id'] = next_available_event_id([rein for rein in self.unit_data.reinforcements if rein.pack == info['pack']])
         info['team'] = str(self.team_box.currentText())
         info['generic'] = True
         created_unit = DataImport.Unit(info)
