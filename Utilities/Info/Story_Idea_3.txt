@@ -129,6 +129,68 @@ Any of your dead units also respawn.
 
 - Need to consider what intrigue happens to prepare the reader for Umbrian superweapon. 
 
+Characters:
+Athelwulf of Athria
+Alfred of Athria
+Aelfwynn (Wynn) of Athria
+Adelbert (Bert) of Athria
+
+Lywark of Loria
+Edelyn of Loria
+Llewelyn of Loria
+Elen of Loria
+
+Osric of Umbria
+Olivia of Umbria
+
+Caelwulf of Mercia
+Cedric (Cedd) of Mercia
+Saebbi of Mercia
+
+Millie of Mercia
+
+Nettle of Mercia
+Bjornred of Mercia
+
+Rudolf of Sussex
+
+Ina of Athria
+
+Sigered of Pembroke (Athria)
+Synne of Pembroke (Athria)
+
+Edwin of Umbria
+Eowa of Umbria
+
+Yohannes of Saxony
+Juniper (June) of Saxony
+
+Rhun of Loria
+Frieda of the Northlands
+
+Sorrel of Mercia
+Clover of Mercia
+Iris of Umbria
+
+Audrea of Athria
+Theodric of the Northlands
+Mael of Eiria
+
+Godwin of Umbria
+Ingrid of Umbria
+
+Alder of the Ashdowns
+Nyssa of the Ashdowns
+
+
+
+
+
+
+
+
+
+
 
 - Classes
 - Thief (Sword) -> Assassin (Sword/Bow)
