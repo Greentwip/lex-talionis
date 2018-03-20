@@ -1,7 +1,7 @@
 # Level2 turnChange script
 if;gameStateObj.turncount == 2
 	m;Stalwarts Unite
-	set_cursor;Althea;force_hold
+	set_cursor;Althea
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -19,11 +19,11 @@ if;gameStateObj.turncount == 2
 	convert;Drake;player
 	if;cf.OPTIONS['Display Hints']
 		s;Narrator;Your party has received two new units, Drake and Althea.{w};auto;hint
-		set_cursor;Drake;force_hold
+		set_cursor;Drake
 		disp_cursor;1
 		s;Narrator;Drake is a righteous cavalier.{w}{br}Because he is mounted on a horse, he moves faster than other characters.{w}{br}He can wield both swords and lances.{w};auto;hint
 		disp_cursor;0
-		set_cursor;Althea;force_hold
+		set_cursor;Althea
 		disp_cursor;1
 		s;Narrator;Althea is an anima mage.{w}{br}Unlike light mages, anima mages cannot heal.{w}{br}They do have a variety of other spells at their disposal.{w};auto;hint
 		disp_cursor;0
@@ -32,10 +32,10 @@ if;gameStateObj.turncount == 2
 	add_talk;Ophie;Althea
 # Add turn 4 reinforcements
 elif;gameStateObj.turncount == 4
-	set_cursor;19,13;force_hold
+	set_cursor;19,13
 	wait;200
 	add_unit;S3
 	add_unit;S4
-	set_cursor;S4;force_hold
+	set_cursor;S4
 	wait;500
 end

@@ -3,12 +3,12 @@ m;Awakening - Easy Now
 convert;Eliza;player
 arrange_formation
 # Center
-set_cursor;10,7
-# Elena Shows up
+set_cursor;10,7;immediate
+# Eliza Shows up
 b;Clearing
 t;2
 # Center
-set_cursor;14,11
+set_cursor;14,11;immediate
 u;Joel;Left
 u;Eliza;Right
 s;Joel;How'd ya convince Sam to let you off the leash, lass?{w};auto
@@ -37,7 +37,7 @@ qmove_sprite;Joel;24,0
 u;Drake;FarLeft
 s;Drake;Enough chatter.{w}{br}To your positions! The caravan approaches!{w};auto
 r;Joel;Drake;Eliza;Prim
-set_cursor;Ophie
+set_cursor;Ophie;immediate
 t;1
 remove_background
 t;2

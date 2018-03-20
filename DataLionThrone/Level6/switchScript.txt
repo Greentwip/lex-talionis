@@ -50,7 +50,7 @@ if;gameStateObj.game_constants['switches'] == 2
     replace_tile;o1,1;9
     wait;500
     # To Razia
-    set_cursor;Razia;force_hold
+    set_cursor;Razia
     u;Razia;Left
     s;Razia;They've lowered the gates...{w}{br}Seems I've underestimated this Resistance...{w};auto
     u;Soldier3;Right
@@ -60,5 +60,5 @@ if;gameStateObj.game_constants['switches'] == 2
     r;Soldier3
     s;Razia;Perhaps my blade will taste new blood under this moon...{w};auto
     r;Razia
-    set_cursor;{unit};force_hold
+    set_cursor;{unit}
 end

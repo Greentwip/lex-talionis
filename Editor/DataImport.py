@@ -133,6 +133,8 @@ class Unit(object):
         new_unit.faction = self.faction
         new_unit.name = self.name
         new_unit.generic = self.generic
+        new_unit.pack = self.pack
+        new_unit.event_id = self.event_id
         new_unit.saved = self.saved
         new_unit.position = None
         new_unit.gender = self.gender
@@ -259,7 +261,7 @@ class GlobalData(object):
                 skill.image = skill.image.convert_alpha()
             self.skill_data[skill.id] = skill
 
-        # === Protrait Data ===
+        # === Portrait Data ===
         # Has mouth and blink positions by name
         portrait_dict = SaveLoad.create_portrait_dict()
         # Setting up portrait data

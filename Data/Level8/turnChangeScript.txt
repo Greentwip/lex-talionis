@@ -2,7 +2,7 @@
 # Reinforcements.
 # Vagnius: Bah! Put them down!
 if;gameStateObj.turncount == 1
-	set_cursor;Vagnius;force_hold
+	set_cursor;Vagnius
 	u;Vagnius;Right
 	u;Soldier2;Left
 	s;Vagnius;Ah, so the Resistance has finally shown their faces.{w}{br}After them! I want them strung up!{w}{br}All will see the fate of those who oppose me!{w};auto
@@ -10,14 +10,14 @@ if;gameStateObj.turncount == 1
 	r;Soldier2;Vagnius
 elif;gameStateObj.turncount == 3
 	# Wyvern Riders
-	set_cursor;30,27;force_hold
+	set_cursor;30,27
 	wait;200
 	add_unit;d3_1
 	add_unit;d3_2
 	add_unit;d3_3
 	wait;500
 elif;gameStateObj.turncount == 4
-	set_cursor;Vagnius;force_hold
+	set_cursor;Vagnius
 	u;Vagnius;Right
 	u;Soldier2;Left
 	s;Vagnius;Bah! What is taking so long? Put them down!{w};auto
@@ -33,7 +33,7 @@ elif;gameStateObj.turncount == 4
 	wait;500
 elif;gameStateObj.turncount == 5
 	# Wyvern Riders
-	set_cursor;30,27;force_hold
+	set_cursor;30,27
 	wait;200
 	add_unit;d5_1
 	add_unit;d5_2
@@ -61,7 +61,7 @@ elif;gameStateObj.turncount == 6
 	#wait;500
 elif;gameStateObj.turncount == 7
 	# Wyvern Riders
-	#set_cursor;30,27;force_hold
+	#set_cursor;30,27
 	#wait;200
 	#add_unit;d7_1
 	#add_unit;d7_2
@@ -91,7 +91,7 @@ elif;gameStateObj.turncount == 8
 	battle_save
 elif;gameStateObj.turncount == 9
 	# Wyvern Riders
-	#set_cursor;30,27;force_hold
+	#set_cursor;30,27
 	#wait;200
 	#add_unit;d9_1
 	#add_unit;d9_2
@@ -112,7 +112,7 @@ elif;gameStateObj.turncount == 10
 	wait;500
 elif;gameStateObj.turncount == 11
 	# Wyvern Riders
-	#set_cursor;30,27;force_hold
+	#set_cursor;30,27
 	#wait;200
 	#add_unit;d11_1
 	#add_unit;d11_2

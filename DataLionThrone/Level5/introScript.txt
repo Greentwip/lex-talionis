@@ -2,13 +2,13 @@
 m;Mount Briggs
 add_unit;N1
 add_unit;N2
-set_cursor;Vagnius
+set_cursor;Vagnius;immediate
 t;2
 map_pan
-set_cursor;Vincent;force_hold
+set_cursor;Vincent
 move_unit;Vincent;23,3
 start_move
-set_cursor;Vincent;force_hold
+set_cursor;Vincent
 disp_cursor;1
 wait;500
 disp_cursor;0
@@ -53,7 +53,7 @@ t;2
 # Add player units
 add_unit;Ophie;3,15
 arrange_formation
-set_cursor;Ophie
+set_cursor;Ophie;immediate
 u;Ophie;MidLeft
 u;Prim;FarLeft
 s;Ophie;The trail stops here.{w};auto
@@ -63,7 +63,7 @@ r;Prim
 u;Eliza;FarLeft
 s;Eliza;Look alive, people!{w}{br}Bandits!{w};auto
 r;Eliza;Ophie
-set_cursor;Jules
+set_cursor;Jules;immediate
 t;1
 remove_background
 t;2
@@ -72,7 +72,7 @@ wait;500
 disp_cursor;0
 move_unit;Jules;5,14
 start_move
-set_cursor;Ophie;force_hold
+set_cursor;Ophie
 t;1
 b;Desert
 t;2
@@ -86,10 +86,10 @@ r;Jules;Ophie;Prim
 t;1
 remove_background
 t;2
-set_cursor;Jules;force_hold
+set_cursor;Jules
 move_unit;Jules;9,5
 start_move
-set_cursor;Ophie;force_hold
+set_cursor;Ophie
 u;Ophie;Left
 s;Ophie;Come on. There's no time to waste!{w};auto
 r;Ophie

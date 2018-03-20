@@ -10,7 +10,7 @@ if;gameStateObj.turncount == 1
 	wait;100
 	set_game_constant;switches;1
 	map_pan
-	set_cursor;Ophie;force_hold
+	set_cursor;Ophie
 	u;Ophie;Left;u;Sam;Right
 	s;Ophie;Woah... What is this place...{w};auto
 	s;Sam;I'm sure there's a rational explanation.{w};auto
@@ -20,107 +20,107 @@ if;gameStateObj.turncount == 1
 	r;Sam;Ophie
 elif;gameStateObj.turncount == 4
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p3_1;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p3_2;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p3_3;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p3_4;next;warp
 	wait;500
-	set_cursor;Ophie;force_hold
+	set_cursor;Ophie
 	u;Ophie;Left
 	s;Ophie;More of these goons...{w}{br}Can't we ever sneak into somewhere undetected for once.{w};auto
 	r;Ophie
 elif;gameStateObj.turncount == 7
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p5_1;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p5_2;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p5_3;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p5_4;next;warp
 	wait;500
 elif;gameStateObj.turncount == 9
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p7_1;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p7_2;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p7_3;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p7_4;next;warp
 	wait;500
 elif;gameStateObj.turncount == 11
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p9_1;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p9_2;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p9_3;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p9_4;next;warp
 	wait;500
 elif;gameStateObj.turncount == 14
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_1;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_2;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_3;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_4;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_5;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_6;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_7;next;warp
 	wait;500
 	set_next_position;r0;closest
-	set_cursor;next;force_hold
+	set_cursor;next
 	add_unit;p11_8;next;warp
 	wait;500
 elif;gameStateObj.turncount >= 16

@@ -47,7 +47,7 @@ enemy;0;0;Razia;12,2;SoftGuard
 # Razia's Guards
 enemy;0;0;Shaman;10;Flux,Stun;6,3;SoftGuard;Guard
 enemy;0;0;Shaman;10;Flux,Stun;18,3;SoftGuard;Guard
-enemy;0;0;Sniper;11;Yew Bow;12,5;SoftGuard;Guard
+enemy;0;0;Sniper;1;Yew Bow;12,5;SoftGuard;Guard
 ### Top - 14 at top
 # At Door
 enemy;0;0;Shaman;7;Flux,Scathe;6,9;SoftGuard;Guard

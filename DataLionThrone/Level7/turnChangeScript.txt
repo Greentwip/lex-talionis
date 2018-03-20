@@ -2,8 +2,8 @@
 # Turn 3
 if;not gameStateObj.check_dead('Marduk') and not 'MercRein' in gameStateObj.level_constants and (gameStateObj.turncount == 3 or any(unit.position[0] - unit.position[1] < 15 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
 	m;Brave Story 27
-	set_cursor;0,27;force_hold
-	set_cursor;Marduk
+	set_cursor;0,27
+	set_cursor;Marduk;immediate
 	wait;200
 	disp_cursor;1
 	wait;500
@@ -26,8 +26,8 @@ if;not gameStateObj.check_dead('Marduk') and not 'MercRein' in gameStateObj.leve
 # Turn 7
 elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.level_constants and not 'BanditRein' in gameStateObj.level_constants and (gameStateObj.turncount >= 8 or any(unit.position[0] - unit.position[1] < 6 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
 	m;Brave Story 27
-	set_cursor;0,27;force_hold
-	set_cursor;Marduk
+	set_cursor;0,27
+	set_cursor;Marduk;immediate
 	wait;200
 	disp_cursor;1
 	wait;500
@@ -42,14 +42,14 @@ elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.level_
 	r;Soldier2
 	s;Marduk;He really sucks all the dramatic tension out of the moment.{w}{br}I'd fire him, I really would.{w}{br}But its so hard to find good help these days...{w};auto
 	r;Marduk
-	set_cursor;0,0;force_hold
+	set_cursor;0,0
 	wait;500
 	add_unit;bandit1
 	add_unit;bandit2
 	add_unit;bandit3
 	add_unit;bandit4
 	wait;1000
-	set_cursor;27,23;force_hold
+	set_cursor;27,23
 	wait;500
 	add_unit;bandit5
 	add_unit;bandit6
@@ -59,8 +59,8 @@ elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.level_
 	set_level_constant;BanditRein
 elif;not gameStateObj.check_dead('Marduk') and 'BanditRein' in gameStateObj.level_constants and not 'WyvernRein' in gameStateObj.level_constants and (gameStateObj.turncount >= 14 or any(unit.position[0] - unit.position[1] < -7 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
 	m;Brave Story 27
-	set_cursor;0,27;force_hold
-	set_cursor;Marduk
+	set_cursor;0,27
+	set_cursor;Marduk;immediate
 	wait;200
 	disp_cursor;1
 	wait;500
@@ -79,28 +79,28 @@ elif;not gameStateObj.check_dead('Marduk') and 'BanditRein' in gameStateObj.leve
 	r;Soldier2
 	s;Marduk;In one fell swoop, the Resistance will be defeated,{w}{br}and I, Marduk, will garner the credit I so rightfully deserve!{w};auto
 	r;Marduk
-	set_cursor;0,0;force_hold
+	set_cursor;0,0
 	wait;200
 	add_unit;wr1_1
 	add_unit;wr1_2
 	add_unit;wr1_3
 	add_unit;wr1_4
 	wait;500
-	set_cursor;27,0;force_hold
+	set_cursor;27,0
 	wait;200
 	add_unit;wr2_1
 	add_unit;wr2_2
 	add_unit;wr2_3
 	add_unit;wr2_4
 	wait;500
-	set_cursor;27,23;force_hold
+	set_cursor;27,23
 	wait;200
 	add_unit;wr3_1
 	add_unit;wr3_2
 	add_unit;wr3_3
 	add_unit;wr3_4
 	wait;500
-	#set_cursor;0,23;force_hold
+	#set_cursor;0,23
 	#wait;200
 	#add_unit;wr4_1
 	#add_unit;wr4_2
@@ -110,7 +110,7 @@ elif;not gameStateObj.check_dead('Marduk') and 'BanditRein' in gameStateObj.leve
 	set_level_constant;WyvernRein
 	battle_save
 elif;gameStateObj.turncount >= 15 and gameStateObj.turncount%2
-    set_cursor;27,0;force_hold
+    set_cursor;27,0
     wait;500
     create_unit;w2;gameStateObj.turncount - 4;26,0
     create_unit;w1;gameStateObj.turncount - 4;25,0
@@ -120,14 +120,14 @@ elif;gameStateObj.turncount >= 15 and gameStateObj.turncount%2
     create_unit;w1;gameStateObj.turncount - 4;27,3
     wait;1000
     if;gameStateObj.turncount >= 19
-        set_cursor;0,0;force_hold
+        set_cursor;0,0
         wait;500
         create_unit;w2;gameStateObj.turncount - 4;1,0
         create_unit;w1;gameStateObj.turncount - 4;2,0
         create_unit;w2;gameStateObj.turncount - 4;0,2
         create_unit;w1;gameStateObj.turncount - 4;0,1
         wait;1000
-        set_cursor;27,23;force_hold
+        set_cursor;27,23
         wait;500
         create_unit;w2;gameStateObj.turncount - 4;27,21
         create_unit;w1;gameStateObj.turncount - 4;27,22

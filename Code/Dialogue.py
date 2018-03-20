@@ -540,7 +540,7 @@ class Dialogue_Scene(object):
                     gameStateObj.stateMachine.changeState('movement')
 
         # === HANDLE CURSOR
-        elif line[0] in ['set_cursor', 'move_cursor']:
+        elif line[0] in 'set_cursor':
             if line[1].startswith('o') and "," in line[1]:
                 coord = self.parse_pos(line[1][1:])
                 if gameStateObj.map.origin:
@@ -560,7 +560,7 @@ class Dialogue_Scene(object):
                     logger.error("Couldn't find unit %s", line[1])
                     return
             gameStateObj.cursor.setPosition(coord, gameStateObj)
-            if (line[0] == 'move_cursor' or 'force_hold' in line) and not self.do_skip:
+            if 'immediate' not in line and not self.do_skip:
                 gameStateObj.stateMachine.changeState('move_camera')
                 self.current_state = "Paused"
         # Display Cursor 1 is yes, 0 is no

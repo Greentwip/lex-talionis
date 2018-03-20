@@ -1,5 +1,6 @@
 from PyQt4 import QtGui, QtCore
 import sys
+from itertools import count
 sys.path.append('../')
 import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
@@ -58,6 +59,12 @@ def setComboBox(combo_box, value):
     i = combo_box.findText(value)
     if i >= 0:
         combo_box.setCurrentIndex(i)
+
+# === Event ID ===
+def next_available_event_id(reinforcements):
+    for num in count(start=1):
+        if not any(rein.event_id == num for rein in reinforcements):
+            return num
 
 # === MAKE PRETTY ===
 def stretch(grid):

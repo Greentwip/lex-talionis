@@ -154,10 +154,12 @@ class MainView(QtGui.QGraphicsView):
             # painter.drawLine(end[0] * 16 + 7, end[1] * 16 + 7, right_x * 16 + 7, right_y * 16 + 7)
 
         def draw(painter, start, end, unit, alpha):
-            if unit.team == 'enemy':
-                color = QtGui.QColor(248, 72, 0, alpha)
+            if unit.team == 'player':
+                color = QtGui.QColor(0, 144, 144, alpha)
+            elif unit.team == 'other':
+                color = QtGui.QColor(0, 248, 0, alpha)
             else:
-                color = QtGui.QColor(0, 248, 248, alpha)
+                color = QtGui.QColor(248, 72, 0, alpha)
             pen.setColor(color)
             painter.setPen(pen)
             painter.drawLine(start[0] * 16 + 7, start[1] * 16 + 7, end[0] * 16 + 7, end[1] * 16 + 7)
@@ -165,6 +167,7 @@ class MainView(QtGui.QGraphicsView):
 
         if self.working_image:
             current_trigger_name = self.window.trigger_menu.get_current_trigger_name()
+            current_pack = self.window.reinforcement_menu.current_pack()
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
             pen = QtGui.QPen(QtCore.Qt.blue, 2, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap)
@@ -172,7 +175,7 @@ class MainView(QtGui.QGraphicsView):
                 alpha = 255 if current_trigger_name == trigger_name else 120
                 for unit, (start, end) in trigger.units.items():
                     if (self.window.dock_visibility['Units'] and unit in self.unit_data.units) or \
-                       (self.window.dock_visibility['Reinforcements'] and unit in self.unit_data.reinforcements):
+                       (self.window.dock_visibility['Reinforcements'] and unit in self.unit_data.reinforcements and unit.pack == current_pack):
                             draw(painter, start, end, unit, alpha)    
             # Draw current
             current_arrow = self.window.trigger_menu.get_current_arrow()
@@ -291,6 +294,8 @@ class MainView(QtGui.QGraphicsView):
                         if current_unit.position:
                             print('Copy & Place Unit')
                             new_unit = current_unit.copy()
+                            pack_mates = [rein for rein in self.unit_data.reinforcements if rein.pack == new_unit.pack]
+                            new_unit.event_id = EditorUtilities.next_available_event_id(pack_mates)
                             new_unit.position = pos
                             self.unit_data.add_reinforcement(new_unit)
                             self.window.reinforcement_menu.add_unit(new_unit)
@@ -611,7 +616,10 @@ class MainEditor(QtGui.QMainWindow):
             return item_str
 
         def write_unit_line(unit):
-            pos_str = ','.join(str(p) for p in unit.position)
+            if unit.position:
+                pos_str = ','.join(str(p) for p in unit.position)
+            else:
+                pos_str = 'None'
             ai_str = unit.ai + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
             event_id_str = (unit.pack + '_' + str(unit.event_id) if unit.pack else str(unit.event_id)) if unit.event_id else '0'
             if unit.generic:

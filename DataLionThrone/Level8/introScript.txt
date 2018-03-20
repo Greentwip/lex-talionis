@@ -2,7 +2,7 @@
 # 
 # A villager arrives, telling that they're under attack. Everyone get ready.
 m;Mount Briggs
-set_cursor;Vagnius
+set_cursor;Vagnius;immediate
 b;TacticsRoom
 t;2
 u;Sam;Left;u;Woman2;Right
@@ -28,7 +28,7 @@ t;1
 remove_background
 t;2
 map_pan
-set_cursor;Vagnius;force_hold
+set_cursor;Vagnius
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -42,12 +42,12 @@ s;Soldier2;Yes, milord.{w};auto
 r;Soldier2
 s;Vagnius;If you want something done right, you have to do it yourself.{w}{br}My underlings have failed to annihilate the pesky Resistance.{w}{br}But I shall not.{w}{br}By the end of today, the Resistance will be no more.{w}{br}And I will be one step closer to my final goal!{w};auto
 r;Vagnius
-set_cursor;0,12;force_hold
+set_cursor;0,12
 t;1
 b;TownDark
 t;2
 arrange_formation
-set_cursor;Ophie
+set_cursor;Ophie;immediate
 u;Sam;OffscreenLeft
 u;Ophie;OffscreenLeft
 qmove_sprite;Sam;72,0

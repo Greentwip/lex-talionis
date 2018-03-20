@@ -40,7 +40,7 @@ t;1
 remove_background
 t;2
 # Pan to village. Pan over to Althea and Drake fighting Imperial Soldiers
-set_cursor;Drake;force_hold
+set_cursor;Drake
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -65,7 +65,7 @@ r;Drake;Althea
 wait;500
 # Pan to top of map
 # OPJN show up
-set_cursor;0,0;force_hold
+set_cursor;0,0
 disp_cursor;1
 wait;500
 disp_cursor;0
@@ -87,7 +87,7 @@ s;Ophie;He won't be alone for long!{w};auto
 r;Ophie;Prim;Joel
 # Pan to Boss
 m;Brave Story 27
-set_cursor;Brigham;force_hold
+set_cursor;Brigham
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -100,4 +100,4 @@ s;Soldier1;Of course not, sir!{w};auto
 r;Soldier1
 s;Brigham;When this day is done, the Empire's hold in Kerala will finally be secured!{w};auto
 r;Brigham
-set_cursor;Ophie;force_hold
+set_cursor;Ophie

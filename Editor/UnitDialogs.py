@@ -1,5 +1,4 @@
 import sys
-from itertools import count
 from PyQt4 import QtGui, QtCore
 
 sys.path.append('../')
@@ -13,11 +12,6 @@ import DataImport
 from DataImport import Data
 import EditorUtilities
 from CustomGUI import GenderBox
-
-def next_available_event_id(reinforcements):
-    for num in count(start=0):
-        if not any(rein.event_id == num for rein in reinforcements):
-            return num
 
 class LoadUnitDialog(QtGui.QDialog):
     def __init__(self, instruction, parent):
@@ -114,7 +108,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         self.form.addRow(QtGui.QLabel(instruction))
 
         # Pack
-        self.pack = QtGui.QLineEdit()
+        self.pack = QtGui.QLineEdit(parent.current_pack())
         self.form.addRow('Pack:', self.pack)
 
         self.create_menus()
@@ -143,7 +137,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = str(dialog.ai_group.text())
             unit.pack = str(dialog.pack.text())
-            unit.event_id = next_available_event_id([rein for rein in dialog.unit_data.reinforcements if rein.pack == unit.pack])
+            unit.event_id = EditorUtilities.next_available_event_id([rein for rein in dialog.unit_data.reinforcements if rein.pack == unit.pack])
             return unit, True
         else:
             return None, False
@@ -223,7 +217,6 @@ class CreateUnitDialog(QtGui.QDialog):
         EditorUtilities.setComboBox(self.faction_select, unit.faction)
         self.level.setValue(unit.level)
         self.gender.setValue(unit.gender)
-        print(unit.team)
         EditorUtilities.setComboBox(self.team_box, unit.team)
         EditorUtilities.setComboBox(self.class_box, unit.klass)
         EditorUtilities.setComboBox(self.ai_select, unit.ai)
@@ -348,9 +341,9 @@ class CreateUnitDialog(QtGui.QDialog):
         created_unit = DataImport.Unit(info)
         return created_unit
 
-    @staticmethod
-    def getUnit(parent, title, instruction, current_unit=None):
-        dialog = CreateUnitDialog(instruction, parent.unit_data, parent)
+    @classmethod
+    def getUnit(cls, parent, title, instruction, current_unit=None):
+        dialog = cls(instruction, parent.unit_data, parent)
         if current_unit:
             dialog.load(current_unit)
         dialog.setWindowTitle(title)
@@ -369,7 +362,7 @@ class ReinCreateUnitDialog(CreateUnitDialog):
         self.unit_data = unit_data
 
         # Pack
-        self.pack = QtGui.QLineEdit()
+        self.pack = QtGui.QLineEdit(parent.current_pack())
         self.form.addRow('Pack:', self.pack)
 
         self.create_menus()
@@ -394,6 +387,9 @@ class ReinCreateUnitDialog(CreateUnitDialog):
             event_box.setChecked(item.event_combat)
             item_box.setCurrentIndex(Data.item_data.keys().index(item.id))
 
+        self.team_changed(0)
+        self.gender_changed(unit.gender)
+
     def create_unit(self):
         info = {}
         info['faction'] = str(self.faction_select.currentText())
@@ -409,7 +405,7 @@ class ReinCreateUnitDialog(CreateUnitDialog):
         info['ai'] = self.get_ai()
         info['ai_group'] = str(self.ai_group.text())
         info['pack'] = str(self.pack.text())
-        info['event_id'] = next_available_event_id([rein for rein in self.unit_data.reinforcements if rein.pack == info['pack']])
+        info['event_id'] = EditorUtilities.next_available_event_id([rein for rein in self.unit_data.reinforcements if rein.pack == info['pack']])
         info['team'] = str(self.team_box.currentText())
         info['generic'] = True
         created_unit = DataImport.Unit(info)

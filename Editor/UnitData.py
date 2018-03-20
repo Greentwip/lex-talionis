@@ -97,7 +97,7 @@ class UnitData(object):
         for idx, rein in enumerate(self.reinforcements):
             if rein.position == pos and rein.pack == pack:
                 return idx
-        #print('Could not find unit at %s, %s' % (pos[0], pos[1]))
+        # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
         return -1
 
     def get_unit_str(self, pos):
@@ -162,6 +162,7 @@ class UnitData(object):
         if legend['event_id'] != "0": # unit does not start on board
             if '_' in legend['event_id']:
                 cur_unit.pack, cur_unit.event_id = legend['event_id'].split('_')
+                cur_unit.event_id = int(cur_unit.event_id)
             else:
                 cur_unit.pack, cur_unit.event_id = legend['event_id'], 1
             self.reinforcements.append(cur_unit)
@@ -227,7 +228,9 @@ class UnitData(object):
         u_i = {}
         u_i['id'] = GC.U_ID
         u_i['team'] = legend['team']
-        u_i['event_id'] = legend['event_id'] if legend['event_id'] != "0" else None
+        if '_' in legend['event_id']:
+            u_i['pack'], u_i['event_id'] = legend['event_id'].split('_')
+            u_i['event_id'] = int(u_i['event_id'])
         if legend['class'].endswith('F'):
             legend['class'] = legend['class'][:-1] # strip off the F
             u_i['gender'] = 5  # Default female gender is 5
@@ -264,7 +267,7 @@ class UnitData(object):
 
         # Reposition units
         cur_unit.position = u_i['position']
-        if u_i['event_id']: # Unit does not start on board
+        if legend['event_id'] != '0': # Unit does not start on board
             self.reinforcements.append(cur_unit)
         else: # Unit does start on board
             self.units.append(cur_unit)
@@ -502,6 +505,10 @@ class ReinforcementMenu(UnitMenu):
         hbox.addWidget(self.pack_view_combobox)
         self.grid.addLayout(hbox, 0, 0)
 
+        self.duplicate_group_button = QtGui.QPushButton('Duplicate Group')
+        self.duplicate_group_button.clicked.connect(self.duplicate_current_pack)
+        self.grid.addWidget(self.duplicate_group_button, 5, 0)
+
         self.list.setSortingEnabled(True)
 
     # def trigger(self):
@@ -525,7 +532,7 @@ class ReinforcementMenu(UnitMenu):
             self.view.center_on_pos(unit.position)
 
     def current_pack(self):
-        return self.pack_view_combobox.currentText()
+        return str(self.pack_view_combobox.currentText())
 
     def load(self, unit_data):
         self.clear()
@@ -551,7 +558,7 @@ class ReinforcementMenu(UnitMenu):
         return item
 
     def load_unit(self):
-        loaded_unit, ok = UnitDialogs.ReinLoadUnitDialog.getUnit(self, "Load Unit", "Select unit:")
+        loaded_unit, ok = UnitDialogs.ReinLoadUnitDialog.getUnit(self, "Load Reinforcement", "Select reinforcement:")
         if ok:
             self.unit_data.add_reinforcement(loaded_unit)
             self.add_unit(loaded_unit)
@@ -559,16 +566,14 @@ class ReinforcementMenu(UnitMenu):
 
     def create_unit(self):
         if self.unit_data.factions:
-            created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
+            created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Reinforcement", "Enter values for reinforcement:")
             if ok:
                 self.unit_data.add_reinforcement(created_unit)
                 self.add_unit(created_unit)            
                 self.window.update_view()
         else:
             # Show pop-up
-            message_box = QtGui.QMessageBox()
-            message_box.setText("Must create at least one faction to use generic units!")
-            message_box.exec_()
+            QtGui.QErrorMessage().showMessage("Must create at least one faction to use generic units!")
 
     def remove_unit(self):
         unit_idx = self.list.currentRow()
@@ -591,9 +596,9 @@ class ReinforcementMenu(UnitMenu):
         idx = self.list.row(item)
         unit = self.unit_data.reinforcements[idx]
         if unit.generic:
-            modified_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:", unit)
+            modified_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Reinforcement", "Enter values for reinforcement:", unit)
         else:
-            modified_unit, ok = UnitDialogs.ReinLoadUnitDialog.getUnit(self, "Load Unit", "Select unit:", unit)
+            modified_unit, ok = UnitDialogs.ReinLoadUnitDialog.getUnit(self, "Load Reinforcement", "Select reinforcement:", unit)
         if ok:
             modified_unit.position = unit.position
             # Replace unit
@@ -610,6 +615,26 @@ class ReinforcementMenu(UnitMenu):
         item = self.create_item(unit)
         self.list.addItem(item)
         self.list.setCurrentRow(self.list.row(item))
+
+    def duplicate_current_pack(self):
+        current_pack = self.current_pack()  # Need to be saved since it changes within this function's for loop
+        new_name, ok = QtGui.QInputDialog.getText(self, "Duplicate Group", 'Enter name of duplicated group:',
+                                                  text=current_pack if current_pack else "")
+        if ok:
+            if not any(rein.pack == new_name for rein in self.unit_data.reinforcements):
+                counter = 0
+                for idx, unit in enumerate(self.unit_data.reinforcements):
+                    if unit.pack == current_pack:
+                        counter += 1
+                        created_unit = unit.copy()
+                        created_unit.pack = new_name
+                        created_unit.event_id = counter
+                        self.unit_data.add_reinforcement(created_unit)
+                        self.add_unit(created_unit)              
+                self.window.update_view()
+            else:
+                # Show pop-up
+                QtGui.QErrorMessage().showMessage("Must use new name for duplicated group!")
 
     def tick(self, current_time):
         if GC.PASSIVESPRITECOUNTER.update(current_time):

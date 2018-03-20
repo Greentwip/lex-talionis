@@ -19,7 +19,7 @@ s;Sam;Coyote, you said this passage was abandoned.{w};auto
 s;Coyote;Old, not abandoned.{w};auto
 s;Sam;Ugh...{w}{br}Everyone, be on your guard.{w}{br}We don't want any surprises.{w};auto
 r;Joel;Nia;Sam;Coyote
-set_cursor;0,30
+set_cursor;0,30;immediate
 end_skip
 t;1
 remove_background
@@ -33,7 +33,7 @@ move_unit;Althea;3,27
 move_unit;Sam;3,28
 move_unit;Joel;1,27
 start_move
-set_cursor;Ophie;force_hold
+set_cursor;Ophie
 u;Ophie;MidLeft
 s;Ophie;Woah!{w};auto
 u;Joel;FarLeft
@@ -48,7 +48,7 @@ r;Sam;Althea
 m;Combat Theme 4
 add_unit;Jakin;6,26;warp
 add_unit;Boaz;6,28;warp
-set_cursor;Jakin;force_hold
+set_cursor;Jakin
 disp_cursor;1
 wait;1000
 disp_cursor;0

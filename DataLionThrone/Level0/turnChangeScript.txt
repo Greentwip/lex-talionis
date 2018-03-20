@@ -3,7 +3,7 @@
 if;gameStateObj.turncount == 1
 	if;cf.OPTIONS['Display Hints']
 		tutorial_mode;Wait
-		set_cursor;0,0
+		set_cursor;0,0;immediate
 		s;Narrator;Your units are blue.{w}{br}Enemy units are red.{w}{br}Ally units are green.{w}{br}To win this chapter, both of your blue units must escape.{w};auto;hint
 		# Show Highlight
 		display_cursor;1
@@ -15,14 +15,14 @@ if;gameStateObj.turncount == 1
 	s;Prim;Ophie, let's go! We need to run!{w};auto
 	s;Ophie;Right.{w};auto
 	r;Prim;Ophie
-	set_cursor;Ophie
+	set_cursor;Ophie;immediate
 elif;gameStateObj.turncount == 2
 	m;Meet the Sage
-	set_cursor;Yohn;force_hold
-	set_cursor;13,5;force_hold
+	set_cursor;Yohn
+	set_cursor;13,5
 	move_unit;Yohn;13,5
 	start_move
-	set_cursor;S1;force_hold
+	set_cursor;S1
 	move_unit;S1;14,5
 	start_move
 	# Swordmaster dude approaches enemies!
@@ -37,11 +37,11 @@ elif;gameStateObj.turncount == 2
 	s;Yohn;My blade sings once again.{w}{br}It is a pity one so young had to suffer for it.{w};auto
 	r;Yohn
 	# Pan to Ophie and Prim
-	set_cursor;0,0;force_hold
+	set_cursor;0,0
 	add_unit;E1;0,4
 	move_unit;E1;4,5
 	start_move
-	set_cursor;E1
+	set_cursor;E1;immediate
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -55,7 +55,7 @@ elif;gameStateObj.turncount == 2
 	# Hint
 	if;cf.OPTIONS['Display Hints']
 		tutorial_mode;Attack
-		set_cursor;E1;force_hold
+		set_cursor;E1
 		disp_cursor;1
 		s;Narrator;You'll need to defeat this fighter to proceed. Select Ophie first.{w};auto;hint
 		disp_cursor;0
@@ -63,7 +63,7 @@ elif;gameStateObj.turncount == 2
 # Begin turn 3
 elif;gameStateObj.turncount == 3
 	m;Meet the Sage
-	set_cursor;Vagnius;force_hold
+	set_cursor;Vagnius
 	move_unit;S2;14,5
 	move_unit;S3;13,4
 	start_move
@@ -84,12 +84,12 @@ elif;gameStateObj.turncount == 3
 	interact_unit;S3;Yohn
 	wait;500
 	# Back to Prim
-	set_cursor;0,4;force_hold
+	set_cursor;0,4
 	wait;500
 	add_unit;E2;0,4
 	move_unit;E2;2,4
 	start_move
-	set_cursor;2,4
+	set_cursor;2,4;immediate
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -110,7 +110,7 @@ elif;gameStateObj.turncount == 3
 # Begin turn 4
 elif;gameStateObj.turncount == 4 
 	m;Mount Briggs
-	set_cursor;Vagnius;force_hold
+	set_cursor;Vagnius
 	move_unit;Yohn;18,5
 	start_move
 	u;Yohn;Left
@@ -125,7 +125,7 @@ elif;gameStateObj.turncount == 4
 	s;Yohn;...{w};auto
 	r;Yohn
 	remove_unit;Yohn
-	set_cursor;Ophie;force_hold
+	set_cursor;Ophie
 	u;Ophie;MidLeft
 	s;Ophie;NO!! Master Yohn!{w};auto
 	move_sprite;Ophie;144,0

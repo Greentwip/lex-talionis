@@ -6,7 +6,7 @@ if;cf.OPTIONS['Display Hints']
 			move_unit;Ophie;9,9;immediate
 			reset_state
 			reset_unit;{unit}
-			set_cursor;Ophie;force_hold
+			set_cursor;Ophie
 			u;Prim;Right;u;Ophie;Left
 			s;Prim;We need to go, Ophie!{w}{br}Let's get as far from here as possible while we can.{w};auto
 			s;Ophie;I heard him too, Prim.{w};auto
@@ -16,7 +16,7 @@ if;cf.OPTIONS['Display Hints']
 			move_unit;Prim;10,9;immediate
 			reset_state
 			reset_unit;{unit}
-			set_cursor;Prim;force_hold
+			set_cursor;Prim
 			u;Prim;Right
 			s;Prim;No, that's not right... I need to move as far as possible...{w};auto
 			r;Prim
@@ -33,7 +33,7 @@ if;cf.OPTIONS['Display Hints']
 				move_unit;Ophie;prev_pos;immediate
 				reset_state
 				reset_unit;{unit}
-				set_cursor;Ophie;force_hold
+				set_cursor;Ophie
 				s;Narrator;Ophie needs to be adjacent to the enemy to attack.{w};auto
 			end
 		# Prim is adjacent to Ophie
@@ -46,7 +46,7 @@ if;cf.OPTIONS['Display Hints']
 			move_unit;Prim;prev_pos;immediate
 			reset_state
 			reset_unit;{unit}
-			set_cursor;Prim;force_hold
+			set_cursor;Prim
 		end
 	end
 end

@@ -82,6 +82,7 @@ remove_background
 t;2
 end_skip
 # TODO: Eirika and Seth arrive
+trigger;Eirika
 set_cursor;Eirika
 disp_cursor;1
 wait;1000

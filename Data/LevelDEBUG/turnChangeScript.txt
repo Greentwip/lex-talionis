@@ -1,6 +1,32 @@
-# Franz says "Are you okay? *Pause* Are you feeling will?" and Eirika replies "Oh no!"
-u;Eirika;Right;u;Franz;Left
-s;Franz;Are you okay?{w}{br}Are you feeling well?
-s;Eirika;Oh no!
-r;Eirika;Franz
-wait;500
+if;gameStateObj.turncount == 2
+    # Move Franz and Gilliam into the game
+    trigger;Franz
+    # Hover cursor over Franz
+    set_cursor;Franz
+    disp_cursor;1
+    wait;1000
+    disp_cursor;0
+    # Franz and Gilliam converse
+    u;Franz;Left;u;Gilliam;Right
+    s;Franz;Sir Gilliam, is that Mulan? Have we reached Frelia's border already?
+    s;Gilliam;Aye, we have. Her Highness Princess Tana should be inside the castle.
+    s;Franz;But look--the countryside is crawling with Grado soldiers!{w}{br}Where's the castle guard? Has Mulan fallen? Are we too late?
+    s;Gilliam;Too tough to say from here.{w}{br}Princess Tana's in no danger if they want her as a bargaining tool.{w}{br}We men of the Eastern Watch will see her to safety.
+    s;Franz;Yes... Yes, of course.{br}We mustn't give up. We must move.{w}{br}We must retake the castle. Then, we ride forth to Princess Eirika's aid.
+    s;Gilliam;I've stronger armor than you do. I'll take the lead. Watch my back.
+    r;Franz;Gilliam
+end
+if;gameStateObj.get_unit_from_name('Eirika').position[0] <= 7 and 'EnemyRein' not in gameStateObj.level_constants
+    # Move reinforcements into the game
+    trigger;EnemyRein
+    # Hover cursor over main soldier; (13, 9) is final position of soldier
+    set_cursor;13,9
+    disp_cursor;1
+    wait;1000
+    disp_cursor;0
+    # Announcement
+    u;Soldier2;Left
+    s;Soldier2;I've found them! Straggers from Renais! Don't let them get away.
+    r;Soldier2
+    set_level_constant;EnemyRein
+end

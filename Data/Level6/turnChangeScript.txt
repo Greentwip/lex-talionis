@@ -2,7 +2,7 @@
 if;gameStateObj.turncount == 1
     m;Combat Theme 4
     # Coyote and Kiley discuss breaking out...
-    set_cursor;Coyote;force_hold
+    set_cursor;Coyote
     disp_cursor;1
     wait;1000
     disp_cursor;0
@@ -26,16 +26,16 @@ if;gameStateObj.turncount == 1
     remove_background
     t;2
     # Sam talks about Switches
-    set_cursor;Sam;force_hold
+    set_cursor;Sam
     u;Sam;Left
     u;Ophie;Right
     s;Sam;Damn! We've been spotted.{w}{br}Okay, everyone, get a hold of yourself.{w}{br}We need to get across that chasm.{w}{br}There should be switches around here that open the gates.{w}{br}We need to pull them or we're never getting across.{w};auto
     s;Ophie;You got it!{w};auto
     r;Sam;Ophie
-    set_cursor;Ophie;force_hold
+    set_cursor;Ophie
 elif;gameStateObj.turncount == 2
     # Razia/Soldier
-    set_cursor;Razia;force_hold
+    set_cursor;Razia
     disp_cursor;1
     wait;1000
     disp_cursor;0
@@ -52,7 +52,7 @@ elif;gameStateObj.turncount == 2
     r;Razia
     # On Turn 2, randoms
     m;Best Detectives
-    set_cursor;C1_2;force_hold
+    set_cursor;C1_2
     disp_cursor;1
     wait;1000
     disp_cursor;0

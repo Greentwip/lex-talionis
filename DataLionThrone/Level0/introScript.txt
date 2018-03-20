@@ -11,9 +11,9 @@ add_unit;S2
 add_unit;S3
 t;2
 set_camera_pan;1
-set_cursor;Vagnius;force_hold
+set_cursor;Vagnius
 set_camera_pan;0
-set_cursor;S1
+set_cursor;S1;immediate
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -41,7 +41,7 @@ move_unit;Sidney;16,3
 move_unit;F1;15,2
 move_unit;F2;15,4
 start_move
-set_cursor;Sidney
+set_cursor;Sidney;immediate
 u;Sidney;Right
 u;OldMan1;Left
 s;Sidney;Hey! Tough guy.{w}{br}Last chance. Anything coming to mind now?{w};auto
@@ -66,7 +66,7 @@ s;Vagnius;Let this be an example to those who would defy the Empire's might!{w}{
 r;Sidney;Vagnius
 # Pan to bottom of screen
 m;Meet the Sage
-set_cursor;10,9;force_hold
+set_cursor;10,9
 add_unit;Prim
 add_unit;Ophie
 add_unit;Yohn
@@ -92,14 +92,14 @@ t;1
 remove_background
 t;2
 # Pan to Page, Vagnius, Sidney
-set_cursor;Vagnius;force_hold
+set_cursor;Vagnius
 u;Vagnius;Right
 u;Sidney;Left
 s;Sidney;Colonel... There's a group of them hiding in the back...{w};auto
 s;Vagnius;What! You idiots! One of them could be the fugitive.{w}{br}Don't let them get away!{w};auto
 r;Vagnius;Sidney
 # Pan over to Ophie, Prim, Master X
-set_cursor;Yohn;force_hold
+set_cursor;Yohn
 u;Yohn;Right
 s;Yohn;Leave. I'll hold them off.{w};auto
 r;Yohn

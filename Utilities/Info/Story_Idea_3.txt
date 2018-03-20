@@ -129,6 +129,17 @@ Any of your dead units also respawn.
 
 - Need to consider what intrigue happens to prepare the reader for Umbrian superweapon. 
 
+History before game:
+- 200 years ago: The Four Kings (Lorwick, Mercyn, Atherwald, and Umber) seal the Rot Machine, for some time.
+- 100 years ago: Loria, a scattered kingdom of the Old Talian Empire, has some unspecified disaster involving Old Talian technology. Most of Loria is destroyed.
+- 30 years ago: Athelwulf, Caelwulf and Umbrian Queen go on adventures.
+- 3 years ago: Athelwulf exiles his firstborn son, Adelbert. Why?
+- 2 years ago: Lywark destroys/removes the first seal of Loria. The world starts getting much worse -- plagues, sicknesses, crops don't grow as well.
+- 6 months ago: Adelbert meets Lywark in the ruins of Loria. Lywark has been studying the ancient artifacts and believes they are the key to bringing his beloved back. Lywark convinces Adelbert he can raise him to his rightful throne. Actually, he wants the seals to unlock the Gate of the Damned.
+- 4 months ago: Umbrian Queen begins experimenting with dark magic.
+- 1 month ago: Adelbert and Lywark kill Athelwulf. Lywark convinces Adelbert that he can conquer the other 2 kingdoms. Really, Lywark just wants the Seals.
+- 2 weeks ago: Lywark, using two of the seals, attempts to bring back his beloved through the body of Elen. It doesn't work. Elen escapes.
+
 Characters:
 Athelwulf of Athria
 Alfred of Athria
@@ -165,7 +176,7 @@ Eowa of Umbria
 Yohannes of Saxony
 Juniper (June) of Saxony
 
-Rhun of Loria
+Rhun of the Northlands
 Frieda of the Northlands
 
 Sorrel of Mercia
@@ -179,8 +190,8 @@ Mael of Eiria
 Godwin of Umbria
 Ingrid of Umbria
 
-Alder of the Ashdowns
-Nyssa of the Ashdowns
+Lorwick of Loria
+Nyssa of Loria
 
 
 

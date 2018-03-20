@@ -1,6 +1,6 @@
 # Intro Script 7
 m;Ambient Forest
-set_cursor;0,0
+set_cursor;0,0;immediate
 t;2
 map_pan
 t;1
@@ -23,7 +23,7 @@ m;Mount Briggs
 t;1
 remove_background
 t;2
-set_cursor;2,21;force_hold
+set_cursor;2,21
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -61,7 +61,7 @@ add_unit;Marduk
 arrange_formation
 m;Airship Thunderchild
 wait;500
-set_cursor;27,0;force_hold
+set_cursor;27,0
 u;Sam;Left
 s;Sam;Okay everyone, we need to hit this fort hard and fast.{w}{br}We can't give their tactician any time to react and formulate a plan.{w};auto
 u;Ophie;Right
