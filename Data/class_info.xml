@@ -211,7 +211,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags>Mounted</tags>
-        <skills>1,Canto;5,Savior;8,Feat</skills>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,30</growths>
 		<bases>12,3,0,2,3,0,4,0,7,7</bases>
@@ -230,7 +230,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags>Mounted</tags>
-        <skills>3,Feat;5,Charisma;8,Feat</skills>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,30</growths>
 		<bases>14,4,0,4,5,0,6,5,8,8</bases>
@@ -251,7 +251,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags>Armor</tags>
-        <skills>1,Provoke;5,Shove;8,Feat</skills>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,35</growths>
 		<bases>11,3,0,2,1,0,6,1,9,4</bases>

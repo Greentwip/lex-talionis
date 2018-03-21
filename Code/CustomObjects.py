@@ -1284,7 +1284,7 @@ class Objective(object):
 
     @classmethod
     def deserialize(cls, info):
-        return cls(*info[0])
+        return cls(*info)
 
     def eval_string(self, text, gameStateObj):
         # Parse evals

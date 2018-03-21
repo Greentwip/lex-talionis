@@ -1,4 +1,6 @@
 # Fade in
+add_talk;Eirika;Franz
+add_talk;Seth;Franz
 t;2
 # TODO: Enemy units appear
 trigger;EnemySpawn
@@ -27,6 +29,21 @@ remove_background
 t;2
 end_skip
 # TODO: Green units leave castle. Mercenary stays on castle.
+# Add the cavalier to the castle gate. 
+# For me, Cavalier's event_id is Greenies_1. Gate position is 2, 2
+add_unit;Greenies_1;2,2
+# Set up move unit one position south
+move_unit;Greenies_1;2,3
+# Once you set up a normal move, must call "start_move" for move to take effect
+start_move
+# Add mercenary to castle gate.
+add_unit;Greenies_2;2,2
+# move cavalier to topleft of map
+move_unit;Greenies_1;0,0
+start_move
+# Remove cavalier
+remove_unit;Greenies_1
+# Done
 set_cursor;Breguet
 disp_cursor;1
 wait;1000
@@ -47,7 +64,12 @@ remove_background
 t;2
 end_skip
 # TODO: Breguet moves and attacks Green Mercenary. He crits the mercenary.
-trigger;Boss1
+# Move Breguet south of mercenary (at 2,2)
+move_unit;Breguet;2,3
+start_move
+# Combat
+interact_unit;Breguet;2,2;Crit
+# Done
 set_cursor;Breguet
 disp_cursor;1
 wait;1000
@@ -56,6 +78,7 @@ u;Breguet;Left
 s;Breguet;Ha! That's what happens when you face my lance!
 r;Breguet
 # TODO: Units move to their final positions
+move_unit;Breguet;2,2
 trigger;Enemy1
 set_cursor;Breguet
 disp_cursor;1

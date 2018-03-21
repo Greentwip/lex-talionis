@@ -35,6 +35,7 @@ class Dialogue_Scene(object):
         if self.unit and isinstance(self.unit, UnitObject.UnitObject):
             # logger.debug('locking %s', self.unit)
             self.unit.lock_active()
+        self.unit1 = unit  # Alternate name
         self.unit2 = unit2
         if self.unit2 and isinstance(self.unit2, UnitObject.UnitObject):
             # logger.debug('locking %s', self.unit2)
@@ -92,7 +93,7 @@ class Dialogue_Scene(object):
             new_line = line.strip()
             if new_line.startswith('if;'):
                 if_count += 1
-            elif new_line.startswith('end'):
+            elif new_line == 'end':
                 if_count -= 1
         return not bool(if_count) # Should be 0.
 
@@ -418,13 +419,12 @@ class Dialogue_Scene(object):
                 name = self.unit.name
             else:
                 name = line[1]
-            for unit in gameStateObj.allunits:
-                if unit.name == name:
-                    for item in unit.items:
-                        if item.name == line[2]:
-                            unit.equip(item)
-                            break
-                break
+            receiver = gameStateObj.get_unit_from_name(name)
+            if receiver:
+                for item in receiver.items:
+                    if item.id == line[2]:
+                        receiver.equip(item)
+                        break
         # Give the gameStateObj GC.COLORDICT['gold']!
         elif line[0] == 'gold':
             gameStateObj.game_constants['money'] += int(line[1])
@@ -510,7 +510,10 @@ class Dialogue_Scene(object):
             # Read input
             attacker = line[1]
             defender = line[2]
-            event_combat = False if len(line) > 3 else True
+            if len(line) > 3:
+                event_combat = [command.lower() for command in reversed(line[3].split(','))]
+            else:
+                event_combat = None
             self.interact_unit(gameStateObj, attacker, defender, event_combat)
         elif line[0] == 'remove_unit' or line[0] == 'kill_unit':
             # Read input
@@ -540,7 +543,7 @@ class Dialogue_Scene(object):
                     gameStateObj.stateMachine.changeState('movement')
 
         # === HANDLE CURSOR
-        elif line[0] in 'set_cursor':
+        elif line[0] == 'set_cursor':
             if line[1].startswith('o') and "," in line[1]:
                 coord = self.parse_pos(line[1][1:])
                 if gameStateObj.map.origin:
@@ -1390,7 +1393,11 @@ class Dialogue_Scene(object):
             if not defender:
                 logger.error('Interact unit routine could not find %s', defender)
                 return
-            def_pos = defender.position
+            if defender.position:
+                def_pos = defender.position
+            else:
+                logger.error('Interact unit routine cannot target a unit without a position')
+                return
 
         item = attacker.items[0]
         if not item:

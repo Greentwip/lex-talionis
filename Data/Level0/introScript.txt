@@ -49,12 +49,12 @@ s;OldMan1;Pah!{w};auto
 s;Sidney;Rough him up!{w};auto
 r;OldMan1;Sidney
 # Combat
-interact_unit;F1;15,3
+interact_unit;F1;15,3;Hit
 u;OldMan1;Left
 s;OldMan1;Urgh!{w};auto
 r;OldMan1
 # Combat
-interact_unit;F2;15,3
+interact_unit;F2;15,3;Hit
 u;OldMan1;Left
 s;OldMan1;...{w};auto
 r;OldMan1

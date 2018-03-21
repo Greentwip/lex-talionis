@@ -25,7 +25,7 @@ class Result(object):
 # Does not check legality of attack, that is for other functions to do. 
 # Assumes attacker can attack all defenders using item and skill
 class Solver(object):
-    def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat=False):
+    def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat=None):
         self.attacker = attacker
         self.defender = defender
         self.def_pos = def_pos
@@ -33,10 +33,14 @@ class Solver(object):
         self.splash = sorted(splash, key=lambda s_unit: Utility.calculate_distance(self.def_pos, s_unit.position))
         self.item = item
         self.skill_used = skill_used
-        self.event_combat = event_combat  # Determines if everything automatically hits, because we're in an event
+        if event_combat:
+            # Must make a copy because other things use whether event_combat is full as True/False values
+            self.event_combat = [e for e in event_combat]
+        else:
+            self.event_combat = None
         # If the item being used has the event combat property, then that too.
-        if self.item.event_combat or (self.defender and self.defender.getMainWeapon() and self.defender.getMainWeapon().event_combat):
-            self.event_combat = True
+        if not event_combat and (self.item.event_combat or (self.defender and self.defender.getMainWeapon() and self.defender.getMainWeapon().event_combat)):
+            self.event_combat = ['hit'] * 8  # Default event combat for evented items
 
         self.state = 'Init'
         self.atk_rounds = 0
@@ -45,8 +49,14 @@ class Solver(object):
         self.uses_count = 0
         self.index = 0
 
-    def generate_roll(self):
-        if self.event_combat or cf.CONSTANTS['rng'] == 'hybrid':
+    def generate_roll(self, event_command=None):
+        if event_command:
+            if event_command in ('hit', 'crit'):
+                return 0
+            elif event_command == 'miss':
+                return 100
+        # Normal RNG
+        if cf.CONSTANTS['rng'] == 'hybrid':
             roll = 0
         elif cf.CONSTANTS['rng'] == 'no_rng':
             roll = cf.CONSTANTS['set_roll']
@@ -58,29 +68,32 @@ class Solver(object):
             roll = (random.randint(0, 99) + random.randint(0, 99) + random.randint(0, 99)) / 3
         return roll
 
-    def generate_crit_roll(self):
-        if self.event_combat:
-            roll = 100
+    def generate_crit_roll(self, event_command=None):
+        if event_command and event_command == 'crit':
+            return 0
         else:
-            roll = random.randint(0, 99)
-        return roll
+            return random.randint(0, 99)
 
-    def handle_crit(self, result, attacker, defender, item, mode, gameStateObj, hybrid):
+    def handle_crit(self, result, attacker, defender, item, mode, gameStateObj, hybrid, event_command):
         to_crit = attacker.compute_crit(defender, gameStateObj, item, mode=mode)
-        crit_roll = self.generate_crit_roll()
+        crit_roll = self.generate_crit_roll(event_command)
         if crit_roll < to_crit and not (isinstance(defender, TileObject.TileObject) or 'ignore_crit' in defender.status_bundle):
             result.outcome = 2
             result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid, crit=cf.CONSTANTS['crit'])
 
     def generate_attacker_phase(self, gameStateObj, metaDataObj, defender):
         result = Result(self.attacker, defender)
+        if self.event_combat:
+            event_command = self.event_combat.pop()
+        else:
+            event_command = None
 
         # Start
         assert isinstance(defender, UnitObject.UnitObject) or isinstance(defender, TileObject.TileObject), \
             "Only Units and Tiles can engage in combat! %s" % (defender)
         
         to_hit = self.attacker.compute_hit(defender, gameStateObj, self.item, mode="Attack")
-        roll = self.generate_roll()
+        roll = self.generate_roll(event_command)
 
         hybrid = to_hit if cf.CONSTANTS['rng'] == 'hybrid' else None
 
@@ -90,7 +103,7 @@ class Solver(object):
                 result.outcome = (2 if self.item.guaranteed_crit else 1)
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
                 if cf.CONSTANTS['crit']: 
-                    self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid)
+                    self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid, event_command)
                     
             # Missed but does half damage
             elif self.item.half:
@@ -103,7 +116,7 @@ class Solver(object):
                 if self.item.damage is not None:
                     result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
                     if cf.CONSTANTS['crit']: 
-                        self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid)
+                        self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid, event_command)
                 elif self.item.heal is not None:
                     result.def_damage = -self.attacker.compute_heal(defender, gameStateObj, self.item, mode='Attack')
                 if self.item.movement:
@@ -144,9 +157,13 @@ class Solver(object):
     def generate_defender_phase(self, gameStateObj):
         # Assumes Capable of counterattacking
         result = Result(self.defender, self.attacker)
+        if self.event_combat:
+            event_command = self.event_combat.pop()
+        else:
+            event_command = None
 
         to_hit = self.defender.compute_hit(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense")
-        roll = self.generate_roll()
+        roll = self.generate_roll(event_command)
 
         hybrid = to_hit if cf.CONSTANTS['rng'] == 'hybrid' else None
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
@@ -154,7 +171,7 @@ class Solver(object):
             result.outcome = (2 if self.item.guaranteed_crit else 1)
             result.def_damage = self.defender.compute_damage(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense", hybrid=hybrid)
             if cf.CONSTANTS['crit']: 
-                self.handle_crit(result, self.defender, self.attacker, self.defender.getMainWeapon(), "Defense", gameStateObj, hybrid)
+                self.handle_crit(result, self.defender, self.attacker, self.defender.getMainWeapon(), "Defense", gameStateObj, hybrid, event_command)
 
         # Missed but does half damage
         elif self.defender.getMainWeapon().half:
@@ -407,7 +424,7 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
     logger.debug('Main Defender: %s, Splash: %s', main_defender, splash_units)
     return main_defender, splash_units
 
-def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_used=None, event_combat=False, ai_combat=False, toggle_anim=False):
+def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_used=None, event_combat=None, ai_combat=False, toggle_anim=False):
     def animation_wanted(attacker, defender):
         return (cf.OPTIONS['Animation'] == 'Always' or
                (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
@@ -616,6 +633,11 @@ class AnimationCombat(Combat):
         self.p2 = defender
         # The attacker is always on the right unless the defender is a player and the attacker is not
         if self.p2.team == 'player' and self.p1.team != 'player':
+            self.right = self.p2
+            self.right_item = self.right.getMainWeapon()
+            self.left = self.p1
+            self.left_item = item
+        elif self.p1.team == 'enemy' and self.p2.team in ('player', 'other'):
             self.right = self.p2
             self.right_item = self.right.getMainWeapon()
             self.left = self.p1
@@ -1778,9 +1800,10 @@ class MapCombat(Combat):
 
         # Handle interact_script
         script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
-        interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None), event_flag=False)
-        gameStateObj.message.append(interact_script)
-        gameStateObj.stateMachine.changeState('dialogue')
+        if os.path.exists(script_name):
+            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None), event_flag=False)
+            gameStateObj.message.append(interact_script)
+            gameStateObj.stateMachine.changeState('dialogue')
 
         # Handle miracle
         for unit in all_units:

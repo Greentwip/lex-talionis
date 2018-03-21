@@ -44,7 +44,7 @@ set_cursor;Drake
 disp_cursor;1
 wait;1000
 disp_cursor;0
-interact_unit;S1;Drake
+interact_unit;S1;Drake;Hit,Hit,Hit,Hit
 u;Drake;MidLeft;u;Althea;FarLeft;u;Soldier2;Right
 s;Soldier2;Urgh...{w};auto
 r;Soldier2
@@ -56,7 +56,7 @@ r;Drake;Althea
 # Another fight!
 move_unit;S2;7,4
 start_move
-interact_unit;S2;Drake
+interact_unit;S2;Drake;Hit,Hit,Hit,Hit
 u;Drake;MidLeft;Full_Blink;u;Althea;FarLeft
 s;Althea;Drake!{w};auto
 set_expression;Drake;Normal

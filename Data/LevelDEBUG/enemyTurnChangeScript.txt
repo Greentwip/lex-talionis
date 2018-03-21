@@ -1,0 +1,6 @@
+# Enemy Turn Change
+if;gameStateObj.turncount == 1
+    u;Breguet;Left
+    s;Breguet;Hm? Is that the princess of Renais?{w}{br}Ha ha! It really is my lucky day! Fame and fortune ride to meet me!{w}{br}Move on, you slugs!{br}Bring that girl to me!
+    r;Breguet
+end

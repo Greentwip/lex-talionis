@@ -99,7 +99,7 @@ class GameStateObj(object):
         # These are needed to keep old saves working
         def get_level_constants(load_info):
             if 'level_constants' in load_info:
-                return load_info['load_info']
+                return load_info['level_constants']
             else:
                 level_constants = Counter()
                 for constant in load_info['event_triggers']:
@@ -139,6 +139,7 @@ class GameStateObj(object):
         self.stateMachine = StateMachine.StateMachine(load_info['state_list'][0], load_info['state_list'][1])
         self.statistics = load_info['statistics']
         # self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
+        self.message = []
         self.modify_stats = load_info.get('modify_stats', cf.read_growths_file())
         self.unlocked_lore = load_info['unlocked_lore']
         self.market_items = load_info.get('market_items', set())
