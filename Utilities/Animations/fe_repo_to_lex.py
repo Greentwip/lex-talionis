@@ -22,7 +22,7 @@ def determine_bg_color(im):
     color = im.getpixel((0, 0))
     return color
 
-def animation_collater(images, bg_color):
+def animation_collater(images, bg_color, weapon_type):
     index_lines = []
     for name, image in images.items():
         width, height = image.size
@@ -60,7 +60,7 @@ def animation_collater(images, bg_color):
     max_height = sum(r for r in row_height)
 
     sprite_sheet = Image.new('RGB', (total_width, max_height))
-    index_script = open('new_index.txt', 'w')
+    index_script = open(weapon_type + '-Index.txt', 'w')
 
     # Paste
     x = 0
@@ -82,8 +82,203 @@ def animation_collater(images, bg_color):
             if color == (0, 0, 0):
                 sprite_sheet.putpixel((x, y), COLORKEY)
 
-    sprite_sheet.save('new_spritesheet.png')
+    sprite_sheet.save(weapon_type + '-GenericBlue.png')
     index_script.close()
+
+def write_scripts(script, images, weapon_type):
+    # Open fe repo script
+    with open(script) as s:
+        script_lines = s.readlines()
+
+    begin = False
+    current_mode = None
+    melee_script, melee_images = {}, set()
+    ranged_script, ranged_images = {}, set()
+    current_pose = []
+    current_frame = None
+    crit = False
+    used_names = set()
+
+    def write_frame(current_pose, name, num_frames):
+        if (name + '_under') in images:
+            current_pose.append('f;' + str(num_frames) + ';' + name + ';' + name + '_under')
+            used_names.add(name + '_under')
+        else:
+            current_pose.append('f;' + str(num_frames) + ';' + name)
+        used_names.add(name)
+
+    def write_wait_for_hit(current_pose, name):
+        if (name + '_under') in images:
+            current_pose.append('wait_for_hit;' + name + ';' + name + '_under')
+            used_names.add(name + '_under')
+        else:
+            current_pose.append('wait_for_hit;' + name)
+        used_names.add(name)
+
+    def save_mode(mode):
+        if mode in (1, 2):
+            melee_script['Attack'] = current_pose
+            melee_images.update(used_names)
+        elif mode in (3, 4):
+            melee_script['Critical'] = current_pose
+            melee_images.update(used_names)
+        elif mode == 5:
+            ranged_script['Attack'] = current_pose
+            ranged_images.update(used_names)
+        elif mode == 6:
+            ranged_script['Critical'] = current_pose
+            ranged_images.update(used_names)
+        elif mode == 7:
+            melee_script['Dodge'] = current_pose
+            melee_images.update(used_names)
+            ranged_script['Dodge'] = current_pose
+            ranged_images.update(used_names)
+        # elif mode == 8:
+        #     melee_script['RangedDodge'] = current_pose
+        #     melee_images.update(used_names)
+        #     ranged_script['RangedDodge'] = current_pose
+        #     ranged_images.update(used_names)
+        elif mode == 9:
+            melee_script['Stand'] = current_pose
+            melee_images.update(used_names)
+        elif mode == 11:
+            ranged_script['Stand'] = current_pose
+            ranged_images.update(used_names)
+        elif mode == 12:
+            melee_script['Miss'] = current_pose
+            melee_images.update(used_names)
+        used_names.clear()  # Reset used names
+
+    for line in script_lines:
+        if '#' in line:
+            line = line[:line.index('#')]
+        line = line.strip()
+        
+        if line.startswith('/// - '):
+            print(line[11:])
+            if current_mode:
+                save_mode(current_mode)
+            if line.startswith('/// - Mode '):
+                current_mode = int(line[11:])
+                current_pose = []  # New current pose
+                if current_mode in (9, 11):  # Need to begin stands
+                    begin = True
+            else:
+                break  # Done
+
+        elif line.startswith('C'):
+            command_code = line[1:3]
+            if command_code == '01':
+                if current_mode == 12:  # Miss
+                    write_frame(current_pose, current_frame[0], 2)
+                    current_pose.append('miss')
+                    write_frame(current_pose, current_frame[0], 30)
+                elif current_mode == 5 or current_mode == 6:  # Ranged
+                    current_pose.append('start_loop')
+                    write_frame(current_pose, current_frame[0], 4)
+                    current_pose.append('end_loop')
+                    write_frame(current_pose, current_frame[0], 30)
+                elif current_mode == 7 or current_mode == 8:  # Dodge
+                    write_frame(current_pose, current_frame[0], 27)
+                elif current_mode in (1, 2, 3, 4):
+                    write_wait_for_hit(current_pose, current_frame[0])
+                    write_frame(current_pose, current_frame[0], 4)
+            elif command_code == '03':
+                begin = True
+            elif command_code == '04':
+                if current_mode == 12:  # Ignore if miss
+                    pass
+                else:
+                    current_pose.append('enemy_flash_white;8')
+            elif command_code == '05':
+                current_pose.append('spell')
+            elif command_code == '06':
+                pass  # Normally starts enemy turn, but that doesn't happen in LT script
+            elif command_code == '07':
+                begin = True
+            elif command_code == '08':
+                crit = True
+                current_pose.append('foreground_blend;2;248,248,248')
+            elif command_code == '0D':
+                write_frame(current_pose, *current_frame)
+                current_frame = None
+            elif command_code == '0E':
+                current_frame[1] -= 1  # Don't increment for 0E
+            elif command_code == '1A':
+                crit = False
+                current_pose.append('screen_flash_white;4')
+            elif command_code == '1F':
+                if crit:
+                    current_pose.append('start_hit')
+                    write_frame(current_pose, current_frame[0], 2)
+                    current_pose.append('crit_spark')
+                    write_frame(current_pose, current_frame[0], 2)
+                else:
+                    write_frame(current_pose, current_frame[0], 4)
+                    current_pose.append('hit_spark')
+                    current_pose.append('start_hit')
+            # Sounds
+            elif command_code == '1C':
+                current_pose.append('sound;Horse Step 1')
+            elif command_code == '1D':
+                current_pose.append('sound;Horse Step 3')
+            elif command_code == '1E':
+                current_pose.append('sound;Horse Step 2')
+            elif command_code == '22':
+                current_pose.append('sound;Weapon Pull')
+            elif command_code == '23':
+                current_pose.append('sound;Weapon Push')
+            
+            # Need to keep track of how many of these we pass, since each adds a frame
+            current_frame[1] += 1
+            
+        elif line.startswith('~~~'):
+            pass
+
+        else:
+            num_frames, _, png_name = line.split()
+            num_frames = int(num_frames)
+            name = png_name[:-4]
+            if name not in images:
+                raise ValueError('%s frame not in images!' % name)
+            if begin:
+                if current_mode in (9, 11):
+                    num_frames = 4
+                else:
+                    num_frames = 6
+            if current_frame:  # write the last one
+                write_frame(current_pose, *current_frame)
+            current_frame = [name, num_frames]
+
+    def write_script(script, s):
+        for pose, line_list in script.items():
+            s.write('pose;' + pose + '\n')
+            for line in line_list:
+                s.write(line + '\n')
+
+    # Now actually write scripts
+    if weapon_type == 'Sword':
+        with open('Sword-Script.txt', 'w') as s:
+            write_script(melee_script, s)
+        with open('MagicSword-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
+    elif weapon_type == 'Lance':
+        with open('Lance-Script.txt', 'w') as s:
+            write_script(melee_script, s)
+        with open('RangedLance-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
+    elif weapon_type == 'Axe':
+        with open('Axe-Script.txt', 'w') as s:
+            write_script(melee_script, s)
+        with open('RangedAxe-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
+    elif weapon_type == 'Disarmed':
+        # only need stand and dodge frames
+        melee_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
+        with open('Unarmed-Script.txt', 'w') as s:
+            write_script(melee_script, s)
+
+    return melee_images, ranged_images
 
 images = glob.glob('*.png')
 script = glob.glob('*.txt')
@@ -94,6 +289,11 @@ elif len(script) == 0:
     raise ValueError("No script file present in current directory!")
 else:
     raise ValueError("Could not determine which *.txt file to use!")
+
+weapons_types = {'Sword', 'Lance', 'Axe'}
+weapon_type = script[:-4]
+if weapon_type not in weapons_types:
+    raise ValueError("%s not a currently supported weapon type!" % weapon_type)
 
 # Convert to images
 images = {name[:-4]: Image.open(name) for name in images}
@@ -122,123 +322,13 @@ images.update(new_images)
 
 bg_color = determine_bg_color(images.values()[0])
 
+melee_images, ranged_images = write_scripts(script, images, weapon_type)
+
+# Once done with building script for melee and ranged, make an image collater
 # Create image and index script
-animation_collater(images, bg_color)
-
-# Open fe repo script
-with open(script) as s:
-    script_lines = s.readlines()
-
-begin = False
-current_mode = None
-melee_script = {}
-ranged_script = {}
-current_pose = []
-current_frames = None
-frame_index = 0
-crit = False
-for line in script_lines:
-    if '#' in line:
-        line = line[:line.index('#')]
-    line = line.strip()
-    
-    if line.startswith('/// - '):
-        print(line[11:])
-        if current_mode:
-            if current_mode in (1, 2):
-                melee_script['Attack'] = current_pose
-            elif current_mode in (3, 4):
-                melee_script['Critical'] = current_pose
-            elif current_mode == 5:
-                ranged_script['Attack'] = current_pose
-            elif current_mode == 6:
-                ranged_script['Critical'] = current_pose
-            elif current_mode == 7:
-                melee_script['Dodge'] = current_pose
-                ranged_script['Dodge'] = current_pose
-            elif current_mode == 8:
-                melee_script['RangedDodge'] = current_pose
-                ranged_script['RangedDodge'] = current_pose
-            elif current_mode == 9:
-                melee_script['Stand'] = current_pose
-            elif current_mode == 11:
-                ranged_script['Stand'] = current_pose
-            elif current_mode == 12:
-                melee_script['Miss'] = current_pose
-            
-        if line.startswith('/// - Mode '):
-            current_mode = int(line[11:])
-        else:
-            break  # Done
-
-    elif line.startswith('C'):
-        command_code = line[1:3]
-        if command_code == '01':
-            if current_mode == 12:  # Miss
-                current_pose.append('f;2;' + current_frames[0])
-                current_pose.append('miss')
-                current_pose.append('f;30' + current_frames[0])
-                frame_index += 32
-            else:  # Hit
-                current_pose.append('wait_for_hit;' + current_frames[0])
-                current_pose.append('f;4' + current_frames[0])
-                frame_index += 4
-        elif command_code == '03':
-            begin = True
-        elif command_code == '04':
-            if current_mode == 12:  # Ignore if miss
-                pass
-            else:
-                current_pose.append('enemy_flash_white;8')
-        elif command_code == '06':
-            pass  # Normally starts enemy turn, but that doesn't happen in LT script
-        elif command_code == '07':
-            begin = True
-        elif command_code == '08':
-            crit = True
-            current_pose.append('foreground_blend;2;248,248,248')
-        elif command_code == '0D':
-            current_pose.append('f;' + str(current_frames[1]) + ';' + current_frames[0])  
-            current_frames = None
-        elif command_code == '1A':
-            crit = False
-            current_pose.append('screen_flash_white;4')
-        elif command_code == '1F':
-            if crit:
-                current_pose.append('start_hit')
-                current_pose.append('f;2' + current_frames[0])
-                current_pose.append('crit_spark')
-                current_pose.append('f;2' + current_frames[0])
-            else:
-                current_pose.append('f;4;' + current_frames[0])
-                current_pose.append('hit_spark')
-                current_pose.append('start_hit')
-            frame_index += 4
-        # Sounds
-        elif command_code == '1C':
-            current_pose.append('sound;Horse Step 1')
-        elif command_code == '1D':
-            current_pose.append('sound;Horse Step 3')
-        elif command_code == '1E':
-            current_pose.append('sound;Horse Step 2')
-        elif command_code == '22':
-            current_pose.append('sound;Weapon Pull')
-        elif command_code == '23':
-            current_pose.append('sound;Weapon Push')
-        
-        # Need to keep track of how many of these we pass, since each adds a frame
-        current_frames[1] += 1
-        
-    elif line.startswith('~~~'):
-        pass
-
-    else:
-        num_frames, _, png_name = line.split()
-        num_frames = int(num_frames)
-        name = png_name[:-4]
-        if begin:
-            num_frames = 6
-        if current_frames:  # write the last one
-            current_pose.append('f;' + str(current_frames[1]) + ';' + current_frames[0])  
-        current_frames = [name, num_frames]
-        frame_index += num_frames
+animation_collater(melee_images, bg_color, weapon_type)
+if ranged_images:
+    if weapon_type == 'Sword':
+        animation_collater(ranged_images, bg_color, 'Magic' + weapon_type)
+    elif weapon_type in ('Lance', 'Axe'):
+        animation_collater(ranged_images, bg_color, 'Ranged' + weapon_type)
