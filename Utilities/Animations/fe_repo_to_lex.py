@@ -4,6 +4,7 @@
 # Takes in FERepo data... a set of images along with a *.txt file that serves as the script.
 
 import glob
+from collections import OrderedDict
 from PIL import Image
 
 COLORKEY = 128, 160, 128
@@ -49,15 +50,16 @@ def animation_collater(images, bg_color, weapon_type):
     row_height = []
     for image, name, width, height, offset in index_lines:
         if x + width > WIDTH_LIMIT:
-            row_height.append(max(r for r in row))
+            row_height.append(max(row))
             x = width
             row = [height]
         else:
             x += width
             row.append(height)
+    row_height.append(max(row))
 
     total_width = min(WIDTH_LIMIT, sum(i[2] for i in index_lines))
-    max_height = sum(r for r in row_height)
+    max_height = sum(row_height)
 
     sprite_sheet = Image.new('RGB', (total_width, max_height))
     index_script = open(weapon_type + '-Index.txt', 'w')
@@ -133,11 +135,6 @@ def write_scripts(script, images, weapon_type):
             melee_images.update(used_names)
             ranged_script['Dodge'] = current_pose
             ranged_images.update(used_names)
-        # elif mode == 8:
-        #     melee_script['RangedDodge'] = current_pose
-        #     melee_images.update(used_names)
-        #     ranged_script['RangedDodge'] = current_pose
-        #     ranged_images.update(used_names)
         elif mode == 9:
             melee_script['Stand'] = current_pose
             melee_images.update(used_names)
@@ -153,16 +150,15 @@ def write_scripts(script, images, weapon_type):
         if '#' in line:
             line = line[:line.index('#')]
         line = line.strip()
+        if not line:
+            continue
         
         if line.startswith('/// - '):
-            print(line[11:])
             if current_mode:
                 save_mode(current_mode)
             if line.startswith('/// - Mode '):
                 current_mode = int(line[11:])
                 current_pose = []  # New current pose
-                if current_mode in (9, 11):  # Need to begin stands
-                    begin = True
             else:
                 break  # Done
 
@@ -170,19 +166,22 @@ def write_scripts(script, images, weapon_type):
             command_code = line[1:3]
             if command_code == '01':
                 if current_mode == 12:  # Miss
-                    write_frame(current_pose, current_frame[0], 2)
+                    write_frame(current_pose, current_frame, 1)
                     current_pose.append('miss')
-                    write_frame(current_pose, current_frame[0], 30)
+                    write_frame(current_pose, current_frame, 30)
                 elif current_mode == 5 or current_mode == 6:  # Ranged
                     current_pose.append('start_loop')
-                    write_frame(current_pose, current_frame[0], 4)
+                    write_frame(current_pose, current_frame, 4)
                     current_pose.append('end_loop')
-                    write_frame(current_pose, current_frame[0], 30)
+                    write_frame(current_pose, current_frame, 30)
                 elif current_mode == 7 or current_mode == 8:  # Dodge
-                    write_frame(current_pose, current_frame[0], 27)
+                    write_frame(current_pose, current_frame, 26)
                 elif current_mode in (1, 2, 3, 4):
-                    write_wait_for_hit(current_pose, current_frame[0])
-                    write_frame(current_pose, current_frame[0], 4)
+                    write_wait_for_hit(current_pose, current_frame)
+                    write_frame(current_pose, current_frame, 4)
+                elif current_mode in (9, 10, 11):
+                    write_frame(current_pose, current_frame, 3)
+                current_frame = None  # 01 does not drop 1 frame after it runs
             elif command_code == '03':
                 begin = True
             elif command_code == '04':
@@ -190,33 +189,35 @@ def write_scripts(script, images, weapon_type):
                     pass
                 else:
                     current_pose.append('enemy_flash_white;8')
-            elif command_code == '05':
+                    current_frame = None
+            elif command_code == '05':  # Start spell
                 current_pose.append('spell')
             elif command_code == '06':
                 pass  # Normally starts enemy turn, but that doesn't happen in LT script
             elif command_code == '07':
                 begin = True
-            elif command_code == '08':
+            elif command_code == '08':  # Start crit
                 crit = True
                 current_pose.append('foreground_blend;2;248,248,248')
-            elif command_code == '0D':
-                write_frame(current_pose, *current_frame)
+            elif command_code == '0D':  # End
+                write_frame(current_pose, current_frame, 1)
                 current_frame = None
-            elif command_code == '0E':
-                current_frame[1] -= 1  # Don't increment for 0E
-            elif command_code == '1A':
+            elif command_code == '0E':  # Dodge
+                current_frame = None
+            elif command_code == '1A':  # Start hit
                 crit = False
                 current_pose.append('screen_flash_white;4')
-            elif command_code == '1F':
+            elif command_code == '1F':  # Actual hit
                 if crit:
                     current_pose.append('start_hit')
-                    write_frame(current_pose, current_frame[0], 2)
+                    write_frame(current_pose, current_frame, 2)
                     current_pose.append('crit_spark')
-                    write_frame(current_pose, current_frame[0], 2)
+                    write_frame(current_pose, current_frame, 2)
                 else:
-                    write_frame(current_pose, current_frame[0], 4)
+                    write_frame(current_pose, current_frame, 4)
                     current_pose.append('hit_spark')
                     current_pose.append('start_hit')
+                current_frame = None
             # Sounds
             elif command_code == '1C':
                 current_pose.append('sound;Horse Step 1')
@@ -230,7 +231,8 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('sound;Weapon Push')
             
             # Need to keep track of how many of these we pass, since each adds a frame
-            current_frame[1] += 1
+            if current_frame:
+                write_frame(current_pose, current_frame, 1)
             
         elif line.startswith('~~~'):
             pass
@@ -242,19 +244,17 @@ def write_scripts(script, images, weapon_type):
             if name not in images:
                 raise ValueError('%s frame not in images!' % name)
             if begin:
-                if current_mode in (9, 11):
-                    num_frames = 4
-                else:
-                    num_frames = 6
-            if current_frame:  # write the last one
-                write_frame(current_pose, *current_frame)
-            current_frame = [name, num_frames]
+                num_frames = 6
+                begin = False
+            current_frame = name
+            write_frame(current_pose, current_frame, num_frames)
 
     def write_script(script, s):
         for pose, line_list in script.items():
             s.write('pose;' + pose + '\n')
             for line in line_list:
                 s.write(line + '\n')
+            s.write('\n')
 
     # Now actually write scripts
     if weapon_type == 'Sword':
@@ -299,15 +299,16 @@ if weapon_type not in weapons_types:
 images = {name[:-4]: Image.open(name) for name in images}
 
 # Convert to GBA Colors
-for image in images.values():
-    image = convert_gba(image).convert('RGB')
+images = {name: convert_gba(image.convert('RGB')) for name, image in images.items()}
 
-# If width of image == 248, clip last 8 pixels
-for image in images.values():
+def simple_crop(image):
     if image.width == 248:
         image = image.crop((0, 0, 240, image.height))
     elif image.width == 488:
         image = image.crop((0, 0, 480, image.height))
+    return image
+# If width of image == 248, clip last 8 pixels
+images = {name: simple_crop(image) for name, image in images.items()}
 
 # If double image, create one as under image instead
 new_images = {}
@@ -322,7 +323,14 @@ images.update(new_images)
 
 bg_color = determine_bg_color(images.values()[0])
 
-melee_images, ranged_images = write_scripts(script, images, weapon_type)
+melee_image_names, ranged_image_names = write_scripts(script, images, weapon_type)
+melee_images = OrderedDict()
+ranged_images = OrderedDict()
+for name, image in sorted(images.items()):
+    if name in melee_image_names:
+        melee_images[name] = image
+    if name in ranged_image_names:
+        ranged_images[name] = image
 
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
@@ -332,3 +340,5 @@ if ranged_images:
         animation_collater(ranged_images, bg_color, 'Magic' + weapon_type)
     elif weapon_type in ('Lance', 'Axe'):
         animation_collater(ranged_images, bg_color, 'Ranged' + weapon_type)
+
+print(' === Done! ===')
