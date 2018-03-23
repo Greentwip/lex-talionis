@@ -108,14 +108,14 @@ cavalier_blue = [(128, 160, 128), # Background
                  (176, 136, 96), # Horse Skin
                  (160, 120, 96), # DM skin
                  (112, 80, 56), # Dark skin
-                 (168, 184, 216), # Light Hair
-                 (96, 136, 168), # Dark Hair
-                 (72, 120, 248), # Light Pennant
-                 (48, 48, 200), # Dark Pennant
-                 (168, 208, 248), # Light Clothes
-                 (80, 128, 240), # LM Clothes
-                 (48, 48, 200), # DM Clothes
-                 (48, 40, 128), # Dark Clothes
+                 (176, 248, 72), # Light Hair
+                 (136, 168, 56), # Dark Hair
+                 (112, 224, 248), # Light Pennant
+                 (64, 112, 248), # Dark Pennant
+                 (168, 248, 248), # Light Clothes
+                 (128, 184, 248), # LM Clothes
+                 (64, 112, 232), # DM Clothes
+                 (56, 56, 192), # Dark Clothes
                  (40, 40, 40)] # Outline
 
 cavalier_drake = [(128, 160, 128), # Background

@@ -400,7 +400,10 @@ class BattleAnimation(object):
             else:
                 self.blend = Engine.BLEND_RGB_ADD
         elif line[0] == 'spell':
-            item_id = self.item.id
+            if len(line) > 1:
+                item_id = line[1]
+            else:
+                item_id = self.item.id
             image, script = GC.ANIMDICT.get_effect(item_id)
             child_effect = BattleAnimation(self.unit, image, script, item_id, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)

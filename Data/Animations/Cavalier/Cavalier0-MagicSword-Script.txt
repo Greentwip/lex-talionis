@@ -1,26 +1,54 @@
-pose;Stand
-f;4;Stand
-
 pose;Dodge
-f;1;Stand
-f;3;Dodge1
-f;27;Dodge2
-f;4;Dodge1
-f;1;Stand
+f;1;Sword_000
+f;3;Sword_033
+f;1;Sword_034
+f;26;Sword_034
+f;3;Sword_033
+f;1;Sword_033
 
 pose;Attack
-f;6;Stand
-sound;Weapon Pull
-f;4;Attack1
-f;5;Attack2
-# Start Main Spell
+f;6;Sword_000
+f;4;Sword_018
+f;4;Sword_019
 spell
-f;1;Attack2
+f;1;Sword_019
+sound;Weapon Pull
+f;1;Sword_019
+f;1;Sword_030
 start_loop
-	f;4;Attack3
+f;4;Sword_030
 end_loop
-f;30;Attack3
+f;4;Sword_030
 sound;Weapon Push
-f;3;Attack2
-f;4;Attack1
-f;1;Stand
+f;3;Sword_019
+f;3;Sword_018
+f;1;Sword_018
+
+pose;Critical
+f;6;Sword_000
+f;4;Sword_018
+f;4;Sword_019
+sound;Weapon Pull
+f;1;Sword_019
+f;2;Sword_030
+f;3;Sword_032
+f;2;Sword_030
+f;3;Sword_032
+f;2;Sword_030
+f;3;Sword_032
+spell
+f;1;Sword_032
+f;1;Sword_030
+start_loop
+f;4;Sword_030
+end_loop
+f;4;Sword_030
+sound;Weapon Push
+f;3;Sword_019
+f;3;Sword_018
+f;1;Sword_018
+
+pose;Stand
+f;1;Sword_000
+f;3;Sword_000
+

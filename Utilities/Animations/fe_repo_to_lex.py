@@ -173,7 +173,7 @@ def write_scripts(script, images, weapon_type):
                     current_pose.append('start_loop')
                     write_frame(current_pose, current_frame, 4)
                     current_pose.append('end_loop')
-                    write_frame(current_pose, current_frame, 30)
+                    write_frame(current_pose, current_frame, 4)
                 elif current_mode == 7 or current_mode == 8:  # Dodge
                     write_frame(current_pose, current_frame, 26)
                 elif current_mode in (1, 2, 3, 4):
@@ -182,6 +182,8 @@ def write_scripts(script, images, weapon_type):
                 elif current_mode in (9, 10, 11):
                     write_frame(current_pose, current_frame, 3)
                 current_frame = None  # 01 does not drop 1 frame after it runs
+            elif command_code == '02':
+                pass  # Normally says this is a dodge, but that doesn't matter
             elif command_code == '03':
                 begin = True
             elif command_code == '04':
@@ -191,12 +193,17 @@ def write_scripts(script, images, weapon_type):
                     current_pose.append('enemy_flash_white;8')
                     current_frame = None
             elif command_code == '05':  # Start spell
-                current_pose.append('spell')
+                if weapon_type == 'Sword':
+                    current_pose.append('spell')
+                elif weapon_type == 'Lance':
+                    current_pose.append('spell;Javelin')
+                elif weapon_type == 'Axe':
+                    current_pose.append('spell;ThrowingAxe')
             elif command_code == '06':
                 pass  # Normally starts enemy turn, but that doesn't happen in LT script
             elif command_code == '07':
                 begin = True
-            elif command_code == '08':  # Start crit
+            elif command_code in ('08', '09', '0A', '0B', '0C'):  # Start crit
                 crit = True
                 current_pose.append('foreground_blend;2;248,248,248')
             elif command_code == '0D':  # End
@@ -207,7 +214,7 @@ def write_scripts(script, images, weapon_type):
             elif command_code == '1A':  # Start hit
                 crit = False
                 current_pose.append('screen_flash_white;4')
-            elif command_code == '1F':  # Actual hit
+            elif command_code in ('1F', '20', '21'):  # Actual hit
                 if crit:
                     current_pose.append('start_hit')
                     write_frame(current_pose, current_frame, 2)
@@ -229,6 +236,15 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('sound;Weapon Pull')
             elif command_code == '23':
                 current_pose.append('sound;Weapon Push')
+            elif command_code == '24':
+                # Needed Sound!
+                pass
+            elif command_code == '25':
+                current_pose.append('sound;Heavy Wing Flap')
+            elif command_code == '38':
+                current_pose.append('sound;Heavy Spear Spin')
+            else:
+                print('Unknown Command Code: C%s' % command_code)
             
             # Need to keep track of how many of these we pass, since each adds a frame
             if current_frame:

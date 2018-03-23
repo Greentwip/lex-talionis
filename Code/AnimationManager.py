@@ -121,6 +121,7 @@ class BattleAnimationManager(object):
     def format_index(self, index, anim):
         frame_directory = {}
         index_lines = []
+        # print(index)
         with open(index) as fp:
             index_lines = [line.strip().split(';') for line in fp.readlines()]
 
@@ -129,6 +130,7 @@ class BattleAnimationManager(object):
             x, y = (int(num) for num in line[1].split(','))
             width, height = (int(num) for num in line[2].split(','))
             offset = tuple(int(num) for num in line[3].split(','))
+            # print(name, x, y, width, height)
             image = Engine.subsurface(anim, (x, y, width, height))
             frame_directory[name] = (image, offset)
         return frame_directory
