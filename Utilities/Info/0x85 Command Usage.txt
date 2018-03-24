@@ -109,7 +109,7 @@ Command list
 0x21 Play hit SFE (sounds like Knight Lord with sword's hit) (see previous note)
 0x22 Play short sword swinging SFE - Weapon Pull
 0x23 Play shorter sword swinging SFE - Weapon Push
-0x24 Play sword slashing air SFE
+0x24 Play sword slashing air SFE - Weapon Swing
 0x25 Play wing flap SFE - Heavy Wing Flap
 0x26 Sword toss; VERY hardcoded (uses 32x32 at linear sheet index 0x1C from current sheet)
 0x27 Shield toss; while this command is used for shield tossing,

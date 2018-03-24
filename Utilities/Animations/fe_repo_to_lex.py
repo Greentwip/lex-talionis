@@ -219,9 +219,8 @@ def write_scripts(script, images, weapon_type):
                     current_pose.append('start_hit')
                     write_frame(current_pose, current_frame, 2)
                     current_pose.append('crit_spark')
-                    write_frame(current_pose, current_frame, 2)
                 else:
-                    write_frame(current_pose, current_frame, 4)
+                    write_frame(current_pose, current_frame, 2)
                     current_pose.append('hit_spark')
                     current_pose.append('start_hit')
                 current_frame = None
@@ -237,8 +236,7 @@ def write_scripts(script, images, weapon_type):
             elif command_code == '23':
                 current_pose.append('sound;Weapon Push')
             elif command_code == '24':
-                # Needed Sound!
-                pass
+                current_pose.append('sound;Weapon Swing')
             elif command_code == '25':
                 current_pose.append('sound;Heavy Wing Flap')
             elif command_code == '38':

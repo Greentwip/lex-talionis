@@ -18,7 +18,7 @@ screen_flash_white;4
 f;1;Sword_002
 sound;Weapon Push
 f;1;Sword_002
-f;4;Sword_002
+f;2;Sword_002
 hit_spark
 start_hit
 f;1;Sword_003;Sword_003_under
@@ -87,7 +87,6 @@ f;1;Sword_002
 start_hit
 f;2;Sword_002
 crit_spark
-f;2;Sword_002
 f;1;Sword_003;Sword_003_under
 wait_for_hit;Sword_003;Sword_003_under
 f;4;Sword_003;Sword_003_under

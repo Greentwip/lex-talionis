@@ -18,7 +18,7 @@
 		<MT>5</MT>
 		<HIT>90</HIT>
 		<LVL>E</LVL>
-        <crit>100</crit>
+        <crit>0</crit>
     </item>
 
     <item name="Rusted Sword">
@@ -418,7 +418,7 @@
         <id>Javelin</id>
         <spritetype>Lance</spritetype>
         <spriteid>14</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Lance</weapontype>
  
         <uses>20</uses>
@@ -430,6 +430,7 @@
 		<MT>3</MT>
 		<HIT>65</HIT>
 		<LVL>D</LVL>
+        <crit>0</crit>
     </item>
 
     <item name="Short Spear">
