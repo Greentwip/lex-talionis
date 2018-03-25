@@ -14,7 +14,7 @@ f;6;Lance_034
 f;13;Lance_035
 sound;Heavy Wing Flap
 f;1;Lance_035
-spell;Javelin
+spell;JavelinCavalier
 f;1;Lance_035
 f;3;Lance_036
 f;1;Lance_037
@@ -48,7 +48,7 @@ f;6;Lance_034
 f;13;Lance_035
 sound;Heavy Wing Flap
 f;1;Lance_035
-spell;Javelin
+spell;JavelinCavalier
 f;1;Lance_035
 f;3;Lance_036
 f;1;Lance_037

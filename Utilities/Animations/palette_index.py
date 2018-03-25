@@ -540,6 +540,23 @@ gilliam = [(128, 160, 128), # Background
                 (40, 40, 40), # ??
                 (40, 40, 40)] # Outline
 
+knight_breguet = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (232, 240, 216), # Armor 1 Light
+                (248, 216, 168), # Armor shine
+                (248, 144, 64), # Armor 2
+                (184, 144, 72), # Armor 3
+                (176, 104, 40), # Armor 4
+                (240, 24, 8), # Armor 5
+                (144, 8, 24), # Armor 6
+                (248, 216, 128), # Light Leather
+                (208, 144, 96), # Mid Leather
+                (152, 112, 80), # Dark Leather
+                (240, 248, 240), # Weapon
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (40, 40, 40)] # Outline
+
 knight_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (232, 240, 216), # Armor 1 Light
@@ -552,24 +569,24 @@ knight_red = [(128, 160, 128), # Background
                 (248, 216, 128), # Light Leather
                 (208, 144, 96), # Mid Leather
                 (152, 112, 80), # Dark Leather
-                (40, 40, 40), # ??
+                (240, 248, 240), # Weapon
                 (40, 40, 40), # ??
                 (40, 40, 40), # ??
                 (40, 40, 40)] # Outline
 
 knight_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
-                (216, 240, 232), # Armor 1 Light
-                (128, 184, 248), # Armor shine
-                (56, 144, 232), # Armor 2
-                (72, 144, 184), # Armor 3
-                (40, 104, 176), # Armor 4
-                (40, 40, 200), # Armor 5
-                (48, 40, 128), # Armor 6
+                (216, 232, 216), # Armor 1 Light
+                (168, 248, 248), # Armor shine
+                (128, 184, 248), # Armor 2
+                (120, 160, 184), # Armor 3
+                (88, 120, 176), # Armor 4
+                (64, 104, 240), # Armor 5
+                (64, 72, 184), # Armor 6
                 (248, 216, 128), # Light Leather
                 (208, 144, 96), # Mid Leather
                 (152, 112, 80), # Dark Leather
-                (40, 40, 40), # ??
+                (240, 248, 240), # Weapon
                 (40, 40, 40), # ??
                 (40, 40, 40), # ??
                 (40, 40, 40)] # Outline
@@ -586,7 +603,7 @@ knight_theo = [(128, 160, 128), # Background
                 (248, 216, 128), # Light Leather
                 (208, 144, 96), # Mid Leather
                 (152, 112, 80), # Dark Leather
-                (40, 40, 40), # ??
+                (240, 248, 240), # Weapon
                 (40, 40, 40), # ??
                 (40, 40, 40), # ??
                 (40, 40, 40)] # Outline
@@ -603,7 +620,7 @@ harold = [(128, 160, 128), # Background
                 (248, 216, 128), # Light Leather
                 (208, 144, 96), # Mid Leather
                 (152, 112, 80), # Dark Leather
-                (40, 40, 40), # ??
+                (240, 248, 240), # Weapon
                 (40, 40, 40), # ??
                 (40, 40, 40), # ??
                 (40, 40, 40)] # Outline

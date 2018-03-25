@@ -211,6 +211,8 @@ def write_scripts(script, images, weapon_type):
                 current_frame = None
             elif command_code == '0E':  # Dodge
                 current_frame = None
+            elif command_code == '15':
+                current_pose.append('platform_shake')
             elif command_code == '1A':  # Start hit
                 crit = False
                 current_pose.append('screen_flash_white;4')
@@ -225,6 +227,8 @@ def write_scripts(script, images, weapon_type):
                     current_pose.append('start_hit')
                 current_frame = None
             # Sounds
+            elif command_code == '1B':
+                current_pose.append('sound;Foot Step')
             elif command_code == '1C':
                 current_pose.append('sound;Horse Step 1')
             elif command_code == '1D':
@@ -239,6 +243,8 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('sound;Weapon Swing')
             elif command_code == '25':
                 current_pose.append('sound;Heavy Wing Flap')
+            elif command_code == '2B':
+                current_pose.append('sound;ArmorShift')
             elif command_code == '38':
                 current_pose.append('sound;Heavy Spear Spin')
             else:
@@ -269,6 +275,31 @@ def write_scripts(script, images, weapon_type):
             for line in line_list:
                 s.write(line + '\n')
             s.write('\n')
+
+    def collate_script(script):
+        for pose in script.keys():
+            new_line_list = []
+            old_line_list = script[pose]
+            prev, curr = None, None
+            while old_line_list:
+                curr = old_line_list.pop()
+                if prev:
+                    if curr.startswith('f;') and prev.startswith('f;'):
+                        c_s = curr.split(';')
+                        p_s = prev.split(';')
+                        if p_s[2:] == c_s[2:]:
+                            curr = 'f;' + str(int(c_s[1]) + int(p_s[1])) + ';' + ';'.join(c_s[2:])
+                            prev = None
+                if prev:
+                    new_line_list.append(prev)
+                prev = curr
+            if prev:
+                new_line_list.append(prev)
+            script[pose] = list(reversed(new_line_list))
+
+    # Combines frame numbers if they are the same frame
+    collate_script(melee_script)
+    collate_script(ranged_script)
 
     # Now actually write scripts
     if weapon_type == 'Sword':
@@ -304,9 +335,9 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapons_types = {'Sword', 'Lance', 'Axe'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed'}
 weapon_type = script[:-4]
-if weapon_type not in weapons_types:
+if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
 
 # Convert to images
@@ -332,7 +363,8 @@ for name in images.keys():
         image1 = image.crop((0, 0, 240, image.height))
         image2 = image.crop((240, 0, 480, image.height))
         new_images[name] = image1
-        new_images[name + '_under'] = image2
+        if image1 != image2:
+            new_images[name + '_under'] = image2
 images.update(new_images)
 
 bg_color = determine_bg_color(images.values()[0])
@@ -348,6 +380,8 @@ for name, image in sorted(images.items()):
 
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
+if weapon_type == 'Disarmed':
+    weapon_type = 'Unarmed'
 animation_collater(melee_images, bg_color, weapon_type)
 if ranged_images:
     if weapon_type == 'Sword':
