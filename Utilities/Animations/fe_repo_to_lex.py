@@ -164,6 +164,7 @@ def write_scripts(script, images, weapon_type):
 
         elif line.startswith('C'):
             command_code = line[1:3]
+            write_extra_frame = True
             if command_code == '01':
                 if current_mode == 12:  # Miss
                     write_frame(current_pose, current_frame, 1)
@@ -181,7 +182,7 @@ def write_scripts(script, images, weapon_type):
                     write_frame(current_pose, current_frame, 4)
                 elif current_mode in (9, 10, 11):
                     write_frame(current_pose, current_frame, 3)
-                current_frame = None  # 01 does not drop 1 frame after it runs
+                write_extra_frame = False  # 01 does not drop 1 frame after it runs
             elif command_code == '02':
                 pass  # Normally says this is a dodge, but that doesn't matter
             elif command_code == '03':
@@ -191,7 +192,7 @@ def write_scripts(script, images, weapon_type):
                     pass
                 else:
                     current_pose.append('enemy_flash_white;8')
-                    current_frame = None
+                    write_extra_frame = False
             elif command_code == '05':  # Start spell
                 if weapon_type == 'Sword':
                     current_pose.append('spell')
@@ -208,9 +209,9 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('foreground_blend;2;248,248,248')
             elif command_code == '0D':  # End
                 write_frame(current_pose, current_frame, 1)
-                current_frame = None
+                write_extra_frame = False
             elif command_code == '0E':  # Dodge
-                current_frame = None
+                write_extra_frame = False
             elif command_code == '15':
                 current_pose.append('platform_shake')
             elif command_code == '1A':  # Start hit
@@ -225,7 +226,7 @@ def write_scripts(script, images, weapon_type):
                     write_frame(current_pose, current_frame, 2)
                     current_pose.append('hit_spark')
                     current_pose.append('start_hit')
-                current_frame = None
+                write_extra_frame = False
             # Sounds
             elif command_code == '1B':
                 current_pose.append('sound;Foot Step')
@@ -250,8 +251,7 @@ def write_scripts(script, images, weapon_type):
             else:
                 print('Unknown Command Code: C%s' % command_code)
             
-            # Need to keep track of how many of these we pass, since each adds a frame
-            if current_frame:
+            if write_extra_frame and current_frame:
                 write_frame(current_pose, current_frame, 1)
             
         elif line.startswith('~~~'):
