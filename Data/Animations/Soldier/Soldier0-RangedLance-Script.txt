@@ -1,7 +1,10 @@
 pose;Dodge
+f;1;Lance_000
+f;3;Lance_026
+f;27;Lance_027
+f;4;Lance_026
 
 pose;Attack
-f;2;Lance_011
 f;6;Lance_000
 sound;Weapon Pull
 f;1;Lance_000
@@ -11,20 +14,18 @@ f;11;Lance_018
 sound;Heavy Wing Flap
 f;1;Lance_018
 f;4;Lance_019
-spell;JavelinSoldier
-f;1;Lance_019
+spell;Javelin
 f;1;Lance_020
 start_loop
 f;4;Lance_020
 end_loop
 f;4;Lance_020
 f;7;Lance_018
-f;4;Lance_017
+f;3;Lance_017
 f;3;Lance_016
 f;4;Lance_021
 
 pose;Critical
-f;2;Lance_021
 f;6;Lance_000
 sound;Heavy Spear Spin
 f;1;Lance_000
@@ -41,15 +42,14 @@ f;11;Lance_018
 sound;Heavy Wing Flap
 f;1;Lance_018
 f;4;Lance_019
-spell;JavelinSoldier
-f;1;Lance_019
+spell;Javelin
 f;1;Lance_020
 start_loop
 f;4;Lance_020
 end_loop
 f;4;Lance_020
 f;7;Lance_018
-f;4;Lance_017
+f;3;Lance_017
 f;3;Lance_016
 f;4;Lance_021
 

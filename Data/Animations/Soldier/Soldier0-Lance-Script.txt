@@ -1,5 +1,4 @@
 pose;Dodge
-f;1;Lance_021
 f;1;Lance_000
 f;3;Lance_026
 f;27;Lance_027
@@ -32,10 +31,9 @@ f;5;Lance_009
 sound;Foot Step
 f;1;Lance_009
 f;6;Lance_010
-f;9;Lance_011
+f;8;Lance_011
 
 pose;Critical
-f;2;Lance_011
 f;6;Lance_000
 f;3;Lance_012
 f;4;Lance_013
@@ -69,15 +67,15 @@ f;5;Lance_009
 sound;Foot Step
 f;1;Lance_009
 f;6;Lance_010
-f;9;Lance_011
+f;8;Lance_011
 
 pose;Miss
-f;8;Lance_000
+f;6;Lance_000
 f;4;Lance_001
 sound;Foot Step
 f;1;Lance_001
 f;4;Lance_002
-f;7;Lance_003
+f;6;Lance_003
 sound;Weapon Push
 f;1;Lance_003
 f;2;Lance_028
@@ -95,7 +93,7 @@ f;5;Lance_009
 sound;Foot Step
 f;1;Lance_009
 f;6;Lance_010
-f;9;Lance_011
+f;8;Lance_011
 
 pose;Stand
 f;4;Lance_000

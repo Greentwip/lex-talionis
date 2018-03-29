@@ -35,6 +35,7 @@ class BattleAnimation(object):
         self.num_frames = 0  # How long this frame of animation should exist for (in frames)
         self.animations = []
         self.base_state = False  # Whether the animation is in a basic state (normally Stand or wait_for_hit)
+        self.wait_for_hit = False
 
         self.children = []
         self.under_children = []
@@ -239,18 +240,19 @@ class BattleAnimation(object):
             # Also offset partner by [-1, -2, -3, -2, -1]
             self.partner.lr_offset = [-1, -2, -3, -2, -1]
         elif line[0] == 'wait_for_hit':
-            if len(line) > 1:
-                self.current_frame = self.frame_directory[line[1]]
-            else:
-                self.current_frame = None
-            if len(line) > 2:
-                self.under_frame = self.frame_directory[line[2]]
-            else:
-                self.under_frame = None
-            self.over_frame = None
-            self.state = 'Wait'
-            self.processing = False
-            self.base_state = True
+            if self.wait_for_hit:
+                if len(line) > 1:
+                    self.current_frame = self.frame_directory[line[1]]
+                else:
+                    self.current_frame = None
+                if len(line) > 2:
+                    self.under_frame = self.frame_directory[line[2]]
+                else:
+                    self.under_frame = None
+                self.over_frame = None
+                self.state = 'Wait'
+                self.processing = False
+                self.base_state = True
         elif line[0] == 'spell_hit':
             # To handle ruin item
             if not self.item.half or self.owner.current_result.def_damage > 0:
@@ -459,6 +461,7 @@ class BattleAnimation(object):
     def start_anim(self, pose):
         self.current_pose = pose
         self.script_index = 0
+        self.wait_for_hit = True
         self.reset()
 
     def resume(self):
@@ -471,6 +474,7 @@ class BattleAnimation(object):
         if self.under_children:
             for child in self.under_children:
                 child.resume()
+        self.wait_for_hit = False
 
     def reset(self):
         self.state = 'Run'

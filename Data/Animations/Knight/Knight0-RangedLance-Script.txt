@@ -22,7 +22,6 @@ f;1;Lance_025
 f;20;Lance_026
 f;3;Lance_027
 spell;JavelinKnight
-f;1;Lance_027
 f;1;Lance_028
 start_loop
 f;4;Lance_028
@@ -71,7 +70,6 @@ f;1;Lance_025
 f;40;Lance_026
 f;3;Lance_027
 spell;Javelin;Knight
-f;1;Lance_027
 f;1;Lance_028
 start_loop
 f;4;Lance_028

@@ -99,6 +99,7 @@ def write_scripts(script, images, weapon_type):
     current_pose = []
     current_frame = None
     crit = False
+    throwing_axe = False
     used_names = set()
 
     def write_frame(current_pose, name, num_frames):
@@ -159,6 +160,8 @@ def write_scripts(script, images, weapon_type):
             if line.startswith('/// - Mode '):
                 current_mode = int(line[11:])
                 current_pose = []  # New current pose
+                throwing_axe = False
+                current_frame = None
             else:
                 break  # Done
 
@@ -166,7 +169,12 @@ def write_scripts(script, images, weapon_type):
             command_code = line[1:3]
             write_extra_frame = True
             if command_code == '01':
-                if current_mode == 12:  # Miss
+                if throwing_axe:
+                    current_pose.append('start_loop')
+                    write_frame(current_pose, current_frame, 1)
+                    current_pose.append('end_loop')
+                    write_frame(current_pose, current_frame, 8)
+                elif current_mode == 12:  # Miss
                     write_frame(current_pose, current_frame, 1)
                     current_pose.append('miss')
                     write_frame(current_pose, current_frame, 30)
@@ -184,24 +192,23 @@ def write_scripts(script, images, weapon_type):
                     write_frame(current_pose, current_frame, 3)
                 write_extra_frame = False  # 01 does not drop 1 frame after it runs
             elif command_code == '02':
-                pass  # Normally says this is a dodge, but that doesn't matter
+                write_extra_frame = False  # Normally says this is a dodge, but that doesn't matter
             elif command_code == '03':
                 begin = True
             elif command_code == '04':
-                if current_mode == 12:  # Ignore if miss
-                    pass
-                else:
+                if current_mode != 12:  # Ignore if miss
                     current_pose.append('enemy_flash_white;8')
-                    write_extra_frame = False
+                write_extra_frame = False
             elif command_code == '05':  # Start spell
                 if weapon_type == 'Sword':
                     current_pose.append('spell')
                 elif weapon_type == 'Lance':
                     current_pose.append('spell;Javelin')
-                elif weapon_type == 'Axe':
+                elif weapon_type in ('Axe', 'Handaxe'):
                     current_pose.append('spell;ThrowingAxe')
+                write_extra_frame = False
             elif command_code == '06':
-                pass  # Normally starts enemy turn, but that doesn't happen in LT script
+                write_extra_frame = False  # Normally starts enemy turn, but that doesn't happen in LT script
             elif command_code == '07':
                 begin = True
             elif command_code in ('08', '09', '0A', '0B', '0C'):  # Start crit
@@ -212,6 +219,11 @@ def write_scripts(script, images, weapon_type):
                 write_extra_frame = False
             elif command_code == '0E':  # Dodge
                 write_extra_frame = False
+            elif command_code == '13':
+                current_pose.append('start_loop')
+                write_frame(current_pose, current_frame, 1)
+                current_pose.append('end_loop')
+                throwing_axe = True
             elif command_code == '15':
                 current_pose.append('platform_shake')
             elif command_code == '1A':  # Start hit
@@ -248,6 +260,10 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('sound;ArmorShift')
             elif command_code == '38':
                 current_pose.append('sound;Heavy Spear Spin')
+            elif command_code == '41':
+                current_pose.append('sound;Axe Pull')
+            elif command_code == '42':
+                current_pose.append('sound;Axe Push')
             else:
                 print('Unknown Command Code: C%s' % command_code)
             
@@ -279,7 +295,7 @@ def write_scripts(script, images, weapon_type):
     def collate_script(script):
         for pose in script.keys():
             new_line_list = []
-            old_line_list = script[pose]
+            old_line_list = [_ for _ in script[pose]]
             prev, curr = None, None
             while old_line_list:
                 curr = old_line_list.pop()
@@ -312,7 +328,7 @@ def write_scripts(script, images, weapon_type):
             write_script(melee_script, s)
         with open('RangedLance-Script.txt', 'w') as s:
             write_script(ranged_script, s)
-    elif weapon_type == 'Axe':
+    elif weapon_type in ('Axe', 'Handaxe'):
         with open('Axe-Script.txt', 'w') as s:
             write_script(melee_script, s)
         with open('RangedAxe-Script.txt', 'w') as s:
@@ -335,7 +351,7 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Handaxe'}
 weapon_type = script[:-4]
 if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
@@ -382,6 +398,8 @@ for name, image in sorted(images.items()):
 # Create image and index script
 if weapon_type == 'Disarmed':
     weapon_type = 'Unarmed'
+if weapon_type == 'Handaxe':
+    weapon_type = 'Axe'
 animation_collater(melee_images, bg_color, weapon_type)
 if ranged_images:
     if weapon_type == 'Sword':

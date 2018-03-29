@@ -15,7 +15,6 @@ f;13;Lance_035
 sound;Heavy Wing Flap
 f;1;Lance_035
 spell;JavelinCavalier
-f;1;Lance_035
 f;3;Lance_036
 f;1;Lance_037
 start_loop
@@ -49,7 +48,6 @@ f;13;Lance_035
 sound;Heavy Wing Flap
 f;1;Lance_035
 spell;JavelinCavalier
-f;1;Lance_035
 f;3;Lance_036
 f;1;Lance_037
 start_loop

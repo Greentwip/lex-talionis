@@ -1,5 +1,4 @@
 pose;Dodge
-f;1;Disarmed_001
 f;1;Disarmed_000
 f;3;Disarmed_001
 f;27;Disarmed_002

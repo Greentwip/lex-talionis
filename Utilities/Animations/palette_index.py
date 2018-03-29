@@ -1436,9 +1436,9 @@ fighter_blue = [(128, 160, 128), # Background
                 (200, 232, 240), # Light Weapon
                 (160, 192, 224), # Dark Weapon
                 (120, 152, 184), # Weapon Highlight
-                (64, 144, 248), # Light Clothes
-                (40, 40, 216), # Med Clothes
-                (48, 40, 128), # Dark Clothes
+                (104, 232, 248), # Light Clothes
+                (88, 136, 248), # Med Clothes
+                (56, 56, 208), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 sidney = [(128, 160, 128), # Background
