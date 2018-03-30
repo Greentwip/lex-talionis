@@ -98,7 +98,8 @@ def write_scripts(script, images, weapon_type):
     ranged_script, ranged_images = {}, set()
     current_pose = []
     current_frame = None
-    crit = False
+    crit = False  # Whether this is a critical hit
+    start_hit = False  # Whether we need to append our start_hit command after the next frame
     throwing_axe = False
     used_names = set()
 
@@ -196,9 +197,7 @@ def write_scripts(script, images, weapon_type):
             elif command_code == '03':
                 begin = True
             elif command_code == '04':
-                if current_mode != 12:  # Ignore if miss
-                    current_pose.append('enemy_flash_white;8')
-                write_extra_frame = False
+                write_extra_frame = False  # Normally prepares some code for returning to stand
             elif command_code == '05':  # Start spell
                 if weapon_type == 'Sword':
                     current_pose.append('spell')
@@ -213,7 +212,11 @@ def write_scripts(script, images, weapon_type):
                 begin = True
             elif command_code in ('08', '09', '0A', '0B', '0C'):  # Start crit
                 crit = True
+                current_pose.append('enemy_flash_white;8')
+                write_frame(current_pose, current_frame, 1)
                 current_pose.append('foreground_blend;2;248,248,248')
+                start_hit = True
+                write_extra_frame = False
             elif command_code == '0D':  # End
                 write_frame(current_pose, current_frame, 1)
                 write_extra_frame = False
@@ -228,16 +231,11 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('platform_shake')
             elif command_code == '1A':  # Start hit
                 crit = False
+                current_pose.append('enemy_flash_white;8')
+                write_frame(current_pose, current_frame, 1)
                 current_pose.append('screen_flash_white;4')
+                start_hit = True
             elif command_code in ('1F', '20', '21'):  # Actual hit
-                if crit:
-                    current_pose.append('start_hit')
-                    write_frame(current_pose, current_frame, 2)
-                    current_pose.append('crit_spark')
-                else:
-                    write_frame(current_pose, current_frame, 2)
-                    current_pose.append('hit_spark')
-                    current_pose.append('start_hit')
                 write_extra_frame = False
             # Sounds
             elif command_code == '1B':
@@ -283,7 +281,18 @@ def write_scripts(script, images, weapon_type):
                 num_frames = 6
                 begin = False
             current_frame = name
-            write_frame(current_pose, current_frame, num_frames)
+            if not (start_hit and crit):  # Don't write this frame if we're starting a crit
+                write_frame(current_pose, current_frame, num_frames)
+            if start_hit:
+                if crit:
+                    current_pose.append('start_hit')
+                    write_frame(current_pose, current_frame, 2)
+                    current_pose.append('crit_spark')
+                else:
+                    write_frame(current_pose, current_frame, 2)
+                    current_pose.append('hit_spark')
+                    current_pose.append('start_hit')
+                start_hit = False
 
     def write_script(script, s):
         for pose, line_list in script.items():

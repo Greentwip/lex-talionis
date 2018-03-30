@@ -208,18 +208,18 @@ paladin_red = [(128, 160, 128), # Background
 paladin_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 216), # Light skin
-                (224, 192, 88), # Med skin
+                (232, 168, 88), # Med skin
                 (136, 104, 88), # Dark skin
-                (232, 232, 248), # Light Horse
-                (168, 176, 200), # Med Horse
-                (112, 128, 152), # Dark Horse
-                (248, 248, 80), # Trim
-                (128, 192, 248), # Light Armor
-                (56, 144, 232), # LM Armor
-                (40, 40, 200), # Med Armor
-                (48, 40, 128), # Dark Armor
-                (40, 40, 200), # Light Shield
-                (64, 56, 144), # Dark Shield
+                (216, 248, 248), # Light Horse
+                (144, 184, 200), # Med Horse
+                (96, 136, 152), # Dark Horse
+                (248, 248, 72), # Trim
+                (176, 232, 248), # Light Armor
+                (136, 176, 240), # LM Armor
+                (72, 96, 240), # Med Armor
+                (64, 56, 168), # Dark Armor
+                (248, 248, 248), # Light Shield
+                (144, 216, 248), # Dark Shield
                 (40, 40, 40)] # Outline
 
 black_3 =  [(168, 144, 152), # Light Horse
