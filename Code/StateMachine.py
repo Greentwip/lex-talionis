@@ -1111,9 +1111,7 @@ class ItemChildState(State):
                 use = False
             elif selection.c_uses and selection.c_uses.uses <= 0:
                 use = False
-            elif selection.promotion and (current_unit.level < cf.CONSTANTS['max_level']/2 or 
-                                          len(metaDataObj['class_dict'][current_unit.klass]['turns_into']) < 1 or 
-                                          current_unit.klass not in selection.promotion):
+            elif selection.promotion and not current_unit.can_promote_using(selection, metaDataObj):
                 use = False
             if use:
                 options.append(cf.WORDS['Use'])

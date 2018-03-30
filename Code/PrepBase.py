@@ -4,7 +4,7 @@ import os
 # Custom imports
 import GlobalConstants as GC
 import configuration as cf
-import StateMachine, MenuFunctions, ItemMethods
+import StateMachine, MenuFunctions, ItemMethods, Utility
 import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine
 
 class PrepMainState(StateMachine.State):
@@ -411,12 +411,11 @@ class PrepItemsChoicesState(StateMachine.State):
         current_unit = gameStateObj.cursor.currentSelectedUnit
         if item.usable and item.booster:
             if item.promotion:
-                if (current_unit.level >= cf.CONSTANTS['max_level']/2 and 
-                        len(gameStateObj.metaDataObj['class_dict'][current_unit.klass]['turns_into']) >= 1 and 
-                        current_unit.klass in item.promotion):
+                if current_unit.can_promote_using(item, gameStateObj.metaDataObj):
                     return True
                 return False
             return True
+        return False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)

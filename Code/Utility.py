@@ -59,6 +59,11 @@ def get_color(team):
     else:
         return 'Red'
 
+# === DETERMINES MAX LEVEL FOR CLASS AT TIER ===========================
+def find_max_level(tier, max_level_list):
+    closest_tier = clamp(tier, 0, len(max_level_list) - 1)
+    return max_level_list[closest_tier]
+
 # === RAYTRACE ALGORITHM FOR TAXICAB GRID ==============================
 def raytrace(old, new):
     x0, y0 = old

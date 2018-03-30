@@ -775,7 +775,16 @@ class UnitObject(object):
         self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
 
     def get_true_level(self, metaDataObj):
-        return self.level + (metaDataObj['class_dict'][self.klass]['tier'] - 1) * cf.CONSTANTS['max_level']
+        unit_klass = metaDataObj['class_dict'][self.klass]
+        counter = self.level
+        for tier in range(unit_klass['tier']):
+            counter += Utility.find_max_level(tier, cf.CONSTANTS['max_level'])
+        return counter
+
+    def can_promote_using(self, item, metaDataObj):
+        unit_klass = metaDataObj['class_dict'][self.klass]
+        max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+        return self.level >= max_level/2 and len(unit_klass['turns_into']) >= 1 and self.klass in item.promotion
 
     def handle_booster(self, item, gameStateObj):
         # Handle uses

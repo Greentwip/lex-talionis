@@ -73,8 +73,12 @@ class levelUpScreen(object):
     def update(self, gameStateObj, metaDataObj):
         # print(self.state.getState())
         # Don't do this if there is no exp change
-        if not self.force_level and self.expNew == 0 or \
-                (self.unit.level >= cf.CONSTANTS['max_level'] and metaDataObj['class_dict'][self.unit.klass]['turns_into'] is None):
+        if not self.force_level and self.expNew == 0:
+            return True
+
+        unit_klass = metaDataObj['class_dict'][self.unit.klass]
+        max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+        if self.unit.level >= max_level and unit_klass['turns_into'] is None:
             return True # We're done here
 
         currentTime = Engine.get_time()
@@ -104,7 +108,7 @@ class levelUpScreen(object):
                 GC.SOUNDDICT['Experience Gain'].stop() 
 
             if self.expSet >= 100:
-                if self.unit.level >= cf.CONSTANTS['max_level']: # If I would promote because I am level 20
+                if self.unit.level >= max_level: # If I would promote because I am level 20
                     GC.SOUNDDICT['Experience Gain'].stop()
                     GC.SOUNDDICT['Level Up'].play()
                     self.state.clear()

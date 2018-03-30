@@ -109,7 +109,7 @@ def read_constants_file():
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'difficulties': 'Normal,Hard,Lunatic',
              'only_difficulty': -1,
-             'max_level': 20, # Maximum Level for any class.
+             'max_level': '20', # Maximum Level for class by tier ('10, 20, 20,')
              'auto_promote': 0, # Promote after max-level?
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
@@ -161,7 +161,7 @@ def read_constants_file():
     lines['num_stats'] = int(lines['num_stats'])
     lines['stat_names'] = lines['stat_names'].split(',')
     lines['difficulties'] = lines['difficulties'].split(',')
-    lines['max_level'] = int(lines['max_level'])
+    lines['max_level'] = [int(n) for n in lines['max_level'].split(',')]
     lines['auto_promote'] = int(lines['auto_promote'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
     lines['damage_mag_coef'] = float(lines['damage_mag_coef'])

@@ -440,7 +440,8 @@ def get_unit_info(class_dict, klass, level, item_line, gameStateObj):
     bases = [sum(x) for x in zip(bases, gameStateObj.modify_stats['enemy_bases'])]
     growths = [sum(x) for x in zip(growths, gameStateObj.modify_stats['enemy_growths'])]
 
-    mod_level = level + (class_dict[klass]['tier'] - 1) * cf.CONSTANTS['max_level']
+    max_level = Utility.find_max_level(class_dict[klass]['tier'], cf.CONSTANTS['max_level'])
+    mod_level = level + (class_dict[klass]['tier'] - 1) * max_level
     stats, growth_points = auto_level(bases, growths, mod_level, class_dict[klass]['max'], gameStateObj)
     # Make sure we don't exceed max
     stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
