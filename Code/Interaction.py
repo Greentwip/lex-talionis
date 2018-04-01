@@ -453,23 +453,28 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                 # Build attacker animation
                 attacker_script = attacker_anim['script']
                 attacker_color = Utility.get_color(attacker.team)
+                name = None
                 if attacker.name in attacker_anim['images']:
-                    attacker_frame_dir = attacker_anim['images'][attacker.name]
+                    name = attacker.name
+                    attacker_frame_dir = attacker_anim['images'][name]
                 elif 'Generic' + attacker_color in attacker_anim['images']:
-                    attacker_frame_dir = attacker_anim['images']['Generic' + attacker_color]
+                    name = 'Generic' + attacker_color
+                    attacker_frame_dir = attacker_anim['images'][name]
                 else:  # Just a map combat
                     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
-                attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, item=item)
+                attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, name, item)
                 # Build defender animation
                 defender_script = defender_anim['script']
                 defender_color = Utility.get_color(defender.team)
                 if defender.name in defender_anim['images']:
-                    defender_frame_dir = defender_anim['images'][defender.name]
+                    name = defender.name
+                    defender_frame_dir = defender_anim['images'][name]
                 elif 'Generic' + defender_color in defender_anim['images']:
-                    defender_frame_dir = defender_anim['images']['Generic' + defender_color]
+                    name = 'Generic' + defender_color
+                    defender_frame_dir = defender_anim['images'][name]
                 else:
                     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
-                defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script, item=defender.getMainWeapon())
+                defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script, name, defender.getMainWeapon())
                 return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
     # default
     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)

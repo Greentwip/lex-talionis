@@ -24,13 +24,13 @@ class Loop(object):
 class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
 
-    def __init__(self, unit, anim, script, name=None, item=None):
+    def __init__(self, unit, anim, script, palette_name=None, item=None):
         self.unit = unit
         self.item = item
         self.frame_directory = anim
         self.poses = script
         self.current_pose = None
-        self.name = name
+        self.palette_name = palette_name
         self.state = 'Inert'  # Internal state
         self.num_frames = 0  # How long this frame of animation should exist for (in frames)
         self.animations = []
@@ -357,26 +357,26 @@ class BattleAnimation(object):
                 self.no_damage()
         # === EFFECTS ===
         elif line[0] == 'effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
             # print('Effect', script)
-            child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
+            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             if len(line) > 2:
                 child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.children.append(child_effect)
         elif line[0] == 'under_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
             # print('Effect', script)
-            child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
+            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             if len(line) > 2:
                 child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
-            child_effect = BattleAnimation(self.partner.unit, image, script, line[1], self.item)
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
+            child_effect = BattleAnimation(self.partner.unit, image, script, self.palette_name, self.item)
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
                                self.at_range, parent=self.parent.partner)
@@ -385,8 +385,8 @@ class BattleAnimation(object):
             child_effect.start_anim(self.current_pose)
             self.partner.children.append(child_effect)
         elif line[0] == 'enemy_under_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
-            child_effect = BattleAnimation(self.partner.unit, image, script, line[1], self.item)
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
+            child_effect = BattleAnimation(self.partner.unit, image, script, self.palette_name, self.item)
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
                                self.at_range, parent=self.parent.partner)
@@ -406,8 +406,8 @@ class BattleAnimation(object):
                 item_id = line[1]
             else:
                 item_id = self.item.id
-            image, script = GC.ANIMDICT.get_effect(item_id)
-            child_effect = BattleAnimation(self.unit, image, script, item_id, self.item)
+            image, script = GC.ANIMDICT.get_effect(item_id, self.palette_name)
+            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             child_effect.start_anim(self.current_pose)
             self.children.append(child_effect)
@@ -432,6 +432,11 @@ class BattleAnimation(object):
                 self.script_index = self.loop.start_index  # re-loop
         elif line[0] == 'end_parent_loop':
             self.parent.end_loop()
+        elif line[0] == 'end_child_loop':
+            for child in self.children:
+                child.end_loop()
+            for child in self.under_children:
+                child.end_loop()
         elif line[0] == 'defer':
             num_frames = int(line[1])
             rest_of_line = line[2:]

@@ -36,7 +36,11 @@ def animation_collater(images, bg_color, weapon_type):
                     image.putpixel((x, y), (0, 0, 0))
 
         # Now get bbox
-        left, upper, right, lower = image.getbbox()
+        bbox = image.getbbox()
+        if not bbox:
+            print('Replace instances of %s with "wait" command!' % name)
+            continue
+        left, upper, right, lower = bbox
         width, height = right - left, lower - upper
         # Offset from 0, 0
         offset = left, upper
@@ -101,6 +105,7 @@ def write_scripts(script, images, weapon_type):
     crit = False  # Whether this is a critical hit
     start_hit = False  # Whether we need to append our start_hit command after the next frame
     throwing_axe = False
+    dodge_front = False
     used_names = set()
 
     def write_frame(current_pose, name, num_frames):
@@ -109,6 +114,14 @@ def write_scripts(script, images, weapon_type):
             used_names.add(name + '_under')
         else:
             current_pose.append('f;' + str(num_frames) + ';' + name)
+        used_names.add(name)
+
+    def write_over_frame(current_pose, name, num_frames):
+        if (name + '_under') in images:
+            current_pose.append('of;' + str(num_frames) + ';' + name + ';' + name + '_under')
+            used_names.add(name + '_under')
+        else:
+            current_pose.append('of;' + str(num_frames) + ';' + name)
         used_names.add(name)
 
     def write_wait_for_hit(current_pose, name):
@@ -163,6 +176,8 @@ def write_scripts(script, images, weapon_type):
                 current_pose = []  # New current pose
                 throwing_axe = False
                 current_frame = None
+                dodge_front = False
+                shield_toss = False
             else:
                 break  # Done
 
@@ -185,10 +200,16 @@ def write_scripts(script, images, weapon_type):
                     current_pose.append('end_loop')
                     write_frame(current_pose, current_frame, 4)
                 elif current_mode == 7 or current_mode == 8:  # Dodge
-                    write_frame(current_pose, current_frame, 26)
+                    if dodge_front:
+                        write_over_frame(current_pose, current_frame, 26)
+                    else:
+                        write_frame(current_pose, current_frame, 26)
                 elif current_mode in (1, 2, 3, 4):
                     write_wait_for_hit(current_pose, current_frame)
-                    write_frame(current_pose, current_frame, 4)
+                    if shield_toss:
+                        current_pose.append('end_child_loop')
+                    else:
+                        write_frame(current_pose, current_frame, 4)
                 elif current_mode in (9, 10, 11):
                     write_frame(current_pose, current_frame, 3)
                 write_extra_frame = False  # 01 does not drop 1 frame after it runs
@@ -227,8 +248,13 @@ def write_scripts(script, images, weapon_type):
                 write_frame(current_pose, current_frame, 1)
                 current_pose.append('end_loop')
                 throwing_axe = True
+            elif command_code == '14':
+                current_pose.append('screen_shake')
             elif command_code == '15':
                 current_pose.append('platform_shake')
+            elif command_code == '18':
+                dodge_front = True  # Dodge to the front
+                write_extra_frame = False  
             elif command_code == '1A':  # Start hit
                 crit = False
                 current_pose.append('enemy_flash_white;8')
@@ -254,8 +280,19 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('sound;Weapon Swing')
             elif command_code == '25':
                 current_pose.append('sound;Heavy Wing Flap')
+            elif command_code == '26' or command_code == '27':
+                current_pose.append('effect;ShieldToss')
+                shield_toss = True
             elif command_code == '2B':
                 current_pose.append('sound;ArmorShift')
+            elif command_code == '34':
+                current_pose.append('sound;Step Back 1')
+            elif command_code == '35':
+                current_pose.append('sound;Long Wing Flap')
+            elif command_code == '36':
+                current_pose.append('sound;Unsheathe')
+            elif command_code == '37':
+                current_pose.append('sound;Sheathe')
             elif command_code == '38':
                 current_pose.append('sound;Heavy Spear Spin')
             elif command_code == '41':
@@ -266,7 +303,10 @@ def write_scripts(script, images, weapon_type):
                 print('Unknown Command Code: C%s' % command_code)
             
             if write_extra_frame and current_frame:
-                write_frame(current_pose, current_frame, 1)
+                if dodge_front:
+                    write_over_frame(current_pose, current_frame, 1)
+                else:
+                    write_frame(current_pose, current_frame, 1)
             
         elif line.startswith('~~~'):
             pass
@@ -282,7 +322,10 @@ def write_scripts(script, images, weapon_type):
                 begin = False
             current_frame = name
             if not (start_hit and crit):  # Don't write this frame if we're starting a crit
-                write_frame(current_pose, current_frame, num_frames)
+                if dodge_front:
+                    write_over_frame(current_pose, current_frame, num_frames)
+                else:
+                    write_frame(current_pose, current_frame, num_frames)
             if start_hit:
                 if crit:
                     current_pose.append('start_hit')

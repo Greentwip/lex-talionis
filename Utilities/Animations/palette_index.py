@@ -386,15 +386,15 @@ mercenary_blue = [(128, 160, 128), # Background
                 (248, 192, 144), # Med skin
                 (176, 112, 64), # DM skin
                 (112, 80, 48), # Dark skin
-                (176, 192, 224), # Light Hair
-                (108, 152, 184), # Med Hair
-                (96, 96, 144), # Dark Hair
+                (96, 208, 96), # Light Hair
+                (88, 120, 8), # Med Hair
+                (16, 72, 0), # Dark Hair
                 (192, 224, 232), # Light Weapon/Leather
                 (152, 184, 216), # Med Weapon/Leather
                 (96, 128, 160), # Dark Weapon/String
-                (72, 160, 248), # Light Clothes
-                (56, 56, 248), # Med Clothes
-                (40, 40, 144), # Dark Clothes
+                (144, 200, 224), # Light Clothes
+                (88, 136, 248), # Med Clothes
+                (40, 64, 192), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 mercenary_green = [(128, 160, 128), # Background
@@ -403,15 +403,15 @@ mercenary_green = [(128, 160, 128), # Background
                  (248, 192, 144), # Med skin
                  (176, 112, 64), # DM skin
                  (112, 80, 48), # Dark skin
-                 (176, 192, 224), # Light Hair
-                 (108, 152, 184), # Med Hair
-                 (96, 96, 144), # Dark Hair
+                 (104, 192, 104), # Light Hair
+                 (88, 120, 8), # Med Hair
+                 (16, 72, 0), # Dark Hair
                  (192, 224, 232), # Light Weapon/Leather
                  (152, 184, 216), # Med Weapon/Leather
                  (96, 128, 160), # Dark Weapon/String
-                 (64, 208, 144), # Light Clothes
-                 (8, 176, 48), # Med Clothes
-                 (0, 144, 0), # Dark Clothes
+                 (192, 248, 120), # Light Clothes
+                 (56, 208, 16), # Med Clothes
+                 (40, 104, 56), # Dark Clothes
                  (40, 40, 40)] # Outline
 
 generic_mercenary = [(255, 255, 255),
@@ -455,6 +455,20 @@ throwing_axe = [(248, 248, 248),
                 (248, 184, 136),
                 (208, 216, 208)]
 
+hero_shield = [(40, 40, 40),  # Border
+               (232, 192, 136),  # Med Shield
+               (176, 136, 96),  # Dark Shield
+               (112, 80, 56),  # Med Leather
+               (72, 80, 0),  # Light Shield
+               (128, 216, 232)]  # Light Leather
+
+hero_shield_red = [(40, 40, 40),  # Border
+               (248, 56, 16),  # Med Shield  
+               (144, 0, 0),  # Dark Shield
+               (184, 136, 88),  # DM Skin
+               (248, 160, 72),  # Light Shield
+               (248, 192, 144)]  # LM Skin
+
 hero_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
@@ -471,6 +485,13 @@ hero_red = [(128, 160, 128), # Background
                 (248, 56, 16), # Med Clothes
                 (144, 0, 0), # Dark Clothes
                 (40, 40, 40)] # Outline
+
+hero_shield_coyote = [(40, 40, 40),  # Border
+               (168, 64, 64),  # Med Shield  
+               (48, 40, 40),  # Dark Shield
+               (184, 136, 88),  # DM Skin
+               (168, 88, 88),  # Light Shield
+               (248, 192, 144)]  # LM Skin
 
 hero_coyote = [(128, 160, 128), # Background
                 (248, 248, 248), # White
@@ -489,21 +510,28 @@ hero_coyote = [(128, 160, 128), # Background
                 (48, 40, 40), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+hero_shield_blue = [(40, 40, 40),  # Border
+               (64, 184, 248),  # Med Shield  
+               (40, 88, 216),  # Dark Shield
+               (184, 136, 88),  # DM Skin
+               (128, 248, 248),  # Light Shield
+               (248, 192, 144)]  # LM Skin
+
 hero_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # LM skin
                 (184, 136, 88), # DM skin
                 (112, 72, 56), # Dark skin
-                (176, 192, 224), # Light Hair
-                (108, 152, 184), # Med Hair
-                (96, 96, 144), # Dark Hair
+                (152, 128, 88), # Light Hair
+                (120, 96, 64), # Med Hair
+                (88, 64, 40), # Dark Hair
                 (192, 224, 232), # Light Weapon/Leather
                 (152, 184, 216), # Med Weapon/Leather
                 (112, 144, 176), # Dark Weapon/String
-                (72, 160, 248), # Light Clothes
-                (56, 56, 248), # Med Clothes
-                (40, 40, 144), # Dark Clothes
+                (128, 248, 248), # Light Clothes
+                (64, 184, 248), # Med Clothes
+                (40, 88, 216), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 generic_hero = [(255, 255, 255),

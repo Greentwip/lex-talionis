@@ -1,58 +1,72 @@
-pose;Stand
-f;4;Stand
-
 pose;Dodge
-f;1;Stand
-of;3;Dodge1
-of;27;Dodge2
-of;4;Dodge1
-f;1;Stand
+of;1;Handaxe_000
+of;3;Handaxe_010
+of;1;Handaxe_011
+of;26;Handaxe_011
+of;3;Handaxe_010
+f;1;Handaxe_010
 
 pose;Attack
-f;6;Stand
+f;6;Handaxe_000
 sound;Weapon Push
-f;3;Attack1
-f;14;Attack2
+f;1;Handaxe_000
+f;3;Handaxe_001
+f;13;Handaxe_002
+sound;Weapon Pull
+f;1;Handaxe_002
+f;3;Handaxe_003
+spell;ThrowingAxe
+f;3;Handaxe_004
+f;1;Handaxe_005
 sound;Weapon Push
-f;4;Attack3
-enemy_flash_white;8
-effect;ThrowingAxe
-f;1;Attack4
-screen_flash_white;4
-f;4;Attack4
-pan
-hit_spark
-start_hit
-f;23;Attack4
-# Put Axe away
-f;3;Attack3
-f;3;Attack1
-wait_for_hit;Attack2
-f;23;Attack2
-pan
-f;13;Attack2
-f;3;Attack1
-f;1;Stand
+f;1;Handaxe_005
+start_loop
+f;1;Handaxe_005
+end_loop
+f;1;Handaxe_005
+f;3;Handaxe_003
+f;2;Handaxe_001
+f;3;Handaxe_002
+start_loop
+f;1;Handaxe_002
+end_loop
+f;8;Handaxe_002
+f;3;Handaxe_001
 
-pose;Miss
-f;6;Stand
+pose;Critical
+f;6;Handaxe_000
 sound;Weapon Push
-f;3;Attack1
-f;14;Attack2
+f;1;Handaxe_000
+f;3;Handaxe_001
+sound;Heavy Spear Spin
+f;1;Handaxe_001
+f;3;Handaxe_002
+f;2;Handaxe_006
+f;4;Handaxe_007
+f;3;Handaxe_008
+f;3;Handaxe_009
+f;13;Handaxe_002
+sound;Weapon Pull
+f;1;Handaxe_002
+f;3;Handaxe_003
+spell;ThrowingAxe
+f;3;Handaxe_004
+f;1;Handaxe_005
 sound;Weapon Push
-f;4;Attack3
-effect;ThrowingAxe
-f;2;Attack4
-miss
-f;2;Attack4
-pan
-f;2;Attack4
-f;22;Attack4
-# Put Axe away
-f;3;Attack3
-f;3;Attack1
-f;23;Attack2
-pan
-f;13;Attack2
-f;3;Attack1
-f;1;Stand
+f;1;Handaxe_005
+start_loop
+f;1;Handaxe_005
+end_loop
+f;1;Handaxe_005
+f;3;Handaxe_003
+f;2;Handaxe_001
+f;3;Handaxe_002
+start_loop
+f;1;Handaxe_002
+end_loop
+f;8;Handaxe_002
+f;3;Handaxe_001
+
+pose;Stand
+f;4;Handaxe_000
+
