@@ -1406,16 +1406,16 @@ myrmidon_blue = [(128, 160, 128), # Background
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
                 (112, 72, 48), # Dark skin
-                (216, 216, 224), # Light Hair
-                (176, 176, 192), # Med Hair
-                (112, 112, 144), # Dark Hair
+                (184, 136, 104), # Light Hair
+                (136, 88, 64), # Med Hair
+                (96, 56, 40), # Dark Hair
                 (176, 208, 240), # Light Weapon/Leather
                 (120, 152, 184), # Med Weapon/Leather
                 (80, 112, 144), # Dark Weapon/String
-                (128, 192, 248), # Light Clothes
-                (48, 136, 248), # LM Clothes
-                (40, 40, 200), # MD Clothes
-                (48, 40, 128), # Dark Clothes
+                (168, 248, 248), # Light Clothes
+                (72, 216, 248), # LM Clothes
+                (80, 128, 248), # MD Clothes
+                (56, 56, 192), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 garcia = [(128, 160, 128), # Background
