@@ -96,7 +96,7 @@ Command list
 0x16 Unused; does nothing
 0x17 Unused; does nothing
 0x18 Use this instead of 0x02 to dodge toward the foreground instead of toward the background
-0x19 Play bow pulling SFE
+0x19 Play bow pulling SFE - Bow
 0x1A Normal hit
 0x1B Play quick "heavy step" SFE - Foot Step
 0x1C Play light horse stepping SFE; pitch decreases - Horse Step 1

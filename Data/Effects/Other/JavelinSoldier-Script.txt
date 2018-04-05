@@ -1,4 +1,4 @@
-# Knight Javelin Throw
+# Soldier Javelin Throw
 pose;Attack
 sound;Throw 1;Throw 2;Throw 3
 enemy_flash_white;8
@@ -21,6 +21,8 @@ wait_for_hit
 end_parent_loop
 wait;10
 pan
+wait;8
+wait;1
 
 pose;Critical
 sound;Throw 1;Throw 2;Throw 3
@@ -44,6 +46,8 @@ wait;4
 end_parent_loop
 wait;10
 pan
+wait;8
+wait;1
 
 pose;Miss
 sound;Throw 1;Throw 2;Throw 3
@@ -64,3 +68,5 @@ wait;30
 end_parent_loop
 wait;6
 pan
+wait;8
+wait;1

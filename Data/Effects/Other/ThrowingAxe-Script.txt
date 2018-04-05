@@ -36,6 +36,7 @@ wait_for_hit
 wait;20
 end_parent_loop
 pan
+wait;8
 wait;1
 
 pose;Miss
@@ -72,4 +73,47 @@ end_parent_loop
 wait;27
 end_parent_loop
 pan
+wait;8
+wait;1
+
+pose;Critical
+static
+enemy_flash_white;8
+f;1;Attack0
+foreground_blend;2;248,248,248
+start_hit
+f;1;AttackMiss1
+f;1;AttackMiss2
+sound;Whistle
+crit_spark
+pan
+f;1;AttackMiss2
+f;1;AttackMiss3
+f;1;Attack1
+f;2;Attack2
+f;2;Attack3
+# Disappears offscreen
+wait;1
+f;2;Attack4
+sound;Whistle
+f;1;Attack5
+f;2;Attack6
+f;1;Attack7
+f;2;Attack8
+f;2;Attack9
+sound;Whistle
+f;1;Attack10
+f;1;Attack11
+f;2;Attack12
+f;1;Attack13
+f;1;Attack14
+wait;1
+sound;Whistle
+# 23
+end_parent_loop
+wait_for_hit
+wait;20
+end_parent_loop
+pan
+wait;8
 wait;1

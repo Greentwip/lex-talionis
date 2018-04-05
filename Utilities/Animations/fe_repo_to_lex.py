@@ -226,6 +226,8 @@ def write_scripts(script, images, weapon_type):
                     current_pose.append('spell;Javelin')
                 elif weapon_type in ('Axe', 'Handaxe'):
                     current_pose.append('spell;ThrowingAxe')
+                elif weapon_type == 'Bow':
+                    current_pose.append('spell;Arrow')
                 write_extra_frame = False
             elif command_code == '06':
                 write_extra_frame = False  # Normally starts enemy turn, but that doesn't happen in LT script
@@ -264,6 +266,8 @@ def write_scripts(script, images, weapon_type):
             elif command_code in ('1F', '20', '21'):  # Actual hit
                 write_extra_frame = False
             # Sounds
+            elif command_code == '19':
+                current_pose.append('sound;Bow')
             elif command_code == '1B':
                 current_pose.append('sound;Foot Step')
             elif command_code == '1C':
@@ -380,16 +384,20 @@ def write_scripts(script, images, weapon_type):
             write_script(melee_script, s)
         with open('RangedLance-Script.txt', 'w') as s:
             write_script(ranged_script, s)
-    elif weapon_type in ('Axe', 'Handaxe'):
+    elif weapon_type == 'Axe':
         with open('Axe-Script.txt', 'w') as s:
             write_script(melee_script, s)
+    elif weapon_type == 'Handaxe':
         with open('RangedAxe-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
+    elif weapon_type == 'Bow':
+        with open('RangedBow-Script.txt', 'w') as s:
             write_script(ranged_script, s)
     elif weapon_type == 'Disarmed':
         # only need stand and dodge frames
-        melee_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
+        unarmed_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
         with open('Unarmed-Script.txt', 'w') as s:
-            write_script(melee_script, s)
+            write_script(unarmed_script, s)
 
     return melee_images, ranged_images
 
@@ -403,7 +411,7 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Handaxe'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Handaxe', 'Bow'}
 weapon_type = script[:-4]
 if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
@@ -452,11 +460,12 @@ if weapon_type == 'Disarmed':
     weapon_type = 'Unarmed'
 if weapon_type == 'Handaxe':
     weapon_type = 'Axe'
-animation_collater(melee_images, bg_color, weapon_type)
+if weapon_type != 'Bow':
+    animation_collater(melee_images, bg_color, weapon_type)
 if ranged_images:
     if weapon_type == 'Sword':
         animation_collater(ranged_images, bg_color, 'Magic' + weapon_type)
-    elif weapon_type in ('Lance', 'Axe'):
+    elif weapon_type in ('Lance', 'Axe', 'Bow'):
         animation_collater(ranged_images, bg_color, 'Ranged' + weapon_type)
 
 print(' === Done! ===')

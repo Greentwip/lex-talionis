@@ -16,13 +16,13 @@ joshua_old = [(128, 160, 128), # Background
                 (24, 48, 48), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-joshua = [(128, 160, 128), # Background
+joshua = [(0, 160, 160), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
                 (112, 72, 48), # Dark skin
-                (224, 48, 16), # Light Hair
-                (160, 8, 8), # Med Hair
+                (224, 32, 16), # Light Hair
+                (200, 0, 0), # Med Hair
                 (104, 8, 16), # Dark Hair
                 (176, 208, 240), # Light Weapon/Leather
                 (112, 144, 176), # Med Weapon/Leather
@@ -31,7 +31,7 @@ joshua = [(128, 160, 128), # Background
                 (88, 128, 128), # LM Clothes
                 (48, 88, 88), # MD Clothes
                 (24, 48, 48), # Dark Clothes
-                (40, 40, 40)] # Outline
+                (32, 32, 32)] # Outline
 
 guy = [(128, 160, 128), # Background
                 (248, 248, 248), # White
@@ -2388,7 +2388,7 @@ wil_archer = [(255, 255, 255), # Background
                 (16, 104, 120), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-archer_red = [(255, 255, 255), # Background
+archer_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -2405,21 +2405,21 @@ archer_red = [(255, 255, 255), # Background
                 (128, 0, 8), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-archer_blue = [(255, 255, 255), # Background
+archer_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
                 (112, 72, 48), # Dark skin
-                (168, 208, 248), # Light Hair
-                (112, 160, 248), # Med Hair
-                (88, 88, 208), # Dark Hair
+                (216, 248, 112), # Light Hair
+                (80, 232, 56), # Med Hair
+                (72, 144, 8), # Dark Hair
                 (248, 232, 160), # Light Weapon/Leather
                 (208, 176, 120), # Med Weapon/Leather
                 (184, 216, 248), # Bowstring
-                (184, 224, 248), # Light Clothes
-                (136, 184, 248), # LM Clothes
-                (40, 40, 248), # MD Clothes
-                (48, 40, 128), # Dark Clothes
+                (168, 248, 248), # Light Clothes
+                (104, 232, 248), # LM Clothes
+                (80, 128, 248), # MD Clothes
+                (56, 56, 192), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 generic_archer = [(255, 255, 255),
