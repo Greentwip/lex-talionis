@@ -1999,16 +1999,16 @@ swordmaster_blue = [(128, 160, 128), # Background
                 (248, 240, 168), # Light skin
                 (224, 168, 104), # Med skin
                 (136, 96, 72), # Dark skin
-                (168, 168, 160), # Light Hair
-                (112, 112, 104), # Med Hair
-                (80, 88, 64), # Dark Hair
+                (184, 136, 104), # Light Hair
+                (136, 88, 64), # Med Hair
+                (96, 56, 40), # Dark Hair
                 (176, 216, 248), # Light Weapon/Leather
                 (120, 152, 184), # Med Weapon/Leather
                 (80, 112, 144), # Dark Weapon/String
-                (144, 208, 248), # Light Clothes
-                (48, 112, 248), # LM Clothes
-                (40, 40, 192), # MD Clothes
-                (40, 48, 96), # Dark Clothes
+                (168, 248, 248), # Light Clothes
+                (128, 184, 248), # LM Clothes
+                (56, 96, 232), # MD Clothes
+                (0, 0, 136), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 white = (208, 144, 88), # White
@@ -2508,7 +2508,7 @@ wil_sniper = [(255, 255, 255), # Background
                 (16, 104, 120), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-sniper_red = [(255, 255, 255), # Background
+sniper_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -2525,21 +2525,21 @@ sniper_red = [(255, 255, 255), # Background
                 (128, 0, 8), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-sniper_blue = [(255, 255, 255), # Background
+sniper_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
                 (112, 72, 48), # Dark skin
-                (200, 192, 248), # Light Hair
-                (168, 160, 248), # Med Hair
-                (112, 96, 200), # Dark Hair
+                (216, 248, 112), # Light Hair
+                (80, 232, 56), # Med Hair
+                (72, 144, 8), # Dark Hair
                 (176, 208, 240), # Light Weapon/Leather
                 (120, 152, 184), # Med Weapon/Leather
                 (80, 112, 144), # Dark Weapon/String
-                (168, 208, 248), # Light Clothes
-                (56, 128, 248), # LM Clothes
-                (40, 40, 232), # MD Clothes
-                (48, 40, 128), # Dark Clothes
+                (176, 248, 248), # Light Clothes
+                (88, 224, 248), # LM Clothes
+                (80, 128, 248), # MD Clothes
+                (56, 56, 192), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 sniper_rebecca = [(255, 255, 255), # Background
@@ -2559,7 +2559,7 @@ sniper_rebecca = [(255, 255, 255), # Background
                 (56, 56, 192), # Dark Clothes
                 (40, 40, 40)] # Outline
 
-sniper_nia = [(255, 255, 255), # Background
+sniper_nia = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin

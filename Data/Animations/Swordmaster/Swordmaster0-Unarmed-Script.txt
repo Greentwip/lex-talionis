@@ -1,7 +1,7 @@
-pose;Stand
-f;4;Stand
-
 pose;Dodge
-f;1;Stand
-f;31;Dodge1
-f;1;Stand
+f;1;Disarmed_000
+f;31;Disarmed_001
+
+pose;Stand
+f;4;Disarmed_000
+

@@ -454,6 +454,21 @@ for name, image in sorted(images.items()):
     if name in ranged_image_names:
         ranged_images[name] = image
 
+# Preprocess
+def preprocess(images):
+    for name, image in images.items():
+        width, height = image.size
+
+        # Convert colorkey colors to 0, 0, 0
+        for x in xrange(width):
+            for y in xrange(height):
+                color = image.getpixel((x, y))
+                if color == (0, 0, 0):
+                    image.putpixel((x, y), (40, 40, 40))
+
+preprocess(melee_images)
+preprocess(ranged_images)
+
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
 if weapon_type == 'Disarmed':
