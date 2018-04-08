@@ -303,6 +303,8 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('sound;Axe Pull')
             elif command_code == '42':
                 current_pose.append('sound;Axe Push')
+            elif command_code == '43':
+                current_pose.append('sound;Weapon Click')
             else:
                 print('Unknown Command Code: C%s' % command_code)
             

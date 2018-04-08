@@ -4,12 +4,12 @@
 import glob
 from PIL import Image
 
-COLORKEY = (255, 255, 255)
+COLORKEY = (128, 160, 128)
 # COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
 NEW_COLORKEY = None
 WIDTH_LIMIT = 240*5
-folder = 'Bow/archerf_hat_bow'
+folder = 'Sword/assassinf_bow'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')
