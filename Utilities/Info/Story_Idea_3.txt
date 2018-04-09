@@ -24,14 +24,84 @@ Colors greens and browns, small yellow, blue for background. Gray, black, dark b
 Character vision
 Clothing should be scrappy, ragged, even for lords. The world is dying -- we're just living in it.
 
-7 plot safe characters
+6 plot safe characters
 - Prot (smart, well-spoken, not aggressive) - Sword (command spell)
 - Waif (shy, mysterious, broken) - Dancer
 - Friend (assertive, forthright, active) - Sword
-- Jade (knowledgeable, steady, calm) - Dark
 - Slate (snarky, sarcastic, but with a heart of gold) - Sword
 - Dark/Jagen (jovial, protective -> brooding, aggressive) - Lance
 - Drake (honorable) - Axe
+
+Part 1 -- Introductions
+The world is falling apart. Bandits roam the land. People are growing sick. Crops are not growing. War is brewing in the south
+Rescue/Find Elen from Monsters
+Character Introduction to Alfred, Saebbi, Cedric, Aelfwynn, Elen
+Initial Unit gathering
+Some groups have started rebelling against the Kingdoms, fueled by their own misfortune
+Monsters have started appearing -- the Rot
+Some darker force is experimenting with the Rot
+Prologue: Alfred and Saebbi are accosted by Bandits looking for easy money -- rescued by Cedric and Millie
+Chapter 1: Travel to Village nearby, but head through Umbrian ruins. Attacked by monsters.
+Chapter 2: Defend village nearby, my brother lives there! from monsters. Saved by Aelfwynn
+Chapter 3: Umbrian army (in disguise) accosts girl. Alfred intervenes. Monsters appear, attack Umbrians
+Chapter 4: Arrive in Athria, where the Athria army is attacking a village. Talk with Sig and Synne, find out the army seems to have gone rogue, blah blah blah
+Part 2 -- Intrigue in Athria
+Introductions to Adelbert, Lewelyn, Lywark
+Find out Elen is Lywark's daughter
+Lewelyn is seen as a honorable, good-natured man who unfortunately follows his fathers every move
+Meet Reed and his crew who tell Alfred how to rescue Juniper
+Rescue Juniper, Alfred's stepmother, at the behest of Johannes
+Adelbert is a poor ruler, not able to keep control over his army or his taxmen
+Lywark has taken/destroyed the Athrian seal
+A.1x: Lewelyn believes them, asks them to investigate ruins, when bandits attack
+A.1y: Sig and Synne are in distress
+A.1z: ??
+A.2: Johannes asks for help rescuing his liege... Reed overhears them in Inn, offers his services if they scratch his back
+A.3: Rescue Juniper from castle, escape!
+Part 3 -- Escape to Mercia
+Lewelyn nevertheless follows his fathers orders
+Monster attacks growing more frequent
+Rescue by Caelwulf's retainers
+Adelbert lusts after Juniper to the point of madness
+Part 4 -- Intrigue in Mercia
+The darker force that's experimenting with the Rot seems to be Umbria, but perhaps they have good intentions
+Lore about the seals is discussed
+Bandit attacks, Geddish pirates
+More Monster attacks
+Attack on castle by Athrian Army! -- It was unexpected!
+Alfred's army is routed and escapes, at the behest of King Caelwulf
+Aelfwynn is killed, sick in her bed
+Alfred, Elen, Cedric are captured
+Part 5 -- Prison Break
+Alfred is broken out of prison by Reed and his gang
+They escape but are apprehended by Lewelyn.
+Helped by an old acquaitance of a rival mercenary group -- Audrea and co.
+They meet up with old army -- monster attack.
+Olivia arrives, reveals Reed is Osric, and directs them to Umbria
+Part 6 -- Intrigue in Umbria
+Children are going missing
+Godwin and Ingrid come to Alfred and co for help
+They meet Queen Ursa
+Iris is revealed as broken sister of Osric
+More monster attacks
+Lewelyn defects
+The Athria army seems to be using the Rot as a weapon -- Lywark is behind this.
+The Umbrian and Athria army + monsters clash, when Umbria is routed, Ursa unleashes the superweapon
+Alfred and co kill Adelbert in the midst of battle
+Lywark sacrifices the remainder of his army to destroy the Umbrian seal and escapes to Loria
+Part 7 -- Lorian Showdown
+Nyssa, a Lorian priestess placed in suspended animation arrives at the level of Rot.
+More monster fights
+They arrive in the old Lorian capital -- monster fights
+They approach the Gate of the Dead, where they are ambushed. Elen is captured, The rest are killed
+Elen shudders, opening the Gate of the Dead
+Lywark is reunited with Edelyn, but something is wrong. They are broken
+Lywark is killed by the death energies
+They have to reseal the gate in final battle!
+
+
+
+Lywarks' plan is explained
 
 Prot is kept as ward of neighboring kingdom, Mercia
 - Prot: Sword Lord
@@ -141,47 +211,57 @@ History before game:
 - 2 weeks ago: Lywark, using two of the seals, attempts to bring back his beloved through the body of Elen. It doesn't work. Elen escapes.
 
 Characters:
-Athelwulf of Athria 
-Alfred of Athria (Lord)
-Aelfwynn (Wynn) of Athria (Lance Cavalier)
-Adelbert (Bert) of Athria (??)
-
-Lywark of Loria (Warlock)
-Edelyn of Loria 
-Lewelyn (Lewis) of Loria (Wyvern Knight)
-Elen of Loria (Mystic)
-
-Osric of Umbria (Mercenary)
-Olivia of Umbria (Pegasus Knight)
-
-Caelwulf of Mercia (Berserker)
-Cedric (Cedd) of Mercia (Cavalier)
+Alfred of Athria (Eliwood Lord)
 Saebbi of Mercia (Myrmidon)
-
+Cedric (Cedd) of Mercia (Lance Cavalier)
 Millie of Mercia (Cleric)
 
 Nettle of Mercia (Archer)
 Bjorn of the Northlands (Knight)
 
-Rudolf of Sussex (Fighter)
+Rudolf of Mercia (Fighter)
 
 Ina of Athria (Troubadour)
+Aelfwynn (Wynn) of Athria (Paladin)*
+
+Elen of Loria (Mystic)
+
+Athelwulf of Athria **
+Adelbert (Bert) of Athria (??)**
+Lywark of Loria (Warlock)**
+Lewelyn (Lewis) of Loria (Wyvern Knight)**
+Osric of Umbria (Vanguard) **
 
 Sigered of Pembroke (Axe Cavalier)
 Synne of Pembroke (Thief)
 
+Olivia of Umbria (Falco Knight)** 
 Edwin of Umbria (Sword Cavalier)
 Eowa of Umbria (Pegasus Knight)
 
+?? of ?? (Brigand)
+?? of ?? (MageF)
+
 Yohannes of Saxony (Shaman)
-Juniper (June) of Saxony (Cleric)
+Juniper (June) of Saxony (Valkyrie)
 
 Rhun of the Northlands (Sentinel)
 Frieda of the Northlands (Wyvern Knight)
 
+Caelwulf of Mercia (Berserker) **
+
+?? of ?? (Cleric)
+
+?? of ?? (MercenaryF)
+?? of ?? (Griffin)
+?? of ?? (??)
+
+Edelyn of Loria **
+
+Osric of Umbria (Vanguard)
 Sorrel of West Talia (Thief)
 Clover of West Talia (Skirmisher)
-Iris of Umbria (Mystic)
+Iris of Umbria (Shaman)
 
 Audrea of Athria (Swordmaster)
 Theodric of the Northlands (Fighter)
@@ -190,7 +270,14 @@ Mael of Eiria (Nomad)
 Godwin of Umbria (Great Knight)
 Ingrid of Umbria (Halberdier)
 
-Nyssa of Loria (Bishop)
+?? of ?? (Sniper)
+?? of ?? (SageM)
+
+?? of ?? (Assassin)
+?? of ?? (Dragoon)
+?? of ?? (General)
+
+Nyssa of Loria (Oracle)
 
 Removing RES stat
 MAG Hit% is now 2xSKL + LCK/2
@@ -202,7 +289,7 @@ MAG Resist is now MAG
     Low HP, Low STR, High SKL and SPD, Low DEF and RES
     Deals ability damage on attack
     Can move through enemies
-    Does not get counterattacked
+    Lethality
     Fades after successful kill
 - Myrmidon (Sword) -> Swordmaster (Sword)
     Low STR, High SKL and SPD, Low DEF, High RES
@@ -212,87 +299,93 @@ MAG Resist is now MAG
     +Avoid against non-adjacent enemies
 - Mercenary (Sword) -> Vanguard (Sword/Axe)
     Med STR, High SKL, Med SPD, Med DEF, Low RES
-    +Damage and Resistance while attacking
+    +Damage while attacking
     Armsthrift
-    Lifelink
-    ??
+    Sol
+    Poise
 - Skirmisher (Lance) -> Dragoon (Lance)
     Med Str, Med SKL, High SPD, Low DEF, High RES
     Deals ability damage on attack
-    Ignores Terrain
+    +Chance of Crit
     Evades AOE
     Does extra damage based on movement
 - Soldier (Lance) -> Halberdier (Lance/Axe)
     Med STR, High SKL, Low SPD, Med DEF, Med REs
     Extra Feats
-    Can Ignore Enemy Defenses
-    ??
+    Luna
+    Solidarity
     ??
 - Knight (Lance) -> General (Lance/Sword)
     Med STR, Med SKL, Low SPD, High DEF, Med RES
     Provoke
-    Smite (pushes enemy away and takes their place) (Passive)
+    Reposition
     Slow
-    ??
+    Block -> allies adjacent to me have my LCK% chance of taking half damage
 - Brigand (Axe) -> Berserker (Axe)
     High HP, High STR, Low SKL, Med SPD, Low DEF, low RES
     Regeneration
     Rage (+Stats, +Movement, AI-controlled) (Passive, based on number of combats)
     +Chance of Crit
-    ??
+    Ignores Terrain
 - Fighter (Axe) -> Warrior (Axe/Bow)
     High HP, High STR, Med SKL, Low SPD, Med DEF, Low RES
     Cleave (Passive)
     Deals extra damage based on weight of weapon
     Extra Feats
-    ??
+    Smite (Pushes enemies)
 - Sentinel (Axe) -> Great Knight (Axe/Lance)
     High STR, Low SKL, Low SPD, High DEF, Low RES
     Defensive Aura
-    ??
-    ??
+    On attack, DEF +10
+    Ignore Status Effects
     ??
 - Archer (Bow) -> Sniper (Bow)
     Med STR, High SKL, Med SPD, Low DEF, Low RES
-    +Damage and Accuracy on attacking
+    +Damage on attacking
     +Chance of Crit
     +1 Range with Bows
-    ??
+    + Accuracy on attacking
 - Cavalier (??) -> Paladin (?? + ??)
     Med STR, Med SKL, Med SPD, Med DEF, Med RES
     Canto
     Avoid Aura
-    ??
+    Elbow Room
     ??
 - Nomad (Bow) -> Ranger (Bow/Sword)
     Med STR, Med SKL, High SPD, Low DEF, Med RES
-    Canto
-    ??
+    Canto+
+    Ignores Terrain
     ??
     ??
 - Pegasus Knight (Lance) -> Falco Knight (Lance/Sword)
     Low STR, Med SKL, High SPD, Low DEF, High RES
     Canto + Flying
-    Can move twice instead of attacking (Dash)
-    ??
+    Does not get counterattacked
+    RES +10
     ??
 - Wyvern Knight (Axe) -> Wyvern Lord (Axe/Lance)
     High STR, Low SKL, Med SPD, High DEF, Low RES
     Canto + Flying
     +Damage when attacking
     Savage Blow on finishing move
+    +Damage versus unmounted enemies
+- Griffin Knight (Sword) -> Griffin Lord (Sword/Axe)
+    Med STR, High SKL, Low SPD, Med DEF, Med RES
+    Canto + Flying
+    +Critical while attacking
+    Galeforce
     ??
 - Lord (Sword) -> Great Lord (Sword/??)
     Med STR, High SKL, Med SPD, Med DEF, Med RES
     Command (another unit gains Offensive bonus this turn)
     ??
     ??
-    ??
-- Waif () -> Mystic (Dark)
+    Aether
+- Mystic
     Low MAG, Med SKL, High SPD, Low DEF, High RES -- Squishy Long-range
     Refresh
     + Luck Avoid and Accurary when under 50% HP
-    Can Warp to other allies
+    ??
     ??
 - Cleric (Light) -> Oracle (Light)
     Med MAG, High SKL, Med SPD, Low DEF, High RES -- healer
@@ -303,14 +396,20 @@ MAG Resist is now MAG
 - Troubadour (Light) -> Valkyrie (Light)
     Med MAG, Med SKL, High SPD, Low DEF, Med RES -- Quick-moving battlefield support
     Canto
-    ??
+    Inspire Aura
     ??
     ??
 - Shaman (Dark) -> Warlock (Dark)
     High MAG, Low SKL, Low SPD, High DEF, Low RES -- Battlemage
     + Damage when attacking 
-    + 1 RNG on AOE effects
+    Can Warp to Other Allies
     Anti-Avoid Aura  
+    Lifetaker on units turn
+- Mage (Dark) -> Sage (Dark)
+    Med MAG, Med SKL, Med SPD, Low DEF, Med RES -- Trick Mage
+    Replicate
+    +Damage/Accuracy versus units wielding metal weapons
+    ??
     ??
     
 
@@ -390,14 +489,17 @@ Duskblade - As Shine, but in sword
 Dawnblade - As Shade, but in sword
 Mageslayer - Silences on Hit, +10 RES
 Wyrmslayer - +Damage versus Dragons
+Slim - +Avoid, Low damage
 
 Lances:
 Javelin - Range 1-2, Low Damage, Low Accuracy, High Weight
 Pike - +Accuracy versus Horses, Slows on Hit
+Glaive - +DEF, -SPD
 
 Axes:
 Hand Axe - Range 1-2, Low Damage, Low Accuracy, High Weight
 Hammer - Ignores DEF, Low Accuracy, High Weight
+Hatchet - Low Damage but accurate
 
 Bows:
 Longbow - Range 2-4, Medium Damage, Low Accuracy, High Weight

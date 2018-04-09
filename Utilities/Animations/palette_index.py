@@ -767,23 +767,25 @@ general_red = [(128, 160, 128), # Background
                 (80, 104, 128), # Weapon 3
                 (40, 40, 40), # Weapon 4
                 (248, 184, 136), # Armor 0
+                (40, 40, 40), # Dark Dark Accent
                 (40, 40, 40)] # Outline
 
 general_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
-                (72, 120, 248), # Armor 1 Light
-                (40, 40, 232), # Armor 2
-                (48, 40, 176), # Armor 3
-                (240, 232, 208), # Light Trim
-                (192, 192, 152), # Mid Trim
-                (136, 112, 104), # Dark Trim
-                (104, 120, 136), # Light Accent
-                (72, 72, 104), # Dark Accent
+                (120, 200, 248), # Armor 1 Light
+                (96, 144, 224), # Armor 2
+                (64, 88, 160), # Armor 3
+                (232, 232, 184), # Light Trim
+                (208, 176, 112), # Mid Trim
+                (152, 104, 40), # Dark Trim
+                (136, 64, 16), # Light Accent
+                (96, 40, 16), # Dark Accent
                 (200, 208, 200), # Weapon 1
                 (112, 152, 176), # Weapon 2
                 (80, 104, 128), # Weapon 3
                 (40, 40, 40), # Weapon 4
-                (136, 184, 232), # Armor 0
+                (176, 224, 240), # Armor 0
+                (72, 40, 0), # Dark Dark Accent
                 (40, 40, 40)] # Outline
 
 general_theo = [(128, 160, 128), # Background
@@ -801,6 +803,7 @@ general_theo = [(128, 160, 128), # Background
                 (80, 104, 128), # Weapon 3
                 (40, 40, 40), # Weapon 4
                 (136, 184, 248), # Armor 0
+                (40, 40, 40), # Dark Dark Accent
                 (40, 40, 40)] # Outline
 
 generic_general = [(255, 255, 255),
