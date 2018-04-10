@@ -265,7 +265,7 @@ def write_scripts(script, images, weapon_type):
                 start_hit = True
             elif command_code in ('1F', '20', '21'):  # Actual hit
                 write_extra_frame = False
-            # Sounds
+            # Sounds and other effects
             elif command_code == '19':
                 current_pose.append('sound;Bow')
             elif command_code == '1B':
@@ -289,6 +289,11 @@ def write_scripts(script, images, weapon_type):
                 shield_toss = True
             elif command_code == '2B':
                 current_pose.append('sound;ArmorShift')
+            elif command_code == '30':
+                current_pose.append('effect;DirtKick')
+            elif command_code == '33':
+                # Not currently avail
+                current_pose.append('# sound;Battle Cry')
             elif command_code == '34':
                 current_pose.append('sound;Step Back 1')
             elif command_code == '35':

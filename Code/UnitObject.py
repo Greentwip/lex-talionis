@@ -1566,6 +1566,8 @@ class UnitObject(object):
         if item.guaranteed_crit or crit == 1:
             damage += self.damage(gameStateObj, item, Utility.calculate_distance(self.position, target.position) <= 1)
         elif crit == 2:
+            damage *= 2
+        elif crit == 3:
             damage *= 3
 
         # Handle hybrid miss

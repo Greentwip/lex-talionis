@@ -1636,9 +1636,9 @@ warrior_blue = [(128, 160, 128), # Background
                 (192, 224, 248), # Light Weapon
                 (136, 176, 200), # Medium Weapon
                 (96, 128, 160), # Dark Weapon
-                (64, 144, 248), # Light Clothes
-                (40, 40, 216), # Med Clothes
-                (48, 40, 128), # Dark Clothes
+                (104, 232, 248), # Light Clothes
+                (88, 136, 248), # Med Clothes
+                (48, 48, 192), # Dark Clothes
                 (208, 216, 208), # Light Armor
                 (128, 128, 136), # Dark Armor
                 (40, 40, 40)] # Outline
@@ -1771,6 +1771,7 @@ berserker_red = [(128, 160, 128), # Background
                  (112, 72, 48), # Dark skin
                  (168, 104, 56), # Wood
                  (248, 248, 8), # Yellow Highlight
+                 (192, 176, 16), # Dark Yellow
                  (192, 224, 232), # Light Weapon
                  (152, 184, 216), # Med Weapon
                  (104, 136, 168), # Dark Weapon
@@ -1787,12 +1788,30 @@ berserker_blue = [(128, 160, 128), # Background
                 (112, 72, 48), # Dark skin
                 (168, 104, 56), # Wood
                 (248, 248, 8), # Yellow Highlight
+                (192, 176, 16), # Dark Yellow
                 (192, 224, 232), # Light Weapon
                 (152, 184, 216), # Med Weapon
                 (104, 136, 168), # Dark Weapon
                 (104, 232, 248), # Light Clothes
                 (88, 136, 248), # Med Clothes
                 (56, 56, 208), # Dark Clothes
+                (40, 40, 40)] # Outline
+
+yetiserker_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (232, 192, 136), # LM skin
+                (200, 136, 88), # M skin
+                (112, 72, 48), # Dark skin
+                (168, 104, 56), # Wood
+                (248, 248, 8), # Yellow Highlight
+                (192, 176, 16), # Dark Yellow
+                (176, 208, 216), # Light Weapon
+                (136, 168, 192), # Med Weapon
+                (88, 120, 144), # Dark Weapon
+                (88, 216, 176), # Light Clothes
+                (72, 160, 200), # Med Clothes
+                (40, 88, 160), # Dark Clothes
                 (40, 40, 40)] # Outline
 
 kiley = [(128, 160, 128), # Background
@@ -1803,6 +1822,7 @@ kiley = [(128, 160, 128), # Background
                 (112, 72, 48), # Dark skin
                 (168, 104, 56), # Wood
                 (248, 248, 8), # Yellow Highlight
+                (192, 176, 16), # Dark Yellow
                 (192, 232, 224), # Light Weapon
                 (144, 208, 176), # Med Weapon
                 (104, 152, 120), # Dark Weapon
@@ -1819,6 +1839,7 @@ boaz = [(128, 160, 128), # Background
                  (112, 72, 48), # Dark skin
                  (168, 104, 56), # Wood
                  (248, 248, 8), # Yellow Highlight
+                 (192, 176, 16), # Dark Yellow
                  (192, 224, 232), # Light Weapon
                  (152, 184, 216), # Med Weapon
                  (104, 136, 168), # Dark Weapon

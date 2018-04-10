@@ -77,7 +77,7 @@ def read_constants_file():
              'speed_to_double': 4, # How much AS is needed to double
              'max_promotions': 10, # Allowed number of promotion options for a unit
              'mounted_aid': 15, # What a mounted units CON is subtracted from to determine AID
-             'crit': 2, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 3x damage minus 3x defense
+             'crit': 3, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 2x damage minus 2x defense, 3 - 3x damage minus 3x defense
              'death': 2,
              'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
              'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)

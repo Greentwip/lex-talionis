@@ -239,7 +239,7 @@ Olivia of Umbria (Falco Knight)**
 Edwin of Umbria (Sword Cavalier)
 Eowa of Umbria (Pegasus Knight)
 
-?? of ?? (Brigand)
+?? of ?? (Phantom/Brigand/Raider)
 ?? of ?? (MageF)
 
 Yohannes of Saxony (Shaman)
@@ -264,7 +264,7 @@ Clover of West Talia (Skirmisher)
 Iris of Umbria (Shaman)
 
 Audrea of Athria (Swordmaster)
-Theodric of the Northlands (Fighter)
+Theodric of the Northlands (Fighter/Berserker/Warrior)
 Mael of Eiria (Nomad)
 
 Godwin of Umbria (Great Knight)
