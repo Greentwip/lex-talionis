@@ -260,7 +260,7 @@ Edelyn of Loria **
 
 Osric of Umbria (Vanguard)
 Sorrel of West Talia (Thief)
-Clover of West Talia (Skirmisher)
+Clover of West Talia (Cleric, ironically)
 Iris of Umbria (Shaman)
 
 Audrea of Athria (Swordmaster)
@@ -303,18 +303,12 @@ MAG Resist is now MAG
     Armsthrift
     Sol
     Poise
-- Skirmisher (Lance) -> Dragoon (Lance)
-    Med Str, Med SKL, High SPD, Low DEF, High RES
-    Deals ability damage on attack
-    +Chance of Crit
-    Evades AOE
-    Does extra damage based on movement
-- Soldier (Lance) -> Halberdier (Lance/Axe)
-    Med STR, High SKL, Low SPD, Med DEF, Med REs
+- Soldier (Lance) -> Halberdier (Lance)
+    Med STR, High SKL, Low SPD, Med DEF, Med RES
     Extra Feats
     Luna
     Solidarity
-    ??
+    +Chance of Crit
 - Knight (Lance) -> General (Lance/Sword)
     Med STR, Med SKL, Low SPD, High DEF, Med RES
     Provoke
@@ -333,7 +327,7 @@ MAG Resist is now MAG
     Deals extra damage based on weight of weapon
     Extra Feats
     Smite (Pushes enemies)
-- Sentinel (Axe) -> Great Knight (Axe/Lance)
+- Sentinel (Axe) -> Sentinel (Great Knight) (Axe/Lance)
     High STR, Low SKL, Low SPD, High DEF, Low RES
     Defensive Aura
     On attack, DEF +10
@@ -348,14 +342,14 @@ MAG Resist is now MAG
 - Cavalier (??) -> Paladin (?? + ??)
     Med STR, Med SKL, Med SPD, Med DEF, Med RES
     Canto
-    Avoid Aura
     Elbow Room
+    Does extra damage based on movement
     ??
-- Nomad (Bow) -> Ranger (Bow/Sword)
+- Nomad (Bow) -> Ranger (Bow/Lance)
     Med STR, Med SKL, High SPD, Low DEF, Med RES
     Canto+
     Ignores Terrain
-    ??
+    Evades AOE
     ??
 - Pegasus Knight (Lance) -> Falco Knight (Lance/Sword)
     Low STR, Med SKL, High SPD, Low DEF, High RES
@@ -374,7 +368,7 @@ MAG Resist is now MAG
     Canto + Flying
     +Critical while attacking
     Galeforce
-    ??
+    Avoid Aura
 - Lord (Sword) -> Great Lord (Sword/??)
     Med STR, High SKL, Med SPD, Med DEF, Med RES
     Command (another unit gains Offensive bonus this turn)

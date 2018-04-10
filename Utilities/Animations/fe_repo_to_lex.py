@@ -133,6 +133,10 @@ def write_scripts(script, images, weapon_type):
         used_names.add(name)
 
     def save_mode(mode):
+        if weapon_type == 'Magic':
+            if mode not in (5, 6, 7, 9, 11):
+                used_names.clear()
+                return
         if mode in (1, 2):
             melee_script['Attack'] = current_pose
             melee_images.update(used_names)
@@ -220,7 +224,7 @@ def write_scripts(script, images, weapon_type):
             elif command_code == '04':
                 write_extra_frame = False  # Normally prepares some code for returning to stand
             elif command_code == '05':  # Start spell
-                if weapon_type == 'Sword':
+                if weapon_type == 'Sword' or weapon_type == 'Magic':
                     current_pose.append('spell')
                 elif weapon_type == 'Lance':
                     current_pose.append('spell;Javelin')
@@ -289,6 +293,12 @@ def write_scripts(script, images, weapon_type):
                 shield_toss = True
             elif command_code == '2B':
                 current_pose.append('sound;ArmorShift')
+            elif command_code == '2E':
+                current_pose.append('effect;MageInit')
+                print('Change "effect;MageInit" to "effect;SageInit" if working with Sage animations')
+            elif command_code == '2F':
+                current_pose.append('effect;MageCrit')
+                print('Change "effect;MageCrit" to "effect;SageCrit" if working with Sage animations')
             elif command_code == '30':
                 current_pose.append('effect;DirtKick')
             elif command_code == '33':
@@ -310,6 +320,11 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('sound;Axe Push')
             elif command_code == '43':
                 current_pose.append('sound;Weapon Click')
+            elif command_code == '47':
+                current_pose.append('effect;Cape Animation')
+                print('Replace "effect;Cape Animation" with actual frames for cape animation in a loop')
+            elif command_code == '49':
+                current_pose.append('Sound;SageRune')
             else:
                 print('Unknown Command Code: C%s' % command_code)
             
@@ -405,6 +420,12 @@ def write_scripts(script, images, weapon_type):
         unarmed_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
         with open('Unarmed-Script.txt', 'w') as s:
             write_script(unarmed_script, s)
+    elif weapon_type == 'Magic':
+        with open('Magic-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
+        unarmed_script = {pose: line_list for pose, line_list in ranged_script.items() if pose in ('Stand', 'Dodge')}
+        with open('Unarmed-Script.txt', 'w') as s:
+            write_script(unarmed_script, s)
 
     return melee_images, ranged_images
 
@@ -418,7 +439,7 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Handaxe', 'Bow'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Handaxe', 'Bow', 'Magic'}
 weapon_type = script[:-4]
 if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
@@ -482,12 +503,16 @@ if weapon_type == 'Disarmed':
     weapon_type = 'Unarmed'
 if weapon_type == 'Handaxe':
     weapon_type = 'Axe'
-if weapon_type != 'Bow':
+if weapon_type not in ('Bow', 'Magic'):
     animation_collater(melee_images, bg_color, weapon_type)
+if weapon_type == 'Magic':
+    animation_collater(melee_images, bg_color, 'Unarmed')
 if ranged_images:
     if weapon_type == 'Sword':
         animation_collater(ranged_images, bg_color, 'Magic' + weapon_type)
     elif weapon_type in ('Lance', 'Axe', 'Bow'):
         animation_collater(ranged_images, bg_color, 'Ranged' + weapon_type)
+    elif weapon_type == 'Magic':
+        animation_collater(ranged_images, bg_color, 'Magic')
 
 print(' === Done! ===')
