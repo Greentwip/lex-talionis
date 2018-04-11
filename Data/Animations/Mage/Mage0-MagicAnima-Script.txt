@@ -61,7 +61,7 @@ sound;Foot Step
 f;1;Magic_024
 f;4;Magic_025
 f;4;Magic_026
-effect;MageCrit
+# effect;MageCrit
 f;1;Magic_026
 f;3;Magic_027
 f;8;Magic_028

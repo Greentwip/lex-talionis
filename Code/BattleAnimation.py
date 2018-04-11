@@ -261,7 +261,10 @@ class BattleAnimation(object):
                 self.processing = False
                 if self.owner.current_result.def_damage > 0:
                     if 'no_shake' not in line:
-                        self.owner.shake(3)
+                        if self.owner.current_result.outcome == 2:  # Crit
+                            self.owner.shake(4)
+                        else:
+                            self.owner.shake(3)
                 elif self.owner.current_result.def_damage == 0:
                     if 'no_shake' not in line:
                         self.owner.shake(2)

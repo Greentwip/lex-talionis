@@ -1149,7 +1149,7 @@
         <id>Fire</id>
         <spritetype>Anima</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,map_hit_color,status_on_equip</components>
+        <components>weapon,uses,map_hit_color,status_on_equip,crit</components>
         <weapontype>Anima</weapontype>
  
         <uses>30</uses>
@@ -1161,6 +1161,7 @@
 		<MT>4</MT>
 		<HIT>80</HIT>
 		<LVL>D</LVL>
+        <crit>100</crit>
 
         <map_hit_color>224,96,-200</map_hit_color>
     </item>

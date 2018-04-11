@@ -324,7 +324,7 @@ def write_scripts(script, images, weapon_type):
                 current_pose.append('effect;Cape Animation')
                 print('Replace "effect;Cape Animation" with actual frames for cape animation in a loop')
             elif command_code == '49':
-                current_pose.append('Sound;SageRune')
+                current_pose.append('sound;SageRune')
             else:
                 print('Unknown Command Code: C%s' % command_code)
             

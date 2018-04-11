@@ -9,7 +9,7 @@ f;6;Magic_000
 f;4;Magic_001
 effect;SageInit
 f;1;Magic_001
-Sound;SageRune
+sound;SageRune
 f;1;Magic_001
 f;8;Magic_002
 sound;Foot Step
@@ -77,7 +77,7 @@ f;4;Magic_040
 f;12;Magic_041
 effect;SageInit
 f;1;Magic_041
-Sound;SageRune
+sound;SageRune
 f;1;Magic_041
 f;8;Magic_002
 sound;Foot Step
