@@ -3,8 +3,8 @@ import glob
 from palette_index import *
 
 ### === INPUTS ===
-p1 = sage_lilina
-p2 = sage_althea
+p1 = mage_knight_blue
+p2 = adjutant
 images_to_convert = '*.png'
 
 def palette_convert(p1, p2, image_to_convert):

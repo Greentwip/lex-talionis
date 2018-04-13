@@ -1090,13 +1090,47 @@ sophia_shaman = [(128, 160, 128), # Background
                  (224, 192, 248), # Light clothes
                  (192, 136, 224), # Medium clothes
                  (88, 56, 160), # Dark clothes
+                 (232, 200, 248), # Hair + Headress L
+                 (192, 152, 216), # Hair + Headress D
                  (176, 120, 240), # Light robe
                  (128, 80, 208), # M robe
                  (96, 72, 160), # Dark robe
                  (56, 0, 112), # Super dark robe outline clothes
-                 (248, 240, 56), # Highlight
-                 (192, 152, 216), # Headress
-                 (232, 200, 248), # Headress highlight
+                 (248, 240, 56), # Highlight Yellow
+                 (40, 40, 40)] # Outline
+
+shamanf_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 176, 88), # Med skin
+                (112, 72, 48), # Dark skin
+                (104, 232, 248), # Light clothes
+                (88, 152, 248), # Medium clothes
+                (24, 88, 216), # Dark clothes
+                (208, 128, 88), # Hair + Highlight L
+                (152, 96, 64), # Hair + Highlight D
+                (144, 160, 192), # Light Robe
+                (104, 120, 136), # Medium Robe
+                (80, 96, 120), # Dark Robe
+                (48, 56, 72), # Darkest Robe
+                (248, 240, 56), # Yellow
+                (40, 40, 40)] # Outline 
+
+shaman_kayla = [(128, 160, 128), # Background
+                 (248, 248, 248), # White
+                 (248, 248, 168), # Light skin
+                 (248, 192, 144), # Med skin
+                 (112, 72, 48), # Dark skin
+                 (224, 160, 216), # Light clothes
+                 (192, 64, 168), # Medium clothes
+                 (88, 16, 104), # Dark clothes
+                 (232, 248, 224), # Hair + Headress L
+                 (176, 200, 192), # Hair + Headress D
+                 (176, 120, 240), # Light robe
+                 (128, 80, 208), # M robe
+                 (96, 72, 160), # Dark robe
+                 (56, 0, 112), # Super dark robe outline clothes
+                 (248, 240, 56), # Highlight Yellow
                  (40, 40, 40)] # Outline
 
 canas_shaman = [(128, 160, 128), # Background
@@ -1150,7 +1184,7 @@ shaman_red = [(128, 160, 128), # Background
                 (40, 40, 40), # ???
                 (40, 40, 40)] # Outline
 
-shaman_blue = [(128, 160, 128), # Background
+shaman_blue_old = [(168, 208, 160), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 192, 144), # Med skin
@@ -1164,6 +1198,23 @@ shaman_blue = [(128, 160, 128), # Background
                 (104, 120, 136), # Medium Robe
                 (80, 96, 120), # Dark Robe
                 (48, 56, 72), # Darkest Robe
+                (40, 40, 40), # ???
+                (40, 40, 40)] # Outline 
+
+shaman_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (248, 176, 88), # Med skin
+                (112, 72, 48), # Dark skin
+                (104, 232, 248), # Light clothes
+                (88, 152, 248), # Medium clothes
+                (24, 88, 216), # Dark clothes
+                (216, 216, 48), # Highlight L
+                (208, 136, 40), # Highlight D
+                (112, 128, 152), # Light Robe
+                (72, 80, 96), # Medium Robe
+                (48, 64, 80), # Dark Robe
+                (16, 24, 32), # Darkest Robe
                 (40, 40, 40), # ???
                 (40, 40, 40)] # Outline 
 
@@ -1187,19 +1238,36 @@ sophia_druid = [(128, 160, 128), # Background
 kayla_druid = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 240, 168), # L Skin
-                (240, 160, 48), # M Skin
-                (96, 56, 24), # D Skin
+                (112, 72, 48), # D Skin
                 (248, 224, 56), # Light highlight
                 (240, 200, 0), # Med highlight
+                (144, 80, 16), # Dark highlight
                 (224, 160, 216), # Light clothes
                 (192, 64, 168), # Medium clothes
-                (56, 16, 48), # Dark clothes
+                (80, 40, 72), # Dark clothes
                 (184, 128, 240), # Light Robe
                 (136, 88, 208), # Medium Robe
                 (104, 56, 160), # Dark Robe
                 (80, 24, 120), # Darkest Robe
-                (40, 40, 40), # ???
-                (40, 40, 40)] # Outline  
+                (48, 64, 80), # Dark Robe 2
+                (40, 40, 40)] # Outline
+
+druidf_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 240, 168), # L Skin
+                (112, 72, 48), # D Skin
+                (248, 248, 48), # Light highlight
+                (240, 160, 48), # Med highlight
+                (96, 56, 24), # Dark highlight
+                (80, 224, 248), # Light clothes
+                (56, 136, 248), # Medium clothes
+                (56, 24, 152), # Dark clothes
+                (136, 144, 168), # Light Robe
+                (104, 104, 128), # Medium Robe
+                (72, 88, 96), # Dark Robe
+                (48, 56, 72), # Darkest Robe
+                (48, 64, 80), # Dark Robe 2
+                (40, 40, 40)] # Outline
 
 canas_druid = [(128, 160, 128), # Background
                 (248, 248, 248), # White
@@ -1256,17 +1324,17 @@ druid_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # L Skin
                 (112, 72, 48), # D Skin
-                (208, 224, 40), # Light highlight
-                (168, 176, 24), # Med highlight
-                (96, 104, 16), # Dark highlight
-                (96, 152, 248), # Light clothes
-                (56, 64, 232), # Medium clothes
-                (40, 40, 104), # Dark clothes
-                (144, 160, 192), # Light Robe
-                (104, 120, 136), # Medium Robe
-                (80, 96, 120), # Dark Robe
-                (48, 56, 72), # Darkest Robe
-                (80, 96, 120), # Dark Robe 2
+                (248, 248, 48), # Light highlight
+                (240, 160, 48), # Med highlight
+                (144, 80, 16), # Dark highlight
+                (88, 240, 248), # Light clothes
+                (88, 152, 248), # Medium clothes
+                (56, 56, 192), # Dark clothes
+                (112, 128, 152), # Light Robe
+                (72, 80, 96), # Medium Robe
+                (48, 64, 80), # Dark Robe
+                (16, 24, 32), # Darkest Robe
+                (48, 64, 80), # Dark Robe 2
                 (40, 40, 40)] # Outline
 
 marduk = [(128, 160, 128), # Background
@@ -1342,16 +1410,16 @@ bishop_blue = [(128, 160, 128), # Background
                 (248, 248, 208), # Light skin
                 (248, 184, 96), # Med skin
                 (120, 72, 48), # Dark skin
-                (200, 152, 32), # Light Hair
-                (136, 104, 24), # Dark Hair
-                (144, 184, 248), # Light clothes
-                (56, 88, 224), # Dark clothes
+                (192, 112, 8), # Light Hair
+                (120, 64, 0), # Dark Hair
+                (128, 232, 232), # Light clothes
+                (64, 152, 248), # Dark clothes
                 (144, 248, 208), # Light Blue
                 (104, 200, 168), # Dark Blue
-                (248, 248, 16), # Accent 1
-                (48, 64, 208), # Light Robe
-                (48, 56, 168), # Medium Robe
-                (40, 48, 96), # Dark Robe
+                (248, 248, 16), # Accent 1 - yellow
+                (88, 144, 248), # Light Robe
+                (48, 104, 216), # Medium Robe
+                (40, 40, 168), # Dark Robe
                 (40, 40, 40)] # Outline
 
 bishopf_blue = [(128, 160, 128), # Background
@@ -2274,7 +2342,7 @@ cleric_m_generic = [(255, 255, 255),
         (240, 163, 255),
         ]
 
-monk_blue = [(255, 255, 255), # Background
+monk_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 208, 128), # Med skin
@@ -2292,7 +2360,7 @@ monk_blue = [(255, 255, 255), # Background
                 (40, 24, 160), # Dark Robe
                 (40, 40, 40)] # Outline
 
-monk_red = [(255, 255, 255), # Background
+monk_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 208, 128), # Med skin
@@ -2310,7 +2378,7 @@ monk_red = [(255, 255, 255), # Background
                 (128, 24, 16), # Dark Robe
                 (40, 40, 40)] # Outline
 
-monk_sam = [(255, 255, 255), # Background
+monk_sam = [(128, 168, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light skin
                 (248, 208, 128), # Med skin

@@ -291,6 +291,8 @@ def write_scripts(script, images, weapon_type):
             elif command_code == '26' or command_code == '27':
                 current_pose.append('effect;ShieldToss')
                 shield_toss = True
+            elif command_code == '28':
+                current_pose.append('sound;ShamanRune')
             elif command_code == '2B':
                 current_pose.append('sound;ArmorShift')
             elif command_code == '2E':
@@ -325,6 +327,14 @@ def write_scripts(script, images, weapon_type):
                 print('Replace "effect;Cape Animation" with actual frames for cape animation in a loop')
             elif command_code == '49':
                 current_pose.append('sound;SageRune')
+            elif command_code == '4B':
+                current_pose.append('sound;MonkRune')
+            elif command_code == '4F':
+                current_pose.append('sound;DruidCrit')
+            elif command_code == '79':
+                current_pose.append('sound;StrategistRune')
+            elif command_code == '7A':
+                current_pose.append('sound;StrategistCrit')
             else:
                 print('Unknown Command Code: C%s' % command_code)
             
