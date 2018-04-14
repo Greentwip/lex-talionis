@@ -705,6 +705,40 @@ soldier_blue = [(128, 160, 128), # Background
                 (120, 96, 24), # Dark Leather
                 (40, 40, 40)] # Outline
 
+soldierf_red = [(128, 160, 128), # Background
+                (240, 240, 240), # White
+                (248, 248, 176), # Light Skin
+                (248, 192, 144), # Med Skin
+                (112, 72, 48), # Dark Skin
+                (248, 168, 112), # Light Armor
+                (240, 48, 40), # LM Armor
+                (176, 48, 32), # DM Armor
+                (88, 0, 8), # Dark Armor
+                (184, 216, 224), # Shield 1
+                (144, 176, 208), # Shield 2
+                (96, 120, 160), # Shield 3
+                (240, 224, 48), # Light Leather + Hair
+                (168, 144, 40), # Mid Leather + Hair
+                (120, 96, 24), # Dark Leather + Hair
+                (40, 40, 40)] # Outline
+
+soldier_eliza = [(128, 160, 128), # Background
+                 (248, 248, 248), # White
+                 (184, 112, 64), # Light Skin
+                 (152, 88, 40), # Med Skin
+                 (112, 64, 40), # Dark Skin
+                 (160, 240, 120), # Light Armor
+                 (72, 168, 72), # LM Armor
+                 (56, 128, 56), # DM Armor
+                 (16, 56, 16), # Dark Armor
+                 (184, 216, 224), # Shield 1
+                 (144, 176, 208), # Shield 2
+                 (96, 120, 160), # Shield 3
+                 (112, 112, 104), # Light Leather + Hair
+                 (80, 80, 64), # Mid Leather + Hair
+                 (64, 64, 48), # Dark Leather + Hair
+                 (40, 40, 40)] # Outline
+
 dragoon_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # LL Skin
