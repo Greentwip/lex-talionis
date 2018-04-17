@@ -739,6 +739,74 @@ soldier_eliza = [(128, 160, 128), # Background
                  (64, 64, 48), # Dark Leather + Hair
                  (40, 40, 40)] # Outline
 
+halberdier_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light Skin
+                (240, 192, 144), # Med Skin
+                (192, 128, 80), # DM Skin
+                (112, 72, 48), # Dark Skin
+                (88, 144, 232), # Light Armor
+                (56, 80, 184), # Medium Armor
+                (40, 32, 152), # Dark Armor
+                (192, 224, 232), # Light Pants + Weapon
+                (160, 184, 224), # Med Pants + Weapon
+                (96, 120, 160), # Dark Pants + Weapon
+                (224, 192, 120), # Light Leather
+                (160, 136, 80), # Mid Leather
+                (104, 88, 40), # Dark Leather
+                (40, 40, 40)] # Outline
+
+halberdier_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light Skin
+                (240, 192, 144), # Med Skin
+                (192, 128, 80), # DM Skin
+                (112, 72, 48), # Dark Skin
+                (240, 72, 40), # Light Armor
+                (184, 40, 32), # Medium Armor
+                (104, 0, 8), # Dark Armor
+                (192, 224, 232), # Light Pants + Weapon
+                (160, 184, 224), # Med Pants + Weapon
+                (96, 120, 160), # Dark Pants + Weapon
+                (224, 192, 120), # Light Leather
+                (160, 136, 80), # Mid Leather
+                (104, 88, 40), # Dark Leather
+                (40, 40, 40)] # Outline
+
+halberdier_eliza = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light Skin
+                (240, 192, 144), # Med Skin
+                (192, 128, 80), # DM Skin
+                (112, 72, 48), # Dark Skin
+                (72, 184, 72), # Light Armor
+                (56, 128, 56), # Medium Armor
+                (16, 56, 16), # Dark Armor
+                (192, 224, 232), # Light Pants + Weapon
+                (160, 184, 224), # Med Pants + Weapon
+                (96, 120, 160), # Dark Pants + Weapon
+                (176, 112, 160), # Light Leather
+                (144, 80, 128), # Mid Leather
+                (112, 48, 96), # Dark Leather
+                (40, 40, 40)] # Outline
+
+soldier_eliza = [(128, 160, 128), # Background
+                 (248, 248, 248), # White
+                 (184, 112, 64), # Light Skin
+                 (152, 88, 40), # Med Skin
+                 (112, 64, 40), # Dark Skin
+                 (160, 240, 120), # Light Armor
+                 (72, 168, 72), # LM Armor
+                 (56, 128, 56), # DM Armor
+                 (16, 56, 16), # Dark Armor
+                 (184, 216, 224), # Shield 1
+                 (144, 176, 208), # Shield 2
+                 (96, 120, 160), # Shield 3
+                 (112, 112, 104), # Light Leather + Hair
+                 (80, 80, 64), # Mid Leather + Hair
+                 (64, 64, 48), # Dark Leather + Hair
+                 (40, 40, 40)] # Outline
+
 dragoon_blue = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # LL Skin
