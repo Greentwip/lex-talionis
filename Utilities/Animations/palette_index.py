@@ -2976,6 +2976,40 @@ assassin_red = [(128, 160, 128), # Background
                 (120, 32, 24), # Dark Clothes
                 (40, 40, 40)] # Outline
 
+skirmisher_generic = [(168, 208, 160), # Background
+                (88, 56, 8), # White
+                (72, 72, 72), # Light skin
+                (120, 120, 120), # Med skin
+                (112, 72, 48), # Dark skin
+                (88, 240, 248), # Light Hair
+                (136, 88, 16), # Medium Hair
+                (208, 144, 32), # Dark Hair
+                (176, 248, 72), # Light Weapon/Leather
+                (56, 56, 192), # Med Weapon/Leather
+                (88, 152, 248), # Heavy Weapon/Leather
+                (248, 248, 208), # Light Clothes
+                (240, 192, 104), # Med Clothes
+                (248, 248, 248), # Dark Clothes
+                (136, 168, 56), # Boots
+                (40, 40, 40)] # Outline
+
+skirmisher_generic2 = [(168, 208, 160), # Background
+                (248, 248, 248), # White
+                (248, 248, 208), # Light skin
+                (240, 192, 104), # Med skin
+                (112, 72, 48), # Dark skin
+                (176, 248, 72), # Light Hair
+                (136, 168, 56), # Medium Hair
+                (96, 144, 32), # Dark Hair
+                (120, 120, 120), # Light Weapon/Leather
+                (96, 96, 96), # Med Weapon/Leather
+                (72, 72, 72), # Heavy Weapon/Leather
+                (88, 240, 248), # Light Clothes
+                (88, 152, 248), # Med Clothes
+                (56, 56, 192), # Dark Clothes
+                (88, 56, 8), # Boots
+                (40, 40, 40)] # Outline
+
 king = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 240, 168), # Light skin

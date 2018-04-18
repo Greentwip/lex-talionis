@@ -53,8 +53,8 @@ enemy;0;tr3;Warrior;8;Adamant Axe,Yew Bow;16,17;Pursue;Claw;fStrength +2
 enemy;0;tr4;Warrior;8;Adamant Axe,Yew Bow;17,16;Pursue;Claw;fStrength +2
 ### Third Turn
 # Left - Generals and Dracolords
-enemy;0;l1;General;8;Great Sword,Adamant Lance;5,21;Pursue;Claw;fDefense +2
-enemy;0;l2;General;8;Great Sword,Adamant Lance;5,23;Pursue;Claw;fDefense +2
+enemy;0;l1;General;8;Great Sword,Adamant Lance,Great Axe;5,21;Pursue;Claw;fDefense +2
+enemy;0;l2;General;8;Great Sword,Adamant Lance,Great Axe;5,23;Pursue;Claw;fDefense +2
 enemy;0;l3;Dracolord;8;Mithril Axe,Mithril Lance;4,22;Pursue;Claw;fDefense +2
 enemy;0;l4;Dracolord;8;Mithril Axe,Mithril Lance;6,22;Pursue;Claw;fDefense +2
 # Right - Sages and Warlocks
