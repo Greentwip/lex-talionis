@@ -3,8 +3,8 @@ import glob
 from palette_index import *
 
 ### === INPUTS ===
-p1 = skirmisher_generic
-p2 = skirmisher_generic2
+p1 = rogue_blue
+p2 = rogue_red
 images_to_convert = '*.png'
 
 def palette_convert(p1, p2, image_to_convert):
