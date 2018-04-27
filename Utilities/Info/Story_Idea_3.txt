@@ -219,73 +219,72 @@ History before game:
 - 2 weeks ago: Lywark, using two of the seals, attempts to bring back his beloved through the body of Elen. It doesn't work. Elen escapes.
 
 Characters:
-Alfred of Athria (Eliwood Lord)
-Saebbi of Mercia (Myrmidon)
-Cedric (Cedd) of Mercia (Lance Cavalier)
-Millie of Mercia (Cleric)
+Alfred of Athria (Eliwood Lord) -- Elf Counsel
+Saebbi of Mercia (Myrmidon) -- British
+Cedric (Cedd) of Mercia (Lance Cavalier) -- Modern variant of Cerdic, which is variant of British name Caraticos
+Millie of Mercia (Cleric) -- From Millicent, Melisende -- Strong Work
 
-Nettle of Mercia (Archer)
-Bjorn of the Northlands (Knight)
+Nettle of Mercia (Archer) -- Plant
+Bjorn of the Northlands (Knight) -- Bear
 
-Rudolf of Mercia (Fighter)
+Rudolf of Mercia (Fighter) -- Famous Wolf
 
-Ina of Athria (Troubadour)
-Aelfwynn (Wynn) of Athria (Paladin)*
+Ava of Athria (Troubadour) -- Unkown (Germanic)
+Aelfwynn (Wynn) of Athria (Paladin)* -- Elf Friend
 
-Elen of Loria (Mystic)
+Elen of Loria (Mystic) -- Welsh
 
-Athelwulf of Athria **
-Adelbert (Bert) of Athria (??)**
-Lywark of Loria (Warlock)**
+Athelwulf of Athria ** -- Noble Wolf
+Adelbert (Bert) of Athria (??)** -- Noble Light
+Lywark of Loria (Warlock)** -- Welsh
 Lewelyn (Lewis) of Loria (Wyvern Knight)**
-Osric of Umbria (Vanguard) **
+Osric of Umbria (Vanguard) ** -- God Ruler (Rich)
 
-Sigered of Pembroke (Axe Cavalier)
-Synne of Pembroke (Thief)
+Sigered of Pembroke (Axe Cavalier) -- Victorious Counsel
+Synne of Pembroke (Thief) -- Travel, Sun (Norwegian)
 
-Olivia of Umbria (Falco Knight)** 
-Edwin of Umbria (Sword Cavalier)
-Eowa of Umbria (Pegasus Knight)
+Olivia of Umbria (Falco Knight)** -- Olive Tree
+Edwin of Umbria (Sword Cavalier) -- Rich Friend
+Eowa of Umbria (Pegasus Knight) -- Ever
 
-?? of ?? (Phantom/Brigand/Raider)
-?? of ?? (MageF)
+Pale of Surtalia (Phantom/Brigand/Raider) -- White
+Asch of Surtalia (MageF) -- Ash, Spear
 
-Yohannes of Saxony (Shaman)
-Juniper (June) of Saxony (Valkyrie)
+Johannes of Jutia (Shaman) -- God is Great
+Juniper (June) of Jutia (Valkyrie) -- Tree
 
-Rhun of the Northlands (Sentinel)
-Frieda of the Northlands (Wyvern Knight)
+Rhun of the Northlands (Sentinel) -- Welsh, Mighty
+Frieda of the Northlands (Wyvern Knight) -- Protection, Peace
 
-Caelwulf of Mercia (Berserker) **
+Caelwulf of Mercia (Berserker) ** -- Close to Coenwulf Fierce Wolf
 
-?? of ?? (Cleric)
+Isolde of Eiria (Cleric) -- Unknown (Possibly Celtic or Welsh)
 
-?? of ?? (MercenaryF)
+Tristan of Talia (Mercenary) -- Brythonic (Noise, Bold)
 ?? of ?? (Griffin)
 ?? of ?? (??)
 
-Edelyn of Loria **
+Edelyn of Loria ** -- Variant of Evelyn, Ava (Radiance, Beauty, Little Bird)
 
 Osric of Umbria (Vanguard)
-Sorrel of West Talia (Thief)
-Clover of West Talia (Cleric, ironically)
-Iris of Umbria (Shaman)
+Sorrel of West Talia (Thief) -- Plant
+Clover of West Talia (Cleric, ironically) -- Plant
+Iris of Umbria (Shaman) -- Flower, Rainbow
 
-Audrea of Athria (Swordmaster)
+Audrey of Athria (Swordmaster) -- From Athelthrith, Noble strength
 Theodric of the Northlands (Fighter/Berserker/Warrior)
-Mael of Eiria (Nomad)
+Mael of Eiria (Nomad) -- Irish, Welsh, Celtic (Chief, Prince)
 
-Godwin of Umbria (Great Knight)
-Ingrid of Umbria (Halberdier)
+Godwin of Umbria (Great Knight) -- Good Friend
+Ingrid of Umbria (Halberdier) -- Beauty
 
 ?? of ?? (Sniper)
 ?? of ?? (SageM)
 
 ?? of ?? (Assassin)
-?? of ?? (Dragoon)
 ?? of ?? (General)
 
-Nyssa of Loria (Oracle)
+Nyssa of Gedland (Oracle) -- Scandinavian, Friendly Elf or Fairy
 
 Removing RES stat
 MAG Hit% is now 2xSKL + LCK/2

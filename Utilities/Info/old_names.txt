@@ -59,6 +59,7 @@ Rudolf
 Swithin
 Wyatt
 Wilfred
+Roric
 
 Welsh:
 Rhodri
@@ -72,6 +73,7 @@ Edwin
 Llywarch
 Asser
 Gwyn
+Gwynoc
 
 Viking:
 Cnut

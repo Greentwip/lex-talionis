@@ -16,7 +16,7 @@ C1B                               #Play quick "heavy step" SFE
 C2B                               #Play armored unit "leaping" SFE
 10 p- Lance_004.png
 5 p- Lance_006.png
-5 p- Lance_007x.png               # Needs to be added
+5 p- Lance_011.png               # Needs to be added
 5 p- Lance_012.png
 13 p- Lance_013.png
 2 p- Lance_014.png
