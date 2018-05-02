@@ -671,6 +671,40 @@ generic_knight = [(255, 255, 255),
                 (0, 0, 0),
                 ]
 
+sentinel_blue = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (112, 144, 240), # Armor Light
+                (80, 88, 192), # Armor Med
+                (48, 48, 120), # Armor Dark
+                (208, 216, 200), # Highlight Light
+                (168, 168, 176), # Highlight Med
+                (120, 136, 120), # Highlight Dark
+                (104, 96, 96), # Leather Light
+                (64, 64, 72), # Leather Dark
+                (104, 72, 24), # Brown Light
+                (72, 48, 24), # Brown Dark
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (40, 40, 40)] # Outline
+
+sentinel_red = [(128, 160, 128), # Background
+                (248, 248, 248), # White
+                (248, 64, 48), # Armor Light
+                (216, 24, 8), # Armor Med
+                (112, 0, 0), # Armor Dark
+                (200, 208, 216), # Highlight Light
+                (176, 168, 168), # Highlight Med
+                (120, 120, 136), # Highlight Dark
+                (104, 96, 96), # Leather Light
+                (64, 64, 72), # Leather Dark
+                (104, 72, 24), # Brown Light
+                (72, 48, 24), # Brown Dark
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (40, 40, 40), # ??
+                (40, 40, 40)] # Outline
+
 soldier_red = [(128, 160, 128), # Background
                 (248, 248, 248), # White
                 (248, 248, 208), # Light Skin
