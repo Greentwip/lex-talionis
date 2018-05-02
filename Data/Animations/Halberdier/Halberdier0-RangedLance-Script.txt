@@ -12,7 +12,7 @@ f;1;Lance_052
 f;2;Lance_053
 f;2;Lance_054
 f;2;Lance_055
-f;32;Lance_056
+f;28;Lance_056
 f;3;Lance_057
 sound;Weapon Swing
 f;1;Lance_057
@@ -49,7 +49,7 @@ f;4;Lance_075
 sound;Weapon Shine
 f;1;Lance_075
 f;8;Lance_076
-f;32;Lance_077
+f;28;Lance_077
 f;3;Lance_057
 sound;Weapon Swing
 f;1;Lance_057
@@ -71,5 +71,5 @@ end_loop
 f;5;Lance_000
 
 pose;Stand
-f;19;Lance_000
+f;6;Lance_000
 

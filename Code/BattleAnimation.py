@@ -177,7 +177,7 @@ class BattleAnimation(object):
             self.script_index += 1
 
     def parse_line(self, line):
-        # print(self.right, True if self.child_effect else False, line)
+        # print(self.right, line)
         self.base_state = False
         # === TIMING AND IMAGES ===
         if line[0] == 'f':
@@ -463,8 +463,9 @@ class BattleAnimation(object):
 
     def end_loop(self):
         if self.loop:
-            self.script_index = self.loop.end_index
-            self.loop = None
+            if self.loop.end_index:  # If we haven't reached the end yet...
+                self.script_index = self.loop.end_index
+            self.loop = None  # Either way, done with loop
 
     def start_anim(self, pose):
         self.current_pose = pose

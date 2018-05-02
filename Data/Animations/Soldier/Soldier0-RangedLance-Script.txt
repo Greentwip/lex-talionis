@@ -21,9 +21,10 @@ f;4;Lance_020
 end_loop
 f;4;Lance_020
 f;7;Lance_018
-f;3;Lance_017
+f;4;Lance_017
 f;3;Lance_016
 f;4;Lance_021
+f;1;Lance_000
 
 pose;Critical
 f;6;Lance_000
@@ -49,9 +50,10 @@ f;4;Lance_020
 end_loop
 f;4;Lance_020
 f;7;Lance_018
-f;3;Lance_017
+f;4;Lance_017
 f;3;Lance_016
 f;4;Lance_021
+f;1;Lance_000
 
 pose;Stand
 f;4;Lance_000

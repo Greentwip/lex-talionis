@@ -23,10 +23,11 @@ def determine_bg_color(im):
     color = im.getpixel((0, 0))
     return color
 
-def animation_collater(images, bg_color, weapon_type):
+def animation_collater(images, weapon_type):
     index_lines = []
     for name, image in images.items():
         width, height = image.size
+        bg_color = determine_bg_color(image)
 
         # Convert colorkey colors to 0, 0, 0
         for x in xrange(width):
@@ -484,8 +485,6 @@ for name in images.keys():
             new_images[name + '_under'] = image2
 images.update(new_images)
 
-bg_color = determine_bg_color(images.values()[0])
-
 melee_image_names, ranged_image_names = write_scripts(script, images, weapon_type)
 melee_images = OrderedDict()
 ranged_images = OrderedDict()
@@ -517,15 +516,15 @@ if weapon_type == 'Disarmed':
 if weapon_type == 'Handaxe':
     weapon_type = 'Axe'
 if weapon_type not in ('Bow', 'Magic'):
-    animation_collater(melee_images, bg_color, weapon_type)
+    animation_collater(melee_images, weapon_type)
 if weapon_type == 'Magic':
-    animation_collater(melee_images, bg_color, 'Unarmed')
+    animation_collater(melee_images, 'Unarmed')
 if ranged_images:
     if weapon_type == 'Sword':
-        animation_collater(ranged_images, bg_color, 'Magic' + weapon_type)
+        animation_collater(ranged_images, 'Magic' + weapon_type)
     elif weapon_type in ('Lance', 'Axe', 'Bow'):
-        animation_collater(ranged_images, bg_color, 'Ranged' + weapon_type)
+        animation_collater(ranged_images, 'Ranged' + weapon_type)
     elif weapon_type == 'Magic':
-        animation_collater(ranged_images, bg_color, 'Magic')
+        animation_collater(ranged_images, 'Magic')
 
 print(' === Done! ===')

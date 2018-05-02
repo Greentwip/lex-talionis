@@ -19,12 +19,17 @@
 #
 # --------------------------------------------
 faction;Soldier;Soldier;Neutral;Grado Soldier
+faction;Eliza;Eliza;Neutral;Eliza
 # Player Characters
 player;0;0;Franz;5,1;None
 player;0;0;Eirika;12,9;None
 player;0;0;Seth;13,8;None
 player;0;0;Gilliam;6,1;None
-player;0;0;Mage;10;Fire,Iron Sword,Willow Bow;11,7;None;Soldier
+player;0;0;SoldierF;10;Iron Lance,Javelin;11,7;None;Eliza
+player;0;0;Halberdier;1;Iron Lance,Javelin;11,8;None;Soldier
+player;0;0;HalberdierF;1;Iron Lance,Javelin;11,9;None;Eliza
+player;0;0;Skirmisher;10;Iron Lance;10,8;None;Soldier
+player;0;0;Sentinel;10;Iron Axe;10,7;None;Soldier
 # Enemies
 # Bosses
 enemy;0;0;Breguet;2,2;HardGuard

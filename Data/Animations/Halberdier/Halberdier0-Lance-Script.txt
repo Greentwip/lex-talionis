@@ -12,7 +12,7 @@ f;2;Lance_001
 f;2;Lance_002
 f;2;Lance_003
 f;2;Lance_004
-f;30;Lance_005
+f;16;Lance_005
 f;2;Lance_006
 f;2;Lance_007
 enemy_flash_white;8
@@ -30,19 +30,19 @@ wait_for_hit;Lance_008;Lance_008_under
 f;4;Lance_008;Lance_008_under
 f;2;Lance_009;Lance_009_under
 f;2;Lance_010;Lance_010_under
-f;2;Lance_011;Lance_011_under
+f;2;Lance_011
 sound;Weapon Swing
-f;1;Lance_011;Lance_011_under
+f;1;Lance_011
 sound;ArmorShift
-f;1;Lance_011;Lance_011_under
+f;1;Lance_011
 f;2;Lance_012
 f;2;Lance_013
 f;2;Lance_014
 f;2;Lance_015
-f;2;Lance_016
+f;1;Lance_016
 sound;Step Back 1
 f;1;Lance_016
-f;2;Lance_017
+f;4;Lance_017
 f;9;Lance_000
 
 pose;Critical
@@ -67,7 +67,9 @@ enemy_flash_white;8
 f;1;Lance_030
 screen_flash_white;4
 f;14;Lance_031;Lance_031_under
-f;2;Lance_032
+f;1;Lance_032
+sound;Weapon Swing
+f;1;Lance_032
 f;4;Lance_033
 f;2;Lance_034
 platform_shake
@@ -77,7 +79,9 @@ screen_flash_white;4
 f;14;Lance_035;Lance_035_under
 f;2;Lance_036
 f;4;Lance_037
-f;25;Lance_038
+f;19;Lance_038
+sound;Weapon Swing
+f;6;Lance_038
 f;2;Lance_007
 enemy_flash_white;8
 f;1;Lance_007
@@ -103,7 +107,7 @@ f;2;Lance_015
 f;2;Lance_016
 sound;Step Back 1
 f;1;Lance_016
-f;2;Lance_017
+f;4;Lance_017
 f;9;Lance_000
 
 pose;Miss
@@ -114,7 +118,7 @@ f;2;Lance_001
 f;2;Lance_002
 f;2;Lance_003
 f;2;Lance_004
-f;30;Lance_005
+f;16;Lance_005
 f;2;Lance_006
 f;2;Lance_007
 f;3;Lance_105
@@ -131,10 +135,10 @@ f;2;Lance_012
 f;2;Lance_013
 f;2;Lance_014
 f;2;Lance_015
-f;2;Lance_016
+f;1;Lance_016
 sound;Step Back 1
 f;1;Lance_016
-f;2;Lance_017
+f;4;Lance_017
 f;9;Lance_000
 
 pose;Stand
