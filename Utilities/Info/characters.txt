@@ -1,0 +1,21 @@
+Six Characters:
+
+Aelfred - The Tactician, clever and sarcastic, cool (Superego) (Hero) -> Loses a bit of his sarcastic edge and begins to care more
+Saebbi - The Hothead, aggressive, energetic, bouncy, and mischievious (Id) (Lancer) -> Mellows out 
+Cedric - The Jagen, calm and confident, except with women (Ego) (Smart Guy) -> Depressed, Gloomy, and Vengeance field (Id)
+Elen - The Mysterious Waif, shy and quiet (The Chick) -> A blossoming strength of character
+Olruna - The Rogue, mysterious, calm, and confident. (Big Guy)
+Leolin - The Honorable Turncoat, full of honor (Sixth Ranger) -> unsure of himself
+
+Example Scene (Outro of Prologue)
+A: Eerie. Bandits this far into Mercia.
+S: Ah, don't be so down, Aelfred! They were nothing we couldn't handle! 
+C: Don't jest -- Aelfred speaks truly. Why would bandits be ranging this far from the foothills? 
+A: Whatever the reason, I'm not standing here to find out. We've got to make the monastery at Ren's Brooke before nightfall.
+C: Aye. Nettle is probably waiting for us at the bridge. Let's catch up.
+S: What's the rush, Ced?. You got something special planned for tonight? Involving a certain special someone?
+C: Huh? No... Anyway, it's none of your business either way. Let's go.
+Cedric leaves.
+S: Hah, he was blushing beet red. ??
+
+
