@@ -50,10 +50,10 @@ class TimeDisplay(object):
             GC.FONT['text_white'].blit(str_time, surf, (self.pos[0] + 4, self.pos[1] + 4))
 
 class Logo(object):
-    def __init__(self, image, height, center):
+    def __init__(self, image, center):
         self.texture = image
         self.image = None
-        self.height = height
+        self.height = self.texture.get_height()/8
         self.width = self.texture.get_width()
         self.center = center
         self.logo_counter = 0
@@ -99,7 +99,7 @@ class StartStart(StateMachine.State):
             gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.logo = GC.IMAGESDICT['Logo']
-            gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], 16, (GC.WINWIDTH/2, 4*GC.WINHEIGHT/5))
+            gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], (GC.WINWIDTH/2, 4*GC.WINHEIGHT/5))
             gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
             gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
@@ -175,8 +175,6 @@ class StartStart(StateMachine.State):
         # gameStateObj.logo.draw(surf)
         surf.blit(gameStateObj.logo, (GC.WINWIDTH/2 - gameStateObj.logo.get_width()/2, GC.WINHEIGHT/2 - gameStateObj.logo.get_height()/2 - 20))
         gameStateObj.press_start.draw(surf)
-        # pos = (GC.WINWIDTH/2 - GC.FONT['text_white'].size(cf.CONSTANTS['attribution'])[0]/2, GC.WINHEIGHT - 16)
-        # GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, pos)
         GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, (4, GC.WINHEIGHT - 16))
         return surf
 
