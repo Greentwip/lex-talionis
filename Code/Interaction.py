@@ -1098,6 +1098,12 @@ class AnimationCombat(Combat):
         elif not self.focus_right and self.pan_offset != self.pan_max:
             self.pan_dir = self.pan_move
 
+    def def_damage(self):
+        return self.current_result.def_damage
+
+    def outcome(self):
+        return self.current_result.outcome
+
     def draw(self, surf, gameStateObj):
         bar_multiplier = self.bar_offset / float(self.max_position_offset)
         platform_trans = 100

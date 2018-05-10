@@ -40,6 +40,7 @@ class BattleAnimation(object):
         self.children = []
         self.under_children = []
         self.loop = False
+        self.end_next_loop = 0  # A counter that keeps track of how many loops in the future to skip
         self.deferred_commands = []
 
         # For drawing
@@ -230,15 +231,16 @@ class BattleAnimation(object):
         # === COMBAT HIT ===
         elif line[0] == 'start_hit':
             if 'no_shake' not in line:
-                if self.owner.current_result.outcome == 2:
+                if self.owner.outcome() == 2:
                     self.owner.shake(4)  # Critical
-                elif self.owner.current_result.def_damage > 0:
+                elif self.owner.def_damage() > 0:
                     self.owner.shake(1)
                 else:  # No Damage -- Hit spark handles anim
                     self.owner.shake(2)
             self.owner.start_hit('no_sound' not in line)
             # Also offset partner by [-1, -2, -3, -2, -1]
-            self.partner.lr_offset = [-1, -2, -3, -2, -1]
+            if self.partner:
+                self.partner.lr_offset = [-1, -2, -3, -2, -1]
         elif line[0] == 'wait_for_hit':
             if self.wait_for_hit:
                 if len(line) > 1:
@@ -255,17 +257,17 @@ class BattleAnimation(object):
                 self.base_state = True
         elif line[0] == 'spell_hit':
             # To handle ruin item
-            if not self.item.half or self.owner.current_result.def_damage > 0:
-                self.owner.start_hit('no_sound' not in line, self.owner.current_result.outcome == 0)
+            if not self.item.half or self.owner.def_damage() > 0:
+                self.owner.start_hit('no_sound' not in line, self.owner.outcome() == 0)
                 self.state = 'Wait'
                 self.processing = False
-                if self.owner.current_result.def_damage > 0:
+                if self.owner.def_damage() > 0:
                     if 'no_shake' not in line:
-                        if self.owner.current_result.outcome == 2:  # Crit
+                        if self.owner.outcome() == 2:  # Crit
                             self.owner.shake(4)
                         else:
                             self.owner.shake(3)
-                elif self.owner.current_result.def_damage == 0:
+                elif self.owner.def_damage() == 0:
                     if 'no_shake' not in line:
                         self.owner.shake(2)
                     if self.item and (self.item.weapon or (self.item.spell and self.item.damage)):
@@ -283,26 +285,32 @@ class BattleAnimation(object):
             self.animations.append(anim)
             if not self.item.half:  # Spell hit handles this
                 self.owner.start_hit('no_sound' not in line, True)  # Miss
-            self.partner.dodge()
+            if self.partner:
+                self.partner.dodge()
         # === FLASHING ===
         elif line[0] == 'parent_tint_loop':
             num_frames = self.get_frames(line[1])
             color = [tuple([int(num) for num in color.split(',')]) for color in line[2:]]
-            self.parent.flash(num_frames, color)
+            if self.parent:
+                self.parent.flash(num_frames, color)
         elif line[0] == 'parent_tint':
             num_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
-            self.parent.flash(num_frames, color)
+            if self.parent:
+                self.parent.flash(num_frames, color)
         elif line[0] == 'enemy_tint':
             num_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
-            self.partner.flash(num_frames, color)
+            if self.partner:
+                self.partner.flash(num_frames, color)
         elif line[0] == 'enemy_gray':
             num_frames = self.get_frames(line[1])
-            self.partner.flash(num_frames, 'gray')
+            if self.partner:
+                self.partner.flash(num_frames, 'gray')
         elif line[0] == 'enemy_flash_white':
             num_frames = self.get_frames(line[1])
-            self.partner.flash(num_frames, (248, 248, 248))
+            if self.partner:
+                self.partner.flash(num_frames, (248, 248, 248))
         elif line[0] == 'self_flash_white':
             num_frames = self.get_frames(line[1])
             self.flash(num_frames, (248, 248, 248))
@@ -337,7 +345,7 @@ class BattleAnimation(object):
             self.owner.shake(1)
         # === ANIMATIONS ===
         elif line[0] == 'hit_spark':
-            if self.owner.current_result.def_damage > 0:
+            if self.owner.def_damage() > 0:
                 if self.right:
                     position = (-110, -30)
                 else:
@@ -349,7 +357,7 @@ class BattleAnimation(object):
             else:  # No Damage
                 self.no_damage()
         elif line[0] == 'crit_spark':
-            if self.owner.current_result.def_damage > 0:
+            if self.owner.def_damage() > 0:
                 image = GC.IMAGESDICT['CritSpark']
                 if not self.right:
                     image = Engine.flip_horiz(image)  # If on the left, then need to swap so enemy can have it
@@ -428,7 +436,10 @@ class BattleAnimation(object):
             self.parent.opacity = int(line[1])
         # === LOOPING ===
         elif line[0] == 'start_loop':
-            self.loop = Loop(self.script_index)
+            if self.end_next_loop > 0:
+                self.end_next_loop -= 1
+            else:
+                self.loop = Loop(self.script_index)
         elif line[0] == 'end_loop':
             if self.loop:
                 self.loop.end_index = self.script_index
@@ -466,6 +477,8 @@ class BattleAnimation(object):
             if self.loop.end_index:  # If we haven't reached the end yet...
                 self.script_index = self.loop.end_index
             self.loop = None  # Either way, done with loop
+        else:
+            self.end_next_loop += 1
 
     def start_anim(self, pose):
         self.current_pose = pose

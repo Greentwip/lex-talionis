@@ -32,6 +32,7 @@ sound;Foot Step
 f;1;Lance_009
 f;6;Lance_010
 f;8;Lance_011
+f;1;Lance_000
 
 pose;Critical
 f;6;Lance_000
@@ -68,6 +69,7 @@ sound;Foot Step
 f;1;Lance_009
 f;6;Lance_010
 f;8;Lance_011
+f;1;Lance_000
 
 pose;Miss
 f;6;Lance_000
@@ -94,6 +96,7 @@ sound;Foot Step
 f;1;Lance_009
 f;6;Lance_010
 f;8;Lance_011
+f;1;Lance_000
 
 pose;Stand
 f;4;Lance_000

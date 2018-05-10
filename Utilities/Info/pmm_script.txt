@@ -1,0 +1,170 @@
+# Project Memento Mori Script
+
+Act I: A wedding and a funeral
+
+Narration:
+
+Five years have passed since the war between Athria and Mercia. A quiet peace has settled over the land. The crown prince of Mercia, Cedric, is to wed Pricess Aelfwynn of Athria, uniting the once antagonistic kingdoms. Yet, all is not well. Athrian villagers complain that their crops do not grow, bandits roam the Mercian foothfills, and a troubling sickness plagues peasant and prince alike. In the midst of these events, Prince Aelfred of Athria, long ward of the victorious Mercians, accompanies Cedric and his sister, Saebbi, to Athria.
+
+Prologue:
+
+* Aelfred, arrives from offscreen left to left. Ruin/forest background
+
+Aelfred: Saebbi? Where'd that girl run off to now. Cedric's going to be pissed if we're held up any longer...
+Saebbi, from offscreen right: Stay back, you thugs!
+Aelfred: Saebbi?
+
+* Aelfred runs offscreen right
+* transition to map screen, Aelfred approaches Saebbi
+* transition to Saebbi, screen left, Gwinoc, screen right. Aelfred arrives behind Saebbi. Different ruin/forest background
+
+Gwinoc: Hah! What luck, boys, another lordling!
+Aelfred: Saebbi... What's going on here?
+Gwinoc: Isn't it obvious boy? You two'll fetch a fine ransom! 
+Saebbi: How dare you! You... you scum!
+Gwinoc: Oh you wound me, lass! We mean you no harm. We'll ransom you to the king and be on our way, our pockets a little heavier. Everyone'll go home happy. So, if you'll put down the blade, lass. I wouldn't want to ruin that pretty face of yours...
+Aelfred: Saebbi... don't get any ideas. Listen to the man. We can't fight them and hope to prevail...
+Saebbi: Not one step closer!
+
+* transition to map screen. Brigand approaches Saebbi
+
+Saebbi: Ah!
+
+* Combat happens. Saebbi wrecks the scrub
+
+Thug: Urgh...
+Gwinoc: So that's how it'll be then? Boys, knock some sense into 'em, but leave 'em still breathing. I intend to collect.
+Aelfred: Damn it, Saebbi. Why couldn't you have stayed with the group for once!
+Saebbi: No time for questions, Aelfred. Ready your blade! I'm not letting any two-bit bandits have their way with me.
+Aelfred: Your bluster is going to get us both killed!
+Saebbi: Don't worry about me. We Mercians can our own in a scrap!
+Aelfred: *sigh*. Well, stay together. If we can kill their leader, the rest should fall back...
+
+* Player Phase 1
+
+* Beginning of Turn 2 or 3
+* Cedric and Bjorn appear on the north end of the map.
+
+Bjorn: Ah, Prince Cedric. You were right once again! Bandits, after all! Your loss for not taking me up on the bet, eh?
+Cedric: Always looking out for the health of your coinpurse, Bjorn. Besides, if I took you up on every bet you'd soon be penniless. That's no way for a lord to treat his liege. Now, get into position! Group up with Aelfred and Saebbi. I'll ride after the leader.
+Bjorn: Right after you, milord.
+
+* On Boss Fight
+
+Gwinoc: Wha-- No matter. I won't be taken down by a bunch of pampered lordlings!
+
+* Gwinoc's death quote
+
+Gwinoc: Urgh- No...justice -- is there... urgh...
+
+* Transition to ruin/forest background
+* Aelfred, Saebbi, & Cedric onscreen
+
+Cedric: What were you thinking? You should have fallen back. Fighting that many bandits on your own -- have you two gone mad?
+Saebbi: Ah, calm down, Ced! They were nothing we couldn't handle! 
+Aelfred: Don't jest -- Cedric speaks truly. Without his timely arrival, we could have died... Saebbi.
+Saebbi: Hey! What are you glaring at me for!
+Cedric: Hmmm... it's eerie. Why would bandits be ranging this far from the foothills?
+Aelfred: Whatever the reason, we shouldn't wait to find out. We've got to make the monastery at Wren's Brooke before nightfall.
+Cedric: Aye. Nettle is probably waiting for us at the bridge. 
+Saebbi: What's the rush, Ced? You've special plans for tonight? Involving a certain someone?
+Cedric: Huh? No... In any case, it's none of your concern. Let's go.
+
+* Cedric leaves.
+
+Saebbi: Hah, did you see that Aelfred? He was blushing beet red. How sweet!
+
+* Transition out to save screen... maybe :)
+
+Narration:
+
+The village at Wren's Brooke has long served as a waystation for travelers between Mercia and Athria. It is fitting that here the wedding of Cedric of Mercia and Aelfwynn of Athria is to take place. Cedric's noble retinue, though shaken by the brazen bandit ambush, continues its march towards Wren's Brooke. However, they soon discover they are not free of their troubles.
+
+Chapter I:
+
+* Transition to forested road. Nettle & Aelfred on screen
+
+Aelfred: Anything happen while we were away, Nettle?
+Nettle: No, but it took you long enough. We've got a timetable to keep, you know!
+
+* Cedric onscreen
+
+Cedric: Don't worry yourself, Nettle. We'll make the monastery in time. Besides, it was not Aelfred's fault we were late. Saebbi wandered off and was waylaid by bandits. Aelfred was offered his sword in her defense.
+
+* Saebbi onscreen.
+
+Saebbi: Pah! I could've taken them on my own!
+Nettle: Whatever. We'd better get moving if we want to reach the safety of Wren's Brooke by nightfall.
+
+* Millie busts in from offscreen
+
+Millie: M-my lords... p-please... I-I beg of thee.... an attack... bandits.
+Cedric: Please sister, slow down. You are safe here. Now tell us what's your problem.
+Millie: *sobs* T-the... M-my monastery at Wren's Brooke. It's been overrun by bandits.
+Saebbi: What!?
+Millie: Ah... so many dead. I know I should have stayed behind to administer last rites to my brothers and sisters, but... I was so scared. God forgive me.
+Aelfred: How many bandits were there?
+Millie: Ah... God forgive, I cannot recall. We are a small, peaceful monastery, and they were armed with axe and sword...
+Saebbi: We cannot allow such a blatant attack to go unpunished.
+Cedric: Nettle, how far to the monastery?
+Nettle: Along the road, several leagues, milord. But I know a shortcut.
+Cedric: Then lead us. Sister, please follow. We may need what healing magicks you possess.
+Millie: I will try, milord.
+
+* Transition out
+* Show south map background, with two bandits.
+Bandit 1: Sure glad the boss had us raid this place. It's downright criminal how much gold and silver these monks were hoarding. We'll put it to better use. 
+Bandit 2: And they barely fought back at all. The boss'll be pleased.
+Bandit 1: Hey, you hear something?
+Bandit 2: Yeah... it sounds like hoofbeats...
+
+* Nettle appears, fires on one bandit, Bandit 1 dies
+
+Bandit 1: Urgh--
+Bandit 2: Wah! Who are you?
+
+* Cedric appears, running down the other
+* Bandit 2 dies
+
+Cedric: Aelfred? You have a plan?
+Aelfred: Don't worry. Just follow my commands...
+
+* Player Phase
+
+* Transition to monastery background
+
+Saebbi: That's the last of them. Good riddance!
+Aelfred: I wouldn't be so sure. Didn't you hear their chatter? 
+Cedric: Hmmm...?
+Aelfred: This is but one group... There's a second attacking the village now.
+Cedric: Aelfwynn was supposed to be at the village. Surely you two are exhausted... watch over the monastery for me. I intend to ride for the village.
+Aelfred: Not so fast, Cedric! She's my own sister -- I'll ride with you.
+Saebbi: And you two aren't leaving me behind!
+Cedric: Saebbi, his majesty tasked with me with your protection. I cannot allow you to follow me.
+Saebbi: How are you supposed to protect us when you're not even here?
+Aelfred: Indeed. You could keep make sure we're safe if we're with you. Besides, you'll need someone to watch your back.
+Cedric: ...
+Saebbi: Please, Cedric. Don't abandon us.
+Cedric: *sigh* Fine. You've convinced me -- you'll probably follow me no matter what I say. At least this way I can keep an eye on you.
+Saebbi: Yes!
+IF: Millie is still alive
+    Millie: Milord...
+    Cedric: Hmm...?
+    Millie: There's nothing left for me here. May I join your retinue?
+    Cedric: Of course, but you may find yourself in grave danger.
+    Millie: I understand. May God watch over us...
+Cedric: Then, with the Authority's blessing, let's not tarry any longer.
+
+* Transition out to save screen maybe :)
+
+Narration:
+
+Chapter II:
+
+
+
+
+
+
+
+

@@ -1,4 +1,3 @@
-import os
 from PIL import Image
 
 map_sprite = Image.open('MapSprite.png')

@@ -132,6 +132,9 @@ def create_surface(size, transparent=False, convert=False):
 def copy_surface(surf):
     return surf.copy()
 
+def save_surface(surf, fn):
+    pygame.image.save(surf, fn)
+
 # assumes pygame surface
 def subsurface(surf, rect):
     x, y, width, height = rect

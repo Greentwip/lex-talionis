@@ -163,4 +163,4 @@ import imageio
 images = []
 for filename in filenames:
     images.append(imageio.imread(filename))
-imageio.mimsave(animator.get_front_name() + '.gif', images, fps=60)
+imageio.mimsave(animator.get_front_name() + '.gif', images, fps=50)
