@@ -22,7 +22,7 @@ faction;Soldier;Soldier;Neutral;Grado Soldier
 faction;Eliza;Eliza;Neutral;Eliza
 # Player Characters
 player;0;0;Franz;5,1;None
-player;0;0;Eirika;11,8;None
+player;0;0;Eirika;12,9;None
 player;0;0;Seth;13,8;None
 player;0;0;Gilliam;6,1;None
 # Enemies
@@ -60,7 +60,7 @@ trigger;EnemySpawn;1,3;1,10;1,6
 trigger;EnemySpawn;8,3;2,10;2,7
 trigger;EnemySpawn;9,5;1,10;1,8
 trigger;EnemySpawn;Breguet;2,10;2,5
-trigger;Eirika;Eirika;16,9;11,8
+trigger;Eirika;Eirika;16,9;12,9
 trigger;Eirika;Seth;15,8;13,8
 trigger;Franz;Franz;5,-1;5,1
 trigger;Franz;Gilliam;6,-1;6,1

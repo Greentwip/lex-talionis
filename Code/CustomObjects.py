@@ -327,8 +327,8 @@ class Cursor(object):
         if self.obj_info_disp:
             # Should be in topright, unless the cursor is in the topright
             # TopRight - I believe this has RIGHT precedence
-            if self.position[1] < GC.WINHEIGHT/2/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 1 and \
-                    gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
+            if self.position[1] < GC.TILEY/2 + gameStateObj.cameraOffset.get_y() and \
+                    gameStateObj.cursor.position[0] > GC.TILEX/2 + gameStateObj.cameraOffset.get_x() - 1:
                 # Gotta place in bottomright, because cursor is in topright
                 if self.obj_top:
                     self.obj_top = False
