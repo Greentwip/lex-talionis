@@ -320,7 +320,7 @@ MAG Resist is now MAG
     Med STR, Med SKL, Low SPD, High DEF, Med RES
     Provoke
     Reposition
-    Slow
+    SlowRi
     Block -> allies adjacent to me have my LCK% chance of taking half damage
 - Brigand (Axe) -> Berserker (Axe)
     High HP, High STR, Low SKL, Med SPD, Low DEF, low RES
