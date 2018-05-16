@@ -336,71 +336,83 @@ Cedric: We can rest here for the night. Tomorrow we'll acompany you to Athria. W
 
 * Aelfred, Saebbi, Cedric in a dark and spooky forest
 
-Not very good pickings. The trees here are rotting from the inside out. A shame the sickness has spread this deep into the forest... Nearly half of them are already dead...
-*Thump* *Thump*
-Did you two hear that?
-Hear what?
-It sounded like someone moving...
-Don't be mean. This forest is spooky enough as it is, Cedric. With the chill in the air, it feels like my skin is crawling...
-No, I'm being serious. There's something else here.
-Aaaah!
-Hark! There it is again!
-Okay, did that sound like a bloodcurdling scream to any of you? No probably not right?
-Of course it was. Grow a pair, someone could be in trouble!
+Saebbi: Hmmph! We barely caught a thing. I'm going to starve! 
+Aelfred: Half the trees here are rotting from the inside out. I'm not sure I'd want to eat anything from here anyway. 
+Cedric: Perhaps that crop sickness of the Athrians has spread to the wildlife?
+???: *Thump* *Thump*
+Cedric: Did you two hear that?
+Saebbi: Hear what?
+Cedric: It sounded like someone moving...
+Aelfred: I thought I heard something too.
+Saebbi: Don't be mean. This forest is spooky enough as it is, Cedric. With the chill in the air, it feels like my skin is crawling...
+Cedric: There's something else here.
+???: Aaaah!
+Saebbi: Ok... I heard that this time.
+Aelfred: Someone's in trouble!
+Cedric: Aelfred, wait up!
 
-* Pan to them running out. 
+* Pan to Aelfred running out. A girl stands facing a monster
 
-What the hell?
+Aelfred: What the hell is that thing? You there, run away! I'll handle this.
 
-* Fights and kills a monster. But a huge monster approaches and wrecks them...
+* The girl runs away
+* Aeflred fights and kills a monster. But a another larger monster approaches and attacks Aelfred...
 
-Another? Urgh...
+Aelfred: What! There was another? Urgh...
 
-This is death... then...
+* Elen appears onscreen
 
-* Elen appears
+Elen: I-I'm so sorry...
 
-I-I'm so sorry...
+* from offscreen
+Cedric: Hey!... stay away from him...
+Saebbi: Oh no... Cedric, what do we do...
+
+Aelfred: ...This is death... then...
 
 * Shudder effect
 
 * Aelfred, Saebbi, Cedric in a dark and spooky forest
 
-*Thump* *Thump*
-Did you two hear that?
-Hear what?
-It sounded like someone moving...
-...
-Don't be mean. This forest is spooky enough --
-Was that just a dream?
-Hey, you shouldn't interrupt, Aelfred.
-What'd you say, Aelfred?
-I dreamt this exact conversation. We were attacked by monsters
-M-m-monsters?
-I was dying but then I saw a Lorian girl...
-A Lorian girl? Didn't that Umbrian mention he was searching for a Lorian maiden?
-Maybe you had a vision, Aelfred?
-Aaah!
-Hark! There it is again!
-Okay, did that sound like a bloodcurdling scream to any of you? 
-Yes! That's the girl. We have to help her.
+???: *Thump* *Thump*
+Cedric: Did you two hear that?
+Saebbi: Hear what?
+Cedric: It sounded like someone moving...
+Aelfred: ...
+Saebbi: Don't be mean. This forest is spooky enough --
+Aelfred: Was that just a dream?
+Saebbi: Hey, you shouldn't interrupt, Aelfred!
+Cedric: What'd you say?
+Aelfred: I know it seems insane, but I dreamt this exact conversation.
+Cedric: What do you mean?
+Aelfred: Next we hear a girl scream -- she's being attacked by monsters.
+Saebbi: M-m-monsters?
+Aelfred: I was dying but then the Lorian girl... I think she saves me?
+Cedric: A Lorian girl? Didn't that Umbrian mention he was searching for a Lorian maiden?
+Saebbi: Maybe you had a vision, Aelfred?
+???: Aaah!
+Saebbi: Okay, did that sound like a bloodcurdling scream to either of you? 
+Aelfred: That's the girl! We have to help her. Follow me.
 
 * Pan to same place they fought monsters before. More monsters this time.
 * Elen comes running over.
 
-I'm so sorry. I... I couldn't stop them... I-I...
-M-m-monsters!
-P-please, I-I p-pulled a different thread...
-What?
-I-I don't want to die again... not again... *sobs*
-She's not thinking straight, Aelfred. Maybe we should leave her alone.
-And leave her with these literal monsters? she's just scared...
-Let's ride out and test these monsters then. We can't leave them to endanger other travelers.
-Hey, it's okay. We'll protect you, alright?
-...
-What's your name?
-M-my n-name? Uh... E-Elen. Elen of Loria.
-Well, Elen of Loria. We'll get you to a safe place. But for now, hold tight.
+Elen: I'm so sorry. I... I couldn't stop them... I-I...
+Saebbi: M-m-monsters!
+Elen: P-please, I-I p-pulled a different thread...
+Cedric: What?
+Elen: I-I don't want to die again... not again... *sobs*
+Cedric: She's not thinking straight, Aelfred. Maybe we should leave her alone.
+Aelfred: And leave her with these literal monsters? She's just scared...
+Cedric: Hmmm... You're right. Let's ride out and test these monsters then. We can't leave them to endanger other travelers.
+
+* Cedric runs offscreen 
+
+Saebbi: Hey, it's okay. We'll protect you, alright?
+Elen: ...
+Aelfred: What's your name?
+Elen: M-my n-name? Uh... E-Elen. Elen of Loria.
+Aelfred: Well, Elen of Loria. We'll get you to a safe place. But for now, hold tight.
 Elen: ...
 Aelfred: Oh, and thank you, I think. For saving me, back there. If that's what you did...
 Elen: If you die again... I will shudder... Sorry... so sorry... Please don't make me shudder again, Aelfred.
@@ -411,11 +423,10 @@ If you make a mistake Elen can shudder, trimming that thread of fate. If one of 
 
 * Turn 2 after Aelfred moves... Elen is unrescued from Aelfred
 
-Oh my. There's so many...
-Let me help you.
-You have no weapons, Lorian. You should stay back!
-I think she saved me before, Cedric. How can you help?
-P-pulling on a small thread... will not fray the weave...
+Elen: Oh my. There's so many... Let me help you.
+Cedric: You have no weapons, Lorian. You should stay back!
+Aelfred: How can you help?
+Elen: P-pulling on a small thread... It will not fray the weave...
 
 * Elen refreshes Aelfred.
 
@@ -423,27 +434,29 @@ P-pulling on a small thread... will not fray the weave...
 
 * Transition to Forest scene...
 Aelfwynn: *cough* Are you all alright? Where have you been?
-Aelfred: We're alive. Which is more than we can ask for. There's monsters
-Aelfwynn: Monsters? *cough*
-Cedric: It's hard to believe, but my lance is still slick with their offal...
-Aelfwynn: I heard peasant's speak of attacks by abominations, but I always dismissed them as nothing more than fairy stories.
-Aelfred: Anyway, we've got to get this one here by the fire. She's been out in the chill for who knows how long...
+Aelfred: We're alive. Which is more than some can ask for. There were monsters --
+Aelfwynn: Monsters? *cough* Don't tell me fairy stories, Aelfred.
+Cedric: Fairy stories they are not. It's hard to believe, but my lance is still slick with their offal...
+Aelfwynn: *cough* I had heard peasant's speak of attacks by abominations, but to think their tales true.
+Aelfred: We've got to get this one here by the fire. She's been out in the chill for who knows how long...
 Aelfwynn: Just who is she?
 Elen: My name is E-Elen... r-right? T-that's what I said?
-Aelfred: Right...
+Aelfred: Uh, right...
 Elen: Elen of Loria...
 Aelfwynn: Why are you here in Athria, Elen?
-Elen: Hmmm... Only fragments come to mind -- the pale moonlight through the clouds, a puppy's mewling cry... I-I don't r-remember... I-I don't remember... D-don't leave me, please...
+Elen: Hmmm... I-I d-don't r-remember... I don't remember... D-don't leave me, please...
 Aelfred: We're not leaving you. Don't worry. 
 Cedric: We'll rest here a while and then be on our way to Athria. With you, if you wish.
 Elen: The weave tangles strangely around ye...
 Cedric: ...?
-Elen: It is not wholly unseemly...
-Aelfred: Then its settled. Let's tuck in for the night. We've got a long journey tomorrow...
+Elen: It is not unseemly...
+Cedric: Then its settled. Let's tuck in for the night. We've got a long journey tomorrow...
 
 * Transition to Save Screen maybe :)
 
 * Base Convos
+
+Aelfred and Elen
 
 * Narration
 
