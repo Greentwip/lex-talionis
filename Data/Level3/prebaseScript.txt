@@ -52,10 +52,9 @@ b;TacticsRoomDay
 t;2
 u;Sam;Right
 u;Joel;FarLeft
-change_priority;Joel;10
 s;Sam;Ah, Joel. You're late.{w};auto
 s;Joel;Good to see you as well, partner.{w};auto
-u;Prim;MidLeft
+u;Prim;MidLeft;LowPriority
 s;Sam;And you brought... guests?{w};auto
 s;Joel;Sure did. I'll have them explain.{w};auto
 r;Joel

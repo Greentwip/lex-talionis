@@ -31,7 +31,7 @@ if;self.name == 'An Uneasy Trust'
 	s;Ophie;Hmmm...{w};auto
 	s;Sam;Don't let it be said that I've never given you anything.{w}{br}Since you're here...{w};auto
 	# Give Ophie Flareblade
-	add_item;Ophie;Flareblade
+	give_item;Ophie;Flareblade
 	s;Ophie;What's this?{w};auto
 	s;Sam;A gift from... my sources.{w}{br}Take it or leave it, I don't care.{w}{br}Perhaps you'll find a better use for it than I have.{w};auto
 	s;Ophie;Thanks, I guess.{w};auto
@@ -80,7 +80,7 @@ elif;self.name == 'Strength'
 	s;Prim;I may not have been here long,{w}{br}but I've come to realize that Sam has his own weakness.{w}{br}He is afraid to lose you.{w}{br}But he doesn't know how strong you are now.{w}{br}And he'll never know if you don't show him that you aren't weak anymore.{w};auto
 	s;Eliza;Hmmm...
 	s;Prim;Take this.
-	add_item;Eliza;Prim's Charm
+	give_item;Eliza;Prim's Charm
 	s;Eliza;What is this?{w};auto
 	s;Prim;Just a simple good luck charm.{w}{br}Now let's go. They're probably halfway to Rajas by now.{w};auto
 	r;Prim

@@ -86,10 +86,9 @@ elif;gameStateObj.turncount == 5
 	wait;1000
 	disp_cursor;0
 	u;Midas;FarRight
-	change_priority;Midas;10
 	u;Anders;FarLeft
 	s;Midas;This isn't working!{w}{br}You, soldier, attend me!{w};auto
-	u;Soldier1;MidLeft
+	u;Soldier1;MidLeft;LowPriority
 	s;Soldier1;Aye, sir?{w};auto
 	s;Midas;We have to retreat. Order everyone back.{w};auto
 	s;Soldier1;Right away, sir.{w};auto

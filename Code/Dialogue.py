@@ -75,9 +75,10 @@ class Dialogue_Scene(object):
         self.waittime = 0
 
         # Handles skipping
-        self.skippable_commands = {'s', 'u', 'qu', 't', 'c', 'wait',
+        self.skippable_commands = {'s', 'u', 'qu', 't', 'wait', 'bop', 'mirror',
                                    'wm_move_sprite', 'map_pan', 'set_expression',
-                                   'credits', 'endings', 'start_move'}
+                                   'credits', 'endings', 'start_move', 
+                                   'move_sprite', 'qmove_sprite'}
 
         # Handles unit face priority
         self.priority_counter = 1
@@ -344,16 +345,6 @@ class Dialogue_Scene(object):
                 unit_name = self.unit.name if name == '{unit}' else name
                 if unit_name in self.unit_sprites:
                     self.unit_sprites.pop(unit_name)
-        # Change a units position
-        elif line[0] == 'c':
-            name = self.unit.name if line[1] == '{unit}' else line[1]
-            self.unit_sprites.pop(name) # Remove line
-            self.add_unit_sprite(line, metaDataObj, transition=False)
-        # Change the priority of a unit
-        elif line[0] == 'change_priority':
-            name = self.unit.name if line[1] == '{unit}' else line[1]
-            if name in self.unit_sprites:
-                self.unit_sprites[name].priority = int(line[2])
         # Move a unit sprite
         elif line[0] == 'move_sprite' or line[0] == 'qmove_sprite':
             name = self.unit.name if line[1] == '{unit}' else line[1]
@@ -396,7 +387,7 @@ class Dialogue_Scene(object):
 
         # === HANDLE ITEMS
         # Give the optional unit an item or give the unit named in the line the item
-        elif line[0] == 'give_item' or line[0] == 'add_item':
+        elif line[0] == 'give_item':
             # Find receiver
             if line[1] == '{unit}' and self.unit:
                 receiver = self.unit
@@ -407,8 +398,8 @@ class Dialogue_Scene(object):
             # Append item to list of units items
             if line[2] != "0":
                 item = ItemMethods.itemparser(line[2])[0]
-                self.add_item(receiver, item, gameStateObj, len(line) <= 3)
-            elif line[2] == "0":
+                self.add_item(receiver, item, gameStateObj, 'no_banner' not in line)
+            elif line[2] == "0" and 'no_banner' not in line:
                 gameStateObj.banners.append(Banner.foundNothingBanner(receiver))
                 gameStateObj.stateMachine.changeState('itemgain')
                 self.current_state = "Paused"
@@ -1170,15 +1161,17 @@ class Dialogue_Scene(object):
             return False
         if line[2] in hardset_positions:
             position = [hardset_positions[line[2]], 80]
-            priority = self.priority_counter
-            self.priority_counter += 1
             mirrorflag = True if line[2] in ['OffscreenLeft', 'FarLeft', 'Left', 'MidLeft'] else False
             if 'mirror' in line:
                 mirrorflag = not mirrorflag
         else:
-            position = [int(line[2]), int(line[3])]
-            priority = int(line[4])
+            position = [int(line[2]), int(line[3])]    
             mirrorflag = True if 'mirror' in line else False
+        if 'LowPriority' in line:
+            priority = self.priority_counter - 1000
+        else:
+            priority = self.priority_counter
+        self.priority_counter += 1
         if 'Full_Blink' in line:
             expression = 'Full_Blink'
         elif 'Smiling' in line:
