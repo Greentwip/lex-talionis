@@ -412,11 +412,16 @@ class Dialogue_Scene(object):
                 name = line[1]
             receiver = gameStateObj.get_unit_from_name(name)
             if receiver:
-                for item in receiver.items:
-                    if item.id == line[2]:
-                        receiver.equip(item)
-                        break
-        # Give the gameStateObj GC.COLORDICT['gold']!
+                if len(line) > 2:
+                    for item in receiver.items:
+                        if item.id == line[2]:
+                            receiver.equip(item)
+                            break
+                else:
+                    m = receiver.getMainWeapon()
+                    receiver.equip(m)
+
+        # Give the player gold!
         elif line[0] == 'gold':
             gameStateObj.game_constants['money'] += int(line[1])
             gameStateObj.banners.append(Banner.acquiredGoldBanner(int(line[1])))
@@ -424,47 +429,29 @@ class Dialogue_Scene(object):
             self.current_state = "Paused"
 
         elif line[0] == 'remove_item':
-            if line[1] == '{unit}':
-                item = [item for item in self.unit.items if item.name == line[2] or item.id == line[2]][0]
-                self.unit.remove_item(item)
-            else:
-                for unit in gameStateObj.allunits:
-                    if unit.name == line[1]:
-                        item = [item for item in self.unit.items if item.name == line[2] or item.id == line[2]][0]
-                        unit.remove_item(item)
-                        break
+            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(name)
+            if unit:
+                valid_items = [item for item in unit.items if item.name == line[2] or item.id == line[2]]
+                if valid_items:
+                    item = valid_items[0]
+                    self.unit.remove_item(item)
 
         # Add a skill/status to a unit
         elif line[0] == 'give_skill':
             skill = StatusObject.statusparser(line[2])
-            if line[1] == '{unit}' and self.unit:
-                StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
+            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(name)
+            if unit and skill:
+                StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
                 if 'no_display' not in line:
                     gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
                     gameStateObj.stateMachine.changeState('itemgain')
                     self.current_state = "Paused"
-            else:
-                for unit in gameStateObj.allunits: # Find the unit this is supposed to go to
-                    if unit.name == line[1]:
-                        # print(unit.name)
-                        StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
-                        if 'no_display' not in line:
-                            gameStateObj.banners.append(Banner.gainedSkillBanner(unit, skill))
-                            gameStateObj.stateMachine.changeState('itemgain')
-                            self.current_state = "Paused"
-                        break
 
         # Give exp to a unit
         elif line[0] == 'exp_gain':
             exp = int(line[2])
-            c_unit = None
-            if line[1] == '{unit}' and self.unit:
-                c_unit = self.unit
-            else:
-                for unit in gameStateObj.allunits:
-                    if unit.name == line[1]:
-                        c_unit = unit
-            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=c_unit, exp=exp))
+            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(name)
+            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=unit, exp=exp))
             gameStateObj.stateMachine.changeState('expgain')
             self.current_state = "Paused"
 
@@ -558,7 +545,7 @@ class Dialogue_Scene(object):
                 gameStateObj.stateMachine.changeState('move_camera')
                 self.current_state = "Paused"
         # Display Cursor 1 is yes, 0 is no
-        elif line[0] == 'disp_cursor' or line[0] == 'display_cursor':
+        elif line[0] == 'disp_cursor':
             choice_flag = int(line[1])
             if choice_flag:
                 gameStateObj.cursor.drawState = 1
@@ -568,9 +555,7 @@ class Dialogue_Scene(object):
             pos1 = self.parse_pos(line[1])
             pos2 = self.parse_pos(line[2])
             gameStateObj.cameraOffset.center2(pos1, pos2)
-            if len(line) > 3 and line[3] == 'force':  # Force
-                pass
-            else:
+            if 'immediate' not in line and not self.do_skip:
                 gameStateObj.stateMachine.changeState('move_camera')      
                 self.current_state = "Paused"
         elif line[0] == 'tutorial_mode':
@@ -581,7 +566,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'fake_cursor':
             coords = line[1:]
             for text_coord in coords:
-                coord = [int(num) for num in text_coord.split(',')]
+                coord = self.parse_pos(text_coord)
                 gameStateObj.fake_cursors.append(CustomObjects.Cursor('Cursor', coord, fake=True))
         elif line[0] == 'remove_fake_cursors':
             gameStateObj.remove_fake_cursors()

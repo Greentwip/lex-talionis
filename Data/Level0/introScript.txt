@@ -70,9 +70,9 @@ set_cursor;10,9
 add_unit;Prim
 add_unit;Ophie
 add_unit;Yohn
-display_cursor;1
+disp_cursor;1
 wait;1000
-display_cursor;0
+disp_cursor;0
 t;1
 b;Monastery
 t;2

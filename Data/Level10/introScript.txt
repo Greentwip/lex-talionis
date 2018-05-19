@@ -57,7 +57,7 @@ end_skip
 t;1
 b;BlackBackground
 arrange_formation;force
-set_camera;8,18;16,26;force
+set_camera;8,18;16,26;immediate
 reset_units
 wait;1000
 remove_background
