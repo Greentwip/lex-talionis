@@ -8,7 +8,7 @@
     - 1:    Move
     - 2:    Attack
     - 4:    Attack Tiles
-    - 8:    Loot Villages
+    - 8:    Villages
     - 16:   Unlock Chests and Doors
     - 32:   Use Thief_Escape event tiles
     - 64:   Use regular Escape event tiles
@@ -108,10 +108,10 @@ class AI(object):
                 logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, Range: %s', 
                              self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.range)
                 self.clean_up()
-                if self.ai1_state & PRIMARYAI['Move']:  # Cannot move
-                    self.valid_moves = {self.unit.position}
-                elif self.ai1_state != 0: 
+                if self.ai1_state & PRIMARYAI['Move']:
                     self.valid_moves = self.get_true_valid_moves(gameStateObj)
+                else:
+                    self.valid_moves = {self.unit.position}                    
                 self.state = 'Escape'
 
             elif self.state == 'Escape':
@@ -152,7 +152,7 @@ class AI(object):
                 self.state = 'Loot'
             
             elif self.state == 'Loot':
-                if self.ai1_state & PRIMARYAI['Loot Village']:
+                if self.ai1_state & PRIMARYAI['Village']:
                     success = self.run_simple_ai(self.valid_moves, 'Village', gameStateObj)
                 self.state = 'Secondary_Init'
 
@@ -465,6 +465,7 @@ class Primary_AI(object):
 
         # Must have determined which mode you are using by now
         self.item_index = 0
+        logger.debug('Testing Items: %s' % self.items)
 
         self.valid_moves = list(valid_moves)
         self.possible_moves = []
@@ -519,6 +520,7 @@ class Primary_AI(object):
             self.valid_targets = []
 
     def get_all_valid_targets(self, gameStateObj):
+        logger.debug(self.items[self.item_index])
         self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], self.valid_moves,
                                                   team_ignore=self.team_ignore, name_ignore=self.name_ignore)
         if 0 in self.items[self.item_index].RNG:
@@ -593,9 +595,11 @@ class Primary_AI(object):
         elif self.target_index >= len(self.valid_targets):
             self.target_index = 0
             self.item_index += 1
+            logger.debug('Item Index %s' % self.item_index)
             if self.item_index < len(self.items):
                 if EQUIP:
                     self.unit.equip(self.items[self.item_index])
+                logger.debug(self.items[self.item_index].name)
                 self.get_all_valid_targets(gameStateObj)
                 self.possible_moves = self.get_possible_moves(gameStateObj)
         elif self.move_index >= len(self.possible_moves):

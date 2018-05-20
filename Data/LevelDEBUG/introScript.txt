@@ -1,6 +1,6 @@
 b;Town
 t;2
-inc_counter;money;5000
+inc_game_constant;money;5000
 set_game_constant;Convoy
 u;Renae;Left
 bop;Renae
