@@ -5,14 +5,14 @@
 # AI State 1 handles the action AI
 # AI State 2 handles the movement AI, if action AI fails
 # Possible States for AI1:
-    - 0: Nothing
-    - 1: Move and Attack
-    - 2: Attack
-    - 3: Move and Attack and Village/HP
-    - 4: Move and Chests/Doors (Locked)
-    - 5: Move and Escape
-    - 6: Move and ThiefEscape
-    - 7: Move and Attack and ThiefEscape
+    - 1:    Move
+    - 2:    Attack
+    - 4:    Attack Tiles
+    - 8:    Loot Villages
+    - 16:   Unlock Chests and Doors
+    - 32:   Use Thief_Escape event tiles
+    - 64:   Use regular Escape event tiles
+    - 128:  Steal
 # Possible States for AI2:
     - 0: Do not move
     - 1: Move towards opponents
@@ -30,7 +30,7 @@
 """
 import GlobalConstants as GC
 import configuration as cf
-import UnitObject, Interaction, Dialogue, Utility, AStar, Engine
+import UnitObject, Interaction, Utility, AStar, Engine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -39,6 +39,15 @@ logger = logging.getLogger(__name__)
 # allows for it to recognize the effects of auras, tile statuses, etc.
 # Slower by about ~2.5x
 QUICK_MOVE = True
+
+PRIMARYAI = {'Move': 1,
+             'Attack': 2,
+             'Steal': 4,
+             'Attack Tile': 8,
+             'Village': 16,
+             'Unlock': 32,
+             'Thief Escape': 64,
+             'Escape': 128}
 
 class AI(object):
     def __init__(self, unit, ai1=0, ai2=0, team_ignore=[], name_ignore=[],
@@ -99,26 +108,35 @@ class AI(object):
                 logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, Range: %s', 
                              self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.range)
                 self.clean_up()
-                if self.ai1_state == 2:
+                if self.ai1_state & PRIMARYAI['Move']:  # Cannot move
                     self.valid_moves = {self.unit.position}
                 elif self.ai1_state != 0: 
                     self.valid_moves = self.get_true_valid_moves(gameStateObj)
+                self.state = 'Escape'
+
+            elif self.state == 'Escape':
+                if self.ai1_state & PRIMARYAI['Escape']:
+                    success = self.run_simple_ai(self.valid_moves, 'Escape', gameStateObj)
+                elif not success and self.ai1_state & PRIMARYAI['Thief Escape']:
+                    success = self.run_simple_ai(self.valid_moves, 'ThiefEscape', gameStateObj)
                 self.state = 'Steal'
 
             elif self.state == 'Steal':
-                if self.ai1_state not in (0, 5, 6) and 'steal' in self.unit.status_bundle and len(self.unit.items) < cf.CONSTANTS['max_items']:
+                if self.ai1_state & PRIMARYAI['Unlock'] and self.unit.can_unlock():
+                    success = self.run_unlock_ai(self.valid_moves, gameStateObj)
+                elif self.ai1_state & PRIMARYAI['Steal'] and 'steal' in self.unit.status_bundle and len(self.unit.items) < cf.CONSTANTS['max_items']:
                     success = self.run_steal_ai(gameStateObj, self.valid_moves)
                 self.state = 'Attack_Init'
 
             elif self.state == 'Attack_Init':
-                if self.ai1_state not in (0, 4, 5, 6):
+                if self.ai1_state & PRIMARYAI['Attack']:
                     self.inner_ai = Primary_AI(self.unit, self.valid_moves, self.team_ignore, self.name_ignore, gameStateObj)
                     if self.inner_ai.skip_flag:
-                        self.state = 'Loot'
+                        self.state = 'AttackTiles'
                     else:
                         self.state = 'Attack'
                 else:
-                    self.state = 'Loot'
+                    self.state = 'AttackTiles'
 
             elif self.state == 'Attack':
                 done, self.target_to_interact_with, self.position_to_move_to, self.item_to_use = self.inner_ai.run(gameStateObj)
@@ -126,11 +144,16 @@ class AI(object):
                     if self.target_to_interact_with:
                         self.ai_group_ping(gameStateObj)
                         success = True
-                    self.state = 'Loot'
+                    self.state = 'AttackTiles'
+
+            elif self.state == 'AttackTiles':
+                if self.ai1_state & PRIMARYAI['Attack Tile']:
+                    success = self.run_attack_tile_ai(self.valid_moves, gameStateObj)
+                self.state = 'Loot'
             
             elif self.state == 'Loot':
-                if self.ai1_state in (3, 4, 5, 6, 7):
-                    success = self.run_loot_ai(gameStateObj, self.valid_moves)
+                if self.ai1_state & PRIMARYAI['Loot Village']:
+                    success = self.run_simple_ai(self.valid_moves, 'Village', gameStateObj)
                 self.state = 'Secondary_Init'
 
             elif self.state == 'Secondary_Init':
@@ -251,11 +274,7 @@ class AI(object):
                 if 'Village' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
                     gameStateObj.map.destroy(gameStateObj.map.tiles[self.target_to_interact_with], gameStateObj)
                 elif 'Locked' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
-                    locked_name = gameStateObj.map.tile_info_dict[self.target_to_interact_with]['Locked']
-                    script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
-                    unlock_script = Dialogue.Dialogue_Scene(script_name, unit=self.unit, name=locked_name, tile_pos=self.target_to_interact_with)
-                    gameStateObj.message.append(unlock_script)
-                    gameStateObj.stateMachine.changeState('dialogue')
+                    self.unit.unlock(self.target_to_interact_with, gameStateObj)
                 elif 'Escape' or 'ThiefEscape' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
                     if self.unit.position != self.target_to_interact_with:
                         return # Didn't actually reach ThiefEscape point
@@ -278,24 +297,31 @@ class AI(object):
         valid_positions = self.get_true_valid_moves(gameStateObj)
         self.position_to_move_to = Utility.farthest_away_pos(self.unit, valid_positions, gameStateObj.allunits)
 
-    def check_mount(self, gameStateObj):
-        if not self.unit.my_mount:
-            adj_position = self.unit.getAdjacentPositions(gameStateObj)
-            ally_units = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfAlly(unit) and unit.position in adj_position]
-            for adjunit in ally_units:
-                if 'Mount' in unit.tags:
-                    self.unit.mount(unit, gameStateObj)
+    # def check_mount(self, gameStateObj):
+    #     if not self.unit.my_mount:
+    #         adj_position = self.unit.getAdjacentPositions(gameStateObj)
+    #         ally_units = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfAlly(unit) and unit.position in adj_position]
+    #         for adjunit in ally_units:
+    #             if 'Mount' in unit.tags:
+    #                 self.unit.mount(unit, gameStateObj)
 
-    def check_dismount(self, gameStateObj):
-        """Determines if unit should dismount from land-based mount to traverse water"""
-        if self.unit.my_mount and 'fleet_of_foot' not in self.unit.status_bundle:
-            adjtiles = self.unit.getAdjacentTiles(gameStateObj)
-            # Determine which tile is closest to target
-            closest_tile = sorted(adjtiles, key=lambda pos: Utility.calculate_distance(self.target_to_interact_with, pos.position))[0]
-            if closest_tile.name in ['River', 'Coast', 'Bank', 'Floor']:
-                self.unit.dismount(closest_tile.position, gameStateObj)
-            elif all(adjtile.name in ['Floor', 'Throne', 'Wall'] for adjtile in adjtiles):
-                self.unit.dismount(closest_tile.position, gameStateObj)
+    # def check_dismount(self, gameStateObj):
+    #     """Determines if unit should dismount from land-based mount to traverse water"""
+    #     if self.unit.my_mount and 'fleet_of_foot' not in self.unit.status_bundle:
+    #         adjtiles = self.unit.getAdjacentTiles(gameStateObj)
+    #         # Determine which tile is closest to target
+    #         closest_tile = sorted(adjtiles, key=lambda pos: Utility.calculate_distance(self.target_to_interact_with, pos.position))[0]
+    #         if closest_tile.name in ('River', 'Coast', 'Bank', 'Floor'):
+    #             self.unit.dismount(closest_tile.position, gameStateObj)
+    #         elif all(adjtile.name in ('Floor', 'Throne', 'Wall') for adjtile in adjtiles):
+    #             self.unit.dismount(closest_tile.position, gameStateObj)
+
+    def change_thief_ai(self, remove):
+        # Change AI
+        new_primary_ai = self.ai1_state - PRIMARYAI[remove]
+        if not new_primary_ai & PRIMARYAI['Thief Escape']:
+            new_primary_ai += PRIMARYAI['Thief Escape']
+        self.change_ai(new_primary_ai, 6)
 
     # === STEAL AI ===
     def run_steal_ai(self, gameStateObj, valid_moves):
@@ -318,50 +344,49 @@ class AI(object):
             # If we've stolen everything possible, escape time -- team ignore is used to set limit
             if len(self.unit.items) >= cf.CONSTANTS['max_items'] or \
                     (self.team_ignore and len(self.unit.items) >= self.team_ignore[0]):
-                self.change_ai(6, 6)
+                self.change_thief_ai('Steal')
             return True
         return False
 
-    # === LOOT AI ===
-    def run_loot_ai(self, gameStateObj, valid_moves):
-        if self.ai1_state == 3: # Village/HP terrain
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
-                                 if 'Village' in gameStateObj.map.tile_info_dict[position] or
-                                 'HP' in gameStateObj.map.tile_info_dict[position]]
-            if not available_targets:
-                self.change_ai(1, 1)
-        elif self.ai1_state == 4: # Chests/Doors
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
-                                 if 'Locked' in gameStateObj.map.tile_info_dict[position]]
-            if not available_targets or len(self.unit.items) >= cf.CONSTANTS['max_items'] \
-               and (not self.team_ignore or len(self.unit.items) >= self.team_ignore[0]): # Leave
-                self.change_ai(6, 6)
-        elif self.ai1_state == 5: # Escape
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
-                                 if 'Escape' in gameStateObj.map.tile_info_dict[position]]
-        if self.ai1_state in [6, 7]: # ThiefEscape
-            available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
-                                 if 'ThiefEscape' in gameStateObj.map.tile_info_dict[position]]
-            if not available_targets:
-                self.change_ai(1, 1)
+    # === UNLOCK AI ===
+    def run_unlock_ai(self, valid_moves, gameStateObj):
+        available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                             if 'Locked' in gameStateObj.map.tile_info_dict[position]]
+        if not available_targets:
+            self.change_thief_ai('Unlock')
+            return False
 
         for move in valid_moves:
             for target in available_targets:
-                # Adjacent
-                if any(pattern in gameStateObj.map.tile_info_dict[target.position] for pattern in ('Locked', 'HP')) and \
-                        Utility.calculate_distance(move, target.position) == 1:
-                    self.target_to_interact_with = target.position
-                    self.position_to_move_to = move
-                    if target.name in 'HP':
-                        self.item_to_use = self.unit.getMainWeapon()
-                    return True
-                # On top of
-                elif ('Locked' in gameStateObj.map.tile_info_dict[move] and target.name == 'Chest' or
-                      any(pattern in gameStateObj.map.tile_info_dict[move] for pattern in ['Village', 'Escape', 'ThiefEscape'])) \
-                        and Utility.calculate_distance(move, target.position) == 0:
+                # We can be adjacent
+                if Utility.calculate_distance(move, target.position) <= 1 and (target.name != 'Chest' or len(self.unit.items) < cf.CONSTANTS['max_items']):
                     self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     return True
+        return False
+
+    # === ATTACK TILE AI ===
+    def run_attack_tile_ai(self, valid_moves, gameStateObj):
+        available_targets = [position for position, tile in gameStateObj.map.tiles 
+                             if 'HP' in gameStateObj.map.tile_info_dict[position]]
+        for item in self.unit.items:
+            if item.weapon:
+                for move in valid_moves:
+                    for target in available_targets:
+                        if Utility.calculate_distance(move, target.position) in item.RNG:
+                            self.target_to_interact_with = target.position
+                            self.position_to_move_to = move
+                            self.item_to_use = item
+                            return True
+        return False
+
+    # === SIMPLE AI FOR EVENT TILES ===
+    def run_simple_ai(self, valid_moves, tile_kind, gameStateObj):
+        for move in valid_moves:
+            if tile_kind in gameStateObj.map.tile_info_dict[move]:
+                self.target_to_interact_with = move
+                self.position_to_move_to = move
+                return True
 
     # === TERTIARY AI ===
     def run_tertiary_ai(self, valid_moves, available_targets, gameStateObj):
@@ -579,16 +604,16 @@ class Primary_AI(object):
             self.possible_moves = self.get_possible_moves(gameStateObj)
             # logger.debug('Possible Moves %s', self.possible_moves)
         else:
+            target = self.valid_targets[self.target_index]
+            item = self.items[self.item_index]
             # Only check one move for each target if using an item with ai_speed_up
             # Otherwise it spends way too long trying every possible position to strike from
-            if self.items[self.item_index].ai_speed_up:
+            if item.ai_speed_up:
                 move = Utility.farthest_away_pos(self.unit, self.possible_moves, gameStateObj.allunits)
             else:   
                 move = self.possible_moves[self.move_index]
             if QUICK_MOVE and self.unit.position != move:
                 self.quick_move(move, gameStateObj, test=True)
-            target = self.valid_targets[self.target_index]
-            item = self.items[self.item_index]
             # logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
             # Only if we have line of sight, since we get every possible position to strike from
             # Determine whether we need line of sight

@@ -2055,6 +2055,9 @@ class UnitObject(object):
                         gameStateObj.stateMachine.changeState('itemgain')
                     break
 
+    def can_unlock(self):
+        return 'locktouch' in self.status_bundle or any(item.unlock for item in self.items) 
+
     # Wrapper around way of inserting item
     def equip(self, item):
         # Moves the item to the top and makes it mainweapon

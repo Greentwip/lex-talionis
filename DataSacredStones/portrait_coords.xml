@@ -1,0 +1,56 @@
+<portrait_info>
+
+    <!-- Player Characters -->
+    <portrait name="Eirika">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Seth">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Franz">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Gilliam">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Tana">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <!-- Enemy bosses -->
+    <portrait name="Breguet">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <!-- NPCs -->
+    <portrait name="VillageMan1">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="VillageMan2">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Soldier1">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Soldier2">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+</portrait_info>

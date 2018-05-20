@@ -1,0 +1,69 @@
+pose;Dodge
+f;1;Lance_000
+f;3;Lance_059
+f;27;Lance_060
+f;4;Lance_059
+
+pose;Attack
+f;6;Lance_000
+f;10;Lance_001
+f;6;Lance_002
+sound;Horse Step 3
+f;1;Lance_002
+f;6;Lance_003
+f;2;Lance_004
+f;5;Lance_047
+f;4;Lance_048
+f;7;Lance_049
+f;11;Lance_050
+sound;Heavy Wing Flap
+f;1;Lance_050
+f;4;Lance_051
+spell;JavelinPaladin
+f;1;Lance_052
+start_loop
+f;4;Lance_052
+end_loop
+f;4;Lance_052
+f;5;Lance_025
+sound;Horse Step 1
+f;1;Lance_025
+f;7;Lance_028
+
+pose;Critical
+f;6;Lance_000
+f;10;Lance_001
+f;6;Lance_002
+sound;Horse Step 3
+f;1;Lance_002
+f;6;Lance_003
+f;2;Lance_004
+f;3;Lance_053
+sound;Heavy Spear Spin
+f;1;Lance_053
+f;2;Lance_054
+f;2;Lance_055
+f;1;Lance_056
+f;1;Lance_057
+f;2;Lance_058
+f;5;Lance_047
+f;4;Lance_048
+f;7;Lance_049
+f;11;Lance_050
+sound;Heavy Wing Flap
+f;1;Lance_050
+f;4;Lance_051
+spell;JavelinPaladin
+f;1;Lance_052
+start_loop
+f;4;Lance_052
+end_loop
+f;4;Lance_052
+f;5;Lance_025
+sound;Horse Step 1
+f;1;Lance_025
+f;7;Lance_028
+
+pose;Stand
+f;4;Lance_000
+
