@@ -1461,6 +1461,9 @@ class UnitObject(object):
                 if unit.team == self.team and unit.ai_group == self.ai_group:
                     unit.ai.range = 2 # allow group to see whole universe
                     unit.ai.ai_group_flag = True # Don't need to do this more than once
+                    if not self.hasMoved and self.hasRunAI():  # We need to tell this guy to try again
+                        gameStateObj.ai_unit_list.append(self)  # Move him up to next on the list
+                        self.reset_ai()
 
     def canAttack(self, gameStateObj):
         return self.getAllTargetPositions(gameStateObj) and not self.hasAttacked
@@ -1784,15 +1787,18 @@ class UnitObject(object):
         # if self.isActive < 0:
         #     logger.error('Something let go of this unit without grabbing hold first!')
         #     self.isActive = 0
+
+    def reset_ai(self):
+        self.hasRunMoveAI = False
+        self.hasRunAttackAI = False
+        self.hasRunGeneralAI = False
         
     def reset(self):
         self.hasMoved = False # Controls whether unit has moved already. Unit can still move back.
         self.hasTraded = False # Controls whether unit has done an action which disallows moving back.
         self.hasAttacked = False # Controls whether unit has done an action which disallows attacking, an action which ends turn
         self.finished = False # Controls whether unit has completed their turn.
-        self.hasRunMoveAI = False
-        self.hasRunAttackAI = False
-        self.hasRunGeneralAI = False
+        self.reset_ai()
         self.isActive = 0
         self.isDying = False # Unit is dying
         self.path = []

@@ -1837,6 +1837,7 @@ class AIState(State):
                                          unit.team == gameStateObj.phase.get_current_phase()]
             # Sort by distance to closest enemy (ascending)
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.distance_to_closest_enemy(gameStateObj))
+            gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.ai_group)
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.priority, reverse=True)
             # Reverse, because we will be popping them off the end
             gameStateObj.ai_unit_list.reverse()

@@ -98,7 +98,7 @@ class AI(object):
         time1 = Engine.get_time()
         orig_pos = self.unit.position
 
-        # Can do more than one pass through if it doesn't take much time (half of a frame)
+        # Can do more than one pass through per frame if it doesn't take much time (half of a frame)
         logger.debug('AI Thinking...')
         while Engine.get_true_time() - time1 < GC.FRAMERATE/2:
             logger.debug('Current State: %s', self.state)
@@ -237,7 +237,7 @@ class AI(object):
 
     def move(self, gameStateObj):
         # Acts only if a unit has a position to move to
-        if self.position_to_move_to:
+        if self.position_to_move_to and self.position_to_move_to != self.unit.position:
             path = self.unit.getPath(gameStateObj, self.position_to_move_to)
             if self.unit.hasAttacked: # If we've already attacked, we're done.
                 self.unit.wait(gameStateObj)
