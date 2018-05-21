@@ -772,7 +772,7 @@ class AnimationCombat(Combat):
         self.right_platform = Engine.flip_horiz(GC.IMAGESDICT[right_platform_type + suffix].copy())
 
     def update(self, gameStateObj, metaDataObj, skip=False):
-        logger.debug(self.combat_state)
+        # logger.debug(self.combat_state)
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)

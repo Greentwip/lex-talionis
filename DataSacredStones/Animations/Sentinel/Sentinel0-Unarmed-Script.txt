@@ -1,0 +1,12 @@
+pose;Dodge
+f;1;Lance_000
+of;3;Lance_094
+sound;ArmorShift
+of;1;Lance_094
+of;27;Lance_095
+of;3;Lance_094
+sound;ArmorShift
+of;2;Lance_094
+
+pose;Stand
+f;6;Lance_000

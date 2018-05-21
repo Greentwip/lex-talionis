@@ -1,0 +1,9 @@
+pose;Dodge
+f;1;Magic_000
+f;3;Magic_027
+f;27;Magic_028
+f;4;Magic_027
+
+pose;Stand
+f;4;Magic_000
+

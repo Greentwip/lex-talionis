@@ -25,9 +25,7 @@ f;1;Magic_008
 spell
 f;3;Magic_009
 f;2;Magic_010
-f;2;Magic_011
-effect;Cape Animation
-f;1;Magic_011
+f;3;Magic_011
 f;1;Magic_012
 start_loop
     f;2;Magic_012
@@ -86,8 +84,7 @@ f;1;Magic_008
 spell
 f;3;Magic_009
 f;2;Magic_010
-f;2;Magic_011
-f;1;Magic_011
+f;3;Magic_011
 f;1;Magic_012
 start_loop
     f;2;Magic_012

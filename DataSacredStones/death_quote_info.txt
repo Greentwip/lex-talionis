@@ -1,0 +1,35 @@
+# Death Quote Script
+# Set up music
+if;self.unit.team == 'player'
+	m;Brave Story 61
+end
+# Player Death Quotes
+if;self.unit.name == 'Eirika'
+    u;Eirika;FarRight
+    s;Eirika;Brother... I'm sorry.
+    set_expression;Eirika;Full_Blink
+    r;Eirika
+    kill_unit;Eirika
+    wait;200
+    lose_game
+elif;self.unit.name == 'Seth'
+    u;Seth;FarRight
+    s;Seth;Urgh...{br}My apologies. I must withdraw.
+    set_expression;Seth;Full_Blink
+    r;Seth
+elif;self.unit.name == 'Franz'
+    u;Franz;FarRight
+    s;Franz;I'm sorry, General Seth...
+    set_expression;Franz;Full_Blink
+    r;Franz
+elif;self.unit.name == 'Gilliam'
+    u;Gilliam;FarRight
+    s;Gilliam;I was prepared for...{br}anything...
+    set_expression;Giliam;Full_Blink
+    r;Gilliam
+elif;self.unit.name == 'Breguet'
+    u;Breguet;FarLeft
+    s;Breguet;This...this can't be...{br}I...
+    set_expression;Breguet;Full_Blink
+    r;Breguet
+end

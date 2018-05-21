@@ -1,7 +1,0 @@
-# Event script that is called every time the player's turn starts. Normally handles reinforcements
-if;gameStateObj.turncount == 4
-    set_cursor;0,0;force_hold
-    wait;500
-	change_tile_sprite;0,0;Door
-    wait;2000
-end

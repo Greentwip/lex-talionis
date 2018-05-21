@@ -6,19 +6,18 @@
         <id>Iron Sword</id>
         <spritetype>Sword</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight,crit</components>
+        <components>weapon,uses,weight</components>
         <weapontype>Sword</weapontype>
  
-        <uses>46</uses>
+        <uses>45</uses>
         <value>10</value>
         <RNG>1</RNG>
-		<weight>5</weight>
+		<weight>3</weight>
         <desc></desc>
         
-		<MT>5</MT>
+		<MT>3</MT>
 		<HIT>90</HIT>
-		<LVL>E</LVL>
-        <crit>100</crit>
+		<LVL>D</LVL>
     </item>
 
     <item name="Rusted Sword">
@@ -43,19 +42,18 @@
         <id>Steel Sword</id>
         <spritetype>Sword</spritetype>
         <spriteid>2</spriteid>       
-        <components>weapon,uses,weight,crit</components>
+        <components>weapon,uses,weight</components>
         <weapontype>Sword</weapontype>
  
         <uses>30</uses>
         <value>20</value>
         <RNG>1</RNG>
         <desc></desc>
-		<weight>10</weight>
+		<weight>6</weight>
         
-		<MT>8</MT>
+		<MT>5</MT>
 		<HIT>75</HIT>
-		<LVL>D</LVL>
-        <crit>0</crit>
+		<LVL>C</LVL>
     </item>
 
     <item name="Mithril Sword">
@@ -211,22 +209,20 @@
         <id>Rapier</id>
         <spritetype>Sword</spritetype>
         <spriteid>9</spriteid>
-        <components>weapon,uses,weight,crit,effective,wexp</components>
+        <components>weapon,uses,weight,alternate_defense</components>
         <weapontype>Sword</weapontype>
 
-        <uses>40</uses>
-        <value>0</value>
+        <uses>20</uses>
+        <value>50</value>
         <RNG>1</RNG>
-        <desc>Eirika only, effective against horseback and armoured units</desc>
+        <desc>Ignores DEF. Targets enemy's SPD instead.</desc>
         <weight>2</weight>
 
-        <effective>Mounted,Armor;14</effective>
+        <alternate_defense>SPD</alternate_defense>
 
-        <MT>7</MT>
-        <HIT>95</HIT>
-        <LVL>Eirika</LVL>
-        <crit>10</crit>
-        <wexp>2</wexp>
+        <MT>3</MT>
+        <HIT>75</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Magebane Swd">
@@ -273,19 +269,18 @@
         <id>Iron Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight,crit</components>
+        <components>weapon,uses,weight</components>
         <weapontype>Lance</weapontype>
  
         <uses>45</uses>
         <RNG>1</RNG>
         <value>8</value>
         <desc></desc>
-		<weight>8</weight>
+		<weight>5</weight>
         
-		<MT>7</MT>
+		<MT>5</MT>
 		<HIT>80</HIT>
-		<LVL>E</LVL>
-        <crit>0</crit>
+		<LVL>D</LVL>
     </item>
 
     <item name="Steel Lance">
@@ -418,7 +413,7 @@
         <id>Javelin</id>
         <spritetype>Lance</spritetype>
         <spriteid>14</spriteid>       
-        <components>weapon,uses,weight,crit</components>
+        <components>weapon,uses,weight</components>
         <weapontype>Lance</weapontype>
  
         <uses>20</uses>
@@ -430,7 +425,6 @@
 		<MT>3</MT>
 		<HIT>65</HIT>
 		<LVL>D</LVL>
-        <crit>0</crit>
     </item>
 
     <item name="Short Spear">
@@ -493,19 +487,18 @@
         <id>Iron Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight,crit</components>
+        <components>weapon,uses,weight</components>
         <weapontype>Axe</weapontype>
  
         <uses>45</uses>
         <RNG>1</RNG>
         <value>6</value>
         <desc></desc>
-		<weight>10</weight>
+		<weight>6</weight>
         
-		<MT>8</MT>
-		<HIT>75</HIT>
-		<LVL>E</LVL>
-        <crit>0</crit>
+		<MT>6</MT>
+		<HIT>70</HIT>
+		<LVL>D</LVL>
     </item>
 
     <item name="Rusted Axe">
@@ -1149,7 +1142,7 @@
         <id>Fire</id>
         <spritetype>Anima</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,map_hit_color,status_on_equip,crit</components>
+        <components>weapon,uses,map_hit_color,status_on_equip</components>
         <weapontype>Anima</weapontype>
  
         <uses>30</uses>
@@ -1161,7 +1154,6 @@
 		<MT>4</MT>
 		<HIT>80</HIT>
 		<LVL>D</LVL>
-        <crit>100</crit>
 
         <map_hit_color>224,96,-200</map_hit_color>
     </item>

@@ -110,7 +110,11 @@ class levelUpScreen(object):
             if self.expSet >= 100:
                 if self.unit.level >= max_level: # If I would promote because I am level 20
                     GC.SOUNDDICT['Experience Gain'].stop()
-                    GC.SOUNDDICT['Level Up'].play()
+                    if cf.CONSTANTS['auto_promote'] and metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                        self.expSet = 100
+                        GC.SOUNDDICT['Level Up'].play()
+                    else:
+                        self.expSet = 99
                     self.state.clear()
                     self.state.changeState('prepare_promote')
                     self.state.changeState('exp_leave')
@@ -202,7 +206,6 @@ class levelUpScreen(object):
 
         # Wait 100 milliseconds before transferring us to the promotion state
         elif self.state.getState() == 'prepare_promote':
-            self.expSet = 99
             self.exp_bar.update(self.expSet)
             if currentTime - self.state_time > 100:
                 if cf.CONSTANTS['auto_promote'] and metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
