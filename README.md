@@ -31,7 +31,7 @@ Un-zip the downloaded files, and then double-click *lion_throne.exe*
 
 Lex Talionis is the custom Fire Emblem engine that runs The Lion Throne. If you've wanted to make your own Fire Emblem fangame but were fed up with the hackery that's required to master ROM-hacking, or you just want to work with total control over the code itself, Lex Talionis is for you. 
 
-Not interested in coding? That's fine -- you can create a whole new game with touching any code. Just modify the "Data" folder, which only contains sprites, text files, and xml files! But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
+Not interested in coding? That's fine -- you can create a whole new game with touching any code. You can follow along with my simple [tutorial](https://github.com/rainlash/lex-talionis/wiki) to get started today, without having to learn how to code! But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
 
 I am planning to create a tutorial on how to use the Lex Talionis engine.
 
@@ -79,8 +79,8 @@ To run The Lion Throne, you will need to download and install the following:
 This section requires git.
 If you don't have git, install it from here: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git.
 
-To get the Lex Talionis engine code on your machine, create a new folder.
-Then, type:
+To get the Lex Talionis engine code on your machine, create a new folder.  
+Then, in the command line or a terminal, type:
 
 ```
 git clone https://github.com/rainlash/lex-talionis
