@@ -25,7 +25,7 @@ class levelUpScreen(object):
         self.levelUpScreen = GC.IMAGESDICT['LevelScreen']
         if self.in_combat:
             topleft=(0, 6)
-            timing = [1 for _ in xrange(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in xrange(15)] + [-1] + [1 for _ in xrange(12)] 
+            timing = [1 for _ in range(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in range(15)] + [-1] + [1 for _ in range(12)] 
             self.levelUpAnimation = CustomObjects.Animation(GC.IMAGESDICT['LevelUpBattle'], topleft, (5, 11), 52, ignore_map=True, set_timing=timing)
         else:
             if unit.position:
@@ -33,7 +33,7 @@ class levelUpScreen(object):
                 topleft = (x-gameStateObj.cameraOffset.x-2)*GC.TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*GC.TILEHEIGHT
             else:
                 topleft = GC.WINWIDTH//2, GC.WINHEIGHT//2
-            timing = [1 for _ in xrange(24)] + [44]
+            timing = [1 for _ in range(24)] + [44]
             self.levelUpAnimation = CustomObjects.Animation(GC.IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True, set_timing=timing)
         self.statupanimation = GC.IMAGESDICT['StatUpSpark']
         self.statunderline = GC.IMAGESDICT['StatUnderline']
@@ -301,7 +301,7 @@ class levelUpScreen(object):
             # self.levelup_list = self.unit.level_up(new_class, apply_level=False) # Level up once, then promote.
             # self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together
             self.levelup_list = new_class['promotion'] # No two level ups, too much gain in one level...
-            current_stats = self.unit.stats.values()
+            current_stats = list(self.unit.stats.values())
             assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s" % (self.levelup_list, new_class['max'], current_stats)
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)

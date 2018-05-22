@@ -226,13 +226,13 @@ class UnitSprite(object):
         self.image = None
 
     def formatSprite(self, standSprites, moveSprites):
-        return {'passive': [Engine.subsurface(standSprites, (num*64, 0, 64, 48)) for num in xrange(3)],
-                'gray': [Engine.subsurface(standSprites, (num*64, 48, 64, 48)) for num in xrange(3)],
-                'active': [Engine.subsurface(standSprites, (num*64, 96, 64, 48)) for num in xrange(3)],
-                'down': [Engine.subsurface(moveSprites, (num*48, 0, 48, 40)) for num in xrange(4)],
-                'left': [Engine.subsurface(moveSprites, (num*48, 40, 48, 40)) for num in xrange(4)],
-                'right': [Engine.subsurface(moveSprites, (num*48, 80, 48, 40)) for num in xrange(4)],
-                'up': [Engine.subsurface(moveSprites, (num*48, 120, 48, 40)) for num in xrange(4)]}
+        return {'passive': [Engine.subsurface(standSprites, (num*64, 0, 64, 48)) for num in range(3)],
+                'gray': [Engine.subsurface(standSprites, (num*64, 48, 64, 48)) for num in range(3)],
+                'active': [Engine.subsurface(standSprites, (num*64, 96, 64, 48)) for num in range(3)],
+                'down': [Engine.subsurface(moveSprites, (num*48, 0, 48, 40)) for num in range(4)],
+                'left': [Engine.subsurface(moveSprites, (num*48, 40, 48, 40)) for num in range(4)],
+                'right': [Engine.subsurface(moveSprites, (num*48, 80, 48, 40)) for num in range(4)],
+                'up': [Engine.subsurface(moveSprites, (num*48, 120, 48, 40)) for num in range(4)]}
 
     def create_image(self, state):
         return self.select_frame(self.unit_sprites[state], state).copy()

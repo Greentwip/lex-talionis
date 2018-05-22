@@ -259,7 +259,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             u_i['level'] = int(unit.find('level').text)
 
             stats = intify_comma_list(unit.find('bases').text)
-            for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
+            for n in range(len(stats), cf.CONSTANTS['num_stats']):
                 stats.append(class_dict[u_i['klass']]['bases'][n])
             if u_i['team'] == 'player': # Modify stats
                 bases = gameStateObj.modify_stats['player_bases']
@@ -533,7 +533,7 @@ def auto_level(bases, growths, level, max_stats, gameStateObj):
 """
 def place_mount(mount_id, chosen_unit, reinforceUnits):
     my_mount = None
-    for u_id, (unit, position) in reinforceUnits.iteritems():
+    for u_id, (unit, position) in reinforceUnits.items():
         if mount_id == u_id:
             my_mount = unit
             break

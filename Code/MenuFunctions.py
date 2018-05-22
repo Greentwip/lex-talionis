@@ -1065,7 +1065,7 @@ class SupportMenu(object):
         return self.options[self.currentSelection], self.currentLevel
 
     def updateOptions(self, gameStateObj):
-        names = gameStateObj.support.node_dict[self.owner.name].adjacent.keys()
+        names = list(gameStateObj.support.node_dict[self.owner.name].adjacent)
         # convert names to units
         self.options = []
         for name in names:
@@ -1633,7 +1633,7 @@ class ConvoyMenu(object):
         for w_type in self.order:
             sorted_dict[w_type] = [option for option in options if w_type in option.TYPE]
         sorted_dict['Consumable'] = [option for option in options if not option.weapon and not option.spell]
-        for key, value in sorted_dict.iteritems():
+        for key, value in sorted_dict.items():
             value.sort(key=lambda item: item.c_uses.uses if item.c_uses else 100)
             value.sort(key=lambda item: item.uses.uses if item.uses else 100)
             value.sort(key=lambda item: item.name)
@@ -1643,7 +1643,7 @@ class ConvoyMenu(object):
 
     def updateOptions(self, options):
         sorted_dict = self.get_sorted_dict(options)
-        for menu_name, menu in self.menus.iteritems():
+        for menu_name, menu in self.menus.items():
             menu.updateOptions(sorted_dict[menu_name])
 
     def buildMenus(self, options):
@@ -2187,7 +2187,7 @@ class RecordsDisplay(ChoiceMenu):
         mvp_dict = collections.Counter()
         for level in stats:
             # print('')
-            for unit, record in level.stats.iteritems():
+            for unit, record in level.stats.items():
                 # print(unit, record),
                 mvp_dict[unit] += CustomObjects.LevelStatistic.formula(record)
         return mvp_dict
@@ -2299,15 +2299,15 @@ class MVPDisplay(RecordsDisplay):
     def __init__(self, stats):
         self.mvp_dict = {}
         for level in stats:
-            for unit, record in level.stats.iteritems():
+            for unit, record in level.stats.items():
                 if unit in self.mvp_dict:
                     for stat in record:
                         self.mvp_dict[unit][stat] += record[stat]
                 else:
-                    self.mvp_dict[unit] = {k: v for (k, v) in record.iteritems()}
+                    self.mvp_dict[unit] = {k: v for (k, v) in record.items()}
 
         # Now convert to list and sort
-        self.options = self.mvp_dict.iteritems()
+        self.options = list(self.mvp_dict.items())
         self.options = sorted(self.options, key=lambda record: CustomObjects.LevelStatistic.formula(record[1]), reverse=True)
 
         self.set_up()
@@ -2354,7 +2354,7 @@ class ChapterStats(MVPDisplay):
         self.mvp_dict = level.stats
 
         # Now convert to list and sort
-        self.options = self.mvp_dict.iteritems()
+        self.options = list(self.mvp_dict.items())
         self.options = sorted(self.options, key=lambda record: CustomObjects.LevelStatistic.formula(record[1]), reverse=True)
 
         self.set_up()

@@ -720,12 +720,12 @@ class Dialogue_Scene(object):
             if len(line) > 1:  # force arrange
                 player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and
                                 not unit.dead]
-                formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.iteritems()
+                formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
                                    if 'Formation' in value]
             else:
                 player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and
                                 not unit.dead and not unit.position]
-                formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.iteritems()
+                formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
                                    if 'Formation' in value and not gameStateObj.grid_manager.get_unit_node(pos)]
             for index, unit in enumerate(player_units[:len(formation_spots)]):
                 if len(line) > 1:
@@ -1108,13 +1108,13 @@ class Dialogue_Scene(object):
             self.background.draw(surf)
 
         # Update unit sprites -- if results in true, delete the unit sprite. -- faciliates 'r' command fade out
-        delete = [key for key, unit in self.unit_sprites.iteritems() if unit.update()]
+        delete = [key for key, unit in self.unit_sprites.items() if unit.update()]
         for key in delete: 
             del self.unit_sprites[key]
 
         # === SCENE SPRITES ===
         # Blit sprites, sort them by their priority (ascending, so 2 is pasted after and on top of 1)
-        sorted_sprites = sorted([unit for key, unit in self.unit_sprites.iteritems()], key=lambda x: x.priority)
+        sorted_sprites = sorted([unit for key, unit in self.unit_sprites.items()], key=lambda x: x.priority)
         for unit in sorted_sprites:
             unit.draw(surf)
 
@@ -1163,7 +1163,7 @@ class Dialogue_Scene(object):
         return True
 
     def reset_unit_sprites(self):
-        for key, unit in self.unit_sprites.iteritems():
+        for key, unit in self.unit_sprites.items():
             unit.stop_talking()
 
     def dialog_unpause(self):
@@ -1458,7 +1458,7 @@ class Dialogue_Scene(object):
         return position_list
 
     def get_rein_position(self, pos_line, gameStateObj):
-        rein_positions = [position for position, value in gameStateObj.map.tile_info_dict.iteritems() if 'Reinforcement' in value]
+        rein_positions = [position for position, value in gameStateObj.map.tile_info_dict.items() if 'Reinforcement' in value]
         position_list = [position for position in rein_positions if gameStateObj.map.tile_info_dict[position]['Reinforcement'] == pos_line]
         return position_list
 

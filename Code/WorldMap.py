@@ -124,10 +124,10 @@ class WorldMapBackground(object):
         for label in self.wm_labels:
             label.draw(image)
         # Update world_map_sprites
-        for key, wm_unit in self.wm_sprites.iteritems():
+        for key, wm_unit in self.wm_sprites.items():
             wm_unit.update()
         # World map sprites
-        for key, wm_unit in self.wm_sprites.iteritems():
+        for key, wm_unit in self.wm_sprites.items():
             wm_unit.draw(image)
         # Cursor
         if self.cursor:

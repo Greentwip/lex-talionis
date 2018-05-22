@@ -59,7 +59,7 @@ class InputManager(object):
         self.key_map['AUX'] = cf.OPTIONS['key_AUX']
         self.key_map['INFO'] = cf.OPTIONS['key_INFO']
 
-        self.map_keys = {v: k for k, v in self.key_map.iteritems()}
+        self.map_keys = {v: k for k, v in self.key_map.items()}
 
     def update_joystick_config(self):
         self.joystick_config = {}
@@ -137,10 +137,10 @@ class InputManager(object):
                                 self.key_up_events.append(button)
 
     def print_key_pressed(self):
-        for key, value in self.keys_pressed.iteritems():
+        for key, value in self.keys_pressed.items():
             if value:
                 print('Key Down', key)
-        for joy, value in self.joys_pressed.iteritems():
+        for joy, value in self.joys_pressed.items():
             if value:
                 print('Joy Down', joy)
 

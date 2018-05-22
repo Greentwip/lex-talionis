@@ -21,13 +21,13 @@ class ScrollBar(object):
         # Draw parts
         surf.blit(self.top, (self.x, self.y))
         surf.blit(self.bottom, (self.x, self.y + height + 2))
-        for num in xrange(1, height + 2):
+        for num in range(1, height + 2):
             surf.blit(self.middle, (self.x, self.y + num))
 
         # Draw bar
         start_position = int(start_frac*height)
         end_position = int(end_frac*height)
-        for num in xrange(start_position, end_position + 1):
+        for num in range(start_position, end_position + 1):
             surf.blit(self.fill, (self.x, self.y + num + 1))
 
         # Draw arrows

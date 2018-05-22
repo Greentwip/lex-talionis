@@ -394,7 +394,7 @@ class HighlightController(object):
                       'move': [Highlight(GC.IMAGESDICT['BlueHighlight']), 7],
                       'aura': [Highlight(GC.IMAGESDICT['LightPurpleHighlight']), 7],
                       'spell_splash': [Highlight(GC.IMAGESDICT['LightGreenHighlight']), 7]}
-        self.highlights = {t: set() for t in self.types.keys()}
+        self.highlights = {t: set() for t in self.types}
 
         self.lasthighlightUpdate = 0
         self.updateIndex = 0
@@ -403,7 +403,7 @@ class HighlightController(object):
 
     def add_highlight(self, position, name, allow_overlap=False):
         if not allow_overlap:
-            for t in self.types.keys():
+            for t in self.types:
                 self.highlights[t].discard(position)
         self.highlights[name].add(position)
         self.types[name][1] = 7 # Reset transitions
@@ -413,7 +413,7 @@ class HighlightController(object):
             self.highlights[name] = set()
             self.types[name][1] = 7 # Reset transitions
         else:
-            self.highlights = {t: set() for t in self.types.keys()}
+            self.highlights = {t: set() for t in self.types}
             # Reset transitions
             for hl_name in self.types:
                 self.types[hl_name][1] = 7
@@ -428,7 +428,7 @@ class HighlightController(object):
             self.updateIndex = 0
 
     def draw(self, surf):
-        for name in self.highlights.keys():
+        for name in self.highlights:
             transition = self.types[name][1]
             if transition > 0:
                 transition -= 1
@@ -515,7 +515,7 @@ class BoundaryManager(object):
         if kind:
             kinds = [kind]
         else:
-            kinds = self.grids.keys()
+            kinds = list(self.grids)
         for k in kinds:
             for x in range(self.gridWidth):
                 for y in range(self.gridHeight):
@@ -539,7 +539,7 @@ class BoundaryManager(object):
         self.surf = None
 
     def _remove_unit(self, unit, gameStateObj):
-        for kind, grid in self.grids.iteritems():
+        for kind, grid in self.grids.items():
             if unit.id in self.dictionaries[kind]:
                 for (x, y) in self.dictionaries[kind][unit.id]:
                     grid[x * self.gridHeight + y].discard(unit.id)
@@ -553,7 +553,7 @@ class BoundaryManager(object):
             x, y = unit.position
             other_units = gameStateObj.get_unit_from_id(self.grids['movement'][x * self.gridHeight + y])
             # other_units = set()
-            # for key, grid in self.grids.iteritems():
+            # for key, grid in self.grids.items():
             # What other units were affecting that position -- only enemies can affect position
             #    other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
             other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
@@ -571,7 +571,7 @@ class BoundaryManager(object):
             x, y = unit.position
             other_units = gameStateObj.get_unit_from_id(self.grids['movement'][x * self.gridHeight + y])
             # other_units = set()
-            # for key, grid in self.grids.iteritems():
+            # for key, grid in self.grids.items():
             # What other units were affecting that position -- only enemies can affect position
             #    other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
             other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
@@ -593,7 +593,7 @@ class BoundaryManager(object):
     # Called when map changes
     def reset_pos(self, pos_group, gameStateObj):
         other_units = set()
-        for key, grid in self.grids.iteritems():
+        for key, grid in self.grids.items():
             # What other units are affecting those positions -- need to check every grid because line of sight might change
             for (x, y) in pos_group:
                 other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
@@ -1471,7 +1471,7 @@ class LevelStatistic(object):
     def get_mvp(self):
         tp = 0
         current_mvp = 'Ophie'
-        for unit, record in self.stats.iteritems():
+        for unit, record in self.stats.items():
             test = self.formula(record)
             if test > tp:
                 tp = test

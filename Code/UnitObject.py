@@ -1036,7 +1036,7 @@ class UnitObject(object):
             enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and
                            unit.team not in team_ignore and unit.name not in name_ignore]
             # Don't want this line, since AI does not consider tiles in the Primary AI
-            # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
+            # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.items() if tile.stats['HP']]
             while enemy_units:
                 current_pos = enemy_units.pop()
                 for valid_move in valid_moves:
@@ -1059,7 +1059,7 @@ class UnitObject(object):
                 enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and
                                unit.team not in team_ignore and unit.name not in name_ignore]
                 # Don't want this line, since AI does not consider tiles in the Primary AI
-                # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
+                # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.items() if tile.stats['HP']]
                 while enemy_units:
                     current_pos = enemy_units.pop()
                     for valid_move in valid_moves:
@@ -1086,7 +1086,7 @@ class UnitObject(object):
         if position is None:
             position = self.position
         targets = []
-        for tile_position, tile in gameStateObj.map.tiles.iteritems():
+        for tile_position, tile in gameStateObj.map.tiles.items():
             if 'HP' in gameStateObj.map.tile_info_dict[tile_position] and Utility.calculate_distance(tile_position, position) in item.RNG:
                 targets.append(tile)
         return targets
@@ -1180,7 +1180,7 @@ class UnitObject(object):
             return []
 
         enemy_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
-                          [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
+                          [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]]
         valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in my_weapon.RNG]                          
         if cf.CONSTANTS['line_of_sight']:
             valid_targets = Utility.line_of_sight([self.position], valid_targets, max(my_weapon.RNG), gameStateObj)
@@ -1266,7 +1266,7 @@ class UnitObject(object):
                 else:
                     if my_spell.detrimental:
                         enemy_positions = set([unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
-                                             [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]])
+                                             [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]])
                         targetable_position = set(targetable_position)
                         if my_spell.aoe.number > 0:
                             additional_positions = set()
@@ -1506,7 +1506,7 @@ class UnitObject(object):
         avoid = 0
 
         if gameStateObj.support and self.position and self.name in gameStateObj.support.node_dict:
-            for name, edge in gameStateObj.support.node_dict[self.name].adjacent.iteritems():
+            for name, edge in gameStateObj.support.node_dict[self.name].adjacent.items():
                 for unit in gameStateObj.allunits:
                     if unit.name == name and unit.position and Utility.calculate_distance(unit.position, self.position) <= 3:
                         support_level = edge.current_value//cf.CONSTANTS['support_points']
@@ -1898,7 +1898,7 @@ class UnitObject(object):
                        'dead': self.dead,
                        'finished': self.finished,
                        'TRV': self.TRV,
-                       'stats': [stat.serialize() for name, stat in self.stats.iteritems()],
+                       'stats': [stat.serialize() for name, stat in self.stats.items()],
                        'movement_group': self.movement_group}
         # Return all extraneous statuses
         # for item in items:

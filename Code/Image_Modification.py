@@ -150,8 +150,8 @@ def transition_image_white(image):
     return image
 
 def print_image(image):
-    for row in xrange(image.get_width()):
-        for col in xrange(image.get_height()):
+    for row in range(image.get_width()):
+        for col in range(image.get_height()):
             color = image.get_at((row, col))
             print(color)
 

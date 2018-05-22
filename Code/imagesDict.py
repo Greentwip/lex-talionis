@@ -61,7 +61,7 @@ def getSounds(home='./'):
     return SOUNDDICT, MUSICDICT
 
 def set_sound_volume(volume, SOUNDDICT):
-    for name, sound in SOUNDDICT.iteritems():
+    for name, sound in SOUNDDICT.items():
         sound.set_volume(volume)
     # Sets cursor sound volume
     SOUNDDICT['Select 5'].set_volume(.5*volume)

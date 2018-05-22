@@ -1430,31 +1430,31 @@ class SimpleHPBar(object):
         full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick] * 2, 0, 2, self.full_hp_blip.get_height()))
         if self.max_hp > 80:
             # First 40 hp
-            for index in xrange(40):
+            for index in range(40):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 4))
             surf.blit(self.end_hp_blip, (pos[0] + 40 * 2 + 5, pos[1] + 4)) # End HP Blip
             # Second 40 hp
-            for index in xrange(40):
+            for index in range(40):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] - 4))
             surf.blit(self.end_hp_blip, (pos[0] + 40 * 2 + 5, pos[1] - 4)) # End HP Blip
         elif self.max_hp <= 40:
-            for index in xrange(t_hp):
+            for index in range(t_hp):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 1))
-            for index in xrange(self.max_hp - t_hp):
+            for index in range(self.max_hp - t_hp):
                 surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp) * 2 + 5, pos[1] + 1))
             surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp) * 2 + 5, pos[1] + 1)) # End HP Blip
         else:
             # First 40 hp
-            for index in xrange(min(t_hp, 40)):
+            for index in range(min(t_hp, 40)):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 4))
             if t_hp < 40:
-                for index in xrange(40 - t_hp):
+                for index in range(40 - t_hp):
                     surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp) * 2 + 5, pos[1] + 4))
             surf.blit(self.end_hp_blip, (pos[0] + (40) * 2 + 5, pos[1] + 4)) # End HP Blip
             # Second 40 hp
-            for index in xrange(max(0, t_hp - 40)):
+            for index in range(max(0, t_hp - 40)):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] - 4))
-            for index in xrange(self.max_hp - max(40, t_hp)):
+            for index in range(self.max_hp - max(40, t_hp)):
                 surf.blit(self.empty_hp_blip, (pos[0] + (index + max(t_hp - 40, 0)) * 2 + 5, pos[1] - 4))
             surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp - 40) * 2 + 5, pos[1] - 4)) # End HP Blip
 

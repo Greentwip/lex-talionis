@@ -64,7 +64,7 @@ class Charge(Active_Skill):
             for weapon in valid_weapons:
                 # Essentially get valid targets
                 enemy_positions = [u.position for u in gameStateObj.allunits if self.checkIfEnemy(u)] + \
-                                  [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
+                                  [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]]
                 if any(Utility.calculate_distance(position, unit.position) == 1 for position in enemy_positions):
                     return True
         return False
@@ -145,7 +145,7 @@ class Cleave(Active_Skill):
         if not unit.hasAttacked and valid_weapons:
             # Essentially get valid targets
             enemy_positions = [enemy.position for enemy in gameStateObj.allunits if enemy.position and unit.checkIfEnemy(enemy)] + \
-                              [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
+                              [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]]
             if any(Utility.calculate_distance(position, unit.position) == 1 for position in enemy_positions):
                 return True
         return False

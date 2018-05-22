@@ -166,17 +166,17 @@ class AI(object):
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfAlly(unit) and
                                               unit is not self.unit and unit.team not in self.team_ignore and unit.name not in self.name_ignore]
                 elif self.ai2_state == 3:
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                                               if 'Village' in gameStateObj.map.tile_info_dict[position] or
                                               'HP' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 4: 
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                                               if 'Locked' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 5:
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems() 
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items() 
                                               if 'Escape' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 6:
-                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                                               if 'ThiefEscape' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 7:
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and 'Boss' in unit.tags and
@@ -350,7 +350,7 @@ class AI(object):
 
     # === UNLOCK AI ===
     def run_unlock_ai(self, valid_moves, gameStateObj):
-        available_targets = [tile for position, tile in gameStateObj.map.tiles.iteritems()
+        available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                              if 'Locked' in gameStateObj.map.tile_info_dict[position]]
         if not available_targets:
             self.change_thief_ai('Unlock')

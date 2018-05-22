@@ -54,7 +54,7 @@ class BattleAnimationManager(object):
             klass_directory = self.directory[klass]
             for weapon in klass_directory:
                 frame_directory = {}
-                for name, anim in klass_directory[weapon]['images'].iteritems():
+                for name, anim in klass_directory[weapon]['images'].items():
                     if 'index' not in klass_directory[weapon]:
                         return False
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)

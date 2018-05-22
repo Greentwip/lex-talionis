@@ -37,7 +37,7 @@ def key_with_max_val(d):
     b) return the key with the max value
     """  
     v = list(d.values())
-    k = list(d.keys())
+    k = list(d)
     return k[v.index(max(v))]
 
 # === GREATER THAN OR EQUAL ============================================
@@ -142,7 +142,7 @@ def weighted_choice(choices):
 
 def get_adjacent_positions(c_pos, rng=1):
     if FAST_SPHERE:
-        return manhattan_sphere.find_manhattan_spheres(range(1, rng+1), c_pos[0], c_pos[1])
+        return manhattan_sphere.find_manhattan_spheres(list(range(1, rng+1)), c_pos[0], c_pos[1])
     else:
         _range = range
         pos = set()
@@ -156,7 +156,7 @@ def get_adjacent_positions(c_pos, rng=1):
 
 def find_manhattan_spheres(rng, c_pos):
     if FAST_SPHERE:
-        return manhattan_sphere.find_manhattan_spheres(rng, c_pos[0], c_pos[1])
+        return manhattan_sphere.find_manhattan_spheres(list(rng), c_pos[0], c_pos[1])
     else:
         _range = range
         main_set = set()
@@ -394,12 +394,12 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
             all_tiles[pos].visibility = 'lit'
 
     # Any tile that can't be moved over at all is dark
-    for pos, tile in all_tiles.iteritems():
+    for pos, tile in all_tiles.items():
         if gameStateObj.map.tiles[pos].opaque:
             tile.visibility = 'dark'
 
     # Iterate over remaining tiles
-    for pos, tile in all_tiles.iteritems():
+    for pos, tile in all_tiles.items():
         if tile.visibility == 'unknown':
             for s_pos in source_pos:
                 if calculate_distance(pos, s_pos) <= max_range and get_line2(s_pos, pos):

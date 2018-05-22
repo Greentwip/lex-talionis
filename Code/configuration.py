@@ -69,7 +69,7 @@ def read_config_file():
 
 def write_config_file():
     with open('Saves/config.ini', 'w') as config_file:
-        write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.iteritems()])
+        write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.items()])
         config_file.write(write_out)
 
 def read_constants_file():

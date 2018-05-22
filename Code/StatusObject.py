@@ -19,7 +19,7 @@ class StatusObject(object):
 
         # Creates component slots
         self.components = components # Consumable, Weapon, Spell Bigger Picture
-        for component_key, component_value in self.components.iteritems():
+        for component_key, component_value in self.components.items():
             self.__dict__[component_key] = component_value
 
         self.loadSprites()
@@ -432,7 +432,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
            
     if not status.momentary:
         # Actually Add!
-        unit.status_bundle.update(status.components.keys()) 
+        unit.status_bundle.update(list(status.components)) 
         unit.status_effects.append(status)
 
     if status.convert:
@@ -520,7 +520,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
     logger.info('Removing status %s from %s at %s', status.id, unit.name, unit.position)
     if status in unit.status_effects:
         unit.status_effects.remove(status)
-        unit.status_bundle.subtract(status.components.keys())
+        unit.status_bundle.subtract(list(status.components))
     else:
         logger.warning('Status %s %s not present...', status.id, status.name)
         logger.warning(unit.status_effects)
@@ -693,7 +693,7 @@ def deserialize(s_dict, unit, gameStateObj):
         for item in unit.items:
             status.passive.apply_mod(item)
     unit.status_effects.append(status)
-    unit.status_bundle.update(status.components.keys())
+    unit.status_bundle.update(list(status.components))
 
 feat_list = ['fStrength +2', 'fMagic +2', 'fSkill +3', 'fSpeed +2', 'fDefense +2', 
              'fResistance +2', 'fMovement +1', 'fConstitution +3', 'fMaximum HP +5', 'fLuck +4']

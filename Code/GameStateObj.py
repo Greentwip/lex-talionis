@@ -290,7 +290,7 @@ class GameStateObj(object):
     def check_formation_spots(self):
         # Returns None if no spot available
         # Returns a spot if a spot is available
-        list_of_spots = [position for position, value in self.map.tile_info_dict.iteritems() if 'Formation' in value]
+        list_of_spots = [position for position, value in self.map.tile_info_dict.items() if 'Formation' in value]
         list_of_unit_positions = [unit.position for unit in self.allunits if unit.team == 'player']
         for position in list_of_spots:
             if position not in list_of_unit_positions:

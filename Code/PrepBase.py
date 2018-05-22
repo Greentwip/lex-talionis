@@ -150,7 +150,7 @@ class PrepPickUnitsState(StateMachine.State):
         backSurf = MenuFunctions.CreateBaseMenuSurf((132, 24), 'BrownPickBackground')
         topleft = (110, 0)
         num_units_map = len([unit for unit in gameStateObj.allunits if unit.position and unit.team == 'player'])
-        num_slots = len([value for position, value in gameStateObj.map.tile_info_dict.iteritems() if 'Formation' in value])
+        num_slots = len([value for position, value in gameStateObj.map.tile_info_dict.items() if 'Formation' in value])
         pick_string = ['Pick ', str(num_slots - num_units_map), ' units  ', str(num_units_map), '/', str(num_slots)]
         pick_font = ['text_white', 'text_blue', 'text_white', 'text_blue', 'text_white', 'text_blue']
         word_index = 8
@@ -1328,7 +1328,7 @@ class BaseMainState(StateMachine.State):
 class BaseInfoState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         options = [key for key in gameStateObj.base_conversations]
-        color_control = [('text_white' if white else 'text_grey') for key, white in gameStateObj.base_conversations.iteritems()]
+        color_control = [('text_white' if white else 'text_grey') for key, white in gameStateObj.base_conversations.items()]
         topleft = 4 + gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.topleft[1] + 2*16
         gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, gem=False)
 
@@ -1707,7 +1707,7 @@ class BaseLibraryState(StateMachine.State):
             gameStateObj.childMenu = None
 
             options, ignore, color_control = [], [], []
-            unlocked_entries = [(entry, data) for entry, data in metaDataObj['lore'].iteritems() if entry in gameStateObj.unlocked_lore]
+            unlocked_entries = [(entry, data) for entry, data in metaDataObj['lore'].items() if entry in gameStateObj.unlocked_lore]
             categories = sorted(list(set([data['type'] for entry, data in unlocked_entries])))
             for category in categories:
                 options.append(category)
@@ -1768,11 +1768,11 @@ class BaseRecordsState(StateMachine.State):
             # Create name dict
             self.name_dict = {}
             for level in gameStateObj.statistics:
-                for unit, record in level.stats.iteritems():
+                for unit, record in level.stats.items():
                     if unit not in self.name_dict:
                         self.name_dict[unit] = []
                     self.name_dict[unit].append((level.name, record))
-            self.name_list = [(k, v) for (k, v) in self.name_dict.iteritems()]
+            self.name_list = [(k, v) for (k, v) in self.name_dict.items()]
             self.name_list = sorted(self.name_list, key=lambda x: self.mvp.mvp_dict[x[0]], reverse=True)
             self.unit_stats = [MenuFunctions.UnitStats(unit, record) for (unit, record) in self.name_list]
             self.state = "records"

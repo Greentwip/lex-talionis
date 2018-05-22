@@ -34,7 +34,7 @@ class ItemObject(object):
         
         # Creates component slots
         self.components = components # Consumable, Weapon, Spell Bigger Picture
-        for component_key, component_value in self.components.iteritems():
+        for component_key, component_value in self.components.items():
             self.__dict__[component_key] = component_value
 
         self.loadSprites()
@@ -177,7 +177,7 @@ def parseRNG(RNG):
     # Should output a list of integers corresponding to acceptable ranges
     if '-' in RNG:
         rngsplit = RNG.split('-')
-        return range(int(rngsplit[0]), int(rngsplit[1]) + 1)
+        return list(range(int(rngsplit[0]), int(rngsplit[1]) + 1))
     else:
         return [int(RNG)]
 

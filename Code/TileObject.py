@@ -110,7 +110,7 @@ class MapObject(object):
     # If you change the map, you also need to reset their position to their normal position, and their image name to none,
     # so the tile sprites reference the new map sprite...
     def reset_all_tile_sprites(self):
-        for position, tile_sprite in self.tile_sprites.iteritems():
+        for position, tile_sprite in self.tile_sprites.items():
             tile_sprite.position = position
             tile_sprite.image_name = None
 
@@ -118,9 +118,9 @@ class MapObject(object):
         if self.autotiles:
             surf.blit(self.autotiles[self.autotile_frame], (0, 0))
         surf.blit(self.map_image, (0, 0))
-        for position, tile in self.tile_sprites.iteritems():
+        for position, tile in self.tile_sprites.items():
             tile.draw(surf, position)
-        for position in self.tile_sprites.keys():
+        for position in self.tile_sprites:
             tile = self.tile_sprites[position]
             if not tile.new_image:
                 tile.draw(self.map_image, position) # Done, can place on main layer
@@ -130,11 +130,11 @@ class MapObject(object):
             if layer.show or layer.fade > 0:
                 layer.draw(surf)
 
-        for pos, highlight in self.escape_highlights.iteritems():
+        for pos, highlight in self.escape_highlights.items():
             highlight.draw(surf, pos, gameStateObj.highlight_manager.updateIndex, 0)
 
         if gameStateObj.stateMachine.getState() in ['prep_formation', 'prep_formation_select']:
-            for pos, highlight in self.formation_highlights.iteritems():
+            for pos, highlight in self.formation_highlights.items():
                 highlight.draw(surf, pos, gameStateObj.highlight_manager.updateIndex, 0)
 
     def loadSprites(self):
@@ -166,34 +166,34 @@ class MapObject(object):
                 self.loose_tile_sprites = {}
 
             # Re-add escape highlights if necessary
-            for position, tile_values in self.tile_info_dict.iteritems():
+            for position, tile_values in self.tile_info_dict.items():
                 if "Escape" in tile_values or "Arrive" in tile_values:
                     self.escape_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
                 if "Formation" in tile_values:
                     self.formation_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
 
             # Re-add associated status sprites
-            for position, value in self.tile_info_dict.iteritems():
+            for position, value in self.tile_info_dict.items():
                 if 'Status' in value:
                     for status in value['Status']:
                         status.loadSprites()
 
     def removeSprites(self):
         self.sprites_loaded_flag = False
-        for position, tile in self.tiles.iteritems():
+        for position, tile in self.tiles.items():
             tile.removeSprites()
         self.map_image = None
         self.loose_tile_sprites = {}
         self.autotiles = []
         self.layers = [Layer() for _ in range(NUM_LAYERS)]
         # Clear tile_sprites...
-        for position, value in self.tile_sprites.iteritems():
+        for position, value in self.tile_sprites.items():
             value.removeSprites()
         # Clear sprites in escape_highlights
         self.escape_highlights = {}
         self.formation_highlights = {}
         # Remove associated status sprites if necessary
-        for position, value in self.tile_info_dict.iteritems():
+        for position, value in self.tile_info_dict.items():
             if 'Status' in value:
                 for status in value['Status']:
                     status.removeSprites()
@@ -319,7 +319,7 @@ class MapObject(object):
     def serialize(self):
         serial_dict = {}
         serial_dict['command_list'] = self.command_list
-        serial_dict['HP'] = [(tile.position, tile.currenthp) for position, tile in self.tiles.iteritems() if tile.tilehp]
+        serial_dict['HP'] = [(tile.position, tile.currenthp) for position, tile in self.tiles.items() if tile.tilehp]
         return serial_dict
 
     # === SCRIPT COMMANDS ===
