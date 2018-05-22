@@ -168,12 +168,6 @@ class StateMachine(object):
     def inList(self, state_name):
         return any([state_name == state.name for state in self.state]) or any([state_name == temp_state for temp_state in self.temp_state])
 
-    def any_events(self):
-        for s in self.state:
-            if s.name == 'dialogue' and s.message and s.message.event_flag:
-                return True
-        return False
-
     # Keeps track of the state at every tick
     def update(self, eventList, gameStateObj, metaDataObj):
         # print(self.state)
@@ -326,7 +320,7 @@ def handle_debug(eventList, gameStateObj, metaDataObj):
                     gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
                     gameStateObj.cursor.currentHoveredUnit.isDying = True
                     gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=gameStateObj.cursor.currentHoveredUnit, event_flag=False))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('dialogue')
                 return
             # Charge all skills and remove all non-class skills
@@ -612,7 +606,7 @@ class MoveState(State):
         if not self.started:
             move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
             if gameStateObj.tutorial_mode and os.path.exists(move_script_name):
-                move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit, event_flag=False)
+                move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit)
                 gameStateObj.message.append(move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -756,7 +750,7 @@ class MenuState(State):
         if not self.started:
             menu_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
             if gameStateObj.tutorial_mode and os.path.exists(menu_script_name):
-                menu_script = Dialogue.Dialogue_Scene(menu_script_name, unit=cur_unit, event_flag=False)
+                menu_script = Dialogue.Dialogue_Scene(menu_script_name, unit=cur_unit)
                 gameStateObj.message.append(menu_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -991,7 +985,7 @@ class MenuState(State):
             elif selection == cf.WORDS['Visit']:
                 village_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Village']]
                 village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position, event_flag=False))
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
                 cur_unit.hasAttacked = True
             elif selection == cf.WORDS['Armory']:
@@ -1281,7 +1275,7 @@ class AttackState(State):
         # Play attack script if it exists
         attack_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
         if gameStateObj.tutorial_mode and os.path.exists(attack_script_name):
-            attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker, event_flag=False)
+            attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker)
             gameStateObj.message.append(attack_script)
             gameStateObj.stateMachine.changeState('transparent_dialogue')
 

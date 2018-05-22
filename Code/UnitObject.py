@@ -1420,10 +1420,10 @@ class UnitObject(object):
     def handle_fight_quote(self, target_unit, gameStateObj):
         fight_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/fightScript.txt'
         if os.path.exists(fight_script_name):
-            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=target_unit, unit2=self, event_flag=False))
+            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=target_unit, unit2=self))
             gameStateObj.stateMachine.changeState('dialogue')
             # And again, the other way round
-            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=self, unit2=target_unit, event_flag=False))
+            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=self, unit2=target_unit))
             gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_steal_banner(self, item, gameStateObj):
@@ -2040,7 +2040,7 @@ class UnitObject(object):
 
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, tile_pos=self.position, event_flag=False))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, gameStateObj):

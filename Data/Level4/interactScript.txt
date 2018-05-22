@@ -1,6 +1,6 @@
 # has our party size fallen below four?
 if;gameStateObj.get_total_party_members() < 5
-	add_minimum_number_banner
+	minimum_number_banner
 	lose_game
 	t;1
 # If no more wagons and Anders is dead win

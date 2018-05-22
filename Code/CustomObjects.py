@@ -1264,6 +1264,50 @@ class CameraOffset(object):
             self.current_y = (gameStateObj.map.height - GC.TILEY)
         # logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
+class PhaseMusic(object):
+    def __init__(self, player, enemy, other=None):
+        self.player_name = player
+        self.enemy_name = enemy
+        self.other_name = other
+        self.player_music = GC.MUSICDICT[self.player_name]
+        self.enemy_music = GC.MUSICDICT[self.enemy_name]
+        self.other_music = GC.MUSICDICT[self.other_name] if self.other_name else None
+
+    def get_phase_music(self, phase_name):
+        if phase_name == 'player':
+            return self.player_music
+        elif phase_name.startswith('enemy'):
+            return self.enemy_music
+        elif phase_name == 'other':
+            return self.other_music
+        else:
+            logging.error('Unsupported phase name: %s', phase_name)
+            return None
+
+    def serialize(self):
+        return (self.player_name, self.enemy_name, self.other_name)
+
+    @classmethod
+    def deserialize(cls, info):
+        return cls(*info)
+
+    def change_music(self, phase_name, music_name):
+        if music_name not in GC.MUSICDICT:
+            logging.error('Music %s not in GC.MUSICDICT', music_name)
+            return None
+        if phase_name == 'player':
+            self.player_name = music_name
+            self.player_music = GC.MUSICDICT[self.music_name]
+        elif phase_name.startswith('enemy'):
+            self.enemy_name = music_name
+            self.enemy_music = GC.MUSICDICT[self.music_name]
+        elif phase_name == 'other':
+            self.other_name = music_name
+            self.other_music = GC.MUSICDICT[self.music_name]
+        else:
+            logging.error('Unsupported phase name: %s', phase_name)
+            return None        
+
 class Objective(object):
     def __init__(self, display_name, win_condition, loss_condition):
         self.display_name_string = display_name

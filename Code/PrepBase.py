@@ -35,7 +35,7 @@ class PrepMainState(StateMachine.State):
             self.started = True
             prep_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/prepScript.txt'
             if os.path.exists(prep_script_name):
-                prep_script = Dialogue.Dialogue_Scene(prep_script_name, event_flag=False)
+                prep_script = Dialogue.Dialogue_Scene(prep_script_name)
                 gameStateObj.message.append(prep_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -1265,7 +1265,7 @@ class BaseMainState(StateMachine.State):
         # Play base script if it exists
         base_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/in_base_script.txt'
         if os.path.exists(base_script_name):
-            base_script = Dialogue.Dialogue_Scene(base_script_name, event_flag=False)
+            base_script = Dialogue.Dialogue_Scene(base_script_name)
             gameStateObj.message.append(base_script)
             gameStateObj.stateMachine.changeState('transparent_dialogue')
             return 'repeat'

@@ -58,7 +58,7 @@ def main():
                     print(unit.name)
                     unit.isDying = True
                     gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit, event_flag=False))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes']))
                     gameStateObj.stateMachine.changeState('dialogue')
                     dead_yet = True
                 elif suspended_yet:

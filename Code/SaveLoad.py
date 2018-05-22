@@ -37,6 +37,9 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     # And general abstraction information    
     get_metaDataObj(levelfolder, metaDataObj)
 
+    starting_music = CustomObjects.PhaseMusic(overview_dict['player_phase_music'], overview_dict['enemy_phase_music'], \
+                                              overview_dict['other_phase_music'] if 'other_phase_music' in overview_dict else None)
+
     # Get tiles
     currentMap = create_map(levelfolder, overview_dict)
     gameStateObj.start_map(currentMap)
@@ -55,7 +58,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
                                        reinforceUnits, prefabs, gameStateObj.triggers, metaDataObj, gameStateObj)
     
     handle_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
-    gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective)
+    gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective, music=starting_music)
 
 def create_map(levelfolder, overview_dict=None):
     if not overview_dict:
@@ -67,9 +70,7 @@ def create_map(levelfolder, overview_dict=None):
     currentMap = TileObject.MapObject(mapfilename, tilefilename, levelfolder, weather)
     return currentMap
 
-def get_metaDataObj(levelfolder, metaDataObj, changes=None):
-    if not changes:
-        changes = []
+def get_metaDataObj(levelfolder, metaDataObj):
     overview_filename = levelfolder + '/overview.txt'
     prebaseScript_filename = levelfolder + '/prebaseScript.txt'
     narrationScript_filename = levelfolder + '/narrationScript.txt'
@@ -93,9 +94,6 @@ def get_metaDataObj(levelfolder, metaDataObj, changes=None):
     metaDataObj['base_music'] = overview_dict['base_music'] if overview_dict['base_flag'] != '0' else None
     metaDataObj['marketFlag'] = bool(int(overview_dict['market_flag']))
     metaDataObj['transitionFlag'] = bool(int(overview_dict['transition_flag']))
-    metaDataObj['playerPhaseMusic'] = GC.MUSICDICT[overview_dict['player_phase_music']]
-    metaDataObj['enemyPhaseMusic'] = GC.MUSICDICT[overview_dict['enemy_phase_music']]
-    metaDataObj['otherPhaseMusic'] = GC.MUSICDICT[overview_dict['other_phase_music']] if 'other_phase_music' in overview_dict else None
     metaDataObj['prebaseScript'] = prebaseScript_filename
     metaDataObj['narrationScript'] = narrationScript_filename
     metaDataObj['introScript'] = introScript_filename
@@ -105,11 +103,6 @@ def get_metaDataObj(levelfolder, metaDataObj, changes=None):
     metaDataObj['class_dict'] = class_dict
     metaDataObj['portrait_dict'] = portrait_dict
     metaDataObj['lore'] = lore_dict
-
-    for line in changes:
-        if line[1].endswith('Music'):
-            line[2] = GC.MUSICDICT[line[2]]
-        metaDataObj[line[1]] = line[2]
 
 def read_overview_file(overview_filename):
     overview_lines = {}
@@ -679,7 +672,7 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
     gameStateObj.save_slot = saveSlot.number
 
     levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
-    get_metaDataObj(levelfolder, metaDataObj, gameStateObj.metaDataObj_changes) 
+    get_metaDataObj(levelfolder, metaDataObj) 
 
     gameStateObj.loadSprites()
 

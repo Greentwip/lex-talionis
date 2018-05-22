@@ -5,7 +5,7 @@ from collections import OrderedDict, Counter
 # Custom imports
 import GlobalConstants as GC
 import configuration as cf
-import CustomObjects, StateMachine, Dialogue, AStar, Support, Engine
+import CustomObjects, StateMachine, AStar, Support, Engine
 import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
 
 import logging
@@ -33,11 +33,12 @@ class GameStateObj(object):
         self.mode = self.default_mode()
 
     # Things that change between levels always
-    def start(self, allreinforcements, prefabs, objective):
+    def start(self, allreinforcements, prefabs, objective, music):
         logger.info("Start")
         self.allreinforcements = allreinforcements
         self.prefabs = prefabs
         self.objective = objective
+        self.phase_music = music
         self.turncount = 0
 
         self.generic()
@@ -61,6 +62,7 @@ class GameStateObj(object):
         self.allreinforcements = {}
         self.prefabs = []
         self.objective = None
+        self.phase_music = None
         self.map = None
         self.game_constants = Counter()
         self.game_constants['level'] = 0
@@ -85,7 +87,6 @@ class GameStateObj(object):
         # None of these are kept through different levels
         self.level_constants = Counter()
         self.triggers = {}
-        self.metaDataObj_changes = []
         self.talk_options = []
         self.base_conversations = OrderedDict()
         self.message = []
@@ -132,8 +133,8 @@ class GameStateObj(object):
         self.game_constants = get_game_constants(load_info)
         self.level_constants = get_level_constants(load_info)
         self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if isinstance(load_info['objective'], tuple) else load_info['objective']
+        self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music']) if 'phase_music' in load_info else None
         support_dict = load_info['support']
-        self.metaDataObj_changes = load_info.get('metaDataObj_changes', [])
         self.talk_options = load_info['talk_options']
         self.base_conversations = load_info['base_conversations']
         self.stateMachine = StateMachine.StateMachine(load_info['state_list'][0], load_info['state_list'][1])
@@ -346,10 +347,10 @@ class GameStateObj(object):
                    'turncount': self.turncount,
                    'convoy': [item.serialize() for item in self.convoy],
                    'objective': self.objective.serialize() if self.objective else None,
+                   'phase_music': self.phase_music.serialize() if self.phase_music else None,
                    'support': self.support.serialize() if self.support else None,
                    'game_constants': self.game_constants,
                    'level_constants': self.level_constants,
-                   'metaDataObj_changes': self.metaDataObj_changes,
                    'unlocked_lore': self.unlocked_lore,
                    'talk_options': self.talk_options,
                    'base_conversations': self.base_conversations,
@@ -411,6 +412,7 @@ class GameStateObj(object):
         self.allreinforcements = {}
         self.prefabs = []
         self.objective = None
+        self.phase_music = None
 
     def compare_teams(self, team1, team2):
         # Returns True if allies, False if enemies

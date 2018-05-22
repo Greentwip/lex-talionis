@@ -14,7 +14,7 @@ hardset_positions = {'OffscreenLeft': -96, 'FarLeft': -24, 'Left': 0, 'MidLeft':
 
 # === GET INFO FOR DIALOGUE SCENE ==================================================
 class Dialogue_Scene(object):
-    def __init__(self, scene, unit=None, unit2=None, name=None, tile_pos=None, event_flag=True, if_flag=False):
+    def __init__(self, scene, unit=None, unit2=None, name=None, tile_pos=None, if_flag=False):
         self.scene = scene
         with open(scene, 'r') as scenefp: # Open this scene's file database
             self.scene_lines = scenefp.readlines()
@@ -83,8 +83,6 @@ class Dialogue_Scene(object):
         # Handles unit face priority
         self.priority_counter = 1
 
-        # Does this count as an event
-        self.event_flag = event_flag
         # Assumes all "if" statements evaluate to True?
         self.if_flag = if_flag
 
@@ -589,7 +587,7 @@ class Dialogue_Scene(object):
             gameStateObj.objective.win_condition_string = line[1]
         elif line[0] == 'change_objective_loss_condition':
             gameStateObj.objective.loss_condition_string = line[1]
-        elif line[0] == 'add_minimum_number_banner':
+        elif line[0] == 'minimum_number_banner':
             gameStateObj.banners.append(Banner.tooFewUnitsBanner())
             gameStateObj.stateMachine.changeState('itemgain')
             self.current_state = "Paused"
@@ -603,6 +601,10 @@ class Dialogue_Scene(object):
             gameStateObj.statedict['levelIsComplete'] = 'win'
         elif line[0] == 'skip_outro':
             gameStateObj.statedict['outroScriptDone'] = True
+        elif line[0] == 'change_music':
+            if gameStateObj.phase_music:
+                # Phase name, musical piece
+                gameStateObj.phase_music.change_music(line[1], line[2])
 
         elif line[0] == 'battle_save':
             # Using a flag instead of just going to battle save state because if I save while
@@ -765,30 +767,22 @@ class Dialogue_Scene(object):
         elif line[0] == 'set_level_constant':
             if len(line) > 2:
                 gameStateObj.level_constants[line[1]] = int(eval(line[2]))
-                if not gameStateObj.level_constants[line[1]]:
-                    del gameStateObj.level_constants[line[1]]
             else:
                 gameStateObj.level_constants[line[1]] = 1
         elif line[0] == 'inc_level_constant':
             if len(line) > 2:
                 gameStateObj.level_constants[line[1]] += int(eval(line[2]))
-                if not gameStateObj.level_constants[line[1]]:
-                    del gameStateObj.level_constants[line[1]]
             else:
                 gameStateObj.level_constants[line[1]] += 1
         # should be remembered for all game
         elif line[0] == 'set_game_constant':
             if len(line) > 2:
                 gameStateObj.game_constants[line[1]] = int(eval(line[2]))
-                if not gameStateObj.game_constants[line[1]]:
-                    del gameStateObj.game_constants[line[1]]
             else:
                 gameStateObj.game_constants[line[1]] = 1
         elif line[0] == 'inc_game_constant':
             if len(line) > 2:
                 gameStateObj.game_constants[line[1]] += int(eval(line[2]))
-                if not gameStateObj.game_constants[line[1]]:
-                    del gameStateObj.game_constants[line[1]]
             else:
                 gameStateObj.game_constants[line[1]] += 1
         elif line[0] == 'unlock_lore':
@@ -796,13 +790,6 @@ class Dialogue_Scene(object):
         elif line[0] == 'remove_lore':
             if line[1] in gameStateObj.unlocked_lore:
                 del gameStateObj.unlocked_lore[line[1]]
-        elif line[0] == 'metaDataObj':
-            gameStateObj.metaDataObj_changes.append(line)
-            metaDataObj[line[1]] = line[2]
-            if line[1].endswith('Music'):
-                metaDataObj[line[1]] = GC.MUSICDICT[line[2]]
-        elif line[0] == 'event_flag':
-            self.event_flag = bool(int(line[1]))
         elif line[0] == 'add_to_market':
             gameStateObj.market_items.add(line[1])
         elif line[0] == 'remove_from_market':
@@ -1040,6 +1027,10 @@ class Dialogue_Scene(object):
             if pos_x % 8 != 0:
                 pos_x += 4
             pos_y = 24
+        else:  # Default value at bottom of screen
+            pos_x = 4
+            pos_y = 110
+            length = 232
         return (pos_x, pos_y), (length, 48)
 
     def determine_width(self, text, num_lines):
@@ -1605,7 +1596,7 @@ class Dialog(object):
             if not self.preempt_break:
                 self._next_line() # go to next line
             self.preempt_break = False
-        elif letter in ["{wait}", "{w}"]:
+        elif letter in ("{wait}", "{w}"):
             self.waiting = True
             both_width = self._get_width('')
             # print(both_width)

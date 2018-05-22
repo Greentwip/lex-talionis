@@ -1327,7 +1327,7 @@ class AnimationCombat(Combat):
         # Handle interact_script
         script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
         if os.path.exists(script_name):
-            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=self.p2, event_flag=False)
+            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=self.p2)
             gameStateObj.message.append(interact_script)
             gameStateObj.stateMachine.changeState('dialogue')
 
@@ -1367,7 +1367,7 @@ class AnimationCombat(Combat):
                     gameStateObj.map.destroy(unit, gameStateObj)
                 else:
                     gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit, event_flag=False))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
                     gameStateObj.stateMachine.changeState('dialogue')
 
         # Actually remove items
@@ -1812,7 +1812,7 @@ class MapCombat(Combat):
         # Handle interact_script
         script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
         if os.path.exists(script_name):
-            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None), event_flag=False)
+            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None))
             gameStateObj.message.append(interact_script)
             gameStateObj.stateMachine.changeState('dialogue')
 
@@ -1898,7 +1898,7 @@ class MapCombat(Combat):
                     gameStateObj.map.destroy(unit, gameStateObj)
                 else:
                     gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit, event_flag=False))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
                     gameStateObj.stateMachine.changeState('dialogue')
 
         # Actually remove items
