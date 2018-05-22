@@ -192,9 +192,9 @@ class Dialogue_Scene(object):
             elif self.transition == 2:
                 self.transition_transparency = 255 - (current_time - self.transition_last_update)
             elif self.transition == 3:
-                self.transition_transparency = (current_time - self.transition_last_update)/2
+                self.transition_transparency = (current_time - self.transition_last_update)//2
             elif self.transition == 4:
-                self.transition_transparency = 255 - (current_time - self.transition_last_update)/2
+                self.transition_transparency = 255 - (current_time - self.transition_last_update)//2
             if self.transition_transparency > 255 + 5*GC.FRAMERATE or self.transition_transparency < 0: # I want 5 extra frames in black
                 self.current_state = "Processing"
                 if self.scene_lines_index >= len(self.scene_lines): # Check if we're done
@@ -357,7 +357,7 @@ class Dialogue_Scene(object):
                 unit_sprite.move(new_position)
                 # Wait after unit sprite is moved to allow time to transition
                 if line[0] == 'move_sprite':
-                    self.waittime = abs(new_position[0] / unit_sprite.unit_speed * unit_sprite.update_time) + 200
+                    self.waittime = abs(new_position[0] // unit_sprite.unit_speed * unit_sprite.update_time) + 200
                     self.last_wait_update = Engine.get_time()
                     self.current_state = "Waiting"
         # Mirror the unit sprite
@@ -624,7 +624,7 @@ class Dialogue_Scene(object):
                 line.append(self.tile_pos)
             gameStateObj.map.command_list.append(line)
         # Change tile sprites. - command, pos, tile_sprite, size, transition
-        elif line[0] == 'change_tile_sprite' or line[0] == 'change_sprite':
+        elif line[0] == 'change_tile_sprite':
             # Add default transition
             if len(line) < 4:
                 line.append('fade')
@@ -915,11 +915,11 @@ class Dialogue_Scene(object):
         thought_bubble = False
         if 'hint' in line:
             if 'auto' in line:
-                position = GC.WINWIDTH/4, GC.WINHEIGHT/4
-                size = GC.WINWIDTH/2 + 8, GC.WINHEIGHT/2
+                position = GC.WINWIDTH//4, GC.WINHEIGHT//4
+                size = GC.WINWIDTH//2 + 8, GC.WINHEIGHT//2
             else:
                 position = [int(line[3]), int(line[4])]
-                size = ((int(line[5]) if line[5] else GC.WINWIDTH/2 + 8), GC.WINHEIGHT/2)
+                size = ((int(line[5]) if line[5] else GC.WINWIDTH//2 + 8), GC.WINHEIGHT//2)
             back_surf = 'Parchment_Window'
             font = 'convo_black'
             num_lines = 4
@@ -1023,7 +1023,7 @@ class Dialogue_Scene(object):
 
             length = longest_dialogue_size + 8*2
             desired_center = self.determine_desired_center(owner.position[0])
-            pos_x = Utility.clamp(desired_center - length/2, 8, GC.WINWIDTH - 8 - length)
+            pos_x = Utility.clamp(desired_center - length//2, 8, GC.WINWIDTH - 8 - length)
             if pos_x % 8 != 0:
                 pos_x += 4
             pos_y = 24
@@ -1656,8 +1656,8 @@ class Dialog(object):
                     pos = [total_length, index * font.height + y]
                     total_length += font.size(chunk)[0] + font.size(' ')[0]
                     if self.position == 'center':
-                        x_pos = surf.get_width()/2 - total_length/2
-                        y_pos = index * font.height + surf.get_height()/2 - num_lines*font.height/2
+                        x_pos = surf.get_width()//2 - total_length//2
+                        y_pos = index * font.height + surf.get_height()//2 - num_lines*font.height//2
                         pos = [x_pos, y_pos]
                     font.blit(chunk, surf, pos)
                     if self.position != 'center':
@@ -1672,7 +1672,7 @@ class Dialog(object):
         dialogue_position = self.topleft
         # Do we flip the tail?
         # unit's x _ position < halfway point of screen - half length of unit sprite
-        if unit_position[0] < GC.WINWIDTH/2 - 96/2: # On left side
+        if unit_position[0] < GC.WINWIDTH//2 - 96//2: # On left side
             mirror = True
         else:
             mirror = False
@@ -1698,7 +1698,7 @@ class Dialog(object):
             pos = (dialogue_position[0] - 4, dialogue_position[1] - 10)
             if pos[0] < 0:
                 pos = dialogue_position[0] + 16, pos[1]
-            position = (name_tag_surf.get_width()/2 - self.main_font.size(self.owner)[0]/2, name_tag_surf.get_height()/2 - self.main_font.size(self.owner)[1]/2)
+            position = (name_tag_surf.get_width()//2 - self.main_font.size(self.owner)[0]//2, name_tag_surf.get_height()//2 - self.main_font.size(self.owner)[1]//2)
             self.main_font.blit(self.owner, name_tag_surf, position)
             surf.blit(name_tag_surf, pos)
 
@@ -1748,7 +1748,7 @@ class Dialog(object):
             
         surf_pos = self.position
         if surf_pos == 'center':
-            self.topleft = (GC.WINWIDTH/2 - self.dlog_box.get_width()/2, GC.WINHEIGHT/2 - self.dlog_box.get_height()/2)
+            self.topleft = (GC.WINWIDTH//2 - self.dlog_box.get_width()//2, GC.WINHEIGHT//2 - self.dlog_box.get_height()//2)
         else:
             self.topleft = surf_pos
 
@@ -1819,7 +1819,7 @@ class Credits(object):
             for line in l:
                 text = ''.join(line)
                 if self.center:
-                    x_pos = GC.WINWIDTH/2 - self.main_font.size(text)[0]/2
+                    x_pos = GC.WINWIDTH//2 - self.main_font.size(text)[0]//2
                 else:
                     x_pos = 88
                 y_pos = self.main_font.height*index + self.title_font.height
@@ -1842,7 +1842,7 @@ class Credits(object):
             self.main_font.blit(text, self.surface, pos)
 
     def determine_wait(self):
-        time = (self.length + 2) * self.main_font.height / self.speed * 1000/GC.FPS
+        time = (self.length + 2) * self.main_font.height // self.speed * 1000//GC.FPS
         if self.wait:
             time += self.get_pause() * 2
         return time
@@ -1863,7 +1863,7 @@ class Credits(object):
             self.wait_flag = False
             self.position[1] -= self.speed
             self.last_update = current_time
-            if self.wait and GC.WINHEIGHT/2 - self.surface.get_height()/2 >= self.position[1]:
+            if self.wait and GC.WINHEIGHT//2 - self.surface.get_height()//2 >= self.position[1]:
                 self.wait_flag = True
                 self.wait = False
 
@@ -1906,7 +1906,7 @@ class EndingsDisplay(object):
         self.surface.blit(self.background, (0, 0))
         self.surface.blit(self.portrait, (128 + 8, GC.WINHEIGHT - 80 - 24 + 1))
 
-        title_pos_x = 68 - self.font.size(self.title)[0]/2
+        title_pos_x = 68 - self.font.size(self.title)[0]//2
         self.font.blit(self.title, self.surface, (title_pos_x, 24))
 
         # === Stats
@@ -2100,9 +2100,9 @@ class UnitPortrait(object):
 
         if self.transition:
             if self.transition == 'trans2color':
-                self.transition_transparency = 100 - (current_time - self.transition_last_update)/2 # 12 frames
+                self.transition_transparency = 100 - (current_time - self.transition_last_update)//2 # 12 frames
             elif self.transition == 'color2trans':
-                self.transition_transparency = (current_time - self.transition_last_update)/2 # 12 frames
+                self.transition_transparency = (current_time - self.transition_last_update)//2 # 12 frames
             if self.transition_transparency > 100 or self.transition_transparency < 0:
                 self.transition = 0
                 self.transition_transparency = max(0, min(100, self.transition_transparency))

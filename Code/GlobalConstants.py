@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 version = "0.7.4"
 # === GLOBAL cf.CONSTANTS ===========================================
 FPS = 60
-FRAMERATE = 1000/FPS
+FRAMERATE = 1000//FPS
 TILEY = 10
 TILEX = 15
 TILEWIDTH = 16

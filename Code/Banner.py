@@ -30,11 +30,11 @@ class Banner(object):
         BGSurf = self.surf.copy()
 
         # Center it
-        pos = surf.get_width()/2 - self.size[0]/2 - 2, surf.get_height()/2 - self.size[1]/2 - 4
+        pos = surf.get_width()//2 - self.size[0]//2 - 2, surf.get_height()//2 - self.size[1]//2 - 4
         # Blit words
         for index, word in enumerate(self.banner):
             word_width = GC.FONT[self.banner_font[index]].size(word)[0]
-            GC.FONT[self.banner_font[index]].blit(word, BGSurf, (self.write_index, self.size[1]/2 - self.font_height/2 + 4))
+            GC.FONT[self.banner_font[index]].blit(word, BGSurf, (self.write_index, self.size[1]//2 - self.font_height//2 + 4))
             self.write_index += word_width
         # Blit item icon
         if self.item:

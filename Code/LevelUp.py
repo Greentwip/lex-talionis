@@ -32,7 +32,7 @@ class levelUpScreen(object):
                 x, y = unit.position
                 topleft = (x-gameStateObj.cameraOffset.x-2)*GC.TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*GC.TILEHEIGHT
             else:
-                topleft = GC.WINWIDTH/2, GC.WINHEIGHT/2
+                topleft = GC.WINWIDTH//2, GC.WINHEIGHT//2
             timing = [1 for _ in xrange(24)] + [44]
             self.levelUpAnimation = CustomObjects.Animation(GC.IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True, set_timing=timing)
         self.statupanimation = GC.IMAGESDICT['StatUpSpark']
@@ -435,9 +435,9 @@ class levelUpScreen(object):
                         self.underline_offset -= 6
                         self.underline_offset = max(0, self.underline_offset)
                         if num >= 4:
-                            topleft = (76 + self.underline_offset/2, 45 + GC.TILEHEIGHT * (num - 4))
+                            topleft = (76 + self.underline_offset//2, 45 + GC.TILEHEIGHT * (num - 4))
                         else:
-                            topleft = (12 + self.underline_offset/2, 45 + GC.TILEHEIGHT * (num))
+                            topleft = (12 + self.underline_offset//2, 45 + GC.TILEHEIGHT * (num))
                     else:
                         if num >= 4:
                             topleft = (76, 45 + GC.TILEHEIGHT * (num - 4))
@@ -520,11 +520,11 @@ class Exp_Bar(object):
         self.bg_surf = self.create_bg_surf()
 
         if center:
-            self.pos = GC.WINWIDTH/2 - self.width/2, GC.WINHEIGHT/2 - self.height/2
+            self.pos = GC.WINWIDTH//2 - self.width//2, GC.WINHEIGHT//2 - self.height//2
         else:
-            self.pos = GC.WINWIDTH/2 - self.width/2, GC.WINHEIGHT - self.height
+            self.pos = GC.WINWIDTH//2 - self.width//2, GC.WINHEIGHT - self.height
 
-        self.sprite_offset = self.height/2
+        self.sprite_offset = self.height//2
         self.done = False
 
         self.num = expSet
@@ -544,7 +544,7 @@ class Exp_Bar(object):
     def update(self, expSet):
         if self.done:
             self.sprite_offset += 1
-            if self.sprite_offset >= self.height/2:
+            if self.sprite_offset >= self.height//2:
                 return True
         elif self.sprite_offset > 0:
             self.sprite_offset -= 1

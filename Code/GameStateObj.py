@@ -303,10 +303,10 @@ class GameStateObj(object):
             self.cameraOffset.set_x(0)
         if self.cameraOffset.y < 0:
             self.cameraOffset.set_y(0)
-        if self.cameraOffset.x > (self.map.width - GC.WINWIDTH/GC.TILEWIDTH): # Need this minus to account for size of screen
-            self.cameraOffset.set_x(self.map.width - GC.WINWIDTH/GC.TILEWIDTH)
-        if self.cameraOffset.y > (self.map.height - GC.WINHEIGHT/GC.TILEHEIGHT):
-            self.cameraOffset.set_y(self.map.height - GC.WINHEIGHT/GC.TILEHEIGHT)
+        if self.cameraOffset.x > (self.map.width - GC.TILEX): # Need this minus to account for size of screen
+            self.cameraOffset.set_x(self.map.width - GC.TILEX)
+        if self.cameraOffset.y > (self.map.height - GC.TILEY):
+            self.cameraOffset.set_y(self.map.height - GC.TILEY)
 
     def remove_fake_cursors(self):
         self.fake_cursors = []

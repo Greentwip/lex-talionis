@@ -78,7 +78,7 @@ class StatusObject(object):
     def draw_cooldown(self, surf, topleft, current, total):
         if total <= 0:
             return
-        index = int(current*8/total)
+        index = int(current*8//total)
         if index >= 8:
             pass
         else:
@@ -195,7 +195,7 @@ class AlwaysAnimationComponent(object):
 
     def loadSprites(self):
         self.sprite = GC.IMAGESDICT[self.animation_name]
-        self.image = Engine.subsurface(self.sprite, (0, 0, self.sprite.get_width()/self.x, self.sprite.get_height()/self.y))
+        self.image = Engine.subsurface(self.sprite, (0, 0, self.sprite.get_width()//self.x, self.sprite.get_height()//self.y))
 
 # === STATUS PROCESSOR =========================================================
 class Status_Processor(object):
@@ -445,9 +445,9 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     if status.rescue:
         # Rescue penalty
-        status.rescue.skl_penalty = -unit.stats['SKL'].base_stat/2
+        status.rescue.skl_penalty = -unit.stats['SKL'].base_stat//2
         unit.stats['SKL'].bonuses += status.rescue.skl_penalty
-        status.rescue.spd_penalty = -unit.stats['SPD'].base_stat/2
+        status.rescue.spd_penalty = -unit.stats['SPD'].base_stat//2
         unit.stats['SPD'].bonuses += status.rescue.spd_penalty
 
     if status.refresh:
@@ -687,8 +687,8 @@ def deserialize(s_dict, unit, gameStateObj):
         status.rescue.skl_penalty = int(s_dict['rescue'][0])
         status.rescue.spd_penalty = int(s_dict['rescue'][1])
     elif status.rescue:
-        status.rescue.skl_penalty = -unit.stats['SKL'].base_stat/2
-        status.rescue.spd_penalty = -unit.stats['SPD'].base_stat/2
+        status.rescue.skl_penalty = -unit.stats['SKL'].base_stat//2
+        status.rescue.spd_penalty = -unit.stats['SPD'].base_stat//2
     if status.passive:
         for item in unit.items:
             status.passive.apply_mod(item)

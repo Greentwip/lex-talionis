@@ -100,7 +100,7 @@ class AI(object):
 
         # Can do more than one pass through per frame if it doesn't take much time (half of a frame)
         logger.debug('AI Thinking...')
-        while Engine.get_true_time() - time1 < GC.FRAMERATE/2:
+        while Engine.get_true_time() - time1 < GC.FRAMERATE//2:
             logger.debug('Current State: %s', self.state)
 
             if self.state == 'Init':
@@ -400,8 +400,8 @@ class AI(object):
                 for unit in available_targets:
                     avg_position[0] += unit.position[0]
                     avg_position[1] += unit.position[1]
-                avg_position[0] = avg_position[0]/len(available_targets)
-                avg_position[1] = avg_position[1]/len(available_targets)
+                avg_position[0] = avg_position[0]//len(available_targets)
+                avg_position[1] = avg_position[1]//len(available_targets)
                 self.position_to_move_to = sorted(valid_moves, key=lambda move: Utility.calculate_distance(avg_position, move))[0]
                 return True
 """

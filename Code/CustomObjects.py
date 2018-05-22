@@ -61,7 +61,7 @@ class Cursor(object):
         if self.drawState or self.fake: # Only draws if cursor is on
             x, y = self.position
             # The space Rect is constructed like so so as to center the cursor sprite
-            topleft = x * GC.TILEWIDTH - max(0, (self.image.get_width() - 16)/2), y * GC.TILEHEIGHT - max(0, (self.image.get_height() - 16)/2)
+            topleft = x * GC.TILEWIDTH - max(0, (self.image.get_width() - 16)//2), y * GC.TILEHEIGHT - max(0, (self.image.get_height() - 16)//2)
             topleft = topleft[0] - self.spriteOffset[0], topleft[1] - self.spriteOffset[1]
             surf.blit(self.image, topleft)
             # Reset sprite offset afterwards
@@ -195,7 +195,7 @@ class Cursor(object):
                 gameStateObj.cameraOffset.set_x(gameStateObj.cameraOffset.x - 1)
         elif 'RIGHT' in directions and self.position[0] < (gameStateObj.map.width - 1):
             self.move((1, 0), gameStateObj)
-            if self.position[0] >= (GC.WINWIDTH/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
+            if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
                 gameStateObj.cameraOffset.set_x(gameStateObj.cameraOffset.x + 1)
         if 'UP' in directions and self.position[1] > 0:
             self.move((0, -1), gameStateObj)
@@ -203,7 +203,7 @@ class Cursor(object):
                 gameStateObj.cameraOffset.set_y(gameStateObj.cameraOffset.y - 1)
         elif 'DOWN' in directions and self.position[1] < (gameStateObj.map.height - 1):
             self.move((0, 1), gameStateObj)
-            if self.position[1] >= (GC.WINHEIGHT/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
+            if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
                 gameStateObj.cameraOffset.set_y(gameStateObj.cameraOffset.y + 1)
 
     def setPosition(self, newposition, gameStateObj):
@@ -214,12 +214,12 @@ class Cursor(object):
         # Recenter camera
         if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
             gameStateObj.cameraOffset.set_x(self.position[0] - 3) # Testing...
-        if self.position[0] >= (GC.WINWIDTH/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
-            gameStateObj.cameraOffset.set_x(self.position[0] + 4 - GC.WINWIDTH/GC.TILEWIDTH)
+        if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
+            gameStateObj.cameraOffset.set_x(self.position[0] + 4 - GC.TILEX)
         if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
             gameStateObj.cameraOffset.set_y(self.position[1] - 2)
-        if self.position[1] >= (GC.WINHEIGHT/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
-            gameStateObj.cameraOffset.set_y(self.position[1] + 3 - GC.WINHEIGHT/GC.TILEHEIGHT)
+        if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
+            gameStateObj.cameraOffset.set_y(self.position[1] + 3 - GC.TILEY)
         # Remove unit display
         self.remove_unit_display()
 
@@ -231,12 +231,12 @@ class Cursor(object):
         # Recenter camera
         if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
             gameStateObj.cameraOffset.force_x(self.position[0] - 3) # Testing...
-        if self.position[0] >= (GC.WINWIDTH/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
-            gameStateObj.cameraOffset.force_x(self.position[0] + 4 - GC.WINWIDTH/GC.TILEWIDTH)
+        if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
+            gameStateObj.cameraOffset.force_x(self.position[0] + 4 - GC.TILEX)
         if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
             gameStateObj.cameraOffset.force_y(self.position[1] - 2)
-        if self.position[1] >= (GC.WINHEIGHT/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
-            gameStateObj.cameraOffset.force_y(self.position[1] + 3 - GC.WINHEIGHT/GC.TILEHEIGHT)
+        if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
+            gameStateObj.cameraOffset.force_y(self.position[1] + 3 - GC.TILEY)
         # Remove unit display
         self.remove_unit_display()
 
@@ -304,15 +304,15 @@ class Cursor(object):
         # === Final blitting
         # Should be in topleft, unless cursor is in topleft, in which case it should be in bottomleft
         if self.unit_info_disp:
-            if self.position[1] < GC.TILEY/2 + gameStateObj.cameraOffset.get_y() and \
-                    not (self.position[0] > GC.TILEX/2 + gameStateObj.cameraOffset.get_x() - 1):
+            if self.position[1] < GC.TILEY//2 + gameStateObj.cameraOffset.get_y() and \
+                    not (self.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1):
                 surf.blit(self.unit_info_disp, (0 - self.unit_info_offset, GC.WINHEIGHT - 0 - self.unit_info_disp.get_height()))
             else:
                 surf.blit(self.unit_info_disp, (0 - self.unit_info_offset, 0))
 
         if self.tile_info_disp:
             # Should be in bottom, no matter what. Can be in bottomleft or bottomright, depending on where cursor is
-            if self.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1: # If cursor is right
+            if self.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1: # If cursor is right
                 if self.tile_left:
                     self.tile_left = False
                     self.tile_info_offset = self.tile_info_disp.get_width()
@@ -327,21 +327,21 @@ class Cursor(object):
         if self.obj_info_disp:
             # Should be in topright, unless the cursor is in the topright
             # TopRight - I believe this has RIGHT precedence
-            if self.position[1] < GC.TILEY/2 + gameStateObj.cameraOffset.get_y() and \
-                    gameStateObj.cursor.position[0] > GC.TILEX/2 + gameStateObj.cameraOffset.get_x() - 1:
+            if self.position[1] < GC.TILEY//2 + gameStateObj.cameraOffset.get_y() and \
+                    gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
                 # Gotta place in bottomright, because cursor is in topright
                 if self.obj_top:
                     self.obj_top = False
                     self.obj_info_offset = self.obj_info_disp.get_width()
-                pos = (GC.WINWIDTH - GC.TILEWIDTH/4 + self.obj_info_offset - self.obj_info_disp.get_width(), 
-                       GC.WINHEIGHT - GC.TILEHEIGHT/4 - self.obj_info_disp.get_height())
+                pos = (GC.WINWIDTH - GC.TILEWIDTH//4 + self.obj_info_offset - self.obj_info_disp.get_width(), 
+                       GC.WINHEIGHT - GC.TILEHEIGHT//4 - self.obj_info_disp.get_height())
                 surf.blit(self.obj_info_disp, pos) # Should be bottom right
             else:
                 # Place in topright
                 if not self.obj_top:
                     self.obj_top = True
                     self.obj_info_offset = self.obj_info_disp.get_width()
-                surf.blit(self.obj_info_disp, (GC.WINWIDTH - GC.TILEWIDTH/4 + self.obj_info_offset - self.obj_info_disp.get_width(), 1))
+                surf.blit(self.obj_info_disp, (GC.WINWIDTH - GC.TILEWIDTH//4 + self.obj_info_offset - self.obj_info_disp.get_width(), 1))
 
     def take_input(self, eventList, gameStateObj):
         if not self.fake:
@@ -361,7 +361,7 @@ class Cursor(object):
             if 'Formation' in gameStateObj.map.tile_info_dict[self.position]:
                 self.image = Engine.subsurface(self.formationsprite, (0, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
             else:
-                self.image = Engine.subsurface(self.formationsprite, (GC.CURSORSPRITECOUNTER.count/2*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
+                self.image = Engine.subsurface(self.formationsprite, (GC.CURSORSPRITECOUNTER.count//2*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
         elif self.drawState == 2 and gameStateObj.stateMachine.getState() != 'dialogue': # Red if it is selecting...
             self.image = Engine.subsurface(self.redsprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
         elif self.currentHoveredUnit and self.currentHoveredUnit.team == 'player' and not self.currentHoveredUnit.isDone():
@@ -692,8 +692,8 @@ class ArrowObject(object):
 
     def __init__(self, index, position):
         rindex, cindex = index
-        left = 1+((GC.TILEWIDTH+2)*cindex)+(1*int(cindex/2))
-        top = 1+((GC.TILEHEIGHT+2)*rindex)
+        left = 1 + ((GC.TILEWIDTH + 2)*cindex) + cindex//2
+        top = 1 + ((GC.TILEHEIGHT + 2)*rindex)
         self.image = Engine.subsurface(self.sprite, (left, top, GC.TILEWIDTH, GC.TILEHEIGHT))
         self.position = position
 
@@ -728,7 +728,7 @@ class Animation(object):
                 '%s %s'%(len(self.set_timing), len(self.total_num_frames))
         self.timing_count = -1
 
-        self.indiv_width, self.indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y
+        self.indiv_width, self.indiv_height = self.sprite.get_width()//self.frame_x, self.sprite.get_height()//self.frame_y
 
         self.image = Engine.subsurface(self.sprite, (0, 0, self.indiv_width, self.indiv_height))
 
@@ -773,12 +773,12 @@ class Animation(object):
                                 gameStateObj.allanimations.remove(self)
                             return True
                     if self.frameCount >= 0:
-                        rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, 
+                        rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount//self.frame_x * self.indiv_height, 
                                 self.indiv_width, self.indiv_height)
                         self.image = Engine.subsurface(self.sprite, rect)
             # Otherwise
             elif currentTime - self.lastUpdate > self.animation_speed:
-                self.frameCount += int((currentTime - self.lastUpdate)/self.animation_speed) # 1
+                self.frameCount += int((currentTime - self.lastUpdate)//self.animation_speed) # 1
                 self.lastUpdate = currentTime
                 if self.frameCount >= self.total_num_frames:
                     if self.loop: # Reset framecount
@@ -790,7 +790,7 @@ class Animation(object):
                             gameStateObj.allanimations.remove(self)
                         return True
                 if self.frameCount >= 0:
-                    rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, 
+                    rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount//self.frame_x * self.indiv_height, 
                             self.indiv_width, self.indiv_height)
                     self.image = Engine.subsurface(self.sprite, rect)
 
@@ -844,7 +844,7 @@ class PhaseIn(object):
         self.spritename = spritename
         self.loadSprites()
         self.display_time = display_time
-        self.topleft = ((GC.WINWIDTH - self.image.get_width())/2, (GC.WINHEIGHT - self.image.get_height())/2)
+        self.topleft = ((GC.WINWIDTH - self.image.get_width())//2, (GC.WINHEIGHT - self.image.get_height())//2)
         self.start_time = None # Don't define it here. Define it at first update
 
     def loadSprites(self):
@@ -901,20 +901,21 @@ class PhaseIn(object):
         
         # === Handle the transition
         most_dark_surf = Engine.subsurface(self.transition, (8*self.transition_size[0], 0, self.transition_size[0], self.transition_size[1])).copy()
+        half_display_time = self.display_time//2
         # If we're in the first half
-        if time_passed < self.display_time/2:
-            transition_space = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT/2 - 75/2 + time_passed/(self.display_time/2/20)), transparent=True)
+        if time_passed < half_display_time:
+            transition_space = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT//2 - 75//2 + time_passed//(half_display_time//20)), transparent=True)
             # Make more transparent based on time.
-            alpha = int(max_opaque * time_passed/float(self.display_time/2))
+            alpha = int(max_opaque * time_passed/float(half_display_time))
             Engine.fill(most_dark_surf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
         # If we're in the second half
         else:
             # Clamp time_passed at display time
             time_passed = min(self.display_time, time_passed)
-            pos = (GC.WINWIDTH, GC.WINHEIGHT/2 - 75/2 + 40/2 - (time_passed - self.display_time/2)/(self.display_time/2/20))
+            pos = (GC.WINWIDTH, GC.WINHEIGHT//2 - 75//2 + 40//2 - (time_passed - half_display_time)//(half_display_time//20))
             transition_space = Engine.create_surface(pos, transparent=True)
             # Make less transparent based on time.
-            alpha = int(max_opaque - max_opaque*(time_passed - self.display_time/2)/float(self.display_time/2))
+            alpha = int(max_opaque - max_opaque*(time_passed - half_display_time)/float(half_display_time))
             alpha = min(255, max(0, alpha))
             Engine.fill(most_dark_surf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
         # transition_space.convert_alpha()
@@ -1211,8 +1212,8 @@ class CameraOffset(object):
         min_y = min(y1, y2)
 
         if self.x > min_x - 4 or self.x + GC.TILEX < max_x + 4 or self.y > min_y - 3 or self.y + GC.TILEY < max_y + 3:
-            self.x = (max_x + min_x)/2 - GC.TILEX/2
-            self.y = (max_y + min_y)/2 - GC.TILEY/2
+            self.x = (max_x + min_x)//2 - GC.TILEX//2
+            self.y = (max_y + min_y)//2 - GC.TILEY//2
         
         # logger.debug('New Camera: %s %s', self.x, self.y)
 
@@ -1236,14 +1237,14 @@ class CameraOffset(object):
         gameStateObj.set_camera_limits()
         if self.current_x != self.x:
             if self.current_x > self.x:
-                self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)/self.speed
+                self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)//self.speed
             elif self.current_x < self.x:
-                self.current_x += 0.125 if self.pan_flag else (self.x - self.current_x)/self.speed
+                self.current_x += 0.125 if self.pan_flag else (self.x - self.current_x)//self.speed
         if self.current_y != self.y:
             if self.current_y > self.y:
-                self.current_y -= 0.125 if self.pan_flag else (self.current_y - self.y)/self.speed
+                self.current_y -= 0.125 if self.pan_flag else (self.current_y - self.y)//self.speed
             elif self.current_y < self.y:
-                self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)/self.speed
+                self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)//self.speed
         # If they are close enough, make them so.
         if abs(self.current_x - self.x) < 0.125:
             self.current_x = self.x
@@ -1371,13 +1372,13 @@ class Objective(object):
             self.BGSurf = Engine.create_surface((BGSurf.get_width(), BGSurf.get_height() + 3), transparent=True, convert=True)
             self.BGSurf.blit(BGSurf, (0, 3))
             gem = GC.IMAGESDICT['BlueCombatGem']
-            self.BGSurf.blit(gem, (BGSurf.get_width()/2 - gem.get_width()/2, 0))
+            self.BGSurf.blit(gem, (BGSurf.get_width()//2 - gem.get_width()//2, 0))
             # Now make translucent
             self.BGSurf = Image_Modification.flickerImageTranslucent(self.BGSurf, 20)
 
         temp_surf = self.BGSurf.copy()
         for index, line in enumerate(text_lines):
-            position = temp_surf.get_width()/2 - GC.FONT['text_white'].size(line)[0]/2, 16 * index + 6
+            position = temp_surf.get_width()//2 - GC.FONT['text_white'].size(line)[0]//2, 16 * index + 6
             GC.FONT['text_white'].blit(line, temp_surf, position)
 
         return temp_surf

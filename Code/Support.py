@@ -99,7 +99,7 @@ class Support_Graph(object):
         if unit_name in self.node_dict:
             node = self.node_dict[unit_name]
             for name, edge in node.adjacent.iteritems():
-                support_level = edge.current_value/cf.CONSTANTS['support_points']
+                support_level = edge.current_value//cf.CONSTANTS['support_points']
                 affinity = self.node_dict[name].affinity
                 supports.append((name, affinity, support_level))
         return supports

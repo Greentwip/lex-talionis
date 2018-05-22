@@ -157,7 +157,7 @@ class MoneyCounterDisplay(object):
             # Fade in and move up
             if self.update_num > 0:
                 my_surf = Image_Modification.flickerImageTranslucent(self.surf, self.update_num)
-                surf.blit(my_surf, (self.topright[0] - self.width, self.topright[1] + self.update_num/5))
+                surf.blit(my_surf, (self.topright[0] - self.width, self.topright[1] + self.update_num//5))
             # Fade out
             else: 
                 if self.update_num < -100:
@@ -188,7 +188,7 @@ class StatusMenu(StateMachine.State):
         name_size = (big_font.size(metaDataObj['name'])[0] + 1, big_font.height)
         name_surf = Engine.create_surface(name_size, transparent=True, convert=True)
         big_font.blit(metaDataObj['name'], name_surf, (0, 0))
-        pos = (24 + name_back_surf.get_width()/2 - name_surf.get_width()/2, 2 + name_back_surf.get_height()/2 - name_surf.get_height()/2)
+        pos = (24 + name_back_surf.get_width()//2 - name_surf.get_width()//2, 2 + name_back_surf.get_height()//2 - name_surf.get_height()//2)
         surfaces.append((name_surf, pos))                    
         # Background
         back_surf = CreateBaseMenuSurf((GC.WINWIDTH - 8, 24), 'WhiteMenuBackgroundOpaque')
@@ -200,23 +200,23 @@ class StatusMenu(StateMachine.State):
         surfaces.append((turn_surf, (10, 42)))
         # Get Funds
         funds_surf = Engine.subsurface(golden_words_surf, (0, 33, 32, 10))
-        surfaces.append((funds_surf, (GC.WINWIDTH/3 - 8, 42)))
+        surfaces.append((funds_surf, (GC.WINWIDTH//3 - 8, 42)))
         # Get PlayTime
         playtime_surf = Engine.subsurface(golden_words_surf, (32, 15, 17, 13))
-        surfaces.append((playtime_surf, (2*GC.WINWIDTH/3 + 6, 39)))
+        surfaces.append((playtime_surf, (2*GC.WINWIDTH//3 + 6, 39)))
         # Get G
         g_surf = Engine.subsurface(golden_words_surf, (40, 50, 9, 9))
-        surfaces.append((g_surf, (2*GC.WINWIDTH/3 - 8 - 1, 43)))
+        surfaces.append((g_surf, (2*GC.WINWIDTH//3 - 8 - 1, 43)))
         # TurnCountSurf
         turn_count_size = (GC.FONT['text_blue'].size(str(gameStateObj.turncount))[0] + 1, GC.FONT['text_blue'].height)
         turn_count_surf = Engine.create_surface(turn_count_size, transparent=True, convert=True)
         GC.FONT['text_blue'].blit(str(gameStateObj.turncount), turn_count_surf, (0, 0))
-        surfaces.append((turn_count_surf, (GC.WINWIDTH/3 - 16 - turn_count_surf.get_width(), 38)))                    
+        surfaces.append((turn_count_surf, (GC.WINWIDTH//3 - 16 - turn_count_surf.get_width(), 38)))                    
         # MoneySurf
         money_size = (GC.FONT['text_blue'].size(str(gameStateObj.game_constants['money']))[0] + 1, GC.FONT['text_blue'].height)
         money_surf = Engine.create_surface(money_size, transparent=True, convert=True)
         GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), money_surf, (0, 0))
-        surfaces.append((money_surf, (2*GC.WINWIDTH/3 - 8 - 4 - money_surf.get_width(), 38)))
+        surfaces.append((money_surf, (2*GC.WINWIDTH//3 - 8 - 4 - money_surf.get_width(), 38)))
 
         # Get win and loss conditions
         win_cons, win_connectives = gameStateObj.objective.get_win_conditions(gameStateObj)
@@ -256,8 +256,8 @@ class StatusMenu(StateMachine.State):
         # Playtime
         time = datetime.timedelta(milliseconds=gameStateObj.playtime)
         seconds = int(time.total_seconds())
-        hours = min(seconds/3600, 99)
-        minutes = str((seconds%3600)/60)
+        hours = min(seconds//3600, 99)
+        minutes = str((seconds%3600)//60)
         if len(minutes) < 2:
             minutes = '0' + minutes
         seconds = str(seconds%60)
@@ -279,10 +279,10 @@ def CreateBaseMenuSurf((width, height), baseimage='BaseMenuBackground', top_left
     mBSHeight = menuBaseSprite.get_height()
 
     # Force the width and height to be correct!
-    full_width = width - width%(mBSWidth/3)
-    full_height = height - height%(mBSHeight/3)
-    width = mBSWidth/3
-    height = mBSHeight/3
+    full_width = width - width%(mBSWidth//3)
+    full_height = height - height%(mBSHeight//3)
+    width = mBSWidth//3
+    height = mBSHeight//3
 
     assert full_width%(width) == 0, "The dimensions of the menu are wrong - the sprites will not line up correctly. They must be multiples of 8. %s" %(width)
     assert full_height%(height) == 0, "The dimensions of the manu are wrong - the sprites will not line up correctly. They must be multiples of 8. %s" %(height)
@@ -302,25 +302,25 @@ def CreateBaseMenuSurf((width, height), baseimage='BaseMenuBackground', top_left
     MainMenuSurface = Engine.create_surface((full_width, full_height), transparent=True, convert=True)
 
     # Blit Center sprite
-    for positionx in range(full_width/width - 2):
-        for positiony in range(full_height/height - 2):
+    for positionx in range(full_width//width - 2):
+        for positiony in range(full_height//height - 2):
             topleft = ((positionx+1)*width, (positiony+1)*height)
             MainMenuSurface.blit(CenterSurf, topleft)
 
     # Blit Edges
-    for position in range(full_width/width - 2): # For each position in which this would fit
+    for position in range(full_width//width - 2): # For each position in which this would fit
         topleft = ((position+1)*width, 0)
         MainMenuSurface.blit(TopSurf, topleft)
     # --
-    for position in range(full_width/width - 2):
+    for position in range(full_width//width - 2):
         topleft = ((position+1)*width, full_height - height)
         MainMenuSurface.blit(BottomSurf, topleft)
     # --
-    for position in range(full_height/height - 2):
+    for position in range(full_height//height - 2):
         topleft = (0, (position+1)*height)
         MainMenuSurface.blit(LeftSurf, topleft)
     # --
-    for position in range(full_height/height - 2):
+    for position in range(full_height//height - 2):
         topleft = (full_width - width, (position+1)*height)
         MainMenuSurface.blit(RightSurf, topleft)
 
@@ -352,7 +352,7 @@ class Lore_Display(object):
             current_image = Image_Modification.flickerImageTranslucentColorKey(current_image, 50)
             self.image.blit(current_image, (self.menu_width - 96, GC.WINHEIGHT - 8 - 80 - 4))
 
-        GC.FONT['text_yellow'].blit(entry['long_name'], self.image, (self.menu_width/2 - GC.FONT['text_yellow'].size(entry['long_name'])[0]/2, 4))
+        GC.FONT['text_yellow'].blit(entry['long_name'], self.image, (self.menu_width//2 - GC.FONT['text_yellow'].size(entry['long_name'])[0]//2, 4))
 
         output_lines = line_wrap(line_chunk(entry['desc']), self.menu_width - 12, GC.FONT['text_white'])
         if entry['type'] == cf.WORDS['Character']:
@@ -492,7 +492,7 @@ class SimpleMenu(Counters.CursorControl):
     def draw_highlight(self, surf, index):
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
-        for slot in range((self.menu_width - 10)/width): # Gives me the amount of highlight needed
+        for slot in range((self.menu_width - 10)//width): # Gives me the amount of highlight needed
             topleft = (self.topleft[0] + 5 + slot*width, self.topleft[1] + 12 + index*16 + 1)
             surf.blit(highlightSurf, topleft)
 
@@ -558,17 +558,17 @@ class ChoiceMenu(SimpleMenu):
 
     def get_topleft(self, gameStateObj):
         if self.topleft == 'auto':
-            if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+            if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
                 self.topleft = (8, 8)
             else:
                 self.topleft = (GC.WINWIDTH - self.menu_width - 8, 8)
         elif self.topleft == 'child':
-            if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+            if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
                 self.topleft = (8 + gameStateObj.activeMenu.menu_width - 32, gameStateObj.activeMenu.currentSelection*16 + 8)
             else:
                 self.topleft = (GC.WINWIDTH - 32 - 8 - gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.currentSelection*16 + 8)
         elif self.topleft == 'center':
-            self.topleft = (GC.WINWIDTH/2 - self.menu_width/2, GC.WINHEIGHT/2 - (len(self.options)*16)/2)
+            self.topleft = (GC.WINWIDTH//2 - self.menu_width//2, GC.WINHEIGHT//2 - (len(self.options)*16)//2)
 
     def toggle_info(self):
         self.info_flag = not self.info_flag
@@ -640,7 +640,7 @@ class ChoiceMenu(SimpleMenu):
             else:
                 return
 
-            if self.topleft[0] < GC.WINWIDTH/2:
+            if self.topleft[0] < GC.WINWIDTH//2:
                 surf.blit(help_box, (self.topleft[0], self.topleft[1] + 20 + 16*self.currentSelection))
             else:
                 surf.blit(help_box, (self.topleft[0] + self.menu_width - help_box.get_width(), self.topleft[1] + 20 + 16*self.currentSelection))
@@ -649,8 +649,8 @@ class ChoiceMenu(SimpleMenu):
         face_image = self.owner.bigportrait.copy()
         face_image = Engine.flip_horiz(face_image)
         face_image = Image_Modification.flickerImageTranslucentColorKey(face_image, 50)
-        left = self.topleft[0] + self.bg_surf.get_width()/2 - face_image.get_width()/2
-        top = self.topleft[1] + self.bg_surf.get_height()/2 - face_image.get_height()/2 - 3
+        left = self.topleft[0] + self.bg_surf.get_width()//2 - face_image.get_width()//2
+        top = self.topleft[1] + self.bg_surf.get_height()//2 - face_image.get_height()//2 - 3
         surf.blit(face_image, (left, top))
 
     def vert_draw(self, surf):
@@ -793,7 +793,7 @@ class ComplexMenu(SimpleMenu):
         return (longest_width_needed - longest_width_needed%8 + 16)
 
     def moveUp(self, first_push=True):
-        split_num = len(self.options)/2
+        split_num = len(self.options)//2
         if self.currentSelection < split_num and self.currentSelection > 0:
             next_selection = self.currentSelection - 1
             while not self.isIndexValid(next_selection):
@@ -810,7 +810,7 @@ class ComplexMenu(SimpleMenu):
             self.currentSelection = next_selection
 
     def moveDown(self, first_push=True):
-        split_num = len(self.options)/2
+        split_num = len(self.options)//2
         if self.currentSelection < split_num - 1:
             next_selection = self.currentSelection + 1
             while not self.isIndexValid(next_selection):
@@ -827,7 +827,7 @@ class ComplexMenu(SimpleMenu):
             self.currentSelection = next_selection
 
     def moveRight(self, first_push=True):
-        split_num = len(self.options)/2
+        split_num = len(self.options)//2
         if self.currentSelection < split_num:
             next_selection = self.currentSelection + split_num
             valid_indices = [index for index in range(split_num, len(self.options)) if self.isIndexValid(index)]
@@ -835,7 +835,7 @@ class ComplexMenu(SimpleMenu):
                 self.currentSelection = min(valid_indices, key=lambda x: abs(x-next_selection))
 
     def moveLeft(self, first_push=True):
-        split_num = len(self.options)/2
+        split_num = len(self.options)//2
         if self.currentSelection > split_num - 1:
             next_selection = self.currentSelection - split_num
             valid_indices = [index for index in range(0, split_num) if self.isIndexValid(index)]
@@ -843,27 +843,27 @@ class ComplexMenu(SimpleMenu):
                 self.currentSelection = min(valid_indices, key=lambda x: abs(x-next_selection))
 
     def draw_cursor(self, surf, index):
-        split_num = len(self.options)/2
-        x_position = self.topleft[0] - 12 + (index/split_num)*self.menu_width + self.cursorAnim[self.cursorCounter]
+        split_num = len(self.options)//2
+        x_position = self.topleft[0] - 12 + (index//split_num)*self.menu_width + self.cursorAnim[self.cursorCounter]
         y_position = self.topleft[1] + 8 + (index%split_num)*16
         surf.blit(self.cursor, (x_position, y_position))
 
     def draw_highlight(self, surf, index):
-        split_num = len(self.options)/2
+        split_num = len(self.options)//2
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
-        for slot in range((self.menu_width - 16)/width): # Gives me the amount of highlight needed
-            x_position = 8 + (index/split_num)*self.menu_width + slot*width
+        for slot in range((self.menu_width - 16)//width): # Gives me the amount of highlight needed
+            x_position = 8 + (index//split_num)*self.menu_width + slot*width
             y_position = 12 + (index%split_num)*16
             surf.blit(highlightSurf, (x_position, y_position))
 
     def draw(self, surf):
-        split_num = len(self.options)/2
+        split_num = len(self.options)//2
         BGSurf = CreateBaseMenuSurf((self.menu_width*2, 16*split_num+8), self.background)
         self.draw_highlight(BGSurf, self.currentSelection)
 
         for index, option in enumerate(self.options):
-            position = 4+(index/split_num)*self.menu_width, 4 + index%split_num*16
+            position = 4+(index//split_num)*self.menu_width, 4 + index%split_num*16
             # Draw icon if possible
             if hasattr(option, 'draw'):
                 option.draw(BGSurf, position)
@@ -902,7 +902,7 @@ class FeatChoiceMenu(ComplexMenu):
     def __init__(self, owner, options):
         self.options = options
         menu_width = self.getMenuWidth()
-        ComplexMenu.__init__(self, owner, options, (GC.WINWIDTH/2 - menu_width, GC.WINHEIGHT - len(options)/2*16 - 8), 'BaseMenuBackground')
+        ComplexMenu.__init__(self, owner, options, (GC.WINWIDTH//2 - menu_width, GC.WINHEIGHT - len(options)//2*16 - 8), 'BaseMenuBackground')
 
     def isIndexValid(self, index):
         return not self.options[index].id in [status.id for status in self.owner.status_effects]
@@ -923,7 +923,7 @@ class FeatChoiceMenu(ComplexMenu):
 
     # Draw face
     def draw_face(self, surf):
-        face_position_x = self.topleft[0] + self.menu_width - self.owner.bigportrait.get_width()/2
+        face_position_x = self.topleft[0] + self.menu_width - self.owner.bigportrait.get_width()//2
         face_position_y = self.topleft[1] - self.owner.bigportrait.get_height() + 8
         face_image = Engine.subsurface(self.owner.bigportrait, (0, 0, self.owner.bigportrait.get_width(), self.owner.bigportrait.get_height() - 8))
         surf.blit(face_image, (face_position_x, face_position_y))
@@ -933,7 +933,7 @@ class FeatChoiceMenu(ComplexMenu):
         width = GC.FONT['text_white'].size(label)[0]
         menu_width = width - width%8 + 16
         bg_surf = CreateBaseMenuSurf((menu_width, 24))
-        GC.FONT['text_white'].blit(label, bg_surf, (menu_width/2 - width/2, 4))
+        GC.FONT['text_white'].blit(label, bg_surf, (menu_width//2 - width//2, 4))
         surf.blit(bg_surf, (0, 0))
 
 class ModeSelectMenu(SimpleMenu):
@@ -1002,7 +1002,7 @@ class ModeSelectMenu(SimpleMenu):
                 font = GC.FONT['chapter_black']
             width = background.get_width()
             surf.blit(background, (left, top+index*32))
-            font.blit(option, surf, (left + width/2 - font.size(option)[0]/2, top+4+index*32))
+            font.blit(option, surf, (left + width//2 - font.size(option)[0]//2, top+4+index*32))
 
         # Draw cursor
         height = top - 16 + self.currentSelection*32 + self.cursorAnim[self.cursorCounter] + self.cursor_y_offset*16
@@ -1082,7 +1082,7 @@ class SupportMenu(object):
             affinity = gameStateObj.support.node_dict[name].affinity
             edge = gameStateObj.support.node_dict[self.owner.name].adjacent[name]
             limit = edge.limit
-            support_level = edge.current_value/cf.CONSTANTS['support_points'] # 0, 1, 2, 3
+            support_level = edge.current_value//cf.CONSTANTS['support_points'] # 0, 1, 2, 3
             self.options.append((name, unit_sprite, affinity, support_level, limit))
 
         self.currentSelection = 0
@@ -1152,7 +1152,7 @@ class MainMenu(object):
         self.cursorAnim = [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]
         self.lastUpdate = Engine.get_time()
 
-    def draw(self, surf, center=(GC.WINWIDTH/2, GC.WINHEIGHT/2), flicker=False, show_cursor=True):
+    def draw(self, surf, center=(GC.WINWIDTH//2, GC.WINHEIGHT//2), flicker=False, show_cursor=True):
         for index, option in enumerate(self.options):
             if flicker and self.currentSelection == index: # If the selection should flash white
                 BGSurf = GC.IMAGESDICT[self.background + 'Flicker']
@@ -1161,10 +1161,10 @@ class MainMenu(object):
             else:
                 BGSurf = GC.IMAGESDICT[self.background]
             top = center[1] - (len(self.options)/2.0 - index)*(self.menu_height+1) + (20 if self.background == 'ChapterSelect' else 0) # What is this formula?
-            left = center[0] - BGSurf.get_width()/2
+            left = center[0] - BGSurf.get_width()//2
             surf.blit(BGSurf, (left, top))
          
-            position = (center[0] - GC.BASICFONT.size(str(option))[0]/2, top + BGSurf.get_height()/2 - GC.BASICFONT.size(str(option))[1]/2)
+            position = (center[0] - GC.BASICFONT.size(str(option))[0]//2, top + BGSurf.get_height()//2 - GC.BASICFONT.size(str(option))[1]//2)
             color_transition = Image_Modification.color_transition(GC.COLORDICT['light_blue'], GC.COLORDICT['off_black'])
             OutlineFont(GC.BASICFONT, str(option), surf, GC.COLORDICT['off_white'], color_transition, position)
   
@@ -1173,8 +1173,8 @@ class MainMenu(object):
             if self.background == 'ChapterSelect':
                 height += 22 
             
-            surf.blit(self.cursor1, (center[0] - self.menu_width/2 - self.cursor1.get_width()/2 - 8, height))
-            surf.blit(self.cursor2, (center[0] + self.menu_width/2 - self.cursor2.get_width()/2 + 8, height))
+            surf.blit(self.cursor1, (center[0] - self.menu_width//2 - self.cursor1.get_width()//2 - 8, height))
+            surf.blit(self.cursor2, (center[0] + self.menu_width//2 - self.cursor2.get_width()//2 + 8, height))
 
     def getSelection(self):
         return self.options[self.currentSelection]
@@ -1228,7 +1228,7 @@ class ChapterSelectMenu(MainMenu):
             elif self.rel_pos_y < 0:
                 self.rel_pos_y += 2
 
-    def draw(self, surf, center=(GC.WINWIDTH/2, GC.WINHEIGHT/2), flicker=False, show_cursor=True):
+    def draw(self, surf, center=(GC.WINWIDTH//2, GC.WINHEIGHT//2), flicker=False, show_cursor=True):
         try:
             check = center[1]
         except TypeError:
@@ -1246,25 +1246,25 @@ class ChapterSelectMenu(MainMenu):
             if self.use_rel_y:
                 top = center[1] + diff*(self.menu_height+1) + self.rel_pos_y
             else:
-                top = center[1] + index*(self.menu_height+1) - (len(self.options)-1)*self.menu_height/2 - 4
+                top = center[1] + index*(self.menu_height+1) - (len(self.options)-1)*self.menu_height//2 - 4
             # Text
-            position = (BGSurf.get_width()/2 - GC.BASICFONT.size(str(option))[0]/2, BGSurf.get_height()/2 - GC.BASICFONT.size(str(option))[1]/2)
+            position = (BGSurf.get_width()//2 - GC.BASICFONT.size(str(option))[0]//2, BGSurf.get_height()//2 - GC.BASICFONT.size(str(option))[1]//2)
             color_transition = Image_Modification.color_transition(GC.COLORDICT['light_blue'], GC.COLORDICT['off_black'])
             OutlineFont(GC.BASICFONT, str(option), BGSurf, GC.COLORDICT['off_white'], color_transition, position)
             # Transparency
             if self.use_transparency:
                 BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, abs(diff)*30)
-            surf.blit(BGSurf, (center[0] - BGSurf.get_width()/2, top))
+            surf.blit(BGSurf, (center[0] - BGSurf.get_width()//2, top))
          
         if show_cursor:
             center_y = center[1] - 12 + self.cursorAnim[self.cursorCounter]
             if self.use_rel_y:
                 height = center_y + self.rel_pos_y
             else:
-                height = center_y + self.currentSelection*(self.menu_height+1) - (len(self.options)-1)*self.menu_height/2 - 4
+                height = center_y + self.currentSelection*(self.menu_height+1) - (len(self.options)-1)*self.menu_height//2 - 4
             
-            surf.blit(self.cursor1, (center[0] - self.menu_width/2 - self.cursor1.get_width()/2 - 8, height))
-            surf.blit(self.cursor2, (center[0] + self.menu_width/2 - self.cursor2.get_width()/2 + 8, height))
+            surf.blit(self.cursor1, (center[0] - self.menu_width//2 - self.cursor1.get_width()//2 - 8, height))
+            surf.blit(self.cursor2, (center[0] + self.menu_width//2 - self.cursor2.get_width()//2 + 8, height))
 
 class BattleSaveMenu(Counters.CursorControl):
     def __init__(self):
@@ -1273,7 +1273,7 @@ class BattleSaveMenu(Counters.CursorControl):
         self.font = GC.FONT['text_white']
 
         self.BGSurf = CreateBaseMenuSurf(self.get_menu_size())
-        self.topleft = GC.WINWIDTH/2 - self.BGSurf.get_width()/2, GC.WINHEIGHT/2 - self.BGSurf.get_height()/2
+        self.topleft = GC.WINWIDTH//2 - self.BGSurf.get_width()//2, GC.WINHEIGHT//2 - self.BGSurf.get_height()//2
 
         self.currentSelection = 0
 
@@ -1301,16 +1301,16 @@ class BattleSaveMenu(Counters.CursorControl):
     def draw(self, surf):
         bg_surf = self.BGSurf.copy()
         # blit first line
-        self.font.blit(self.text, bg_surf, (bg_surf.get_width()/2 - self.font.size(self.text)[0]/2, 4))
+        self.font.blit(self.text, bg_surf, (bg_surf.get_width()//2 - self.font.size(self.text)[0]//2, 4))
 
         # blit background highlight
         options = '    '.join(self.options)
         option_width = self.font.size(options)[0]
-        center = bg_surf.get_width()/2 - option_width/2
+        center = bg_surf.get_width()//2 - option_width//2
 
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
-        for slot in range(((GC.FONT['text_white'].size(self.options[self.currentSelection]))[0] + 8)/width):
+        for slot in range(((GC.FONT['text_white'].size(self.options[self.currentSelection]))[0] + 8)//width):
             if self.currentSelection:
                 option_left = GC.FONT['text_white'].size('Yes' + '    ')[0] + center
             else:
@@ -1390,7 +1390,7 @@ class UnitSelectMenu(Counters.CursorControl):
             self.cursor_y_offset = -1
         if len(self.options) > self.units_per_row*self.num_rows and self.scroll <= self.currentSelection - self.units_per_row*(self.num_rows-1):
             self.scroll += 1
-            self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options)/self.units_per_row - self.num_rows + 1))
+            self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options)//self.units_per_row - self.num_rows + 1))
 
     def moveUp(self, first_push=True):
         self.currentSelection -= self.units_per_row
@@ -1422,16 +1422,16 @@ class UnitSelectMenu(Counters.CursorControl):
         if self.highlight:
             highlightSurf = GC.IMAGESDICT['MenuHighlight']
             width = highlightSurf.get_width()
-            for slot in range((self.option_length-20)/width): # Gives me the amount of highlight needed
+            for slot in range((self.option_length-20)//width): # Gives me the amount of highlight needed
                 left = self.topleft[0] + 20 + self.currentSelection%self.units_per_row*self.option_length + slot*width 
-                top = self.topleft[1] + (self.currentSelection-self.scroll*self.units_per_row)/self.units_per_row*self.option_height + 12
+                top = self.topleft[1] + (self.currentSelection-self.scroll*self.units_per_row)//self.units_per_row*self.option_height + 12
                 surf.blit(highlightSurf, (left, top))
         if self.draw_extra_marker:
             self.draw_extra_highlight(surf)
 
         s_size = self.units_per_row*self.num_rows
         for index, unit in enumerate(self.options[self.scroll*self.units_per_row:s_size+self.scroll*self.units_per_row]):
-            top = index/self.units_per_row
+            top = index//self.units_per_row
             left = index%self.units_per_row
 
             # Blit passive sprite
@@ -1452,14 +1452,14 @@ class UnitSelectMenu(Counters.CursorControl):
 
         # Blit cursor
         left = self.topleft[0] + 8 + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
-        top = self.topleft[1] + 4 + (self.currentSelection-self.scroll*self.units_per_row)/self.units_per_row*self.option_height + self.cursor_y_offset*8
+        top = self.topleft[1] + 4 + (self.currentSelection-self.scroll*self.units_per_row)//self.units_per_row*self.option_height + self.cursor_y_offset*8
         self.cursor_y_offset = 0 # Reset
         surf.blit(self.cursor, (left, top))
         if self.draw_extra_marker:
             self.draw_extra_cursor(surf)
 
         if len(self.options) > self.units_per_row*self.num_rows:
-            self.scroll_bar.draw(surf, self.scroll, self.num_rows, len(self.options)/self.units_per_row + 1)
+            self.scroll_bar.draw(surf, self.scroll, self.num_rows, len(self.options)//self.units_per_row + 1)
 
     def set_extra_marker(self, selection):
         self.draw_extra_marker = selection
@@ -1470,16 +1470,16 @@ class UnitSelectMenu(Counters.CursorControl):
             selection = self.draw_extra_marker
             highlightSurf = GC.IMAGESDICT['MenuHighlight']
             width = highlightSurf.get_width()
-            for slot in range((self.option_length-20)/width): # Gives me the amount of highlight needed
+            for slot in range((self.option_length-20)//width): # Gives me the amount of highlight needed
                 left = self.topleft[0] + 20 + selection%self.units_per_row*self.option_length + slot*width 
-                top = self.topleft[1] + (selection-self.scroll)/self.units_per_row*self.option_height + 12
+                top = self.topleft[1] + (selection-self.scroll)//self.units_per_row*self.option_height + 12
                 surf.blit(highlightSurf, (left, top))
 
     def draw_extra_cursor(self, surf):
         # Blit cursor
         selection = self.draw_extra_marker
         left = self.topleft[0] - 8 + selection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
-        top = self.topleft[1] + 4 + (selection-self.scroll)/self.units_per_row*self.option_height
+        top = self.topleft[1] + 4 + (selection-self.scroll)//self.units_per_row*self.option_height
         surf.blit(self.cursor, (left, top))
 
 def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, include_face=False, right=True, shimmer=0):
@@ -1487,7 +1487,7 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
         white_backSurf = GC.IMAGESDICT['PrepTop']
         surf.blit(white_backSurf, (topleft[0] - 6, topleft[1] - white_backSurf.get_height()))
         surf.blit(unit.portrait, (topleft[0] + 3, topleft[1] - 35))
-        GC.FONT['text_white'].blit(unit.name, surf, (topleft[0] + 68 - GC.FONT['text_white'].size(unit.name)[0]/2, topleft[1] - 40 + 5))
+        GC.FONT['text_white'].blit(unit.name, surf, (topleft[0] + 68 - GC.FONT['text_white'].size(unit.name)[0]//2, topleft[1] - 40 + 5))
         # GC.FONT['text_yellow'].blit('<>', surf, (topleft[0] + 37, topleft[1] - 20))
         # GC.FONT['text_yellow'].blit('$', surf, (topleft[0] + 69, topleft[1] - 20))
         GC.FONT['text_blue'].blit(str(unit.level), surf, (topleft[0] + 72 - GC.FONT['text_blue'].size(str(unit.level))[0], topleft[1] - 19))
@@ -1506,8 +1506,8 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
             if right:
                 face_image = Engine.flip_horiz(face_image)
             face_image = Image_Modification.flickerImageTranslucentColorKey(face_image, 50)
-            left = topleft[0] + blue_backSurf.get_width()/2 - face_image.get_width()/2 + 1
-            top = topleft[1] + blue_backSurf.get_height()/2 - face_image.get_height()/2 - 1
+            left = topleft[0] + blue_backSurf.get_width()//2 - face_image.get_width()//2 + 1
+            top = topleft[1] + blue_backSurf.get_height()//2 - face_image.get_height()//2 - 1
             pos = left, top
             surf.blit(face_image, pos)
 
@@ -1562,18 +1562,18 @@ def drawUnitSupport(surf, unit1, unit2, gameStateObj):
     # Status surf
     width = 192
     status_menu = CreateBaseMenuSurf((width, 24))
-    GC.FONT['text_white'].blit(status, status_menu, (width/2 - GC.FONT['text_white'].size(status)[0]/2, 4))
+    GC.FONT['text_white'].blit(status, status_menu, (width//2 - GC.FONT['text_white'].size(status)[0]//2, 4))
     node1.affinity.draw(status_menu, (4, 3))
     if node2:
         node2.affinity.draw(status_menu, (width - 20, 3))
-    surf.blit(status_menu, (GC.WINWIDTH/2 - width/2, GC.WINHEIGHT/2 - 20))
+    surf.blit(status_menu, (GC.WINWIDTH//2 - width//2, GC.WINHEIGHT//2 - 20))
 
     # Draw middle menu
     middle_surf = CreateBaseMenuSurf((72, 72))
-    GC.FONT['text_yellow'].blit(cf.WORDS['Atk'], middle_surf, (72/2 - GC.FONT['text_yellow'].size('Atk')[0]/2, 4))
-    GC.FONT['text_yellow'].blit(cf.WORDS['DEF'], middle_surf, (72/2 - GC.FONT['text_yellow'].size('Def')[0]/2, 20))
-    GC.FONT['text_yellow'].blit(cf.WORDS['Hit'], middle_surf, (72/2 - GC.FONT['text_yellow'].size('Hit')[0]/2, 36))
-    GC.FONT['text_yellow'].blit(cf.WORDS['Avo'], middle_surf, (72/2 - GC.FONT['text_yellow'].size('Avo')[0]/2, 52))
+    GC.FONT['text_yellow'].blit(cf.WORDS['Atk'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Atk')[0]//2, 4))
+    GC.FONT['text_yellow'].blit(cf.WORDS['DEF'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Def')[0]//2, 20))
+    GC.FONT['text_yellow'].blit(cf.WORDS['Hit'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Hit')[0]//2, 36))
+    GC.FONT['text_yellow'].blit(cf.WORDS['Avo'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Avo')[0]//2, 52))
 
     # Draw stars for strengths
     unit2_attack = node1.affinity.attack
@@ -1606,7 +1606,7 @@ def drawUnitSupport(surf, unit1, unit2, gameStateObj):
             else:
                 middle_surf.blit(GC.ICONDICT['StarIcon'], (positions[index][0] - 8, positions[index][1]))
 
-    surf.blit(middle_surf, (GC.WINWIDTH/2 - 72/2, 88))
+    surf.blit(middle_surf, (GC.WINWIDTH//2 - 72//2, 88))
 
 # Serves as controller class for host of menus
 class ConvoyMenu(object):
@@ -1708,9 +1708,9 @@ class ConvoyMenu(object):
         self.menus[self.order[self.selection_index]].update()
 
     def draw(self, surf, gameStateObj=None):
-        dist = int(120/len(self.order)) - 1
+        dist = int(120//len(self.order)) - 1
         if self.disp_value:
-            dist = int(160/len(self.order)) - 1
+            dist = int(160//len(self.order)) - 1
             self.menus[self.order[self.selection_index]].draw(surf, gameStateObj.game_constants['money'])
         else:
             self.menus[self.order[self.selection_index]].draw(surf)
@@ -1750,8 +1750,8 @@ class ShopMenu(ChoiceMenu):
         self.lastUpdate = Engine.get_time()
 
         self.old_scroll = self.scroll
-        self.up_arrow = GUIObjects.ScrollArrow('up', (self.topleft[0] + self.menu_width/2 - 7, self.topleft[1] - 4))
-        self.down_arrow = GUIObjects.ScrollArrow('down', (self.topleft[0] + self.menu_width/2 - 7, self.topleft[1] + 16*5 + 4), 0.5)
+        self.up_arrow = GUIObjects.ScrollArrow('up', (self.topleft[0] + self.menu_width//2 - 7, self.topleft[1] - 4))
+        self.down_arrow = GUIObjects.ScrollArrow('down', (self.topleft[0] + self.menu_width//2 - 7, self.topleft[1] + 16*5 + 4), 0.5)
 
         self.shimmer = shimmer
 
@@ -1787,15 +1787,15 @@ class ShopMenu(ChoiceMenu):
             true_value = None
             if option.uses:
                 uses_string = str(option.uses.uses)
-                true_value = option.uses.uses * option.value / self.denominator
+                true_value = option.uses.uses * option.value // self.denominator
                 value_string = str(true_value)
             elif option.c_uses:
                 uses_string = str(option.c_uses)
-                true_value = option.value / self.denominator
-                value_string = str(option.value / self.denominator)
+                true_value = option.value // self.denominator
+                value_string = str(option.value // self.denominator)
             elif option.value:
-                true_value = option.value / self.denominator
-                value_string = str(option.value / self.denominator)
+                true_value = option.value // self.denominator
+                value_string = str(option.value // self.denominator)
 
             if option.locked or not option.value or (self.owner and not self.owner.canWield(option)):
                 name_font = GC.FONT['text_grey']
@@ -1878,8 +1878,8 @@ class TradeMenu(Counters.CursorControl):
 
         surf.blit(nameBG1Surf, (-4, -1))
         surf.blit(nameBG2Surf, (GC.WINWIDTH - nameBG2Surf.get_width() + 4, -1))
-        GC.FONT['text_white'].blit(self.owner.name, surf, (24 - GC.FONT['text_white'].size(self.owner.name)[0]/2, 0))
-        GC.FONT['text_white'].blit(self.partner.name, surf, (GC.WINWIDTH - 24 - GC.FONT['text_white'].size(self.partner.name)[0]/2, 0))
+        GC.FONT['text_white'].blit(self.owner.name, surf, (24 - GC.FONT['text_white'].size(self.owner.name)[0]//2, 0))
+        GC.FONT['text_white'].blit(self.partner.name, surf, (GC.WINWIDTH - 24 - GC.FONT['text_white'].size(self.partner.name)[0]//2, 0))
 
         # Blit menu background
         BGSurf1 = CreateBaseMenuSurf((self.menuWidth, self.optionHeight*cf.CONSTANTS['max_items']+8))
@@ -1890,22 +1890,22 @@ class TradeMenu(Counters.CursorControl):
         # Blit portraits
         clipped_surf1 = Engine.subsurface(self.owner.bigportrait, (0, 3, self.owner.bigportrait.get_width(), 68))
         portraitSurf1 = Engine.flip_horiz(clipped_surf1)
-        pos = (self.topleft[0] + BGSurf1.get_width()/2 - portraitSurf1.get_width()/2, self.topleft[1] - portraitSurf1.get_height())
+        pos = (self.topleft[0] + BGSurf1.get_width()//2 - portraitSurf1.get_width()//2, self.topleft[1] - portraitSurf1.get_height())
         surf.blit(portraitSurf1, pos)
         surf.blit(BGSurf1, self.topleft)
 
         if hasattr(self.partner, 'bigportrait'):
             clipped_surf2 = Engine.subsurface(self.partner.bigportrait, (0, 3, self.partner.bigportrait.get_width(), 68))
             portraitSurf2 = clipped_surf2
-            pos = (second_topleft[0] + BGSurf2.get_width()/2 - portraitSurf2.get_width()/2, second_topleft[1] - portraitSurf2.get_height())
+            pos = (second_topleft[0] + BGSurf2.get_width()//2 - portraitSurf2.get_width()//2, second_topleft[1] - portraitSurf2.get_height())
             surf.blit(portraitSurf2, pos)
         surf.blit(BGSurf2, second_topleft)
 
         # Blit background highlight
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
-        for slot in range((self.menuWidth - 16)/width): # Gives me the amount of highlight needed
-            topleft = (self.topleft[0] + 8 + slot*width + (self.menuWidth+8)*(self.selection1/cf.CONSTANTS['max_items']), 
+        for slot in range((self.menuWidth - 16)//width): # Gives me the amount of highlight needed
+            topleft = (self.topleft[0] + 8 + slot*width + (self.menuWidth+8)*(self.selection1//cf.CONSTANTS['max_items']), 
                        self.topleft[1] + 11 + (self.selection1%cf.CONSTANTS['max_items'])*16)
             surf.blit(highlightSurf, topleft)
 
@@ -1913,12 +1913,12 @@ class TradeMenu(Counters.CursorControl):
         self.draw_items(surf, self.options2, second_topleft, BGSurf2.get_width(), self.partner)
 
         if self.selection2 is not None:
-            left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*(self.selection2/cf.CONSTANTS['max_items'])
+            left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*(self.selection2//cf.CONSTANTS['max_items'])
             top = self.topleft[1] + 4 + (self.selection2%cf.CONSTANTS['max_items'])*self.optionHeight
             surf.blit(self.cursor, (left, top))
 
         # Cursor location        
-        left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*(self.selection1/cf.CONSTANTS['max_items'])
+        left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*(self.selection1//cf.CONSTANTS['max_items'])
         top = self.topleft[1] + 4 + (self.selection1%cf.CONSTANTS['max_items'])*16 + self.cursor_y_offset*8
         self.cursor_y_offset = 0 # reset
         surf.blit(self.cursor, (left, top))
@@ -2065,7 +2065,7 @@ def drawTradePreview(surf, gameStateObj, steal=False):
     width, height = window.get_width(), window.get_height()
     top_of_window = Engine.subsurface(window, (0, 0, width, 27))
     bottom_of_window = Engine.subsurface(window, (0, height - 5, width, 5))
-    middle_of_window = Engine.subsurface(window, (0, height/2 + 3, width, 16))
+    middle_of_window = Engine.subsurface(window, (0, height//2 + 3, width, 16))
     size = (width, top_of_window.get_height() + bottom_of_window.get_height() + middle_of_window.get_height() * max(1, len(items)) - 2)
     BGSurf = Engine.create_surface(size, transparent=True)
     BGSurf.blit(top_of_window, (0, 0))
@@ -2109,12 +2109,12 @@ def drawTradePreview(surf, gameStateObj, steal=False):
 
     GC.FONT['text_white'].blit(unit.name, BGSurf, (32, 8))
 
-    if position[0] > GC.TILEX/2 + gameStateObj.cameraOffset.get_x() - 1:
+    if position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
         b_topleft = (0, 0)
-        u_topleft = (12 - max(0, (unit_surf.get_width() - 16)/2), 8 - max(0, (unit_surf.get_width() - 16)/2))
+        u_topleft = (12 - max(0, (unit_surf.get_width() - 16)//2), 8 - max(0, (unit_surf.get_width() - 16)//2))
     else:
         b_topleft = (GC.WINWIDTH - 4 - BGSurf.get_width(), 0)
-        u_topleft = (GC.WINWIDTH - BGSurf.get_width() + 4 - max(0, (unit_surf.get_width() - 16)/2), 8 - max(0, (unit_surf.get_width() - 16)/2))
+        u_topleft = (GC.WINWIDTH - BGSurf.get_width() + 4 - max(0, (unit_surf.get_width() - 16)//2), 8 - max(0, (unit_surf.get_width() - 16)//2))
 
     surf.blit(BGSurf, b_topleft)
     surf.blit(unit_surf, u_topleft)
@@ -2131,14 +2131,14 @@ def drawRescuePreview(surf, gameStateObj):
     num_font.blit(aid, window, (width - num_font.size(aid)[0] - 3, 24))
     rescuer_surf = rescuer.sprite.create_image('passive')
     rescuee_surf = rescuee.sprite.create_image('passive')
-    left = 12 - max(0, (rescuer_surf.get_width() - 16)/2) 
-    top = 8 - max(0, (rescuer_surf.get_width() - 16)/2)
+    left = 12 - max(0, (rescuer_surf.get_width() - 16)//2) 
+    top = 8 - max(0, (rescuer_surf.get_width() - 16)//2)
     window.blit(rescuer_surf, (left, top))
     window.blit(rescuee_surf, (left, top + 48))
     GC.FONT['text_white'].blit(rescuer.name, window, (32, 8))
     GC.FONT['text_white'].blit(rescuee.name, window, (32, 56))
 
-    if rescuer.position[0] > GC.TILEX/2 + gameStateObj.cameraOffset.get_x() - 1:
+    if rescuer.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
         topleft = (0, 0)
     else:
         topleft = (GC.WINWIDTH - 4 - width, 0)
@@ -2204,7 +2204,7 @@ class RecordsDisplay(ChoiceMenu):
     def draw_highlight(self, surf, index):
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
-        for slot in range((self.menu_width - 16)/width): # Gives me the amount of highlight needed
+        for slot in range((self.menu_width - 16)//width): # Gives me the amount of highlight needed
             topleft = (self.topleft[0] + 8 + slot*width, self.topleft[1] + 12 + 1 + index*16)
             surf.blit(highlightSurf, topleft)
 
@@ -2233,7 +2233,7 @@ class RecordsDisplay(ChoiceMenu):
         GC.FONT['text_blue'].blit(healing, surf, (x_offset + 206 - GC.FONT['text_blue'].size(str(record['healing']))[0] + 4, y))
 
     def draw(self, surf, offset_x=0, offset_y=0):
-        surf.blit(self.top_banner, (GC.WINWIDTH/2 - self.top_banner.get_width()/2, 4))
+        surf.blit(self.top_banner, (GC.WINWIDTH//2 - self.top_banner.get_width()//2, 4))
 
         back_surf = self.back_surf.copy()
         self.draw_highlight(back_surf, self.currentSelection - self.scroll)
@@ -2245,8 +2245,8 @@ class RecordsDisplay(ChoiceMenu):
         GC.FONT['text_yellow'].blit(cf.WORDS['Records Header'], back_surf, (4, 4))
         for index, (name, turncount, mvp) in enumerate(self.options[self.scroll:self.scroll+self.limit]):
             GC.FONT['text_white'].blit(name, back_surf, (4, index*16 + 20))
-            GC.FONT['text_blue'].blit(str(turncount), back_surf, (self.menu_width/2 - GC.FONT['text_blue'].size(str(turncount))[0] + 8, index*16 + 20))
-            GC.FONT['text_white'].blit(mvp, back_surf, (self.menu_width - 28 - GC.FONT['text_white'].size(mvp)[0]/2, index*16 + 20))
+            GC.FONT['text_blue'].blit(str(turncount), back_surf, (self.menu_width//2 - GC.FONT['text_blue'].size(str(turncount))[0] + 8, index*16 + 20))
+            GC.FONT['text_white'].blit(mvp, back_surf, (self.menu_width - 28 - GC.FONT['text_white'].size(mvp)[0]//2, index*16 + 20))
 
         surf.blit(back_surf, (8 + offset_x, 32 + offset_y))
 
@@ -2270,11 +2270,11 @@ class UnitStats(RecordsDisplay):
 
     def create_top_banner(self):
         banner_surf = GC.IMAGESDICT['PurpleBackground'].copy()
-        GC.FONT['chapter_grey'].blit(self.name, banner_surf, (banner_surf.get_width()/2 - GC.FONT['chapter_grey'].size(self.name)[0]/2, 4))
+        GC.FONT['chapter_grey'].blit(self.name, banner_surf, (banner_surf.get_width()//2 - GC.FONT['chapter_grey'].size(self.name)[0]//2, 4))
         return banner_surf
 
     def draw(self, surf, offset_x=0, offset_y=0):
-        surf.blit(self.top_banner, (GC.WINWIDTH/2 - self.top_banner.get_width()/2 + offset_x, 4 + offset_y))
+        surf.blit(self.top_banner, (GC.WINWIDTH//2 - self.top_banner.get_width()//2 + offset_x, 4 + offset_y))
 
         back_surf = self.back_surf.copy()
 
@@ -2323,7 +2323,7 @@ class MVPDisplay(RecordsDisplay):
         self.top_banner = self.create_top_banner()
 
     def draw(self, surf, offset_x=0, offset_y=0):
-        surf.blit(self.top_banner, (GC.WINWIDTH/2 - self.top_banner.get_width()/2, 4))
+        surf.blit(self.top_banner, (GC.WINWIDTH//2 - self.top_banner.get_width()//2, 4))
         self.draw_rest(surf, offset_x, offset_y)
 
     def draw_rest(self, surf, offset_x=0, offset_y=0):
@@ -2368,9 +2368,9 @@ class ChapterStats(MVPDisplay):
 
     def create_top_banner(self):
         banner_surf = GC.IMAGESDICT['PurpleBackground'].copy()
-        GC.FONT['chapter_grey'].blit(self.name, banner_surf, (banner_surf.get_width()/2 - GC.FONT['chapter_grey'].size(self.name)[0]/2, 4))
+        GC.FONT['chapter_grey'].blit(self.name, banner_surf, (banner_surf.get_width()//2 - GC.FONT['chapter_grey'].size(self.name)[0]//2, 4))
         return banner_surf
 
     def draw(self, surf, offset_x=0, offset_y=0):
-        surf.blit(self.top_banner, (GC.WINWIDTH/2 - self.top_banner.get_width()/2 + offset_x, 4 + offset_y))
+        surf.blit(self.top_banner, (GC.WINWIDTH//2 - self.top_banner.get_width()//2 + offset_x, 4 + offset_y))
         self.draw_rest(surf, offset_x, offset_y)

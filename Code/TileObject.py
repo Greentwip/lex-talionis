@@ -90,7 +90,7 @@ class MapObject(object):
 
     def change_tile_sprites(self, coord, image_filename, transition=None):
         image = self.loose_tile_sprites[image_filename]
-        size = image.get_width()/GC.TILEWIDTH, image.get_height()/GC.TILEHEIGHT
+        size = image.get_width()//GC.TILEWIDTH, image.get_height()//GC.TILEHEIGHT
         for x in range(coord[0], coord[0]+size[0]):
             for y in range(coord[1], coord[1]+size[1]):
                 pos = (x - coord[0], y - coord[1])
@@ -101,7 +101,7 @@ class MapObject(object):
                     self.tile_sprites[(x, y)].loadNewSprites()
                     if transition == 'destroy':
                         # To be moved to global during next update
-                        self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
+                        self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
                 else:
                     self.tile_sprites[(x, y)].image_name = image_filename
                     self.tile_sprites[(x, y)].position = pos
@@ -305,15 +305,15 @@ class MapObject(object):
         if self.autotiles:
             time = int(GC.FRAMERATE*29)
             mod_time = current_time%(len(self.autotiles)*time) # 29 ticks
-            self.autotile_frame = mod_time/time
+            self.autotile_frame = mod_time//time
 
     def initiate_warp_flowers(self, center_pos):
         self.weather.append(Weather.Weather('Warp_Flower', -1, (-1, -1, -1, -1), (self.width, self.height)))
-        angle_frac = math.pi/8
-        true_pos = center_pos[0] * GC.TILEWIDTH + GC.TILEWIDTH/2, center_pos[1] * GC.TILEHEIGHT + GC.TILEHEIGHT/2
+        angle_frac = math.pi//8
+        true_pos = center_pos[0] * GC.TILEWIDTH + GC.TILEWIDTH//2, center_pos[1] * GC.TILEHEIGHT + GC.TILEHEIGHT//2
         for speed in (2.0, 2.5):
             for num in range(0, 16):
-                angle = num*angle_frac + angle_frac/2
+                angle = num*angle_frac + angle_frac//2
                 self.weather[-1].particles.append(Weather.WarpFlower(true_pos, speed, angle))
 
     def serialize(self):
@@ -330,7 +330,7 @@ class MapObject(object):
             if line[0] == 'set_origin':
                 self.origin = line[1]
             # Change tile sprites
-            elif line[0] == 'change_tile_sprite' or line[0] == 'change_sprite':
+            elif line[0] == 'change_tile_sprite':
                 self.change_sprite(line)
             # Add tile sprite to layer
             elif line[0] == 'layer_tile_sprite':
@@ -417,7 +417,7 @@ class MapObject(object):
             if transition == 'destroy':
                 for sprite in self.layers[layer]:
                     x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
+                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
         else:
             self.layers[layer].show = True
             self.layers[layer].fade = 100          
@@ -430,7 +430,7 @@ class MapObject(object):
             if transition == 'destroy':
                 for sprite in self.layers[layer]:
                     x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
+                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
         else:
             self.layers[layer].show = False
             self.layers[layer].fade = 0
@@ -482,7 +482,7 @@ class MapObject(object):
     # Init weather
     def add_weather(self, weather):
         if weather == "Rain":
-            bounds = (-self.height*GC.TILEHEIGHT/4, self.width*GC.TILEWIDTH, -16, -8)
+            bounds = (-self.height*GC.TILEHEIGHT//4, self.width*GC.TILEWIDTH, -16, -8)
             self.weather.append(Weather.Weather('Rain', .1, bounds, (self.width, self.height)))
         elif weather == "Snow":
             bounds = (-self.height*GC.TILEHEIGHT, self.width*GC.TILEWIDTH, -16, -8)
@@ -675,7 +675,7 @@ class TileObject(object):
                 # Blit AVO Text
                 position = back_surf.get_width() - GC.FONT['small_white'].size(str(self.AVO))[0] - 3, 25
                 GC.FONT['small_white'].blit(str(self.AVO), back_surf, position)
-        pos = (back_surf.get_width()/2 - GC.FONT['text_white'].size(self.name)[0]/2, 22 - GC.FONT['text_white'].size(self.name)[1])
+        pos = (back_surf.get_width()//2 - GC.FONT['text_white'].size(self.name)[0]//2, 22 - GC.FONT['text_white'].size(self.name)[1])
         GC.FONT['text_white'].blit(self.name, back_surf, pos)
         self.display_surface = back_surf
 

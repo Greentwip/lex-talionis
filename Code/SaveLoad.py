@@ -500,7 +500,7 @@ def auto_level(bases, growths, level, max_stats, gameStateObj):
     if leveling == 1 or leveling == 3: # Fixed -- 3 if not chosen
         for index, growth in enumerate(growths):
             growth_sum = growth * (level - 1)
-            stats[index] += growth_sum/100
+            stats[index] += growth_sum//100
             growth_points[index] += growth_sum%100
 
     elif leveling == 0: # Random
@@ -514,7 +514,7 @@ def auto_level(bases, growths, level, max_stats, gameStateObj):
     elif leveling == 2: # Like Radiant Dawn Bonus Exp Method -- Hybrid
         growths = [growth * (level - 1) if stats[index] < max_stats[index] else 0 for index, growth in enumerate(growths)]
         growth_sum = sum(growths)
-        num_choice = growth_sum/100
+        num_choice = growth_sum//100
         growth_points[0] = growth_sum%100
         while num_choice > 0:
             num_choice -= 1
@@ -522,7 +522,7 @@ def auto_level(bases, growths, level, max_stats, gameStateObj):
             stats[idx] += 1
             growths[idx] = max(0, growths[idx] - 100)
             if stats[idx] >= max_stats[idx]:
-                num_choice -= growths[idx]/100
+                num_choice -= growths[idx]//100
                 growths[idx] = 0
 
     else:

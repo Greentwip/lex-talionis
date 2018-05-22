@@ -45,12 +45,12 @@ if;gameStateObj.game_constants['switches'] >= 3
 	# Replace with open floor
 	replace_tile;10,6;9
 	replace_tile;10,10;9
-	change_sprite;10,6;left_vault_floor
-	change_sprite;9,6;wall_left
-	change_sprite;10,10;left_vault_floor
-	change_sprite;9,10;wall_left
-	change_sprite;10,7;vault_floor
-	change_sprite;10,11;floor
+	change_tile_sprite;10,6;left_vault_floor
+	change_tile_sprite;9,6;wall_left
+	change_tile_sprite;10,10;left_vault_floor
+	change_tile_sprite;9,10;wall_left
+	change_tile_sprite;10,7;vault_floor
+	change_tile_sprite;10,11;floor
 	# To Renae
 	set_cursur;Renae
 	u;Joel;MidRight

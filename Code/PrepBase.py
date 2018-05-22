@@ -4,7 +4,7 @@ import os
 # Custom imports
 import GlobalConstants as GC
 import configuration as cf
-import StateMachine, MenuFunctions, ItemMethods, Utility
+import StateMachine, MenuFunctions, ItemMethods
 import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine
 
 class PrepMainState(StateMachine.State):
@@ -315,7 +315,7 @@ class PrepItemsState(StateMachine.State):
             self.quick_sort_disp = MenuFunctions.CreateBaseMenuSurf(pos, 'BrownBackgroundOpaque')
             self.quick_sort_disp = Image_Modification.flickerImageTranslucent(self.quick_sort_disp, 10)
             for idx, button in enumerate(self.buttons):
-                self.quick_sort_disp.blit(button, (4 + 33/2 - button.get_width()/2, idx*self.font.height + 8 - button.get_height()/2 + 4))
+                self.quick_sort_disp.blit(button, (4 + 33//2 - button.get_width()//2, idx*self.font.height + 8 - button.get_height()//2 + 4))
             for idx, command in enumerate(self.commands):
                 self.font.blit(command, self.quick_sort_disp, (38, idx*self.font.height + 4))
 
@@ -371,7 +371,7 @@ class PrepItemsState(StateMachine.State):
         if gameStateObj.activeMenu:
             MenuFunctions.drawUnitItems(surf, (6, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
         # Draw quick sort display
-        surf.blit(self.quick_sort_disp, (GC.WINWIDTH/2 + 10, GC.WINHEIGHT/2 + 9))
+        surf.blit(self.quick_sort_disp, (GC.WINWIDTH//2 + 10, GC.WINHEIGHT//2 + 9))
         draw_funds(surf, gameStateObj)
 
         return surf
@@ -793,7 +793,7 @@ class PrepListState(StateMachine.State):
         self.menu.draw(surf)
         # Draw name
         surf.blit(self.name_surf, (-2, -1))
-        name_position = (24 - GC.FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]/2, 0)
+        name_position = (24 - GC.FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]//2, 0)
         GC.FONT['text_white'].blit(gameStateObj.cursor.currentSelectedUnit.name, surf, name_position)
         # Draw face image
         face_image = gameStateObj.cursor.currentSelectedUnit.bigportrait.copy()
@@ -1126,7 +1126,7 @@ class BaseMarketState(StateMachine.State):
                 if selection == cf.WORDS['Sell']:
                     GC.SOUNDDICT['Select 1'].play()
                     item = self.current_menu.getSelection()
-                    value = (item.value * item.uses.uses)/2 if item.uses else item.value/2
+                    value = (item.value * item.uses.uses)//2 if item.uses else item.value//2
                     gameStateObj.game_constants['money'] += value
                     self.money_counter_disp.start(value)
                     if item.owner:
@@ -1254,7 +1254,7 @@ class BaseMainState(StateMachine.State):
                 color_control[2] = 'text_white'
             if gameStateObj.support and 'AllowSupports' in gameStateObj.game_constants:
                 color_control[3] = 'text_white'
-            topleft = 4, GC.WINHEIGHT/2 - (len(options)*16 + 8)/2
+            topleft = 4, GC.WINHEIGHT//2 - (len(options)*16 + 8)//2
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, shimmer=2, gem=False)
 
         # Transition in:
@@ -1560,7 +1560,7 @@ class BaseSupportConvoState(StateMachine.State):
                 unit, level = gameStateObj.childMenu.getSelection()
                 owner = gameStateObj.childMenu.owner
                 edge = gameStateObj.support.node_dict[owner.name].adjacent[unit.name]
-                support_level = edge.current_value/cf.CONSTANTS['support_points']
+                support_level = edge.current_value//cf.CONSTANTS['support_points']
                 # if cf.OPTIONS['debug']:
                 #     print(level, support_level)
                 if level < support_level:

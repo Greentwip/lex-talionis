@@ -188,7 +188,7 @@ class UnitMenu(StateMachine.State):
     def draw_highlight(self, surf):
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
-        for slot in range(216/width): # Gives me the amount of highlight needed
+        for slot in range(216//width): # Gives me the amount of highlight needed
             topleft = (8 + slot*width, 64 + 2 + (self.unit_index-self.scroll_index)*16)
             surf.blit(highlightSurf, topleft)
 
@@ -198,8 +198,8 @@ class UnitMenu(StateMachine.State):
         for idx, unit in enumerate(self.units[self.scroll_index-1:self.scroll_index-1+self.num_per_page]):
             # Image
             unit_sprite = unit.sprite.create_image('passive')
-            left = 8 - max(0, (unit_sprite.get_width() - 16)/2)
-            top = 48 + idx*16 - max(0, (unit_sprite.get_height() - 16)/2)
+            left = 8 - max(0, (unit_sprite.get_width() - 16)//2)
+            top = 48 + idx*16 - max(0, (unit_sprite.get_height() - 16)//2)
             surf.blit(unit_sprite, (left, top))
             # Name
             font.blit(unit.name, surf, (24, 56 + idx*16))
@@ -207,7 +207,7 @@ class UnitMenu(StateMachine.State):
     def draw_banner(self, surf):
         surf.blit(self.title_bg, (0, 0))
         title = self.states[self.state_index][0]
-        GC.FONT['text_brown'].blit(title, surf, (64 - GC.FONT['text_brown'].size(title)[0]/2, 8))
+        GC.FONT['text_brown'].blit(title, surf, (64 - GC.FONT['text_brown'].size(title)[0]//2, 8))
 
     def draw_cursor(self, surf):
         self.banner_index = min(self.banner_index, len(self.help_boxes) - 1)

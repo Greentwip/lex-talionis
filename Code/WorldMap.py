@@ -196,7 +196,7 @@ class WMSprite(object):
 
     def draw(self, surf):
         x, y = self.position
-        topleft = x - max(0, (self.image.get_width() - 16)/2), y - max(0, self.image.get_height() - 16)
+        topleft = x - max(0, (self.image.get_width() - 16)//2), y - max(0, self.image.get_height() - 16)
         surf.blit(self.image, topleft)
 
     def move(self, new_pos):
@@ -736,7 +736,7 @@ class MiniMap(object):
         units = self.pin_surf
         # Flicker pin surf
         if current_time > 1600:
-            whiteness = 2.55 * (100 - abs(current_time - 1800)/2)
+            whiteness = 2.55 * (100 - abs(current_time - 1800)//2)
             units = Image_Modification.flickerImageWhite(units, whiteness)
         image.blit(units, (0, 0))
 
@@ -744,7 +744,7 @@ class MiniMap(object):
             image = self.occlude(Engine.copy_surface(image), progress)
 
         # TODO make minimaps work with even bigger maps (current limit is 60x40)
-        pos = (GC.WINWIDTH/2 - image.get_width()/2, GC.WINHEIGHT/2 - image.get_height()/2)
+        pos = (GC.WINWIDTH//2 - image.get_width()//2, GC.WINHEIGHT//2 - image.get_height()//2)
         surf.blit(image, pos)
         x = camera_offset.x
         y = camera_offset.y
@@ -753,9 +753,9 @@ class MiniMap(object):
             minimap_cursor = self.minimap_cursor
             if current_time > 1600 or (current_time > 600 and current_time < 1000):
                 if current_time > 1600:
-                    whiteness = 2.55 * (100 - abs(current_time - 1800)/2)
+                    whiteness = 2.55 * (100 - abs(current_time - 1800)//2)
                 else:
-                    whiteness = 2.55 * (100 - abs(current_time - 800)/2)
+                    whiteness = 2.55 * (100 - abs(current_time - 800)//2)
                 minimap_cursor = Image_Modification.flickerImageWhite(minimap_cursor, whiteness)
             surf.blit(minimap_cursor, cursor_pos)
 
@@ -775,7 +775,7 @@ class MiniMap(object):
         # Rotate mask by -90 degrees at max
         mask = Engine.transform_rotate(mask, progress*-90)
         # Place mask within center of minimap
-        bg.blit(mask, (bg.get_width()/2 - mask.get_width()/2, bg.get_height()/2 - mask.get_height()/2))
+        bg.blit(mask, (bg.get_width()//2 - mask.get_width()//2, bg.get_height()//2 - mask.get_height()//2))
 
         # Apply mask to surf
         Engine.blit(surf, bg, bg.get_rect().topleft, bg.get_rect(), Engine.BLEND_RGB_MULT)

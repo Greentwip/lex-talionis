@@ -2042,8 +2042,8 @@ class VictoryState(State):
         GC.FONT['text_yellow'].blit('MVP', bg, (4, 20))
         turns_size = GC.FONT['text_blue'].size(turns)[0]
         mvp_size = GC.FONT['text_blue'].size(mvp)[0]
-        GC.FONT['text_blue'].blit(turns, bg, (menu_width - 40 - turns_size/2, 4))
-        GC.FONT['text_blue'].blit(mvp, bg, (menu_width - 40 - mvp_size/2, 20))
+        GC.FONT['text_blue'].blit(turns, bg, (menu_width - 40 - turns_size//2, 4))
+        GC.FONT['text_blue'].blit(mvp, bg, (menu_width - 40 - mvp_size//2, 20))
 
         return bg
 
@@ -2069,14 +2069,14 @@ class VictoryState(State):
         offset = self.num_frame/float(self.num_transition_frames)
 
         # Stat surf draw
-        pos = (GC.WINWIDTH/2 - self.stat_surf.get_width()/2, GC.WINHEIGHT - (offset * self.stat_surf_target))
+        pos = (GC.WINWIDTH//2 - self.stat_surf.get_width()//2, GC.WINHEIGHT - (offset * self.stat_surf_target))
         mapSurf.blit(self.stat_surf, pos)
         # Victory draw
         vic_surf = Engine.copy_surface(self.victory_surf)
         vic_surf = Image_Modification.flickerImageTranslucent(vic_surf, 100 - (offset * 100))
         height = int(self.vic_height * offset)
         vic_surf = Engine.transform_scale(vic_surf, (GC.WINWIDTH, height))
-        mapSurf.blit(vic_surf, (0, self.victory_surf.get_height()/2 - height/2))
+        mapSurf.blit(vic_surf, (0, self.victory_surf.get_height()//2 - height//2))
 
         return mapSurf
 
@@ -2412,8 +2412,8 @@ class PromotionChoiceState(State):
         surf = State.draw(self, gameStateObj, metaDataObj)
         # Anim
         top = 88
-        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + self.anim_offset + 52, top))
-        surf.blit(self.right_platform, (GC.WINWIDTH / 2 + self.anim_offset + 52, top))
+        surf.blit(self.left_platform, (GC.WINWIDTH // 2 - self.left_platform.get_width() + self.anim_offset + 52, top))
+        surf.blit(self.right_platform, (GC.WINWIDTH // 2 + self.anim_offset + 52, top))
         anim = self.animations[self.menu.currentSelection]
         if anim:
             anim.draw(surf, (self.anim_offset + 12, 0))
@@ -2494,7 +2494,7 @@ class PromotionState(State):
             # Name Tag
             self.name_tag = GC.IMAGESDICT[color + 'RightCombatName'].copy()
             size_x = GC.FONT['text_brown'].size(self.unit.name)[0]
-            GC.FONT['text_brown'].blit(self.unit.name, self.name_tag, (36 - size_x / 2, 8))
+            GC.FONT['text_brown'].blit(self.unit.name, self.name_tag, (36 - size_x // 2, 8))
 
             # For darken backgrounds and drawing
             self.darken_background = 0
@@ -2607,8 +2607,8 @@ class PromotionState(State):
 
         # Platforms
         top = 88
-        combat_surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
-        combat_surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
+        combat_surf.blit(self.left_platform, (GC.WINWIDTH // 2 - self.left_platform.get_width(), top))
+        combat_surf.blit(self.right_platform, (GC.WINWIDTH // 2, top))
 
         # Name Tag
         combat_surf.blit(self.name_tag, (GC.WINWIDTH + 3 - self.name_tag.get_width(), 0))
@@ -2885,7 +2885,7 @@ class ShopState(State):
             # Get items
             items_for_sale = ItemMethods.itemparser(itemids)
             
-            topleft = (GC.WINWIDTH/2 - 80 + 4, 3*GC.WINHEIGHT/8+8)
+            topleft = (GC.WINWIDTH//2 - 80 + 4, 3*GC.WINHEIGHT//8+8)
             self.shopMenu = MenuFunctions.ShopMenu(self.unit, items_for_sale, topleft, limit=5, buy=True)
             self.myMenu = MenuFunctions.ShopMenu(self.unit, self.unit.items, topleft, limit=5, buy=False)
             self.buy_sell_menu = MenuFunctions.ChoiceMenu(self.unit, [cf.WORDS['Buy'], cf.WORDS['Sell']], (80, 32), background='ActualTransparent', horizontal=True)
@@ -3080,7 +3080,7 @@ class ShopState(State):
                     selection = self.myMenu.getSelection()
                     self.unit.remove_item(selection)
                     self.myMenu.currentSelection = 0 # Reset selection
-                    value = (selection.value * selection.uses.uses)/2 if selection.uses else selection.value/2 # Divide by 2 because selling
+                    value = (selection.value * selection.uses.uses)//2 if selection.uses else selection.value//2 # Divide by 2 because selling
                     gameStateObj.counters['money'] += value
                     self.money_counter_disp.start(value)
                     self.display_message = self.get_dialog(self.back_message)

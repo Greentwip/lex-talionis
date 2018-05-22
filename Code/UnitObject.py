@@ -51,10 +51,10 @@ class Stat(object):
         return other * (self.base_stat + self.bonuses)
 
     def __div__(self, other):
-        return (self.base_stat + self.bonuses) / other
+        return (self.base_stat + self.bonuses) // other
 
     def __rdiv__(self, other):
-        return other / (self.base_stat + self.bonuses)
+        return other // (self.base_stat + self.bonuses)
 
     def __neg__(self):
         return -(self.base_stat + self.bonuses)
@@ -238,14 +238,14 @@ class UnitObject(object):
         top = 4
         left = 6
         # Blit Portrait
-        PortraitSurface.blit(self.portrait, (left + 1 + 16 - self.portrait.get_width()/2, top + 4 + 16 - self.portrait.get_height()/2))
+        PortraitSurface.blit(self.portrait, (left + 1 + 16 - self.portrait.get_width()//2, top + 4 + 16 - self.portrait.get_height()//2))
         # Blit Name
         name = self.name
         # If generic, include level in name
         if self.generic_flag:
             short_name = gameStateObj.metaDataObj['class_dict'][self.klass]['short_name']
             name = short_name + ' ' + str(self.level)
-        position = (left + PortraitWidth/2 + 6 - GC.FONT['info_grey'].size(name)[0]/2, top + 4)
+        position = (left + PortraitWidth//2 + 6 - GC.FONT['info_grey'].size(name)[0]//2, top + 4)
         GC.FONT['info_grey'].blit(name, PortraitSurface, position)
         # Blit Health Text
         PortraitSurface.blit(GC.IMAGESDICT['InfoHP'], (34 + left, PortraitHeight - 20 + top))
@@ -269,7 +269,7 @@ class UnitObject(object):
         # Blit weapon icon
         current_weapon = self.getMainWeapon()
         if current_weapon:
-            current_weapon.draw(PortraitSurface, (PortraitWidth - 20 + left, PortraitHeight/2 - 8 + top))
+            current_weapon.draw(PortraitSurface, (PortraitWidth - 20 + left, PortraitHeight//2 - 8 + top))
         return PortraitSurface
 
     def create_attack_info(self, gameStateObj, enemyunit):
@@ -288,18 +288,18 @@ class UnitObject(object):
 
         # Blit my name
         size = GC.FONT['text_white'].size(self.name)
-        position = 43 - size[0]/2, 3
+        position = 43 - size[0]//2, 3
         GC.FONT['text_white'].blit(self.name, surf, position)
         # Blit enemy name
         size = GC.FONT['text_white'].size(enemyunit.name)
         y_pos = 84 if cf.CONSTANTS['crit'] else 68
-        position = 26 - size[0]/2, y_pos
+        position = 26 - size[0]//2, y_pos
         GC.FONT['text_white'].blit(enemyunit.name, surf, position)
         # Blit name of enemy weapon
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
             size = GC.FONT['text_white'].size(enemyunit.getMainWeapon().name)
             y_pos = 100 if cf.CONSTANTS['crit'] else 84
-            position = 32 - size[0]/2, y_pos
+            position = 32 - size[0]//2, y_pos
             GC.FONT['text_white'].blit(enemyunit.getMainWeapon().name, surf, position)
         # Blit self HP
         blit_num(surf, self.currenthp, 64, 19)
@@ -340,11 +340,11 @@ class UnitObject(object):
             gameStateObj.info_surf = self.create_attack_info(gameStateObj, enemyunit)
 
         # Find topleft
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
-            topleft = GC.TILEWIDTH/2, GC.TILEHEIGHT/4
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
+            topleft = GC.TILEWIDTH//2, GC.TILEHEIGHT//4
             topleft = (topleft[0] - self.attack_info_offset, topleft[1])
         else:
-            topleft = GC.WINWIDTH - 69 - GC.TILEWIDTH/2, GC.TILEHEIGHT/4
+            topleft = GC.WINWIDTH - 69 - GC.TILEWIDTH//2, GC.TILEHEIGHT//4
             topleft = (topleft[0] + self.attack_info_offset, topleft[1])
         if self.attack_info_offset > 0:
             self.attack_info_offset -= 20
@@ -484,7 +484,7 @@ class UnitObject(object):
             running_height += 16
             self.getMainSpell().draw(BGSurf, (8, running_height))
             name_width = GC.FONT['text_white'].size(self.getMainSpell().name)[0]
-            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
+            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width//2, running_height))
 
             return BGSurf
 
@@ -529,7 +529,7 @@ class UnitObject(object):
             running_height += 16
             self.getMainSpell().draw(BGSurf, (4, running_height))
             name_width = GC.FONT['text_white'].size(self.getMainSpell().name)[0]
-            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
+            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width//2, running_height))
 
             return BGSurf
 
@@ -544,14 +544,14 @@ class UnitObject(object):
         if otherunit:
             unit_surf = otherunit.sprite.create_image('passive')
 
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
             topleft = (4, 4)
             if otherunit:
-                u_topleft = (16 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
+                u_topleft = (16 - max(0, (unit_surf.get_width() - 16)//2), 12 - max(0, (unit_surf.get_width() - 16)//2))
         else:
             topleft = (GC.WINWIDTH - 4 - width, 4)
             if otherunit:
-                u_topleft = (GC.WINWIDTH - width + 8 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
+                u_topleft = (GC.WINWIDTH - width + 8 - max(0, (unit_surf.get_width() - 16)//2), 12 - max(0, (unit_surf.get_width() - 16)//2))
 
         surf.blit(gameStateObj.info_surf, topleft)
         if otherunit:
@@ -574,11 +574,11 @@ class UnitObject(object):
         if item.weapon and self.canWield(item):
             top = 4
             left = 2
-            GC.FONT['text_white'].blit('Affin', BGSurf, (width/2 - GC.FONT['text_white'].size('Affin')[0] + left, 4 + top))
+            GC.FONT['text_white'].blit('Affin', BGSurf, (width//2 - GC.FONT['text_white'].size('Affin')[0] + left, 4 + top))
             GC.FONT['text_white'].blit('Atk', BGSurf, (5 + left, 20 + top))
-            GC.FONT['text_white'].blit('AS', BGSurf, (width/2 + 5 + left, 20 + top))
+            GC.FONT['text_white'].blit('AS', BGSurf, (width//2 + 5 + left, 20 + top))
             GC.FONT['text_white'].blit('Hit', BGSurf, (5 + left, 36 + top))
-            GC.FONT['text_white'].blit('Avo', BGSurf, (width/2 + 5 + left, 36 + top))
+            GC.FONT['text_white'].blit('Avo', BGSurf, (width//2 + 5 + left, 36 + top))
         
             dam = str(self.damage(gameStateObj, item))
             acc = str(self.accuracy(gameStateObj, item))
@@ -588,12 +588,12 @@ class UnitObject(object):
             HitWidth = GC.FONT['text_blue'].size(acc)[0]
             AvoidWidth = GC.FONT['text_blue'].size(avo)[0]
             ASWidth = GC.FONT['text_blue'].size(atkspd)[0] 
-            GC.FONT['text_blue'].blit(dam, BGSurf, (width/2 - 4 - AtkWidth + left, 20 + top))
+            GC.FONT['text_blue'].blit(dam, BGSurf, (width//2 - 4 - AtkWidth + left, 20 + top))
             GC.FONT['text_blue'].blit(atkspd, BGSurf, (width - 8 - ASWidth + left, 20 + top))
-            GC.FONT['text_blue'].blit(acc, BGSurf, (width/2 - 4 - HitWidth + left, 36 + top))
+            GC.FONT['text_blue'].blit(acc, BGSurf, (width//2 - 4 - HitWidth + left, 36 + top))
             GC.FONT['text_blue'].blit(avo, BGSurf, (width - 8 - AvoidWidth + left, 36 + top))
 
-            item.drawType(BGSurf, width/2 + 8 + left, 3 + top)
+            item.drawType(BGSurf, width//2 + 8 + left, 3 + top)
 
         else: # assumes every non-weapon has a description
             if item.desc:
@@ -607,7 +607,7 @@ class UnitObject(object):
 
         surf.blit(BGSurf, (0, 76))
 
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
             rightflag = True
         else:
             rightflag = False
@@ -625,7 +625,7 @@ class UnitObject(object):
         if not gameStateObj.info_surf:
             gameStateObj.info_surf = self.create_item_description(gameStateObj)
 
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
             topleft = (GC.WINWIDTH - 8 - gameStateObj.info_surf.get_width(), GC.WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
         else:
             topleft = (8, GC.WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
@@ -784,7 +784,7 @@ class UnitObject(object):
     def can_promote_using(self, item, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
         max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
-        return self.level >= max_level/2 and len(unit_klass['turns_into']) >= 1 and self.klass in item.promotion
+        return self.level >= max_level//2 and len(unit_klass['turns_into']) >= 1 and self.klass in item.promotion
 
     def handle_booster(self, item, gameStateObj):
         # Handle uses
@@ -883,7 +883,7 @@ class UnitObject(object):
             for index in range(8):
                 growth = growths[index]
                 if leveling == 1: # Fixed
-                    levelup_list[index] = min((self.growth_points[index] + growth)/100, class_info['max'][index] - self.stats.values()[index].base_stat)
+                    levelup_list[index] = min((self.growth_points[index] + growth)//100, class_info['max'][index] - self.stats.values()[index].base_stat)
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
                 elif leveling == 0: # Random
                     while growth > 0:
@@ -893,7 +893,7 @@ class UnitObject(object):
         else: # Hybrid and Default
             growths = [growth if self.stats.values()[index].base_stat < class_info['max'][index] else 0 for index, growth in enumerate(growths)]
             growth_sum = sum(growths)
-            num_choices = growth_sum/100
+            num_choices = growth_sum//100
             self.growth_points[0] += growth_sum%100
             if self.growth_points[0] >= 100:
                 self.growth_points[0] -= 100
@@ -1509,7 +1509,7 @@ class UnitObject(object):
             for name, edge in gameStateObj.support.node_dict[self.name].adjacent.iteritems():
                 for unit in gameStateObj.allunits:
                     if unit.name == name and unit.position and Utility.calculate_distance(unit.position, self.position) <= 3:
-                        support_level = edge.current_value/cf.CONSTANTS['support_points']
+                        support_level = edge.current_value//cf.CONSTANTS['support_points']
                         affinity = gameStateObj.support.node_dict[name].affinity
                         attack += affinity.attack * support_level
                         defense += affinity.defense * support_level
@@ -1549,7 +1549,7 @@ class UnitObject(object):
             if item.ignore_def:
                 pass
             elif item.ignore_half_def:
-                damage -= target.defense(gameStateObj, stat)/2
+                damage -= target.defense(gameStateObj, stat)//2
             else:
                 damage -= target.defense(gameStateObj, stat)
 
@@ -1761,8 +1761,8 @@ class UnitObject(object):
     """
 
     def get_rating(self):
-        return (self.stats['HP'] - 10)/2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \
-            self.stats['SPD'] + self.stats['LCK']/2 + self.stats['DEF'] + self.stats['RES']
+        return (self.stats['HP'] - 10)//2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \
+            self.stats['SPD'] + self.stats['LCK']//2 + self.stats['DEF'] + self.stats['RES']
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj):

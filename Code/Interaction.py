@@ -63,9 +63,9 @@ class Solver(object):
         elif cf.CONSTANTS['rng'] == 'classic':
             roll = random.randint(0, 99)
         elif cf.CONSTANTS['rng'] == 'true_hit':
-            roll = (random.randint(0, 99) + random.randint(0, 99)) / 2
+            roll = (random.randint(0, 99) + random.randint(0, 99)) // 2
         elif cf.CONSTANTS['rng'] == 'true_hit+':
-            roll = (random.randint(0, 99) + random.randint(0, 99) + random.randint(0, 99)) / 3
+            roll = (random.randint(0, 99) + random.randint(0, 99) + random.randint(0, 99)) // 3
         return roll
 
     def generate_crit_roll(self, event_command=None):
@@ -107,7 +107,7 @@ class Solver(object):
                     
             # Missed but does half damage
             elif self.item.half:
-                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid) / 2
+                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid) // 2
                 # print(result.def_damage)
 
         elif self.item.spell:
@@ -145,7 +145,7 @@ class Solver(object):
             if self.item.lifelink:
                 result.atk_damage -= result.def_damage
             if self.item.half_lifelink:
-                result.atk_damage -= result.def_damage/2
+                result.atk_damage -= result.def_damage//2
             # Handle Vampire Status
             for status in self.attacker.status_effects:
                 if status.vampire and defender.currenthp - result.def_damage <= 0 and \
@@ -175,7 +175,7 @@ class Solver(object):
 
         # Missed but does half damage
         elif self.defender.getMainWeapon().half:
-            result.def_damage = self.defender.compute_damage(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense", hybrid=hybrid) / 2
+            result.def_damage = self.defender.compute_damage(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense", hybrid=hybrid) // 2
 
         if result.outcome:
             for s_id in self.defender.getMainWeapon().status:
@@ -187,7 +187,7 @@ class Solver(object):
             if self.defender.getMainWeapon().lifelink:
                 result.atk_damage -= result.def_damage
             if self.defender.getMainWeapon().half_lifelink:
-                result.atk_damage -= result.def_damage/2
+                result.atk_damage -= result.def_damage//2
             # Handle Vampire Status
             for status in self.defender.status_effects:
                 if status.vampire and self.attacker.currenthp - result.def_damage <= 0 and \
@@ -738,28 +738,28 @@ class AnimationCombat(Combat):
         # Name Tag
         self.left_name = GC.IMAGESDICT[left_color + 'LeftCombatName'].copy()
         size_x = GC.FONT['text_brown'].size(self.left.name)[0]
-        GC.FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x / 2, 8))
+        GC.FONT['text_brown'].blit(self.left.name, self.left_name, (30 - size_x // 2, 8))
         # Bar
         self.left_bar = GC.IMAGESDICT[left_color + 'LeftMainCombat' + crit].copy()
         if self.left_item:
             name = self.left_item.name
             name = mod_name(name)
             size_x = GC.FONT['text_brown'].size(name)[0]
-            GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
+            GC.FONT['text_brown'].blit(name, self.left_bar, (91 - size_x // 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
         # Right
         right_color = Utility.get_color(self.right.team)
         # Name Tag
         self.right_name = GC.IMAGESDICT[right_color + 'RightCombatName'].copy()
         size_x = GC.FONT['text_brown'].size(self.right.name)[0]
-        GC.FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x / 2, 8))
+        GC.FONT['text_brown'].blit(self.right.name, self.right_name, (36 - size_x // 2, 8))
         # Bar
         self.right_bar = GC.IMAGESDICT[right_color + 'RightMainCombat' + crit].copy()
         if self.right_item:
             name = self.right_item.name
             name = mod_name(name)
             size_x = GC.FONT['text_brown'].size(name)[0]
-            GC.FONT['text_brown'].blit(name, self.right_bar, (47 - size_x / 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
+            GC.FONT['text_brown'].blit(name, self.right_bar, (47 - size_x // 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
         # Platforms
         left_platform_type = gameStateObj.map.tiles[self.left.position].platform
@@ -1132,8 +1132,8 @@ class AnimationCombat(Combat):
             surf.blit(self.left_platform, (9 - self.pan_max + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
             surf.blit(self.right_platform, (131 + self.pan_max + total_shake_x + self.pan_offset, top)) # Tested for attacker == right
         else:
-            surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + total_shake_x, top))
-            surf.blit(self.right_platform, (GC.WINWIDTH / 2 + total_shake_x, top))
+            surf.blit(self.left_platform, (GC.WINWIDTH // 2 - self.left_platform.get_width() + total_shake_x, top))
+            surf.blit(self.right_platform, (GC.WINWIDTH // 2 + total_shake_x, top))
         # Animation
         if self.at_range:
             right_range_offset = 24 + self.pan_max  # Tested
@@ -1173,11 +1173,11 @@ class AnimationCombat(Combat):
             self.draw_item(right_bar, self.right_item, self.left_item, self.right, self.left, (1, 2 + crit))
         # Stats
         self.draw_stats(left_bar, self.left_stats, (42, 1))
-        self.draw_stats(right_bar, self.right_stats, (GC.WINWIDTH / 2 - 3, 1))
+        self.draw_stats(right_bar, self.right_stats, (GC.WINWIDTH // 2 - 3, 1))
 
         bar_trans = 80
         left_pos = (-3 + self.shake_offset[0], GC.WINHEIGHT - self.left_bar.get_height() + (bar_trans - bar_multiplier * bar_trans) + self.shake_offset[1])
-        right_pos = (GC.WINWIDTH / 2 + self.shake_offset[0], 
+        right_pos = (GC.WINWIDTH // 2 + self.shake_offset[0], 
                      GC.WINHEIGHT - self.right_bar.get_height() + (bar_trans - bar_multiplier * bar_trans) + self.shake_offset[1])
         combat_surf.blit(left_bar, left_pos)
         combat_surf.blit(right_bar, right_pos)
@@ -1532,7 +1532,7 @@ class MapCombat(Combat):
                     hp_bar.force_position_update(gameStateObj)
 
             elif self.combat_state == 'Init':
-                if skip or current_time > self.length_of_combat / 5 + self.additional_time:
+                if skip or current_time > self.length_of_combat // 5 + self.additional_time:
                     gameStateObj.cursor.drawState = 0
                     gameStateObj.highlight_manager.remove_highlights()
 
@@ -1541,8 +1541,8 @@ class MapCombat(Combat):
                         num_frames = 12
                         if 'AOE_' + self.item.id in GC.IMAGESDICT:
                             image = GC.IMAGESDICT['AOE_' + self.item.id]
-                            pos = gameStateObj.cursor.position[0] - (image.get_width() / num_frames / GC.TILEWIDTH / 2) + 1, \
-                                gameStateObj.cursor.position[1] - (image.get_height() / GC.TILEHEIGHT / 2)
+                            pos = gameStateObj.cursor.position[0] - (image.get_width() // num_frames // GC.TILEWIDTH // 2) + 1, \
+                                gameStateObj.cursor.position[1] - (image.get_height() // GC.TILEHEIGHT // 2)
                             #  
                             # print(gameStateObj.cursor.position, pos)
                             anim = CustomObjects.Animation(GC.IMAGESDICT['AOE_' + self.item.id], pos, (num_frames, 1), num_frames, 32)
@@ -1551,11 +1551,11 @@ class MapCombat(Combat):
                             logger.warning('%s not in GC.IMAGESDICT. Skipping Animation', 'AOE_' + self.item.id)
                     # Weapons get extra time, spells and items do not need it, since they are one sided.
                     if not self.item.weapon:
-                        self.additional_time -= self.length_of_combat / 5
+                        self.additional_time -= self.length_of_combat // 5
                     self.combat_state = '2'
 
             elif self.combat_state == '2':
-                if skip or current_time > 2 * self.length_of_combat / 5 + self.additional_time:
+                if skip or current_time > 2 * self.length_of_combat // 5 + self.additional_time:
                     self.combat_state = 'Anim'
                     if self.results[0].attacker.sprite.state in {'combat_attacker', 'combat_defender'}:
                         self.results[0].attacker.sprite.change_state('combat_anim', gameStateObj)
@@ -1568,7 +1568,7 @@ class MapCombat(Combat):
                             GC.SOUNDDICT[item.sfx_on_cast].play()
 
             elif self.combat_state == 'Anim':
-                if skip or current_time > 3 * self.length_of_combat / 5 + self.additional_time:
+                if skip or current_time > 3 * self.length_of_combat // 5 + self.additional_time:
                     if self.results[0].attacker.sprite.state == 'combat_anim':
                         self.results[0].attacker.sprite.change_state('combat_attacker', gameStateObj)
                     for result in self.results:
@@ -1580,7 +1580,7 @@ class MapCombat(Combat):
                                 item = result.attacker.getMainWeapon()
                             if isinstance(result.defender, UnitObject.UnitObject):
                                 color = item.map_hit_color if item.map_hit_color else (255, 255, 255) # default to white
-                                result.defender.begin_flicker(self.length_of_combat / 5, color)
+                                result.defender.begin_flicker(self.length_of_combat // 5, color)
                             # Sound
                             if item.sfx_on_hit and item.sfx_on_hit in GC.SOUNDDICT:
                                 GC.SOUNDDICT[item.sfx_on_hit].play()
@@ -1650,15 +1650,15 @@ class MapCombat(Combat):
                     for hp_bar in self.health_bars.values():
                         hp_bar.update()
                     self.additional_time += \
-                        max(hp_bar.time_for_change for hp_bar in self.health_bars.values()) if self.health_bars else self.length_of_combat / 5
+                        max(hp_bar.time_for_change for hp_bar in self.health_bars.values()) if self.health_bars else self.length_of_combat // 5
                     self.combat_state = 'Clean'
 
             elif self.combat_state == 'Clean':
-                if skip or current_time > (3 * self.length_of_combat / 5) + self.additional_time:
+                if skip or current_time > (3 * self.length_of_combat // 5) + self.additional_time:
                     self.combat_state = 'Wait'
 
             elif self.combat_state == 'Wait': 
-                if skip or current_time > (4 * self.length_of_combat / 5) + self.additional_time:
+                if skip or current_time > (4 * self.length_of_combat // 5) + self.additional_time:
                     self.end_phase(gameStateObj)
                     self.old_results += self.results
                     self.results = []
@@ -1979,11 +1979,11 @@ class HealthBar(object):
                 self.determine_position(gameStateObj, (width, height))
 
             if self.stats:
-                blit_surf = Engine.subsurface(bg_surf, (0, true_height/2 - int(true_height*self.blinds/2), width, int(true_height*self.blinds)))
-                y_pos = self.true_position[1] + true_height/2 - int(true_height*self.blinds/2)
+                blit_surf = Engine.subsurface(bg_surf, (0, true_height//2 - int(true_height*self.blinds//2), width, int(true_height*self.blinds)))
+                y_pos = self.true_position[1] + true_height//2 - int(true_height*self.blinds//2)
             else:
-                blit_surf = Engine.subsurface(bg_surf, (0, height/2 - int(height*self.blinds/2), width, int(height*self.blinds)))
-                y_pos = self.true_position[1] + height/2 - int(height*self.blinds/2)
+                blit_surf = Engine.subsurface(bg_surf, (0, height//2 - int(height*self.blinds//2), width, int(height*self.blinds)))
+                y_pos = self.true_position[1] + height//2 - int(height*self.blinds//2)
             surf.blit(blit_surf, (self.true_position[0] + self.shake_offset[0], y_pos + self.shake_offset[1]))
 
             # blit Gem
@@ -2004,7 +2004,7 @@ class HealthBar(object):
             hit = str(self.stats[0])
         else:
             hit = '--'
-        position = c_surf.get_width()/2 - GC.FONT['number_small2'].size(hit)[0] - 1, -2
+        position = c_surf.get_width()//2 - GC.FONT['number_small2'].size(hit)[0] - 1, -2
         GC.FONT['number_small2'].blit(hit, c_surf, position)
         # Blit Damage
         if self.stats[1] is not None:
@@ -2031,7 +2031,7 @@ class HealthBar(object):
                 left = True if pos1[0] < pos2[0] else False
             self.order = 'left' if left else 'right'
             # logger.debug("%s %s %s", pos1, pos2, left)
-            x_pos = GC.WINWIDTH/2 - width if left else GC.WINWIDTH/2
+            x_pos = GC.WINWIDTH//2 - width if left else GC.WINWIDTH//2
             rel_1 = pos1[1] - c_pos[1]
             rel_2 = pos2[1] - c_pos[1]
             # logger.debug("Health_Bar_Pos %s %s", rel_1, rel_2)
@@ -2054,8 +2054,8 @@ class HealthBar(object):
                 elif bottom_gap > top_gap and bottom_gap > middle_gap:
                     y_pos = (bottom_gap+1) * GC.TILEHEIGHT + 12
                 else:
-                    y_pos = GC.WINHEIGHT/4 - height/2 - 13/2 if rel_1 < 5 else 3*GC.WINHEIGHT/4 - height/2 - 13/2
-                    x_pos = GC.WINWIDTH/4 - width/2 if pos1[0] - c_pos[0] > GC.TILEX/2 else 3*GC.WINWIDTH/4 - width/2
+                    y_pos = GC.WINHEIGHT//4 - height//2 - 13//2 if rel_1 < 5 else 3*GC.WINHEIGHT//4 - height//2 - 13//2
+                    x_pos = GC.WINWIDTH//4 - width//2 if pos1[0] - c_pos[0] > GC.TILEX//2 else 3*GC.WINWIDTH//4 - width//2
                     self.order = 'middle'
             self.true_position = (x_pos, y_pos)
             # logger.debug('True Position %s %s', x_pos, y_pos)
@@ -2064,11 +2064,11 @@ class HealthBar(object):
             pos_x = self.unit.position[0] - gameStateObj.cameraOffset.get_x()
             pos_x = Utility.clamp(pos_x, 3, GC.TILEX - 2)
             # Find y position
-            if self.unit.position[1] - gameStateObj.cameraOffset.get_y() < GC.TILEY/2: # IF unit is at top of screen
+            if self.unit.position[1] - gameStateObj.cameraOffset.get_y() < GC.TILEY//2: # IF unit is at top of screen
                 pos_y = self.unit.position[1] - gameStateObj.cameraOffset.get_y() + 2
             else:
                 pos_y = self.unit.position[1] - gameStateObj.cameraOffset.get_y() - 3
-            self.true_position = pos_x*GC.TILEWIDTH - width/2, pos_y*GC.TILEHEIGHT - 8
+            self.true_position = pos_x*GC.TILEWIDTH - width//2, pos_y*GC.TILEHEIGHT - 8
             self.order = 'middle'
             # logger.debug('Other True Position %s %s', pos_x, pos_y)
 

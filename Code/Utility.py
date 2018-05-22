@@ -186,8 +186,8 @@ def farthest_away_pos(unit, valid_moves, all_units):
             for u in enemy_units:
                 avg_position[0] += u.position[0]
                 avg_position[1] += u.position[1]
-            avg_position[0] = avg_position[0]/len(enemy_units)
-            avg_position[1] = avg_position[1]/len(enemy_units)
+            avg_position[0] = avg_position[0]//len(enemy_units)
+            avg_position[1] = avg_position[1]//len(enemy_units)
             return sorted(valid_moves, key=lambda move: calculate_distance(avg_position, move))[-1]
         else:
             return valid_moves[0]

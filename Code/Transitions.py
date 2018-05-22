@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 def create_title(text, background='DarkMenu'):
     title_surf = GC.IMAGESDICT[background].copy()
-    title_pos = GC.WINWIDTH/2 - title_surf.get_width()/2, 21 - title_surf.get_height()/2
-    center_pos = title_surf.get_width()/2 - GC.BASICFONT.size(text)[0]/2, title_surf.get_height()/2 - GC.BASICFONT.size(text)[1]/2
+    title_pos = GC.WINWIDTH//2 - title_surf.get_width()//2, 21 - title_surf.get_height()//2
+    center_pos = title_surf.get_width()//2 - GC.BASICFONT.size(text)[0]//2, title_surf.get_height()//2 - GC.BASICFONT.size(text)[1]//2
     MenuFunctions.OutlineFont(GC.BASICFONT, text, title_surf, GC.COLORDICT['off_white'], GC.COLORDICT['off_black'], center_pos)
     return title_surf, title_pos
 
@@ -53,7 +53,7 @@ class Logo(object):
     def __init__(self, image, center):
         self.texture = image
         self.image = None
-        self.height = self.texture.get_height()/8
+        self.height = self.texture.get_height()//8
         self.width = self.texture.get_width()
         self.center = center
         self.logo_counter = 0
@@ -71,7 +71,7 @@ class Logo(object):
             self.last_update = currentTime
 
     def draw(self, surf):
-        surf.blit(self.image, (self.center[0] - self.width/2, self.center[1] - self.height/2))
+        surf.blit(self.image, (self.center[0] - self.width//2, self.center[1] - self.height//2))
 
 def load_saves():
     save_slots = []
@@ -99,7 +99,7 @@ class StartStart(StateMachine.State):
             gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.logo = GC.IMAGESDICT['Logo']
-            gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], (GC.WINWIDTH/2, 4*GC.WINHEIGHT/5))
+            gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], (GC.WINWIDTH//2, 4*GC.WINHEIGHT//5))
             gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
             gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
@@ -173,7 +173,7 @@ class StartStart(StateMachine.State):
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         # gameStateObj.logo.draw(surf)
-        surf.blit(gameStateObj.logo, (GC.WINWIDTH/2 - gameStateObj.logo.get_width()/2, GC.WINHEIGHT/2 - gameStateObj.logo.get_height()/2 - 20))
+        surf.blit(gameStateObj.logo, (GC.WINWIDTH//2 - gameStateObj.logo.get_width()//2, GC.WINHEIGHT//2 - gameStateObj.logo.get_height()//2 - 20))
         gameStateObj.press_start.draw(surf)
         GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, (4, GC.WINHEIGHT - 16))
         return surf
@@ -185,7 +185,7 @@ class StartOption(StateMachine.State):
             self.selection = None
             self.state = "transition_in"
             self.banner = None
-            self.position_x = -GC.WINWIDTH/2
+            self.position_x = -GC.WINWIDTH//2
 
             self.background = GC.IMAGESDICT['BlackBackground']
             self.transition = 100
@@ -253,14 +253,14 @@ class StartOption(StateMachine.State):
         # Transition out
         if self.state == 'transition_in':
             self.position_x += 20
-            if self.position_x >= GC.WINWIDTH/2:
-                self.position_x = GC.WINWIDTH/2
+            if self.position_x >= GC.WINWIDTH//2:
+                self.position_x = GC.WINWIDTH//2
                 self.state = "normal"
 
         elif self.state == 'transition_out':
             self.position_x -= 20
-            if self.position_x <= -GC.WINWIDTH/2:
-                self.position_x = -GC.WINWIDTH/2
+            if self.position_x <= -GC.WINWIDTH//2:
+                self.position_x = -GC.WINWIDTH//2
                 if self.selection == cf.WORDS['Load Game']:
                     gameStateObj.stateMachine.changeState('start_load')
                 elif self.selection == cf.WORDS['Restart Level']:
@@ -302,9 +302,9 @@ class StartOption(StateMachine.State):
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         if self.menu:
-            self.menu.draw(surf, center=(self.position_x, GC.WINHEIGHT/2), show_cursor=(self.state == "normal"))
+            self.menu.draw(surf, center=(self.position_x, GC.WINHEIGHT//2), show_cursor=(self.state == "normal"))
         if self.banner and self.state == 'normal':
-            surf.blit(self.banner, (GC.WINWIDTH/2 - self.banner.get_width()/2, GC.WINHEIGHT/2 - self.banner.get_height()/2))
+            surf.blit(self.banner, (GC.WINWIDTH//2 - self.banner.get_width()//2, GC.WINHEIGHT//2 - self.banner.get_height()//2))
 
         # Now draw black background
         bb = Image_Modification.flickerImageTranslucent(self.background, self.transition)
@@ -318,7 +318,7 @@ class StartLoad(StateMachine.State):
             # For transition
             self.selection = None
             self.state = "transition_in"
-            self.position_x = 3*GC.WINWIDTH/2
+            self.position_x = 3*GC.WINWIDTH//2
             self.title_surf, self.title_pos = create_title(cf.WORDS['Load Game'])
             self.rel_title_pos_y = -40
             options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
@@ -368,8 +368,8 @@ class StartLoad(StateMachine.State):
 
         if self.state == 'transition_in':
             self.position_x -= 20
-            if self.position_x <= GC.WINWIDTH/2:
-                self.position_x = GC.WINWIDTH/2
+            if self.position_x <= GC.WINWIDTH//2:
+                self.position_x = GC.WINWIDTH//2
                 self.state = "normal"
             if self.rel_title_pos_y < 0:
                 self.rel_title_pos_y += 4 
@@ -378,8 +378,8 @@ class StartLoad(StateMachine.State):
             self.position_x += 20
             if self.rel_title_pos_y > -40:
                 self.rel_title_pos_y -= 4
-            if self.position_x >= 3*GC.WINWIDTH/2:
-                self.position_x = 3*GC.WINWIDTH/2
+            if self.position_x >= 3*GC.WINWIDTH//2:
+                self.position_x = 3*GC.WINWIDTH//2
                 gameStateObj.stateMachine.back()
                 self.state = 'transition_in'
                 return 'repeat'
@@ -405,7 +405,7 @@ class StartRestart(StartLoad):
             # For transition
             self.selection = None
             self.state = "transition_in"
-            self.position_x = 3*GC.WINWIDTH/2
+            self.position_x = 3*GC.WINWIDTH//2
             self.title_surf, self.title_pos = create_title(cf.WORDS['Restart Level'])
             self.rel_title_pos_y = -40
             options = [save_slot.get_name() for save_slot in gameStateObj.save_slots]
@@ -573,7 +573,7 @@ class StartNew(StateMachine.State):
             # For transition
             self.selection = None
             self.state = "transition_in"
-            self.position_x = 3*GC.WINWIDTH/2
+            self.position_x = 3*GC.WINWIDTH//2
             self.title_surf, self.title_pos = create_title(cf.WORDS['New Game'])
             self.rel_title_pos_y = -40
             options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
@@ -603,7 +603,7 @@ class StartNew(StateMachine.State):
             if selection.kind:
                 GC.SOUNDDICT['Select 1'].play()
                 options = [cf.WORDS['Overwrite'], cf.WORDS['Back']]
-                gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, (GC.TILEWIDTH/2, GC.WINHEIGHT - GC.TILEHEIGHT * 1.5), horizontal=True)
+                gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, (GC.TILEWIDTH//2, GC.WINHEIGHT - GC.TILEHEIGHT * 1.5), horizontal=True)
                 gameStateObj.stateMachine.changeState('start_newchild')
                 # self.time_display.state = 'left'
             else:
@@ -637,8 +637,8 @@ class StartNew(StateMachine.State):
 
         if self.state == 'transition_in':
             self.position_x -= 20
-            if self.position_x <= GC.WINWIDTH/2:
-                self.position_x = GC.WINWIDTH/2
+            if self.position_x <= GC.WINWIDTH//2:
+                self.position_x = GC.WINWIDTH//2
                 self.state = "normal"
             if self.rel_title_pos_y < 0:
                 self.rel_title_pos_y += 4 
@@ -647,8 +647,8 @@ class StartNew(StateMachine.State):
             self.position_x += 20
             if self.rel_title_pos_y > -40:
                 self.rel_title_pos_y -= 4
-            if self.position_x >= 3*GC.WINWIDTH/2:
-                self.position_x = 3*GC.WINWIDTH/2
+            if self.position_x >= 3*GC.WINWIDTH//2:
+                self.position_x = 3*GC.WINWIDTH//2
                 # gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('start_option')
@@ -661,7 +661,7 @@ class StartNew(StateMachine.State):
         gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
         gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT/2])
+            gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT//2])
         # selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
         # self.time_display.draw(surf, selection.realtime)
         if gameStateObj.childMenu:
@@ -714,7 +714,7 @@ class StartExtras(StateMachine.State):
         # For transition
         self.selection = None
         self.state = "transition_in"
-        self.position_x = 3*GC.WINWIDTH/2
+        self.position_x = 3*GC.WINWIDTH//2
 
         options = [cf.WORDS['Options'], cf.WORDS['Credits']]
         gameStateObj.activeMenu = MenuFunctions.MainMenu(options, 'DarkMenu')
@@ -751,14 +751,14 @@ class StartExtras(StateMachine.State):
 
         if self.state == 'transition_in':
             self.position_x -= 20
-            if self.position_x <= GC.WINWIDTH/2:
-                self.position_x = GC.WINWIDTH/2
+            if self.position_x <= GC.WINWIDTH//2:
+                self.position_x = GC.WINWIDTH//2
                 self.state = "normal"
 
         elif self.state == 'transition_out':
             self.position_x += 20
-            if self.position_x >= 3*GC.WINWIDTH/2:
-                self.position_x = 3*GC.WINWIDTH/2
+            if self.position_x >= 3*GC.WINWIDTH//2:
+                self.position_x = 3*GC.WINWIDTH//2
                 gameStateObj.stateMachine.back()
                 self.state = 'transition_in'
                 return 'repeat'
@@ -773,7 +773,7 @@ class StartExtras(StateMachine.State):
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.draw(surf, center=(self.position_x, GC.WINHEIGHT/2))
+            gameStateObj.activeMenu.draw(surf, center=(self.position_x, GC.WINHEIGHT//2))
         return surf
 
 class StartWait(StateMachine.State):
@@ -1014,7 +1014,7 @@ class GameOverState(StateMachine.State):
             if self.GOStateMachine.getState() == 'text_fade_in':
                 alpha = 255 - int(2.55*self.transparency)
                 Engine.fill(TextSurf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
-            pos = (GC.WINWIDTH/2 - TextSurf.get_width()/2, GC.WINHEIGHT/2 - TextSurf.get_height()/2)
+            pos = (GC.WINWIDTH//2 - TextSurf.get_width()//2, GC.WINHEIGHT//2 - TextSurf.get_height()//2)
         
             surf.blit(TextSurf, pos)
 
@@ -1112,23 +1112,23 @@ class ChapterTransitionState(StateMachine.State):
         # Draw sigil
         sigil_outline = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['chapterTransitionSigil'], self.sigil_fade)
         sigil_middle = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['chapterTransitionSigil2'], self.sigil_fade)
-        center_x = (GC.WINWIDTH/2 - sigil_outline.get_width()/2)
-        center_y = (GC.WINHEIGHT/2 - sigil_outline.get_height()/2)
+        center_x = (GC.WINWIDTH//2 - sigil_outline.get_width()//2)
+        center_y = (GC.WINHEIGHT//2 - sigil_outline.get_height()//2)
         mapSurf.blit(sigil_outline, (center_x + 1, center_y + 1))
         mapSurf.blit(sigil_middle, (center_x, center_y))
 
         # Draw Ribbon
         if self.CTStateMachine.getState() in ['ribbon_fade_in', 'wait', 'ribbon_close', 'fade_out']:
             new_ribbon = self.ribbon.copy()
-            position = (GC.WINWIDTH/2 - GC.FONT['chapter_yellow'].size(self.name)[0]/2, self.ribbon.get_height()/2 - 6)
+            position = (GC.WINWIDTH//2 - GC.FONT['chapter_yellow'].size(self.name)[0]//2, self.ribbon.get_height()//2 - 6)
             GC.FONT['chapter_yellow'].blit(self.name, new_ribbon, position)
-            new_ribbon = Engine.subsurface(new_ribbon, (0, (self.ribbon.get_height() - self.banner_grow_y)/2, self.ribbon.get_width(), self.banner_grow_y))
-            mapSurf.blit(new_ribbon, (GC.WINWIDTH/2 - self.ribbon.get_width()/2, GC.WINHEIGHT/2 - new_ribbon.get_height()/2))
+            new_ribbon = Engine.subsurface(new_ribbon, (0, (self.ribbon.get_height() - self.banner_grow_y)//2, self.ribbon.get_width(), self.banner_grow_y))
+            mapSurf.blit(new_ribbon, (GC.WINWIDTH//2 - self.ribbon.get_width()//2, GC.WINHEIGHT//2 - new_ribbon.get_height()//2))
 
         # Draw Banner
         banner = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['chapterTransitionBanner'], self.banner_fade)
         banner = Engine.subsurface(banner, (0, 0, self.banner_grow_x, self.banner_grow_y))
-        mapSurf.blit(banner, (GC.WINWIDTH/2 - banner.get_width()/2, GC.WINHEIGHT/2 - banner.get_height()/2))
+        mapSurf.blit(banner, (GC.WINWIDTH//2 - banner.get_width()//2, GC.WINHEIGHT//2 - banner.get_height()//2))
 
         return mapSurf
 
