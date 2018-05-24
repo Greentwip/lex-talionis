@@ -323,17 +323,7 @@ class MusicThread(object):
     def fade_to_normal(self, gameStateObj, metaDataObj):
         logger.info('Music: Fade to Normal')
         phase_name = gameStateObj.phase.get_current_phase()
-        if gameStateObj.phase_music:
-            self.fade_in(gameStateObj.phase_music.get_phase_music(phase_name))
-        else:
-            if phase_name == 'player':
-                self.fade_in(metaDataObj['playerPhaseMusic'])
-            elif phase_name.startswith('enemy'):
-                self.fade_in(metaDataObj['enemyPhaseMusic'])
-            elif phase_name == 'other':
-                self.fade_in(metaDataObj['otherPhaseMusic'])
-            else:
-                logging.error('Unsupported phase name: %s', phase_name)
+        self.fade_in(gameStateObj.phase_music.get_phase_music(phase_name))
 
     def fade_in(self, next_song, num_plays=-1, time=0):
         logger.info('Music: Fade in')

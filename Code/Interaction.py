@@ -49,22 +49,22 @@ class Solver(object):
         self.uses_count = 0
         self.index = 0
 
-    def generate_roll(self, event_command=None):
+    def generate_roll(self, rng_mode, event_command=None):
         if event_command:
             if event_command in ('hit', 'crit'):
                 return 0
             elif event_command == 'miss':
                 return 100
         # Normal RNG
-        if cf.CONSTANTS['rng'] == 'hybrid':
+        if rng_mode == 'hybrid':
             roll = 0
-        elif cf.CONSTANTS['rng'] == 'no_rng':
+        elif rng_mode == 'no_rng':
             roll = cf.CONSTANTS['set_roll']
-        elif cf.CONSTANTS['rng'] == 'classic':
+        elif rng_mode == 'classic':
             roll = random.randint(0, 99)
-        elif cf.CONSTANTS['rng'] == 'true_hit':
+        elif rng_mode == 'true_hit':
             roll = (random.randint(0, 99) + random.randint(0, 99)) // 2
-        elif cf.CONSTANTS['rng'] == 'true_hit+':
+        elif rng_mode == 'true_hit+':
             roll = (random.randint(0, 99) + random.randint(0, 99) + random.randint(0, 99)) // 3
         return roll
 
@@ -93,9 +93,10 @@ class Solver(object):
             "Only Units and Tiles can engage in combat! %s" % (defender)
         
         to_hit = self.attacker.compute_hit(defender, gameStateObj, self.item, mode="Attack")
-        roll = self.generate_roll(event_command)
+        rng_mode = gameStateObj.mode['rng']
+        roll = self.generate_roll(rng_mode, event_command)
 
-        hybrid = to_hit if cf.CONSTANTS['rng'] == 'hybrid' else None
+        hybrid = to_hit if rng_mode == 'hybrid' else None
 
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
         if self.item.weapon:
@@ -163,9 +164,10 @@ class Solver(object):
             event_command = None
 
         to_hit = self.defender.compute_hit(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense")
-        roll = self.generate_roll(event_command)
+        rng_mode = gameStateObj.mode['rng']
+        roll = self.generate_roll(rng_mode, event_command)
 
-        hybrid = to_hit if cf.CONSTANTS['rng'] == 'hybrid' else None
+        hybrid = to_hit if rng_mode == 'hybrid' else None
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
         if roll < to_hit:
             result.outcome = (2 if self.item.guaranteed_crit else 1)

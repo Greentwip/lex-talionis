@@ -78,7 +78,6 @@ def read_constants_file():
              'max_promotions': 10, # Allowed number of promotion options for a unit
              'mounted_aid': 15, # What a mounted units CON is subtracted from to determine AID
              'crit': 3, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 2x damage minus 2x defense, 3 - 3x damage minus 3x defense
-             'death': 2,
              'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
              'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)
              'exp_curve': 2.3, # How linear the exp curve is. Higher = less linear
@@ -100,16 +99,11 @@ def read_constants_file():
              'def_double': 1, # Whether units on defense can double their attackers
              'support': 1, # Whether this game has supports
              'enemy_leveling': 1, # How to level up non-player units
-             'growths': 3,
-             'rng': 'true_hit', # How hits are calculated ('classic', 'true_hit', 'true_hit+', 'no_rng', 'hybrid') # FE6-13 uses true_hit
-             'set_roll': 49, # used for 'no_rng' mode. Determines threshold at which attacks miss. Ex. Any attack with hitrate <= set_roll, misses
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
              'max_stat': 20, # Maximum value that a non-HP stat can be. Irrespective of class caps. 
              'num_stats': 10, # Number of stats that a unit has (Includes HP, CON, and MOV)
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
-             'difficulties': 'Normal,Hard,Lunatic',
-             'only_difficulty': -1,
-             'max_level': '20', # Maximum Level for class by tier ('10, 20, 20,')
+             'max_level': '10,20,20', # Maximum Level for class by tier ('10, 20, 20,')
              'auto_promote': 0, # Promote after max-level?
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
@@ -133,7 +127,6 @@ def read_constants_file():
     lines['speed_to_double'] = int(lines['speed_to_double'])
     lines['mounted_aid'] = int(lines['mounted_aid'])
     lines['crit'] = int(lines['crit'])
-    lines['death'] = int(lines['death'])
     lines['flying_mcost_column'] = int(lines['flying_mcost_column'])
     lines['fleet_mcost_column'] = int(lines['fleet_mcost_column'])
     lines['exp_curve'] = float(lines['exp_curve'])
@@ -154,13 +147,10 @@ def read_constants_file():
     lines['def_double'] = int(lines['def_double'])
     lines['support'] = int(lines['support'])
     lines['enemy_leveling'] = int(lines['enemy_leveling'])
-    lines['growths'] = int(lines['growths'])
-    lines['set_roll'] = int(lines['set_roll'])
     lines['num_skills'] = int(lines['num_skills'])
     lines['max_stat'] = int(lines['max_stat'])
     lines['num_stats'] = int(lines['num_stats'])
     lines['stat_names'] = lines['stat_names'].split(',')
-    lines['difficulties'] = lines['difficulties'].split(',')
     lines['max_level'] = [int(n) for n in lines['max_level'].split(',')]
     lines['auto_promote'] = int(lines['auto_promote'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
@@ -172,30 +162,6 @@ def read_constants_file():
     lines['crit_accuracy_skill_coef'] = float(lines['crit_accuracy_skill_coef'])
     lines['crit_avoid_luck_coef'] = float(lines['crit_avoid_luck_coef'])
     lines['defense_coef'] = float(lines['defense_coef'])
-
-    return lines
-
-def read_growths_file():
-    # HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV
-    lines = {'enemy_growths': ','.join(['0'] * CONSTANTS['num_stats']),
-             'player_growths': ','.join(['0'] * CONSTANTS['num_stats']),
-             'enemy_bases': ','.join(['0'] * CONSTANTS['num_stats']),
-             'player_bases': ','.join(['0'] * CONSTANTS['num_stats'])}
-
-    if os.path.isfile('Data/growths.txt'):
-        with open('Data/growths.txt') as growths_file:
-            for line in growths_file:
-                split_line = line.strip().split(';')
-                lines[split_line[0]] = split_line[1]
-
-    lines['enemy_growths'] = [int(num) for num in lines['enemy_growths'].split(',')]
-    lines['player_growths'] = [int(num) for num in lines['player_growths'].split(',')]
-    lines['enemy_bases'] = [int(num) for num in lines['enemy_bases'].split(',')]
-    lines['player_bases'] = [int(num) for num in lines['player_bases'].split(',')]
-    assert len(lines['enemy_growths']) == CONSTANTS['num_stats']
-    assert len(lines['player_growths']) == CONSTANTS['num_stats']
-    assert len(lines['enemy_bases']) == CONSTANTS['num_stats']
-    assert len(lines['player_bases']) == CONSTANTS['num_stats']
 
     return lines
 

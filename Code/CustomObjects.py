@@ -1237,14 +1237,14 @@ class CameraOffset(object):
         gameStateObj.set_camera_limits()
         if self.current_x != self.x:
             if self.current_x > self.x:
-                self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)//self.speed
+                self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)/self.speed
             elif self.current_x < self.x:
-                self.current_x += 0.125 if self.pan_flag else (self.x - self.current_x)//self.speed
+                self.current_x += 0.125 if self.pan_flag else (self.x - self.current_x)/self.speed
         if self.current_y != self.y:
             if self.current_y > self.y:
-                self.current_y -= 0.125 if self.pan_flag else (self.current_y - self.y)//self.speed
+                self.current_y -= 0.125 if self.pan_flag else (self.current_y - self.y)/self.speed
             elif self.current_y < self.y:
-                self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)//self.speed
+                self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)/self.speed
         # If they are close enough, make them so.
         if abs(self.current_x - self.x) < 0.125:
             self.current_x = self.x

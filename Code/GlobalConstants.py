@@ -6,7 +6,7 @@ import configuration as cf
 import logging
 logger = logging.getLogger(__name__)
 
-version = "0.7.4"
+version = "0.8.0"
 # === GLOBAL cf.CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000//FPS
@@ -66,6 +66,7 @@ except ImportError:
 # Outside data
 # === CREATE ITEM DICTIONARY =================================================
 loc = Engine.engine_constants['home']
+
 def create_item_dict():
     item_dict = {}
     # For each lore
@@ -76,12 +77,29 @@ def create_item_dict():
         item_dict[name]['num'] = idx
     return item_dict
 ITEMDATA = create_item_dict() # This is done differently because I thought the ET was slow. Turns out its not slow. Creating ItemObjects is slow.
+
 STATUSDATA = ET.parse(loc + 'Data/status.xml')
 UNITDATA = ET.parse(loc + 'Data/units.xml')
 CLASSDATA = ET.parse(loc + 'Data/class_info.xml')
 LOREDATA = ET.parse(loc + 'Data/lore.xml')
 PORTRAITDATA = ET.parse(loc + 'Data/portrait_coords.xml')
 TERRAINDATA = ET.parse(loc + 'Data/terrain.xml')
+
+def create_difficulty_dict(fp):
+    difficulty_dict = OrderedDict()
+    # For each difficulty
+    for idx, entry in enumerate(ET.parse(fp).getroot().findall('difficulty')):
+        name = entry.attrib['name']
+        difficulty_dict[name] = {c.tag: c.text for c in entry}
+        cur = difficulty_dict[name]
+        cur['name'] = name
+        cur['enemy_growths'] = [int(num) for num in cur['enemy_growths'].split(',')]
+        cur['player_growths'] = [int(num) for num in cur['player_growths'].split(',')]
+        cur['enemy_bases'] = [int(num) for num in cur['enemy_bases'].split(',')]
+        cur['player_bases'] = [int(num) for num in cur['player_bases'].split(',')]
+    return difficulty_dict
+DIFFICULTYDATA = create_difficulty_dict(loc + 'Data/difficulty_modes.xml')
+
 def create_mcost_dict(fp):
     mcost_dict = {}
     with open(fp, 'r') as mcost_data:
@@ -92,6 +110,7 @@ def create_mcost_dict(fp):
             mcost_dict[s_line[0]] = [int(s) if s != '-' else 99 for s in s_line[1:]]
     return mcost_dict
 MCOSTDATA = create_mcost_dict(loc + 'Data/mcost.txt')
+
 def create_ai_dict(fp):
     ai_dict = OrderedDict()
     with open(fp, 'r') as ai_data:

@@ -51,9 +51,15 @@ class Stat(object):
         return other * (self.base_stat + self.bonuses)
 
     def __div__(self, other):
+        return (self.base_stat + self.bonuses) / other
+
+    def __floordiv__(self, other):
         return (self.base_stat + self.bonuses) // other
 
     def __rdiv__(self, other):
+        return other / (self.base_stat + self.bonuses)
+
+    def __rfloordiv__(self, other):
         return other // (self.base_stat + self.bonuses)
 
     def __neg__(self):
@@ -776,10 +782,7 @@ class UnitObject(object):
 
     def get_true_level(self, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
-        counter = self.level
-        for tier in range(unit_klass['tier']):
-            counter += Utility.find_max_level(tier, cf.CONSTANTS['max_level'])
-        return counter
+        return Utility.find_true_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])
 
     def can_promote_using(self, item, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
@@ -873,11 +876,11 @@ class UnitObject(object):
         levelup_list = [0 for x in self.stats]
         growths = self.growths
         if self.team == 'player':
-            leveling = gameStateObj.mode['growths']
+            leveling = int(gameStateObj.mode['growths'])
         else:
             leveling = cf.CONSTANTS['enemy_leveling']
             if leveling == 3: # Match player method
-                leveling = gameStateObj.mode['growths']
+                leveling = int(gameStateObj.mode['growths'])
 
         if leveling in (0, 1): # Fixed or Random
             for index in range(8):

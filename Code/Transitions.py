@@ -121,6 +121,7 @@ class StartStart(StateMachine.State):
         if event == 'AUX' and cf.OPTIONS['cheat']:
             GC.SOUNDDICT['Start'].play()
             # selection = gameStateObj.save_slots[0]
+            gameStateObj.mode = gameStateObj.default_mode()  # Need to make sure its got a mode ready
             gameStateObj.build_new() # Make the gameStateObj ready for a new game
             gameStateObj.save_slot = 'DEBUG'
             gameStateObj.game_constants['level'] = 'DEBUG'
@@ -450,19 +451,15 @@ class StartRestart(StartLoad):
 
 class StartMode(StateMachine.State):
     def no_difficulty_choice(self):
-        return cf.CONSTANTS['difficulties'][0] == '0'
-
-    def no_death_choice(self):
-        return cf.CONSTANTS['death'] != 2
-
-    def no_growth_choice(self):
-        return cf.CONSTANTS['growths'] != 3
+        return len(GC.DIFFICULTYDATA) == 1
 
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.menu = None
             self.state = 'difficulty_setup'
             self.started = True
+            self.death_choice = True
+            self.growth_choice = True
 
         if self.state == 'difficulty_setup':
             if self.no_difficulty_choice():
@@ -470,40 +467,38 @@ class StartMode(StateMachine.State):
                 return self.begin(gameStateObj, metaDataObj)
             else:
                 self.title_surf, self.title_pos = create_title(cf.WORDS['Select Difficulty'])
-                options = cf.CONSTANTS['difficulties']
+                options = list(GC.DIFFICULTYDATA)
                 toggle = [True for o in options]
-                self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
-                self.mode_name = 'difficulty'
+                self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=0)
                 gameStateObj.stateMachine.changeState('transition_in')
                 self.state = 'difficulty_wait'
                 return 'repeat'
 
         elif self.state == 'death_setup':
-            if self.no_death_choice():
-                self.state = 'growth_setup'
-                return self.begin(gameStateObj, metaDataObj)
-            else:
+            if self.death_choice:
                 self.title_surf, self.title_pos = create_title(cf.WORDS['Select Mode'])
                 options = ['Casual', 'Classic']
                 toggle = [True, True]
                 self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
-                self.mode_name = 'death'
                 gameStateObj.stateMachine.changeState('transition_in')
                 self.state = 'death_wait'
                 return 'repeat'
+            else:
+                self.state = 'growth_setup'
+                return self.begin(gameStateObj, metaDataObj)
 
         elif self.state == 'growth_setup':
-            if self.no_growth_choice():
-                gameStateObj.stateMachine.changeState('start_new')
-                gameStateObj.stateMachine.changeState('transition_out')
-            else:
+            if self.growth_choice:
                 self.title_surf, self.title_pos = create_title(cf.WORDS['Select Growths'])
                 options = ['Random', 'Fixed', 'Hybrid']
                 toggle = [True, True, True]
                 self.menu = MenuFunctions.ModeSelectMenu(options, toggle, default=1)
-                self.mode_name = 'growths'
                 gameStateObj.stateMachine.changeState('transition_in')
                 self.state = 'growth_wait'
+            else:
+                gameStateObj.stateMachine.changeState('start_new')
+                gameStateObj.stateMachine.changeState('transition_out')
+                
             return 'repeat'
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -526,29 +521,49 @@ class StartMode(StateMachine.State):
                     self.state = 'difficulty_setup'
                     gameStateObj.stateMachine.changeState('transition_clean')
             elif self.state == 'growth_wait':
-                if self.no_death_choice():
+                if self.death_choice:
+                    self.state = 'death_setup'
+                    gameStateObj.stateMachine.changeState('transition_clean')
+                else:
                     if self.no_difficulty_choice():
                         gameStateObj.stateMachine.changeState('transition_pop')
                     else:
                         self.state = 'difficulty_setup'
                         gameStateObj.stateMachine.changeState('transition_clean')
-                else:
-                    self.state = 'death_setup'
-                    gameStateObj.stateMachine.changeState('transition_clean')
+                    
             return 'repeat'
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
-            gameStateObj.mode[self.mode_name] = self.menu.getSelectionIndex()
             if self.state == 'growth_wait':
+                gameStateObj.mode['growths'] = self.menu.getSelectionIndex()
                 gameStateObj.stateMachine.changeState('start_new')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif self.state == 'death_wait':
-                self.state = 'growth_setup'
-                gameStateObj.stateMachine.changeState('transition_clean')
+                gameStateObj.mode['death'] = self.menu.getSelectionIndex()
+                if self.growth_choice:
+                    self.state = 'growth_setup'
+                    gameStateObj.stateMachine.changeState('transition_clean')
+                else:
+                    gameStateObj.stateMachine.changeState('start_new')
+                    gameStateObj.stateMachine.changeState('transition_out')
             elif self.state == 'difficulty_wait':
-                self.state = 'death_setup'
-                gameStateObj.stateMachine.changeState('transition_clean')
+                gameStateObj.mode = list(GC.DIFFICULTYDATA.values())[self.menu.getSelectionIndex()]
+                self.death_choice = gameStateObj.mode['death'] == '?'
+                self.growth_choice = gameStateObj.mode['growths'] == '?'
+                # Turn tutorial mode off if the difficulty does not support a tutorial
+                if not int(gameStateObj.mode['tutorial']):
+                    cf.OPTIONS['Display Hints'] = 0
+                    gameStateObj.tutorial_mode_off()
+                if self.death_choice:
+                    self.state = 'death_setup'
+                    gameStateObj.stateMachine.changeState('transition_clean')
+                elif self.growth_choice:
+                    self.state = 'growth_setup'
+                    gameStateObj.stateMachine.changeState('transition_clean')
+                else:
+                    gameStateObj.stateMachine.changeState('start_new')
+                    gameStateObj.stateMachine.changeState('transition_out')
             return 'repeat'
 
     def update(self, gameStateObj, metaDataObj):

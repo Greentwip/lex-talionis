@@ -29,8 +29,8 @@ class GameStateObj(object):
         self.info_surf = None
         # playtime
         self.playtime = 0
-        # mode options
-        self.mode = self.default_mode()
+        # mode
+        self.mode = None
 
     # Things that change between levels always
     def start(self, allreinforcements, prefabs, objective, music):
@@ -70,7 +70,6 @@ class GameStateObj(object):
         self.convoy = []
         self.play_time = 0
         self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if cf.CONSTANTS['support'] else None
-        self.modify_stats = cf.read_growths_file()
         self.unlocked_lore = []
         self.statistics = []
         self.market_items = set()
@@ -79,9 +78,10 @@ class GameStateObj(object):
         self.generic()
 
     def default_mode(self):
-        return {'difficulty': 1,
-                'death': cf.CONSTANTS['death'], # 0 is Casual, 1 is Classic
-                'growths': cf.CONSTANTS['growths']} # 0 is Random, 1 is Fixed, 2 is Hybrid
+        return list(GC.DIFFICULTYDATA.values())[0]
+
+    def check_mode(self, mode):
+        return mode == 'All' or mode == self.mode['name'] or mode == self.mode['id']
 
     def sweep(self):
         # None of these are kept through different levels
@@ -97,27 +97,6 @@ class GameStateObj(object):
             print(unit.name, unit.event_id, unit.position)
 
     def load(self, load_info):
-        # These are needed to keep old saves working
-        def get_level_constants(load_info):
-            if 'level_constants' in load_info:
-                return load_info['level_constants']
-            else:
-                level_constants = Counter()
-                for constant in load_info['event_triggers']:
-                    level_constants[constant] = 1
-                return level_constants
-
-        def get_game_constants(load_info):
-            if 'counters' in load_info:
-                game_constants = Counter()
-                for constant in load_info['game_constants']:
-                    game_constants[constant] = 1
-                for name, value in load_info['counters'].items():
-                    game_constants[name] = value
-                return game_constants
-            else:
-                return load_info['game_constants']
-
         logger.info("Load")
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
@@ -130,10 +109,10 @@ class GameStateObj(object):
         self.convoy = [ItemMethods.deserialize(item_dict) for item_dict in load_info['convoy']]
         self.convoy = [item for item in self.convoy if item]
         self.turncount = load_info['turncount']
-        self.game_constants = get_game_constants(load_info)
-        self.level_constants = get_level_constants(load_info)
-        self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if isinstance(load_info['objective'], tuple) else load_info['objective']
-        self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music']) if 'phase_music' in load_info else None
+        self.game_constants = load_info['game_constants']
+        self.level_constants = load_info['level_constants']
+        self.objective = CustomObjects.Objective.deserialize(load_info['objective'])
+        self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music'])
         support_dict = load_info['support']
         self.talk_options = load_info['talk_options']
         self.base_conversations = load_info['base_conversations']
@@ -141,7 +120,6 @@ class GameStateObj(object):
         self.statistics = load_info['statistics']
         # self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
         self.message = []
-        self.modify_stats = load_info.get('modify_stats', cf.read_growths_file())
         self.unlocked_lore = load_info['unlocked_lore']
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
@@ -356,7 +334,6 @@ class GameStateObj(object):
                    'base_conversations': self.base_conversations,
                    'state_list': self.stateMachine.serialize(),
                    'statistics': self.statistics,
-                   'modify_stats': self.modify_stats,
                    'market_items': self.market_items,
                    'mode': self.mode,
                    # 'message': [message.serialize() for message in self.message],
@@ -396,7 +373,7 @@ class GameStateObj(object):
         # Handle player death
         for unit in reversed(self.allunits):
             if unit.dead:
-                if not self.mode['death']: # Casual
+                if not int(self.mode['death']): # Casual
                     unit.dead = False
                 else:
                     for item in unit.items:
