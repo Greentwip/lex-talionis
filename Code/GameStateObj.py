@@ -77,6 +77,10 @@ class GameStateObj(object):
         self.sweep()
         self.generic()
 
+        # Turn tutorial mode off if the difficulty does not start with a tutorial
+        if not int(self.mode['tutorial']):
+            cf.OPTIONS['Display Hints'] = 0
+
     def default_mode(self):
         return list(GC.DIFFICULTYDATA.values())[0]
 

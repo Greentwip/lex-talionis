@@ -551,10 +551,6 @@ class StartMode(StateMachine.State):
                 gameStateObj.mode = list(GC.DIFFICULTYDATA.values())[self.menu.getSelectionIndex()]
                 self.death_choice = gameStateObj.mode['death'] == '?'
                 self.growth_choice = gameStateObj.mode['growths'] == '?'
-                # Turn tutorial mode off if the difficulty does not support a tutorial
-                if not int(gameStateObj.mode['tutorial']):
-                    cf.OPTIONS['Display Hints'] = 0
-                    gameStateObj.tutorial_mode_off()
                 if self.death_choice:
                     self.state = 'death_setup'
                     gameStateObj.stateMachine.changeState('transition_clean')
