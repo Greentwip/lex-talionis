@@ -22,7 +22,7 @@
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
-- Have Start Skip or Massivily Speed-up AI State
+- Have Start Skip or Massively Speed-up AI State
 --- ENGINE ---
 - Dialogue Tester
 - Game Editor??
@@ -31,8 +31,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- SUPPORTS ---
 - Confirm Path Of Radiance style supports work
 - Add GBA style supports
-- Add damage numbers on hit to both map combat and animation combat
-- Add Hybrid Display?
 =============
 --- EXTRA ---
 =============

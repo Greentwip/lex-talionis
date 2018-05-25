@@ -3,7 +3,7 @@ import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
 import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-import MenuFunctions
+import MenuFunctions, GUIObjects
 
 import logging
 logger = logging.getLogger(__name__)
@@ -429,8 +429,8 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
 def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_used=None, event_combat=None, ai_combat=False, toggle_anim=False):
     def animation_wanted(attacker, defender):
         return (cf.OPTIONS['Animation'] == 'Always' or
-               (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
-               (cf.OPTIONS['Animation'] == 'Combat Only' and attacker.checkIfEnemy(defender)))
+                (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
+                (cf.OPTIONS['Animation'] == 'Combat Only' and attacker.checkIfEnemy(defender)))
 
     toggle_anim = gameStateObj.input_manager.is_pressed('AUX')
     # Whether animation combat is even allowed
@@ -644,7 +644,7 @@ class AnimationCombat(Combat):
             self.right_item = self.right.getMainWeapon()
             self.left = self.p1
             self.left_item = item
-        elif self.p1.team == 'enemy' and self.p2.team in ('player', 'other'):
+        elif self.p1.team.startswith('enemy') and self.p2.team in ('player', 'other'):
             self.right = self.p2
             self.right_item = self.right.getMainWeapon()
             self.left = self.p1
@@ -674,6 +674,7 @@ class AnimationCombat(Combat):
         self.p1.lock_active()
         self.p2.lock_active()
 
+        # For fade to black viewbox
         self.viewbox_clamp_state = 0
         self.total_viewbox_clamp_states = 15
         self.viewbox = None
@@ -720,9 +721,12 @@ class AnimationCombat(Combat):
         self.platform_shake_offset = (0, 0)
         self.platform_current_shake = 0
 
+        # For display damage number animations
+        self.damage_numbers = []
+
         # To match MapCombat
         self.health_bars = {self.left: self.left_hp_bar, self.right: self.right_hp_bar}
-        self.splash = []
+        self.splash = []  # This'll never be used
 
     def init_draw(self, gameStateObj, metaDataObj):
         def mod_name(name):
@@ -732,7 +736,7 @@ class AnimationCombat(Combat):
                     return name
                 name = ' '.join(s_n[:-1])
             return name
-        self.gameStateObj = gameStateObj # Dependency Injection
+        self.gameStateObj = gameStateObj  # Dependency Injection
         self.metaDataObj = metaDataObj  # Dependency Injection
         crit = 'Crit' if cf.CONSTANTS['crit'] else ''
         # Left
@@ -948,12 +952,28 @@ class AnimationCombat(Combat):
         if self.current_result.outcome or self.current_result.def_damage != 0 or self.current_result.atk_damage != 0:
             self.last_update = Engine.get_time()
             self.combat_state = 'HP_Change'
+            self.start_damage_num_animation(self.current_result)
         # Sound
         if sound:
             if miss:
                 GC.SOUNDDICT['Miss'].play()
             else:
                 self.play_hit_sound()
+
+    def start_damage_num_animation(self, result):
+        damage = result.def_damage
+        str_damage = str(abs(damage))
+        left = self.left == result.defender
+        for idx, num in enumerate(str_damage):
+            if result.outcome == 2:  # Crit
+                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Yellow')
+                self.damage_numbers.append(d)
+            elif result.def_damage < 0:
+                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Cyan')
+                self.damage_numbers.append(d)
+            elif result.def_damage > 0:
+                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Red')
+                self.damage_numbers.append(d)
 
     def play_hit_sound(self):
         if self.current_result.defender.currenthp <= 0:
@@ -1158,6 +1178,17 @@ class AnimationCombat(Combat):
         else:
             self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)
             self.right.battle_anim.draw(surf, (0, 0), right_range_offset, self.pan_offset)
+
+        # Damage number animations
+        for damage_num in self.damage_numbers:
+            damage_num.update()
+            if damage_num.left:
+                left_pos = 94 + left_range_offset - total_shake_x + self.pan_offset
+                damage_num.draw(surf, (left_pos, 40))
+            else:
+                right_pos = 146 + right_range_offset - total_shake_x + self.pan_offset
+                damage_num.draw(surf, (right_pos, 40))
+        self.damage_numbers = [d for d in self.damage_numbers if not d.done]
 
         # Make combat surf
         combat_surf = Engine.copy_surface(self.combat_surf)
@@ -1480,6 +1511,8 @@ class MapCombat(Combat):
         self.combat_state = 'Pre_Init'
         self.aoe_anim_flag = False # Have we shown the aoe animation yet?
 
+        self.damage_numbers = []
+
         self.health_bars = {}
 
     def update(self, gameStateObj, metaDataObj, skip=False):
@@ -1574,80 +1607,7 @@ class MapCombat(Combat):
                     if self.results[0].attacker.sprite.state == 'combat_anim':
                         self.results[0].attacker.sprite.change_state('combat_attacker', gameStateObj)
                     for result in self.results:
-                        # TODO: Add offset to sound and animation
-                        if result.outcome:
-                            if result.attacker is self.p1:
-                                item = self.item
-                            else:
-                                item = result.attacker.getMainWeapon()
-                            if isinstance(result.defender, UnitObject.UnitObject):
-                                color = item.map_hit_color if item.map_hit_color else (255, 255, 255) # default to white
-                                result.defender.begin_flicker(self.length_of_combat // 5, color)
-                            # Sound
-                            if item.sfx_on_hit and item.sfx_on_hit in GC.SOUNDDICT:
-                                GC.SOUNDDICT[item.sfx_on_hit].play()
-                            elif result.defender.currenthp - result.def_damage <= 0: # Lethal
-                                GC.SOUNDDICT['Final Hit'].play()
-                                if result.outcome == 2: # Critical
-                                    for health_bar in self.health_bars.values():
-                                        health_bar.shake(3)
-                                else:
-                                    for health_bar in self.health_bars.values():
-                                        health_bar.shake(2)
-                            elif result.def_damage < 0: # Heal
-                                GC.SOUNDDICT['heal'].play()
-                            elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
-                                GC.SOUNDDICT['No Damage'].play()
-                            else:
-                                if result.outcome == 2: # critical
-                                    sound_to_play = 'Critical Hit ' + str(random.randint(1, 2))
-                                else:
-                                    sound_to_play = 'Attack Hit ' + str(random.randint(1, 5)) # Choose a random hit sound
-                                GC.SOUNDDICT[sound_to_play].play()
-                                if result.outcome == 2: # critical
-                                    for health_bar in self.health_bars.values():
-                                        health_bar.shake(3)
-                                else:
-                                    for health_bar in self.health_bars.values():
-                                        health_bar.shake(1)
-                            # Animation
-                            if self.item.self_anim:
-                                name, x, y, num = item.self_anim.split(',')
-                                pos = (result.defender.position[0], result.defender.position[1] - 1)
-                                anim = CustomObjects.Animation(GC.IMAGESDICT[name], pos, (int(x), int(y)), int(num), 24)
-                                gameStateObj.allanimations.append(anim)
-                            elif result.def_damage < 0: # Heal
-                                pos = (result.defender.position[0], result.defender.position[1] - 1)
-                                if result.def_damage <= -30:
-                                    anim = CustomObjects.Animation(GC.IMAGESDICT['MapBigHealTrans'], pos, (5, 4), 16, 24)
-                                elif result.def_damage <= -15:
-                                    anim = CustomObjects.Animation(GC.IMAGESDICT['MapMediumHealTrans'], pos, (5, 4), 16, 24)
-                                else:
-                                    anim = CustomObjects.Animation(GC.IMAGESDICT['MapSmallHealTrans'], pos, (5, 4), 16, 24)
-                                gameStateObj.allanimations.append(anim)
-                            elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
-                                pos = result.defender.position[0] - 0.5, result.defender.position[1]
-                                anim = CustomObjects.Animation(GC.IMAGESDICT['MapNoDamage'], pos, (1, 12), set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 10, 3, 3, 3))
-                                gameStateObj.allanimations.append(anim)
-                        elif result.summoning:
-                            GC.SOUNDDICT['Summon 2'].play()
-                        else:
-                            GC.SOUNDDICT['Attack Miss 2'].play()
-                            anim = CustomObjects.Animation(GC.IMAGESDICT['MapMiss'], result.defender.position, 
-                                                           (1, 13), set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 3, 3, 3))
-                            gameStateObj.allanimations.append(anim)
-                        # Handle status one time animations
-                        for status in result.def_status:
-                            if status.one_time_animation:
-                                stota = status.one_time_animation
-                                pos = result.defender.position[0], result.defender.position[1] - 1
-                                gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, pos, (stota.x, stota.y), stota.num_frames))
-                        for status in result.atk_status:
-                            if status.one_time_animation:
-                                stota = status.one_time_animation
-                                pos = result.attacker.position[0], result.attacker.position[1] - 1
-                                gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, pos, (stota.x, stota.y), stota.num_frames))
-                        self.apply_result(result, gameStateObj)
+                        self.handle_result_anim(result, gameStateObj)
                     # force update hp bars
                     for hp_bar in self.health_bars.values():
                         hp_bar.update()
@@ -1670,6 +1630,99 @@ class MapCombat(Combat):
                 for hp_bar in self.health_bars.values():
                     hp_bar.update()
         return False
+
+    def handle_result_anim(self, result, gameStateObj):
+        if result.outcome:
+            if result.attacker is self.p1:
+                item = self.item
+            else:
+                item = result.attacker.getMainWeapon()
+            if isinstance(result.defender, UnitObject.UnitObject):
+                color = item.map_hit_color if item.map_hit_color else (255, 255, 255) # default to white
+                result.defender.begin_flicker(self.length_of_combat // 5, color)
+            # Sound
+            if item.sfx_on_hit and item.sfx_on_hit in GC.SOUNDDICT:
+                GC.SOUNDDICT[item.sfx_on_hit].play()
+            elif result.defender.currenthp - result.def_damage <= 0: # Lethal
+                GC.SOUNDDICT['Final Hit'].play()
+                if result.outcome == 2: # Critical
+                    for health_bar in self.health_bars.values():
+                        health_bar.shake(3)
+                else:
+                    for health_bar in self.health_bars.values():
+                        health_bar.shake(2)
+            elif result.def_damage < 0: # Heal
+                GC.SOUNDDICT['heal'].play()
+            elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
+                GC.SOUNDDICT['No Damage'].play()
+            else:
+                if result.outcome == 2: # critical
+                    sound_to_play = 'Critical Hit ' + str(random.randint(1, 2))
+                else:
+                    sound_to_play = 'Attack Hit ' + str(random.randint(1, 5)) # Choose a random hit sound
+                GC.SOUNDDICT[sound_to_play].play()
+                if result.outcome == 2: # critical
+                    for health_bar in self.health_bars.values():
+                        health_bar.shake(3)
+                else:
+                    for health_bar in self.health_bars.values():
+                        health_bar.shake(1)
+            # Animation
+            if self.item.self_anim:
+                name, x, y, num = item.self_anim.split(',')
+                pos = (result.defender.position[0], result.defender.position[1] - 1)
+                anim = CustomObjects.Animation(GC.IMAGESDICT[name], pos, (int(x), int(y)), int(num), 24)
+                gameStateObj.allanimations.append(anim)
+            elif result.def_damage < 0: # Heal
+                pos = (result.defender.position[0], result.defender.position[1] - 1)
+                if result.def_damage <= -30:
+                    anim = CustomObjects.Animation(GC.IMAGESDICT['MapBigHealTrans'], pos, (5, 4), 16, 24)
+                elif result.def_damage <= -15:
+                    anim = CustomObjects.Animation(GC.IMAGESDICT['MapMediumHealTrans'], pos, (5, 4), 16, 24)
+                else:
+                    anim = CustomObjects.Animation(GC.IMAGESDICT['MapSmallHealTrans'], pos, (5, 4), 16, 24)
+                gameStateObj.allanimations.append(anim)
+            elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
+                pos = result.defender.position[0] - 0.5, result.defender.position[1]
+                anim = CustomObjects.Animation(GC.IMAGESDICT['MapNoDamage'], pos, (1, 12), set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 10, 3, 3, 3))
+                gameStateObj.allanimations.append(anim)
+            # Damage Num
+            self.start_damage_num_animation(result)
+
+        elif result.summoning:
+            GC.SOUNDDICT['Summon 2'].play()
+        else:
+            GC.SOUNDDICT['Attack Miss 2'].play()
+            anim = CustomObjects.Animation(GC.IMAGESDICT['MapMiss'], result.defender.position, 
+                                           (1, 13), set_timing=(1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 3, 3, 3))
+            gameStateObj.allanimations.append(anim)
+        # Handle status one time animations
+        for status in result.def_status:
+            if status.one_time_animation:
+                stota = status.one_time_animation
+                pos = result.defender.position[0], result.defender.position[1] - 1
+                gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, pos, (stota.x, stota.y), stota.num_frames))
+        for status in result.atk_status:
+            if status.one_time_animation:
+                stota = status.one_time_animation
+                pos = result.attacker.position[0], result.attacker.position[1] - 1
+                gameStateObj.allanimations.append(CustomObjects.Animation(stota.sprite, pos, (stota.x, stota.y), stota.num_frames))
+        self.apply_result(result, gameStateObj)
+
+    def start_damage_num_animation(self, result):
+        damage = result.def_damage
+        str_damage = str(abs(damage))
+        left = result.defender.position
+        for idx, num in enumerate(str_damage):
+            if result.outcome == 2:  # Crit
+                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'SmallYellow')
+                self.damage_numbers.append(d)
+            elif result.def_damage < 0:
+                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'SmallCyan')
+                self.damage_numbers.append(d)
+            elif result.def_damage > 0:
+                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'SmallRed')
+                self.damage_numbers.append(d)
 
     def skip(self):
         self.p1.sprite.reset_sprite_offset()
@@ -1757,8 +1810,18 @@ class MapCombat(Combat):
         self.additional_time = 0
 
     def draw(self, surf, gameStateObj):
+        # Health Bars
         for hp_bar in self.health_bars.values():
             hp_bar.draw(surf, gameStateObj)
+        # Damage numbers    
+        for damage_num in self.damage_numbers:
+            damage_num.update()
+            position = damage_num.left
+            c_pos = gameStateObj.cameraOffset.get_xy()
+            rel_x = position[0] - c_pos[0]
+            rel_y = position[1] - c_pos[1]
+            damage_num.draw(surf, (rel_x * GC.TILEWIDTH + 4, rel_y * GC.TILEHEIGHT))
+        self.damage_numbers = [d for d in self.damage_numbers if not d.done]
 
     # Clean up everything
     def clean_up(self, gameStateObj, metaDataObj):
@@ -2022,7 +2085,7 @@ class HealthBar(object):
         # Determine position
         self.true_position = self.topleft
         # logger.debug("Topleft %s", self.topleft)
-        if self.topleft in {'p1', 'p2'}:
+        if self.topleft in ('p1', 'p2'):
             # Get the two positions, along with camera position
             pos1 = self.unit.position
             pos2 = self.other.position

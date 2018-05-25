@@ -287,7 +287,9 @@ class UnitObject(object):
                 position = x_pos - size[0], y_pos
                 GC.FONT['text_blue'].blit(str(num), surf, position)
 
-        if cf.CONSTANTS['crit']:
+        if gameStateObj.mode['rng'] == 'hybrid':
+            surf = GC.IMAGESDICT['QuickAttackInfoHybrid'].copy()
+        elif cf.CONSTANTS['crit']:
             surf = GC.IMAGESDICT['QuickAttackInfoCrit'].copy()
         else:
             surf = GC.IMAGESDICT['QuickAttackInfo'].copy()
@@ -313,14 +315,18 @@ class UnitObject(object):
         blit_num(surf, enemyunit.currenthp, 20, 19)
         # Blit my MT
         mt = self.compute_damage(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-        blit_num(surf, mt, 64, 35)
-        # Blit my Hit
-        hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-        blit_num(surf, hit, 64, 51)
-        # Blit crit, if applicable
-        if cf.CONSTANTS['crit']:
-            crit = self.compute_crit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-            blit_num(surf, crit, 64, 67)
+        if gameStateObj.mode['rng'] == 'hybrid':
+            hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
+            blit_num(surf, int(mt * float(hit) / 100), 64, 35)
+        # Blit my Hit if not hybrid
+        else:
+            blit_num(surf, mt, 64, 35)
+            hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
+            blit_num(surf, hit, 64, 51)
+            # Blit crit, if applicable
+            if cf.CONSTANTS['crit']:
+                crit = self.compute_crit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
+                blit_num(surf, crit, 64, 67)
         # Blit enemy hit and mt
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
                 Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().RNG:
@@ -334,10 +340,16 @@ class UnitObject(object):
             e_mt = '--'
             e_hit = '--'
             e_crit = '--'
-        blit_num(surf, e_mt, 20, 35)
-        blit_num(surf, e_hit, 20, 51)
-        if cf.CONSTANTS['crit']:
-            blit_num(surf, e_crit, 20, 67)
+        if gameStateObj.mode['rng'] == 'hybrid':
+            if e_mt == '--' or e_hit == '--':
+                blit_num(surf, e_mt, 20, 35)
+            else:
+                blit_num(surf, int(e_mt * float(e_hit) / 100), 20, 35)
+        else:
+            blit_num(surf, e_mt, 20, 35)
+            blit_num(surf, e_hit, 20, 51)
+            if cf.CONSTANTS['crit']:
+                blit_num(surf, e_crit, 20, 67)
 
         return surf
 

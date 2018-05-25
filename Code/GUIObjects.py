@@ -1,5 +1,7 @@
+import math
+
 import GlobalConstants as GC
-import Engine, Counters
+import Engine, Counters, Image_Modification
 
 class ScrollBar(object):
     top = Engine.subsurface(GC.IMAGESDICT['Scroll_Bar'], (0, 0, 7, 1))
@@ -68,3 +70,68 @@ class ScrollArrow(object):
         elif self.direction == 'right':
             pos = (self.x + (self.offset.pop() if self.offset else 0), self.y)
             surf.blit(Engine.subsurface(self.images['right'], (self.arrow_counter.get()*8, 0, 8, 14)), pos)
+
+class DamageNumber(object):
+        def __init__(self, num, idx, length, left, color):
+            im = GC.IMAGESDICT.get('DamageNumbers' + color, GC.IMAGESDICT['DamageNumbersRed'])
+            if color.startswith('Small'):
+                self.small = True
+            else:
+                self.small = False
+            self.num = num
+            self.idx = idx
+            self.length = length
+            self.left = left
+            self.true_image = Engine.subsurface(im, (num*16, 0, 16, 16))
+            self.image = None
+            self.done = False
+            self.start_time = Engine.get_time()
+            self.top_pos = 0
+            self.state = -1
+            if self.small:
+                self.init_time = 50 * self.idx
+            else:
+                self.init_time = 50 * self.idx + 50
+
+        def update(self):
+            new_time = float(Engine.get_time() - self.start_time)
+            # Totally transparent start_up
+            if self.state == -1:
+                if new_time > self.init_time:
+                    self.state = 0
+            # Initial bouncing and fading in
+            if self.state == 0:
+                state_time = new_time - self.init_time
+                # Position
+                self.top_pos = 10 * math.exp(-state_time/250) * math.sin(state_time/25)
+                # Transparency
+                new_transparency = max(0, (200 - state_time)/2)
+                if new_transparency > 0:
+                    self.image = Image_Modification.flickerImageTranslucent(self.true_image, new_transparency)
+                else:
+                    self.image = self.true_image
+                if state_time > 400:
+                    self.state = 1
+                    self.top_pos = 0
+            # Pause
+            if self.state == 1:
+                if new_time - self.init_time > 1000:
+                    self.state = 2
+            # Fade out and up
+            if self.state == 2:
+                state_time = new_time - self.init_time - 1000
+                # Position
+                self.top_pos = state_time/10
+                # Transparency
+                new_transparency = state_time/2
+                self.image = Image_Modification.flickerImageTranslucent(self.true_image, new_transparency)
+                if new_time > 1200:
+                    self.done = True
+
+        def draw(self, surf, pos):
+            if self.image:
+                if self.small:
+                    true_pos = pos[0] - 4*self.length + 8*self.idx, pos[1] - self.top_pos
+                else:
+                    true_pos = pos[0] - 7*self.length + 14*self.idx, pos[1] - self.top_pos
+                surf.blit(self.image, true_pos)

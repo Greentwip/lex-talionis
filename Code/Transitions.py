@@ -122,6 +122,10 @@ class StartStart(StateMachine.State):
             GC.SOUNDDICT['Start'].play()
             # selection = gameStateObj.save_slots[0]
             gameStateObj.mode = gameStateObj.default_mode()  # Need to make sure its got a mode ready
+            if gameStateObj.mode['growths'] == '?':
+                gameStateObj.mode['growths'] = 0
+            if gameStateObj.mode['death'] == '?':
+                gameStateObj.mode['death'] = 1
             gameStateObj.build_new() # Make the gameStateObj ready for a new game
             gameStateObj.save_slot = 'DEBUG'
             gameStateObj.game_constants['level'] = 'DEBUG'
