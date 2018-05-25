@@ -115,8 +115,8 @@ class GameStateObj(object):
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
         self.level_constants = load_info['level_constants']
-        self.objective = CustomObjects.Objective.deserialize(load_info['objective'])
-        self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music'])
+        self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if load_info['objective'] else None
+        self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music']) if load_info['phase_music'] else None
         support_dict = load_info['support']
         self.talk_options = load_info['talk_options']
         self.base_conversations = load_info['base_conversations']

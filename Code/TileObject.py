@@ -91,8 +91,8 @@ class MapObject(object):
     def change_tile_sprites(self, coord, image_filename, transition=None):
         image = self.loose_tile_sprites[image_filename]
         size = image.get_width()//GC.TILEWIDTH, image.get_height()//GC.TILEHEIGHT
-        for x in range(coord[0], coord[0]+size[0]):
-            for y in range(coord[1], coord[1]+size[1]):
+        for x in range(coord[0], coord[0] + size[0]):
+            for y in range(coord[1], coord[1] + size[1]):
                 pos = (x - coord[0], y - coord[1])
                 self.tile_sprites[(x, y)] = TileSprite(None, (x, y), self)
                 if transition:
@@ -120,11 +120,12 @@ class MapObject(object):
         surf.blit(self.map_image, (0, 0))
         for position, tile in self.tile_sprites.items():
             tile.draw(surf, position)
-        for position in self.tile_sprites:
-            tile = self.tile_sprites[position]
-            if not tile.new_image:
-                tile.draw(self.map_image, position) # Done, can place on main layer
-                del self.tile_sprites[position] # Can delete now that it has been permanently etched onto map image
+            
+        need_draw = [position for position in self.tile_sprites if not self.tile_sprites[position].new_image]
+        for position in need_draw:
+            self.tile_sprites[position].draw(self.map_image, position) # Done, can place on main layer
+            del self.tile_sprites[position] # Can delete now that it has been permanently etched onto map image
+                
         # Layers
         for layer in self.layers:
             if layer.show or layer.fade > 0:

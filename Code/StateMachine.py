@@ -1950,7 +1950,6 @@ class DialogueState(State):
                 ### Determines the number of levels in the game
                 num_levels = 0
                 level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
-                print(level_directories)
                 for directory in level_directories:
                     try:
                         num = int(os.path.split(directory)[1][5:])
@@ -2979,7 +2978,7 @@ class ShopState(State):
                 selection = self.shopMenu.getSelection()
                 value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                 if ('Convoy' in gameStateObj.game_constants or len(self.unit.items) < cf.CONSTANTS['max_items']) and\
-                        (gameStateObj.counters['money'] - value) >= 0:
+                        (gameStateObj.game_constants['money'] - value) >= 0:
                     GC.SOUNDDICT['Select 1'].play()
                     self.stateMachine.changeState('buy_sure')
                     if len(self.unit.items) >= cf.CONSTANTS['max_items']:
@@ -2987,7 +2986,7 @@ class ShopState(State):
                     else:
                         self.display_message = self.get_dialog(cf.WORDS['Shop_check'])
                     self.shopMenu.takes_input = False
-                elif (gameStateObj.counters['money'] - value) < 0:
+                elif (gameStateObj.game_constants['money'] - value) < 0:
                     GC.SOUNDDICT['Select 4'].play()
                     self.display_message = self.get_dialog(cf.WORDS['Shop_no_money'])
                 elif len(self.unit.items) >= cf.CONSTANTS['max_items']:
@@ -3049,7 +3048,7 @@ class ShopState(State):
                         self.unit.add_item(ItemMethods.itemparser(str(selection.id))[0])
                     else:
                         gameStateObj.convoy.append(ItemMethods.itemparser(str(selection.id))[0])
-                    gameStateObj.counters['money'] -= value
+                    gameStateObj.game_constants['money'] -= value
                     self.money_counter_disp.start(-value)
                     self.display_message = self.get_dialog('Buying anything else?')
                     self.unit.hasAttacked = True
@@ -3081,7 +3080,7 @@ class ShopState(State):
                     self.unit.remove_item(selection)
                     self.myMenu.currentSelection = 0 # Reset selection
                     value = (selection.value * selection.uses.uses)//2 if selection.uses else selection.value//2 # Divide by 2 because selling
-                    gameStateObj.counters['money'] += value
+                    gameStateObj.game_constants['money'] += value
                     self.money_counter_disp.start(value)
                     self.display_message = self.get_dialog(self.back_message)
                     self.unit.hasAttacked = True
@@ -3132,9 +3131,9 @@ class ShopState(State):
 
         if self.stateMachine.getState() in ['sell', 'sell_sure'] or \
                 (self.stateMachine.getState() == 'choice' and self.buy_sell_menu.getSelection() == cf.WORDS['Sell']):
-            self.myMenu.draw(surf, gameStateObj.counters['money'])
+            self.myMenu.draw(surf, gameStateObj.game_constants['money'])
         else:
-            self.shopMenu.draw(surf, gameStateObj.counters['money'])
+            self.shopMenu.draw(surf, gameStateObj.game_constants['money'])
 
         if self.stateMachine.getState() == 'choice' and self.display_message.done:
             self.buy_sell_menu.draw(surf)
@@ -3145,7 +3144,7 @@ class ShopState(State):
         for simple_surf, rect in self.draw_surfaces:
             surf.blit(simple_surf, rect)
 
-        GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), surf, (223 - GC.FONT['text_yellow'].size(str(gameStateObj.counters['money']))[0], 48))
+        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), surf, (223 - GC.FONT['text_yellow'].size(str(gameStateObj.game_constants['money']))[0], 48))
         self.money_counter_disp.draw(surf)
 
         # Draw current info

@@ -4,7 +4,6 @@
 - Need to compile cython modules for Linux/Mac
 
 -- REPORTED ISSUES:
-- Moving really fast in the Stat Screen crashes game?
 - Crashed on Suspend and Load another Saved Game?
 - Some music doesn't loop?
 
@@ -32,6 +31,8 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- SUPPORTS ---
 - Confirm Path Of Radiance style supports work
 - Add GBA style supports
+- Add damage numbers on hit to both map combat and animation combat
+- Add Hybrid Display?
 =============
 --- EXTRA ---
 =============
@@ -46,7 +47,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add other numbers to Level Up Numbers (5 - 7)
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells?) --- Cleave, Critical, Sol, Luna, Shove, Rally, Metamagic
 - Comment many of the functions with purposes
-- Add damage numbers on hit to both map combat and animation combat
 - Allow fully custom stat definitions
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)

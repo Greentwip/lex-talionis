@@ -20,8 +20,8 @@
 # --------------------------------------------
 faction;Soldier;Soldier;Empire;An imperial soldier
 # Player Characters
-player;0;0;Ophie;3,7;None
-player;0;0;Prim;2,7;None
+player;1;0;Ophie;3,7;None
+player;1;0;Prim;2,7;None
 player;0;0;Joel;3,6;None
 player;0;0;Nia;1,5;None
 # Enemies
@@ -29,7 +29,7 @@ player;0;0;Nia;1,5;None
 # Player Characters
 # Enemies
 # Bosses
-enemy;0;Sidney;Sidney;17,7;None
+enemy;0;Sidney;Sidney;17,7;SoftGuard
 # Generics
 enemy;0;A1;Archer;1;Willow Bow;0,0;SoftGuard;Soldier
 enemy;0;F1;Fighter;1;Iron Axe;0,0;Attack;Soldier

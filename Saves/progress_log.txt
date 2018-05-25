@@ -1,0 +1,73 @@
+
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 54
+Wexp: 10, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42
+*** Prim: Healtouch
+Lvl 1, Exp 33
+Wexp: 0, 0, 0, 0, 4, 0, 0
+Items: Heal 29, Glimmer Ward 27
+*** Convoy:
+Items: 
+
+=== Level 1 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 54
+Wexp: 10, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42
+*** Prim: Healtouch
+Lvl 1, Exp 33
+Wexp: 0, 0, 0, 0, 4, 0, 0
+Items: Heal 29, Glimmer Ward 27
+*** Ophie: Riposte
+Lvl 3, Exp 59
+Wexp: 17, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 33, Vulnerary 1
+*** Prim: Healtouch
+Lvl 2, Exp 75
+Wexp: 0, 0, 0, 0, 13, 0, 0
+Items: Heal 21, Glimmer Ward 27
+*** Joel: Cleave
+Lvl 4, Exp 79
+Wexp: 0, 0, 28, 0, 0, 0, 0
+Items: Iron Axe 33, Vulnerary 2
+*** Nia: Prescience
+Lvl 3, Exp 69
+Wexp: 0, 0, 0, 23, 0, 0, 0
+Items: Willow Bow 38, Hand Axe 20
+*** Convoy:
+Items: 
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 54
+Wexp: 10, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42
+*** Prim: Healtouch
+Lvl 1, Exp 22
+Wexp: 0, 0, 0, 0, 3, 0, 0
+Items: Glimmer Ward 27, Heal 30
+*** Convoy:
+Items: 
+
+=== Level 1 === Money: 1500
+*** Ophie: Riposte
+Lvl 3, Exp 47
+Wexp: 16, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 32
+*** Prim: Healtouch
+Lvl 2, Exp 51
+Wexp: 0, 0, 0, 0, 10, 0, 0
+Items: Heal 26, Glimmer Ward 24, Hand Axe 20
+*** Joel: Cleave
+Lvl 4, Exp 70
+Wexp: 0, 0, 28, 0, 0, 0, 0
+Items: Iron Axe 33, Vulnerary 3
+*** Nia: Prescience
+Lvl 4, Exp 1
+Wexp: 0, 0, 0, 23, 0, 0, 0
+Items: Willow Bow 38, Vulnerary 3
+*** Convoy:
+Items: 
