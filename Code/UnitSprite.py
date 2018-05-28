@@ -155,8 +155,15 @@ class UnitSprite(object):
 
         if gameStateObj.cursor.currentSelectedUnit and (gameStateObj.cursor.currentSelectedUnit.name, self.unit.name) in gameStateObj.talk_options:
             frame = (Engine.get_time()//100)%8
-            topleft = (left + 6, top - 12)
-            surf.blit(Engine.subsurface(GC.IMAGESDICT['TalkMarker'], (frame*8, 0, 8, 16)), topleft)
+            topleft = (left - 1, top - 12)
+            # surf.blit(Engine.subsurface(GC.IMAGESDICT['TalkMarker'], (frame*8, 0, 8, 16)), topleft)
+            if frame in (0, 1, 2):
+                offset = 0
+            elif frame in (3, 7):
+                offset = 1
+            else:
+                offset = 2
+            surf.blit(GC.IMAGESDICT['TalkMarker'], (topleft[0], topleft[1] + offset))
 
     def draw_hp(self, surf, gameStateObj):
         current_time = Engine.get_time()
