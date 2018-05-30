@@ -11,8 +11,9 @@ import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 from Code.imagesDict import COLORKEY
 
-import PropertyMenu, Terrain, TileInfo, UnitData, EditorUtilities, Faction, Triggers, QtWeather
-from DataImport import Data
+from EditorCode import PropertyMenu, Terrain, TileInfo, UnitData
+from EditorCode import EditorUtilities, Faction, Triggers, QtWeather
+from EditorCode.DataImport import Data
 
 # TODO: Reinforcements -- impl
 # TODO: Created Units -- maybe not
@@ -26,7 +27,7 @@ from DataImport import Data
 # TODO: Droppable and Equippable Item support -- impl
 # TODO: Class sprites move -- impl
 # TODO: Highlight dances -- maybe not
-# TODO: Items displyed next to unit names in Units and Reinforcements -- impl
+# TODO: Items displayed next to unit names in Units and Reinforcements -- impl
 # TODO: Switching tab displays help information in status bar -- impl
 
 class MainView(QtGui.QGraphicsView):

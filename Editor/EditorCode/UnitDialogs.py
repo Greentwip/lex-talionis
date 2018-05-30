@@ -57,8 +57,8 @@ class LoadUnitDialog(QtGui.QDialog):
         self.ai_group = QtGui.QLineEdit()
         self.form.addRow('AI Group:', self.ai_group)
 
-        self.ai_select.setEnabled(str(self.team.currentText()) != 'player')
-        self.ai_group.setEnabled(str(self.team.currentText()) != 'player')
+        self.ai_select.setEnabled(str(self.team_box.currentText()) != 'player')
+        self.ai_group.setEnabled(str(self.team_box.currentText()) != 'player')
 
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
