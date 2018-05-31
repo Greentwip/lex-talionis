@@ -1,5 +1,3 @@
-#! /usr/bin/bash
-
 # Build Script for the_lion_throne
 # In Data/config.ini, turn cheat to 0
 # In Data/config.ini, turn Screen Size to 3 and temp_ScreenSize to 3

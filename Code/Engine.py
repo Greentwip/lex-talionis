@@ -26,7 +26,7 @@ BLEND_RGBA_MULT = pygame.BLEND_RGBA_MULT
 def init():
     # pygame.mixer.pre_init(44100, -16, 1, 512)
     if not PYGAME_SDL2:
-        pygame.mixer.pre_init(44100, -16, 2, 4096)
+        pygame.mixer.pre_init(44100, -16, 2, 256 * 2**configuration.OPTIONS['Sound Buffer Size'])
     pygame.init()
     if not PYGAME_SDL2:
         pygame.mixer.init()
@@ -218,16 +218,16 @@ class BaseSound():
     def play(self, loops=0, maxtime=0, fade_ms=0):
         pass
 
-    def stop():
+    def stop(self):
         pass
 
-    def fadeout(time):
+    def fadeout(self, time):
         pass
 
-    def set_volume(value):
+    def set_volume(self, value):
         pass
 
-    def get_volume():
+    def get_volume(self):
         pass
 
 def create_sound(fp):
@@ -350,7 +350,10 @@ class MusicThread(object):
             self.current.current_time += pygame.mixer.music.get_pos()
 
         # This is where we are going to
-        self.next = self.song_stack[-1]
+        if self.song_stack:
+            self.next = self.song_stack[-1]
+        else:
+            self.next = None
 
         # Start fade out process
         self.state = 'fade' # Now we know to fade to next index
@@ -364,7 +367,10 @@ class MusicThread(object):
             return
         self.song_stack.pop()
 
-        self.next = self.song_stack[-1]
+        if self.song_stack:
+            self.next = self.song_stack[-1]
+        else:
+            self.next = None
 
         # Start fade out process
         self.state = 'fade' # Now we know to fade to next index
@@ -414,16 +420,19 @@ class MusicThread(object):
             if current_time - self.fade_out_update > self.fade_out_time:
                 logger.debug('Music: Actual Fade in!')
                 self.current = self.next
-                if pygame.mixer.music.get_busy():
-                    self.fade_out_update = current_time
-                # self.next = None
-                pygame.mixer.music.set_volume(self.volume)
-                pygame.mixer.music.stop()
-                # This takes 50 ms or so each time :(
-                pygame.mixer.music.load(self.current.song)
-                pygame.mixer.music.play(0, self.current.current_time/1000)
-                # self.fade_out_update = current_time
-                self.state = 'fade_catch'
+                if self.current:
+                    if pygame.mixer.music.get_busy():
+                        self.fade_out_update = current_time
+                    # self.next = None
+                    pygame.mixer.music.set_volume(self.volume)
+                    pygame.mixer.music.stop()
+                    # This takes 50 ms or so each time :(
+                    pygame.mixer.music.load(self.current.song)
+                    pygame.mixer.music.play(0, self.current.current_time/1000)
+                    # self.fade_out_update = current_time
+                    self.state = 'fade_catch'
+                else:
+                    self.state = 'normal'
 
         # If there's no music currently playing, make it so that music does play
         if self.current and not pygame.mixer.music.get_busy():

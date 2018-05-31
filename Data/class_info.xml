@@ -162,7 +162,7 @@
 
     <class id="Halberdier">
         <short_name>Halberdier</short_name>
-        <long_name>Haberdier</long_name>
+        <long_name>Halberdier</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,10,0,0,0,0,0</wexp_gain>
