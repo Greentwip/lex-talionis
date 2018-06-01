@@ -71,3 +71,31 @@ Wexp: 0, 0, 0, 23, 0, 0, 0
 Items: Willow Bow 38, Vulnerary 3
 *** Convoy:
 Items: 
+
+=== Level 2 === Money: 3160
+*** Ophie: Riposte,Vantage
+Lvl 5, Exp 28
+Wexp: 21, 0, 0, 0, 0, 0, 0
+Items: Steel Sword 29, Iron Sword 27, Hatchet 35, Slim Lance 35, Angelic Robe 1
+*** Prim: Healtouch
+Lvl 3, Exp 75
+Wexp: 0, 0, 0, 0, 20, 0, 0
+Items: Heal 18, Glimmer Ward 22
+*** Joel: Cleave,Shove
+Lvl 5, Exp 56
+Wexp: 0, 0, 36, 0, 0, 0, 0
+Items: Hand Axe 20, Iron Axe 25, Vulnerary 3, Potion 2
+*** Nia: Prescience,Critical
+Lvl 5, Exp 43
+Wexp: 0, 0, 0, 35, 0, 0, 0
+Items: Willow Bow 25
+*** Althea: Resistance +2,Focus
+Lvl 3, Exp 11
+Wexp: 0, 0, 0, 0, 0, 13, 0
+Items: Fire Ward 23, Vulnerary 2
+*** Drake: Canto,Savior
+Lvl 6, Exp 27
+Wexp: 11, 26, 0, 0, 0, 0, 0
+Items: Iron Lance 35, Iron Sword 43, Spiritbane 2
+*** Convoy:
+Items: Vulnerary 3, Vulnerary 3
