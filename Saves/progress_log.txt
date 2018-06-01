@@ -99,3 +99,39 @@ Wexp: 11, 26, 0, 0, 0, 0, 0
 Items: Iron Lance 35, Iron Sword 43, Spiritbane 2
 *** Convoy:
 Items: Vulnerary 3, Vulnerary 3
+
+=== Level 3 === Money: 5160
+*** Ophie: Riposte,Vantage
+Lvl 7, Exp 64.0
+Wexp: 31, 0, 0, 0, 0, 0, 0
+Items: Rapier 4, Steel Sword 26, Iron Sword 25, Vulnerary 2, Steel Axe 27
+*** Prim: Healtouch,Miracle
+Lvl 5, Exp 22
+Wexp: 0, 0, 0, 0, 34, 0, 0
+Items: Glimmer Ward 19, Heal 7
+*** Joel: Cleave,Shove
+Lvl 6, Exp 59
+Wexp: 0, 0, 46, 0, 0, 0, 0
+Items: Iron Axe 15, Hand Axe 20, Hatchet 35, Skeleton Key 1
+*** Nia: Prescience,Critical
+Lvl 6, Exp 71
+Wexp: 0, 0, 0, 45, 0, 0, 0
+Items: Willow Bow 12, Mana Ring 1
+*** Althea: Focus,Resistance +2
+Lvl 4, Exp 67
+Wexp: 0, 0, 0, 0, 0, 22, 0
+Items: Fire Ward 14, Vulnerary 2
+*** Drake: Canto,Savior
+Lvl 7, Exp 28
+Wexp: 14, 34, 0, 0, 0, 0, 0
+Items: Iron Lance 37, Iron Sword 42, Spiritbane 2
+*** Renae: Locktouch
+Lvl 4, Exp 3
+Wexp: 19, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42, Vulnerary 1
+*** Theo: Provoke,Shove
+Lvl 5, Exp 65
+Wexp: 0, 25, 0, 0, 0, 0, 0
+Items: Iron Lance 26, Slim Lance 35, Mend 15
+*** Convoy:
+Items: Skeleton Key 1, Javelin 20

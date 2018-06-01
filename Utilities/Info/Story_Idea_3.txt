@@ -219,6 +219,9 @@ History before game:
 - 2 weeks ago: Lywark, using two of the seals, attempts to bring back his beloved through the body of Elen. It doesn't work. Elen escapes.
 
 Characters:
+
+Act I:
+
 Alfred of Athria (Eliwood Lord) -- Elf Counsel
 Saebbi of Mercia (Myrmidon) -- British
 Cedric (Cedd) of Mercia (Lance Cavalier) -- Modern variant of Cerdic, which is variant of British name Caraticos
@@ -234,24 +237,33 @@ Aelfwynn (Wynn) of Athria (Paladin)* -- Elf Friend
 
 Elen of Loria (Mystic) -- Welsh
 
-Athelwulf of Athria ** -- Noble Wolf
-Adelbert (Bert) of Athria (??)** -- Noble Light
-Lywark of Loria (Warlock)** -- Welsh
-Lewelyn (Lewis) of Loria (Wyvern Knight)**
-Osric of Umbria (Vanguard) ** -- God Ruler (Rich)
-
 Sigered of Pembroke (Axe Cavalier) -- Victorious Counsel
 Synne of Pembroke (Thief) -- Travel, Sun (Norwegian)
+
+Adelbert (Bert) of Athria (??)** -- Noble Light
+Athelwulf of Athria ** -- Noble Wolf
+
+Act II:
+
+Lywark of Loria (Warlock)** -- Welsh
+
+Padraig of ?? (Phantom/Brigand/Raider) -- 
+Asch of Arwick (MageF) -- Ash, Spear
 
 Olivia of Umbria (Falco Knight)** -- Olive Tree
 Edwin of Umbria (Sword Cavalier) -- Rich Friend
 Eowa of Umbria (Pegasus Knight) -- Ever
-
-Pale of Surtalia (Phantom/Brigand/Raider) -- White
-Asch of Surtalia (MageF) -- Ash, Spear
-
 Johannes of Jutia (Shaman) -- God is Great
+Leolin of Loria (Wyvern Knight)** -- Lion
+
+Orrel of Umbria (Vanguard) ** --
+
+?? of ?? (Griffin)
+?? of ?? (Lance Cavalier)
+
 Juniper (June) of Jutia (Valkyrie) -- Tree
+
+Act III:
 
 Rhun of the Northlands (Sentinel) -- Welsh, Mighty
 Frieda of the Northlands (Wyvern Knight) -- Protection, Peace
@@ -259,16 +271,15 @@ Frieda of the Northlands (Wyvern Knight) -- Protection, Peace
 Caelwulf of Mercia (Berserker) ** -- Close to Coenwulf Fierce Wolf
 
 Isolde of Eiria (Cleric) -- Unknown (Possibly Celtic or Welsh)
-
 Tristan of Talia (Mercenary) -- Brythonic (Noise, Bold)
-?? of ?? (Griffin)
-?? of ?? (??)
 
-Edelyn of Loria ** -- Variant of Evelyn, Ava (Radiance, Beauty, Little Bird)
+Edelyn of Loria ** -- Variant of Evelyn (Radiance, Beauty, Little Bird)
 
-Osric of Umbria (Vanguard)
-Sorrel of West Talia (Thief) -- Plant
-Clover of West Talia (Cleric, ironically) -- Plant
+Act IV:
+
+Orrel of Umbria (Vanguard)
+Basil of Wytalia (Thief) -- Plant
+Clover of Wytalia (Cleric, ironically) -- Plant
 Iris of Umbria (Shaman) -- Flower, Rainbow
 
 Audrey of Athria (Swordmaster) -- From Athelthrith, Noble strength
@@ -280,11 +291,12 @@ Ingrid of Umbria (Halberdier) -- Beauty
 
 ?? of ?? (Sniper)
 ?? of ?? (SageM)
-
 ?? of ?? (Assassin)
 ?? of ?? (General)
 
-Nyssa of Gedland (Oracle) -- Scandinavian, Friendly Elf or Fairy
+Act V:
+
+Nyssa of Loria (Oracle) -- Scandinavian, Friendly Elf or Fairy
 
 Removing RES stat
 MAG Hit% is now 2xSKL + LCK/2
