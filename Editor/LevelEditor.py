@@ -3,6 +3,7 @@ import sys, os, shutil, math
 
 from PyQt4 import QtGui, QtCore
 
+sys.path.append('./')
 sys.path.append('../')
 import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
