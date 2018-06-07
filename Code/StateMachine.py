@@ -5,7 +5,7 @@ import configuration as cf
 import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 import Interaction, LevelUp, StatusObject, ItemMethods
 import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
-import BattleAnimation
+import BattleAnimation, TextChunk
 
 import logging
 logger = logging.getLogger(__name__)
@@ -256,7 +256,7 @@ class State(object):
 
     def draw(self, gameStateObj, metaDataObj):
         if self.show_map:
-            mapSurf = drawMap(gameStateObj) # Creates mapSurf
+            mapSurf = drawMap(gameStateObj)  # Creates mapSurf
             gameStateObj.set_camera_limits()
             rect = (gameStateObj.cameraOffset.get_x()*GC.TILEWIDTH, gameStateObj.cameraOffset.get_y()*GC.TILEHEIGHT, GC.WINWIDTH, GC.WINHEIGHT)
             mapSurf = Engine.subsurface(mapSurf, rect)
@@ -2434,7 +2434,7 @@ class PromotionChoiceState(State):
         # Description
         font = GC.FONT['convo_white']
         desc = metaDataObj['class_dict'][self.menu.getSelection()]['desc']
-        text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), 208, font)
+        text = TextChunk.line_wrap(TextChunk.line_chunk(desc), 208, font)
         for idx, line in enumerate(text):
             font.blit(line, surf, (14, font.height * idx + 120))
 
@@ -3242,6 +3242,6 @@ def drawMap(gameStateObj):
     for cursor in gameStateObj.fake_cursors:
         cursor.draw(mapSurf)
     # Draw weather
-    for particle in gameStateObj.map.weather:
-        particle.draw(mapSurf)
+    for weather in gameStateObj.map.weather:
+        weather.draw(mapSurf)
     return mapSurf

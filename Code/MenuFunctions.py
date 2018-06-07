@@ -3,7 +3,7 @@ import GlobalConstants as GC
 import configuration as cf
 import ItemMethods, Image_Modification, Utility, Engine, Counters
 import StateMachine, InfoMenu, GUIObjects
-import CustomObjects
+import CustomObjects, TextChunk
 
 import logging
 logger = logging.getLogger(__name__)
@@ -354,12 +354,12 @@ class Lore_Display(object):
 
         GC.FONT['text_yellow'].blit(entry['long_name'], self.image, (self.menu_width//2 - GC.FONT['text_yellow'].size(entry['long_name'])[0]//2, 4))
 
-        output_lines = line_wrap(line_chunk(entry['desc']), self.menu_width - 12, GC.FONT['text_white'])
+        output_lines = TextChunk.line_wrap(TextChunk.line_chunk(entry['desc']), self.menu_width - 12, GC.FONT['text_white'])
         if entry['type'] == cf.WORDS['Character']:
             first_section = output_lines[:4]
             second_section = output_lines[4:]
             if second_section:
-                second_section = line_wrap(line_chunk(' '.join(second_section)), self.menu_width - 80, GC.FONT['text_white'])
+                second_section = TextChunk.line_wrap(TextChunk.line_chunk(' '.join(second_section)), self.menu_width - 80, GC.FONT['text_white'])
             output_lines = first_section + second_section
 
         # Now draw
@@ -368,52 +368,6 @@ class Lore_Display(object):
 
     def draw(self, surf):
         surf.blit(self.image, self.topleft)
-
-def line_chunk(text):
-    chunks = text.strip().split(' ')
-    chunks = filter(None, chunks) # Remove empty chunks
-    return chunks
-
-# This is such an awful algorithm :(
-def line_wrap(chunks, width, font, test=False):
-    lines = []
-    chunks.reverse()
-    space_length = font.size(' ')[0]
-    if test:
-        chunks.insert(0, '   ')
-
-    while chunks:
-        cur_line = []
-        cur_len = 0
-
-        while chunks:
-            length = font.size(chunks[-1])[0]
-            # print(cur_line, chunks[-1], cur_len, length, width)
-            if length > width:
-                if test:
-                    return 'One word is too wide for line!'  # Which has a huge length, always failing length check
-                # else
-                if cur_line:
-                    lines.append(' '.join(cur_line))
-                cur_line = []
-                cur_len = 0
-                cur_line.append(chunks.pop())
-                cur_len += length
-                cur_len += space_length
-            # Can at least squeeze this chunk onto the current line
-            elif cur_len + length <= width:
-                cur_line.append(chunks.pop())
-                cur_len += length
-                cur_len += space_length
-            # Nope, this line is full
-            else:
-                break
-
-        # Convert current line back to a string and store it in list
-        # of all lines (return value).
-        if cur_line:
-            lines.append(' '.join(cur_line))
-    return lines
     
 # === MENUS ============================================================ ###
 # Abstract menu class. Must implement personal draw function
@@ -1014,7 +968,7 @@ class ModeSelectMenu(SimpleMenu):
         # surf.blit(GC.IMAGESDICT['SmallGem'], (139, 48))
         # Draw text
         text = cf.WORDS['mode_' + self.options[self.currentSelection]]
-        text_lines = line_wrap(line_chunk(text), 88, GC.FONT['text_white'])
+        text_lines = TextChunk.line_wrap(TextChunk.line_chunk(text), 88, GC.FONT['text_white'])
         for index, line in enumerate(text_lines):
             GC.FONT['text_white'].blit(line, surf, (142 + 4, 52 + 4 + index*16))
 

@@ -5,7 +5,7 @@ import os
 import GlobalConstants as GC
 import configuration as cf
 import StateMachine, MenuFunctions, ItemMethods
-import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine
+import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk
 
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -692,7 +692,7 @@ class PrepUseItemState(StateMachine.State):
 
         font = GC.FONT['text_white']
         if desc:
-            text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), GC.WINWIDTH - topleft[0] - 8, font)
+            text = TextChunk.line_wrap(TextChunk.line_chunk(desc), GC.WINWIDTH - topleft[0] - 8, font)
             for idx, line in enumerate(text):
                 font.blit(line, surf, (topleft[0] + 4, font.height * idx + 4 + topleft[1]))
 

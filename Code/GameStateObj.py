@@ -47,8 +47,8 @@ class GameStateObj(object):
         self.map = tilemap
 
         # Set up blitting surface
-        mapSurfWidth = self.map.width * GC.TILEWIDTH
-        mapSurfHeight = self.map.height * GC.TILEHEIGHT
+        mapSurfWidth = max(self.map.width * GC.TILEWIDTH, GC.WINWIDTH)
+        mapSurfHeight = max(self.map.height * GC.TILEHEIGHT, GC.WINHEIGHT)
         self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
         self.grid_manager = AStar.Grid_Manager(self.map)

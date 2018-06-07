@@ -4,7 +4,7 @@ import GlobalConstants as GC
 import configuration as cf
 import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject
 import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
-import Utility, LevelUp, ItemMethods, Engine, Banner
+import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
 
 import logging
 logger = logging.getLogger(__name__)
@@ -618,7 +618,7 @@ class UnitObject(object):
                 words_in_item_desc = item.desc
             else:
                 words_in_item_desc = "Cannot wield."
-            lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(words_in_item_desc), width - 8, GC.FONT['text_white'])
+            lines = TextChunk.line_wrap(TextChunk.line_chunk(words_in_item_desc), width - 8, GC.FONT['text_white'])
 
             for index, line in enumerate(lines):
                 GC.FONT['text_white'].blit(line, BGSurf, (4 + 2, 4+index*16 + 4))

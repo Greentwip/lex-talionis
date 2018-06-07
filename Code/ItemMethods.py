@@ -1,6 +1,6 @@
 import GlobalConstants as GC
 import configuration as cf
-import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, CustomObjects, Engine
+import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, CustomObjects, Engine, TextChunk
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):
@@ -139,7 +139,7 @@ class ItemObject(object):
 
             first_line_length = max(font1.size(''.join(first_line_text))[0] + 16 * len(self.TYPE) + 4, 112) # 112 was 96
             if self.desc:
-                output_desc_lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
+                output_desc_lines = TextChunk.line_wrap(TextChunk.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
             else:
                 output_desc_lines = ''
             size_x = first_line_length + 16

@@ -905,18 +905,18 @@ class Help_Box(Counters.CursorControl):
     def __init__(self, name, cursor_position, help_surf):
         self.name = name
         self.cursor_position = cursor_position
-        self.help_surf = help_surf
+        self.help_dialog = help_surf
         # Determine help_topleft position
-        if self.cursor_position[0] + self.help_surf.get_width() > GC.WINWIDTH:
-            helpleft = GC.WINWIDTH - self.help_surf.get_width()
+        if self.cursor_position[0] + self.help_dialog.get_width() > GC.WINWIDTH:
+            helpleft = GC.WINWIDTH - self.help_dialog.get_width()
         else:
             helpleft = self.cursor_position[0] - min(GC.TILEWIDTH*2, self.cursor_position[0]) # Don't go to far to the left
         if self.cursor_position[1] > GC.WINHEIGHT//2 + 8:
-            helptop = self.cursor_position[1] - self.help_surf.get_height()
+            helptop = self.cursor_position[1] - self.help_dialog.get_height()
         else:
             helptop = self.cursor_position[1] + 16
         self.help_topleft = (helpleft, helptop)
-        
+
         self.left = None
         self.right = None
         self.up = None
@@ -927,7 +927,7 @@ class Help_Box(Counters.CursorControl):
     def draw(self, surf, info=True):
         surf.blit(self.cursor, (self.cursor_position[0] + self.cursorAnim[self.cursorCounter], self.cursor_position[1]))
         if info:
-            surf.blit(self.help_surf, self.help_topleft)
+            surf.blit(self.help_dialog, self.help_topleft)
 
 def create_help_box(description, num_lines=2, name=False):
     font = GC.FONT['convo_black']

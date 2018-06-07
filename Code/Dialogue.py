@@ -4,7 +4,7 @@ import re, random, math, itertools
 import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp
-import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner
+import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
 
 import logging
 logger = logging.getLogger(__name__)
@@ -987,41 +987,7 @@ class Dialogue_Scene(object):
         length = GC.WINWIDTH - 8*2
         num_lines = 2
         if owner:
-            # Split on breaks and clears
-            longest_dialogue_size = 0
-            current_dialogue = []
-            command = []
-            in_command = False
-            for character in dialogue:
-                if character == '{':
-                    in_command = True
-
-                if in_command:
-                    command.append(character)
-                else:
-                    current_dialogue.append(character)
-
-                if character == '}':
-                    in_command = False
-                    command_text = ''.join(command)
-                    if command_text == '{clear}' or command_text == '{br}':
-                        current_text = ''.join(current_dialogue)
-                        # Now find out how big this needs to be to hold this
-                        width = self.determine_width(current_text, num_lines)
-                        if width > longest_dialogue_size:
-                            longest_dialogue_size = width
-                        # Clear current dialogue
-                        current_dialogue = []
-                    # Clear command
-                    command = []
-            # And do it at the end
-            current_text = ''.join(current_dialogue)
-            # Now find out how big this needs to be to hold this
-            width = self.determine_width(current_text, num_lines)
-            if width > longest_dialogue_size:
-                longest_dialogue_size = width
-
-            length = longest_dialogue_size + 8*2
+            size = TextChunk.command_chunk(dialogue, num_lines)
             desired_center = self.determine_desired_center(owner.position[0])
             pos_x = Utility.clamp(desired_center - length//2, 8, GC.WINWIDTH - 8 - length)
             if pos_x % 8 != 0:
@@ -1030,23 +996,8 @@ class Dialogue_Scene(object):
         else:  # Default value at bottom of screen
             pos_x = 4
             pos_y = 110
-            length = 232
-        return (pos_x, pos_y), (length, 48)
-
-    def determine_width(self, text, num_lines):
-        chunks = MenuFunctions.line_chunk(text)
-        if len(chunks) <= 5 and sum(len(c) for c in chunks) <= 22:
-            num_lines = 1  # Try just 1 line if 3 or less words
-        for w in range(32, GC.WINWIDTH - 8*4, 8):
-            # print('width', w)
-            output_lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(text), w, GC.FONT['convo_black'], test=True)
-            # print(w, output_lines)
-            if len(output_lines) <= num_lines:
-                return w # This is an extra buffer to account for waiting cursor
-        # If we got here, it was too bug
-        logger.warning('Text too big for dialog box!')
-        # print('Text too big for dialog box!')
-        return GC.WINWIDTH - 8*4
+            size = 232, 48
+        return (pos_x, pos_y), size
 
     def determine_desired_center(self, position):
         if position < 0:  # FarLeft
@@ -1120,7 +1071,7 @@ class Dialogue_Scene(object):
 
         if self.dialog and (self.current_state == "Displaying" or self.dialog[-1].hold):# Draw text (Don't draw text while transitioning)
             for dialog in reversed(self.dialog):
-                dialog.draw(surf, self.unit_sprites)
+                dialog.draw(surf)
                 if dialog.solo_flag:
                     break
 
@@ -1541,6 +1492,12 @@ class Dialog(object):
         self.solo_flag = True # Only one of these on the screen at a time
         self.slow_flag = slow_flag # Whether to print the characters out slower than normal
 
+    def get_width(self):
+        return self.dlog_box.get_width()
+
+    def get_height(self):
+        return self.dlog_box.get_height()
+
     def set_text(self):
         if self.truetext == '':
             return
@@ -1598,7 +1555,7 @@ class Dialog(object):
             self.preempt_break = False
         elif letter in ("{wait}", "{w}"):
             self.waiting = True
-            both_width = self._get_width('')
+            both_width = self._get_word_width('')
             # print(both_width)
             if both_width >= self.text_width - self.wait_width: # if we've exceeded width
                 self.preempt_break = True # We've essentially done the next line break
@@ -1619,7 +1576,7 @@ class Dialog(object):
             self.current_color = "red"
             self._next_chunk()
         else:
-            both_width = self._get_width(word)
+            both_width = self._get_word_width(word)
             # print(letter, previous_lines, word[::-1], both_width, self.text_width)
             if both_width > self.text_width: # if we've exceeded width
                 self._next_line()
@@ -1630,7 +1587,7 @@ class Dialog(object):
  
         return False
 
-    def _get_width(self, word):
+    def _get_word_width(self, word):
         font = GC.FONT[self.current_font + '_' + self.current_color]
         # Get text for all chunks in this line
         previous_lines = ''
@@ -1664,9 +1621,9 @@ class Dialog(object):
                         pos[0] = total_length
         return pos
 
-    def add_message_tail(self, surf, unit_sprites):
-        if self.owner in unit_sprites:
-            unit_position = unit_sprites[self.owner].position
+    def add_message_tail(self, surf):
+        if self.unit_sprites and self.owner in self.unit_sprites:
+            unit_position = self.unit_sprites[self.owner].position
         else:
             return
         dialogue_position = self.topleft
@@ -1691,8 +1648,8 @@ class Dialog(object):
 
         surf.blit(tail_surf, (x_position, y_position))
 
-    def add_nametag(self, surf, unit_sprites):
-        if self.owner not in unit_sprites and self.owner != "Narrator":
+    def add_nametag(self, surf):
+        if (not self.unit_sprites or self.owner not in self.unit_sprites) and self.owner != "Narrator":
             dialogue_position = self.topleft
             name_tag_surf = MenuFunctions.CreateBaseMenuSurf((64, 16), 'NameTagMenu')
             pos = (dialogue_position[0] - 4, dialogue_position[1] - 10)
@@ -1737,7 +1694,7 @@ class Dialog(object):
                     self.total_num_updates = 0
                     break
 
-    def draw(self, surf, unit_sprites):
+    def draw(self, surf):
         text_surf = self.text_surf.copy()
         if self.transition:
             scroll = 0
@@ -1763,8 +1720,8 @@ class Dialog(object):
 
         if not self.transition:
             if self.message_tail:
-                self.add_message_tail(surf, unit_sprites)
-            self.add_nametag(surf, unit_sprites)
+                self.add_message_tail(surf)
+            self.add_nametag(surf)
             surf.blit(text_surf, (self.topleft[0] + 8, self.topleft[1] + 8))
 
             # Handle the waiting cursor
@@ -1815,7 +1772,7 @@ class Credits(object):
         self.parsed_text = []
         for credit in self.text:
             x_bound = GC.WINWIDTH - 12 if self.center else GC.WINWIDTH - 88
-            l = MenuFunctions.line_wrap(MenuFunctions.line_chunk(credit), x_bound, self.main_font)
+            l = TextChunk.line_wrap(TextChunk.line_chunk(credit), x_bound, self.main_font)
             for line in l:
                 text = ''.join(line)
                 if self.center:
@@ -1934,7 +1891,7 @@ class EndingsDisplay(object):
         GC.FONT['text_blue'].blit(heal, self.surface, (208, 8))
 
     def format_text(self, text):
-        l = MenuFunctions.line_wrap(MenuFunctions.line_chunk(text), GC.WINWIDTH - 32, self.font)
+        l = TextChunk.line_wrap(TextChunk.line_chunk(text), GC.WINWIDTH - 32, self.font)
         for line in l:
             self.text.append(''.join(line))
 
