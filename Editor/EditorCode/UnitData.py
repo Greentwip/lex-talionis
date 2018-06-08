@@ -389,6 +389,8 @@ class UnitMenu(QtGui.QWidget):
         self.grid.addWidget(self.create_unit_button, 3, 0)
         self.grid.addWidget(self.remove_unit_button, 4, 0)
 
+        self.last_touched_generic = None
+
     # def trigger(self):
     #     self.view.tool = 'Units'
 
@@ -445,14 +447,18 @@ class UnitMenu(QtGui.QWidget):
 
     def create_unit(self):
         if self.unit_data.factions:
-            created_unit, ok = UnitDialogs.CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:")
+            unit = self.get_current_unit()
+            if not unit.generic:
+                unit = self.last_touched_generic
+            created_unit, ok = UnitDialogs.CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:", unit)
             if ok:
                 self.unit_data.add_unit(created_unit)
                 self.add_unit(created_unit)
+                self.last_touched_generic = created_unit
                 self.window.update_view()
         else:
             # Show pop-up
-            QtGui.QMessageBox.critical(self, "No Factions!", "Must create at least one faction to use generic units!")
+            QtGui.QMessageBox.critical(self, "No Faction!", "Must create at least one faction to create a generic unit!")
 
     def remove_unit(self):
         unit_idx = self.list.currentRow()
@@ -473,6 +479,8 @@ class UnitMenu(QtGui.QWidget):
             self.list.takeItem(idx)
             self.list.insertItem(idx, self.create_item(modified_unit))
             self.unit_data.replace_unit(idx, modified_unit)
+            if modified_unit.generic:
+                self.last_touched_generic = modified_unit
             self.window.update_view()
 
     def add_unit(self, unit):
