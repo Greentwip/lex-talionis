@@ -1,0 +1,138 @@
+# TurnChange Script 7
+# Turn 3
+if;not gameStateObj.check_dead('Marduk') and not 'MercRein' in gameStateObj.level_constants and (gameStateObj.turncount == 3 or any(unit.position[0] - unit.position[1] < 15 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
+	m;Brave Story 27
+	set_cursor;0,27
+	set_cursor;Marduk;immediate
+	wait;200
+	disp_cursor;1
+	wait;500
+	disp_cursor;0
+	u;Marduk;Left
+	u;Soldier2;Right
+	s;Soldier2;Sir, the Resistance is attacking!{w}{br}What are your orders?{w};auto
+	s;Marduk;So this assignment wasn't a complete waste of time.{w}{br}Hold the line for now.{w}{br}My glorius plan will deal with these interlopers in due time.{w};auto
+	s;Soldier2;Yes, sir.{w};auto
+	r;Soldier2
+	s;Marduk;Hah, hah, hah!{w}{br}Those fools don't know what they are walking into.{w}{br}My plan is unassailable!{w};auto
+	r;Marduk
+	wait;500
+	add_unit;merc1
+	add_unit;merc2
+	add_unit;merc3
+	add_unit;merc4
+	wait;1000
+	set_level_constant;MercRein
+# Turn 7
+elif;not gameStateObj.check_dead('Marduk') and 'MercRein' in gameStateObj.level_constants and not 'BanditRein' in gameStateObj.level_constants and (gameStateObj.turncount >= 8 or any(unit.position[0] - unit.position[1] < 6 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
+	m;Brave Story 27
+	set_cursor;0,27
+	set_cursor;Marduk;immediate
+	wait;200
+	disp_cursor;1
+	wait;500
+	disp_cursor;0
+	u;Marduk;Left
+	u;Soldier2;Right
+	s;Soldier2;Sir, the Resistance has advanced further into our territory.{w}{br}What do we do now?{w};auto
+	s;Marduk;This so-called Resistance. I did not give them enough credit.{w}{br}But no matter,{w}{br}the next phase of my master plan will wipe them out once and for all!{w}{br}Send in... Team Omega! {w};auto
+	s;Soldier2;Team Omega, sir?{w};auto
+	s;Marduk;Uh... must you....{w}{br}Just...{w}{br}Just send in those bandits we hired.{w};auto
+	s;Soldier2;Right away, sir.{w};auto
+	r;Soldier2
+	s;Marduk;He really sucks all the dramatic tension out of the moment.{w}{br}I'd fire him, I really would.{w}{br}But its so hard to find good help these days...{w};auto
+	r;Marduk
+	set_cursor;0,0
+	wait;500
+	add_unit;bandit1
+	add_unit;bandit2
+	add_unit;bandit3
+	add_unit;bandit4
+	wait;1000
+	set_cursor;27,23
+	wait;500
+	add_unit;bandit5
+	add_unit;bandit6
+	add_unit;bandit7
+	add_unit;bandit8
+	wait;1000
+	set_level_constant;BanditRein
+elif;not gameStateObj.check_dead('Marduk') and 'BanditRein' in gameStateObj.level_constants and not 'WyvernRein' in gameStateObj.level_constants and (gameStateObj.turncount >= 14 or any(unit.position[0] - unit.position[1] < -7 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position))
+	m;Brave Story 27
+	set_cursor;0,27
+	set_cursor;Marduk;immediate
+	wait;200
+	disp_cursor;1
+	wait;500
+	disp_cursor;0
+	u;Marduk;Left
+	u;Soldier2;Right
+	s;Soldier2;Sir! The bandits were not enough!{w}{br}The Resistance is nearing us!{w}{br}What do we do, sir?{w};auto
+	s;Marduk;Hahaha!{w}{br}Do not worry!{w}{br}This is all part of my master plan.{w};auto
+	s;Soldier2;Eh?{w};auto
+	s;Marduk;One must draw in the Resistance to truly destroy them,{w}{br}like a fish to a line.{w};auto
+	s;Soldier2;But the bandits?{w};auto
+	s;Marduk;A pleasant side-effect.{w}{br}The Resistance will be destroyed, and the bandit menace will be curtailed!{w}{br}My plan is impregnable!{w}{br}Activate the final phase of my plan!{w};auto
+	s;Soldier2;The wyverns, sir?{w};auto
+	s;Marduk;The Wyverns!{w};auto
+	s;Soldier2;Yes, sir!{w};auto
+	r;Soldier2
+	s;Marduk;In one fell swoop, the Resistance will be defeated,{w}{br}and I, Marduk, will garner the credit I so rightfully deserve!{w};auto
+	r;Marduk
+	set_cursor;0,0
+	wait;200
+	add_unit;wr1_1
+	add_unit;wr1_2
+	add_unit;wr1_3
+	add_unit;wr1_4
+	wait;500
+	set_cursor;27,0
+	wait;200
+	add_unit;wr2_1
+	add_unit;wr2_2
+	add_unit;wr2_3
+	add_unit;wr2_4
+	wait;500
+	set_cursor;27,23
+	wait;200
+	add_unit;wr3_1
+	add_unit;wr3_2
+	add_unit;wr3_3
+	add_unit;wr3_4
+	wait;500
+	#set_cursor;0,23
+	#wait;200
+	#add_unit;wr4_1
+	#add_unit;wr4_2
+	#add_unit;wr4_3
+	#add_unit;wr4_4
+	#wait;500
+	set_level_constant;WyvernRein
+	battle_save
+elif;gameStateObj.turncount >= 15 and gameStateObj.turncount%2
+    set_cursor;27,0
+    wait;500
+    create_unit;w2;gameStateObj.turncount - 4;26,0
+    create_unit;w1;gameStateObj.turncount - 4;25,0
+    create_unit;w2;gameStateObj.turncount - 4;24,0
+    create_unit;w1;gameStateObj.turncount - 4;27,1
+    create_unit;w2;gameStateObj.turncount - 4;27,2
+    create_unit;w1;gameStateObj.turncount - 4;27,3
+    wait;1000
+    if;gameStateObj.turncount >= 19
+        set_cursor;0,0
+        wait;500
+        create_unit;w2;gameStateObj.turncount - 4;1,0
+        create_unit;w1;gameStateObj.turncount - 4;2,0
+        create_unit;w2;gameStateObj.turncount - 4;0,2
+        create_unit;w1;gameStateObj.turncount - 4;0,1
+        wait;1000
+        set_cursor;27,23
+        wait;500
+        create_unit;w2;gameStateObj.turncount - 4;27,21
+        create_unit;w1;gameStateObj.turncount - 4;27,22
+        create_unit;w2;gameStateObj.turncount - 4;26,23
+        create_unit;w1;gameStateObj.turncount - 4;25,23
+        wait;100
+    end
+end

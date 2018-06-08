@@ -1,0 +1,79 @@
+# Base Script Level 5
+if;self.name == 'Theo Sphinx, Pt. II'
+	# Episode 2
+	m;Jazz Noir
+	b;MainBase
+	t;2
+	u;Theo;Left
+	s;Theo;It was what folks called the dead of winter.{w}{br}The dirt mixed with the snow until the alleys were plastered in a gritty brown.{w}{br}A fine complement to this cold case.{w}{br}I'd just stopped off at Joel's and ordered a good hot cup o' joe,{w}{br}when in comes a violet-haired vixen with an eerie smile--{w}{br}looking for me, as usual.{w};auto;noir
+	u;Renae;Right
+	s;Renae;Rumor is you wanted to talk to me, Theo?{w}{br}What's up?{w};auto
+	s;Theo;I had little to go on, but this dame was my first lead.{w}{br}She might have looked enticing, but every rose has its thorns.{w}{br}Stolen many a bloke's heart--{w}{br}along with his money.{w}{br}She'd supposedly reformed, but I had my doubts.{w}{br}I asked her if she'd been around O'Halley's street anytime lately.{w}{br}Maybe the temptation of her past had proven too great?{w};auto;noir
+	s;Renae;What are you going on about, Theo?{w}{br}O'Halley Street?{w};auto
+	s;Theo;She tried to play dumb with me, but I wasn't buying it.{w}{br}I'd seen her at Miss Prim's weekend galas,{w}{br}often through the glass of a strong scotch.{w};auto;noir
+	s;Renae;Oh, Prim's room? Yeah, I've been by...{w}{br}I heard she lost a tome?{w};auto
+	s;Theo;Finally a lead.{w}{br}I pressed her on her story.{w};auto;noir
+	s;Renae;Hey, you think I took it?{w}{br}Sure, I'm a thief, but I don't steal from the Resistance!{w}{br}You've got to know that by now, Theo.{w}{br}Trust me, I'm not the culprit.{w}{br}Maybe Sam knows?{w}{br}He's always keeping tabs on us.{w};auto
+	r;Renae
+	s;Theo;She made like a skydiver with a broken parachute and hit the road,{w}{br}leaving me to my thoughts.{w}{br}This case was a real stumper.{w}{br}But I knew who to turn to next,{w}{br}an old friend on the force who might have some answers...{w};auto;noir
+	r;Theo
+	grey_base_convo;Theo Sphinx, Pt. II
+	inc_game_constant;noir
+	t;1
+elif;self.name == 'Apologies'
+	m;Midna's Theme
+	b;TacticsRoomDay
+	t;2
+	u;Sam;Right
+	u;Eliza;Left
+	s;Sam;Insubordination.{w}{br}Disobedience.{w}{br}Refusal to follow my direct orders.{w};auto
+	s;Eliza;Sam,--
+	s;Sam;I'm not finished.{w}{clear}Do you know what you've done?{w}{br}I could expect this from Ophie or Prim, but from you?{w}{br}One misstep, one false move, and it's over for us.{w};auto
+	s;Eliza;Sam, I can explain--
+	s;Sam;No need.{w}{br}I understand plenty, and I'm sorry.{w};auto
+	s;Eliza;Huh? You're sorry...?
+	s;Sam;You should never have been on that mission.{w}{br}You were too inexperienced, and you suffered for it.{w}{clear}But I've come to realize that you've changed.{w};auto
+	s;Eliza;...
+	s;Sam;You're much stronger now. I was wrong to keep you caged here.{w}{br}I hope you can forgive my poor judgement.
+	s;Eliza;...All this time, I thought you hated me... for my failure.
+	s;Sam;Of course not!{w}{br}You were my responsiblity.{w}{br}But you can handle yourself now, right?{w};auto
+	set_expression;Eliza;Smiling
+	s;Eliza;R-Right!
+	s;Sam;Then, welcome back to the team, Eliza.
+	s;Eliza;I'll do my best!
+	s;Sam;But as a member of the Resistance...{w}{br}no more insubordination, got that?{w}{br}I must be confident my orders will be followed.
+	s;Eliza;...O-of course!
+	s;Sam;I was saving this for your return.{w}{br}I expected it to be a couple more solstices, but...{w};auto
+	give_item;Eliza;Short Spear
+	s;Eliza;You won't regret this, Sam. Thank you.
+	r;Sam;Eliza
+	grey_base_convo;Apologies
+	t;1
+elif;self.name == 'Joel and Nia'
+	m;Awakening - Easy Now
+	b;ClearingSunrise
+	t;2
+	u;Nia;Left;u;Joel;Right
+	s;Joel;Howdy, Nia! You're up early.{w}{br}The sun's barely peaked o'er the horizon.{w}{br}Oh! And you already caught something? Rabbit, is it?{w};auto
+	s;Nia;Mmm... 'twas sleeping! Easy!
+	set_expression;Nia;Smiling
+	s;Joel;Looks good. Thank you, Nia.
+	s;Nia;...
+	set_expression;Nia;Normal
+	s;Joel;You remember what to say?
+	s;Nia;...Y-you are... welcome?
+	s;Joel;That's my girl.{w}{br}A few more years and I'll have you gossiping like a real high society gal.{w}{br}Just you wait.
+	s;Nia;Mmm... hmmm.
+	s;Joel;Aaah.....{w}{br}Nothing like fresh breakfast at the crack of dawn...
+	s;Nia;...
+	s;Joel;You know, Nia, the winds are changin' mighty quick round here.{w}{br}Our little resistance has grown leaps and bounds jus' in the past moon.{w}{br}Somethings brewin' in ol' Sam's mind.{w}{br}A plan to end this struggle, one way or another...{w};auto
+	s;Nia;...
+	s;Joel;So what I mean to say is that these peaceful moments...{w}{br}they're gonna be few and far between.{w}{clear}Ah, hell, Nia. I just want ya to know that I might not be around as much.{w}{br}I know you survived alone before, but you ARE human.{w}{br}You could use a friend.{w}{clear}If I don't make it, Nia... try to at least talk to someone every once in a while, okay?{w};auto
+	s;Nia;...O-kay.
+	s;Joel;...Well, I'm glad we could talk.{w}{br}But I suppose we've got to get ready for the day.{w}{br}So long.
+	r;Joel
+	s;Nia;...B-bye, Joel.
+	r;Nia
+	grey_base_convo;Joel and Nia
+	t;1
+end

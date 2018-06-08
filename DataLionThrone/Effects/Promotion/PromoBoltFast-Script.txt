@@ -1,0 +1,14 @@
+pose;Attack
+blend
+sound;PromotionCrackle
+f;2;bolt4
+wait;2
+sound;PromotionCrackle
+f;2;bolt5
+wait;2
+sound;PromotionCrackle
+f;2;bolt4
+wait;2
+sound;PromotionCrackle
+f;2;bolt6
+wait;1

@@ -1,0 +1,140 @@
+# Turn Change 9
+if;gameStateObj.turncount == 1
+	# Switch map to state 1 (up/down)
+	show_layer;1
+	# Turn tiles into bridges
+	replace_tile;4,0.4,1.26,0.26,1.12,7.12,8.12,9.18,7.18,8.18,9.4,22.4,23.4,24.26,22.26,23.26,24;12
+	wait;20
+	# Turn tiles into bridges
+	replace_tile;4,7.4,8.4,9.26,7.26,8.26,9.12,22.12,23.12,24.18,22.18,23.18,24.4,30.4,31.26,30.26,31;12
+	wait;100
+	set_game_constant;switches;1
+	map_pan
+	set_cursor;Ophie
+	u;Ophie;Left;u;Sam;Right
+	s;Ophie;Woah... What is this place...{w};auto
+	s;Sam;I'm sure there's a rational explanation.{w};auto
+	s;Ophie;There's not really any time for rational explanations, Sam.{w}{br}We need to move.{w};auto
+	r;Ophie
+	s;Sam;Hmm...{w};auto
+	r;Sam;Ophie
+elif;gameStateObj.turncount == 4
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p3_1;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p3_2;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p3_3;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p3_4;next;warp
+	wait;500
+	set_cursor;Ophie
+	u;Ophie;Left
+	s;Ophie;More of these goons...{w}{br}Can't we ever sneak into somewhere undetected for once.{w};auto
+	r;Ophie
+elif;gameStateObj.turncount == 7
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p5_1;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p5_2;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p5_3;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p5_4;next;warp
+	wait;500
+elif;gameStateObj.turncount == 9
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p7_1;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p7_2;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p7_3;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p7_4;next;warp
+	wait;500
+elif;gameStateObj.turncount == 11
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p9_1;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p9_2;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p9_3;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p9_4;next;warp
+	wait;500
+elif;gameStateObj.turncount == 14
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_1;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_2;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_3;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_4;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_5;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_6;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_7;next;warp
+	wait;500
+	set_next_position;r0;closest
+	set_cursor;next
+	add_unit;p11_8;next;warp
+	wait;500
+elif;gameStateObj.turncount >= 16
+	# Infinite Reinforcements start
+	if;gameStateObj.turncount%2
+		create_unit;w_Sage;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Oracle;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Warlock;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Ranger;gameStateObj.turncount;r0;warp;closest
+	else
+		create_unit;w_Berserker;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Warrior;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Swordmaster;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Dragoon;gameStateObj.turncount;r0;warp;closest
+	end
+	wait;500
+end

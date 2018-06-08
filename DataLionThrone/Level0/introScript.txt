@@ -1,0 +1,143 @@
+# Intro Script 0
+# Open with view of map
+# Shows Green Villagers vs. Red Soldiers -> Vagnius and Sydney stand out.
+# Set initial money
+set_game_constant;money;1500
+m;Mount Briggs
+add_unit;F1
+add_unit;F2
+add_unit;S1
+add_unit;S2
+add_unit;S3
+t;2
+set_camera_pan;1
+set_cursor;Vagnius
+set_camera_pan;0
+set_cursor;S1;immediate
+disp_cursor;1
+wait;1000
+disp_cursor;0
+u;Soldier1;Right
+u;Man1;FarLeft
+u;OldMan1;MidLeft
+s;Soldier1;By order of the Duke,{w}{br}at the behest of the Empress herself,{w}{br}this monastery is to be searched.{w};auto
+s;OldMan1;What gives you the right!{w};auto
+s;Man1;Yeah, we haven't done anything!{w};auto
+s;Soldier1;Ahem!{w}{br}Anyone who resists will be punished in full accordance with the law.{w};auto
+s;Man1;Shove your full accordance--{w};auto
+qmove_sprite;Soldier1;24,0
+u;Vagnius;MidRight
+s;Vagnius;That's enough.{w}{br}Let's cut to the chase, shall we?{w}{br}We know you're harboring a fugitive.{w}{br}Hand the girl over and no one has to get hurt.{w};auto
+s;OldMan1;Hmmph.{w};auto
+r;Soldier1
+s;Vagnius;Well? So eager before, and now you hesitate. A pity.{w}{br}Sidney?{w};auto
+u;Sidney;FarRight
+s;Sidney;Boss?{w};auto
+s;Vagnius;How about some additional... incentive.{w};auto
+s;Sidney;Heh. My pleasure.{w};auto
+r;Man1;OldMan1;Vagnius;Sidney
+# Move Sidney and two thugs to Man1
+move_unit;Sidney;16,3
+move_unit;F1;15,2
+move_unit;F2;15,4
+start_move
+set_cursor;Sidney;immediate
+u;Sidney;Right
+u;OldMan1;Left
+s;Sidney;Hey! Tough guy.{w}{br}Last chance. Anything coming to mind now?{w};auto
+s;OldMan1;Pah!{w};auto
+s;Sidney;Rough him up!{w};auto
+r;OldMan1;Sidney
+# Combat
+interact_unit;F1;15,3;Hit
+u;OldMan1;Left
+s;OldMan1;Urgh!{w};auto
+r;OldMan1
+# Combat
+interact_unit;F2;15,3;Hit
+u;OldMan1;Left
+s;OldMan1;...{w};auto
+r;OldMan1
+# Man dies
+r;OldMan1
+qmove_sprite;Sidney;24,0
+u;Vagnius;Right
+s;Vagnius;Let this be an example to those who would defy the Empire's might!{w}{br}Now, hand over the fugitive, or more will end up like this traitor!{w};auto
+r;Sidney;Vagnius
+# Pan to bottom of screen
+m;Meet the Sage
+set_cursor;10,9
+add_unit;Prim
+add_unit;Ophie
+add_unit;Yohn
+disp_cursor;1
+wait;1000
+disp_cursor;0
+t;1
+b;Monastery
+t;2
+u;Prim;MidLeft
+s;Prim;Master Yohn! Look!{w};auto
+u;Yohn;Right
+s;Yohn;It is best to direct your concern elsewhere, Prim.{w}{br}There's nothing we can do here and now.{w};auto
+s;Prim;Oh...{w}{br}W-why are they even here?{w}{br}We're not harboring any fugitives.{w};auto
+u;Ophie;FarLeft
+s;Ophie;Hmmph. The Empire will take any excuse for a fight.{w}{br}They think they can just walk in here--{w};auto
+s;Yohn;Anger is a natural feeling, Ophie.{w}{br}But now is not the time for anger.{w}{br}We must make haste. We can stay here no longer--{w};auto
+s;???;Hey! There's someone hiding back here!{w};8;28;224
+s;Prim;Eep! They've found us!{w};auto
+r;Prim;Ophie;Yohn
+m;Flight over Venice
+t;1
+remove_background
+t;2
+# Pan to Page, Vagnius, Sidney
+set_cursor;Vagnius
+u;Vagnius;Right
+u;Sidney;Left
+s;Sidney;Colonel... There's a group of them hiding in the back...{w};auto
+s;Vagnius;What! You idiots! One of them could be the fugitive.{w}{br}Don't let them get away!{w};auto
+r;Vagnius;Sidney
+# Pan over to Ophie, Prim, Master X
+set_cursor;Yohn
+u;Yohn;Right
+s;Yohn;Leave. I'll hold them off.{w};auto
+r;Yohn
+# Yohn moves
+convert;Yohn;other
+move_unit;Yohn;8,5
+start_move
+u;Prim;Left
+s;Prim;Master?{w};auto
+u;Yohn;Right
+s;Yohn;Run! And don't look back!{w};auto
+r;Yohn;Prim
+# Some others leave
+move_unit;13,3;14,0
+move_unit;15,3;16,0
+move_unit;14,4;15,0
+start_move
+remove_unit;14,0
+remove_unit;15,0
+remove_unit;16,0
+wait;400
+move_unit;13,4;15,0
+move_unit;12,5;14,0
+move_unit;15,5;16,0
+start_move
+remove_unit;14,0
+remove_unit;15,0
+remove_unit;16,0
+u;Vagnius;Right
+s;Vagnius;Don't just stand there! After the rest of them!{w}{br}I'll handle this one.{w};auto
+r;Vagnius
+u;Sidney;Right
+s;Sidney;You heard the commander! Kill anyone who stands in our way!{w};auto
+r;Sidney
+move_unit;Sidney;15,0
+move_unit;F1;14,0
+move_unit;F2;16,0
+start_move
+remove_unit;Sidney
+remove_unit;F1
+remove_unit;F2

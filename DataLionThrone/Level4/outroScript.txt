@@ -1,0 +1,62 @@
+# outro script 3
+victory_screen
+m;Fire Treasure
+b;Clearing
+t;2
+u;Ophie;Left
+u;Joel;Right
+s;Ophie;Wow! Look at all this loot!{w};auto
+s;Joel;With this many weapons, the Resistance should be set for quite a while.{w};auto 
+if;gameStateObj.check_alive('Nia')
+	r;Ophie
+	u;Nia;Left
+	s;Joel;So Nia, anything catching you're eye?{w};auto
+	s;Nia;Hmmm...{w};auto
+	r;Nia
+	wait;200
+	u;Nia;Left
+	# Give Nia a new bow Oak Bow
+	give_item;Nia;Oak Bow
+	s;Nia;Pretty...{w};auto
+	r;Nia
+end
+if;gameStateObj.check_alive('Drake')
+	r;Joel;Ophie
+	u;Althea;Left;u;Drake;Right
+	s;Althea;Drake, look at this!{w};auto
+	s;Drake;Althea, don't touch that! These are Imperial weapons...{w}{br}They could be dangerous!{w};auto
+	s;Althea;Always a worrier.{w}{br}Come on Drake, live a little.{w};auto
+	s;Drake;Well, if you insist.{w};auto
+	# Give Drake a greatlance
+	give_item;Drake;Great Lance
+	r;Althea;Drake
+end
+if;gameStateObj.check_alive('Nia') or gameStateObj.check_alive('Drake')
+	u;Ophie;Left
+end
+if;gameStateObj.check_alive('Drake')
+	u;Joel;Right
+end
+s;Ophie;Joel, you ever seen a sword like this before?{w}{br}It was wrapped up by itself in the back.{w};auto
+s;Joel;Well, lad, it's certainly ornate.{w}{br}How does it feel?{w};auto
+s;Ophie;Hmmm... Powerful.{w};auto
+qmove_sprite;Joel;24,0
+u;Prim;MidRight
+s;Prim;I don't like the look of it. {w};auto
+s;Ophie;What?{w}{br}Wait... are you jealous, Prim?{w};auto
+s;Prim;No... I just have a bad feeling.{w};auto
+qmove_sprite;Ophie;-24,0
+u;Althea;MidLeft
+s;Althea;So do I...{w};auto
+s;Joel;I reckon' I've heard of this blade before.{w}{br}This is ancient magic.{w}{br}Lad, what you hold in your hands is a Magebane Sword.{w};auto
+s;Ophie;A Magebane Sword?{w};auto
+s;Joel;A blade that devours magic.{w}{br}That must be why Althea and Prim feel sick.{w};auto
+s;Prim;Please, Ophie, now that we know what it is, can you put it back?{w}{br}I feel like I'm going to throw up.{w};auto
+s;Ophie;Oh, sorry...{w};auto
+s;Joel;Don't throw it away though, lad.{w}{br}A sword like that could come in handy.{w};auto
+give_item;Ophie;Magebane Sword
+r;Prim
+u;Drake;MidRight
+s;Drake;Alright, everyone. Let's get a move on.{w}{br}The wagon's fully loaded.{w};auto
+r;Ophie;Drake;Joel;Althea
+t;1

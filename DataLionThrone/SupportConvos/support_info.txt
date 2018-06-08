@@ -1,0 +1,5 @@
+Support Conversations would go in this folder.
+Named like so (character names in alphabetical order within filename):
+- OphiePrim.txt
+- KaylaSam.txt
+- CoyoteOphie.txt

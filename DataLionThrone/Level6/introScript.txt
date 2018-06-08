@@ -1,0 +1,61 @@
+# Intro Script
+# Outside the Prison
+m;Sootballs
+arrange_formation
+set_game_constant;switches;0
+set_game_constant;Civ_Escape;0
+# Set it to start at something that can't be reached
+set_game_constant;line_cross;-100
+unlock_lore;Coyote
+set_cursor;Ophie;immediate
+#add_unit;C1_1
+add_unit;C1_2
+add_unit;C1_3
+add_unit;C2_1
+add_unit;C2_2
+add_unit;C2_3
+add_unit;C3_1
+add_unit;C3_2
+add_unit;C3_3
+#add_unit;C4_1
+b;Wastes
+t;2
+u;Sam;MidRight
+s;Sam;There's the prison.{w};auto
+if;not gameStateObj.check_dead("Theo")
+    u;Theo;FarRight
+    s;Theo;Foreboding...{w};auto
+end
+if;not gameStateObj.check_dead("Joel")
+    u;Joel;FarLeft
+    s;Joel;At least it'll be warmer inside. I'm f-freezing!{w};auto
+end
+r;Theo
+u;Kayla;MidLeft
+s;Kayla;Before we make our way in, a heads-up.{w}{br}The Confederacy has a man on the inside, posing as a prisoner.{w}{br}He goes by the code name 'Coyote'.{w}{br}But we lost contact with him.{w}{br}They must've have tightened up security.{w}{br}Honestly, he's probably dead.{w};auto 
+s;Kayla;But if he's still around, he could be a valuable resource.{w};auto
+s;Sam;We'll keep that in mind.{w}{clear}Our objective is to incapacitate the warden.{w}{br}If we can take out their chain of command, the rest of the prison should follow.
+u;Renae;FarLeft
+s;Renae;Okay, everyone, hush!{w}{br}We're nearing the passage. I'll take it from here.{w};auto
+r;Sam;Kayla;Ophie;Renae
+t;1
+b;Castle
+t;2
+u;Ophie;FarLeft
+u;Renae;MidLeft
+s;Ophie;Well, we haven't been caught yet...{w};auto
+s;Renae;Of course we haven't! I'm really good at this kind of thing.{w};auto
+s;Ophie;I didn't mean to--{w};auto
+mirror;Renae
+s;Renae;Shhh, shh.{w}{br}We're almost there!{w};auto
+s;Ophie;Gulp.{w};auto
+mirror;Renae
+s;Renae;Ah, perfect.{w}{br}We made it, everyone.{w}{br}No need for congratulations, tips are fine--{w};auto
+s;Alarm;Wee-oh, wee-oh, wee-oh!{w};8;28;224
+u;Sam;Right
+s;Sam;You were saying?{w};auto
+s;Renae;No time for questions, Sam!{w}{br}We've been spotted!{w};auto
+r;Sam;Renae;Ophie
+t;1
+remove_background
+t;2

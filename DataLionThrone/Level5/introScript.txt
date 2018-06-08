@@ -1,0 +1,100 @@
+# Intro Script Level 5
+m;Mount Briggs
+add_unit;N1
+add_unit;N2
+set_cursor;Vagnius;immediate
+t;2
+map_pan
+set_cursor;Vincent
+move_unit;Vincent;23,3
+start_move
+set_cursor;Vincent
+disp_cursor;1
+wait;500
+disp_cursor;0
+u;Vincent;Left
+u;Vagnius;Right
+s;Vagnius;Is everything prepared?
+s;Vincent;You don't have to worry, boss.{w}{br}Those posers won't be getting through the Ghat Mountain Bandits.{w}{br}You can trust me on that!{w}{br}They don't call us the toughest bandits this side of the Ghats for no reason!{w};auto
+s;Vagnius;Uh-huh.{w}{br}I hope your boys can live up to such a... glorious... reputation.{w};auto
+s;Vincent;Those children are safe with us!{w}{br}...Well, not really safe, since they've been kidnapped...{w}{br}Which does not meet the normal criteria for safety.{w}{br}But I assure you, they will not be leaving this temple.{w}{br}The Ghat Mountain bandits are in their natural element!{w};auto
+# This section might be cuttable?
+s;Vagnius;... Are you quite finished?{w};auto
+s;Vincent;Huh?{w};auto
+s;Vagnius;Never mind...{w}{br}Look here!{w};auto
+s;Vincent;Hee hee! More gold.{w}{br}What's this for, boss?{w};auto
+s;Vagnius;Your silence.{w};auto
+s;Vincent;Our silence?{w};auto
+s;Vagnius;Holding children hostage isn't exactly lauded by the international community...{w};auto
+s;Vincent;Oh, I get ya, boss.{w}{br}Not a word of it will pass my lips!{w};auto
+# End cuttable setion here
+mirror;Vagnius
+move_sprite;Vagnius;24,0
+s;Vincent;Hey! Where you going, boss?{w};auto 
+mirror;Vagnius
+s;Vincent;Don't you want to see the fireworks?{w};auto
+s;Vagnius;I have more important things to do than watch a slaughter.{w}{br}I trust you can handle those nuisances when they show, or it'll be your skin.{w};auto
+s;Vincent;You bet, boss!{w};auto
+r;Vagnius;Vincent
+move_unit;Vagnius;20,0
+start_move
+remove_unit;Vagnius
+remove_unit;N1
+remove_unit;N2
+move_unit;Vincent;23,2
+start_move
+u;Vincent;Left
+s;Vincent;Gulp!{w};auto
+r;Vincent
+m;Combat Theme 4
+t;1
+b;Desert
+t;2
+# Add player units
+add_unit;Ophie;3,15
+arrange_formation
+set_cursor;Ophie;immediate
+u;Ophie;MidLeft
+u;Prim;FarLeft
+s;Ophie;The trail stops here.{w};auto
+s;Prim;Could we have lost them?{w}{br}A-are we... too late?{w};auto
+s;Ophie;No, they must be nearby.{w}{br}There's an old temple over there.{w}{br}Maybe Vagnius is hiding within, like the snake he is...{w};auto
+r;Prim
+u;Eliza;FarLeft
+s;Eliza;Look alive, people!{w}{br}Bandits!{w};auto
+r;Eliza;Ophie
+set_cursor;Jules;immediate
+t;1
+remove_background
+t;2
+disp_cursor;1
+wait;500
+disp_cursor;0
+move_unit;Jules;5,14
+start_move
+set_cursor;Ophie
+t;1
+b;Desert
+t;2
+u;Jules;Right;u;Prim;FarLeft;u;Ophie;MidLeft
+s;Jules;Well, well, well...{w}{br}Look who decided to show up, boys!{w}{br}You know, you're late!{w}{br}And I hate being kept waiting!{w};auto
+s;Prim;You were expecting us?{w};auto
+s;Jules;You bet your ass we were, sweet cheeks!{w};auto
+s;Ophie;Where are the children?{w}{br}We know Vagnius brought them here!{w};auto
+s;Jules;Ha ha ha! Don't get ahead of yourself, boy!{w}{br}If you want those children, you'll have to go through us.{w}{br}The Ghat Mountain Bandits!{w}{br}The toughest bandits this side of the Ghat Mountains!{w}{br}Ha ha ha!{w};auto
+r;Jules;Ophie;Prim
+t;1
+remove_background
+t;2
+set_cursor;Jules
+move_unit;Jules;9,5
+start_move
+set_cursor;Ophie
+u;Ophie;Left
+s;Ophie;Come on. There's no time to waste!{w};auto
+r;Ophie
+t;1
+# There was movement, so reset that
+reset_units
+remove_background
+t;2

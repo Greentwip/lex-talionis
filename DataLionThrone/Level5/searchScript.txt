@@ -1,0 +1,8 @@
+# Level 5 Search Script
+# Open the Hidden Gate...
+if;self.name == 'Hidden'
+	# Do the deed - Replace tiles
+	area_replace_tile;21,4;OpenRoadData
+	change_tile_sprite;21,4;OpenRoad;destroy
+	set_tile_info;23,12
+end

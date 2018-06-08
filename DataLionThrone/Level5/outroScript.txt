@@ -1,0 +1,62 @@
+# Outro Script Level 5
+# Change Sam and Kayla to player controlled
+convert;Sam;player
+convert;Kayla;player
+unlock_lore;CFS
+unlock_lore;Kayla
+victory_screen
+m;Good Theme
+b;Desert
+t;2
+u;Sam;Left;u;Man1;Right
+s;Man1;Sir, I don't know how we can ever repay you.{w};auto
+s;Sam;No need.{w}{br}Besides, it is not me you should be thanking.{w};auto
+qmove_sprite;Sam;-24,0
+u;Ophie;MidLeft
+s;Sam;Without my friend's stubborn insistence on doing what is right,{w}{br}we never would have succeeded.{w}{br}He led the charge.{w};auto
+s;Man1;Thank you.{w}{br}Finding and returning our children...{w}{br}It's like a miracle from out of the age of the Moon King.{w};auto
+s;Ophie;All in a days' work for the Resistance.{w}{br}We Keralans have to stick together.{w};auto
+s;Man1;Indeed.{w}{br}Thank you again, all of you, for your help.{w};auto
+r;Man1
+r;Ophie
+u;Ophie;MidRight
+s;Ophie;So, I guess I should thank you.{w}{br}You arrived in the nick of time.{w};auto
+s;Sam;No, actually I should apologize to you.{w}{br}You were right.{w}{br}We can't hide in the shadows and expect to accomplish anything substantial.{w};auto
+s;Ophie;Well, I'm glad you came around.{w};auto
+m;Hum of the Streets
+u;Kayla;MidLeft
+s;Ophie;So, who's this?{w};auto
+s;Kayla;Who's this...?{w}{br}Sammy, my dear, you still haven't told them about me?{w}{br}Trying to keep me all to yourself? Tsk Tsk.{w}{br}It's a pleasure to meet you, Ophie.{w}{br}I'm Kayla.{w};auto
+s;Sam;...My source...{w};auto
+s;Ophie;This woman is your secret source?{w};auto
+s;Sam;...Kayla is a liason from the Confederacy of Free Cities.{w};auto
+s;Ophie;The Confederacy of what now?{w};auto
+s;Sam;The Confederacy of Free Cities.{w};auto
+s;Ophie;Which is?{w};auto
+s;Sam;The Confederacy is a group of free city states to the east.{w}{br}They've banded together to protect themselves against the Empire's ambition.{w};auto
+s;Kayla;Indeed. I'm with the Confederacy's... diplomacy bureau.{w};auto
+s;Sam;She's one of the reasons the Resistance has had such success lately.{w}{br}There are many Confederacy spies in the ranks of the Empire.{w}{br}They relay back important information about where the Empire is weak,{w}{br}and when would be a good time to strike.{w};auto
+s;Ophie;So you're Sam's mysterious source.{w}{br}This is who you've been trusting, Sam?{w}{clear}Kayla, your 'information' nearly got us killed at Fort Kosheen.{w};auto
+s;Kayla;Ah yes, one of our spies fed us false information.{w}{br}Tsk Tsk.{w}{br}Don't worry, he was dealt with.{w}{br}Harshly.{w};auto
+s;Sam;There's no need to be suspicious.{w}{br}Any enemy of the Empire is a friend of ours.{w}{br}The Confederacy's been struggling against the Empire for many solstices.{w}{br}They're interested in Kerala's freedom just as much as we are.{w};auto
+s;Kayla;Lately, the Confederacy's decided to take a more active approach.{w}{br}I'll be accompanying you all on your missions from now on.{w}{br}How exciting!{w}{br}You should know I've never really done anything so hands-on before.{w}{br}Freedom fighters, nighttime raids, disguised princesses...{w}{br}Oh, how romantic!{w};auto
+s;Ophie;Yeah, we'll see how you like it after the next mission, eh?{w};auto
+r;Sam
+u;Sam;FarRight
+s;Kayla;Oh, don't be rude.{w}{br}I didn't get this far on my looks alone now.{w};auto
+s;Sam;Kayla's one of the Confederacy's top shamans.{w}{br}She can take care of herself.{w};auto
+s;Kayla;Well, no use dilly-dallying.{w}{br}I want to see what accoutrements you've managed to scrounge up.{w};auto
+s;Ophie;You never brought her to the base, Sam?{w};auto
+s;Sam;No--{w};auto
+s;Kayla;I know right, how rude!{w};auto
+s;Ophie;No, actually, that's smart...{w};auto
+s;Kayla;So what does your base look like?{w};auto
+s;Ophie;Err...{w};auto
+r;Ophie
+s;Kayla;Do you all live in a big treehouse?{w};auto
+s;Sam;No...{w};auto
+r;Sam
+s;Kayla;Or maybe in the sewers, with, like, rat throw-rugs?{w}{br}Or I know, behind a waterfall!{w}{br}That's gotta be it...{w};auto
+qmove_sprite;Kayla;96,0
+r;Kayla;Ophie;Sam
+t;1

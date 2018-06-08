@@ -1,0 +1,38 @@
+# Called whenever a unit escapes
+# 
+# Level Specific
+# Level 4
+if;gameStateObj.game_constants['level'] == 4
+	if;self.unit.klass == 'Wagon'
+		inc_game_constant;Escaped_Wagons
+	end
+	if;gameStateObj.game_constants['Escaped_Wagons'] >= 4
+		lose_game
+	# If the number of escaped wagons plus the number of dead wagons is gte than the total number of wagons, win
+	elif;gameStateObj.game_constants['Escaped_Wagons'] + gameStateObj.game_constants['Dead_Wagons'] >= 12
+		if;gameStateObj.check_dead('Anders')
+			win_game
+		else
+			set_cursor;Anders
+			u;Anders;FarLeft
+			s;Anders;You haven't won yet, Resistance scum.{w}{br}I'll take your scalps back to the Duke myself!
+			r;Anders
+		end
+	end
+# Level 6
+elif;gameStateObj.game_constants['level'] == 6
+	if;self.unit.name == 'Kiley'
+		u;Kiley;Right
+		s;Kiley;Aye, looks like this Resistance can handle itself.{w}{br}I'd best be following me crew.{w}{br}They get mighty rowdy without their captain to steer 'em straight{w};auto
+		r;Kiley
+	elif;self.unit.name == 'Prisoner'
+		inc_game_constant;Civ_Escape
+	end
+end
+#
+# Universal
+remove_unit;{unit}
+wait;200
+if;not any(unit.team in ["player", "other"] for unit in gameStateObj.allunits if unit.position)
+	win_game
+end

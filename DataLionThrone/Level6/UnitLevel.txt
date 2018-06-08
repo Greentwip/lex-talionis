@@ -1,0 +1,139 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+#
+# Factions
+faction;Prisoner;Prisoner;Neutral;Captive of the Tyrana prison
+faction;Guard;Guard;Empire;Guard at the Tyrana Prison
+faction;Thief;Thief;Empire;Just doing some... uh... inventory management
+# Other
+# Cage 4
+other;0;0;Coyote;13,36;None
+other;0;0;Kiley;11,37;None
+# Cage 1
+other;0;C1_2;Brigand;6;Rusted Axe;0,34;None;Prisoner
+other;0;C1_3;Raider;6;Rusted Axe;1,34;None;Prisoner
+# Cage 2
+other;0;C2_1;Citizen;5;;23,34;None;Prisoner
+other;0;C2_2;Citizen;5;;22,33;None;Prisoner
+other;0;C2_3;Citizen;5;;24,32;None;Prisoner
+# Cage 3
+#other;0;C3_1;Citizen;5;;16,30;None;Prisoner
+#other;0;C3_2;Citizen;5;;17,31;None;Prisoner
+#other;0;C3_3;Citizen;5;;18,30;None;Prisoner
+#
+# Enemies
+# Bosses
+enemy;0;0;Razia;12,2;SoftGuard
+# Generics
+# Razia's Guards
+enemy;0;0;Shaman;10;Flux,Stun;6,3;SoftGuard;Guard
+enemy;0;0;Shaman;10;Flux,Stun;18,3;SoftGuard;Guard
+enemy;0;0;Sniper;1;Yew Bow;12,5;SoftGuard;Guard
+### Top - 14 at top
+# At Door
+enemy;0;0;Shaman;7;Flux,Scathe;6,9;SoftGuard;Guard
+enemy;0;0;Shaman;7;Flux,Scathe;18,9;SoftGuard;Guard
+enemy;0;0;Shaman;7;Flux,Hex;7,9;SoftGuard;Guard
+enemy;0;0;Shaman;7;Flux,Hex;17,9;SoftGuard;Guard
+enemy;0;0;Knight;7;dShort Spear,Potion;6,10;Attack_3;Guard
+enemy;0;0;Knight;7;Javelin,Steel Lance;18,10;Attack_3;Guard
+enemy;0;0;Fighter;9;Iron Axe;7,10;Attack_3;Guard
+enemy;0;0;Fighter;9;Iron Axe;17,10;Attack_3;Guard
+# Further Behind Doors
+enemy;0;0;Myrmidon;9;Mithril Sword,dEnergy Ring;12,8;Attack;Guard
+enemy;0;0;Cleric;8;Glimmer,Mend;2,8;Attack;Guard
+enemy;0;0;Cleric;8;Glimmer,Fortune;22,8;Attack;Guard
+### Bottom - 23 at bottom
+# Guarding doors
+enemy;0;0;Knight;7;Iron Lance,dSkeleton Key;6,24;SoftGuard;Guard
+enemy;0;0;Knight;7;Great Lance,Potion;7,24;SoftGuard;Guard
+enemy;0;0;Knight;7;Iron Lance,dSkeleton Key;18,24;SoftGuard;Guard
+enemy;0;0;Knight;7;dGreat Lance,Potion;17,24;SoftGuard;Guard
+# Right Door - 4 Fighters
+enemy;0;0;Fighter;8;Iron Axe;15,24;Attack_2;Guard
+enemy;0;0;Fighter;8;Iron Axe;17,25;Attack_2;Guard
+enemy;0;0;Fighter;8;Iron Axe;18,25;Attack_2;Guard
+enemy;0;0;Fighter;8;Iron Axe;20,24;Attack_2;Guard
+# Left Door - 4 Mercenaries
+enemy;0;0;Mercenary;8;Iron Sword;4,24;Attack_1;Guard
+enemy;0;0;Mercenary;8;Iron Sword;6,25;Attack_1;Guard
+enemy;0;0;Mercenary;8;Iron Sword;7,25;Attack_1;Guard
+enemy;0;0;Mercenary;8;Iron Sword;9,24;Attack_1;Guard
+# At Front
+enemy;0;0;Mage;8;Wind;6,31;Attack;Guard
+enemy;0;0;Mage;8;Wind;18,31;Attack;Guard
+#
+# Guarding Switches
+enemy;0;0;Knight;7;Javelin;1,24;HardGuard;Guard
+enemy;0;0;Knight;7;Javelin;23,24;HardGuard;Guard
+# Guarding Treasure
+enemy;0;0;Knight;7;Javelin,dSkeleton Key;12,27;HardGuard;Guard
+#enemy;0;0;Archer;7;Longbow;8,28;Attack;Guard
+#enemy;0;0;Archer;7;Longbow;16,28;Attack;Guard
+#
+# From Left
+enemy;0;0;Fighter;7;Hand Axe;1,27;Attack_1;Guard
+enemy;0;0;Fighter;7;Hand Axe;1,28;Attack_1;Guard
+# From Right
+enemy;0;0;Soldier;7;Javelin;23,27;Attack_2;Guard
+enemy;0;0;Soldier;7;Javelin;23,28;Attack_2;Guard
+# Reinforcements - 
+# Turn 2
+enemy;0;pack_r2_1;Soldier;7;Iron Lance;24,27;Pursue;Guard
+enemy;0;pack_r2_2;Soldier;7;Javelin;24,28;Pursue;Guard
+enemy;0;pack_l2_1;Fighter;7;Hand Axe;0,27;Pursue;Guard
+enemy;0;pack_l2_2;Fighter;7;Iron Axe;0,28;Pursue;Guard
+# Turn 3
+enemy;0;pack_l3_1;Soldier;7;Iron Lance;0,27;Pursue;Guard
+enemy;0;pack_l3_2;Soldier;7;Iron Lance;0,28;Pursue;Guard
+enemy;0;pack_r3_1;Mercenary;7;Iron Sword;24,27;Pursue;Guard
+enemy;0;pack_r3_2;Mercenary;7;Iron Sword;24,28;Pursue;Guard
+# Turn 4
+enemy;0;pack_l4_1;Myrmidon;7;Iron Sword;0,27;Pursue;Guard
+enemy;0;pack_l4_2;Myrmidon;7;Iron Sword;0,28;Pursue;Guard
+enemy;0;pack_r4_1;Knight;7;Iron Lance;24,27;Pursue;Guard
+enemy;0;pack_r4_2;Knight;7;Iron Lance;24,28;Pursue;Guard
+# After you cross the gap
+enemy;0;pack_l7_1;Soldier;8;Iron Lance;7,0;Pursue;Guard
+enemy;0;pack_l7_2;Soldier;8;Javelin;5,0;Pursue;Guard
+#
+enemy;0;pack_r7_1;Soldier;8;Iron Lance;17,0;Pursue;Guard
+enemy;0;pack_r7_2;Soldier;8;Javelin;19,0;Pursue;Guard
+# Next Turn
+enemy;0;pack_l8_1;Soldier;9;Iron Lance;5,0;Pursue;Guard
+enemy;0;pack_l8_2;Mage;8;Wind;7,0;Pursue;Guard
+#
+enemy;0;pack_r8_1;Soldier;9;Iron Lance;19,0;Pursue;Guard
+enemy;0;pack_r8_2;Mage;8;Wind;17,0;Pursue;Guard
+# Next Turn
+enemy;0;pack_l9_1;Mage;9;Wind;7,0;Pursue;Guard
+enemy;0;pack_l9_2;Mage;9;Wind;5,0;Pursue;Guard
+#
+enemy;0;pack_r9_1;Mage;9;Wind;17,0;Pursue;Guard
+enemy;0;pack_r9_2;Mage;9;Wind;19,0;Pursue;Guard
+# Thieves
+enemy;0;pack_lt_1;Thief;8;Rapier;6,0;Unlock2;Thief
+enemy;0;pack_rt_1;Thief;8;Rapier;18,0;Unlock2;Thief
+#
+# Infinite Reinforcements -
+enemy;2;i1;Knight;Mithril Lance,Short Spear;0,0;Pursue;Guard;Void_Curse
+enemy;2;i2;Mage;Wind;0,0;Pursue;Guard;Void_Curse

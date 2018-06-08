@@ -1,0 +1,247 @@
+# Death Quote Script
+# Catalog of Death Quotes
+#
+# Level Specific on bottom
+#
+# Universal
+if;self.unit.team == 'player'
+	m;Brave Story 61
+end
+# Player Death Quotes
+if;self.unit.name == 'Ophie'
+	u;Ophie;FarRight
+	if;gameStateObj.game_constants['level'] in [1, 3, 5, 7, 9]
+		s;Ophie;No! I must... k-keep going...{w};auto
+	else
+		s;Ophie;Urgh... M-master Yohn, I-I've failed... {w};auto
+	end
+	r;Ophie
+	kill_unit;Ophie
+	wait;200
+	lose_game
+elif;self.unit.name == 'Prim'
+	u;Prim;FarRight
+	if;gameStateObj.game_constants['level'] == 0
+		s;Prim;Is this... blood?{w}{br}Hang on... I'm sure I can...{w}{br}I can...{w};auto
+		r;Prim
+		kill_unit;Prim
+		wait;200
+		lose_game
+	else
+		s;Prim;Is this... blood?{w}{br}Hang on...{w};auto
+		if;not gameStateObj.check_dead('Ophie')
+			u;Ophie;Left
+			s;Ophie;Prim!{w};auto
+		end
+		s;Prim;I'm sure I can fix this...{w}{br}I-I c-can...{w}{br}T-this is too m-much...{w}{br}I-I have to retreat...{w};auto
+		r;Prim;Ophie
+	end
+elif;self.unit.name == 'Joel'
+	u;Joel;FarRight
+	s;Joel;Argh...{w}{br}Sorry captain...{w}{br}But I have to fall back...{w};auto
+	r;Joel
+elif;self.unit.name == 'Nia'
+	u;Nia;FarRight
+	s;Nia;...{w};auto
+	r;Nia
+elif;self.unit.name == 'Althea'
+	u;Althea;FarRight
+	if;gameStateObj.game_constants['level'] == 2
+		s;Althea;It seems... I couldn't run... forever...{w};auto
+		if;not gameStateObj.check_dead('Drake')
+			u;Drake;Left
+			s;Drake;No! Althea!{w}{br}Hang on... p-please...{w};auto
+		end
+		r;Althea;Drake
+		kill_unit;Althea
+		wait;200
+		lose_game
+	else
+		if;gameStateObj.game_constants['level'] >= 8
+			s;Althea;It seems... my best... was not good enough.{w};auto
+		else
+			s;Althea;It seems... I couldn't run... forever...{w};auto
+		end
+		if;not gameStateObj.check_dead('Drake')
+			u;Drake;Left
+			s;Drake;Althea! Fall back!{w}{br}You never should have been on this battlefield!{w};auto
+			s;Althea;Right... I'm always a burden...{w};auto
+			r;Althea
+			s;Drake;Hmmph.{w};auto
+		end
+		r;Drake;Althea
+	end
+elif;self.unit.name == 'Drake'
+	u;Drake;FarRight
+	if;not gameStateObj.check_dead('Althea')
+		u;Althea;Left
+		s;Althea;Drake, you're wounded... You should fall back...{w};auto
+		s;Drake;Urgh... No! I can't leave you here...{w};auto
+		s;Althea;I can take care of myself!{w}{br}I order you to retreat!{w};auto
+		s;Drake;Then I am no use to anyone...{w}{br}I must depart...{w};auto
+	else
+		s;Drake;I am of no use to anyone in this condition...{w}{br}I must... fall back...{w};auto
+	end
+	r;Drake;Althea
+elif;self.unit.name == 'Renae'
+	u;Renae;FarRight
+	s;Renae;But how...?{w}{br}I'm the fastest...{w};auto
+	r;Renae
+	if;gameStateObj.game_constants['level'] == 3
+		kill_unit;Renae
+		wait;200
+		lose_game
+	end
+elif;self.unit.name == 'Theo'
+	u;Theo;FarRight
+	s;Theo;Urgh! There's been a mistake...{w}{br}This wasn't... supposed to happen...{w};auto
+	r;Theo
+elif;self.unit.name == 'Sam'
+	u;Sam;FarRight
+	s;Sam;What! No!{w}{br}...{w};auto
+	s;Sam;I'm not done...{w}{br}Urgh...{w};auto
+	r;Sam
+	kill_unit;Sam
+	wait;200
+	lose_game
+elif;self.unit.name == 'Eliza'
+	u;Eliza;FarRight
+	s;Eliza;I-I shouldn't have tried...{w}{br}I-I am too weak...{w};auto
+	r;Eliza
+elif;self.unit.name == 'Coyote'
+	u;Coyote;FarRight
+	s;Coyote;Urgh! No wonder they were always afraid...{w};auto
+	r;Coyote
+elif;self.unit.name == 'Kayla'
+	u;Kayla;FarRight
+	s;Kayla;Hmph, I know when I've been beat.{w};auto
+	r;Kayla
+# Boss Death Quotes
+elif;self.unit.name == 'Sidney'
+	u;Sidney;FarLeft
+	s;Sidney;Huh?! This was supposed to be... easy...{w};auto
+	r;Sidney
+elif;self.unit.name == 'Brigham'
+	u;Brigham;FarLeft
+	s;Brigham;What... No! I was so close...{w};auto
+	r;Brigham
+elif;self.unit.name == 'Harold'
+	u;Harold;FarLeft
+	s;Harold;... Is this my...{w};auto
+	set_expression;Harold;Full_Blink
+	s;Harold;...glorious end? Hmmph!{w};auto
+	r;Harold
+elif;self.unit.name == 'Anders'
+	u;Anders;FarLeft
+	s;Anders;What? Blood? This blood?{w}{br}It's nothing... I will not disappoint...{w};auto
+	r;Anders
+elif;self.unit.name == 'Midas'
+	u;Midas;FarLeft
+	s;Midas;Please... I'll give you everything... all the gold I...{w};auto
+	r;Midas
+elif;self.unit.name == 'Jules'
+	u;Jules;FarLeft
+	s;Jules;...'Tis only a scratch, nothing more...{w}{br}Urgh...{w};auto
+	r;Jules
+elif;self.unit.name == 'Vincent'
+	u;Vincent;FarLeft
+	s;Vincent;Oh Damn....{w}{br}I'm in big fucking trouble here...{w};auto
+	r;Vincent
+elif;self.unit.name == 'Razia'
+	u;Razia;FarLeft
+	s;Razia;Hmmph! You've fought well, Keralan...{w}{br}Not many have... tested my blade and lived...{w};auto
+	r;Razia
+elif;self.unit.name == 'Marduk'
+	u;Marduk;FarLeft
+	s;Marduk;But my plan... was perfect...{w};auto
+	r;Marduk
+elif;self.unit.name == 'Vagnius'
+	u;Vagnius;FarLeft
+	s;Vagnius;Is this... truly the extent of my... ambition?{w}{br}Urgh...{w};auto
+	r;Vagnius
+elif;self.unit.name == 'Jakin'
+	u;Jakin;FarLeft
+	s;Jakin;Proceed, my child, to your ultimate destiny!{w};auto
+	r;Jakin
+	remove_unit;Jakin;warp
+elif;self.unit.name == 'Boaz'
+	u;Boaz;FarLeft
+	s;Boaz;Hah! The hunter becomes the hunted!{w}{br}You were a worthy opponent! Well done!{w};auto
+	r;Boaz
+	remove_unit;Boaz;warp
+elif;self.unit.name == 'Adjutant'
+	u;Adjutant;FarLeft
+	s;Adjutant;Oh... 'Tis a pity... {w};auto
+	r;Adjutant
+elif;self.unit.name == 'Ulver'
+	u;Ulver;FarLeft
+	s;Ulver;No! I am strong! ...The strongest!{w}{br}I will not go out like a common--{w}{br}Urgh...{w};auto
+	r;Ulver
+	# Remove all enemies from the field
+	kill_all;enemy
+	wait;200
+end
+#
+# Level 4
+if;gameStateObj.game_constants['level'] == 4
+	if;self.unit.klass == 'Wagon'
+		inc_game_constant;Dead_Wagons
+	end
+# Level 9
+elif;gameStateObj.game_constants['level'] == 9
+	if;not 'master_switch' in gameStateObj.level_constants
+		inc_game_constant;switches
+		# Check to make sure we don't go over
+		if;gameStateObj.game_constants['switches'] > 2
+			set_game_constant;switches;1
+		end
+		# Switch map to state up/down (state 1)
+		if;gameStateObj.game_constants['switches'] == 1
+			# Remove left and right bridges
+			hide_layer;2
+			# Turn tiles back into lakes
+			replace_tile;0,4.1,4.21,4.22,4.23,4.7,12.8,12.9,12.7,19.8,19.9,19.21,27.22,27.23,27;23
+			wait;20
+			# Turn tiles back into lakes
+			replace_tile;7,4.8,4.9,4.21,12.22,12.23,12.21,19.22,19.23,19.7,27.8,27.9,27.29,27.30,27;23
+			wait;100
+			clear_command_list;replace_tile
+			clear_command_list;hide_layer
+			clear_command_list;show_layer
+			show_layer;1
+			# Turn tiles into bridges
+			replace_tile;4,0.4,1.26,0.26,1.12,7.12,8.12,9.18,7.18,8.18,9.4,22.4,23.4,24.26,22.26,23.26,24;12
+			wait;20
+			# Turn tiles into bridges
+			replace_tile;4,7.4,8.4,9.26,7.26,8.26,9.12,22.12,23.12,24.18,22.18,23.18,24.4,30.4,31.26,30.26,31;12
+			wait;20
+		# Switch map to state left/right (state 2)
+		elif;gameStateObj.game_constants['switches'] == 2
+			hide_layer;1
+			# Remove up and down bridges
+			# Turn tiles into lakes
+			replace_tile;4,0.4,1.26,0.26,1.12,7.12,8.12,9.18,7.18,8.18,9.4,22.4,23.4,24.26,22.26,23.26,24;23
+			wait;20
+			# Remove down bridges
+			# Turn tiles into lake
+			replace_tile;4,7.4,8.4,9.26,7.26,8.26,9.12,22.12,23.12,24.18,22.18,23.18,24.4,30.4,31.26,30.26,31;23
+			wait;100
+			clear_command_list;replace_tile
+			clear_command_list;hide_layer
+			clear_command_list;show_layer
+			show_layer;2
+			# Turn tiles into bridges
+			replace_tile;7,4.8,4.9,4.21,12.22,12.23,12.21,19.22,19.23,19.7,27.8,27.9,27.29,27.30,27;12
+			wait;20
+			# Turn tiles into bridges
+			replace_tile;0,4.1,4.21,4.22,4.23,4.7,12.8,12.9,12.7,19.8,19.9,19.21,27.22,27.23,27;12
+			wait;20
+		end
+		if;self.unit.generic_flag and not 'first_death' in gameStateObj.level_constants
+			set_level_constant;first_death
+			u;Ophie;Left
+			s;Ophie;Well that did something alright.{w}{br}Is this what they meant by a game?{w};auto
+			r;Ophie
+		end
+	end
+end

@@ -1,3 +1,4 @@
+
 # UnitLevel.txt is used to define what units will be part of this level and where they will spawn
 # 
 # Each unit belongs on its own line
@@ -17,21 +18,15 @@
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
-faction;Althea;Althea;Resistance;Nope
-faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Archer;4;Magebane Bow,Yew Bow,Boltblade,Angelic Robe,Barkskin;5,13;Pursue;Resistance
-player;0;0;Sentinel;10;Iron Axe,Hand Axe;4,12;Pursue;Resistance
-player;0;0;Mage;5;Wind;4,15;Pursue;Resistance
-player;0;0;HalberdierF;10;Superior Edge;3,14;Pursue;Resistance
-player;0;0;OracleF;15;Nyx,Glimmer,Heal,Refresh,Physic;4,14;Support;Resistance
-player;0;0;Knight;10;Nyx,Flux,Warp,Wyrmsfire,Howl;4,13;Pursue;Resistance
-player;0;0;Vanguard;15;Iron Sword,Iron Lance,Javelin,Speedwings,Speedwings;5,14;Pursue;Resistance
+player;0;0;Franz;7,4;None
+player;0;0;Eirika;12,7;None
+player;0;0;Seth;12,9;None
+player;0;0;Gilliam;6,0;None
 # Enemies
-enemy;0;0;Myrmidon;1;Iron Sword;17,3;Pursue;Resistance
-enemy;0;0;Soldier;1;Iron Lance;16,2;Pursue;Resistance
-enemy;0;0;Archer;1;Willow Bow;16,5;Pursue;Resistance
-enemy;0;0;Sage;5;Slim Lance,dFire,Vulnerary;3,15;Pursue;Resistance
-enemy;0;0;Halberdier;10;Iron Axe;3,16;Pursue;Resistance
-enemy;0;0;Tactician;1;Glimmer,Heal;16,4;Support;Resistance
-enemy;0;0;Mage;1;Fire;16,3;Pursue;Resistance
+# Bosses
+enemy;0;0;Breguet;2,2;HardGuard
+# === Reinforcements ===
+# Player Characters
+# Enemies
+# === Triggers ===

@@ -1,0 +1,67 @@
+# pre base script 7
+m;The Task at Hand
+add_to_market;Great Sword
+add_to_market;Great Lance
+add_to_market;Great Axe
+add_to_market;Spiritbane
+add_to_market;Barkskin
+if;not gameStateObj.check_dead('Coyote')
+	set_base_convo;Training
+end
+if;not gameStateObj.check_dead('Theo') and gameStateObj.game_constants['noir'] >= 3
+    set_base_convo;Theo Sphinx, Pt. IV
+end
+# Show room
+b;TacticsFloor;map
+wm_add;Sam;7,2
+wm_add;Ophie;12,6
+wm_add;Prim;10,6
+wm_add;Theo;10,9
+wm_add;Renae;2,9
+wm_add;Drake;5,6
+wm_add;Joel;9,7
+wm_add;Althea;3,6
+wm_add;Nia;13,9
+wm_add;Eliza;5,9
+wm_add;Kayla;2,4
+wm_add;Coyote;1,8
+t;2
+wait;500
+wm_cursor;7,2
+wait;1000
+wm_remove_cursor
+t;1
+b;TacticsRoomDay
+t;2
+u;Sam;Right
+s;Sam;Ahem. Gather round everyone...{w};auto
+u;Joel;MidLeft
+u;Kayla;FarLeft
+if;gameStateObj.game_constants['Civ_Escape'] >= 3
+    s;Sam;We've received some spoils from our last mission.{w};auto
+    give_item;Convoy;Barkskin
+    if;gameStateObj.game_constants['Civ_Escape'] >= 5
+    	give_item;Convoy;Yew Bow
+    end
+end
+s;Sam;So then...{w}{br}Our last few missions have been quite... challenging.{w};auto
+s;Joel;You're tellin' me...{w};auto
+s;Sam;Hopefully this next one will be easier.{w};auto
+if;not gameStateObj.check_dead('Coyote') and not gameStateObj.check_dead('Kayla')
+	s;Sam;Especially with Coyote and Kayla in our roster.{w};auto
+end
+s;Sam;My sources--{w};auto
+r;Joel
+u;Ophie;MidLeft
+s;Ophie;We know who your sources are, Sam.{w}{br}She's standing right here.{w};auto
+s;Kayla;Tsk tsk. No need to ruin Sam's fun, Ophie.{w}{br}You know playing at spymaster is the only thing he has left--{w};auto
+s;Sam;Ahem.{w}{br}As I was saying, my sources, that is, the Confederacy,{w}{br}determined the location of Duke Ulver's upcoming military plans.{w}{br}Details of Imperial logistics would be an invaluable asset.{w};auto
+s;Ophie;Why can't the Confederacy do their own work for once?{w}{br}We didn't ask to be at their beck and call.{w};auto
+s;Sam;Well, this information has value for both parties.{w}{clear}Plus, the Confederacy has been so far unsuccessful using stealth.{w}{br}So... we're going to capture the plans by force!{w};auto
+s;Ophie;Of course...{w};auto
+s;Sam;We believe they are currently at Fort Bekal, which is nearby.{w}{br}We'll leave after breakfast.{w}{br}Hopefully the plans will be in hand by lunch.
+r;Kayla
+u;Joel;FarLeft
+s;Joel;Now that's my kind of mission!{w};auto
+r;Joel;Sam;Ophie
+t;1

@@ -1,0 +1,17 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Adjutant'
+        if;not 'AdjutantDefault' in gameStateObj.level_constants
+            u;Adjutant;Left
+            s;Adjutant;Insolent pests!{w}{br}You should be grateful the Empire ever graced your backwoods province.{w};auto
+            r;Adjutant
+            set_level_constant;AdjutantDefault
+        end
+    elif;self.unit2.name == 'Ulver'
+        if;not 'UlverDefault' in gameStateObj.level_constants
+            u;Ulver;Left
+            s;Ulver;Come then. Test yourself against my strength!{w};auto
+            r;Ulver
+            set_level_constant;UlverDefault
+        end
+    end
+end

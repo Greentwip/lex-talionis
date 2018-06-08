@@ -1,0 +1,141 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+#
+# Enemies
+# Bosses
+enemy;0;0;Vagnius;30,19;SoftGuard
+# Generics
+# Faction
+faction;Claw;Claw;Empire;The Empire's elite guard
+# 2 Ballista on cliff, 1 on top right
+enemy;0;0;Ballista;13;Ballista;22,24;HardGuard;Claw
+enemy;0;0;Ballista;17;Ballista;25,5;HardGuard;Claw
+enemy;0;0;Ballista;13;Ballista;23,23;HardGuard;Claw
+# Starting Units = 31 generics
+# 4 Wyvern Riders and 1 Wyvern Lord on bottom right
+enemy;0;0;Dracoknight;10;Slim Lance;28,25;Pursue;Claw
+enemy;0;0;Dracoknight;10;Slim Lance;30,27;Pursue;Claw
+enemy;0;0;Dracoknight;10;Steel Lance;30,25;Pursue;Claw
+enemy;0;0;Dracoknight;10;Steel Lance;28,27;Pursue;Claw
+enemy;0;0;Dracolord;4;Javelin,dTalisman;29,26;Pursue;Claw
+# 4 Heroes, bottom near spawn
+enemy;0;0;Vanguard;2;Mithril Sword;5,19;Attack_4;Claw
+enemy;0;0;Vanguard;2;Mithril Sword;9,21;Attack_4;Claw
+enemy;0;0;Vanguard;2;Mithril Axe;10,19;Attack_4;Claw
+enemy;0;0;Vanguard;2;Mithril Axe;3,23;Attack_4;Claw
+# 4 Mages and a Sage in middle of Map
+enemy;0;0;Mage;10;Fire;15,15;Attack_2;Claw
+enemy;0;0;Mage;10;Thunder;17,17;Attack_2;Claw
+enemy;0;0;Mage;10;Wind;17,15;Attack_2;Claw
+enemy;0;0;Sage;12;Blizzard,dElixir;16,16;Attack_2;Claw
+# 2 Warriors above spawn, along with 1 Tactician and 1 Shaman
+enemy;0;0;Warrior;1;Mithril Axe,Oak Bow;4,3;Attack_3;Claw
+enemy;0;0;Warrior;1;Mithril Axe,Oak Bow;6,6;Attack_3;Claw
+enemy;0;0;Tactician;10;Glimmer,Fortune;7,3;Attack_3;Claw
+enemy;0;0;Shaman;10;Flux,dScathe;3,1;SoftGuard;Claw
+# 2 Cavaliers above middle
+enemy;0;0;Cavalier;10;Steel Lance;14,7;Attack_1;Claw
+enemy;0;0;Cavalier;10;Steel Lance;15,8;Attack_1;Claw
+# 2 Cavaliers below middle
+enemy;0;0;Cavalier;10;Steel Lance;18,22;Attack_5;Claw
+enemy;0;0;Cavalier;10;Steel Lance;19,21;Attack_5;Claw
+# A Bishop and a Ranger on top right
+enemy;0;0;Sniper;2;Yew Bow,Elixir;22,4;Attack;Claw
+enemy;0;0;Oracle;2;Shine,Physic;23,6;Attack;Claw
+# 1 Berserker guarding ballista
+enemy;0;0;Berserker;3;Mithril Axe,dMithril Mail;24,21;Attack;Claw
+# 2 Myrmidons, 1 Swordmaster, 1 Halberdier on right peninsula
+enemy;0;0;Myrmidon;10;Steel Sword;26,11;Attack_6;Claw
+enemy;0;0;Myrmidon;10;Steel Sword;26,13;Attack_6;Claw
+enemy;0;0;Swordmaster;3;Superior Edge;27,12;Attack_6;Claw
+enemy;0;0;Halberdier;1;Steel Axe,Short Spear;27,9;Attack_6;Claw
+# 1 Oracle guarding Vagnius
+enemy;0;0;Oracle;2;Shine,Hex,Heal;28,19;SoftGuard;Claw
+# Reinforcements
+# 2 Wyvern Riders and a Wyvern Lord from bottom right, on turns 3, 5, 7, 9, 11
+enemy;0;d3_1;Dracoknight;10;Iron Lance;30,25;Pursue;Claw
+enemy;0;d3_2;Dracoknight;10;Iron Lance;28,27;Pursue;Claw
+enemy;0;d3_3;Dracolord;1;Mithril Lance;29,26;Pursue;Claw
+#
+enemy;0;d5_1;Dracoknight;10;Iron Lance;30,25;Pursue;Claw
+enemy;0;d5_2;Dracoknight;10;Iron Lance;28,27;Pursue;Claw
+enemy;0;d5_3;Dracolord;2;Mithril Lance;29,26;Pursue;Claw
+#
+enemy;0;d7_1;Dracoknight;10;Steel Lance;30,25;Pursue;Claw
+enemy;0;d7_2;Dracoknight;10;Steel Lance;28,27;Pursue;Claw
+enemy;0;d7_3;Dracolord;3;Mithril Lance;29,26;Pursue;Claw
+#
+enemy;0;d9_1;Dracoknight;10;Steel Lance;30,25;Pursue;Claw
+enemy;0;d9_2;Dracoknight;10;Steel Lance;28,27;Pursue;Claw
+enemy;0;d9_3;Dracolord;4;Mithril Lance,Potion;29,26;Pursue;Claw
+#
+enemy;0;d11_1;Dracoknight;10;Steel Lance;30,25;Pursue;Claw
+enemy;0;d11_2;Dracoknight;10;Steel Lance;28,27;Pursue;Claw
+enemy;0;d11_3;Dracolord;5;Mithril Lance,Potion;29,26;Pursue;Claw
+# 3 Shamans from near Vagnius on turns 4, 6, 8
+enemy;0;s4_1;Shaman;10;Flux;30,16;Pursue;Claw
+enemy;0;s4_2;Shaman;10;Nyx;30,17;Pursue;Claw
+enemy;0;s4_3;Shaman;10;Flux;30,18;Pursue;Claw
+#
+enemy;0;s6_1;Shaman;10;Nyx;30,16;Pursue;Claw
+enemy;0;s6_2;Shaman;10;Ruin;30,17;Pursue;Claw
+enemy;0;s6_3;Shaman;10;Nyx;30,18;Pursue;Claw
+#
+enemy;0;s8_1;Shaman;10;Nyx;30,16;Pursue;Claw
+enemy;0;s8_2;Shaman;10;Ruin;30,17;Pursue;Claw
+enemy;0;s8_3;Shaman;10;Nyx;30,18;Pursue;Claw
+# 2 Paladins from top, on turns 4, 6, 8, 10, 12
+enemy;0;p4_1;Paladin;2;Mithril Sword;14,0;Pursue;Claw
+enemy;0;p4_2;Paladin;2;Mithril Lance;15,0;Pursue;Claw
+#
+enemy;0;p6_1;Paladin;2;Mithril Sword;14,0;Pursue;Claw
+enemy;0;p6_2;Paladin;2;Mithril Lance;15,0;Pursue;Claw
+#
+enemy;0;p8_1;Paladin;3;Mithril Sword;14,0;Pursue;Claw
+enemy;0;p8_2;Paladin;3;Mithril Lance;15,0;Pursue;Claw
+#
+enemy;0;p10_1;Paladin;3;Mithril Sword;14,0;Pursue;Claw
+enemy;0;p10_2;Paladin;3;Mithril Lance;15,0;Pursue;Claw
+#
+enemy;0;p12_1;Paladin;4;Mithril Sword;14,0;Pursue;Claw
+enemy;0;p12_2;Paladin;4;Mithril Lance;15,0;Pursue;Claw
+# 2 Warriors from left, turn 6 happens, for 5 turns
+enemy;0;w6_1;Warrior;1;Mithril Axe,Oak Bow;0,10;Pursue;Claw
+enemy;0;w6_2;Warrior;1;Mithril Axe,Oak Bow;0,12;Pursue;Claw
+# 
+enemy;0;w7_1;Warrior;2;Mithril Axe,Oak Bow;0,10;Pursue;Claw
+enemy;0;w7_2;Warrior;2;Mithril Axe,Oak Bow;0,12;Pursue;Claw
+# 
+enemy;0;w8_1;Warrior;3;Great Axe,Yew Bow;0,10;Pursue;Claw
+enemy;0;w8_2;Warrior;3;Great Axe,Yew Bow;0,12;Pursue;Claw
+# 
+enemy;0;w9_1;Warrior;4;Mithril Axe,Yew Bow;0,10;Pursue;Claw
+enemy;0;w9_2;Warrior;4;Mithril Axe,Yew Bow;0,12;Pursue;Claw
+# 
+enemy;0;w10_1;Warrior;5;Mithril Axe,Great Bow;0,10;Pursue;Claw
+enemy;0;w10_2;Warrior;5;Mithril Axe,Great Bow;0,12;Pursue;Claw
+# Infinite Reinforcements
+enemy;2;i1;Warrior;Mithril Axe,Oak Bow;0,0;Pursue;Claw;Void_Curse
+enemy;2;i2;Sniper;Yew Bow;0,0;Pursue;Claw;Void_Curse
+enemy;2;i3;Vanguard;Mithril Sword,Steel Axe;0,0;Pursue;Claw;Void_Curse
+enemy;2;i4;Sage;Fire;0,0;Pursue;Claw;Void_Curse
+enemy;2;i5;Oracle;Shine,Mend;0,0;Pursue;Claw;Void_Curse

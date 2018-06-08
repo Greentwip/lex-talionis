@@ -1,0 +1,12 @@
+# Attack Script 0
+if;cf.OPTIONS['Display Hints']
+    if;gameStateObj.turncount == 2
+        if;self.unit.name == 'Ophie'
+            s;Narrator;This is the combat information window.{w}{clear}You can see the combatant's HP and the amount of damage you will inflict.{w}{clear}Ophie does {eval:self.unit.compute_damage(gameStateObj.get_unit('E1'), gameStateObj, self.unit.getMainWeapon(), 'Attack')} damage, and the enemy does {eval:gameStateObj.get_unit('E1').compute_damage(self.unit, gameStateObj, gameStateObj.get_unit('E1').getMainWeapon(), 'Defense')}.{w};8;40;;hint
+            if;self.unit.attackspeed() - gameStateObj.get_unit('E1').attackspeed() >= cf.CONSTANTS['speed_to_double']
+                s;Narrator;You see the x2 next to Mt, right?{w}{br}This indicates that you will attack twice.{w}{br}Since Ophie's Attack Speed surpasses the enemy's by {eval:cf.CONSTANTS['speed_to_double']} or more,{w}{br}he can strike twice while attacking.{w}{br}So, with 2 attacks of {eval:self.unit.compute_damage(gameStateObj.get_unit('E1'), gameStateObj, self.unit.getMainWeapon(), 'Attack')} points each, Ophie will do {eval:2*self.unit.compute_damage(gameStateObj.get_unit('E1'), gameStateObj, self.unit.getMainWeapon(), 'Attack')} points of damage.{w};8;40;;hint
+            end
+            s;Narrator;Press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_SELECT'])}{black}to attack the enemy.{w};8;40;;hint
+        end
+    end
+end

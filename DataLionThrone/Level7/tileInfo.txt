@@ -1,0 +1,22 @@
+26,0:Formation=0
+27,0:Formation=0
+27,1:Formation=0
+25,1:Formation=0
+25,2:Formation=0
+26,2:Formation=0
+23,0:Formation=0
+24,1:Formation=0
+23,2:Formation=0
+25,3:Formation=0
+27,3:Formation=0
+26,4:Formation=0
+21,1:Shop=Mithril Sword,Rapier,Mithril Lance,Short Spear,Mithril Axe,Short Axe,Longbow,Yew Bow
+23,6:Shop=Corona,Physic,Wyrmsfire,Blizzard,Ruin,Stun,Potion,Spiritbane,Barkskin
+2,16:Status=tile_Regeneration
+4,17:Status=tile_Regeneration
+8,21:Status=tile_Regeneration
+8,23:Status=tile_Regeneration
+2,21:Status=tile_Regeneration,Rex_Aegis;Seize=1
+3,6:Search=Nia
+27,14:Search=Kayla
+23,21:Search=Renae

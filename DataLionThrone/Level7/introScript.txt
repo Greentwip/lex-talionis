@@ -1,0 +1,69 @@
+# Intro Script 7
+m;Ambient Forest
+set_cursor;0,0;immediate
+t;2
+map_pan
+t;1
+b;Clearing
+t;2
+u;Sam;Left
+u;Kayla;Right
+s;Sam;Hmmm.... There's a lot of them.{w}{br}Duke Ulver has this place locked down.{w};auto
+s;Kayla;And look who's leading them!{w};auto
+s;Sam;Huh?{w};auto
+s;Kayla;See that black banner flying above the fort?{w};auto
+s;Sam;I don't recognize it...{w};auto
+s;Kayla;Tsk Tsk.{w}{br}It's the flag of the elite Imperial tacticians.{w}{br}This wasn't in the report. We'd better be on our guard.{w};auto
+s;Sam;Strange to see someone of that caliber posted to simple guard duty.{w};auto
+s;Kayla;All the more reason to get that information.{w};auto
+s;Sam;I just hope its worth the effort.{w};auto
+s;Kayla;Oh, it will be. Trust me.{w};auto
+r;Kayla;Sam
+m;Mount Briggs
+t;1
+remove_background
+t;2
+set_cursor;2,21
+disp_cursor;1
+wait;1000
+disp_cursor;0
+t;1
+b;Bank
+t;2
+u;Marduk;Left;u;Vagnius;Right
+s;Vagnius;I can trust you then?{w};auto
+s;Marduk;Of course, milord. My plans have never failed!{w}{br}Once the Resistance attacks, well, they're surely going to regret it!{w};auto
+s;Vagnius;Good, good. I want them wiped out.{w}{br}No captives. No survivors.{w};auto
+s;Marduk;It's all been factored into the plan.{w}{br}Which is flawless, by the way.{w}{br}As long as they show up, of course.{w};auto
+s;Vagnius;Oh, they'll show alright.{w}{br}We have a mole in the Confederacy.{w}{br}We fed them false information that this fort was basically unguarded.{w};auto
+s;Marduk;Ah, but of course, it's not poorly guarded at all!{w}{br}Genius, milord. I couldn't have come up with a better plan myself.{w};auto
+s;Vagnius;Perhaps that is why they kicked you out here to the colonies.{w};auto
+s;Marduk;Milord?{w};auto
+s;Vagnius;Nothing, nothing.{w}{br}I'll trust you to see this through.{w};auto
+r;Vagnius
+s;Marduk;Good day, milord.{w};auto 
+r;Marduk
+u;Marduk;Right
+s;Marduk;How dare he, insult my genius...{w}{br}I'll show him.{w}{br}I'll kill two Resistances!{w}{br}See how he likes that!{w}{br}Yeah...{w};auto
+r;Marduk
+t;1
+remove_background
+t;2
+# Vagnius leaves
+add_unit;Vagnius
+wait;500
+move_unit;Vagnius;0,22
+start_move
+remove_unit;Vagnius
+wait;500
+add_unit;Marduk
+# Vagnius leaves
+arrange_formation
+m;Airship Thunderchild
+wait;500
+set_cursor;27,0
+u;Sam;Left
+s;Sam;Okay everyone, we need to hit this fort hard and fast.{w}{br}We can't give their tactician any time to react and formulate a plan.{w};auto
+u;Ophie;Right
+s;Ophie;Right!{w};auto
+r;Ophie;Sam

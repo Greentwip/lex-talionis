@@ -1,0 +1,86 @@
+# Althea and Prim and Drake discuss Althea's return to the throne
+if;self.name == 'Midnight Rendezvous'
+	# Coyote and Sam discuss passage into Rajas
+	m;Toorimichi
+	b;TacticsRoom
+	t;2
+	u;Sam;Right;u;Coyote;Left
+	s;Sam;... Coyote?{w}{br}Uh... what a... um... pleasant surprise.{w}{clear}You do know it's two in the morning?{w};auto
+	s;Coyote;I am aware.{w};auto
+	s;Sam;Okay then...
+	s;Coyote;Rumor has it you're planning to assault Rajas.
+	s;Sam;Hmmm... It's a complicated problem.{w}{br}Ulver has at least five hundred men stationed--{w}{clear}Wait. Back up. How'd did you find out?
+	s;Coyote;It doesn't matter.{w}{clear}Are you aware of the Order of the Templars?
+	s;Sam;Of course I'm aware.{w}{br}What do you take me for?{w}{br}I've looked into them myself, but they're a myth, nothing more.
+	s;Coyote;They're no myth.
+	s;Sam;You've met them?
+	s;Coyote;I have.
+	s;Sam;Pah...{w}{br}The Templars were said to be the Solarch's most loyal protectors.{w}{br}They were to defend the throne with their lives.{w}{br}To snuff out dissent, they could appear anywhere in Rajas, at any time...{w}{br}...{w}{br}Are you suggesting--
+	s;Coyote;Tunnels. Under the city.
+	s;Sam;You expect me to believe--
+	s;Coyote;It's the only way in.
+	s;Sam;...*sigh*{w}{br}If we can find one of these tunnels...
+	move_sprite;Coyote;-24,0
+	s;Coyote;I was never here. Got that?
+	s;Sam;Wait, what?
+	s;Coyote;I was never here.
+	r;Coyote
+	s;Sam;...There is something very wrong with that man.{w}{br}...
+	move_sprite;Sam;-24,0
+	s;Sam;What's this?
+	give_item;Sam;Fortune
+	r;Sam
+	grey_base_convo;Midnight Rendezvous
+	t;1
+elif;self.name == 'Coronation'
+	m;Lady Eboshi
+	b;GenericRoom
+	t;2
+	u;Althea;FarLeft;mirror
+	s;Althea;...Ah...*sniff*...
+	u;Prim;Right
+	s;Prim;Hey... Althea? Can I come in?
+	mirror;Althea
+	s;Althea;O-oh Prim... ah...{w}{br}Just a m-moment...
+	s;Prim;...
+	move_sprite;Althea;24,0
+	s;Althea;H-Hello, Prim. Here, please sit.
+	s;Prim;Your face is all red.
+	s;Althea;It's nothing...
+	s;Prim;I noticed you were... hesitant at the meeting today.{w}{br}Is something wrong?
+	s;Althea;No, nothing's wrong...
+	s;Prim;You know, Althea, you can talk to me.{w}{br}I won't tell anyone else if something's bothering you.
+	s;Althea;*sniff*... 
+	s;Prim;...Do you not want to be queen?
+	s;Althea;It's... It's not that I don't want to...{w}{br}Ah... I j-just can't...
+	s;Prim;What? Why couldn't you?{w}{br}You're the spitting image of your mother--
+	s;Althea;It's not that I can't be queen...{w}{br}I just won't be able to.{w}{br}I have no experience...{w}{br}My sister was the expected heir to the throne.{w}{br}She was the one everyone looked up to...{w}{br}She was so strong. I am but a shadow in comparison...
+	s;Prim;That doesn't matter, Althea--
+	s;Althea;It does! I'm... I'm too weak.{w}{br}Everyone will be relying on me.{w}{br}What if I fail? I-It's too much! 
+	move_sprite;Prim;-48,0
+	s;Prim;There there.{w}{br}Slow down... you'll make yourself hysterical.
+	s;Althea;See I'm just weak...{w}{br}I have nothing of the royal strength in me.
+	s;Prim;That's untrue, Althea. You do have the makings of a queen.{w}{br}I may not know much about politics or government,{w}{br}but I have a knack for knowing a good person when I see one.{w}{br}And I know that you do not lack strength.
+	s;Althea;Y-you really think so?
+	s;Prim;I believe in you.{w}{br}Also, there's something else you haven't thought of.
+	s;Althea;Hmmm...?
+	s;Prim;You won't be taking on the responsibility of the throne alone.{w}{br}Do you think we'll just abandon you?{w}{br}Our job will not be over when Kerala is freed.
+	u;Drake;Right
+	r;Prim
+	qmove_sprite;Althea;-24,0
+	u;Prim;MidLeft
+	s;Prim;Drake?
+	s;Drake;My lady Althea... Your conduct at the meeting was concerning--{w}{br}Wait, you've been crying?{w}{br}I would not normally strike a lady, Prim, but you leave me no choice--
+	s;Althea;Haha... Drake, hold!
+	s;Drake;My lady?
+	s;Althea;Yes, I've been crying, but it's nothing to be concerned with.{w}{br}Prim and I were just talking. She was very helpful.
+	s;Drake;Oh, is that all.{w}{br}My poor heart...
+	s;Althea;There's nothing to be worried about, Drake.{w}{br}I'll be queen.{w}{br}Well, I'll try my best at it.{w}{br}You'll be there for me, right?
+	s;Drake;Of course, my lady...{w}{br}If you so wished it I would never leave your side!
+	s;Prim;See, Althea. You won't have to shoulder this burden alone.{w}{br}Although you may wish you had after a couple of weeks.
+	s;Althea;Heehee...
+	s;Drake;Eh?
+	r;Prim;Drake;Althea
+	t;1
+	grey_base_convo;Coronation
+end

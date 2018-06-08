@@ -1,0 +1,6 @@
+pose;Attack
+blend
+f;2;Orb1
+f;2;Orb2
+f;1;Orb3
+wait;1

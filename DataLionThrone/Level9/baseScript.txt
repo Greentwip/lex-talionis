@@ -1,0 +1,124 @@
+if;self.name == 'Promises'
+    m;Awakening - SSupport
+    b;GenericRoom
+    t;2
+    u;Kayla;Left;u;Sam;Right
+    s;Sam;Are you almost ready, Kayla?
+    s;Kayla;Tsk Tsk. A lady is ready precisely when she means to be, and no sooner.
+    s;Sam;I see...
+    s;Kayla;Is something wrong, dearest?
+    s;Sam;No... Well, its nothing you said.
+    s;Kayla;So?
+    s;Sam;This is our last mission...
+    s;Kayla;You worry we won't succeed?
+    s;Sam;To be honest, I am a bit worried. Even you have your limits, Kayla. 
+    s;Kayla;Haven't found them yet!
+    s;Sam;Anyways, thats not really my chief concern.{w}{br}It's our last mission together.{w}{br}When this is over we'll split ways.{w}{br}The Resistance will be disbanded.{w}{br}So, there won't be much of a reason... for the two of us.
+    s;Kayla;Sam, say no more. You know my feelings toward you.{w}{br}Do you think I'll just leave?
+    s;Sam;No, but we each have jobs, responsibilities, ambitions.{w}{br}Those too can strand us apart.{w}{br}I don't want to look back on today with any regrets. 
+    s;Kayla;Nor do I.
+    s;Sam;Well, then,{w}{br}after this is over... if we're both still...{w}{br}around.{w}{br}I'd like to make this fling official.
+    give_item;Kayla;Energy Ring
+    s;Kayla;Ah! A ring?
+    s;Sam;I'd been meaning to give it to you for a while...{w}{br}but I could never find the right time.{w}{br}So how 'bout it?
+    s;Kayla;Of course!
+    s;Sam;Phew!
+    s;Kayla;You thought I'd turn you down?
+    s;Sam;Never hurts to consider the possibilities.
+    s;Kayla;...You know we're not going to die out there.
+    s;Sam;Hmmm...?
+    s;Kayla;Between the two of us, Sam, nothing can stand in our way.
+    r;Sam;Kayla
+    grey_base_convo;Promises
+    t;1
+# Not available right now
+elif;self.name == 'Althea and Ophie'
+    m;Awakening - Easy Now
+    b;BaseEntrance
+    t;2
+    u;Althea;Left;u;Ophie;Right
+    s;Althea;Ah... greetings, Ophie.{w}{br}...You're already done with your preparations?
+    s;Ophie;Yep. Honestly, I don't need to bring much.{w}{br}My trusty blade and some food go a long way.
+    s;Althea;Hmmm...
+    s;Ophie;Althea?
+    s;Althea;Oh, sorry. I was listening.{w}{br}I'm just having trouble fitting this all in one bag...
+    s;Ophie;Let me take over.
+    s;Althea;Oh-- If you insist.
+    s;Ophie;I do.
+    qmove_sprite;Althea;-24,0
+    r;Ophie
+    u;Ophie;MidLeft
+    r;Althea
+    u;Althea;Right
+    s;Althea;Between my magic tomes, spare robes, potions and other draughts...{w}{br}it's quite the hassle... So thank you.
+    s;Ophie;Oh, it's no hassle at all.
+    s;Althea;Well, I admire your practicality.{w}{br}I never got the chance to learn how to cook or clean or sew like most girls.{w}{br}I really feel quite useless compared to Prim or Eliza.
+    s;Ophie;There's always time to learn.
+    s;Althea;Oh, I wouldn't want to burden them with teaching me.{w}{br}I'd make a fool of myself.
+    set_expression;Ophie;Smiling
+    s;Ophie;Nonsense. I'm sure Prim would be happy to teach you how to sew.{w}{br}And I'm a pretty good cook myself.{w}{br}I could give you a few pointers.
+    set_expression;Althea;Smiling
+    s;Althea;That'd be nice...
+    set_expression;Ophie;Normal
+    s;Ophie;Anyhow, Althea, you shouldn't be so down on yourself.{w}{br}You've got... uh... other strengths.
+    s;Althea;Hmmm...?
+    s;Ophie;I-I mean, you may not know how to sew,{w}{br}but you're levelheaded... and fair... and smart!{w}{br}I couldn't stand to read all these tomes.
+    s;Althea;...Teehee. Thank you, Ophie.{w}{br}That makes me feel better.
+    s;Ophie;Well, uh, I'm all done here...{w}{br}So I'd better get going...{w}{br}I'm sure someone else could use help.
+    set_expression;Althea;Normal
+    s;Althea;Wait, Ophie. Before you go...
+    give_item;Ophie;Althea's Charm
+    s;Ophie;Uh... Thanks.{w}{br}You sure you want to give this to me?
+    s;Althea;Oh, its nothing. Take it.
+    s;Ophie;Right...{w}{br}Well, I'll be off.
+    r;Ophie;Althea
+    grey_base_convo;Althea and Ophie
+    t;1
+elif;self.name == 'Theo and Eliza'
+    m;Midna's Theme
+    b;Study
+    t;2
+    u;Theo;Left;u;Eliza;Right
+    bop;Eliza
+    s;Eliza;Would you HURRY up already, Theo?{w}{br}You've been at this for hours!{w}{br}What more could you need to bring?!
+    s;Theo;One moment, please. I need some time to consider...
+    s;Eliza;Urgh!
+    move_sprite;Eliza;-48,0
+    s;Eliza;We're not gonna need all this!{w}{br}This is just a day trip, Theo!
+    s;Theo;...
+    s;Eliza;What could you possibly need all these potions for?
+    s;Theo;Someone could fall ill.
+    s;Eliza;And this much flint?
+    s;Theo;Always important to keep your weapons in tip-top shape.
+    s;Eliza;A tent?
+    s;Theo;Rain.
+    s;Eliza;Matches?
+    s;Theo;Light.
+    s;Eliza;Compass? Sextant?
+    s;Theo;Uh... We could get lost?
+    s;Eliza;We're not traveling by sea, Theo!
+    s;Theo;One can never be too prepared.
+    s;Eliza;And all these books!
+    s;Theo;Gentle! You'll bend the spine.
+    s;Eliza;Hmmph!
+    s;Theo;I never leave home bereft of a good read.
+    s;Eliza;Pah! You and your books.{w}{br}If Ophie's right about one thing, it's that they're no substitute for reality!
+    s;Theo;Hmm... Ironic, coming from you, Eliza.
+    s;Eliza;How so?
+    s;Theo;I've seen you engrossed in one.
+    s;Eliza;What, you have?{w}{br}I mean... no you haven't!
+    s;Theo;Hmmm... Let's take a look then, shall we.{w}{br}Ahem.{w}{clear}''The crow has flown away--{w}{br}Swaying in the evening sun,{w}{br}A leafless tree.''
+    s;Eliza;...
+    s;Theo;It's quite good.{w}{br}I had no idea you were a poet, Eliza.
+    s;Eliza;My... uh... where'd you find that.
+    s;Theo;I picked it up by accident.{w}{br}But really, Eliza, you write poetry?
+    s;Eliza;Hmmph! Not well.
+    s;Theo;I think it's quite good, quite good indeed.
+    s;Eliza;Don't you dare tell anyone else, you got that Theo!{w}{br}Or it'll be your head!
+    s;Theo;Gulp. I would never.
+    s;Eliza;Hmmph!
+    r;Eliza;Theo
+    give_item;Eliza;Secret Book
+    grey_base_convo;Theo and Eliza
+    t;1
+end

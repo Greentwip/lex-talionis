@@ -1,0 +1,113 @@
+# Base Script Level 6
+if;self.name == 'Theo Sphinx, Pt. III'
+	# Episode 3
+	m;Jazz Noir
+	b;TacticsRoomDay
+	t;2
+	u;Theo;Left
+	s;Theo;It was raining.{w}{br}Hard, drumming, pounding rain.{w}{br}The kind of rain you'd hope would clean the filth right off the streets.{w}{br}Sam "Snake Eyes" Alhara was waiting outside the station.{w}{br}Well, not all our wishes can come true.{w};auto;noir
+	u;Sam;Right
+	s;Sam;What is it Theo?{w}{br}I'm kind of busy here...{w}{br}Our next raid is quite important.{w};auto
+	s;Theo;Sam was a cool customer, with a face made for radio.{w}{br}An old partner of mine, but we'd drifted apart since I left the force.{w}{br}Too bad he was my only lead on this one.{w};auto;noir
+	s;Sam;Prim's missing tome?{w}{br}Really, Theo?{w}{br}Don't you think this could wait?{w};auto
+	s;Theo;I could tell he was hiding something.{w}{br}Sam's the kind of guy who'd jump at the chance to prove himself to the force.{w}{br}Kissing the commissioner's ass was half his job description these days.{w};auto;noir
+	s;Sam;Well, maybe the Empire's managed to infiltrate us after all?{w}{br}This isn't good...{w};auto
+	s;Theo;Please. Don't make me laugh. {w};auto
+	s;Theo;You'd have figured Sam would've had some smarts,{w}{br}since he surely hadn't graduated the academy on his looks.{w};auto;noir 
+	s;Theo;This is not the way the Empire would've done it.{w}{br}It was somebody on the inside, Sam!{w};auto
+	s;Sam;But, who would've taken Prim's tome...{w}{br}Did you talk to Renae?{w}{br}Or you could try Nia, she's perceptive, if you can get her to talk.{w}{br}Anyway, I've got work to do...{w};auto
+	r;Sam
+	s;Theo;Clearly, Sam was not going to be any more help.{w}{br}He didn't know a thing--{w}{br}no surprise.{w}{br}After I roughed him up a bit, he made like a rat on a sinking ship and bailed.{w}{br}But I had one more lead, and I was going to make it count.{w};auto;noir
+	r;Theo
+	grey_base_convo;Theo Sphinx, Pt. III
+	inc_game_constant;noir
+	t;1
+elif;self.name == 'Guard Duty'
+	m;Brave Story - Hare
+	b;Cave
+	t;2
+	u;Renae;Left
+	wait;500
+	qu;Drake;OffscreenRight
+	move_sprite;Drake;-108,0
+	s;Renae;Hey!
+	move_sprite;Drake;12,0
+	s;Drake;Ah!
+	s;Renae;Not so fast there, stranger!
+	s;Drake;Huh? Miss, are you addressing me?
+	s;Renae;You bet! Mister red-haired stranger man--
+	s;Drake;The name's Drake.
+	s;Renae;Right. Blake--
+	s;Drake;Drake.
+	s;Renae;You can't come in unless you know the password. 
+	s;Drake;Password? 
+	s;Renae;This is the Resistance base, y'know, and we can't have just anybody walk in!{w}{br}That's why Sam entrusted me with guarding the entrance!
+	s;Drake;But... I don't know the password.
+	s;Renae;Then, Hank, you're out of luck!{w}{br}Come back another day!
+	s;Drake;I swear on my knightly honor that I am a full-fledged member of the Resistance.
+	s;Renae;You sure about that, Nate?{w}{br}'Cause I think I would recognize a member of the Resistance.
+	s;Drake;It's Drake, and also I'm quite sure.{w}{br}Don't you remember when we attacked Fort Kosheen?{w}{br}I held off those guards.
+	s;Renae;Hmm... Nothing's coming to me.
+	s;Drake;I was also present when we disrupted that Imperial weapon shipment.
+	s;Renae;You're wasting my time, Frank.{w}{br}I think I would remember some tough looking red-haired dude, don't you?{w}{br}You're not exactly easy to miss.
+	s;Drake;Urgh! I don't have the patience for this.{w}{br}Just... go retrieve Sam or Althea!{w}{br}They'll vouch for me.
+	s;Renae;Woah, now.{w}{br}Don't get all bent out of shape, Drew.{w}{br}I finally figured it all out!
+	s;Drake;Really?
+	s;Renae;Yep! You're Althea's boyfriend!
+	s;Drake;What! No!
+	s;Renae;Now you're just confusing me, Mike.{w}{br}Are you Althea's boyfriend or not?
+	s;Drake;No. Yes. I mean... Urgh!{w}{br}I am Althea's pledged guardian!{w}{br}But we're not in a romantic relationship!
+	s;Renae;So, its more of a friends with benefits thing? I like it!
+	s;Drake;Urgh!!!{w}{br}Please. No more, Renae.{w}{br}I can't handle it. Just let me in.
+	s;Renae;Heehee! I'm just pulling your leg, Pate.{w};auto
+	s;Drake;What? This was all a practical joke?
+	s;Renae;Yep!{w}{br}Like Sam would ever assign ME guard duty!{w}{br}He'd have to be out of his mind!{w}{br}Hahaha! Ciao!
+	r;Renae
+	s;Drake;...
+	r;Drake
+	grey_base_convo;Guard Duty
+	t;1
+elif;self.name == 'Cipher'
+	m;Hum of the Streets
+	b;GenericRoom
+	t;2
+	u;Kayla;Left;u;Sam;Right
+	s;Sam;Kayla? You done packing?
+	s;Kayla;Done packing?{w}{br}Dear, I haven't even started. 
+	s;Sam;What! But we're leaving in less than an hour!
+	s;Kayla;Tsk Tsk. Don't you worry, Sam.{w}{br}I'll be ready.{w}{br}Here, sit down with me.{w}{br}Maybe you can help me decipher this tome?
+	s;Sam;...{w}{br}Hmmm... You sure this is even magical?{w}{br}I don't recognize any of these words...
+	s;Kayla;I'm certain. Can't you sense the aura?
+	s;Sam;You know I've no talent for that.{w}{br}Anyway, I think I do recognize some of this script.{w}{br}Here. Move over.
+	r;Sam
+	qmove_sprite;Kayla;-24,0
+	u;Sam;MidLeft
+	s;Sam;This section is total gibberish, but this right here.{w}{br}It almost looks like a legend or guide.
+	s;Kayla;You're thinking it's encoded?
+	s;Sam;Exactly. 
+	s;Kayla;...
+	s;Sam;...
+	s;Kayla;Take a look at this pattern.{w}{br}This symbol shows up all over the place.
+	s;Sam;Hmmm... Maybe its the key?{w}{br}It shows up on page two, three, five, seven, eleven...{w}{br}...{w}{br}Primes!
+	s;Kayla;Primes? You sure?
+	s;Sam;Try it.{w}{br}Read only the prime characters on the page.
+	s;Kayla;Gebo... Naudiz... Fehu... Ehwaz...{w};auto;slow
+	s;Kayla;It is a spell! And powerful too!{w}{clear}Oh, thank you, Sam! I knew I could count on you!
+	u;Eliza;FarRight
+	s;Eliza;Get a room, nerds!
+	r;Eliza
+	s;Kayla;Mind your own business, girl!
+	u;Eliza;FarRight
+	s;Eliza;Also, hurry up!{w}{br}We don't have all day!
+	r;Eliza
+	r;Sam
+	u;Sam;Right
+	s;Sam;Ah... Seems I let the time get ahead of me.
+	s;Kayla;Tsk Tsk. Time enjoyed is never time wasted.{w}{br}Thanks for your help, dearest.
+	s;Sam;No problem.{w}{br}It's not everyday I find someone who shares my fascination with the magical arts...
+	s;Kayla;And it's not everyday a spell's cipher is solved that quickly, handsome.{w}{br}Now be on your way.{w}{br}A lady needs time to prepare.
+	r;Sam;Kayla
+	give_item;Kayla;Disintegrate
+	grey_base_convo;Cipher
+	t;1
+end

@@ -1,0 +1,17 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Vagnius'
+        m;Durchriss
+        if;self.unit.name == 'Prim' and not 'Vagnius0Prim' in gameStateObj.level_constants
+            u;Vagnius;Left;u;Prim;Right
+            s;Prim;P-Please, stop! You have to listen!{w}{br}We're not harboring any fugitive.{w};auto
+            s;Vagnius;Well, you don't look like the fugitive girl.{w}{br}But better safe than sorry...{w};auto
+            r;Prim;Vagnius
+            set_level_constant;Vagnius0Prim
+        elif;self.unit.name == 'Ophie' and not 'Vagnius0Ophie' in gameStateObj.level_constants
+            u;Vagnius;Left;u;Ophie;Right
+            s;Vagnius;Hmmph! You're not the one I seek!{w}{br}Out of my way!{w};auto
+            r;Ophie;Vagnius
+            set_level_constant;Vagnius0Ophie
+        end
+    end
+end

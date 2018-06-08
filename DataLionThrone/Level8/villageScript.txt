@@ -1,0 +1,105 @@
+# Tomahawk
+if;self.name == '1'
+	t;1
+	b;House
+	t;2
+	u;{unit};Right
+	s;Man;Honey grab the kids! {wait}{br}The Empire has come for us!{wait};8;28;168
+	s;Man;HYAAH!!! {wait};8;28;168
+	s;Man;There's more what that came from! {wait}{br}Now, get out of my house! {wait};8;28;168
+	r;{unit}
+	change_tile_sprite;4,11;closed
+	set_tile_info;4,11
+	replace_tile;4,11;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Tomahawk
+# Superior Axe
+elif;self.name == '2'
+	t;1
+	b;House
+	t;2
+	u;OldMan1;Left
+	u;{unit};Right
+	s;OldMan1;What are you doing at my door, you whippersnappers!{w}{br}Do you expect these old bones to fight?{w}{br}Here, take this and get off my lawn!{w};auto
+	r;{unit};OldMan1
+	# Close the village
+	change_tile_sprite;7,17;closed
+	set_tile_info;7,17
+	replace_tile;7,17;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Superior Axe
+# Long Spear
+elif;self.name == '3'
+	t;1
+	b;House
+	t;2
+	u;Man5;Left
+	u;{unit};Right
+	s;Man5;Are you defending the village?{w}{br}Here take this. {wait}{br}When the Imperial army passed through here, I managed to snatch it. {wait}{br}It should serve you well.{wait};auto
+	r;{unit};Man5
+	# Close the village
+	change_tile_sprite;15,11;closed
+	set_tile_info;15,11
+	replace_tile;15,11;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Long Spear
+# Adamant Lance
+elif;self.name == '4'
+	t;1
+	b;House
+	t;2
+	u;Man1;Left
+	u;{unit};Right
+	s;Man1;I was a soldier once. {wait}I even fought during the Second Rebellion--{w}{br}A brutal, short affair that was. {wait}Now?{br}I'm just a simple merchant. {wait}Don't have much use for this old hunk of metal anymore. {wait}If you want it, feel free to take it.{wait};auto
+	r;Man1;{unit}
+	# Close the village
+	change_tile_sprite;16,6;closed
+	set_tile_info;16,6
+	replace_tile;16,6;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Adamant Lance
+# Angelic Robe
+elif;self.name == '5'
+	# Boring Conversation
+	t;1
+	b;House
+	t;2
+	u;Boy2;Left
+	u;{unit};Right
+	s;Boy2;Mother says that I should hide in the basement whenever bandits attack,{w}{br}but I want to fight too. {wait}{clear}One day, I'll grow big and strong and be able to fight the Empire!{w}{br}Just like my pa and my big brother.{wait}{br}I'll go all over Kerala, killing Imperials wherever they lurk! Yaaah!{wait};auto
+	s;Narrator;Come down here NOW, Billy!{wait};auto
+	s;Boy2;Yes, mother!{w}{br}Here, you can have this.{wait};auto
+	r;Boy2;{unit}
+	change_tile_sprite;21,20;closed
+	set_tile_info;21,20
+	replace_tile;21,20;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Angelic Robe
+# Magebane Bow
+elif;self.name == '6'
+	t;1
+	b;House
+	t;2
+	u;Woman1;Left
+	u;{unit};Right
+	s;Woman1;My husband was an archer. {wait}{br}He fought off bandits with his trusty bow. {wait}{br}B-but he perished in the fight with Rusonoon army... {wait}Take this. {wait}{br}If using his bow helps you save someone you love, I'm sure he'd be proud. {wait};auto
+	r;Woman1;{unit}
+	# Close the village
+	change_tile_sprite;29,5;closed
+	set_tile_info;29,5
+	replace_tile;29,5;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Magebane Bow
+end

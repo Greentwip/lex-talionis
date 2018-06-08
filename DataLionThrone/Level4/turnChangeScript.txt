@@ -1,0 +1,128 @@
+# turnChange Script 3
+# Turn 1
+if;gameStateObj.turncount == 1
+	set_cursor;0,0
+	add_unit;Wagon_1;r0;;closest
+	add_unit;pack1_1;r0
+	add_unit;pack1_2;r0
+	wait;500
+	set_cursor;0,16
+	add_unit;Wagon_2;r1;;closest
+	add_unit;pack2_1;r1
+	add_unit;pack2_2;r1
+	wait;500
+	if;not gameStateObj.check_dead('Theo')
+		set_cursor;15,8
+		disp_cursor;1
+		wait;1000
+		disp_cursor;0
+		u;Theo;FarLeft
+		s;Theo;Ah! Ancient ruins, here?{w}{br}They might hold interest for my research.{w}{br}The others won't notice if I take a short break, right?{w};auto;thought_bubble
+		r;Theo
+	end
+elif;gameStateObj.turncount == 2
+	m;Combat Theme 4
+	t;1
+	b;Wastes
+	t;2
+	u;Midas;Right;mirror
+	u;Anders;Left
+	s;Midas;Ah! T-There are bandits to the south!{w}{br}My precious cargo...{w};auto
+	mirror;Midas
+	s;Midas;Anders, what do we do?!{w};auto
+	s;Anders;Hmph! Those are no ordinary bandits.{w}{br}It's the Resistance! To arms, men!{w};auto
+	s;Midas;To arms...?{w};auto
+	s;Anders;We cannot allow the Resistance to capture this cargo.{w}{br}This is Imperial property!{w}{br}Defend this cargo with your lives!{w};auto
+	r;Midas;Anders
+	t;1
+	remove_background
+	t;2
+	set_cursor;0,0
+	add_unit;Wagon_3;r0;;closest
+	add_unit;pack3_1;r0
+	add_unit;pack3_2;r0
+	wait;500
+	set_cursor;0,16
+	add_unit;Wagon_4;r1;;closest
+	add_unit;pack4_1;r1
+	add_unit;pack4_2;r1
+	wait;500
+elif;gameStateObj.turncount == 3
+	set_cursor;0,0
+	add_unit;Wagon_5;r0;;closest
+	add_unit;pack5_1;r0
+	#add_unit;pack5_2;r0
+	wait;500
+	set_cursor;0,16
+	add_unit;Wagon_6;r1;;closest
+	add_unit;pack6_1;r1
+	#add_unit;pack6_2;r1
+	wait;500
+# Skip a turn
+elif;gameStateObj.turncount == 4
+	if;not gameStateObj.check_dead('Joel')
+		u;Joel;Right
+		s;Joel;Look out! Wyverns to the west!{w};auto
+		r;Joel
+	end
+	set_cursor;0,10
+	add_unit;Wyvern_1;0,11;;closest_f
+	add_unit;Wyvern_2;0,12;;closest_f
+	wait;500
+elif;gameStateObj.turncount == 5
+	m;Combat Theme 4
+	set_cursor;0,0
+	add_unit;Wagon_7;r0;;closest
+	add_unit;pack7_1;r0
+	add_unit;pack7_2;r0
+	wait;500
+	set_cursor;0,16
+	wait;200
+	add_unit;Midas;0,16;;push
+	add_unit;Anders;0,17;;push
+	add_unit;pack8_1;0,15;;push
+	set_cursor;Midas
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	u;Midas;FarRight
+	u;Anders;FarLeft
+	s;Midas;This isn't working!{w}{br}You, soldier, attend me!{w};auto
+	u;Soldier1;MidLeft;LowPriority
+	s;Soldier1;Aye, sir?{w};auto
+	s;Midas;We have to retreat. Order everyone back.{w};auto
+	s;Soldier1;Right away, sir.{w};auto
+	r;Soldier1
+	s;Anders;Soldier! Belay that!{w};auto
+	u;Soldier1;MidRight
+	s;Midas;W-What!?{w};auto
+	s;Anders;Shut yer mouth, you swaddled pig.{w}{br}I will not disappoint the Duke.{w}{br}We will lay down our lives in his name!{w};auto
+	s;Midas;T-There has to be another way!{w};auto
+	if;gameStateObj.game_constants['Dead_Wagons'] > 1
+		s;Midas;They've already struck down some of my best wagons!{w};auto
+	end
+	s;Anders;You sniveling craven.{w}{br}Out of my way!{w};auto
+	r;Midas;Anders;Soldier1
+#elif;gameStateObj.turncount == 6
+#	set_cursor;0,0
+#	add_unit;Wagon_9;r0;;closest
+#	add_unit;pack9_1;r0
+#	add_unit;pack9_2;r0
+#	wait;500
+#	set_cursor;0,16
+#	add_unit;Wagon_10;r1;;closest
+#	add_unit;pack10_1;r1
+#	add_unit;pack10_2;r1
+#	wait;500
+elif;gameStateObj.turncount == 6
+	set_cursor;0,0
+	add_unit;Wagon_11;r0;;closest
+	add_unit;pack11_1;r0
+	add_unit;pack11_2;r0
+	wait;500
+	set_cursor;0,16
+	add_unit;Wagon_12;r1;;closest
+	add_unit;pack12_1;r1
+	add_unit;pack12_2;r1
+	wait;500
+end

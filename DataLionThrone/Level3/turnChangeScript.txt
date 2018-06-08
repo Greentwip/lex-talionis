@@ -1,0 +1,122 @@
+# TurnChange
+# S1 is commander
+# S2 is generic dude
+# S3 is napping dude
+# S4 is S3 reborn
+if;gameStateObj.turncount == 1
+	m;Best Detectives
+	set_cursor;S3
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	t;1
+	b;Bank
+	t;2
+	u;Soldier3;Left
+	u;Soldier2;Right
+	s;Soldier3;I wonder what got the Sarge all riled up.{w};auto
+	s;Soldier2;'Ey, don't worry about him.{w}{br}We finally get some time to relax without him breathing down our neck.{w};auto
+	s;Soldier3;I tell ya.{w}{br}He catches me napping on duty once, and I'm shoveling shit for a week.{w};auto
+	s;Soldier2;Aye, he's a hardass...{w};auto
+	s;Soldier3;Man, I could really use a break though...{w}{br}...Hey... can you cover for me...{w}{br}I'm going to take a quick nap while he's gone.{w};auto
+	s;Soldier2;Really, man?{w};auto
+	s;Soldier3;You're still single!{w}{br}You don't know what its like with two kids at home.{w}{br}I can't remember the last time I got a full night's rest.{w};auto
+	s;Soldier2;Hmm... all right, but you owe me one.{w};auto
+	r;Soldier2;Soldier3
+	t;1
+	remove_background
+	t;2
+	move_unit;S3;18,8
+	start_move
+	remove_unit;S3
+	wait;250
+elif;gameStateObj.turncount == 2
+	m;Brave Story 33
+	set_cursor;S1
+	move_unit;S1;18,6
+	start_move
+	set_cursor;S2
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	u;Soldier1;Right
+	u;Soldier2;Left
+	s;Soldier1;The Resistance! Those traitorous scum...{w}{br}Men, to arms! We cannot allow them into the vault.{w};auto
+	s;Soldier2;Aye, aye sir!{w};auto
+	s;Soldier1;And send a runner to Sergeant Harold.{w}{br}We need backup! These Resistance scum must be put down!{w};auto
+	s;Soldier2;Right away, sir!{w};auto
+	r;Soldier1;Soldier2
+	move_unit;S2;18,0
+	start_move
+	remove_unit;S2
+	wait;250
+# Reinforcements
+elif;gameStateObj.turncount == 4
+	m;Brave Story 33
+	set_cursor;18,8
+	add_unit;S4;18,8;fade;closest
+	set_cursor;S4
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	u;Soldier3;Right
+	s;Soldier3;Eh, what's going on?{w};auto
+	u;Soldier1;Left
+	s;Soldier1;On your feet, soldier! The Resistance is here!{w};auto
+	r;Soldier1
+	s;Soldier3;I take one nap, and all hell breaks loose.{w}{br}Just my luck...{w};auto
+	r;Soldier3
+	change_ai;S4;Attack
+	change_ai;S1;Attack
+elif;gameStateObj.turncount == 9
+	m;Brave Story 33
+	change_objective_display_name;Escape or Defeat Boss
+	change_objective_win_condition;Escape the Fort or Defeat Boss.
+	set_cursor;6,18
+	wait;200
+	add_unit;G1;5,18;fade;push
+	add_unit;Harold;6,18;fade;push
+	add_unit;G2;7,18;fade;push
+	set_cursor;Harold
+	wait;200
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	u;Harold;Right
+	u;Soldier2;Left
+	s;Harold;Men, double time! Fan out and surround the Fort.{w}{br}Don't let a single robber escape!{w}{br}We shall not fail the Empire.{w};auto
+	s;Soldier2;Right away, sir!{w};auto
+	r;Soldier2;Harold
+	# Pan over to Resistance
+	if;not gameStateObj.check_dead('Prim')
+		set_cursor;Prim
+		u;Prim;Right
+		u;Renae;Left
+		s;Prim;Oh no. Those soldiers were not gone for very long.{w}{br}We need to run!{w};auto
+		s;Renae;You don't have to tell me twice!{w}{br}Catch you all later!{w};auto
+		r;Prim;Renae
+	end
+	set_tile_info;17,0;Escape=0
+	set_tile_info;18,0;Escape=0
+	add_unit;pack1_1;r0
+	add_unit;pack1_2;r0
+	add_unit;pack1_3;r0
+	add_unit;pack1_4;r0
+	add_unit;pack1_5;r0
+	map_pan
+	battle_save
+elif;gameStateObj.turncount == 11
+	add_unit;pack2_1;r0
+	add_unit;pack2_2;r0
+	add_unit;pack2_3;r0
+	add_unit;pack2_4;r0
+	add_unit;pack2_5;r0
+	map_pan
+elif;gameStateObj.turncount == 13
+	add_unit;pack3_1;r0
+	add_unit;pack3_2;r0
+	add_unit;pack3_3;r0
+	add_unit;pack3_4;r0
+	add_unit;pack3_5;r0
+	map_pan
+end

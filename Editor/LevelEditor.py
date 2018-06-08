@@ -61,6 +61,7 @@ class MainView(QtGui.QGraphicsView):
             for y in xrange(self.image.height()):
                 if self.image.pixel(x, y) == qCOLORKEY:
                     self.image.setPixel(x, y, new_color)
+        self.setSceneRect(0, 0, self.image.width(), self.image.height())
 
     def clear_scene(self):
         self.scene.clear()
@@ -464,6 +465,7 @@ class MainEditor(QtGui.QMainWindow):
 
     def new(self):
         if self.maybe_save():
+            self.current_level_name = None
             self.new_level()
 
     def new_level(self):
@@ -560,8 +562,6 @@ class MainEditor(QtGui.QMainWindow):
         if not self.tile_data or not hasattr(self.tile_data, 'width'):
             return
         width, height = self.tile_data.width, self.tile_data.height
-        print('Add Weather')
-        print(weather)
         if weather == "Rain":
             bounds = (-height*GC.TILEHEIGHT/4, width*GC.TILEWIDTH, -16, -8)
             self.weather.append(QtWeather.Weather('Rain', .1, bounds, (width, height)))
@@ -700,9 +700,11 @@ class MainEditor(QtGui.QMainWindow):
             except Exception as e:
                 print(e)
 
-    def save(self):
-        new = False
-        if not self.current_level_name:
+    def save_as(self):
+        self.save(True)
+
+    def save(self, new=False):
+        if new or not self.current_level_name:
             text, ok = QtGui.QInputDialog.getText(self, "Level Editor", "Enter Level Number:")
             if ok:
                 self.current_level_name = text
@@ -752,6 +754,7 @@ class MainEditor(QtGui.QMainWindow):
         self.new_act = QtGui.QAction("&New...", self, shortcut="Ctrl+N", triggered=self.new)
         self.open_act = QtGui.QAction("&Open...", self, shortcut="Ctrl+O", triggered=self.open)
         self.save_act = QtGui.QAction("&Save...", self, shortcut="Ctrl+S", triggered=self.save)
+        self.save_as_act = QtGui.QAction("&Save As...", self, shortcut="Ctrl+Shift+S", triggered=self.save_as)
         self.exit_act = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q", triggered=self.close)
         self.import_act = QtGui.QAction("&Import Map...", self, shortcut="Ctrl+I", triggered=self.import_new_map)
         self.reload_act = QtGui.QAction("&Reload", self, shortcut="Ctrl+R", triggered=self.load_data)
@@ -762,6 +765,7 @@ class MainEditor(QtGui.QMainWindow):
         file_menu.addAction(self.new_act)
         file_menu.addAction(self.open_act)
         file_menu.addAction(self.save_act)
+        file_menu.addAction(self.save_as_act)
         file_menu.addSeparator()
         file_menu.addAction(self.import_act)
         file_menu.addAction(self.reload_act)
@@ -861,7 +865,7 @@ class MainEditor(QtGui.QMainWindow):
 
     def about(self):
         QtGui.QMessageBox.about(self, "About Lex Talionis",
-            "<p>This is the <b>Lex Talionis</b> Engine Level Editor.</p>"
+            "<p>This is the <b>Lex Talionis</b> Level Editor.</p>"
             "<p>Check out https://www.github.com/rainlash/lex-talionis "
             "for more information and helpful tutorials.</p>"
             "<p>This program has been freely distributed under the MIT License.</p>"
