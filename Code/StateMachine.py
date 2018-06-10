@@ -854,7 +854,9 @@ class MenuState(State):
 
         # Filter by legal options here
         if gameStateObj.tutorial_mode:
-            options = [option for option in options if option == gameStateObj.tutorial_mode]
+            t_options = [option for option in options if option == gameStateObj.tutorial_mode]
+            if t_options:
+                options = t_options
 
         if options:
             opt_color = ['text_green' if option not in self.normal_options else 'text_white' for option in options]

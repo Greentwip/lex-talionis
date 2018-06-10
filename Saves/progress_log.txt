@@ -135,3 +135,15 @@ Wexp: 0, 25, 0, 0, 0, 0, 0
 Items: Iron Lance 26, Slim Lance 35, Mend 15
 *** Convoy:
 Items: Skeleton Key 1, Javelin 20
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 0
+Wexp: 8, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 45
+*** Prim: Healtouch
+Lvl 1, Exp 0
+Wexp: 0, 0, 0, 0, 1, 0, 0
+Items: Glimmer Ward 30, Heal 30
+*** Convoy:
+Items: 

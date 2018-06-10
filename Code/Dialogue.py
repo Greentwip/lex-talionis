@@ -427,7 +427,7 @@ class Dialogue_Scene(object):
             self.current_state = "Paused"
 
         elif line[0] == 'remove_item':
-            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(name)
+            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit:
                 valid_items = [item for item in unit.items if item.name == line[2] or item.id == line[2]]
                 if valid_items:
@@ -437,7 +437,7 @@ class Dialogue_Scene(object):
         # Add a skill/status to a unit
         elif line[0] == 'give_skill':
             skill = StatusObject.statusparser(line[2])
-            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(name)
+            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit and skill:
                 StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
                 if 'no_display' not in line:
@@ -448,7 +448,7 @@ class Dialogue_Scene(object):
         # Give exp to a unit
         elif line[0] == 'exp_gain':
             exp = int(line[2])
-            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(name)
+            unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=unit, exp=exp))
             gameStateObj.stateMachine.changeState('expgain')
             self.current_state = "Paused"
@@ -984,12 +984,11 @@ class Dialogue_Scene(object):
         self.current_state = "Displaying"
 
     def auto_dialog_box(self, dialogue, owner):
-        length = GC.WINWIDTH - 8*2
         num_lines = 2
         if owner:
             size = TextChunk.command_chunk(dialogue, num_lines)
             desired_center = self.determine_desired_center(owner.position[0])
-            pos_x = Utility.clamp(desired_center - length//2, 8, GC.WINWIDTH - 8 - length)
+            pos_x = Utility.clamp(desired_center - size[0]//2, 8, GC.WINWIDTH - 8 - size[0])
             if pos_x % 8 != 0:
                 pos_x += 4
             pos_y = 24
