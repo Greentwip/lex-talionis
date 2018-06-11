@@ -1,0 +1,5 @@
+# prepScript 2
+if;cf.OPTIONS['Display Hints'] and not 'tutorial_prep' in gameStateObj.level_constants
+	set_level_constant;tutorial_prep
+	s;Narrator;You now have access to the preparations screen.{w}{br}On this screen, you can equip different items and arrange your formation.{w}{br}When you are done preparing, select{red}Fight{black}from the Prep Menu.{w};auto;hint
+end

@@ -1,0 +1,43 @@
+# Intro Script 3
+m;Awakening - Easy Now
+convert;Eliza;player
+arrange_formation
+# Center
+set_cursor;10,7;immediate
+# Eliza Shows up
+b;Clearing
+t;2
+# Center
+set_cursor;14,11;immediate
+u;Joel;Left
+u;Eliza;Right
+s;Joel;How'd ya convince Sam to let you off the leash, lass?{w};auto
+s;Eliza;Oh... well...{w};auto
+s;Joel;I'd have bet that Sam would never relent.{w};auto
+s;Eliza;Well, you see...{w};auto
+s;Joel;What'd you say to him, anyway?{w}{br}He's usually so protective...{w};auto
+s;Eliza;... Um...{w}{br}...I didn't...{w};auto
+s;Joel;Huh? Speak up, lass.{w};auto
+s;Eliza;I never spoke to Sam.{w};auto
+s;Joel;Eh? You sayin' you're not supposed to be here?{w};auto
+s;Eliza;Please, Joel. Let me stay.{w}{br}I really want to fight!{w};auto
+s;Joel;Ahahaha! You reckon' I'd send you back?{w}{br}Nah, if you say you're ready...{w}{br}Welcome back to the team, lass.{w};auto
+s;Eliza;Phew... Thanks...{w};auto
+s;Joel;Though, when Sam hears about this, he'll be furious.{w};auto
+s;Eliza;You'd tell him?{w};auto
+s;Joel;You supposin' I should lie?{w};auto
+s;Eliza;Yes?{w};auto
+qmove_sprite;Eliza;-24,0
+u;Prim;FarRight
+s;Prim;Don't worry, Eliza.{w}{br}Once we succeed here, how could Sam claim you're not strong enough?{w};auto
+s;Eliza;I guess.{w}{br}I don't want him mad at me, though.{w};auto
+s;Prim;You've trained for this.{w}{br}You'll do great!{w};auto
+s;Eliza;...{w};auto
+qmove_sprite;Joel;24,0
+u;Drake;FarLeft
+s;Drake;Enough chatter.{w}{br}To your positions! The caravan approaches!{w};auto
+r;Joel;Drake;Eliza;Prim
+set_cursor;Ophie;immediate
+t;1
+remove_background
+t;2

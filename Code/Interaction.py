@@ -550,13 +550,13 @@ class Combat(object):
         if self.item.exp:
             normal_exp = self.item.exp
         elif self.item.weapon or not self.p1.checkIfAlly(other_unit):
-            level_diff = other_unit.get_true_level(gameStateObj.metaDataObj) - self.p1.get_true_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
+            level_diff = other_unit.get_comparison_level(gameStateObj.metaDataObj) - self.p1.get_comparison_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
             normal_exp = int(cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve']))
         elif self.item.spell:
             if self.item.heal:
                 # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
                 self.p1.records['healing'] += damage_done
-                normal_exp = max(5, int(cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_true_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
+                normal_exp = max(5, int(cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_comparison_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
                 normal_exp = cf.CONSTANTS['status_exp']
         else:
@@ -579,7 +579,7 @@ class Combat(object):
         if applicable_results:
             damage_done = sum([result.def_damage_done for result in applicable_results])
             self.p2.records['damage'] += damage_done
-            level_diff = self.p1.get_true_level(gameStateObj.metaDataObj) - self.p2.get_true_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
+            level_diff = self.p1.get_comparison_level(gameStateObj.metaDataObj) - self.p2.get_comparison_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
             normal_exp = max(0, int(cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve'])))
             if self.p1.isDying:
                 self.p2.records['kills'] += 1

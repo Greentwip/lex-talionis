@@ -1,0 +1,101 @@
+# narration 5
+# Woman2 shows up requesting help
+# Everyone except Sam heads out in a rush.
+# Show room
+m;The Task at Hand
+b;TacticsFloor;map
+wm_add;customSam;7,2;Tactician;M;player
+wm_add;Ophie;12,6
+wm_add;Prim;10,6
+wm_add;Theo;10,9
+wm_add;Renae;2,9
+wm_add;Drake;5,6
+wm_add;Joel;9,7
+wm_add;Althea;3,6
+wm_add;Eliza;5,9
+t;2
+wait;500
+wm_cursor;7,2
+wait;1000
+wm_remove_cursor
+t;1
+b;TacticsRoomDay
+t;2
+u;Sam;FarRight
+u;Renae;Left
+s;Sam;Welcome back, everyone.{w}{br}The last mission went better than expected, so congratulations.{w}{br}In thanks for a job well done, I'm giving you all a day off.{w};auto
+s;Renae;You're kidding?{w};auto
+s;Sam;Don't go expecting this to happen often, now--{w};auto
+m;Mount Briggs
+r;Renae;Sam
+# Show room
+t;1
+b;TacticsFloor;map
+wm_add;customSam;7,2;Tactician;M;player
+wm_add;Ophie;12,6
+wm_add;Prim;10,6
+wm_add;Theo;10,9
+wm_add;Renae;2,9
+wm_add;Drake;5,6
+wm_add;Joel;9,7
+wm_add;Althea;3,6
+wm_add;Eliza;5,9
+t;2
+wait;200
+wm_cursor;7,9
+wait;500
+wm_add;Nia;7,9
+wm_add;customVillager;8,9;Citizen;F;other
+wm_move_sprite;Nia;0,-16
+wm_move_sprite;customVillager;0,-16
+wm_cursor;7,8
+wait;1000
+wm_remove_cursor
+t;1
+b;TacticsRoomDay
+t;2
+u;Nia;FarLeft;u;Woman2;MidLeft;Full_Blink
+u;Sam;FarRight
+s;Nia;Err... B-bad sneak here!{w};auto
+s;Sam;A spy?{w};auto
+s;Woman2;Mrghghgl!{w};auto
+s;Sam;If the Empire's discovered our location...{w}{br}We need to leave right away...{w}{br}I wasn't expecting them to be able to track this--{w};auto
+set_expression;Woman2;Normal
+s;Nia;!{w};auto
+s;Woman2;No! I'm not a spy!{w};auto
+# Nia moves
+move_sprite;Nia;24,0
+s;Sam;Hold!{w}{br}Let's hear her out!{w};auto
+# Nia moves back
+move_sprite;Nia;-24,0
+s;Sam;So you say you're no spy...{w}{br}Why are you here then?{w};auto
+s;Woman2;I was just trying to speak to you.{w}{br}We need your help!{w};auto
+s;Sam;We?{w};auto
+s;Woman2;I'm from Podoma.{w}{br}Your group defended our village.{w};auto
+r;Nia
+s;Sam;Go on...{w};auto
+s;Woman2;Because of the drought, our last harvest was poor.{w}{br}W-we couldn't pay the Empire's absurd taxes.{w}{br}So they sent one of their warlocks...{w};auto
+u;Ophie;MidRight
+s;Ophie;Vagnius!{w};auto
+s;Woman2;He took the only thing we had left...{w}{br}our children...{w}{br}Please, you have to help us!{w}{br}I can't bear to lose my son!{w};auto
+u;Althea;FarLeft
+s;Althea;Even for the Empire, stealing children seems excessive.{w};auto
+u;Ophie;MidRight
+s;Ophie;It must be Vagnius's idea!{w}{br}That bastard!{w}{br}Where did he take them?{w};auto
+s;Woman2;H-he said he was taking them to the Sun temple's ruins...{w};auto
+s;Sam;A likely story...{w}{br}They must be trying to draw us out.{w}{br}Well, we won't give them the satisfaction.{w}{br}Sorry, but we're not just going to walk right into their trap.{w};auto
+r;Ophie;Althea
+u;Ophie;FarLeft
+s;Ophie;How can you be so heartless?{w};auto
+s;Sam;I'm just being rational.{w}{br}Let's take some time and think this through.{w}{br}We'll find a plan that doesn't require blindly walking into Vagnius's trap.{w};auto
+s;Ophie;We can't just sit here and do nothing!{w}{br}We're the Resistance, and we do what's right!{w};auto
+u;Joel;MidRight
+s;Joel;Well said, lad.{w};auto
+s;Sam;Joel!{w};auto
+s;Joel;Sorry, captain, but the lad's right...{w}{br}If we can't stop Imperials from snatching children out from under our noses,{w}{br}we don't deserve to be called the Resistance.{w};auto
+s;Sam;Harrumph...{w}{br}It's your life to throw away...{w};auto
+r;Sam
+s;Joel;I reckon' we don't got time to dawdle.{w}{br}Let's go while the trail's fresh!{w};auto
+s;Ophie;Right!{w};auto
+r;Woman2;Ophie;Joel
+t;1

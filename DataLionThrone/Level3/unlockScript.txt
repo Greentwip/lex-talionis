@@ -1,0 +1,42 @@
+# Level 3 Locked script
+set_origin
+if;self.name == '3'
+	replace_tile;6,6;9
+	change_tile_sprite;6,6;left_floor
+	change_tile_sprite;6,7;floor
+	set_tile_info;6,6
+elif;self.name == '4'
+	replace_tile;14,10;9
+	change_tile_sprite;14,10;left_floor
+	change_tile_sprite;14,11;floor
+	set_tile_info;14,10
+elif;self.name == 'Left'
+	change_tile_sprite;o0,0;open_chest_green
+	set_tile_info;o0,0
+	gold;2000
+elif;self.name == 'Middle'
+	change_tile_sprite;o0,0;open_chest_green
+	set_tile_info;o0,0
+	gold;2000
+elif;self.name == 'Right'
+	change_tile_sprite;o0,0;open_chest_green
+	set_tile_info;o0,0
+	gold;2000
+elif;self.name == 'Money'
+	change_tile_sprite;o0,0;open_chest
+	set_tile_info;o0,0
+	gold;5000
+	u;Renae;Left
+	s;Renae;Okay, we've got the loot!{w}{br}Let's scram!{w};auto
+	r;Renae
+	# Change Objective
+	change_objective_display_name;Escape
+	if;gameStateObj.turncount > 8
+		change_objective_display_name;Escape or Defeat Boss
+		change_objective_win_condition;Escape the Fort or Defeat Boss.
+	end
+	# Set escape tiles
+	set_tile_info;17,0;Escape=0
+	set_tile_info;18,0;Escape=0
+	set_level_constant;MoneyLooted
+end

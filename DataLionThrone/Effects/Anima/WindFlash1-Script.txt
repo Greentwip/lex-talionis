@@ -1,0 +1,7 @@
+pose;Attack
+blend
+f;7;WindFlash1
+f;2;WindFlash2
+f;2;WindFlash3
+f;2;WindFlash4
+wait;1

@@ -1,0 +1,12 @@
+pose;Attack
+blend
+sound;SageCrit
+f;3;rune1
+f;23;rune2
+f;4;rune3
+f;23;rune4
+f;4;rune5
+f;26;rune6
+f;4;rune7
+f;4;rune8
+wait;1

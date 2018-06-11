@@ -1,0 +1,19 @@
+# has our party size fallen below three?
+if;gameStateObj.get_total_party_members() < 3
+	minimum_number_banner
+	lose_game
+	t;1
+elif;gameStateObj.check_dead('Sidney')
+	win_game
+elif;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
+	if;self.unit.name == 'Nia'
+		s;Narrator;Great!{w}{br}Now select Joel, the axe fighter.{w};auto;hint
+		give_skill;Joel;Skill_Restore;no_display
+		set_level_constant;tutorial_nia
+		tutorial_mode;Cleave
+	elif;self.unit.name == 'Joel'
+		s;Narrator;Joel attacked both enemies at once.{w}{br}Activated skills give you powerful options in battle.{w}{br}Always be aware of what skills you have at your disposal.{w}{br}Remember, to find more info on something, press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_INFO'])}.{black}{w};auto;hint
+		s;Narrator;You can now proceed through the rest of the chapter on your own.{w}{br}Good luck!{w};auto;hint
+		tutorial_mode;0
+	end
+end

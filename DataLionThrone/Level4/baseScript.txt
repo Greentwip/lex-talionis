@@ -1,0 +1,113 @@
+# Base Script Level 4
+if;self.name == 'An Uneasy Trust'
+	# Gives Ophie Flareblade
+	m;Toorimichi
+	b;TacticsRoomDay
+	t;2
+	# Ophie confronts Sam.
+	u;Sam;Right
+	qu;Ophie;OffscreenLeft
+	move_sprite;Ophie;96,0
+	s;Ophie;Hey, Sam--{w};auto
+	s;Sam;Ophie.
+	s;Ophie;Huh?
+	s;Sam;Do you have faith?
+	s;Ophie;Uh... what's that supposed to mean?{w}{br}The monks taught me all about--
+	s;Sam;No, boy.{w}{br}Do you have faith in the Resistance?{w}{br}Do you believe that we can succeed?{w}{br}That we can cleanse these Imperial scum from our land?{w};auto
+	s;Ophie;What?{w}{br}Where's this coming from?{w};auto
+	s;Sam;I was made aware of your outburst yesterday...{w}{br}So I'll ask again.{w}{br}Do you have faith?{w};auto
+	s;Ophie;...No.{w}{br}I guess I don't have faith in your Resistance...{w}{br}But I want to see the Empire crushed, same as you!{w}{br}I lost my home to the Empire!{w}{br}Why else would I even be here?{w};auto
+	s;Sam;...{w};auto
+	s;Ophie;Last night, I was tired.{w}{br}The plan failed and you weren't even there...{w}{br}My emotions got the better of me.{w};auto
+	s;Sam;You understand I can't have my soldiers doubting my orders.{w}{br}In battle, one hesitation, one mistake, and it's over.{w};auto
+	s;Ophie;Well yeah...{w};auto
+	s;Sam;Then we understand one another?{w};auto
+	s;Ophie;Yeah.{w}{br}But if I'm going to follow your orders, I need to know...{w}{br}Who are your sources?{w}{br}And why don't you fight with us?{w};auto
+	s;Sam;...I can't answer those questions yet.{w};auto
+	s;Ophie;Of course...{w};auto
+	s;Sam;Trust me.{w}{br}In a few weeks, you'll understand the reason for my secrecy.{w}{br}I can't have word getting out, no matter what.{w};auto
+	s;Ophie;...{w};auto
+	s;Sam;I know how it feels to lose everything to the Empire.{w}{br}Even now, the memories still burn a hole in my gut.{w}{br}So I know what you're going through...{w}{br}But if you can trust me, I promise we will have our revenge.{w};auto
+	s;Ophie;Hmmm...{w};auto
+	s;Sam;Don't let it be said that I've never given you anything.{w}{br}Since you're here...{w};auto
+	# Give Ophie Flareblade
+	give_item;Ophie;Flareblade
+	s;Ophie;What's this?{w};auto
+	s;Sam;A gift from... my sources.{w}{br}Take it or leave it, I don't care.{w}{br}Perhaps you'll find a better use for it than I have.{w};auto
+	s;Ophie;Thanks, I guess.{w};auto
+	s;Sam;Now leave me be....{w};auto
+	r;Sam
+	s;Ophie;...Good day to you too...{w};auto
+	r;Ophie
+	grey_base_convo;An Uneasy Trust
+	t;1
+elif;self.name == 'Strength'
+	# Gives Eliza Prim's charm
+	convert;Eliza;player
+	m;Midna's Theme
+	b;Clearing
+	t;2
+	u;Eliza;MidLeft;mirror
+	wait;1000
+	move_sprite;Eliza;-24,0
+	s;Eliza;Hmph.{w};auto
+	move_sprite;Eliza;24,0
+	qu;Prim;OffscreenRight
+	move_sprite;Prim;-96,0
+	s;Prim;H-Hello? Eliza?{w};auto
+	s;Eliza;What do you want?{w}{br}Come to gloat?{w}{br}Feel free... Not like I could stop you anyhow...{w};auto
+	s;Prim;Is that what you think?{w};auto
+	mirror;Eliza
+	s;Eliza;I get it. I've been replaced...{w}{br}With you all here, Sam will never need my help.{w}{br}I really am weak.{w};auto
+	s;Prim;You're not weak!{w}{br}I was just worried...{w};auto
+	s;Eliza;I don't need your pity.{w};auto
+	s;Prim;I've seen you out here training.{w}{br}Every day, for hours. You never let up.{w};auto
+	s;Eliza;Yeah, so?{w};auto
+	s;Prim;What happened between you and Sam?{w}{br}Why won't he let you fight?{w};auto
+	s;Eliza;Hmmph. It doesn't really matter.{w};auto
+	s;Prim;So tell me, then.{w};auto
+	s;Eliza;...If it'll get you off my back.{w}{clear}On one of the Resistance's first missions, I made a mistake.{w}{br}A nearly fatal mistake.{w}{br}Sam tried his best to heal me,{w}{br}but there was nothing more he could do.{w}{br}No more missions after that.{w};auto
+	s;Prim;But you ARE better now!{w};auto
+	s;Eliza;I'm still weak.{w}{br}I thought that maybe one day...{w}{br}But then, you all showed up.{w}{br}Now I'll never have a chance to prove myself.{w};auto
+	s;Prim;I didn't realize...{w};auto
+	s;Eliza;Of course.{w}{br}Let me get back to training.{w};auto
+	move_sprite;Eliza;-24,0
+	s;Prim;I think you've done enough training for today.{w}{br}Come on.{w};auto
+	move_sprite;Prim;-24,0
+	s;Eliza;Huh?{w};auto
+	s;Prim;Well, don't you want to put that training to use?{w}{br}Let's go catch up to the others.{w};auto
+	s;Eliza;B-But... Sam told me not to go...{w};auto
+	s;Prim;I may not have been here long,{w}{br}but I've come to realize that Sam has his own weakness.{w}{br}He is afraid to lose you.{w}{br}But he doesn't know how strong you are now.{w}{br}And he'll never know if you don't show him that you aren't weak anymore.{w};auto
+	s;Eliza;Hmmm...
+	s;Prim;Take this.
+	give_item;Eliza;Prim's Charm
+	s;Eliza;What is this?{w};auto
+	s;Prim;Just a simple good luck charm.{w}{br}Now let's go. They're probably halfway to Rajas by now.{w};auto
+	r;Prim
+	s;Eliza;...{w};auto
+	r;Eliza
+	grey_base_convo;Strength
+	t;1
+# Theo's Noir Adventures
+elif;self.name == "Theo Sphinx, Pt. I"
+	# Episode 1
+	m;Jazz Noir
+	b;Study
+	t;2
+	u;Theo;Left
+	s;Theo;Listen... It started like this.{w}{br}It was an uneventful Tuesday morning.{w}{br}I should have known something was up.{w}{br}My hangover from last night was gnashing my temples,{w}{br}like a toothless rat on a nickel steak.{w}{br}I needed another drink.{w}{br}Or five.{w}{clear}That's when trouble walked in the door.{w};auto;noir
+	u;Prim;Right
+	s;Prim;Theo, I need your help.{w};auto
+	s;Theo;A blue-haired dame, looking more nervous than a spinal column.{w}{br}She was an old flame of mine who'd fallen on hard times.{w}{br}But I wasn't looking to rekindle the relationship.{w};auto;noir
+	s;Prim;Theo, what are you mumbling about?{w}{br}Are you alright?{w}{br}Anyways, I've lost a tome of mine...{w}{br}Have you seen it around by chance?
+	s;Theo;This had bad news written on it like the front page of the morning paper.{w}{br}But Theo Sphinx, Private Eye never refuses a case,{w}{br}no matter how dangerous.{w};auto;noir
+	s;Prim;Theo?{w};auto
+	s;Theo;I agreed, reluctantly--{w}{br}for the sake of the past.{w};auto;noir
+	s;Prim;Oh you don't have to go through the trouble, I was just wondering if...{w};auto
+	r;Prim
+	s;Theo;The dame prattled on, but I'd heard enough.{w}{br}I dusted off my jacket, lit up my last cigar, grabbed my hat and walked out,{w}{br}the scent of one too many cheap drinks hanging on the wallpaper.{w}{br}I had a meeting with destiny, and she was a cold mistress.{w};auto;noir
+	r;Theo
+	grey_base_convo;Theo Sphinx, Pt. I
+	inc_game_constant;noir
+	t;1
+end

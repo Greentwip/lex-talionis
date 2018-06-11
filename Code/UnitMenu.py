@@ -84,6 +84,7 @@ class UnitMenu(StateMachine.State):
                 else:
                     self.current_sort = new_sort
                 self.sort(gameStateObj)
+                GC.SOUNDDICT['Select 3'].play()
         elif 'RIGHT' in directions:
             if self.unit_index:
                 self.next_state()
@@ -107,6 +108,9 @@ class UnitMenu(StateMachine.State):
             self.banner_index = 1
             self.help_boxes = []
             self.right_arrow.pulse()
+            GC.SOUNDDICT['Status_Page_Change'].play()
+        else:
+            GC.SOUNDDICT['Error'].play()
 
     def prev_state(self):
         if self.state_index > 0:
@@ -116,12 +120,17 @@ class UnitMenu(StateMachine.State):
             self.banner_index = 10
             self.help_boxes = []
             self.left_arrow.pulse()
+            GC.SOUNDDICT['Status_Page_Change'].play()
+        else:
+            GC.SOUNDDICT['Error'].play()
 
     def next_banner(self):
         self.banner_index += 1
         self.right_arrow.pulse()
         if self.banner_index >= len(self.help_boxes):
             self.next_state()
+        else:
+            GC.SOUNDDICT['Select 6'].play()
 
     def prev_banner(self):
         if self.banner_index > 0:
@@ -129,15 +138,19 @@ class UnitMenu(StateMachine.State):
             self.banner_index -= 1
         if self.banner_index < 1:
             self.prev_state()
+        else:
+            GC.SOUNDDICT['Select 6'].play()
 
     def move_up(self):
         if self.unit_index > 0:
+            GC.SOUNDDICT['Select 6'].play()
             self.unit_index -= 1
         if self.scroll_index >= self.unit_index and self.scroll_index > 1:
             self.scroll_index -= 1
 
     def move_down(self):
         if self.unit_index < len(self.units):
+            GC.SOUNDDICT['Select 6'].play()
             self.unit_index += 1
             self.info = False
         if self.scroll_index <= self.unit_index - self.num_per_page + 1 and self.scroll_index <= len(self.units) - self.num_per_page:
@@ -176,7 +189,8 @@ class UnitMenu(StateMachine.State):
         self.draw_banner(surf)
         self.draw_sort(surf)
         self.draw_page_numbers(surf)
-        self.scroll_bar.draw(surf, self.scroll_index - 1, 6, len(self.units))
+        if self.units:
+            self.scroll_bar.draw(surf, self.scroll_index - 1, 6, len(self.units))
         if self.state_index > 0:
             self.left_arrow.draw(surf)
         if self.state_index < len(self.states) - 1:

@@ -1,0 +1,64 @@
+set_origin
+inc_game_constant;switches
+# Switch Left
+if;self.name == 'Left'
+    set_tile_info;o0,0
+    change_tile_sprite;o0,0;switch_pulled
+    switch_pulled_banner
+# Switch 2
+elif;self.name == 'Right'
+    set_tile_info;o0,0
+    change_tile_sprite;o0,0;switch_pulled
+    switch_pulled_banner
+end
+# Check if we've pulled both switches
+if;gameStateObj.game_constants['switches'] == 2
+    set_level_constant;BothSwitchesPulled1
+    u;Sam;Right
+    s;Sam;We've done it! Everyone, forward, across the chasm!{w};auto
+    r;Sam
+    # Open Gates
+    set_camera;6,11;18,12
+    wait;500
+    # Replace with open areas
+    set_origin;6,11
+    change_tile_sprite;o0,0;wall_topleft
+    replace_tile;o0,0;9
+    replace_tile;o0,1;9
+    replace_tile;o1,0;9
+    replace_tile;o1,1;9
+    set_origin;17,11
+    change_tile_sprite;o0,0;wall_topright
+    replace_tile;o0,0;9
+    replace_tile;o0,1;9
+    replace_tile;o1,0;9
+    replace_tile;o1,1;9
+    wait;500
+    set_camera;6,22;18,23
+    wait;500
+    set_origin;6,22
+    change_tile_sprite;o0,0;wall_topright
+    replace_tile;o0,0;9
+    replace_tile;o0,1;9
+    replace_tile;o1,0;9
+    replace_tile;o1,1;9
+    set_origin;17,22
+    change_tile_sprite;o0,0;wall_topright
+    replace_tile;o0,0;9
+    replace_tile;o0,1;9
+    replace_tile;o1,0;9
+    replace_tile;o1,1;9
+    wait;500
+    # To Razia
+    set_cursor;Razia
+    u;Razia;Left
+    s;Razia;They've lowered the gates...{w}{br}Seems I've underestimated this Resistance...{w};auto
+    u;Soldier3;Right
+    s;Soldier3;Ma'am, the Resistance, they've--{w};auto
+    s;Razia;I know.{w}{br}Spare me tales of your incompetence.{w}{br}We'll handle them on our terms, then.{w}{br}Cut them off on the bridges.{w};auto
+    s;Soldier3;Aye, ma'am.{w};auto
+    r;Soldier3
+    s;Razia;Perhaps my blade will taste new blood under this moon...{w};auto
+    r;Razia
+    set_cursor;{unit}
+end

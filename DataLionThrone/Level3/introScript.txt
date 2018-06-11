@@ -1,0 +1,58 @@
+# Intro Script 3
+m;Awakening - Easy Now
+arrange_formation
+set_cursor;0,20;immediate
+add_unit;S1
+add_unit;S2
+add_unit;S3
+b;ClearingSunset
+t;2
+u;Ophie;Right
+s;Ophie;Just like Sam said, the guards are leaving...{w};auto
+u;Joel;Left
+s;Joel;I reckon' we'd best make this quick.{w}{br}Who knows how long they'll be.{w};auto
+r;Ophie
+u;Renae;Right
+s;Renae;Oh, you can count on me to make this quick.{w}{br}They don't call me the best thief in Kerala for nothing.{w};auto
+r;Joel
+u;Theo;Left
+s;Theo;I doubt that anybody refers to you as that, Renae.{w};auto
+s;Renae;Sure they do.{w}{br}Really, Theo, you need to get out more.{w};auto
+s;Theo;Hmmm...{w}{br}Wouldn't being called the best thief in Kerala falsify that very statement?{w};auto
+s;Renae;What now?{w};auto
+s;Theo;The best thief should be sneaky, right?{w};auto
+s;Renae;I am sneaky!{w};auto
+s;Theo;So the best thief in Kerala should be someone nobody knows about...{w};auto
+s;Renae;Yet, here I am, living proof!{w}{br}La-dee-da!{w};auto
+qmove_sprite;Renae;24,0
+qmove_sprite;Theo;-24,0
+u;Joel;MidLeft
+s;Joel;Enough talk. Now's the time to strike.{w};auto
+u;Ophie;MidRight
+s;Ophie;Alright! Let's go!{w};auto
+r;Ophie;Joel;Renae;Theo
+end_skip
+m;Preparing for Battle
+t;1
+remove_background
+t;2
+map_pan
+set_cursor;Ophie
+if;cf.OPTIONS['Display Hints']
+	s;Narrator;You have gained two new allies, Theo and Renae.{w};auto;hint
+	set_cursor;Theo
+	disp_cursor;1
+	s;Narrator;Theo is a knight.{w}{br}Knights are very slow but have great defense.{w};auto;hint
+	disp_cursor;0
+	set_cursor;Renae
+	disp_cursor;1
+	s;Narrator;Renae is a thief.{w}{br}Thieves are very fast but have poor strength and defense.{w}{br}Thieves also have the ability{red}Locktouch.{black}{w}{br}This lets thieves unlock doors and chests without a key.{w};auto;hint
+	disp_cursor;0
+	set_cursor;10,8
+	disp_cursor;1
+	s;Narrator;In this chapter, you need to steal the money from the center vault.{w};auto;hint
+	fake_cursor;2,9;14,2;14,16
+	map_pan
+	s;Narrator;Activate each of the three switches to unbar the vault.{w};auto;hint
+	remove_fake_cursors
+end

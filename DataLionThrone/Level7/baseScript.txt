@@ -1,0 +1,89 @@
+# Base Script Level 7
+if;self.name == 'Theo Sphinx, Pt. IV'
+	# Episode 4
+	m;Jazz Noir
+	b;Snow_Forest_Clearing
+	t;2
+	u;Theo;FarLeft
+	s;Theo;Snow.{w}{br}Since when did it snow around here?{w}{br}And it was coming down in buckets.{w}{clear}So this was it, my last lead in this godforsaken case.{w}{br}The hour crawled by like a sick cockroach.{w}{br}I'd almost given up hope when out of the dark strutted a raven-haired dame.{w}{br}She had a wild glint in her eyes.{w}{br}Before she could scamper off, I cornered her.{w};auto;noir
+	u;Nia;Right
+	qmove_sprite;Theo;24,0
+	s;Nia;...{w};auto
+	s;Theo;She looked tenser than a minister in a ten-cent whorehouse.{w}{br}I asked her if she'd heard anything about Miss Prim's problem.{w}{br}She shook her head, but I wasn't having it.{w}{br}I grabbed her by the collar and demanded the truth about the missing tome--{w}{br}I've still got the scratches to prove it.{w}{br}To my surprise, her expression softened.{w}{br}She beckoned me down 79th street and I followed.{w}{br}After what seemed like a dozen twists and turns through this concrete jungle,{w}{br}we arrived at a run-down shack on the outskirts of the East Side.{w};auto;noir
+	r;Nia;Theo
+	t;1
+	b;Supply_Fort
+	t;2
+	u;Theo;Left;u;Nia;Right
+	s;Nia;...{w};auto;noir
+	r;Nia
+	s;Theo;Nia didn't mince words.{w}{br}But I could tell something was going to be finished once I walked in that door--{w}{br}either this case, or me.{w}{br}The dame made like a banana and split,{w}{br}while I holstered my gun and made my way inside.{w}{clear}I was ready for answers.{w};auto;noir
+	wait;500
+	u;Kayla;Right
+	s;Kayla;Tsk Tsk. So you've finally arrived, Theo.{w}{br}I was wondering if you'd ever manage to track me down.{w}{br}How'd you find the place?{w};auto
+	s;Theo;The silver-haired dame was all business.{w};auto;noir
+	s;Kayla;No, don't tell me.{w}{br}That damned girl!{w};auto
+	s;Theo;Your game is up, Kayla.{w}{br}Hand over the tome.{w};auto
+	s;Theo;Sad to see such a pretty girl turning herself to a life a crime.{w};auto;noir
+	s;Kayla;The tome, what?{w};auto
+	s;Theo;She wasn't making this any easier on herself.{w};auto;noir 
+	s;Theo;Don't play dumb with me, Kayla. Prim's tome!{w};auto
+	s;Kayla;Hah. You're a bit late on the uptake, Theo.{w}{br}I've already transformed Prim's tome into something much grander!{w}{br}Behold!{w};auto
+	# Give Theo Howl
+	give_item;Theo;Howl
+	s;Theo;With something like that in her possession,{w}{br}the dame was obviously connected to someone up high.{w}{br}But I had a job to finish.{w}{br}Though she tried to fight back, I cuffed her and brought her to the station.{w};auto;noir
+	r;Kayla
+	s;Theo;This was on Sam's plate now.{w}{br}Too bad about Miss Prim's tome...{w}{br}but my job here was done.{w}{br}Another case closed by Private Eye Theo Sphinx.{w};auto;noir
+	r;Theo
+	grey_base_convo;Theo Sphinx, Pt. IV
+	t;1
+elif;self.name == 'Training'
+	m;Wild Arms Town
+	b;Clearing
+	t;2
+	u;Ophie;MidLeft;mirror
+	bop;Ophie
+	s;Ophie;Ha-aah!
+	qmove_sprite;Ophie;-24,0
+	s;Ophie;I've got you now, Ulver!{w}{br}Your evil will be vanquished from this earth!
+	u;Coyote;Right
+	s;Coyote;*cough*
+	mirror;Ophie
+	s;Ophie;Oh! Hey Coyote...{w}{br}What's up?
+	s;Coyote;I'm not here to chit-chat, kid. 
+	s;Ophie;Okay...
+	s;Coyote;You are too aggressive.
+	s;Ophie;Huh?
+	s;Coyote;You attack without plan... leaving yourself wide open.
+	s;Ophie;What! I can protect myself.
+	s;Coyote;Prove it.
+	s;Ophie;Hah... If you're ready...
+	move_sprite;Ophie;48,0
+	s;Ophie;Ha-aah!
+	move_sprite;Coyote;-24,0
+	move_sprite;Coyote;24,0
+	s;Ophie;Oof!
+	move_sprite;Ophie;-24,0
+	s;Coyote;Still so sure?
+	s;Ophie;Damn! Where did that come from.
+	s;Coyote;You are too focused on your own movement.{w}{br}That is not the Rusonoon monks' style.
+	s;Ophie;What would you know of the Way of the Blade?{w}{br}It's a sacred art that only expresses itself clearly in self-defense!
+	s;Coyote;So you remember Yohn's words.
+	s;Ophie;You knew Master Yohn?
+	s;Coyote;Many solstices ago...{w}{clear}As he would say, read your opponent's movements, and yours will follow.{w}{br}Combat is a dance.{w}{br}Turn your opponents energy against them...
+	s;Ophie;...And then strike!
+	s;Coyote;Here. Pay attention to me, not your sword.
+	move_sprite;Coyote;-48,0
+	s;Ophie;Hah Ah!
+	move_sprite;Coyote;24,0
+	s;Coyote;Huff.
+	s;Ophie;Ah! I did it.
+	s;Coyote;Catch.
+	give_item;Ophie;Rapier
+	s;Coyote;Attacking trees will not improve your swordsmanship.{w}{br}Meet me here tomorrow when the sun is halfway down the western sky.
+	r;Coyote
+	s;Ophie;Uh... Yeah.{w}{br}Sure, I guess!{w}{br}I'll be ready!
+	r;Ophie
+	grey_base_convo;Training
+	t;1
+end

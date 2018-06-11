@@ -1,0 +1,78 @@
+# Talk Script Lvl 6
+# Sam and Kiley -- Kiley expresses regret, but meet me after you take down the warden
+if;self.unit.name == 'Sam' and self.unit2.name == 'Kiley'
+	u;Kiley;Left
+	u;Sam;Right
+	s;Sam;Hey, you look like you're in charge of the prisoners here.{w};auto
+	s;Kiley;Eh, wot, matey?{w}{br}I didn't catch ya. Speak up!{w}{br}All this commotion, y'hear.{w};auto
+	s;Sam;I said, you're in the charge of the prisoners here, right.{w};auto
+	s;Kiley;I might be.{w}{br}Who's asking?{w};auto
+	s;Sam;I'm Sam. The leader of the Resistance.{w}{br}We just freed you.{w};auto
+	s;Kiley;Oy! And now you want something.{w}{br}Aye, matey, I catch yer drift.{w};auto
+	s;Sam;We could use your help dealing with the rest of the guards.{w};auto
+	s;Kiley;No can do, matey.{w}{br}I got me own crew.{w}{br}But come talk to me after the battle, and maybe we can hash out a deal.{w};auto
+	r;Kiley
+	s;Sam;I don't know why I thought this would be easier...{w};auto
+	r;Sam
+	remove_talk;Sam;Kiley
+# Sam and Coyote -- Sam recruits Coyote
+elif;self.unit.name == 'Sam' and self.unit2.name == 'Coyote'
+	u;Coyote;Left
+	u;Sam;Right
+	s;Sam;Coyote, right?{w};auto
+	s;Coyote;...{w};auto
+	s;Sam;I'll take that as a yes...{w}{br}Uh... We could use your help, since you know the place.{w};auto
+	s;Coyote;Way ahead of you. Wait here.{w}{br}I'll handle the warden myself.{w};auto
+	s;Sam;I'm not sure that's such a good idea.{w}{br}Why don't we come up with a plan, instead of going in guns blazing?{w};auto
+	s;Coyote;Look, I get it. You're new at this.{w}{br}Trust me. I'm a professional.{w};auto
+	s;Sam;No actually, I'm not new, I've been doing this for a while--{w};auto
+	r;Coyote
+	s;Sam;Hey, wait!{w};auto
+	r;Sam
+	remove_talk;Sam;Coyote
+# Kayla and Coyote -- Give Coyote a Superior Edge
+elif;self.unit.name == 'Kayla' and self.unit2.name == 'Coyote'
+	u;Kayla;Right
+	u;Coyote;Left
+	s;Kayla;Ah Coyote. Fancy seeing you here.{w};auto
+	s;Coyote;...{w};auto
+	s;Kayla;You know, your job performance has been lacking lately.{w}{br}No reports since the last moon!{w};auto
+	s;Coyote;It's something of an occupational hazard.{w};auto
+	s;Kayla;Well, I'll be keeping a better eye on you from now on.{w};auto
+	s;Coyote;I don't need the Confederacy breathing down my neck.{w};auto
+	qmove_sprite;Kayla;-24,0
+	s;Kayla;Oh, don't worry. This is personal.{w};auto
+	s;Coyote;I work better alone.{w};auto
+	s;Kayla;Tsk Tsk. Don't get so bent out of shape, Coyote.{w}{br}I'm sure you could use a break from that loner persona.{w};auto
+	s;Coyote;Enough talk.{w}{br}I've got a warden to kill.{w};auto
+	s;Kayla;Wait up.{w}{br}You're going to need this.{w};auto
+	give_item;Coyote;Superior Edge
+	s;Coyote;We'll see.{w};auto
+	r;Coyote;Kayla
+	remove_talk;Kayla;Coyote
+# Ophie and Coyote -- Coyote confronts Ophie about the way of the blade. Share the same teacher, Yohn.
+elif;self.unit.name == 'Ophie' and self.unit2.name == 'Coyote'
+	u;Ophie;Right
+	u;Coyote;Left
+	s;Coyote;Hey, kid. Where'd you learn that stance?{w};auto
+	s;Ophie;Huh?{w};auto
+	s;Coyote;Your sword stance.{w}{br}Who taught you it?{w};auto
+	s;Ophie;Um... A monk.{w};auto
+	s;Coyote;A monk, eh?{w}{br}Well, you're doing your teacher a disservice.{w};auto
+	s;Ophie;What! No, I'm not.{w}{br}I was taught by the best!{w};auto
+	s;Coyote;I guess you didn't listen.{w}{br}Hold your wrist up higher.{w}{br}There.{w};auto
+	s;Ophie;Hmmm...{w};auto
+	s;Coyote;Feels better, right?{w};auto
+	s;Ophie;How'd you know how to do that?{w}{br}Were you a monk?{w};auto
+	s;Coyote;Now's no time for stories, kid.{w};auto
+	r;Coyote
+	s;Ophie;What's up with him...{w};auto
+	r;Ophie
+	remove_talk;Ophie;Coyote
+	exp_gain;Ophie;50
+end
+# If Coyote is not converted, convert him to player
+if;self.unit2.name == 'Coyote' and self.unit2.team == 'other'
+	convert;Coyote;player
+	change_ai;Coyote;None
+end

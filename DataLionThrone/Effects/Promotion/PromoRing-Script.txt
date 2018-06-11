@@ -1,0 +1,11 @@
+pose;Attack
+f;4;Ring1
+f;4;Ring2
+f;4;Ring3
+f;4;Ring4
+f;4;Ring5
+f;4;Ring6
+f;4;Ring7
+f;4;Ring8
+f;4;Ring9
+wait;1

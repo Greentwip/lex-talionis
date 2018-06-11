@@ -1,0 +1,8 @@
+# has our party size fallen below three?
+if;gameStateObj.get_total_party_members() < 3
+	minimum_number_banner
+	lose_game
+	t;1
+elif;gameStateObj.check_dead('Brigham')
+	win_game
+end

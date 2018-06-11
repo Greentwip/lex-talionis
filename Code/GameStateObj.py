@@ -344,7 +344,8 @@ class GameStateObj(object):
                    'phase_info': (self.phase.current, self.phase.previous)}
         import time
         to_save_meta = {'playtime': self.playtime,
-                        'realtime': time.time()}
+                        'realtime': time.time(),
+                        'version': GC.version}
         return to_save, to_save_meta
 
     def loadSprites(self):

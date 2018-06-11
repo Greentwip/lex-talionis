@@ -19,6 +19,25 @@
         <desc>An ordinary commoner.</desc>
     </class>
 
+    <class id="Lord">
+        <short_name>Lord</short_name>
+        <long_name>Lord</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>0</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>90,45,0,40,45,40,15,15</growths>
+        <bases>16,4,0,8,9,0,3,1,5,5</bases>
+        <max>60,20,20,20,20,30,20,20,20</max>
+        <desc>??</desc>
+    </class>
+
 <!-- Normal Classes -->
     <!-- Myrmidon -> Swordmaster -->
     <class id="Myrmidon">
@@ -148,36 +167,35 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Halberdier</turns_into>
+        <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
-        <skills>1,Synergy;5,Feat;8,Feat</skills>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,65,15,70,60,35,40,20</growths>
-		<bases>13,2,0,4,0,0,0,0,7,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
-        <desc>Well-rounded combatants who rely on their exceptional skill.</desc>
+        <growths>80,50,0,30,20,25,12,15</growths>
+        <bases>20,3,0,0,1,0,0,0,6,5</bases>
+        <max>60,20,20,20,20,30,20,20,20</max>
+        <desc>??</desc>
     </class>
 
-    <class id="Halberdier">
-        <short_name>Halberdier</short_name>
-        <long_name>Halberdier</long_name>
-        <tier>2</tier>
+    <class id="Fighter">
+        <short_name>Fighter</short_name>
+        <long_name>Fighter</long_name>
+        <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
-        <wexp_gain>0,10,0,0,0,0,0</wexp_gain>
-        <promotes_from>Soldier</promotes_from>
-        <turns_into></turns_into>
+        <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Warrior</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>1</movement_group>
+        <movement_group>4</movement_group>
         <tags></tags>
-        <skills>3,Feat;5,Luna;8,Feat</skills>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,65,15,70,60,35,40,20</growths>
-		<bases>17,3,1,6,2,0,5,2,9,6</bases>
-        <promotion>4,1,1,2,3,0,4,2,2,1</promotion>
-		<max>40,18,15,20,17,20,19,17,20</max>
-        <desc>Veteran frontliners who claim never to miss their target.</desc>
+        <growths>85,55,0,35,30,15,15,15</growths>
+        <bases>20,5,0,2,4,0,2,0,11,5</bases>
+        <max>60,20,20,20,20,30,20,20,20</max>
+        <desc>??</desc>
     </class>
 
     <!-- Cavalier -> Paladin -->
@@ -192,7 +210,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags>Mounted</tags>
-        <skills>1,Canto;5,Savior;8,Feat</skills>
+        <skills>1,Canto</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,30</growths>
 		<bases>12,3,0,2,3,0,4,0,7,7</bases>
@@ -211,7 +229,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags>Mounted</tags>
-        <skills>3,Feat;5,Charisma;8,Feat</skills>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>100,45,5,55,35,40,20,30</growths>
 		<bases>14,4,0,4,5,0,6,5,8,8</bases>
@@ -231,8 +249,8 @@
         <turns_into>General</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
-        <tags></tags>
-        <skills>1,Provoke;5,Shove;8,Feat</skills>
+        <tags>Armor</tags>
+        <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,35</growths>
 		<bases>11,3,0,2,1,0,6,1,9,4</bases>
@@ -250,7 +268,7 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
-        <tags></tags>
+        <tags>Armor</tags>
         <skills>3,Feat;5,Slow;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,35</growths>

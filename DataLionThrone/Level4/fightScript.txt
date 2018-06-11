@@ -1,0 +1,17 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Midas'
+        if;not 'MidasDefault' in gameStateObj.level_constants
+            u;Midas;Left
+            s;Midas;Ah! B-Bandits!{w}{br}Guards, attack!{w}{br}Protect m-me!{w};auto
+            r;Midas
+            set_level_constant;MidasDefault
+        end
+    elif;self.unit2.name == 'Anders'
+        if;not 'AndersDefault' in gameStateObj.level_constants
+            u;Anders;Left
+            s;Anders;You scum chose the wrong caravan to raid.{w}{br}You're gonna regret crossing paths with ol' Anders here.{w};auto
+            r;Anders
+            set_level_constant;AndersDefault
+        end
+    end
+end

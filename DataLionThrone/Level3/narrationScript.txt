@@ -1,0 +1,51 @@
+# narration Script 3
+# Set switches
+m;The Task at Hand
+# Show room
+b;TacticsFloor;map
+wm_add;customSam;7,2;Tactician;M;player
+wm_add;Ophie;12,6
+wm_add;Prim;10,6
+wm_add;Theo;10,9
+wm_add;Renae;5,9
+wm_add;Drake;5,6
+wm_add;Joel;9,7
+wm_add;Althea;3,6
+wm_add;Nia;13,9
+t;2
+wait;500
+wm_cursor;7,2
+wait;1000
+wm_remove_cursor
+t;1
+b;TacticsRoomDay
+t;2
+u;Sam;Right
+u;Joel;Left
+s;Sam;Good morning everyone.{w};auto
+s;Sam;As you all can see, we have some new members.{w}{br}I foresee good fortune in our future.{w}{br}Now, we'll be able to take the fight to the Imperial interlopers!{w};auto
+s;Joel;Yeah, yeah, Sam.{w}{br}You give us the same prep talk before every mission.{w}{br}Just tell it to us straight.{w};auto
+s;Sam;Fine. Theo has informed me that we're running low on funds.{w}{br}We need money for repairs, new armor, and so on.{w}{br}So...{w} we're gonna rob the Imperial Bank.{w};auto
+qmove_sprite;Joel;-24,0
+u;Drake;MidLeft
+s;Drake;Rob a bank? We'll be regarded as nothing more than common thugs.{w}{br}What honor can be found in that?{w};auto
+s;Sam;This is no ordinary bank.{w}{br}The Empire imposes harsh taxes on the Keralan people.{w}{br}Their blood money is kept in Fort Kosheen before being sent to the Empire proper.{w}{br}We'll be... liberating this unearned revenue from the Empire.{w}{br}Surely you can see the honor in that, Drake?{w};auto
+s;Drake;Hmmm...{w};auto
+r;Drake
+u;Ophie;MidLeft
+s;Ophie;But won't this fort be heavily guarded?{w};auto
+s;Sam;Normally, yes.{w}{br}But my sources assure me that the guard at Fort Kosheen will be light tonight.{w}{br}They will be having other... troubles.{w}{br}Leaving the treasure for us.{w};auto
+set_expression;Ophie;Smiling
+s;Ophie;Hah! A heist against the Empire!{w}{br}This is what being in the Resistance is all about, eh, Prim?{w};auto
+qmove_sprite;Sam;24,0
+u;Prim;MidRight
+set_expression;Prim;Smiling
+s;Prim;Uh... Yeah!{w};auto
+s;Joel;Well, then, sounds like a plan.{w}{br}I'm fixin' to get me some breakfast.{w}{br}Who's with me?{w};auto
+s;Ophie;I sure am!{w};auto
+s;Prim;And me!{w};auto
+r;Joel;Ophie;Prim
+wait;200
+s;Sam;I wish you good luck this evening, everyone.{w};auto
+r;Sam
+t;1

@@ -1,0 +1,81 @@
+# prebaseScript 4
+m;The Task at Hand
+add_to_market;Slim Lance
+add_to_market;Hatchet
+add_to_market;Wind
+if;not gameStateObj.check_dead('Prim')
+	set_base_convo;Strength
+end
+set_base_convo;An Uneasy Trust
+if;not gameStateObj.check_dead('Theo')
+	set_base_convo;Theo Sphinx, Pt. I
+end
+# Show room
+b;TacticsFloor;map
+wm_add;customSam;7,2;Tactician;M;player
+wm_add;Ophie;12,6
+wm_add;Prim;10,6
+wm_add;Theo;10,9
+wm_add;Renae;2,9
+wm_add;Drake;5,6
+wm_add;Joel;9,7
+wm_add;Althea;3,6
+wm_add;Nia;13,9
+wm_add;customEliza;5,9;Soldier;F;player
+t;2
+wait;500
+wm_cursor;7,2
+wait;1000
+wm_remove_cursor
+t;1
+b;TacticsRoomDay
+t;2
+u;Sam;FarRight
+if;gameStateObj.game_constants['switches'] >= 2
+	s;Sam;Well done everyone.{w}{br}Thanks to your valiant efforts, we have the funds we need to keep our struggle alive.{w}{br}But we can't stop now.{w};auto
+else
+	s;Sam;I know the last mission did not go as well as we had hoped.{w};auto
+	u;Renae;Left
+	s;Renae;You're telling me!{w};auto
+	s;Sam;...There is good news, though.{w};auto
+end
+s;Sam;According to my sources, a weapon shipment is due to reach the Imperials.{w}{br}We cannot allow those weapons to reach Duke Ulver.{w};auto
+r;Renae
+u;Prim;Left
+s;Prim;Won't the caravans be guarded?{w}{br};auto
+s;Sam;Yes, but it should only be a token force.{w}{br}The Empire is keeping these shipments on the down-low.{w}{clear}Capturing these weapons will not only strike a blow against the Empire,{w}{br}but will also aid the Resistance in our future endeavors.{w}{br}This mission is of paramount importance!{w};auto
+s;Prim;Oh...{w};auto
+s;Sam;If no one else has any comments...{w};auto
+m;Midna's Theme
+qmove_sprite;Prim;-24,0
+u;Eliza;MidLeft
+s;Sam;Eliza?{w};auto
+s;Eliza;Can you let me join this fight?{w};auto
+s;Sam;What? Out of the question, Eliza.{w}{br}You are not ready.{w};auto
+bop;Eliza
+s;Eliza;I am ready!{w}{br}I can do it. I know I can.{w};auto
+s;Sam;We've been over this...{w};auto
+s;Eliza;Please, Sam. I've been training...{w}{br}I'm stronger than I was then. I won't get hurt.{w};auto
+s;Sam;No. And that's final.{w};auto
+s;Eliza;You really don't trust me anymore, do you!{w};auto
+# Eliza runs off
+r;Eliza
+s;Sam;...{w};auto
+u;Althea;MidLeft
+s;Althea;Well, um,{w}{br}this has been an eventful meeting, but,{w} uh...{w}{br}if we're going to catch those caravans, we'd better get ready, right?{w};auto
+r;Althea;Sam;Prim
+# Prim and Ophie conversation
+t;1
+b;MainBase
+t;2
+if;not gameStateObj.check_dead('Prim')
+	u;Ophie;Right;u;Prim;Left
+	s;Ophie;Prim?{w};auto
+	s;Prim;Cover for me. I'll catch up with you guys in a little.{w};auto
+	s;Ophie;Uh...{w};auto
+	s;Prim;Thanks!{w};auto
+	r;Prim
+	s;Ophie;What could she be up to?{w};auto;thought_bubble
+	r;Ophie
+end
+t;1

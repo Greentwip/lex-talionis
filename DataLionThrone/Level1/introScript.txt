@@ -1,0 +1,101 @@
+# Intro
+# Ophie and Prim in Forest
+m;Ambient Forest
+add_component;Sidney;Boss
+b;Forest
+t;2
+u;Prim;Right
+s;Prim;...Ophie... slow down.{w};auto
+u;Ophie;Left
+s;Ophie;Hey, are you okay?{w};auto
+s;Prim;...I just need to... c-catch my breath...{w};auto
+s;Ophie;I guess we've made it far enough.{w}{br}We can rest here for a little.{w};auto
+r;Ophie;Prim
+t;1
+b;DeeperForest
+t;2
+# Nia and Joel
+u;Nia;MidLeft
+wait;500
+u;Joel;FarLeft
+s;Joel;What do ya spy, lass?{w}{br}Hmmm...{w}{br}Wait, those ain't Imperials! Nia, hold your fire!{w};auto
+bop;Nia
+s;Narrator;Twang!{w};160;28;72
+s;Joel;Heh heh. Oops...{w};auto
+r;Joel;Nia
+m;Wild Arms Town
+t;1
+b;Forest
+t;2
+u;Prim;MidRight
+u;Ophie;MidLeft
+s;Narrator;Thud!{w};160;28;72
+s;Prim;What the--{w};auto
+s;Ophie;Quick, get down! Someone's shooting at us!{w};auto
+r;Ophie
+u;Ophie;FarRight
+s;Prim;...{w};auto
+s;Ophie;Hmm... A stray shot?{w};auto
+s;???;Hey! You two!{w}{br}Sorry about that...{w}{br}My partner here's got a bit of an itchy trigger finger.{w};04;28;160
+s;Ophie;Stay down. It could be a trap.{w};auto
+s;Prim;How can we trust you? Who are you?{w};auto
+s;Ophie;Prim!{w};auto
+s;???;We're uh.... rangers.{w}{br}Yeah, rangers... y'know... protectin' the forest...{w};04;28;160
+# Joel appears
+u;Joel;MidLeft
+s;Joel;Boy, ya'll look roughed up.{w};auto
+bop;Ophie
+s;Ophie;Don't come any closer!{w};auto
+s;Joel;Hey, no need for the blade, lad.{w}{br}We mean you no harm.{w};auto
+s;Ophie;Well, you don't look Imperial...{w};auto
+s;Joel;Is that who ya'll runnin' from?{w}{br}Them scum.{w};auto
+s;Prim;Yes--{w};auto
+#Nia appears
+m;Combat Theme 4
+u;Nia;FarLeft
+s;Nia;J-Joel... 
+s;Joel;Hmm?
+s;Nia;I-Imp'rials... to the east...{w};auto
+s;Joel;Well, I reckon' ya'll could use some help...{w};auto
+s;Ophie;I can take them.{w}{br}I don't need your--{w};auto
+s;Prim;Ophie! Now's not the time for pride!{w}{br}What would Master Yohn say?{w};auto
+s;Ophie;Hmmph.{w};auto
+s;Prim;Thank you, um... kind sir.{w};auto
+s;Joel;Ah, don't mention it, little lady.{w}{br}The only good Imperial in my reckonin' is a dead one.{w};auto
+r;Ophie;Prim;Nia;Joel
+end_skip
+t;1
+remove_background
+t;2
+# Enemies appear
+set_cursor;17,7
+add_unit;Sidney
+add_tag;Sidney;Boss
+disp_cursor;1
+wait;1000
+disp_cursor;0
+u;Sidney;FarRight
+s;Sidney;Hah! Found you little mice!{w}{br}Now I'm gonna crush you!{w};auto
+r;Sidney
+add_unit;F1;17,6
+add_unit;F2;16,7
+add_unit;F3;17,5
+add_unit;S1;17,9
+add_unit;S2;17,8
+add_unit;S3;17,4
+add_unit;A1;17,2
+wait;200
+move_unit;S1;16,6
+move_unit;S2;15,7
+move_unit;S3;7,7
+move_unit;F1;11,5
+move_unit;F2;7,8
+move_unit;F3;12,6
+move_unit;A1;16,4
+start_move
+set_cursor;Joel
+u;Joel;FarLeft
+u;Sidney;FarRight
+s;Joel;Not without goin' through me first!{w};auto
+s;Sidney;Boys, looks like we found ourselves another traitor!{w}{br}Well, bud, we'll show you what happens when you cross the Empire!{w};auto
+r;Joel;Sidney

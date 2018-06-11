@@ -1,0 +1,138 @@
+# Base Script Level 3
+# Base Conversation 3 - 1 Renae
+if;self.name == 'Ophie meets Renae'
+	m;Brave Story - Hare
+	b;MainBase
+	t;2
+	u;Renae;Left;Smiling
+	s;Renae;Hey Joel! Come on over!{w};auto
+	u;Joel;FarRight
+	s;Renae;Sit down!{w}{br}Try some of this goulash! It's fantastic!{w};auto
+	u;Ophie;MidRight
+	s;Renae;And you brought a friend!{w};auto
+	s;Joel;Renae, I cooked that goulash... for myself.{w};auto
+	s;Renae;I know and it is delicious!{w}{br}Now stop interrupting me.{w}{br}Try some!{w};auto
+	s;Ophie;Huh?{w};auto
+	s;Renae;Eat it, its good for you.{w}{br}...Probably.{w};auto
+	s;Ophie;Uh okay.{w};auto
+	s;Renae;What's your name, kid?{w};auto
+	s;Ophie;Mrghghg...{w};auto
+	s;Renae;Huh? You shouldn't talk with your mouth full, y'know.{w};auto
+	s;Joel;Slow down, Renae.{w}{br}Give the lad a little time to compose himself, eh?{w};auto
+	s;Ophie;--Gulp{w}{br}Ophie.{w};auto
+	s;Renae;Ophie! Nice to meet ya. I'm Renae!{w}{br}I'm this group's, uh, subterfuge specialist!{w};auto
+	s;Joel;Our thief.{w};auto
+	s;Renae;Joel! I didn't want this kid to get the wrong idea!{w};auto
+	s;Ophie;No, I understand.{w}{br}You guys steal from the Empire, and give back to the common folk, right?{w};auto
+	s;Renae;Uh... right!{w}{br}Well, when we can.{w}{br}Sam hasn't had us doing too much of that lately though.{w}{br}Anyway, you're a swordsman, I take it?{w};auto
+	s;Ophie;I was trained by the Rusonoon Monks, the best in Kerala.{w};auto
+	s;Renae;Well then... Hiyaah!{w};auto
+	bop;Ophie
+	s;Ophie;Ah!{w}{br}What the hell was that for?{w};auto
+	s;Renae;Don't act so grouchy...{w}{br}Just testing your reflexes.{w};auto
+	s;Ophie;With a sword?!{w};auto
+	s;Renae;Yeah! Luckily, you passed.{w}{br}Here take this.{w};auto
+	give_item;Ophie;Rapier
+	s;Ophie;The sword?{w};auto
+	s;Renae;Hey! This is no ordinary sword!{w}{br}This baby'll cut through the toughest armor like its butter!{w}{br}It'll come in handy.{w};auto
+	s;Ophie;Thanks, I think?{w};auto
+	s;Renae;Well, now, off you go!{w}{br}Let me finish my goulash in peace!{w};auto
+	s;Ophie;Uh... right...{w};auto
+	r;Renae;Joel;Ophie
+	grey_base_convo;Ophie meets Renae
+	t;1
+elif;self.name == 'Prim meets Eliza'
+	m;Midna's Theme
+	b;Clearing
+	t;2
+	u;Joel;MidRight;u;Prim;FarRight
+	s;Joel;She's gotta be hidin' around here somewhere... {w};auto
+	s;Prim;It's not a big deal if I don't meet her now, Joel.{w}{br}I'm sure I'll get a chance later.{w};auto
+	s;Joel;I said I'd introduce you to the crew, and I don't break my promises.{w}{br}Eliza!{w};auto
+	qu;Eliza;OffscreenLeft
+	move_sprite;Eliza;96,0
+	s;Eliza;Joel! Is something wrong?{w};auto
+	s;Joel;I've brought someone for you to meet.{w};auto
+	s;Eliza;Oh...{w}Is that all?{w};auto
+	s;Prim;Uh, nice to meet you.{w}{br}I'm Prim.{w}{br}...I-I guess I'm the newest member of this group.{w};auto
+	s;Joel;Well, I'll leave you two alone...{w};auto
+	r;Joel
+	move_sprite;Prim;-24,0
+	s;Prim;Uh... Its a beautiful day, isn't it?{w};auto
+	s;Eliza;What do you do?{w};auto
+	s;Prim;Hmmm?{w};auto
+	s;Eliza;What do you do?{w};auto
+	s;Prim;I'm afraid I don't understand...{w};auto
+	s;Eliza;What are your skills?{w}{br}What do you bring to the group?{w}{br}We don't need anybody else weighing us down.{w};auto
+	s;Prim;Oh.. well... um...{w};auto
+	s;Eliza;...{w};auto
+	s;Prim;I guess, well, I'm a cleric, so... I can heal.{w};auto
+	s;Eliza;We already have a healer.{w}{br}We don't need another.{w};auto
+	s;Prim;Well, I can fight too.{w};auto
+	s;Eliza;Really? With light magic?{w};auto
+	s;Prim;Y-yes.{w};auto
+	s;Eliza;Then let's see what you got.{w};auto
+	s;Prim;Huh?{w};auto
+	s;Eliza;Come on.{w}{br}Hit me with it!{w};auto
+	s;Prim;What... but...{w}{br}I could hurt you.{w};auto
+	s;Eliza;I doubt it.{w};auto
+	s;Prim;I won't strike you.{w};auto
+	s;Eliza;As I thought.{w}{br}You are deadweight.{w};auto
+	s;Prim;W-why are you so....{w}{br}I'm leaving...{w};auto
+	mirror;Prim
+	r;Prim
+	s;Eliza;Hmmph.{w};auto
+	r;Eliza
+	grey_base_convo;Prim meets Eliza
+	t;1
+elif;self.name == 'Ophie meets Theo'
+	m;Lady Eboshi
+	b;BaseEntrance
+	t;2
+	u;Joel;MidLeft
+	u;Ophie;FarLeft
+	s;Joel;Open up Theo.{w}{br}There's someone here for you to meet.{w};auto
+	s;Theo;Just one moment.{w};120;28;112
+	# Theo arrives
+	qu;Theo;OffscreenRight
+	move_sprite;Theo;-72,0
+	s;Theo;Joel, ol' chap, must you always interrupt me while I'm reading?{w}{br}What is it now?{w}{br}Oh pardon my manners. You have a guest.{w};auto
+	s;Joel;Our newest recruit, Ophie.{w}{br}Ophie, Theo.{w};auto
+	s;Ophie;Uh, hello.{w};auto
+	s;Theo;A pleasure. Well, don't just stand in the doorway...{w}{br}Please come in.{w};auto
+	r;Theo;Ophie;Joel
+	t;1
+	b;Study
+	t;2
+	u;Theo;Right
+	u;Ophie;Left
+	s;Theo;Welcome to my humble abode.{w}{br}So you're our newest recruit, then?{w}{br}You look a little young, eh?{w};auto
+	s;Ophie;I'm old enough to fight!{w};auto
+	s;Theo;Hah! I don't doubt such a fiery rebuttal.{w};auto
+	s;Ophie;So...{w}{br}what do you do here, then, Theo?{w};auto
+	s;Theo;Many things, Ophie, many things.{w}{br}The Resistance is not just a combat unit.{w}{br}Someone needs to handle other temporal matters--{w}{br}food, weapon repair, logistics, etcetera.{w};auto
+	s;Ophie;So you're what--{w}{br}A bookkeeper?{w};auto
+	s;Theo;Hah!{w}{br}I quite like that...{w}{br}As you can see, I do enjoy a good read now and again. And you?{w};auto
+	s;Ophie;What use are books in a fight?{w};auto
+	s;Theo;Why, books have so much to tell us!{w}{br}They are veritable fonts of knowledge.{w};auto
+	s;Ophie;Not the kind of knowledge I'm looking for.{w};auto
+	s;Theo;Hmmm.... you're a man of the sword, I take it?{w};auto
+	s;Ophie;Uh huh.{w};auto
+	s;Theo;Well, I might just have a book you'd be interested in.{w}{br}Now where is it...{w};auto
+	s;Ophie;...{w};auto
+	s;Theo;Ah, here.{w};auto
+	give_item;Ophie;Secret Book
+	s;Ophie;What's this?{w};auto
+	s;Theo;A book on combat.{w}{br}If you study it, perhaps your skills will improve.{w};auto
+	s;Ophie;Well, I'll see.{w}{br}The Rusonoon monks also loved their books.{w};auto
+	s;Theo;You've stayed with the Rusonoon monks?{w}{br}I've always hoped to visit their library...{w};auto
+	s;Ophie;They're dead.{w};auto
+	s;Theo;Oh, well...{w}{br}I'm sorry.{w};auto
+	s;Ophie;Their books didn't save them.{w};auto
+	mirror;Ophie
+	r;Ophie
+	s;Theo;Hmmm... Theo, ol'chap.{w}{br}That could have gone better.{w};auto;thought_bubble
+	r;Theo
+	grey_base_convo;Ophie meets Theo
+	t;1
+end

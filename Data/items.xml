@@ -6,18 +6,19 @@
         <id>Iron Sword</id>
         <spritetype>Sword</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Sword</weapontype>
  
-        <uses>45</uses>
+        <uses>46</uses>
         <value>10</value>
         <RNG>1</RNG>
-		<weight>3</weight>
+        <weight>5</weight>
         <desc></desc>
         
-		<MT>3</MT>
-		<HIT>90</HIT>
-		<LVL>D</LVL>
+        <MT>5</MT>
+        <HIT>90</HIT>
+        <LVL>E</LVL>
+        <crit>0</crit>
     </item>
 
     <item name="Rusted Sword">
@@ -42,18 +43,19 @@
         <id>Steel Sword</id>
         <spritetype>Sword</spritetype>
         <spriteid>2</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Sword</weapontype>
  
         <uses>30</uses>
         <value>20</value>
         <RNG>1</RNG>
         <desc></desc>
-		<weight>6</weight>
+        <weight>10</weight>
         
-		<MT>5</MT>
-		<HIT>75</HIT>
-		<LVL>C</LVL>
+        <MT>8</MT>
+        <HIT>75</HIT>
+        <LVL>D</LVL>
+        <crit>0</crit>
     </item>
 
     <item name="Mithril Sword">
@@ -209,20 +211,22 @@
         <id>Rapier</id>
         <spritetype>Sword</spritetype>
         <spriteid>9</spriteid>
-        <components>weapon,uses,weight,alternate_defense</components>
+        <components>weapon,uses,weight,crit,effective,wexp</components>
         <weapontype>Sword</weapontype>
 
-        <uses>20</uses>
-        <value>50</value>
+        <uses>40</uses>
+        <value>0</value>
         <RNG>1</RNG>
-        <desc>Ignores DEF. Targets enemy's SPD instead.</desc>
-        <weight>2</weight>
+        <desc>Eirika only, effective against horseback and armoured units.</desc>
+        <weight>5</weight>
 
-        <alternate_defense>SPD</alternate_defense>
+        <effective>Mounted,Armor;14</effective>
 
-        <MT>3</MT>
-        <HIT>75</HIT>
-        <LVL>D</LVL>
+        <MT>7</MT>
+        <HIT>95</HIT>
+        <LVL>Eirika</LVL>
+        <crit>10</crit>
+        <wexp>2</wexp>
     </item>
 
     <item name="Magebane Swd">
@@ -269,18 +273,19 @@
         <id>Iron Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Lance</weapontype>
  
         <uses>45</uses>
         <RNG>1</RNG>
         <value>8</value>
         <desc></desc>
-		<weight>5</weight>
+        <weight>8</weight>
         
-		<MT>5</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
+        <MT>7</MT>
+        <HIT>80</HIT>
+        <LVL>E</LVL>
+        <crit>0</crit>
     </item>
 
     <item name="Steel Lance">
@@ -301,22 +306,23 @@
 		<LVL>C</LVL>
     </item>
 
-    <item name="Mithril Lance">
+    <item name="Silver Lance">
         <id>Mithril Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Lance</weapontype>
  
         <uses>20</uses>
         <RNG>1</RNG>
         <value>60</value>
         <desc></desc>
-		<weight>7</weight>
+		<weight>10</weight>
         
-		<MT>9</MT>
+		<MT>14</MT>
 		<HIT>75</HIT>
-		<LVL>B</LVL>
+		<LVL>A</LVL>
+        <crit>0</crit>
     </item>
 
     <item name="Slim Lance">
@@ -487,18 +493,19 @@
         <id>Iron Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Axe</weapontype>
  
         <uses>45</uses>
         <RNG>1</RNG>
         <value>6</value>
         <desc></desc>
-		<weight>6</weight>
+        <weight>10</weight>
         
-		<MT>6</MT>
-		<HIT>70</HIT>
-		<LVL>D</LVL>
+        <MT>8</MT>
+        <HIT>75</HIT>
+        <LVL>E</LVL>
+        <crit>0</crit>
     </item>
 
     <item name="Rusted Axe">

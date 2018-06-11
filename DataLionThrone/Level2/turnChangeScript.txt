@@ -1,0 +1,41 @@
+# Level2 turnChange script
+if;gameStateObj.turncount == 2
+	m;Stalwarts Unite
+	set_cursor;Althea
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	u;Althea;Left
+	u;Drake;Right
+	s;Althea;Drake! Look!{w};auto
+	s;Drake;Oh... it's so... beautiful...{w};auto
+	s;Althea;Drake, are you alright?{w}{br}You're crying...{w};auto
+	s;Drake;Do not worry yourself, milady.{w}{br}The sight of your loyal subjects, defending Kerala's pride with their lives...{w}{br}It would bring any man to tears.{w};auto
+	s;Althea;Well, while you do that,{w}{br}I'm going to help!{w};auto
+	s;Drake;Wait! Milady, please!{w}{br}You shouldn't fight!{w};auto
+	s;Althea;I can defend myself, Drake.{w}{br}You can help if you wish.{w};auto
+	r;Drake;Althea
+	convert;Althea;player
+	convert;Drake;player
+	if;cf.OPTIONS['Display Hints']
+		s;Narrator;Your party has received two new units, Drake and Althea.{w};auto;hint
+		set_cursor;Drake
+		disp_cursor;1
+		s;Narrator;Drake is a righteous cavalier.{w}{br}Because he is mounted on a horse, he moves faster than other characters.{w}{br}He can wield both swords and lances.{w};auto;hint
+		disp_cursor;0
+		set_cursor;Althea
+		disp_cursor;1
+		s;Narrator;Althea is an anima mage.{w}{br}Unlike light mages, anima mages cannot heal.{w}{br}They do have a variety of other spells at their disposal.{w};auto;hint
+		disp_cursor;0
+		s;Narrator;Remember if you're ever unsure of something, press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_INFO'])}{black}to get more information.{w}{br}Try pressing{red}{eval:Engine.get_key_name(cf.OPTIONS['key_INFO'])}{black}on your newest units to learn more of their capabilities.{w};auto;hint
+	end
+	add_talk;Ophie;Althea
+# Add turn 4 reinforcements
+elif;gameStateObj.turncount == 4
+	set_cursor;19,13
+	wait;200
+	add_unit;S3
+	add_unit;S4
+	set_cursor;S4
+	wait;500
+end

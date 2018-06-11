@@ -1,0 +1,16 @@
+# Escape
+if;gameStateObj.turncount > 1 and not any(unit.team == 'player' for unit in gameStateObj.allunits if unit.position)
+	win_game
+elif;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 2 and self.unit.name == 'Ophie'
+	# Just in case, kill off E1, since Ophie is supposed to kill that one.
+	set_level_constant;turn2_ophie
+	kill_unit;E1
+	tutorial_mode;Spells
+	u;Prim;Left
+	u;Ophie;Right
+	s;Prim;You're hurt!{w};auto
+	s;Ophie;I-it's nothing.{w};auto
+	s;Prim;Let me fix that.{w};auto
+	r;Ophie;Prim
+	s;Narrator;Prim is a light mage.{w}{br}Light mages can heal{red}themselves{black}and their{red}allies.{black}{w}{br}Select Prim and move her adjacent to Ophie.{w};auto;hint
+end

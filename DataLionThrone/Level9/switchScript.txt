@@ -1,0 +1,21 @@
+# Level 9 Switch Script
+# Master switch is only switch
+clear_command_list_except;layer_tile_sprite
+set_origin
+show_layer;1
+show_layer;2
+# Turn tiles into bridges
+replace_tile;4,0.4,1.26,0.26,1.12,7.12,8.12,9.18,7.18,8.18,9.4,22.4,23.4,24.26,22.26,23.26,24;12
+wait;20
+# Turn tiles into bridges
+replace_tile;7,4.8,4.9,4.21,12.22,12.23,12.21,19.22,19.23,19.7,27.8,27.9,27.29,27.30,27;12
+wait;20
+# Turn tiles into bridges
+replace_tile;4,7.4,8.4,9.26,7.26,8.26,9.12,22.12,23.12,24.18,22.18,23.18,24.4,30.4,31.26,30.26,31;12
+wait;20
+# Turn tiles into bridges
+replace_tile;0,4.1,4.21,4.22,4.23,4.7,12.8,12.9,12.7,19.8,19.9,19.21,27.22,27.23,27;12
+# Finalize
+set_level_constant;master_switch
+set_tile_info;o0,0
+switch_pulled_banner

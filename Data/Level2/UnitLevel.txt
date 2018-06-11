@@ -26,8 +26,8 @@ other;0;0;Drake;7,3;None
 # Faction
 faction;Soldier;Soldier;Empire;Brigham's henchman
 #
-enemy;0;S1;Soldier;1;eIron Lance;6,3;Attack;Soldier
-enemy;0;S2;Soldier;3;eIron Lance;7,5;Attack;Soldier
+enemy;0;S1;Soldier;f1;eIron Lance;6,3;Attack;Soldier
+enemy;0;S2;Soldier;f3;eIron Lance;7,5;Attack;Soldier
 # Enemies
 # Boss
 enemy;0;0;Brigham;19,5;SoftGuard

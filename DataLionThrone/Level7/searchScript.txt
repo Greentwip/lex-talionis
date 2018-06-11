@@ -1,0 +1,14 @@
+# Level 7 Search Script
+# Give a Great Bow
+if;self.name == 'Nia'
+	set_tile_info;3,6
+	give_item;{unit};Great Bow
+# Give a Hex
+elif;self.name == 'Kayla'
+	set_tile_info;27,14
+	give_item;{unit};Hex
+# Give a Rescue
+elif;self.name == 'Renae'
+	set_tile_info;23,21
+	give_item;{unit};Rescue
+end

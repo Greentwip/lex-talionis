@@ -1,0 +1,19 @@
+# has our party size fallen below four?
+if;gameStateObj.get_total_party_members() < 5
+	minimum_number_banner
+	lose_game
+	t;1
+elif;gameStateObj.check_dead('Harold')
+	u;Soldier1;Right
+	s;Soldier1;Blast!{w}{br}They've taken the gold and the life of our commanding officer.{w}{br}Everybody fall back!{w};auto
+	r;Soldier1
+	u;Ophie;MidLeft;u;Renae;FarLeft
+	s;Ophie;We've broken their ranks!{w}{br}Now's our chance to escape.{w};auto
+	s;Renae;Score one for the Resistance!{w};auto
+	r;Ophie;Renae
+	# Increment this a couple of times to make sure the game realizes this is a good end.
+	inc_game_constant;switches
+	inc_game_constant;switches
+	inc_game_constant;switches
+	win_game
+end

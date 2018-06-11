@@ -1,0 +1,85 @@
+# Intro Script 9
+m;Sootballs
+b;Sewers
+t;2
+u;Joel;Left;u;Coyote;Right
+s;Joel;Are you sure we're going the right way, Coyote?{w};auto
+s;Coyote;Yes.{w};auto
+s;Joel;I mean, I don't want to cast doubt on your judgement, partner...{w}{br}But I reckon' I've seen that dead rat before.{w};auto
+qmove_sprite;Joel;-24,0
+u;Sam;MidLeft
+# This line is bad
+s;Sam;Joel, quit your whining and stay alert.{w}{br}Our exit should be nearby.{w}{br}Once we're there, I'll--{w};auto
+qmove_sprite;Coyote;24,0
+u;Nia;MidRight
+s;Sam;Hmm, Nia?{w};auto
+s;Nia;S-Someone else...{w}{br}Someone else here...{w};auto
+s;Nia;Many someone.{w};auto
+s;Sam;Coyote, you said this passage was abandoned.{w};auto
+s;Coyote;Old, not abandoned.{w};auto
+s;Sam;Ugh...{w}{br}Everyone, be on your guard.{w}{br}We don't want any surprises.{w};auto
+r;Joel;Nia;Sam;Coyote
+set_cursor;0,30;immediate
+end_skip
+t;1
+remove_background
+t;2
+add_unit;Ophie;0,27;;stack
+add_unit;Joel;0,27;;stack
+add_unit;Althea;0,27;;stack
+add_unit;Sam;0,27;;stack
+move_unit;Ophie;2,27
+move_unit;Althea;3,27
+move_unit;Sam;3,28
+move_unit;Joel;1,27
+start_move
+set_cursor;Ophie
+u;Ophie;MidLeft
+s;Ophie;Woah!{w};auto
+u;Joel;FarLeft
+s;Joel;By the light...{w};auto
+r;Ophie
+u;Althea;MidLeft
+s;Althea;This is no sewer...{w};auto
+r;Joel
+u;Sam;FarLeft
+s;Sam;What could be the purpose of all this?{w};auto
+r;Sam;Althea
+m;Combat Theme 4
+add_unit;Jakin;6,26;warp
+add_unit;Boaz;6,28;warp
+set_cursor;Jakin
+disp_cursor;1
+wait;1000
+disp_cursor;0
+u;Althea;MidLeft;u;Sam;FarLeft;u;Jakin;MidRight
+s;Althea;Eek!{w};auto
+s;Jakin;Purpose...{w}{br}A bird does not wonder if its purpose is to fly.{w};auto
+u;Boaz;FarRight
+s;Boaz;No time for philosophy, my friend. Prey is afoot!{w};auto
+s;Althea;Who are you...{w}{br}What is this...{w};auto
+s;Boaz;Hmm? Did you hear something, Jakin?{w};auto
+s;Jakin;...{w};auto
+qmove_sprite;Boaz;-48,0
+move_sprite;Jakin;48,0
+s;Boaz;What's a nice girl like you doing in the undercity?{w};auto
+move_sprite;Althea;12,0
+s;Althea;O-Out of our way!{w}{br}We need to get to the palace!{w};auto
+s;Boaz;Hahaha! Such vigor!{w}{br}I'll take pity on you, little girl.{w}{br}You want to cross these waters, you have to play our game.{w}{br}There's only one rule.{w}{br}If you can make it by us alive, then you're free.{w}{br}Otherwise, well... Hahaha!.{w};auto
+s;Althea;What sort of sick game is this...{w};auto
+s;Boaz;The greatest of games!{w}{br}You just have to bet your life to play!{w}{br}Hahaha!{w};auto
+s;Sam;You're insane...{w};auto
+s;Boaz;Come on Jakin. Let's scram.{w}{br}We've got to give them a fighting chance, after all.{w};auto
+r;Jakin;Boaz;Althea;Sam
+move_unit;Jakin;4,4;warp
+move_unit;Boaz;26,27;warp
+wait;500
+u;Althea;MidLeft;u;Sam;FarLeft;u;Ophie;Right
+s;Ophie;Who the hell were those jokers...{w};auto
+s;Sam;Never mind that.{w}{br}We must be right under the palace.{w}{br}There should be an exit nearby.{w}{br}Stay together, and we might make it out of this 'game' alive.{w};auto
+r;Althea;Ophie;Sam
+t;1
+arrange_formation;force
+add_unit;load_me;;immediate
+reset_units
+t;2

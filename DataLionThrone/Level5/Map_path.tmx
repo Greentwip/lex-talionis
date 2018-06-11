@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="26" height="17" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="7B007C7D" tilewidth="16" tileheight="16" tilecount="1024">
+  <image source="../../Utilities/TileSets/Desert_River/7B007C7D.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="26" height="17">
+  <data encoding="base64" compression="zlib">
+   eJyNlDtOw0AQhtd2gQISpuAOPCQKKHKGQOcIcQc4BxTQROIOUQhUMSdIEayAxEMQmRsYCh4RCFEyo52VJ8NkneLXeh/eb+ffmU0DY44jY1JoW9AOoL2mb5+GsCbxzN+GxtyB7kPb7xvL2GRr9isYTnimYsqZ3mH/D9AncdYCy+kpa9swfib2aShrNM4iKAYtUf8N4jkhTkf8k0H/io09wtmewv/+aZwRrMtB49Ce5RA4NfLa5wPqK9T3xvPwOJvEQQa2GXEu6Y4Sjw9aHkyb241sLCMS9ndCyyqI5ftfywMt5/aikoE87CPjiFgx8+9Cuf+MfE0ES3rtOC4m7B9A+w3rMubdaYUv2hwfw33HzDcXj/Ptxdg8x5rq0flnZS1TbI7zwPKAc1A3oKEp66lbcVcDMd8mP3g8ucKpBeXb0BFvxCxxIfc1sPvmwrd5xomZZ1ouyBptRZO1jXXThH6d1Q+qLuIpWC64+pP78jFeaykxVkErgf12cnXK5Xvv5N6ZiOWH7beBvhMTPVoHbYMaoIWgzANeI132nsq7d/pVzsx9miOdszzom8l3CPNhK7Is+dY6PXs4qD9PzgGh
+  </data>
+ </layer>
+</map>

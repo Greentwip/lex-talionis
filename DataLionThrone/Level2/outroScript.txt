@@ -1,0 +1,45 @@
+# Outro Script 2
+# Just in case
+convert;Althea;player
+convert;Drake;player
+victory_screen
+m;Lady Eboshi
+b;Podoma
+t;2
+u;Drake;FarRight
+u;Althea;MidRight
+u;Prim;MidLeft
+u;Ophie;FarLeft
+s;Althea;We can't thank you enough.{w}{br}If you hadn't arrived when you did...{w};auto
+s;Drake;My sincerest apologies.{w}{br}I am ever in your debt.{w};auto
+s;Prim;Oh, don't mention it!{w}{br}We Keralans should help each other in these troubled times.{w};auto
+s;Althea;That's a pleasant philosophy.{w};auto
+s;Prim;...{w};auto
+s;Althea;I mean it. Honest!{w}{br}If everyone lived that way, the world would be a much better place.{w};auto
+s;Prim;Oh, I didn't mean to question your honesty...{w}{br}I-it's just, I feel like I've seen you before.{w}{br}But I could swear I've never met you.{w};auto
+s;Althea;Hmm. It's probably nothing to fret over.{w};auto
+s;Prim;Now I remember!{w}{br}Your picture... it was carved on the Lion's Wall at the monastery!{w};auto
+s;Ophie;That's not possible, Prim.{w}{br}That carving has to be decades old...
+s;Prim;But--
+s;Ophie;And anyway, Master Yohn said everyone on that wall died in the Empire's purge.{w};auto
+s;Althea;...Your master was correct.{w}{br}They are all dead.{w};auto
+s;Drake;I think you've said enough.{w}{br}Thank you for the help, but you're upsetting my lady.{w};auto
+s;Prim;Oh, I'm sorry--{w};auto
+s;Althea;No, Drake. I can handle myself.{w}{br}...That's my mother you recognize.{w};auto
+s;Prim;The queen?{w}{br}Then... you're the queen's daughter?{w};auto
+s;Ophie;But all of the royalty were executed after the invasion.{w};auto
+s;Althea;They were, except me.{w}{br}With Drake's aid, I managed to escape.{w}{br}...I, alone among my family, survived the purge, for all the good that's done.{w}{br}Drake and I have been on the run ever since.{w};auto
+s;Ophie;So you're the one the Duke's been looking for!{w}{br}You're the fugitive!{w};auto
+s;Drake;Yes. Capturing her is the Empire's last step in securing Kerala.{w};auto
+s;Ophie;Then, we can't let them capture you!{w}{br}You have to come with us.{w}{br}We'll get you to the Resistance base.{w};auto
+s;Althea;The Resistance base?{w};auto
+s;Ophie;It's gotta be the safest place in all of Kerala for you.{w};auto
+s;Althea;Hmmm....{w};auto
+s;Drake;If they're telling the truth, milady,{w}{br}it would mean an end to all this running.{w};auto 
+s;Althea;Hmmm... I'll trust your word, um...{w};auto
+s;Ophie;Oh, sorry, your highness.{w}{br}I'm Ophie and this is Prim.{w};auto
+s;Prim;I-it's an honor to meet you, princess Althea.{w};auto
+s;Althea;Please, don't be so formal.{w}{br}I can't convince Drake to call me Althea,{w}{br}but I couldn't bear to have anyone else be so stiff.{w};auto 
+s;Ophie;Will do, Althea!{w}{br}Then let's scram, before any more Imperial thugs show up.{w};auto
+r;Drake;Althea;Prim;Ophie
+t;1

@@ -1,0 +1,75 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+#
+other;0;0;Eliza;None;None
+#
+# Factions
+faction;Soldier;Soldier;Empire;An imperial soldier
+faction;Wagon;Wagon;Empire;A wagon carrying an Imperial weapon shipment
+# Enemies
+# Turn 1 Enemies
+enemy;0;Wagon_1;Wagon;5;dRapier;0,0;ThiefEscape;Wagon
+enemy;0;pack1_1;Cavalier;3;Iron Sword;0,0;Pursue;Soldier
+enemy;0;pack1_2;Raider;4;Iron Axe;0,0;FollowWagon;Soldier
+enemy;0;Wagon_2;Wagon;5;dSteel Lance;0,0;ThiefEscape;Wagon
+enemy;0;pack2_1;Cavalier;3;Iron Sword;0,0;Pursue;Soldier
+enemy;0;pack2_2;Raider;4;Iron Axe;0,0;FollowWagon;Soldier
+# Turn 2
+enemy;0;Wagon_3;Wagon;5;dFire;0,0;ThiefEscape;Wagon
+enemy;0;pack3_1;Raider;5;Iron Axe;0,0;FollowWagon;Soldier
+enemy;0;pack3_2;Archer;3;Willow Bow;0,0;FollowWagon;Soldier
+enemy;0;Wagon_4;Wagon;5;dThunder;0,0;ThiefEscape;Wagon
+enemy;0;pack4_1;Raider;5;Iron Axe;0,0;FollowWagon;Soldier
+enemy;0;pack4_2;Archer;3;Willow Bow;0,0;FollowWagon;Soldier
+# Turn 3
+enemy;0;Wagon_5;Wagon;5;dTalisman;0,0;ThiefEscape;Wagon
+enemy;0;pack5_1;Mage;5;Fire;0,0;FollowWagon;Soldier
+# Going to try less mages
+#enemy;0;pack5_2;Shaman;4;Flux;0,0;FollowWagon;Soldier
+enemy;0;Wagon_6;Wagon;5;dJavelin;0,0;ThiefEscape;Wagon
+enemy;0;pack6_1;Mage;5;Fire;0,0;FollowWagon;Soldier
+# Going to try less mages
+#enemy;0;pack6_2;Shaman;4;Flux;0,0;FollowWagon;Soldier
+# Turn 4
+enemy;0;Wyvern_1;Dracoknight;4;Iron Lance;0,0;Pursue;Soldier
+enemy;0;Wyvern_2;Dracoknight;4;Iron Lance;0,0;Pursue;Soldier
+# Turn 5
+enemy;0;Wagon_7;Wagon;5;dShine;0,0;ThiefEscape;Wagon
+enemy;0;pack7_1;Mercenary;5;Iron Sword;0,0;FollowWagon;Soldier
+enemy;0;pack7_2;Fighter;5;Hatchet;0,0;FollowWagon;Soldier
+enemy;0;Midas;Midas;0,0;ThiefEscape
+enemy;0;Anders;Anders;0,0;Pursue
+enemy;0;pack8_1;Soldier;5;Iron Lance;0,0;1.Midas...2.20;Soldier
+# Turn 6
+#enemy;0;Wagon_9;Wagon;5;dHatchet;0,0;ThiefEscape;Wagon
+#enemy;0;pack9_1;Mercenary;5;Steel Sword;0,0;FollowWagon;Soldier
+#enemy;0;pack9_2;Fighter;5;Iron Axe;0,0;FollowWagon;Soldier
+#enemy;0;Wagon_10;Wagon;5;dSteel Sword;0,0;ThiefEscape;Wagon
+#enemy;0;pack10_1;Mercenary;5;Steel Sword;0,0;FollowWagon;Soldier
+#enemy;0;pack10_2;Fighter;5;Iron Axe;0,0;FollowWagon;Soldier
+# Turn 6
+enemy;0;Wagon_11;Wagon;5;dRuby;0,0;ThiefEscape;Wagon
+enemy;0;pack11_1;Cavalier;6;Iron Sword;0,0;FollowWagon;Soldier
+enemy;0;pack11_2;Cavalier;5;Iron Lance,Javelin;0,0;FollowWagon;Soldier
+enemy;0;Wagon_12;Wagon;5;dFly;0,0;ThiefEscape;Wagon
+enemy;0;pack12_1;Cavalier;6;Iron Sword;0,0;FollowWagon;Soldier
+enemy;0;pack12_2;Cavalier;5;Iron Lance,Javelin;0,0;FollowWagon;Soldier

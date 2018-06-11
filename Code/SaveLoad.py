@@ -275,8 +275,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             u_i['growths'] = [sum(x) for x in zip(u_i['growths'], mode_growths)]
             assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
 
-            true_level = Utility.find_true_level(class_dict[u_i['klass']]['tier'], u_i['level'], cf.CONSTANTS['max_level'])
-            num_levelups = true_level - class_dict[u_i['klass']]['tier']
+            num_levelups = u_i['level'] - 1
             stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj)
 
             u_i['stats'] = build_stat_dict(stats)
@@ -348,12 +347,16 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     # Give default previous class
     default_previous_classes(u_i['klass'], classes, class_dict)
 
+    force_fixed = False
+    if(legend['level'].startswith('f')):  # Force fixed level up
+        legend['level'] = legend['level'][1:]
+        force_fixed = True
     u_i['level'] = int(legend['level'])
     u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
     u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
-        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'], gameStateObj)
+        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'], gameStateObj.mode, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
@@ -407,7 +410,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
-        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj)
+        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj.mode)
     u_i['stats'] = build_stat_dict(stats)
     unit = UnitObject.UnitObject(u_i)
 
@@ -429,31 +432,30 @@ def build_stat_dict_plus(stats):
         st[name] = Stat(idx, stats[idx][0], stats[idx][1])
     return st
 
-def get_unit_info(class_dict, team, klass, level, item_line, gameStateObj):
+def get_unit_info(class_dict, team, klass, level, item_line, mode, force_fixed=False):
     # Handle stats
     # hp, str, mag, skl, spd, lck, def, res, con, mov
     bases = class_dict[klass]['bases'][:] # Using copies    
     growths = class_dict[klass]['growths'][:] # Using copies
 
     if team == 'player' or team == 'other': # Modify stats
-        mode_bases = gameStateObj.mode['player_bases']
-        mode_growths = gameStateObj.mode['player_growths']
-        hidden_levels = int(eval(gameStateObj.mode['autolevel_players']))
+        mode_bases = mode['player_bases']
+        mode_growths = mode['player_growths']
+        hidden_levels = int(eval(mode['autolevel_players']))
         explicit_levels = 0
     else:
-        mode_bases = gameStateObj.mode['enemy_bases']
-        mode_growths = gameStateObj.mode['enemy_growths']
-        hidden_levels = int(eval(gameStateObj.mode['autolevel_enemies']))
-        explicit_levels = int(eval(gameStateObj.mode['truelevel_enemies']))
+        mode_bases = mode['enemy_bases']
+        mode_growths = mode['enemy_growths']
+        hidden_levels = int(eval(mode['autolevel_enemies']))
+        explicit_levels = int(eval(mode['truelevel_enemies']))
 
     level += explicit_levels
 
     bases = [sum(x) for x in zip(bases, mode_bases)]
     growths = [sum(x) for x in zip(growths, mode_growths)]
 
-    true_level = Utility.find_true_level(class_dict[klass]['tier'], level, cf.CONSTANTS['max_level'])
-    num_levelups = true_level - class_dict[klass]['tier']
-    stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, class_dict[klass]['max'], gameStateObj)
+    num_levelups = level - 1
+    stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, class_dict[klass]['max'], mode, force_fixed=force_fixed)
 
     # Handle items
     items = ItemMethods.itemparser(item_line)
@@ -505,15 +507,15 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
     # handle having a status that gives stats['HP']
     unit.set_hp(int(unit.stats['HP']))
 
-def auto_level(bases, growths, num_levelups, max_stats, gameStateObj):
+def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False):
     stats = bases[:]
     growth_points = [50 for growth in growths]
     leveling = cf.CONSTANTS['enemy_leveling']
 
     if leveling == 3:
-        leveling = int(gameStateObj.mode['growths'])
+        leveling = int(mode['growths'])
 
-    if leveling == 1:  # Fixed
+    if leveling == 1 or force_fixed:  # Fixed
         for index, growth in enumerate(growths):
             growth_sum = growth * num_levelups
             stats[index] += (growth_sum + growth_points[index])//100
