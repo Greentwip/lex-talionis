@@ -241,7 +241,9 @@ class UnitData(object):
         # Give default previous class
         # default_previous_classes(u_i['klass'], classes, class_dict)
 
-        u_i['level'] = int(legend['level'])
+        if legend['level'].startswith('f'):
+            legend['level'] = legend['level'][1:]  # Remove f at the beginning
+        u_i['level'] = int(legend['level'])  # Doesn't need force_fixed since it is fixed by defualt in LevelEditor
         u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
 
         u_i['faction'] = legend['faction']

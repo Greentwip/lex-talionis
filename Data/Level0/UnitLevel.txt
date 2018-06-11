@@ -32,16 +32,16 @@ faction;Soldier;Soldier;Empire;An imperial soldier
 faction;Monk;Monk;Neutral;A monk at this monastery
 #
 # Vagnius's soldiers
-enemy;0;S1;Soldier;7;Iron Lance;18,5;SoftGuard;Soldier
-enemy;0;S2;Soldier;7;Iron Lance;19,6;SoftGuard;Soldier
-enemy;0;S3;Soldier;7;Iron Lance;19,4;SoftGuard;Soldier
+enemy;0;S1;Soldier;f7;Iron Lance;18,5;SoftGuard;Soldier
+enemy;0;S2;Soldier;f7;Iron Lance;19,6;SoftGuard;Soldier
+enemy;0;S3;Soldier;f7;Iron Lance;19,4;SoftGuard;Soldier
 # Sidney's thugs
-enemy;0;F1;Fighter;1;Hatchet;19,3;SoftGuard;Soldier
-enemy;0;F2;Fighter;1;Hatchet;18,3;SoftGuard;Soldier
+enemy;0;F1;Fighter;f1;Hatchet;19,3;SoftGuard;Soldier
+enemy;0;F2;Fighter;f1;Hatchet;18,3;SoftGuard;Soldier
 # First enemy
-enemy;0;E1;Fighter;1;eIron Axe;0,0;Pursue;Soldier;Maximum HP -5
+enemy;0;E1;Fighter;f1;eIron Axe;0,0;Pursue;Soldier;Maximum HP -5
 # Second enemies
-enemy;0;E2;Soldier;1;eSlim Lance;0,0;Pursue;Soldier
+enemy;0;E2;Soldier;f1;eSlim Lance;0,0;Pursue;Soldier
 #
 # Citizens
 other;0;0;CitizenF;1;;12,5;DoNothing;Monk
