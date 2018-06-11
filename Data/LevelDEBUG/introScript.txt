@@ -15,7 +15,7 @@ u;Soldier1;Left;u;Tana;Right
 s;Soldier1;Princess Tana! Grado's forces are approaching!
 s;Tana;What? So soon? Ah, we've had no time!
 s;Soldier1;Milady, we lack the arms to defend this place. You must return to Castle Frelia.
-s;Tana;I can't! Not yet. We haven't found Eirika and her companions yet.{w}{br}Eirika is my friend, and she needs my help. I won't abandon her.{w}{br}Oh, I know! Go and ask Father-- I mean King Hayden for more troops.
+s;Tana;I can't! Not yet. We haven't found Eirika and her companions yet.{w}{br}Eirika is my friend, and she needs my help. I won't abandon her.{w}{br}Oh, I know! Go and ask Father--{br}I mean King Hayden for more troops.
 s;Soldier1;Yes, Your Highness!
 r;Soldier1
 s;Tana;Eirika, please be safe!
@@ -91,3 +91,4 @@ s;Eirika;Please, Seth. I can't allow that to happen here.{w}{br}I don't want to 
 s;Seth;All right, Princess. I understand. Perhaps we can retake Mulan.{w}{br}But, Princess, you must act with caution. Your people need you, too.
 s;Eirika;Of course, Seth. Come on! Let's go!
 r;Seth;Eirika
+end_skip

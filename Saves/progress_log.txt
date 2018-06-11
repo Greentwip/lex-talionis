@@ -147,3 +147,103 @@ Wexp: 0, 0, 0, 0, 1, 0, 0
 Items: Glimmer Ward 30, Heal 30
 *** Convoy:
 Items: 
+
+=== Level DEBUG === Money: 0
+*** Franz: Canto
+Lvl 1, Exp 0
+Wexp: 1, 31, 0, 0, 0, 0, 0
+Items: Iron Sword 46, Iron Lance 45, Vulnerary 3, Vulnerary 3
+*** Eirika: 
+Lvl 1, Exp 0
+Wexp: 1, 0, 0, 0, 0, 0, 0
+Items: Rapier 40, Vulnerary 3
+*** Seth: Canto
+Lvl 1, Exp 0
+Wexp: 181, 181, 0, 0, 0, 0, 0
+Items: Steel Sword 30, Silver Lance 20, Vulnerary 3
+*** Gilliam: 
+Lvl 4, Exp 0
+Wexp: 0, 71, 0, 0, 0, 0, 0
+Items: Iron Lance 45
+*** Convoy:
+Items: 
+
+=== Level DEBUG === Money: 0
+*** Franz: Canto
+Lvl 1, Exp 0
+Wexp: 1, 31, 0, 0, 0, 0, 0
+Items: Iron Sword 46, Iron Lance 45, Vulnerary 3, Vulnerary 3
+*** Eirika: 
+Lvl 1, Exp 0
+Wexp: 1, 0, 0, 0, 0, 0, 0
+Items: Rapier 40, Vulnerary 3
+*** Seth: Canto
+Lvl 1, Exp 0
+Wexp: 181, 181, 0, 0, 0, 0, 0
+Items: Steel Sword 30, Silver Lance 20, Vulnerary 3
+*** Gilliam: 
+Lvl 4, Exp 0
+Wexp: 0, 71, 0, 0, 0, 0, 0
+Items: Iron Lance 45
+*** Convoy:
+Items: 
+
+=== Level DEBUG === Money: 0
+*** Franz: Canto
+Lvl 1, Exp 0
+Wexp: 1, 31, 0, 0, 0, 0, 0
+Items: Iron Sword 46, Iron Lance 45, Vulnerary 3, Vulnerary 3
+*** Eirika: 
+Lvl 1, Exp 0
+Wexp: 1, 0, 0, 0, 0, 0, 0
+Items: Rapier 40, Vulnerary 3
+*** Seth: Canto
+Lvl 1, Exp 0
+Wexp: 181, 181, 0, 0, 0, 0, 0
+Items: Steel Sword 30, Silver Lance 20, Vulnerary 3
+*** Gilliam: 
+Lvl 4, Exp 0
+Wexp: 0, 71, 0, 0, 0, 0, 0
+Items: Iron Lance 45
+*** Convoy:
+Items: 
+
+=== Level DEBUG === Money: 0
+*** Franz: Canto
+Lvl 1, Exp 0
+Wexp: 1, 31, 0, 0, 0, 0, 0
+Items: Iron Sword 46, Iron Lance 45, Vulnerary 3, Vulnerary 3
+*** Eirika: 
+Lvl 1, Exp 0
+Wexp: 1, 0, 0, 0, 0, 0, 0
+Items: Rapier 40, Vulnerary 3
+*** Seth: Canto
+Lvl 1, Exp 0
+Wexp: 181, 181, 0, 0, 0, 0, 0
+Items: Steel Sword 30, Silver Lance 20, Vulnerary 3
+*** Gilliam: 
+Lvl 4, Exp 0
+Wexp: 0, 71, 0, 0, 0, 0, 0
+Items: Iron Lance 45
+*** Convoy:
+Items: 
+
+=== Level DEBUG === Money: 0
+*** Franz: Canto
+Lvl 1, Exp 0
+Wexp: 1, 31, 0, 0, 0, 0, 0
+Items: Iron Sword 46, Iron Lance 45, Vulnerary 3, Vulnerary 3
+*** Eirika: 
+Lvl 1, Exp 0
+Wexp: 1, 0, 0, 0, 0, 0, 0
+Items: Rapier 40, Vulnerary 3
+*** Seth: Canto
+Lvl 1, Exp 0
+Wexp: 181, 181, 0, 0, 0, 0, 0
+Items: Steel Sword 30, Silver Lance 20, Vulnerary 3
+*** Gilliam: 
+Lvl 4, Exp 0
+Wexp: 0, 71, 0, 0, 0, 0, 0
+Items: Iron Lance 45
+*** Convoy:
+Items: 

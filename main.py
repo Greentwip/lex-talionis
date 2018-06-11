@@ -63,7 +63,8 @@ def run(gameStateObj, metaDataObj):
         # === UPDATE USER STATES ===
         mapSurf, repeat = gameStateObj.stateMachine.update(eventList, gameStateObj, metaDataObj)
         while repeat:
-            mapSurf, repeat = gameStateObj.stateMachine.update(eventList, gameStateObj, metaDataObj)
+            # We don't need to process the eventList more than once I think
+            mapSurf, repeat = gameStateObj.stateMachine.update([], gameStateObj, metaDataObj)
         # Update global sprite counters
         GC.PASSIVESPRITECOUNTER.update()
         GC.ACTIVESPRITECOUNTER.update()
