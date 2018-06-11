@@ -275,8 +275,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             u_i['growths'] = [sum(x) for x in zip(u_i['growths'], mode_growths)]
             assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
 
-            true_level = Utility.find_true_level(class_dict[u_i['klass']]['tier'], u_i['level'], cf.CONSTANTS['max_level'])
-            num_levelups = true_level - class_dict[u_i['klass']]['tier']
+            num_levelups = u_i['level'] - 1
             stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj)
 
             u_i['stats'] = build_stat_dict(stats)
@@ -455,8 +454,7 @@ def get_unit_info(class_dict, team, klass, level, item_line, mode, force_fixed=F
     bases = [sum(x) for x in zip(bases, mode_bases)]
     growths = [sum(x) for x in zip(growths, mode_growths)]
 
-    true_level = Utility.find_true_level(class_dict[klass]['tier'], level, cf.CONSTANTS['max_level'])
-    num_levelups = true_level - class_dict[klass]['tier']
+    num_levelups = level - 1
     stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, class_dict[klass]['max'], mode, force_fixed=force_fixed)
 
     # Handle items

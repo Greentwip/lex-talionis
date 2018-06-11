@@ -792,9 +792,9 @@ class UnitObject(object):
         self.currenthp = int(hp)
         self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
 
-    def get_true_level(self, metaDataObj):
+    def get_comparison_level(self, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
-        return Utility.find_true_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])
+        return Utility.comparison_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])
 
     def can_promote_using(self, item, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
