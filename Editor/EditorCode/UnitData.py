@@ -521,6 +521,8 @@ class ReinforcementMenu(UnitMenu):
 
         self.list.setSortingEnabled(True)
 
+        self.last_touched_generic = None
+
     # def trigger(self):
     #     self.view.tool = 'Reinforcements'
 
@@ -576,10 +578,14 @@ class ReinforcementMenu(UnitMenu):
 
     def create_unit(self):
         if self.unit_data.factions:
-            created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Reinforcement", "Enter values for reinforcement:")
+            unit = self.get_current_unit()
+            if not unit.generic:
+                unit = self.last_touched_generic
+            created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Reinforcement", "Enter values for reinforcement:", unit)
             if ok:
                 self.unit_data.add_reinforcement(created_unit)
                 self.add_unit(created_unit)            
+                self.last_touched_generic = created_unit
                 self.window.update_view()
         else:
             # Show pop-up
@@ -618,6 +624,8 @@ class ReinforcementMenu(UnitMenu):
             self.list.insertItem(idx, item)
             self.list.setCurrentRow(self.list.row(item))
             self.unit_data.replace_reinforcement(idx, modified_unit)
+            if modified_unit.generic:
+                self.last_touched_generic = modified_unit
             print(idx, self.list.row(item))
             self.window.update_view()
 

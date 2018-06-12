@@ -109,7 +109,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
 
         # Pack
         self.pack = QtGui.QLineEdit(parent.current_pack())
-        self.form.addRow('Pack:', self.pack)
+        self.form.addRow('Group:', self.pack)
 
         self.create_menus()
 

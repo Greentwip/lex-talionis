@@ -34,6 +34,8 @@ class TriggerMenu(QtGui.QWidget):
             item = QtGui.QListWidgetItem(trigger)
             self.list.addItem(item)
             self.unit_data.add_trigger(trigger)
+            self.list.scrollToBottom()
+            self.list.setCurrentItem(item)
 
     def remove_trigger(self):
         idx = self.list.currentRow()
