@@ -197,15 +197,14 @@ def build_event_list():
 QUIT = pygame.QUIT
 KEYUP = pygame.KEYUP
 KEYDOWN = pygame.KEYDOWN
-key_map = {'w': pygame.K_w,
-           'j': pygame.K_j,
-           '5': pygame.K_5, 
-           'u': pygame.K_u,
-           'p': pygame.K_p,
-           'l': pygame.K_l,
-           'e': pygame.K_e,
-           't': pygame.K_t,
-           'd': pygame.K_d}
+key_map = {'d': pygame.K_d,
+           'enter': pygame.K_RETURN,
+           'backspace': pygame.K_BACKSPACE,
+           'up': pygame.K_UP,
+           'ctrl': pygame.K_LCTRL}
+
+def get_pressed():
+    return pygame.key.get_pressed()
 
 def joystick_avail():
     return pygame.joystick.get_count()

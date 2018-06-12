@@ -16,8 +16,11 @@ hardset_positions = {'OffscreenLeft': -96, 'FarLeft': -24, 'Left': 0, 'MidLeft':
 class Dialogue_Scene(object):
     def __init__(self, scene, unit=None, unit2=None, name=None, tile_pos=None, if_flag=False):
         self.scene = scene
-        with open(scene, 'r') as scenefp: # Open this scene's file database
-            self.scene_lines = scenefp.readlines()
+        if self.scene:
+            with open(scene, 'r') as scenefp: # Open this scene's file database
+                self.scene_lines = scenefp.readlines()
+        else:
+            self.scene_lines = []
         if cf.OPTIONS['debug']: 
             if not self.count_if_statements():
                 logger.error('ERROR: Incorrect number of if and end statements! %s', scene)
@@ -404,11 +407,7 @@ class Dialogue_Scene(object):
 
         # Has the unit equip an item in their inventory if and only if that item is in their inventory by name
         elif line[0] == 'equip_item':
-            if line[1] == '{unit}':
-                name = self.unit.name
-            else:
-                name = line[1]
-            receiver = gameStateObj.get_unit_from_name(name)
+            receiver = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if receiver:
                 if len(line) > 2:
                     for item in receiver.items:
@@ -743,7 +742,7 @@ class Dialogue_Scene(object):
                 self.unit.reset()
             else:
                 for unit in gameStateObj.allunits:
-                    if unit.id == line[1] or unit.event_id == line[1] or unit.name == line[1] or unit.team == line[1]:
+                    if line[1] in (unit.id, unit.event_id, unit.name, unit.team):
                         unit.reset()
         elif line[0] == 'remove_enemies':
             if len(line) > 1:

@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 # === Finite State Machine Object ===============================
 class StateMachine(object):
     def __init__(self, state_list=[], temp_state=[]):
-        import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu
+        import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu, DebugMode
         self.all_states = {'free': FreeState,
                            'turn_change': TurnChangeState,
                            'move': MoveState,
@@ -107,7 +107,8 @@ class StateMachine(object):
                            'config_menu': OptionsMenu.OptionsMenu,
                            'status_menu': MenuFunctions.StatusMenu,
                            'info_menu': InfoMenu.InfoMenu,
-                           'unit_menu': UnitMenu.UnitMenu}
+                           'unit_menu': UnitMenu.UnitMenu,
+                           'debug': DebugMode.DebugState}
         self.state = []
         for state_name in state_list:
             self.state.append(self.all_states[state_name](state_name))
@@ -274,71 +275,11 @@ class State(object):
                 gameStateObj.childMenu.draw(mapSurf, gameStateObj)
         return mapSurf
 
-def handle_debug(eventList, gameStateObj, metaDataObj):
-    # === For debugging purposes only ===
+def wizard_mode(eventList, gameStateObj):
     for event in eventList:
         if event.type == Engine.KEYUP:
-            # Win the game
-            if event.key == Engine.key_map['w']:
-                gameStateObj.statedict['levelIsComplete'] = 'win'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt'))
-                gameStateObj.stateMachine.changeState('dialogue')
-            # Do 2 damage to unit
-            elif event.key == Engine.key_map['d']: # For debugging purposes only
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.change_hp(-2)
-            # Lose the game
-            elif event.key == Engine.key_map['l']:
-                gameStateObj.statedict['levelIsComplete'] = 'loss'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt'))
-                gameStateObj.stateMachine.changeState('dialogue')
-            # Level up unit by 100 or by 14
-            elif event.key == Engine.key_map['u'] or event.key == Engine.key_map['j']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    if event.key == Engine.key_map['j']:
-                        exp = 14
-                    else:
-                        exp = 100
-                    # Also handles actually adding the exp to the unit
-                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=gameStateObj.cursor.currentHoveredUnit, exp=exp))
-                    gameStateObj.stateMachine.changeState('expgain')
-                return
-            # Give unit ten exp
-            elif event.key == Engine.key_map['e']: # For debugging purposes only
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.exp += 10
-            # Kill unit
-            elif event.key == Engine.key_map['p']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.isDying = True
-                    gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=gameStateObj.cursor.currentHoveredUnit))
-                    gameStateObj.stateMachine.changeState('dialogue')
-                return
-            # Charge all skills and remove all non-class skills
-            elif event.key == Engine.key_map['t']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if skill.active]:
-                        skill.active.current_charge = skill.active.required_charge
-                        gameStateObj.cursor.currentHoveredUnit.tags.add('ActiveSkillCharged')
-                    # for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if not skill.class_skill]:
-                    #     StatusObject.HandleStatusRemoval(skill, gameStateObj.cursor.currentHoveredUnit, gameStateObj)
-            # Increase all wexp by 5
-            elif event.key == Engine.key_map['5']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.increase_wexp(5, gameStateObj)
+            if event.key == Engine.key_map['d']:
+                gameStateObj.stateMachine.changeState('debug')
 
 class TurnChangeState(State):
     def begin(self, gameStateObj, metaDataObj):
@@ -461,7 +402,7 @@ class FreeState(State):
             GC.SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
         elif cf.OPTIONS['cheat']:
-            handle_debug(eventList, gameStateObj, metaDataObj)
+            wizard_mode(eventList, gameStateObj)
         # Moved down here so it is done last
         gameStateObj.cursor.take_input(eventList, gameStateObj)
 
