@@ -1,0 +1,148 @@
+# Turn Change Script
+# Turn 2
+if;gameStateObj.turncount == 1
+	if;cf.OPTIONS['Display Hints']
+		tutorial_mode;Wait
+		set_cursor;0,0;immediate
+		s;Narrator;Your units are blue.{w}{br}Enemy units are red.{w}{br}Ally units are green.{w}{br}To win this chapter, both of your blue units must escape.{w};auto;hint
+		# Show Highlight
+		disp_cursor;1
+		s;Narrator;Select each of your units and move them as close as possible to the highlighted tile.{w};auto;hint
+		disp_cursor;0
+	end
+	u;Prim;Right
+	u;Ophie;Left
+	s;Prim;Ophie, let's go! We need to run!{w};auto
+	s;Ophie;Right.{w};auto
+	r;Prim;Ophie
+	set_cursor;Ophie;immediate
+elif;gameStateObj.turncount == 2
+	m;Meet the Sage
+	set_cursor;Yohn
+	set_cursor;13,5
+	move_unit;Yohn;13,5
+	start_move
+	set_cursor;S1
+	move_unit;S1;14,5
+	start_move
+	# Swordmaster dude approaches enemies!
+	u;Soldier2;Right
+	u;Yohn;Left
+	s;Soldier2;Hah! You think you're tough enough to take us on, old man?{w};auto
+	s;Yohn;You are filled with rage, my child. Allow me to release your anger!{w};auto
+	r;Soldier2;Yohn
+	# Combat
+	interact_unit;Yohn;S1;Hit,Hit,Hit
+	u;Yohn;Left
+	s;Yohn;My blade sings once again.{w}{br}It is a pity one so young had to suffer for it.{w};auto
+	r;Yohn
+	# Pan to Ophie and Prim
+	set_cursor;0,0
+	add_unit;E1;0,4
+	move_unit;E1;4,5
+	start_move
+	set_cursor;E1;immediate
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	# An enemy cuts off their escape
+	u;Bandit1;Left
+	u;Ophie;MidRight
+	u;Prim;FarRight
+	s;Bandit1;Heh! Caught ya!{w};auto
+	s;Ophie;Behind me, Prim.{w}{br}This one's mine!{w};auto
+	r;Bandit1;Ophie;Prim
+	# Hint
+	if;cf.OPTIONS['Display Hints']
+		tutorial_mode;Attack
+		set_cursor;E1
+		disp_cursor;1
+		s;Narrator;You'll need to defeat this fighter to proceed. Select Ophie first.{w};auto;hint
+		disp_cursor;0
+	end
+# Begin turn 3
+elif;gameStateObj.turncount == 3
+	m;Meet the Sage
+	set_cursor;Vagnius
+	move_unit;S2;14,5
+	move_unit;S3;13,4
+	start_move
+	u;Soldier1;Right
+	u;Yohn;Left
+	s;Soldier1;You need to learn your place!{w};auto
+	r;Soldier1;Yohn
+	# Combat1
+	interact_unit;S2;Yohn;Hit,Hit,Hit
+	u;Soldier1;Right
+	u;Yohn;Left
+	s;Soldier1;Urgh...{w};auto
+	r;Soldier1
+	u;Soldier2;FarRight
+	s;Soldier2;Die, Keralan scum!{w};auto
+	r;Soldier2;Yohn
+	# Combat2
+	interact_unit;S3;Yohn;Hit,Hit,Hit
+	wait;500
+	# Back to Prim
+	set_cursor;0,4
+	wait;500
+	add_unit;E2;0,4
+	move_unit;E2;2,4
+	start_move
+	set_cursor;2,4;immediate
+	disp_cursor;1
+	wait;1000
+	disp_cursor;0
+	u;Soldier4;Left
+	u;Prim;MidRight
+	u;Ophie;FarRight
+	s;Soldier4;There's nowhere to run.{w}{br}Give up now and I'll go easy on you.{w};auto
+	s;Ophie;Never! Out of our way!{w}{br}Prim, stay behind me!{w};auto
+	s;Prim;No! I can fight too!{w}{br}You stay behind me!{w};auto
+	r;Ophie;Prim;Soldier4
+	if;cf.OPTIONS['Display Hints']
+		s;Narrator;Just as swords are strong vs. axes,{w}{br}axes are strong vs. lances,{w}{br}and lances are strong vs. swords.{w}{br}This enemy soldier wields lances.{w}{br}Lances have advantage over Ophie's swords.{w};auto;hint
+		s;Narrator;Luckily, as a light mage, Prim can also engage in combat.{w}{br}Magic is special. It can be used at range.{w}{br}Prim doesn't have to be next to enemies to fight.{w};auto;hint
+		s;Narrator;Try moving Prim two tiles away from the soldier and selecting{red}Attack.{black}{w}{br}This way, she can weaken him.{w}{br}Then, Ophie can finish him without fear of a counterattack.{w};auto;hint
+		# Tutorial mode is finished
+		tutorial_mode;0
+	end
+# Begin turn 4
+elif;gameStateObj.turncount == 4 
+	m;Mount Briggs
+	set_cursor;Vagnius
+	move_unit;Yohn;18,5
+	start_move
+	u;Yohn;Left
+	u;Vagnius;Right
+	s;Vagnius;Imbeciles!{w}{br}I'll deal with this one myself.{w};auto
+	s;Yohn;You may find that easier said than done.{w};auto
+	s;Vagnius;Hah. You prideful fool...{w};auto
+	r;Vagnius;Yohn
+	interact_unit;Yohn;Vagnius;Hit,Hit,Hit
+	# Vagnius wrecks Master Yohn
+	u;Yohn;FarLeft
+	s;Yohn;...{w};auto
+	r;Yohn
+	remove_unit;Yohn
+	set_cursor;Ophie
+	u;Ophie;MidLeft
+	s;Ophie;NO!! Master Yohn!{w};auto
+	move_sprite;Ophie;144,0
+	u;Prim;FarLeft
+	mirror;Ophie
+	s;Prim;O-Ophie! He said not to look back!{w};auto
+	s;Ophie;Argh!... B-But...{w};auto
+	s;Prim;Ophie...{w};auto
+	s;Ophie;How can I...?{w};auto
+	bop;Prim
+	s;Prim;Snap out of it!{w}{br}Just think! What w-would Master Yohn have wanted?{w};auto
+	s;Ophie;... Damn it!{w}{br}Come on then. Our master's sacrifice will not be in vain.{w};auto
+	r;Prim;Ophie
+	change_ai;Vagnius;Pursue
+	if;cf.OPTIONS['Display Hints']
+		s;Narrator;With their mentor dead, Ophie and Prim must now set out on their own.{w}{clear}To find more information on something, press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_INFO'])}.{black}{w};auto;hint
+		s;Narrator;If you are ever unsure of your goal,{w}{br}check your objective by pressing{red}{eval:Engine.get_key_name(cf.OPTIONS['key_SELECT'])}{black}on an unoccupied tile.{w}{br}Then select{red}Objective{black}from the Menu.{w};auto;hint
+		s;Narrator;If this isn't your first time playing,{w}{br}you can select{red}Options{black}from the Menu to turn off these hints.{w};auto;hint
+	end
+end

@@ -1,0 +1,13 @@
+pose;Attack
+start_loop
+    f;1;shield0
+    f;1;shield1
+    f;1;shield2
+    f;1;shield3
+    f;1;shield4
+    f;1;shield5
+    f;1;shield6
+    f;1;shield7
+    f;1;shield8
+    f;1;shield9
+end_loop

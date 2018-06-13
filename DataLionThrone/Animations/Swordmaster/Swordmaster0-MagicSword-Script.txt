@@ -1,0 +1,46 @@
+pose;Dodge
+f;1;Sword_000
+f;31;Sword_084
+
+pose;Attack
+f;6;Sword_000
+sound;Weapon Pull
+f;1;Sword_000
+f;3;Sword_078
+spell
+f;1;Sword_079
+start_loop
+f;4;Sword_079
+end_loop
+f;4;Sword_079
+sound;Weapon Push
+f;1;Sword_079
+f;4;Sword_078
+
+pose;Critical
+f;6;Sword_000
+sound;Weapon Pull
+f;1;Sword_000
+f;3;Sword_078
+f;5;Sword_080
+f;4;Sword_081
+f;1;Sword_080
+f;3;Sword_081
+f;2;Sword_080
+f;4;Sword_081
+f;4;Sword_080
+f;2;Sword_081
+f;12;Sword_082
+spell
+f;1;Sword_083
+start_loop
+f;4;Sword_083
+end_loop
+f;4;Sword_083
+sound;Weapon Push
+f;1;Sword_083
+f;4;Sword_078
+
+pose;Stand
+f;4;Sword_000
+
