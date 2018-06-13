@@ -21,7 +21,8 @@ class DebugState(StateMachine.State):
             if event.type == Engine.KEYDOWN:
                 if event.key == Engine.key_map['enter']:
                     self.parse_command(self.current_command, gameStateObj)
-                    commands.append(self.current_command)
+                    if self.current_command != 'q' and self.current_command != 'exit':
+                        commands.append(self.current_command)
                     self.current_command = ''
                     self.buffer_count = 0
                 elif event.key == Engine.key_map['backspace']:

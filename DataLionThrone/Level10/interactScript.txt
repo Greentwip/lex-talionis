@@ -1,4 +1,0 @@
-# Ulver dies
-if;gameStateObj.check_dead('Ulver')
-    win_game
-end

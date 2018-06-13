@@ -137,14 +137,15 @@ class UnitData(object):
             self.triggers[unitLine[1]].add_unit(unit, unitLine[3], unitLine[4])
         else: # For now it just loads every unit, irrespective of mode
             # New Unit
-            if unitLine[1] == "0":
-                if len(unitLine) > 7:
-                    self.create_unit_from_line(unitLine)
-                else:
-                    self.add_unit_from_line(unitLine)
-            # Saved Unit
-            elif unitLine[1] == "1":
-                self.saved_unit_from_line(unitLine)
+            # if unitLine[1] == "0":
+            if len(unitLine) > 7:
+                self.create_unit_from_line(unitLine)
+            else:
+                self.add_unit_from_line(unitLine)
+            # # Saved Unit
+            # elif unitLine[1] == "1":
+            #     print("Saved!")
+            #     self.saved_unit_from_line(unitLine)
         return current_mode
 
     def add_unit_from_line(self, unitLine):
@@ -159,6 +160,10 @@ class UnitData(object):
         cur_unit.position = position
         cur_unit.ai = legend['ai']
         cur_unit.team = legend['team']
+        if legend['unit_type'] == '1':
+            cur_unit.saved = True
+        else:
+            cur_unit.saved = False
         if legend['event_id'] != "0": # unit does not start on board
             if '_' in legend['event_id']:
                 cur_unit.pack, cur_unit.event_id = legend['event_id'].split('_')
@@ -450,7 +455,7 @@ class UnitMenu(QtGui.QWidget):
     def create_unit(self):
         if self.unit_data.factions:
             unit = self.get_current_unit()
-            if not unit.generic:
+            if unit and not unit.generic:
                 unit = self.last_touched_generic
             created_unit, ok = UnitDialogs.CreateUnitDialog.getUnit(self, "Create Unit", "Enter values for unit:", unit)
             if ok:
@@ -579,7 +584,7 @@ class ReinforcementMenu(UnitMenu):
     def create_unit(self):
         if self.unit_data.factions:
             unit = self.get_current_unit()
-            if not unit.generic:
+            if unit and not unit.generic:
                 unit = self.last_touched_generic
             created_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Reinforcement", "Enter values for reinforcement:", unit)
             if ok:

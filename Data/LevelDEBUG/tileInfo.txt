@@ -1,5 +1,2 @@
-13,6:Village=right
-10,4:Village=left
-7,7:Status=tile_Regeneration
-7,2:Status=tile_Regeneration
-2,2:Lord_Seize=win;Status=tile_Regeneration
+7,6:Shop=Iron Sword,Iron Axe,Iron Lance,Willow Bow
+0,15:Shop=Iron Sword,Iron Axe,Iron Lance,Willow Bow,Wind,Fire,Thunder,Glimmer,Shine

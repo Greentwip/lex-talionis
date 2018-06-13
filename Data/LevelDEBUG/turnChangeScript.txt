@@ -1,18 +1,7 @@
-if;gameStateObj.turncount == 2
-    # Move Franz and Gilliam into the game
-    trigger;Franz
-    # Hover cursor over Franz
-    set_cursor;Franz
-    disp_cursor;1
-    wait;1000
-    disp_cursor;0
-    # Franz and Gilliam converse
-    u;Franz;Left;u;Gilliam;Right
-    s;Franz;Sir Gilliam, is that Mulan? Have we reached Frelia's border already?
-    s;Gilliam;Aye, we have. Her Highness Princess Tana should be inside the castle.
-    s;Franz;But look--the countryside is crawling with Grado soldiers!{w}{br}Where's the castle guard? Has Mulan fallen? Are we too late?
-    s;Gilliam;Too tough to say from here.{w}{br}Princess Tana's in no danger if they want her as a bargaining tool.{w}{br}We men of the Eastern Watch will see her to safety.
-    s;Franz;Yes... Yes, of course.{br}We mustn't give up. We must move.{w}{br}We must retake the castle. Then, we ride forth to Princess Eirika's aid.
-    s;Gilliam;I've stronger armor than you do. I'll take the lead. Watch my back.
-    r;Franz;Gilliam
+# Event script that is called every time the player's turn starts. Normally handles reinforcements
+if;gameStateObj.turncount == 4
+    set_cursor;0,0;force_hold
+    wait;500
+	change_tile_sprite;0,0;Door
+    wait;2000
 end
