@@ -19,26 +19,6 @@
         <desc>An ordinary commoner.</desc>
     </class>
 
-<!-- Lord Classes -->
-    <class id="Lord">
-        <short_name>Lord</short_name>
-        <long_name>Lord</long_name>
-        <tier>1</tier>
-        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
-        <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
-        <promotes_from></promotes_from>
-        <turns_into></turns_into>
-        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>4</movement_group>
-        <tags></tags>
-        <skills></skills>
-        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-        <growths>120,60,0,55,60,55,20,20</growths>
-        <bases>12,3,0,6,6,0,2,1,3,5</bases>
-        <max>40,20,20,20,20,30,20,20,20</max>
-        <desc>A noble of some renown</desc>
-    </class>
-
 <!-- Normal Classes -->
     <!-- Myrmidon -> Swordmaster -->
     <class id="Myrmidon">
