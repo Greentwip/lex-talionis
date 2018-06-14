@@ -276,7 +276,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
 
             num_levelups = u_i['level'] - 1
-            stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj)
+            stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj.mode)
 
             u_i['stats'] = build_stat_dict(stats)
             logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
