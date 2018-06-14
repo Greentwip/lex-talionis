@@ -622,11 +622,11 @@ class MainEditor(QtGui.QMainWindow):
                 pos_str = ','.join(str(p) for p in unit.position)
             else:
                 pos_str = 'None'
-            ai_str = unit.ai + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
-            event_id_str = (unit.pack + '_' + str(unit.event_id) if unit.pack else str(unit.event_id)) if unit.event_id else '0'
+            ai_str = str(unit.ai) + (('_' + str(unit.ai_group)) if unit.ai_group else '') 
+            event_id_str = (str(unit.pack) + '_' + str(unit.event_id) if unit.pack else str(unit.event_id)) if unit.event_id else '0'
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
-                klass_str = unit.klass + ('F' if unit.gender >= 5 else '')
+                klass_str = str(unit.klass) + ('F' if unit.gender >= 5 else '')
                 order = (unit.team, '0', event_id_str, klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.faction)
             else:
                 order = (unit.team, '1' if unit.saved else '0', event_id_str, unit.name, pos_str, ai_str)
