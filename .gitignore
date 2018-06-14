@@ -12,6 +12,7 @@ Audio/
 # Builds
 build/
 dist/
+*.exe
 
 # Windows image file caches
 Thumbs.db
