@@ -30,7 +30,7 @@ class GameStateObj(object):
         # playtime
         self.playtime = 0
         # mode
-        self.mode = None
+        self.mode = self.default_mode()
 
     # Things that change between levels always
     def start(self, allreinforcements, prefabs, objective, music):

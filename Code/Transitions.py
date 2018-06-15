@@ -956,7 +956,11 @@ class GameOverState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         self.lastUpdate = Engine.get_time()
         self.currentTime = self.lastUpdate
-        self.GOStateMachine = CustomObjects.StateMachine('initial_transition')
+        if 'no_fade_to_game_over' in gameStateObj.level_constants:
+            init_state = 'text_fade_in'
+        else:
+            init_state = 'initial_transition'
+        self.GOStateMachine = CustomObjects.StateMachine(init_state)
         # Other states are text_fade_in, bg_fade_in, stasis
 
         self.transparency = 100
@@ -1011,7 +1015,7 @@ class GameOverState(StateMachine.State):
         surf.blit(s, (0, 0))
 
         # Game Over Background
-        if self.GOStateMachine.getState() in ['bg_fade_in', 'stasis']:
+        if self.GOStateMachine.getState() in ('bg_fade_in', 'stasis'):
             GOSurf = self.MovingSurf.copy()
             # Flicker image transparent
             if self.GOStateMachine.getState() == 'bg_fade_in':
@@ -1024,7 +1028,7 @@ class GameOverState(StateMachine.State):
             if 256 + top < GC.WINHEIGHT:
                 surf.blit(GOSurf, (0, 256+top))
 
-        if self.GOStateMachine.getState() in ['text_fade_in', 'bg_fade_in', 'stasis']:
+        if self.GOStateMachine.getState() in ('text_fade_in', 'bg_fade_in', 'stasis'):
             TextSurf = GC.IMAGESDICT['GameOverText'].copy()
             if self.GOStateMachine.getState() == 'text_fade_in':
                 alpha = 255 - int(2.55*self.transparency)

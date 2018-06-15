@@ -585,7 +585,7 @@ class MiniMap(object):
             value = 9
         elif len(intersection) == 1:
             value = intersection[0]
-        elif len(intersection) == 2:
+        elif len(intersection) >= 2:
             value = sorted(intersection)[-1]
         if value == 0:
             row, column = 0, 7

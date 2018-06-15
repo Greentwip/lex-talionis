@@ -65,7 +65,7 @@ class ItemObject(object):
     def draw(self, surf, topleft, white=False, cooldown=False):
         ItemSurf = self.image
         if white:
-            ItemSurf = Image_Modification.flickerImageWhite(ItemSurf.convert_alpha(), 255)
+            ItemSurf = Image_Modification.flickerImageWhite(ItemSurf.convert_alpha(), abs(255 - Engine.get_time()%510))
             # ItemSurf = Image_Modification.transition_image_white(ItemSurf)
         surf.blit(ItemSurf, topleft)
         # if self.locked:

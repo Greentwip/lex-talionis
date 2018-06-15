@@ -452,6 +452,16 @@ class Dialogue_Scene(object):
             gameStateObj.stateMachine.changeState('expgain')
             self.current_state = "Paused"
 
+        # destroy a destructible object
+        elif line[0] == 'destroy':
+            if len(line) > 1:
+                pos = self.parse_pos(line[1])
+            else:
+                pos = self.tile_pos
+            tile_info = gameStateObj.map.tile_info_dict[pos]
+            if 'Destructible' in tile_info:
+                gameStateObj.map.destroy(gameStateObj.map.tiles[pos], gameStateObj)
+
         # === HANDLES UNITS ON MAP
         elif line[0] == 'add_unit':
             # Read input

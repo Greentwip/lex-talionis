@@ -54,6 +54,14 @@ class DebugState(StateMachine.State):
                 for skill in [skill for skill in cur_unit.status_effects if skill.active]:
                     skill.active.current_charge = skill.active.required_charge
                     cur_unit.tags.add('ActiveSkillCharged')
+        elif split_command[0] == 'win_game':
+            gameStateObj.statedict['levelIsComplete'] = 'win'
+            gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt'))
+            gameStateObj.stateMachine.changeState('dialogue')
+        elif split_command[0] == 'lose_game':
+            gameStateObj.statedict['levelIsComplete'] = 'loss'
+            gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt'))
+            gameStateObj.stateMachine.changeState('dialogue')
         else:  # Dialog command
             if cur_unit:
                 self.dialogue_scene.unit = cur_unit
