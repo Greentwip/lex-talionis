@@ -7,17 +7,17 @@
 # Possible States for AI1:
     - 1:    Move
     - 2:    Attack
-    - 4:    Attack Tiles
-    - 8:    Villages
-    - 16:   Unlock Chests and Doors
-    - 32:   Use Thief_Escape event tiles
-    - 64:   Use regular Escape event tiles
-    - 128:  Steal
+    - 4:    Steal
+    - 8:    Attack Tiles
+    - 16:   Destructible Tiles (like Villages)
+    - 32:   Unlock Chests and Doors
+    - 64:   Use Thief_Escape event tiles
+    - 128:  Use regular Escape event tiles
 # Possible States for AI2:
     - 0: Do not move
     - 1: Move towards opponents
     - 2: Move towards allies
-    - 3: move towards unlooted and unclosed villages or HP
+    - 3: move towards unlooted destructible objects or HP
     - 4: move towards unlooted and unopened chests/doors
     - 5: move towards escape tiles
     - 6: move towards thief escape tiles
@@ -44,7 +44,7 @@ PRIMARYAI = {'Move': 1,
              'Attack': 2,
              'Steal': 4,
              'Attack Tile': 8,
-             'Village': 16,
+             'Destructible': 16,
              'Unlock': 32,
              'Thief Escape': 64,
              'Escape': 128}
@@ -152,8 +152,8 @@ class AI(object):
                 self.state = 'Loot'
             
             elif self.state == 'Loot':
-                if self.ai1_state & PRIMARYAI['Village']:
-                    success = self.run_simple_ai(self.valid_moves, 'Village', gameStateObj)
+                if self.ai1_state & PRIMARYAI['Destructible']:
+                    success = self.run_simple_ai(self.valid_moves, 'Destructible', gameStateObj)
                 self.state = 'Secondary_Init'
 
             elif self.state == 'Secondary_Init':
@@ -167,7 +167,7 @@ class AI(object):
                                               unit is not self.unit and unit.team not in self.team_ignore and unit.name not in self.name_ignore]
                 elif self.ai2_state == 3:
                     self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
-                                              if 'Village' in gameStateObj.map.tile_info_dict[position] or
+                                              if 'Destructible' in gameStateObj.map.tile_info_dict[position] or
                                               'HP' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 4: 
                     self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
@@ -271,11 +271,13 @@ class AI(object):
                         self.item_to_use.droppable = True
                     self.unit.handle_steal_banner(self.item_to_use, gameStateObj)
             else:
-                if 'Village' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
-                    gameStateObj.map.destroy(gameStateObj.map.tiles[self.target_to_interact_with], gameStateObj)
-                elif 'Locked' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
+                tile_info = gameStateObj.map.tile_info_dict[self.target_to_interact_with]
+                tile = gameStateObj.map.tiles[self.target_to_interact_with]
+                if 'Destructible' in tile_info:
+                    gameStateObj.map.destroy(tile, gameStateObj)
+                elif 'Locked' in tile_info:
                     self.unit.unlock(self.target_to_interact_with, gameStateObj)
-                elif 'Escape' or 'ThiefEscape' in gameStateObj.map.tile_info_dict[self.target_to_interact_with]:
+                elif 'Escape' or 'ThiefEscape' in tile_info:
                     if self.unit.position != self.target_to_interact_with:
                         return # Didn't actually reach ThiefEscape point
                     self.unit.escape(gameStateObj)

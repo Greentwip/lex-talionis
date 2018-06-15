@@ -652,6 +652,7 @@ class ReinforcementMenu(UnitMenu):
                         created_unit = unit.copy()
                         created_unit.pack = new_name
                         created_unit.event_id = counter
+                        created_unit.position = unit.position  # Make sure position is copied over
                         self.unit_data.add_reinforcement(created_unit)
                         self.add_unit(created_unit)              
                 self.window.update_view()
