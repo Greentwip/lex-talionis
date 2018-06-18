@@ -15,9 +15,7 @@
 
 - Test promotion and item promotion, both in game and in prep.
 
-- Windows/Mac/Linux build of latest Engine, Level Editor, FeRepoToLTScript
-
-- Test Wiki Tutorial
+- Windows/Mac/Linux build of latest Engine, Level Editor
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
