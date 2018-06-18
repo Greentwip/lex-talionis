@@ -798,8 +798,10 @@ class UnitObject(object):
 
     def can_promote_using(self, item, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
+        allowed_classes = item.promotion
         max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
-        return self.level >= max_level//2 and len(unit_klass['turns_into']) >= 1 and self.klass in item.promotion
+        return self.level >= max_level//2 and len(unit_klass['turns_into']) >= 1 \
+            and (self.klass in allowed_classes or 'All' in allowed_classes)
 
     def handle_booster(self, item, gameStateObj):
         # Handle uses

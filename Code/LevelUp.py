@@ -7,7 +7,7 @@ import StatusObject, Banner, Utility
 ####################################################################
 # Displays the level up screen
 class levelUpScreen(object):
-    def __init__(self, gameStateObj, unit, exp, force_level=None, force_promotion=False, in_combat=False):
+    def __init__(self, gameStateObj, unit, exp, force_level=None, force_promote=False, in_combat=False):
         self.unit = unit
         # if cf.OPTIONS['debug']:
         #     print('LevelUpScreen: ', exp)
@@ -16,7 +16,7 @@ class levelUpScreen(object):
         self.expOld = self.unit.exp
         self.expSet = self.expOld
 
-        self.force_level = force_level
+        self.force_level = force_level or force_promote
         self.in_combat = in_combat
         self.prev_level = self.unit.level
         self.new_wexp = None  # For promotion
@@ -55,7 +55,7 @@ class levelUpScreen(object):
             self.unit.apply_levelup(force_level, exp == 0)
             self.state.changeState('levelScreen')
             self.state_time = Engine.get_time()
-        if force_promotion:
+        if force_promote:
             self.state.changeState('item_promote')
             self.state_time = Engine.get_time()
 

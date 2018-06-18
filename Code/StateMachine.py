@@ -852,7 +852,7 @@ class MenuState(State):
             gameStateObj.highlight_manager.remove_highlights()
             active_skills = [status for status in cur_unit.status_effects if status.active]
 
-            if selection in {status.name for status in active_skills}:
+            if selection in [status.name for status in active_skills]:
                 for status in active_skills:
                     if selection == status.name or selection == status.id:
                         cur_unit.current_skill = status
@@ -1052,7 +1052,6 @@ class ItemChildState(State):
                 use = False
             if use:
                 options.append(cf.WORDS['Use'])
-        # Why does this even exist? When would you want to discard your items in battle?
         if 'Convoy' in gameStateObj.game_constants:
             options.append(cf.WORDS['Storage'])
         else:
@@ -2470,8 +2469,8 @@ class PromotionState(State):
 
     def start_anim(self, effect):
         anim = self.current_anim
-        image, script = GC.ANIMDICT.get_effect(effect, anim.name)
-        child_effect = BattleAnimation.BattleAnimation(self.unit, image, script, anim.name)
+        image, script = GC.ANIMDICT.get_effect(effect, anim.palette_name)
+        child_effect = BattleAnimation.BattleAnimation(self.unit, image, script, anim.palette_name)
         child_effect.awake(anim.owner, anim.partner, anim.right, anim.at_range, parent=anim)
         child_effect.start_anim('Attack')
         anim.children.append(child_effect)
@@ -2803,7 +2802,7 @@ class WaitState(State):
 class ShopState(State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            if self.name in ['armory', 'market']:
+            if self.name in ('armory', 'market'):
                 self.opening_message = self.get_dialog(cf.WORDS['Armory_opener'])
                 self.portrait = GC.IMAGESDICT['ArmoryPortrait']
                 self.buy_message = cf.WORDS['Armory_buy']
