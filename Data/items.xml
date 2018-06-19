@@ -1602,19 +1602,6 @@
         <desc>Permanently increases its user's maximum HP by 5.</desc>   
     </item>
 
-    <item name="Master Seal">
-        <id>Master Seal</id>
-        <spritetype>Boosters</spritetype>
-        <spriteid>0</spriteid>       
-        <components>usable,uses,promotion,booster,beneficial</components>
-        
-        <promotion>All</promotion>
-        <uses>1</uses>
-        <RNG>0</RNG>
-        <value>8000</value>
-        <desc>Promotes.</desc>   
-    </item>
-
     <item name="Energy Ring">
         <id>Energy Ring</id>
         <spritetype>Boosters</spritetype>
