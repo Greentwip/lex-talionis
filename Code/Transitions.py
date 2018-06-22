@@ -1046,6 +1046,7 @@ class ChapterTransitionState(StateMachine.State):
         gameStateObj.background = TransitionBackground(GC.IMAGESDICT['chapterTransitionBackground'])
         self.name = metaDataObj['name'] # Lol -- this is why some states show up as Chapter I
         self.show_map = False
+        Engine.music_thread.clear()
         Engine.music_thread.fade_in(GC.MUSICDICT['Chapter Sound'], 1)
         self.CTStateMachine = CustomObjects.StateMachine('transition_in')
 

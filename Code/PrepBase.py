@@ -998,7 +998,7 @@ class BaseMarketState(StateMachine.State):
             self.money_surf = MenuFunctions.CreateBaseMenuSurf((56, 24))
             g_surf = Engine.subsurface(GC.IMAGESDICT['GoldenWords'], (40, 50, 9, 9))
             self.money_surf.blit(g_surf, (45, 8))
-            self.money_counter_disp = MenuFunctions.MoneyCounterDisplay((66, GC.WINHEIGHT - 40))
+            self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((66, GC.WINHEIGHT - 40))
 
             # Create owner surf
             self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')

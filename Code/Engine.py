@@ -382,6 +382,7 @@ class MusicThread(object):
     def stop(self):
         if self.current:
             self.current.current_time += pygame.mixer.music.get_pos()
+            self.current = None
         pygame.mixer.music.stop()
 
     def update(self, eventList):
@@ -409,7 +410,12 @@ class MusicThread(object):
                         pygame.mixer.music.play(0)
                     elif self.current.num_plays == -1:
                         pygame.mixer.music.play(0)
+                    elif self.current.num_plays >= 0:
+                        self.current.num_plays -= 1
                     self.current.current_time = 0
+                    if self.current.num_plays == 0:
+                        self.stop()
+                        self.fade_back()
                 elif self.state == 'fade_catch':
                     logger.debug('Music: Fade Catch Event')
                     self.state = 'normal' # catches the stop from fade and returns to normal

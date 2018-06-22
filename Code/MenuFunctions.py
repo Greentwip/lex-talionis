@@ -132,24 +132,29 @@ class Foreground(object):
                     self.foreground = None
                     self.fade_out = False
 
-class MoneyCounterDisplay(object):
+class BriefPopUpDisplay(object):
     def __init__(self, topright):
         self.topright = topright
         self.update_num = -200
 
-    def start(self, money):
+    def start(self, text):
         self.update_num = 100
-        if money >= 0:
-            font = GC.FONT['text_green']
+        if isinstance(text, int):
+            money = text
+            if money >= 0:
+                font = GC.FONT['text_green']
+            else:
+                font = GC.FONT['text_red']
+            my_str = str(money)
+            if money >= 0:
+                my_str = '+' + my_str
         else:
-            font = GC.FONT['text_red']
-        money_str = str(money)
-        if money >= 0:
-            money_str = '+' + money_str
-        money_size = font.size(money_str)[0]
-        self.surf = Engine.create_surface((money_size + 8, 16), transparent=True)
+            font = GC.FONT['text_blue']
+            my_str = str(text)
+        str_size = font.size(my_str)[0]
+        self.surf = Engine.create_surface((str_size + 8, 16), transparent=True)
         self.width = self.surf.get_width()
-        font.blit(money_str, self.surf, (0, 0))
+        font.blit(my_str, self.surf, (0, 0))
 
     def draw(self, surf):
         if self.update_num > -200:

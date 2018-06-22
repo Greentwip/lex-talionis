@@ -1828,6 +1828,7 @@ class DialogueState(State):
     def __init__(self, name='dialogue'):
         State.__init__(self, name)
         self.message = None
+        self.text_speed_change = MenuFunctions.BriefPopUpDisplay((GC.WINWIDTH, GC.WINHEIGHT - 16))
 
     def begin(self, gameStateObj, metaDataObj):
         cf.CONSTANTS['Unit Speed'] = 120
@@ -1861,6 +1862,7 @@ class DialogueState(State):
                 if current_index >= len(cf.text_speed_options):
                     current_index = 0
                 cf.OPTIONS['Text Speed'] = cf.text_speed_options[current_index]
+                self.text_speed_change.start('Changed Text Speed!')
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):
         logger.debug('Ending dialogue state')
@@ -1948,6 +1950,7 @@ class DialogueState(State):
             mapSurf = gameStateObj.generic_surf
         if self.message:
             self.message.draw(mapSurf)
+        self.text_speed_change.draw(mapSurf)
         return mapSurf
 
     def finish(self, gameStateObj, metaDataObj):
@@ -2857,7 +2860,7 @@ class ShopState(State):
         moneyBGSurf = GC.IMAGESDICT['MoneyBG']
         self.draw_surfaces.append((moneyBGSurf, (172, 48)))
 
-        self.money_counter_disp = MenuFunctions.MoneyCounterDisplay((223, 32))
+        self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((223, 32))
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList) 
