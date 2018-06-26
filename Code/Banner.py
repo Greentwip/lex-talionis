@@ -2,7 +2,7 @@
 
 import GlobalConstants as GC
 
-import MenuFunctions, CustomObjects, Engine, Image_Modification
+import MenuFunctions, Engine, Image_Modification, Weapons
 
 class Banner(object):
     def __init__(self):
@@ -100,8 +100,8 @@ class gainedWexpBanner(Banner):
     def __init__(self, unit, wexp, weapon_type):
         Banner.__init__(self)
         self.unit = unit
-        self.item = CustomObjects.WeaponIcon(weapon_type)
-        self.banner = [unit.name, ' reached rank ', CustomObjects.WEAPON_EXP.number_to_letter(wexp)]
+        self.item = Weapons.Icon(weapon_type)
+        self.banner = [unit.name, ' reached rank ', Weapons.EXP.number_to_letter(wexp)]
         self.banner_font = ['text_blue', 'text_white', 'text_blue']
         self.figure_out_size()
         self.sound = GC.SOUNDDICT['Item']

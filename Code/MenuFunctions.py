@@ -3,7 +3,7 @@ import GlobalConstants as GC
 import configuration as cf
 import ItemMethods, Image_Modification, Utility, Engine, Counters
 import StateMachine, InfoMenu, GUIObjects
-import CustomObjects, TextChunk
+import CustomObjects, TextChunk, Weapons
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1574,8 +1574,8 @@ class ConvoyMenu(object):
         self.topleft = topleft
         self.disp_value = disp_value
 
-        self.order = CustomObjects.WEAPON_TRIANGLE.types + ["Consumable"]
-        self.wexp_icons = [CustomObjects.WeaponIcon(name, grey=True) for name in self.order]
+        self.order = Weapons.TRIANGLE.types + ["Consumable"]
+        self.wexp_icons = [Weapons.Icon(name, grey=True) for name in self.order]
         self.buildMenus(options)
 
         self.selection_index = 0
@@ -1590,7 +1590,7 @@ class ConvoyMenu(object):
     def get_sorted_dict(self, options):
         sorted_dict = {}
         for w_type in self.order:
-            sorted_dict[w_type] = [option for option in options if w_type in option.TYPE]
+            sorted_dict[w_type] = [option for option in options if w_type == option.TYPE]
         sorted_dict['Consumable'] = [option for option in options if not option.weapon and not option.spell]
         for key, value in sorted_dict.items():
             value.sort(key=lambda item: item.c_uses.uses if item.c_uses else 100)
@@ -1657,7 +1657,7 @@ class ConvoyMenu(object):
 
     def goto(self, item):
         if item.TYPE:
-            self.selection_index = self.order.index(item.TYPE[0])
+            self.selection_index = self.order.index(item.TYPE)
         else:
             self.selection_index = len(self.order) - 1
         item_index = self.menus[self.order[self.selection_index]].options.index(item)
@@ -1685,7 +1685,7 @@ class ConvoyMenu(object):
                 # offset = 4
                 # if index == 0:
                 #     offset = 0 # noqa
-                icon = CustomObjects.WeaponIcon(icon)
+                icon = Weapons.Icon(icon)
                 icon.draw(surf, (self.topleft[0] + index*dist + 4, self.topleft[1] - 14))
                 surf.blit(GC.IMAGESDICT['Shine_Wexp'], (self.topleft[0] + index*dist + 4, self.topleft[1] - 14))
         self.drawTopArrows(surf)

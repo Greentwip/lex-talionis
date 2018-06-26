@@ -6,6 +6,7 @@ import configuration as cf
 # Custom Imports
 import MenuFunctions
 import Utility, Image_Modification, Engine, InputManager
+import Weapons
 
 import logging
 logger = logging.getLogger(__name__)
@@ -929,121 +930,6 @@ class PhaseIn(object):
         # Other transition_space
         surf.blit(transition_space, (0, GC.WINHEIGHT - transition_space.get_height()))
 
-# === WEAPON TRIANGLE OBJECT ==================================================
-class Weapon_Triangle(object):
-    def __init__(self, fp):
-        self.types = []
-        self.advantage = {}
-        self.disadvantage = {}
-        self.type_to_index = {}
-        self.index_to_type = {}
-        self.magic_types = []
-
-        self.parse_file(fp)
-
-    def number(self):
-        return len(self.types)
-
-    def parse_file(self, fp):
-        lines = []
-        with open(fp) as w_fp:
-            lines = w_fp.readlines()
-
-        for index, line in enumerate(lines):
-            split_line = line.strip().split(';')
-            name = split_line[0]
-            advantage = split_line[1].split(',')
-            disadvantage = split_line[2].split(',')
-            magic = True if split_line[3] == 'M' else False
-            # Ascend
-            self.types.append(name)
-            self.type_to_index[name] = index
-            self.index_to_type[index] = name
-            self.advantage[name] = advantage
-            self.disadvantage[name] = disadvantage
-            if magic:
-                self.magic_types.append(name)
-
-        self.type_to_index['Consumable'] = len(lines)
-        self.index_to_type[len(lines)] = 'Consumable'
-
-    def compute_advantage(self, weapon1, weapon2):
-        """ Returns two-tuple describing advantage """
-        if not weapon1 and not weapon2:
-            return (0, 0) # If either does not have a weapon, neither has advantage
-        if not weapon1:
-            return (0, 2)
-        if not weapon2:
-            return (2, 0)
-
-        weapon1_advantage, weapon2_advantage = 0, 0
-        for weapon1_type in weapon1.TYPE:
-            for weapon2_type in weapon2.TYPE:
-                if weapon2_type in self.advantage[weapon1_type]:
-                    weapon1_advantage += 1
-                if weapon2_type in self.disadvantage[weapon1_type]:
-                    weapon1_advantage -= 1
-                if weapon1_type in self.advantage[weapon2_type]:
-                    weapon2_advantage += 1
-                if weapon1_type in self.disadvantage[weapon2_type]:
-                    weapon2_advantage -= 1
-
-        # Handle reverse (reaver) weapons
-        if weapon1.reverse or weapon2.reverse:
-            return (-2*weapon1_advantage, -2*weapon2_advantage)
-        else:
-            return (weapon1_advantage, weapon2_advantage)
-
-    def isMagic(self, item):
-        if item.magic or item.magic_at_range or any(w_type in self.magic_types for w_type in item.TYPE):
-            return True
-        return False
-
-class Weapon_Exp(object):
-    def __init__(self, fp):
-        self.wexp_dict = {}
-        self.sorted_list = []
-        self.parse_file(fp)
-
-    def parse_file(self, fp):
-        lines = []
-        with open(fp) as w_fp:
-            lines = w_fp.readlines()
-
-        for index, line in enumerate(lines):
-            split_line = line.strip().split(';')
-            letter = split_line[0]
-            number = int(split_line[1])
-            self.wexp_dict[letter] = number
-
-        self.sorted_list = sorted(self.wexp_dict.items(), key=lambda x: x[1])
-
-    def number_to_letter(self, wexp):
-        current_letter = "--"
-        for letter, number in self.sorted_list:
-            if wexp >= number:
-                current_letter = letter
-            else:
-                break
-        return current_letter
-
-    # Returns a float between 0 and 1 desribing how closes number is to next tier from previous tier
-    def percentage(self, wexp):
-        current_percentage = 0.0
-        # print(wexp, self.sorted_list)
-        for index, (letter, number) in enumerate(self.sorted_list):
-            if index + 1 >= len(self.sorted_list):
-                current_percentage = 1.0
-                break
-            elif wexp >= number:
-                difference = float(self.sorted_list[index+1][1] - number)
-                if wexp - number >= difference:
-                    continue
-                current_percentage = (wexp - number)/difference
-                # print('WEXP', wexp, number, difference, current_percentage)
-                break
-        return current_percentage
-
 # === SAVESLOTS ===============================================================
 class SaveSlot(object):
     def __init__(self, metadata_fp, number):
@@ -1426,31 +1312,6 @@ def handle_aux_key(gameStateObj):
 # Initialize counter
 handle_aux_key.counter = 0
 
-class WeaponIcon(object):
-    def __init__(self, name=None, idx=None, grey=False):
-        if name:
-            self.name = name
-            self.idx = WEAPON_TRIANGLE.type_to_index[self.name]
-        else:
-            self.name = None
-            self.idx = idx
-        self.set_grey(grey)
-
-    def set_grey(self, grey):
-        self.grey = grey
-        self.create_image()
-
-    def create_image(self):
-        # Weapon Icons Pictures
-        if self.grey:
-            weaponIcons = GC.ITEMDICT['Gray_Wexp_Icons']
-        else:
-            weaponIcons = GC.ITEMDICT['Wexp_Icons']
-        self.image = Engine.subsurface(weaponIcons, (0, 16*self.idx, 16, 16))
-
-    def draw(self, surf, topleft, cooldown=False):
-        surf.blit(self.image, topleft)
-
 class LevelStatistic(object):
     def __init__(self, gameStateObj, metaDataObj):
         self.name = metaDataObj['name']
@@ -1478,6 +1339,3 @@ class LevelStatistic(object):
                 current_mvp = unit 
 
         return current_mvp
-
-WEAPON_TRIANGLE = Weapon_Triangle(Engine.engine_constants['home'] + "Data/weapon_triangle.txt")
-WEAPON_EXP = Weapon_Exp(Engine.engine_constants['home'] + "Data/weapon_exp.txt")

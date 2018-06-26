@@ -1747,8 +1747,8 @@
         <id>Makara</id>
         <spritetype>Lance</spritetype>
         <spriteid>17</spriteid>       
-        <components>weapon,weight,status,map_hit_color,magic_at_range</components>
-        <weapontype>Sword,Lance,Axe</weapontype>
+        <components>weapon,weight,status,map_hit_color,magic_at_range,ignore_weapon_advantage</components>
+        <weapontype>Lance</weapontype>
  
         <RNG>1-2</RNG>
         <value>100000</value>

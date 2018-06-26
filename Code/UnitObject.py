@@ -2,7 +2,7 @@ import random, os
 from collections import Counter
 import GlobalConstants as GC
 import configuration as cf
-import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject
+import Interaction, MenuFunctions, AStar, Weapons, SaveLoad, TileObject
 import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
 import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
 
@@ -373,7 +373,7 @@ class UnitObject(object):
         white = False
         if isinstance(enemyunit, UnitObject):
             if (self.getMainWeapon().effective and any([comp in enemyunit.tags for comp in self.getMainWeapon().effective.against])) or \
-                    any([status.weakness and status.weakness.damage_type in self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
+                    any([status.weakness and status.weakness.damage_type == self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
                 white = True
         self.getMainWeapon().draw(surf, (topleft[0] + 2, topleft[1] + 4), white)
         # Blit enemy item
@@ -381,13 +381,13 @@ class UnitObject(object):
             white = False
             if (enemyunit.getMainWeapon().effective and any([comp in self.tags for comp in enemyunit.getMainWeapon().effective.against])):
                 white = True
-            elif any([status.weakness and status.weakness.damage_type in enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
+            elif any([status.weakness and status.weakness.damage_type == enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
                 white = True
             enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, topleft[1] + 67 + (16 if cf.CONSTANTS['crit'] else 0)), white)
 
         # Blit advantage -- This must be blit every frame
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
-            advantage, e_advantage = CustomObjects.WEAPON_TRIANGLE.compute_advantage(self.getMainWeapon(), enemyunit.getMainWeapon())
+            advantage, e_advantage = Weapons.TRIANGLE.compute_advantage(self.getMainWeapon(), enemyunit.getMainWeapon())
             UpArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 0, 7, 10))
             DownArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 10, 7, 10))
             if advantage > 0:
@@ -410,7 +410,7 @@ class UnitObject(object):
             if not my_wep.no_double:
                 if my_wep.brave:
                     my_num *= 2
-                if self.attackspeed() - enemyunit.attackspeed() >= cf.CONSTANTS['speed_to_double']:
+                if self.outspeed(enemyunit, my_wep):
                     my_num *= 2
                 if my_wep.uses or my_wep.c_uses:
                     if my_wep.uses:
@@ -433,8 +433,7 @@ class UnitObject(object):
                     Utility.calculate_distance(self.position, enemyunit.position) in e_wep.RNG:
                 if e_wep.brave:
                     e_num *= 2
-                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
-                        enemyunit.attackspeed() - self.attackspeed() >= cf.CONSTANTS['speed_to_double']:
+                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemy_unit.outspeed(self, e_wep):
                     e_num *= 2
             if e_num == 2:
                 surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
@@ -729,7 +728,7 @@ class UnitObject(object):
         """
         if (item.weapon or item.spell) and 'no_weapons' in self.status_bundle:
             return False
-        if CustomObjects.WEAPON_TRIANGLE.isMagic(item) and 'no_magic_weapons' in self.status_bundle:
+        if Weapons.TRIANGLE.isMagic(item) and 'no_magic_weapons' in self.status_bundle:
             return False
         # if the item is a weapon
         if item.weapon:
@@ -739,21 +738,14 @@ class UnitObject(object):
         else:
             return True # does not have a level so it can be used
 
-        for itemType in item.TYPE:
-            # print(itemType)
-            idx = CustomObjects.WEAPON_TRIANGLE.type_to_index[itemType]
-            # print(idx)
-            # print(self.name)
-            # print(self.wexp)
-            unitwexp = self.wexp[idx]
-            if itemLvl in CustomObjects.WEAPON_EXP.wexp_dict and unitwexp >= CustomObjects.WEAPON_EXP.wexp_dict[itemLvl]:
-                continue
-            elif itemLvl == self.name: # If this weapon is for me!
-                return True
-            else:
-                return False
-
-        return True
+        idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+        unitwexp = self.wexp[idx]
+        if itemLvl in Weapons.EXP.wexp_dict and unitwexp >= Weapons.EXP.wexp_dict[itemLvl]:
+            return True
+        elif itemLvl == self.name: # If this weapon is for me!
+            return True
+        else:
+            return False
 
     # Given an item or a list or an int, increase my wexp based on the types of the weapon
     def increase_wexp(self, item, gameStateObj):
@@ -769,18 +761,17 @@ class UnitObject(object):
                     self.wexp[index] += item
         else:  # Normal item
             increase = item.wexp if item.wexp else 1
-            for TYPE in item.TYPE:
-                if TYPE in CustomObjects.WEAPON_TRIANGLE.type_to_index:
-                    self.wexp[CustomObjects.WEAPON_TRIANGLE.type_to_index[TYPE]] += increase
+            if item.TYPE in Weapons.TRIANGLE.name_to_index:
+                self.wexp[Weapons.TRIANGLE.name_to_index[item.TYPE]] += increase
 
         self.add_wexp_banner(old_wexp, self.wexp, gameStateObj)
 
     def add_wexp_banner(self, old_wexp, new_wexp, gameStateObj):
-        wexp_partitions = [x[1] for x in CustomObjects.WEAPON_EXP.sorted_list]
+        wexp_partitions = [x[1] for x in Weapons.EXP.sorted_list]
         for index in range(len(old_wexp)):
             for value in reversed(wexp_partitions):
                 if new_wexp[index] >= value and old_wexp[index] < value:
-                    gameStateObj.banners.append(Banner.gainedWexpBanner(self, value, CustomObjects.WEAPON_TRIANGLE.index_to_type[index]))
+                    gameStateObj.banners.append(Banner.gainedWexpBanner(self, value, Weapons.TRIANGLE.index_to_name[index]))
                     gameStateObj.stateMachine.changeState('itemgain')
                     break
 
@@ -1534,6 +1525,19 @@ class UnitObject(object):
                         avoid += affinity.avoid * support_level * 5
         return min(4, attack), min(4, defense), min(20, accuracy), min(20, avoid)
 
+    def outspeed(self, target, item):
+        """
+        Returns bool: whether self doubles target
+        """
+        if isinstance(target, TileObject.TileObject):
+            return False
+
+        advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
+        a = advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).attackspeed
+        b = advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).attackspeed
+
+        return self.attackspeed() + a >= target.attackspeed() + b + cf.CONSTANTS['speed_to_double']
+
     # computes the damage dealt by me using this item
     def compute_damage(self, target, gameStateObj, item, mode=None, hybrid=None, crit=0):
         if not item:
@@ -1553,8 +1557,10 @@ class UnitObject(object):
                 if any((unit_tag in item.effective.against) for unit_tag in target.tags):
                     damage += item.effective.bonus
             # Weapon Triangle
-            damage += CustomObjects.WEAPON_TRIANGLE.compute_advantage(item, target.getMainWeapon())[0]
-            if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
+            advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
+            damage += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).damage
+            damage -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).resist
+            if Weapons.TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
                     stat = 'DEF'
                 else:
@@ -1580,7 +1586,7 @@ class UnitObject(object):
                     damage -= new_damage
             # Determine weakness
             for status in target.status_effects:
-                if status.weakness and status.weakness.damage_type in item.TYPE:
+                if status.weakness and status.weakness.damage_type == item.TYPE:
                     damage += status.weakness.num
             
         if item.guaranteed_crit or crit == 1:
@@ -1618,10 +1624,11 @@ class UnitObject(object):
 
         # Calculations
         if my_item.weapon or my_item.spell:
-            hitadvantage = 0
-            if my_item.weapon:
-                hitadvantage = 15*CustomObjects.WEAPON_TRIANGLE.compute_advantage(my_item, target.getMainWeapon())[0]
-            hitrate = self.accuracy(gameStateObj, my_item) + hitadvantage - target.avoid(gameStateObj)
+            advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
+            bonus = 0
+            bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(my_item, self.wexp).accuracy
+            bonus -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).avoid
+            hitrate = self.accuracy(gameStateObj, my_item) + bonus - target.avoid(gameStateObj)
             for status in self.status_effects:
                 if status.conditional_hit and eval(status.conditional_hit.conditional, globals(), locals()):
                     new_hit = int(eval(status.conditional_hit.value, globals(), locals()))
@@ -1648,7 +1655,11 @@ class UnitObject(object):
 
         # Calculations
         if my_item.weapon or my_item.spell:
-            critrate = self.crit_accuracy(gameStateObj, my_item) - target.crit_avoid(gameStateObj)
+            advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
+            bonus = 0
+            bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(my_item, self.wexp).crit
+            bonus -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).dodge
+            critrate = self.crit_accuracy(gameStateObj, my_item) + bonus - target.crit_avoid(gameStateObj)
             for status in self.status_effects:
                 if status.conditional_crit_hit and eval(status.conditional_crit_hit.conditional, globals(), locals()):
                     new_hit = int(eval(status.conditional_crit_hit.value, globals(), locals()))
@@ -1716,7 +1727,7 @@ class UnitObject(object):
                 damage += int(eval(status.mt, globals(), locals()))
         if item.weapon:
             damage += item.weapon.MT
-            if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
+            if Weapons.TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
                     damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
                 else:  # Normal

@@ -2,7 +2,7 @@
 import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, Image_Modification, Engine
-import StatusObject, Banner, Utility
+import StatusObject, Banner, Utility, Weapons
 
 ####################################################################
 # Displays the level up screen
@@ -270,7 +270,7 @@ class levelUpScreen(object):
             # Reseed the combat animation
             if self.in_combat and old_anim:
                 item = self.unit.getMainWeapon()
-                magic = CustomObjects.WEAPON_TRIANGLE.isMagic(item) if item else False
+                magic = Weapons.TRIANGLE.isMagic(item) if item else False
                 anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender, item, magic)
                 if anim:
                     # Build animation

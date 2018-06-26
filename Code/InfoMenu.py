@@ -3,7 +3,7 @@
 # Imports
 import GlobalConstants as GC
 import configuration as cf
-import CustomObjects, MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects
+import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons
 
 class InfoMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -412,8 +412,8 @@ class InfoMenu(StateMachine.State):
         how_many = sum(1 if wexp > 0 else 0 for wexp in self.unit.wexp)
         x_pos = (menu_surf.get_width()-6)//max(how_many, 2)
         for index, wexp in enumerate(self.unit.wexp):
-            wexpLetter = CustomObjects.WEAPON_EXP.number_to_letter(wexp)
-            wexp_percentage = CustomObjects.WEAPON_EXP.percentage(wexp)
+            wexpLetter = Weapons.EXP.number_to_letter(wexp)
+            wexp_percentage = Weapons.EXP.percentage(wexp)
             if wexp > 0:
                 offset = 3 + counter*x_pos
                 counter += 1

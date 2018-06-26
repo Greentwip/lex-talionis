@@ -3,7 +3,7 @@ import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
 import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-import MenuFunctions, GUIObjects
+import MenuFunctions, GUIObjects, Weapons
 
 import logging
 logger = logging.getLogger(__name__)
@@ -219,17 +219,13 @@ class Solver(object):
             return False
 
     def defender_has_vantage(self):
-        return isinstance(self.defender, UnitObject.UnitObject) and self.outspeed(self.defender, self.attacker) and \
+        return isinstance(self.defender, UnitObject.UnitObject) and self.defender.outspeed(self.attacker, self.defender.getMainWeapon()) and \
             'vantage' in self.defender.status_bundle and not self.item.cannot_be_countered and \
             self.defender_can_counterattack() and self.item.weapon
 
-    def outspeed(self, unit1, unit2):
-        """Whether unit1 outspeeds unit2"""
-        return unit1.attackspeed() >= unit2.attackspeed() + cf.CONSTANTS['speed_to_double']
-
     def def_double(self):
         return (cf.CONSTANTS['def_double'] or 'vantage' in self.defender.status_bundle or 'def_double' in self.defender.status_bundle) and \
-            self.def_rounds < 2 and self.outspeed(self.defender, self.attacker)
+            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.defender.getMainWeapon())
 
     def determine_state(self, gameStateObj):
         logger.debug('Interaction State 1: %s', self.state)
@@ -260,7 +256,7 @@ class Solver(object):
                         self.item.weapon and not self.item.cannot_be_countered and isinstance(self.defender, UnitObject.UnitObject) and \
                         self.defender_can_counterattack():
                     self.state = 'Defender'
-                elif self.atk_rounds < 2 and self.item.weapon and self.outspeed(self.attacker, self.defender) and self.item_uses(self.item):
+                elif self.atk_rounds < 2 and self.item.weapon and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item):
                     self.state = 'Attacker'
                 else:
                     self.state = 'Done'
@@ -282,7 +278,7 @@ class Solver(object):
                     self.defender.currenthp > 0 and self.defender_can_counterattack() and not self.item.cannot_be_countered:
                 self.index = 0
                 self.state = 'Defender'
-            elif self.defender and self.atk_rounds < 2 and self.outspeed(self.attacker, self.defender) and \
+            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and \
                     self.item_uses(self.item) and self.defender.currenthp > 0:
                 self.index = 0
                 self.state = 'Attacker'
@@ -297,7 +293,7 @@ class Solver(object):
                     self.item.weapon and self.defender and isinstance(self.defender, UnitObject.UnitObject) and \
                     not self.item.cannot_be_countered and self.defender.currenthp > 0 and self.defender_can_counterattack():
                 self.state = 'Defender'
-            elif self.atk_rounds < 2 and self.outspeed(self.attacker, self.defender) and self.item_uses(self.item) and self.defender.currenthp > 0:
+            elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item) and self.defender.currenthp > 0:
                 self.state = 'Attacker'
             else:
                 self.state = 'Done'
@@ -309,7 +305,7 @@ class Solver(object):
                     self.item.weapon and self.defender and isinstance(self.defender, UnitObject.UnitObject) and \
                     self.defender.currenthp > 0 and self.defender_can_counterattack() and not self.item.cannot_be_countered:
                 self.state = 'Defender'
-            elif self.defender and self.atk_rounds < 2 and self.outspeed(self.attacker, self.defender) and \
+            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and \
                     self.item_uses(self.item) and self.defender.currenthp > 0:
                 self.state = 'Attacker'
             else:
@@ -322,7 +318,7 @@ class Solver(object):
                     self.state = 'DefenderBrave'
                 elif self.def_rounds < 2 and self.defender_has_vantage():
                     self.state = 'Attacker'
-                elif self.atk_rounds < 2 and self.outspeed(self.attacker, self.defender) and self.item_uses(self.item) and not self.item.no_double:
+                elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item) and not self.item.no_double:
                     self.state = 'Attacker'
                 elif self.def_double() and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
                     self.state = 'Defender'
@@ -332,7 +328,7 @@ class Solver(object):
             if self.attacker.currenthp > 0:
                 if self.def_rounds < 2 and self.defender_has_vantage():
                     self.state = 'Attacker'
-                if self.atk_rounds < 2 and self.outspeed(self.attacker, self.defender) and self.item_uses(self.item) and not self.item.no_double:
+                if self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item) and not self.item.no_double:
                     self.state = 'Attacker'
                 elif self.def_double() and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
                     self.state = 'Defender'
@@ -438,13 +434,13 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
         # XOR below
         if animation_wanted(attacker, defender) != toggle_anim:
             distance = Utility.calculate_distance(attacker.position, def_pos)
-            magic = CustomObjects.WEAPON_TRIANGLE.isMagic(item)
+            magic = Weapons.TRIANGLE.isMagic(item)
             if magic and item.magic_at_range and distance <= 1:
                 magic = False
             attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, magic, distance)
             defender_item = defender.getMainWeapon()
             if defender_item:
-                magic = CustomObjects.WEAPON_TRIANGLE.isMagic(defender_item)
+                magic = Weapons.TRIANGLE.isMagic(defender_item)
                 # Not magic animation at close combat for a magic at range item
                 if magic and defender_item.magic_at_range and distance <= 1:
                     magic = False
@@ -1234,12 +1230,12 @@ class AnimationCombat(Combat):
 
     def draw_item(self, surf, item, other_item, unit, other, topleft):
         white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \
-            any(status.weakness and status.weakness.damage_type in self.item.TYPE for status in other.status_effects) else False
+            any(status.weakness and status.weakness.damage_type == self.item.TYPE for status in other.status_effects) else False
         item.draw(surf, (topleft[0] + 2, topleft[1] + 3), white)
 
         # Blit advantage -- This must be blit every frame
         if unit.checkIfEnemy(other):
-            advantage, e_advantage = CustomObjects.WEAPON_TRIANGLE.compute_advantage(item, other_item)
+            advantage, e_advantage = Weapons.TRIANGLE.compute_advantage(item, other_item)
             if advantage > 0:
                 UpArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (unit.arrowAnim[unit.arrowCounter] * 7, 0, 7, 10))
                 surf.blit(UpArrow, (topleft[0] + 11, topleft[1] + 7))
@@ -2003,14 +1999,14 @@ class HealthBar(object):
             if self.item:
                 if self.other and isinstance(self.other, UnitObject.UnitObject):
                     white = True if (self.item.effective and any(comp in self.other.tags for comp in self.item.effective.against)) or \
-                        any(status.weakness and status.weakness.damage_type in self.item.TYPE for status in self.other.status_effects) else False
+                        any(status.weakness and status.weakness.damage_type == self.item.TYPE for status in self.other.status_effects) else False
                 else:
                     white = False
                 self.item.draw(bg_surf, (2, 3), white)
 
                 # Blit advantage -- This must be blit every frame
                 if isinstance(self.other, UnitObject.UnitObject) and self.other.getMainWeapon() and self.unit.checkIfEnemy(self.other):
-                    advantage, e_advantage = CustomObjects.WEAPON_TRIANGLE.compute_advantage(self.item, self.other.getMainWeapon())
+                    advantage, e_advantage = Weapons.TRIANGLE.compute_advantage(self.item, self.other.getMainWeapon())
                     if advantage > 0:
                         UpArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.unit.arrowAnim[self.unit.arrowCounter]*7, 0, 7, 10))
                         bg_surf.blit(UpArrow, (11, 7))

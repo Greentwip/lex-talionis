@@ -107,6 +107,7 @@ def read_constants_file():
              'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'max_level': '10,20,20', # Maximum Level for class by tier ('10, 20, 20,')
              'auto_promote': 0, # Promote after max-level?
+             'weapon_adv_flip': 1, # Flip advantage bonuses when at disadvantage
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
              'avoid_speed_coef': 2.0,
@@ -155,6 +156,7 @@ def read_constants_file():
     lines['stat_names'] = lines['stat_names'].split(',')
     lines['max_level'] = [int(n) for n in lines['max_level'].split(',')]
     lines['auto_promote'] = int(lines['auto_promote'])
+    lines['weapon_adv_flip'] = int(lines['weapon_adv_flip'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
     lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
     lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])

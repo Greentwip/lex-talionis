@@ -5,7 +5,7 @@ import configuration as cf
 import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 import Interaction, LevelUp, StatusObject, ItemMethods
 import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
-import BattleAnimation, TextChunk
+import BattleAnimation, TextChunk, Weapons
 
 import logging
 logger = logging.getLogger(__name__)
@@ -2268,7 +2268,7 @@ class PromotionChoiceState(State):
                 weapons = []
                 for idx, wexp in enumerate(metaDataObj['class_dict'][option]['wexp_gain']):
                     if wexp > 0:
-                        weapons.append(CustomObjects.WeaponIcon(idx=idx))
+                        weapons.append(Weapons.Icon(idx=idx))
                 self.weapon_icons.append(weapons)
 
             # Platforms

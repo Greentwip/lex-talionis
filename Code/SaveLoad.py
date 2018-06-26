@@ -7,7 +7,7 @@ from collections import OrderedDict
 # Custom imports
 import GlobalConstants as GC
 import configuration as cf
-import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility
+import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
 from UnitObject import Stat
 
 import logging
@@ -285,11 +285,11 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             # Parse wexp
             u_i['wexp'] = unit.find('wexp').text.split(',')
             for index, wexp in enumerate(u_i['wexp'][:]):
-                if wexp in CustomObjects.WEAPON_EXP.wexp_dict:
-                    u_i['wexp'][index] = CustomObjects.WEAPON_EXP.wexp_dict[wexp]
+                if wexp in Weapons.EXP.wexp_dict:
+                    u_i['wexp'][index] = Weapons.EXP.wexp_dict[wexp]
             u_i['wexp'] = [int(num) for num in u_i['wexp']]
 
-            assert len(u_i['wexp']) == len(CustomObjects.WEAPON_TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
+            assert len(u_i['wexp']) == len(Weapons.TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
             
             u_i['desc'] = unit.find('desc').text
             # Tags
@@ -465,16 +465,16 @@ def get_unit_info(class_dict, team, klass, level, item_line, mode, force_fixed=F
     # print(klass, wexp)
     for item in items:
         if item.weapon:
-            weapon_types = item.TYPE
+            weapon_type = item.TYPE
             item_level = item.weapon.LVL
         elif item.spell:
-            weapon_types = item.TYPE
+            weapon_type = item.TYPE
             item_level = item.spell.LVL
         else:
             continue
-        for weapon_type in weapon_types:
-            wexp_index = CustomObjects.WEAPON_TRIANGLE.type_to_index[weapon_type]
-            item_requirement = CustomObjects.WEAPON_EXP.wexp_dict[item_level]
+        if weapon_type:
+            wexp_index = Weapons.TRIANGLE.name_to_index[weapon_type]
+            item_requirement = Weapons.EXP.wexp_dict[item_level]
             # print(item, weapon_type, wexp_index, item_requirement, wexp[wexp_index])
             if item_requirement > wexp[wexp_index] and wexp[wexp_index] > 0:
                 wexp[wexp_index] = item_requirement

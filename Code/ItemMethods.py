@@ -1,6 +1,6 @@
 import GlobalConstants as GC
 import configuration as cf
-import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, CustomObjects, Engine, TextChunk
+import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, Weapons, Engine, TextChunk
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):
@@ -28,9 +28,10 @@ class ItemObject(object):
         
         self.aoe = aoe
         self.TYPE = weapontype
-        self.icons = []
-        for weapon_type in self.TYPE:
-            self.icons.append(CustomObjects.WeaponIcon(weapon_type))
+        if self.TYPE:
+            self.icon = Weapons.Icon(self.TYPE)
+        else:
+            self.icon = None
         
         # Creates component slots
         self.components = components # Consumable, Weapon, Spell Bigger Picture
@@ -137,7 +138,7 @@ class ItemObject(object):
                 first_line_text += [' Rng ', self.strRNG]
                 first_line_font += [font2, font1]
 
-            first_line_length = max(font1.size(''.join(first_line_text))[0] + 16 * len(self.TYPE) + 4, 112) # 112 was 96
+            first_line_length = max(font1.size(''.join(first_line_text))[0] + (16 if self.icon else 0) + 4, 112) # 112 was 96
             if self.desc:
                 output_desc_lines = TextChunk.line_wrap(TextChunk.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
             else:
@@ -148,7 +149,7 @@ class ItemObject(object):
             self.drawType(help_surf, 4, 4)
             
             # Actually blit first line
-            word_index = 4 + 16 * len(self.TYPE)
+            word_index = 20 if self.icon else 4
             for index, word in enumerate(first_line_text):
                 first_line_font[index].blit(word, help_surf, (word_index, 4))
                 word_index += first_line_font[index].size(word)[0]
@@ -162,8 +163,8 @@ class ItemObject(object):
             return InfoMenu.create_help_box(self.desc)
 
     def drawType(self, surf, left, top):
-        for index, icon in enumerate(self.icons):    
-            icon.draw(surf, (left + index*16, top))
+        if self.icon:  
+            self.icon.draw(surf, (left, top))
 
     def get_str_RNG(self):
         max_rng = max(self.RNG)
@@ -224,7 +225,7 @@ class WeaponComponent(object):
         self.MT = int(MT)
         self.HIT = int(HIT)
         self.LVL = LVL
-        self.strLVL = self.LVL if self.LVL in ['A', 'B', 'C', 'D', 'E', 'S', 'SS'] else 'Prf' # Display Prf if Lvl is weird
+        self.strLVL = self.LVL if self.LVL in ('A', 'B', 'C', 'D', 'E', 'S', 'SS') else 'Prf' # Display Prf if Lvl is weird
 
 class ExtraSelectComponent(object):
     def __init__(self, RNG, targets):
@@ -345,11 +346,9 @@ def itemparser(itemstring):
             if 'weapon' in components or 'spell' in components:
                 weapontype = item['weapontype']
                 if weapontype == 'None':
-                    weapontype = []
-                else:
-                    weapontype = weapontype.split(',')
+                    weapontype = None
             else:
-                weapontype = []
+                weapontype = None
 
             if 'locked' in components:
                 locked = True

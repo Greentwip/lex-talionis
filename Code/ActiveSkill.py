@@ -1,4 +1,4 @@
-import ItemMethods, Utility, StatusObject, CustomObjects
+import ItemMethods, Utility, StatusObject, Weapons
 
 import logging
 logger = logging.getLogger(__name__)
@@ -85,7 +85,7 @@ class Charge(Active_Skill):
         self.item = None
 
     def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if any(TYPE == 'Lance' for TYPE in weapon.TYPE) and 1 in weapon.RNG]
+        return [weapon for weapon in weapons if weapon.TYPE == 'Lance' and 1 in weapon.RNG]
 
 class Knock_Out(Active_Skill):
     def __init__(self, name, required_charge):
@@ -112,7 +112,7 @@ class Knock_Out(Active_Skill):
         self.item = None
 
     def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if any(TYPE in ['Axe', 'Lance', 'Sword', 'Bow'] for TYPE in weapon.TYPE)]
+        return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Lance', 'Sword', 'Bow')]
 
 class Twin_Strike(Active_Skill):
     def __init__(self, name, required_charge):
@@ -168,7 +168,7 @@ class Cleave(Active_Skill):
         self.item = None
 
     def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if any(TYPE in ['Axe', 'Sword'] for TYPE in weapon.TYPE) and 1 in weapon.RNG]
+        return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Sword') and 1 in weapon.RNG]
 
 class Rage(Active_Skill):
     def __init__(self, name, required_charge):
@@ -177,7 +177,7 @@ class Rage(Active_Skill):
         self.item = ItemMethods.itemparser('so_Rage')[0]
 
     def check_valid(self, unit, gameStateObj):
-        if not unit.hasAttacked and not any(status.id in ['Weakened', 'Rage_Status'] for status in unit.status_effects):
+        if not unit.hasAttacked and not any(status.id in ('Weakened', 'Rage_Status') for status in unit.status_effects):
             return True
         return False
 
@@ -458,7 +458,7 @@ class PassiveSkill(object):
 class Swordfaire(PassiveSkill):
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if 'Sword' in item.TYPE:
+        if item.TYPE == 'Sword':
             item.swordfaire = True
             item.orig_brave = item.brave
             item.brave = True
@@ -471,7 +471,7 @@ class Swordfaire(PassiveSkill):
 class Lancefaire(PassiveSkill):
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if 'Lance' in item.TYPE:
+        if item.TYPE == 'Lance':
             item.lancefaire = True
             item.orig_counter = item.cannot_be_countered
             item.cannot_be_countered = True
@@ -484,7 +484,7 @@ class Lancefaire(PassiveSkill):
 class Axefaire(PassiveSkill):
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if 'Axe' in item.TYPE:
+        if item.TYPE == 'Axe':
             item.axefaire = True
             item.orig_ignore_half_def = item.ignore_half_def
             item.ignore_half_def = True
@@ -497,7 +497,7 @@ class Axefaire(PassiveSkill):
 class Longshot(PassiveSkill):
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if 'Bow' in item.TYPE:
+        if item.TYPE == 'Bow':
             item.longshot = True
             item.orig_RNG = item.RNG[:]
             item.RNG.append(max(item.RNG) + 1)
@@ -546,7 +546,7 @@ class Slow(PassiveSkill):
 class Nosferatu(PassiveSkill):
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if 'Dark' in item.TYPE:
+        if item.TYPE == 'Dark':
             item.nosferatu = True
             item.old_lifelink = item.lifelink
             item.lifelink = True
@@ -559,7 +559,7 @@ class Nosferatu(PassiveSkill):
 class Metamagic_Status(PassiveSkill):
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if CustomObjects.WEAPON_TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast'):
+        if Weapons.TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast'):
             item.overcharged = True
             item.orig_aoe = item.aoe
             item.aoe = ItemMethods.AOEComponent('Blast', item.orig_aoe.number + 1)

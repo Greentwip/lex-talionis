@@ -2,7 +2,7 @@
 import GlobalConstants as GC
 import configuration as cf
 import Engine, StateMachine
-import Image_Modification, MenuFunctions, CustomObjects, InfoMenu
+import Image_Modification, MenuFunctions, Weapons, InfoMenu
 import GUIObjects, Counters
 
 class UnitMenu(StateMachine.State):
@@ -18,7 +18,7 @@ class UnitMenu(StateMachine.State):
                            ('Fighting Skill', ['STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES'], [4, 26, 48, 71, 94, 119, 142]),
                            ('Equipment', ['Equip', 'Atk', 'Hit', 'Avoid'], [16, 72, 103, 136]),
                            ('Personal Data', ['MOV', 'CON', 'Aid', 'Rat', 'Trv'], [4, 33, 60, 82, 106]),
-                           ('Weapon Level', CustomObjects.WEAPON_TRIANGLE.types, [9 + idx*16 for idx in range(len(CustomObjects.WEAPON_TRIANGLE.types))])]
+                           ('Weapon Level', Weapons.TRIANGLE.types, [9 + idx*16 for idx in range(len(Weapons.TRIANGLE.types))])]
             if cf.CONSTANTS['support']:
                 self.states.append(('Support Chance', ['Ally'], [0]))
             self.state_index = 0
@@ -31,7 +31,7 @@ class UnitMenu(StateMachine.State):
             self.state_scroll = 0
             self.scroll_direction = 0
 
-            self.weapon_icons = [CustomObjects.WeaponIcon(weapon) for weapon in CustomObjects.WEAPON_TRIANGLE.types]
+            self.weapon_icons = [Weapons.Icon(weapon) for weapon in Weapons.TRIANGLE.types]
             self.help_boxes = []
             self.info = False
 
@@ -376,7 +376,7 @@ class UnitMenu(StateMachine.State):
             top = idx*16 + 16
             for index, wexp in enumerate(unit.wexp):
                 if wexp > 0:
-                    wexpLetter = CustomObjects.WEAPON_EXP.number_to_letter(wexp)
+                    wexpLetter = Weapons.EXP.number_to_letter(wexp)
                 else:
                     wexpLetter = '-'
                 pos = (24 + index*16 - GC.FONT['text_blue'].size(wexpLetter)[0], top)
@@ -427,8 +427,8 @@ class UnitMenu(StateMachine.State):
             comp = lambda unit: unit.accuracy(gameStateObj)
         elif self.current_sort == 'Avoid':
             comp = lambda unit: unit.avoid(gameStateObj)
-        elif self.current_sort in CustomObjects.WEAPON_TRIANGLE.types:
-            comp = lambda unit: unit.wexp[CustomObjects.WEAPON_TRIANGLE.types.index(self.current_sort)]
+        elif self.current_sort in Weapons.TRIANGLE.types:
+            comp = lambda unit: unit.wexp[Weapons.TRIANGLE.types.index(self.current_sort)]
         elif self.current_sort == 'Equip':
             comp = lambda unit: GC.ITEMDATA[unit.getMainWeapon().id]['num'] if unit.getMainWeapon() else 1000
 
