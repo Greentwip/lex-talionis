@@ -356,7 +356,8 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
-        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'], gameStateObj.mode, force_fixed=force_fixed)
+        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'], \
+        gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
@@ -410,7 +411,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
-        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj.mode)
+        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj.mode, gameStateObj.game_constants)
     u_i['stats'] = build_stat_dict(stats)
     unit = UnitObject.UnitObject(u_i)
 
@@ -432,7 +433,7 @@ def build_stat_dict_plus(stats):
         st[name] = Stat(idx, stats[idx][0], stats[idx][1])
     return st
 
-def get_unit_info(class_dict, team, klass, level, item_line, mode, force_fixed=False):
+def get_unit_info(class_dict, team, klass, level, item_line, mode, game_constants, force_fixed=False):
     # Handle stats
     # hp, str, mag, skl, spd, lck, def, res, con, mov
     bases = class_dict[klass]['bases'][:] # Using copies    
@@ -446,6 +447,8 @@ def get_unit_info(class_dict, team, klass, level, item_line, mode, force_fixed=F
     else:
         mode_bases = mode['enemy_bases']
         mode_growths = mode['enemy_growths']
+        if 'extra_enemy_growths' in game_constants:
+            mode_growths = [g + int(game_constants['extra_enemy_growths']) for g in mode_growths]
         hidden_levels = int(eval(mode['autolevel_enemies']))
         explicit_levels = int(eval(mode['truelevel_enemies']))
 
