@@ -745,7 +745,7 @@ class MainEditor(QtGui.QMainWindow):
 
         level_editor_config = str(QtCore.QDir.currentPath() + '/le_config.txt')
         with open(level_editor_config, 'w') as fp:
-            fp.write(os.path.relpath(self.directory))
+            fp.write(os.path.relpath(str(self.directory)))
 
         print('Saved Level' + self.current_level_name)
 

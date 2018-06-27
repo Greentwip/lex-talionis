@@ -6,7 +6,7 @@ import Image_Modification, Utility, Engine
 import logging
 logger = logging.getLogger(__name__)
 
-WARP_OUT_SET = {'warp_out', 'fade_out', 'fade_move', 'warp_move'}
+WARP_OUT_SET = {'warp_out', 'fade_out', 'fade_move', 'warp_move', 'fade_out_event'}
 
 class UnitSprite(object):
     def __init__(self, unit):
@@ -76,6 +76,11 @@ class UnitSprite(object):
                 image = Image_Modification.flickerImageTranslucentColorKey(image, 100 - self.transition_counter//(self.transition_time//100))
                 if self.transition_counter <= 0:
                     if self.transition_state == 'fade_out':
+                        self.transition_state = 'normal'
+                        if self.state == 'fake_transition_out':
+                            self.change_state('normal', gameStateObj)
+                        self.unit.die(gameStateObj)
+                    elif self.transition_state == 'fade_out_event':
                         self.transition_state = 'normal'
                         if self.state == 'fake_transition_out':
                             self.change_state('normal', gameStateObj)
@@ -202,7 +207,7 @@ class UnitSprite(object):
                         surf.blit(health_bar, (left+1, top+14))
             # Extra Icons
             # Essentially an every 132 millisecond timer
-            if 'Boss' in self.unit.tags and self.image_state in {'gray', 'passive'} and int((current_time%450)//150) in (1, 2):
+            if 'Boss' in self.unit.tags and self.image_state in ('gray', 'passive') and int((current_time%450)//150) in (1, 2):
                 bossIcon = GC.ICONDICT['BossIcon']
                 surf.blit(bossIcon, (left - 8, top - 8))
             if self.unit.TRV:
@@ -282,11 +287,11 @@ class UnitSprite(object):
 
     def change_state(self, new_state, gameStateObj=None):
         self.state = new_state
-        if self.state in {'combat_attacker', 'combat_anim'}:
+        if self.state in ('combat_attacker', 'combat_anim'):
             self.netposition = gameStateObj.cursor.position[0] - self.unit.position[0], gameStateObj.cursor.position[1] - self.unit.position[1]
             self.handle_net_position(self.netposition)
             self.reset_sprite_offset()
-        elif self.state in {'combat_active', 'status_active'}:
+        elif self.state in ('combat_active', 'status_active'):
             self.image_state = 'active'
         elif self.state == 'combat_defender':
             attacker = gameStateObj.combatInstance.p1

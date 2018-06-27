@@ -84,8 +84,8 @@ class GameStateObj(object):
     def default_mode(self):
         return list(GC.DIFFICULTYDATA.values())[0]
 
-    def check_mode(self, mode):
-        return mode == 'All' or mode == self.mode['name'] or mode == self.mode['id']
+    def check_mode(self, legal_modes):
+        return 'All' in legal_modes or self.mode['name'] in legal_modes or self.mode['id'] in legal_modes
 
     def sweep(self):
         # None of these are kept through different levels

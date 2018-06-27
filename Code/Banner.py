@@ -123,6 +123,14 @@ class switchPulledBanner(Banner):
         self.figure_out_size()
         self.sound = GC.SOUNDDICT['Item']
 
+class customBanner(Banner):
+    def __init__(self, text):
+        Banner.__init__(self)
+        self.banner = [text]
+        self.banner_font = ['text_white']
+        self.figure_out_size()
+        self.sound = GC.SOUNDDICT['Item']
+
 class miracleBanner(Banner):
     def __init__(self, unit, skill):
         Banner.__init__(self)

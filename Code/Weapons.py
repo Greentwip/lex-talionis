@@ -44,9 +44,15 @@ class Weapon_Triangle(object):
         """ Returns two-tuple describing advantage """
         if not weapon1 and not weapon2:
             return (0, 0) # If either does not have a weapon, neither has advantage
-        if not weapon1:
+        elif not weapon1:
             return (0, 2)
-        if not weapon2:
+        elif not weapon2:
+            return (2, 0)
+        if not weapon1.TYPE and not weapon2.TYPE:
+            return (0, 0)
+        elif not weapon1.TYPE:
+            return (0, 2)
+        elif not weapon2.TYPE:
             return (2, 0)
         if weapon1.ignore_weapon_advantage or weapon2.ignore_weapon_advantage:
             return (0, 0)

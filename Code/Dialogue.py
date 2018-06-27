@@ -604,6 +604,10 @@ class Dialogue_Scene(object):
             gameStateObj.banners.append(Banner.switchPulledBanner())
             gameStateObj.stateMachine.changeState('itemgain')
             self.current_state = "Paused"
+        elif line[0] == 'custom_banner':
+            gameStateObj.banners.append(Banner.customBanner(line[1]))
+            gameStateObj.stateMachine.changeState('itemgain')
+            self.current_state = "Paused"
         elif line[0] == 'lose_game':
             gameStateObj.statedict['levelIsComplete'] = 'loss'
         elif line[0] == 'win_game':
@@ -1297,9 +1301,12 @@ class Dialogue_Scene(object):
         if transition == 'warp':
             unit.sprite.set_transition('warp_out')
         elif transition == 'fade':
-            if event and gameStateObj.map.on_border(unit.position):
-                unit.sprite.spriteOffset = gameStateObj.map.which_border(unit.position)
-                unit.sprite.set_transition('fake_out')
+            if event:
+                if gameStateObj.map.on_border(unit.position):
+                    unit.sprite.spriteOffset = gameStateObj.map.which_border(unit.position)
+                    unit.sprite.set_transition('fake_out')
+                else:
+                    unit.sprite.set_transition('fade_out_event')
             else:
                 unit.sprite.set_transition('fade_out')
         elif transition == 'immediate':

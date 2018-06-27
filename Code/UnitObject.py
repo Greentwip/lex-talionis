@@ -433,7 +433,7 @@ class UnitObject(object):
                     Utility.calculate_distance(self.position, enemyunit.position) in e_wep.RNG:
                 if e_wep.brave:
                     e_num *= 2
-                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemy_unit.outspeed(self, e_wep):
+                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemyunit.outspeed(self, e_wep):
                     e_num *= 2
             if e_num == 2:
                 surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
@@ -814,6 +814,11 @@ class UnitObject(object):
         elif item.promotion:
             gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self, exp=0, force_promote=True))
             gameStateObj.stateMachine.changeState('expgain')
+        elif item.call_item_script:
+            call_item_script = 'Data/callItemScript.txt'
+            if os.path.isfile(call_item_script):
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(call_item_script))
+                gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_forced_movement(self, other_pos, movement, gameStateObj, def_pos=None):
         # Remove tile statuses
@@ -1544,6 +1549,8 @@ class UnitObject(object):
             return None
         if item.spell and not item.damage:
             return 0
+        if not item.weapon and not item.spell:
+            return 0
 
         adj = Utility.calculate_distance(self.position, target.position) <= 1
         damage = self.damage(gameStateObj, item, adj)
@@ -1740,6 +1747,8 @@ class UnitObject(object):
                 damage += item.damage + int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
             else:
                 return 0
+        else:
+            return 0
 
         return damage
 

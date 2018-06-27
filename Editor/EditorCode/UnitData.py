@@ -10,7 +10,7 @@ Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 
 import Code.ItemMethods as ItemMethods
-import Code.CustomObjects as CustomObjects
+import Code.Weapons as Weapons
 
 from Code.UnitObject import Stat
 import Code.Utility as Utility
@@ -316,16 +316,16 @@ class UnitData(object):
         # print(klass, wexp)
         for item in items:
             if item.weapon:
-                weapon_types = item.TYPE
+                weapon_type = item.TYPE
                 item_level = item.weapon.LVL
             elif item.spell:
-                weapon_types = item.TYPE
+                weapon_type = item.TYPE
                 item_level = item.spell.LVL
             else:
                 continue
-            for weapon_type in weapon_types:
-                wexp_index = CustomObjects.WEAPON_TRIANGLE.type_to_index[weapon_type]
-                item_requirement = CustomObjects.WEAPON_EXP.wexp_dict[item_level]
+            if weapon_type:
+                wexp_index = Weapons.TRIANGLE.name_to_index[weapon_type]
+                item_requirement = Weapons.EXP.wexp_dict[item_level]
                 # print(item, weapon_type, wexp_index, item_requirement, wexp[wexp_index])
                 if item_requirement > wexp[wexp_index] and wexp[wexp_index] > 0:
                     wexp[wexp_index] = item_requirement

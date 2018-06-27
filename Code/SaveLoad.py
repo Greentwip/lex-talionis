@@ -45,7 +45,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     gameStateObj.start_map(currentMap)
 
     # === Process unit data ===
-    current_mode = 'All'
+    current_mode = ['All']
     for line in unitcontent:
         # Process each line that was in the level file.
         line = line.strip()
@@ -191,7 +191,7 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
     if unitLine[0] == 'faction':
         factions[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
     elif unitLine[0] == 'mode':
-        current_mode = unitLine[1]
+        current_mode = unitLine[1].split(',')
     elif unitLine[0] == 'load_player_characters':
         for unit in allunits:
             if unit.team == 'player' and not unit.dead:

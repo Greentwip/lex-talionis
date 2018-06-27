@@ -108,6 +108,7 @@ def read_constants_file():
              'max_level': '10,20,20', # Maximum Level for class by tier ('10, 20, 20,')
              'auto_promote': 0, # Promote after max-level?
              'weapon_adv_flip': 1, # Flip advantage bonuses when at disadvantage
+             'title': 'Lex Talionis Engine',
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
              'avoid_speed_coef': 2.0,

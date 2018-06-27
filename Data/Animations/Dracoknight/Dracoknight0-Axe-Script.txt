@@ -1,0 +1,157 @@
+pose;Dodge
+f;1;Axe_063
+f;3;Axe_064
+f;27;Axe_065
+f;4;Axe_066
+
+pose;Attack
+f;6;Axe_000
+f;4;Axe_001
+f;7;Axe_002
+sound;Weapon Push
+f;1;Axe_002
+f;4;Axe_003
+enemy_flash_white;8
+f;1;Axe_003
+screen_flash_white;4
+f;1;Axe_003
+f;4;Axe_004;Axe_004_under
+hit_spark
+start_hit
+f;2;Axe_005;Axe_005_under
+wait_for_hit;Axe_005;Axe_005_under
+f;4;Axe_005;Axe_005_under
+f;1;Axe_006;Axe_006_under
+f;2;Axe_007
+sound;Weapon Pull
+f;1;Axe_007
+f;2;Axe_008
+f;2;Axe_009
+f;8;Axe_010
+sound;Heavy Wing Flap
+f;1;Axe_010
+f;5;Axe_011
+f;9;Axe_012
+f;6;Axe_013
+sound;Heavy Wing Flap
+f;1;Axe_013
+f;4;Axe_014
+f;8;Axe_015
+f;7;Axe_016
+sound;Long Wing Flap
+f;1;Axe_016
+f;3;Axe_017
+f;2;Axe_018
+f;1;Axe_019
+f;1;Axe_020
+f;2;Axe_021
+f;1;Axe_022
+f;2;Axe_023
+platform_shake
+f;2;Axe_023
+
+pose;Critical
+f;6;Axe_024
+f;2;Axe_025
+f;7;Axe_026
+sound;Heavy Spear Spin
+f;1;Axe_026
+f;1;Axe_027
+f;1;Axe_028
+f;2;Axe_029
+f;2;Axe_030
+sound;Heavy Spear Spin
+f;1;Axe_030
+f;1;Axe_031
+f;1;Axe_032
+f;2;Axe_033
+f;2;Axe_034
+f;2;Axe_035
+f;2;Axe_036
+f;5;Axe_037
+f;4;Axe_038
+f;7;Axe_039
+sound;Weapon Push
+f;1;Axe_039
+f;4;Axe_040
+enemy_flash_white;8
+f;1;Axe_040
+foreground_blend;2;248,248,248
+start_hit
+f;2;Axe_041;Axe_041_under
+crit_spark
+f;2;Axe_042;Axe_042_under
+wait_for_hit;Axe_042;Axe_042_under
+f;4;Axe_042;Axe_042_under
+f;1;Axe_043;Axe_043_under
+f;2;Axe_044
+sound;Weapon Pull
+f;1;Axe_044
+f;2;Axe_045
+f;2;Axe_046
+f;8;Axe_047
+sound;Heavy Wing Flap
+f;1;Axe_047
+f;5;Axe_048
+f;9;Axe_049
+f;6;Axe_050
+sound;Heavy Wing Flap
+f;1;Axe_050
+f;4;Axe_051
+f;8;Axe_052
+f;7;Axe_053
+sound;Long Wing Flap
+f;1;Axe_053
+f;3;Axe_054
+f;2;Axe_055
+f;1;Axe_056
+f;1;Axe_057
+f;2;Axe_058
+f;1;Axe_059
+f;2;Axe_060
+platform_shake
+f;2;Axe_060
+
+pose;Miss
+f;6;Axe_074
+f;4;Axe_075
+f;7;Axe_076
+sound;Weapon Push
+f;1;Axe_076
+f;4;Axe_077
+f;2;Axe_078
+f;3;Axe_079
+miss
+f;30;Axe_079
+f;1;Axe_080
+f;2;Axe_081
+sound;Weapon Pull
+f;1;Axe_081
+f;2;Axe_082
+f;2;Axe_083
+f;8;Axe_084
+sound;Heavy Wing Flap
+f;1;Axe_084
+f;5;Axe_085
+f;9;Axe_086
+f;6;Axe_087
+sound;Heavy Wing Flap
+f;1;Axe_087
+f;4;Axe_088
+f;8;Axe_089
+f;7;Axe_090
+sound;Long Wing Flap
+f;1;Axe_090
+f;3;Axe_091
+f;2;Axe_092
+f;1;Axe_093
+f;1;Axe_094
+f;2;Axe_095
+f;1;Axe_096
+f;2;Axe_097
+platform_shake
+f;2;Axe_097
+
+pose;Stand
+f;4;Axe_071
+
