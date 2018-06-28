@@ -817,7 +817,7 @@ class UnitObject(object):
         elif item.call_item_script:
             call_item_script = 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(call_item_script))
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(call_item_script, unit=self, unit2=item))
                 gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_forced_movement(self, other_pos, movement, gameStateObj, def_pos=None):
