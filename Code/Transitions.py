@@ -120,13 +120,9 @@ class StartStart(StateMachine.State):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'AUX' and cf.OPTIONS['cheat']:
             GC.SOUNDDICT['Start'].play()
-            # selection = gameStateObj.save_slots[0]
-            gameStateObj.mode = gameStateObj.default_mode()  # Need to make sure its got a mode ready
-            if gameStateObj.mode['growths'] == '?':
-                gameStateObj.mode['growths'] = 0
-            if gameStateObj.mode['death'] == '?':
-                gameStateObj.mode['death'] = 1
+            # selection = gameStateObj.save_slots[0]    
             gameStateObj.build_new() # Make the gameStateObj ready for a new game
+            gameStateObj.set_generic_mode()
             gameStateObj.save_slot = 'DEBUG'
             gameStateObj.game_constants['level'] = 'DEBUG'
             levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])

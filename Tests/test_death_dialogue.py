@@ -6,11 +6,12 @@ import cProfile
 import pygame
 import pyautogui
 
+import Code.Engine as Engine
 import Code.GlobalConstants as GC
+
 import Code.SaveLoad as SaveLoad
 import Code.GameStateObj as GameStateObj
 import Code.Dialogue as Dialogue
-import Code.Engine as Engine
 
 import logging
 
@@ -25,15 +26,20 @@ def main():
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
     gameStateObj.build_new()
-    for num in range(0, GC.cf.CONSTANTS['num_levels']):
-        print('Level: %s'%num)
+    gameStateObj.set_generic_mode()
+    num = 0
+    while True:
         levelfolder = 'Data/Level' + str(num)
+        if not os.path.exists(levelfolder):
+            break
+        print('Level: %s' % num)
         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
-        print('Num Units: %s  Map Size: %s'%(len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
+        print('Num Units: %s  Map Size: %s' % (len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
         for unit in gameStateObj.allunits:
             run(gameStateObj, metaDataObj, unit)
         gameStateObj.clean_up()
-        print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
+        print('Num Units Remaining: %s' % (len(gameStateObj.allunits)))
+        num += 1
 
 def run(gameStateObj, metaDataObj, unit):
     print(unit.name)

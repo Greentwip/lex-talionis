@@ -9,7 +9,7 @@ import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 
 import Code.ItemMethods as ItemMethods
-import Code.CustomObjects as CustomObjects
+import Code.Weapons as Weapons
 import Code.StatusObject as StatusObject
 
 import Code.UnitSprite as UnitSprite
@@ -167,7 +167,7 @@ class Klass(object):
             self.desc = info['desc']
         else:
             self.name = ''
-            self.wexp = [0 for n in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))]
+            self.wexp = [0 for n in xrange(len(Weapons.TRIANGLE.types))]
             self.promotes_from = ''
             self.promotes_to = []
             self.movement_group = 0

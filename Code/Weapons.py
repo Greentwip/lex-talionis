@@ -91,6 +91,7 @@ class Weapon_Advantage(object):
 
     def __init__(self, fn):
         self.wadv_dict = {}
+        self.no_advantage = self.Advantage(0, 0, 0, 0, 0, 0, 0)
         self.parse_file(fn)
 
     def parse_file(self, fn):
@@ -127,13 +128,13 @@ class Weapon_Advantage(object):
                 else:
                     return self.wadv_dict['All']['All']
         else:
-            return 0
+            return self.no_advantage
 
     def get_disadvantage(self, weapon, wexp):
         if cf.CONSTANTS['weapon_adv_flip']:
             return self.get_advantage(weapon, wexp)
         else:
-            return 0
+            return self.no_advantage
 
 class Weapon_Exp(object):
     def __init__(self, fn):

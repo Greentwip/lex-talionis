@@ -324,7 +324,7 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
     return allunits, reinforceUnits
 
 def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameStateObj):
-    assert len(unitLine) in [9, 10], "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
+    assert len(unitLine) in (9, 10), "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
     legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
               'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
               'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}

@@ -25,14 +25,18 @@ def main():
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
     gameStateObj.build_new()
+    gameStateObj.set_generic_mode()
     scripts = ['preBase', 'in_base_', 'narration', 'intro', 'prep', 'turnChange', 'move',
                'menu', 'attack', 'interact']
-    for num in range(0, GC.cf.CONSTANTS['num_levels']):
-        print('Level: %s'%num)
+    num = 0
+    while True:
         levelfolder = 'Data/Level' + str(num)
+        if not os.path.exists(levelfolder):
+            break
+        print('Level: %s'% num)
         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
-        print('Num Units: %s  Map Size: %s'%(len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
-        if num == 3:
+        print('Num Units: %s  Map Size: %s' % (len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
+        if num == 10:
             for script in scripts:
                 fp = levelfolder + '/' + script + 'Script.txt'
                 run(gameStateObj, metaDataObj, fp)
@@ -44,11 +48,12 @@ def main():
             run(gameStateObj, metaDataObj, fp)
         gameStateObj.clean_up()
         print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
+        num += 1
 
 def run(gameStateObj, metaDataObj, fp):
     if os.path.exists(fp):
         print(fp)
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(fp, optionalunit=gameStateObj.allunits[0]))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(fp, unit=gameStateObj.allunits[0]))
         gameStateObj.stateMachine.changeState('dialogue')
         counter = 0
         while gameStateObj.message:

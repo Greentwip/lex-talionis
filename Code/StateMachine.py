@@ -1891,7 +1891,7 @@ class DialogueState(State):
                     gameStateObj.game_constants['level'] += 1
 
                 gameStateObj.stateMachine.clear()
-                ### Determines the number of levels in the game
+                # Determines the number of levels in the game
                 num_levels = 0
                 level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
                 for directory in level_directories:
@@ -1901,7 +1901,7 @@ class DialogueState(State):
                             num_levels = num
                     except:
                         continue
-                ###
+                        
                 if (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] >= num_levels:
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start')
@@ -1964,7 +1964,10 @@ class VictoryState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=True)
-        level_statistic = gameStateObj.statistics[-1]
+        if gameStateObj.statistics:
+            level_statistic = gameStateObj.statistics[-1]
+        else:
+            level_statistic = None
         self.state = 'init'
         self.stat_surf = self.create_stat_surf(level_statistic)
         self.stat_surf_target = self.stat_surf.get_height() + 4
@@ -1974,8 +1977,12 @@ class VictoryState(State):
         GC.SOUNDDICT['StageClear'].play()
 
     def create_stat_surf(self, stats):
-        turns = str(stats.turncount)
-        mvp = stats.get_mvp()
+        if stats:
+            turns = str(stats.turncount)
+            mvp = stats.get_mvp()
+        else:
+            turns ='0'
+            mvp = 'None'
         menu_width = 96
         bg = MenuFunctions.CreateBaseMenuSurf((menu_width, 40), 'BaseMenuBackgroundOpaque')
         img = GC.IMAGESDICT['Shimmer2']

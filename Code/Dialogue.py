@@ -474,7 +474,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'create_unit':
             # Read input
             which_unit = line[1]
-            level = eval(line[2])
+            level = str(eval(line[2]))
             to_which_position = line[3] if len(line) > 3 else None
             transition = line[4] if (len(line) > 4 and line[4]) else 'fade'
             placement = line[5] if (len(line) > 5 and line[5]) else 'give_up'
@@ -1145,7 +1145,7 @@ class Dialogue_Scene(object):
                 return
             new_unitLine = unitLine[:]
             new_unitLine.insert(4, create)
-            unit = SaveLoad.create_unit(new_unitLine, gameStateObj.allunits, gameStateObj.groups, gameStateObj.allreinforcements, metaDataObj, gameStateObj)
+            unit = SaveLoad.create_unit(new_unitLine, gameStateObj.allunits, gameStateObj.factions, gameStateObj.allreinforcements, metaDataObj, gameStateObj)
             position = self.parse_pos(unitLine[5])
         else:
             context = gameStateObj.allreinforcements.get(which_unit)

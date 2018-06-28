@@ -84,6 +84,13 @@ class GameStateObj(object):
     def default_mode(self):
         return list(GC.DIFFICULTYDATA.values())[0]
 
+    def set_generic_mode(self):
+        self.mode = self.default_mode()  # Need to make sure its got a mode ready
+        if self.mode['growths'] == '?':
+            self.mode['growths'] = 0
+        if self.mode['death'] == '?':
+            self.mode['death'] = 1
+
     def check_mode(self, legal_modes):
         return 'All' in legal_modes or self.mode['name'] in legal_modes or self.mode['id'] in legal_modes
 

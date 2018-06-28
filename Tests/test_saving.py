@@ -28,14 +28,15 @@ def main():
     metaDataObj = {}
     gameStateObj.build_new()
     done = False
-    for num in range(0, GC.cf.CONSTANTS['num_levels']):
+    for num in range(0, 12):
         if hasattr(gameStateObj, 'saving_thread'):
             gameStateObj.saving_thread.join()
         gameStateObj.save_slots = Transitions.load_saves()
-        print('Level: %s'%num)
+        print('Level: %s' % num)
         gameStateObj.build_new() # Make the gameStateObj ready for a new game
+        gameStateObj.set_generic_mode()
         gameStateObj.save_slot = 0
-        levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
+        levelfolder = 'Data/Level' + str(num)
         # Create a save for the first game
         gameStateObj.stateMachine.clear()
         gameStateObj.stateMachine.changeState('turn_change')
@@ -58,11 +59,13 @@ def main():
                     print(unit.name)
                     unit.isDying = True
                     gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes']))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
                     gameStateObj.stateMachine.changeState('dialogue')
                     dead_yet = True
                 elif suspended_yet:
-                    pyautogui.press('w')
+                    gameStateObj.statedict['levelIsComplete'] = 'win'
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt'))
+                    gameStateObj.stateMachine.changeState('dialogue')
                     suspended_yet = False
                 else:
                     SaveLoad.suspendGame(gameStateObj, 'Suspend', hard_loc='Suspend')
