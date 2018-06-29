@@ -9,7 +9,7 @@ if;gameStateObj.turncount == 1
 	#start_move
 	wait;1000
 	u;Adjutant;Left
-	move_sprite;Ophie;24,0
+	qmove_sprite;Ophie;24,0
 	s;Ophie;!{w};auto
 	s;Adjutant;Duke Ulver sends his regards.{w}{br}He regrets to inform you that he is occupied at the moment.{w};auto
 	u;Sam;MidRight
@@ -18,24 +18,24 @@ if;gameStateObj.turncount == 1
 	s;Ophie;But--{w};auto
 	s;Adjutant;My boy, do not fret.{w}{br}The Duke has graciously decided to provide you with...{w}{br}alternative entertainment.{w};auto
 	r;Adjutant;Ophie;Sam
-	set_cursor;12,8;force_hold
+	set_cursor;12,8
 	#change_tile_sprite;10,7;top_gap
 	hide_layer;1
 	show_layer;2
 	area_replace_tile;10,7;top_gap_data
 	wait;1000
-	set_cursor;12,36;force_hold
+	set_cursor;12,36
 	#change_tile_sprite;10,32;bottom_gap
 	show_layer;3
 	area_replace_tile;10,32;bottom_gap_data
 	wait;1000
-	set_cursor;18,27;force_hold
+	set_cursor;18,27
 	add_unit;br1;;warp;push
 	add_unit;br2;;warp;push
 	add_unit;br3;;warp;push
 	add_unit;br4;;warp;push
 	wait;1000
-	set_cursor;8,17;force_hold
+	set_cursor;8,17
 	add_unit;tl1;;warp;push
 	add_unit;tl2;;warp;push
 	add_unit;tl3;;warp;push
@@ -105,26 +105,26 @@ if;gameStateObj.turncount == 1
 	s;Ophie;If we give it our all...{w}{br}Well, by the light, what are waiting for!{w}{br}Let's go!{w};auto
 	r;Ophie
 elif;gameStateObj.turncount == 2
-	set_cursor;8,27;force_hold
+	set_cursor;8,27
 	add_unit;bl1;;warp;push
 	add_unit;bl2;;warp;push
 	add_unit;bl3;;warp;push
 	add_unit;bl4;;warp;push
 	wait;500
-	set_cursor;18,17;force_hold
+	set_cursor;18,17
 	add_unit;tr1;;warp;push
 	add_unit;tr2;;warp;push
 	add_unit;tr3;;warp;push
 	add_unit;tr4;;warp;push
 	wait;500
 elif;gameStateObj.turncount == 3
-	set_cursor;8,22;force_hold
+	set_cursor;8,22
 	add_unit;l1;;warp;push
 	add_unit;l2;;warp;push
 	add_unit;l3;;warp;push
 	add_unit;l4;;warp;push
 	wait;500
-	set_cursor;18,22;force_hold
+	set_cursor;18,22
 	add_unit;r1;;warp;push
 	add_unit;r2;;warp;push
 	add_unit;r3;;warp;push
@@ -140,7 +140,7 @@ elif;gameStateObj.turncount == 5
 	r;Ulver
 	wait;200
 	move_unit;Ulver;12,22;warp;push
-	set_cursor;12,22;force_hold
+	set_cursor;12,22
 	move_unit;Adjutant;12,15;warp;push
 	wait;400
 	add_unit;s1;;warp;push

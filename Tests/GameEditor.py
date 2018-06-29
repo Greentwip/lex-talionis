@@ -1,4 +1,3 @@
-
 from PyQt4 import QtGui, QtCore
 import sys
 sys.path.append('../')
@@ -169,7 +168,7 @@ class Unit(object):
 class Klass(object):
     def __init__(self, info):
         if info:
-            self.name = info['name']
+            self.name = info['id']
             self.wexp = info['wexp_gain']
             self.promotes_from = info['promotes_from']
             self.promotes_to = info['turns_into']

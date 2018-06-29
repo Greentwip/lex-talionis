@@ -18,7 +18,7 @@ Un-zip the downloaded files, and then double-click *lion_throne.exe*
 
 ### Screenshots
 ![TitleScreen](/Utilities/Screenshots/TitleScreen3.png) 
-![Range](/Utilities/Screenshots/AOE.gif)
+![Range](/Utilities/Screenshots/AOE2.gif)
 ![Skill](/Utilities/Screenshots/OphieSkill.gif)
 ![Prep](/Utilities/Screenshots/TheoSearch.gif)
 ![Conversation](/Utilities/Screenshots/Conversation1.png) 
@@ -31,9 +31,11 @@ Un-zip the downloaded files, and then double-click *lion_throne.exe*
 
 Lex Talionis is the custom Fire Emblem engine that runs The Lion Throne. If you've wanted to make your own Fire Emblem fangame but were fed up with the hackery that's required to master ROM-hacking, or you just want to work with total control over the code itself, Lex Talionis is for you. 
 
-Not interested in coding? That's fine -- you can create a whole new game with touching any code. Just modify the "Data" folder, which only contains sprites, text files, and xml files! But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
+Not interested in coding? That's fine -- you can create a whole new game with touching any code. 
 
-I am planning to create a tutorial on how to use the Lex Talionis engine.
+There is a simple [Tutorial](https://github.com/rainlash/lex-talionis/wiki) here, which will teach you how to get started today, without having to learn how to code! 
+
+But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
 
 Both the engine and the game are still in Alpha, so there may (and probably are) bugs in the code. Tread carefully.
 
@@ -47,19 +49,14 @@ Both the engine and the game are still in Alpha, so there may (and probably are)
 
 ## Default Controls:
 
- - Arrow keys move the cursor.
+ - Arrow keys move the cursor.  
+ - {X} is the 'A' button. Go forward.  
+ - {Z} is the 'B' button. Go backward.  
+ - {C} is the 'R' button. It gives the player additional info.  
+ - {S} is the 'Start' button.  
+ - {A} is the 'L' button.  
 
- - {X} is the 'A' button. Go forward.
-
- - {Z} is the 'B' button. Go backward.
-
- - {C} is the 'R' button. It gives the player additional info.
-
- - {S} is the 'Start' button. 
-
- - {A} is the 'L' button.
-
-These defaults can be changed within the game or in the Data/config.txt file
+These defaults can be changed within the game.
 
 ## Getting Started
 
@@ -69,7 +66,7 @@ However, if you are familiar with Python, Pygame, and Git, read on to find out h
 
 ### Prerequisites
 
-To run The Lion Throne, you will need to download and install the following:
+To run the engine, you will need to download and install the following:
 
 * [Python 2.7.x+](https://www.python.org/downloads/release/python-2712/) - Python 3.x will not work
 * [Pygame 1.9.1+](http://www.pygame.org/download.shtml) - The framework used to handle rendering and sound
@@ -79,8 +76,8 @@ To run The Lion Throne, you will need to download and install the following:
 This section requires git.
 If you don't have git, install it from here: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git.
 
-To get the Lex Talionis engine code on your machine, create a new folder.
-Then, type:
+To get the Lex Talionis engine code on your machine, create a new folder.  
+Then, in the command line or a terminal, type:
 
 ```
 git clone https://github.com/rainlash/lex-talionis
@@ -100,7 +97,7 @@ Once Lex Talionis has been cloned to your machine, from that same directory, you
 python main.py
 ```
 
-A small screen should pop up on your computer, displaying the logo. Don't worry if it takes a minute or two the first time it is run. It is just taking the time to parse the code into compiled binary files.
+A small screen should pop up on your computer, displaying the logo. Don't worry if it takes a couple of minutes the first time it is run. It is just taking the time to turn the code text into compiled bytecode.
 
 ## License
 

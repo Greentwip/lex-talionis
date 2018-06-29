@@ -1,6 +1,6 @@
 # has our party size fallen below four?
 if;gameStateObj.get_total_party_members() < 5
-	add_minimum_number_banner
+	minimum_number_banner
 	lose_game
 	t;1
 elif;gameStateObj.check_dead('Harold')
@@ -12,8 +12,8 @@ elif;gameStateObj.check_dead('Harold')
 	s;Renae;Score one for the Resistance!{w};auto
 	r;Ophie;Renae
 	# Increment this a couple of times to make sure the game realizes this is a good end.
-	inc_counter;switches
-	inc_counter;switches
-	inc_counter;switches
+	inc_game_constant;switches
+	inc_game_constant;switches
+	inc_game_constant;switches
 	win_game
 end

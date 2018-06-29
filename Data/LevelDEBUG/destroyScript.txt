@@ -1,4 +1,4 @@
-if;self.optionalunit == '1'
+if;self.name == '1'
     set_cursor;0,0;force_hold
     wait;500
     change_tile_sprite;0,0;Door;destroy

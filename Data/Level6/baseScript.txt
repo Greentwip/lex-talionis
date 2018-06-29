@@ -1,5 +1,5 @@
 # Base Script Level 6
-if;self.optionalunit == 'Theo Sphinx, Pt. III'
+if;self.name == 'Theo Sphinx, Pt. III'
 	# Episode 3
 	m;Jazz Noir
 	b;TacticsRoomDay
@@ -20,18 +20,18 @@ if;self.optionalunit == 'Theo Sphinx, Pt. III'
 	s;Theo;Clearly, Sam was not going to be any more help.{w}{br}He didn't know a thing--{w}{br}no surprise.{w}{br}After I roughed him up a bit, he made like a rat on a sinking ship and bailed.{w}{br}But I had one more lead, and I was going to make it count.{w};auto;noir
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. III
-	inc_counter;noir
+	inc_game_constant;noir
 	t;1
-elif;self.optionalunit == 'Guard Duty'
+elif;self.name == 'Guard Duty'
 	m;Brave Story - Hare
 	b;Cave
 	t;2
 	u;Renae;Left
 	wait;500
 	qu;Drake;OffscreenRight
-	move_sprite;Drake;-108,0;force_hold
+	move_sprite;Drake;-108,0
 	s;Renae;Hey!
-	move_sprite;Drake;12,0;force_hold
+	move_sprite;Drake;12,0
 	s;Drake;Ah!
 	s;Renae;Not so fast there, stranger!
 	s;Drake;Huh? Miss, are you addressing me?
@@ -67,7 +67,7 @@ elif;self.optionalunit == 'Guard Duty'
 	r;Drake
 	grey_base_convo;Guard Duty
 	t;1
-elif;self.optionalunit == 'Cipher'
+elif;self.name == 'Cipher'
 	m;Hum of the Streets
 	b;GenericRoom
 	t;2
@@ -80,7 +80,7 @@ elif;self.optionalunit == 'Cipher'
 	s;Kayla;I'm certain. Can't you sense the aura?
 	s;Sam;You know I've no talent for that.{w}{br}Anyway, I think I do recognize some of this script.{w}{br}Here. Move over.
 	r;Sam
-	move_sprite;Kayla;-24,0
+	qmove_sprite;Kayla;-24,0
 	u;Sam;MidLeft
 	s;Sam;This section is total gibberish, but this right here.{w}{br}It almost looks like a legend or guide.
 	s;Kayla;You're thinking it's encoded?

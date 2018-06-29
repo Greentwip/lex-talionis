@@ -1,5 +1,6 @@
 # Autotile maker part 2
 import os
+from collections import Counter
 from PIL import Image
 
 WIDTH, HEIGHT = 16, 16
@@ -43,18 +44,17 @@ class PaletteData(object):
         self.uniques = reduce(lambda l, x: l if x in l else l+[x], self.data, [])
         self.uniques = sorted(self.uniques, key=lambda x: self.data.count(x), reverse=True)
         self.palette = self.data[:]
-        #self.simple_palette = self.data[:]
+        # self.simple_palette = self.data[:]
         for u in self.uniques:
             for index, pixel in enumerate(self.data):
                 if pixel == u:
                     self.palette[index] = count
-                #if pixel[2] > pixel[1] and pixel[2] > pixel[0]:
+                # if pixel[2] > pixel[1] and pixel[2] > pixel[0]:
                 #    self.simple_palette[index] = 1 # Blue
-                #else:
+                # else:
                 #    self.simple_palette[index] = 0 # Not really blue
             count += 1
 
-from collections import Counter
 def remove_bad_color(new):
     for i in range(WIDTH):
         for j in range(HEIGHT):
@@ -69,7 +69,6 @@ def remove_bad_color(new):
     return new
 
 def color_change_band(series, palette, current, test_im, (x, y)):
-
     # Build color conversion dictionary
     color_conversion_dict = {}
     for index, color in enumerate(palette.data):

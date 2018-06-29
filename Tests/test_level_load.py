@@ -3,7 +3,6 @@ import os, time
 import pstats
 import cProfile
 
-import Code.GlobalConstants as GC
 import Code.SaveLoad as SaveLoad
 import Code.GameStateObj as GameStateObj
 
@@ -16,14 +15,20 @@ def main():
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
     gameStateObj.build_new()
-    for num in range(0, GC.cf.CONSTANTS['num_levels']):
+    gameStateObj.set_generic_mode()
+    num = 0
+    while True:
+        levelfolder = 'Data/Level' + str(num)
+        if not os.path.exists(levelfolder):
+            break
         time1 = time.clock()
-        print('Level: %s'%num)
-        SaveLoad.load_level('Data/Level' + str(num), gameStateObj, metaDataObj)
-        print('Time to Load: %s'%(time.clock() - time1))
-        print('Num Units: %s  Map Size: %s'%(len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
+        print('Level: %s' % num)
+        SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
+        print('Time to Load: %s' % (time.clock() - time1))
+        print('Num Units: %s  Map Size: %s' % (len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
         gameStateObj.clean_up()
-        print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
+        print('Num Units Remaining: %s' % (len(gameStateObj.allunits)))
+        num += 1
 
 if __name__ == '__main__':
     cProfile.run("main()", "Profile.prof")

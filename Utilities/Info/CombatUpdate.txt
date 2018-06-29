@@ -104,3 +104,20 @@ What's Next:
 Level Editor and Tutorial (I have considered a fully-fledged Graphical GUI (the beginnings are present under GameEditor.py in Tests), but there is so much customizable options (especially for Items and Statuses) that a graphical GUI could not cover. Will show how to do everything using text in Tutorial. However, a Level Editor for individual levels will be useful)
 Mac/Linux Exectuble creation (It works on most Macs and Linux boxes if you have Python 2.7+ and Pygame 1.9.2+) Going to have to borrow a mac and linux box to create executables for those OSs
 Android Support (Managed to get game to appear on an Android emulator using PygameSDL2 instead of Pygame. Not currently working on this, since I do not have an Android device)
+
+Still Needed:
+** Animations **
+Spell Animations:
+Restore
+Evil Eye
+Shadowshot
+Demon Surge
+
+Unit Animations:
+Female Soldier
+Male Halberdier (Lance and Axe)
+Female Halberdier (Lance and Axe)
+Skirmisher (Lance)
+Sentinel (Axe)
+
+There are probably still tons of bugs. Wade in at your own peril

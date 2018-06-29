@@ -1,8 +1,8 @@
 # Imports
 import GlobalConstants as GC
 import configuration as cf
-import Engine, InputManager, StateMachine
-import Image_Modification, MenuFunctions, CustomObjects, InfoMenu
+import Engine, StateMachine
+import Image_Modification, MenuFunctions, Weapons, InfoMenu
 import GUIObjects, Counters
 
 class UnitMenu(StateMachine.State):
@@ -18,7 +18,7 @@ class UnitMenu(StateMachine.State):
                            ('Fighting Skill', ['STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES'], [4, 26, 48, 71, 94, 119, 142]),
                            ('Equipment', ['Equip', 'Atk', 'Hit', 'Avoid'], [16, 72, 103, 136]),
                            ('Personal Data', ['MOV', 'CON', 'Aid', 'Rat', 'Trv'], [4, 33, 60, 82, 106]),
-                           ('Weapon Level', CustomObjects.WEAPON_TRIANGLE.types, [9 + idx*16 for idx in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))])]
+                           ('Weapon Level', Weapons.TRIANGLE.types, [9 + idx*16 for idx in range(len(Weapons.TRIANGLE.types))])]
             if cf.CONSTANTS['support']:
                 self.states.append(('Support Chance', ['Ally'], [0]))
             self.state_index = 0
@@ -31,7 +31,7 @@ class UnitMenu(StateMachine.State):
             self.state_scroll = 0
             self.scroll_direction = 0
 
-            self.weapon_icons = [CustomObjects.WeaponIcon(weapon) for weapon in CustomObjects.WEAPON_TRIANGLE.types]
+            self.weapon_icons = [Weapons.Icon(weapon) for weapon in Weapons.TRIANGLE.types]
             self.help_boxes = []
             self.info = False
 
@@ -84,6 +84,7 @@ class UnitMenu(StateMachine.State):
                 else:
                     self.current_sort = new_sort
                 self.sort(gameStateObj)
+                GC.SOUNDDICT['Select 3'].play()
         elif 'RIGHT' in directions:
             if self.unit_index:
                 self.next_state()
@@ -107,6 +108,9 @@ class UnitMenu(StateMachine.State):
             self.banner_index = 1
             self.help_boxes = []
             self.right_arrow.pulse()
+            GC.SOUNDDICT['Status_Page_Change'].play()
+        else:
+            GC.SOUNDDICT['Error'].play()
 
     def prev_state(self):
         if self.state_index > 0:
@@ -116,12 +120,17 @@ class UnitMenu(StateMachine.State):
             self.banner_index = 10
             self.help_boxes = []
             self.left_arrow.pulse()
+            GC.SOUNDDICT['Status_Page_Change'].play()
+        else:
+            GC.SOUNDDICT['Error'].play()
 
     def next_banner(self):
         self.banner_index += 1
         self.right_arrow.pulse()
         if self.banner_index >= len(self.help_boxes):
             self.next_state()
+        else:
+            GC.SOUNDDICT['Select 6'].play()
 
     def prev_banner(self):
         if self.banner_index > 0:
@@ -129,15 +138,19 @@ class UnitMenu(StateMachine.State):
             self.banner_index -= 1
         if self.banner_index < 1:
             self.prev_state()
+        else:
+            GC.SOUNDDICT['Select 6'].play()
 
     def move_up(self):
         if self.unit_index > 0:
+            GC.SOUNDDICT['Select 6'].play()
             self.unit_index -= 1
         if self.scroll_index >= self.unit_index and self.scroll_index > 1:
             self.scroll_index -= 1
 
     def move_down(self):
         if self.unit_index < len(self.units):
+            GC.SOUNDDICT['Select 6'].play()
             self.unit_index += 1
             self.info = False
         if self.scroll_index <= self.unit_index - self.num_per_page + 1 and self.scroll_index <= len(self.units) - self.num_per_page:
@@ -146,10 +159,10 @@ class UnitMenu(StateMachine.State):
     def move_to_unit(self, unit):
         new_unit_index = self.units.index(unit) + 1
         if new_unit_index > self.unit_index:
-            for num in xrange(new_unit_index - self.unit_index):
+            for num in range(new_unit_index - self.unit_index):
                 self.move_down()
         elif new_unit_index < self.unit_index:
-            for num in xrange(self.unit_index - new_unit_index):
+            for num in range(self.unit_index - new_unit_index):
                 self.move_up()
 
     def update(self, gameStateObj, metaDataObj):
@@ -176,7 +189,8 @@ class UnitMenu(StateMachine.State):
         self.draw_banner(surf)
         self.draw_sort(surf)
         self.draw_page_numbers(surf)
-        self.scroll_bar.draw(surf, self.scroll_index - 1, 6, len(self.units))
+        if self.units:
+            self.scroll_bar.draw(surf, self.scroll_index - 1, 6, len(self.units))
         if self.state_index > 0:
             self.left_arrow.draw(surf)
         if self.state_index < len(self.states) - 1:
@@ -188,7 +202,7 @@ class UnitMenu(StateMachine.State):
     def draw_highlight(self, surf):
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
-        for slot in range(216/width): # Gives me the amount of highlight needed
+        for slot in range(216//width): # Gives me the amount of highlight needed
             topleft = (8 + slot*width, 64 + 2 + (self.unit_index-self.scroll_index)*16)
             surf.blit(highlightSurf, topleft)
 
@@ -198,8 +212,8 @@ class UnitMenu(StateMachine.State):
         for idx, unit in enumerate(self.units[self.scroll_index-1:self.scroll_index-1+self.num_per_page]):
             # Image
             unit_sprite = unit.sprite.create_image('passive')
-            left = 8 - max(0, (unit_sprite.get_width() - 16)/2)
-            top = 48 + idx*16 - max(0, (unit_sprite.get_height() - 16)/2)
+            left = 8 - max(0, (unit_sprite.get_width() - 16)//2)
+            top = 48 + idx*16 - max(0, (unit_sprite.get_height() - 16)//2)
             surf.blit(unit_sprite, (left, top))
             # Name
             font.blit(unit.name, surf, (24, 56 + idx*16))
@@ -207,7 +221,7 @@ class UnitMenu(StateMachine.State):
     def draw_banner(self, surf):
         surf.blit(self.title_bg, (0, 0))
         title = self.states[self.state_index][0]
-        GC.FONT['text_brown'].blit(title, surf, (64 - GC.FONT['text_brown'].size(title)[0]/2, 8))
+        GC.FONT['text_brown'].blit(title, surf, (64 - GC.FONT['text_brown'].size(title)[0]//2, 8))
 
     def draw_cursor(self, surf):
         self.banner_index = min(self.banner_index, len(self.help_boxes) - 1)
@@ -279,12 +293,13 @@ class UnitMenu(StateMachine.State):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
         font = GC.FONT['text_white']
-        for idx in xrange(len(titles)):
+        for idx in range(len(titles)):
             font.blit(cf.WORDS[titles[idx]], surf, (offsets[idx], 0))
 
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
-            font.blit(unit.klass, surf, (4, top))
+            long_name = metaDataObj['class_dict'][unit.klass]['long_name']
+            font.blit(long_name, surf, (4, top))
             GC.FONT['text_blue'].blit(str(unit.level), surf, (80 - GC.FONT['text_blue'].size(str(unit.level))[0], top))
             GC.FONT['text_blue'].blit(str(unit.exp), surf, (100 - GC.FONT['text_blue'].size(str(unit.exp))[0], top))
             c_hp = str(unit.currenthp)
@@ -298,7 +313,7 @@ class UnitMenu(StateMachine.State):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
         font = GC.FONT['text_white']
-        for idx in xrange(len(titles)):
+        for idx in range(len(titles)):
             font.blit(cf.WORDS[titles[idx]], surf, (offsets[idx], 0))
 
         value_offsets = [16, 40, 64, 88, 112, 136, 160]
@@ -313,7 +328,7 @@ class UnitMenu(StateMachine.State):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
         font = GC.FONT['text_white']
-        for idx in xrange(len(titles)):
+        for idx in range(len(titles)):
             font.blit(cf.WORDS[titles[idx]], surf, (offsets[idx], 0))
 
         for idx, unit in enumerate(self.avail_units()):
@@ -335,7 +350,7 @@ class UnitMenu(StateMachine.State):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
         font = GC.FONT['text_white']
-        for idx in xrange(len(titles)):
+        for idx in range(len(titles)):
             font.blit(cf.WORDS[titles[idx]], surf, (offsets[idx], 0))
 
         for idx, unit in enumerate(self.avail_units()):
@@ -361,7 +376,7 @@ class UnitMenu(StateMachine.State):
             top = idx*16 + 16
             for index, wexp in enumerate(unit.wexp):
                 if wexp > 0:
-                    wexpLetter = CustomObjects.WEAPON_EXP.number_to_letter(wexp)
+                    wexpLetter = Weapons.EXP.number_to_letter(wexp)
                 else:
                     wexpLetter = '-'
                 pos = (24 + index*16 - GC.FONT['text_blue'].size(wexpLetter)[0], top)
@@ -378,7 +393,7 @@ class UnitMenu(StateMachine.State):
     def summon_help_boxes(self, titles, offsets):
         if not self.help_boxes:
             self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.create_help_box(cf.WORDS['Name_desc'])))
-            for idx in xrange(len(titles)):
+            for idx in range(len(titles)):
                 pos = (offsets[idx] + 64 - 15 - 2, 40)
                 self.help_boxes.append(InfoMenu.Help_Box(titles[idx], pos, InfoMenu.create_help_box(cf.WORDS[titles[idx] + '_desc'])))
 
@@ -412,8 +427,8 @@ class UnitMenu(StateMachine.State):
             comp = lambda unit: unit.accuracy(gameStateObj)
         elif self.current_sort == 'Avoid':
             comp = lambda unit: unit.avoid(gameStateObj)
-        elif self.current_sort in CustomObjects.WEAPON_TRIANGLE.types:
-            comp = lambda unit: unit.wexp[CustomObjects.WEAPON_TRIANGLE.types.index(self.current_sort)]
+        elif self.current_sort in Weapons.TRIANGLE.types:
+            comp = lambda unit: unit.wexp[Weapons.TRIANGLE.types.index(self.current_sort)]
         elif self.current_sort == 'Equip':
             comp = lambda unit: GC.ITEMDATA[unit.getMainWeapon().id]['num'] if unit.getMainWeapon() else 1000
 

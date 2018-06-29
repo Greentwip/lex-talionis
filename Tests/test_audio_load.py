@@ -1,28 +1,33 @@
-import time, os
+import time, os, sys
 
 # Test image loading
 import pstats
 import cProfile
 
 import pygame
-import Code.GlobalConstants as GC
-import Code.imagesDict as images
+sys.path.append('../')
 import Code.Engine as Engine
+# So that the code basically starts looking in the parent directory
+Engine.engine_constants['home'] = '../'
+import Code.GlobalConstants as GC
 
 import logging
 GC.DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))
 
 my_level = logging.DEBUG
-logging.basicConfig(filename='Tests/debug.log.test', filemode='w', level=my_level, 
+logging.basicConfig(filename='debug.log.test', filemode='w', level=my_level, 
                     disable_existing_loggers=False, format='%(levelname)8s:%(module)20s: %(message)s')
 
 def main():
-    GC.SOUNDDICT, GC.MUSICDICT = images.getSounds()
-    print('Num Music: %s'%len(GC.MUSICDICT))
-    print('Num Sounds: %s'%len(GC.SOUNDDICT))
-    for num in range(0, GC.cf.CONSTANTS['num_levels']):
-        print('Level: %s'%num)
+    print('Num Music: %s' % len(GC.MUSICDICT))
+    print('Num Sounds: %s' % len(GC.SOUNDDICT))
+
+    num = 0
+    while True:
         levelfolder = 'Data/Level' + str(num)
+        if not os.path.exists(levelfolder):
+            break
+        print('Level: %s' % num)
         for fp in os.listdir(levelfolder):
             if fp.endswith('Script.txt'):
                 with open(levelfolder + '/' + fp) as script:
@@ -47,6 +52,7 @@ def main():
                                 Engine.music_thread.fade_in(GC.MUSICDICT[line[1]])
                             else:
                                 print("***Couldn't find music matching %s"%line[1])
+        num += 1
 
     print('Sound check!')
     for name, sfx in GC.SOUNDDICT.iteritems():

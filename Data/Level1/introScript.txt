@@ -68,7 +68,7 @@ t;1
 remove_background
 t;2
 # Enemies appear
-set_cursor;17,7;force_hold
+set_cursor;17,7
 add_unit;Sidney
 add_tag;Sidney;Boss
 disp_cursor;1
@@ -93,7 +93,7 @@ move_unit;F2;7,8
 move_unit;F3;12,6
 move_unit;A1;16,4
 start_move
-set_cursor;Joel;force_hold
+set_cursor;Joel
 u;Joel;FarLeft
 u;Sidney;FarRight
 s;Joel;Not without goin' through me first!{w};auto

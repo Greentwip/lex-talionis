@@ -13,5 +13,4 @@ set_tile_info;12,3
 t;1
 remove_background
 t;2
-# add_game_constant;House1Visited
 give_item;{unit};Hand Axe

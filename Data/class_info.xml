@@ -1,7 +1,8 @@
 <class_info>
 <!-- Tier 0 Classes -->
     <class id="Citizen">
-        <name>Citizen</name>
+        <short_name>Citizen</short_name>
+        <long_name>Citizen</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,0,0</wexp_gain>
@@ -21,7 +22,8 @@
 <!-- Normal Classes -->
     <!-- Myrmidon -> Swordmaster -->
     <class id="Myrmidon">
-        <name>Myrm.</name>
+        <short_name>Myrm.</short_name>
+        <long_name>Myrmidon</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
@@ -39,7 +41,8 @@
     </class>
 
     <class id="Swordmaster">
-        <name>Swd. Mstr.</name>
+        <short_name>Swd. Mstr.</short_name>
+        <long_name>Swordmaster</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>10,0,0,0,0,0,0</wexp_gain>
@@ -59,7 +62,8 @@
 
     <!-- Mercenary -> Vanguard -->
     <class id="Mercenary">
-        <name>Merc.</name>
+        <short_name>Merc.</short_name>
+        <long_name>Mercenary</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
@@ -77,7 +81,8 @@
     </class>
 
     <class id="Vanguard">
-        <name>Vanguard</name>
+        <short_name>Vanguard</short_name>
+        <long_name>Vanguard</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>10,0,16,0,0,0,0</wexp_gain>
@@ -97,7 +102,8 @@
 
     <!-- Thief -> Assassin -->
     <class id="Thief">
-        <name>Thief</name>
+        <short_name>Thief</short_name>
+        <long_name>Thief</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
@@ -115,7 +121,8 @@
     </class>
 
     <class id="Assassin">
-        <name>Assassin</name>
+        <short_name>Assassin</short_name>
+        <long_name>Assassin</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,0,0,16,0,0,0</wexp_gain>
@@ -135,7 +142,8 @@
 
     <!-- Soldier -> Halberdier -->
     <class id="Soldier">
-        <name>Soldier</name>
+        <short_name>Soldier</short_name>
+        <long_name>Soldier</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,0,0,0,0,0</wexp_gain>
@@ -146,17 +154,18 @@
         <tags></tags>
         <skills>1,Synergy;5,Feat;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,65,15,65,60,35,35,20</growths>
+		<growths>105,65,15,70,60,35,40,20</growths>
 		<bases>13,2,0,4,0,0,0,0,7,5</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Well-rounded combatants who rely on their exceptional skill.</desc>
     </class>
 
     <class id="Halberdier">
-        <name>Halberdier</name>
+        <short_name>Halberdier</short_name>
+        <long_name>Halberdier</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
-        <wexp_gain>0,1,16,0,0,0,0</wexp_gain>
+        <wexp_gain>0,10,0,0,0,0,0</wexp_gain>
         <promotes_from>Soldier</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -164,16 +173,17 @@
         <tags></tags>
         <skills>3,Feat;5,Luna;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,65,15,65,60,35,35,20</growths>
+		<growths>105,65,15,70,60,35,40,20</growths>
 		<bases>17,3,1,6,2,0,5,2,9,6</bases>
-        <promotion>4,1,1,2,2,0,5,2,2,1</promotion>
+        <promotion>4,1,1,2,3,0,4,2,2,1</promotion>
 		<max>40,18,15,20,17,20,19,17,20</max>
-        <desc>Veteran frontliners who wield axe and lance</desc>
+        <desc>Veteran frontliners who claim never to miss their target.</desc>
     </class>
 
     <!-- Cavalier -> Paladin -->
     <class id="Cavalier">
-        <name>Cavalier</name>
+        <short_name>Cavalier</short_name>
+        <long_name>Cavalier</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,1,0,0,0,0,0</wexp_gain>
@@ -191,7 +201,8 @@
     </class>   
 
     <class id="Paladin">
-        <name>Paladin</name>
+        <short_name>Paladin</short_name>
+        <long_name>Paladin</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,1,0,0,0,0,0</wexp_gain>
@@ -211,7 +222,8 @@
 
     <!-- Knight -> General -->
     <class id="Knight">
-        <name>Knight</name>
+        <short_name>Knight</short_name>
+        <long_name>Knight</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,0,0,0,0,0</wexp_gain>
@@ -229,10 +241,11 @@
     </class>
 
     <class id="General">
-        <name>General</name>
+        <short_name>General</short_name>
+        <long_name>General</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
-        <wexp_gain>16,1,0,0,0,0,0</wexp_gain>
+        <wexp_gain>16,1,16,0,0,0,0</wexp_gain>
         <promotes_from>Knight</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -249,7 +262,8 @@
 
     <!-- Skirmisher -> Dragoon -->
     <class id="Skirmisher">
-        <name>Skirmisher</name>
+        <short_name>Skirmisher</short_name>
+        <long_name>Skirmisher</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,0,0,0,0,0</wexp_gain>
@@ -267,7 +281,8 @@
     </class>
 
     <class id="Dragoon">
-        <name>Dragoon</name>
+        <short_name>Dragoon</short_name>
+        <long_name>Dragoon</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,10,0,0,0,0,0</wexp_gain>
@@ -287,7 +302,8 @@
 
     <!-- Fighter -> Warrior -->
     <class id="Fighter">
-        <name>Fighter</name>
+        <short_name>Fighter</short_name>
+        <long_name>Fighter</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -305,7 +321,8 @@
     </class>
 
     <class id="Warrior">
-        <name>Warrior</name>
+        <short_name>Warrior</short_name>
+        <long_name>Warrior</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,16,0,0,0</wexp_gain>
@@ -325,7 +342,8 @@
 
     <!-- Archer -> Sniper -->
     <class id="Archer">
-        <name>Archer</name>
+        <short_name>Archer</short_name>
+        <long_name>Archer</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,1,0,0,0</wexp_gain>
@@ -343,7 +361,8 @@
     </class> 
 
     <class id="Sniper">
-        <name>Sniper</name>
+        <short_name>Sniper</short_name>
+        <long_name>Sniper</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,10,0,0,0</wexp_gain>
@@ -363,7 +382,8 @@
 
     <!-- Tactician -> Strategist -->
     <class id="Tactician">
-        <name>Tactician</name>
+        <short_name>Tactician</short_name>
+        <long_name>Tactician</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,1,0,0</wexp_gain>
@@ -381,7 +401,8 @@
     </class>
 
     <class id="Strategist">
-        <name>Strtgst.</name>
+        <short_name>Strtgst.</short_name>
+        <long_name>Strategist</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,10,0,0</wexp_gain>
@@ -401,7 +422,8 @@
 
     <!-- Cleric -> Oracle -->
     <class id="Cleric">
-        <name>Cleric</name>
+        <short_name>Cleric</short_name>
+        <long_name>Cleric</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,1,0,0</wexp_gain>
@@ -419,7 +441,8 @@
     </class>
 
     <class id="Oracle">
-        <name>Oracle</name>
+        <short_name>Oracle</short_name>
+        <long_name>Oracle</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,1,0,16</wexp_gain>
@@ -439,7 +462,8 @@
 
     <!-- Mage -> Sage -->
     <class id="Mage">
-        <name>Mage</name>
+        <short_name>Mage</short_name>
+        <long_name>Mage</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,1,0</wexp_gain>
@@ -457,7 +481,8 @@
     </class>
 
     <class id="Sage">
-        <name>Sage</name>
+        <short_name>Sage</short_name>
+        <long_name>Sage</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,10,0</wexp_gain>
@@ -477,7 +502,8 @@
 
     <!-- Shaman -> Warlock -->
     <class id="Shaman">
-        <name>Shaman</name>
+        <short_name>Shaman</short_name>
+        <long_name>Shaman</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,0,1</wexp_gain>
@@ -495,7 +521,8 @@
     </class>
 
     <class id="Warlock">
-        <name>Warlock</name>
+        <short_name>Warlock</short_name>
+        <long_name>Warlock</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,0,10</wexp_gain>
@@ -515,7 +542,8 @@
 
     <!-- Raider -> Berserker -->
     <class id="Raider">
-        <name>Raider</name>
+        <short_name>Raider</short_name>
+        <long_name>Raider</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -533,7 +561,8 @@
     </class>
 
     <class id="Berserker">
-        <name>Berserker</name>
+        <short_name>Berserker</short_name>
+        <long_name>Berserker</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,10,0,0,0,0</wexp_gain>
@@ -553,7 +582,8 @@
 
     <!-- Dracoknight -> Dracolord -->
     <class id="Dracoknight">
-        <name>Dr. knight</name>
+        <short_name>Dr. knight</short_name>
+        <long_name>Dracoknight</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,0,0,0,0,0</wexp_gain>
@@ -571,7 +601,8 @@
     </class>
 
     <class id="Dracolord">
-        <name>Dr. lord</name>
+        <short_name>Dr. lord</short_name>
+        <long_name>Dracolord</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,1,1,0,0,0,0</wexp_gain>
@@ -592,7 +623,8 @@
 <!-- Enemy Only Classes -->
     <!-- Brigand -> ??? -->
     <class id="Brigand">
-        <name>Brigand</name>
+        <short_name>Brigand</short_name>
+        <long_name>Brigand</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -611,7 +643,8 @@
         
     <!-- Sentinel -->
     <class id="Sentinel">
-        <name>Sentinel</name>
+        <short_name>Sentinel</short_name>
+        <long_name>Sentinel</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -629,7 +662,8 @@
     </class>  
 
     <class id="Ballista">
-        <name>Ballista</name>
+        <short_name>Ballista</short_name>
+        <long_name>Ballista</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,1,0,0,0</wexp_gain>
@@ -647,8 +681,9 @@
     </class> 
 
     <!-- Duke -->
-        <class id="Duke">
-        <name>Duke</name>
+    <class id="Duke">
+        <short_name>Duke</short_name>
+        <long_name>Duke</long_name>
         <tier>3</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,1,1,0,0,0,0</wexp_gain>
@@ -668,7 +703,8 @@
 
 <!-- Summoned only classes -->
     <class id="Phantom">
-        <name>Phantom</name>
+        <short_name>Phantom</short_name>
+        <long_name>Phantom</long_name>
         <tier>0</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,1,0,0,0,0</wexp_gain>
@@ -686,7 +722,8 @@
     </class>
 
     <class id="Wagon">
-        <name>Wagon</name>
+        <short_name>Wagon</short_name>
+        <long_name>Wagon</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>0,0,0,0,0,0,0</wexp_gain>

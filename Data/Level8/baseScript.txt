@@ -1,5 +1,5 @@
 # Althea and Prim and Drake discuss Althea's return to the throne
-if;self.optionalunit == 'Midnight Rendezvous'
+if;self.name == 'Midnight Rendezvous'
 	# Coyote and Sam discuss passage into Rajas
 	m;Toorimichi
 	b;TacticsRoom
@@ -20,19 +20,19 @@ if;self.optionalunit == 'Midnight Rendezvous'
 	s;Sam;You expect me to believe--
 	s;Coyote;It's the only way in.
 	s;Sam;...*sigh*{w}{br}If we can find one of these tunnels...
-	move_sprite;Coyote;-24,0;force_hold
+	move_sprite;Coyote;-24,0
 	s;Coyote;I was never here. Got that?
 	s;Sam;Wait, what?
 	s;Coyote;I was never here.
 	r;Coyote
 	s;Sam;...There is something very wrong with that man.{w}{br}...
-	move_sprite;Sam;-24,0;force_hold
+	move_sprite;Sam;-24,0
 	s;Sam;What's this?
 	give_item;Sam;Fortune
 	r;Sam
 	grey_base_convo;Midnight Rendezvous
 	t;1
-elif;self.optionalunit == 'Coronation'
+elif;self.name == 'Coronation'
 	m;Lady Eboshi
 	b;GenericRoom
 	t;2
@@ -43,7 +43,7 @@ elif;self.optionalunit == 'Coronation'
 	mirror;Althea
 	s;Althea;O-oh Prim... ah...{w}{br}Just a m-moment...
 	s;Prim;...
-	move_sprite;Althea;24,0;force_hold
+	move_sprite;Althea;24,0
 	s;Althea;H-Hello, Prim. Here, please sit.
 	s;Prim;Your face is all red.
 	s;Althea;It's nothing...
@@ -57,7 +57,7 @@ elif;self.optionalunit == 'Coronation'
 	s;Althea;It's not that I can't be queen...{w}{br}I just won't be able to.{w}{br}I have no experience...{w}{br}My sister was the expected heir to the throne.{w}{br}She was the one everyone looked up to...{w}{br}She was so strong. I am but a shadow in comparison...
 	s;Prim;That doesn't matter, Althea--
 	s;Althea;It does! I'm... I'm too weak.{w}{br}Everyone will be relying on me.{w}{br}What if I fail? I-It's too much! 
-	move_sprite;Prim;-48,0;force_hold
+	move_sprite;Prim;-48,0
 	s;Prim;There there.{w}{br}Slow down... you'll make yourself hysterical.
 	s;Althea;See I'm just weak...{w}{br}I have nothing of the royal strength in me.
 	s;Prim;That's untrue, Althea. You do have the makings of a queen.{w}{br}I may not know much about politics or government,{w}{br}but I have a knack for knowing a good person when I see one.{w}{br}And I know that you do not lack strength.
@@ -67,7 +67,7 @@ elif;self.optionalunit == 'Coronation'
 	s;Prim;You won't be taking on the responsibility of the throne alone.{w}{br}Do you think we'll just abandon you?{w}{br}Our job will not be over when Kerala is freed.
 	u;Drake;Right
 	r;Prim
-	move_sprite;Althea;-24,0
+	qmove_sprite;Althea;-24,0
 	u;Prim;MidLeft
 	s;Prim;Drake?
 	s;Drake;My lady Althea... Your conduct at the meeting was concerning--{w}{br}Wait, you've been crying?{w}{br}I would not normally strike a lady, Prim, but you leave me no choice--

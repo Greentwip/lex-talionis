@@ -23,7 +23,7 @@ class Weather(object):
 
         # print(self.abundance, len(self.particles))
         # If we're missing some particles and we haven't updated in 250 ms over the num of particles
-        if len(self.particles) < self.abundance and current_time - self.last_update > 250/self.abundance:
+        if len(self.particles) < self.abundance and current_time - self.last_update > 250//self.abundance:
             self.particles.append(self.particle((random.randint(self.l_x, self.u_x), random.randint(self.l_y, self.u_y))))
             self.last_update = current_time
 
@@ -79,15 +79,15 @@ class Smoke(Raindrop):
         self.sprite = self.bottom_sprite
 
     def update(self, gameStateObj):
-        self.x += random.randint(self.speed/2, self.speed)
-        self.y -= random.randint(self.speed/2, self.speed)
+        self.x += random.randint(self.speed//2, self.speed)
+        self.y -= random.randint(self.speed//2, self.speed)
         if hasattr(gameStateObj, 'map') and gameStateObj.map and self.x > gameStateObj.map.width*GC.TILEWIDTH:
             self.remove_me = True
         elif self.x > GC.WINWIDTH:
             self.remove_me = True
         if self.y < -32:
             self.remove_me = True
-        if self.on_bottom_flag and self.y < GC.WINHEIGHT/2:
+        if self.on_bottom_flag and self.y < GC.WINHEIGHT//2:
             self.sprite = self.top_sprite
             self.on_bottom_flag = False
 

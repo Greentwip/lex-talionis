@@ -2,12 +2,12 @@
 # Outside the Prison
 m;Sootballs
 arrange_formation
-set_counter;switches;0
-set_counter;Civ_Escape;0
+set_game_constant;switches;0
+set_game_constant;Civ_Escape;0
 # Set it to start at something that can't be reached
-set_counter;line_cross;-100
+set_game_constant;line_cross;-100
 unlock_lore;Coyote
-set_cursor;Ophie
+set_cursor;Ophie;immediate
 #add_unit;C1_1
 add_unit;C1_2
 add_unit;C1_3

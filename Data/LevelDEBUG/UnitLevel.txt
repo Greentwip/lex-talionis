@@ -1,31 +1,42 @@
-# UnitLevel.txt is used to define what units will be part of this level; and where they will spawn
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
 # 
 # Each unit belongs on its own line
 # Syntax:
-# team; savedunit; event_id; unit_id; position; ai
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
-# team; savedunit; event_id; class; level; items; position; ai; name; faction; desc
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
-# savedunit refers to whether the unit should be loaded from a previous level (ie player characters).
-# event_id gives the unit a unique id that other scripts use. The unit will not start on the battlefield unless event_id = 0.
-# unit_id refers to what kind of unit to load from the data.xml files
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
 # position should be formatted like #,#
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
-group;Resistance;Bandit;Resistance;Nope
-group;Althea;Althea;Resistance;Nope
-player;0;0;Archer;4;Willow Bow,Iron Sword,Boltblade,Angelic Robe,Barkskin;5,13;Pursue;Resistance
+faction;Althea;Althea;Resistance;Nope
+faction;Resistance;Bandit;Resistance;Nope
+# Player Characters
+player;0;0;Archer;4;Magebane Bow,Yew Bow,Boltblade,Angelic Robe,Barkskin;5,13;Pursue;Resistance
 player;0;0;Sentinel;10;Iron Axe,Hand Axe;4,12;Pursue;Resistance
-player;0;0;Sage;15;Aether,Meteor,Sandblast,Wyrmsfire,Fly;4,15;Pursue;Resistance
+player;0;0;Mage;5;Wind;4,15;Pursue;Resistance
 player;0;0;HalberdierF;10;Superior Edge;3,14;Pursue;Resistance
 player;0;0;OracleF;15;Nyx,Glimmer,Heal,Refresh,Physic;4,14;Support;Resistance
 player;0;0;Knight;10;Nyx,Flux,Warp,Wyrmsfire,Howl;4,13;Pursue;Resistance
 player;0;0;Vanguard;15;Iron Sword,Iron Lance,Javelin,Speedwings,Speedwings;5,14;Pursue;Resistance
-enemy;0;0;Myrmidon;1;Iron Sword;17,3;Pursue;Resistance
-enemy;0;0;Soldier;1;Iron Lance;16,2;Pursue;Resistance
-enemy;0;0;Archer;1;Willow Bow;16,5;Pursue;Resistance
-enemy;0;0;Sage;5;Slim Lance,dFire,Vulnerary;3,15;Pursue;Resistance
-enemy;0;0;Halberdier;10;Iron Axe;3,16;Pursue;Resistance
-enemy;0;0;Tactician;1;Glimmer,Heal;16,4;Support;Resistance
-enemy;0;0;Mage;1;Fire;16,3;Pursue;Resistance
+# For AOE
+player;0;0;Althea;18,6;None
+enemy;0;0;Fighter;1;Iron Axe;14,5;None;Resistance
+enemy;0;0;Fighter;1;Iron Axe;13,6;None;Resistance
+enemy;0;0;Fighter;1;Iron Axe;14,7;None;Resistance
+# Enemies
+# enemy;0;0;Myrmidon;1;Iron Sword;17,3;Pursue;Resistance
+# enemy;0;0;Soldier;1;Iron Lance;16,2;Pursue;Resistance
+# enemy;0;0;Archer;1;Willow Bow;16,5;Pursue;Resistance
+# enemy;0;0;Sage;5;Slim Lance,dFire,Vulnerary;3,15;Pursue;Resistance
+# enemy;0;0;Halberdier;10;Iron Axe;3,16;Pursue;Resistance
+# enemy;0;0;Tactician;1;Glimmer,Heal;16,4;Support;Resistance
+# enemy;0;0;Mage;1;Fire;16,3;Pursue;Resistance

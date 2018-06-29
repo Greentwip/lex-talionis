@@ -1,5 +1,5 @@
 # Base Script Level 4
-if;self.optionalunit == 'An Uneasy Trust'
+if;self.name == 'An Uneasy Trust'
 	# Gives Ophie Flareblade
 	m;Toorimichi
 	b;TacticsRoomDay
@@ -7,7 +7,7 @@ if;self.optionalunit == 'An Uneasy Trust'
 	# Ophie confronts Sam.
 	u;Sam;Right
 	qu;Ophie;OffscreenLeft
-	move_sprite;Ophie;96,0;force_hold
+	move_sprite;Ophie;96,0
 	s;Ophie;Hey, Sam--{w};auto
 	s;Sam;Ophie.
 	s;Ophie;Huh?
@@ -31,7 +31,7 @@ if;self.optionalunit == 'An Uneasy Trust'
 	s;Ophie;Hmmm...{w};auto
 	s;Sam;Don't let it be said that I've never given you anything.{w}{br}Since you're here...{w};auto
 	# Give Ophie Flareblade
-	add_item;Ophie;Flareblade
+	give_item;Ophie;Flareblade
 	s;Ophie;What's this?{w};auto
 	s;Sam;A gift from... my sources.{w}{br}Take it or leave it, I don't care.{w}{br}Perhaps you'll find a better use for it than I have.{w};auto
 	s;Ophie;Thanks, I guess.{w};auto
@@ -41,7 +41,7 @@ if;self.optionalunit == 'An Uneasy Trust'
 	r;Ophie
 	grey_base_convo;An Uneasy Trust
 	t;1
-elif;self.optionalunit == 'Strength'
+elif;self.name == 'Strength'
 	# Gives Eliza Prim's charm
 	convert;Eliza;player
 	m;Midna's Theme
@@ -49,11 +49,11 @@ elif;self.optionalunit == 'Strength'
 	t;2
 	u;Eliza;MidLeft;mirror
 	wait;1000
-	move_sprite;Eliza;-24,0;force_hold
+	move_sprite;Eliza;-24,0
 	s;Eliza;Hmph.{w};auto
-	move_sprite;Eliza;24,0;force_hold
+	move_sprite;Eliza;24,0
 	qu;Prim;OffscreenRight
-	move_sprite;Prim;-96,0;force_hold
+	move_sprite;Prim;-96,0
 	s;Prim;H-Hello? Eliza?{w};auto
 	s;Eliza;What do you want?{w}{br}Come to gloat?{w}{br}Feel free... Not like I could stop you anyhow...{w};auto
 	s;Prim;Is that what you think?{w};auto
@@ -71,16 +71,16 @@ elif;self.optionalunit == 'Strength'
 	s;Eliza;I'm still weak.{w}{br}I thought that maybe one day...{w}{br}But then, you all showed up.{w}{br}Now I'll never have a chance to prove myself.{w};auto
 	s;Prim;I didn't realize...{w};auto
 	s;Eliza;Of course.{w}{br}Let me get back to training.{w};auto
-	move_sprite;Eliza;-24,0;force_hold
+	move_sprite;Eliza;-24,0
 	s;Prim;I think you've done enough training for today.{w}{br}Come on.{w};auto
-	move_sprite;Prim;-24,0;force_hold
+	move_sprite;Prim;-24,0
 	s;Eliza;Huh?{w};auto
 	s;Prim;Well, don't you want to put that training to use?{w}{br}Let's go catch up to the others.{w};auto
 	s;Eliza;B-But... Sam told me not to go...{w};auto
 	s;Prim;I may not have been here long,{w}{br}but I've come to realize that Sam has his own weakness.{w}{br}He is afraid to lose you.{w}{br}But he doesn't know how strong you are now.{w}{br}And he'll never know if you don't show him that you aren't weak anymore.{w};auto
 	s;Eliza;Hmmm...
 	s;Prim;Take this.
-	add_item;Eliza;Prim's Charm
+	give_item;Eliza;Prim's Charm
 	s;Eliza;What is this?{w};auto
 	s;Prim;Just a simple good luck charm.{w}{br}Now let's go. They're probably halfway to Rajas by now.{w};auto
 	r;Prim
@@ -89,7 +89,7 @@ elif;self.optionalunit == 'Strength'
 	grey_base_convo;Strength
 	t;1
 # Theo's Noir Adventures
-elif;self.optionalunit == "Theo Sphinx, Pt. I"
+elif;self.name == "Theo Sphinx, Pt. I"
 	# Episode 1
 	m;Jazz Noir
 	b;Study
@@ -108,6 +108,6 @@ elif;self.optionalunit == "Theo Sphinx, Pt. I"
 	s;Theo;The dame prattled on, but I'd heard enough.{w}{br}I dusted off my jacket, lit up my last cigar, grabbed my hat and walked out,{w}{br}the scent of one too many cheap drinks hanging on the wallpaper.{w}{br}I had a meeting with destiny, and she was a cold mistress.{w};auto;noir
 	r;Theo
 	grey_base_convo;Theo Sphinx, Pt. I
-	inc_counter;noir
+	inc_game_constant;noir
 	t;1
 end

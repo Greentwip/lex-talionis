@@ -1,0 +1,137 @@
+--- Fire Emblem: Memento Mori ---
+
+Themes:
+Grungier and earthier than the Lion Throne. More of an old-school middle english epic.
+Knights, Heros, Lords and Ladies, Lowmagic
+
+Backstory:
+
+Plot:
+Ash is kept as a ward of a neighboring kingdom (Mercia)
+He his more methodical and logical outlook, but with a strong sense of justice
+A couple of bandit attacks plague thier far-flung farmsteads, and Ash, along with his/her retainers deal with them
+A Seth-style Jagen
+AethelredF (good natured and humorous) travels to Mercia and informs them that his/her father is dead and his/her eldest brother Aethelberht has traveled from exile and taken the throne
+On the way to Altia they discover Mysterious Waif, who has turnwheel powers, amnesia, and is being chased by a mysterious force?
+Aethelberht was never a good boy, but now hes changed for the worst, erratic, and maybe even possessed
+At some point, after using them, he orders Girl 2 slain for being a witch. Boy and Aethelred
+defend her and escape.
+One of the Knights of the Nightmare Army, masquerading as one of Aetherbehrt lietaneuets, follows
+They rest in Mercia, which unfortunately cannot help Alfred and Aetherred's course to remove Aethelbehrt from power.
+In the night, they are attacked by the Nightmare Army.
+Aethelred along with Girl 1's father, the King of Mercia, are slain. 
+Alfred is taken hostage, along with Mysterious Waif and Seth, Aethelred's husband
+They have a couple of conversations with Aethelbehrt and Ivar
+Umbrian mercenaries rescue them
+Waif leaves, claiming she has brought so much ruin to Alfred
+They travel to a duchy in Mercia, where she is being held hostage. 
+They meet with Kara and others, who tell them that Altia has fallen to the Nightmare Army
+They slay duchy's leader and leave
+They travel to Umbria, which has been utterly ruined.
+It is revealed that leader of Umbrian mercenaries in prince of Umbria in disguise
+Peg Gril reunites wit them, but they are attacked by Nightmare Army.
+After failing to hold them off for long, they leave. England is not safe, and they escape to Wales.
+- Need additional story on the way to Wales (which is hidden) (Chain of Dogs?)
+In Wales they make their way to the Elves, where they meet Elf-Girl, who info dumps them
+According to the Elves, Elf-Girl was prophised to stop the Apocalypse
+However, thanks to a traitor, the Warlock King's Son makes it to them and engages them in battle
+--- They unfortunately must split again, each to recover a MacGuffin, one from Umbria, one from Mercia, before reuniting in Anglia
+Can recruit Warlock King's Son at some point
+They need to collect several MacGuffin's so that Elf-Girl can use them against the Warlock King
+...
+At some point they kill several of the Warlock King's lietaneuets, who are Girl 2's siblings, the daughters all haven been transformed by black magic
+They make their way back to Altia, where the summoning portal for doom has been erected
+They meet Aethelbehrt, who has raised the corpse of Aethelred and Aethelwulf and is now married to their step-mother
+" A family again, Alfred "
+Then they fight the Warlock King
+The end
+
+Characters:
+Ash --- kind-hearted, studious and methodical lord (youngest son of Aethelwulf) --- Sword Lord (Eliwood/Eirika Sprite)
+Genki --- Strong, quickwitted genki girl --- Archer
+AEthelwulf --- King of Wessex, stern --- Lord
+AEthelred --- humorous and jocular lord (middle daughter of Aethelwulf) --- Cavalier
+AEthelberht --- Angry, rage-filled and erratic exiled lord (eldest son of Aethelwulf) --- 
+Jagen --- Stern protector of Ash --- Paladin
+Uther --- 's jovial prince --- Cavalier
+Lara --- 's pessimistic, and sarcastic princess --- Mage
+Seth --- Aethelred's darkened husband --- Cavalier
+Mysterious Waif --- Shy, Amnesiac, and unsure of herself --- Dancer (Mystic)
+Locke --- The Warlock King's youngest son, masquerading as Aethelberht lietantent and confidant, twin to Mysterious Waif --- Wyvern Lord
+Ivar --- The Warlock King's eldest son, cruel and vindictive --- Berserker?
+Asser --- Wayward Irish Monk --- Monk
+Isail --- One of Third Kingdom's hostages --- Dark Mage
+Elf-Girl --- Houghty Toughty, stressed royal --- Light Mage
+Elf-Boy --- Elf-Girl's bodyguard and boon companion, forthright --- Nomad
+Kara --- Mercenary group leader --- Myrmidon
+Biggy --- Mercenary Group Her right hand man, a gentle giant --- Axe bro
+Piper --- Mercenary Group Hyper wind mage --- Bard?
+Fire King --- Mercenary Group Dour dutiful knight --- Knight
+Jagen's Daughter --- Earlygame Healer
+Zeke --- Cold-hearted Altian Mercenary and leader. Secretly prince of Umbria --- Mercenary
+Tsun --- Tsundere Altian princess. Extremely competent -- Pegasus Knight
+Ice Mage --- Dark Mage
+Joker --- Jovial and sarcastic thief --- Thief
+??? --- Eeery and mischievous --- Archer
+
+Sword LordM
+ArcherF
+JagenM (Paladin)
+ClericF
+CavalierF
+CavalierM
+(Fighter)
+(Knight)
+
+MageF
+
+DancerF
+Pegasus KnightF
+
+MercenaryM
+ShamanF
+ThiefM
+ArcherF
+
+CavalierM
+
+MyrmidonF
+FighterM
+BardF
+Wyvern KnightM
+
+Pegasus KnightF
+
+TroubadourF
+NomadM
+
+# At some point
+ClericM
+ShamanF
+ThiefF
+
+# Later
+Wyvern LordM
+SwordmasterM
+
+Families:
+Altians: Behrt, Red, Ash
+Altian Retainers: Jagen, ClericF
+Mercians: Uther, Genki, Lara
+Umbrians: Tsun, Zeke
+Nightmare: Locke, Waif
+
+Still needed
+Second Mage
+
+Names:
+Fleur
+
+Kingdoms:
+Altia -- Protagonist's Country -- Known for Sword users and Cavaliers
+Mercia --- Genki's Country -- Known for Mages and Wyvern Knights
+Umbria --- 3rd Kingdom --- Known for Pegasus Knights
+Wales --- Kingdom of Elves --- Horse Archers, Archers, Light Mages, Skirmishers
+Nightmare Army --- Dark Mages, Brigands, Raiders, Monsters
+Scots --- Bandits --- Bandits
+

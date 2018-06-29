@@ -23,13 +23,18 @@ def main():
     gameStateObj = GameStateObj.GameStateObj()
     metaDataObj = {}
     gameStateObj.build_new()
+    gameStateObj.set_generic_mode()
     wait_for = 1
-    for num in range(0, GC.cf.CONSTANTS['num_levels']):
+    num = 0
+    while True:
+        levelfolder = 'Data/Level' + str(num)
+        if not os.path.exists(levelfolder):
+            break
+        print('Level: %s' % num)
         time1 = time.clock()
-        print('Level: %s'%num)
         SaveLoad.load_level('Data/Level' + str(num), gameStateObj, metaDataObj)
-        print('Time to Load: %s'%(time.clock() - time1))
-        print('Num Units: %s  Map Size: %s'%(len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
+        print('Time to Load: %s' % (time.clock() - time1))
+        print('Num Units: %s  Map Size: %s' % (len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
         for unit in gameStateObj.allunits:
             CustomObjects.handle_info_key(gameStateObj, metaDataObj, unit)
             info_menu = InfoMenu.InfoMenu()
@@ -49,6 +54,8 @@ def main():
 
         gameStateObj.clean_up()
         print('Num Units Remaining: %s'%(len(gameStateObj.allunits)))
+
+        num += 1
 
 def run(gameStateObj, metaDataObj, info_menu):
     info_menu.update(gameStateObj, metaDataObj)

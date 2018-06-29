@@ -1,0 +1,17 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Jakin'
+        if;not 'JakinDefault' in gameStateObj.level_constants
+            u;Jakin;Left
+            s;Jakin;A deadly dance then, spider and fly.{w};auto
+            r;Jakin
+            set_level_constant;JakinDefault
+        end
+    elif;self.unit2.name == 'Boaz'
+        if;not 'BoazDefault' in gameStateObj.level_constants
+            u;Boaz;Left
+            s;Boaz;I've slain many, beast and men alike.{w}{br}You shall not pose any greater challenge.{w};auto
+            r;Boaz
+            set_level_constant;BoazDefault
+        end
+    end
+end

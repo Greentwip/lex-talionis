@@ -2,7 +2,7 @@
 # 
 # A villager arrives, telling that they're under attack. Everyone get ready.
 m;Mount Briggs
-set_cursor;Vagnius
+set_cursor;Vagnius;immediate
 b;TacticsRoom
 t;2
 u;Sam;Left;u;Woman2;Right
@@ -11,7 +11,7 @@ s;Sam;You again?{w}{br}We can't afford any security breaches at a time like this
 s;Woman2;Please! You have to help us!{w};auto
 s;Sam;What is it then?{w};auto
 s;Woman2;Podoma is under attack.{w}{br}It's that man from before.{w}{br}And this time he brought an army!{w};auto
-move_sprite;Sam;-24,0
+qmove_sprite;Sam;-24,0
 u;Ophie;MidLeft
 s;Ophie;Vagnius! The bastard!{w};auto
 s;Woman2;Our entire village will be destroyed...{w}{br}You're our only hope...{w};auto
@@ -28,7 +28,7 @@ t;1
 remove_background
 t;2
 map_pan
-set_cursor;Vagnius;force_hold
+set_cursor;Vagnius
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -42,16 +42,16 @@ s;Soldier2;Yes, milord.{w};auto
 r;Soldier2
 s;Vagnius;If you want something done right, you have to do it yourself.{w}{br}My underlings have failed to annihilate the pesky Resistance.{w}{br}But I shall not.{w}{br}By the end of today, the Resistance will be no more.{w}{br}And I will be one step closer to my final goal!{w};auto
 r;Vagnius
-set_cursor;0,12;force_hold
+set_cursor;0,12
 t;1
 b;TownDark
 t;2
 arrange_formation
-set_cursor;Ophie
+set_cursor;Ophie;immediate
 u;Sam;OffscreenLeft
 u;Ophie;OffscreenLeft
-move_sprite;Sam;72,0
-move_sprite;Ophie;120,0;force_hold
+qmove_sprite;Sam;72,0
+move_sprite;Ophie;120,0
 s;Sam;Well the town's still standing.{w}{br}We're not too late.{w};auto
 r;Sam
 s;Ophie;Master Yohn, you have not been forgotten.{w}{br}Vagnius dies today, this I swear.{w};auto

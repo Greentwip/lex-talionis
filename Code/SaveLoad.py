@@ -7,7 +7,7 @@ from collections import OrderedDict
 # Custom imports
 import GlobalConstants as GC
 import configuration as cf
-import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility
+import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
 from UnitObject import Stat
 
 import logging
@@ -37,12 +37,15 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     # And general abstraction information    
     get_metaDataObj(levelfolder, metaDataObj)
 
+    starting_music = CustomObjects.PhaseMusic(overview_dict['player_phase_music'], overview_dict['enemy_phase_music'], \
+                                              overview_dict['other_phase_music'] if 'other_phase_music' in overview_dict else None)
+
     # Get tiles
     currentMap = create_map(levelfolder, overview_dict)
     gameStateObj.start_map(currentMap)
 
     # === Process unit data ===
-    current_mode = '0123456789' # Defaults to all modes
+    current_mode = ['All']
     for line in unitcontent:
         # Process each line that was in the level file.
         line = line.strip()
@@ -51,9 +54,11 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
             continue
         # Process line
         unitLine = line.split(';')
-        current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.groups, reinforceUnits, prefabs, metaDataObj, gameStateObj)
+        current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, 
+                                       reinforceUnits, prefabs, gameStateObj.triggers, metaDataObj, gameStateObj)
     
-    gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective)
+    handle_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
+    gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective, music=starting_music)
 
 def create_map(levelfolder, overview_dict=None):
     if not overview_dict:
@@ -65,9 +70,7 @@ def create_map(levelfolder, overview_dict=None):
     currentMap = TileObject.MapObject(mapfilename, tilefilename, levelfolder, weather)
     return currentMap
 
-def get_metaDataObj(levelfolder, metaDataObj, changes=None):
-    if not changes:
-        changes = []
+def get_metaDataObj(levelfolder, metaDataObj):
     overview_filename = levelfolder + '/overview.txt'
     prebaseScript_filename = levelfolder + '/prebaseScript.txt'
     narrationScript_filename = levelfolder + '/narrationScript.txt'
@@ -91,9 +94,6 @@ def get_metaDataObj(levelfolder, metaDataObj, changes=None):
     metaDataObj['base_music'] = overview_dict['base_music'] if overview_dict['base_flag'] != '0' else None
     metaDataObj['marketFlag'] = bool(int(overview_dict['market_flag']))
     metaDataObj['transitionFlag'] = bool(int(overview_dict['transition_flag']))
-    metaDataObj['playerPhaseMusic'] = GC.MUSICDICT[overview_dict['player_phase_music']]
-    metaDataObj['enemyPhaseMusic'] = GC.MUSICDICT[overview_dict['enemy_phase_music']]
-    metaDataObj['otherPhaseMusic'] = GC.MUSICDICT[overview_dict['other_phase_music']] if 'other_phase_music' in overview_dict else None
     metaDataObj['prebaseScript'] = prebaseScript_filename
     metaDataObj['narrationScript'] = narrationScript_filename
     metaDataObj['introScript'] = introScript_filename
@@ -104,11 +104,6 @@ def get_metaDataObj(levelfolder, metaDataObj, changes=None):
     metaDataObj['portrait_dict'] = portrait_dict
     metaDataObj['lore'] = lore_dict
 
-    for line in changes:
-        if line[1].endswith('Music'):
-            line[2] = GC.MUSICDICT[line[2]]
-        metaDataObj[line[1]] = line[2]
-
 def read_overview_file(overview_filename):
     overview_lines = {}
     with open(overview_filename, 'r') as mainInfo:
@@ -117,22 +112,101 @@ def read_overview_file(overview_filename):
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
-def parse_unit_line(unitLine, current_mode, allunits, groups, reinforceUnits, prefabs, metaDataObj, gameStateObj):
+# === TRIGGER STUFF ===
+class Trigger(object):
+    def __init__(self):
+        self.units = {}
+        self.kind = 'normal'
+
+    def add_unit(self, unit_id, pos1, pos2):
+        if ',' in pos1:
+            pos1 = tuple(int(n) for n in pos1.split(','))
+        if ',' in pos2:
+            pos2 = tuple(int(n) for n in pos2.split(','))
+        self.units[unit_id] = (pos1, pos2)
+
+def read_trigger_line(unitLine, allunits, reinforceUnits):
+    if ',' in unitLine[2]:
+        position = tuple(int(n) for n in unitLine[2].split(','))
+        for unit in allunits:
+            if unit.position == position:
+                return unit.id
+    else:
+        for unit in allunits:
+            if unit.id == unitLine[2]:
+                return unit.id
+        for event_id, (unit_id, position) in reinforceUnits.items():
+            if event_id == unitLine[2] or unit_id == unitLine[2]:
+                return unit_id
+    return None
+
+def handle_triggers(allunits, reinforceUnits, triggers, level_map):
+    def determine_first_position(unit, trigger_list):
+        queue = [t for t in trigger_list]
+        current_pos = unit.position
+        counter = 0
+        while queue and counter < 10:
+            start, end = queue.pop()
+            if end == current_pos:
+                current_pos = start
+                counter = 0
+            else:
+                queue.insert(0, (start, end))
+                counter += 1
+        if not current_pos:
+            unit.position = None
+            reinforceUnits[unit.id] = (unit.id, current_pos)
+        elif current_pos not in level_map.tiles:
+            unit.position = None
+            if current_pos[0] >= level_map.width:
+                spawn_pos = level_map.width - 1, current_pos[1]
+            elif current_pos[1] >= level_map.height:
+                spawn_pos = current_pos[0], level_map.height - 1
+            elif current_pos[0] < 0:
+                spawn_pos = 0, current_pos[1]
+            elif current_pos[1] < 0:
+                spawn_pos = current_pos[0], 0
+            reinforceUnits[unit.id] = (unit.id, spawn_pos)
+        else:
+            unit.position = current_pos
+
+    # create a new object with unit id as main and triggers in dict
+    unit_triggers = {}
+    for trigger_name, trigger in triggers.items():
+        for unit_id, (start, end) in trigger.units.items():
+            if unit_id not in unit_triggers:
+                unit_triggers[unit_id] = []
+            unit_triggers[unit_id].append((start, end))
+
+    # Now for each unit id in unit_triggers, set the position correctly
+    for unit_id, trigger_list in unit_triggers.items():
+        for unit in allunits:
+            if unit_id == unit.id:
+                determine_first_position(unit, trigger_list)
+                break
+
+def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, triggers, metaDataObj, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
-    # New Group
-    if unitLine[0] == 'group':
-        groups[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
+    # New Faction
+    if unitLine[0] == 'faction':
+        factions[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
     elif unitLine[0] == 'mode':
-        current_mode = unitLine[1]
+        current_mode = unitLine[1].split(',')
     elif unitLine[0] == 'load_player_characters':
         for unit in allunits:
             if unit.team == 'player' and not unit.dead:
                 reinforceUnits[unit.name] = (unit.id, None)
-    elif str(gameStateObj.mode['difficulty']) in current_mode:
+    elif unitLine[0] == 'trigger':
+        if unitLine[1] not in triggers:
+            triggers[unitLine[1]] = Trigger()
+        unit_id = read_trigger_line(unitLine, allunits, reinforceUnits)
+        if unit_id:
+            triggers[unitLine[1]].add_unit(unit_id, unitLine[3], unitLine[4])
+    elif gameStateObj.check_mode(current_mode):
         # New Unit
         if unitLine[1] == "0":
             if len(unitLine) > 7:
-                create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj)
+                create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameStateObj)
             else:
                 add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj)
         # Saved Unit
@@ -183,37 +257,39 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             default_previous_classes(u_i['klass'], classes, class_dict)
             u_i['gender'] = int(unit.find('gender').text)
             u_i['level'] = int(unit.find('level').text)
-            u_i['faction'] = unit.find('faction').text
 
             stats = intify_comma_list(unit.find('bases').text)
-            for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
+            for n in range(len(stats), cf.CONSTANTS['num_stats']):
                 stats.append(class_dict[u_i['klass']]['bases'][n])
-            if u_i['team'] == 'player': # Modify stats
-                bases = gameStateObj.modify_stats['player_bases']
-                growths = gameStateObj.modify_stats['player_growths']
+            if u_i['team'] == 'player' or u_i['team'] == 'other': # Modify stats
+                mode_bases = gameStateObj.mode['player_bases']
+                mode_growths = gameStateObj.mode['player_growths']
             else:
-                bases = gameStateObj.modify_stats['enemy_bases']
-                growths = gameStateObj.modify_stats['enemy_growths']
-            stats = [sum(x) for x in zip(stats, bases)]
+                mode_bases = gameStateObj.mode['enemy_bases']
+                mode_growths = gameStateObj.mode['enemy_growths']
+            stats = [sum(x) for x in zip(stats, mode_bases)]
             assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
-            u_i['stats'] = build_stat_dict(stats)
-            logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
 
             u_i['growths'] = intify_comma_list(unit.find('growths').text)
             u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
-            u_i['growths'] = [sum(x) for x in zip(u_i['growths'], growths)]
+            u_i['growths'] = [sum(x) for x in zip(u_i['growths'], mode_growths)]
             assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
-            u_i['growth_points'] = [50]*cf.CONSTANTS['num_stats']
+
+            num_levelups = u_i['level'] - 1
+            stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj.mode)
+
+            u_i['stats'] = build_stat_dict(stats)
+            logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
 
             u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text)
             # Parse wexp
             u_i['wexp'] = unit.find('wexp').text.split(',')
             for index, wexp in enumerate(u_i['wexp'][:]):
-                if wexp in CustomObjects.WEAPON_EXP.wexp_dict:
-                    u_i['wexp'][index] = CustomObjects.WEAPON_EXP.wexp_dict[wexp]
+                if wexp in Weapons.EXP.wexp_dict:
+                    u_i['wexp'][index] = Weapons.EXP.wexp_dict[wexp]
             u_i['wexp'] = [int(num) for num in u_i['wexp']]
 
-            assert len(u_i['wexp']) == len(CustomObjects.WEAPON_TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
+            assert len(u_i['wexp']) == len(Weapons.TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
             
             u_i['desc'] = unit.find('desc').text
             # Tags
@@ -232,7 +308,6 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             else: # Unit does start on board
                 cur_unit.position = u_i['position']
 
-
             # Status Effects and Skills
             get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
@@ -248,11 +323,11 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
             break
     return allunits, reinforceUnits
 
-def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameStateObj):
-    assert len(unitLine) in [9, 10], "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
+def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameStateObj):
+    assert len(unitLine) in (9, 10), "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
     legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
               'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
-              'position': unitLine[6], 'ai': unitLine[7], 'group': unitLine[8]}
+              'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
     class_dict = metaDataObj['class_dict']
 
     u_i = {}
@@ -272,11 +347,17 @@ def create_unit(unitLine, allunits, groups, reinforceUnits, metaDataObj, gameSta
     # Give default previous class
     default_previous_classes(u_i['klass'], classes, class_dict)
 
+    force_fixed = False
+    if(legend['level'].startswith('f')):  # Force fixed level up
+        legend['level'] = legend['level'][1:]
+        force_fixed = True
     u_i['level'] = int(legend['level'])
-    u_i['position'] = tuple([int(num) for num in legend['position'].split(',')])
-    u_i['name'], u_i['faction'], u_i['desc'] = groups[legend['group']]
+    u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
+    u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
-    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], legend['items'], gameStateObj)
+    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
+        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'], \
+        gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
@@ -319,9 +400,9 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['team'] = summoner.team
     u_i['event_id'] = 0
     u_i['gender'] = 0
-    classes = classes[:summoner.level/cf.CONSTANTS['max_level'] + 1]
+    classes = classes[:class_dict[summoner.klass]['tier'] + 1]
     u_i['klass'] = classes[-1]
-    u_i['faction'] = summoner.faction
+    u_i['faction_icon'] = summoner.faction_icon
     u_i['name'] = summon_info.name
     u_i['desc'] = summon_info.desc
     u_i['ai'] = summon_info.ai
@@ -329,7 +410,8 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['tags'].add('Summon_' + str(summon_info.s_id) + '_' + str(summoner.id)) # Add unique identifier
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
-    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = get_unit_info(class_dict, u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj)
+    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
+        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj.mode, gameStateObj.game_constants)
     u_i['stats'] = build_stat_dict(stats)
     unit = UnitObject.UnitObject(u_i)
 
@@ -351,18 +433,32 @@ def build_stat_dict_plus(stats):
         st[name] = Stat(idx, stats[idx][0], stats[idx][1])
     return st
 
-def get_unit_info(class_dict, klass, level, item_line, gameStateObj):
+def get_unit_info(class_dict, team, klass, level, item_line, mode, game_constants, force_fixed=False):
     # Handle stats
     # hp, str, mag, skl, spd, lck, def, res, con, mov
     bases = class_dict[klass]['bases'][:] # Using copies    
     growths = class_dict[klass]['growths'][:] # Using copies
 
-    bases = [sum(x) for x in zip(bases, gameStateObj.modify_stats['enemy_bases'])]
-    growths = [sum(x) for x in zip(growths, gameStateObj.modify_stats['enemy_growths'])]
+    if team == 'player' or team == 'other': # Modify stats
+        mode_bases = mode['player_bases']
+        mode_growths = mode['player_growths']
+        hidden_levels = int(eval(mode['autolevel_players']))
+        explicit_levels = 0
+    else:
+        mode_bases = mode['enemy_bases']
+        mode_growths = mode['enemy_growths']
+        if 'extra_enemy_growths' in game_constants:
+            mode_growths = [g + int(game_constants['extra_enemy_growths']) for g in mode_growths]
+        hidden_levels = int(eval(mode['autolevel_enemies']))
+        explicit_levels = int(eval(mode['truelevel_enemies']))
 
-    stats, growth_points = auto_level(bases, growths, level, class_dict[klass]['max'], gameStateObj)
-    # Make sure we don't exceed max
-    stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
+    level += explicit_levels
+
+    bases = [sum(x) for x in zip(bases, mode_bases)]
+    growths = [sum(x) for x in zip(growths, mode_growths)]
+
+    num_levelups = level - 1
+    stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, class_dict[klass]['max'], mode, force_fixed=force_fixed)
 
     # Handle items
     items = ItemMethods.itemparser(item_line)
@@ -372,29 +468,29 @@ def get_unit_info(class_dict, klass, level, item_line, gameStateObj):
     # print(klass, wexp)
     for item in items:
         if item.weapon:
-            weapon_types = item.TYPE
+            weapon_type = item.TYPE
             item_level = item.weapon.LVL
         elif item.spell:
-            weapon_types = item.TYPE
+            weapon_type = item.TYPE
             item_level = item.spell.LVL
         else:
             continue
-        for weapon_type in weapon_types:
-            wexp_index = CustomObjects.WEAPON_TRIANGLE.type_to_index[weapon_type]
-            item_requirement = CustomObjects.WEAPON_EXP.wexp_dict[item_level]
+        if weapon_type:
+            wexp_index = Weapons.TRIANGLE.name_to_index[weapon_type]
+            item_requirement = Weapons.EXP.wexp_dict[item_level]
             # print(item, weapon_type, wexp_index, item_requirement, wexp[wexp_index])
             if item_requirement > wexp[wexp_index] and wexp[wexp_index] > 0:
                 wexp[wexp_index] = item_requirement
     # print(wexp)
 
-    return stats, growths, growth_points, items, wexp
+    return stats, growths, growth_points, items, wexp, level
 
 def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0):
     class_skills = []
     for index, klass in enumerate(classes):
         for level_needed, class_skill in class_dict[klass]['skills']:
             # If level is gte level needed for skill or gte max_level
-            if level%cf.CONSTANTS['max_level'] >= level_needed or index < len(classes) - 1 or level%cf.CONSTANTS['max_level'] == 0:
+            if level >= level_needed or index < len(classes) - 1:
                 class_skills.append(class_skill)
     # === Handle Feats (Naive choice)
     if feat:
@@ -414,32 +510,32 @@ def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0
     # handle having a status that gives stats['HP']
     unit.set_hp(int(unit.stats['HP']))
 
-def auto_level(bases, growths, level, max_stats, gameStateObj):
+def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False):
     stats = bases[:]
     growth_points = [50 for growth in growths]
     leveling = cf.CONSTANTS['enemy_leveling']
 
     if leveling == 3:
-        leveling = gameStateObj.mode['growths']
+        leveling = int(mode['growths'])
 
-    if leveling == 1 or leveling == 3: # Fixed -- 3 if not chosen
+    if leveling == 1 or force_fixed:  # Fixed
         for index, growth in enumerate(growths):
-            growth_sum = growth * (level - 1)
-            stats[index] += growth_sum/100
+            growth_sum = growth * num_levelups
+            stats[index] += (growth_sum + growth_points[index])//100
             growth_points[index] += growth_sum%100
 
-    elif leveling == 0: # Random
+    elif leveling == 0 or leveling == 3:  # Random
         for index, growth in enumerate(growths):
-            for _ in range(level - 1):
+            for _ in range(num_levelups):
                 growth_rate = growth
                 while growth_rate > 0:
                     stats[index] += 1 if random.randint(0, 99) < growth_rate else 0
                     growth_rate -= 100
 
-    elif leveling == 2: # Like Radiant Dawn Bonus Exp Method -- Hybrid
-        growths = [growth * (level - 1) if stats[index] < max_stats[index] else 0 for index, growth in enumerate(growths)]
+    elif leveling == 2:  # Hybrid
+        growths = [growth * num_levelups if stats[index] < max_stats[index] else 0 for index, growth in enumerate(growths)]
         growth_sum = sum(growths)
-        num_choice = growth_sum/100
+        num_choice = growth_sum//100
         growth_points[0] = growth_sum%100
         while num_choice > 0:
             num_choice -= 1
@@ -447,18 +543,21 @@ def auto_level(bases, growths, level, max_stats, gameStateObj):
             stats[idx] += 1
             growths[idx] = max(0, growths[idx] - 100)
             if stats[idx] >= max_stats[idx]:
-                num_choice -= growths[idx]/100
+                num_choice -= growths[idx]//100
                 growths[idx] = 0
 
     else:
         logger.error('Unsupported leveling type %s', leveling)
+
+    # Make sure we don't exceed max
+    stats = [Utility.clamp(stat, 0, max_stats[index]) for index, stat in enumerate(stats)]
             
     return stats, growth_points
 
 """
 def place_mount(mount_id, chosen_unit, reinforceUnits):
     my_mount = None
-    for u_id, (unit, position) in reinforceUnits.iteritems():
+    for u_id, (unit, position) in reinforceUnits.items():
         if mount_id == u_id:
             my_mount = unit
             break
@@ -491,8 +590,9 @@ def create_class_dict():
     # For each class
     for klass in GC.CLASSDATA.getroot().findall('class'):
         c_id = klass.get('id')
-        class_dict[c_id] = {'name': klass.find('name').text,
-                            'id': klass.get('id'),
+        class_dict[c_id] = {'short_name': klass.find('short_name').text,
+                            'long_name': klass.find('long_name').text,
+                            'id': c_id,
                             'tier': int(klass.find('tier').text),
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                             'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
@@ -580,7 +680,7 @@ def suspendGame(gameStateObj, kind, slot=None, hard_loc=None):
     # gameStateObj.removeSprites()
     to_save, to_save_meta = gameStateObj.save()
     to_save_meta['kind'] = kind
-    to_save_meta['name'] = read_overview_file('Data/Level' + str(gameStateObj.counters['level']) + '/overview.txt')['name']
+    to_save_meta['name'] = read_overview_file('Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
 
     gameStateObj.saving_thread = threading.Thread(target=save_io, args=(copy.deepcopy(to_save), copy.deepcopy(to_save_meta), old_slot, slot, hard_loc))
     gameStateObj.saving_thread.start()
@@ -595,8 +695,8 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
     gameStateObj.load(to_save)
     gameStateObj.save_slot = saveSlot.number
 
-    levelfolder = 'Data/Level' + str(gameStateObj.counters['level'])
-    get_metaDataObj(levelfolder, metaDataObj, gameStateObj.metaDataObj_changes) 
+    levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+    get_metaDataObj(levelfolder, metaDataObj) 
 
     gameStateObj.loadSprites()
 

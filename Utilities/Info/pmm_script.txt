@@ -1,0 +1,485 @@
+# Project Memento Mori Script
+
+Act I: A wedding and a funeral
+
+Narration:
+
+Five years have passed since the war between Athria and Mercia. A quiet peace has settled over the land. The crown prince of Mercia, Cedric, is to wed Pricess Aelfwynn of Athria, uniting the once antagonistic kingdoms. Yet, all is not well. Athrian villagers complain that their crops do not grow, bandits roam the Mercian foothfills, and a troubling sickness plagues peasant and prince alike. In the midst of these events, Prince Aelfred of Athria, long ward of the victorious Mercians, accompanies Cedric and his sister, Saebbi, to Athria.
+
+Prologue:
+
+* Aelfred, arrives from offscreen left to left. Ruin/forest background
+
+Aelfred: Saebbi? Where'd that girl run off to now. Cedric's going to be pissed if we're held up any longer...
+Saebbi, from offscreen right: Stay back, you thugs!
+Aelfred: Saebbi?
+
+* Aelfred runs offscreen right
+* transition to map screen, Aelfred approaches Saebbi
+* transition to Saebbi, screen left, Gwinoc, screen right. Aelfred arrives behind Saebbi. Different ruin/forest background
+
+Gwinoc: Hah! What luck, boys, another lordling!
+Aelfred: Saebbi... What's going on here?
+Gwinoc: Isn't it obvious boy? You two'll fetch a fine ransom! 
+Saebbi: How dare you! You... you scum!
+Gwinoc: Oh you wound me, lass! We mean you no harm. We'll ransom you to the king and be on our way, our pockets a little heavier. Everyone'll go home happy. So, if you'll put down the blade, lass. I wouldn't want to ruin that pretty face of yours...
+Aelfred: Saebbi... don't get any ideas. Listen to the man. We can't fight them and hope to prevail...
+Saebbi: Not one step closer!
+
+* transition to map screen. Brigand approaches Saebbi
+
+Saebbi: Ah!
+
+* Combat happens. Saebbi wrecks the scrub
+
+Thug: Urgh...
+Gwinoc: So that's how it'll be then? Boys, knock some sense into 'em, but leave 'em still breathing. I intend to collect.
+Aelfred: Damn it, Saebbi. Why couldn't you have stayed with the group for once!
+Saebbi: No time for questions, Aelfred. Ready your blade! I'm not letting any two-bit bandits have their way with me.
+Aelfred: Your bluster is going to get us both killed!
+Saebbi: Don't worry about me. We Mercians can our own in a scrap!
+Aelfred: *sigh*. Well, stay together. If we can kill their leader, the rest should fall back...
+
+* Player Phase 1
+
+* Beginning of Turn 2 or 3
+* Cedric and Bjorn appear on the north end of the map.
+
+Bjorn: Ah, Prince Cedric. You were right once again! Bandits, after all! Your loss for not taking me up on the bet, eh?
+Cedric: Always looking out for the health of your coinpurse, Bjorn. Besides, if I took you up on every bet you'd soon be penniless. That's no way for a lord to treat his liege. Now, get into position! Group up with Aelfred and Saebbi. I'll ride after the leader.
+Bjorn: Right after you, milord.
+
+* On Boss Fight
+
+Gwinoc: Wha-- No matter. I won't be taken down by a bunch of pampered lordlings!
+
+* Gwinoc's death quote
+
+Gwinoc: Urgh- No...justice -- is there... urgh...
+
+* Transition to ruin/forest background
+* Aelfred, Saebbi, & Cedric onscreen
+
+Cedric: What were you thinking? You should have fallen back. Fighting that many bandits on your own -- have you two gone mad?
+Saebbi: Ah, calm down, Ced! They were nothing we couldn't handle! 
+Aelfred: Don't jest -- Cedric speaks truly. Without his timely arrival, we could have died... Saebbi.
+Saebbi: Hey! What are you glaring at me for!
+Cedric: Hmmm... it's eerie. Why would bandits be ranging this far from the foothills?
+Aelfred: Whatever the reason, we shouldn't wait to find out. We've got to make the monastery at Wren's Brooke before nightfall.
+Cedric: Aye. Nettle is probably waiting for us at the bridge. 
+Saebbi: What's the rush, Ced? You've special plans for tonight? Involving a certain someone?
+Cedric: Huh? No... In any case, it's none of your concern. Let's go.
+
+* Cedric leaves.
+
+Saebbi: Hah, did you see that Aelfred? He was blushing beet red. How sweet!
+
+* Transition out to save screen... maybe :)
+
+Narration:
+
+The village at Wren's Brooke has long served as a waystation for travelers between Mercia and Athria. It is fitting that here the wedding of Cedric of Mercia and Aelfwynn of Athria is to take place. Cedric's noble retinue, though shaken by the brazen bandit ambush, continues its march towards Wren's Brooke. However, they soon discover they are not free of their troubles.
+
+Chapter I:
+
+* Transition to forested road. Nettle & Aelfred on screen
+
+Aelfred: Anything happen while we were away, Nettle?
+Nettle: No, but it took you long enough. We've got a timetable to keep, you know!
+
+* Cedric onscreen
+
+Cedric: Don't worry yourself, Nettle. We'll make the monastery in time. Besides, it was not Aelfred's fault we were late. Saebbi wandered off and was waylaid by bandits. Aelfred was offered his sword in her defense.
+
+* Saebbi onscreen.
+
+Saebbi: Pah! I could've taken them on my own!
+Nettle: Whatever. We'd better get moving if we want to reach the safety of Wren's Brooke by nightfall.
+
+* Millie busts in from offscreen
+
+Millie: M-my lords... p-please... I-I beg of thee.... an attack... bandits.
+Cedric: Please sister, slow down. You are safe here. Now tell us what's your problem.
+Millie: *sobs* T-the... M-my monastery at Wren's Brooke. It's been overrun by bandits.
+Saebbi: What!?
+Millie: Ah... so many dead. I know I should have stayed behind to administer last rites to my brothers and sisters, but... I was so scared. God forgive me.
+Aelfred: How many bandits were there?
+Millie: Ah... God forgive, I cannot recall. We are a small, peaceful monastery, and they were armed with axe and sword...
+Saebbi: We cannot allow such a blatant attack to go unpunished.
+Cedric: Nettle, how far to the monastery?
+Nettle: Along the road, several leagues, milord. But I know a shortcut.
+Cedric: Then lead us. Sister, please follow. We may need what healing magicks you possess.
+Millie: I will try, milord.
+
+* Transition out
+* Show south map background, with two bandits.
+Bandit 1: Sure glad the boss had us raid this place. It's downright criminal how much gold and silver these monks were hoarding. We'll put it to better use. 
+Bandit 2: And they barely fought back at all. The boss'll be pleased.
+Bandit 1: Hey, you hear something?
+Bandit 2: Yeah... it sounds like hoofbeats...
+
+* Nettle appears, fires on one bandit, Bandit 1 dies
+
+Bandit 1: Urgh--
+Bandit 2: Wah! Who are you?
+
+* Cedric appears, running down the other
+* Bandit 2 dies
+
+Cedric: Aelfred? You have a plan?
+Aelfred: Don't worry. Just follow my commands...
+
+* Player Phase
+
+* Transition to monastery background
+
+Saebbi: That's the last of them. Good riddance!
+Aelfred: I wouldn't be so sure. Didn't you hear their chatter? 
+Cedric: Hmmm...?
+Aelfred: This is but one group... There's a second attacking the village now.
+Cedric: Aelfwynn was supposed to be at the village. Surely you two are exhausted... watch over the monastery for me. I intend to ride for the village.
+Aelfred: Not so fast, Cedric! She's my own sister -- I'll ride with you.
+Saebbi: And you two aren't leaving me behind!
+Cedric: Saebbi, his majesty tasked with me with your protection. I cannot allow you to follow me.
+Saebbi: How are you supposed to protect us when you're not even here?
+Aelfred: Indeed. You could keep make sure we're safe if we're with you. Besides, you'll need someone to watch your back.
+Cedric: ...
+Saebbi: Please, Cedric. Don't abandon us.
+Cedric: *sigh* Fine. You've convinced me -- you'll probably follow me no matter what I say. At least this way I can keep an eye on you.
+Saebbi: Yes!
+IF: Millie is still alive
+    Millie: Milord...
+    Cedric: Hmm...?
+    Millie: There's nothing left for me here. May I join your retinue?
+    Cedric: Of course, but you may find yourself in grave danger.
+    Millie: I understand. May God watch over us...
+Cedric: Then, with the Authority's blessing, let's not tarry any longer.
+
+* Transition out to save screen maybe :)
+
+Narration:
+
+Chapter II:
+
+* Pan over map, a village already partially destroyed, with enemy soldiers crawling over it. A couple of green units fight the soldiers in the village square.
+
+* Transition to Village Background. Aldor and an Enemy Soldier onscreen
+
+Aldor: What's taking so long, soldier? I expected this village pacified an hour ago.
+Soldier: Respectfully, sir, what do you expect from common brigands? They're looting each house before bothering to clear the next. 
+Aldor: Hmmm. We don't have all day. Put some fear of God into those brigands. The Crow does not tolerate anything short of perfection. 
+Soldier: Right away, sir. But, before I go...
+Aldor: Hmm?
+Soldier: Some of the villagers have taken up arms in defense of the manor. They've managed to drive back the brigands.
+Aldor: Pah. Then send some of my men. Umbrian steel should teach these villains a lesson.
+Soldier: By your leave, sir.
+
+* Transition to main manor. Two green units are fighting brigands. One of the green units goes down, but Rudolf slays his attacker in return.
+
+Rudolf: Comrade! Retreat back to the manor. I have this under control.
+Villager: Aye. God bless you.
+Rudolf: And to you. Now then, which of you scum will die next? Come at me and prove your worth!
+
+* Another combat. Rudolf slaughters the scrub
+
+Rudolf: Pah! More of the same. I can barely tell you pagans apart.
+
+* Ava appears from the manor
+
+Ava: Rudolf! It's time to fall back. There's a more defensible position within the manor. 
+Rudolf: Retreat? You ask me to shame myself and my family?
+Ava: You'll die out here!
+IF: Millie is still alive
+    Rudolf: I know my sister prays for me. I will not falter.
+ELSE:
+    Rudolf: Have faith. I will not falter.
+
+* Transition to inside manor. Aelfwynn and Ava talk
+
+Aelfwynn: *cough* Were you able to convince him, Ava?
+Ava: He is stubborn, milady. I'm sorry.
+Aelfwynn: Surely he not resist my words. I can be quite charming when I put my mind -- *cough*, *cough* -- hah, to it.
+Ava: Please, Lady Aelfwynn, stay inside.
+Aelfwynn: Lady Aelf -- *cough* -- wynn. When did you become so formal?
+Ava: Aelfwynn, my friend. You cannot go out there in your condition. I forbid it.
+Aelfwynn: Hah, you forbid *cough* me *cough*. Fine then. Let me save up my strength. We'll hold here a while longer.
+
+* Pan to Aelfred, Cedric, Saebbi & crew arriving
+
+Aelfred: It's worse than I imangined. This was the main thrust of the bandits' attacks.
+Cedric: These are no mere bandits. Look closer.
+Saebbi: Umbrians! What are they doing with bandits.
+Aelfred: Whatever it is, it can't be good.
+Cedric: I knew you two should've stayed at the monastery. There's far too many of them. Fall back. I'll ride out to find Lady Aelfwynn.
+Saebbi: What about the rest of them?
+Cedric: We can't help everyone, Saebbi.
+Saebbi: To hell with that! I'm going to help! 
+
+* Saebbi leaves
+
+Cedric: Saebbi! ...Aelfred, you can speak to her better than I. Talk some sense into her. She can't throw her life away for nothing.
+Aelfred: *sigh* You owe me.
+
+* Transition to Saebbi and Aelfred
+
+Aelfred: Saebbi, wait up.
+Saebbi: He sent you? If you're trying to convince me, it won't work, and I'll be very cross.
+Aelfred: No. It's not like that. I've come to help. I won't shirk my duty here. But please, you can't keep wandering off. You'll get yourself killed acting like this.
+Saebbi: Hmmph. Fine. But no more delay.
+Aelfred: Right, let's regroup. Follow my command and we'll get through this.
+Saebbi: How can you be so sure? 
+Aelfred: Hmm? I many not have trained with a blade as long as you Mercians, but don't discount that famed Athrian acumen. I'll make sure no one dies out there.
+
+* Player Phase
+
+* On Turn Change
+* Pan to Aelfwynn and Ava in the manor
+
+Aelfwynn: That's it! *cough* Another one brought in on his own shield. I've waited long enough, Ava. I won't idly by while others fight and die in my stead.
+Ava: Aelfwynn, please. You are not well.
+Aelfwynn: I am well enough for this, Ava.
+
+* Aelfwynn leaves
+
+Ava: Ah!
+
+* Pan to Aelfwyn and Ava taking up position outside the manor
+
+* On Aelfred talks to Aelfwynn or Ava
+
+Aelfwynn: Brother!
+Aelfred: Aelfwynn, I'm glad you're safe.
+Aelfwynn: *cough* It's good to see you after so long, Aelfred. Why, you've grown. *cough* ...So, found anyone special while you've been away?
+Aelfred: *sigh* Now's not really the time, Aelfwynn.
+Aelfwynn: Tsk tsk! So uptight! *cough* I was just teasing. I see Prince Cedric's been a bad influence on you.
+Aelfred: Good you see you again, Lady Ava. Take care of my sister for me, alright?
+Ava: M-my pleasure, milord...
+
+* Recruit Aelfwynn and Ava if not already recruited
+
+* On Cedric talks to Aelfwynn
+
+Cedric: Are you sick? You look pale...
+Aelfred: It's just a cold. *cough* It'll pass.
+Cedric: Aelfwynn...
+Aelfred: Cedric. Don't fred so much over me. *cough* It's unbecoming. What will the people think?
+Cedric: I gather they have other more pressing matters on their mind, milady. What are you doing out here in the cold when you're sick?
+Ava: I was trying to tell her so, milord. But she wouldn't listen...
+Aelfwynn: I couldn't just stand idly by. You won't -- *cough*. You won't convince me otherwise.
+Cedric: ... That stubbornnes of yours. You should've been born a Mercian. *sigh* ... If you truly wish to fight...
+Aelfwynn: I do.
+Cedric: And I can't convice you otherwise...
+Aelfwynn: *cough* You cannot
+Cedric: Then at least stay with me. I'll deal with the brunt of the enemy. Yes?
+Aelfwynn: Yes. Come on then. Others need our help...
+
+* Recruit Aelfwynn and Ava is not already recruited
+
+* On the player's army crossing a predefined threshold
+
+Aldor: Hmmph! You lordlings, stay out of this! You meddle in Umbrian affairs.
+Aelfred: Slaughtering innocents on Mercian soil? I've heard stories of Umbrian barbarity, but to steep this low.
+Aldor: Strong words from an Athrian dog! Besides, my maps tell a different story. This is Umbrian land. Now be on your way and leave the rabble to us.
+Saebbi: What you're doing here is unforgiveable.
+Aldor: I do as the Prince of Crows commands. Nothing more. By the way, you wouldn't happen to know the whereabouts of a displaced Lorian maiden, would you?
+Saebbi: What? No, and even if we did, we'd never tell you!
+Aldor: A shame. Well, then, if you won't cease your interference, you leave my no choice. Men, slay the lordlings! We can't let any word of these events reach the ears of Mercia.
+
+* Reinforcements appear
+
+* On Boss Fight
+
+AGAINST Aelfred, Aelfwynn, Saebbi, Cedric:
+    Aldor: You've insulted the Prince of Crows' will for the last time, lordling. 
+ELSE:
+    Aldor: Out of my way, peasant.
+
+* On Aldor's Death
+
+Aldor: Pah! This isn't the end... The Prince of Crows will re -- Urgh...
+
+* Transition to Village background
+* Aelfwynn and Cedric are talking
+
+Aelfwynn: So, it seems our wedding is called off then, Cedric...
+Cedric: It's certainly delayed, but there's no reason I couldn't bring you back to Mercia for the ceremony. Mercia must hear of this Umbrian treachery anyway.
+Aelfwynn: Unfortunately, *cough* it's not quite so simple. *cough* Aelfred, you'll want to hear this...
+
+* Aelfred arrives onscreen
+
+Aelfred: Hmmm. What is it?
+Aelfwynn: I bring grim tidings from Athria. I hate to worsen this tragedy, but... well... our father, King Athelwulf, is dead.
+Aelfred: ...Father... d-dead?
+Cedric: Oh... I'm sorry, Aelfwynn, Aelfred...
+Aelfred: But, Aelfwynn, it can't be... that means you're the queen... What are you doing here?
+Aelfwynn: *cough* It's not so simple. Our brother Adelbert has returned from exile. He has taken the Athrian throne.
+Aelfred: What! But father cast him out.
+Aelfwynn: Adelbert claims that father never formally disowned him, so by right he is the true king of Athria. And he brought a small army to prove it...
+Aelfred: Where did he find that?
+Aelfwynn: I know not. But our father's funeral is soon, and I was actually tasked with bringing you back home. Adelbert wishes to reunite the family once more...
+Aelfred: ...
+Aelfwynn: I'm sorry we have to part so soon, Cedric. *cough* We can rest a night here, but I must soon return to Athria.
+Cedric: Nonsense. I will ride with you. These trails growm more dangerous by the day. You two will need a guard. Is that alright with you, milady?
+Aelfwynn: I guess.
+Cedric: We can rest here for the night. Tomorrow we'll acompany you to Athria. We can tell Adelbert of the Umbrian's attack then...
+
+* Transition out to save screen maybe :)
+
+* Base Conversations
+
+* Aelfred talks to Rudolf about joining the group. Or rather Rudolf ropes himself in, insisting the party needs his support
+* Aelfred talks to Aelfwynn about Adelbert, Lorian warlock, her own sickness, relying on Aelfred, can't fight, etc.
+
+* Narration
+
+* Chapter III
+
+* Aelfred, Saebbi, Cedric in a dark and spooky forest
+
+Saebbi: Hmmph! We barely caught a thing. I'm going to starve! 
+Aelfred: Half the trees here are rotting from the inside out. I'm not sure I'd want to eat anything from here anyway. 
+Cedric: Perhaps that crop sickness of the Athrians has spread to the wildlife?
+???: *Thump* *Thump*
+Cedric: Did you two hear that?
+Saebbi: Hear what?
+Cedric: It sounded like someone moving...
+Aelfred: I thought I heard something too.
+Saebbi: Don't be mean. This forest is spooky enough as it is, Cedric. With the chill in the air, it feels like my skin is crawling...
+Cedric: There's something else here.
+???: Aaaah!
+Saebbi: Ok... I heard that this time.
+Aelfred: Someone's in trouble!
+Cedric: Aelfred, wait up!
+
+* Pan to Aelfred running out. A girl stands facing a monster
+
+Aelfred: What the hell is that thing? You there, run away! I'll handle this.
+
+* The girl runs away
+* Aeflred fights and kills a monster. But a another larger monster approaches and attacks Aelfred...
+
+Aelfred: What! There was another? Urgh...
+
+* Elen appears onscreen
+
+Elen: I-I'm so sorry...
+
+* from offscreen
+Cedric: Hey!... stay away from him...
+Saebbi: Oh no... Cedric, what do we do...
+
+Aelfred: ...This is death... then...
+
+* Shudder effect
+
+* Aelfred, Saebbi, Cedric in a dark and spooky forest
+
+???: *Thump* *Thump*
+Cedric: Did you two hear that?
+Saebbi: Hear what?
+Cedric: It sounded like someone moving...
+Aelfred: ...
+Saebbi: Don't be mean. This forest is spooky enough --
+Aelfred: Was that just a dream?
+Saebbi: Hey, you shouldn't interrupt, Aelfred!
+Cedric: What'd you say?
+Aelfred: I know it seems insane, but I dreamt this exact conversation.
+Cedric: What do you mean?
+Aelfred: Next we hear a girl scream -- she's being attacked by monsters.
+Saebbi: M-m-monsters?
+Aelfred: I was dying but then the Lorian girl... I think she saves me?
+Cedric: A Lorian girl? Didn't that Umbrian mention he was searching for a Lorian maiden?
+Saebbi: Maybe you had a vision, Aelfred?
+???: Aaah!
+Saebbi: Okay, did that sound like a bloodcurdling scream to either of you? 
+Aelfred: That's the girl! We have to help her. Follow me.
+
+* Pan to same place they fought monsters before. More monsters this time.
+* Elen comes running over.
+
+Elen: I'm so sorry. I... I couldn't stop them... I-I...
+Saebbi: M-m-monsters!
+Elen: P-please, I-I p-pulled a different thread...
+Cedric: What?
+Elen: I-I don't want to die again... not again... *sobs*
+Cedric: She's not thinking straight, Aelfred. Maybe we should leave her alone.
+Aelfred: And leave her with these literal monsters? She's just scared...
+Cedric: Hmmm... You're right. Let's ride out and test these monsters then. We can't leave them to endanger other travelers.
+
+* Cedric runs offscreen 
+
+Saebbi: Hey, it's okay. We'll protect you, alright?
+Elen: ...
+Aelfred: What's your name?
+Elen: M-my n-name? Uh... E-Elen. Elen of Loria.
+Aelfred: Well, Elen of Loria. We'll get you to a safe place. But for now, hold tight.
+Elen: ...
+Aelfred: Oh, and thank you, I think. For saving me, back there. If that's what you did...
+Elen: If you die again... I will shudder... Sorry... so sorry... Please don't make me shudder again, Aelfred.
+Aelfred: Uh... Right... I'll be careful...
+
+* Turnwheel tutorial
+If you make a mistake Elen can shudder, trimming that thread of fate. If one of your lords would die in combat, Elen will be forced to shudder to right the weave. Be warned, however, that pulling on the weave of the universe does not come without consequences.
+
+* Turn 2 after Aelfred moves... Elen is unrescued from Aelfred
+
+Elen: Oh my. There's so many... Let me help you.
+Cedric: You have no weapons, Lorian. You should stay back!
+Aelfred: How can you help?
+Elen: P-pulling on a small thread... It will not fray the weave...
+
+* Elen refreshes Aelfred.
+
+* On routing all monsters
+
+* Transition to Forest scene...
+Aelfwynn: *cough* Are you all alright? Where have you been?
+Aelfred: We're alive. Which is more than some can ask for. There were monsters --
+Aelfwynn: Monsters? *cough* Don't tell me fairy stories, Aelfred.
+Cedric: Fairy stories they are not. It's hard to believe, but my lance is still slick with their offal...
+Aelfwynn: *cough* I had heard peasant's speak of attacks by abominations, but to think their tales true.
+Aelfred: We've got to get this one here by the fire. She's been out in the chill for who knows how long...
+Aelfwynn: Just who is she?
+Elen: My name is E-Elen... r-right? T-that's what I said?
+Aelfred: Uh, right...
+Elen: Elen of Loria...
+Aelfwynn: Why are you here in Athria, Elen?
+Elen: Hmmm... I-I d-don't r-remember... I don't remember... D-don't leave me, please...
+Aelfred: We're not leaving you. Don't worry. 
+Cedric: We'll rest here a while and then be on our way to Athria. With you, if you wish.
+Elen: The weave tangles strangely around ye...
+Cedric: ...?
+Elen: It is not unseemly...
+Cedric: Then its settled. Let's tuck in for the night. We've got a long journey tomorrow...
+
+* Transition to Save Screen maybe :)
+
+* Base Convos
+
+Aelfred and Elen
+
+* Narration
+
+* Chapter IV
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

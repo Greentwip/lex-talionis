@@ -1,11 +1,11 @@
 #! usr/bin/env python
 import random
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 
 # Custom imports
 import GlobalConstants as GC
 import configuration as cf
-import CustomObjects, StateMachine, Dialogue, AStar, Support, Engine
+import CustomObjects, StateMachine, AStar, Support, Engine
 import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
 
 import logging
@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 class GameStateObj(object):
     # needed for main menu
     def __init__(self):
-        self.counters = {}
-        self.counters['level'] = 0
+        self.game_constants = Counter()
+        self.game_constants['level'] = 0
         # Set up blitting surfaces
         self.generic_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT))
         # Build starting stateMachine
@@ -29,15 +29,16 @@ class GameStateObj(object):
         self.info_surf = None
         # playtime
         self.playtime = 0
-        # mode options
+        # mode
         self.mode = self.default_mode()
 
     # Things that change between levels always
-    def start(self, allreinforcements, prefabs, objective):
+    def start(self, allreinforcements, prefabs, objective, music):
         logger.info("Start")
         self.allreinforcements = allreinforcements
         self.prefabs = prefabs
         self.objective = objective
+        self.phase_music = music
         self.turncount = 0
 
         self.generic()
@@ -46,8 +47,8 @@ class GameStateObj(object):
         self.map = tilemap
 
         # Set up blitting surface
-        mapSurfWidth = self.map.width * GC.TILEWIDTH
-        mapSurfHeight = self.map.height * GC.TILEHEIGHT
+        mapSurfWidth = max(self.map.width * GC.TILEWIDTH, GC.WINWIDTH)
+        mapSurfHeight = max(self.map.height * GC.TILEHEIGHT, GC.WINHEIGHT)
         self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
         self.grid_manager = AStar.Grid_Manager(self.map)
@@ -57,19 +58,18 @@ class GameStateObj(object):
     def build_new(self):
         logger.info("Build New")
         self.allunits = []
-        self.groups = {}
+        self.factions = {}
         self.allreinforcements = {}
         self.prefabs = []
         self.objective = None
+        self.phase_music = None
         self.map = None
-        self.counters = {}
-        self.counters['level'] = 0
+        self.game_constants = Counter()
+        self.game_constants['level'] = 0
+        self.game_constants['money'] = 0
         self.convoy = []
-        self.counters['money'] = 0
         self.play_time = 0
-        self.game_constants = []
         self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if cf.CONSTANTS['support'] else None
-        self.modify_stats = cf.read_growths_file()
         self.unlocked_lore = []
         self.statistics = []
         self.market_items = set()
@@ -77,15 +77,27 @@ class GameStateObj(object):
         self.sweep()
         self.generic()
 
+        # Turn tutorial mode off if the difficulty does not start with a tutorial
+        if not int(self.mode['tutorial']):
+            cf.OPTIONS['Display Hints'] = 0
+
     def default_mode(self):
-        return {'difficulty': 1,
-                'death': cf.CONSTANTS['death'], # 0 is Casual, 1 is Classic
-                'growths': cf.CONSTANTS['growths']} # 0 is Random, 1 is Fixed, 2 is Hybrid
+        return list(GC.DIFFICULTYDATA.values())[0]
+
+    def set_generic_mode(self):
+        self.mode = self.default_mode()  # Need to make sure its got a mode ready
+        if self.mode['growths'] == '?':
+            self.mode['growths'] = 0
+        if self.mode['death'] == '?':
+            self.mode['death'] = 1
+
+    def check_mode(self, legal_modes):
+        return 'All' in legal_modes or self.mode['name'] in legal_modes or self.mode['id'] in legal_modes
 
     def sweep(self):
         # None of these are kept through different levels
-        self.event_triggers = []
-        self.metaDataObj_changes = []
+        self.level_constants = Counter()
+        self.triggers = {}
         self.talk_options = []
         self.base_conversations = OrderedDict()
         self.message = []
@@ -99,34 +111,34 @@ class GameStateObj(object):
         logger.info("Load")
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
-        self.groups = load_info['groups'] if 'groups' in load_info else {}
+        self.factions = load_info['factions'] if 'factions' in load_info else (load_info['groups'] if 'groups' in load_info else {})
         self.allreinforcements = load_info['allreinforcements'] 
         self.prefabs = load_info['prefabs']
+        self.triggers = load_info.get('triggers', dict())
         map_info = load_info['map']
         self.playtime = load_info['playtime']
         self.convoy = [ItemMethods.deserialize(item_dict) for item_dict in load_info['convoy']]
         self.convoy = [item for item in self.convoy if item]
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
-        self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if isinstance(load_info['objective'], tuple) else load_info['objective']
+        self.level_constants = load_info['level_constants']
+        self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if load_info['objective'] else None
+        self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music']) if load_info['phase_music'] else None
         support_dict = load_info['support']
-        self.event_triggers = load_info['event_triggers']
-        self.metaDataObj_changes = load_info.get('metaDataObj_changes', [])
         self.talk_options = load_info['talk_options']
         self.base_conversations = load_info['base_conversations']
         self.stateMachine = StateMachine.StateMachine(load_info['state_list'][0], load_info['state_list'][1])
         self.statistics = load_info['statistics']
-        self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
-        self.modify_stats = load_info.get('modify_stats', cf.read_growths_file())
+        # self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
+        self.message = []
         self.unlocked_lore = load_info['unlocked_lore']
-        self.counters = load_info['counters']
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
 
         # Map
-        self.map = SaveLoad.create_map('Data/Level' + str(self.counters['level']))
+        self.map = SaveLoad.create_map('Data/Level' + str(self.game_constants['level']))
         if map_info:
-            self.map.replay_commands(map_info['command_list'], self.counters['level'])
+            self.map.replay_commands(map_info['command_list'], self.game_constants['level'])
             self.map.command_list = map_info['command_list']
             for position, current_hp in map_info['HP']:
                 self.map.tiles[position].set_hp(current_hp)
@@ -261,13 +273,13 @@ class GameStateObj(object):
             return {unit for unit in self.allunits if unit.name in any_id or unit.id in any_id or unit.event_id in any_id}
         else:
             for unit in self.allunits:
-                if any_id in [unit.name, unit.id, unit.event_id]:
+                if any_id in (unit.name, unit.id, unit.event_id):
                     return unit
 
     def check_formation_spots(self):
         # Returns None if no spot available
         # Returns a spot if a spot is available
-        list_of_spots = [position for position, value in self.map.tile_info_dict.iteritems() if 'Formation' in value]
+        list_of_spots = [position for position, value in self.map.tile_info_dict.items() if 'Formation' in value]
         list_of_unit_positions = [unit.position for unit in self.allunits if unit.team == 'player']
         for position in list_of_spots:
             if position not in list_of_unit_positions:
@@ -280,10 +292,10 @@ class GameStateObj(object):
             self.cameraOffset.set_x(0)
         if self.cameraOffset.y < 0:
             self.cameraOffset.set_y(0)
-        if self.cameraOffset.x > (self.map.width - GC.WINWIDTH/GC.TILEWIDTH): # Need this minus to account for size of screen
-            self.cameraOffset.set_x(self.map.width - GC.WINWIDTH/GC.TILEWIDTH)
-        if self.cameraOffset.y > (self.map.height - GC.WINHEIGHT/GC.TILEHEIGHT):
-            self.cameraOffset.set_y(self.map.height - GC.WINHEIGHT/GC.TILEHEIGHT)
+        if self.cameraOffset.x > (self.map.width - GC.TILEX): # Need this minus to account for size of screen
+            self.cameraOffset.set_x(self.map.width - GC.TILEX)
+        if self.cameraOffset.y > (self.map.height - GC.TILEY):
+            self.cameraOffset.set_y(self.map.height - GC.TILEY)
 
     def remove_fake_cursors(self):
         self.fake_cursors = []
@@ -315,32 +327,32 @@ class GameStateObj(object):
         for unit in self.allunits:
             unit.arrive(self, serializing=True)
         to_save = {'allunits': ser_units,
-                   'groups': self.groups,
+                   'factions': self.factions,
                    'allreinforcements': self.allreinforcements,
                    'prefabs': self.prefabs,
+                   'triggers': self.triggers,
                    'map': self.map.serialize() if self.map else None,
                    'playtime': self.playtime,
                    'turncount': self.turncount,
                    'convoy': [item.serialize() for item in self.convoy],
                    'objective': self.objective.serialize() if self.objective else None,
+                   'phase_music': self.phase_music.serialize() if self.phase_music else None,
                    'support': self.support.serialize() if self.support else None,
                    'game_constants': self.game_constants,
-                   'metaDataObj_changes': self.metaDataObj_changes,
-                   'event_triggers': self.event_triggers,
+                   'level_constants': self.level_constants,
                    'unlocked_lore': self.unlocked_lore,
-                   'counters': self.counters,
                    'talk_options': self.talk_options,
                    'base_conversations': self.base_conversations,
                    'state_list': self.stateMachine.serialize(),
                    'statistics': self.statistics,
-                   'modify_stats': self.modify_stats,
                    'market_items': self.market_items,
                    'mode': self.mode,
-                   'message': [message.serialize() for message in self.message],
+                   # 'message': [message.serialize() for message in self.message],
                    'phase_info': (self.phase.current, self.phase.previous)}
         import time
         to_save_meta = {'playtime': self.playtime,
-                        'realtime': time.time()}
+                        'realtime': time.time(),
+                        'version': GC.version}
         return to_save, to_save_meta
 
     def loadSprites(self):
@@ -373,7 +385,7 @@ class GameStateObj(object):
         # Handle player death
         for unit in reversed(self.allunits):
             if unit.dead:
-                if not self.mode['death']: # Casual
+                if not int(self.mode['death']): # Casual
                     unit.dead = False
                 else:
                     for item in unit.items:
@@ -385,10 +397,11 @@ class GameStateObj(object):
         # Remove unnecessary information between levels
         self.sweep()
         self.map = None
-        self.groups = {}
+        self.factions = {}
         self.allreinforcements = {}
         self.prefabs = []
         self.objective = None
+        self.phase_music = None
 
     def compare_teams(self, team1, team2):
         # Returns True if allies, False if enemies
@@ -486,7 +499,7 @@ class GameStateObj(object):
     def output_progress(self):
         with open('Saves/progress_log.txt', 'a') as p_log:
             p_log.write('\n')
-            p_log.write('\n=== Level ' + str(self.counters['level']) + ' === Money: ' + str(self.counters['money']))
+            p_log.write('\n=== Level ' + str(self.game_constants['level']) + ' === Money: ' + str(self.game_constants['money']))
             for unit in self.allunits:
                 p_log.write('\n*** ' + unit.name + ': ' + ','.join([skill.name for skill in unit.status_effects]))
                 p_log.write('\nLvl ' + str(unit.level) + ', Exp ' + str(unit.exp))

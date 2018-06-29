@@ -1,6 +1,6 @@
 import GlobalConstants as GC
 import configuration as cf
-import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, CustomObjects, Engine
+import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, Weapons, Engine, TextChunk
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):
@@ -28,13 +28,14 @@ class ItemObject(object):
         
         self.aoe = aoe
         self.TYPE = weapontype
-        self.icons = []
-        for weapon_type in self.TYPE:
-            self.icons.append(CustomObjects.WeaponIcon(weapon_type))
+        if self.TYPE:
+            self.icon = Weapons.Icon(self.TYPE)
+        else:
+            self.icon = None
         
         # Creates component slots
         self.components = components # Consumable, Weapon, Spell Bigger Picture
-        for component_key, component_value in self.components.iteritems():
+        for component_key, component_value in self.components.items():
             self.__dict__[component_key] = component_value
 
         self.loadSprites()
@@ -65,7 +66,7 @@ class ItemObject(object):
     def draw(self, surf, topleft, white=False, cooldown=False):
         ItemSurf = self.image
         if white:
-            ItemSurf = Image_Modification.flickerImageWhite(ItemSurf.convert_alpha(), 255)
+            ItemSurf = Image_Modification.flickerImageWhite(ItemSurf.convert_alpha(), abs(255 - Engine.get_time()%510))
             # ItemSurf = Image_Modification.transition_image_white(ItemSurf)
         surf.blit(ItemSurf, topleft)
         # if self.locked:
@@ -111,7 +112,7 @@ class ItemObject(object):
             if self.weapon:
                 first_line_text = [' ', self.weapon.LVL, ' Mt ', str(self.weapon.MT), ' Hit ', str(self.weapon.HIT)]
                 if cf.CONSTANTS['crit']:
-                    first_line_text += [' Crit ', str(self.crit) if self.crit else '--']
+                    first_line_text += [' Crit ', str(self.crit) if self.crit is not None else '--']
                 if self.weight:
                     first_line_text += [' Wt ', str(self.weight)]
                 first_line_text += [' Rng ', self.strRNG]
@@ -137,9 +138,9 @@ class ItemObject(object):
                 first_line_text += [' Rng ', self.strRNG]
                 first_line_font += [font2, font1]
 
-            first_line_length = max(font1.size(''.join(first_line_text))[0] + 16 * len(self.TYPE) + 4, 112) # 112 was 96
+            first_line_length = max(font1.size(''.join(first_line_text))[0] + (16 if self.icon else 0) + 4, 112) # 112 was 96
             if self.desc:
-                output_desc_lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
+                output_desc_lines = TextChunk.line_wrap(TextChunk.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
             else:
                 output_desc_lines = ''
             size_x = first_line_length + 16
@@ -148,7 +149,7 @@ class ItemObject(object):
             self.drawType(help_surf, 4, 4)
             
             # Actually blit first line
-            word_index = 4 + 16 * len(self.TYPE)
+            word_index = 20 if self.icon else 4
             for index, word in enumerate(first_line_text):
                 first_line_font[index].blit(word, help_surf, (word_index, 4))
                 word_index += first_line_font[index].size(word)[0]
@@ -162,8 +163,8 @@ class ItemObject(object):
             return InfoMenu.create_help_box(self.desc)
 
     def drawType(self, surf, left, top):
-        for index, icon in enumerate(self.icons):    
-            icon.draw(surf, (left + index*16, top))
+        if self.icon:  
+            self.icon.draw(surf, (left, top))
 
     def get_str_RNG(self):
         max_rng = max(self.RNG)
@@ -177,7 +178,7 @@ def parseRNG(RNG):
     # Should output a list of integers corresponding to acceptable ranges
     if '-' in RNG:
         rngsplit = RNG.split('-')
-        return range(int(rngsplit[0]), int(rngsplit[1]) + 1)
+        return list(range(int(rngsplit[0]), int(rngsplit[1]) + 1))
     else:
         return [int(RNG)]
 
@@ -224,7 +225,7 @@ class WeaponComponent(object):
         self.MT = int(MT)
         self.HIT = int(HIT)
         self.LVL = LVL
-        self.strLVL = self.LVL if self.LVL in ['A', 'B', 'C', 'D', 'E', 'S', 'SS'] else 'Prf' # Display Prf if Lvl is weird
+        self.strLVL = self.LVL if self.LVL in ('A', 'B', 'C', 'D', 'E', 'S', 'SS') else 'Prf' # Display Prf if Lvl is weird
 
 class ExtraSelectComponent(object):
     def __init__(self, RNG, targets):
@@ -283,9 +284,10 @@ class UsableComponent(object):
         self.name = 'usable'
 
 class EffectiveComponent(object):
-    def __init__(self, effective_against):
+    def __init__(self, effective_against, bonus):
         # List of types its effective against
         self.against = effective_against
+        self.bonus = bonus
 
 class PermanentStatIncreaseComponent(object):
     def __init__(self, stat_increase):
@@ -344,11 +346,9 @@ def itemparser(itemstring):
             if 'weapon' in components or 'spell' in components:
                 weapontype = item['weapontype']
                 if weapontype == 'None':
-                    weapontype = []
-                else:
-                    weapontype = weapontype.split(',')
+                    weapontype = None
             else:
-                weapontype = []
+                weapontype = None
 
             if 'locked' in components:
                 locked = True
@@ -388,11 +388,18 @@ def itemparser(itemstring):
                     for s_id in statusid:
                         status_on_equip.append(s_id)
                 elif component == 'effective':
-                    effective_against = item['effective'].split(',')
-                    my_components['effective'] = EffectiveComponent(effective_against)
+                    try:
+                        effective_against, bonus = item['effective'].split(';')
+                        effective_against = effective_against.split(',')
+                        my_components['effective'] = EffectiveComponent(effective_against, int(bonus))
+                    except:
+                        continue
                 elif component == 'permanent_stat_increase':
                     stat_increase = SaveLoad.intify_comma_list(item['stat_increase'])
                     my_components['permanent_stat_increase'] = PermanentStatIncreaseComponent(stat_increase)
+                elif component == 'promotion':
+                    legal_classes = item['promotion'].split(',')
+                    my_components['promotion'] = legal_classes
                 elif component == 'aoe':
                     info_line = item['aoe'].split(',')
                     aoe = AOEComponent(info_line[0], int(info_line[1]))
@@ -400,10 +407,10 @@ def itemparser(itemstring):
                 elif component == 'map_hit_color':
                     my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
                     assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
-                elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase'):
+                elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase', 'wexp'):
                     if component in item:
                         my_components[component] = int(item[component])
-                elif component in ['movement', 'self_movement']:
+                elif component in ('movement', 'self_movement'):
                     mode, magnitude = item[component].split(',')
                     my_components[component] = MovementComponent(mode, magnitude)
                 elif component == 'summon':

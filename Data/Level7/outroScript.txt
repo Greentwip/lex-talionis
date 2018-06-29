@@ -25,7 +25,7 @@ s;Theo;He definitely didn't seem like one of the Duke's normal lieutenants.{w}{b
 s;Prim;Hmmm...{w};auto
 r;Theo;Prim
 u;Sam;OffscreenLeft
-move_sprite;Sam;96,0;force_hold
+move_sprite;Sam;96,0
 u;Joel;Right
 s;Joel;Captain!{w}{br}Took you long enough.{w};auto
 s;Sam;It wasn't as easy to find as I'd been led to believe.{w}{br}Anyway, we've got what we came for. Let's go.{w};auto
@@ -39,7 +39,7 @@ u;Vagnius;Left
 s;Vagnius;Keeping ME waiting... He will pay for this insult.{w};auto;thought_bubble
 wait;500
 qu;Adjutant;OffscreenRight
-move_sprite;Adjutant;-96,0;force_hold
+move_sprite;Adjutant;-96,0
 s;Adjutant;The Duke will see you now. Follow me.{w};auto
 s;Vagnius;Finally.{w};auto
 r;Adjutant
