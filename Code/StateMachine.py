@@ -938,9 +938,7 @@ class MenuState(State):
                 gameStateObj.stateMachine.changeState('vendor')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Seize']:
-                cur_unit.hasAttacked = True
-                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=cur_unit, tile_pos=cur_unit.position))
-                gameStateObj.stateMachine.changeState('dialogue')
+                cur_unit.seize(gameStateObj)
             elif selection in [cf.WORDS['Escape'], cf.WORDS['Arrive']]:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')

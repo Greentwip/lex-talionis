@@ -11,6 +11,7 @@
 #    - 32:   Unlock Chest or Door  
 #    - 64:   Use ThiefEscape event tile  
 #    - 128:  Use regular Escape event tile  
+#    - 256:  Use Enemy_Seize event tiles
 # Possible States for AI2:
 #    - 0: Do not move
 #    - 1: Move towards opponents
@@ -20,6 +21,7 @@
 #    - 5: move towards escape tiles
 #    - 6: move towards thief escape tiles
 #    - 7: move towards boss unit
+#    - 8: move towards enemy seize tiles
 #    - A string: move towards unit whose name or event_id matches string
 # Possible States for view_range (secondary AI):
 #    - 0: Do not look
@@ -55,3 +57,4 @@ PursueVillage			19 3 - - 2 20
 Support					3 2 - - 2 10
 FollowBoss				3 7 - - 2 15
 FollowWagon             3 Wagon - - 2 20
+Seize                   259 8 - - 2 20

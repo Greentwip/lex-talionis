@@ -1811,6 +1811,12 @@ class UnitObject(object):
         self.finished = True
         self.previous_position = self.position
         self.sprite.change_state('normal')
+        # Called whenever a unit waits
+        wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
+        if os.path.exists(wait_script_name):
+            move_script = Dialogue.Dialogue_Scene(wait_script_name, unit=self)
+            gameStateObj.message.append(move_script)
+            gameStateObj.stateMachine.changeState('dialogue')
 
     def isDone(self):
         return self.finished
@@ -2078,6 +2084,11 @@ class UnitObject(object):
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
         gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, tile_pos=self.position))
+        gameStateObj.stateMachine.changeState('dialogue')
+
+    def seize(self, gameStateObj):
+        self.hasAttacked = True
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, gameStateObj):

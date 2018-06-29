@@ -13,6 +13,7 @@
     - 32:   Unlock Chests and Doors
     - 64:   Use Thief_Escape event tiles
     - 128:  Use regular Escape event tiles
+    - 256:  Use Enemy_Seize event tiles
 # Possible States for AI2:
     - 0: Do not move
     - 1: Move towards opponents
@@ -22,6 +23,7 @@
     - 5: move towards escape tiles
     - 6: move towards thief escape tiles
     - 7: move towards boss unit
+    - 8: move towards enemy seize tiles
     - A string: move towards unit whose name or event_id matches string
 # Possible States for view_range (secondary AI):
     - 0: Do not look
@@ -47,7 +49,8 @@ PRIMARYAI = {'Move': 1,
              'Destructible': 16,
              'Unlock': 32,
              'Thief Escape': 64,
-             'Escape': 128}
+             'Escape': 128,
+             'Enemy Seize': 256}
 
 class AI(object):
     def __init__(self, unit, ai1=0, ai2=0, team_ignore=[], name_ignore=[],
@@ -115,10 +118,12 @@ class AI(object):
                 self.state = 'Escape'
 
             elif self.state == 'Escape':
-                if self.ai1_state & PRIMARYAI['Escape']:
+                if self.ai1_state & PRIMARYAI['Enemy Seize']:
+                    success = self.run_simple_ai(self.valid_moves, 'Enemy_Seize', gameStateObj) 
+                if not success and self.ai1_state & PRIMARYAI['Escape']:
                     success = self.run_simple_ai(self.valid_moves, 'Escape', gameStateObj)
-                elif not success and self.ai1_state & PRIMARYAI['Thief Escape']:
-                    success = self.run_simple_ai(self.valid_moves, 'ThiefEscape', gameStateObj)
+                if not success and self.ai1_state & PRIMARYAI['Thief Escape']:
+                    success = self.run_simple_ai(self.valid_moves, 'Thief_Escape', gameStateObj)
                 self.state = 'Steal'
 
             elif self.state == 'Steal':
@@ -177,10 +182,13 @@ class AI(object):
                                               if 'Escape' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 6:
                     self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
-                                              if 'ThiefEscape' in gameStateObj.map.tile_info_dict[position]]
+                                              if 'Thief_Escape' in gameStateObj.map.tile_info_dict[position]]
                 elif self.ai2_state == 7:
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and 'Boss' in unit.tags and
                                               unit.team not in self.team_ignore and unit.name not in self.name_ignore]
+                elif self.ai2_state == 8:
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
+                                              if 'Enemy_Seize' in gameStateObj.map.tile_info_dict[position]]
                 else:
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and
                                               (unit.name == self.ai2_state or unit.event_id == self.ai2_state)]
@@ -273,15 +281,19 @@ class AI(object):
             else:
                 tile_info = gameStateObj.map.tile_info_dict[self.target_to_interact_with]
                 tile = gameStateObj.map.tiles[self.target_to_interact_with]
-                if 'Destructible' in tile_info:
+                if 'Enemy_Seize' in tile_info:
+                    if self.unit.position != self.target_to_interact_with:
+                        return # Didn't actually reach Seize point
+                    self.unit.seize(gameStateObj)
+                elif 'Destructible' in tile_info:
                     gameStateObj.map.destroy(tile, gameStateObj)
                 elif 'Locked' in tile_info:
                     self.unit.unlock(self.target_to_interact_with, gameStateObj)
-                elif 'Escape' or 'ThiefEscape' in tile_info:
+                elif 'Escape' or 'Thief_Escape' in tile_info:
                     if self.unit.position != self.target_to_interact_with:
                         return # Didn't actually reach ThiefEscape point
                     self.unit.escape(gameStateObj)
-
+                
     def quick_move(self, move, gameStateObj, test=False):
         self.unit.leave(gameStateObj, serializing=test)
         self.unit.position = move
