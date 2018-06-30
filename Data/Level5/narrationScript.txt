@@ -64,10 +64,10 @@ set_expression;Woman2;Normal
 s;Nia;!{w};auto
 s;Woman2;No! I'm not a spy!{w};auto
 # Nia moves
-move_sprite;Nia;24,0;force_hold
+move_sprite;Nia;24,0
 s;Sam;Hold!{w}{br}Let's hear her out!{w};auto
 # Nia moves back
-move_sprite;Nia;-24,0;force_hold
+move_sprite;Nia;-24,0
 s;Sam;So you say you're no spy...{w}{br}Why are you here then?{w};auto
 s;Woman2;I was just trying to speak to you.{w}{br}We need your help!{w};auto
 s;Sam;We?{w};auto

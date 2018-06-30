@@ -6,6 +6,7 @@ import configuration as cf
 # Custom Imports
 import MenuFunctions
 import Utility, Image_Modification, Engine, InputManager
+import Weapons
 
 import logging
 logger = logging.getLogger(__name__)
@@ -61,7 +62,7 @@ class Cursor(object):
         if self.drawState or self.fake: # Only draws if cursor is on
             x, y = self.position
             # The space Rect is constructed like so so as to center the cursor sprite
-            topleft = x * GC.TILEWIDTH - max(0, (self.image.get_width() - 16)/2), y * GC.TILEHEIGHT - max(0, (self.image.get_height() - 16)/2)
+            topleft = x * GC.TILEWIDTH - max(0, (self.image.get_width() - 16)//2), y * GC.TILEHEIGHT - max(0, (self.image.get_height() - 16)//2)
             topleft = topleft[0] - self.spriteOffset[0], topleft[1] - self.spriteOffset[1]
             surf.blit(self.image, topleft)
             # Reset sprite offset afterwards
@@ -195,7 +196,7 @@ class Cursor(object):
                 gameStateObj.cameraOffset.set_x(gameStateObj.cameraOffset.x - 1)
         elif 'RIGHT' in directions and self.position[0] < (gameStateObj.map.width - 1):
             self.move((1, 0), gameStateObj)
-            if self.position[0] >= (GC.WINWIDTH/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
+            if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
                 gameStateObj.cameraOffset.set_x(gameStateObj.cameraOffset.x + 1)
         if 'UP' in directions and self.position[1] > 0:
             self.move((0, -1), gameStateObj)
@@ -203,7 +204,7 @@ class Cursor(object):
                 gameStateObj.cameraOffset.set_y(gameStateObj.cameraOffset.y - 1)
         elif 'DOWN' in directions and self.position[1] < (gameStateObj.map.height - 1):
             self.move((0, 1), gameStateObj)
-            if self.position[1] >= (GC.WINHEIGHT/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
+            if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
                 gameStateObj.cameraOffset.set_y(gameStateObj.cameraOffset.y + 1)
 
     def setPosition(self, newposition, gameStateObj):
@@ -214,12 +215,12 @@ class Cursor(object):
         # Recenter camera
         if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
             gameStateObj.cameraOffset.set_x(self.position[0] - 3) # Testing...
-        if self.position[0] >= (GC.WINWIDTH/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
-            gameStateObj.cameraOffset.set_x(self.position[0] + 4 - GC.WINWIDTH/GC.TILEWIDTH)
+        if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
+            gameStateObj.cameraOffset.set_x(self.position[0] + 4 - GC.TILEX)
         if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
             gameStateObj.cameraOffset.set_y(self.position[1] - 2)
-        if self.position[1] >= (GC.WINHEIGHT/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
-            gameStateObj.cameraOffset.set_y(self.position[1] + 3 - GC.WINHEIGHT/GC.TILEHEIGHT)
+        if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
+            gameStateObj.cameraOffset.set_y(self.position[1] + 3 - GC.TILEY)
         # Remove unit display
         self.remove_unit_display()
 
@@ -231,12 +232,12 @@ class Cursor(object):
         # Recenter camera
         if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
             gameStateObj.cameraOffset.force_x(self.position[0] - 3) # Testing...
-        if self.position[0] >= (GC.WINWIDTH/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 3):
-            gameStateObj.cameraOffset.force_x(self.position[0] + 4 - GC.WINWIDTH/GC.TILEWIDTH)
+        if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
+            gameStateObj.cameraOffset.force_x(self.position[0] + 4 - GC.TILEX)
         if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
             gameStateObj.cameraOffset.force_y(self.position[1] - 2)
-        if self.position[1] >= (GC.WINHEIGHT/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 3):
-            gameStateObj.cameraOffset.force_y(self.position[1] + 3 - GC.WINHEIGHT/GC.TILEHEIGHT)
+        if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
+            gameStateObj.cameraOffset.force_y(self.position[1] + 3 - GC.TILEY)
         # Remove unit display
         self.remove_unit_display()
 
@@ -304,15 +305,15 @@ class Cursor(object):
         # === Final blitting
         # Should be in topleft, unless cursor is in topleft, in which case it should be in bottomleft
         if self.unit_info_disp:
-            if self.position[1] < GC.TILEY/2 + gameStateObj.cameraOffset.get_y() and \
-                    not (self.position[0] > GC.TILEX/2 + gameStateObj.cameraOffset.get_x() - 1):
+            if self.position[1] < GC.TILEY//2 + gameStateObj.cameraOffset.get_y() and \
+                    not (self.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1):
                 surf.blit(self.unit_info_disp, (0 - self.unit_info_offset, GC.WINHEIGHT - 0 - self.unit_info_disp.get_height()))
             else:
                 surf.blit(self.unit_info_disp, (0 - self.unit_info_offset, 0))
 
         if self.tile_info_disp:
             # Should be in bottom, no matter what. Can be in bottomleft or bottomright, depending on where cursor is
-            if self.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1: # If cursor is right
+            if self.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1: # If cursor is right
                 if self.tile_left:
                     self.tile_left = False
                     self.tile_info_offset = self.tile_info_disp.get_width()
@@ -327,21 +328,21 @@ class Cursor(object):
         if self.obj_info_disp:
             # Should be in topright, unless the cursor is in the topright
             # TopRight - I believe this has RIGHT precedence
-            if self.position[1] < GC.WINHEIGHT/2/GC.TILEHEIGHT + gameStateObj.cameraOffset.get_y() - 1 and \
-                    gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
+            if self.position[1] < GC.TILEY//2 + gameStateObj.cameraOffset.get_y() and \
+                    gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
                 # Gotta place in bottomright, because cursor is in topright
                 if self.obj_top:
                     self.obj_top = False
                     self.obj_info_offset = self.obj_info_disp.get_width()
-                pos = (GC.WINWIDTH - GC.TILEWIDTH/4 + self.obj_info_offset - self.obj_info_disp.get_width(), 
-                       GC.WINHEIGHT - GC.TILEHEIGHT/4 - self.obj_info_disp.get_height())
+                pos = (GC.WINWIDTH - GC.TILEWIDTH//4 + self.obj_info_offset - self.obj_info_disp.get_width(), 
+                       GC.WINHEIGHT - GC.TILEHEIGHT//4 - self.obj_info_disp.get_height())
                 surf.blit(self.obj_info_disp, pos) # Should be bottom right
             else:
                 # Place in topright
                 if not self.obj_top:
                     self.obj_top = True
                     self.obj_info_offset = self.obj_info_disp.get_width()
-                surf.blit(self.obj_info_disp, (GC.WINWIDTH - GC.TILEWIDTH/4 + self.obj_info_offset - self.obj_info_disp.get_width(), 1))
+                surf.blit(self.obj_info_disp, (GC.WINWIDTH - GC.TILEWIDTH//4 + self.obj_info_offset - self.obj_info_disp.get_width(), 1))
 
     def take_input(self, eventList, gameStateObj):
         if not self.fake:
@@ -361,7 +362,7 @@ class Cursor(object):
             if 'Formation' in gameStateObj.map.tile_info_dict[self.position]:
                 self.image = Engine.subsurface(self.formationsprite, (0, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
             else:
-                self.image = Engine.subsurface(self.formationsprite, (GC.CURSORSPRITECOUNTER.count/2*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
+                self.image = Engine.subsurface(self.formationsprite, (GC.CURSORSPRITECOUNTER.count//2*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
         elif self.drawState == 2 and gameStateObj.stateMachine.getState() != 'dialogue': # Red if it is selecting...
             self.image = Engine.subsurface(self.redsprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
         elif self.currentHoveredUnit and self.currentHoveredUnit.team == 'player' and not self.currentHoveredUnit.isDone():
@@ -394,7 +395,7 @@ class HighlightController(object):
                       'move': [Highlight(GC.IMAGESDICT['BlueHighlight']), 7],
                       'aura': [Highlight(GC.IMAGESDICT['LightPurpleHighlight']), 7],
                       'spell_splash': [Highlight(GC.IMAGESDICT['LightGreenHighlight']), 7]}
-        self.highlights = {t: set() for t in self.types.keys()}
+        self.highlights = {t: set() for t in self.types}
 
         self.lasthighlightUpdate = 0
         self.updateIndex = 0
@@ -403,7 +404,7 @@ class HighlightController(object):
 
     def add_highlight(self, position, name, allow_overlap=False):
         if not allow_overlap:
-            for t in self.types.keys():
+            for t in self.types:
                 self.highlights[t].discard(position)
         self.highlights[name].add(position)
         self.types[name][1] = 7 # Reset transitions
@@ -413,7 +414,7 @@ class HighlightController(object):
             self.highlights[name] = set()
             self.types[name][1] = 7 # Reset transitions
         else:
-            self.highlights = {t: set() for t in self.types.keys()}
+            self.highlights = {t: set() for t in self.types}
             # Reset transitions
             for hl_name in self.types:
                 self.types[hl_name][1] = 7
@@ -428,7 +429,7 @@ class HighlightController(object):
             self.updateIndex = 0
 
     def draw(self, surf):
-        for name in self.highlights.keys():
+        for name in self.highlights:
             transition = self.types[name][1]
             if transition > 0:
                 transition -= 1
@@ -515,7 +516,7 @@ class BoundaryManager(object):
         if kind:
             kinds = [kind]
         else:
-            kinds = self.grids.keys()
+            kinds = list(self.grids)
         for k in kinds:
             for x in range(self.gridWidth):
                 for y in range(self.gridHeight):
@@ -539,7 +540,7 @@ class BoundaryManager(object):
         self.surf = None
 
     def _remove_unit(self, unit, gameStateObj):
-        for kind, grid in self.grids.iteritems():
+        for kind, grid in self.grids.items():
             if unit.id in self.dictionaries[kind]:
                 for (x, y) in self.dictionaries[kind][unit.id]:
                     grid[x * self.gridHeight + y].discard(unit.id)
@@ -553,7 +554,7 @@ class BoundaryManager(object):
             x, y = unit.position
             other_units = gameStateObj.get_unit_from_id(self.grids['movement'][x * self.gridHeight + y])
             # other_units = set()
-            # for key, grid in self.grids.iteritems():
+            # for key, grid in self.grids.items():
             # What other units were affecting that position -- only enemies can affect position
             #    other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
             other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
@@ -571,7 +572,7 @@ class BoundaryManager(object):
             x, y = unit.position
             other_units = gameStateObj.get_unit_from_id(self.grids['movement'][x * self.gridHeight + y])
             # other_units = set()
-            # for key, grid in self.grids.iteritems():
+            # for key, grid in self.grids.items():
             # What other units were affecting that position -- only enemies can affect position
             #    other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
             other_units = {other_unit for other_unit in other_units if not gameStateObj.compare_teams(unit.team, other_unit.team)} 
@@ -593,7 +594,7 @@ class BoundaryManager(object):
     # Called when map changes
     def reset_pos(self, pos_group, gameStateObj):
         other_units = set()
-        for key, grid in self.grids.iteritems():
+        for key, grid in self.grids.items():
             # What other units are affecting those positions -- need to check every grid because line of sight might change
             for (x, y) in pos_group:
                 other_units |= gameStateObj.get_unit_from_id(grid[x * self.gridHeight + y])
@@ -692,8 +693,8 @@ class ArrowObject(object):
 
     def __init__(self, index, position):
         rindex, cindex = index
-        left = 1+((GC.TILEWIDTH+2)*cindex)+(1*int(cindex/2))
-        top = 1+((GC.TILEHEIGHT+2)*rindex)
+        left = 1 + ((GC.TILEWIDTH + 2)*cindex) + cindex//2
+        top = 1 + ((GC.TILEHEIGHT + 2)*rindex)
         self.image = Engine.subsurface(self.sprite, (left, top, GC.TILEWIDTH, GC.TILEHEIGHT))
         self.position = position
 
@@ -728,7 +729,7 @@ class Animation(object):
                 '%s %s'%(len(self.set_timing), len(self.total_num_frames))
         self.timing_count = -1
 
-        self.indiv_width, self.indiv_height = self.sprite.get_width()/self.frame_x, self.sprite.get_height()/self.frame_y
+        self.indiv_width, self.indiv_height = self.sprite.get_width()//self.frame_x, self.sprite.get_height()//self.frame_y
 
         self.image = Engine.subsurface(self.sprite, (0, 0, self.indiv_width, self.indiv_height))
 
@@ -773,12 +774,12 @@ class Animation(object):
                                 gameStateObj.allanimations.remove(self)
                             return True
                     if self.frameCount >= 0:
-                        rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, 
+                        rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount//self.frame_x * self.indiv_height, 
                                 self.indiv_width, self.indiv_height)
                         self.image = Engine.subsurface(self.sprite, rect)
             # Otherwise
             elif currentTime - self.lastUpdate > self.animation_speed:
-                self.frameCount += int((currentTime - self.lastUpdate)/self.animation_speed) # 1
+                self.frameCount += int((currentTime - self.lastUpdate)//self.animation_speed) # 1
                 self.lastUpdate = currentTime
                 if self.frameCount >= self.total_num_frames:
                     if self.loop: # Reset framecount
@@ -790,7 +791,7 @@ class Animation(object):
                             gameStateObj.allanimations.remove(self)
                         return True
                 if self.frameCount >= 0:
-                    rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount/self.frame_x * self.indiv_height, 
+                    rect = (self.frameCount%self.frame_x * self.indiv_width, self.frameCount//self.frame_x * self.indiv_height, 
                             self.indiv_width, self.indiv_height)
                     self.image = Engine.subsurface(self.sprite, rect)
 
@@ -844,7 +845,7 @@ class PhaseIn(object):
         self.spritename = spritename
         self.loadSprites()
         self.display_time = display_time
-        self.topleft = ((GC.WINWIDTH - self.image.get_width())/2, (GC.WINHEIGHT - self.image.get_height())/2)
+        self.topleft = ((GC.WINWIDTH - self.image.get_width())//2, (GC.WINHEIGHT - self.image.get_height())//2)
         self.start_time = None # Don't define it here. Define it at first update
 
     def loadSprites(self):
@@ -901,20 +902,21 @@ class PhaseIn(object):
         
         # === Handle the transition
         most_dark_surf = Engine.subsurface(self.transition, (8*self.transition_size[0], 0, self.transition_size[0], self.transition_size[1])).copy()
+        half_display_time = self.display_time//2
         # If we're in the first half
-        if time_passed < self.display_time/2:
-            transition_space = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT/2 - 75/2 + time_passed/(self.display_time/2/20)), transparent=True)
+        if time_passed < half_display_time:
+            transition_space = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT//2 - 75//2 + time_passed//(half_display_time//20)), transparent=True)
             # Make more transparent based on time.
-            alpha = int(max_opaque * time_passed/float(self.display_time/2))
+            alpha = int(max_opaque * time_passed/float(half_display_time))
             Engine.fill(most_dark_surf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
         # If we're in the second half
         else:
             # Clamp time_passed at display time
             time_passed = min(self.display_time, time_passed)
-            pos = (GC.WINWIDTH, GC.WINHEIGHT/2 - 75/2 + 40/2 - (time_passed - self.display_time/2)/(self.display_time/2/20))
+            pos = (GC.WINWIDTH, GC.WINHEIGHT//2 - 75//2 + 40//2 - (time_passed - half_display_time)//(half_display_time//20))
             transition_space = Engine.create_surface(pos, transparent=True)
             # Make less transparent based on time.
-            alpha = int(max_opaque - max_opaque*(time_passed - self.display_time/2)/float(self.display_time/2))
+            alpha = int(max_opaque - max_opaque*(time_passed - half_display_time)/float(half_display_time))
             alpha = min(255, max(0, alpha))
             Engine.fill(most_dark_surf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
         # transition_space.convert_alpha()
@@ -927,121 +929,6 @@ class PhaseIn(object):
         surf.blit(transition_space, (0, 0))
         # Other transition_space
         surf.blit(transition_space, (0, GC.WINHEIGHT - transition_space.get_height()))
-
-# === WEAPON TRIANGLE OBJECT ==================================================
-class Weapon_Triangle(object):
-    def __init__(self, fp):
-        self.types = []
-        self.advantage = {}
-        self.disadvantage = {}
-        self.type_to_index = {}
-        self.index_to_type = {}
-        self.magic_types = []
-
-        self.parse_file(fp)
-
-    def number(self):
-        return len(self.types)
-
-    def parse_file(self, fp):
-        lines = []
-        with open(fp) as w_fp:
-            lines = w_fp.readlines()
-
-        for index, line in enumerate(lines):
-            split_line = line.strip().split(';')
-            name = split_line[0]
-            advantage = split_line[1].split(',')
-            disadvantage = split_line[2].split(',')
-            magic = True if split_line[3] == 'M' else False
-            # Ascend
-            self.types.append(name)
-            self.type_to_index[name] = index
-            self.index_to_type[index] = name
-            self.advantage[name] = advantage
-            self.disadvantage[name] = disadvantage
-            if magic:
-                self.magic_types.append(name)
-
-        self.type_to_index['Consumable'] = len(lines)
-        self.index_to_type[len(lines)] = 'Consumable'
-
-    def compute_advantage(self, weapon1, weapon2):
-        """ Returns two-tuple describing advantage """
-        if not weapon1 and not weapon2:
-            return (0, 0) # If either does not have a weapon, neither has advantage
-        if not weapon1:
-            return (0, 2)
-        if not weapon2:
-            return (2, 0)
-
-        weapon1_advantage, weapon2_advantage = 0, 0
-        for weapon1_type in weapon1.TYPE:
-            for weapon2_type in weapon2.TYPE:
-                if weapon2_type in self.advantage[weapon1_type]:
-                    weapon1_advantage += 1
-                if weapon2_type in self.disadvantage[weapon1_type]:
-                    weapon1_advantage -= 1
-                if weapon1_type in self.advantage[weapon2_type]:
-                    weapon2_advantage += 1
-                if weapon1_type in self.disadvantage[weapon2_type]:
-                    weapon2_advantage -= 1
-
-        # Handle reverse (reaver) weapons
-        if weapon1.reverse or weapon2.reverse:
-            return (-2*weapon1_advantage, -2*weapon2_advantage)
-        else:
-            return (weapon1_advantage, weapon2_advantage)
-
-    def isMagic(self, item):
-        if item.magic or item.magic_at_range or any(w_type in self.magic_types for w_type in item.TYPE):
-            return True
-        return False
-
-class Weapon_Exp(object):
-    def __init__(self, fp):
-        self.wexp_dict = {}
-        self.sorted_list = []
-        self.parse_file(fp)
-
-    def parse_file(self, fp):
-        lines = []
-        with open(fp) as w_fp:
-            lines = w_fp.readlines()
-
-        for index, line in enumerate(lines):
-            split_line = line.strip().split(';')
-            letter = split_line[0]
-            number = int(split_line[1])
-            self.wexp_dict[letter] = number
-
-        self.sorted_list = sorted(self.wexp_dict.items(), key=lambda x: x[1])
-
-    def number_to_letter(self, wexp):
-        current_letter = "--"
-        for letter, number in self.sorted_list:
-            if wexp >= number:
-                current_letter = letter
-            else:
-                break
-        return current_letter
-
-    # Returns a float between 0 and 1 desribing how closes number is to next tier from previous tier
-    def percentage(self, wexp):
-        current_percentage = 0.0
-        # print(wexp, self.sorted_list)
-        for index, (letter, number) in enumerate(self.sorted_list):
-            if index + 1 >= len(self.sorted_list):
-                current_percentage = 1.0
-                break
-            elif wexp >= number:
-                difference = float(self.sorted_list[index+1][1] - number)
-                if wexp - number >= difference:
-                    continue
-                current_percentage = (wexp - number)/difference
-                # print('WEXP', wexp, number, difference, current_percentage)
-                break
-        return current_percentage
 
 # === SAVESLOTS ===============================================================
 class SaveSlot(object):
@@ -1211,8 +1098,8 @@ class CameraOffset(object):
         min_y = min(y1, y2)
 
         if self.x > min_x - 4 or self.x + GC.TILEX < max_x + 4 or self.y > min_y - 3 or self.y + GC.TILEY < max_y + 3:
-            self.x = (max_x + min_x)/2 - GC.TILEX/2
-            self.y = (max_y + min_y)/2 - GC.TILEY/2
+            self.x = (max_x + min_x)//2 - GC.TILEX//2
+            self.y = (max_y + min_y)//2 - GC.TILEY//2
         
         # logger.debug('New Camera: %s %s', self.x, self.y)
 
@@ -1264,6 +1151,50 @@ class CameraOffset(object):
             self.current_y = (gameStateObj.map.height - GC.TILEY)
         # logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
+class PhaseMusic(object):
+    def __init__(self, player, enemy, other=None):
+        self.player_name = player
+        self.enemy_name = enemy
+        self.other_name = other
+        self.player_music = GC.MUSICDICT[self.player_name]
+        self.enemy_music = GC.MUSICDICT[self.enemy_name]
+        self.other_music = GC.MUSICDICT[self.other_name] if self.other_name else None
+
+    def get_phase_music(self, phase_name):
+        if phase_name == 'player':
+            return self.player_music
+        elif phase_name.startswith('enemy'):
+            return self.enemy_music
+        elif phase_name == 'other':
+            return self.other_music
+        else:
+            logging.error('Unsupported phase name: %s', phase_name)
+            return None
+
+    def serialize(self):
+        return (self.player_name, self.enemy_name, self.other_name)
+
+    @classmethod
+    def deserialize(cls, info):
+        return cls(*info)
+
+    def change_music(self, phase_name, music_name):
+        if music_name not in GC.MUSICDICT:
+            logging.error('Music %s not in GC.MUSICDICT', music_name)
+            return None
+        if phase_name == 'player':
+            self.player_name = music_name
+            self.player_music = GC.MUSICDICT[self.music_name]
+        elif phase_name.startswith('enemy'):
+            self.enemy_name = music_name
+            self.enemy_music = GC.MUSICDICT[self.music_name]
+        elif phase_name == 'other':
+            self.other_name = music_name
+            self.other_music = GC.MUSICDICT[self.music_name]
+        else:
+            logging.error('Unsupported phase name: %s', phase_name)
+            return None        
+
 class Objective(object):
     def __init__(self, display_name, win_condition, loss_condition):
         self.display_name_string = display_name
@@ -1284,7 +1215,7 @@ class Objective(object):
 
     @classmethod
     def deserialize(cls, info):
-        return cls(info[0], info[1], info[2])
+        return cls(*info)
 
     def eval_string(self, text, gameStateObj):
         # Parse evals
@@ -1327,13 +1258,13 @@ class Objective(object):
             self.BGSurf = Engine.create_surface((BGSurf.get_width(), BGSurf.get_height() + 3), transparent=True, convert=True)
             self.BGSurf.blit(BGSurf, (0, 3))
             gem = GC.IMAGESDICT['BlueCombatGem']
-            self.BGSurf.blit(gem, (BGSurf.get_width()/2 - gem.get_width()/2, 0))
+            self.BGSurf.blit(gem, (BGSurf.get_width()//2 - gem.get_width()//2, 0))
             # Now make translucent
             self.BGSurf = Image_Modification.flickerImageTranslucent(self.BGSurf, 20)
 
         temp_surf = self.BGSurf.copy()
         for index, line in enumerate(text_lines):
-            position = temp_surf.get_width()/2 - GC.FONT['text_white'].size(line)[0]/2, 16 * index + 6
+            position = temp_surf.get_width()//2 - GC.FONT['text_white'].size(line)[0]//2, 16 * index + 6
             GC.FONT['text_white'].blit(line, temp_surf, position)
 
         return temp_surf
@@ -1381,31 +1312,6 @@ def handle_aux_key(gameStateObj):
 # Initialize counter
 handle_aux_key.counter = 0
 
-class WeaponIcon(object):
-    def __init__(self, name=None, idx=None, grey=False):
-        if name:
-            self.name = name
-            self.idx = WEAPON_TRIANGLE.type_to_index[self.name]
-        else:
-            self.name = None
-            self.idx = idx
-        self.set_grey(grey)
-
-    def set_grey(self, grey):
-        self.grey = grey
-        self.create_image()
-
-    def create_image(self):
-        # Weapon Icons Pictures
-        if self.grey:
-            weaponIcons = GC.ITEMDICT['Gray_Wexp_Icons']
-        else:
-            weaponIcons = GC.ITEMDICT['Wexp_Icons']
-        self.image = Engine.subsurface(weaponIcons, (0, 16*self.idx, 16, 16))
-
-    def draw(self, surf, topleft, cooldown=False):
-        surf.blit(self.image, topleft)
-
 class LevelStatistic(object):
     def __init__(self, gameStateObj, metaDataObj):
         self.name = metaDataObj['name']
@@ -1426,13 +1332,10 @@ class LevelStatistic(object):
     def get_mvp(self):
         tp = 0
         current_mvp = 'Ophie'
-        for unit, record in self.stats.iteritems():
+        for unit, record in self.stats.items():
             test = self.formula(record)
             if test > tp:
                 tp = test
                 current_mvp = unit 
 
         return current_mvp
-
-WEAPON_TRIANGLE = Weapon_Triangle(Engine.engine_constants['home'] + "Data/weapon_triangle.txt")
-WEAPON_EXP = Weapon_Exp(Engine.engine_constants['home'] + "Data/weapon_exp.txt")

@@ -5,7 +5,7 @@
 # S4 is S3 reborn
 if;gameStateObj.turncount == 1
 	m;Best Detectives
-	set_cursor;S3;force_hold
+	set_cursor;S3
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -32,10 +32,10 @@ if;gameStateObj.turncount == 1
 	wait;250
 elif;gameStateObj.turncount == 2
 	m;Brave Story 33
-	set_cursor;S1;force_hold
+	set_cursor;S1
 	move_unit;S1;18,6
 	start_move
-	set_cursor;S2;force_hold
+	set_cursor;S2
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -53,9 +53,9 @@ elif;gameStateObj.turncount == 2
 # Reinforcements
 elif;gameStateObj.turncount == 4
 	m;Brave Story 33
-	set_cursor;18,8;force_hold
+	set_cursor;18,8
 	add_unit;S4;18,8;fade;closest
-	set_cursor;S4;force_hold
+	set_cursor;S4
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -72,12 +72,12 @@ elif;gameStateObj.turncount == 9
 	m;Brave Story 33
 	change_objective_display_name;Escape or Defeat Boss
 	change_objective_win_condition;Escape the Fort or Defeat Boss.
-	set_cursor;6,18;force_hold
+	set_cursor;6,18
 	wait;200
 	add_unit;G1;5,18;fade;push
 	add_unit;Harold;6,18;fade;push
 	add_unit;G2;7,18;fade;push
-	set_cursor;Harold;force_hold
+	set_cursor;Harold
 	wait;200
 	disp_cursor;1
 	wait;1000
@@ -89,7 +89,7 @@ elif;gameStateObj.turncount == 9
 	r;Soldier2;Harold
 	# Pan over to Resistance
 	if;not gameStateObj.check_dead('Prim')
-		set_cursor;Prim;force_hold
+		set_cursor;Prim
 		u;Prim;Right
 		u;Renae;Left
 		s;Prim;Oh no. Those soldiers were not gone for very long.{w}{br}We need to run!{w};auto

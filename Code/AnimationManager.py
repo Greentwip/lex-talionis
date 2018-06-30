@@ -39,10 +39,11 @@ class BattleAnimationManager(object):
                     continue
                 if effect not in self.effects:
                     self.effects[effect] = {}
+                    self.effects[effect]['images'] = {}
                 full_name = os.path.join(root, name)
                 if name.endswith('.png'):
                     image = Engine.image_load(full_name, convert_alpha=True)
-                    self.effects[effect]['image'] = image
+                    self.effects[effect]['images'][desc[:-4]] = image
                 elif name.endswith('Script.txt'):
                     self.effects[effect]['script'] = full_name
                 elif name.endswith('Index.txt'):
@@ -53,7 +54,7 @@ class BattleAnimationManager(object):
             klass_directory = self.directory[klass]
             for weapon in klass_directory:
                 frame_directory = {}
-                for name, anim in klass_directory[weapon]['images'].iteritems():
+                for name, anim in klass_directory[weapon]['images'].items():
                     if 'index' not in klass_directory[weapon]:
                         return False
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)
@@ -75,16 +76,18 @@ class BattleAnimationManager(object):
         if effect in self.effects and effect not in self.generated_effects:
             self.generated_effects.add(effect)
             e_dict = self.effects[effect]
-            if 'image' in e_dict:
-                e_dict['image'] = self.format_index(e_dict['index'], e_dict['image'])
-            else:
-                e_dict['image'] = None
+            frame_directory = {}
+            for name, anim in e_dict['images'].items():
+                if 'index' not in e_dict:
+                    return False
+                frame_directory[name] = self.format_index(e_dict['index'], anim)
+            e_dict['images'] = frame_directory
             e_dict['script'] = self.parse_script(e_dict['script'])
 
     def partake(self, klass, gender=0, item=None, magic=False, distance=1):
         klass = klass + str(gender)
         if klass not in self.directory:
-            gender = (gender/5) * 5  # Get nearest default
+            gender = (gender//5) * 5  # Get nearest default
             klass = klass[:-1] + str(gender)
         if klass in self.directory:
             if not self.generate(klass):
@@ -109,18 +112,23 @@ class BattleAnimationManager(object):
         else:
             return None
 
-    def get_effect(self, effect):
+    def get_effect(self, effect, name=None):
         if effect in self.effects:
             self.generate_effect(effect)
-            #print(self.effects[effect]['script'])
-            return self.effects[effect]['image'], self.effects[effect]['script']
+            if not name or name not in self.effects[effect]['images']:
+                name = 'Image'
+            if name in self.effects[effect]['images']:
+                return self.effects[effect]['images'][name], self.effects[effect]['script']
+            else:
+                return None, self.effects[effect]['script']
         else:
-            print('Effect %s not found in self.effects!'%(effect))
+            print('Effect %s not found in self.effects!' % effect)
             return None, None
 
     def format_index(self, index, anim):
         frame_directory = {}
         index_lines = []
+        # print(index)
         with open(index) as fp:
             index_lines = [line.strip().split(';') for line in fp.readlines()]
 
@@ -129,6 +137,7 @@ class BattleAnimationManager(object):
             x, y = (int(num) for num in line[1].split(','))
             width, height = (int(num) for num in line[2].split(','))
             offset = tuple(int(num) for num in line[3].split(','))
+            # print(name, x, y, width, height)
             image = Engine.subsurface(anim, (x, y, width, height))
             frame_directory[name] = (image, offset)
         return frame_directory

@@ -1,9 +1,9 @@
 # Escape
 if;gameStateObj.turncount > 1 and not any(unit.team == 'player' for unit in gameStateObj.allunits if unit.position)
 	win_game
-elif;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 2 and self.optionalunit.name == 'Ophie'
+elif;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 2 and self.unit.name == 'Ophie'
 	# Just in case, kill off E1, since Ophie is supposed to kill that one.
-	trigger_event;turn2_ophie
+	set_level_constant;turn2_ophie
 	kill_unit;E1
 	tutorial_mode;Spells
 	u;Prim;Left

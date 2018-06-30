@@ -1,6 +1,6 @@
 # Level 2 Village Script
 # Ruby
-if;self.optionalunit2 == '1'
+if;self.name == '1'
 	t;1
 	b;House
 	t;2
@@ -18,7 +18,7 @@ if;self.optionalunit2 == '1'
 	t;2
 	give_item;{unit};Ruby
 # Potion
-elif;self.optionalunit2 == '2'
+elif;self.name == '2'
 	t;1
 	b;House
 	t;2
@@ -36,7 +36,7 @@ elif;self.optionalunit2 == '2'
 	t;2
 	give_item;{unit};Potion
 # Spiritbane
-elif;self.optionalunit2 == '3'
+elif;self.name == '3'
 	t;1
 	b;House
 	t;2

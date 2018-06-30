@@ -16,7 +16,6 @@
         <level>1</level>
         <class>Myrmidon</class>
         <desc>A strong-hearted renegade who often acts before he thinks.</desc>
-        <faction>Resistance</faction>
         
         <tags>Lord</tags>
         <skills></skills>
@@ -37,7 +36,6 @@
         <level>1</level>
         <class>Cleric</class>
         <desc>A shy but kind-hearted young woman. Has an affinity with the spiritual.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills></skills>
@@ -58,7 +56,6 @@
         <level>3</level>
         <class>Fighter</class>
         <desc>A jovial former sailor. Always ready for a new adventure.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills></skills>
@@ -79,7 +76,6 @@
         <level>3</level>
         <class>Archer</class>
         <desc>A quiet archer most at home in the wilderness.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills></skills>
@@ -100,7 +96,6 @@
         <level>2</level>
         <class>Mage</class>
         <desc>A forthright but elegant and refined sorceress.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills></skills>
@@ -121,7 +116,6 @@
         <level>5</level>
         <class>Cavalier</class>
         <desc>A disgraced Imperial knight now in Althea's service.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills></skills>
@@ -142,8 +136,7 @@
         <level>4</level>
         <class>Thief</class>
         <desc>An energetic thief with a kleptomanic streak.</desc>
-        <faction>Resistance</faction>
-        
+
         <tags></tags>
         <skills></skills>
     </unit>
@@ -163,7 +156,6 @@
         <level>4</level>
         <class>Knight</class>
         <desc>An avid scholar. Interested in esoteric philosophy.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills></skills>
@@ -184,7 +176,6 @@
         <level>1</level>
         <class>Soldier</class>
         <desc>A moody, sarcastic soldier.</desc>
-        <faction>Resistance</faction>
 
         <tags></tags>
         <skills></skills>
@@ -205,7 +196,6 @@
         <level>7</level>
         <class>Tactician</class>
         <desc>The resistance's leader. Ambitious and inquisitive.</desc>
-        <faction>Resistance</faction>
 
         <tags></tags>
         <skills></skills>
@@ -226,7 +216,6 @@
         <level>9</level>
         <class>Mercenary</class>
         <desc>A troubled wandererer with a mysterious past.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills>fMaximum HP +5</skills>
@@ -247,7 +236,6 @@
         <level>8</level>
         <class>Shaman</class>
         <desc>A scheming diplomat from the Confederacy.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills>fSpeed +2</skills>
@@ -266,10 +254,9 @@
         
         <inventory>Mithril Sword</inventory>
         
-        <level>14</level>
+        <level>4</level>
         <class>Myrmidon,Swordmaster</class>
         <desc>A devoted monk. Ophie's mentor in the way of the blade.</desc>
-        <faction>Neutral</faction>
         
         <tags></tags>
         <skills></skills>
@@ -287,10 +274,9 @@
         
         <inventory>Rusted Axe</inventory>
         
-        <level>12</level>
+        <level>2</level>
         <class>Raider,Berserker</class>
         <desc>Jovial leader by acclamation of the Tyrana prisoners.</desc>
-        <faction>Resistance</faction>
         
         <tags></tags>
         <skills></skills>
@@ -312,7 +298,6 @@
         <level>4</level>
         <class>Fighter</class>
         <desc>A cruel Imperial lieutenant.</desc>
-        <faction>Empire</faction>
 
         <tags></tags>
         <skills></skills>
@@ -334,7 +319,6 @@
         <level>6</level>
         <class>Shaman</class>
         <desc>Tasked with hunting down the Empire's fugitives.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -356,7 +340,6 @@
         <level>8</level>
         <class>Knight</class>
         <desc>Captain in the Imperial Army. Ulver's sworn man.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -377,8 +360,7 @@
         
         <level>8</level>
         <class>Brigand</class>
-        <desc>First lieutanent at the Tyrana Mines.</desc>
-        <faction>Empire</faction>
+        <desc>First lieutenant at the Tyrana Mines.</desc>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -399,7 +381,6 @@
         <level>5</level>
         <class>Wagon</class>
         <desc>A greedy Imperial merchant.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -421,7 +402,6 @@
         <level>10</level>
         <class>Brigand</class>
         <desc>Boss of the Ghat mountain bandits.</desc>
-        <faction>Bandit</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -442,7 +422,6 @@
         <level>10</level>
         <class>Brigand</class>
         <desc>Boss of the Ghat mountain bandits</desc>
-        <faction>Bandit</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -461,10 +440,9 @@
         
         <inventory>Mithril Sword,Boltblade</inventory>
         
-        <level>14</level>
+        <level>4</level>
         <class>Myrmidon,Swordmaster</class>
         <desc>Harsh warden of the Tyrana Prison.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -483,10 +461,9 @@
         
         <inventory>Corona,Physic,dRefresh</inventory>
         
-        <level>15</level>
+        <level>5</level>
         <class>Tactician,Strategist</class>
         <desc>A member of the Empire's elite cadre of tacticians.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -505,10 +482,9 @@
         
         <inventory>Ruin,dMana Ring</inventory>
         
-        <level>18</level>
+        <level>8</level>
         <class>Shaman,Warlock</class>
         <desc>Ruthless and cunning Imperial warlock.</desc>
-        <faction>Empire</faction>
         
         <tags></tags>
         <skills></skills>
@@ -527,10 +503,9 @@
         
         <inventory>dAdamant Axe,Tomahawk,Elixir</inventory>
         
-        <level>20</level>
+        <level>10</level>
         <class>Raider,Berserker</class>
         <desc>An acclaimed hunter of rare beasts.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -548,10 +523,9 @@
         
         <inventory>Longbow,dAdamant Sword</inventory>
         
-        <level>20</level>
+        <level>10</level>
         <class>Thief,Assassin</class>
         <desc>An enigmatic masked man.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills></skills>
@@ -570,10 +544,9 @@
         
         <inventory>Corona,Physic</inventory>
         
-        <level>20</level>
+        <level>10</level>
         <class>Tactician,Strategist</class>
         <desc>Duke Ulver's loyal assistant.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills>Imperial Wards</skills>
@@ -590,10 +563,9 @@
         
         <inventory>Makara</inventory>
         
-        <level>25</level>
+        <level>5</level>
         <class>Knight,General,Duke</class>
         <desc>Hard-nosed Imperial Duke occupying Kerala.</desc>
-        <faction>Empire</faction>
         
         <tags>Boss</tags>
         <skills>Imperial Wards</skills>

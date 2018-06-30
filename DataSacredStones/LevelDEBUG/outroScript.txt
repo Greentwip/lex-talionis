@@ -1,0 +1,23 @@
+# Fade to black
+t;1
+b;InsideCastle
+t;2
+u;Tana;Left;u;Gilliam;MidRight
+s;Gilliam;Princess Tana
+s;Tana;Sir Gilliam...{w}{br}I'm sorry. I never meant to cause you such trouble.
+s;Gilliam;It was no trouble. I live to serve, Princess.
+# Move Eirika onscreen from offscreen
+qu;Eirika;OffscreenRight
+move_sprite;Eirika;FarRight
+s;Eirika;Tana!
+s;Tana;...Eirika?!?{w}{br}Is that really you?
+s;Eirika;Tana, what are you doing, so far from Castle Frelia?
+# This is how you tell a character to change their expression
+set_expression;Tana;Smiling
+s;Tana;I heard that Renais had fallen, and I was so worried...{w}{br}But I'm glad to see that you're safe...{w}{clear}Wait! Where is Ephraim? Is he well?
+set_expression;Tana;Normal
+s;Eirika;I wish I knew.
+s;Tana;You haven't heard from him? Oh, I hope he's not been harmed...{w}{br}Come, we must go to Castle Frelia. My lord father may know something.
+s;Eirika;Thank you, Tana.
+t;1
+qr;Tana;Gilliam;Eirika

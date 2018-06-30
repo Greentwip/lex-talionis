@@ -50,7 +50,7 @@ def gray_image(image):
         for col in range(image.get_height()):
             color = image.get_at((row, col))
             if color[3] != 0:
-                avg = (color[0] + color[1] + color[2]) / 3
+                avg = (color[0] + color[1] + color[2]) // 3
                 image.set_at((row, col), (avg, avg, avg))
     return image
 
@@ -117,7 +117,7 @@ def change_image_color(image, color):
 # Gets a color that is between the two colors in a linear way
 def color_transition(color1, color2):
     # A number between 1 and 20 that changes at a set pace in a linear fashion
-    linear_transform_num = math.sin(math.radians((Engine.get_time()/10)%180))
+    linear_transform_num = math.sin(math.radians((Engine.get_time()//10)%180))
     diff_colors = (color2[0] - color1[0], color2[1] - color1[1], color2[2] - color1[2])
     new_color = []
     for index, chroma in enumerate(diff_colors):
@@ -129,7 +129,7 @@ def color_transition(color1, color2):
 # Gets a color that is between the two colors in a linear way
 def color_transition2(color1, color2):
     # A number between 1 and 20 that changes at a set pace in a linear fashion
-    linear_transform_num = math.sin(math.radians((Engine.get_time()/10)%180))
+    linear_transform_num = math.sin(math.radians((Engine.get_time()//10)%180))
     diff_colors = (color2[0] - color1[0], color2[1] - color1[1], color2[2] - color1[2])
     new_color = []
     for index, chroma in enumerate(diff_colors):
@@ -150,8 +150,8 @@ def transition_image_white(image):
     return image
 
 def print_image(image):
-    for row in xrange(image.get_width()):
-        for col in xrange(image.get_height()):
+    for row in range(image.get_width()):
+        for col in range(image.get_height()):
             color = image.get_at((row, col))
             print(color)
 

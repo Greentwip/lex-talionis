@@ -5,14 +5,14 @@ import configuration as cf
 import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 import Interaction, LevelUp, StatusObject, ItemMethods
 import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
-import BattleAnimation
+import BattleAnimation, TextChunk, Weapons
 
 import logging
 logger = logging.getLogger(__name__)
 # === Finite State Machine Object ===============================
 class StateMachine(object):
     def __init__(self, state_list=[], temp_state=[]):
-        import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu
+        import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu, DebugMode
         self.all_states = {'free': FreeState,
                            'turn_change': TurnChangeState,
                            'move': MoveState,
@@ -107,7 +107,8 @@ class StateMachine(object):
                            'config_menu': OptionsMenu.OptionsMenu,
                            'status_menu': MenuFunctions.StatusMenu,
                            'info_menu': InfoMenu.InfoMenu,
-                           'unit_menu': UnitMenu.UnitMenu}
+                           'unit_menu': UnitMenu.UnitMenu,
+                           'debug': DebugMode.DebugState}
         self.state = []
         for state_name in state_list:
             self.state.append(self.all_states[state_name](state_name))
@@ -167,12 +168,6 @@ class StateMachine(object):
 
     def inList(self, state_name):
         return any([state_name == state.name for state in self.state]) or any([state_name == temp_state for temp_state in self.temp_state])
-
-    def any_events(self):
-        for s in self.state:
-            if s.name == 'dialogue' and s.message and s.message.event_flag:
-                return True
-        return False
 
     # Keeps track of the state at every tick
     def update(self, eventList, gameStateObj, metaDataObj):
@@ -262,7 +257,7 @@ class State(object):
 
     def draw(self, gameStateObj, metaDataObj):
         if self.show_map:
-            mapSurf = drawMap(gameStateObj) # Creates mapSurf
+            mapSurf = drawMap(gameStateObj)  # Creates mapSurf
             gameStateObj.set_camera_limits()
             rect = (gameStateObj.cameraOffset.get_x()*GC.TILEWIDTH, gameStateObj.cameraOffset.get_y()*GC.TILEHEIGHT, GC.WINWIDTH, GC.WINHEIGHT)
             mapSurf = Engine.subsurface(mapSurf, rect)
@@ -280,71 +275,11 @@ class State(object):
                 gameStateObj.childMenu.draw(mapSurf, gameStateObj)
         return mapSurf
 
-def handle_debug(eventList, gameStateObj, metaDataObj):
-    # === For debugging purposes only ===
+def wizard_mode(eventList, gameStateObj):
     for event in eventList:
         if event.type == Engine.KEYUP:
-            # Win the game
-            if event.key == Engine.key_map['w']:
-                gameStateObj.statedict['levelIsComplete'] = 'win'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seize_triggers.txt'))
-                gameStateObj.stateMachine.changeState('dialogue')
-            # Do 2 damage to unit
-            elif event.key == Engine.key_map['d']: # For debugging purposes only
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.change_hp(-2)
-            # Lose the game
-            elif event.key == Engine.key_map['l']:
-                gameStateObj.statedict['levelIsComplete'] = 'loss'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escape_triggers.txt'))
-                gameStateObj.stateMachine.changeState('dialogue')
-            # Level up unit by 100 or by 14
-            elif event.key == Engine.key_map['u'] or event.key == Engine.key_map['j']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    if event.key == Engine.key_map['j']:
-                        exp = 14
-                    else:
-                        exp = 100
-                    # Also handles actually adding the exp to the unit
-                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=gameStateObj.cursor.currentHoveredUnit, exp=exp))
-                    gameStateObj.stateMachine.changeState('expgain')
-                return
-            # Give unit ten exp
-            elif event.key == Engine.key_map['e']: # For debugging purposes only
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.exp += 10
-            # Kill unit
-            elif event.key == Engine.key_map['p']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.isDying = True
-                    gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], gameStateObj.cursor.currentHoveredUnit, event_flag=False))
-                    gameStateObj.stateMachine.changeState('dialogue')
-                return
-            # Charge all skills and remove all non-class skills
-            elif event.key == Engine.key_map['t']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if skill.active]:
-                        skill.active.current_charge = skill.active.required_charge
-                        gameStateObj.cursor.currentHoveredUnit.tags.add('ActiveSkillCharged')
-                    # for skill in [skill for skill in gameStateObj.cursor.currentHoveredUnit.status_effects if not skill.class_skill]:
-                    #     StatusObject.HandleStatusRemoval(skill, gameStateObj.cursor.currentHoveredUnit, gameStateObj)
-            # Increase all wexp by 5
-            elif event.key == Engine.key_map['5']:
-                gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
-                if gameStateObj.cursor.currentHoveredUnit:
-                    gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
-                    gameStateObj.cursor.currentHoveredUnit.increase_wexp(5, gameStateObj)
+            if event.key == Engine.key_map['d']:
+                gameStateObj.stateMachine.changeState('debug')
 
 class TurnChangeState(State):
     def begin(self, gameStateObj, metaDataObj):
@@ -369,7 +304,7 @@ class TurnChangeState(State):
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
-            turn_event_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/turnChangeScript.txt'
+            turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
             if os.path.isfile(turn_event_script):
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(turn_event_script))
                 gameStateObj.stateMachine.changeState('dialogue')
@@ -404,6 +339,12 @@ class TurnChangeState(State):
             gameStateObj.stateMachine.changeState('ai')
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')
+            # === TURN EVENT SCRIPT ===
+            if gameStateObj.phase.get_current_phase() == 'enemy':
+                enemy_turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
+                if os.path.isfile(enemy_turn_event_script):
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(enemy_turn_event_script))
+                    gameStateObj.stateMachine.changeState('dialogue')
             gameStateObj.stateMachine.changeState('end_step')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -424,7 +365,8 @@ class FreeState(State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         # Check to see if all ally units have completed their turns and no unit is active and the game is in the free state.
-        if cf.OPTIONS['Autoend Turn'] and all([unit.isDone() for unit in gameStateObj.allunits if unit.position and unit.team == 'player']):
+        if cf.OPTIONS['Autoend Turn'] and any(unit.position for unit in gameStateObj.allunits) and \
+                all(unit.isDone() for unit in gameStateObj.allunits if unit.position and unit.team == 'player'):
             # End the turn
             logger.info('Autoending turn.')
             gameStateObj.stateMachine.changeState('turn_change')
@@ -460,7 +402,7 @@ class FreeState(State):
             GC.SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
         elif cf.OPTIONS['cheat']:
-            handle_debug(eventList, gameStateObj, metaDataObj)
+            wizard_mode(eventList, gameStateObj)
         # Moved down here so it is done last
         gameStateObj.cursor.take_input(eventList, gameStateObj)
 
@@ -603,9 +545,9 @@ class MoveState(State):
 
         # Play move script if it exists
         if not self.started:
-            move_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/moveScript.txt'
+            move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
             if gameStateObj.tutorial_mode and os.path.exists(move_script_name):
-                move_script = Dialogue.Dialogue_Scene(move_script_name, cur_unit, event_flag=False)
+                move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit)
                 gameStateObj.message.append(move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -747,9 +689,9 @@ class MenuState(State):
 
         # Play menu script if it exists
         if not self.started:
-            menu_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/menuScript.txt'
+            menu_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
             if gameStateObj.tutorial_mode and os.path.exists(menu_script_name):
-                menu_script = Dialogue.Dialogue_Scene(menu_script_name, cur_unit, event_flag=False)
+                menu_script = Dialogue.Dialogue_Scene(menu_script_name, unit=cur_unit)
                 gameStateObj.message.append(menu_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -772,15 +714,17 @@ class MenuState(State):
         adjallies = [unit for unit in adjunits if cur_unit.checkIfAlly(unit)]
 
         # If the unit is standing on a throne
-        if cf.WORDS['Seize'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        if 'Seize' in gameStateObj.map.tile_info_dict[cur_unit.position]:
+            options.append(cf.WORDS['Seize'])
+        elif 'Lord_Seize' in gameStateObj.map.tile_info_dict[cur_unit.position] and 'Lord' in cur_unit.tags:
             options.append(cf.WORDS['Seize'])
         # If the unit is standing on an escape tile
-        if cf.WORDS['Escape'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        if 'Escape' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Escape'])
-        elif cf.WORDS['Arrive'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        elif 'Arrive' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Arrive'])
         # If the unit is standing on a switch
-        if cf.WORDS['Switch'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+        if 'Switch' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Switch'])
         # If the unit has validTargets
         if atk_targets:
@@ -802,10 +746,10 @@ class MenuState(State):
                     options.append(cf.WORDS['Talk'])
                     break
             # If the unit is on a village tile
-            if cf.WORDS['Village'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+            if 'Village' in gameStateObj.map.tile_info_dict[cur_unit.position]:
                 options.append(cf.WORDS['Visit'])
             # If the unit is on a shop tile
-            if cf.WORDS['Shop'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+            if 'Shop' in gameStateObj.map.tile_info_dict[cur_unit.position]:
                 if gameStateObj.map.tiles[cur_unit.position].name == cf.WORDS['Armory']:
                     options.append(cf.WORDS['Armory'])
                 else:
@@ -818,7 +762,7 @@ class MenuState(State):
                     elif any([cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[tile.position] for tile in adjtiles]):
                         options.append(cf.WORDS['Unlock'])
             # If the unit is on a searchable tile
-            if cf.WORDS['Search'] in gameStateObj.map.tile_info_dict[cur_unit.position] and not cur_unit.hasAttacked:
+            if 'Search' in gameStateObj.map.tile_info_dict[cur_unit.position] and not cur_unit.hasAttacked:
                 options.append(cf.WORDS['Search'])
             # If the unit has a traveler
             if cur_unit.TRV and not cur_unit.hasAttacked: # (len(set(adjposition) | set(current_unit_positions)) > len(set(current_unit_positions)))
@@ -851,7 +795,9 @@ class MenuState(State):
 
         # Filter by legal options here
         if gameStateObj.tutorial_mode:
-            options = [option for option in options if option == gameStateObj.tutorial_mode]
+            t_options = [option for option in options if option == gameStateObj.tutorial_mode]
+            if t_options:
+                options = t_options
 
         if options:
             opt_color = ['text_green' if option not in self.normal_options else 'text_white' for option in options]
@@ -906,7 +852,7 @@ class MenuState(State):
             gameStateObj.highlight_manager.remove_highlights()
             active_skills = [status for status in cur_unit.status_effects if status.active]
 
-            if selection in {status.name for status in active_skills}:
+            if selection in [status.name for status in active_skills]:
                 for status in active_skills:
                     if selection == status.name or selection == status.id:
                         cur_unit.current_skill = status
@@ -981,8 +927,8 @@ class MenuState(State):
                 gameStateObj.stateMachine.changeState('giveselect')
             elif selection == cf.WORDS['Visit']:
                 village_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Village']]
-                village_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/villageScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, cur_unit, village_name, cur_unit.position, event_flag=False))
+                village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
                 cur_unit.hasAttacked = True
             elif selection == cf.WORDS['Armory']:
@@ -992,9 +938,7 @@ class MenuState(State):
                 gameStateObj.stateMachine.changeState('vendor')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Seize']:
-                cur_unit.hasAttacked = True
-                gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seize_triggers.txt', cur_unit, tile_pos=cur_unit.position))
-                gameStateObj.stateMachine.changeState('dialogue')
+                cur_unit.seize(gameStateObj)
             elif selection in [cf.WORDS['Escape'], cf.WORDS['Arrive']]:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
@@ -1002,8 +946,8 @@ class MenuState(State):
             elif selection == cf.WORDS['Switch']:
                 cur_unit.hasAttacked = True
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
-                switch_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/switchScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, cur_unit, switch_name, tile_pos=cur_unit.position))
+                switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
             elif selection == cf.WORDS['Unlock']:
                 avail_pos = [pos for pos in cur_unit.getAdjacentPositions(gameStateObj) + [cur_unit.position] if cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[pos]]
@@ -1018,8 +962,8 @@ class MenuState(State):
                     logger.error('Made a mistake in allowing unit to access Unlock!')
             elif selection == cf.WORDS['Search']:
                 search_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Search']]
-                search_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/searchScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, cur_unit, search_name, cur_unit.position))
+                search_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, unit=cur_unit, name=search_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
                 cur_unit.hasAttacked = True
             elif selection == cf.WORDS['Talk']:
@@ -1091,15 +1035,21 @@ class ItemChildState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.info_surf = None
         selection = gameStateObj.activeMenu.getSelection()
+        current_unit = gameStateObj.cursor.currentSelectedUnit
         # Create child menu with additional options
         options = []
-        if selection.weapon and gameStateObj.cursor.currentSelectedUnit.canWield(selection):
+        if selection.weapon and current_unit.canWield(selection):
             options.append(cf.WORDS['Equip'])
         if selection.usable:
-            if not selection.heal or gameStateObj.cursor.currentSelectedUnit.currenthp < gameStateObj.cursor.currentSelectedUnit.stats['HP'] and \
-                    (not selection.c_uses or selection.c_uses.uses > 0):
+            use = True
+            if selection.heal and current_unit.currenthp >= current_unit.stats['HP']:
+                use = False
+            elif selection.c_uses and selection.c_uses.uses <= 0:
+                use = False
+            elif selection.promotion and not current_unit.can_promote_using(selection, metaDataObj):
+                use = False
+            if use:
                 options.append(cf.WORDS['Use'])
-        # Why does this even exist? When would you want to discard your items in battle?
         if 'Convoy' in gameStateObj.game_constants:
             options.append(cf.WORDS['Storage'])
         else:
@@ -1263,9 +1213,9 @@ class AttackState(State):
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
 
         # Play attack script if it exists
-        attack_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/attackScript.txt'
+        attack_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
         if gameStateObj.tutorial_mode and os.path.exists(attack_script_name):
-            attack_script = Dialogue.Dialogue_Scene(attack_script_name, self.attacker, event_flag=False)
+            attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker)
             gameStateObj.message.append(attack_script)
             gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -1603,8 +1553,8 @@ class SelectState(State):
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
                     cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
-                    talk_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/talkScript.txt'
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, cur_unit, gameStateObj.cursor.currentHoveredUnit))
+                    talk_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('dialogue')
             elif self.name == 'unlockselect':
@@ -1821,6 +1771,7 @@ class AIState(State):
                                          unit.team == gameStateObj.phase.get_current_phase()]
             # Sort by distance to closest enemy (ascending)
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.distance_to_closest_enemy(gameStateObj))
+            gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.ai_group)
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.priority, reverse=True)
             # Reverse, because we will be popping them off the end
             gameStateObj.ai_unit_list.reverse()
@@ -1875,6 +1826,7 @@ class DialogueState(State):
     def __init__(self, name='dialogue'):
         State.__init__(self, name)
         self.message = None
+        self.text_speed_change = MenuFunctions.BriefPopUpDisplay((GC.WINWIDTH, GC.WINHEIGHT - 16))
 
     def begin(self, gameStateObj, metaDataObj):
         cf.CONSTANTS['Unit Speed'] = 120
@@ -1908,6 +1860,7 @@ class DialogueState(State):
                 if current_index >= len(cf.text_speed_options):
                     current_index = 0
                 cf.OPTIONS['Text Speed'] = cf.text_speed_options[current_index]
+                self.text_speed_change.start('Changed Text Speed!')
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):
         logger.debug('Ending dialogue state')
@@ -1929,16 +1882,25 @@ class DialogueState(State):
                     gameStateObj.message.append(outro_script)
                     gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.statedict['outroScriptDone'] = True
-                # if metaDataObj['victoryFlag']:
-                    # gameStateObj.stateMachine.changeState('victory')
             else:
                 gameStateObj.clean_up()
                 gameStateObj.output_progress()
-                if isinstance(gameStateObj.counters['level'], int):
-                    gameStateObj.counters['level'] += 1
+                if isinstance(gameStateObj.game_constants['level'], int):
+                    gameStateObj.game_constants['level'] += 1
 
                 gameStateObj.stateMachine.clear()
-                if (not isinstance(gameStateObj.counters['level'], int)) or gameStateObj.counters['level'] >= cf.CONSTANTS['num_levels']:
+                # Determines the number of levels in the game
+                num_levels = 0
+                level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
+                for directory in level_directories:
+                    try:
+                        num = int(os.path.split(directory)[1][5:])
+                        if num > num_levels:
+                            num_levels = num
+                    except:
+                        continue
+                        
+                if (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] >= num_levels:
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start')
                 else:
@@ -1986,6 +1948,7 @@ class DialogueState(State):
             mapSurf = gameStateObj.generic_surf
         if self.message:
             self.message.draw(mapSurf)
+        self.text_speed_change.draw(mapSurf)
         return mapSurf
 
     def finish(self, gameStateObj, metaDataObj):
@@ -1999,7 +1962,10 @@ class VictoryState(State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=True)
-        level_statistic = gameStateObj.statistics[-1]
+        if gameStateObj.statistics:
+            level_statistic = gameStateObj.statistics[-1]
+        else:
+            level_statistic = None
         self.state = 'init'
         self.stat_surf = self.create_stat_surf(level_statistic)
         self.stat_surf_target = self.stat_surf.get_height() + 4
@@ -2009,8 +1975,12 @@ class VictoryState(State):
         GC.SOUNDDICT['StageClear'].play()
 
     def create_stat_surf(self, stats):
-        turns = str(stats.turncount)
-        mvp = stats.get_mvp()
+        if stats:
+            turns = str(stats.turncount)
+            mvp = stats.get_mvp()
+        else:
+            turns ='0'
+            mvp = 'None'
         menu_width = 96
         bg = MenuFunctions.CreateBaseMenuSurf((menu_width, 40), 'BaseMenuBackgroundOpaque')
         img = GC.IMAGESDICT['Shimmer2']
@@ -2021,8 +1991,8 @@ class VictoryState(State):
         GC.FONT['text_yellow'].blit('MVP', bg, (4, 20))
         turns_size = GC.FONT['text_blue'].size(turns)[0]
         mvp_size = GC.FONT['text_blue'].size(mvp)[0]
-        GC.FONT['text_blue'].blit(turns, bg, (menu_width - 40 - turns_size/2, 4))
-        GC.FONT['text_blue'].blit(mvp, bg, (menu_width - 40 - mvp_size/2, 20))
+        GC.FONT['text_blue'].blit(turns, bg, (menu_width - 40 - turns_size//2, 4))
+        GC.FONT['text_blue'].blit(mvp, bg, (menu_width - 40 - mvp_size//2, 20))
 
         return bg
 
@@ -2048,14 +2018,14 @@ class VictoryState(State):
         offset = self.num_frame/float(self.num_transition_frames)
 
         # Stat surf draw
-        pos = (GC.WINWIDTH/2 - self.stat_surf.get_width()/2, GC.WINHEIGHT - (offset * self.stat_surf_target))
+        pos = (GC.WINWIDTH//2 - self.stat_surf.get_width()//2, GC.WINHEIGHT - (offset * self.stat_surf_target))
         mapSurf.blit(self.stat_surf, pos)
         # Victory draw
         vic_surf = Engine.copy_surface(self.victory_surf)
         vic_surf = Image_Modification.flickerImageTranslucent(vic_surf, 100 - (offset * 100))
         height = int(self.vic_height * offset)
         vic_surf = Engine.transform_scale(vic_surf, (GC.WINWIDTH, height))
-        mapSurf.blit(vic_surf, (0, self.victory_surf.get_height()/2 - height/2))
+        mapSurf.blit(vic_surf, (0, self.victory_surf.get_height()//2 - height//2))
 
         return mapSurf
 
@@ -2188,11 +2158,11 @@ class PhaseChangeState(State):
         if cf.OPTIONS['debug']:
             if gameStateObj.phase.get_current_phase() == 'player':
                 logger.debug("Saving as we enter player phase!")
-                name = 'L' + str(gameStateObj.counters['level']) + 'T' + str(gameStateObj.turncount)
+                name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount)
                 SaveLoad.suspendGame(gameStateObj, 'TurnChange', hard_loc=name)
             elif gameStateObj.phase.get_current_phase() == 'enemy':
                 logger.debug("Saving as we enter enemy phase!")
-                name = 'L' + str(gameStateObj.counters['level']) + 'T' + str(gameStateObj.turncount) + 'b'
+                name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount) + 'b'
                 SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange', hard_loc=name)
 
     def update(self, gameStateObj, metaDataObj):
@@ -2289,19 +2259,21 @@ class PromotionChoiceState(State):
                 if anim:
                     # Build animation
                     script = anim['script']
+                    name = None
                     if self.unit.name in anim['images']:
-                        frame_dir = anim['images'][self.unit.name]
+                        name = self.unit.name
                     else:
                         color = 'Blue' if self.unit.team == 'player' else 'Red'
-                        frame_dir = anim['images']['Generic' + color]
-                    anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
+                        name = 'Generic' + color
+                    frame_dir = anim['images'][name]
+                    anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script, name)
                     anim.awake(owner=self, parent=None, partner=None, right=True, at_range=False) # Stand
                 self.animations.append(anim)
                 # Build weapon icons
                 weapons = []
                 for idx, wexp in enumerate(metaDataObj['class_dict'][option]['wexp_gain']):
                     if wexp > 0:
-                        weapons.append(CustomObjects.WeaponIcon(idx=idx))
+                        weapons.append(Weapons.Icon(idx=idx))
                 self.weapon_icons.append(weapons)
 
             # Platforms
@@ -2389,8 +2361,8 @@ class PromotionChoiceState(State):
         surf = State.draw(self, gameStateObj, metaDataObj)
         # Anim
         top = 88
-        surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width() + self.anim_offset + 52, top))
-        surf.blit(self.right_platform, (GC.WINWIDTH / 2 + self.anim_offset + 52, top))
+        surf.blit(self.left_platform, (GC.WINWIDTH // 2 - self.left_platform.get_width() + self.anim_offset + 52, top))
+        surf.blit(self.right_platform, (GC.WINWIDTH // 2 + self.anim_offset + 52, top))
         anim = self.animations[self.menu.currentSelection]
         if anim:
             anim.draw(surf, (self.anim_offset + 12, 0))
@@ -2412,7 +2384,7 @@ class PromotionChoiceState(State):
         # Description
         font = GC.FONT['convo_white']
         desc = metaDataObj['class_dict'][self.menu.getSelection()]['desc']
-        text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), 208, font)
+        text = TextChunk.line_wrap(TextChunk.line_chunk(desc), 208, font)
         for idx, line in enumerate(text):
             font.blit(line, surf, (14, font.height * idx + 120))
 
@@ -2435,21 +2407,25 @@ class PromotionState(State):
             if self.right_anim:
                 # Build animation
                 script = self.right_anim['script']
+                name = None
                 if self.unit.name in self.right_anim['images']:
-                    frame_dir = self.right_anim['images'][self.unit.name]
+                    name = self.unit.name
                 else:
-                    frame_dir = self.right_anim['images']['Generic' + color]
-                self.right_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
+                    name = 'Generic' + color
+                frame_dir = self.right_anim['images'][name]
+                self.right_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script, name)
             # New - Left - Animation
             self.left_anim = GC.ANIMDICT.partake(self.unit.new_klass, self.unit.gender)
             if self.left_anim:
                 # Build animation
                 script = self.left_anim['script']
+                name = None
                 if self.unit.name in self.left_anim['images']:
-                    frame_dir = self.left_anim['images'][self.unit.name]
+                    name = self.unit.name
                 else:
-                    frame_dir = self.left_anim['images']['Generic' + color]
-                self.left_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
+                    name = 'Generic' + color
+                frame_dir = self.left_anim['images'][self.unit.name]
+                self.left_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script, name)
             if self.right_anim:
                 self.right_anim.awake(owner=self, parent=None, partner=self.left_anim if self.left_anim else None, right=True, at_range=False) # Stand
             if self.left_anim:
@@ -2467,7 +2443,7 @@ class PromotionState(State):
             # Name Tag
             self.name_tag = GC.IMAGESDICT[color + 'RightCombatName'].copy()
             size_x = GC.FONT['text_brown'].size(self.unit.name)[0]
-            GC.FONT['text_brown'].blit(self.unit.name, self.name_tag, (36 - size_x / 2, 8))
+            GC.FONT['text_brown'].blit(self.unit.name, self.name_tag, (36 - size_x // 2, 8))
 
             # For darken backgrounds and drawing
             self.darken_background = 0
@@ -2501,8 +2477,8 @@ class PromotionState(State):
 
     def start_anim(self, effect):
         anim = self.current_anim
-        image, script = GC.ANIMDICT.get_effect(effect)
-        child_effect = BattleAnimation.BattleAnimation(self.unit, image, script, effect)
+        image, script = GC.ANIMDICT.get_effect(effect, anim.palette_name)
+        child_effect = BattleAnimation.BattleAnimation(self.unit, image, script, anim.palette_name)
         child_effect.awake(anim.owner, anim.partner, anim.right, anim.at_range, parent=anim)
         child_effect.start_anim('Attack')
         anim.children.append(child_effect)
@@ -2580,8 +2556,8 @@ class PromotionState(State):
 
         # Platforms
         top = 88
-        combat_surf.blit(self.left_platform, (GC.WINWIDTH / 2 - self.left_platform.get_width(), top))
-        combat_surf.blit(self.right_platform, (GC.WINWIDTH / 2, top))
+        combat_surf.blit(self.left_platform, (GC.WINWIDTH // 2 - self.left_platform.get_width(), top))
+        combat_surf.blit(self.right_platform, (GC.WINWIDTH // 2, top))
 
         # Name Tag
         combat_surf.blit(self.name_tag, (GC.WINWIDTH + 3 - self.name_tag.get_width(), 0))
@@ -2834,7 +2810,7 @@ class WaitState(State):
 class ShopState(State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            if self.name in ['armory', 'market']:
+            if self.name in ('armory', 'market'):
                 self.opening_message = self.get_dialog(cf.WORDS['Armory_opener'])
                 self.portrait = GC.IMAGESDICT['ArmoryPortrait']
                 self.buy_message = cf.WORDS['Armory_buy']
@@ -2858,7 +2834,7 @@ class ShopState(State):
             # Get items
             items_for_sale = ItemMethods.itemparser(itemids)
             
-            topleft = (GC.WINWIDTH/2 - 80 + 4, 3*GC.WINHEIGHT/8+8)
+            topleft = (GC.WINWIDTH//2 - 80 + 4, 3*GC.WINHEIGHT//8+8)
             self.shopMenu = MenuFunctions.ShopMenu(self.unit, items_for_sale, topleft, limit=5, buy=True)
             self.myMenu = MenuFunctions.ShopMenu(self.unit, self.unit.items, topleft, limit=5, buy=False)
             self.buy_sell_menu = MenuFunctions.ChoiceMenu(self.unit, [cf.WORDS['Buy'], cf.WORDS['Sell']], (80, 32), background='ActualTransparent', horizontal=True)
@@ -2889,7 +2865,7 @@ class ShopState(State):
         moneyBGSurf = GC.IMAGESDICT['MoneyBG']
         self.draw_surfaces.append((moneyBGSurf, (172, 48)))
 
-        self.money_counter_disp = MenuFunctions.MoneyCounterDisplay((223, 32))
+        self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((223, 32))
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList) 
@@ -2952,7 +2928,7 @@ class ShopState(State):
                 selection = self.shopMenu.getSelection()
                 value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                 if ('Convoy' in gameStateObj.game_constants or len(self.unit.items) < cf.CONSTANTS['max_items']) and\
-                        (gameStateObj.counters['money'] - value) >= 0:
+                        (gameStateObj.game_constants['money'] - value) >= 0:
                     GC.SOUNDDICT['Select 1'].play()
                     self.stateMachine.changeState('buy_sure')
                     if len(self.unit.items) >= cf.CONSTANTS['max_items']:
@@ -2960,7 +2936,7 @@ class ShopState(State):
                     else:
                         self.display_message = self.get_dialog(cf.WORDS['Shop_check'])
                     self.shopMenu.takes_input = False
-                elif (gameStateObj.counters['money'] - value) < 0:
+                elif (gameStateObj.game_constants['money'] - value) < 0:
                     GC.SOUNDDICT['Select 4'].play()
                     self.display_message = self.get_dialog(cf.WORDS['Shop_no_money'])
                 elif len(self.unit.items) >= cf.CONSTANTS['max_items']:
@@ -3022,7 +2998,7 @@ class ShopState(State):
                         self.unit.add_item(ItemMethods.itemparser(str(selection.id))[0])
                     else:
                         gameStateObj.convoy.append(ItemMethods.itemparser(str(selection.id))[0])
-                    gameStateObj.counters['money'] -= value
+                    gameStateObj.game_constants['money'] -= value
                     self.money_counter_disp.start(-value)
                     self.display_message = self.get_dialog('Buying anything else?')
                     self.unit.hasAttacked = True
@@ -3053,8 +3029,8 @@ class ShopState(State):
                     selection = self.myMenu.getSelection()
                     self.unit.remove_item(selection)
                     self.myMenu.currentSelection = 0 # Reset selection
-                    value = (selection.value * selection.uses.uses)/2 if selection.uses else selection.value/2 # Divide by 2 because selling
-                    gameStateObj.counters['money'] += value
+                    value = (selection.value * selection.uses.uses)//2 if selection.uses else selection.value//2 # Divide by 2 because selling
+                    gameStateObj.game_constants['money'] += value
                     self.money_counter_disp.start(value)
                     self.display_message = self.get_dialog(self.back_message)
                     self.unit.hasAttacked = True
@@ -3105,9 +3081,9 @@ class ShopState(State):
 
         if self.stateMachine.getState() in ['sell', 'sell_sure'] or \
                 (self.stateMachine.getState() == 'choice' and self.buy_sell_menu.getSelection() == cf.WORDS['Sell']):
-            self.myMenu.draw(surf, gameStateObj.counters['money'])
+            self.myMenu.draw(surf, gameStateObj.game_constants['money'])
         else:
-            self.shopMenu.draw(surf, gameStateObj.counters['money'])
+            self.shopMenu.draw(surf, gameStateObj.game_constants['money'])
 
         if self.stateMachine.getState() == 'choice' and self.display_message.done:
             self.buy_sell_menu.draw(surf)
@@ -3118,7 +3094,7 @@ class ShopState(State):
         for simple_surf, rect in self.draw_surfaces:
             surf.blit(simple_surf, rect)
 
-        GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), surf, (223 - GC.FONT['text_yellow'].size(str(gameStateObj.counters['money']))[0], 48))
+        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), surf, (223 - GC.FONT['text_yellow'].size(str(gameStateObj.game_constants['money']))[0], 48))
         self.money_counter_disp.draw(surf)
 
         # Draw current info
@@ -3216,6 +3192,6 @@ def drawMap(gameStateObj):
     for cursor in gameStateObj.fake_cursors:
         cursor.draw(mapSurf)
     # Draw weather
-    for particle in gameStateObj.map.weather:
-        particle.draw(mapSurf)
+    for weather in gameStateObj.map.weather:
+        weather.draw(mapSurf)
     return mapSurf

@@ -43,8 +43,8 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             self.state = CustomObjects.StateMachine('TopMenu')
 
             Counters.CursorControl.__init__(self)
-            self.up_arrow = GUIObjects.ScrollArrow('up', (GC.WINWIDTH/2 - 7, self.start_offset - 4), 0)
-            self.down_arrow = GUIObjects.ScrollArrow('down', (GC.WINWIDTH/2 - 7, self.start_offset + 6*16 - 1), 0.5)
+            self.up_arrow = GUIObjects.ScrollArrow('up', (GC.WINWIDTH//2 - 7, self.start_offset - 4), 0)
+            self.down_arrow = GUIObjects.ScrollArrow('down', (GC.WINWIDTH//2 - 7, self.start_offset + 6*16 - 1), 0.5)
             self.left_arrow = GUIObjects.ScrollArrow('left', (0, 0), 0)
             self.right_arrow = GUIObjects.ScrollArrow('right', (0, 0), 0.5)
 
@@ -250,9 +250,9 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         height = size_of_text[1]
         pop_up_surf = MenuFunctions.CreateBaseMenuSurf((width + 16 - width%8, height + 16 - height%8))
         surf.blit(Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'].copy(), 60), (0, 0))
-        topleft = (GC.WINWIDTH/2 - pop_up_surf.get_width()/2, GC.WINHEIGHT/2 - pop_up_surf.get_height()/2)
+        topleft = (GC.WINWIDTH//2 - pop_up_surf.get_width()//2, GC.WINHEIGHT//2 - pop_up_surf.get_height()//2)
         surf.blit(pop_up_surf, topleft)
-        position = (GC.WINWIDTH/2 - width/2, GC.WINHEIGHT/2 - height/2)
+        position = (GC.WINWIDTH//2 - width//2, GC.WINHEIGHT//2 - height//2)
         GC.FONT['text_white'].blit(cf.WORDS["Invalid Choice"], surf, position)
 
     def drawControls(self, surf):
@@ -264,13 +264,13 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 key_font = GC.FONT['text_yellow']
 
             icon_surf = self.controls[control]
-            topleft = (18 - icon_surf.get_width()/2, 2 + self.start_offset + index*16 + 8 - icon_surf.get_height()/2)
+            topleft = (18 - icon_surf.get_width()//2, 2 + self.start_offset + index*16 + 8 - icon_surf.get_height()//2)
             surf.blit(icon_surf, topleft)
 
             name_position = (44, self.start_offset + index*16 + 2)
             name_font.blit(cf.WORDS[control], surf, name_position)
 
-            key_position = (GC.WINWIDTH/2 + 8, self.start_offset + index*16 + 2)
+            key_position = (GC.WINWIDTH//2 + 8, self.start_offset + index*16 + 2)
             key_font.blit(Engine.get_key_name(cf.OPTIONS[control]), surf, key_position)
 
         self.drawScrollArrows(surf, self.control_order)
@@ -294,7 +294,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             # Is a slider
             if isinstance(bounds[0], int) or isinstance(bounds[0], float):
                 slider_bar = GC.IMAGESDICT['HealthBarBG']
-                surf.blit(slider_bar, (GC.WINWIDTH/2 + 12, self.start_offset + index*16 + 4))
+                surf.blit(slider_bar, (GC.WINWIDTH//2 + 12, self.start_offset + index*16 + 4))
 
                 slider_hold = GC.IMAGESDICT['WaitingCursor']
                 if current_option in bounds:
@@ -302,15 +302,15 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 else:
                     slider_fraction = (current_option - bounds[0])/float((bounds[-1] - bounds[0]))
                 hold_offset = slider_fraction*(slider_bar.get_width() - 6)
-                slider_bop = self.cursorAnim[self.cursorCounter]/2 - 1 if index + self.top_of_menu == self.currentSelection else 0
-                topleft = (GC.WINWIDTH/2 + 12 + hold_offset, self.start_offset + index*16 + 4 + slider_bop)
+                slider_bop = self.cursorAnim[self.cursorCounter]//2 - 1 if index + self.top_of_menu == self.currentSelection else 0
+                topleft = (GC.WINWIDTH//2 + 12 + hold_offset, self.start_offset + index*16 + 4 + slider_bop)
                 surf.blit(slider_hold, topleft)
             # Is a list of options
             else:
                 if len(''.join(bounds)) > 15:
                     font = GC.FONT['text_blue']
                     size = font.size(cf.WORDS[current_option])
-                    option_position = (3*GC.WINWIDTH/4 - 4 - size[0]/2, self.start_offset + index*16)
+                    option_position = (3*GC.WINWIDTH//4 - 4 - size[0]//2, self.start_offset + index*16)
                     font.blit(cf.WORDS[current_option], surf, option_position)
                     self.drawSideArrows(surf, self.start_offset + index*16)
                 else:
@@ -321,7 +321,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                             font = GC.FONT['text_blue']
                         else:
                             font = GC.FONT['text_grey']
-                        option_position = (GC.WINWIDTH/2 + 8 + word_index, self.start_offset + index*16)
+                        option_position = (GC.WINWIDTH//2 + 8 + word_index, self.start_offset + index*16)
                         font.blit(cf.WORDS[choice], surf, option_position)
                         word_index += font.size(cf.WORDS[choice] + '   ')[0]
 
@@ -334,7 +334,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             self.down_arrow.draw(surf)
 
     def drawSideArrows(self, surf, y_pos):
-        self.left_arrow.x = GC.WINWIDTH/2 + 5
+        self.left_arrow.x = GC.WINWIDTH//2 + 5
         self.right_arrow.x = GC.WINWIDTH - 20
         self.left_arrow.y = y_pos
         self.right_arrow.y = y_pos
@@ -360,7 +360,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         bounds = self.config[self.currentSelection][1]
         if not isinstance(bounds[0], int) and not isinstance(bounds[0], float) and len(''.join(bounds)) <= 15:
             bound_index = self.get_index(bounds, cf.OPTIONS[self.config[self.currentSelection][0]])
-            left_position = GC.FONT['text_white'].size('   '.join(bounds[:bound_index]) + ('   ' if bound_index > 0 else ''))[0] + GC.WINWIDTH/2 - 8
+            left_position = GC.FONT['text_white'].size('   '.join(bounds[:bound_index]) + ('   ' if bound_index > 0 else ''))[0] + GC.WINWIDTH//2 - 8
             top_position = 32 + (self.currentSelection - self.top_of_menu)*16
             surf.blit(self.cursor, (left_position + self.cursorAnim[self.cursorCounter], top_position))
         # Blit still cursor
@@ -375,11 +375,11 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
     def drawTopMenuCursor(self, surf):
         # Blit Moving Cursor
         if self.currentSelection == 0: # Config
-            left_position = 4 + (GC.WINWIDTH/2 - 8)/2 - GC.FONT['text_white'].size('Config')[0]/2 + self.cursorAnim[self.cursorCounter] - 16
-            top_position = 16 - GC.FONT['text_white'].size('Config')[1]/2
+            left_position = 4 + (GC.WINWIDTH//2 - 8)//2 - GC.FONT['text_white'].size('Config')[0]//2 + self.cursorAnim[self.cursorCounter] - 16
+            top_position = 16 - GC.FONT['text_white'].size('Config')[1]//2
         else: # Controls
-            left_position = GC.WINWIDTH/2 + 4 + (GC.WINWIDTH/2 - 8)/2 - GC.FONT['text_white'].size('Controls')[0]/2 + self.cursorAnim[self.cursorCounter] - 16
-            top_position = 16 - GC.FONT['text_white'].size('Controls')[1]/2
+            left_position = GC.WINWIDTH//2 + 4 + (GC.WINWIDTH//2 - 8)//2 - GC.FONT['text_white'].size('Controls')[0]//2 + self.cursorAnim[self.cursorCounter] - 16
+            top_position = 16 - GC.FONT['text_white'].size('Controls')[1]//2
         moving_cursor_position = (left_position, top_position)
         surf.blit(self.cursor, moving_cursor_position)
 
@@ -403,8 +403,8 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         GC.FONT['text_white'].blit(info_text, surf, (32, GC.WINHEIGHT - 20))
 
     def drawSlide(self, surf):
-        mainSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH + 8, 6*GC.WINHEIGHT/10 + 8), 'ClearMenuBackground')
-        surf.blit(mainSlideSurf, (0 - 4, GC.WINHEIGHT/5))
+        mainSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH + 8, 6*GC.WINHEIGHT//10 + 8), 'ClearMenuBackground')
+        surf.blit(mainSlideSurf, (0 - 4, GC.WINHEIGHT//5))
 
         if self.state.getState() == 'Config' or (self.state.getState() == 'TopMenu' and self.currentSelection == 0):
             config_font = GC.FONT['text_blue']
@@ -413,12 +413,12 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             config_font = GC.FONT['text_grey']
             controls_font = GC.FONT['text_blue']
 
-        configSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH/2 - 8, 24), 'ClearMenuBackground')
+        configSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH//2 - 8, 24), 'ClearMenuBackground')
         surf.blit(configSlideSurf, (4, 4))
-        config_position = (4 + configSlideSurf.get_width()/2 - config_font.size('Config')[0]/2, 16 - config_font.size('Config')[1]/2)
+        config_position = (4 + configSlideSurf.get_width()//2 - config_font.size('Config')[0]//2, 16 - config_font.size('Config')[1]//2)
         config_font.blit(cf.WORDS['Config'], surf, config_position)
 
-        controlsSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH/2 - 8, 24), 'ClearMenuBackground')
-        surf.blit(controlsSlideSurf, (GC.WINWIDTH/2 + 4, 4))
-        controls_position = (GC.WINWIDTH/2 + 4 + controlsSlideSurf.get_width()/2 - controls_font.size('Controls')[0]/2, 16 - controls_font.size('Controls')[1]/2)
+        controlsSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH//2 - 8, 24), 'ClearMenuBackground')
+        surf.blit(controlsSlideSurf, (GC.WINWIDTH//2 + 4, 4))
+        controls_position = (GC.WINWIDTH//2 + 4 + controlsSlideSurf.get_width()//2 - controls_font.size('Controls')[0]//2, 16 - controls_font.size('Controls')[1]//2)
         controls_font.blit(cf.WORDS['Controls'], surf, controls_position)

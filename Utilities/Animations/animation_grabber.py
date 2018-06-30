@@ -5,14 +5,14 @@ from PIL import Image
 import palette_index
 
 COLORKEY = (128, 160, 128)
-COLORKEY = (0, 0, 0)
+# COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
-YLIMIT = 110
+YLIMIT = 70
 XLIMIT = 0
-palette_set = None
+palette_set = palette_index.hero_shield
 
-folder = 'silence_star/'
-name = 'Star'
+folder = 'hero_shield/'
+name = 'Shield'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')
@@ -35,7 +35,7 @@ for idx, fp in enumerate(sorted(images)):
         for x in xrange(width):
             for y in xrange(height):
                 color = image.getpixel((x, y))
-                if color in palette_set:
+                if color in palette_set and y <= YLIMIT and x <= 144:
                     grid[y*width + x] = True
                 else:
                     image.putpixel((x, y), (128, 160, 128))

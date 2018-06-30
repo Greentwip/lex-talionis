@@ -2,12 +2,12 @@
 import GlobalConstants as GC
 import configuration as cf
 import CustomObjects, Image_Modification, Engine
-import StatusObject, Banner, Utility
+import StatusObject, Banner, Utility, Weapons
 
 ####################################################################
 # Displays the level up screen
 class levelUpScreen(object):
-    def __init__(self, gameStateObj, unit, exp, force_level=None, in_combat=False):
+    def __init__(self, gameStateObj, unit, exp, force_level=None, force_promote=False, in_combat=False):
         self.unit = unit
         # if cf.OPTIONS['debug']:
         #     print('LevelUpScreen: ', exp)
@@ -16,23 +16,24 @@ class levelUpScreen(object):
         self.expOld = self.unit.exp
         self.expSet = self.expOld
 
-        self.force_level = force_level
+        self.force_level = force_level or force_promote
         self.in_combat = in_combat
+        self.prev_level = self.unit.level
         self.new_wexp = None  # For promotion
 
         # spriting
         self.levelUpScreen = GC.IMAGESDICT['LevelScreen']
         if self.in_combat:
             topleft=(0, 6)
-            timing = [1 for _ in xrange(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in xrange(15)] + [-1] + [1 for _ in xrange(12)] 
+            timing = [1 for _ in range(19)] + [10, 1, 1, 1, 1, 1] + [2 for _ in range(15)] + [-1] + [1 for _ in range(12)] 
             self.levelUpAnimation = CustomObjects.Animation(GC.IMAGESDICT['LevelUpBattle'], topleft, (5, 11), 52, ignore_map=True, set_timing=timing)
         else:
             if unit.position:
                 x, y = unit.position
                 topleft = (x-gameStateObj.cameraOffset.x-2)*GC.TILEWIDTH, (y-gameStateObj.cameraOffset.y-1)*GC.TILEHEIGHT
             else:
-                topleft = GC.WINWIDTH/2, GC.WINHEIGHT/2
-            timing = [1 for _ in xrange(24)] + [44]
+                topleft = GC.WINWIDTH//2, GC.WINHEIGHT//2
+            timing = [1 for _ in range(24)] + [44]
             self.levelUpAnimation = CustomObjects.Animation(GC.IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True, set_timing=timing)
         self.statupanimation = GC.IMAGESDICT['StatUpSpark']
         self.statunderline = GC.IMAGESDICT['StatUnderline']
@@ -54,6 +55,9 @@ class levelUpScreen(object):
             self.unit.apply_levelup(force_level, exp == 0)
             self.state.changeState('levelScreen')
             self.state_time = Engine.get_time()
+        if force_promote:
+            self.state.changeState('item_promote')
+            self.state_time = Engine.get_time()
 
         # TIMING
         self.total_time_for_exp = self.expNew * GC.FRAMERATE # exp rate is 16
@@ -63,14 +67,18 @@ class levelUpScreen(object):
 
     def get_num_sparks(self):
         if self.levelup_list:
-            return sum([min(num, 1) for num in self.levelup_list])
+            return sum(min(num, 1) for num in self.levelup_list)
         return 0
 
     def update(self, gameStateObj, metaDataObj):
         # print(self.state.getState())
         # Don't do this if there is no exp change
-        if not self.force_level and self.expNew == 0 or \
-                (self.unit.level%cf.CONSTANTS['max_level'] == 0 and metaDataObj['class_dict'][self.unit.klass]['turns_into'] is None):
+        if not self.force_level and self.expNew == 0:
+            return True
+
+        unit_klass = metaDataObj['class_dict'][self.unit.klass]
+        max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+        if self.unit.level >= max_level and unit_klass['turns_into'] is None:
             return True # We're done here
 
         currentTime = Engine.get_time()
@@ -100,9 +108,13 @@ class levelUpScreen(object):
                 GC.SOUNDDICT['Experience Gain'].stop() 
 
             if self.expSet >= 100:
-                if self.unit.level%cf.CONSTANTS['max_level'] == 0: # If I would promote because I am level 20
+                if self.unit.level >= max_level: # If I would promote because I am level 20
                     GC.SOUNDDICT['Experience Gain'].stop()
-                    GC.SOUNDDICT['Level Up'].play()
+                    if cf.CONSTANTS['auto_promote'] and metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                        self.expSet = 100
+                        GC.SOUNDDICT['Level Up'].play()
+                    else:
+                        self.expSet = 99
                     self.state.clear()
                     self.state.changeState('prepare_promote')
                     self.state.changeState('exp_leave')
@@ -178,7 +190,7 @@ class levelUpScreen(object):
                 # check for skill gain if not a forced level
                 if not self.force_level:
                     for level_needed, class_skill in metaDataObj['class_dict'][self.unit.klass]['skills']:
-                        if self.unit.level%cf.CONSTANTS['max_level'] == level_needed:
+                        if self.unit.level == level_needed:
                             if class_skill == 'Feat':
                                 gameStateObj.cursor.currentSelectedUnit = self.unit
                                 gameStateObj.stateMachine.changeState('feat_choice')
@@ -194,10 +206,9 @@ class levelUpScreen(object):
 
         # Wait 100 milliseconds before transferring us to the promotion state
         elif self.state.getState() == 'prepare_promote':
-            self.expSet = 99
             self.exp_bar.update(self.expSet)
             if currentTime - self.state_time > 100:
-                if metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                if cf.CONSTANTS['auto_promote'] and metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
                     self.expSet = 0
                     class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
                     if len(class_options) > 1:
@@ -221,6 +232,30 @@ class levelUpScreen(object):
                     self.unit.exp = 99
                     return True # Done
 
+        elif self.state.getState() == 'item_promote':
+            if metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
+                if len(class_options) > 1:
+                    gameStateObj.cursor.currentSelectedUnit = self.unit
+                    gameStateObj.stateMachine.changeState('promotion_choice')
+                    gameStateObj.stateMachine.changeState('transition_out')
+                    self.state.changeState('wait')
+                    self.state_time = currentTime
+                elif len(class_options) == 1:
+                    gameStateObj.cursor.currentSelectedUnit = self.unit
+                    self.unit.new_klass = class_options[0]
+                    gameStateObj.stateMachine.changeState('promotion')
+                    gameStateObj.stateMachine.changeState('transition_out')
+                    # self.state.changeState('promote')
+                    self.state.changeState('wait')
+                    self.state_time = currentTime
+                else:
+                    self.unit.exp = 99
+                    return True # Done
+            else: # Unit is at the highest point it can be. No more.
+                self.unit.exp = 99
+                return True # Done
+
         elif self.state.getState() == 'wait':
             if currentTime - self.state_time > 1000:  # Wait a while
                 return True
@@ -235,7 +270,7 @@ class levelUpScreen(object):
             # Reseed the combat animation
             if self.in_combat and old_anim:
                 item = self.unit.getMainWeapon()
-                magic = CustomObjects.WEAPON_TRIANGLE.isMagic(item) if item else False
+                magic = Weapons.TRIANGLE.isMagic(item) if item else False
                 anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender, item, magic)
                 if anim:
                     # Build animation
@@ -251,8 +286,8 @@ class levelUpScreen(object):
                                                 init_position=old_anim.init_position)
                 else:
                     self.unit.battle_anim = old_anim
-            # Reset Level - Don't!
-            self.unit.level += 1
+            # Reset Level
+            self.unit.level = 1
             # Actually change class
             # Reset movement group
             self.unit.movement_group = new_class['movement_group']
@@ -266,8 +301,8 @@ class levelUpScreen(object):
             # self.levelup_list = self.unit.level_up(new_class, apply_level=False) # Level up once, then promote.
             # self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together
             self.levelup_list = new_class['promotion'] # No two level ups, too much gain in one level...
-            current_stats = self.unit.stats.values()
-            assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s"%(self.levelup_list, new_class['max'], current_stats)
+            current_stats = list(self.unit.stats.values())
+            assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s" % (self.levelup_list, new_class['max'], current_stats)
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)
             self.unit.apply_levelup(self.levelup_list)
@@ -323,10 +358,13 @@ class levelUpScreen(object):
             LevelUpSurface.blit(LevelSurf, (0, 0))
 
             # Render top banner text
-            GC.FONT['text_white'].blit(str(self.unit.klass).replace('_', ' '), LevelUpSurface, (12, 3))
+            long_name = gameStateObj.metaDataObj['class_dict'][self.unit.klass]['long_name']
+            GC.FONT['text_white'].blit(long_name, LevelUpSurface, (12, 3))
             GC.FONT['text_yellow'].blit(cf.WORDS['Lv'], LevelUpSurface, (LevelUpSurface.get_width()/2+12, 3))
             if self.first_spark_flag or self.force_level:
                 level = str(self.unit.level)
+            elif self.unit.level == 1:
+                level = str(self.prev_level)
             else:
                 level = str(self.unit.level - 1)
             GC.FONT['text_blue'].blit(level, LevelUpSurface, (LevelUpSurface.get_width()/2+50-GC.FONT['text_blue'].size(level)[0], 3))
@@ -397,9 +435,9 @@ class levelUpScreen(object):
                         self.underline_offset -= 6
                         self.underline_offset = max(0, self.underline_offset)
                         if num >= 4:
-                            topleft = (76 + self.underline_offset/2, 45 + GC.TILEHEIGHT * (num - 4))
+                            topleft = (76 + self.underline_offset//2, 45 + GC.TILEHEIGHT * (num - 4))
                         else:
-                            topleft = (12 + self.underline_offset/2, 45 + GC.TILEHEIGHT * (num))
+                            topleft = (12 + self.underline_offset//2, 45 + GC.TILEHEIGHT * (num))
                     else:
                         if num >= 4:
                             topleft = (76, 45 + GC.TILEHEIGHT * (num - 4))
@@ -482,11 +520,11 @@ class Exp_Bar(object):
         self.bg_surf = self.create_bg_surf()
 
         if center:
-            self.pos = GC.WINWIDTH/2 - self.width/2, GC.WINHEIGHT/2 - self.height/2
+            self.pos = GC.WINWIDTH//2 - self.width//2, GC.WINHEIGHT//2 - self.height//2
         else:
-            self.pos = GC.WINWIDTH/2 - self.width/2, GC.WINHEIGHT - self.height
+            self.pos = GC.WINWIDTH//2 - self.width//2, GC.WINHEIGHT - self.height
 
-        self.sprite_offset = self.height/2
+        self.sprite_offset = self.height//2
         self.done = False
 
         self.num = expSet
@@ -506,7 +544,7 @@ class Exp_Bar(object):
     def update(self, expSet):
         if self.done:
             self.sprite_offset += 1
-            if self.sprite_offset >= self.height/2:
+            if self.sprite_offset >= self.height//2:
                 return True
         elif self.sprite_offset > 0:
             self.sprite_offset -= 1

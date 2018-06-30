@@ -5,7 +5,7 @@ import os
 import GlobalConstants as GC
 import configuration as cf
 import StateMachine, MenuFunctions, ItemMethods
-import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine
+import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk
 
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -33,9 +33,9 @@ class PrepMainState(StateMachine.State):
         # Play prep script if it exists
         if not self.started:
             self.started = True
-            prep_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/prepScript.txt'
+            prep_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/prepScript.txt'
             if os.path.exists(prep_script_name):
-                prep_script = Dialogue.Dialogue_Scene(prep_script_name, None, event_flag=False)
+                prep_script = Dialogue.Dialogue_Scene(prep_script_name)
                 gameStateObj.message.append(prep_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
@@ -150,7 +150,7 @@ class PrepPickUnitsState(StateMachine.State):
         backSurf = MenuFunctions.CreateBaseMenuSurf((132, 24), 'BrownPickBackground')
         topleft = (110, 0)
         num_units_map = len([unit for unit in gameStateObj.allunits if unit.position and unit.team == 'player'])
-        num_slots = len([value for position, value in gameStateObj.map.tile_info_dict.iteritems() if 'Formation' in value])
+        num_slots = len([value for position, value in gameStateObj.map.tile_info_dict.items() if 'Formation' in value])
         pick_string = ['Pick ', str(num_slots - num_units_map), ' units  ', str(num_units_map), '/', str(num_slots)]
         pick_font = ['text_white', 'text_blue', 'text_white', 'text_blue', 'text_white', 'text_blue']
         word_index = 8
@@ -291,7 +291,7 @@ def draw_funds(surf, gameStateObj):
     GC.FONT['text_white'].blit(': Info', surf, (123 + GC.FONT['text_blue'].size(helper)[0], 143))
     # Draw Funds display
     surf.blit(GC.IMAGESDICT['FundsDisplay'], (168, 137))
-    money = str(gameStateObj.counters['money'])
+    money = str(gameStateObj.game_constants['money'])
     size = GC.FONT['text_blue'].size(money)[0]
     GC.FONT['text_blue'].blit(money, surf, (219 - size, 140))
 
@@ -315,7 +315,7 @@ class PrepItemsState(StateMachine.State):
             self.quick_sort_disp = MenuFunctions.CreateBaseMenuSurf(pos, 'BrownBackgroundOpaque')
             self.quick_sort_disp = Image_Modification.flickerImageTranslucent(self.quick_sort_disp, 10)
             for idx, button in enumerate(self.buttons):
-                self.quick_sort_disp.blit(button, (4 + 33/2 - button.get_width()/2, idx*self.font.height + 8 - button.get_height()/2 + 4))
+                self.quick_sort_disp.blit(button, (4 + 33//2 - button.get_width()//2, idx*self.font.height + 8 - button.get_height()//2 + 4))
             for idx, command in enumerate(self.commands):
                 self.font.blit(command, self.quick_sort_disp, (38, idx*self.font.height + 4))
 
@@ -371,7 +371,7 @@ class PrepItemsState(StateMachine.State):
         if gameStateObj.activeMenu:
             MenuFunctions.drawUnitItems(surf, (6, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
         # Draw quick sort display
-        surf.blit(self.quick_sort_disp, (GC.WINWIDTH/2 + 10, GC.WINHEIGHT/2 + 9))
+        surf.blit(self.quick_sort_disp, (GC.WINWIDTH//2 + 10, GC.WINHEIGHT//2 + 9))
         draw_funds(surf, gameStateObj)
 
         return surf
@@ -397,7 +397,7 @@ class PrepItemsChoicesState(StateMachine.State):
             gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.set_extra_marker(False)
-        if any(item.usable and item.booster for item in gameStateObj.cursor.currentSelectedUnit.items):
+        if any(self.can_use(item, gameStateObj) for item in gameStateObj.cursor.currentSelectedUnit.items):
             self.menu.update_grey(1, True)
         else:
             self.menu.update_grey(1, False)
@@ -406,6 +406,16 @@ class PrepItemsChoicesState(StateMachine.State):
         if gameStateObj.stateMachine.from_transition():
             gameStateObj.stateMachine.changeState("transition_in")
             return 'repeat'
+
+    def can_use(self, item, gameStateObj):
+        current_unit = gameStateObj.cursor.currentSelectedUnit
+        if item.usable and item.booster:
+            if item.promotion:
+                if current_unit.can_promote_using(item, gameStateObj.metaDataObj):
+                    return True
+                return False
+            return True
+        return False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
@@ -682,7 +692,7 @@ class PrepUseItemState(StateMachine.State):
 
         font = GC.FONT['text_white']
         if desc:
-            text = MenuFunctions.line_wrap(MenuFunctions.line_chunk(desc), GC.WINWIDTH - topleft[0] - 8, font)
+            text = TextChunk.line_wrap(TextChunk.line_chunk(desc), GC.WINWIDTH - topleft[0] - 8, font)
             for idx, line in enumerate(text):
                 font.blit(line, surf, (topleft[0] + 4, font.height * idx + 4 + topleft[1]))
 
@@ -783,7 +793,7 @@ class PrepListState(StateMachine.State):
         self.menu.draw(surf)
         # Draw name
         surf.blit(self.name_surf, (-2, -1))
-        name_position = (24 - GC.FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]/2, 0)
+        name_position = (24 - GC.FONT['text_white'].size(gameStateObj.cursor.currentSelectedUnit.name)[0]//2, 0)
         GC.FONT['text_white'].blit(gameStateObj.cursor.currentSelectedUnit.name, surf, name_position)
         # Draw face image
         face_image = gameStateObj.cursor.currentSelectedUnit.bigportrait.copy()
@@ -988,7 +998,7 @@ class BaseMarketState(StateMachine.State):
             self.money_surf = MenuFunctions.CreateBaseMenuSurf((56, 24))
             g_surf = Engine.subsurface(GC.IMAGESDICT['GoldenWords'], (40, 50, 9, 9))
             self.money_surf.blit(g_surf, (45, 8))
-            self.money_counter_disp = MenuFunctions.MoneyCounterDisplay((66, GC.WINHEIGHT - 40))
+            self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((66, GC.WINHEIGHT - 40))
 
             # Create owner surf
             self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
@@ -1074,7 +1084,7 @@ class BaseMarketState(StateMachine.State):
                 selection = self.current_menu.getSelection()
                 if selection:
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
-                    if gameStateObj.counters['money'] - value >= 0:
+                    if gameStateObj.game_constants['money'] - value >= 0:
                         self.state = 'Buy_Sure'
                         GC.SOUNDDICT['Select 1'].play()
                     else:
@@ -1093,7 +1103,7 @@ class BaseMarketState(StateMachine.State):
                     else:
                         gameStateObj.convoy.append(item)
                     value = (item.value * item.uses.uses) if item.uses else item.value
-                    gameStateObj.counters['money'] -= value
+                    gameStateObj.game_constants['money'] -= value
                     self.money_counter_disp.start(-value)
                     self.update_options(gameStateObj)
                 else:
@@ -1116,8 +1126,8 @@ class BaseMarketState(StateMachine.State):
                 if selection == cf.WORDS['Sell']:
                     GC.SOUNDDICT['Select 1'].play()
                     item = self.current_menu.getSelection()
-                    value = (item.value * item.uses.uses)/2 if item.uses else item.value/2
-                    gameStateObj.counters['money'] += value
+                    value = (item.value * item.uses.uses)//2 if item.uses else item.value//2
+                    gameStateObj.game_constants['money'] += value
                     self.money_counter_disp.start(value)
                     if item.owner:
                         owner = gameStateObj.get_unit_from_id(item.owner)
@@ -1177,7 +1187,7 @@ class BaseMarketState(StateMachine.State):
         
         # Draw Money
         mapSurf.blit(self.money_surf, (10, GC.WINHEIGHT - 24))
-        GC.FONT['text_blue'].blit(str(gameStateObj.counters['money']), mapSurf, (16, GC.WINHEIGHT - 20))
+        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), mapSurf, (16, GC.WINHEIGHT - 20))
         # Draw money counter display
         self.money_counter_disp.draw(mapSurf)
 
@@ -1244,7 +1254,7 @@ class BaseMainState(StateMachine.State):
                 color_control[2] = 'text_white'
             if gameStateObj.support and 'AllowSupports' in gameStateObj.game_constants:
                 color_control[3] = 'text_white'
-            topleft = 4, GC.WINHEIGHT/2 - (len(options)*16 + 8)/2
+            topleft = 4, GC.WINHEIGHT//2 - (len(options)*16 + 8)//2
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, shimmer=2, gem=False)
 
         # Transition in:
@@ -1253,9 +1263,9 @@ class BaseMainState(StateMachine.State):
             return 'repeat'
 
         # Play base script if it exists
-        base_script_name = 'Data/Level' + str(gameStateObj.counters['level']) + '/in_base_script.txt'
+        base_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/in_base_script.txt'
         if os.path.exists(base_script_name):
-            base_script = Dialogue.Dialogue_Scene(base_script_name, None, event_flag=False)
+            base_script = Dialogue.Dialogue_Scene(base_script_name)
             gameStateObj.message.append(base_script)
             gameStateObj.stateMachine.changeState('transparent_dialogue')
             return 'repeat'
@@ -1318,7 +1328,7 @@ class BaseMainState(StateMachine.State):
 class BaseInfoState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         options = [key for key in gameStateObj.base_conversations]
-        color_control = [('text_white' if white else 'text_grey') for key, white in gameStateObj.base_conversations.iteritems()]
+        color_control = [('text_white' if white else 'text_grey') for key, white in gameStateObj.base_conversations.items()]
         topleft = 4 + gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.topleft[1] + 2*16
         gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, gem=False)
 
@@ -1339,8 +1349,8 @@ class BaseInfoState(StateMachine.State):
             selection = gameStateObj.childMenu.getSelection()
             if gameStateObj.childMenu.color_control[gameStateObj.childMenu.currentSelection] == 'text_white':
                 GC.SOUNDDICT['Select 1'].play()
-                dialogue_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/baseScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(dialogue_script, selection))
+                dialogue_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/baseScript.txt'
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(dialogue_script, name=selection))
                 gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.stateMachine.changeState('transition_out')
             return
@@ -1550,7 +1560,7 @@ class BaseSupportConvoState(StateMachine.State):
                 unit, level = gameStateObj.childMenu.getSelection()
                 owner = gameStateObj.childMenu.owner
                 edge = gameStateObj.support.node_dict[owner.name].adjacent[unit.name]
-                support_level = edge.current_value/cf.CONSTANTS['support_points']
+                support_level = edge.current_value//cf.CONSTANTS['support_points']
                 # if cf.OPTIONS['debug']:
                 #     print(level, support_level)
                 if level < support_level:
@@ -1562,7 +1572,7 @@ class BaseSupportConvoState(StateMachine.State):
                         level = 'A'
                     elif level == 3:
                         level = 'S'
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, level))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, unit=unit, name=level))
                     gameStateObj.stateMachine.changeState('dialogue')
                     gameStateObj.stateMachine.changeState('transition_out')
                     edge.unread = False
@@ -1697,7 +1707,7 @@ class BaseLibraryState(StateMachine.State):
             gameStateObj.childMenu = None
 
             options, ignore, color_control = [], [], []
-            unlocked_entries = [(entry, data) for entry, data in metaDataObj['lore'].iteritems() if entry in gameStateObj.unlocked_lore]
+            unlocked_entries = [(entry, data) for entry, data in metaDataObj['lore'].items() if entry in gameStateObj.unlocked_lore]
             categories = sorted(list(set([data['type'] for entry, data in unlocked_entries])))
             for category in categories:
                 options.append(category)
@@ -1758,11 +1768,11 @@ class BaseRecordsState(StateMachine.State):
             # Create name dict
             self.name_dict = {}
             for level in gameStateObj.statistics:
-                for unit, record in level.stats.iteritems():
+                for unit, record in level.stats.items():
                     if unit not in self.name_dict:
                         self.name_dict[unit] = []
                     self.name_dict[unit].append((level.name, record))
-            self.name_list = [(k, v) for (k, v) in self.name_dict.iteritems()]
+            self.name_list = [(k, v) for (k, v) in self.name_dict.items()]
             self.name_list = sorted(self.name_list, key=lambda x: self.mvp.mvp_dict[x[0]], reverse=True)
             self.unit_stats = [MenuFunctions.UnitStats(unit, record) for (unit, record) in self.name_list]
             self.state = "records"

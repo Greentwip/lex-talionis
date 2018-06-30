@@ -1,0 +1,201 @@
+Unit_desc;Display a chart of all units on the field.
+Objective_desc;Current objective and overall status.
+Options_desc;Change settings and controls.
+Suspend_desc;Save the game for later. On reload, save is deleted.
+End_desc;Pass the turn.
+Armory_opener;This is an armory. {wait}{clear}Buy something, would ya?
+Armory_buy;What do ya need?
+Armory_back;Anything else?
+Armory_leave;Come back again.
+Vendor_opener;This is a general store. {wait}{clear}How can I help you?
+Vendor_buy;What can I get for you?
+Vendor_back;Anything else I can do for you?
+Vendor_leave;Drop in again.
+Shop_again;Do you need anything else?
+Shop_convoy;Send it to your convoy?
+Shop_max;Your hands are full. {wait}{clear}If you had a convoy, I could send it there... {wait}Anything else I can do for you?
+Shop_no_money;Sorry. You don't have enough money.
+Shop_check;Are you sure?
+Shop_no_value;You can't sell that here.
+Win Conditions;Win Conditions
+Loss Conditions;Loss Conditions
+Character;Character
+Feat Choice;Choose a Feat:
+Battle Save Header;Would you like to save?
+Atk;Atk
+Def;Def
+Avo;Avo
+Avoid;Avoid
+Hit;Hit
+Rng;Rng
+Mt;Mt
+Affi;Affi
+Affin;Affin
+AS;AS
+Lv;Lv
+STR;Str
+MAG;Mag
+SKL;Skill
+SPD;Spd
+LCK;Luck
+DEF;Def
+RES;Res
+CON;Con
+MOV;Move
+STR_desc;Strength. The higher the number, the more damage you inflict.
+MAG_desc;Magical power. Increases ward and spell damage.
+SKL_desc;Fighting skill. A higher number improves accuracy.
+SPD_desc;This affects both evasion and attack speed.
+DEF_desc;Reduces damage from weapons.
+RES_desc;Reduces damage from magical attacks.
+LCK_desc;Luck affects accuracy and avoid.
+MOV_desc;The distance you can cross in one turn.
+CON_desc;Constitution. Affects how well the unit can wield heavier weapons.
+Aid_desc;Max rescuing constitution. Units with greater Con cannot be rescued.
+Trv_desc;Who is this unit rescuing?
+Affin_desc;Determines bonuses given to other units in supports.
+Rat_desc;Holistic combat rating.
+Trv;Trv
+Aid;Aid
+Atk_desc;Amount of damage this weapon causes. Affected by defenses.
+Hit_desc;Chance that the attack will hit. Affected by terrain and enemies.
+Rng_desc;Weapon Range. A range of 1 can only hit adjacent spaces.
+Avoid_desc;Ability to dodge enemy attacks. Affects enemy's accuracy.
+AS_desc;Attack Speed. If a unit has 4 or more attack speed than its opponent, it attacks twice.
+Support_Atk_desc;Amount of damage added by nearby supports.
+Support_Hit_desc;Increased chance to hit due to nearby supports.
+Support_Def_desc;Amount of damage reduced from enemy attacks by nearby supports.
+Support_Avoid_desc;Increased chance to dodge enemy attacks due to nearby supports.
+Equipment;Equipment
+Personal Data;Personal Data
+Skills & Status;Skills & Status
+Supports;Supports
+Personal Growths;Personal Growths
+Current Bonuses;Current Bonuses
+Level_desc;Unit level. How experienced a unit is.
+Exp_desc;Experience points gained. Gain 100 points to earn a new level.
+HP_desc;Hit points. The unit is removed from the battle if HP reaches 0.
+Total Turns;Total Turns
+Overall MVP;Overall MVP
+Records Header;Chapter Name       Turn Count            MVP
+MVP Header;Rank    Name        Kills    Damage    Healing
+UnitStat Header;Chapter Name        Kills    Damage    Healing
+ON;ON
+OFF;OFF
+Config;Config
+Config_desc;Change your options
+Controls;Controls
+Controls_desc;Change key mappings
+Get_Input_desc;Press a new key (or BACK to quit)
+Manage;Manage
+Formation;Formation
+Fight;Fight
+Pick Units;Pick Units
+Quick Sort;Quick Sort
+Optimize;Optimize
+Manage;Manage
+List;List
+Transfer;Transfer
+Give All;Give All
+Market;Market
+Owner;Owner
+Codex;Codex
+Convos;Convos
+Continue;Continue
+Pairings;Pairings
+Conversation;Conversation
+Library;Library
+Map;Map
+Records;Records
+Animation;Animation
+Animation_desc;Show combat animations
+temp_Screen Size_desc;Restart for change to take effect
+Unit Speed;Unit Speed
+Unit Speed_desc;Set unit movement speed
+Text Speed;Text Speed
+Text Speed_desc;Set message speed
+Cursor Speed;Cursor Speed
+Cursor Speed_desc;Set cursor speed
+Show Terrain;Show Terrain
+Show Terrain_desc;Set Terrain window display
+Show Objective;Show Objective
+Show Objective_desc;Set Chapter Goal display
+Autocursor;Autocursor
+Autocursor_desc;Set cursor to start on main hero
+HP Map Team;HP Map Team
+HP Map Team_desc;Set which team should display HP bars
+HP Map Cull;HP Map Cull
+HP Map Cull_desc;Set what kind of units should display HP
+Music Volume;Music Volume
+Music Volume_desc;Set music volume (soft - loud)
+Sound Volume;Sound Volume
+Sound Volume_desc;Set sound effect volume (soft - loud)
+Autoend Turn;Autoend Turn
+Autoend Turn_desc;End turn when no moves are available
+Confirm End;Confirm End
+Confirm End_desc;Ask again before manually ending turn?
+Display Hints;Display Hints
+Display Hints_desc;Show Tutorial
+key_SELECT;SELECT
+key_BACK;BACK
+key_START;START
+key_AUX;AUX
+key_INFO;INFO
+key_LEFT;LEFT
+key_RIGHT;RIGHT
+key_UP;UP
+key_DOWN;DOWN
+Overwrite;Overwrite
+Back;Back
+Shop;Shop
+Village;Village
+Locked;Locked
+Currently Unpaired;Currently Unpaired
+Currently Paired With;Currently Paired with
+Pair With;Pair with
+Invalid Choice;Invalid Choice!
+Shove;Shove
+All;All
+Solo;Solo
+Wounded;Wounded
+None;None
+Ally;Ally
+Enemy;Enemy
+Always;Always
+Never;Never
+Your Turn;Your Turn
+Combat Only;Combat Only
+rescueselect;Select a unit to rescue.
+tradeselect;Select which unit to trade with.
+takeselect;Select which unit to receive the traveler.
+dropselect;Select which space to drop the unit into.
+stealselect;Select which unit to steal from.
+giveselect;Select which unit to receive the traveler.
+talkselect;Select which unit to talk to.
+Storage_info;Your inventory is full. Select an item to send to convoy.
+Discard_info;Your inventory is full. Select an item to discard.
+Nothing;Nothing
+Select Difficulty;Select Difficulty
+Select Mode;Select Mode
+Select Growths;Select Growths
+mode_Normal;Recommended for newcomers.
+mode_Hard;For seasoned Fire Emblem veterans. 
+mode_Lunatic;No casuls allowed. Prepare to lose. A lot.
+mode_Classic;Units killed are lost forever.
+mode_Casual;Your units will live to fight another day.
+mode_Random;Each level-up is random. Classic Fire Emblem.
+mode_Fixed;Each level-up is fixed. Recommended.
+mode_Hybrid;Level-ups are random, but you can't be stat-screwed.
+Name_desc;Name of the unit.
+Class_desc;The unit's class. Each class possesses unique traits.
+Lv_desc;Unit level. The unit becomes stronger as it gains levels.
+Max_desc;Current Max HP.
+Equip_desc;Weapon or magical ward being used.
+Sword_desc;Sword mastery level.
+Lance_desc;Lance mastery level.
+Axe_desc;Axe mastery level.
+Bow_desc;Bow mastery level.
+Staff_desc;Staff mastery level.
+Light_desc;Light magic mastery level.
+Anima_desc;Anima magic mastery level.
+Dark_desc;Dark magic mastery level.

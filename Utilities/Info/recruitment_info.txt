@@ -1,0 +1,348 @@
+FE6:
+1:
+Sword Lord (M)
+Jagen Paladin (M)
+Cavalier (M)
+Cavalier (M)
+Archer (M)
+Knight (M)
+2:
+Cleric (F)
+Fighter (M)
+Fighter (M)
+Mercenary (M)
+Pegasus Knight (F)
+Convoy (M)
+3:
+Thief (M)
+Mage (M)
+4:
+Troubadour (F)
+Myrmidon (M)
+5:
+Cleric (M)
+Archer (F)
+6:
+Nomad (F)
+7:
+Jagen Paladin (M)
+Cavalier (M)
+Cavalier (M)
+8:
+Mage (F)
+Thief (M)
+Mercenary (M)
+Knight (M)
+Knight (F)
+8x:
+9:
+Myrmidon (F)
+Nomad (M)
+10-11:
+Fighter (M)
+Brigand (M)
+Sniper (M)
+Pegasus Knight (F)
+Dancer (F) or Bard (M)
+Hero (F) or Warrior (M)
+12:
+Shaman (M)
+Thief (F)
+12x:
+13:
+Wyvern Knight (F)
+Paladin (M)
+14:
+Valkyrie (F)
+Shaman (F)
+14x:
+15:
+Sniper (F)
+Berserker (M)
+Manakete (F)
+16:
+Wyvern Knight (M)
+Mage (M)
+16x:
+General (M)
+17-20
+Niime (F)
+Juno (F) or Ranger (M)
+20x:
+21:
+Bishop (M)
+21x:
+22:
+23:
+Swordmaster (M)
+24:
+35 males
+19 females
+54 playable Characters
+Can get at most 51 in a playthrough
+
+FE7 Lyn Mode
+Prologue:
+- Myrmidon (F)
+1:
+- Cavalier (M) (Strong, Luck, Defense)
+- Cavalier (M) (HP, Skill, Speed, Res)
+2:
+3:
+- Pegasus Knight (F)
+- Archer (M)
+4:
+- Fighter (M)
+5:
+- Cleric (F)
+- Mage (M)
+6:
+- Nomad (M)
+- Thief (M) (Village)
+7:
+- Bard (M)
+- Monk (M)
+7x:
+8:
+9:
+- Knight (M)
+10:
+
+LT:
+Prologue:
+- Myrmidon (M)
+- Cleric (F)
+1:
+- Fighter (M)
+- Archer (F)
+2:
+- Cavalier (M)
+- Mage (F)
+3:
+- Knight (M)
+- Thief (F)
+4:
+- Soldier (F)
+5:
+- Tactician (M)
+- Shaman (F)
+6:
+- Mercenary (M)
+7:
+8:
+9:
+10:
+
+FE7 Eliwood/Hector Mode
+11-12 Combined:
+- Lord (M) (Swords) (Average)
+- Lord (M) (Axes) (Strong, Defense)
+- Paladin (M) (Jagen)
+- Cavalier (M)
+- Archer (F)
+- Fighter (M)
+- Fighter (M)
+- Cleric (F)
+- Thief (M)
+- Knight (M)
+13:
+- Myrmidon (M)
+13x:
+- Convoy (M)
+14:
+- Mage (M) (Recruit)
+- Troubadour (F) (Village)
+15:
+16:
+- Myrmidon (F)
+- Cavalier (M)
+- Cavalier (M)
+- Archer (M)
+- Peg. Knight (F)
+17:
+- Mercenary (M) (Recruit)
+- Monk (M) (Recruit)
+17x:
+- Shaman (M) (Village)
+18:
+19:
+- Raider (M)
+- Peg. Knight (F) (Recruit)
+19x:
+19xx:
+20:
+- Thief (M) (Recruit)
+21:
+- Dancer (F)
+22:
+- Paladin (F)
+- Nomad (M) (Recruit)
+- Wyvern Knight (M) (Recruit)
+23:
+- Berserker (M) (Recruit)
+23x:
+24:
+- Warrior (M) -OR- General (M) (Recruit)
+25:
+- Peg. Knight (F) (Recruit)
+26:
+- Sage (M)
+- Sniper (F)
+27:
+- Hero (M) -OR- Swordmaster (M) (Recruit)
+28:
+- Mage (F) (Recruit)
+28x:
+- Assassin (M) (Recruit)
+29:
+- Wyvern Lord (F) (Recruit)
+30:
+31:
+32:
+- Bishop (M) (Village)
+32x:
+33:
+- Archsage (M)
+30 males
+12 females
+42 playable Characters
+Can get at most 40 in a playthrough
+
+FE8:
+Prologue:
+- Lord (F)
+- Paladin (M) (Jagen)
+1:
+- Cavalier (M)
+- Knight (M)
+2:
+- Pegasus Knight (F)
+- Cleric (M)
+- Raider (M) (Recruit)
+- Fighter (M) (Recruit)
+3:
+- Archer (F)
+- Thief (M)
+4:
+- Cleric (M)
+- Mage (F)
+5:
+- Cleric (F)
+- Myrmidon (M)
+5x:
+6:
+7:
+8:
+Cavalier (M)
+Cavalier (M)
+9:
+Pegasus Knight (F)
+Recruit (F)
+10:
+Sniper (M)
+Mercenary (M)
+Dancer (F)
+Myrmidon (F)
+11:
+Troubadour (F) (Recruit)
+Berserker (M) (Recruit)
+12:
+Sage (M)
+Mage (F)
+13:
+Wyvern Knight (M)
+14:
+Thief (M) (Recruit)
+15:
+Lance Lord (M)
+Great Knight (M)
+Shaman (M)
+16:
+Manakete (F)
+17:
+Pegasus Knight (F) (Recruit)
+18:
+19:
+20:
+21:
+20 males
+13 females
+33 playable Characters
+Can get all in a playthrough
+12 Swords
+12 Lances
+4 Axes
+2 Bows
+3 Light
+3 Anima
+1 Dark
+7 Mages / 26 Physicals
+10 Mounted / 23 Unmounted
+
+PMM:
+Prologue: Ambush by Bandits
+- Lord (M)
+- Myrmidon (F)
+- Cavalier (M) (Lances)
+- Cleric (F)
+1: Forest Investigation
+- Knight (M)
+- Archer (F)
+2: Save the Village
+- Fighter (M) (Axes)
+- Troubadour (F)
+3: Monsters! -- MONSTERS
+- Dancer (F)
+4: The Lorians are raiding? -- not strong...
+- Cavalier (M) (Axes)
+- Thief (F)
+5: Monster Circles -- MONSTERS
+- Cleric (Monk) (M)
+- Pegasus Knight (F)
+- Cavalier (M) (Swords)
+6: Drake helps (Made aware of Jade)
+7: Escape!
+- Cleric (F)
+8: Monsters -- MONSTERS
+9: Drake Pursues
+- Wyvern Knight (F)
+- Sentinel (M)
+10: Attack on Mercia
+10x: Escape
+11: Prison Break
+- Mercenary (M)
+- Thief (M)
+- Skirmisher (F)
+- Shaman (F)
+12: Drake Pursues
+- Swordmaster (F)
+- Fighter (M)
+- Nomad (M)
+13: Reunite -- MONSTERS
+14: Enter Umbria
+- Falco Knight (F)
+15: Intrigue, People going missing
+- Halberdier (F)
+- Great Knight (M)
+16: The Army appears (Intrigue ends, they discover the plot)
+- Warlock (M)
+17:  Umbrian superweapn unleashed, Drake turns, helps fight monsters -- MONSTERS
+- Wyvern Lord (M)
+18: Bert attacks
+19: Head for the City -- MONSTERs
+- Cleric (F) (Gotoh) (Dark/Light)
+20: Enter city -- MONSTERS
+21: Final battle -- MONSTERS
+
+15 males
+15 females
+30 playable characters
+
+9 Swords
+8 Lances
+7 Axes
+2 Bows
+4 Light
+4 Dark
+8 Mages / 22 Physicals
+9 Mounted / 21 Unmounted

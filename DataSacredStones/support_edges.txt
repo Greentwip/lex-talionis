@@ -1,0 +1,8 @@
+# C Support at 12
+# B Support at 24
+# A Support at 36
+# S Support at 48
+# Support Partner 1; Support Partner 2; Starting Value; Rate of Growth; Limit
+# Order of names should match order in Data/SupportConvos. I use alphabetical to keep it simple.
+Renae;Sam;6;6;4
+# Romantic support - but how...

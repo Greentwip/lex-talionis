@@ -96,12 +96,12 @@ Command list
 0x16 Unused; does nothing
 0x17 Unused; does nothing
 0x18 Use this instead of 0x02 to dodge toward the foreground instead of toward the background
-0x19 Play bow pulling SFE
+0x19 Play bow pulling SFE - Bow
 0x1A Normal hit
 0x1B Play quick "heavy step" SFE - Foot Step
-0x1C Play light horse stepping SFE; pitch decreases
-0x1D Play light horse stepping SFE; pitch increases
-0x1E Similar to 0x1D; a bit louder
+0x1C Play light horse stepping SFE; pitch decreases - Horse Step 1
+0x1D Play light horse stepping SFE; pitch increases - Horse Step 3
+0x1E Similar to 0x1D; a bit louder - Horse Step 2
 0x1F Play hit SFE (sounds like Eliwood with sword's hit)
 	(Will be normal hit sound during normal attack and critical hit sound during critical
 	attack)
@@ -109,7 +109,7 @@ Command list
 0x21 Play hit SFE (sounds like Knight Lord with sword's hit) (see previous note)
 0x22 Play short sword swinging SFE - Weapon Pull
 0x23 Play shorter sword swinging SFE - Weapon Push
-0x24 Play sword slashing air SFE
+0x24 Play sword slashing air SFE - Weapon Swing
 0x25 Play wing flap SFE - Heavy Wing Flap
 0x26 Sword toss; VERY hardcoded (uses 32x32 at linear sheet index 0x1C from current sheet)
 0x27 Shield toss; while this command is used for shield tossing,
@@ -117,7 +117,7 @@ Command list
 0x28 Play electrical charging SFE (Used by Shamans)
 0x29 Kills BGM
 0x2A Kills BGM
-0x2B Play armored unit "leaping" SFE
+0x2B Play armored unit "leaping" SFE  -- ArmorShift
 0x2C Show fire (that envelopes Sealed Sword; contains all Sealed Sword fire frames) animation
 	Slashing frames missing in FE 7/8!
 0x2D ? (Assassin critical) (Lethality activator that is dependent on other commands?)

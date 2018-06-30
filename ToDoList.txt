@@ -4,35 +4,32 @@
 - Need to compile cython modules for Linux/Mac
 
 -- REPORTED ISSUES:
-- Moving really fast in the Stat Screen crashes game?
 - Crashed on Suspend and Load another Saved Game?
 - Some music doesn't loop?
 
 -- MISSING ANIMS:
-- Male and Female Halberdier
-- Female Soldier (Eliza)
-- Skirmisher
-- Sentinel
 - Demon Surge (Disintegrate)
 - Evil Eye (Scathe)
 - Shadowshot (Hex)
 - Restore (Restore)
 
+- Windows/Mac/Linux build of latest Engine, Level Editor
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
-- Have Start Skip or Massivily Speed-up AI State
+- Have Start Skip or Massively Speed-up AI State
 --- ENGINE ---
-- Level Editor (Map, Terrain, TileInfo, Unit Placement, Item Placements, Eventing)
 - Dialogue Tester
 - Game Editor??
 - Android Support (pygame_sdl2)
 - Mac/Linux Support
-- Write a tutorial on how to use Lex Talionis Engine (Make Sacred Stones Chapter 1, 2) ++
+--- SUPPORTS ---
+- Confirm Path Of Radiance style supports work
+- Add GBA style supports
 =============
 --- EXTRA ---
 =============
-- Names for chapters??
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Add Fake arrival to Give/Take
 - Scenic Maps (UnitLevel rework?) (Don't need to put previous saved units in UnitLevel.txt manually) (maybe have a load unit command? then a place loaded_units command?)++
@@ -44,7 +41,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add other numbers to Level Up Numbers (5 - 7)
 - Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells?) --- Cleave, Critical, Sol, Luna, Shove, Rally, Metamagic
 - Comment many of the functions with purposes
-- Add damage numbers on hit to both map combat and animation combat
+- Allow fully custom stat definitions
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow
@@ -56,8 +53,8 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- DIALOG SYSTEM ---
 - Functions - may be needed for Normal, Hard, Lunatic differentiation
 - Use Dictionary instead of if/elif system? -- premature optimization?
-- Use getattr() instead of dictionary or if/elif system
---- MUSIC ---
+- Use getattr() instead of dictionary or if/elif system??
+--- MUSIC --- ??
 - Replace with Open-Source Music - Especially Ghibli (they are especially litigious)
 - Replace with Fire Emblem 6-8 music?
 - Replace with Own Music?

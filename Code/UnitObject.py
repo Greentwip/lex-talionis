@@ -1,10 +1,10 @@
-import random
+import random, os
 from collections import Counter
 import GlobalConstants as GC
 import configuration as cf
-import Interaction, MenuFunctions, AStar, CustomObjects, SaveLoad, TileObject
+import Interaction, MenuFunctions, AStar, Weapons, SaveLoad, TileObject
 import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
-import Utility, LevelUp, ItemMethods, Engine, Banner
+import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
 
 import logging
 logger = logging.getLogger(__name__)
@@ -53,8 +53,14 @@ class Stat(object):
     def __div__(self, other):
         return (self.base_stat + self.bonuses) / other
 
+    def __floordiv__(self, other):
+        return (self.base_stat + self.bonuses) // other
+
     def __rdiv__(self, other):
         return other / (self.base_stat + self.bonuses)
+
+    def __rfloordiv__(self, other):
+        return other // (self.base_stat + self.bonuses)
 
     def __neg__(self):
         return -(self.base_stat + self.bonuses)
@@ -111,11 +117,11 @@ class UnitObject(object):
         self.previous_position = self.position
         self.name = info['name']
         self.team = info['team']
-        self.faction = info['faction']
+        self.faction_icon = info.get('faction_icon', 'Neutral')
         self.klass = info['klass']
         self.gender = int(info['gender'])
         self.level = int(info['level'])
-        self.exp = info['exp'] if 'exp' in info else 0
+        self.exp = info.get('exp', 0)
         
         # --- Optional tags and Skills
         self.tags = info['tags']
@@ -144,7 +150,7 @@ class UnitObject(object):
         self.movement_group = info['movement_group']
 
         # --- Rescue
-        self.TRV = info['TRV'] if 'TRV' in info else 0
+        self.TRV = info.get('TRV', 0)
         self.strTRV = "---"
 
         # --- Weapon experience points
@@ -166,13 +172,13 @@ class UnitObject(object):
         self.get_ai(info['ai'])
 
         # --- Stats -- this level
-        self.records = info['records'] if 'records' in info else self.default_records()
+        self.records = info.get('records', self.default_records())
 
         # --- Other Properties (Update related normally)
         self.validPartners = [] # Used by selection algorithms
         self.current_skill = None
 
-        self.dead = info['dead'] if 'dead' in info else False
+        self.dead = info.get('dead', False)
         self.deathCounter = 0
 
         self.sprite = UnitSprite.UnitSprite(self)
@@ -187,7 +193,7 @@ class UnitObject(object):
 
         # --- Temporary Status
         self.reset()
-        self.finished = info['finished'] if 'finished' in info else False
+        self.finished = info.get('finished', False)
 
         self.resetUpdates()
     
@@ -217,7 +223,7 @@ class UnitObject(object):
         except KeyError:
             self.generic_flag = True
             self.bigportrait = GC.UNITDICT['Generic_Portrait_' + self.klass]
-            self.portrait = GC.UNITDICT[self.faction + 'Emblem']
+            self.portrait = GC.UNITDICT[self.faction_icon + 'Emblem']
         # Generate Animation
         # GC.ANIMDICT.generate(self.klass)
         self.battle_anim = None
@@ -238,14 +244,14 @@ class UnitObject(object):
         top = 4
         left = 6
         # Blit Portrait
-        PortraitSurface.blit(self.portrait, (left + 1 + 16 - self.portrait.get_width()/2, top + 4 + 16 - self.portrait.get_height()/2))
+        PortraitSurface.blit(self.portrait, (left + 1 + 16 - self.portrait.get_width()//2, top + 4 + 16 - self.portrait.get_height()//2))
         # Blit Name
         name = self.name
         # If generic, include level in name
         if self.generic_flag:
-            klass_name = gameStateObj.metaDataObj['class_dict'][self.klass]['name']
-            name = klass_name + ' ' + str(self.level)
-        position = (left + PortraitWidth/2 + 6 - GC.FONT['info_grey'].size(name)[0]/2, top + 4)
+            short_name = gameStateObj.metaDataObj['class_dict'][self.klass]['short_name']
+            name = short_name + ' ' + str(self.level)
+        position = (left + PortraitWidth//2 + 6 - GC.FONT['info_grey'].size(name)[0]//2, top + 4)
         GC.FONT['info_grey'].blit(name, PortraitSurface, position)
         # Blit Health Text
         PortraitSurface.blit(GC.IMAGESDICT['InfoHP'], (34 + left, PortraitHeight - 20 + top))
@@ -269,7 +275,7 @@ class UnitObject(object):
         # Blit weapon icon
         current_weapon = self.getMainWeapon()
         if current_weapon:
-            current_weapon.draw(PortraitSurface, (PortraitWidth - 20 + left, PortraitHeight/2 - 8 + top))
+            current_weapon.draw(PortraitSurface, (PortraitWidth - 20 + left, PortraitHeight//2 - 8 + top))
         return PortraitSurface
 
     def create_attack_info(self, gameStateObj, enemyunit):
@@ -281,25 +287,27 @@ class UnitObject(object):
                 position = x_pos - size[0], y_pos
                 GC.FONT['text_blue'].blit(str(num), surf, position)
 
-        if cf.CONSTANTS['crit']:
+        if gameStateObj.mode['rng'] == 'hybrid':
+            surf = GC.IMAGESDICT['QuickAttackInfoHybrid'].copy()
+        elif cf.CONSTANTS['crit']:
             surf = GC.IMAGESDICT['QuickAttackInfoCrit'].copy()
         else:
             surf = GC.IMAGESDICT['QuickAttackInfo'].copy()
 
         # Blit my name
         size = GC.FONT['text_white'].size(self.name)
-        position = 43 - size[0]/2, 3
+        position = 43 - size[0]//2, 3
         GC.FONT['text_white'].blit(self.name, surf, position)
         # Blit enemy name
         size = GC.FONT['text_white'].size(enemyunit.name)
         y_pos = 84 if cf.CONSTANTS['crit'] else 68
-        position = 26 - size[0]/2, y_pos
+        position = 26 - size[0]//2, y_pos
         GC.FONT['text_white'].blit(enemyunit.name, surf, position)
         # Blit name of enemy weapon
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
             size = GC.FONT['text_white'].size(enemyunit.getMainWeapon().name)
             y_pos = 100 if cf.CONSTANTS['crit'] else 84
-            position = 32 - size[0]/2, y_pos
+            position = 32 - size[0]//2, y_pos
             GC.FONT['text_white'].blit(enemyunit.getMainWeapon().name, surf, position)
         # Blit self HP
         blit_num(surf, self.currenthp, 64, 19)
@@ -307,14 +315,18 @@ class UnitObject(object):
         blit_num(surf, enemyunit.currenthp, 20, 19)
         # Blit my MT
         mt = self.compute_damage(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-        blit_num(surf, mt, 64, 35)
-        # Blit my Hit
-        hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-        blit_num(surf, hit, 64, 51)
-        # Blit crit, if applicable
-        if cf.CONSTANTS['crit']:
-            crit = self.compute_crit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
-            blit_num(surf, crit, 64, 67)
+        if gameStateObj.mode['rng'] == 'hybrid':
+            hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
+            blit_num(surf, int(mt * float(hit) / 100), 64, 35)
+        # Blit my Hit if not hybrid
+        else:
+            blit_num(surf, mt, 64, 35)
+            hit = self.compute_hit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
+            blit_num(surf, hit, 64, 51)
+            # Blit crit, if applicable
+            if cf.CONSTANTS['crit']:
+                crit = self.compute_crit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
+                blit_num(surf, crit, 64, 67)
         # Blit enemy hit and mt
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
                 Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().RNG:
@@ -328,10 +340,16 @@ class UnitObject(object):
             e_mt = '--'
             e_hit = '--'
             e_crit = '--'
-        blit_num(surf, e_mt, 20, 35)
-        blit_num(surf, e_hit, 20, 51)
-        if cf.CONSTANTS['crit']:
-            blit_num(surf, e_crit, 20, 67)
+        if gameStateObj.mode['rng'] == 'hybrid':
+            if e_mt == '--' or e_hit == '--':
+                blit_num(surf, e_mt, 20, 35)
+            else:
+                blit_num(surf, int(e_mt * float(e_hit) / 100), 20, 35)
+        else:
+            blit_num(surf, e_mt, 20, 35)
+            blit_num(surf, e_hit, 20, 51)
+            if cf.CONSTANTS['crit']:
+                blit_num(surf, e_crit, 20, 67)
 
         return surf
 
@@ -340,11 +358,11 @@ class UnitObject(object):
             gameStateObj.info_surf = self.create_attack_info(gameStateObj, enemyunit)
 
         # Find topleft
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
-            topleft = GC.TILEWIDTH/2, GC.TILEHEIGHT/4
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
+            topleft = GC.TILEWIDTH//2, GC.TILEHEIGHT//4
             topleft = (topleft[0] - self.attack_info_offset, topleft[1])
         else:
-            topleft = GC.WINWIDTH - 69 - GC.TILEWIDTH/2, GC.TILEHEIGHT/4
+            topleft = GC.WINWIDTH - 69 - GC.TILEWIDTH//2, GC.TILEHEIGHT//4
             topleft = (topleft[0] + self.attack_info_offset, topleft[1])
         if self.attack_info_offset > 0:
             self.attack_info_offset -= 20
@@ -355,7 +373,7 @@ class UnitObject(object):
         white = False
         if isinstance(enemyunit, UnitObject):
             if (self.getMainWeapon().effective and any([comp in enemyunit.tags for comp in self.getMainWeapon().effective.against])) or \
-                    any([status.weakness and status.weakness.damage_type in self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
+                    any([status.weakness and status.weakness.damage_type == self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
                 white = True
         self.getMainWeapon().draw(surf, (topleft[0] + 2, topleft[1] + 4), white)
         # Blit enemy item
@@ -363,13 +381,13 @@ class UnitObject(object):
             white = False
             if (enemyunit.getMainWeapon().effective and any([comp in self.tags for comp in enemyunit.getMainWeapon().effective.against])):
                 white = True
-            elif any([status.weakness and status.weakness.damage_type in enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
+            elif any([status.weakness and status.weakness.damage_type == enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
                 white = True
             enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, topleft[1] + 67 + (16 if cf.CONSTANTS['crit'] else 0)), white)
 
         # Blit advantage -- This must be blit every frame
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
-            advantage, e_advantage = CustomObjects.WEAPON_TRIANGLE.compute_advantage(self.getMainWeapon(), enemyunit.getMainWeapon())
+            advantage, e_advantage = Weapons.TRIANGLE.compute_advantage(self.getMainWeapon(), enemyunit.getMainWeapon())
             UpArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 0, 7, 10))
             DownArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 10, 7, 10))
             if advantage > 0:
@@ -392,7 +410,7 @@ class UnitObject(object):
             if not my_wep.no_double:
                 if my_wep.brave:
                     my_num *= 2
-                if self.attackspeed() - enemyunit.attackspeed() >= cf.CONSTANTS['speed_to_double']:
+                if self.outspeed(enemyunit, my_wep):
                     my_num *= 2
                 if my_wep.uses or my_wep.c_uses:
                     if my_wep.uses:
@@ -415,8 +433,7 @@ class UnitObject(object):
                     Utility.calculate_distance(self.position, enemyunit.position) in e_wep.RNG:
                 if e_wep.brave:
                     e_num *= 2
-                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
-                        enemyunit.attackspeed() - self.attackspeed() >= cf.CONSTANTS['speed_to_double']:
+                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemyunit.outspeed(self, e_wep):
                     e_num *= 2
             if e_num == 2:
                 surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
@@ -484,7 +501,7 @@ class UnitObject(object):
             running_height += 16
             self.getMainSpell().draw(BGSurf, (8, running_height))
             name_width = GC.FONT['text_white'].size(self.getMainSpell().name)[0]
-            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
+            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width//2, running_height))
 
             return BGSurf
 
@@ -529,7 +546,7 @@ class UnitObject(object):
             running_height += 16
             self.getMainSpell().draw(BGSurf, (4, running_height))
             name_width = GC.FONT['text_white'].size(self.getMainSpell().name)[0]
-            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width/2, running_height))
+            GC.FONT['text_white'].blit(self.getMainSpell().name, BGSurf, (24 + 24 - name_width//2, running_height))
 
             return BGSurf
 
@@ -544,14 +561,14 @@ class UnitObject(object):
         if otherunit:
             unit_surf = otherunit.sprite.create_image('passive')
 
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/2/GC.TILEWIDTH + gameStateObj.cameraOffset.get_x() - 1:
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x() - 1:
             topleft = (4, 4)
             if otherunit:
-                u_topleft = (16 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
+                u_topleft = (16 - max(0, (unit_surf.get_width() - 16)//2), 12 - max(0, (unit_surf.get_width() - 16)//2))
         else:
             topleft = (GC.WINWIDTH - 4 - width, 4)
             if otherunit:
-                u_topleft = (GC.WINWIDTH - width + 8 - max(0, (unit_surf.get_width() - 16)/2), 12 - max(0, (unit_surf.get_width() - 16)/2))
+                u_topleft = (GC.WINWIDTH - width + 8 - max(0, (unit_surf.get_width() - 16)//2), 12 - max(0, (unit_surf.get_width() - 16)//2))
 
         surf.blit(gameStateObj.info_surf, topleft)
         if otherunit:
@@ -574,11 +591,11 @@ class UnitObject(object):
         if item.weapon and self.canWield(item):
             top = 4
             left = 2
-            GC.FONT['text_white'].blit('Affin', BGSurf, (width/2 - GC.FONT['text_white'].size('Affin')[0] + left, 4 + top))
+            GC.FONT['text_white'].blit('Affin', BGSurf, (width//2 - GC.FONT['text_white'].size('Affin')[0] + left, 4 + top))
             GC.FONT['text_white'].blit('Atk', BGSurf, (5 + left, 20 + top))
-            GC.FONT['text_white'].blit('AS', BGSurf, (width/2 + 5 + left, 20 + top))
+            GC.FONT['text_white'].blit('AS', BGSurf, (width//2 + 5 + left, 20 + top))
             GC.FONT['text_white'].blit('Hit', BGSurf, (5 + left, 36 + top))
-            GC.FONT['text_white'].blit('Avo', BGSurf, (width/2 + 5 + left, 36 + top))
+            GC.FONT['text_white'].blit('Avo', BGSurf, (width//2 + 5 + left, 36 + top))
         
             dam = str(self.damage(gameStateObj, item))
             acc = str(self.accuracy(gameStateObj, item))
@@ -588,26 +605,26 @@ class UnitObject(object):
             HitWidth = GC.FONT['text_blue'].size(acc)[0]
             AvoidWidth = GC.FONT['text_blue'].size(avo)[0]
             ASWidth = GC.FONT['text_blue'].size(atkspd)[0] 
-            GC.FONT['text_blue'].blit(dam, BGSurf, (width/2 - 4 - AtkWidth + left, 20 + top))
+            GC.FONT['text_blue'].blit(dam, BGSurf, (width//2 - 4 - AtkWidth + left, 20 + top))
             GC.FONT['text_blue'].blit(atkspd, BGSurf, (width - 8 - ASWidth + left, 20 + top))
-            GC.FONT['text_blue'].blit(acc, BGSurf, (width/2 - 4 - HitWidth + left, 36 + top))
+            GC.FONT['text_blue'].blit(acc, BGSurf, (width//2 - 4 - HitWidth + left, 36 + top))
             GC.FONT['text_blue'].blit(avo, BGSurf, (width - 8 - AvoidWidth + left, 36 + top))
 
-            item.drawType(BGSurf, width/2 + 8 + left, 3 + top)
+            item.drawType(BGSurf, width//2 + 8 + left, 3 + top)
 
         else: # assumes every non-weapon has a description
             if item.desc:
                 words_in_item_desc = item.desc
             else:
                 words_in_item_desc = "Cannot wield."
-            lines = MenuFunctions.line_wrap(MenuFunctions.line_chunk(words_in_item_desc), width - 8, GC.FONT['text_white'])
+            lines = TextChunk.line_wrap(TextChunk.line_chunk(words_in_item_desc), width - 8, GC.FONT['text_white'])
 
             for index, line in enumerate(lines):
                 GC.FONT['text_white'].blit(line, BGSurf, (4 + 2, 4+index*16 + 4))
 
         surf.blit(BGSurf, (0, 76))
 
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
             rightflag = True
         else:
             rightflag = False
@@ -625,7 +642,7 @@ class UnitObject(object):
         if not gameStateObj.info_surf:
             gameStateObj.info_surf = self.create_item_description(gameStateObj)
 
-        if gameStateObj.cursor.position[0] > GC.WINWIDTH/GC.TILEWIDTH/2 + gameStateObj.cameraOffset.get_x():
+        if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
             topleft = (GC.WINWIDTH - 8 - gameStateObj.info_surf.get_width(), GC.WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
         else:
             topleft = (8, GC.WINHEIGHT - 8 - gameStateObj.info_surf.get_height())
@@ -711,7 +728,7 @@ class UnitObject(object):
         """
         if (item.weapon or item.spell) and 'no_weapons' in self.status_bundle:
             return False
-        if CustomObjects.WEAPON_TRIANGLE.isMagic(item) and 'no_magic_weapons' in self.status_bundle:
+        if Weapons.TRIANGLE.isMagic(item) and 'no_magic_weapons' in self.status_bundle:
             return False
         # if the item is a weapon
         if item.weapon:
@@ -721,23 +738,16 @@ class UnitObject(object):
         else:
             return True # does not have a level so it can be used
 
-        for itemType in item.TYPE:
-            # print(itemType)
-            idx = CustomObjects.WEAPON_TRIANGLE.type_to_index[itemType]
-            # print(idx)
-            # print(self.name)
-            # print(self.wexp)
-            unitwexp = self.wexp[idx]
-            if itemLvl in CustomObjects.WEAPON_EXP.wexp_dict and unitwexp >= CustomObjects.WEAPON_EXP.wexp_dict[itemLvl]:
-                continue
-            elif itemLvl == self.name: # If this weapon is for me!
-                return True
-            else:
-                return False
+        idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+        unitwexp = self.wexp[idx]
+        if itemLvl in Weapons.EXP.wexp_dict and unitwexp >= Weapons.EXP.wexp_dict[itemLvl]:
+            return True
+        elif itemLvl == self.name: # If this weapon is for me!
+            return True
+        else:
+            return False
 
-        return True
-
-    # Given an item or a 10-list or an int, increase my wexp based on the types of the weapon
+    # Given an item or a list or an int, increase my wexp based on the types of the weapon
     def increase_wexp(self, item, gameStateObj):
         old_wexp = [num for num in self.wexp]
         if item is None:
@@ -749,19 +759,19 @@ class UnitObject(object):
             for index, num in enumerate(old_wexp):
                 if num > 0:
                     self.wexp[index] += item
-        else:
-            for TYPE in item.TYPE:
-                if TYPE in CustomObjects.WEAPON_TRIANGLE.type_to_index:
-                    self.wexp[CustomObjects.WEAPON_TRIANGLE.type_to_index[TYPE]] += 1
+        else:  # Normal item
+            increase = item.wexp if item.wexp else 1
+            if item.TYPE in Weapons.TRIANGLE.name_to_index:
+                self.wexp[Weapons.TRIANGLE.name_to_index[item.TYPE]] += increase
 
         self.add_wexp_banner(old_wexp, self.wexp, gameStateObj)
 
     def add_wexp_banner(self, old_wexp, new_wexp, gameStateObj):
-        wexp_partitions = [x[1] for x in CustomObjects.WEAPON_EXP.sorted_list]
+        wexp_partitions = [x[1] for x in Weapons.EXP.sorted_list]
         for index in range(len(old_wexp)):
             for value in reversed(wexp_partitions):
                 if new_wexp[index] >= value and old_wexp[index] < value:
-                    gameStateObj.banners.append(Banner.gainedWexpBanner(self, value, CustomObjects.WEAPON_TRIANGLE.index_to_type[index]))
+                    gameStateObj.banners.append(Banner.gainedWexpBanner(self, value, Weapons.TRIANGLE.index_to_name[index]))
                     gameStateObj.stateMachine.changeState('itemgain')
                     break
 
@@ -772,6 +782,17 @@ class UnitObject(object):
     def set_hp(self, hp):
         self.currenthp = int(hp)
         self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
+
+    def get_comparison_level(self, metaDataObj):
+        unit_klass = metaDataObj['class_dict'][self.klass]
+        return Utility.comparison_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])
+
+    def can_promote_using(self, item, metaDataObj):
+        unit_klass = metaDataObj['class_dict'][self.klass]
+        allowed_classes = item.promotion
+        max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+        return self.level >= max_level//2 and len(unit_klass['turns_into']) >= 1 \
+            and (self.klass in allowed_classes or 'All' in allowed_classes)
 
     def handle_booster(self, item, gameStateObj):
         # Handle uses
@@ -790,6 +811,14 @@ class UnitObject(object):
             gameStateObj.stateMachine.changeState('expgain')
         elif item.wexp_increase:
             self.increase_wexp(item.wexp_increase, gameStateObj)
+        elif item.promotion:
+            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self, exp=0, force_promote=True))
+            gameStateObj.stateMachine.changeState('expgain')
+        elif item.call_item_script:
+            call_item_script = 'Data/callItemScript.txt'
+            if os.path.isfile(call_item_script):
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(call_item_script, unit=self, unit2=item))
+                gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_forced_movement(self, other_pos, movement, gameStateObj, def_pos=None):
         # Remove tile statuses
@@ -857,17 +886,17 @@ class UnitObject(object):
         levelup_list = [0 for x in self.stats]
         growths = self.growths
         if self.team == 'player':
-            leveling = gameStateObj.mode['growths']
+            leveling = int(gameStateObj.mode['growths'])
         else:
             leveling = cf.CONSTANTS['enemy_leveling']
             if leveling == 3: # Match player method
-                leveling = gameStateObj.mode['growths']
+                leveling = int(gameStateObj.mode['growths'])
 
         if leveling in (0, 1): # Fixed or Random
             for index in range(8):
                 growth = growths[index]
                 if leveling == 1: # Fixed
-                    levelup_list[index] = min((self.growth_points[index] + growth)/100, class_info['max'][index] - self.stats.values()[index].base_stat)
+                    levelup_list[index] = min((self.growth_points[index] + growth)//100, class_info['max'][index] - self.stats.values()[index].base_stat)
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
                 elif leveling == 0: # Random
                     while growth > 0:
@@ -877,7 +906,7 @@ class UnitObject(object):
         else: # Hybrid and Default
             growths = [growth if self.stats.values()[index].base_stat < class_info['max'][index] else 0 for index, growth in enumerate(growths)]
             growth_sum = sum(growths)
-            num_choices = growth_sum/100
+            num_choices = growth_sum//100
             self.growth_points[0] += growth_sum%100
             if self.growth_points[0] >= 100:
                 self.growth_points[0] -= 100
@@ -1020,7 +1049,7 @@ class UnitObject(object):
             enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and
                            unit.team not in team_ignore and unit.name not in name_ignore]
             # Don't want this line, since AI does not consider tiles in the Primary AI
-            # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
+            # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.items() if tile.stats['HP']]
             while enemy_units:
                 current_pos = enemy_units.pop()
                 for valid_move in valid_moves:
@@ -1043,7 +1072,7 @@ class UnitObject(object):
                 enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and
                                unit.team not in team_ignore and unit.name not in name_ignore]
                 # Don't want this line, since AI does not consider tiles in the Primary AI
-                # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.iteritems() if tile.stats['HP']]
+                # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.items() if tile.stats['HP']]
                 while enemy_units:
                     current_pos = enemy_units.pop()
                     for valid_move in valid_moves:
@@ -1070,7 +1099,7 @@ class UnitObject(object):
         if position is None:
             position = self.position
         targets = []
-        for tile_position, tile in gameStateObj.map.tiles.iteritems():
+        for tile_position, tile in gameStateObj.map.tiles.items():
             if 'HP' in gameStateObj.map.tile_info_dict[tile_position] and Utility.calculate_distance(tile_position, position) in item.RNG:
                 targets.append(tile)
         return targets
@@ -1164,7 +1193,7 @@ class UnitObject(object):
             return []
 
         enemy_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
-                          [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]]
+                          [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]]
         valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in my_weapon.RNG]                          
         if cf.CONSTANTS['line_of_sight']:
             valid_targets = Utility.line_of_sight([self.position], valid_targets, max(my_weapon.RNG), gameStateObj)
@@ -1250,7 +1279,7 @@ class UnitObject(object):
                 else:
                     if my_spell.detrimental:
                         enemy_positions = set([unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
-                                             [position for position, tile in gameStateObj.map.tiles.iteritems() if 'HP' in gameStateObj.map.tile_info_dict[position]])
+                                             [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]])
                         targetable_position = set(targetable_position)
                         if my_spell.aoe.number > 0:
                             additional_positions = set()
@@ -1402,11 +1431,13 @@ class UnitObject(object):
         return True
 
     def handle_fight_quote(self, target_unit, gameStateObj):
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', target_unit, self, event_flag=False))
-        gameStateObj.stateMachine.changeState('dialogue')
-        # And again, the other way round
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/fight_quote_info.txt', self, target_unit, event_flag=False))
-        gameStateObj.stateMachine.changeState('dialogue')
+        fight_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/fightScript.txt'
+        if os.path.exists(fight_script_name):
+            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=target_unit, unit2=self))
+            gameStateObj.stateMachine.changeState('dialogue')
+            # And again, the other way round
+            gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=self, unit2=target_unit))
+            gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_steal_banner(self, item, gameStateObj):
         gameStateObj.banners.append(Banner.stealBanner(self, item))
@@ -1443,6 +1474,9 @@ class UnitObject(object):
                 if unit.team == self.team and unit.ai_group == self.ai_group:
                     unit.ai.range = 2 # allow group to see whole universe
                     unit.ai.ai_group_flag = True # Don't need to do this more than once
+                    if not self.hasMoved and self.hasRunAI():  # We need to tell this guy to try again
+                        gameStateObj.ai_unit_list.append(self)  # Move him up to next on the list
+                        self.reset_ai()
 
     def canAttack(self, gameStateObj):
         return self.getAllTargetPositions(gameStateObj) and not self.hasAttacked
@@ -1485,10 +1519,10 @@ class UnitObject(object):
         avoid = 0
 
         if gameStateObj.support and self.position and self.name in gameStateObj.support.node_dict:
-            for name, edge in gameStateObj.support.node_dict[self.name].adjacent.iteritems():
+            for name, edge in gameStateObj.support.node_dict[self.name].adjacent.items():
                 for unit in gameStateObj.allunits:
                     if unit.name == name and unit.position and Utility.calculate_distance(unit.position, self.position) <= 3:
-                        support_level = edge.current_value/cf.CONSTANTS['support_points']
+                        support_level = edge.current_value//cf.CONSTANTS['support_points']
                         affinity = gameStateObj.support.node_dict[name].affinity
                         attack += affinity.attack * support_level
                         defense += affinity.defense * support_level
@@ -1496,11 +1530,26 @@ class UnitObject(object):
                         avoid += affinity.avoid * support_level * 5
         return min(4, attack), min(4, defense), min(20, accuracy), min(20, avoid)
 
+    def outspeed(self, target, item):
+        """
+        Returns bool: whether self doubles target
+        """
+        if isinstance(target, TileObject.TileObject):
+            return False
+
+        advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
+        a = advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).attackspeed
+        b = advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).attackspeed
+
+        return self.attackspeed() + a >= target.attackspeed() + b + cf.CONSTANTS['speed_to_double']
+
     # computes the damage dealt by me using this item
     def compute_damage(self, target, gameStateObj, item, mode=None, hybrid=None, crit=0):
         if not item:
             return None
         if item.spell and not item.damage:
+            return 0
+        if not item.weapon and not item.spell:
             return 0
 
         adj = Utility.calculate_distance(self.position, target.position) <= 1
@@ -1510,8 +1559,15 @@ class UnitObject(object):
             pass
             
         else:
-            damage += CustomObjects.WEAPON_TRIANGLE.compute_advantage(item, target.getMainWeapon())[0]
-            if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
+            # Determine effective
+            if item.effective:
+                if any((unit_tag in item.effective.against) for unit_tag in target.tags):
+                    damage += item.effective.bonus
+            # Weapon Triangle
+            advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
+            damage += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).damage
+            damage -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).resist
+            if Weapons.TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
                     stat = 'DEF'
                 else:
@@ -1523,7 +1579,7 @@ class UnitObject(object):
             if item.ignore_def:
                 pass
             elif item.ignore_half_def:
-                damage -= target.defense(gameStateObj, stat)/2
+                damage -= target.defense(gameStateObj, stat)//2
             else:
                 damage -= target.defense(gameStateObj, stat)
 
@@ -1537,12 +1593,14 @@ class UnitObject(object):
                     damage -= new_damage
             # Determine weakness
             for status in target.status_effects:
-                if status.weakness and status.weakness.damage_type in item.TYPE:
+                if status.weakness and status.weakness.damage_type == item.TYPE:
                     damage += status.weakness.num
             
         if item.guaranteed_crit or crit == 1:
             damage += self.damage(gameStateObj, item, Utility.calculate_distance(self.position, target.position) <= 1)
         elif crit == 2:
+            damage *= 2
+        elif crit == 3:
             damage *= 3
 
         # Handle hybrid miss
@@ -1573,10 +1631,11 @@ class UnitObject(object):
 
         # Calculations
         if my_item.weapon or my_item.spell:
-            hitadvantage = 0
-            if my_item.weapon:
-                hitadvantage = 15*CustomObjects.WEAPON_TRIANGLE.compute_advantage(my_item, target.getMainWeapon())[0]
-            hitrate = self.accuracy(gameStateObj, my_item) + hitadvantage - target.avoid(gameStateObj)
+            advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
+            bonus = 0
+            bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(my_item, self.wexp).accuracy
+            bonus -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).avoid
+            hitrate = self.accuracy(gameStateObj, my_item) + bonus - target.avoid(gameStateObj)
             for status in self.status_effects:
                 if status.conditional_hit and eval(status.conditional_hit.conditional, globals(), locals()):
                     new_hit = int(eval(status.conditional_hit.value, globals(), locals()))
@@ -1598,12 +1657,16 @@ class UnitObject(object):
             return None
         if not isinstance(target, UnitObject):
             return 0
-        if not my_item.crit:
+        if my_item.crit is None:
             return 0
 
         # Calculations
         if my_item.weapon or my_item.spell:
-            critrate = self.crit_accuracy(gameStateObj, my_item) - target.crit_avoid(gameStateObj)
+            advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
+            bonus = 0
+            bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(my_item, self.wexp).crit
+            bonus -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).dodge
+            critrate = self.crit_accuracy(gameStateObj, my_item) + bonus - target.crit_avoid(gameStateObj)
             for status in self.status_effects:
                 if status.conditional_crit_hit and eval(status.conditional_crit_hit.conditional, globals(), locals()):
                     new_hit = int(eval(status.conditional_crit_hit.value, globals(), locals()))
@@ -1639,15 +1702,18 @@ class UnitObject(object):
             else:
                 return None
         if item.weapon:
-            accuracy += item.weapon.HIT + self.stats['SKL']*3 + self.stats['LCK']
+            accuracy += item.weapon.HIT + int(self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] +
+                                              self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef'])
         elif item.spell and item.hit:
-            accuracy += item.hit + self.stats['SKL']*3 + self.stats['LCK']
+            accuracy += item.hit + int(self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] +
+                                       self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef'])
         else:
             accuracy = 10000
         return accuracy
 
     def avoid(self, gameStateObj, item=None):
-        base = self.attackspeed(item) * 3 + self.stats['LCK']
+        base = int(self.attackspeed(item) * cf.CONSTANTS['avoid_speed_coef'] +
+                   self.stats['LCK'] * cf.CONSTANTS['avoid_luck_coef'])
         base += self.get_support_bonuses(gameStateObj)[3]
         for status in self.status_effects:
             if status.avoid:
@@ -1668,19 +1734,21 @@ class UnitObject(object):
                 damage += int(eval(status.mt, globals(), locals()))
         if item.weapon:
             damage += item.weapon.MT
-            if CustomObjects.WEAPON_TRIANGLE.isMagic(item):
+            if Weapons.TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
-                    damage += self.stats['STR']
+                    damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
                 else:  # Normal
-                    damage += self.stats['MAG']
+                    damage += int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
             else:
-                damage += self.stats['STR']
+                damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
             return damage
         elif item.spell:
             if item.damage:
-                damage += item.damage + self.stats['MAG']
+                damage += item.damage + int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
             else:
                 return 0
+        else:
+            return 0
 
         return damage
 
@@ -1692,20 +1760,20 @@ class UnitObject(object):
                 item = self.getMainSpell()
             else:
                 return None
-        if item.crit and (item.weapon or item.spell):
-            accuracy = item.crit + self.stats['SKL']
+        if item.crit is not None and (item.weapon or item.spell):
+            accuracy = item.crit + int(self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef'])
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             return accuracy
         else:
             return 0
 
     def crit_avoid(self, gameStateObj, item=None):
-        base = self.stats['LCK']*2
+        base = int(self.stats['LCK'] * cf.CONSTANTS['crit_avoid_luck_coef'])
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         return base
 
     def defense(self, gameStateObj, stat='DEF'):
-        defense = self.stats[stat]
+        defense = int(self.stats[stat] * cf.CONSTANTS['defense_coef'])
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
         if cf.CONSTANTS['support']:
@@ -1730,8 +1798,8 @@ class UnitObject(object):
     """
 
     def get_rating(self):
-        return (self.stats['HP'] - 10)/2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \
-            self.stats['SPD'] + self.stats['LCK']/2 + self.stats['DEF'] + self.stats['RES']
+        return (self.stats['HP'] - 10)//2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \
+            self.stats['SPD'] + self.stats['LCK']//2 + self.stats['DEF'] + self.stats['RES']
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj):
@@ -1743,6 +1811,12 @@ class UnitObject(object):
         self.finished = True
         self.previous_position = self.position
         self.sprite.change_state('normal')
+        # Called whenever a unit waits
+        wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
+        if os.path.exists(wait_script_name):
+            move_script = Dialogue.Dialogue_Scene(wait_script_name, unit=self)
+            gameStateObj.message.append(move_script)
+            gameStateObj.stateMachine.changeState('dialogue')
 
     def isDone(self):
         return self.finished
@@ -1756,15 +1830,18 @@ class UnitObject(object):
         # if self.isActive < 0:
         #     logger.error('Something let go of this unit without grabbing hold first!')
         #     self.isActive = 0
+
+    def reset_ai(self):
+        self.hasRunMoveAI = False
+        self.hasRunAttackAI = False
+        self.hasRunGeneralAI = False
         
     def reset(self):
         self.hasMoved = False # Controls whether unit has moved already. Unit can still move back.
         self.hasTraded = False # Controls whether unit has done an action which disallows moving back.
         self.hasAttacked = False # Controls whether unit has done an action which disallows attacking, an action which ends turn
         self.finished = False # Controls whether unit has completed their turn.
-        self.hasRunMoveAI = False
-        self.hasRunAttackAI = False
-        self.hasRunGeneralAI = False
+        self.reset_ai()
         self.isActive = 0
         self.isDying = False # Unit is dying
         self.path = []
@@ -1846,7 +1923,7 @@ class UnitObject(object):
                        'position': self.position,
                        'name': self.name,
                        'team': self.team,
-                       'faction': self.faction,
+                       'faction_icon': self.faction_icon,
                        'klass': self.klass,
                        'gender': self.gender,
                        'level': self.level,
@@ -1864,7 +1941,7 @@ class UnitObject(object):
                        'dead': self.dead,
                        'finished': self.finished,
                        'TRV': self.TRV,
-                       'stats': [stat.serialize() for name, stat in self.stats.iteritems()],
+                       'stats': [stat.serialize() for name, stat in self.stats.items()],
                        'movement_group': self.movement_group}
         # Return all extraneous statuses
         # for item in items:
@@ -2006,14 +2083,19 @@ class UnitObject(object):
 
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escape_triggers.txt', self, tile_pos=self.position, event_flag=False))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, tile_pos=self.position))
+        gameStateObj.stateMachine.changeState('dialogue')
+
+    def seize(self, gameStateObj):
+        self.hasAttacked = True
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, gameStateObj):
         self.hasAttacked = True
         locked_name = gameStateObj.map.tile_info_dict[pos]['Locked']
-        unlock_script = 'Data/Level' + str(gameStateObj.counters['level']) + '/unlockScript.txt'
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, self, locked_name, pos))
+        unlock_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
         gameStateObj.stateMachine.changeState('dialogue')
 
         # Use up skeleton key if it was what was used
@@ -2026,6 +2108,9 @@ class UnitObject(object):
                         gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
                         gameStateObj.stateMachine.changeState('itemgain')
                     break
+
+    def can_unlock(self):
+        return 'locktouch' in self.status_bundle or any(item.unlock for item in self.items) 
 
     # Wrapper around way of inserting item
     def equip(self, item):
@@ -2042,12 +2127,12 @@ class UnitObject(object):
     # This does the adding and subtracting of statuses
     def remove_item(self, item):
         logger.debug("Removing %s from %s items.", item, self.name)
-        item_index = self.items.index(item)
+        was_mainweapon = self.getMainWeapon() == item
         self.items.remove(item)
         item.owner = 0
         for status_on_hold in item.status_on_hold:
             StatusObject.HandleStatusRemoval(status_on_hold, self)
-        if item_index == 0 and self.canWield(item):
+        if was_mainweapon and self.canWield(item):
             for status_on_equip in item.status_on_equip:
                 StatusObject.HandleStatusRemoval(status_on_equip, self)
         # remove passive item skill
@@ -2055,7 +2140,7 @@ class UnitObject(object):
             if status.passive:
                 status.passive.reverse_mod(item)
         # There may be a new item equipped
-        if item_index == 0 and self.getMainWeapon():
+        if was_mainweapon and self.getMainWeapon():
             for status_on_equip in self.getMainWeapon().status_on_equip:
                 new_status = StatusObject.statusparser(status_on_equip)
                 StatusObject.HandleStatusAddition(new_status, self)
@@ -2071,7 +2156,7 @@ class UnitObject(object):
         if item in self.items:
             self.items.remove(item)
             self.items.insert(index, item)
-            if index == 0: # If new mainweapon...
+            if self.getMainWeapon() == item: # If new mainweapon...
                 # You unequipped a different item, so remove its status.
                 if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                     for status_on_equip in self.items[1].status_on_equip:
@@ -2093,7 +2178,7 @@ class UnitObject(object):
                 for status_on_hold in item.status_on_hold:
                     new_status = StatusObject.statusparser(status_on_hold)
                     StatusObject.HandleStatusAddition(new_status, self)
-                if index == 0: # If new mainweapon...
+                if self.getMainWeapon() == item: # If new mainweapon...
                     # You unequipped a different item, so remove its status.
                     if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                         for status_on_equip in self.items[1].status_on_equip:
@@ -2194,7 +2279,7 @@ class UnitObject(object):
             if self.path: # and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
                 new_position = self.path.pop()
                 if self.position != new_position:
-                    self.movement_left -= (cf.CONSTANTS['normal_movement'] if 'flying' in self.status_bundle else gameStateObj.map.tiles[new_position].get_mcost(self))
+                    self.movement_left -= gameStateObj.map.tiles[new_position].get_mcost(self)
                 self.position = new_position
                 # Camera auto-follow
                 if not gameStateObj.cursor.camera_follow:

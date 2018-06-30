@@ -1,0 +1,10 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Harold'
+        if;not 'HaroldDefault' in gameStateObj.level_constants
+            u;Harold;Left
+            s;Harold;You cannot escape!{w}{br}Bear witness to the Empire's might!{w};auto
+            r;Harold
+            set_level_constant;HaroldDefault
+        end
+    end
+end

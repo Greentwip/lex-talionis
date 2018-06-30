@@ -3,26 +3,26 @@
 if;gameStateObj.turncount == 1
 	if;cf.OPTIONS['Display Hints']
 		tutorial_mode;Wait
-		set_cursor;0,0
+		set_cursor;0,0;immediate
 		s;Narrator;Your units are blue.{w}{br}Enemy units are red.{w}{br}Ally units are green.{w}{br}To win this chapter, both of your blue units must escape.{w};auto;hint
 		# Show Highlight
-		display_cursor;1
+		disp_cursor;1
 		s;Narrator;Select each of your units and move them as close as possible to the highlighted tile.{w};auto;hint
-		display_cursor;0
+		disp_cursor;0
 	end
 	u;Prim;Right
 	u;Ophie;Left
 	s;Prim;Ophie, let's go! We need to run!{w};auto
 	s;Ophie;Right.{w};auto
 	r;Prim;Ophie
-	set_cursor;Ophie
+	set_cursor;Ophie;immediate
 elif;gameStateObj.turncount == 2
 	m;Meet the Sage
-	set_cursor;Yohn;force_hold
-	set_cursor;13,5;force_hold
+	set_cursor;Yohn
+	set_cursor;13,5
 	move_unit;Yohn;13,5
 	start_move
-	set_cursor;S1;force_hold
+	set_cursor;S1
 	move_unit;S1;14,5
 	start_move
 	# Swordmaster dude approaches enemies!
@@ -32,16 +32,16 @@ elif;gameStateObj.turncount == 2
 	s;Yohn;You are filled with rage, my child. Allow me to release your anger!{w};auto
 	r;Soldier2;Yohn
 	# Combat
-	interact_unit;Yohn;S1
+	interact_unit;Yohn;S1;Hit,Hit,Hit
 	u;Yohn;Left
 	s;Yohn;My blade sings once again.{w}{br}It is a pity one so young had to suffer for it.{w};auto
 	r;Yohn
 	# Pan to Ophie and Prim
-	set_cursor;0,0;force_hold
+	set_cursor;0,0
 	add_unit;E1;0,4
 	move_unit;E1;4,5
 	start_move
-	set_cursor;E1
+	set_cursor;E1;immediate
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -55,7 +55,7 @@ elif;gameStateObj.turncount == 2
 	# Hint
 	if;cf.OPTIONS['Display Hints']
 		tutorial_mode;Attack
-		set_cursor;E1;force_hold
+		set_cursor;E1
 		disp_cursor;1
 		s;Narrator;You'll need to defeat this fighter to proceed. Select Ophie first.{w};auto;hint
 		disp_cursor;0
@@ -63,7 +63,7 @@ elif;gameStateObj.turncount == 2
 # Begin turn 3
 elif;gameStateObj.turncount == 3
 	m;Meet the Sage
-	set_cursor;Vagnius;force_hold
+	set_cursor;Vagnius
 	move_unit;S2;14,5
 	move_unit;S3;13,4
 	start_move
@@ -72,7 +72,7 @@ elif;gameStateObj.turncount == 3
 	s;Soldier1;You need to learn your place!{w};auto
 	r;Soldier1;Yohn
 	# Combat1
-	interact_unit;S2;Yohn
+	interact_unit;S2;Yohn;Hit,Hit,Hit
 	u;Soldier1;Right
 	u;Yohn;Left
 	s;Soldier1;Urgh...{w};auto
@@ -81,15 +81,15 @@ elif;gameStateObj.turncount == 3
 	s;Soldier2;Die, Keralan scum!{w};auto
 	r;Soldier2;Yohn
 	# Combat2
-	interact_unit;S3;Yohn
+	interact_unit;S3;Yohn;Hit,Hit,Hit
 	wait;500
 	# Back to Prim
-	set_cursor;0,4;force_hold
+	set_cursor;0,4
 	wait;500
 	add_unit;E2;0,4
 	move_unit;E2;2,4
 	start_move
-	set_cursor;2,4
+	set_cursor;2,4;immediate
 	disp_cursor;1
 	wait;1000
 	disp_cursor;0
@@ -110,7 +110,7 @@ elif;gameStateObj.turncount == 3
 # Begin turn 4
 elif;gameStateObj.turncount == 4 
 	m;Mount Briggs
-	set_cursor;Vagnius;force_hold
+	set_cursor;Vagnius
 	move_unit;Yohn;18,5
 	start_move
 	u;Yohn;Left
@@ -119,16 +119,16 @@ elif;gameStateObj.turncount == 4
 	s;Yohn;You may find that easier said than done.{w};auto
 	s;Vagnius;Hah. You prideful fool...{w};auto
 	r;Vagnius;Yohn
-	interact_unit;Yohn;Vagnius
+	interact_unit;Yohn;Vagnius;Hit,Hit,Hit
 	# Vagnius wrecks Master Yohn
 	u;Yohn;FarLeft
 	s;Yohn;...{w};auto
 	r;Yohn
 	remove_unit;Yohn
-	set_cursor;Ophie;force_hold
+	set_cursor;Ophie
 	u;Ophie;MidLeft
 	s;Ophie;NO!! Master Yohn!{w};auto
-	move_sprite;Ophie;144,0;force_hold
+	move_sprite;Ophie;144,0
 	u;Prim;FarLeft
 	mirror;Ophie
 	s;Prim;O-Ophie! He said not to look back!{w};auto

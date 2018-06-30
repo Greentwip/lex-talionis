@@ -3,13 +3,13 @@
 # Each unit belongs on its own line
 # Syntax:
 # New Units:
-# team; 0; event_id; class; level; items; position; ai; group; status (optional)
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
 # - OR -
 # Saved units:
 # team; 1; event_id; unit_id; position; ai
 # - OR -
 # Created Units:
-# team; 2; event_id; class; items; position; ai; group; status (optional)
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
 # 
 # event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
 # unit_id - unit to load from the units.xml file
@@ -23,10 +23,10 @@ load_player_characters
 # Other
 other;0;Sam;Sam;0,0;None
 other;0;Kayla;Kayla;0,0;None
-# Groups
-group;Bandit;Bandit;Bandit;A Bandit hailing from the Ghat mountains
-group;Claw;Claw;Empire;The Empire's elite guard
-group;Elite;Elite;Confederacy;A member of the Confederacy's special forces
+# Factions
+faction;Bandit;Bandit;Bandit;A Bandit hailing from the Ghat mountains
+faction;Claw;Claw;Empire;The Empire's elite guard
+faction;Elite;Elite;Confederacy;A member of the Confederacy's special forces
 #
 other;0;M1;Mercenary;6;Steel Sword;0,0;Pursue;Elite
 other;0;M2;Mercenary;6;Steel Sword;0,0;Pursue;Elite

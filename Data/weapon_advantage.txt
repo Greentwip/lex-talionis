@@ -1,0 +1,2 @@
+# Weapon Type - Weapon Rank - Damage - Resist - Accuracy - Avoid - Crit - Dodge - AS
+All All 1 0 15 0 0 0 0

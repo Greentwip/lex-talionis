@@ -98,21 +98,21 @@ class Support_Graph(object):
         supports = []
         if unit_name in self.node_dict:
             node = self.node_dict[unit_name]
-            for name, edge in node.adjacent.iteritems():
-                support_level = edge.current_value/cf.CONSTANTS['support_points']
+            for name, edge in node.adjacent.items():
+                support_level = edge.current_value//cf.CONSTANTS['support_points']
                 affinity = self.node_dict[name].affinity
                 supports.append((name, affinity, support_level))
         return supports
 
     def serialize(self):
         serial_dict = {}
-        for name1, node in self.node_dict.iteritems():
+        for name1, node in self.node_dict.items():
             serial_dict[name1] = {}
-            for name2, edge in node.adjacent.iteritems():
+            for name2, edge in node.adjacent.items():
                 serial_dict[name1][name2] = edge.current_value
         return serial_dict
 
     def deserialize(self, serial_dict):
-        for name1, names in serial_dict.iteritems():
-            for name2, value in names.iteritems():
+        for name1, names in serial_dict.items():
+            for name2, value in names.items():
                 self.node_dict[name1].adjacent[name2].current_value = value

@@ -11,7 +11,7 @@ s;AltheaQueen;Prim, do you think I look alright?{w}{br}I didn't forget a button,
 s;Prim;Althea, don't worry. You look great!{w}{br}Don't be so nervous!{w}{br}This is your coronation!{w}{br}It's supposed to be a celebration.{w};auto  
 s;AltheaQueen;Easy for you to say.{w}{br}Everyone's looking up to me.{w}{br}What happens if I forget what I'm going to say?{w}{br}Or worse, what if I trip on my way the throne?{w};auto
 s;Prim;You won't trip.{w}{br}Don't worry about it.{w};auto
-move_sprite;Prim;-24,0
+qmove_sprite;Prim;-24,0
 u;Sam;FarRight
 s;Sam;Prim, please stop fussing over Althea.{w}{br}You're just going to make her more nervous.{w};auto
 s;AltheaQueen;Ah, Sam! You're back.{w};auto
@@ -19,7 +19,7 @@ s;Sam;Yep. Just in time, too.{w}{br}Didn't want to miss your coronation.{w};auto
 s;AltheaQueen;How'd did the meeting go, Chancellor?{w};auto
 s;Sam;The Confederacy agreed to a formal defense pact.{w}{br}In no small part due to Kayla's armtwisting.{w};auto
 r;Prim
-move_sprite;AltheaQueen;-24,0
+qmove_sprite;AltheaQueen;-24,0
 u;Kayla;MidRight;u;Prim;MidLeft
 s;Kayla;What can I say, I'm very persuasive.{w};auto
 s;AltheaQueen;Oh, thank you, Kayla!{w};auto
@@ -50,7 +50,7 @@ s;Kayla;We'd best be going ourselves.{w}{br}If we want to be able to see the cer
 s;Ophie;Aye.{w};auto
 s;Kayla;Coming, Prim?{w};auto
 s;Prim;Right behind you.{w};auto
-move_sprite;Ophie;24,0
+qmove_sprite;Ophie;24,0
 r;Kayla;Prim;Sam
 u;Sam;Left
 s;Sam;Well, Ophie.{w};auto

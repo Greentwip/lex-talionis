@@ -2,7 +2,7 @@
 
 import GlobalConstants as GC
 
-import MenuFunctions, CustomObjects, Engine, Image_Modification
+import MenuFunctions, Engine, Image_Modification, Weapons
 
 class Banner(object):
     def __init__(self):
@@ -30,11 +30,11 @@ class Banner(object):
         BGSurf = self.surf.copy()
 
         # Center it
-        pos = surf.get_width()/2 - self.size[0]/2 - 2, surf.get_height()/2 - self.size[1]/2 - 4
+        pos = surf.get_width()//2 - self.size[0]//2 - 2, surf.get_height()//2 - self.size[1]//2 - 4
         # Blit words
         for index, word in enumerate(self.banner):
             word_width = GC.FONT[self.banner_font[index]].size(word)[0]
-            GC.FONT[self.banner_font[index]].blit(word, BGSurf, (self.write_index, self.size[1]/2 - self.font_height/2 + 4))
+            GC.FONT[self.banner_font[index]].blit(word, BGSurf, (self.write_index, self.size[1]//2 - self.font_height//2 + 4))
             self.write_index += word_width
         # Blit item icon
         if self.item:
@@ -100,8 +100,8 @@ class gainedWexpBanner(Banner):
     def __init__(self, unit, wexp, weapon_type):
         Banner.__init__(self)
         self.unit = unit
-        self.item = CustomObjects.WeaponIcon(weapon_type)
-        self.banner = [unit.name, ' reached rank ', CustomObjects.WEAPON_EXP.number_to_letter(wexp)]
+        self.item = Weapons.Icon(weapon_type)
+        self.banner = [unit.name, ' reached rank ', Weapons.EXP.number_to_letter(wexp)]
         self.banner_font = ['text_blue', 'text_white', 'text_blue']
         self.figure_out_size()
         self.sound = GC.SOUNDDICT['Item']
@@ -119,6 +119,14 @@ class switchPulledBanner(Banner):
     def __init__(self):
         Banner.__init__(self)
         self.banner = ['Switch pulled!']
+        self.banner_font = ['text_white']
+        self.figure_out_size()
+        self.sound = GC.SOUNDDICT['Item']
+
+class customBanner(Banner):
+    def __init__(self, text):
+        Banner.__init__(self)
+        self.banner = [text]
         self.banner_font = ['text_white']
         self.figure_out_size()
         self.sound = GC.SOUNDDICT['Item']

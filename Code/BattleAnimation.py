@@ -24,21 +24,23 @@ class Loop(object):
 class BattleAnimation(object):
     idle_poses = {'Stand', 'RangedStand'}
 
-    def __init__(self, unit, anim, script, name=None, item=None):
+    def __init__(self, unit, anim, script, palette_name=None, item=None):
         self.unit = unit
         self.item = item
         self.frame_directory = anim
         self.poses = script
         self.current_pose = None
-        self.name = name
+        self.palette_name = palette_name
         self.state = 'Inert'  # Internal state
         self.num_frames = 0  # How long this frame of animation should exist for (in frames)
         self.animations = []
         self.base_state = False  # Whether the animation is in a basic state (normally Stand or wait_for_hit)
+        self.wait_for_hit = False
 
         self.children = []
         self.under_children = []
         self.loop = False
+        self.end_next_loop = 0  # A counter that keeps track of how many loops in the future to skip
         self.deferred_commands = []
 
         # For drawing
@@ -176,7 +178,7 @@ class BattleAnimation(object):
             self.script_index += 1
 
     def parse_line(self, line):
-        # print(self.right, True if self.child_effect else False, line)
+        # print(self.right, line)
         self.base_state = False
         # === TIMING AND IMAGES ===
         if line[0] == 'f':
@@ -229,38 +231,43 @@ class BattleAnimation(object):
         # === COMBAT HIT ===
         elif line[0] == 'start_hit':
             if 'no_shake' not in line:
-                if self.owner.current_result.outcome == 2:
+                if self.owner.outcome() == 2:
                     self.owner.shake(4)  # Critical
-                elif self.owner.current_result.def_damage > 0:
+                elif self.owner.def_damage() > 0:
                     self.owner.shake(1)
                 else:  # No Damage -- Hit spark handles anim
                     self.owner.shake(2)
             self.owner.start_hit('no_sound' not in line)
             # Also offset partner by [-1, -2, -3, -2, -1]
-            self.partner.lr_offset = [-1, -2, -3, -2, -1]
+            if self.partner:
+                self.partner.lr_offset = [-1, -2, -3, -2, -1]
         elif line[0] == 'wait_for_hit':
-            if len(line) > 1:
-                self.current_frame = self.frame_directory[line[1]]
-            else:
-                self.current_frame = None
-            if len(line) > 2:
-                self.under_frame = self.frame_directory[line[2]]
-            else:
-                self.under_frame = None
-            self.over_frame = None
-            self.state = 'Wait'
-            self.processing = False
-            self.base_state = True
-        elif line[0] == 'spell_hit':
-            # To handle ruin item
-            if not self.item.half or self.owner.current_result.def_damage > 0:
-                self.owner.start_hit('no_sound' not in line, self.owner.current_result.outcome == 0)
+            if self.wait_for_hit:
+                if len(line) > 1:
+                    self.current_frame = self.frame_directory[line[1]]
+                else:
+                    self.current_frame = None
+                if len(line) > 2:
+                    self.under_frame = self.frame_directory[line[2]]
+                else:
+                    self.under_frame = None
+                self.over_frame = None
                 self.state = 'Wait'
                 self.processing = False
-                if self.owner.current_result.def_damage > 0:
+                self.base_state = True
+        elif line[0] == 'spell_hit':
+            # To handle ruin item
+            if not self.item.half or self.owner.def_damage() > 0:
+                self.owner.start_hit('no_sound' not in line, self.owner.outcome() == 0)
+                self.state = 'Wait'
+                self.processing = False
+                if self.owner.def_damage() > 0:
                     if 'no_shake' not in line:
-                        self.owner.shake(3)
-                elif self.owner.current_result.def_damage == 0:
+                        if self.owner.outcome() == 2:  # Crit
+                            self.owner.shake(4)
+                        else:
+                            self.owner.shake(3)
+                elif self.owner.def_damage() == 0:
                     if 'no_shake' not in line:
                         self.owner.shake(2)
                     if self.item and (self.item.weapon or (self.item.spell and self.item.damage)):
@@ -278,26 +285,32 @@ class BattleAnimation(object):
             self.animations.append(anim)
             if not self.item.half:  # Spell hit handles this
                 self.owner.start_hit('no_sound' not in line, True)  # Miss
-            self.partner.dodge()
+            if self.partner:
+                self.partner.dodge()
         # === FLASHING ===
         elif line[0] == 'parent_tint_loop':
             num_frames = self.get_frames(line[1])
             color = [tuple([int(num) for num in color.split(',')]) for color in line[2:]]
-            self.parent.flash(num_frames, color)
+            if self.parent:
+                self.parent.flash(num_frames, color)
         elif line[0] == 'parent_tint':
             num_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
-            self.parent.flash(num_frames, color)
+            if self.parent:
+                self.parent.flash(num_frames, color)
         elif line[0] == 'enemy_tint':
             num_frames = self.get_frames(line[1])
             color = tuple([int(num) for num in line[2].split(',')])
-            self.partner.flash(num_frames, color)
+            if self.partner:
+                self.partner.flash(num_frames, color)
         elif line[0] == 'enemy_gray':
             num_frames = self.get_frames(line[1])
-            self.partner.flash(num_frames, 'gray')
+            if self.partner:
+                self.partner.flash(num_frames, 'gray')
         elif line[0] == 'enemy_flash_white':
             num_frames = self.get_frames(line[1])
-            self.partner.flash(num_frames, (248, 248, 248))
+            if self.partner:
+                self.partner.flash(num_frames, (248, 248, 248))
         elif line[0] == 'self_flash_white':
             num_frames = self.get_frames(line[1])
             self.flash(num_frames, (248, 248, 248))
@@ -332,7 +345,7 @@ class BattleAnimation(object):
             self.owner.shake(1)
         # === ANIMATIONS ===
         elif line[0] == 'hit_spark':
-            if self.owner.current_result.def_damage > 0:
+            if self.owner.def_damage() > 0:
                 if self.right:
                     position = (-110, -30)
                 else:
@@ -344,7 +357,7 @@ class BattleAnimation(object):
             else:  # No Damage
                 self.no_damage()
         elif line[0] == 'crit_spark':
-            if self.owner.current_result.def_damage > 0:
+            if self.owner.def_damage() > 0:
                 image = GC.IMAGESDICT['CritSpark']
                 if not self.right:
                     image = Engine.flip_horiz(image)  # If on the left, then need to swap so enemy can have it
@@ -355,26 +368,26 @@ class BattleAnimation(object):
                 self.no_damage()
         # === EFFECTS ===
         elif line[0] == 'effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
             # print('Effect', script)
-            child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
+            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             if len(line) > 2:
                 child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.children.append(child_effect)
         elif line[0] == 'under_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
             # print('Effect', script)
-            child_effect = BattleAnimation(self.unit, image, script, line[1], self.item)
+            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             if len(line) > 2:
                 child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
             child_effect.start_anim(self.current_pose)
             self.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
-            child_effect = BattleAnimation(self.partner.unit, image, script, line[1], self.item)
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
+            child_effect = BattleAnimation(self.partner.unit, image, script, self.palette_name, self.item)
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
                                self.at_range, parent=self.parent.partner)
@@ -383,8 +396,8 @@ class BattleAnimation(object):
             child_effect.start_anim(self.current_pose)
             self.partner.children.append(child_effect)
         elif line[0] == 'enemy_under_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1])
-            child_effect = BattleAnimation(self.partner.unit, image, script, line[1], self.item)
+            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
+            child_effect = BattleAnimation(self.partner.unit, image, script, self.palette_name, self.item)
             # Opposite effects
             child_effect.awake(self.owner, self.parent, not self.right,
                                self.at_range, parent=self.parent.partner)
@@ -400,9 +413,12 @@ class BattleAnimation(object):
             else:
                 self.blend = Engine.BLEND_RGB_ADD
         elif line[0] == 'spell':
-            item_id = self.item.id
-            image, script = GC.ANIMDICT.get_effect(item_id)
-            child_effect = BattleAnimation(self.unit, image, script, item_id, self.item)
+            if len(line) > 1:
+                item_id = line[1]
+            else:
+                item_id = self.item.id
+            image, script = GC.ANIMDICT.get_effect(item_id, self.palette_name)
+            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
             child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
             child_effect.start_anim(self.current_pose)
             self.children.append(child_effect)
@@ -420,13 +436,21 @@ class BattleAnimation(object):
             self.parent.opacity = int(line[1])
         # === LOOPING ===
         elif line[0] == 'start_loop':
-            self.loop = Loop(self.script_index)
+            if self.end_next_loop > 0:
+                self.end_next_loop -= 1
+            else:
+                self.loop = Loop(self.script_index)
         elif line[0] == 'end_loop':
             if self.loop:
                 self.loop.end_index = self.script_index
                 self.script_index = self.loop.start_index  # re-loop
         elif line[0] == 'end_parent_loop':
             self.parent.end_loop()
+        elif line[0] == 'end_child_loop':
+            for child in self.children:
+                child.end_loop()
+            for child in self.under_children:
+                child.end_loop()
         elif line[0] == 'defer':
             num_frames = int(line[1])
             rest_of_line = line[2:]
@@ -450,12 +474,16 @@ class BattleAnimation(object):
 
     def end_loop(self):
         if self.loop:
-            self.script_index = self.loop.end_index
-            self.loop = None
+            if self.loop.end_index:  # If we haven't reached the end yet...
+                self.script_index = self.loop.end_index
+            self.loop = None  # Either way, done with loop
+        else:
+            self.end_next_loop += 1
 
     def start_anim(self, pose):
         self.current_pose = pose
         self.script_index = 0
+        self.wait_for_hit = True
         self.reset()
 
     def resume(self):
@@ -468,6 +496,7 @@ class BattleAnimation(object):
         if self.under_children:
             for child in self.under_children:
                 child.resume()
+        self.wait_for_hit = False
 
     def reset(self):
         self.state = 'Run'

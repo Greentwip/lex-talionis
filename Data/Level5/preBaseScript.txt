@@ -9,6 +9,6 @@ end
 if;not gameStateObj.check_dead('Joel') and not gameStateObj.check_dead('Nia')
     set_base_convo;Joel and Nia
 end
-if;not gameStateObj.check_dead('Theo') and gameStateObj.counters.get('noir', 1) >= 1
+if;not gameStateObj.check_dead('Theo') and gameStateObj.game_constants['noir'] >= 1
     set_base_convo;Theo Sphinx, Pt. II
 end

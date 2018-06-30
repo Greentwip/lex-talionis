@@ -1,0 +1,630 @@
+# Originally Compiled by BwdYeti
+0x0000 Nothing
+0x0001 Precious Things
+0x0002 Companions
+0x0003 Friendship and Adventure
+0x0004 Dragon's Gate II
+0x0005 Scars of the Scouring
+0x0006 Raise Your Spirits
+0x0007 Shadow Approaches
+0x0008 Binding Ties
+0x0009 Winning Road
+0x000A Distant Travels
+0x000B Inescapable Fate
+0x000C Enemies Appear
+0x000D The Messenger
+0x000E Darkness Comes
+0x000F Nabata's Wandering Messenger
+0x0010 Dragon's Gate I
+0x0011 Legendary Inheritance
+0x0012 Raid!
+0x0013 Messenger from the Darkness
+0x0014 Victory Now!
+0x0015 Rise to the Challenge
+0x0016 Softly with Grace
+0x0017 Everything into the Dark
+0x0018 Campaign of Fire
+0x0019 Healing
+0x001A Curing
+0x001B To the Heights
+0x001C Blessing of the 8 Generals I
+0x001D Receive the Blessings of Water
+0x001E Ride the Wind
+0x001F Strike
+0x0020 Safeguard
+0x0021 Requiem
+0x0022 Land of Swirling Sands
+0x0023 The Kingdom of Bern
+0x0024 Bern - A Mother's Wish
+0x0025 A Hint of Things to Come
+0x0026 Road of Trials
+0x0027 Destiny Enlaced by Fear
+0x0028 Nothing
+0x0029 Results
+0x002A Treasured Hope
+0x002B Game Over
+0x002C Within Sadness
+0x002D Arena Victory
+0x002E Arena Tactics
+0x002F Nothing
+0x0030 Winds Across the Plains
+0x0031 Nothing
+0x0032 An Unexpected Caller
+0x0033 When the Rush Comes
+0x0034 The Cogs of Fate
+0x0035 Shocking Truth I
+0x0036 Shocking Truth II
+0x0037 The Eight Generals
+0x0038 Triumph
+0x0039 In the Shadow of Triumph
+0x003A Reminiscence
+0x003B Nergal's Wrath
+0x003C The Archsage Athos
+0x003D One Heart: Eliwood's Theme
+0x003E Loyalty: Hector's Theme
+0x003F Girl of the Plains: Lyn's Theme
+0x0040 Final Farewell
+0x0041 Going My Way
+0x0042 Together, We Ride!
+0x0043 A Knight's Oath
+0x0044 Happiness Abounds
+0x0045 Main Theme Arrangement
+0x0046 Shop
+0x0047 Arena Entrance
+0x0048 Arena Battle
+0x0049 Prepare to Charge
+0x004A Calamity Bringer: Nergal's Theme
+0x004B Light to Tomorrow
+0x004C Merchant Merlinus
+0x004D Armory
+0x004E Ships and Homes
+0x004F Silent Ground
+0x0050 Black Fang
+0x0051 Recollection of a Petal
+0x0052 What Comes from Darkness
+0x0053 Stratagem
+0x0054 Lyn's Desire
+0x0055 Nothing
+0x0056 Eyes of Sorrow
+0x0057 Unshakable Faith
+0x0058 The Grieving Heart
+0x0059 Nothing
+0x005A Fire Emblem Theme
+0x005B Fire Emblem Theme (looped)
+0x005C Opening: History Unveiled
+0x005D Distant Utopia
+0x005E Fortune Telling
+0x005F Fire Emblem Theme (with intro)
+0x0060 Chapter Display humming
+0x0061 Chapter Display
+0x0062 Water Droplet in the Opening
+0x0063 Sword Sound in the Opening
+0x0064 What Comes from Darkness
+0x0065 Black Fang
+0x0066 Going My Way
+0x0067 Safeguard
+0x0068 Shattered Life
+0x0069 Anguish
+0x006A Respite in Battle
+0x006B The Inn
+0x006C Nothing
+0x006D Nothing
+0x006E Blessing of the 8 Generals II
+0x006F Campaign of Fire (no intro)
+0x0070 Beneath a New Light
+0x0071 The Path to Greatness
+0x0072 In the Name of Bern
+0x0073 Legend of Athos
+0x0074 Avoided Fate
+0x0075 Legend of the God Dragon
+0x0076 Royal Palace of Silezha
+0x0077 Avoided fate beginning
+0x0078 Avoided fate middle
+0x0079 Avoided fate end
+0x007A Nothing
+0x007B Nothing
+0x007C Nothing
+0x007D Nothing
+0x007E Nothing
+0x007F Nothing
+Hex	Dec
+	1	Precious Things - Eliwood chapter 1
+	12	Enemies Appear - Enemy turn, bandit
+	24	Crash
+	25	Healing (Attack staff)
+	26	Curing (Heal Staff)
+	31	Strike - Ally Battle 1
+	32	Safeguard - Enemy Battle 1
+	48	Winds across the Plains - Lyn chapter 1
+	66	Together We Ride
+	73	- Preparations
+	90	- Title
+	92	- Opening
+	95	- Post-opening into Title
+	96	- Chapter Intro low hum
+	97	- Chapter Intro sound
+	103	Apparently also Safeguard
+0x0080	128	Point gain thing in link battle
+0x0081	129	Crowd cheering (keeps going)
+0x0082	130	Rest (Restore) staff (map)
+0x0083	131	Silence staff (map)
+0x0084		Nothing/Weird static(FE7)
+0x0085	133	Sleep staff (map)
+0x0086	134	Hammerne staff (map)
+0x0087	135	Berserk staff (map)
+0x0088	136	Weird sound (Watch staff?)
+0x0089	137	Live (Heal) staff
+0x008A	138	Relive (Mend) staff
+0x008B	139	Recover staff
+0x008C	140	Reserve (Physic) staff
+0x008D	141	Recovery from a status effect (longer)
+0x008E	142	Crowd cheering (softer) (keeps going)
+0x008F	143	Crowd cheering, then ends (ends cheering)
+0x0090	144	New chapter sound 1
+0x0091	145	New chapter sound 2
+0x0092		Nothing
+0x0093		Nothing
+0x0094		Nothing
+0x0095		Nothing
+
+		Map movement
+0x0096	150	Footsteps 1
+0x0097	151	Footsteps 2
+0x0098	152	Footsteps 3
+0x0099	153	Footsteps 4
+0x009A	154	Horse trot 1-1
+0x009B	155	Horse trot 1-2
+0x009C	156	Horse trot 1-3
+0x009D	157	Horse trot 2-1
+0x009E	158	Horse trot 2-2
+0x009F	159	Horse trot 2-3
+0x00A0	160	Wyvern flying 1
+0x00A1	161	Wyvern flying 2
+0x00A2	162	Armour walk 1-1
+0x00A3	163	Armour walk 1-2
+0x00A4	164	Armour walk 2-1
+0x00A5	165	Armour walk 2-2
+0x00A6	166	Pegasus flying 1
+0x00A7	167	Pegasus flying 2
+
+0x00A8		Nothing
+0x00A9		Nothing
+0x00AA	170	Recovery from a status effect
+0x00AB	171	Rock exploding?
+0x00AC	172	Captive falling from dead holder
+0x00AD		Nothing
+0x00AE		Nothing
+0x00AF	175	Destroyed wall/snag
+0x00B0	176	Attacking wall/snag
+0x00B1	177	Unlocking door
+0x00B2		Nothing
+0x00B3	179	Torch
+0x00B4	180	Warping
+0x00B5	181	Warp end
+0x00B6	182	Antitoxin
+0x00B7	183	Poison sound
+0x00B8	184	??? (o_O)
+0x00B9	185	Gold changing
+0x00BA	186	Poison vent
+0x00BB		Nothing
+0x00BC		Nothing
+0x00BD	189	Water tile going under
+0x00BE	190	Water tile coming up
+0x00BF	191	Fire tile
+0x00C0		Nothing
+0x00C1		Nothing
+0x00C2		Nothing
+0x00C3		Nothing
+0x00C4		Nothing
+0x00C5		Nothing
+0x00C6		Nothing
+0x00C7	199	GBA version of Zelda:OoT future Hyrule Castle winds
+0x00C8	200	Swing
+0x00C9	201	Swing
+0x00CA	202	Whoosh swing
+0x00CB	203	Slow weapon swing
+0x00CC	204	Bow plunk
+0x00CD	205	Hand Axe toss
+0x00CE	206	Sword unsheathe
+0x00CF	207	Sword sheathe
+0x00D0	208	Ballista fire
+0x00D1	209	Bow strain
+0x00D2	210	Hit
+0x00D3	211	Hit 2
+0x00D4	212	Hit 3
+0x00D5	213	Kill (map)
+0x00D6	214	Death (map)
+0x00D7	215	Miss (realtime)
+0x00D8	216	Critical Explode -Sounds wrong in Sappy-
+0x00D9		Nothing
+0x00DA		Nothing
+0x00DB		Nothing
+0x00DC	220	Mamkute transform
+0x00DD	221	Mamkute de-transform
+0x00DE	222	Mamkute yowl
+0x00DF	223	Mamkute roar
+0x00E0		Sleep startup realtime (FE6 only)
+0x00E1		Poison? (FE6 only)
+0x00E2	226	Armour triangle, allies striking
+0x00E3	227	Idoun/Fire Dragon death roar (FE6/7 only)
+0x00E4		Nothing
+0x00E5	229	Idoun/Fire Dragon death roar (FE6/7 only)
+0x00E6	230	Mamkute transform growl
+0x00E7	231	Brigand battle cry
+0x00E8		Mamkute transform (FE6 only)
+0x00E9		Mamkute detransform (FE6 only)
+0x00EA	234	Axe falling
+0x00EB	235	Axe rising
+0x00EC		NO DAMAGE! (FE6 only)
+0x00ED		Odd screech (FE6 only)
+0x00EE		Elfin's Harp (FE6 only)
+0x00EF	239	Dance/Play effect
+0x00F0	240	Divine weapon shine
+0x00F1	241*	Fire charge
+0x00F2	242*	Fire shoot
+0x00F3		Nothing
+0x00F4	244	Thunderstorm (Thunder) static (one crack)
+0x00F5	245*	Thunderstorm (Thunder) strike
+0x00F6	246	Shaman charging
+0x00F7		Some kinda fire;Weird rumbling
+0x00F8		Some kinda fire;Weird rumbling 2
+0x00F9	249	Berserk staff (realtime)
+0x00FA	250	Silence staff charging (realtime)
+0x00FB	251	Silence staff forming (realtime)
+0x00FC		Very short static
+0x00FD	253	Rest staff (realtime)
+0x00FE	254	Purge flash
+0x00FF	255	Purge flash 2
+0x0100	256	Purge charging
+0x0101	257	Purge strike
+0x0102	258	Aureola light explosion (short)
+0x0103	259	Hammerne staff (realtime)
+0x0104		Apocalypse sign (FE6 only)
+0x0105		Apocalypse charging (FE6 only)
+0x0106		Apocalypse black hole (FE6 only)
+0x0107		Nothing
+0x0108		Aircalibur forming (FE6 only)
+0x0109		Aircalibur hit (FE6 only)
+0x010A	266	Flux charging
+0x010B		Flux hit
+0x010C		Exaccus wave (FE6 only)
+0x010D		Sword of Seals fire (FE6 only)
+0x010E	270	Live (Heal) staff
+0x010F	271	Live (Heal) staff
+0x0110	272	Relive (Mend) staff
+0x0111	273	Relive (Mend) staff
+0x0112	274	Recover staff
+0x0113	275	Recover staff
+0x0114	276	Reserve (Physic) staff (realtime)
+0x0115		Nothing
+0x0116		Nothing
+0x0117		Nothing
+0x0118		Nothing
+0x0119	281	Thunderstorm (Bolting) sparks
+0x011A	282	Thunderstorm (Bolting) strike
+0x011B	283	Sleep charging (realtime)
+0x011C	284	Sleep activating (realtime)
+0x011D	285	Rumbling/Flames?
+0x011E	286	Some kind of wind (Fimbulvetr without effects?)
+0x011F	287	Weird charging sound
+0x0120	288*	Lightning charging
+0x0121	289*	Lightning strike
+0x0122	290	Fimbulvetr wind
+0x0123	291	Fimbulvetr ice
+0x0124	292	Nosferatu symbol
+0x0125	293	Nosferatu drain
+0x0126	294	Nosferatu heal
+0x0127	295	Divine charging
+0x0128	296	Divine falling
+0x0129	297	Divine strike
+0x012A	298	Aureola charge (FE6/7 only)
+0x012B	299	Aureola light bomb falling (FE6/7 only)
+0x012C	300	Aureola light explosion (FE6/7 only)
+0x012D		Forblaze charging (FE6 only)
+0x012E		Forblaze something (FE6 only)
+0x012F		Forblaze hit (FE6 only)
+0x0130	304	Fenrir
+0x0131	305	Fenrir
+0x0132	306	Fenrir
+0x0133	307	Fenrir
+0x0134	308	Valkyrie charge
+0x0135	309	Sage Rune
+0x0136	310	Arrow Bolt something
+0x0137	311	Falling arrow bolt something?
+0x0138	312	Eclipse start
+0x0139	313	Eclipse sphere
+0x013A		Nothing
+0x013B	315	Weird charge up (Some Light Magic?)
+0x013C	316	Weird discharge (Some Light Magic?)
+0x013D	317	Charge/restore sound
+0x013E	318	Bolting crack
+0x013F	319	Some light thing, then two cracks (FE8 only)
+0x0140	320	wtfffff; eye lasers maybe? (FE8 only)
+0x0141	321	I do not know (FE8 only)
+0x0142	322	wind and roaring (FE8 only)
+0x0143		Nothing
+0x0144		Nothing
+0x0145		Nothing
+0x0146		Nothing
+0x0147	327	Bolting crack (Promotion?)
+0x0148		Nothing
+0x0149		Nothing
+0x014A	330	Medium step - Plains
+0x014B	331	Medium step 2
+0x014C	332	Light Step
+0x014D	333	Light Step 2
+0x014E	334	Heavy Step
+0x014F	335	Heavy Step 2
+0x0150	336	Armor Step
+0x0151	337	Armor Step 2
+0x0152		Nothing
+0x0153		Nothing
+0x0154	340	Medium step - Forest
+0x0155	341	Medium step 2
+0x0156	342	Soft Step
+0x0157	343	Soft Step 2
+0x0158	344	Heavy Step
+0x0159	345	Heavy Step 2
+0x015A	346	Armor Step
+0x015B	347	Armor Step 2
+0x015C		Nothing
+0x015D		Nothing
+0x015E	350	Soft step - River
+0x015F	351	Soft step 2
+0x0160	352	Heavy Step
+0x0161	353	Heavy Step 2
+0x0162	354	Heavy Step
+0x0163	355	Heavy Step 2
+0x0164	356	Knight Step
+0x0165	357	Knight Step 2
+0x0166		Nothing
+0x0167		Nothing
+0x0168	360	Medium step - firm but soft, Snow?
+0x0169	361	Medium step 2
+0x016A	362	Soft step
+0x016B	363	Soft step 2
+0x016C	364	Heavy Step
+0x016D	365	Heavy Step 2
+0x016E	366	Armor Step
+0x016F	367	Armor Step 2
+0x0170		Nothing
+0x0171		Nothing
+0x0172	370	Medium step - mushy but clacky, Dirt/Sand?
+0x0173	371	Medium step 2
+0x0174	372	Soft step
+0x0175	373	Soft step 2
+0x0176	374	Heavy Step
+0x0177	375	Heavy Step 2
+0x0178	376	Armor Step
+0x0179	377	Armor Step 2
+0x017A		Nothing
+0x017B		Nothing
+0x017C	380	Medium step - Bridge (very hard but muffled, Wood/Stone?)
+0x017D	381	Medium step 2
+0x017E	382	Soft step
+0x017F	383	Soft step 2
+0x0180	384	Heavy Step
+0x0181	385	Heavy Step 2
+0x0182	386	Armor Step
+0x0183	387	Armor Step 2
+0x0184		Nothing
+0x0185		Nothing
+0x0186	390	Medium step - hard, a bit of reverb, Boat?
+0x0187	391	Medium step 2
+0x0188	392	Soft step
+0x0189	393	Soft step 2
+0x018A	394	Heavy Step
+0x018B	395	Heavy Step 2
+0x018C	396	Armor Step
+0x018D	397	Armor Step 2
+0x018E		Nothing
+0x018F		Nothing
+0x0190	400	Horse Step - Plains?
+0x0191	401	Horse Step 2  3 step
+0x0192	402	Horse Step 3
+0x0193	403	Horse Step 4  2 step high
+0x0194	404	Horse Step 5
+0x0195	405	Horse Step 6  2 step low
+
+0x0	410	Horse Step - hard, low
+0x0	420	Horse Step - clean
+
+0x0	430	Horse Step - Forest?
+0x0	440	Horse Step
+0x0	450	Horse Step
+
+0x0	460	Horse Step - River?
+0x0	470	Horse Step
+0x0	480	Horse Step
+
+0x0	490	Horse Step - Snow?
+0x0	500	Horse Step
+0x0	510	Horse Step
+
+0x0	520	Horse Step - Sand?
+0x0	530	Horse Step
+0x0	540	Horse Step
+
+0x0	550	Horse Step - hard - Wood/Stone?
+0x0	560	Horse Step
+0x0	570	Horse Step
+
+0x0	580	Horse Step - clacky/reverby - Boat?
+0x0	590	Horse Step
+0x0	600	Horse Step
+
+0x0262	610	Wyvern flap
+0x0263	611	Wyvern flap
+0x0264	612	Wyvern return to screen
+0x0265	613	Wyvern return to screen
+0x0266	614	Armor step (battle)
+0x0267	615	Armor step (battle)
+0x0268	616	sharp, vaguly roary
+0x0269	617	charge up?
+0x026A	618	rumble (keeps going)
+0x026B	619	violent brightness, kinda like Legendary weapon flash
+0x026C	620	shiny sound
+
+Nothing between these
+
+0x02BC	700	Shine attack
+0x02BD	701	Luna symbol
+0x02BE	702	Luna hitting
+0x02BF	703	Excalibur forming
+0x02C0	704	Excalibur cutting
+0x02C1	705	Aura flash
+0x02C2	706	Aura going up
+0x02C3	707	Aura strike
+0x02C4	708	Luce flash (FE7 only)
+0x02C5	709	Luce charging (FE7 only)
+0x02C6	710	Luce flowing (FE7 only)
+0x02C7	711	Gespenst symbol
+0x02C8	712	Gespenst clouds
+0x02C9	713	Gespenst strike
+0x02CA	714	Forblaze charging (FE7 only)
+0x02CB	715	Forblaze rising (FE7 only)
+0x02CC	716	Staff use charging
+0x02CD	717	Level Up (Level number change)
+0x02CE	718	NO DAMAGE!
+0x02CF	719	Hilt grip
+0x02D0	720	Eliwood's sword shining
+0x02D1	721	Eliwood's horse neighing (FE7 only)
+0x02D2	722	Weird flaming sound
+0x02D3	723	Dancing
+0x02D4	724	Playing (FE6/7 only)
+0x02D5	725	Dancing (map)
+0x02D6	726	Playing (map)
+0x02D7	727	Snag falling
+0x02D8	728	Weird charging sound (Shine?)
+0x02D9	729	Thud
+0x02DA	730	Sword unsheathing
+0x02DB	731	Bizarre three sound effects (FE7 only)
+0x02DC	732	A ref whistle (Used by Dart in 16x?) (FE7 only)
+0x02DD	733	Monk Charge -Sounds wrong in Sappy-
+0x02DE	734	Shine sound (FE7 only)
+0x02DF	735	Shine sound 2 (FE7 only)
+0x02E0	736	Weird rumbling
+0x02E1	737	Eclipse striking
+0x02E2	738	Eclipse striking (shorter)
+0x02E3	739	Dark Druid charging (FE7 only)
+0x02E4	740	Necromancer charge maybe?  (FE8 only)
+0x02E5	741	beep?
+0x02E6	742	static
+0x02E7	743	also static
+0x02E8	744	Dark Druid charging, then critical (FE7 only)
+0x02E9	745	Magic shine
+0x02EA	746	Magic shine, long
+0x02EB	747	Magic shine, longer
+0x02EC	748	Magic shine, longer still
+0x02ED	749	Magic shine, longest
+0x02EE	750	Quintessence gathering (FE7 only)
+0x02EF	751	Ninian ressurrection (FE7 only)
+0x02F0	752	Rumbling at the Dragon's Gate
+0x02F1	753	Dragons screaming
+0x02F2	754	Fire Dragon dying
+0x02F3	755	Fire Dragon dying 2
+0x02F4	756	No damage?; some kinda sword clash
+0x02F5	757	High-pitched dragon yell
+0x02F6	758	Soft step (FE7 only)
+0x02F7	759	Druid critical charge
+0x02F8	760	Sage critical conjuration
+0x02F9	761	Swish sound
+0x02FA	762	Icy sound (FE7 only)
+0x02FB	763	Fire Dragon attacking
+0x02FC	764	Dragons attacking Athos
+0x02FD	765	Ereshkigal charging (FE7 only)
+0x02FE	766	Ereshkigal strike (FE7 only)
+0x02FF	767	Swoosh sound (FE7 only)
+	768	Something light spell-ish (dragon dying?) (FE7 only)
+
+0x0302	770	Zombie squishy step (FE8 only from here)
+0x0303	771	Zombie squishy step
+	772	Skeleton step
+	773	Skeleton step
+	774	Eye flight
+	775	Eye flight
+	776	Spider step
+	777	Spider step
+	778	Centaur step?
+	779	Centaur step?
+	780	Snake step
+	781	Snake step
+	782	Something step
+	783	Something step
+	784	New place - World map
+	785
+	786	Monster roar - World map
+	787
+	788
+
+	790	Chapter start music
+	791
+
+	800	Revenant lean back
+	801	Revenant swipe
+	802	Revenant crit something
+
+	805	Spider attack 1
+	806	Spider attack 2
+	807	Spider crit roar
+
+	809
+	810
+	811
+	812	Wolf roar
+
+	814	Gorgon? crit roar
+	815
+	816
+	817	something else roar
+	818	Skeleton crit
+
+	820	more monster walking
+	827	through here
+
+	830	squish
+	831
+	832
+	833
+	834
+	835
+	836
+	837
+
+	840
+	841
+	842
+	843
+	844
+	845
+	846
+	847
+
+	900 Naglfar
+
+	940 Gleipnir
+	943 a dark magic
+
+	950 Demon Surge
+	951 Gorgon attack
+	952 Stone hole
+	953 Stone cloud
+
+	960 Eyes squint
+
+	962 Eyes fire?
+	963 Eyes crit squint?
+	964 Eyes crit fire?
+
+	966 Eyes basic spell
+
+	977 Ivaldi sparkle
+	978 Ivaldi charge
+	979 Ivaldi beam
+	980 Ivaldi
+	981 Shadowshot
+
+	997
+	998
+
+	1000+ *Crash*

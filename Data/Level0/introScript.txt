@@ -2,7 +2,7 @@
 # Open with view of map
 # Shows Green Villagers vs. Red Soldiers -> Vagnius and Sydney stand out.
 # Set initial money
-set_counter;money;1500
+set_game_constant;money;1500
 m;Mount Briggs
 add_unit;F1
 add_unit;F2
@@ -11,9 +11,9 @@ add_unit;S2
 add_unit;S3
 t;2
 set_camera_pan;1
-set_cursor;Vagnius;force_hold
+set_cursor;Vagnius
 set_camera_pan;0
-set_cursor;S1
+set_cursor;S1;immediate
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -25,7 +25,7 @@ s;OldMan1;What gives you the right!{w};auto
 s;Man1;Yeah, we haven't done anything!{w};auto
 s;Soldier1;Ahem!{w}{br}Anyone who resists will be punished in full accordance with the law.{w};auto
 s;Man1;Shove your full accordance--{w};auto
-move_sprite;Soldier1;24,0
+qmove_sprite;Soldier1;24,0
 u;Vagnius;MidRight
 s;Vagnius;That's enough.{w}{br}Let's cut to the chase, shall we?{w}{br}We know you're harboring a fugitive.{w}{br}Hand the girl over and no one has to get hurt.{w};auto
 s;OldMan1;Hmmph.{w};auto
@@ -41,7 +41,7 @@ move_unit;Sidney;16,3
 move_unit;F1;15,2
 move_unit;F2;15,4
 start_move
-set_cursor;Sidney
+set_cursor;Sidney;immediate
 u;Sidney;Right
 u;OldMan1;Left
 s;Sidney;Hey! Tough guy.{w}{br}Last chance. Anything coming to mind now?{w};auto
@@ -49,30 +49,30 @@ s;OldMan1;Pah!{w};auto
 s;Sidney;Rough him up!{w};auto
 r;OldMan1;Sidney
 # Combat
-interact_unit;F1;15,3
+interact_unit;F1;15,3;Hit
 u;OldMan1;Left
 s;OldMan1;Urgh!{w};auto
 r;OldMan1
 # Combat
-interact_unit;F2;15,3
+interact_unit;F2;15,3;Hit
 u;OldMan1;Left
 s;OldMan1;...{w};auto
 r;OldMan1
 # Man dies
 r;OldMan1
-move_sprite;Sidney;24,0
+qmove_sprite;Sidney;24,0
 u;Vagnius;Right
 s;Vagnius;Let this be an example to those who would defy the Empire's might!{w}{br}Now, hand over the fugitive, or more will end up like this traitor!{w};auto
 r;Sidney;Vagnius
 # Pan to bottom of screen
 m;Meet the Sage
-set_cursor;10,9;force_hold
+set_cursor;10,9
 add_unit;Prim
 add_unit;Ophie
 add_unit;Yohn
-display_cursor;1
+disp_cursor;1
 wait;1000
-display_cursor;0
+disp_cursor;0
 t;1
 b;Monastery
 t;2
@@ -92,14 +92,14 @@ t;1
 remove_background
 t;2
 # Pan to Page, Vagnius, Sidney
-set_cursor;Vagnius;force_hold
+set_cursor;Vagnius
 u;Vagnius;Right
 u;Sidney;Left
 s;Sidney;Colonel... There's a group of them hiding in the back...{w};auto
 s;Vagnius;What! You idiots! One of them could be the fugitive.{w}{br}Don't let them get away!{w};auto
 r;Vagnius;Sidney
 # Pan over to Ophie, Prim, Master X
-set_cursor;Yohn;force_hold
+set_cursor;Yohn
 u;Yohn;Right
 s;Yohn;Leave. I'll hold them off.{w};auto
 r;Yohn

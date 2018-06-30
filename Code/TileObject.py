@@ -24,7 +24,7 @@ class MapObject(object):
         self.command_list = [] # The commands that have been acted upon the map by scripts
         self.escape_highlights = {}
         self.formation_highlights = {}
-        self.custom_origin = None
+        self.origin = None
 
         self.levelfolder = levelfolder
         self.mapfilename = mapfilename
@@ -90,9 +90,9 @@ class MapObject(object):
 
     def change_tile_sprites(self, coord, image_filename, transition=None):
         image = self.loose_tile_sprites[image_filename]
-        size = image.get_width()/GC.TILEWIDTH, image.get_height()/GC.TILEHEIGHT
-        for x in range(coord[0], coord[0]+size[0]):
-            for y in range(coord[1], coord[1]+size[1]):
+        size = image.get_width()//GC.TILEWIDTH, image.get_height()//GC.TILEHEIGHT
+        for x in range(coord[0], coord[0] + size[0]):
+            for y in range(coord[1], coord[1] + size[1]):
                 pos = (x - coord[0], y - coord[1])
                 self.tile_sprites[(x, y)] = TileSprite(None, (x, y), self)
                 if transition:
@@ -101,7 +101,7 @@ class MapObject(object):
                     self.tile_sprites[(x, y)].loadNewSprites()
                     if transition == 'destroy':
                         # To be moved to global during next update
-                        self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
+                        self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
                 else:
                     self.tile_sprites[(x, y)].image_name = image_filename
                     self.tile_sprites[(x, y)].position = pos
@@ -110,7 +110,7 @@ class MapObject(object):
     # If you change the map, you also need to reset their position to their normal position, and their image name to none,
     # so the tile sprites reference the new map sprite...
     def reset_all_tile_sprites(self):
-        for position, tile_sprite in self.tile_sprites.iteritems():
+        for position, tile_sprite in self.tile_sprites.items():
             tile_sprite.position = position
             tile_sprite.image_name = None
 
@@ -118,23 +118,24 @@ class MapObject(object):
         if self.autotiles:
             surf.blit(self.autotiles[self.autotile_frame], (0, 0))
         surf.blit(self.map_image, (0, 0))
-        for position, tile in self.tile_sprites.iteritems():
+        for position, tile in self.tile_sprites.items():
             tile.draw(surf, position)
-        for position in self.tile_sprites.keys():
-            tile = self.tile_sprites[position]
-            if not tile.new_image:
-                tile.draw(self.map_image, position) # Done, can place on main layer
-                del self.tile_sprites[position] # Can delete now that it has been permanently etched onto map image
+            
+        need_draw = [position for position in self.tile_sprites if not self.tile_sprites[position].new_image]
+        for position in need_draw:
+            self.tile_sprites[position].draw(self.map_image, position) # Done, can place on main layer
+            del self.tile_sprites[position] # Can delete now that it has been permanently etched onto map image
+                
         # Layers
         for layer in self.layers:
             if layer.show or layer.fade > 0:
                 layer.draw(surf)
 
-        for pos, highlight in self.escape_highlights.iteritems():
+        for pos, highlight in self.escape_highlights.items():
             highlight.draw(surf, pos, gameStateObj.highlight_manager.updateIndex, 0)
 
         if gameStateObj.stateMachine.getState() in ['prep_formation', 'prep_formation_select']:
-            for pos, highlight in self.formation_highlights.iteritems():
+            for pos, highlight in self.formation_highlights.items():
                 highlight.draw(surf, pos, gameStateObj.highlight_manager.updateIndex, 0)
 
     def loadSprites(self):
@@ -166,34 +167,34 @@ class MapObject(object):
                 self.loose_tile_sprites = {}
 
             # Re-add escape highlights if necessary
-            for position, tile_values in self.tile_info_dict.iteritems():
+            for position, tile_values in self.tile_info_dict.items():
                 if "Escape" in tile_values or "Arrive" in tile_values:
                     self.escape_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
                 if "Formation" in tile_values:
                     self.formation_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
 
             # Re-add associated status sprites
-            for position, value in self.tile_info_dict.iteritems():
+            for position, value in self.tile_info_dict.items():
                 if 'Status' in value:
                     for status in value['Status']:
                         status.loadSprites()
 
     def removeSprites(self):
         self.sprites_loaded_flag = False
-        for position, tile in self.tiles.iteritems():
+        for position, tile in self.tiles.items():
             tile.removeSprites()
         self.map_image = None
         self.loose_tile_sprites = {}
-        self.autotiles = {}
+        self.autotiles = []
         self.layers = [Layer() for _ in range(NUM_LAYERS)]
         # Clear tile_sprites...
-        for position, value in self.tile_sprites.iteritems():
+        for position, value in self.tile_sprites.items():
             value.removeSprites()
         # Clear sprites in escape_highlights
         self.escape_highlights = {}
         self.formation_highlights = {}
         # Remove associated status sprites if necessary
-        for position, value in self.tile_info_dict.iteritems():
+        for position, value in self.tile_info_dict.items():
             if 'Status' in value:
                 for status in value['Status']:
                     status.removeSprites()
@@ -202,7 +203,7 @@ class MapObject(object):
 
     def destroy(self, tile, gameStateObj):
         destroy_index = self.tile_info_dict[tile.position]['Destructible']
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(self.levelfolder + '/destroyScript.txt', destroy_index, tile_pos=tile.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(self.levelfolder + '/destroyScript.txt', name=destroy_index, tile_pos=tile.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def check_bounds(self, pos):
@@ -305,21 +306,21 @@ class MapObject(object):
         if self.autotiles:
             time = int(GC.FRAMERATE*29)
             mod_time = current_time%(len(self.autotiles)*time) # 29 ticks
-            self.autotile_frame = mod_time/time
+            self.autotile_frame = mod_time//time
 
     def initiate_warp_flowers(self, center_pos):
         self.weather.append(Weather.Weather('Warp_Flower', -1, (-1, -1, -1, -1), (self.width, self.height)))
-        angle_frac = math.pi/8
-        true_pos = center_pos[0] * GC.TILEWIDTH + GC.TILEWIDTH/2, center_pos[1] * GC.TILEHEIGHT + GC.TILEHEIGHT/2
+        angle_frac = math.pi//8
+        true_pos = center_pos[0] * GC.TILEWIDTH + GC.TILEWIDTH//2, center_pos[1] * GC.TILEHEIGHT + GC.TILEHEIGHT//2
         for speed in (2.0, 2.5):
             for num in range(0, 16):
-                angle = num*angle_frac + angle_frac/2
+                angle = num*angle_frac + angle_frac//2
                 self.weather[-1].particles.append(Weather.WarpFlower(true_pos, speed, angle))
 
     def serialize(self):
         serial_dict = {}
         serial_dict['command_list'] = self.command_list
-        serial_dict['HP'] = [(tile.position, tile.currenthp) for position, tile in self.tiles.iteritems() if tile.tilehp]
+        serial_dict['HP'] = [(tile.position, tile.currenthp) for position, tile in self.tiles.items() if tile.tilehp]
         return serial_dict
 
     # === SCRIPT COMMANDS ===
@@ -327,10 +328,10 @@ class MapObject(object):
         for line in command_list:
             logger.debug('Replaying Command: %s', line)
             # Set a custom origin point
-            if line[0] == 'set_custom_origin':
-                self.custom_origin = line[1]
+            if line[0] == 'set_origin':
+                self.origin = line[1]
             # Change tile sprites
-            elif line[0] == 'change_tile_sprite' or line[0] == 'change_sprite':
+            elif line[0] == 'change_tile_sprite':
                 self.change_sprite(line)
             # Add tile sprite to layer
             elif line[0] == 'layer_tile_sprite':
@@ -386,8 +387,8 @@ class MapObject(object):
             pos = pos[1:]
         new_pos = tuple([int(num) for num in pos.split(',')])
         if offset:
-            if self.custom_origin:
-                return (self.custom_origin[0] + new_pos[0], self.custom_origin[1] + new_pos[1])
+            if self.origin:
+                return (self.origin[0] + new_pos[0], self.origin[1] + new_pos[1])
             else:
                 return (0, 0)
         else:
@@ -417,7 +418,7 @@ class MapObject(object):
             if transition == 'destroy':
                 for sprite in self.layers[layer]:
                     x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
+                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
         else:
             self.layers[layer].show = True
             self.layers[layer].fade = 100          
@@ -430,7 +431,7 @@ class MapObject(object):
             if transition == 'destroy':
                 for sprite in self.layers[layer]:
                     x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME/(13*5)))
+                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
         else:
             self.layers[layer].show = False
             self.layers[layer].fade = 0
@@ -482,7 +483,7 @@ class MapObject(object):
     # Init weather
     def add_weather(self, weather):
         if weather == "Rain":
-            bounds = (-self.height*GC.TILEHEIGHT/4, self.width*GC.TILEWIDTH, -16, -8)
+            bounds = (-self.height*GC.TILEHEIGHT//4, self.width*GC.TILEWIDTH, -16, -8)
             self.weather.append(Weather.Weather('Rain', .1, bounds, (self.width, self.height)))
         elif weather == "Snow":
             bounds = (-self.height*GC.TILEHEIGHT, self.width*GC.TILEWIDTH, -16, -8)
@@ -675,7 +676,7 @@ class TileObject(object):
                 # Blit AVO Text
                 position = back_surf.get_width() - GC.FONT['small_white'].size(str(self.AVO))[0] - 3, 25
                 GC.FONT['small_white'].blit(str(self.AVO), back_surf, position)
-        pos = (back_surf.get_width()/2 - GC.FONT['text_white'].size(self.name)[0]/2, 22 - GC.FONT['text_white'].size(self.name)[1])
+        pos = (back_surf.get_width()//2 - GC.FONT['text_white'].size(self.name)[0]//2, 22 - GC.FONT['text_white'].size(self.name)[1])
         GC.FONT['text_white'].blit(self.name, back_surf, pos)
         self.display_surface = back_surf
 

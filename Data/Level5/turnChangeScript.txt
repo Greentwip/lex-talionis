@@ -1,15 +1,15 @@
 # Turn Change for Level 5
-if;gameStateObj.check_dead('Jules') and not 'Rein1' in gameStateObj.event_triggers
-	set_cursor;0,0;force_hold
+if;gameStateObj.check_dead('Jules') and not 'Rein1' in gameStateObj.level_constants
+	set_cursor;0,0
 	add_unit;pack1_1
 	add_unit;pack1_2
 	add_unit;pack1_3
 	add_unit;pack1_4
 	wait;500
 	# Reinforcements
-	trigger_event;Rein1
+	set_level_constant;Rein1
 	if;not gameStateObj.check_dead('Prim')
-		set_cursor;Prim;force_hold
+		set_cursor;Prim
 		disp_cursor;1
 		wait;500
 		disp_cursor;0
@@ -28,14 +28,14 @@ if;gameStateObj.turncount == 8
 	unlock_lore;Kayla
 	# Kayla and Sam arrives
 	change_objective_loss_condition;Ophie dies OR Sam dies,OR,Party size falls below 5. Currently {gameStateObj.get_total_party_members()}
-	set_cursor;25,16;force_hold
+	set_cursor;25,16
 	wait;200
 	add_unit;Sam;20,16;;closest
 	add_unit;Kayla;21,16;;closest
 	move_unit;Sam;20,15;;push
 	move_unit;Kayla;21,15;;push
 	start_move
-	set_cursor;Sam;force_hold
+	set_cursor;Sam
 	u;Sam;Left;u;Kayla;Right
 	s;Sam;Looks like we're not too late...{w};auto
 	s;Kayla;I'd certainly hope not... dragging me out here on such short notice.{w}{br}There'd better be something to see.{w};auto
@@ -51,7 +51,7 @@ if;gameStateObj.turncount == 8
 	add_unit;M2;24,16
 	wait;1000
 elif;gameStateObj.turncount == 16 or gameStateObj.turncount == 18 or gameStateObj.turncount >= 20
-	set_cursor;0,0;force_hold
+	set_cursor;0,0
 	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
 	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
 	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2

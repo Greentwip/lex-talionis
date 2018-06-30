@@ -26,7 +26,7 @@ BLEND_RGBA_MULT = pygame.BLEND_RGBA_MULT
 def init():
     # pygame.mixer.pre_init(44100, -16, 1, 512)
     if not PYGAME_SDL2:
-        pygame.mixer.pre_init(44100, -16, 2, 4096)
+        pygame.mixer.pre_init(44100, -16, 2, 256 * 2**configuration.OPTIONS['Sound Buffer Size'])
     pygame.init()
     if not PYGAME_SDL2:
         pygame.mixer.init()
@@ -60,18 +60,19 @@ def build_font(ttf, size):
         size += 2
     return pygame.font.Font(ttf, size)
 
-def terminate():
-    final()
+def terminate(crash=False):
+    final(crash)
     if not PYGAME_SDL2:
         pygame.mixer.music.stop()
         pygame.mixer.quit()
     pygame.quit()
     sys.exit()
 
-def final():
+def final(crash=False):
     configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
     configuration.write_config_file() # Write last saved options to config file
-    create_crash_save()
+    if crash:
+        create_crash_save()
 
 def create_crash_save():
     import os, glob
@@ -82,7 +83,7 @@ def create_crash_save():
         return
     latest_file = max(save_metas, key=os.path.getmtime)
     pmeta_name = os.path.split(latest_file)[1]
-    # If newest *.pmeta file is not called SaveState* or Suspend*
+    # If newest *.pmeta file is not called SaveState* or Suspend* or Restart*
     if not (pmeta_name.startswith('SaveState') or pmeta_name.startswith('Suspend') or pmeta_name.startswith('Restart')):
         # Copy newest *.p and *.pmeta file and call them Suspend.p and Suspend.pmeta
         p_file = latest_file[:-6] + '.p'
@@ -130,6 +131,9 @@ def create_surface(size, transparent=False, convert=False):
 
 def copy_surface(surf):
     return surf.copy()
+
+def save_surface(surf, fn):
+    pygame.image.save(surf, fn)
 
 # assumes pygame surface
 def subsurface(surf, rect):
@@ -193,15 +197,14 @@ def build_event_list():
 QUIT = pygame.QUIT
 KEYUP = pygame.KEYUP
 KEYDOWN = pygame.KEYDOWN
-key_map = {'w': pygame.K_w,
-           'j': pygame.K_j,
-           '5': pygame.K_5, 
-           'u': pygame.K_u,
-           'p': pygame.K_p,
-           'l': pygame.K_l,
-           'e': pygame.K_e,
-           't': pygame.K_t,
-           'd': pygame.K_d}
+key_map = {'d': pygame.K_d,
+           'enter': pygame.K_RETURN,
+           'backspace': pygame.K_BACKSPACE,
+           'up': pygame.K_UP,
+           'ctrl': pygame.K_LCTRL}
+
+def get_pressed():
+    return pygame.key.get_pressed()
 
 def joystick_avail():
     return pygame.joystick.get_count()
@@ -214,16 +217,16 @@ class BaseSound():
     def play(self, loops=0, maxtime=0, fade_ms=0):
         pass
 
-    def stop():
+    def stop(self):
         pass
 
-    def fadeout(time):
+    def fadeout(self, time):
         pass
 
-    def set_volume(value):
+    def set_volume(self, value):
         pass
 
-    def get_volume():
+    def get_volume(self):
         pass
 
 def create_sound(fp):
@@ -319,15 +322,7 @@ class MusicThread(object):
     def fade_to_normal(self, gameStateObj, metaDataObj):
         logger.info('Music: Fade to Normal')
         phase_name = gameStateObj.phase.get_current_phase()
-        if phase_name == 'player':
-            self.fade_in(metaDataObj['playerPhaseMusic'])
-        elif phase_name.startswith('enemy'):
-            self.fade_in(metaDataObj['enemyPhaseMusic'])
-        elif phase_name == 'other':
-            self.fade_in(metaDataObj['otherPhaseMusic'])
-        else:
-            logging.error('Unsupported phase name: %s', phase_name)
-        # self.music_stack = [] # Clear the stack
+        self.fade_in(gameStateObj.phase_music.get_phase_music(phase_name))
 
     def fade_in(self, next_song, num_plays=-1, time=0):
         logger.info('Music: Fade in')
@@ -354,7 +349,10 @@ class MusicThread(object):
             self.current.current_time += pygame.mixer.music.get_pos()
 
         # This is where we are going to
-        self.next = self.song_stack[-1]
+        if self.song_stack:
+            self.next = self.song_stack[-1]
+        else:
+            self.next = None
 
         # Start fade out process
         self.state = 'fade' # Now we know to fade to next index
@@ -368,7 +366,10 @@ class MusicThread(object):
             return
         self.song_stack.pop()
 
-        self.next = self.song_stack[-1]
+        if self.song_stack:
+            self.next = self.song_stack[-1]
+        else:
+            self.next = None
 
         # Start fade out process
         self.state = 'fade' # Now we know to fade to next index
@@ -381,6 +382,7 @@ class MusicThread(object):
     def stop(self):
         if self.current:
             self.current.current_time += pygame.mixer.music.get_pos()
+            self.current = None
         pygame.mixer.music.stop()
 
     def update(self, eventList):
@@ -408,7 +410,12 @@ class MusicThread(object):
                         pygame.mixer.music.play(0)
                     elif self.current.num_plays == -1:
                         pygame.mixer.music.play(0)
+                    elif self.current.num_plays >= 0:
+                        self.current.num_plays -= 1
                     self.current.current_time = 0
+                    if self.current.num_plays == 0:
+                        self.stop()
+                        self.fade_back()
                 elif self.state == 'fade_catch':
                     logger.debug('Music: Fade Catch Event')
                     self.state = 'normal' # catches the stop from fade and returns to normal
@@ -418,16 +425,19 @@ class MusicThread(object):
             if current_time - self.fade_out_update > self.fade_out_time:
                 logger.debug('Music: Actual Fade in!')
                 self.current = self.next
-                if pygame.mixer.music.get_busy():
-                    self.fade_out_update = current_time
-                # self.next = None
-                pygame.mixer.music.set_volume(self.volume)
-                pygame.mixer.music.stop()
-                # This takes 50 ms or so each time :(
-                pygame.mixer.music.load(self.current.song)
-                pygame.mixer.music.play(0, self.current.current_time/1000)
-                # self.fade_out_update = current_time
-                self.state = 'fade_catch'
+                if self.current:
+                    if pygame.mixer.music.get_busy():
+                        self.fade_out_update = current_time
+                    # self.next = None
+                    pygame.mixer.music.set_volume(self.volume)
+                    pygame.mixer.music.stop()
+                    # This takes 50 ms or so each time :(
+                    pygame.mixer.music.load(self.current.song)
+                    pygame.mixer.music.play(0, self.current.current_time/1000)
+                    # self.fade_out_update = current_time
+                    self.state = 'fade_catch'
+                else:
+                    self.state = 'normal'
 
         # If there's no music currently playing, make it so that music does play
         if self.current and not pygame.mixer.music.get_busy():

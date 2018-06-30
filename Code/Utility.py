@@ -37,7 +37,7 @@ def key_with_max_val(d):
     b) return the key with the max value
     """  
     v = list(d.values())
-    k = list(d.keys())
+    k = list(d)
     return k[v.index(max(v))]
 
 # === GREATER THAN OR EQUAL ============================================
@@ -58,6 +58,19 @@ def get_color(team):
         return 'Green'
     else:
         return 'Red'
+
+# === DETERMINES MAX LEVEL FOR CLASS AT TIER ===========================
+def find_max_level(tier, max_level_list):
+    closest_tier = clamp(tier, 0, len(max_level_list) - 1)
+    return max_level_list[closest_tier]
+
+# === ALLOWS COMPARISON OF LEVEL BETWEEN DIFFERENT TIERED CLASSES ======
+def comparison_level(tier, level, max_level_list):
+    true_level = level
+    for idx, l in enumerate(max_level_list):
+        if idx < tier:
+            true_level += l
+    return true_level
 
 # === RAYTRACE ALGORITHM FOR TAXICAB GRID ==============================
 def raytrace(old, new):
@@ -137,7 +150,7 @@ def weighted_choice(choices):
 
 def get_adjacent_positions(c_pos, rng=1):
     if FAST_SPHERE:
-        return manhattan_sphere.find_manhattan_spheres(range(1, rng+1), c_pos[0], c_pos[1])
+        return manhattan_sphere.find_manhattan_spheres(list(range(1, rng+1)), c_pos[0], c_pos[1])
     else:
         _range = range
         pos = set()
@@ -151,7 +164,7 @@ def get_adjacent_positions(c_pos, rng=1):
 
 def find_manhattan_spheres(rng, c_pos):
     if FAST_SPHERE:
-        return manhattan_sphere.find_manhattan_spheres(rng, c_pos[0], c_pos[1])
+        return manhattan_sphere.find_manhattan_spheres(list(rng), c_pos[0], c_pos[1])
     else:
         _range = range
         main_set = set()
@@ -181,8 +194,8 @@ def farthest_away_pos(unit, valid_moves, all_units):
             for u in enemy_units:
                 avg_position[0] += u.position[0]
                 avg_position[1] += u.position[1]
-            avg_position[0] = avg_position[0]/len(enemy_units)
-            avg_position[1] = avg_position[1]/len(enemy_units)
+            avg_position[0] = avg_position[0]//len(enemy_units)
+            avg_position[1] = avg_position[1]//len(enemy_units)
             return sorted(valid_moves, key=lambda move: calculate_distance(avg_position, move))[-1]
         else:
             return valid_moves[0]
@@ -389,12 +402,12 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
             all_tiles[pos].visibility = 'lit'
 
     # Any tile that can't be moved over at all is dark
-    for pos, tile in all_tiles.iteritems():
+    for pos, tile in all_tiles.items():
         if gameStateObj.map.tiles[pos].opaque:
             tile.visibility = 'dark'
 
     # Iterate over remaining tiles
-    for pos, tile in all_tiles.iteritems():
+    for pos, tile in all_tiles.items():
         if tile.visibility == 'unknown':
             for s_pos in source_pos:
                 if calculate_distance(pos, s_pos) <= max_range and get_line2(s_pos, pos):

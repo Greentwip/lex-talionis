@@ -1,4 +1,4 @@
-if;self.optionalunit == 'Promises'
+if;self.name == 'Promises'
     m;Awakening - SSupport
     b;GenericRoom
     t;2
@@ -32,7 +32,7 @@ if;self.optionalunit == 'Promises'
     grey_base_convo;Promises
     t;1
 # Not available right now
-elif;self.optionalunit == 'Althea and Ophie'
+elif;self.name == 'Althea and Ophie'
     m;Awakening - Easy Now
     b;BaseEntrance
     t;2
@@ -45,7 +45,7 @@ elif;self.optionalunit == 'Althea and Ophie'
     s;Ophie;Let me take over.
     s;Althea;Oh-- If you insist.
     s;Ophie;I do.
-    move_sprite;Althea;-24,0
+    qmove_sprite;Althea;-24,0
     r;Ophie
     u;Ophie;MidLeft
     r;Althea
@@ -74,7 +74,7 @@ elif;self.optionalunit == 'Althea and Ophie'
     r;Ophie;Althea
     grey_base_convo;Althea and Ophie
     t;1
-elif;self.optionalunit == 'Theo and Eliza'
+elif;self.name == 'Theo and Eliza'
     m;Midna's Theme
     b;Study
     t;2
@@ -83,7 +83,7 @@ elif;self.optionalunit == 'Theo and Eliza'
     s;Eliza;Would you HURRY up already, Theo?{w}{br}You've been at this for hours!{w}{br}What more could you need to bring?!
     s;Theo;One moment, please. I need some time to consider...
     s;Eliza;Urgh!
-    move_sprite;Eliza;-48,0;force_hold
+    move_sprite;Eliza;-48,0
     s;Eliza;We're not gonna need all this!{w}{br}This is just a day trip, Theo!
     s;Theo;...
     s;Eliza;What could you possibly need all these potions for?

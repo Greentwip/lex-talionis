@@ -7,7 +7,7 @@ show_layer;1;immediate
 m;Awakening - Know Peace
 t;2
 set_camera;8,0;16,0
-set_cursor;Ulver;force_hold
+set_cursor;Ulver
 disp_cursor;1
 wait;1000
 disp_cursor;0
@@ -37,7 +37,6 @@ s;Adjutant;Well then, I will allow the Resistance to pass.{w};auto
 s;Ulver;Let us see how they fare.{w};auto
 r;Ulver;Adjutant
 end_skip
-#set_cursor;12,36
 t;1
 remove_background
 t;2
@@ -58,7 +57,7 @@ end_skip
 t;1
 b;BlackBackground
 arrange_formation;force
-set_camera;8,18;16,26;force
+set_camera;8,18;16,26;immediate
 reset_units
 wait;1000
 remove_background

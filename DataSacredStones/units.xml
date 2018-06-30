@@ -1,0 +1,106 @@
+<unit_catalog>
+	
+    <!-- Player Characters -->
+    <unit name="Eirika">
+        <id>Eirika</id>
+        <gender>5</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp>1,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
+		<bases>16,4,0,8,9,5,3,1,5</bases>
+		<growths>70,40,0,60,60,60,30,30</growths>
+        
+        <inventory>Rapier,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Lord</class>
+        <desc>The princess of the Kingdom of Renais. She's elegant and kind.</desc>
+        
+        <tags>Lord</tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Seth">
+        <id>Seth</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp>181,181,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
+        <bases>30,14,0,13,12,13,11,8,11</bases>
+        <growths>70,40,0,60,60,60,30,30</growths>
+        
+        <inventory>Steel Sword,Mithril Lance,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Paladin</class>
+        <desc>A young commander of Renais. He's calm, composed, and skilled.</desc>
+        
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Franz">
+        <id>Franz</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp>1,31,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>20,7,0,5,7,2,6,1,9</bases>
+        <growths>80,40,0,40,50,40,25,20</growths>
+        
+        <inventory>Iron Sword,Iron Lance,Vulnerary,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Cavalier</class>
+        <desc>An earnest and compassionate cavalier from Renais.</desc>
+        
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Gilliam">
+        <id>Gilliam</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp>0,71,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>25,9,0,6,3,3,9,3,14</bases>
+        <growths>90,45,0,35,30,30,55,20</growths>
+        
+        <inventory>Iron Lance</inventory>
+        
+        <level>4</level>
+        <class>Knight</class>
+        <desc>An armoured knight from Frelia. He's quiet yet dependable.</desc>
+        
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Named NPC Characters/Bosses -->
+    <!-- Level 1 Boss -->
+    <unit name="Breguet">
+        <id>Breguet</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp>0,71,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>20,8,0,2,1,2,9,0,13,0</bases>
+        <growths>90,45,0,35,30,30,55,20</growths>
+        
+        <inventory>Iron Lance</inventory>
+        
+        <level>4</level>
+        <class>Knight</class>
+        <desc>??</desc>
+        
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+</unit_catalog>

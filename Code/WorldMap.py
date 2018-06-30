@@ -1,5 +1,4 @@
 # World Map
-
 import math
 
 # Custom imports
@@ -125,10 +124,10 @@ class WorldMapBackground(object):
         for label in self.wm_labels:
             label.draw(image)
         # Update world_map_sprites
-        for key, wm_unit in self.wm_sprites.iteritems():
+        for key, wm_unit in self.wm_sprites.items():
             wm_unit.update()
         # World map sprites
-        for key, wm_unit in self.wm_sprites.iteritems():
+        for key, wm_unit in self.wm_sprites.items():
             wm_unit.draw(image)
         # Cursor
         if self.cursor:
@@ -197,7 +196,7 @@ class WMSprite(object):
 
     def draw(self, surf):
         x, y = self.position
-        topleft = x - max(0, (self.image.get_width() - 16)/2), y - max(0, self.image.get_height() - 16)
+        topleft = x - max(0, (self.image.get_width() - 16)//2), y - max(0, self.image.get_height() - 16)
         surf.blit(self.image, topleft)
 
     def move(self, new_pos):
@@ -236,8 +235,8 @@ class WMSprite(object):
                         self.image = Engine.subsurface(self.moveUp, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
                     else:
                         self.image = Engine.subsurface(self.moveDown, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
-                    updated_position = (self.position[0] + unit_speed * math.cos(angle), self.position[1] + unit_speed * math.sin(angle))
-                    self.position = updated_position
+                    updatedown_position = (self.position[0] + unit_speed * math.cos(angle), self.position[1] + unit_speed * math.sin(angle))
+                    self.position = updatedown_position
 
                 self.last_move_update = currentTime
 
@@ -463,7 +462,7 @@ class MiniMap(object):
                   'Snow': (12, 1),
                   'Dark_Snow': (13, 1),
                   'Pier': (14, 1)}
-    complex_map = ['Wall', 'River', 'Sand', 'Sea']
+    complex_map = ('Wall', 'River', 'Sand', 'Sea')
     scale_factor = 4
 
     def __init__(self, tile_map, units):
@@ -489,7 +488,7 @@ class MiniMap(object):
         for x in range(self.width):
             for y in range(self.height):
                 key = self.tile_map.tiles[(x, y)].minimap
-                if key in ['Cliff', 'Desert_Cliff', 'Snow_Cliff']:
+                if key in ('Cliff', 'Desert_Cliff', 'Snow_Cliff'):
                     cliff_positions.add((x, y))
         self.cliff_manager = Cliff_Manager(cliff_positions, (self.width, self.height))
 
@@ -522,9 +521,9 @@ class MiniMap(object):
             return self.complex_shape(key, position)
         # Coast
         elif key == 'Coast':
-            return self.coast(position)
+            return self.coast2(position)
         # Cliff
-        elif key in ['Cliff', 'Desert_Cliff', 'Snow_Cliff']:
+        elif key in ('Cliff', 'Desert_Cliff', 'Snow_Cliff'):
             pos = self.cliff_manager.get_orientation(position)
             if key == 'Desert_Cliff':
                 pos = (pos[0] + 4, pos[1])
@@ -548,60 +547,134 @@ class MiniMap(object):
                 else:
                     self.pin_surf.blit(Engine.subsurface(self.minimap_units, (self.scale_factor*3, 0, self.scale_factor, self.scale_factor)), pos)
 
-    def coast(self, position):
-        column = 6
-        sea_keys = ['Sea', 'Coast', 'Pier', 'River', 'Sea_Cliff', 'Bridge']
-        adj_pos = self.tile_map.get_adjacent(position)
-        border = 4 - len(adj_pos)
-        number_matching = sum([self.tile_map.tiles[pos].minimap in sea_keys for pos in adj_pos])
-        number_matching += border
-
+    def coast2(self, position):
+        sea_keys = ('Sea', 'Pier', 'River', 'Bridge')
+        # A is up, B is left, C is right, D is down
+        # This code determines which minimap tiles fit assuming you only knew one side of the tile, and then intersects to find the best
+        a, b, c, d = None, None, None, None
+        up_pos = position[0], position[1] - 1
+        if up_pos not in self.tile_map.tiles or self.tile_map.tiles[up_pos].minimap in sea_keys:
+            a = {0, 1, 5, 6, 7, 9, 10}
+        elif self.tile_map.tiles[up_pos].minimap == 'Coast':
+            a = {0, 1, 5, 6, 7, 9, 10, 11, 12}
+        else:
+            a = {2, 3, 4, 8, 11, 12, 13}
         left_pos = position[0] - 1, position[1]
+        if left_pos not in self.tile_map.tiles or self.tile_map.tiles[left_pos].minimap in sea_keys:
+            b = {0, 2, 5, 6, 8, 9, 11}
+        elif self.tile_map.tiles[left_pos].minimap == 'Coast':
+            b = {0, 2, 5, 6, 8, 9, 10, 11, 12}
+        else:
+            b = {1, 3, 4, 7, 10, 12, 13}
         right_pos = position[0] + 1, position[1]
-        top_pos = position[0], position[1] - 1
-        bottom_pos = position[0], position[1] + 1
-
-        if number_matching == 0:
+        if right_pos not in self.tile_map.tiles or self.tile_map.tiles[right_pos].minimap in sea_keys:
+            c = {0, 3, 5, 7, 8, 10, 12}
+        elif self.tile_map.tiles[right_pos].minimap == 'Coast':
+            c = {0, 3, 5, 7, 8, 9, 10, 11, 12}
+        else:
+            c = {1, 2, 4, 6, 9, 11, 13}
+        down_pos = position[0], position[1] + 1
+        if down_pos not in self.tile_map.tiles or self.tile_map.tiles[down_pos].minimap in sea_keys:
+            d = {0, 4, 6, 7, 8, 11, 12}
+        elif self.tile_map.tiles[down_pos].minimap == 'Coast':
+            d = {0, 4, 6, 7, 8, 9, 10, 11, 12}
+        else:
+            d = {1, 2, 3, 5, 9, 10, 13}
+        intersection = list(a & b & c & d)
+        if len(intersection) == 0:
+            value = 9
+        elif len(intersection) == 1:
+            value = intersection[0]
+        elif len(intersection) >= 2:
+            value = sorted(intersection)[-1]
+        if value == 0:
+            row, column = 0, 7
+        elif value == 1:
+            row, column = 1, 7
+        elif value == 2:
+            row, column = 2, 7
+        elif value == 3:
+            row, column = 3, 7
+        elif value == 4:
+            row, column = 4, 7
+        elif value == 5:
+            row, column = 4, 6
+        elif value == 6:
+            row, column = 6, 6
+        elif value == 7:
+            row, column = 2, 6
+        elif value == 8:
+            row, column = 0, 6
+        elif value == 9:
+            row, column = 5, 6
+        elif value == 10:
+            row, column = 3, 6
+        elif value == 11:
+            row, column = 7, 6
+        elif value == 12:
+            row, column = 1, 6
+        elif value == 13:
             row, column = 0, 5
-        elif number_matching == 1:
-            if not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap in sea_keys:
-                row = 6
-            elif not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap in sea_keys:
-                row = 2
-            elif not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap in sea_keys:
-                row = 4
-            elif not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap in sea_keys:
-                row = 0
-        elif number_matching == 2:
-            # Topleft
-            if (not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap in sea_keys) and \
-               (not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap in sea_keys):
-                row = 5
-            # Topright
-            elif (not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap in sea_keys) and \
-               (not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap in sea_keys):
-                row = 3
-            # Bottomleft
-            elif (not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap in sea_keys) and \
-               (not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap in sea_keys):
-                row = 7
-            # Bottomright
-            elif (not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap in sea_keys) and \
-               (not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap in sea_keys):
-                row = 1
-            else:
-                row, column = 0, 0
-        elif number_matching == 3:
-            if not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap not in sea_keys:
-                row = 2
-            elif not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap not in sea_keys:
-                row = 6
-            elif not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap not in sea_keys:
-                row = 0
-            elif not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap not in sea_keys:
-                row = 4
 
         return self.get_sprite((row, column))
+
+    # def coast(self, position):
+    #     column = 6
+    #     # sea_keys = ('Sea', 'Coast', 'Pier', 'River', 'Bridge')
+    #     sea_keys = ('Sea', 'Pier', 'River', 'Bridge')
+    #     adj_pos = self.tile_map.get_adjacent(position)
+    #     border = 4 - len(adj_pos)
+    #     number_matching = sum([self.tile_map.tiles[pos].minimap in sea_keys for pos in adj_pos])
+    #     number_matching += border
+
+    #     left_pos = position[0] - 1, position[1]
+    #     right_pos = position[0] + 1, position[1]
+    #     top_pos = position[0], position[1] - 1
+    #     bottom_pos = position[0], position[1] + 1
+
+    #     if number_matching == 0:
+    #         row, column = 0, 5
+    #     elif number_matching == 1:
+    #         if not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap in sea_keys:
+    #             row = 6
+    #         elif not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap in sea_keys:
+    #             row = 2
+    #         elif not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap in sea_keys:
+    #             row = 4
+    #         elif not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap in sea_keys:
+    #             row = 0
+    #     elif number_matching == 2:
+    #         # Topleft
+    #         if (not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap in sea_keys) and \
+    #            (not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap in sea_keys):
+    #             row = 5
+    #         # Topright
+    #         elif (not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap in sea_keys) and \
+    #            (not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap in sea_keys):
+    #             row = 3
+    #         # Bottomleft
+    #         elif (not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap in sea_keys) and \
+    #            (not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap in sea_keys):
+    #             row = 7
+    #         # Bottomright
+    #         elif (not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap in sea_keys) and \
+    #            (not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap in sea_keys):
+    #             row = 1
+    #         else:
+    #             row, column = 0, 0
+    #     elif number_matching == 3:
+    #         if not self.tile_map.check_bounds(left_pos) or self.tile_map.tiles[left_pos].minimap not in sea_keys:
+    #             row = 2
+    #         elif not self.tile_map.check_bounds(right_pos) or self.tile_map.tiles[right_pos].minimap not in sea_keys:
+    #             row = 6
+    #         elif not self.tile_map.check_bounds(top_pos) or self.tile_map.tiles[top_pos].minimap not in sea_keys:
+    #             row = 0
+    #         elif not self.tile_map.check_bounds(bottom_pos) or self.tile_map.tiles[bottom_pos].minimap not in sea_keys:
+    #             row = 4
+    #     elif number_matching == 4:
+    #         row, column = 0, 7
+
+    #     return self.get_sprite((row, column))
 
     def bridge_left_right(self, position):
         # Keep running left along bridge until we leave bridge
@@ -628,11 +701,11 @@ class MiniMap(object):
         column = self.complex_map.index(key) + 2
         
         if key == 'Sand':
-            keys = ['Sand', 'Desert', 'Desert_Cliff', 'Wall']
-        elif key in ['Sea', 'River']:
-            keys = ['Sea', 'Sea_Cliff', 'Coast', 'River', 'Wall', 'Pier', 'Bridge']
+            keys = ('Sand', 'Desert', 'Desert_Cliff', 'Wall')
+        elif key in ('Sea', 'River'):
+            keys = ('Sea', 'Coast', 'River', 'Wall', 'Pier', 'Bridge')
         else:
-            keys = [key]
+            keys = (key, )
 
         row = 0
 
@@ -663,7 +736,7 @@ class MiniMap(object):
         units = self.pin_surf
         # Flicker pin surf
         if current_time > 1600:
-            whiteness = 2.55 * (100 - abs(current_time - 1800)/2)
+            whiteness = 2.55 * (100 - abs(current_time - 1800)//2)
             units = Image_Modification.flickerImageWhite(units, whiteness)
         image.blit(units, (0, 0))
 
@@ -671,7 +744,7 @@ class MiniMap(object):
             image = self.occlude(Engine.copy_surface(image), progress)
 
         # TODO make minimaps work with even bigger maps (current limit is 60x40)
-        pos = (GC.WINWIDTH/2 - image.get_width()/2, GC.WINHEIGHT/2 - image.get_height()/2)
+        pos = (GC.WINWIDTH//2 - image.get_width()//2, GC.WINHEIGHT//2 - image.get_height()//2)
         surf.blit(image, pos)
         x = camera_offset.x
         y = camera_offset.y
@@ -680,9 +753,9 @@ class MiniMap(object):
             minimap_cursor = self.minimap_cursor
             if current_time > 1600 or (current_time > 600 and current_time < 1000):
                 if current_time > 1600:
-                    whiteness = 2.55 * (100 - abs(current_time - 1800)/2)
+                    whiteness = 2.55 * (100 - abs(current_time - 1800)//2)
                 else:
-                    whiteness = 2.55 * (100 - abs(current_time - 800)/2)
+                    whiteness = 2.55 * (100 - abs(current_time - 800)//2)
                 minimap_cursor = Image_Modification.flickerImageWhite(minimap_cursor, whiteness)
             surf.blit(minimap_cursor, cursor_pos)
 
@@ -702,7 +775,7 @@ class MiniMap(object):
         # Rotate mask by -90 degrees at max
         mask = Engine.transform_rotate(mask, progress*-90)
         # Place mask within center of minimap
-        bg.blit(mask, (bg.get_width()/2 - mask.get_width()/2, bg.get_height()/2 - mask.get_height()/2))
+        bg.blit(mask, (bg.get_width()//2 - mask.get_width()//2, bg.get_height()//2 - mask.get_height()//2))
 
         # Apply mask to surf
         Engine.blit(surf, bg, bg.get_rect().topleft, bg.get_rect(), Engine.BLEND_RGB_MULT)
