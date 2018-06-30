@@ -1802,7 +1802,7 @@ class UnitObject(object):
             self.stats['SPD'] + self.stats['LCK']//2 + self.stats['DEF'] + self.stats['RES']
                                                                                      
 # === ACTIONS =========================================================        
-    def wait(self, gameStateObj):
+    def wait(self, gameStateObj, script=True):
         logger.debug('%s %s waits', self.name, self)
         self.hasMoved = True
         self.hasTraded = True
@@ -1813,9 +1813,9 @@ class UnitObject(object):
         self.sprite.change_state('normal')
         # Called whenever a unit waits
         wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
-        if os.path.exists(wait_script_name):
-            move_script = Dialogue.Dialogue_Scene(wait_script_name, unit=self)
-            gameStateObj.message.append(move_script)
+        if script and os.path.exists(wait_script_name):
+            wait_script = Dialogue.Dialogue_Scene(wait_script_name, unit=self)
+            gameStateObj.message.append(wait_script)
             gameStateObj.stateMachine.changeState('dialogue')
 
     def isDone(self):
@@ -2047,7 +2047,7 @@ class UnitObject(object):
     def drop(self, position, gameStateObj):
         TRVunit = gameStateObj.get_unit_from_id(self.TRV)
         TRVunit.position = position
-        TRVunit.wait(gameStateObj)
+        TRVunit.wait(gameStateObj, script=False)
         TRVunit.hasAttacked = True
         # Add tile statuses to unit
         TRVunit.arrive(gameStateObj)

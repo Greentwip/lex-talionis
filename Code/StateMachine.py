@@ -565,12 +565,12 @@ class MoveState(State):
 
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
+            gameStateObj.stateMachine.clear()
+            gameStateObj.stateMachine.changeState('free')
             if cur_unit.hasAttacked or cur_unit.hasTraded: # If canto already attacked or traded, can't bizz out.
                 cur_unit.wait(gameStateObj)
             else:
                 cur_unit.sprite.change_state('normal', gameStateObj)
-            gameStateObj.stateMachine.clear()
-            gameStateObj.stateMachine.changeState('free')
             # gameStateObj.stateMachine.back() does not work, cause sometimes the last state is actually menu, not free
 
         elif event == 'SELECT':
@@ -578,9 +578,9 @@ class MoveState(State):
             if gameStateObj.cursor.position == cur_unit.position:
                 GC.SOUNDDICT['Select 2'].play()
                 if cur_unit.hasAttacked or cur_unit.hasTraded: # If canto already attacked.
-                    cur_unit.wait(gameStateObj)
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('free')
+                    cur_unit.wait(gameStateObj)
                 else:
                     gameStateObj.stateMachine.changeState('menu')
                   
@@ -634,7 +634,7 @@ class CantoWaitState(State):
         elif event == 'SELECT':
             gameStateObj.stateMachine.clear()
             gameStateObj.stateMachine.changeState('free')
-            cur_unit.wait(gameStateObj) # Canto"""
+            cur_unit.wait(gameStateObj) # Canto
 
         elif event == 'BACK':
             # puts unit back - handles status
@@ -827,9 +827,9 @@ class MenuState(State):
                     gameStateObj.stateMachine.changeState('move')
                 else:
                     # I've already done something that qualifies for taking away my attack, which means I don't get to move back to where I started
-                    gameStateObj.cursor.currentSelectedUnit.wait(gameStateObj)
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('free')
+                    gameStateObj.cursor.currentSelectedUnit.wait(gameStateObj)
             else:
                 # puts unit back - handles status
                 gameStateObj.cursor.currentSelectedUnit.leave(gameStateObj)
@@ -974,9 +974,9 @@ class MenuState(State):
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
                 gameStateObj.stateMachine.changeState('talkselect')
             elif selection == cf.WORDS['Wait']:
-                cur_unit.wait(gameStateObj)
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
+                cur_unit.wait(gameStateObj)
 
     def end(self, gameStateObj, metaDataObj):
         gameStateObj.activeMenu = None
@@ -1532,8 +1532,8 @@ class SelectState(State):
                     if cur_unit.has_canto():
                         gameStateObj.stateMachine.changeState('menu') # Should this be inside or outside the if statement - Is an error to not get here
                     else:
-                        cur_unit.wait(gameStateObj)
                         gameStateObj.stateMachine.changeState('free')
+                        cur_unit.wait(gameStateObj)
                         gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
             elif self.name == 'takeselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
@@ -1547,8 +1547,8 @@ class SelectState(State):
                     cur_unit.give(gameStateObj.cursor.currentHoveredUnit, gameStateObj)
                     gameStateObj.stateMachine.changeState('menu')
             elif self.name == 'dropselect':
-                cur_unit.drop(gameStateObj.cursor.position, gameStateObj)
                 gameStateObj.stateMachine.changeState('menu')
+                cur_unit.drop(gameStateObj.cursor.position, gameStateObj)
             elif self.name == 'talkselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
@@ -1676,9 +1676,9 @@ class StealState(State):
             if self.initiator.has_canto():
                 gameStateObj.stateMachine.changeState('menu')
             else:
-                self.initiator.wait(gameStateObj)
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
+                self.initiator.wait(gameStateObj)
             gameStateObj.activeMenu = None
             self.initiator.handle_steal_banner(selection, gameStateObj)
 
