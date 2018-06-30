@@ -20,7 +20,7 @@ import EditorUtilities
 teams = ('player', 'enemy', 'other', 'enemy2')
 
 # === DATA IMPORTING ===
-def build_units(class_dict):
+def build_named_units(class_dict):
     units = OrderedDict()
     for unit in GC.UNITDATA.getroot().findall('unit'):
         u_i = {}
@@ -79,6 +79,7 @@ class Unit(object):
                 Unit.g_id += 1
             self.pack = info.get('pack')  # What reinforcement pack am I in
             self.event_id = info.get('event_id')  # Number within the pack
+            self.mode = info.get('mode', ['All'])
             self.faction = info.get('faction')
             self.name = info['name']
             self.generic = info.get('generic', False)
@@ -105,6 +106,7 @@ class Unit(object):
         else:
             self.id = 0
             self.event_id = None
+            self.mode = ['All']
             self.pack = None
             self.faction = None
             self.name = ''
@@ -130,6 +132,7 @@ class Unit(object):
     def copy(self):
         new_unit = Unit()
         new_unit.id = self.id
+        new_unit.mode = self.mode
         new_unit.faction = self.faction
         new_unit.name = self.name
         new_unit.generic = self.generic
@@ -282,6 +285,6 @@ class GlobalData(object):
             self.class_data[klass_id] = Klass(klass)
 
         # === Loaded Preset Unit Data ===
-        self.unit_data = build_units(self.class_dict)
+        self.unit_data = build_named_units(self.class_dict)
 
 Data = GlobalData()

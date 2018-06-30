@@ -127,7 +127,7 @@ class UnitData(object):
         if unitLine[0] == 'faction':
             self.factions[unitLine[1]] = Faction.Faction(unitLine[1], unitLine[2], unitLine[3], unitLine[4])
         elif unitLine[0] == 'mode':
-            current_mode = unitLine[1]
+            current_mode = unitLine[1].split(',')
         elif unitLine[0] == 'load_player_characters':
             self.load_player_characters = True
         elif unitLine[0] == 'trigger':
@@ -137,29 +137,29 @@ class UnitData(object):
             self.triggers[unitLine[1]].add_unit(unit, unitLine[3], unitLine[4])
         else: # For now it just loads every unit, irrespective of mode
             # New Unit
-            # if unitLine[1] == "0":
             if len(unitLine) > 7:
-                self.create_unit_from_line(unitLine)
+                self.create_unit_from_line(unitLine, current_mode)
             else:
-                self.add_unit_from_line(unitLine)
+                self.add_unit_from_line(unitLine, current_mode)
             # # Saved Unit
             # elif unitLine[1] == "1":
             #     print("Saved!")
             #     self.saved_unit_from_line(unitLine)
         return current_mode
 
-    def add_unit_from_line(self, unitLine):
+    def add_unit_from_line(self, unitLine, mode):
         assert len(unitLine) == 6, "unitLine %s must have length 6"%(unitLine)
         legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
                   'unit_id': unitLine[3], 'position': unitLine[4], 'ai': unitLine[5]}
-        self.add_unit_from_legend(legend)
+        self.add_unit_from_legend(legend, mode)
 
-    def add_unit_from_legend(self, legend):
+    def add_unit_from_legend(self, legend, mode):
         cur_unit = Data.unit_data[legend['unit_id']]
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         cur_unit.position = position
         cur_unit.ai = legend['ai']
         cur_unit.team = legend['team']
+        cur_unit.mode = mode
         if legend['unit_type'] == '1':
             cur_unit.saved = True
         else:
@@ -220,14 +220,14 @@ class UnitData(object):
     def saved_unit_from_line(self, unitLine):
         self.add_unit_from_line(unitLine)
 
-    def create_unit_from_line(self, unitLine):
+    def create_unit_from_line(self, unitLine, mode):
         assert len(unitLine) in [9, 10], "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
         legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
                   'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
                   'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
         self.create_unit_from_legend(legend)
 
-    def create_unit_from_legend(self, legend):
+    def create_unit_from_legend(self, legend, mode):
         GC.U_ID += 1
 
         u_i = {}
@@ -269,6 +269,7 @@ class UnitData(object):
         u_i['movement_group'] = Data.class_dict[u_i['klass']]['movement_group']
         u_i['skills'] = []
         u_i['generic'] = True
+        u_i['mode'] = mode
 
         cur_unit = DataImport.Unit(u_i)
 
@@ -371,6 +372,8 @@ class UnitMenu(QtGui.QWidget):
         self.window = window
         self.view = view
 
+        self.create_mode_view_box()
+
         self.list = SignalList(self, del_func=self.remove_unit)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
@@ -391,15 +394,24 @@ class UnitMenu(QtGui.QWidget):
         self.remove_unit_button = QtGui.QPushButton('Remove Unit')
         self.remove_unit_button.clicked.connect(self.remove_unit)
 
-        self.grid.addWidget(self.list, 1, 0)
-        self.grid.addWidget(self.load_unit_button, 2, 0)
-        self.grid.addWidget(self.create_unit_button, 3, 0)
-        self.grid.addWidget(self.remove_unit_button, 4, 0)
+        self.grid.addWidget(self.list, 2, 0)
+        self.grid.addWidget(self.load_unit_button, 3, 0)
+        self.grid.addWidget(self.create_unit_button, 4, 0)
+        self.grid.addWidget(self.remove_unit_button, 5, 0)
 
         self.last_touched_generic = None
 
     # def trigger(self):
     #     self.view.tool = 'Units'
+
+    def create_mode_view_box(self):
+        self.mode_view_label = QtGui.QLabel("Current Mode:")
+        self.mode_view_combobox = QtGui.QComboBox()
+
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(self.mode_view_label)
+        hbox.addWidget(self.mode_view_combobox)
+        self.grid.addLayout(hbox, 0, 0)
 
     def get_current_item(self):
         return self.list.item(self.list.currentRow())
@@ -518,7 +530,7 @@ class ReinforcementMenu(UnitMenu):
         hbox = QtGui.QHBoxLayout()
         hbox.addWidget(self.pack_view_label)
         hbox.addWidget(self.pack_view_combobox)
-        self.grid.addLayout(hbox, 0, 0)
+        self.grid.addLayout(hbox, 0, 1)
 
         self.duplicate_group_button = QtGui.QPushButton('Duplicate Group')
         self.duplicate_group_button.clicked.connect(self.duplicate_current_pack)
