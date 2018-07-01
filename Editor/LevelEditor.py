@@ -116,7 +116,8 @@ class MainView(QtGui.QGraphicsView):
         if self.working_image:
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
-            for coord, unit_image in self.unit_data.get_unit_images().items():
+            current_mode = self.window.unit_menu.current_mode_view()
+            for coord, unit_image in self.unit_data.get_unit_images(current_mode).items():
                 if unit_image:
                     painter.drawImage(coord[0] * 16 - 4, coord[1] * 16 - 6, unit_image)
             # Highlight current unit
@@ -129,7 +130,9 @@ class MainView(QtGui.QGraphicsView):
         if self.working_image:
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
-            for coord, unit_image in self.unit_data.get_reinforcement_images(self.window.reinforcement_menu.current_pack()).items():
+            current_mode = self.window.reinforcement_menu.current_mode_view()
+            current_pack = self.window.reinforcement_menu.current_pack()
+            for coord, unit_image in self.unit_data.get_reinforcement_images(current_mode, current_pack).items():
                 if unit_image:
                     painter.drawImage(coord[0] * 16 - 4, coord[1] * 16 - 6, unit_image)
             # Highlight current unit
@@ -206,10 +209,12 @@ class MainView(QtGui.QGraphicsView):
                     self.window.trigger_menu.clear_current_arrow()
                 else:
                     if self.window.dock_visibility['Units']:                            
-                        current_unit = self.unit_data.get_unit_from_pos(pos)
+                        current_mode = self.window.unit_menu.current_mode_view()
+                        current_unit = self.unit_data.get_unit_from_pos(pos, current_mode)
                     elif self.window.dock_visibility['Reinforcements']:
+                        current_mode = self.window.reinforcement_menu.current_mode_view()
                         current_pack = self.window.reinforcement_menu.current_pack()
-                        current_unit = self.unit_data.get_rein_from_pos(pos, current_pack)
+                        current_unit = self.unit_data.get_rein_from_pos(pos, current_mode, current_pack)
                     if current_unit:
                         self.window.trigger_menu.set_current_arrow(current_unit, pos)
                     else:
@@ -264,7 +269,8 @@ class MainView(QtGui.QGraphicsView):
                 if event.button() == QtCore.Qt.LeftButton:
                     current_unit = self.window.unit_menu.get_current_unit()
                     if current_unit:
-                        under_unit = self.unit_data.get_unit_from_pos(pos)
+                        current_mode = self.window.unit_menu.current_mode_view()
+                        under_unit = self.unit_data.get_unit_from_pos(pos, current_mode)
                         if under_unit:
                             print('Removing Unit')
                             under_unit.position = None
@@ -286,7 +292,7 @@ class MainView(QtGui.QGraphicsView):
                             self.window.unit_menu.get_current_item().setTextColor(QtGui.QColor("black"))
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
-                    current_idx = self.unit_data.get_idx_from_pos(pos)
+                    current_idx = self.unit_data.get_idx_from_pos(pos, self.window.unit_menu.current_mode_view())
                     print('Current IDX %s' % current_idx)
                     if current_idx >= 0:
                         self.window.unit_menu.set_current_idx(current_idx)
@@ -309,7 +315,9 @@ class MainView(QtGui.QGraphicsView):
                             self.window.reinforcement_menu.get_current_item().setTextColor(QtGui.QColor("black"))
                         self.window.update_view()
                 elif event.button() == QtCore.Qt.RightButton:
-                    current_idx = self.unit_data.get_ridx_from_pos(pos, self.window.reinforcement_menu.current_pack())
+                    current_mode = self.window.reinforcement_menu.current_mode_view()
+                    current_pack = self.window.reinforcement_menu.current_pack()
+                    current_idx = self.unit_data.get_ridx_from_pos(pos, current_mode, current_pack)
                     print(current_idx)
                     if current_idx >= 0:
                         self.window.reinforcement_menu.set_current_idx(current_idx)
@@ -323,10 +331,13 @@ class MainView(QtGui.QGraphicsView):
         if pixmap:
             pos = int(scene_pos.x() / 16), int(scene_pos.y() / 16)
             info = None
-            if self.window.dock_visibility['Units'] and self.unit_data.get_unit_from_pos(pos):
-                info = self.unit_data.get_unit_str(pos)
-            elif self.window.dock_visibility['Reinforcements'] and self.unit_data.get_rein_from_pos(pos, self.window.reinforcement_menu.current_pack()):
-                info = self.unit_data.get_reinforcement_str(pos, self.window.reinforcement_menu.current_pack())
+            current_unit_mode = self.window.unit_menu.current_mode_view()
+            current_rein_mode = self.window.reinforcement_menu.current_mode_view()
+            if self.window.dock_visibility['Units'] and self.unit_data.get_unit_from_pos(pos, current_unit_mode):
+                info = self.unit_data.get_unit_str(pos, current_unit_mode)
+            elif self.window.dock_visibility['Reinforcements'] and \
+                    self.unit_data.get_rein_from_pos(pos, current_rein_mode, self.window.reinforcement_menu.current_pack()):
+                info = self.unit_data.get_reinforcement_str(pos, current_rein_mode, self.window.reinforcement_menu.current_pack())
             elif self.window.dock_visibility['Event Tiles'] and self.tile_info.get(pos):
                 info = self.tile_info.get_str(pos)
             elif self.window.dock_visibility['Terrain'] and pos in self.tile_data.tiles:
@@ -634,15 +645,24 @@ class MainEditor(QtGui.QMainWindow):
 
         def write_units(units):
             # Player units
-            player_units = [unit for unit in units if unit.team == 'player']
             unit_level.write('# Player Characters\n')
+            player_units = [unit for unit in units if unit.team == 'player']
+            player_units = sorted(player_units, key=lambda x: x.mode)
+            current_mode = ['All']
             for unit in player_units:
+                if unit.mode != current_mode:
+                    current_mode = unit.mode
+                    unit_level.write('mode;' + ','.join(current_mode))
                 write_unit_line(unit)
             # Other units
             other_units = [unit for unit in units if unit.team == 'other']
             if other_units:
+                other_units = sorted(other_units, key=lambda x: x.mode)
                 unit_level.write('# Other Characters\n')
                 for unit in other_units:
+                    if unit.mode != current_mode:
+                        current_mode = unit.mode
+                        unit_level.write('mode;' + ','.join(current_mode))
                     write_unit_line(unit)
             # Enemies
             unit_level.write('# Enemies\n')
@@ -650,14 +670,22 @@ class MainEditor(QtGui.QMainWindow):
                 # Named enemy characters
                 named_enemies = [unit for unit in units if unit.team == team and not unit.generic]
                 if named_enemies:
+                    named_enemies = sorted(named_enemies, key=lambda x: x.mode)
                     unit_level.write('# Bosses\n')
                     for unit in named_enemies:
+                        if unit.mode != current_mode:
+                            current_mode = unit.mode
+                            unit_level.write('mode;' + ','.join(current_mode))
                         write_unit_line(unit)
                 # Generic enemy characters
                 generic_enemies = [unit for unit in units if unit.team == team and unit.generic]
                 if generic_enemies:
+                    generic_enemies = sorted(generic_enemies, key=lambda x: x.mode)
                     unit_level.write('# Generics\n')
                     for unit in generic_enemies:
+                        if unit.mode != current_mode:
+                            current_mode = unit.mode
+                            unit_level.write('mode;' + ','.join(current_mode))
                         write_unit_line(unit)
 
         with open(fp, 'w') as unit_level:
@@ -676,11 +704,15 @@ class MainEditor(QtGui.QMainWindow):
             write_units(reinforcements)
             # Triggers
             unit_level.write('# === Triggers ===\n')
+            current_mode = ['All']
             for trigger_name, trigger in self.unit_data.triggers.items():
                 for unit, (start, end) in trigger.units.items():
                     start_str = str(start[0]) + ',' + str(start[1])
                     end_str = str(end[0]) + ',' + str(end[1])
                     if unit.generic and unit in self.unit_data.units:
+                        if unit.mode != current_mode:
+                            current_mode = unit.mode
+                            unit_level.write('mode;' + ','.join(current_mode))
                         unit_id = str(unit.position[0]) + ',' + str(unit.position[1])
                     elif unit in self.unit_data.reinforcements:
                         unit_id = unit.pack + '_' + str(unit.event_id) if unit.pack else str(unit.event_id)

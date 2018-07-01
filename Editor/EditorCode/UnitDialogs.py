@@ -11,9 +11,30 @@ import Code.GlobalConstants as GC
 import DataImport
 from DataImport import Data
 import EditorUtilities
-from CustomGUI import GenderBox
+from CustomGUI import GenderBox, CheckableComboBox
 
-class LoadUnitDialog(QtGui.QDialog):
+class HasModes(object):
+    def create_mode_combobox(self):
+        self.mode_box = CheckableComboBox()
+        self.mode_box.uniformItemSizes = True
+        for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()):
+            self.mode_box.addItem(name)
+            row = self.mode_box.model().item(idx, 0)
+            row.setCheckState(QtCore.Qt.Checked)
+        self.form.addRow('Modes:', self.mode_box)
+
+    def populate_mode(self, unit):
+        for index, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.items()):
+            row = self.mode_box.model().item(index, 0)
+            if name in unit.mode:
+                row.setCheckState(QtCore.Qt.Checked)
+            else:
+                row.setCheckState(QtCore.Qt.Unchecked)
+
+    def get_modes(self):
+        return [name for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.items()) if self.mode_box.model().item(idx, 0).checkState() == QtCore.Qt.Checked]
+
+class LoadUnitDialog(QtGui.QDialog, HasModes):
     def __init__(self, instruction, parent):
         super(LoadUnitDialog, self).__init__(parent)
         self.form = QtGui.QFormLayout(self)
@@ -57,6 +78,8 @@ class LoadUnitDialog(QtGui.QDialog):
         self.ai_group = QtGui.QLineEdit()
         self.form.addRow('AI Group:', self.ai_group)
 
+        self.create_mode_combobox()
+
         self.ai_select.setEnabled(str(self.team_box.currentText()) != 'player')
         self.ai_group.setEnabled(str(self.team_box.currentText()) != 'player')
 
@@ -72,6 +95,7 @@ class LoadUnitDialog(QtGui.QDialog):
         EditorUtilities.setComboBox(self.ai_select, unit.ai)
         if unit.ai_group:
             self.ai_group.setText(str(unit.ai_group))
+        self.populate_mode(unit)
 
     def team_changed(self, item):
         self.saved_checkbox.setEnabled(str(item) == 'player')
@@ -123,6 +147,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
             self.ai_group.setText(str(unit.ai_group))
         if unit.pack:
             self.pack.setText(unit.pack)
+        self.populate_mode(unit)
 
     @staticmethod
     def getUnit(parent, title, instruction, current_unit=None):
@@ -142,7 +167,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         else:
             return None, False
 
-class CreateUnitDialog(QtGui.QDialog):
+class CreateUnitDialog(QtGui.QDialog, HasModes):
     def __init__(self, instruction, unit_data, parent):
         super(CreateUnitDialog, self).__init__(parent)
         self.form = QtGui.QFormLayout(self)
@@ -208,6 +233,8 @@ class CreateUnitDialog(QtGui.QDialog):
 
         self.form.addRow('Faction:', self.faction_select)
 
+        self.create_mode_combobox()
+
         self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
         self.buttonbox.accepted.connect(self.accept)
@@ -230,6 +257,8 @@ class CreateUnitDialog(QtGui.QDialog):
             drop_box.setChecked(item.droppable)
             event_box.setChecked(item.event_combat)
             item_box.setCurrentIndex(Data.item_data.keys().index(item.id))
+        # === Mode ===
+        self.populate_mode(unit)
 
         self.team_changed(0)
         self.gender_changed(unit.gender)
@@ -338,6 +367,7 @@ class CreateUnitDialog(QtGui.QDialog):
         info['ai_group'] = str(self.ai_group.text())
         info['team'] = str(self.team_box.currentText())
         info['generic'] = True
+        info['mode'] = self.get_modes()
         created_unit = DataImport.Unit(info)
         return created_unit
 
@@ -386,6 +416,7 @@ class ReinCreateUnitDialog(CreateUnitDialog):
             drop_box.setChecked(item.droppable)
             event_box.setChecked(item.event_combat)
             item_box.setCurrentIndex(Data.item_data.keys().index(item.id))
+        self.populate_mode(unit)
 
         self.team_changed(0)
         self.gender_changed(unit.gender)
@@ -408,5 +439,6 @@ class ReinCreateUnitDialog(CreateUnitDialog):
         info['event_id'] = EditorUtilities.next_available_event_id([rein for rein in self.unit_data.reinforcements if rein.pack == info['pack']])
         info['team'] = str(self.team_box.currentText())
         info['generic'] = True
+        info['mode'] = self.get_modes()
         created_unit = DataImport.Unit(info)
         return created_unit

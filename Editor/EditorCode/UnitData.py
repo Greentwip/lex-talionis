@@ -34,7 +34,7 @@ class UnitData(object):
 
     def load(self, fp):
         self.clear()
-        current_mode = '0123456789' # Defaults to all modes
+        current_mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()] # Defaults to all modes
         with open(fp) as data:
             unitcontent = data.readlines()
             for line in unitcontent:
@@ -48,15 +48,15 @@ class UnitData(object):
                 current_mode = self.parse_unit_line(unitLine, current_mode)
         self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))  # First sort
 
-    def get_unit_images(self):
+    def get_unit_images(self, mode):
         return {unit.position: EditorUtilities.create_image(unit.klass_image) if unit.klass_image else 
                 EditorUtilities.create_image(Data.class_data.get(unit.klass, Data.class_data['Citizen']).get_image(unit.team, unit.gender))
-                for unit in self.units if unit.position}
+                for unit in self.units if unit.position and mode in unit.mode}
 
-    def get_reinforcement_images(self, pack):
+    def get_reinforcement_images(self, mode, pack):
         return {rein.position: EditorUtilities.create_image(rein.klass_image) if rein.klass_image else 
                 EditorUtilities.create_image(Data.class_data.get(rein.klass, Data.class_data['Citizen']).get_image(rein.team, rein.gender))
-                for rein in self.reinforcements if rein.position and rein.pack == pack}
+                for rein in self.reinforcements if rein.position and mode in rein.mode and rein.pack == pack}
 
     def get_unit_from_id(self, e_id):
         for unit in self.units:
@@ -74,49 +74,49 @@ class UnitData(object):
                     return rein
         return None
 
-    def get_unit_from_pos(self, pos):
+    def get_unit_from_pos(self, pos, mode):
         for unit in self.units:
-            if unit.position == pos:
+            if unit.position == pos and mode in unit.mode:
                 return unit
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
 
-    def get_rein_from_pos(self, pos, pack):
+    def get_rein_from_pos(self, pos, mode, pack):
         for rein in self.reinforcements:
-            if rein.position == pos and rein.pack == pack:
+            if rein.position == pos and mode in rein.mode and rein.pack == pack:
                 return rein
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
 
-    def get_idx_from_pos(self, pos):
+    def get_idx_from_pos(self, pos, mode):
         for idx, unit in enumerate(self.units):
-            if unit.position == pos:
+            if unit.position == pos and mode in unit.mode:
                 return idx
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
         return -1
 
-    def get_ridx_from_pos(self, pos, pack):
+    def get_ridx_from_pos(self, pos, mode, pack):
         for idx, rein in enumerate(self.reinforcements):
-            if rein.position == pos and rein.pack == pack:
+            if rein.position == pos and mode in rein.mode and rein.pack == pack:
                 return idx
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
         return -1
 
-    def get_unit_str(self, pos):
+    def get_unit_str(self, pos, mode):
         for unit in self.units:
-            if unit.position == pos:
+            if unit.position == pos and mode in unit.mode:
                 return unit.name + ': ' + unit.klass + ' ' + str(unit.level) + ' -- ' + ','.join([item.name for item in unit.items])
         return ''
 
-    def get_reinforcement_str(self, pos, pack):
+    def get_reinforcement_str(self, pos, pack, mode):
         for rein in self.reinforcements:
-            if rein.position == pos and rein.pack == pack:
+            if rein.position == pos and mode in rein.mode and rein.pack == pack:
                 return pack + '_' + str(rein.event_id) + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
         return ''
 
     def parse_unit_line(self, unitLine, current_mode):
-        def read_trigger_line(unitLine):
+        def read_trigger_line(unitLine, current_mode):
             if ',' in unitLine[2]:
                 position = tuple(int(n) for n in unitLine[2].split(','))
-                return self.get_unit_from_pos(position)
+                return self.get_unit_from_pos(position, current_mode[0])
             else:
                 unit = self.get_unit_from_id(unitLine[2])
                 if unit:
@@ -131,7 +131,7 @@ class UnitData(object):
         elif unitLine[0] == 'load_player_characters':
             self.load_player_characters = True
         elif unitLine[0] == 'trigger':
-            unit = read_trigger_line(unitLine)
+            unit = read_trigger_line(unitLine, current_mode)
             if unitLine[1] not in self.triggers:
                 self.triggers[unitLine[1]] = Trigger()
             self.triggers[unitLine[1]].add_unit(unit, unitLine[3], unitLine[4])
@@ -225,7 +225,7 @@ class UnitData(object):
         legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
                   'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
                   'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
-        self.create_unit_from_legend(legend)
+        self.create_unit_from_legend(legend, mode)
 
     def create_unit_from_legend(self, legend, mode):
         GC.U_ID += 1
@@ -236,6 +236,12 @@ class UnitData(object):
         if '_' in legend['event_id']:
             u_i['pack'], u_i['event_id'] = legend['event_id'].split('_')
             u_i['event_id'] = int(u_i['event_id'])
+        elif legend['event_id'] != '0':
+            u_i['pack'] = legend['event_id']
+            u_i['event_id'] = 0
+        else:
+            u_i['pack'] = None
+            u_i['event_id'] = 0
         if legend['class'].endswith('F'):
             legend['class'] = legend['class'][:-1] # strip off the F
             u_i['gender'] = 5  # Default female gender is 5
@@ -406,12 +412,18 @@ class UnitMenu(QtGui.QWidget):
 
     def create_mode_view_box(self):
         self.mode_view_label = QtGui.QLabel("Current Mode:")
+        names = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
         self.mode_view_combobox = QtGui.QComboBox()
+        for name in names:
+            self.mode_view_combobox.addItem(name)
 
         hbox = QtGui.QHBoxLayout()
         hbox.addWidget(self.mode_view_label)
         hbox.addWidget(self.mode_view_combobox)
         self.grid.addLayout(hbox, 0, 0)
+
+    def current_mode_view(self):
+        return str(self.mode_view_combobox.currentText())
 
     def get_current_item(self):
         return self.list.item(self.list.currentRow())
@@ -530,7 +542,7 @@ class ReinforcementMenu(UnitMenu):
         hbox = QtGui.QHBoxLayout()
         hbox.addWidget(self.pack_view_label)
         hbox.addWidget(self.pack_view_combobox)
-        self.grid.addLayout(hbox, 0, 1)
+        self.grid.addLayout(hbox, 1, 0)
 
         self.duplicate_group_button = QtGui.QPushButton('Duplicate Group')
         self.duplicate_group_button.clicked.connect(self.duplicate_current_pack)

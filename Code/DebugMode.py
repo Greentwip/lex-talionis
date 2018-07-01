@@ -41,7 +41,7 @@ class DebugState(StateMachine.State):
         else:
             cur_unit = None
         split_command = command.split(';')
-        if split_command[0] == 'exit' or split_command[0] == 'q':
+        if split_command[0] == 'exit' or split_command[0] == 'q' or split_command[0] == '':
             gameStateObj.stateMachine.back()
         elif split_command[0] == 'damage':
             if cur_unit:
