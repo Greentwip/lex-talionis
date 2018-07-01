@@ -445,6 +445,9 @@ class UnitMenu(QtGui.QWidget):
         # idx = int(idx)
         unit = self.unit_data.units[idx]
         if unit.position:
+            current_mode = str(self.mode_view_combobox.currentText())
+            if current_mode not in unit.mode:
+                EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
             self.view.center_on_pos(unit.position)
 
     def load(self, unit_data):
@@ -569,6 +572,9 @@ class ReinforcementMenu(UnitMenu):
         # idx = int(idx)
         unit = self.unit_data.reinforcements[idx]
         if unit.position:
+            current_mode = str(self.mode_view_combobox.currentText())
+            if current_mode not in unit.mode:
+                EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
             EditorUtilities.setComboBox(self.pack_view_combobox, unit.pack)
             self.view.center_on_pos(unit.position)
 

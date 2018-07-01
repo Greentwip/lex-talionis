@@ -84,8 +84,7 @@ def add_line(grid, row):
     line.setLineWidth(0)
     grid.addWidget(line, row, 0)
 
-unit_level_header = """
-# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+unit_level_header = """# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
 # 
 # Each unit belongs on its own line
 # Syntax:

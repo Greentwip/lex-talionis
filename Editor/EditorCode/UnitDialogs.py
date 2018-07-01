@@ -24,7 +24,7 @@ class HasModes(object):
         self.form.addRow('Modes:', self.mode_box)
 
     def populate_mode(self, unit):
-        for index, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.items()):
+        for index, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()):
             row = self.mode_box.model().item(index, 0)
             if name in unit.mode:
                 row.setCheckState(QtCore.Qt.Checked)
@@ -32,7 +32,7 @@ class HasModes(object):
                 row.setCheckState(QtCore.Qt.Unchecked)
 
     def get_modes(self):
-        return [name for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.items()) if self.mode_box.model().item(idx, 0).checkState() == QtCore.Qt.Checked]
+        return [name for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()) if self.mode_box.model().item(idx, 0).checkState() == QtCore.Qt.Checked]
 
 class LoadUnitDialog(QtGui.QDialog, HasModes):
     def __init__(self, instruction, parent):
@@ -224,7 +224,7 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
         self.faction_select = QtGui.QComboBox()
         self.faction_select.uniformItemSizes = True
         self.faction_select.setIconSize(QtCore.QSize(32, 32))
-        for faction_name, faction in self.unit_data.factions.iteritems():
+        for faction_name, faction in self.unit_data.factions.items():
             image = GC.UNITDICT.get(faction.faction_icon + 'Emblem')
             if image:
                 self.faction_select.addItem(EditorUtilities.create_icon(image.convert_alpha()), faction.faction_id)

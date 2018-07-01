@@ -648,11 +648,11 @@ class MainEditor(QtGui.QMainWindow):
             unit_level.write('# Player Characters\n')
             player_units = [unit for unit in units if unit.team == 'player']
             player_units = sorted(player_units, key=lambda x: x.mode)
-            current_mode = ['All']
+            current_mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
             for unit in player_units:
                 if unit.mode != current_mode:
                     current_mode = unit.mode
-                    unit_level.write('mode;' + ','.join(current_mode))
+                    unit_level.write('mode;' + ','.join(current_mode) + '\n')
                 write_unit_line(unit)
             # Other units
             other_units = [unit for unit in units if unit.team == 'other']
@@ -662,7 +662,7 @@ class MainEditor(QtGui.QMainWindow):
                 for unit in other_units:
                     if unit.mode != current_mode:
                         current_mode = unit.mode
-                        unit_level.write('mode;' + ','.join(current_mode))
+                        unit_level.write('mode;' + ','.join(current_mode) + '\n')
                     write_unit_line(unit)
             # Enemies
             unit_level.write('# Enemies\n')
@@ -675,7 +675,7 @@ class MainEditor(QtGui.QMainWindow):
                     for unit in named_enemies:
                         if unit.mode != current_mode:
                             current_mode = unit.mode
-                            unit_level.write('mode;' + ','.join(current_mode))
+                            unit_level.write('mode;' + ','.join(current_mode) + '\n')
                         write_unit_line(unit)
                 # Generic enemy characters
                 generic_enemies = [unit for unit in units if unit.team == team and unit.generic]
@@ -685,7 +685,7 @@ class MainEditor(QtGui.QMainWindow):
                     for unit in generic_enemies:
                         if unit.mode != current_mode:
                             current_mode = unit.mode
-                            unit_level.write('mode;' + ','.join(current_mode))
+                            unit_level.write('mode;' + ','.join(current_mode) + '\n')
                         write_unit_line(unit)
 
         with open(fp, 'w') as unit_level:
@@ -704,7 +704,7 @@ class MainEditor(QtGui.QMainWindow):
             write_units(reinforcements)
             # Triggers
             unit_level.write('# === Triggers ===\n')
-            current_mode = ['All']
+            current_mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
             for trigger_name, trigger in self.unit_data.triggers.items():
                 for unit, (start, end) in trigger.units.items():
                     start_str = str(start[0]) + ',' + str(start[1])
@@ -712,7 +712,7 @@ class MainEditor(QtGui.QMainWindow):
                     if unit.generic and unit in self.unit_data.units:
                         if unit.mode != current_mode:
                             current_mode = unit.mode
-                            unit_level.write('mode;' + ','.join(current_mode))
+                            unit_level.write('mode;' + ','.join(current_mode) + '\n')
                         unit_id = str(unit.position[0]) + ',' + str(unit.position[1])
                     elif unit in self.unit_data.reinforcements:
                         unit_id = unit.pack + '_' + str(unit.event_id) if unit.pack else str(unit.event_id)
