@@ -3077,7 +3077,7 @@ class ShopState(State):
         surf.blit(self.bg, (0, 8))
 
         if self.display_message:
-            self.display_message.draw(surf, {})
+            self.display_message.draw(surf)
 
         if self.stateMachine.getState() in ['sell', 'sell_sure'] or \
                 (self.stateMachine.getState() == 'choice' and self.buy_sell_menu.getSelection() == cf.WORDS['Sell']):

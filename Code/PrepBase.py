@@ -200,7 +200,7 @@ class PrepFormationState(StateMachine.State):
             gameStateObj.stateMachine.changeState('minimap')
 
         elif cf.OPTIONS['cheat']:
-            StateMachine.handle_debug(eventList, gameStateObj, metaDataObj)
+            StateMachine.wizard_mode(eventList, gameStateObj)
 
         gameStateObj.cursor.take_input(eventList, gameStateObj)
             

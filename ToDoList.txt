@@ -15,6 +15,8 @@
 
 - Windows/Mac/Linux build of latest Engine, Level Editor
 
+- Sometimes on Formation Screen, Ophie shows his running down animation instead of normal passive anim; could be from previous level...
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
