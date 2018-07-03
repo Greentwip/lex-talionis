@@ -108,6 +108,7 @@ def read_constants_file():
              'max_level': '10,20,20', # Maximum Level for class by tier ('10, 20, 20,')
              'auto_promote': 0, # Promote after max-level?
              'weapon_adv_flip': 1, # Flip advantage bonuses when at disadvantage
+             'minimum_damage': 0, # Minimum amount of damage that can be dealt (switch to 1 to make it like FE2 or FE15)
              'title': 'Lex Talionis Engine',
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
@@ -158,6 +159,7 @@ def read_constants_file():
     lines['max_level'] = [int(n) for n in lines['max_level'].split(',')]
     lines['auto_promote'] = int(lines['auto_promote'])
     lines['weapon_adv_flip'] = int(lines['weapon_adv_flip'])
+    lines['minimum_damage'] = int(lines['minimum_damage'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
     lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
     lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])

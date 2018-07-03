@@ -1608,7 +1608,7 @@ class UnitObject(object):
             damage = int(damage * hybrid/100.0) 
 
         # Can't do negative damage
-        return max(0, damage)
+        return max(cf.CONSTANTS['minimum_damage'], damage)
 
     def compute_heal(self, target, gameStateObj, item, mode=None):
         heal = int(eval(item.heal)) + self.stats['MAG']
