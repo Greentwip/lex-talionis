@@ -37,7 +37,7 @@
         <autolevel_enemies>0</autolevel_enemies>
         <autolevel_players>0</autolevel_players>
 
-        <truelevel_enemies>gameStateObj.game_constants['level']//5</truelevel_enemies>
+        <truelevel_enemies>game_constants['level']//5</truelevel_enemies>
     </difficulty>
 
     <difficulty name="Grandmaster">
@@ -56,10 +56,10 @@
         <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
         <enemy_bases>0,0,1,0,0,0,0,0,0,0</enemy_bases>
 
-        <autolevel_enemies>1 + gameStateObj.game_constants['level']//2</autolevel_enemies>
+        <autolevel_enemies>1 + game_constants['level']//2</autolevel_enemies>
         <autolevel_players>0</autolevel_players>
 
-        <truelevel_enemies>gameStateObj.game_constants['level']//5</truelevel_enemies>
+        <truelevel_enemies>game_constants['level']//5</truelevel_enemies>
     </difficulty>
 
 </mode_catalog>

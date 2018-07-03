@@ -555,3 +555,139 @@ Wexp: 13, 21, 0, 0, 0, 0, 0
 Items: Iron Lance 40, Iron Sword 40, Spiritbane 2
 *** Convoy:
 Items: 
+
+=== Level 0 === Money: 1500
+*** Ophie: Riposte
+Lvl 1, Exp 54
+Wexp: 10, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42
+*** Prim: Healtouch
+Lvl 1, Exp 24
+Wexp: 0, 0, 0, 0, 3, 0, 0
+Items: Glimmer Ward 28, Heal 29
+*** Convoy:
+Items: 
+
+=== Level 1 === Money: 1500
+*** Ophie: Riposte
+Lvl 3, Exp 76
+Wexp: 18, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 30
+*** Prim: Healtouch
+Lvl 2, Exp 28
+Wexp: 0, 0, 0, 0, 11, 0, 0
+Items: Heal 25, Glimmer Ward 24
+*** Joel: Cleave
+Lvl 4, Exp 1
+Wexp: 0, 0, 23, 0, 0, 0, 0
+Items: Hand Axe 20, Vulnerary 3, Iron Axe 38
+*** Nia: Prescience
+Lvl 3, Exp 63
+Wexp: 0, 0, 0, 21, 0, 0, 0
+Items: Willow Bow 40, Vulnerary 3
+*** Convoy:
+Items: 
+
+=== Level 2 === Money: 2860
+*** Ophie: Riposte
+Lvl 4, Exp 35
+Wexp: 21, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 25, Steel Sword 30, Vulnerary 3
+*** Prim: Healtouch
+Lvl 3, Exp 88
+Wexp: 0, 0, 0, 0, 21, 0, 0
+Items: Heal 17, Glimmer Ward 22
+*** Joel: Cleave,Shove
+Lvl 5, Exp 91
+Wexp: 0, 0, 32, 0, 0, 0, 0
+Items: Iron Axe 31, Hand Axe 18, Vulnerary 3, Vulnerary 3, Angelic Robe 1
+*** Nia: Prescience
+Lvl 4, Exp 51
+Wexp: 0, 0, 0, 26, 0, 0, 0
+Items: Willow Bow 35, Vulnerary 2, Slim Lance 35, Hatchet 35
+*** Althea: Resistance +2,Focus
+Lvl 3, Exp 3
+Wexp: 0, 0, 0, 0, 0, 11, 0
+Items: Fire Ward 25, Potion 3
+*** Drake: Canto,Savior
+Lvl 5, Exp 76
+Wexp: 12, 22, 0, 0, 0, 0, 0
+Items: Iron Lance 38, Iron Sword 42, Vulnerary 2, Spiritbane 2
+*** Convoy:
+Items: 
+
+=== Level 3 === Money: 13260
+*** Ophie: Riposte,Vantage
+Lvl 5, Exp 96
+Wexp: 29, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 17, Steel Sword 29, Rapier 16, Mana Ring 1
+*** Prim: Healtouch,Miracle
+Lvl 5, Exp 54
+Wexp: 0, 0, 0, 0, 34, 0, 0
+Items: Heal 5, Glimmer Ward 20
+*** Joel: Cleave,Shove
+Lvl 7, Exp 68
+Wexp: 0, 0, 45, 0, 0, 0, 0
+Items: Iron Axe 28, Steel Axe 24, Hatchet 29, Hand Axe 17, Vulnerary 1
+*** Nia: Prescience,Critical
+Lvl 5, Exp 96
+Wexp: 0, 0, 0, 36, 0, 0, 0
+Items: Willow Bow 22, Vulnerary 2, Mend 15
+*** Althea: Resistance +2,Focus,Conductance
+Lvl 6, Exp 22
+Wexp: 0, 0, 0, 0, 0, 22, 0
+Items: Fire Ward 13, Skeleton Key 1, Javelin 18
+*** Drake: Canto,Savior
+Lvl 6, Exp 70
+Wexp: 17, 27, 0, 0, 0, 0, 0
+Items: Iron Sword 37, Iron Lance 33, Potion 2
+*** Renae: Locktouch
+Lvl 4, Exp 36
+Wexp: 18, 0, 0, 0, 0, 0, 0
+Items: Iron Sword 42, Vulnerary 3, Willow Bow 44
+*** Theo: Provoke,Shove
+Lvl 5, Exp 34
+Wexp: 0, 22, 0, 0, 0, 0, 0
+Items: Iron Lance 43, Slim Lance 31, Vulnerary 2, Spiritbane 1, Steel Sword 28
+*** Convoy:
+Items: Heal 30, Secret Book 1, Angelic Robe 1, Vulnerary 3
+
+=== Level 4 === Money: 11880
+*** Ophie: Riposte,Vantage
+Lvl 7, Exp 0
+Wexp: 34, 0, 0, 0, 0, 0, 0
+Items: Steel Sword 26, Iron Sword 11, Rapier 16, Vulnerary 2, Magebane Swd 15
+*** Prim: Healtouch,Miracle
+Lvl 6, Exp 36
+Wexp: 0, 0, 0, 0, 39, 0, 0
+Items: Glimmer Ward 17, Heal 2, Heal 30, Mend 15, Javelin 20
+*** Joel: Cleave,Shove,Defense +2
+Lvl 8, Exp 77
+Wexp: 0, 0, 51, 0, 0, 0, 0
+Items: Steel Axe 23, Iron Axe 27, Hatchet 25, Hand Axe 17, Potion 1
+*** Nia: Prescience,Critical
+Lvl 7, Exp 62
+Wexp: 0, 0, 0, 43, 0, 0, 0
+Items: Willow Bow 14, Vulnerary 2, Willow Bow 44, Mithril Mail 1, Oak Bow 30
+*** Althea: Focus,Conductance,Resistance +2
+Lvl 7, Exp 30
+Wexp: 0, 0, 0, 0, 0, 29, 0
+Items: Fire Ward 6, Vulnerary 3, Rapier 20, Shine Ward 20, Ruby --
+*** Drake: Canto,Savior
+Lvl 7, Exp 54
+Wexp: 18, 32, 0, 0, 0, 0, 0
+Items: Iron Lance 28, Iron Sword 36, Javelin 18, Vulnerary 1, Vulnerary 3
+*** Renae: Locktouch,Steal
+Lvl 6, Exp 2
+Wexp: 25, 0, 0, 0, 0, 0, 0
+Items: Steel Sword 26, Iron Sword 42, Flareblade 19, Vulnerary 3, Thunder Ward 30
+*** Theo: Provoke,Shove
+Lvl 6, Exp 36
+Wexp: 0, 29, 0, 0, 0, 0, 0
+Items: Slim Lance 26, Iron Lance 41, Spiritbane 1, Fire Ward 30
+*** Eliza: Synergy,Underdog
+Lvl 2, Exp 65
+Wexp: 0, 25, 0, 0, 0, 0, 0
+Items: Iron Lance 41, Javelin 20, Prim's Charm --, Vulnerary 2
+*** Convoy:
+Items: Secret Book 1, Angelic Robe 1, Mana Ring 1, Skeleton Key 1, Wind Ward 30, Wyrmsfire 10, Steel Lance 30, Talisman 1, Sapphire --, Fly 10, Great Lance 25
