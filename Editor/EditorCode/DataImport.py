@@ -128,6 +128,7 @@ class Unit(object):
             self.image = None
         self.saved = False
         self.klass_image = False
+        self.extra_statuses = None
 
     def copy(self):
         new_unit = Unit()
@@ -150,6 +151,7 @@ class Unit(object):
         new_unit.items = [ItemMethods.itemparser(item.id)[0] for item in self.items]
         new_unit.ai = self.ai
         new_unit.image = self.image
+        new_unit.extra_statuses = self.extra_statuses
         return new_unit
 
 class Klass(object):

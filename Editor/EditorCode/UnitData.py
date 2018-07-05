@@ -221,10 +221,14 @@ class UnitData(object):
         self.add_unit_from_line(unitLine)
 
     def create_unit_from_line(self, unitLine, mode):
-        assert len(unitLine) in [9, 10], "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
+        assert len(unitLine) in (9, 10), "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
         legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
                   'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
                   'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
+        if len(unitLine) == 10:
+            legend['extra_status'] = unitLine[9]
+        else:
+            legend['extra_status'] = None
         self.create_unit_from_legend(legend, mode)
 
     def create_unit_from_legend(self, legend, mode):
@@ -290,10 +294,7 @@ class UnitData(object):
         # get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
 
         # Extra Skills
-        # if len(unitLine) == 10:
-            # statuses = [StatusObject.statusparser(status) for status in unitLine[9].split(',')]
-            # for status in statuses:
-                # StatusObject.HandleStatusAddition(status, cur_unit, gameStateObj)
+        cur_unit.extra_statuses = legend['extra_status']
 
     def build_stat_dict(self, stats):
         st = OrderedDict()

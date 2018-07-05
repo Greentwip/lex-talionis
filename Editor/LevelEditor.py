@@ -638,9 +638,11 @@ class MainEditor(QtGui.QMainWindow):
             if unit.generic:
                 item_strs = ','.join(get_item_str(item) for item in unit.items)
                 klass_str = str(unit.klass) + ('F' if unit.gender >= 5 else '')
-                order = (unit.team, '0', event_id_str, klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.faction)
+                order = [unit.team, '0', event_id_str, klass_str, str(unit.level), item_strs, pos_str, ai_str, unit.faction]
             else:
-                order = (unit.team, '1' if unit.saved else '0', event_id_str, unit.name, pos_str, ai_str)
+                order = [unit.team, '1' if unit.saved else '0', event_id_str, unit.name, pos_str, ai_str]
+            if unit.extra_statuses:
+                order.append(unit.extra_statuses)
             unit_level.write(';'.join(order) + '\n')
 
         def write_units(units):
