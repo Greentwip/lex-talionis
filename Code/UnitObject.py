@@ -1538,9 +1538,15 @@ class UnitObject(object):
             return False
 
         advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
-        a = advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).attackspeed
-        b = advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).attackspeed
-
+        a, b = 0, 0
+        if advantage[0] > 0:
+            a += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).attackspeed
+        else:
+            a -= advantage[0] * Weapons.ADVANTAGE.get_disadvantage(item, self.wexp).attackspeed
+        if advantage[1] > 0:
+            b += advantage[1] * Weapons.ADVANTAGE.get_advantage(target.getMainWeapon(), target.wexp).attackspeed
+        else:
+            b -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).attackspeed
         return self.attackspeed() + a >= target.attackspeed() + b + cf.CONSTANTS['speed_to_double']
 
     # computes the damage dealt by me using this item
@@ -1565,8 +1571,14 @@ class UnitObject(object):
                     damage += item.effective.bonus
             # Weapon Triangle
             advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
-            damage += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).damage
-            damage -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).resist
+            if advantage[0] > 0:
+                damage += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).damage
+            else:
+                damage -= advantage[0] * Weapons.ADVANTAGE.get_disadvantage(item, self.wexp).damage
+            if advantage[1] > 0:
+                damage -= advantage[1] * Weapons.ADVANTAGE.get_advantage(target.getMainWeapon(), target.wexp).resist
+            else:
+                damage += advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).resist
             if Weapons.TRIANGLE.isMagic(item):
                 if item.magic_at_range and adj:
                     stat = 'DEF'
@@ -1631,10 +1643,18 @@ class UnitObject(object):
 
         # Calculations
         if my_item.weapon or my_item.spell:
+            # Weapon triangle
             advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
             bonus = 0
-            bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(my_item, self.wexp).accuracy
-            bonus -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).avoid
+            if advantage[0] > 0:
+                bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).accuracy
+            else:
+                bonus -= advantage[0] * Weapons.ADVANTAGE.get_disadvantage(item, self.wexp).accuracy
+            if advantage[1] > 0:
+                bonus -= advantage[1] * Weapons.ADVANTAGE.get_advantage(target.getMainWeapon(), target.wexp).avoid
+            else:
+                bonus += advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).avoid
+
             hitrate = self.accuracy(gameStateObj, my_item) + bonus - target.avoid(gameStateObj)
             for status in self.status_effects:
                 if status.conditional_hit and eval(status.conditional_hit.conditional, globals(), locals()):
@@ -1664,8 +1684,14 @@ class UnitObject(object):
         if my_item.weapon or my_item.spell:
             advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
             bonus = 0
-            bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(my_item, self.wexp).crit
-            bonus -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).dodge
+            if advantage[0] > 0:
+                bonus += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).crit
+            else:
+                bonus -= advantage[0] * Weapons.ADVANTAGE.get_disadvantage(item, self.wexp).crit
+            if advantage[1] > 0:
+                bonus -= advantage[1] * Weapons.ADVANTAGE.get_advantage(target.getMainWeapon(), target.wexp).dodge
+            else:
+                bonus += advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).dodge
             critrate = self.crit_accuracy(gameStateObj, my_item) + bonus - target.crit_avoid(gameStateObj)
             for status in self.status_effects:
                 if status.conditional_crit_hit and eval(status.conditional_crit_hit.conditional, globals(), locals()):

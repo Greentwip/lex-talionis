@@ -548,7 +548,7 @@ class StartMode(StateMachine.State):
                     gameStateObj.stateMachine.changeState('start_new')
                     gameStateObj.stateMachine.changeState('transition_out')
             elif self.state == 'difficulty_wait':
-                gameStateObj.mode = list(GC.DIFFICULTYDATA.values())[self.menu.getSelectionIndex()]
+                gameStateObj.mode = list(GC.DIFFICULTYDATA.values())[self.menu.getSelectionIndex()].copy()
                 self.death_choice = gameStateObj.mode['death'] == '?'
                 self.growth_choice = gameStateObj.mode['growths'] == '?'
                 if self.death_choice:

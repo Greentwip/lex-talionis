@@ -91,6 +91,7 @@ class Weapon_Advantage(object):
 
     def __init__(self, fn):
         self.wadv_dict = {}
+        self.wdadv_dict = {}
         self.no_advantage = self.Advantage(0, 0, 0, 0, 0, 0, 0)
         self.parse_file(fn)
 
@@ -98,43 +99,54 @@ class Weapon_Advantage(object):
         with open(fn) as fp:
             lines = [l.strip() for l in fp.readlines()]
 
+        on_disadvantage = False
         for index, line in enumerate(lines):
             if line.startswith('#'):
+                continue
+            elif line.startswith('Disadvantage'):
+                on_disadvantage = True
                 continue
             split_line = line.split()
             weapon_type = split_line[0]
             weapon_rank = split_line[1]
             stats = [int(x) for x in split_line[2:]]
-            if weapon_type not in self.wadv_dict:
-                self.wadv_dict[weapon_type] = {}
-            self.wadv_dict[weapon_type][weapon_rank] = self.Advantage(*stats)
+            if on_disadvantage:
+                if weapon_type not in self.wdadv_dict:
+                    self.wdadv_dict[weapon_type] = {}
+                self.wdadv_dict[weapon_type][weapon_rank] = self.Advantage(*stats)
+            else:
+                if weapon_type not in self.wadv_dict:
+                    self.wadv_dict[weapon_type] = {}
+                self.wadv_dict[weapon_type][weapon_rank] = self.Advantage(*stats)
 
         assert 'All' in self.wadv_dict
         assert 'All' in self.wadv_dict['All']
+        assert 'All' in self.wdadv_dict
+        assert 'All' in self.wdadv_dict['All']
 
-    def get_advantage(self, weapon, wexp):
+    def _get_data(self, weapon, wexp, data):
         if weapon:
             weapon_type = weapon.TYPE
             weapon_wexp = wexp[TRIANGLE.name_to_index[weapon.TYPE]]
             weapon_rank = EXP.number_to_letter(weapon_wexp)
-            if weapon_type in self.wadv_dict:
-                if weapon_rank in self.wadv_dict[weapon_type]:
-                    return self.wadv_dict[weapon_type][weapon_rank]
+            if weapon_type in data:
+                if weapon_rank in data[weapon_type]:
+                    return data[weapon_type][weapon_rank]
                 else:
-                    return self.wadv_dict[weapon_type]['All']
+                    return data[weapon_type]['All']
             else:
-                if weapon_rank in self.wadv_dict['All']:
-                    return self.wadv_dict['All'][weapon_rank]
+                if weapon_rank in data['All']:
+                    return data['All'][weapon_rank]
                 else:
-                    return self.wadv_dict['All']['All']
+                    return data['All']['All']
         else:
             return self.no_advantage
 
+    def get_advantage(self, weapon, wexp):
+        self._get_data(weapon, wexp, self.wadv_dict)
+
     def get_disadvantage(self, weapon, wexp):
-        if cf.CONSTANTS['weapon_adv_flip']:
-            return self.get_advantage(weapon, wexp)
-        else:
-            return self.no_advantage
+        self._get_data(weapon, wexp, self.wdadv_dict)
 
 class Weapon_Exp(object):
     def __init__(self, fn):

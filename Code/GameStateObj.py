@@ -82,7 +82,7 @@ class GameStateObj(object):
             cf.OPTIONS['Display Hints'] = 0
 
     def default_mode(self):
-        return list(GC.DIFFICULTYDATA.values())[0]
+        return list(GC.DIFFICULTYDATA.values())[0].copy()
 
     def set_generic_mode(self):
         self.mode = self.default_mode()  # Need to make sure its got a mode ready
