@@ -1,6 +1,5 @@
 # Weapons.py
 import GlobalConstants as GC
-import configuration as cf
 import Engine
 
 # === WEAPON TRIANGLE OBJECT ==================================================
@@ -143,10 +142,10 @@ class Weapon_Advantage(object):
             return self.no_advantage
 
     def get_advantage(self, weapon, wexp):
-        self._get_data(weapon, wexp, self.wadv_dict)
+        return self._get_data(weapon, wexp, self.wadv_dict)
 
     def get_disadvantage(self, weapon, wexp):
-        self._get_data(weapon, wexp, self.wdadv_dict)
+        return self._get_data(weapon, wexp, self.wdadv_dict)
 
 class Weapon_Exp(object):
     def __init__(self, fn):
