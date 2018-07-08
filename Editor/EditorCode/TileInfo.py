@@ -30,6 +30,7 @@ info_kinds = [('Status', 'Status'),
               ('Shop', 'Item'),
               ('Village', 'string'),
               ('Destructible', 'string'),
+              ('HP', 'int'),
               ('Locked', 'string'),
               ('Switch', 'string'),
               ('Search', 'string'),
@@ -201,6 +202,12 @@ class TileInfoMenu(QtGui.QWidget):
                 return None
         elif kind == 'string':
             text, ok = QtGui.QInputDialog.getText(self, self.get_current_name(), 'Enter ID to use:')
+            if ok:
+                return text
+            else:
+                return None
+        elif kind == 'int':
+            text, ok = QtGui.QInputDialog.getInt(self, self.get_current_name(), 'Set Starting HP:', 10, 0)
             if ok:
                 return text
             else:
