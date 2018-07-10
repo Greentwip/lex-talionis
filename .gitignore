@@ -4,6 +4,8 @@
 # Save States
 Saves/*.p
 Saves/*.pmeta
+Saves/*.ini
+Saves/progress_log.txt
 debug.log.*
 
 # Large Audio Files

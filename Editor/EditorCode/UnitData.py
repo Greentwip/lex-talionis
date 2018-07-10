@@ -128,6 +128,8 @@ class UnitData(object):
             self.factions[unitLine[1]] = Faction.Faction(unitLine[1], unitLine[2], unitLine[3], unitLine[4])
         elif unitLine[0] == 'mode':
             current_mode = unitLine[1].split(',')
+            if 'All' in current_mode:
+                current_mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
         elif unitLine[0] == 'load_player_characters':
             self.load_player_characters = True
         elif unitLine[0] == 'trigger':
