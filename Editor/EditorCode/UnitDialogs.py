@@ -32,7 +32,8 @@ class HasModes(object):
                 row.setCheckState(QtCore.Qt.Unchecked)
 
     def get_modes(self):
-        return [name for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()) if self.mode_box.model().item(idx, 0).checkState() == QtCore.Qt.Checked]
+        return [name for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values())
+                if self.mode_box.model().item(idx, 0).checkState() == QtCore.Qt.Checked]
 
 class LoadUnitDialog(QtGui.QDialog, HasModes):
     def __init__(self, instruction, parent):

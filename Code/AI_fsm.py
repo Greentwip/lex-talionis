@@ -158,7 +158,7 @@ class AI(object):
             
             elif self.state == 'Loot':
                 if self.ai1_state & PRIMARYAI['Destructible']:
-                    success = self.run_simple_ai(self.valid_moves, 'Destructible', gameStateObj)
+                    success = self.run_simple_ai(self.valid_moves, 'Destructible', gameStateObj, 'HP')
                 self.state = 'Secondary_Init'
 
             elif self.state == 'Secondary_Init':
@@ -383,21 +383,24 @@ class AI(object):
     def run_attack_tile_ai(self, valid_moves, gameStateObj):
         available_targets = [position for position, tile in gameStateObj.map.tiles 
                              if 'HP' in gameStateObj.map.tile_info_dict[position]]
-        for item in self.unit.items:
-            if item.weapon:
+        avail_items = [item for item in self.unit.items if item.weapon]
+        avail_items = sorted(avail_items, key=lambda x: x.MT, reverse=True)
+
+        for item in avail_items:
+            for target in available_targets:
                 for move in valid_moves:
-                    for target in available_targets:
-                        if Utility.calculate_distance(move, target.position) in item.RNG:
-                            self.target_to_interact_with = target.position
-                            self.position_to_move_to = move
-                            self.item_to_use = item
-                            return True
+                    if Utility.calculate_distance(move, target.position) in item.RNG:
+                        self.target_to_interact_with = target.position
+                        self.position_to_move_to = move
+                        self.item_to_use = item
+                        return True
         return False
 
     # === SIMPLE AI FOR EVENT TILES ===
-    def run_simple_ai(self, valid_moves, tile_kind, gameStateObj):
+    def run_simple_ai(self, valid_moves, tile_kind, gameStateObj, ignore_tile_kind=None):
         for move in valid_moves:
-            if tile_kind in gameStateObj.map.tile_info_dict[move]:
+            tile_info = gameStateObj.map.tile_info_dict[move]
+            if tile_kind in tile_info and ignore_tile_kind not in tile_info:
                 self.target_to_interact_with = move
                 self.position_to_move_to = move
                 return True

@@ -79,7 +79,7 @@ class Unit(object):
                 Unit.g_id += 1
             self.pack = info.get('pack')  # What reinforcement pack am I in
             self.event_id = info.get('event_id')  # Number within the pack
-            self.mode = info.get('mode', ['All'])
+            self.mode = info.get('mode', [mode['name'] for mode in GC.DIFFICULTYDATA.values()])
             self.faction = info.get('faction')
             self.name = info['name']
             self.generic = info.get('generic', False)
@@ -106,7 +106,7 @@ class Unit(object):
         else:
             self.id = 0
             self.event_id = None
-            self.mode = ['All']
+            self.mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
             self.pack = None
             self.faction = None
             self.name = ''

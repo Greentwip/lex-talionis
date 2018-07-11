@@ -45,7 +45,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     gameStateObj.start_map(currentMap)
 
     # === Process unit data ===
-    current_mode = ['All']
+    current_mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
     for line in unitcontent:
         # Process each line that was in the level file.
         line = line.strip()

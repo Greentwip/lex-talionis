@@ -1204,9 +1204,9 @@
         <components>spell,uses,aoe,hit,damage,detrimental,status,ai_speed_up,aoe_anim</components>
         <weapontype>Anima</weapontype>
  
-        <uses>10</uses>
+        <uses>5</uses>
         <RNG>2</RNG>
-        <value>150</value>
+        <value>300</value>
         <desc>Affects medium sized area. Blinds foes.</desc>
         <aoe>Blast,1</aoe>
         

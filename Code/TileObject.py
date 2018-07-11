@@ -202,9 +202,12 @@ class MapObject(object):
         self.weather = []
 
     def destroy(self, tile, gameStateObj):
-        destroy_index = self.tile_info_dict[tile.position]['Destructible']
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(self.levelfolder + '/destroyScript.txt', name=destroy_index, tile_pos=tile.position))
-        gameStateObj.stateMachine.changeState('dialogue')
+        if 'Destructible' in self.tile_info_dict:
+            destroy_index = self.tile_info_dict[tile.position]['Destructible']
+            script_name = self.levelfolder + '/destroyScript.txt'
+            if os.path.exists(script_name):
+                gameStateObj.message.append(Dialogue.Dialogue_Scene(script_name, name=destroy_index, tile_pos=tile.position))
+                gameStateObj.stateMachine.changeState('dialogue')
 
     def check_bounds(self, pos):
         if pos[0] >= 0 and pos[1] >= 0 and pos[0] < self.width and pos[1] < self.height:
