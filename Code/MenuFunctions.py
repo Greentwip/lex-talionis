@@ -1165,7 +1165,7 @@ class MainMenu(object):
 class ChapterSelectMenu(MainMenu):
     def __init__(self, options):
         MainMenu.__init__(self, options, 'ChapterSelect')
-        self.use_rel_y = (len(options) > 3)
+        self.use_rel_y = len(options) > 3
         self.use_transparency = True
         self.rel_pos_y = 0
 
@@ -1183,9 +1183,13 @@ class ChapterSelectMenu(MainMenu):
         MainMenu.update(self)
         if self.use_rel_y:
             if self.rel_pos_y > 0:
-                self.rel_pos_y -= 2
+                self.rel_pos_y -= 4
+                if self.rel_pos_y < 0:
+                    self.rel_pos_y = 0
             elif self.rel_pos_y < 0:
-                self.rel_pos_y += 2
+                self.rel_pos_y += 4
+                if self.rel_pos_y > 0:
+                    self.rel_pos_y = 0
 
     def draw(self, surf, center=(GC.WINWIDTH//2, GC.WINHEIGHT//2), flicker=False, show_cursor=True):
         try:
@@ -1193,7 +1197,9 @@ class ChapterSelectMenu(MainMenu):
         except TypeError:
             logger.warning("this is a gameStateObj.activeMenu... It shouldn't be. Aborting draw...")
             return
-        for index, option in enumerate(self.options):
+        # Only bother to show closest 7
+        start_index = max(0, self.currentSelection - 3)
+        for index, option in enumerate(self.options[start_index:self.currentSelection + 3], start_index):
             if flicker and self.currentSelection == index: # If the selection should flash white
                 BGSurf = GC.IMAGESDICT[self.background + 'Flicker'].copy()
             elif self.currentSelection == index: # Highlight the chosen option

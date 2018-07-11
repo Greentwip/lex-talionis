@@ -95,6 +95,7 @@ class StateMachine(object):
                            'start_new': Transitions.StartNew,
                            'start_newchild': Transitions.StartNewChild,
                            'start_extras': Transitions.StartExtras,
+                           'start_all_saves': Transitions.StartAllSaves,
                            'start_wait': Transitions.StartWait,
                            'start_save': Transitions.StartSave,
                            'credits': Transitions.CreditsState,
@@ -2159,11 +2160,11 @@ class PhaseChangeState(State):
             if gameStateObj.phase.get_current_phase() == 'player':
                 logger.debug("Saving as we enter player phase!")
                 name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount)
-                SaveLoad.suspendGame(gameStateObj, 'TurnChange', hard_loc=name)
+                SaveLoad.suspendGame(gameStateObj, 'TurnChange ' + str(gameStateObj.turncount), hard_loc=name)
             elif gameStateObj.phase.get_current_phase() == 'enemy':
                 logger.debug("Saving as we enter enemy phase!")
                 name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount) + 'b'
-                SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange', hard_loc=name)
+                SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange ' + str(gameStateObj.turncount), hard_loc=name)
 
     def update(self, gameStateObj, metaDataObj):
         State.update(self, gameStateObj, metaDataObj)

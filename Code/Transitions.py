@@ -400,6 +400,63 @@ class StartLoad(StateMachine.State):
 
         return surf
 
+class StartAllSaves(StartLoad):
+    def begin(self, gameStateObj, metaDataObj):
+        if not self.started:
+            # For transition
+            self.selection = None
+            self.state = "transition_in"
+            self.position_x = 3*GC.WINWIDTH//2
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Load Game'])
+            self.rel_title_pos_y = -40
+            self.all_saves = sorted(self.get_all_saves(), key=lambda x: x.realtime, reverse=True)
+            options = [save_slot.get_name() for save_slot in self.all_saves]
+            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
+            # Default to most recent
+            gameStateObj.activeMenu.currentSelection = 0
+
+    def get_all_saves(self):
+        import glob
+        save_slots = []
+        for meta_fn in glob.glob('Saves/L*T*.pmeta'):
+            ss = CustomObjects.SaveSlot(meta_fn, 0)
+            save_slots.append(ss)
+        return save_slots
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+                        
+        if event == 'DOWN':
+            GC.SOUNDDICT['Select 6'].play()
+            gameStateObj.activeMenu.moveDown()
+        elif event == 'UP':
+            GC.SOUNDDICT['Select 6'].play()
+            gameStateObj.activeMenu.moveUp()
+
+        elif event == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.activeMenu = None # Remove menu
+            self.state = 'transition_out'
+            # self.time_display.state = 'left'
+
+        elif event == 'SELECT':
+            selection = self.all_saves[gameStateObj.activeMenu.getSelectionIndex()]
+            if selection.kind:
+                GC.SOUNDDICT['Save'].play()
+
+                # gameStateObj.activeMenu = None # Remove menu
+                logger.debug('Loading game...')
+                SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
+                if selection.kind == 'Start': # Restart
+                    levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+                    # Load the first level
+                    SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
+                gameStateObj.transition_from = cf.WORDS['Load Game']
+                gameStateObj.stateMachine.changeState('start_wait')
+                gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
+            else:
+                GC.SOUNDDICT['Error'].play()
+
 class StartRestart(StartLoad):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
@@ -728,6 +785,8 @@ class StartExtras(StateMachine.State):
         self.position_x = 3*GC.WINWIDTH//2
 
         options = [cf.WORDS['Options'], cf.WORDS['Credits']]
+        if cf.OPTIONS['cheat']:
+            options.append(cf.WORDS['All Saves'])
         gameStateObj.activeMenu = MenuFunctions.MainMenu(options, 'DarkMenu')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -753,6 +812,9 @@ class StartExtras(StateMachine.State):
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Options']:
                 gameStateObj.stateMachine.changeState('config_menu')
+                gameStateObj.stateMachine.changeState('transition_out')
+            elif selection == cf.WORDS['All Saves']:
+                gameStateObj.stateMachine.changeState('start_all_saves')
                 gameStateObj.stateMachine.changeState('transition_out')
 
     def update(self, gameStateObj, metaDataObj):

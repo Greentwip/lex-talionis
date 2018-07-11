@@ -40,7 +40,8 @@ if;gameStateObj.turncount == 8
 	s;Sam;Looks like we're not too late...{w};auto
 	s;Kayla;I'd certainly hope not... dragging me out here on such short notice.{w}{br}There'd better be something to see.{w};auto
 	s;Sam;Look! They're making their way up the switchbacks.{w};auto
-	s;Kayla;Oh, how romantic!{w}{br}Our heroes dashing through the sweltering desert, bandits on their tail.{w}{br}It's like a novel!{w};auto
+	bop;Kayla
+	s;Kayla;Oh, how romantic!{w}{br}Our heroes dashing through the sweltering desert, bandits on their tail.{w}{br}It's just like a novel!{w};auto
 	s;Sam;We're not here to discuss literature, Kayla.{w};auto
 	s;Kayla;Tsk Tsk. A lady needs time to prepare, you know.{w}{br}But if you're in such a rush...{w}{br}Men, into formation! Spread out and take the ridge!{w};auto
 	r;Sam;Kayla
@@ -50,6 +51,7 @@ if;gameStateObj.turncount == 8
 	add_unit;M1;23,16
 	add_unit;M2;24,16
 	wait;1000
+	battle_save
 elif;gameStateObj.turncount == 16 or gameStateObj.turncount == 18 or gameStateObj.turncount >= 20
 	set_cursor;0,0
 	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
