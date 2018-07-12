@@ -220,8 +220,13 @@ class UnitSprite(object):
 
     def get_sprites(self, team):
         gender = 'M' if self.unit.gender < 5 else 'F'
-        unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
-        unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
+        try:
+            unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
+            unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
+        except KeyError:  # Try the other gender
+            gender = 'F' if self.unit.gender < 5 else 'M'
+            unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
+            unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
         return unit_stand_sprites, unit_move_sprites
 
     def loadSprites(self):
