@@ -268,14 +268,14 @@ def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
                 mode_bases = gameStateObj.mode['enemy_bases']
                 mode_growths = gameStateObj.mode['enemy_growths']
             stats = [sum(x) for x in zip(stats, mode_bases)]
-            assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
+            assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long" % (stats, cf.CONSTANTS['num_stats'])
 
             u_i['growths'] = intify_comma_list(unit.find('growths').text)
             u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
             u_i['growths'] = [sum(x) for x in zip(u_i['growths'], mode_growths)]
-            assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
+            assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long" % (stats, cf.CONSTANTS['num_stats'])
 
-            num_levelups = u_i['level'] - 1
+            num_levelups = u_i['level'] - 1 + (cf.CONSTANTS['promoted_level'] if class_dict[u_i['klass']]['tier'] > 1 else 0)
             stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj.mode)
 
             u_i['stats'] = build_stat_dict(stats)
@@ -356,8 +356,8 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
-        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'], \
-        gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
+        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'],
+                      gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
@@ -457,7 +457,7 @@ def get_unit_info(class_dict, team, klass, level, item_line, mode, game_constant
     bases = [sum(x) for x in zip(bases, mode_bases)]
     growths = [sum(x) for x in zip(growths, mode_growths)]
 
-    num_levelups = level - 1
+    num_levelups = level - 1 + (cf.CONSTANTS['promoted_level'] if class_dict[klass]['tier'] > 1 else 0)
     stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, class_dict[klass]['max'], mode, force_fixed=force_fixed)
 
     # Handle items
