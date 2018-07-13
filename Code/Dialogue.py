@@ -89,6 +89,9 @@ class Dialogue_Scene(object):
         # Assumes all "if" statements evaluate to True?
         self.if_flag = if_flag
 
+    def serialize(self):
+        return self.scene
+
     def count_if_statements(self):
         if_count = 0
         for line in self.scene_lines:

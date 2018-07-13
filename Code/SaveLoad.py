@@ -657,9 +657,10 @@ def save_io(to_save, to_save_meta, old_slot, slot=None, hard_loc=None):
                 shutil.copy(save_loc, r_save)
                 shutil.copy(meta_loc, r_save_meta)
         else:
-            if 'Saves/Restart' + str(old_slot) + '.p' != r_save:
-                shutil.copy('Saves/Restart' + str(old_slot) + '.p', r_save)
-                shutil.copy('Saves/Restart' + str(old_slot) + '.pmeta', r_save_meta)
+            old_name = 'Saves/Restart' + str(old_slot) + '.p'
+            if old_name != r_save:
+                shutil.copy(old_name, r_save)
+                shutil.copy(old_name + 'meta', r_save_meta)
 
     """
     # Take the temporary file we just created and make it an actual file

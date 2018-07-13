@@ -954,6 +954,8 @@ class SaveSlot(object):
                 self.playtime = save_metadata['playtime']
                 self.realtime = save_metadata['realtime']
                 self.kind = save_metadata['kind']
+                if self.number is None:
+                    self.number = save_metadata['save_slot']
 
         except ValueError as e:
             print('***Value Error: %s' % (e))

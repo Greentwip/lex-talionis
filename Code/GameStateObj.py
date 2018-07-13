@@ -5,7 +5,7 @@ from collections import OrderedDict, Counter
 # Custom imports
 import GlobalConstants as GC
 import configuration as cf
-import CustomObjects, StateMachine, AStar, Support, Engine
+import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue
 import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
 
 import logging
@@ -129,8 +129,8 @@ class GameStateObj(object):
         self.base_conversations = load_info['base_conversations']
         self.stateMachine = StateMachine.StateMachine(load_info['state_list'][0], load_info['state_list'][1])
         self.statistics = load_info['statistics']
-        # self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info['message']]
-        self.message = []
+        self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info.get('message', [])]
+        # self.message = []
         self.unlocked_lore = load_info['unlocked_lore']
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
@@ -347,12 +347,13 @@ class GameStateObj(object):
                    'statistics': self.statistics,
                    'market_items': self.market_items,
                    'mode': self.mode,
-                   # 'message': [message.serialize() for message in self.message],
+                   'message': [message.serialize() for message in self.message],
                    'phase_info': (self.phase.current, self.phase.previous)}
         import time
         to_save_meta = {'playtime': self.playtime,
                         'realtime': time.time(),
-                        'version': GC.version}
+                        'version': GC.version,
+                        'save_slot': self.save_slot}
         return to_save, to_save_meta
 
     def loadSprites(self):

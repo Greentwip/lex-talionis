@@ -283,7 +283,7 @@ class StartOption(StateMachine.State):
 
     def continue_suspend(self, gameStateObj, metaDataObj):
         # gameStateObj.activeMenu = None # Remove menu
-        suspend = CustomObjects.SaveSlot(GC.SUSPEND_LOC, 'suspend')
+        suspend = CustomObjects.SaveSlot(GC.SUSPEND_LOC, None)
         logger.debug('Loading game...')
         SaveLoad.loadGame(gameStateObj, metaDataObj, suspend)
 
@@ -1118,9 +1118,13 @@ class ChapterTransitionState(StateMachine.State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
-        if event and self.CTStateMachine.getState() == 'wait':
-            Engine.music_thread.fade_out(400)
-            self.CTStateMachine.changeState('fade_out')
+        if event == 'START': # self.CTStateMachine.getState() == 'wait':
+            # Engine.music_thread.fade_out(400)
+            # self.CTStateMachine.changeState('fade_out')
+            # Alternatively
+            Engine.music_thread.fade_out(100)
+            # gameStateObj.stateMachine.back()
+            gameStateObj.stateMachine.changeState('transition_pop')
 
     def update(self, gameStateObj, metaDataObj):
         currentTime = Engine.get_time()
@@ -1196,7 +1200,7 @@ class ChapterTransitionState(StateMachine.State):
         mapSurf.blit(sigil_middle, (center_x, center_y))
 
         # Draw Ribbon
-        if self.CTStateMachine.getState() in ['ribbon_fade_in', 'wait', 'ribbon_close', 'fade_out']:
+        if self.CTStateMachine.getState() in ('ribbon_fade_in', 'wait', 'ribbon_close', 'fade_out'):
             new_ribbon = self.ribbon.copy()
             position = (GC.WINWIDTH//2 - GC.FONT['chapter_yellow'].size(self.name)[0]//2, self.ribbon.get_height()//2 - 6)
             GC.FONT['chapter_yellow'].blit(self.name, new_ribbon, position)
