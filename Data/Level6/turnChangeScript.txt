@@ -113,7 +113,7 @@ elif;gameStateObj.turncount == 10
     wait;200
     add_unit;pack_rt_1
     wait;1000
-elif;gameStateObj.turncount >= 16
+elif;gameStateObj.turncount >= 16 and gameStateObj.turncount <= 19
     set_camera;0,26;0,29
     wait;200
     create_unit;i1;gameStateObj.turncount - 4;0,27;;give_up
