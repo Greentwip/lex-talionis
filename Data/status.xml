@@ -352,8 +352,8 @@
         <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
         <components>conditional_avoid,conditional_hit</components>
 
-        <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Sword' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Sword' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
+        <conditional_hit>30;target.getMainWeapon() and target.getMainWeapon().TYPE == 'Sword'</conditional_hit>
+        <conditional_avoid>30;self.getMainWeapon() and self.getMainWeapon().TYPE == 'Sword'</conditional_avoid>
     </status>
 
     <status name="Lancebreaker">
@@ -362,8 +362,8 @@
         <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
         <components>conditional_avoid,conditional_hit</components>
 
-        <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Lance' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Lance' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
+        <conditional_hit>30;target.getMainWeapon() and target.getMainWeapon().TYPE == 'Lance'</conditional_hit>
+        <conditional_avoid>30;self.getMainWeapon() and self.getMainWeapon().TYPE == 'Lance'</conditional_avoid>
     </status>
 
     <status name="Axebreaker">
@@ -372,8 +372,8 @@
         <desc>Grants Hit/Avoid +30 against enemies wielding Axes.</desc>
         <components>conditional_avoid,conditional_hit</components>
 
-        <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Axe' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Axe' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
+        <conditional_hit>30;target.getMainWeapon() and target.getMainWeapon().TYPE == 'Axe'</conditional_hit>
+        <conditional_avoid>30;self.getMainWeapon() and self.getMainWeapon().TYPE == 'Axe</conditional_avoid>
     </status>
 
     <!-- Used by Final Boss -->
@@ -591,8 +591,8 @@
         <desc>Grants Hit +15 and Damage +1 against enemies wielding Swords, Lances, or Axes.</desc>
         <components>conditional_mt,conditional_hit,class_skill</components>
 
-        <conditional_mt>1;target.getMainWeapon() and any(TYPE in ['Sword', 'Lance', 'Axe'] for TYPE in target.getMainWeapon().TYPE)</conditional_mt>
-        <conditional_hit>15;target.getMainWeapon() and any(TYPE in ['Sword', 'Lance', 'Axe'] for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
+        <conditional_mt>1;target.getMainWeapon() and target.getMainWeapon().TYPE in ('Sword', 'Lance', 'Axe')</conditional_mt>
+        <conditional_hit>15;target.getMainWeapon() and target.getMainWeapon().TYPE in ('Sword', 'Lance', 'Axe')</conditional_hit>
     </status>
 
     <status name="Miracle">
