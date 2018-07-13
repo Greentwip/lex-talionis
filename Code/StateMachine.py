@@ -426,8 +426,12 @@ class OptionsMenuState(State):
         options = [cf.WORDS['Unit'], cf.WORDS['Objective'], cf.WORDS['Options']]
         info_desc = [cf.WORDS['Unit_desc'], cf.WORDS['Objective_desc'], cf.WORDS['Options_desc']]
         if not gameStateObj.tutorial_mode:
-            options.append(cf.WORDS['Suspend'])
-            info_desc.append(cf.WORDS['Suspend_desc'])
+            if gameStateObj.mode['death']:  # If classic mode
+                options.append(cf.WORDS['Suspend'])
+                info_desc.append(cf.WORDS['Suspend_desc'])
+            else:  # If casual mode
+                options.append(cf.WORDS['Save'])
+                info_desc.append(cf.WORDS['Save_desc'])
         if not gameStateObj.tutorial_mode or all(unit.finished for unit in gameStateObj.allunits if unit.team == 'player'):
             options.append(cf.WORDS['End'])
             info_desc.append(cf.WORDS['End_desc'])
@@ -462,7 +466,7 @@ class OptionsMenuState(State):
                     gameStateObj.stateMachine.changeState('optionchild')
                 else:
                     gameStateObj.stateMachine.changeState('turn_change')
-            elif selection == cf.WORDS['Suspend']:
+            elif selection == cf.WORDS['Suspend'] or selection == cf.WORDS['Save']:
                 # Create child menu with additional options
                 options = [cf.WORDS['Yes'], cf.WORDS['No']]
                 gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
@@ -517,7 +521,13 @@ class OptionChildState(State):
                     gameStateObj.save_slots = None # Reset save slots
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start') 
-                    
+                elif gameStateObj.childMenu.owner == cf.WORDS['Save']:
+                    gameStateObj.stateMachine.back()
+                    gameStateObj.stateMachine.back()
+                    logger.info('Creating battle save...')
+                    gameStateObj.save_kind = 'Battle'
+                    gameStateObj.stateMachine.changeState('start_save')
+                    gameStateObj.stateMachine.changeState('transition_out')
                 gameStateObj.activeMenu = None
             else:
                 GC.SOUNDDICT['Select 4'].play()
