@@ -1,4 +1,5 @@
-if;self.name == '1'
+lose_game
+if;self.name == '0'
     set_cursor;0,0;force_hold
     wait;500
     change_tile_sprite;0,0;Door;destroy
