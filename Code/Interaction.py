@@ -611,7 +611,7 @@ class Combat(object):
                 StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
             elif status.lost_on_interact and (self.item.weapon or self.item.spell):
                 StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
-        if self.p2 and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
+        if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
             for status in self.p2.status_effects:
                 if status.status_after_battle and not (status.tether and self.p2.isDying):
                     applied_status = StatusObject.statusparser(status.status_after_battle)

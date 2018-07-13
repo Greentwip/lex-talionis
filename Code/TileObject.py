@@ -202,7 +202,7 @@ class MapObject(object):
         self.weather = []
 
     def destroy(self, tile, gameStateObj):
-        if 'Destructible' in self.tile_info_dict:
+        if 'Destructible' in self.tile_info_dict[tile.position]:
             destroy_index = self.tile_info_dict[tile.position]['Destructible']
             script_name = self.levelfolder + '/destroyScript.txt'
             if os.path.exists(script_name):

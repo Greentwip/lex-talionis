@@ -1,3 +1,4 @@
 7,6:Shop=Iron Sword,Iron Axe,Iron Lance,Willow Bow
 7,14:HP=10;Destructible=0
 0,15:Shop=Iron Sword,Iron Axe,Iron Lance,Willow Bow,Wind,Fire,Thunder,Glimmer,Shine
+7,14:HP=30;Destructible=0
