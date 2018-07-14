@@ -723,10 +723,10 @@ static char __pyx_k_source_pos[] = "source_pos";
 static char __pyx_k_grid_height[] = "grid_height";
 static char __pyx_k_opacity_map[] = "opacity_map";
 static char __pyx_k_line_of_sight[] = "line_of_sight";
-static char __pyx_k_c_Users_pbradley_Documents_GitHu[] = "c:\\Users\\pbradley\\Documents\\GitHub\\lex-talionis\\Code\\LOS.pyx";
+static char __pyx_k_C_Users_pbradley_Documents_GitHu[] = "C:\\Users\\pbradley\\Documents\\GitHub\\lex-talionis\\Code\\LOS.pyx";
+static PyObject *__pyx_kp_s_C_Users_pbradley_Documents_GitHu;
 static PyObject *__pyx_n_s_Code_LOS;
 static PyObject *__pyx_n_s_all_tiles;
-static PyObject *__pyx_kp_s_c_Users_pbradley_Documents_GitHu;
 static PyObject *__pyx_n_s_dest_pos;
 static PyObject *__pyx_n_s_grid_height;
 static PyObject *__pyx_n_s_line_of_sight;
@@ -848,7 +848,6 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
   int __pyx_v_errorprev;
   int __pyx_v_error;
   CYTHON_UNUSED int __pyx_v_i;
-  CYTHON_UNUSED PyObject *__pyx_v_pos = NULL;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -857,8 +856,6 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
   int __pyx_t_4;
   int __pyx_t_5;
   PyObject *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -869,7 +866,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  * cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height):
  *         if x1 == x2 and y1 == y2:             # <<<<<<<<<<<<<<
  *             return True
- *         #SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
+ *         # SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
  */
   __pyx_t_2 = ((__pyx_v_x1 == __pyx_v_x2) != 0);
   if (__pyx_t_2) {
@@ -886,7 +883,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  * cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height):
  *         if x1 == x2 and y1 == y2:
  *             return True             # <<<<<<<<<<<<<<
- *         #SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
+ *         # SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
  *         # Setup initial conditions
  */
     __pyx_r = 1;
@@ -897,7 +894,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  * cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height):
  *         if x1 == x2 and y1 == y2:             # <<<<<<<<<<<<<<
  *             return True
- *         #SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
+ *         # SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
  */
   }
 
@@ -1120,7 +1117,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  *                     y += ystep
  *                     error -= ddx             # <<<<<<<<<<<<<<
  *                     if error + errorprev < ddx: # bottom square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  */
         __pyx_v_error = (__pyx_v_error - __pyx_v_ddx);
 
@@ -1128,7 +1125,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  *                     y += ystep
  *                     error -= ddx
  *                     if error + errorprev < ddx: # bottom square             # <<<<<<<<<<<<<<
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False
  */
         __pyx_t_1 = (((__pyx_v_error + __pyx_v_errorprev) < __pyx_v_ddx) != 0);
@@ -1137,23 +1134,37 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
           /* "Code\LOS.pyx":43
  *                     error -= ddx
  *                     if error + errorprev < ddx: # bottom square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                     elif error + errorprev > ddx: # left square
  */
+          __pyx_t_2 = ((__pyx_v_x != __pyx_v_x2) != 0);
+          if (!__pyx_t_2) {
+          } else {
+            goto __pyx_L15_next_and;
+          }
+          __pyx_t_2 = (((__pyx_v_y - __pyx_v_ystep) != __pyx_v_y2) != 0);
+          if (__pyx_t_2) {
+          } else {
+            __pyx_t_1 = __pyx_t_2;
+            goto __pyx_L14_bool_binop_done;
+          }
+          __pyx_L15_next_and:;
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos(__pyx_v_x, (__pyx_v_y - __pyx_v_ystep), __pyx_v_grid_height);
           __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 43; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+          __pyx_t_1 = __pyx_t_2;
+          __pyx_L14_bool_binop_done:;
           if (__pyx_t_1) {
 
             /* "Code\LOS.pyx":44
  *                     if error + errorprev < ddx: # bottom square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False             # <<<<<<<<<<<<<<
  *                     elif error + errorprev > ddx: # left square
- *                         pos = x - xstep, y
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
  */
             __pyx_r = 0;
             goto __pyx_L0;
@@ -1161,7 +1172,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
             /* "Code\LOS.pyx":43
  *                     error -= ddx
  *                     if error + errorprev < ddx: # bottom square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                     elif error + errorprev > ddx: # left square
  */
@@ -1171,18 +1182,18 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  *                     y += ystep
  *                     error -= ddx
  *                     if error + errorprev < ddx: # bottom square             # <<<<<<<<<<<<<<
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False
  */
           goto __pyx_L12;
         }
 
         /* "Code\LOS.pyx":45
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False
  *                     elif error + errorprev > ddx: # left square             # <<<<<<<<<<<<<<
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                             return False
  */
         __pyx_t_1 = (((__pyx_v_error + __pyx_v_errorprev) > __pyx_v_ddx) != 0);
         if (__pyx_t_1) {
@@ -1190,97 +1201,89 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
           /* "Code\LOS.pyx":46
  *                             return False
  *                     elif error + errorprev > ddx: # left square
- *                         pos = x - xstep, y             # <<<<<<<<<<<<<<
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
+ *                     else:  # through the middle
  */
-          __pyx_t_6 = __Pyx_PyInt_From_int((__pyx_v_x - __pyx_v_xstep)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_y); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_7);
-          __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_8);
-          __Pyx_GIVEREF(__pyx_t_6);
-          PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6);
-          __Pyx_GIVEREF(__pyx_t_7);
-          PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_7);
-          __pyx_t_6 = 0;
-          __pyx_t_7 = 0;
-          __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_8);
-          __pyx_t_8 = 0;
-
-          /* "Code\LOS.pyx":47
- *                     elif error + errorprev > ddx: # left square
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
- *                             return False
- *                     else:
- */
+          __pyx_t_2 = (((__pyx_v_x - __pyx_v_xstep) != __pyx_v_x2) != 0);
+          if (!__pyx_t_2) {
+          } else {
+            goto __pyx_L19_next_and;
+          }
+          __pyx_t_2 = ((__pyx_v_y != __pyx_v_y2) != 0);
+          if (__pyx_t_2) {
+          } else {
+            __pyx_t_1 = __pyx_t_2;
+            goto __pyx_L18_bool_binop_done;
+          }
+          __pyx_L19_next_and:;
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos((__pyx_v_x - __pyx_v_xstep), __pyx_v_y, __pyx_v_grid_height);
-          __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-          __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+          __Pyx_GOTREF(__pyx_t_6);
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+          __pyx_t_1 = __pyx_t_2;
+          __pyx_L18_bool_binop_done:;
           if (__pyx_t_1) {
 
-            /* "Code\LOS.pyx":48
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+            /* "Code\LOS.pyx":47
+ *                     elif error + errorprev > ddx: # left square
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False             # <<<<<<<<<<<<<<
- *                     else:
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  */
             __pyx_r = 0;
             goto __pyx_L0;
 
-            /* "Code\LOS.pyx":47
- *                     elif error + errorprev > ddx: # left square
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
+            /* "Code\LOS.pyx":46
  *                             return False
- *                     else:
+ *                     elif error + errorprev > ddx: # left square
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
+ *                             return False
+ *                     else:  # through the middle
  */
           }
 
           /* "Code\LOS.pyx":45
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False
  *                     elif error + errorprev > ddx: # left square             # <<<<<<<<<<<<<<
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                             return False
  */
           goto __pyx_L12;
         }
 
-        /* "Code\LOS.pyx":50
+        /* "Code\LOS.pyx":49
  *                             return False
- *                     else:
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
  */
         /*else*/ {
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos(__pyx_v_x, (__pyx_v_y - __pyx_v_ystep), __pyx_v_grid_height);
-          __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-          __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+          __Pyx_GOTREF(__pyx_t_6);
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           if (__pyx_t_2) {
           } else {
             __pyx_t_1 = __pyx_t_2;
-            goto __pyx_L16_bool_binop_done;
+            goto __pyx_L22_bool_binop_done;
           }
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos((__pyx_v_x - __pyx_v_xstep), __pyx_v_y, __pyx_v_grid_height);
-          __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-          __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+          __Pyx_GOTREF(__pyx_t_6);
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_1 = __pyx_t_2;
-          __pyx_L16_bool_binop_done:;
+          __pyx_L22_bool_binop_done:;
           if (__pyx_t_1) {
 
-            /* "Code\LOS.pyx":51
- *                     else:
+            /* "Code\LOS.pyx":50
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False             # <<<<<<<<<<<<<<
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
@@ -1289,9 +1292,9 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
             __pyx_r = 0;
             goto __pyx_L0;
 
-            /* "Code\LOS.pyx":50
+            /* "Code\LOS.pyx":49
  *                             return False
- *                     else:
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
@@ -1309,7 +1312,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  */
       }
 
-      /* "Code\LOS.pyx":52
+      /* "Code\LOS.pyx":51
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:             # <<<<<<<<<<<<<<
@@ -1319,25 +1322,25 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
       __pyx_t_2 = ((__pyx_v_x != __pyx_v_x2) != 0);
       if (!__pyx_t_2) {
       } else {
-        goto __pyx_L20_next_and;
+        goto __pyx_L26_next_and;
       }
       __pyx_t_2 = ((__pyx_v_y != __pyx_v_y2) != 0);
       if (__pyx_t_2) {
       } else {
         __pyx_t_1 = __pyx_t_2;
-        goto __pyx_L19_bool_binop_done;
+        goto __pyx_L25_bool_binop_done;
       }
-      __pyx_L20_next_and:;
+      __pyx_L26_next_and:;
       __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos(__pyx_v_x, __pyx_v_y, __pyx_v_grid_height);
-      __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_8); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 52; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_1 = __pyx_t_2;
-      __pyx_L19_bool_binop_done:;
+      __pyx_L25_bool_binop_done:;
       if (__pyx_t_1) {
 
-        /* "Code\LOS.pyx":53
+        /* "Code\LOS.pyx":52
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
  *                     return False             # <<<<<<<<<<<<<<
@@ -1347,7 +1350,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
         __pyx_r = 0;
         goto __pyx_L0;
 
-        /* "Code\LOS.pyx":52
+        /* "Code\LOS.pyx":51
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:             # <<<<<<<<<<<<<<
@@ -1356,7 +1359,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  */
       }
 
-      /* "Code\LOS.pyx":54
+      /* "Code\LOS.pyx":53
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
  *                     return False
  *                 errorprev = error             # <<<<<<<<<<<<<<
@@ -1376,7 +1379,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
     goto __pyx_L8;
   }
 
-  /* "Code\LOS.pyx":56
+  /* "Code\LOS.pyx":55
  *                 errorprev = error
  *         else:
  *             errorprev = error = dy             # <<<<<<<<<<<<<<
@@ -1387,7 +1390,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
     __pyx_v_errorprev = __pyx_v_dy;
     __pyx_v_error = __pyx_v_dy;
 
-    /* "Code\LOS.pyx":57
+    /* "Code\LOS.pyx":56
  *         else:
  *             errorprev = error = dy
  *             for i in range(dy):             # <<<<<<<<<<<<<<
@@ -1398,7 +1401,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "Code\LOS.pyx":58
+      /* "Code\LOS.pyx":57
  *             errorprev = error = dy
  *             for i in range(dy):
  *                 y += ystep             # <<<<<<<<<<<<<<
@@ -1407,7 +1410,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  */
       __pyx_v_y = (__pyx_v_y + __pyx_v_ystep);
 
-      /* "Code\LOS.pyx":59
+      /* "Code\LOS.pyx":58
  *             for i in range(dy):
  *                 y += ystep
  *                 error += ddx             # <<<<<<<<<<<<<<
@@ -1416,7 +1419,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  */
       __pyx_v_error = (__pyx_v_error + __pyx_v_ddx);
 
-      /* "Code\LOS.pyx":60
+      /* "Code\LOS.pyx":59
  *                 y += ystep
  *                 error += ddx
  *                 if error > ddy:             # <<<<<<<<<<<<<<
@@ -1426,7 +1429,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
       __pyx_t_1 = ((__pyx_v_error > __pyx_v_ddy) != 0);
       if (__pyx_t_1) {
 
-        /* "Code\LOS.pyx":61
+        /* "Code\LOS.pyx":60
  *                 error += ddx
  *                 if error > ddy:
  *                     x += xstep             # <<<<<<<<<<<<<<
@@ -1435,172 +1438,178 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  */
         __pyx_v_x = (__pyx_v_x + __pyx_v_xstep);
 
-        /* "Code\LOS.pyx":62
+        /* "Code\LOS.pyx":61
  *                 if error > ddy:
  *                     x += xstep
  *                     error -= ddy             # <<<<<<<<<<<<<<
  *                     if error + errorprev < ddy: # bottom square
- *                         pos = x - xstep, y
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
  */
         __pyx_v_error = (__pyx_v_error - __pyx_v_ddy);
 
-        /* "Code\LOS.pyx":63
+        /* "Code\LOS.pyx":62
  *                     x += xstep
  *                     error -= ddy
  *                     if error + errorprev < ddy: # bottom square             # <<<<<<<<<<<<<<
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                             return False
  */
         __pyx_t_1 = (((__pyx_v_error + __pyx_v_errorprev) < __pyx_v_ddy) != 0);
         if (__pyx_t_1) {
 
-          /* "Code\LOS.pyx":64
+          /* "Code\LOS.pyx":63
  *                     error -= ddy
  *                     if error + errorprev < ddy: # bottom square
- *                         pos = x - xstep, y             # <<<<<<<<<<<<<<
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
- *                             return False
- */
-          __pyx_t_8 = __Pyx_PyInt_From_int((__pyx_v_x - __pyx_v_xstep)); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_y); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_7);
-          __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_6);
-          __Pyx_GIVEREF(__pyx_t_8);
-          PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_8);
-          __Pyx_GIVEREF(__pyx_t_7);
-          PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_7);
-          __pyx_t_8 = 0;
-          __pyx_t_7 = 0;
-          __Pyx_XDECREF_SET(__pyx_v_pos, __pyx_t_6);
-          __pyx_t_6 = 0;
-
-          /* "Code\LOS.pyx":65
- *                     if error + errorprev < ddy: # bottom square
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                     elif error + errorprev > ddy: # left square
  */
+          __pyx_t_2 = (((__pyx_v_x - __pyx_v_xstep) != __pyx_v_x2) != 0);
+          if (!__pyx_t_2) {
+          } else {
+            goto __pyx_L34_next_and;
+          }
+          __pyx_t_2 = ((__pyx_v_y != __pyx_v_y2) != 0);
+          if (__pyx_t_2) {
+          } else {
+            __pyx_t_1 = __pyx_t_2;
+            goto __pyx_L33_bool_binop_done;
+          }
+          __pyx_L34_next_and:;
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos((__pyx_v_x - __pyx_v_xstep), __pyx_v_y, __pyx_v_grid_height);
-          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+          __pyx_t_1 = __pyx_t_2;
+          __pyx_L33_bool_binop_done:;
           if (__pyx_t_1) {
 
-            /* "Code\LOS.pyx":66
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+            /* "Code\LOS.pyx":64
+ *                     if error + errorprev < ddy: # bottom square
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False             # <<<<<<<<<<<<<<
  *                     elif error + errorprev > ddy: # left square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  */
             __pyx_r = 0;
             goto __pyx_L0;
 
-            /* "Code\LOS.pyx":65
+            /* "Code\LOS.pyx":63
+ *                     error -= ddy
  *                     if error + errorprev < ddy: # bottom square
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                     elif error + errorprev > ddy: # left square
  */
           }
 
-          /* "Code\LOS.pyx":63
+          /* "Code\LOS.pyx":62
  *                     x += xstep
  *                     error -= ddy
  *                     if error + errorprev < ddy: # bottom square             # <<<<<<<<<<<<<<
- *                         pos = x - xstep, y
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
+ *                             return False
  */
-          goto __pyx_L25;
+          goto __pyx_L31;
         }
 
-        /* "Code\LOS.pyx":67
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+        /* "Code\LOS.pyx":65
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False
  *                     elif error + errorprev > ddy: # left square             # <<<<<<<<<<<<<<
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False
  */
         __pyx_t_1 = (((__pyx_v_error + __pyx_v_errorprev) > __pyx_v_ddy) != 0);
         if (__pyx_t_1) {
 
-          /* "Code\LOS.pyx":68
+          /* "Code\LOS.pyx":66
  *                             return False
  *                     elif error + errorprev > ddy: # left square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
- *                     else:
+ *                     else:  # through the middle
  */
+          __pyx_t_2 = ((__pyx_v_x != __pyx_v_x2) != 0);
+          if (!__pyx_t_2) {
+          } else {
+            goto __pyx_L38_next_and;
+          }
+          __pyx_t_2 = (((__pyx_v_y - __pyx_v_ystep) != __pyx_v_y2) != 0);
+          if (__pyx_t_2) {
+          } else {
+            __pyx_t_1 = __pyx_t_2;
+            goto __pyx_L37_bool_binop_done;
+          }
+          __pyx_L38_next_and:;
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos(__pyx_v_x, (__pyx_v_y - __pyx_v_ystep), __pyx_v_grid_height);
-          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+          __pyx_t_1 = __pyx_t_2;
+          __pyx_L37_bool_binop_done:;
           if (__pyx_t_1) {
 
-            /* "Code\LOS.pyx":69
+            /* "Code\LOS.pyx":67
  *                     elif error + errorprev > ddy: # left square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False             # <<<<<<<<<<<<<<
- *                     else:
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  */
             __pyx_r = 0;
             goto __pyx_L0;
 
-            /* "Code\LOS.pyx":68
+            /* "Code\LOS.pyx":66
  *                             return False
  *                     elif error + errorprev > ddy: # left square
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
- *                     else:
+ *                     else:  # through the middle
  */
           }
 
-          /* "Code\LOS.pyx":67
- *                         if opacity_map[get_pos(x - xstep, y, grid_height)]:
+          /* "Code\LOS.pyx":65
+ *                         if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False
  *                     elif error + errorprev > ddy: # left square             # <<<<<<<<<<<<<<
- *                         if opacity_map[get_pos(x, y - ystep, grid_height)]:
+ *                         if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
  *                             return False
  */
-          goto __pyx_L25;
+          goto __pyx_L31;
         }
 
-        /* "Code\LOS.pyx":71
+        /* "Code\LOS.pyx":69
  *                             return False
- *                     else:
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
  */
         /*else*/ {
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos(__pyx_v_x, (__pyx_v_y - __pyx_v_ystep), __pyx_v_grid_height);
-          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           if (__pyx_t_2) {
           } else {
             __pyx_t_1 = __pyx_t_2;
-            goto __pyx_L29_bool_binop_done;
+            goto __pyx_L41_bool_binop_done;
           }
           __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos((__pyx_v_x - __pyx_v_xstep), __pyx_v_y, __pyx_v_grid_height);
-          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+          __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
           __pyx_t_1 = __pyx_t_2;
-          __pyx_L29_bool_binop_done:;
+          __pyx_L41_bool_binop_done:;
           if (__pyx_t_1) {
 
-            /* "Code\LOS.pyx":72
- *                     else:
+            /* "Code\LOS.pyx":70
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False             # <<<<<<<<<<<<<<
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
@@ -1609,18 +1618,18 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
             __pyx_r = 0;
             goto __pyx_L0;
 
-            /* "Code\LOS.pyx":71
+            /* "Code\LOS.pyx":69
  *                             return False
- *                     else:
+ *                     else:  # through the middle
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:             # <<<<<<<<<<<<<<
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
  */
           }
         }
-        __pyx_L25:;
+        __pyx_L31:;
 
-        /* "Code\LOS.pyx":60
+        /* "Code\LOS.pyx":59
  *                 y += ystep
  *                 error += ddx
  *                 if error > ddy:             # <<<<<<<<<<<<<<
@@ -1629,7 +1638,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  */
       }
 
-      /* "Code\LOS.pyx":73
+      /* "Code\LOS.pyx":71
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:             # <<<<<<<<<<<<<<
@@ -1639,25 +1648,25 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
       __pyx_t_2 = ((__pyx_v_x != __pyx_v_x2) != 0);
       if (!__pyx_t_2) {
       } else {
-        goto __pyx_L33_next_and;
+        goto __pyx_L45_next_and;
       }
       __pyx_t_2 = ((__pyx_v_y != __pyx_v_y2) != 0);
       if (__pyx_t_2) {
       } else {
         __pyx_t_1 = __pyx_t_2;
-        goto __pyx_L32_bool_binop_done;
+        goto __pyx_L44_bool_binop_done;
       }
-      __pyx_L33_next_and:;
+      __pyx_L45_next_and:;
       __pyx_t_5 = __pyx_f_4Code_3LOS_get_pos(__pyx_v_x, __pyx_v_y, __pyx_v_grid_height);
-      __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+      __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_5, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_1 = __pyx_t_2;
-      __pyx_L32_bool_binop_done:;
+      __pyx_L44_bool_binop_done:;
       if (__pyx_t_1) {
 
-        /* "Code\LOS.pyx":74
+        /* "Code\LOS.pyx":72
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
  *                     return False             # <<<<<<<<<<<<<<
@@ -1667,7 +1676,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
         __pyx_r = 0;
         goto __pyx_L0;
 
-        /* "Code\LOS.pyx":73
+        /* "Code\LOS.pyx":71
  *                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
  *                             return False
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:             # <<<<<<<<<<<<<<
@@ -1676,7 +1685,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
  */
       }
 
-      /* "Code\LOS.pyx":75
+      /* "Code\LOS.pyx":73
  *                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
  *                     return False
  *                 errorprev = error             # <<<<<<<<<<<<<<
@@ -1688,7 +1697,7 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
   }
   __pyx_L8:;
 
-  /* "Code\LOS.pyx":76
+  /* "Code\LOS.pyx":74
  *                     return False
  *                 errorprev = error
  *         assert x == x2 and y == y2             # <<<<<<<<<<<<<<
@@ -1701,19 +1710,19 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
     if (__pyx_t_2) {
     } else {
       __pyx_t_1 = __pyx_t_2;
-      goto __pyx_L35_bool_binop_done;
+      goto __pyx_L47_bool_binop_done;
     }
     __pyx_t_2 = ((__pyx_v_y == __pyx_v_y2) != 0);
     __pyx_t_1 = __pyx_t_2;
-    __pyx_L35_bool_binop_done:;
+    __pyx_L47_bool_binop_done:;
     if (unlikely(!__pyx_t_1)) {
       PyErr_SetNone(PyExc_AssertionError);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
 
-  /* "Code\LOS.pyx":77
+  /* "Code\LOS.pyx":75
  *                 errorprev = error
  *         assert x == x2 and y == y2
  *         return True             # <<<<<<<<<<<<<<
@@ -1734,17 +1743,14 @@ static int __pyx_f_4Code_3LOS_get_line(int __pyx_v_x1, int __pyx_v_y1, int __pyx
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_WriteUnraisable("Code.LOS.get_line", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_pos);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "Code\LOS.pyx":79
+/* "Code\LOS.pyx":77
  *         return True
  * 
  * def line_of_sight(source_pos, dest_pos, int max_range, opacity_map, int grid_height):             # <<<<<<<<<<<<<<
@@ -1790,26 +1796,26 @@ static PyObject *__pyx_pw_4Code_3LOS_1line_of_sight(PyObject *__pyx_self, PyObje
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_dest_pos)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_max_range)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_opacity_map)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_grid_height)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 4); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, 4); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "line_of_sight") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "line_of_sight") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -1822,13 +1828,13 @@ static PyObject *__pyx_pw_4Code_3LOS_1line_of_sight(PyObject *__pyx_self, PyObje
     }
     __pyx_v_source_pos = values[0];
     __pyx_v_dest_pos = values[1];
-    __pyx_v_max_range = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_max_range == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_max_range = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_max_range == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     __pyx_v_opacity_map = values[3];
-    __pyx_v_grid_height = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_grid_height == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_grid_height = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_grid_height == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("line_of_sight", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("Code.LOS.line_of_sight", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1861,29 +1867,28 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
   Py_ssize_t __pyx_t_7;
   int __pyx_t_8;
   int __pyx_t_9;
-  int __pyx_t_10;
-  int __pyx_t_11;
+  PyObject *__pyx_t_10 = NULL;
+  Py_ssize_t __pyx_t_11;
   PyObject *__pyx_t_12 = NULL;
-  Py_ssize_t __pyx_t_13;
-  PyObject *__pyx_t_14 = NULL;
+  int __pyx_t_13;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("line_of_sight", 0);
 
-  /* "Code\LOS.pyx":84
+  /* "Code\LOS.pyx":82
  * 
  *     # 0 is unknown, 1 is dark, 2 is lit
  *     all_tiles = {}             # <<<<<<<<<<<<<<
  *     for pos in dest_pos:
  *         all_tiles[pos] = 0
  */
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 84; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 82; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_all_tiles = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Code\LOS.pyx":85
+  /* "Code\LOS.pyx":83
  *     # 0 is unknown, 1 is dark, 2 is lit
  *     all_tiles = {}
  *     for pos in dest_pos:             # <<<<<<<<<<<<<<
@@ -1894,26 +1899,26 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
     __pyx_t_1 = __pyx_v_dest_pos; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_dest_pos); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_dest_pos); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -1923,46 +1928,46 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         break;
       }
       __Pyx_GOTREF(__pyx_t_4);
     }
-    if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_XDECREF_SET(__pyx_v_pos, ((PyObject*)__pyx_t_4));
     __pyx_t_4 = 0;
 
-    /* "Code\LOS.pyx":86
+    /* "Code\LOS.pyx":84
  *     all_tiles = {}
  *     for pos in dest_pos:
  *         all_tiles[pos] = 0             # <<<<<<<<<<<<<<
  *         if pos in source_pos:
  *             all_tiles[pos] = 2
  */
-    if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 86; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 84; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-    /* "Code\LOS.pyx":87
+    /* "Code\LOS.pyx":85
  *     for pos in dest_pos:
  *         all_tiles[pos] = 0
  *         if pos in source_pos:             # <<<<<<<<<<<<<<
  *             all_tiles[pos] = 2
  * 
  */
-    __pyx_t_5 = (__Pyx_PySequence_ContainsTF(__pyx_v_pos, __pyx_v_source_pos, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = (__Pyx_PySequence_ContainsTF(__pyx_v_pos, __pyx_v_source_pos, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_6 = (__pyx_t_5 != 0);
     if (__pyx_t_6) {
 
-      /* "Code\LOS.pyx":88
+      /* "Code\LOS.pyx":86
  *         all_tiles[pos] = 0
  *         if pos in source_pos:
  *             all_tiles[pos] = 2             # <<<<<<<<<<<<<<
  * 
  *     # Any tile that can't be moved over at all is dark
  */
-      if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_2) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 88; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_2) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 86; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-      /* "Code\LOS.pyx":87
+      /* "Code\LOS.pyx":85
  *     for pos in dest_pos:
  *         all_tiles[pos] = 0
  *         if pos in source_pos:             # <<<<<<<<<<<<<<
@@ -1971,7 +1976,7 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
  */
     }
 
-    /* "Code\LOS.pyx":85
+    /* "Code\LOS.pyx":83
  *     # 0 is unknown, 1 is dark, 2 is lit
  *     all_tiles = {}
  *     for pos in dest_pos:             # <<<<<<<<<<<<<<
@@ -1981,15 +1986,15 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Code\LOS.pyx":91
+  /* "Code\LOS.pyx":94
  * 
- *     # Any tile that can't be moved over at all is dark
+ *     # Iterate over remaining tiles
  *     for pos in all_tiles:             # <<<<<<<<<<<<<<
- *         if opacity_map[get_pos(pos[0], pos[1], grid_height)]:
- *             all_tiles[pos] = 1
+ *         if all_tiles[pos] == 0:
+ *             for s_pos in source_pos:
  */
   __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_all_tiles, 1, ((PyObject *)NULL), (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 91; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_all_tiles, 1, ((PyObject *)NULL), (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_1);
   __pyx_t_1 = __pyx_t_4;
@@ -1997,95 +2002,29 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
   while (1) {
     __pyx_t_9 = __Pyx_dict_iter_next(__pyx_t_1, __pyx_t_7, &__pyx_t_2, &__pyx_t_4, NULL, NULL, __pyx_t_8);
     if (unlikely(__pyx_t_9 == 0)) break;
-    if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 91; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 91; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_XDECREF_SET(__pyx_v_pos, ((PyObject*)__pyx_t_4));
     __pyx_t_4 = 0;
 
-    /* "Code\LOS.pyx":92
- *     # Any tile that can't be moved over at all is dark
- *     for pos in all_tiles:
- *         if opacity_map[get_pos(pos[0], pos[1], grid_height)]:             # <<<<<<<<<<<<<<
- *             all_tiles[pos] = 1
- * 
- */
-    if (unlikely(__pyx_v_pos == Py_None)) {
-      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    }
-    __pyx_t_9 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v_pos, 0)); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (unlikely(__pyx_v_pos == Py_None)) {
-      PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    }
-    __pyx_t_10 = __Pyx_PyInt_As_int(PyTuple_GET_ITEM(__pyx_v_pos, 1)); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_t_11 = __pyx_f_4Code_3LOS_get_pos(__pyx_t_9, __pyx_t_10, __pyx_v_grid_height);
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_opacity_map, __pyx_t_11, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__pyx_t_6) {
-
-      /* "Code\LOS.pyx":93
- *     for pos in all_tiles:
- *         if opacity_map[get_pos(pos[0], pos[1], grid_height)]:
- *             all_tiles[pos] = 1             # <<<<<<<<<<<<<<
- * 
- *     # Iterate over remaining tiles
- */
-      if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_1) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 93; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-
-      /* "Code\LOS.pyx":92
- *     # Any tile that can't be moved over at all is dark
- *     for pos in all_tiles:
- *         if opacity_map[get_pos(pos[0], pos[1], grid_height)]:             # <<<<<<<<<<<<<<
- *             all_tiles[pos] = 1
- * 
- */
-    }
-  }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "Code\LOS.pyx":96
- * 
- *     # Iterate over remaining tiles
- *     for pos in all_tiles:             # <<<<<<<<<<<<<<
- *         if all_tiles[pos] == 0:
- *             for s_pos in source_pos:
- */
-  __pyx_t_7 = 0;
-  __pyx_t_4 = __Pyx_dict_iterator(__pyx_v_all_tiles, 1, ((PyObject *)NULL), (&__pyx_t_2), (&__pyx_t_8)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_1);
-  __pyx_t_1 = __pyx_t_4;
-  __pyx_t_4 = 0;
-  while (1) {
-    __pyx_t_11 = __Pyx_dict_iter_next(__pyx_t_1, __pyx_t_2, &__pyx_t_7, &__pyx_t_4, NULL, NULL, __pyx_t_8);
-    if (unlikely(__pyx_t_11 == 0)) break;
-    if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_4);
-    if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_XDECREF_SET(__pyx_v_pos, ((PyObject*)__pyx_t_4));
-    __pyx_t_4 = 0;
-
-    /* "Code\LOS.pyx":97
+    /* "Code\LOS.pyx":95
  *     # Iterate over remaining tiles
  *     for pos in all_tiles:
  *         if all_tiles[pos] == 0:             # <<<<<<<<<<<<<<
  *             for s_pos in source_pos:
  *                 x1, y1 = pos
  */
-    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_all_tiles, __pyx_v_pos); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_all_tiles, __pyx_v_pos); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_12 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_10 = __Pyx_PyInt_EqObjC(__pyx_t_4, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_10); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     if (__pyx_t_6) {
 
-      /* "Code\LOS.pyx":98
+      /* "Code\LOS.pyx":96
  *     for pos in all_tiles:
  *         if all_tiles[pos] == 0:
  *             for s_pos in source_pos:             # <<<<<<<<<<<<<<
@@ -2093,49 +2032,49 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
  *                 x2, y2 = s_pos
  */
       if (likely(PyList_CheckExact(__pyx_v_source_pos)) || PyTuple_CheckExact(__pyx_v_source_pos)) {
-        __pyx_t_12 = __pyx_v_source_pos; __Pyx_INCREF(__pyx_t_12); __pyx_t_13 = 0;
+        __pyx_t_10 = __pyx_v_source_pos; __Pyx_INCREF(__pyx_t_10); __pyx_t_11 = 0;
         __pyx_t_3 = NULL;
       } else {
-        __pyx_t_13 = -1; __pyx_t_12 = PyObject_GetIter(__pyx_v_source_pos); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_3 = Py_TYPE(__pyx_t_12)->tp_iternext; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_11 = -1; __pyx_t_10 = PyObject_GetIter(__pyx_v_source_pos); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_3 = Py_TYPE(__pyx_t_10)->tp_iternext; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       for (;;) {
         if (likely(!__pyx_t_3)) {
-          if (likely(PyList_CheckExact(__pyx_t_12))) {
-            if (__pyx_t_13 >= PyList_GET_SIZE(__pyx_t_12)) break;
+          if (likely(PyList_CheckExact(__pyx_t_10))) {
+            if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_10)) break;
             #if CYTHON_COMPILING_IN_CPYTHON
-            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_12, __pyx_t_13); __Pyx_INCREF(__pyx_t_4); __pyx_t_13++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_10, __pyx_t_11); __Pyx_INCREF(__pyx_t_4); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_12, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           } else {
-            if (__pyx_t_13 >= PyTuple_GET_SIZE(__pyx_t_12)) break;
+            if (__pyx_t_11 >= PyTuple_GET_SIZE(__pyx_t_10)) break;
             #if CYTHON_COMPILING_IN_CPYTHON
-            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_12, __pyx_t_13); __Pyx_INCREF(__pyx_t_4); __pyx_t_13++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_10, __pyx_t_11); __Pyx_INCREF(__pyx_t_4); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_12, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           }
         } else {
-          __pyx_t_4 = __pyx_t_3(__pyx_t_12);
+          __pyx_t_4 = __pyx_t_3(__pyx_t_10);
           if (unlikely(!__pyx_t_4)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             }
             break;
           }
           __Pyx_GOTREF(__pyx_t_4);
         }
-        if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (!(likely(PyTuple_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_XDECREF_SET(__pyx_v_s_pos, ((PyObject*)__pyx_t_4));
         __pyx_t_4 = 0;
 
-        /* "Code\LOS.pyx":99
+        /* "Code\LOS.pyx":97
  *         if all_tiles[pos] == 0:
  *             for s_pos in source_pos:
  *                 x1, y1 = pos             # <<<<<<<<<<<<<<
@@ -2152,30 +2091,30 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
           if (unlikely(size != 2)) {
             if (size > 2) __Pyx_RaiseTooManyValuesError(2);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           }
           #if CYTHON_COMPILING_IN_CPYTHON
           __pyx_t_4 = PyTuple_GET_ITEM(sequence, 0); 
-          __pyx_t_14 = PyTuple_GET_ITEM(sequence, 1); 
+          __pyx_t_12 = PyTuple_GET_ITEM(sequence, 1); 
           __Pyx_INCREF(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_14);
+          __Pyx_INCREF(__pyx_t_12);
           #else
-          __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_4);
-          __pyx_t_14 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_14);
+          __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_GOTREF(__pyx_t_12);
           #endif
         } else {
-          __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_11 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_14); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-        __pyx_v_x1 = __pyx_t_11;
-        __pyx_v_y1 = __pyx_t_10;
+        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_v_x1 = __pyx_t_9;
+        __pyx_v_y1 = __pyx_t_13;
 
-        /* "Code\LOS.pyx":100
+        /* "Code\LOS.pyx":98
  *             for s_pos in source_pos:
  *                 x1, y1 = pos
  *                 x2, y2 = s_pos             # <<<<<<<<<<<<<<
@@ -2192,30 +2131,30 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
           if (unlikely(size != 2)) {
             if (size > 2) __Pyx_RaiseTooManyValuesError(2);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           }
           #if CYTHON_COMPILING_IN_CPYTHON
-          __pyx_t_14 = PyTuple_GET_ITEM(sequence, 0); 
+          __pyx_t_12 = PyTuple_GET_ITEM(sequence, 0); 
           __pyx_t_4 = PyTuple_GET_ITEM(sequence, 1); 
-          __Pyx_INCREF(__pyx_t_14);
+          __Pyx_INCREF(__pyx_t_12);
           __Pyx_INCREF(__pyx_t_4);
           #else
-          __pyx_t_14 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_14);
-          __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_12 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_GOTREF(__pyx_t_12);
+          __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
-          __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_10 = __Pyx_PyInt_As_int(__pyx_t_14); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-        __pyx_t_11 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+        __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_v_x2 = __pyx_t_10;
-        __pyx_v_y2 = __pyx_t_11;
+        __pyx_v_x2 = __pyx_t_13;
+        __pyx_v_y2 = __pyx_t_9;
 
-        /* "Code\LOS.pyx":101
+        /* "Code\LOS.pyx":99
  *                 x1, y1 = pos
  *                 x2, y2 = s_pos
  *                 if calculate_distance(x1, y1, x2, y2) <= max_range and get_line(x2, y2, x1, y1, opacity_map, grid_height):             # <<<<<<<<<<<<<<
@@ -2226,32 +2165,32 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
         if (__pyx_t_5) {
         } else {
           __pyx_t_6 = __pyx_t_5;
-          goto __pyx_L15_bool_binop_done;
+          goto __pyx_L12_bool_binop_done;
         }
         __pyx_t_5 = (__pyx_f_4Code_3LOS_get_line(__pyx_v_x2, __pyx_v_y2, __pyx_v_x1, __pyx_v_y1, __pyx_v_opacity_map, __pyx_v_grid_height) != 0);
         __pyx_t_6 = __pyx_t_5;
-        __pyx_L15_bool_binop_done:;
+        __pyx_L12_bool_binop_done:;
         if (__pyx_t_6) {
 
-          /* "Code\LOS.pyx":102
+          /* "Code\LOS.pyx":100
  *                 x2, y2 = s_pos
  *                 if calculate_distance(x1, y1, x2, y2) <= max_range and get_line(x2, y2, x1, y1, opacity_map, grid_height):
  *                     all_tiles[pos] = 2             # <<<<<<<<<<<<<<
  *                     break
  *             if all_tiles[pos] == 0:
  */
-          if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_2) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_2) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-          /* "Code\LOS.pyx":103
+          /* "Code\LOS.pyx":101
  *                 if calculate_distance(x1, y1, x2, y2) <= max_range and get_line(x2, y2, x1, y1, opacity_map, grid_height):
  *                     all_tiles[pos] = 2
  *                     break             # <<<<<<<<<<<<<<
  *             if all_tiles[pos] == 0:
  *                 all_tiles[pos] = 1
  */
-          goto __pyx_L13_break;
+          goto __pyx_L10_break;
 
-          /* "Code\LOS.pyx":101
+          /* "Code\LOS.pyx":99
  *                 x1, y1 = pos
  *                 x2, y2 = s_pos
  *                 if calculate_distance(x1, y1, x2, y2) <= max_range and get_line(x2, y2, x1, y1, opacity_map, grid_height):             # <<<<<<<<<<<<<<
@@ -2260,7 +2199,7 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
  */
         }
 
-        /* "Code\LOS.pyx":98
+        /* "Code\LOS.pyx":96
  *     for pos in all_tiles:
  *         if all_tiles[pos] == 0:
  *             for s_pos in source_pos:             # <<<<<<<<<<<<<<
@@ -2268,35 +2207,35 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
  *                 x2, y2 = s_pos
  */
       }
-      __pyx_L13_break:;
-      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+      __pyx_L10_break:;
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-      /* "Code\LOS.pyx":104
+      /* "Code\LOS.pyx":102
  *                     all_tiles[pos] = 2
  *                     break
  *             if all_tiles[pos] == 0:             # <<<<<<<<<<<<<<
  *                 all_tiles[pos] = 1
  * 
  */
-      __pyx_t_12 = __Pyx_PyDict_GetItem(__pyx_v_all_tiles, __pyx_v_pos); if (unlikely(__pyx_t_12 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-      __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_t_12, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_10 = __Pyx_PyDict_GetItem(__pyx_v_all_tiles, __pyx_v_pos); if (unlikely(__pyx_t_10 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+      __Pyx_GOTREF(__pyx_t_10);
+      __pyx_t_4 = __Pyx_PyInt_EqObjC(__pyx_t_10, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
 
-        /* "Code\LOS.pyx":105
+        /* "Code\LOS.pyx":103
  *                     break
  *             if all_tiles[pos] == 0:
  *                 all_tiles[pos] = 1             # <<<<<<<<<<<<<<
  * 
  *     lit_tiles = [pos for pos in dest_pos if all_tiles[pos] != 1]
  */
-        if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_1) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (unlikely(PyDict_SetItem(__pyx_v_all_tiles, __pyx_v_pos, __pyx_int_1) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-        /* "Code\LOS.pyx":104
+        /* "Code\LOS.pyx":102
  *                     all_tiles[pos] = 2
  *                     break
  *             if all_tiles[pos] == 0:             # <<<<<<<<<<<<<<
@@ -2305,7 +2244,7 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
  */
       }
 
-      /* "Code\LOS.pyx":97
+      /* "Code\LOS.pyx":95
  *     # Iterate over remaining tiles
  *     for pos in all_tiles:
  *         if all_tiles[pos] == 0:             # <<<<<<<<<<<<<<
@@ -2316,71 +2255,71 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "Code\LOS.pyx":107
+  /* "Code\LOS.pyx":105
  *                 all_tiles[pos] = 1
  * 
  *     lit_tiles = [pos for pos in dest_pos if all_tiles[pos] != 1]             # <<<<<<<<<<<<<<
  *     return lit_tiles
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (likely(PyList_CheckExact(__pyx_v_dest_pos)) || PyTuple_CheckExact(__pyx_v_dest_pos)) {
-    __pyx_t_4 = __pyx_v_dest_pos; __Pyx_INCREF(__pyx_t_4); __pyx_t_2 = 0;
+    __pyx_t_4 = __pyx_v_dest_pos; __Pyx_INCREF(__pyx_t_4); __pyx_t_7 = 0;
     __pyx_t_3 = NULL;
   } else {
-    __pyx_t_2 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_dest_pos); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_dest_pos); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   for (;;) {
     if (likely(!__pyx_t_3)) {
       if (likely(PyList_CheckExact(__pyx_t_4))) {
-        if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_4)) break;
+        if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_12 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_2); __Pyx_INCREF(__pyx_t_12); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_10 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_7); __Pyx_INCREF(__pyx_t_10); __pyx_t_7++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_12 = PySequence_ITEM(__pyx_t_4, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_10 = PySequence_ITEM(__pyx_t_4, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_10);
         #endif
       } else {
-        if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
+        if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_12 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_2); __Pyx_INCREF(__pyx_t_12); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_7); __Pyx_INCREF(__pyx_t_10); __pyx_t_7++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_12 = PySequence_ITEM(__pyx_t_4, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_12);
+        __pyx_t_10 = PySequence_ITEM(__pyx_t_4, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_10);
         #endif
       }
     } else {
-      __pyx_t_12 = __pyx_t_3(__pyx_t_4);
-      if (unlikely(!__pyx_t_12)) {
+      __pyx_t_10 = __pyx_t_3(__pyx_t_4);
+      if (unlikely(!__pyx_t_10)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         break;
       }
-      __Pyx_GOTREF(__pyx_t_12);
+      __Pyx_GOTREF(__pyx_t_10);
     }
-    if (!(likely(PyTuple_CheckExact(__pyx_t_12))||((__pyx_t_12) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_12)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_XDECREF_SET(__pyx_v_pos, ((PyObject*)__pyx_t_12));
-    __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyDict_GetItem(__pyx_v_all_tiles, __pyx_v_pos); if (unlikely(__pyx_t_12 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_int_1, Py_NE); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyTuple_CheckExact(__pyx_t_10))||((__pyx_t_10) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_10)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_XDECREF_SET(__pyx_v_pos, ((PyObject*)__pyx_t_10));
+    __pyx_t_10 = 0;
+    __pyx_t_10 = __Pyx_PyDict_GetItem(__pyx_v_all_tiles, __pyx_v_pos); if (unlikely(__pyx_t_10 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __Pyx_GOTREF(__pyx_t_10);
+    __pyx_t_12 = PyObject_RichCompare(__pyx_t_10, __pyx_int_1, Py_NE); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     if (__pyx_t_6) {
-      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_v_pos))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_v_pos))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_lit_tiles = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "Code\LOS.pyx":108
+  /* "Code\LOS.pyx":106
  * 
  *     lit_tiles = [pos for pos in dest_pos if all_tiles[pos] != 1]
  *     return lit_tiles             # <<<<<<<<<<<<<<
@@ -2390,7 +2329,7 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
   __pyx_r = __pyx_v_lit_tiles;
   goto __pyx_L0;
 
-  /* "Code\LOS.pyx":79
+  /* "Code\LOS.pyx":77
  *         return True
  * 
  * def line_of_sight(source_pos, dest_pos, int max_range, opacity_map, int grid_height):             # <<<<<<<<<<<<<<
@@ -2402,8 +2341,8 @@ static PyObject *__pyx_pf_4Code_3LOS_line_of_sight(CYTHON_UNUSED PyObject *__pyx
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_12);
-  __Pyx_XDECREF(__pyx_t_14);
   __Pyx_AddTraceback("Code.LOS.line_of_sight", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -2439,9 +2378,9 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_kp_s_C_Users_pbradley_Documents_GitHu, __pyx_k_C_Users_pbradley_Documents_GitHu, sizeof(__pyx_k_C_Users_pbradley_Documents_GitHu), 0, 0, 1, 0},
   {&__pyx_n_s_Code_LOS, __pyx_k_Code_LOS, sizeof(__pyx_k_Code_LOS), 0, 0, 1, 1},
   {&__pyx_n_s_all_tiles, __pyx_k_all_tiles, sizeof(__pyx_k_all_tiles), 0, 0, 1, 1},
-  {&__pyx_kp_s_c_Users_pbradley_Documents_GitHu, __pyx_k_c_Users_pbradley_Documents_GitHu, sizeof(__pyx_k_c_Users_pbradley_Documents_GitHu), 0, 0, 1, 0},
   {&__pyx_n_s_dest_pos, __pyx_k_dest_pos, sizeof(__pyx_k_dest_pos), 0, 0, 1, 1},
   {&__pyx_n_s_grid_height, __pyx_k_grid_height, sizeof(__pyx_k_grid_height), 0, 0, 1, 1},
   {&__pyx_n_s_line_of_sight, __pyx_k_line_of_sight, sizeof(__pyx_k_line_of_sight), 0, 0, 1, 1},
@@ -2471,17 +2410,17 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "Code\LOS.pyx":79
+  /* "Code\LOS.pyx":77
  *         return True
  * 
  * def line_of_sight(source_pos, dest_pos, int max_range, opacity_map, int grid_height):             # <<<<<<<<<<<<<<
  *     cdef int x1, y1, x2, y2
  *     cdef tuple pos, s_pos
  */
-  __pyx_tuple_ = PyTuple_Pack(13, __pyx_n_s_source_pos, __pyx_n_s_dest_pos, __pyx_n_s_max_range, __pyx_n_s_opacity_map, __pyx_n_s_grid_height, __pyx_n_s_x1, __pyx_n_s_y1, __pyx_n_s_x2, __pyx_n_s_y2, __pyx_n_s_pos, __pyx_n_s_s_pos, __pyx_n_s_all_tiles, __pyx_n_s_lit_tiles); if (unlikely(!__pyx_tuple_)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple_ = PyTuple_Pack(13, __pyx_n_s_source_pos, __pyx_n_s_dest_pos, __pyx_n_s_max_range, __pyx_n_s_opacity_map, __pyx_n_s_grid_height, __pyx_n_s_x1, __pyx_n_s_y1, __pyx_n_s_x2, __pyx_n_s_y2, __pyx_n_s_pos, __pyx_n_s_s_pos, __pyx_n_s_all_tiles, __pyx_n_s_lit_tiles); if (unlikely(!__pyx_tuple_)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(5, 0, 13, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_c_Users_pbradley_Documents_GitHu, __pyx_n_s_line_of_sight, 79, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(5, 0, 13, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_C_Users_pbradley_Documents_GitHu, __pyx_n_s_line_of_sight, 77, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -2593,16 +2532,16 @@ PyMODINIT_FUNC PyInit_LOS(void)
   if (__Pyx_patch_abc() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
 
-  /* "Code\LOS.pyx":79
+  /* "Code\LOS.pyx":77
  *         return True
  * 
  * def line_of_sight(source_pos, dest_pos, int max_range, opacity_map, int grid_height):             # <<<<<<<<<<<<<<
  *     cdef int x1, y1, x2, y2
  *     cdef tuple pos, s_pos
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_4Code_3LOS_1line_of_sight, NULL, __pyx_n_s_Code_LOS); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_4Code_3LOS_1line_of_sight, NULL, __pyx_n_s_Code_LOS); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_line_of_sight, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_line_of_sight, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "Code\LOS.pyx":1

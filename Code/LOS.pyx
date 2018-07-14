@@ -11,7 +11,7 @@ cdef int calculate_distance(int x1, int y1, int x2, int y2):
 cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height):
         if x1 == x2 and y1 == y2:
             return True
-        #SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
+        # SuperCover Line Algorithm http://eugen.dedu.free.fr/projects/bresenham/
         # Setup initial conditions
         cdef int dx, dy, x, y, xstep, ystep, ddy, ddx, errorprev, error
         dx = x2 - x1
@@ -40,13 +40,12 @@ cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height)
                     y += ystep
                     error -= ddx
                     if error + errorprev < ddx: # bottom square
-                        if opacity_map[get_pos(x, y - ystep, grid_height)]:
+                        if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
                             return False
                     elif error + errorprev > ddx: # left square
-                        pos = x - xstep, y
-                        if opacity_map[get_pos(x - xstep, y, grid_height)]:
+                        if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
                             return False
-                    else:
+                    else:  # through the middle
                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
                             return False
                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
@@ -61,13 +60,12 @@ cdef bint get_line(int x1, int y1, int x2, int y2, opacity_map, int grid_height)
                     x += xstep
                     error -= ddy
                     if error + errorprev < ddy: # bottom square
-                        pos = x - xstep, y
-                        if opacity_map[get_pos(x - xstep, y, grid_height)]:
+                        if (x - xstep != x2 or y != y2) and opacity_map[get_pos(x - xstep, y, grid_height)]:
                             return False
                     elif error + errorprev > ddy: # left square
-                        if opacity_map[get_pos(x, y - ystep, grid_height)]:
+                        if (x != x2 or y - ystep != y2) and opacity_map[get_pos(x, y - ystep, grid_height)]:
                             return False
-                    else:
+                    else:  # through the middle
                         if opacity_map[get_pos(x, y - ystep, grid_height)] and opacity_map[get_pos(x - xstep, y, grid_height)]:
                             return False
                 if (x != x2 or y != y2) and opacity_map[get_pos(x, y, grid_height)]:
@@ -88,9 +86,9 @@ def line_of_sight(source_pos, dest_pos, int max_range, opacity_map, int grid_hei
             all_tiles[pos] = 2
 
     # Any tile that can't be moved over at all is dark
-    for pos in all_tiles:
-        if opacity_map[get_pos(pos[0], pos[1], grid_height)]:
-            all_tiles[pos] = 1
+    # for pos in all_tiles:
+    #     if opacity_map[get_pos(pos[0], pos[1], grid_height)]:
+    #         all_tiles[pos] = 1
 
     # Iterate over remaining tiles
     for pos in all_tiles:

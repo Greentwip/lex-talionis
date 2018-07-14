@@ -11,7 +11,6 @@ try:
 except:
     FAST_LOS = False
     print('Fast line of sight calculation not available. Falling back on default Python implementation.')
-
 # === TAXICAB DISTANCE =================================================
 def calculate_distance(position1, position2):
     return (abs(position1[0] - position2[0]) + abs(position1[1] - position2[1]))
@@ -206,10 +205,12 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
     if FAST_LOS:
         return LOS.line_of_sight(source_pos, dest_pos, max_range, gameStateObj.map.opacity_map, gameStateObj.map.height)
 
+    UNKNOWN, DARK, LIT = 0, 1, 2
+
     # This is important so we can change the values of this while we iterate over it.
     class SimpleTile(object):
         def __init__(self):
-            self.visibility = 'unknown'
+            self.visibility = UNKNOWN
 
     """
     def get_line3(start, end):
@@ -319,13 +320,13 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
                     error -= ddx
                     if error + errorprev < ddx: # bottom square
                         pos = x, y - ystep
-                        if gameStateObj.map.tiles[pos].opaque:
+                        if pos != end and gameStateObj.map.tiles[pos].opaque:
                             return False
                     elif error + errorprev > ddx: # left square
                         pos = x - xstep, y
-                        if gameStateObj.map.tiles[pos].opaque:
+                        if pos != end and gameStateObj.map.tiles[pos].opaque:
                             return False
-                    else:
+                    else:  # through the middle
                         pos1, pos2 = (x, y - ystep), (x - xstep, y)
                         if gameStateObj.map.tiles[pos1].opaque and gameStateObj.map.tiles[pos2].opaque:
                             return False
@@ -343,13 +344,13 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
                     error -= ddy
                     if error + errorprev < ddy: # bottom square
                         pos = x - xstep, y
-                        if gameStateObj.map.tiles[pos].opaque:
+                        if pos != end and gameStateObj.map.tiles[pos].opaque:
                             return False
                     elif error + errorprev > ddy: # left square
                         pos = x, y - ystep
-                        if gameStateObj.map.tiles[pos].opaque:
+                        if pos != end and gameStateObj.map.tiles[pos].opaque:
                             return False
-                    else:
+                    else:  # through the middle
                         pos1, pos2 = (x, y - ystep), (x - xstep, y)
                         if gameStateObj.map.tiles[pos1].opaque and gameStateObj.map.tiles[pos2].opaque:
                             return False
@@ -394,29 +395,29 @@ def line_of_sight(source_pos, dest_pos, max_range, gameStateObj):
                 return True
     # End Func
     """
-
     all_tiles = {}
     for pos in dest_pos:
         all_tiles[pos] = SimpleTile()
         if pos in source_pos:
-            all_tiles[pos].visibility = 'lit'
+            all_tiles[pos].visibility = LIT
 
     # Any tile that can't be moved over at all is dark
-    for pos, tile in all_tiles.items():
-        if gameStateObj.map.tiles[pos].opaque:
-            tile.visibility = 'dark'
+    # for pos, tile in all_tiles.items():
+    #     if gameStateObj.map.tiles[pos].opaque:
+    #         tile.visibility = DARK
 
     # Iterate over remaining tiles
     for pos, tile in all_tiles.items():
-        if tile.visibility == 'unknown':
+        if tile.visibility == UNKNOWN:
             for s_pos in source_pos:
                 if calculate_distance(pos, s_pos) <= max_range and get_line2(s_pos, pos):
-                    tile.visibility = 'lit'
+                    tile.visibility = LIT
                     break
-            if tile.visibility == 'unknown':
-                tile.visibility = 'dark'
+            else:
+                tile.visibility = DARK
 
-    lit_tiles = [pos for pos in dest_pos if all_tiles[pos].visibility != 'dark']
+    lit_tiles = [pos for pos in dest_pos if all_tiles[pos].visibility != DARK]
+
     # print(time.clock() - time1)
     return lit_tiles
 
