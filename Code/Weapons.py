@@ -84,8 +84,8 @@ class Weapon_Advantage(object):
             self.resist = resist
             self.accuracy = accuracy
             self.avoid = avoid
-            self.crit = crit
-            self.evade = evade
+            self.crit = self.crit_accuracy = crit
+            self.evade = self.dodge = self.crit_avoid = evade
             self.attackspeed = attackspeed
 
     def __init__(self, fn):
