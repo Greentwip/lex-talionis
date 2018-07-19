@@ -302,6 +302,7 @@ class PrepItemsState(StateMachine.State):
             gameStateObj.background = None
 
         if not self.started:
+            # print([(unit.name, unit.dead) for unit in gameStateObj.allunits])
             units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
             units = sorted(units, key=lambda unit: bool(unit.position), reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 3, 4, 'center')

@@ -592,6 +592,38 @@ class Combat(object):
             my_exp = Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100)
         return my_exp
 
+    def handle_interact_script(self, gameStateObj):
+        script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
+        if os.path.exists(script_name):
+            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None))
+            gameStateObj.message.append(interact_script)
+            gameStateObj.stateMachine.changeState('dialogue')
+
+    def handle_miracle(self, gameStateObj, all_units):
+        for unit in all_units:
+            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
+                if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
+                    unit.handle_miracle(gameStateObj)
+
+    def handle_state_stack(self, gameStateObj):
+        if self.event_combat:
+            gameStateObj.message[-1].current_state = "Processing"
+            if not self.p1.isDying:
+                self.p1.sprite.change_state('normal', gameStateObj)
+        else:
+            if self.p1.team == 'player':
+                # Check if this is an ai controlled player
+                if gameStateObj.stateMachine.getPreviousState() == 'ai':
+                    pass
+                elif not self.p1.hasAttacked:
+                    gameStateObj.stateMachine.changeState('menu')
+                elif self.p1.has_canto_plus() and not self.p1.isDying:
+                    gameStateObj.stateMachine.changeState('move')
+                else:
+                    gameStateObj.stateMachine.clear()
+                    gameStateObj.stateMachine.changeState('free')
+                    gameStateObj.stateMachine.changeState('wait')
+
     def handle_statuses(self, gameStateObj):
         for status in self.p1.status_effects:
             if status.status_after_battle and not (self.p1.isDying and status.tether):
@@ -629,6 +661,17 @@ class Combat(object):
                 self.p1.tags.discard('ActiveSkillCharged')
             if self.skill_used.active.mode == 'Attack':
                 self.skill_used.active.reverse_mod()
+
+    def handle_death(self, gameStateObj, metaDataObj, all_units):
+        for unit in all_units:
+            if unit.isDying:
+                logger.debug('%s is dying.', unit.name)
+                if isinstance(unit, TileObject.TileObject):
+                    gameStateObj.map.destroy(unit, gameStateObj)
+                else:
+                    gameStateObj.stateMachine.changeState('dying')
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
+                    gameStateObj.stateMachine.changeState('dialogue')
 
 class AnimationCombat(Combat):
     def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat, ai_combat):
@@ -1335,36 +1378,11 @@ class AnimationCombat(Combat):
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
-        if self.event_combat:
-            gameStateObj.message[-1].current_state = "Processing"
-            if not self.p1.isDying:
-                self.p1.sprite.change_state('normal', gameStateObj)
-        else:
-            if self.p1.team == 'player':
-                # Check if this is an ai controlled player
-                if gameStateObj.stateMachine.getPreviousState() == 'ai':
-                    pass
-                elif not self.p1.hasAttacked:
-                    gameStateObj.stateMachine.changeState('menu')
-                elif self.p1.has_canto_plus() and not self.p1.isDying:
-                    gameStateObj.stateMachine.changeState('move')
-                else:
-                    gameStateObj.stateMachine.clear()
-                    gameStateObj.stateMachine.changeState('free')
-                    gameStateObj.stateMachine.changeState('wait')
+        self.handle_state_stack(gameStateObj)
 
-        # Handle interact_script
-        script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
-        if os.path.exists(script_name):
-            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=self.p2)
-            gameStateObj.message.append(interact_script)
-            gameStateObj.stateMachine.changeState('dialogue')
-
-        # Handle miracle
-        for unit in all_units:
-            if unit.isDying:
-                if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
-                    unit.handle_miracle(gameStateObj)
+        self.handle_interact_script(gameStateObj)
+        
+        self.handle_miracle(gameStateObj, all_units)
 
         # Handle item gain
         for unit in all_units:
@@ -1388,16 +1406,7 @@ class AnimationCombat(Combat):
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)
 
-        # Handle death
-        for unit in all_units:
-            if unit.isDying:
-                logger.debug('%s is dying.', unit.name)
-                if isinstance(unit, TileObject.TileObject):
-                    gameStateObj.map.destroy(unit, gameStateObj)
-                else:
-                    gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
-                    gameStateObj.stateMachine.changeState('dialogue')
+        self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
         self.remove_broken_items(a_broke_item, d_broke_item)
@@ -1851,37 +1860,11 @@ class MapCombat(Combat):
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
-        if self.event_combat:
-            gameStateObj.message[-1].current_state = "Processing"
-        else:
-            if self.p1.team == 'player':
-                # Check if this is an ai controlled player
-                if gameStateObj.stateMachine.getPreviousState() == 'ai':
-                    pass
-                elif not self.p1.hasAttacked:
-                    gameStateObj.stateMachine.changeState('menu')
-                elif self.p1.has_canto_plus() and not self.p1.isDying:
-                    gameStateObj.stateMachine.changeState('move')
-                else:
-                    # self.p1.wait(gameStateObj)
-                    gameStateObj.stateMachine.clear()
-                    gameStateObj.stateMachine.changeState('free')
-                    gameStateObj.stateMachine.changeState('wait')
-            # else:
-                # gameStateObj.stateMachine.changeState('ai')
+        self.handle_state_stack(gameStateObj)
 
-        # Handle interact_script
-        script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
-        if os.path.exists(script_name):
-            interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None))
-            gameStateObj.message.append(interact_script)
-            gameStateObj.stateMachine.changeState('dialogue')
+        self.handle_interact_script(gameStateObj)
 
-        # Handle miracle
-        for unit in all_units:
-            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
-                if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
-                    unit.handle_miracle(gameStateObj)
+        self.handle_miracle(gameStateObj, all_units)
 
         # Handle item gain
         for unit in all_units:
@@ -1951,16 +1934,7 @@ class MapCombat(Combat):
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)
 
-        # Handle death
-        for unit in all_units:
-            if unit.isDying:
-                logger.debug('%s is dying.', unit.name)
-                if isinstance(unit, TileObject.TileObject):
-                    gameStateObj.map.destroy(unit, gameStateObj)
-                else:
-                    gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
-                    gameStateObj.stateMachine.changeState('dialogue')
+        self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
         self.remove_broken_items(a_broke_item, d_broke_item)

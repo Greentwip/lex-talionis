@@ -12,7 +12,7 @@ import Code.GlobalConstants as GC
 import Code.ItemMethods as ItemMethods
 import Code.Weapons as Weapons
 
-from Code.UnitObject import Stat
+from Code.StatObject import Stat
 import Code.Utility as Utility
 from Code.SaveLoad import Trigger
 

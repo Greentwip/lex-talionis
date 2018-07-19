@@ -8,7 +8,7 @@ from collections import OrderedDict
 import GlobalConstants as GC
 import configuration as cf
 import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
-from UnitObject import Stat
+from StatObject import Stat
 
 import logging
 logger = logging.getLogger(__name__)
@@ -195,6 +195,7 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
     elif unitLine[0] == 'load_player_characters':
         for unit in allunits:
             if unit.team == 'player' and not unit.dead:
+                # Event ID is unit name
                 reinforceUnits[unit.name] = (unit.id, None)
     elif unitLine[0] == 'trigger':
         if unitLine[1] not in triggers:
@@ -212,7 +213,7 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
         # Saved Unit
         elif unitLine[1] == "1":
             for unit in allunits:
-                if unit.name == unitLine[3]: # Saved units use their name...\
+                if unit.id == unitLine[3]: # Saved units use their id (which normally is name)
                     if unitLine[4] == 'None':
                         position = None
                     else:
@@ -221,6 +222,7 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
                         unit.position = position
                     else: # Unit does not start on board
                         reinforceUnits[unitLine[2]] = (unit.id, position)
+                    break
         # Created Unit
         elif unitLine[1] == "2":
             event_id = unitLine[2]

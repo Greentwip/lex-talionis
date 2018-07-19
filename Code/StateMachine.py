@@ -1885,21 +1885,18 @@ class DialogueState(State):
         if gameStateObj.statedict['levelIsComplete'] == 'win':
             logger.info('Player wins!')
             # Run the outro_script
-            if not gameStateObj.statedict['outroScriptDone']:
-                gameStateObj.update_statistics(metaDataObj)
-                # Run the outro script
-                if os.path.exists(metaDataObj['outroScript']):
-                    outro_script = Dialogue.Dialogue_Scene(metaDataObj['outroScript'])
-                    gameStateObj.message.append(outro_script)
-                    gameStateObj.stateMachine.changeState('dialogue')
+            if not gameStateObj.statedict['outroScriptDone'] and os.path.exists(metaDataObj['outroScript']):
+                outro_script = Dialogue.Dialogue_Scene(metaDataObj['outroScript'])
+                gameStateObj.message.append(outro_script)
+                gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.statedict['outroScriptDone'] = True
             else:
+                gameStateObj.update_statistics(metaDataObj)
                 gameStateObj.clean_up()
                 gameStateObj.output_progress()
                 if isinstance(gameStateObj.game_constants['level'], int):
                     gameStateObj.game_constants['level'] += 1
 
-                gameStateObj.stateMachine.clear()
                 # Determines the number of levels in the game
                 num_levels = 0
                 level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
@@ -1910,12 +1907,11 @@ class DialogueState(State):
                             num_levels = num
                     except:
                         continue
-                        
+                
+                gameStateObj.stateMachine.clear()        
                 if (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] >= num_levels:
-                    gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start')
                 else:
-                    gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('turn_change') # after we're done waiting, go to turn_change, start the GAME!
                     gameStateObj.save_kind = 'Start'
                     gameStateObj.stateMachine.changeState('start_save')

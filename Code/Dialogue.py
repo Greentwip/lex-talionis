@@ -544,7 +544,7 @@ class Dialogue_Scene(object):
                     coord = self.unit.position
             else:
                 for unit in gameStateObj.allunits:
-                    if (unit.name == line[1] or unit.event_id == line[1]) and unit.position:
+                    if (unit.id == line[1] or unit.event_id == line[1]) and unit.position:
                         coord = unit.position
                         break
                 else:
@@ -615,8 +615,6 @@ class Dialogue_Scene(object):
             gameStateObj.statedict['levelIsComplete'] = 'loss'
         elif line[0] == 'win_game':
             gameStateObj.statedict['levelIsComplete'] = 'win'
-        elif line[0] == 'skip_outro':
-            gameStateObj.statedict['outroScriptDone'] = True
         elif line[0] == 'change_music':
             if gameStateObj.phase_music:
                 # Phase name, musical piece
@@ -733,18 +731,19 @@ class Dialogue_Scene(object):
 
         # === CLEANUP
         elif line[0] == 'arrange_formation':
-            if len(line) > 1:  # force arrange
-                player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and
-                                not unit.dead]
+            force = True if len(line) > 1 else False
+            if force:  # force arrange
+                player_units = [unit for unit in gameStateObj.allunits if 
+                                unit.team == 'player' and not unit.dead]
                 formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
                                    if 'Formation' in value]
             else:
-                player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and
-                                not unit.dead and not unit.position]
+                player_units = [unit for unit in gameStateObj.allunits if 
+                                unit.team == 'player' and not unit.dead and not unit.position]
                 formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
                                    if 'Formation' in value and not gameStateObj.grid_manager.get_unit_node(pos)]
             for index, unit in enumerate(player_units[:len(formation_spots)]):
-                if len(line) > 1:
+                if force:
                     unit.leave(gameStateObj)
                     unit.remove_from_map(gameStateObj)
                 unit.position = formation_spots[index]
@@ -759,20 +758,18 @@ class Dialogue_Scene(object):
                 self.unit.reset()
             else:
                 for unit in gameStateObj.allunits:
-                    if line[1] in (unit.id, unit.event_id, unit.name, unit.team):
+                    if line[1] in (unit.id, unit.event_id, unit.team):
                         unit.reset()
         elif line[0] == 'remove_enemies':
-            if len(line) > 1:
-                exception = line[1]
-            else:
-                exception = None
+            exception = line[1] if len(line) > 1 else None
+            units_to_remove = [unit for unit in gameStateObj.allunits if unit.team != "enemy" and unit.id != exception]
             # Remove enemies
-            gameStateObj.allunits = [unit for unit in gameStateObj.allunits if unit.team == 'player' or unit.name == exception]
+            for unit in units_to_remove:
+                unit.leave(gameStateObj)
+                unit.remove_from_map(gameStateObj)
+                unit.position = None
         elif line[0] == 'kill_all':
-            if len(line) > 1:
-                call_out = line[1]
-            else:
-                call_out = None
+            call_out = line[1] if len(line) > 1 else None
             for unit in gameStateObj.allunits:
                 if unit.position and unit.team == call_out:
                     unit.isDying = True
@@ -832,23 +829,23 @@ class Dialogue_Scene(object):
         elif line[0] == 'convert':
             unit_specifier = self.get_id(line[1])
             for unit in gameStateObj.allunits:
-                if unit.name == unit_specifier or unit.event_id == unit_specifier or unit.position == unit_specifier:
+                if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.changeTeams(line[2], gameStateObj)
         elif line[0] == 'change_class':
             unit_specifier = self.get_id(line[1])
             for unit in gameStateObj.allunits:
-                if unit.name == unit_specifier or unit.event_id == unit_specifier or unit.position == unit_specifier:
+                if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.changeClass(line[2], gameStateObj)
         elif line[0] == 'change_ai':
             unit_specifier = self.get_id(line[1])
             for unit in gameStateObj.allunits:
-                if unit.name == unit_specifier or unit.event_id == unit_specifier or unit.position == unit_specifier:
+                if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.ai_descriptor = line[2]
                     unit.get_ai(line[2])
         elif line[0] == 'add_tag':
             unit_specifier = self.get_id(line[1])
             for unit in gameStateObj.allunits:
-                if unit.name == unit_specifier or unit.event_id == unit_specifier or unit.position == unit_specifier:
+                if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.tags.add(line[2])
 
         # === HANDLE TALKING
@@ -1103,7 +1100,7 @@ class Dialogue_Scene(object):
             return False
         if line[2] in hardset_positions:
             position = [hardset_positions[line[2]], 80]
-            mirrorflag = True if line[2] in ['OffscreenLeft', 'FarLeft', 'Left', 'MidLeft'] else False
+            mirrorflag = True if line[2] in ('OffscreenLeft', 'FarLeft', 'Left', 'MidLeft') else False
             if 'mirror' in line:
                 mirrorflag = not mirrorflag
         else:

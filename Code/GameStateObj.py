@@ -379,16 +379,15 @@ class GameStateObj(object):
             unit.clean_up(self)
 
         # Remove non player team units
-        for unit in reversed(self.allunits):
-            if unit.team != 'player' or unit.generic_flag:
-                self.allunits.remove(unit)
+        self.allunits = [unit for unit in self.allunits if unit.team == 'player' and not unit.generic_flag]
 
         # Handle player death
-        for unit in reversed(self.allunits):
+        for unit in self.allunits:
             if unit.dead:
                 if not int(self.mode['death']): # Casual
                     unit.dead = False
                 else:
+                    # Give all of the unit's items to the convoy
                     for item in unit.items:
                         unit.remove_item(item)
                         if not item.locked:

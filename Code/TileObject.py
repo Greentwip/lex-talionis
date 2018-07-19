@@ -646,11 +646,11 @@ class TileObject(object):
 
     def change_hp(self, dhp):
         self.currenthp += int(dhp)
-        self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
+        self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))
 
     def set_hp(self, hp):
         self.currenthp = int(hp)
-        self.currenthp = Utility.clamp(self.currenthp, 0, self.stats['HP'])
+        self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))
 
     def get_mcost(self, unit):
         if isinstance(unit, int):

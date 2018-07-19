@@ -15,7 +15,7 @@
 
 - Windows/Mac/Linux build of latest Engine, Level Editor
 
-- Sometimes on Formation Screen, Ophie shows his running down animation instead of normal passive anim; could be from previous level...
+- Sometimes on Formation Screen, Ophie shows his running down animation instead of normal passive anim; could be from previous level... (after seize?)
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
