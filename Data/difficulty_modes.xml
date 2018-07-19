@@ -43,7 +43,7 @@
     <difficulty name="Grandmaster">
         <id>3</id>
         <!-- 0=Casual, 1=Classic -->
-        <death>0</death>
+        <death>1</death>
         <!-- 0=Random, 1=Fixed, 2=Hybrid -->
         <growths>1</growths>
         <rng>hybrid</rng>

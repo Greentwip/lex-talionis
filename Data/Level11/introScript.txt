@@ -130,6 +130,5 @@ end_skip
 b;Fin
 t;2
 win_game
-skip_outro
 s;Narrator;{wait};auto;cinematic
 t;3
