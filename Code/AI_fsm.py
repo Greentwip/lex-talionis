@@ -288,7 +288,8 @@ class AI(object):
                 elif 'Destructible' in tile_info:
                     gameStateObj.map.destroy(tile, gameStateObj)
                 elif 'Locked' in tile_info:
-                    self.unit.unlock(self.target_to_interact_with, gameStateObj)
+                    item = self.unit.get_unlock_item()
+                    self.unit.unlock(self.target_to_interact_with, item, gameStateObj)
                 elif 'Escape' or 'Thief_Escape' in tile_info:
                     if self.unit.position != self.target_to_interact_with:
                         return # Didn't actually reach ThiefEscape point

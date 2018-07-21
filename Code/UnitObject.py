@@ -286,6 +286,9 @@ class UnitObject(object):
             if (self.getMainWeapon().effective and any([comp in enemyunit.tags for comp in self.getMainWeapon().effective.against])) or \
                     any([status.weakness and status.weakness.damage_type == self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
                 white = True
+        else:  # Tile Object
+            if self.getMainWeapon().extra_tile_damage:
+                white = True
         self.getMainWeapon().draw(surf, (topleft[0] + 2, topleft[1] + 4), white)
         # Blit enemy item
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
@@ -1473,8 +1476,9 @@ class UnitObject(object):
         damage = self.damage(gameStateObj, item, adj)
 
         if isinstance(target, TileObject.TileObject):
-            pass
-            
+            if item.extra_tile_damage:
+                damage += item.extra_tile_damage
+
         else:
             # Determine effective
             if item.effective:
@@ -2029,23 +2033,27 @@ class UnitObject(object):
         gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
-    def unlock(self, pos, gameStateObj):
+    def unlock(self, pos, item, gameStateObj):
         self.hasAttacked = True
         locked_name = gameStateObj.map.tile_info_dict[pos]['Locked']
         unlock_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
-        gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
-        gameStateObj.stateMachine.changeState('dialogue')
+        if os.path.exists(unlock_script):
+            gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
+            gameStateObj.stateMachine.changeState('dialogue')
 
-        # Use up skeleton key if it was what was used
-        if 'locktouch' not in self.status_bundle:
-            for item in self.items:
-                if item.unlock:
-                    item.uses.decrement()
-                    if item.uses.uses <= 0:
-                        self.remove_item(item)
-                        gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
-                        gameStateObj.stateMachine.changeState('itemgain')
-                    break
+        if item and item.uses:
+            item.uses.decrement()
+            if item.uses.uses <= 0:
+                self.remove_item(item)
+                gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
+                gameStateObj.stateMachine.changeState('itemgain')
+
+    def get_unlock_item(self):
+        keys = [item for item in self.items if item.unlock and not item.spell]
+        item = None
+        if keys and 'locktouch' not in self.status_bundle:
+            item = keys[0]
+        return item
 
     def can_unlock(self):
         return 'locktouch' in self.status_bundle or any(item.unlock for item in self.items) 
