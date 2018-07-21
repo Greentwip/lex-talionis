@@ -561,7 +561,8 @@ class BoundaryManager(object):
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
             for other_unit in other_units:
-                self._add_unit(other_unit, gameStateObj)
+                if other_unit.position:
+                    self._add_unit(other_unit, gameStateObj)
 
     def arrive(self, unit, gameStateObj):
         if unit.position:
@@ -580,7 +581,8 @@ class BoundaryManager(object):
             for other_unit in other_units:
                 self._remove_unit(other_unit, gameStateObj)
             for other_unit in other_units:
-                self._add_unit(other_unit, gameStateObj)
+                if other_unit.position:
+                    self._add_unit(other_unit, gameStateObj)
 
     # Called when map changes
     def reset(self, gameStateObj):
