@@ -1163,11 +1163,23 @@ class MainMenu(object):
                 self.cursorCounter = 0
 
 class ChapterSelectMenu(MainMenu):
-    def __init__(self, options):
+    def __init__(self, options, colors=None):
         MainMenu.__init__(self, options, 'ChapterSelect')
+        if colors:
+            self.colors = [self.determine_color(color) for color in colors]
+        else:
+            self.colors = ['Green' for option in self.options]
         self.use_rel_y = len(options) > 3
         self.use_transparency = True
         self.rel_pos_y = 0
+
+    def determine_color(self, mode):
+        if mode == 2 or mode == '2' or mode == 'Lunatic':
+            return 'Red'
+        elif mode == 3 or mode == '3' or mode == 'Grandmaster':
+            return 'Blue'
+        else:
+            return 'Green'
 
     def moveUp(self):
         MainMenu.moveUp(self)
@@ -1201,11 +1213,11 @@ class ChapterSelectMenu(MainMenu):
         start_index = max(0, self.currentSelection - 3)
         for index, option in enumerate(self.options[start_index:self.currentSelection + 3], start_index):
             if flicker and self.currentSelection == index: # If the selection should flash white
-                BGSurf = GC.IMAGESDICT[self.background + 'Flicker'].copy()
+                BGSurf = GC.IMAGESDICT[self.background + 'Flicker' + self.colors[index]].copy()
             elif self.currentSelection == index: # Highlight the chosen option
-                BGSurf = GC.IMAGESDICT[self.background + 'Highlight'].copy()
+                BGSurf = GC.IMAGESDICT[self.background + 'Highlight' + self.colors[index]].copy()
             else:
-                BGSurf = GC.IMAGESDICT[self.background].copy()
+                BGSurf = GC.IMAGESDICT[self.background + self.colors[index]].copy()
             # Position
             diff = index - self.currentSelection
             if self.use_rel_y:

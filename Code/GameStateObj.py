@@ -353,6 +353,7 @@ class GameStateObj(object):
         to_save_meta = {'playtime': self.playtime,
                         'realtime': time.time(),
                         'version': GC.version,
+                        'mode_id': self.mode['id'],
                         'save_slot': self.save_slot}
         return to_save, to_save_meta
 

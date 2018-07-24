@@ -93,6 +93,11 @@ def remove_suspend():
     if not cf.OPTIONS['cheat'] and os.path.exists(GC.SUSPEND_LOC):
         os.remove(GC.SUSPEND_LOC)
 
+def get_save_title(save_slots):
+    options = [save_slot.get_name() for save_slot in save_slots]
+    colors = [save_slot.mode_id for save_slot in save_slots]
+    return options, colors
+
 class StartStart(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
@@ -322,8 +327,8 @@ class StartLoad(StateMachine.State):
             self.position_x = 3*GC.WINWIDTH//2
             self.title_surf, self.title_pos = create_title(cf.WORDS['Load Game'])
             self.rel_title_pos_y = -40
-            options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
-            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
+            options, colors = get_save_title(gameStateObj.save_slots)
+            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options, colors)
             # Default to most recent
             gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x: x.realtime))
             # self.time_display = TimeDisplay()
@@ -410,8 +415,8 @@ class StartAllSaves(StartLoad):
             self.title_surf, self.title_pos = create_title(cf.WORDS['Load Game'])
             self.rel_title_pos_y = -40
             self.all_saves = sorted(self.get_all_saves(), key=lambda x: x.realtime, reverse=True)
-            options = [save_slot.get_name() for save_slot in self.all_saves]
-            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
+            options, colors = get_save_title(self.all_saves)
+            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options, colors)
             # Default to most recent
             gameStateObj.activeMenu.currentSelection = 0
 
@@ -466,8 +471,8 @@ class StartRestart(StartLoad):
             self.position_x = 3*GC.WINWIDTH//2
             self.title_surf, self.title_pos = create_title(cf.WORDS['Restart Level'])
             self.rel_title_pos_y = -40
-            options = [save_slot.get_name() for save_slot in gameStateObj.save_slots]
-            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
+            options, colors = get_save_title(gameStateObj.save_slots)
+            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options, colors)
             # Default to most recent
             gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x: x.realtime))
             # self.time_display = TimeDisplay()
@@ -644,8 +649,8 @@ class StartNew(StateMachine.State):
             self.position_x = 3*GC.WINWIDTH//2
             self.title_surf, self.title_pos = create_title(cf.WORDS['New Game'])
             self.rel_title_pos_y = -40
-            options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
-            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
+            options, colors = get_save_title(gameStateObj.save_slots)
+            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options, colors)
             # Default to oldest
             gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(min(gameStateObj.save_slots, key=lambda x: x.realtime))
             # self.time_display = TimeDisplay()
@@ -901,8 +906,8 @@ class StartSave(StateMachine.State):
             gameStateObj.save_slots = load_saves()
             self.title_surf, self.title_pos = create_title(cf.WORDS['Save Game'])
 
-            options = [save_slot.get_name() for save_slot in gameStateObj.save_slots] # SaveSlots
-            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options)
+            options, colors = get_save_title(gameStateObj.save_slots)
+            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options, colors)
             # Default to most recent
             gameStateObj.activeMenu.currentSelection = gameStateObj.save_slots.index(max(gameStateObj.save_slots, key=lambda x: x.realtime))
 

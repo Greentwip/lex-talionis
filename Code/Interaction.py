@@ -605,6 +605,21 @@ class Combat(object):
                 if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
                     unit.handle_miracle(gameStateObj)
 
+    def handle_item_gain(self, gameStateObj, all_units):
+        for unit in all_units:
+            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
+                for item in unit.items:
+                    if item.droppable:
+                        item.droppable = False
+                        if unit in self.splash or unit is self.p2:
+                            self.p1.add_item(item)
+                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p1, item))
+                            gameStateObj.stateMachine.changeState('itemgain')
+                        elif self.p2:
+                            self.p2.add_item(item)
+                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p2, item))
+                            gameStateObj.stateMachine.changeState('itemgain')
+
     def handle_state_stack(self, gameStateObj):
         if self.event_combat:
             gameStateObj.message[-1].current_state = "Processing"
@@ -1384,20 +1399,7 @@ class AnimationCombat(Combat):
         
         self.handle_miracle(gameStateObj, all_units)
 
-        # Handle item gain
-        for unit in all_units:
-            if unit.isDying:
-                for item in unit.items:
-                    if item.droppable:
-                        item.droppable = False
-                        if unit is self.p2:
-                            self.p1.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p1, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
-                        else:
-                            self.p2.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p2, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
+        self.handle_item_gain(gameStateObj, all_units)
 
         # Handle item loss
         if self.p1 is not self.p2:
@@ -1866,20 +1868,7 @@ class MapCombat(Combat):
 
         self.handle_miracle(gameStateObj, all_units)
 
-        # Handle item gain
-        for unit in all_units:
-            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
-                for item in unit.items:
-                    if item.droppable:
-                        item.droppable = False
-                        if unit in self.splash or unit is self.p2:
-                            self.p1.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p1, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
-                        elif self.p2:
-                            self.p2.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p2, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
+        self.handle_item_gain(gameStateObj, all_units)
 
         # Handle item loss
         if self.p1 is not self.p2:

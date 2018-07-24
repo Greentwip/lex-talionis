@@ -1686,6 +1686,7 @@ class StealState(State):
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
+            selection.droppable = False
             self.rube.remove_item(selection)
             self.initiator.add_item(selection)
             self.initiator.hasAttacked = True
