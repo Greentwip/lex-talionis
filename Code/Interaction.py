@@ -1971,9 +1971,12 @@ class HealthBar(object):
             GC.FONT['text_numbers'].blit(self.unit.name, bg_surf, position)
             # Blit item -- Must be blit every frame
             if self.item:
-                if self.other and isinstance(self.other, UnitObject.UnitObject):
-                    white = True if (self.item.effective and any(comp in self.other.tags for comp in self.item.effective.against)) or \
-                        any(status.weakness and status.weakness.damage_type == self.item.TYPE for status in self.other.status_effects) else False
+                if self.other:
+                    if isinstance(self.other, UnitObject.UnitObject):
+                        white = True if (self.item.effective and any(comp in self.other.tags for comp in self.item.effective.against)) or \
+                            any(status.weakness and status.weakness.damage_type == self.item.TYPE for status in self.other.status_effects) else False
+                    else:  # Tile Object
+                        white = True if self.item.extra_tile_damage else False
                 else:
                     white = False
                 self.item.draw(bg_surf, (2, 3), white)

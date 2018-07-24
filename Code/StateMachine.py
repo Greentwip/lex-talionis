@@ -968,7 +968,8 @@ class MenuState(State):
                     gameStateObj.cursor.setPosition(closest_position, gameStateObj)
                     gameStateObj.stateMachine.changeState('unlockselect')
                 elif len(avail_pos) == 1:
-                    cur_unit.unlock(avail_pos[0], gameStateObj)
+                    item = cur_unit.get_unlock_item()
+                    cur_unit.unlock(avail_pos[0], item, gameStateObj)
                 else:
                     logger.error('Made a mistake in allowing unit to access Unlock!')
             elif selection == cf.WORDS['Search']:
@@ -1399,7 +1400,7 @@ class SpellState(State):
             targets = spell.spell.targets
             gameStateObj.cursor.currentHoveredUnit = [unit for unit in gameStateObj.allunits if unit.position == gameStateObj.cursor.position]
             gameStateObj.cursor.currentHoveredTile = gameStateObj.map.tiles[gameStateObj.cursor.position]
-            if targets in ['Enemy', 'Ally', 'Unit'] and gameStateObj.cursor.currentHoveredUnit:
+            if targets in ('Enemy', 'Ally', 'Unit') and gameStateObj.cursor.currentHoveredUnit:
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.currentHoveredUnit[0]
                 cur_unit = gameStateObj.cursor.currentHoveredUnit
                 if (targets == 'Enemy' and attacker.checkIfEnemy(cur_unit)) \
@@ -1427,7 +1428,10 @@ class SpellState(State):
                     if spell.extra_select:
                         splash += spell.extra_select_targets
                         spell.extra_select_targets = []
-                    if not spell.hit or defender or splash:
+                    if spell.unlock:
+                        gameStateObj.stateMachine.changeState('menu')
+                        attacker.unlock(gameStateObj.cursor.position, spell, gameStateObj)
+                    elif not spell.hit or defender or splash:
                         if not spell.detrimental or (defender and attacker.checkIfEnemy(defender)) or any(attacker.checkIfEnemy(unit) for unit in splash):
                             gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, gameStateObj.cursor.position, splash, spell)
                             gameStateObj.stateMachine.changeState('combat')
@@ -1570,7 +1574,8 @@ class SelectState(State):
                     gameStateObj.stateMachine.changeState('dialogue')
             elif self.name == 'unlockselect':
                 gameStateObj.stateMachine.changeState('menu')
-                cur_unit.unlock(gameStateObj.cursor.position, gameStateObj)
+                item = cur_unit.get_unlock_item()
+                cur_unit.unlock(gameStateObj.cursor.position, item, gameStateObj)
             else:
                 logger.warning('SelectState does not have valid name: %s', self.name)
                 gameStateObj.stateMachine.back() # Shouldn't happen
