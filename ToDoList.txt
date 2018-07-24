@@ -17,6 +17,9 @@
 
 - Sometimes on Formation Screen, Ophie shows his running down animation instead of normal passive anim; could be from previous level... (after seize?)
 
+- A player character has somehow received a droppable item (Mend).
+- Add different colors for different difficulties (Red for Lunatic, Blue for Grandmaster, Green for Normal)
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
