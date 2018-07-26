@@ -186,7 +186,7 @@ class StatusMenu(StateMachine.State):
     def get_surfaces(self, gameStateObj, metaDataObj):
         surfaces = []
         # Background
-        name_back_surf = GC.IMAGESDICT['ChapterSelect']
+        name_back_surf = GC.IMAGESDICT['ChapterSelectGreen']
         surfaces.append((name_back_surf, (24, 2)))
         # Text
         big_font = GC.FONT['chapter_green']
@@ -1103,7 +1103,7 @@ class MainMenu(object):
 
         self.menu_width = 136
         self.menu_height = 24
-        if background == 'ChapterSelect':
+        if background.startswith('ChapterSelect'):
             self.menu_width = 192
             self.menu_height = 30
         
@@ -1119,7 +1119,7 @@ class MainMenu(object):
                 BGSurf = GC.IMAGESDICT[self.background + 'Highlight']
             else:
                 BGSurf = GC.IMAGESDICT[self.background]
-            top = center[1] - (len(self.options)/2.0 - index)*(self.menu_height+1) + (20 if self.background == 'ChapterSelect' else 0) # What is this formula?
+            top = center[1] - (len(self.options)/2.0 - index)*(self.menu_height+1) + (20 if self.background.startswith('ChapterSelect') else 0) # What is this formula?
             left = center[0] - BGSurf.get_width()//2
             surf.blit(BGSurf, (left, top))
          
@@ -1129,7 +1129,7 @@ class MainMenu(object):
   
         if show_cursor:
             height = center[1] - 12 - (len(self.options)/2.0 - self.currentSelection)*(self.menu_height+1) + self.cursorAnim[self.cursorCounter]
-            if self.background == 'ChapterSelect':
+            if self.background.startswith('ChapterSelect'):
                 height += 22 
             
             surf.blit(self.cursor1, (center[0] - self.menu_width//2 - self.cursor1.get_width()//2 - 8, height))
