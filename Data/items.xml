@@ -139,10 +139,10 @@
         <uses>15</uses>
         <value>150</value>
         <desc></desc>
-		<weight>9</weight>
+		<weight>7</weight>
         
 		<MT>9</MT>
-		<HIT>65</HIT>
+		<HIT>75</HIT>
 		<LVL>A</LVL>
     </item>
 
@@ -402,10 +402,10 @@
         <uses>15</uses>
         <value>120</value>
         <desc></desc>
-		<weight>10</weight>
+		<weight>8</weight>
         
 		<MT>11</MT>
-		<HIT>55</HIT>
+		<HIT>65</HIT>
 		<LVL>A</LVL>
     </item>
 
@@ -638,10 +638,10 @@
         <uses>15</uses>
         <value>100</value>
         <desc></desc>
-		<weight>12</weight>
+		<weight>10</weight>
         
 		<MT>12</MT>
-		<HIT>45</HIT>
+		<HIT>55</HIT>
 		<LVL>A</LVL>
     </item>
     
@@ -1027,7 +1027,7 @@
         <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color</components>
         <weapontype>Light</weapontype>
  
-        <uses>5</uses>
+        <uses>3</uses>
         <RNG>2-10</RNG>
         <value>600</value>
         <desc>Brings an ally near.</desc>
@@ -1465,9 +1465,9 @@
         <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color</components>
         <weapontype>Dark</weapontype>
  
-        <uses>5</uses>
+        <uses>3</uses>
         <RNG>0-1</RNG>
-        <value>1000</value>
+        <value>1500</value>
         <desc>Teleports a nearby unit.</desc>
         
         <LVL>A</LVL>

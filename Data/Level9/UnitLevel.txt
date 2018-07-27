@@ -38,7 +38,11 @@ enemy;0;0;Thief;15;Boltblade;5,3;SoftGuard;Templar
 # Generics
 enemy;0;load_me;Warrior;5;Mithril Axe,Hand Axe;12,27;Attack;Templar
 enemy;0;0;Warlock;5;Ruin;4,19;Attack;Templar
+mode;Lunatic
+enemy;0;0;Warlock;5;Ruin,dWarp;18,27;Attack;Templar
+mode;Hard,Grandmaster
 enemy;0;0;Warlock;5;Ruin;18,27;Attack;Templar
+mode;All
 enemy;0;0;Dragoon;5;Adamant Lance,dSpeedwings;12,19;Attack;Templar
 enemy;0;0;Oracle;5;Corona;4,12;Attack;Templar
 enemy;0;0;Oracle;5;Corona,dSilence;18,19;Attack;Templar

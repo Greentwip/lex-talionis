@@ -5,6 +5,9 @@ add_to_market;Short Axe
 add_to_market;Short Spear
 add_to_market;Ruin
 add_to_market;Wyrmsfire
+if;gameStateObj.mode['name'] == 'Lunatic'
+    set_tile_info;20,1;Shop=Corona,Physic,Rescue,Fireball,Fly,Howl,Disintegrate,Elixir,Warp
+end
 set_base_convo;Coronation
 if;not gameStateObj.check_dead('Coyote')
     set_base_convo;Midnight Rendezvous

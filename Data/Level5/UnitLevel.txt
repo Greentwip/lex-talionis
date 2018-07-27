@@ -75,7 +75,11 @@ enemy;0;0;Fighter;8;Steel Axe;21,6;Attack;Claw
 enemy;0;N1;Shaman;10;Flux;21,0;HardGuard;Claw
 enemy;0;N2;Shaman;10;Flux;19,0;HardGuard;Claw
 # Ruins
+mode;Lunatic
+enemy;0;0;Cleric;6;Glimmer,Heal,dRescue;23,12;SoftGuard_1;Claw
+mode;Hard,Grandmaster
 enemy;0;0;Cleric;6;Glimmer,Heal;23,12;SoftGuard_1;Claw
+mode;All
 enemy;0;0;Shaman;7;Flux;22,13;SoftGuard_1;Claw
 enemy;0;0;Shaman;7;Flux;24,13;SoftGuard_1;Claw
 # 3 Brigands, 1 Mage
