@@ -1181,6 +1181,9 @@ class ChapterSelectMenu(MainMenu):
         else:
             return 'Green'
 
+    def set_color(self, idx, mode):
+        self.colors[idx] = self.determine_color(mode)
+
     def moveUp(self):
         MainMenu.moveUp(self)
         if self.use_rel_y:

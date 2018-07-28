@@ -695,6 +695,7 @@ class StartNew(StateMachine.State):
         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
         # Hardset the name of the first level
         gameStateObj.activeMenu.options[gameStateObj.save_slot] = metaDataObj['name']
+        gameStateObj.activeMenu.set_color(gameStateObj.save_slot, gameStateObj.mode['name'])
         gameStateObj.stateMachine.clear()
         gameStateObj.stateMachine.changeState('turn_change')
         # gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
@@ -940,6 +941,7 @@ class StartSave(StateMachine.State):
                 # Rename thing
                 name = SaveLoad.read_overview_file('Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
                 gameStateObj.activeMenu.options[gameStateObj.activeMenu.getSelectionIndex()] = name
+                gameStateObj.activeMenu.set_color(gameStateObj.activeMenu.getSelectionIndex(), gameStateObj.mode['name'])
                 self.wait_time = Engine.get_time()
 
     def update(self, gameStateObj, metaDataObj):
