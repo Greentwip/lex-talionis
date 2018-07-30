@@ -1041,6 +1041,22 @@
         <map_hit_color>-248,248,248</map_hit_color>
     </item>
 
+    <item name="Unlock">
+        <id>Unlock</id>
+        <spritetype>Light</spritetype>
+        <spriteid>10</spriteid>       
+        <components>spell,uses,no_ai,unlock</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>1-7</RNG>
+        <value>600</value>
+        <desc>Unlocks distant targets.</desc>
+        
+        <LVL>C</LVL>
+        <targets>Tile</targets>
+    </item>
+
     <item name="Refresh">
         <id>Refresh</id>
         <spritetype>Light</spritetype>
