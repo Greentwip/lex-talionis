@@ -77,7 +77,7 @@
             <unit name="Kayla">
                 <level>13</level>
                 <exp>10</exp>
-                <items>Nyx,Scathe,Flux,Vulnerary,Barkskin</items>
+                <items>Nyx 17,Scathe 3,Flux 11,Vulnerary 3,Barkskin 3</items>
                 <wexp>0,0,0,0,0,0,75</wexp>
                 <skills>Hex,Empowered,fSpeed +2,fMovement +1</skills>
             </unit>
