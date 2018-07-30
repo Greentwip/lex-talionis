@@ -565,6 +565,8 @@ class StartPreloadedLevels(StartLoad):
             if item.uses:
                 item.uses.uses = int(uses)
             gameStateObj.convoy.append(item)
+        if level['convoy']:
+            gameStateObj.game_constants['Convoy'] = True
         # Units
         for unit_dict in level['units']:
             legend = {}

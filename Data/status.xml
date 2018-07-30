@@ -455,7 +455,7 @@
         <image_index>1,5</image_index>
         <desc>If attacking, grants Hit/Avoid +15 and Damage +1.</desc>
         <components>conditional_avoid,conditional_hit,conditional_mt,class_skill</components>
-        <!-- avoid is swapped because it is only taken into account when being counterattacked -->
+        <!-- avoid is swapped because it is only taken into account when being counterattacked where the unit who is checking is the defender -->
         <conditional_avoid>15;mode == 'Defense'</conditional_avoid>
         <conditional_hit>15;mode == 'Attack'</conditional_hit>
         <conditional_mt>1;mode == 'Attack'</conditional_mt>
