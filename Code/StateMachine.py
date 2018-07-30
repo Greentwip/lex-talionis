@@ -96,6 +96,7 @@ class StateMachine(object):
                            'start_newchild': Transitions.StartNewChild,
                            'start_extras': Transitions.StartExtras,
                            'start_all_saves': Transitions.StartAllSaves,
+                           'start_preloaded_levels': Transitions.StartPreloadedLevels,
                            'start_wait': Transitions.StartWait,
                            'start_save': Transitions.StartSave,
                            'credits': Transitions.CreditsState,
@@ -1899,9 +1900,9 @@ class DialogueState(State):
             else:
                 gameStateObj.update_statistics(metaDataObj)
                 gameStateObj.clean_up()
-                gameStateObj.output_progress()
                 if isinstance(gameStateObj.game_constants['level'], int):
                     gameStateObj.game_constants['level'] += 1
+                gameStateObj.output_progress_xml()  # Done after level change so that it will load up the right level next time
 
                 # Determines the number of levels in the game
                 num_levels = 0

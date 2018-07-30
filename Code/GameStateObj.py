@@ -86,6 +86,9 @@ class GameStateObj(object):
 
     def set_generic_mode(self):
         self.mode = self.default_mode()  # Need to make sure its got a mode ready
+        self.default_mode_choice()
+
+    def default_mode_choice(self):
         if self.mode['growths'] == '?':
             self.mode['growths'] = 0
         if self.mode['death'] == '?':
@@ -508,3 +511,27 @@ class GameStateObj(object):
                 p_log.write('\nItems: ' + ', '.join([item.name + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]))
             p_log.write('\n*** Convoy:')
             p_log.write('\nItems: ' + ', '.join([item.name + ' ' + str(item.uses.uses if item.uses else '--') for item in self.convoy]))
+
+    def output_progress_xml(self):
+        with open('Saves/progress_log.xml', 'a') as p_log:
+            p_log.write('<level name="' + str(self.game_constants['level']) + '">\n')
+            p_log.write('\t<mode>' + self.mode['name'] + '</mode>\n')
+            p_log.write('\t<money>' + str(self.game_constants['money']) + '</money>\n')
+            # Convoy
+            p_log.write('\t<convoy>')
+            p_log.write(','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in self.convoy]))
+            p_log.write('</convoy>\n')
+            # Units
+            p_log.write('\t<units>\n')
+            for unit in self.allunits:
+                if unit.dead:  # Don't write about dead units
+                    continue
+                p_log.write('\t\t<unit name="' + unit.name + '">\n')
+                p_log.write('\t\t\t<level>' + str(unit.level) + '</level>\n')
+                p_log.write('\t\t\t<exp>' + str(unit.exp) + '</exp>\n')
+                p_log.write('\t\t\t<items>' + ','.join([item.name + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]) + '</items>\n')
+                p_log.write('\t\t\t<wexp>' + ','.join([str(wexp) for wexp in unit.wexp]) + '</wexp>\n')
+                p_log.write('\t\t\t<skills>' + ','.join([skill.id for skill in unit.status_effects if not skill.class_skill]) + '</skills>\n')
+                p_log.write('\t\t</unit>\n')
+            p_log.write('\t</units>\n')
+            p_log.write('</level>\n\n')

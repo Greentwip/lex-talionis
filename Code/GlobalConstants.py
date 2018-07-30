@@ -76,7 +76,7 @@ def create_item_dict():
         item_dict[name].update(entry.attrib)
         item_dict[name]['num'] = idx
     return item_dict
-ITEMDATA = create_item_dict() # This is done differently because I thought the ET was slow. Turns out its not slow. Creating ItemObjects is slow.
+ITEMDATA = create_item_dict()  # This is done differently because I thought the ET was slow. Turns out its not slow. Creating ItemObjects is slow.
 
 STATUSDATA = ET.parse(loc + 'Data/status.xml')
 UNITDATA = ET.parse(loc + 'Data/units.xml')
@@ -84,6 +84,10 @@ CLASSDATA = ET.parse(loc + 'Data/class_info.xml')
 LOREDATA = ET.parse(loc + 'Data/lore.xml')
 PORTRAITDATA = ET.parse(loc + 'Data/portrait_coords.xml')
 TERRAINDATA = ET.parse(loc + 'Data/terrain.xml')
+if os.path.exists(loc + 'Data/preload_levels.xml'):
+    PRELOADDATA = ET.parse(loc + 'Data/preload_levels.xml')
+else:
+    PRELOADDATA = None
 
 def create_difficulty_dict(fp):
     difficulty_dict = OrderedDict()

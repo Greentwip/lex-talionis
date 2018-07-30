@@ -462,6 +462,173 @@ class StartAllSaves(StartLoad):
             else:
                 GC.SOUNDDICT['Error'].play()
 
+class StartPreloadedLevels(StartLoad):
+    def begin(self, gameStateObj, metaDataObj):
+        if not self.started:
+            # For transition
+            self.selection = None
+            self.state = "transition_in"
+            self.position_x = 3*GC.WINWIDTH//2
+            self.title_surf, self.title_pos = create_title(cf.WORDS['Load Game'])
+            self.rel_title_pos_y = -40
+            options, colors = self.get_colors()
+            gameStateObj.activeMenu = MenuFunctions.ChapterSelectMenu(options, colors)
+            gameStateObj.activeMenu.currentSelection = 0
+
+    def get_colors(self):
+        name, color = [], []
+        for level in GC.PRELOADDATA.getroot().findall('level'):
+            name.append(level.get('name'))
+            color.append(level.find('mode').text)
+        return name, color
+
+    def preload_level(self, name):
+        def parse_item_uses_list(text):
+            my_items = []
+            items = text.split(',')
+            for item in items:
+                uses = item.split()[-1]
+                item_id = ' '.join(item.split()[:-1])
+                my_items.append((item_id, uses))
+            return my_items
+
+        level_dict = {}
+        for level in GC.PRELOADDATA.getroot().findall('level'):
+            if level.get('name') == name:
+                level_dict['name'] = level.get('name')
+                level_dict['mode'] = level.find('mode').text
+                level_dict['money'] = int(level.find('money').text)
+                level_dict['convoy'] = parse_item_uses_list(level.find('convoy').text)
+                units = level.find('units')
+                unit_list = []
+                for unit in units.findall('unit'):
+                    unit_dict = {}
+                    unit_dict['name'] = unit.get('name')
+                    unit_dict['level'] = int(unit.find('level').text)
+                    unit_dict['exp'] = int(unit.find('exp').text)
+                    unit_dict['items'] = parse_item_uses_list(unit.find('items').text)
+                    unit_dict['wexp'] = [int(x) for x in unit.find('wexp').text.split(',')]
+                    unit_dict['skills'] = [x for x in unit.find('skills').text.split(',')]
+                    unit_list.append(unit_dict)
+                level_dict['units'] = unit_list
+                return level_dict
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+                        
+        if event == 'DOWN':
+            GC.SOUNDDICT['Select 6'].play()
+            gameStateObj.activeMenu.moveDown()
+        elif event == 'UP':
+            GC.SOUNDDICT['Select 6'].play()
+            gameStateObj.activeMenu.moveUp()
+
+        elif event == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
+            # gameStateObj.activeMenu = None # Remove menu
+            self.state = 'transition_out'
+            # self.time_display.state = 'left'
+
+        elif event == 'SELECT':
+            preloaded_level = self.preload_level(gameStateObj.activeMenu.getSelection())
+            GC.SOUNDDICT['Save'].play()
+            logger.debug('Starting Preloaded Level...')
+            self.build_new_game(preloaded_level, gameStateObj, metaDataObj)
+
+    def build_new_game(self, level, gameStateObj, metaDataObj):
+        import ItemMethods, Utility, StatusObject
+        gameStateObj.build_new() # Make the gameStateObj ready for a new game
+
+        levelfolder = 'Data/Level' + str(level['name'])
+        SaveLoad.get_metaDataObj(levelfolder, metaDataObj)
+
+        # === Populate ===
+        # Mode, Money, Level...
+        modes = [mode for mode in GC.DIFFICULTYDATA.values() if level['mode'] == mode['name'] or level['mode'] == mode['id']]
+        if modes:
+            gameStateObj.mode = modes[0]
+        else:
+            gameStateObj.mode = gameStateObj.default_mode()
+        gameStateObj.default_mode_choice()
+        gameStateObj.game_constants['money'] = level['money']
+        try:
+            gameStateObj.game_constants['level'] = int(level['name'])
+        except:
+            gameStateObj.game_constants['level'] = level['name']
+        gameStateObj.save_slot = 'Preload ' + level['name']
+        # Convoy
+        for item_id, uses in level['convoy']:
+            items = ItemMethods.itemparser(item_id)
+            if not items:
+                continue
+            item = items[0]
+            if item.uses:
+                item.uses.uses = int(uses)
+            gameStateObj.convoy.append(item)
+        # Units
+        for unit_dict in level['units']:
+            legend = {}
+            legend['team'] = 'player'
+            legend['event_id'] = '0'
+            legend['position'] = 'None'
+            legend['unit_id'] = unit_dict['name']
+            legend['ai'] = 'None'
+            legend['items'] = []
+            # Get items
+            for item_id, uses in unit_dict['items']:
+                items = ItemMethods.itemparser(item_id)
+                if not items:
+                    continue
+                item = items[0]
+                if item.uses:
+                    item.uses.uses = int(uses)
+                legend['items'].append(item)
+            # Reinforcement units can be empty, since they won't spawn in as reinforcements
+            unit = SaveLoad.add_unit_from_legend(legend, gameStateObj.allunits, {}, metaDataObj, gameStateObj)
+            # Level up the unit
+            for level_num in range(unit_dict['level'] - unit.level):
+                unit_klass = metaDataObj['class_dict'][unit.klass]
+                max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+                if unit.level >= max_level:
+                    class_options = unit_klass['turns_into']
+                    if class_options:
+                        unit.klass = class_options[0]
+                        unit_klass = metaDataObj['class_dict'][unit.klass]
+                        unit.removeSprites()
+                        unit.loadSprites()
+                        unit.level = 1
+                        unit.movement_group = unit_klass['movement_group']
+                        if unit_klass['tags']:
+                            unit.tags |= unit_klass['tags']
+                        levelup_list = unit_klass['promotion']
+                        current_stats = list(unit.stats.values())
+                        assert len(levelup_list) == len(unit_klass['max']) == len(current_stats), "%s %s %s" % (levelup_list, unit_klass['max'], current_stats)
+                        for index, stat in enumerate(levelup_list):
+                            levelup_list[index] = min(stat, unit_klass['max'][index] - current_stats[index].base_stat)
+                        unit.apply_levelup(levelup_list)
+                else:
+                    unit.level += 1
+                    unit.level_up(gameStateObj, unit_klass)
+            unit.exp = unit_dict['exp']
+            unit.wexp = unit_dict['wexp']
+            # Get skills
+            for skill_id in unit_dict['skills']:
+                if skill_id not in (s.id for s in unit.status_effects):
+                    skill = StatusObject.statusparser(skill_id)
+                    if skill:
+                        StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
+            unit.change_hp(100)  # reset currenthp
+
+        # Actually Load the first level
+        SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
+        # Hardset the name of the first level
+        gameStateObj.stateMachine.clear()
+        gameStateObj.stateMachine.changeState('turn_change')
+        # gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
+        # gameStateObj.transition_from = cf.WORDS['Load Game']
+        # gameStateObj.stateMachine.changeState('start_wait')
+        # gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
+
 class StartRestart(StartLoad):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
@@ -793,6 +960,7 @@ class StartExtras(StateMachine.State):
         options = [cf.WORDS['Options'], cf.WORDS['Credits']]
         if cf.OPTIONS['cheat']:
             options.append(cf.WORDS['All Saves'])
+            options.append(cf.WORDS['Preloaded Levels'])
         gameStateObj.activeMenu = MenuFunctions.MainMenu(options, 'DarkMenu')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -821,6 +989,9 @@ class StartExtras(StateMachine.State):
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['All Saves']:
                 gameStateObj.stateMachine.changeState('start_all_saves')
+                gameStateObj.stateMachine.changeState('transition_out')
+            elif selection == cf.WORDS['Preloaded Levels']:
+                gameStateObj.stateMachine.changeState('start_preloaded_levels')
                 gameStateObj.stateMachine.changeState('transition_out')
 
     def update(self, gameStateObj, metaDataObj):
