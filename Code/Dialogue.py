@@ -509,6 +509,12 @@ class Dialogue_Scene(object):
             transition = line[2] if (len(line) > 2 and line[2]) else 'fade'
             event = (line[0] == 'remove_unit')
             self.remove_unit(gameStateObj, which_unit, transition, event=event)
+        elif line[0] == 'resurrect_unit':
+            unit = gameStateObj.get_unit_from_name(line[1])
+            if unit and unit.dead:
+                unit.dead = False
+            else:
+                logger.warning('Unit %s either does not exist or was not dead!', line[1])
         elif line[0] == 'set_next_position':
             to_which_position = line[1]
             placement = line[2] if len(line) > 2 else 'give_up'
