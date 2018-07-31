@@ -769,10 +769,15 @@ class UnitObject(object):
         elif movement.mode == 'Swap': # This simple thing will actually probably work
             self.position = other_pos
         elif movement.mode == 'Warp':
-            self.position = def_pos
+            # self.position = def_pos
+            # self.sprite.set_transition('warp_in')
+            self.sprite.set_next_position(def_pos)
+            self.sprite.set_transition('warp_move')
+            gameStateObj.map.initiate_warp_flowers(self.position)
 
-        self.arrive(gameStateObj)
-        self.previous_position = self.position
+        if movement.mode != 'Warp':
+            self.arrive(gameStateObj)
+            self.previous_position = self.position
 
     def push_to_nearest_open_space(self, gameStateObj):
         for r in range(1, 15):

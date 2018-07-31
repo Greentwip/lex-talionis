@@ -1633,7 +1633,7 @@ class MapCombat(Combat):
                     self.results = []
                     self.combat_state = 'Pre_Init'
 
-            if self.combat_state not in ['Pre_Init', 'Init1']:        
+            if self.combat_state not in ('Pre_Init', 'Init1'):        
                 for hp_bar in self.health_bars.values():
                     hp_bar.update()
         return False

@@ -313,11 +313,11 @@ class MapObject(object):
 
     def initiate_warp_flowers(self, center_pos):
         self.weather.append(Weather.Weather('Warp_Flower', -1, (-1, -1, -1, -1), (self.width, self.height)))
-        angle_frac = math.pi//8
+        angle_frac = math.pi/8
         true_pos = center_pos[0] * GC.TILEWIDTH + GC.TILEWIDTH//2, center_pos[1] * GC.TILEHEIGHT + GC.TILEHEIGHT//2
         for speed in (2.0, 2.5):
             for num in range(0, 16):
-                angle = num*angle_frac + angle_frac//2
+                angle = num*angle_frac + angle_frac/2
                 self.weather[-1].particles.append(Weather.WarpFlower(true_pos, speed, angle))
 
     def serialize(self):

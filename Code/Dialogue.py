@@ -1273,6 +1273,7 @@ class Dialogue_Scene(object):
         elif transition == 'warp':
             unit.sprite.set_transition('warp_move')
             unit.sprite.set_next_position(final_pos)
+            gameStateObj.map.initiate_warp_flowers(final_pos)
         elif transition == 'fade':
             unit.sprite.set_transition('fade_move')
             unit.sprite.set_next_position(final_pos)

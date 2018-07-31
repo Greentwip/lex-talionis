@@ -92,10 +92,12 @@ class UnitSprite(object):
                         if self.state == 'fake_transition_out':
                             self.change_state('normal', gameStateObj)
                     elif self.transition_state in ('fade_move', 'warp_move'):
-                        gameStateObj.map.initiate_warp_flowers(self.unit.position)
+                        # gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.leave(gameStateObj)
                         self.unit.position = self.next_position
                         self.unit.arrive(gameStateObj)
+                        gameStateObj.cursor.setPosition(self.unit.position, gameStateObj)
+                        # gameStateObj.stateMachine.changeState('move_camera')
                         self.next_position = None
                         gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         if self.transition_state == 'fade_move':
@@ -111,7 +113,8 @@ class UnitSprite(object):
                 self.transition_state = 'normal'
                 if self.state == 'fake_transition_in':
                     self.change_state('normal', gameStateObj)
-        elif self.unit.flicker:
+        
+        if self.unit.flicker:
             color = self.unit.flicker[2]
             total_time = self.unit.flicker[1]
             starting_time = self.unit.flicker[0]
