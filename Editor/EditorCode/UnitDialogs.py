@@ -59,9 +59,9 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
         self.unit_data = Data.unit_data.values()
         for idx, unit in enumerate(self.unit_data):
             if unit.image:
-                self.unit_box.addItem(EditorUtilities.create_icon(unit.image), unit.name)
+                self.unit_box.addItem(EditorUtilities.create_icon(unit.image), unit.id)
             else:
-                self.unit_box.addItem(unit.name)
+                self.unit_box.addItem(unit.id)
         self.form.addRow(self.unit_box)
 
         # Saved
@@ -90,7 +90,7 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
         self.buttonbox.rejected.connect(self.reject)
 
     def load(self, unit):
-        EditorUtilities.setComboBox(self.unit_box, unit.name)
+        EditorUtilities.setComboBox(self.unit_box, unit.id)
         EditorUtilities.setComboBox(self.team_box, unit.team)
         self.saved_checkbox.setChecked(unit.saved)
         EditorUtilities.setComboBox(self.ai_select, unit.ai)
@@ -122,6 +122,7 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = dialog.ai_group.text()
+            unit.mode = dialog.get_modes()
             return unit, True
         else:
             return None, False
@@ -139,7 +140,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         self.create_menus()
 
     def load(self, unit):
-        EditorUtilities.setComboBox(self.unit_box, unit.name)
+        EditorUtilities.setComboBox(self.unit_box, unit.id)
         EditorUtilities.setComboBox(self.team_box, unit.team)
         self.saved_checkbox.setChecked(unit.saved)
         print(unit.ai)
@@ -163,7 +164,9 @@ class ReinLoadUnitDialog(LoadUnitDialog):
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = str(dialog.ai_group.text())
             unit.pack = str(dialog.pack.text())
-            unit.event_id = EditorUtilities.next_available_event_id([rein for rein in dialog.unit_data.reinforcements if rein.pack == unit.pack])
+            same_pack = [rein for rein in parent.unit_data.reinforcements if rein.pack == unit.pack]
+            unit.event_id = EditorUtilities.next_available_event_id(same_pack)
+            unit.mode = dialog.get_modes()
             return unit, True
         else:
             return None, False

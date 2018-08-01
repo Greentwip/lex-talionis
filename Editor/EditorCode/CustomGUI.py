@@ -115,6 +115,28 @@ class SignalList(QtGui.QListWidget):
         if self.del_func and event.key() == QtCore.Qt.Key_Delete:
             self.del_func()
 
+class DragAndDropSignalList(SignalList):
+    itemMoved = QtCore.pyqtSignal(int, int, QtGui.QListWidgetItem)
+
+    def __init__(self, parent=None, del_func=None):
+        super(DragAndDropSignalList, self).__init__(parent, del_func)
+
+        self.setAcceptDrops(True)
+        self.setDragEnabled(True)
+        self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
+        self.drag_item = None
+        self.drag_row = None
+
+    def dropEvent(self, event):
+        super(DragAndDropSignalList, self).dropEvent(event)
+        self.itemMoved.emit(self.drag_row, self.row(self.drag_item), self.drag_item)
+        self.drag_item = None
+
+    def startDrag(self, supportedActions):
+        self.drag_item = self.currentItem()
+        self.drag_row = self.row(self.drag_item)
+        super(DragAndDropSignalList, self).startDrag(supportedActions)
+
 class CheckableComboBox(QtGui.QComboBox):
     def __init__(self):
         super(CheckableComboBox, self).__init__()

@@ -19,7 +19,7 @@ from Code.SaveLoad import Trigger
 import DataImport
 from DataImport import Data
 import EditorUtilities, Faction, UnitDialogs
-from CustomGUI import SignalList
+from CustomGUI import DragAndDropSignalList
 
 class UnitData(object):
     def __init__(self):
@@ -27,7 +27,7 @@ class UnitData(object):
 
     def clear(self):
         self.units = []
-        self.reinforcements = []  # Should always be sorted by pack and then by event_id
+        self.reinforcements = []
         self.factions = OrderedDict()
         self.triggers = OrderedDict()
         self.load_player_characters = False
@@ -46,7 +46,6 @@ class UnitData(object):
                 # Process line
                 unitLine = line.split(';')
                 current_mode = self.parse_unit_line(unitLine, current_mode)
-        self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))  # First sort
 
     def get_unit_images(self, mode):
         return {unit.position: EditorUtilities.create_image(unit.klass_image) if unit.klass_image else 
@@ -181,8 +180,6 @@ class UnitData(object):
 
     def add_reinforcement(self, rein):
         self.reinforcements.append(rein)
-        self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))
-        return self.reinforcements.index(rein)
 
     def remove_unit_from_idx(self, unit_idx):
         if self.units:
@@ -200,10 +197,17 @@ class UnitData(object):
     def replace_reinforcement(self, rein_idx, rein):
         if self.reinforcements:
             self.reinforcements.pop(rein_idx)
-        # self.reinforcements.insert(rein_idx, rein)
-        self.reinforcements.append(rein)
-        self.reinforcements = sorted(self.reinforcements, key=lambda x: (x.pack, x.event_id))
-        return self.reinforcements.index(rein)
+        self.reinforcements.insert(rein_idx, rein)
+
+    def drag_and_drop_unit(self, old_idx, new_idx):
+        if self.units:
+            unit = self.units.pop(old_idx)
+            self.units.insert(new_idx, unit)
+
+    def drag_and_drop_rein(self, old_idx, new_idx):
+        if self.reinforcements:
+            rein = self.reinforcements.pop(old_idx)
+            self.reinforcements.insert(new_idx, rein)
 
     def add_trigger(self, trigger_name):
         self.triggers[trigger_name] = Trigger()
@@ -244,10 +248,10 @@ class UnitData(object):
             u_i['event_id'] = int(u_i['event_id'])
         elif legend['event_id'] != '0':
             u_i['pack'] = legend['event_id']
-            u_i['event_id'] = 0
+            u_i['event_id'] = 1
         else:
             u_i['pack'] = None
-            u_i['event_id'] = 0
+            u_i['event_id'] = 1
         if legend['class'].endswith('F'):
             legend['class'] = legend['class'][:-1] # strip off the F
             u_i['gender'] = 5  # Default female gender is 5
@@ -383,12 +387,13 @@ class UnitMenu(QtGui.QWidget):
 
         self.create_mode_view_box()
 
-        self.list = SignalList(self, del_func=self.remove_unit)
+        self.list = DragAndDropSignalList(self, del_func=self.remove_unit)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
         self.list.setIconSize(QtCore.QSize(32, 32))
         self.delegate = ItemDelegate(unit_data)
         self.list.setItemDelegate(self.delegate)
+        self.list.itemMoved.connect(self.drag_unit)
 
         self.load(unit_data)
         self.list.currentItemChanged.connect(self.center_on_unit)
@@ -467,7 +472,7 @@ class UnitMenu(QtGui.QWidget):
         if unit.generic:
             item = QtGui.QListWidgetItem(str(unit.klass) + ': L' + str(unit.level))
         else:
-            item = QtGui.QListWidgetItem(unit.name)
+            item = QtGui.QListWidgetItem(unit.id)
         klass = Data.class_data.get(unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
@@ -524,6 +529,9 @@ class UnitMenu(QtGui.QWidget):
         self.list.addItem(self.create_item(unit))
         self.list.setCurrentRow(self.list.count() - 1)
 
+    def drag_unit(self, old_idx, new_idx, item):
+        self.unit_data.drag_and_drop_unit(old_idx, new_idx)
+
     def tick(self, current_time):
         if GC.PASSIVESPRITECOUNTER.update(current_time):
             for idx, unit in enumerate(self.unit_data.units):
@@ -553,8 +561,6 @@ class ReinforcementMenu(UnitMenu):
         self.duplicate_group_button = QtGui.QPushButton('Duplicate Group')
         self.duplicate_group_button.clicked.connect(self.duplicate_current_pack)
         self.grid.addWidget(self.duplicate_group_button, 5, 0)
-
-        self.list.setSortingEnabled(True)
 
         self.last_touched_generic = None
 
@@ -589,7 +595,8 @@ class ReinforcementMenu(UnitMenu):
         self.unit_data = unit_data
         # Ingest Data
         for unit in self.unit_data.reinforcements:
-            self.list.addItem(self.create_item(unit))
+            item = self.create_item(unit)
+            self.list.addItem(item)
 
     def create_item(self, unit):
         if unit.generic:
@@ -671,6 +678,9 @@ class ReinforcementMenu(UnitMenu):
         item = self.create_item(unit)
         self.list.addItem(item)
         self.list.setCurrentRow(self.list.row(item))
+
+    def drag_unit(self, old_idx, new_idx, unit):
+        self.unit_data.drag_and_drop_rein(old_idx, new_idx)
 
     def duplicate_current_pack(self):
         current_pack = self.current_pack()  # Need to be saved since it changes within this function's for loop

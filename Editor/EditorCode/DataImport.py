@@ -100,7 +100,7 @@ class Unit(object):
             self.ai = info.get('ai', None)
             self.ai_group = info.get('ai_group', None)
             try:
-                self.image = EditorUtilities.create_chibi(self.name)
+                self.image = EditorUtilities.create_chibi(str(self.id))
             except KeyError:
                 self.image = GC.UNITDICT[self.faction_icon + 'Emblem'].convert_alpha()
         else:
