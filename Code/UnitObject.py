@@ -1996,6 +1996,7 @@ class UnitObject(object):
         TRVunit.position = position
         TRVunit.wait(gameStateObj, script=False)
         TRVunit.hasAttacked = True
+        self.hasTraded = True # Can no longer do everything
         # Add tile statuses to unit
         TRVunit.arrive(gameStateObj)
         if Utility.calculate_distance(self.position, position) == 1:
