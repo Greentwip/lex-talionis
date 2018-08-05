@@ -1916,7 +1916,7 @@ class DialogueState(State):
                         continue
                 
                 gameStateObj.stateMachine.clear()        
-                if (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] >= num_levels:
+                if (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] > num_levels:
                     gameStateObj.stateMachine.changeState('start_start')
                 else:
                     gameStateObj.stateMachine.changeState('turn_change') # after we're done waiting, go to turn_change, start the GAME!
