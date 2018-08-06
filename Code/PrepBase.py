@@ -97,13 +97,20 @@ class PrepMainState(StateMachine.State):
 
 class PrepPickUnitsState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
+        self.show_map = False
+        if not self.started and gameStateObj.stateMachine.getPreviousState() == 'prep_main':
+            gameStateObj.background = None
+
         if not self.started:
             units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
             units = sorted(units, key=lambda unit: unit.position, reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 2, 6, (110, 24))
+    
+        if not gameStateObj.background:
             gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
-            # Transition in:
+        # Transition in:
+        if gameStateObj.stateMachine.from_transition():
             gameStateObj.stateMachine.changeState("transition_in")
             return 'repeat'
 
@@ -138,13 +145,15 @@ class PrepPickUnitsState(StateMachine.State):
                     selection.reset() # Make sure unit is not 'wait'...
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.stateMachine.back()
+            # gameStateObj.stateMachine.back()
+            gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
             StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        MenuFunctions.drawUnitItems(surf, (4, 4 + 40), gameStateObj.activeMenu.getSelection(), include_top=True)
+        if gameStateObj.activeMenu:
+            MenuFunctions.drawUnitItems(surf, (4, 4 + 40), gameStateObj.activeMenu.getSelection(), include_top=True)
 
         # Draw Pick Units screen
         backSurf = MenuFunctions.CreateBaseMenuSurf((132, 24), 'BrownPickBackground')
@@ -161,9 +170,9 @@ class PrepPickUnitsState(StateMachine.State):
 
         return surf
 
-    def end(self, gameStateObj, metaDataObj):
+    def finish(self, gameStateObj, metaDataObj):
         gameStateObj.activeMenu = None
-        gameStateObj.background = None
+        # gameStateObj.background = None
 
 class PrepFormationState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):

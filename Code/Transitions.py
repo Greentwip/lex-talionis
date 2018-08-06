@@ -485,11 +485,12 @@ class StartPreloadedLevels(StartLoad):
     def preload_level(self, name):
         def parse_item_uses_list(text):
             my_items = []
-            items = text.split(',')
-            for item in items:
-                uses = item.split()[-1]
-                item_id = ' '.join(item.split()[:-1])
-                my_items.append((item_id, uses))
+            if text:
+                items = text.split(',')
+                for item in items:
+                    uses = item.split()[-1]
+                    item_id = ' '.join(item.split()[:-1])
+                    my_items.append((item_id, uses))
             return my_items
 
         level_dict = {}
@@ -508,7 +509,8 @@ class StartPreloadedLevels(StartLoad):
                     unit_dict['exp'] = int(unit.find('exp').text)
                     unit_dict['items'] = parse_item_uses_list(unit.find('items').text)
                     unit_dict['wexp'] = [int(x) for x in unit.find('wexp').text.split(',')]
-                    unit_dict['skills'] = [x for x in unit.find('skills').text.split(',')]
+                    skill_text = unit.find('skills').text
+                    unit_dict['skills'] = [x for x in skill_text.split(',')] if skill_text else []
                     unit_list.append(unit_dict)
                 level_dict['units'] = unit_list
                 return level_dict
