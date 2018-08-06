@@ -54,6 +54,7 @@ class MainView(QtGui.QGraphicsView):
 
     def set_new_image(self, image):
         self.image = QtGui.QImage(image)
+        self.image = self.image.convertToFormat(QtGui.QImage.Format_ARGB32)
         # Handle colorkey
         qCOLORKEY = QtGui.qRgb(*COLORKEY)
         new_color = QtGui.qRgba(0, 0, 0, 0)
@@ -78,7 +79,7 @@ class MainView(QtGui.QGraphicsView):
                 image = image.copy()
                 painter = QtGui.QPainter()
                 painter.begin(image)
-                painter.drawImage(0, 0, self.image.copy())
+                painter.drawImage(0, 0, self.image.copy())  # Draw image on top of autotiles
                 painter.end()
                 self.working_image = image
             else:
