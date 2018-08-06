@@ -1246,21 +1246,25 @@ class ChapterSelectMenu(MainMenu):
             surf.blit(self.cursor1, (center[0] - self.menu_width//2 - self.cursor1.get_width()//2 - 8, height))
             surf.blit(self.cursor2, (center[0] + self.menu_width//2 - self.cursor2.get_width()//2 + 8, height))
 
-class BattleSaveMenu(Counters.CursorControl):
-    def __init__(self):
-        self.options = [cf.WORDS['Yes'], cf.WORDS['No']]
-        self.text = cf.WORDS['Battle Save Header']
+class HorizOptionsMenu(Counters.CursorControl):
+    def __init__(self, header, options):
+        self.options = options
+        self.text = header
         self.font = GC.FONT['text_white']
+        self.spacing = '    '
 
         self.BGSurf = CreateBaseMenuSurf(self.get_menu_size())
-        self.topleft = GC.WINWIDTH//2 - self.BGSurf.get_width()//2, GC.WINHEIGHT//2 - self.BGSurf.get_height()//2
+        self.half_width = self.BGSurf.get_width()//2
+        self.topleft = GC.WINWIDTH//2 - self.half_width, GC.WINHEIGHT//2 - self.BGSurf.get_height()//2
 
         self.currentSelection = 0
 
         Counters.CursorControl.__init__(self)
 
     def get_menu_size(self):
-        h_size = self.font.size(self.text)[0]
+        h_text = self.font.size(self.text)[0]
+        h_options = self.font.size(self.spacing.join(self.options))[0]
+        h_size = max(h_text, h_options)
         width = h_size + 16 - h_size%8
         height = 40
         return (width, height)
@@ -1281,35 +1285,33 @@ class BattleSaveMenu(Counters.CursorControl):
     def draw(self, surf):
         bg_surf = self.BGSurf.copy()
         # blit first line
-        self.font.blit(self.text, bg_surf, (bg_surf.get_width()//2 - self.font.size(self.text)[0]//2, 4))
+        self.font.blit(self.text, bg_surf, (self.half_width - self.font.size(self.text)[0]//2, 4))
 
         # blit background highlight
-        options = '    '.join(self.options)
+        options = self.spacing.join(self.options)
         option_width = self.font.size(options)[0]
-        center = bg_surf.get_width()//2 - option_width//2
+        option_start = self.half_width - option_width//2
 
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
-        width = highlightSurf.get_width()
-        for slot in range(((GC.FONT['text_white'].size(self.options[self.currentSelection]))[0] + 8)//width):
-            if self.currentSelection:
-                option_left = GC.FONT['text_white'].size('Yes' + '    ')[0] + center
-            else:
-                option_left = center
-            topleft = (slot*width + option_left - 2, 20 + 9)
+        highlight_width = highlightSurf.get_width()
+        current_selection_width = self.font.size(self.getSelection())[0] + 6
+        num_highlights = current_selection_width//highlight_width
+        prev_words = self.spacing.join(self.options[:self.currentSelection])
+        if prev_words:
+            prev_words += self.spacing
+        start_left = self.font.size(prev_words)[0] + option_start
+        for slot in range(num_highlights):    
+            topleft = (slot*highlight_width + start_left - 2, 20 + 9)
             bg_surf.blit(highlightSurf, topleft)
 
         # Blit options
-        GC.FONT['text_white'].blit(options, bg_surf, (center, 20))
+        self.font.blit(options, bg_surf, (option_start, 20))
 
         # blit menu
         surf.blit(bg_surf, self.topleft)
   
         # blit cursor
-        if self.currentSelection:
-            option_left = GC.FONT['text_white'].size('Yes' + '    ')[0] + center
-        else:
-            option_left = center
-        surf.blit(self.cursor, (self.topleft[0] - 16 + option_left + self.cursorAnim[self.cursorCounter], self.topleft[1] + 20))
+        surf.blit(self.cursor, (self.topleft[0] - 16 + start_left + self.cursorAnim[self.cursorCounter], self.topleft[1] + 20))
         
 # For Pick Unit and Prep Item
 class UnitSelectMenu(Counters.CursorControl):

@@ -870,6 +870,15 @@ class Dialogue_Scene(object):
         elif line[0] == 'grey_base_convo':
             if line[1] in gameStateObj.base_conversations:
                 gameStateObj.base_conversations[line[1]] = False
+
+        elif line[0] == 'choice':
+            name = line[1]
+            header = line[2]
+            options = line[3].split(',')
+            # Save results to the game constants
+            gameStateObj.game_constants['choice'] = (name, header, options)
+            self.current_state = "Paused"
+            gameStateObj.stateMachine.changeState('dialog_options')
             
         # === DIALOGUE BOX
         # Add line of text          

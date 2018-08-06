@@ -1,4 +1,4 @@
-import random, sys, math
+import random, sys
 
 sys.path.append('../')
 import Code.Engine as Engine

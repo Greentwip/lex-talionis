@@ -60,6 +60,7 @@ class StateMachine(object):
                            'armory': ShopState,
                            'market': ShopState,
                            'battle_save': BattleSaveState,
+                           'dialog_options': DialogOptionsState,
                            'wait': WaitState,
                            'minimap': MinimapState,
                            'chapter_transition': Transitions.ChapterTransitionState,
@@ -2765,7 +2766,7 @@ class BattleSaveState(State):
         self.counter = 0
 
     def begin(self, gameStateObj, metaDataObj):
-        self.menu = MenuFunctions.BattleSaveMenu()
+        self.menu = MenuFunctions.HorizOptionsMenu(cf.WORDS['Battle Save Header'], [cf.WORDS['Yes'], cf.WORDS['No']])
         self.counter += 1
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -2808,6 +2809,47 @@ class BattleSaveState(State):
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)
+        if self.menu:
+            self.menu.draw(mapSurf)
+        return mapSurf
+
+class DialogOptionsState(State):
+    def begin(self, gameStateObj, metaDataObj):
+        name, header, options = gameStateObj.game_constants['choice']
+        self.name = name
+        self.menu = MenuFunctions.HorizOptionsMenu(header, options)
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+                    
+        if event == 'RIGHT':
+            GC.SOUNDDICT['Select 6'].play()
+            self.menu.moveRight()
+        elif event == 'LEFT':
+            GC.SOUNDDICT['Select 6'].play()
+            self.menu.moveLeft()
+
+        elif event == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
+            gameStateObj.stateMachine.back()
+
+        elif event == 'SELECT':
+            selection = self.menu.getSelection()
+            self.menu = None
+            gameStateObj.game_constants[self.name] = selection
+            gameStateObj.game_constants['last_choice'] = selection
+            GC.SOUNDDICT['Select 1'].play()
+            gameStateObj.stateMachine.back()
+
+    def update(self, gameStateObj, metaDataObj):
+        State.update(self, gameStateObj, metaDataObj)
+        if self.menu:
+            self.menu.update()
+
+    def draw(self, gameStateObj, metaDataObj):
+        mapSurf = State.draw(self, gameStateObj, metaDataObj)
+        if gameStateObj.message:
+            gameStateObj.message[-1].draw(mapSurf)
         if self.menu:
             self.menu.draw(mapSurf)
         return mapSurf
