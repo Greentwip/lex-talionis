@@ -15,7 +15,12 @@
 
 - Windows/Mac/Linux build of latest Engine, Level Editor
 
-- Sometimes on Formation Screen, Ophie shows his running down animation instead of normal passive anim; could be from previous level... (after seize?)
+For Level Editor:
+Autotiles
+Make Terrain Painting make more sense
+Add a transparency slider to Terrain Painting
+Have Dock Menus accept UP & DOWN Arrows
+
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---

@@ -137,6 +137,8 @@ class UnitData(object):
                 self.triggers[unitLine[1]] = Trigger()
             self.triggers[unitLine[1]].add_unit(unit, unitLine[3], unitLine[4])
         else: # For now it just loads every unit, irrespective of mode
+            if unitLine[1] == "2":
+                return current_mode  # Skip infinite created units for now (TODO)
             # New Unit
             if len(unitLine) > 7:
                 self.create_unit_from_line(unitLine, current_mode)
@@ -251,7 +253,7 @@ class UnitData(object):
             u_i['event_id'] = 1
         else:
             u_i['pack'] = None
-            u_i['event_id'] = 1
+            u_i['event_id'] = 0
         if legend['class'].endswith('F'):
             legend['class'] = legend['class'][:-1] # strip off the F
             u_i['gender'] = 5  # Default female gender is 5
@@ -264,7 +266,7 @@ class UnitData(object):
 
         if legend['level'].startswith('f'):
             legend['level'] = legend['level'][1:]  # Remove f at the beginning
-        u_i['level'] = int(legend['level'])  # Doesn't need force_fixed since it is fixed by defualt in LevelEditor
+        u_i['level'] = int(legend['level'])  # Doesn't need force_fixed since it is fixed by default in LevelEditor
         u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
 
         u_i['faction'] = legend['faction']

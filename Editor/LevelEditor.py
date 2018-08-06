@@ -527,12 +527,13 @@ class MainEditor(QtGui.QMainWindow):
         if os.path.exists(starting_path):
             with open(starting_path, 'r') as fp:
                 self.directory = fp.readline().strip()
-            # Get the current level num
-            if 'Level' in str(self.directory):
-                idx = str(self.directory).index('Level')
-                num = str(self.directory)[idx + 5:]
-                self.current_level_name = num
-            self.load_level()
+            if os.path.exists(self.directory):
+                # Get the current level num
+                if 'Level' in str(self.directory):
+                    idx = str(self.directory).index('Level')
+                    num = str(self.directory)[idx + 5:]
+                    self.current_level_name = num
+                self.load_level()
 
     def load_level(self):
         if self.directory:
@@ -777,6 +778,7 @@ class MainEditor(QtGui.QMainWindow):
         unit_level_filename = level_directory + '/UnitLevel.txt'
         self.write_unit_level(unit_level_filename)
 
+        self.directory = level_directory  # New level directory
         level_editor_config = str(QtCore.QDir.currentPath() + '/le_config.txt')
         with open(level_editor_config, 'w') as fp:
             fp.write(os.path.relpath(str(self.directory)))
