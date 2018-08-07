@@ -97,13 +97,20 @@ class TileData(object):
                 self.tiles[(x, y)] = cur
 
 class TerrainMenu(QtGui.QWidget):
-    def __init__(self, terrain_data, view, window=None):
+    def __init__(self, tile_data, view, window=None):
         super(TerrainMenu, self).__init__(window)
         self.grid = QtGui.QGridLayout()
         self.setLayout(self.grid)
+        self.tile_data = tile_data
         self.window = window
 
         self.view = view
+
+        self.alpha_slider = QtGui.QSlider(QtCore.Qt.Horizontal, self)
+        self.alpha_slider.setRange(0, 255)
+        self.alpha_slider.setValue(192)
+        self.grid.addWidget(QtGui.QLabel("Transparency"), 0, 0)
+        self.grid.addWidget(self.alpha_slider, 0, 1)
 
         self.list = SignalList(self)
         self.list.setMinimumSize(128, 320)
@@ -120,11 +127,13 @@ class TerrainMenu(QtGui.QWidget):
             item.setIcon(QtGui.QIcon(pixmap))
             self.list.addItem(item)
 
-        self.grid.addWidget(self.list, 0, 0)
+        self.grid.addWidget(self.list, 1, 0, 1, 2)
+
+        self.mouse_down = False
+        self.undo_stack = []
 
     def get_current_color(self):
         color = Data.terrain_data.keys()[self.list.currentRow()]
-        print(color)
         return color
 
     def set_current_color(self, color):
@@ -137,6 +146,32 @@ class TerrainMenu(QtGui.QWidget):
     def get_info_str(self, color):
         tid, name = Data.terrain_data[color]
         return str(tid) + " - " + str(name)
+
+    def get_alpha(self):
+        return int(self.alpha_slider.value())
+
+    def undo(self):
+        if not self.undo_stack:
+            return
+        last_actions = self.undo_stack.pop()
+        for action in last_actions:
+            pos, old_color, new_color = action
+            self.tile_data.tiles[pos] = old_color
+        self.window.update_view()
+
+    def paint(self, pos):
+        if not self.mouse_down:  # First pick
+            self.undo_stack.append([])
+        self.mouse_down = True
+        old_color = self.tile_data.tiles[pos]
+        new_color = self.get_current_color()
+        self.tile_data.tiles[pos] = new_color
+        if old_color != new_color:  # Required since updating view each frame is EXPENSIVE!
+            self.undo_stack[-1].append((pos, old_color, new_color))
+            self.window.update_view()
+
+    def mouse_release(self):
+        self.mouse_down = False
 
     # def trigger(self):
     #     self.view.tool = 'Terrain'

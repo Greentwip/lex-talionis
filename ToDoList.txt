@@ -15,13 +15,6 @@
 
 - Windows/Mac/Linux build of latest Engine, Level Editor
 
-For Level Editor:
-Autotiles
-Make Terrain Painting make more sense
-Add a transparency slider to Terrain Painting
-Have Dock Menus accept UP & DOWN Arrows
-
-
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.

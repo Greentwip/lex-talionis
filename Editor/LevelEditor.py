@@ -101,7 +101,7 @@ class MainView(QtGui.QGraphicsView):
             painter.begin(self.working_image)
             for coord, color in self.tile_data.tiles.iteritems():
                 write_color = QtGui.QColor(color[0], color[1], color[2])
-                write_color.setAlpha(192)
+                write_color.setAlpha(self.window.terrain_menu.get_alpha())
                 painter.fillRect(coord[0] * 16, coord[1] * 16, 16, 16, write_color)
             painter.end()
 
@@ -250,9 +250,7 @@ class MainView(QtGui.QGraphicsView):
             # print('mousePress Tool: %s' % self.tool)
             if self.window.dock_visibility['Terrain']:
                 if event.button() == QtCore.Qt.LeftButton:
-                    current_color = self.window.terrain_menu.get_current_color()
-                    self.tile_data.tiles[pos] = current_color
-                    self.window.update_view()
+                    self.window.terrain_menu.paint(pos)
                 elif event.button() == QtCore.Qt.RightButton:
                     current_color = self.tile_data.tiles[pos]
                     self.window.terrain_menu.set_current_color(current_color)
@@ -323,6 +321,12 @@ class MainView(QtGui.QGraphicsView):
                     if current_idx >= 0:
                         self.window.reinforcement_menu.set_current_idx(current_idx)
 
+    def mouseReleaseEvent(self, event):
+        # Do the parent's version
+        QtGui.QGraphicsView.mouseReleaseEvent(self, event)
+        if self.window.dock_visibility['Terrain']:
+            self.window.terrain_menu.mouse_release()
+
     def mouseMoveEvent(self, event):
         # Do the parent's version
         QtGui.QGraphicsView.mouseMoveEvent(self, event)
@@ -345,10 +349,14 @@ class MainView(QtGui.QGraphicsView):
                 hovered_color = self.tile_data.tiles[pos]
                 # print('Hover', pos, hovered_color)
                 info = self.window.terrain_menu.get_info_str(hovered_color)
+                if self.window.terrain_menu.mouse_down:
+                    self.window.terrain_menu.paint(pos)
             # print('mouseMove: %s' % info)
             if info:
                 message = str(pos[0]) + ', ' + str(pos[1]) + ': ' + info
                 self.window.status_bar.showMessage(message)
+        elif self.window.dock_visibility['Terrain']:
+            self.window.terrain_menu.mouse_release()
 
     def wheelEvent(self, event):
         if event.delta() > 0 and self.screen_scale < 4:
@@ -357,6 +365,13 @@ class MainView(QtGui.QGraphicsView):
         elif event.delta() < 0 and self.screen_scale > 1:
             self.screen_scale -= 1
             self.scale(0.5, 0.5)
+
+    def keyPressEvent(self, event):
+        super(QtGui.QGraphicsView, self).keyPressEvent(event)
+        if self.window.dock_visibility['Terrain']:
+            # if (event.modifiers() & QtCore.Qt.ControlModifier) and event.key() == 
+            if event.key() == (QtCore.Qt.Key_Control and QtCore.Qt.Key_Z):
+                self.window.terrain_menu.undo()
 
     def center_on_pos(self, pos):
         self.centerOn(pos[0] * 16, pos[1] * 16)
@@ -825,7 +840,7 @@ class MainEditor(QtGui.QMainWindow):
 
         self.docks['Terrain'] = Dock("Terrain", self)
         self.docks['Terrain'].setAllowedAreas(QtCore.Qt.RightDockWidgetArea)
-        self.terrain_menu = Terrain.TerrainMenu(self.view, self)
+        self.terrain_menu = Terrain.TerrainMenu(self.tile_data, self.view, self)
         self.docks['Terrain'].setWidget(self.terrain_menu)
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docks['Terrain'])
 
