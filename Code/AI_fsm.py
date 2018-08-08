@@ -371,7 +371,7 @@ class AI(object):
             self.change_thief_ai('Unlock')
             return False
 
-        available_targets = sorted(available_targets)
+        available_targets = sorted(available_targets, key=lambda tile: gameStateObj.map.tile_info_dict[tile.position].get('Locked'))
         for target in available_targets:
             for move in valid_moves:
                 # We can be adjacent
