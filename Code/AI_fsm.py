@@ -371,8 +371,9 @@ class AI(object):
             self.change_thief_ai('Unlock')
             return False
 
-        for move in valid_moves:
-            for target in available_targets:
+        available_targets = sorted(available_targets)
+        for target in available_targets:
+            for move in valid_moves:
                 # We can be adjacent
                 if Utility.calculate_distance(move, target.position) <= 1 and (target.name != 'Chest' or len(self.unit.items) < cf.CONSTANTS['max_items']):
                     self.target_to_interact_with = target.position
