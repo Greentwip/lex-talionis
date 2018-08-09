@@ -127,7 +127,7 @@ def create_ai_dict(fp):
                 if obj == '-':
                     obj = []
                 elif obj.startswith('[') and obj.endswith(']'):
-                    obj = obj.split(',')
+                    obj = obj[1:-1].split(',')
                 elif obj.isdigit():
                     obj = int(obj)
                 ai_dict[s_line[0]].append(obj)
