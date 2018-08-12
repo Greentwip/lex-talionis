@@ -20,7 +20,7 @@
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Cavalier;10;Iron Axe,Shine,Warp;5,15;None;Althea
+player;0;0;Thief;10;Iron Sword;5,15;Unlock2;Althea
 player;0;0;Cleric;10;Iron Axe,Shine,Unlock;5,16;None;Althea
 
 # Enemies

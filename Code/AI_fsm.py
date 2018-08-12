@@ -331,9 +331,13 @@ class AI(object):
     #         elif all(adjtile.name in ('Floor', 'Throne', 'Wall') for adjtile in adjtiles):
     #             self.unit.dismount(closest_tile.position, gameStateObj)
 
-    def change_thief_ai(self, remove):
+    def thief_to_escape(self):
         # Change AI
-        new_primary_ai = self.ai1_state - PRIMARYAI[remove]
+        new_primary_ai = self.ai1_state
+        if new_primary_ai & PRIMARYAI['Steal']:
+            new_primary_ai -= PRIMARYAI['Steal']
+        if new_primary_ai & PRIMARYAI['Unlock']:
+            new_primary_ai -= PRIMARYAI['Unlock']            
         if not new_primary_ai & PRIMARYAI['Thief Escape']:
             new_primary_ai += PRIMARYAI['Thief Escape']
         self.change_ai(new_primary_ai, 6)
@@ -342,8 +346,6 @@ class AI(object):
     def run_steal_ai(self, gameStateObj, valid_moves):
         max_tp = 0
         for move in valid_moves:
-            if isinstance(self.team_ignore, int):
-                self.team_ignore = [self.team_ignore]
             valid_targets = [unit for unit in self.unit.getStealTargets(gameStateObj, move) if self.unit.checkIfEnemy(unit) and
                              unit.team not in self.team_ignore and unit.name not in self.name_ignore]
             for target in valid_targets:
@@ -358,8 +360,8 @@ class AI(object):
         if max_tp > 0:
             # If we've stolen everything possible, escape time -- team ignore is used to set limit
             if len(self.unit.items) >= cf.CONSTANTS['max_items'] or \
-                    (self.team_ignore and len(self.unit.items) >= self.team_ignore[0]):
-                self.change_thief_ai('Steal')
+                    (self.team_ignore and self.team_ignore[0].isdigit() and len(self.unit.items) >= int(self.team_ignore[0])):
+                self.thief_to_escape()  # For next time
             return True
         return False
 
@@ -368,14 +370,19 @@ class AI(object):
         available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                              if 'Locked' in gameStateObj.map.tile_info_dict[position]]
         if not available_targets:
-            self.change_thief_ai('Unlock')
+            self.thief_to_escape()
             return False
 
         available_targets = sorted(available_targets, key=lambda tile: gameStateObj.map.tile_info_dict[tile.position].get('Locked'))
         for target in available_targets:
             for move in valid_moves:
                 # We can be adjacent
-                if Utility.calculate_distance(move, target.position) <= 1 and (target.name != 'Chest' or len(self.unit.items) < cf.CONSTANTS['max_items']):
+                if Utility.calculate_distance(move, target.position) <= 1:
+                    if target.name == 'Chest' or True:
+                        num_before = len(self.unit.items) + 1
+                        if num_before >= cf.CONSTANTS['max_items'] or \
+                                (self.team_ignore and self.team_ignore[0].isdigit() and num_before >= int(self.team_ignore[0])):
+                            self.thief_to_escape()  # For next time
                     self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     return True
