@@ -20,9 +20,8 @@
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Myrmidon;4;Iron Sword;3,14;None;Althea
-# Other Characters
-other;0;0;Citizen;1;;3,15;None;Althea
+player;0;0;Thief;10;Iron Sword;5,15;Unlock2;Althea
+player;0;0;Cleric;10;Iron Axe,Shine,Unlock;5,16;None;Althea
 # Enemies
 # Generics
 enemy;0;0;Fighter;1;Iron Axe;5,15;PursueIgnoreOther;Althea
