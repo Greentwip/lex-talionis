@@ -184,12 +184,12 @@ class BattleAnimation(object):
         if line[0] == 'f':
             self.frame_count = 0
             self.num_frames = self.get_frames(line[1])
-            self.current_frame = self.frame_directory[line[2]]
+            self.current_frame = self.frame_directory.get(line[2])
             self.processing = False
             if line[2] == 'Stand':
                 self.base_state = True
             if len(line) > 3 and line[3]:  # Under frame
-                self.under_frame = self.frame_directory[line[3]]
+                self.under_frame = self.frame_directory.get(line[3])
             else:
                 self.under_frame = None
             self.over_frame = None
@@ -200,9 +200,9 @@ class BattleAnimation(object):
             self.num_frames = self.get_frames(line[1])
             self.under_frame = None
             self.processing = False
-            self.over_frame = self.frame_directory[line[2]]
+            self.over_frame = self.frame_directory.get(line[2])
             if len(line) > 3:  # Current frame
-                self.current_frame = self.frame_directory[line[3]]
+                self.current_frame = self.frame_directory.get(line[3])
             else:
                 self.current_frame = None
         elif line[0] == 'uf':
@@ -210,7 +210,7 @@ class BattleAnimation(object):
             self.num_frames = self.get_frames(line[1])
             self.current_frame = None
             self.over_frame = None
-            self.under_frame = self.frame_directory[line[2]]
+            self.under_frame = self.frame_directory.get(line[2])
             self.processing = False
             if len(line) > 3:
                 self.personal_offset = tuple(int(num) for num in line[3].split(','))
