@@ -100,7 +100,7 @@ f;4;Sword_003
 sound;Heavy Wing Flap
 f;1;Sword_003
 f;2;Sword_004
-f;2;Sword_005
+wait;2
 f;2;Sword_006
 f;2;Sword_007
 f;3;Sword_008
@@ -159,7 +159,7 @@ f;4;Sword_003
 sound;Heavy Wing Flap
 f;1;Sword_003
 f;2;Sword_004
-f;2;Sword_005
+wait;2
 f;2;Sword_006
 f;2;Sword_007
 f;3;Sword_008
