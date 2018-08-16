@@ -120,12 +120,12 @@ f;2;Lance_124
 f;2;Lance_125
 f;4;Lance_126
 f;6;Lance_127
+miss
 f;5;Lance_128
 f;4;Lance_129
 f;3;Lance_130
 f;3;Lance_131
-miss
-f;30;Lance_131
+f;15;Lance_131
 f;2;Lance_132
 sound;Weapon Pull
 f;1;Lance_132
