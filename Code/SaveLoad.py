@@ -1,14 +1,23 @@
 # Saving and Loading Functions
 # === IMPORT MODULES =============================================
 import random, copy, threading, shutil
-import cPickle as pickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 from collections import OrderedDict
 
 # Custom imports
-import GlobalConstants as GC
-import configuration as cf
-import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
-from StatObject import Stat
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
+    from StatObject import Stat, build_stat_dict
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
+    from Code.StatObject import Stat, build_stat_dict
 
 import logging
 logger = logging.getLogger(__name__)
@@ -427,18 +436,6 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     get_skills(class_dict, unit, classes, u_i['level'], gameStateObj, seed=my_seed)
 
     return unit
-
-def build_stat_dict(stats):
-    st = OrderedDict()
-    for idx, name in enumerate(cf.CONSTANTS['stat_names']):
-        st[name] = Stat(idx, stats[idx])
-    return st
-
-def build_stat_dict_plus(stats):
-    st = OrderedDict()
-    for idx, name in enumerate(cf.CONSTANTS['stat_names']):
-        st[name] = Stat(idx, stats[idx][0], stats[idx][1])
-    return st
 
 def get_unit_info(class_dict, team, klass, level, item_line, mode, game_constants, force_fixed=False):
     # Handle stats

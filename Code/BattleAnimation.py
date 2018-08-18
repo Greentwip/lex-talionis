@@ -1,18 +1,13 @@
 import random
 
-import GlobalConstants as GC
-import Engine, Image_Modification
-import CustomObjects
-# Mode types:
-# * Attack 
-# * Attack2 - behind
-# Critical
-# Critical2 - behind
-# * Miss
-# * Dodge
-# * RangedDodge
-# * Stand
-# * RangedStand
+try:
+    import GlobalConstants as GC
+    import Engine, Image_Modification
+    import CustomObjects
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import Engine, Image_Modification
+    from . import CustomObjects
 
 speed = 1
 

@@ -1,5 +1,9 @@
-import GlobalConstants as GC
-import configuration as cf
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
 
 def command_chunk(text, num_lines):
     # Split on breaks and clears
@@ -55,7 +59,7 @@ def determine_width(text, num_lines):
 
 def line_chunk(text):
     chunks = text.strip().split(' ')
-    chunks = filter(None, chunks) # Remove empty chunks
+    chunks = [x for x in chunks if x] # Remove empty chunks
     return chunks
 
 # This is such an awful algorithm :(

@@ -3,10 +3,16 @@ import random
 from collections import OrderedDict, Counter
 
 # Custom imports
-import GlobalConstants as GC
-import configuration as cf
-import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue
-import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue, Cursor
+    import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue, Cursor
+    from . import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
 
 import logging
 logger = logging.getLogger(__name__)
@@ -211,7 +217,7 @@ class GameStateObj(object):
             cursor_position = lord_position
         else:
             cursor_position = (0, 0)
-        self.cursor = CustomObjects.Cursor('Cursor', cursor_position)
+        self.cursor = Cursor.Cursor('Cursor', cursor_position)
         self.fake_cursors = []
         self.tutorial_mode = False
 

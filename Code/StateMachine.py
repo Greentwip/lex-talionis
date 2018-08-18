@@ -1,18 +1,26 @@
-# Custom imports
 import os
-import GlobalConstants as GC
-import configuration as cf
-import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
-import Interaction, LevelUp, StatusObject, ItemMethods
-import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
-import BattleAnimation, TextChunk, Weapons
+
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
+    import Interaction, LevelUp, StatusObject, ItemMethods
+    import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
+    import BattleAnimation, TextChunk, Weapons
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
+    from . import Interaction, LevelUp, StatusObject, ItemMethods
+    from . import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
+    from . import BattleAnimation, TextChunk, Weapons
 
 import logging
 logger = logging.getLogger(__name__)
 # === Finite State Machine Object ===============================
 class StateMachine(object):
     def __init__(self, state_list=[], temp_state=[]):
-        import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu, DebugMode
+        from . import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu, DebugMode
         self.all_states = {'free': FreeState,
                            'turn_change': TurnChangeState,
                            'move': MoveState,

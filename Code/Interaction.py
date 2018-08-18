@@ -1,9 +1,17 @@
 import random, math, os
-import GlobalConstants as GC
-import configuration as cf
-import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
-import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-import MenuFunctions, GUIObjects, Weapons
+
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
+    import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
+    import MenuFunctions, GUIObjects, Weapons
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
+    from . import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
+    from . import MenuFunctions, GUIObjects, Weapons
 
 import logging
 logger = logging.getLogger(__name__)

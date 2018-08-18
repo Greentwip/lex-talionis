@@ -1,6 +1,9 @@
-# Weapons.py
-import GlobalConstants as GC
-import Engine
+try:
+    import GlobalConstants as GC
+    import Engine
+except:
+    from . import GlobalConstants as GC
+    from . import Engine
 
 # === WEAPON TRIANGLE OBJECT ==================================================
 class Weapon_Triangle(object):

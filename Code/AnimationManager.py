@@ -1,5 +1,9 @@
 import os
-import Engine
+
+try:
+    import Engine
+except ImportError:
+    from . import Engine
 
 class BattleAnimationManager(object):
     def __init__(self, COLORKEY, home='./'):

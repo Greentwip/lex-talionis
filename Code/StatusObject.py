@@ -1,8 +1,13 @@
 # === Imports ==================================================================
 # Custom imports
-import GlobalConstants as GC
-import configuration as cf
-import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
 
 import logging
 logger = logging.getLogger(__name__)

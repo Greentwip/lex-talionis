@@ -1,6 +1,11 @@
-import GlobalConstants as GC
-import configuration as cf
-import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, Weapons, Engine, TextChunk
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, Weapons, Engine, TextChunk
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, Weapons, Engine, TextChunk
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):

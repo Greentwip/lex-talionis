@@ -1,7 +1,11 @@
-#! usr/bin/env python2.7
-import GlobalConstants as GC
-import configuration as cf
-import Image_Modification, Utility, Engine
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import Image_Modification, Utility, Engine
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import Image_Modification, Utility, Engine
 
 import logging
 logger = logging.getLogger(__name__)

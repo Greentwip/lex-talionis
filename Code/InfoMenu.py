@@ -1,9 +1,14 @@
 #! usr/bin/env python
 
 # Imports
-import GlobalConstants as GC
-import configuration as cf
-import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons
 
 class InfoMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):

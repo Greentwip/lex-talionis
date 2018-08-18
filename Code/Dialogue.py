@@ -1,10 +1,16 @@
 #! usr/bin/env
 import re, random, math, itertools
 # Custom imports
-import GlobalConstants as GC
-import configuration as cf
-import CustomObjects, MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp
-import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
+    import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
+    from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
 
 import logging
 logger = logging.getLogger(__name__)
@@ -583,7 +589,7 @@ class Dialogue_Scene(object):
             coords = line[1:]
             for text_coord in coords:
                 coord = self.parse_pos(text_coord)
-                gameStateObj.fake_cursors.append(CustomObjects.Cursor('Cursor', coord, fake=True))
+                gameStateObj.fake_cursors.append(Cursor.Cursor('Cursor', coord, fake=True))
         elif line[0] == 'remove_fake_cursors':
             gameStateObj.remove_fake_cursors()
         elif line[0] == 'set_camera_pan':

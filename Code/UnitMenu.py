@@ -1,9 +1,16 @@
 # Imports
-import GlobalConstants as GC
-import configuration as cf
-import Engine, StateMachine
-import Image_Modification, MenuFunctions, Weapons, InfoMenu
-import GUIObjects, Counters
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import Engine, StateMachine
+    import Image_Modification, MenuFunctions, Weapons, InfoMenu
+    import GUIObjects, Counters
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import Engine, StateMachine
+    from . import Image_Modification, MenuFunctions, Weapons, InfoMenu
+    from . import GUIObjects, Counters
 
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):

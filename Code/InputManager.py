@@ -1,7 +1,11 @@
 #! usr/bin/env python2.7
 
-import configuration as cf
-import Engine
+try:
+    import configuration as cf
+    import Engine
+except ImportError:
+    from . import configuration as cf
+    from . import Engine
 
 class InputManager(object):
     def __init__(self):
@@ -37,7 +41,7 @@ class InputManager(object):
         else:
             self.joystick = None
             self.joystick_name = None
-        print self.joystick_name
+        print(self.joystick_name)
 
     # button is a string of the designation in the list above 
     def is_pressed(self, button):

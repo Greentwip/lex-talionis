@@ -3,8 +3,12 @@
 import math
 
 # Custom imports
-import GlobalConstants as GC
-import Engine, Utility
+try:
+    import GlobalConstants as GC
+    import Engine, Utility
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import Engine, Utility
 
 def flicker_image(image, color):
     color = tuple(Utility.clamp(c, 0, 255) for c in color)

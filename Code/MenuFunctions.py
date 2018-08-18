@@ -1,9 +1,16 @@
 import datetime, collections
-import GlobalConstants as GC
-import configuration as cf
-import ItemMethods, Image_Modification, Utility, Engine, Counters
-import StateMachine, InfoMenu, GUIObjects
-import CustomObjects, TextChunk, Weapons
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import ItemMethods, Image_Modification, Utility, Engine, Counters
+    import StateMachine, InfoMenu, GUIObjects
+    import CustomObjects, TextChunk, Weapons
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import ItemMethods, Image_Modification, Utility, Engine, Counters
+    from . import StateMachine, InfoMenu, GUIObjects
+    from . import CustomObjects, TextChunk, Weapons
 
 import logging
 logger = logging.getLogger(__name__)
@@ -276,7 +283,8 @@ class StatusMenu(StateMachine.State):
 
         return self.backSurf
         
-def CreateBaseMenuSurf((width, height), baseimage='BaseMenuBackground', top_left_sigil=None):
+def CreateBaseMenuSurf(size, baseimage='BaseMenuBackground', top_left_sigil=None):
+    width, height = size
     menuBaseSprite = GC.IMAGESDICT[baseimage]
     # Get total width and height.
     # Each piece of the menu (9) should be 1/3 of these dimensions

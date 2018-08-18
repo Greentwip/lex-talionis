@@ -1,4 +1,12 @@
-import GlobalConstants as GC
+from collections import OrderedDict
+
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+
 # === Helper component class for unit stats ===================================
 class Stat(object):
     def __init__(self, idx, stat, bonus=0):
@@ -60,6 +68,25 @@ class Stat(object):
         elif total < other:
             return -1
 
+    # Python 3 needs these explicitly defined
+    def __lt__(self, other):
+        return self.base_stat + self.bonuses < other
+
+    def __gt__(self, other):
+        return self.base_stat + self.bonuses > other
+
+    def __le__(self, other):
+        return self.base_stat + self.bonuses <= other
+
+    def __ge__(self, other):
+        return self.base_stat + self.bonuses >= other
+
+    def __eq__(self, other):
+        return self.base_stat + self.bonuses == other
+
+    def __ne__(self, other):
+        return self.base_stat + self.bonuses != other
+
     def serialize(self):
         return (self.base_stat, self.bonuses)
 
@@ -88,3 +115,15 @@ class Stat(object):
             elif self.bonuses < 0:
                 output = str(self.bonuses)
                 GC.FONT['small_red'].blit(output, surf, (topright[0], topright[1]))
+
+def build_stat_dict(stats):
+    st = OrderedDict()
+    for idx, name in enumerate(cf.CONSTANTS['stat_names']):
+        st[name] = Stat(idx, stats[idx])
+    return st
+
+def build_stat_dict_plus(stats):
+    st = OrderedDict()
+    for idx, name in enumerate(cf.CONSTANTS['stat_names']):
+        st[name] = Stat(idx, stats[idx][0], stats[idx][1])
+    return st

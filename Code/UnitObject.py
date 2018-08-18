@@ -1,11 +1,19 @@
 import random, os
 from collections import Counter
-import GlobalConstants as GC
-import configuration as cf
-import Interaction, MenuFunctions, AStar, Weapons, SaveLoad, TileObject
-import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
-import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
-from StatObject import Stat  # Needed so old saves can load
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import Interaction, MenuFunctions, AStar, Weapons, TileObject
+    import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
+    import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
+    from StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import Interaction, MenuFunctions, AStar, Weapons, TileObject
+    from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
+    from . import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
+    from Code.StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
 
 import logging
 logger = logging.getLogger(__name__)
@@ -50,7 +58,7 @@ class UnitObject(object):
 
         # --- Stats
         if isinstance(info['stats'], list):
-            self.stats = SaveLoad.build_stat_dict_plus(info['stats'])
+            self.stats = build_stat_dict_plus(info['stats'])
         else:
             self.stats = info['stats']
         self.currenthp = info.get('currenthp') or int(self.stats['HP'])
@@ -871,7 +879,7 @@ class UnitObject(object):
         my_grid = gameStateObj.grid_manager.get_grid(self)
         pathfinder = AStar.Djikstra(self.position, my_grid, gameStateObj.map.width, gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
         # Run the pathfinder
-        movement_left = self.movement_left if not force else self.stats['MOV']
+        movement_left = self.movement_left if not force else int(self.stats['MOV'])
         ValidMoves = pathfinder.process(gameStateObj.grid_manager.team_map, movement_left)
         # Own position is always a valid move
         ValidMoves.add(self.position)

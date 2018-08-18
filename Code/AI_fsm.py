@@ -30,9 +30,14 @@
     - 1: Look up to my Movement*2 + maximum range of item away
     - 2: Look at entire map
 """
-import GlobalConstants as GC
-import configuration as cf
-import UnitObject, Interaction, Utility, AStar, Engine
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import UnitObject, Interaction, Utility, AStar, Engine
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import UnitObject, Interaction, Utility, AStar, Engine
 
 import logging
 logger = logging.getLogger(__name__)

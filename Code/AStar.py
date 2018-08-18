@@ -1,7 +1,12 @@
 # A* implementation
 import heapq
-import GlobalConstants as GC
-import configuration as cf
+
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
 
 try:
     import fast_pathfinding # noqa
@@ -49,6 +54,12 @@ else:
 
         def __repr__(self):
             return '%s,%s ; %s %s'%(self.x, self.y, self.reachable, self.cost)
+
+        def __gt__(self, n):
+            return self.cost > n.cost
+
+        def __lt__(self, n):
+            return self.cost < n.cost
 
     class Grid_Manager(object):
         __slots__ = ['gridHeight', 'gridWidth', 'grids', 'team_map', 'unit_map', 'aura_map', 'known_auras']

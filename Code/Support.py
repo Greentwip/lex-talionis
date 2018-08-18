@@ -1,6 +1,11 @@
-import GlobalConstants as GC
-import configuration as cf
-import Engine
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import Engine
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import Engine
 
 class Affinity(object):
     def __init__(self, name, attack, defense, accuracy, avoid, index, desc):

@@ -1,11 +1,17 @@
 import os, math
-from imagesDict import COLORKEY
-import GlobalConstants as GC
-import configuration as cf
 from collections import OrderedDict
 
 # Custom imports
-import StatusObject, CustomObjects, Dialogue, Image_Modification, Engine, Weather, Utility
+try:
+    from imagesDict import COLORKEY
+    import GlobalConstants as GC
+    import configuration as cf
+    import StatusObject, CustomObjects, Dialogue, Image_Modification, Engine, Weather, Utility
+except ImportError:
+    from Code.imagesDict import COLORKEY
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import StatusObject, CustomObjects, Dialogue, Image_Modification, Engine, Weather, Utility
 
 import logging
 logger = logging.getLogger(__name__)

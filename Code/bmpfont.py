@@ -54,7 +54,10 @@ alllowercase
 
 __all__ = ["BmpFont"]
 
-import Engine
+try:
+    import Engine
+except ImportError:
+    from . import Engine
 
 class BmpFont:
     """Provides an object for treating a bitmap as a font."""

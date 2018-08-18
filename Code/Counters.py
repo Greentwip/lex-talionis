@@ -1,7 +1,11 @@
 #! usr/bin/env python2.7
 
-import Engine
-from GlobalConstants import IMAGESDICT
+try:
+    import Engine
+    from GlobalConstants import IMAGESDICT
+except ImportError:
+    from . import Engine
+    from Code.GlobalConstants import IMAGESDICT
 
 # Helper global object for passive sprite animations
 class generic3Counter(object):

@@ -1,10 +1,14 @@
-# World Map
 import math
 
 # Custom imports
-import GlobalConstants as GC
-import configuration as cf
-import Utility, Image_Modification, Engine
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import Utility, Image_Modification, Engine
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import Utility, Image_Modification, Engine
 
 class WorldMapBackground(object):
     def __init__(self, sprite, labels=True):
@@ -93,7 +97,7 @@ class WorldMapBackground(object):
         return x, y
 
     def create_cursor(self, coord):
-        from CustomObjects import Cursor
+        from Cursor import Cursor
         self.cursor = Cursor('Cursor', coord, fake=True)
 
     def remove_cursor(self):

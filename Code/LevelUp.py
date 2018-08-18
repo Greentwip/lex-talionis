@@ -1,8 +1,14 @@
 # Display Unit Info function
-import GlobalConstants as GC
-import configuration as cf
-import CustomObjects, Image_Modification, Engine
-import StatusObject, Banner, Utility, Weapons
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import CustomObjects, Image_Modification, Engine
+    import StatusObject, Banner, Utility, Weapons
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import CustomObjects, Image_Modification, Engine
+    from . import StatusObject, Banner, Utility, Weapons
 
 ####################################################################
 # Displays the level up screen

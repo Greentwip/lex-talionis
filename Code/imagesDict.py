@@ -1,5 +1,9 @@
 import os
-import Engine, AnimationManager
+
+try:
+    import Engine, AnimationManager
+except ImportError:
+    from . import Engine, AnimationManager
 
 COLORKEY = (128, 160, 128)
 def getImages(home='./'):

@@ -2,10 +2,16 @@
 import os
 
 # Custom imports
-import GlobalConstants as GC
-import configuration as cf
-import StateMachine, MenuFunctions, ItemMethods
-import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import StateMachine, MenuFunctions, ItemMethods
+    import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import StateMachine, MenuFunctions, ItemMethods
+    from . import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk
 
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):

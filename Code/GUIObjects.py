@@ -1,7 +1,11 @@
 import math
 
-import GlobalConstants as GC
-import Engine, Counters, Image_Modification
+try:
+    import GlobalConstants as GC
+    import Engine, Counters, Image_Modification
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import Engine, Counters, Image_Modification
 
 class ScrollBar(object):
     top = Engine.subsurface(GC.IMAGESDICT['Scroll_Bar'], (0, 0, 7, 1))

@@ -1,7 +1,11 @@
 import os
 from collections import OrderedDict
-import bmpfont, Engine, imagesDict
-import configuration as cf
+try:
+    import bmpfont, Engine, imagesDict
+    import configuration as cf
+except ImportError:
+    from . import bmpfont, Engine, imagesDict
+    from . import configuration as cf
 
 import logging
 logger = logging.getLogger(__name__)
@@ -145,7 +149,10 @@ MAINFONT = loc + "Sprites/Fonts/KhmerUI.ttf"
 BASICFONT = Engine.build_font(MAINFONT, 10)
 BIGFONT = Engine.build_font(MAINFONT, 12)
 
-import Counters # noqa
+try:
+    import Counters
+except ImportError:
+    from . import Counters
 PASSIVESPRITECOUNTER = Counters.generic3Counter(int(32*FRAMERATE), int(4*FRAMERATE))
 ACTIVESPRITECOUNTER = Counters.generic3Counter(int(13*FRAMERATE), int(6*FRAMERATE))
 CURSORSPRITECOUNTER = Counters.generic3Counter(int(20*FRAMERATE), int(2*FRAMERATE), int(8*FRAMERATE))

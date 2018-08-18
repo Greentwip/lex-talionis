@@ -1,6 +1,10 @@
 import random, math
-import GlobalConstants as GC
-import Engine, Image_Modification
+try:
+    import GlobalConstants as GC
+    import Engine, Image_Modification
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import Engine, Image_Modification
 
 class Weather(object):
     def __init__(self, name, abundance, bounds, size):

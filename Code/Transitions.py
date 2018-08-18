@@ -3,9 +3,14 @@
 import os, time
 
 # Custom imports
-import GlobalConstants as GC
-import configuration as cf
-import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue, Engine, Image_Modification, Weather
+try:
+    import GlobalConstants as GC
+    import configuration as cf
+    import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue, Engine, Image_Modification, Weather
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import configuration as cf
+    from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue, Engine, Image_Modification, Weather
 
 import logging
 logger = logging.getLogger(__name__)

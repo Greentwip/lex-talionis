@@ -113,8 +113,7 @@ if __name__ == '__main__':
     else:
         my_level = logging.WARNING
     logging.basicConfig(filename='./Saves/debug.log.1', filemode='w',
-                        level=my_level, disable_existing_loggers=False,
-                        format='%(levelname)8s:%(module)20s: %(message)s')
+                        level=my_level, format='%(levelname)8s:%(module)20s: %(message)s')
     try:
         main()
     except Exception as e:

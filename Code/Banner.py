@@ -1,8 +1,11 @@
 #! usr/bin/env python2.7
 
-import GlobalConstants as GC
-
-import MenuFunctions, Engine, Image_Modification, Weapons
+try:
+    import GlobalConstants as GC
+    import MenuFunctions, Engine, Image_Modification, Weapons
+except ImportError:
+    from . import GlobalConstants as GC
+    from . import MenuFunctions, Engine, Image_Modification, Weapons
 
 class Banner(object):
     def __init__(self):
