@@ -1,4 +1,3 @@
-#! usr/bin/env
 import re, random, math, itertools
 # Custom imports
 try:

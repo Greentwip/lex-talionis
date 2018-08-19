@@ -1,5 +1,3 @@
-#! usr/bin/env python2.7
-
 try:
     import configuration as cf
     import Engine

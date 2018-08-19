@@ -15,7 +15,10 @@ import Code.StatusObject as StatusObject
 import Code.UnitSprite as UnitSprite
 from Code.Dialogue import UnitPortrait
 
-import EditorUtilities
+try:
+    import EditorUtilities
+except ImportError:
+    from . import EditorUtilities
 
 teams = ('player', 'enemy', 'other', 'enemy2')
 
@@ -35,7 +38,7 @@ def build_named_units(class_dict):
         u_i['level'] = int(unit.find('level').text)
 
         # stats = SaveLoad.intify_comma_list(unit.find('bases').text)
-        # for n in xrange(len(stats), cf.CONSTANTS['num_stats']):
+        # for n in range(len(stats), cf.CONSTANTS['num_stats']):
         #     stats.append(class_dict[u_i['klass']]['bases'][n])
         # assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
         # u_i['stats'] = SaveLoad.build_stat_dict(stats)
@@ -121,7 +124,7 @@ class Unit(object):
             # current_class = EditorUtilities.find(class_data, self.klass)
             self.items = []
             self.skills = []
-            # self.wexp = [0 for n in xrange(len(CustomObjects.WEAPON_TRIANGLE.types))]
+            # self.wexp = [0 for n in range(len(CustomObjects.WEAPON_TRIANGLE.types))]
             self.team = 'player'
             self.ai = 'None'
             self.ai_group = None
@@ -172,16 +175,16 @@ class Klass(object):
             self.desc = info['desc']
         else:
             self.name = ''
-            self.wexp = [0 for n in xrange(len(Weapons.TRIANGLE.types))]
+            self.wexp = [0 for n in range(len(Weapons.TRIANGLE.types))]
             self.promotes_from = ''
             self.promotes_to = []
             self.movement_group = 0
             self.tags = set()
             self.skills = []
             self.skill_levels = []
-            self.bases = [0 for n in xrange(cf.CONSTANTS['num_stats'])]
-            self.growths = [0 for n in xrange(cf.CONSTANTS['num_stats'])]
-            self.promotion = [0 for n in xrange(cf.CONSTANTS['num_stats'])]
+            self.bases = [0 for n in range(cf.CONSTANTS['num_stats'])]
+            self.growths = [0 for n in range(cf.CONSTANTS['num_stats'])]
+            self.promotion = [0 for n in range(cf.CONSTANTS['num_stats'])]
             self.max = [40, 15, 15, 15, 15, 20, 15, 15, 20]
             self.desc = ''
 

@@ -8,10 +8,16 @@ import Code.Engine as Engine
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 
-import DataImport
-from DataImport import Data
-import EditorUtilities
-from CustomGUI import GenderBox, CheckableComboBox
+try:
+    import DataImport
+    from DataImport import Data
+    import EditorUtilities
+    from CustomGUI import GenderBox, CheckableComboBox
+except ImportError:
+    from . import DataImport
+    from EditorCode.DataImport import Data
+    from . import EditorUtilities
+    from EditorCode.CustomGUI import GenderBox, CheckableComboBox
 
 class HasModes(object):
     def create_mode_combobox(self):
@@ -56,7 +62,7 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
         self.unit_box = QtGui.QComboBox()
         self.unit_box.uniformItemSizes = True
         self.unit_box.setIconSize(QtCore.QSize(32, 32))
-        self.unit_data = Data.unit_data.values()
+        self.unit_data = list(Data.unit_data.values())
         for idx, unit in enumerate(self.unit_data):
             if unit.image:
                 self.unit_box.addItem(EditorUtilities.create_icon(unit.image), unit.id)
@@ -117,7 +123,7 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
         dialog.setWindowTitle(title)
         result = dialog.exec_()
         if result == QtGui.QDialog.Accepted:
-            unit = Data.unit_data.values()[dialog.unit_box.currentIndex()]
+            unit = list(Data.unit_data.values())[dialog.unit_box.currentIndex()]
             unit.team = dialog.get_team()
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
@@ -159,7 +165,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         dialog.setWindowTitle(title)
         result = dialog.exec_()
         if result == QtGui.QDialog.Accepted:
-            unit = Data.unit_data.values()[dialog.unit_box.currentIndex()]
+            unit = list(Data.unit_data.values())[dialog.unit_box.currentIndex()]
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = str(dialog.ai_group.text())
@@ -260,7 +266,7 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
             item_box, drop_box, event_box = self.item_boxes[index]
             drop_box.setChecked(item.droppable)
             event_box.setChecked(item.event_combat)
-            item_box.setCurrentIndex(Data.item_data.keys().index(item.id))
+            item_box.setCurrentIndex(list(Data.item_data.keys()).index(item.id))
         # === Mode ===
         self.populate_mode(unit)
 
@@ -276,7 +282,7 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
         self.remove_item_button.setEnabled(False)
 
         self.item_boxes = []
-        for num in xrange(cf.CONSTANTS['max_items']):
+        for num in range(cf.CONSTANTS['max_items']):
             self.item_boxes.append((self.create_item_combo_box(), QtGui.QCheckBox(), QtGui.QCheckBox()))
         for index, item in enumerate(self.item_boxes):
             item_box, drop, event = item
@@ -328,7 +334,7 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
     def getItems(self):
         items = []
         for index, (item_box, drop_box, event_box) in enumerate(self.item_boxes[:self.num_items]):
-            item = Data.item_data.values()[item_box.currentIndex()]
+            item = list(Data.item_data.values())[item_box.currentIndex()]
             item.droppable = drop_box.isChecked()
             item.event_combat = event_box.isChecked()
             items.append(item)
@@ -419,7 +425,7 @@ class ReinCreateUnitDialog(CreateUnitDialog):
             item_box, drop_box, event_box = self.item_boxes[index]
             drop_box.setChecked(item.droppable)
             event_box.setChecked(item.event_combat)
-            item_box.setCurrentIndex(Data.item_data.keys().index(item.id))
+            item_box.setCurrentIndex(list(Data.item_data.keys()).index(item.id))
         self.populate_mode(unit)
 
         self.team_changed(0)

@@ -6,8 +6,12 @@ import Code.Engine as Engine
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 
-import EditorUtilities
-from CustomGUI import SignalList
+try:
+    import EditorUtilities
+    from CustomGUI import SignalList
+except ImportError:
+    from . import EditorUtilities
+    from EditorCode.CustomGUI import SignalList
 
 all_faction_icons = [key[:-6] for key in GC.UNITDICT if key.endswith('Emblem')]
 
@@ -129,7 +133,7 @@ class FactionMenu(QtGui.QWidget):
         self.unit_data.load_player_characters = bool(state)
 
     def get_current_faction(self):
-        return self.unit_data.factions.values()[self.list.currentRow()]
+        return list(self.unit_data.factions.values())[self.list.currentRow()]
 
     def load(self, unit_data):
         self.clear()

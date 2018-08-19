@@ -1,6 +1,9 @@
 from PyQt4 import QtGui
 
-from CustomGUI import SignalList
+try:
+    from CustomGUI import SignalList
+except ImportError:
+    from EditorCode.CustomGUI import SignalList
 
 class TriggerMenu(QtGui.QWidget):
     def __init__(self, unit_data, view, window=None):

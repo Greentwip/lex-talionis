@@ -1,6 +1,3 @@
-#! usr/bin/env python
-
-# Imports
 try:
     import GlobalConstants as GC
     import configuration as cf

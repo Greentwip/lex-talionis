@@ -1,5 +1,3 @@
-#! usr/bin/env python2.7
-
 try:
     import GlobalConstants as GC
     import MenuFunctions, Engine, Image_Modification, Weapons

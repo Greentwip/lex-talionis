@@ -9,9 +9,14 @@ Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 import Code.CustomObjects as CustomObjects
 
-import EditorUtilities
-from CustomGUI import SignalList, CheckableComboBox
-from DataImport import Data
+try:
+    import EditorUtilities
+    from CustomGUI import SignalList, CheckableComboBox
+    from DataImport import Data
+except ImportError:
+    from . import EditorUtilities
+    from EditorCode.CustomGUI import SignalList, CheckableComboBox
+    from EditorCode.DataImport import Data
 
 class InfoKind(object):
     def __init__(self, num, name, kind):
@@ -56,7 +61,7 @@ class TileInfo(object):
 
     def get_str(self, coord):
         if coord in self.tile_info_dict and self.tile_info_dict[coord]:
-            return ';'.join([(name + '=' + value) for name, value in self.tile_info_dict[coord].iteritems()])
+            return ';'.join([(name + '=' + value) for name, value in self.tile_info_dict[coord].items()])
         else:
             return None
 
@@ -101,8 +106,8 @@ class TileInfo(object):
     def get_images(self):
         image_coords = {}
         # Returns a dictionary of coordinates mapped to images to display
-        for coord, properties in self.tile_info_dict.iteritems():
-            for name, value in properties.iteritems():
+        for coord, properties in self.tile_info_dict.items():
+            for name, value in properties.items():
                 image_coords[coord] = EditorUtilities.ImageWidget(kinds[name].image).image
         return image_coords
 

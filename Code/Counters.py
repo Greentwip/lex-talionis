@@ -1,5 +1,3 @@
-#! usr/bin/env python2.7
-
 try:
     import Engine
     from GlobalConstants import IMAGESDICT

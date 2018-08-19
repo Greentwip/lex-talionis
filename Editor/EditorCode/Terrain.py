@@ -6,8 +6,12 @@ import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
 Engine.engine_constants['home'] = '../'
 
-from DataImport import Data
-from CustomGUI import SignalList
+try:
+    from DataImport import Data
+    from CustomGUI import SignalList
+except ImportError:
+    from EditorCode.DataImport import Data
+    from EditorCode.CustomGUI import SignalList
 
 class Autotiles(object):
     def __init__(self):
@@ -29,7 +33,7 @@ class Autotiles(object):
     def update(self, current_time):
         time = 483  # 29 ticks
         mod_time = current_time%(len(self.autotiles)*time)
-        self.autotile_frame = mod_time/time
+        self.autotile_frame = mod_time//time
 
     def draw(self):
         if self.autotiles:
@@ -37,7 +41,12 @@ class Autotiles(object):
         else:
             return None
 
+    # Python 2
     def __nonzero__(self):
+        return bool(self.autotiles)
+
+    # Python 3
+    def __bool__(self):
         return bool(self.autotiles)
 
 class TileData(object):
@@ -118,7 +127,7 @@ class TerrainMenu(QtGui.QWidget):
         self.list.setIconSize(QtCore.QSize(32, 32))
 
         # Ingest terrain_data
-        for color, terrain in Data.terrain_data.iteritems():
+        for color, terrain in Data.terrain_data.items():
             tid, name = terrain
             pixmap = QtGui.QPixmap(32, 32)
             pixmap.fill(QtGui.QColor(color[0], color[1], color[2]))
@@ -133,11 +142,11 @@ class TerrainMenu(QtGui.QWidget):
         self.undo_stack = []
 
     def get_current_color(self):
-        color = Data.terrain_data.keys()[self.list.currentRow()]
+        color = list(Data.terrain_data.keys())[self.list.currentRow()]
         return color
 
     def set_current_color(self, color):
-        idx = Data.terrain_data.keys().index(color)
+        idx = list(Data.terrain_data.keys()).index(color)
         self.list.setCurrentRow(idx)
 
     def get_info(self, color):

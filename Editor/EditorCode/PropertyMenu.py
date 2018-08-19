@@ -2,8 +2,12 @@ from collections import OrderedDict
 
 from PyQt4 import QtGui, QtCore
 
-import CustomGUI as LtGui
-import EditorUtilities
+try:
+    import CustomGUI as LtGui
+    import EditorUtilities
+except ImportError:
+    from . import CustomGUI as LtGui
+    from . import EditorUtilities
 
 class PropertyMenu(QtGui.QWidget):
     def __init__(self, window=None):

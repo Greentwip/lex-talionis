@@ -6,7 +6,10 @@ import Code.Engine as Engine
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 
-import EditorUtilities
+try:
+    import EditorUtilities
+except ImportError:
+    from . import EditorUtilities
 
 class Weather(object):
     def __init__(self, name, abundance, bounds, size):

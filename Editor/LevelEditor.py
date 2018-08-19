@@ -16,20 +16,7 @@ from EditorCode import PropertyMenu, Terrain, TileInfo, UnitData
 from EditorCode import EditorUtilities, Faction, Triggers, QtWeather
 from EditorCode.DataImport import Data
 
-# TODO: Reinforcements -- impl
-# TODO: Created Units -- maybe not
-# TODO: Load new Map button -- impl
-# TODO: Refresh button (also on losing and gaining focus) -- impl
-# TODO: Highlight current unit -- impl
-# TODO: Add color to text when unit isn't positioned -- impl
-# TODO: Add Del key to Units -- impl
-# TODO: Add Autotile support to map -- impl
-# TODO: Add Weather to map -- impl
-# TODO: Droppable and Equippable Item support -- impl
-# TODO: Class sprites move -- impl
-# TODO: Highlight dances -- maybe not
-# TODO: Items displayed next to unit names in Units and Reinforcements -- impl
-# TODO: Switching tab displays help information in status bar -- impl
+# TODO: Created Units
 
 class MainView(QtGui.QGraphicsView):
     def __init__(self, tile_data, tile_info, unit_data, window=None):
@@ -58,8 +45,8 @@ class MainView(QtGui.QGraphicsView):
         # Handle colorkey
         qCOLORKEY = QtGui.qRgb(*COLORKEY)
         new_color = QtGui.qRgba(0, 0, 0, 0)
-        for x in xrange(self.image.width()):
-            for y in xrange(self.image.height()):
+        for x in range(self.image.width()):
+            for y in range(self.image.height()):
                 if self.image.pixel(x, y) == qCOLORKEY:
                     self.image.setPixel(x, y, new_color)
         self.setSceneRect(0, 0, self.image.width(), self.image.height())
@@ -99,7 +86,7 @@ class MainView(QtGui.QGraphicsView):
         if self.working_image:
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
-            for coord, color in self.tile_data.tiles.iteritems():
+            for coord, color in self.tile_data.tiles.items():
                 write_color = QtGui.QColor(color[0], color[1], color[2])
                 write_color.setAlpha(self.window.terrain_menu.get_alpha())
                 painter.fillRect(coord[0] * 16, coord[1] * 16, 16, 16, write_color)
@@ -109,7 +96,7 @@ class MainView(QtGui.QGraphicsView):
         if self.working_image:
             painter = QtGui.QPainter()
             painter.begin(self.working_image)
-            for coord, image in self.tile_info.get_images().iteritems():
+            for coord, image in self.tile_info.get_images().items():
                 painter.drawImage(coord[0] * 16 + 1, coord[1] * 16, image)
             painter.end()
 
@@ -612,7 +599,7 @@ class MainEditor(QtGui.QMainWindow):
     # === Save ===
     def write_overview(self, fp):
         with open(fp, 'w') as overview:
-            for k, v in self.overview_dict.iteritems():
+            for k, v in self.overview_dict.items():
                 if v:
                     overview.write(k + ';' + v + '\n')
 
@@ -621,7 +608,7 @@ class MainEditor(QtGui.QMainWindow):
             image = QtGui.QImage(self.tile_data.width, self.tile_data.height, QtGui.QImage.Format_RGB32)
             painter = QtGui.QPainter()
             painter.begin(image)
-            for coord, color in self.tile_data.tiles.iteritems():
+            for coord, color in self.tile_data.tiles.items():
                 write_color = QtGui.QColor(color[0], color[1], color[2])
                 painter.fillRect(coord[0], coord[1], 1, 1, write_color)
             painter.end()
@@ -630,7 +617,7 @@ class MainEditor(QtGui.QMainWindow):
 
     def write_tile_info(self, fp):
         with open(fp, 'w') as tile_info:
-            for coord, properties in self.tile_info.tile_info_dict.iteritems():
+            for coord, properties in self.tile_info.tile_info_dict.items():
                 value = self.tile_info.get_str(coord)
                 if value:
                     tile_info.write(str(coord[0]) + ',' + str(coord[1]) + ':')
@@ -888,7 +875,7 @@ class MainEditor(QtGui.QMainWindow):
         self.dock_visibility = {k: False for k in self.docks.keys()}
 
         # Remove ability for docks to be moved.
-        for name, dock in self.docks.iteritems():
+        for name, dock in self.docks.items():
             dock.setFeatures(QtGui.QDockWidget.NoDockWidgetFeatures)
 
     def maybe_save(self):

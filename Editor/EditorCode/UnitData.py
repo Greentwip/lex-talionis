@@ -16,10 +16,16 @@ from Code.StatObject import Stat
 import Code.Utility as Utility
 from Code.SaveLoad import Trigger
 
-import DataImport
-from DataImport import Data
-import EditorUtilities, Faction, UnitDialogs
-from CustomGUI import DragAndDropSignalList
+try:
+    import DataImport
+    from DataImport import Data
+    import EditorUtilities, Faction, UnitDialogs
+    from CustomGUI import DragAndDropSignalList
+except ImportError:
+    from . import DataImport
+    from EditorCode.DataImport import Data
+    from . import EditorUtilities, Faction, UnitDialogs
+    from EditorCode.CustomGUI import DragAndDropSignalList
 
 class UnitData(object):
     def __init__(self):
@@ -215,15 +221,15 @@ class UnitData(object):
         self.triggers[trigger_name] = Trigger()
 
     def remove_trigger(self, idx):
-        trigger_name = self.triggers.keys()[idx]
+        trigger_name = list(self.triggers.keys())[idx]
         del self.triggers[trigger_name]   
 
     def get_trigger(self, idx):
-        trigger_name = self.triggers.keys()[idx]
+        trigger_name = list(self.triggers.keys())[idx]
         return self.triggers[trigger_name]
 
     def get_trigger_name(self, idx):
-        return self.triggers.keys()[idx]
+        return list(self.triggers.keys())[idx]
 
     def saved_unit_from_line(self, unitLine):
         self.add_unit_from_line(unitLine)

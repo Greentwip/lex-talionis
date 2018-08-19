@@ -56,10 +56,10 @@ else:
             return '%s,%s ; %s %s'%(self.x, self.y, self.reachable, self.cost)
 
         def __gt__(self, n):
-            return self.cost > n.cost
+            return self.cost > n
 
         def __lt__(self, n):
-            return self.cost < n.cost
+            return self.cost < n
 
     class Grid_Manager(object):
         __slots__ = ['gridHeight', 'gridWidth', 'grids', 'team_map', 'unit_map', 'aura_map', 'known_auras']
