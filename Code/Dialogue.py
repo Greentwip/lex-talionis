@@ -406,8 +406,12 @@ class Dialogue_Scene(object):
                 receiver = gameStateObj.get_unit_from_name(line[1])
             # Append item to list of units items
             if line[2] != "0":
-                item = ItemMethods.itemparser(line[2])[0]
-                self.add_item(receiver, item, gameStateObj, 'no_banner' not in line)
+                item = ItemMethods.itemparser(line[2])
+                if item:
+                    item = item[0]
+                    self.add_item(receiver, item, gameStateObj, 'no_banner' not in line)
+                else:
+                    logger.error("Could not find item matching %s", line[2])
             elif line[2] == "0" and 'no_banner' not in line:
                 gameStateObj.banners.append(Banner.foundNothingBanner(receiver))
                 gameStateObj.stateMachine.changeState('itemgain')
