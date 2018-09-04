@@ -307,6 +307,21 @@ class MainView(QtGui.QGraphicsView):
                     print(current_idx)
                     if current_idx >= 0:
                         self.window.reinforcement_menu.set_current_idx(current_idx)
+        else:
+            if self.window.dock_visibility['Units']:
+                if event.button() == QtCore.Qt.LeftButton:
+                    current_unit = self.window.unit_menu.get_current_unit()
+                    if current_unit:
+                        print("Removing Unit's Position")
+                        current_unit.position = None
+                        self.window.unit_menu.get_item_from_unit(current_unit).setTextColor(QtGui.QColor("red"))
+            elif self.window.dock_visibility['Reinforcements']:
+                if event.button() == QtCore.Qt.LeftButton:
+                    current_unit = self.window.reinforcement_menu.get_current_unit()
+                    if current_unit:
+                        print("Removing Unit's Position")
+                        current_unit.position = None
+                        self.window.reinforcement_menu.get_item_from_unit(current_unit).setTextColor(QtGui.QColor("red"))
 
     def mouseReleaseEvent(self, event):
         # Do the parent's version
@@ -703,7 +718,7 @@ class MainEditor(QtGui.QMainWindow):
                 unit_level.write('faction;' + faction.faction_id + ';' + faction.unit_name + 
                                  ';' + faction.faction_icon + ';' + faction.desc + '\n')
             # Units
-            units = [unit for unit in self.unit_data.units if unit.position]
+            units = [unit for unit in self.unit_data.units]
             reinforcements = [rein for rein in self.unit_data.reinforcements]
             write_units(units)
             unit_level.write('# === Reinforcements ===\n')

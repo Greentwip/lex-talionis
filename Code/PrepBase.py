@@ -6,12 +6,12 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import StateMachine, MenuFunctions, ItemMethods
-    import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk
+    import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import StateMachine, MenuFunctions, ItemMethods
-    from . import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk
+    from . import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -82,9 +82,14 @@ class PrepMainState(StateMachine.State):
                 # gameStateObj.banners.append(Banner.gameSavedBanner())
                 # gameStateObj.stateMachine.changeState('itemgain')
             elif selection == cf.WORDS['Fight']:
-                # self.menu = None
-                gameStateObj.background = None
-                gameStateObj.stateMachine.back()
+                if any(unit.position for unit in gameStateObj.allunits if unit.team == 'player'):
+                    # self.menu = None
+                    gameStateObj.background = None
+                    gameStateObj.stateMachine.back()
+                else:
+                    GC.SOUNDDICT['Select 4'].play()
+                    gameStateObj.banners.append(Banner.customBanner("Must select at least one unit!"))
+                    gameStateObj.stateMachine.changeState('itemgain')
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
@@ -162,8 +167,8 @@ class PrepPickUnitsState(StateMachine.State):
             MenuFunctions.drawUnitItems(surf, (4, 4 + 40), gameStateObj.activeMenu.getSelection(), include_top=True)
 
         # Draw Pick Units screen
-        backSurf = MenuFunctions.CreateBaseMenuSurf((132, 24), 'BrownPickBackground')
-        topleft = (110, 0)
+        backSurf = MenuFunctions.CreateBaseMenuSurf((132, 24), 'WhiteMenuBackgroundOpaque')
+        topleft = (110, 4)
         num_units_map = len([unit for unit in gameStateObj.allunits if unit.position and unit.team == 'player'])
         num_slots = len([value for position, value in gameStateObj.map.tile_info_dict.items() if 'Formation' in value])
         pick_string = ['Pick ', str(num_slots - num_units_map), ' units  ', str(num_units_map), '/', str(num_slots)]

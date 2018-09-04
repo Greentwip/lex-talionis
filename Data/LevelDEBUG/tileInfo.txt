@@ -1,4 +1,8 @@
-7,6:Shop=Iron Sword,Iron Axe,Iron Lance,Willow Bow
-6,15:HP=30;Destructible=0
-7,15:Locked=0
-0,15:Shop=Iron Sword,Iron Axe,Iron Lance,Willow Bow,Wind,Fire,Thunder,Glimmer,Shine
+4,15:Formation=0
+4,17:Formation=0
+4,13:Formation=0
+3,16:Formation=0
+2,13:Formation=0
+2,17:Formation=0
+2,15:Formation=0
+3,14:Formation=0

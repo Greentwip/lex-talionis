@@ -279,7 +279,6 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
         self.add_item_button.clicked.connect(self.add_item_box)
         self.remove_item_button = QtGui.QPushButton('Remove Item')
         self.remove_item_button.clicked.connect(self.remove_item_box)
-        self.remove_item_button.setEnabled(False)
 
         self.item_boxes = []
         for num in range(cf.CONSTANTS['max_items']):
@@ -303,6 +302,7 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
         for index, (item_box, drop, event) in enumerate(self.item_boxes):
             item_box.hide(); drop.hide(); event.hide()
         self.num_items = 0
+        self.remove_item_button.setEnabled(False)
 
     def add_item_box(self):
         self.num_items += 1

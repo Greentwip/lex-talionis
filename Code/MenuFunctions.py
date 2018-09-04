@@ -1407,6 +1407,7 @@ class UnitSelectMenu(Counters.CursorControl):
 
     def draw(self, surf, gameStateObj):
         surf.blit(self.backsurf, self.topleft)
+        x_center = -8 if self.units_per_row == 2 else 0
 
         # Blit background highlight
         if self.highlight:
@@ -1430,18 +1431,18 @@ class UnitSelectMenu(Counters.CursorControl):
                 unit_image = unit.sprite.create_image('gray')
             elif unit == self.options[self.currentSelection]:
                 unit_image = unit.sprite.create_image('active')
-            topleft = (self.topleft[0] - 16 - 4 + 16 + left*self.option_length, self.topleft[1] + 2 + (top+1)*self.option_height - unit_image.get_height() + 8)
+            topleft = (self.topleft[0] - 4 + x_center + left*self.option_length, self.topleft[1] + 2 + (top+1)*self.option_height - unit_image.get_height() + 8)
             surf.blit(unit_image, topleft)
 
             # Blit name
             font = GC.FONT['text_white']
             if self.mode == 'position' and not unit.position:
                 font = GC.FONT['text_grey']
-            position = (self.topleft[0] + 20 + 1 + 16 + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)
+            position = (self.topleft[0] + 20 + 1 + 16 + x_center + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)
             font.blit(unit.name, surf, position)
 
         # Blit cursor
-        left = self.topleft[0] + 8 + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
+        left = self.topleft[0] + 8 + x_center + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
         top = self.topleft[1] + 4 + (self.currentSelection-self.scroll*self.units_per_row)//self.units_per_row*self.option_height + self.cursor_y_offset*8
         self.cursor_y_offset = 0 # Reset
         surf.blit(self.cursor, (left, top))
