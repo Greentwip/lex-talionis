@@ -1436,8 +1436,11 @@ class UnitSelectMenu(Counters.CursorControl):
 
             # Blit name
             font = GC.FONT['text_white']
-            if self.mode == 'position' and not unit.position:
-                font = GC.FONT['text_grey']
+            if self.mode == 'position':
+                if not unit.position:
+                    font = GC.FONT['text_grey']
+                elif unit.position and 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]:
+                    font = GC.FONT['text_green']  # Locked/Lord character
             position = (self.topleft[0] + 20 + 1 + 16 + x_center + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)
             font.blit(unit.name, surf, position)
 

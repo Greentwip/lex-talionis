@@ -145,7 +145,9 @@ class PrepPickUnitsState(StateMachine.State):
 
         if event == 'SELECT':
             selection = gameStateObj.activeMenu.getSelection()
-            if selection.position:
+            if selection.position and 'Formation' not in gameStateObj.map.tile_info_dict[selection.position]:
+                GC.SOUNDDICT['Select 4'].play()  # Locked/Lord Character
+            elif selection.position:
                 GC.SOUNDDICT['Select 1'].play()
                 selection.position = None
             else:
@@ -163,7 +165,7 @@ class PrepPickUnitsState(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        if gameStateObj.activeMenu:
+        if gameStateObj.activeMenu and gameStateObj.activeMenu.getSelection():
             MenuFunctions.drawUnitItems(surf, (4, 4 + 40), gameStateObj.activeMenu.getSelection(), include_top=True)
 
         # Draw Pick Units screen
@@ -389,7 +391,7 @@ class PrepItemsState(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        if gameStateObj.activeMenu:
+        if gameStateObj.activeMenu and gameStateObj.activeMenu.getSelection():
             MenuFunctions.drawUnitItems(surf, (6, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
         # Draw quick sort display
         surf.blit(self.quick_sort_disp, (GC.WINWIDTH//2 + 10, GC.WINHEIGHT//2 + 9))

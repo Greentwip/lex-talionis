@@ -17,21 +17,11 @@
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
+load_player_characters
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Ophie;None;None
-player;0;0;Prim;None;None
-player;0;0;Joel;None;None
-player;0;0;Nia;None;None
-player;0;0;Drake;None;None
-player;0;0;Althea;None;None
-player;0;0;Renae;None;None
-player;0;0;Theo;None;None
-player;0;0;Eliza;None;None
-player;0;0;Sam;None;None
-player;0;0;Coyote;None;None
-player;0;0;Kayla;None;None
+player;1;0;Ophie;3,17;None
 # Enemies
 # === Reinforcements ===
 # Player Characters
