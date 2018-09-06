@@ -1413,8 +1413,8 @@ class UnitSelectMenu(Counters.CursorControl):
         if self.highlight:
             highlightSurf = GC.IMAGESDICT['MenuHighlight']
             width = highlightSurf.get_width()
-            for slot in range((self.option_length-20)//width): # Gives me the amount of highlight needed
-                left = self.topleft[0] + 20 + self.currentSelection%self.units_per_row*self.option_length + slot*width 
+            for slot in range((self.option_length-4)//width): # Gives me the amount of highlight needed
+                left = self.topleft[0] + 20 + x_center + self.currentSelection%self.units_per_row*self.option_length + slot*width 
                 top = self.topleft[1] + (self.currentSelection-self.scroll*self.units_per_row)//self.units_per_row*self.option_height + 12
                 surf.blit(highlightSurf, (left, top))
         if self.draw_extra_marker:
