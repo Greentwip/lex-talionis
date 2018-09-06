@@ -433,11 +433,7 @@ class PrepItemsChoicesState(StateMachine.State):
     def can_use(self, item, gameStateObj):
         current_unit = gameStateObj.cursor.currentSelectedUnit
         if item.usable and item.booster:
-            if item.promotion:
-                if current_unit.can_promote_using(item, gameStateObj.metaDataObj):
-                    return True
-                return False
-            return True
+            return current_unit.can_use_booster(item, gameStateObj.metaDataObj)
         return False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):

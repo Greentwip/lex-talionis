@@ -716,6 +716,19 @@ class UnitObject(object):
         return self.level >= max_level//2 and len(unit_klass['turns_into']) >= 1 \
             and (self.klass in allowed_classes or 'All' in allowed_classes)
 
+    def can_use_booster(self, item, metaDataObj):
+        if item.permanent_stat_increase:
+            # Test whether the permanent stat increase would actually do anythin
+            current_stats = list(self.stats.values())
+            klass_max = metaDataObj['class_dict'][self.klass]['max']
+            stat_increase = item.permanent_stat_increase.stat_increase
+            test = [(klass_max[i] - current_stats[i].base_stat) > 0 for i in range(len(stat_increase)) if stat_increase[i] > 0]
+            return any(test)
+        elif item.promotion:
+            return self.can_promote_using(item, metaDataObj)
+        else:
+            return True
+
     def handle_booster(self, item, gameStateObj):
         # Handle uses
         if item.uses:

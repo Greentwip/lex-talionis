@@ -1068,7 +1068,7 @@ class ItemChildState(State):
                 use = False
             elif selection.c_uses and selection.c_uses.uses <= 0:
                 use = False
-            elif selection.promotion and not current_unit.can_promote_using(selection, metaDataObj):
+            elif selection.booster and not current_unit.can_use_booster(selection, metaDataObj):
                 use = False
             if use:
                 options.append(cf.WORDS['Use'])
