@@ -2381,7 +2381,11 @@ class PromotionChoiceState(State):
             anim.update()
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = State.draw(self, gameStateObj, metaDataObj)
+        # surf = State.draw(self, gameStateObj, metaDataObj)
+        surf = gameStateObj.generic_surf
+        if gameStateObj.background:
+            if gameStateObj.background.draw(surf):
+                gameStateObj.background = None
         # Anim
         top = 88
         surf.blit(self.left_platform, (GC.WINWIDTH // 2 - self.left_platform.get_width() + self.anim_offset + 52, top))
@@ -2564,7 +2568,11 @@ class PromotionState(State):
             self.current_anim.update()
 
     def draw(self, gameStateObj, metaDataObj):
-        surf = State.draw(self, gameStateObj, metaDataObj)
+        # surf = State.draw(self, gameStateObj, metaDataObj)
+        surf = gameStateObj.generic_surf
+        if gameStateObj.background:
+            if gameStateObj.background.draw(surf):
+                gameStateObj.background = None
 
         if self.darken_background or self.target_dark:
             bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - abs(int(self.darken_background * 12.5)))
@@ -2638,7 +2646,8 @@ class ItemGainState(State):
         # To handle promotion
         under_state = gameStateObj.stateMachine.get_under_state(self)
         if under_state and isinstance(under_state, ExpGainState) or isinstance(under_state, ItemGainState) \
-           or isinstance(under_state, CombatState) or isinstance(under_state, PromotionState):
+           or isinstance(under_state, CombatState) or isinstance(under_state, PromotionState) \
+           or isinstance(under_state, gameStateObj.stateMachine.all_states['prep_items_choices']):
             mapSurf = under_state.draw(gameStateObj, metaDataObj)
         # For Dialogue
         elif gameStateObj.message:

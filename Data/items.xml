@@ -1632,6 +1632,19 @@
         <desc>Permanently increases its user's strength by 2.</desc>   
     </item>
 
+    <item name="Guiding Ring">
+        <id>Guiding Ring</id>
+        <spritetype>Boosters</spritetype>
+        <spriteid>1</spriteid>       
+        <components>usable,uses,promotion,booster,beneficial</components>
+        
+        <promotion>Mage,Shaman,Cleric,Tactician</promotion>
+        <uses>1</uses>
+        <RNG>0</RNG>
+        <value>8000</value>
+        <desc>Promotes magic-using classes.</desc>   
+    </item>
+
     <item name="Mana Ring">
         <id>Mana Ring</id>
         <spritetype>Boosters</spritetype>

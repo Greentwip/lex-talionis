@@ -215,9 +215,9 @@
                 <skills>Prescience,Critical,fSpeed +2,fMaximum HP +5</skills>
             </unit>
             <unit name="Althea">
-                <level>15</level>
+                <level>9</level>
                 <exp>29</exp>
-                <items>Wind 10,Thunder 24,Fly 6,Vulnerary 3,Iron Lance 45</items>
+                <items>Wind 10,Thunder 24,Fly 6,Guiding Ring 1,Iron Lance 45</items>
                 <wexp>0,0,0,0,0,85,0</wexp>
                 <skills>Focus,Conductance,fMaximum HP +5,fMovement +1,Metamagic</skills>
             </unit>

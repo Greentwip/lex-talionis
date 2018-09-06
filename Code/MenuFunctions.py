@@ -1407,7 +1407,7 @@ class UnitSelectMenu(Counters.CursorControl):
 
     def draw(self, surf, gameStateObj):
         surf.blit(self.backsurf, self.topleft)
-        x_center = -8 if self.units_per_row == 2 else 0
+        x_center = -16 if self.units_per_row == 2 else 0
 
         # Blit background highlight
         if self.highlight:
@@ -1445,15 +1445,18 @@ class UnitSelectMenu(Counters.CursorControl):
             font.blit(unit.name, surf, position)
 
         # Blit cursor
-        left = self.topleft[0] + 8 + x_center + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
-        top = self.topleft[1] + 4 + (self.currentSelection-self.scroll*self.units_per_row)//self.units_per_row*self.option_height + self.cursor_y_offset*8
-        self.cursor_y_offset = 0 # Reset
-        surf.blit(self.cursor, (left, top))
+        self.draw_cursor(surf, x_center)
         if self.draw_extra_marker:
             self.draw_extra_cursor(surf)
 
         if len(self.options) > self.units_per_row*self.num_rows:
             self.scroll_bar.draw(surf, self.scroll, self.num_rows, len(self.options)//self.units_per_row + 1)
+
+    def draw_cursor(self, surf, x_center):
+        left = self.topleft[0] + 8 + x_center + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]
+        top = self.topleft[1] + 4 + (self.currentSelection-self.scroll*self.units_per_row)//self.units_per_row*self.option_height + self.cursor_y_offset*8
+        self.cursor_y_offset = 0 # Reset
+        surf.blit(self.cursor, (left, top))
 
     def set_extra_marker(self, selection):
         self.draw_extra_marker = selection

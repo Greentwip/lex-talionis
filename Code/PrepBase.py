@@ -113,8 +113,10 @@ class PrepPickUnitsState(StateMachine.State):
             gameStateObj.background = None
 
         if not self.started:
-            units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
-            units = sorted(units, key=lambda unit: unit.position, reverse=True)
+            player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
+            lord_units = [unit for unit in player_units if unit.position and 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]]
+            non_lord_units = [unit for unit in player_units if unit not in lord_units]
+            units = lord_units + sorted(non_lord_units, key=lambda unit: unit.position, reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 2, 6, (110, 24))
     
         if not gameStateObj.background:
@@ -171,8 +173,10 @@ class PrepPickUnitsState(StateMachine.State):
         # Draw Pick Units screen
         backSurf = MenuFunctions.CreateBaseMenuSurf((132, 24), 'WhiteMenuBackgroundOpaque')
         topleft = (110, 4)
-        num_units_map = len([unit for unit in gameStateObj.allunits if unit.position and unit.team == 'player'])
-        num_slots = len([value for position, value in gameStateObj.map.tile_info_dict.items() if 'Formation' in value])
+        player_units = [unit for unit in gameStateObj.allunits if unit.position and unit.team == 'player']
+        num_lords = len([unit for unit in player_units if 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]])
+        num_units_map = len(player_units)
+        num_slots = num_lords + len([value for position, value in gameStateObj.map.tile_info_dict.items() if 'Formation' in value])
         pick_string = ['Pick ', str(num_slots - num_units_map), ' units  ', str(num_units_map), '/', str(num_slots)]
         pick_font = ['text_white', 'text_blue', 'text_white', 'text_blue', 'text_white', 'text_blue']
         word_index = 8
@@ -180,6 +184,8 @@ class PrepPickUnitsState(StateMachine.State):
             GC.FONT[pick_font[index]].blit(word, backSurf, (word_index, 4))
             word_index += GC.FONT[pick_font[index]].size(word)[0]
         surf.blit(backSurf, topleft)
+
+        gameStateObj.activeMenu.draw_cursor(surf, -16)
 
         return surf
 
