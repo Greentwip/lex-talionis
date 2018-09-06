@@ -1,4 +1,95 @@
 <preload_level>
+    <level name="10">
+        <mode>Lunatic</mode>
+        <money>139</money>
+        <convoy>Angelic Robe 1,Mana Ring 1,Talisman 1,Mithril Mail 1,Speedwings 1,Energy Ring 1,Energy Ring 1,Barkskin 3,Talisman 1,Mithril Mail 1,Mana Ring 1,Gustblade 15,Angelic Robe 1,Adamant Lance 15,Disintegrate 3,Mithril Axe 19,Tomahawk 10,Vulnerary 3,Energy Ring 1,Secret Book 1,Great Sword 25,Javelin 20,Mithril Sword 20,Speedwings 1,Warp 3,Hex 4,Adamant Sword 15,Silence 4,Aether 11,Boltblade 25,Meteor 1,Superior Lance 8</convoy>
+        <units>
+            <unit name="Ophie">
+                <level>17</level>
+                <exp>21</exp>
+                <items>Iron Sword 41,Magebane Sword 9,Superior Edge 5,Boltblade 25,Elixir 3</items>
+                <wexp>93,0,0,0,0,0,0</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Prim">
+                <level>16</level>
+                <exp>27</exp>
+                <items>Mend 9,Physic 11,Flux 30,Glimmer 30,Restore 10</items>
+                <wexp>0,0,0,0,97,0,23</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Joel">
+                <level>14</level>
+                <exp>83</exp>
+                <items>Hand Axe 11,Great Axe 21,Elixir 1,Iron Axe 24,Superior Axe 10</items>
+                <wexp>0,0,84,20,0,0,0</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Nia">
+                <level>18</level>
+                <exp>7</exp>
+                <items>Yew Bow 13,Willow Bow 3,Oak Bow 18,Longbow 20,Vulnerary 3</items>
+                <wexp>0,0,0,108,0,0,0</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Althea">
+                <level>18</level>
+                <exp>99</exp>
+                <items>Blizzard 1,Wyrmsfire 9,Wind 6,Fire 29,Thunder 24</items>
+                <wexp>0,0,0,0,0,109,0</wexp>
+                <skills>Speed +2</skills>
+            </unit>
+            <unit name="Drake">
+                <level>13</level>
+                <exp>89</exp>
+                <items>Javelin 2,Short Spear 15,Great Lance 25,Iron Lance 44,Vulnerary 3</items>
+                <wexp>26,59,0,0,0,0,0</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Renae">
+                <level>13</level>
+                <exp>28</exp>
+                <items>Longbow 14,Steel Sword 29,Iron Sword 45,Flareblade 25,Prim's Charm --</items>
+                <wexp>51,0,0,17,0,0,0</wexp>
+                <skills>Underdog</skills>
+            </unit>
+            <unit name="Theo">
+                <level>13</level>
+                <exp>66</exp>
+                <items>Steel Lance 26,Slim Lance 35,Great Lance 24,Short Spear 6,Vulnerary 3</items>
+                <wexp>16,52,16,0,0,0,0</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Eliza">
+                <level>17</level>
+                <exp>78</exp>
+                <items>Short Spear 14,Javelin 18,Mithril Lance 13,Iron Lance 40,Vulnerary 3</items>
+                <wexp>0,79,0,0,0,0,0</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Sam">
+                <level>16</level>
+                <exp>0</exp>
+                <items>Refresh 2,Heal 28,Physic 7,Shine 19,Fortune 10</items>
+                <wexp>0,0,0,0,97,0,0</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Kayla">
+                <level>14</level>
+                <exp>78</exp>
+                <items>Scathe 6,Howl 5,Nyx 16,Vulnerary 2</items>
+                <wexp>0,0,0,0,0,0,87</wexp>
+                <skills></skills>
+            </unit>
+            <unit name="Coyote">
+                <level>14</level>
+                <exp>45</exp>
+                <items>Short Axe 12,Mithril Sword 16,Steel Axe 7,Iron Sword 41,Potion 3</items>
+                <wexp>67,0,23,0,0,0,0</wexp>
+                <skills></skills>
+            </unit>
+        </units>
+    </level>
     <level name="8">
         <mode>Lunatic</mode>
         <money>4767</money>
