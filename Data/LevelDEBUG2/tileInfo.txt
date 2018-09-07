@@ -1,0 +1,5 @@
+2,2:Village=Topleft
+4,12:Village=Bottom
+1,7:Village=Left
+4,2:Village=Topright
+7,8:Village=Right
