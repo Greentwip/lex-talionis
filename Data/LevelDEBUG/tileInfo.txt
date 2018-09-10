@@ -3,3 +3,4 @@
 1,7:Village=Left
 4,2:Village=Topright
 7,8:Village=Right
+6,3:HP=30

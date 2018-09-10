@@ -25,7 +25,6 @@ class MapObject(object):
 
         self._tiles = {} # The mechanical information about the tile organized by position
         self.tile_sprites = {} # The sprite information about the tile organized by position
-        self.opacity_map = [False for _ in range(self.width*self.height)]
         self.command_list = [] # The commands that have been acted upon the map by scripts
         self.escape_highlights = {}
         self.formation_highlights = {}
@@ -87,10 +86,6 @@ class MapObject(object):
                 else: # Never found terrain...
                     logger.error('Terrain matching colorkey %s never found.', cur)
         self.true_tiles = None  # Reset tiles
-        for x in range(offset[0], end_x):
-            end_y = offset[1] + len(colorKeyObj[x - offset[0]])
-            for y in range(offset[1], end_y):
-                self.opacity_map[x*self.height + y] = self.tiles[(x, y)]
 
     def area_replace(self, coord, image_filename, grid_manager):
         colorkey, width, height = self.build_color_key(self.loose_tile_sprites[image_filename])
@@ -319,7 +314,7 @@ class MapObject(object):
     def serialize(self):
         serial_dict = {}
         serial_dict['command_list'] = self.command_list
-        serial_dict['HP'] = self.hp.items()
+        serial_dict['HP'] = [(pos, hp.currenthp) for pos, hp in self.hp.items()]
         return serial_dict
 
     # === SCRIPT COMMANDS ===
@@ -335,6 +330,9 @@ class MapObject(object):
             # Add tile sprite to layer
             elif line[0] == 'layer_tile_sprite':
                 self.layer_tile_sprite(line)
+            # Add terrain to layer
+            elif line[0] == 'layer_terrain':
+                self.layer_terrain(line)
             # Show Layer
             elif line[0] == 'show_layer':
                 self.show_layer(line)
@@ -413,19 +411,22 @@ class MapObject(object):
         if len(line) > 4:
             self._layer_terrain(layer, line[4], coord)
 
-    def layer_terrain(self, line):
+    def layer_terrain(self, line, grid_manager=None):
         layer = int(line[1])
         coord = self.parse_pos(line[2])
         image_filename = line[3]
-        self._layer_terrain(layer, image_filename, coord)
+        self._layer_terrain(layer, image_filename, coord, grid_manager)
 
-    def _layer_terrain(self, layer, fn, coord):
-        new_terrain = TerrainLayerGroup(fn, coord, self)
+    def _layer_terrain(self, layer, fn, coord, grid_manager=None):
         while len(self.terrain_layers) <= layer:
-            self.terrain_layers.append(TerrainLayer())
-        self.terrain_layers[layer].append(new_terrain)
+            self.terrain_layers.append(TerrainLayer(self))
+        self.terrain_layers[layer].add(fn, coord)
+        if self.terrain_layers[layer].show:
+            self.true_tiles = None  # Reset tiles if we made changes while showing
+            if grid_manager:
+                self.handle_grid_manager_with_layer(layer, grid_manager)
 
-    def show_layer(self, line):
+    def show_layer(self, line, grid_manager=None):
         layer = int(line[1])
         # Image layer
         if len(self.layers) > layer:
@@ -443,8 +444,10 @@ class MapObject(object):
         if len(self.terrain_layers) > layer:
             self.terrain_layers[layer].show = True
             self.true_tiles = None  # Reset tiles
+            if grid_manager:
+                self.handle_grid_manager_with_layer(layer, grid_manager)
 
-    def hide_layer(self, line):
+    def hide_layer(self, line, grid_manager=None):
         layer = int(line[1])
         # Image layer
         if len(self.layers) > layer:
@@ -462,13 +465,35 @@ class MapObject(object):
         if len(self.terrain_layers) > layer:
             self.terrain_layers[layer].show = False
             self.true_tiles = None  # Reset tiles
+            if grid_manager:
+                self.handle_grid_manager_with_layer(layer, grid_manager)
+
+    def handle_grid_manager_with_layer(self, layer, grid_manager):
+        current_layer = self.terrain_layers[layer]
+        coords = current_layer._tiles.keys()
+        if current_layer.show:  # Determine if anything obstructs each coordinate
+            all_higher_coords = {l._tiles.keys() for l in self.terrain_layers[layer+1:] if l.show}
+            for coord in coords:
+                if coord not in all_higher_coords:  # Nothing's obstructing showing this
+                    grid_manager.update_tile(current_layer._tiles[coord])
+        else:  # Determine which tile should be shown
+            lower_terrain_layers = list(reversed(i for i in self.terrain_layers[:layer] if i.show))
+            for coord in coords:
+                for terrain_layer in lower_terrain_layers:  # Highest first
+                    if coord in terrain_layer._tiles:
+                        grid_manager.update_tile(terrain_layer._tiles[coord])
+                        break
+                else:  # Defaults to base level
+                    grid_manager.update_tile(self._tiles[coord])
 
     def clear_layer(self, num):
+        # Assumes layer is hidden!!!
         layer = int(num)
         if len(self.layers) > layer:
             self.layers[layer] = Layer()
         if len(self.terrain_layers) > layer:
-            self.terrain_layers[layer] = TerrainLayer()
+            self.terrain_layers[layer] = TerrainLayer(self)
+        self.true_tiles = None
 
     def replace_tile(self, line, grid_manager=None):
         coords = self.get_position(line[1])
@@ -476,9 +501,8 @@ class MapObject(object):
             self._tiles[coord] = self.get_tile_from_id(int(line[2]))
             self._tiles[coord].position = coord
         self.true_tiles = None  # Reset
-        for coord in coords:
-            self.opacity_map[coord[0] * self.height + coord[1]] = self.tiles[coord].opaque
-            if grid_manager:
+        if grid_manager:
+            for coord in coords:
                 grid_manager.update_tile(self.tiles[coord])
         return coords
 
@@ -585,6 +609,14 @@ class MapObject(object):
 
     tiles = property(get_tiles)
 
+    def get_opacity_map(self):
+        opacity_map = [False for _ in range(self.width*self.height)]
+        for coord, tile in self.tiles.items():
+            opacity_map[coord[0] * self.height + coord[1]] = tile.opaque
+        return opacity_map
+
+    opacity_map = property(get_opacity_map)
+
 # === GENERIC TILE SPRITE =====================================================
 class TileSprite(object):
     transition_speed = 5
@@ -679,33 +711,22 @@ class LayerSprite(object):
         surf.blit(self.image, pos)
 
 class TerrainLayer(object):
-    def __init__(self):
-        self.groups = []
+    def __init__(self, parent_map):
+        self.map_reference = parent_map
+        self._tiles = {}
         self.show = False
 
-    def append(self, obj):
-        self.groups.append(obj)
-
-    def __iter__(self):
-        return self.groups
-
     def overwrite(self, tiles):
-        for terrain_group in self.groups:
-            for position, tile in terrain_group._tiles.items():
-                tiles[position] = tile
+        for position, tile in self._tiles.items():
+            tiles[position] = tile
         return tiles
 
-class TerrainLayerGroup(object):
-    def __init__(self, image_name, position, parent_map):
-        self.image_name = image_name
-        self.position = position # True position
-        self.map_reference = parent_map
-        self.image = self.map_reference.loose_tile_sprites[image_name]
-        self._tiles = {}
-        color_key_obj, self.width, self.height = self.map_reference.build_color_key(self.image)
-        self.populate_tiles(color_key_obj)
+    def add(self, image_name, position):
+        image = self.map_reference.loose_tile_sprites[image_name]
+        color_key_obj, width, height = self.map_reference.build_color_key(image)
+        self.populate_tiles(color_key_obj, position)
 
-    def populate_tiles(self, color_key_obj):
+    def populate_tiles(self, color_key_obj, offset):
         for x in range(len(color_key_obj)):
             for y in range(len(color_key_obj[x])):
                 cur = color_key_obj[x][y]
@@ -713,9 +734,10 @@ class TerrainLayerGroup(object):
                     colorKey = terrain.find('color').text.split(',')
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
-                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
+                        pos = (offset[0] + x, offset[1] + y)
+                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, pos,
                                               terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text], self.map_reference)
-                        self._tiles[(self.position[0] + x, self.position[1] + y)] = new_tile
+                        self._tiles[pos] = new_tile
                         break
                 else: # Never found terrain...
                     logger.error('Terrain matching colorkey %s never found.', cur)
@@ -758,13 +780,13 @@ class TileObject(object):
     def getMainWeapon(self):
         return None
 
-    def get_currenthp(self):
+    def get_hp(self):
         if self.position in self.map_ref.hp:
             return self.map_ref.hp[self.position].currenthp
         else:
             return 0
 
-    def set_currenthp(self, value):
+    def set_hp(self, value):
         if self.position in self.map_ref.hp:
             self.map_ref.hp[self.position].set_hp(value)
 
@@ -772,7 +794,7 @@ class TileObject(object):
         if self.position in self.map_ref.hp:
             self.map_ref.hp[self.position].change_hp(dhp)
 
-    currenthp = property(get_currenthp, set_currenthp)
+    currenthp = property(get_hp, set_hp)
 
 # === Tile HP Object =====================================================
 class TileHP(object):

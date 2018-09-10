@@ -668,26 +668,29 @@ class Dialogue_Scene(object):
             gameStateObj.map.layer_tile_sprite(line)
             gameStateObj.map.command_list.append(line)
         elif line[0] == 'layer_terrain':
-            gameStateObj.map.layer_terrain(line)
+            gameStateObj.map.layer_terrain(line, gameStateObj.grid_manager)
             gameStateObj.map.command_list.append(line)
+            self.reset_boundary_manager = True
         elif line[0] == 'show_layer':
             if len(line) < 3:
                 line.append('fade')
-            gameStateObj.map.show_layer(line)
+            gameStateObj.map.show_layer(line, gameStateObj.grid_manager)
             if 'fade' in line:
                 line.remove('fade')
             elif 'destroy' in line:
                 line.remove('destroy')
             gameStateObj.map.command_list.append(line)
+            self.reset_boundary_manager = True
         elif line[0] == 'hide_layer':
             if len(line) < 3:
                 line.append('fade')
-            gameStateObj.map.hide_layer(line)
+            gameStateObj.map.hide_layer(line, gameStateObj.grid_manager)
             if 'fade' in line:
                 line.remove('fade')
             elif 'destroy' in line:
                 line.remove('destroy')
             gameStateObj.map.command_list.append(line)
+            self.reset_boundary_manager = True
         elif line[0] == 'clear_layer':
             gameStateObj.map.clear_layer(line[1])
             gameStateObj.map.command_list.append(line)
