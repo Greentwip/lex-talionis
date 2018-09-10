@@ -1,13 +1,11 @@
-name;DEBUG
-prep_flag;1
-prep_music;Fire Treasure
+name;Chapter 6: Blood of Pride
+prep_flag;0
 pick_flag;1
 base_flag;0
 market_flag;0
-transition_flag;0
-display_name;Survive Ambush,{6 - gameStateObj.turncount} turns left
-win_condition;Reach turn 6
-loss_condition;Sam dies
-player_phase_music;Brave Story 61
-enemy_phase_music;In the Midst
-weather;Light
+transition_flag;1
+display_name;Hit Switches
+win_condition;Hit Switches
+loss_condition;Lyn dies
+player_phase_music;Distant Roads
+enemy_phase_music;Shadow of the Enemy

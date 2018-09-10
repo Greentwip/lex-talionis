@@ -667,6 +667,9 @@ class Dialogue_Scene(object):
         elif line[0] == 'layer_tile_sprite':
             gameStateObj.map.layer_tile_sprite(line)
             gameStateObj.map.command_list.append(line)
+        elif line[0] == 'layer_terrain':
+            gameStateObj.map.layer_terrain(line)
+            gameStateObj.map.command_list.append(line)
         elif line[0] == 'show_layer':
             if len(line) < 3:
                 line.append('fade')

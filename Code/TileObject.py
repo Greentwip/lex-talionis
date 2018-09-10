@@ -17,20 +17,20 @@ import logging
 logger = logging.getLogger(__name__)
 
 DESTRUCTION_ANIM_TIME = 500
-NUM_LAYERS = 4
 
 # === GENERIC MAP OBJECT
 class MapObject(object):
     def __init__(self, mapfilename, tilefilename, levelfolder, weather=None):
         colorkey, self.width, self.height = self.build_color_key(Engine.image_load(tilefilename, convert=True))
 
-        self.tiles = {} # The mechanical information about the tile organized by position
+        self._tiles = {} # The mechanical information about the tile organized by position
         self.tile_sprites = {} # The sprite information about the tile organized by position
         self.opacity_map = [False for _ in range(self.width*self.height)]
         self.command_list = [] # The commands that have been acted upon the map by scripts
         self.escape_highlights = {}
         self.formation_highlights = {}
         self.origin = None
+        self.hp = {}
 
         self.levelfolder = levelfolder
         self.mapfilename = mapfilename
@@ -42,17 +42,21 @@ class MapObject(object):
                 self.add_weather(name)
         self.status_effects = set() # Status ids, not the statuses themselves
 
+        # Layers
+        self.layers = []
+        self.terrain_layers = []
+        self.true_tiles = {} # Tiles with layers
+
         # Populate tiles
         self.populate_tiles(colorkey)
 
         self.sprites_loaded_flag = False
         self.loadSprites()
-        # Layers
-        self.layers = [Layer() for _ in range(NUM_LAYERS)]
 
         self.animations = []
+        self.expected_coord = None
 
-    def build_color_key(self, tiledata, orig=True):
+    def build_color_key(self, tiledata):
         width = tiledata.get_width()
         height = tiledata.get_height()
         mapObj = [] # Array of map data
@@ -67,8 +71,10 @@ class MapObject(object):
         return mapObj, width, height
 
     def populate_tiles(self, colorKeyObj, offset=(0, 0)):
-        for x in range(offset[0], offset[0]+len(colorKeyObj)):
-            for y in range(offset[1], offset[1]+len(colorKeyObj[x-offset[0]])):
+        end_x = offset[0] + len(colorKeyObj)
+        for x in range(offset[0], end_x):
+            end_y = offset[1] + len(colorKeyObj[x - offset[0]])
+            for y in range(offset[1], end_y):
                 cur = colorKeyObj[x-offset[0]][y-offset[1]]
                 for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
                     colorKey = terrain.find('color').text.split(',')
@@ -76,23 +82,27 @@ class MapObject(object):
                         # Instantiate
                         new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
                                               terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text])
-                        self.tiles[(x, y)] = new_tile
-                        self.opacity_map[x*self.height + y] = new_tile.opaque
-                        if 'HP' in self.tile_info_dict[(x, y)]: # Tile hp is needed so apply that here
-                            self.tiles[(x, y)].give_hp_stat(self.tile_info_dict[(x, y)]['HP'])
+                        self._tiles[(x, y)] = new_tile
                         break
                 else: # Never found terrain...
                     logger.error('Terrain matching colorkey %s never found.', cur)
+        self.true_tiles = None  # Reset tiles
+        for x in range(offset[0], end_x):
+            end_y = offset[1] + len(colorKeyObj[x - offset[0]])
+            for y in range(offset[1], end_y):
+                self.opacity_map[x*self.height + y] = self.tiles[(x, y)]
 
-    def area_replace(self, coord, image_filename, grid_manager=None):
+    def area_replace(self, coord, image_filename, grid_manager):
         colorkey, width, height = self.build_color_key(self.loose_tile_sprites[image_filename])
         self.populate_tiles(colorkey, coord)
-        if grid_manager:
-            # Remember to update the grid also
-            for x in range(coord[0], coord[0]+width):
-                for y in range(coord[1], coord[1]+height):
-                    grid_manager.update_tile(self.tiles[(x, y)])
+        self.update_grid_manager(coord, width, height, grid_manager)
         return width, height
+
+    def update_grid_manager(self, coord, width, height, grid_manager):
+        # Remember to update the grid also
+        for x in range(coord[0], coord[0] + width):
+            for y in range(coord[1], coord[1] + height):
+                grid_manager.update_tile(self.tiles[(x, y)])
 
     def change_tile_sprites(self, coord, image_filename, transition=None):
         image = self.loose_tile_sprites[image_filename]
@@ -185,28 +195,6 @@ class MapObject(object):
                     for status in value['Status']:
                         status.loadSprites()
 
-    def removeSprites(self):
-        self.sprites_loaded_flag = False
-        for position, tile in self.tiles.items():
-            tile.removeSprites()
-        self.map_image = None
-        self.loose_tile_sprites = {}
-        self.autotiles = []
-        self.layers = [Layer() for _ in range(NUM_LAYERS)]
-        # Clear tile_sprites...
-        for position, value in self.tile_sprites.items():
-            value.removeSprites()
-        # Clear sprites in escape_highlights
-        self.escape_highlights = {}
-        self.formation_highlights = {}
-        # Remove associated status sprites if necessary
-        for position, value in self.tile_info_dict.items():
-            if 'Status' in value:
-                for status in value['Status']:
-                    status.removeSprites()
-        # Remove weather
-        self.weather = []
-
     def destroy(self, tile, gameStateObj):
         if 'Destructible' in self.tile_info_dict[tile.position]:
             destroy_index = self.tile_info_dict[tile.position]['Destructible']
@@ -297,6 +285,8 @@ class MapObject(object):
                     self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
                 elif property_name == "Formation":
                     self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
+                elif property_name == "HP":
+                    self.hp[coord] = TileHP(int(property_value))
                 self.tile_info_dict[coord][property_name] = property_value
         else:
             self.tile_info_dict[coord] = {'Status': []} # Empty Dictionary
@@ -329,7 +319,7 @@ class MapObject(object):
     def serialize(self):
         serial_dict = {}
         serial_dict['command_list'] = self.command_list
-        serial_dict['HP'] = [(tile.position, tile.currenthp) for position, tile in self.tiles.items() if tile.tilehp]
+        serial_dict['HP'] = self.hp.items()
         return serial_dict
 
     # === SCRIPT COMMANDS ===
@@ -417,47 +407,79 @@ class MapObject(object):
         coord = self.parse_pos(line[2])
         image_filename = line[3]
         new_sprite = LayerSprite(image_filename, coord, self)
+        while len(self.layers) <= layer:
+            self.layers.append(Layer())
         self.layers[layer].append(new_sprite)
+        if len(line) > 4:
+            self._layer_terrain(layer, line[4], coord)
+
+    def layer_terrain(self, line):
+        layer = int(line[1])
+        coord = self.parse_pos(line[2])
+        image_filename = line[3]
+        self._layer_terrain(layer, image_filename, coord)
+
+    def _layer_terrain(self, layer, fn, coord):
+        new_terrain = TerrainLayerGroup(fn, coord, self)
+        while len(self.terrain_layers) <= layer:
+            self.terrain_layers.append(TerrainLayer())
+        self.terrain_layers[layer].append(new_terrain)
 
     def show_layer(self, line):
         layer = int(line[1])
-        transition = line[2] if len(line) > 2 else None
-        if transition == 'fade' or transition == 'destroy':
-            self.layers[layer].show = True
-            if transition == 'destroy':
-                for sprite in self.layers[layer]:
-                    x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
-        else:
-            self.layers[layer].show = True
-            self.layers[layer].fade = 100          
+        # Image layer
+        if len(self.layers) > layer:
+            transition = line[2] if len(line) > 2 else None
+            if transition == 'fade' or transition == 'destroy':
+                self.layers[layer].show = True
+                if transition == 'destroy':
+                    for sprite in self.layers[layer]:
+                        x, y = sprite.position
+                        self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
+            else:
+                self.layers[layer].show = True
+                self.layers[layer].fade = 100          
+        # Terrain layer
+        if len(self.terrain_layers) > layer:
+            self.terrain_layers[layer].show = True
+            self.true_tiles = None  # Reset tiles
 
     def hide_layer(self, line):
         layer = int(line[1])
-        transition = line[2] if len(line) > 2 else None
-        if transition == 'fade' or transition == 'destroy':
-            self.layers[layer].show = False
-            if transition == 'destroy':
-                for sprite in self.layers[layer]:
-                    x, y = sprite.position
-                    self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
-        else:
-            self.layers[layer].show = False
-            self.layers[layer].fade = 0
+        # Image layer
+        if len(self.layers) > layer:
+            transition = line[2] if len(line) > 2 else None
+            if transition == 'fade' or transition == 'destroy':
+                self.layers[layer].show = False
+                if transition == 'destroy':
+                    for sprite in self.layers[layer]:
+                        x, y = sprite.position
+                        self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
+            else:
+                self.layers[layer].show = False
+                self.layers[layer].fade = 0
+        # Terrain layer
+        if len(self.terrain_layers) > layer:
+            self.terrain_layers[layer].show = False
+            self.true_tiles = None  # Reset tiles
 
     def clear_layer(self, num):
-        self.layers[int(num)] = Layer()
+        layer = int(num)
+        if len(self.layers) > layer:
+            self.layers[layer] = Layer()
+        if len(self.terrain_layers) > layer:
+            self.terrain_layers[layer] = TerrainLayer()
 
     def replace_tile(self, line, grid_manager=None):
         coords = self.get_position(line[1])
         for coord in coords:
-            self.tiles[coord] = self.get_tile_from_id(int(line[2]))
-            self.tiles[coord].position = coord
+            self._tiles[coord] = self.get_tile_from_id(int(line[2]))
+            self._tiles[coord].position = coord
+        self.true_tiles = None  # Reset
+        for coord in coords:
             self.opacity_map[coord[0] * self.height + coord[1]] = self.tiles[coord].opaque
             if grid_manager:
                 grid_manager.update_tile(self.tiles[coord])
-            if 'HP' in self.tile_info_dict[coord]: # Tile hp is needed so apply that here
-                self.tiles[coord].give_hp_stat(self.tile_info_dict[coord]['HP'])
         return coords
 
     def mass_replace_tile(self, line, grid_manager=None):
@@ -518,6 +540,50 @@ class MapObject(object):
 
     def remove_global_status(self, s_id):
         self.status_effects.discard(s_id)
+
+    def create_display(self, coord, gameStateObj):
+        if coord in self.hp:
+            self.expected_coord = None  # Let HP tiles change all the time
+            back_surf = GC.IMAGESDICT['DestructibleTileInfo'].copy()
+            at_icon = GC.ICONDICT['Attackable_Terrain_Icon']
+            back_surf.blit(at_icon, (7, back_surf.get_height() - 7 - at_icon.get_height()))
+            v = str(self.hp[coord].currenthp)
+            GC.FONT['small_white'].blit(v, back_surf, (back_surf.get_width() - GC.FONT['small_white'].size(v)[0] - 9, 24))
+        else:
+            self.expected_coord = coord
+            back_surf = GC.IMAGESDICT['QuickTileInfo'].copy()
+            if self.tiles[coord].mcost != 'Wall':
+                # Blit DEF Text
+                def_text = str(self.tiles[coord].stats['DEF'])
+                position = back_surf.get_width() - GC.FONT['small_white'].size(def_text)[0] - 3, 17
+                GC.FONT['small_white'].blit(def_text, back_surf, position)
+                # Blit AVO Text
+                avo_text = str(self.tiles[coord].AVO)
+                position = back_surf.get_width() - GC.FONT['small_white'].size(avo_text)[0] - 3, 25
+                GC.FONT['small_white'].blit(avo_text, back_surf, position)
+        name = self.tiles[coord].name
+        pos = (back_surf.get_width()//2 - GC.FONT['text_white'].size(name)[0]//2, 22 - GC.FONT['text_white'].size(name)[1])
+        GC.FONT['text_white'].blit(name, back_surf, pos)
+
+        self.display_surface = back_surf
+
+    def getDisplay(self, coord, gameStateObj):
+        if coord != self.expected_coord:
+            self.create_display(coord, gameStateObj)
+        return self.display_surface
+
+    def get_tiles(self):
+        if not self.true_tiles:
+            # Base layer
+            tiles = self._tiles.copy()
+            # Extra layers
+            for terrain_layer in self.terrain_layers:
+                if terrain_layer.show:
+                    tiles = terrain_layer.overwrite(tiles)
+            self.true_tiles = tiles
+        return self.true_tiles
+
+    tiles = property(get_tiles)
 
 # === GENERIC TILE SPRITE =====================================================
 class TileSprite(object):
@@ -612,6 +678,48 @@ class LayerSprite(object):
         pos = (self.position[0] * GC.TILEWIDTH, self.position[1] * GC.TILEHEIGHT)
         surf.blit(self.image, pos)
 
+class TerrainLayer(object):
+    def __init__(self):
+        self.groups = []
+        self.show = False
+
+    def append(self, obj):
+        self.groups.append(obj)
+
+    def __iter__(self):
+        return self.groups
+
+    def overwrite(self, tiles):
+        for terrain_group in self.groups:
+            for position, tile in terrain_group._tiles.items():
+                tiles[position] = tile
+        return tiles
+
+class TerrainLayerGroup(object):
+    def __init__(self, image_name, position, parent_map):
+        self.image_name = image_name
+        self.position = position # True position
+        self.map_reference = parent_map
+        self.image = self.map_reference.loose_tile_sprites[image_name]
+        self._tiles = {}
+        color_key_obj, self.width, self.height = self.map_reference.build_color_key(self.image)
+        self.populate_tiles(color_key_obj)
+
+    def populate_tiles(self, color_key_obj):
+        for x in range(len(color_key_obj)):
+            for y in range(len(color_key_obj[x])):
+                cur = color_key_obj[x][y]
+                for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
+                    colorKey = terrain.find('color').text.split(',')
+                    if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
+                        # Instantiate
+                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
+                                              terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text])
+                        self._tiles[(self.position[0] + x, self.position[1] + y)] = new_tile
+                        break
+                else: # Never found terrain...
+                    logger.error('Terrain matching colorkey %s never found.', cur)
+
 # === GENERIC TILE OBJECT =======================================
 class TileObject(object):
     def __init__(self, name, minimap, platform, position, mcost, stats):
@@ -633,30 +741,7 @@ class TileObject(object):
         else:
             self.opaque = False
 
-        self.tilehp = False
-        self.stats['HP'] = self.currenthp = 0
         self.isDying = False # Whether I have been destroyed
-
-        self.removeSprites()
-
-    def removeSprites(self):
-        # Display surface
-        self.display_surface = None
-        # List of things that could conceivable change without just replacing the tile.
-        self.expected_tilehp = None
-        self.expected_currenthp = None
-
-    def give_hp_stat(self, hp):
-        self.tilehp = True
-        self.stats['HP'] = self.currenthp = int(hp)
-
-    def change_hp(self, dhp):
-        self.currenthp += int(dhp)
-        self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))
-
-    def set_hp(self, hp):
-        self.currenthp = int(hp)
-        self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))
 
     def get_mcost(self, unit):
         if isinstance(unit, int):
@@ -670,29 +755,15 @@ class TileObject(object):
     def getMainWeapon(self):
         return None
 
-    def create_display(self, gameStateObj):
-        if self.tilehp:
-            back_surf = GC.IMAGESDICT['DestructibleTileInfo'].copy()
-            at_icon = GC.ICONDICT['Attackable_Terrain_Icon']
-            back_surf.blit(at_icon, (7, back_surf.get_height() - 7 - at_icon.get_height()))
-            GC.FONT['small_white'].blit(str(self.currenthp), back_surf, (back_surf.get_width() - GC.FONT['small_white'].size(str(self.currenthp))[0] - 9, 24))
-        else:
-            back_surf = GC.IMAGESDICT['QuickTileInfo'].copy()
-            if self.mcost != 'Wall':
-                # Blit DEF Text
-                position = back_surf.get_width() - GC.FONT['small_white'].size(str(self.stats['DEF']))[0] - 3, 17
-                GC.FONT['small_white'].blit(str(self.stats['DEF']), back_surf, position)
-                # Blit AVO Text
-                position = back_surf.get_width() - GC.FONT['small_white'].size(str(self.AVO))[0] - 3, 25
-                GC.FONT['small_white'].blit(str(self.AVO), back_surf, position)
-        pos = (back_surf.get_width()//2 - GC.FONT['text_white'].size(self.name)[0]//2, 22 - GC.FONT['text_white'].size(self.name)[1])
-        GC.FONT['text_white'].blit(self.name, back_surf, pos)
-        self.display_surface = back_surf
+# === Tile HP Object =====================================================
+class TileHP(object):
+    def __init__(self, hp):
+        self.stats['HP'] = self.currenthp = int(hp)
 
-    def getDisplay(self, gameStateObj):
-        if self.currenthp != self.expected_currenthp or self.tilehp != self.expected_tilehp:
-            self.create_display(gameStateObj)
-            self.expected_currenthp = self.currenthp
-            self.expected_tilehp = self.tilehp
+    def change_hp(self, dhp):
+        self.currenthp += int(dhp)
+        self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))
 
-        return self.display_surface
+    def set_hp(self, hp):
+        self.currenthp = int(hp)
+        self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))

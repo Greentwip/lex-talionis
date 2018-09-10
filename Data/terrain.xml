@@ -596,4 +596,16 @@
         
         <mtype>Wall</mtype>
     </terrain>
+
+    <terrain name="Roof">
+        <id>60</id>
+        <color>128,32,32</color>
+        <minimap>Wall</minimap>
+        <platform>Wall</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+
+        <mtype>Wall</mtype>
+    </terrain>
 </terrain_data>

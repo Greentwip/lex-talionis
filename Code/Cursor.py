@@ -221,14 +221,14 @@ class Cursor(object):
         lord = [unit for unit in player_units if 'Lord' in unit.tags]
         if force:
             if lord:
-                gameStateObj.cursor.forcePosition(lord[0].position, gameStateObj)
+                self.forcePosition(lord[0].position, gameStateObj)
             elif player_units:
-                gameStateObj.cursor.forcePosition(player_units[0].position, gameStateObj)
+                self.forcePosition(player_units[0].position, gameStateObj)
         else:
             if lord:
-                gameStateObj.cursor.setPosition(lord[0].position, gameStateObj)
+                self.setPosition(lord[0].position, gameStateObj)
             elif player_units:
-                gameStateObj.cursor.setPosition(player_units[0].position, gameStateObj)
+                self.setPosition(player_units[0].position, gameStateObj)
 
     def formatSprite(self, sprite):
         # Sprites are in 64 x 64 boxes
@@ -256,9 +256,8 @@ class Cursor(object):
 
         # Tile Info Handling
         if gameStateObj.stateMachine.getState() in legal_states and cf.OPTIONS['Show Terrain']:
-            gameStateObj.cursor.currentHoveredTile = gameStateObj.map.tiles[gameStateObj.cursor.position]
-            if gameStateObj.cursor.currentHoveredTile:
-                self.tile_info_disp = gameStateObj.cursor.currentHoveredTile.getDisplay(gameStateObj)
+            self.tile_info_disp = gameStateObj.map.getDisplay(self.position, gameStateObj)
+            if self.tile_info_disp:
                 self.tile_info_offset = min(self.tile_info_disp.get_width(), self.tile_info_offset)
             self.tile_info_offset -= 20
             self.tile_info_offset = max(0, self.tile_info_offset)

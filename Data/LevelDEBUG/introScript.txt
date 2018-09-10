@@ -1,17 +1,22 @@
-b;Town
-t;2
-inc_game_constant;money;5000
-set_game_constant;Convoy
-u;Renae;Left
-bop;Renae
-s;Renae;You don't have to tell me twice!{w}{br}Catch you all later!{w};auto
-choice;Renae;Punch Renae?;Yes,No,Maybe
-if;gameStateObj.game_constants['Renae'] == 'Yes'
-    bop;Renae
-    s;Renae;Ow!
-end
-r;Renae
-battle_save
-t;1
-remove_background
-t;2
+# introScript for Chapter 6: Blood of Pride
+# Make sure the boss has the boss symbol
+add_tag;Boss_1;Boss
+# Set up tile layers. We are going to use five layers to set this up.
+# They are drawn in ascending order, so the last one will be on top.
+layer_tile_sprite;0;11,0;BossRoom
+layer_tile_sprite;1;10,3;Middle
+layer_tile_sprite;2;15,0;Bottomright
+layer_tile_sprite;3;15,6;Bottomright
+layer_tile_sprite;4;7,0;Topleft
+# Also set up terrain
+layer_terrain;0;11,0;SmallRoof
+layer_terrain;1;10,3;MiddleRoof
+layer_terrain;2;15,0;SmallRoof
+layer_terrain;3;15,6;SmallRoof
+layer_terrain;4;7,0;SmallRoof
+# Show all layers
+show_layer;0
+show_layer;1
+show_layer;2
+show_layer;3
+show_layer;4

@@ -1,5 +1,8 @@
-2,2:Village=Topleft
-4,12:Village=Bottom
-1,7:Village=Left
-4,2:Village=Topright
-7,8:Village=Right
+4,15:Formation=0
+4,17:Formation=0
+4,13:Formation=0
+3,16:Formation=0
+2,13:Formation=0
+2,17:Formation=0
+2,15:Formation=0
+3,14:Formation=0

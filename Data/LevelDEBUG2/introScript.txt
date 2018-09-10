@@ -1,0 +1,17 @@
+b;Town
+t;2
+inc_game_constant;money;5000
+set_game_constant;Convoy
+u;Renae;Left
+bop;Renae
+s;Renae;You don't have to tell me twice!{w}{br}Catch you all later!{w};auto
+choice;Renae;Punch Renae?;Yes,No,Maybe
+if;gameStateObj.game_constants['Renae'] == 'Yes'
+    bop;Renae
+    s;Renae;Ow!
+end
+r;Renae
+battle_save
+t;1
+remove_background
+t;2
