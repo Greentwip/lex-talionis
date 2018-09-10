@@ -81,7 +81,7 @@ class MapObject(object):
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
                         new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
-                                              terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text])
+                                              terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text], self)
                         self._tiles[(x, y)] = new_tile
                         break
                 else: # Never found terrain...
@@ -235,7 +235,7 @@ class MapObject(object):
             if tile_id == terrain.find('id').text or tile_id == int(terrain.find('id').text):
                 tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text,
                                   None, terrain.find('mtype').text,
-                                  [terrain.find('DEF').text, terrain.find('AVO').text])
+                                  [terrain.find('DEF').text, terrain.find('AVO').text], self)
                 return tile
         else:
             logger.error('Could not find tile matching id: %s', tile_id)
@@ -714,7 +714,7 @@ class TerrainLayerGroup(object):
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
                         new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
-                                              terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text])
+                                              terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text], self.map_reference)
                         self._tiles[(self.position[0] + x, self.position[1] + y)] = new_tile
                         break
                 else: # Never found terrain...
@@ -722,7 +722,8 @@ class TerrainLayerGroup(object):
 
 # === GENERIC TILE OBJECT =======================================
 class TileObject(object):
-    def __init__(self, name, minimap, platform, position, mcost, stats):
+    def __init__(self, name, minimap, platform, position, mcost, stats, map_ref):
+        self.map_ref = map_ref
         DEF, AVO = stats 
         self.name = name
         self.minimap = minimap
@@ -743,6 +744,8 @@ class TileObject(object):
 
         self.isDying = False # Whether I have been destroyed
 
+        self.stats['HP'] = self.currenthp
+
     def get_mcost(self, unit):
         if isinstance(unit, int):
             return GC.MCOSTDATA[self.mcost][unit]
@@ -755,9 +758,26 @@ class TileObject(object):
     def getMainWeapon(self):
         return None
 
+    def get_currenthp(self):
+        if self.position in self.map_ref.hp:
+            return self.map_ref.hp[self.position].currenthp
+        else:
+            return 0
+
+    def set_currenthp(self, value):
+        if self.position in self.map_ref.hp:
+            self.map_ref.hp[self.position].set_hp(value)
+
+    def change_hp(self, dhp):
+        if self.position in self.map_ref.hp:
+            self.map_ref.hp[self.position].change_hp(dhp)
+
+    currenthp = property(get_currenthp, set_currenthp)
+
 # === Tile HP Object =====================================================
 class TileHP(object):
     def __init__(self, hp):
+        self.stats = {}
         self.stats['HP'] = self.currenthp = int(hp)
 
     def change_hp(self, dhp):
