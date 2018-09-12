@@ -17,31 +17,13 @@
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
-faction;Lyn's Legion;Lyn's Legion;Resistance;A member of Lyn's Legion
-faction;Assassin;Assassin;Bandit;An assassin employed by Lord Lundgren
+load_player_characters
+faction;Althea;Althea;Resistance;Nope
+faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;MyrmidonF;5;Iron Sword,Vulnerary;4,7;None;Lyn's Legion
-player;0;0;Cavalier;5;Iron Sword,Iron Lance;5,10;None;Lyn's Legion
-player;0;0;Cavalier;4;Iron Sword,Iron Lance;6,9;None;Lyn's Legion
-player;0;0;SkirmisherF;7;Iron Lance,Slim Lance;3,10;None;Lyn's Legion
-player;0;0;Fighter;6;Iron Axe,Vulnerary;3,9;None;Lyn's Legion
-player;0;0;ClericF;3;Heal;4,9;None;Lyn's Legion
-player;0;0;Mage;4;Fire;6,11;None;Lyn's Legion
-player;0;0;Archer;2;Willow Bow;6,10;None;Lyn's Legion
-player;0;0;Paladin;7;Javelin;6,6;None;Lyn's Legion
+player;1;0;Ophie;3,17;None
 # Enemies
-# Generics
-enemy;0;0;Mercenary;1;Iron Sword;11,11;Attack;Lyn's Legion
-enemy;0;0;Mercenary;1;Iron Sword;7,13;Attack;Lyn's Legion
-enemy;0;0;Soldier;1;Iron Lance;16,10;Attack;Assassin
 # === Reinforcements ===
 # Player Characters
-# Other Characters
-other;0;Matthew_1;Thief;3;Iron Sword;4,3;None;Lyn's Legion
 # Enemies
-# Generics
-enemy;0;Bottom_1;Soldier;1;Iron Lance;16,7;SoftGuard;Assassin
-enemy;0;Top_1;Soldier;1;Iron Lance;16,4;SoftGuard;Assassin
-enemy;0;Boss_1;Knight;5;Iron Lance,Javelin;12,1;HardGuard;Assassin
-enemy;0;Boss_2;Archer;1;Willow Bow;12,2;SoftGuard;Assassin
 # === Triggers ===

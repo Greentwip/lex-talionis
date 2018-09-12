@@ -1,6 +1,6 @@
 # Level 4 Switch Script
 # Universal things
-inc_game_constant;switches
+inc_level_constant;switches
 set_origin
 set_tile_info;o0,0
 change_tile_sprite;o0,0;pulled_switch
@@ -38,7 +38,7 @@ elif;self.name == '3'
 	replace_tile;10,3;9
 	switch_pulled_banner
 # Check if we've pulled all three switches
-if;gameStateObj.game_constants['switches'] >= 3
+if;gameStateObj.level_constants['switches'] >= 3
 	# Open Gates
 	set_cursor;10,8
 	wait;500

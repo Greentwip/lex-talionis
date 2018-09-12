@@ -1,8 +1,0 @@
-4,15:Formation=0
-4,17:Formation=0
-4,13:Formation=0
-3,16:Formation=0
-2,13:Formation=0
-2,17:Formation=0
-2,15:Formation=0
-3,14:Formation=0
