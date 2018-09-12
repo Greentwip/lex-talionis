@@ -272,13 +272,13 @@ class Dialogue_Scene(object):
 
         # === WORLD MAP
         elif line[0] == 'wm_move':
-            new_position = self.parse_pos(line[1])
+            new_position = self.parse_pos(line[1], gameStateObj)
             self.background.move(new_position)
         elif line[0] == 'wm_qmove':
-            new_position = self.parse_pos(line[1])
+            new_position = self.parse_pos(line[1], gameStateObj)
             self.background.quick_move(new_position)
         elif line[0] == 'wm_load_sprite' or line[0] == 'wm_load' or line[0] == 'wm_add':
-            starting_position = self.parse_pos(line[2])
+            starting_position = self.parse_pos(line[2], gameStateObj)
             if line[0] == 'wm_add':
                 starting_position = (starting_position[0]*16, starting_position[1]*16)
             if 'custom' in line[1]:
@@ -297,11 +297,11 @@ class Dialogue_Scene(object):
         elif line[0] == 'wm_remove_sprite' or line[0] == 'wm_remove':
             self.background.remove_sprite(line[1])
         elif line[0] == 'wm_move_sprite':
-            new_position = self.parse_pos(line[2])
+            new_position = self.parse_pos(line[2], gameStateObj)
             self.background.move_sprite(line[1], new_position)
         elif line[0] == 'wm_label':
             name = line[1]
-            position = self.parse_pos(line[2])
+            position = self.parse_pos(line[2], gameStateObj)
             self.background.add_label(name, position)
         elif line[0] == 'wm_label_clear':
             self.background.clear_labels()
@@ -311,7 +311,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'wm_highlight_clear':
             self.background.clear_highlights()
         elif line[0] == 'wm_cursor':
-            pos = self.parse_pos(line[1])
+            pos = self.parse_pos(line[1], gameStateObj)
             self.background.create_cursor(pos)
         elif line[0] == 'wm_remove_cursor':
             self.background.remove_cursor()
@@ -364,7 +364,7 @@ class Dialogue_Scene(object):
                     current_x = unit_sprite.position[0]
                     new_position = (new_x - current_x, 0)
                 else:
-                    new_position = self.parse_pos(line[2])
+                    new_position = self.parse_pos(line[2], gameStateObj)
                 unit_sprite.move(new_position)
                 # Wait after unit sprite is moved to allow time to transition
                 if line[0] == 'move_sprite':
@@ -467,7 +467,7 @@ class Dialogue_Scene(object):
         # destroy a destructible object
         elif line[0] == 'destroy':
             if len(line) > 1:
-                pos = self.parse_pos(line[1])
+                pos = self.parse_pos(line[1], gameStateObj)
             else:
                 pos = self.tile_pos
             tile_info = gameStateObj.map.tile_info_dict[pos]
@@ -547,12 +547,8 @@ class Dialogue_Scene(object):
 
         # === HANDLE CURSOR
         elif line[0] == 'set_cursor':
-            if line[1].startswith('o') and "," in line[1]:
-                coord = self.parse_pos(line[1][1:])
-                if gameStateObj.map.origin:
-                    coord = coord[0] + gameStateObj.map.origin[0], coord[1] + gameStateObj.map.origin[1]
-            elif "," in line[1]: # If is a coordinate
-                coord = self.parse_pos(line[1])
+            if "," in line[1]: # If is a coordinate
+                coord = self.parse_pos(line[1], gameStateObj)
             elif line[1] == 'next' and self.next_position:
                 coord = self.next_position
             elif line[1] == '{unit}' and self.unit:
@@ -577,8 +573,8 @@ class Dialogue_Scene(object):
             else:
                 gameStateObj.cursor.drawState = 0
         elif line[0] == 'set_camera':
-            pos1 = self.parse_pos(line[1])
-            pos2 = self.parse_pos(line[2])
+            pos1 = self.parse_pos(line[1], gameStateObj)
+            pos2 = self.parse_pos(line[2], gameStateObj)
             gameStateObj.cameraOffset.center2(pos1, pos2)
             if 'immediate' not in line and not self.do_skip:
                 gameStateObj.stateMachine.changeState('move_camera')      
@@ -591,7 +587,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'fake_cursor':
             coords = line[1:]
             for text_coord in coords:
-                coord = self.parse_pos(text_coord)
+                coord = self.parse_pos(text_coord, gameStateObj)
                 gameStateObj.fake_cursors.append(Cursor.Cursor('Cursor', coord, fake=True))
         elif line[0] == 'remove_fake_cursors':
             gameStateObj.remove_fake_cursors()
@@ -646,8 +642,8 @@ class Dialogue_Scene(object):
         # === HANDLE TILE CHANGES -- These get put in the command list
         elif line[0] == 'set_origin':
             if len(line) > 1:
-                gameStateObj.map.origin = self.parse_pos(line[1])
-                line = [line[0], self.parse_pos(line[1])]
+                gameStateObj.map.origin = self.parse_pos(line[1], gameStateObj)
+                line = [line[0], self.parse_pos(line[1], gameStateObj)]
             else:
                 gameStateObj.map.origin = self.tile_pos
                 line.append(self.tile_pos)
@@ -848,23 +844,23 @@ class Dialogue_Scene(object):
         
         # === CHANGING UNITS
         elif line[0] == 'convert':
-            unit_specifier = self.get_id(line[1])
+            unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.changeTeams(line[2], gameStateObj)
         elif line[0] == 'change_class':
-            unit_specifier = self.get_id(line[1])
+            unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.changeClass(line[2], gameStateObj)
         elif line[0] == 'change_ai':
-            unit_specifier = self.get_id(line[1])
+            unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.ai_descriptor = line[2]
                     unit.get_ai(line[2])
         elif line[0] == 'add_tag':
-            unit_specifier = self.get_id(line[1])
+            unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     unit.tags.add(line[2])
@@ -1176,7 +1172,7 @@ class Dialogue_Scene(object):
             new_unitLine = unitLine[:]
             new_unitLine.insert(4, create)
             unit = SaveLoad.create_unit(new_unitLine, gameStateObj.allunits, gameStateObj.factions, gameStateObj.allreinforcements, metaDataObj, gameStateObj)
-            position = self.parse_pos(unitLine[5])
+            position = self.parse_pos(unitLine[5], gameStateObj)
         else:
             context = gameStateObj.allreinforcements.get(which_unit)
             if not context:
@@ -1205,7 +1201,7 @@ class Dialogue_Scene(object):
             new_pos = [self.next_position]
         # If coord, use coord
         elif ',' in new_pos:
-            new_pos = self.get_position(new_pos)
+            new_pos = self.get_position(new_pos, gameStateObj)
         # If name, then we want to find a point adjacent to that characters position
         else:
             new_char = gameStateObj.get_unit_from_id(new_pos)
@@ -1252,7 +1248,7 @@ class Dialogue_Scene(object):
         elif isinstance(which_unit, int):
             unit = gameStateObj.get_unit_from_id(which_unit)
         elif ',' in which_unit:
-            unit = gameStateObj.get_unit_from_pos(self.parse_pos(which_unit))
+            unit = gameStateObj.get_unit_from_pos(self.parse_pos(which_unit, gameStateObj))
         else:
             unit = gameStateObj.get_unit(which_unit)
         if not unit:
@@ -1278,7 +1274,7 @@ class Dialogue_Scene(object):
             new_pos = [unit.previous_position]
         # If coord, use coord
         elif ',' in new_pos:
-            new_pos = self.get_position(new_pos)
+            new_pos = self.get_position(new_pos, gameStateObj)
         # If name, then we want to find a point adjacent to that characters position
         else:
             new_pos = [gameStateObj.get_unit_from_id(new_pos).position]
@@ -1317,7 +1313,7 @@ class Dialogue_Scene(object):
         if which_unit == '{unit}':
             unit = self.unit
         elif ',' in which_unit:
-            unit = gameStateObj.get_unit_from_pos(self.parse_pos(which_unit))
+            unit = gameStateObj.get_unit_from_pos(self.parse_pos(which_unit, gameStateObj))
         else:
             unit = gameStateObj.get_unit(which_unit)
         if not unit:
@@ -1345,7 +1341,7 @@ class Dialogue_Scene(object):
 
     def interact_unit(self, gameStateObj, attacker, defender, event_combat=True):
         if ',' in attacker:
-            attacker = gameStateObj.get_unit_from_pos(self.parse_pos(attacker))
+            attacker = gameStateObj.get_unit_from_pos(self.parse_pos(attacker, gameStateObj))
         else:
             attacker = gameStateObj.get_unit(attacker)
         if not attacker:
@@ -1353,7 +1349,7 @@ class Dialogue_Scene(object):
             return
 
         if ',' in defender:
-            def_pos = self.parse_pos(defender)
+            def_pos = self.parse_pos(defender, gameStateObj)
         else:
             defender = gameStateObj.get_unit(defender)
             if not defender:
@@ -1381,7 +1377,7 @@ class Dialogue_Scene(object):
             new_pos = self.get_rein_position(new_pos[1:], gameStateObj)
         # If coord, use coord
         elif ',' in new_pos:
-            new_pos = self.get_position(new_pos)
+            new_pos = self.get_position(new_pos, gameStateObj)
         # If name, then we want to find a point adjacent to that characters position
         else:
             if new_pos in gameStateObj.allreinforcements:
@@ -1441,17 +1437,21 @@ class Dialogue_Scene(object):
                             return check_pos
             r += 1
 
-    def get_id(self, spec):
+    def get_id(self, spec, gameStateObj):
         if "," in spec: # If is a coordinate
-            return self.parse_pos(spec)
+            return self.parse_pos(spec, gameStateObj)
         else:
             return spec
 
-    def parse_pos(self, pos):
+    def parse_pos(self, pos, gameStateObj):
+        if pos.startswith('o'):
+            coord = [int(num) for num in pos[1:].split(',')]
+            if gameStateObj.map.origin:
+                return (coord[0] + gameStateObj.map.origin[0], coord[1] + gameStateObj.map.origin[1])
         return tuple([int(num) for num in pos.split(',')])
 
-    def get_position(self, pos_line):
-        position_list = [self.parse_pos(coord) for coord in pos_line.split('.')]
+    def get_position(self, pos_line, gameStateObj):
+        position_list = [self.parse_pos(coord, gameStateObj) for coord in pos_line.split('.')]
         return position_list
 
     def get_rein_position(self, pos_line, gameStateObj):

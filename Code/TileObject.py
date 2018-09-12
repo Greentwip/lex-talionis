@@ -44,7 +44,8 @@ class MapObject(object):
         # Layers
         self.layers = []
         self.terrain_layers = []
-        self.true_tiles = {} # Tiles with layers
+        self.true_tiles = None # Tiles with layers
+        self.true_opacity_map = None
 
         # Populate tiles
         self.populate_tiles(colorkey)
@@ -86,6 +87,7 @@ class MapObject(object):
                 else: # Never found terrain...
                     logger.error('Terrain matching colorkey %s never found.', cur)
         self.true_tiles = None  # Reset tiles
+        self.true_opacity_map = None
 
     def area_replace(self, coord, image_filename, grid_manager):
         colorkey, width, height = self.build_color_key(self.loose_tile_sprites[image_filename])
@@ -423,6 +425,7 @@ class MapObject(object):
         self.terrain_layers[layer].add(fn, coord)
         if self.terrain_layers[layer].show:
             self.true_tiles = None  # Reset tiles if we made changes while showing
+            self.true_opacity_map = None
             if grid_manager:
                 self.handle_grid_manager_with_layer(layer, grid_manager)
 
@@ -444,6 +447,7 @@ class MapObject(object):
         if len(self.terrain_layers) > layer:
             self.terrain_layers[layer].show = True
             self.true_tiles = None  # Reset tiles
+            self.true_opacity_map = None
             if grid_manager:
                 self.handle_grid_manager_with_layer(layer, grid_manager)
 
@@ -465,6 +469,7 @@ class MapObject(object):
         if len(self.terrain_layers) > layer:
             self.terrain_layers[layer].show = False
             self.true_tiles = None  # Reset tiles
+            self.true_opacity_map = None
             if grid_manager:
                 self.handle_grid_manager_with_layer(layer, grid_manager)
 
@@ -472,19 +477,21 @@ class MapObject(object):
         current_layer = self.terrain_layers[layer]
         coords = current_layer._tiles.keys()
         if current_layer.show:  # Determine if anything obstructs each coordinate
-            all_higher_coords = {l._tiles.keys() for l in self.terrain_layers[layer+1:] if l.show}
+            all_higher_coords = {coord for l in self.terrain_layers[layer+1:] for coord in l._tiles.keys() if l.show}
             for coord in coords:
                 if coord not in all_higher_coords:  # Nothing's obstructing showing this
                     grid_manager.update_tile(current_layer._tiles[coord])
         else:  # Determine which tile should be shown
-            lower_terrain_layers = list(reversed(i for i in self.terrain_layers[:layer] if i.show))
+            lower_terrain_layers = list(reversed([i for i in self.terrain_layers[:layer] if i.show]))
+            all_higher_coords = {coord for l in self.terrain_layers[layer+1:] for coord in l._tiles.keys() if l.show}
             for coord in coords:
-                for terrain_layer in lower_terrain_layers:  # Highest first
-                    if coord in terrain_layer._tiles:
-                        grid_manager.update_tile(terrain_layer._tiles[coord])
-                        break
-                else:  # Defaults to base level
-                    grid_manager.update_tile(self._tiles[coord])
+                if coord not in all_higher_coords:  # Nothing's obstructing showing a lower level
+                    for terrain_layer in lower_terrain_layers:  # Highest first
+                        if coord in terrain_layer._tiles:
+                            grid_manager.update_tile(terrain_layer._tiles[coord])
+                            break
+                    else:  # Defaults to base level
+                        grid_manager.update_tile(self._tiles[coord])
 
     def clear_layer(self, num):
         # Assumes layer is hidden!!!
@@ -494,6 +501,7 @@ class MapObject(object):
         if len(self.terrain_layers) > layer:
             self.terrain_layers[layer] = TerrainLayer(self)
         self.true_tiles = None
+        self.true_opacity_map = None
 
     def replace_tile(self, line, grid_manager=None):
         coords = self.get_position(line[1])
@@ -501,6 +509,7 @@ class MapObject(object):
             self._tiles[coord] = self.get_tile_from_id(int(line[2]))
             self._tiles[coord].position = coord
         self.true_tiles = None  # Reset
+        self.true_opacity_map = None
         if grid_manager:
             for coord in coords:
                 grid_manager.update_tile(self.tiles[coord])
@@ -610,10 +619,12 @@ class MapObject(object):
     tiles = property(get_tiles)
 
     def get_opacity_map(self):
-        opacity_map = [False for _ in range(self.width*self.height)]
-        for coord, tile in self.tiles.items():
-            opacity_map[coord[0] * self.height + coord[1]] = tile.opaque
-        return opacity_map
+        if not self.true_opacity_map:
+            opacity_map = [False for _ in range(self.width*self.height)]
+            for coord, tile in self.tiles.items():
+                opacity_map[coord[0] * self.height + coord[1]] = tile.opaque
+            self.true_opacity_map = opacity_map
+        return self.true_opacity_map
 
     opacity_map = property(get_opacity_map)
 

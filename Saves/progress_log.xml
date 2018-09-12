@@ -89,3 +89,19 @@
 		</unit>
 	</units>
 </level>
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<money>0</money>
+	<convoy></convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<money>0</money>
+	<convoy></convoy>
+	<units>
+	</units>
+</level>
+
