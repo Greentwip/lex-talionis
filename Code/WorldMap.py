@@ -55,8 +55,8 @@ class WorldMapBackground(object):
     def clear_labels(self):
         self.wm_labels = []
 
-    def add_highlight(self, sprite):
-        self.wm_highlights.append(WMHighlight(sprite))
+    def add_highlight(self, sprite, position):
+        self.wm_highlights.append(WMHighlight(sprite, position))
 
     def clear_highlights(self):
         for highlight in self.wm_highlights:
@@ -76,16 +76,16 @@ class WorldMapBackground(object):
             print('Error! ', name, ' not in self.wm_sprites')
 
     def quick_move(self, new_pos):
-        self.x = self.x + new_pos[0]
-        self.y = self.y + new_pos[1]
+        self.x += new_pos[0]
+        self.y += new_pos[1]
 
         self.x, self.y = self.bound(self.x, self.y)
 
     def move(self, new_pos):
         self.old_x = self.x
         self.old_y = self.y
-        self.target_x = self.target_x + new_pos[0]
-        self.target_y = self.target_y + new_pos[1]
+        self.target_x = self.x + new_pos[0]
+        self.target_y = self.y + new_pos[1]
         self.start_time = Engine.get_time()
         self.easing_flag = True
 
@@ -151,8 +151,9 @@ class WMLabel(object):
         self.font.blit(self.name, surf, self.position)
 
 class WMHighlight(object):
-    def __init__(self, sprite):
+    def __init__(self, sprite, position):
         self.sprite = sprite
+        self.position = position
         self.trans_value = 0
         self.trans_dir = True
 
@@ -181,7 +182,7 @@ class WMHighlight(object):
     def draw(self, surf):
         self.update()
         image = Image_Modification.flickerImageTranslucent(Engine.copy_surface(self.sprite), self.trans_value)
-        surf.blit(image, (0, 0))
+        surf.blit(image, self.position)
 
 class WMSprite(object):
     def __init__(self, klass, gender, team, position):

@@ -281,23 +281,23 @@ class Dialogue_Scene(object):
             starting_position = self.parse_pos(line[2], gameStateObj)
             if line[0] == 'wm_add':
                 starting_position = (starting_position[0]*16, starting_position[1]*16)
-            if 'custom' in line[1]:
-                klass, gender, team = line[3:6]
+            for unit in gameStateObj.allunits:
+                if unit.name == line[1]:
+                    klass = unit.klass
+                    gender = 'M' if unit.gender < 5 else 'F'
+                    team = unit.team
+                    break
             else:
-                for unit in gameStateObj.allunits:
-                    if unit.name == line[1]:
-                        klass = unit.klass
-                        gender = 'M' if unit.gender < 5 else 'F'
-                        team = unit.team
-                        break
-                else:
-                    logger.warning("Couldn't find unit matching line: %s", line)
-                    return
+                klass, gender, team = line[3:6]
             self.background.add_sprite(line[1], klass, gender, team, starting_position)
         elif line[0] == 'wm_remove_sprite' or line[0] == 'wm_remove':
             self.background.remove_sprite(line[1])
         elif line[0] == 'wm_move_sprite':
             new_position = self.parse_pos(line[2], gameStateObj)
+            self.background.move_sprite(line[1], new_position)
+        elif line[0] == 'wm_move_unit':
+            new_position = self.parse_pos(line[2], gameStateObj)
+            new_position = (new_position[0]*16, new_position[1]*16)
             self.background.move_sprite(line[1], new_position)
         elif line[0] == 'wm_label':
             name = line[1]
@@ -306,8 +306,11 @@ class Dialogue_Scene(object):
         elif line[0] == 'wm_label_clear':
             self.background.clear_labels()
         elif line[0] == 'wm_highlight':
-            name = line[1]
-            self.background.add_highlight(GC.IMAGESDICT['Highlight' + name])
+            if len(line) > 2:
+                new_position = self.parse_pos(line[2], gameStateObj)
+            else:
+                new_position = (0, 0)
+            self.background.add_highlight(GC.IMAGESDICT[line[1]], new_position)
         elif line[0] == 'wm_highlight_clear':
             self.background.clear_highlights()
         elif line[0] == 'wm_cursor':
