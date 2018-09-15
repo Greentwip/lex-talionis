@@ -6,3 +6,4 @@
 2,17:Formation=0
 2,15:Formation=0
 3,14:Formation=0
+2,16:HP=3;Destructible=1

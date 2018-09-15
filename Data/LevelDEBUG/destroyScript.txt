@@ -1,8 +1,2 @@
-lose_game
-if;self.name == '0'
-    set_cursor;0,0;force_hold
-    wait;500
-    change_tile_sprite;0,0;Door;destroy
-    wait;2000
-    wait;500
-end
+set_origin
+set_tile_info;o0,0

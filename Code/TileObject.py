@@ -286,6 +286,8 @@ class MapObject(object):
                     self.hp[coord] = TileHP(int(property_value))
                 self.tile_info_dict[coord][property_name] = property_value
         else:
+            if coord in self.hp:
+                del self.hp[coord]
             self.tile_info_dict[coord] = {'Status': []} # Empty Dictionary
 
     def update(self, gameStateObj):
