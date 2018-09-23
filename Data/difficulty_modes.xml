@@ -50,16 +50,16 @@
         <tutorial>0</tutorial>
 
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <player_growths>5,10,5,15,5,0,15,0,0,0</player_growths>
-        <enemy_growths>5,15,15,20,30,0,30,15,0,0</enemy_growths>
+        <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
+        <enemy_growths>0,0,0,0,0,0,0,0,0,0</enemy_growths>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
-        <enemy_bases>0,0,1,0,0,0,0,0,0,0</enemy_bases>
+        <enemy_bases>0,0,0,0,0,0,0,0,0,0</enemy_bases>
 
-        <autolevel_enemies>1 + game_constants['level']//2</autolevel_enemies>
+        <autolevel_enemies>0</autolevel_enemies>
         <autolevel_players>0</autolevel_players>
 
-        <truelevel_enemies>game_constants['level']//5</truelevel_enemies>
+        <truelevel_enemies>0</truelevel_enemies>
     </difficulty>
 
 </mode_catalog>

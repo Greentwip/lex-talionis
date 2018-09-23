@@ -105,3 +105,95 @@
 	</units>
 </level>
 
+<level name="9">
+	<mode>Lunatic</mode>
+	<money>4767</money>
+	<convoy>Angelic Robe 1,Mana Ring 1,Skeleton Key 1,Talisman 1,Magebane Sword 15,Mithril Mail 1,Speedwings 1,Disintegrate 3,Energy Ring 1,Howl 10,Mend 5,Energy Ring 1,Iron Lance 9,Javelin 7,Slim Lance 17,Skeleton Key 1,Rapier 14,Fire 4,Great Lance 25,Heal 30,Iron Axe 27,Fire 30,Short Axe 15,Short Spear 15,Great Lance 23,Mithril Sword 19,Physic 15,Wyrmsfire 10,Vulnerary 3,Hex 5,Great Axe 23,Mithril Axe 20,Blizzard 2,Refresh 10</convoy>
+	<units>
+		<unit name="Ophie">
+			<level>14</level>
+			<exp>63</exp>
+			<items>Iron Sword 7,Steel Sword 4,Great Sword 25,Gustblade 20,Potion 2</items>
+			<wexp>82,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>12</level>
+			<exp>7</exp>
+			<items>Shine Ward 18,Glimmer Ward 28,Mend 14,Physic 12,Heal 4</items>
+			<wexp>0,0,0,0,81,0,16</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Joel">
+			<level>13</level>
+			<exp>1</exp>
+			<items>Hatchet 14,Steel Axe 12,Longbow 18,Potion 1,Hand Axe 12</items>
+			<wexp>0,0,78,16,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Nia">
+			<level>14</level>
+			<exp>12</exp>
+			<items>Willow Bow 24,Yew Bow 18,Longbow 19,Oak Bow 23,Elixir 2</items>
+			<wexp>0,0,0,88,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Althea">
+			<level>15</level>
+			<exp>29</exp>
+			<items>Wind Ward 10,Thunder Ward 24,Fly 6,Vulnerary 3,Iron Lance 45</items>
+			<wexp>0,0,0,0,0,85,0</wexp>
+			<skills>Speed +2</skills>
+		</unit>
+		<unit name="Drake">
+			<level>12</level>
+			<exp>74</exp>
+			<items>Great Lance 24,Iron Lance 36,Vulnerary 3,Vulnerary 3</items>
+			<wexp>25,57,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Renae">
+			<level>9</level>
+			<exp>71</exp>
+			<items>Iron Sword 41,Steel Sword 26,Flareblade 2,Rapier 20,Tomahawk 10</items>
+			<wexp>43,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Theo">
+			<level>10</level>
+			<exp>7</exp>
+			<items>Javelin 19,Steel Lance 28,Iron Lance 41,Short Spear 11</items>
+			<wexp>0,44,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Eliza">
+			<level>12</level>
+			<exp>74</exp>
+			<items>Mithril Lance 18,Slim Lance 25,Javelin 18,Short Spear 13,Prim's Charm --</items>
+			<wexp>0,61,0,0,0,0,0</wexp>
+			<skills>Underdog</skills>
+		</unit>
+		<unit name="Sam">
+			<level>12</level>
+			<exp>82</exp>
+			<items>Mend 5,Glimmer Ward 12,Shine Ward 4,Fortune 8,Restore 10</items>
+			<wexp>0,0,0,0,77,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Kayla">
+			<level>13</level>
+			<exp>10</exp>
+			<items>Nyx Ward 17,Scathe 3,Flux Ward 11,Vulnerary 3,Barkskin 3</items>
+			<wexp>0,0,0,0,0,0,75</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Coyote">
+			<level>11</level>
+			<exp>47</exp>
+			<items>Iron Sword 43,Rapier 20,Master Edge 6,Vulnerary 3,Spiritbane 3</items>
+			<wexp>63,0,16,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+
