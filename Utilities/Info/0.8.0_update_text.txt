@@ -1,0 +1,104 @@
+The Level Editor Update
+
+Version 0.8 of The Lion Throne is out now. The OP has been updated with the download link. Also, you can download it here (TODO link).
+
+What's New?
+
+Level Editor and Tutorial
+
+## Screenshot of the level editor in action
+
+Yes, it's finally here folks. The fruit of nearly nine months of labor -- my baby, the Level Editor for the Lex Talionis Engine.
+
+You can find a tutorial on how to use the editor here: lex-talionis-wiki. It should have everything you need to get your first level set-up and running.
+
+You will not need to know how to code AT ALL to use this tutorial, in fact we will never touch the codebase -- just follow the directions and you'll be well on your way in no time. If you have any questions, feel free to PM me. I welcome questions!
+
+In fact, some people have already started using it for their projects -- I know of two projects in the works myself, and with the Level Editor and Tutorial's official release, I hope to hear of more.
+
+Writing and testing the Level Editor and Tutorial took up the bulk of my time these past months, but there have been a few more changes. 
+
+Custom Combat Animations
+
+## Best 2 combat animations I got
+
+Critical animations for all default classes now available
+
+Regular animations for Sentinel, Halberdier, Skirmisher, Bowsassin and Female Soldier added
+
+Two New Difficulties
+
+## Screenshots of the Mode menu
+
+Lunatic Mode:
+
+# Screenshot of Warp-sniping a boss
+
+Have you ever wanted to distinguish yourself from among the horde of casuals who consider themselves Fire Emblem players. Have you ever wanted to lose -- a lot. over and over and over? Well have I got the mode for you!
+
+Lunatic mode (like other Fire Emblem hard modes before it) rapidly ups the difficulty. But your own characters bring better stats and new weapons to the fight as well (Rescue and Warp are available only to those playing on Lunatic mode) And trust me you're going to need it. I only managed to beat it on Lunatic Casual, but I'm sure someone is hardcore enough to try besting Lunatic Classic (god bless you)
+
+Grandmaster Mode:
+
+# Screenshot of Grandmaster Mode
+
+Hate missing? Hate RNG? Want to truly prove your LTC skills? Welcome to Grandmaster mode, where only the greatest tacticians will triumph. Instead of missing an attack, the attack will instead do damage modified by its hit chance. So a 50% 10 damage attack will always do 5 damage in this mode, instead of flipping a coin for 0 or 10 damage.
+
+### And like >100 minor changes to the Lex Talionis Engine, generally to make creating your own custom levels easier.
+
+Major Feature Updates:
+
+Full Combat Animations:
+
+Animation option in the Options Menu now works (can change between Always, Your Turn, Combat Only, and Never for Full Animations).
+You can press whatever your AUX key is mapped to (default: a) to toggle Full Animation.
+You can press whatever your START key is mapped to (default: s) to speed up Full Animation.
+Missing several animations:
+Spoiler
+Spell Animations:
+Restore
+Evil Eye
+Shadowshot
+Demon Surge
+
+Unit Animations:
+Female Soldier
+Male Halberdier (Lance and Axe)
+Female Halberdier (Lance and Axe)
+Skirmisher (Lance)
+Sentinel (Axe)
+
+
+Better debugging information:
+
+Game now pauses for 20 seconds after crashing. Take a screenshot!
+Detailed error logs are output to the terminal and saved in  debug.log.1.
+Unit Menu (relatively untested since I never use it) (but its there)
+
+
+
+Promotion Animations
+
+Also added in promotion choices (so you can select between two different options a la Sacred Stones). This is not utilized by The Lion Throne
+Spoiler
+Gameplay Balancing
+
+Slight nerf to Halberdier promotion gains (Eliza has been buffed slightly to make up for this)
+Halberdier loses access to Axes
+General gains access to Axes
+Chapter 6 has been made slightly easier
+Sandblast ​​​​​​'s number of uses lowered from 10 to 5
+End-game adamant weapons have been buffed (-2 weight, +10 accuracy)
+Casual mode now allows you to make a Battle Save at any time
+
+A few caveats before you venture forth:
+
+As always, I am only one man and cannot find every bug in this behemoth of a codebase (and its only gotten bigger!). So if you encounter a bug, please send me a PM or comment here with the full error message. Also attach your Saves/debug.log.1 if you can, since it has useful information that will help me find the bug and squash it.
+Since I made some changes to streamline the level creation process, the format of the save files changed once again. You will not be able to use your old version 0.7 save files in this version.  There's nothing groundbreaking in this update for the base game, so if you're still playing The Lion Throne's Hard mode, just keep going. You can upgrade to this version layer if you want to try out anything new.
+What's Next?
+
+I'm sorry to say, but this is my last content update for The Lion Throne. I've accomplished everything I set out to do with this project. I'll still be around handling any bug fixes, but there will be no more core gameplay updates.
+
+But fret not -- I  will still be working on improving the Lex Talionis Engine. I hope that you will see another project by me in the future. I've been mulling over something spicy, and I hope to be able to present it to you all when it's ready.
+
+Thanks to everyone who played it. I hope you enjoyed playing The Lion Throne as much as I enjoyed making it. And I hope others find the engine useful to them in their own pursuits.

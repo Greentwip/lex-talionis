@@ -14,6 +14,7 @@ Audio/
 # Builds
 build/
 dist/
+LevelEditor/
 *.exe
 
 # Windows image file caches

@@ -99,6 +99,7 @@ class UnitSprite(object):
                         # gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.leave(gameStateObj)
                         self.unit.position = self.next_position
+                        self.unit.previous_position = self.next_position
                         self.unit.arrive(gameStateObj)
                         gameStateObj.cursor.setPosition(self.unit.position, gameStateObj)
                         # gameStateObj.stateMachine.changeState('move_camera')

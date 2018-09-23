@@ -1036,7 +1036,7 @@
         <targets>Ally</targets>
         <movement>Warp,0</movement>
 
-        <extra_select>1,Tile</extra_select>
+        <extra_select>1,TileNoUnit</extra_select>
 
         <map_hit_color>-248,248,248</map_hit_color>
     </item>
@@ -1490,7 +1490,7 @@
         <targets>Unit</targets>
         <movement>Warp,0</movement>
 
-        <extra_select>1-10,Tile</extra_select>
+        <extra_select>1-10,TileNoUnit</extra_select>
 
         <map_hit_color>128,-248,248</map_hit_color>
     </item>

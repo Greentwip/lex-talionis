@@ -150,7 +150,7 @@ class Animator(object):
                               self.pose])
         return image_name
 
-animator = Animator('Sentinel', 0, 'GenericBlue', DummyItem('Axe'))
+animator = Animator('Halberdier', 5, 'Eliza', DummyItem('Lance'))
 animator.start_anim('Attack')
 filenames = []
 while not animator.anim.done():

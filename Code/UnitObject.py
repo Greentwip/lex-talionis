@@ -219,13 +219,17 @@ class UnitObject(object):
         GC.FONT['text_white'].blit(self.name, surf, position)
         # Blit enemy name
         size = GC.FONT['text_white'].size(enemyunit.name)
-        y_pos = 84 if cf.CONSTANTS['crit'] else 68
+        y_pos = 84
+        if not cf.CONSTANTS['crit']: y_pos -= 16
+        if gameStateObj.mode['rng'] == 'hybrid': y_pos -= 16
         position = 26 - size[0]//2, y_pos
         GC.FONT['text_white'].blit(enemyunit.name, surf, position)
         # Blit name of enemy weapon
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
             size = GC.FONT['text_white'].size(enemyunit.getMainWeapon().name)
-            y_pos = 100 if cf.CONSTANTS['crit'] else 84
+            y_pos = 100
+            if not cf.CONSTANTS['crit']: y_pos -= 16
+            if gameStateObj.mode['rng'] == 'hybrid': y_pos -= 16
             position = 32 - size[0]//2, y_pos
             GC.FONT['text_white'].blit(enemyunit.getMainWeapon().name, surf, position)
         # Blit self HP
@@ -305,7 +309,10 @@ class UnitObject(object):
                 white = True
             elif any([status.weakness and status.weakness.damage_type == enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
                 white = True
-            enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, topleft[1] + 67 + (16 if cf.CONSTANTS['crit'] else 0)), white)
+            y_pos = topleft[1] + 83
+            if not cf.CONSTANTS['crit']: y_pos -= 16
+            if gameStateObj.mode['rng'] == 'hybrid': y_pos -= 16
+            enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, y_pos), white)
 
         # Blit advantage -- This must be blit every frame
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
@@ -316,10 +323,13 @@ class UnitObject(object):
                 surf.blit(UpArrow, (topleft[0] + 13, topleft[1] + 8))
             elif advantage < 0:
                 surf.blit(DownArrow, (topleft[0] + 13, topleft[1] + 8))
+            y_pos = topleft[1] + 89
+            if not cf.CONSTANTS['crit']: y_pos -= 16
+            if gameStateObj.mode['rng'] == 'hybrid': y_pos -= 16
             if e_advantage > 0:
-                surf.blit(UpArrow, (topleft[0] + 61, topleft[1] + 73 + (16 if cf.CONSTANTS['crit'] else 0)))
+                surf.blit(UpArrow, (topleft[0] + 61, y_pos))
             elif e_advantage < 0:
-                surf.blit(DownArrow, (topleft[0] + 61, topleft[1] + 73 + (16 if cf.CONSTANTS['crit'] else 0)))
+                surf.blit(DownArrow, (topleft[0] + 61, y_pos))
                 
         # Blit doubling -- This gets blit every frame
         if isinstance(enemyunit, UnitObject):
@@ -427,7 +437,7 @@ class UnitObject(object):
 
             return BGSurf
 
-        elif self.getMainSpell().spell.targets == 'Tile':
+        elif self.getMainSpell().spell.targets.startswith('Tile'):
             """if self.getMainSpell().damage is None and self.getMainSpell().hit is None:
                 return None"""
             height = 24
@@ -999,6 +1009,10 @@ class UnitObject(object):
         elif item.spell:
             if item.spell.targets == 'Tile':
                 targets = Utility.get_shell(valid_moves, item.RNG, gameStateObj.map)
+            elif item.spell.targets == 'TileNoUnit':
+                targets = set(Utility.get_shell(valid_moves, item.RNG, gameStateObj.map))
+                unit_positions = {unit.position for unit in gameStateObj.allunits if unit.position}
+                targets -= unit_positions
             elif item.beneficial:
                 ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and
                               unit.team not in team_ignore and unit.name not in name_ignore]
@@ -1177,58 +1191,28 @@ class UnitObject(object):
         elif my_spell.spell.targets == 'Unit':
             targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and
                                    Utility.calculate_distance(unit.position, self.position) in my_spell.RNG]
-        elif my_spell.spell.targets == 'Tile':
+        elif my_spell.spell.targets.startswith('Tile'):
             targetable_position = Utility.find_manhattan_spheres(my_spell.RNG, self.position)
             targetable_position = [pos for pos in targetable_position if gameStateObj.map.check_bounds(pos)]
-            # print(targetable_position)
+            if my_spell.spell.targets == 'TileNoUnit':
+                targetable_position = [pos for pos in targetable_position if not gameStateObj.grid_manager.get_unit_node(pos)]
             if my_spell.unlock:
                 targetable_position = [position for position in targetable_position if 'Locked' in gameStateObj.map.tile_info_dict[position]]
             # This might take a while
             elif my_spell.aoe.mode == 'Blast' and len(my_spell.RNG) < 7:
-                # import time
-                # time1 = time.clock()
                 valid_positions = []
                 for pos in targetable_position:
-                    # print('%s, %s'%(pos))
                     team = gameStateObj.grid_manager.get_team_node(pos)
                     if team and not gameStateObj.compare_teams(self.team, team):
                         valid_positions.append(pos)
                     else:
                         for x_pos in Utility.find_manhattan_spheres(range(1, my_spell.aoe.number + 1), pos):
-                            # print('-- %s, %s'%(x_pos))
                             if gameStateObj.map.check_bounds(x_pos):
                                 team = gameStateObj.grid_manager.get_team_node(x_pos)
                                 if team and not gameStateObj.compare_teams(self.team, team):
                                     valid_positions.append(pos)
                                     break
                 targetable_position = valid_positions
-                # print(time.clock()*1000 - time1*1000)
-            # print(targetable_position)
-
-            """
-            # The old method -- takes forever
-            elif my_spell.hit:
-                if len(targetable_position) < 20:
-                    results = [Interaction.convert_positions(gameStateObj, self, self.position, position, my_spell) for position in targetable_position]
-                    if my_spell.detrimental:
-                        targetable_position = [position for index, position in enumerate(targetable_position) if \
-                                               (results[index][0] and not self.checkIfAlly(results[index][0])) or \
-                                               any(r for r in results[index][1] if not self.checkIfAlly(r))]
-                    else:
-                        targetable_position = [position for index, position in enumerate(targetable_position) if results[index][0] or results[index][1]]
-                else:
-                    if my_spell.detrimental:
-                        enemy_positions = set([unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
-                                             [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]])
-                        targetable_position = set(targetable_position)
-                        if my_spell.aoe.number > 0:
-                            additional_positions = set()
-                            for enemy in enemy_positions:
-                                for rng in range(my_spell.aoe.number):
-                                    additional_positions |= Utility.get_adjacent_positions(enemy, rng + 1)
-                            targetable_position |= additional_positions
-                        targetable_position = list(targetable_position)
-            """
 
         if cf.CONSTANTS['spell_line_of_sight']:
             validSpellTargets = Utility.line_of_sight([self.position], targetable_position, max(my_spell.RNG), gameStateObj)

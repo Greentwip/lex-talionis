@@ -197,3 +197,25 @@
 	</units>
 </level>
 
+<level name="1">
+	<mode>Grandmaster</mode>
+	<money>1500</money>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>1</level>
+			<exp>0</exp>
+			<items>Glimmer Ward 30,Heal 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+

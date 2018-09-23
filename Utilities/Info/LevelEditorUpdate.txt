@@ -1,4 +1,4 @@
-Compilation of Changes from Level Editor Branch to Master 6-29-18
+Compilation of Changes from Level Editor Branch to Master 9-22-18
 
 - Major Changes:
 Graphical Level Editor now available for use.
@@ -12,6 +12,9 @@ Added two new difficulties (Lunatic & Grandmaster). Lunatic is for those who des
 Slight nerf to Halberdier promotion gains
 Halberdier loses access to Axes
 General gains access to Axes
+Sandblast default number of uses lowered to 5 from 10
+Casual mode now allows you to make a Battle Save at any time
+End-game adamant weapons have been buffed (-2 weight, +10 accuracy added to each)
 
 - Engine Changes:
 Added ability to change the constants in combat equations/calculations (like Accuracy is 2xSKL or 3xSKL)
@@ -21,7 +24,7 @@ Can now create promotion items and can turn off auto-promoting at max level
 Moved fight quote info script into each individual level
 Effective items now determine their level of effectivenesss individually
 Game Constants and Counters are now one Counter object: game_constants. Event Triggers is now antoher Counter object: level_constants
-Display now tells user when he/she is hcanging text speed
+Display now tells user when he/she is changing text speed
 Added Triggers (Different method to easily move groups of units at a time)
 Added Lord Only Seize and Enemy Seize
 Added event triggers on enemy turn start, unit ending its turn, and using an item with the call_item_script component
@@ -36,6 +39,11 @@ Added Simple Debug Console
 Added support for destructible tiles
 Added support for in-game enemy growth increase
 Added support for custom banner pop-ups
+Added better support for Pick Units menu
+Added debug "wizard mode". Press "D" when cheat=1
+Added support for Preloaded levels, to make testing later levels in your fangame much easier.
+Added new terrain layer system to make dynamically changing the terrain of the level much easier on the level designer
+Added choice dialogue boxes
 
 Fe Repo Script created
 Animation Gif Maker Created
@@ -57,7 +65,6 @@ Old saves will not work with v0.8.0. Sorry. There's nothing groundbreaking in th
 
 
 Still ToDo:
-Android and/or Browser support
 Mac Build?
 New Game, maybe?
 Turnwheel
@@ -66,6 +73,4 @@ Total control over stats and combat calculations
 Dialogue Tester/Editor?
 Game Editor?
 Awakening Style UI updates
-Music Changes?
 Warning/Danger markers (for effective weapons, reavers, killers, etc.)
-Choice dialog box

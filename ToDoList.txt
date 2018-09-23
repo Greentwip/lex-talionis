@@ -3,22 +3,15 @@
 - Avast Antivirus or other antiviruses may slow down certain actions that write to disk. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
 - Need to compile cython modules for Linux/Mac
 
--- REPORTED ISSUES:
-- Crashed on Suspend and Load another Saved Game?
-- Some music doesn't loop?
-
 -- MISSING ANIMS:
 - Demon Surge (Disintegrate)
 - Evil Eye (Scathe)
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Windows/Mac/Linux build of latest Engine, Level Editor
-
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
-- Have Start Skip or Massively Speed-up AI State
 --- ENGINE ---
 - Dialogue Tester
 - Game Editor??
@@ -32,14 +25,13 @@ FOR FUTURE UPDATES TO THE ENGINE:
 =============
 - Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Add Fake arrival to Give/Take
-- Scenic Maps (UnitLevel rework?) (Don't need to put previous saved units in UnitLevel.txt manually) (maybe have a load unit command? then a place loaded_units command?)++
+- Submaps -- Double positions for units? Copied units? Not quite sure...
 - If you are on impassable terrain, take damage.
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
 - Add Turnwheel
 - Add Awakening-style dialogue backlog...??** On R press
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
 - Add other numbers to Level Up Numbers (5 - 7)
-- Add custom AI for activated skills, if necessary (hook it onto the custom AI for spells?) --- Cleave, Critical, Sol, Luna, Shove, Rally, Metamagic
 - Comment many of the functions with purposes
 - Allow fully custom stat definitions
 --- AWAKENING UI ---
@@ -48,8 +40,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Pulsing arrow (transparency and color)
 - Allow user to control arrow movement (option)
 - Allow quick attack on enemy, quick spell on ally (option)
---- DIFFICULTY ---
-- Add in Normal and Lunatic modes (Normal, enemy growths down, enemy bases down, no infinite reinforcements, less complex) (Lunatic, player and enemy growths up, maybe some new items (Actually get all your units to 20 before final chapter))
 --- DIALOG SYSTEM ---
 - Functions - may be needed for Normal, Hard, Lunatic differentiation
 - Use Dictionary instead of if/elif system? -- premature optimization?

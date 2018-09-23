@@ -1403,6 +1403,8 @@ class SpellState(State):
         # Go back to weapon choice
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
+            spell = attacker.getMainSpell()
+            self.reapply_old_values(spell)
             gameStateObj.stateMachine.back()
 
         elif event == 'SELECT':
@@ -1419,6 +1421,8 @@ class SpellState(State):
                     if spell.extra_select and spell.extra_select_index < len(spell.extra_select):
                         self.handle_extra_select(gameStateObj, spell)
                         spell.extra_select_targets.append(cur_unit)  # Must be done after handle_extra_select
+                        self.end(gameStateObj, metaDataObj)
+                        self.begin(gameStateObj, metaDataObj)
                     else:
                         self.reapply_old_values(spell)
                         defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, cur_unit.position, spell)
@@ -1428,10 +1432,12 @@ class SpellState(State):
                         gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, cur_unit.position, splash, spell)
                         gameStateObj.stateMachine.changeState('combat')
                         GC.SOUNDDICT['Select 1'].play()
-            elif targets == 'Tile':
+            elif targets == 'Tile' or targets == 'TileNoUnit':
                 if spell.extra_select and spell.extra_select_index < len(spell.extra_select):
                     self.handle_extra_select(gameStateObj, spell)
                     spell.extra_select_targets.append(gameStateObj.cursor.position)
+                    self.end(gameStateObj, metaDataObj)  # Faking moving to a new spell state
+                    self.begin(gameStateObj, metaDataObj)
                 else:
                     self.reapply_old_values(spell)
                     defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.position, spell)
@@ -1469,7 +1475,7 @@ class SpellState(State):
         spell.RNG = spell.extra_select[idx].RNG
         spell.spell.targets = spell.extra_select[idx].targets
         spell.extra_select_index += 1
-        gameStateObj.stateMachine.changeState('spell')
+        # gameStateObj.stateMachine.changeState('spell')
         GC.SOUNDDICT['Select 1'].play()
 
     def reapply_old_values(self, spell):
@@ -1488,7 +1494,7 @@ class SpellState(State):
         spell = attacker.getMainSpell()
         targets = spell.spell.targets
         if gameStateObj.cursor.currentSelectedUnit:
-            if targets == 'Tile':
+            if targets == 'Tile' or targets == 'TileNoUnit':
                 attacker.displaySpellInfo(mapSurf, gameStateObj)
             elif gameStateObj.cursor.currentHoveredUnit: 
                 attacker.displaySpellInfo(mapSurf, gameStateObj, gameStateObj.cursor.currentHoveredUnit)
