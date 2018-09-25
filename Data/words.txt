@@ -181,7 +181,7 @@ Select Mode;Select Mode
 Select Growths;Select Growths
 mode_Normal;Recommended for newcomers to Fire Emblem
 mode_Hard;For Fire Emblem veterans. Start here.
-mode_Lunatic;No casuls allowed. Prepare to lose.
+mode_Lunatic;Extremely difficult. Prepare to lose.
 mode_Grandmaster;No RNG at all. Instead damage dealt is lowered by hit percentage.
 mode_Classic;Units killed are lost forever.
 mode_Casual;Your units will live to fight another day.
