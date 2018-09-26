@@ -9,6 +9,8 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
+- Add EXP for unlock and steal to thief. AND/OR add class specific exp modifiers
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.

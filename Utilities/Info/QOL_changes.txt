@@ -1,0 +1,22 @@
+Cursor speed exactly GBA (check)
+Cursor stops at edge of movement for a second
+Cursor movement arrow follows cursor
+Cursor movement arrow stays when stopped at edge of movement
+Cursor B doubles cursor speed
+Cursor R shows all enemy range
+Cursor sound (check)
+Fix Info Screen -- make more like FE8 or Glenn
+Swap where skills and wexp are
+Add support section to statuses
+Make statuses work like skills currently work, but with numbers, maybe
+Text speed exactly GBA (check)
+Text press A rapid speeds up, instead of double tapping. (check)
+Text press B skips section (check)
+Info Menu bar down one pixel
+Info Menu help fade in and out
+Look at Info Menu help format (single line?)
+Turn change animation
+Options Menu
+Objective Menu
+Text Sound Audio (Not going to happen)
+Have units flash yellow when charged with a skill

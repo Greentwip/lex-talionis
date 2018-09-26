@@ -1860,6 +1860,7 @@ class DialogueState(State):
         State.__init__(self, name)
         self.message = None
         self.text_speed_change = MenuFunctions.BriefPopUpDisplay((GC.WINWIDTH, GC.WINHEIGHT - 16))
+        self.hurry_up_time = 0
 
     def begin(self, gameStateObj, metaDataObj):
         cf.CONSTANTS['Unit Speed'] = 120
@@ -1873,17 +1874,21 @@ class DialogueState(State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
 
-        if event == 'START' and self.message and not self.message.do_skip: # SKIP
+        if (event == 'START' or event == 'BACK') and self.message and not self.message.do_skip: # SKIP
             GC.SOUNDDICT['Select 4'].play()
             self.message.skip()
 
         elif event == 'SELECT' or event == 'RIGHT' or event == 'DOWN': # Get it to move along...
             if self.message.current_state == "Displaying" and self.message.dialog:
-                if self.message.dialog[-1].waiting:
-                    GC.SOUNDDICT['Select 1'].play()
-                    self.message.dialog_unpause()
-                else:
-                    self.message.dialog[-1].hurry_up()
+                last_hit = Engine.get_time() - self.hurry_up_time
+                if last_hit > 400:  # How long it will pause before moving on to next section
+                    if self.message.dialog[-1].waiting:
+                        GC.SOUNDDICT['Select 1'].play()
+                        self.message.dialog_unpause()
+                        self.hurry_up_time = 0
+                    else:
+                        self.message.dialog[-1].hurry_up()
+                        self.hurry_up_time = Engine.get_time()
 
         elif event == 'AUX':  # Increment the text speed to be faster
             if cf.OPTIONS['Text Speed'] in cf.text_speed_options:

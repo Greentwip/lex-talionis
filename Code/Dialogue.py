@@ -333,7 +333,7 @@ class Dialogue_Scene(object):
             for sub_command in spl:
                 if self.add_unit_sprite(sub_command, metaDataObj, transition=True):
                     # Force wait after unit sprite is drawn to allow time to transition.
-                    self.waittime = 250
+                    self.waittime = 266  # 16 frames
                     self.last_wait_update = Engine.get_time()
                     self.current_state = "Waiting"
         # Add a unit to the scene without transition
@@ -1513,7 +1513,7 @@ class Dialog(object):
 
         self.waiting_cursor = GC.IMAGESDICT['WaitingCursor']
         self.wait_width = self.waiting_cursor.get_width()
-        self.waiting_cursor_offset = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1]
+        self.waiting_cursor_offset = [0]*20 + [1]*2 + [2]*8 + [1]*2
         self.waiting_cursor_offset_index = 0
         self.waiting_cursor_flag = waiting_cursor_flag
         self.preempt_break = False
@@ -1727,21 +1727,24 @@ class Dialog(object):
                 if self.talk and self.owner in self.unit_sprites:
                     self.unit_sprites[self.owner].talk()
         elif self.scroll_y > 0:
-            self.scroll_y -= 2
+            self.scroll_y -= 1
         else:
-            num_updates = Engine.get_delta() / float(cf.OPTIONS['Text Speed']*self.slow_flag)
-            self.total_num_updates += num_updates
-            if self.total_num_updates >= 1:
-                # handle the waiting markxzer's vertical offset
-                self.waiting_cursor_offset_index += 1
-                if self.waiting_cursor_offset_index > len(self.waiting_cursor_offset) - 1:
-                    self.waiting_cursor_offset_index = 0
+            if cf.OPTIONS['Text Speed'] > 0:
+                num_updates = Engine.get_delta() / float(cf.OPTIONS['Text Speed']*self.slow_flag)
+                self.total_num_updates += num_updates
 
-            while self.total_num_updates >= 1:
-                self.total_num_updates -= 1
-                if self._next_char():
-                    self.total_num_updates = 0
-                    break
+                while self.total_num_updates >= 1:
+                    self.total_num_updates -= 1
+                    if self._next_char():
+                        self.total_num_updates = 0
+                        break
+            else:
+                self.hurry_up()
+
+        # handle the waiting marker's vertical offset
+        self.waiting_cursor_offset_index += 1
+        if self.waiting_cursor_offset_index > len(self.waiting_cursor_offset) - 1:
+            self.waiting_cursor_offset_index = 0
 
     def draw(self, surf):
         text_surf = self.text_surf.copy()
@@ -2105,10 +2108,12 @@ class UnitPortrait(object):
             self.blink_counter.update(current_time)
 
         if self.transition:
+            # 14 frames for Unit Face to appear
+            perc = 100. * (current_time - self.transition_last_update) / 233
             if self.transition == 'trans2color':
-                self.transition_transparency = 100 - (current_time - self.transition_last_update)//2 # 12 frames
+                self.transition_transparency = 100 - perc 
             elif self.transition == 'color2trans':
-                self.transition_transparency = (current_time - self.transition_last_update)//2 # 12 frames
+                self.transition_transparency = perc
             if self.transition_transparency > 100 or self.transition_transparency < 0:
                 self.transition = 0
                 self.transition_transparency = max(0, min(100, self.transition_transparency))

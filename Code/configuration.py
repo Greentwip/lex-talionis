@@ -195,4 +195,4 @@ print('Debug: %s' % (OPTIONS['debug']))
 CONSTANTS = read_constants_file()
 CONSTANTS['Unit Speed'] = OPTIONS['Unit Speed']
 WORDS = read_words_file()
-text_speed_options = list(reversed([1, 5, 10, 15, 20, 30, 40, 50, 75, 100, 150]))
+text_speed_options = list(reversed([0, 1, 5, 10, 15, 20, 32, 50, 80, 112, 150]))
