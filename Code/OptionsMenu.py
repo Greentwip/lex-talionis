@@ -17,7 +17,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                            ('temp_Screen Size', ['1', '2', '3', '4', '5'], cf.WORDS['temp_Screen Size_desc'], 18),
                            ('Unit Speed', list(reversed(range(15, 180, 15))), cf.WORDS['Unit Speed_desc'], 1),
                            ('Text Speed', cf.text_speed_options, cf.WORDS['Text Speed_desc'], 2),
-                           ('Cursor Speed', list(reversed(range(0, 220, 20))), cf.WORDS['Cursor Speed_desc'], 8),
+                           ('Cursor Speed', list(reversed(range(32, 160, 16))), cf.WORDS['Cursor Speed_desc'], 8),
                            ('Show Terrain', ['ON', 'OFF'], cf.WORDS['Show Terrain_desc'], 7),
                            ('Show Objective', ['ON', 'OFF'], cf.WORDS['Show Objective_desc'], 6),
                            ('Autocursor', ['ON', 'OFF'], cf.WORDS['Autocursor_desc'], 13),

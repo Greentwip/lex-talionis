@@ -1,4 +1,4 @@
-import os, pickle, re
+import os, pickle, re, math
 
 try:
     import GlobalConstants as GC
@@ -452,10 +452,10 @@ class Animation(object):
 class Phase(object):
     def __init__(self, gameStateObj):
         self.phase_in = []
-        self.phase_in.append(PhaseIn('player', 'PlayerTurnBanner', 800))
-        self.phase_in.append(PhaseIn('enemy', 'EnemyTurnBanner', 800))
-        self.phase_in.append(PhaseIn('enemy2', 'Enemy2TurnBanner', 800))
-        self.phase_in.append(PhaseIn('other', 'OtherTurnBanner', 800))
+        self.phase_in.append(PhaseIn('player', 'PlayerTurnBanner'))
+        self.phase_in.append(PhaseIn('enemy', 'EnemyTurnBanner'))
+        self.phase_in.append(PhaseIn('enemy2', 'Enemy2TurnBanner'))
+        self.phase_in.append(PhaseIn('other', 'OtherTurnBanner'))
         self.order = ('player', 'enemy', 'enemy2', 'other')
 
         self.current = 3 if gameStateObj.turncount == 0 else 0
@@ -493,18 +493,21 @@ class Phase(object):
         self.phase_in[self.current].draw(surf)
 
 class PhaseIn(object):
-    def __init__(self, name, spritename, display_time):
+    def __init__(self, name, spritename):
         self.name = name
         self.spritename = spritename
         self.loadSprites()
-        self.display_time = display_time
+        self.begin_time = 128
+        self.main_time = 1000
+        self.end_time = 240
+        self.display_time = self.begin_time + self.main_time + self.end_time
         self.topleft = ((GC.WINWIDTH - self.image.get_width())//2, (GC.WINHEIGHT - self.image.get_height())//2)
         self.start_time = None # Don't define it here. Define it at first update
 
     def loadSprites(self):
         self.image = GC.IMAGESDICT[self.spritename]
         self.transition = GC.IMAGESDICT['PhaseTransition'] # The Black Squares that happen during a phase transition
-        self.transition_size = (16, 16)
+        self.transition_space = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT//2 - 16), transparent=True)
 
     def removeSprites(self):
         self.image = None
@@ -533,55 +536,85 @@ class PhaseIn(object):
 
     def draw(self, surf):
         currentTime = Engine.get_time()
-        time_passed = currentTime - self.start_time
+        time_passed = min(currentTime - self.start_time, self.display_time)
         if cf.OPTIONS['debug'] and time_passed < 0:
             logger.error('This phase has a negative time_passed! %s %s %s', time_passed, currentTime, self.start_time)
-        max_opaque = 160
+        max_opaque = 118
 
         # Blit the banner
         # position
-        if time_passed < 100:
-            offset = self.topleft[0] + 100 - time_passed
-            trans = 100 - time_passed
-        elif time_passed > self.display_time - 100:
-            offset = self.topleft[0] + self.display_time - 100 - time_passed 
-            trans = -(self.display_time - 100 - time_passed)
-        else:
+        if time_passed < self.begin_time:
+            diff = time_passed / float(self.begin_time)
+            offset = self.topleft[0] + self.begin_time * (1 - diff)
+            trans = 100. * (1 - diff) ** 2
+        elif time_passed < self.begin_time + self.main_time:
             offset = self.topleft[0]
             trans = 0
+        else:  # 367 milliseconds
+            diff = (time_passed - (self.begin_time + self.main_time)) / float(self.end_time)
+            offset = self.topleft[0] - self.end_time * diff
+            trans = 100. * diff ** 2
+
         # transparency
         image = Image_Modification.flickerImageTranslucent(self.image.copy(), trans)
         surf.blit(image, (offset, self.topleft[1]))
-        
-        # === Handle the transition
-        most_dark_surf = Engine.subsurface(self.transition, (8*self.transition_size[0], 0, self.transition_size[0], self.transition_size[1])).copy()
-        half_display_time = self.display_time//2
-        # If we're in the first half
-        if time_passed < half_display_time:
-            transition_space = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT//2 - 75//2 + time_passed//(half_display_time//20)), transparent=True)
-            # Make more transparent based on time.
-            alpha = int(max_opaque * time_passed/float(half_display_time))
-            Engine.fill(most_dark_surf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
-        # If we're in the second half
-        else:
-            # Clamp time_passed at display time
-            time_passed = min(self.display_time, time_passed)
-            pos = (GC.WINWIDTH, GC.WINHEIGHT//2 - 75//2 + 40//2 - (time_passed - half_display_time)//(half_display_time//20))
-            transition_space = Engine.create_surface(pos, transparent=True)
-            # Make less transparent based on time.
-            alpha = int(max_opaque - max_opaque*(time_passed - half_display_time)/float(half_display_time))
-            alpha = min(255, max(0, alpha))
-            Engine.fill(most_dark_surf, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
-        # transition_space.convert_alpha()
-        # Tile
-        for x in range(0, transition_space.get_width(), 16):
-            for y in range(0, transition_space.get_height(), 16):
-                transition_space.blit(most_dark_surf, (x, y))
 
+        transition_space1 = self.transition_space.copy()
+        transition_space2 = self.transition_space.copy()
+
+        # === Handle the transition
+        half_display_time = self.display_time//2
+        if time_passed < half_display_time:
+            diff = time_passed/float(half_display_time)
+            height = (GC.WINHEIGHT//2 - 16) * diff    
+            alpha = int(max_opaque * math.sqrt(time_passed/float(half_display_time)))
+        else:
+            diff = -(half_display_time - time_passed)/float(half_display_time)
+            height = (GC.WINHEIGHT//2 - 16) * (1 - diff)
+            alpha = int(max_opaque - max_opaque*((time_passed - half_display_time)/float(half_display_time))**2)
+            alpha = Utility.clamp(alpha, 0, 255)
+
+        if time_passed < half_display_time:
+            t = int(2 + diff*16)  # Starts a little ways along at the beginning
+        else:
+            t = int(diff*16)
+
+        for x in range(0, GC.WINWIDTH, 16):
+            for y in range(0, 64, 16):
+                i, j = x/16, y/16
+                k = int(t*1.5 - (i - j%2)/2 + j/2 - 4)
+                if time_passed < half_display_time:
+                    frame = Utility.clamp(8 - abs(max(k, 8) - 8), 0, 8)
+                else:
+                    frame = Utility.clamp(k, 0, 8)
+                # frame = Utility.clamp(min(k, 8) + min(8 - k, 0), 0, 8)                
+                square_surf = Engine.subsurface(self.transition, (frame*16, 0, 16, 16)).copy()
+                transition_space1.blit(square_surf, (x, y))
+
+        for x in range(0, GC.WINWIDTH, 16):
+            for y in range(0, 64, 16):
+                i, j = x/16, y/16
+                k = int(t*1.5 - (i - j%2)/2 + j/2 - 1)
+                if time_passed < half_display_time:
+                    frame = Utility.clamp(8 - abs(max(k, 8) - 8), 0, 8)
+                else:
+                    frame = Utility.clamp(k, 0, 8)
+                # frame = Utility.clamp(min(k, 8) + min(8 - k, 0), 0, 8)
+                square_surf = Engine.subsurface(self.transition, (frame*16, 0, 16, 16)).copy()
+                transition_space2.blit(square_surf, (x, y))
+
+        # height = 64  # remove later
+        transition_space1 = Engine.subsurface(transition_space1, (0, 0, GC.WINWIDTH, height))
+        transition_space2 = Engine.subsurface(transition_space2, (0, self.transition_space.get_height() - height, GC.WINWIDTH, height))
+
+        # Fill with correct alpha
+        # alpha = 255  # Remove later
+        Engine.fill(transition_space1, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
+        Engine.fill(transition_space2, (255, 255, 255, alpha), None, Engine.BLEND_RGBA_MULT)
         # Now blit transition space
-        surf.blit(transition_space, (0, 0))
+        surf.blit(transition_space1, (0, 0))
         # Other transition_space
-        surf.blit(transition_space, (0, GC.WINHEIGHT - transition_space.get_height()))
+        surf.blit(transition_space2, (0, GC.WINHEIGHT - transition_space2.get_height()))
 
 # === SAVESLOTS ===============================================================
 class SaveSlot(object):
@@ -711,7 +744,7 @@ class CameraOffset(object):
         self.old_x = x
         self.old_y = y
 
-        self.speed = 6.0 # Linear. 
+        self.speed = 8.0 # Linear. 
 
         self.pan_flag = False
         self.pan_to = []
@@ -789,9 +822,9 @@ class CameraOffset(object):
             elif self.current_y < self.y:
                 self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)/self.speed
         # If they are close enough, make them so.
-        if abs(self.current_x - self.x) < 0.125:
+        if abs(self.current_x - self.x) < 0.25:
             self.current_x = self.x
-        if abs(self.current_y - self.y) < 0.125:
+        if abs(self.current_y - self.y) < 0.25:
             self.current_y = self.y
         # Move to next place on the list
         if self.pan_to and self.current_y == self.y and self.current_x == self.x:
