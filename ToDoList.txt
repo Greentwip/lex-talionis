@@ -10,6 +10,12 @@
 - Restore (Restore)
 
 - Add EXP for unlock and steal to thief. AND/OR add class specific exp modifiers
+- Add Killer & Effective Weapon markers
+- Add growth modification to statuses
+- Supports (GBA & POR)
+- Turnwheel
+- Submaps
+- Overworld
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---

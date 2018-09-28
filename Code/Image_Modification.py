@@ -25,7 +25,6 @@ def flickerImageWhite(image, white):
     return image
 
 def flickerImageRed(image, red):
-    """whiteness measured from 0 to 255"""
     red = Utility.clamp(red, 0, 255)
     image = Engine.copy_surface(image)
     Engine.fill(image, (red, 0, 0), None, Engine.BLEND_RGB_ADD)
@@ -115,6 +114,13 @@ def change_image_color(image, color):
         else:
             new_color = (0, 0, band)
         Engine.fill(image, new_color, None, blend_mode)
+
+    return image
+
+def color_tint(image, color):
+    new_image = change_image_color(image, color)
+    Engine.fill(new_image, (255, 255, 255, color[3]), None, Engine.BLEND_RGBA_MULT)
+    image.blit(new_image, (0, 0))
 
     return image
 

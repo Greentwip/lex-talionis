@@ -12,7 +12,7 @@ if;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 		end
 	elif;self.unit.name == 'Joel'
 		if;self.unit.position == (6,7)
-			s;Narrator;Each class has a different set of skills.{w}{br}Some skills are passive, like Ophie's{red}Riposte.{black}{w}{br}Other skills must be{red}activated,{black}like Joel's{red}Cleave.{black}{w}{br}Activated skills charge up in combat.{w}{br}When fully charged, the ground beneath the unit will flash yellow.{w};auto;hint
+			s;Narrator;Each class has a different set of skills.{w}{br}Some skills are passive, like Ophie's{red}Riposte.{black}{w}{br}Other skills must be{red}activated,{black}like Joel's{red}Cleave.{black}{w}{br}Activated skills charge up in combat.{w}{br}When fully charged, the unit will flash yellow.{w};auto;hint
 			s;Narrator;Joel's{red}Cleave{black} allows him to hit more than one enemy at the same time.{w}{br}Try it out now.{w};auto;hint
 		else
 			move_unit;Joel;3,6;immediate
