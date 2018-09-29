@@ -358,8 +358,10 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
                 return choices.index('OFF')
         elif isinstance(choices[0], str):
             return choices.index(str(option))
-        else:
+        elif option in choices:
             return choices.index(option)
+        else:
+            return choices.index(min(choices, key=lambda x: abs(x - option)))
 
     def drawConfigCursor(self, surf):
         # Blit cursor (s)

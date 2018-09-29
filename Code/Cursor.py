@@ -31,6 +31,7 @@ class Cursor(object):
 
         self.drawState = 0 # If cursor will be drawn
 
+        self.back_pressed = False
         self.spriteOffset = [0, 0]
         
     def draw(self, surf):
@@ -41,14 +42,15 @@ class Cursor(object):
             topleft = topleft[0] - self.spriteOffset[0], topleft[1] - self.spriteOffset[1]
             surf.blit(self.image, topleft)
             # Reset sprite offset afterwards
+            num = 8 if self.back_pressed else 4
             if self.spriteOffset[0] > 0:
-                self.spriteOffset[0] -= 4
+                self.spriteOffset[0] = max(0, self.spriteOffset[0] - num)
             elif self.spriteOffset[0] < 0:
-                self.spriteOffset[0] += 4
+                self.spriteOffset[0] = min(0, self.spriteOffset[0] + num)
             if self.spriteOffset[1] > 0:
-                self.spriteOffset[1] -= 4
+                self.spriteOffset[1] = max(0, self.spriteOffset[1] - num)
             elif self.spriteOffset[1] < 0:
-                self.spriteOffset[1] += 4
+                self.spriteOffset[1] = min(0, self.spriteOffset[1] + num)
 
     def getHoveredUnit(self, gameStateObj):
         for unit in gameStateObj.allunits:
@@ -101,8 +103,12 @@ class Cursor(object):
         self.remove_unit_display()
         # Sprite Offset -- but only if we're not traveling too fast
         if cf.OPTIONS['Cursor Speed'] >= 40:
-            self.spriteOffset[0] += 12*dx
-            self.spriteOffset[1] += 12*dy
+            if self.back_pressed:
+                self.spriteOffset[0] += 8*dx
+                self.spriteOffset[1] += 8*dy
+            else:
+                self.spriteOffset[0] += 12*dx
+                self.spriteOffset[1] += 12*dy
 
     def place_arrows(self, gameStateObj):
         if gameStateObj.stateMachine.getState() == 'move' and gameStateObj.highlight_manager.check_arrow(self.position):
@@ -163,7 +169,9 @@ class Cursor(object):
         # Handle Cursor movement   -   Move the cursor around
         # Refuses to move Cursor if not enough time has passed since the cursor has last moved. This is
         # a hack to slow down cursor movement rate.
-        directions = self.fluid_helper.get_directions()
+        # Back doubles speed
+        gameStateObj.cameraOffset.back_pressed(self.back_pressed)  # changes camera speed
+        directions = self.fluid_helper.get_directions(double_speed=self.back_pressed)
         if 'LEFT' in directions and self.position[0] > 0:
             self.move((-1, 0), gameStateObj)
             if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Cursor controls camera movement
