@@ -386,7 +386,11 @@ class FreeState(State):
         event = gameStateObj.input_manager.process_input(eventList)
         # Show R unit status screen
         if event == 'INFO':
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj)
+            if gameStateObj.cursor.getHoveredUnit(gameStateObj):
+                CustomObjects.handle_info_key(gameStateObj, metaDataObj)
+            else:  # Show enemy attacks otherwise
+                GC.SOUNDDICT['Select 3'].play()
+                gameStateObj.boundary_manager.toggle_all_enemy_attacks(gameStateObj)
         elif event == 'AUX':
             CustomObjects.handle_aux_key(gameStateObj)
         # Enter movement state       
@@ -407,14 +411,16 @@ class FreeState(State):
                 GC.SOUNDDICT['Select 2'].play()
                 gameStateObj.stateMachine.changeState('optionsmenu')
         elif event == 'BACK':
-            GC.SOUNDDICT['Select 3'].play()
-            gameStateObj.boundary_manager.toggle_all_enemy_attacks(gameStateObj)
+            # GC.SOUNDDICT['Select 3'].play()
+            # gameStateObj.boundary_manager.toggle_all_enemy_attacks(gameStateObj)
+            pass  # While held doubles cursor movement speed
         elif event == 'START':
             GC.SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
         elif cf.OPTIONS['cheat']:
             wizard_mode(eventList, gameStateObj)
         # Moved down here so it is done last
+        gameStateObj.cursor.back_pressed = gameStateObj.input_manager.is_pressed('BACK')
         gameStateObj.cursor.take_input(eventList, gameStateObj)
 
     def update(self, gameStateObj, metaDataObj):
@@ -424,6 +430,7 @@ class FreeState(State):
     def end(self, gameStateObj, metaDataObj):
         gameStateObj.highlight_manager.remove_highlights()
         gameStateObj.cursor.remove_unit_display()
+        gameStateObj.cursor.back_pressed = False
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = State.draw(self, gameStateObj, metaDataObj)

@@ -2,8 +2,8 @@ Cursor speed exactly GBA (check)
 Cursor stops at edge of movement for a second
 Cursor movement arrow follows cursor
 Cursor movement arrow stays when stopped at edge of movement
-Cursor B doubles cursor speed
-Cursor R shows all enemy range
+Cursor B doubles cursor speed (check)
+Cursor R shows all enemy range (check)
 Cursor sound (check)
 Fix Info Screen -- make more like FE8 or Glenn
 Swap where skills and wexp are
@@ -19,4 +19,5 @@ Turn change animation
 Options Menu
 Objective Menu
 Text Sound Audio (Not going to happen)
-Have units flash yellow when charged with a skill
+Have units flash yellow when charged with a skill (check)
+Maybe have things happen not on key up but on key down?

@@ -778,6 +778,12 @@ class CameraOffset(object):
     def get_y(self):
         return self.current_y
 
+    def back_pressed(self, val):
+        if val:
+            self.speed = 4.0
+        else:
+            self.speed = 8.0
+
     def center2(self, old, new):
         x1, y1 = old
         x2, y2 = new
