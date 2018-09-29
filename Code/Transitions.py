@@ -54,30 +54,6 @@ class TimeDisplay(object):
             str_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(real_time))
             GC.FONT['text_white'].blit(str_time, surf, (self.pos[0] + 4, self.pos[1] + 4))
 
-class Logo(object):
-    def __init__(self, image, center):
-        self.texture = image
-        self.image = None
-        self.height = self.texture.get_height()//8
-        self.width = self.texture.get_width()
-        self.center = center
-        self.logo_counter = 0
-        self.logo_anim = [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1]
-        self.last_update = 0
-        self.image = Engine.subsurface(self.texture, (0, self.logo_anim[self.logo_counter]*self.height, self.texture.get_width(), self.height))
-
-    def update(self):
-        currentTime = Engine.get_time()
-        if currentTime - self.last_update > 60:
-            self.logo_counter += 1
-            if self.logo_counter >= len(self.logo_anim):
-                self.logo_counter = 0
-            self.image = Engine.subsurface(self.texture, (0, self.logo_anim[self.logo_counter]*self.height, self.texture.get_width(), self.height))
-            self.last_update = currentTime
-
-    def draw(self, surf):
-        surf.blit(self.image, (self.center[0] - self.width//2, self.center[1] - self.height//2))
-
 def load_saves():
     save_slots = []
     for num in range(0, int(cf.CONSTANTS['save_slots'])):
@@ -109,7 +85,7 @@ class StartStart(StateMachine.State):
             gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.logo = GC.IMAGESDICT['Logo']
-            gameStateObj.press_start = Logo(GC.IMAGESDICT['PressStart'], (GC.WINWIDTH//2, 4*GC.WINHEIGHT//5))
+            gameStateObj.press_start = MenuFunctions.Logo(GC.IMAGESDICT['PressStart'], (GC.WINWIDTH//2, 4*GC.WINHEIGHT//5))
             gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
             gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))

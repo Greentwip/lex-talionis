@@ -148,21 +148,26 @@ class ItemObject(object):
                 output_desc_lines = TextChunk.line_wrap(TextChunk.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
             else:
                 output_desc_lines = ''
-            size_x = first_line_length + 16
-            size_y = 24 + len(output_desc_lines)*16
+            size_x = first_line_length + 24
+            size_y = 32 + len(output_desc_lines)*16
             help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')  
-            self.drawType(help_surf, 4, 4)
+            self.drawType(help_surf, 8, 8)
             
             # Actually blit first line
             word_index = 20 if self.icon else 4
             for index, word in enumerate(first_line_text):
-                first_line_font[index].blit(word, help_surf, (word_index, 4))
+                first_line_font[index].blit(word, help_surf, (word_index, 8))
                 word_index += first_line_font[index].size(word)[0]
             
             for index, line in enumerate(output_desc_lines):
-                GC.FONT['convo_black'].blit(''.join(line), help_surf, (4, GC.FONT['convo_black'].height*index + 4 + 16))  
+                GC.FONT['convo_black'].blit(''.join(line), help_surf, (4, GC.FONT['convo_black'].height*index + 8 + 16))  
 
-            return help_surf
+            # Draw help logo
+            h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
+            h_surf.blit(help_surf, (0, 3))
+            h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
+
+            return h_surf
 
         else:
             return InfoMenu.create_help_box(self.desc)

@@ -139,6 +139,66 @@ class Foreground(object):
                     self.foreground = None
                     self.fade_out = False
 
+class Logo(object):
+    def __init__(self, texture, center):
+        self.texture = texture
+        self.center = center
+
+        self.image = None
+        self.height = self.texture.get_height()//8
+        self.width = self.texture.get_width()
+    
+        self.logo_counter = 0
+        self.logo_anim = [0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1]
+        self.last_update = 0
+
+        self.image = Engine.subsurface(self.texture, (0, self.logo_anim[self.logo_counter]*self.height, self.texture.get_width(), self.height))
+
+        self.state = "Idle"
+
+    def update(self):
+        currentTime = Engine.get_time()
+
+        if currentTime - self.last_update > 64:
+            self.logo_counter += 1
+            if self.logo_counter >= len(self.logo_anim):
+                self.logo_counter = 0
+            self.image = Engine.subsurface(self.texture, (0, self.logo_anim[self.logo_counter]*self.height, self.width, self.height))
+            self.last_update = currentTime
+
+        if self.state == "Idle":
+            self.draw_image = self.image
+
+        elif self.state == "Out":
+            self.transition_counter -= 1
+
+            self.draw_image = Engine.subsurface(self.image, (0, self.height//2 - self.transition_counter, self.width, self.transition_counter*2))
+
+            if self.transition_counter <= 0:
+                self.state = "In"
+                self.texture = self.new_texture
+                self.height = self.new_height
+                self.width = self.new_width
+                self.image = Engine.subsurface(self.texture, (0, self.logo_anim[self.logo_counter]*self.height, self.width, self.height))
+
+        elif self.state == "In":
+            self.transition_counter += 1
+            if self.transition_counter >= self.height//2:
+                self.transition_counter = self.height//2
+                self.state = "Idle"
+
+            self.draw_image = Engine.subsurface(self.image, (0, self.height//2 - self.transition_counter, self.width, self.transition_counter*2))
+
+    def draw(self, surf, offset_y=0):
+        surf.blit(self.draw_image, (self.center[0] - self.draw_image.get_width()//2, self.center[1] - self.draw_image.get_height()//2 + offset_y))
+
+    def switch_image(self, new_image):
+        self.new_texture = new_image
+        self.new_height = self.new_texture.get_height()//8
+        self.new_width = self.new_texture.get_width()
+        self.transition_counter = self.height//2
+        self.state = "Out"
+
 class BriefPopUpDisplay(object):
     def __init__(self, topright):
         self.topright = topright

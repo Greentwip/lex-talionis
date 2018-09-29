@@ -5,14 +5,14 @@ Cursor movement arrow stays when stopped at edge of movement
 Cursor B doubles cursor speed (check)
 Cursor R shows all enemy range (check)
 Cursor sound (check)
-Fix Info Screen -- make more like FE8 or Glenn
-Swap where skills and wexp are
+Fix Info Screen -- make more like FE8 or Glenn (check)
+Swap where skills and wexp are (check)
 Add support section to statuses
 Make statuses work like skills currently work, but with numbers, maybe
 Text speed exactly GBA (check)
 Text press A rapid speeds up, instead of double tapping. (check)
 Text press B skips section (check)
-Info Menu bar down one pixel
+Info Menu bar down one pixel (check)
 Info Menu help fade in and out
 Look at Info Menu help format (single line?)
 Turn change animation (check)
@@ -21,3 +21,4 @@ Objective Menu
 Text Sound Audio (Not going to happen)
 Have units flash yellow when charged with a skill (check)
 Maybe have things happen not on key up but on key down?
+InfoMenu Left/Right scroll

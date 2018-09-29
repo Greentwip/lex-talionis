@@ -20,9 +20,7 @@ class InfoMenu(StateMachine.State):
             self.scroll_units = sorted(self.scroll_units, key=lambda unit: unit.team)
 
             # The current state
-            self.states = [cf.WORDS["Equipment"], cf.WORDS["Personal Data"], cf.WORDS["Skills & Status"]]
-            if cf.CONSTANTS['support'] and self.unit.team == 'player':
-                self.states.append(cf.WORDS["Supports"])
+            self.states = ["Personal Data", "Equipment", "Support & Status"]
             self.currentState = min(gameStateObj.info_menu_struct['current_state'], len(self.states) - 1)
 
             self.reset_surfs()
@@ -34,9 +32,12 @@ class InfoMenu(StateMachine.State):
             # Counters
             # self.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
             self.background = GC.IMAGESDICT['InfoMenuBackground']
-            self.left_arrow = GUIObjects.ScrollArrow('left', (108, 1))
-            self.right_arrow = GUIObjects.ScrollArrow('right', (GC.WINWIDTH - 13, 1), 0.5)
+            self.left_arrow = GUIObjects.ScrollArrow('left', (103, 3))
+            self.right_arrow = GUIObjects.ScrollArrow('right', (217, 3), 0.5)
             self.scroll_offset = 0
+
+            self.logo = None
+            self.switch_logo()
 
             self.hold_flag = gameStateObj.info_menu_struct['one_unit_only']
 
@@ -96,7 +97,7 @@ class InfoMenu(StateMachine.State):
                 GC.SOUNDDICT['Info In'].play()
                 self.helpMenu.current = self.helpMenu.initial
             elif event == 'SELECT':
-                if self.states[self.currentState] == cf.WORDS["Personal Data"] and self.unit.team == "player":
+                if self.states[self.currentState] == "Personal Data" and self.unit.team == "player":
                     GC.SOUNDDICT['Select 3'].play()
                     self.growth_flag = not self.growth_flag
             elif event == 'BACK':
@@ -137,6 +138,7 @@ class InfoMenu(StateMachine.State):
         self.currentState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
         self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
         self.left_arrow.pulse()
+        self.switch_logo()
 
     def move_right(self, gameStateObj, metaDataObj):
         GC.SOUNDDICT['Status_Page_Change'].play()
@@ -144,6 +146,7 @@ class InfoMenu(StateMachine.State):
         self.currentState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
         self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
         self.right_arrow.pulse()
+        self.switch_logo()
 
     def update(self, gameStateObj, metaDataObj):
         if self.helpMenu.current:
@@ -157,7 +160,7 @@ class InfoMenu(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         surf.fill(GC.COLORDICT['black'])
-        self.background.draw(surf)
+        surf.blit(self.background, (0, 0))
         self.draw_portrait(surf, metaDataObj)
         self.drawSlide(surf, gameStateObj, metaDataObj)
 
@@ -182,24 +185,12 @@ class InfoMenu(StateMachine.State):
 
     def create_portrait(self, metaDataObj):
         UnitInfoSurface = Engine.create_surface((96, GC.WINHEIGHT), transparent=True)
-        UnitInfoSurface = UnitInfoSurface.convert_alpha()
-        # Blit Background of Character Portrait
-        # PortraitBGSurf = GC.IMAGESDICT['PortraitBackground']
-        # UnitInfoSurface.blit(PortraitBGSurf, (4, GC.TILEHEIGHT//2))
-        # Blit Character Portrait for the chosen unit
-        # 80 x 72 is what fits in the portrait slot
-        # 96 x 80 is the actual size of a big_portrait
+
+        UnitInfoSurface.blit(GC.IMAGESDICT['InfoUnit'], (8, 122))
+
         PortraitSurf = Engine.subsurface(self.unit.bigportrait, ((self.unit.bigportrait.get_width() - 80)//2, 0, 80, 72))
-        UnitInfoSurface.blit(PortraitSurf, (12, GC.TILEHEIGHT//2+4))
-        # Blit Background for the simple info block beneath the Character Portrait
-        # InfoBlockSurf = GC.IMAGESDICT['TransparentBackground']
-        # UnitInfoSurface.blit(InfoBlockSurf, (0, GC.WINHEIGHT - GC.TILEHEIGHT*3.5))
-        # Blit background for the unit Name banner beneath the Character Portrait
-        # PortraitNameSurf = GC.IMAGESDICT['PortraitName']
-        # p_left = PortraitBGSurf.get_width()//2 + 4 - PortraitNameSurf.get_width()//2
-        # p_top = GC.TILEHEIGHT//2 + PortraitBGSurf.get_height() - 7
-        # UnitInfoSurface.blit(PortraitNameSurf, (p_left, p_top))
-        # Blit the name on top of the unit name banner
+        UnitInfoSurface.blit(PortraitSurf, (8, 8))
+
         name_size = GC.FONT['text_white'].size(self.unit.name)
         position = (96//2 - name_size[0]//2, 80)
         GC.FONT['text_white'].blit(self.unit.name, UnitInfoSurface, position) 
@@ -208,25 +199,25 @@ class InfoMenu(StateMachine.State):
         GC.FONT['text_white'].blit(long_name, UnitInfoSurface, (8, 104))
         # Blit the unit's level on the simple info block
         level_size = GC.FONT['text_blue'].size(str(self.unit.level))
-        position = (40 - level_size[0], 120)
+        position = (39 - level_size[0], 120)
         GC.FONT['text_blue'].blit(str(self.unit.level), UnitInfoSurface, position)
         # Blit the unit's exp on the simple info block
         exp_size = GC.FONT['text_blue'].size(str(self.unit.exp))
-        position = (64 - exp_size[0], 120)
+        position = (63 - exp_size[0], 120)
         GC.FONT['text_blue'].blit(str(self.unit.exp), UnitInfoSurface, position)
         # Blit the unit's current hp on the simple info block
         current_hp = str(self.unit.currenthp)
         if len(current_hp) > 2:
             current_hp = '??'
         current_hp_size = GC.FONT['text_blue'].size(current_hp)
-        position = (40 - current_hp_size[0], 136)
+        position = (39 - current_hp_size[0], 136)
         GC.FONT['text_blue'].blit(current_hp, UnitInfoSurface, position)
         # Blit the unit's max hp on the simple info block
         max_hp = str(self.unit.stats['HP'])
         if len(max_hp) > 2:
             max_hp = '??'
         max_hp_size = GC.FONT['text_blue'].size(max_hp)
-        position = (64 - max_hp_size[0], 136)
+        position = (63 - max_hp_size[0], 136)
         GC.FONT['text_blue'].blit(max_hp, UnitInfoSurface, position)
         # Blit the white status platform
         PlatSurf = GC.IMAGESDICT['StatusPlatform']
@@ -238,18 +229,33 @@ class InfoMenu(StateMachine.State):
         self.left_arrow.draw(surf)
         self.right_arrow.draw(surf)
 
+    def switch_logo(self):
+        name = self.states[self.currentState]
+        if name == "Personal Data":
+            image = GC.IMAGESDICT['InfoPersonalDataTitle']
+        elif name == "Equipment":
+            image = GC.IMAGESDICT['InfoItemsTitle']
+        elif name == "Support & Status":
+            image = GC.IMAGESDICT['InfoWeaponTitle']
+        else:
+            return
+        if self.logo:
+            self.logo.switch_image(image)
+        else:
+            self.logo = MenuFunctions.Logo(image, (164, 10))
+
     def drawSlide(self, surf, gameStateObj, metaDataObj):
         # blit title of menu
-        name = self.states[self.currentState]
-        if self.growth_flag and name == cf.WORDS["Personal Data"]:
-            name = cf.WORDS["Personal Growths"]
-        StateSize = GC.FONT['text_yellow'].size(name)
-        position = (172 - StateSize[0]//2, GC.TILEHEIGHT//2 - StateSize[1]//2 + 16*self.scroll_offset)
-        GC.FONT['text_yellow'].blit(name, surf, position)
+        surf.blit(GC.IMAGESDICT['InfoTitleBackground'], (112, 8 + 16*self.scroll_offset))
+        if self.logo:
+            self.logo.update()
+            self.logo.draw(surf, 16*self.scroll_offset)
+        page = str(self.currentState + 1) + '/' + str(len(self.states))
+        GC.FONT['small_white'].blit(page, surf, (235 - GC.FONT['small_white'].size(page)[0], 12))
 
         self.drawTopArrows(surf)
 
-        if self.states[self.currentState] == cf.WORDS["Personal Data"]:
+        if self.states[self.currentState] == "Personal Data":
             if self.growth_flag:
                 if not self.growths_surf:
                     self.growths_surf = self.create_growths_surf(gameStateObj)
@@ -258,107 +264,105 @@ class InfoMenu(StateMachine.State):
                 if not self.personal_data_surf:
                     self.personal_data_surf = self.create_personal_data_surf(gameStateObj, metaDataObj)
                 self.draw_personal_data_surf(surf)
-            if not self.wexp_surf:
-                self.wexp_surf = self.create_wexp_surf()
-            self.draw_wexp_surf(surf)
-        elif self.states[self.currentState] == cf.WORDS['Equipment']:
-            if not self.equipment_surf:
-                self.equipment_surf = self.create_equipment_surf(gameStateObj)
-            self.draw_equipment_surf(surf)
-        elif self.states[self.currentState] == cf.WORDS["Supports"]:
-            if not self.support_surf:
-                self.support_surf = self.create_support_surf(gameStateObj)
-            self.draw_support_surf(surf)
-        elif self.states[self.currentState] == cf.WORDS['Skills & Status']: 
-            if not self.skill_surf:
-                self.skill_surf = self.create_skill_surf()
-            self.draw_skill_surf(surf)
             if not self.class_skill_surf:
                 self.class_skill_surf = self.create_class_skill_surf()
             self.draw_class_skill_surf(surf)
+        elif self.states[self.currentState] == 'Equipment':
+            if not self.equipment_surf:
+                self.equipment_surf = self.create_equipment_surf(gameStateObj)
+            self.draw_equipment_surf(surf)
+        elif self.states[self.currentState] == 'Support & Status': 
+            surf.blit(GC.IMAGESDICT['StatusLogo'], (100, 44 + 16*self.scroll_offset))
+            if not self.skill_surf:
+                self.skill_surf = self.create_skill_surf()
+            self.draw_skill_surf(surf)
+            if not self.wexp_surf:
+                self.wexp_surf = self.create_wexp_surf()
+            self.draw_wexp_surf(surf)
+            # Support surf also goes here
     
     def create_personal_data_surf(self, gameStateObj, metaDataObj):
         # Menu Background
-        menu_size = (GC.WINWIDTH//2+8, GC.WINHEIGHT - GC.TILEHEIGHT * 3)
-        menu_surf = MenuFunctions.CreateBaseMenuSurf(menu_size)
+        menu_size = (GC.WINWIDTH - 96, GC.WINHEIGHT)
+        menu_surf = Engine.create_surface(menu_size, transparent=True)
 
         max_stats = metaDataObj['class_dict'][self.unit.klass]['max']
-        offset = GC.FONT['text_yellow'].size('Mag')[0] + 4
+        # offset = GC.FONT['text_yellow'].size('Mag')[0] + 4
         # For each left stat
         stats = ['STR', 'MAG', 'SKL', 'SPD', 'DEF', 'RES']
         for idx, stat in enumerate(stats):
             index = cf.CONSTANTS['stat_names'].index(stat)
-            self.build_groove(menu_surf, (offset - 1, GC.TILEHEIGHT*1.1*idx + 10), int(max_stats[index]/float(cf.CONSTANTS['max_stat'])*44), 
+            self.build_groove(menu_surf, (27, GC.TILEHEIGHT*idx + 32), int(max_stats[index]/float(cf.CONSTANTS['max_stat'])*44), 
                               self.unit.stats[stat].base_stat/float(max_stats[index]))
-            self.unit.stats[stat].draw(menu_surf, self.unit, (43, GC.TILEHEIGHT*1.1*idx + 4), metaDataObj)
+            self.unit.stats[stat].draw(menu_surf, self.unit, (47, GC.TILEHEIGHT*idx + 24), metaDataObj)
 
         self.blit_stat_titles(menu_surf)
 
-        self.unit.stats['LCK'].draw(menu_surf, self.unit, (108, 4), metaDataObj)
-        self.unit.stats['MOV'].draw(menu_surf, self.unit, (108, GC.TILEHEIGHT*1.1 + 4), metaDataObj)
-        self.unit.stats['CON'].draw(menu_surf, self.unit, (108, GC.TILEHEIGHT*2.2 + 4), metaDataObj)
-        GC.FONT['text_blue'].blit(str(self.unit.strTRV), menu_surf, (92, GC.TILEHEIGHT*4.4 + 4)) # Blit Outlined Traveler
+        self.unit.stats['LCK'].draw(menu_surf, self.unit, (111, 24), metaDataObj)
+        self.unit.stats['MOV'].draw(menu_surf, self.unit, (111, GC.TILEHEIGHT + 24), metaDataObj)
+        self.unit.stats['CON'].draw(menu_surf, self.unit, (111, GC.TILEHEIGHT*2 + 24), metaDataObj)
+        GC.FONT['text_blue'].blit(str(self.unit.strTRV), menu_surf, (96, GC.TILEHEIGHT*4 + 24)) # Blit Outlined Traveler
         # Blit Outlined Aid
         GC.FONT['text_blue'].blit(str(self.unit.getAid()), menu_surf, 
-                                  (108 - GC.FONT['text_blue'].size(str(self.unit.getAid()))[0], GC.TILEHEIGHT*3.3+4))
+                                  (111 - GC.FONT['text_blue'].size(str(self.unit.getAid()))[0], GC.TILEHEIGHT*3 + 24))
 
         # Handle MountSymbols
-        """if 'Dragon' in self.unit.tags:
-            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0,48,16,16))
+        if 'Dragon' in self.unit.tags:
+            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0, 48, 16, 16))
         elif 'flying' in self.unit.status_bundle:
-            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0,32,16,16))
+            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0, 32, 16, 16))
         elif 'Mounted' in self.unit.tags:
-            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0,16,16,16))
+            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0, 16, 16, 16))
         else:
-            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0,0,16,16))
+            AidSurf = Engine.subsurface(GC.ICONDICT['Aid'], (0, 0, 16, 16))
         AidRect = AidSurf.get_rect()
-        AidRect.topleft = (menu_surf.get_width()/2 + 38, GC.TILEHEIGHT*3.3 + 4)
-        menu_surf.blit(AidSurf, AidRect)"""
+        AidRect.topleft = (112, GC.TILEHEIGHT*3 + 24)
+        menu_surf.blit(AidSurf, AidRect)
 
         # Handle Affinity
         if cf.CONSTANTS['support']:
             if self.unit.name in gameStateObj.support.node_dict:
-                gameStateObj.support.node_dict[self.unit.name].affinity.draw(menu_surf, (menu_surf.get_width()//2 + 32, GC.TILEHEIGHT*5.5 + 4))
+                gameStateObj.support.node_dict[self.unit.name].affinity.draw(menu_surf, (96, GC.TILEHEIGHT*5 + 24))
             else:
-                GC.FONT['text_blue'].blit('--', menu_surf, (94, GC.TILEHEIGHT*5.5 + 4)) # Blit No Affinity
+                GC.FONT['text_blue'].blit('---', menu_surf, (96, GC.TILEHEIGHT*5 + 24)) # Blit No Affinity
         else:
             rat = str(self.unit.get_rating())
             if len(rat) < 3:
                 rat_size = GC.FONT['text_blue'].size(rat)[0]
-                GC.FONT['text_blue'].blit(rat, menu_surf, (108 - rat_size, GC.TILEHEIGHT*5.5 + 4))
+                GC.FONT['text_blue'].blit(rat, menu_surf, (111 - rat_size, GC.TILEHEIGHT*5 + 24))
             else:
-                GC.FONT['text_blue'].blit(rat, menu_surf, (92, GC.TILEHEIGHT*5.5 + 4))
+                GC.FONT['text_blue'].blit(rat, menu_surf, (96, GC.TILEHEIGHT*5 + 24))
 
         return menu_surf
 
     def blit_stat_titles(self, menu_surf, growths=False):
-        GC.FONT['text_yellow'].blit(cf.WORDS['STR'], menu_surf, (4, 4)) # Blit Outlined Strength
-        GC.FONT['text_yellow'].blit(cf.WORDS['MAG'], menu_surf, (4, GC.TILEHEIGHT*1.1+4)) # Blit Outlined Magic
-        GC.FONT['text_yellow'].blit(cf.WORDS['SKL'], menu_surf, (4, GC.TILEHEIGHT*2.2+4)) # Blit Outlined Skill
-        GC.FONT['text_yellow'].blit(cf.WORDS['SPD'], menu_surf, (4, GC.TILEHEIGHT*3.3+4)) # Blit Outlined Speed
-        GC.FONT['text_yellow'].blit(cf.WORDS['LCK'], menu_surf, (68, 4)) # Blit Outlined Luck
-        GC.FONT['text_yellow'].blit(cf.WORDS['DEF'], menu_surf, (4, GC.TILEHEIGHT*4.4+4)) # Blit Outlined Defense
-        GC.FONT['text_yellow'].blit(cf.WORDS['RES'], menu_surf, (4, GC.TILEHEIGHT*5.5+4)) # Blit Outlined Resistance
-        GC.FONT['text_yellow'].blit(cf.WORDS['MOV'], menu_surf, (68, GC.TILEHEIGHT*1.1+4)) # Blit Outlined Movement
-        GC.FONT['text_yellow'].blit(cf.WORDS['CON'], menu_surf, (68, GC.TILEHEIGHT*2.2+4)) # Blit Outlined Constitution
-        GC.FONT['text_yellow'].blit(cf.WORDS['Trv'], menu_surf, (68, GC.TILEHEIGHT*4.4+4)) # Blit Outlined Traveler
+        GC.FONT['text_yellow'].blit(cf.WORDS['STR'], menu_surf, (8, 24)) # Blit Outlined Strength
+        GC.FONT['text_yellow'].blit(cf.WORDS['MAG'], menu_surf, (8, GC.TILEHEIGHT*1 + 24)) # Blit Outlined Magic
+        GC.FONT['text_yellow'].blit(cf.WORDS['SKL'], menu_surf, (8, GC.TILEHEIGHT*2 + 24)) # Blit Outlined Skill
+        GC.FONT['text_yellow'].blit(cf.WORDS['SPD'], menu_surf, (8, GC.TILEHEIGHT*3 + 24)) # Blit Outlined Speed
+        GC.FONT['text_yellow'].blit(cf.WORDS['LCK'], menu_surf, (72, 24)) # Blit Outlined Luck
+        GC.FONT['text_yellow'].blit(cf.WORDS['DEF'], menu_surf, (8, GC.TILEHEIGHT*4 + 24)) # Blit Outlined Defense
+        GC.FONT['text_yellow'].blit(cf.WORDS['RES'], menu_surf, (8, GC.TILEHEIGHT*5 + 24)) # Blit Outlined Resistance
+        GC.FONT['text_yellow'].blit(cf.WORDS['MOV'], menu_surf, (72, GC.TILEHEIGHT*1 + 24)) # Blit Outlined Movement
+        GC.FONT['text_yellow'].blit(cf.WORDS['CON'], menu_surf, (72, GC.TILEHEIGHT*2 + 24)) # Blit Outlined Constitution
+        GC.FONT['text_yellow'].blit(cf.WORDS['Trv'], menu_surf, (72, GC.TILEHEIGHT*4 + 24)) # Blit Outlined Traveler
         if growths:
-            GC.FONT['text_yellow'].blit('HP', menu_surf, (68, GC.TILEHEIGHT*3.3+4)) # Blit Outlined Aid
+            GC.FONT['text_yellow'].blit('HP', menu_surf, (72, GC.TILEHEIGHT*3 + 24)) # Blit Outlined Aid
         else:
-            GC.FONT['text_yellow'].blit(cf.WORDS['Aid'], menu_surf, (68, GC.TILEHEIGHT*3.3+4)) # Blit Outlined Aid
+            GC.FONT['text_yellow'].blit(cf.WORDS['Aid'], menu_surf, (72, GC.TILEHEIGHT*3 + 24)) # Blit Outlined Aid
         if cf.CONSTANTS['support']:
-            GC.FONT['text_yellow'].blit(cf.WORDS['Affin'], menu_surf, (68, GC.TILEHEIGHT*5.5+4)) # Blit Outlined Affinity
+            GC.FONT['text_yellow'].blit(cf.WORDS['Affin'], menu_surf, (72, GC.TILEHEIGHT*5 + 24)) # Blit Outlined Affinity
         else:
-            GC.FONT['text_yellow'].blit(cf.WORDS['Rat'], menu_surf, (68, GC.TILEHEIGHT*5.5+4)) # Blit Outlined Rating
+            GC.FONT['text_yellow'].blit(cf.WORDS['Rat'], menu_surf, (72, GC.TILEHEIGHT*5 + 24)) # Blit Outlined Rating
 
     def draw_personal_data_surf(self, surf):
-        menu_position = (108, GC.TILEHEIGHT + 16*self.scroll_offset)
+        menu_position = (96, 16*self.scroll_offset)
         surf.blit(self.personal_data_surf, menu_position)
 
     def create_growths_surf(self, gameStateObj):
         # Menu Background
-        menu_size = (GC.WINWIDTH//2+8, GC.WINHEIGHT - GC.TILEHEIGHT * 3)
-        menu_surf = MenuFunctions.CreateBaseMenuSurf(menu_size)
+        menu_size = (GC.WINWIDTH - 96, GC.WINHEIGHT)
+        menu_surf = Engine.create_surface(menu_size, transparent=True)
 
         stats = [self.unit.growths[1], self.unit.growths[2], self.unit.growths[3], self.unit.growths[4], self.unit.growths[6], self.unit.growths[7]]
 
@@ -366,23 +370,23 @@ class InfoMenu(StateMachine.State):
 
         for index, stat in enumerate(stats):
             font = GC.FONT['text_blue']
-            font.blit(str(stat), menu_surf, (49 - font.size(str(stat))[0], GC.TILEHEIGHT*1.1*index + 4))
-        GC.FONT['text_blue'].blit(str(self.unit.growths[5]), menu_surf, (115 - GC.FONT['text_blue'].size(str(self.unit.growths[5]))[0], 4)) # Blit Outlined Luck
-        GC.FONT['text_blue'].blit(str(0), menu_surf, (108 - GC.FONT['text_blue'].size(str(0))[0], GC.TILEHEIGHT*1.1+4)) # Blit Outlined Movement
-        GC.FONT['text_blue'].blit(str(0), menu_surf, (108 - GC.FONT['text_blue'].size(str(0))[0], GC.TILEHEIGHT*2.2+4)) # Blit Outlined Constitution
-        GC.FONT['text_blue'].blit(str(self.unit.strTRV), menu_surf, (92, GC.TILEHEIGHT*4.4+4)) # Blit Outlined Traveler
-        GC.FONT['text_blue'].blit(str(self.unit.growths[0]), menu_surf, (115 - GC.FONT['text_blue'].size(str(self.unit.growths[0]))[0], GC.TILEHEIGHT*3.3+4))
+            font.blit(str(stat), menu_surf, (47 - font.size(str(stat))[0], GC.TILEHEIGHT*1*index + 24))
+        GC.FONT['text_blue'].blit(str(self.unit.growths[5]), menu_surf, (111 - GC.FONT['text_blue'].size(str(self.unit.growths[5]))[0], 24)) # Blit Outlined Luck
+        GC.FONT['text_blue'].blit(str(self.unit.growths[9]), menu_surf, (111 - GC.FONT['text_blue'].size(str(self.unit.growths[9]))[0], GC.TILEHEIGHT*1 + 24)) # Blit Outlined Movement
+        GC.FONT['text_blue'].blit(str(self.unit.growths[8]), menu_surf, (111 - GC.FONT['text_blue'].size(str(self.unit.growths[8]))[0], GC.TILEHEIGHT*2 + 24)) # Blit Outlined Constitution
+        GC.FONT['text_blue'].blit(str(self.unit.strTRV), menu_surf, (96, GC.TILEHEIGHT*4 + 24)) # Blit Outlined Traveler
+        GC.FONT['text_blue'].blit(str(self.unit.growths[0]), menu_surf, (111 - GC.FONT['text_blue'].size(str(self.unit.growths[0]))[0], GC.TILEHEIGHT*3 + 24))
 
         # Handle Affinity
         if cf.CONSTANTS['support'] and self.unit.name in gameStateObj.support.node_dict:
-            gameStateObj.support.node_dict[self.unit.name].affinity.draw(menu_surf, (menu_surf.get_width()//2 + 32, GC.TILEHEIGHT*5.5 + 4))
+            gameStateObj.support.node_dict[self.unit.name].affinity.draw(menu_surf, (menu_surf.get_width()//2 + 32, GC.TILEHEIGHT*5 + 24))
         else:
-            GC.FONT['text_blue'].blit('--', menu_surf, (94, GC.TILEHEIGHT*5.5 + 4)) # Blit No Affinity
+            GC.FONT['text_blue'].blit('--', menu_surf, (96, GC.TILEHEIGHT*5 + 24)) # Blit No Affinity
 
         return menu_surf
 
     def draw_growths_surf(self, surf):
-        menu_position = (108, GC.TILEHEIGHT + 16*self.scroll_offset)
+        menu_position = (96, 16*self.scroll_offset)
         surf.blit(self.growths_surf, menu_position)
 
     def build_groove(self, surf, topleft, width, fill):
@@ -402,12 +406,13 @@ class InfoMenu(StateMachine.State):
         surf.blit(bgs_end, end_pos)
 
         # Build fill groove
-        number_of_fgs_needed = int(fill * (width - 2)) # Width of groove minus section for start and end of back groove
+        number_of_fgs_needed = int(fill * (width - 1)) # Width of groove minus section for start and end of back groove
         for groove in range(number_of_fgs_needed):
-            surf.blit(fgs_mid, (topleft[0] + bgs_start.get_width() + groove, topleft[1] + 1))
+            surf.blit(fgs_mid, (topleft[0] + bgs_start.get_width() + groove - 1, topleft[1] + 1))
 
     def create_wexp_surf(self):
-        menu_surf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH//2 + 8, 24))
+        menu_surf = Engine.create_surface((GC.WINWIDTH - 96, 24), transparent=True)
+        # menu_surf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH//2 + 8, 24))
         # Weapon Icons Pictures
         weaponIcons = GC.ITEMDICT['Wexp_Icons']
 
@@ -418,13 +423,13 @@ class InfoMenu(StateMachine.State):
             wexpLetter = Weapons.EXP.number_to_letter(wexp)
             wexp_percentage = Weapons.EXP.percentage(wexp)
             if wexp > 0:
-                offset = 3 + counter*x_pos
+                offset = 8 + counter*x_pos
                 counter += 1
                 # Add icon
                 menu_surf.blit(Engine.subsurface(weaponIcons, (0, index*16, 16, 16)), (offset, 4))
 
                 # Actually build grooves
-                self.build_groove(menu_surf, (offset + 18, 10), x_pos - 22, wexp_percentage)
+                self.build_groove(menu_surf, (offset + 18, 10), x_pos - 24, wexp_percentage)
 
                 # Add text
                 GC.FONT['text_blue'].blit(wexpLetter, menu_surf, (offset + 18 + (x_pos - 22)//2 - GC.FONT['text_blue'].size(wexpLetter)[0]//2, 4))
@@ -432,13 +437,13 @@ class InfoMenu(StateMachine.State):
         return menu_surf
 
     def draw_wexp_surf(self, surf):
-        menu_position = (108, GC.WINHEIGHT - 16 - 12 + 16*self.scroll_offset)
+        menu_position = (96, 20 + 16*self.scroll_offset)
         surf.blit(self.wexp_surf, menu_position)
 
     def create_equipment_surf(self, gameStateObj):
         # Menu Background
-        menu_size = (GC.WINWIDTH//2+8, GC.WINHEIGHT - GC.TILEHEIGHT)
-        menu_surf = MenuFunctions.CreateBaseMenuSurf(menu_size)
+        menu_size = (GC.WINWIDTH - 96, GC.WINHEIGHT)
+        menu_surf = Engine.create_surface(menu_size, transparent=True)
 
         # Blit background highlight
         index_of_mainweapon = None
@@ -447,15 +452,12 @@ class InfoMenu(StateMachine.State):
                 if item.weapon:
                     index_of_mainweapon = index
                     break
-            highlightSurf = GC.IMAGESDICT['MenuHighlight']
-            for slot in range((menu_surf.get_width() - 16)//highlightSurf.get_width()): # Gives me the amount of highlight needed
-                left = 8 + slot*highlightSurf.get_width()
-                top = 14 + index_of_mainweapon*16
-                menu_surf.blit(highlightSurf, (left, top))
+            highlightSurf = GC.IMAGESDICT['EquipmentHighlight']
+            menu_surf.blit(highlightSurf, (8, 32 + 16 * index_of_mainweapon))
 
         # Blit items
         for index, item in enumerate(self.unit.items):
-            item.draw(menu_surf, (4, index*GC.TILEHEIGHT+4)) # Draws icon
+            item.draw(menu_surf, (8, index*GC.TILEHEIGHT + 24)) # Draws icon
             if item.droppable:
                 namefont = GC.FONT['text_green']
                 usefont = GC.FONT['text_green']
@@ -465,31 +467,32 @@ class InfoMenu(StateMachine.State):
             else:
                 namefont = GC.FONT['text_grey']
                 usefont = GC.FONT['text_grey']
-            namefont.blit(item.name, menu_surf, (20, index*GC.TILEHEIGHT+5))
+            namefont.blit(item.name, menu_surf, (24, index*GC.TILEHEIGHT + 24))
             if item.uses:
-                uses = str(item.uses) + '/' + str(item.uses.total_uses)
+                cur_uses = str(item.uses)
+                total_uses = str(item.uses.total_uses)
             elif item.c_uses:
-                uses = str(item.c_uses) + '/' + str(item.c_uses.total_uses)
+                cur_uses = str(item.c_uses)
+                total_uses = str(item.c_uses.total_uses)
             else:
-                uses = "--/--"
-            usefont.blit(uses, menu_surf, (menu_surf.get_width() - 4 - usefont.size(uses)[0], index*GC.TILEHEIGHT+5))
+                cur_uses = total_uses = '--'
+            usefont.blit(cur_uses, menu_surf, (104 - usefont.size(cur_uses)[0], index*GC.TILEHEIGHT + 24))
+            namefont.blit("/", menu_surf, (106, index*GC.TILEHEIGHT + 24))
+            usefont.blit(total_uses, menu_surf, (128 - usefont.size(total_uses)[0], index*GC.TILEHEIGHT + 24))
 
         # Then, input battle stats
         BattleInfoSurf = GC.IMAGESDICT['BattleInfo']
         # Rect
-        top = menu_surf.get_height() - BattleInfoSurf.get_height() - 5
-        left = 4
-        width = BattleInfoSurf.get_width()
-        height = BattleInfoSurf.get_height()
-        right = left + width
+        top = 104
+        left = 12
         menu_surf.blit(BattleInfoSurf, (left, top))
         # Then populate battle info menu_surf
-        menu_surf.blit(GC.IMAGESDICT['EquipmentLogo'], (8, top+4)) 
-        GC.FONT['text_yellow'].blit(cf.WORDS["Rng"], menu_surf, (width//2+8, top))
-        GC.FONT['text_yellow'].blit(cf.WORDS["Atk"], menu_surf, (12, top + height//3))
-        GC.FONT['text_yellow'].blit(cf.WORDS["Hit"], menu_surf, (12, top + 2*height//3))
-        GC.FONT['text_yellow'].blit(cf.WORDS["AS"], menu_surf, (width//2+8, top + height//3))
-        GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (width//2+8, top + 2*height//3))
+        menu_surf.blit(GC.IMAGESDICT['EquipmentLogo'], (14, top+4)) 
+        GC.FONT['text_yellow'].blit(cf.WORDS["Rng"], menu_surf, (78, top))
+        GC.FONT['text_yellow'].blit(cf.WORDS["Atk"], menu_surf, (22, top + 16))
+        GC.FONT['text_yellow'].blit(cf.WORDS["Hit"], menu_surf, (22, top + 32))
+        GC.FONT['text_yellow'].blit(cf.WORDS["AS"], menu_surf, (78, top + 16))
+        GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (78, top + 32))
 
         if self.unit.getMainWeapon():
             rng = self.unit.getMainWeapon().get_str_RNG()
@@ -506,16 +509,16 @@ class InfoMenu(StateMachine.State):
         HitWidth = GC.FONT['text_blue'].size(acc)[0]
         AvoidWidth = GC.FONT['text_blue'].size(avo)[0]
         ASWidth = GC.FONT['text_blue'].size(atkspd)[0] 
-        GC.FONT['text_blue'].blit(rng, menu_surf, (right - 6 - RngWidth, top))
-        GC.FONT['text_blue'].blit(dam, menu_surf, (width//2 - 2 - AtkWidth, top + height//3))
-        GC.FONT['text_blue'].blit(acc, menu_surf, (width//2 - 2 - HitWidth, top + 2*height//3))
-        GC.FONT['text_blue'].blit(avo, menu_surf, (right - 6 - AvoidWidth, top + 2*height//3))
-        GC.FONT['text_blue'].blit(atkspd, menu_surf, (right - 6 - ASWidth, top + height//3))
+        GC.FONT['text_blue'].blit(rng, menu_surf, (127 - RngWidth, top))
+        GC.FONT['text_blue'].blit(dam, menu_surf, (71 - AtkWidth, top + 16))
+        GC.FONT['text_blue'].blit(acc, menu_surf, (71 - HitWidth, top + 32))
+        GC.FONT['text_blue'].blit(avo, menu_surf, (127 - AvoidWidth, top + 32))
+        GC.FONT['text_blue'].blit(atkspd, menu_surf, (127 - ASWidth, top + 16))
 
         return menu_surf
 
     def draw_equipment_surf(self, surf):
-        menu_position = (108, GC.TILEHEIGHT + 16*self.scroll_offset)
+        menu_position = (96, 16*self.scroll_offset)
         surf.blit(self.equipment_surf, menu_position)
 
     def draw_status(self, index, status, menu_surf):
@@ -528,35 +531,39 @@ class InfoMenu(StateMachine.State):
         elif status.count:
             output = str(status.count.count) + '/' + str(status.count.orig_count)
             GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 5))
-        GC.FONT['text_white'].blit(status.name, menu_surf, (24, index*16 + 5))
-        status.draw(menu_surf, (4, index*16 + 4))
+        GC.FONT['text_white'].blit(status.name, menu_surf, (32, index*16 + 68))
+        status.draw(menu_surf, (8, index*16 + 68))
 
     def create_skill_surf(self):
         # Menu background
-        menu_size = (GC.WINWIDTH//2+8, GC.WINHEIGHT - 3*GC.TILEHEIGHT)
-        menu_surf = MenuFunctions.CreateBaseMenuSurf(menu_size)
+        menu_size = (GC.WINWIDTH - 96, GC.WINHEIGHT)
+        menu_surf = Engine.create_surface(menu_size, transparent=True)
 
-        for index, status in enumerate([status for status in self.unit.status_effects if not (status.class_skill or status.hidden)][:6]):
-            self.draw_status(index, status, menu_surf)
+        statuses = [status for status in self.unit.status_effects if not (status.class_skill or status.hidden)][:6]
+        if statuses:
+            for index, status in enumerate(statuses):
+                self.draw_status(index, status, menu_surf)
+        else:
+            GC.FONT['text_white'].blit('---', menu_surf, (32, 48))
 
         return menu_surf
 
     def draw_skill_surf(self, surf):
-        menu_position = (108, GC.TILEHEIGHT + 16*self.scroll_offset)
+        menu_position = (96, 16*self.scroll_offset)
         surf.blit(self.skill_surf, menu_position)
 
     def create_class_skill_surf(self):
-        menu_surf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH//2 + 8, 24), 'ClearMenuBackground')
+        menu_surf = Engine.create_surface((GC.WINWIDTH - 96, 24), transparent=True)
         class_skills = [status for status in self.unit.status_effects if status.class_skill]
 
         for index, skill in enumerate(class_skills):
-            left_pos = index*((GC.WINWIDTH//2 + 8)//max(cf.CONSTANTS['num_skills'], len(class_skills)))
-            skill.draw(menu_surf, (left_pos + 4, 4))
+            left_pos = index*((GC.WINWIDTH - 96)//max(cf.CONSTANTS['num_skills'], len(class_skills)))
+            skill.draw(menu_surf, (left_pos + 8, 4))
 
         return menu_surf
 
     def draw_class_skill_surf(self, surf):
-        menu_position = (108, GC.WINHEIGHT - 16 - 12 + 16*self.scroll_offset)
+        menu_position = (96, GC.WINHEIGHT - 36 + 16*self.scroll_offset)
         surf.blit(self.class_skill_surf, menu_position)
 
     def create_support_surf(self, gameStateObj):
@@ -619,53 +626,51 @@ class HelpGraph(object):
         self.unit = unit
         self.current = None
 
-        if state == cf.WORDS['Personal Data']:
+        if state == 'Personal Data':
             self.populate_personal_data(metaDataObj)
             self.initial = "Strength"
-        elif state == cf.WORDS['Personal Growths']:
+        elif state == 'Personal Growths':
             self.populate_personal_data(metaDataObj, growths=True)
             self.initial = "Strength"
-        elif state == cf.WORDS['Equipment']:
+        elif state == 'Equipment':
             self.populate_equipment(metaDataObj)
             if self.unit.items:
                 self.initial = "Item0"
             else:
                 self.initial = "Unit Desc"
-        elif state == cf.WORDS["Supports"]:
-            self.populate_supports(gameStateObj, metaDataObj)
-            if any(support[2] for support in gameStateObj.support.get_supports(self.unit.name)):
-                self.initial = "Support0"
-            else:
-                self.initial = "Unit Desc"
-        elif state == cf.WORDS["Skills & Status"]:
+        # elif state == cf.WORDS["Supports"]:
+        #     self.populate_supports(gameStateObj, metaDataObj)
+        #     if any(support[2] for support in gameStateObj.support.get_supports(self.unit.name)):
+        #         self.initial = "Support0"
+        #     else:
+        #         self.initial = "Unit Desc"
+        elif state == 'Support & Status':
             self.populate_status(metaDataObj)
-            if [status for status in self.unit.status_effects if not status.class_skill]:
-                self.initial = "Status0"
-            elif self.unit.status_effects:
-                self.initial = "Skill0"
+            if [wexp for wexp in self.unit.wexp if wexp > 0]:
+                self.initial = "Wexp0"
             else:
                 self.initial = "Unit Desc"
 
     def populate_personal_data(self, metaDataObj, growths=False):
-        self.help_boxes["Strength"] = Help_Box("Strength", (2 + (6*GC.WINWIDTH//16), GC.TILEHEIGHT+5), create_help_box(cf.WORDS['STR_desc']))
-        self.help_boxes["Magic"] = Help_Box("Magic", (2 + (6*GC.WINWIDTH//16), GC.TILEHEIGHT*2.1+5), create_help_box(cf.WORDS['MAG_desc']))
-        self.help_boxes["Skill"] = Help_Box("Skill", (2 + (6*GC.WINWIDTH//16), GC.TILEHEIGHT*3.2+5), create_help_box(cf.WORDS['SKL_desc']))
-        self.help_boxes["Speed"] = Help_Box("Speed", (2 + (6*GC.WINWIDTH//16), GC.TILEHEIGHT*4.3+5), create_help_box(cf.WORDS['SPD_desc']))
-        self.help_boxes["Defense"] = Help_Box("Defense", (2 + (6*GC.WINWIDTH//16), GC.TILEHEIGHT*5.4+5), create_help_box(cf.WORDS['DEF_desc']))
-        self.help_boxes["Resistance"] = Help_Box("Resistance", (2 + (6*GC.WINWIDTH//16), GC.TILEHEIGHT*6.5+5), create_help_box(cf.WORDS['RES_desc']))
+        self.help_boxes["Strength"] = Help_Box("Strength", (88, 26), create_help_box(cf.WORDS['STR_desc']))
+        self.help_boxes["Magic"] = Help_Box("Magic", (88, GC.TILEHEIGHT + 26), create_help_box(cf.WORDS['MAG_desc']))
+        self.help_boxes["Skill"] = Help_Box("Skill", (88, GC.TILEHEIGHT*2 + 26), create_help_box(cf.WORDS['SKL_desc']))
+        self.help_boxes["Speed"] = Help_Box("Speed", (88, GC.TILEHEIGHT*3 + 26), create_help_box(cf.WORDS['SPD_desc']))
+        self.help_boxes["Defense"] = Help_Box("Defense", (88, GC.TILEHEIGHT*4 + 26), create_help_box(cf.WORDS['DEF_desc']))
+        self.help_boxes["Resistance"] = Help_Box("Resistance", (88, GC.TILEHEIGHT*5 + 26), create_help_box(cf.WORDS['RES_desc']))
 
-        self.help_boxes["Luck"] = Help_Box("Luck", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT+5), create_help_box(cf.WORDS['LCK_desc']))
-        self.help_boxes["Movement"] = Help_Box("Movement", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT*2.1 + 5), create_help_box(cf.WORDS['MOV_desc']))
-        self.help_boxes["Con"] = Help_Box("Con", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT*3.2 + 5), create_help_box(cf.WORDS['CON_desc']))
+        self.help_boxes["Luck"] = Help_Box("Luck", (152, 26), create_help_box(cf.WORDS['LCK_desc']))
+        self.help_boxes["Movement"] = Help_Box("Movement", (152, GC.TILEHEIGHT + 26), create_help_box(cf.WORDS['MOV_desc']))
+        self.help_boxes["Con"] = Help_Box("Con", (152, GC.TILEHEIGHT*2 + 26), create_help_box(cf.WORDS['CON_desc']))
         if growths:
-            self.help_boxes["Aid"] = Help_Box("Aid", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT*4.3 + 5), create_help_box(cf.WORDS['HP_desc']))
+            self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), create_help_box(cf.WORDS['HP_desc']))
         else:
-            self.help_boxes["Aid"] = Help_Box("Aid", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT*4.3 + 5), create_help_box(cf.WORDS['Aid_desc']))
-        self.help_boxes["Traveler"] = Help_Box("Traveler", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT*5.4 + 5), create_help_box(cf.WORDS['Trv_desc']))
+            self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), create_help_box(cf.WORDS['Aid_desc']))
+        self.help_boxes["Traveler"] = Help_Box("Traveler", (152, GC.TILEHEIGHT*4 + 26), create_help_box(cf.WORDS['Trv_desc']))
         if cf.CONSTANTS['support']:
-            self.help_boxes["Affin"] = Help_Box("Affin", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT*6.5 + 5), create_help_box(cf.WORDS['Affin_desc']))
+            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), create_help_box(cf.WORDS['Affin_desc']))
         else:
-            self.help_boxes["Affin"] = Help_Box("Affin", (10*GC.WINWIDTH//16 + 6, GC.TILEHEIGHT*6.5 + 5), create_help_box(cf.WORDS['Rat_desc']))
+            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), create_help_box(cf.WORDS['Rat_desc']))
 
         # Connect personal data
         self.help_boxes["Strength"].down = "Magic"
@@ -702,32 +707,34 @@ class HelpGraph(object):
         self.help_boxes["Traveler"].left = "Defense"
         self.help_boxes["Affin"].left = "Resistance"
 
-        # Populate Weapon Exp
-        good_weapons = [wexp for wexp in self.unit.wexp if wexp > 0]
-        for index, wexp in enumerate(good_weapons):
-            self.help_boxes["Wexp"+str(index)] = Help_Box("Wexp"+str(index), (100+60*index, 136), create_help_box("Weapon Rank: %s"%(wexp)))
+        # Populate Class Skills
+        skills = [status for status in self.unit.status_effects if status.class_skill]
 
-        for i in range(len(good_weapons)):
-            self.help_boxes["Wexp"+str(i)].right = ("Wexp"+str(i+1)) if i < (len(good_weapons) - 1) else None
-            self.help_boxes["Wexp"+str(i)].left = ("Wexp"+str(i-1)) if i > 0 else None
-            if i:
-                self.help_boxes["Wexp"+str(i)].up = "Affin"
+        for index, skill in enumerate(skills):
+            if skill.active:
+                description = skill.desc + ' ' + str(skill.active.current_charge) + '/' + str(skill.active.required_charge)
             else:
-                self.help_boxes["Wexp"+str(i)].up = "Resistance"
-                self.help_boxes["Wexp"+str(i)].left = "HP"
+                description = skill.desc
+            left = 92 + index*(96//max(cf.CONSTANTS['num_skills'], len(skills)))
+            self.help_boxes["Skill"+str(index)] = Help_Box("Skill"+str(index), (left, GC.WINHEIGHT - 32), create_help_box(description, name=skill.name))
 
-        if good_weapons:
-            self.help_boxes["Resistance"].down = "Wexp0"
-        if len(good_weapons) > 1:
-            self.help_boxes["Affin"].down = "Wexp1"
+        for i in range(len(skills)):
+            self.help_boxes["Skill"+str(i)].up = "Resistance"
+            self.help_boxes["Skill"+str(i)].right = ("Skill"+str(i+1)) if i < (len(skills) - 1) else None
+            self.help_boxes["Skill"+str(i)].left = ("Skill"+str(i-1)) if i > 0 else None
 
         self.populate_info_menu_default(metaDataObj)
+
+        if skills:
+            self.help_boxes["Skill0"].left = "HP"
+            self.help_boxes["HP"].right = "Skill0"
+            self.help_boxes["Experience"].right = "Skill0"
+            self.help_boxes["Resistance"].down = "Skill0"
+            self.help_boxes["Affin"].down = "Skill0"
 
         # Connect default with personal data
         self.help_boxes["Unit Desc"].right = "Speed"
         self.help_boxes["Class Desc"].right = "Resistance"
-        self.help_boxes["Experience"].right = "Resistance"
-        self.help_boxes["HP"].right = "Wexp0" if good_weapons else "Resistance"
         self.help_boxes["Resistance"].left = "Class Desc"
         self.help_boxes["Defense"].left = "Unit Desc"
         self.help_boxes["Speed"].left = "Unit Desc"
@@ -737,14 +744,14 @@ class HelpGraph(object):
 
     def populate_equipment(self, metaDataObj):
         for index, item in enumerate(self.unit.items):
-            pos = ((7*GC.WINWIDTH//16) - 8, GC.TILEHEIGHT*index + GC.TILEHEIGHT + 4)
+            pos = (88, GC.TILEHEIGHT*index + 24)
             self.help_boxes["Item"+str(index)] = Help_Box("Item"+str(index), pos, item.get_help_box())
 
-        self.help_boxes["Atk"] = Help_Box("Atk", (100, GC.WINHEIGHT - GC.TILEHEIGHT*2 - 2), create_help_box(cf.WORDS['Atk_desc']))
-        self.help_boxes["Hit"] = Help_Box("Hit", (100, GC.WINHEIGHT - GC.TILEHEIGHT - 2), create_help_box(cf.WORDS['Hit_desc']))
-        self.help_boxes["Rng"] = Help_Box("Rng", (160, GC.WINHEIGHT - GC.TILEHEIGHT*3 - 2), create_help_box(cf.WORDS['Rng_desc']))
-        self.help_boxes["AS"] = Help_Box("AS", (160, GC.WINHEIGHT - GC.TILEHEIGHT*2 - 2), create_help_box(cf.WORDS['AS_desc']))
-        self.help_boxes["Avoid"] = Help_Box("Avoid", (160, GC.WINHEIGHT - GC.TILEHEIGHT - 2), create_help_box(cf.WORDS['Avoid_desc']))
+        self.help_boxes["Atk"] = Help_Box("Atk", (100, GC.WINHEIGHT - 40), create_help_box(cf.WORDS['Atk_desc']))
+        self.help_boxes["Hit"] = Help_Box("Hit", (100, GC.WINHEIGHT - 24), create_help_box(cf.WORDS['Hit_desc']))
+        self.help_boxes["Rng"] = Help_Box("Rng", (158, GC.WINHEIGHT - 56), create_help_box(cf.WORDS['Rng_desc']))
+        self.help_boxes["AS"] = Help_Box("AS", (158, GC.WINHEIGHT - 40), create_help_box(cf.WORDS['AS_desc']))
+        self.help_boxes["Avoid"] = Help_Box("Avoid", (158, GC.WINHEIGHT - 24), create_help_box(cf.WORDS['Avoid_desc']))
 
         # Add connections
         for i in range(len(self.unit.items)):
@@ -788,6 +795,66 @@ class HelpGraph(object):
         self.help_boxes["Experience"].right = "Atk"
         self.help_boxes["HP"].right = "Hit"
 
+    def populate_status(self, metaDataObj):
+        # Populate Weapon Exp
+        good_weapons = [wexp for wexp in self.unit.wexp if wexp > 0]
+        for index, wexp in enumerate(good_weapons):
+            self.help_boxes["Wexp"+str(index)] = Help_Box("Wexp"+str(index), (92 + 60*index, 26), create_help_box("Weapon Rank: %s"%(wexp)))
+
+        for i in range(len(good_weapons)):
+            self.help_boxes["Wexp"+str(i)].right = ("Wexp"+str(i+1)) if i < (len(good_weapons) - 1) else None
+            self.help_boxes["Wexp"+str(i)].left = ("Wexp"+str(i-1)) if i > 0 else None
+
+        # Non-class skills
+        statuses = [status for status in self.unit.status_effects if not (status.class_skill or status.hidden)]
+
+        for index, status in enumerate(statuses):
+            pos = (104, GC.TILEHEIGHT*index + 48)
+            self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), pos, create_help_box(status.desc))
+
+        self.populate_info_menu_default(metaDataObj)
+
+        # Connect them together
+        for i in range(len(statuses)):
+            self.help_boxes["Status"+str(i)].down = ("Status"+str(i+1)) if i < (len(statuses) - 1) else None
+            self.help_boxes["Status"+str(i)].up = ("Status"+str(i-1)) if i > 0 else None
+        
+        for i in range(len(statuses)):
+            self.help_boxes["Status"+str(i)].left = "Unit Desc"
+
+        if good_weapons:
+            self.help_boxes["Wexp"+str(i)].left = "Unit Desc"
+            self.help_boxes['Unit Desc'].up = "Wexp0"
+
+        if statuses:
+            self.help_boxes['Unit Desc'].right = "Status" + str(min(3, len(statuses) - 1))
+            self.help_boxes['Experience'].right = "Status" + str(min(3, len(statuses) - 1))
+            self.help_boxes['HP'].right = "Status" + str(min(3, len(statuses) - 1))
+        elif good_weapons:
+            self.help_boxes['Unit Desc'].right = "Wexp0"
+            self.help_boxes['Experience'].right = "Wexp0"
+            self.help_boxes['HP'].right = "Wexp0"
+
+    def populate_info_menu_default(self, metaDataObj):
+        self.help_boxes["Unit Desc"] = Help_Box("Unit Desc", (16, 82), create_help_box(self.unit.desc))
+        self.help_boxes["Class Desc"] = Help_Box("Class Desc", (-8, 107), create_help_box(metaDataObj['class_dict'][self.unit.klass]['desc']))
+        self.help_boxes["Unit Level"] = Help_Box("Unit Level", (-8, 123), create_help_box(cf.WORDS['Level_desc']))
+        self.help_boxes["Experience"] = Help_Box("Experience", (22, 123), create_help_box(cf.WORDS['Exp_desc']))
+        self.help_boxes["HP"] = Help_Box("HP", (-8, 139), create_help_box(cf.WORDS['HP_desc']))
+
+        # Connections
+        self.help_boxes["Unit Desc"].down = "Class Desc"
+        self.help_boxes["Class Desc"].up = "Unit Desc"
+        self.help_boxes["Class Desc"].down = "Unit Level"
+        self.help_boxes["Unit Level"].up = "Class Desc"
+        self.help_boxes["Unit Level"].right = "Experience"
+        self.help_boxes["Unit Level"].down = "HP"
+        self.help_boxes["Experience"].left = "Unit Level"
+        self.help_boxes["Experience"].up = "Class Desc"
+        self.help_boxes["Experience"].down = "HP"
+        self.help_boxes["HP"].up = "Unit Level"
+
+    """
     def populate_supports(self, gameStateObj, metaDataObj):
         supports = gameStateObj.support.get_supports(self.unit.name)
         supports = [support for support in supports if support[2]]
@@ -839,70 +906,7 @@ class HelpGraph(object):
         self.help_boxes["Class Desc"].right = "Atk"
         self.help_boxes["Experience"].right = "Atk"
         self.help_boxes["HP"].right = "Hit"
-
-    def populate_status(self, metaDataObj):
-        statuses = [status for status in self.unit.status_effects if not status.class_skill]
-        skills = [status for status in self.unit.status_effects if status.class_skill]
-
-        for index, status in enumerate(statuses):
-            pos = ((7*GC.WINWIDTH//16) - 8, GC.TILEHEIGHT*1.1*index + GC.TILEHEIGHT + 4)
-            self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), pos, create_help_box(status.desc))
-
-        for index, skill in enumerate(skills):
-            if skill.active:
-                description = skill.desc + ' ' + str(skill.active.current_charge) + '/' + str(skill.active.required_charge)
-            else:
-                description = skill.desc
-            left = 108 + index*((GC.WINWIDTH//2 + 8)//max(cf.CONSTANTS['num_skills'], len(skills))) - 10
-            self.help_boxes["Skill"+str(index)] = Help_Box("Skill"+str(index), (left, 82 + 7*GC.TILEHEIGHT//2), create_help_box(description, name=skill.name))
-
-        self.populate_info_menu_default(metaDataObj)
-
-        # Connect them together
-        for i in range(len(statuses)):
-            self.help_boxes["Status"+str(i)].down = ("Status"+str(i+1)) if i < (len(statuses) - 1) else None
-            self.help_boxes["Status"+str(i)].up = ("Status"+str(i-1)) if i > 0 else None
-        
-        # Connect default with equipment
-        for i in range(len(statuses)):
-            self.help_boxes["Status"+str(i)].left = "Unit Desc"
-
-        if statuses:
-            self.help_boxes['Unit Desc'].up = "Status0"
-            self.help_boxes['Unit Desc'].right = "Status" + str(min(3, len(statuses) - 1))
-
-        if statuses and skills:
-            self.help_boxes["Status"+str(len(statuses)-1)].down = "Skill0"
-
-        for i in range(len(skills)):
-            if statuses:
-                self.help_boxes["Skill"+str(i)].up = "Status" + str(len(statuses)-1)
-            self.help_boxes["Skill"+str(i)].right = ("Skill"+str(i+1)) if i < (len(skills) - 1) else None
-            self.help_boxes["Skill"+str(i)].left = ("Skill"+str(i-1)) if i > 0 else None
-
-        if skills:
-            self.help_boxes["Skill0"].left = "HP"
-            self.help_boxes["HP"].right = "Skill0"
-            self.help_boxes["Experience"].right = "Skill0"
-
-    def populate_info_menu_default(self, metaDataObj):
-        self.help_boxes["Unit Desc"] = Help_Box("Unit Desc", (24, 84 + GC.TILEHEIGHT//2), create_help_box(self.unit.desc))
-        self.help_boxes["Class Desc"] = Help_Box("Class Desc", (-8, 84 + 3*GC.TILEHEIGHT//2), create_help_box(metaDataObj['class_dict'][self.unit.klass]['desc']))
-        self.help_boxes["Unit Level"] = Help_Box("Unit Level", (-8, 82 + 5*GC.TILEHEIGHT//2), create_help_box(cf.WORDS['Level_desc']))
-        self.help_boxes["Experience"] = Help_Box("Experience", (22, 84 + 5*GC.TILEHEIGHT//2), create_help_box(cf.WORDS['Exp_desc']))
-        self.help_boxes["HP"] = Help_Box("HP", (-8, 82 + 7*GC.TILEHEIGHT//2), create_help_box(cf.WORDS['HP_desc']))
-
-        # Connections
-        self.help_boxes["Unit Desc"].down = "Class Desc"
-        self.help_boxes["Class Desc"].up = "Unit Desc"
-        self.help_boxes["Class Desc"].down = "Unit Level"
-        self.help_boxes["Unit Level"].up = "Class Desc"
-        self.help_boxes["Unit Level"].right = "Experience"
-        self.help_boxes["Unit Level"].down = "HP"
-        self.help_boxes["Experience"].left = "Unit Level"
-        self.help_boxes["Experience"].up = "Class Desc"
-        self.help_boxes["Experience"].down = "HP"
-        self.help_boxes["HP"].up = "Unit Level"
+    """
 
 class Help_Box(Counters.CursorControl):
     def __init__(self, name, cursor_position, help_surf):
@@ -911,7 +915,7 @@ class Help_Box(Counters.CursorControl):
         self.help_dialog = help_surf
         # Determine help_topleft position
         if self.cursor_position[0] + self.help_dialog.get_width() > GC.WINWIDTH:
-            helpleft = GC.WINWIDTH - self.help_dialog.get_width()
+            helpleft = GC.WINWIDTH - self.help_dialog.get_width() - 8
         else:
             helpleft = self.cursor_position[0] - min(GC.TILEWIDTH*2, self.cursor_position[0]) # Don't go to far to the left
         if self.cursor_position[1] > GC.WINHEIGHT//2 + 8:
@@ -964,15 +968,20 @@ def create_help_box(description, num_lines=2, name=False):
     # Find the greater of the two lengths
     greater_line_len = max([font.size(string)[0] for string in strings])
 
-    size_x = greater_line_len + 16
+    size_x = greater_line_len + 24
     if name:
         num_lines += 1
-    size_y = font.height * num_lines + 8
+    size_y = font.height * num_lines + 16
     help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')
     # Now draw
     if name:
-        font.blit(name, help_surf, (4, 4))
+        font.blit(name, help_surf, (8, 8))
     for index, string in enumerate(strings):
-        font.blit(string, help_surf, (4, font.height*index + 4 + (16 if name else 0)))
+        font.blit(string, help_surf, (8, font.height*index + 8 + (16 if name else 0)))
 
-    return help_surf
+    # Draw help logo
+    h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
+    h_surf.blit(help_surf, (0, 3))
+    h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
+
+    return h_surf
