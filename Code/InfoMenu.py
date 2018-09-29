@@ -32,7 +32,8 @@ class InfoMenu(StateMachine.State):
 
             self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
             # Counters
-            self.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
+            # self.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
+            self.background = GC.IMAGESDICT['InfoMenuBackground']
             self.left_arrow = GUIObjects.ScrollArrow('left', (108, 1))
             self.right_arrow = GUIObjects.ScrollArrow('right', (GC.WINWIDTH - 13, 1), 0.5)
             self.scroll_offset = 0
@@ -180,56 +181,56 @@ class InfoMenu(StateMachine.State):
         surf.blit(activeSpriteSurf, (pos[0], pos[1] + 16*self.scroll_offset))
 
     def create_portrait(self, metaDataObj):
-        UnitInfoSurface = Engine.create_surface((7*GC.WINWIDTH//16, GC.WINHEIGHT), transparent=True)
+        UnitInfoSurface = Engine.create_surface((96, GC.WINHEIGHT), transparent=True)
         UnitInfoSurface = UnitInfoSurface.convert_alpha()
         # Blit Background of Character Portrait
-        PortraitBGSurf = GC.IMAGESDICT['PortraitBackground']
-        UnitInfoSurface.blit(PortraitBGSurf, (4, GC.TILEHEIGHT//2))
+        # PortraitBGSurf = GC.IMAGESDICT['PortraitBackground']
+        # UnitInfoSurface.blit(PortraitBGSurf, (4, GC.TILEHEIGHT//2))
         # Blit Character Portrait for the chosen unit
         # 80 x 72 is what fits in the portrait slot
         # 96 x 80 is the actual size of a big_portrait
         PortraitSurf = Engine.subsurface(self.unit.bigportrait, ((self.unit.bigportrait.get_width() - 80)//2, 0, 80, 72))
         UnitInfoSurface.blit(PortraitSurf, (12, GC.TILEHEIGHT//2+4))
         # Blit Background for the simple info block beneath the Character Portrait
-        InfoBlockSurf = GC.IMAGESDICT['TransparentBackground']
-        UnitInfoSurface.blit(InfoBlockSurf, (0, GC.WINHEIGHT - GC.TILEHEIGHT*3.5))
+        # InfoBlockSurf = GC.IMAGESDICT['TransparentBackground']
+        # UnitInfoSurface.blit(InfoBlockSurf, (0, GC.WINHEIGHT - GC.TILEHEIGHT*3.5))
         # Blit background for the unit Name banner beneath the Character Portrait
-        PortraitNameSurf = GC.IMAGESDICT['PortraitName']
-        p_left = PortraitBGSurf.get_width()//2 + 4 - PortraitNameSurf.get_width()//2
-        p_top = GC.TILEHEIGHT//2 + PortraitBGSurf.get_height() - 7
-        UnitInfoSurface.blit(PortraitNameSurf, (p_left, p_top))
+        # PortraitNameSurf = GC.IMAGESDICT['PortraitName']
+        # p_left = PortraitBGSurf.get_width()//2 + 4 - PortraitNameSurf.get_width()//2
+        # p_top = GC.TILEHEIGHT//2 + PortraitBGSurf.get_height() - 7
+        # UnitInfoSurface.blit(PortraitNameSurf, (p_left, p_top))
         # Blit the name on top of the unit name banner
-        NameSize = GC.FONT['text_white'].size(self.unit.name)
-        position = (p_left + PortraitNameSurf.get_width()//2 - NameSize[0]//2, p_top + PortraitNameSurf.get_height()//2 - NameSize[1]//2)
+        name_size = GC.FONT['text_white'].size(self.unit.name)
+        position = (96//2 - name_size[0]//2, 80)
         GC.FONT['text_white'].blit(self.unit.name, UnitInfoSurface, position) 
         # Blit the unit's class on the simple info block
         long_name = metaDataObj['class_dict'][self.unit.klass]['long_name']
-        GC.FONT['text_white'].blit(long_name, UnitInfoSurface, (GC.TILEWIDTH//2, GC.WINHEIGHT - GC.TILEHEIGHT * 3.25 - 1))
+        GC.FONT['text_white'].blit(long_name, UnitInfoSurface, (8, 104))
         # Blit the unit's level on the simple info block
-        LevelSize = GC.FONT['text_blue'].size(str(self.unit.level))
-        position = (GC.TILEWIDTH*2.5 - LevelSize[0] - 1, GC.WINHEIGHT - GC.TILEHEIGHT*2.5)
+        level_size = GC.FONT['text_blue'].size(str(self.unit.level))
+        position = (40 - level_size[0], 120)
         GC.FONT['text_blue'].blit(str(self.unit.level), UnitInfoSurface, position)
         # Blit the unit's exp on the simple info block
-        ExpSize = GC.FONT['text_blue'].size(str(self.unit.exp))
-        position = (GC.TILEWIDTH*4 - 2 - ExpSize[0], GC.WINHEIGHT - GC.TILEHEIGHT*2.5)
+        exp_size = GC.FONT['text_blue'].size(str(self.unit.exp))
+        position = (64 - exp_size[0], 120)
         GC.FONT['text_blue'].blit(str(self.unit.exp), UnitInfoSurface, position)
         # Blit the unit's current hp on the simple info block
         current_hp = str(self.unit.currenthp)
         if len(current_hp) > 2:
             current_hp = '??'
-        CurrentHPSize = GC.FONT['text_blue'].size(current_hp)
-        position = (GC.TILEWIDTH*2.5 - CurrentHPSize[0], GC.WINHEIGHT - GC.TILEHEIGHT*1.5)
+        current_hp_size = GC.FONT['text_blue'].size(current_hp)
+        position = (40 - current_hp_size[0], 136)
         GC.FONT['text_blue'].blit(current_hp, UnitInfoSurface, position)
         # Blit the unit's max hp on the simple info block
         max_hp = str(self.unit.stats['HP'])
         if len(max_hp) > 2:
             max_hp = '??'
-        MaxHPSize = GC.FONT['text_blue'].size(max_hp)
-        position = (GC.TILEWIDTH*4 - 2 - MaxHPSize[0], GC.WINHEIGHT - GC.TILEHEIGHT*1.5)
+        max_hp_size = GC.FONT['text_blue'].size(max_hp)
+        position = (64 - max_hp_size[0], 136)
         GC.FONT['text_blue'].blit(max_hp, UnitInfoSurface, position)
         # Blit the white status platform
         PlatSurf = GC.IMAGESDICT['StatusPlatform']
-        pos = (InfoBlockSurf.get_width() - 2 - PlatSurf.get_width(), GC.WINHEIGHT - GC.TILEHEIGHT*3.5 + InfoBlockSurf.get_height() + 2 - PlatSurf.get_width())
+        pos = (66, 131)
         UnitInfoSurface.blit(PlatSurf, pos)
         return UnitInfoSurface
 

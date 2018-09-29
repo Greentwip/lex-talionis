@@ -15,7 +15,7 @@ Text press B skips section (check)
 Info Menu bar down one pixel
 Info Menu help fade in and out
 Look at Info Menu help format (single line?)
-Turn change animation
+Turn change animation (check)
 Options Menu
 Objective Menu
 Text Sound Audio (Not going to happen)
