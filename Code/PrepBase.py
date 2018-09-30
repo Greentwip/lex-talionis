@@ -185,6 +185,7 @@ class PrepPickUnitsState(StateMachine.State):
             word_index += GC.FONT[pick_font[index]].size(word)[0]
         surf.blit(backSurf, topleft)
 
+        gameStateObj.activeMenu.draw_units(surf, -16, gameStateObj)
         gameStateObj.activeMenu.draw_cursor(surf, -16)
 
         return surf

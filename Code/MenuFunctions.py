@@ -1480,6 +1480,17 @@ class UnitSelectMenu(Counters.CursorControl):
         if self.draw_extra_marker:
             self.draw_extra_highlight(surf)
 
+        self.draw_units(surf, x_center, gameStateObj)
+
+        # Blit cursor
+        self.draw_cursor(surf, x_center)
+        if self.draw_extra_marker:
+            self.draw_extra_cursor(surf)
+
+        if len(self.options) > self.units_per_row*self.num_rows:
+            self.scroll_bar.draw(surf, self.scroll, self.num_rows, len(self.options)//self.units_per_row + 1)
+
+    def draw_units(self, surf, x_center, gameStateObj):
         s_size = self.units_per_row*self.num_rows
         for index, unit in enumerate(self.options[self.scroll*self.units_per_row:s_size+self.scroll*self.units_per_row]):
             top = index//self.units_per_row
@@ -1503,14 +1514,6 @@ class UnitSelectMenu(Counters.CursorControl):
                     font = GC.FONT['text_green']  # Locked/Lord character
             position = (self.topleft[0] + 20 + 1 + 16 + x_center + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)
             font.blit(unit.name, surf, position)
-
-        # Blit cursor
-        self.draw_cursor(surf, x_center)
-        if self.draw_extra_marker:
-            self.draw_extra_cursor(surf)
-
-        if len(self.options) > self.units_per_row*self.num_rows:
-            self.scroll_bar.draw(surf, self.scroll, self.num_rows, len(self.options)//self.units_per_row + 1)
 
     def draw_cursor(self, surf, x_center):
         left = self.topleft[0] + 8 + x_center + self.currentSelection%self.units_per_row*self.option_length + self.cursorAnim[self.cursorCounter]

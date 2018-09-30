@@ -1,15 +1,16 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons
+    import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons, Image_Modification
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons
+    from . import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons, Image_Modification
 
 class InfoMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
+            self.show_map = False
             # Set unit to be displayed
             self.unit = gameStateObj.info_menu_struct['chosen_unit']
             if not gameStateObj.info_menu_struct['scroll_units']:
@@ -34,12 +35,20 @@ class InfoMenu(StateMachine.State):
             self.background = GC.IMAGESDICT['InfoMenuBackground']
             self.left_arrow = GUIObjects.ScrollArrow('left', (103, 3))
             self.right_arrow = GUIObjects.ScrollArrow('right', (217, 3), 0.5)
-            self.scroll_offset = 0
 
             self.logo = None
-            self.switch_logo()
+            self.switch_logo(self.states[self.currentState])
 
             self.hold_flag = gameStateObj.info_menu_struct['one_unit_only']
+
+            # Transition helpers
+            self.nextState = None
+            self.next_unit = None
+            self.scroll_offset_y = 0
+            self.scroll_offset_x = 0
+            self.transparency = 0
+            self.transition = None
+            self.transition_counter = 0
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -92,7 +101,7 @@ class InfoMenu(StateMachine.State):
                 if self.helpMenu.help_boxes[self.helpMenu.current].down:
                     GC.SOUNDDICT['Select 6'].play()
                     self.helpMenu.current = self.helpMenu.help_boxes[self.helpMenu.current].down
-        else:
+        elif not self.transition:  # Only takes input when not transitioning -- for sanity's sake?
             if event == 'INFO':
                 GC.SOUNDDICT['Info In'].play()
                 self.helpMenu.current = self.helpMenu.initial
@@ -110,57 +119,143 @@ class InfoMenu(StateMachine.State):
             elif 'DOWN' in directions:
                 self.last_fluid = currentTime
                 GC.SOUNDDICT['Status_Character'].play()
-                if not self.hold_flag:
+                if not self.hold_flag and len(self.scroll_units):
                     index = self.scroll_units.index(self.unit)
                     if index < len(self.scroll_units) - 1:
-                        self.unit = self.scroll_units[index+1]
+                        self.next_unit = self.scroll_units[index + 1]
                     else:
-                        self.unit = self.scroll_units[0]
-                    self.scroll_offset = 9
-                    self.reset_surfs()
-                    self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+                        self.next_unit = self.scroll_units[0]
+                    self.transition = 'DOWN'
+                    # self.reset_surfs()
+                    self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
             elif 'UP' in directions:
                 self.last_fluid = currentTime
                 GC.SOUNDDICT['Status_Character'].play()
-                if not self.hold_flag:
+                if not self.hold_flag and len(self.scroll_units):
                     index = self.scroll_units.index(self.unit)
                     if index > 0:
-                        self.unit = self.scroll_units[index - 1]
+                        self.next_unit = self.scroll_units[index - 1]
                     else:
-                        self.unit = self.scroll_units[-1] # last unit
-                    self.scroll_offset = -9
-                    self.reset_surfs()
-                    self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+                        self.next_unit = self.scroll_units[-1] # last unit
+                    self.transition = 'UP'
+                    # self.reset_surfs()
+                    self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
 
     def move_left(self, gameStateObj, metaDataObj):
         GC.SOUNDDICT['Status_Page_Change'].play()
         self.last_fluid = Engine.get_time()
-        self.currentState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
-        self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+        self.nextState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
+        self.transition = 'LEFT'
+        self.helpMenu = HelpGraph(self.states[self.nextState], self.unit, metaDataObj, gameStateObj)
         self.left_arrow.pulse()
-        self.switch_logo()
+        self.switch_logo(self.states[self.nextState])
 
     def move_right(self, gameStateObj, metaDataObj):
         GC.SOUNDDICT['Status_Page_Change'].play()
         self.last_fluid = Engine.get_time()
-        self.currentState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
-        self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+        self.nextState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
+        self.transition = 'RIGHT'
+        self.helpMenu = HelpGraph(self.states[self.nextState], self.unit, metaDataObj, gameStateObj)
         self.right_arrow.pulse()
-        self.switch_logo()
+        self.switch_logo(self.states[self.nextState])
 
     def update(self, gameStateObj, metaDataObj):
         if self.helpMenu.current:
             self.helpMenu.help_boxes[self.helpMenu.current].update()
 
-        if self.scroll_offset > 0:
-            self.scroll_offset -= 1
-        if self.scroll_offset < 0:
-            self.scroll_offset += 1
+        # Up and Down
+        if self.next_unit:
+            self.transition_counter += 1
+            # Transition in
+            if self.next_unit == self.unit:
+                if self.transition_counter == 1:
+                    self.transparency = 200
+                    self.scroll_offset_y = -80 if self.transition == 'DOWN' else 80
+                elif self.transition_counter == 2:
+                    self.transparency = 160
+                    self.scroll_offset_y = -32 if self.transition == 'DOWN' else 32
+                elif self.transition_counter == 3:
+                    self.transparency = 120
+                    self.scroll_offset_y = -16 if self.transition == 'DOWN' else 16
+                elif self.transition_counter == 4:
+                    self.transparency = 40
+                    self.scroll_offset_y = -4 if self.transition == 'DOWN' else 4
+                elif self.transition_counter == 5:
+                    self.scroll_offset_y = 0
+                else:
+                    self.transition = None
+                    self.transparency = 0
+                    self.next_unit = None
+                    self.transition_counter = 0
+            # Transition out
+            else:
+                if self.transition_counter == 1:
+                    self.transparency = 40
+                elif self.transition_counter == 2:
+                    self.transparency = 80
+                elif self.transition_counter == 3:
+                    self.transparency = 120
+                    self.scroll_offset_y = 8 if self.transition == 'DOWN' else -8
+                elif self.transition_counter == 4:
+                    self.transparency = 200
+                    self.scroll_offset_y = 16 if self.transition == 'DOWN' else -16
+                else:
+                    self.transparency = 255
+                    self.scroll_offset_y = 160 if self.transition == 'DOWN' else -160
+                    self.unit = self.next_unit  # Now transition in
+                    self.reset_surfs()
+                    self.transition_counter = 0
+
+        # Left and Right
+        elif self.nextState is not None:
+            self.transition_counter += 1
+            # Transition in
+            if self.nextState == self.currentState:
+                if self.transition_counter == 1:
+                    self.scroll_offset_x = 104 if self.transition == 'RIGHT' else -104
+                elif self.transition_counter == 2:
+                    self.scroll_offset_x = 72 if self.transition == 'RIGHT' else -72
+                elif self.transition_counter == 3:
+                    self.scroll_offset_x = 56 if self.transition == 'RIGHT' else -56
+                elif self.transition_counter == 4:
+                    self.scroll_offset_x = 40 if self.transition == 'RIGHT' else -40
+                elif self.transition_counter == 5:
+                    self.scroll_offset_x = 24 if self.transition == 'RIGHT' else -24
+                elif self.transition_counter == 6:
+                    self.scroll_offset_x = 8 if self.transition == 'RIGHT' else -8
+                else:
+                    self.transition = None
+                    self.scroll_offset_x = 0
+                    self.nextState = None
+                    self.transition_counter = 0
+            else:
+                if self.transition_counter == 1:
+                    self.scroll_offset_x = -32 if self.transition == 'RIGHT' else 32
+                elif self.transition_counter == 2:
+                    self.scroll_offset_x = -56 if self.transition == 'RIGHT' else 56
+                elif self.transition_counter == 3:
+                    self.scroll_offset_x = -80 if self.transition == 'RIGHT' else 80
+                elif self.transition_counter == 4:
+                    self.scroll_offset_x = -96 if self.transition == 'RIGHT' else 96
+                elif self.transition_counter == 5:
+                    self.scroll_offset_x = -112 if self.transition == 'RIGHT' else 112
+                else:
+                    self.scroll_offset_x = -140 if self.transition == 'RIGHT' else 140
+                    self.currentState = self.nextState
+                    self.transition_counter = 0
 
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
-        surf.fill(GC.COLORDICT['black'])
+        # surf.fill(GC.COLORDICT['black'])
         surf.blit(self.background, (0, 0))
+
+        # Image flashy thing at the top of the InfoMenu
+        num_frames = 8
+        blend_perc = abs(num_frames - ((Engine.get_time()/134)%(num_frames*2))) / float(num_frames)  # 8 frames long, 8 different frames
+        im = Image_Modification.flickerImageTranslucentBlend(GC.IMAGESDICT['InfoMenuFlash'], 128.*blend_perc)
+        surf.blit(im, (98, 0), None, Engine.BLEND_RGB_ADD)
+
+        # Portrait and Slide
         self.draw_portrait(surf, metaDataObj)
         self.drawSlide(surf, gameStateObj, metaDataObj)
 
@@ -175,13 +270,20 @@ class InfoMenu(StateMachine.State):
             self.portrait_surf = self.create_portrait(metaDataObj)
 
         # Stick it on the surface
-        surf.blit(self.portrait_surf, (0, 16*self.scroll_offset))
+        if self.transparency:
+            im = Image_Modification.flickerImageTranslucent255(self.portrait_surf, self.transparency)
+            surf.blit(im, (0, self.scroll_offset_y))
+        else:
+            surf.blit(self.portrait_surf, (0, self.scroll_offset_y))
 
         # Blit the unit's active sprite
-        activeSpriteSurf = self.unit.sprite.create_image('active')
-        pos = (74 - max(0, (activeSpriteSurf.get_width() - 16)//2),
-               GC.WINHEIGHT - GC.TILEHEIGHT*3.5 + 18 - max(0, (activeSpriteSurf.get_width() - 16)/2))
-        surf.blit(activeSpriteSurf, (pos[0], pos[1] + 16*self.scroll_offset))
+        if not self.transparency:
+            activeSpriteSurf = self.unit.sprite.create_image('active')
+            x_pos = 74 - max(0, (activeSpriteSurf.get_width() - 16)//2)
+            y_pos = GC.WINHEIGHT - GC.TILEHEIGHT*3.5 + 18 - max(0, (activeSpriteSurf.get_width() - 16)/2)
+            # im = Image_Modification.flickerImageTranslucent255(activeSpriteSurf, self.transparency)
+            # surf.blit(im, (x_pos, y_pos + self.scroll_offset_y))
+            surf.blit(activeSpriteSurf, (x_pos, y_pos + self.scroll_offset_y))
 
     def create_portrait(self, metaDataObj):
         UnitInfoSurface = Engine.create_surface((96, GC.WINHEIGHT), transparent=True)
@@ -229,8 +331,7 @@ class InfoMenu(StateMachine.State):
         self.left_arrow.draw(surf)
         self.right_arrow.draw(surf)
 
-    def switch_logo(self):
-        name = self.states[self.currentState]
+    def switch_logo(self, name):
         if name == "Personal Data":
             image = GC.IMAGESDICT['InfoPersonalDataTitle']
         elif name == "Equipment":
@@ -245,41 +346,51 @@ class InfoMenu(StateMachine.State):
             self.logo = MenuFunctions.Logo(image, (164, 10))
 
     def drawSlide(self, surf, gameStateObj, metaDataObj):
+        top_surf = Engine.create_surface((surf.get_width(), surf.get_height()), transparent=True)
+        main_surf = Engine.copy_surface(top_surf)
         # blit title of menu
-        surf.blit(GC.IMAGESDICT['InfoTitleBackground'], (112, 8 + 16*self.scroll_offset))
+        top_surf.blit(GC.IMAGESDICT['InfoTitleBackground'], (112, 8))
         if self.logo:
             self.logo.update()
-            self.logo.draw(surf, 16*self.scroll_offset)
+            self.logo.draw(top_surf)
         page = str(self.currentState + 1) + '/' + str(len(self.states))
-        GC.FONT['small_white'].blit(page, surf, (235 - GC.FONT['small_white'].size(page)[0], 12))
+        GC.FONT['small_white'].blit(page, top_surf, (235 - GC.FONT['small_white'].size(page)[0], 12))
 
-        self.drawTopArrows(surf)
+        self.drawTopArrows(top_surf)
 
         if self.states[self.currentState] == "Personal Data":
             if self.growth_flag:
                 if not self.growths_surf:
                     self.growths_surf = self.create_growths_surf(gameStateObj)
-                self.draw_growths_surf(surf)
+                self.draw_growths_surf(main_surf)
             else:
                 if not self.personal_data_surf:
                     self.personal_data_surf = self.create_personal_data_surf(gameStateObj, metaDataObj)
-                self.draw_personal_data_surf(surf)
+                self.draw_personal_data_surf(main_surf)
             if not self.class_skill_surf:
                 self.class_skill_surf = self.create_class_skill_surf()
-            self.draw_class_skill_surf(surf)
+            self.draw_class_skill_surf(main_surf)
         elif self.states[self.currentState] == 'Equipment':
             if not self.equipment_surf:
                 self.equipment_surf = self.create_equipment_surf(gameStateObj)
-            self.draw_equipment_surf(surf)
+            self.draw_equipment_surf(main_surf)
         elif self.states[self.currentState] == 'Support & Status': 
-            surf.blit(GC.IMAGESDICT['StatusLogo'], (100, 44 + 16*self.scroll_offset))
+            main_surf.blit(GC.IMAGESDICT['StatusLogo'], (100, 48))
             if not self.skill_surf:
                 self.skill_surf = self.create_skill_surf()
-            self.draw_skill_surf(surf)
+            self.draw_skill_surf(main_surf)
             if not self.wexp_surf:
                 self.wexp_surf = self.create_wexp_surf()
-            self.draw_wexp_surf(surf)
+            self.draw_wexp_surf(main_surf)
             # Support surf also goes here
+
+        # Now put it in the right place
+        offset_x = max(96, 96 - self.scroll_offset_x)
+        main_surf = Engine.subsurface(main_surf, (offset_x, 0, main_surf.get_width() - offset_x, GC.WINHEIGHT))
+        top_surf.blit(main_surf, (max(96, 96 + self.scroll_offset_x), self.scroll_offset_y))
+        if self.transparency:
+            top_surf = Image_Modification.flickerImageTranslucent255(top_surf, self.transparency)
+        surf.blit(top_surf, (0, 0))
     
     def create_personal_data_surf(self, gameStateObj, metaDataObj):
         # Menu Background
@@ -356,7 +467,7 @@ class InfoMenu(StateMachine.State):
             GC.FONT['text_yellow'].blit(cf.WORDS['Rat'], menu_surf, (72, GC.TILEHEIGHT*5 + 24)) # Blit Outlined Rating
 
     def draw_personal_data_surf(self, surf):
-        menu_position = (96, 16*self.scroll_offset)
+        menu_position = (96, 0)
         surf.blit(self.personal_data_surf, menu_position)
 
     def create_growths_surf(self, gameStateObj):
@@ -386,7 +497,7 @@ class InfoMenu(StateMachine.State):
         return menu_surf
 
     def draw_growths_surf(self, surf):
-        menu_position = (96, 16*self.scroll_offset)
+        menu_position = (96, 0)
         surf.blit(self.growths_surf, menu_position)
 
     def build_groove(self, surf, topleft, width, fill):
@@ -437,7 +548,7 @@ class InfoMenu(StateMachine.State):
         return menu_surf
 
     def draw_wexp_surf(self, surf):
-        menu_position = (96, 20 + 16*self.scroll_offset)
+        menu_position = (96, 24)
         surf.blit(self.wexp_surf, menu_position)
 
     def create_equipment_surf(self, gameStateObj):
@@ -518,21 +629,21 @@ class InfoMenu(StateMachine.State):
         return menu_surf
 
     def draw_equipment_surf(self, surf):
-        menu_position = (96, 16*self.scroll_offset)
+        menu_position = (96, 0)
         surf.blit(self.equipment_surf, menu_position)
 
     def draw_status(self, index, status, menu_surf):
         if status.time:
-            pos = (menu_surf.get_width() - GC.FONT['text_blue'].size(str(status.time.time_left))[0] - 4, index*16 + 5)
+            pos = (menu_surf.get_width() - GC.FONT['text_blue'].size(str(status.time.time_left))[0] - 4, index*16 + 56)
             GC.FONT['text_blue'].blit(str(status.time.time_left), menu_surf, pos)
         elif status.active and status.active.required_charge > 0:
             output = str(status.active.current_charge) + '/' + str(status.active.required_charge)
-            GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 5))
+            GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 56))
         elif status.count:
             output = str(status.count.count) + '/' + str(status.count.orig_count)
-            GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 5))
-        GC.FONT['text_white'].blit(status.name, menu_surf, (32, index*16 + 68))
-        status.draw(menu_surf, (8, index*16 + 68))
+            GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 56))
+        GC.FONT['text_white'].blit(status.name, menu_surf, (32, index*16 + 56))
+        status.draw(menu_surf, (8, index*16 + 56))
 
     def create_skill_surf(self):
         # Menu background
@@ -544,12 +655,12 @@ class InfoMenu(StateMachine.State):
             for index, status in enumerate(statuses):
                 self.draw_status(index, status, menu_surf)
         else:
-            GC.FONT['text_white'].blit('---', menu_surf, (32, 48))
+            GC.FONT['text_white'].blit('---', menu_surf, (32, 56))
 
         return menu_surf
 
     def draw_skill_surf(self, surf):
-        menu_position = (96, 16*self.scroll_offset)
+        menu_position = (96, 0)
         surf.blit(self.skill_surf, menu_position)
 
     def create_class_skill_surf(self):
@@ -563,7 +674,7 @@ class InfoMenu(StateMachine.State):
         return menu_surf
 
     def draw_class_skill_surf(self, surf):
-        menu_position = (96, GC.WINHEIGHT - 36 + 16*self.scroll_offset)
+        menu_position = (96, GC.WINHEIGHT - 36)
         surf.blit(self.class_skill_surf, menu_position)
 
     def create_support_surf(self, gameStateObj):
@@ -617,7 +728,7 @@ class InfoMenu(StateMachine.State):
         return menu_surf
 
     def draw_support_surf(self, surf):
-        menu_position = (108, GC.TILEHEIGHT + 16*self.scroll_offset)
+        menu_position = (108, GC.TILEHEIGHT)
         surf.blit(self.support_surf, menu_position)
 
 class HelpGraph(object):

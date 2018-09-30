@@ -955,6 +955,7 @@ class Dialogue_Scene(object):
         waiting_cursor = True
         transition = False
         thought_bubble = False
+        line[2] = line[2].replace('|', '{w}{br}')
         if 'hint' in line:
             if 'auto' in line:
                 position = GC.WINWIDTH//4, GC.WINHEIGHT//4
