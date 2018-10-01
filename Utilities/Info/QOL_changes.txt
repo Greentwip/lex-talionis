@@ -15,8 +15,9 @@ Text press B skips section (check)
 Info Menu bar down one pixel (check)
 Info Menu help fade in and out
 Look at Info Menu help format (single line?)
+Help screen text write in
 Turn change animation (check)
-Options Menu
+Options Menu (check)
 Objective Menu
 Text Sound Audio (Not going to happen)
 Have units flash yellow when charged with a skill (check)

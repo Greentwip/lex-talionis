@@ -20,7 +20,7 @@ class ScrollBar(object):
 
     def draw(self, surf, scroll, limit, num_options):
         self.arrow_counter.update()
-        height = limit*16 - 16
+        height = limit*16 - 20
         start_frac = scroll/float(num_options)
         end_frac = (scroll + limit)/float(num_options)
 
