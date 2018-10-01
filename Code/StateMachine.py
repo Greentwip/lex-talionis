@@ -635,6 +635,7 @@ class MoveState(State):
                 GC.SOUNDDICT['Error'].play()
 
     def end(self, gameStateObj, metaDataObj):
+        gameStateObj.cursor.border_position = None
         gameStateObj.allarrows = []
         gameStateObj.remove_fake_cursors()
         gameStateObj.highlight_manager.remove_highlights()

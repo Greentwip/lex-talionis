@@ -33,6 +33,8 @@ class Cursor(object):
 
         self.back_pressed = False
         self.spriteOffset = [0, 0]
+        self.already_stopped_at_move_border = False  # Only applies during MoveState in StateMachine
+        self.border_position = None  # Where the arrow stopped at the border
         
     def draw(self, surf):
         if self.drawState or self.fake: # Only draws if cursor is on
@@ -98,6 +100,8 @@ class Cursor(object):
         GC.SOUNDDICT['Select 5'].play()
         x, y = self.position
         self.position = x + dx, y + dy
+        if gameStateObj.highlight_manager.check_arrow(self.position):
+            self.border_position = self.position
         self.place_arrows(gameStateObj)
         # Remove unit display
         self.remove_unit_display()
@@ -111,8 +115,12 @@ class Cursor(object):
                 self.spriteOffset[1] += 12*dy
 
     def place_arrows(self, gameStateObj):
-        if gameStateObj.stateMachine.getState() == 'move' and gameStateObj.highlight_manager.check_arrow(self.position):
-            self.movePath = self.currentSelectedUnit.getPath(gameStateObj, self.position)
+        # if gameStateObj.stateMachine.getState() == 'move' and gameStateObj.highlight_manager.check_arrow(self.position):
+        if gameStateObj.stateMachine.getState() == 'move':
+            if self.border_position:
+                self.movePath = self.currentSelectedUnit.getPath(gameStateObj, self.border_position)
+            else:
+                self.movePath = self.currentSelectedUnit.getPath(gameStateObj, self.position)
             self.constructArrows(self.movePath[::-1], gameStateObj)
 
     # The algorithm below is all hard-coded in, which sucks, should change it later, but it WORKS, so thats good
@@ -169,9 +177,34 @@ class Cursor(object):
         # Handle Cursor movement   -   Move the cursor around
         # Refuses to move Cursor if not enough time has passed since the cursor has last moved. This is
         # a hack to slow down cursor movement rate.
+        if self.already_stopped_at_move_border:  # Must click again to keep moving
+            self.fluid_helper.update(gameStateObj, hold=False)
+        else:
+            self.fluid_helper.update(gameStateObj)
         # Back doubles speed
         gameStateObj.cameraOffset.back_pressed(self.back_pressed)  # changes camera speed
         directions = self.fluid_helper.get_directions(double_speed=self.back_pressed)
+
+        # This section tries to handle the case where the cursor should STOP when it reaches the units movement borders
+        # However, it then needs to continue on when re-pressed
+        if gameStateObj.highlight_manager.check_arrow(self.position):
+            if directions:
+                if ('LEFT' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0] - 1, self.position[1]))) or \
+                   ('RIGHT' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0] + 1, self.position[1]))) or \
+                   ('UP' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0], self.position[1] - 1))) or \
+                   ('DOWN' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0], self.position[1] + 1))):
+                    if self.already_stopped_at_move_border:
+                        self.already_stopped_at_move_border = False
+                    else:
+                        directions = []
+                        self.fluid_helper.reset()  # Reset input so we don't keep going
+                        self.already_stopped_at_move_border = True
+                else:
+                    self.already_stopped_at_move_border = False
+        else:
+            self.already_stopped_at_move_border = False
+
+        # Normal movement
         if 'LEFT' in directions and self.position[0] > 0:
             self.move((-1, 0), gameStateObj)
             if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Cursor controls camera movement
@@ -328,8 +361,6 @@ class Cursor(object):
 
     def take_input(self, eventList, gameStateObj):
         if not self.fake:
-            self.fluid_helper.update(gameStateObj)
-            # Handle cursor movement
             self.handleMovement(gameStateObj)
 
     def update(self, gameStateObj):

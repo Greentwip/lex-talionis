@@ -148,35 +148,38 @@ class InputManager(object):
 
 class FluidScroll(object):
     def __init__(self, speed=64, slow_speed=3):
-        self.moveLeft = False
-        self.moveRight = False
-        self.moveUp = False
-        self.moveDown = False
+        self.reset()
         self.left_update, self.right_update, self.up_update, self.down_update = 0, 0, 0, 0
         self.fast_speed = speed
         self.slow_speed = speed*slow_speed if slow_speed else speed
         self.move_counter = 0
 
-    def update(self, gameStateObj):
-        if gameStateObj.input_manager.is_pressed('LEFT') or 'LEFT' in gameStateObj.input_manager.key_down_events:
+    def reset(self):
+        self.moveLeft = False
+        self.moveRight = False
+        self.moveUp = False
+        self.moveDown = False
+
+    def update(self, gameStateObj, hold=True):
+        if (hold and gameStateObj.input_manager.is_pressed('LEFT')) or 'LEFT' in gameStateObj.input_manager.key_down_events:
             self.moveRight = False
             self.moveLeft = True
         else:
             self.moveLeft = False
 
-        if gameStateObj.input_manager.is_pressed('RIGHT') or 'RIGHT' in gameStateObj.input_manager.key_down_events:
+        if (hold and gameStateObj.input_manager.is_pressed('RIGHT')) or 'RIGHT' in gameStateObj.input_manager.key_down_events:
             self.moveLeft = False
             self.moveRight = True
         else:
             self.moveRight = False
 
-        if gameStateObj.input_manager.is_pressed('UP') or 'UP' in gameStateObj.input_manager.key_down_events:
+        if (hold and gameStateObj.input_manager.is_pressed('UP')) or 'UP' in gameStateObj.input_manager.key_down_events:
             self.moveDown = False
             self.moveUp = True
         else:
             self.moveUp = False
 
-        if gameStateObj.input_manager.is_pressed('DOWN') or 'DOWN' in gameStateObj.input_manager.key_down_events:
+        if (hold and gameStateObj.input_manager.is_pressed('DOWN')) or 'DOWN' in gameStateObj.input_manager.key_down_events:
             self.moveUp = False
             self.moveDown = True
         else:

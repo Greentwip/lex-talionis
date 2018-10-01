@@ -12,6 +12,7 @@
 - Add EXP for unlock and steal to thief. AND/OR add class specific exp modifiers
 - Add Killer & Effective Weapon markers
 - Add growth modification to statuses
+- Fix Metamagic
 - Supports (GBA & POR)
 - Turnwheel
 - Submaps
