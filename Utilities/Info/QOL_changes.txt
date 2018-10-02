@@ -1,5 +1,5 @@
 Cursor speed exactly GBA (check)
-Cursor stops at edge of movement for a second (check ALSO CHECK FEEL)
+Cursor stops at edge of movement for a second (check)
 Cursor movement arrow follows cursor
 Cursor movement arrow stays when stopped at edge of movement (check)
 Cursor B doubles cursor speed (check)

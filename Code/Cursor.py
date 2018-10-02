@@ -189,10 +189,10 @@ class Cursor(object):
         # However, it then needs to continue on when re-pressed
         if gameStateObj.highlight_manager.check_arrow(self.position):
             if directions:
-                if ('LEFT' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0] - 1, self.position[1]))) or \
-                   ('RIGHT' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0] + 1, self.position[1]))) or \
-                   ('UP' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0], self.position[1] - 1))) or \
-                   ('DOWN' in directions and not gameStateObj.highlight_manager.check_arrow((self.position[0], self.position[1] + 1))):
+                if ('LEFT' in directions and 'LEFT' not in gameStateObj.input_manager.key_down_events and not gameStateObj.highlight_manager.check_arrow((self.position[0] - 1, self.position[1]))) or \
+                   ('RIGHT' in directions and 'RIGHT' not in gameStateObj.input_manager.key_down_events and not gameStateObj.highlight_manager.check_arrow((self.position[0] + 1, self.position[1]))) or \
+                   ('UP' in directions and 'UP' not in gameStateObj.input_manager.key_down_events and not gameStateObj.highlight_manager.check_arrow((self.position[0], self.position[1] - 1))) or \
+                   ('DOWN' in directions and 'DOWN' not in gameStateObj.input_manager.key_down_events and not gameStateObj.highlight_manager.check_arrow((self.position[0], self.position[1] + 1))):
                     if self.already_stopped_at_move_border:
                         self.already_stopped_at_move_border = False
                     else:
