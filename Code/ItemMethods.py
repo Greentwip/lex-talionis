@@ -111,66 +111,9 @@ class ItemObject(object):
 
     def create_help_box(self):
         if self.weapon or self.spell:
-            font1 = GC.FONT['text_blue']
-            font2 = GC.FONT['text_yellow']
-
-            if self.weapon:
-                first_line_text = [' ', self.weapon.LVL, ' Mt ', str(self.weapon.MT), ' Hit ', str(self.weapon.HIT)]
-                if cf.CONSTANTS['crit']:
-                    first_line_text += [' Crit ', str(self.crit) if self.crit is not None else '--']
-                if self.weight:
-                    first_line_text += [' Wt ', str(self.weight)]
-                first_line_text += [' Rng ', self.strRNG]
-                first_line_font = [font1, font1, font2, font1, font2, font1]
-                if cf.CONSTANTS['crit']:
-                    first_line_font += [font2, font1]
-                if self.weight:
-                    first_line_font += [font2, font1]
-                first_line_font += [font2, font1]
-
-            elif self.spell:
-                first_line_text = [' ', self.spell.LVL]
-                first_line_font = [font1, font1]
-                if self.damage is not None:
-                    first_line_text += [' Mt ', str(self.damage)]
-                    first_line_font += [font2, font1]
-                if self.hit is not None:
-                    first_line_text += [' Hit ', str(self.hit)]
-                    first_line_font += [font2, font1]
-                if cf.CONSTANTS['crit'] and self.crit is not None:
-                    first_line_text += [' Crit ', str(self.crit)]
-                    first_line_font += [font2, font1]
-                first_line_text += [' Rng ', self.strRNG]
-                first_line_font += [font2, font1]
-
-            first_line_length = max(font1.size(''.join(first_line_text))[0] + (16 if self.icon else 0) + 4, 112) # 112 was 96
-            if self.desc:
-                output_desc_lines = TextChunk.line_wrap(TextChunk.line_chunk(self.desc), first_line_length, GC.FONT['convo_black']) 
-            else:
-                output_desc_lines = ''
-            size_x = first_line_length + 24
-            size_y = 32 + len(output_desc_lines)*16
-            help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')  
-            self.drawType(help_surf, 8, 8)
-            
-            # Actually blit first line
-            word_index = 20 if self.icon else 4
-            for index, word in enumerate(first_line_text):
-                first_line_font[index].blit(word, help_surf, (word_index, 8))
-                word_index += first_line_font[index].size(word)[0]
-            
-            for index, line in enumerate(output_desc_lines):
-                GC.FONT['convo_black'].blit(''.join(line), help_surf, (4, GC.FONT['convo_black'].height*index + 8 + 16))  
-
-            # Draw help logo
-            h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
-            h_surf.blit(help_surf, (0, 3))
-            h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
-
-            return h_surf
-
+            return Help_Dialog(self)
         else:
-            return InfoMenu.create_help_box(self.desc)
+            return InfoMenu.Help_Dialog(self.desc)
 
     def drawType(self, surf, left, top):
         if self.icon:  
@@ -183,6 +126,77 @@ class ItemObject(object):
             return str(max_rng)
         else:
             return ''.join([str(min_rng), '-', str(max_rng)])
+
+class Help_Dialog(object):
+    def __init__(self, item):
+        self.item = item
+        font1 = GC.FONT['text_blue']
+        font2 = GC.FONT['text_yellow']
+
+        if self.item.weapon:
+            self.first_line_text = [' ', self.item.weapon.LVL, ' Mt ', str(self.item.weapon.MT), ' Hit ', str(self.item.weapon.HIT)]
+            if cf.CONSTANTS['crit']:
+                self.first_line_text += [' Crit ', str(self.item.crit) if self.item.crit is not None else '--']
+            if self.item.weight:
+                self.first_line_text += [' Wt ', str(self.item.weight)]
+            self.first_line_text += [' Rng ', self.item.strRNG]
+            self.first_line_font = [font1, font1, font2, font1, font2, font1]
+            if cf.CONSTANTS['crit']:
+                self.first_line_font += [font2, font1]
+            if self.item.weight:
+                self.first_line_font += [font2, font1]
+            self.first_line_font += [font2, font1]
+
+        elif self.item.spell:
+            self.first_line_text = [' ', self.item.spell.LVL]
+            self.first_line_font = [font1, font1]
+            if self.item.damage is not None:
+                self.first_line_text += [' Mt ', str(self.item.damage)]
+                self.first_line_font += [font2, font1]
+            if self.item.hit is not None:
+                self.first_line_text += [' Hit ', str(self.item.hit)]
+                self.first_line_font += [font2, font1]
+            if cf.CONSTANTS['crit'] and self.item.crit is not None:
+                self.first_line_text += [' Crit ', str(self.item.crit)]
+                self.first_line_font += [font2, font1]
+            self.first_line_text += [' Rng ', self.item.strRNG]
+            self.first_line_font += [font2, font1]
+
+        first_line_length = max(font1.size(''.join(self.first_line_text))[0] + (16 if self.item.icon else 0) + 4, 112) # 112 was 96
+        if self.item.desc:
+            self.output_desc_lines = TextChunk.line_wrap(TextChunk.line_chunk(self.item.desc), first_line_length, GC.FONT['convo_black']) 
+        else:
+            self.output_desc_lines = ''
+        size_x = first_line_length + 24
+        size_y = 32 + len(self.output_desc_lines)*16
+        self.help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')  
+        self.h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
+
+    def get_width(self):
+        return self.help_surf.get_width()
+
+    def get_height(self):
+        return self.help_surf.get_height()
+
+    def draw(self, surf, pos):
+        help_surf = Engine.copy_surface(self.help_surf)
+        self.item.drawType(help_surf, 8, 8)
+        
+        # Actually blit first line
+        word_index = 24 if self.item.icon else 8
+        for index, word in enumerate(self.first_line_text):
+            self.first_line_font[index].blit(word, help_surf, (word_index, 8))
+            word_index += self.first_line_font[index].size(word)[0]
+        
+        for index, line in enumerate(self.output_desc_lines):
+            GC.FONT['convo_black'].blit(''.join(line), help_surf, (4, GC.FONT['convo_black'].height*index + 8 + 16))  
+
+        # Draw help logo
+        h_surf = Engine.copy_surface(self.h_surf)
+        h_surf.blit(help_surf, (0, 3))
+        h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
+
+        surf.blit(h_surf, pos)
 
 def parseRNG(RNG):
     # Should output a list of integers corresponding to acceptable ranges

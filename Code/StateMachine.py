@@ -1798,8 +1798,7 @@ class FeatChoiceState(State):
         if self.info and self.menu:
             selection = self.menu.getSelection()
             position = (16, 16*self.menu.currentSelection%5 + 48)
-            help_surf = selection.get_help_box()
-            mapSurf.blit(help_surf, position)
+            selection.get_help_box().draw(mapSurf, position)
         return mapSurf
 
 class AIState(State):
@@ -3197,8 +3196,8 @@ class ShopState(State):
                 menu = self.shopMenu
             selection = menu.getSelection()
             if selection:
-                help_surf = selection.get_help_box()
-                surf.blit(help_surf, (8, 16*menu.get_relative_index() + 32 - 4))
+                help_box = selection.get_help_box()
+                help_box.draw(surf, (8, 16*menu.get_relative_index() + 32 - 4))
 
         return surf
 

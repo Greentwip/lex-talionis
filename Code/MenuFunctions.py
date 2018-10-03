@@ -663,14 +663,14 @@ class ChoiceMenu(SimpleMenu):
             if isinstance(option, ItemMethods.ItemObject):
                 help_box = option.get_help_box()
             elif self.info_desc:
-                help_box = InfoMenu.create_help_box(self.info_desc[self.currentSelection])
+                help_box = InfoMenu.Help_Dialog(self.info_desc[self.currentSelection])
             else:
                 return
 
             if self.topleft[0] < GC.WINWIDTH//2:
-                surf.blit(help_box, (self.topleft[0], self.topleft[1] + 20 + 16*self.currentSelection))
+                help_box.draw(surf, (self.topleft[0], self.topleft[1] + 20 + 16*self.currentSelection))
             else:
-                surf.blit(help_box, (self.topleft[0] + self.menu_width - help_box.get_width(), self.topleft[1] + 20 + 16*self.currentSelection))
+                help_box.draw(surf, (self.topleft[0] + self.menu_width - help_box.get_width(), self.topleft[1] + 20 + 16*self.currentSelection))
 
     def drawFace(self, surf):
         face_image = self.owner.bigportrait.copy()
@@ -2031,9 +2031,9 @@ class TradeMenu(Counters.CursorControl):
                 help_box = option.get_help_box()
                 top = self.topleft[1] + 4 + 16*idx - help_box.get_height()
                 if side_flag:
-                    surf.blit(help_box, (GC.WINWIDTH - 8 - help_box.get_width(), top))
+                    help_box.draw(surf, (GC.WINWIDTH - 8 - help_box.get_width(), top))
                 else:
-                    surf.blit(help_box, (self.topleft[0] + 8, top))
+                    help_box.draw(surf, (self.topleft[0] + 8, top))
 
     def tradeItems(self):
         # swaps selected item and current item

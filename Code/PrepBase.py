@@ -704,11 +704,11 @@ class PrepUseItemState(StateMachine.State):
             position = None
             selection = self.menu.getSelection()
             if selection:
-                help_surf = selection.get_help_box()
-                height = 16*self.menu.currentSelection - help_surf.get_height() + 64
+                help_box = selection.get_help_box()
+                height = 16*self.menu.currentSelection - help_box.get_height() + 64
                 position = (16, height)
-                help_surf = selection.get_help_box()
-                mapSurf.blit(help_surf, position)
+                help_box = selection.get_help_box()
+                help_box.draw(mapSurf, position)
         return mapSurf
 
     def draw_use_desc(self, surf, desc):
@@ -843,14 +843,14 @@ class PrepListState(StateMachine.State):
         if self.info:
             selection = self.menu.getSelection()
             if selection:
-                help_surf = selection.get_help_box()
-                height = 16*(self.menu.get_relative_index()+2) + 12 - help_surf.get_height()
+                help_box = selection.get_help_box()
+                height = 16*(self.menu.get_relative_index()+2) + 12 - help_box.get_height()
                 if height < 0:
                     height = 16*(self.menu.get_relative_index()+4) - 4
                 left = 64
-                if help_surf.get_width() > GC.WINWIDTH - 64 - 4:
-                    left = GC.WINWIDTH - help_surf.get_width() - 4
-                surf.blit(help_surf, (left, height))
+                if help_box.get_width() > GC.WINWIDTH - 64 - 4:
+                    left = GC.WINWIDTH - help_box.get_width() - 4
+                help_box.draw(surf, (left, height))
 
         return surf
 
@@ -982,23 +982,23 @@ class PrepTransferState(StateMachine.State):
             if self.state == cf.WORDS["Give"]:
                 selection = self.owner_menu.getSelection()
                 if selection:
-                    help_surf = selection.get_help_box()
-                    height = 16*self.owner_menu.currentSelection - help_surf.get_height() + 64
+                    help_box = selection.get_help_box()
+                    height = 16*self.owner_menu.currentSelection - help_box.get_height() + 64
                     position = (16, height)
             elif self.state == cf.WORDS["Take"]:
                 selection = self.menu.getSelection()
                 if selection:
-                    help_surf = selection.get_help_box()
-                    height = 16*(self.menu.get_relative_index()+2) + 12 - help_surf.get_height()
+                    help_box = selection.get_help_box()
+                    height = 16*(self.menu.get_relative_index()+2) + 12 - help_box.get_height()
                     if height < 0:
                         height = 16*(self.menu.get_relative_index()+4) - 4
                     left = 64
-                    if help_surf.get_width() > GC.WINWIDTH - 64 - 4:
-                        left = GC.WINWIDTH - help_surf.get_width() - 4
+                    if help_box.get_width() > GC.WINWIDTH - 64 - 4:
+                        left = GC.WINWIDTH - help_box.get_width() - 4
                     position = (left, height)
             if selection:
-                help_surf = selection.get_help_box()
-                mapSurf.blit(help_surf, position)
+                help_box = selection.get_help_box()
+                help_box.draw(mapSurf, position)
         return mapSurf
 
     def finish(self, gameStateObj, metaDataObj):
@@ -1235,14 +1235,14 @@ class BaseMarketState(StateMachine.State):
         if self.info:
             selection = self.current_menu.getSelection()
             if selection:
-                help_surf = selection.get_help_box()
-                height = 16*(self.current_menu.get_relative_index()+2) + 12 - help_surf.get_height()
+                help_box = selection.get_help_box()
+                height = 16*(self.current_menu.get_relative_index()+2) + 12 - help_box.get_height()
                 if height < 0:
                     height = 16*(self.current_menu.get_relative_index()+4) - 4
                 left = 64
-                if help_surf.get_width() > GC.WINWIDTH - 64 - 4:
-                    left = GC.WINWIDTH - help_surf.get_width() - 4
-                mapSurf.blit(help_surf, (left, height))
+                if help_box.get_width() > GC.WINWIDTH - 64 - 4:
+                    left = GC.WINWIDTH - help_box.get_width() - 4
+                help_box.draw(mapSurf, (left, height))
 
         if self.state == 'Buy_Sure':
             self.buy_sure_menu.draw(mapSurf, gameStateObj)

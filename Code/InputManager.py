@@ -29,7 +29,7 @@ class InputManager(object):
         self.unavailable_button = None
 
     # Set joystick information. 
-    # The joystick needs to be plugged in before this method is called (see main() method) 
+    # The joystick needs to be plugged in before this method is called 
     def init_joystick(self):
         if Engine.joystick_avail():
             joystick = Engine.get_joystick()
@@ -103,11 +103,11 @@ class InputManager(object):
 
         # Return the correct event for this frame -- Gives priority to later inputs...
         # Remove reversed to give priority to earlier inputs
-        for button in reversed(self.key_up_events):
+        for button in reversed(self.key_down_events):
             if button in self.hard_buttons:
                 return button
-        if self.key_up_events:
-            return self.key_up_events[-1]
+        if self.key_down_events:
+            return self.key_down_events[-1]
 
         # self.print_key_pressed()
         

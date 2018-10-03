@@ -763,25 +763,25 @@ class HelpGraph(object):
                 self.initial = "Unit Desc"
 
     def populate_personal_data(self, metaDataObj, growths=False):
-        self.help_boxes["Strength"] = Help_Box("Strength", (88, 26), create_help_box(cf.WORDS['STR_desc']))
-        self.help_boxes["Magic"] = Help_Box("Magic", (88, GC.TILEHEIGHT + 26), create_help_box(cf.WORDS['MAG_desc']))
-        self.help_boxes["Skill"] = Help_Box("Skill", (88, GC.TILEHEIGHT*2 + 26), create_help_box(cf.WORDS['SKL_desc']))
-        self.help_boxes["Speed"] = Help_Box("Speed", (88, GC.TILEHEIGHT*3 + 26), create_help_box(cf.WORDS['SPD_desc']))
-        self.help_boxes["Defense"] = Help_Box("Defense", (88, GC.TILEHEIGHT*4 + 26), create_help_box(cf.WORDS['DEF_desc']))
-        self.help_boxes["Resistance"] = Help_Box("Resistance", (88, GC.TILEHEIGHT*5 + 26), create_help_box(cf.WORDS['RES_desc']))
+        self.help_boxes["Strength"] = Help_Box("Strength", (88, 26), Help_Dialog(cf.WORDS['STR_desc']))
+        self.help_boxes["Magic"] = Help_Box("Magic", (88, GC.TILEHEIGHT + 26), Help_Dialog(cf.WORDS['MAG_desc']))
+        self.help_boxes["Skill"] = Help_Box("Skill", (88, GC.TILEHEIGHT*2 + 26), Help_Dialog(cf.WORDS['SKL_desc']))
+        self.help_boxes["Speed"] = Help_Box("Speed", (88, GC.TILEHEIGHT*3 + 26), Help_Dialog(cf.WORDS['SPD_desc']))
+        self.help_boxes["Defense"] = Help_Box("Defense", (88, GC.TILEHEIGHT*4 + 26), Help_Dialog(cf.WORDS['DEF_desc']))
+        self.help_boxes["Resistance"] = Help_Box("Resistance", (88, GC.TILEHEIGHT*5 + 26), Help_Dialog(cf.WORDS['RES_desc']))
 
-        self.help_boxes["Luck"] = Help_Box("Luck", (152, 26), create_help_box(cf.WORDS['LCK_desc']))
-        self.help_boxes["Movement"] = Help_Box("Movement", (152, GC.TILEHEIGHT + 26), create_help_box(cf.WORDS['MOV_desc']))
-        self.help_boxes["Con"] = Help_Box("Con", (152, GC.TILEHEIGHT*2 + 26), create_help_box(cf.WORDS['CON_desc']))
+        self.help_boxes["Luck"] = Help_Box("Luck", (152, 26), Help_Dialog(cf.WORDS['LCK_desc']))
+        self.help_boxes["Movement"] = Help_Box("Movement", (152, GC.TILEHEIGHT + 26), Help_Dialog(cf.WORDS['MOV_desc']))
+        self.help_boxes["Con"] = Help_Box("Con", (152, GC.TILEHEIGHT*2 + 26), Help_Dialog(cf.WORDS['CON_desc']))
         if growths:
-            self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), create_help_box(cf.WORDS['HP_desc']))
+            self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), Help_Dialog(cf.WORDS['HP_desc']))
         else:
-            self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), create_help_box(cf.WORDS['Aid_desc']))
-        self.help_boxes["Traveler"] = Help_Box("Traveler", (152, GC.TILEHEIGHT*4 + 26), create_help_box(cf.WORDS['Trv_desc']))
+            self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), Help_Dialog(cf.WORDS['Aid_desc']))
+        self.help_boxes["Traveler"] = Help_Box("Traveler", (152, GC.TILEHEIGHT*4 + 26), Help_Dialog(cf.WORDS['Trv_desc']))
         if cf.CONSTANTS['support']:
-            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), create_help_box(cf.WORDS['Affin_desc']))
+            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog(cf.WORDS['Affin_desc']))
         else:
-            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), create_help_box(cf.WORDS['Rat_desc']))
+            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog(cf.WORDS['Rat_desc']))
 
         # Connect personal data
         self.help_boxes["Strength"].down = "Magic"
@@ -827,7 +827,7 @@ class HelpGraph(object):
             else:
                 description = skill.desc
             left = 92 + index*(96//max(cf.CONSTANTS['num_skills'], len(skills)))
-            self.help_boxes["Skill"+str(index)] = Help_Box("Skill"+str(index), (left, GC.WINHEIGHT - 32), create_help_box(description, name=skill.name))
+            self.help_boxes["Skill"+str(index)] = Help_Box("Skill"+str(index), (left, GC.WINHEIGHT - 32), Help_Dialog(description, name=skill.name))
 
         for i in range(len(skills)):
             self.help_boxes["Skill"+str(i)].up = "Resistance"
@@ -858,11 +858,11 @@ class HelpGraph(object):
             pos = (88, GC.TILEHEIGHT*index + 24)
             self.help_boxes["Item"+str(index)] = Help_Box("Item"+str(index), pos, item.get_help_box())
 
-        self.help_boxes["Atk"] = Help_Box("Atk", (100, GC.WINHEIGHT - 40), create_help_box(cf.WORDS['Atk_desc']))
-        self.help_boxes["Hit"] = Help_Box("Hit", (100, GC.WINHEIGHT - 24), create_help_box(cf.WORDS['Hit_desc']))
-        self.help_boxes["Rng"] = Help_Box("Rng", (158, GC.WINHEIGHT - 56), create_help_box(cf.WORDS['Rng_desc']))
-        self.help_boxes["AS"] = Help_Box("AS", (158, GC.WINHEIGHT - 40), create_help_box(cf.WORDS['AS_desc']))
-        self.help_boxes["Avoid"] = Help_Box("Avoid", (158, GC.WINHEIGHT - 24), create_help_box(cf.WORDS['Avoid_desc']))
+        self.help_boxes["Atk"] = Help_Box("Atk", (100, GC.WINHEIGHT - 40), Help_Dialog(cf.WORDS['Atk_desc']))
+        self.help_boxes["Hit"] = Help_Box("Hit", (100, GC.WINHEIGHT - 24), Help_Dialog(cf.WORDS['Hit_desc']))
+        self.help_boxes["Rng"] = Help_Box("Rng", (158, GC.WINHEIGHT - 56), Help_Dialog(cf.WORDS['Rng_desc']))
+        self.help_boxes["AS"] = Help_Box("AS", (158, GC.WINHEIGHT - 40), Help_Dialog(cf.WORDS['AS_desc']))
+        self.help_boxes["Avoid"] = Help_Box("Avoid", (158, GC.WINHEIGHT - 24), Help_Dialog(cf.WORDS['Avoid_desc']))
 
         # Add connections
         for i in range(len(self.unit.items)):
@@ -910,7 +910,7 @@ class HelpGraph(object):
         # Populate Weapon Exp
         good_weapons = [wexp for wexp in self.unit.wexp if wexp > 0]
         for index, wexp in enumerate(good_weapons):
-            self.help_boxes["Wexp"+str(index)] = Help_Box("Wexp"+str(index), (92 + 60*index, 26), create_help_box("Weapon Rank: %s"%(wexp)))
+            self.help_boxes["Wexp"+str(index)] = Help_Box("Wexp"+str(index), (92 + 60*index, 26), Help_Dialog("Weapon Rank: %s"%(wexp)))
 
         for i in range(len(good_weapons)):
             self.help_boxes["Wexp"+str(i)].right = ("Wexp"+str(i+1)) if i < (len(good_weapons) - 1) else None
@@ -921,7 +921,7 @@ class HelpGraph(object):
 
         for index, status in enumerate(statuses):
             pos = (104, GC.TILEHEIGHT*index + 48)
-            self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), pos, create_help_box(status.desc))
+            self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), pos, Help_Dialog(status.desc))
 
         self.populate_info_menu_default(metaDataObj)
 
@@ -947,11 +947,11 @@ class HelpGraph(object):
             self.help_boxes['HP'].right = "Wexp0"
 
     def populate_info_menu_default(self, metaDataObj):
-        self.help_boxes["Unit Desc"] = Help_Box("Unit Desc", (16, 82), create_help_box(self.unit.desc))
-        self.help_boxes["Class Desc"] = Help_Box("Class Desc", (-8, 107), create_help_box(metaDataObj['class_dict'][self.unit.klass]['desc']))
-        self.help_boxes["Unit Level"] = Help_Box("Unit Level", (-8, 123), create_help_box(cf.WORDS['Level_desc']))
-        self.help_boxes["Experience"] = Help_Box("Experience", (22, 123), create_help_box(cf.WORDS['Exp_desc']))
-        self.help_boxes["HP"] = Help_Box("HP", (-8, 139), create_help_box(cf.WORDS['HP_desc']))
+        self.help_boxes["Unit Desc"] = Help_Box("Unit Desc", (16, 82), Help_Dialog(self.unit.desc))
+        self.help_boxes["Class Desc"] = Help_Box("Class Desc", (-8, 107), Help_Dialog(metaDataObj['class_dict'][self.unit.klass]['desc']))
+        self.help_boxes["Unit Level"] = Help_Box("Unit Level", (-8, 123), Help_Dialog(cf.WORDS['Level_desc']))
+        self.help_boxes["Experience"] = Help_Box("Experience", (22, 123), Help_Dialog(cf.WORDS['Exp_desc']))
+        self.help_boxes["HP"] = Help_Box("HP", (-8, 139), Help_Dialog(cf.WORDS['HP_desc']))
 
         # Connections
         self.help_boxes["Unit Desc"].down = "Class Desc"
@@ -973,12 +973,12 @@ class HelpGraph(object):
             affinity = support[1]
             desc = affinity.desc
             pos = ((7*GC.WINWIDTH//16) - 8, GC.TILEHEIGHT*index + GC.TILEHEIGHT + 4)
-            self.help_boxes["Support"+str(index)] = Help_Box("Support"+str(index), pos, create_help_box(desc))
+            self.help_boxes["Support"+str(index)] = Help_Box("Support"+str(index), pos, Help_Dialog(desc))
 
-        self.help_boxes["Atk"] = Help_Box("Atk", (100, GC.WINHEIGHT - GC.TILEHEIGHT*2 - 2), create_help_box(cf.WORDS['Support_Atk_desc']))
-        self.help_boxes["Hit"] = Help_Box("Hit", (100, GC.WINHEIGHT - GC.TILEHEIGHT - 2), create_help_box(cf.WORDS['Support_Hit_desc']))
-        self.help_boxes["Def"] = Help_Box("Def", (160, GC.WINHEIGHT - GC.TILEHEIGHT*2 - 2), create_help_box(cf.WORDS['Support_Def_desc']))
-        self.help_boxes["Avoid"] = Help_Box("Avoid", (160, GC.WINHEIGHT - GC.TILEHEIGHT - 2), create_help_box(cf.WORDS['Support_Avoid_desc']))
+        self.help_boxes["Atk"] = Help_Box("Atk", (100, GC.WINHEIGHT - GC.TILEHEIGHT*2 - 2), Help_Dialog(cf.WORDS['Support_Atk_desc']))
+        self.help_boxes["Hit"] = Help_Box("Hit", (100, GC.WINHEIGHT - GC.TILEHEIGHT - 2), Help_Dialog(cf.WORDS['Support_Hit_desc']))
+        self.help_boxes["Def"] = Help_Box("Def", (160, GC.WINHEIGHT - GC.TILEHEIGHT*2 - 2), Help_Dialog(cf.WORDS['Support_Def_desc']))
+        self.help_boxes["Avoid"] = Help_Box("Avoid", (160, GC.WINHEIGHT - GC.TILEHEIGHT - 2), Help_Dialog(cf.WORDS['Support_Avoid_desc']))
 
         # Add connections
         for i in range(len(supports)):
@@ -1045,54 +1045,67 @@ class Help_Box(Counters.CursorControl):
     def draw(self, surf, info=True):
         surf.blit(self.cursor, (self.cursor_position[0] + self.cursorAnim[self.cursorCounter], self.cursor_position[1]))
         if info:
-            surf.blit(self.help_dialog, self.help_topleft)
+            self.help_dialog.draw(surf, self.help_topleft)
 
-def create_help_box(description, num_lines=2, name=False):
-    font = GC.FONT['convo_black']
-    # Set up variables needed for algorithm
-    description_length = font.size(description)[0]
-    # Hard set num_lines if description is very short.
-    if len(description) < 24:
-        num_lines = 1
+class Help_Dialog(object):
+    def __init__(self, description, num_lines=2, name=False):
+        self.font = GC.FONT['convo_black']
+        self.name = name
+        # Set up variables needed for algorithm
+        description_length = self.font.size(description)[0]
+        # Hard set num_lines if description is very short.
+        if len(description) < 24:
+            num_lines = 1
 
-    lines = []
-    for line in range(num_lines):
-        lines.append([])
-    length_reached = False # Whether we've reached over the length of the description
-    which_line = 0 # Which line are we reading
-    # Place description into balanced size lines
-    for character in description:
-        if length_reached and character == ' ':
-            which_line += 1
-            length_reached = False
-            continue
-        lines[which_line].append(character)
-        length_so_far = font.size(''.join(lines[which_line]))[0]
-        if length_so_far > description_length//num_lines:
-            length_reached = True
-        elif length_so_far > GC.WINWIDTH - 8:
-            length_reached = True
-    # Reform strings
-    strings = []
-    for line in lines:
-        strings.append(''.join(line)) 
-    # Find the greater of the two lengths
-    greater_line_len = max([font.size(string)[0] for string in strings])
+        lines = []
+        for line in range(num_lines):
+            lines.append([])
+        length_reached = False # Whether we've reached over the length of the description
+        which_line = 0 # Which line are we reading
+        # Place description into balanced size lines
+        for character in description:
+            if length_reached and character == ' ':
+                which_line += 1
+                length_reached = False
+                continue
+            lines[which_line].append(character)
+            length_so_far = self.font.size(''.join(lines[which_line]))[0]
+            if length_so_far > description_length//num_lines:
+                length_reached = True
+            elif length_so_far > GC.WINWIDTH - 8:
+                length_reached = True
+        # Reform strings
+        self.strings = []
+        for line in lines:
+            self.strings.append(''.join(line)) 
+        # Find the greater of the two lengths
+        greater_line_len = max([self.font.size(string)[0] for string in self.strings])
 
-    size_x = greater_line_len + 24
-    if name:
-        num_lines += 1
-    size_y = font.height * num_lines + 16
-    help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')
-    # Now draw
-    if name:
-        font.blit(name, help_surf, (8, 8))
-    for index, string in enumerate(strings):
-        font.blit(string, help_surf, (8, font.height*index + 8 + (16 if name else 0)))
+        size_x = greater_line_len + 24
+        self.width = size_x
+        if name:
+            num_lines += 1
+        size_y = self.font.height * num_lines + 16
 
-    # Draw help logo
-    h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
-    h_surf.blit(help_surf, (0, 3))
-    h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
+        self.help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')
+        self.h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
 
-    return h_surf
+    def get_width(self):
+        return self.help_surf.get_width()
+
+    def get_height(self):
+        return self.help_surf.get_height()
+
+    def draw(self, surf, pos):
+        help_surf = Engine.copy_surface(self.help_surf)
+        # Now draw
+        if self.name:
+            self.font.blit(self.name, help_surf, (8, 8))
+        for index, string in enumerate(self.strings):
+            self.font.blit(string, help_surf, (8, self.font.height*index + 8 + (16 if self.name else 0)))
+        
+        h_surf = Engine.copy_surface(self.h_surf)
+        h_surf.blit(help_surf, (0, 3))
+        h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
+
+        surf.blit(h_surf, pos)

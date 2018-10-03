@@ -399,10 +399,10 @@ class UnitMenu(StateMachine.State):
 
     def summon_help_boxes(self, titles, offsets):
         if not self.help_boxes:
-            self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.create_help_box(cf.WORDS['Name_desc'])))
+            self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.Help_Dialog(cf.WORDS['Name_desc'])))
             for idx in range(len(titles)):
                 pos = (offsets[idx] + 64 - 15 - 2, 40)
-                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], pos, InfoMenu.create_help_box(cf.WORDS[titles[idx] + '_desc'])))
+                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], pos, InfoMenu.Help_Dialog(cf.WORDS[titles[idx] + '_desc'])))
 
     fighting_stats = {'STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES', 'CON', 'MOV'}
     ['MOV', 'CON', 'Aid', 'Rat', 'Trv']

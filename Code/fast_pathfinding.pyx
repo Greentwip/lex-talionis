@@ -50,7 +50,7 @@ class Grid_Manager(object):
         self.grids = {} # Dictionary
 
         cdef int num
-        for num in range(len(MCOSTDATA['Normal'])):
+        for num in range(len(GC.MCOSTDATA['Normal'])):
             self.grids[num] = self.init_grid(num, tilemap) # For each movement type
 
         self.team_map = self.init_unit_map()
@@ -111,9 +111,9 @@ class Grid_Manager(object):
     # === For Movement ===
     def get_grid(self, unit):
         if 'flying' in unit.status_bundle:
-            return self.grids[CONSTANTS['flying_mcost_column']]
+            return self.grids[cf.CONSTANTS['flying_mcost_column']]
         elif 'fleet_of_foot' in unit.status_bundle:
-            return self.grids[CONSTANTS['fleet_mcost_column']]
+            return self.grids[cf.CONSTANTS['fleet_mcost_column']]
         else:
             return self.grids[unit.movement_group]
 
@@ -131,7 +131,7 @@ class Grid_Manager(object):
         cdef int x, y, num, cost
         x = tile.position[0]
         y = tile.position[1]
-        for num in range(len(MCOSTDATA['Normal'])):
+        for num in range(len(GC.MCOSTDATA['Normal'])):
             cost = tile.get_mcost(num)
             self.grids[num][x * self.gridHeight + y] = Node(x, y, cost != 99, cost)
 

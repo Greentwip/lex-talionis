@@ -91,7 +91,7 @@ class StatusObject(object):
             surf.blit(chosen_cooldown, topleft) 
 
     def get_help_box(self):
-        return InfoMenu.create_help_box(self.desc)
+        return InfoMenu.Help_Dialog(self.desc)
 
     def remove_children(self, gameStateObj):
         logger.debug('Removing children from %s', self.id)

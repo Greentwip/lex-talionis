@@ -20,6 +20,6 @@ Options Menu (check)
 Objective Menu
 Text Sound Audio (Not going to happen)
 Have units flash yellow when charged with a skill (check)
-Have things happen not on key up but on key down?
+Have things happen not on key up but on key down? (check)
 InfoMenu Left/Right scroll (Also transition transparent) (check)
 InfoMenu Flashy thing (check)
