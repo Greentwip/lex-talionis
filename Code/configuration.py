@@ -109,6 +109,7 @@ def read_constants_file():
              'promoted_level': 19, # Add this to a promoted units level to determine how many levels they've had
              'auto_promote': 0, # Promote after max-level?
              'minimum_damage': 0, # Minimum amount of damage that can be dealt (switch to 1 to make it like FE2 or FE15)
+             'steal_exp': 11, # Amount of exp gained from stealing
              'title': 'Lex Talionis Engine',
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
@@ -160,6 +161,7 @@ def read_constants_file():
     lines['auto_promote'] = int(lines['auto_promote'])
     lines['promoted_level'] = int(lines['promoted_level'])
     lines['minimum_damage'] = int(lines['minimum_damage'])
+    lines['steal_exp'] = int(lines['steal_exp'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
     lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
     lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])

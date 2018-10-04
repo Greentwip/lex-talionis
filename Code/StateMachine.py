@@ -1721,6 +1721,11 @@ class StealState(State):
                 gameStateObj.stateMachine.changeState('free')
                 self.initiator.wait(gameStateObj)
             gameStateObj.activeMenu = None
+            # Give exp
+            exp = cf.CONSTANTS['steal_exp']
+            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.initiator, exp=exp))
+            gameStateObj.stateMachine.changeState('expgain')
+            # Display banner -- opposite order
             self.initiator.handle_steal_banner(selection, gameStateObj)
 
         elif event == 'INFO':
@@ -2248,9 +2253,10 @@ class StatusState(State):
         return mapSurf
 
 class ExpGainState(State):
+    in_combat = False
+    
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
-        self.in_combat = False
         # Reset level time
         if gameStateObj.levelUpScreen:
             if gameStateObj.levelUpScreen[-1].in_combat:

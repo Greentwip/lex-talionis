@@ -23,7 +23,8 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Swordmaster;15;Iron Sword;3,17;None;Althea
 player;0;0;Sage;15;Wind;3,18;None;Resistance
-enemy;0;0;Swordmaster;15;Iron Sword;4,14;None;Althea
+player;0;0;Thief;5;Iron Sword;3,16;None;Resistance
+enemy;0;0;Knight;1;Iron Sword,Vulnerary;4,14;None;Althea
 # Enemies
 # === Reinforcements ===
 # Player Characters

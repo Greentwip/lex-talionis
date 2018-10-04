@@ -127,8 +127,10 @@ class ItemObject(object):
         else:
             return ''.join([str(min_rng), '-', str(max_rng)])
 
-class Help_Dialog(object):
+class Help_Dialog(InfoMenu.Help_Dialog_Base):
     def __init__(self, item):
+        self.last_time = self.start_time = 0
+        self.transition_in = self.transition_out = False
         self.item = item
         font1 = GC.FONT['text_blue']
         font2 = GC.FONT['text_yellow']
@@ -165,20 +167,20 @@ class Help_Dialog(object):
         first_line_length = max(font1.size(''.join(self.first_line_text))[0] + (16 if self.item.icon else 0) + 4, 112) # 112 was 96
         if self.item.desc:
             self.output_desc_lines = TextChunk.line_wrap(TextChunk.line_chunk(self.item.desc), first_line_length, GC.FONT['convo_black']) 
+            self.output_desc_lines = [''.join(line) for line in self.output_desc_lines]
         else:
-            self.output_desc_lines = ''
+            self.output_desc_lines = []
         size_x = first_line_length + 24
         size_y = 32 + len(self.output_desc_lines)*16
         self.help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')  
         self.h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
 
-    def get_width(self):
-        return self.help_surf.get_width()
-
-    def get_height(self):
-        return self.help_surf.get_height()
-
     def draw(self, surf, pos):
+        time = Engine.get_time()
+        if time > self.last_time + 1000:  # If it's been at least a second since last update
+            self.start_time = time - 16
+        self.last_time = time
+
         help_surf = Engine.copy_surface(self.help_surf)
         self.item.drawType(help_surf, 8, 8)
         
@@ -188,15 +190,13 @@ class Help_Dialog(object):
             self.first_line_font[index].blit(word, help_surf, (word_index, 8))
             word_index += self.first_line_font[index].size(word)[0]
         
+        num_characters = 2*(time - self.start_time)/cf.OPTIONS['Text Speed']
         for index, line in enumerate(self.output_desc_lines):
-            GC.FONT['convo_black'].blit(''.join(line), help_surf, (4, GC.FONT['convo_black'].height*index + 8 + 16))  
+            if num_characters > 0:
+                GC.FONT['convo_black'].blit(line[:num_characters], help_surf, (8, GC.FONT['convo_black'].height*index + 8 + 16))  
+                num_characters -= len(line)
 
-        # Draw help logo
-        h_surf = Engine.copy_surface(self.h_surf)
-        h_surf.blit(help_surf, (0, 3))
-        h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
-
-        surf.blit(h_surf, pos)
+        self.final_draw(surf, pos, time, help_surf)
 
 def parseRNG(RNG):
     # Should output a list of integers corresponding to acceptable ranges

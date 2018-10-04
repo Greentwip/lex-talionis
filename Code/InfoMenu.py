@@ -83,7 +83,8 @@ class InfoMenu(StateMachine.State):
         if self.helpMenu.current:
             if event == 'INFO' or event == 'BACK':
                 GC.SOUNDDICT['Info Out'].play()
-                self.helpMenu.current = None
+                # self.helpMenu.current = None
+                self.helpMenu.help_boxes[self.helpMenu.current].help_dialog.set_transition_out()
                 return
             if 'RIGHT' in directions:
                 if self.helpMenu.help_boxes[self.helpMenu.current].right:
@@ -105,6 +106,7 @@ class InfoMenu(StateMachine.State):
             if event == 'INFO':
                 GC.SOUNDDICT['Info In'].play()
                 self.helpMenu.current = self.helpMenu.initial
+                self.helpMenu.help_boxes[self.helpMenu.current].help_dialog.transition_in = True
             elif event == 'SELECT':
                 if self.states[self.currentState] == "Personal Data" and self.unit.team == "player":
                     GC.SOUNDDICT['Select 3'].play()
@@ -162,6 +164,9 @@ class InfoMenu(StateMachine.State):
     def update(self, gameStateObj, metaDataObj):
         if self.helpMenu.current:
             self.helpMenu.help_boxes[self.helpMenu.current].update()
+            if self.helpMenu.help_boxes[self.helpMenu.current].help_dialog.transition_out == -1:
+                self.helpMenu.help_boxes[self.helpMenu.current].help_dialog.transition_out = False
+                self.helpMenu.current = None
 
         # Up and Down
         if self.next_unit:
@@ -1047,10 +1052,57 @@ class Help_Box(Counters.CursorControl):
         if info:
             self.help_dialog.draw(surf, self.help_topleft)
 
-class Help_Dialog(object):
+class Help_Dialog_Base(object):
+    def get_width(self):
+        return self.help_surf.get_width()
+
+    def get_height(self):
+        return self.help_surf.get_height()
+
+    def handle_transition_in(self, time, h_surf):
+        # Handle transitioning in
+        if self.transition_in:
+            perc = (time - self.start_time) / 100.
+            if perc >= 1:
+                self.transition_in = False
+            else:
+                h_surf = Engine.transform_scale(h_surf, (int(perc*h_surf.get_width()), int(perc*h_surf.get_height())))
+                h_surf = Image_Modification.flickerImageTranslucent255(h_surf, perc*255)
+        return h_surf
+
+    def set_transition_out(self):
+        self.transition_out = Engine.get_time()
+
+    def handle_transition_out(self, time, h_surf):
+        # Handle transitioning in
+        if self.transition_out:
+            perc = 1. - ((time - self.transition_out) / 100.)
+            if perc <= 0:
+                self.transition_out = -1
+                perc = 0.1
+            h_surf = Engine.transform_scale(h_surf, (int(perc*h_surf.get_width()), int(perc*h_surf.get_height())))
+            h_surf = Image_Modification.flickerImageTranslucent255(h_surf, perc*255)
+        return h_surf
+
+    def final_draw(self, surf, pos, time, help_surf):
+        # Draw help logo
+        h_surf = Engine.copy_surface(self.h_surf)
+        h_surf.blit(help_surf, (0, 3))
+        h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
+
+        if self.transition_in:
+            h_surf = self.handle_transition_in(time, h_surf)
+        elif self.transition_out:
+            h_surf = self.handle_transition_out(time, h_surf)
+
+        surf.blit(h_surf, pos)
+
+class Help_Dialog(Help_Dialog_Base):
     def __init__(self, description, num_lines=2, name=False):
         self.font = GC.FONT['convo_black']
         self.name = name
+        self.last_time = self.start_time = 0
+        self.transition_in = self.transition_out = False
         # Set up variables needed for algorithm
         description_length = self.font.size(description)[0]
         # Hard set num_lines if description is very short.
@@ -1090,22 +1142,21 @@ class Help_Dialog(object):
         self.help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')
         self.h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
 
-    def get_width(self):
-        return self.help_surf.get_width()
-
-    def get_height(self):
-        return self.help_surf.get_height()
-
     def draw(self, surf, pos):
+        time = Engine.get_time()
+        if time > self.last_time + 1000:  # If it's been at least a second since last update
+            self.start_time = time - 16
+        self.last_time = time
+
         help_surf = Engine.copy_surface(self.help_surf)
         # Now draw
         if self.name:
             self.font.blit(self.name, help_surf, (8, 8))
-        for index, string in enumerate(self.strings):
-            self.font.blit(string, help_surf, (8, self.font.height*index + 8 + (16 if self.name else 0)))
-        
-        h_surf = Engine.copy_surface(self.h_surf)
-        h_surf.blit(help_surf, (0, 3))
-        h_surf.blit(GC.IMAGESDICT['HelpLogo'], (9, 0))
 
-        surf.blit(h_surf, pos)
+        num_characters = 2*(time - self.start_time)/cf.OPTIONS['Text Speed']
+        for index, string in enumerate(self.strings):
+            if num_characters > 0:
+                self.font.blit(string[:num_characters], help_surf, (8, self.font.height*index + 8 + (16 if self.name else 0)))
+                num_characters -= len(string)
+    
+        self.final_draw(surf, pos, time, help_surf)

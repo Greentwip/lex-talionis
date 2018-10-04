@@ -1,25 +1,26 @@
 Cursor speed exactly GBA (check)
 Cursor stops at edge of movement for a second (check)
-Cursor movement arrow follows cursor
+Cursor movement arrow follows cursor (Not going to happen)
 Cursor movement arrow stays when stopped at edge of movement (check)
 Cursor B doubles cursor speed (check)
 Cursor R shows all enemy range (check)
 Cursor sound (check)
 Fix Info Screen -- make more like FE8 or Glenn (check)
 Swap where skills and wexp are (check)
-Add support section to statuses
+Add support section to statuses screen
 Text speed exactly GBA (check)
 Text press A rapid speeds up, instead of double tapping. (check)
 Text press B skips section (check)
 Info Menu bar down one pixel (check)
-Info Menu help fade in and out
-Look at Info Menu help format (single line?)
-Help screen text write in
+Info Menu help fade in and out (chec)
+Look at Info Menu help format (!!single line?)
+Help screen text write in (!!check text speed in)
 Turn change animation (check)
 Options Menu (check)
 Objective Menu
 Text Sound Audio (Not going to happen)
-Have units flash yellow when charged with a skill (check)
+Have units flash yellow when charged with a skill (!!check -- maybe not?)
 Have things happen not on key up but on key down? (check)
 InfoMenu Left/Right scroll (Also transition transparent) (check)
 InfoMenu Flashy thing (check)
+Does InfoMenu keep memory of where you are?

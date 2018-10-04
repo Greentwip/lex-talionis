@@ -194,9 +194,11 @@ class FluidScroll(object):
         if 'UP' in gameStateObj.input_manager.key_down_events:
             self.up_update = 0
 
-        if any(direction in gameStateObj.input_manager.key_down_events for direction in ('LEFT', 'RIGHT', 'UP', 'DOWN')):
+        if all(not d for d in (self.moveLeft, self.moveRight, self.moveUp, self.moveDown)):
             self.move_counter = 0
-            return True
+            
+        if any(direction in gameStateObj.input_manager.key_down_events for direction in ('LEFT', 'RIGHT', 'UP', 'DOWN')):
+            return True  # First push for menus
         return False
 
     def get_directions(self, double_speed=False):
