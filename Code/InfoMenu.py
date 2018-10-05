@@ -1062,12 +1062,12 @@ class Help_Dialog_Base(object):
     def handle_transition_in(self, time, h_surf):
         # Handle transitioning in
         if self.transition_in:
-            perc = (time - self.start_time) / 100.
+            perc = (time - self.start_time) / 130.
             if perc >= 1:
                 self.transition_in = False
             else:
                 h_surf = Engine.transform_scale(h_surf, (int(perc*h_surf.get_width()), int(perc*h_surf.get_height())))
-                h_surf = Image_Modification.flickerImageTranslucent255(h_surf, perc*255)
+                # h_surf = Image_Modification.flickerImageTranslucent255(h_surf, perc*255)
         return h_surf
 
     def set_transition_out(self):
@@ -1081,7 +1081,7 @@ class Help_Dialog_Base(object):
                 self.transition_out = -1
                 perc = 0.1
             h_surf = Engine.transform_scale(h_surf, (int(perc*h_surf.get_width()), int(perc*h_surf.get_height())))
-            h_surf = Image_Modification.flickerImageTranslucent255(h_surf, perc*255)
+            # h_surf = Image_Modification.flickerImageTranslucent255(h_surf, perc*255)
         return h_surf
 
     def final_draw(self, surf, pos, time, help_surf):

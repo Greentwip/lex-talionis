@@ -241,7 +241,7 @@ class BriefPopUpDisplay(object):
 class StatusMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.background = MovingBackground(GC.IMAGESDICT['StatusBackground'])
+            self.background = MovingBackground(GC.IMAGESDICT['RuneBackground'])
             self.surfaces = self.get_surfaces(gameStateObj, metaDataObj)
             # backSurf
             self.backSurf = gameStateObj.generic_surf
@@ -253,14 +253,14 @@ class StatusMenu(StateMachine.State):
     def get_surfaces(self, gameStateObj, metaDataObj):
         surfaces = []
         # Background
-        name_back_surf = GC.IMAGESDICT['ChapterSelectGreen']
+        name_back_surf = GC.IMAGESDICT['ObjectiveTitle']
         surfaces.append((name_back_surf, (24, 2)))
         # Text
         big_font = GC.FONT['chapter_green']
         name_size = (big_font.size(metaDataObj['name'])[0] + 1, big_font.height)
         name_surf = Engine.create_surface(name_size, transparent=True, convert=True)
         big_font.blit(metaDataObj['name'], name_surf, (0, 0))
-        pos = (24 + name_back_surf.get_width()//2 - name_surf.get_width()//2, 2 + name_back_surf.get_height()//2 - name_surf.get_height()//2)
+        pos = (24 + name_back_surf.get_width()//2 - name_surf.get_width()//2, 3 + name_back_surf.get_height()//2 - name_surf.get_height()//2)
         surfaces.append((name_surf, pos))                    
         # Background
         back_surf = CreateBaseMenuSurf((GC.WINWIDTH - 8, 24), 'WhiteMenuBackgroundOpaque')
@@ -277,8 +277,8 @@ class StatusMenu(StateMachine.State):
         playtime_surf = Engine.subsurface(golden_words_surf, (32, 15, 17, 13))
         surfaces.append((playtime_surf, (2*GC.WINWIDTH//3 + 6, 39)))
         # Get G
-        g_surf = Engine.subsurface(golden_words_surf, (40, 50, 9, 9))
-        surfaces.append((g_surf, (2*GC.WINWIDTH//3 - 8 - 1, 43)))
+        g_surf = Engine.subsurface(golden_words_surf, (40, 47, 9, 12))
+        surfaces.append((g_surf, (2*GC.WINWIDTH//3 - 8 - 1, 40)))
         # TurnCountSurf
         turn_count_size = (GC.FONT['text_blue'].size(str(gameStateObj.turncount))[0] + 1, GC.FONT['text_blue'].height)
         turn_count_surf = Engine.create_surface(turn_count_size, transparent=True, convert=True)
@@ -295,11 +295,14 @@ class StatusMenu(StateMachine.State):
         loss_cons, loss_connectives = gameStateObj.objective.get_loss_conditions(gameStateObj)
 
         hold_surf = CreateBaseMenuSurf((GC.WINWIDTH - 16, 8 + 16 + 16 + 16*len(win_cons) + 16 * len(loss_cons)))
+        hold_surf.blit(GC.IMAGESDICT['Lowlight'], (2, 12))
 
         GC.FONT['text_yellow'].blit(cf.WORDS['Win Conditions'], hold_surf, (4, 4))
 
         for index, win_con in enumerate(win_cons):
             GC.FONT['text_white'].blit(win_con, hold_surf, (8, 20 + 16*index))
+
+        hold_surf.blit(GC.IMAGESDICT['Lowlight'], (2, 28 + 16*len(win_cons)))
 
         GC.FONT['text_yellow'].blit(cf.WORDS['Loss Conditions'], hold_surf, (4, 20 + 16*len(win_cons)))
 
@@ -313,6 +316,7 @@ class StatusMenu(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
             gameStateObj.stateMachine.changeState('transition_pop')
 
     def update(self, gameStateObj, metaDataObj):

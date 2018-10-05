@@ -63,11 +63,11 @@ class UnitSprite(object):
         top = y * GC.TILEHEIGHT + self.spriteOffset[1]
 
         # Active Skill Icon
-        # if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
-        #     active_icon = GC.ICONDICT["ActiveSkill"]
-        #     active_icon = Engine.subsurface(active_icon, (GC.PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
-        #     topleft = (left - max(0, (active_icon.get_width() - 16)//2), top - max(0, (active_icon.get_height() - 16)//2))
-        #     surf.blit(active_icon, topleft)
+        if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
+            active_icon = GC.ICONDICT["ActiveSkill"]
+            active_icon = Engine.subsurface(active_icon, (GC.PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
+            topleft = (left - max(0, (active_icon.get_width() - 16)//2), top - max(0, (active_icon.get_height() - 16)//2))
+            surf.blit(active_icon, topleft)
 
         if self.transition_state in WARP_OUT_SET:
             if self.unit.deathCounter:
@@ -136,17 +136,17 @@ class UnitSprite(object):
         if 'unit_translucent' in self.unit.status_bundle:
             image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
 
-        # Active Skill Indicator
-        if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
-            time = Engine.get_time()
-            length = 500
-            if not (time//1000)%3 and not (time//length)%(1000//length):
-                diff = time%length
-                if diff > length//2:
-                    diff = length - diff
-                diff = Utility.clamp(255. * diff / length * 2, 0, 255)
-                color = (248, 248, -248, diff)
-                image = Image_Modification.color_tint(image.convert_alpha(), color)
+        # Active Skill Indicator -- this flashes the unit yellow when a skill is charged
+        # if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
+        #     time = Engine.get_time()
+        #     length = 500
+        #     if not (time//1000)%3 and not (time//length)%(1000//length):
+        #         diff = time%length
+        #         if diff > length//2:
+        #             diff = length - diff
+        #         diff = Utility.clamp(255. * diff / length * 2, 0, 255)
+        #         color = (248, 248, -248, diff)
+        #         image = Image_Modification.color_tint(image.convert_alpha(), color)
         # What is this line even doing? - Something majorly important though
         # Each image has (self.image.get_width() - 32)/2 buffers on the left and right of it, to handle any off tile spriting
         # Without self.image.get_width() - 32)//2, we would output the left buffer along with the unit, 
