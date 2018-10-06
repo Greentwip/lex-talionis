@@ -564,9 +564,9 @@ class Combat(object):
             if self.item.heal:
                 # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
                 self.p1.records['healing'] += damage_done
-                normal_exp = max(5, int(p1_klass['klass_exp_multipler']*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_comparison_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
+                normal_exp = max(5, int(p1_klass['exp_multipler']*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_comparison_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
-                normal_exp = p1_klass['klass_exp_multiplier']*cf.CONSTANTS['status_exp']
+                normal_exp = p1_klass['exp_multiplier']*cf.CONSTANTS['status_exp']
         else:
             normal_exp = 0
             

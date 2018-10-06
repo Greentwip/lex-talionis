@@ -136,6 +136,16 @@ class UnitSprite(object):
         if 'unit_translucent' in self.unit.status_bundle:
             image = Image_Modification.flickerImageTranslucentColorKey(image, 50)
 
+        if 'unit_tint' in self.unit.status_bundle:
+            for status in self.unit.status_effects:
+                if status.unit_tint:
+                    color = status.unit_tint.color
+                    time = Engine.get_time()
+                    diff = Utility.determine_perc(time, status.unit_tint.period, status.unit_tint.width)
+                    diff = Utility.clamp(255. * diff * status.unit_tint.max_alpha, 0, 255)
+                    color = (color[0], color[1], color[2], diff)
+                    image = Image_Modification.color_tint(image.convert_alpha(), color)            
+
         # Active Skill Indicator -- this flashes the unit yellow when a skill is charged
         # if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
         #     time = Engine.get_time()

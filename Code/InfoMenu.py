@@ -833,10 +833,12 @@ class HelpGraph(object):
         for index, skill in enumerate(skills):
             if skill.active:
                 description = skill.desc + ' ' + str(skill.active.current_charge) + '/' + str(skill.active.required_charge)
+            elif skill.automatic:
+                description = skill.desc + ' ' + str(skill.automatic.current_charge) + '/' + str(skill.automatic.required_charge)
             else:
                 description = skill.desc
-            left = 92 + index*(96//max(cf.CONSTANTS['num_skills'], len(skills)))
-            self.help_boxes["Skill"+str(index)] = Help_Box("Skill"+str(index), (left, GC.WINHEIGHT - 32), Help_Dialog(description, name=skill.name))
+            left_pos = index*((GC.WINWIDTH - 96)//max(cf.CONSTANTS['num_skills'], len(skills))) + 92
+            self.help_boxes["Skill"+str(index)] = Help_Box("Skill"+str(index), (left_pos, GC.WINHEIGHT - 32), Help_Dialog(description, name=skill.name))
 
         for i in range(len(skills)):
             self.help_boxes["Skill"+str(i)].up = "Resistance"
@@ -943,7 +945,7 @@ class HelpGraph(object):
             self.help_boxes["Status"+str(i)].left = "Unit Desc"
 
         if good_weapons:
-            self.help_boxes["Wexp"+str(i)].left = "Unit Desc"
+            self.help_boxes["Wexp0"].left = "Unit Desc"
             self.help_boxes['Unit Desc'].up = "Wexp0"
 
         if statuses:

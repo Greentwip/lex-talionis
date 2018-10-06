@@ -10,7 +10,6 @@
 - Restore (Restore)
 
 - Add Killer & Effective Weapon markers
-- Fix Metamagic
 - Supports (GBA & POR)
 - Turnwheel
 - Submaps

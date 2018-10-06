@@ -77,6 +77,8 @@ class StatusObject(object):
         if cooldown:
             if self.active:
                 self.draw_cooldown(surf, topleft, self.active.current_charge, self.active.required_charge)
+            elif self.automatic:
+                self.draw_cooldown(surf, topleft, self.automatic.current_charge, self.automatic.required_charge)
             elif self.count:
                 self.draw_cooldown(surf, topleft, self.count.count, self.count.orig_count)
 
@@ -201,6 +203,14 @@ class AlwaysAnimationComponent(object):
     def loadSprites(self):
         self.sprite = GC.IMAGESDICT[self.animation_name]
         self.image = Engine.subsurface(self.sprite, (0, 0, self.sprite.get_width()//self.x, self.sprite.get_height()//self.y))
+
+class UnitTintComponent(object):
+    def __init__(self, data):
+        color1, color2, color3, period, width, max_alpha = data.split(',')
+        self.color = (int(color1), int(color2), int(color3))
+        self.period = int(period)
+        self.width = int(width)
+        self.max_alpha = float(max_alpha)
 
 # === STATUS PROCESSOR =========================================================
 class Status_Processor(object):
@@ -331,6 +341,12 @@ class Status_Processor(object):
             self.state_buffer = True
         else:
             self.state_buffer = False
+
+def check_automatic(status, unit, gameStateObj):
+    if status.automatic and status.automatic.check_charged():
+        s = statusparser(status.automatic.status)
+        HandleStatusAddition(s, unit, gameStateObj)
+        status.automatic.reset_charge()
         
 def HandleStatusUpkeep(status, unit, gameStateObj):
     oldhp = unit.currenthp
@@ -366,10 +382,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
         else:
             unit.apply_stat_change(status.rhythm_stat_change.change)
 
-    if status.automatic and status.automatic.check_charged():
-        s = statusparser(status.automatic.status)
-        HandleStatusAddition(s, unit, gameStateObj)
-        status.automatic.reset_charge()
+    check_automatic(status, unit, gameStateObj)
 
     if status.upkeep_animation and unit.currenthp != oldhp:
         stota = status.upkeep_animation
@@ -467,6 +480,9 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     if status.refresh:
         unit.reset()
+        # Automatic skills can also show up after being refreshed
+        for status in unit.status_effects:
+            check_automatic(status, unit, gameStateObj)
 
     if status.skill_restore:
         activated_skills = [s for s in unit.status_effects if s.active]
@@ -662,6 +678,9 @@ def statusparser(s_id):
                     info_line = status.find('always_animation').text
                     split_line = info_line.split(',')
                     my_components['always_animation'] = AlwaysAnimationComponent(split_line[0], split_line[1], split_line[2], split_line[3])
+                elif component == 'unit_tint':
+                    info_line = status.find('unit_tint').text
+                    my_components['unit_tint'] = UnitTintComponent(info_line)
                 elif component == 'active':
                     charge = int(status.find('active').text)
                     my_components['active'] = getattr(ActiveSkill, s_id)(name, charge)

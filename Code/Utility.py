@@ -39,6 +39,20 @@ def easing(current_time, begin, change, total_time):
     """
     return change * current_time / float(total_time) + begin
 
+# === DETERMINES IF TIME FITS WITHIN VALUE =============================
+def determine_perc(time, period, width):
+    """
+    Models a rise time of width/2 followed immediately by a fall time of width/2
+    Each instance is separated by (period - width) milliseconds
+    """
+    cur_time = time%period
+    if cur_time < width//2:
+        return float(cur_time)/width/2
+    elif cur_time < width:
+        return 1. - float(cur_time - width//2)/width/2
+    else:
+        return 0.
+
 # === FINDS MAX VALUE ==================================================
 def key_with_max_val(d):
     """
