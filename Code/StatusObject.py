@@ -366,6 +366,11 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
         else:
             unit.apply_stat_change(status.rhythm_stat_change.change)
 
+    if status.automatic and status.automatic.check_charged():
+        s = statusparser(status.automatic.status)
+        HandleStatusAddition(s, unit, gameStateObj)
+        status.automatic.reset_charge()
+
     if status.upkeep_animation and unit.currenthp != oldhp:
         stota = status.upkeep_animation
         if not stota.sprite:
@@ -410,6 +415,9 @@ def HandleStatusEndStep(status, unit, gameStateObj):
         else:
             unit.apply_stat_change(status.endstep_rhythm_stat_change.change)
 
+    if status.lost_on_endstep:
+        HandleStatusRemoval(status, unit, gameStateObj)
+
     return oldhp, unit.currenthp
 
 def HandleStatusAddition(status, unit, gameStateObj=None):
@@ -447,6 +455,8 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     if status.stat_change:
         unit.apply_stat_change(status.stat_change)
+    if status.growth_mod:
+        unit.apply_growth_mod(status.growth_mod)
 
     if status.rescue:
         # Rescue penalty
@@ -536,6 +546,8 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
         unit.apply_stat_change([-stat*(status.upkeep_stat_change.count) for stat in status.upkeep_stat_change.stat_change])
     if status.stat_change:
         unit.apply_stat_change([-stat for stat in status.stat_change])
+    if status.growth_mod:
+        unit.apply_growth_mod([-growth for growth in status.growth_mod])
     if status.rescue:
         unit.stats['SKL'].bonuses -= status.rescue.skl_penalty
         unit.stats['SPD'].bonuses -= status.rescue.spd_penalty
@@ -587,6 +599,9 @@ def statusparser(s_id):
                 elif component == 'stat_change':
                     my_components['stat_change'] = SaveLoad.intify_comma_list(status.find('stat_change').text)
                     my_components['stat_change'].extend([0] * (cf.CONSTANTS['num_stats'] - len(my_components['stat_change'])))
+                elif component == 'growth_mod':
+                    my_components['growth_mod'] = SaveLoad.intify_comma_list(status.find('growth_mod').text)
+                    my_components['growth_mod'].extend([0] * (cf.CONSTANTS['num_stats'] - len(my_components['growth_mod'])))
                 elif component == 'upkeep_stat_change':
                     stat_change = SaveLoad.intify_comma_list(status.find('upkeep_stat_change').text)
                     stat_change.extend([0] * (cf.CONSTANTS['num_stats'] - len(stat_change)))
@@ -650,6 +665,10 @@ def statusparser(s_id):
                 elif component == 'active':
                     charge = int(status.find('active').text)
                     my_components['active'] = getattr(ActiveSkill, s_id)(name, charge)
+                elif component == 'automatic':
+                    charge = int(status.find('automatic').text)
+                    status_id = status.find('status').text
+                    my_components['automatic'] = ActiveSkill.AutomaticSkill(name, charge, status_id)
                 elif component == 'passive':
                     my_components['passive'] = getattr(ActiveSkill, s_id)(name)
                 elif component == 'aura':

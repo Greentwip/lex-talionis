@@ -56,9 +56,12 @@ class DebugState(StateMachine.State):
                 cur_unit.increase_wexp(int(split_command[1]), gameStateObj)
         elif split_command[0] == 'charge_skills':
             if cur_unit:
-                for skill in [skill for skill in cur_unit.status_effects if skill.active]:
-                    skill.active.current_charge = skill.active.required_charge
-                    cur_unit.tags.add('ActiveSkillCharged')
+                for skill in cur_unit.status_effects:
+                    if skill.active:
+                        skill.active.current_charge = skill.active.required_charge
+                        cur_unit.tags.add('ActiveSkillCharged')
+                    if skill.automatic:
+                        skill.automatic.current_charge = skill.automatic.required_charge
         elif split_command[0] == 'win_game':
             gameStateObj.statedict['levelIsComplete'] = 'win'
             gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt'))

@@ -9,9 +9,7 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Add class specific exp modifiers
 - Add Killer & Effective Weapon markers
-- Add growth modification to statuses
 - Fix Metamagic
 - Supports (GBA & POR)
 - Turnwheel

@@ -644,6 +644,9 @@ class InfoMenu(StateMachine.State):
         elif status.active and status.active.required_charge > 0:
             output = str(status.active.current_charge) + '/' + str(status.active.required_charge)
             GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 56))
+        elif status.automatic and status.automatic.required_charge > 0:
+            output = str(status.automatic.current_charge) + '/' + str(status.automatic.required_charge)
+            GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 56))
         elif status.count:
             output = str(status.count.count) + '/' + str(status.count.orig_count)
             GC.FONT['text_blue'].blit(output, menu_surf, (menu_surf.get_width() - GC.FONT['text_blue'].size(output)[0] - 6, index*16 + 56))

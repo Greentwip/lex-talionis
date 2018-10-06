@@ -1885,18 +1885,6 @@
         <sfx_on_hit>Rally</sfx_on_hit>
     </item>
 
-    <item name="Metamagic">
-        <id>so_Metamagic</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>8,7</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>0</RNG>
-        <desc>I done broked something.</desc>
-        <status>Metamagic_Status</status>
-    </item>
-
     <item name="Summon_1">
         <id>so_Summon_1</id>
         <spritetype>Skills</spritetype>

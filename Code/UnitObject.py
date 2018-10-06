@@ -893,6 +893,10 @@ class UnitObject(object):
         self.change_hp(0)
         if self.movement_left > int(self.stats['MOV']):
             self.movement_left = max(0, int(self.stats['MOV']))
+
+    def apply_growth_mod(self, growth_mod):
+        logger.debug("Applying growth modification %s to %s", growth_mod, self.name)
+        self.growths = [a + b for a, b in zip(self.growths, growth_mod)]
         
 # === TILE ALGORITHMS ===
     # Kind of a wrapper around the recursive algorithm for finding movement
@@ -1429,10 +1433,12 @@ class UnitObject(object):
     def isSummon(self):
         return any(component.startswith('Summon_') for component in self.tags)
 
-    def charge(self): # charge active skills
+    def charge(self): # charge skills
         for status in self.status_effects:
-            if status.active and status.active.current_charge < status.active.required_charge:
+            if status.active and not status.active.check_charged():
                 status.active.increase_charge(self)
+            elif status.automatic and not status.automatic.check_charged():
+                status.automatic.increase_charge(self)
 
 # === COMBAT CALCULATIONS ====================================================
     # Gets bonuses from supports
