@@ -17,9 +17,9 @@ Look at Info Menu help format (!!single line?) (add double line if crit?)
 Help screen text write in (check)
 Turn change animation (check)
 Options Menu (check)
-Objective Menu
+Objective Menu (check for now)
 Text Sound Audio (Not going to happen)
 Have things happen not on key up but on key down? (check)
 InfoMenu Left/Right scroll (Also transition transparent) (check)
 InfoMenu Flashy thing (check)
-Does InfoMenu keep memory of where you are? It does ONLY while you are in the same screen
+Does InfoMenu keep memory of where you are? (check)

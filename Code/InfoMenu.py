@@ -166,6 +166,7 @@ class InfoMenu(StateMachine.State):
             self.helpMenu.help_boxes[self.helpMenu.current].update()
             if self.helpMenu.help_boxes[self.helpMenu.current].help_dialog.transition_out == -1:
                 self.helpMenu.help_boxes[self.helpMenu.current].help_dialog.transition_out = False
+                self.helpMenu.initial = self.helpMenu.current
                 self.helpMenu.current = None
 
         # Up and Down
