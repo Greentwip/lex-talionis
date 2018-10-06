@@ -588,7 +588,7 @@
     <status name="Conductance">
         <id>Conductance</id>
         <image_index>4,6</image_index>
-        <desc>Grants Hit +15 and Damage +1 against enemies wielding Swords, Lances, or Axes.</desc>
+        <desc>Grants Hit +15 and Damage +1 against enemies wielding metal weapons.</desc>
         <components>conditional_mt,conditional_hit,class_skill</components>
 
         <conditional_mt>1;target.getMainWeapon() and target.getMainWeapon().TYPE in ('Sword', 'Lance', 'Axe')</conditional_mt>
@@ -645,9 +645,10 @@
     <status name="Metamagic">
         <id>Metamagic</id>
         <image_index>8,7</image_index>
-        <desc>Activated. Next attack has increased area of blast +1.</desc>
-        <components>active,class_skill</components>
-        <active>40</active>
+        <desc>Automatic. When charged, next attack has increased area of blast +1.</desc>
+        <components>automatic,status,class_skill</components>
+        <automatic>40</automatic>
+        <status>Metamagic_Status</status>
     </status>
 
     <status name="Shove">
@@ -783,8 +784,10 @@
         <id>Metamagic_Status</id>
         <image_index>8,7</image_index>
         <desc>Next attack or spell has increased area of effect.</desc>
-        <components>passive,lost_on_interact,time</components>
-        <time>1</time>
+        <components>passive,lost_on_interact,lost_on_endstep,always_animation</components>
+        
+        <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
+        <always_animation>MapFlying,3,3,9</always_animation>
     </status>
 
     <!-- Aura Skills -->

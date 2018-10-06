@@ -763,7 +763,7 @@ class MenuState(State):
             options.append(cf.WORDS['Spells'])
         # Active Skills
         for status in cur_unit.status_effects:
-            if status.active and status.active.current_charge >= status.active.required_charge:
+            if status.active and status.active.check_charged():
                 if status.active.check_valid(cur_unit, gameStateObj):
                     options.append(status.active.name)
             if status.steal and len(cur_unit.items) < cf.CONSTANTS['max_items'] and cur_unit.getStealPartners(gameStateObj):
@@ -884,8 +884,8 @@ class MenuState(State):
             if selection in [status.name for status in active_skills]:
                 for status in active_skills:
                     if selection == status.name or selection == status.id:
-                        cur_unit.current_skill = status
                         if status.active.mode == 'Attack':
+                            cur_unit.current_skill = status
                             gameStateObj.stateMachine.changeState('weapon')
                         elif status.active.mode in ('Interact', 'Tile'):
                             valid_choices = status.active.get_choices(cur_unit, gameStateObj)
@@ -893,17 +893,16 @@ class MenuState(State):
                                 cur_unit.validPartners = CustomObjects.MapSelectHelper(valid_choices)
                                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
+                                cur_unit.current_skill = status
                                 gameStateObj.stateMachine.changeState('skillselect')
                             else:
                                 skill_item = status.active.item
                                 main_defender, splash_units = Interaction.convert_positions(gameStateObj, cur_unit, cur_unit.position, cur_unit.position, skill_item)
                                 gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, cur_unit, main_defender, cur_unit.position, splash_units, skill_item, status)
                                 gameStateObj.stateMachine.changeState('combat')
-                                cur_unit.current_skill = None
                         else: # Solo
                             gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, cur_unit, cur_unit, cur_unit.position, [], status.active.item, status)
                             gameStateObj.stateMachine.changeState('combat')
-                            cur_unit.current_skill = None
             elif selection == cf.WORDS['Attack']:
                 gameStateObj.stateMachine.changeState('weapon')
             elif selection == cf.WORDS['Spells']:

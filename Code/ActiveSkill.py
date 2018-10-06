@@ -17,9 +17,12 @@ class Active_Skill(object):
     def check_valid(self, unit, gameStateObj):
         return True
 
+    def check_charged(self):
+        return self.current_charge >= self.required_charge
+
     def increase_charge(self, unit):
         self.current_charge += unit.stats['SKL']
-        if self.current_charge > self.required_charge:
+        if self.check_charged():
             self.current_charge = self.required_charge
             unit.tags.add('ActiveSkillCharged')
         logger.debug('%s increased charge to %s', self.name, self.current_charge)
@@ -172,28 +175,6 @@ class Cleave(Active_Skill):
 
     def valid_weapons(self, weapons):
         return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Sword') and 1 in weapon.RNG]
-
-class Rage(Active_Skill):
-    def __init__(self, name, required_charge):
-        Active_Skill.__init__(self, name, required_charge)
-        self.mode = 'Solo'
-        self.item = ItemMethods.itemparser('so_Rage')[0]
-
-    def check_valid(self, unit, gameStateObj):
-        if not unit.hasAttacked and not any(status.id in ('Weakened', 'Rage_Status') for status in unit.status_effects):
-            return True
-        return False
-
-class Metamagic(Active_Skill):
-    def __init__(self, name, required_charge):
-        Active_Skill.__init__(self, name, required_charge)
-        self.mode = 'Solo'
-        self.item = ItemMethods.itemparser('so_Metamagic')[0]
-
-    def check_valid(self, unit, gameStateObj):
-        if not unit.hasAttacked and not any(status.id == 'Metamagic_Status' for status in unit.status_effects):
-            return True
-        return False
 
 class True_Strike(Active_Skill):
     def __init__(self, name, required_charge):
@@ -438,7 +419,7 @@ class Rage(Active_Skill):
         self.item = ItemMethods.itemparser('so_Rage')[0]
 
     def check_valid(self, unit, gameStateObj):
-        if not unit.hasAttacked and not any(status.id in ['Weakened', 'Rage_Status'] for status in unit.status_effects):
+        if not unit.hasAttacked and not any(status.id in ('Weakened', 'Rage_Status') for status in unit.status_effects):
             return True
         return False
 
@@ -452,6 +433,26 @@ class Fade(Active_Skill):
         if not unit.hasAttacked and not any(status.id == 'Fade_Status' for status in unit.status_effects):
             return True
         return False
+
+# AUTOMATIC SKILL
+class AutomaticSkill(object):
+    def __init__(self, name, required_charge, status_id):
+        self.name = name
+        self.required_charge = required_charge
+        self.current_charge = 0
+        self.status = status_id
+
+    def reset_charge(self):
+        self.current_charge = 0
+
+    def check_charged(self):
+        return self.current_charge >= self.required_charge
+
+    def increase_charge(self, unit):
+        self.current_charge += unit.stats['SKL']
+        if self.check_charged():
+            self.current_charge = self.required_charge
+        logger.debug('%s increased charge to %s', self.name, self.current_charge)
 
 # PASSIVE SKILLS
 class PassiveSkill(object):

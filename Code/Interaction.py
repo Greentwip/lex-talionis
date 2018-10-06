@@ -547,6 +547,10 @@ class Combat(object):
             gameStateObj.stateMachine.changeState('itemgain')
     
     def calc_init_exp_p1(self, my_exp, other_unit, applicable_results, gameStateObj):
+        p1_klass = gameStateObj.metaDataObj['class_dict'][self.p1.klass]
+        other_unit_klass = gameStateObj.metaDataObj['class_dict'][other_unit.klass]
+        exp_multiplier = p1_klass['exp_multiplier']*other_unit_klass['exp_when_attacked']
+
         damage_done = sum([result.def_damage_done for result in applicable_results])
         if not self.item.heal:
             self.p1.records['damage'] += damage_done
@@ -555,14 +559,14 @@ class Combat(object):
             normal_exp = self.item.exp
         elif self.item.weapon or not self.p1.checkIfAlly(other_unit):
             level_diff = other_unit.get_comparison_level(gameStateObj.metaDataObj) - self.p1.get_comparison_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
-            normal_exp = int(cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve']))
+            normal_exp = int(exp_multiplier*cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve']))
         elif self.item.spell:
             if self.item.heal:
                 # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
                 self.p1.records['healing'] += damage_done
-                normal_exp = max(5, int(cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_comparison_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
+                normal_exp = max(5, int(p1_klass['klass_exp_multipler']*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_comparison_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
-                normal_exp = cf.CONSTANTS['status_exp']
+                normal_exp = p1_klass['klass_exp_multiplier']*cf.CONSTANTS['status_exp']
         else:
             normal_exp = 0
             
@@ -577,6 +581,10 @@ class Combat(object):
         return my_exp
 
     def calc_init_exp_p2(self, defender_results, gameStateObj):
+        p2_klass = gameStateObj.metaDataObj['class_dict'][self.p2.klass]
+        other_unit_klass = gameStateObj.metaDataObj['class_dict'][self.p1.klass]
+        exp_multiplier = p2_klass['exp_multiplier']*other_unit_klass['exp_when_attacked']
+
         my_exp = 0
         applicable_results = [result for result in self.old_results if result.outcome and result.attacker is self.p2 and
                               result.defender is self.p1 and not result.def_damage <= 0]
@@ -584,7 +592,7 @@ class Combat(object):
             damage_done = sum([result.def_damage_done for result in applicable_results])
             self.p2.records['damage'] += damage_done
             level_diff = self.p1.get_comparison_level(gameStateObj.metaDataObj) - self.p2.get_comparison_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
-            normal_exp = max(0, int(cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve'])))
+            normal_exp = max(0, int(exp_multiplier*cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve'])))
             if self.p1.isDying:
                 self.p2.records['kills'] += 1
                 my_exp += int(cf.CONSTANTS['kill_multiplier']*normal_exp) + (cf.CONSTANTS['boss_bonus'] if 'Boss' in self.p1.tags else 0)

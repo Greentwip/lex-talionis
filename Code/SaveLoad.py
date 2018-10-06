@@ -608,7 +608,9 @@ def create_class_dict():
                             'bases': intify_comma_list(klass.find('bases').text),
                             'promotion': intify_comma_list(klass.find('promotion').text) if klass.find('promotion') is not None else [0]*10,
                             'max': intify_comma_list(klass.find('max').text) if klass.find('max') is not None else [60],
-                            'desc': klass.find('desc').text}
+                            'desc': klass.find('desc').text,
+                            'exp_multiplier': float(klass.find('exp_multiplier').text) if klass.find('exp_multiplier') is not None else 1.,
+                            'exp_when_attacked': float(klass.find('exp_when_attacked').text) if klass.find('exp_when_attacked') is not None else 1.}
         class_dict[c_id]['bases'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['bases'])))
         class_dict[c_id]['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['growths'])))
         class_dict[c_id]['promotion'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['promotion'])))
