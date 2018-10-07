@@ -249,7 +249,7 @@
         <id>Superior Edge</id>
         <spritetype>Sword</spritetype>
         <spriteid>18</spriteid>       
-        <components>weapon,uses,weight,status_on_equip</components>
+        <components>weapon,uses,weight,status_on_equip,warning</components>
         <weapontype>Sword</weapontype>
  
         <uses>10</uses>
@@ -258,6 +258,7 @@
         <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
 		<weight>7</weight>
         <status_on_equip>Swordbreaker</status_on_equip>
+        <warning>cur_unit.getMainWeapon() and cur_unit.getMainWeapon().TYPE == 'Sword'</warning>
         
 		<MT>7</MT>
 		<HIT>80</HIT>
@@ -269,7 +270,7 @@
         <id>Iron Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,effective</components>
         <weapontype>Lance</weapontype>
  
         <uses>45</uses>
@@ -281,6 +282,7 @@
 		<MT>5</MT>
 		<HIT>80</HIT>
 		<LVL>D</LVL>
+        <effective>Armor;7</effective>
     </item>
 
     <item name="Steel Lance">
@@ -467,7 +469,7 @@
         <id>Superior Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>13</spriteid>       
-        <components>weapon,uses,weight,status_on_equip</components>
+        <components>weapon,uses,weight,status_on_equip,warning</components>
         <weapontype>Lance</weapontype>
  
         <uses>10</uses>
@@ -476,6 +478,7 @@
         <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
 		<weight>6</weight>
         <status_on_equip>Lancebreaker</status_on_equip>
+        <warning>cur_unit.getMainWeapon() and cur_unit.getMainWeapon().TYPE == 'Lance'</warning>
         
 		<MT>9</MT>
         <HIT>70</HIT>
@@ -703,7 +706,7 @@
         <id>Superior Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>17</spriteid>       
-        <components>weapon,uses,weight,status_on_equip</components>
+        <components>weapon,uses,weight,status_on_equip,warning</components>
         <weapontype>Axe</weapontype>
  
         <uses>10</uses>
@@ -712,6 +715,7 @@
         <desc>Grants Hit/Avoid +30 against enemies wielding Axes.</desc>
 		<weight>9</weight>
         <status_on_equip>Axebreaker</status_on_equip>
+        <warning>cur_unit.getMainWeapon() and cur_unit.getMainWeapon().TYPE == 'Axe'</warning>
         
 		<MT>10</MT>
 		<HIT>60</HIT>

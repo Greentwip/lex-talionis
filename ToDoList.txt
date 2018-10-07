@@ -9,7 +9,6 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Add Killer & Effective Weapon markers
 - Supports (GBA & POR)
 - Turnwheel
 - Submaps

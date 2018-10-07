@@ -1,11 +1,11 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import Image_Modification, Utility, Engine
+    import Weapons, Image_Modification, Utility, Engine
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import Image_Modification, Utility, Engine
+    from . import Weapons, Image_Modification, Utility, Engine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -188,17 +188,37 @@ class UnitSprite(object):
                 topleft = (left - max(0, (warp_anim.get_width() - 16)//2), top - max(0, (warp_anim.get_height() - 16)//2) - 4)
                 surf.blit(warp_anim, topleft)
 
-        if gameStateObj.cursor.currentSelectedUnit and (gameStateObj.cursor.currentSelectedUnit.name, self.unit.name) in gameStateObj.talk_options:
-            frame = (Engine.get_time()//100)%8
-            topleft = (left - 1, top - 12)
-            # surf.blit(Engine.subsurface(GC.IMAGESDICT['TalkMarker'], (frame*8, 0, 8, 16)), topleft)
-            if frame in (0, 1, 2):
-                offset = 0
-            elif frame in (3, 7):
-                offset = 1
-            else:
-                offset = 2
-            surf.blit(GC.IMAGESDICT['TalkMarker'], (topleft[0], topleft[1] + offset))
+        # Talk, Warning and Danger icons
+        if gameStateObj.cursor.currentSelectedUnit:
+            cur_unit = gameStateObj.cursor.currentSelectedUnit
+            if (cur_unit, self.unit.name) in gameStateObj.talk_options:
+                frame = (Engine.get_time()//100)%8
+                topleft = (left - 1, top - 12)
+                if frame in (0, 1, 2):
+                    offset = 0
+                elif frame in (3, 7):
+                    offset = 1
+                else:
+                    offset = 2
+                surf.blit(GC.IMAGESDICT['TalkMarker'], (topleft[0], topleft[1] + offset))
+            if self.unit.checkIfEnemy(cur_unit):
+                self.draw_warning_marker(surf, left, top, cur_unit)
+
+    def draw_warning_marker(self, surf, left, top, cur_unit):
+        items = self.unit.items
+        # print(items)
+        # Effective Weapons
+        if any(item.effective and any(comp in cur_unit.tags for comp in item.effective.against) for item in items):
+            frame = (Engine.get_time()//125)%8
+            topleft = (left + 5, top - 12)
+            surf.blit(Engine.subsurface(GC.IMAGESDICT['DangerMarker'], (frame*8, 0, 8, 16)), topleft)
+        # Killer Weapons and Master Weapons
+        for item in items:
+            if (item.warning and eval(item.warning)) or \
+                    (item.reverse and cur_unit.getMainWeapon() and Weapons.TRIANGLE.compute_advantage(item, cur_unit.getMainWeapon())[0]):
+                frame = (Engine.get_time()//125)%8
+                topleft = (left + 5, top - 12)
+                surf.blit(Engine.subsurface(GC.IMAGESDICT['WarningMarker'], (frame*8, 0, 8, 16)), topleft)
 
     def draw_hp(self, surf, gameStateObj):
         current_time = Engine.get_time()
