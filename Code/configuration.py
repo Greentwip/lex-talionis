@@ -93,13 +93,11 @@ def read_constants_file():
              'boss_bonus': 40, # Added to total exp on killing a boss
              'min_exp': 1, # Minimum amount of experience gained for just existing in combat
              'kill_worth': 20, # How much damage is worth a kill in the Records
-             'support_points': 12, # Number of points needed for one level of support
              'line_of_sight': 1, # Whether to use line of sight algorithm when choosing targets for weapons
              'spell_line_of_sight': 0, # Whether to use line of sight algorithm when choosing targets for spells
              'aura_los': 1, # Whether to use line of sight algorithm for auras
              'simultaneous_aoe': 1, # Whether AOE attacks on many targets are resolved simultaneously or in order
              'def_double': 1, # Whether units on defense can double their attackers
-             'support': 1, # Whether this game has supports
              'enemy_leveling': 1, # How to level up non-player units
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
              'max_stat': 20, # Maximum value that a non-HP stat can be. Irrespective of class caps. 
@@ -119,7 +117,17 @@ def read_constants_file():
              'accuracy_luck_coef': 0.5,
              'crit_accuracy_skill_coef': 1.0,
              'crit_avoid_luck_coef': 1.0,
-             'defense_coef': 1.0}
+             'defense_coef': 1.0,
+             'support': 1, # 0 - No supports, 1 - Conversations in combat, Conversations in base
+             'support_bonus': 3, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
+             'support_range': 3, # 0 - Entire map
+             'support_growth_range': 1, # 0 - Entire map
+             'support_end_chapter': 0, # Points gained for ending a chapter with both alive
+             'support_end_turn': 1, # Points gained for ending turn in range
+             'support_combat': 1, # Points gained for combat in range
+             'support_interact': 1, # Points for interacting
+             'support_limit': 5, # Limit to number of support level: 0 - No limit
+             }
 
     if os.path.isfile('Data/constants.ini'):
         with open('Data/constants.ini') as constants_file:
@@ -145,13 +153,11 @@ def read_constants_file():
     lines['kill_multiplier'] = float(lines['kill_multiplier'])
     lines['boss_bonus'] = float(lines['boss_bonus'])
     lines['min_exp'] = int(lines['min_exp'])
-    lines['support_points'] = int(lines['support_points'])
     lines['line_of_sight'] = int(lines['line_of_sight'])
     lines['spell_line_of_sight'] = int(lines['spell_line_of_sight'])
     lines['aura_los'] = int(lines['aura_los'])
     lines['simultaneous_aoe'] = int(lines['simultaneous_aoe'])
     lines['def_double'] = int(lines['def_double'])
-    lines['support'] = int(lines['support'])
     lines['enemy_leveling'] = int(lines['enemy_leveling'])
     lines['num_skills'] = int(lines['num_skills'])
     lines['max_stat'] = int(lines['max_stat'])
@@ -171,6 +177,14 @@ def read_constants_file():
     lines['crit_accuracy_skill_coef'] = float(lines['crit_accuracy_skill_coef'])
     lines['crit_avoid_luck_coef'] = float(lines['crit_avoid_luck_coef'])
     lines['defense_coef'] = float(lines['defense_coef'])
+    lines['support'] = int(lines['support'])
+    lines['support_bonus'] = int(lines['support_bonus'])
+    lines['support_range'] = int(lines['support_range'])
+    lines['support_growth_range'] = int(lines['support_growth_range'])
+    lines['support_end_chapter'] = int(lines['support_end_chapter'])
+    lines['support_end_turn'] = int(lines['support_end_turn'])
+    lines['support_combat'] = int(lines['support_combat'])
+    lines['support_interact'] = int(lines['support_interact'])
 
     return lines
 

@@ -620,7 +620,7 @@ class InfoMenu(StateMachine.State):
             dam = '--'
             acc = '--'
         avo = str(self.unit.avoid(gameStateObj))
-        atkspd = str(self.unit.attackspeed())
+        atkspd = str(self.unit.attackspeed(gameStateObj))
         RngWidth = GC.FONT['text_blue'].size(rng)[0]
         AtkWidth = GC.FONT['text_blue'].size(dam)[0]
         HitWidth = GC.FONT['text_blue'].size(acc)[0]
@@ -724,7 +724,7 @@ class InfoMenu(StateMachine.State):
         GC.FONT['text_yellow'].blit(cf.WORDS["DEF"], menu_surf, (width//2+8, top + height//3))
         GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (width//2+8, top + 2*height//3))
 
-        attack, defense, accuracy, avoid = self.unit.get_support_bonuses(gameStateObj)
+        attack, defense, accuracy, avoid, crit, dodge, attackspeed = self.unit.get_support_bonuses()
         AtkWidth = GC.FONT['text_blue'].size(str(attack))[0]
         HitWidth = GC.FONT['text_blue'].size(str(accuracy))[0]
         AvoidWidth = GC.FONT['text_blue'].size(str(avoid))[0]

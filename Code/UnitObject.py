@@ -101,6 +101,7 @@ class UnitObject(object):
         self.deathCounter = 0
 
         self.sprite = UnitSprite.UnitSprite(self)
+        self.support_bonuses = None
         self.arrowCounter = 0
         self.arrowAnim = [0, 1, 2]
         self.flicker = None
@@ -605,6 +606,7 @@ class UnitObject(object):
                 gameStateObj.boundary_manager.leave(self, gameStateObj)
             self.remove_tile_status(gameStateObj)
         self.remove_aura_status(gameStateObj, serializing=serializing)
+        self.support_bonuses = None  # Reset support bonuses
 
     def arrive(self, gameStateObj, serializing=False):
         if self.position:
@@ -614,6 +616,7 @@ class UnitObject(object):
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
             self.acquire_tile_status(gameStateObj)
             self.acquire_aura_status(gameStateObj, serializing=serializing)
+            self.create_support_bonuses(gameStateObj)
 
     def remove_from_map(self, gameStateObj):
         if self.position:
@@ -1442,23 +1445,22 @@ class UnitObject(object):
 
 # === COMBAT CALCULATIONS ====================================================
     # Gets bonuses from supports
-    def get_support_bonuses(self, gameStateObj):
-        attack = 0
-        defense = 0
-        accuracy = 0
-        avoid = 0
+    def get_support_bonuses(self):
+        return self.support_bonuses
 
-        if gameStateObj.support and self.position and self.name in gameStateObj.support.node_dict:
-            for name, edge in gameStateObj.support.node_dict[self.name].adjacent.items():
+    def create_support_bonuses(self, gameStateObj):
+        # attack, defense, accuracy, avoid, crit, dodge, attackspeed
+        bonuses = [0] * 7
+
+        if gameStateObj.support and self.position and self.id in gameStateObj.support.node_dict:
+            for other_unit in gameStateObj.support.node_dict.get_adjacent(self.id):
                 for unit in gameStateObj.allunits:
-                    if unit.name == name and unit.position and Utility.calculate_distance(unit.position, self.position) <= 3:
-                        support_level = edge.current_value//cf.CONSTANTS['support_points']
-                        affinity = gameStateObj.support.node_dict[name].affinity
-                        attack += affinity.attack * support_level
-                        defense += affinity.defense * support_level
-                        accuracy += affinity.accuracy * support_level * 5
-                        avoid += affinity.avoid * support_level * 5
-        return min(4, attack), min(4, defense), min(20, accuracy), min(20, avoid)
+                    if unit.id == other_unit and unit.position and self.checkIfAlly(unit):
+                        cur_bonus = gameStateObj.support.get_affinity_bonuses(self, unit)
+                        bonuses = [a + b for a, b in zip(bonuses, cur_bonus)]
+                        break
+
+        self.support_bonuses = bonuses
 
     def outspeed(self, target, item):
         """
@@ -1643,10 +1645,11 @@ class UnitObject(object):
             attackspeed = self.stats['SPD'] - max(0, item.weight - self.stats['CON'])
         else:
             attackspeed = self.stats['SPD']
+        attackspeed += self.get_support_bonuses()[6]
         return attackspeed
 
     def accuracy(self, gameStateObj, item=None):
-        accuracy = self.get_support_bonuses(gameStateObj)[2]
+        accuracy = self.get_support_bonuses()[2]
         # Cannot convert the following into a list comprehension, since the scoping ruins globals and locals
         for status in self.status_effects:
             if status.hit:
@@ -1671,7 +1674,7 @@ class UnitObject(object):
     def avoid(self, gameStateObj, item=None):
         base = int(self.attackspeed(item) * cf.CONSTANTS['avoid_speed_coef'] +
                    self.stats['LCK'] * cf.CONSTANTS['avoid_luck_coef'])
-        base += self.get_support_bonuses(gameStateObj)[3]
+        base += self.get_support_bonuses()[3]
         for status in self.status_effects:
             if status.avoid:
                 base += int(eval(status.avoid, globals(), locals()))
@@ -1685,7 +1688,7 @@ class UnitObject(object):
         if not item:
             return 0
 
-        damage = self.get_support_bonuses(gameStateObj)[0]
+        damage = self.get_support_bonuses()[0]
         for status in self.status_effects:
             if status.mt:
                 damage += int(eval(status.mt, globals(), locals()))
@@ -1720,6 +1723,7 @@ class UnitObject(object):
         if item.crit is not None and (item.weapon or item.spell):
             accuracy = item.crit + int(self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef'])
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
+            accuracy += self.get_support_bonuses()[4]
             return accuracy
         else:
             return 0
@@ -1727,32 +1731,15 @@ class UnitObject(object):
     def crit_avoid(self, gameStateObj, item=None):
         base = int(self.stats['LCK'] * cf.CONSTANTS['crit_avoid_luck_coef'])
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
+        base += self.get_support_bonuses()[5]
         return base
 
     def defense(self, gameStateObj, stat='DEF'):
         defense = int(self.stats[stat] * cf.CONSTANTS['defense_coef'])
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
-        if cf.CONSTANTS['support']:
-            defense += self.get_support_bonuses(gameStateObj)[1]
+        defense += self.get_support_bonuses()[1]
         return defense
-
-    """
-    def defense(self, gameStateObj):
-        defense = self.stats['DEF'] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
-        if cf.CONSTANTS['support']:
-            defense += self.get_support_bonuses(gameStateObj)[1]
-        return defense
-
-    def resistance(self, gameStateObj):
-        return self.stats['RES'] + self.get_support_bonuses(gameStateObj)[1]
-
-    def mixed_defense(self, gameStateObj):
-        defense = self.stats['DEF'] + self.stats['RES'] + (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].stats['DEF'])
-        if cf.CONSTANTS['support']:
-            defense += self.get_support_bonuses(gameStateObj)[1] 
-        return defense
-    """
 
     def get_rating(self):
         return (self.stats['HP'] - 10)//2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \
