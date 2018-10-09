@@ -86,9 +86,9 @@ class StateMachine(object):
                            'base_main': PrepBase.BaseMainState,
                            'base_items': PrepBase.PrepItemsState,
                            'base_info': PrepBase.BaseInfoState,
-                           'base_support_child': PrepBase.BaseSupportChildState,
-                           'base_pairing': PrepBase.BasePairingState,
-                           'base_pairing_select': PrepBase.BasePairingSelectState,
+                           # 'base_support_child': PrepBase.BaseSupportChildState,
+                           # 'base_pairing': PrepBase.BasePairingState,
+                           # 'base_pairing_select': PrepBase.BasePairingSelectState,
                            'base_support_convos': PrepBase.BaseSupportConvoState,
                            'base_codex_child': PrepBase.BaseCodexChildState,
                            'base_map': PrepBase.BaseMapState,
@@ -774,6 +774,13 @@ class MenuState(State):
                 if (cur_unit.name, adjunit.name) in gameStateObj.talk_options:
                     options.append(cf.WORDS['Talk'])
                     break
+            # If supports happen in battle
+            if cf.CONSTANTS['supports'] == 1 and 'AllowSupports' in gameStateObj.game_constants:
+                for adjunit in adjunits:
+                    edge = gameStateObj.support.get_edge(cur_unit.id, adjunit.id)
+                    if edge and edge.can_support():
+                        options.append(cf.WORDS['Support'])
+                        break
             # If the unit is on a village tile
             if 'Village' in gameStateObj.map.tile_info_dict[cur_unit.position]:
                 options.append(cf.WORDS['Visit'])
@@ -1002,6 +1009,13 @@ class MenuState(State):
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
                 gameStateObj.stateMachine.changeState('talkselect')
+            elif selection == cf.WORDS['Support']:
+                positions = [unit.position for unit in gameStateObj.allunits if unit.position in cur_unit.getAdjacentPositions(gameStateObj) and 
+                             gameStateObj.support.get_edge(cur_unit.id, unit.id) and gameStateObj.support.get_edge(cur_unit.id, unit.id).can_support()]
+                cur_unit.validPartners = CustomObjects.MapSelectHelper(positions)
+                closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
+                gameStateObj.cursor.setPosition(closest_position, gameStateObj)
+                gameStateObj.stateMachine.changeState('supportselect')
             elif selection == cf.WORDS['Wait']:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
@@ -1595,6 +1609,24 @@ class SelectState(State):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('dialogue')
+            elif self.name == 'supportselect':
+                gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
+                if gameStateObj.cursor.currentHoveredUnit:
+                    cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
+                    edge = gameStateObj.support.get_edge(cur_unit.id, gameStateObj.cursor.currentHoveredUnit.id)
+                    support_script = edge.script
+                    level = edge.get_support_level()
+                    if level == 0:
+                        level = 'C'
+                    elif level == 1:
+                        level = 'B'
+                    elif level == 2:
+                        level = 'A'
+                    elif level == 3:
+                        level = 'S'
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit, name=level))
+                    gameStateObj.stateMachine.changeState('menu')
+                    gameStateObj.stateMachine.changeState('dialogue')
             elif self.name == 'unlockselect':
                 gameStateObj.stateMachine.changeState('menu')
                 item = cur_unit.get_unlock_item()
@@ -1930,6 +1962,7 @@ class DialogueState(State):
                 gameStateObj.statedict['outroScriptDone'] = True
             else:
                 gameStateObj.update_statistics(metaDataObj)
+                gameStateObj.increment_supports()
                 gameStateObj.clean_up()
                 if isinstance(gameStateObj.game_constants['level'], int):
                     gameStateObj.game_constants['level'] += 1

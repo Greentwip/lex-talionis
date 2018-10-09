@@ -427,6 +427,16 @@ class GameStateObj(object):
         for unit in self.allunits:
             unit.records = unit.default_records()
 
+    def increment_supports(self):
+        if self.support and cf.CONSTANTS['support_end_chapter']:
+            units = [unit for unit in self.allunits if unit.position and not unit.dead and unit.id in self.support.node_dict]
+            for unit in units:
+                node = self.support.node_dict[unit.id]
+                other_ids = [other.id for other in units if unit.checkIfAlly(other)]
+                for other_id, edge in node.adjacent.items():
+                    if other_id in other_ids:
+                        edge.increment(cf.CONSTANTS['support_end_chapter'])
+
     def restock_convoy(self):
         items_with_uses = sorted((item for item in self.convoy if item.uses), key=lambda item: item.id)
         # Actually restock

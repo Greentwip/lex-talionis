@@ -616,7 +616,6 @@ class UnitObject(object):
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
             self.acquire_tile_status(gameStateObj)
             self.acquire_aura_status(gameStateObj, serializing=serializing)
-            self.create_support_bonuses(gameStateObj)
 
     def remove_from_map(self, gameStateObj):
         if self.position:
@@ -1446,7 +1445,11 @@ class UnitObject(object):
 # === COMBAT CALCULATIONS ====================================================
     # Gets bonuses from supports
     def get_support_bonuses(self):
-        return self.support_bonuses
+        if self.support_bonuses:
+            return self.support_bonuses
+        else:
+            logger.error("Supports bonuses were not pre-generated for %s", self.name)
+            return [0]*7
 
     def create_support_bonuses(self, gameStateObj):
         # attack, defense, accuracy, avoid, crit, dodge, attackspeed
@@ -1461,6 +1464,9 @@ class UnitObject(object):
                         break
 
         self.support_bonuses = bonuses
+
+    def clear_support_bonuses(self):
+        self.support_bonuses = None
 
     def outspeed(self, target, item):
         """
@@ -1755,6 +1761,10 @@ class UnitObject(object):
         self.finished = True
         self.previous_position = self.position
         self.sprite.change_state('normal')
+        # Handle support increment
+        if gameStateObj.support and cf.CONSTANTS['support_end_turn']:
+            gameStateObj.support.end_turn(self, gameStateObj)
+
         # Called whenever a unit waits
         wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
         if script and os.path.exists(wait_script_name):

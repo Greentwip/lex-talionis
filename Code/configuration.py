@@ -185,6 +185,7 @@ def read_constants_file():
     lines['support_end_turn'] = int(lines['support_end_turn'])
     lines['support_combat'] = int(lines['support_combat'])
     lines['support_interact'] = int(lines['support_interact'])
+    lines['support_limit'] = int(lines['support_limit'])
 
     return lines
 

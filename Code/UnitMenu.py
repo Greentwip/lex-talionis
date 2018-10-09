@@ -405,7 +405,7 @@ class UnitMenu(StateMachine.State):
                 self.help_boxes.append(InfoMenu.Help_Box(titles[idx], pos, InfoMenu.Help_Dialog(cf.WORDS[titles[idx] + '_desc'])))
 
     fighting_stats = {'STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES', 'CON', 'MOV'}
-    ['MOV', 'CON', 'Aid', 'Rat', 'Trv']
+    # ['MOV', 'CON', 'Aid', 'Rat', 'Trv']
 
     def sort(self, gameStateObj=None):
         if self.current_sort == 'Name':

@@ -13,6 +13,7 @@ class InfoMenu(StateMachine.State):
             self.show_map = False
             # Set unit to be displayed
             self.unit = gameStateObj.info_menu_struct['chosen_unit']
+            self.unit.create_support_bonuses(gameStateObj)
             if not gameStateObj.info_menu_struct['scroll_units']:
                 self.scroll_units = [unit for unit in gameStateObj.allunits if (not self.unit.position or unit.position) and 
                                      not unit.dead and unit.team == self.unit.team]
@@ -68,6 +69,7 @@ class InfoMenu(StateMachine.State):
 
     def back(self, gameStateObj):
         GC.SOUNDDICT['Select 4'].play()
+        self.unit.clear_support_bonuses()
         gameStateObj.info_menu_struct['current_state'] = self.currentState
         gameStateObj.info_menu_struct['chosen_unit'] = self.unit
         if not gameStateObj.info_menu_struct['one_unit_only'] and self.unit.position:
@@ -127,6 +129,8 @@ class InfoMenu(StateMachine.State):
                         self.next_unit = self.scroll_units[index + 1]
                     else:
                         self.next_unit = self.scroll_units[0]
+                    self.unit.clear_support_bonuses()
+                    self.next_unit.create_support_bonuses(gameStateObj)
                     self.transition = 'DOWN'
                     # self.reset_surfs()
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
@@ -139,6 +143,8 @@ class InfoMenu(StateMachine.State):
                         self.next_unit = self.scroll_units[index - 1]
                     else:
                         self.next_unit = self.scroll_units[-1] # last unit
+                    self.unit.clear_support_bonuses()
+                    self.next_unit.create_support_bonuses(gameStateObj)
                     self.transition = 'UP'
                     # self.reset_surfs()
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
@@ -389,6 +395,9 @@ class InfoMenu(StateMachine.State):
                 self.wexp_surf = self.create_wexp_surf()
             self.draw_wexp_surf(main_surf)
             # Support surf also goes here
+            if not self.support_surf:
+                self.support_surf = self.create_support_surf()
+            self.draw_support_surf(main_surf)
 
         # Now put it in the right place
         offset_x = max(96, 96 - self.scroll_offset_x)
@@ -495,8 +504,8 @@ class InfoMenu(StateMachine.State):
         GC.FONT['text_blue'].blit(str(self.unit.growths[0]), menu_surf, (111 - GC.FONT['text_blue'].size(str(self.unit.growths[0]))[0], GC.TILEHEIGHT*3 + 24))
 
         # Handle Affinity
-        if cf.CONSTANTS['support'] and self.unit.name in gameStateObj.support.node_dict:
-            gameStateObj.support.node_dict[self.unit.name].affinity.draw(menu_surf, (menu_surf.get_width()//2 + 32, GC.TILEHEIGHT*5 + 24))
+        if cf.CONSTANTS['support'] and self.unit.id in gameStateObj.support.node_dict:
+            gameStateObj.support.node_dict[self.unit.id].affinity.draw(menu_surf, (96, GC.TILEHEIGHT*5 + 24))
         else:
             GC.FONT['text_blue'].blit('--', menu_surf, (96, GC.TILEHEIGHT*5 + 24)) # Blit No Affinity
 
@@ -688,16 +697,17 @@ class InfoMenu(StateMachine.State):
 
     def create_support_surf(self, gameStateObj):
         # Menu background
-        menu_size = (GC.WINWIDTH//2+8, GC.WINHEIGHT - GC.TILEHEIGHT)
-        menu_surf = MenuFunctions.CreateBaseMenuSurf(menu_size)
+        menu_surf = Engine.create_surface((GC.WINWIDTH - 96, GC.WINHEIGHT), transparent=True)
 
-        current_supports = gameStateObj.support.get_supports(self.unit.name)
+        current_supports = gameStateObj.support.get_supports(self.unit.id)
+        # support[2] is support level
         current_supports = [support for support in current_supports if support[2]]
 
         # Display
+        top = 80
         for index, (name, affinity, support_level) in enumerate(current_supports):
-            affinity.draw(menu_surf, (4, index*16 + 4))
-            GC.FONT['text_white'].blit(name, menu_surf, (24, index*16 + 4))
+            affinity.draw(menu_surf, (4, index*16 + top))
+            GC.FONT['text_white'].blit(name, menu_surf, (24, index*16 + top))
             if support_level == 1:
                 letter_level = '@' # Big C
             elif support_level == 2:
@@ -706,39 +716,40 @@ class InfoMenu(StateMachine.State):
                 letter_level = '~' # Big A
             elif support_level >= 4:
                 letter_level = '%' # Big S
-            GC.FONT['text_yellow'].blit(letter_level, menu_surf, (menu_surf.get_width() - 8 - GC.FONT['text_yellow'].size(letter_level)[0], index*16 + 4))
+            letter_width = GC.FONT['text_yellow'].size(letter_level)[0]
+            GC.FONT['text_yellow'].blit(letter_level, menu_surf, (menu_surf.get_width() - 8 - letter_width, index*16 + top))
 
         # Then, display current support bonuses
-        SupportInfoSurf = GC.IMAGESDICT['CurrentSupportInfo']
-        left = 4
-        height = SupportInfoSurf.get_height()
-        width = SupportInfoSurf.get_width()
-        right = left + width
-        top = menu_surf.get_height() - height - 5        
-        menu_surf.blit(SupportInfoSurf, (left, top))
+        # === This part is no longer warranted ===
+        # SupportInfoSurf = GC.IMAGESDICT['CurrentSupportInfo']
+        # left = 4
+        # height = SupportInfoSurf.get_height()
+        # width = SupportInfoSurf.get_width()
+        # right = left + width
+        # top = menu_surf.get_height() - height - 5        
+        # menu_surf.blit(SupportInfoSurf, (left, top))
 
-        # Then populate current support info menu_surf
-        GC.FONT['text_white'].blit(cf.WORDS["Current Bonuses"], menu_surf, (8, top)) 
-        GC.FONT['text_yellow'].blit(cf.WORDS["Atk"], menu_surf, (12, top + height//3))
-        GC.FONT['text_yellow'].blit(cf.WORDS["Hit"], menu_surf, (12, top + 2*height//3))
-        GC.FONT['text_yellow'].blit(cf.WORDS["DEF"], menu_surf, (width//2+8, top + height//3))
-        GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (width//2+8, top + 2*height//3))
+        # # Then populate current support info menu_surf
+        # GC.FONT['text_white'].blit(cf.WORDS["Current Bonuses"], menu_surf, (8, top)) 
+        # GC.FONT['text_yellow'].blit(cf.WORDS["Atk"], menu_surf, (12, top + height//3))
+        # GC.FONT['text_yellow'].blit(cf.WORDS["Hit"], menu_surf, (12, top + 2*height//3))
+        # GC.FONT['text_yellow'].blit(cf.WORDS["DEF"], menu_surf, (width//2+8, top + height//3))
+        # GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (width//2+8, top + 2*height//3))
 
-        attack, defense, accuracy, avoid, crit, dodge, attackspeed = self.unit.get_support_bonuses()
-        AtkWidth = GC.FONT['text_blue'].size(str(attack))[0]
-        HitWidth = GC.FONT['text_blue'].size(str(accuracy))[0]
-        AvoidWidth = GC.FONT['text_blue'].size(str(avoid))[0]
-        DefWidth = GC.FONT['text_blue'].size(str(defense))[0] 
-        GC.FONT['text_blue'].blit(str(attack), menu_surf, (width//2 - 2 - AtkWidth, top + height//3))
-        GC.FONT['text_blue'].blit(str(accuracy), menu_surf, (width//2 - 2 - HitWidth, top + 2*height//3))
-        GC.FONT['text_blue'].blit(str(avoid), menu_surf, (right - 6 - AvoidWidth, top + 2*height//3))
-        GC.FONT['text_blue'].blit(str(defense), menu_surf, (right - 6 - DefWidth, top + height//3))
+        # attack, defense, accuracy, avoid, crit, dodge, attackspeed = self.unit.get_support_bonuses()
+        # AtkWidth = GC.FONT['text_blue'].size(str(attack))[0]
+        # HitWidth = GC.FONT['text_blue'].size(str(accuracy))[0]
+        # AvoidWidth = GC.FONT['text_blue'].size(str(avoid))[0]
+        # DefWidth = GC.FONT['text_blue'].size(str(defense))[0] 
+        # GC.FONT['text_blue'].blit(str(attack), menu_surf, (width//2 - 2 - AtkWidth, top + height//3))
+        # GC.FONT['text_blue'].blit(str(accuracy), menu_surf, (width//2 - 2 - HitWidth, top + 2*height//3))
+        # GC.FONT['text_blue'].blit(str(avoid), menu_surf, (right - 6 - AvoidWidth, top + 2*height//3))
+        # GC.FONT['text_blue'].blit(str(defense), menu_surf, (right - 6 - DefWidth, top + height//3))
 
         return menu_surf
 
     def draw_support_surf(self, surf):
-        menu_position = (108, GC.TILEHEIGHT)
-        surf.blit(self.support_surf, menu_position)
+        surf.blit(self.support_surf, (96, 0))
 
 class HelpGraph(object):
     def __init__(self, state, unit, metaDataObj, gameStateObj):
@@ -765,7 +776,7 @@ class HelpGraph(object):
         #     else:
         #         self.initial = "Unit Desc"
         elif state == 'Support & Status':
-            self.populate_status(metaDataObj)
+            self.populate_status(gameStateObj, metaDataObj)
             if [wexp for wexp in self.unit.wexp if wexp > 0]:
                 self.initial = "Wexp0"
             else:
@@ -917,7 +928,7 @@ class HelpGraph(object):
         self.help_boxes["Experience"].right = "Atk"
         self.help_boxes["HP"].right = "Hit"
 
-    def populate_status(self, metaDataObj):
+    def populate_status(self, gameStateObj, metaDataObj):
         # Populate Weapon Exp
         good_weapons = [wexp for wexp in self.unit.wexp if wexp > 0]
         for index, wexp in enumerate(good_weapons):
@@ -934,12 +945,26 @@ class HelpGraph(object):
             pos = (104, GC.TILEHEIGHT*index + 48)
             self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), pos, Help_Dialog(status.desc))
 
-        self.populate_info_menu_default(metaDataObj)
-
         # Connect them together
         for i in range(len(statuses)):
             self.help_boxes["Status"+str(i)].down = ("Status"+str(i+1)) if i < (len(statuses) - 1) else None
             self.help_boxes["Status"+str(i)].up = ("Status"+str(i-1)) if i > 0 else None
+
+        # Supports
+        supports = gameStateObj.support.get_supports(self.unit.id)
+        supports = [support for support in supports if support[2]]
+        for index, support in enumerate(supports):
+            affinity = support[1]
+            desc = affinity.desc
+            pos = (96, 16*index + 24)
+            self.help_boxes["Support"+str(index)] = Help_Box("Support"+str(index), pos, Help_Dialog(desc))
+
+        # Connect supports
+        for i in range(len(supports)):
+            self.help_boxes["Support"+str(i)].down = ("Support"+str(i+1)) if i < (len(supports) - 1) else None
+            self.help_boxes["Support"+str(i)].up = ("Support"+str(i-1)) if i > 0 else None
+
+        self.populate_info_menu_default(metaDataObj)
         
         for i in range(len(statuses)):
             self.help_boxes["Status"+str(i)].left = "Unit Desc"
@@ -947,7 +972,9 @@ class HelpGraph(object):
         if good_weapons:
             self.help_boxes["Wexp0"].left = "Unit Desc"
             self.help_boxes['Unit Desc'].up = "Wexp0"
-
+        if statuses and supports:
+            self.help_boxes["Support0"].up = "Status" + str(len(statuses))
+            self.help_boxes["Status" + str(len(statuses))].down = "Support0"
         if statuses:
             self.help_boxes['Unit Desc'].right = "Status" + str(min(3, len(statuses) - 1))
             self.help_boxes['Experience'].right = "Status" + str(min(3, len(statuses) - 1))

@@ -21,12 +21,8 @@ load_player_characters
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Swordmaster;15;Iron Sword;3,17;None;Althea
-player;0;0;Sage;5;Fire;3,18;None;Resistance
-player;0;0;Cleric;5;Refresh;3,16;None;Resistance
-enemy;0;0;Knight;1;Iron Lance,Vulnerary;4,14;None;Althea
-enemy;0;0;Fighter;2;Swordreaver,Vulnerary;3,14;None;Althea
-enemy;0;0;Myrmidon;2;Superior Edge,Vulnerary;3,15;None;Althea
+player;1;0;Ophie;3,17;None
+player;1;0;Prim;3,15;None
 # Enemies
 # === Reinforcements ===
 # Player Characters

@@ -2,6 +2,7 @@ b;Town
 t;2
 inc_game_constant;money;5000
 set_game_constant;Convoy
+set_game_constant;AllowSupports
 u;Renae;Left
 bop;Renae
 s;Renae;You don't have to tell me twice!{w}{br}Catch you all later!

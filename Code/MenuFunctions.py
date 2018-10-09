@@ -1096,13 +1096,13 @@ class SupportMenu(object):
         return self.options[self.currentSelection], self.currentLevel
 
     def updateOptions(self, gameStateObj):
-        names = list(gameStateObj.support.node_dict[self.owner.name].adjacent)
+        names = list(gameStateObj.support.node_dict[self.owner.id].adjacent)
         # convert names to units
         self.options = []
         for name in names:
             unit_sprite = None
             for unit in gameStateObj:
-                if unit.team == 'player' and name == unit.name:
+                if unit.team == 'player' and name == unit.id:
                     unit_sprite = unit.sprite
                     break
             if gameStateObj.support.node_dict[name].dead:
@@ -1111,9 +1111,9 @@ class SupportMenu(object):
                 continue
             # We haven't found unit yet, so just skip
             affinity = gameStateObj.support.node_dict[name].affinity
-            edge = gameStateObj.support.node_dict[self.owner.name].adjacent[name]
+            edge = gameStateObj.support.node_dict[self.owner.id].adjacent[name]
             limit = edge.limit
-            support_level = edge.current_value//cf.CONSTANTS['support_points'] # 0, 1, 2, 3
+            support_level = edge.get_support_level() # 0, 1, 2, 3
             self.options.append((name, unit_sprite, affinity, support_level, limit))
 
         self.currentSelection = 0
@@ -1590,6 +1590,7 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
                 uses_string = str(item.c_uses)
             use_font.blit(uses_string, surf, (topleft[0] + 104 - 4 - use_font.size(uses_string)[0], topleft[1] + index*16 + 4))
 
+"""
 def drawUnitSupport(surf, unit1, unit2, gameStateObj):
     # Draw face one
     face_image1 = unit1.bigportrait.copy()
@@ -1671,6 +1672,7 @@ def drawUnitSupport(surf, unit1, unit2, gameStateObj):
                 middle_surf.blit(GC.ICONDICT['StarIcon'], (positions[index][0] - 8, positions[index][1]))
 
     surf.blit(middle_surf, (GC.WINWIDTH//2 - 72//2, 88))
+"""
 
 # Serves as controller class for host of menus
 class ConvoyMenu(object):

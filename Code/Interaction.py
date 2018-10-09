@@ -436,6 +436,12 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                 (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
                 (cf.OPTIONS['Animation'] == 'Combat Only' and attacker.checkIfEnemy(defender)))
 
+    def set_up_supports(attacker, defender, splash):
+        attacker.create_support_bonuses(gameStateObj)
+        defender.create_support_bonuses(gameStateObj)
+        for unit in splash:
+            unit.create_support_bonuses(gameStateObj)
+
     toggle_anim = gameStateObj.input_manager.is_pressed('AUX')
     # Whether animation combat is even allowed
     if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject) and not item.movement and not item.self_movement):
@@ -467,6 +473,7 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                     name = 'Generic' + attacker_color
                     attacker_frame_dir = attacker_anim['images'][name]
                 else:  # Just a map combat
+                    set_up_supports(attacker, defender, splash)
                     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
                 attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, name, item)
                 # Build defender animation
@@ -479,10 +486,13 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                     name = 'Generic' + defender_color
                     defender_frame_dir = defender_anim['images'][name]
                 else:
+                    set_up_supports(attacker, defender, splash)
                     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
                 defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script, name, defender.getMainWeapon())
+                set_up_supports(attacker, defender, [])
                 return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
     # default
+    set_up_supports(gameStateObj, attacker, defender, splash)
     return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
 
 # Abstract base class for combat
@@ -703,6 +713,14 @@ class Combat(object):
                     gameStateObj.stateMachine.changeState('dying')
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
                     gameStateObj.stateMachine.changeState('dialogue')
+
+    def handle_supports(self, gameStateObj, all_units):
+        non_dying_units = [u for u in all_units if not u.isDying]
+        for unit in all_units:
+            unit.clear_support_bonuses()
+            if not unit.isDying:
+                gameStateObj.support.end_combat(unit, gameStateObj)
+                gameStateObj.support.check_interact(unit, non_dying_units, gameStateObj)
 
 class AnimationCombat(Combat):
     def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat, ai_combat):
@@ -1429,6 +1447,9 @@ class AnimationCombat(Combat):
         # Actually remove items
         self.remove_broken_items(a_broke_item, d_broke_item)
 
+        if cf.CONSTANTS['support']:
+            self.handle_supports(gameStateObj, all_units)
+
 class SimpleHPBar(object):
     full_hp_blip = GC.IMAGESDICT['FullHPBlip']
     empty_hp_blip = GC.IMAGESDICT['EmptyHPBlip']
@@ -1943,6 +1964,10 @@ class MapCombat(Combat):
 
         # Actually remove items
         self.remove_broken_items(a_broke_item, d_broke_item)
+
+        if cf.CONSTANTS['support']:
+            units = [unit for unit in all_units if isinstance(unit, UnitObject.UnitObject)]
+            self.handle_supports(gameStateObj, units)
 
 class HealthBar(object):
     def __init__(self, draw_method, unit, item, other=None, stats=None, swap_stats=None):

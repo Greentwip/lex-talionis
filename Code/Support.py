@@ -52,7 +52,7 @@ class Support_Node(object):
         self.name = name
         self.affinity = AFFINITY_DICT[affinity]
         self.adjacent = {}
-        self.paired_with = None
+        # self.paired_with = None
         self.dead = False
 
     def add_neighbor(self, neighbor, edge):
@@ -61,16 +61,26 @@ class Support_Node(object):
 class Support_Edge(object):
     def __init__(self, supports, script_loc):
         self.supports = [int(x) for x in supports]
+        self.support_level = 0
         self.current_value = 0
         self.script = script_loc
 
-    def get_support_level(self):
+    def increment(self, value):
+        self.current_value += value
+
+    def available_level(self):
         current_value = self.current_value
         for idx, support in enumerate(self.supports):
             current_value -= support
             if current_value < 0:
                 return idx
         return len(self.supports)
+
+    def can_support(self):
+        return self.support_level < self.available_level()
+
+    def get_support_level(self):
+        return self.support_level
 
 class Support_Graph(object):
     def __init__(self, node_fp, edge_fp):
@@ -113,6 +123,11 @@ class Support_Graph(object):
         self.node_dict[frm].add_neighbor(self.node_dict[to], edge)
         self.node_dict[to].add_neighbor(self.node_dict[frm], edge)
 
+    def get_edge(self, frm, to):
+        if frm in self.node_dict and to in self.node_dict[frm].adjacent:
+            return self.node_dict[frm].adjacent[to]
+
+    """
     def pair(self, name1, name2):
         name1_pair = self.node_dict[name1].paired_with
         name2_pair = self.node_dict[name2].paired_with
@@ -122,6 +137,7 @@ class Support_Graph(object):
             self.node_dict[name2_pair].paired_with = None
         self.node_dict[name1].paired_with = name2
         self.node_dict[name2].paired_with = name1
+    """
 
     def get_adjacent(self, unit_id):
         if unit_id in self.node_dict:
@@ -150,32 +166,61 @@ class Support_Graph(object):
             if cf.CONSTANTS['support_bonus'] == 0:
                 return [0] * 7
             elif cf.CONSTANTS['support_bonus'] == 1:
-                return [b * support_level for b in self.node_dict[unit.id].affinity.get_bonus()]
+                return [int(b * support_level) for b in self.node_dict[unit.id].affinity.get_bonus()]
             elif cf.CONSTANTS['support_bonus'] == 2:
-                return [b * support_level for b in self.node_dict[other.id].affinity.get_bonus()]
+                return [int(b * support_level) for b in self.node_dict[other.id].affinity.get_bonus()]
             elif cf.CONSTANTS['support_bonus'] == 3:
                 bonus1 = self.node_dict[unit.id].affinity.get_bonus()
                 bonus2 = self.node_dict[other.id].affinity.get_bonus()
-                return [(a + b) * support_level / 2 for a, b in zip(bonus1, bonus2)]
+                return [int((a + b) * support_level / 2) for a, b in zip(bonus1, bonus2)]
             elif cf.CONSTANTS['support_bonus'] == 4:
                 bonus1 = self.node_dict[unit.id].affinity.get_bonus()
                 bonus2 = self.node_dict[other.id].affinity.get_bonus()
-                return [(a + b) * support_level for a, b in zip(bonus1, bonus2)]
+                return [int((a + b) * support_level) for a, b in zip(bonus1, bonus2)]
         else:
             return [0] * 7
+
+    def _end_general(self, unit, gameStateObj, gain):
+        if unit.id not in self.node_dict:
+            return
+        node = self.node_dict[unit.id]
+        other_ids = {u.id for u in gameStateObj.allunits if u is not unit and u.position and not u.dead and
+                     u.id in self.node_dict and unit.checkIfAlly(u) and
+                     Utility.calculate_distance(unit.position, u.position) <= cf.CONSTANTS['support_growth_range']}
+        for other_id, edge in node.adjacent.items():
+            if other_id in other_ids:
+                edge.increment(gain)
+
+    def end_turn(self, unit, gameStateObj):
+        self._end_general(unit, gameStateObj, cf.CONSTANTS['support_end_turn'])
+
+    def end_combat(self, unit, gameStateObj):
+        self._end_general(unit, gameStateObj, cf.CONSTANTS['support_end_combat'])
+
+    def check_interact(self, unit, units, gameStateObj):
+        if unit.id not in self.node_dict:
+            return
+        node = self.node_dict[unit.id]
+        other_ids = {u.id for u in units if u is not unit and unit.checkIfAlly(u) and 
+                     u.id in self.node_dict}
+        for other_id, edge in node.adjacent.items():
+            if other_id in other_ids:
+                edge.increment(cf.CONSTANTS['support_interact'])
 
     def serialize(self):
         serial_dict = {}
         for name1, node in self.node_dict.items():
             serial_dict[name1] = {}
             for name2, edge in node.adjacent.items():
-                serial_dict[name1][name2] = edge.current_value
+                serial_dict[name1][name2] = edge.current_value, edge.support_level
         return serial_dict
 
     def deserialize(self, serial_dict):
         for name1, names in serial_dict.items():
             for name2, value in names.items():
-                self.node_dict[name1].adjacent[name2].current_value = value
+                current_value, support_level = value
+                self.node_dict[name1].adjacent[name2].current_value = current_value
+                self.node_dict[name1].adjacent[name2].support_level = support_level
 
 def create_affinity_dict(fn):
     d = {}
@@ -187,13 +232,13 @@ def create_affinity_dict(fn):
             continue
         split_line = line.strip().split()
         name = split_line[0]
-        damage = int(split_line[1])
-        resist = int(split_line[2])
-        accuracy = int(split_line[3])
-        avoid = int(split_line[4])
-        crit = int(split_line[5])
-        dodge = int(split_line[6])
-        attackspeed = int(split_line[7])
+        damage = float(split_line[1])
+        resist = float(split_line[2])
+        accuracy = float(split_line[3])
+        avoid = float(split_line[4])
+        crit = float(split_line[5])
+        dodge = float(split_line[6])
+        attackspeed = float(split_line[7])
         d[name] = Affinity(index, name, damage, resist, accuracy, avoid, crit, dodge, attackspeed)
 
     return d

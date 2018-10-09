@@ -1271,7 +1271,8 @@ class BaseMainState(StateMachine.State):
         elif not gameStateObj.activeMenu:
             options = [cf.WORDS['Items'], cf.WORDS['Market'], cf.WORDS['Convos'], cf.WORDS['Codex'], cf.WORDS['Save'], cf.WORDS['Continue']]
             color_control = ['text_white', 'text_grey', 'text_grey', 'text_white', 'text_white', 'text_white']
-            if gameStateObj.support:
+            # In base supports
+            if cf.CONSTANTS['support'] == 2:
                 options.insert(3, cf.WORDS['Supports'])
                 color_control.insert(3, 'text_grey')
             if metaDataObj['marketFlag']:
@@ -1328,7 +1329,9 @@ class BaseMainState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('base_info')
             elif selection == cf.WORDS['Supports']:
                 GC.SOUNDDICT['Select 1'].play()
-                gameStateObj.stateMachine.changeState('base_support_child')
+                # gameStateObj.stateMachine.changeState('base_support_child')
+                gameStateObj.stateMachine.changeState('base_support_convos')
+                gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Codex']:
                 GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.stateMachine.changeState('base_codex_child')
@@ -1387,6 +1390,7 @@ class BaseInfoState(StateMachine.State):
     def finish(self, gameStateObj, metaDataObj):
         gameStateObj.childMenu = None
 
+"""
 class BaseSupportChildState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if gameStateObj.hidden_active and gameStateObj.hidden_child:
@@ -1529,6 +1533,7 @@ class BasePairingSelectState(StateMachine.State):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         MenuFunctions.drawUnitSupport(surf, self.selection, gameStateObj.activeMenu.getSelection(), gameStateObj)
         return surf
+"""
 
 class BaseSupportConvoState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -1585,11 +1590,10 @@ class BaseSupportConvoState(StateMachine.State):
                 GC.SOUNDDICT['Select 1'].play()
                 unit, level = gameStateObj.childMenu.getSelection()
                 owner = gameStateObj.childMenu.owner
-                edge = gameStateObj.support.node_dict[owner.name].adjacent[unit.name]
-                support_level = edge.current_value//cf.CONSTANTS['support_points']
+                edge = gameStateObj.support.node_dict[owner.id].adjacent[unit.id]
                 # if cf.OPTIONS['debug']:
                 #     print(level, support_level)
-                if level < support_level:
+                if level < edge.available_level():
                     if level == 0:
                         level = 'C'
                     elif level == 1:
@@ -1598,10 +1602,9 @@ class BaseSupportConvoState(StateMachine.State):
                         level = 'A'
                     elif level == 3:
                         level = 'S'
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, unit=unit, name=level))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, unit=unit, unit2=owner, name=level))
                     gameStateObj.stateMachine.changeState('dialogue')
                     gameStateObj.stateMachine.changeState('transition_out')
-                    edge.unread = False
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
             gameStateObj.activeMenu = None
