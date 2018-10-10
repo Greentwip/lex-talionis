@@ -47,6 +47,7 @@ class StateMachine(object):
                            'giveselect': SelectState,
                            'rescueselect': SelectState,
                            'talkselect': SelectState,
+                           'supportselect': SelectState,
                            'unlockselect': SelectState,
                            'trade': TradeState,
                            'steal': StealState,
@@ -775,7 +776,7 @@ class MenuState(State):
                     options.append(cf.WORDS['Talk'])
                     break
             # If supports happen in battle
-            if cf.CONSTANTS['supports'] == 1 and 'AllowSupports' in gameStateObj.game_constants:
+            if cf.CONSTANTS['support'] == 1 and 'AllowSupports' in gameStateObj.game_constants:
                 for adjunit in adjunits:
                     edge = gameStateObj.support.get_edge(cur_unit.id, adjunit.id)
                     if edge and edge.can_support():
@@ -1616,14 +1617,6 @@ class SelectState(State):
                     edge = gameStateObj.support.get_edge(cur_unit.id, gameStateObj.cursor.currentHoveredUnit.id)
                     support_script = edge.script
                     level = edge.get_support_level()
-                    if level == 0:
-                        level = 'C'
-                    elif level == 1:
-                        level = 'B'
-                    elif level == 2:
-                        level = 'A'
-                    elif level == 3:
-                        level = 'S'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit, name=level))
                     gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('dialogue')

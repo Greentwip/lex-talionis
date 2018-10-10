@@ -884,7 +884,10 @@ class Dialogue_Scene(object):
         elif line[0] == 'grey_base_convo':
             if line[1] in gameStateObj.base_conversations:
                 gameStateObj.base_conversations[line[1]] = False
-
+        elif line[0] == 'inc_support':
+            edge = gameStateObj.support.get_edge(line[1], line[2])
+            if edge and edge.can_support() and edge.support_level == self.name:  # Only increment if we haven't read this before (IE we can support)
+                edge.increment_support_level()
         elif line[0] == 'choice':
             name = line[1]
             header = line[2]

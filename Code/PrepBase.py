@@ -1591,20 +1591,17 @@ class BaseSupportConvoState(StateMachine.State):
                 unit, level = gameStateObj.childMenu.getSelection()
                 owner = gameStateObj.childMenu.owner
                 edge = gameStateObj.support.node_dict[owner.id].adjacent[unit.id]
-                # if cf.OPTIONS['debug']:
-                #     print(level, support_level)
+                # print(level, edge.available_level())
                 if level < edge.available_level():
-                    if level == 0:
-                        level = 'C'
-                    elif level == 1:
-                        level = 'B'
-                    elif level == 2:
-                        level = 'A'
-                    elif level == 3:
-                        level = 'S'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, unit=unit, unit2=owner, name=level))
                     gameStateObj.stateMachine.changeState('dialogue')
                     gameStateObj.stateMachine.changeState('transition_out')
+                else:
+                    GC.SOUNDDICT['Error'].play()
+            else:
+                self.state = True
+                gameStateObj.childMenu.cursor_flag = True
+
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
             gameStateObj.activeMenu = None

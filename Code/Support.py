@@ -1,3 +1,5 @@
+import os
+
 try:
     import GlobalConstants as GC
     import configuration as cf
@@ -28,20 +30,20 @@ class Affinity(object):
         stats = [self.attack, self.defense, self.accuracy, self.avoid, self.crit, self.dodge, self.attackspeed]
         names = ["Damage", "Defense", "Hit", "Avoid", "Crit", "Crit Evade", "Attack Speed"]
 
-        l = []
+        desc_parts = []
         for stat, name in zip(stats, names):
             s = "%d %s" % (stat, name)
             if stat >= 0:
                 s = "+" + s
-            l.append(s)
-        if len(l) == 0:
+            desc_parts.append(s)
+        if len(desc_parts) == 0:
             return "No bonus"
-        elif len(l) == 1:
-            return l[0] + " per support level"
-        elif len(l) == 2:
-            return l[0] + " and " + l[1] + " per support level"
-        elif len(1) > 2:
-            return ", ".join(l[:-1]) + ", and " + l[-1] + " per support level"
+        elif len(desc_parts) == 1:
+            return desc_parts[0] + " per support level"
+        elif len(desc_parts) == 2:
+            return desc_parts[0] + " and " + desc_parts[1] + " per support level"
+        elif len(desc_parts) > 2:
+            return ", ".join(desc_parts[:-1]) + ", and " + desc_parts[-1] + " per support level"
 
     def get_bonus(self):
         return [self.attack, self.defense, self.accuracy, self.avoid, self.crit, self.dodge, self.attackspeed]
@@ -67,6 +69,9 @@ class Support_Edge(object):
 
     def increment(self, value):
         self.current_value += value
+
+    def increment_support_level(self):
+        self.support_level += 1
 
     def available_level(self):
         current_value = self.current_value
@@ -227,7 +232,8 @@ def create_affinity_dict(fn):
     with open(fn) as fp:
         lines = fp.readlines()
 
-    for index, line in enumerate(lines):
+    counter = 0
+    for line in lines:
         if line.startswith('#'):
             continue
         split_line = line.strip().split()
@@ -239,8 +245,10 @@ def create_affinity_dict(fn):
         crit = float(split_line[5])
         dodge = float(split_line[6])
         attackspeed = float(split_line[7])
-        d[name] = Affinity(index, name, damage, resist, accuracy, avoid, crit, dodge, attackspeed)
+        d[name] = Affinity(counter, name, damage, resist, accuracy, avoid, crit, dodge, attackspeed)
+        counter += 1
 
     return d
 
-AFFINITY_DICT = create_affinity_dict('Data/affinity.txt')
+if os.path.exists('Data/affinity.txt'):
+    AFFINITY_DICT = create_affinity_dict('Data/affinity.txt')

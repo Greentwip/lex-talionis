@@ -21,8 +21,8 @@ load_player_characters
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;1;0;Ophie;3,17;None
-player;1;0;Prim;3,15;None
+player;0;0;Ophie;3,17;None
+player;0;0;Prim;3,15;None
 # Enemies
 # === Reinforcements ===
 # Player Characters

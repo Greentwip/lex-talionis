@@ -1051,11 +1051,14 @@ class ModeSelectMenu(SimpleMenu):
 
 # Support Conversation Menu
 class SupportMenu(object):
-    def __init__(self, owner, gameStateObj, topleft, background='BaseMenuBackground'):
+    def __init__(self, owner, gameStateObj, topleft, background='BaseMenuBackgroundOpaque'):
         self.owner = owner
         self.updateOptions(gameStateObj)
         self.topleft = topleft
         self.back_surf = CreateBaseMenuSurf((136, 136), background)
+        shimmer = GC.IMAGESDICT['Shimmer2']
+        self.back_surf.blit(shimmer, (136 - shimmer.get_width() - 1, 136 - shimmer.get_height() - 5))
+        self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
 
         self.currentSelection = 0
         self.currentLevel = 0
@@ -1082,7 +1085,7 @@ class SupportMenu(object):
 
     def moveRight(self, first_push=True):
         self.currentLevel += 1
-        limit = self.options[self.currentSelection][4]
+        limit = len(self.options[self.currentSelection][2].supports) - 1
         self.currentLevel = min(self.currentLevel, limit)
 
     def moveLeft(self, first_push=True):
@@ -1093,28 +1096,26 @@ class SupportMenu(object):
         return True
 
     def getSelection(self):
-        return self.options[self.currentSelection], self.currentLevel
+        return self.options[self.currentSelection][0], self.currentLevel
 
     def updateOptions(self, gameStateObj):
         names = list(gameStateObj.support.node_dict[self.owner.id].adjacent)
         # convert names to units
         self.options = []
         for name in names:
-            unit_sprite = None
-            for unit in gameStateObj:
+            other_unit = None
+            for unit in gameStateObj.allunits:
                 if unit.team == 'player' and name == unit.id:
-                    unit_sprite = unit.sprite
+                    other_unit = unit
                     break
-            if gameStateObj.support.node_dict[name].dead:
-                pass
-            else:
-                continue
+            # if gameStateObj.support.node_dict[name].dead:
+            #     pass
+            # else:
+            #     continue
             # We haven't found unit yet, so just skip
             affinity = gameStateObj.support.node_dict[name].affinity
             edge = gameStateObj.support.node_dict[self.owner.id].adjacent[name]
-            limit = edge.limit
-            support_level = edge.get_support_level() # 0, 1, 2, 3
-            self.options.append((name, unit_sprite, affinity, support_level, limit))
+            self.options.append((other_unit, affinity, edge))
 
         self.currentSelection = 0
 
@@ -1124,34 +1125,39 @@ class SupportMenu(object):
     def draw(self, surf, gameStateObj):
         back_surf = self.back_surf.copy()
         units = []
-        for index, (name, unit_sprite, affinity, support_level, limit) in enumerate(self.options):
+        for index, (unit, affinity, edge) in enumerate(self.options):
             # Blit passive sprite
             unit_image = topleft = None
-            if unit_sprite:
+            if unit:
+                unit_sprite = unit.sprite
                 unit_image = unit_sprite.create_image('passive')
                 if index == self.currentSelection:
                     unit_image = unit_sprite.create_image('active')
-                if gameStateObj.support.node_dict[name].dead:
+                if gameStateObj.support.node_dict[unit.id].dead:
                     unit_image = unit_sprite.create_image('gray')
-                topleft = (4 - 24, 2 + (index+1)*16 - unit_image.get_height())
+                topleft = (4 - 24, 10 + (index+1)*16 - unit_image.get_height())
+            # TODO Blit ???
             units.append((unit_image, topleft))
 
             # Blit name
-            position = (24 + 1, 2 + index*16)
-            GC.FONT['text_white'].blit(name, back_surf, position)
+            position = (24 + 1, 4 + index*16)
+            GC.FONT['text_white'].blit(unit.name, back_surf, position)
 
             # Blit Affinity
-            affinity.draw(back_surf, (72, 2 + index*16))
+            affinity.draw(back_surf, (72, 3 + index*16))
 
             # Blit LVS
-            font = GC.FONT['text_white']
-            letters = ['@', '`', '~'] # C, B, A
-            if limit == 4:
-                letters.append('%') # Big S
-            for letter_index, letter in enumerate(letters):
-                if letter_index + 1 > support_level:
+            letters = ['@', '`', '~', '%'] # C, B, A, S
+            limit = len(edge.supports)
+            letters = letters[:limit]
+            for level, letter in enumerate(letters):
+                if edge.can_support() and edge.support_level == level:
+                    font = GC.FONT['text_green']
+                elif edge.support_level > level:
+                    font = GC.FONT['text_white']
+                else:
                     font = GC.FONT['text_grey']
-                font.blit(letter, back_surf, (90+letter_index*10, 2 + index*16))
+                font.blit(letter, back_surf, (90 + level*10, 4 + index*16))
 
         surf.blit(back_surf, self.topleft)
         for unit in units:
@@ -1161,7 +1167,7 @@ class SupportMenu(object):
         # Blit cursor
         if self.cursor_flag:
             left = self.currentLevel*10 + self.topleft[0] + 100 - 12 - 10
-            top = self.currentSelection*16 + self.topleft[1] + 2
+            top = self.currentSelection*16 + self.topleft[1] + 4
             surf.blit(self.cursor, (left, top))
 
 # Simple start menu
@@ -1471,7 +1477,7 @@ class UnitSelectMenu(Counters.CursorControl):
 
     def draw(self, surf, gameStateObj):
         surf.blit(self.backsurf, self.topleft)
-        x_center = -16 if self.units_per_row == 2 else 0
+        x_center = -16 if self.units_per_row <= 2 else 0
 
         # Blit background highlight
         if self.highlight:

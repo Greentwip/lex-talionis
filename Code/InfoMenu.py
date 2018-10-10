@@ -13,7 +13,6 @@ class InfoMenu(StateMachine.State):
             self.show_map = False
             # Set unit to be displayed
             self.unit = gameStateObj.info_menu_struct['chosen_unit']
-            self.unit.create_support_bonuses(gameStateObj)
             if not gameStateObj.info_menu_struct['scroll_units']:
                 self.scroll_units = [unit for unit in gameStateObj.allunits if (not self.unit.position or unit.position) and 
                                      not unit.dead and unit.team == self.unit.team]
@@ -69,7 +68,6 @@ class InfoMenu(StateMachine.State):
 
     def back(self, gameStateObj):
         GC.SOUNDDICT['Select 4'].play()
-        self.unit.clear_support_bonuses()
         gameStateObj.info_menu_struct['current_state'] = self.currentState
         gameStateObj.info_menu_struct['chosen_unit'] = self.unit
         if not gameStateObj.info_menu_struct['one_unit_only'] and self.unit.position:
@@ -129,8 +127,6 @@ class InfoMenu(StateMachine.State):
                         self.next_unit = self.scroll_units[index + 1]
                     else:
                         self.next_unit = self.scroll_units[0]
-                    self.unit.clear_support_bonuses()
-                    self.next_unit.create_support_bonuses(gameStateObj)
                     self.transition = 'DOWN'
                     # self.reset_surfs()
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
@@ -143,8 +139,6 @@ class InfoMenu(StateMachine.State):
                         self.next_unit = self.scroll_units[index - 1]
                     else:
                         self.next_unit = self.scroll_units[-1] # last unit
-                    self.unit.clear_support_bonuses()
-                    self.next_unit.create_support_bonuses(gameStateObj)
                     self.transition = 'UP'
                     # self.reset_surfs()
                     self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
@@ -629,7 +623,7 @@ class InfoMenu(StateMachine.State):
             dam = '--'
             acc = '--'
         avo = str(self.unit.avoid(gameStateObj))
-        atkspd = str(self.unit.attackspeed(gameStateObj))
+        atkspd = str(self.unit.attackspeed())
         RngWidth = GC.FONT['text_blue'].size(rng)[0]
         AtkWidth = GC.FONT['text_blue'].size(dam)[0]
         HitWidth = GC.FONT['text_blue'].size(acc)[0]
@@ -736,7 +730,7 @@ class InfoMenu(StateMachine.State):
         # GC.FONT['text_yellow'].blit(cf.WORDS["DEF"], menu_surf, (width//2+8, top + height//3))
         # GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (width//2+8, top + 2*height//3))
 
-        # attack, defense, accuracy, avoid, crit, dodge, attackspeed = self.unit.get_support_bonuses()
+        # attack, defense, accuracy, avoid, crit, dodge, attackspeed = self.unit.get_support_bonuses(gameStateObj)
         # AtkWidth = GC.FONT['text_blue'].size(str(attack))[0]
         # HitWidth = GC.FONT['text_blue'].size(str(accuracy))[0]
         # AvoidWidth = GC.FONT['text_blue'].size(str(avoid))[0]
