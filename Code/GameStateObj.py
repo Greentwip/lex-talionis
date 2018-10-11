@@ -436,6 +436,12 @@ class GameStateObj(object):
                 for other_id, edge in node.adjacent.items():
                     if other_id in other_ids:
                         edge.increment(cf.CONSTANTS['support_end_chapter'])
+        if self.support:  # Reset max number of support levels that can be gotten in one chapter
+            units = [unit for unit in self.allunits if unit.id in self.support.node_dict]
+            for unit in units:
+                node = self.support.node_dict[unit.id]
+                for edge in node.adjacent.values():
+                    edge.reset()
 
     def restock_convoy(self):
         items_with_uses = sorted((item for item in self.convoy if item.uses), key=lambda item: item.id)

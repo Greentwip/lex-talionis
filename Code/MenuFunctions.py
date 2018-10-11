@@ -1074,6 +1074,9 @@ class SupportMenu(object):
                 self.currentSelection = 0
             else:
                 self.currentSelection -= 1
+        # Check limit for new row
+        limit = len(self.options[self.currentSelection][2].supports) - 1
+        self.currentLevel = min(self.currentLevel, limit)
 
     def moveUp(self, first_push=True):
         self.currentSelection -= 1
@@ -1082,6 +1085,9 @@ class SupportMenu(object):
                 self.currentSelection = len(self.options) - 1
             else:
                 self.currentSelection += 1
+        # Check limit for new row
+        limit = len(self.options[self.currentSelection][2].supports) - 1
+        self.currentLevel = min(self.currentLevel, limit)
 
     def moveRight(self, first_push=True):
         self.currentLevel += 1
@@ -1151,7 +1157,7 @@ class SupportMenu(object):
             limit = len(edge.supports)
             letters = letters[:limit]
             for level, letter in enumerate(letters):
-                if edge.can_support() and edge.support_level == level:
+                if gameStateObj.support.can_support(unit.id, self.owner.id) and edge.support_level == level:
                     font = GC.FONT['text_green']
                 elif edge.support_level > level:
                     font = GC.FONT['text_white']
@@ -1416,7 +1422,7 @@ class UnitSelectMenu(Counters.CursorControl):
         self.highlight = True
         self.draw_extra_marker = None
 
-        self.scroll_bar = GUIObjects.ScrollBar((self.topleft[0] + self.menu_width, self.topleft[1]))
+        self.scroll_bar = GUIObjects.ScrollBar((self.topleft[0] + self.menu_width, self.topleft[1] + 4))
         Counters.CursorControl.__init__(self)
         self.cursor_y_offset = 0
 
@@ -1595,90 +1601,6 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
             elif item.c_uses:
                 uses_string = str(item.c_uses)
             use_font.blit(uses_string, surf, (topleft[0] + 104 - 4 - use_font.size(uses_string)[0], topleft[1] + index*16 + 4))
-
-"""
-def drawUnitSupport(surf, unit1, unit2, gameStateObj):
-    # Draw face one
-    face_image1 = unit1.bigportrait.copy()
-    face_image1 = Engine.flip(face_image1)
-    pos = 0, 80
-    surf.blit(face_image1, pos)
-
-    # Determine status
-    status = cf.WORDS['Currently Unpaired']
-    if not unit2:
-        unit2_name = gameStateObj.support.node_dict[unit1.name].paired_with
-        if unit2_name:
-            try:
-                unit2 = [unit for unit in gameStateObj.allunits if unit.name == unit2_name][0]
-                status = cf.WORDS['Currently Paired With'] + ' ' + unit2.name
-            except IndexError:
-                print("Unit does not seem to exist?")
-    else:
-        status = cf.WORDS['Pair With'] + ' ' + unit2.name + '?'
-
-    # Draw face two
-    if unit2:
-        face_image2 = unit2.bigportrait.copy()
-        pos = GC.WINWIDTH - 96, 80
-        surf.blit(face_image2, pos)
-
-    # Get support nodes
-    node1 = gameStateObj.support.node_dict[unit1.name]
-    if unit2:
-        node2 = gameStateObj.support.node_dict[unit2.name]
-    else:
-        node2 = None
-
-    # Status surf
-    width = 192
-    status_menu = CreateBaseMenuSurf((width, 24))
-    GC.FONT['text_white'].blit(status, status_menu, (width//2 - GC.FONT['text_white'].size(status)[0]//2, 4))
-    node1.affinity.draw(status_menu, (4, 3))
-    if node2:
-        node2.affinity.draw(status_menu, (width - 20, 3))
-    surf.blit(status_menu, (GC.WINWIDTH//2 - width//2, GC.WINHEIGHT//2 - 20))
-
-    # Draw middle menu
-    middle_surf = CreateBaseMenuSurf((72, 72))
-    GC.FONT['text_yellow'].blit(cf.WORDS['Atk'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Atk')[0]//2, 4))
-    GC.FONT['text_yellow'].blit(cf.WORDS['DEF'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Def')[0]//2, 20))
-    GC.FONT['text_yellow'].blit(cf.WORDS['Hit'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Hit')[0]//2, 36))
-    GC.FONT['text_yellow'].blit(cf.WORDS['Avo'], middle_surf, (72//2 - GC.FONT['text_yellow'].size('Avo')[0]//2, 52))
-
-    # Draw stars for strengths
-    unit2_attack = node1.affinity.attack
-    unit2_defense = node1.affinity.defense
-    unit2_accuracy = node1.affinity.accuracy
-    unit2_avoid = node1.affinity.avoid
-    if unit2:
-        unit1_attack = node2.affinity.attack
-        unit1_defense = node2.affinity.defense
-        unit1_accuracy = node2.affinity.accuracy
-        unit1_avoid = node2.affinity.avoid
-    else:
-        unit1_attack = 0
-        unit1_defense = 0
-        unit1_accuracy = 0
-        unit1_avoid = 0
-
-    stats = [unit1_attack, unit1_defense, unit1_accuracy, unit1_avoid, unit2_attack, unit2_defense, unit2_accuracy, unit2_avoid]
-    positions = [(12, 4), (12, 20), (12, 36), (12, 52), (54, 4), (54, 20), (54, 36), (54, 52)]
-
-    for index, stat in enumerate(stats):
-        if stat == 0:
-            GC.FONT['text_white'].blit('-', middle_surf, positions[index])
-        elif stat == 1:
-            middle_surf.blit(GC.ICONDICT['StarIcon'], (positions[index][0] - 4, positions[index][1]))
-        elif stat == 2:
-            middle_surf.blit(GC.ICONDICT['StarIcon'], positions[index])
-            if positions[index][0] == 4:
-                middle_surf.blit(GC.ICONDICT['StarIcon'], (positions[index][0] + 8, positions[index][1]))
-            else:
-                middle_surf.blit(GC.ICONDICT['StarIcon'], (positions[index][0] - 8, positions[index][1]))
-
-    surf.blit(middle_surf, (GC.WINWIDTH//2 - 72//2, 88))
-"""
 
 # Serves as controller class for host of menus
 class ConvoyMenu(object):

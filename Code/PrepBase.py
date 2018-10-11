@@ -1390,151 +1390,6 @@ class BaseInfoState(StateMachine.State):
     def finish(self, gameStateObj, metaDataObj):
         gameStateObj.childMenu = None
 
-"""
-class BaseSupportChildState(StateMachine.State):
-    def begin(self, gameStateObj, metaDataObj):
-        if gameStateObj.hidden_active and gameStateObj.hidden_child:
-            gameStateObj.activeMenu = gameStateObj.hidden_active
-            gameStateObj.childMenu = gameStateObj.hidden_child
-            gameStateObj.hidden_active = None
-            gameStateObj.hidden_child = None
-
-        if not gameStateObj.childMenu:
-            options = [cf.WORDS['Pairings'], cf.WORDS['Conversations']]
-            topleft = 4 + gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.topleft[1] + 3*16
-            gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft)
-
-        # Transition in:
-        if gameStateObj.stateMachine.from_transition():
-            gameStateObj.stateMachine.changeState("transition_in")
-            return 'repeat'
-
-    def take_input(self, eventList, gameStateObj, metaDataObj):
-        event = gameStateObj.input_manager.process_input(eventList)
-        if event == 'DOWN':
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.childMenu.moveDown()
-        elif event == 'UP':
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.childMenu.moveUp()
-        elif event == 'SELECT':
-            GC.SOUNDDICT['Select 1'].play()
-            selection = gameStateObj.childMenu.getSelection()
-            if selection == cf.WORDS['Pairings']:
-                gameStateObj.stateMachine.changeState('base_pairing')
-                gameStateObj.stateMachine.changeState('transition_out')
-            elif selection == cf.WORDS['Conversations']:
-                gameStateObj.stateMachine.changeState('base_support_convos')
-                gameStateObj.stateMachine.changeState('transition_out')
-            gameStateObj.hidden_active = gameStateObj.activeMenu
-            gameStateObj.hidden_child = gameStateObj.childMenu
-            gameStateObj.activeMenu = None
-        elif event == 'BACK':
-            GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.stateMachine.back()
-
-    def finish(self, gameStateObj, metaDataObj):
-        gameStateObj.childMenu = None
-
-class BasePairingState(StateMachine.State):
-    def begin(self, gameStateObj, metaDataObj):
-        self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and unit.name in gameStateObj.support.node_dict and
-                      any(o_unit.name in gameStateObj.support.node_dict[unit.name].adjacent for o_unit in gameStateObj.allunits)]
-        if not gameStateObj.activeMenu:
-            gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 3, 3, 'center')
-            gameStateObj.activeMenu.mode = 'support'
-
-        # Transition in:
-        if gameStateObj.stateMachine.from_transition():
-            gameStateObj.stateMachine.changeState("transition_in")
-            return 'repeat'
-
-    def take_input(self, eventList, gameStateObj, metaDataObj):
-        event = gameStateObj.input_manager.process_input(eventList)
-        first_push = self.fluid_helper.update(gameStateObj)
-        directions = self.fluid_helper.get_directions()
-
-        if 'DOWN' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveDown(first_push)
-        elif 'UP' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveUp(first_push)
-        elif 'LEFT' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveLeft(first_push)
-        elif 'RIGHT' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveRight(first_push)
-        
-        if event == 'SELECT':
-            GC.SOUNDDICT['Select 1'].play()
-            selection = gameStateObj.activeMenu.getSelection()
-            gameStateObj.cursor.currentSelectedUnit = selection
-            gameStateObj.stateMachine.changeState('base_pairing_select')
-            # Hide this menu
-            gameStateObj.pair_menu = gameStateObj.activeMenu
-            gameStateObj.activeMenu = None
-        elif event == 'BACK':
-            GC.SOUNDDICT['Select 4'].play()
-            # gameStateObj.stateMachine.back()
-            gameStateObj.stateMachine.changeState('transition_pop')
-        elif event == 'INFO':
-            StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
-
-    def draw(self, gameStateObj, metaDataObj):
-        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        if gameStateObj.activeMenu:
-            MenuFunctions.drawUnitSupport(surf, gameStateObj.activeMenu.getSelection(), None, gameStateObj)
-        return surf
-
-class BasePairingSelectState(StateMachine.State):
-    def begin(self, gameStateObj, metaDataObj):
-        self.selection = gameStateObj.cursor.currentSelectedUnit
-        self.units = [unit for unit in gameStateObj.allunits if unit.name in gameStateObj.support.node_dict[self.selection.name].adjacent]
-        gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 3, 3, 'center')
-        gameStateObj.activeMenu.mode = 'support'
-
-    def take_input(self, eventList, gameStateObj, metaDataObj):
-        event = gameStateObj.input_manager.process_input(eventList)
-        first_push = self.fluid_helper.update(gameStateObj)
-        directions = self.fluid_helper.get_directions()
-
-        if 'DOWN' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveDown(first_push)
-        elif 'UP' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveUp(first_push)
-        elif 'LEFT' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveLeft(first_push)
-        elif 'RIGHT' in directions:
-            GC.SOUNDDICT['Select 5'].play()
-            gameStateObj.activeMenu.moveRight(first_push)
-        
-        if event == 'SELECT':
-            GC.SOUNDDICT['Select 1'].play()
-            selection = gameStateObj.activeMenu.getSelection()
-            # Re-pair
-            gameStateObj.support.pair(selection.name, self.selection.name)
-            gameStateObj.stateMachine.back()
-            # Unhide
-            gameStateObj.activeMenu = gameStateObj.pair_menu
-        elif event == 'BACK':
-            GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.stateMachine.back()
-            # Unhide
-            gameStateObj.activeMenu = gameStateObj.pair_menu
-        elif event == 'INFO':
-            StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
-
-    def draw(self, gameStateObj, metaDataObj):
-        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        MenuFunctions.drawUnitSupport(surf, self.selection, gameStateObj.activeMenu.getSelection(), gameStateObj)
-        return surf
-"""
-
 class BaseSupportConvoState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.generic_flag]
@@ -1593,7 +1448,11 @@ class BaseSupportConvoState(StateMachine.State):
                 edge = gameStateObj.support.node_dict[owner.id].adjacent[unit.id]
                 # print(level, edge.available_level())
                 if level < edge.available_level():
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(edge.script, unit=unit, unit2=owner, name=level))
+                    if os.path.exists(edge.script):
+                        support_script = edge.script
+                    else:
+                        support_script = 'Data/SupportConvos/GenericScript.txt'
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=unit, unit2=owner, name=level))
                     gameStateObj.stateMachine.changeState('dialogue')
                     gameStateObj.stateMachine.changeState('transition_out')
                 else:

@@ -9,7 +9,6 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Supports (GBA & POR)
 - Turnwheel
 - Submaps
 - Overworld
@@ -22,13 +21,9 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Game Editor??
 - Android Support (pygame_sdl2)
 - Mac/Linux Support
---- SUPPORTS ---
-- Confirm Path Of Radiance style supports work
-- Add GBA style supports
 =============
 --- EXTRA ---
 =============
-- Add Decals and Colors to Info Menus... ??** -- Update Info Menu to match Sacred Stones?
 - Add Fake arrival to Give/Take
 - Submaps -- Double positions for units? Copied units? Not quite sure...
 - If you are on impassable terrain, take damage.

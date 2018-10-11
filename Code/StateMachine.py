@@ -87,9 +87,6 @@ class StateMachine(object):
                            'base_main': PrepBase.BaseMainState,
                            'base_items': PrepBase.PrepItemsState,
                            'base_info': PrepBase.BaseInfoState,
-                           # 'base_support_child': PrepBase.BaseSupportChildState,
-                           # 'base_pairing': PrepBase.BasePairingState,
-                           # 'base_pairing_select': PrepBase.BasePairingSelectState,
                            'base_support_convos': PrepBase.BaseSupportConvoState,
                            'base_codex_child': PrepBase.BaseCodexChildState,
                            'base_map': PrepBase.BaseMapState,
@@ -778,8 +775,7 @@ class MenuState(State):
             # If supports happen in battle
             if cf.CONSTANTS['support'] == 1 and 'AllowSupports' in gameStateObj.game_constants:
                 for adjunit in adjunits:
-                    edge = gameStateObj.support.get_edge(cur_unit.id, adjunit.id)
-                    if edge and edge.can_support():
+                    if gameStateObj.support.can_support(cur_unit.id, adjunit.id):
                         options.append(cf.WORDS['Support'])
                         break
             # If the unit is on a village tile
@@ -1012,7 +1008,7 @@ class MenuState(State):
                 gameStateObj.stateMachine.changeState('talkselect')
             elif selection == cf.WORDS['Support']:
                 positions = [unit.position for unit in gameStateObj.allunits if unit.position in cur_unit.getAdjacentPositions(gameStateObj) and 
-                             gameStateObj.support.get_edge(cur_unit.id, unit.id) and gameStateObj.support.get_edge(cur_unit.id, unit.id).can_support()]
+                             gameStateObj.support.can_support(cur_unit.id, unit.id)]
                 cur_unit.validPartners = CustomObjects.MapSelectHelper(positions)
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
@@ -1615,7 +1611,10 @@ class SelectState(State):
                 if gameStateObj.cursor.currentHoveredUnit:
                     cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
                     edge = gameStateObj.support.get_edge(cur_unit.id, gameStateObj.cursor.currentHoveredUnit.id)
-                    support_script = edge.script
+                    if os.path.exists(edge.script):
+                        support_script = edge.script
+                    else:
+                        support_script = 'Data/SupportConvos/GenericScript.txt'
                     level = edge.get_support_level()
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit, name=level))
                     gameStateObj.stateMachine.changeState('menu')

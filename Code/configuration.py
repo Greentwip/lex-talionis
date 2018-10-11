@@ -127,6 +127,7 @@ def read_constants_file():
              'support_combat': 1, # Points gained for combat in range
              'support_interact': 1, # Points for interacting
              'support_limit': 5, # Limit to number of support level: 0 - No limit
+             'support_s_limit': 0, # Limit to number of s support levels (>4): 0 - No limit
              }
 
     if os.path.isfile('Data/constants.ini'):
@@ -186,6 +187,7 @@ def read_constants_file():
     lines['support_combat'] = int(lines['support_combat'])
     lines['support_interact'] = int(lines['support_interact'])
     lines['support_limit'] = int(lines['support_limit'])
+    lines['support_s_limit'] = int(lines['support_s_limit'])
 
     return lines
 

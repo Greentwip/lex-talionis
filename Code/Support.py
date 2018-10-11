@@ -60,18 +60,34 @@ class Support_Node(object):
     def add_neighbor(self, neighbor, edge):
         self.adjacent[neighbor.name] = edge
 
+    def get_total_support_level(self):
+        return sum(edge.support_level for edge in self.adjacent.values())
+
+    def get_num_s_supports(self):
+        return sum(edge.support_level >= 4 for edge in self.adjacent.values())
+
 class Support_Edge(object):
     def __init__(self, supports, script_loc):
         self.supports = [int(x) for x in supports]
         self.support_level = 0
         self.current_value = 0
         self.script = script_loc
+        self.reset()
+
+    def reset(self):
+        self.support_levels_this_chapter = 0
+        self.value_added_this_chapter = 0
 
     def increment(self, value):
+        # If I've reached the point that I could support again, but I've already supported this chapter, then I stop increment value
+        if self.support_level < self.available_level() and self.support_levels_this_chapter > 0:
+            return
         self.current_value += value
+        self.value_added_this_chapter += value
 
     def increment_support_level(self):
         self.support_level += 1
+        self.support_levels_this_chapter += 1
 
     def available_level(self):
         current_value = self.current_value
@@ -82,7 +98,7 @@ class Support_Edge(object):
         return len(self.supports)
 
     def can_support(self):
-        return self.support_level < self.available_level()
+        return self.support_level < self.available_level() and self.support_levels_this_chapter == 0
 
     def get_support_level(self):
         return self.support_level
@@ -132,24 +148,27 @@ class Support_Graph(object):
         if frm in self.node_dict and to in self.node_dict[frm].adjacent:
             return self.node_dict[frm].adjacent[to]
 
-    """
-    def pair(self, name1, name2):
-        name1_pair = self.node_dict[name1].paired_with
-        name2_pair = self.node_dict[name2].paired_with
-        if name1_pair:
-            self.node_dict[name1_pair].paired_with = None
-        if name2_pair:
-            self.node_dict[name2_pair].paired_with = None
-        self.node_dict[name1].paired_with = name2
-        self.node_dict[name2].paired_with = name1
-    """
-
     def get_adjacent(self, unit_id):
         if unit_id in self.node_dict:
             node = self.node_dict[unit_id]
             return list(node.adjacent.keys())
         else:
             return []
+
+    def can_support(self, unit_id, other_id):
+        if self.check_max_support_limit(unit_id, other_id):
+            edge = self.get_edge(unit_id, other_id)
+            if edge and edge.can_support() and self.check_s_support(unit_id, other_id):
+                return True
+        return False
+
+    def check_max_support_limit(self, unit_id, other_id):
+        return not cf.CONSTANTS['support_limit'] or (self.node_dict[unit_id].get_total_support_level() < cf.CONSTANTS['support_limit'] and 
+                                                     self.node_dict[other_id].get_total_support_level() < cf.CONSTANTS['support_limit'])
+
+    def check_s_support(self, unit_id, other_id):
+        return not cf.CONSTANTS['support_s_limit'] or (self.node_dict[unit_id].get_num_s_supports() < cf.CONSTANTS['support_s_limit'] and 
+                                                       self.node_dict[other_id].get_num_s_supports() < cf.CONSTANTS['support_s_limit'])
 
     def get_supports(self, unit_id):
         """

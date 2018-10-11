@@ -9,4 +9,4 @@ elif;self.name == 3
     s;Prim;Bye
 end
 r;Ophie;Prim
-inc_support;Ophie;Prim
+inc_support
