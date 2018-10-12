@@ -3,11 +3,13 @@ import re, random, math, itertools
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
     import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
     from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
 
@@ -1220,7 +1222,7 @@ class Dialogue_Scene(object):
 
         # Shuffle positions if necessary
         if shuffle:
-            random.shuffle(new_pos)
+            static_random.shuffle(new_pos)
 
         # Determine which positions I can't move onto
         bad_pos = {bad_unit.position for bad_unit in gameStateObj.allunits if bad_unit.position}
@@ -1288,7 +1290,7 @@ class Dialogue_Scene(object):
 
         # Shuffle positions if necessary
         if shuffle:
-            random.shuffle(new_pos)
+            static_random.shuffle(new_pos)
 
         # Determine which positions I can't move onto
         bad_pos = {bad_unit.position for bad_unit in gameStateObj.allunits if bad_unit.position}
@@ -1394,7 +1396,7 @@ class Dialogue_Scene(object):
 
         # Shuffle positions if necessary
         if shuffle:
-            random.shuffle(new_pos)
+            static_random.shuffle(new_pos)
 
         # Determine which positions I can't move onto
         bad_pos = {bad_unit.position for bad_unit in gameStateObj.allunits if bad_unit.position}

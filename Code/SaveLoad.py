@@ -1,6 +1,6 @@
 # Saving and Loading Functions
 # === IMPORT MODULES =============================================
-import random, copy, threading, shutil
+import copy, threading, shutil
 try:
     import cPickle as pickle
 except ImportError:
@@ -11,11 +11,13 @@ from collections import OrderedDict
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
     from StatObject import Stat, build_stat_dict
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
     from Code.StatObject import Stat, build_stat_dict
 
@@ -533,7 +535,7 @@ def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False)
             for _ in range(num_levelups):
                 growth_rate = growth
                 while growth_rate > 0:
-                    stats[index] += 1 if random.randint(0, 99) < growth_rate else 0
+                    stats[index] += 1 if static_random.get_growth() < growth_rate else 0
                     growth_rate -= 100
 
     elif leveling == 2:  # Hybrid
@@ -543,7 +545,7 @@ def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False)
         growth_points[0] = growth_sum%100
         while num_choice > 0:
             num_choice -= 1
-            idx = Utility.weighted_choice(growths)
+            idx = static_random.weighted_choice(growths)
             stats[idx] += 1
             growths[idx] = max(0, growths[idx] - 100)
             if stats[idx] >= max_stats[idx]:

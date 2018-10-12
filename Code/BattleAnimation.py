@@ -221,8 +221,8 @@ class BattleAnimation(object):
             sound = random.choice(line[1:])
             GC.SOUNDDICT[sound].play()
         elif line[0] == 'stop_sound':
-            sound = random.choice(line[1:])
-            GC.SOUNDDICT[sound].stop()
+            for sound in line[1:]:
+                GC.SOUNDDICT[sound].stop()
         # === COMBAT HIT ===
         elif line[0] == 'start_hit':
             if 'no_shake' not in line:

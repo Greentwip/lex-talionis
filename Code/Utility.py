@@ -160,17 +160,6 @@ def process_terms(terms):
     #    print('Processed Terms: ', [term[0] for term in terms])
     return sum([float(term[0]*term[1]) for term in terms])/weight_sum 
 
-# === Returns the index of a weighted list
-def weighted_choice(choices):
-    import random
-    rn = random.randint(0, sum(choices) - 1)
-    upto = 0
-    for index, w in enumerate(choices):
-        upto += w
-        if upto > rn:
-            return index
-    assert False, "Shouldn't get here"
-
 def get_adjacent_positions(c_pos, rng=1):
     if FAST_SPHERE:
         return manhattan_sphere.find_manhattan_spheres(list(range(1, rng+1)), c_pos[0], c_pos[1])

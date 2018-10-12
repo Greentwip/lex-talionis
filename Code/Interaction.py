@@ -3,12 +3,14 @@ import random, math, os
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
     import MenuFunctions, GUIObjects, Weapons
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     from . import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
     from . import MenuFunctions, GUIObjects, Weapons
@@ -69,18 +71,18 @@ class Solver(object):
         elif rng_mode == 'no_rng':
             roll = cf.CONSTANTS['set_roll']
         elif rng_mode == 'classic':
-            roll = random.randint(0, 99)
+            roll = static_random.get_combat()
         elif rng_mode == 'true_hit':
-            roll = (random.randint(0, 99) + random.randint(0, 99)) // 2
+            roll = (static_random.get_combat() + static_random.get_combat()) // 2
         elif rng_mode == 'true_hit+':
-            roll = (random.randint(0, 99) + random.randint(0, 99) + random.randint(0, 99)) // 3
+            roll = (static_random.get_combat() + static_random.get_combat() + static_random.get_combat()) // 3
         return roll
 
     def generate_crit_roll(self, event_command=None):
         if event_command and event_command == 'crit':
             return 0
         else:
-            return random.randint(0, 99)
+            return static_random.get_combat()
 
     def handle_crit(self, result, attacker, defender, item, mode, gameStateObj, hybrid, event_command):
         to_crit = attacker.compute_crit(defender, gameStateObj, item, mode=mode)
@@ -556,7 +558,7 @@ class Combat(object):
             self.p1.records['damage'] += damage_done
 
         if self.item.exp:
-            normal_exp = self.item.exp
+            normal_exp = int(self.item.exp)
         elif self.item.weapon or not self.p1.checkIfAlly(other_unit):
             level_diff = other_unit.get_comparison_level(gameStateObj.metaDataObj) - self.p1.get_comparison_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
             normal_exp = int(exp_multiplier*cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve']))
@@ -566,7 +568,7 @@ class Combat(object):
                 self.p1.records['healing'] += damage_done
                 normal_exp = max(5, int(p1_klass['exp_multipler']*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_comparison_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
-                normal_exp = p1_klass['exp_multiplier']*cf.CONSTANTS['status_exp']
+                normal_exp = int(p1_klass['exp_multiplier']*cf.CONSTANTS['status_exp'])
         else:
             normal_exp = 0
             

@@ -404,7 +404,7 @@ class FreeState(State):
                 else:
                     GC.SOUNDDICT['Select 2'].play()
                     if gameStateObj.cursor.currentSelectedUnit.team.startswith('enemy'):
-                        gameStateObj.boundary_manager.toggle_unit(gameStateObj.cursor.currentSelectedUnit, gameStateObj)
+                        gameStateObj.boundary_manager.toggle_unit(gameStateObj.cursor.currentSelectedUnit)
             else: # No unit
                 GC.SOUNDDICT['Select 2'].play()
                 gameStateObj.stateMachine.changeState('optionsmenu')

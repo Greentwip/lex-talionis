@@ -1,8 +1,9 @@
-import random, os
+import os
 from collections import Counter
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import Interaction, MenuFunctions, AStar, Weapons, TileObject
     import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
     import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
@@ -10,6 +11,7 @@ try:
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import Interaction, MenuFunctions, AStar, Weapons, TileObject
     from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
     from . import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
@@ -850,7 +852,7 @@ class UnitObject(object):
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
                 elif leveling == 0: # Random
                     while growth > 0:
-                        levelup_list[index] += 1 if random.randint(0, 99) < growth else 0
+                        levelup_list[index] += 1 if static_random.get_growth() < growth else 0
                         growth -= 100
                     levelup_list[index] = min(levelup_list[index], class_info['max'][index] - self.stats.values()[index].base_stat)
         else: # Hybrid and Default
@@ -863,7 +865,7 @@ class UnitObject(object):
                 num_choices += 1
 
             for _ in range(num_choices):
-                index = Utility.weighted_choice(growths)
+                index = static_random.weighted_choice(growths)
                 levelup_list[index] += 1
                 growths[index] = max(0, growths[index] - 100)
                 if self.stats.values()[index].base_stat + levelup_list[index] >= class_info['max'][index]:
@@ -2142,6 +2144,7 @@ class UnitObject(object):
     def changeTeams(self, new_team, gameStateObj):
         self.leave(gameStateObj)
         self.team = new_team
+        gameStateObj.boundary_manager.reset_unit(self)
         # new sprite to reflect this
         self.sprite = UnitSprite.UnitSprite(self)
         self.reset()

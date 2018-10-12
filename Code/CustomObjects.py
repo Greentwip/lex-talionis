@@ -160,16 +160,20 @@ class BoundaryManager(object):
             return True
         return False
 
-    def toggle_unit(self, unit, gameStateObj):
+    def toggle_unit(self, unit):
         if unit.id in self.displaying_units:
             self.displaying_units.discard(unit.id)
             unit.flickerRed = False
-            # self.remove_unit(unit, gameStateObj)
         else:
             self.displaying_units.add(unit.id)
             unit.flickerRed = True
-            # self.add_unit(unit, gameStateObj)
         self.surf = None
+
+    def reset_unit(self, unit):
+        if unit.id in self.displaying_units:
+            self.displaying_units.discard(unit.id)
+            unit.flickerRed = False
+            self.surf = None
 
     def _set(self, positions, kind, u_id):
         this_grid = self.grids[kind]

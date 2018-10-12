@@ -310,9 +310,9 @@ class InfoMenu(StateMachine.State):
         position = (39 - level_size[0], 120)
         GC.FONT['text_blue'].blit(str(self.unit.level), UnitInfoSurface, position)
         # Blit the unit's exp on the simple info block
-        exp_size = GC.FONT['text_blue'].size(str(self.unit.exp))
+        exp_size = GC.FONT['text_blue'].size(str(int(self.unit.exp)))
         position = (63 - exp_size[0], 120)
-        GC.FONT['text_blue'].blit(str(self.unit.exp), UnitInfoSurface, position)
+        GC.FONT['text_blue'].blit(str(int(self.unit.exp)), UnitInfoSurface, position)
         # Blit the unit's current hp on the simple info block
         current_hp = str(self.unit.currenthp)
         if len(current_hp) > 2:
