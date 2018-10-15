@@ -205,9 +205,10 @@ class InfoMenu(StateMachine.State):
                 elif self.transition_counter == 4:
                     self.transparency = 200
                     self.scroll_offset_y = 16 if self.transition == 'DOWN' else -16
-                else:
+                elif self.transition_counter in (5, 6, 7, 8):  # Pause for a bit
                     self.transparency = 255
                     self.scroll_offset_y = 160 if self.transition == 'DOWN' else -160
+                else:
                     self.unit = self.next_unit  # Now transition in
                     self.reset_surfs()
                     self.transition_counter = 0
@@ -661,7 +662,7 @@ class InfoMenu(StateMachine.State):
         statuses = [status for status in self.unit.status_effects if not (status.class_skill or status.hidden)][:6]
 
         for index, status in enumerate(statuses):
-            left_pos = index*((GC.WINWIDTH - 96)//max(6, len(statuses)))
+            left_pos = index*((GC.WINWIDTH - 96)//max(5, len(statuses)))
             pos = (left_pos + 8, 4)
             self.draw_status(pos, status, menu_surf)
 
@@ -689,9 +690,12 @@ class InfoMenu(StateMachine.State):
         # Menu background
         menu_surf = Engine.create_surface((GC.WINWIDTH - 96, GC.WINHEIGHT), transparent=True)
 
-        current_supports = gameStateObj.support.get_supports(self.unit.id)
-        # support[2] is support level
-        current_supports = [support for support in current_supports if support[2]]
+        if gameStateObj.support:
+            current_supports = gameStateObj.support.get_supports(self.unit.id)
+            # support[2] is support level
+            current_supports = [support for support in current_supports if support[2]]
+        else:
+            current_supports = []
 
         # Display
         top = 48
@@ -899,7 +903,7 @@ class HelpGraph(object):
         statuses = [status for status in self.unit.status_effects if not (status.class_skill or status.hidden)]
 
         for index, status in enumerate(statuses):
-            left_pos = index*((GC.WINWIDTH - 96)//max(6, len(statuses))) + 92
+            left_pos = index*((GC.WINWIDTH - 96)//max(5, len(statuses))) + 92
             self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), (left_pos, GC.WINHEIGHT - 20), Help_Dialog(status.desc))
 
         # Connect them together
@@ -908,8 +912,11 @@ class HelpGraph(object):
             self.help_boxes["Status"+str(i)].left = ("Status"+str(i-1)) if i > 0 else None
 
         # Supports
-        supports = gameStateObj.support.get_supports(self.unit.id)
-        supports = [support for support in supports if support[2]]
+        if gameStateObj.support:
+            supports = gameStateObj.support.get_supports(self.unit.id)
+            supports = [support for support in supports if support[2]]
+        else:
+            supports = []
         for index, support in enumerate(supports):
             affinity = support[1]
             desc = affinity.desc
