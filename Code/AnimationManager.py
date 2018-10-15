@@ -83,6 +83,7 @@ class BattleAnimationManager(object):
             frame_directory = {}
             for name, anim in e_dict['images'].items():
                 if 'index' not in e_dict:
+                    print("Error! Couldn't find index for %s!" % effect)
                     return False
                 frame_directory[name] = self.format_index(e_dict['index'], anim)
             e_dict['images'] = frame_directory
@@ -147,7 +148,6 @@ class BattleAnimationManager(object):
         return frame_directory
 
     def parse_script(self, script):
-        all_lines = []
         with open(script) as fp:
             all_lines = [line.strip() for line in fp.readlines()]
             all_lines = [line.split(';') for line in all_lines if line and not line.startswith('#')]

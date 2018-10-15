@@ -1916,7 +1916,7 @@ class DialogueState(State):
         elif event == 'SELECT' or event == 'RIGHT' or event == 'DOWN': # Get it to move along...
             if self.message.current_state == "Displaying" and self.message.dialog:
                 last_hit = Engine.get_time() - self.hurry_up_time
-                if last_hit > 400:  # How long it will pause before moving on to next section
+                if last_hit > 200:  # How long it will pause before moving on to next section
                     if self.message.dialog[-1].waiting:
                         GC.SOUNDDICT['Select 1'].play()
                         self.message.dialog_unpause()

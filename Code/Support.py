@@ -32,8 +32,13 @@ class Affinity(object):
 
         desc_parts = []
         for stat, name in zip(stats, names):
-            s = "%d %s" % (stat, name)
-            if stat >= 0:
+            if stat == 0:
+                continue
+            if stat.is_integer():
+                s = "%d %s" % (stat, name)
+            else:
+                s = "%.1f %s" % (stat, name)
+            if stat > 0:
                 s = "+" + s
             desc_parts.append(s)
         if len(desc_parts) == 0:

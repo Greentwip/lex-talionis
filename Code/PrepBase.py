@@ -1462,10 +1462,15 @@ class BaseSupportConvoState(StateMachine.State):
                 gameStateObj.childMenu.cursor_flag = True
 
         elif event == 'BACK':
-            GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.activeMenu = None
-            gameStateObj.childMenu = None
-            gameStateObj.stateMachine.changeState('transition_pop')
+            if self.state:
+                GC.SOUNDDICT['TradeRight'].play()
+                self.state = False
+                gameStateObj.childMenu.cursor_flag = self.state
+            else:
+                GC.SOUNDDICT['Select 4'].play()
+                gameStateObj.activeMenu = None
+                gameStateObj.childMenu = None
+                gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
             StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
 

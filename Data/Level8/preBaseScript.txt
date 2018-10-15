@@ -1,5 +1,6 @@
 # prebaseScript 8
 m;Comfort's Call
+set_game_constant;AllowSupports
 add_to_market;Rapier
 add_to_market;Short Axe
 add_to_market;Short Spear
