@@ -462,7 +462,7 @@ class Dialogue_Scene(object):
                     self.current_state = "Paused"
 
         # Give exp to a unit
-        elif line[0] == 'exp_gain':
+        elif line[0] == 'exp_gain' or line[0] == 'give_exp':
             exp = int(line[2])
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=unit, exp=exp))

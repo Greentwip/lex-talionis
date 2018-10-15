@@ -18,7 +18,7 @@ class lcg(object):
         return seq[int(self.random() * len(seq))]  # raises IndexError if seq is empty
 
     def shuffle(self, seq):
-        for i in reversed(xrange(1, len(seq))):
+        for i in reversed(range(1, len(seq))):
             # pick an element in x[:i+1] with which to exchange x[i]
             j = int(self.random() * (i+1))
             seq[i], seq[j] = seq[j], seq[i]
@@ -57,7 +57,7 @@ def get_levelup(u_id, lvl):
 
 # === Returns the index of a weighted list
 def weighted_choice(choices):
-    rn = r.growth_random.choice(choices)
+    rn = r.growth_random.randint(0, sum(choices) - 1)
     upto = 0
     for index, w in enumerate(choices):
         upto += w
@@ -73,3 +73,12 @@ if __name__ == '__main__':
     r.combat_random.deserialize(state)
     print(get_combat())
     print(get_combat())
+    l = [1, 2, 3, 4, 5, 6, 7]
+    print(shuffle(l))
+    l = [1, 2, 3, 4, 5, 6, 7]
+    print(shuffle(l))
+    l = [1, 2, 3, 4, 5, 6, 7]
+    print(shuffle(l))
+    l = [1, 2, 3, 4, 5, 6, 7]
+    print(shuffle(l))
+
