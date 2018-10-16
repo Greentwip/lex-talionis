@@ -561,7 +561,12 @@ class ChoiceMenu(SimpleMenu):
         self.ignore = ignore
 
         self.info_flag = False
-        self.info_desc = info_desc
+        self.help_boxes = []
+        for index, desc in enumerate(info_desc):
+            if isinstance(self.options[index], ItemMethods.ItemObject):
+                self.help_boxes.append(self.options[index].get_help_box())
+            else:
+                self.help_boxes.append(InfoMenu.Help_Dialog(info_desc[index]))
 
         self.takes_input = True
         self.draw_face = False
@@ -663,13 +668,7 @@ class ChoiceMenu(SimpleMenu):
 
     def drawInfo(self, surf):
         if self.info_flag:
-            option = self.getSelection()
-            if isinstance(option, ItemMethods.ItemObject):
-                help_box = option.get_help_box()
-            elif self.info_desc:
-                help_box = InfoMenu.Help_Dialog(self.info_desc[self.currentSelection])
-            else:
-                return
+            help_box = self.help_boxes[self.currentSelection]
 
             if self.topleft[0] < GC.WINWIDTH//2:
                 help_box.draw(surf, (self.topleft[0], self.topleft[1] + 20 + 16*self.currentSelection))

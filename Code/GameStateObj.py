@@ -7,12 +7,12 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue, Cursor
-    import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
+    import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods, Turnwheel
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue, Cursor
-    from . import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods
+    from . import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods, Turnwheel
 
 import logging
 logger = logging.getLogger(__name__)
@@ -111,6 +111,7 @@ class GameStateObj(object):
         self.base_conversations = OrderedDict()
         self.message = []
         self.turncount = 0
+        self.event_log = Turnwheel.EventLog()
 
     def display_all_units(self):
         for unit in self.allunits:

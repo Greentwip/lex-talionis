@@ -189,16 +189,18 @@ class warningContinueBanner(Banner):
 # Lower banner that scrolls across bottom of screen
 class Pennant(object):
     def __init__(self, text):
-        self.text = text
         self.font = GC.FONT['convo_white']
-        self.text_width = self.font.size(self.text)[0]
-
+        self.change_text(text)
+        
         self.sprite_offset = 32
 
         self.width = GC.WINWIDTH
         self.height = GC.TILEHEIGHT
         self.back_surf = GC.IMAGESDICT['PennantBG']
 
+    def change_text(self, text):
+        self.text = text
+        self.text_width = self.font.size(self.text)[0]
         self.text_counter = 0
 
     def draw(self, surf, gameStateObj):

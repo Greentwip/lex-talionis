@@ -80,6 +80,7 @@ def read_constants_file():
              'max_promotions': 10, # Allowed number of promotion options for a unit
              'mounted_aid': 15, # What a mounted units CON is subtracted from to determine AID
              'crit': 3, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 2x damage minus 2x defense, 3 - 3x damage minus 3x defense
+             'turnwheel': 0, # Whether to use the turnwheel
              'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
              'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)
              'exp_curve': 2.3, # How linear the exp curve is. Higher = less linear
@@ -142,6 +143,7 @@ def read_constants_file():
     lines['speed_to_double'] = int(lines['speed_to_double'])
     lines['mounted_aid'] = int(lines['mounted_aid'])
     lines['crit'] = int(lines['crit'])
+    lines['turnwheel'] = int(lines['turnwheel'])
     lines['flying_mcost_column'] = int(lines['flying_mcost_column'])
     lines['fleet_mcost_column'] = int(lines['fleet_mcost_column'])
     lines['exp_curve'] = float(lines['exp_curve'])

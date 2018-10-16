@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # === Finite State Machine Object ===============================
 class StateMachine(object):
     def __init__(self, state_list=[], temp_state=[]):
-        from . import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu, DebugMode
+        from . import PrepBase, Transitions, OptionsMenu, InfoMenu, UnitMenu, DebugMode, Turnwheel
         self.all_states = {'free': FreeState,
                            'turn_change': TurnChangeState,
                            'move': MoveState,
@@ -117,7 +117,8 @@ class StateMachine(object):
                            'status_menu': MenuFunctions.StatusMenu,
                            'info_menu': InfoMenu.InfoMenu,
                            'unit_menu': UnitMenu.UnitMenu,
-                           'debug': DebugMode.DebugState}
+                           'debug': DebugMode.DebugState,
+                           'turnwheel': Turnwheel.TurnwheelState}
         self.state = []
         for state_name in state_list:
             self.state.append(self.all_states[state_name](state_name))
@@ -450,6 +451,9 @@ class OptionsMenuState(State):
         if not gameStateObj.tutorial_mode or all(unit.finished for unit in gameStateObj.allunits if unit.team == 'player'):
             options.append(cf.WORDS['End'])
             info_desc.append(cf.WORDS['End_desc'])
+        if cf.CONSTANTS['turnwheel']:
+            options.insert(0, cf.WORDS['Turnwheel'])
+            info_desc.insert(0, cf.WORDS['Turnwheel_desc'])
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(None, options, 'auto', gameStateObj=gameStateObj, info_desc=info_desc)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -495,6 +499,8 @@ class OptionsMenuState(State):
             elif selection == cf.WORDS['Unit']:
                 gameStateObj.stateMachine.changeState('unit_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
+            elif selection == cf.WORDS['Turnwheel']:
+                gameStateObj.stateMachine.changeState('turnwheel')
 
         elif event == 'INFO':
             gameStateObj.activeMenu.toggle_info()
@@ -1101,6 +1107,7 @@ class ItemChildState(State):
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
+        cur_unit = gameStateObj.activeMenu.owner
 
         if 'DOWN' in directions:
             GC.SOUNDDICT['Select 6'].play(first_push)
@@ -1119,13 +1126,13 @@ class ItemChildState(State):
             item = self.menu.owner
             if selection == cf.WORDS['Use']:
                 if item.booster: # Does not use interact object
-                    if gameStateObj.activeMenu.owner.items: # If the unit still has some items
+                    if cur_unit.items: # If the unit still has some items
                         gameStateObj.stateMachine.back()
                     else: # If the unit has no more items, head all the way back to menu. 
                         gameStateObj.activeMenu = None
                         gameStateObj.stateMachine.back()
                         gameStateObj.stateMachine.back()
-                    gameStateObj.activeMenu.owner.hasAttacked = True # Using a booster counts as an action
+                    cur_unit.hasAttacked = True # Using a booster counts as an action
                     gameStateObj.stateMachine.changeState('free')
                     gameStateObj.stateMachine.changeState('wait')
                     gameStateObj.activeMenu = None
@@ -1138,16 +1145,20 @@ class ItemChildState(State):
                     gameStateObj.stateMachine.changeState('combat')
             elif selection == cf.WORDS['Equip']:
                 # Swap order of items
-                gameStateObj.activeMenu.owner.equip(item)
+                old_item_order = [id(i) for i in cur_unit.items]
+                cur_unit.equip(item)
+                new_item_order = [id(i) for i in cur_unit.items]
+                if old_item_order != new_item_order:
+                    gameStateObj.event_log.add(('Equip', cur_unit.id, old_item_order, new_item_order))
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
                 gameStateObj.stateMachine.back()
             elif selection == cf.WORDS['Storage'] or selection == cf.WORDS['Discard']:
-                if item in gameStateObj.activeMenu.owner.items:
+                if item in cur_unit.items:
                     gameStateObj.activeMenu.owner.remove_item(item)
                     gameStateObj.convoy.append(item)
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
-                gameStateObj.activeMenu.owner.hasAttacked = True # Discarding an item counts as an action
-                if gameStateObj.activeMenu.owner.items: # If the unit still has some items
+                cur_unit.hasAttacked = True # Discarding an item counts as an action
+                if cur_unit.items: # If the unit still has some items
                     gameStateObj.stateMachine.back()
                 else: # If the unit has no more items, head all the way back to menu. 
                     gameStateObj.activeMenu = None
