@@ -247,6 +247,9 @@ class GameStateObj(object):
         num_members = sum([1 for unit in self.allunits if unit.team == 'player' and not unit.dead and not unit.generic_flag])
         return num_members
 
+    def check_rout(self):
+        return not any(unit.team.startswith('enemy') and unit.position for unit in self.allunits)
+
     def check_dead(self, name):
         return any(unit.name == name and unit.dead for unit in self.allunits)
 
