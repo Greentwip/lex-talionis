@@ -9,6 +9,8 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
+- Make gameStateObj/metaDataObj global?
+
 - Turnwheel
 - Submaps
 - Overworld
