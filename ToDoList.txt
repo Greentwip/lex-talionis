@@ -13,6 +13,24 @@
 - Submaps
 - Overworld
 
+Wait
+Attack
+Spell
+Equip
+Trade
+Discard
+Get Item
+Rescue
+Drop
+Give
+Take
+Exp Gain
+Level Up
+Shove/Warp/Rescue
+Skill Gain
+
+At each turn change, just loads the last turn save???
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
@@ -21,6 +39,9 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Game Editor??
 - Android Support (pygame_sdl2)
 - Mac/Linux Support
+--- SUPPORTS ---
+- Confirm Path Of Radiance style supports work
+- Add GBA style supports
 =============
 --- EXTRA ---
 =============
