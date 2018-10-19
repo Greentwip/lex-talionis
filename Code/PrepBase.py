@@ -624,7 +624,7 @@ class PrepTradeState(StateMachine.State):
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
             if self.menu.selection2 is not None:
-                self.menu.tradeItems()
+                self.menu.tradeItems(gameStateObj)
             else:
                 self.menu.setSelection()
 

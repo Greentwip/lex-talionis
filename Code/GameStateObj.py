@@ -116,7 +116,7 @@ class GameStateObj(object):
         self.base_conversations = OrderedDict()
         self.message = []
         self.turncount = 0
-        self.event_log = Turnwheel.EventLog()
+        self.action_log = Turnwheel.ActionLog()
 
     def display_all_units(self):
         for unit in self.allunits:

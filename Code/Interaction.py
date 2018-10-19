@@ -6,14 +6,14 @@ try:
     import static_random
     import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-    import MenuFunctions, GUIObjects, Weapons
+    import MenuFunctions, GUIObjects, Weapons, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     from . import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-    from . import MenuFunctions, GUIObjects, Weapons
+    from . import MenuFunctions, GUIObjects, Weapons, Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -346,11 +346,11 @@ class Solver(object):
         elif self.state == 'Summon':
             self.state = 'Done'
 
-    def use_item(self, item):
-        if item.uses:
-            item.uses.decrement()
-        if item.c_uses:
-            item.c_uses.decrement()
+    # def use_item(self, item):
+    #     if item.uses:
+    #         item.uses.decrement()
+    #     if item.c_uses:
+    #         item.c_uses.decrement()
 
     def get_a_result(self, gameStateObj, metaDataObj):
         result = None
@@ -362,41 +362,48 @@ class Solver(object):
             result = None
 
         elif self.state == 'Attacker':
-            self.use_item(self.item)
+            Action.do(Action.UseItem(self.item), gameStateObj)
+            # self.use_item(self.item)
             self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.defender)
             self.atk_rounds += 1
 
         elif self.state == 'Splash':
             if self.uses_count < 1:
-                self.use_item(self.item)
+                Action.do(Action.UseItem(self.item), gameStateObj)
+                # self.use_item(self.item)
                 self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.splash[self.index])
             self.index += 1
 
         elif self.state == 'AttackerBrave':
-            self.use_item(self.item)
+            Action.do(Action.UseItem(self.item), gameStateObj)
+            # self.use_item(self.item)
             self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.defender)
 
         elif self.state == 'SplashBrave':
             if self.uses_count < 2:
-                self.use_item(self.item)
+                Action.do(Action.UseItem(self.item), gameStateObj)
+                # self.use_item(self.item)
                 self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.splash[self.index])
             self.index += 1
 
         elif self.state == 'Defender':
-            self.use_item(self.defender.getMainWeapon())
+            Action.do(Action.UseItem(self.defender.getMainWeapon()), gameStateObj)
+            # self.use_item(self.defender.getMainWeapon())
             self.def_rounds += 1
             result = self.generate_defender_phase(gameStateObj)
 
         elif self.state == 'DefenderBrave':
-            self.use_item(self.defender.getMainWeapon())
+            Action.do(Action.UseItem(self.defender.getMainWeapon()), gameStateObj)
+            # self.use_item(self.defender.getMainWeapon())
             result = self.generate_defender_phase(gameStateObj)
 
         elif self.state == 'Summon':
-            self.use_item(self.item)
+            Action.do(Action.UseItem(self.item), gameStateObj)
+            # self.use_item(self.item)
             result = self.generate_summon_phase(gameStateObj, metaDataObj)
                 
         return result
@@ -534,11 +541,13 @@ class Combat(object):
             d_broke_item = True
         return a_broke_item, d_broke_item
 
-    def remove_broken_items(self, a_broke_item, d_broke_item):
+    def remove_broken_items(self, a_broke_item, d_broke_item, gameStateObj):
         if a_broke_item:
-            self.p1.remove_item(self.item)
+            Action.do(Action.RemoveItem(self.p1, self.item), gameStateObj)
+            # self.p1.remove_item(self.item)
         if d_broke_item:
-            self.p2.remove_item(self.p2.getMainWeapon())
+            Action.do(Action.RemoveItem(self.p2, self.p2.getMainWeapon()), gameStateObj)
+            # self.p2.remove_item(self.p2.getMainWeapon())
 
     def summon_broken_item_banner(self, a_broke_item, d_broke_item, gameStateObj):
         if a_broke_item and self.p1.team == 'player' and not self.p1.isDying:
@@ -1429,7 +1438,7 @@ class AnimationCombat(Combat):
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
-        self.remove_broken_items(a_broke_item, d_broke_item)
+        self.remove_broken_items(a_broke_item, d_broke_item, gameStateObj)
 
 class SimpleHPBar(object):
     full_hp_blip = GC.IMAGESDICT['FullHPBlip']
@@ -1944,7 +1953,7 @@ class MapCombat(Combat):
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
-        self.remove_broken_items(a_broke_item, d_broke_item)
+        self.remove_broken_items(a_broke_item, d_broke_item, gameStateObj)
 
 class HealthBar(object):
     def __init__(self, draw_method, unit, item, other=None, stats=None, swap_stats=None):

@@ -437,7 +437,7 @@ class Dialogue_Scene(object):
 
         # Give the player gold!
         elif line[0] == 'gold':
-            Action.GiveGold(int(line[1])).do(gameStateObj)
+            Action.do(Action.GiveGold(int(line[1])), gameStateObj)
             self.current_state = "Paused"
 
         elif line[0] == 'remove_item':
@@ -446,7 +446,7 @@ class Dialogue_Scene(object):
                 valid_items = [item for item in unit.items if item.name == line[2] or item.id == line[2]]
                 if valid_items:
                     item = valid_items[0]
-                    Action.DiscardItem(unit, item).do(gameStateObj)
+                    Action.do(Action.DiscardItem(unit, item), gameStateObj)
 
         # Add a skill/status to a unit
         elif line[0] == 'give_skill':
@@ -850,12 +850,7 @@ class Dialogue_Scene(object):
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
-                    Action.ChangeTeam(unit, line[2]).do(gameStateObj)
-        elif line[0] == 'change_class':
-            unit_specifier = self.get_id(line[1], gameStateObj)
-            for unit in gameStateObj.allunits:
-                if unit_specifier in (unit.id, unit.event_id, unit.position):
-                    Action.ChangeClass(unit, line[2]).do(gameStateObj)
+                    Action.do(Action.ChangeTeam(unit, line[2]), gameStateObj)
         elif line[0] == 'change_ai':
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
@@ -1302,7 +1297,7 @@ class Dialogue_Scene(object):
             transition = 'immediate'
         if transition == 'normal':
             move_path = unit.getPath(gameStateObj, final_pos)
-            Action.Move(unit, final_pos).do(gameStateObj, move_path)
+            Action.do(Action.Move(unit, final_pos, move_path), gameStateObj)
         elif transition == 'warp':
             unit.sprite.set_transition('warp_move')
             unit.sprite.set_next_position(final_pos)
@@ -1311,7 +1306,7 @@ class Dialogue_Scene(object):
             unit.sprite.set_transition('fade_move')
             unit.sprite.set_next_position(final_pos)
         elif transition == 'immediate':
-            Action.Move(unit, final_pos).execute(gameStateObj)
+            Action.execute(Action.Move(unit, final_pos), gameStateObj)
 
     def remove_unit(self, gameStateObj, which_unit, transition, event=True):
         # Find unit
@@ -1467,16 +1462,16 @@ class Dialogue_Scene(object):
     def add_item(self, unit, item, gameStateObj, banner=True):
         if unit:
             if banner:
-                Action.GiveItem(unit, item).do(gameStateObj)
+                Action.do(Action.GiveItem(unit, item), gameStateObj)
                 self.current_state = "Paused"
             else:
-                Action.GiveItem(unit, item).execute(gameStateObj)
+                Action.execute(Action.GiveItem(unit, item), gameStateObj)
         else:
             if banner:
-                Action.ItemConvoy(item).do(gameStateObj)
+                Action.do(Action.PutItemInConvoy(item), gameStateObj)
                 self.current_state = "Paused"
             else:
-                Action.ItemConvoy(item).execute(gameStateObj)
+                Action.execute(Action.PutItemInConvoy(item), gameStateObj)
         
 # === DIALOG CLASS ============================================================
 class Dialog(object):

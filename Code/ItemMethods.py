@@ -219,7 +219,6 @@ class NonNegative(int):
 
 class UsesComponent(object):
     def __init__(self, uses):
-        self.name = 'uses'
         self.uses = int(uses)
         self.total_uses = self.uses
 
@@ -229,23 +228,16 @@ class UsesComponent(object):
     def decrement(self):
         self.uses -= 1
 
-class CUsesComponent(object):
-    def __init__(self, uses):
-        self.name = 'c_uses'
-        self.uses = int(uses)
-        self.total_uses = self.uses
+    def reset(self):
+        self.uses = self.total_uses
 
-    def __repr__(self):
-        return str(self.uses)
-
-    def decrement(self):
-        self.uses -= 1
-        self.uses = max(self.uses, 0)
+    def increment(self):
+        self.uses += 1
+        self.uses = min(self.uses, self.total_uses)
                
 class WeaponComponent(object):
     def __init__(self, stats):
         MT, HIT, LVL = stats
-        self.name = 'weapon'
         self.MT = int(MT)
         self.HIT = int(HIT)
         self.LVL = LVL
@@ -387,7 +379,7 @@ def itemparser(itemstring):
                 if component == 'uses':
                     my_components['uses'] = UsesComponent(int(item['uses']))
                 elif component == 'c_uses':
-                    my_components['c_uses'] = CUsesComponent(int(item['c_uses']))
+                    my_components['c_uses'] = UsesComponent(int(item['c_uses']))
                 elif component == 'weapon':
                     stats = [item['MT'], item['HIT'], item['LVL']]
                     my_components['weapon'] = WeaponComponent(stats)

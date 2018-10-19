@@ -376,7 +376,7 @@ class MoveState(StateMachine.State):
                     else:
                         gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('movement')
-                    Action.Move(cur_unit, gameStateObj.cursor.position).do(gameStateObj)
+                    Action.do(Action.Move(cur_unit, gameStateObj.cursor.position), gameStateObj)
 
             else:
                 GC.SOUNDDICT['Error'].play()
@@ -900,7 +900,7 @@ class ItemChildState(StateMachine.State):
                 gameStateObj.stateMachine.back()
             elif selection == cf.WORDS['Storage'] or selection == cf.WORDS['Discard']:
                 if item in cur_unit.items:
-                    Action.DiscardItem(gameStateObj.activeMenu.owner, item).do(gameStateObj)
+                    Action.do(Action.DiscardItem(gameStateObj.activeMenu.owner, item), gameStateObj)
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
                 # cur_unit.hasAttacked = True # Discarding an item counts as an action
                 if cur_unit.items: # If the unit still has some items
@@ -1343,7 +1343,7 @@ class SelectState(StateMachine.State):
             elif self.name == 'rescueselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
-                    Action.Rescue(cur_unit, gameStateObj.cursor.currentHoveredUnit).do(gameStateObj)
+                    Action.do(Action.Rescue(cur_unit, gameStateObj.cursor.currentHoveredUnit), gameStateObj)
                     if cur_unit.has_canto():
                         gameStateObj.stateMachine.changeState('menu') # Should this be inside or outside the if statement - Is an error to not get here
                     else:
@@ -1353,18 +1353,18 @@ class SelectState(StateMachine.State):
             elif self.name == 'takeselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
-                    Action.Take(cur_unit, gameStateObj.cursor.currentHoveredUnit).do(gameStateObj)
+                    Action.do(Action.Take(cur_unit, gameStateObj.cursor.currentHoveredUnit), gameStateObj)
                     # Take does not count as a MAJOR action
                     gameStateObj.stateMachine.changeState('menu') # Should this be inside or outside the if statement - Is an error to not get here
             elif self.name == 'giveselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
-                    Action.Give(cur_unit, gameStateObj.cursor.currentHoveredUnit).do(gameStateObj)
+                    Action.do(Action.Give(cur_unit, gameStateObj.cursor.currentHoveredUnit), gameStateObj)
                     gameStateObj.stateMachine.changeState('menu')
             elif self.name == 'dropselect':
                 gameStateObj.stateMachine.changeState('menu')
                 drop_me = gameStateObj.get_unit_from_id(cur_unit.TRV)
-                Action.Drop(cur_unit, drop_me, gameStateObj.cursor.position).do(gameStateObj)
+                Action.do(Action.Drop(cur_unit, drop_me, gameStateObj.cursor.position), gameStateObj)
             elif self.name == 'talkselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
@@ -1456,7 +1456,7 @@ class TradeState(StateMachine.State):
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
             if gameStateObj.activeMenu.selection2 is not None:
-                gameStateObj.activeMenu.tradeItems()
+                gameStateObj.activeMenu.tradeItems(gameStateObj)
             else:
                 gameStateObj.activeMenu.setSelection()
 
@@ -2599,7 +2599,7 @@ class ItemDiscardChildState(StateMachine.State):
             if selection == cf.WORDS['Storage'] or selection == cf.WORDS['Discard']:
                 item = self.menu.owner
                 if item in gameStateObj.activeMenu.owner.items:
-                    Action.DiscardItem(gameStateObj.activeMenu.owner, item).do(gameStateObj)
+                    Action.do(Action.DiscardItem(gameStateObj.activeMenu.owner, item), gameStateObj)
                 self.menu = None
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
                 # gameStateObj.activeMenu.owner.hasAttacked = True # Discarding an item counts as an action

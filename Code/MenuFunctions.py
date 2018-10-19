@@ -1,4 +1,4 @@
-import datetime, collections
+import collections
 try:
     import GlobalConstants as GC
     import configuration as cf
@@ -9,8 +9,8 @@ except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import ItemMethods, Image_Modification, Utility, Engine, Counters
-    from . import StateMachine, InfoMenu, GUIObjects
-    from . import CustomObjects, TextChunk, Weapons
+    from . import InfoMenu, GUIObjects
+    from . import CustomObjects, TextChunk, Weapons, Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1859,7 +1859,7 @@ class TradeMenu(Counters.CursorControl):
                 else:
                     help_box.draw(surf, (self.topleft[0] + 8, top))
 
-    def tradeItems(self):
+    def tradeItems(self, gameStateObj):
         # swaps selected item and current item
         # Get items
         item1 = "EmptySlot"
@@ -1886,27 +1886,31 @@ class TradeMenu(Counters.CursorControl):
         # Now swap items
         if self.selection1 < cf.CONSTANTS['max_items']:
             if self.selection2 < cf.CONSTANTS['max_items']:
-                self.swap(self.owner, self.owner, item1, item2)
+                Action.do(Action.TradeItem(self.owner, self.owner, item1, item2), gameStateObj)
+                # self.swap(self.owner, self.owner, item1, item2)
             else:
-                self.swap(self.owner, self.partner, item1, item2)
+                # self.swap(self.owner, self.partner, item1, item2)
+                Action.do(Action.TradeItem(self.owner, self.partner, item1, item2), gameStateObj)
         else:
             if self.selection2 < cf.CONSTANTS['max_items']:
-                self.swap(self.partner, self.owner, item1, item2)
+                # self.swap(self.partner, self.owner, item1, item2)
+                Action.do(Action.TradeItem(self.partner, self.owner, item1, item2), gameStateObj)
             else:
-                self.swap(self.partner, self.partner, item1, item2)
+                # self.swap(self.partner, self.partner, item1, item2)
+                Action.do(Action.TradeItem(self.partner, self.partner, item1, item2), gameStateObj)
 
         self.selection2 = None
         self.owner.hasTraded = True
                 
-    def swap(self, unit1, unit2, item1, item2):
-        selection1 = self.selection1%5
-        selection2 = self.selection2%5
-        if item1 is not "EmptySlot":
-            unit1.remove_item(item1)
-            unit2.insert_item(selection2, item1)
-        if item2 is not "EmptySlot":
-            unit2.remove_item(item2)
-            unit1.insert_item(selection1, item2)
+    # def swap(self, unit1, unit2, item1, item2):
+    #     selection1 = self.selection1%5
+    #     selection2 = self.selection2%5
+    #     if item1 is not "EmptySlot":
+    #         unit1.remove_item(item1)
+    #         unit2.insert_item(selection2, item1)
+    #     if item2 is not "EmptySlot":
+    #         unit2.remove_item(item2)
+    #         unit1.insert_item(selection1, item2)
 
     def toggle_info(self):
         self.info_flag = not self.info_flag

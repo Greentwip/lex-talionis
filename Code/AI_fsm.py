@@ -255,7 +255,7 @@ class AI(object):
             if self.unit.hasAttacked: # If we've already attacked, we're done.
                 self.unit.wait(gameStateObj)
             gameStateObj.stateMachine.changeState('movement')
-            Action.Move(self.unit, self.position_to_move_to).do(gameStateObj, path)
+            Action.do(Action.Move(self.unit, self.position_to_move_to, path), gameStateObj)
             return True
         else:
             return False
