@@ -5,13 +5,13 @@ try:
     import configuration as cf
     import static_random
     import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
-    import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
+    import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
-    from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk
+    from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -437,9 +437,7 @@ class Dialogue_Scene(object):
 
         # Give the player gold!
         elif line[0] == 'gold':
-            gameStateObj.game_constants['money'] += int(line[1])
-            gameStateObj.banners.append(Banner.acquiredGoldBanner(int(line[1])))
-            gameStateObj.stateMachine.changeState('itemgain')
+            Action.GiveGold(int(line[1])).do(gameStateObj)
             self.current_state = "Paused"
 
         elif line[0] == 'remove_item':
@@ -448,7 +446,7 @@ class Dialogue_Scene(object):
                 valid_items = [item for item in unit.items if item.name == line[2] or item.id == line[2]]
                 if valid_items:
                     item = valid_items[0]
-                    self.unit.remove_item(item)
+                    Action.DiscardItem(unit, item).do(gameStateObj)
 
         # Add a skill/status to a unit
         elif line[0] == 'give_skill':
@@ -852,12 +850,12 @@ class Dialogue_Scene(object):
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
-                    unit.changeTeams(line[2], gameStateObj)
+                    Action.ChangeTeam(unit, line[2]).do(gameStateObj)
         elif line[0] == 'change_class':
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
-                    unit.changeClass(line[2], gameStateObj)
+                    Action.ChangeClass(unit, line[2]).do(gameStateObj)
         elif line[0] == 'change_ai':
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
@@ -1303,8 +1301,8 @@ class Dialogue_Scene(object):
         if self.do_skip:
             transition = 'immediate'
         if transition == 'normal':
-            movePath = unit.getPath(gameStateObj, final_pos)
-            unit.beginMovement(gameStateObj, movePath)
+            move_path = unit.getPath(gameStateObj, final_pos)
+            Action.Move(unit, final_pos).do(gameStateObj, move_path)
         elif transition == 'warp':
             unit.sprite.set_transition('warp_move')
             unit.sprite.set_next_position(final_pos)
@@ -1313,9 +1311,7 @@ class Dialogue_Scene(object):
             unit.sprite.set_transition('fade_move')
             unit.sprite.set_next_position(final_pos)
         elif transition == 'immediate':
-            unit.leave(gameStateObj)
-            unit.position = final_pos
-            unit.arrive(gameStateObj)
+            Action.Move(unit, final_pos).execute(gameStateObj)
 
     def remove_unit(self, gameStateObj, which_unit, transition, event=True):
         # Find unit
@@ -1470,24 +1466,17 @@ class Dialogue_Scene(object):
 
     def add_item(self, unit, item, gameStateObj, banner=True):
         if unit:
-            if len(unit.items) < cf.CONSTANTS['max_items']:
-                unit.add_item(item)
-                if banner:
-                    gameStateObj.banners.append(Banner.acquiredItemBanner(unit, item))
-                    gameStateObj.stateMachine.changeState('itemgain')
-                    self.current_state = "Paused"
-            elif unit.team == 'player':
-                gameStateObj.convoy.append(item)
-                if banner:
-                    gameStateObj.banners.append(Banner.sent_to_convoyBanner(item))
-                    gameStateObj.stateMachine.changeState('itemgain')
-                    self.current_state = "Paused"
-        else:
-            gameStateObj.convoy.append(item)
             if banner:
-                gameStateObj.banners.append(Banner.sent_to_convoyBanner(item))
-                gameStateObj.stateMachine.changeState('itemgain')
+                Action.GiveItem(unit, item).do(gameStateObj)
                 self.current_state = "Paused"
+            else:
+                Action.GiveItem(unit, item).execute(gameStateObj)
+        else:
+            if banner:
+                Action.ItemConvoy(item).do(gameStateObj)
+                self.current_state = "Paused"
+            else:
+                Action.ItemConvoy(item).execute(gameStateObj)
         
 # === DIALOG CLASS ============================================================
 class Dialog(object):

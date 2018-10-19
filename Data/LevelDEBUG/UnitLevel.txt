@@ -22,6 +22,7 @@ faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Warrior;1;Iron Axe,Hand Axe;3,17;None;Resistance
+player;0;0;Mage;1;Fire;4,17;None;Resistance
 enemy;0;0;Dracolord;1;Javelin;3,15;None;Resistance
 # Enemies
 # === Reinforcements ===

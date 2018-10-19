@@ -53,7 +53,13 @@ def get_levelup(u_id, lvl):
     if u_id not in r.levelup_random_dict:
         new_generator = lcg(hash(u_id) + r.seed)
         r.levelup_random_dict[u_id] = new_generator
-    return r.levelup_random_dict[u_id].get()
+    return r.levelup_random_dict[u_id].randint(0, 99)
+
+def set_growth_rng(u_id, rng):
+    if u_id not in r.levelup_random_dict:
+        new_generator = lcg(hash(u_id) + r.seed)
+        r.levelup_random_dict[u_id] = new_generator
+    r.levelup_random_dict[u_id].state = rng
 
 # === Returns the index of a weighted list
 def weighted_choice(choices):
@@ -81,4 +87,3 @@ if __name__ == '__main__':
     print(shuffle(l))
     l = [1, 2, 3, 4, 5, 6, 7]
     print(shuffle(l))
-

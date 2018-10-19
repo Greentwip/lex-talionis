@@ -6,13 +6,17 @@ from collections import OrderedDict, Counter
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue, Cursor
-    import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods, Turnwheel
+    import InputManager, Engine
+    import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
+    import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
+    import Boundary, Objective
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import CustomObjects, StateMachine, AStar, Support, Engine, Dialogue, Cursor
-    from . import StatusObject, UnitObject, SaveLoad, InputManager, ItemMethods, Turnwheel
+    from . import InputManager, Engine
+    from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
+    from . import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
+    from . import Boundary, Objective
 
 import logging
 logger = logging.getLogger(__name__)
@@ -24,9 +28,10 @@ class GameStateObj(object):
         self.game_constants['level'] = 0
         # Set up blitting surfaces
         self.generic_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT))
+        # Set up input handling
+        self.input_manager = InputManager.InputManager()
         # Build starting stateMachine
         self.stateMachine = StateMachine.StateMachine(['start_start'], [])
-        self.input_manager = InputManager.InputManager()
         # Menu slots
         self.activeMenu = None
         self.childMenu = None
@@ -58,7 +63,7 @@ class GameStateObj(object):
         self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
         self.grid_manager = AStar.Grid_Manager(self.map)
-        self.boundary_manager = CustomObjects.BoundaryManager(self.map)
+        self.boundary_manager = Boundary.BoundaryInterface(self.map)
 
     # Start a new game
     def build_new(self):
@@ -132,7 +137,7 @@ class GameStateObj(object):
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
         self.level_constants = load_info['level_constants']
-        self.objective = CustomObjects.Objective.deserialize(load_info['objective']) if load_info['objective'] else None
+        self.objective = Objective.Objective.deserialize(load_info['objective']) if load_info['objective'] else None
         self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music']) if load_info['phase_music'] else None
         support_dict = load_info['support']
         self.talk_options = load_info['talk_options']
@@ -175,7 +180,7 @@ class GameStateObj(object):
             self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
             self.grid_manager = AStar.Grid_Manager(self.map)
-            self.boundary_manager = CustomObjects.BoundaryManager(self.map)
+            self.boundary_manager = Boundary.BoundaryInterface(self.map)
 
             for unit in self.allunits:
                 if unit.position:
@@ -564,3 +569,41 @@ class GameStateObj(object):
                 p_log.write('\t\t</unit>\n')
             p_log.write('\t</units>\n')
             p_log.write('</level>\n\n')
+
+    def drawMap(self):
+        """Draw the map to a Surface object."""
+
+        # mapSurf will be the single Surface object that the tiles are drawn
+        # on, so that is is easy to position the entire map on the GC.DISPLAYSURF
+        # Surface object. First, the width and height must be calculated
+        mapSurf = self.mapSurf
+        # mapSurf.fill(GC.COLORDICT['bg_color']) # Start with a blank color on the surface
+        # Draw the tile sprites onto this surface
+        self.map.draw(mapSurf, self)
+        self.boundary_manager.draw(mapSurf, (mapSurf.get_width(), mapSurf.get_height()))
+        self.highlight_manager.draw(mapSurf)
+        for arrow in self.allarrows:
+            arrow.draw(mapSurf)
+        # Reorder units so they are drawn in correct order, from top to bottom, so that units on bottom are blit over top
+        # Only draw units that will be in the camera's field of view
+        # unitSurf = gameStateObj.generic_surf.copy()
+        camera_x = int(self.cameraOffset.get_x())
+        camera_y = int(self.cameraOffset.get_y())
+        culled_units = [unit for unit in self.allunits if unit.position and
+                        ((camera_x - 1 <= unit.position[0] <= camera_x + GC.TILEX + 1 and
+                         camera_y - 1 <= unit.position[1] <= camera_y + GC.TILEY + 1) or
+                         unit.sprite.draw_anyway())]
+        draw_me = sorted(culled_units, key=lambda unit: unit.position[1])
+        for unit in draw_me:
+            unit.draw(mapSurf, self)
+        for unit_hp in draw_me:
+            unit_hp.draw_hp(mapSurf, self)
+        # draw cursor
+        if self.cursor:
+            self.cursor.draw(mapSurf)
+        for cursor in self.fake_cursors:
+            cursor.draw(mapSurf)
+        # Draw weather
+        for weather in self.map.weather:
+            weather.draw(mapSurf)
+        return mapSurf

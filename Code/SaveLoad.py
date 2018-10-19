@@ -12,13 +12,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
+    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective
     from StatObject import Stat, build_stat_dict
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons
+    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective
     from Code.StatObject import Stat, build_stat_dict
 
 import logging
@@ -42,7 +42,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     overview_filename = levelfolder + '/overview.txt'
     overview_dict = read_overview_file(overview_filename)
     # Get objective
-    starting_objective = CustomObjects.Objective(overview_dict['display_name'], overview_dict['win_condition'], overview_dict['loss_condition'])
+    starting_objective = Objective.Objective(overview_dict['display_name'], overview_dict['win_condition'], overview_dict['loss_condition'])
 
     # MetaDataObj holds unchanging information for the level
     # And general abstraction information    

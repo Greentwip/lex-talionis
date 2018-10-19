@@ -102,7 +102,6 @@ class UnitObject(object):
         self.dead = info.get('dead', False)
         self.deathCounter = 0
 
-        self.sprite = UnitSprite.UnitSprite(self)
         self.arrowCounter = 0
         self.arrowAnim = [0, 1, 2]
         self.flicker = None
@@ -135,6 +134,7 @@ class UnitObject(object):
 
     def loadSprites(self):
         # Load sprites
+        self.sprite = UnitSprite.UnitSprite(self)
         self.sprite.loadSprites()
         self.generic_flag = False
         try:
@@ -584,21 +584,6 @@ class UnitObject(object):
         surf.blit(gameStateObj.info_surf, topleft)
 
 # === TARGETING AND OTHER UTILITY FUNCTIONS ===================================
-    def beginMovement(self, gameStateObj, path=None):
-        logger.debug('%s beginning movement', self.name)
-        gameStateObj.moving_units.add(self)
-        self.lock_active()
-        self.sprite.change_state('moving', gameStateObj)
-        # Remove tile statuses
-        self.leave(gameStateObj)
-        if path is None:
-            self.path = gameStateObj.cursor.movePath
-        else:
-            self.path = path
-        self.play_movement_sound(gameStateObj)
-        # self.path = self.path[::-1] Pops off end instead of just being backwards
-        # Path is backwards, goes from goal node to start node
-
     def leave(self, gameStateObj, serializing=False):
         if self.position:
             logger.debug('Leave %s %s %s', self, self.name, self.position)
@@ -1777,6 +1762,9 @@ class UnitObject(object):
         #     logger.error('Something let go of this unit without grabbing hold first!')
         #     self.isActive = 0
 
+    # def hasAttacked(self):
+        # return self.hasRescued
+
     def reset_ai(self):
         self.hasRunMoveAI = False
         self.hasRunAttackAI = False
@@ -1977,49 +1965,6 @@ class UnitObject(object):
         # Remove all highlights that share a name with my aura
         gameStateObj.highlight_manager.remove_aura_highlights()
 
-    def rescue(self, unit, gameStateObj):
-        self.TRV = unit.id
-        self.strTRV = unit.name
-        # Remove tile statuses from rescue
-        if Utility.calculate_distance(self.position, unit.position) == 1:
-            unit.sprite.set_transition('rescue')
-            unit.sprite.spriteOffset = [(self.position[0] - unit.position[0]), (self.position[1] - unit.position[1])]
-        else:
-            unit.leave(gameStateObj)
-            unit.position = None
-        self.hasAttacked = True
-        if 'savior' not in self.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self, gameStateObj)
-
-    def drop(self, position, gameStateObj):
-        TRVunit = gameStateObj.get_unit_from_id(self.TRV)
-        TRVunit.position = position
-        TRVunit.wait(gameStateObj, script=False)
-        TRVunit.hasAttacked = True
-        self.hasTraded = True # Can no longer do everything
-        # Add tile statuses to unit
-        TRVunit.arrive(gameStateObj)
-        if Utility.calculate_distance(self.position, position) == 1:
-            TRVunit.sprite.set_transition('fake_in')
-            TRVunit.sprite.spriteOffset = [(self.position[0] - position[0])*GC.TILEWIDTH, (self.position[1] - position[1])*GC.TILEHEIGHT]
-        self.unrescue(gameStateObj)
-
-    def give(self, unit, gameStateObj):
-        unit.TRV = self.TRV
-        unit.strTRV = self.strTRV
-        self.hasAttacked = True
-        if 'savior' not in self.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), unit, gameStateObj)
-        self.unrescue(gameStateObj)
-
-    def take(self, unit, gameStateObj):
-        self.TRV = unit.TRV
-        self.strTRV = unit.strTRV
-        self.hasTraded = True # Can no longer do everything
-        if 'savior' not in self.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self, gameStateObj)
-        unit.unrescue(gameStateObj)
-
     def unrescue(self, gameStateObj):
         self.TRV = 0
         self.strTRV = "---"
@@ -2140,23 +2085,6 @@ class UnitObject(object):
                         for status_on_equip in item.status_on_equip:
                             new_status = StatusObject.statusparser(status_on_equip)
                             StatusObject.HandleStatusAddition(new_status, self)
-
-    def changeTeams(self, new_team, gameStateObj):
-        self.leave(gameStateObj)
-        self.team = new_team
-        gameStateObj.boundary_manager.reset_unit(self)
-        # new sprite to reflect this
-        self.sprite = UnitSprite.UnitSprite(self)
-        self.reset()
-        self.arrive(gameStateObj)
-
-    def changeClass(self, new_class, gameStateObj):
-        self.leave(gameStateObj)
-        self.klass = new_class
-        # new sprite to reflect this
-        self.sprite = UnitSprite.UnitSprite(self)
-        self.loadSprites()
-        self.arrive(gameStateObj)
 
     def die(self, gameStateObj, event=False):
         # Drop any travelers

@@ -33,11 +33,11 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import UnitObject, Interaction, Utility, AStar, Engine
+    import UnitObject, Interaction, Utility, AStar, Engine, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import UnitObject, Interaction, Utility, AStar, Engine
+    from . import UnitObject, Interaction, Utility, AStar, Engine, Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -255,7 +255,7 @@ class AI(object):
             if self.unit.hasAttacked: # If we've already attacked, we're done.
                 self.unit.wait(gameStateObj)
             gameStateObj.stateMachine.changeState('movement')
-            self.unit.beginMovement(gameStateObj, path)
+            Action.Move(self.unit, self.position_to_move_to).do(gameStateObj, path)
             return True
         else:
             return False

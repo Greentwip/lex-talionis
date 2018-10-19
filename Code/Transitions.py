@@ -80,6 +80,8 @@ def get_save_title(save_slots):
     return options, colors
 
 class StartStart(StateMachine.State):
+    name = 'start_start'
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
@@ -166,6 +168,8 @@ class StartStart(StateMachine.State):
         return surf
 
 class StartOption(StateMachine.State):
+    name = 'start_option'
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # For transition
@@ -300,6 +304,8 @@ class StartOption(StateMachine.State):
         return surf
 
 class StartLoad(StateMachine.State):
+    name = 'start_load'
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # For transition
@@ -387,6 +393,8 @@ class StartLoad(StateMachine.State):
         return surf
 
 class StartAllSaves(StartLoad):
+    name = 'start_all_saves'
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # For transition
@@ -444,6 +452,8 @@ class StartAllSaves(StartLoad):
                 GC.SOUNDDICT['Error'].play()
 
 class StartPreloadedLevels(StartLoad):
+    name = 'start_preloaded_levels'
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # For transition
@@ -615,6 +625,8 @@ class StartPreloadedLevels(StartLoad):
         # gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
 
 class StartRestart(StartLoad):
+    name = 'start_restart'
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # For transition
@@ -664,6 +676,8 @@ class StartRestart(StartLoad):
                 GC.SOUNDDICT['Error'].play()
 
 class StartMode(StateMachine.State):
+    name = 'start_mode'
+
     def no_difficulty_choice(self):
         return len(GC.DIFFICULTYDATA) == 1
 
@@ -793,6 +807,8 @@ class StartMode(StateMachine.State):
         return surf
 
 class StartNew(StateMachine.State):
+    name = 'start_new'
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # For transition
@@ -899,6 +915,8 @@ class StartNew(StateMachine.State):
         return surf
 
 class StartNewChild(StartNew):
+    name = 'start_newchild'
+
     def begin(self, gameStateObj, metaDataObj):
         self.title_surf, self.title_pos = create_title(cf.WORDS['New Game'])
 
@@ -936,6 +954,8 @@ class StartNewChild(StartNew):
         gameStateObj.childMenu = None
 
 class StartExtras(StateMachine.State):
+    name = 'start_extras'
+
     def begin(self, gameStateObj, metaDataObj):
         # For transition
         self.selection = None
@@ -1012,6 +1032,8 @@ class StartExtras(StateMachine.State):
         return surf
 
 class StartWait(StateMachine.State):
+    name = 'start_wait'
+
     def begin(self, gameStateObj, metaDataObj):
         self.wait_flag = False
         self.wait_time = Engine.get_time()
@@ -1047,6 +1069,8 @@ class StartWait(StateMachine.State):
         gameStateObj.title_particles = None
 
 class StartSave(StateMachine.State):
+    name = 'start_save'
+
     def begin(self, gameStateObj, metaDataObj):
         # self.selection = None
         if self.started:
@@ -1144,6 +1168,8 @@ class StartSave(StateMachine.State):
 
 # === DISPLAY CREDITS SCREEN
 class CreditsState(StateMachine.State):
+    name = 'credits'
+
     """Displays the credits screen, then returns"""
     def begin(self, gameStateObj, metaDataObj):
         self.show_map = False
@@ -1173,6 +1199,8 @@ class CreditsState(StateMachine.State):
 
 # === DISPLAY GAME OVER SCREEN ================================================
 class GameOverState(StateMachine.State):
+    name = 'game_over'
+
     """Display the game over screen for a little transition, then cut to start screen"""
     def begin(self, gameStateObj, metaDataObj):
         self.lastUpdate = Engine.get_time()
@@ -1263,6 +1291,8 @@ class GameOverState(StateMachine.State):
         return surf
 
 class ChapterTransitionState(StateMachine.State):
+    name = 'chapter_transition'
+
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.background = TransitionBackground(GC.IMAGESDICT['chapterTransitionBackground'])
         self.name = metaDataObj['name'] # Lol -- this is why some states show up as Chapter I
@@ -1383,6 +1413,7 @@ class ChapterTransitionState(StateMachine.State):
 transition_speed = 1
 transition_max = 10
 class TransitionInState(StateMachine.State):
+    name = 'transition_in'
     # Assumes there is a state directly under this state. Draw that state also
     def begin(self, gameStateObj, metaDataObj):
         self.background = GC.IMAGESDICT['BlackBackground']
@@ -1402,6 +1433,7 @@ class TransitionInState(StateMachine.State):
         return surf
 
 class TransitionOutState(StateMachine.State):
+    name = 'transition_out'
     # Assumes there is a state two under this state. Draw that state also
     # Earlier state ^
     # State to be draw
@@ -1425,6 +1457,8 @@ class TransitionOutState(StateMachine.State):
         return surf
 
 class TransitionPopState(StateMachine.State):
+    name = 'transition_pop'
+
     def begin(self, gameStateObj, metaDataObj):
         self.background = GC.IMAGESDICT['BlackBackground']
         self.transition = transition_max
@@ -1445,6 +1479,8 @@ class TransitionPopState(StateMachine.State):
         return surf
 
 class TransitionDoublePopState(TransitionPopState):
+    name = 'transition_double_pop'
+
     # Used when you you want to transition from current state, immediately skip the state under it, and go to the state under that one
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.stateMachine.get_under_state(self).draw(gameStateObj, metaDataObj)
@@ -1459,6 +1495,8 @@ class TransitionDoublePopState(TransitionPopState):
         return surf
 
 class TransitionCleanState(TransitionOutState):
+    name = 'transition_clean'
+    
     # Assumes there is a state directly under this state. Draw that state also.
     def update(self, gameStateObj, metaDataObj):
         gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
