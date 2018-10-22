@@ -33,7 +33,7 @@ class ActionLog(object):
         return message
 
     def forward(self, gameStateObj):
-        if not self.actions or self.action_index >= len(self.actions):
+        if not self.actions or self.action_index + 1 >= len(self.actions):
             return None
         self.action_index += 1
         action = self.actions[self.action_index]

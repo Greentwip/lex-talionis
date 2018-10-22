@@ -463,9 +463,10 @@ class Dialogue_Scene(object):
         elif line[0] == 'exp_gain' or line[0] == 'give_exp':
             exp = int(line[2])
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
-            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=unit, exp=exp))
-            gameStateObj.stateMachine.changeState('expgain')
-            self.current_state = "Paused"
+            if unit:
+                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=unit, exp=exp))
+                gameStateObj.stateMachine.changeState('expgain')
+                self.current_state = "Paused"
 
         # destroy a destructible object
         elif line[0] == 'destroy':
@@ -855,21 +856,20 @@ class Dialogue_Scene(object):
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
-                    unit.ai_descriptor = line[2]
-                    unit.get_ai(line[2])
+                    Action.do(Action.ChangeAI(unit, line[2]), gameStateObj)
         elif line[0] == 'add_tag':
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
-                    unit.tags.add(line[2])
+                    Action.do(Action.AddTag(unit, line[2]), gameStateObj)
 
         # === HANDLE TALKING
         elif line[0] == 'add_talk':
             # Add to dictionary
-            gameStateObj.talk_options.append((line[1], line[2]))
+            Action.do(Action.AddTalk(line[1], line[2]), gameStateObj)
         elif line[0] == 'remove_talk':
             if (line[1], line[2]) in gameStateObj.talk_options:
-                gameStateObj.talk_options.remove((line[1], line[2]))
+                Action.do(Action.RemoveTalk(line[1], line[2]), gameStateObj)
         elif line[0] == 'set_base_convo':
             # Add to dictionary
             gameStateObj.base_conversations[line[1]] = True

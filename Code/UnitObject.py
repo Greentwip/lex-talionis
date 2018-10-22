@@ -6,7 +6,7 @@ try:
     import static_random
     import Interaction, MenuFunctions, AStar, Weapons, TileObject
     import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
-    import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
+    import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk, Action
     from StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
 except ImportError:
     from . import GlobalConstants as GC
@@ -14,7 +14,7 @@ except ImportError:
     from . import static_random
     from . import Interaction, MenuFunctions, AStar, Weapons, TileObject
     from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
-    from . import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
+    from . import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk, Action
     from Code.StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
 
 import logging
@@ -1731,12 +1731,9 @@ class UnitObject(object):
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj, script=True):
         logger.debug('%s %s waits', self.name, self)
-        self.hasMoved = True
-        self.hasTraded = True
-        self.hasRescued = True
-        self.hasAttacked = True
-        self.finished = True
-        self.previous_position = self.position
+        # changing state
+        Action.do(Action.Wait(self), gameStateObj)
+
         self.sprite.change_state('normal')
         # Handle support increment
         if gameStateObj.support and cf.CONSTANTS['support_end_turn']:

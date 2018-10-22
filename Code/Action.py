@@ -100,6 +100,7 @@ class Drop(Action):
         self.unit = unit
         self.droppee = droppee
         self.pos = pos
+        self.hasTraded = self.unit.hasTraded
 
     def do(self, gameStateObj):
         self.droppee.position = self.pos
@@ -124,7 +125,8 @@ class Drop(Action):
     def reverse(self, gameStateObj):
         self.unit.TRV = self.droppee.id
         self.unit.strTRV = self.droppee.name
-        self.unit.hasTraded = False
+        self.unit.hasTraded = self.hasTraded
+        self.unit.hasAttacked = False
         self.droppee.position = None
         self.droppee.leave(gameStateObj)
         if 'savior' not in self.unit.status_bundle:
@@ -155,6 +157,7 @@ class Take(Action):
     def __init__(self, unit, other_unit):
         self.unit = unit
         self.other_unit = other_unit
+        self.hasTraded = self.unit.hasTraded
 
     def do(self, gameStateObj):
         self.unit.TRV = self.other_unit.TRV
@@ -167,7 +170,7 @@ class Take(Action):
     def reverse(self, gameStateObj):
         self.other_unit.TRV = self.unit.TRV
         self.other_unit.strTRV = self.unit.strTRV
-        self.unit.hasTraded = False
+        self.unit.hasTraded = self.hasTraded
         if 'savior' not in self.other_unit.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.other_unit, gameStateObj)
         self.unit.unrescue()
@@ -192,12 +195,19 @@ class ChangeTeam(Action):
     def reverse(self, gameStateObj):
         self._change_team(self.old_team, gameStateObj)
 
-# TODO
 class ChangeAI(Action):
     def __init__(self, unit, new_ai):
         self.unit = unit
-        self.old_ai = self.unit.ai
+        self.old_ai = self.unit.ai_descriptor
         self.new_ai = new_ai
+
+    def do(self, gameStateObj):
+        self.unit.ai_descriptor = self.new_ai
+        self.unit.get_ai(self.new_ai)
+
+    def reverse(self, gameStateObj):
+        self.unit.ai_descriptor = self.old_ai
+        self.unit.get_ai(self.old_ai)
 
 class GiveGold(Action):
     def __init__(self, amount):
@@ -505,7 +515,27 @@ class LayerTerrain(Action):
     pass
 
 class Wait(Action):
-    pass
+    def __init__(self, unit):
+        self.unit = unit
+        self.hasMoved = self.unit.hasMoved
+        self.hasTraded = self.unit.hasTraded
+        self.hasAttacked = self.unit.hasAttacked
+        self.finished = self.unit.finished
+        self.previous_position = self.unit.previous_position
+
+    def do(self, gameStateObj):
+        self.unit.hasMoved = True
+        self.unit.hasTraded = True
+        self.unit.hasAttacked = True
+        self.unit.finished = True
+        self.unit.previous_position = self.unit.position
+
+    def reverse(self, gameStateObj):
+        self.unit.hasMoved = self.hasMoved
+        self.unit.hasTraded = self.hasTraded
+        self.unit.hasAttacked = self.hasAttacked
+        self.unit.finished = self.finished
+        self.unit.previous_position = self.previous_position
 
 class Refresh(Action):
     pass
@@ -514,13 +544,40 @@ class CantoMove(Action):
     pass
 
 class AddTag(Action):
-    pass
+    def __init__(self, unit, new_tag):
+        self.unit = unit
+        self.new_tag = new_tag
+        self.already_present = new_tag in unit.tags
+
+    def do(self, gameStateObj):
+        if not self.already_present:
+            self.unit.tags.add(self.new_tag)
+
+    def reverse(self, gameStateObj):
+        if not self.already_present:
+            self.unit.tags.remove(self.new_tag)
 
 class AddTalk(Action):
-    pass
+    def __init__(self, unit1, unit2):
+        self.unit1 = unit1
+        self.unit2 = unit2
+
+    def do(self, gameStateObj):
+        gameStateObj.talk_options.append((self.unit1, self.unit2))
+
+    def reverse(self, gameStateObj):
+        gameStateObj.talk_options.remove((self.unit1, self.unit2))
 
 class RemoveTalk(Action):
-    pass
+    def __init__(self, unit1, unit2):
+        self.unit1 = unit1
+        self.unit2 = unit2
+
+    def do(self, gameStateObj):
+        gameStateObj.talk_options.remove((self.unit1, self.unit2))
+
+    def reverse(self, gameStateObj):
+        gameStateObj.talk_options.append((self.unit1, self.unit2))
 
 class Destroy(Action):
     pass

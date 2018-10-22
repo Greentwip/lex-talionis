@@ -541,12 +541,12 @@ def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False)
     elif leveling == 2:  # Hybrid
         growths = [growth * num_levelups if stats[index] < max_stats[index] else 0 for index, growth in enumerate(growths)]
         growth_sum = sum(growths)
-        if growth_sum <= 0:
-            return  # No growths
         num_choice = growth_sum//100
         growth_points[0] = growth_sum%100
         while num_choice > 0:
             num_choice -= 1
+            if sum(growths) <= 0:
+                break
             idx = static_random.weighted_choice(growths)
             stats[idx] += 1
             growths[idx] = max(0, growths[idx] - 100)
