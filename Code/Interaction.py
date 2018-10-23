@@ -516,21 +516,18 @@ class Combat(object):
         # Status
         for status_obj in result.def_status:
             status_obj.parent_id = result.attacker.id
-            StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
+            Action.do(Action.ApplyStatus(result.defender, status_obj), gameStateObj)
+            # StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
         for status_obj in result.atk_status:
             status_obj.parent_id = result.defender.id
-            StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
+            Action.do(Action.ApplyStatus(result.attacker, status_obj), gameStateObj)
+            # StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP
-        result.attacker.change_hp(-result.atk_damage)
-        # result.attacker.currenthp -= result.atk_damage
-        # result.attacker.currenthp = Utility.clamp(result.attacker.currenthp, 0, result.attacker.stats['HP'])
+        Action.do(Action.ChangeHP(result.attacker, -result.atk_damage), gameStateObj)
         if result.defender:
-            result.defender.change_hp(-result.def_damage)
-            # result.defender.currenthp -= result.def_damage
-            # print(result.defender.currenthp, result.def_damage)
-            # result.defender.currenthp = Utility.clamp(result.defender.currenthp, 0, result.defender.stats['HP'])
+            Action.do(Action.ChangeHP(result.defender, -result.def_damage), gameStateObj)
 
     def find_broken_items(self):
         # Handle items that were used
@@ -630,22 +627,17 @@ class Combat(object):
         for unit in all_units:
             if unit.isDying and isinstance(unit, UnitObject.UnitObject):
                 if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
-                    unit.handle_miracle(gameStateObj)
+                    Action.do(Action.Miracle(unit), gameStateObj)
 
     def handle_item_gain(self, gameStateObj, all_units):
         for unit in all_units:
             if unit.isDying and isinstance(unit, UnitObject.UnitObject):
                 for item in unit.items:
                     if item.droppable:
-                        item.droppable = False
                         if unit in self.splash or unit is self.p2:
-                            self.p1.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p1, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
+                            Action.do(Action.DropItem(self.p1, item), gameStateObj)
                         elif self.p2:
-                            self.p2.add_item(item)
-                            gameStateObj.banners.append(Banner.acquiredItemBanner(self.p2, item))
-                            gameStateObj.stateMachine.changeState('itemgain')
+                            Action.do(Action.DropItem(self.p2, item), gameStateObj)
 
     def handle_state_stack(self, gameStateObj):
         if self.event_combat:

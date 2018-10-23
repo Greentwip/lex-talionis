@@ -2123,21 +2123,7 @@ class UnitObject(object):
             GC.SOUNDDICT['Heavy Foot Steps 1'].stop()
         else:
             GC.SOUNDDICT['Light Foot Steps 1'].stop()
-
-    def handle_miracle(self, gameStateObj):
-        self.isDying = False
-        self.set_hp(1)
-        miracle_status = None
-        for status in self.status_effects:
-            if status.miracle:
-                if status.count and status.count.count > 0:
-                    status.count.count -= 1
-                    miracle_status = status
-                    break
-        # StatusObject.HandleStatusAddition(StatusObject.statusparser('Clear'), self, gameStateObj)
-        gameStateObj.banners.append(Banner.miracleBanner(self, miracle_status))
-        gameStateObj.stateMachine.changeState('itemgain')
-                                
+                          
     # This obviously has some important purpose. Should write that purpose when I remember why i did this.
     def __getstate__(self):
         return self.__dict__

@@ -60,6 +60,65 @@ class Move(Action):
         self.unit.position = self.old_pos
         self.unit.arrive(gameStateObj)
 
+class ArriveOnMap(Action):
+    pass
+
+class LeaveMap(Action):
+    pass
+
+class Warp(Action):
+    pass
+
+class Wait(Action):
+    def __init__(self, unit):
+        self.unit = unit
+        self.hasMoved = self.unit.hasMoved
+        self.hasTraded = self.unit.hasTraded
+        self.hasAttacked = self.unit.hasAttacked
+        self.finished = self.unit.finished
+        self.previous_position = self.unit.previous_position
+
+    def do(self, gameStateObj):
+        self.unit.hasMoved = True
+        self.unit.hasTraded = True
+        self.unit.hasAttacked = True
+        self.unit.finished = True
+        self.unit.previous_position = self.unit.position
+
+    def reverse(self, gameStateObj):
+        self.unit.hasMoved = self.hasMoved
+        self.unit.hasTraded = self.hasTraded
+        self.unit.hasAttacked = self.hasAttacked
+        self.unit.finished = self.finished
+        self.unit.previous_position = self.previous_position
+
+class Refresh(Action):
+    def __init__(self, unit):
+        self.unit = unit
+        self.hasMoved = self.unit.hasMoved
+        self.hasTraded = self.unit.hasTraded
+        self.hasAttacked = self.unit.hasAttacked
+        self.finished = self.unit.finished
+        self.hasRunMoveAI = self.unit.hasRunMoveAI
+        self.hasRunAttackAI = self.unit.hasRunAttackAI
+        self.hasRunGeneralAI = self.unit.hasRunGeneralAI
+
+    def do(self, gameStateObj):
+        self.unit.reset()
+
+    def reverse(self, gameStateObj):
+        self.unit.hasMoved = self.hasMoved
+        self.unit.hasTraded = self.hasTraded
+        self.unit.hasAttacked = self.hasAttacked
+        self.unit.finished = self.finished
+        self.unit.hasRunMoveAI = self.hasRunMoveAI
+        self.unit.hasRunAttackAI = self.hasRunAttackAI
+        self.unit.hasRunGeneralAI = self.hasRunGeneralAI
+
+class CantoMove(Action):
+    pass
+
+# === RESCUE ACTIONS ==========================================================
 class Rescue(Action):
     def __init__(self, unit, rescuee):
         self.unit = unit
@@ -175,79 +234,7 @@ class Take(Action):
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.other_unit, gameStateObj)
         self.unit.unrescue()
 
-class ChangeTeam(Action):
-    def __init__(self, unit, new_team):
-        self.unit = unit
-        self.new_team = new_team
-        self.old_team = self.unit.team
-
-    def _change_team(self, team, gameStateObj):
-        self.unit.leave(gameStateObj)
-        self.unit.team = team
-        gameStateObj.boundary_manager.reset_unit(self.unit)
-        self.unit.loadSprites()
-        self.unit.reset()
-        self.unit.arrive(gameStateObj)
-
-    def do(self, gameStateObj):
-        self._change_team(self.new_team, gameStateObj)
-        
-    def reverse(self, gameStateObj):
-        self._change_team(self.old_team, gameStateObj)
-
-class ChangeAI(Action):
-    def __init__(self, unit, new_ai):
-        self.unit = unit
-        self.old_ai = self.unit.ai_descriptor
-        self.new_ai = new_ai
-
-    def do(self, gameStateObj):
-        self.unit.ai_descriptor = self.new_ai
-        self.unit.get_ai(self.new_ai)
-
-    def reverse(self, gameStateObj):
-        self.unit.ai_descriptor = self.old_ai
-        self.unit.get_ai(self.old_ai)
-
-class GiveGold(Action):
-    def __init__(self, amount):
-        self.amount = amount
-
-    def do(self, gameStateObj):
-        gameStateObj.game_constants['money'] += self.amount
-        gameStateObj.banners.append(Banner.acquiredGoldBanner(self.amount))
-        gameStateObj.stateMachine.changeState('itemgain')
-
-    def execute(self, gameStateObj):
-        gameStateObj.game_constants['money'] += self.amount
-
-    def reverse(self, gameStateObj):
-        gameStateObj.game_constants['money'] -= self.amount
-
-class ChangeGameConstant(Action):
-    def __init__(self, constant, old_value, new_value):
-        self.constant = constant
-        self.old_value = old_value
-        self.new_value = new_value
-
-    def do(self, gameStateObj):
-        gameStateObj.game_constants[self.constant] = self.new_value
-
-    def reverse(self, gameStateObj):
-        gameStateObj.game_constants[self.constant] = self.old_value        
-
-class ChangeLevelConstant(Action):
-    def __init__(self, constant, old_value, new_value):
-        self.constant = constant
-        self.old_value = old_value
-        self.new_value = new_value
-
-    def do(self, gameStateObj):
-        gameStateObj.level_constants[self.constant] = self.new_value
-
-    def reverse(self, gameStateObj):
-        gameStateObj.level_constants[self.constant] = self.old_value
-
+# === ITEM ACTIONS ==========================================================
 class PutItemInConvoy(Action):
     def __init__(self, item):
         self.item = item
@@ -292,6 +279,25 @@ class GiveItem(Action):
             self.convoy.remove(self.item)
         else:
             self.unit.remove_item(self.item)
+
+class DropItem(Action):
+    def __init__(self, unit, item):
+        self.unit = unit
+        self.item = item
+
+    def do(self, gameStateObj):
+        self.item.droppable = False
+        self.unit.add_item(self.item)
+        gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
+        gameStateObj.stateMachine.changeState('itemgain')
+
+    def execute(self, gameStateObj):
+        self.item.droppable = False
+        self.unit.add_item(self.item)
+
+    def reverse(self, gameStateObj):
+        self.item.droppable = True
+        self.unit.remove_item(self.item)
 
 class DiscardItem(Action):
     def __init__(self, unit, item):
@@ -472,17 +478,50 @@ class GainExp(Action):
         else:
             self.unit.exp -= self.exp_amount
 
-class Damage(Action):
-    pass
+class ChangeHP(Action):
+    def __init__(self, unit, num):
+        self.unit = unit
+        self.num = num
+        self.old_hp = self.unit.currenthp
 
-class Heal(Action):
-    pass
+    def do(self, gameStateObj):
+        self.unit.change_hp(self.num)
 
-class ApplyStatus(Action):
-    pass
+    def reverse(self, gameStateObj):
+        self.unit.set_hp(self.old_hp)
 
-class RemoveStatus(Action):
-    pass
+class Miracle(Action):
+    def __init__(self, unit):
+        self.unit = unit
+        self.old_hp = self.unit.currenthp
+
+    def do(self, gameStateObj):
+        self.unit.isDying = False
+        self.unit.set_hp(1)
+        miracle_status = None
+        for status in self.unit.status_effects:
+            if status.miracle and status.count and status.count.count > 0:
+                status.count.count -= 1
+                miracle_status = status
+                break
+        gameStateObj.banners.append(Banner.miracleBanner(self.unit, miracle_status))
+        gameStateObj.stateMachine.changeState('itemgain')
+
+    def execute(self, gameStateObj):
+        self.unit.isDying = False
+        self.unit.set_hp(1)
+        for status in self.unit.status_effects:
+            if status.miracle and status.count and status.count.count > 0:
+                status.count.count -= 1
+                break
+
+    def reverse(self, gameStateObj):
+        self.unit.isDying = True
+        self.unit.set_hp(self.old_hp)
+        for status in self.unit.status_effects:
+            if status.miracle and status.count:
+                status.count.count += 1
+                break
 
 class Die(Action):
     pass
@@ -490,58 +529,96 @@ class Die(Action):
 class Resurrect(Action):
     pass
 
-class ArriveOnMap(Action):
-    pass
-
-class LeaveMap(Action):
-    pass
-
-class Warp(Action):
-    pass
-
-class UpdateAttackStatistics(Action):
-    pass
-
-class ChangeTileSprite(Action):
-    pass
-
-class ChangeTerrain(Action):
-    pass
-
-class LayerTileSprite(Action):
-    pass
-
-class LayerTerrain(Action):
-    pass
-
-class Wait(Action):
-    def __init__(self, unit):
+class ApplyStatus(Action):
+    def __init__(self, unit, status_obj):
         self.unit = unit
-        self.hasMoved = self.unit.hasMoved
-        self.hasTraded = self.unit.hasTraded
-        self.hasAttacked = self.unit.hasAttacked
-        self.finished = self.unit.finished
-        self.previous_position = self.unit.previous_position
+        self.status_obj = status_obj
+        self.actually_added = True
 
     def do(self, gameStateObj):
-        self.unit.hasMoved = True
-        self.unit.hasTraded = True
-        self.unit.hasAttacked = True
-        self.unit.finished = True
-        self.unit.previous_position = self.unit.position
+        if not StatusObject.HandleStatusAddition(self.status_obj, self.unit, gameStateObj):
+            self.actually_added = False
 
     def reverse(self, gameStateObj):
-        self.unit.hasMoved = self.hasMoved
-        self.unit.hasTraded = self.hasTraded
-        self.unit.hasAttacked = self.hasAttacked
-        self.unit.finished = self.finished
-        self.unit.previous_position = self.previous_position
+        if self.actually_added:
+            StatusObject.HandleStatusRemoval(self.status_obj, self.unit, gameStateObj)
 
-class Refresh(Action):
+class RemoveStatus(Action):
     pass
 
-class CantoMove(Action):
-    pass
+# === GENERAL ACTIONS =========================================================
+class ChangeTeam(Action):
+    def __init__(self, unit, new_team):
+        self.unit = unit
+        self.new_team = new_team
+        self.old_team = self.unit.team
+
+    def _change_team(self, team, gameStateObj):
+        self.unit.leave(gameStateObj)
+        self.unit.team = team
+        gameStateObj.boundary_manager.reset_unit(self.unit)
+        self.unit.loadSprites()
+        self.unit.reset()
+        self.unit.arrive(gameStateObj)
+
+    def do(self, gameStateObj):
+        self._change_team(self.new_team, gameStateObj)
+        
+    def reverse(self, gameStateObj):
+        self._change_team(self.old_team, gameStateObj)
+
+class ChangeAI(Action):
+    def __init__(self, unit, new_ai):
+        self.unit = unit
+        self.old_ai = self.unit.ai_descriptor
+        self.new_ai = new_ai
+
+    def do(self, gameStateObj):
+        self.unit.ai_descriptor = self.new_ai
+        self.unit.get_ai(self.new_ai)
+
+    def reverse(self, gameStateObj):
+        self.unit.ai_descriptor = self.old_ai
+        self.unit.get_ai(self.old_ai)
+
+class GiveGold(Action):
+    def __init__(self, amount):
+        self.amount = amount
+
+    def do(self, gameStateObj):
+        gameStateObj.game_constants['money'] += self.amount
+        gameStateObj.banners.append(Banner.acquiredGoldBanner(self.amount))
+        gameStateObj.stateMachine.changeState('itemgain')
+
+    def execute(self, gameStateObj):
+        gameStateObj.game_constants['money'] += self.amount
+
+    def reverse(self, gameStateObj):
+        gameStateObj.game_constants['money'] -= self.amount
+
+class ChangeGameConstant(Action):
+    def __init__(self, constant, old_value, new_value):
+        self.constant = constant
+        self.old_value = old_value
+        self.new_value = new_value
+
+    def do(self, gameStateObj):
+        gameStateObj.game_constants[self.constant] = self.new_value
+
+    def reverse(self, gameStateObj):
+        gameStateObj.game_constants[self.constant] = self.old_value        
+
+class ChangeLevelConstant(Action):
+    def __init__(self, constant, old_value, new_value):
+        self.constant = constant
+        self.old_value = old_value
+        self.new_value = new_value
+
+    def do(self, gameStateObj):
+        gameStateObj.level_constants[self.constant] = self.new_value
+
+    def reverse(self, gameStateObj):
+        gameStateObj.level_constants[self.constant] = self.old_value
 
 class AddTag(Action):
     def __init__(self, unit, new_tag):
@@ -579,10 +656,23 @@ class RemoveTalk(Action):
     def reverse(self, gameStateObj):
         gameStateObj.talk_options.append((self.unit1, self.unit2))
 
-class Destroy(Action):
+class ChangeObjective(Action):
     pass
 
-class ChangeObjective(Action):
+# === TILE ACTIONS ========================================================
+class ChangeTileSprite(Action):
+    pass
+
+class ChangeTerrain(Action):
+    pass
+
+class LayerTileSprite(Action):
+    pass
+
+class LayerTerrain(Action):
+    pass
+
+class Destroy(Action):
     pass
 
 class ShowLayer(Action):
@@ -594,11 +684,33 @@ class HideLayer(Action):
 class SetTileInfo(Action):
     pass
 
+# === SUPPORT ACTIONS =======================================================
 class IncrementSupportLevel(Action):
     pass
 
 class ActivateSupport(Action):
     pass
+
+class InteractionCleanup(Action):
+    pass
+
+class UpdateAttackStatistics(Action):
+    pass
+
+class AutomaticSkillCharged(Action):
+    def __init__(self, status, unit):
+        self.status = status
+        self.unit = unit
+        self.current_charge = status.automatic.current_charge
+
+    def do(self, gameStateObj):
+        self.s = StatusObject.statusparser(self.status.automatic.status)
+        StatusObject.HandleStatusAddition(self.s, self.unit, gameStateObj)
+        self.status.automatic.reset_charge()
+
+    def reverse(self, gameStateObj):
+        StatusObject.HandleStatusRemoval(self.s, self.unit, gameStateObj)
+        self.status.automatic.current_charge = self.current_charge
 
 # === Master Functions for adding to action log ===
 def do(action, gameStateObj):

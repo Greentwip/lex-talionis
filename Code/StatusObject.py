@@ -3,11 +3,11 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
+    import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Action, Utility, Engine
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Utility, Engine
+    from . import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Action, Utility, Engine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -344,9 +344,7 @@ class Status_Processor(object):
 
 def check_automatic(status, unit, gameStateObj):
     if status.automatic and status.automatic.check_charged():
-        s = statusparser(status.automatic.status)
-        HandleStatusAddition(s, unit, gameStateObj)
-        status.automatic.reset_charge()
+        Action.do(Action.AutomaticSkillCharged(status, unit), gameStateObj)
         
 def HandleStatusUpkeep(status, unit, gameStateObj):
     oldhp = unit.currenthp
@@ -456,16 +454,37 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         s_copy.already_reflected = True # So we don't get infinite reflections between two units with reflect
         HandleStatusAddition(s_copy, p_unit, gameStateObj)
            
-    if not status.momentary:
+    if not status.momentary:  
         # Actually Add!
         unit.status_bundle.update(list(status.components)) 
         unit.status_effects.append(status)
 
+    # --- Momentary status ---
+    # Momentary status do need to be worked with Actions
     if status.convert:
         status.original_team = unit.team
         p_unit = gameStateObj.get_unit_from_id(status.parent_id)
-        unit.changeTeams(p_unit.team, gameStateObj)
+        Action.do(Action.ChangeTeams(unit, p_unit.team), gameStateObj)
+        # unit.changeTeams(p_unit.team, gameStateObj)
 
+    if status.refresh:
+        Action.do(Action.Refresh(unit), gameStateObj)
+        # Automatic skills can also show up after being refreshed
+        for status in unit.status_effects:
+            check_automatic(status, unit, gameStateObj)
+
+    if status.skill_restore:
+        activated_skills = [s for s in unit.status_effects if s.active]
+        for activated_skill in activated_skills:
+            activated_skill.active.current_charge = activated_skill.active.required_charge
+            unit.tags.add('ActiveSkillCharged')
+
+    if status.clear:
+        for status in unit.status_effects:
+            if status.time:
+                HandleStatusRemoval(status, unit, gameStateObj)
+
+    # --- Non-momentary status ---
     if status.stat_change:
         unit.apply_stat_change(status.stat_change)
     if status.growth_mod:
@@ -477,18 +496,6 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         unit.stats['SKL'].bonuses += status.rescue.skl_penalty
         status.rescue.spd_penalty = -unit.stats['SPD'].base_stat//2
         unit.stats['SPD'].bonuses += status.rescue.spd_penalty
-
-    if status.refresh:
-        unit.reset()
-        # Automatic skills can also show up after being refreshed
-        for status in unit.status_effects:
-            check_automatic(status, unit, gameStateObj)
-
-    if status.skill_restore:
-        activated_skills = [s for s in unit.status_effects if s.active]
-        for activated_skill in activated_skills:
-            activated_skill.active.current_charge = activated_skill.active.required_charge
-            unit.tags.add('ActiveSkillCharged')
 
     if status.name == "Clumsy":
         if 'horsemanship' in unit.status_bundle:
@@ -509,11 +516,6 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         status.aura.set_parent_unit(unit)
         # Re-arrive at where you are at so you can give your friendos their status
         unit.propagate_aura(status.aura, gameStateObj)
-
-    if status.clear:
-        for status in unit.status_effects:
-            if status.time:
-                HandleStatusRemoval(status, unit, gameStateObj)
 
     # when you gain shrugg off, lower negative status ailments to 0
     if status.shrug_off:
