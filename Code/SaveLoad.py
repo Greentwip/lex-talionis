@@ -545,6 +545,8 @@ def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False)
         growth_points[0] = growth_sum%100
         while num_choice > 0:
             num_choice -= 1
+            if sum(growths) <= 0:
+                break
             idx = static_random.weighted_choice(growths)
             stats[idx] += 1
             growths[idx] = max(0, growths[idx] - 100)

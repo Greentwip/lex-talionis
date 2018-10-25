@@ -865,6 +865,8 @@ class UnitObject(object):
                 num_choices += 1
 
             for _ in range(num_choices):
+                if sum(growths) <= 0:
+                    break
                 index = static_random.weighted_choice(growths)
                 levelup_list[index] += 1
                 growths[index] = max(0, growths[index] - 100)

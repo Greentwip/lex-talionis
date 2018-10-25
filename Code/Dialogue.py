@@ -735,11 +735,11 @@ class Dialogue_Scene(object):
             gameStateObj.map.command_list.append(line)
         # Add global status
         elif line[0] == 'add_global_status':
-            gameStateObj.map.add_status(line[1])
+            gameStateObj.map.add_global_status(line[1], gameStateObj)
             gameStateObj.map.command_list.append(line)
         # Remove global status
         elif line[0] == 'remove_global_status':
-            gameStateObj.map.remove_status(line[1])
+            gameStateObj.map.remove_global_status(line[1], gameStateObj)
             gameStateObj.map.command_list.append(line)
         # Remove global status
         # Clear command list
