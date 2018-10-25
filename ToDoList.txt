@@ -12,6 +12,7 @@
 - Turnwheel
 - Submaps
 - Overworld
+- Parties
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
