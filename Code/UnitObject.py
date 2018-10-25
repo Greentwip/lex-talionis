@@ -35,7 +35,6 @@ class UnitObject(object):
         self.id = info['u_id']
         self.event_id = info['event_id']
         self.position = info['position']
-        self.previous_position = self.position
         self.name = info['name']
         self.team = info['team']
         self.faction_icon = info.get('faction_icon', 'Neutral')
@@ -753,9 +752,8 @@ class UnitObject(object):
                 gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_forced_movement(self, other_pos, movement, gameStateObj, def_pos=None):
-        # Remove tile statuses
-        self.leave(gameStateObj)
         move_mag = int(eval(movement.magnitude))
+        new_pos = self.position
         
         if movement.mode == 'Push':
             # Get all positions on infinite raytraced vector from other_pos to self.position
@@ -770,43 +768,37 @@ class UnitObject(object):
 
             # New position is last position on new_path
             # TODO this movement can eventually be animated like normal movement
-            self.position = new_path.position[-1]
+            new_pos = new_path.position[-1]
         elif movement.mode == 'Shove':
             new_position = self.check_shove(other_pos, 1, gameStateObj)
             if new_position:
                 self.sprite.set_transition('fake_in')
                 self.sprite.spriteOffset = [(self.position[0] - new_position[0])*GC.TILEWIDTH, (self.position[1] - new_position[1])*GC.TILEHEIGHT]
-                self.position = new_position
+                new_pos = new_position
         elif movement.mode == 'Rescue':
             # print(movement.mode, other_pos)
             for pos in Utility.get_adjacent_positions(other_pos):
                 # If in map and walkable and no other unit is there.
                 if gameStateObj.map.check_bounds(pos) and gameStateObj.map.tiles[pos].get_mcost(self) < self.stats['MOV'] and \
                         not gameStateObj.grid_manager.get_unit_node(pos):
-                    self.position = pos
+                    new_pos = pos
+                    break
         elif movement.mode == 'Swap': # This simple thing will actually probably work
-            self.position = other_pos
+            new_pos = other_pos
         elif movement.mode == 'Warp':
-            # self.position = def_pos
-            # self.sprite.set_transition('warp_in')
-            self.sprite.set_next_position(def_pos)
-            self.sprite.set_transition('warp_move')
-            gameStateObj.map.initiate_warp_flowers(self.position)
+            Action.do(Action.Warp(self, def_pos), gameStateObj)
 
         if movement.mode != 'Warp':
-            self.arrive(gameStateObj)
-            self.previous_position = self.position
+            if new_pos != self.position:
+                Action.do(Action.Teleport(self, new_pos), gameStateObj)
 
-    def push_to_nearest_open_space(self, gameStateObj):
+    def get_nearest_open_space(self, gameStateObj):
         for r in range(1, 15):
             positions = Utility.find_manhattan_spheres([r], self.position)
             positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
             for pos in positions:
                 if not any(unit.position == pos for unit in gameStateObj.allunits):
-                    self.leave(gameStateObj)
-                    self.position = pos
-                    self.arrive(gameStateObj)
-                    return
+                    return pos
 
     def check_shove(self, other_pos, move_mag, gameStateObj):
         pos_offset = (self.position[0] - other_pos[0], self.position[1] - other_pos[1])
@@ -1843,13 +1835,6 @@ class UnitObject(object):
          4 - Possibly any time?
          # What do we need to know about this unit that we cannot get elsewhere?
         """
-        # Reset all position dependant voodoo
-        # self.leave(gameStateObj, serializing=True)
-        # Reset all item dependent voodoo, since this gets readded later
-        # items = self.items[:]
-        # This is to remove all extraneous statuses
-        # for item in reversed(self.items):
-        #    self.remove_item(item)
         serial_dict = {'u_id': self.id,
                        'event_id': self.event_id,
                        'position': self.position,
@@ -1875,10 +1860,6 @@ class UnitObject(object):
                        'TRV': self.TRV,
                        'stats': [stat.serialize() for name, stat in self.stats.items()],
                        'movement_group': self.movement_group}
-        # Return all extraneous statuses
-        # for item in items:
-        #    self.add_item(item)
-        # self.arrive(gameStateObj, serializing=True)
         return serial_dict
 
     def acquire_tile_status(self, gameStateObj, force=False):

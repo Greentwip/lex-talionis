@@ -2,11 +2,11 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import InputManager, StateMachine, Banner
+    import InputManager, StateMachine, Banner, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import InputManager, StateMachine, Banner
+    from . import InputManager, StateMachine, Banner, Action
 
 class ActionLog(object):
     def __init__(self):
@@ -18,6 +18,10 @@ class ActionLog(object):
         self.actions.append(action)
         self.action_index += 1
 
+    def remove(self, action):
+        self.actions.remove(action)
+        self.action_index -= 1
+
     def run_action_backward(self, action, gameStateObj):
         action.reverse(gameStateObj)
 
@@ -28,27 +32,33 @@ class ActionLog(object):
         if not self.actions or self.action_index < 0:
             return None
         action = self.actions[self.action_index]
-        message = self.run_action_backward(action, gameStateObj)
+        self.run_action_backward(action, gameStateObj)
         self.action_index -= 1
-        return message
+        return str(self.action_index) + ' / ' + str(len(self.actions))
 
     def forward(self, gameStateObj):
         if not self.actions or self.action_index + 1 >= len(self.actions):
             return None
         self.action_index += 1
         action = self.actions[self.action_index]
-        message = self.run_action_forward(action, gameStateObj)
-        return message
+        self.run_action_forward(action, gameStateObj)
+        return str(self.action_index) + ' / ' + str(len(self.actions))
 
     def finalize(self):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index]
 
+    def get_previous_position(self, unit):
+        for action in reversed(self.actions):
+            if isinstance(action, Action.Move):
+                if action.unit == unit:
+                    return action.old_pos
+        return unit.position
+
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         self.pennant = Banner.Pennant(cf.WORDS["Turnwheel_desc"])
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
-        self.hidden_menu = gameStateObj.activeMenu
         gameStateObj.activeMenu = None
 
     def take_input(self, actionList, gameStateObj, metaDataObj):
@@ -76,6 +86,3 @@ class TurnwheelState(StateMachine.State):
         if self.pennant:
             self.pennant.draw(mapSurf, gameStateObj)
         return mapSurf
-
-    def end(self, gameStateObj, metaDataObj):
-        gameStateObj.activeMenu = self.hidden_menu

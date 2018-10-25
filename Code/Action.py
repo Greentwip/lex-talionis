@@ -32,11 +32,19 @@ class Action(object):
         pass
 
 class Move(Action):
+    """
+    A basic, user-directed move
+    """
     def __init__(self, unit, new_pos, path=None):
         self.unit = unit
         self.old_pos = self.unit.position
         self.new_pos = new_pos
+
+        self.prev_movement_left = self.unit.movement_left
+        self.new_movement_left = None
+
         self.path = path
+        self.hasMoved = self.unit.hasMoved
 
     def do(self, gameStateObj):
         gameStateObj.moving_units.add(self.unit)
@@ -52,6 +60,31 @@ class Move(Action):
 
     def execute(self, gameStateObj):
         self.unit.leave(gameStateObj)
+        if self.new_movement_left is not None:
+            self.unit.movement_left = self.new_movement_left
+        self.unit.hasMoved = True
+        self.unit.position = self.new_pos
+        self.unit.arrive(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.unit.leave(gameStateObj)
+        self.new_movement_left = self.unit.movement_left
+        self.unit.movement_left = self.prev_movement_left
+        self.unit.hasMoved = self.hasMoved
+        self.unit.position = self.old_pos
+        self.unit.arrive(gameStateObj)
+
+class Teleport(Action):
+    """
+    A script directed move, no animation
+    """
+    def __init__(self, unit, new_pos):
+        self.unit = unit
+        self.old_pos = self.unit.position
+        self.new_pos = new_pos
+
+    def do(self, gameStateObj):
+        self.unit.leave(gameStateObj)
         self.unit.position = self.new_pos
         self.unit.arrive(gameStateObj)
 
@@ -60,13 +93,36 @@ class Move(Action):
         self.unit.position = self.old_pos
         self.unit.arrive(gameStateObj)
 
+class Warp(Action):
+    def __init__(self, unit, new_pos):
+        self.unit = unit
+        self.old_pos = self.unit.position
+        self.new_pos = new_pos
+
+    def do(self, gameStateObj):
+        self.unit.sprite.set_transition('warp_move')
+        self.unit.sprite.set_next_position(self.new_pos)
+        gameStateObj.map.initiate_warp_flowers(self.unit.position)
+
+    def execute(self, gameStateObj):
+        self.unit.leave(gameStateObj)
+        self.unit.position = self.new_pos
+        self.unit.arrive(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.unit.leave(gameStateObj)
+        self.unit.position = self.old_pos
+        self.unit.arrive(gameStateObj)
+
+class FadeMove(Warp):
+    def do(self, gameStateObj):
+        self.unit.sprite.set_transition('fade_move')
+        self.unit.sprite.set_next_position(self.new_pos)
+
 class ArriveOnMap(Action):
     pass
 
 class LeaveMap(Action):
-    pass
-
-class Warp(Action):
     pass
 
 class Wait(Action):
@@ -76,21 +132,18 @@ class Wait(Action):
         self.hasTraded = self.unit.hasTraded
         self.hasAttacked = self.unit.hasAttacked
         self.finished = self.unit.finished
-        self.previous_position = self.unit.previous_position
 
     def do(self, gameStateObj):
         self.unit.hasMoved = True
         self.unit.hasTraded = True
         self.unit.hasAttacked = True
         self.unit.finished = True
-        self.unit.previous_position = self.unit.position
 
     def reverse(self, gameStateObj):
         self.unit.hasMoved = self.hasMoved
         self.unit.hasTraded = self.hasTraded
         self.unit.hasAttacked = self.hasAttacked
         self.unit.finished = self.finished
-        self.unit.previous_position = self.previous_position
 
 class Refresh(Action):
     def __init__(self, unit):
@@ -720,3 +773,7 @@ def do(action, gameStateObj):
 def execute(action, gameStateObj):
     action.execute(gameStateObj)
     gameStateObj.action_log.append(action)
+
+def reverse(action, gameStateObj):
+    action.reverse(gameStateObj)
+    gameStateObj.action_log.remove(action)

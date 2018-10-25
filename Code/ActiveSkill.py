@@ -82,7 +82,8 @@ class Charge(Active_Skill):
         self.item = weapon
         self.original_range = weapon.RNG
         self.original_might = weapon.weapon.MT
-        weapon.weapon.MT += 2*Utility.calculate_distance(unit.position, unit.previous_position)
+        previous_position = gameStateObj.action_log.get_previous_position(unit)
+        weapon.weapon.MT += 2*Utility.calculate_distance(unit.position, previous_position)
         weapon.RNG = [1]
 
     def reverse_mod(self):

@@ -96,18 +96,16 @@ class UnitSprite(object):
                         if self.state == 'fake_transition_out':
                             self.change_state('normal', gameStateObj)
                     elif self.transition_state in ('fade_move', 'warp_move'):
-                        # gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         self.unit.leave(gameStateObj)
                         self.unit.position = self.next_position
-                        self.unit.previous_position = self.next_position
                         self.unit.arrive(gameStateObj)
                         gameStateObj.cursor.setPosition(self.unit.position, gameStateObj)
                         # gameStateObj.stateMachine.changeState('move_camera')
                         self.next_position = None
-                        gameStateObj.map.initiate_warp_flowers(self.unit.position)
                         if self.transition_state == 'fade_move':
                             self.set_transition('fade_in')
                         elif self.transition_state == 'warp_move':
+                            gameStateObj.map.initiate_warp_flowers(self.unit.position)
                             self.set_transition('warp_in')
         elif self.transition_state == 'warp_in' or self.transition_state == 'fade_in':
             self.transition_counter -= Engine.get_delta()

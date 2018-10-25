@@ -1273,7 +1273,7 @@ class Dialogue_Scene(object):
             new_pos = [self.next_position]
         # Using prev position
         elif new_pos == 'prev_pos':
-            new_pos = [unit.previous_position]
+            new_pos = [gameStateObj.action_log.get_previous_position(unit)]
         # If coord, use coord
         elif ',' in new_pos:
             new_pos = self.get_position(new_pos, gameStateObj)
@@ -1299,14 +1299,11 @@ class Dialogue_Scene(object):
             move_path = unit.getPath(gameStateObj, final_pos)
             Action.do(Action.Move(unit, final_pos, move_path), gameStateObj)
         elif transition == 'warp':
-            unit.sprite.set_transition('warp_move')
-            unit.sprite.set_next_position(final_pos)
-            gameStateObj.map.initiate_warp_flowers(final_pos)
+            Action.do(Action.Warp(unit, final_pos), gameStateObj)
         elif transition == 'fade':
-            unit.sprite.set_transition('fade_move')
-            unit.sprite.set_next_position(final_pos)
+            Action.do(Action.FadeMove(unit, final_pos), gameStateObj)
         elif transition == 'immediate':
-            Action.execute(Action.Move(unit, final_pos), gameStateObj)
+            Action.do(Action.Teleport(unit, final_pos), gameStateObj)
 
     def remove_unit(self, gameStateObj, which_unit, transition, event=True):
         # Find unit
@@ -1417,7 +1414,7 @@ class Dialogue_Scene(object):
             pos = new_pos[0]
             if gameStateObj.map.check_bounds(pos):
                 other_unit = gameStateObj.get_unit_from_pos(pos)
-                other_unit.push_to_nearest_open_space(gameStateObj)
+                pos = other_unit.get_nearest_open_space(gameStateObj)
                 return pos
             else:
                 return None

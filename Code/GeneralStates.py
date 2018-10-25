@@ -364,19 +364,18 @@ class MoveState(StateMachine.State):
                 if gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position):
                     GC.SOUNDDICT['Error'].play()
                 else:
+                    cur_unit.current_move_action = Action.Move(cur_unit, gameStateObj.cursor.position)
                     # SOUND - Footstep sounds but no select sound
                     if cur_unit.hasAttacked: # If we've already attacked, we're done. Move to free
                         """gameStateObj.stateMachine.clear()
                         gameStateObj.stateMachine.changeState('free')
                         cur_unit.wait(gameStateObj) # Canto"""
                         # Instead go to wait select
-                        cur_unit.previous_position = cur_unit.position
-                        cur_unit.prev_movement_left = cur_unit.movement_left
                         gameStateObj.stateMachine.changeState('canto_wait')
                     else:
                         gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('movement')
-                    Action.do(Action.Move(cur_unit, gameStateObj.cursor.position), gameStateObj)
+                    Action.do(cur_unit.current_move_action, gameStateObj)
 
             else:
                 GC.SOUNDDICT['Error'].play()
@@ -415,13 +414,8 @@ class CantoWaitState(StateMachine.State):
             cur_unit.wait(gameStateObj) # Canto
 
         elif event == 'BACK':
-            # puts unit back - handles status
-            cur_unit.leave(gameStateObj)
-            cur_unit.position = cur_unit.previous_position
-            if hasattr(cur_unit, 'prev_movement_left'):
-                cur_unit.movement_left = cur_unit.prev_movement_left
-            # gameStateObj.cursor.setPosition(gameStateObj.cursor.currentSelectedUnit.position, gameStateObj)
-            cur_unit.arrive(gameStateObj)
+            Action.reverse(cur_unit.current_move_action, gameStateObj)
+            cur_unit.current_move_action = None
             gameStateObj.stateMachine.back()
 
     def end(self, gameStateObj, metaDataObj):
@@ -594,6 +588,7 @@ class MenuState(StateMachine.State):
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
+        cur_unit = gameStateObj.cursor.currentSelectedUnit
 
         if 'DOWN' in directions:
             GC.SOUNDDICT['Select 6'].play()
@@ -605,33 +600,31 @@ class MenuState(StateMachine.State):
         # Back - Put unit back to where he/she started
         if event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            if gameStateObj.cursor.currentSelectedUnit.hasAttacked or gameStateObj.cursor.currentSelectedUnit.hasTraded:
-                if gameStateObj.cursor.currentSelectedUnit.has_canto():
+            if cur_unit.hasAttacked or cur_unit.hasTraded:
+                if cur_unit.has_canto():
                     # Don't display excess attacks, because I have already attacked...
-                    gameStateObj.cursor.setPosition(gameStateObj.cursor.currentSelectedUnit.position, gameStateObj)
+                    gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
                     gameStateObj.stateMachine.changeState('move')
                 else:
                     # I've already done something that qualifies for taking away my attack, which means I don't get to move back to where I started
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('free')
-                    gameStateObj.cursor.currentSelectedUnit.wait(gameStateObj)
+                    cur_unit.wait(gameStateObj)
             else:
                 # puts unit back - handles status
-                gameStateObj.cursor.currentSelectedUnit.leave(gameStateObj)
-                gameStateObj.cursor.currentSelectedUnit.position = gameStateObj.cursor.currentSelectedUnit.previous_position
-                gameStateObj.cursor.currentSelectedUnit.reset()
-                # gameStateObj.cursor.setPosition(gameStateObj.cursor.currentSelectedUnit.position, gameStateObj)
-                gameStateObj.cursor.currentSelectedUnit.arrive(gameStateObj)
-                gameStateObj.cursor.setPosition(gameStateObj.cursor.currentSelectedUnit.position, gameStateObj)
+                Action.reverse(cur_unit.current_move_action, gameStateObj)
+                cur_unit.current_move_action = None
+                cur_unit.reset()
+                gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
                 gameStateObj.stateMachine.changeState('move')
 
         # Show R unit status screen
         elif event == 'INFO':
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.cursor.currentSelectedUnit, one_unit_only=True)
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, cur_unit, one_unit_only=True)
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
-            cur_unit = gameStateObj.cursor.currentSelectedUnit
+            cur_unit = cur_unit
             selection = gameStateObj.activeMenu.getSelection()
             logger.debug('Player selected %s', selection)
             gameStateObj.highlight_manager.remove_highlights()
@@ -2000,8 +1993,6 @@ class PhaseChangeState(StateMachine.State):
         # All units can now move and attack, etc.
         for unit in gameStateObj.allunits:
             unit.reset()
-            # if unit.team.startswith('enemy'):
-            #    gameStateObj.boundary_manager.arrive(unit, gameStateObj)
         gameStateObj.cursor.drawState = 0
         gameStateObj.activeMenu = None
         gameStateObj.phase.slide_in(gameStateObj)

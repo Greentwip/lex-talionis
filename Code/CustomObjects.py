@@ -289,9 +289,9 @@ class PhaseIn(object):
         currentTime = Engine.get_time()
         GC.SOUNDDICT['Next Turn'].play()
         if self.name == 'player':
-            # Keeps track of where units started their turns (mainly)
-            for unit in gameStateObj.allunits:
-                unit.previous_position = unit.position
+            # # Keeps track of where units started their turns (mainly)
+            # for unit in gameStateObj.allunits:
+            #     unit.previous_position = unit.position
 
             # Set position over leader lord
             if cf.OPTIONS['Autocursor']:
