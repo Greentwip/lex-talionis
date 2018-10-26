@@ -120,10 +120,34 @@ class FadeMove(Warp):
         self.unit.sprite.set_next_position(self.new_pos)
 
 class ArriveOnMap(Action):
-    pass
+    def __init__(self, unit, pos):
+        self.unit = unit
+        self.pos = pos
+
+    def do(self, gameStateObj):
+        self.unit.position = self.pos
+        self.unit.place_on_map(gameStateObj)
+        self.unit.arrive(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.unit.leave()
+        self.unit.remove_from_map(gameStateObj)
+        self.unit.position = None
 
 class LeaveMap(Action):
-    pass
+    def __init__(self, unit):
+        self.unit = unit
+        self.old_pos = self.unit.position
+
+    def do(self, gameStateObj):
+        self.unit.leave()
+        self.unit.remove_from_map(gameStateObj)
+        self.unit.position = None
+
+    def reverse(self, gameStateObj):
+        self.unit.position = self.old_pos
+        self.unit.place_on_map(gameStateObj)
+        self.unit.arrive()
 
 class Wait(Action):
     def __init__(self, unit):
@@ -167,9 +191,6 @@ class Refresh(Action):
         self.unit.hasRunMoveAI = self.hasRunMoveAI
         self.unit.hasRunAttackAI = self.hasRunAttackAI
         self.unit.hasRunGeneralAI = self.hasRunGeneralAI
-
-class CantoMove(Action):
-    pass
 
 # === RESCUE ACTIONS ==========================================================
 class Rescue(Action):
@@ -577,10 +598,46 @@ class Miracle(Action):
                 break
 
 class Die(Action):
-    pass
+    def __init__(self, unit):
+        self.unit = unit
+        self.old_pos = unit.position
+
+        self.drop_action = None
+
+    def do(self, gameStateObj):
+        # Drop any travelers
+        if self.unit.TRV:
+            drop_me = gameStateObj.get_unit_from_id(self.unit.TRV)
+            self.drop_action = Drop(self.unit, drop_me, self.unit.position)
+            self.drop_action.do(gameStateObj)
+
+        # I no longer have a position
+        self.unit.leave(gameStateObj)
+        self.unit.remove_from_map(gameStateObj)
+        self.unit.position = None
+        ##
+        self.unit.dead = True
+        self.unit.isDying = False
+
+    def reverse(self, gameStateObj):
+        self.unit.dead = False
+
+        self.unit.position = self.old_pos
+        self.unit.place_on_map(gameStateObj)
+        self.unit.leave(gameStateObj)
+
+        if self.drop_action:
+            self.drop_action.reverse(gameStateObj)
 
 class Resurrect(Action):
-    pass
+    def __init__(self, unit):
+        self.unit = unit
+
+    def do(self, gameStateObj):
+        self.unit.dead = False
+
+    def reverse(self, gameStateObj):
+        self.unit.dead = True
 
 class ApplyStatus(Action):
     def __init__(self, unit, status_obj):
@@ -710,7 +767,29 @@ class RemoveTalk(Action):
         gameStateObj.talk_options.append((self.unit1, self.unit2))
 
 class ChangeObjective(Action):
-    pass
+    def __init__(self, display_name=None, win_condition=None, loss_condition=None):
+        self.display_name = display_name
+        self.win_condition = win_condition
+        self.loss_condition = loss_condition
+
+    def do(self, gameStateObj):
+        obj = gameStateObj.objective
+        self.old_values = obj.display_name_string, obj.win_condition_string, obj.loss_condition_string
+        if self.display_name:
+            obj.display_name_string = self.display_name
+        if self.win_condition:
+            obj.win_condition_string = self.win_condition
+        if self.loss_condition:
+            obj.loss_condition_string = self.loss_condition
+
+    def reverse(self, gameStateObj):
+        obj = gameStateObj.objective
+        if self.display_name:
+            obj.display_name_string = self.old_values[0]
+        if self.win_condition:
+            obj.win_condition_string = self.old_values[1]
+        if self.loss_condition:
+            obj.loss_condition_string = self.old_values[2]
 
 # === TILE ACTIONS ========================================================
 class ChangeTileSprite(Action):

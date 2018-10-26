@@ -525,7 +525,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'resurrect_unit':
             unit = gameStateObj.get_unit_from_name(line[1])
             if unit and unit.dead:
-                unit.dead = False
+                Action.do(Action.Resurrect(unit), gameStateObj)
             else:
                 logger.warning('Unit %s either does not exist or was not dead!', line[1])
         elif line[0] == 'set_next_position':
@@ -609,11 +609,14 @@ class Dialogue_Scene(object):
 
         # === HANDLE OBJECTIVE
         elif line[0] == 'change_objective_display_name':
-            gameStateObj.objective.display_name_string = line[1]
+            Action.do(Action.ChangeObjective(display_name=line[1]), gameStateObj)
+            # gameStateObj.objective.display_name_string = line[1]
         elif line[0] == 'change_objective_win_condition':
-            gameStateObj.objective.win_condition_string = line[1]
+            Action.do(Action.ChangeObjective(win_condition=line[1]), gameStateObj)
+            # gameStateObj.objective.win_condition_string = line[1]
         elif line[0] == 'change_objective_loss_condition':
-            gameStateObj.objective.loss_condition_string = line[1]
+            Action.do(Action.ChangeObjective(loss_condiion=line[1]), gameStateObj)
+            # gameStateObj.objective.loss_condition_string = line[1]
         elif line[0] == 'minimum_number_banner':
             gameStateObj.banners.append(Banner.tooFewUnitsBanner())
             gameStateObj.stateMachine.changeState('itemgain')
@@ -1228,7 +1231,6 @@ class Dialogue_Scene(object):
         if self.do_skip:
             transition = 'immediate'
         # Now we have final pos
-        unit.position = final_pos
         if transition == 'warp':
             unit.sprite.set_transition('warp_in')
             gameStateObj.map.initiate_warp_flowers(final_pos)
@@ -1240,8 +1242,7 @@ class Dialogue_Scene(object):
                 unit.sprite.set_transition('fade_in')
         elif transition == 'immediate':
             pass
-        unit.place_on_map(gameStateObj)
-        unit.arrive(gameStateObj)
+        Action.do(Action.ArriveOnMap(unit, final_pos), gameStateObj)
 
     def move_unit(self, gameStateObj, metaDataObj, which_unit, new_pos, transition, placement, shuffle=True):
         # Find unit
