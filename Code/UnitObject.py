@@ -1958,22 +1958,24 @@ class UnitObject(object):
         gameStateObj.stateMachine.changeState('dialogue')
 
     def seize(self, gameStateObj):
-        self.hasAttacked = True
+        # self.hasAttacked = True
+        Action.do(Action.HasAttacked(self), gameStateObj)
         gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, item, gameStateObj):
-        self.hasAttacked = True
+        # self.hasAttacked = True
+        Action.do(Action.HasAttacked(self), gameStateObj)
         locked_name = gameStateObj.map.tile_info_dict[pos]['Locked']
         unlock_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
         if os.path.exists(unlock_script):
             gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
             gameStateObj.stateMachine.changeState('dialogue')
 
-        if item and item.uses:
-            item.uses.decrement()
-            if item.uses.uses <= 0:
-                self.remove_item(item)
+        if item:
+            Action.do(Action.UseItem(item), gameStateObj)
+            if item.uses and item.uses.uses <= 0:
+                Action.do(Action.RemoveItem(self, item), gameStateObj)
                 gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
                 gameStateObj.stateMachine.changeState('itemgain')
 
@@ -2065,25 +2067,10 @@ class UnitObject(object):
                             StatusObject.HandleStatusAddition(new_status, self)
 
     def die(self, gameStateObj, event=False):
-        # Drop any travelers
-        if self.TRV and not event:
-            self.drop(self.position, gameStateObj)
-        # I no longer have a position
-        self.leave(gameStateObj)
-        self.remove_from_map(gameStateObj)
-        self.position = None
-        ##
-        if not event:
-            self.dead = True
-        # Remove summons permanently. Don't need to keep their data, since they would eventually fill all 
-        # memory if player kept creating them.
-        if self.isSummon() and self in gameStateObj.allunits:
-            gameStateObj.allunits.remove(self)
-        # Other things to clean
-        self.clean_up(gameStateObj, event)
-        self.isDying = False
-        if not event:
-            logger.debug('%s %s dies', self.name, self)
+        if event:
+            Action.do(Action.LeaveMap(self), gameStateObj)
+        else:
+            Action.do(Action.Die(self), gameStateObj)
 
     def play_movement_sound(self, gameStateObj):
         if 'flying' in self.status_bundle:

@@ -707,7 +707,8 @@ class MenuState(StateMachine.State):
                 village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
-                cur_unit.hasAttacked = True
+                # cur_unit.hasAttacked = True
+                Action.do(Action.HasAttacked(cur_unit), gameStateObj)
             elif selection == cf.WORDS['Armory']:
                 gameStateObj.stateMachine.changeState('armory')
                 gameStateObj.stateMachine.changeState('transition_out')
@@ -721,7 +722,8 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('free')
                 cur_unit.escape(gameStateObj)
             elif selection == cf.WORDS['Switch']:
-                cur_unit.hasAttacked = True
+                # cur_unit.hasAttacked = True
+                Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
                 switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
@@ -743,7 +745,8 @@ class MenuState(StateMachine.State):
                 search_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, unit=cur_unit, name=search_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
-                cur_unit.hasAttacked = True
+                # cur_unit.hasAttacked = True
+                Action.do(Action.HasAttacked(cur_unit), gameStateObj)
             elif selection == cf.WORDS['Talk']:
                 positions = [unit.position for unit in gameStateObj.allunits if unit.position in cur_unit.getAdjacentPositions(gameStateObj) and 
                              (cur_unit.name, unit.name) in gameStateObj.talk_options]
@@ -875,7 +878,8 @@ class ItemChildState(StateMachine.State):
                         gameStateObj.activeMenu = None
                         gameStateObj.stateMachine.back()
                         gameStateObj.stateMachine.back()
-                    cur_unit.hasAttacked = True # Using a booster counts as an action
+                    # cur_unit.hasAttacked = True # Using a booster counts as an action
+                    Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                     gameStateObj.stateMachine.changeState('free')
                     gameStateObj.stateMachine.changeState('wait')
                     gameStateObj.activeMenu = None
@@ -1361,7 +1365,8 @@ class SelectState(StateMachine.State):
             elif self.name == 'talkselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
-                    cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
+                    # cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
+                    Action.do(Action.HasTraded(cur_unit), gameStateObj)
                     talk_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
@@ -1369,7 +1374,8 @@ class SelectState(StateMachine.State):
             elif self.name == 'supportselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
-                    cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
+                    Action.do(Action.hasTraded(cur_unit), gameStateObj)
+                    # cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
                     edge = gameStateObj.support.get_edge(cur_unit.id, gameStateObj.cursor.currentHoveredUnit.id)
                     if os.path.exists(edge.script):
                         support_script = edge.script
@@ -1497,10 +1503,13 @@ class StealState(StateMachine.State):
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
-            selection.droppable = False
-            self.rube.remove_item(selection)
-            self.initiator.add_item(selection)
-            self.initiator.hasAttacked = True
+            # selection.droppable = False
+            # self.rube.remove_item(selection)
+            Action.do(Action.RemoveItem(self.rube, selection), gameStateObj)
+            Action.execute(Action.DropItem(self.initiator, selection), gameStateObj)
+            # self.initiator.add_item(selection)
+            # self.initiator.hasAttacked = True
+            Action.do(Action.HasAttacked(self.initiator), gameStateObj)
             if self.initiator.has_canto():
                 gameStateObj.stateMachine.changeState('menu')
             else:
@@ -2913,14 +2922,13 @@ class ShopState(StateMachine.State):
                     GC.SOUNDDICT['Select 1'].play()
                     selection = self.shopMenu.getSelection()
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
-                    if len(self.unit.items) < cf.CONSTANTS['max_items']:
-                        self.unit.add_item(ItemMethods.itemparser(str(selection.id))[0])
-                    else:
-                        gameStateObj.convoy.append(ItemMethods.itemparser(str(selection.id))[0])
-                    gameStateObj.game_constants['money'] -= value
+                    Action.execute(Action.GiveItem(self.unit, ItemMethods.itemparser(str(selection.id))[0]), gameStateObj)
+                    # gameStateObj.game_constants['money'] -= value
+                    Action.do(Action.ChangeGameConstant('money', gameStateObj.game_constants['money'] - value), gameStateObj)
                     self.money_counter_disp.start(-value)
                     self.display_message = self.get_dialog('Buying anything else?')
-                    self.unit.hasAttacked = True
+                    # self.unit.hasAttacked = True
+                    Action.do(Action.HasAttacked(self.unit), gameStateObj)
                     self.myMenu.updateOptions(self.unit.items)
                     self.stateMachine.changeState('buy')
                     self.shopMenu.takes_input = True
@@ -2946,13 +2954,16 @@ class ShopState(StateMachine.State):
                 if choice == cf.WORDS['Yes']:
                     GC.SOUNDDICT['Select 1'].play()
                     selection = self.myMenu.getSelection()
-                    self.unit.remove_item(selection)
+                    Action.do(Action.RemoveItem(self.unit, selection), gameStateObj)
+                    # self.unit.remove_item(selection)
                     self.myMenu.currentSelection = 0 # Reset selection
                     value = (selection.value * selection.uses.uses)//2 if selection.uses else selection.value//2 # Divide by 2 because selling
-                    gameStateObj.game_constants['money'] += value
+                    # gameStateObj.game_constants['money'] += value
+                    Action.do(Action.ChangeGameConstant('money', gameStateObj.game_constants['money'] + value), gameStateObj)
                     self.money_counter_disp.start(value)
                     self.display_message = self.get_dialog(self.back_message)
-                    self.unit.hasAttacked = True
+                    # self.unit.hasAttacked = True
+                    Action.do(Action.HasAttacked(self.unit), gameStateObj)
                     self.myMenu.updateOptions(self.unit.items)
                     if len(self.unit.items) <= 0:
                         self.myMenu.takes_input = False

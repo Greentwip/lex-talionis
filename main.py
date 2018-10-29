@@ -32,8 +32,6 @@ from Code import GameStateObj, Engine
 
 # === MAIN FUNCTION ===========================================================
 def main():
-    # logger = logging.getLogger(__name__)
-
     # Set Volume
     Engine.music_thread.set_volume(cf.OPTIONS['Music Volume'])
     imagesDict.set_sound_volume(cf.OPTIONS['Sound Volume'], GC.SOUNDDICT)

@@ -14,11 +14,12 @@ class ActionLog(object):
         self.action_index = -1  # Means no actions
 
     def append(self, action):
-        print(action)
+        print("Add Action: %s" % action)
         self.actions.append(action)
         self.action_index += 1
 
     def remove(self, action):
+        print("Remove Action: %s" % action)
         self.actions.remove(action)
         self.action_index -= 1
 
@@ -34,7 +35,7 @@ class ActionLog(object):
         action = self.actions[self.action_index]
         self.run_action_backward(action, gameStateObj)
         self.action_index -= 1
-        return str(self.action_index) + ' / ' + str(len(self.actions))
+        return action.__class__.__name__ + ": " + str(self.action_index + 1) + ' / ' + str(len(self.actions))
 
     def forward(self, gameStateObj):
         if not self.actions or self.action_index + 1 >= len(self.actions):
@@ -42,11 +43,13 @@ class ActionLog(object):
         self.action_index += 1
         action = self.actions[self.action_index]
         self.run_action_forward(action, gameStateObj)
-        return str(self.action_index) + ' / ' + str(len(self.actions))
+        return action.__class__.__name__ + ': ' + str(self.action_index + 1) + ' / ' + str(len(self.actions))
 
     def finalize(self):
         # Remove all actions after where we turned back to
-        self.actions = self.actions[:self.action_index]
+        self.actions = self.actions[:self.action_index + 1]
+        print("Remaining Actions:")
+        print(self.actions)
 
     def get_previous_position(self, unit):
         for action in reversed(self.actions):
@@ -75,7 +78,7 @@ class TurnwheelState(StateMachine.State):
             if new_message:
                 self.pennant.change_text(new_message)
 
-        if action == 'BACK':
+        if action == 'SELECT' or action == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
             gameStateObj.action_log.finalize()
             gameStateObj.stateMachine.back()

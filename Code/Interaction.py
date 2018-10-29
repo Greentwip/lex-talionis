@@ -1393,7 +1393,8 @@ class AnimationCombat(Combat):
     # Clean up everything
     def clean_up(self, gameStateObj, metaDataObj):
         gameStateObj.stateMachine.back()
-        self.p1.hasAttacked = True
+        # self.p1.hasAttacked = True
+        Action.do(Action.HasAttacked(self.p1), gameStateObj)
         if not self.p1.has_canto_plus() and not self.event_combat:
             gameStateObj.stateMachine.changeState('wait') # Event combats do not cause unit to wait
 
@@ -1855,10 +1856,11 @@ class MapCombat(Combat):
         gameStateObj.stateMachine.back()
         # Reset states if you're not using a solo skill
         if self.skill_used and self.skill_used.active and self.skill_used.active.mode == 'Solo':
-            self.p1.hasTraded = True  # Can still attack, can't move
-            self.p1.hasAttacked = False
+            # self.p1.hasTraded = True  # Can still attack, can't move
+            Action.do(Action.HasTraded(self.p1), gameStateObj)
         else:
-            self.p1.hasAttacked = True
+            # self.p1.hasAttacked = True
+            Action.do(Action.HasAttacked(self.p1), gameStateObj)
             if not self.p1.has_canto_plus() and not self.event_combat:
                 gameStateObj.stateMachine.changeState('wait')  # Event combats do not cause unit to wait
 

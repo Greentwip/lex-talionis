@@ -1900,7 +1900,7 @@ class TradeMenu(Counters.CursorControl):
                 Action.do(Action.TradeItem(self.partner, self.partner, item1, item2), gameStateObj)
 
         self.selection2 = None
-        self.owner.hasTraded = True
+        # self.owner.hasTraded = True
                 
     # def swap(self, unit1, unit2, item1, item2):
     #     selection1 = self.selection1%5
