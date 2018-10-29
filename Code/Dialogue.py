@@ -789,10 +789,7 @@ class Dialogue_Scene(object):
             units_to_remove = [unit for unit in gameStateObj.allunits if unit.team != "enemy" and unit.id != exception]
             # Remove enemies
             for unit in units_to_remove:
-                Action.do(Action.RemoveFromMap(unit), gameStateObj)
-                # unit.leave(gameStateObj)
-                # unit.remove_from_map(gameStateObj)
-                # unit.position = None
+                Action.do(Action.LeaveMap(unit), gameStateObj)
         elif line[0] == 'kill_all':
             call_out = line[1] if len(line) > 1 else None
             for unit in gameStateObj.allunits:
