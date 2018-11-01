@@ -49,6 +49,7 @@ class ActionLog(object):
     def finalize(self):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index + 1]
+        self.last_saved_action = min(self.last_saved_action, self.action_index)
         print("Remaining Actions:")
         print(self.actions)
 

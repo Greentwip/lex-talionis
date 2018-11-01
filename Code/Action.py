@@ -1,6 +1,5 @@
 # Actions
 # All permanent changes to game state are reified as actions.
-import inspect
 
 try:
     import GlobalConstants as GC
@@ -34,9 +33,8 @@ class Action(object):
 
     def serialize(self, gameStateObj):
         ser_dict = {}
-        for attr in inspect.getmembers(self):
-            if inspect.isfunction(attr):
-                continue
+        for attr in self.__dict__.items():
+            # print(attr)
             name, value = attr
             if isinstance(value, UnitObject.UnitObject):
                 value = ('Unit', value.id)
@@ -53,6 +51,7 @@ class Action(object):
             else:
                 value = ('Generic', value)
             ser_dict[name] = value
+        # print(ser_dict)
         return (self.__class__.__name__, ser_dict)
 
     @classmethod
