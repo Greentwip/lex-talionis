@@ -614,7 +614,7 @@ class MenuState(StateMachine.State):
                 # puts unit back - handles status
                 Action.reverse(cur_unit.current_move_action, gameStateObj)
                 cur_unit.current_move_action = None
-                cur_unit.reset()
+                # cur_unit.reset()
                 gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
                 gameStateObj.stateMachine.changeState('move')
 
@@ -2001,7 +2001,7 @@ class PhaseChangeState(StateMachine.State):
         logger.debug('Phase Start')
         # All units can now move and attack, etc.
         for unit in gameStateObj.allunits:
-            unit.reset()
+            Action.do(Action.Reset(unit), gameStateObj)
         gameStateObj.cursor.drawState = 0
         gameStateObj.activeMenu = None
         gameStateObj.phase.slide_in(gameStateObj)
@@ -2009,16 +2009,16 @@ class PhaseChangeState(StateMachine.State):
     def end(self, gameStateObj, metaDataObj):
         logger.debug('Phase End')
         Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
-        # If debug, save state at beginning of each turn
-        if cf.OPTIONS['debug']:
-            if gameStateObj.phase.get_current_phase() == 'player':
-                logger.debug("Saving as we enter player phase!")
-                name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount)
-                SaveLoad.suspendGame(gameStateObj, 'TurnChange ' + str(gameStateObj.turncount), hard_loc=name)
-            elif gameStateObj.phase.get_current_phase() == 'enemy':
-                logger.debug("Saving as we enter enemy phase!")
-                name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount) + 'b'
-                SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange ' + str(gameStateObj.turncount), hard_loc=name)
+        # Save state at beginning of each turn
+        if gameStateObj.phase.get_current_phase() == 'player':
+            logger.debug("Saving as we enter player phase!")
+            name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount)
+            SaveLoad.suspendGame(gameStateObj, 'TurnChange ' + str(gameStateObj.turncount), hard_loc=name)
+        elif gameStateObj.phase.get_current_phase() == 'enemy':
+            logger.debug("Saving as we enter enemy phase!")
+            name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount) + 'b'
+            SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange ' + str(gameStateObj.turncount), hard_loc=name)
+        gameStateObj.action_log.set_last_saved_action()
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)

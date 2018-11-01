@@ -776,14 +776,14 @@ class Dialogue_Scene(object):
                 unit.arrive(gameStateObj)
         elif line[0] == 'reset_units':
             for unit in gameStateObj.allunits:
-                unit.reset()
+                Action.do(Action.Reset(unit), gameStateObj)
         elif line[0] == 'reset_unit':
             if line[1] == '{unit}':
-                self.unit.reset()
+                Action.do(Action.Reset(self.unit), gameStateObj)
             else:
                 for unit in gameStateObj.allunits:
                     if line[1] in (unit.id, unit.event_id, unit.team):
-                        unit.reset()
+                        Action.do(Action.Reset(unit), gameStateObj)
         elif line[0] == 'remove_enemies':
             exception = line[1] if len(line) > 1 else None
             units_to_remove = [unit for unit in gameStateObj.allunits if unit.team != "enemy" and unit.id != exception]

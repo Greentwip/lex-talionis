@@ -120,22 +120,23 @@ class StatusObject(object):
 
 class TimeComponent(object):
     def __init__(self, time_left):
-        self.name = 'time'
         self.time_left = int(time_left)
         self.total_time = self.time_left
 
     def decrement(self):
         self.time_left -= 1
 
+    def increment(self):
+        self.time_left += 1
+        self.time_left = min(self.time_left, self.total_time)
+
 class UpkeepStatChangeComponent(object):
     def __init__(self, change_in_stats):
-        self.name = "UpkeepStatChange"
         self.stat_change = change_in_stats
         self.count = 0
 
 class RhythmStatChangeComponent(object):
     def __init__(self, change, reset, init_count, limit):
-        self.name = "RhythmStatChange"
         self.change = change
         self.count = init_count
         self.limit = limit
@@ -143,7 +144,6 @@ class RhythmStatChangeComponent(object):
 
 class HPPercentageComponent(object):
     def __init__(self, percentage):
-        self.name = "hppercentage"
         self.percentage = int(percentage)
 
 class ConditionalComponent(object):
@@ -157,7 +157,6 @@ class ConditionalComponent(object):
 
 class WeaknessComponent(object):
     def __init__(self, damage_type, num):
-        self.name = "weakness"
         self.damage_type = damage_type
         self.num = num
 
@@ -173,7 +172,6 @@ class CountComponent(object):
 
 class UpkeepAnimationComponent(object):
     def __init__(self, animation_name, x, y, num_frames):
-        self.name = "upkeep_animation"
         self.animation_name = animation_name
         self.x = int(x)
         self.y = int(y)
@@ -187,7 +185,6 @@ class UpkeepAnimationComponent(object):
 
 class AlwaysAnimationComponent(object):
     def __init__(self, animation_name, x, y, num_frames):
-        self.name = "alwaysanimation"
         self.animation_name = animation_name
         self.x = int(x)
         self.y = int(y)
@@ -281,7 +278,7 @@ class Status_Processor(object):
                     output = HandleStatusEndStep(self.current_status, self.current_unit, gameStateObj)
 
                 if output == "Remove": # Returns "Remove" if status has run out of time and should just be removed
-                    HandleStatusRemoval(self.current_status, self.current_unit, gameStateObj)
+                    Action.do(Action.RemoveStatus(self.current_unit, self.current_status), gameStateObj)
                     self.state.changeState('new_status')
                 else:
                     self.oldhp = output[0]
@@ -344,12 +341,12 @@ class Status_Processor(object):
 
 def check_automatic(status, unit, gameStateObj):
     if status.automatic and status.automatic.check_charged():
-        Action.do(Action.AutomaticSkillCharged(status, unit), gameStateObj)
+        Action.do(Action.FinalizeAutomaticSkill(status, unit), gameStateObj)
         
 def HandleStatusUpkeep(status, unit, gameStateObj):
     oldhp = unit.currenthp
     if status.time:
-        status.time.decrement()
+        Action.do(Action.DecrementStatusTime(status))
         logger.info('Time Status %s to %s at %s. Time left: %s', status.id, unit.name, unit.position, status.time.time_left)
         if status.time.time_left <= 0:
             return "Remove" # Don't process. Status has no more effect on unit
@@ -362,23 +359,21 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
     if status.hp_percentage:
         hp_change = int(int(unit.stats['HP']) * status.hp_percentage.percentage/100.0)
         old_hp = unit.currenthp
-        unit.change_hp(hp_change)
-        # unit.currenthp += hp_change
-        # unit.currenthp = Utility.clamp(unit.currenthp, 0, unit.stats['HP'])
+        Action.do(Action.ChangeHP(unit, hp_change), gameStateObj)
         if unit.currenthp > old_hp:
             GC.SOUNDDICT['heal'].play()
 
     if status.upkeep_stat_change:
-        unit.apply_stat_change(status.upkeep_stat_change.stat_change)
-        status.upkeep_stat_change.count += 1
+        Action.do(Action.ApplyStatChange(unit, status.upkeep_stat_change.stat_change))
+        Action.do(Action.ChangeStatusCount(status.upkeep_stat_change, status.upkeep_stat_change.count + 1))
 
     if status.rhythm_stat_change:
-        status.rhythm_stat_change.count += 1
+        Action.do(Action.ChangeStatusCount(status.rhythm_stat_change, status.rhythm_stat_change.count + 1))
         if status.rhythm_stat_change.count > status.rhythm_stat_change.limit:
-            status.rhythm_stat_change.count = 0
-            unit.apply_stat_change(status.rhythm_stat_change.reset)
+            Action.do(Action.ChangeStatusCount(status.rhythm_stat_change, 0))
+            Action.do(Action.ApplyStatChange(unit, status.rhythm_stat_change.reset))
         else:
-            unit.apply_stat_change(status.rhythm_stat_change.change)
+            Action.do(Action.ApplyStatChange(unit, status.rhythm_stat_change.change))
 
     check_automatic(status, unit, gameStateObj)
 
@@ -396,38 +391,31 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
             if unit.position:
                 gameStateObj.boundary_manager._add_unit(unit, gameStateObj)
 
-    unit.change_hp(0)  # Just check bounds
-    # if unit.currenthp > int(unit.stats['HP']):
-    #     unit.currenthp = int(unit.stats['HP'])
-    if unit.movement_left > int(unit.stats['MOV']):
-        unit.movement_left = max(0, int(unit.stats['MOV']))
+    # unit.change_hp(0)  # Just check bounds
+    # # if unit.currenthp > int(unit.stats['HP']):
+    # #     unit.currenthp = int(unit.stats['HP'])
+    # if unit.movement_left > int(unit.stats['MOV']):
+    #     unit.movement_left = max(0, int(unit.stats['MOV']))
 
     return oldhp, unit.currenthp 
 
 def HandleStatusEndStep(status, unit, gameStateObj):
     oldhp = unit.currenthp
-    """
-    # Increases skill charge on endstep
-    if status.active and status.active.current_charge < status.active.required_charge:
-        status.active.current_charge += unit.stats['SKL']
-        if status.active.current_charge >= status.active.required_charge:
-            status.active.current_charge = status.active.required_charge
-            # TODO Display Animation
-    """
+
     if status.endstep_stat_change:
-        unit.apply_stat_change(status.endstep_stat_change.stat_change)
-        status.endstep_stat_change.count += 1
+        Action.do(Action.ApplyStatChange(unit, status.endstep_stat_change.stat_change))
+        Action.do(Action.ChangeStatusCount(status.endstep_stat_change, status.endstep_stat_change.count + 1))
 
     if status.endstep_rhythm_stat_change:
-        status.endstep_rhythm_stat_change.count += 1
+        Action.do(Action.ChangeStatusCount(status.endstep_rhythm_stat_change, status.endstep_rhythm_stat_change.count + 1))
         if status.endstep_rhythm_stat_change.count > status.endstep_rhythm_stat_change.limit:
-            status.endstep_rhythm_stat_change.count = 0
-            unit.apply_stat_change(status.endstep_rhythm_stat_change.reset)
+            Action.do(Action.ChangeStatusCount(status.endstep_rhythm_stat_change, 0))
+            Action.do(Action.ApplyStatChange(unit, status.endstep_rhythm_stat_change.reset))
         else:
-            unit.apply_stat_change(status.endstep_rhythm_stat_change.change)
+            Action.do(Action.ApplyStatChange(unit, status.endstep_rhythm_stat_change.change))
 
     if status.lost_on_endstep:
-        HandleStatusRemoval(status, unit, gameStateObj)
+        Action.do(Action.RemoveStatus(status, unit), gameStateObj)
 
     return oldhp, unit.currenthp
 
@@ -461,6 +449,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     # --- Momentary status ---
     # Momentary status do need to be worked with Actions
+    # Since they can't be obviously reversed otherwise
     if status.convert:
         status.original_team = unit.team
         p_unit = gameStateObj.get_unit_from_id(status.parent_id)
@@ -468,7 +457,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         # unit.changeTeams(p_unit.team, gameStateObj)
 
     if status.refresh:
-        Action.do(Action.Refresh(unit), gameStateObj)
+        Action.do(Action.Reset(unit), gameStateObj)
         # Automatic skills can also show up after being refreshed
         for status in unit.status_effects:
             check_automatic(status, unit, gameStateObj)
@@ -476,13 +465,12 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
     if status.skill_restore:
         activated_skills = [s for s in unit.status_effects if s.active]
         for activated_skill in activated_skills:
-            activated_skill.active.current_charge = activated_skill.active.required_charge
-            unit.tags.add('ActiveSkillCharged')
+            Action.do(Action.ChargeActiveSkill(activated_skill, unit, activated_skill.active.required_charge))
 
     if status.clear:
         for status in unit.status_effects:
             if status.time:
-                HandleStatusRemoval(status, unit, gameStateObj)
+                Action.do(Action.RemoveStatus(status, unit), gameStateObj)
 
     # --- Non-momentary status ---
     if status.stat_change:
@@ -517,16 +505,17 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         # Re-arrive at where you are at so you can give your friendos their status
         unit.propagate_aura(status.aura, gameStateObj)
 
+    # These can't be easily reversed
     # when you gain shrugg off, lower negative status ailments to 0
     if status.shrug_off:
         for status in unit.status_effects:
             if status.time and status.negative and status.time.time_left > 1:
-                status.time.time_left = 1
+                Action.do(Action.ShrugOff(status), gameStateObj)
 
     # If you have shrug off, lower this ailment, if temporary, to 0
     if 'shrug_off' in unit.status_bundle:
         if status.time and status.time > 1:
-            status.time.time_left = 1
+            Action.do(Action.ShrugOff(status), gameStateObj)
 
     if status.affects_movement:
         if unit.team.startswith('enemy'):

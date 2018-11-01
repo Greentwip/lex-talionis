@@ -149,6 +149,11 @@ class GameStateObj(object):
         self.unlocked_lore = load_info['unlocked_lore']
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
+        # Action log
+        if 'action_log' in load_info:
+            self.action_log = Turnwheel.ActionLog.deserialize(load_info['action_log'], self)
+        else:
+            self.action_log = Turnwheel.ActionLog()
 
         # Map
         self.map = SaveLoad.create_map('Data/Level' + str(self.game_constants['level']))
@@ -356,6 +361,7 @@ class GameStateObj(object):
                    'objective': self.objective.serialize() if self.objective else None,
                    'phase_music': self.phase_music.serialize() if self.phase_music else None,
                    'support': self.support.serialize() if self.support else None,
+                   'action_log': self.action_log.serialize(),
                    'game_constants': self.game_constants,
                    'level_constants': self.level_constants,
                    'unlocked_lore': self.unlocked_lore,

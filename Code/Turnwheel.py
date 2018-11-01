@@ -12,6 +12,7 @@ class ActionLog(object):
     def __init__(self):
         self.actions = []
         self.action_index = -1  # Means no actions
+        self.last_saved_action = -1
 
     def append(self, action):
         print("Add Action: %s" % action)
@@ -57,6 +58,20 @@ class ActionLog(object):
                 if action.unit == unit:
                     return action.old_pos
         return unit.position
+
+    def set_last_saved_action(self):
+        self.last_saved_action = self.action_index
+
+    def serialize(self, gameStateObj):
+        return [action.serialize(gameStateObj) for action in self.actions]
+
+    @classmethod
+    def deserialize(cls, actions, gameStateObj):
+        self = cls()
+        for name, action in actions:
+            self.append(getattr(Action, name).deserialize(action, gameStateObj))
+        self.set_last_saved_action()
+        return self
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):

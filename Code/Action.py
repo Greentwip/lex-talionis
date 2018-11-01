@@ -1,16 +1,17 @@
 # Actions
 # All permanent changes to game state are reified as actions.
+import inspect
 
 try:
     import GlobalConstants as GC
     import configuration as cf
     import StatusObject, Banner, LevelUp
-    import Utility
+    import Utility, ItemMethods, UnitObject
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import StatusObject, Banner, LevelUp
-    from . import Utility
+    from . import Utility, ItemMethods, UnitObject
 
 class Action(object):
     def __init__(self):
@@ -30,6 +31,46 @@ class Action(object):
 
     def update(self, gameStateObj):
         pass
+
+    def serialize(self, gameStateObj):
+        ser_dict = {}
+        for attr in inspect.getmembers(self):
+            if inspect.isfunction(attr):
+                continue
+            name, value = attr
+            if isinstance(value, UnitObject.UnitObject):
+                value = ('Unit', value.id)
+            elif isinstance(value, ItemMethods.ItemObject):
+                for unit in gameStateObj.allunits:
+                    if value in unit.items:
+                        value = ('Item', unit.id, unit.items.index(value))
+                        break
+                else:
+                    if value in gameStateObj.convoy:
+                        value = ('ConvoyItem', gameStateObj.convoy.index(value))
+                    else:
+                        value = ('UniqueItem', value.serialize())
+            else:
+                value = ('Generic', value)
+            ser_dict[name] = value
+        return (self.__class__.__name__, ser_dict)
+
+    @classmethod
+    def deserialize(cls, ser_dict, gameStateObj):
+        self = cls.__new__(cls)
+        for name, value in ser_dict.items():
+            if value[0] == 'Unit':
+                setattr(self, name, gameStateObj.get_unit_from_id(value[1]))
+            elif value[0] == 'Item':
+                unit = gameStateObj.get_unit_from_id(value[1])
+                setattr(self, name, unit.items[value[2]])
+            elif value[0] == 'ConvoyItem':
+                setattr(self, name, gameStateObj.convoy[value[1]])
+            elif value[0] == 'UniqueItem':
+                setattr(self, name, ItemMethods.deserialize(value[1]))
+            else:
+                setattr(self, name, value[1])
+        return self
 
 class Move(Action):
     """
@@ -72,6 +113,7 @@ class Move(Action):
         self.unit.movement_left = self.prev_movement_left
         self.unit.hasMoved = self.hasMoved
         self.unit.position = self.old_pos
+        self.unit.path = []
         self.unit.arrive(gameStateObj)
 
 class Teleport(Action):
@@ -152,10 +194,10 @@ class LeaveMap(Action):
 class Wait(Action):
     def __init__(self, unit):
         self.unit = unit
-        self.hasMoved = self.unit.hasMoved
-        self.hasTraded = self.unit.hasTraded
-        self.hasAttacked = self.unit.hasAttacked
-        self.finished = self.unit.finished
+        self.hasMoved = unit.hasMoved
+        self.hasTraded = unit.hasTraded
+        self.hasAttacked = unit.hasAttacked
+        self.finished = unit.finished
 
     def do(self, gameStateObj):
         self.unit.hasMoved = True
@@ -169,16 +211,16 @@ class Wait(Action):
         self.unit.hasAttacked = self.hasAttacked
         self.unit.finished = self.finished
 
-class Refresh(Action):
+class Reset(Action):
     def __init__(self, unit):
         self.unit = unit
-        self.hasMoved = self.unit.hasMoved
-        self.hasTraded = self.unit.hasTraded
-        self.hasAttacked = self.unit.hasAttacked
-        self.finished = self.unit.finished
-        self.hasRunMoveAI = self.unit.hasRunMoveAI
-        self.hasRunAttackAI = self.unit.hasRunAttackAI
-        self.hasRunGeneralAI = self.unit.hasRunGeneralAI
+        self.hasMoved = unit.hasMoved
+        self.hasTraded = unit.hasTraded
+        self.hasAttacked = unit.hasAttacked
+        self.finished = unit.finished
+        self.hasRunMoveAI = unit.hasRunMoveAI
+        self.hasRunAttackAI = unit.hasRunAttackAI
+        self.hasRunGeneralAI = unit.hasRunGeneralAI
 
     def do(self, gameStateObj):
         self.unit.reset()
@@ -645,43 +687,29 @@ class Resurrect(Action):
     def reverse(self, gameStateObj):
         self.unit.dead = True
 
-class ApplyStatus(Action):
-    def __init__(self, unit, status_obj):
-        self.unit = unit
-        self.status_obj = status_obj
-        self.actually_added = True
-
-    def do(self, gameStateObj):
-        if not StatusObject.HandleStatusAddition(self.status_obj, self.unit, gameStateObj):
-            self.actually_added = False
-
-    def reverse(self, gameStateObj):
-        if self.actually_added:
-            StatusObject.HandleStatusRemoval(self.status_obj, self.unit, gameStateObj)
-
-class RemoveStatus(Action):
-    pass
-
 # === GENERAL ACTIONS =========================================================
 class ChangeTeam(Action):
     def __init__(self, unit, new_team):
         self.unit = unit
         self.new_team = new_team
         self.old_team = self.unit.team
+        self.reset_action = Reset(self.unit)
 
     def _change_team(self, team, gameStateObj):
         self.unit.leave(gameStateObj)
         self.unit.team = team
         gameStateObj.boundary_manager.reset_unit(self.unit)
         self.unit.loadSprites()
-        self.unit.reset()
-        self.unit.arrive(gameStateObj)
 
     def do(self, gameStateObj):
         self._change_team(self.new_team, gameStateObj)
+        self.reset_action.do(gameStateObj)
+        self.unit.arrive(gameStateObj)
         
     def reverse(self, gameStateObj):
         self._change_team(self.old_team, gameStateObj)
+        self.reset_action.reverse(gameStateObj)
+        self.unit.arrive(gameStateObj)
 
 class ChangeAI(Action):
     def __init__(self, unit, new_ai):
@@ -859,7 +887,89 @@ class InteractionCleanup(Action):
 class UpdateAttackStatistics(Action):
     pass
 
-class AutomaticSkillCharged(Action):
+# === SKILL AND STATUS ACTIONS ===================================================
+class ApplyStatus(Action):
+    def __init__(self, unit, status_obj):
+        self.unit = unit
+        self.status_obj = status_obj
+        self.actually_added = True
+
+    def do(self, gameStateObj):
+        if not StatusObject.HandleStatusAddition(self.status_obj, self.unit, gameStateObj):
+            self.actually_added = False
+
+    def reverse(self, gameStateObj):
+        if self.actually_added:
+            StatusObject.HandleStatusRemoval(self.status_obj, self.unit, gameStateObj)
+
+class RemoveStatus(Action):
+    def __init__(self, unit, status_obj):
+        self.unit = unit
+        self.status_obj = status_obj
+        # Do we have to worry about time?
+        # Or is it automatically taken care of
+
+    def do(self, gameStateObj):
+        StatusObject.HandleStatusRemoval(self.status_obj, self.unit, gameStateObj)
+
+    def reverse(self, gameStateObj):
+        StatusObject.HandleStatusAddition(self.status_obj, self.unit, gameStateObj)
+
+class ApplyStatChange(Action):
+    def __init__(self, unit, stat_change):
+        self.unit = unit
+        self.stat_change = stat_change
+        self.movement_left = self.unit.movement_left
+        self.currenthp = self.unit.currenthp
+
+    def do(self, gameStateObj=None):
+        self.unit.apply_stat_change(self.stat_change)
+
+    def reverse(self, gameStateObj=None):
+        self.unit.apply_stat_change([-i for i in self.stat_change])
+        self.unit.movement_left = self.movement_left
+        self.unit.set_hp(self.currenthp)
+
+class ChangeStatusCount(Action):
+    def __init__(self, status, new_count):
+        self.status = status
+        self.old_count = status.count
+        self.new_count = new_count
+
+    def do(self, gameStateObj=None):
+        self.status.count = self.new_count
+
+    def reverse(self, gameStateObj=None):
+        self.status.count = self.old_count
+
+class DecrementStatusTime(Action):
+    def __init__(self, status):
+        self.status = status
+
+    def do(self, gameStateObj=None):
+        self.status.time.decrement()
+
+    def reverse(self, gameStateObj=None):
+        self.status.time.increment()
+
+class ChargeActiveSkill(Action):
+    def __init__(self, status, unit, new_charge):
+        self.status = status
+        self.unit = unit
+        self.current_charge = status.active.current_charge
+        self.new_charge = new_charge
+
+    def do(self, gameStateObj):
+        self.status.active.current_charge = self.new_charge
+        if self.status.active.current_charge >= self.status.active.required_charge:
+            self.unit.tags.add('ActiveSkillCharged')
+
+    def reverse(self, gameStateObj):        
+        self.status.active.current_charge = self.current_charge
+        if self.status.active.current_charge < self.status.active.required_charge:
+            self.unit.tags.discard('ActiveSkillCharged')
+
+class FinalizeAutomaticSkill(Action):
     def __init__(self, status, unit):
         self.status = status
         self.unit = unit
@@ -873,6 +983,17 @@ class AutomaticSkillCharged(Action):
     def reverse(self, gameStateObj):
         StatusObject.HandleStatusRemoval(self.s, self.unit, gameStateObj)
         self.status.automatic.current_charge = self.current_charge
+
+class ShrugOff(Action):
+    def __init__(self, status):
+        self.status = status
+        self.old_time = self.status.time.time_left
+
+    def do(self, gameStateObj=None):
+        self.status.time.time_left = 1
+
+    def reverse(self, gameStateObj=None):
+        self.status.time.time_left = self.old_time
 
 # === Master Functions for adding to action log ===
 def do(action, gameStateObj):
