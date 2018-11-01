@@ -571,18 +571,24 @@ class MapObject(object):
         self.weather = [weather for weather in self.weather if weather.name != name]
 
     def add_global_status(self, s_id, gameStateObj=None):
-        self.status_effects.add(s_id)
+        if any(status.id == s_id for status in self.status_effects):
+            return  # No stacking at all of global statuses
+        status_obj = StatusObject.statusparser(s_id)
+        self.status_effects.add(status_obj)
         if gameStateObj:
             for unit in gameStateObj.allunits:
                 if unit.position:
-                    StatusObject.HandleStatusAddition(s_id, unit, gameStateObj)
+                    StatusObject.HandleStatusAddition(status_obj, unit, gameStateObj)
 
     def remove_global_status(self, s_id, gameStateObj=None):
-        self.status_effects.discard(s_id)
+        if not any(status.id == s_id for status in self.status_effects):
+            return  # Must have the right status to remove
+        status_obj = [status for status in self.status_effects if status.id == s_id][0]
+        self.status_effects.discard(status_obj)
         if gameStateObj:
             for unit in gameStateObj.allunits:
                 if unit.position:
-                    StatusObject.HandleStatusRemoval(s_id, unit, gameStateObj)
+                    StatusObject.HandleStatusRemoval(status_obj, unit, gameStateObj)
 
     def create_display(self, coord, gameStateObj):
         if coord in self.hp:

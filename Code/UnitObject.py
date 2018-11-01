@@ -620,14 +620,14 @@ class UnitObject(object):
     def remove_from_map(self, gameStateObj):
         if self.position:
             logger.debug('Remove %s %s %s', self, self.name, self.position)
-            for s_id in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusRemoval(s_id, self, gameStateObj)
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusRemoval(status, self, gameStateObj)
 
     def place_on_map(self, gameStateObj):
         if self.position:
             logger.debug('Place %s %s %s', self, self.name, self.position)
-            for s_id in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusAddition(s_id, self, gameStateObj)
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusAddition(status, self, gameStateObj)
 
     # Pathfinding algorithm
     def getPath(self, gameStateObj, goalPosition, ally_block=False):
