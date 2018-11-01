@@ -270,7 +270,7 @@
         <id>Iron Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight,effective</components>
+        <components>weapon,uses,weight</components>
         <weapontype>Lance</weapontype>
  
         <uses>45</uses>
@@ -282,7 +282,6 @@
 		<MT>5</MT>
 		<HIT>80</HIT>
 		<LVL>D</LVL>
-        <effective>Armor;7</effective>
     </item>
 
     <item name="Steel Lance">
