@@ -4,12 +4,12 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import StatusObject, Banner, LevelUp
+    import StatusObject, Banner, LevelUp, Weapons
     import Utility, ItemMethods, UnitObject
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import StatusObject, Banner, LevelUp
+    from . import StatusObject, Banner, LevelUp, Weapons
     from . import Utility, ItemMethods, UnitObject
 
 class Action(object):
@@ -48,6 +48,13 @@ class Action(object):
                         value = ('ConvoyItem', gameStateObj.convoy.index(value))
                     else:
                         value = ('UniqueItem', value.serialize())
+            elif isinstance(value, StatusObject.StatusObject):
+                for unit in gameStateObj.allunits:
+                    if value in unit.status_effects:
+                        value = ('Status', unit.id, unit.status_effects.index(value))
+                        break
+                else:
+                    value = ('UniqueStatus', value.serialize())
             else:
                 value = ('Generic', value)
             ser_dict[name] = value
@@ -67,6 +74,11 @@ class Action(object):
                 setattr(self, name, gameStateObj.convoy[value[1]])
             elif value[0] == 'UniqueItem':
                 setattr(self, name, ItemMethods.deserialize(value[1]))
+            elif value[0] == 'Status':
+                unit = gameStateObj.get_unit_from_id(value[1])
+                setattr(self, name, unit.status_effects[value[2]])
+            elif value[0] == 'UniqueStatus':
+                setattr(self, name, StatusObject.deserialize(value[1]))
             else:
                 setattr(self, name, value[1])
         return self
@@ -500,21 +512,22 @@ class UseItem(Action):
             self.item.c_uses.increment()
 
 class GainExp(Action):
-    def __init__(self, unit, exp):
+    def __init__(self, unit, exp, in_combat=None):
         self.unit = unit
         self.exp_amount = exp
         self.old_exp = self.unit.exp
+        self.old_level = self.unit.level
         self.current_stats = self.stats.items()
 
-        self.promoted_to = None
+        self.promoted_to = None  # Determined on reverse
         self.current_class = self.unit.klass
 
         self.current_skills = [s.id for s in self.unit.status_effects]
         self.added_skills = []  # Determined on reverse
 
-        self.old_level = self.unit.level
+        self.in_combat = in_combat
 
-    def forward_class_change(self, gameStateObj, promote=True):
+    def _forward_class_change(self, gameStateObj, promote=True):
         old_klass = gameStateObj.metaDataObj['class_dict'][self.current_class]
         new_klass = gameStateObj.metaDataObj['class_dict'][self.promoted_to]
         self.unit.leave(gameStateObj)
@@ -523,6 +536,7 @@ class GainExp(Action):
         self.unit.loadSprites()
         if promote:
             self.unit.level = 1
+            self.unit.exp = 0
             self.levelup_list = new_klass['promotion']
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_klass['max'][index] - self.current_stats[index][1].base_stat)
@@ -536,7 +550,7 @@ class GainExp(Action):
             self.unit.tags |= new_klass['tags']
         self.unit.arrive(gameStateObj)
 
-    def reverse_class_change(self, gameStateObj, promote=True):
+    def _reverse_class_change(self, gameStateObj, promote=True):
         old_klass = gameStateObj.metaDataObj['class_dict'][self.current_class]
         new_klass = gameStateObj.metaDataObj['class_dict'][self.promoted_to]
         self.unit.leave(gameStateObj)
@@ -545,6 +559,7 @@ class GainExp(Action):
         self.unit.loadSprites()
         if promote:
             self.unit.level = self.old_level
+            self.unit.exp = self.old_exp
             self.unit.apply_levelup([-x for x in self.levelup_list])
             self.unit.increase_wexp([-x for x in new_klass['wexp_gain']], gameStateObj, banner=False)
         self.unit.movement_group = old_klass['movement_group']
@@ -555,9 +570,23 @@ class GainExp(Action):
             self.unit.tags |= old_klass['tags']
         self.unit.arrive(gameStateObj)
 
+    def _add_skills(self, gameStateObj):
+        # If we don't already have this skill
+        for s_id in self.added_skills:
+            skill = StatusObject.statusparser(s_id)
+            if skill.stack or skill.id not in (s.id for s in self.unit.status_effects):
+                StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
+
+    def _remove_skills(self, added_skills, gameStateObj):
+        # If we don't already have this skill
+        for skill in added_skills:
+            StatusObject.HandleStatusRemoval(skill, self.unit, gameStateObj)
+            self.added_skills.append(skill.id)
+
     def do(self, gameStateObj):
-        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.unit, exp=self.exp_amount))
+        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.unit, exp=self.exp_amount, in_combat=self.in_combat))
         gameStateObj.stateMachine.changeState('expgain')
+        self.in_combat = None  # Don't need this anymore
 
     def execute(self, gameStateObj):
         if self.exp_amount + self.unit.exp >= 100:
@@ -566,38 +595,100 @@ class GainExp(Action):
             # Level Up
             if self.unit.level >= max_level:
                 if cf.CONSTANTS['auto_promote'] and klass_dict['turns_into']: # If has at least one class to turn into
-                    self.forward_class_change(gameStateObj, True)
+                    self._forward_class_change(gameStateObj, True)
                 else:
                     self.unit.exp = 99
             else:
                 self.unit.exp = (self.unit.exp + self.exp_amount)%100
                 self.unit.level += 1
                 self.unit.apply_levelup(self.levelup_list)
-                # If we don't already have this skill
-                for skill in self.added_skills:
-                    if skill.stack or skill.id not in (s.id for s in self.unit.status_effects):
-                        StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
-
+            self._add_skills(gameStateObj)    
         else:
             self.unit.exp += self.exp_amount
 
     def reverse(self, gameStateObj):
+        self.promoted_to = self.unit.klass
+        added_skills = [skill for skill in self.unit.status_effects if skill.id not in self.current_skills]
         if self.unit.exp < self.exp_amount: # Leveled up
             klass_dict = gameStateObj.metaDataObj['class_dict'][self.current_class]
             max_level = Utility.find_max_level(klass_dict['tier'], cf.CONSTANTS['max_level'])
             if self.unit.level == 1:  # Promoted here
-                self.reverse_class_change(gameStateObj, True)
+                self._reverse_class_change(gameStateObj, True)
             elif self.unit.level >= max_level and self.unit.exp >= 99:
                 self.unit.exp = self.unit.old_exp
             else:
                 self.unit.exp = 100 - self.exp_amount + self.unit.exp
                 self.unit.level -= 1
                 self.unit.apply_levelup([-x for x in self.levelup_list])
-                # If we don't already have this skill
-                for skill in self.added_skills:
-                    StatusObject.HandleStatusRemoval(skill, self.unit, gameStateObj)
+            self._remove_skills(added_skills, gameStateObj)
         else:
             self.unit.exp -= self.exp_amount
+
+class Promote(GainExp):
+    def __init__(self, unit):
+        self.unit = unit
+
+        self.old_exp = self.unit.exp
+        self.old_level = self.unit.level
+
+        self.promoted_to = None
+        self.current_class = self.unit.klass
+
+        self.current_skills = [s.id for s in self.unit.status_effects]
+        self.added_skills = []  # Determined on reverse
+
+    def do(self, gameStateObj):
+        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.unit, exp=0, force_promote=True))
+        gameStateObj.stateMachine.changeState('expgain')
+
+    def execute(self, gameStateObj):
+        self._forward_class_change(gameStateObj, True)
+        self._add_skills(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.promoted_to = self.unit.klass
+        added_skills = [skill for skill in self.unit.status_effects if skill.id not in self.current_skills]
+        self._reverse_class_change(gameStateObj, True)
+        self._remove_skills(added_skills, gameStateObj)
+
+class PermanentStatIncrease(Action):
+    def __init__(self, unit, stat_increase):
+        self.unit = unit
+        self.current_stats = [stat.base_stat for stat in self.unit.stats.values()]
+        self.stat_increase = stat_increase
+
+    def do(self, gameStateObj):
+        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.unit, exp=0, force_level=self.stat_increase))
+        gameStateObj.stateMachine.changeState('expgain')
+
+    def execute(self, gameStateObj):
+        klass = gameStateObj.metaDataObj['class_dict'][self.unit.klass]
+        for index, stat in enumerate(self.stat_increase):
+            self.stat_increase[index] = min(stat, klass['max'][index] - self.current_stats[index])
+        self.unit.apply_levelup(self.stat_increase, True)
+
+    def reverse(self, gameStateObj):
+        for idx, stat in enumerate(self.unit.stats.values()):
+            stat.base_stat = self.current_stats[idx]
+
+class GainWexp(Action):
+    def __init__(self, unit, item):
+        self.unit = unit
+        self.item = item
+
+    def do(self, gameStateObj):
+        self.unit.increase_wexp(self.item, gameStateObj)
+
+    def execute(self, gameStateObj):
+        self.unit.increase_wexp(self.item, gameStateObj, banner=False)
+
+    def reverse(self, gameStateObj):
+        if isinstance(self.item, list):
+            self.unit.increase_wexp([-x for x in self.item], gameStateObj, banner=False)
+        else:
+            change = -self.item.wexp if self.item.wexp else -1
+            if self.item.TYPE in Weapons.TRIANGLE.name_to_index:
+                self.unit.wexp[Weapons.TRIANGLE.name_to_index[self.item.TYPE]] += change
 
 class ChangeHP(Action):
     def __init__(self, unit, num):
@@ -605,10 +696,10 @@ class ChangeHP(Action):
         self.num = num
         self.old_hp = self.unit.currenthp
 
-    def do(self, gameStateObj):
+    def do(self, gameStateObj=None):
         self.unit.change_hp(self.num)
 
-    def reverse(self, gameStateObj):
+    def reverse(self, gameStateObj=None):
         self.unit.set_hp(self.old_hp)
 
 class Miracle(Action):
@@ -883,8 +974,20 @@ class HasTraded(Action):
 class InteractionCleanup(Action):
     pass
 
-class UpdateAttackStatistics(Action):
-    pass
+class UpdateUnitRecords(Action):
+    def __init__(self, unit, record):
+        self.unit = unit
+        self.record = record  # damage, healing, kills
+
+    def do(self, gameStateObj=None):
+        self.unit.records['damage'] += self.record[0]
+        self.unit.records['healing'] += self.record[1]
+        self.unit.records['kills'] += self.record[2]
+
+    def reverse(self, gameStateObj=None):
+        self.unit.records['damage'] -= self.record[0]
+        self.unit.records['healing'] -= self.record[1]
+        self.unit.records['kills'] -= self.record[2]
 
 # === SKILL AND STATUS ACTIONS ===================================================
 class ApplyStatus(Action):
@@ -951,22 +1054,47 @@ class DecrementStatusTime(Action):
     def reverse(self, gameStateObj=None):
         self.status.time.increment()
 
-class ChargeActiveSkill(Action):
-    def __init__(self, status, unit, new_charge):
-        self.status = status
+class ChargeAllSkills(Action):
+    def __init__(self, unit, new_charge):
         self.unit = unit
-        self.current_charge = status.active.current_charge
+        self.old_charge = []
+        for status in self.unit.status_effects:
+            if status.active:
+                self.old_charge.append(status.active.current_charge)
+            elif status.automatic:
+                self.old_charge.append(status.automatic.current_charge)
+            else:
+                self.old_charge.append(0)
         self.new_charge = new_charge
 
-    def do(self, gameStateObj):
-        self.status.active.current_charge = self.new_charge
-        if self.status.active.current_charge >= self.status.active.required_charge:
-            self.unit.tags.add('ActiveSkillCharged')
+    def do(self, gameStateObj=None):
+        for status in self.unit.status_effects:
+            if status.active:
+                status.active.increase_charge(self.new_charge)
+            elif status.automatic:
+                status.active.increase_charge(self.new_charge)
 
-    def reverse(self, gameStateObj):        
-        self.status.active.current_charge = self.current_charge
-        if self.status.active.current_charge < self.status.active.required_charge:
+    def reverse(self, gameStateObj=None):
+        for idx, status in enumerate(self.unit.status_effects):
+            if status.active:
+                status.active.current_charge = self.old_charge[idx]
+            elif status.automatic:
+                status.automatic.current_charge = self.old_charge[idx]
+
+class FinalizeActiveSkill(Action):
+    def __init__(self, status, unit):
+        self.status = status
+        self.unit = unit
+        self.old_charge = self.status.active.current_charge
+
+    def do(self, gameStateObj):
+        self.status.active.current_charge = 0
+        # If no other active skills, can remove active skill charged
+        if not any(skill.active and skill.active.required_charge > 0 and 
+                   skill.active.current_charge >= skill.active.required_charge for skill in self.unit.status_effects):
             self.unit.tags.discard('ActiveSkillCharged')
+        if self.status.active.mode == 'Attack':
+            self.status.active.reverse_mod()
 
 class FinalizeAutomaticSkill(Action):
     def __init__(self, status, unit):

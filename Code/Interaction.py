@@ -5,14 +5,14 @@ try:
     import configuration as cf
     import static_random
     import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
-    import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
+    import StatusObject, SaveLoad, Utility, Dialogue, Engine, Image_Modification
     import MenuFunctions, GUIObjects, Weapons, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
-    from . import StatusObject, LevelUp, SaveLoad, Utility, Dialogue, Engine, Image_Modification
+    from . import StatusObject, SaveLoad, Utility, Dialogue, Engine, Image_Modification
     from . import MenuFunctions, GUIObjects, Weapons, Action
 
 import logging
@@ -517,11 +517,9 @@ class Combat(object):
         for status_obj in result.def_status:
             status_obj.parent_id = result.attacker.id
             Action.do(Action.ApplyStatus(result.defender, status_obj), gameStateObj)
-            # StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
         for status_obj in result.atk_status:
             status_obj.parent_id = result.defender.id
             Action.do(Action.ApplyStatus(result.attacker, status_obj), gameStateObj)
-            # StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP
@@ -541,10 +539,8 @@ class Combat(object):
     def remove_broken_items(self, a_broke_item, d_broke_item, gameStateObj):
         if a_broke_item:
             Action.do(Action.RemoveItem(self.p1, self.item), gameStateObj)
-            # self.p1.remove_item(self.item)
         if d_broke_item:
             Action.do(Action.RemoveItem(self.p2, self.p2.getMainWeapon()), gameStateObj)
-            # self.p2.remove_item(self.p2.getMainWeapon())
 
     def summon_broken_item_banner(self, a_broke_item, d_broke_item, gameStateObj):
         if a_broke_item and self.p1.team == 'player' and not self.p1.isDying:
@@ -559,9 +555,11 @@ class Combat(object):
         other_unit_klass = gameStateObj.metaDataObj['class_dict'][other_unit.klass]
         exp_multiplier = p1_klass['exp_multiplier']*other_unit_klass['exp_when_attacked']
 
+        damage, healing, kills = 0, 0, 0
+
         damage_done = sum([result.def_damage_done for result in applicable_results])
         if not self.item.heal:
-            self.p1.records['damage'] += damage_done
+            damage += damage_done
 
         if self.item.exp:
             normal_exp = int(self.item.exp)
@@ -571,7 +569,7 @@ class Combat(object):
         elif self.item.spell:
             if self.item.heal:
                 # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
-                self.p1.records['healing'] += damage_done
+                healing += damage_done
                 normal_exp = max(5, int(p1_klass['exp_multiplier']*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_comparison_level(gameStateObj.metaDataObj)) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
                 normal_exp = int(p1_klass['exp_multiplier']*cf.CONSTANTS['status_exp'])
@@ -579,30 +577,32 @@ class Combat(object):
             normal_exp = 0
             
         if other_unit.isDying:
-            self.p1.records['kills'] += 1
+            kills += 1
             my_exp += int(cf.CONSTANTS['kill_multiplier']*normal_exp) + (cf.CONSTANTS['boss_bonus'] if 'Boss' in other_unit.tags else 0)
         else:
             my_exp += normal_exp
         if 'no_exp' in other_unit.status_bundle:
             my_exp = 0
         logger.debug('Attacker gained %s exp', my_exp)
-        return my_exp
+        return my_exp, (damage, healing, kills)
 
     def calc_init_exp_p2(self, defender_results, gameStateObj):
         p2_klass = gameStateObj.metaDataObj['class_dict'][self.p2.klass]
         other_unit_klass = gameStateObj.metaDataObj['class_dict'][self.p1.klass]
         exp_multiplier = p2_klass['exp_multiplier']*other_unit_klass['exp_when_attacked']
 
+        damage, healing, kills = 0, 0, 0
+
         my_exp = 0
         applicable_results = [result for result in self.old_results if result.outcome and result.attacker is self.p2 and
                               result.defender is self.p1 and not result.def_damage <= 0]
         if applicable_results:
             damage_done = sum([result.def_damage_done for result in applicable_results])
-            self.p2.records['damage'] += damage_done
+            damage += damage_done
             level_diff = self.p1.get_comparison_level(gameStateObj.metaDataObj) - self.p2.get_comparison_level(gameStateObj.metaDataObj) + cf.CONSTANTS['exp_offset']
             normal_exp = max(0, int(exp_multiplier*cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve'])))
             if self.p1.isDying:
-                self.p2.records['kills'] += 1
+                kills += 1
                 my_exp += int(cf.CONSTANTS['kill_multiplier']*normal_exp) + (cf.CONSTANTS['boss_bonus'] if 'Boss' in self.p1.tags else 0)
             else:
                 my_exp += normal_exp 
@@ -614,7 +614,7 @@ class Combat(object):
             my_exp = Utility.clamp(my_exp, 0, 100)
         else:
             my_exp = Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100)
-        return my_exp
+        return my_exp, (damage, healing, kills)
 
     def handle_interact_script(self, gameStateObj):
         script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
@@ -688,13 +688,7 @@ class Combat(object):
 
     def handle_skill_used(self):
         if self.skill_used and self.skill_used.active:
-            self.skill_used.active.current_charge = 0
-            # If no other active skills, can remove active skill charged
-            if not any(skill.active and skill.active.required_charge > 0 and 
-                       skill.active.current_charge >= skill.active.required_charge for skill in self.p1.status_effects):
-                self.p1.tags.discard('ActiveSkillCharged')
-            if self.skill_used.active.mode == 'Attack':
-                self.skill_used.active.reverse_mod()
+            Action.do(Action.FinalizeActiveSkill(self.skill_used, self.p1))
 
     def handle_death(self, gameStateObj, metaDataObj, all_units):
         for unit in all_units:
@@ -1344,12 +1338,12 @@ class AnimationCombat(Combat):
         if not self.event_combat and (self.item.weapon or self.item.spell):
             attacker_results = [result for result in self.old_results if result.attacker is self.p1]
             if not self.p1.isDying and attacker_results and not self.skill_used:
-                self.p1.charge()
+                Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']))
 
             if self.p1.team == 'player' and not self.p1.isDying and 'Mindless' not in self.p1.tags \
                and not self.p1.isSummon():
                 if attacker_results: # and result.outcome for result in self.old_results):
-                    self.p1.increase_wexp(self.item, gameStateObj)
+                    Action.do(Action.GainWexp(self.p1, self.item), gameStateObj)
                     
                 my_exp = 0
                 applicable_results = [result for result in attacker_results if result.outcome and
@@ -1357,7 +1351,9 @@ class AnimationCombat(Combat):
                 # Doesn't count if it did 0 damage
                 applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
                 if applicable_results:
-                    my_exp = self.calc_init_exp_p1(my_exp, self.p2, applicable_results, gameStateObj)
+                    my_exp, record = self.calc_init_exp_p1(my_exp, self.p2, applicable_results, gameStateObj)
+
+                Action.do(Action.UpdateUnitRecords(self.p1, record))
 
                 # No free exp for affecting myself or being affected by allies
                 if self.p1.checkIfAlly(self.p2):
@@ -1366,23 +1362,20 @@ class AnimationCombat(Combat):
                     my_exp = int(Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100))
 
                 if my_exp > 0:
-                    # Also handles actually adding the exp to the unit
-                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp, in_combat=self))
-                    gameStateObj.stateMachine.changeState('expgain')
+                    Action.do(Action.GainExp(self.p1, my_exp, in_combat=self), gameStateObj)
 
             if self.p2 and not self.p2.isDying:
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 if defender_results:
-                    self.p2.charge()
+                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']))
                 if self.p2.team == 'player' and 'Mindless' not in self.p2.tags and not self.p2.isSummon():
                     if defender_results: # and result.outcome for result in self.old_results):
-                        self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
+                        Action.do(Action.GainWexp(self.p2, self.p2.getMainWeapon()), gameStateObj)
                         
-                    my_exp = self.calc_init_exp_p2(defender_results, gameStateObj)
+                    my_exp, records = self.calc_init_exp_p2(defender_results, gameStateObj)
+                    Action.do(Action.UpdateUnitRecords(self.p2, records))
                     if my_exp > 0:
-                        # Also handles actually adding the exp to the unit
-                        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp, in_combat=self))
-                        gameStateObj.stateMachine.changeState('expgain')
+                        Action.do(Action.GainExp(self.p2, my_exp, in_combat=self), gameStateObj)
 
     def check_death(self):
         if self.p1.currenthp <= 0:
@@ -1899,11 +1892,11 @@ class MapCombat(Combat):
         if not self.event_combat and (self.item.weapon or self.item.spell):
             attacker_results = [result for result in self.old_results if result.attacker is self.p1]
             if not self.p1.isDying and attacker_results and not self.skill_used:
-                self.p1.charge()
+                Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']))
 
             if self.p1.team == 'player' and not self.p1.isDying and 'Mindless' not in self.p1.tags and not self.p1.isSummon():
                 if attacker_results: # and result.outcome for result in self.old_results):
-                    self.p1.increase_wexp(self.item, gameStateObj)
+                    Action.do(Action.GainWexp(self.p1, self.item), gameStateObj)
                     
                 my_exp = 0
                 for other_unit in self.splash + [self.p2]:
@@ -1915,7 +1908,8 @@ class MapCombat(Combat):
                     applicable_results = [result for result in applicable_results if not 
                                           ((self.item.weapon or self.item.detrimental) and result.attacker.checkIfAlly(result.defender))]
                     if isinstance(other_unit, UnitObject.UnitObject) and applicable_results:
-                        my_exp = self.calc_init_exp_p1(my_exp, other_unit, applicable_results, gameStateObj)
+                        my_exp, records = self.calc_init_exp_p1(my_exp, other_unit, applicable_results, gameStateObj)
+                        Action.do(Action.UpdateUnitRecords(self.p1, records))
 
                 # No free exp for affecting myself or being affected by allies
                 if not isinstance(self.p2, UnitObject.UnitObject) or self.p1.checkIfAlly(self.p2):
@@ -1924,22 +1918,21 @@ class MapCombat(Combat):
                     my_exp = int(Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100))
 
                 # Also handles actually adding the exp to the unit
-                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p1, exp=my_exp)) 
-                gameStateObj.stateMachine.changeState('expgain')
+                if my_exp > 0:
+                    Action.do(Action.GainExp(self.p1, my_exp), gameStateObj)
 
             if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and not self.p2.isDying and self.p2 is not self.p1:
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 if defender_results:
-                    self.p2.charge()
+                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']))
                 if self.p2.team == 'player' and 'Mindless' not in self.p2.tags and not self.p2.isSummon():
                     if defender_results: # and result.outcome for result in self.old_results):
-                        self.p2.increase_wexp(self.p2.getMainWeapon(), gameStateObj)
+                        Action.do(Action.GainWexp(self.p2, self.p2.getMainWeapon()), gameStateObj)
                         
-                    my_exp = self.calc_init_exp_p2(defender_results, gameStateObj)
-
-                    # Also handles actually adding the exp to the unit
-                    gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.p2, exp=my_exp)) 
-                    gameStateObj.stateMachine.changeState('expgain')
+                    my_exp, records = self.calc_init_exp_p2(defender_results, gameStateObj)
+                    Action.do(Action.UpdateUnitRecords(self.p2, records))
+                    if my_exp > 0:
+                        Action.do(Action.GainExp(self.p2, my_exp), gameStateObj)
 
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)

@@ -726,25 +726,19 @@ class UnitObject(object):
             return True
 
     def handle_booster(self, item, gameStateObj):
-        # Handle uses
-        if item.uses:
-            item.uses.decrement()
-        if item.c_uses:
-            item.c_uses.decrement()
+        Action.do(Action.UseItem(item), gameStateObj)
         if item.uses and item.uses.uses <= 0:
             gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
             gameStateObj.stateMachine.changeState('itemgain')
-            self.remove_item(item)
+            Action.do(Action.RemoveItem(self, item), gameStateObj)
 
         # Actually use item
         if item.permanent_stat_increase:
-            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self, exp=0, force_level=item.permanent_stat_increase.stat_increase))
-            gameStateObj.stateMachine.changeState('expgain')
+            Action.do(Action.PermanentStatIncrease(self, item.permanent_stat_increase.stat_increase), gameStateObj)
         elif item.wexp_increase:
-            self.increase_wexp(item.wexp_increase, gameStateObj)
+            Action.do(Action.GainWexp(self, item.wexp_increase), gameStateObj)
         elif item.promotion:
-            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self, exp=0, force_promote=True))
-            gameStateObj.stateMachine.changeState('expgain')
+            Action.do(Action.Promote(self), gameStateObj)
         elif item.call_item_script:
             call_item_script = 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
@@ -1412,13 +1406,6 @@ class UnitObject(object):
     def isSummon(self):
         return any(component.startswith('Summon_') for component in self.tags)
 
-    def charge(self): # charge skills
-        for status in self.status_effects:
-            if status.active and not status.active.check_charged():
-                status.active.increase_charge(self)
-            elif status.automatic and not status.automatic.check_charged():
-                status.automatic.increase_charge(self)
-
 # === COMBAT CALCULATIONS ====================================================
     # Gets bonuses from supports
     # Right now this is just recalled every time it is needed!!!
@@ -1948,9 +1935,6 @@ class UnitObject(object):
         self.strTRV = "---"
         StatusObject.HandleStatusRemoval("Rescue", self, gameStateObj)
         # Remove rescue penalty
-
-    def regenerate(self, hp):
-        self.change_hp(int(hp/float(100) * self.stats['HP']))
 
     def escape(self, gameStateObj):
         # Handles any events that happen on escape

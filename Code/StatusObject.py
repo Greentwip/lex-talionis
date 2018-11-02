@@ -463,9 +463,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
             check_automatic(status, unit, gameStateObj)
 
     if status.skill_restore:
-        activated_skills = [s for s in unit.status_effects if s.active]
-        for activated_skill in activated_skills:
-            Action.do(Action.ChargeActiveSkill(activated_skill, unit, activated_skill.active.required_charge))
+        Action.do(Action.ChargeAllSkills(unit, 1000))
 
     if status.clear:
         for status in unit.status_effects:
@@ -548,7 +546,8 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
         logger.warning(unit.status_effects)
         return
     if status.convert:
-        unit.changeTeams(status.original_team, gameStateObj)
+        # unit.changeTeams(status.original_team, gameStateObj)
+        Action.do(Action.ChangeTeams(unit, status.original_team), gameStateObj)
     if status.upkeep_stat_change:
         unit.apply_stat_change([-stat*(status.upkeep_stat_change.count) for stat in status.upkeep_stat_change.stat_change])
     if status.stat_change:
@@ -569,10 +568,11 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
     if status.tether:
         status.remove_children()
     if status.status_on_complete and not clean_up:
-        HandleStatusAddition(statusparser(status.status_on_complete), unit, gameStateObj)
+        Action.do(Action.ApplyStatus(unit, statusparser(status.status_on_complete)), gameStateObj)
     if status.ephemeral:
         unit.isDying = True
-        unit.set_hp(0)
+        # unit.set_hp(0)
+        Action.do(Action.ChangeHP(unit, -10000))
         gameStateObj.stateMachine.changeState('dying')
     if status.affects_movement:
         if unit.team.startswith('enemy'):
@@ -695,7 +695,7 @@ def statusparser(s_id):
 
             return currentStatus
 
-def deserialize(s_dict, unit, gameStateObj):
+def deserialize(s_dict, unit=None):
     status = statusparser(s_dict['id'])
     if not status:
         return
@@ -714,20 +714,21 @@ def deserialize(s_dict, unit, gameStateObj):
         status.children = s_dict['children']
     if s_dict.get('parent_id'):
         status.parent_id = s_dict['parent_id']
-    if status.aura:
-        status.aura.set_parent_unit(unit)
-    # For rescue
-    if s_dict.get('rescue'):
-        status.rescue.skl_penalty = int(s_dict['rescue'][0])
-        status.rescue.spd_penalty = int(s_dict['rescue'][1])
-    elif status.rescue:
-        status.rescue.skl_penalty = -unit.stats['SKL'].base_stat//2
-        status.rescue.spd_penalty = -unit.stats['SPD'].base_stat//2
-    if status.passive:
-        for item in unit.items:
-            status.passive.apply_mod(item)
-    unit.status_effects.append(status)
-    unit.status_bundle.update(list(status.components))
+    if unit:
+        if status.aura:
+            status.aura.set_parent_unit(unit)
+        # For rescue
+        if s_dict.get('rescue'):
+            status.rescue.skl_penalty = int(s_dict['rescue'][0])
+            status.rescue.spd_penalty = int(s_dict['rescue'][1])
+        elif status.rescue:
+            status.rescue.skl_penalty = -unit.stats['SKL'].base_stat//2
+            status.rescue.spd_penalty = -unit.stats['SPD'].base_stat//2
+        if status.passive:
+            for item in unit.items:
+                status.passive.apply_mod(item)
+        unit.status_effects.append(status)
+        unit.status_bundle.update(list(status.components))
 
 feat_list = ['fStrength +2', 'fMagic +2', 'fSkill +3', 'fSpeed +2', 'fDefense +2', 
              'fResistance +2', 'fMovement +1', 'fConstitution +3', 'fMaximum HP +5', 'fLuck +4']

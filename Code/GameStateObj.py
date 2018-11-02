@@ -167,7 +167,7 @@ class GameStateObj(object):
         for index, info in enumerate(load_info['allunits']):
             for s_dict in info['status_effects']:
                 if isinstance(s_dict, dict):
-                    StatusObject.deserialize(s_dict, self.allunits[index], self)
+                    StatusObject.deserialize(s_dict, self.allunits[index])
                 else:
                     self.allunits[index].status_effects.append(s_dict)
 
