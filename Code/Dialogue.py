@@ -650,108 +650,89 @@ class Dialogue_Scene(object):
         elif line[0] == 'set_origin':
             if len(line) > 1:
                 gameStateObj.map.origin = self.parse_pos(line[1], gameStateObj)
-                line = [line[0], self.parse_pos(line[1], gameStateObj)]
             else:
                 gameStateObj.map.origin = self.tile_pos
-                line.append(self.tile_pos)
-            gameStateObj.map.command_list.append(line)
         # Change tile sprites. - command, pos, tile_sprite, size, transition
         elif line[0] == 'change_tile_sprite':
-            # Add default transition
-            if len(line) < 4:
-                line.append('fade')
-            gameStateObj.map.change_sprite(line)
-            # Ways of destroying. Defaults to instantaneous in command list
-            if 'fade' in line:
-                line.remove('fade')
+            coord = self.parse_pos(line[1])
+            transition = None
+            if 'fade' in line or len(line) < 4:
+                transition = 'fade'
             elif 'destroy' in line:
-                line.remove('destroy')
-            gameStateObj.map.command_list.append(line)
+                transition = 'destroy'
+            image_name = line[2]
+            image = gameStateObj.map.loose_tile_sprites[image_name]
+            size = image.get_width()//GC.TILEWIDTH, image.get_height()//GC.TILEHEIGHT
+            Action.do(Action.ChangeTileSprite(coord, image_name, size, transition), gameStateObj)
         elif line[0] == 'layer_tile_sprite':
-            gameStateObj.map.layer_tile_sprite(line)
-            gameStateObj.map.command_list.append(line)
+            layer = int(line[1])
+            coord = self.parse_pos(line[2])
+            image_filename = line[3]
+            Action.do(Action.LayerTileSprite(layer, coord, image_filename), gameStateObj)
+            if len(line) > 4:
+                Action.do(Action.LayerTerrain(layer, coord, line[4]), gameStateObj)
+                self.reset_boundary_manager = True
         elif line[0] == 'layer_terrain':
-            gameStateObj.map.layer_terrain(line, gameStateObj.grid_manager)
-            gameStateObj.map.command_list.append(line)
+            layer = int(line[1])
+            coord = self.parse_pos(line[2])
+            image_filename = line[3]
+            Action.do(Action.LayerTerrain(layer, coord, image_filename), gameStateObj)
             self.reset_boundary_manager = True
         elif line[0] == 'show_layer':
-            if len(line) < 3:
-                line.append('fade')
-            gameStateObj.map.show_layer(line, gameStateObj.grid_manager)
-            if 'fade' in line:
-                line.remove('fade')
-            elif 'destroy' in line:
-                line.remove('destroy')
-            gameStateObj.map.command_list.append(line)
+            layer = int(line[1])
+            transition = line[2] if len(line) > 2 else 'fade'
+            Action.do(Action.ShowLayer(layer, transition), gameStateObj)
             self.reset_boundary_manager = True
         elif line[0] == 'hide_layer':
-            if len(line) < 3:
-                line.append('fade')
-            gameStateObj.map.hide_layer(line, gameStateObj.grid_manager)
-            if 'fade' in line:
-                line.remove('fade')
-            elif 'destroy' in line:
-                line.remove('destroy')
-            gameStateObj.map.command_list.append(line)
+            layer = int(line[1])
+            transition = line[2] if len(line) > 2 else 'fade'
+            Action.do(Action.HideLayer(layer, transition), gameStateObj)
             self.reset_boundary_manager = True
         elif line[0] == 'clear_layer':
-            gameStateObj.map.clear_layer(line[1])
-            gameStateObj.map.command_list.append(line)
+            layer = int(line[1])
+            Action.do(Action.ClearLayer(layer), gameStateObj)
         # Change one tile
         elif line[0] == 'replace_tile':
-            coords = gameStateObj.map.replace_tile(line, gameStateObj.grid_manager)
-            gameStateObj.map.command_list.append(line)
+            pos_list = self.get_position(line[1])
+            tile_id = int(line[2])
+            Action.do(Action.ReplaceTiles(pos_list, tile_id), gameStateObj)
             self.reset_boundary_manager = True
-            # gameStateObj.boundary_manager.reset(gameStateObj)
         # Change area of tile (must include pic instead of id)
         elif line[0] == 'area_replace_tile':
-            coord, size = gameStateObj.map.mass_replace_tile(line, gameStateObj.grid_manager)
-            gameStateObj.map.command_list.append(line)
+            coord = self.parse_pos(line[1])
+            image_fp = line[2]
+            Action.do(Action.AreaReplaceTiles(coord, image_fp), gameStateObj)
             self.reset_boundary_manager = True
-            # width, height = size
-            # gameStateObj.boundary_manager.reset(gameStateObj)
         # Change one tile's information
         elif line[0] == 'set_tile_info':
-            gameStateObj.map.set_tile_info(line)
-            gameStateObj.map.command_list.append(line)
-        # Changing whole map tile data!
-        elif line[0] == 'load_new_map_tiles':
-            gameStateObj.map.load_new_map_tiles(line, gameStateObj.game_constants['level'])
-            gameStateObj.map.command_list.append(line)
-            gameStateObj.boundary_manager.reset(gameStateObj)
-        # Changing whole map's sprites!
-        elif line[0] == 'load_new_map_sprite':
-            gameStateObj.map.load_new_map_sprite(line, gameStateObj.game_constants['level'])
-            gameStateObj.map.command_list.append(line)
-        # Reset whole map's tile_info!
-        elif line[0] == 'reset_map_tile_info':
-            gameStateObj.map.reset_tile_info()
-            gameStateObj.map.command_list.append(line)
+            coord = self.parse_pos(line[1])
+            property_list = line[2:] if len(line) > 2 else None
+            if property_list:
+                for tile_property in property_list:
+                    Action.do(Action.AddTileProperty(coord, tile_property), gameStateObj)
+            else:
+                for tile_property in gameStateObj.map.tile_info_dict[coord].items():
+                    Action.do(Action.RemoveTileProperty(coord, tile_property), gameStateObj)
+        elif line[0] == 'add_tile_property':
+            coord = self.parse_pos(line[1])
+            tile_property = line[2]
+            Action.do(Action.AddTileProperty(coord, tile_property), gameStateObj)
+        elif line[0] == 'remove_tile_property':
+            coord = self.parse_pos(line[1])
+            tile_property = line[2]
+            Action.do(Action.RemoveTileProperty(coord, tile_property), gameStateObj)
         # Add weather
         elif line[0] == 'add_weather':
-            gameStateObj.map.add_weather(line[1])
-            gameStateObj.map.command_list.append(line)
+            Action.do(Action.AddWeather(line[1]), gameStateObj)
         # Remove weather
         elif line[0] == 'remove_weather':
-            gameStateObj.map.remove_weather(line[1])
-            gameStateObj.map.command_list.append(line)
+            Action.do(Action.RemoveWeather(line[1]), gameStateObj)
         # Add global status
         elif line[0] == 'add_global_status':
-            gameStateObj.map.add_status(line[1])
-            gameStateObj.map.command_list.append(line)
+            Action.do(Action.AddGlobalStatus(line[1]), gameStateObj)
         # Remove global status
         elif line[0] == 'remove_global_status':
-            gameStateObj.map.remove_status(line[1])
-            gameStateObj.map.command_list.append(line)
-        # Remove global status
-        # Clear command list
-        elif line[0] == 'clear_command_list':
-            if len(line) > 1:
-                gameStateObj.map.command_list = [command for command in gameStateObj.map.command_list if command[0] != line[1]]
-            else:
-                gameStateObj.map.command_list = []
-        elif line[0] == 'clear_command_list_except':
-            gameStateObj.map.command_list = [command for command in gameStateObj.map.command_list if command[0] == line[1]]
+            Action.do(Action.RemoveGlobalStatus(line[1]), gameStateObj)
 
         # === CLEANUP
         elif line[0] == 'arrange_formation':
@@ -882,8 +863,9 @@ class Dialogue_Scene(object):
                 gameStateObj.base_conversations[line[1]] = False
         elif line[0] == 'inc_support':
             edge = gameStateObj.support.get_edge(self.unit.id, self.unit2.id)
-            if edge and gameStateObj.support.can_support(self.unit.id, self.unit2.id) and edge.support_level == self.name:  # Only increment if we haven't read this before (IE we can support)
-                edge.increment_support_level()
+            if edge and gameStateObj.support.can_support(self.unit.id, self.unit2.id) and \
+                    edge.support_level == self.name:  # Only increment if we haven't read this before (IE we can support)
+                Action.do(Action.IncrementSupportLevel(self.unit.id, self.unit2.id), gameStateObj)
         elif line[0] == 'choice':
             name = line[1]
             header = line[2]

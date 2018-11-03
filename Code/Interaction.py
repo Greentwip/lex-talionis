@@ -1421,6 +1421,10 @@ class AnimationCombat(Combat):
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)
 
+        gameStateObj.support.check_interact(self.p1, all_units, gameStateObj)
+        if not self.p1.isDying:
+            gameStateObj.support.end_combat(self.p1, gameStateObj)
+
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
@@ -1936,6 +1940,10 @@ class MapCombat(Combat):
 
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)
+
+        gameStateObj.support.check_interact(self.p1, all_units, gameStateObj)
+        if not self.p1.isDying:
+            gameStateObj.support.end_combat(self.p1, gameStateObj)
 
         self.handle_death(gameStateObj, metaDataObj, all_units)
 

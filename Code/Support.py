@@ -3,11 +3,11 @@ import os
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import Engine, Utility
+    import Action, Engine, Utility
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import Engine, Utility
+    from . import Action, Engine, Utility
 
 class Affinity(object):
     def __init__(self, icon_index, name, attack, defense, accuracy, avoid, crit, dodge, attackspeed):
@@ -218,7 +218,8 @@ class Support_Graph(object):
                      Utility.calculate_distance(unit.position, u.position) <= cf.CONSTANTS['support_growth_range']}
         for other_id, edge in node.adjacent.items():
             if other_id in other_ids:
-                edge.increment(gain)
+                Action.do(Action.SupportGain(unit.id, other_id, gain), gameStateObj)
+                # edge.increment(gain)
 
     def end_turn(self, unit, gameStateObj):
         self._end_general(unit, gameStateObj, cf.CONSTANTS['support_end_turn'])
@@ -234,22 +235,28 @@ class Support_Graph(object):
                      u.id in self.node_dict}
         for other_id, edge in node.adjacent.items():
             if other_id in other_ids:
-                edge.increment(cf.CONSTANTS['support_interact'])
+                Action.do(Action.SupportGain(unit.id, other_id, cf.CONSTANTS['support_interact']), gameStateObj)
+                # edge.increment(cf.CONSTANTS['support_interact'])
 
     def serialize(self):
         serial_dict = {}
         for name1, node in self.node_dict.items():
             serial_dict[name1] = {}
             for name2, edge in node.adjacent.items():
-                serial_dict[name1][name2] = edge.current_value, edge.support_level
+                serial_dict[name1][name2] = (edge.current_value, edge.support_level,
+                                             edge.support_levels_this_chapter,
+                                             edge.value_added_this_chapter)
         return serial_dict
 
     def deserialize(self, serial_dict):
         for name1, names in serial_dict.items():
             for name2, value in names.items():
-                current_value, support_level = value
-                self.node_dict[name1].adjacent[name2].current_value = current_value
-                self.node_dict[name1].adjacent[name2].support_level = support_level
+                current_value, support_level, support_levels_this_chapter, value_added_this_chapter = value
+                edge = self.node_dict[name1].adjacent[name2]
+                edge.current_value = current_value
+                edge.support_level = support_level
+                edge.support_levels_this_chapter = support_levels_this_chapter
+                edge.value_added_this_chapter = value_added_this_chapter
 
 def create_affinity_dict(fn):
     d = {}

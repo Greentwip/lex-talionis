@@ -53,6 +53,11 @@ class ActionLog(object):
         print("Remaining Actions:")
         print(self.actions)
 
+    def replay_map_commands(self, gameStateObj):
+        for action in self.actions:
+            if action.run_on_load:
+                self.run_action_forward(action, gameStateObj)
+
     def get_previous_position(self, unit):
         for action in reversed(self.actions):
             if isinstance(action, Action.Move):

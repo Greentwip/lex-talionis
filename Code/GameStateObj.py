@@ -150,16 +150,12 @@ class GameStateObj(object):
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
         # Action log
-        if 'action_log' in load_info:
-            self.action_log = Turnwheel.ActionLog.deserialize(load_info['action_log'], self)
-        else:
-            self.action_log = Turnwheel.ActionLog()
+        self.action_log = Turnwheel.ActionLog.deserialize(load_info['action_log'], self)
 
         # Map
         self.map = SaveLoad.create_map('Data/Level' + str(self.game_constants['level']))
         if map_info:
-            self.map.replay_commands(map_info['command_list'], self.game_constants['level'])
-            self.map.command_list = map_info['command_list']
+            self.action_log.replay_map_commands(self)
             for position, current_hp in map_info['HP']:
                 self.map.tiles[position].set_hp(current_hp)
 

@@ -205,9 +205,6 @@ elif;gameStateObj.game_constants['level'] == 9
 			# Turn tiles back into lakes
 			replace_tile;7,4.8,4.9,4.21,12.22,12.23,12.21,19.22,19.23,19.7,27.8,27.9,27.29,27.30,27;23
 			wait;100
-			clear_command_list;replace_tile
-			clear_command_list;hide_layer
-			clear_command_list;show_layer
 			show_layer;1
 			# Turn tiles into bridges
 			replace_tile;4,0.4,1.26,0.26,1.12,7.12,8.12,9.18,7.18,8.18,9.4,22.4,23.4,24.26,22.26,23.26,24;12
@@ -226,9 +223,6 @@ elif;gameStateObj.game_constants['level'] == 9
 			# Turn tiles into lake
 			replace_tile;4,7.4,8.4,9.26,7.26,8.26,9.12,22.12,23.12,24.18,22.18,23.18,24.4,30.4,31.26,30.26,31;23
 			wait;100
-			clear_command_list;replace_tile
-			clear_command_list;hide_layer
-			clear_command_list;show_layer
 			show_layer;2
 			# Turn tiles into bridges
 			replace_tile;7,4.8,4.9,4.21,12.22,12.23,12.21,19.22,19.23,19.7,27.8,27.9,27.29,27.30,27;12

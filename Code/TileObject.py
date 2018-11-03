@@ -25,7 +25,6 @@ class MapObject(object):
 
         self._tiles = {} # The mechanical information about the tile organized by position
         self.tile_sprites = {} # The sprite information about the tile organized by position
-        self.command_list = [] # The commands that have been acted upon the map by scripts
         self.escape_highlights = {}
         self.formation_highlights = {}
         self.origin = None
@@ -80,7 +79,7 @@ class MapObject(object):
                     colorKey = terrain.find('color').text.split(',')
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
-                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
+                        new_tile = TileObject(int(terrain.find('id').text), terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, (x, y),
                                               terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text], self)
                         self._tiles[(x, y)] = new_tile
                         break
@@ -101,9 +100,7 @@ class MapObject(object):
             for y in range(coord[1], coord[1] + height):
                 grid_manager.update_tile(self.tiles[(x, y)])
 
-    def change_tile_sprites(self, coord, image_filename, transition=None):
-        image = self.loose_tile_sprites[image_filename]
-        size = image.get_width()//GC.TILEWIDTH, image.get_height()//GC.TILEHEIGHT
+    def change_tile_sprites(self, coord, image_filename, size, transition=None):
         for x in range(coord[0], coord[0] + size[0]):
             for y in range(coord[1], coord[1] + size[1]):
                 pos = (x - coord[0], y - coord[1])
@@ -230,7 +227,7 @@ class MapObject(object):
     def get_tile_from_id(self, tile_id):
         for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
             if tile_id == terrain.find('id').text or tile_id == int(terrain.find('id').text):
-                tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text,
+                tile = TileObject(tile_id, terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text,
                                   None, terrain.find('mtype').text,
                                   [terrain.find('DEF').text, terrain.find('AVO').text], self)
                 return tile
@@ -270,25 +267,38 @@ class MapObject(object):
     def parse_tile_line(self, coord, property_list):
         if property_list:
             for tile_property in property_list:
-                property_name, property_value = tile_property.split('=')
-                # Handle special cases...
-                if property_name == 'Status': # Treasure does not need to be split. It is split by the itemparser function itself.
-                    # Turn these string of ids into a list of status objects
-                    status_list = []
-                    for status in property_value.split(','):
-                        status_list.append(StatusObject.statusparser(status))
-                    property_value = status_list
-                elif property_name in ["Escape", "Arrive"]:
-                    self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
-                elif property_name == "Formation":
-                    self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
-                elif property_name == "HP":
-                    self.hp[coord] = TileHP(int(property_value))
-                self.tile_info_dict[coord][property_name] = property_value
+                self.add_tile_property(coord, tile_property)
         else:
-            if coord in self.hp:
-                del self.hp[coord]
-            self.tile_info_dict[coord] = {'Status': []} # Empty Dictionary
+            # Empty dictionary
+            for tile_property in self.tile_info_dict[coord].items():
+                self.remove_tile_property(coord, tile_property)
+
+    def add_tile_property(self, coord, tile_property):
+        property_name, property_value = tile_property.split('=')
+        # Handle special cases...
+        if property_name == 'Status': # Treasure does not need to be split. It is split by the itemparser function itself.
+            # Turn these string of ids into a list of status objects
+            status_list = []
+            for status in property_value.split(','):
+                status_list.append(StatusObject.statusparser(status))
+            property_value = status_list
+        elif property_name in ("Escape", "Arrive"):
+            self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
+        elif property_name == "Formation":
+            self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
+        elif property_name == "HP":
+            self.hp[coord] = TileHP(int(property_value))
+        self.tile_info_dict[coord][property_name] = property_value
+
+    def remove_tile_property(self, coord, tile_property):
+        property_name, property_value = tile_property
+        del self.tile_info_dict[coord][property_name]
+        if property_name == "HP" and coord in self.hp:
+            del self.hp[coord]
+        elif property_name in ("Escape", "Arrive") and coord in self.escape_highlights:
+            del self.escape_highlights[coord]
+        elif property_name == "Status":
+            self.tile_info_dict[coord]["Status"] = []
 
     def update(self, gameStateObj):
         current_time = Engine.get_time()
@@ -317,111 +327,16 @@ class MapObject(object):
 
     def serialize(self):
         serial_dict = {}
-        serial_dict['command_list'] = self.command_list
         serial_dict['HP'] = [(pos, hp.currenthp) for pos, hp in self.hp.items()]
         return serial_dict
 
-    # === SCRIPT COMMANDS ===
-    def replay_commands(self, command_list, currentLevelIndex):
-        for line in command_list:
-            logger.debug('Replaying Command: %s', line)
-            # Set a custom origin point
-            if line[0] == 'set_origin':
-                self.origin = line[1]
-            # Change tile sprites
-            elif line[0] == 'change_tile_sprite':
-                self.change_sprite(line)
-            # Add tile sprite to layer
-            elif line[0] == 'layer_tile_sprite':
-                self.layer_tile_sprite(line)
-            # Add terrain to layer
-            elif line[0] == 'layer_terrain':
-                self.layer_terrain(line)
-            # Show Layer
-            elif line[0] == 'show_layer':
-                self.show_layer(line)
-            # Hide Layer
-            elif line[0] == 'hide_layer':
-                self.hide_layer(line)
-            # Clear Layer
-            elif line[0] == 'clear_layer':
-                self.clear_layer(line[1])
-            # Change one tile
-            elif line[0] == 'replace_tile':
-                self.replace_tile(line)
-            # Change area of tile (must include pic instead of id)
-            elif line[0] == 'area_replace_tile':
-                self.mass_replace_tile(line)
-            # Change one tile's information
-            elif line[0] == 'set_tile_info':
-                self.set_tile_info(line)
-            # Changing whole map tile data!
-            elif line[0] == 'load_new_map_tiles':
-                self.load_new_map_tiles(line, currentLevelIndex)
-            # Changing whole map's sprites!
-            elif line[0] == 'load_new_map_sprite':
-                self.load_new_map_sprite(line, currentLevelIndex)
-            # Reset whole map's tile_info!
-            elif line[0] == 'reset_map_tile_info':
-                self.reset_tile_info()
-            # Add westher
-            elif line[0] == 'add_weather':
-                self.add_weather(line[1])
-            # Remove weather
-            elif line[0] == 'remove_weather':
-                self.remove_weather(line[1])
-            # Add global status
-            elif line[0] == 'add_global_status':
-                self.add_global_status(line[1])
-            # Remove global status
-            elif line[0] == 'remove_global_status':
-                self.remove_global_status(line[1])
-
-    def get_position(self, pos_line):
-        position_list = [self.parse_pos(coord) for coord in pos_line.split('.')]
-        return position_list
-
-    def parse_pos(self, pos):
-        offset = False
-        if pos[0] == 'o': # Offset
-            offset = True
-            pos = pos[1:]
-        new_pos = tuple([int(num) for num in pos.split(',')])
-        if offset:
-            if self.origin:
-                return (self.origin[0] + new_pos[0], self.origin[1] + new_pos[1])
-            else:
-                return (0, 0)
-        else:
-            return new_pos 
-
-    def change_sprite(self, line):
-        coord = self.parse_pos(line[1])
-        transition = None
-        if 'fade' in line:
-            transition = 'fade'
-        elif 'destroy' in line:
-            transition = 'destroy'
-        self.change_tile_sprites(coord, line[2], transition)
-
-    def layer_tile_sprite(self, line):
-        layer = int(line[1])
-        coord = self.parse_pos(line[2])
-        image_filename = line[3]
+    def layer_tile_sprite(self, layer, coord, image_filename):
         new_sprite = LayerSprite(image_filename, coord, self)
         while len(self.layers) <= layer:
             self.layers.append(Layer())
         self.layers[layer].append(new_sprite)
-        if len(line) > 4:
-            self._layer_terrain(layer, line[4], coord)
 
-    def layer_terrain(self, line, grid_manager=None):
-        layer = int(line[1])
-        coord = self.parse_pos(line[2])
-        image_filename = line[3]
-        self._layer_terrain(layer, image_filename, coord, grid_manager)
-
-    def _layer_terrain(self, layer, fn, coord, grid_manager=None):
+    def layer_terrain(self, layer, fn, coord, grid_manager=None):
         while len(self.terrain_layers) <= layer:
             self.terrain_layers.append(TerrainLayer(self))
         self.terrain_layers[layer].add(fn, coord)
@@ -431,11 +346,9 @@ class MapObject(object):
             if grid_manager:
                 self.handle_grid_manager_with_layer(layer, grid_manager)
 
-    def show_layer(self, line, grid_manager=None):
-        layer = int(line[1])
+    def show_layer(self, layer, transition, grid_manager=None):
         # Image layer
         if len(self.layers) > layer:
-            transition = line[2] if len(line) > 2 else None
             if transition == 'fade' or transition == 'destroy':
                 self.layers[layer].show = True
                 if transition == 'destroy':
@@ -453,11 +366,9 @@ class MapObject(object):
             if grid_manager:
                 self.handle_grid_manager_with_layer(layer, grid_manager)
 
-    def hide_layer(self, line, grid_manager=None):
-        layer = int(line[1])
+    def hide_layer(self, layer, transition, grid_manager=None):
         # Image layer
         if len(self.layers) > layer:
-            transition = line[2] if len(line) > 2 else None
             if transition == 'fade' or transition == 'destroy':
                 self.layers[layer].show = False
                 if transition == 'destroy':
@@ -495,9 +406,8 @@ class MapObject(object):
                     else:  # Defaults to base level
                         grid_manager.update_tile(self._tiles[coord])
 
-    def clear_layer(self, num):
+    def clear_layer(self, layer):
         # Assumes layer is hidden!!!
-        layer = int(num)
         if len(self.layers) > layer:
             self.layers[layer] = Layer()
         if len(self.terrain_layers) > layer:
@@ -505,30 +415,14 @@ class MapObject(object):
         self.true_tiles = None
         self.true_opacity_map = None
 
-    def replace_tile(self, line, grid_manager=None):
-        coords = self.get_position(line[1])
-        for coord in coords:
-            self._tiles[coord] = self.get_tile_from_id(int(line[2]))
-            self._tiles[coord].position = coord
+    def replace_tile(self, coord, tile_id, grid_manager=None):
+        self._tiles[coord] = self.get_tile_from_id(tile_id)
+        self._tiles[coord].position = coord
         self.true_tiles = None  # Reset
         self.true_opacity_map = None
         if grid_manager:
-            for coord in coords:
-                grid_manager.update_tile(self.tiles[coord])
-        return coords
-
-    def mass_replace_tile(self, line, grid_manager=None):
-        coord = self.parse_pos(line[1])
-        image_fp = line[2]
-        width, height = self.area_replace(coord, image_fp, grid_manager)
-        return coord, (width, height)
-
-    def set_tile_info(self, line):
-        coord = self.parse_pos(line[1])
-        if len(line) > 2:
-            self.parse_tile_line(coord, line[2:])
-        else:
-            self.parse_tile_line(coord, None)
+            grid_manager.update_tile(self.tiles[coord])
+        return coord
 
     def load_new_map_tiles(self, line, currentLevelIndex):
         tile_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
@@ -691,6 +585,9 @@ class Layer(object):
     def __iter__(self):
         return self.sprites
 
+    def remove(self, image_name, position):
+        self.sprites = [s for s in self.sprites if s.image_name != image_name or s.position != position]
+
     def draw(self, surf):
         if self.show and self.fade < 100:
             self.fade += self.transition_speed
@@ -739,6 +636,16 @@ class TerrainLayer(object):
         color_key_obj, width, height = self.map_reference.build_color_key(image)
         self.populate_tiles(color_key_obj, position)
 
+    def reset(self, old_terrain_ids):
+        self._tiles = {}
+        for position, tile_id in old_terrain_ids:
+            for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
+                if int(terrain.find('id').text) == tile_id:
+                    new_tile = TileObject(tile_id, terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, position,
+                                          terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text], self.map_reference)
+                    self._tiles[position] = new_tile
+                    break
+
     def populate_tiles(self, color_key_obj, offset):
         for x in range(len(color_key_obj)):
             for y in range(len(color_key_obj[x])):
@@ -748,7 +655,7 @@ class TerrainLayer(object):
                     if (int(cur[0]) == int(colorKey[0]) and int(cur[1]) == int(colorKey[1]) and int(cur[2]) == int(colorKey[2])):
                         # Instantiate
                         pos = (offset[0] + x, offset[1] + y)
-                        new_tile = TileObject(terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, pos,
+                        new_tile = TileObject(int(terrain.find('id').text), terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, pos,
                                               terrain.find('mtype').text, [terrain.find('DEF').text, terrain.find('AVO').text], self.map_reference)
                         self._tiles[pos] = new_tile
                         break
@@ -757,7 +664,8 @@ class TerrainLayer(object):
 
 # === GENERIC TILE OBJECT =======================================
 class TileObject(object):
-    def __init__(self, name, minimap, platform, position, mcost, stats, map_ref):
+    def __init__(self, tile_id, name, minimap, platform, position, mcost, stats, map_ref):
+        self.tile_id = tile_id
         self.map_ref = map_ref
         DEF, AVO = stats 
         self.name = name

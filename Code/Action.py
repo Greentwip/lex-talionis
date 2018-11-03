@@ -13,6 +13,8 @@ except ImportError:
     from . import Utility, ItemMethods, UnitObject
 
 class Action(object):
+    run_on_load = False
+
     def __init__(self):
         pass
 
@@ -917,37 +919,40 @@ class ChangeObjective(Action):
         if self.loss_condition:
             obj.loss_condition_string = self.old_values[2]
 
-# === TILE ACTIONS ========================================================
-class ChangeTileSprite(Action):
-    pass
-
-class ChangeTerrain(Action):
-    pass
-
-class LayerTileSprite(Action):
-    pass
-
-class LayerTerrain(Action):
-    pass
-
-class Destroy(Action):
-    pass
-
-class ShowLayer(Action):
-    pass
-
-class HideLayer(Action):
-    pass
-
-class SetTileInfo(Action):
-    pass
-
 # === SUPPORT ACTIONS =======================================================
 class IncrementSupportLevel(Action):
-    pass
+    def __init__(self, unit1_id, unit2_id):
+        self.unit1_id = unit1_id
+        self.unit2_id = unit2_id
 
-class ActivateSupport(Action):
-    pass
+    def do(self, gameStateObj):
+        edge = gameStateObj.support.get_edge(self.unit1_id, self.unit2_id)
+        edge.increment_support_level()
+
+    def reverse(self, gameStateObj):
+        edge = gameStateObj.support.get_edge(self.unit1_id, self.unit2_id)
+        edge.support_level -= 1
+        edge.support_levels_this_chapter -= 1
+
+class SupportGain(Action):
+    def __init__(self, unit1_id, unit2_id, gain):
+        self.unit1_id = unit1_id
+        self.unit2_id = unit2_id
+        self.gain = gain
+
+        self.current_value = 0
+        self.value_added_this_chapter = 0
+
+    def do(self, gameStateObj):
+        edge = gameStateObj.support.get_edge(self.unit1_id, self.unit2_id)
+        self.current_value = edge.current_value
+        self.value_added_this_chapter = edge.value_added_this_chapter
+        edge.increment(self.gain)     
+
+    def reverse(self, gameStateObj):
+        edge = gameStateObj.support.get_edge(self.unit1_id, self.unit2_id)
+        edge.current_value = self.current_value
+        edge.value_added_this_chapter = self.value_added_this_chapter
 
 class HasAttacked(Action):
     def __init__(self, unit):
@@ -970,9 +975,6 @@ class HasTraded(Action):
 
     def reverse(self, gameStateObj):
         self.unit.hasTraded = self.old_value
-
-class InteractionCleanup(Action):
-    pass
 
 class UpdateUnitRecords(Action):
     def __init__(self, unit, record):
@@ -1121,6 +1123,238 @@ class ShrugOff(Action):
 
     def reverse(self, gameStateObj=None):
         self.status.time.time_left = self.old_time
+
+# === TILE ACTIONS ========================================================
+class ChangeTileSprite(Action):
+    run_on_load = True
+
+    def __init__(self, pos, sprite_name, size, transition):
+        self.pos = pos
+        self.sprite_name = sprite_name
+        self.size = size
+        self.transition = transition
+
+        self.old_image_name = None
+
+    def do(self, gameStateObj):
+        self.old_image_name = gameStateObj.map.tile_sprites[self.pos].image_name
+        gameStateObj.map.change_tile_sprites(self.pos, self.sprite_name, self.size, self.transition)
+
+    def execute(self, gameStateObj):
+        gameStateObj.map.change_tile_sprites(self.pos, self.sprite_name, self.size, None)
+
+    def reverse(self, gameStateObj):
+        if self.old_image_name:  # If it was previously another name
+            gameStateObj.map.change_tile_sprites(self.pos, self.old_image_name, self.size, None)
+        else:  # It was previously the default map
+            gameStateObj.map.change_tile_sprites(self.pos, None, self.size, None)
+
+class ReplaceTiles(Action):
+    run_on_load = True
+
+    def __init__(self, pos_list, terrain_id):
+        self.pos_list = pos_list
+        self.terrain_id = terrain_id
+
+        self.old_ids = {}
+
+    def do(self, gameStateObj):
+        for position in self.pos_list:
+            self.old_ids[position] = gameStateObj.map.tiles[position].tile_id
+            gameStateObj.map.replace_tile(position, self.terrain_id, gameStateObj.grid_manager)
+
+    def reverse(self, gameStateObj):
+        for position, tile_id in self.old_ids.items():
+            gameStateObj.map.replace_tiles(position, tile_id, gameStateObj.grid_manager)
+
+class AreaReplaceTiles(Action):
+    run_on_load = True
+
+    def __init__(self, top_left_coord, image_name):
+        self.top_left_coord = top_left_coord
+        self.image_name = image_name
+
+        self.old_ids = {}
+ 
+    def do(self, gameStateObj):
+        image = gameStateObj.map.loose_tile_sprites[self.image_name] 
+        width = image.get_width()
+        height = image.get_height()
+        for x in range(self.top_left_coord[0], self.top_left_coord[0] + width):
+            for y in range(self.top_left_coord[1], self.top_left_coord[1] + height):
+                self.old_ids[(x, y)] = gameStateObj.map.tiles[(x, y)].tile_id
+        gameStateObj.map.area_replace(self.top_left_coord, self.image_name, gameStateObj.grid_manager)
+
+    def reverse(self, gameStateObj):
+        for position, tile_id in self.old_ids.items():
+            gameStateObj.map.replace_tiles(position, tile_id, gameStateObj.grid_manager)
+
+class LayerTileSprite(Action):
+    run_on_load = True
+
+    def __init__(self, layer, coord, image_name):
+        self.layer = layer
+        self.coord = coord
+        self.image_name = image_name
+
+    def do(self, gameStateObj):
+        gameStateObj.map.layer_tile_sprite(self.layer, self.coord, self.image_name)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.layers[self.layer].remove(self.image_name, self.coord)
+
+class LayerTerrain(Action):
+    run_on_load = True
+
+    def __init__(self, layer, coord, image_name):
+        self.layer = layer
+        self.coord = coord
+        self.image_name = image_name
+
+        self.old_terrain_ids = {}
+
+    def do(self, gameStateObj):
+        for position, tile in gameStateObj.map.terrain_layers[self.layer]._tiles.items():
+            self.old_terrain_ids[position] = tile.tile_id
+        gameStateObj.map.layer_terrain(self.layer, self.coord, self.image_name, gameStateObj.grid_manager)
+
+    def reverse(self, gameStateObj):
+        terrain_layer = gameStateObj.map.terrain_layers[self.layer]
+        terrain_layer.reset(self.old_terrain_ids)
+        # Make sure this works right
+        if terrain_layer.show:
+            gameStateObj.map.true_tiles = None  # Reset tiles if we made changes while showing
+            gameStateObj.map.true_opacity_map = None
+            if gameStateObj.grid_manager:
+                gameStateObj.map.handle_grid_manager_with_layer(self.layer, gameStateObj.grid_manager)
+
+class ShowLayer(Action):
+    run_on_load = True
+
+    def __init__(self, layer, transition):
+        self.layer = layer
+        self.transition = transition
+
+    def do(self, gameStateObj):
+        gameStateObj.map.show_layer(self.layer, self.transition, gameStateObj.grid_manager)
+
+    def execute(self, gameStateObj):
+        gameStateObj.map.show_layer(self.layer, None, gameStateObj.grid_manager)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.hide_layer(self.layer, None, gameStateObj.grid_manager)
+
+class HideLayer(Action):
+    run_on_load = True
+
+    def __init__(self, layer, transition):
+        self.layer = layer
+        self.transition = transition
+
+    def do(self, gameStateObj):
+        gameStateObj.map.hide_layer(self.layer, self.transition, gameStateObj.grid_manager)
+
+    def execute(self, gameStateObj):
+        gameStateObj.map.hide_layer(self.layer, None, gameStateObj.grid_manager)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.show_layer(self.layer, None, gameStateObj.grid_manager)
+
+class ClearLayer(Action):
+    run_on_load = True
+
+    # Assume layer is hidden !!!
+    def __init__(self, layer):
+        self.layer = layer
+
+        self.old_sprites = []
+        self.old_terrain_ids = {}
+
+    def do(self, gameStateObj):
+        for sprite in gameStateObj.map.layers[self.layer]:
+            self.old_sprites.append((sprite.position, sprite.image_name))
+        for position, tile in gameStateObj.map.terrain_layers[self.layer]._tiles.items():
+            self.old_terrain_ids[position] = tile.tile_id
+        gameStateObj.map.clear_layer(self.layer)
+
+    def reverse(self, gameStateObj):
+        for position, image_name in self.old_sprites:
+            gameStateObj.map.layer_terrain(self.layer, position, image_name, gameStateObj.grid_manager)
+        gameStateObj.map.terrain_layers[self.layer].reset(self.old_terrain_ids)
+
+class AddTileProperty(Action):
+    run_on_load = True
+
+    def __init__(self, coord, tile_property):
+        self.coord = coord
+        self.tile_property = tile_property
+
+    def do(self, gameStateObj):
+        gameStateObj.map.add_tile_property(self.coord, self.tile_property)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.remove_tile_property(self.coord, self.tile_property)
+
+class RemoveTileProperty(Action):
+    run_on_load = True
+
+    def __init__(self, coord, tile_property):
+        self.coord = coord
+        self.tile_property = tile_property
+
+    def do(self, gameStateObj):
+        gameStateObj.map.remove_tile_property(self.coord, self.tile_property)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.add_tile_property(self.coord, self.tile_property)
+
+class AddWeather(Action):
+    run_on_load = True
+
+    def __init__(self, weather):
+        self.weather = weather
+
+    def do(self, gameStateObj):
+        gameStateObj.map.add_weather(self.weather)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.remove_weather(self.weather)
+
+class RemoveWeather(Action):
+    run_on_load = True
+
+    def __init__(self, weather):
+        self.weather = weather
+
+    def do(self, gameStateObj):
+        gameStateObj.map.remove_weather(self.weather)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.add_weather(self.weather)
+
+class AddGlobalStatus(Action):
+    run_on_load = True
+
+    def __init__(self, status):
+        self.status = status
+
+    def do(self, gameStateObj):
+        gameStateObj.map.add_status(self.status)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.remove_status(self.status)
+
+class RemoveGlobalStatus(Action):
+    run_on_load = True
+
+    def __init__(self, status):
+        self.status = status
+
+    def do(self, gameStateObj):
+        gameStateObj.map.remove_status(self.status)
+
+    def reverse(self, gameStateObj):
+        gameStateObj.map.add_status(self.status)
 
 # === Master Functions for adding to action log ===
 def do(action, gameStateObj):
