@@ -44,7 +44,8 @@ class TurnChangeState(StateMachine.State):
         gameStateObj.phase.next(gameStateObj)
 
         if gameStateObj.phase.get_current_phase() == 'player':
-            gameStateObj.turncount += 1
+            # gameStateObj.turncount += 1
+            Action.do(Action.IncrementTurn(), gameStateObj)
             gameStateObj.stateMachine.changeState('free')
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')

@@ -519,7 +519,7 @@ class GainExp(Action):
         self.exp_amount = exp
         self.old_exp = self.unit.exp
         self.old_level = self.unit.level
-        self.current_stats = self.stats.items()
+        self.current_stats = self.unit.stats.items()
 
         self.promoted_to = None  # Determined on reverse
         self.current_class = self.unit.klass
@@ -858,6 +858,16 @@ class ChangeLevelConstant(Action):
     def reverse(self, gameStateObj):
         gameStateObj.level_constants[self.constant] = self.old_value
 
+class IncrementTurn(Action):
+    def __init__(self):
+        pass
+
+    def do(self, gameStateObj):
+        gameStateObj.turncount += 1
+
+    def reverse(self, gameStateObj):
+        gameStateObj.turncount -= 1
+
 class AddTag(Action):
     def __init__(self, unit, new_tag):
         self.unit = unit
@@ -1072,9 +1082,9 @@ class ChargeAllSkills(Action):
     def do(self, gameStateObj=None):
         for status in self.unit.status_effects:
             if status.active:
-                status.active.increase_charge(self.new_charge)
+                status.active.increase_charge(self.unit, self.new_charge)
             elif status.automatic:
-                status.active.increase_charge(self.new_charge)
+                status.active.increase_charge(self.unit, self.new_charge)
 
     def reverse(self, gameStateObj=None):
         for idx, status in enumerate(self.unit.status_effects):

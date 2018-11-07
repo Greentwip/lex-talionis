@@ -686,9 +686,15 @@ class Combat(object):
                         applied_status.parent_id = self.p2.id
                     StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
 
-    def handle_skill_used(self):
+    def handle_supports(self, all_units, gameStateObj):
+        if gameStateObj.support and cf.CONSTANTS['support']:
+            gameStateObj.support.check_interact(self.p1, all_units, gameStateObj)
+            if not self.p1.isDying:
+                gameStateObj.support.end_combat(self.p1, gameStateObj)
+
+    def handle_skill_used(self, gameStateObj):
         if self.skill_used and self.skill_used.active:
-            Action.do(Action.FinalizeActiveSkill(self.skill_used, self.p1))
+            Action.do(Action.FinalizeActiveSkill(self.skill_used, self.p1), gameStateObj)
 
     def handle_death(self, gameStateObj, metaDataObj, all_units):
         for unit in all_units:
@@ -1338,7 +1344,7 @@ class AnimationCombat(Combat):
         if not self.event_combat and (self.item.weapon or self.item.spell):
             attacker_results = [result for result in self.old_results if result.attacker is self.p1]
             if not self.p1.isDying and attacker_results and not self.skill_used:
-                Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']))
+                Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']), gameStateObj)
 
             if self.p1.team == 'player' and not self.p1.isDying and 'Mindless' not in self.p1.tags \
                and not self.p1.isSummon():
@@ -1353,7 +1359,7 @@ class AnimationCombat(Combat):
                 if applicable_results:
                     my_exp, record = self.calc_init_exp_p1(my_exp, self.p2, applicable_results, gameStateObj)
 
-                Action.do(Action.UpdateUnitRecords(self.p1, record))
+                Action.do(Action.UpdateUnitRecords(self.p1, record), gameStateObj)
 
                 # No free exp for affecting myself or being affected by allies
                 if self.p1.checkIfAlly(self.p2):
@@ -1367,7 +1373,7 @@ class AnimationCombat(Combat):
             if self.p2 and not self.p2.isDying:
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 if defender_results:
-                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']))
+                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']), gameStateObj)
                 if self.p2.team == 'player' and 'Mindless' not in self.p2.tags and not self.p2.isSummon():
                     if defender_results: # and result.outcome for result in self.old_results):
                         Action.do(Action.GainWexp(self.p2, self.p2.getMainWeapon()), gameStateObj)
@@ -1394,7 +1400,7 @@ class AnimationCombat(Combat):
         a_broke_item, d_broke_item = self.find_broken_items()
 
         # Handle skills that were used
-        self.handle_skill_used()
+        self.handle_skill_used(gameStateObj)
 
         # Create all_units list
         all_units = [self.p1, self.p2]
@@ -1421,9 +1427,7 @@ class AnimationCombat(Combat):
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)
 
-        gameStateObj.support.check_interact(self.p1, all_units, gameStateObj)
-        if not self.p1.isDying:
-            gameStateObj.support.end_combat(self.p1, gameStateObj)
+        self.handle_supports(all_units, gameStateObj)
 
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
@@ -1864,7 +1868,7 @@ class MapCombat(Combat):
         a_broke_item, d_broke_item = self.find_broken_items()
 
         # Handle skills that were used
-        self.handle_skill_used()
+        self.handle_skill_used(gameStateObj)
 
         # Create all_units list
         all_units = [unit for unit in self.splash] + [self.p1]
@@ -1896,7 +1900,7 @@ class MapCombat(Combat):
         if not self.event_combat and (self.item.weapon or self.item.spell):
             attacker_results = [result for result in self.old_results if result.attacker is self.p1]
             if not self.p1.isDying and attacker_results and not self.skill_used:
-                Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']))
+                Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']), gameStateObj)
 
             if self.p1.team == 'player' and not self.p1.isDying and 'Mindless' not in self.p1.tags and not self.p1.isSummon():
                 if attacker_results: # and result.outcome for result in self.old_results):
@@ -1913,7 +1917,7 @@ class MapCombat(Combat):
                                           ((self.item.weapon or self.item.detrimental) and result.attacker.checkIfAlly(result.defender))]
                     if isinstance(other_unit, UnitObject.UnitObject) and applicable_results:
                         my_exp, records = self.calc_init_exp_p1(my_exp, other_unit, applicable_results, gameStateObj)
-                        Action.do(Action.UpdateUnitRecords(self.p1, records))
+                        Action.do(Action.UpdateUnitRecords(self.p1, records), gameStateObj)
 
                 # No free exp for affecting myself or being affected by allies
                 if not isinstance(self.p2, UnitObject.UnitObject) or self.p1.checkIfAlly(self.p2):
@@ -1928,22 +1932,20 @@ class MapCombat(Combat):
             if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and not self.p2.isDying and self.p2 is not self.p1:
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 if defender_results:
-                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']))
+                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']), gameStateObj)
                 if self.p2.team == 'player' and 'Mindless' not in self.p2.tags and not self.p2.isSummon():
                     if defender_results: # and result.outcome for result in self.old_results):
                         Action.do(Action.GainWexp(self.p2, self.p2.getMainWeapon()), gameStateObj)
                         
                     my_exp, records = self.calc_init_exp_p2(defender_results, gameStateObj)
-                    Action.do(Action.UpdateUnitRecords(self.p2, records))
+                    Action.do(Action.UpdateUnitRecords(self.p2, records), gameStateObj)
                     if my_exp > 0:
                         Action.do(Action.GainExp(self.p2, my_exp), gameStateObj)
 
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)
 
-        gameStateObj.support.check_interact(self.p1, all_units, gameStateObj)
-        if not self.p1.isDying:
-            gameStateObj.support.end_combat(self.p1, gameStateObj)
+        self.handle_supports(all_units, gameStateObj)
 
         self.handle_death(gameStateObj, metaDataObj, all_units)
 

@@ -20,8 +20,8 @@ class Active_Skill(object):
     def check_charged(self):
         return self.current_charge >= self.required_charge
 
-    def increase_charge(self, unit):
-        self.current_charge += unit.stats['SKL']
+    def increase_charge(self, unit, inc):
+        self.current_charge += inc
         if self.check_charged():
             self.current_charge = self.required_charge
             unit.tags.add('ActiveSkillCharged')

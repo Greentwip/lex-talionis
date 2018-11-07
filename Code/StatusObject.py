@@ -346,7 +346,7 @@ def check_automatic(status, unit, gameStateObj):
 def HandleStatusUpkeep(status, unit, gameStateObj):
     oldhp = unit.currenthp
     if status.time:
-        Action.do(Action.DecrementStatusTime(status))
+        Action.do(Action.DecrementStatusTime(status), gameStateObj)
         logger.info('Time Status %s to %s at %s. Time left: %s', status.id, unit.name, unit.position, status.time.time_left)
         if status.time.time_left <= 0:
             return "Remove" # Don't process. Status has no more effect on unit
@@ -364,16 +364,16 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
             GC.SOUNDDICT['heal'].play()
 
     if status.upkeep_stat_change:
-        Action.do(Action.ApplyStatChange(unit, status.upkeep_stat_change.stat_change))
-        Action.do(Action.ChangeStatusCount(status.upkeep_stat_change, status.upkeep_stat_change.count + 1))
+        Action.do(Action.ApplyStatChange(unit, status.upkeep_stat_change.stat_change), gameStateObj)
+        Action.do(Action.ChangeStatusCount(status.upkeep_stat_change, status.upkeep_stat_change.count + 1), gameStateObj)
 
     if status.rhythm_stat_change:
-        Action.do(Action.ChangeStatusCount(status.rhythm_stat_change, status.rhythm_stat_change.count + 1))
+        Action.do(Action.ChangeStatusCount(status.rhythm_stat_change, status.rhythm_stat_change.count + 1), gameStateObj)
         if status.rhythm_stat_change.count > status.rhythm_stat_change.limit:
-            Action.do(Action.ChangeStatusCount(status.rhythm_stat_change, 0))
-            Action.do(Action.ApplyStatChange(unit, status.rhythm_stat_change.reset))
+            Action.do(Action.ChangeStatusCount(status.rhythm_stat_change, 0), gameStateObj)
+            Action.do(Action.ApplyStatChange(unit, status.rhythm_stat_change.reset), gameStateObj)
         else:
-            Action.do(Action.ApplyStatChange(unit, status.rhythm_stat_change.change))
+            Action.do(Action.ApplyStatChange(unit, status.rhythm_stat_change.change), gameStateObj)
 
     check_automatic(status, unit, gameStateObj)
 
@@ -403,16 +403,16 @@ def HandleStatusEndStep(status, unit, gameStateObj):
     oldhp = unit.currenthp
 
     if status.endstep_stat_change:
-        Action.do(Action.ApplyStatChange(unit, status.endstep_stat_change.stat_change))
-        Action.do(Action.ChangeStatusCount(status.endstep_stat_change, status.endstep_stat_change.count + 1))
+        Action.do(Action.ApplyStatChange(unit, status.endstep_stat_change.stat_change), gameStateObj)
+        Action.do(Action.ChangeStatusCount(status.endstep_stat_change, status.endstep_stat_change.count + 1), gameStateObj)
 
     if status.endstep_rhythm_stat_change:
-        Action.do(Action.ChangeStatusCount(status.endstep_rhythm_stat_change, status.endstep_rhythm_stat_change.count + 1))
+        Action.do(Action.ChangeStatusCount(status.endstep_rhythm_stat_change, status.endstep_rhythm_stat_change.count + 1), gameStateObj)
         if status.endstep_rhythm_stat_change.count > status.endstep_rhythm_stat_change.limit:
-            Action.do(Action.ChangeStatusCount(status.endstep_rhythm_stat_change, 0))
-            Action.do(Action.ApplyStatChange(unit, status.endstep_rhythm_stat_change.reset))
+            Action.do(Action.ChangeStatusCount(status.endstep_rhythm_stat_change, 0), gameStateObj)
+            Action.do(Action.ApplyStatChange(unit, status.endstep_rhythm_stat_change.reset), gameStateObj)
         else:
-            Action.do(Action.ApplyStatChange(unit, status.endstep_rhythm_stat_change.change))
+            Action.do(Action.ApplyStatChange(unit, status.endstep_rhythm_stat_change.change), gameStateObj)
 
     if status.lost_on_endstep:
         Action.do(Action.RemoveStatus(status, unit), gameStateObj)
@@ -463,7 +463,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
             check_automatic(status, unit, gameStateObj)
 
     if status.skill_restore:
-        Action.do(Action.ChargeAllSkills(unit, 1000))
+        Action.do(Action.ChargeAllSkills(unit, 1000), gameStateObj)
 
     if status.clear:
         for status in unit.status_effects:
@@ -572,7 +572,7 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
     if status.ephemeral:
         unit.isDying = True
         # unit.set_hp(0)
-        Action.do(Action.ChangeHP(unit, -10000))
+        Action.do(Action.ChangeHP(unit, -10000), gameStateObj)
         gameStateObj.stateMachine.changeState('dying')
     if status.affects_movement:
         if unit.team.startswith('enemy'):
