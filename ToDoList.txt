@@ -12,6 +12,7 @@
 - Make gameStateObj/metaDataObj global?
 
 - Turnwheel
+    - Make it pretty and work the way FE Echoes works
 - Submaps
 - Overworld
 

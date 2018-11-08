@@ -358,6 +358,8 @@ class Solver(object):
         self.determine_state(gameStateObj)
         logger.debug('Interaction State 2: %s', self.state)
 
+        old_random_state = static_random.get_combat_random_state()
+
         if self.state == 'Done':
             result = None
 
@@ -405,6 +407,9 @@ class Solver(object):
             Action.do(Action.UseItem(self.item), gameStateObj)
             # self.use_item(self.item)
             result = self.generate_summon_phase(gameStateObj, metaDataObj)
+
+        new_random_state = static_random.get_combat_random_state()
+        Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)
                 
         return result
 

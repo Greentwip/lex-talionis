@@ -4,11 +4,13 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import StatusObject, Banner, LevelUp, Weapons
     import Utility, ItemMethods, UnitObject
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import StatusObject, Banner, LevelUp, Weapons
     from . import Utility, ItemMethods, UnitObject
 
@@ -1000,6 +1002,20 @@ class UpdateUnitRecords(Action):
         self.unit.records['damage'] -= self.record[0]
         self.unit.records['healing'] -= self.record[1]
         self.unit.records['kills'] -= self.record[2]
+
+class RecordRandomState(Action):
+    def __init__(self, old, new):
+        self.old = old
+        self.new = new
+
+    def do(self, gameStateObj):
+        pass
+
+    def execute(self, gameStateObj):
+        static_random.set_combat_random_state(self.new)
+
+    def reverse(self, gameStateObj):
+        static_random.set_combat_random_state(self.old)
 
 # === SKILL AND STATUS ACTIONS ===================================================
 class ApplyStatus(Action):

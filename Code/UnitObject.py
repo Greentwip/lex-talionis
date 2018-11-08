@@ -6,7 +6,7 @@ try:
     import static_random
     import Interaction, MenuFunctions, AStar, Weapons, TileObject
     import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
-    import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk, Action
+    import Utility, ItemMethods, Engine, Banner, TextChunk, Action
     from StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
 except ImportError:
     from . import GlobalConstants as GC
@@ -14,7 +14,7 @@ except ImportError:
     from . import static_random
     from . import Interaction, MenuFunctions, AStar, Weapons, TileObject
     from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
-    from . import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk, Action
+    from . import Utility, ItemMethods, Engine, Banner, TextChunk, Action
     from Code.StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
 
 import logging
@@ -815,6 +815,8 @@ class UnitObject(object):
             if leveling == 3: # Match player method
                 leveling = int(gameStateObj.mode['growths'])
 
+        r = static_random.get_levelup(self.id, self.level + class_info['tier'] * 100)
+
         if leveling in (0, 1): # Fixed or Random
             for index in range(8):
                 growth = growths[index]
@@ -823,7 +825,7 @@ class UnitObject(object):
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
                 elif leveling == 0: # Random
                     while growth > 0:
-                        levelup_list[index] += 1 if static_random.get_growth() < growth else 0
+                        levelup_list[index] += 1 if r.randint(0, 99) < growth else 0
                         growth -= 100
                     levelup_list[index] = min(levelup_list[index], class_info['max'][index] - self.stats.values()[index].base_stat)
         else: # Hybrid and Default
@@ -836,7 +838,7 @@ class UnitObject(object):
                 num_choices += 1
 
             for _ in range(num_choices):
-                index = static_random.weighted_choice(growths)
+                index = static_random.weighted_choice(growths, r)
                 levelup_list[index] += 1
                 growths[index] = max(0, growths[index] - 100)
                 if self.stats.values()[index].base_stat + levelup_list[index] >= class_info['max'][index]:

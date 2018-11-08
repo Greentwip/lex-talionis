@@ -31,13 +31,18 @@ class lcg(object):
 
 class StaticRandom(object):
     def __init__(self, seed=0):
+        self.set_seed(seed)
+
+    def set_seed(self, seed):
         self.seed = seed
         self.combat_random = lcg(seed)
         self.growth_random = lcg(seed + 1)
         self.other_random = lcg(seed + 2)
-        self.levelup_random_dict = {}
 
 r = StaticRandom()
+
+def set_seed(self, seed):
+    r.set_seed(seed)
 
 def get_combat():
     return r.combat_random.randint(0, 99)
@@ -45,25 +50,25 @@ def get_combat():
 def get_growth():
     return r.growth_random.randint(0, 99)
 
+def get_levelup(u_id, lvl):
+    return lcg(hash(u_id) + lvl + r.seed)
+
+def get_combat_random_state():
+    return r.combat_random.state
+
+def set_combat_random_state(state):
+    r.combat_random.state = state
+
 def shuffle(lst):
     r.other_random.shuffle(lst)
     return lst
 
-def get_levelup(u_id, lvl):
-    if u_id not in r.levelup_random_dict:
-        new_generator = lcg(hash(u_id) + r.seed)
-        r.levelup_random_dict[u_id] = new_generator
-    return r.levelup_random_dict[u_id].randint(0, 99)
-
-def set_growth_rng(u_id, rng):
-    if u_id not in r.levelup_random_dict:
-        new_generator = lcg(hash(u_id) + r.seed)
-        r.levelup_random_dict[u_id] = new_generator
-    r.levelup_random_dict[u_id].state = rng
-
 # === Returns the index of a weighted list
-def weighted_choice(choices):
-    rn = r.growth_random.randint(0, sum(choices) - 1)
+def weighted_choice(choices, generator=None):
+    if generator:
+        rn = generator.randint(0, sum(choices) - 1)
+    else:
+        rn = r.growth_random.randint(0, sum(choices) - 1)
     upto = 0
     for index, w in enumerate(choices):
         upto += w
