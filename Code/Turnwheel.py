@@ -12,7 +12,7 @@ class ActionLog(object):
     def __init__(self):
         self.actions = []
         self.action_index = -1  # Means no actions
-        self.last_saved_action = -1
+        self.first_free_action = -1
 
     def append(self, action):
         print("Add Action: %s" % action)
@@ -24,32 +24,41 @@ class ActionLog(object):
         self.actions.remove(action)
         self.action_index -= 1
 
-    def run_action_backward(self, action, gameStateObj):
+    def run_action_backward(self, gameStateObj):
+        action = self.actions[self.action_index]
         action.reverse(gameStateObj)
+        self.action_index -= 1
+        return action
 
-    def run_action_forward(self, action, gameStateObj):
+    def run_action_forward(self, gameStateObj):
+        self.action_index += 1
+        action = self.actions[self.action_index]
         action.execute(gameStateObj)
+        return action
 
     def backward(self, gameStateObj):
-        if not self.actions or self.action_index < 0:
+        if not self.actions or self.action_index < self.first_free_action + 1:
             return None
-        action = self.actions[self.action_index]
-        self.run_action_backward(action, gameStateObj)
-        self.action_index -= 1
+
+        action = self.run_action_backward(gameStateObj)
+        while action.skip and self.action_index >= self.first_free_action + 1:
+            action = self.run_action_backward(gameStateObj)
+        
         return action.__class__.__name__ + ": " + str(self.action_index + 1) + ' / ' + str(len(self.actions))
 
     def forward(self, gameStateObj):
         if not self.actions or self.action_index + 1 >= len(self.actions):
             return None
-        self.action_index += 1
-        action = self.actions[self.action_index]
-        self.run_action_forward(action, gameStateObj)
+
+        action = self.run_action_forward(gameStateObj)
+        while action.skip and self.action_index + 1 < len(self.actions):
+            action = self.run_action_forward(gameStateObj)
+            
         return action.__class__.__name__ + ': ' + str(self.action_index + 1) + ' / ' + str(len(self.actions))
 
     def finalize(self):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index + 1]
-        self.last_saved_action = min(self.last_saved_action, self.action_index)
         print("Remaining Actions:")
         print(self.actions)
 
@@ -65,18 +74,20 @@ class ActionLog(object):
                     return action.old_pos
         return unit.position
 
-    def set_last_saved_action(self):
-        self.last_saved_action = self.action_index
+    def set_first_free_action(self):
+        if self.first_free_action == -1:
+            self.first_free_action = self.action_index
 
     def serialize(self, gameStateObj):
-        return [action.serialize(gameStateObj) for action in self.actions]
+        return ([action.serialize(gameStateObj) for action in self.actions], self.first_free_action)
 
     @classmethod
-    def deserialize(cls, actions, gameStateObj):
+    def deserialize(cls, serial, gameStateObj):
         self = cls()
+        actions, first_free_action = serial
         for name, action in actions:
             self.append(getattr(Action, name).deserialize(action, gameStateObj))
-        self.set_last_saved_action()
+        self.first_free_action = first_free_action
         return self
 
 class TurnwheelState(StateMachine.State):

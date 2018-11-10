@@ -113,6 +113,7 @@ class UnitObject(object):
         # --- Temporary Status
         self.reset()
         self.finished = info.get('finished', False)
+        self.current_move_action = None
 
         self.resetUpdates()
     
@@ -2148,6 +2149,7 @@ class UnitObject(object):
                 self.sprite.set_transition('fade_out')
             self.deathCounter += 1
             if self.deathCounter > 27: # DEAD
+                self.isDying = False
                 self.die(gameStateObj)
                 self.deathCounter = 0 # Reset deathCounter. Otherwise characters never leaves death process.
 # === END UNIT ================================================================
