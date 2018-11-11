@@ -10,7 +10,7 @@ except ImportError:
     from . import configuration as cf
     from . import ItemMethods, Image_Modification, Utility, Engine, Counters
     from . import InfoMenu, GUIObjects, Action
-    from . import CustomObjects, TextChunk, Weapons, Action
+    from . import CustomObjects, TextChunk, Weapons
 
 import logging
 logger = logging.getLogger(__name__)

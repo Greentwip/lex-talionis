@@ -203,7 +203,10 @@ def read_words_file():
         with open('Data/words.txt') as words_file:
             for line in words_file:
                 split_line = line.strip().split(';')
-                lines[split_line[0]] = split_line[1]
+                if len(split_line) == 2:
+                    lines[split_line[0]] = split_line[1]
+                else:
+                    print('ERROR! unparseable words.txt line: %s' % line)
     else:
         print("ERROR! No words.txt file found in the data directory.")
 

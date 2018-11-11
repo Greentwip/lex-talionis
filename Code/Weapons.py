@@ -200,7 +200,7 @@ class Icon(object):
     def __init__(self, name=None, idx=None, grey=False):
         if name:
             self.name = name
-            self.idx = TRIANGLE.name_to_index[self.name]
+            self.idx = TRIANGLE.name_to_index.get(self.name, 0)
         else:
             self.name = None
             self.idx = idx

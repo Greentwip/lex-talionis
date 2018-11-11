@@ -110,6 +110,9 @@ class FreeState(StateMachine.State):
             gameStateObj.cursor.currentSelectedUnit = None
         Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
         self.info_counter = 0
+        # So the turnwheel cannot go back before this moment
+        if gameStateObj.turncount == 1:
+            gameStateObj.action_log.set_first_free_action()
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         # Check to see if all ally units have completed their turns and no unit is active and the game is in the free state.
@@ -613,8 +616,9 @@ class MenuState(StateMachine.State):
                     cur_unit.wait(gameStateObj)
             else:
                 # puts unit back - handles status
-                Action.reverse(cur_unit.current_move_action, gameStateObj)
-                cur_unit.current_move_action = None
+                if cur_unit.current_move_action:
+                    Action.reverse(cur_unit.current_move_action, gameStateObj)
+                    cur_unit.current_move_action = None
                 # cur_unit.reset()
                 gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
                 gameStateObj.stateMachine.changeState('move')
@@ -2019,7 +2023,6 @@ class PhaseChangeState(StateMachine.State):
             logger.debug("Saving as we enter enemy phase!")
             name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount) + 'b'
             SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange ' + str(gameStateObj.turncount), hard_loc=name)
-        gameStateObj.action_log.set_last_saved_action()
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)

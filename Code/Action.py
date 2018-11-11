@@ -16,6 +16,7 @@ except ImportError:
 
 class Action(object):
     run_on_load = False
+    skip = False
 
     def __init__(self):
         pass
@@ -227,6 +228,8 @@ class Wait(Action):
         self.unit.finished = self.finished
 
 class Reset(Action):
+    skip = True
+    
     def __init__(self, unit):
         self.unit = unit
         self.hasMoved = unit.hasMoved
@@ -333,7 +336,7 @@ class Give(Action):
         self.unit.hasAttacked = True
         if 'savior' not in self.other_unit.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.other_unit, gameStateObj)
-        self.unit.unrescue()
+        self.unit.unrescue(gameStateObj)
 
     def reverse(self, gameStateObj):
         self.unit.TRV = self.other_unit.TRV
@@ -341,7 +344,7 @@ class Give(Action):
         self.unit.hasAttacked = False
         if 'savior' not in self.unit.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.unit, gameStateObj)
-        self.other_unit.unrescue()
+        self.other_unit.unrescue(gameStateObj)
 
 class Take(Action):
     def __init__(self, unit, other_unit):
@@ -363,7 +366,7 @@ class Take(Action):
         self.unit.hasTraded = self.hasTraded
         if 'savior' not in self.other_unit.status_bundle:
             StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.other_unit, gameStateObj)
-        self.unit.unrescue()
+        self.unit.unrescue(gameStateObj)
 
 # === ITEM ACTIONS ==========================================================
 class PutItemInConvoy(Action):
@@ -472,8 +475,8 @@ class TradeItem(Action):
         self.unit2 = unit2
         self.item1 = item1
         self.item2 = item2
-        self.item_index1 = unit1.items.index(item1)
-        self.item_index2 = unit2.items.index(item2)
+        self.item_index1 = unit1.items.index(item1) if item1 != "EmptySlot" else 4
+        self.item_index2 = unit2.items.index(item2) if item2 != "EmptySlot" else 4
         self.hasTraded1 = self.unit1.hasTraded
         self.hasTraded2 = self.unit2.hasTraded
 
@@ -763,6 +766,7 @@ class Die(Action):
 
     def reverse(self, gameStateObj):
         self.unit.dead = False
+        self.unit.sprite.set_transition('normal')
 
         self.unit.position = self.old_pos
         self.unit.place_on_map(gameStateObj)
