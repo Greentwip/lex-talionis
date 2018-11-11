@@ -229,7 +229,7 @@ class Wait(Action):
 
 class Reset(Action):
     skip = True
-    
+
     def __init__(self, unit):
         self.unit = unit
         self.hasMoved = unit.hasMoved
@@ -598,7 +598,7 @@ class GainExp(Action):
     def execute(self, gameStateObj):
         if self.exp_amount + self.unit.exp >= 100:
             klass_dict = gameStateObj.metaDataObj['class_dict'][self.unit.klass]
-            max_level = Utility.find_max_level(klass_dict['tier'], cf.CONSTANTS['max_level'])
+            max_level = klass_dict['max_level']
             # Level Up
             if self.unit.level >= max_level:
                 if cf.CONSTANTS['auto_promote'] and klass_dict['turns_into']: # If has at least one class to turn into
@@ -618,7 +618,7 @@ class GainExp(Action):
         added_skills = [skill for skill in self.unit.status_effects if skill.id not in self.current_skills]
         if self.unit.exp < self.exp_amount: # Leveled up
             klass_dict = gameStateObj.metaDataObj['class_dict'][self.current_class]
-            max_level = Utility.find_max_level(klass_dict['tier'], cf.CONSTANTS['max_level'])
+            max_level = klass_dict['max_level']
             if self.unit.level == 1:  # Promoted here
                 self._reverse_class_change(gameStateObj, True)
             elif self.unit.level >= max_level and self.unit.exp >= 99:

@@ -88,7 +88,7 @@ class levelUpScreen(object):
             return True
 
         unit_klass = metaDataObj['class_dict'][self.unit.klass]
-        max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+        max_level = unit_klass['max_level']
         if self.unit.level >= max_level and unit_klass['turns_into'] is None:
             return True # We're done here
 

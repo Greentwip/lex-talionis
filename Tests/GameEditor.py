@@ -733,7 +733,7 @@ class ClassView(QtGui.QWidget):
             self.skills.append(self.create_skill_combo_box())
             skill_level = QtGui.QSpinBox()
             skill_level.setMinimum(1)
-            skill_level.setMaximum(cf.CONSTANTS['max_level'])
+            skill_level.setMaximum(40)
             self.skill_levels.append(skill_level)
         for index, skill_box in enumerate(self.skills):
             skill_grid.addWidget(skill_box, index + 2, 1, 1, 3)

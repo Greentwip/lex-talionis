@@ -598,10 +598,11 @@ def create_class_dict():
     # For each class
     for klass in GC.CLASSDATA.getroot().findall('class'):
         c_id = klass.get('id')
+        tier = int(klass.find('tier').text)
         class_dict[c_id] = {'short_name': klass.find('short_name').text,
                             'long_name': klass.find('long_name').text,
                             'id': c_id,
-                            'tier': int(klass.find('tier').text),
+                            'tier': tier,
                             'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
                             'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
                             'turns_into': klass.find('turns_into').text.split(',') if klass.find('turns_into').text is not None else [],
@@ -614,7 +615,8 @@ def create_class_dict():
                             'max': intify_comma_list(klass.find('max').text) if klass.find('max') is not None else [60],
                             'desc': klass.find('desc').text,
                             'exp_multiplier': float(klass.find('exp_multiplier').text) if klass.find('exp_multiplier') is not None else 1.,
-                            'exp_when_attacked': float(klass.find('exp_when_attacked').text) if klass.find('exp_when_attacked') is not None else 1.}
+                            'exp_when_attacked': float(klass.find('exp_when_attacked').text) if klass.find('exp_when_attacked') is not None else 1.,
+                            'max_level': int(klass.find('max_level').text) if klass.find('max_level') is not None else Utility.find_max_level(tier, cf.CONSTANTS['max_level'])}
         class_dict[c_id]['bases'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['bases'])))
         class_dict[c_id]['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['growths'])))
         class_dict[c_id]['promotion'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['promotion'])))

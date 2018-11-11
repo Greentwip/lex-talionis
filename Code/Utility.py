@@ -88,7 +88,7 @@ def find_max_level(tier, max_level_list):
     return max_level_list[closest_tier]
 
 # === ALLOWS COMPARISON OF LEVEL BETWEEN DIFFERENT TIERED CLASSES ======
-def comparison_level(tier, level, max_level_list):
+def internal_level(tier, level, max_level_list):
     true_level = level
     for idx, l in enumerate(max_level_list):
         if idx < tier:

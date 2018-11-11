@@ -583,7 +583,7 @@ class StartPreloadedLevels(StartLoad):
             # Level up the unit
             for level_num in range(unit_dict['level'] - unit.level):
                 unit_klass = metaDataObj['class_dict'][unit.klass]
-                max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+                max_level = unit_klass['max_level']
                 if unit.level >= max_level:
                     class_options = unit_klass['turns_into']
                     if class_options:

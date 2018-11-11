@@ -702,14 +702,14 @@ class UnitObject(object):
         self.currenthp = int(hp)
         self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))
 
-    def get_comparison_level(self, metaDataObj):
+    def get_internal_level(self, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
-        return Utility.comparison_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])
+        return Utility.internal_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])
 
     def can_promote_using(self, item, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]
         allowed_classes = item.promotion
-        max_level = Utility.find_max_level(unit_klass['tier'], cf.CONSTANTS['max_level'])
+        max_level = unit_klass['max_level']
         return self.level >= max_level//2 and len(unit_klass['turns_into']) >= 1 \
             and (self.klass in allowed_classes or 'All' in allowed_classes)
 
