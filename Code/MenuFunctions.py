@@ -3,13 +3,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import ItemMethods, Image_Modification, Utility, Engine, Counters
-    import StateMachine, InfoMenu, GUIObjects
+    import InfoMenu, GUIObjects, Action
     import CustomObjects, TextChunk, Weapons
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import ItemMethods, Image_Modification, Utility, Engine, Counters
-    from . import InfoMenu, GUIObjects
+    from . import InfoMenu, GUIObjects, Action
     from . import CustomObjects, TextChunk, Weapons, Action
 
 import logging
