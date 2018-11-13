@@ -453,7 +453,7 @@ class Dialogue_Scene(object):
             skill = StatusObject.statusparser(line[2])
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit and skill:
-                StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
+                Action.do(Action.ApplyStatus(unit, skill), gameStateObj)
                 if 'no_display' not in line:
                     gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
                     gameStateObj.stateMachine.changeState('itemgain')
@@ -464,8 +464,7 @@ class Dialogue_Scene(object):
             exp = int(line[2])
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit:
-                gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=unit, exp=exp))
-                gameStateObj.stateMachine.changeState('expgain')
+                Action.do(Action.GainExp(unit, exp), gameStateObj)
                 self.current_state = "Paused"
 
         # destroy a destructible object
@@ -830,6 +829,7 @@ class Dialogue_Scene(object):
         
         # === CHANGING UNITS
         elif line[0] == 'convert':
+            assert len(line) == 3
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):

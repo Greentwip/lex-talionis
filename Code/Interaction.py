@@ -1362,9 +1362,8 @@ class AnimationCombat(Combat):
                 # Doesn't count if it did 0 damage
                 applicable_results = [result for result in applicable_results if not (self.item.weapon and result.def_damage <= 0)]
                 if applicable_results:
-                    my_exp, record = self.calc_init_exp_p1(my_exp, self.p2, applicable_results, gameStateObj)
-
-                Action.do(Action.UpdateUnitRecords(self.p1, record), gameStateObj)
+                    my_exp, records = self.calc_init_exp_p1(my_exp, self.p2, applicable_results, gameStateObj)
+                    Action.do(Action.UpdateUnitRecords(self.p1, records), gameStateObj)
 
                 # No free exp for affecting myself or being affected by allies
                 if self.p1.checkIfAlly(self.p2):

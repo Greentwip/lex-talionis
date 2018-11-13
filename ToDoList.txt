@@ -11,21 +11,17 @@
 
 - Turnwheel
     - Make it pretty and work the way FE Echoes works
+    - If loading crashed save, allow execution of turnwheel forward
 - Submaps
 - Overworld
 
 To Test Action:
-ArriveMap
 LeaveMap
-PutItemInConvoy
 GiveItem
 DropItem
-DiscardItem
-LevelUp
 Promotion
 Using a Booster
 Miracle
-ChangeTeam
 ChangeAI
 GiveGold
 AddTag

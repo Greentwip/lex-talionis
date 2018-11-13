@@ -60,6 +60,8 @@ class Action(object):
                         break
                 else:
                     value = ('UniqueStatus', value.serialize())
+            elif isinstance(value, Action):  # This only works if two actions never refer to one another
+                value = ('Action', value.serialize(gameStateObj))
             else:
                 value = ('Generic', value)
             ser_dict[name] = value
@@ -84,6 +86,8 @@ class Action(object):
                 setattr(self, name, unit.status_effects[value[2]])
             elif value[0] == 'UniqueStatus':
                 setattr(self, name, StatusObject.deserialize(value[1]))
+            elif value[0] == 'Action':
+                setattr(self, name, Action.deserialize(value[1], gameStateObj))
             else:
                 setattr(self, name, value[1])
         return self
@@ -188,7 +192,7 @@ class ArriveOnMap(Action):
         self.unit.arrive(gameStateObj)
 
     def reverse(self, gameStateObj):
-        self.unit.leave()
+        self.unit.leave(gameStateObj)
         self.unit.remove_from_map(gameStateObj)
         self.unit.position = None
 
@@ -198,14 +202,14 @@ class LeaveMap(Action):
         self.old_pos = self.unit.position
 
     def do(self, gameStateObj):
-        self.unit.leave()
+        self.unit.leave(gameStateObj)
         self.unit.remove_from_map(gameStateObj)
         self.unit.position = None
 
     def reverse(self, gameStateObj):
         self.unit.position = self.old_pos
         self.unit.place_on_map(gameStateObj)
-        self.unit.arrive()
+        self.unit.arrive(gameStateObj)
 
 class Wait(Action):
     def __init__(self, unit):
@@ -524,7 +528,8 @@ class GainExp(Action):
         self.exp_amount = exp
         self.old_exp = self.unit.exp
         self.old_level = self.unit.level
-        self.current_stats = self.unit.stats.items()
+        self.current_stats = [s.base_stat for s in self.unit.stats.values()]
+        self.levelup_list = None
 
         self.promoted_to = None  # Determined on reverse
         self.current_class = self.unit.klass
@@ -626,6 +631,8 @@ class GainExp(Action):
             else:
                 self.unit.exp = 100 - self.exp_amount + self.unit.exp
                 self.unit.level -= 1
+                stats_after_levelup = [s.base_stat for s in self.unit.stats.values()]
+                self.levelup_list = [a - b for a, b in zip(stats_after_levelup, self.current_stats)]
                 self.unit.apply_levelup([-x for x in self.levelup_list])
             self._remove_skills(added_skills, gameStateObj)
         else:

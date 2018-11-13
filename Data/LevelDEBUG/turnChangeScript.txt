@@ -1,4 +1,7 @@
 # Event script that is called every time the player's turn starts. Normally handles reinforcements
+if;gameStateObj.turncount == 2
+    convert;4,18;enemy
+end
 if;gameStateObj.turncount == 4
     set_cursor;0,0;force_hold
     wait;500
