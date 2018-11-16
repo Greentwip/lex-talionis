@@ -343,7 +343,7 @@ class MusicThread(object):
                 self.song_stack.append(song)
                 break
         else:
-            logger.info('Music: New Song')
+            logger.info('Music: Next Song %s', next_song)
             if next_song:
                 new_song = Song(next_song, num_plays, time)
                 self.song_stack.append(new_song)
@@ -357,6 +357,7 @@ class MusicThread(object):
             self.next = self.song_stack[-1]
         else:
             self.next = None
+        logger.info('Music: Next Song %s', self.next)
 
         # Start fade out process
         self.state = 'fade' # Now we know to fade to next index
@@ -408,18 +409,19 @@ class MusicThread(object):
             if event.type == self.end_song_event:
                 if self.state == 'normal':
                     logger.debug('Music: Normal Event')
-                    if self.current.loop:
-                        self.current.swap()
-                        pygame.mixer.music.load(self.current.song)
-                        pygame.mixer.music.play(0)
-                    elif self.current.num_plays == -1:
-                        pygame.mixer.music.play(0)
-                    elif self.current.num_plays >= 0:
-                        self.current.num_plays -= 1
-                    self.current.current_time = 0
-                    if self.current.num_plays == 0:
-                        self.stop()
-                        self.fade_back()
+                    if self.current:
+                        if self.current.loop:
+                            self.current.swap()
+                            pygame.mixer.music.load(self.current.song)
+                            pygame.mixer.music.play(0)
+                        elif self.current.num_plays == -1:
+                            pygame.mixer.music.play(0)
+                        elif self.current.num_plays >= 0:
+                            self.current.num_plays -= 1
+                        self.current.current_time = 0
+                        if self.current.num_plays == 0:
+                            self.stop()
+                            self.fade_back()
                 elif self.state == 'fade_catch':
                     logger.debug('Music: Fade Catch Event')
                     self.state = 'normal' # catches the stop from fade and returns to normal

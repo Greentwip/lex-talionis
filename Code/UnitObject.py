@@ -1741,9 +1741,6 @@ class UnitObject(object):
         #     logger.error('Something let go of this unit without grabbing hold first!')
         #     self.isActive = 0
 
-    # def hasAttacked(self):
-        # return self.hasRescued
-
     def reset_ai(self):
         self.hasRunMoveAI = False
         self.hasRunAttackAI = False
@@ -1759,6 +1756,7 @@ class UnitObject(object):
         self.isDying = False # Unit is dying
         self.path = []
         self.movement_left = self.stats['MOV']
+        self.current_move_action = None
 
     # This is required to reset certain time dependant counters, because pygame counts from the beginning of each session
     # So if you spent 700 seconds in one session, the self.lastUpdate might be 700,000

@@ -16,6 +16,8 @@
 - Overworld
 
 To Test Action:
+FadeIn
+WarpIn
 LeaveMap
 GiveItem
 DropItem

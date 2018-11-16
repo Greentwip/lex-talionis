@@ -194,9 +194,9 @@ class StartOption(StateMachine.State):
             return 'repeat'
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+
         if self.state == "normal":
-            event = gameStateObj.input_manager.process_input(eventList)
-                            
             if event == 'DOWN':
                 GC.SOUNDDICT['Select 6'].play()
                 self.menu.moveDown()
@@ -228,6 +228,7 @@ class StartOption(StateMachine.State):
                     self.banner = MenuFunctions.CreateBaseMenuSurf((width, 24), 'DarkMenuBackground')
                     self.banner = Image_Modification.flickerImageTranslucent(self.banner, 10)
                     MenuFunctions.OutlineFont(GC.BASICFONT, text, self.banner, GC.COLORDICT['off_white'], GC.COLORDICT['off_black'], position)
+                    self.state = "click_once"
                 elif self.selection == cf.WORDS['New Game']:
                     self.banner = None
                     gameStateObj.stateMachine.changeState('start_mode')
@@ -235,7 +236,19 @@ class StartOption(StateMachine.State):
                 else:
                     self.banner = None
                     self.state = "transition_out"
-            
+
+        elif self.state == "click_once":
+            if event == 'SELECT':
+                if self.menu.getSelection() == cf.WORDS['New Game']:
+                    gameStateObj.stateMachine.changeState('start_mode')
+                    gameStateObj.stateMachine.changeState('transition_out')
+                else:
+                    self.state = "transition_out"
+                self.banner = None
+            elif event:
+                self.banner = None
+                self.state = "normal"
+                
     def update(self, gameStateObj, metaDataObj):
         # gameStateObj.logo.update()
         if self.menu:
@@ -272,7 +285,7 @@ class StartOption(StateMachine.State):
                 return 'repeat'
 
     def continue_suspend(self, gameStateObj, metaDataObj):
-        # gameStateObj.activeMenu = None # Remove menu
+        gameStateObj.activeMenu = None # Remove menu
         suspend = CustomObjects.SaveSlot(GC.SUSPEND_LOC, None)
         logger.debug('Loading game...')
         SaveLoad.loadGame(gameStateObj, metaDataObj, suspend)
@@ -294,7 +307,7 @@ class StartOption(StateMachine.State):
         gameStateObj.button_b.draw(surf)
         if self.menu:
             self.menu.draw(surf, center=(self.position_x, GC.WINHEIGHT//2), show_cursor=(self.state == "normal"))
-        if self.banner and self.state == 'normal':
+        if self.banner and self.state == 'click_once':
             surf.blit(self.banner, (GC.WINWIDTH//2 - self.banner.get_width()//2, GC.WINHEIGHT//2 - self.banner.get_height()//2))
 
         # Now draw black background

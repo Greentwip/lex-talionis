@@ -1212,17 +1212,11 @@ class Dialogue_Scene(object):
             transition = 'immediate'
         # Now we have final pos
         if transition == 'warp':
-            unit.sprite.set_transition('warp_in')
-            gameStateObj.map.initiate_warp_flowers(final_pos)
+            Action.do(Action.WarpIn(unit, final_pos), gameStateObj)
         elif transition == 'fade':
-            if gameStateObj.map.on_border(final_pos):
-                unit.sprite.spriteOffset = [num*GC.TILEWIDTH for num in gameStateObj.map.which_border(final_pos)]
-                unit.sprite.set_transition('fake_in')
-            else:
-                unit.sprite.set_transition('fade_in')
-        elif transition == 'immediate':
-            pass
-        Action.do(Action.ArriveOnMap(unit, final_pos), gameStateObj)
+            Action.do(Action.FadeIn(unit, final_pos), gameStateObj)
+        else: ## immediate
+            Action.do(Action.ArriveOnMap(unit, final_pos), gameStateObj)
 
     def move_unit(self, gameStateObj, metaDataObj, which_unit, new_pos, transition, placement, shuffle=True):
         # Find unit

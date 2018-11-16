@@ -342,7 +342,7 @@ class GameStateObj(object):
         # Reset all position dependant voodoo -- Done by gameStateObj at once instead of one at a time...
         for unit in self.allunits:
             unit.leave(self, serializing=True)
-        ser_units = [unit.serialize(self) for unit in self.allunits if not (unit.dead and unit.generic_flag)]
+        ser_units = [unit.serialize(self) for unit in self.allunits]
         for unit in self.allunits:
             unit.arrive(self, serializing=True)
         to_save = {'allunits': ser_units,

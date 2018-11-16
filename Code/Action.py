@@ -71,10 +71,13 @@ class Action(object):
     @classmethod
     def deserialize(cls, ser_dict, gameStateObj):
         self = cls.__new__(cls)
+        print(cls.__name__)
         for name, value in ser_dict.items():
             if value[0] == 'Unit':
                 setattr(self, name, gameStateObj.get_unit_from_id(value[1]))
             elif value[0] == 'Item':
+                print(value[1])
+                print([u.id for u in gameStateObj.allunits])
                 unit = gameStateObj.get_unit_from_id(value[1])
                 setattr(self, name, unit.items[value[2]])
             elif value[0] == 'ConvoyItem':
@@ -196,6 +199,25 @@ class ArriveOnMap(Action):
         self.unit.remove_from_map(gameStateObj)
         self.unit.position = None
 
+class WarpIn(ArriveOnMap):
+    def do(self, gameStateObj):
+        self.unit.position = self.pos
+        self.unit.sprite.set_transition('warp_in')
+        gameStateObj.map.initiate_warp_flowers(self.pos)
+        self.unit.place_on_map(gameStateObj)
+        self.unit.arrive(gameStateObj)
+
+class FadeIn(ArriveOnMap):
+    def do(self, gameStateObj):
+        self.unit.position = self.pos
+        if gameStateObj.map.on_border(self.pos):
+            self.unit.sprite.spriteOffset = [num*GC.TILEWIDTH for num in gameStateObj.map.which_border(self.pos)]
+            self.unit.sprite.set_transition('fake_in')
+        else:
+            self.unit.sprite.set_transition('fade_in')
+        self.unit.place_on_map(gameStateObj)
+        self.unit.arrive(gameStateObj)
+
 class LeaveMap(Action):
     def __init__(self, unit):
         self.unit = unit
@@ -224,6 +246,7 @@ class Wait(Action):
         self.unit.hasTraded = True
         self.unit.hasAttacked = True
         self.unit.finished = True
+        self.unit.current_move_action = None
 
     def reverse(self, gameStateObj):
         self.unit.hasMoved = self.hasMoved
@@ -872,6 +895,8 @@ class ChangeLevelConstant(Action):
         gameStateObj.level_constants[self.constant] = self.old_value
 
 class IncrementTurn(Action):
+    skip = True
+
     def __init__(self):
         pass
 

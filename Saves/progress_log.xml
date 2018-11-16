@@ -219,3 +219,32 @@
 	</units>
 </level>
 
+<level name="1">
+	<mode>Hard</mode>
+	<money>3000</money>
+	<convoy></convoy>
+	<units>
+		<unit name="Silas">
+			<level>2</level>
+			<exp>45</exp>
+			<items>Iron Bow 22,Iron Bow 30,Vulnerary 5</items>
+			<wexp>0,0,0,9,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Cedric">
+			<level>2</level>
+			<exp>7</exp>
+			<items>Iron Sword 22,Iron Sword 30,Vulnerary 4</items>
+			<wexp>9,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Tessa">
+			<level>1</level>
+			<exp>99</exp>
+			<items>Iron Lance 22,Iron Lance 30,Vulnerary 3</items>
+			<wexp>0,9,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+

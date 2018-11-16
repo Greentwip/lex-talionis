@@ -656,7 +656,8 @@ def save_io(to_save, to_save_meta, old_slot, slot=None, hard_loc=None):
     logger.info('Saving to %s', save_loc)
 
     with open(save_loc, 'wb') as suspendFile:
-        pickle.dump(to_save, suspendFile)
+        # Remove the -1 here if you want to interrogate the pickled save
+        pickle.dump(to_save, suspendFile, -1)
     with open(meta_loc, 'wb') as metaFile:
         pickle.dump(to_save_meta, metaFile)
 
