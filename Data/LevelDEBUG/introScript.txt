@@ -13,3 +13,4 @@ r;Renae;Ophie
 t;1
 remove_background
 t;2
+interact_unit;Sam;3,15;Miss,Miss
