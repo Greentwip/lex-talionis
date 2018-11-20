@@ -14,6 +14,8 @@
 - Overworld
 - Parties
 
+- New Screenshots in all marketing content
+
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.

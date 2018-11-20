@@ -10,7 +10,7 @@ except ImportError:
 import logging
 logger = logging.getLogger(__name__)
 
-version = "0.8.1"
+version = "0.8.2"
 # === GLOBAL cf.CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000//FPS
