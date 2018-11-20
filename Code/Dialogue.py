@@ -516,7 +516,6 @@ class Dialogue_Scene(object):
                 event_combat = [command.lower() for command in reversed(line[3].split(','))]
             else:
                 event_combat = None
-            print(event_combat)
             self.interact_unit(gameStateObj, attacker, defender, event_combat)
         elif line[0] == 'remove_unit' or line[0] == 'kill_unit':
             # Read input
