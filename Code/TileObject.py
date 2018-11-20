@@ -92,7 +92,8 @@ class MapObject(object):
     def area_replace(self, coord, image_filename, grid_manager):
         colorkey, width, height = self.build_color_key(self.loose_tile_sprites[image_filename])
         self.populate_tiles(colorkey, coord)
-        self.update_grid_manager(coord, width, height, grid_manager)
+        if grid_manager:
+            self.update_grid_manager(coord, width, height, grid_manager)
         return width, height
 
     def update_grid_manager(self, coord, width, height, grid_manager):
