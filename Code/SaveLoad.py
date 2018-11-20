@@ -67,7 +67,6 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
         unitLine = line.split(';')
         current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, 
                                        reinforceUnits, prefabs, gameStateObj.triggers, metaDataObj, gameStateObj)
-    
     handle_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective, music=starting_music)
 
@@ -127,7 +126,6 @@ def read_overview_file(overview_filename):
 class Trigger(object):
     def __init__(self):
         self.units = {}
-        self.kind = 'normal'
 
     def add_unit(self, unit_id, pos1, pos2):
         if ',' in pos1:
@@ -136,7 +134,7 @@ class Trigger(object):
             pos2 = tuple(int(n) for n in pos2.split(','))
         self.units[unit_id] = (pos1, pos2)
 
-def read_trigger_line(unitLine, allunits, reinforceUnits):
+def get_trigger_unit(unitLine, allunits, reinforceUnits):
     if ',' in unitLine[2]:
         position = tuple(int(n) for n in unitLine[2].split(','))
         for unit in allunits:
@@ -158,12 +156,14 @@ def handle_triggers(allunits, reinforceUnits, triggers, level_map):
         counter = 0
         while queue and counter < 10:
             start, end = queue.pop()
-            if end == current_pos:
+            if end == current_pos:  # Running up the chain
                 current_pos = start
                 counter = 0
             else:
                 queue.insert(0, (start, end))
                 counter += 1
+        # print("Determining First Position")
+        # print(unit.id, current_pos)
         if not current_pos:
             unit.position = None
             reinforceUnits[unit.id] = (unit.id, current_pos)
@@ -180,8 +180,12 @@ def handle_triggers(allunits, reinforceUnits, triggers, level_map):
             reinforceUnits[unit.id] = (unit.id, spawn_pos)
         else:
             unit.position = current_pos
+        # print("Unit Position")
+        # print(unit.position)
+        # print(reinforceUnits.get(unit.id))
 
     # create a new object with unit id as main and triggers in dict
+    # This organizas all triggers to be organized by unit instead of by trigger name
     unit_triggers = {}
     for trigger_name, trigger in triggers.items():
         for unit_id, (start, end) in trigger.units.items():
@@ -204,16 +208,18 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
     elif unitLine[0] == 'mode':
         current_mode = unitLine[1].split(',')
     elif unitLine[0] == 'load_player_characters':
-        for unit in allunits:
-            if unit.team == 'player' and not unit.dead:
-                # Event ID is unit name
-                reinforceUnits[unit.name] = (unit.id, None)
+        pass
+    #     for unit in allunits:
+    #         if unit.team == 'player' and not unit.dead:
+    #             # Event ID is unit name
+    #             reinforceUnits[unit.name] = (unit.id, None)
     elif unitLine[0] == 'trigger':
-        if unitLine[1] not in triggers:
-            triggers[unitLine[1]] = Trigger()
-        unit_id = read_trigger_line(unitLine, allunits, reinforceUnits)
+        trigger_name = unitLine[1]
+        if trigger_name not in triggers:
+            triggers[trigger_name] = Trigger()
+        unit_id = get_trigger_unit(unitLine, allunits, reinforceUnits)
         if unit_id:
-            triggers[unitLine[1]].add_unit(unit_id, unitLine[3], unitLine[4])
+            triggers[trigger_name].add_unit(unit_id, unitLine[3], unitLine[4])
     elif gameStateObj.check_mode(current_mode):
         # New Unit
         if unitLine[1] == "0":

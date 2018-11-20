@@ -36,7 +36,7 @@ class UnitData(object):
         self.reinforcements = []
         self.factions = OrderedDict()
         self.triggers = OrderedDict()
-        self.load_player_characters = False
+        # self.load_player_characters = False
 
     def load(self, fp):
         self.clear()
@@ -136,7 +136,8 @@ class UnitData(object):
             if 'All' in current_mode:
                 current_mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
         elif unitLine[0] == 'load_player_characters':
-            self.load_player_characters = True
+            # self.load_player_characters = True
+            pass
         elif unitLine[0] == 'trigger':
             unit = read_trigger_line(unitLine, current_mode)
             if unitLine[1] not in self.triggers:

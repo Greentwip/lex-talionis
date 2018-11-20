@@ -77,8 +77,8 @@ class FactionMenu(QtGui.QWidget):
         self.window = window
         self.view = view
 
-        self.load_player_characters = QtGui.QCheckBox('Load saved player characters?')
-        self.load_player_characters.stateChanged.connect(self.set_load_player_characters)
+        # self.load_player_characters = QtGui.QCheckBox('Load saved player characters?')
+        # self.load_player_characters.stateChanged.connect(self.set_load_player_characters)
 
         self.list = SignalList(self, del_func=self.remove_faction)
         self.list.setMinimumSize(128, 320)
@@ -95,7 +95,7 @@ class FactionMenu(QtGui.QWidget):
         self.remove_faction_button = QtGui.QPushButton('Remove Faction')
         self.remove_faction_button.clicked.connect(self.remove_faction)
 
-        self.grid.addWidget(self.load_player_characters, 0, 0)
+        # self.grid.addWidget(self.load_player_characters, 0, 0)
         self.grid.addWidget(self.list, 1, 0)
         self.grid.addWidget(self.add_faction_button, 2, 0)
         self.grid.addWidget(self.remove_faction_button, 3, 0)
@@ -129,8 +129,8 @@ class FactionMenu(QtGui.QWidget):
         self.list.takeItem(idx)
         del self.unit_data.factions[self.unit_data.factions.key()[idx]]
 
-    def set_load_player_characters(self, state):
-        self.unit_data.load_player_characters = bool(state)
+    # def set_load_player_characters(self, state):
+    #     self.unit_data.load_player_characters = bool(state)
 
     def get_current_faction(self):
         return list(self.unit_data.factions.values())[self.list.currentRow()]
@@ -141,8 +141,8 @@ class FactionMenu(QtGui.QWidget):
         # Ingest Data
         for faction in self.unit_data.factions.values():
             self.list.addItem(self.create_item(faction))
-        self.load_player_characters.setChecked(self.unit_data.load_player_characters)
+        # self.load_player_characters.setChecked(self.unit_data.load_player_characters)
 
     def clear(self):
         self.list.clear()
-        self.load_player_characters.setChecked(False)
+        # self.load_player_characters.setChecked(False)

@@ -516,6 +516,7 @@ class Dialogue_Scene(object):
                 event_combat = [command.lower() for command in reversed(line[3].split(','))]
             else:
                 event_combat = None
+            print(event_combat)
             self.interact_unit(gameStateObj, attacker, defender, event_combat)
         elif line[0] == 'remove_unit' or line[0] == 'kill_unit':
             # Read input
@@ -538,6 +539,8 @@ class Dialogue_Scene(object):
             if line[1] in gameStateObj.triggers:
                 trigger = gameStateObj.triggers[line[1]]
                 for unit_id, (start, end) in trigger.units.items():
+                    print('In trigger:')
+                    print(unit_id, start, end)
                     # First see if the unit is in reinforcements
                     if unit_id in gameStateObj.allreinforcements:
                         self.add_unit(gameStateObj, metaDataObj, unit_id, None, 'fade', 'stack')
@@ -1184,11 +1187,16 @@ class Dialogue_Scene(object):
             position = self.parse_pos(unitLine[5], gameStateObj)
         else:
             context = gameStateObj.allreinforcements.get(which_unit)
-            if not context:
-                logger.warning('Could not find %s in allreinforcements', which_unit)
-                return
-            u_id, position = context
-            unit = gameStateObj.get_unit_from_id(u_id)
+            if context:
+                u_id, position = context
+                unit = gameStateObj.get_unit_from_id(u_id)
+            else:
+                unit = gameStateObj.get_unit_from_id(which_unit)
+                position = None
+                if not unit:
+                    logger.warning('Could not find %s', which_unit)
+                    return
+            # print(unit.id, position)
             if unit.dead:
                 logger.warning('Unit %s is dead', u_id)
                 return
@@ -1348,7 +1356,7 @@ class Dialogue_Scene(object):
         elif transition == 'immediate':
             unit.die(gameStateObj, event=event)
 
-    def interact_unit(self, gameStateObj, attacker, defender, event_combat=True):
+    def interact_unit(self, gameStateObj, attacker, defender, event_combat=False):
         if ',' in attacker:
             attacker = gameStateObj.get_unit_from_pos(self.parse_pos(attacker, gameStateObj))
         else:

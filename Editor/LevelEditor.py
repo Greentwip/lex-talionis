@@ -712,8 +712,8 @@ class MainEditor(QtGui.QMainWindow):
         with open(fp, 'w') as unit_level:
             unit_level.write(EditorUtilities.unit_level_header)
             factions = self.unit_data.factions
-            if self.unit_data.load_player_characters:
-                unit_level.write('load_player_characters\n')
+            # if self.unit_data.load_player_characters:
+            #     unit_level.write('load_player_characters\n')
             for faction in factions.values():
                 unit_level.write('faction;' + faction.faction_id + ';' + faction.unit_name + 
                                  ';' + faction.faction_icon + ';' + faction.desc + '\n')
