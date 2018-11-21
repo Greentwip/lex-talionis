@@ -85,7 +85,9 @@ if __name__ == '__main__':
     print(get_combat())
     print(get_combat())
     l = [1, 2, 3, 4, 5, 6, 7]
-    print(shuffle(l))
+    print(l)
+    shuffle(l)
+    print(l)
     l = [1, 2, 3, 4, 5, 6, 7]
     print(shuffle(l))
     l = [1, 2, 3, 4, 5, 6, 7]

@@ -28,7 +28,7 @@ s;Ulver;I am certain of it.{w};auto
 s;Adjutant;You know best, milord.{w}{br}Should I send out the Palace Guards?{w};auto
 s;Ulver;No... Leave them here. Let the Resistance come.{w};auto
 s;Adjutant;Milord?!{w};auto
-s;Ulver;If they've has finally worked up the nerve to attack me directly...{w}{br}Well, let them try.{w}{br}They will find it easier said than done.{w};auto
+s;Ulver;If they've have finally worked up the nerve to attack me directly...{w}{br}Well, let them try.{w}{br}They will find it easier said than done.{w};auto
 s;Adjutant;Are you sure that's wise, milord?{w};auto
 s;Ulver;They were too much for my underlings to handle.{w}{br}Brigham, Marduk, Vagnius.{w}{br}All of them met their match against the Resistance.{w}{br}I say that the Resistance has earned their right to challenge me.{w}{br}I will finish them myself, ending their nusiance once and for all.{w}{br}They will die with their honor intact, at least.{w};auto
 s;Adjutant;How magninimous, milord.{w};auto

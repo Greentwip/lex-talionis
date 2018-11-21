@@ -407,7 +407,7 @@ class GameStateObj(object):
             if unit.dead:
                 if not int(self.mode['death']): # Casual
                     unit.dead = False
-                else:
+                elif cf.CONSTANTS['convoy_on_death']:
                     # Give all of the unit's items to the convoy
                     for item in unit.items:
                         unit.remove_item(item)

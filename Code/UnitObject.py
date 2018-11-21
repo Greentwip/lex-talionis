@@ -7,7 +7,7 @@ try:
     import Interaction, MenuFunctions, AStar, Weapons, TileObject
     import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
     import Utility, ItemMethods, Engine, Banner, TextChunk, Action
-    from StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
+    from StatObject import build_stat_dict_plus  # Needed so old saves can load
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
@@ -15,7 +15,7 @@ except ImportError:
     from . import Interaction, MenuFunctions, AStar, Weapons, TileObject
     from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
     from . import Utility, ItemMethods, Engine, Banner, TextChunk, Action
-    from Code.StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
+    from Code.StatObject import build_stat_dict_plus  # Needed so old saves can load
 
 import logging
 logger = logging.getLogger(__name__)
@@ -605,14 +605,14 @@ class UnitObject(object):
     def remove_from_map(self, gameStateObj):
         if self.position:
             logger.debug('Remove %s %s %s', self, self.name, self.position)
-            for s_id in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusRemoval(s_id, self, gameStateObj)
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusRemoval(status, self, gameStateObj)
 
     def place_on_map(self, gameStateObj):
         if self.position:
             logger.debug('Place %s %s %s', self, self.name, self.position)
-            for s_id in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusAddition(s_id, self, gameStateObj)
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusAddition(status, self, gameStateObj)
 
     # Pathfinding algorithm
     def getPath(self, gameStateObj, goalPosition, ally_block=False):
@@ -839,6 +839,8 @@ class UnitObject(object):
                 num_choices += 1
 
             for _ in range(num_choices):
+                if sum(growths) <= 0:
+                    break
                 index = static_random.weighted_choice(growths, r)
                 levelup_list[index] += 1
                 growths[index] = max(0, growths[index] - 100)

@@ -91,7 +91,8 @@ class MapObject(object):
     def area_replace(self, coord, image_filename, grid_manager):
         colorkey, width, height = self.build_color_key(self.loose_tile_sprites[image_filename])
         self.populate_tiles(colorkey, coord)
-        self.update_grid_manager(coord, width, height, grid_manager)
+        if grid_manager:
+            self.update_grid_manager(coord, width, height, grid_manager)
         return width, height
 
     def update_grid_manager(self, coord, width, height, grid_manager):
@@ -464,11 +465,25 @@ class MapObject(object):
     def remove_weather(self, name):
         self.weather = [weather for weather in self.weather if weather.name != name]
 
-    def add_global_status(self, s_id):
-        self.status_effects.add(s_id)
+    def add_global_status(self, s_id, gameStateObj=None):
+        if any(status.id == s_id for status in self.status_effects):
+            return  # No stacking at all of global statuses
+        status_obj = StatusObject.statusparser(s_id)
+        self.status_effects.add(status_obj)
+        if gameStateObj:
+            for unit in gameStateObj.allunits:
+                if unit.position:
+                    StatusObject.HandleStatusAddition(status_obj, unit, gameStateObj)
 
-    def remove_global_status(self, s_id):
-        self.status_effects.discard(s_id)
+    def remove_global_status(self, s_id, gameStateObj=None):
+        if not any(status.id == s_id for status in self.status_effects):
+            return  # Must have the right status to remove
+        status_obj = [status for status in self.status_effects if status.id == s_id][0]
+        self.status_effects.discard(status_obj)
+        if gameStateObj:
+            for unit in gameStateObj.allunits:
+                if unit.position:
+                    StatusObject.HandleStatusRemoval(status_obj, unit, gameStateObj)
 
     def create_display(self, coord, gameStateObj):
         if coord in self.hp:

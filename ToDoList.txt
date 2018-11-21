@@ -14,6 +14,9 @@
     - If loading crashed save, allow execution of turnwheel forward
 - Submaps
 - Overworld
+- Parties
+
+- New Screenshots in all marketing content
 
 To Test Action:
 FadeIn

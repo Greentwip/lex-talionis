@@ -21,13 +21,13 @@ load_player_characters
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Warrior;10;Iron Axe,Hand Axe;3,17;None;Resistance
-player;0;0;Mage;1;Fire;4,17;None;Resistance
-player;0;0;Archer;4;Willow Bow;4,18;None;Resistance
-enemy;0;0;Dracolord;1;Javelin;3,15;None;Resistance
-enemy;0;0;Brigham;5,11;None
+player;0;0;Sam;3,17;None
+player;0;0;Fighter;1;Superior Axe;3,16;None;Resistance
 # Enemies
+# Generics
+enemy;0;0;Dracolord;1;Hand Axe;3,15;None;Resistance
 # === Reinforcements ===
 # Player Characters
 # Enemies
 # === Triggers ===
+trigger;basic;Sam;3,23;3,17

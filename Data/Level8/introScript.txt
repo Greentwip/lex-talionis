@@ -40,7 +40,7 @@ s;Soldier2;Milord?{w};auto
 s;Vagnius;You are dismissed.{w};auto
 s;Soldier2;Yes, milord.{w};auto
 r;Soldier2
-s;Vagnius;If you want something done right, you have to do it yourself.{w}{br}My underlings have failed to annihilate the pesky Resistance.{w}{br}But I shall not.{w}{br}By the end of today, the Resistance will be no more.{w}{br}And I will be one step closer to my final goal!{w};auto
+s;Vagnius;If you want something done right, you have to do it yourself.{w}{br}My underlings have failed to annihilate the pesky Resistance.{w}{br}But I shall not.{w}{br}By the end of today, they will be no more.{w}{br}And I will be one step closer to my final goal!{w};auto
 r;Vagnius
 set_cursor;0,12
 t;1

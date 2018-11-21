@@ -109,6 +109,7 @@ def read_constants_file():
              'auto_promote': 0, # Promote after max-level?
              'minimum_damage': 0, # Minimum amount of damage that can be dealt (switch to 1 to make it like FE2 or FE15)
              'steal_exp': 11, # Amount of exp gained from stealing
+             'convoy_on_death': 0, # Should dead units give all of their items to the convoy at the end of each level?
              'title': 'Lex Talionis Engine',
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
@@ -171,6 +172,7 @@ def read_constants_file():
     lines['promoted_level'] = int(lines['promoted_level'])
     lines['minimum_damage'] = int(lines['minimum_damage'])
     lines['steal_exp'] = int(lines['steal_exp'])
+    lines['convoy_on_death'] = int(lines['convoy_on_death'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
     lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
     lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])

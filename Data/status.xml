@@ -373,7 +373,7 @@
         <components>conditional_avoid,conditional_hit</components>
 
         <conditional_hit>30;target.getMainWeapon() and target.getMainWeapon().TYPE == 'Axe'</conditional_hit>
-        <conditional_avoid>30;self.getMainWeapon() and self.getMainWeapon().TYPE == 'Axe</conditional_avoid>
+        <conditional_avoid>30;self.getMainWeapon() and self.getMainWeapon().TYPE == 'Axe'</conditional_avoid>
     </status>
 
     <!-- Used by Final Boss -->
