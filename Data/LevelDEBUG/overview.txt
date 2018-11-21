@@ -1,7 +1,8 @@
 name;DEBUG
-prep_flag;0
-pick_flag;0
-base_flag;MainBase
+prep_flag;1
+prep_music;Fire Treasure
+pick_flag;1
+base_flag;0
 base_music;Fire Treasure
 market_flag;0
 transition_flag;0
