@@ -4,13 +4,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
+    import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, Cursor
     import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, LevelUp, Cursor
+    from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, Cursor
     from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 
 import logging

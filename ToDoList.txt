@@ -14,7 +14,7 @@
     - If loading crashed save, allow execution of turnwheel forward
 - Submaps
 - Overworld
-- Parties
+- Parties (maybe just convoy differentiation -- since Anchorman has managed different parties pretty well themselves)
 
 - New Screenshots in all marketing content
 
@@ -27,7 +27,6 @@ DropItem
 Promotion
 Using a Booster
 Miracle
-ChangeAI
 GiveGold
 AddTag
 AddTalk

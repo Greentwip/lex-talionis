@@ -62,7 +62,7 @@ class Solver(object):
     def generate_roll(self, rng_mode, event_command=None):
         if event_command:
             if event_command in ('hit', 'crit'):
-                return 0
+                return -1
             elif event_command == 'miss':
                 return 100
         # Normal RNG
@@ -80,7 +80,7 @@ class Solver(object):
 
     def generate_crit_roll(self, event_command=None):
         if event_command and event_command == 'crit':
-            return 0
+            return -1
         else:
             return static_random.get_combat()
 
@@ -1383,7 +1383,7 @@ class AnimationCombat(Combat):
                         Action.do(Action.GainWexp(self.p2, self.p2.getMainWeapon()), gameStateObj)
                         
                     my_exp, records = self.calc_init_exp_p2(defender_results, gameStateObj)
-                    Action.do(Action.UpdateUnitRecords(self.p2, records))
+                    Action.do(Action.UpdateUnitRecords(self.p2, records), gameStateObj)
                     if my_exp > 0:
                         Action.do(Action.GainExp(self.p2, my_exp, in_combat=self), gameStateObj)
 

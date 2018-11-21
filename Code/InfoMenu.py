@@ -171,7 +171,7 @@ class InfoMenu(StateMachine.State):
 
         # Up and Down
         if self.next_unit:
-            self.transition_counter += 1
+            self.transition_counter += 0.1
             # Transition in
             if self.next_unit == self.unit:
                 if self.transition_counter == 1:

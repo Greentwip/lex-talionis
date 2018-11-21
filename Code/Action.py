@@ -1401,10 +1401,10 @@ class AddGlobalStatus(Action):
         self.status = status
 
     def do(self, gameStateObj):
-        gameStateObj.map.add_status(self.status)
+        gameStateObj.map.add_global_status(self.status, gameStateObj)
 
     def reverse(self, gameStateObj):
-        gameStateObj.map.remove_status(self.status)
+        gameStateObj.map.remove_global_status(self.status, gameStateObj)
 
 class RemoveGlobalStatus(Action):
     run_on_load = True
@@ -1413,10 +1413,10 @@ class RemoveGlobalStatus(Action):
         self.status = status
 
     def do(self, gameStateObj):
-        gameStateObj.map.remove_status(self.status)
+        gameStateObj.map.remove_global_status(self.status, gameStateObj)
 
     def reverse(self, gameStateObj):
-        gameStateObj.map.add_status(self.status)
+        gameStateObj.map.add_global_status(self.status, gameStateObj)
 
 # === Master Functions for adding to action log ===
 def do(action, gameStateObj):
