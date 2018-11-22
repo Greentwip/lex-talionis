@@ -1222,7 +1222,7 @@ class Dialogue_Scene(object):
             Action.do(Action.WarpIn(unit, final_pos), gameStateObj)
         elif transition == 'fade':
             Action.do(Action.FadeIn(unit, final_pos), gameStateObj)
-        else: ## immediate
+        else:  # immediate
             Action.do(Action.ArriveOnMap(unit, final_pos), gameStateObj)
 
     def move_unit(self, gameStateObj, metaDataObj, which_unit, new_pos, transition, placement, shuffle=True):

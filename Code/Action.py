@@ -210,7 +210,7 @@ class WarpIn(ArriveOnMap):
 class FadeIn(ArriveOnMap):
     def do(self, gameStateObj):
         self.unit.position = self.pos
-        if gameStateObj.map.on_border(self.pos):
+        if gameStateObj.map.on_border(self.pos) and gameStateObj.map.tiles[self.pos].name not in ('Stairs', 'Fort'):
             self.unit.sprite.spriteOffset = [num*GC.TILEWIDTH for num in gameStateObj.map.which_border(self.pos)]
             self.unit.sprite.set_transition('fake_in')
         else:

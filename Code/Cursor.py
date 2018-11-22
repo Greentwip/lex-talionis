@@ -378,7 +378,8 @@ class Cursor(object):
                 self.image = Engine.subsurface(self.formationsprite, (GC.CURSORSPRITECOUNTER.count//2*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
         elif self.drawState == 2 and gameStateObj.stateMachine.getState() != 'dialogue': # Red if it is selecting...
             self.image = Engine.subsurface(self.redsprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
-        elif self.currentHoveredUnit and self.currentHoveredUnit.team == 'player' and not self.currentHoveredUnit.isDone():
+        elif self.currentHoveredUnit and self.currentHoveredUnit.team == 'player' and \
+                not self.currentHoveredUnit.isDone() and gameStateObj.stateMachine.getState() != 'dialogue':
             self.image = self.activesprite
         else:
             self.image = Engine.subsurface(self.passivesprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
