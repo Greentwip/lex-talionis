@@ -22,7 +22,7 @@ class ScrollBar(object):
         self.arrow_counter.update()
         height = limit*16 - 20
         start_frac = scroll/float(num_options)
-        end_frac = (scroll + limit)/float(num_options)
+        end_frac = min(1, (scroll + limit)/float(num_options))
 
         # Draw parts
         surf.blit(self.top, (self.x, self.y))

@@ -76,7 +76,14 @@ def remove_suspend():
 
 def get_save_title(save_slots):
     options = [save_slot.get_name() for save_slot in save_slots]
-    colors = [save_slot.mode_id for save_slot in save_slots]
+
+    def get_color(mode_id):
+        for mode in GC.DIFFICULTYDATA.values():
+            if int(mode['id']) == mode_id:
+                return mode['color']
+        return 'Green'
+
+    colors = [get_color(save_slot.mode_id) for save_slot in save_slots]
     return options, colors
 
 class StartStart(StateMachine.State):
@@ -460,7 +467,7 @@ class StartPreloadedLevels(StartLoad):
         name, color = [], []
         for level in GC.PRELOADDATA.getroot().findall('level'):
             name.append(level.get('name'))
-            color.append(level.find('mode').text)
+            color.append(GC.DIFFICULTYDATA[level.find('mode').text]['color'])
         return name, color
 
     def preload_level(self, name):
@@ -847,7 +854,7 @@ class StartNew(StateMachine.State):
         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
         # Hardset the name of the first level
         gameStateObj.activeMenu.options[gameStateObj.save_slot] = metaDataObj['name']
-        gameStateObj.activeMenu.set_color(gameStateObj.save_slot, gameStateObj.mode['name'])
+        gameStateObj.activeMenu.set_color(gameStateObj.save_slot, gameStateObj.mode['color'])
         gameStateObj.stateMachine.clear()
         gameStateObj.stateMachine.changeState('turn_change')
         # gameStateObj.stateMachine.process_temp_state(gameStateObj, metaDataObj)
@@ -946,17 +953,17 @@ class StartExtras(StateMachine.State):
         if cf.OPTIONS['cheat']:
             options.append(cf.WORDS['All Saves'])
             options.append(cf.WORDS['Preloaded Levels'])
-        gameStateObj.activeMenu = MenuFunctions.MainMenu(options, 'DarkMenu')
+        self.menu = MenuFunctions.MainMenu(options, 'DarkMenu')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
                         
         if event == 'DOWN':
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveDown()
+            self.menu.moveDown()
         elif event == 'UP':
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveUp()
+            self.menu.moveUp()
 
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
@@ -965,7 +972,7 @@ class StartExtras(StateMachine.State):
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
-            selection = gameStateObj.activeMenu.getSelection()
+            selection = self.menu.getSelection()
             if selection == cf.WORDS['Credits']:
                 gameStateObj.stateMachine.changeState('credits')
                 gameStateObj.stateMachine.changeState('transition_out')
@@ -981,8 +988,8 @@ class StartExtras(StateMachine.State):
 
     def update(self, gameStateObj, metaDataObj):
         # gameStateObj.logo.update()
-        if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.update()
+        if self.menu:
+            self.menu.update()
 
         if self.state == 'transition_in':
             self.position_x -= 20
@@ -1007,8 +1014,8 @@ class StartExtras(StateMachine.State):
         # gameStateObj.logo.draw(surf)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
-        if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.draw(surf, center=(self.position_x, GC.WINHEIGHT//2))
+        if self.menu:
+            self.menu.draw(surf, center=(self.position_x, GC.WINHEIGHT//2))
         return surf
 
 class StartWait(StateMachine.State):
@@ -1097,7 +1104,7 @@ class StartSave(StateMachine.State):
                 # Rename thing
                 name = SaveLoad.read_overview_file('Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
                 gameStateObj.activeMenu.options[gameStateObj.activeMenu.getSelectionIndex()] = name
-                gameStateObj.activeMenu.set_color(gameStateObj.activeMenu.getSelectionIndex(), gameStateObj.mode['name'])
+                gameStateObj.activeMenu.set_color(gameStateObj.activeMenu.getSelectionIndex(), gameStateObj.mode['color'])
                 self.wait_time = Engine.get_time()
 
     def update(self, gameStateObj, metaDataObj):

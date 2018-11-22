@@ -1250,23 +1250,15 @@ class ChapterSelectMenu(MainMenu):
     def __init__(self, options, colors=None):
         MainMenu.__init__(self, options, 'ChapterSelect')
         if colors:
-            self.colors = [self.determine_color(color) for color in colors]
+            self.colors = colors
         else:
             self.colors = ['Green' for option in self.options]
         self.use_rel_y = len(options) > 3
         self.use_transparency = True
         self.rel_pos_y = 0
 
-    def determine_color(self, mode):
-        if mode == 2 or mode == '2' or mode == 'Lunatic':
-            return 'Red'
-        elif mode == 3 or mode == '3' or mode == 'Grandmaster':
-            return 'Blue'
-        else:
-            return 'Green'
-
-    def set_color(self, idx, mode):
-        self.colors[idx] = self.determine_color(mode)
+    def set_color(self, idx, color):
+        self.colors[idx] = color
 
     def moveUp(self):
         MainMenu.moveUp(self)

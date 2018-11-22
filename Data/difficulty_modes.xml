@@ -2,10 +2,13 @@
 
     <difficulty name="Hard">
         <id>1</id>
+        <!-- 0=Casual, 1=Classic -->
         <death>?</death>
+        <!-- 0=Random, 1=Fixed, 2=Hybrid -->
         <growths>?</growths>
         <rng>true_hit</rng>
         <tutorial>1</tutorial>
+        <color>Green</color>
 
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
@@ -22,10 +25,13 @@
 
     <difficulty name="Lunatic">
         <id>2</id>
+        <!-- 0=Casual, 1=Classic -->
         <death>?</death>
+        <!-- 0=Random, 1=Fixed, 2=Hybrid -->
         <growths>?</growths>
         <rng>true_hit+</rng>
         <tutorial>0</tutorial>
+        <color>Red</color>
 
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_growths>20,10,5,15,5,0,0,0,0,0</player_growths>
@@ -48,6 +54,7 @@
         <growths>1</growths>
         <rng>hybrid</rng>
         <tutorial>0</tutorial>
+        <color>Blue</color>
 
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
