@@ -317,25 +317,6 @@ class AI(object):
         valid_positions = self.get_true_valid_moves(gameStateObj)
         self.position_to_move_to = Utility.farthest_away_pos(self.unit, valid_positions, gameStateObj.allunits)
 
-    # def check_mount(self, gameStateObj):
-    #     if not self.unit.my_mount:
-    #         adj_position = self.unit.getAdjacentPositions(gameStateObj)
-    #         ally_units = [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfAlly(unit) and unit.position in adj_position]
-    #         for adjunit in ally_units:
-    #             if 'Mount' in unit.tags:
-    #                 self.unit.mount(unit, gameStateObj)
-
-    # def check_dismount(self, gameStateObj):
-    #     """Determines if unit should dismount from land-based mount to traverse water"""
-    #     if self.unit.my_mount and 'fleet_of_foot' not in self.unit.status_bundle:
-    #         adjtiles = self.unit.getAdjacentTiles(gameStateObj)
-    #         # Determine which tile is closest to target
-    #         closest_tile = sorted(adjtiles, key=lambda pos: Utility.calculate_distance(self.target_to_interact_with, pos.position))[0]
-    #         if closest_tile.name in ('River', 'Coast', 'Bank', 'Floor'):
-    #             self.unit.dismount(closest_tile.position, gameStateObj)
-    #         elif all(adjtile.name in ('Floor', 'Throne', 'Wall') for adjtile in adjtiles):
-    #             self.unit.dismount(closest_tile.position, gameStateObj)
-
     def thief_to_escape(self):
         # Change AI
         new_primary_ai = self.ai1_state

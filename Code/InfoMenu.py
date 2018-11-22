@@ -171,7 +171,7 @@ class InfoMenu(StateMachine.State):
 
         # Up and Down
         if self.next_unit:
-            self.transition_counter += 0.1
+            self.transition_counter += 1
             # Transition in
             if self.next_unit == self.unit:
                 if self.transition_counter == 1:
@@ -205,7 +205,7 @@ class InfoMenu(StateMachine.State):
                 elif self.transition_counter == 4:
                     self.transparency = 200
                     self.scroll_offset_y = 16 if self.transition == 'DOWN' else -16
-                elif self.transition_counter in (5, 6, 7, 8):  # Pause for a bit
+                elif self.transition_counter < 8: # (5, 6, 7, 8):  # Pause for a bit
                     self.transparency = 255
                     self.scroll_offset_y = 160 if self.transition == 'DOWN' else -160
                 else:
@@ -278,7 +278,7 @@ class InfoMenu(StateMachine.State):
 
         # Stick it on the surface
         if self.transparency:
-            im = Image_Modification.flickerImageTranslucent255(self.portrait_surf, self.transparency)
+            im = Image_Modification.flickerImageTranslucent255(self.portrait_surf, 255 - self.transparency)
             surf.blit(im, (0, self.scroll_offset_y))
         else:
             surf.blit(self.portrait_surf, (0, self.scroll_offset_y))
@@ -397,10 +397,10 @@ class InfoMenu(StateMachine.State):
         # Now put it in the right place
         offset_x = max(96, 96 - self.scroll_offset_x)
         main_surf = Engine.subsurface(main_surf, (offset_x, 0, main_surf.get_width() - offset_x, GC.WINHEIGHT))
-        top_surf.blit(main_surf, (max(96, 96 + self.scroll_offset_x), self.scroll_offset_y))
+        surf.blit(main_surf, (max(96, 96 + self.scroll_offset_x), self.scroll_offset_y))
         if self.transparency:
-            top_surf = Image_Modification.flickerImageTranslucent255(top_surf, self.transparency)
-        surf.blit(top_surf, (0, 0))
+            top_surf = Image_Modification.flickerImageTranslucent255(top_surf, 255 - self.transparency)
+        surf.blit(top_surf, (0, self.scroll_offset_y))
     
     def create_personal_data_surf(self, gameStateObj, metaDataObj):
         # Menu Background

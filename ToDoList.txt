@@ -19,25 +19,17 @@
 - New Screenshots in all marketing content
 
 To Test Action:
-FadeIn
 WarpIn
 LeaveMap
 GiveItem
 DropItem
-Promotion
-Using a Booster
-Miracle
-GiveGold
-AddTag
 AddTalk
 RemoveTalk
-ChangeObjective
 IncrementSupportLevel
 SupportGain
 Fully Test RecordRandomState
 ApplyStatus
 RemoveStatus
-ApplyStatChange
 FinalizeActiveSkill
 FinalizeAutomaticSkill
 -- These need to be tested on load as well

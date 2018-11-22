@@ -13,13 +13,13 @@ try:
     import configuration as cf
     import static_random
     import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective
-    from StatObject import Stat, build_stat_dict
+    from StatObject import build_stat_dict
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective
-    from Code.StatObject import Stat, build_stat_dict
+    from Code.StatObject import build_stat_dict
 
 import logging
 logger = logging.getLogger(__name__)

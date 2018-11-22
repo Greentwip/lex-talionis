@@ -536,8 +536,8 @@ class Dialogue_Scene(object):
             if line[1] in gameStateObj.triggers:
                 trigger = gameStateObj.triggers[line[1]]
                 for unit_id, (start, end) in trigger.units.items():
-                    print('In trigger:')
-                    print(unit_id, start, end)
+                    # print('In trigger:')
+                    # print(unit_id, start, end)
                     # First see if the unit is in reinforcements
                     if unit_id in gameStateObj.allreinforcements:
                         self.add_unit(gameStateObj, metaDataObj, unit_id, None, 'fade', 'stack')

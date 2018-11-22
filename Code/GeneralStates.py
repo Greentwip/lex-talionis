@@ -1453,8 +1453,8 @@ class TradeState(StateMachine.State):
             else:
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.activeMenu = None
-                if initiator.hasTraded:
-                    initiator.hasMoved = True
+                # if initiator.hasTraded:
+                #     initiator.hasMoved = True
                 gameStateObj.stateMachine.changeState('menu')
                                          
         elif event == 'SELECT':
