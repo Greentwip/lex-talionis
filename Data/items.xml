@@ -1599,7 +1599,7 @@
         <id>Skeleton Key</id>
         <spritetype>Consumable</spritetype>
         <spriteid>6</spriteid>       
-        <components>uses,unlock</components>
+        <components>uses,key</components>
  
         <uses>1</uses>
         <RNG>0-1</RNG>

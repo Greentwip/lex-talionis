@@ -539,7 +539,7 @@ class MenuState(StateMachine.State):
                     options.append(cf.WORDS['Vendor'])
             # If the unit is on or adjacent to an unlockable door or on a treasure chest
             if not cur_unit.hasAttacked:
-                if 'locktouch' in cur_unit.status_bundle or 'Skeleton Key' in [item.name for item in cur_unit.items]:
+                if 'locktouch' in cur_unit.status_bundle or any(item.key for item in cur_unit.items):
                     if cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
                         options.append(cf.WORDS['Unlock'])
                     elif any([cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[tile.position] for tile in adjtiles]):
