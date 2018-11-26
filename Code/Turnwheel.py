@@ -40,22 +40,32 @@ class ActionLog(object):
         if not self.actions or self.action_index < self.first_free_action + 1:
             return None
 
+        # Get where we should stop next
         starting_index = self.action_index
         while self.action_index >= self.first_free_action + 1:
-            # If next action back is Wait
             action = self.actions[self.action_index]
+            # Wait
             if isinstance(action, Action.Wait) and self.action_index != starting_index:
                 gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
-                break
+                # Get content of unit's turn
+                text = self.get_unit_turn(action.unit, self.action_index)
+                return '  '.join(text)
+            # Mark PHase
             elif isinstance(action, Action.MarkPhase) and self.action_index != starting_index:
-                gameStateObj.cursor.autocursor(gameStateObj)
-                return "Start of %s phase" % action.phase_name
+                if action.phase_name == 'player':
+                    gameStateObj.cursor.autocursor(gameStateObj)
+                return "Start of %s phase" % action.phase_name.capitalize()
+            # Actually Run backwards
             action = self.run_action_backward(gameStateObj)
+            # Move
             if isinstance(action, Action.Move):
                 gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
-                return action.__class__.__name__
+                if self.action_index == self.first_free_action:
+                    return "Start of Player Phase"
+                return ""
         
-        return action.__class__.__name__ + ": " + str(self.action_index + 1) + ' / ' + str(len(self.actions))
+        # return action.__class__.__name__ + ": " + str(self.action_index + 1) + ' / ' + str(len(self.actions))
+        return ""
 
     def forward(self, gameStateObj):
         if not self.actions or self.action_index + 1 >= len(self.actions):
@@ -64,24 +74,55 @@ class ActionLog(object):
         starting_index = self.action_index
         while self.action_index + 1 < len(self.actions):
             action = self.actions[self.action_index + 1]
+            # Move
             if isinstance(action, Action.Move) and self.action_index != starting_index:
                 gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
-                return action.__class__.__name__
+                return ""
+            # Actually run
             action = self.run_action_forward(gameStateObj)
+            # Wait
             if isinstance(action, Action.Wait):
                 gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
-                break
+                # Get content of unit's turn
+                text = self.get_unit_turn(action.unit, self.action_index)
+                return '  '.join(text)
+            # Mark Phase
             elif isinstance(action, Action.MarkPhase):
-                gameStateObj.cursor.autocursor(gameStateObj)
-                return "Start of %s phase" % action.phase_name
+                if action.phase_name == 'player':
+                    gameStateObj.cursor.autocursor(gameStateObj)
+                return "Start of %s Phase" % action.phase_name.capitalize()
 
-        return action.__class__.__name__ + ': ' + str(self.action_index + 1) + ' / ' + str(len(self.actions))
+        # return action.__class__.__name__ + ': ' + str(self.action_index + 1) + ' / ' + str(len(self.actions))
+        return ""
 
     def finalize(self):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index + 1]
-        # print("Remaining Actions:")
-        # print(self.actions)
+
+    def get_unit_turn(self, unit, wait_index):
+        cur_index = wait_index
+        text = []
+        while True:
+            cur_index -= 1
+            cur_action = self.actions[cur_index]
+            if isinstance(cur_action, Action.Message):
+                text.insert(0, cur_action.message)
+            elif isinstance(cur_action, Action.Move):
+                return text
+
+    def get_last_unit_turn(self, gameStateObj):
+        if not self.actions or self.action_index < self.first_free_action + 1:
+            return ""
+
+        while self.action_index >= self.first_free_action + 1:
+            action = self.actions[self.action_index]
+            if isinstance(action, Action.Wait):
+                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                text = self.get_unit_turn(action.unit, self.action_index)
+                return '  '.join(text)
+            self.action_index -= 1
+
+        return ""
 
     def replay_map_commands(self, gameStateObj):
         for action in self.actions:
@@ -113,8 +154,9 @@ class ActionLog(object):
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
-        self.pennant = Banner.Pennant(cf.WORDS["Turnwheel_desc"])
-        self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
+        turnwheel_desc = gameStateObj.action_log.get_last_unit_turn(gameStateObj)
+        self.pennant = Banner.Pennant(turnwheel_desc)
+        self.fluid_helper = InputManager.FluidScroll(200)
         gameStateObj.activeMenu = None
 
     def take_input(self, actionList, gameStateObj, metaDataObj):

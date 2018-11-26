@@ -361,6 +361,8 @@ class MoveState(StateMachine.State):
                     gameStateObj.stateMachine.changeState('free')
                     cur_unit.wait(gameStateObj)
                 else:
+                    cur_unit.current_move_action = Action.Move(cur_unit, gameStateObj.cursor.position)
+                    Action.execute(cur_unit.current_move_action, gameStateObj)
                     gameStateObj.stateMachine.changeState('menu')
                   
             # If the cursor is on a validMove that is not contiguous with a unit
@@ -368,15 +370,16 @@ class MoveState(StateMachine.State):
                 if gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position):
                     GC.SOUNDDICT['Error'].play()
                 else:
-                    cur_unit.current_move_action = Action.Move(cur_unit, gameStateObj.cursor.position)
                     # SOUND - Footstep sounds but no select sound
                     if cur_unit.hasAttacked: # If we've already attacked, we're done. Move to free
+                        cur_unit.current_move_action = Action.CantoMove(cur_unit, gameStateObj.cursor.position)
                         """gameStateObj.stateMachine.clear()
                         gameStateObj.stateMachine.changeState('free')
                         cur_unit.wait(gameStateObj) # Canto"""
                         # Instead go to wait select
                         gameStateObj.stateMachine.changeState('canto_wait')
                     else:
+                        cur_unit.current_move_action = Action.Move(cur_unit, gameStateObj.cursor.position)
                         gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('movement')
                     Action.do(cur_unit.current_move_action, gameStateObj)
@@ -896,8 +899,7 @@ class ItemChildState(StateMachine.State):
                     gameStateObj.activeMenu = None
                     gameStateObj.stateMachine.changeState('combat')
             elif selection == cf.WORDS['Equip']:
-                # Swap order of items
-                cur_unit.equip(item)
+                Action.do(Action.EquipItem(cur_unit, item), gameStateObj)
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
                 gameStateObj.stateMachine.back()
             elif selection == cf.WORDS['Storage'] or selection == cf.WORDS['Discard']:

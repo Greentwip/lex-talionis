@@ -68,11 +68,12 @@ When you move without attacking, no text is displayed
 
 So each movement gets two turnwheel clicks, one for before they've taken their turn, and one for after they've taken their turn. During both of these cursor is hovered over unit in question.
 
-Cannot active turnwheel on enemy turn
+Cannot activate turnwheel on enemy turn
 "Start of enemy phase"
 
 "Start of player phase" can't actually be chosen by turnwheel!
 
+does movement, killing units, attacking in turnwheel have an animation?
 
 
 FOR FUTURE UPDATES TO THE ENGINE:
