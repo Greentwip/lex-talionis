@@ -1379,7 +1379,7 @@ class SelectState(StateMachine.State):
             elif self.name == 'supportselect':
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 if gameStateObj.cursor.currentHoveredUnit:
-                    Action.do(Action.hasTraded(cur_unit), gameStateObj)
+                    Action.do(Action.HasTraded(cur_unit), gameStateObj)
                     # cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
                     edge = gameStateObj.support.get_edge(cur_unit.id, gameStateObj.cursor.currentHoveredUnit.id)
                     if os.path.exists(edge.script):
@@ -2007,6 +2007,7 @@ class PhaseChangeState(StateMachine.State):
         # All units can now move and attack, etc.
         for unit in gameStateObj.allunits:
             Action.do(Action.Reset(unit), gameStateObj)
+        Action.do(Action.MarkPhase(gameStateObj.phase.get_current_phase()), gameStateObj)
         gameStateObj.cursor.drawState = 0
         gameStateObj.activeMenu = None
         gameStateObj.phase.slide_in(gameStateObj)

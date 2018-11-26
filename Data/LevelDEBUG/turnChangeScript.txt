@@ -1,6 +1,8 @@
 # Event script that is called every time the player's turn starts. Normally handles reinforcements
 if;gameStateObj.turncount == 2
     change_ai;3,15;Pursue
+    add_talk;Ophie;Althea
+    give_item;Ophie;Iron Sword
 end
 if;gameStateObj.turncount == 4
     set_cursor;0,0;force_hold

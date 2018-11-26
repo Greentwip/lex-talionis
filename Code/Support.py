@@ -168,10 +168,14 @@ class Support_Graph(object):
         return False
 
     def check_max_support_limit(self, unit_id, other_id):
+        if unit_id not in self.node_dict or other_id not in self.node_dict:
+            return False
         return not cf.CONSTANTS['support_limit'] or (self.node_dict[unit_id].get_total_support_level() < cf.CONSTANTS['support_limit'] and 
                                                      self.node_dict[other_id].get_total_support_level() < cf.CONSTANTS['support_limit'])
 
     def check_s_support(self, unit_id, other_id):
+        if unit_id not in self.node_dict or other_id not in self.node_dict:
+            return False
         return not cf.CONSTANTS['support_s_limit'] or (self.node_dict[unit_id].get_num_s_supports() < cf.CONSTANTS['support_s_limit'] and 
                                                        self.node_dict[other_id].get_num_s_supports() < cf.CONSTANTS['support_s_limit'])
 
@@ -225,7 +229,7 @@ class Support_Graph(object):
         self._end_general(unit, gameStateObj, cf.CONSTANTS['support_end_turn'])
 
     def end_combat(self, unit, gameStateObj):
-        self._end_general(unit, gameStateObj, cf.CONSTANTS['support_end_combat'])
+        self._end_general(unit, gameStateObj, cf.CONSTANTS['support_combat'])
 
     def check_interact(self, unit, units, gameStateObj):
         if unit.id not in self.node_dict:

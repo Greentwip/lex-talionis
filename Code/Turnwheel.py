@@ -15,12 +15,12 @@ class ActionLog(object):
         self.first_free_action = -1
 
     def append(self, action):
-        print("Add Action: %s" % action)
+        print("Add Action: %s" % action.__class__.__name__)
         self.actions.append(action)
         self.action_index += 1
 
     def remove(self, action):
-        print("Remove Action: %s" % action)
+        print("Remove Action: %s" % action.__class__.__name__)
         self.actions.remove(action)
         self.action_index -= 1
 
@@ -40,9 +40,20 @@ class ActionLog(object):
         if not self.actions or self.action_index < self.first_free_action + 1:
             return None
 
-        action = self.run_action_backward(gameStateObj)
-        while action.skip and self.action_index >= self.first_free_action + 1:
+        starting_index = self.action_index
+        while self.action_index >= self.first_free_action + 1:
+            # If next action back is Wait
+            action = self.actions[self.action_index]
+            if isinstance(action, Action.Wait) and self.action_index != starting_index:
+                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                break
+            elif isinstance(action, Action.MarkPhase) and self.action_index != starting_index:
+                gameStateObj.cursor.autocursor(gameStateObj)
+                return "Start of %s phase" % action.phase_name
             action = self.run_action_backward(gameStateObj)
+            if isinstance(action, Action.Move):
+                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                return action.__class__.__name__
         
         return action.__class__.__name__ + ": " + str(self.action_index + 1) + ' / ' + str(len(self.actions))
 
@@ -50,22 +61,32 @@ class ActionLog(object):
         if not self.actions or self.action_index + 1 >= len(self.actions):
             return None
 
-        action = self.run_action_forward(gameStateObj)
-        while action.skip and self.action_index + 1 < len(self.actions):
+        starting_index = self.action_index
+        while self.action_index + 1 < len(self.actions):
+            action = self.actions[self.action_index + 1]
+            if isinstance(action, Action.Move) and self.action_index != starting_index:
+                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                return action.__class__.__name__
             action = self.run_action_forward(gameStateObj)
-            
+            if isinstance(action, Action.Wait):
+                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                break
+            elif isinstance(action, Action.MarkPhase):
+                gameStateObj.cursor.autocursor(gameStateObj)
+                return "Start of %s phase" % action.phase_name
+
         return action.__class__.__name__ + ': ' + str(self.action_index + 1) + ' / ' + str(len(self.actions))
 
     def finalize(self):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index + 1]
-        print("Remaining Actions:")
-        print(self.actions)
+        # print("Remaining Actions:")
+        # print(self.actions)
 
     def replay_map_commands(self, gameStateObj):
         for action in self.actions:
             if action.run_on_load:
-                self.run_action_forward(action, gameStateObj)
+                action.execute(gameStateObj)
 
     def get_previous_position(self, unit):
         for action in reversed(self.actions):

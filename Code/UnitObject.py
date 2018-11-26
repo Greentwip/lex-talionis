@@ -1715,13 +1715,14 @@ class UnitObject(object):
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj, script=True):
         logger.debug('%s %s waits', self.name, self)
-        # changing state
-        Action.do(Action.Wait(self), gameStateObj)
 
         self.sprite.change_state('normal')
         # Handle support increment
         if gameStateObj.support and cf.CONSTANTS['support_end_turn']:
             gameStateObj.support.end_turn(self, gameStateObj)
+
+        # changing state
+        Action.do(Action.Wait(self), gameStateObj)
 
         # Called whenever a unit waits
         wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'

@@ -80,7 +80,7 @@ def get_save_title(save_slots):
     def get_color(mode_id):
         for mode in GC.DIFFICULTYDATA.values():
             if int(mode['id']) == mode_id:
-                return mode['color']
+                return mode.get('color', 'Green')
         return 'Green'
 
     colors = [get_color(save_slot.mode_id) for save_slot in save_slots]

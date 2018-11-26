@@ -16,7 +16,7 @@ except ImportError:
 
 class Action(object):
     run_on_load = False
-    skip = False
+    skip = True
 
     def __init__(self):
         pass
@@ -71,7 +71,7 @@ class Action(object):
     @classmethod
     def deserialize(cls, ser_dict, gameStateObj):
         self = cls.__new__(cls)
-        print(cls.__name__)
+        # print(cls.__name__)
         for name, value in ser_dict.items():
             if value[0] == 'Unit':
                 setattr(self, name, gameStateObj.get_unit_from_id(value[1]))
@@ -99,6 +99,8 @@ class Move(Action):
     """
     A basic, user-directed move
     """
+    skip = False
+
     def __init__(self, unit, new_pos, path=None):
         self.unit = unit
         self.old_pos = self.unit.position
@@ -234,6 +236,8 @@ class LeaveMap(Action):
         self.unit.arrive(gameStateObj)
 
 class Wait(Action):
+    skip = False
+
     def __init__(self, unit):
         self.unit = unit
         self.hasMoved = unit.hasMoved
@@ -253,11 +257,9 @@ class Wait(Action):
         self.unit.hasTraded = self.hasTraded
         self.unit.hasAttacked = self.hasAttacked
         self.unit.finished = self.finished
-        print(self.unit.hasMoved, self.unit.hasTraded, self.unit.hasAttacked)
+        # print(self.unit.hasMoved, self.unit.hasTraded, self.unit.hasAttacked)
 
 class Reset(Action):
-    skip = True
-
     def __init__(self, unit):
         self.unit = unit
         self.hasMoved = unit.hasMoved
@@ -808,6 +810,7 @@ class Die(Action):
     def reverse(self, gameStateObj):
         self.unit.dead = False
         self.unit.sprite.set_transition('normal')
+        self.unit.sprite.change_state('normal', gameStateObj)
 
         self.unit.position = self.old_pos
         self.unit.place_on_map(gameStateObj)
@@ -906,8 +909,6 @@ class ChangeLevelConstant(Action):
         gameStateObj.level_constants[self.constant] = self.old_value
 
 class IncrementTurn(Action):
-    skip = True
-
     def __init__(self):
         pass
 
@@ -916,6 +917,10 @@ class IncrementTurn(Action):
 
     def reverse(self, gameStateObj):
         gameStateObj.turncount -= 1
+
+class MarkPhase(Action):
+    def __init__(self, phase_name):
+        self.phase_name = phase_name
 
 class AddTag(Action):
     def __init__(self, unit, new_tag):

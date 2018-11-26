@@ -655,7 +655,7 @@ class Dialogue_Scene(object):
                 gameStateObj.map.origin = self.tile_pos
         # Change tile sprites. - command, pos, tile_sprite, size, transition
         elif line[0] == 'change_tile_sprite':
-            coord = self.parse_pos(line[1])
+            coord = self.parse_pos(line[1], gameStateObj)
             transition = None
             if 'fade' in line or len(line) < 4:
                 transition = 'fade'
@@ -667,7 +667,7 @@ class Dialogue_Scene(object):
             Action.do(Action.ChangeTileSprite(coord, image_name, size, transition), gameStateObj)
         elif line[0] == 'layer_tile_sprite':
             layer = int(line[1])
-            coord = self.parse_pos(line[2])
+            coord = self.parse_pos(line[2], gameStateObj)
             image_filename = line[3]
             Action.do(Action.LayerTileSprite(layer, coord, image_filename), gameStateObj)
             if len(line) > 4:
@@ -675,7 +675,7 @@ class Dialogue_Scene(object):
                 self.reset_boundary_manager = True
         elif line[0] == 'layer_terrain':
             layer = int(line[1])
-            coord = self.parse_pos(line[2])
+            coord = self.parse_pos(line[2], gameStateObj)
             image_filename = line[3]
             Action.do(Action.LayerTerrain(layer, coord, image_filename), gameStateObj)
             self.reset_boundary_manager = True
@@ -700,13 +700,13 @@ class Dialogue_Scene(object):
             self.reset_boundary_manager = True
         # Change area of tile (must include pic instead of id)
         elif line[0] == 'area_replace_tile':
-            coord = self.parse_pos(line[1])
+            coord = self.parse_pos(line[1], gameStateObj)
             image_fp = line[2]
             Action.do(Action.AreaReplaceTiles(coord, image_fp), gameStateObj)
             self.reset_boundary_manager = True
         # Change one tile's information
         elif line[0] == 'set_tile_info':
-            coord = self.parse_pos(line[1])
+            coord = self.parse_pos(line[1], gameStateObj)
             property_list = line[2:] if len(line) > 2 else None
             if property_list:
                 for tile_property in property_list:
@@ -715,11 +715,11 @@ class Dialogue_Scene(object):
                 for tile_property in gameStateObj.map.tile_info_dict[coord].items():
                     Action.do(Action.RemoveTileProperty(coord, tile_property), gameStateObj)
         elif line[0] == 'add_tile_property':
-            coord = self.parse_pos(line[1])
+            coord = self.parse_pos(line[1], gameStateObj)
             tile_property = line[2]
             Action.do(Action.AddTileProperty(coord, tile_property), gameStateObj)
         elif line[0] == 'remove_tile_property':
-            coord = self.parse_pos(line[1])
+            coord = self.parse_pos(line[1], gameStateObj)
             tile_property = line[2]
             Action.do(Action.RemoveTileProperty(coord, tile_property), gameStateObj)
         # Add weather

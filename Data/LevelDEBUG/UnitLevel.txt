@@ -22,10 +22,11 @@ faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Sam;3,17;None
-player;0;0;Fighter;1;Superior Axe,Guiding Ring;3,16;None;Resistance
+player;0;0;Ophie;3,18;None
+player;0;0;Althea;3,19;None
 # Enemies
 # Generics
-enemy;0;0;Cleric;5;Hand Axe;3,15;None;Resistance
+enemy;0;0;Fighter;1;dHand Axe,dIron Sword;3,15;None;Resistance
 # === Reinforcements ===
 # Player Characters
 # Enemies

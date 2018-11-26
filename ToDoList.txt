@@ -15,18 +15,15 @@
 - Submaps
 - Overworld
 - Parties (maybe just convoy differentiation -- since Anchorman has managed different parties pretty well themselves)
+- Check that casual doesn't have a death cooldown.
+- Check that HP/minis shows up after NOT using formation?
+- Add "having 2+ parties" ability to the Engine and Wiki.
 
 - New Screenshots in all marketing content
 
 To Test Action:
 WarpIn
 LeaveMap
-GiveItem
-DropItem
-AddTalk
-RemoveTalk
-IncrementSupportLevel
-SupportGain
 Fully Test RecordRandomState
 ApplyStatus
 RemoveStatus
@@ -45,8 +42,37 @@ AddTileProperty
 RemoveTileProperty
 AddWeather
 RemoveWeather
-AddGlobalStatus
-RemoveGlobalStatus
+
+Upon activation of turnwheel:
+Music Fades
+Gong sounds mean turnwheel has been activated
+Display translates in
+Turn 1 in upper right
+2 lines of text through top banner
+Num turnwheel uses in bottom right
+Units left to move in bottomleft (Left:    19/20)
+Small bright border around top and bottom and black outer fade
+
+When the turnwheel is moved forward or backwards in time, clicking sound is emitted
+"Start of Player Phase" (hovers over Lord Character)
+"(nothing at all)" (hovers over Delthea -- who I moved first)
+"Delthea attacked Gargoyle"/"Prevailed over Gargoyle"
+
+When turnwheel is actived -- crazy green animation occurs
+Loud sound like crashing water + magic is emitted
+While crazy green animation occurs, turnwheel fades out
+
+"Catria activated Defensive"
+When you move without attacking, no text is displayed
+"Delthea attacked Gargoyle" with nothing else if Delthea does not defeat Gargoyle
+
+So each movement gets two turnwheel clicks, one for before they've taken their turn, and one for after they've taken their turn. During both of these cursor is hovered over unit in question.
+
+Cannot active turnwheel on enemy turn
+"Start of enemy phase"
+
+"Start of player phase" can't actually be chosen by turnwheel!
+
 
 
 FOR FUTURE UPDATES TO THE ENGINE:

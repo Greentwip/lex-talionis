@@ -2,7 +2,7 @@
 # Support Partner ID 1; Support Partner ID 2;Num Points for First Support;Num Points for Second Support;Num Points for Third Support;...(etc.)
 Joel;Ophie;5;5;5
 Ophie;Sam;20;10;4
-Ophie;Prim;0;1;1
+Ophie;Prim;1;1;1
 Coyote;Ophie;2;5;10
 Prim;Theo;8;8;8
 Eliza;Prim;10;4;2
