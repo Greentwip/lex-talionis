@@ -4,13 +4,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, Cursor
+    import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, Cursor, Background
     import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, Cursor
+    from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Counters, Cursor, Background
     from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 
 import logging
@@ -260,7 +260,7 @@ class Dialogue_Scene(object):
             elif 'advanced' in line:
                 self.background = WorldMap.WorldMapBackground(GC.IMAGESDICT[line[1]])
             else:
-                self.background = MenuFunctions.StaticBackground(GC.IMAGESDICT[line[1]], fade=False)
+                self.background = Background.StaticBackground(GC.IMAGESDICT[line[1]], fade=False)
         # Remove the background
         elif line[0] == 'remove_background':
             self.background = None
@@ -268,7 +268,7 @@ class Dialogue_Scene(object):
         # === FOREGROUND
         # Change the foreground
         elif line[0] == 'foreground':
-            self.foreground = MenuFunctions.StaticBackground(GC.IMAGESDICT[line[1]], fade=False)
+            self.foreground = Background.StaticBackground(GC.IMAGESDICT[line[1]], fade=False)
         elif line[0] == 'remove_foreground':
             self.foreground = None
 

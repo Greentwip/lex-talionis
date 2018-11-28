@@ -3,11 +3,11 @@ import re, datetime
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import MenuFunctions, StateMachine, Image_Modification, Engine
+    import MenuFunctions, Background, StateMachine, Image_Modification, Engine
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import MenuFunctions, StateMachine, Image_Modification, Engine
+    from . import MenuFunctions, Background, StateMachine, Image_Modification, Engine
 
 class Objective(object):
     def __init__(self, display_name, win_condition, loss_condition):
@@ -98,7 +98,7 @@ class Objective(object):
 class StatusMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            self.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
             self.surfaces = self.get_surfaces(gameStateObj, metaDataObj)
             # backSurf
             self.backSurf = gameStateObj.generic_surf

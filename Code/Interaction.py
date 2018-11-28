@@ -6,14 +6,14 @@ try:
     import static_random
     import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     import StatusObject, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-    import MenuFunctions, GUIObjects, Weapons, Action
+    import GUIObjects, Weapons, Action, Background
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     from . import StatusObject, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-    from . import MenuFunctions, GUIObjects, Weapons, Action
+    from . import GUIObjects, Weapons, Action, Background
 
 import logging
 logger = logging.getLogger(__name__)
@@ -763,7 +763,7 @@ class AnimationCombat(Combat):
         self.darken_background = 0
         self.target_dark = 0
         self.darken_ui_background = 0
-        self.foreground = MenuFunctions.Foreground()
+        self.foreground = Background.Foreground()
         self.combat_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
 
         # For positioning UI

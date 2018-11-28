@@ -5,12 +5,12 @@ import os
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import StateMachine, MenuFunctions, ItemMethods
+    import StateMachine, MenuFunctions, ItemMethods, Background
     import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import StateMachine, MenuFunctions, ItemMethods
+    from . import StateMachine, MenuFunctions, ItemMethods, Background
     from . import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 
 class PrepMainState(StateMachine.State):
@@ -23,7 +23,7 @@ class PrepMainState(StateMachine.State):
             fade = True
         else:
             fade = False
-        gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=fade)
+        gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=fade)
         if not self.started:
             options = [cf.WORDS['Manage'], cf.WORDS['Formation'], cf.WORDS['Options'], cf.WORDS['Save'], cf.WORDS['Fight']]
             if metaDataObj['pickFlag']:
@@ -120,7 +120,7 @@ class PrepPickUnitsState(StateMachine.State):
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 2, 6, (110, 24))
     
         if not gameStateObj.background:
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
         # Transition in:
         if gameStateObj.stateMachine.from_transition():
@@ -350,7 +350,7 @@ class PrepItemsState(StateMachine.State):
                 self.font.blit(command, self.quick_sort_disp, (38, idx*self.font.height + 4))
 
         if not gameStateObj.background:
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
         # Transition in:
         if gameStateObj.stateMachine.from_transition():
@@ -424,7 +424,7 @@ class PrepItemsChoicesState(StateMachine.State):
         if hasattr(gameStateObj, 'hidden_item_child_option'):
             self.menu.setSelection(gameStateObj.hidden_item_child_option)
         if not gameStateObj.background:
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.set_extra_marker(False)
         if any(self.can_use(item, gameStateObj) for item in gameStateObj.cursor.currentSelectedUnit.items):
@@ -1030,7 +1030,7 @@ class BaseMarketState(StateMachine.State):
             self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
 
             if not gameStateObj.background:
-                gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+                gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
             # Hide active menu
             gameStateObj.childMenu = gameStateObj.activeMenu
@@ -1263,7 +1263,7 @@ class BaseMainState(StateMachine.State):
         self.show_map = False
         gameStateObj.cursor.drawState = 0
         background_image = GC.IMAGESDICT[metaDataObj['baseFlag']]
-        gameStateObj.background = MenuFunctions.StaticBackground(background_image, fade=False)
+        gameStateObj.background = Background.StaticBackground(background_image, fade=False)
 
         if gameStateObj.main_menu:
             gameStateObj.activeMenu = gameStateObj.main_menu

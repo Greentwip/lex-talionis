@@ -4,13 +4,13 @@ try:
     import configuration as cf
     import Engine, StateMachine
     import Image_Modification, MenuFunctions, Weapons, InfoMenu
-    import GUIObjects, Counters
+    import GUIObjects, Counters, Background
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import Engine, StateMachine
     from . import Image_Modification, MenuFunctions, Weapons, InfoMenu
-    from . import GUIObjects, Counters
+    from . import GUIObjects, Counters, Background
 
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -20,7 +20,7 @@ class UnitMenu(StateMachine.State):
 
             self.bg_surf = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['UnitMenuBackground'], 10)
             self.title_bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['TitleBar'], 10)
-            self.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            self.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
             self.states = [('Character', ['Class', 'Lv', 'Exp', 'HP', 'Max'], [4, 66, 89, 113, 133]),
                            ('Fighting Skill', ['STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES'], [4, 26, 48, 71, 94, 119, 142]),
                            ('Equipment', ['Equip', 'Atk', 'Hit', 'Avoid'], [16, 72, 103, 136]),

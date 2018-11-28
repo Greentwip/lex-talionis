@@ -6,11 +6,13 @@ import os, time
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue, Engine, Image_Modification, Weather
+    import CustomObjects, MenuFunctions, SaveLoad, StateMachine
+    import Dialogue, Engine, Image_Modification, Weather, Background
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue, Engine, Image_Modification, Weather
+    from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine
+    from . import Dialogue, Engine, Image_Modification, Weather, Background
 
 import logging
 logger = logging.getLogger(__name__)
@@ -95,7 +97,7 @@ class StartStart(StateMachine.State):
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.logo = GC.IMAGESDICT['Logo']
             gameStateObj.press_start = MenuFunctions.Logo(GC.IMAGESDICT['PressStart'], (GC.WINWIDTH//2, 4*GC.WINHEIGHT//5))
-            gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background')
+            gameStateObj.title_bg = Background.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
             gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
             # Wait until saving thread has finished
@@ -1099,7 +1101,7 @@ class StartSave(StateMachine.State):
         if not self.started:
             gameStateObj.button_a = Button(4, (GC.WINWIDTH - 64, GC.WINHEIGHT - 16), 'key_SELECT')
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
-            gameStateObj.title_bg = MenuFunctions.MovieBackground('title_background')
+            gameStateObj.title_bg = Background.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
             gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
             # self.time_display = TimeDisplay()

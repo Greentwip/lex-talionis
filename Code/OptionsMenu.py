@@ -2,12 +2,14 @@ try:
     import imagesDict
     import GlobalConstants as GC
     import configuration as cf
-    import CustomObjects, MenuFunctions, Image_Modification, Engine, StateMachine, Counters, GUIObjects
+    import CustomObjects, MenuFunctions, Image_Modification, Engine
+    import StateMachine, Counters, GUIObjects, Background
 except ImportError:
     from . import imagesDict
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import CustomObjects, MenuFunctions, Image_Modification, Engine, StateMachine, Counters, GUIObjects
+    from . import CustomObjects, MenuFunctions, Image_Modification, Engine
+    from . import StateMachine, Counters, GUIObjects, Background
 
 
 class OptionsMenu(StateMachine.State, Counters.CursorControl):
@@ -45,7 +47,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
 
             self.control_order = ['key_SELECT', 'key_BACK', 'key_INFO', 'key_AUX', 'key_LEFT', 'key_RIGHT', 'key_UP', 'key_DOWN', 'key_START']
 
-            self.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            self.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
             self.state = CustomObjects.StateMachine('TopMenu')
 

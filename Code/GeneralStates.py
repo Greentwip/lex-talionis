@@ -4,14 +4,14 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
-    import Interaction, LevelUp, StatusObject, ItemMethods
+    import Interaction, LevelUp, StatusObject, ItemMethods, Background
     import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
     import BattleAnimation, TextChunk, Weapons, StateMachine, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
-    from . import Interaction, LevelUp, StatusObject, ItemMethods
+    from . import Interaction, LevelUp, StatusObject, ItemMethods, Background
     from . import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
     from . import BattleAnimation, TextChunk, Weapons, StateMachine, Action
 
@@ -1818,7 +1818,7 @@ class VictoryState(StateMachine.State):
 
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
-        gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=True)
+        gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=True)
         if gameStateObj.statistics:
             level_statistic = gameStateObj.statistics[-1]
         else:
@@ -2153,7 +2153,7 @@ class PromotionChoiceState(StateMachine.State):
             self.anim_offset = 120
             self.target_anim_offset = False
 
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
             # Transition in:
             if gameStateObj.stateMachine.from_transition():
@@ -2312,7 +2312,7 @@ class PromotionState(StateMachine.State):
             self.left_platform = GC.IMAGESDICT[platform].copy()
             self.right_platform = Engine.flip_horiz(self.left_platform.copy())
 
-            gameStateObj.background = MenuFunctions.StaticBackground(GC.IMAGESDICT['Promotion'], fade=False)
+            gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['Promotion'], fade=False)
 
             # Name Tag
             self.name_tag = GC.IMAGESDICT[color + 'RightCombatName'].copy()
@@ -2323,7 +2323,7 @@ class PromotionState(StateMachine.State):
             self.darken_background = 0
             self.target_dark = 0
             self.darken_ui_background = 0
-            self.foreground = MenuFunctions.Foreground()
+            self.foreground = Background.Foreground()
             self.combat_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
 
             self.current_state = 'Init'
@@ -2782,7 +2782,7 @@ class ShopState(StateMachine.State):
             self.info = False
 
             # For background
-            gameStateObj.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+            gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
