@@ -18,6 +18,7 @@
 - Check that casual doesn't have a death cooldown.
 - Check that HP/minis shows up after NOT using formation?
 - Add "having 2+ parties" ability to the Engine and Wiki.
+- Add player phase and enemy phase battle animation music
 
 - New Screenshots in all marketing content
 

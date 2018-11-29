@@ -46,7 +46,7 @@ class ActionLog(object):
             action = self.actions[self.action_index]
             # Wait
             if isinstance(action, Action.Wait) and self.action_index != starting_index:
-                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 # Get content of unit's turn
                 text_list = self.get_unit_turn(action.unit, self.action_index)
                 return text_list
@@ -59,7 +59,7 @@ class ActionLog(object):
             action = self.run_action_backward(gameStateObj)
             # Move
             if isinstance(action, Action.Move):
-                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 if self.action_index == self.first_free_action:
                     return ["Start of Player Phase"]
                 return []
@@ -76,13 +76,13 @@ class ActionLog(object):
             action = self.actions[self.action_index + 1]
             # Move
             if isinstance(action, Action.Move) and self.action_index != starting_index:
-                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 return []
             # Actually run
             action = self.run_action_forward(gameStateObj)
             # Wait
             if isinstance(action, Action.Wait):
-                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 # Get content of unit's turn
                 text_list = self.get_unit_turn(action.unit, self.action_index)
                 return text_list
@@ -117,7 +117,7 @@ class ActionLog(object):
         while self.action_index >= self.first_free_action + 1:
             action = self.actions[self.action_index]
             if isinstance(action, Action.Wait):
-                gameStateObj.cursor.setPosition(action.unit.position, gameStateObj)
+                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 text_list = self.get_unit_turn(action.unit, self.action_index)
                 return text_list
             self.action_index -= 1
@@ -163,6 +163,9 @@ class TurnwheelDisplay(object):
         self.desc = desc
         self.turn = turn
 
+    def fade_out(self):
+        self.state = "out"
+
     def draw(self, surf, gameStateObj):
         if self.state == "in":
             self.transition += 2
@@ -175,9 +178,9 @@ class TurnwheelDisplay(object):
         # Turnwheel message
         if self.desc:
             num_lines = len(self.desc)
-            bg = MenuFunctions.CreateBaseMenuSurf((240, 4 + 16*num_lines), 'ClearMenuBackground')
+            bg = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH, 8 + 16*num_lines), 'ClearMenuBackground')
             for idx, line in enumerate(self.desc):
-                GC.FONT['text_white'].blit(line, bg, (0, 2 + 16*idx))
+                GC.FONT['text_white'].blit(line, bg, (4, 4 + 16*idx))
             if self.transition != 0:
                 bg = Image_Modification.flickerImageTranslucent(bg, -self.transition/24.*100.)
             surf.blit(bg, (0, 0))
@@ -185,19 +188,23 @@ class TurnwheelDisplay(object):
         golden_words_surf = GC.IMAGESDICT['GoldenWords']
         # Get Turn
         turn_surf = Engine.subsurface(golden_words_surf, (0, 17, 26, 10))
-        turn_bg = MenuFunctions.CreateBaseMenuSurf((48, 24))
-        turn_bg.blit(turn_surf, (4, 4))
-        GC.FONT['text_blue'].blit(str(self.turn), turn_bg, (24, 4))
-        surf.blit(turn_bg, (GC.WINWIDTH - 48, 4 + self.transition))
+        turn_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
+        turn_bg.blit(turn_surf, (4, 6))
+        turn_str = str(self.turn)
+        turn_size = GC.FONT['text_blue'].size(turn_str)[0]
+        GC.FONT['text_blue'].blit(turn_str, turn_bg, (48 - 4 - turn_size, 3))
+        surf.blit(turn_bg, (GC.WINWIDTH - 48 - 4, 4 + self.transition))
         # Unit Count
-        count_bg = MenuFunctions.CreateBaseMenuSurf((48, 24))
+        count_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
         player_units = [unit for unit in gameStateObj.allunits if unit.team == "player" and unit.position and not unit.dead]
         unused_units = [unit for unit in player_units if not unit.finished]
-        GC.FONT['text_blue'].blit(str(len(unused_units)) + "/" + str(len(player_units)), count_bg, (4, 4))
+        count_str = str(len(unused_units)) + "/" + str(len(player_units))
+        count_size = GC.FONT['text_blue'].size(count_str)[0]
+        GC.FONT['text_blue'].blit(count_str, count_bg, (24 - count_size/2, 3))
         surf.blit(count_bg, (4, GC.WINHEIGHT - 24 - 4 - self.transition))
         # Num Uses
         if gameStateObj.game_constants.get('current_turnwheel_uses', -1) > 0:
-            uses_bg = MenuFunctions.CreateBaseMenuSurf((48, 24))
+            uses_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
             GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['current_turnwheel_uses']), (4, 4))
             surf.blit(uses_bg, GC.WINWIDTH - 48, GC.WINHEIGHT - 24 - 4 - self.transition)
 
@@ -209,9 +216,10 @@ class TurnwheelState(StateMachine.State):
 
         gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['FocusFade'], fade=True)
         turnwheel_desc = gameStateObj.action_log.get_last_unit_turn(gameStateObj)
-        self.pennant = TurnwheelDisplay(turnwheel_desc, gameStateObj.turncount)
+        self.display = TurnwheelDisplay(turnwheel_desc, gameStateObj.turncount)
         self.fluid_helper = InputManager.FluidScroll(200)
         gameStateObj.activeMenu = None
+        self.transition_out = 0
 
     def take_input(self, actionList, gameStateObj, metaDataObj):
         action = gameStateObj.input_manager.process_input(actionList)
@@ -222,25 +230,42 @@ class TurnwheelState(StateMachine.State):
             # GC.SOUNDDICT['TurnwheelClick'].play()
             new_message = gameStateObj.action_log.forward(gameStateObj)
             if new_message is not None:
-                self.pennant.change_text(new_message, gameStateObj.turncount)
+                self.display.change_text(new_message, gameStateObj.turncount)
         elif 'UP' in directions or 'LEFT' in directions:
             # GC.SOUNDDICT['TurnwheelClick'].play()
             new_message = gameStateObj.action_log.backward(gameStateObj)
             if new_message is not None:
-                self.pennant.change_text(new_message, gameStateObj.turncount)
+                self.display.change_text(new_message, gameStateObj.turncount)
 
-        if action == 'SELECT' or action == 'BACK':
-            GC.SOUNDDICT['Select 4'].play()
+        if action == 'SELECT':
+            # GC.SOUNDDICT['TurnwheelSelect'].play()
+            # Play Big Turnwheel WOOSH Animation
             gameStateObj.action_log.finalize()
-            gameStateObj.stateMachine.back()
-            gameStateObj.stateMachine.back()  # Leave Options Menu
+            self.transition_out = 24
+            self.display.fade_out()
+
+        elif action == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
+            self.transition_out = 24
+            self.display.fade_out()
+
+    def update(self, gameStateObj, metaDataObj):
+        StateMachine.State.update(self, gameStateObj, metaDataObj)
+
+        if self.transition_out > 0:
+            self.transition_out -= 2
+            if self.transition_out <= 0:
+                # Let's leave now 
+                gameStateObj.stateMachine.back()
+                gameStateObj.stateMachine.back()
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        if self.pennant:
-            self.pennant.draw(mapSurf, gameStateObj)
+        if self.display:
+            self.display.draw(mapSurf, gameStateObj)
         return mapSurf
 
     def end(self, gameStateObj, metaDataObj):
         Engine.music_thread.set_volume(self.current_volume)
-        self.pennant = None
+        self.display = None
+        # gameStateObj.background = None

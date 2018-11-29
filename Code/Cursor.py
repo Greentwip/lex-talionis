@@ -223,38 +223,36 @@ class Cursor(object):
             if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
                 gameStateObj.cameraOffset.set_y(gameStateObj.cameraOffset.y + 1)
 
-    def setPosition(self, newposition, gameStateObj):
-        if not newposition:
+    def _set_position(self, pos, func_x, func_y, gameStateObj):
+        if not pos:
             return            
-        logger.debug('Cursor new position %s', newposition)
-        self.position = newposition
-        # Recenter camera
+        logger.debug('Cursor new position %s', pos)
+        self.position = pos
+        # Recenter camera only if necessary
         if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
-            gameStateObj.cameraOffset.set_x(self.position[0] - 3) # Testing...
+            func_x(self.position[0] - 3) # Testing...
         if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
-            gameStateObj.cameraOffset.set_x(self.position[0] + 4 - GC.TILEX)
+            func_x(self.position[0] + 4 - GC.TILEX)
         if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
-            gameStateObj.cameraOffset.set_y(self.position[1] - 2)
+            func_y(self.position[1] - 2)
         if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
-            gameStateObj.cameraOffset.set_y(self.position[1] + 3 - GC.TILEY)
+            func_y(self.position[1] + 3 - GC.TILEY)
         # Remove unit display
         self.remove_unit_display()
 
+    def setPosition(self, newposition, gameStateObj):
+        self._set_position(newposition, gameStateObj.cameraOffset.set_x, gameStateObj.cameraOffset.set_y, gameStateObj)
+
     def forcePosition(self, newposition, gameStateObj):
+        self._set_position(newposition, gameStateObj.cameraOffset.force_x, gameStateObj.cameraOffset.force_y, gameStateObj)
+
+    def centerPosition(self, newposition, gameStateObj):
         if not newposition:
             return            
         logger.debug('Cursor new position %s', newposition)
         self.position = newposition
-        # Recenter camera
-        if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
-            gameStateObj.cameraOffset.force_x(self.position[0] - 3) # Testing...
-        if self.position[0] >= (GC.TILEX + gameStateObj.cameraOffset.get_x() - 3):
-            gameStateObj.cameraOffset.force_x(self.position[0] + 4 - GC.TILEX)
-        if self.position[1] <= gameStateObj.cameraOffset.get_y() + 2:
-            gameStateObj.cameraOffset.force_y(self.position[1] - 2)
-        if self.position[1] >= (GC.TILEY + gameStateObj.cameraOffset.get_y() - 3):
-            gameStateObj.cameraOffset.force_y(self.position[1] + 3 - GC.TILEY)
-        # Remove unit display
+        gameStateObj.cameraOffset.set_x(self.position[0] - GC.TILEX/2)
+        gameStateObj.cameraOffset.set_y(self.position[1] - GC.TILEY/2)
         self.remove_unit_display()
 
     def autocursor(self, gameStateObj, force=False):
