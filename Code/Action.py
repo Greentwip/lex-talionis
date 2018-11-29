@@ -75,8 +75,6 @@ class Action(object):
             if value[0] == 'Unit':
                 setattr(self, name, gameStateObj.get_unit_from_id(value[1]))
             elif value[0] == 'Item':
-                print(value[1])
-                print([u.id for u in gameStateObj.allunits])
                 unit = gameStateObj.get_unit_from_id(value[1])
                 setattr(self, name, unit.items[value[2]])
             elif value[0] == 'ConvoyItem':

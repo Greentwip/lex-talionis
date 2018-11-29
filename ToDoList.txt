@@ -12,13 +12,15 @@
 - Turnwheel
     - Make it pretty and work the way FE Echoes works
     - If loading crashed save, allow execution of turnwheel forward
+    - Add turnwheel finalize script
+    - Check that max turnwheel, turnwheel count etc works
 - Submaps
 - Overworld
 - Parties (maybe just convoy differentiation -- since Anchorman has managed different parties pretty well themselves)
 - Check that casual doesn't have a death cooldown.
 - Check that HP/minis shows up after NOT using formation?
 - Add "having 2+ parties" ability to the Engine and Wiki.
-- Add player phase and enemy phase battle animation music
+- Test player phase and enemy phase battle animation music
 
 - New Screenshots in all marketing content
 

@@ -346,12 +346,6 @@ class Solver(object):
         elif self.state == 'Summon':
             self.state = 'Done'
 
-    # def use_item(self, item):
-    #     if item.uses:
-    #         item.uses.decrement()
-    #     if item.c_uses:
-    #         item.c_uses.decrement()
-
     def get_a_result(self, gameStateObj, metaDataObj):
         result = None
 
@@ -365,7 +359,6 @@ class Solver(object):
 
         elif self.state == 'Attacker':
             Action.do(Action.UseItem(self.item), gameStateObj)
-            # self.use_item(self.item)
             self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.defender)
             self.atk_rounds += 1
@@ -373,39 +366,33 @@ class Solver(object):
         elif self.state == 'Splash':
             if self.uses_count < 1:
                 Action.do(Action.UseItem(self.item), gameStateObj)
-                # self.use_item(self.item)
                 self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.splash[self.index])
             self.index += 1
 
         elif self.state == 'AttackerBrave':
             Action.do(Action.UseItem(self.item), gameStateObj)
-            # self.use_item(self.item)
             self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.defender)
 
         elif self.state == 'SplashBrave':
             if self.uses_count < 2:
                 Action.do(Action.UseItem(self.item), gameStateObj)
-                # self.use_item(self.item)
                 self.uses_count += 1
             result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.splash[self.index])
             self.index += 1
 
         elif self.state == 'Defender':
             Action.do(Action.UseItem(self.defender.getMainWeapon()), gameStateObj)
-            # self.use_item(self.defender.getMainWeapon())
             self.def_rounds += 1
             result = self.generate_defender_phase(gameStateObj)
 
         elif self.state == 'DefenderBrave':
             Action.do(Action.UseItem(self.defender.getMainWeapon()), gameStateObj)
-            # self.use_item(self.defender.getMainWeapon())
             result = self.generate_defender_phase(gameStateObj)
 
         elif self.state == 'Summon':
             Action.do(Action.UseItem(self.item), gameStateObj)
-            # self.use_item(self.item)
             result = self.generate_summon_phase(gameStateObj, metaDataObj)
 
         if self.state != "Done":
@@ -816,6 +803,7 @@ class AnimationCombat(Combat):
                     return name
                 name = ' '.join(s_n[:-1])
             return name
+
         self.gameStateObj = gameStateObj  # Dependency Injection
         self.metaDataObj = metaDataObj  # Dependency Injection
         crit = 'Crit' if cf.CONSTANTS['crit'] else ''
@@ -917,6 +905,11 @@ class AnimationCombat(Combat):
                 self.name_offset = self.max_position_offset
                 self.last_update = current_time
                 self.combat_state = 'Pre_Init'
+                # Start Battle Music
+                if self.p1.team in ('player', 'other'):
+                    Engine.music_thread.fade_in(gameStateObj.phase_music.player_battle_music)
+                else:
+                    Engine.music_thread.fade_in(gameStateObj.phase_music.enemy_battle_music)
 
         elif self.combat_state == 'Pre_Init':
             if skip or current_time - self.last_update > 410: # 25 frames
@@ -1139,6 +1132,7 @@ class AnimationCombat(Combat):
     def finish(self):
         self.p1.unlock_active()
         self.p2.unlock_active()
+        Engine.music_thread.fade_back()
 
     def shake(self, num):
         self.current_shake = 1

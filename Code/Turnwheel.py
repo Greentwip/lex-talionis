@@ -1,12 +1,13 @@
 # Turnwheel & Event Log
+import os, math
 try:
     import GlobalConstants as GC
     import InputManager, StateMachine, MenuFunctions, BattleAnimation
-    import Background, Action, Engine, Image_Modification
+    import Background, Action, Engine, Image_Modification, Weather, Dialogue
 except ImportError:
     from . import GlobalConstants as GC
     from . import InputManager, StateMachine, MenuFunctions, BattleAnimation
-    from . import Background, Action, Engine, Image_Modification
+    from . import Background, Action, Engine, Image_Modification, Weather, Dialogue
 
 class ActionLog(object):
     def __init__(self):
@@ -98,6 +99,9 @@ class ActionLog(object):
     def finalize(self):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index + 1]
+
+    def is_turned_back(self):
+        return self.action_index + 1 < len(self.actions)
 
     def get_unit_turn(self, unit, wait_index):
         cur_index = wait_index
@@ -203,10 +207,10 @@ class TurnwheelDisplay(object):
         GC.FONT['text_blue'].blit(count_str, count_bg, (24 - count_size/2, 3))
         surf.blit(count_bg, (4, GC.WINHEIGHT - 24 - 4 - self.transition))
         # Num Uses
-        if gameStateObj.game_constants.get('current_turnwheel_uses', -1) > 0:
+        if gameStateObj.game_constants.get('max_turnwheel_uses', -1) > 0:
             uses_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
             GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['current_turnwheel_uses']), (4, 4))
-            surf.blit(uses_bg, GC.WINWIDTH - 48, GC.WINHEIGHT - 24 - 4 - self.transition)
+            surf.blit(uses_bg, GC.WINWIDTH - 48 - 4, GC.WINHEIGHT - 24 - 4 - self.transition)
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -221,7 +225,12 @@ class TurnwheelState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll(200)
         gameStateObj.activeMenu = None
         self.transition_out = 0
+
+        # For darken backgrounds and drawing
+        self.darken_background = 0
+        self.target_dark = 0
         self.end_effect = None
+        self.particles = []
 
     def take_input(self, actionList, gameStateObj, metaDataObj):
         action = gameStateObj.input_manager.process_input(actionList)
@@ -240,26 +249,39 @@ class TurnwheelState(StateMachine.State):
                 self.display.change_text(new_message, gameStateObj.turncount)
 
         if action == 'SELECT':
-            GC.SOUNDDICT['TurnwheelOut'].play()
-            # Play Big Turnwheel WOOSH Animation
-            gameStateObj.action_log.finalize()
-            self.transition_out = 60
-            self.display.fade_out()
-            self.turnwheel_effect()
-            gameStateObj.background.fade_out()
+            if gameStateObj.action_log.is_turned_back():
+                GC.SOUNDDICT['TurnwheelOut'].play()
+                # Play Big Turnwheel WOOSH Animation
+                gameStateObj.action_log.finalize()
+                self.transition_out = 60
+                self.display.fade_out()
+                self.turnwheel_effect()
+                gameStateObj.background.fade_out()
+                gameStateObj.game_constants['current_turnwheel_uses'] -= 1
+            else:
+                GC.SOUNDDICT['Error'].play()
 
         elif action == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            self.transition_out = 60
+            self.transition_out = 24
             self.display.fade_out()
             gameStateObj.background.fade_out()
 
     def turnwheel_effect(self):
-        image, script = GC.ANIMDICT.get_effect('WindFlash1', None)
+        image, script = GC.ANIMDICT.get_effect('TurnwheelFlash', None)
         self.end_effect = BattleAnimation.BattleAnimation(None, image, script, None, None)
-        self.end_effect.awake(None, None, True, False, parent=self)
+        self.end_effect.awake(self, None, True, False)
         self.end_effect.start_anim('Attack')
-        print(self.end_effect)
+        self.initiate_warp_flowers()
+
+    def initiate_warp_flowers(self):
+        self.particles = []
+        angle_frac = math.pi/8
+        true_pos = GC.WINWIDTH//2, GC.WINHEIGHT//2
+        for speed in (0.5, 1.0, 2.0, 2.5, 3.5, 4.0):
+            for num in range(0, 16):
+                angle = num*angle_frac + angle_frac/2
+                self.particles.append(Weather.WarpFlower(true_pos, speed, angle))
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
@@ -270,14 +292,37 @@ class TurnwheelState(StateMachine.State):
                 # Let's leave now 
                 gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.back()
+                # Called whenever the turnwheel is used
+                turnwheel_script_name = 'Data/turnwheelScript.txt'
+                if self.end_effect and os.path.exists(turnwheel_script_name):
+                    turnwheel_script = Dialogue.Dialogue_Scene(turnwheel_script_name)
+                    gameStateObj.message.append(turnwheel_script)
+                    gameStateObj.stateMachine.changeState('dialogue')
 
         if self.end_effect:
             self.end_effect.update()
+        for particle in self.particles:
+            particle.update(gameStateObj)
+
+    def darken(self):
+        self.target_dark += 4
+
+    def lighten(self):
+        self.target_dark -= 4
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         if self.display:
             self.display.draw(mapSurf, gameStateObj)
+        if self.darken_background or self.target_dark:
+            bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - int(self.darken_background * 12.5))
+            mapSurf.blit(bg, (0, 0))
+            if self.target_dark > self.darken_background:
+                self.darken_background += 1
+            elif self.target_dark < self.darken_background:
+                self.darken_background -= 1
+        for particle in self.particles:
+            particle.draw(mapSurf)
         if self.end_effect:
             self.end_effect.draw(mapSurf, (0, 0), 0, 0)
         return mapSurf
