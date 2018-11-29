@@ -31,7 +31,6 @@ class InfoMenu(StateMachine.State):
 
             self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
             # Counters
-            # self.background = MenuFunctions.MovingBackground(GC.IMAGESDICT['StatusBackground'])
             self.background = GC.IMAGESDICT['InfoMenuBackground']
             self.left_arrow = GUIObjects.ScrollArrow('left', (103, 3))
             self.right_arrow = GUIObjects.ScrollArrow('right', (217, 3), 0.5)

@@ -16,7 +16,6 @@ except ImportError:
 
 class Action(object):
     run_on_load = False
-    skip = True
 
     def __init__(self):
         pass
@@ -99,8 +98,6 @@ class Move(Action):
     """
     A basic, user-directed move
     """
-    skip = False
-
     def __init__(self, unit, new_pos, path=None):
         self.unit = unit
         self.old_pos = self.unit.position
@@ -140,6 +137,10 @@ class Move(Action):
         self.unit.position = self.old_pos
         self.unit.path = []
         self.unit.arrive(gameStateObj)
+
+# Just another name for move
+class CantoMove(Move):
+    pass
 
 class Teleport(Action):
     """
@@ -236,8 +237,6 @@ class LeaveMap(Action):
         self.unit.arrive(gameStateObj)
 
 class Wait(Action):
-    skip = False
-
     def __init__(self, unit):
         self.unit = unit
         self.hasMoved = unit.hasMoved
@@ -921,6 +920,10 @@ class IncrementTurn(Action):
 class MarkPhase(Action):
     def __init__(self, phase_name):
         self.phase_name = phase_name
+
+class Message(Action):
+    def __init__(self, message):
+        self.message = message
 
 class AddTag(Action):
     def __init__(self, unit, new_tag):

@@ -6,14 +6,14 @@ try:
     import static_random
     import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     import StatusObject, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-    import MenuFunctions, GUIObjects, Weapons, Action
+    import GUIObjects, Weapons, Action, Background
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
     from . import StatusObject, SaveLoad, Utility, Dialogue, Engine, Image_Modification
-    from . import MenuFunctions, GUIObjects, Weapons, Action
+    from . import GUIObjects, Weapons, Action, Background
 
 import logging
 logger = logging.getLogger(__name__)
@@ -408,8 +408,9 @@ class Solver(object):
             # self.use_item(self.item)
             result = self.generate_summon_phase(gameStateObj, metaDataObj)
 
-        new_random_state = static_random.get_combat_random_state()
-        Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)
+        if self.state != "Done":
+            new_random_state = static_random.get_combat_random_state()
+            Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)
                 
         return result
 
@@ -633,6 +634,7 @@ class Combat(object):
             if unit.isDying and isinstance(unit, UnitObject.UnitObject):
                 if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
                     Action.do(Action.Miracle(unit), gameStateObj)
+                    Action.do(Action.Message("%s activated Miracle" % unit.name), gameStateObj)
 
     def handle_item_gain(self, gameStateObj, all_units):
         for unit in all_units:
@@ -761,7 +763,7 @@ class AnimationCombat(Combat):
         self.darken_background = 0
         self.target_dark = 0
         self.darken_ui_background = 0
-        self.foreground = MenuFunctions.Foreground()
+        self.foreground = Background.Foreground()
         self.combat_surf = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
 
         # For positioning UI
@@ -1398,6 +1400,12 @@ class AnimationCombat(Combat):
         gameStateObj.stateMachine.back()
         # self.p1.hasAttacked = True
         Action.do(Action.HasAttacked(self.p1), gameStateObj)
+
+        if self.p1.checkIfEnemy(self.p2):
+            Action.do(Action.Message("%s attacked %s" % (self.p1.name, self.p2.name)), gameStateObj)
+        else:
+            Action.do(Action.Message("%s helped %s" % (self.p1.name, self.p2.name)), gameStateObj)
+
         if not self.p1.has_canto_plus() and not self.event_combat:
             gameStateObj.stateMachine.changeState('wait') # Event combats do not cause unit to wait
 
@@ -1413,6 +1421,8 @@ class AnimationCombat(Combat):
         self.check_death()
         if not self.p2.isDying:
             self.p2.sprite.change_state('normal', gameStateObj)
+        else:
+            Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
@@ -1859,6 +1869,10 @@ class MapCombat(Combat):
     def clean_up(self, gameStateObj, metaDataObj):
         # Remove combat state
         gameStateObj.stateMachine.back()
+
+        if self.skill_used and self.skill_used.active:
+            Action.do(Action.Message("%s activated %s" % (self.p1.name, self.skill_used.name)), gameStateObj)
+
         # Reset states if you're not using a solo skill
         if self.skill_used and self.skill_used.active and self.skill_used.active.mode == 'Solo':
             # self.p1.hasTraded = True  # Can still attack, can't move
@@ -1866,6 +1880,17 @@ class MapCombat(Combat):
         else:
             # self.p1.hasAttacked = True
             Action.do(Action.HasAttacked(self.p1), gameStateObj)
+            if self.p2:
+                if isinstance(self.p2, UnitObject.UnitObject):
+                    if self.p1.checkIfEnemy(self.p2):
+                        Action.do(Action.Message("%s attacked %s" % (self.p1.name, self.p2.name)), gameStateObj)
+                    else:
+                        Action.do(Action.Message("%s helped %s" % (self.p1.name, self.p2.name)), gameStateObj)
+                else:
+                    Action.do(Action.Message("%s attacked a tile" % self.p1.name), gameStateObj)
+            else:
+                Action.do(Action.Message("%s attacked" % self.p1.name), gameStateObj)
+
             if not self.p1.has_canto_plus() and not self.event_combat:
                 gameStateObj.stateMachine.changeState('wait')  # Event combats do not cause unit to wait
 
@@ -1885,6 +1910,13 @@ class MapCombat(Combat):
                 unit.isDying = True
             if isinstance(unit, UnitObject.UnitObject):
                 unit.sprite.change_state('normal', gameStateObj)
+
+        if not self.p1.isDying:
+            if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.isDying:
+                Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
+            for unit in self.splash:
+                if isinstance(unit, UnitObject.UnitObject) and unit.isDying:
+                    Action.do(Action.Message("Prevailed over %s") % unit.name)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
