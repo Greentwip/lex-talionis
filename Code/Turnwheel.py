@@ -1,11 +1,11 @@
 # Turnwheel & Event Log
 try:
     import GlobalConstants as GC
-    import InputManager, StateMachine, MenuFunctions
+    import InputManager, StateMachine, MenuFunctions, BattleAnimation
     import Background, Action, Engine, Image_Modification
 except ImportError:
     from . import GlobalConstants as GC
-    from . import InputManager, StateMachine, MenuFunctions
+    from . import InputManager, StateMachine, MenuFunctions, BattleAnimation
     from . import Background, Action, Engine, Image_Modification
 
 class ActionLog(object):
@@ -210,6 +210,7 @@ class TurnwheelDisplay(object):
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
+        GC.SOUNDDICT['TurnwheelIn2'].play()
         # Lower volume
         self.current_volume = Engine.music_thread.volume
         Engine.music_thread.set_volume(self.current_volume/2)
@@ -220,6 +221,7 @@ class TurnwheelState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll(200)
         gameStateObj.activeMenu = None
         self.transition_out = 0
+        self.end_effect = None
 
     def take_input(self, actionList, gameStateObj, metaDataObj):
         action = gameStateObj.input_manager.process_input(actionList)
@@ -227,45 +229,59 @@ class TurnwheelState(StateMachine.State):
         directions = self.fluid_helper.get_directions()
 
         if 'DOWN' in directions or 'RIGHT' in directions:
-            # GC.SOUNDDICT['TurnwheelClick'].play()
+            GC.SOUNDDICT['Select 1'].play()
             new_message = gameStateObj.action_log.forward(gameStateObj)
             if new_message is not None:
                 self.display.change_text(new_message, gameStateObj.turncount)
         elif 'UP' in directions or 'LEFT' in directions:
-            # GC.SOUNDDICT['TurnwheelClick'].play()
+            GC.SOUNDDICT['Select 2'].play()
             new_message = gameStateObj.action_log.backward(gameStateObj)
             if new_message is not None:
                 self.display.change_text(new_message, gameStateObj.turncount)
 
         if action == 'SELECT':
-            # GC.SOUNDDICT['TurnwheelSelect'].play()
+            GC.SOUNDDICT['TurnwheelOut'].play()
             # Play Big Turnwheel WOOSH Animation
             gameStateObj.action_log.finalize()
-            self.transition_out = 24
+            self.transition_out = 60
             self.display.fade_out()
+            self.turnwheel_effect()
+            gameStateObj.background.fade_out()
 
         elif action == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            self.transition_out = 24
+            self.transition_out = 60
             self.display.fade_out()
+            gameStateObj.background.fade_out()
+
+    def turnwheel_effect(self):
+        image, script = GC.ANIMDICT.get_effect('WindFlash1', None)
+        self.end_effect = BattleAnimation.BattleAnimation(None, image, script, None, None)
+        self.end_effect.awake(None, None, True, False, parent=self)
+        self.end_effect.start_anim('Attack')
+        print(self.end_effect)
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
 
         if self.transition_out > 0:
-            self.transition_out -= 2
+            self.transition_out -= 1
             if self.transition_out <= 0:
                 # Let's leave now 
                 gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.back()
 
+        if self.end_effect:
+            self.end_effect.update()
+
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         if self.display:
             self.display.draw(mapSurf, gameStateObj)
+        if self.end_effect:
+            self.end_effect.draw(mapSurf, (0, 0), 0, 0)
         return mapSurf
 
     def end(self, gameStateObj, metaDataObj):
         Engine.music_thread.set_volume(self.current_volume)
         self.display = None
-        # gameStateObj.background = None
