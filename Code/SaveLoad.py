@@ -170,13 +170,13 @@ def handle_triggers(allunits, reinforceUnits, triggers, level_map):
         elif current_pos not in level_map.tiles:
             unit.position = None
             if current_pos[0] >= level_map.width:
-                spawn_pos = level_map.width - 1, current_pos[1]
+                spawn_pos = level_map.width - 1, Utility.clamp(current_pos[1], 0, level_map.height - 1)
             elif current_pos[1] >= level_map.height:
-                spawn_pos = current_pos[0], level_map.height - 1
+                spawn_pos = Utility.clamp(current_pos[0], 0, level_map.width - 1), level_map.height - 1
             elif current_pos[0] < 0:
-                spawn_pos = 0, current_pos[1]
+                spawn_pos = 0, Utility.clamp(current_pos[1], 0, level_map.height - 1)
             elif current_pos[1] < 0:
-                spawn_pos = current_pos[0], 0
+                spawn_pos = Utility.clamp(current_pos[0], 0, level_map.width - 1), 0
             reinforceUnits[unit.id] = (unit.id, spawn_pos)
         else:
             unit.position = current_pos
