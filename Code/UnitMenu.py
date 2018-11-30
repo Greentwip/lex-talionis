@@ -280,6 +280,9 @@ class UnitMenu(StateMachine.State):
             elif scroll < 0:
                 left = 64
                 state_surf = Engine.subsurface(state_surf, (-scroll, 0, 160 + scroll, 112))
+            else:
+                left = 64
+                state_surf = Engine.subsurface(state_surf, (0, 0, 160, 112))
         else:
             if scroll > 0:
                 left = 64

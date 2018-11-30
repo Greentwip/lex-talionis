@@ -1247,7 +1247,7 @@ class Dialogue_Scene(object):
             unit.sprite.set_transition('warp_in')
             gameStateObj.map.initiate_warp_flowers(final_pos)
         elif transition == 'fade':
-            if gameStateObj.map.on_border(final_pos):
+            if gameStateObj.map.on_border(final_pos) and gameStateObj.map.tiles[final_pos].name not in ('Stairs', 'Fort'):
                 unit.sprite.spriteOffset = [num*GC.TILEWIDTH for num in gameStateObj.map.which_border(final_pos)]
                 unit.sprite.set_transition('fake_in')
             else:
