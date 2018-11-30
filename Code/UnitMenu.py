@@ -311,7 +311,8 @@ class UnitMenu(StateMachine.State):
             long_name = metaDataObj['class_dict'][unit.klass]['long_name']
             font.blit(long_name, surf, (4, top))
             GC.FONT['text_blue'].blit(str(unit.level), surf, (80 - GC.FONT['text_blue'].size(str(unit.level))[0], top))
-            GC.FONT['text_blue'].blit(str(unit.exp), surf, (100 - GC.FONT['text_blue'].size(str(unit.exp))[0], top))
+            exp = str(int(unit.exp))
+            GC.FONT['text_blue'].blit(exp, surf, (100 - GC.FONT['text_blue'].size(exp)[0], top))
             c_hp = str(unit.currenthp)
             GC.FONT['text_blue'].blit(c_hp, surf, (128 - GC.FONT['text_blue'].size(c_hp)[0], top))
             font.blit('/', surf, (130, top))
@@ -418,7 +419,7 @@ class UnitMenu(StateMachine.State):
         elif self.current_sort == 'Lv':
             comp = lambda unit: unit.level
         elif self.current_sort == 'Exp':
-            comp = lambda unit: unit.exp
+            comp = lambda unit: int(unit.exp)
         elif self.current_sort == 'HP':
             comp = lambda unit: unit.currenthp
         elif self.current_sort == 'Max':

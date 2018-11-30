@@ -218,7 +218,7 @@ class PrepFormationState(StateMachine.State):
                 else:
                     GC.SOUNDDICT['Select 2'].play()
                     if gameStateObj.cursor.currentSelectedUnit.team.startswith('enemy'):
-                        gameStateObj.boundary_manager.toggle_unit(gameStateObj.cursor.currentSelectedUnit, gameStateObj)
+                        gameStateObj.boundary_manager.toggle_unit(gameStateObj.cursor.currentSelectedUnit)
 
         elif event == 'BACK':
             GC.SOUNDDICT['Select 1'].play()
