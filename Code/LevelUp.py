@@ -147,7 +147,7 @@ class levelUpScreen(object):
         elif self.state.getState() == 'exp_leave':
             done = self.exp_bar.update(self.expSet)
             if done:
-                self.unit.exp += self.expNew
+                self.unit.change_exp(self.expNew)
                 self.state.back()
                 self.state_time = currentTime
                 if len(self.state.state) <= 0:
@@ -190,9 +190,9 @@ class levelUpScreen(object):
                     self.in_combat.lighten_ui()
                 # Handle EXP when the user levels up, if this is not a forced level
                 if not self.force_level:
-                    self.unit.exp += self.expNew
+                    self.unit.change_exp(self.expNew)
                     if self.unit.exp >= 100:
-                        self.unit.exp = self.expNew - (100 - self.expOld)
+                        self.unit.set_exp(self.expNew - (100 - self.expOld))
                 # Remove animations
                 self.animations = []
                 # check for weapon gain
@@ -237,10 +237,10 @@ class levelUpScreen(object):
                         self.state.changeState('wait')
                         self.state_time = currentTime
                     else:
-                        self.unit.exp = 99
+                        self.unit.set_exp(99)
                         return True # Done
                 else: # Unit is at the highest point it can be. No more.
-                    self.unit.exp = 99
+                    self.unit.set_exp(99)
                     return True # Done
 
         elif self.state.getState() == 'item_promote':
@@ -261,10 +261,10 @@ class levelUpScreen(object):
                     self.state.changeState('wait')
                     self.state_time = currentTime
                 else:
-                    self.unit.exp = 99
+                    self.unit.set_exp(99)
                     return True # Done
             else: # Unit is at the highest point it can be. No more.
-                self.unit.exp = 99
+                self.unit.set_exp(99)
                 return True # Done
 
         elif self.state.getState() == 'wait':

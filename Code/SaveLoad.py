@@ -48,8 +48,9 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     # And general abstraction information    
     get_metaDataObj(levelfolder, metaDataObj)
 
-    starting_music = CustomObjects.PhaseMusic(overview_dict['player_phase_music'], overview_dict['enemy_phase_music'], \
-                                              overview_dict['other_phase_music'] if 'other_phase_music' in overview_dict else None)
+    starting_music = CustomObjects.PhaseMusic(overview_dict['player_phase_music'], overview_dict['enemy_phase_music'],
+                                              overview_dict.get('other_phase_music', None), overview_dict.get('player_battle_music', None),
+                                              overview_dict.get('enemy_battle_music', None))
 
     # Get tiles
     currentMap = create_map(levelfolder, overview_dict)
@@ -118,7 +119,7 @@ def read_overview_file(overview_filename):
     overview_lines = {}
     with open(overview_filename, 'r') as mainInfo:
         for line in mainInfo:
-            split_line = line.rstrip('\r\n').split(";", 1)
+            split_line = line.strip().split(";", 1)
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
@@ -170,13 +171,13 @@ def handle_triggers(allunits, reinforceUnits, triggers, level_map):
         elif current_pos not in level_map.tiles:
             unit.position = None
             if current_pos[0] >= level_map.width:
-                spawn_pos = level_map.width - 1, current_pos[1]
+                spawn_pos = level_map.width - 1, Utility.clamp(current_pos[1], 0, level_map.height - 1)
             elif current_pos[1] >= level_map.height:
-                spawn_pos = current_pos[0], level_map.height - 1
+                spawn_pos = Utility.clamp(current_pos[0], 0, level_map.width - 1), level_map.height - 1
             elif current_pos[0] < 0:
-                spawn_pos = 0, current_pos[1]
+                spawn_pos = 0, Utility.clamp(current_pos[1], 0, level_map.height - 1)
             elif current_pos[1] < 0:
-                spawn_pos = current_pos[0], 0
+                spawn_pos = Utility.clamp(current_pos[0], 0, level_map.width - 1), 0
             reinforceUnits[unit.id] = (unit.id, spawn_pos)
         else:
             unit.position = current_pos

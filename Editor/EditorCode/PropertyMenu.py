@@ -9,6 +9,50 @@ except ImportError:
     from . import CustomGUI as LtGui
     from . import EditorUtilities
 
+class MusicDialog(QtGui.QDialog):
+    def __init__(self, parent):
+        super(MusicDialog, self).__init__(parent)
+        music_grid = QtGui.QGridLayout(self)
+        music_grid.setVerticalSpacing(0)
+
+        self.player_music = LtGui.MusicBox('Player Phase Music')
+        music_grid.addWidget(self.player_music, 1, 0)
+        self.enemy_music = LtGui.MusicBox('Enemy Phase Music')
+        music_grid.addWidget(self.enemy_music, 2, 0)
+        self.other_music = LtGui.MusicBox('Other Phase Music')
+        music_grid.addWidget(self.other_music, 3, 0)
+        self.player_battle_music = LtGui.MusicBox('Player Battle Music')
+        music_grid.addWidget(self.player_battle_music, 4, 0)
+        self.enemy_battle_music = LtGui.MusicBox('Enemy Battle Music')
+        music_grid.addWidget(self.enemy_battle_music, 5, 0)
+
+    def load(self, music_text):
+        self.player_music.setText(music_text[0])
+        self.enemy_music.setText(music_text[1])
+        self.other_music.setText(music_text[2])
+        self.player_battle_music.setText(music_text[3])
+        self.enemy_battle_music.setText(music_text[4])
+
+    def save(self):
+        overview = {}
+        overview['player_music'] = self.player_music.text()
+        overview['enemy_music'] = self.enemy_music.text()
+        overview['other_music'] = self.other_music.text()
+        overview['player_battle_music'] = self.player_battle_music.text()
+        overview['enemy_battle_music'] = self.enemy_battle_music.text()
+        return overview
+
+    @staticmethod
+    def editMusic(parent, music_text):
+        dialog = MusicDialog(parent)
+        dialog.load(music_text)
+        dialog.setWindowTitle('Set Chapter Music')
+        result = dialog.exec_()
+        if result == QtGui.QDialog.Accepted:
+            return dialog.save(), True
+        else:
+            return None, False
+
 class PropertyMenu(QtGui.QWidget):
     def __init__(self, window=None):
         super(PropertyMenu, self).__init__(window)
@@ -48,25 +92,26 @@ class PropertyMenu(QtGui.QWidget):
         self.transition = QtGui.QCheckBox('Show Chpt. Transition?')
         self.grid.addWidget(self.transition, 8, 0)
 
-        # Main music
-        music_grid = QtGui.QGridLayout()
-        self.grid.addLayout(music_grid, 10, 0)
-        music_grid.setVerticalSpacing(0)
-
-        EditorUtilities.add_line(music_grid, 0)
-        self.player_music = LtGui.MusicBox('Player Phase Music')
-        music_grid.addWidget(self.player_music, 1, 0)
-        self.enemy_music = LtGui.MusicBox('Enemy Phase Music')
-        music_grid.addWidget(self.enemy_music, 2, 0)
-        self.other_music = LtGui.MusicBox('Other Phase Music')
-        music_grid.addWidget(self.other_music, 3, 0)
-        EditorUtilities.add_line(music_grid, 4)
+        EditorUtilities.add_line(self.grid, 9)
+        self.music_button = QtGui.QPushButton('Phase Music')
+        self.music_button.clicked.connect(self.edit_music)
+        self.grid.addWidget(self.music_button, 10, 0)
+        EditorUtilities.add_line(self.grid, 11)
 
         self.create_weather(12)
         EditorUtilities.add_line(self.grid, 14)
         self.create_objective(15)
 
         self.update()
+
+    def edit_music(self):
+        music, ok = MusicDialog.editMusic(self, (self.player_music, self.enemy_music, self.other_music, self.player_battle_music, self.enemy_battle_music))
+        if ok:
+            self.player_music = music['player_music']
+            self.enemy_music = music['enemy_music']
+            self.other_music = music['other_music']
+            self.player_battle_music = music['player_battle_music']
+            self.enemy_battle_music = music['enemy_battle_music']
 
     def create_weather(self, row):
         grid = QtGui.QGridLayout()
@@ -133,13 +178,16 @@ class PropertyMenu(QtGui.QWidget):
         self.base.setChecked(False)
         self.market.setChecked(False)
         self.transition.setChecked(True)
-        self.player_music.setText('')
-        self.enemy_music.setText('')
-        self.other_music.setText('')
         self.prep_music.setText('')
         self.pick.setChecked(True)
         self.base_music.setText('')
         self.base_bg.setText('')
+
+        self.player_music = ''
+        self.enemy_music = ''
+        self.other_music = ''
+        self.player_battle_music = ''
+        self.enemy_battle_music = ''
 
         for box in self.weather_boxes:
             box.setChecked(False)
@@ -154,13 +202,16 @@ class PropertyMenu(QtGui.QWidget):
         self.base.setChecked(overview['base_flag'] != '0')
         self.market.setChecked(bool(int(overview['market_flag'])))
         self.transition.setChecked(bool(int(overview['transition_flag'])))
-        self.player_music.setText(overview['player_phase_music'])
-        self.enemy_music.setText(overview['enemy_phase_music'])
-        self.other_music.setText(overview['other_phase_music'] if 'other_phase_music' in overview else '')
         self.prep_music.setText(overview['prep_music'] if self.prep.isChecked() else '')
         self.pick.setChecked(bool(int(overview['pick_flag'])))
         self.base_music.setText(overview['base_music'] if self.base.isChecked() else '')
         self.base_bg.setText(overview['base_flag'] if self.base.isChecked() else '')
+
+        self.player_music = overview['player_phase_music']
+        self.enemy_music = overview['enemy_phase_music']
+        self.other_music = overview.get('other_phase_music', '')
+        self.player_battle_music = overview.get('player_battle_music', '')
+        self.enemy_battle_music = overview.get('enemy_battle_music', '')
 
         weather = overview['weather'].split(',') if 'weather' in overview else []
         for box in self.weather_boxes:
@@ -185,14 +236,16 @@ class PropertyMenu(QtGui.QWidget):
         overview['base_music'] = self.base_music.text()
         overview['market_flag'] = '1' if self.market.isChecked() else '0'
         overview['transition_flag'] = '1' if self.transition.isChecked() else '0'
+
+        overview['player_phase_music'] = self.player_music
+        overview['enemy_phase_music'] = self.enemy_music
+        overview['other_phase_music'] = self.other_music
+        overview['player_battle_music'] = self.player_battle_music
+        overview['enemy_battle_music'] = self.enemy_battle_music
         
         overview['display_name'] = self.simple_display.text()
         overview['win_condition'] = self.win_condition.text()
         overview['loss_condition'] = self.loss_condition.text()
-
-        overview['player_phase_music'] = self.player_music.text()
-        overview['enemy_phase_music'] = self.enemy_music.text()
-        overview['other_phase_music'] = self.other_music.text()
 
         overview['weather'] = ','.join(self.get_weather_strings())
 

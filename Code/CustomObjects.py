@@ -614,13 +614,17 @@ class CameraOffset(object):
         # logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
 class PhaseMusic(object):
-    def __init__(self, player, enemy, other=None):
+    def __init__(self, player, enemy, other=None, player_battle=None, enemy_battle=None):
         self.player_name = player
         self.enemy_name = enemy
         self.other_name = other
+        self.player_battle_name = player_battle
+        self.enemy_battle_name = enemy_battle
         self.player_music = GC.MUSICDICT[self.player_name]
         self.enemy_music = GC.MUSICDICT[self.enemy_name]
-        self.other_music = GC.MUSICDICT[self.other_name] if self.other_name else None
+        self.other_music = GC.MUSICDICT.get(self.other_name, None)
+        self.player_battle_music = GC.MUSICDICT.get(self.player_battle_name, None)
+        self.enemy_battle_music = GC.MUSICDICT.get(self.enemy_battle_name, None)
 
     def get_phase_music(self, phase_name):
         if phase_name == 'player':
@@ -634,7 +638,7 @@ class PhaseMusic(object):
             return None
 
     def serialize(self):
-        return (self.player_name, self.enemy_name, self.other_name)
+        return (self.player_name, self.enemy_name, self.other_name, self.player_battle_name, self.enemy_battle_name)
 
     @classmethod
     def deserialize(cls, info):

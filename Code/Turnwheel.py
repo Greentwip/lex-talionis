@@ -1,18 +1,20 @@
 # Turnwheel & Event Log
+import os, math
 try:
     import GlobalConstants as GC
     import InputManager, StateMachine, MenuFunctions, BattleAnimation
-    import Background, Action, Engine, Image_Modification
+    import Background, Action, Engine, Image_Modification, Weather, Dialogue
 except ImportError:
     from . import GlobalConstants as GC
     from . import InputManager, StateMachine, MenuFunctions, BattleAnimation
-    from . import Background, Action, Engine, Image_Modification
+    from . import Background, Action, Engine, Image_Modification, Weather, Dialogue
 
 class ActionLog(object):
     def __init__(self):
         self.actions = []
         self.action_index = -1  # Means no actions
         self.first_free_action = -1
+        self.locked = False
 
     def append(self, action):
         print("Add Action: %s" % action.__class__.__name__)
@@ -44,25 +46,35 @@ class ActionLog(object):
         starting_index = self.action_index
         while self.action_index >= self.first_free_action + 1:
             action = self.actions[self.action_index]
-            # Wait
-            if isinstance(action, Action.Wait) and self.action_index != starting_index:
+            if self.action_index != starting_index:
+                # Wait
+                if isinstance(action, Action.Wait):
+                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
+                    # Get content of unit's turn
+                    text_list = self.get_unit_turn(action.unit, self.action_index)
+                    return text_list
+                # Mark Phase
+                elif isinstance(action, Action.MarkPhase) and self.action_index != starting_index:
+                    if action.phase_name == 'player':
+                        gameStateObj.cursor.autocursor(gameStateObj)
+                    return ["Start of %s Phase" % action.phase_name.capitalize()]
+            # Actually Run backwards
+            action = self.run_action_backward(gameStateObj)
+            # Move
+            if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
+                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
+                print('%s %s moves!' % (action.unit.klass, action.unit.name))
+                if self.action_index == self.first_free_action:
+                    return ["Start of Player Phase"]
+                return []
+            # Die
+            elif isinstance(action, Action.Die):
                 gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 # Get content of unit's turn
                 text_list = self.get_unit_turn(action.unit, self.action_index)
                 return text_list
-            # Mark PHase
-            elif isinstance(action, Action.MarkPhase) and self.action_index != starting_index:
-                if action.phase_name == 'player':
-                    gameStateObj.cursor.autocursor(gameStateObj)
-                return ["Start of %s phase" % action.phase_name.capitalize()]
-            # Actually Run backwards
-            action = self.run_action_backward(gameStateObj)
-            # Move
-            if isinstance(action, Action.Move):
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                if self.action_index == self.first_free_action:
-                    return ["Start of Player Phase"]
-                return []
+            elif isinstance(action, Action.LockTurnwheel):
+                self.locked = self.get_last_lock()
         
         # return action.__class__.__name__ + ": " + str(self.action_index + 1) + ' / ' + str(len(self.actions))
         return None
@@ -74,14 +86,16 @@ class ActionLog(object):
         starting_index = self.action_index
         while self.action_index + 1 < len(self.actions):
             action = self.actions[self.action_index + 1]
-            # Move
-            if isinstance(action, Action.Move) and self.action_index != starting_index:
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                return []
+            if self.action_index != starting_index:
+                # Move
+                if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
+                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
+                    print('%s %s moves!' % (action.unit.klass, action.unit.name))
+                    return []
             # Actually run
             action = self.run_action_forward(gameStateObj)
             # Wait
-            if isinstance(action, Action.Wait):
+            if isinstance(action, Action.Wait) or isinstance(action, Action.Die):
                 gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 # Get content of unit's turn
                 text_list = self.get_unit_turn(action.unit, self.action_index)
@@ -91,6 +105,8 @@ class ActionLog(object):
                 if action.phase_name == 'player':
                     gameStateObj.cursor.autocursor(gameStateObj)
                 return ["Start of %s Phase" % action.phase_name.capitalize()]
+            elif isinstance(action, Action.LockTurnwheel):
+                self.locked = action.lock
 
         # return action.__class__.__name__ + ': ' + str(self.action_index + 1) + ' / ' + str(len(self.actions))
         return None
@@ -99,10 +115,25 @@ class ActionLog(object):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index + 1]
 
+    def get_last_lock(self):
+        cur_index = self.action_index
+        while cur_index > self.first_free_action:
+            cur_index -= 1
+            cur_action = self.actions[cur_index]
+            if isinstance(cur_action, Action.LockTurnwheel):
+                return cur_action.lock
+        return False
+
+    def is_turned_back(self):
+        return self.action_index + 1 < len(self.actions)
+
+    def can_use(self):
+        return self.is_turned_back() and not self.locked
+
     def get_unit_turn(self, unit, wait_index):
         cur_index = wait_index
         text = []
-        while True:
+        while cur_index > self.first_free_action:
             cur_index -= 1
             cur_action = self.actions[cur_index]
             if isinstance(cur_action, Action.Message):
@@ -114,13 +145,16 @@ class ActionLog(object):
         if not self.actions or self.action_index < self.first_free_action + 1:
             return []
 
-        while self.action_index >= self.first_free_action + 1:
-            action = self.actions[self.action_index]
-            if isinstance(action, Action.Wait):
+        cur_index = self.action_index
+        while cur_index >= self.first_free_action + 1:
+            action = self.actions[cur_index]
+            if isinstance(action, Action.MarkPhase):
+                return []
+            elif isinstance(action, Action.Wait) or isinstance(action, Action.Die):
                 gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 text_list = self.get_unit_turn(action.unit, self.action_index)
                 return text_list
-            self.action_index -= 1
+            cur_index -= 1
 
         return []
 
@@ -138,6 +172,7 @@ class ActionLog(object):
 
     def set_first_free_action(self):
         if self.first_free_action == -1:
+            print("*** First Free Action ***")
             self.first_free_action = self.action_index
 
     def serialize(self, gameStateObj):
@@ -175,6 +210,9 @@ class TurnwheelDisplay(object):
         elif self.state == "out":
             self.transition -= 2
 
+        if gameStateObj.action_log.locked:
+            surf.blit(GC.IMAGESDICT['FocusFadeRed'], (0, 0))
+
         # Turnwheel message
         if self.desc:
             num_lines = len(self.desc)
@@ -203,10 +241,10 @@ class TurnwheelDisplay(object):
         GC.FONT['text_blue'].blit(count_str, count_bg, (24 - count_size/2, 3))
         surf.blit(count_bg, (4, GC.WINHEIGHT - 24 - 4 - self.transition))
         # Num Uses
-        if gameStateObj.game_constants.get('current_turnwheel_uses', -1) > 0:
+        if gameStateObj.game_constants.get('max_turnwheel_uses', -1) > 0:
             uses_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
             GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['current_turnwheel_uses']), (4, 4))
-            surf.blit(uses_bg, GC.WINWIDTH - 48, GC.WINHEIGHT - 24 - 4 - self.transition)
+            surf.blit(uses_bg, GC.WINWIDTH - 48 - 4, GC.WINHEIGHT - 24 - 4 - self.transition)
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -221,7 +259,12 @@ class TurnwheelState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll(200)
         gameStateObj.activeMenu = None
         self.transition_out = 0
+
+        # For darken backgrounds and drawing
+        self.darken_background = 0
+        self.target_dark = 0
         self.end_effect = None
+        self.particles = []
 
     def take_input(self, actionList, gameStateObj, metaDataObj):
         action = gameStateObj.input_manager.process_input(actionList)
@@ -240,26 +283,39 @@ class TurnwheelState(StateMachine.State):
                 self.display.change_text(new_message, gameStateObj.turncount)
 
         if action == 'SELECT':
-            GC.SOUNDDICT['TurnwheelOut'].play()
-            # Play Big Turnwheel WOOSH Animation
-            gameStateObj.action_log.finalize()
-            self.transition_out = 60
-            self.display.fade_out()
-            self.turnwheel_effect()
-            gameStateObj.background.fade_out()
+            if gameStateObj.action_log.can_use():
+                GC.SOUNDDICT['TurnwheelOut'].play()
+                # Play Big Turnwheel WOOSH Animation
+                gameStateObj.action_log.finalize()
+                self.transition_out = 60
+                self.display.fade_out()
+                self.turnwheel_effect()
+                gameStateObj.background.fade_out()
+                gameStateObj.game_constants['current_turnwheel_uses'] -= 1
+            else:
+                GC.SOUNDDICT['Error'].play()
 
         elif action == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            self.transition_out = 60
+            self.transition_out = 24
             self.display.fade_out()
             gameStateObj.background.fade_out()
 
     def turnwheel_effect(self):
-        image, script = GC.ANIMDICT.get_effect('WindFlash1', None)
+        image, script = GC.ANIMDICT.get_effect('TurnwheelFlash', None)
         self.end_effect = BattleAnimation.BattleAnimation(None, image, script, None, None)
-        self.end_effect.awake(None, None, True, False, parent=self)
+        self.end_effect.awake(self, None, True, False)
         self.end_effect.start_anim('Attack')
-        print(self.end_effect)
+        self.initiate_warp_flowers()
+
+    def initiate_warp_flowers(self):
+        self.particles = []
+        angle_frac = math.pi/8
+        true_pos = GC.WINWIDTH//2, GC.WINHEIGHT//2
+        for speed in (0.5, 1.0, 2.0, 2.5, 3.5, 4.0):
+            for num in range(0, 16):
+                angle = num*angle_frac + angle_frac/2
+                self.particles.append(Weather.WarpFlower(true_pos, speed, angle))
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
@@ -270,14 +326,37 @@ class TurnwheelState(StateMachine.State):
                 # Let's leave now 
                 gameStateObj.stateMachine.back()
                 gameStateObj.stateMachine.back()
+                # Called whenever the turnwheel is used
+                turnwheel_script_name = 'Data/turnwheelScript.txt'
+                if self.end_effect and os.path.exists(turnwheel_script_name):
+                    turnwheel_script = Dialogue.Dialogue_Scene(turnwheel_script_name)
+                    gameStateObj.message.append(turnwheel_script)
+                    gameStateObj.stateMachine.changeState('dialogue')
 
         if self.end_effect:
             self.end_effect.update()
+        for particle in self.particles:
+            particle.update(gameStateObj)
+
+    def darken(self):
+        self.target_dark += 4
+
+    def lighten(self):
+        self.target_dark -= 4
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         if self.display:
             self.display.draw(mapSurf, gameStateObj)
+        if self.darken_background or self.target_dark:
+            bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - int(self.darken_background * 12.5))
+            mapSurf.blit(bg, (0, 0))
+            if self.target_dark > self.darken_background:
+                self.darken_background += 1
+            elif self.target_dark < self.darken_background:
+                self.darken_background -= 1
+        for particle in self.particles:
+            particle.draw(mapSurf)
         if self.end_effect:
             self.end_effect.draw(mapSurf, (0, 0), 0, 0)
         return mapSurf

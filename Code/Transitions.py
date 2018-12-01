@@ -626,7 +626,7 @@ class StartPreloadedLevels(StartLoad):
                 else:
                     unit.level += 1
                     unit.level_up(gameStateObj, unit_klass)
-            unit.exp = unit_dict['exp']
+            unit.set_exp(unit_dict['exp'])
             unit.wexp = unit_dict['wexp']
             # Get skills
             for skill_id in unit_dict['skills']:
