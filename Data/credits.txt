@@ -3,11 +3,12 @@ foreground;GameOverFade
 t;2
 credits;A Game By;rainlash;wait 
 credits;Lex Talionis Engine;rainlash;wait
-credits;Alpha Testing;rainlash;WinstonJoe;Joytis;Lynx;Cosmic;Anchorman
+credits;Alpha Testing;rainlash;WinstonJoe;Joytis;Lynx;Cosmic;Anchorman;welshie
 credits;Map Design;rainlash
 credits;Map Spriting Resources;Feaw;Primefusion
 credits;Information Resources;Serenes Forest
 credits;Portrait Design;rainlash
+credits;Minimugs;welshie
 credits;Portrait Spriting Resources;NICKT
 credits;Custom Item Sprites;rainlash;FE7x Team;LordGlenn
 credits;Custom Class Cards;rainlash;Dei;MageKnight404
