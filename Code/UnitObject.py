@@ -41,7 +41,7 @@ class UnitObject(object):
         self.klass = info['klass']
         self.gender = int(info['gender'])
         self.level = int(info['level'])
-        self.exp = info.get('exp', 0)
+        self.exp = int(info.get('exp', 0))
         
         # --- Optional tags and Skills
         self.tags = info['tags']
@@ -701,6 +701,12 @@ class UnitObject(object):
     def set_hp(self, hp):
         self.currenthp = int(hp)
         self.currenthp = Utility.clamp(self.currenthp, 0, int(self.stats['HP']))
+
+    def change_exp(self, dexp):
+        self.exp += int(dexp)
+
+    def set_exp(self, exp):
+        self.exp = int(exp)
 
     def get_internal_level(self, metaDataObj):
         unit_klass = metaDataObj['class_dict'][self.klass]

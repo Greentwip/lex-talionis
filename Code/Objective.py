@@ -110,7 +110,8 @@ class StatusMenu(StateMachine.State):
     def get_surfaces(self, gameStateObj, metaDataObj):
         surfaces = []
         # Background
-        name_back_surf = GC.IMAGESDICT['ObjectiveTitle']
+        # name_back_surf = GC.IMAGESDICT['ObjectiveTitle']
+        name_back_surf = GC.IMAGESDICT['ChapterSelect' + gameStateObj.mode.get('color', 'Green')]
         surfaces.append((name_back_surf, (24, 2)))
         # Text
         big_font = GC.FONT['chapter_green']

@@ -14,6 +14,7 @@ class ActionLog(object):
         self.actions = []
         self.action_index = -1  # Means no actions
         self.first_free_action = -1
+        self.locked = False
 
     def append(self, action):
         print("Add Action: %s" % action.__class__.__name__)
@@ -45,25 +46,35 @@ class ActionLog(object):
         starting_index = self.action_index
         while self.action_index >= self.first_free_action + 1:
             action = self.actions[self.action_index]
-            # Wait
-            if isinstance(action, Action.Wait) and self.action_index != starting_index:
+            if self.action_index != starting_index:
+                # Wait
+                if isinstance(action, Action.Wait):
+                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
+                    # Get content of unit's turn
+                    text_list = self.get_unit_turn(action.unit, self.action_index)
+                    return text_list
+                # Mark Phase
+                elif isinstance(action, Action.MarkPhase) and self.action_index != starting_index:
+                    if action.phase_name == 'player':
+                        gameStateObj.cursor.autocursor(gameStateObj)
+                    return ["Start of %s Phase" % action.phase_name.capitalize()]
+            # Actually Run backwards
+            action = self.run_action_backward(gameStateObj)
+            # Move
+            if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
+                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
+                print('%s %s moves!' % (action.unit.klass, action.unit.name))
+                if self.action_index == self.first_free_action:
+                    return ["Start of Player Phase"]
+                return []
+            # Die
+            elif isinstance(action, Action.Die):
                 gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 # Get content of unit's turn
                 text_list = self.get_unit_turn(action.unit, self.action_index)
                 return text_list
-            # Mark PHase
-            elif isinstance(action, Action.MarkPhase) and self.action_index != starting_index:
-                if action.phase_name == 'player':
-                    gameStateObj.cursor.autocursor(gameStateObj)
-                return ["Start of %s phase" % action.phase_name.capitalize()]
-            # Actually Run backwards
-            action = self.run_action_backward(gameStateObj)
-            # Move
-            if isinstance(action, Action.Move):
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                if self.action_index == self.first_free_action:
-                    return ["Start of Player Phase"]
-                return []
+            elif isinstance(action, Action.LockTurnwheel):
+                self.locked = self.get_last_lock()
         
         # return action.__class__.__name__ + ": " + str(self.action_index + 1) + ' / ' + str(len(self.actions))
         return None
@@ -75,14 +86,16 @@ class ActionLog(object):
         starting_index = self.action_index
         while self.action_index + 1 < len(self.actions):
             action = self.actions[self.action_index + 1]
-            # Move
-            if isinstance(action, Action.Move) and self.action_index != starting_index:
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                return []
+            if self.action_index != starting_index:
+                # Move
+                if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
+                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
+                    print('%s %s moves!' % (action.unit.klass, action.unit.name))
+                    return []
             # Actually run
             action = self.run_action_forward(gameStateObj)
             # Wait
-            if isinstance(action, Action.Wait):
+            if isinstance(action, Action.Wait) or isinstance(action, Action.Die):
                 gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 # Get content of unit's turn
                 text_list = self.get_unit_turn(action.unit, self.action_index)
@@ -92,6 +105,8 @@ class ActionLog(object):
                 if action.phase_name == 'player':
                     gameStateObj.cursor.autocursor(gameStateObj)
                 return ["Start of %s Phase" % action.phase_name.capitalize()]
+            elif isinstance(action, Action.LockTurnwheel):
+                self.locked = action.lock
 
         # return action.__class__.__name__ + ': ' + str(self.action_index + 1) + ' / ' + str(len(self.actions))
         return None
@@ -100,13 +115,25 @@ class ActionLog(object):
         # Remove all actions after where we turned back to
         self.actions = self.actions[:self.action_index + 1]
 
+    def get_last_lock(self):
+        cur_index = self.action_index
+        while cur_index > self.first_free_action:
+            cur_index -= 1
+            cur_action = self.actions[cur_index]
+            if isinstance(cur_action, Action.LockTurnwheel):
+                return cur_action.lock
+        return False
+
     def is_turned_back(self):
         return self.action_index + 1 < len(self.actions)
+
+    def can_use(self):
+        return self.is_turned_back() and not self.locked
 
     def get_unit_turn(self, unit, wait_index):
         cur_index = wait_index
         text = []
-        while True:
+        while cur_index > self.first_free_action:
             cur_index -= 1
             cur_action = self.actions[cur_index]
             if isinstance(cur_action, Action.Message):
@@ -118,13 +145,16 @@ class ActionLog(object):
         if not self.actions or self.action_index < self.first_free_action + 1:
             return []
 
-        while self.action_index >= self.first_free_action + 1:
-            action = self.actions[self.action_index]
-            if isinstance(action, Action.Wait):
+        cur_index = self.action_index
+        while cur_index >= self.first_free_action + 1:
+            action = self.actions[cur_index]
+            if isinstance(action, Action.MarkPhase):
+                return []
+            elif isinstance(action, Action.Wait) or isinstance(action, Action.Die):
                 gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
                 text_list = self.get_unit_turn(action.unit, self.action_index)
                 return text_list
-            self.action_index -= 1
+            cur_index -= 1
 
         return []
 
@@ -142,6 +172,7 @@ class ActionLog(object):
 
     def set_first_free_action(self):
         if self.first_free_action == -1:
+            print("*** First Free Action ***")
             self.first_free_action = self.action_index
 
     def serialize(self, gameStateObj):
@@ -178,6 +209,9 @@ class TurnwheelDisplay(object):
                 self.state = "normal"
         elif self.state == "out":
             self.transition -= 2
+
+        if gameStateObj.action_log.locked:
+            surf.blit(GC.IMAGESDICT['FocusFadeRed'], (0, 0))
 
         # Turnwheel message
         if self.desc:
@@ -249,7 +283,7 @@ class TurnwheelState(StateMachine.State):
                 self.display.change_text(new_message, gameStateObj.turncount)
 
         if action == 'SELECT':
-            if gameStateObj.action_log.is_turned_back():
+            if gameStateObj.action_log.can_use():
                 GC.SOUNDDICT['TurnwheelOut'].play()
                 # Play Big Turnwheel WOOSH Animation
                 gameStateObj.action_log.finalize()

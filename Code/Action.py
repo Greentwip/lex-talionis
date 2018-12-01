@@ -574,7 +574,7 @@ class GainExp(Action):
         self.unit.loadSprites()
         if promote:
             self.unit.level = 1
-            self.unit.exp = 0
+            self.unit.set_exp(0)
             self.levelup_list = new_klass['promotion']
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_klass['max'][index] - self.current_stats[index])
@@ -597,7 +597,7 @@ class GainExp(Action):
         self.unit.loadSprites()
         if promote:
             self.unit.level = self.old_level
-            self.unit.exp = self.old_exp
+            self.unit.set_exp(self.old_exp)
             self.unit.apply_levelup([-x for x in self.levelup_list])
             self.unit.increase_wexp([-x for x in new_klass['wexp_gain']], gameStateObj, banner=False)
         self.unit.movement_group = old_klass['movement_group']
@@ -635,14 +635,14 @@ class GainExp(Action):
                 if cf.CONSTANTS['auto_promote'] and klass_dict['turns_into']: # If has at least one class to turn into
                     self._forward_class_change(gameStateObj, True)
                 else:
-                    self.unit.exp = 99
+                    self.unit.set_exp(99)
             else:
-                self.unit.exp = (self.unit.exp + self.exp_amount)%100
+                self.unit.set_exp((self.unit.exp + self.exp_amount)%100)
                 self.unit.level += 1
                 self.unit.apply_levelup(self.levelup_list)
             self._add_skills(gameStateObj)    
         else:
-            self.unit.exp += self.exp_amount
+            self.unit.change_exp(self.exp_amount)
 
     def reverse(self, gameStateObj):
         self.promoted_to = self.unit.klass
@@ -655,14 +655,14 @@ class GainExp(Action):
             if self.unit.level == 1:  # Promoted here
                 self._reverse_class_change(gameStateObj, True)
             elif self.unit.level >= max_level and self.unit.exp >= 99:
-                self.unit.exp = self.unit.old_exp
+                self.unit.set_exp(self.old_exp)
             else:
-                self.unit.exp = 100 - self.exp_amount + self.unit.exp
+                self.unit.set_exp(100 - self.exp_amount + self.unit.exp)
                 self.unit.level -= 1
                 self.unit.apply_levelup([-x for x in self.levelup_list])
             self._remove_skills(added_skills, gameStateObj)
         else:
-            self.unit.exp -= self.exp_amount
+            self.unit.change_exp(-self.exp_amount)
 
 class Promote(GainExp):
     def __init__(self, unit):
@@ -918,6 +918,10 @@ class IncrementTurn(Action):
 class MarkPhase(Action):
     def __init__(self, phase_name):
         self.phase_name = phase_name
+
+class LockTurnwheel(Action):
+    def __init__(self, lock):
+        self.lock = lock
 
 class Message(Action):
     def __init__(self, message):

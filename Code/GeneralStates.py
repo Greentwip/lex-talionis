@@ -1522,12 +1522,11 @@ class StealState(StateMachine.State):
             else:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
-                self.initiator.wait(gameStateObj)
+                Action.do(Action.Wait(self.initiator), gameStateObj)
             gameStateObj.activeMenu = None
             # Give exp
             exp = cf.CONSTANTS['steal_exp']
-            gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.initiator, exp=exp))
-            gameStateObj.stateMachine.changeState('expgain')
+            Action.do(Action.GainExp(self.initiator, exp), gameStateObj)
             # Display banner -- opposite order
             self.initiator.handle_steal_banner(selection, gameStateObj)
 
@@ -1744,6 +1743,7 @@ class DialogueState(StateMachine.State):
                 gameStateObj.clean_up()
                 if isinstance(gameStateObj.game_constants['level'], int):
                     gameStateObj.game_constants['level'] += 1
+                gameStateObj.game_constants['current_turnwheel_uses'] = gameStateObj.game_constants.get('max_turnwheel_uses', -1)
                 gameStateObj.output_progress_xml()  # Done after level change so that it will load up the right level next time
 
                 # Determines the number of levels in the game
@@ -2006,9 +2006,11 @@ class PhaseChangeState(StateMachine.State):
 
     def begin(self, gameStateObj, metaDataObj):
         logger.debug('Phase Start')
+        Action.do(Action.LockTurnwheel(gameStateObj.phase.get_current_phase() != 'player'), gameStateObj)
         # All units can now move and attack, etc.
         for unit in gameStateObj.allunits:
-            Action.do(Action.Reset(unit), gameStateObj)
+            if not unit.dead:
+                Action.do(Action.Reset(unit), gameStateObj)
         Action.do(Action.MarkPhase(gameStateObj.phase.get_current_phase()), gameStateObj)
         gameStateObj.cursor.drawState = 0
         gameStateObj.activeMenu = None

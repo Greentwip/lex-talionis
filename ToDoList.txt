@@ -21,6 +21,7 @@
 - Check that HP/minis shows up after NOT using formation?
 - Add "having 2+ parties" ability to the Engine and Wiki.
 - Test player phase and enemy phase battle animation music
+- Add support section to wiki
 
 - New Screenshots in all marketing content
 
