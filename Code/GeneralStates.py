@@ -5,14 +5,14 @@ try:
     import configuration as cf
     import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
     import Interaction, LevelUp, StatusObject, ItemMethods, Background
-    import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
+    import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
     import BattleAnimation, TextChunk, Weapons, StateMachine, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
     from . import Interaction, LevelUp, StatusObject, ItemMethods, Background
-    from . import WorldMap, InputManager, Banner, Engine, Utility, Image_Modification
+    from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
     from . import BattleAnimation, TextChunk, Weapons, StateMachine, Action
 
 import logging
@@ -1741,7 +1741,7 @@ class DialogueState(StateMachine.State):
                 gameStateObj.update_statistics(metaDataObj)
                 gameStateObj.increment_supports()
                 gameStateObj.clean_up()
-                if isinstance(gameStateObj.game_constants['level'], int):
+                if not cf.CONSTANTS['overworld'] and isinstance(gameStateObj.game_constants['level'], int):
                     gameStateObj.game_constants['level'] += 1
                 gameStateObj.game_constants['current_turnwheel_uses'] = gameStateObj.game_constants.get('max_turnwheel_uses', -1)
                 gameStateObj.output_progress_xml()  # Done after level change so that it will load up the right level next time
@@ -1757,8 +1757,12 @@ class DialogueState(StateMachine.State):
                     except:
                         continue
                 
-                gameStateObj.stateMachine.clear()        
-                if (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] > num_levels:
+                gameStateObj.stateMachine.clear()       
+                if cf.CONSTANTS['overworld']:
+                    gameStateObj.stateMachine.changeState('overworld')
+                    gameStateObj.save_kind = 'Start'
+                    gameStateObj.stateMachine.changeState('start_save') 
+                elif (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] > num_levels:
                     gameStateObj.stateMachine.changeState('start_start')
                 else:
                     gameStateObj.stateMachine.changeState('turn_change') # after we're done waiting, go to turn_change, start the GAME!
@@ -2109,11 +2113,10 @@ class ExpGainState(StateMachine.State):
 
 class PromotionChoiceState(StateMachine.State):
     name = 'promotion_choice'
+    show_map = False
 
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            self.show_map = False
-
             self.unit = gameStateObj.cursor.currentSelectedUnit
             class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
             self.menu = MenuFunctions.ChoiceMenu(self.unit, class_options, (14, 13), width=80)
@@ -2266,6 +2269,7 @@ class PromotionChoiceState(StateMachine.State):
 
 class PromotionState(StateMachine.State):
     name = 'promotion'
+    show_map = False
 
     def begin(self, gameStateObj, metaDataObj):
         self.last_update = Engine.get_time()
@@ -2273,7 +2277,6 @@ class PromotionState(StateMachine.State):
         if not self.started:
             # Start music
             Engine.music_thread.fade_in(GC.MUSICDICT['To A Higher Place'])
-            self.show_map = False
 
             self.unit = gameStateObj.cursor.currentSelectedUnit
             color = Utility.get_color(self.unit.team)
@@ -3058,7 +3061,7 @@ class MinimapState(StateMachine.State):
 
     def begin(self, gameStateObj, metaDataObj):
         GC.SOUNDDICT['Map In'].play()
-        self.minimap = WorldMap.MiniMap(gameStateObj.map, gameStateObj.allunits)
+        self.minimap = Minimap.MiniMap(gameStateObj.map, gameStateObj.allunits)
         self.arrive_flag = True
         self.arrive_time = Engine.get_time()
         self.exit_flag = False

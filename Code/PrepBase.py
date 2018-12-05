@@ -107,8 +107,9 @@ class PrepMainState(StateMachine.State):
         return mapSurf
 
 class PrepPickUnitsState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
-        self.show_map = False
         if not self.started and gameStateObj.stateMachine.getPreviousState() == 'prep_main':
             gameStateObj.background = None
 
@@ -325,8 +326,9 @@ def draw_funds(surf, gameStateObj):
     GC.FONT['text_blue'].blit(money, surf, (219 - size, 140))
 
 class PrepItemsState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
-        self.show_map = False
         if not self.started and gameStateObj.stateMachine.getPreviousState() == 'prep_main':
             gameStateObj.background = None
 
@@ -410,8 +412,9 @@ class PrepItemsState(StateMachine.State):
         gameStateObj.activeMenu = None
 
 class PrepItemsChoicesState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
-        self.show_map = False
         if not self.started:
             grayed_out = [True, False, True, False, False, False]
             if 'Convoy' in gameStateObj.game_constants:
@@ -504,6 +507,8 @@ class PrepItemsChoicesState(StateMachine.State):
         # self.menu = None
 
 class PrepTradeSelectState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         # Put a marker where gameStateObj.activeMenu is pointing
         if not hasattr(self, 'selection'):
@@ -574,6 +579,8 @@ class ConvoyTrader(object):
             self.convoy.remove(item)
 
 class PrepTradeState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.partner = gameStateObj.cursor.secondSelectedUnit
@@ -647,6 +654,8 @@ class PrepTradeState(StateMachine.State):
         gameStateObj.activeMenu = self.hidden_active
 
 class PrepUseItemState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         self.menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (6, 72), limit=5, hard_limit=True, gem=False, shimmer=2,
@@ -726,6 +735,8 @@ class PrepUseItemState(StateMachine.State):
         self.menu = None
 
 class PrepListState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # self.name_surf = MenuFunctions.CreateBaseMenuSurf((56, 24), 'TransMenuBackground60')
@@ -860,6 +871,8 @@ class PrepListState(StateMachine.State):
         gameStateObj.childMenu = None
 
 class PrepTransferState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             all_items = gameStateObj.convoy
@@ -1007,6 +1020,8 @@ class PrepTransferState(StateMachine.State):
         gameStateObj.childMenu = None
 
 class BaseMarketState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.cur_unit = gameStateObj.cursor.currentSelectedUnit
@@ -1257,10 +1272,11 @@ class BaseMarketState(StateMachine.State):
         gameStateObj.childMenu = None
 
 class BaseMainState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         Engine.music_thread.fade_in(GC.MUSICDICT[metaDataObj['base_music']])
         self.done = False
-        self.show_map = False
         gameStateObj.cursor.drawState = 0
         background_image = GC.IMAGESDICT[metaDataObj['baseFlag']]
         gameStateObj.background = Background.StaticBackground(background_image, fade=False)
@@ -1355,6 +1371,8 @@ class BaseMainState(StateMachine.State):
         gameStateObj.activeMenu = None
 
 class BaseInfoState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         options = [key for key in gameStateObj.base_conversations]
         color_control = [('text_white' if white else 'text_grey') for key, white in gameStateObj.base_conversations.items()]
@@ -1391,6 +1409,8 @@ class BaseInfoState(StateMachine.State):
         gameStateObj.childMenu = None
 
 class BaseSupportConvoState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.generic_flag]
 
@@ -1475,6 +1495,8 @@ class BaseSupportConvoState(StateMachine.State):
             StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
 
 class BaseCodexChildState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         if not gameStateObj.childMenu:
             options = [cf.WORDS['Library']]
@@ -1520,6 +1542,8 @@ class BaseCodexChildState(StateMachine.State):
             gameStateObj.stateMachine.back()
 
 class BaseMapState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         self.hidden_active = gameStateObj.activeMenu
         gameStateObj.activeMenu = None
@@ -1589,6 +1613,8 @@ class BaseMapState(StateMachine.State):
         gameStateObj.background = gameStateObj.old_background
 
 class BaseLibraryState(StateMachine.State):
+    show_map = False
+
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.hidden_active = gameStateObj.activeMenu
@@ -1645,6 +1671,8 @@ class BaseLibraryState(StateMachine.State):
         gameStateObj.childMenu = self.hidden_child
 
 class BaseRecordsState(StateMachine.State):
+    show_map = False
+    
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.hidden_active = gameStateObj.activeMenu

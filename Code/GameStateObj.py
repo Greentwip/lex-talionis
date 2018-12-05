@@ -552,7 +552,10 @@ class GameStateObj(object):
         with open('Saves/progress_log.xml', 'a') as p_log:
             p_log.write('<level name="' + str(self.game_constants['level']) + '">\n')
             p_log.write('\t<mode>' + self.mode['name'] + '</mode>\n')
-            p_log.write('\t<money>' + str(self.game_constants['money']) + '</money>\n')
+            # Game Constants
+            p_log.write('\t<game_constants>')
+            p_log.write(';'.join([str(k) + ',' + str(v) for k, v in self.game_constants.items()]))
+            p_log.write('</game_constants>\n')
             # Convoy
             p_log.write('\t<convoy>')
             p_log.write(','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in self.convoy]))

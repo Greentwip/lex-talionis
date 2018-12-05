@@ -121,6 +121,8 @@ MCOSTDATA = create_mcost_dict(loc + 'Data/mcost.txt')
 
 def create_ai_dict(fp):
     ai_dict = OrderedDict()
+    if not os.path.exists(fp):
+        return ai_dict
     with open(fp, 'r') as ai_data:
         for line in ai_data.readlines():
             if line.startswith('#'):
@@ -137,6 +139,24 @@ def create_ai_dict(fp):
                 ai_dict[s_line[0]].append(obj)
     return ai_dict
 AIDATA = create_ai_dict(loc + 'Data/ai_presets.txt')
+
+def create_overworld_data(fp):
+    overworld_data = []
+    if not os.path.exists(fp):
+        return overworld_data
+    with open(fp, 'r') as data:
+        for line in data.readlines():
+            if line.startswith('#'):
+                continue
+            s_line = line.strip().split(';')
+            place = {}
+            place['level_name'] = s_line[0]
+            place['icon_idx'] = int(s_line[1])
+            place['position'] = tuple([int(i) for i in s_line[2].split(',')])
+            place['connections'] = s_line[3].split(',')
+            overworld_data.append(place)
+    return overworld_data
+OVERWORLDDATA = create_overworld_data(loc + 'Data/overworld_data.txt')
 
 FONT = {}
 for fp in os.listdir(loc + 'Sprites/Fonts'):

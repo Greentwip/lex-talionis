@@ -345,21 +345,21 @@ class TurnwheelState(StateMachine.State):
         self.target_dark -= 4
 
     def draw(self, gameStateObj, metaDataObj):
-        mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         if self.display:
-            self.display.draw(mapSurf, gameStateObj)
+            self.display.draw(surf, gameStateObj)
         if self.darken_background or self.target_dark:
             bg = Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'], 100 - int(self.darken_background * 12.5))
-            mapSurf.blit(bg, (0, 0))
+            surf.blit(bg, (0, 0))
             if self.target_dark > self.darken_background:
                 self.darken_background += 1
             elif self.target_dark < self.darken_background:
                 self.darken_background -= 1
         for particle in self.particles:
-            particle.draw(mapSurf)
+            particle.draw(surf)
         if self.end_effect:
-            self.end_effect.draw(mapSurf, (0, 0), 0, 0)
-        return mapSurf
+            self.end_effect.draw(surf, (0, 0), 0, 0)
+        return surf
 
     def end(self, gameStateObj, metaDataObj):
         Engine.music_thread.set_volume(self.current_volume)

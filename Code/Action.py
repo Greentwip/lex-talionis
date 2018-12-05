@@ -87,7 +87,7 @@ class Action(object):
             elif value[0] == 'UniqueStatus':
                 setattr(self, name, StatusObject.deserialize(value[1]))
             elif value[0] == 'Action':
-                setattr(self, name, Action.deserialize(value[1], gameStateObj))
+                setattr(self, name, Action.deserialize(value[1][1], gameStateObj))
             else:
                 setattr(self, name, value[1])
         return self

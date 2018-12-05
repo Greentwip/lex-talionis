@@ -14,7 +14,7 @@ class StateMachine(object):
     def __init__(self, state_list=[], temp_state=[]):
         # All places where states could be hiding
         from . import GeneralStates, Transitions, PrepBase, OptionsMenu, \
-            InfoMenu, UnitMenu, DebugMode, Turnwheel, Objective
+            InfoMenu, UnitMenu, DebugMode, Turnwheel, Objective, Overworld
         self.all_states = {'free': GeneralStates.FreeState,
                            'turn_change': GeneralStates.TurnChangeState,
                            'move': GeneralStates.MoveState,
@@ -112,6 +112,7 @@ class StateMachine(object):
                            'info_menu': InfoMenu.InfoMenu,
                            'unit_menu': UnitMenu.UnitMenu,
                            'turnwheel': Turnwheel.TurnwheelState,
+                           'overworld': Overworld.OverworldState,
                            'debug': DebugMode.DebugState}
         self.state = []
         for state_name in state_list:

@@ -506,12 +506,24 @@ class StartPreloadedLevels(StartLoad):
                     my_items.append((item_id, uses))
             return my_items
 
+        def parse_game_constants(text):
+            gc = {}
+            if text:
+                pairs = text.split(';')
+                for pair in pairs:
+                    key, value = pair.split(',')
+                    try:
+                        gc[key] = int(value)
+                    except:
+                        gc[key] = value
+            return gc
+
         level_dict = {}
         for level in GC.PRELOADDATA.getroot().findall('level'):
             if level.get('name') == name:
                 level_dict['name'] = level.get('name')
                 level_dict['mode'] = level.find('mode').text
-                level_dict['money'] = int(level.find('money').text)
+                level_dict['game_constants'] = parse_game_constants(level.find('game_constants').text)
                 level_dict['convoy'] = parse_item_uses_list(level.find('convoy').text)
                 units = level.find('units')
                 unit_list = []
@@ -551,7 +563,7 @@ class StartPreloadedLevels(StartLoad):
             self.build_new_game(preloaded_level, gameStateObj, metaDataObj)
 
     def build_new_game(self, level, gameStateObj, metaDataObj):
-        import ItemMethods, Utility, StatusObject
+        import ItemMethods, StatusObject
         gameStateObj.build_new() # Make the gameStateObj ready for a new game
 
         levelfolder = 'Data/Level' + str(level['name'])
@@ -565,11 +577,8 @@ class StartPreloadedLevels(StartLoad):
         else:
             gameStateObj.mode = gameStateObj.default_mode()
         gameStateObj.default_mode_choice()
-        gameStateObj.game_constants['money'] = level['money']
-        try:
-            gameStateObj.game_constants['level'] = int(level['name'])
-        except:
-            gameStateObj.game_constants['level'] = level['name']
+        for key, value in level['game_constants']:
+            gameStateObj.game_constants[key] = value
         gameStateObj.save_slot = 'Preload ' + level['name']
         # Convoy
         for item_id, uses in level['convoy']:
