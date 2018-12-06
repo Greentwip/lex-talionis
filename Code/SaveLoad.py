@@ -41,6 +41,8 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     # Read overview file
     overview_filename = levelfolder + '/overview.txt'
     overview_dict = read_overview_file(overview_filename)
+    if 'current_party' in overview_dict:
+        gameStateObj.current_party = int(overview_dict['current_party'])
     # Get objective
     starting_objective = Objective.Objective(overview_dict['display_name'], overview_dict['win_condition'], overview_dict['loss_condition'])
 
@@ -273,6 +275,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, metaDataObj, gameStat
             u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
             u_i['name'] = unit.get('name')
             u_i['team'] = legend['team']
+            u_i['party'] = gameStateObj.current_party
 
             classes = unit.find('class').text.split(',')
             u_i['klass'] = classes[-1]
@@ -361,6 +364,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     u_i['u_id'] = GC.U_ID
 
     u_i['team'] = legend['team']
+    u_i['party'] = gameStateObj.current_party
     u_i['event_id'] = legend['event_id']
     if legend['class'].endswith('F'):
         legend['class'] = legend['class'][:-1] # strip off the F

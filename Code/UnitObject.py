@@ -37,6 +37,7 @@ class UnitObject(object):
         self.position = info['position']
         self.name = info['name']
         self.team = info['team']
+        self.party = info.get('party', 0)
         self.faction_icon = info.get('faction_icon', 'Neutral')
         self.klass = info['klass']
         self.gender = int(info['gender'])

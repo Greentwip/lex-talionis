@@ -114,7 +114,7 @@ class PrepPickUnitsState(StateMachine.State):
             gameStateObj.background = None
 
         if not self.started:
-            player_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
+            player_units = gameStateObj.get_units_in_party(gameStateObj.current_party) 
             lord_units = [unit for unit in player_units if unit.position and 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]]
             non_lord_units = [unit for unit in player_units if unit not in lord_units]
             units = lord_units + sorted(non_lord_units, key=lambda unit: unit.position, reverse=True)

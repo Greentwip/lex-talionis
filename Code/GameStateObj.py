@@ -9,14 +9,14 @@ try:
     import InputManager, Engine
     import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    import Boundary, Objective
+    import Boundary, Objective, Overworld
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import InputManager, Engine
     from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     from . import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    from . import Boundary, Objective
+    from . import Boundary, Objective, Overworld
 
 import logging
 logger = logging.getLogger(__name__)
@@ -65,6 +65,11 @@ class GameStateObj(object):
         self.grid_manager = AStar.Grid_Manager(self.map)
         self.boundary_manager = Boundary.BoundaryInterface(self.map)
 
+    def get_convoy(self):
+        return self._convoy[self.current_party]
+
+    convoy = property(get_convoy)
+
     # Start a new game
     def build_new(self):
         logger.info("Build New")
@@ -78,9 +83,11 @@ class GameStateObj(object):
         self.game_constants = Counter()
         self.game_constants['level'] = 0
         self.game_constants['money'] = 0
-        self.convoy = []
+        self._convoy = {0: []}
+        self.current_party = 0
         self.play_time = 0
         self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if cf.CONSTANTS['support'] else None
+        self.overworld = Overworld.Overworld()
         self.unlocked_lore = []
         self.statistics = []
         self.market_items = set()
@@ -132,8 +139,8 @@ class GameStateObj(object):
         self.triggers = load_info.get('triggers', dict())
         map_info = load_info['map']
         self.playtime = load_info['playtime']
-        self.convoy = [ItemMethods.deserialize(item_dict) for item_dict in load_info['convoy']]
-        self.convoy = [item for item in self.convoy if item]
+        self._convoy = {party_id: [ItemMethods.deserialize(item_dict) for item_dict in party_convoy] for party_id, party_convoy in load_info['convoy'].items()},
+        self._convoy = {party_id: [item for item in party_convoy if item] for party_id, party_convoy in self._convoy}
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
         self.level_constants = load_info['level_constants']
@@ -146,6 +153,10 @@ class GameStateObj(object):
         self.statistics = load_info['statistics']
         self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info.get('message', [])]
         # self.message = []
+        if cf.CONSTANTS['overworld']:
+            self.overworld = Overworld.Overworld.deserialize(load_info.get('overworld'))
+        else:
+            self.overworld = None
         self.unlocked_lore = load_info['unlocked_lore']
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
@@ -251,8 +262,10 @@ class GameStateObj(object):
                                  'chosen_unit': None}
 
     def get_total_party_members(self):
-        num_members = sum([1 for unit in self.allunits if unit.team == 'player' and not unit.dead and not unit.generic_flag])
-        return num_members
+        return len(self.get_units_in_party(self.current_party))
+
+    def get_units_in_party(self, party):
+        return [unit for unit in self.allunits if unit.team == 'player' and not unit.dead and not unit.generic_flag and unit.party == party]
 
     def check_rout(self):
         return not any(unit.team.startswith('enemy') and unit.position for unit in self.allunits)
@@ -323,20 +336,20 @@ class GameStateObj(object):
         self.remove_fake_cursors()
         self.tutorial_mode = False
 
-    def removeSprites(self):
-        # Decouple sprites
-        for unit in self.allunits:
-            unit.sweep()
-            for item in unit.items:
-                item.removeSprites()
-            for status in unit.status_effects:
-                status.removeSprites()
-        # if self.map:
-        #    self.map.removeSprites() I don't think this is actually necessary..., since we save a serialized version of the map now
-        if self.objective:
-            self.objective.removeSprites()
-        for item in self.convoy:
-            item.removeSprites()
+    # def removeSprites(self):
+    #     # Decouple sprites
+    #     for unit in self.allunits:
+    #         unit.sweep()
+    #         for item in unit.items:
+    #             item.removeSprites()
+    #         for status in unit.status_effects:
+    #             status.removeSprites()
+    #     # if self.map:
+    #     #    self.map.removeSprites() I don't think this is actually necessary..., since we save a serialized version of the map now
+    #     if self.objective:
+    #         self.objective.removeSprites()
+    #     for item in self.convoy:
+    #         item.removeSprites()
 
     def save(self):
         # Reset all position dependant voodoo -- Done by gameStateObj at once instead of one at a time...
@@ -355,11 +368,13 @@ class GameStateObj(object):
                    'map': self.map.serialize() if self.map else None,
                    'playtime': self.playtime,
                    'turncount': self.turncount,
-                   'convoy': [item.serialize() for item in self.convoy],
+                   'convoy': {party_id: [item.serialize() for item in party_convoy] for party_id, party_convoy in self._convoy.items()},
+                   'current_party': self.current_party,
                    'objective': self.objective.serialize() if self.objective else None,
                    'phase_music': self.phase_music.serialize() if self.phase_music else None,
                    'support': self.support.serialize() if self.support else None,
                    'action_log': self.action_log.serialize(self),
+                   'overworld': self.overworld.serialize() if self.overworld else None,
                    'game_constants': self.game_constants,
                    'level_constants': self.level_constants,
                    'unlocked_lore': self.unlocked_lore,
@@ -390,8 +405,9 @@ class GameStateObj(object):
                 status.loadSprites()
         if self.map:
             self.map.loadSprites()
-        for item in self.convoy:
-            item.loadSprites()
+        for party in self._convoy.values():
+            for item in party:
+                item.loadSprites()
 
     def clean_up(self):
         # Units should leave (first, because clean_up removes position)

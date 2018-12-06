@@ -321,6 +321,36 @@ class Dialogue_Scene(object):
         elif line[0] == 'wm_remove_cursor':
             self.background.remove_cursor()
 
+        # === OVERWORLD
+        elif line[0] == 'ow_trigger':
+            gameStateObj.overworld.trigger.append(line[1])
+        elif line[0] == 'ow_icon_show':
+            gameStateObj.overworld.show_icon(line[1])
+        elif line[0] == 'ow_icon_hide':
+            gameStateObj.overworld.hide_icon(line[1])
+        elif line[0] == 'ow_next_icon':
+            if len(line) > 1:
+                gameStateObj.overworld.set_next_icon(line[1])
+            else:
+                gameStateObj.overworld.set_next_icon(None)
+        elif line[0] == 'ow_move_party':
+            if len(line) > 2:
+                party_id = int(line[2])
+            else:
+                party_id = 0
+            gameStateObj.overworld.move_party(line[1], party_id)
+        elif line[0] == 'ow_add_party':
+            party_id = int(line[2])
+            lords = [unit for unit in gameStateObj.get_units_in_party(party_id) if 'Lord' in unit.tags]
+            if len(line) > 3:  # Custom sprite
+                lords = [(line[3], line[4])]
+            gameStateObj.overworld.add_party(line[1], party_id, lords)
+        elif line[0] == 'ow_remove_party':
+            gameStateObj.overworld.remove_party(int(line[2]))
+        elif line[0] == 'ow_set_cursor':
+            new_pos = tuple([int(num) for num in line[1].split(',')])
+            gameStateObj.overworld.set_cursor(new_pos)
+
         # === UNIT SPRITE
         # Add a unit to the scene
         elif line[0] == 'u':
@@ -566,7 +596,7 @@ class Dialogue_Scene(object):
                 else:
                     logger.error("Couldn't find unit %s", line[1])
                     return
-            gameStateObj.cursor.setPosition(coord, gameStateObj)
+            gameStateObj.cursor.centerPosition(coord, gameStateObj)
             if 'immediate' not in line and not self.do_skip:
                 gameStateObj.stateMachine.changeState('move_camera')
                 self.current_state = "Paused"
@@ -739,13 +769,11 @@ class Dialogue_Scene(object):
         elif line[0] == 'arrange_formation':
             force = True if len(line) > 1 else False
             if force:  # force arrange
-                player_units = [unit for unit in gameStateObj.allunits if 
-                                unit.team == 'player' and not unit.dead]
+                player_units = gameStateObj.get_units_in_party(gameStateObj.current_party)
                 formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
                                    if 'Formation' in value]
             else:
-                player_units = [unit for unit in gameStateObj.allunits if 
-                                unit.team == 'player' and not unit.dead and not unit.position]
+                player_units = [unit for unit in gameStateObj.get_units_in_party(gameStateObj.current_party) if not unit.position]
                 formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
                                    if 'Formation' in value and not gameStateObj.grid_manager.get_unit_node(pos)]
             for index, unit in enumerate(player_units[:len(formation_spots)]):
@@ -841,6 +869,11 @@ class Dialogue_Scene(object):
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     Action.do(Action.ChangeAI(unit, line[2]), gameStateObj)
+        elif line[0] == 'change_party':
+            unit_specifier = self.get_id(line[1], gameStateObj)
+            for unit in gameStateObj.allunits:
+                if unit_specifier in (unit.id, unit.event_id, unit.position):
+                    Action.do(Action.ChangeParty(unit, int(line[2])), gameStateObj)
         elif line[0] == 'add_tag':
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:

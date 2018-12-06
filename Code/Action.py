@@ -864,6 +864,18 @@ class ChangeAI(Action):
         self.unit.ai_descriptor = self.old_ai
         self.unit.get_ai(self.old_ai)
 
+class ChangeParty(Action):
+    def __init__(self, unit, new_party):
+        self.unit = unit
+        self.old_party = self.unit.party
+        self.new_party = new_party
+
+    def do(self, gameStateObj):
+        self.unit.party = self.new_party
+
+    def reverse(self, gameStateObj):
+        self.unit.party = self.old_party
+
 class GiveGold(Action):
     def __init__(self, amount):
         self.amount = amount
