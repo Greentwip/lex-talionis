@@ -324,15 +324,15 @@ class Dialogue_Scene(object):
         # === OVERWORLD
         elif line[0] == 'ow_trigger':
             gameStateObj.overworld.trigger.append(line[1])
-        elif line[0] == 'ow_icon_show':
-            gameStateObj.overworld.show_icon(line[1])
-        elif line[0] == 'ow_icon_hide':
-            gameStateObj.overworld.hide_icon(line[1])
-        elif line[0] == 'ow_next_icon':
+        elif line[0] == 'ow_location_show':
+            gameStateObj.overworld.show_location(line[1])
+        elif line[0] == 'ow_location_hide':
+            gameStateObj.overworld.hide_location(line[1])
+        elif line[0] == 'ow_next_location':
             if len(line) > 1:
-                gameStateObj.overworld.set_next_icon(line[1])
+                gameStateObj.overworld.set_next_location(line[1])
             else:
-                gameStateObj.overworld.set_next_icon(None)
+                gameStateObj.overworld.set_next_location(None)
         elif line[0] == 'ow_move_party':
             if len(line) > 2:
                 party_id = int(line[2])

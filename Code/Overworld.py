@@ -51,39 +51,41 @@ class OverworldCursor(object):
     def draw(self, surf):
         surf.blit(self.image, (self.x - self.overworld.x, self.y - self.overworld.y))
 
-class OverworldIcon(object):
-    icon_bases = GC.IMAGESDICT['OverworldIcons']
-    size = 32
+class OverworldLocation(object):
+    icons = GC.IMAGESDICT['OverworldIcons']
+    icon_size = 32
 
     def __init__(self, data):
-        self.level_name = data['level_name']
+        self.level_id = data['level_id']
+        self.location_name = data['location_name']
         self.icon_idx = data['icon_idx']
         self.position = data['position']
         self.connections = data['connections']
-        self.image = Engine.subsurface(self.icon_bases, (0, self.size * self.icon_idx, self.size, self.size))
+        self.image = Engine.subsurface(self.icons, (0, self.icon_size * self.icon_idx, self.icon_size, self.icon_size))
         self.show = True
         self.display_flag = False
+        self.visited = False
 
     def get_position(self):
         return self.position[0]*8, self.position[1]*8
 
     def draw(self, surf):
         if self.show:
-            surf.blit(self.image, (self.position[0]*8 - self.size/2, self.position[1]*8 - self.size/2))
+            surf.blit(self.image, (self.position[0]*8 - self.icon_size/2, self.position[1]*8 - self.icon_size/2))
 
-    def show_icon(self):
+    def show_location(self):
         self.show = True
 
-    def hide_icon(self):
+    def hide_location(self):
         self.show = False
 
     def serialize(self):
-        return (self.show, self.display_flag)
+        return (self.show, self.display_flag, self.visited)
 
     def deserialize(self, data):
         if not data:
             return
-        self.show, self.display_flag = data
+        self.show, self.display_flag, self.visited = data
 
 class OverworldRoute(object):
     route_sheet = GC.IMAGESDICT['OverworldRoutes']
@@ -153,11 +155,14 @@ class OverworldParty(object):
         for sprite in self.sprites:
             sprite.update()
         # Check if done moving
-        if all(not sprite.isMoving for sprite in self.sprites):
+        if not self.isMoving():
             self.location = self.next_location
             self.position = self.next_position
             self.next_location = None
             self.next_position = None
+
+    def isMoving(self):
+        return any(sprite.isMoving for sprite in self.sprites)
 
     def draw(self, surf):
         for sprite in self.sprites:
@@ -169,9 +174,9 @@ class Overworld(object):
         self.main_sprite = GC.IMAGESDICT['OverworldSprite']
         self.width, self.height = self.main_sprite.get_width(), self.main_sprite.get_height()
 
-        self.icons = {icon_data['level_name']: OverworldIcon(icon_data) for icon_data in GC.OVERWORLDDATA}
+        self.locations = {location_data['level_id']: OverworldLocation(location_data) for location_data in GC.OVERWORLDDATA}
         self.create_routes()
-        print(self.icons)
+        print(self.locations)
         print(self.routes)
         self.parties = {}
 
@@ -181,29 +186,11 @@ class Overworld(object):
 
     def create_routes(self):
         self.routes = {}
-        for name, icon in self.icons.items():
-            for connection in icon.connections:
+        for name, location in self.locations.items():
+            for connection in location.connections:
                 route_name = tuple(sorted((name, connection)))
                 if route_name not in self.routes:
-                    self.routes[route_name] = OverworldRoute(route_name, icon.position, self.icons[connection].position)
-
-    def move_cursor(self, gameStateObj):
-        self.cursor.handle_movement(gameStateObj)
-
-    def move_current_party(self, event, gameStateObj):
-        cur_party = self.parties[gameStateObj.current_party]
-
-        if event == 'UP':
-            new_location = self.icons[cur_party.location].connections[0]
-        elif event == 'LEFT':
-            new_location = self.icons[cur_party.location].connections[1]
-        elif event == 'RIGHT':
-            new_location = self.icons[cur_party.location].connections[2]
-        elif event == 'DOWN':
-            new_location = self.icons[cur_party.location].connections[3]
-
-        if new_location != cur_party.location:
-            cur_party.move(new_location, self.icons[new_location].position)
+                    self.routes[route_name] = OverworldRoute(route_name, location.position, self.locations[connection].position)
 
     def set_cursor(self, pos):
         self.cursor.x, self.cursor.y = pos
@@ -222,26 +209,26 @@ class Overworld(object):
             self.x = Utility.clamp(cur_party.position[0] - GC.WINWIDTH/2, 0, self.width - GC.WINWIDTH)
             self.y = Utility.clamp(cur_party.position[1] - GC.WINHEIGHT/2, 0, self.height - GC.WINHEIGHT)
 
-    def show_icon(self, icon_id):
-        self.icons[icon_id].show_icon()
+    def show_location(self, level_id):
+        self.locations[level_id].show_location()
 
-    def hide_icon(self, icon_id):
-        self.icons[icon_id].hide_icon()
+    def hide_location(self, level_id):
+        OverworldLocation[level_id].hide_location()
 
-    def set_next_icon(self, icon_id):
-        if icon_id:
-            self.icons[icon_id].display_flag = True
+    def set_next_location(self, level_id):
+        if level_id:
+            self.locations[level_id].display_flag = True
         else:
-            for icon in self.icons.values():
-                icon.display_flag = False
+            for location in self.locations.values():
+                location.display_flag = False
 
-    def move_party(self, icon_id, party_id):
-        position = self.icons[icon_id].get_position()
-        self.parties[party_id].move(icon_id, position)
+    def move_party(self, level_id, party_id):
+        position = self.locations[level_id].get_position()
+        self.parties[party_id].move(level_id, position)
 
-    def add_party(self, icon_id, party_id, lords):
-        position = self.icons[icon_id].get_position()
-        self.parties[party_id] = OverworldParty(party_id, icon_id, position, lords)
+    def add_party(self, level_id, party_id, lords):
+        position = self.locations[level_id].get_position()
+        self.parties[party_id] = OverworldParty(party_id, level_id, position, lords)
 
     def remove_party(self, party_id):
         del self.parties[party_id]
@@ -256,8 +243,8 @@ class Overworld(object):
         image = Engine.copy_surface(self.main_sprite)
         for route in self.routes.values():
             route.draw(image)
-        for icon in self.icons.values():
-            icon.draw(image)
+        for location in self.locations.values():
+            location.draw(image)
         for party in self.parties.values():
             party.draw(image)
         image = Engine.subsurface(image, (self.x, self.y, GC.WINWIDTH, GC.WINHEIGHT))
@@ -267,7 +254,7 @@ class Overworld(object):
 
     def serialize(self):
         d = {'triggers': self.triggers,
-             'icons': {name: icon.serialize() for name, icon in self.icons.items()},
+             'locations': {name: location.serialize() for name, location in self.locations.items()},
              }
         return d
 
@@ -277,8 +264,8 @@ class Overworld(object):
             return None
         s = cls()
         s.triggers = data['triggers']
-        for name, icon in s.icons.items():
-            icon.deserialize(data['icons'].get(name))
+        for level_name, location in s.locations.items():
+            location.deserialize(data['locations'].get(level_name))
         return s
 
 class OverworldState(StateMachine.State):
@@ -288,6 +275,8 @@ class OverworldState(StateMachine.State):
         if not self.started:
             self.started = True
             gameStateObj.current_party = None
+            self.choice_menu = None
+            self.state = 'normal'
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -307,29 +296,67 @@ class OverworldState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         
-        if gameStateObj.current_party is not None:
-            level_name = gameStateObj.overworld.move_current_party(event, gameStateObj)
-            if level_name is not None:
-                gameStateObj.stateMachine.changeState('turn_change')
-                levelfolder = 'Data/Level' + level_name
-                SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
+        if self.state == 'normal':
+            if gameStateObj.current_party is not None:
+                cur_party = gameStateObj.overworld.parties[gameStateObj.current_party]
+                new_location = cur_party.location
 
-            if event == 'BACK':
-                gameStateObj.current_party = None
+                if event == 'BACK':
+                    gameStateObj.current_party = None
+                elif event == 'SELECT':
+                    if not gameStateObj.overworld.locations[cur_party.location].visited:
+                        self.state = 'are_you_sure'
+                        self.choice_menu = MenuFunctions.ChoiceMenu(self, ['Yes', 'No'], (GC.TILEWIDTH//2, GC.WINHEIGHT - GC.TILEHEIGHT * 1.5), horizontal=True)
+                    else:
+                        gameStateObj.stateMachine.changeState('base_main')
+                        gameStateObj.stateMachine.changeState('transition_out')
+                elif event == 'UP':
+                    new_location = gameStateObj.overworld.locations[cur_party.location].connections[0]
+                elif event == 'LEFT':
+                    new_location = gameStateObj.overworld.locations[cur_party.location].connections[1]
+                elif event == 'RIGHT':
+                    new_location = gameStateObj.overworld.locations[cur_party.location].connections[2]
+                elif event == 'DOWN':
+                    new_location = gameStateObj.overworld.locations[cur_party.location].connections[3]
 
-        else:
-            gameStateObj.overworld.move_cursor(gameStateObj)
+                if new_location != cur_party.location:
+                    cur_party.move(new_location, gameStateObj.overworld.locations[new_location].position)
+                    self.state = 'party_moving'
 
+            else:
+                gameStateObj.overworld.cursor.handle_movement(gameStateObj)
+
+                if event == 'SELECT':
+                    gameStateObj.current_party = gameStateObj.overworld.get_current_hovered_party()
+
+        elif self.state == 'are_you_sure':
+            cur_party = gameStateObj.overworld.parties[gameStateObj.current_party]
             if event == 'SELECT':
-                gameStateObj.current_party = gameStateObj.overworld.get_current_hovered_party()
+                if self.choice_menu.getSelection() == 'Yes':
+                    level_id = cur_party.location
+                    if level_id is not None:
+                        gameStateObj.stateMachine.changeState('turn_change')
+                        levelfolder = 'Data/Level' + level_id
+                        SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
+                else:
+                    self.state = 'normal'
+                    self.choice_menu = None
+            elif event == 'BACK':
+                self.state = 'normal'
+                self.choice_menu = None
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
         gameStateObj.overworld.update(gameStateObj)
+        if self.state == 'party_moving':
+            cur_party = gameStateObj.overworld.parties[gameStateObj.current_party]
+            if not cur_party.isMoving():
+                self.state = 'normal'
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         gameStateObj.overworld.draw(surf, gameStateObj)
+
         if gameStateObj.current_party is None and gameStateObj.overworld.get_current_hovered_party() is not None:
             party_surf = MenuFunctions.CreateBaseMenuSurf((64, 40))
             party_name = str(gameStateObj.overworld.get_current_hovered_party())
@@ -338,5 +365,6 @@ class OverworldState(StateMachine.State):
             GC.FONT['blue'].blit('Units', party_surf, (0, 20))
             num_units = len(gameStateObj.get_units_in_party(gameStateObj.current_party))
             GC.FONT['blue'].blit(str(num_units), party_surf, (64 - GC.FONT['blue'].size(str(num_units))[0], 4))
+            surf.blit(party_surf, (0, 0))
 
         return surf

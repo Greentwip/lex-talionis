@@ -150,10 +150,11 @@ def create_overworld_data(fp):
                 continue
             s_line = line.strip().split(';')
             place = {}
-            place['level_name'] = s_line[0]
-            place['icon_idx'] = int(s_line[1])
-            place['position'] = tuple([int(i) for i in s_line[2].split(',')])
-            place['connections'] = s_line[3].split(',')
+            place['level_id'] = s_line[0]
+            place['location_name'] = s_line[1]
+            place['icon_idx'] = int(s_line[2])
+            place['position'] = tuple([int(i) for i in s_line[3].split(',')])
+            place['connections'] = s_line[4].split(',')
             overworld_data.append(place)
     return overworld_data
 OVERWORLDDATA = create_overworld_data(loc + 'Data/overworld_data.txt')
