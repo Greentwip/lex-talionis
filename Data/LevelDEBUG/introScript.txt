@@ -22,3 +22,7 @@ set_cursor;3,21
 wait;1000
 trigger;basic
 interact_unit;Sam;3,15;Miss,Miss
+if;sum(1 for unit in gameStateObj.allunits if unit.team == 'enemy' and unit.position) == 1
+    gold;1000
+    change_music;player;Jazz Noir
+end

@@ -141,7 +141,9 @@ class Dialogue_Scene(object):
         # === CONDITIONALS PARSING
         if line[0] == 'if':
             if not self.if_stack or self.if_stack[-1]:
+                print(line[1])
                 truth = eval(line[1])
+                print(truth)
                 self.if_stack.append(truth)
                 self.parse_stack.append(truth) # Whether we've encountered a truth this level
             else:
