@@ -884,13 +884,13 @@ class PhaseMusic(object):
             return None
         if phase_name == 'player':
             self.player_name = music_name
-            self.player_music = GC.MUSICDICT[self.music_name]
+            self.player_music = GC.MUSICDICT[music_name]
         elif phase_name.startswith('enemy'):
             self.enemy_name = music_name
-            self.enemy_music = GC.MUSICDICT[self.music_name]
+            self.enemy_music = GC.MUSICDICT[music_name]
         elif phase_name == 'other':
             self.other_name = music_name
-            self.other_music = GC.MUSICDICT[self.music_name]
+            self.other_music = GC.MUSICDICT[music_name]
         else:
             logging.error('Unsupported phase name: %s', phase_name)
             return None        
