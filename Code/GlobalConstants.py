@@ -141,21 +141,35 @@ def create_ai_dict(fp):
 AIDATA = create_ai_dict(loc + 'Data/ai_presets.txt')
 
 def create_overworld_data(fp):
-    overworld_data = []
+    overworld_data = {}
+    cur_dict = None
     if not os.path.exists(fp):
         return overworld_data
     with open(fp, 'r') as data:
         for line in data.readlines():
             if line.startswith('#'):
                 continue
+            elif line.startswith('==='):
+                cur_dict = line[3:]
+                overworld_data[line[3:]] = []
             s_line = line.strip().split(';')
-            place = {}
-            place['level_id'] = s_line[0]
-            place['location_name'] = s_line[1]
-            place['icon_idx'] = int(s_line[2])
-            place['position'] = tuple([int(i) for i in s_line[3].split(',')])
-            place['connections'] = s_line[4].split(',')
-            overworld_data.append(place)
+            if cur_dict == 'Location':
+                place = {}
+                place['level_id'] = s_line[0]
+                place['location_name'] = s_line[1]
+                place['icon_idx'] = int(s_line[2])
+                place['position'] = tuple([int(i) for i in s_line[3].split(',')])
+                overworld_data[cur_dict].append(place)
+            elif cur_dict == 'Routes':
+                route = {}
+                route['connection'] = tuple([int(i) for i in s_line[0].split(',')])
+                route['route'] = tuple([int(i) for i in s_line[1].split(',')])
+                overworld_data[cur_dict].append(route)   
+            elif cur_dict == 'Parties':
+                party = {}
+                party['party_id'] = int(s_line[0])
+                party['name'] = s_line[1]
+                overworld_data[cur_dict].append(party)   
     return overworld_data
 OVERWORLDDATA = create_overworld_data(loc + 'Data/overworld_data.txt')
 

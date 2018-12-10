@@ -2,18 +2,19 @@ import os
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import StateMachine, SaveLoad, Dialogue, MenuFunctions
-    import Utility, Engine, InputManager, GenericMapSprite
+    import StateMachine, SaveLoad, Dialogue, MenuFunctions, CustomObjects
+    import Utility, Engine, InputManager, GenericMapSprite, Image_Modification
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import StateMachine, SaveLoad, Dialogue, MenuFunctions
-    from . import Utility, Engine, InputManager, GenericMapSprite
+    from . import StateMachine, SaveLoad, Dialogue, MenuFunctions, CustomObjects
+    from . import Utility, Engine, InputManager, GenericMapSprite, Image_Modification
 
 class OverworldCursor(object):
     image = GC.IMAGESDICT['OverworldCursor']
-    width = image.get_width()
-    height = image.get_height()
+    width = 16
+    height = 16
+    icon_states = (0, 0, 1, 2, 3, 4, 5, 6, 6, 5, 4, 3, 2, 1)
 
     def __init__(self, overworld):
         self.x, self.y = 0, 0
@@ -49,11 +50,19 @@ class OverworldCursor(object):
                 self.overworld.change_y(self.speed)
 
     def draw(self, surf):
-        surf.blit(self.image, (self.x - self.overworld.x, self.y - self.overworld.y))
+        self.counter += 1
+        if self.counter >= 4:
+            self.icon_state_counter += 1
+            self.counter = 0
+
+        image = Engine.subsurface(self.image, (0, self.icon_state_counter%len(self.icon_states), self.width, self.height))
+        surf.blit(image, (self.x - self.overworld.x, self.y - self.overworld.y))
 
 class OverworldLocation(object):
     icons = GC.IMAGESDICT['OverworldIcons']
+    next_icon = GC.IMAGESDICT['OverworldNextIcon']
     icon_size = 32
+    show_anim = GC.IMAGESDICT['OverworldShowAnim']
 
     def __init__(self, data):
         self.level_id = data['level_id']
@@ -66,18 +75,58 @@ class OverworldLocation(object):
         self.display_flag = False
         self.visited = False
 
+        self.counter = 0
+        self.transparency = 0
+        self.state = 'normal'
+
     def get_position(self):
         return self.position[0]*8, self.position[1]*8
 
     def draw(self, surf):
+        self.counter += 1
+        if self.state == 'fade_in':
+            self.transparency -= 5
+            if self.transparency <= 0:
+                self.transparency = 0
+                self.state = 'normal'
+        elif self.state == 'fade_out':
+            self.transparency += 5
+            if self.transparency >= 100:
+                self.transparency = 100
+                self.show = False
+                self.state = 'normal'
+
         if self.show:
-            surf.blit(self.image, (self.position[0]*8 - self.icon_size/2, self.position[1]*8 - self.icon_size/2))
+            pos = self.get_draw_pos()
+            image = Image_Modification.flickerImageTranslucent(self.image, self.transparency)
+            surf.blit(image, pos)
+            if self.display_flag:
+                # Next icon every 13 frames -- there are four icons
+                which_icon = self.counter//13%4
+                icon = Engine.subsurface(self.next_icon, (32*which_icon, 0, 32, 32))
+                icon = Image_Modification.flickerImageTranslucent(icon, self.transparency)
+                surf.blit(icon, (pos[0], pos[1] - 16))
 
-    def show_location(self):
-        self.show = True
+        if self.state == 'anim_in':
+            remove = self.anim.update()
+            if remove:
+                self.state = 'fade_in'
+                self.anim = None
+                self.show = True
+            else:
+                self.anim.draw(surf)
 
-    def hide_location(self):
-        self.show = False
+    def get_draw_pos(self):
+        return (self.position[0]*8 - self.icon_size/2, self.position[1]*8 - self.icon_size/2)
+
+    def fade_in(self):
+        self.transparency = 100
+        self.state = 'anim_in'
+        self.anim = CustomObjects.Animation(self.show_anim, self.get_draw_pos(), (4, 4), animation_speed=66, ignore_map=True)
+        self.anim.tint = True
+
+    def fade_out(self):
+        self.state = 'fade_out'
 
     def serialize(self):
         return (self.show, self.display_flag, self.visited)
@@ -94,12 +143,13 @@ class OverworldRoute(object):
     left_vert = Engine.subsurface(route_sheet, (8 * 3, 0, 8, 8))
     right_vert = Engine.subsurface(route_sheet, (8 * 4, 0, 8, 8))
 
-    def __init__(self, name, pos1, pos2):
-        self.name = name
+    def __init__(self, connection, pos1, pos2, route):
+        self.connection = connection
         self.pos1 = pos1
         self.pos2 = pos2
+        self.route = route
 
-        self.create_image()
+        self.create_image2()
 
     def create_image(self):
         dx = self.pos2[0] - self.pos1[0]
@@ -126,8 +176,42 @@ class OverworldRoute(object):
             self.image = Engine.create_surface((16, 16), transparent=True)
             self.position = (0, 0)
 
+    def create_image2(self):
+        self.image = Engine.create_surface((len(self.route)*8, len(self.route)*8), transparent=True)
+        if self.pos1[0] < self.pos2[0]:
+            if self.pos1[1] < self.pos2[1]:
+                cur_x, cur_y = 0, 0
+                self.topleft = self.pos1
+            else:
+                cur_x, cur_y = 0, len(self.route)
+                self.topleft = (self.pos1[0], self.pos2[1])
+        else:
+            if self.pos1[1] < self.pos2[1]:
+                cur_x, cur_y = len(self.route), 0
+                self.topleft = (self.pos2[0], self.pos1[1])
+            else:
+                cur_x, cur_y = len(self.route), len(self.route)
+                self.topleft = self.pos2
+        for route in self.route:
+            if route == 2:
+                self.image.blit(self.left_vert, (cur_x*8 - 8, cur_y*8))
+                self.image.blit(self.right_vert, (cur_x*8, cur_y*8))
+                cur_y += 1
+            elif route == 4:
+                self.image.blit(self.top_horiz, (cur_x*8 - 8, cur_y*8 - 8))
+                self.image.blit(self.bottom_horiz, (cur_x*8 - 8, cur_y*8))
+                cur_x -= 1
+            elif route == 6:
+                self.image.blit(self.top_horiz, (cur_x*8, cur_y*8 - 8))
+                self.image.blit(self.bottom_horiz, (cur_x*8, cur_y*8))
+                cur_x += 1
+            elif route == 8:
+                self.image.blit(self.left_vert, (cur_x*8 - 8, cur_y*8 - 8))
+                self.image.blit(self.right_vert, (cur_x*8, cur_y*8 - 8))
+                cur_y -= 1
+
     def draw(self, surf):
-        surf.blit(self.image, (self.position[0]*8, self.position[1]*8))
+        surf.blit(self.image, self.topleft)
 
 class OverworldParty(object):
     def __init__(self, name, location, position, lords):
@@ -174,7 +258,7 @@ class Overworld(object):
         self.main_sprite = GC.IMAGESDICT['OverworldSprite']
         self.width, self.height = self.main_sprite.get_width(), self.main_sprite.get_height()
 
-        self.locations = {location_data['level_id']: OverworldLocation(location_data) for location_data in GC.OVERWORLDDATA}
+        self.locations = {location_data['level_id']: OverworldLocation(location_data) for location_data in GC.OVERWORLDDATA['Locations']}
         self.create_routes()
         print(self.locations)
         print(self.routes)
@@ -186,11 +270,10 @@ class Overworld(object):
 
     def create_routes(self):
         self.routes = {}
-        for name, location in self.locations.items():
-            for connection in location.connections:
-                route_name = tuple(sorted((name, connection)))
-                if route_name not in self.routes:
-                    self.routes[route_name] = OverworldRoute(route_name, location.position, self.locations[connection].position)
+        for route in GC.OVERWORLDDATA['Routes']:
+            connection = route['connection']
+            loc1, loc2 = self.locations[connection[0]], self.locations[connection[1]]
+            self.routes[connection] = OverworldRoute(connection, loc1.position, loc2.position, route['route'])
 
     def set_cursor(self, pos):
         self.cursor.x, self.cursor.y = pos
@@ -210,17 +293,19 @@ class Overworld(object):
             self.y = Utility.clamp(cur_party.position[1] - GC.WINHEIGHT/2, 0, self.height - GC.WINHEIGHT)
 
     def show_location(self, level_id):
-        self.locations[level_id].show_location()
+        self.locations[level_id].fade_in()
 
     def hide_location(self, level_id):
-        OverworldLocation[level_id].hide_location()
+        OverworldLocation[level_id].fade_out()
+
+    def quick_show_location(self, level_id):
+        self.locations[level_id].show = True
 
     def set_next_location(self, level_id):
+        for location in self.locations.values():
+                location.display_flag = False
         if level_id:
             self.locations[level_id].display_flag = True
-        else:
-            for location in self.locations.values():
-                location.display_flag = False
 
     def move_party(self, level_id, party_id):
         position = self.locations[level_id].get_position()
@@ -239,7 +324,7 @@ class Overworld(object):
                 return name
         return None
 
-    def draw(self, surf, gameStateObj):
+    def draw(self, surf, gameStateObj, show_cursor=True):
         image = Engine.copy_surface(self.main_sprite)
         for route in self.routes.values():
             route.draw(image)
@@ -248,7 +333,7 @@ class Overworld(object):
         for party in self.parties.values():
             party.draw(image)
         image = Engine.subsurface(image, (self.x, self.y, GC.WINWIDTH, GC.WINHEIGHT))
-        if gameStateObj.current_party is None:
+        if gameStateObj.current_party is None and show_cursor:
             self.cursor.draw(image)
         surf.blit(image, (0, 0))
 
@@ -277,6 +362,7 @@ class OverworldState(StateMachine.State):
             gameStateObj.current_party = None
             self.choice_menu = None
             self.state = 'normal'
+            self.show_cursor = False
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -328,6 +414,13 @@ class OverworldState(StateMachine.State):
 
                 if event == 'SELECT':
                     gameStateObj.current_party = gameStateObj.overworld.get_current_hovered_party()
+                    if gameStateObj.current_party is None:
+                        # TODO Open up several menus (Options, Save)
+                        pass
+                elif event == 'INFO':
+                    # TODO open up Manage Items menu / Or base menu
+                    # Add R: Make Camp Here (maybe child menu check before?)
+                    pass
 
         elif self.state == 'are_you_sure':
             cur_party = gameStateObj.overworld.parties[gameStateObj.current_party]
@@ -348,6 +441,8 @@ class OverworldState(StateMachine.State):
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
         gameStateObj.overworld.update(gameStateObj)
+        if not self.triggers and not self.show_cursor:
+            self.show_cursor = True  # Fix this
         if self.state == 'party_moving':
             cur_party = gameStateObj.overworld.parties[gameStateObj.current_party]
             if not cur_party.isMoving():
@@ -357,14 +452,19 @@ class OverworldState(StateMachine.State):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         gameStateObj.overworld.draw(surf, gameStateObj)
 
-        if gameStateObj.current_party is None and gameStateObj.overworld.get_current_hovered_party() is not None:
-            party_surf = MenuFunctions.CreateBaseMenuSurf((64, 40))
-            party_name = str(gameStateObj.overworld.get_current_hovered_party())
-            p_size = GC.FONT['yellow'].size(party_name)[0]
-            GC.FONT['yellow'].blit(party_name, party_surf, (32 - p_size/2, 4))
-            GC.FONT['blue'].blit('Units', party_surf, (0, 20))
+        cur_party = gameStateObj.overworld.get_current_hovered_party()
+        if cur_party is not None:
+            overworld_info = GC.IMAGESDICT['OverworldInfo']
+            location_name = cur_party.location.name
+            l_size = GC.FONT['white'].size(location_name)[0]
+            GC.FONT['white'].blit(location_name, overworld_info, (52 - l_size/2, 4))
+            party_name = cur_party.name
+            p_size = GC.FONT['info_grey'].size(party_name)[0]
+            GC.FONT['info_grey'].blit(party_name, overworld_info, (52 - p_size/2, 4))
+            GC.FONT['white'].blit('Units', overworld_info, (4, 20))
             num_units = len(gameStateObj.get_units_in_party(gameStateObj.current_party))
-            GC.FONT['blue'].blit(str(num_units), party_surf, (64 - GC.FONT['blue'].size(str(num_units))[0], 4))
-            surf.blit(party_surf, (0, 0))
+            GC.FONT['white'].blit(str(num_units), overworld_info, (92 - GC.FONT['white'].size(str(num_units))[0], 4))
+            surf.blit(overworld_info, (0, 0))
+            # TODO: Add lord unit minimug
 
         return surf

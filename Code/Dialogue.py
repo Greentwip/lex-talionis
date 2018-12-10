@@ -324,8 +324,18 @@ class Dialogue_Scene(object):
         # === OVERWORLD
         elif line[0] == 'ow_trigger':
             gameStateObj.overworld.trigger.append(line[1])
+        elif line[0] == 'force_ow_trigger':
+            if len(line) > 1:
+                gameStateObj.overworld.trigger.append(line[1])
+            gameStateObj.stateMachine.changeState('overworld')
+            self.current_state = "Paused"
+        elif line[0] == 'force_leave_overworld':
+            gameStateObj.stateMachine.back()  # Back to previous dialogue
+            gameStateObj.stateMachine.back()
         elif line[0] == 'ow_location_show':
             gameStateObj.overworld.show_location(line[1])
+        elif line[0] == 'ow_location_quick_show':
+            gameStateObj.overworld.quick_show_location(line[1])
         elif line[0] == 'ow_location_hide':
             gameStateObj.overworld.hide_location(line[1])
         elif line[0] == 'ow_next_location':
