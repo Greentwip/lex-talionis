@@ -1,0 +1,12 @@
+# Level ID; Location Name ; Icon Index ; Position
+===Locations
+0;Border Mulan;2;18,7
+1;Castle Frelia;3;10,5
+2;Ide;1;14,11
+# Route connections (between level id's); Route (numpad)
+===Routes
+0,1;4,4,4,7,7,4,4,4
+1,2;3,3,3,3,2,2
+# Party ID must be integer ; Party name (must be character)
+===Parties
+0;Eirika

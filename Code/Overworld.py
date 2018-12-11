@@ -364,9 +364,9 @@ class OverworldState(StateMachine.State):
             self.state = 'normal'
             self.show_cursor = False
 
-            # Transition in:
-            gameStateObj.stateMachine.changeState("transition_in")
-            return 'repeat'
+            # # Transition in:
+            # gameStateObj.stateMachine.changeState("transition_in")
+            # return 'repeat'
 
         if self.triggers:
             # Play any triggers

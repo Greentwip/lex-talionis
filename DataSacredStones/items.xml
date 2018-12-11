@@ -328,18 +328,19 @@
         <id>Slim Lance</id>
         <spritetype>Lance</spritetype>
         <spriteid>4</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Lance</weapontype>
  
-        <uses>35</uses>
+        <uses>30</uses>
         <value>14</value>
         <RNG>1</RNG>
         <desc></desc>
-		<weight>3</weight>
+		<weight>4</weight>
         
-		<MT>3</MT>
-		<HIT>90</HIT>
-		<LVL>D</LVL>
+		<MT>4</MT>
+		<HIT>85</HIT>
+        <crit>5</crit>
+		<LVL>E</LVL>
     </item>
 
     <item name="Great Lance">
@@ -425,11 +426,11 @@
         <RNG>1-2</RNG>
         <value>20</value>
         <desc></desc>
-		<weight>7</weight>
+		<weight>11</weight>
         
-		<MT>3</MT>
+		<MT>6</MT>
 		<HIT>65</HIT>
-		<LVL>D</LVL>
+		<LVL>E</LVL>
         <crit>0</crit>
     </item>
 
@@ -566,18 +567,19 @@
         <id>Hatchet</id>
         <spritetype>Axe</spritetype>
         <spriteid>4</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Axe</weapontype>
  
-        <uses>35</uses>
-        <RNG>1</RNG>
-        <value>10</value>
+        <uses>50</uses>
+        <RNG>1-2</RNG>
+        <value>0</value>
         <desc></desc>
-		<weight>3</weight>
+		<weight>5</weight>
         
-		<MT>3</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
+		<MT>4</MT>
+		<HIT>85</HIT>
+        <crit>0</crit>
+		<LVL>E</LVL>
     </item>
         
     <item name="Great Axe">
@@ -656,18 +658,19 @@
         <id>Hand Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>14</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,crit</components>
         <weapontype>Axe</weapontype>
  
         <uses>20</uses>
         <RNG>1-2</RNG>
         <value>15</value>
         <desc></desc>
-		<weight>8</weight>
+		<weight>12</weight>
         
-		<MT>4</MT>
-		<HIT>55</HIT>
-		<LVL>D</LVL>
+		<MT>7</MT>
+		<HIT>60</HIT>
+        <crit>0</crit>
+		<LVL>E</LVL>
     </item>
 
     <item name="Short Axe">
@@ -952,23 +955,24 @@
 
     <item name="Heal">
         <id>Heal</id>
-        <spritetype>Light</spritetype>
-        <spriteid>3</spriteid>       
-        <components>spell,heal,uses,beneficial,map_hit_color</components>
-        <weapontype>Light</weapontype>
+        <spritetype>Staff</spritetype>
+        <spriteid>0</spriteid>       
+        <components>spell,heal,uses,beneficial,map_hit_color,exp</components>
+        <weapontype>Staff</weapontype>
  
         <uses>30</uses>
-        <RNG>0-1</RNG>
+        <RNG>1</RNG>
         <value>20</value>
-        <desc>Restores (User's Magic + 5) HP.</desc>
+        <desc>Restores (User's Magic + 10) HP.</desc>
         
-        <heal>5</heal>
+        <heal>10</heal>
+        <exp>11</exp>
         <LVL>D</LVL>
         <targets>Ally</targets>    
 
         <map_hit_color>96,144,232</map_hit_color>
     </item>
-
+    
     <item name="Fortune">
         <id>Fortune</id>
         <spritetype>Light</spritetype>
