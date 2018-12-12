@@ -150,10 +150,11 @@ def create_overworld_data(fp):
             if line.startswith('#'):
                 continue
             elif line.startswith('==='):
-                cur_dict = line[3:]
-                overworld_data[line[3:]] = []
+                cur_dict = line.strip()[3:]
+                overworld_data[cur_dict] = []
+                continue
             s_line = line.strip().split(';')
-            if cur_dict == 'Location':
+            if cur_dict == 'Locations':
                 place = {}
                 place['level_id'] = s_line[0]
                 place['location_name'] = s_line[1]
@@ -162,7 +163,7 @@ def create_overworld_data(fp):
                 overworld_data[cur_dict].append(place)
             elif cur_dict == 'Routes':
                 route = {}
-                route['connection'] = tuple([int(i) for i in s_line[0].split(',')])
+                route['connection'] = tuple(s_line[0].split(','))
                 route['route'] = tuple([int(i) for i in s_line[1].split(',')])
                 overworld_data[cur_dict].append(route)   
             elif cur_dict == 'Parties':

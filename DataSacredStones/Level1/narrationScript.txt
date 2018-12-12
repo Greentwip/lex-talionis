@@ -1,1 +1,5 @@
-force_ow_trigger;Narration2
+show_overworld
+t;2
+u;Hayden;Left
+s;Narrator;King Hayden apologizes for being unable to spare soldiers.|However, he does provide Eirika with a small but trusted party of vassals.|Eirika is grateful for the king's aid. Chasing rumors of her brother, she sets out for Grado.|The group's first stop is the remote village of Ide, which was, until very recently, a part of Renais.|Here, Eirika sees the devastation of Renais with her own eyes.{wait};auto;narration
+t;1

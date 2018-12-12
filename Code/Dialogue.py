@@ -322,6 +322,8 @@ class Dialogue_Scene(object):
             self.background.remove_cursor()
 
         # === OVERWORLD
+        elif line[0] == 'show_overworld':
+            self.background = gameStateObj.overworld
         elif line[0] == 'ow_trigger':
             gameStateObj.overworld.trigger.append(line[1])
         elif line[0] == 'force_ow_trigger':

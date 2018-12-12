@@ -722,6 +722,9 @@ class StartMode(StateMachine.State):
 
         if self.state == 'difficulty_setup':
             if self.no_difficulty_choice():
+                gameStateObj.mode = GC.DIFFICULTYDATA.values()[0].copy()
+                self.death_choice = gameStateObj.mode['death'] == '?'
+                self.growth_choice = gameStateObj.mode['growths'] == '?'
                 self.state = 'death_setup'
                 return self.begin(gameStateObj, metaDataObj)
             else:

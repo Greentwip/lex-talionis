@@ -1862,13 +1862,13 @@ class UnitObject(object):
 
     def acquire_tile_status(self, gameStateObj, force=False):
         if self.position and (force or 'flying' not in self.status_bundle):
-            for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
+            for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
                 if status not in self.status_effects:
                     StatusObject.HandleStatusAddition(status, self, gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):
         if self.position and (force or 'flying' not in self.status_bundle):
-            for status in gameStateObj.map.tile_info_dict[self.position]['Status']:
+            for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
                 StatusObject.HandleStatusRemoval(status, self, gameStateObj)
 
     def acquire_aura_status(self, gameStateObj, serializing=False):

@@ -1,29 +1,8 @@
-if;self.name == 'Outro1'
-    ow_location_quick_show
-    ow_add_party;0;0;Eirika
-    t;2
-    wait;500
-    ow_next_location;1
-    ow_location_show;1
-    wait;1000
-    s;Narrator;Eirika and her companions have liberated the border castle.|Alongside Princess Tana of Frelia, they ride to the Frelian capital.{wait};auto;narration
-    ow_move_party;1
-    wait;1000
-    t;1
-    force_leave_overworld
-elif;self.name == 'Intro2'
+if;self.name == 'Intro2'
     ow_next_location
     t;2
     wait;500
     ow_next_location;2
     ow_location_show;2
     wait;1000
-elif;self.name == 'Narration2'
-    t;2
-    u;Hayden;Left
-    s;Narrator;King Hayden apologizes for being unable to spare soldiers.|However, he does provide Eirika with a small but trusted party of vassals.|Eirika is grateful for the king's aid. Chasing rumors of her brother, she sets out for Grado.|The group's first stop is the remote village of Ide, which was, until very recently, a part of Renais.|Here, Eirika sees the devastation of Renais with her own eyes.{wait};auto;narration
-    t;1
-    force_leave_overworld
-else
-    t;2
 end

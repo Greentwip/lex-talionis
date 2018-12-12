@@ -21,8 +21,22 @@ s;Tana;You haven't heard from him? Oh, I hope he's not been harmed...{w}{br}Come
 s;Eirika;Thank you, Tana.
 t;1
 qr;Tana;Gilliam;Eirika
-# Reads from overworld_script.txt to play narration over the overworld
-force_ow_trigger;Outro1
+end_skip
+# === OVERWORLD SECTION
+show_overworld
+ow_location_quick_show
+ow_add_party;0;0;Eirika
+t;2
+wait;500
+ow_next_location;1
+ow_location_show;1
+wait;1000
+s;Narrator;Eirika and her companions have liberated the border castle.|Alongside Princess Tana of Frelia, they ride to the Frelian capital.{wait};auto;narration
+ow_move_party;1
+wait;1000
+t;1
+end_skip
+# === FRELIA SECTION
 b;House
 t;2
 u;Hayden;Left;u;Tana;FarRight

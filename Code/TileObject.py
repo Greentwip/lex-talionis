@@ -241,7 +241,7 @@ class MapObject(object):
         self.tile_info_dict = {}
         for x in range(self.width):
             for y in range(self.height):
-                self.tile_info_dict[(x, y)] = {'Status': []}
+                self.tile_info_dict[(x, y)] = {}
 
         if not os.path.isfile(tile_info_location):
             return None
@@ -268,14 +268,14 @@ class MapObject(object):
     def parse_tile_line(self, coord, property_list):
         if property_list:
             for tile_property in property_list:
-                self.add_tile_property(coord, tile_property)
+                self.add_tile_property(coord, tile_property.split('='))
         else:
             # Empty dictionary
             for tile_property in self.tile_info_dict[coord].items():
                 self.remove_tile_property(coord, tile_property)
 
     def add_tile_property(self, coord, tile_property):
-        property_name, property_value = tile_property.split('=')
+        property_name, property_value = tile_property
         # Handle special cases...
         if property_name == 'Status': # Treasure does not need to be split. It is split by the itemparser function itself.
             # Turn these string of ids into a list of status objects
@@ -298,8 +298,6 @@ class MapObject(object):
             del self.hp[coord]
         elif property_name in ("Escape", "Arrive") and coord in self.escape_highlights:
             del self.escape_highlights[coord]
-        elif property_name == "Status":
-            self.tile_info_dict[coord]["Status"] = []
 
     def update(self, gameStateObj):
         current_time = Engine.get_time()

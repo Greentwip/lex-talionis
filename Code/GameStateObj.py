@@ -139,8 +139,8 @@ class GameStateObj(object):
         self.triggers = load_info.get('triggers', dict())
         map_info = load_info['map']
         self.playtime = load_info['playtime']
-        self._convoy = {party_id: [ItemMethods.deserialize(item_dict) for item_dict in party_convoy] for party_id, party_convoy in load_info['convoy'].items()},
-        self._convoy = {party_id: [item for item in party_convoy if item] for party_id, party_convoy in self._convoy}
+        self._convoy = {party_id: [ItemMethods.deserialize(item_dict) for item_dict in party_convoy] for party_id, party_convoy in load_info['convoy'].items()}
+        self._convoy = {party_id: [item for item in party_convoy if item] for party_id, party_convoy in self._convoy.items()}
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
         self.level_constants = load_info['level_constants']
