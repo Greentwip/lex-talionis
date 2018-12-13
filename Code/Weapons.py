@@ -1,8 +1,10 @@
 try:
     import GlobalConstants as GC
+    import configuration as cf
     import Engine
 except:
     from . import GlobalConstants as GC
+    from . import configuration as cf
     from . import Engine
 
 # === WEAPON TRIANGLE OBJECT ==================================================
@@ -47,9 +49,9 @@ class Weapon_Triangle(object):
         if not weapon1 and not weapon2:
             return (0, 0) # If either does not have a weapon, neither has advantage
         elif not weapon1:
-            return (0, 2)
+            return (0, cf.CONSTANTS['unarmed_punish'])
         elif not weapon2:
-            return (2, 0)
+            return (cf.CONSTANTS['unarmed_punish'], 0)
         if not weapon1.TYPE and not weapon2.TYPE:
             return (0, 0)
         elif not weapon1.TYPE:

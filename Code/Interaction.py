@@ -2025,7 +2025,7 @@ class HealthBar(object):
                 self.item.draw(bg_surf, (2, 3), white)
 
                 # Blit advantage -- This must be blit every frame
-                if isinstance(self.other, UnitObject.UnitObject) and self.other.getMainWeapon() and self.unit.checkIfEnemy(self.other):
+                if isinstance(self.other, UnitObject.UnitObject) and self.unit.checkIfEnemy(self.other):
                     advantage, e_advantage = Weapons.TRIANGLE.compute_advantage(self.item, self.other.getMainWeapon())
                     if advantage > 0:
                         UpArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.unit.arrowAnim[self.unit.arrowCounter]*7, 0, 7, 10))

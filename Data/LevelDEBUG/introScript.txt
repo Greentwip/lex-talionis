@@ -14,4 +14,8 @@ t;1
 remove_background
 t;2
 trigger;basic
-# interact_unit;Sam;3,15;Miss,Miss
+interact_unit;Sam;3,15;Miss,Miss
+if;sum(1 for unit in gameStateObj.allunits if unit.team == 'enemy' and unit.position) == 1
+    gold;1000
+    change_music;player;Jazz Noir
+end

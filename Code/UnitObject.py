@@ -318,7 +318,7 @@ class UnitObject(object):
             enemyunit.getMainWeapon().draw(surf, (topleft[0] + 50, y_pos), white)
 
         # Blit advantage -- This must be blit every frame
-        if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
+        if isinstance(enemyunit, UnitObject) and self.checkIfEnemy(enemyunit):
             advantage, e_advantage = Weapons.TRIANGLE.compute_advantage(self.getMainWeapon(), enemyunit.getMainWeapon())
             UpArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 0, 7, 10))
             DownArrow = Engine.subsurface(GC.IMAGESDICT['ItemArrows'], (self.arrowAnim[self.arrowCounter]*7, 10, 7, 10))

@@ -998,7 +998,7 @@
     <status name="Provoked">
         <id>Provoke_Child</id>
         <image_index>4,5</image_index>
-        <desc>Inflicts Hit -30 and Damage -2 when attacking units other than the one provoking it.</desc>
+        <desc>Hit -30 and Damage -2 when attacking units other than the one provoking it.</desc>
         <components>conditional_mt,conditional_hit,negative,remove_range,always_animation</components>
 
         <remove_range>10</remove_range>
