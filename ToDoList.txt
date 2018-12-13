@@ -25,6 +25,9 @@
 
 - New Screenshots in all marketing content
 
+- Check that Canto adds one wait, not 4!!
+- Check that triggers work with turnwheel??
+
 To Test Action:
 WarpIn
 LeaveMap

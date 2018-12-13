@@ -580,13 +580,18 @@ class Dialogue_Scene(object):
                 for unit_id, (start, end) in trigger.units.items():
                     # print('In trigger:')
                     # print(unit_id, start, end)
-                    # First see if the unit is in reinforcements
-                    if unit_id in gameStateObj.allreinforcements:
+                    # # First see if the unit is in reinforcements
+                    # if unit_id in gameStateObj.allreinforcements:
+                    #     self.add_unit(gameStateObj, metaDataObj, unit_id, None, 'fade', 'stack')
+                    #     del gameStateObj.allreinforcements[unit_id]  # So we just move the unit now
+                    #     self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
+                    # else:
+                    #     self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
+                    unit = gameStateObj.get_unit_from_id(unit_id)
+                    if not unit.position:
                         self.add_unit(gameStateObj, metaDataObj, unit_id, None, 'fade', 'stack')
-                        del gameStateObj.allreinforcements[unit_id]  # So we just move the unit now
-                        self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
-                    else:
-                        self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
+                    self.move_unit(gameStateObj, metaDataObj, unit_id, end, 'normal', 'give_up')
+
                 if trigger.units:
                     # Start move
                     self.current_state = "Paused"
@@ -1247,6 +1252,12 @@ class Dialogue_Scene(object):
             else:
                 logger.error('Could not find unit %s', new_pos)
                 return
+
+        if new_pos is None:
+            print(context)
+            print(which_unit)
+            logger.warning('Position for "add_unit" is not set!')
+            return
 
         # Shuffle positions if necessary
         if shuffle:

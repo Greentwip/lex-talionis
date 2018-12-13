@@ -811,7 +811,7 @@ class Die(Action):
 
         self.unit.position = self.old_pos
         self.unit.place_on_map(gameStateObj)
-        self.unit.leave(gameStateObj)
+        self.unit.arrive(gameStateObj)
 
         if self.drop_action:
             self.drop_action.reverse(gameStateObj)

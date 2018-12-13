@@ -2,7 +2,9 @@ Unit_desc;Display a chart of all units on the field.
 Objective_desc;Current objective and overall status.
 Options_desc;Change settings and controls.
 Suspend_desc;Save the game for later. On reload, save is deleted.
+Save_desc;Save the game for later.
 End_desc;Pass the turn.
+Turnwheel_desc;Can undo previous actions.
 Armory_opener;This is an armory. {wait}{clear}Buy something, would ya?
 Armory_buy;What do ya need?
 Armory_back;Anything else?

@@ -303,9 +303,10 @@ class TurnwheelState(StateMachine.State):
 
     def turnwheel_effect(self):
         image, script = GC.ANIMDICT.get_effect('TurnwheelFlash', None)
-        self.end_effect = BattleAnimation.BattleAnimation(None, image, script, None, None)
-        self.end_effect.awake(self, None, True, False)
-        self.end_effect.start_anim('Attack')
+        if image and script:
+            self.end_effect = BattleAnimation.BattleAnimation(None, image, script, None, None)
+            self.end_effect.awake(self, None, True, False)
+            self.end_effect.start_anim('Attack')
         self.initiate_warp_flowers()
 
     def initiate_warp_flowers(self):
