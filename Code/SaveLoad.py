@@ -12,13 +12,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective
+    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective, Triggers
     from StatObject import build_stat_dict
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective
+    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective, Triggers
     from Code.StatObject import build_stat_dict
 
 import logging
@@ -70,7 +70,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
         unitLine = line.split(';')
         current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, 
                                        reinforceUnits, prefabs, gameStateObj.triggers, metaDataObj, gameStateObj)
-    handle_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
+    Triggers.finalize_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective, music=starting_music)
 
 def create_map(levelfolder, overview_dict=None):
@@ -125,84 +125,6 @@ def read_overview_file(overview_filename):
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
-# === TRIGGER STUFF ===
-class Trigger(object):
-    def __init__(self):
-        self.units = {}
-
-    def add_unit(self, unit_id, pos1, pos2):
-        if ',' in pos1:
-            pos1 = tuple(int(n) for n in pos1.split(','))
-        if ',' in pos2:
-            pos2 = tuple(int(n) for n in pos2.split(','))
-        self.units[unit_id] = (pos1, pos2)
-
-def get_trigger_unit(unitLine, allunits, reinforceUnits):
-    if ',' in unitLine[2]:
-        position = tuple(int(n) for n in unitLine[2].split(','))
-        for unit in allunits:
-            if unit.position == position:
-                return unit.id
-    else:
-        for unit in allunits:
-            if unit.id == unitLine[2]:
-                return unit.id
-        for event_id, (unit_id, position) in reinforceUnits.items():
-            if event_id == unitLine[2] or unit_id == unitLine[2]:
-                return unit_id
-    return None
-
-def handle_triggers(allunits, reinforceUnits, triggers, level_map):
-    def determine_first_position(unit, trigger_list):
-        queue = [t for t in trigger_list]
-        current_pos = unit.position
-        counter = 0
-        while queue and counter < 10:
-            start, end = queue.pop()
-            if end == current_pos:  # Running up the chain
-                current_pos = start
-                counter = 0
-            else:
-                queue.insert(0, (start, end))
-                counter += 1
-        # print("Determining First Position")
-        # print(unit.id, current_pos)
-        if not current_pos:
-            unit.position = None
-            reinforceUnits[unit.id] = (unit.id, current_pos)
-        elif current_pos not in level_map.tiles:
-            unit.position = None
-            if current_pos[0] >= level_map.width:
-                spawn_pos = level_map.width - 1, Utility.clamp(current_pos[1], 0, level_map.height - 1)
-            elif current_pos[1] >= level_map.height:
-                spawn_pos = Utility.clamp(current_pos[0], 0, level_map.width - 1), level_map.height - 1
-            elif current_pos[0] < 0:
-                spawn_pos = 0, Utility.clamp(current_pos[1], 0, level_map.height - 1)
-            elif current_pos[1] < 0:
-                spawn_pos = Utility.clamp(current_pos[0], 0, level_map.width - 1), 0
-            reinforceUnits[unit.id] = (unit.id, spawn_pos)
-        else:
-            unit.position = current_pos
-        # print("Unit Position")
-        # print(unit.position)
-        # print(reinforceUnits.get(unit.id))
-
-    # create a new object with unit id as main and triggers in dict
-    # This organizas all triggers to be organized by unit instead of by trigger name
-    unit_triggers = {}
-    for trigger_name, trigger in triggers.items():
-        for unit_id, (start, end) in trigger.units.items():
-            if unit_id not in unit_triggers:
-                unit_triggers[unit_id] = []
-            unit_triggers[unit_id].append((start, end))
-
-    # Now for each unit id in unit_triggers, set the position correctly
-    for unit_id, trigger_list in unit_triggers.items():
-        for unit in allunits:
-            if unit_id == unit.id:
-                determine_first_position(unit, trigger_list)
-                break
-
 def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, triggers, metaDataObj, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
     # New Faction
@@ -219,8 +141,8 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
     elif unitLine[0] == 'trigger':
         trigger_name = unitLine[1]
         if trigger_name not in triggers:
-            triggers[trigger_name] = Trigger()
-        unit_id = get_trigger_unit(unitLine, allunits, reinforceUnits)
+            triggers[trigger_name] = Triggers.Trigger()
+        unit_id = Triggers.get_trigger_unit(unitLine, allunits, reinforceUnits)
         if unit_id:
             triggers[trigger_name].add_unit(unit_id, unitLine[3], unitLine[4])
     elif gameStateObj.check_mode(current_mode):

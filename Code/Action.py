@@ -894,28 +894,36 @@ class GiveGold(Action):
 class ChangeGameConstant(Action):
     def __init__(self, constant, new_value):
         self.constant = constant
+        self.already_present = False
         self.old_value = None
         self.new_value = new_value
 
     def do(self, gameStateObj):
+        self.already_present = self.constant in gameStateObj.game_constants
         self.old_value = gameStateObj.game_constants[self.constant]
         gameStateObj.game_constants[self.constant] = self.new_value
 
     def reverse(self, gameStateObj):
         gameStateObj.game_constants[self.constant] = self.old_value        
+        if not self.already_present:
+            del gameStateObj.game_constants[self.constant]
 
 class ChangeLevelConstant(Action):
     def __init__(self, constant, new_value):
         self.constant = constant
+        self.already_present = False
         self.old_value = None
         self.new_value = new_value
 
     def do(self, gameStateObj):
+        self.present = self.constant in gameStateObj.level_constants
         self.old_value = gameStateObj.level_constants[self.constant]   
         gameStateObj.level_constants[self.constant] = self.new_value
 
     def reverse(self, gameStateObj):
         gameStateObj.level_constants[self.constant] = self.old_value
+        if not self.already_present:
+            del gameStateObj.level_constants[self.constant]
 
 class IncrementTurn(Action):
     def __init__(self):
@@ -1073,6 +1081,8 @@ class UpdateUnitRecords(Action):
         self.unit.records['kills'] -= self.record[2]
 
 class RecordRandomState(Action):
+    run_on_load = True
+    
     def __init__(self, old, new):
         self.old = old
         self.new = new

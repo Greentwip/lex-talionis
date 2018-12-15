@@ -24,7 +24,7 @@ qr;Tana;Gilliam;Eirika
 end_skip
 # === OVERWORLD SECTION
 show_overworld
-ow_location_quick_show
+ow_location_quick_show;0
 ow_add_party;0;0;Eirika
 t;2
 wait;500

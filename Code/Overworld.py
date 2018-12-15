@@ -121,7 +121,9 @@ class OverworldLocation(object):
     def fade_in(self):
         self.transparency = 100
         self.state = 'anim_in'
-        self.anim = CustomObjects.Animation(self.show_anim, self.get_draw_pos(), (4, 4), animation_speed=66, ignore_map=True)
+        position = self.get_draw_pos()
+        position = position[0] - 16, position[1] - 16
+        self.anim = CustomObjects.Animation(self.show_anim, position, (4, 4), animation_speed=66, ignore_map=True)
         self.anim.tint = True
 
     def fade_out(self):
@@ -178,21 +180,25 @@ class OverworldRoute(object):
             self.position = (0, 0)
 
     def create_image2(self):
-        self.image = Engine.create_surface((len(self.route)*8, len(self.route)*8), transparent=True)
-        if self.pos1[0] < self.pos2[0]:
-            if self.pos1[1] < self.pos2[1]:
+        width = abs(sum(-1 for route in self.route if route in (1, 4, 7)) + sum(1 for route in self.route if route in (3, 6, 9)))
+        height = abs(sum(-1 for route in self.route if route in (7, 8, 9)) + sum(1 for route in self.route if route in (1, 2, 3)))
+        print(width, height)
+        self.image = Engine.create_surface((width*8 + 16, height*8 + 16), transparent=True)
+        if self.pos1[0] <= self.pos2[0]:
+            if self.pos1[1] <= self.pos2[1]:
                 cur_x, cur_y = 0, 0
                 self.topleft = self.pos1
             else:
-                cur_x, cur_y = 0, len(self.route)
+                cur_x, cur_y = 0, height
                 self.topleft = (self.pos1[0], self.pos2[1])
         else:
             if self.pos1[1] < self.pos2[1]:
-                cur_x, cur_y = len(self.route), 0
+                cur_x, cur_y = width, 0
                 self.topleft = (self.pos2[0], self.pos1[1])
             else:
-                cur_x, cur_y = len(self.route), len(self.route)
+                cur_x, cur_y = width, height
                 self.topleft = self.pos2
+        print(self.pos1, self.pos2, self.topleft, cur_x, cur_y)
         for route in self.route:
             if route == 1:
                 self.image.blit(self.forwardslash, (cur_x*8 - 8, cur_y*8))
@@ -228,31 +234,31 @@ class OverworldRoute(object):
                 cur_y -= 1
 
     def draw(self, surf):
-        surf.blit(self.image, self.topleft)
+        surf.blit(self.image, (self.topleft[0]*8, self.topleft[1]*8))
 
 class OverworldParty(object):
-    def __init__(self, name, location, position, lords):
+    def __init__(self, name, location, position, lords, gameStateObj):
         self.name = name
-        self.position = position
         self.location = location
         self.lords = lords
-        self.next_position = None
-        self.next_location = []
+        self.next_position = []
+        self.next_location = None
         self.current_move = None
         self.sprites = []
         for lord in self.lords:
-            if isinstance(lord, tuple):
-                self.sprites.append(GenericMapSprite.GenericMapSprite(lord[0], lord[1], 'player', self.position))
-            else:
-                self.sprites.append(GenericMapSprite.GenericMapSprite(lord.klass, lord.gender, 'player', self.position))
+            unit = gameStateObj.get_unit_from_id(lord)
+            gender = 'M' if unit.gender < 5 else 'F'
+            pos = self.mod_pos(position)
+            self.sprites.append(GenericMapSprite.GenericMapSprite(unit.klass, gender, 'player', pos))
 
     def move(self, next_location, gameStateObj):
-        self.next_position = gameStateObj.overworld.get_route(self.location, next_location)
+        self.next_position = gameStateObj.overworld.get_route(self.location, next_location, gameStateObj)
         self.location = None
         self.next_location = next_location
-        self.current_move = self.next_position.pop()
+        self.current_move = self.mod_pos(self.next_position.pop())
         for sprite in self.sprites:
             sprite.set_target(self.current_move)
+        return len(self.next_position) + 1
 
     def update(self):
         for sprite in self.sprites:
@@ -260,15 +266,20 @@ class OverworldParty(object):
         # Check if done moving
         if not self.isMoving():
             if self.next_position:
-                self.current_move = self.next_position.pop()
-            else:
+                self.current_move = self.mod_pos(self.next_position.pop())
+                for sprite in self.sprites:
+                    sprite.set_target(self.current_move)
+            elif self.location is None:
                 self.location = self.next_location
-                self.position = self.next_position
-                self.next_position = None
+                self.next_location = None
+                self.next_position = []
                 self.current_move = None
 
     def isMoving(self):
         return any(sprite.isMoving for sprite in self.sprites)
+
+    def mod_pos(self, position):
+        return position[0] - 8, position[1] - 8
 
     def draw(self, surf):
         for sprite in self.sprites:
@@ -332,42 +343,45 @@ class Overworld(object):
             self.locations[level_id].display_flag = True
 
     def get_route(self, loc_id1, loc_id2, gameStateObj):
-        route_name = tuple(sorted([loc_id1, loc_id2]))
+        sorted_routes = sorted([loc_id1, loc_id2])
+        route_name = tuple(sorted_routes)
         route = self.routes[route_name]
-        cur_x, cur_y = self.location[loc_id1].position
+        cur_x, cur_y = self.locations[loc_id1].position
         overall_path = []
         for path in route.route:
             if route_name[0] != loc_id1:  # route is backwards
                 path = 10 - path  # Run route backwards
             if path == 1:
-                cur_x -= 8
-                cur_y += 8
+                cur_x -= 1
+                cur_y += 1
             elif path == 2:
-                cur_y += 8
+                cur_y += 1
             elif path == 3:
-                cur_x += 8
-                cur_y += 8
+                cur_x += 1
+                cur_y += 1
             elif path == 4:
-                cur_x -= 8
+                cur_x -= 1
             elif path == 6:
-                cur_x += 8
+                cur_x += 1
             elif path == 7:
-                cur_x -= 8
-                cur_y -= 8
+                cur_x -= 1
+                cur_y -= 1
             elif path == 8:
-                cur_y -= 8
+                cur_y -= 1
             elif path == 9:
-                cur_x += 8
-                cur_y -= 8
-            overall_path.append((cur_x, cur_y))
-        return reversed(overall_path)
+                cur_x += 1
+                cur_y -= 1
+            overall_path.append((cur_x*8, cur_y*8))
+        print(overall_path)
+        return list(reversed(overall_path))
 
     def move_party(self, level_id, party_id, gameStateObj):
-        self.parties[party_id].move(level_id, gameStateObj)
+        route_length = self.parties[party_id].move(level_id, gameStateObj)
+        return route_length
 
-    def add_party(self, level_id, party_id, lords):
+    def add_party(self, level_id, party_id, lords, gameStateObj):
         position = self.locations[level_id].get_position()
-        self.parties[party_id] = OverworldParty(party_id, level_id, position, lords)
+        self.parties[party_id] = OverworldParty(party_id, level_id, position, lords, gameStateObj)
 
     def remove_party(self, party_id):
         del self.parties[party_id]
@@ -403,6 +417,7 @@ class Overworld(object):
         for location in self.locations.values():
             location.draw(image)
         for party in self.parties.values():
+            party.update()
             party.draw(image)
         image = Engine.subsurface(image, (self.x, self.y, GC.WINWIDTH, GC.WINHEIGHT))
         if gameStateObj and gameStateObj.current_party is None and show_cursor:

@@ -141,9 +141,7 @@ class Dialogue_Scene(object):
         # === CONDITIONALS PARSING
         if line[0] == 'if':
             if not self.if_stack or self.if_stack[-1]:
-                print(line[1])
                 truth = eval(line[1])
-                print(truth)
                 self.if_stack.append(truth)
                 self.parse_stack.append(truth) # Whether we've encountered a truth this level
             else:
@@ -347,20 +345,25 @@ class Dialogue_Scene(object):
                 gameStateObj.overworld.set_next_location(line[1])
             else:
                 gameStateObj.overworld.set_next_location(None)
-        elif line[0] == 'ow_move_party':
+        elif line[0] == 'ow_move_party' or line[0] == 'ow_quick_move_party':
             if len(line) > 2:
                 party_id = int(line[2])
             else:
                 party_id = 0
-            gameStateObj.overworld.move_party(line[1], party_id)
+            route_length = gameStateObj.overworld.move_party(line[1], party_id, gameStateObj)
+            if line[0] == 'ow_move_party':
+                self.waittime = route_length * 500
+                self.last_wait_update = Engine.get_time()
+                self.current_state = "Waiting"
         elif line[0] == 'ow_add_party':
             party_id = int(line[2])
-            lords = [unit for unit in gameStateObj.get_units_in_party(party_id) if 'Lord' in unit.tags]
-            if len(line) > 3:  # Custom sprite
-                lords = [(line[3], line[4])]
-            gameStateObj.overworld.add_party(line[1], party_id, lords)
+            lords = line[3].split(',')  # Unit IDs
+            gameStateObj.overworld.add_party(line[1], party_id, lords, gameStateObj)
         elif line[0] == 'ow_remove_party':
             gameStateObj.overworld.remove_party(int(line[2]))
+        # elif line[0] == 'ow_add_party_member':
+        #     party_id = int(line[1])
+        #     gameStateObj.overworld.add_party_member(party_id, line[2].split(','))
         elif line[0] == 'ow_set_cursor':
             new_pos = tuple([int(num) for num in line[1].split(',')])
             gameStateObj.overworld.set_cursor(new_pos)
@@ -1214,6 +1217,9 @@ class Dialogue_Scene(object):
             position = self.parse_pos(unitLine[5], gameStateObj)
         else:
             context = gameStateObj.allreinforcements.get(which_unit)
+            print(gameStateObj.allreinforcements)
+            print(which_unit)
+            print(context)
             if context:
                 u_id, position = context
                 unit = gameStateObj.get_unit_from_id(u_id)
@@ -1255,7 +1261,9 @@ class Dialogue_Scene(object):
                 logger.error('Could not find unit %s', new_pos)
                 return
 
-        if new_pos is None:
+        print("Add Unit: New Pos")
+        print(new_pos)
+        if new_pos == [None]:
             print(context)
             print(which_unit)
             logger.warning('Position for "add_unit" is not set!')
