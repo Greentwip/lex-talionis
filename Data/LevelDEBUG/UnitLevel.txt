@@ -28,6 +28,7 @@ player;0;0;Fighter;1;Superior Axe;3,16;None;Resistance
 enemy;0;0;Knight;5;;3,15;None;Resistance
 # === Reinforcements ===
 # Player Characters
+player;0;Soldier1;Soldier;1;Iron Lance;None;None;Resistance
 # Enemies
 # === Triggers ===
 trigger;basic;Sam;3,23;3,17

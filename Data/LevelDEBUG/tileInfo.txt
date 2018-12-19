@@ -1,4 +1,5 @@
 2,16:HP=3;Destructible=1
+3,19:Search=0
 4,15:Formation=0
 4,17:Formation=0
 4,13:Formation=0
