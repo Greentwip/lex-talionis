@@ -23,6 +23,9 @@ class OverworldCursor(object):
 
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed']/2)
 
+        self.counter = 0
+        self.icon_state_counter = 0
+
     def get_position(self):
         return self.x, self.y
 
@@ -55,7 +58,8 @@ class OverworldCursor(object):
             self.icon_state_counter += 1
             self.counter = 0
 
-        image = Engine.subsurface(self.image, (0, self.icon_state_counter%len(self.icon_states), self.width, self.height))
+        which_icon = self.icon_states[self.icon_state_counter%len(self.icon_states)]
+        image = Engine.subsurface(self.image, (0, which_icon*self.height, self.width, self.height))
         surf.blit(image, (self.x - self.overworld.x, self.y - self.overworld.y))
 
 class OverworldLocation(object):
@@ -70,7 +74,7 @@ class OverworldLocation(object):
         self.icon_idx = data['icon_idx']
         self.position = data['position']
         self.image = Engine.subsurface(self.icons, (0, self.icon_size * self.icon_idx, self.icon_size, self.icon_size))
-        self.show = True
+        self.show = False
         self.display_flag = False
         self.visited = False
 
@@ -152,34 +156,15 @@ class OverworldRoute(object):
         self.pos2 = pos2
         self.route = route
 
-        self.create_image2()
+        self.show = False
+
+        self.create_image()
+
+        # For fading in and out
+        self.transparency = 0
+        self.state = 'normal'
 
     def create_image(self):
-        dx = self.pos2[0] - self.pos1[0]
-        dy = self.pos2[1] - self.pos1[1]
-        adx, ady = abs(dx), abs(dy)
-        print(self.pos1, self.pos2, dx, dy)
-        x = self.pos1[0] if dx > 0 else self.pos2[0]
-        y = self.pos1[1] if dy > 0 else self.pos2[1]
-
-        if adx == 0:
-            self.image = Engine.create_surface((16, ady * 8), transparent=True)
-            for i in range(ady):
-                self.image.blit(self.left_vert, (0, i * 8))
-                self.image.blit(self.right_vert, (8, i * 8))
-            self.position = (x - 1, y)
-        elif ady == 0:
-            self.image = Engine.create_surface((adx * 8, 16), transparent=True)
-            for i in range(adx):
-                self.image.blit(self.top_horiz, (i * 8, 0))
-                self.image.blit(self.bottom_horiz, (i * 8, 8))
-            self.position = (x, y - 1)
-        else:
-            # TBD
-            self.image = Engine.create_surface((16, 16), transparent=True)
-            self.position = (0, 0)
-
-    def create_image2(self):
         width = abs(sum(-1 for route in self.route if route in (1, 4, 7)) + sum(1 for route in self.route if route in (3, 6, 9)))
         height = abs(sum(-1 for route in self.route if route in (7, 8, 9)) + sum(1 for route in self.route if route in (1, 2, 3)))
         print(width, height)
@@ -233,16 +218,46 @@ class OverworldRoute(object):
                 cur_x += 1
                 cur_y -= 1
 
+    def fade_in(self):
+        self.state = 'fade_in'
+        self.transparency = 100
+        self.show = True
+
+    def fade_out(self):
+        self.state = 'fade_out'
+
     def draw(self, surf):
-        surf.blit(self.image, (self.topleft[0]*8, self.topleft[1]*8))
+        if self.state == 'fade_in':
+            self.transparency -= 4
+            if self.transparency <= 0:
+                self.transparency = 0
+                self.state = 'normal'
+        elif self.state == 'fade_out':
+            self.transparency += 5
+            if self.transparency >= 100:
+                self.transparency = 100
+                self.show = False
+                self.state = 'normal'
+
+        if self.show:
+            image = Image_Modification.flickerImageTranslucent(self.image, self.transparency)
+            surf.blit(image, (self.topleft[0]*8, self.topleft[1]*8))
+
+    def serialize(self):
+        return self.show
+
+    def deserialize(self, data):
+        if not data:
+            return
+        self.show = data
 
 class OverworldParty(object):
-    def __init__(self, name, location, position, lords, gameStateObj):
+    def __init__(self, name, location_id, position, lords, gameStateObj):
         self.name = name
-        self.location = location
+        self.location_id = location_id
         self.lords = lords
         self.next_position = []
-        self.next_location = None
+        self.next_location_id = None
         self.current_move = None
         self.sprites = []
         for lord in self.lords:
@@ -251,10 +266,10 @@ class OverworldParty(object):
             pos = self.mod_pos(position)
             self.sprites.append(GenericMapSprite.GenericMapSprite(unit.klass, gender, 'player', pos))
 
-    def move(self, next_location, gameStateObj):
-        self.next_position = gameStateObj.overworld.get_route(self.location, next_location, gameStateObj)
-        self.location = None
-        self.next_location = next_location
+    def move(self, next_location_id, gameStateObj):
+        self.next_position = gameStateObj.overworld.get_route(self.location_id, next_location_id, gameStateObj)
+        self.location_id = None
+        self.next_location_id = next_location_id
         self.current_move = self.mod_pos(self.next_position.pop())
         for sprite in self.sprites:
             sprite.set_target(self.current_move)
@@ -269,9 +284,9 @@ class OverworldParty(object):
                 self.current_move = self.mod_pos(self.next_position.pop())
                 for sprite in self.sprites:
                     sprite.set_target(self.current_move)
-            elif self.location is None:
-                self.location = self.next_location
-                self.next_location = None
+            elif self.location_id is None:
+                self.location_id = self.next_location_id
+                self.next_location_id = None
                 self.next_position = []
                 self.current_move = None
 
@@ -284,6 +299,18 @@ class OverworldParty(object):
     def draw(self, surf):
         for sprite in self.sprites:
             sprite.draw(surf)
+
+    def serialize(self):
+        return self.name, self.location_id, self.lords
+
+    @classmethod
+    def deserialize(cls, data, overworld, gameStateObj):
+        if not data:
+            return None
+        location_id = data[1]
+        position = overworld.locations[location_id].get_position()            
+        s = cls(data[0], location_id, position, data[2], gameStateObj)
+        return s
 
 class Overworld(object):
     def __init__(self):
@@ -329,12 +356,35 @@ class Overworld(object):
 
     def show_location(self, level_id):
         self.locations[level_id].fade_in()
+        # Handle adjacent routes
+        for route_id, route in self.routes.items():
+            if level_id == route_id[0]:
+                if self.locations[route_id[1]].show:
+                    route.fade_in()
+            elif level_id == route_id[1]:
+                if self.locations[route_id[0]].show:
+                    route.fade_in()
 
     def hide_location(self, level_id):
         OverworldLocation[level_id].fade_out()
+        for route_id, route in self.routes.items():
+            if level_id == route_id[0]:
+                if self.locations[route_id[1]].show:
+                    route.fade_out()
+            elif level_id == route_id[1]:
+                if self.locations[route_id[0]].show:
+                    route.fade_out()
 
     def quick_show_location(self, level_id):
         self.locations[level_id].show = True
+        # Handle adjacent routes
+        for route_id, route in self.routes.items():
+            if level_id == route_id[0]:
+                if self.locations[route_id[1]].show:
+                    route.show = True
+            elif level_id == route_id[1]:
+                if self.locations[route_id[0]].show:
+                    route.show = True
 
     def set_next_location(self, level_id):
         for location in self.locations.values():
@@ -388,8 +438,12 @@ class Overworld(object):
 
     def get_current_hovered_party(self):
         for name, party in self.parties.items():
-            if party.position == self.cursor.get_position():
-                return name
+            party_pos = self.locations[party.location_id].get_position()
+            print(party_pos)
+            cursor_pos = self.cursor.get_position()
+            print(cursor_pos)
+            if party_pos == cursor_pos:
+                return party
         return None
 
     def get_location(self, location_id, direction):
@@ -427,17 +481,23 @@ class Overworld(object):
     def serialize(self):
         d = {'triggers': self.triggers,
              'locations': {name: location.serialize() for name, location in self.locations.items()},
+             'routes': {name: route.serialize() for name, route in self.routes.items()},
+             'parties': {party_id: party.serialize() for party_id, party in self.parties.items()}
              }
         return d
 
     @classmethod
-    def deserialize(cls, data):
+    def deserialize(cls, data, gameStateObj):
         if not data:
             return None
         s = cls()
         s.triggers = data['triggers']
         for level_name, location in s.locations.items():
             location.deserialize(data['locations'].get(level_name))
+        for route_name, route in s.routes.items():
+            route.deserialize(data['routes'].get(route_name))
+        for party_id, party in data['parties']:
+            s.parties[party_id] = OverworldParty.deserialize(party, s, gameStateObj)
         return s
 
 class OverworldState(StateMachine.State):
@@ -451,19 +511,19 @@ class OverworldState(StateMachine.State):
             self.state = 'normal'
             self.show_cursor = False
 
-            if not self.triggers:
+            if not gameStateObj.overworld.triggers:
                 gameStateObj.stateMachine.changeState("transition_in")
                 return 'repeat'
 
-        if self.triggers:
+        if gameStateObj.overworld.triggers:
             # Play any triggers
-            trigger = self.triggers[0]
+            trigger = gameStateObj.overworld.triggers[0]
             overworld_script_name = 'Data/overworld_script.txt'
             if os.path.exists(overworld_script_name):
                 overworld_script = Dialogue.Dialogue_Scene(overworld_script_name, name=trigger)
                 gameStateObj.message.append(overworld_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
-            del self.triggers[0]
+            del gameStateObj.overworld.triggers[0]
             return 'repeat'
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -522,7 +582,7 @@ class OverworldState(StateMachine.State):
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
         gameStateObj.overworld.update(gameStateObj)
-        if not self.triggers and not self.show_cursor:
+        if not gameStateObj.overworld.triggers and not self.show_cursor:
             self.show_cursor = True  # Fix this
         if self.state == 'party_moving':
             cur_party = gameStateObj.overworld.parties[gameStateObj.current_party]
@@ -531,12 +591,12 @@ class OverworldState(StateMachine.State):
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        gameStateObj.overworld.draw(surf, gameStateObj)
+        gameStateObj.overworld.draw(surf, gameStateObj, self.show_cursor)
 
         cur_party = gameStateObj.overworld.get_current_hovered_party()
         if cur_party is not None:
             overworld_info = GC.IMAGESDICT['OverworldInfo']
-            location_name = cur_party.location.name
+            location_name = gameStateObj.overworld.locations[cur_party.location_id]
             l_size = GC.FONT['white'].size(location_name)[0]
             GC.FONT['white'].blit(location_name, overworld_info, (52 - l_size/2, 4))
             party_name = cur_party.name

@@ -325,10 +325,10 @@ class Dialogue_Scene(object):
         elif line[0] == 'show_overworld':
             self.background = gameStateObj.overworld
         elif line[0] == 'ow_trigger':
-            gameStateObj.overworld.trigger.append(line[1])
+            gameStateObj.overworld.triggers.append(line[1])
         elif line[0] == 'force_ow_trigger':
             if len(line) > 1:
-                gameStateObj.overworld.trigger.append(line[1])
+                gameStateObj.overworld.triggers.append(line[1])
             gameStateObj.stateMachine.changeState('overworld')
             self.current_state = "Paused"
         elif line[0] == 'force_leave_overworld':

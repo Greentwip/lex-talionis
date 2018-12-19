@@ -26,7 +26,8 @@
 - New Screenshots in all marketing content
 
 - Check that Canto adds one wait, not 4!!
-- Check that triggers work with turnwheel??
+- Check that you can skip over overworld sections without repercussions
+    - Or disallow skipping over overworld...
 
 To Test Action:
 WarpIn

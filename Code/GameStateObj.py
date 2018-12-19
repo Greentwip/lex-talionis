@@ -155,7 +155,7 @@ class GameStateObj(object):
         self.message = [Dialogue.Dialogue_Scene(scene) for scene in load_info.get('message', [])]
         # self.message = []
         if cf.CONSTANTS['overworld']:
-            self.overworld = Overworld.Overworld.deserialize(load_info.get('overworld'))
+            self.overworld = Overworld.Overworld.deserialize(load_info.get('overworld'), self)
         else:
             self.overworld = None
         self.unlocked_lore = load_info['unlocked_lore']

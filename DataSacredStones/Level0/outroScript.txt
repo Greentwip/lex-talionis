@@ -92,10 +92,10 @@ set_game_constant;Convoy
 s;Eirika;King Hayden, I... Thank you.
 s;Hayden;No, save your thanks for your return... with your brother, Prince Ephraim.
 s;Eirika;Yes, Your highness!
-r;Hayden;Eirika
 end_skip
 gold;5000
 t;1
+qr;Hayden;Eirika;Gilliam
 b;Castle
 t;2
 u;Eirika;Left;u;Tana;Right
