@@ -2001,7 +2001,7 @@ class MovementState(StateMachine.State):
         if not gameStateObj.moving_units:
             gameStateObj.stateMachine.back()
             # If this was part of a cutscene and I am the last unit moving, head back to dialogue state
-            if gameStateObj.stateMachine.getPreviousState() == 'dialogue' or gameStateObj.message: # The back should move us out of 'movement' state
+            if gameStateObj.stateMachine.getPreviousState() in ('dialogue', 'transparent_dialogue') or gameStateObj.message: # The back should move us out of 'movement' state
                 gameStateObj.message[-1].current_state = "Processing" # Make sure that we can go back to processing
             return 'repeat'
 
