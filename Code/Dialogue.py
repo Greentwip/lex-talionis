@@ -335,7 +335,12 @@ class Dialogue_Scene(object):
             gameStateObj.stateMachine.back()  # Back to previous dialogue
             gameStateObj.stateMachine.back()
         elif line[0] == 'ow_location_show':
-            gameStateObj.overworld.show_location(line[1])
+            if self.do_skip:
+                gameStateObj.overworld.quick_show_location(line[1])
+            else:
+                gameStateObj.overworld.show_location(line[1])
+                self.current_state = "Paused"
+                gameStateObj.stateMachine.changeState('overworld_effects')
         elif line[0] == 'ow_location_quick_show':
             gameStateObj.overworld.quick_show_location(line[1])
         elif line[0] == 'ow_location_hide':
@@ -350,11 +355,13 @@ class Dialogue_Scene(object):
                 party_id = int(line[2])
             else:
                 party_id = 0
-            route_length = gameStateObj.overworld.move_party(line[1], party_id, gameStateObj)
-            if line[0] == 'ow_move_party':
-                self.waittime = route_length * 500
-                self.last_wait_update = Engine.get_time()
-                self.current_state = "Waiting"
+            # Start move
+            if line[0] == 'ow_quick_move_party' or self.do_skip:
+                gameStateObj.overworld.quick_move_party(line[1], party_id, gameStateObj)
+            else:
+                gameStateObj.overworld.move_party(line[1], party_id, gameStateObj)
+                self.current_state = "Paused"
+                gameStateObj.stateMachine.changeState('overworld_effects')
         elif line[0] == 'ow_add_party':
             party_id = int(line[2])
             lords = line[3].split(',')  # Unit IDs

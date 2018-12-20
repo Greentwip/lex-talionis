@@ -32,9 +32,11 @@ class GenericMapSprite(object):
         self.new_position = target
         self.isMoving = True
 
+    def teleport(self, new_pos):
+        self.position = new_pos
+
     def set_target(self, new_pos):
-        target = new_pos[0], new_pos[1]
-        self.new_position = target
+        self.new_position = new_pos
         self.isMoving = True
 
     def update(self):
