@@ -212,6 +212,8 @@ class TurnwheelDisplay(object):
 
         if gameStateObj.action_log.locked:
             surf.blit(GC.IMAGESDICT['FocusFadeRed'], (0, 0))
+        else:
+            surf.blit(GC.IMAGESDICT['FocusFadeGreen'], (0, 0))
 
         # Turnwheel message
         if self.desc:

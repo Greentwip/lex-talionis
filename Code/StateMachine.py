@@ -183,10 +183,10 @@ class StateMachine(object):
         repeat_flag = False # Determines whether we run the state machine again in the same frame
         # Is this a new state?
         if not self.state[-1].processed:
+            self.state[-1].processed = True
             begin_output = self.state[-1].begin(gameStateObj, metaDataObj)
             if begin_output == 'repeat':
                 repeat_flag = True
-            self.state[-1].processed = True
             self.state[-1].started = True
             self.last_state = self.state[-1].name
         time_input = Engine.get_true_time()
@@ -271,7 +271,7 @@ class State(object):
             gameStateObj.childMenu.update()
 
     def draw(self, gameStateObj, metaDataObj):
-        if self.show_map:
+        if self.show_map and gameStateObj.map:
             mapSurf = gameStateObj.drawMap()  # Creates mapSurf
             gameStateObj.set_camera_limits()
             rect = (gameStateObj.cameraOffset.get_x()*GC.TILEWIDTH, gameStateObj.cameraOffset.get_y()*GC.TILEHEIGHT, GC.WINWIDTH, GC.WINHEIGHT)

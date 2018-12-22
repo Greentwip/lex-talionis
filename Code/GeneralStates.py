@@ -1760,7 +1760,7 @@ class DialogueState(StateMachine.State):
                 gameStateObj.stateMachine.clear()       
                 if cf.CONSTANTS['overworld']:
                     gameStateObj.stateMachine.changeState('overworld')
-                    gameStateObj.save_kind = 'Start'
+                    gameStateObj.save_kind = 'Overworld'
                     gameStateObj.stateMachine.changeState('start_save') 
                 elif (not isinstance(gameStateObj.game_constants['level'], int)) or gameStateObj.game_constants['level'] > num_levels:
                     gameStateObj.stateMachine.changeState('start_start')
