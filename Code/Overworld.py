@@ -26,8 +26,19 @@ class OverworldCursor(object):
         self.counter = 0
         self.icon_state_counter = 0
 
+        self.overworld_info = None
+        self.remove_overworld_info = True
+        self.overworld_info_offset = -72
+
     def get_position(self):
         return self.x, self.y
+
+    def set_cursor(self, pos, overworld):
+        print('Setting Cursor to:', pos)
+        self.remove_overworld_info = True
+        self.x, self.y = pos
+        overworld.next_x = Utility.clamp(overworld.next_x, max(0, self.x - GC.WINWIDTH + 48), min(overworld.width - GC.WINWIDTH, self.x - 48))
+        overworld.next_y = Utility.clamp(overworld.next_y, max(0, self.y - GC.WINHEIGHT + 48), min(overworld.height - GC.WINHEIGHT, self.y - 48))
 
     def handle_movement(self, gameStateObj):
         self.fluid_helper.update(gameStateObj)
@@ -36,21 +47,73 @@ class OverworldCursor(object):
         # Normal movement
         if 'LEFT' in directions and self.x > 0:
             self.x -= self.speed
+            self.remove_overworld_info = True
             if self.x <= self.overworld.next_x + 48: # Cursor controls camera movement
                 # Set x is move the camera. Move it to its x_pos - 1, cause we're moving left
                 self.overworld.change_x(-self.speed)
         elif 'RIGHT' in directions and self.x < (self.overworld.width - self.width):
             self.x += self.speed
+            self.remove_overworld_info = True
             if self.x >= (self.overworld.next_x + GC.WINWIDTH - 48):
                 self.overworld.change_x(self.speed)
         if 'UP' in directions and self.y > self.height:
             self.y -= self.speed
+            self.remove_overworld_info = True
             if self.y <= self.overworld.next_y + 48:
                 self.overworld.change_y(-self.speed)
         elif 'DOWN' in directions and self.y < (self.overworld.height):
             self.y += self.speed
+            self.remove_overworld_info = True
             if self.y >= (self.overworld.next_y + GC.WINHEIGHT - 48):
                 self.overworld.change_y(self.speed)
+
+    def create_info(self, cur_party, cur_location, gameStateObj):
+        if cur_party is not None:
+            overworld_info = GC.IMAGESDICT['OverworldInfo'].copy()
+            location_name = gameStateObj.overworld.locations[cur_party.location_id].name
+            l_size = GC.FONT['text_white'].size(location_name)[0]
+            GC.FONT['text_white'].blit(location_name, overworld_info, (48 - l_size/2, 8))
+            party_name = cur_party.lords[0]
+            p_size = GC.FONT['info_grey'].size(party_name)[0]
+            GC.FONT['info_grey'].blit(party_name, overworld_info, (66 - p_size/2, 32))
+            GC.FONT['text_white'].blit('Units', overworld_info, (44, 46))
+            num_units = len(gameStateObj.get_units_in_party(cur_party.party_id))
+            GC.FONT['text_white'].blit(str(num_units), overworld_info, (85 - GC.FONT['text_white'].size(str(num_units))[0], 46))
+            try:
+                portrait = Engine.subsurface(GC.UNITDICT[party_name + 'Portrait'], (96, 16, 32, 32))
+            except KeyError:
+                portrait = GC.UNITDICT.get('MonsterEmblem', None)
+            if portrait:
+                overworld_info.blit(portrait, (8, 32))
+        else:
+            if cur_location is not None:
+                overworld_info = GC.IMAGESDICT['OverworldInfoSmall'].copy()
+                location_name = cur_location.name
+                l_size = GC.FONT['text_white'].size(location_name)[0]
+                GC.FONT['text_white'].blit(location_name, overworld_info, (48 - l_size/2, 8))
+        return overworld_info
+
+    def draw_info(self, surf, cur_party, cur_location, gameStateObj):
+        if self.remove_overworld_info:
+            if cur_party is not None or cur_location is not None:
+                self.remove_overworld_info = False
+                self.overworld_info = self.create_info(cur_party, cur_location, gameStateObj)
+                # self.overworld_info_offset = min(self.overworld_info.get_height(), self.overworld_info_offset)
+            elif self.overworld_info:
+                self.overworld_info_offset -= 18
+                if self.overworld_info_offset < -72:
+                    self.overworld_info = None
+        else:
+            self.overworld_info_offset += 18
+            self.overworld_info_offset = min(0, self.overworld_info_offset)
+
+        if self.overworld_info:
+            cursor_pos = gameStateObj.overworld.cursor.get_position()
+            if cursor_pos[0] - gameStateObj.overworld.x > GC.WINWIDTH/2:
+                info_pos = (0, self.overworld_info_offset)
+            else:
+                info_pos = (136, self.overworld_info_offset)
+            surf.blit(self.overworld_info, info_pos)
 
     def draw(self, surf):
         self.counter += 1
@@ -357,13 +420,7 @@ class Overworld(object):
     def autocursor(self):
         if self.last_party is not None:
             last_party = self.parties[self.last_party]
-            self.set_cursor(self.locations[last_party.location_id].get_position())
-
-    def set_cursor(self, pos):
-        print('Setting Cursor to:', pos)
-        self.cursor.x, self.cursor.y = pos
-        self.next_x = Utility.clamp(self.next_x, max(0, self.cursor.x - GC.WINWIDTH + 48), min(self.width - GC.WINWIDTH, self.cursor.x - 48))
-        self.next_y = Utility.clamp(self.next_y, max(0, self.cursor.y - GC.WINHEIGHT + 48), min(self.height - GC.WINHEIGHT, self.cursor.y - 48))
+            self.cursor.set_cursor(self.locations[last_party.location_id].get_position(), self)
 
     def change_x(self, dx):
         self.next_x = Utility.clamp(self.next_x + dx, 0, self.width - GC.WINWIDTH)
@@ -396,7 +453,7 @@ class Overworld(object):
 
     def show_location(self, level_id):
         self.locations[level_id].fade_in()
-        self.set_cursor(self.locations[level_id].get_position())
+        self.cursor.set_cursor(self.locations[level_id].get_position(), self)
         # Handle adjacent routes
         for route_id, route in self.routes.items():
             if level_id == route_id[0]:
@@ -486,11 +543,10 @@ class Overworld(object):
     def get_current_hovered_party(self):
         cursor_pos = self.cursor.get_position()
         for name, party in self.parties.items():
-            party_pos = self.locations[party.location_id].get_position()
-            # print(party_pos)
-            # print(cursor_pos)
-            if party_pos == cursor_pos:
-                return party
+            if party.location_id is not None:
+                party_pos = self.locations[party.location_id].get_position()
+                if party_pos == cursor_pos:
+                    return party
         return None
 
     def get_current_hovered_location(self):
@@ -608,6 +664,7 @@ class OverworldState(StateMachine.State):
             self.choice_menu = None
             self.state = 'normal'
             self.show_cursor = False
+            self.triggers_done = False
 
             if not gameStateObj.overworld.triggers:
                 gameStateObj.stateMachine.changeState("transition_in")
@@ -626,6 +683,7 @@ class OverworldState(StateMachine.State):
             return 'repeat'
         else:
             self.show_cursor = True
+            self.triggers_done = True
             if gameStateObj.overworld.last_party is not None:
                 gameStateObj.overworld.autocursor()
 
@@ -643,21 +701,23 @@ class OverworldState(StateMachine.State):
                     gameStateObj.overworld.autocursor()
                     gameStateObj.current_party = None
                 elif event == 'SELECT':
-                    if not gameStateObj.overworld.locations[cur_party.location_id].visited:
+                    # If unvisited before
+                    cur_loc = gameStateObj.overworld.locations[cur_party.location_id]
+                    if not cur_loc.visited:
                         self.state = 'are_you_sure'
-                        self.choice_menu = MenuFunctions.ChoiceMenu(self, ['Yes', 'No'], (GC.TILEWIDTH//2, GC.WINHEIGHT - GC.TILEHEIGHT * 1.5), horizontal=True)
+                        header = "Explore " + cur_loc.name + "?"
+                        self.choice_menu = MenuFunctions.HorizOptionsMenu(header, ['Yes', 'No'])
                     else:
-                        gameStateObj.stateMachine.changeState('base_main')
-                        gameStateObj.stateMachine.changeState('transition_out')
+                        self.go_to_base(cur_party, gameStateObj, metaDataObj)
                 elif event in ('UP', 'LEFT', 'RIGHT', 'DOWN'):
-                    new_location_id = gameStateObj.overworld.get_location(cur_party.location_id, event)
-
-                if new_location_id is None:
-                    GC.SOUNDDICT['Error'].play()
-                elif new_location_id != cur_party.location_id:
-                    cur_party.move(new_location_id, gameStateObj)
-                    self.state = 'party_moving'
-
+                    new_location_id = gameStateObj.overworld.get_location(cur_party.location_id, event)    
+                    if new_location_id is None:
+                        GC.SOUNDDICT['Error'].play()
+                    elif new_location_id != cur_party.location_id:
+                        cur_party.move(new_location_id, gameStateObj)
+                        self.state = 'party_moving'
+                elif event == 'INFO':
+                    self.go_to_base(cur_party, gameStateObj, metaDataObj)
             else:
                 gameStateObj.overworld.cursor.handle_movement(gameStateObj)
 
@@ -668,15 +728,17 @@ class OverworldState(StateMachine.State):
                         cur_party.select()
                         self.show_cursor = False
                     else:
-                        # TODO Open up several menus (Options, Save)
-                        pass
-                elif event == 'INFO':
-                    # TODO open up Manage Items menu / Or base menu
-                    # Add R: Make Camp Here (maybe child menu check before?)
-                    pass
+                        gameStateObj.stateMachine.changeState('overworld_options')
 
         elif self.state == 'are_you_sure':
             cur_party = gameStateObj.overworld.parties[gameStateObj.current_party]
+            if event == 'LEFT':
+                GC.SOUNDDICT['Select 6'].play()
+                self.choice_menu.moveLeft()
+            elif event == 'RIGHT':
+                GC.SOUNDDICT['Select 6'].play()
+                self.choice_menu.moveRight()
+
             if event == 'SELECT':
                 if self.choice_menu.getSelection() == 'Yes':
                     level_id = cur_party.location_id
@@ -699,49 +761,39 @@ class OverworldState(StateMachine.State):
             if not cur_party.isMoving():
                 self.state = 'normal'
 
-    def draw_info(self, surf, cur_party, gameStateObj):
-        cursor_pos = gameStateObj.overworld.cursor.get_position()
-        if cursor_pos[0] - gameStateObj.overworld.x > GC.WINWIDTH/2:
-            info_pos = (0, 0)
+    def go_to_base(self, cur_party, gameStateObj, metaDataObj):
+        levelfolder = 'Data/Level' + cur_party.location_id
+        overview_filename = levelfolder + '/overview.txt'
+        if os.path.exists(overview_filename):
+            overview_dict = SaveLoad.read_overview_file(overview_filename)
+            metaDataObj['baseFlag'] = overview_dict['base_flag'] if overview_dict['base_flag'] != '0' else False
         else:
-            info_pos = (122, 0)
-        if cur_party is not None:
-            overworld_info = GC.IMAGESDICT['OverworldInfo'].copy()
-            location_name = gameStateObj.overworld.locations[cur_party.location_id].name
-            l_size = GC.FONT['text_white'].size(location_name)[0]
-            GC.FONT['text_white'].blit(location_name, overworld_info, (60 - l_size/2, 8))
-            party_name = cur_party.lords[0]
-            p_size = GC.FONT['info_grey'].size(party_name)[0]
-            GC.FONT['info_grey'].blit(party_name, overworld_info, (81 - p_size/2, 32))
-            GC.FONT['text_white'].blit('Units', overworld_info, (44, 44))
-            num_units = len(gameStateObj.get_units_in_party(cur_party.party_id))
-            print([unit.name for unit in gameStateObj.get_units_in_party(cur_party.party_id)])
-            GC.FONT['text_white'].blit(str(num_units), overworld_info, (100 - GC.FONT['text_white'].size(str(num_units))[0], 44))
-            try:
-                portrait = Engine.subsurface(GC.UNITDICT[party_name + 'Portrait'], (96, 16, 32, 32))
-            except KeyError:
-                portrait = GC.UNITDICT.get('MonsterEmblem', None)
-            if portrait:
-                overworld_info.blit(portrait, (8, 32))
-            surf.blit(overworld_info, info_pos)
-        else:
-            cur_location = gameStateObj.overworld.get_current_hovered_location()
-            if cur_location is not None:
-                overworld_info = GC.IMAGESDICT['OverworldInfoSmall'].copy()
-                location_name = cur_location.name
-                l_size = GC.FONT['text_white'].size(location_name)[0]
-                GC.FONT['text_white'].blit(location_name, overworld_info, (60 - l_size/2, 8))
-                surf.blit(overworld_info, info_pos)
+            metaDataObj['baseFlag'] = 'MainBase'
+        gameStateObj.stateMachine.changeState('base_main')
+        gameStateObj.stateMachine.changeState('transition_out')
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         gameStateObj.overworld.draw(surf, gameStateObj, self.show_cursor)
 
+        cur_party = gameStateObj.overworld.get_current_hovered_party()
+        cur_location = gameStateObj.overworld.get_current_hovered_location()
         if self.show_cursor:
-            cur_party = gameStateObj.overworld.get_current_hovered_party()
             if cur_party is not None:
                 cur_party.hover_over()
-            self.draw_info(surf, cur_party, gameStateObj)
+        elif self.triggers_done:
+            # Draw R: Info display
+            camp_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'WhiteMenuBackground75')
+            helper = Engine.get_key_name(cf.OPTIONS['key_INFO']).upper()
+            GC.FONT['text_yellow'].blit(helper, camp_surf, (4, 3))
+            GC.FONT['text_white'].blit(': Make Camp Here', camp_surf, (4 + GC.FONT['text_blue'].size(helper)[0], 3))
+            surf.blit(camp_surf, (119, 139))
+
+        if self.show_cursor:
+            gameStateObj.overworld.cursor.draw_info(surf, cur_party, cur_location, gameStateObj)
+
+        if self.choice_menu:
+            self.choice_menu.draw(surf)
 
         return surf
 
@@ -767,3 +819,53 @@ class OverworldEffectsState(StateMachine.State):
         gameStateObj.overworld.draw(surf, gameStateObj, False)
 
         return surf
+
+class OverworldOptionsState(StateMachine.State):
+    name = 'overworld_optons'
+
+    def begin(self, gameStateObj, metaDataObj):
+        gameStateObj.cursor.drawState = 0
+        options = [cf.WORDS['Options'], cf.WORDS['Save']]
+        info_desc = [cf.WORDS['Options_desc'], cf.WORDS['Save_desc']]
+        self.menu = MenuFunctions.ChoiceMenu(None, options, 'auto', gameStateObj=gameStateObj, info_desc=info_desc)
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+        first_push = self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
+
+        if 'DOWN' in directions:
+            GC.SOUNDDICT['Select 6'].play()
+            self.menu.moveDown(first_push)
+        elif 'UP' in directions:
+            GC.SOUNDDICT['Select 6'].play()
+            self.menu.moveUp(first_push)
+
+        # Back - to overworld state
+        if event == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
+            self.menu = None # Remove menu
+            gameStateObj.stateMachine.back()
+
+        elif event == 'SELECT':
+            selection = self.menu.getSelection()
+            GC.SOUNDDICT['Select 1'].play()
+            if selection == cf.WORDS['Save']:
+                # Create child menu with additional options
+                options = [cf.WORDS['Yes'], cf.WORDS['No']]
+                gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
+                gameStateObj.stateMachine.changeState('optionchild')
+            elif selection == cf.WORDS['Options']:
+                gameStateObj.stateMachine.changeState('config_menu')
+                gameStateObj.stateMachine.changeState('transition_out')
+
+        elif event == 'INFO':
+            self.toggle_info()
+
+    def draw(self, gameStateObj, metaDataObj):
+        mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        gameStateObj.overworld.draw(mapSurf, gameStateObj, False)
+        if self.menu:
+            self.menu.draw(mapSurf, gameStateObj)
+            self.menu.drawInfo(mapSurf)
+        return mapSurf

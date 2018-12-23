@@ -114,6 +114,7 @@ class StateMachine(object):
                            'turnwheel': Turnwheel.TurnwheelState,
                            'overworld': Overworld.OverworldState,
                            'overworld_effects': Overworld.OverworldEffectsState,
+                           'overworld_options': Overworld.OverworldOptionsState,
                            'debug': DebugMode.DebugState}
         self.state = []
         for state_name in state_list:

@@ -278,7 +278,7 @@ class Cursor(object):
         return passivesprite, activesprite, redsprite, formationsprite
 
     def drawPortraits(self, surf, gameStateObj):
-        legal_states = ['free', 'prep_formation', 'prep_formation_select']
+        legal_states = ('free', 'prep_formation', 'prep_formation_select')
         # Unit Info handling
         if self.remove_unit_info:
             if gameStateObj.stateMachine.getState() in legal_states and self.currentHoveredUnit: # Get this 
