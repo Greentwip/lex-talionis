@@ -7,6 +7,3 @@
 ===Routes
 0,1;4,4,4,7,7,4,4,4
 1,2;3,3,3,3,2,2
-# Party ID must be integer ; Party name (must be character)
-===Parties
-0;Eirika

@@ -15,6 +15,8 @@ class GenericMapSprite(object):
         self.new_position = position # Describe where the sprite wants to go
 
         self.isMoving = False
+        self.selected = False
+        self.hovered = False
         self.loadSprites()
 
         # Counters
@@ -63,32 +65,36 @@ class GenericMapSprite(object):
                 else:
                     angle = math.atan2(diff_pos[1], diff_pos[0])
                     if angle >= -math.pi/4 and angle <= math.pi/4:
-                        self.image = Engine.subsurface(self.moveRight, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveRight, (self.moveSpriteCounter*48, 0, 48, 40))
                     elif angle <= -3*math.pi/4 or angle >= 3*math.pi/4:
-                        self.image = Engine.subsurface(self.moveLeft, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveLeft, (self.moveSpriteCounter*48, 0, 48, 40))
                     elif angle <= -math.pi/4:
-                        self.image = Engine.subsurface(self.moveUp, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveUp, (self.moveSpriteCounter*48, 0, 48, 40))
                     else:
-                        self.image = Engine.subsurface(self.moveDown, (self.moveSpriteCounter*GC.TILEWIDTH*3, 0, GC.TILEWIDTH*3, 40))
+                        self.image = Engine.subsurface(self.moveDown, (self.moveSpriteCounter*48, 0, 48, 40))
                     updatedown_position = (self.position[0] + unit_speed * math.cos(angle), self.position[1] + unit_speed * math.sin(angle))
                     self.position = updatedown_position
 
                 self.last_move_update = currentTime
 
+        elif self.selected:
+            self.image = Engine.subsurface(self.moveDown, (self.moveSpriteCounter*48, 0, 48, 40))
+        elif self.hovered:
+            self.image = Engine.subsurface(self.activeSprite, (GC.ACTIVESPRITECOUNTER.count*64, 0, 64, 40))
         else:
-            self.image = Engine.subsurface(self.passiveSprite, (GC.PASSIVESPRITECOUNTER.count*GC.TILEWIDTH*4, 0, GC.TILEWIDTH*4, 40))
+            self.image = Engine.subsurface(self.passiveSprite, (GC.PASSIVESPRITECOUNTER.count*64, 0, 64, 40))
 
     def loadSprites(self):
         # Load sprites
         standsprites = GC.UNITDICT[self.standspritesName]
         movesprites = GC.UNITDICT[self.movespritesName]
         self.passiveSprite, self.graySprite, self.activeSprite, self.moveLeft, self.moveRight, self.moveDown, self.moveUp = self.formatSprite(standsprites, movesprites)
-        self.image = Engine.subsurface(self.passiveSprite, (0, 0, GC.TILEWIDTH*4, 40))
+        self.image = Engine.subsurface(self.passiveSprite, (0, 0, GC.TILEWIDTH*4, 48))
 
     def formatSprite(self, standSprites, moveSprites):
-        passiveSprites = Engine.subsurface(standSprites, (0, 0, standSprites.get_width(), GC.TILEHEIGHT*3))
-        graySprites = Engine.subsurface(standSprites, (0, GC.TILEHEIGHT*3, standSprites.get_width(), GC.TILEHEIGHT*3))
-        activeSprites = Engine.subsurface(standSprites, (0, 2*GC.TILEHEIGHT*3, standSprites.get_width(), GC.TILEHEIGHT*3))
+        passiveSprites = Engine.subsurface(standSprites, (0, 0, standSprites.get_width(), 48))
+        graySprites = Engine.subsurface(standSprites, (0, 48, standSprites.get_width(), 48))
+        activeSprites = Engine.subsurface(standSprites, (0, 96, standSprites.get_width(), 48))
         moveDown = Engine.subsurface(moveSprites, (0, 0, moveSprites.get_width(), 40))
         moveLeft = Engine.subsurface(moveSprites, (0, 40, moveSprites.get_width(), 40))
         moveRight = Engine.subsurface(moveSprites, (0, 80, moveSprites.get_width(), 40))

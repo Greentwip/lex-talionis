@@ -273,6 +273,18 @@ class OverworldParty(object):
             sprite.set_target(self.current_move)
         return len(self.next_position) + 1
 
+    def select(self):
+        for sprite in self.sprites:
+            sprite.selected = True
+
+    def deselect(self):
+        for sprite in self.sprites:
+            sprite.selected = False
+
+    def hover_over(self):
+        for sprite in self.sprites:
+            sprite.hovered = True
+
     def quick_move(self, next_location_id, gameStateObj):
         self.location_id = next_location_id
         position = gameStateObj.overworld.locations[next_location_id].get_position()
@@ -303,6 +315,7 @@ class OverworldParty(object):
     def draw(self, surf):
         for sprite in self.sprites:
             sprite.draw(surf)
+            sprite.hovered = False
 
     def serialize(self):
         return self.party_id, self.location_id, self.lords
@@ -426,7 +439,11 @@ class Overworld(object):
         route = self.routes[route_name]
         cur_x, cur_y = self.locations[loc_id1].position
         overall_path = []
-        for path in route.route:
+        if route_name[0] != loc_id1:  # route is backwards
+            route_path = list(reversed(route.route))
+        else:
+            route_path = list(route.route)
+        for path in route_path:
             if route_name[0] != loc_id1:  # route is backwards
                 path = 10 - path  # Run route backwards
             if path == 1:
@@ -486,7 +503,7 @@ class Overworld(object):
         return None
 
     def get_location(self, location_id, direction):
-        valid_directions = {}
+        valid_directions = {i: None for i in range(1, 10)}
         for name, route in self.routes.items():
             if location_id in name:
                 if location_id == name[0]:
@@ -494,13 +511,53 @@ class Overworld(object):
                 else:
                     valid_directions[10 - route.route[-1]] = name[0]
         if direction == 'UP':
-            return valid_directions[8]
+            if valid_directions[8]:
+                return valid_directions[8]
+            if valid_directions[7] and not valid_directions[9]:
+                return valid_directions[7]
+            if valid_directions[9] and not valid_directions[7]:
+                return valid_directions[9]
+            if valid_directions[7] and valid_directions[9]:
+                if valid_directions[4]:
+                    return valid_directions[7]
+                else:
+                    return valid_directions[9]
         elif direction == 'LEFT':
-            return valid_directions[4]
+            if valid_directions[4]:
+                return valid_directions[4]
+            if valid_directions[7] and not valid_directions[1]:
+                return valid_directions[7]
+            if valid_directions[1] and not valid_directions[7]:
+                return valid_directions[1]
+            if valid_directions[7] and valid_directions[1]:
+                if valid_directions[2]:
+                    return valid_directions[1]
+                else:
+                    return valid_directions[7]
         elif direction == 'RIGHT':
-            return valid_directions[6]
+            if valid_directions[6]:
+                return valid_directions[6]
+            if valid_directions[9] and not valid_directions[3]:
+                return valid_directions[9]
+            if valid_directions[3] and not valid_directions[9]:
+                return valid_directions[3]
+            if valid_directions[9] and valid_directions[3]:
+                if valid_directions[8]:
+                    return valid_directions[9]
+                else:
+                    return valid_directions[3]
         elif direction == 'DOWN':
-            return valid_directions[2]
+            if valid_directions[2]:
+                return valid_directions[2]
+            if valid_directions[1] and not valid_directions[3]:
+                return valid_directions[1]
+            if valid_directions[3] and not valid_directions[1]:
+                return valid_directions[3]
+            if valid_directions[1] and valid_directions[3]:
+                if valid_directions[6]:
+                    return valid_directions[3]
+                else:
+                    return valid_directions[1]
         return None
 
     def draw(self, surf, gameStateObj=None, show_cursor=True):
@@ -581,6 +638,9 @@ class OverworldState(StateMachine.State):
                 new_location_id = cur_party.location_id
 
                 if event == 'BACK':
+                    self.show_cursor = True
+                    cur_party.deselect()
+                    gameStateObj.overworld.autocursor()
                     gameStateObj.current_party = None
                 elif event == 'SELECT':
                     if not gameStateObj.overworld.locations[cur_party.location_id].visited:
@@ -592,7 +652,9 @@ class OverworldState(StateMachine.State):
                 elif event in ('UP', 'LEFT', 'RIGHT', 'DOWN'):
                     new_location_id = gameStateObj.overworld.get_location(cur_party.location_id, event)
 
-                if new_location_id != cur_party.location_id:
+                if new_location_id is None:
+                    GC.SOUNDDICT['Error'].play()
+                elif new_location_id != cur_party.location_id:
                     cur_party.move(new_location_id, gameStateObj)
                     self.state = 'party_moving'
 
@@ -603,6 +665,8 @@ class OverworldState(StateMachine.State):
                     cur_party = gameStateObj.overworld.get_current_hovered_party()
                     if cur_party:
                         gameStateObj.current_party = cur_party.party_id
+                        cur_party.select()
+                        self.show_cursor = False
                     else:
                         # TODO Open up several menus (Options, Save)
                         pass
@@ -635,13 +699,12 @@ class OverworldState(StateMachine.State):
             if not cur_party.isMoving():
                 self.state = 'normal'
 
-    def draw_info(self, surf, gameStateObj):
+    def draw_info(self, surf, cur_party, gameStateObj):
         cursor_pos = gameStateObj.overworld.cursor.get_position()
         if cursor_pos[0] - gameStateObj.overworld.x > GC.WINWIDTH/2:
-            info_pos = (122, 0)
-        else:
             info_pos = (0, 0)
-        cur_party = gameStateObj.overworld.get_current_hovered_party()
+        else:
+            info_pos = (122, 0)
         if cur_party is not None:
             overworld_info = GC.IMAGESDICT['OverworldInfo'].copy()
             location_name = gameStateObj.overworld.locations[cur_party.location_id].name
@@ -654,7 +717,6 @@ class OverworldState(StateMachine.State):
             num_units = len(gameStateObj.get_units_in_party(cur_party.party_id))
             print([unit.name for unit in gameStateObj.get_units_in_party(cur_party.party_id)])
             GC.FONT['text_white'].blit(str(num_units), overworld_info, (100 - GC.FONT['text_white'].size(str(num_units))[0], 44))
-            # TODO: Lord Minimug
             try:
                 portrait = Engine.subsurface(GC.UNITDICT[party_name + 'Portrait'], (96, 16, 32, 32))
             except KeyError:
@@ -676,7 +738,10 @@ class OverworldState(StateMachine.State):
         gameStateObj.overworld.draw(surf, gameStateObj, self.show_cursor)
 
         if self.show_cursor:
-            self.draw_info(surf, gameStateObj)
+            cur_party = gameStateObj.overworld.get_current_hovered_party()
+            if cur_party is not None:
+                cur_party.hover_over()
+            self.draw_info(surf, cur_party, gameStateObj)
 
         return surf
 
