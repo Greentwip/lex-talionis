@@ -1020,7 +1020,7 @@
     <!-- Slow Status -->
     <status name="Slowed">
         <id>Slowed</id>
-        <desc>Inflicts MOV -6.</desc>
+        <desc>Inflicts MOV -3.</desc>
         <image_index>3,0</image_index>
         <components>stat_change,always_animation,negative,time,affects_movement</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
