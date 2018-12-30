@@ -36,6 +36,8 @@ class UnitSprite(object):
         self.lastHPUpdate = 0
         self.current_cut_off = int((self.unit.currenthp/float(self.unit.stats['HP']))*12) + 1
 
+        self.turnwheel_indicator = False
+
     def set_transition(self, new_state):
         self.transition_counter = self.transition_time
         self.transition_state = new_state
@@ -155,6 +157,19 @@ class UnitSprite(object):
         #         diff = Utility.clamp(255. * diff / length * 2, 0, 255)
         #         color = (248, 248, -248, diff)
         #         image = Image_Modification.color_tint(image.convert_alpha(), color)
+
+        # Turnwheel indicator -- this flashes the unit green
+        if self.turnwheel_indicator:
+            time = Engine.get_time()
+            length = 200
+            if not (time//200)%2 and not (time//length)%(200//length):
+                diff = time%length
+                if diff > length//2:
+                    diff = length - diff
+                diff = Utility.clamp(255. * diff / length * 2, 0, 255)
+                color = (-120, 120, -120, diff)
+                image = Image_Modification.color_tint(image.convert_alpha(), color)
+
         # What is this line even doing? - Something majorly important though
         # Each image has (self.image.get_width() - 32)/2 buffers on the left and right of it, to handle any off tile spriting
         # Without self.image.get_width() - 32)//2, we would output the left buffer along with the unit, 

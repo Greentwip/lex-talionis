@@ -1416,7 +1416,10 @@ class AnimationCombat(Combat):
         if not self.p2.isDying:
             self.p2.sprite.change_state('normal', gameStateObj)
         else:
-            Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
+            if self.p2.team.startswith('enemy'):
+                Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
+            else:
+                Action.do(Action.Message("%s was defeated" % self.p2.name), gameStateObj)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
@@ -1907,10 +1910,16 @@ class MapCombat(Combat):
 
         if not self.p1.isDying:
             if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.isDying:
-                Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
+                if self.p2.team.startswith('enemy'):
+                    Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
+                else:
+                    Action.do(Action.Message("%s was defeated" % self.p2.name), gameStateObj)
             for unit in self.splash:
                 if isinstance(unit, UnitObject.UnitObject) and unit.isDying:
-                    Action.do(Action.Message("Prevailed over %s") % unit.name)
+                    if self.p2.team.startswith('enemy'):
+                        Action.do(Action.Message("Prevailed over %s" % unit.name), gameStateObj)
+                    else:
+                        Action.do(Action.Message("%s was defeated" % unit.name), gameStateObj)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end

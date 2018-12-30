@@ -18,6 +18,7 @@ class ActionLog(object):
 
         # For playback
         self.current_unit = None
+        self.hovered_unit = None
         self.current_move = None
         self.current_move_index = 0
         self.unique_moves = []
@@ -50,53 +51,6 @@ class ActionLog(object):
     def at_far_future(self):
         return not self.actions or self.action_index + 1 >= len(self.actions)
 
-    def backward_old(self, gameStateObj):
-        if self.at_far_past():
-            return None
-
-        # Get where we should stop next
-        starting_index = self.action_index
-        while self.action_index >= self.first_free_action + 1:
-            action = self.actions[self.action_index]
-            if self.action_index != starting_index:
-                # Wait
-                if isinstance(action, Action.Wait):
-                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                    # Get content of unit's turn
-                    text_list = self.get_unit_turn(action.unit, self.action_index)
-                    return text_list
-                # Mark Phase
-                elif isinstance(action, Action.MarkPhase) and self.action_index != starting_index:
-                    if action.phase_name == 'player':
-                        gameStateObj.cursor.autocursor(gameStateObj)
-                    return ["Start of %s Phase" % action.phase_name.capitalize()]
-            # Actually Run backwards
-            action = self.run_action_backward(gameStateObj)
-            # Move
-            if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                print('%s %s moves!' % (action.unit.klass, action.unit.name))
-                if self.action_index == self.first_free_action:
-                    return ["Start of Player Phase"]
-                return []
-            # Die
-            elif isinstance(action, Action.Die):
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                # Get content of unit's turn
-                text_list = self.get_unit_turn(action.unit, self.action_index)
-                return text_list
-            elif isinstance(action, Action.LockTurnwheel):
-                self.locked = self.get_last_lock()
-        
-        return None
-
-    def set_up_old(self):
-        action = self.actions[self.action_index]
-        if isinstance(action, Action.Wait):
-            self.current_unit = action.unit
-        elif isinstance(action, Action.Die) and action.unit.team == self.get_current_phase():
-            self.current_unit = action.unit
-
     class Move(object):
         def __init__(self, unit, begin, end=None):
             self.unit = unit
@@ -107,27 +61,37 @@ class ActionLog(object):
             return '%s %s %s' % (self.unit.name, self.begin, self.end)
 
     def set_up(self):
+        def finalize(move):
+            if isinstance(move, self.Move) and move.end is None:
+                move.end = move.begin
+            self.unique_moves.append(move)
+
         self.unique_moves = []
         current_move = None
         for action_index in range(self.first_free_action, len(self.actions)):
             action = self.actions[action_index]
             if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
                 if current_move:
-                    self.unique_moves.append(current_move)
+                    finalize(current_move)
                 current_move = self.Move(action.unit, action_index)
             elif isinstance(action, Action.Wait) or isinstance(action, Action.Die):
                 if current_move and action.unit == current_move.unit:
                     current_move.end = action_index
-                    self.unique_moves.append(current_move)
-                    current_move = None                    
+                    finalize(current_move)
+                    current_move = None
+            elif isinstance(action, Action.ArriveOnMap):
+                if current_move:
+                    finalize(current_move)
+                    current_move = None
+                self.unique_moves.append(('Arrive', action_index, action.unit.id))                    
             elif isinstance(action, Action.MarkPhase):
                 if current_move:
-                    self.unique_moves.append(current_move)
+                    finalize(current_move)
                     current_move = None
                 self.unique_moves.append(('Phase', action_index, action.phase_name))
             elif isinstance(action, Action.LockTurnwheel):
                 if current_move:
-                    self.unique_moves.append(current_move)
+                    finalize(current_move)
                     current_move = None
                 self.unique_moves.append(('Lock', action_index, action.lock))
         self.current_move_index = len(self.unique_moves)
@@ -140,28 +104,36 @@ class ActionLog(object):
                     text_list = self.get_unit_turn(move.unit, move.end)
                     return text_list
                 return []
+            elif move[0] == 'Phase':
+                return ["Start of %s Phase" % move[2].capitalize()]
         return []
 
     def backward(self, gameStateObj):
         if self.current_move_index < 1:
             return None
-        print(self.current_move_index)
+        # self.fore_current_unit = None
         self.current_move = self.unique_moves[self.current_move_index - 1]
-        print(self.current_move)
+        print("Backward", self.current_move_index, self.current_move, self.action_index)
         self.current_move_index -= 1
         if isinstance(self.current_move, self.Move):
             if self.current_unit:
                 while self.action_index >= self.current_move.begin:
                     action = self.run_action_backward(gameStateObj)
-                gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)                    
+                gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj) 
                 self.current_unit = None
                 return []
             else:
+                if self.hovered_unit:
+                    self.hovered_unit.sprite.turnwheel_indicator = False
+                    gameStateObj.cursor.drawState = 0                   
                 self.current_unit = self.current_move.unit
                 if self.current_move.end:
                     while self.action_index > self.current_move.end:
                         action = self.run_action_backward(gameStateObj)
                     gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
+                    self.current_unit.sprite.turnwheel_indicator = True
+                    gameStateObj.cursor.drawState = 3
+                    self.hovered_unit = self.current_unit
                     text_list = self.get_unit_turn(self.current_unit, self.action_index)
                     self.current_move_index += 1  # Make sure we don't skip first half of this
                     return text_list
@@ -169,14 +141,31 @@ class ActionLog(object):
                     while self.action_index >= self.current_move.begin:
                         action = self.run_action_backward(gameStateObj)
                     gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)                    
+                    self.current_unit.sprite.turnwheel_indicator = True
+                    gameStateObj.cursor.drawState = 3
+                    self.hovered_unit = self.current_unit
                     return []
         else:
             if self.current_move[0] == 'Phase':
-                while self.action_index >= self.current_move[1]:
+                while self.action_index > self.current_move[1]:
                     action = self.run_action_backward(gameStateObj)
+                if self.hovered_unit:
+                    self.hovered_unit.sprite.turnwheel_indicator = False
+                    gameStateObj.cursor.drawState = 0
                 if self.current_move[2] == 'player':
                     gameStateObj.cursor.autocursor(gameStateObj)
                 return ["Start of %s Phase" % self.current_move[2].capitalize()]
+            elif self.current_move[0] == 'Arrive':
+                while self.action_index >= self.current_move[1]:
+                    action = self.run_action_backward(gameStateObj)
+                if self.hovered_unit:
+                    self.hovered_unit.sprite.turnwheel_indicator = False
+                    gameStateObj.cursor.drawState = 0
+                next_move = self.unique_moves[self.current_move_index - 1]
+                if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
+                    return self.backward(gameStateObj)
+                else:
+                    return []
             elif self.current_move[0] == 'Lock':
                 while self.action_index >= self.current_move[1]:
                     action = self.run_action_backward(gameStateObj)
@@ -186,7 +175,9 @@ class ActionLog(object):
     def forward(self, gameStateObj):
         if self.current_move_index >= len(self.unique_moves):
             return None
+        # self.back_current_unit = None
         self.current_move = self.unique_moves[self.current_move_index]
+        print("Forward", self.current_move_index, self.current_move, self.action_index)
         self.current_move_index += 1
         if isinstance(self.current_move, self.Move):
             if self.current_unit:
@@ -197,160 +188,57 @@ class ActionLog(object):
                 self.current_unit = None
                 return text_list
             else:
+                if self.hovered_unit:
+                    self.hovered_unit.sprite.turnwheel_indicator = False
+                    gameStateObj.cursor.drawState = 0
                 self.current_unit = self.current_move.unit
                 while self.action_index < self.current_move.begin - 1:
+                    # Does next action, so -1 is necessary
                     action = self.run_action_forward(gameStateObj)
                 gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
+                self.current_unit.sprite.turnwheel_indicator = True
+                gameStateObj.cursor.drawState = 3
+                self.hovered_unit = self.current_unit
                 self.current_move_index -= 1  # Make sure we don't skip second half of this
                 return []
         else:
             if self.current_move[0] == 'Phase':
                 while self.action_index < self.current_move[1]:
                     action = self.run_action_forward(gameStateObj)
+                if self.hovered_unit:
+                    self.hovered_unit.sprite.turnwheel_indicator = False  
+                    gameStateObj.cursor.drawState = 0
                 if self.current_move[2] == 'player':
                     gameStateObj.cursor.autocursor(gameStateObj)
                 return ["Start of %s Phase" % self.current_move[2].capitalize()]
+            elif self.current_move[0] == 'Arrive':
+                while self.action_index < self.current_move[1]:
+                    action = self.run_action_forward(gameStateObj)
+                if self.hovered_unit:
+                    self.hovered_unit.sprite.turnwheel_indicator = False
+                    gameStateObj.cursor.drawState = 0
+                next_move = self.unique_moves[self.current_move_index]
+                if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
+                    return self.forward(gameStateObj)
+                else:
+                    return []
             elif self.current_move[0] == 'Lock':
                 while self.action_index < self.current_move[1]:
                     action = self.run_action_forward(gameStateObj)
                 self.locked = self.current_move[2]
                 return self.forward(gameStateObj)  # Go again
 
-    def backward_old2(self, gameStateObj):
-        if self.at_far_past():
-            print("At far past!")
-            gameStateObj.cursor.autocursor(gameStateObj)
-            return ["Start of Player Phase"]
-
-        if self.current_unit:
-            print(self.current_unit.name)
-            while self.action_index >= self.first_free_action + 1:
-                # Actually Run backwards
-                action = self.run_action_backward(gameStateObj)
-                if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
-                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                    print('%s %s moves backward!' % (action.unit.klass, action.unit.name))
-                    self.current_unit = None
-                    # if self.action_index == self.first_free_action:
-                    #     return ["Start of Player Phase"]
-                    return []
-        else:
-            starting_index = self.action_index
-            while self.action_index >= self.first_free_action + 1:
-                action = self.actions[self.action_index]
-                # Wait
-                if self.action_index != starting_index:
-                    if isinstance(action, Action.Wait):
-                        gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                        # Get content of unit's turn
-                        self.current_unit = action.unit
-                        text_list = self.get_unit_turn(action.unit, self.action_index)
-                        return text_list
-                    # Mark Phase
-                    elif isinstance(action, Action.MarkPhase):
-                        if action.phase_name == 'player':
-                            gameStateObj.cursor.autocursor(gameStateObj)
-                        return ["Start of %s Phase" % action.phase_name.capitalize()]
-                action = self.run_action_backward(gameStateObj)
-                # Die
-                if isinstance(action, Action.Die):
-                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                    # Only happens if unit is active unit, 
-                    # since otherwise we'd have a current unit and not be here
-                    if action.unit.team == self.get_current_phase():
-                        self.current_unit = action.unit
-                        text_list = self.get_unit_turn(action.unit, self.action_index)
-                        return text_list
-                elif isinstance(action, Action.LockTurnwheel):
-                    self.locked = self.get_last_lock()
-
-        return None
-
-    def forward_old(self, gameStateObj):
-        if self.at_far_future():
-            return None
-
-        starting_index = self.action_index
-        while self.action_index + 1 < len(self.actions):
-            action = self.actions[self.action_index + 1]
-            if self.action_index != starting_index:
-                # Move
-                if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
-                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                    print('%s %s moves!' % (action.unit.klass, action.unit.name))
-                    return []
-            # Actually run
-            action = self.run_action_forward(gameStateObj)
-            # Wait
-            if isinstance(action, Action.Wait) or isinstance(action, Action.Die):
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                # Get content of unit's turn
-                text_list = self.get_unit_turn(action.unit, self.action_index)
-                return text_list
-            # Mark Phase
-            elif isinstance(action, Action.MarkPhase):
-                if action.phase_name == 'player':
-                    gameStateObj.cursor.autocursor(gameStateObj)
-                return ["Start of %s Phase" % action.phase_name.capitalize()]
-            elif isinstance(action, Action.LockTurnwheel):
-                self.locked = action.lock
-
-        return None
-
-    def get_next_ending_action(self):
-        cur_index = self.action_index
-        while cur_index < len(self.actions):
-            action = self.actions[cur_index]
-            if isinstance(action, Action.Wait):
-                return cur_index
-            elif isinstance(action, Action.Die):
-                if action.unit.id == self.current_unit.id:
-                    return cur_index
-            elif isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
-                return cur_index - 1
-            cur_index += 1
-        print('No Ending Action?')
-        return None
-
-    def forward_old2(self, gameStateObj):
-        if self.at_far_future():
-            return None
-
-        if self.current_unit:
-            print(self.current_unit.name)
-            ending_index = self.get_next_ending_action()
-            while self.action_index + 1 <= ending_index:
-                action = self.run_action_forward(gameStateObj)
-            gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
-            text_list = self.get_unit_turn(self.current_unit, self.action_index)
-            self.current_unit = None
-            return text_list
-        else:
-            while self.action_index + 1 < len(self.actions):
-                action = self.actions[self.action_index + 1]
-                if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
-                    self.current_unit = action.unit
-                    gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                    print('%s %s moves forward!' % (action.unit.klass, action.unit.name))
-                    return []
-                action = self.run_action_forward(gameStateObj)
-                # Mark Phase
-                if isinstance(action, Action.MarkPhase):
-                    if action.phase_name == 'player':
-                        gameStateObj.cursor.autocursor(gameStateObj)
-                    return ["Start of %s Phase" % action.phase_name.capitalize()]
-                elif isinstance(action, Action.LockTurnwheel):
-                    self.locked = action.lock
-
-        return None
-
     def finalize(self):
         # Remove all actions after where we turned back to
         self.current_unit = None
+        if self.hovered_unit:
+            self.hovered_unit.sprite.turnwheel_indicator = False
         self.actions = self.actions[:self.action_index + 1]
 
     def reset(self, gameStateObj):
         self.current_unit = None
+        if self.hovered_unit:
+            self.hovered_unit.sprite.turnwheel_indicator = False
         while not self.at_far_future():
             self.run_action_forward(gameStateObj)
 
@@ -388,23 +276,6 @@ class ActionLog(object):
                 text.insert(0, cur_action.message)
             elif isinstance(cur_action, Action.Move):
                 return text
-
-    def get_last_unit_turn_old(self, gameStateObj):
-        if not self.actions or self.action_index < self.first_free_action + 1:
-            return []
-
-        cur_index = self.action_index
-        while cur_index >= self.first_free_action + 1:
-            action = self.actions[cur_index]
-            if isinstance(action, Action.MarkPhase):
-                return []
-            elif isinstance(action, Action.Wait) or isinstance(action, Action.Die):
-                gameStateObj.cursor.centerPosition(action.unit.position, gameStateObj)
-                text_list = self.get_unit_turn(action.unit, self.action_index)
-                return text_list
-            cur_index -= 1
-
-        return []
 
     def replay_map_commands(self, gameStateObj):
         for action in self.actions:
@@ -526,17 +397,25 @@ class TurnwheelState(StateMachine.State):
 
         if 'DOWN' in directions or 'RIGHT' in directions:
             GC.SOUNDDICT['Select 1'].play()
-            new_message = gameStateObj.action_log.forward(gameStateObj)
+            old_message = None
             if self.last_direction == 'BACKWARD':
-                new_message = gameStateObj.action_log.forward(gameStateObj)
+                gameStateObj.action_log.current_unit = None
+                old_message = gameStateObj.action_log.forward(gameStateObj)
+            new_message = gameStateObj.action_log.forward(gameStateObj)
+            if new_message is None:
+                new_message = old_message
             if new_message is not None:
                 self.display.change_text(new_message, gameStateObj.turncount)
             self.last_direction = 'FORWARD'
         elif 'UP' in directions or 'LEFT' in directions:
             GC.SOUNDDICT['Select 2'].play()
-            new_message = gameStateObj.action_log.backward(gameStateObj)
+            old_message = None
             if self.last_direction == 'FORWARD':
-                new_message = gameStateObj.action_log.backward(gameStateObj)
+                gameStateObj.action_log.current_unit = None
+                old_message = gameStateObj.action_log.backward(gameStateObj)
+            new_message = gameStateObj.action_log.backward(gameStateObj)
+            if new_message is None:
+                new_message = old_message
             if new_message is not None:
                 self.display.change_text(new_message, gameStateObj.turncount)
             self.last_direction = 'BACKWARD'

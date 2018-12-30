@@ -76,7 +76,7 @@ class Cursor(object):
     def removeSprites(self):
         self.sprite = None
         self.image = None
-        self.passivesprite, self.activesprite, self.redsprite = None, None, None
+        self.passivesprite, self.activesprite, self.redsprite, self.greensprite = None, None, None, None
 
         # Current displays
         self.init_displays()
@@ -84,9 +84,8 @@ class Cursor(object):
     def loadSprites(self):
         # Load sprite
         self.sprite = GC.IMAGESDICT[self.spriteName]
-        self.passivesprite, self.activesprite, self.redsprite, self.formationsprite = self.formatSprite(self.sprite)
+        self.passivesprite, self.activesprite, self.redsprite, self.formationsprite, self.greensprite = self.formatSprite(self.sprite)
         self.image = Engine.subsurface(self.passivesprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2)) # 32*32
-
         # Current displays
         self.init_displays()
 
@@ -270,12 +269,13 @@ class Cursor(object):
                 self.setPosition(player_units[0].position, gameStateObj)
 
     def formatSprite(self, sprite):
-        # Sprites are in 64 x 64 boxes
-        passivesprite = Engine.subsurface(sprite, (0, 0, GC.TILEWIDTH*2*4, GC.TILEHEIGHT*2))
-        redsprite = Engine.subsurface(sprite, (0, GC.TILEHEIGHT*2, GC.TILEWIDTH*2*4, GC.TILEHEIGHT*2))
-        activesprite = Engine.subsurface(sprite, (0, GC.TILEHEIGHT*4, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
-        formationsprite = Engine.subsurface(sprite, (GC.TILEWIDTH*2*2, GC.TILEHEIGHT*4, GC.TILEWIDTH*2*2, GC.TILEHEIGHT*2))
-        return passivesprite, activesprite, redsprite, formationsprite
+        # Sprites are in 32 x 32 boxes
+        passivesprite = Engine.subsurface(sprite, (0, 0, 128, 32))
+        redsprite = Engine.subsurface(sprite, (0, 32, 128, 32))
+        activesprite = Engine.subsurface(sprite, (0, 64, 32, 32))
+        formationsprite = Engine.subsurface(sprite, (64, 64, 64, 32))
+        greensprite = Engine.subsurface(sprite, (0, 96, 128, 32))
+        return passivesprite, activesprite, redsprite, formationsprite, greensprite
 
     def drawPortraits(self, surf, gameStateObj):
         legal_states = ('free', 'prep_formation', 'prep_formation_select')
@@ -376,6 +376,8 @@ class Cursor(object):
                 self.image = Engine.subsurface(self.formationsprite, (GC.CURSORSPRITECOUNTER.count//2*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
         elif self.drawState == 2 and gameStateObj.stateMachine.getState() != 'dialogue': # Red if it is selecting...
             self.image = Engine.subsurface(self.redsprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
+        elif self.drawState == 3: # Green for turnwheel
+            self.image = Engine.subsurface(self.greensprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
         elif self.currentHoveredUnit and self.currentHoveredUnit.team == 'player' and \
                 not self.currentHoveredUnit.isDone() and gameStateObj.stateMachine.getState() != 'dialogue':
             self.image = self.activesprite
