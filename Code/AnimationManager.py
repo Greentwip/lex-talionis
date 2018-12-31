@@ -137,13 +137,16 @@ class BattleAnimationManager(object):
         with open(index) as fp:
             index_lines = [line.strip().split(';') for line in fp.readlines()]
 
-        for line in index_lines:
+        for idx, line in enumerate(index_lines):
             name = line[0]
             x, y = (int(num) for num in line[1].split(','))
             width, height = (int(num) for num in line[2].split(','))
             offset = tuple(int(num) for num in line[3].split(','))
             # print(name, x, y, width, height)
-            image = Engine.subsurface(anim, (x, y, width, height))
+            try:
+                image = Engine.subsurface(anim, (x, y, width, height))
+            except ValueError:
+                raise ValueError("Subsurface read error. %s is telling the Engine to read from an area on the image that does not exist. Check line %s:" % (index, idx + 1), line)
             frame_directory[name] = (image, offset)
         return frame_directory
 

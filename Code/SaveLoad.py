@@ -250,6 +250,8 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
     return current_mode
 
 def default_previous_classes(cur_class, classes, class_dict):
+    if cur_class not in class_dict:
+        raise KeyError("Cannot find %s in class_info.xml." % cur_class)
     while class_dict[cur_class]['tier'] > len(classes) and class_dict[cur_class]['promotes_from']:
         prev_class = class_dict[cur_class]['promotes_from']
         if prev_class not in classes:
