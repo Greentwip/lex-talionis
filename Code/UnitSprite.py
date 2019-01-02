@@ -290,9 +290,12 @@ class UnitSprite(object):
             unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
             unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
         except KeyError:  # Try the other gender
-            gender = 'F' if self.unit.gender < 5 else 'M'
-            unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
-            unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
+            try:
+                gender = 'F' if self.unit.gender < 5 else 'M'
+                unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
+                unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
+            except KeyError:
+                raise KeyError("You are missing map animations for the %s class" % self.unit.klass)
         return unit_stand_sprites, unit_move_sprites
 
     def loadSprites(self):

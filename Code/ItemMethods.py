@@ -190,7 +190,10 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
             self.first_line_font[index].blit(word, help_surf, (word_index, 8))
             word_index += self.first_line_font[index].size(word)[0]
         
-        num_characters = 2*(time - self.start_time)/cf.OPTIONS['Text Speed']
+        if cf.OPTIONS['Text Speed'] > 0:
+            num_characters = 2*(time - self.start_time)/float(cf.OPTIONS['Text Speed'])
+        else:
+            num_characters = 1000
         for index, line in enumerate(self.output_desc_lines):
             if num_characters > 0:
                 GC.FONT['convo_black'].blit(line[:num_characters], help_surf, (8, GC.FONT['convo_black'].height*index + 8 + 16))  

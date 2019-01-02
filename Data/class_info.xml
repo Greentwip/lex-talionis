@@ -50,7 +50,7 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
-        <tags>Armor</tags>
+        <tags></tags>
         <skills>3,Feat;5,Critical;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,35,65,60,60,20,35</growths>

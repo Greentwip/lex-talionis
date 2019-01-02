@@ -267,6 +267,8 @@ class NoMusicThread(object):
         pass
     def unmute(self):
         pass
+    def get_volume(self):
+        return 0
     def set_volume(self, volume):
         pass
     def fade_to_normal(self, gameStateObj, metaDataObj):
@@ -318,6 +320,9 @@ class MusicThread(object):
 
     def unmute(self):
         pygame.mixer.music.set_volume(self.volume)
+
+    def get_volume(self):
+        return self.volume
 
     def set_volume(self, volume):
         self.volume = volume

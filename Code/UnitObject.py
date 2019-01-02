@@ -614,6 +614,7 @@ class UnitObject(object):
             logger.debug('Place %s %s %s', self, self.name, self.position)
             for status in gameStateObj.map.status_effects:
                 StatusObject.HandleStatusAddition(status, self, gameStateObj)
+            self.previous_position = self.position
 
     # Pathfinding algorithm
     def getPath(self, gameStateObj, goalPosition, ally_block=False):
@@ -887,6 +888,8 @@ class UnitObject(object):
     # Kind of a wrapper around the recursive algorithm for finding movement
     def getValidMoves(self, gameStateObj, force=False):
         if not force and self.hasMoved and (not self.has_canto() or self.finished): # No Valid moves once moved
+            return set()
+        if not self.position:  # Not sure how this is possible...
             return set()
         my_grid = gameStateObj.grid_manager.get_grid(self)
         pathfinder = AStar.Djikstra(self.position, my_grid, gameStateObj.map.width, gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
