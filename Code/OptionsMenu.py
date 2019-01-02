@@ -11,6 +11,8 @@ except ImportError:
 
 
 class OptionsMenu(StateMachine.State, Counters.CursorControl):
+    show_map = False
+    
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.config = [('Animation', ['Always', 'Your Turn', 'Combat Only', 'Never'], cf.WORDS['Animation_desc'], 0),
@@ -225,8 +227,10 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         Counters.CursorControl.update(self)
 
         # Update music volume...
-        Engine.music_thread.set_volume(cf.OPTIONS['Music Volume'])
-        imagesDict.set_sound_volume(cf.OPTIONS['Sound Volume'], GC.SOUNDDICT)
+        if cf.OPTIONS['Music Volume'] != Engine.music_thread.get_volume():
+            Engine.music_thread.set_volume(cf.OPTIONS['Music Volume'])
+        if cf.OPTIONS['Sound Volume'] != imagesDict.sound_volume:
+            imagesDict.set_sound_volume(cf.OPTIONS['Sound Volume'], GC.SOUNDDICT)
 
     def draw(self, gameStateObj, metaDataObj):
         surf = self.backSurf

@@ -1106,7 +1106,10 @@ class Help_Dialog(Help_Dialog_Base):
         if self.name:
             self.font.blit(self.name, help_surf, (8, 8))
 
-        num_characters = 2*(time - self.start_time)/cf.OPTIONS['Text Speed']
+        if cf.OPTIONS['Text Speed'] > 0:
+            num_characters = 2*(time - self.start_time)/float(cf.OPTIONS['Text Speed'])
+        else:
+            num_characters = 1000
         for index, string in enumerate(self.strings):
             if num_characters > 0:
                 self.font.blit(string[:num_characters], help_surf, (8, self.font.height*index + 8 + (16 if self.name else 0)))
