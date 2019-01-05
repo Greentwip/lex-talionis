@@ -1,72 +1,490 @@
 <portrait_info>
 
     <!-- Player Characters -->
-    <portrait name="Eirika">
-        <mouth>16,48</mouth>
-        <blink>24,32</blink>
-    </portrait>
+	<portrait name="Amelia">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
 
-    <portrait name="Seth">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Artur">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
 
-    <portrait name="Franz">
-        <mouth>16,48</mouth>
-        <blink>24,32</blink>
-    </portrait>
+	<portrait name="Colm">
+		<mouth>24,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
 
-    <portrait name="Gilliam">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Cormag">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
 
-    <portrait name="Vanessa">
-        <mouth>16,48</mouth>
-        <blink>24,32</blink>
-    </portrait>
+	<portrait name="Dozla">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
 
-    <portrait name="Moulder">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Duessel">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
 
-    <portrait name="Tana">
-        <mouth>16,48</mouth>
-        <blink>24,32</blink>
-    </portrait>
+	<portrait name="Eirika">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
 
-    <!-- Enemy bosses -->
-    <portrait name="Breguet">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Eirika_Past">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
 
-    <!-- Other -->
-    <portrait name="Hayden">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Ephraim">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
 
-    <!-- NPCs -->
-    <portrait name="VillageMan1">
-        <mouth>16,48</mouth>
-        <blink>24,32</blink>
-    </portrait>
+	<portrait name="Ephraim_Past">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
 
-    <portrait name="VillageMan2">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Ewan">
+		<mouth>24,56</mouth>
+		<blink>24,40</blink>
+	</portrait>
 
-    <portrait name="Soldier1">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Forde">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
 
-    <portrait name="Soldier2">
-        <mouth>16,40</mouth>
-        <blink>24,24</blink>
-    </portrait>
+	<portrait name="Franz">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
 
-</portrait_info>
+	<portrait name="Garcia">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Gerik">
+		<mouth>16,32</mouth>
+		<blink>24,16</blink>
+	</portrait>
+
+	<portrait name="Gilliam">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Innes">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Joshua">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Knoll">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Knoll_Past">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Kyle">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="L'arachel">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Lute">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Marisa">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Moulder">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Myrrh">
+		<mouth>16,56</mouth>
+		<blink>24,40</blink>
+	</portrait>
+
+	<portrait name="MyrrhDragon">
+		<mouth>16,56</mouth>
+		<blink>24,40</blink>
+	</portrait>
+
+	<portrait name="Natasha">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Neimi">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Orson">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="OrsonEvil">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Rennac">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Ross">
+		<mouth>24,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Saleh">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Seth">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Syrene">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Tana">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Tethys">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Vanessa">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+    <!-- Enemy Characters -->
+	<portrait name="Aias">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Bandit1">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Bandit2">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Bazba">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Beran">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Binks">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Bone">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Breguet">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Caellach">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Carlyle">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Gheb">
+		<mouth>16,32</mouth>
+		<blink>24,16</blink>
+	</portrait>
+
+	<portrait name="Lyon">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="LyonEvil">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Lyon_Past">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Mercenary1">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Mercenary2">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Morva">
+		<mouth>16,32</mouth>
+		<blink>24,16</blink>
+	</portrait>
+
+	<portrait name="Murray">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Novala">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="O'Neill">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Pablo">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Riev">
+		<mouth>16,56</mouth>
+		<blink>16,40</blink>
+	</portrait>
+
+	<portrait name="Saar">
+		<mouth>16,40</mouth>
+		<blink>16,24</blink>
+	</portrait>
+
+	<portrait name="Selena">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Sorceror1">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Tirado">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Valter">
+		<mouth>16,32</mouth>
+		<blink>24,16</blink>
+	</portrait>
+
+	<portrait name="Vigarde">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="VigardeHealthy">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Vigarde_Past">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Zonta">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+    <!-- Other Characters -->
+	<portrait name="Anna">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Dara">
+		<mouth>16,56</mouth>
+		<blink>24,40</blink>
+	</portrait>
+
+	<portrait name="Fado">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Generic">
+		<mouth>0,0</mouth>
+		<blink>0,0</blink>
+	</portrait>
+
+	<portrait name="Glen">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Hayden">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Ismaire">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Klimt">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Mansel">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+    <!-- Unnamed NPCs -->
+	<portrait name="Boy1">
+		<mouth>16,56</mouth>
+		<blink>24,40</blink>
+	</portrait>
+
+	<portrait name="Girl1">
+		<mouth>16,56</mouth>
+		<blink>24,40</blink>
+	</portrait>
+
+	<portrait name="Man1">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Man2">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Man4">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Man5">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Man6">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Messenger">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="OldMan1">
+		<mouth>16,56</mouth>
+		<blink>24,40</blink>
+	</portrait>
+
+	<portrait name="OldWoman1">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="SoldierBlue">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="SoldierGreen">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="SoldierGrey">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="SoldierPurple">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="SoldierRed">
+		<mouth>16,40</mouth>
+		<blink>24,24</blink>
+	</portrait>
+
+	<portrait name="Woman1">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Woman2">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
+
+	<portrait name="Woman3">
+		<mouth>16,48</mouth>
+		<blink>24,32</blink>
+	</portrait>
