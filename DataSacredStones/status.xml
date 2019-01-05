@@ -28,17 +28,16 @@
     </status>
 
     <!-- Poison Status -->
-	<status name="Poisoned">
-		<id>Poison</id>
-		<desc>All stats lowered by 2.</desc>
-		<image_index>3,4</image_index>
-		<components>stat_change,always_animation,time,negative</components>
+    <status name="Poisoned">
+        <id>Poison</id>
+        <desc>Suffers damage over time.</desc>
+        <image_index>3,4</image_index>
+        <components>always_animation,hp_percentage,time,negative</components>
 
-		<time>6</time>
-		<!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-    	<stat_change>0,-2,-2,-2,-2,0,-2,-2,0,0</stat_change>
-		<!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
-		<always_animation>MapPoison,5,2,8</always_animation>
+        <time>5</time>
+        <hp_percentage>-15</hp_percentage>
+        <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
+        <always_animation>MapPoison,5,2,8</always_animation>
     </status>
 
     <!-- Resistant Status -->
@@ -48,22 +47,10 @@
 		<image_index>5,5</image_index>
 		<components>stat_change,upkeep_stat_change,time</components>
 
-		<time>5</time>
+		<time>7</time>
 		<!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-    	<stat_change>0,0,0,0,0,0,0,5,0,0</stat_change>
+    	<stat_change>0,0,0,0,0,0,0,7,0,0</stat_change>
     	<upkeep_stat_change>0,0,0,0,0,0,0,-1,0,0</upkeep_stat_change>
-    </status>
-
-    <!-- Barkskin Status -->
-	<status name="Barkskin">
-		<id>Barkskin</id>
-		<desc>Grants DEF +5, but inflicts SPD -4.</desc>
-		<image_index>9,8</image_index>
-		<components>stat_change,time</components>
-
-		<time>5</time>
-		<!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-    	<stat_change>0,0,0,0,-4,0,5,0,0,0</stat_change>
     </status>
 
     <!-- Stun Status -->
@@ -102,17 +89,6 @@
         <time>5</time>
     </status>
 
-    <!-- Fortune Status -->
-    <status name="Good Fortune">
-        <id>Fortune</id>
-        <desc>Grants hit +50.</desc>
-        <image_index>10,2</image_index>
-        <components>hit,time</components>
-
-        <time>1</time>
-        <hit>50</hit>
-    </status>
-
     <!-- Clear Status -->
     <status name="Clear">
     	<id>Clear</id>
@@ -135,51 +111,6 @@
         <desc>Fully charges all activated skills.</desc>
         <image_index>0,0</image_index>
         <components>skill_restore,momentary</components>
-    </status>
-
-    <status name="Dazzled">
-        <id>Dazzle</id>
-        <desc>Inflicts Hit -10.</desc>
-        <image_index>2,2</image_index>
-        <components>hit,time,negative</components>
-
-        <hit>-10</hit>
-        <time>2</time>
-    </status>
-
-    <status name="Blinded">
-        <id>Blinded</id>
-        <desc>Inflicts Hit -100.</desc>
-        <image_index>9,6</image_index>
-        <components>hit,time,negative,always_animation</components>
-
-        <hit>-100</hit>
-        <time>2</time>
-        <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
-        <always_animation>MapBerserk,5,2,9</always_animation>
-    </status>
-
-    <status name="Chilled">
-        <id>Chill</id>
-        <desc>Inflicts Avoid -10.</desc>
-        <image_index>2,4</image_index>
-        <components>avoid,time,negative</components>
-
-        <avoid>-10</avoid>
-        <time>2</time>
-    </status>
-
-    <status name="Frostbite">
-        <id>Frostbite</id>
-        <desc>Inflicts SPD -3.</desc>
-        <image_index>5,3</image_index>
-        <components>stat_change,time,negative,always_animation</components>
-
-        <stat_change>0,0,0,0,-3,0,0,0,0,0</stat_change>
-        <time>2</time>
-
-        <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
-        <always_animation>MapFrostbite,11,1,11</always_animation>
     </status>
 
     <!-- FEATS -->
@@ -273,117 +204,55 @@
         <stat_change>0,0,0,0,0,4,0,0,0,0</stat_change>
     </status>
 
-    <!-- ITEM SKILLS -->
-    <!-- Used by Wind -->
-    <status name="Speed +2">
-        <id>Speed +2</id>
-        <desc>Grants SPD +2.</desc>
-        <image_index>0,4</image_index>
-        <components>stat_change</components>
+    <!-- For weapons -->
+    <!-- Used by Sieglinde, Siegmund -->
+    <status name="Strength +5">
+        <id>Strength +5</id>
+        <desc>Grants STR +5.</desc>
+        <image_index>0,0</image_index>
+        <components>stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,0,0,0,2,0,0,0,0,0</stat_change>
+        <stat_change>0,5,0,0,0,0,0,0,0,0</stat_change>
     </status>
 
-    <!-- Used by Earth -->
-    <status name="Speed -2">
-        <id>Speed -2</id>
-        <desc>Inflicts SPD -2.</desc>
-        <image_index>9,4</image_index>
-        <components>stat_change</components>
-        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,0,0,0,-2,0,0,0,0,0</stat_change>
-    </status>
-
-    <!-- Used by Earth, Practice Blade -->
-    <status name="Defense +2">
-        <id>Defense +2</id>
-        <desc>Grants DEF +2.</desc>
-        <image_index>0,5</image_index>
-        <components>stat_change</components>
-        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,0,0,0,0,0,2,0,0,0</stat_change>
-    </status>
-
-    <!-- Used by Water -->
-    <status name="Resistance +2">
-        <id>Resistance +2</id>
-        <desc>Grants RES +2.</desc>
-        <image_index>0,6</image_index>
-        <components>stat_change</components>
-        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,0,0,0,0,0,0,2,0,0</stat_change>
-    </status>
-
-    <!-- Used by Magebane weapons -->
-    <status name="Resistance +10">
-        <id>Resistance +10</id>
-        <desc>Grants RES +10.</desc>
+    <!-- Used by Garm -->
+    <status name="Speed +5">
+        <id>Speed +5</id>
+        <desc>Grants SPD +5.</desc>
         <image_index>9,10</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,0,0,0,0,0,0,10,0,0</stat_change>
+        <stat_change>0,0,0,0,5,0,0,0,0,0</stat_change>
     </status>
 
-    <!-- Used by Prim's Charm -->
-    <status name="Underdog">
-        <id>Underdog</id>
-        <image_index>9,5</image_index>
-        <desc>Grants Damage +2 and Damage Taken -2 against enemies with greater max HP.</desc>
-        <components>conditional_mt,conditional_resist</components>
-
-        <conditional_mt>2;Utility.lt(self.stats['HP'], target.stats['HP'])</conditional_mt>
-        <conditional_resist>2;Utility.lt(target.stats['HP'], self.stats['HP'])</conditional_resist>
-    </status>
-
-    <!-- Used by Althea's Charm -->
-    <status name="Luck +10">
-        <id>Luck +10</id>
-        <desc>Gain LCK +10.</desc>
-        <image_index>11,9</image_index>
+    <!-- Used by Nidhogg -->
+    <status name="Luck +5">
+        <id>Speed +5</id>
+        <desc>Grants LCK +5.</desc>
+        <image_index>9,10</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,0,0,0,0,10,0,0,0,0</stat_change>
+        <stat_change>0,0,0,0,0,5,0,0,0,0</stat_change>
     </status>
 
-    <!-- Used by Superior Weapons -->
-    <status name="Swordbreaker">
-        <id>Swordbreaker</id>
-        <image_index>6,9</image_index>
-        <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
-        <components>conditional_avoid,conditional_hit</components>
-
-        <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Sword' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Sword' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
-    </status>
-
-    <status name="Lancebreaker">
-        <id>Lancebreaker</id>
-        <image_index>6,7</image_index>
-        <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
-        <components>conditional_avoid,conditional_hit</components>
-
-        <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Lance' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Lance' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
-    </status>
-
-    <status name="Axebreaker">
-        <id>Axebreaker</id>
-        <image_index>6,8</image_index>
-        <desc>Grants Hit/Avoid +30 against enemies wielding Axes.</desc>
-        <components>conditional_avoid,conditional_hit</components>
-
-        <conditional_hit>30;target.getMainWeapon() and any(TYPE == 'Axe' for TYPE in target.getMainWeapon().TYPE)</conditional_hit>
-        <conditional_avoid>30;self.getMainWeapon() and any(TYPE == 'Axe' for TYPE in self.getMainWeapon().TYPE)</conditional_avoid>
-    </status>
-
-    <!-- Used by Final Boss -->
-    <status name="Imperial Wards">
-        <id>Imperial Wards</id>
-        <desc>Grants STR/MAG/SKL/SPD/DEF/RES +5.</desc>
-        <image_index>10,9</image_index>
+    <!-- Used by Vidofnir -->
+    <status name="Defense +5">
+        <id>Defense +5</id>
+        <desc>Grants DEF +5.</desc>
+        <image_index>9,10</image_index>
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,5,5,5,5,0,5,5,0,0</stat_change>
+        <stat_change>0,0,0,0,0,0,5,0,0,0</stat_change>
+    </status>
+
+    <!-- Used by Audhulma -->
+    <status name="Resistance +5">
+        <id>Resistance +5</id>
+        <desc>Grants RES +5.</desc>
+        <image_index>9,10</image_index>
+        <components>stat_change</components>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <stat_change>0,0,0,0,0,0,0,5,0,0</stat_change>
     </status>
 
     <status name="Canto">

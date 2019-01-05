@@ -717,6 +717,18 @@ class PermanentStatIncrease(Action):
         # Since hp_up...
         self.unit.change_hp(-self.stat_increase[0])
 
+class PermanentGrowthIncrease(Action):
+    def __init__(self, unit, stat_increase):
+        self.unit = unit
+        self.current_growths = self.unit.growths
+        self.stat_increase = stat_increase
+
+    def do(self, gameStateObj):
+        self.unit.apply_growth_mod(self.stat_increase)
+
+    def reverse(self, gameStateObj):
+        self.unit.apply_growth_mod([-x for x in self.stat_increase])
+
 class GainWexp(Action):
     def __init__(self, unit, item):
         self.unit = unit

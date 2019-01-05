@@ -534,11 +534,16 @@ def create_class_dict():
     for klass in GC.CLASSDATA.getroot().findall('class'):
         c_id = klass.get('id')
         tier = int(klass.find('tier').text)
+        wexp_gain = klass.find('wexp_gain').text.split(',')
+        for index, wexp in enumerate(wexp_gain[:]):
+            if wexp in Weapons.EXP.wexp_dict:
+                wexp_gain[index] = Weapons.EXP.wexp_dict[wexp]
+        wexp_gain = [int(num) for num in wexp_gain]
         class_dict[c_id] = {'short_name': klass.find('short_name').text,
                             'long_name': klass.find('long_name').text,
                             'id': c_id,
                             'tier': tier,
-                            'wexp_gain': intify_comma_list(klass.find('wexp_gain').text),
+                            'wexp_gain': wexp_gain,
                             'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
                             'turns_into': klass.find('turns_into').text.split(',') if klass.find('turns_into').text is not None else [],
                             'movement_group': int(klass.find('movement_group').text),

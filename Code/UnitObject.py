@@ -663,10 +663,12 @@ class UnitObject(object):
         unitwexp = self.wexp[idx]
         if itemLvl in Weapons.EXP.wexp_dict and unitwexp >= Weapons.EXP.wexp_dict[itemLvl]:
             return True
-        elif itemLvl == self.name: # If this weapon is for me!
-            return True
         else:
-            return False
+            itemLvl = itemLvl.split(',')
+            for n in itemLvl:
+                if n == self.id or n == self.klass or n == self.name:
+                    return True
+        return False
 
     # Given an item or a list or an int, increase my wexp based on the types of the weapon
     def increase_wexp(self, item, gameStateObj, banner=True):
@@ -723,10 +725,10 @@ class UnitObject(object):
 
     def can_use_booster(self, item, metaDataObj):
         if item.permanent_stat_increase:
-            # Test whether the permanent stat increase would actually do anythin
+            # Test whether the permanent stat increase would actually do anything
             current_stats = list(self.stats.values())
             klass_max = metaDataObj['class_dict'][self.klass]['max']
-            stat_increase = item.permanent_stat_increase.stat_increase
+            stat_increase = item.permanent_stat_increase
             test = [(klass_max[i] - current_stats[i].base_stat) > 0 for i in range(len(stat_increase)) if stat_increase[i] > 0]
             return any(test)
         elif item.promotion:
@@ -743,7 +745,9 @@ class UnitObject(object):
 
         # Actually use item
         if item.permanent_stat_increase:
-            Action.do(Action.PermanentStatIncrease(self, item.permanent_stat_increase.stat_increase), gameStateObj)
+            Action.do(Action.PermanentStatIncrease(self, item.permanent_stat_increase), gameStateObj)
+        elif item.permanent_growth_increase:
+            Action.do(Action.PermanentGrowthIncrease(self, item.permanent_growth_increase), gameStateObj)
         elif item.wexp_increase:
             Action.do(Action.GainWexp(self, item.wexp_increase), gameStateObj)
         elif item.promotion:

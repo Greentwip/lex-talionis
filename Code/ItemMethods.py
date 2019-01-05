@@ -136,7 +136,11 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
         font2 = GC.FONT['text_yellow']
 
         if self.item.weapon:
-            self.first_line_text = [' ', self.item.weapon.LVL, ' Mt ', str(self.item.weapon.MT), ' Hit ', str(self.item.weapon.HIT)]
+            if ',' in self.item.weapon.LVL:
+                weaponLVL = 'Prf'
+            else:
+                weaponLVL = self.item.weapon.LVL
+            self.first_line_text = [' ', weaponLVL, ' Mt ', str(self.item.weapon.MT), ' Hit ', str(self.item.weapon.HIT)]
             if cf.CONSTANTS['crit']:
                 self.first_line_text += [' Crit ', str(self.item.crit) if self.item.crit is not None else '--']
             if self.item.weight:
@@ -150,7 +154,11 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
             self.first_line_font += [font2, font1]
 
         elif self.item.spell:
-            self.first_line_text = [' ', self.item.spell.LVL]
+            if ',' in self.item.spell.LVL:
+                spellLVL = 'Prf'
+            else:
+                spellLVL = self.item.spell.LVL
+            self.first_line_text = [' ', spellLVL]
             self.first_line_font = [font1, font1]
             if self.item.damage is not None:
                 self.first_line_text += [' Mt ', str(self.item.damage)]
@@ -308,10 +316,6 @@ class EffectiveComponent(object):
         self.against = effective_against
         self.bonus = bonus
 
-class PermanentStatIncreaseComponent(object):
-    def __init__(self, stat_increase):
-        self.stat_increase = stat_increase
-
 class SpellComponent(object):
     def __init__(self, LVL, targets):
         self.name = 'spell'
@@ -415,7 +419,10 @@ def itemparser(itemstring):
                         continue
                 elif component == 'permanent_stat_increase':
                     stat_increase = SaveLoad.intify_comma_list(item['stat_increase'])
-                    my_components['permanent_stat_increase'] = PermanentStatIncreaseComponent(stat_increase)
+                    my_components['permanent_stat_increase'] = stat_increase
+                elif component == 'permanent_growth_increase':
+                    stat_increase = SaveLoad.intify_comma_list(item['growth_increase'])
+                    my_components['permanent_growth_increase'] = stat_increase
                 elif component == 'promotion':
                     legal_classes = item['promotion'].split(',')
                     my_components['promotion'] = legal_classes
@@ -429,6 +436,8 @@ def itemparser(itemstring):
                 elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase', 'wexp', 'extra_tile_damage'):
                     if component in item:
                         my_components[component] = int(item[component])
+                    elif component == 'crit':
+                        my_components['crit'] = 0
                 elif component in ('movement', 'self_movement'):
                     mode, magnitude = item[component].split(',')
                     my_components[component] = MovementComponent(mode, magnitude)

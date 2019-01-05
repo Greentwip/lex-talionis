@@ -28,6 +28,11 @@
 - Check that Canto adds one wait, not 4!!
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
+- Add automatic CON and MOV scaling on promotion.. so like Cavalier -> Great Knight loses 1 mov, but Knight to Great Knight gains 2 mov.
+- On promotion, if you lose a weapon's experience, lose the weapon's experience? Or rather, force it to the back -- so you could do reclassing?
+- Implement legendary animation
+- Implement Devil axe effect --  -- gotta think about this...
+- Implement stationary weapon event tiles
 
 To Test Action:
 WarpIn

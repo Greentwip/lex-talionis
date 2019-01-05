@@ -12,12 +12,12 @@
         <uses>45</uses>
         <value>10</value>
         <RNG>1</RNG>
-		<weight>3</weight>
+        <weight>3</weight>
         <desc></desc>
         
-		<MT>3</MT>
-		<HIT>90</HIT>
-		<LVL>D</LVL>
+        <MT>3</MT>
+        <HIT>90</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Rusted Sword">
@@ -30,12 +30,12 @@
         <uses>20</uses>
         <value>6</value>
         <RNG>1</RNG>
-		<weight>3</weight>
+        <weight>3</weight>
         <desc></desc>
         
-		<MT>2</MT>
-		<HIT>85</HIT>
-		<LVL>D</LVL>
+        <MT>2</MT>
+        <HIT>85</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Steel Sword">
@@ -49,11 +49,11 @@
         <value>20</value>
         <RNG>1</RNG>
         <desc></desc>
-		<weight>6</weight>
+        <weight>6</weight>
         
-		<MT>5</MT>
-		<HIT>75</HIT>
-		<LVL>C</LVL>
+        <MT>5</MT>
+        <HIT>75</HIT>
+        <LVL>C</LVL>
     </item>
 
     <item name="Mithril Sword">
@@ -67,11 +67,11 @@
         <value>75</value>
         <RNG>1</RNG>
         <desc></desc>
-		<weight>5</weight>
+        <weight>5</weight>
 
-		<MT>8</MT>
-		<HIT>80</HIT>
-		<LVL>B</LVL>
+        <MT>8</MT>
+        <HIT>80</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Great Sword">
@@ -85,11 +85,11 @@
         <value>40</value>
         <RNG>1</RNG>
         <desc></desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>7</MT>
-		<HIT>70</HIT>
-		<LVL>B</LVL>
+        <MT>7</MT>
+        <HIT>70</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Lancereaver">
@@ -98,16 +98,16 @@
         <spriteid>10</spriteid>       
         <components>weapon,uses,reverse,weight</components>
         <weapontype>Sword</weapontype>
-		<weight>6</weight>
+        <weight>6</weight>
  
         <uses>15</uses>
         <RNG>1</RNG>
         <value>120</value>
         <desc>Reverses the weapon triangle.</desc>
         
-		<MT>6</MT>
-		<HIT>75</HIT>
-		<LVL>B</LVL>
+        <MT>6</MT>
+        <HIT>75</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Brave Sword">
@@ -121,11 +121,11 @@
         <RNG>1</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>6</MT>
-		<HIT>75</HIT>
-		<LVL>A</LVL>
+        <MT>6</MT>
+        <HIT>75</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Adamant Swd">
@@ -139,11 +139,11 @@
         <uses>15</uses>
         <value>150</value>
         <desc></desc>
-		<weight>7</weight>
+        <weight>7</weight>
         
-		<MT>9</MT>
-		<HIT>75</HIT>
-		<LVL>A</LVL>
+        <MT>9</MT>
+        <HIT>75</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Gustblade">
@@ -236,13 +236,13 @@
         <value>220</value>
         <RNG>1</RNG>
         <desc>Grants wielder RES +10. Silences on hit.</desc>
-		<weight>5</weight>
+        <weight>5</weight>
         <status_on_equip>Resistance +10</status_on_equip>
         <status>Silence</status>
         
-		<MT>5</MT>
-		<HIT>80</HIT>
-		<LVL>A</LVL>
+        <MT>5</MT>
+        <HIT>80</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Master Edge">
@@ -256,13 +256,13 @@
         <value>200</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Swords.</desc>
-		<weight>7</weight>
+        <weight>7</weight>
         <status_on_equip>Swordbreaker</status_on_equip>
         <warning>cur_unit.getMainWeapon() and cur_unit.getMainWeapon().TYPE == 'Sword'</warning>
         
-		<MT>7</MT>
-		<HIT>80</HIT>
-		<LVL>B</LVL>
+        <MT>7</MT>
+        <HIT>80</HIT>
+        <LVL>B</LVL>
     </item>
 
     <!-- Lances -->
@@ -277,11 +277,11 @@
         <RNG>1</RNG>
         <value>8</value>
         <desc></desc>
-		<weight>5</weight>
+        <weight>5</weight>
         
-		<MT>5</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
+        <MT>5</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Steel Lance">
@@ -295,11 +295,11 @@
         <RNG>1</RNG>
         <value>16</value>
         <desc></desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>7</MT>
-		<HIT>70</HIT>
-		<LVL>C</LVL>
+        <MT>7</MT>
+        <HIT>70</HIT>
+        <LVL>C</LVL>
     </item>
 
     <item name="Mithril Lance">
@@ -313,11 +313,11 @@
         <RNG>1</RNG>
         <value>60</value>
         <desc></desc>
-		<weight>7</weight>
+        <weight>7</weight>
         
-		<MT>9</MT>
-		<HIT>75</HIT>
-		<LVL>B</LVL>
+        <MT>9</MT>
+        <HIT>75</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Slim Lance">
@@ -331,11 +331,11 @@
         <value>14</value>
         <RNG>1</RNG>
         <desc></desc>
-		<weight>3</weight>
+        <weight>3</weight>
         
-		<MT>3</MT>
-		<HIT>90</HIT>
-		<LVL>D</LVL>
+        <MT>3</MT>
+        <HIT>90</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Great Lance">
@@ -349,11 +349,11 @@
         <RNG>1</RNG>
         <value>35</value>
         <desc></desc>
-		<weight>9</weight>
+        <weight>9</weight>
         
-		<MT>9</MT>
-		<HIT>60</HIT>
-		<LVL>B</LVL>
+        <MT>9</MT>
+        <HIT>60</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Axereaver">
@@ -367,11 +367,11 @@
         <RNG>1</RNG>
         <value>130</value>
         <desc>Reverses the weapon triangle.</desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>7</MT>
-		<HIT>70</HIT>
-		<LVL>B</LVL>
+        <MT>7</MT>
+        <HIT>70</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Brave Lance">
@@ -385,11 +385,11 @@
         <RNG>1</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<weight>9</weight>
+        <weight>9</weight>
         
-		<MT>7</MT>
-		<HIT>70</HIT>
-		<LVL>A</LVL>
+        <MT>7</MT>
+        <HIT>70</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Adamant Lnc.">
@@ -403,11 +403,11 @@
         <uses>15</uses>
         <value>120</value>
         <desc></desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>11</MT>
-		<HIT>65</HIT>
-		<LVL>A</LVL>
+        <MT>11</MT>
+        <HIT>65</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Javelin">
@@ -421,11 +421,11 @@
         <RNG>1-2</RNG>
         <value>20</value>
         <desc></desc>
-		<weight>7</weight>
+        <weight>7</weight>
         
-		<MT>3</MT>
-		<HIT>65</HIT>
-		<LVL>D</LVL>
+        <MT>3</MT>
+        <HIT>65</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Short Spear">
@@ -439,11 +439,11 @@
         <RNG>1-2</RNG>
         <value>50</value>
         <desc></desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>6</MT>
-		<HIT>60</HIT>
-		<LVL>C</LVL>
+        <MT>6</MT>
+        <HIT>60</HIT>
+        <LVL>C</LVL>
     </item>
 
     <item name="Long Spear">
@@ -457,11 +457,11 @@
         <RNG>1-2</RNG>
         <value>120</value>
         <desc></desc>
-		<weight>9</weight>
+        <weight>9</weight>
         
-		<MT>8</MT>
-		<HIT>50</HIT>
-		<LVL>A</LVL>
+        <MT>8</MT>
+        <HIT>50</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Master Lance">
@@ -475,11 +475,11 @@
         <value>180</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Lances.</desc>
-		<weight>6</weight>
+        <weight>6</weight>
         <status_on_equip>Lancebreaker</status_on_equip>
         <warning>cur_unit.getMainWeapon() and cur_unit.getMainWeapon().TYPE == 'Lance'</warning>
         
-		<MT>9</MT>
+        <MT>9</MT>
         <HIT>70</HIT>
         <LVL>B</LVL>
     </item>
@@ -496,11 +496,11 @@
         <RNG>1</RNG>
         <value>6</value>
         <desc></desc>
-		<weight>6</weight>
+        <weight>6</weight>
         
-		<MT>6</MT>
-		<HIT>70</HIT>
-		<LVL>D</LVL>
+        <MT>6</MT>
+        <HIT>70</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Rusted Axe">
@@ -514,11 +514,11 @@
         <RNG>1</RNG>
         <value>4</value>
         <desc></desc>
-		<weight>5</weight>
+        <weight>5</weight>
         
-		<MT>5</MT>
-		<HIT>65</HIT>
-		<LVL>D</LVL>
+        <MT>5</MT>
+        <HIT>65</HIT>
+        <LVL>D</LVL>
     </item>
     
     <item name="Steel Axe">
@@ -532,11 +532,11 @@
         <RNG>1</RNG>
         <value>12</value>
         <desc></desc>
-		<weight>9</weight>
+        <weight>9</weight>
         
-		<MT>9</MT>
-		<HIT>60</HIT>
-		<LVL>C</LVL>
+        <MT>9</MT>
+        <HIT>60</HIT>
+        <LVL>C</LVL>
     </item>
 
     <item name="Mithril Axe">
@@ -550,11 +550,11 @@
         <RNG>1</RNG>
         <value>50</value>
         <desc></desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>9</MT>
-		<HIT>65</HIT>
-		<LVL>B</LVL>
+        <MT>9</MT>
+        <HIT>65</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Hatchet">
@@ -568,11 +568,11 @@
         <RNG>1</RNG>
         <value>10</value>
         <desc></desc>
-		<weight>3</weight>
+        <weight>3</weight>
         
-		<MT>3</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
+        <MT>3</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
     </item>
         
     <item name="Great Axe">
@@ -586,11 +586,11 @@
         <RNG>1</RNG>
         <value>40</value>
         <desc></desc>
-		<weight>11</weight>
+        <weight>11</weight>
         
-		<MT>11</MT>
-		<HIT>50</HIT>
-		<LVL>B</LVL>
+        <MT>11</MT>
+        <HIT>50</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Swordreaver">
@@ -604,11 +604,11 @@
         <RNG>1</RNG>
         <value>140</value>
         <desc>Reverses the weapon triangle.</desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>7</MT>
-		<HIT>65</HIT>
-		<LVL>B</LVL>
+        <MT>7</MT>
+        <HIT>65</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Brave Axe">
@@ -622,11 +622,11 @@
         <RNG>1</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<weight>11</weight>
+        <weight>11</weight>
         
-		<MT>7</MT>
-		<HIT>65</HIT>
-		<LVL>A</LVL>
+        <MT>7</MT>
+        <HIT>65</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Adamant Axe">
@@ -640,11 +640,11 @@
         <uses>15</uses>
         <value>100</value>
         <desc></desc>
-		<weight>10</weight>
+        <weight>10</weight>
         
-		<MT>12</MT>
-		<HIT>55</HIT>
-		<LVL>A</LVL>
+        <MT>12</MT>
+        <HIT>55</HIT>
+        <LVL>A</LVL>
     </item>
     
     <item name="Hand Axe">
@@ -658,11 +658,11 @@
         <RNG>1-2</RNG>
         <value>15</value>
         <desc></desc>
-		<weight>8</weight>
+        <weight>8</weight>
         
-		<MT>4</MT>
-		<HIT>55</HIT>
-		<LVL>D</LVL>
+        <MT>4</MT>
+        <HIT>55</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Short Axe">
@@ -676,11 +676,11 @@
         <RNG>1-2</RNG>
         <value>40</value>
         <desc></desc>
-		<weight>9</weight>
+        <weight>9</weight>
         
-		<MT>7</MT>
-		<HIT>55</HIT>
-		<LVL>C</LVL>
+        <MT>7</MT>
+        <HIT>55</HIT>
+        <LVL>C</LVL>
     </item>
 
     <item name="Tomahawk">
@@ -694,11 +694,11 @@
         <RNG>1-2</RNG>
         <value>200</value>
         <desc></desc>
-		<weight>10</weight>
+        <weight>10</weight>
         
-		<MT>10</MT>
-		<HIT>40</HIT>
-		<LVL>A</LVL>
+        <MT>10</MT>
+        <HIT>40</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Master Axe">
@@ -712,13 +712,13 @@
         <value>160</value>
         <RNG>1</RNG>
         <desc>Grants Hit/Avoid +30 against enemies wielding Axes.</desc>
-		<weight>9</weight>
+        <weight>9</weight>
         <status_on_equip>Axebreaker</status_on_equip>
         <warning>cur_unit.getMainWeapon() and cur_unit.getMainWeapon().TYPE == 'Axe'</warning>
         
-		<MT>10</MT>
-		<HIT>60</HIT>
-		<LVL>B</LVL>
+        <MT>10</MT>
+        <HIT>60</HIT>
+        <LVL>B</LVL>
     </item>
     
     <!-- Bows -->
@@ -733,11 +733,11 @@
         <RNG>2-3</RNG>
         <value>12</value>
         <desc></desc>
-		<weight>3</weight>
+        <weight>3</weight>
         
-		<MT>4</MT>
-		<HIT>85</HIT>
-		<LVL>D</LVL>
+        <MT>4</MT>
+        <HIT>85</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Oak Bow">
@@ -751,11 +751,11 @@
         <RNG>2-3</RNG>
         <value>24</value>
         <desc></desc>
-		<weight>6</weight>
+        <weight>6</weight>
         
-		<MT>6</MT>
-		<HIT>75</HIT>
-		<LVL>C</LVL>
+        <MT>6</MT>
+        <HIT>75</HIT>
+        <LVL>C</LVL>
     </item>
 
     <item name="Yew Bow">
@@ -769,11 +769,11 @@
         <RNG>2-3</RNG>
         <value>80</value>
         <desc></desc>
-		<weight>4</weight>
+        <weight>4</weight>
         
-		<MT>7</MT>
-		<HIT>80</HIT>
-		<LVL>B</LVL>
+        <MT>7</MT>
+        <HIT>80</HIT>
+        <LVL>B</LVL>
     </item>
 
     <item name="Poison Bow">
@@ -788,11 +788,11 @@
         <value>15</value>
         <desc>Inflicts poison on hit.</desc>
         <status>Poison</status>
-		<weight>4</weight>
+        <weight>4</weight>
         
-		<MT>4</MT>
-		<HIT>75</HIT>
-		<LVL>D</LVL>
+        <MT>4</MT>
+        <HIT>75</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Brave Bow">
@@ -806,11 +806,11 @@
         <RNG>2-3</RNG>
         <value>150</value>
         <desc>Allows two consecutive hits.</desc>
-		<weight>9</weight>
+        <weight>9</weight>
         
-		<MT>7</MT>
-		<HIT>70</HIT>
-		<LVL>A</LVL>
+        <MT>7</MT>
+        <HIT>70</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Longbow">
@@ -824,11 +824,11 @@
         <RNG>2-4</RNG>
         <value>50</value>
         <desc></desc>
-		<weight>7</weight>
+        <weight>7</weight>
         
-		<MT>3</MT>
-		<HIT>65</HIT>
-		<LVL>C</LVL>
+        <MT>3</MT>
+        <HIT>65</HIT>
+        <LVL>C</LVL>
     </item>
 
     <item name="Great Bow">
@@ -860,13 +860,13 @@
         <value>150</value>
         <RNG>2-3</RNG>
         <desc>Grants wielder RES +10. Silences on hit.</desc>
-		<weight>6</weight>
+        <weight>6</weight>
         <status_on_equip>Resistance +10</status_on_equip>
         <status>Silence</status>
         
-		<MT>6</MT>
-		<HIT>70</HIT>
-		<LVL>A</LVL>
+        <MT>6</MT>
+        <HIT>70</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Ballista">
@@ -880,11 +880,11 @@
         <RNG>3-10</RNG>
         <value>400</value>
         <desc></desc>
-		<weight>12</weight>
+        <weight>12</weight>
         
-		<MT>5</MT>
-		<HIT>65</HIT>
-		<LVL>D</LVL>
+        <MT>5</MT>
+        <HIT>65</HIT>
+        <LVL>D</LVL>
     </item>
 
     <!-- Light -->
@@ -901,9 +901,9 @@
         <desc>Lowers enemy accuracy slightly on hit.</desc>
         <status>Dazzle</status>
 
-		<MT>2</MT>
-		<HIT>100</HIT>
-		<LVL>D</LVL>
+        <MT>2</MT>
+        <HIT>100</HIT>
+        <LVL>D</LVL>
 
         <map_hit_color>248,248,128</map_hit_color>
     </item>
@@ -920,9 +920,9 @@
         <value>30</value>
         <desc></desc>
 
-		<MT>4</MT>
-		<HIT>90</HIT>
-		<LVL>C</LVL>
+        <MT>4</MT>
+        <HIT>90</HIT>
+        <LVL>C</LVL>
 
         <map_hit_color>248,248,128</map_hit_color>
     </item>
@@ -939,9 +939,9 @@
         <value>220</value>
         <desc></desc>
 
-		<MT>8</MT>
-		<HIT>80</HIT>
-		<LVL>A</LVL>
+        <MT>8</MT>
+        <HIT>80</HIT>
+        <LVL>A</LVL>
 
         <map_hit_color>248,248,128</map_hit_color>
     </item>
@@ -1134,9 +1134,9 @@
         <desc>Grants wielder SPD +2.</desc>
         <status_on_equip>Speed +2</status_on_equip>
 
-		<MT>2</MT>
-		<HIT>100</HIT>
-		<LVL>D</LVL>
+        <MT>2</MT>
+        <HIT>100</HIT>
+        <LVL>D</LVL>
     </item>
 
     <item name="Thunder Ward">
@@ -1170,9 +1170,9 @@
         <desc>Grants wielder RES +2.</desc>
         <status_on_equip>Resistance +2</status_on_equip>
 
-		<MT>4</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
+        <MT>4</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
 
         <map_hit_color>224,96,-200</map_hit_color>
     </item>
@@ -1190,9 +1190,9 @@
         <desc>Grants wielder +2 SPD/DEF/RES</desc>
         <status_on_equip>Speed +2,Defense +2,Resistance +2</status_on_equip>
 
-		<MT>8</MT>
-		<HIT>100</HIT>
-		<LVL>A</LVL>
+        <MT>8</MT>
+        <HIT>100</HIT>
+        <LVL>A</LVL>
     </item>
 
     <item name="Wyrmsfire">
@@ -1208,8 +1208,8 @@
         <desc>Affects medium sized area.</desc>
         <aoe>Blast,1</aoe>
         
-		<damage>5</damage>
-		<hit>65</hit>
+        <damage>5</damage>
+        <hit>65</hit>
         <LVL>C</LVL>
         <targets>Tile</targets>
 
@@ -1229,7 +1229,7 @@
         <desc>Affects medium sized area. Blinds foes.</desc>
         <aoe>Blast,1</aoe>
         
-		<damage>2</damage>
+        <damage>2</damage>
         <status>Blinded</status>
         <hit>55</hit>
         <LVL>C</LVL>
@@ -1250,7 +1250,7 @@
         <desc>Damages huge area. Inflicts SPD debuff.</desc>
         <aoe>Blast,3</aoe>
         
-		<damage>3</damage>
+        <damage>3</damage>
         <hit>80</hit>
         <LVL>B</LVL>
         <targets>Tile</targets>
@@ -1288,8 +1288,8 @@
         <desc>Affects a large area.</desc>
         <aoe>Blast,2</aoe>
         
-		<damage>11</damage>
-		<hit>55</hit>
+        <damage>11</damage>
+        <hit>55</hit>
         <LVL>A</LVL>
         <targets>Tile</targets>
 
@@ -1309,7 +1309,7 @@
         <desc>Affects medium sized area.</desc>
         <aoe>Blast,1</aoe>
         
-		<damage>13</damage>
+        <damage>13</damage>
         <hit>45</hit>
         <LVL>A</LVL>
         <targets>Tile</targets>
@@ -1332,9 +1332,9 @@
         <desc>Lowers enemy avoid slightly on hit.</desc>
         <status>Chill</status>
 
-		<MT>5</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
+        <MT>5</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
     </item>
@@ -1351,9 +1351,9 @@
         <value>80</value>
         <desc>Recover HP equal to half damage dealt.</desc>
 
-		<MT>7</MT>
-		<HIT>60</HIT>
-		<LVL>C</LVL>
+        <MT>7</MT>
+        <HIT>60</HIT>
+        <LVL>C</LVL>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
     </item>
@@ -1370,9 +1370,9 @@
         <value>120</value>
         <desc>Does half damage even on miss.</desc>
 
-		<MT>8</MT>
-		<HIT>50</HIT>
-		<LVL>B</LVL>
+        <MT>8</MT>
+        <HIT>50</HIT>
+        <LVL>B</LVL>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
     </item>
@@ -1389,9 +1389,9 @@
         <value>250</value>
         <desc></desc>
 
-		<MT>11</MT>
-		<HIT>70</HIT>
-		<LVL>A</LVL>
+        <MT>11</MT>
+        <HIT>70</HIT>
+        <LVL>A</LVL>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
     </item>
@@ -1408,8 +1408,8 @@
         <value>150</value>
         <desc>Long-range strike.</desc>
         
-		<damage>2</damage>
-		<hit>60</hit>
+        <damage>2</damage>
+        <hit>60</hit>
         <LVL>C</LVL>
         <targets>Enemy</targets>
 
@@ -1428,7 +1428,7 @@
         <value>400</value>
         <desc>Weakens target.</desc>
         
-		<hit>80</hit>
+        <hit>80</hit>
         <LVL>C</LVL>
         <targets>Enemy</targets>
 
@@ -1451,7 +1451,7 @@
         <status>Stun</status>
         
         <LVL>B</LVL>
-		<hit>60</hit>
+        <hit>60</hit>
         <targets>Enemy</targets>    
 
         <map_hit_color>-248,0,-248</map_hit_color>
@@ -1469,8 +1469,8 @@
         <value>1000</value>
         <desc>Does half damage on miss.</desc>
         
-		<damage>11</damage>
-		<hit>40</hit>
+        <damage>11</damage>
+        <hit>40</hit>
         <LVL>A</LVL>
         <targets>Enemy</targets>
 
@@ -1510,9 +1510,9 @@
         <value>1</value>
         <desc></desc>
 
-		<MT>3</MT>
-		<HIT>90</HIT>
-		<LVL>D</LVL>
+        <MT>3</MT>
+        <HIT>90</HIT>
+        <LVL>D</LVL>
     </item>
 
     <!-- Other Items -->
@@ -1785,12 +1785,12 @@
         <RNG>1-2</RNG>
         <value>100000</value>
         <desc>An Imperial Witchblade. Enervates enemies.</desc>
-		<weight>12</weight>
+        <weight>12</weight>
         <status>Enervated</status>
         
-		<MT>13</MT>
-		<HIT>70</HIT>
-		<LVL>A</LVL>
+        <MT>13</MT>
+        <HIT>70</HIT>
+        <LVL>A</LVL>
 
         <map_hit_color>-248,0,-248</map_hit_color>
     </item>

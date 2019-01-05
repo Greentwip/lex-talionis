@@ -1,5 +1,5 @@
 <class_info>
-<!-- Tier 0 Classes -->
+<!-- Generic Classes -->
     <class id="Citizen">
         <short_name>Citizen</short_name>
         <long_name>Citizen</long_name>
@@ -14,9 +14,109 @@
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,0,0,0,0,0,0,0</growths>
-		<bases>7,0,0,0,0,0,0,0,3,4</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<bases>10,0,0,0,0,0,0,0,5,5</bases>
+		<max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>An ordinary commoner.</desc>
+    </class>
+
+<!-- Special Classes -->
+    <!-- Lord -> Great Lord -->
+    <class id="Eirika_Lord">
+        <short_name>Lord</short_name>
+        <long_name>Lord</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>E,0,0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Eirika_Great_Lord</turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>0</movement_group>
+        <tags>Sword</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>90,45,22,40,45,40,15,20</growths>
+        <bases>16,4,2,8,9,0,3,1,5,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>??</desc>
+    </class>
+
+    <class id="Eirika_Great_Lord">
+        <short_name>Great Lord</short_name>
+        <long_name>Great Lord</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>70,0,0,0,0,0,0,0</wexp_gain>
+        <promotes_from>Eirika_Lord</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>2</movement_group>
+        <tags>Sword,Mounted,Horse</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>90,45,22,40,45,40,15,20</growths>
+        <bases>18,3,2,3,4,0,5,0,7,7</bases>
+        <promotion>4,2,1,2,1,0,3,5,2,2</promotion>
+        <max>60,24,20,29,30,30,22,25,25,15</max>
+        <desc>??</desc>
+    </class>
+
+    <class id="Ephraim_Lord">
+        <short_name>Lord</short_name>
+        <long_name>Lord</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,D,0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Ephraim_Great_Lord</turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>0</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>90,45,22,40,45,40,15,15</growths>
+        <bases>18,6,3,6,7,0,6,0,8,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>??</desc>
+    </class>
+
+    <class id="Ephraim_Great_Lord">
+        <short_name>Great Lord</short_name>
+        <long_name>Great Lord</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,40,0,0,0,0,0,0</wexp_gain>
+        <promotes_from>Ephraim_Lord</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>2</movement_group>
+        <tags>Mounted,Horse</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>90,45,22,40,45,40,15,15</growths>
+        <bases>18,3,2,3,4,0,5,0,10,7</bases>
+        <promotion>4,2,1,3,2,0,2,5,2,2</promotion>
+        <max>60,27,20,26,27,30,23,23,25,15</max>
+        <desc>??</desc>
+    </class>
+
+    <!-- Dancer -->
+    <class id="Dancer">
+        <short_name>Dancer</short_name>
+        <long_name>Dancer</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>0</movement_group>
+        <tags></tags>
+        <skills>1,Refresh</skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>45,45,45,30,60,70,0,13</growths>
+        <bases>14,1,1,2,7,0,0,1,4,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>??</desc>
     </class>
 
 <!-- Normal Classes -->
@@ -26,17 +126,17 @@
         <long_name>Myrmidon</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,0,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>D,0,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Swordmaster</turns_into>
+        <turns_into>Swordmaster,Assassin</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
-        <tags></tags>
+        <tags>Sword</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,35,65,60,60,20,35</growths>
-		<bases>11,3,1,6,7,0,1,1,5,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>70,35,17,40,40,30,15,20</growths>
+		<bases>16,4,2,9,10,0,2,1,8,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Swordfighters with superior speed and skill.</desc>
     </class>
 
@@ -45,38 +145,19 @@
         <long_name>Swordmaster</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>10,0,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>40,0,0,0,0,0,0,0</wexp_gain>
         <promotes_from>Myrmidon</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
-        <tags></tags>
+        <tags>Sword</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,35,65,60,60,20,35</growths>
-		<bases>16,5,2,6,7,0,3,2,6,6</bases>
-        <promotion>5,2,1,0,0,0,2,1,1,1</promotion>
-		<max>40,16,15,19,20,20,15,17,20</max>
+		<growths>65,25,12,30,30,25,15,22</growths>
+		<bases>21,6,3,11,12,0,5,3,9,6</bases>
+        <promotion>5,2,1,1,0,0,2,1,1,1</promotion>
+		<max>60,24,20,29,30,30,22,25,20,15</max>
         <desc>Devotees of the sword. Possess incredible speed and skill.</desc>
-    </class>
-
-    <class id="Lord">
-        <short_name>Lord</short_name>
-        <long_name>Lord</long_name>
-        <tier>1</tier>
-        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,0,0,0,0,0,0,0</wexp_gain>
-        <promotes_from></promotes_from>
-        <turns_into></turns_into>
-        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>0</movement_group>
-        <tags></tags>
-        <skills></skills>
-        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-        <growths>90,45,0,40,45,40,15,15</growths>
-        <bases>16,4,0,8,9,0,3,1,5,5</bases>
-        <max>60,20,20,20,20,30,20,20,20</max>
-        <desc>??</desc>
     </class>
 
     <!-- Mercenary -> Hero -->
@@ -85,17 +166,17 @@
         <long_name>Mercenary</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,0,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>D,0,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Hero</turns_into>
+        <turns_into>Hero,Ranger</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
-        <tags></tags>
+        <tags>Sword</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
-		<growths>105,60,15,55,45,40,25,15</growths>
-		<bases>14,3,0,5,5,0,3,0,6,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>80,40,20,40,32,30,18,30</growths>
+		<bases>18,4,2,8,8,0,4,0,9,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Professional soldiers for hire. Well-balanced, with superior abilities all around.</desc>
     </class>
 
@@ -104,18 +185,18 @@
         <long_name>Hero</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>10,0,16,0,0,0,0,0</wexp_gain>
+        <wexp_gain>40,0,D,0,0,0,0,0</wexp_gain>
         <promotes_from>Mercenary</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
-        <tags></tags>
+        <tags>Sword</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,60,15,55,45,40,25,15</growths>
-		<bases>18,4,0,7,7,0,5,2,8,6</bases>
+		<growths>75,30,15,30,20,25,20,20</growths>
+		<bases>22,6,3,10,11,0,8,3,11,6</bases>
         <promotion>4,1,0,2,2,0,2,2,2,1</promotion>
-		<max>40,17,15,19,17,20,17,15,20</max>
+		<max>60,25,20,30,26,30,25,24,25,15</max>
         <desc>Veteran warriors expert in all fields of combat.</desc>
     </class>
 
@@ -125,17 +206,17 @@
         <long_name>Thief</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,0,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>E,0,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Assassin</turns_into>
+        <turns_into>Assassin,Rogue</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
-        <tags></tags>
+        <tags>Sword</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,40,35,60,65,55,5,35</growths>
-		<bases>11,2,1,2,6,0,1,1,4,6</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>50,5,5,45,40,40,5,20</growths>
+		<bases>16,3,3,1,9,0,2,0,6,6</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Expert in stealth and subterfuge. Possess weak attacks but many other skills.</desc>
     </class>
 
@@ -144,40 +225,61 @@
         <long_name>Assassin</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,0,0,16,0,0,0,0</wexp_gain>
+        <wexp_gain>D,0,0,0,0,0,0,0</wexp_gain>
         <promotes_from>Thief</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
-        <tags></tags>
+        <tags>Sword</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,40,35,60,65,55,5,35</growths>
-		<bases>14,4,2,5,8,0,3,3,5,7</bases>
-        <promotion>3,2,1,3,2,0,2,2,1,1</promotion>
-		<max>40,15,15,20,20,20,15,15,20</max>
+        <growths>50,5,5,45,40,40,5,20</growths>
+        <bases>16,3,3,1,9,0,2,0,6,7</bases>
+        <promotion>3,1,1,1,1,0,2,2,2,1</promotion>
+		<max>60,20,20,30,30,30,20,20,20,15</max>
         <desc>Killers at home in the shadows.</desc>
     </class>
 
-    <!-- Soldier -> Halberdier -->
-    <class id="Soldier">
-        <short_name>Soldier</short_name>
-        <long_name>Soldier</long_name>
-        <tier>1</tier>
+    <class id="Rogue">
+        <short_name>Rogue</short_name>
+        <long_name>Rogue</long_name>
+        <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,1,0,0,0,0,0,0</wexp_gain>
-        <promotes_from></promotes_from>
+        <wexp_gain>1,0,0,0,0,0,0,0</wexp_gain>
+        <promotes_from>Thief</promotes_from>
         <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>0</movement_group>
+        <tags>Sword</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>50,10,5,45,35,40,5,20</growths>
+        <bases>16,3,3,1,9,0,2,0,7,7</bases>
+        <promotion>2,1,1,1,0,0,2,2,1,1</promotion>
+        <max>60,20,20,30,30,30,20,20,20,15</max>
+        <desc>Killers at home in the shadows.</desc>
+    </class>
+
+    <!-- Recruit -->
+    <class id="Recruit">
+        <short_name>Recruit</short_name>
+        <long_name>Recruit</long_name>
+        <tier>0</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,E,0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Knight,Cavalier,Pegasus_Knight</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>80,50,0,30,20,25,12,15</growths>
-		<bases>20,3,0,0,1,0,0,0,6,5</bases>
-		<max>60,20,20,20,20,30,20,20,20</max>
-        <desc>??</desc>
-    </class>
+        <growths>75,45,0,40,40,40,25,35</growths>
+        <bases>13,3,0,1,0,0,0,1,6,4</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>Mounted knights with superior movement.</desc>
+        <max_level>10</max_level>
+    </class>   
 
     <!-- Cavalier -> Paladin -->
     <class id="Cavalier">
@@ -185,17 +287,18 @@
         <long_name>Cavalier</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,1,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>E,D,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Paladin</turns_into>
+        <turns_into>Paladin,Great_Knight</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags>Mounted</tags>
+        <tags>Mounted,Horse</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>100,45,5,55,35,40,20,30</growths>
-		<bases>12,3,0,2,3,0,4,0,7,7</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>75,35,17,40,28,30,15,15</growths>
+		<bases>20,5,2,3,5,0,6,0,9,7</bases>
+        <promotion>1,0,0,2,2,0,0,2,3,3</promotion>
+        <max>60,20,20,20,20,30,20,20,25,15</max>
         <desc>Mounted knights with superior movement.</desc>
     </class>   
 
@@ -204,18 +307,38 @@
         <long_name>Paladin</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,1,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>30,30,0,0,0,0,0,0</wexp_gain>
         <promotes_from>Cavalier</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags>Mounted</tags>
+        <tags>Mounted,Horse</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>100,45,5,55,35,40,20,30</growths>
-		<bases>14,4,0,4,5,0,6,5,8,8</bases>
-        <promotion>2,1,0,2,2,0,2,5,1,1</promotion>
-		<max>40,17,15,18,17,20,17,18,20</max>
+		<growths>70,25,12,35,25,25,12,25</growths>
+		<bases>23,7,3,6,11,0,8,6,11,8</bases>
+        <promotion>2,1,0,1,2,0,2,2,2,1</promotion>
+		<max>60,25,20,27,25,30,25,26,25,15</max>
+        <desc>Veteran horse knights.</desc>
+    </class>
+
+    <class id="Great_Knight">
+        <short_name>Great Knight</short_name>
+        <long_name>Great Knight</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>E,E,D,0,0,0,0,0</wexp_gain>
+        <promotes_from>Cavalier</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>1</movement_group>
+        <tags>Mounted,Armor,Horse</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>70,30,15,25,20,20,21,22</growths>
+        <bases>21,8,4,6,7,0,11,3,13,6</bases>
+        <promotion>3,2,1,1,2,0,2,2,4</promotion>
+        <max>60,28,20,26,25,30,29,26,25,15</max>
         <desc>Veteran horse knights.</desc>
     </class>
 
@@ -225,17 +348,18 @@
         <long_name>Knight</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,1,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>0,D,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>General</turns_into>
+        <turns_into>General,Great_Knight</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags>Armor</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,55,15,40,20,35,55,35</growths>
-		<bases>11,3,0,2,1,0,6,1,9,4</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>80,40,0,30,15,25,28,20</growths>
+		<bases>17,5,0,3,1,0,9,1,13,4</bases>
+        <promotion>2,1,0,1,1,0,2,0,4,0</promotion>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Heavily armored knights with superior defense but poor movement.</desc>
     </class>
 
@@ -244,7 +368,7 @@
         <long_name>General</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>16,1,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>E,40,E,0,0,0,0,0</wexp_gain>
         <promotes_from>Knight</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -252,21 +376,20 @@
         <tags>Armor</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,55,15,40,20,35,55,35</growths>
+		<growths>75,30,0,25,10,20,23,25</growths>
 		<bases>17,6,0,4,4,0,8,4,10,5</bases>
-        <promotion>6,3,0,2,3,0,2,3,1,1</promotion>
-		<max>40,19,15,18,15,20,20,17,20</max>
+        <promotion>4,2,0,3,3,0,3,3,2,1</promotion>
+		<max>60,29,20,28,25,30,30,26,25,15</max>
         <desc>Defensive stalwarts able to take a hit.</desc>
     </class>
 
-
     <!-- Pegasus Knight -> Falcoknight -->
-    <class id="Pegasus Knight">
+    <class id="Pegasus_Knight">
         <short_name>Peg. Knight</short_name>
         <long_name>Pegasus Knight</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,31,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>0,D,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
         <turns_into>Falcoknight</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -274,9 +397,10 @@
         <tags>Flying,Mounted</tags>
         <skills>1,Flying</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-        <growths>65,35,0,40,40,35,12,35</growths>
-        <bases>14,4,0,5,5,0,3,2,5,7</bases>
-        <max>40,15,15,15,15,20,15,15,20</max>
+        <growths>65,35,17,40,40,35,12,35</growths>
+        <bases>14,4,2,5,5,0,3,2,5,7</bases>
+        <promotion>0,0,0,3,3,0,0,3,1,3</promotion>
+        <max>60,20,20,20,20,30,20,20,25,15</max>
         <desc>Mounted knights with superior movement.</desc>
     </class>   
 
@@ -285,18 +409,18 @@
         <long_name>Falcoknight</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>1,40,0,0,0,0,0,0</wexp_gain>
-        <promotes_from>Pegasus Knight</promotes_from>
+        <wexp_gain>E,40,0,0,0,0,0,0</wexp_gain>
+        <promotes_from>Pegasus_Knight</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>3</movement_group>
         <tags>Flying,Mounted</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-        <growths>60,30,0,30,30,30,12,30</growths>
-        <bases>20,6,0,7,7,0,5,4,6,8</bases>
-        <promotion>5,2,0,0,2,0,2,2,1,1</promotion>
-        <max>60,23,20,25,28,30,23,26,25</max>
+        <growths>60,30,15,30,30,30,12,30</growths>
+        <bases>20,6,3,7,7,0,5,4,6,8</bases>
+        <promotion>5,2,1,0,2,0,2,2,1,1</promotion>
+        <max>60,23,20,25,28,30,23,26,25,15</max>
         <desc>Veteran pegasus knights.</desc>
     </class>
 
@@ -306,9 +430,9 @@
         <long_name>Journeyman</long_name>
         <tier>0</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,1,0,0,0,0,0</wexp_gain>
+        <wexp_gain>0,0,E,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Pirate,Fighter</turns_into>
+        <turns_into>Pirate,Fighter,Wyvern_Knight</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
@@ -316,7 +440,7 @@
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
         <growths>85,55,0,40,32,40,18,20</growths>
         <bases>14,3,0,0,1,0,1,0,8,4</bases>
-        <max>60,20,20,20,20,30,20,20,20</max>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>??</desc>
         <max_level>10</max_level>
     </class>
@@ -327,9 +451,9 @@
         <long_name>Fighter</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,1,0,0,0,0,0</wexp_gain>
+        <wexp_gain>0,0,D,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Warrior</turns_into>
+        <turns_into>Warrior,Hero</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>4</movement_group>
         <tags></tags>
@@ -337,7 +461,8 @@
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>85,55,0,35,30,15,15,15</growths>
 		<bases>20,5,0,2,4,0,2,0,11,5</bases>
-		<max>60,20,20,20,20,30,20,20,20</max>
+        <promotion>2,2,0,1,0,0,0,1,3,1</promotion>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>??</desc>
     </class>
 
@@ -346,7 +471,7 @@
         <long_name>Warrior</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,1,16,0,0,0,0</wexp_gain>
+        <wexp_gain>0,0,40,E,0,0,0,0</wexp_gain>
         <promotes_from>Fighter</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -354,11 +479,52 @@
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>120,75,15,45,40,20,25,20</growths>
-		<bases>18,4,0,3,3,0,4,2,10,6</bases>
-        <promotion>3,1,0,2,0,0,3,2,2,1</promotion>
-		<max>40,20,15,19,17,20,17,15,20</max>
+		<growths>80,45,0,25,20,15,16,17</growths>
+		<bases>28,8,0,5,6,0,5,0,13,6</bases>
+        <promotion>3,1,0,2,0,0,3,3,2,1</promotion>
+		<max>60,30,20,28,26,30,26,22,25,15</max>
         <desc>Determined fighters who relish battle.</desc>
+    </class>
+
+    <!-- Pirate -> Berserker -->
+    <class id="Pirate">
+        <short_name>Pirate</short_name>
+        <long_name>Pirate</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,D,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Berserker,Warrior</turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>4</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>75,50,0,35,25,15,10,13</growths>
+        <bases>19,4,0,2,6,0,3,0,10,5</bases>
+        <promotion>2,2,0,0,1,0,1,0,2,1</promotion>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>Untrained but fanatical combatant.</desc>
+    </class>
+
+    <class id="Berserker">
+        <short_name>Berserker</short_name>
+        <long_name>Berserker</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,40,0,0,0,0,0</wexp_gain>
+        <promotes_from>Pirate</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>4</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>75,50,0,35,25,15,10,13</growths>
+        <bases>24,7,0,6,7,0,6,0,13,6</bases>
+        <promotion>4,1,0,1,1,0,2,2,3,1</promotion>
+        <max>60,30,20,29,28,30,23,21,25,15</max>
+        <desc>Devotees of the axe. Relentless savages that deliver devastating stikes.</desc>
     </class>
 
     <!-- Archer -> Sniper -->
@@ -367,17 +533,17 @@
         <long_name>Archer</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,1,0,0,0,0</wexp_gain>
+        <wexp_gain>0,0,0,D,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Sniper</turns_into>
+        <turns_into>Sniper,Ranger</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,40,55,45,45,20,25</growths>
-		<bases>12,3,0,2,3,0,2,0,5,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>70,35,0,40,32,35,15,20</growths>
+		<bases>18,4,0,3,4,0,3,0,7,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Lightly armored soldiers armed with bows. Can attack from a distance.</desc>
     </class> 
 
@@ -386,7 +552,7 @@
         <long_name>Sniper</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,10,0,0,0,0</wexp_gain>
+        <wexp_gain>0,0,0,40,0,0,0,0</wexp_gain>
         <promotes_from>Archer</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -394,10 +560,30 @@
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,40,55,45,45,20,25</growths>
-		<bases>16,6,1,4,5,0,4,3,6,6</bases>
-        <promotion>4,3,1,2,2,0,2,3,1,1</promotion>
-		<max>40,17,15,20,19,20,17,16,20</max>
+		<growths>65,30,0,30,20,30,15,25</growths>
+		<bases>21,7,0,6,7,0,5,3,8,6</bases>
+        <promotion>4,3,0,2,2,0,2,3,1,1</promotion>
+		<max>60,25,20,30,29,30,25,24,20</max>
+        <desc>Devotees of the bow. Possess incredible range.</desc>
+    </class>
+
+    <class id="Ranger">
+        <short_name>Ranger</short_name>
+        <long_name>Ranger</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>D,0,0,1,0,0,0,0</wexp_gain>
+        <promotes_from>Archer</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>2</movement_group>
+        <tags>Mounted,Horse</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>60,25,0,30,35,25,15,20</growths>
+        <bases>21,7,0,6,7,0,6,4,9,7</bases>
+        <promotion>3,2,0,2,1,0,3,3,3,2</promotion>
+        <max>60,25,20,28,30,30,24,25,25,15</max>
         <desc>Devotees of the bow. Possess incredible range.</desc>
     </class>
 
@@ -407,17 +593,37 @@
         <long_name>Cleric</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,0,1,0,0,0</wexp_gain>
+        <wexp_gain>0,0,0,0,D,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Bishop</turns_into>
+        <turns_into>Bishop,Valkyrie</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,15,40,55,45,70,15,65</growths>
-		<bases>11,0,1,1,1,0,0,4,4,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>50,0,30,35,32,45,8,50</growths>
+		<bases>18,0,1,2,2,0,1,6,5,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>Kind-hearted healers.</desc>
+    </class>
+
+    <class id="Monk">
+        <short_name>Cleric</short_name>
+        <long_name>Cleric</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,0,0,0,E,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Bishop,Sage</turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>5</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>50,0,30,35,32,45,8,40</growths>
+        <bases>18,0,1,1,2,0,1,5,6,5</bases>
+        <promotion>1,0,0,2,2,0,0,2,1,1</promotion>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Kind-hearted healers.</desc>
     </class>
 
@@ -434,11 +640,51 @@
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,15,40,55,45,70,15,65</growths>
-		<bases>14,0,3,3,2,0,3,6,5,6</bases>
-        <promotion>3,0,2,2,1,0,3,2,1,1</promotion>
-		<max>40,15,17,19,17,20,15,20,20</max>
+		<growths>45,0,35,25,22,40,8,50</growths>
+		<bases>21,0,4,5,4,0,3,9,7,6</bases>
+        <promotion>3,0,2,2,1,0,3,2,2,1</promotion>
+		<max>60,20,25,26,26,30,22,30,20,15</max>
         <desc>Mages gifted with visions of the future.</desc>
+    </class>
+
+    <!-- Troubadour -> Valkyrie -->
+    <class id="Troubadour">
+        <short_name>Troubadour</short_name>
+        <long_name>Troubadour</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,0,0,D,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Valkyrie,Mage_Knight</turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>3</movement_group>
+        <tags>Mounted,Horse</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>50,0,25,35,55,45,12,40</growths>
+        <bases>15,0,1,1,3,0,2,5,5,6</bases>
+        <max>60,20,20,20,20,30,20,20,25,15</max>
+        <desc>Kind-hearted healers.</desc>
+    </class>
+
+    <class id="Valkyrie">
+        <short_name>Valkyrie</short_name>
+        <long_name>Valkyrie</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,0,0,D,0,0,0</wexp_gain>
+        <promotes_from>Troubadour</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>3</movement_group>
+        <tags>Mounted,Horse</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>45,0,35,25,45,40,10,40</growths>
+        <bases>20,0,4,3,5,0,4,8,6,7</bases>
+        <promotion>3,0,2,2,1,0,3,2,2,1</promotion>
+        <max>60,20,25,24,25,30,24,28,25,15</max>
+        <desc>Kind-hearted healers.</desc>
     </class>
 
     <!-- Mage -> Sage -->
@@ -447,17 +693,18 @@
         <long_name>Mage</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,0,0,0,1,0</wexp_gain>
+        <wexp_gain>0,0,0,0,0,0,D,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Sage</turns_into>
+        <turns_into>Sage,Mage_Knight</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>75,15,75,45,65,40,20,45</growths>
-		<bases>11,0,1,1,2,0,1,2,4,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>55,0,55,40,35,20,5,40</growths>
+		<bases>16,0,1,3,3,0,3,4,5,5</bases>
+        <promotion>1,0,0,1,2,0,1,2,1,1</promotion>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Curious practioners of anima magic.</desc>
     </class>
 
@@ -466,7 +713,7 @@
         <long_name>Sage</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,0,0,0,10,0</wexp_gain>
+        <wexp_gain>0,0,0,0,D,D,D,0</wexp_gain>
         <promotes_from>Mage</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -474,11 +721,52 @@
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>75,15,75,45,65,40,20,45</growths>
-		<bases>15,0,2,2,2,0,4,5,5,6</bases>
-        <promotion>4,0,1,1,0,0,3,3,1,1</promotion>
-		<max>40,15,19,17,18,20,15,18,20</max>
+		<growths>45,0,45,30,25,15,10,40</growths>
+		<bases>20,0,5,6,5,0,5,6,7,6</bases>
+        <promotion>4,0,1,1,0,0,3,3,1</promotion>
+		<max>60,20,30,30,26,30,21,25,20,15</max>
         <desc>Advanced wielders of the natural magics.</desc>
+    </class>
+
+    <class id="Mage_Knight">
+        <short_name>Mage Knight</short_name>
+        <long_name>Mage Knight</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,0,0,D,0,40,0</wexp_gain>
+        <promotes_from>Mage</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>5</movement_group>
+        <tags>Mounted,Horse</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>45,0,40,30,40,40,10,40</growths>
+        <bases>20,0,4,5,6,0,5,6,8,7</bases>
+        <promotion>4,0,2,1,0,0,2,2,3</promotion>
+        <max>60,20,25,26,25,40,24,28,25,15</max>
+        <desc>Advanced wielders of the natural magics.</desc>
+    </class>
+
+    <!-- Pupil -->
+    <class id="Pupil">
+        <short_name>Pupil</short_name>
+        <long_name>Pupil</long_name>
+        <tier>0</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,0,0,0,0,0,E,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Shaman,Mage,Monk</turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>5</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>55,0,55,40,35,40,10,30</growths>
+        <bases>13,0,1,0,1,0,0,3,5,4</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>Impulsive mages with a tenous grasp on their magic.</desc>
+        <max_level>10</max_level>
     </class>
 
     <!-- Shaman -> Druid -->
@@ -487,17 +775,18 @@
         <long_name>Shaman</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,0,0,0,0,1</wexp_gain>
+        <wexp_gain>0,0,0,0,0,0,0,D</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Druid</turns_into>
+        <turns_into>Druid,Summoner</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,20,65,45,40,25,25,55</growths>
-		<bases>11,1,2,1,1,0,1,3,5,4</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>50,0,50,32,30,20,10,40</growths>
+		<bases>16,0,3,1,2,0,2,5,7,5</bases>
+        <promotion>1,0,2,0,1,0,1,2,2,1</promotion>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Impulsive mages with a tenous grasp on their magic.</desc>
     </class>
 
@@ -506,7 +795,7 @@
         <long_name>Druid</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,0,0,0,0,10</wexp_gain>
+        <wexp_gain>0,0,0,0,E,0,D,40</wexp_gain>
         <promotes_from>Shaman</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -514,101 +803,121 @@
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>65,20,65,45,40,25,25,55</growths>
-		<bases>15,1,4,3,4,0,3,5,6,5</bases>
-        <promotion>4,0,2,2,3,0,2,2,1,1</promotion>
-		<max>40,15,19,17,17,20,15,19,20</max>
+		<growths>45,0,55,30,25,20,10,35</growths>
+		<bases>19,0,7,3,4,0,4,6,8,6</bases>
+        <promotion>4,0,0,0,3,0,2,2,1,1</promotion>
+		<max>60,20,29,26,26,30,21,29,20,15</max>
         <desc>War shaman capable of incredible feats of magic.</desc>
     </class>
 
-    <!-- Pirate -> Berserker -->
-    <class id="Pirate">
-        <short_name>Pirate</short_name>
-        <long_name>Pirate</long_name>
-        <tier>1</tier>
-        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,1,0,0,0,0,0</wexp_gain>
-        <promotes_from></promotes_from>
-        <turns_into>Berserker</turns_into>
-        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>4</movement_group>
-        <tags></tags>
-        <skills></skills>
-        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>100,65,5,35,45,20,15,15</growths>
-		<bases>15,3,0,1,4,0,2,0,7,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
-        <desc>Untrained but fanatical combatant.</desc>
-    </class>
-
-    <class id="Berserker">
-        <short_name>Berserker</short_name>
-        <long_name>Berserker</long_name>
+    <class id="Summoner">
+        <short_name>Summoner</short_name>
+        <long_name>Summoner</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,10,0,0,0,0,0</wexp_gain>
-        <promotes_from>Pirate</promotes_from>
+        <wexp_gain>0,0,0,0,E,0,0,40</wexp_gain>
+        <promotes_from>Shaman</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>4</movement_group>
+        <movement_group>5</movement_group>
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>100,65,5,35,45,20,15,15</growths>
-		<bases>19,4,0,2,7,0,4,4,10,6</bases>
-        <promotion>4,1,0,1,3,0,2,4,3,1</promotion>
-		<max>40,20,15,19,19,20,15,15,20</max>
-        <desc>Devotees of the axe. Relentless savages that deliver devastating stikes.</desc>
+        <growths>45,0,50,30,25,20,8,35</growths>
+        <bases>18,0,5,3,4,0,3,5,8,6</bases>
+        <promotion>3,0,0,1,3,0,1,3,1,1</promotion>
+        <max>60,20,27,27,26,30,20,28,20,15</max>
+        <desc>War shaman capable of incredible feats of magic.</desc>
     </class>
 
-    <!-- Dracoknight -> Dracolord -->
-    <class id="Dracoknight">
-        <short_name>Dr. knight</short_name>
-        <long_name>Dracoknight</long_name>
+    <!-- Wyverns -->
+    <class id="Wyvern_Rider">
+        <short_name>Wyv. Rider</short_name>
+        <long_name>Wyvern Rider</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,1,0,0,0,0,0,0</wexp_gain>
+        <wexp_gain>0,D,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Dracolord</turns_into>
+        <turns_into>Wyvern_Lord,Wyvern_Knight</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags>Flying,Mounted</tags>
-        <skills>1,Flying</skills>
+        <tags>Flying,Mounted,Dragon</tags>
+        <skills>1,Flying;1,Canto</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,60,15,45,40,35,35,25</growths>
-		<bases>14,5,0,3,3,0,5,0,7,6</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>80,45,0,35,30,25,25,17</growths>
+		<bases>20,7,0,5,5,0,8,0,10,7</bases>
+        <max>60,20,20,20,20,30,20,20,25,15</max>
         <desc>An elite warrior mounted on the back of a wyvern.</desc>
     </class>
 
-    <class id="Dracolord">
-        <short_name>Dr. lord</short_name>
-        <long_name>Dracolord</long_name>
+    <class id="Wyvern_Lord">
+        <short_name>Wyv. Lord</short_name>
+        <long_name>Wyvern Lord</long_name>
         <tier>2</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,1,1,0,0,0,0,0</wexp_gain>
-        <promotes_from>Dracoknight</promotes_from>
+        <wexp_gain>D,40,0,0,0,0,0,0</wexp_gain>
+        <promotes_from>Wyvern_Rider</promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags>Flying,Mounted</tags>
+        <tags>Flying,Mounted,Dragon</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>105,60,15,45,40,35,35,25</growths>
-		<bases>19,6,0,6,4,0,6,2,9,7</bases>
+		<growths>75,40,0,30,20,20,20,17</growths>
+		<bases>25,9,0,7,7,0,10,2,11,8</bases>
         <promotion>5,1,0,3,1,0,1,2,2,1</promotion>
-		<max>40,18,15,17,16,20,19,15,20</max>
+		<max>60,27,20,26,24,30,28,23,25,15</max>
+        <desc>Lords who command the battlefield on their draconic mounts.</desc>
+    </class>
+
+    <class id="Wyvern_Knight">
+        <short_name>Wyv. Knight</short_name>
+        <long_name>Wyvern Knight</long_name>
+        <tier>2</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,40,0,0,0,0,0,0</wexp_gain>
+        <promotes_from>Wyvern_Rider</promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>2</movement_group>
+        <tags>Flying,Mounted,Dragon</tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>65,35,0,30,30,25,15,20</growths>
+        <bases>20,7,0,8,9,0,7,2,9,8</bases>
+        <promotion>5,1,0,3,1,0,1,2,2,1</promotion>
+        <max>60,25,20,27,29,30,24,23,25,15</max>
         <desc>Lords who command the battlefield on their draconic mounts.</desc>
     </class>
 
 <!-- Enemy Only Classes -->
-    <!-- Brigand -> ??? -->
+    <!-- Soldier -->
+    <class id="Soldier">
+        <short_name>Soldier</short_name>
+        <long_name>Soldier</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
+        <wexp_gain>0,E,0,0,0,0,0,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into></turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>4</movement_group>
+        <tags></tags>
+        <skills></skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>80,50,0,30,20,25,12,15</growths>
+        <bases>20,3,0,0,1,0,0,0,6,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
+        <desc>??</desc>
+    </class>
+
+    <!-- Brigand -->
     <class id="Brigand">
         <short_name>Brigand</short_name>
         <long_name>Brigand</long_name>
         <tier>1</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,1,0,0,0,0,0</wexp_gain>
+        <wexp_gain>0,0,D,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -616,38 +925,19 @@
         <tags></tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>110,65,0,40,25,20,15,15</growths>
-		<bases>13,3,0,1,3,0,2,0,9,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>82,50,0,30,20,15,10,13</growths>
+		<bases>20,5,0,1,5,0,3,0,12,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>Ruffians with a strong offense but poor defense.</desc>
     </class>
 
-    <class id="Ballista">
-        <short_name>Ballista</short_name>
-        <long_name>Ballista</long_name>
-        <tier>1</tier>
-        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,1,0,0,0,0</wexp_gain>
-        <promotes_from></promotes_from>
-        <turns_into></turns_into>
-        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>1</movement_group>
-        <tags></tags>
-        <skills></skills>
-        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,45,0,55,0,45,20,25</growths>
-		<bases>12,6,0,2,3,0,2,0,2,0</bases>
-		<max>40,17,15,20,15,20,17,16,20</max>
-        <desc>Long-range immobile siege weapons.</desc>
-    </class> 
-
-<!-- Summoned only classes -->
+<!-- Summoned Classes -->
     <class id="Phantom">
         <short_name>Phantom</short_name>
         <long_name>Phantom</long_name>
         <tier>0</tier>
         <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,1,0,0,0,0,0</wexp_gain>
+        <wexp_gain>0,0,C,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
         <turns_into>Phantom</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
@@ -655,28 +945,9 @@
         <tags>Mindless</tags>
         <skills>1,Ephemeral</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-		<growths>95,75,0,45,60,0,20,20</growths>
-		<bases>13,3,0,1,3,0,0,0,8,5</bases>
-		<max>40,15,15,15,15,20,15,15,20</max>
+		<growths>0,55,0,35,45,50,15,15</growths>
+		<bases>1,5,0,2,4,0,0,0,11,5</bases>
+        <max>60,20,20,20,20,30,20,20,20,15</max>
         <desc>A summoned phantom.</desc>
-    </class>
-
-    <class id="Wagon">
-        <short_name>Wagon</short_name>
-        <long_name>Wagon</long_name>
-        <tier>1</tier>
-        <!-- Swords, Lances, Axes, Bows, Staves, Light, Anima, Dark -->
-        <wexp_gain>0,0,0,0,0,0,0,0</wexp_gain>
-        <promotes_from></promotes_from>
-        <turns_into></turns_into>
-        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
-        <movement_group>2</movement_group>
-        <tags></tags>
-        <skills></skills>
-        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-        <growths>15,0,0,0,0,0,0,0</growths>
-        <bases>10,0,0,2,2,0,2,0,5,6</bases>
-        <max>40,15,15,15,15,20,15,15,20</max>
-        <desc>A merchant's wagon.</desc>
     </class>
 </class_info>
