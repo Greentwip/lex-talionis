@@ -2471,7 +2471,7 @@ class PromotionState(State):
 
         if not self.started:
             # Start music
-            Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_promotion']])
+            Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_promotion')])
             self.show_map = False
 
             self.unit = gameStateObj.cursor.currentSelectedUnit
@@ -2943,14 +2943,14 @@ class ShopState(State):
                 self.buy_message = cf.WORDS['Armory_buy']
                 self.back_message = cf.WORDS['Armory_back']
                 self.leave_message = cf.WORDS['Armory_leave']
-                Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_armory']])
+                Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_armory')])
             elif self.name == 'vendor':
                 self.opening_message = self.get_dialog(cf.WORDS['Vendor_opener'])
                 self.portrait = GC.IMAGESDICT['VendorPortrait']
                 self.buy_message = cf.WORDS['Vendor_buy']
                 self.back_message = cf.WORDS['Vendor_back']
                 self.leave_message = cf.WORDS['Vendor_leave']
-                Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_vendor']])
+                Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_vendor')])
             # Get data
             self.unit = gameStateObj.cursor.currentSelectedUnit
             if self.name == 'market':

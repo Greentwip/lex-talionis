@@ -334,6 +334,9 @@ class MusicThread(object):
         self.fade_in(gameStateObj.phase_music.get_phase_music(phase_name))
 
     def fade_in(self, next_song, num_plays=-1, time=0):
+        if not next_song:
+            logger.info('Music: Song does not exist')
+            return
         logger.info('Music: Fade in')
         # Confirm thats its not already at the top of the stack
         if self.song_stack and self.song_stack[-1].song == next_song:
