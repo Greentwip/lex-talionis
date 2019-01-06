@@ -191,7 +191,7 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
             word_index += self.first_line_font[index].size(word)[0]
         
         if cf.OPTIONS['Text Speed'] > 0:
-            num_characters = 2*(time - self.start_time)/float(cf.OPTIONS['Text Speed'])
+            num_characters = int(2*(time - self.start_time)/float(cf.OPTIONS['Text Speed']))
         else:
             num_characters = 1000
         for index, line in enumerate(self.output_desc_lines):

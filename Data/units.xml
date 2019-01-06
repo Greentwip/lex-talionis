@@ -169,7 +169,7 @@
         <wexp>0,21,0,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
 		<bases>13,3,0,4,6,3,3,1</bases>
-		<growths>75,65,65,80,65,35,65,35</growths>
+		<growths>80,70,70,85,70,40,70,40</growths>
         
         <inventory>Iron Lance,Javelin</inventory>
         

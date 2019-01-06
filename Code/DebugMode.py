@@ -74,7 +74,10 @@ class DebugState(StateMachine.State):
             if cur_unit:
                 self.dialogue_scene.unit = cur_unit
             self.dialogue_scene.tile_pos = gameStateObj.cursor.position
-            self.dialogue_scene.parse_line(split_command, gameStateObj)
+            try:
+                self.dialogue_scene.parse_line(split_command, gameStateObj)
+            except Exception as e:
+                print(e)
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)

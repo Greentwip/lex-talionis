@@ -934,6 +934,11 @@ class FeatChoiceMenu(ComplexMenu):
         self.options = options
         menu_width = self.getMenuWidth()
         ComplexMenu.__init__(self, owner, options, (GC.WINWIDTH//2 - menu_width, GC.WINHEIGHT - len(options)//2*16 - 8), 'BaseMenuBackground')
+        # Place index at valid position
+        for idx, option in enumerate(self.options):
+            if self.isIndexValid(idx):
+                self.currentSelection = idx
+                break
 
     def isIndexValid(self, index):
         return not self.options[index].id in [status.id for status in self.owner.status_effects]
