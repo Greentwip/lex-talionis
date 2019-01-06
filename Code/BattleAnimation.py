@@ -516,6 +516,13 @@ class BattleAnimation(object):
         self.flash_frames = num
         self.flash_color = color
 
+    def start_skill_anim(self, skill_activation):
+        image, script = GC.ANIMDICT.get_effect(skill_activation.id, self.palette_name)
+        child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
+        child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+        child_effect.start_anim(self.current_pose)
+        self.children.append(child_effect)
+
     def no_damage(self):
         # print('No Damage!')
         if self.right:

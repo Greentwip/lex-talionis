@@ -4,7 +4,8 @@
         <id>Feat</id>
         <desc>Generic Feat placeholder</desc>
         <image_index>0,0</image_index>
-        <components>hidden</components>
+        <components>hidden,feat_list</components>
+        <feat_list>fStrength +2,fMagic +2,fSkill +3,fSpeed +2,fDefense +2,fResistance +2,fMovement +1,fConstitution +3, fMaximum HP +5,fLuck +4</feat_list>
     </status>
 
 	<!-- Ever-lasting Regeneration -->
@@ -295,11 +296,20 @@
     <status name="Rescuing">
         <id>Rescue</id>
         <image_index>3,2</image_index>
-        <desc>Halves SKL/SPD.</desc>
+        <desc>Halves SKL/SPD</desc>
         <components>rescue,negative</components>
     </status>
 
     <!-- CLASS SKILLS -->
+    <status name="Critical +15">
+        <id>Critical +15</id>
+        <image_index>8,1</image_index>
+        <desc>Raises critical rate by 15 points.</desc>
+        <components>crit,class_skill</components>
+
+        <crit>15</crit>
+    </status>
+
     <status name="Locktouch">
     	<id>Locktouch</id>
         <image_index>1,0</image_index>
@@ -559,10 +569,10 @@
         <active>0</active>
     </status>
 
-    <status name="Refresh">
+    <status name="Dance">
         <id>Refresh</id>
         <image_index>3,9</image_index>
-        <desc>Activated. Adjacent unit is refreshed.</desc>
+        <desc>Activated. Adjacent unit can act again.</desc>
         <components>active,class_skill</components>
         <active>0</active>
     </status>
@@ -616,11 +626,11 @@
     </status>
 
     <status name="Summon">
-        <id>Gate</id>
+        <id>Summon</id>
         <image_index>9,0</image_index>
-        <desc>Activated. Summons a dark phantom to aid you.</desc>
+        <desc>Activated. Summon a dark phantom to aid you</desc>
         <components>active,class_skill</components>
-        <active>40</active>
+        <active>0</active>
     </status>
 
     <status name="Luna">
@@ -656,6 +666,13 @@
         <id>Longshot</id>
         <image_index>5,9</image_index>
         <desc>While wielding a bow, attack range +1.</desc>
+        <components>passive,class_skill</components>
+    </status>
+
+    <status name="Slayer">
+        <id>Slayer</id>
+        <image_index>5,6</image_index>
+        <desc>Effective against monsters</desc>
         <components>passive,class_skill</components>
     </status>
 

@@ -367,7 +367,7 @@ class Rally(Active_Skill):
     def get_choices(self, cur_unit, gameStateObj):
         return None
 
-class Gate(Active_Skill):
+class Summon(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Tile'
@@ -511,6 +511,23 @@ class Longshot(PassiveSkill):
         if item.longshot:
             item.longshot = False
             item.RNG = item.orig_RNG
+
+class Slayer(PassiveSkill):
+    def apply_mod(self, item):
+        self.reverse_mod(item)
+        if item.weapon:
+            item.slayer = True
+            item.old_effective = item.effective
+            if item.effective:
+                new_effective = list(set(item.effective.against).add('Monster'))
+                item.effective = ItemMethods.EffectiveComponent(new_effective, item.MT*2)
+            else:
+                item.effective = ItemMethods.EffectiveComponent(['Monster'], item.MT*2)
+
+    def reverse_mod(self, item):
+        if item.slayer:
+            item.slayer = False
+            item.effective = item.old_effective
 
 class Celeste(PassiveSkill):
     def apply_mod(self, item):

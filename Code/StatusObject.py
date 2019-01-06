@@ -730,5 +730,12 @@ def deserialize(s_dict, unit=None):
         unit.status_effects.append(status)
         unit.status_bundle.update(list(status.components))
 
-feat_list = ['fStrength +2', 'fMagic +2', 'fSkill +3', 'fSpeed +2', 'fDefense +2', 
-             'fResistance +2', 'fMovement +1', 'fConstitution +3', 'fMaximum HP +5', 'fLuck +4']
+# Populate feat_list
+def get_feat_list(status_data):
+    for status in status_data.getroot().findall('status'):
+        if status.find('id').text == 'Feat':
+            feat_list = status.find('feat_list').text if status.find('feat_list') is not None else ''
+            return feat_list.split(',')
+    return []
+
+feat_list = get_feat_list(GC.STATUSDATA)

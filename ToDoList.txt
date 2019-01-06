@@ -40,10 +40,12 @@
 - Make sure Berserk works (add un_selectable status?)
 - Add Fog of War
 - Add Hammerne state
-- Add other_anim component support
-- Add all aoe
+- Add other_anim component support (like self_anim)
+- Add all aoe (Latona)
 - Add support for generic rank bonuses
 - Add support for weapons with "no_counterattack"
+- Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
+- Check that enemy ai takes critical into account
 
 To Test Action:
 WarpIn

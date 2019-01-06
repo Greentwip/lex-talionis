@@ -930,7 +930,8 @@
         <id>Flying</id>
         <image_index>3,10</image_index>
         <desc>Grants flying.</desc>
-        <components>flying,pass_through,class_skill,affects_movement</components>
+        <!-- Does not give pass in Sacred Stones -->
+        <components>flying,class_skill,affects_movement</components>
     </status>
 
     <status name="Flying">

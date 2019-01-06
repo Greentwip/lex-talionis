@@ -358,7 +358,7 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['faction_icon'] = summoner.faction_icon
     u_i['name'] = summon_info.name
     u_i['desc'] = summon_info.desc
-    u_i['ai'] = summon_info.ai
+    u_i['ai'] = summon_info.ai if summoner.team != 'player' else 'None'
     u_i['tags'] = set(class_dict[u_i['klass']]['tags'].split(',')) if class_dict[u_i['klass']]['tags'] else set()
     u_i['tags'].add('Summon_' + str(summon_info.s_id) + '_' + str(summoner.id)) # Add unique identifier
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']

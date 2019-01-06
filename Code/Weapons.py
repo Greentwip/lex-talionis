@@ -179,8 +179,12 @@ class Weapon_Exp(object):
                 damage = int(split_line[3])
             else:
                 damage = 0
+            if len(split_line) > 4:
+                crit_rate = int(split_line[4])
+            else:
+                crit_rate = 0
             self.wexp_dict[letter] = number
-            self.rank_bonuses[letter] = (accuracy, damage)
+            self.rank_bonuses[letter] = (accuracy, damage, crit_rate)
 
         self.sorted_list = sorted(self.wexp_dict.items(), key=lambda x: x[1])
 
