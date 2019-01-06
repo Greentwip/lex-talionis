@@ -1248,7 +1248,7 @@
         <id>Ballista</id>
         <spritetype>Bow</spritetype>
         <spriteid>8</spriteid>       
-        <components>weapon,uses,weight,crit,effective,wexp</components>
+        <components>weapon,uses,weight,crit,effective,wexp,no_counterattack</components>
         <weapontype>Bow</weapontype>
  
         <uses>5</uses>
@@ -1269,7 +1269,7 @@
         <id>Long Ballista</id>
         <spritetype>Bow</spritetype>
         <spriteid>9</spriteid>       
-        <components>weapon,uses,weight,crit,effective,wexp</components>
+        <components>weapon,uses,weight,crit,effective,wexp,no_counterattack</components>
         <weapontype>Bow</weapontype>
  
         <uses>5</uses>
@@ -1290,7 +1290,7 @@
         <id>Killer Ballista</id>
         <spritetype>Bow</spritetype>
         <spriteid>10</spriteid>       
-        <components>weapon,uses,weight,crit,effective,wexp</components>
+        <components>weapon,uses,weight,crit,effective,wexp,no_counterattack</components>
         <weapontype>Bow</weapontype>
  
         <uses>5</uses>
@@ -1329,151 +1329,239 @@
         <LVL>S</LVL>
     </item>
 
-    <!-- Light -->
-    <item name="Glimmer Ward">
-        <id>Glimmer</id>
-        <spritetype>Light</spritetype>
-        <spriteid>0</spriteid>       
-        <components>weapon,uses,status,map_hit_color</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>30</uses>
-        <RNG>1-2</RNG>
-        <value>15</value>
-        <desc>Lowers enemy accuracy slightly on hit.</desc>
-        <status>Dazzle</status>
-
-		<MT>2</MT>
-		<HIT>100</HIT>
-		<LVL>D</LVL>
-
-        <map_hit_color>248,248,128</map_hit_color>
-    </item>
-
-    <item name="Shine Ward">
-        <id>Shine</id>
-        <spritetype>Light</spritetype>
-        <spriteid>1</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>20</uses>
-        <RNG>1-2</RNG>
-        <value>30</value>
-        <desc></desc>
-
-		<MT>4</MT>
-		<HIT>90</HIT>
-		<LVL>C</LVL>
-
-        <map_hit_color>248,248,128</map_hit_color>
-    </item>
-
-    <item name="Corona Ward">
-        <id>Corona</id>
-        <spritetype>Light</spritetype>
-        <spriteid>2</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>10</uses>
-        <RNG>1-2</RNG>
-        <value>220</value>
-        <desc></desc>
-
-		<MT>8</MT>
-		<HIT>80</HIT>
-		<LVL>A</LVL>
-
-        <map_hit_color>248,248,128</map_hit_color>
-    </item>
-
+    <!-- Staves -->
     <item name="Heal">
         <id>Heal</id>
-        <spritetype>Light</spritetype>
-        <spriteid>3</spriteid>       
-        <components>spell,heal,uses,beneficial,map_hit_color</components>
-        <weapontype>Light</weapontype>
+        <spritetype>Staff</spritetype>
+        <spriteid>0</spriteid>       
+        <components>spell,heal,uses,beneficial,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
  
         <uses>30</uses>
-        <RNG>0-1</RNG>
+        <RNG>1</RNG>
         <value>20</value>
-        <desc>Restores (User's Magic + 5) HP.</desc>
+        <desc>Restores (User's Magic + 10) HP</desc>
         
-        <heal>5</heal>
-        <LVL>D</LVL>
+        <heal>10</heal>
+        <LVL>E</LVL>
         <targets>Ally</targets>    
 
         <map_hit_color>96,144,232</map_hit_color>
-    </item>
-
-    <item name="Fortune">
-        <id>Fortune</id>
-        <spritetype>Light</spritetype>
-        <spriteid>4</spriteid>       
-        <components>spell,uses,status,beneficial,custom_ai,ai_speed_up</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>10</uses>
-        <RNG>1-5</RNG>
-        <value>80</value>
-        <desc>Ally gains +50 accuracy until next turn.</desc>
-        <status>Fortune</status>
-        <custom_ai>not target.isDone() and target.accuracy(gameStateObj) &lt; 80</custom_ai> 
-        
-        <LVL>D</LVL>
-        <targets>Ally</targets>    
+        <wexp>2</wexp>
+        <exp>11</exp>
     </item>
 
     <item name="Mend">
         <id>Mend</id>
-        <spritetype>Light</spritetype>
-        <spriteid>5</spriteid>       
-        <components>spell,heal,uses,aoe,beneficial,aoe_anim,map_hit_color</components>
-        <weapontype>Light</weapontype>
+        <spritetype>Staff</spritetype>
+        <spriteid>1</spriteid>       
+        <components>spell,heal,uses,beneficial,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
  
-        <uses>15</uses>
-        <RNG>0</RNG>
-        <value>75</value>
-        <desc>Restores (User's Magic + 10) HP to self and all adjacent allies.</desc>
+        <uses>20</uses>
+        <RNG>1</RNG>
+        <value>50</value>
+        <desc>Restores (User's Magic + 20) HP</desc>
         
-        <heal>10</heal>
-        <LVL>C</LVL>
-        <targets>Ally</targets>
-        <aoe>Blast,1</aoe>    
+        <heal>20</heal>
+        <LVL>D</LVL>
+        <targets>Ally</targets>    
 
         <map_hit_color>96,144,232</map_hit_color>
+        <wexp>3</wexp>
+        <exp>12</exp>
+    </item>
+
+    <item name="Recover">
+        <id>Recover</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>2</spriteid>       
+        <components>spell,heal,uses,beneficial,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>15</uses>
+        <RNG>1</RNG>
+        <value>150</value>
+        <desc>Fully restore's an ally's HP</desc>
+        
+        <heal>1000</heal>
+        <LVL>C</LVL>
+        <targets>Ally</targets>    
+
+        <map_hit_color>96,144,232</map_hit_color>
+        <wexp>3</wexp>
+        <exp>17</exp>
+    </item>
+
+    <item name="Physic">
+        <id>Physic</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>3</spriteid>       
+        <components>spell,heal,uses,beneficial,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>15</uses>
+        <RNG>1-10</RNG>
+        <value>250</value>
+        <desc>Restores (User's Magic + 10) HP</desc>
+        
+        <heal>10</heal>
+        <LVL>B</LVL>
+        <targets>Ally</targets>    
+
+        <map_hit_color>96,144,232</map_hit_color>
+        <wexp>3</wexp>
+        <exp>22</exp>
+    </item>
+
+    <item name="Fortify">
+        <id>Fortify</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>4</spriteid>       
+        <components>spell,heal,uses,aoe,beneficial,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>8</uses>
+        <RNG>0</RNG>
+        <value>1000</value>
+        <desc>Restores (User's Magic + 10) HP to all allies within range.</desc>
+        
+        <heal>1000</heal>
+        <LVL>A</LVL>
+        <targets>Ally</targets>
+        <aoe>Blast,7</aoe>    
+
+        <map_hit_color>96,144,232</map_hit_color>
+        <wexp>5</wexp>
+        <exp>60</exp>
     </item>
 
     <item name="Restore">
         <id>Restore</id>
-        <spritetype>Light</spritetype>
-        <spriteid>9</spriteid>       
-        <components>spell,uses,status,beneficial,target_restrict,map_hit_color</components>
-        <weapontype>Light</weapontype>
+        <spritetype>Staff</spritetype>
+        <spriteid>5</spriteid>       
+        <components>spell,uses,status,beneficial,target_restrict,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
  
         <uses>10</uses>
-        <RNG>0-1</RNG>
+        <RNG>1</RNG>
         <value>200</value>
         <desc>Removes all temporary statuses.</desc>
         <status>Clear</status>
         <target_restrict>any(status.negative and status.time for status in target.status_effects)</target_restrict>
         
-        <LVL>B</LVL>
+        <LVL>C</LVL>
         <targets>Ally</targets>
 
         <map_hit_color>96,144,232</map_hit_color>    
+        <wexp>3</wexp>
+        <exp>20</exp>
+    </item>
+
+    <item name="Silence">
+        <id>Silence</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>6</spriteid>       
+        <components>spell,uses,detrimental,status,custom_ai_value,target_restrict,hit,wexp,exp</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>1-7</RNG>
+        <value>400</value>
+        <desc>Prevents target from using magic</desc>
+
+        <!-- Does the target use magic? -->
+        <target_restrict>sum(target.wexp[4:]) &gt; 0</target_restrict>
+        <custom_ai_value>2</custom_ai_value>
+        <status>Silence</status>
+
+        <LVL>B</LVL>
+        <targets>Enemy</targets>
+        <hit>30</hit> 
+
+        <wexp>5</wexp>
+        <exp>30</exp>
+    </item>
+
+    <item name="Sleep">
+        <id>Sleep</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>7</spriteid>       
+        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>1-7</RNG>
+        <value>500</value>
+        <desc>Sends an enemy to sleep</desc>
+        <status>Sleep</status>
+        
+        <LVL>B</LVL>
+        <targets>Enemy</targets>  
+        <hit>30</hit>  
+
+        <wexp>5</wexp>
+        <exp>35</exp>
+
+        <map_hit_color>-248,0,-248</map_hit_color>
+    </item>
+
+    <item name="Berserk">
+        <id>Berserk</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>8</spriteid>       
+        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>1-7</RNG>
+        <value>600</value>
+        <desc>Enrages an enemy, causing them to attack without regard for allies</desc>
+        <status>Berserk</status>
+        
+        <LVL>B</LVL>
+        <targets>Enemy</targets>  
+        <hit>30</hit>  
+
+        <wexp>5</wexp>
+        <exp>40</exp>
+
+        <map_hit_color>248,64,-248</map_hit_color>
+    </item>
+
+    <item name="Warp">
+        <id>Warp</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>9</spriteid>       
+        <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>1</RNG>
+        <value>1500</value>
+        <desc>Teleports a nearby unit.</desc>
+        
+        <LVL>A</LVL>
+        <targets>Unit</targets>
+        <movement>Warp,0</movement>
+
+        <extra_select>1-7,TileNoUnit</extra_select>
+
+        <wexp>7</wexp>
+        <exp>85</exp>
+
+        <map_hit_color>128,-248,248</map_hit_color>
     </item>
 
     <item name="Rescue">
         <id>Rescue</id>
-        <spritetype>Light</spritetype>
+        <spritetype>Staff</spritetype>
         <spriteid>10</spriteid>       
-        <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color</components>
-        <weapontype>Light</weapontype>
+        <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color,wexp,exp</components>
+        <weapontype>Staff</weapontype>
  
         <uses>3</uses>
-        <RNG>2-10</RNG>
+        <RNG>1-7</RNG>
         <value>600</value>
         <desc>Brings an ally near.</desc>
         
@@ -1483,461 +1571,510 @@
 
         <extra_select>1,TileNoUnit</extra_select>
 
+        <wexp>7</wexp>
+        <exp>40</exp>
+
         <map_hit_color>-248,248,248</map_hit_color>
+    </item>
+
+    <item name="Torch">
+        <id>Torch</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>11</spriteid>       
+        <components>spell,uses,beneficial,wexp,exp,no_ai,torch</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>10</uses>
+        <RNG>1-7</RNG>
+        <value>100</value>
+        <desc>Lights up an area.</desc>
+        
+        <LVL>D</LVL>
+        <targets>Tile</targets>
+ 
+        <wexp>5</wexp>
+        <exp>15</exp>
+    </item>
+
+    <item name="Hammerne">
+        <id>Hammerne</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>12</spriteid>       
+        <components>spell,uses,beneficial,wexp,exp,no_ai,hammerne</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>1-7</RNG>
+        <value>600</value>
+        <desc>Repairs a weapon or staff to full uses</desc>
+        
+        <LVL>C</LVL>
+        <targets>Ally</targets>
+ 
+        <wexp>8</wexp>
+        <exp>40</exp>
     </item>
 
     <item name="Unlock">
         <id>Unlock</id>
-        <spritetype>Light</spritetype>
-        <spriteid>10</spriteid>       
-        <components>spell,uses,no_ai,unlock</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>5</uses>
-        <RNG>1-7</RNG>
-        <value>600</value>
-        <desc>Unlocks distant targets.</desc>
-        
-        <LVL>C</LVL>
-        <targets>Tile</targets>
-    </item>
-
-    <item name="Refresh">
-        <id>Refresh</id>
-        <spritetype>Light</spritetype>
-        <spriteid>6</spriteid>       
-        <components>spell,uses,beneficial,status,no_ai,target_restrict</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>10</uses>
-        <RNG>1</RNG>
-        <value>400</value>
-        <desc>Allows a unit to move again.</desc>
-        <status>Refresh_Status</status>
-        <target_restrict>target.isDone()</target_restrict>
-        
-        <LVL>A</LVL>
-        <targets>Ally</targets>
-
-        <map_hit_color>248,248,0</map_hit_color>    
-    </item>
-
-    <item name="Physic">
-        <id>Physic</id>
-        <spritetype>Light</spritetype>
+        <spritetype>Staff</spritetype>
         <spriteid>13</spriteid>       
-        <components>spell,heal,uses,beneficial,ai_speed_up,map_hit_color</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>15</uses>
-        <RNG>0-7</RNG>
-        <value>250</value>
-        <desc>Restores (User's Magic + 10) HP at range.</desc>
-        
-        <heal>10</heal>
-        <LVL>B</LVL>
-        <targets>Ally</targets> 
-
-        <map_hit_color>96,144,232</map_hit_color>   
-    </item>
-
-    <item name="Silence">
-        <id>Silence</id>
-        <spritetype>Light</spritetype>
-        <spriteid>14</spriteid>       
-        <components>spell,uses,detrimental,status,custom_ai_value,target_restrict,hit</components>
-        <weapontype>Light</weapontype>
- 
-        <uses>5</uses>
-        <RNG>1-7</RNG>
-        <value>400</value>
-        <desc>Prevents target from using magic.</desc>
-
-        <!-- Does the target use magic? -->
-        <target_restrict>sum(target.wexp[4:]) &gt; 0</target_restrict>
-        <custom_ai_value>2</custom_ai_value>
-        <status>Silence</status>
-        <LVL>A</LVL>
-        <targets>Enemy</targets>
-        <hit>70</hit>    
-    </item>
-
-    <!-- Anima -->
-    <item name="Wind Ward">
-        <id>Wind</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>0</spriteid>       
-        <components>weapon,uses,status_on_equip</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>30</uses>
-        <RNG>1-2</RNG>
-        <value>16</value>
-        <desc>Grants wielder SPD +2.</desc>
-        <status_on_equip>Speed +2</status_on_equip>
-
-		<MT>2</MT>
-		<HIT>100</HIT>
-		<LVL>D</LVL>
-    </item>
-
-    <item name="Thunder Ward">
-        <id>Thunder</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>13</spriteid>       
-        <components>weapon,uses,status_on_equip</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>30</uses>
-        <RNG>1-2</RNG>
-        <value>32</value>
-        <desc>Grants wielder DEF +2.</desc>
-        <status_on_equip>Defense +2</status_on_equip>
-
-        <MT>6</MT>
-        <HIT>60</HIT>
-        <LVL>D</LVL>
-    </item>
-
-    <item name="Fire Ward">
-        <id>Fire</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>3</spriteid>       
-        <components>weapon,uses,map_hit_color,status_on_equip</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>30</uses>
-        <RNG>1-2</RNG>
-        <value>24</value>
-        <desc>Grants wielder RES +2.</desc>
-        <status_on_equip>Resistance +2</status_on_equip>
-
-		<MT>4</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
-
-        <map_hit_color>224,96,-200</map_hit_color>
-    </item>
-
-    <item name="Aether Ward">
-        <id>Aether</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>12</spriteid>       
-        <components>weapon,uses,status_on_equip</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>15</uses>
-        <RNG>1-2</RNG>
-        <value>300</value>
-        <desc>Grants wielder +2 SPD/DEF/RES</desc>
-        <status_on_equip>Speed +2,Defense +2,Resistance +2</status_on_equip>
-
-		<MT>8</MT>
-		<HIT>100</HIT>
-		<LVL>A</LVL>
-    </item>
-
-    <item name="Wyrmsfire">
-        <id>Wyrmsfire</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>5</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>10</uses>
-        <RNG>2</RNG>
-        <value>200</value>
-        <desc>Affects medium sized area.</desc>
-        <aoe>Blast,1</aoe>
-        
-		<damage>5</damage>
-		<hit>65</hit>
-        <LVL>C</LVL>
-        <targets>Tile</targets>
-
-        <map_hit_color>224,96,-200</map_hit_color>
-    </item>
-
-    <item name="Sandblast">
-        <id>Sandblast</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>9</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,status,ai_speed_up,aoe_anim</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>5</uses>
-        <RNG>2</RNG>
-        <value>300</value>
-        <desc>Affects medium sized area. Blinds foes.</desc>
-        <aoe>Blast,1</aoe>
-        
-		<damage>2</damage>
-        <status>Blinded</status>
-        <hit>55</hit>
-        <LVL>C</LVL>
-        <targets>Tile</targets>
-    </item>
-
-    <!-- Possibly just make this lower SPD -5? -->
-    <item name="Blizzard">
-        <id>Blizzard</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>10</spriteid>       
-        <components>spell,uses,aoe,hit,damage,status,detrimental,ai_speed_up,aoe_anim</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>5</uses>
-        <RNG>4</RNG>
-        <value>400</value>
-        <desc>Damages huge area. Inflicts SPD debuff.</desc>
-        <aoe>Blast,3</aoe>
-        
-		<damage>3</damage>
-        <hit>80</hit>
-        <LVL>B</LVL>
-        <targets>Tile</targets>
-        <status>Frostbite</status>
-    </item>
-
-    <item name="Fly">
-        <id>Fly</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>7</spriteid>       
-        <components>spell,uses,status,beneficial,custom_ai</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>10</uses>
-        <RNG>0-1</RNG>
-        <value>200</value>
-        <desc>Grants ally flying for 5 turns.</desc>
-        <custom_ai>not 'Rex_Aegis' in [s.id for s in target.status_effects]</custom_ai> 
-        
-        <LVL>C</LVL>
-        <targets>Ally</targets>
-        <status>TempFlying</status>
-    </item>
-
-    <item name="Fireball">
-        <id>Fireball</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>8</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>5</uses>
-        <RNG>3</RNG>
-        <value>600</value>
-        <desc>Affects a large area.</desc>
-        <aoe>Blast,2</aoe>
-        
-		<damage>11</damage>
-		<hit>55</hit>
-        <LVL>A</LVL>
-        <targets>Tile</targets>
-
-        <map_hit_color>224,96,-200</map_hit_color>
-    </item>
-
-    <item name="Meteor">
-        <id>Meteor</id>
-        <spritetype>Anima</spritetype>
-        <spriteid>11</spriteid>       
-        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color,aoe_anim,sfx_on_cast</components>
-        <weapontype>Anima</weapontype>
- 
-        <uses>3</uses>
-        <RNG>3-10</RNG>
-        <value>1500</value>
-        <desc>Affects medium sized area.</desc>
-        <aoe>Blast,1</aoe>
-        
-		<damage>13</damage>
-        <hit>45</hit>
-        <LVL>A</LVL>
-        <targets>Tile</targets>
-
-        <map_hit_color>224,96,-200</map_hit_color>
-        <sfx_on_cast>FireCharge</sfx_on_cast>
-    </item>
-    
-    <!-- Dark -->
-    <item name="Flux Ward">
-        <id>Flux</id>
-        <spritetype>Dark</spritetype>
-        <spriteid>0</spriteid>       
-        <components>weapon,uses,status,map_hit_color</components>
-        <weapontype>Dark</weapontype>
- 
-        <uses>30</uses>
-        <RNG>1-2</RNG>
-        <value>20</value>
-        <desc>Lowers enemy avoid slightly on hit.</desc>
-        <status>Chill</status>
-
-		<MT>5</MT>
-		<HIT>80</HIT>
-		<LVL>D</LVL>
-
-        <map_hit_color>-248,-248,-248</map_hit_color>
-    </item>
-
-    <item name="Nyx Ward">
-        <id>Nyx</id>
-        <spritetype>Dark</spritetype>
-        <spriteid>1</spriteid>       
-        <components>weapon,uses,map_hit_color,half_lifelink</components>
-        <weapontype>Dark</weapontype>
- 
-        <uses>20</uses>
-        <RNG>1-2</RNG>
-        <value>80</value>
-        <desc>Recover HP equal to half damage dealt.</desc>
-
-		<MT>7</MT>
-		<HIT>60</HIT>
-		<LVL>C</LVL>
-
-        <map_hit_color>-248,-248,-248</map_hit_color>
-    </item>
-
-    <item name="Ruin Ward">
-        <id>Ruin</id>
-        <spritetype>Dark</spritetype>
-        <spriteid>2</spriteid>       
-        <components>weapon,uses,half,map_hit_color</components>
-        <weapontype>Dark</weapontype>
- 
-        <uses>15</uses>
-        <RNG>1-2</RNG>
-        <value>120</value>
-        <desc>Does half damage even on miss.</desc>
-
-		<MT>8</MT>
-		<HIT>50</HIT>
-		<LVL>B</LVL>
-
-        <map_hit_color>-248,-248,-248</map_hit_color>
-    </item>
-
-    <item name="Howl Ward">
-        <id>Howl</id>
-        <spritetype>Dark</spritetype>
-        <spriteid>3</spriteid>       
-        <components>weapon,uses,map_hit_color</components>
-        <weapontype>Dark</weapontype>
- 
-        <uses>10</uses>
-        <RNG>1-2</RNG>
-        <value>250</value>
-        <desc></desc>
-
-		<MT>11</MT>
-		<HIT>70</HIT>
-		<LVL>A</LVL>
-
-        <map_hit_color>-248,-248,-248</map_hit_color>
-    </item>
-
-    <item name="Scathe">
-        <id>Scathe</id>
-        <spritetype>Dark</spritetype>
-        <spriteid>4</spriteid>       
-        <components>spell,uses,hit,damage,detrimental,map_hit_color</components>
-        <weapontype>Dark</weapontype>
+        <components>spell,uses,no_ai,unlock,wexp,exp</components>
+        <weapontype>Staff</weapontype>
  
         <uses>10</uses>
         <RNG>1-7</RNG>
         <value>150</value>
-        <desc>Long-range strike.</desc>
+        <desc>Unlocks distant targets</desc>
         
-		<damage>2</damage>
-		<hit>60</hit>
+        <LVL>D</LVL>
+        <targets>Tile</targets>
+
+        <wexp>5</wexp>
+        <exp>17</exp>
+    </item>
+
+    <item name="Barrier">
+        <id>Barrier</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>14</spriteid>       
+        <components>spell,uses,status,beneficial,wexp,exp,map_hit_color,other_anim</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>15</uses>
+        <RNG>1</RNG>
+        <value>150</value>
+        <desc>Raises ally's resistance</desc>
+        <status>Resistant</status>
+        
         <LVL>C</LVL>
-        <targets>Enemy</targets>
+        <targets>Ally</targets>
+        <wexp>4</wexp>
+        <exp>17</exp>
+
+        <map_hit_color>96,144,232</map_hit_color>
+        <other_anim>MapSpiritbane,5,4,20</other_anim>
+    </item>
+
+    <item name="Latona">
+        <id>Latona</id>
+        <spritetype>Staff</spritetype>
+        <spriteid>15</spriteid>       
+        <components>spell,heal,uses,aoe,beneficial,map_hit_color,exp,status</components>
+        <weapontype>Staff</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>0</RNG>
+        <value>0</value>
+        <desc>Restores HP and condition of all allied units</desc>
+        
+        <heal>1000</heal>
+        <status>Clear</status>
+        <LVL>S</LVL>
+        <targets>Ally</targets>
+        <aoe>All,0</aoe>    
+
+        <map_hit_color>96,144,232</map_hit_color>
+        <exp>10</exp>
+    </item>
+
+    <!-- Light -->
+    <item name="Lightning">
+        <id>Lightning</id>
+        <spritetype>Light</spritetype>
+        <spriteid>0</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>35</uses>
+        <RNG>1-2</RNG>
+        <value>18</value>
+        <weight>6</weight>
+        <desc></desc>
+
+		<MT>4</MT>
+		<HIT>95</HIT>
+		<LVL>E</LVL>
+        <crit>5</crit>
+
+        <map_hit_color>248,248,128</map_hit_color>
+    </item>
+
+    <item name="Shine">
+        <id>Shine</id>
+        <spritetype>Light</spritetype>
+        <spriteid>1</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,wexp</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>30</uses>
+        <RNG>1-2</RNG>
+        <value>30</value>
+        <weight>8</weight>
+        <desc></desc>
+
+        <MT>6</MT>
+        <HIT>90</HIT>
+        <LVL>D</LVL>
+        <crit>8</crit>
+        <wexp>2</wexp>
+
+        <map_hit_color>248,248,128</map_hit_color>
+    </item>
+
+    <item name="Divine">
+        <id>Divine</id>
+        <spritetype>Light</spritetype>
+        <spriteid>2</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>25</uses>
+        <RNG>1-2</RNG>
+        <value>100</value>
+        <weight>12</weight>
+        <desc></desc>
+
+        <MT>8</MT>
+        <HIT>85</HIT>
+        <LVL>C</LVL>
+        <crit>10</crit>
+
+        <map_hit_color>248,248,128</map_hit_color>
+    </item>
+
+    <item name="Purge">
+        <id>Purge</id>
+        <spritetype>Light</spritetype>
+        <spriteid>3</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,wexp,no_counterattack</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>3-10</RNG>
+        <value>600</value>
+        <weight>20</weight>
+        <desc></desc>
+
+        <MT>10</MT>
+        <HIT>75</HIT>
+        <LVL>B</LVL>
+        <crit>5</crit>
+        <wexp>3</wexp>
+
+        <map_hit_color>248,248,128</map_hit_color>
+    </item>
+
+    <item name="Aura">
+        <id>Aura</id>
+        <spritetype>Light</spritetype>
+        <spriteid>4</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>20</uses>
+        <RNG>1-2</RNG>
+        <value>400</value>
+        <weight>15</weight>
+        <desc></desc>
+
+        <MT>12</MT>
+        <HIT>85</HIT>
+        <LVL>A</LVL>
+        <crit>15</crit>
+
+        <map_hit_color>248,248,128</map_hit_color>
+    </item>
+
+    <item name="Ivaldi">
+        <id>Ivaldi</id>
+        <spritetype>Light</spritetype>
+        <spriteid>5</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,legendary,status_on_equip,effective</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>30</uses>
+        <RNG>1-2</RNG>
+        <value>30</value>
+        <weight>8</weight>
+        <desc>Defense +5. Effective against monsters</desc>
+
+        <status_on_equip>Defense +5</status_on_equip>
+        <effective>Monster;34</effective>
+
+        <MT>17</MT>
+        <HIT>90</HIT>
+        <LVL>S</LVL>
+        <crit>5</crit>
+
+        <map_hit_color>248,248,128</map_hit_color>
+    </item>
+
+    <!-- Anima -->
+    <item name="Fire">
+        <id>Fire</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>0</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>40</uses>
+        <RNG>1-2</RNG>
+        <value>14</value>
+        <weight>4</weight>
+        <desc></desc>
+
+        <MT>5</MT>
+        <HIT>90</HIT>
+        <LVL>E</LVL>
+
+        <map_hit_color>224,96,-200</map_hit_color>
+    </item>
+
+    <item name="Thunder">
+        <id>Thunder</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>1</spriteid>       
+        <components>weapon,uses,weight,crit</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>35</uses>
+        <RNG>1-2</RNG>
+        <value>20</value>
+        <weight>6</weight>
+        <desc></desc>
+
+        <MT>8</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
+        <crit>0</crit>
+    </item>
+
+    <item name="Elfire">
+        <id>Elfire</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>2</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,wexp</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>30</uses>
+        <RNG>1-2</RNG>
+        <value>40</value>
+        <weight>10</weight>
+        <desc></desc>
+
+        <MT>10</MT>
+        <HIT>85</HIT>
+        <LVL>C</LVL>
+        <wexp>2</wexp>
+
+        <map_hit_color>224,96,-200</map_hit_color>
+    </item>
+
+    <item name="Bolting">
+        <id>Bolting</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>3</spriteid>       
+        <components>weapon,uses,weight,crit,no_counterattack</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>3-10</RNG>
+        <value>500</value>
+        <weight>20</weight>
+        <desc></desc>
+
+        <MT>12</MT>
+        <HIT>60</HIT>
+        <LVL>B</LVL>
+    </item>
+
+    <item name="Fimbulvetr">
+        <id>Fimbulvetr</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>4</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>20</uses>
+        <RNG>1-2</RNG>
+        <value>300</value>
+        <weight>12</weight>
+        <desc></desc>
+
+        <MT>13</MT>
+        <HIT>80</HIT>
+        <LVL>A</LVL>
+
+        <map_hit_color>-248,96,224</map_hit_color>
+    </item>
+
+    <item name="Excalibur">
+        <id>Excalibur</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>5</spriteid>       
+        <components>weapon,uses,weight,crit,legendary,effective,status_on_equip</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>30</uses>
+        <RNG>1-2</RNG>
+        <value>0</value>
+        <weight>13</weight>
+        <desc>Speed +5. Effective against monsters</desc>
+
+        <status_on_equip>Speed +5</status_on_equip>
+        <effective>Monster;36</effective>
+
+        <MT>18</MT>
+        <HIT>90</HIT>
+        <LVL>S</LVL>
+        <crit>10</crit>
+    </item>
+    
+    <!-- Dark -->
+    <item name="Flux">
+        <id>Flux</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>0</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>45</uses>
+        <RNG>1-2</RNG>
+        <value>20</value>
+        <weight>8</weight>
+        <desc></desc>
+
+        <MT>7</MT>
+        <HIT>80</HIT>
+        <LVL>D</LVL>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
     </item>
 
-    <item name="Hex">
-        <id>Hex</id>
+    <item name="Luna">
+        <id>Luna</id>
         <spritetype>Dark</spritetype>
-        <spriteid>5</spriteid>       
-        <components>spell,uses,hit,status,detrimental,map_hit_color</components>
+        <spriteid>1</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,ignore_def</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>30</uses>
+        <RNG>1-2</RNG>
+        <value>140</value>
+        <weight>12</weight>
+        <desc>Ignore's enemy resistance</desc>
+
+        <MT>0</MT>
+        <HIT>50</HIT>
+        <LVL>C</LVL>
+        <crit>10</crit>
+
+        <map_hit_color>-248,-248,-248</map_hit_color>
+    </item>
+
+    <item name="Nosferatu">
+        <id>Nosferatu</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>2</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,lifelink</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>20</uses>
+        <RNG>1-2</RNG>
+        <value>160</value>
+        <weight>14</weight>
+        <desc>Recover HP equal to damage dealth</desc>
+
+        <MT>10</MT>
+        <HIT>70</HIT>
+        <LVL>C</LVL>
+
+        <map_hit_color>-248,-248,-248</map_hit_color>
+    </item>
+
+    <item name="Eclipse">
+        <id>Flux</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>3</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,status_on_equip,no_counterattack,wexp,ignore_def</components>
         <weapontype>Dark</weapontype>
  
         <uses>5</uses>
-        <RNG>1-7</RNG>
-        <value>400</value>
-        <desc>Weakens target.</desc>
-        
-		<hit>80</hit>
-        <LVL>C</LVL>
-        <targets>Enemy</targets>
-
-        <status>Weakened</status>
-
-        <map_hit_color>-248,0,-248</map_hit_color>
-    </item>
-
-    <item name="Stun">
-        <id>Stun</id>
-        <spritetype>Dark</spritetype>
-        <spriteid>6</spriteid>       
-        <components>spell,uses,status,hit,detrimental,map_hit_color</components>
-        <weapontype>Dark</weapontype>
- 
-        <uses>3</uses>
-        <RNG>1-7</RNG>
+        <RNG>3-10</RNG>
         <value>800</value>
-        <desc>Stuns target.</desc>
-        <status>Stun</status>
-        
+        <weight>8</weight>
+        <desc>Halve's the enemy's current HP</desc>
+        <status_on_equip>Eclipse_Helper</status_on_equip>
+
+        <MT>0</MT>
+        <HIT>30</HIT>
         <LVL>B</LVL>
-		<hit>60</hit>
-        <targets>Enemy</targets>    
-
-        <map_hit_color>-248,0,-248</map_hit_color>
-    </item>
-
-    <item name="Disintegrate">
-        <id>Disintegrate</id>
-        <spritetype>Dark</spritetype>
-        <spriteid>8</spriteid>       
-        <components>spell,uses,hit,damage,half,detrimental,map_hit_color</components>
-        <weapontype>Dark</weapontype>
- 
-        <uses>3</uses>
-        <RNG>1-7</RNG>
-        <value>1000</value>
-        <desc>Does half damage on miss.</desc>
-        
-		<damage>11</damage>
-		<hit>40</hit>
-        <LVL>A</LVL>
-        <targets>Enemy</targets>
+        <wexp>8</wexp>
 
         <map_hit_color>-248,-248,-248</map_hit_color>
     </item>
 
-    <item name="Warp">
-        <id>Warp</id>
+    <item name="Fenrir">
+        <id>Fenrir</id>
         <spritetype>Dark</spritetype>
-        <spriteid>10</spriteid>       
-        <components>spell,extra_select,uses,movement,beneficial,no_ai,map_hit_color</components>
+        <spriteid>4</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit</components>
         <weapontype>Dark</weapontype>
  
-        <uses>3</uses>
-        <RNG>0-1</RNG>
-        <value>1500</value>
-        <desc>Teleports a nearby unit.</desc>
-        
+        <uses>20</uses>
+        <RNG>1-2</RNG>
+        <value>450</value>
+        <weight>18</weight>
+        <desc></desc>
+
+        <MT>15</MT>
+        <HIT>70</HIT>
         <LVL>A</LVL>
-        <targets>Unit</targets>
-        <movement>Warp,0</movement>
 
-        <extra_select>1-10,TileNoUnit</extra_select>
+        <map_hit_color>-248,-248,-248</map_hit_color>
+    </item>
 
-        <map_hit_color>128,-248,248</map_hit_color>
+    <item name="Gleipnir">
+        <id>Gleipnir</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>5</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,status_on_equip,wexp</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>30</uses>
+        <RNG>1-2</RNG>
+        <value>0</value>
+        <weight>20</weight>
+        <desc></desc>
+
+        <status_on_equip>Skill +5</status_on_equip>
+
+        <MT>23</MT>
+        <HIT>80</HIT>
+        <LVL>S</LVL>
+        <wexp>3</wexp>
+
+        <map_hit_color>-248,-248,-248</map_hit_color>
+    </item>
+
+    <item name="Naglfar">
+        <id>Naglfar</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>6</spriteid>       
+        <components>weapon,weight,map_hit_color,crit</components>
+        <weapontype>Dark</weapontype>
+ 
+        <RNG>1-2</RNG>
+        <value>0</value>
+        <weight>18</weight>
+        <desc></desc>
+
+        <MT>25</MT>
+        <HIT>95</HIT>
+        <LVL>S</LVL>
+
+        <map_hit_color>-248,-248,-248</map_hit_color>
     </item>
 
     <!-- Neutral -->

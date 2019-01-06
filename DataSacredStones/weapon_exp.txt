@@ -1,6 +1,7 @@
+# Rank - Value - Accuracy - Damage
 E;1
 D;31
 C;71
 B;121
 A;181
-S;251
+S;251;5

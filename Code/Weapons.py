@@ -158,17 +158,29 @@ class Weapon_Exp(object):
     def __init__(self, fn):
         self.wexp_dict = {}
         self.sorted_list = []
+        self.rank_bonuses = {}
         self.parse_file(fn)
 
     def parse_file(self, fn):
         with open(fn) as fp:
             lines = fp.readlines()
 
-        for index, line in enumerate(lines):
+        for line in lines:
+            if line.startswith('#'):
+                continue
             split_line = line.strip().split(';')
             letter = split_line[0]
             number = int(split_line[1])
+            if len(split_line) > 2:
+                accuracy = int(split_line[2])
+            else:
+                accuracy = 0
+            if len(split_line) > 3:
+                damage = int(split_line[3])
+            else:
+                damage = 0
             self.wexp_dict[letter] = number
+            self.rank_bonuses[letter] = (accuracy, damage)
 
         self.sorted_list = sorted(self.wexp_dict.items(), key=lambda x: x[1])
 
