@@ -903,7 +903,7 @@ class HelpGraph(object):
 
         for index, status in enumerate(statuses):
             left_pos = index*((GC.WINWIDTH - 96)//max(5, len(statuses))) + 92
-            self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), (left_pos, GC.WINHEIGHT - 20), Help_Dialog(status.desc))
+            self.help_boxes["Status"+str(index)] = Help_Box("Status"+str(index), (left_pos, GC.WINHEIGHT - 20), Help_Dialog(status.desc, name=status.name))
 
         # Connect them together
         for i in range(len(statuses)):
@@ -1106,7 +1106,7 @@ class Help_Dialog(Help_Dialog_Base):
             self.font.blit(self.name, help_surf, (8, 8))
 
         if cf.OPTIONS['Text Speed'] > 0:
-            num_characters = 2*(time - self.start_time)/float(cf.OPTIONS['Text Speed'])
+            num_characters = int(2*(time - self.start_time)/float(cf.OPTIONS['Text Speed']))
         else:
             num_characters = 1000
         for index, string in enumerate(self.strings):

@@ -2276,7 +2276,7 @@ class PromotionState(StateMachine.State):
 
         if not self.started:
             # Start music
-            Engine.music_thread.fade_in(GC.MUSICDICT['To A Higher Place'])
+            Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_promotion']])
 
             self.unit = gameStateObj.cursor.currentSelectedUnit
             color = Utility.get_color(self.unit.team)
@@ -2291,8 +2291,11 @@ class PromotionState(StateMachine.State):
                     name = self.unit.name
                 else:
                     name = 'Generic' + color
-                frame_dir = self.right_anim['images'][name]
-                self.right_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script, name)
+                frame_dir = self.right_anim['images'].get(name, None)
+                if frame_dir:
+                    self.right_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script, name)
+                else:
+                    self.right_anim = None
             # New - Left - Animation
             self.left_anim = GC.ANIMDICT.partake(self.unit.new_klass, self.unit.gender)
             if self.left_anim:
@@ -2303,8 +2306,11 @@ class PromotionState(StateMachine.State):
                     name = self.unit.name
                 else:
                     name = 'Generic' + color
-                frame_dir = self.left_anim['images'][self.unit.name]
-                self.left_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script, name)
+                frame_dir = self.left_anim['images'].get(name, None)
+                if frame_dir:
+                    self.left_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script, name)
+                else:
+                    self.left_anim = None
             if self.right_anim:
                 self.right_anim.awake(owner=self, parent=None, partner=self.left_anim if self.left_anim else None, right=True, at_range=False) # Stand
             if self.left_anim:
