@@ -107,7 +107,7 @@ class StartStart(StateMachine.State):
             gameStateObj.save_slots = load_saves()
             gameStateObj.restart_slots = load_restarts()
             # Start music
-            Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_main']])
+            Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_main')])
 
             # Transition in:
             gameStateObj.stateMachine.changeState("transition_in")
@@ -1248,7 +1248,7 @@ class GameOverState(StateMachine.State):
 
         self.transparency = 100
         self.backgroundCounter = 0
-        Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS['music_game_over']], 1)
+        Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_game_over')], 1)
 
         # Make background
         self.MovingSurf = Engine.create_surface((256, 256), transparent=True, convert=True)
