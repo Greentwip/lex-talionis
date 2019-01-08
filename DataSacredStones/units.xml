@@ -614,6 +614,27 @@
     </unit>
 
     <!-- Named NPC Characters/Bosses -->
+    <!-- Prologue Boss -->
+    <unit name="O'Neill">
+        <id>O'Neill</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,C,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>24,7,0,4,7,0,2,0,11,0</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Iron Axe</inventory>
+        
+        <level>4</level>
+        <class>Fighter</class>
+        <desc>??</desc>
+        
+        <tags>Boss</tags>
+        <skills></skills>
+    </unit>
+
     <!-- Level 1 Boss -->
     <unit name="Breguet">
         <id>Breguet</id>
@@ -622,8 +643,8 @@
         <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
         <wexp>0,C,0,0,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
-        <bases>20,8,0,2,1,2,9,0,13,0</bases>
-        <growths>90,45,0,35,30,30,55,20</growths>
+        <bases>21,8,0,2,1,2,9,0,13,0</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
         
         <inventory>Iron Lance</inventory>
         
@@ -632,6 +653,48 @@
         <desc>??</desc>
         
         <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Level 2 Boss -->
+    <unit name="Bone">
+        <id>Bone</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,D,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>25,7,0,5,5,0,4,0,12</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Iron Axe</inventory>
+        
+        <level>4</level>
+        <class>Brigand</class>
+        <desc>??</desc>
+        
+        <tags>Boss</tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Level 3 Boss -->
+    <unit name="Bazba">
+        <id>Bazba</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,C,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>27,9,0,6,7,1,5,2,12</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Steel Axe,Hand Axe</inventory>
+        
+        <level>6</level>
+        <class>Brigand</class>
+        <desc>??</desc>
+        
+        <tags>Boss</tags>
         <skills></skills>
     </unit>
 
