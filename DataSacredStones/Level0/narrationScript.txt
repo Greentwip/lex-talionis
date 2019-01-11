@@ -1,0 +1,100 @@
+# Prologue narration Script
+b;BlackBackground
+t;4
+s;Narrator;In an age long past...{br}evil flooded over the land.{br}Creatures awash in the dark{br}tide ran wild, pushing mankind{br}to the brink of annihilation.{w};cinematic
+s;Narrator;In its despair, mankind{br}appealed to the heavens, and{br}from a blinding light came hope.{w};cinematic
+# Light transition
+t;5
+b;RuneBackground
+t;6
+s;Narrator;The Sacred Stones{w};cinematic
+s;Narrator;These five glorious treasures{br}held the power to dispel evil.{w};cinematic
+s;Narrator;The hero Grado and his warriors{br}used the Sacred Stones to combat{br}evil's darkness. They defeated{br}the Demon King and sealed his{br}soul away within the stones.{w};cinematic
+s;Narrator;With the darkness imprisoned,{br}peace returned to Magvel.{w};cinematic
+t;1
+b;BlackBackground
+t;2
+s;Narrator;But this peace would not last...{w};cinematic
+wait;1000
+t;3
+b;MiniWorldMap;world_map
+t;4
+s;Narrator;The continent of Magvel.|For some 800 years, a quiet peace reigned in the absence of the terrible darkness.|The Sacred Stones have been passed from generation to generation.|Nations have been built around their power and their legacy{w};auto;narration;hold
+# Labels fade in from the right just like units do
+wm_label;RENAIS
+wm_highlight;Renais
+u;Fado;MidRight;SlideRight
+s;Narrator;The kingdom of Renais, ruled by Fado, the peerless Warrior King.{w};auto;narration;hold
+wm_remove_label;RENAIS
+wm_remove_highlight;Renais
+r;Fado;SlideLeft
+wait;500
+wm_label;FRELIA
+wm_highlight;Frelia
+u;Hayden;MidRight;SlideRight
+s;Narrator;The kingdom of Frelia, ruled by Hayden, the venerable Sage King.{w};auto;narration;hold
+wm_remove_label;FRELIA
+wm_remove_highlight;Frelia
+r;Hayden;SlideLeft
+wait;500
+wm_label;JEHANNA
+wm_highlight;Jehanna
+u;Ismaire;MidLeft;SlideLeft
+s;Narrator;The kingdom of Jehanna, ruled by Ismaire, Queen of the White Dunes.{w};auto;narration;hold
+wm_remove_label;JEHANNA
+wm_remove_highlight;Jehanna
+r;Ismaire;SlideRight
+wait;500
+wm_label;RAUSTEN
+wm_highlight;Rausten
+u;Mansel;MidRight;SlideLeft
+s;Narrator;The kingdom of Rausten, ruled by Mansel, the Divine Emperor.{w};auto;narration;hold
+wm_remove_label;RAUSTEN
+wm_remove_highlight;Rausten
+r;Mansel;SlideRight
+wait;500
+wm_label;GRADO
+wm_highlight;Grado
+u;GradoPale;MidRight;SlideRight
+s;Narrator;The Grado Empire, ruled by Vigarde, the stalwart Silent Emperor.{w};auto;narration;hold
+wm_remove_label;GRADO
+wm_remove_highlight;Grado
+r;GradoPale;SlideLeft
+wait;500
+s;Narrator;These five countries house the power of the Sacred Stones.{w};auto;narration;hold
+wm_label;CARCINO
+wm_highlight;Carcino
+u;Klimt;MidRight;SlideRight
+s;Narrator;They are joined by the emerging mercantile republic of Carcino.{w};auto;narration;hold
+wm_remove_label;CARCINO
+wm_remove_highlight;Carcino
+r;Klimt;SlideLeft
+wait;500
+s;Narrator;In these times of peace, tales of past conflict have drifted into legend,|and memories of the ancient dark arts have all but evaporated.{w}{clear}It is now the year 803...|In an instant, the whole of Magvel is threatened by an unexpected atrocity.{w};auto;narration;hold
+wm_label;GRADO
+wm_highlight;Grado
+u;GradoPale;MidRight;SlideRight
+s;Narrator;The Grado Empire, the largest of the Sacred Stone nations,|has invaded the kingdom of Renais under orders from Emperor Vigarde.{w};auto;narration;hold
+wm_remove_label;GRADO
+wm_remove_highlight;Grado
+r;GradoPale;SlideLeft
+wait;500
+wm_label;RENAIS
+wm_highlight;Renais
+u;Fado;MidRight;SlideRight
+s;Narrator;A longtime ally of Grado, Renais is caught off guard, unable to mount any resistance.{w};auto;narration;hold
+wm_remove_label;RENAIS
+wm_remove_highlight;Renais
+r;Fado;SlideLeft
+wait;500
+# Enemy Soldiers appear on map
+# Enemy soldiers move toward Renais
+s;Narrator;Grado's forces move quickly, seizing one territory after another.{w};auto;narration;hold
+u;Ephraim;MidLeft;SlideLeft
+# Ephraim appears on map
+s;Narrator;Compounding King Fado's worries, his son, Prince Ephraim, has gone missing.{w};auto;narration;hold
+# Duessel, Glen, and Selena appear on map
+s;Narrator;Grado's momentum carries its armies to the gates of Castle Renais itself{w};auto;narration;hold
+# Eirika, Fado appear on map
+s;Narrator;Renais will fall...{br}It is inevitable.{w};auto;narration;hold
+t;1

@@ -279,6 +279,16 @@
         <stat_change>0,0,0,0,0,0,0,5,0,0</stat_change>
     </status>
 
+    <!-- Used by Dragonstone -->
+    <status name="Draconic Might">
+        <id>Dragonstone</id>
+        <desc>Grants STR +12, SKL +12, DEF +15, RES +20.</desc>
+        <image_index>8,10</image_index>
+        <components>stat_change,class_skill</components>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <stat_change>0,12,0,12,0,0,15,20,0,0</stat_change>
+    </status>
+
     <status name="Canto">
     	<id>Canto</id>
     	<desc>Can move again after taking certain actions.</desc>

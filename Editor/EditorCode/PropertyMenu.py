@@ -207,8 +207,8 @@ class PropertyMenu(QtGui.QWidget):
         self.base_music.setText(overview['base_music'] if self.base.isChecked() else '')
         self.base_bg.setText(overview['base_flag'] if self.base.isChecked() else '')
 
-        self.player_music = overview['player_phase_music']
-        self.enemy_music = overview['enemy_phase_music']
+        self.player_music = overview.get('player_phase_music', '')
+        self.enemy_music = overview.get('enemy_phase_music', '')
         self.other_music = overview.get('other_phase_music', '')
         self.player_battle_music = overview.get('player_battle_music', '')
         self.enemy_battle_music = overview.get('enemy_battle_music', '')

@@ -2094,6 +2094,29 @@
 		<LVL>D</LVL>
     </item>
 
+    <item name="Dragonstone">
+        <id>Dragonstone</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>1</spriteid>       
+        <components>weapon,uses,weight,crit,effective,status_on_equip,wexp</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <value>0</value>
+        <weight>0</weight>
+        <uses>50</uses>
+        <desc>Effective against monsters</desc>
+
+        <effective>Monster;32</effective>
+        <status_on_equip>Dragonstone</status_on_equip>
+
+        <MT>16</MT>
+        <HIT>100</HIT>
+        <LVL>Myrrh</LVL>
+        <crit>15</crit>
+        <wexp>0</wexp>
+    </item>
+
     <!-- Other Items -->
     <item name="Vulnerary">
         <id>Vulnerary</id>
@@ -2401,8 +2424,8 @@
     </item>
 
     <!-- Money -->
-    <item name="Ruby">
-        <id>Ruby</id>
+    <item name="Red Gem">
+        <id>Red Gem</id>
         <spritetype>Valuable</spritetype>
         <spriteid>0</spriteid>       
         <components></components>
@@ -2412,8 +2435,8 @@
         <desc>An expensive gem worth 2500 gold.</desc>   
     </item>
 
-    <item name="Sapphire">
-        <id>Sapphire</id>
+    <item name="Blue Gem">
+        <id>Blue Gem</id>
         <spritetype>Valuable</spritetype>
         <spriteid>1</spriteid>       
         <components></components>
@@ -2423,8 +2446,8 @@
         <desc>An expensive gem worth 5000 gold.</desc>   
     </item>
 
-    <item name="Diamond">
-        <id>Diamond</id>
+    <item name="White Gem">
+        <id>White Gem</id>
         <spritetype>Valuable</spritetype>
         <spriteid>2</spriteid>       
         <components></components>

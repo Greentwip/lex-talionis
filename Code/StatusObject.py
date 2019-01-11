@@ -674,7 +674,10 @@ def statusparser(s_id):
                     my_components['unit_tint'] = UnitTintComponent(info_line)
                 elif component == 'active':
                     charge = int(status.find('active').text)
-                    my_components['active'] = getattr(ActiveSkill, s_id)(name, charge)
+                    try:
+                        my_components['active'] = getattr(ActiveSkill, s_id)(name, charge)
+                    except AttributeError as e:
+                        print("AttributeError %s. Missing ActiveSkill %s (not your fault)" % (e, name))
                 elif component == 'automatic':
                     charge = int(status.find('automatic').text)
                     status_id = status.find('status').text

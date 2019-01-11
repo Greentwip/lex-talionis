@@ -92,7 +92,10 @@ class ItemObject(object):
         else:
             sprite_id = (0, int(self.spriteid))
         # actually build
-        self.image = Engine.subsurface(GC.ITEMDICT[self.spritetype], (16*sprite_id[0], 16*sprite_id[1], 16, 16))
+        try:
+            self.image = Engine.subsurface(GC.ITEMDICT[self.spritetype], (16*sprite_id[0], 16*sprite_id[1], 16, 16))
+        except ValueError:
+            raise ValueError("Item %s is trying to read from position %s on %s sprite which does not exist." % (self.id, sprite_id[1], self.spritetype))
         self.help_box = None
 
     def __str__(self):
@@ -384,7 +387,10 @@ def itemparser(itemstring):
             my_components = {}
             for component in components:
                 if component == 'uses':
-                    my_components['uses'] = UsesComponent(int(item['uses']))
+                    try:
+                        my_components['uses'] = UsesComponent(int(item['uses']))
+                    except KeyError as e:
+                        raise KeyError("You are missing uses component line for %s item" % itemid)
                 elif component == 'c_uses':
                     my_components['c_uses'] = UsesComponent(int(item['c_uses']))
                 elif component == 'weapon':

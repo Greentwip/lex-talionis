@@ -14,7 +14,7 @@ import Code.Weapons as Weapons
 
 from Code.StatObject import Stat
 import Code.Utility as Utility
-from Code.SaveLoad import Trigger
+from Code.Triggers import Trigger
 
 try:
     import DataImport
