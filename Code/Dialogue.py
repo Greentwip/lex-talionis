@@ -186,8 +186,10 @@ class Dialogue_Scene(object):
             self.last_state = self.current_state
             logger.debug('Dialogue Current State: %s', self.current_state)
 
-        if self.current_state == "Waiting":
+        if self.current_state == "Waiting" or self.current_state == "FlashCursor":
             if current_time > self.last_wait_update + self.waittime:
+                if self.current_state == "FlashCursor":
+                    gameStateObj.cursor.drawState = 0
                 self.current_state = "Processing" # Done waiting. Head back to processing
             else:
                 return # Keep waiting. Do nothing
@@ -611,20 +613,7 @@ class Dialogue_Scene(object):
 
         # === HANDLE CURSOR
         elif line[0] == 'set_cursor':
-            if "," in line[1]: # If is a coordinate
-                coord = self.parse_pos(line[1], gameStateObj)
-            elif line[1] == 'next' and self.next_position:
-                coord = self.next_position
-            elif line[1] == '{unit}' and self.unit:
-                    coord = self.unit.position
-            else:
-                for unit in gameStateObj.allunits:
-                    if (unit.id == line[1] or unit.event_id == line[1]) and unit.position:
-                        coord = unit.position
-                        break
-                else:
-                    logger.error("Couldn't find unit %s", line[1])
-                    return
+            coord = self.get_cursor_coord(line[1], gameStateObj)
             gameStateObj.cursor.centerPosition(coord, gameStateObj)
             if 'immediate' not in line and not self.do_skip:
                 gameStateObj.stateMachine.changeState('move_camera')
@@ -636,6 +625,12 @@ class Dialogue_Scene(object):
                 gameStateObj.cursor.drawState = 1
             else:
                 gameStateObj.cursor.drawState = 0
+        elif line[0] == 'flash_cursor':
+            # Macro -- inserted backwards
+            self.scene_lines.insert(self.scene_lines_index, ['disp_cursor', '0'])
+            self.scene_lines.insert(self.scene_lines_index, ['wait', '500'])
+            self.scene_lines.insert(self.scene_lines_index, ['disp_cursor', '1'])
+            self.scene_lines.insert(self.scene_lines_index, ['set_cursor', line[1]])
         elif line[0] == 'set_camera':
             pos1 = self.parse_pos(line[1], gameStateObj)
             pos2 = self.parse_pos(line[2], gameStateObj)
@@ -944,6 +939,9 @@ class Dialogue_Scene(object):
         elif line[0] == 's':
             self.evaluate_evals(line, gameStateObj)
             self.add_dialog(line)
+        # === CINEMATIC TEXT
+        elif line[0] == 'cinematic':
+            self.add_cinematic(line)
         # === CREDITS BOX
         elif line[0] == 'credits':
             self.add_credits(line)
@@ -1125,6 +1123,24 @@ class Dialogue_Scene(object):
         self.current_state = "Waiting"
 
         self.dialog.append(new_credits)
+
+    def add_cinematic(self, line):
+        text = line[1]
+        if len(line) > 2:
+            flags = line[2:]
+            if 'center' in flags:
+                center = True
+            else:
+                center = False
+        font = 'chapter_yellow'
+
+        new_cinematic = Cinematic(text, font, center=center)
+        # Wait a certain amount of time before next one
+        self.waittime = new_cinematic.determine_wait()
+        self.last_wait_update = Engine.get_time()
+        self.current_state = "Waiting"
+
+        self.dialog.append(new_cinematic)
 
     def add_ending(self, line, gameStateObj):
         portrait = line[1]
@@ -1494,6 +1510,21 @@ class Dialogue_Scene(object):
             return self.parse_pos(spec, gameStateObj)
         else:
             return spec
+
+    def get_cursor_coord(self, pos, gameStateObj):
+        if "," in pos: # If is a coordinate
+            return self.parse_pos(pos, gameStateObj)
+        elif pos == 'next' and self.next_position:
+            return self.next_position
+        elif pos == '{unit}' and self.unit:
+            return self.unit.position
+        else:
+            for unit in gameStateObj.allunits:
+                if (unit.id == pos or unit.event_id == pos) and unit.position:
+                    return unit.position
+            else:
+                logger.error("Couldn't find unit %s", pos)
+                return
 
     def parse_pos(self, pos, gameStateObj):
         if pos.startswith('o'):
@@ -1921,6 +1952,77 @@ class Credits(object):
     def draw(self, surf, unit_sprites=None):
         self.update()
         surf.blit(self.surface, self.position)
+
+class Cinematic(object):
+    def __init__(self, text, font, wait=False, center=False):
+        self.text = text.split('|')
+        self.center = center
+        self.wait = wait
+        self.wait_flag = False
+        self.main_font = GC.FONT[font]
+
+        self.transition_state = 'fade_in'
+        self.start_time = Engine.get_time()
+
+        # To match dialog
+        self.waiting = False # Never waiting on unit input
+        self.done = True # Always ready to move on to next dialog object
+        self.hold = True # Always show, even if waiting
+        self.solo_flag = True # As many of these on the screen as possible
+        self.talk = False
+
+    def populate_surface(self):
+        self.surface = Engine.create_surface((GC.WINWIDTH, GC.WINHEIGHT), transparent=True)
+        for idx, line in enumerate(self.text):
+            if self.center:
+                x_pos = GC.WINWIDTH//2 - self.main_font.size(line)[0]//2
+            else:
+                x_pos = 16
+            half = len(self.text)//2
+            if len(self.text)%2:  # If odd
+                y_pos = GC.WINHEIGHT//2 + (idx - half)*32 - 8
+            else:
+                y_pos = GC.WINHEIGHT//2 + (idx - half)*32 + 8
+            self.main_font.blit(line, self.surface, (x_pos, y_pos))
+
+    def determine_wait(self):
+        time = len(self.text) * 16
+        if self.wait:
+            time += self.get_pause() * 2
+        return time
+
+    def get_pause(self):
+        # -~ adds one in place
+        return -~self.length * 1000 # 1500
+
+    def hurry_up(self):
+        pass
+
+    def is_done(self):
+        return self.done
+
+    def update(self):
+        current_time = Engine.get_time()
+        if current_time - self.start_time > self.wait + 200:
+            self.transition_state = 'fade_out'
+            self.start_time = current_time
+        
+        if self.transition_state == 'fade_in':
+            transition = max((current_time - self.start_time)/2, 100)
+            self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
+            if transition >= 100:
+                self.transition_state = 'normal'
+        elif self.transition_state == 'normal':
+            self.image = self.surface.copy()
+        elif self.transition_state == 'fade_out':
+            transition = 100 - max((current_time - self.start_time)/2, 100)
+            self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
+            if transition <= 0:
+                self.done = True
+
+    def draw(self, surf, unit_sprites=None):
+        self.update()
+        surf.blit(self.image, (0, 0))
 
 class EndingsDisplay(object):
     def __init__(self, message_system, portrait1, title, text, stats, font='text_white'):

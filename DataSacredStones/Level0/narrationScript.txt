@@ -1,20 +1,20 @@
 # Prologue narration Script
 b;BlackBackground
 t;4
-s;Narrator;In an age long past...{br}evil flooded over the land.{br}Creatures awash in the dark{br}tide ran wild, pushing mankind{br}to the brink of annihilation.{w};cinematic
-s;Narrator;In its despair, mankind{br}appealed to the heavens, and{br}from a blinding light came hope.{w};cinematic
+cinematic;In an age long past...|evil flooded over the land.|Creatures awash in the dark|tide ran wild, pushing mankind|to the brink of annihilation.;center
+cinematic;In its despair, mankind|appealed to the heavens, and|from a blinding light came hope.;center
 # Light transition
 t;5
 b;RuneBackground
 t;6
-s;Narrator;The Sacred Stones{w};cinematic
-s;Narrator;These five glorious treasures{br}held the power to dispel evil.{w};cinematic
-s;Narrator;The hero Grado and his warriors{br}used the Sacred Stones to combat{br}evil's darkness. They defeated{br}the Demon King and sealed his{br}soul away within the stones.{w};cinematic
-s;Narrator;With the darkness imprisoned,{br}peace returned to Magvel.{w};cinematic
+cinematic;The Sacred Stones;center
+cinematic;These five glorious treasures|held the power to dispel evil.;center
+cinematic;The hero Grado and his warriors|used the Sacred Stones to combat|evil's darkness. They defeated|the Demon King and sealed his|soul away within the stones.
+cinematic;With the darkness imprisoned,|peace returned to Magvel.;center
 t;1
 b;BlackBackground
 t;2
-s;Narrator;But this peace would not last...{w};cinematic
+cinematic;But this peace would not last...;center
 wait;1000
 t;3
 b;MiniWorldMap;world_map
