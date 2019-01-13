@@ -34,18 +34,19 @@
 - Implement Devil axe effect --  -- gotta think about this...
 - Implement stationary weapon event tiles
 - Implement MAG range (Physic staff, etc.)
-- Make sure wexp gain works like GBA FE (on double hit, double? On hit or miss?)
+- Test wexp gain works like GBA FE (on double hit, double? On hit or miss?)
 - Add MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)
 - Add MAG to accuracy as well (or add flag for FE GBA style staves) -- or try and make it work with both
-- Make sure Berserk works (add un_selectable status?)
+- Test Berserk works
 - Add Fog of War
 - Add Hammerne state
-- Add other_anim component support (like self_anim)
-- Add all aoe (Latona)
-- Add support for generic rank bonuses
-- Add support for weapons with "no_counterattack"
+- Test other_anim component support (like self_anim)
+- Test all aoe (Latona)
+- Test support for generic rank bonuses
+- Test support for weapons with "cannot_be_countered"
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
-- Check that enemy ai takes critical into account
+- Test that enemy ai takes critical into account
+- Add sounds effects to cutscenes
 
 To Test Action:
 WarpIn

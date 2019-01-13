@@ -681,11 +681,22 @@ class Primary_AI(object):
         if defender:
             target = defender
             raw_damage = self.unit.compute_damage(target, gameStateObj, item, 'Attack')
+            my_crit_damage = 0
+            if item.crit is not None:
+                if cf.CONSTANTS['crit'] == 1:
+                    my_crit_damage = self.damage(gameStateObj, item)
+                elif cf.CONSTANTS['crit'] == 2:
+                    my_crit_damage = raw_damage
+                elif cf.CONSTANTS['crit'] == 3:
+                    my_crit_damage = 2 * raw_damage
+            my_crit_damage = Utility.clamp(my_crit_damage/float(target.currenthp), 0, 1)
+
             # Damage I do compared to targets current health
             my_damage = Utility.clamp(raw_damage/float(target.currenthp), 0, 1) # Essentially incorporates weakness into calc
             # Do I add a new status to the target
             my_status = 1 if item.status and any(s_id not in [s.id for s in target.status_effects] for s_id in item.status) else 0
             my_accuracy = Utility.clamp(self.unit.compute_hit(target, gameStateObj, item, 'Attack')/100.0, 0, 1)
+            my_crit_accuracy = Utility.clamp(self.unit.compute_crit(target, gameStateObj, item, 'Attack')/100,0, 0, 1)
 
             target_damage = 0
             target_accuracy = 0
@@ -700,9 +711,10 @@ class Primary_AI(object):
             if double and target_damage >= 1:
                 double *= (1 - (target_accuracy*(1 - chance_i_kill_target_on_first))) # Chance that I actually get to double
 
-            offensive_term += 3 if my_damage*my_accuracy >= 1 else my_damage*my_accuracy*(double+1) 
+            offensive_term += 3 if my_damage*my_accuracy >= 1 else my_damage*my_accuracy*(double+1)
+            offensive_term += my_crit_damage*my_crit_accuracy*my_accuracy*(double+1)
             status_term += my_status*min(1, my_accuracy*(double+1)) if my_status else 0
-            defensive_term -= target_damage*target_accuracy*(1-chance_i_kill_target_on_first)
+            defensive_term -= target_damage*target_accuracy*(1-chance_i_kill_target_on_first) 
 
         splash = [s for s in splash if isinstance(s, UnitObject.UnitObject)]
 

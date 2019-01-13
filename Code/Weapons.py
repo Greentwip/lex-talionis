@@ -197,6 +197,9 @@ class Weapon_Exp(object):
                 break
         return current_letter
 
+    def get_rank_bonus(self, wexp):
+        return self.rank_bonuses[self.number_to_letter(wexp)]
+
     # Returns a float between 0 and 1 desribing how closes number is to next tier from previous tier
     def percentage(self, wexp):
         current_percentage = 0.0

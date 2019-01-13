@@ -454,7 +454,10 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
         status.original_team = unit.team
         p_unit = gameStateObj.get_unit_from_id(status.parent_id)
         Action.do(Action.ChangeTeams(unit, p_unit.team), gameStateObj)
-        # unit.changeTeams(p_unit.team, gameStateObj)
+
+    if status.ai_change:
+        status.original_ai = unit.ai_descriptor
+        Action.do(Action.ChangeAI(unit, status.ai_change), gameStateObj)
 
     if status.refresh:
         Action.do(Action.Reset(unit), gameStateObj)
@@ -546,8 +549,10 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
         logger.warning(unit.status_effects)
         return
     if status.convert:
-        # unit.changeTeams(status.original_team, gameStateObj)
         Action.do(Action.ChangeTeams(unit, status.original_team), gameStateObj)
+    if status.ai_change:
+        Action.do(Action.ChangeAI(unit, status.original_ai), gameStateObj)
+        
     if status.upkeep_stat_change:
         unit.apply_stat_change([-stat*(status.upkeep_stat_change.count) for stat in status.upkeep_stat_change.stat_change])
     if status.stat_change:

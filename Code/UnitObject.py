@@ -1078,7 +1078,7 @@ class UnitObject(object):
         true_attacks = []
         splash_attacks = []
         for position in attacks:
-            attack, splash_pos = my_weapon.aoe.get_positions(self.position, position, gameStateObj.map, my_weapon)
+            attack, splash_pos = my_weapon.aoe.get_positions(self.position, position, gameStateObj, my_weapon)
             if attack:
                 true_attacks.append(attack)
             splash_attacks += splash_pos
@@ -1248,7 +1248,7 @@ class UnitObject(object):
     def displaySingleAttack(self, gameStateObj, position, item=None):
         if not item:
             item = self.getMainWeapon()
-        true_position, splash_positions = item.aoe.get_positions(self.position, position, gameStateObj.map, item)
+        true_position, splash_positions = item.aoe.get_positions(self.position, position, gameStateObj, item)
         if item.beneficial:
             if true_position:
                 gameStateObj.highlight_manager.add_highlight(true_position, 'spell2', allow_overlap=True)
@@ -1521,8 +1521,10 @@ class UnitObject(object):
             for status in target.status_effects:
                 if status.weakness and status.weakness.damage_type == item.TYPE:
                     damage += status.weakness.num
-            
-        if item.guaranteed_crit or crit == 1:
+        
+        if item.guaranteed_crit:
+            crit = cf.CONSTANTS['crit'] or 1
+        if crit == 1:
             damage += self.damage(gameStateObj, item, Utility.calculate_distance(self.position, target.position) <= 1)
         elif crit == 2:
             damage *= 2
@@ -1650,6 +1652,10 @@ class UnitObject(object):
                                        self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef'])
         else:
             accuracy = 10000
+        # Generic rank bonuses
+        if item.weapon or item.spell:
+            idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+            accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[0]
         return accuracy
 
     def avoid(self, gameStateObj, item=None):
@@ -1682,10 +1688,15 @@ class UnitObject(object):
                     damage += int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
             else:
                 damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
-            return damage
+            # Generic rank bonuses
+            idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+            damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
         elif item.spell:
             if item.damage:
                 damage += item.damage + int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
+                # Generic rank bonuses
+                idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+                damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
             else:
                 return 0
         else:
@@ -1705,6 +1716,9 @@ class UnitObject(object):
             accuracy = item.crit + int(self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef'])
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             accuracy += self.get_support_bonuses(gameStateObj)[4]
+            # Generic rank bonuses
+            idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+            accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
             return accuracy
         else:
             return 0

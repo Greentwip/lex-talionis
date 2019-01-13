@@ -112,6 +112,9 @@ def read_constants_file():
              'steal_exp': 0, # Amount of exp gained from stealing
              'unarmed_punish': 0, # How much weapon disadvantage an unarmed unit gets
              'convoy_on_death': 0, # Should dead units give all of their items to the convoy at the end of each level?
+             'fatal_wexp': 1, # Should units get double weapon experience on lethal hits
+             'double_wexp': 1, # Give wexp for every hit (so if you double, you get 2x wexp)
+             'miss_wexp': 1, # Give wexp even if you do no damage or miss
              'title': 'Lex Talionis Engine',
              'damage_str_coef': 1.0,
              'damage_mag_coef': 1.0,
@@ -177,6 +180,9 @@ def read_constants_file():
     lines['steal_exp'] = int(lines['steal_exp'])
     lines['unarmed_punish'] = int(lines['unarmed_punish'])
     lines['convoy_on_death'] = int(lines['convoy_on_death'])
+    lines['fatal_wexp'] = int(lines['fatal_wexp'])
+    lines['double_wexp'] = int(lines['double_wexp'])
+    lines['miss_wexp'] = int(lines['miss_wexp'])
     lines['damage_str_coef'] = float(lines['damage_str_coef'])
     lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
     lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])

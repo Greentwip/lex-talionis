@@ -268,7 +268,8 @@ class AOEComponent(object):
         self.mode = mode
         self.number = number
 
-    def get_positions(self, unit_position, cursor_position, tileMap, item):
+    def get_positions(self, unit_position, cursor_position, gameStateObj, item):
+        tileMap = gameStateObj.map
         if self.mode == 'Normal':
             return cursor_position, []
         elif self.mode == 'Cleave_Old':
@@ -304,6 +305,18 @@ class AOEComponent(object):
         elif self.mode == 'Line':
             splash_positions = Utility.raytrace(unit_position, cursor_position)
             splash_positions = [position for position in splash_positions if position != unit_position]
+            return None, splash_positions
+        elif self.mode == 'AllAllies':
+            splash_positions = [unit.position for unit in gameStateObj.allunits if item.owner.checkIfAlly(unit)]
+            return None, splash_positions
+        elif self.mode == 'AllEnemies':
+            splash_positions = [unit.position for unit in gameStateObj.allunits if item.owner.checkIfEnemy(unit)]
+            return None, splash_positions
+        elif self.mode == 'AllUnits':
+            splash_positions = [unit.position for unit in gameStateObj.allunits]
+            return None, splash_positions
+        elif self.mode == 'AllTiles':
+            splash_positions = tileMap.tiles.keys()
             return None, splash_positions
         else:
             print('Error! ' + self.mode + ' AOE mode is not supported yet!')

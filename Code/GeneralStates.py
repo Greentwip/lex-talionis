@@ -140,13 +140,17 @@ class FreeState(StateMachine.State):
                                                        unit.position == gameStateObj.cursor.position and not unit.isDone()]
             if gameStateObj.cursor.currentSelectedUnit: # Unit must exist at that spot
                 gameStateObj.cursor.currentSelectedUnit = gameStateObj.cursor.currentSelectedUnit[0]
-                if gameStateObj.cursor.currentSelectedUnit.team == 'player': # Ie a player controlled character
-                    GC.SOUNDDICT['Select 3'].play()
+                # Ie a player controlled character
+                if gameStateObj.cursor.currentSelectedUnit.team == 'player' and \
+                        'un_selectable' not in gameStateObj.cursor.currentSelectedUnit.status_bundle: 
+                    GC.SOUNDDICT['Select 3'].play() 
                     gameStateObj.stateMachine.changeState('move')
                 else:
                     GC.SOUNDDICT['Select 2'].play()
                     if gameStateObj.cursor.currentSelectedUnit.team.startswith('enemy'):
                         gameStateObj.boundary_manager.toggle_unit(gameStateObj.cursor.currentSelectedUnit)
+                    else:
+                        GC.SOUNDDICT['Error'].play()
             else: # No unit
                 GC.SOUNDDICT['Select 2'].play()
                 gameStateObj.stateMachine.changeState('optionsmenu')

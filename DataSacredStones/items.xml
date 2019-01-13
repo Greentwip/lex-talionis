@@ -278,7 +278,7 @@
         <id>Light Brand</id>
         <spritetype>Sword</spritetype>
         <spriteid>14</spriteid>       
-        <components>weapon,uses,weight,magic,map_hit_color</components>
+        <components>weapon,uses,weight,magic_at_range,map_hit_color</components>
         <weapontype>Sword</weapontype>
  
         <uses>25</uses>
@@ -401,7 +401,7 @@
         <id>Wind Sword</id>
         <spritetype>Sword</spritetype>
         <spriteid>20</spriteid>       
-        <components>weapon,uses,weight,magic,effective</components>
+        <components>weapon,uses,weight,magic_at_range,effective</components>
         <weapontype>Sword</weapontype>
  
         <uses>40</uses>
@@ -1248,7 +1248,7 @@
         <id>Ballista</id>
         <spritetype>Bow</spritetype>
         <spriteid>8</spriteid>       
-        <components>weapon,uses,weight,crit,effective,wexp,no_counterattack</components>
+        <components>weapon,uses,weight,crit,effective,wexp,cannot_be_countered</components>
         <weapontype>Bow</weapontype>
  
         <uses>5</uses>
@@ -1269,7 +1269,7 @@
         <id>Long Ballista</id>
         <spritetype>Bow</spritetype>
         <spriteid>9</spriteid>       
-        <components>weapon,uses,weight,crit,effective,wexp,no_counterattack</components>
+        <components>weapon,uses,weight,crit,effective,wexp,cannot_be_countered</components>
         <weapontype>Bow</weapontype>
  
         <uses>5</uses>
@@ -1290,7 +1290,7 @@
         <id>Killer Ballista</id>
         <spritetype>Bow</spritetype>
         <spriteid>10</spriteid>       
-        <components>weapon,uses,weight,crit,effective,wexp,no_counterattack</components>
+        <components>weapon,uses,weight,crit,effective,wexp,cannot_be_countered</components>
         <weapontype>Bow</weapontype>
  
         <uses>5</uses>
@@ -1672,7 +1672,7 @@
         <status>Clear</status>
         <LVL>S</LVL>
         <targets>Ally</targets>
-        <aoe>All,0</aoe>    
+        <aoe>AllAllies,0</aoe>    
 
         <map_hit_color>96,144,232</map_hit_color>
         <exp>10</exp>
@@ -1747,7 +1747,7 @@
         <id>Purge</id>
         <spritetype>Light</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,weight,map_hit_color,crit,wexp,no_counterattack</components>
+        <components>weapon,uses,weight,map_hit_color,crit,wexp,cannot_be_countered</components>
         <weapontype>Light</weapontype>
  
         <uses>5</uses>
@@ -1875,7 +1875,7 @@
         <id>Bolting</id>
         <spritetype>Anima</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,weight,crit,no_counterattack</components>
+        <components>weapon,uses,weight,crit,cannot_be_countered</components>
         <weapontype>Anima</weapontype>
  
         <uses>5</uses>
@@ -1997,7 +1997,7 @@
         <id>Flux</id>
         <spritetype>Dark</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,weight,map_hit_color,status_on_equip,no_counterattack,wexp,ignore_def</components>
+        <components>weapon,uses,weight,map_hit_color,status_on_equip,cannot_be_countered,wexp,ignore_def</components>
         <weapontype>Dark</weapontype>
  
         <uses>5</uses>
