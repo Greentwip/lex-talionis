@@ -12,6 +12,7 @@ s;Ophie;I am a waffle!{w}{br}Waffle good! Waffle strong!
 r;Renae;Ophie
 t;1
 remove_background
+sound;Legendary Weapon
 t;2
 end_skip
 set_cursor;3,16
