@@ -1,0 +1,21 @@
+# Calculations set-up
+# Must have HP, MOV in stats
+# HP always comes first, MOV always come last
+# Remaining stats spelled out in order here
+STR;MAG;SKL;SPD;LCK;DEF;RES;CON
+# Legal nonnumeric values:
+# HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON
+# AS (attackspeed), DIST (distance), ITEM_WEIGHT
+# ITEM_HIT, ITEM_MT, ITEM_CRIT
+# Must set up equations that calculate HIT, AVOID, STAFF_HIT, STAFF_AVOID, CRIT, CRIT_AVOID, AS, DAMAGE, MAGIC_DAMAGE, DEFENSE, MAGIC_DEFENSE
+AS = SPD - ITEM_WEIGHT
+HIT = ITEM_HIT + SKL*2 + LCK/2
+AVOID = AS*2 + LCK
+STAFF_HIT = ITEM_HIT + MAG*5 + SKL
+STAFF_AVOID = RES*5 + DIST*2
+CRIT = ITEM_CRIT + SKL/2
+CRIT_AVOID = LCK
+DAMAGE = STR
+DEFENSE = DEF
+MAGIC_DAMAGE = MAG
+MAGIC_DEFENSE = RES

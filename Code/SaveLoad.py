@@ -5,20 +5,21 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-from collections import OrderedDict
 
 # Custom imports
 try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective, Triggers
+    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects
+    import Utility, Weapons, Objective, Triggers, ClassData
     from StatObject import build_stat_dict
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects, Utility, Weapons, Objective, Triggers
+    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects
+    from . import Utility, Weapons, Objective, Triggers, ClassData
     from Code.StatObject import build_stat_dict
 
 import logging
@@ -69,7 +70,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
         # Process line
         unitLine = line.split(';')
         current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, 
-                                       reinforceUnits, prefabs, gameStateObj.triggers, metaDataObj, gameStateObj)
+                                       reinforceUnits, prefabs, gameStateObj.triggers, gameStateObj)
     Triggers.finalize_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective, music=starting_music)
 
@@ -91,12 +92,6 @@ def get_metaDataObj(levelfolder, metaDataObj):
     outroScript_filename = levelfolder + '/outroScript.txt'
     death_quote_filename = 'Data/death_quote_info.txt'
 
-    portrait_dict = create_portrait_dict()
-
-    # Grab general catalogs
-    class_dict = create_class_dict()
-    lore_dict = create_lore_dict()
-
     overview_dict = read_overview_file(overview_filename)
 
     metaDataObj['name'] = overview_dict['name']
@@ -113,9 +108,6 @@ def get_metaDataObj(levelfolder, metaDataObj):
     metaDataObj['outroScript'] = outroScript_filename
     metaDataObj['overview'] = overview_filename
     metaDataObj['death_quotes'] = death_quote_filename
-    metaDataObj['class_dict'] = class_dict
-    metaDataObj['portrait_dict'] = portrait_dict
-    metaDataObj['lore'] = lore_dict
 
 def read_overview_file(overview_filename):
     overview_lines = {}
@@ -125,7 +117,7 @@ def read_overview_file(overview_filename):
             overview_lines[split_line[0]] = split_line[1]
     return overview_lines
 
-def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, triggers, metaDataObj, gameStateObj):
+def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, triggers, gameStateObj):
     logger.info('Reading unit line %s', unitLine)
     # New Faction
     if unitLine[0] == 'faction':
@@ -149,9 +141,9 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
         # New Unit
         if unitLine[1] == "0":
             if len(unitLine) > 7:
-                create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameStateObj)
+                create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj)
             else:
-                add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj)
+                add_unit(unitLine, allunits, reinforceUnits, gameStateObj)
         # Saved Unit
         elif unitLine[1] == "1":
             for unit in allunits:
@@ -174,23 +166,24 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
         # Unit is not used in this mode
     return current_mode
 
-def default_previous_classes(cur_class, classes, class_dict):
-    if cur_class not in class_dict:
+def default_previous_classes(cur_class, classes):
+    if cur_class not in ClassData.class_dict:
         raise KeyError("Cannot find %s in class_info.xml." % cur_class)
-    while class_dict[cur_class]['tier'] > len(classes) and class_dict[cur_class]['promotes_from']:
-        prev_class = class_dict[cur_class]['promotes_from']
+    klass = ClassData.class_dict[cur_class]
+    while klass['tier'] > len(classes) and klass['promotes_from']:
+        prev_class = klass['promotes_from']
         if prev_class not in classes:
             classes.insert(0, prev_class)
             cur_class = prev_class
 
-def add_unit(unitLine, allunits, reinforceUnits, metaDataObj, gameStateObj):
+def add_unit(unitLine, allunits, reinforceUnits, gameStateObj):
     assert len(unitLine) == 6, "unitLine %s must have length 6"%(unitLine)
     legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
               'unit_id': unitLine[3], 'position': unitLine[4], 'ai': unitLine[5]}
-    return add_unit_from_legend(legend, allunits, reinforceUnits, metaDataObj, gameStateObj)
+    return add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj)
 
-def add_unit_from_legend(legend, allunits, reinforceUnits, metaDataObj, gameStateObj):
-    class_dict = metaDataObj['class_dict']
+def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
+    class_dict = ClassData.class_dict
     for unit in GC.UNITDATA.getroot().findall('unit'):
         if unit.find('id').text == legend['unit_id']:
             u_i = {}
@@ -204,11 +197,11 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, metaDataObj, gameStat
             classes = unit.find('class').text.split(',')
             u_i['klass'] = classes[-1]
             # Give default previous class
-            default_previous_classes(u_i['klass'], classes, class_dict)
+            default_previous_classes(u_i['klass'], classes)
             u_i['gender'] = int(unit.find('gender').text)
             u_i['level'] = int(unit.find('level').text)
 
-            stats = intify_comma_list(unit.find('bases').text)
+            stats = Utility.intify_comma_list(unit.find('bases').text)
             for n in range(len(stats), cf.CONSTANTS['num_stats']):
                 stats.append(class_dict[u_i['klass']]['bases'][n])
             if u_i['team'] == 'player' or u_i['team'] == 'other': # Modify stats
@@ -220,7 +213,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, metaDataObj, gameStat
             stats = [sum(x) for x in zip(stats, mode_bases)]
             assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long" % (stats, cf.CONSTANTS['num_stats'])
 
-            u_i['growths'] = intify_comma_list(unit.find('growths').text)
+            u_i['growths'] = Utility.intify_comma_list(unit.find('growths').text)
             u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
             u_i['growths'] = [sum(x) for x in zip(u_i['growths'], mode_growths)]
             assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long" % (stats, cf.CONSTANTS['num_stats'])
@@ -262,7 +255,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, metaDataObj, gameStat
                 cur_unit.position = u_i['position']
 
             # Status Effects and Skills
-            get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
+            get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
             personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []
             c_s = [StatusObject.statusparser(status) for status in personal_skills]
@@ -275,12 +268,12 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, metaDataObj, gameStat
             allunits.append(cur_unit)
             return cur_unit
 
-def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameStateObj):
+def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     assert len(unitLine) in (9, 10), "unitLine %s must have length 9 or 10 (if optional status)"%(unitLine)
     legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
               'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
               'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
-    class_dict = metaDataObj['class_dict']
+    class_dict = ClassData.class_dict
 
     u_i = {}
 
@@ -298,7 +291,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     classes = legend['class'].split(',')
     u_i['klass'] = classes[-1]
     # Give default previous class
-    default_previous_classes(u_i['klass'], classes, class_dict)
+    default_previous_classes(u_i['klass'], classes)
 
     force_fixed = False
     if(legend['level'].startswith('f')):  # Force fixed level up
@@ -309,7 +302,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
-        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], legend['items'],
+        get_unit_info(u_i['team'], u_i['klass'], u_i['level'], legend['items'],
                       gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
@@ -328,7 +321,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
         cur_unit.position = u_i['position']
 
     # Status Effects and Skills
-    get_skills(class_dict, cur_unit, classes, u_i['level'], gameStateObj, feat=False)
+    get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)
 
     # Extra Skills
     if len(unitLine) == 10:
@@ -339,9 +332,9 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, metaDataObj, gameS
     allunits.append(cur_unit)
     return cur_unit
 
-def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
+def create_summon(summon_info, summoner, position, gameStateObj):
     # Important Info
-    class_dict = metaDataObj['class_dict']
+    class_dict = ClassData.class_dict
     u_i = {}
 
     GC.U_ID += 1
@@ -364,21 +357,21 @@ def create_summon(summon_info, summoner, position, metaDataObj, gameStateObj):
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
     stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
-        get_unit_info(class_dict, u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj.mode, gameStateObj.game_constants)
+        get_unit_info(u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj.mode, gameStateObj.game_constants)
     u_i['stats'] = build_stat_dict(stats)
     unit = UnitObject.UnitObject(u_i)
 
     # Status Effects and Skills
     my_seed = sum(u_i['position']) if u_i['position'] else 0
-    get_skills(class_dict, unit, classes, u_i['level'], gameStateObj, seed=my_seed)
+    get_skills(unit, classes, u_i['level'], gameStateObj, seed=my_seed)
 
     return unit
 
-def get_unit_info(class_dict, team, klass, level, item_line, mode, game_constants, force_fixed=False):
+def get_unit_info(team, klass, level, item_line, mode, game_constants, force_fixed=False):
     # Handle stats
     # hp, str, mag, skl, spd, lck, def, res, con, mov
-    bases = class_dict[klass]['bases'][:] # Using copies    
-    growths = class_dict[klass]['growths'][:] # Using copies
+    bases = ClassData.class_dict[klass]['bases'][:] # Using copies    
+    growths = ClassData.class_dict[klass]['growths'][:] # Using copies
 
     if team == 'player' or team == 'other': # Modify stats
         mode_bases = mode['player_bases']
@@ -398,14 +391,14 @@ def get_unit_info(class_dict, team, klass, level, item_line, mode, game_constant
     bases = [sum(x) for x in zip(bases, mode_bases)]
     growths = [sum(x) for x in zip(growths, mode_growths)]
 
-    num_levelups = level - 1 + (cf.CONSTANTS['promoted_level'] if class_dict[klass]['tier'] > 1 else 0)
-    stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, class_dict[klass]['max'], mode, force_fixed=force_fixed)
+    num_levelups = level - 1 + (cf.CONSTANTS['promoted_level'] if ClassData.class_dict[klass]['tier'] > 1 else 0)
+    stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, ClassData.class_dict[klass]['max'], mode, force_fixed=force_fixed)
 
     # Handle items
     items = ItemMethods.itemparser(item_line)
 
     # Handle required wexp
-    wexp = class_dict[klass]['wexp_gain'][:]
+    wexp = ClassData.class_dict[klass]['wexp_gain'][:]
     # print(klass, wexp)
     for item in items:
         if item.weapon:
@@ -426,10 +419,10 @@ def get_unit_info(class_dict, team, klass, level, item_line, mode, game_constant
 
     return stats, growths, growth_points, items, wexp, level
 
-def get_skills(class_dict, unit, classes, level, gameStateObj, feat=True, seed=0):
+def get_skills(unit, classes, level, gameStateObj, feat=True, seed=0):
     class_skills = []
     for index, klass in enumerate(classes):
-        for level_needed, class_skill in class_dict[klass]['skills']:
+        for level_needed, class_skill in ClassData.class_dict[klass]['skills']:
             # If level is gte level needed for skill or gte max_level
             if level >= level_needed or index < len(classes) - 1:
                 class_skills.append(class_skill)
@@ -496,93 +489,6 @@ def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False)
     stats = [Utility.clamp(stat, 0, max_stats[index]) for index, stat in enumerate(stats)]
             
     return stats, growth_points
-
-"""
-def place_mount(mount_id, chosen_unit, reinforceUnits):
-    my_mount = None
-    for u_id, (unit, position) in reinforceUnits.items():
-        if mount_id == u_id:
-            my_mount = unit
-            break
-    if my_mount:
-        chosen_unit.mount(my_mount, None)
-    logger.warning('Could not find mount!')
-"""
-
-def intify_comma_list(comma_string):
-    # Takes string, turns it into list of ints
-    if comma_string:
-        s_l = comma_string.split(',')
-        s_l = [int(num) for num in s_l]
-    else:
-        s_l = []
-    return s_l
-
-# === PARSES A SKILL LINE =====================================================
-def class_skill_parser(skill_text):
-    if skill_text is not None:
-        each_skill = skill_text.split(';')
-        split_line = [(int(skill.split(',')[0]), skill.split(',')[1]) for skill in each_skill]
-        return split_line
-    else:
-        return []
-
-# === CREATE CLASS DICTIONARY ================================================
-def create_class_dict():
-    class_dict = OrderedDict()
-    # For each class
-    for klass in GC.CLASSDATA.getroot().findall('class'):
-        c_id = klass.get('id')
-        tier = int(klass.find('tier').text)
-        wexp_gain = klass.find('wexp_gain').text.split(',')
-        for index, wexp in enumerate(wexp_gain[:]):
-            if wexp in Weapons.EXP.wexp_dict:
-                wexp_gain[index] = Weapons.EXP.wexp_dict[wexp]
-        wexp_gain = [int(num) for num in wexp_gain]
-        class_dict[c_id] = {'short_name': klass.find('short_name').text,
-                            'long_name': klass.find('long_name').text,
-                            'id': c_id,
-                            'tier': tier,
-                            'wexp_gain': wexp_gain,
-                            'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
-                            'turns_into': klass.find('turns_into').text.split(',') if klass.find('turns_into').text is not None else [],
-                            'movement_group': int(klass.find('movement_group').text),
-                            'tags': set(klass.find('tags').text.split(',')) if klass.find('tags').text is not None else set(),
-                            'skills': class_skill_parser(klass.find('skills').text),
-                            'growths': intify_comma_list(klass.find('growths').text),
-                            'bases': intify_comma_list(klass.find('bases').text),
-                            'promotion': intify_comma_list(klass.find('promotion').text) if klass.find('promotion') is not None else [0]*10,
-                            'max': intify_comma_list(klass.find('max').text) if klass.find('max') is not None else [60],
-                            'desc': klass.find('desc').text,
-                            'exp_multiplier': float(klass.find('exp_multiplier').text) if klass.find('exp_multiplier') is not None else 1.,
-                            'exp_when_attacked': float(klass.find('exp_when_attacked').text) if klass.find('exp_when_attacked') is not None else 1.,
-                            'max_level': int(klass.find('max_level').text) if klass.find('max_level') is not None else Utility.find_max_level(tier, cf.CONSTANTS['max_level'])}
-        class_dict[c_id]['bases'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['bases'])))
-        class_dict[c_id]['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['growths'])))
-        class_dict[c_id]['promotion'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['promotion'])))
-        class_dict[c_id]['max'].extend([cf.CONSTANTS['max_stat']] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['max'])))
-    return class_dict
-
-# === CREATE LORE DICTIONARY =================================================
-def create_lore_dict():
-    lore_dict = {}
-    # For each lore
-    for entry in GC.LOREDATA.getroot().findall('lore'):
-        lore_dict[entry.get('name')] = {'long_name': entry.find('long_name').text,
-                                        'short_name': entry.get('name'),
-                                        'desc': entry.find('desc').text,
-                                        'type': entry.find('type').text,
-                                        'unread': True}
-
-    return lore_dict
-
-# === CREATE PORTRAIT_DICTIONARY =============================================
-def create_portrait_dict():
-    portrait_dict = OrderedDict()
-    for portrait in GC.PORTRAITDATA.getroot().findall('portrait'):
-        portrait_dict[portrait.get('name')] = {'mouth': [int(coord) for coord in portrait.find('mouth').text.split(',')],
-                                               'blink': [int(coord) for coord in portrait.find('blink').text.split(',')]}
-    return portrait_dict
 
 # Save IO
 def save_io(to_save, to_save_meta, old_slot, slot=None, hard_loc=None):

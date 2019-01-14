@@ -29,14 +29,14 @@
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
 - Add automatic CON and MOV scaling on promotion.. so like Cavalier -> Great Knight loses 1 mov, but Knight to Great Knight gains 2 mov.
-- On promotion, if you lose a weapon's experience, lose the weapon's experience? Or rather, force it to the back -- so you could do reclassing?
+- Test filtering class wexp -- so you could do reclassing?
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
 - Implement stationary weapon event tiles
-- Implement MAG range (Physic staff, etc.)
+- Test MAG range (Physic staff, etc.)
 - Test wexp gain works like GBA FE (on double hit, double? On hit or miss?)
-- Add MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)
-- Add MAG to accuracy as well (or add flag for FE GBA style staves) -- or try and make it work with both
+- Test MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)
+- Test MAG to accuracy as well (or add flag for FE GBA style staves) -- or try and make it work with both
 - Test Berserk works
 - Add Fog of War
 - Add Hammerne state
@@ -46,7 +46,6 @@
 - Test support for weapons with "cannot_be_countered"
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
 - Test that enemy ai takes critical into account
-- Add sounds effects to cutscenes
 
 To Test Action:
 WarpIn

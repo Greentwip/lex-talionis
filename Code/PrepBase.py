@@ -443,7 +443,7 @@ class PrepItemsChoicesState(StateMachine.State):
     def can_use(self, item, gameStateObj):
         current_unit = gameStateObj.cursor.currentSelectedUnit
         if item.usable and item.booster:
-            return current_unit.can_use_booster(item, gameStateObj.metaDataObj)
+            return current_unit.can_use_booster(item)
         return False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -1623,7 +1623,7 @@ class BaseLibraryState(StateMachine.State):
             gameStateObj.childMenu = None
 
             options, ignore, color_control = [], [], []
-            unlocked_entries = [(entry, data) for entry, data in metaDataObj['lore'].items() if entry in gameStateObj.unlocked_lore]
+            unlocked_entries = [(entry, data) for entry, data in GC.LOREDICT.items() if entry in gameStateObj.unlocked_lore]
             categories = sorted(list(set([data['type'] for entry, data in unlocked_entries])))
             for category in categories:
                 options.append(category)
@@ -1636,7 +1636,7 @@ class BaseLibraryState(StateMachine.State):
 
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, (4, 4), limit=9, hard_limit=True, ignore=ignore, color_control=color_control)
             gameStateObj.activeMenu.moveDown()
-            self.menu = MenuFunctions.Lore_Display(metaDataObj['lore'][gameStateObj.activeMenu.getSelection()])
+            self.menu = MenuFunctions.Lore_Display(GC.LOREDICT[gameStateObj.activeMenu.getSelection()])
 
             # Transition in:
             if gameStateObj.stateMachine.from_transition():
@@ -1651,11 +1651,11 @@ class BaseLibraryState(StateMachine.State):
         if 'DOWN' in directions:
             GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveDown(first_push)
-            self.menu.update_entry(metaDataObj['lore'][gameStateObj.activeMenu.getSelection()])
+            self.menu.update_entry(GC.LOREDICT[gameStateObj.activeMenu.getSelection()])
         elif 'UP' in directions:
             GC.SOUNDDICT['Select 6'].play()
             gameStateObj.activeMenu.moveUp(first_push)
-            self.menu.update_entry(metaDataObj['lore'][gameStateObj.activeMenu.getSelection()])
+            self.menu.update_entry(GC.LOREDICT[gameStateObj.activeMenu.getSelection()])
 
         if event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()

@@ -84,7 +84,7 @@ class Charge(Active_Skill):
         self.original_might = weapon.weapon.MT
         previous_position = gameStateObj.action_log.get_previous_position(unit)
         weapon.weapon.MT += 2*Utility.calculate_distance(unit.position, previous_position)
-        weapon.RNG = [1]
+        weapon.RNG = ['1']
 
     def reverse_mod(self):
         self.item.weapon.MT = self.original_might
@@ -92,7 +92,7 @@ class Charge(Active_Skill):
         self.item = None
 
     def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if weapon.TYPE == 'Lance' and 1 in weapon.RNG]
+        return [weapon for weapon in weapons if weapon.TYPE == 'Lance' and 1 in weapon.get_range()]
 
 class Knock_Out(Active_Skill):
     def __init__(self, name, required_charge):
@@ -165,7 +165,7 @@ class Cleave(Active_Skill):
         self.original_aoe = weapon.aoe
         self.original_no_double = weapon.no_double
         weapon.aoe = ItemMethods.AOEComponent('Cleave', 1)
-        weapon.RNG = [1]
+        weapon.RNG = ['1']
         weapon.no_double = True
 
     def reverse_mod(self):
@@ -175,7 +175,7 @@ class Cleave(Active_Skill):
         self.item = None
 
     def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Sword') and 1 in weapon.RNG]
+        return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Sword') and 1 in weapon.get_range()]
 
 class True_Strike(Active_Skill):
     def __init__(self, name, required_charge):
@@ -505,7 +505,11 @@ class Longshot(PassiveSkill):
         if item.TYPE == 'Bow':
             item.longshot = True
             item.orig_RNG = item.RNG[:]
-            item.RNG.append(max(item.RNG) + 1)
+            if item.RNG[-1] == 'MAG/2':
+                item.RNG = [item.RNG[0], 'MAG/2 + 1']
+            else:
+                item.RNG = [item.RNG[0], str(int(item.RNG[-1]) + 1)]
+            # Else no change -- doesn't handle magic range
 
     def reverse_mod(self, item):
         if item.longshot:
@@ -584,7 +588,11 @@ class Metamagic_Status(PassiveSkill):
         if Weapons.TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast'):
             item.overcharged = True
             item.orig_aoe = item.aoe
-            item.aoe = ItemMethods.AOEComponent('Blast', item.orig_aoe.number + 1)
+            if item.orig_aoe.number == 'MAG/2':
+                new_num = 'MAG/2 + 1'
+            else:
+                new_num = int(item.orig_aoe.number) + 1
+            item.aoe = ItemMethods.AOEComponent('Blast', new_num)
 
     def reverse_mod(self, item):
         if item.overcharged:

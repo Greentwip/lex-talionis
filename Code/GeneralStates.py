@@ -6,14 +6,14 @@ try:
     import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
     import Interaction, LevelUp, StatusObject, ItemMethods, Background
     import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-    import BattleAnimation, TextChunk, Weapons, StateMachine, Action
+    import BattleAnimation, TextChunk, Weapons, StateMachine, Action, ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
     from . import Interaction, LevelUp, StatusObject, ItemMethods, Background
     from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-    from . import BattleAnimation, TextChunk, Weapons, StateMachine, Action
+    from . import BattleAnimation, TextChunk, Weapons, StateMachine, Action, ClassData
 
 import logging
 logger = logging.getLogger(__name__)
@@ -850,7 +850,7 @@ class ItemChildState(StateMachine.State):
                 use = False
             elif selection.c_uses and selection.c_uses.uses <= 0:
                 use = False
-            elif selection.booster and not current_unit.can_use_booster(selection, metaDataObj):
+            elif selection.booster and not current_unit.can_use_booster(selection):
                 use = False
             if use:
                 options.append(cf.WORDS['Use'])
@@ -2122,7 +2122,7 @@ class PromotionChoiceState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.unit = gameStateObj.cursor.currentSelectedUnit
-            class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
+            class_options = ClassData.class_dict[self.unit.klass]['turns_into']
             self.menu = MenuFunctions.ChoiceMenu(self.unit, class_options, (14, 13), width=80)
 
             self.on_child_menu = False
@@ -2148,7 +2148,7 @@ class PromotionChoiceState(StateMachine.State):
                 self.animations.append(anim)
                 # Build weapon icons
                 weapons = []
-                for idx, wexp in enumerate(metaDataObj['class_dict'][option]['wexp_gain']):
+                for idx, wexp in enumerate(ClassData.class_dict[option]['wexp_gain']):
                     if wexp > 0:
                         weapons.append(Weapons.Icon(idx=idx))
                 self.weapon_icons.append(weapons)
@@ -2264,7 +2264,7 @@ class PromotionChoiceState(StateMachine.State):
 
         # Description
         font = GC.FONT['convo_white']
-        desc = metaDataObj['class_dict'][self.menu.getSelection()]['desc']
+        desc = ClassData.class_dict[self.menu.getSelection()]['desc']
         text = TextChunk.line_wrap(TextChunk.line_chunk(desc), 208, font)
         for idx, line in enumerate(text):
             font.blit(line, surf, (14, font.height * idx + 120))

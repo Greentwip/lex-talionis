@@ -4,13 +4,13 @@ try:
     import configuration as cf
     import Engine, StateMachine
     import Image_Modification, MenuFunctions, Weapons, InfoMenu
-    import GUIObjects, Counters, Background
+    import GUIObjects, Counters, Background, ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import Engine, StateMachine
     from . import Image_Modification, MenuFunctions, Weapons, InfoMenu
-    from . import GUIObjects, Counters, Background
+    from . import GUIObjects, Counters, Background, ClassData
 
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -189,10 +189,10 @@ class UnitMenu(StateMachine.State):
             self.draw_highlight(surf)
         self.draw_names(surf)
         if self.scroll_direction > 0:
-            self.draw_state(surf, gameStateObj, metaDataObj, self.state_scroll, prev=True)
+            self.draw_state(surf, gameStateObj, self.state_scroll, prev=True)
         elif self.scroll_direction < 0:
-            self.draw_state(surf, gameStateObj, metaDataObj, self.state_scroll, prev=True)
-        self.draw_state(surf, gameStateObj, metaDataObj, self.state_scroll)
+            self.draw_state(surf, gameStateObj, self.state_scroll, prev=True)
+        self.draw_state(surf, gameStateObj, self.state_scroll)
         self.draw_banner(surf)
         self.draw_sort(surf)
         self.draw_page_numbers(surf)
@@ -250,7 +250,7 @@ class UnitMenu(StateMachine.State):
             surf.blit(GC.IMAGESDICT['GreenArrow'], (225, 9 + self.sort_arrow_counter.get()))
         GC.FONT['text_white'].blit('Sort: ' + self.current_sort, surf, (173, 8))
 
-    def draw_state(self, surf, gameStateObj, metaDataObj, scroll=0, prev=False):
+    def draw_state(self, surf, gameStateObj, scroll=0, prev=False):
         state_surf = Engine.create_surface((160, 112), transparent=True)
         if prev:
             idx = self.prev_state_index
@@ -258,13 +258,13 @@ class UnitMenu(StateMachine.State):
             idx = self.state_index
         state = self.states[idx][0]
         if state == 'Character':
-            titles, offsets = self.draw_character_state(state_surf, idx, metaDataObj)
+            titles, offsets = self.draw_character_state(state_surf, idx)
         elif state == 'Fighting Skill':
-            titles, offsets = self.draw_fighting_skill_state(state_surf, idx, metaDataObj)
+            titles, offsets = self.draw_fighting_skill_state(state_surf, idx)
         elif state == 'Equipment':
             titles, offsets = self.draw_equipment_state(state_surf, idx, gameStateObj)
         elif state == 'Personal Data':
-            titles, offsets = self.draw_personal_data_state(state_surf, idx, metaDataObj)
+            titles, offsets = self.draw_personal_data_state(state_surf, idx)
         elif state == 'Weapon Level':
             titles, offsets = self.draw_weapon_level_state(state_surf, idx)
         elif state == 'Support Chance':
@@ -298,7 +298,7 @@ class UnitMenu(StateMachine.State):
     def avail_units(self):
         return self.units[self.scroll_index-1:self.scroll_index-1+self.num_per_page]
 
-    def draw_character_state(self, surf, idx, metaDataObj):
+    def draw_character_state(self, surf, idx):
         # draw title
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
@@ -308,7 +308,7 @@ class UnitMenu(StateMachine.State):
 
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
-            long_name = metaDataObj['class_dict'][unit.klass]['long_name']
+            long_name = ClassData.class_dict[unit.klass]['long_name']
             font.blit(long_name, surf, (4, top))
             GC.FONT['text_blue'].blit(str(unit.level), surf, (80 - GC.FONT['text_blue'].size(str(unit.level))[0], top))
             exp = str(int(unit.exp))
@@ -316,11 +316,11 @@ class UnitMenu(StateMachine.State):
             c_hp = str(unit.currenthp)
             GC.FONT['text_blue'].blit(c_hp, surf, (128 - GC.FONT['text_blue'].size(c_hp)[0], top))
             font.blit('/', surf, (130, top))
-            unit.stats['HP'].draw(surf, unit, (152, top), metaDataObj, compact=True)
+            unit.stats['HP'].draw(surf, unit, (152, top), compact=True)
 
         return titles, offsets
 
-    def draw_fighting_skill_state(self, surf, idx, metaDataObj):
+    def draw_fighting_skill_state(self, surf, idx):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
         font = GC.FONT['text_white']
@@ -331,7 +331,7 @@ class UnitMenu(StateMachine.State):
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
             for idx, stat in enumerate(titles):
-                unit.stats[stat].draw(surf, unit, (value_offsets[idx] - 1, top), metaDataObj, compact=True)
+                unit.stats[stat].draw(surf, unit, (value_offsets[idx] - 1, top), compact=True)
 
         return titles, offsets
 
@@ -357,7 +357,7 @@ class UnitMenu(StateMachine.State):
 
         return titles, offsets
 
-    def draw_personal_data_state(self, surf, idx, metaDataObj):
+    def draw_personal_data_state(self, surf, idx):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
         font = GC.FONT['text_white']
@@ -366,8 +366,8 @@ class UnitMenu(StateMachine.State):
 
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
-            unit.stats['MOV'].draw(surf, unit, (24, top), metaDataObj, compact=True)
-            unit.stats['CON'].draw(surf, unit, (48, top), metaDataObj, compact=True)
+            unit.stats['MOV'].draw(surf, unit, (24, top), compact=True)
+            unit.stats['CON'].draw(surf, unit, (48, top), compact=True)
             aid = str(unit.getAid())
             GC.FONT['text_blue'].blit(aid, surf, (72 - GC.FONT['text_blue'].size(aid)[0], top))
             rat = str(unit.get_rating())

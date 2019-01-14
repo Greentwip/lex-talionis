@@ -5,13 +5,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import StatusObject, Banner, LevelUp, Weapons
+    import StatusObject, Banner, LevelUp, Weapons, ClassData
     import Utility, ItemMethods, UnitObject
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import StatusObject, Banner, LevelUp, Weapons
+    from . import StatusObject, Banner, LevelUp, Weapons, ClassData
     from . import Utility, ItemMethods, UnitObject
 
 class Action(object):
@@ -566,8 +566,8 @@ class GainExp(Action):
         self.in_combat = in_combat
 
     def _forward_class_change(self, gameStateObj, promote=True):
-        old_klass = gameStateObj.metaDataObj['class_dict'][self.current_class]
-        new_klass = gameStateObj.metaDataObj['class_dict'][self.promoted_to]
+        old_klass = ClassData.class_dict[self.current_class]
+        new_klass = ClassData.class_dict[self.promoted_to]
         self.unit.leave(gameStateObj)
         self.unit.klass = self.promoted_to
         self.unit.removeSprites()
@@ -589,8 +589,8 @@ class GainExp(Action):
         self.unit.arrive(gameStateObj)
 
     def _reverse_class_change(self, gameStateObj, promote=True):
-        old_klass = gameStateObj.metaDataObj['class_dict'][self.current_class]
-        new_klass = gameStateObj.metaDataObj['class_dict'][self.promoted_to]
+        old_klass = ClassData.class_dict[self.current_class]
+        new_klass = ClassData.class_dict[self.promoted_to]
         self.unit.leave(gameStateObj)
         self.unit.klass = self.current_class
         self.unit.removeSprites()
@@ -628,7 +628,7 @@ class GainExp(Action):
 
     def execute(self, gameStateObj):
         if self.exp_amount + self.unit.exp >= 100:
-            klass_dict = gameStateObj.metaDataObj['class_dict'][self.unit.klass]
+            klass_dict = ClassData.class_dict[self.unit.klass]
             max_level = klass_dict['max_level']
             # Level Up
             if self.unit.level >= max_level:
@@ -648,7 +648,7 @@ class GainExp(Action):
         self.promoted_to = self.unit.klass
         added_skills = [skill for skill in self.unit.status_effects if skill.id not in self.current_skills]
         if self.unit.exp < self.exp_amount: # Leveled up
-            klass_dict = gameStateObj.metaDataObj['class_dict'][self.current_class]
+            klass_dict = ClassData.class_dict[self.current_class]
             max_level = klass_dict['max_level']
             stats_after_levelup = [s.base_stat for s in self.unit.stats.values()]
             self.levelup_list = [a - b for a, b in zip(stats_after_levelup, self.current_stats)]
@@ -706,7 +706,7 @@ class PermanentStatIncrease(Action):
         gameStateObj.stateMachine.changeState('expgain')
 
     def execute(self, gameStateObj):
-        klass = gameStateObj.metaDataObj['class_dict'][self.unit.klass]
+        klass = ClassData.class_dict[self.unit.klass]
         for index, stat in enumerate(self.stat_increase):
             self.stat_increase[index] = min(stat, klass['max'][index] - self.current_stats[index])
         self.unit.apply_levelup(self.stat_increase, True)

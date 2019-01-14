@@ -3,11 +3,11 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Action, Utility, Engine
+    import CustomObjects, ActiveSkill, Interaction, InfoMenu, UnitObject, Action, Utility, Engine
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import CustomObjects, ActiveSkill, Interaction, SaveLoad, InfoMenu, UnitObject, Action, Utility, Engine
+    from . import CustomObjects, ActiveSkill, Interaction, InfoMenu, UnitObject, Action, Utility, Engine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -609,32 +609,32 @@ def statusparser(s_id):
                     time = status.find('time').text
                     my_components['time'] = TimeComponent(time)
                 elif component == 'stat_change':
-                    my_components['stat_change'] = SaveLoad.intify_comma_list(status.find('stat_change').text)
+                    my_components['stat_change'] = Utility.intify_comma_list(status.find('stat_change').text)
                     my_components['stat_change'].extend([0] * (cf.CONSTANTS['num_stats'] - len(my_components['stat_change'])))
                 elif component == 'growth_mod':
-                    my_components['growth_mod'] = SaveLoad.intify_comma_list(status.find('growth_mod').text)
+                    my_components['growth_mod'] = Utility.intify_comma_list(status.find('growth_mod').text)
                     my_components['growth_mod'].extend([0] * (cf.CONSTANTS['num_stats'] - len(my_components['growth_mod'])))
                 elif component == 'upkeep_stat_change':
-                    stat_change = SaveLoad.intify_comma_list(status.find('upkeep_stat_change').text)
+                    stat_change = Utility.intify_comma_list(status.find('upkeep_stat_change').text)
                     stat_change.extend([0] * (cf.CONSTANTS['num_stats'] - len(stat_change)))
                     my_components['upkeep_stat_change'] = UpkeepStatChangeComponent(stat_change)
                 elif component == 'endstep_stat_change':
-                    stat_change = SaveLoad.intify_comma_list(status.find('endstep_stat_change').text)
+                    stat_change = Utility.intify_comma_list(status.find('endstep_stat_change').text)
                     stat_change.extend([0] * (cf.CONSTANTS['num_stats'] - len(stat_change)))
                     my_components['endstep_stat_change'] = UpkeepStatChangeComponent(stat_change)
                 elif component == 'rhythm_stat_change':
                     change, reset, init_count, limit = status.find('rhythm_stat_change').text.split(';')
-                    change = SaveLoad.intify_comma_list(change)
+                    change = Utility.intify_comma_list(change)
                     change.extend([0] * (cf.CONSTANTS['num_stats'] - len(change)))
-                    reset = SaveLoad.intify_comma_list(reset)
+                    reset = Utility.intify_comma_list(reset)
                     init_count = int(init_count)
                     limit = int(limit)
                     my_components['rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)
                 elif component == 'endstep_rhythm_stat_change':
                     change, reset, init_count, limit = status.find('endstep_rhythm_stat_change').text.split(';')
-                    change = SaveLoad.intify_comma_list(change)
+                    change = Utility.intify_comma_list(change)
                     change.extend([0] * (cf.CONSTANTS['num_stats'] - len(change)))
-                    reset = SaveLoad.intify_comma_list(reset)
+                    reset = Utility.intify_comma_list(reset)
                     init_count = int(init_count)
                     limit = int(limit)
                     my_components['endstep_rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)

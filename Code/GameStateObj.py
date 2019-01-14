@@ -9,14 +9,14 @@ try:
     import InputManager, Engine
     import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    import Boundary, Objective, Overworld
+    import Boundary, Objective, Overworld, ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import InputManager, Engine
     from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     from . import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    from . import Boundary, Objective, Overworld
+    from . import Boundary, Objective, Overworld, ClassData
 
 import logging
 logger = logging.getLogger(__name__)
@@ -565,7 +565,7 @@ class GameStateObj(object):
             p_log.write('\nItems: ' + ', '.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in self.convoy]))
 
     def output_progress_xml(self):
-        klasses = self.metaDataObj['class_dict']
+        klasses = ClassData.class_dict
         with open('Saves/progress_log.xml', 'a') as p_log:
             p_log.write('<level name="' + str(self.game_constants['level']) + '">\n')
             p_log.write('\t<mode>' + self.mode['name'] + '</mode>\n')

@@ -125,6 +125,10 @@ def read_constants_file():
              'crit_accuracy_skill_coef': 1.0,
              'crit_avoid_luck_coef': 1.0,
              'defense_coef': 1.0,
+             'staff_accuracy_magic_coef': 5.0,
+             'staff_accuracy_skill_coef': 1.0,
+             'staff_avoid_res_coef': 5.0,
+             'staff_avoid_distance_coef': 2.0,
              'support': 1, # 0 - No supports, 1 - Conversations in combat, Conversations in base
              'support_bonus': 3, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
              'support_range': 3, # 0 - Entire map
@@ -192,6 +196,10 @@ def read_constants_file():
     lines['crit_accuracy_skill_coef'] = float(lines['crit_accuracy_skill_coef'])
     lines['crit_avoid_luck_coef'] = float(lines['crit_avoid_luck_coef'])
     lines['defense_coef'] = float(lines['defense_coef'])
+    lines['staff_accuracy_magic_coef'] = float(lines['staff_accuracy_magic_coef'])
+    lines['staff_accuracy_skill_coef'] = float(lines['staff_accuracy_skill_coef'])
+    lines['staff_avoid_res_coef'] = float(lines['staff_avoid_res_coef'])
+    lines['staff_avoid_distance_coef'] = float(lines['staff_avoid_distance_coef'])
     lines['support'] = int(lines['support'])
     lines['support_bonus'] = int(lines['support_bonus'])
     lines['support_range'] = int(lines['support_range'])

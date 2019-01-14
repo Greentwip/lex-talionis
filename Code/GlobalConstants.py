@@ -93,6 +93,28 @@ if os.path.exists(loc + 'Data/preload_levels.xml'):
 else:
     PRELOADDATA = None
 
+# === Grab general catalogs
+def create_portrait_dict():
+    portrait_dict = OrderedDict()
+    for portrait in PORTRAITDATA.getroot().findall('portrait'):
+        portrait_dict[portrait.get('name')] = {'mouth': [int(coord) for coord in portrait.find('mouth').text.split(',')],
+                                               'blink': [int(coord) for coord in portrait.find('blink').text.split(',')]}
+    return portrait_dict
+
+def create_lore_dict():
+    lore_dict = {}
+    # For each lore
+    for entry in LOREDATA.getroot().findall('lore'):
+        lore_dict[entry.get('name')] = {'long_name': entry.find('long_name').text,
+                                        'short_name': entry.get('name'),
+                                        'desc': entry.find('desc').text,
+                                        'type': entry.find('type').text,
+                                        'unread': True}
+    return lore_dict
+
+PORTRAITDICT = create_portrait_dict()
+LOREDICT = create_lore_dict()
+
 def create_difficulty_dict(fp):
     difficulty_dict = OrderedDict()
     # For each difficulty

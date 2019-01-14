@@ -1401,7 +1401,7 @@
         <weapontype>Staff</weapontype>
  
         <uses>15</uses>
-        <RNG>1-10</RNG>
+        <RNG>1-MAG/2</RNG>
         <value>250</value>
         <desc>Restores (User's Magic + 10) HP</desc>
         
@@ -1429,7 +1429,7 @@
         <heal>1000</heal>
         <LVL>A</LVL>
         <targets>Ally</targets>
-        <aoe>Blast,7</aoe>    
+        <aoe>Blast,MAG/2</aoe>    
 
         <map_hit_color>96,144,232</map_hit_color>
         <wexp>5</wexp>
@@ -1462,11 +1462,11 @@
         <id>Silence</id>
         <spritetype>Staff</spritetype>
         <spriteid>6</spriteid>       
-        <components>spell,uses,detrimental,status,custom_ai_value,target_restrict,hit,wexp,exp</components>
+        <components>spell,uses,detrimental,status,custom_ai_value,target_restrict,hit,wexp,exp,staff_hit</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
-        <RNG>1-7</RNG>
+        <RNG>1-MAG/2</RNG>
         <value>400</value>
         <desc>Prevents target from using magic</desc>
 
@@ -1487,11 +1487,11 @@
         <id>Sleep</id>
         <spritetype>Staff</spritetype>
         <spriteid>7</spriteid>       
-        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp</components>
+        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp,staff_hit</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
-        <RNG>1-7</RNG>
+        <RNG>1-MAG/2</RNG>
         <value>500</value>
         <desc>Sends an enemy to sleep</desc>
         <status>Sleep</status>
@@ -1510,11 +1510,11 @@
         <id>Berserk</id>
         <spritetype>Staff</spritetype>
         <spriteid>8</spriteid>       
-        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp</components>
+        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp,staff_hit</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
-        <RNG>1-7</RNG>
+        <RNG>1-MAG/2</RNG>
         <value>600</value>
         <desc>Enrages an enemy, causing them to attack without regard for allies</desc>
         <status>Berserk</status>
@@ -1545,7 +1545,7 @@
         <targets>Unit</targets>
         <movement>Warp,0</movement>
 
-        <extra_select>1-7,TileNoUnit</extra_select>
+        <extra_select>1-MAG/2,TileNoUnit</extra_select>
 
         <wexp>7</wexp>
         <exp>85</exp>
@@ -1561,7 +1561,7 @@
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
-        <RNG>1-7</RNG>
+        <RNG>1-MAG/2</RNG>
         <value>600</value>
         <desc>Brings an ally near.</desc>
         
@@ -1585,7 +1585,7 @@
         <weapontype>Staff</weapontype>
  
         <uses>10</uses>
-        <RNG>1-7</RNG>
+        <RNG>1-MAG/2</RNG>
         <value>100</value>
         <desc>Lights up an area.</desc>
         
@@ -1623,7 +1623,7 @@
         <weapontype>Staff</weapontype>
  
         <uses>10</uses>
-        <RNG>1-7</RNG>
+        <RNG>1-MAG/2</RNG>
         <value>150</value>
         <desc>Unlocks distant targets</desc>
         
@@ -1672,7 +1672,7 @@
         <status>Clear</status>
         <LVL>S</LVL>
         <targets>Ally</targets>
-        <aoe>AllAllies,0</aoe>    
+        <aoe>AllAllies</aoe>    
 
         <map_hit_color>96,144,232</map_hit_color>
         <exp>10</exp>

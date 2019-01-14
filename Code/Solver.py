@@ -221,7 +221,7 @@ class Solver(object):
 
     def defender_can_counterattack(self):
         weapon = self.defender.getMainWeapon()
-        if weapon and self.item_uses(weapon) and Utility.calculate_distance(self.attacker.position, self.defender.position) in weapon.RNG:
+        if weapon and self.item_uses(weapon) and Utility.calculate_distance(self.attacker.position, self.defender.position) in weapon.get_range():
             return True
         else:
             return False

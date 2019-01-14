@@ -7,11 +7,11 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import CustomObjects, MenuFunctions, SaveLoad, StateMachine
-    import Dialogue, Engine, Image_Modification, Weather, Background
+    import Dialogue, Engine, Image_Modification, Weather, Background, ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine
+    from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, ClassData
     from . import Dialogue, Engine, Image_Modification, Weather, Background
 
 import logging
@@ -610,16 +610,16 @@ class StartPreloadedLevels(StartLoad):
                     item.uses.uses = int(uses)
                 legend['items'].append(item)
             # Reinforcement units can be empty, since they won't spawn in as reinforcements
-            unit = SaveLoad.add_unit_from_legend(legend, gameStateObj.allunits, {}, metaDataObj, gameStateObj)
+            unit = SaveLoad.add_unit_from_legend(legend, gameStateObj.allunits, {}, gameStateObj)
             # Level up the unit
             for level_num in range(unit_dict['level'] - unit.level):
-                unit_klass = metaDataObj['class_dict'][unit.klass]
+                unit_klass = ClassData.class_dict[unit.klass]
                 max_level = unit_klass['max_level']
                 if unit.level >= max_level:
                     class_options = unit_klass['turns_into']
                     if class_options:
                         unit.klass = class_options[0]
-                        unit_klass = metaDataObj['class_dict'][unit.klass]
+                        unit_klass = ClassData.class_dict[unit.klass]
                         unit.removeSprites()
                         unit.loadSprites()
                         unit.level = 1

@@ -1,11 +1,13 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons, Image_Modification
+    import MenuFunctions, Engine, InputManager, StateMachine, Counters
+    import GUIObjects, Weapons, Image_Modification, ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import MenuFunctions, Engine, InputManager, StateMachine, Counters, GUIObjects, Weapons, Image_Modification
+    from . import MenuFunctions, Engine, InputManager, StateMachine, Counters 
+    from . import GUIObjects, Weapons, Image_Modification, ClassData
 
 class InfoMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -29,7 +31,7 @@ class InfoMenu(StateMachine.State):
 
             self.fluid_helper = InputManager.FluidScroll(200, slow_speed=0)
 
-            self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, metaDataObj, gameStateObj)
+            self.helpMenu = HelpGraph(self.states[self.currentState], self.unit, gameStateObj)
             # Counters
             self.background = GC.IMAGESDICT['InfoMenuBackground']
             self.left_arrow = GUIObjects.ScrollArrow('left', (103, 3))
@@ -114,9 +116,9 @@ class InfoMenu(StateMachine.State):
                 self.back(gameStateObj)
                 return
             if 'RIGHT' in directions:
-                self.move_right(gameStateObj, metaDataObj)
+                self.move_right(gameStateObj)
             elif 'LEFT' in directions:
-                self.move_left(gameStateObj, metaDataObj)
+                self.move_left(gameStateObj)
             elif 'DOWN' in directions:
                 self.last_fluid = currentTime
                 GC.SOUNDDICT['Status_Character'].play()
@@ -128,7 +130,7 @@ class InfoMenu(StateMachine.State):
                         self.next_unit = self.scroll_units[0]
                     self.transition = 'DOWN'
                     # self.reset_surfs()
-                    self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
+                    self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, gameStateObj)
             elif 'UP' in directions:
                 self.last_fluid = currentTime
                 GC.SOUNDDICT['Status_Character'].play()
@@ -140,23 +142,23 @@ class InfoMenu(StateMachine.State):
                         self.next_unit = self.scroll_units[-1] # last unit
                     self.transition = 'UP'
                     # self.reset_surfs()
-                    self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, metaDataObj, gameStateObj)
+                    self.helpMenu = HelpGraph(self.states[self.currentState], self.next_unit, gameStateObj)
 
-    def move_left(self, gameStateObj, metaDataObj):
+    def move_left(self, gameStateObj):
         GC.SOUNDDICT['Status_Page_Change'].play()
         self.last_fluid = Engine.get_time()
         self.nextState = (self.currentState - 1) if self.currentState > 0 else len(self.states) - 1
         self.transition = 'LEFT'
-        self.helpMenu = HelpGraph(self.states[self.nextState], self.unit, metaDataObj, gameStateObj)
+        self.helpMenu = HelpGraph(self.states[self.nextState], self.unit, gameStateObj)
         self.left_arrow.pulse()
         self.switch_logo(self.states[self.nextState])
 
-    def move_right(self, gameStateObj, metaDataObj):
+    def move_right(self, gameStateObj):
         GC.SOUNDDICT['Status_Page_Change'].play()
         self.last_fluid = Engine.get_time()
         self.nextState = (self.currentState + 1) if self.currentState < len(self.states) - 1 else 0
         self.transition = 'RIGHT'
-        self.helpMenu = HelpGraph(self.states[self.nextState], self.unit, metaDataObj, gameStateObj)
+        self.helpMenu = HelpGraph(self.states[self.nextState], self.unit, gameStateObj)
         self.right_arrow.pulse()
         self.switch_logo(self.states[self.nextState])
 
@@ -262,7 +264,7 @@ class InfoMenu(StateMachine.State):
         surf.blit(im, (98, 0), None, Engine.BLEND_RGB_ADD)
 
         # Portrait and Slide
-        self.draw_portrait(surf, metaDataObj)
+        self.draw_portrait(surf)
         self.drawSlide(surf, gameStateObj, metaDataObj)
 
         if self.helpMenu.current:
@@ -270,10 +272,10 @@ class InfoMenu(StateMachine.State):
 
         return surf
 
-    def draw_portrait(self, surf, metaDataObj):
+    def draw_portrait(self, surf):
         # Only create if we don't have one in memory
         if not self.portrait_surf:
-            self.portrait_surf = self.create_portrait(metaDataObj)
+            self.portrait_surf = self.create_portrait()
 
         # Stick it on the surface
         if self.transparency:
@@ -291,7 +293,7 @@ class InfoMenu(StateMachine.State):
             # surf.blit(im, (x_pos, y_pos + self.scroll_offset_y))
             surf.blit(activeSpriteSurf, (x_pos, y_pos + self.scroll_offset_y))
 
-    def create_portrait(self, metaDataObj):
+    def create_portrait(self):
         UnitInfoSurface = Engine.create_surface((96, GC.WINHEIGHT), transparent=True)
 
         UnitInfoSurface.blit(GC.IMAGESDICT['InfoUnit'], (8, 122))
@@ -303,7 +305,7 @@ class InfoMenu(StateMachine.State):
         position = (96//2 - name_size[0]//2, 80)
         GC.FONT['text_white'].blit(self.unit.name, UnitInfoSurface, position) 
         # Blit the unit's class on the simple info block
-        long_name = metaDataObj['class_dict'][self.unit.klass]['long_name']
+        long_name = ClassData.class_dict[self.unit.klass]['long_name']
         GC.FONT['text_white'].blit(long_name, UnitInfoSurface, (8, 104))
         # Blit the unit's level on the simple info block
         level_size = GC.FONT['text_blue'].size(str(self.unit.level))
@@ -371,7 +373,7 @@ class InfoMenu(StateMachine.State):
                 self.draw_growths_surf(main_surf)
             else:
                 if not self.personal_data_surf:
-                    self.personal_data_surf = self.create_personal_data_surf(gameStateObj, metaDataObj)
+                    self.personal_data_surf = self.create_personal_data_surf(gameStateObj)
                 self.draw_personal_data_surf(main_surf)
             if not self.class_skill_surf:
                 self.class_skill_surf = self.create_class_skill_surf()
@@ -401,12 +403,12 @@ class InfoMenu(StateMachine.State):
             top_surf = Image_Modification.flickerImageTranslucent255(top_surf, 255 - self.transparency)
         surf.blit(top_surf, (0, self.scroll_offset_y))
     
-    def create_personal_data_surf(self, gameStateObj, metaDataObj):
+    def create_personal_data_surf(self, gameStateObj):
         # Menu Background
         menu_size = (GC.WINWIDTH - 96, GC.WINHEIGHT)
         menu_surf = Engine.create_surface(menu_size, transparent=True)
 
-        max_stats = metaDataObj['class_dict'][self.unit.klass]['max']
+        max_stats = ClassData.class_dict[self.unit.klass]['max']
         # offset = GC.FONT['text_yellow'].size('Mag')[0] + 4
         # For each left stat
         stats = ['STR', 'MAG', 'SKL', 'SPD', 'DEF', 'RES']
@@ -414,13 +416,13 @@ class InfoMenu(StateMachine.State):
             index = cf.CONSTANTS['stat_names'].index(stat)
             self.build_groove(menu_surf, (27, GC.TILEHEIGHT*idx + 32), int(max_stats[index]/float(cf.CONSTANTS['max_stat'])*44), 
                               self.unit.stats[stat].base_stat/float(max_stats[index]))
-            self.unit.stats[stat].draw(menu_surf, self.unit, (47, GC.TILEHEIGHT*idx + 24), metaDataObj)
+            self.unit.stats[stat].draw(menu_surf, self.unit, (47, GC.TILEHEIGHT*idx + 24))
 
         self.blit_stat_titles(menu_surf)
 
-        self.unit.stats['LCK'].draw(menu_surf, self.unit, (111, 24), metaDataObj)
-        self.unit.stats['MOV'].draw(menu_surf, self.unit, (111, GC.TILEHEIGHT + 24), metaDataObj)
-        self.unit.stats['CON'].draw(menu_surf, self.unit, (111, GC.TILEHEIGHT*2 + 24), metaDataObj)
+        self.unit.stats['LCK'].draw(menu_surf, self.unit, (111, 24))
+        self.unit.stats['MOV'].draw(menu_surf, self.unit, (111, GC.TILEHEIGHT + 24))
+        self.unit.stats['CON'].draw(menu_surf, self.unit, (111, GC.TILEHEIGHT*2 + 24))
         GC.FONT['text_blue'].blit(str(self.unit.strTRV), menu_surf, (96, GC.TILEHEIGHT*4 + 24)) # Blit Outlined Traveler
         # Blit Outlined Aid
         GC.FONT['text_blue'].blit(str(self.unit.getAid()), menu_surf, 
@@ -615,7 +617,7 @@ class InfoMenu(StateMachine.State):
         GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (78, top + 32))
 
         if self.unit.getMainWeapon():
-            rng = self.unit.getMainWeapon().get_str_RNG()
+            rng = self.unit.getMainWeapon().get_range_string()
             dam = str(self.unit.damage(gameStateObj))
             acc = str(self.unit.accuracy(gameStateObj))
         else:
@@ -718,31 +720,31 @@ class InfoMenu(StateMachine.State):
         surf.blit(self.support_surf, (96, 0))
 
 class HelpGraph(object):
-    def __init__(self, state, unit, metaDataObj, gameStateObj):
+    def __init__(self, state, unit, gameStateObj):
         self.help_boxes = {}
         self.unit = unit
         self.current = None
 
         if state == 'Personal Data':
-            self.populate_personal_data(metaDataObj)
+            self.populate_personal_data()
             self.initial = "Strength"
         elif state == 'Personal Growths':
-            self.populate_personal_data(metaDataObj, growths=True)
+            self.populate_personal_data(growths=True)
             self.initial = "Strength"
         elif state == 'Equipment':
-            self.populate_equipment(metaDataObj)
+            self.populate_equipment()
             if self.unit.items:
                 self.initial = "Item0"
             else:
                 self.initial = "Unit Desc"
         elif state == 'Support & Status':
-            self.populate_status(gameStateObj, metaDataObj)
+            self.populate_status(gameStateObj)
             if [wexp for wexp in self.unit.wexp if wexp > 0]:
                 self.initial = "Wexp0"
             else:
                 self.initial = "Unit Desc"
 
-    def populate_personal_data(self, metaDataObj, growths=False):
+    def populate_personal_data(self, growths=False):
         self.help_boxes["Strength"] = Help_Box("Strength", (88, 26), Help_Dialog(cf.WORDS['STR_desc']))
         self.help_boxes["Magic"] = Help_Box("Magic", (88, GC.TILEHEIGHT + 26), Help_Dialog(cf.WORDS['MAG_desc']))
         self.help_boxes["Skill"] = Help_Box("Skill", (88, GC.TILEHEIGHT*2 + 26), Help_Dialog(cf.WORDS['SKL_desc']))
@@ -816,7 +818,7 @@ class HelpGraph(object):
             self.help_boxes["Skill"+str(i)].right = ("Skill"+str(i+1)) if i < (len(skills) - 1) else None
             self.help_boxes["Skill"+str(i)].left = ("Skill"+str(i-1)) if i > 0 else None
 
-        self.populate_info_menu_default(metaDataObj)
+        self.populate_info_menu_default()
 
         if skills:
             self.help_boxes["Skill0"].left = "HP"
@@ -835,7 +837,7 @@ class HelpGraph(object):
         self.help_boxes["Strength"].left = "Unit Desc"
         self.help_boxes["Skill"].left = "Unit Desc"
 
-    def populate_equipment(self, metaDataObj):
+    def populate_equipment(self):
         for index, item in enumerate(self.unit.items):
             pos = (88, GC.TILEHEIGHT*index + 24)
             self.help_boxes["Item"+str(index)] = Help_Box("Item"+str(index), pos, item.get_help_box())
@@ -874,7 +876,7 @@ class HelpGraph(object):
         self.help_boxes["Rng"].up = ("Item"+str(len(self.unit.items) - 1)) if self.unit.items else "Unit Desc"
         self.help_boxes["Rng"].down = "AS"
 
-        self.populate_info_menu_default(metaDataObj)
+        self.populate_info_menu_default()
 
         # Connect default with equipment
         for i in range(len(self.unit.items)):
@@ -888,7 +890,7 @@ class HelpGraph(object):
         self.help_boxes["Experience"].right = "Atk"
         self.help_boxes["HP"].right = "Hit"
 
-    def populate_status(self, gameStateObj, metaDataObj):
+    def populate_status(self, gameStateObj):
         # Populate Weapon Exp
         good_weapons = [wexp for wexp in self.unit.wexp if wexp > 0]
         for index, wexp in enumerate(good_weapons):
@@ -927,7 +929,7 @@ class HelpGraph(object):
             self.help_boxes["Support"+str(i)].down = ("Support"+str(i+1)) if i < (len(supports) - 1) else None
             self.help_boxes["Support"+str(i)].up = ("Support"+str(i-1)) if i > 0 else None
 
-        self.populate_info_menu_default(metaDataObj)
+        self.populate_info_menu_default()
         
         for i in range(len(supports)):
             self.help_boxes["Support"+str(i)].left = "Unit Desc"
@@ -957,9 +959,9 @@ class HelpGraph(object):
             self.help_boxes['Experience'].right = "Wexp0"
             self.help_boxes['HP'].right = "Wexp0"
 
-    def populate_info_menu_default(self, metaDataObj):
+    def populate_info_menu_default(self):
         self.help_boxes["Unit Desc"] = Help_Box("Unit Desc", (16, 82), Help_Dialog(self.unit.desc))
-        self.help_boxes["Class Desc"] = Help_Box("Class Desc", (-8, 107), Help_Dialog(metaDataObj['class_dict'][self.unit.klass]['desc']))
+        self.help_boxes["Class Desc"] = Help_Box("Class Desc", (-8, 107), Help_Dialog(ClassData.class_dict[self.unit.klass]['desc']))
         self.help_boxes["Unit Level"] = Help_Box("Unit Level", (-8, 123), Help_Dialog(cf.WORDS['Level_desc']))
         self.help_boxes["Experience"] = Help_Box("Experience", (22, 123), Help_Dialog(cf.WORDS['Exp_desc']))
         self.help_boxes["HP"] = Help_Box("HP", (-8, 139), Help_Dialog(cf.WORDS['HP_desc']))

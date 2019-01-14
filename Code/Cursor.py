@@ -283,7 +283,7 @@ class Cursor(object):
         if self.remove_unit_info:
             if gameStateObj.stateMachine.getState() in legal_states and self.currentHoveredUnit: # Get this 
                 self.remove_unit_info = False
-                self.unit_info_disp = self.currentHoveredUnit.createPortrait(gameStateObj)
+                self.unit_info_disp = self.currentHoveredUnit.createPortrait()
                 self.unit_info_offset = min(self.unit_info_disp.get_width(), self.unit_info_offset)
             elif self.unit_info_disp:
                 self.unit_info_offset += 20

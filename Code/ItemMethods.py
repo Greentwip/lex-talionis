@@ -1,11 +1,11 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, Weapons, Engine, TextChunk
+    import InfoMenu, MenuFunctions, Image_Modification, Utility, Weapons, Engine, TextChunk
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import InfoMenu, MenuFunctions, SaveLoad, Image_Modification, Utility, Weapons, Engine, TextChunk
+    from . import InfoMenu, MenuFunctions, Image_Modification, Utility, Weapons, Engine, TextChunk
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):
@@ -19,8 +19,7 @@ class ItemObject(object):
         self.owner = 0
         self.name = str(name)
         self.value = int(value) # Value for one use of item, or for an infinite item
-        self.RNG = parseRNG(RNG) # Comes in the form of looking like '1-2' or '1' or '2-3' or '3-10'
-        self.strRNG = RNG # string version of RNG for display
+        self.RNG = RNG.split('-') # Comes in the form of looking like '1-2' or '1' or '2-3' or '3-10'
         self.event_combat = event_combat
         self.droppable = droppable # Whether this item is given to its owner's killer upon death
         self.locked = locked # Whether this item can be traded, sold, or dropped.
@@ -44,6 +43,15 @@ class ItemObject(object):
             self.__dict__[component_key] = component_value
 
         self.loadSprites()
+
+    def get_range(self):
+        if self.owner:
+            return get_range(self, self.owner)
+        else:
+            return []
+
+    def get_range_string(self):
+        return '-'.join(self.RNG)
 
     def serialize(self):
         serial_dict = {}
@@ -122,13 +130,34 @@ class ItemObject(object):
         if self.icon:  
             self.icon.draw(surf, (left, top))
 
-    def get_str_RNG(self):
-        max_rng = max(self.RNG)
-        min_rng = min(self.RNG)
-        if max_rng == min_rng:
-            return str(max_rng)
+def get_range(item, unit):
+    if len(item.RNG) == 1:
+        r = item.RNG[0]
+        if r == 'MAG/2':
+            return [unit.stats['MAG']//2]
+        elif r == 'MAG/2 + 1':
+            return [unit.stats['MAG']//2 + 1]
         else:
-            return ''.join([str(min_rng), '-', str(max_rng)])
+            return [int(r)]
+    elif len(item.RNG) == 2:
+        r1 = item.RNG[0]
+        r2 = item.RNG[1]
+        if r1 == 'MAG/2':
+            r1 = unit.stats['MAG']//2
+        elif r1 == 'MAG/2 + 1':
+            return unit.stats['MAG']//2 + 1
+        else:
+            r1 = int(r1)
+        if r2 == 'MAG/2':
+            r2 = unit.stats['MAG']//2
+        elif r2 == 'MAG/2 + 1':
+            return unit.stats['MAG']//2 + 1
+        else:
+            r2 = int(r2)
+        return list(range(r1, r2 + 1))
+    else:
+        print('%s has an unsupported range: %s' % (item, item.get_range_string()))
+        return []
 
 class Help_Dialog(InfoMenu.Help_Dialog_Base):
     def __init__(self, item):
@@ -148,7 +177,7 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
                 self.first_line_text += [' Crit ', str(self.item.crit) if self.item.crit is not None else '--']
             if self.item.weight:
                 self.first_line_text += [' Wt ', str(self.item.weight)]
-            self.first_line_text += [' Rng ', self.item.strRNG]
+            self.first_line_text += [' Rng ', self.item.get_range_string()]
             self.first_line_font = [font1, font1, font2, font1, font2, font1]
             if cf.CONSTANTS['crit']:
                 self.first_line_font += [font2, font1]
@@ -172,7 +201,7 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
             if cf.CONSTANTS['crit'] and self.item.crit is not None:
                 self.first_line_text += [' Crit ', str(self.item.crit)]
                 self.first_line_font += [font2, font1]
-            self.first_line_text += [' Rng ', self.item.strRNG]
+            self.first_line_text += [' Rng ', self.item.get_range_string()]
             self.first_line_font += [font2, font1]
 
         first_line_length = max(font1.size(''.join(self.first_line_text))[0] + (16 if self.item.icon else 0) + 4, 112) # 112 was 96
@@ -211,14 +240,6 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
                 num_characters -= len(line)
 
         self.final_draw(surf, pos, time, help_surf)
-
-def parseRNG(RNG):
-    # Should output a list of integers corresponding to acceptable ranges
-    if '-' in RNG:
-        rngsplit = RNG.split('-')
-        return list(range(int(rngsplit[0]), int(rngsplit[1]) + 1))
-    else:
-        return [int(RNG)]
 
 # A subclass of int so that if the int is negative, it will instead output "--"
 class NonNegative(int):
@@ -259,12 +280,17 @@ class WeaponComponent(object):
 
 class ExtraSelectComponent(object):
     def __init__(self, RNG, targets):
-        self.strRNG = RNG
-        self.RNG = parseRNG(RNG)
+        self.RNG = RNG.split('-')
         self.targets = targets
 
+    def get_range_string(self):
+        return '-'.join(self.RNG)
+
+    def get_range(self, unit):
+        return get_range(self, unit)
+
 class AOEComponent(object):
-    def __init__(self, mode, number):
+    def __init__(self, mode, number=0):
         self.mode = mode
         self.number = number
 
@@ -296,7 +322,11 @@ class AOEComponent(object):
             splash_positions = {position for position in other_position if tileMap.check_bounds(position)}
             return cursor_position, list(splash_positions - {cursor_position})
         elif self.mode == 'Blast':
-            splash_positions = Utility.find_manhattan_spheres(range(self.number + 1), cursor_position)
+            if self.number == 'MAG/2':
+                num = item.owner.stats['MAG']//2
+            else:
+                num = int(self.number)
+            splash_positions = Utility.find_manhattan_spheres(range(num + 1), cursor_position)
             splash_positions = {position for position in splash_positions if tileMap.check_bounds(position)}
             if item.weapon:
                 return cursor_position, list(splash_positions - {cursor_position})
@@ -437,17 +467,17 @@ def itemparser(itemstring):
                     except:
                         continue
                 elif component == 'permanent_stat_increase':
-                    stat_increase = SaveLoad.intify_comma_list(item['stat_increase'])
+                    stat_increase = Utility.intify_comma_list(item['stat_increase'])
                     my_components['permanent_stat_increase'] = stat_increase
                 elif component == 'permanent_growth_increase':
-                    stat_increase = SaveLoad.intify_comma_list(item['growth_increase'])
+                    stat_increase = Utility.intify_comma_list(item['growth_increase'])
                     my_components['permanent_growth_increase'] = stat_increase
                 elif component == 'promotion':
                     legal_classes = item['promotion'].split(',')
                     my_components['promotion'] = legal_classes
                 elif component == 'aoe':
                     info_line = item['aoe'].split(',')
-                    aoe = AOEComponent(info_line[0], int(info_line[1]))
+                    aoe = AOEComponent(*info_line)
                 # Affects map animation
                 elif component == 'map_hit_color':
                     my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))

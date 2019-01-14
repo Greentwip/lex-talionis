@@ -63,6 +63,16 @@ def key_with_max_val(d):
     k = list(d)
     return k[v.index(max(v))]
 
+# === INTIFY COMMA LIST ================================================
+def intify_comma_list(comma_string):
+    # Takes string, turns it into list of ints
+    if comma_string:
+        s_l = comma_string.split(',')
+        s_l = [int(num) for num in s_l]
+    else:
+        s_l = []
+    return s_l
+
 # === GREATER THAN OR EQUAL ============================================
 def gte(a, b):
     return a >= b

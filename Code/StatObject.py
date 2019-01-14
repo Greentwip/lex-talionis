@@ -3,9 +3,11 @@ from collections import OrderedDict
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import ClassData
 
 # === Helper component class for unit stats ===================================
 class Stat(object):
@@ -90,9 +92,9 @@ class Stat(object):
     def serialize(self):
         return (self.base_stat, self.bonuses)
 
-    def draw(self, surf, unit, topright, metaDataObj, compact=False):
+    def draw(self, surf, unit, topright, compact=False):
         if compact:
-            if self.base_stat >= metaDataObj['class_dict'][unit.klass]['max'][self.idx]:
+            if self.base_stat >= ClassData.class_dict[unit.klass]['max'][self.idx]:
                 font = GC.FONT['text_yellow']
             elif self.bonuses > 0: 
                 font = GC.FONT['text_green']
@@ -104,7 +106,7 @@ class Stat(object):
             font.blit(str(value), surf, (topright[0] - font.size(str(value))[0], topright[1]))
         else:
             value = self.base_stat
-            if value >= metaDataObj['class_dict'][unit.klass]['max'][self.idx]:
+            if value >= ClassData.class_dict[unit.klass]['max'][self.idx]:
                 GC.FONT['text_yellow'].blit(str(value), surf, (topright[0] - GC.FONT['text_green'].size(str(value))[0], topright[1]))
             else:
                 GC.FONT['text_blue'].blit(str(value), surf, (topright[0] - GC.FONT['text_blue'].size(str(value))[0], topright[1]))

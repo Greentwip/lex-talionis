@@ -384,7 +384,7 @@ class AI(object):
         for item in avail_items:
             for target in available_targets:
                 for move in valid_moves:
-                    if Utility.calculate_distance(move, target.position) in item.RNG:
+                    if Utility.calculate_distance(move, target.position) in item.get_range():
                         self.target_to_interact_with = target.position
                         self.position_to_move_to = move
                         self.item_to_use = item
@@ -463,12 +463,12 @@ class Primary_AI(object):
                       (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'] + 2)]
         # Remove any items that heal only me if I don't need healing
         if self.unit.currenthp >= self.unit.stats['HP']:
-            self.items = [i for i in self.items if not (i.heal and max(i.RNG) == 0)]
+            self.items = [i for i in self.items if not (i.heal and max(i.get_range()) == 0)]
 
         # Remove any items that heal others if there are no allies in need of healing nearby
         if any(item.heal for item in self.items):
             distance_to_heal = self.distance_to_closest_ally_in_need_of_healing(gameStateObj)
-            self.items = [i for i in self.items if not (i.heal and distance_to_heal > self.unit.stats['MOV'] + max(i.RNG))]
+            self.items = [i for i in self.items if not (i.heal and distance_to_heal > self.unit.stats['MOV'] + max(i.get_range()))]
 
         if self.determine_skip(gameStateObj, closest_enemy_distance):
             self.skip_flag = True
@@ -507,7 +507,7 @@ class Primary_AI(object):
             return False
         detrimental_items = [item for item in self.unit.items if (item.weapon or (item.spell and item.detrimental)) and self.unit.canWield(item)]
         if len(detrimental_items) == len(self.items):
-            max_range = max(max(item.RNG) for item in detrimental_items) + self.unit.stats['MOV']
+            max_range = max(max(item.get_range()) for item in detrimental_items) + self.unit.stats['MOV']
             if closest_enemy_distance > max_range:
                 return True
         return False
@@ -526,7 +526,7 @@ class Primary_AI(object):
             move = self.valid_moves[self.move_index]
             self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], [move], 
                                                       team_ignore=self.team_ignore, name_ignore=self.name_ignore)
-            if 0 in self.items[self.item_index].RNG:
+            if 0 in self.items[self.item_index].get_range():
                 self.valid_targets.append(self.unit.position) # Hack to target self
         else:
             self.valid_targets = []
@@ -535,7 +535,7 @@ class Primary_AI(object):
         logger.debug(self.items[self.item_index])
         self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], self.valid_moves,
                                                   team_ignore=self.team_ignore, name_ignore=self.name_ignore)
-        if 0 in self.items[self.item_index].RNG:
+        if 0 in self.items[self.item_index].get_range():
             self.valid_targets += self.valid_moves # Hack to target self in all valid positions
             self.valid_targets = list(set(self.valid_targets))  # Only uniques
         logger.debug('Valid Targets: %s', self.valid_targets)
@@ -544,7 +544,7 @@ class Primary_AI(object):
         # logger.debug('%s %s %s %s', self.target_index, self.valid_targets, self.item_index, self.items)
         if self.target_index < len(self.valid_targets) and self.item_index < len(self.items):
             # Given an item and a target, find all positions in valid_moves that I can strike the target at.
-            a = Utility.find_manhattan_spheres(self.items[self.item_index].RNG, self.valid_targets[self.target_index])
+            a = Utility.find_manhattan_spheres(self.items[self.item_index].get_range(), self.valid_targets[self.target_index])
             b = set(self.valid_moves)
             return list(a & b)
         else:
@@ -634,9 +634,9 @@ class Primary_AI(object):
             # Only if we have line of sight, since we get every possible position to strike from
             # Determine whether we need line of sight
             los_flag = True
-            if item.spell and cf.CONSTANTS['spell_line_of_sight'] and not Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
+            if item.spell and cf.CONSTANTS['spell_line_of_sight'] and not Utility.line_of_sight([move], [target], max(item.get_range()), gameStateObj):
                 los_flag = False
-            elif item.weapon and cf.CONSTANTS['line_of_sight'] and not Utility.line_of_sight([move], [target], max(item.RNG), gameStateObj):
+            elif item.weapon and cf.CONSTANTS['line_of_sight'] and not Utility.line_of_sight([move], [target], max(item.get_range()), gameStateObj):
                 los_flag = False
             # Actually finding the utility here
             if los_flag:
@@ -701,7 +701,7 @@ class Primary_AI(object):
             target_damage = 0
             target_accuracy = 0
             # Determine if I would be countered
-            if target.getMainWeapon() and Utility.calculate_distance(move, target.position) in target.getMainWeapon().RNG:
+            if target.getMainWeapon() and Utility.calculate_distance(move, target.position) in target.getMainWeapon().get_range():
                 target_damage = Utility.clamp(target.compute_damage(self.unit, gameStateObj, target.getMainWeapon(), 'Defense')/float(self.unit.currenthp), 0, 1)
                 target_accuracy = Utility.clamp(target.compute_hit(self.unit, gameStateObj, target.getMainWeapon(), 'Defense')/100.0, 0, 1)
 

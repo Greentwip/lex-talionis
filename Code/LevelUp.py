@@ -3,12 +3,12 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import CustomObjects, Image_Modification, Engine
-    import StatusObject, Banner, Utility, Weapons
+    import StatusObject, Banner, Utility, Weapons, ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import CustomObjects, Image_Modification, Engine
-    from . import StatusObject, Banner, Utility, Weapons
+    from . import StatusObject, Banner, Utility, Weapons, ClassData
 
 ####################################################################
 # Displays the level up screen
@@ -60,7 +60,7 @@ class levelUpScreen(object):
         if force_level:
             # Need to prevent from going over max
             current_stats = list(self.unit.stats.values())
-            klass = gameStateObj.metaDataObj['class_dict'][self.unit.klass]
+            klass = ClassData.class_dict[self.unit.klass]
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, klass['max'][index] - current_stats[index].base_stat)
             self.unit.apply_levelup(self.levelup_list, exp == 0)
@@ -87,7 +87,7 @@ class levelUpScreen(object):
         if not self.force_level and self.expNew == 0:
             return True
 
-        unit_klass = metaDataObj['class_dict'][self.unit.klass]
+        unit_klass = ClassData.class_dict[self.unit.klass]
         max_level = unit_klass['max_level']
         if self.unit.level >= max_level and unit_klass['turns_into'] is None:
             return True # We're done here
@@ -121,7 +121,7 @@ class levelUpScreen(object):
             if self.expSet >= 100:
                 if self.unit.level >= max_level: # If I would promote because I am level 20
                     GC.SOUNDDICT['Experience Gain'].stop()
-                    if cf.CONSTANTS['auto_promote'] and metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                    if cf.CONSTANTS['auto_promote'] and ClassData.class_dict[self.unit.klass]['turns_into']: # If has at least one class to turn into
                         self.expSet = 100
                         GC.SOUNDDICT['Level Up'].play()
                     else:
@@ -134,7 +134,7 @@ class levelUpScreen(object):
                 else:
                     self.expSet = 0
                     self.unit.level += 1
-                    self.levelup_list = self.unit.level_up(gameStateObj, metaDataObj['class_dict'][self.unit.klass])
+                    self.levelup_list = self.unit.level_up(gameStateObj, ClassData.class_dict[self.unit.klass])
                     self.state.changeState('exp100')
                     # Do not reset state time
             # Extra time to account for end pause
@@ -200,7 +200,7 @@ class levelUpScreen(object):
                     self.unit.increase_wexp(self.new_wexp, gameStateObj)
                 # check for skill gain if not a forced level
                 if not self.force_level:
-                    for level_needed, class_skill in metaDataObj['class_dict'][self.unit.klass]['skills']:
+                    for level_needed, class_skill in ClassData.class_dict[self.unit.klass]['skills']:
                         if self.unit.level == level_needed:
                             if class_skill == 'Feat':
                                 gameStateObj.cursor.currentSelectedUnit = self.unit
@@ -219,9 +219,9 @@ class levelUpScreen(object):
         elif self.state.getState() == 'prepare_promote':
             self.exp_bar.update(self.expSet)
             if currentTime - self.state_time > 100:
-                if cf.CONSTANTS['auto_promote'] and metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
+                if cf.CONSTANTS['auto_promote'] and ClassData.class_dict[self.unit.klass]['turns_into']: # If has at least one class to turn into
                     self.expSet = 0
-                    class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
+                    class_options = ClassData.class_dict[self.unit.klass]['turns_into']
                     if len(class_options) > 1:
                         gameStateObj.cursor.currentSelectedUnit = self.unit
                         gameStateObj.stateMachine.changeState('promotion_choice')
@@ -244,8 +244,8 @@ class levelUpScreen(object):
                     return True # Done
 
         elif self.state.getState() == 'item_promote':
-            if metaDataObj['class_dict'][self.unit.klass]['turns_into']: # If has at least one class to turn into
-                class_options = metaDataObj['class_dict'][self.unit.klass]['turns_into']
+            if ClassData.class_dict[self.unit.klass]['turns_into']: # If has at least one class to turn into
+                class_options = ClassData.class_dict[self.unit.klass]['turns_into']
                 if len(class_options) > 1:
                     gameStateObj.cursor.currentSelectedUnit = self.unit
                     gameStateObj.stateMachine.changeState('promotion_choice')
@@ -274,7 +274,7 @@ class levelUpScreen(object):
         elif self.state.getState() == 'promote':
             # Class should already have been changed by now in the levelpromote state
             # Here's where I change all the important information
-            new_class = metaDataObj['class_dict'][self.unit.klass]
+            new_class = ClassData.class_dict[self.unit.klass]
             old_anim = self.unit.battle_anim
             self.unit.removeSprites()
             self.unit.loadSprites()
@@ -369,7 +369,7 @@ class levelUpScreen(object):
             LevelUpSurface.blit(LevelSurf, (0, 0))
 
             # Render top banner text
-            long_name = gameStateObj.metaDataObj['class_dict'][self.unit.klass]['long_name']
+            long_name = ClassData.class_dict[self.unit.klass]['long_name']
             GC.FONT['text_white'].blit(long_name, LevelUpSurface, (12, 3))
             GC.FONT['text_yellow'].blit(cf.WORDS['Lv'], LevelUpSurface, (LevelUpSurface.get_width()/2+12, 3))
             if self.first_spark_flag or self.force_level:

@@ -389,14 +389,14 @@ class Dialogue_Scene(object):
                 spl[-1].extend(y)
 
             for sub_command in spl:
-                if self.add_unit_sprite(sub_command, metaDataObj, transition=True):
+                if self.add_unit_sprite(sub_command, transition=True):
                     # Force wait after unit sprite is drawn to allow time to transition.
                     self.waittime = 266  # 16 frames
                     self.last_wait_update = Engine.get_time()
                     self.current_state = "Waiting"
         # Add a unit to the scene without transition
         elif line[0] == 'qu':
-            self.add_unit_sprite(line, metaDataObj, transition=False)
+            self.add_unit_sprite(line, transition=False)
         # Change a unit's expression
         elif line[0] == 'set_expression':
             self.unit_sprites[line[1]].expression = line[2]
@@ -1185,7 +1185,7 @@ class Dialogue_Scene(object):
         s.fill((0, 0, 0, self.transition_transparency))
         surf.blit(s, (0, 0))
 
-    def add_unit_sprite(self, line, metaDataObj, transition=False):
+    def add_unit_sprite(self, line, transition=False):
         name = self.unit.name if line[1] == '{unit}' else line[1]
         if name in self.unit_sprites and not self.unit_sprites[name].remove_flag:
             return False
@@ -1208,9 +1208,9 @@ class Dialogue_Scene(object):
             expression = 'Smiling'
         else:
             expression = 'Normal'
-        assert name in metaDataObj['portrait_dict'], "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(name)
-        blink = metaDataObj['portrait_dict'][name]['blink']
-        mouth = metaDataObj['portrait_dict'][name]['mouth']
+        assert name in GC.PORTRAITDICT, "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(name)
+        blink = GC.PORTRAITDICT[name]['blink']
+        mouth = GC.PORTRAITDICT[name]['mouth']
         self.unit_sprites[name] = UnitPortrait(portrait_name=name, blink_position=blink, mouth_position=mouth, transition=transition,
                                                position=position, priority=priority, mirror=mirrorflag, expression=expression)
 
