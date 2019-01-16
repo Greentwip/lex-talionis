@@ -1,10 +1,10 @@
 import os
 from collections import OrderedDict
 try:
-    import bmpfont, Engine, imagesDict
+    import bmpfont, Engine, imagesDict, Equations
     import configuration as cf
 except ImportError:
-    from . import bmpfont, Engine, imagesDict
+    from . import bmpfont, Engine, imagesDict, Equations
     from . import configuration as cf
 
 import logging
@@ -70,6 +70,8 @@ except ImportError:
 # Outside data
 # === CREATE ITEM DICTIONARY =================================================
 loc = Engine.engine_constants['home']
+
+EQUATIONS = Equations.Parser(loc + 'Data/equations.txt')
 
 def create_item_dict():
     item_dict = {}

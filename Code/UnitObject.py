@@ -1475,8 +1475,8 @@ class UnitObject(object):
         if not item.weapon and not item.spell:
             return 0
 
-        adj = Utility.calculate_distance(self.position, target.position) <= 1
-        damage = self.damage(gameStateObj, item, adj)
+        dist = Utility.calculate_distance(self.position, target.position)
+        damage = self.damage(gameStateObj, item, dist)
 
         if isinstance(target, TileObject.TileObject):
             if item.extra_tile_damage:
@@ -1498,20 +1498,20 @@ class UnitObject(object):
             else:
                 damage += advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).resist
             if Weapons.TRIANGLE.isMagic(item):
-                if item.magic_at_range and adj:
-                    stat = 'DEF'
+                if item.magic_at_range and dist <= 1:
+                    equation = 'DEFENSE'
                 else:
-                    stat = 'RES'
+                    equation = 'MAGIC_DEFENSE'
             elif item.alternate_defense:
-                stat = item.alternate_defense
+                equation = item.alternate_defense
             else:
-                stat = 'DEF'
+                equation = 'DEFENSE'
             if item.ignore_def:
                 pass
             elif item.ignore_half_def:
-                damage -= target.defense(gameStateObj, stat)//2
+                damage -= target.defense(gameStateObj, equation, item, dist)//2
             else:
-                damage -= target.defense(gameStateObj, stat)
+                damage -= target.defense(gameStateObj, equation, item, dist)
 
             for status in self.status_effects:
                 if status.conditional_mt and eval(status.conditional_mt.conditional, globals(), locals()):
@@ -1564,6 +1564,7 @@ class UnitObject(object):
         # Calculations
         if my_item.weapon or my_item.spell:
             # Weapon triangle
+            dist = Utility.calculate_distance(self.position, target.position)
             advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
             bonus = 0
             if advantage[0] > 0:
@@ -1575,7 +1576,7 @@ class UnitObject(object):
             else:
                 bonus += advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).avoid
 
-            hitrate = self.accuracy(gameStateObj, my_item) + bonus - target.avoid(gameStateObj)
+            hitrate = self.accuracy(gameStateObj, my_item, dist) + bonus - target.avoid(gameStateObj, my_item, dist)
             for status in self.status_effects:
                 if status.conditional_hit and eval(status.conditional_hit.conditional, globals(), locals()):
                     new_hit = int(eval(status.conditional_hit.value, globals(), locals()))
@@ -1602,6 +1603,7 @@ class UnitObject(object):
 
         # Calculations
         if my_item.weapon or my_item.spell:
+            dist = Utility.calculate_distance(self.position, target.position)
             advantage = Weapons.TRIANGLE.compute_advantage(my_item, target.getMainWeapon())
             bonus = 0
             if advantage[0] > 0:
@@ -1612,7 +1614,7 @@ class UnitObject(object):
                 bonus -= advantage[1] * Weapons.ADVANTAGE.get_advantage(target.getMainWeapon(), target.wexp).dodge
             else:
                 bonus += advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).dodge
-            critrate = self.crit_accuracy(gameStateObj, my_item) + bonus - target.crit_avoid(gameStateObj)
+            critrate = self.crit_accuracy(gameStateObj, my_item, dist) + bonus - target.crit_avoid(gameStateObj, my_item, dist)
             for status in self.status_effects:
                 if status.conditional_crit_hit and eval(status.conditional_crit_hit.conditional, globals(), locals()):
                     new_hit = int(eval(status.conditional_crit_hit.value, globals(), locals()))
@@ -1628,14 +1630,10 @@ class UnitObject(object):
     def attackspeed(self, item=None):
         if not item:
             item = self.getMainWeapon()
-        if item and item.weight:
-            attackspeed = self.stats['SPD'] - max(0, item.weight - self.stats['CON'])
-        else:
-            attackspeed = self.stats['SPD']
-        # attackspeed += self.get_support_bonuses(gameStateObj)[6]
+        attackspeed = GC.EQUATIONS.get_attackspeed(self, item)
         return attackspeed
 
-    def accuracy(self, gameStateObj, item=None):
+    def accuracy(self, gameStateObj, item=None, dist=0):
         accuracy = self.get_support_bonuses(gameStateObj)[2]
         # Cannot convert the following into a list comprehension, since the scoping ruins globals and locals
         for status in self.status_effects:
@@ -1649,15 +1647,15 @@ class UnitObject(object):
             else:
                 return None
         if item.weapon:
-            accuracy += item.weapon.HIT + int(self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] +
-                                              self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef'])
-        elif item.spell and item.hit:
-            if item.staff_hit:
-                accuracy += item.hit + int(self.stats['MAG'] * cf.CONSTANTS['staff_accuracy_magic_coef'] + 
-                                           self.stats['SKL'] * cf.CONSTANTS['staff_accuracy_skill_coef'])
+            if item.alternate_hit:
+                accuracy += item.weapon.HIT + GC.EQUATIONS.get_equation(item.alternate_hit, self, item, dist)
             else:
-                accuracy += item.hit + int(self.stats['SKL'] * cf.CONSTANTS['accuracy_skill_coef'] +
-                                           self.stats['LCK'] * cf.CONSTANTS['accuracy_luck_coef'])
+                accuracy += item.weapon.HIT + GC.EQUATIONS.get_hit(self, item, dist)
+        elif item.spell and item.hit:
+            if item.alternate_hit:
+                accuracy += item.hit + GC.EQUATIONS.get_equation(item.alternate_hit, self, item, dist)
+            else:
+                accuracy += item.hit + GC.EQUATIONS.get_hit(self, item, dist)
         else:
             accuracy = 10000
         # Generic rank bonuses
@@ -1666,13 +1664,11 @@ class UnitObject(object):
             accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[0]
         return accuracy
 
-    def avoid(self, gameStateObj, item=None, dist_from_enemy=0):
-        if item.staff_hit:
-            base = int(self.stats['RES'] * cf.CONSTANTS['staff_avoid_res_coef'] + 
-                       dist_from_enemy * cf.CONSTANTS['staff_avoid_distance_coef'])
+    def avoid(self, gameStateObj, item=None, dist=0):
+        if item and item.alternate_avoid:
+            base = GC.EQUATIONS.get_equation(item.alternate_avoid, self, item, dist)
         else:
-            base = int(self.attackspeed(item) * cf.CONSTANTS['avoid_speed_coef'] +
-                       self.stats['LCK'] * cf.CONSTANTS['avoid_luck_coef'])
+            base = GC.EQUATIONS.get_avoid(self, item, dist)
         
         base += self.get_support_bonuses(gameStateObj)[3]
         for status in self.status_effects:
@@ -1682,7 +1678,7 @@ class UnitObject(object):
             base += (0 if 'flying' in self.status_bundle else gameStateObj.map.tiles[self.position].AVO)
         return base
                 
-    def damage(self, gameStateObj, item=None, adj=True):
+    def damage(self, gameStateObj, item=None, dist=0):
         if not item:
             item = self.getMainWeapon()
         if not item:
@@ -1695,18 +1691,18 @@ class UnitObject(object):
         if item.weapon:
             damage += item.weapon.MT
             if Weapons.TRIANGLE.isMagic(item):
-                if item.magic_at_range and adj:
-                    damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
+                if item.magic_at_range and dist <= 1:
+                    damage += GC.EQUATIONS.get_damage(self, item, dist)
                 else:  # Normal
-                    damage += int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
+                    damage += GC.EQUATIONS.get_magic_damage(self, item, dist)
             else:
-                damage += int(self.stats['STR'] * cf.CONSTANTS['damage_str_coef'])
+                damage += GC.EQUATIONS.get_damage(self, item, dist)
             # Generic rank bonuses
             idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
             damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
         elif item.spell:
             if item.damage:
-                damage += item.damage + int(self.stats['MAG'] * cf.CONSTANTS['damage_mag_coef'])
+                damage += item.damage + GC.EQUATIONS.get_damage(self, item)
                 # Generic rank bonuses
                 idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
                 damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
@@ -1717,7 +1713,7 @@ class UnitObject(object):
 
         return damage
 
-    def crit_accuracy(self, gameStateObj, item=None):
+    def crit_accuracy(self, gameStateObj, item=None, dist=0):
         if not item:
             if self.getMainWeapon():
                 item = self.getMainWeapon()
@@ -1726,7 +1722,7 @@ class UnitObject(object):
             else:
                 return None
         if item.crit is not None and (item.weapon or item.spell):
-            accuracy = item.crit + int(self.stats['SKL'] * cf.CONSTANTS['crit_accuracy_skill_coef'])
+            accuracy = item.crit + GC.EQUATIONS.get_crit(self, item, dist)
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             accuracy += self.get_support_bonuses(gameStateObj)[4]
             # Generic rank bonuses
@@ -1736,22 +1732,21 @@ class UnitObject(object):
         else:
             return 0
 
-    def crit_avoid(self, gameStateObj, item=None):
-        base = int(self.stats['LCK'] * cf.CONSTANTS['crit_avoid_luck_coef'])
+    def crit_avoid(self, gameStateObj, item=None, dist=0):
+        base = item.crit + GC.EQUATIONS.get_crit_avoid(self, item, dist)
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         base += self.get_support_bonuses(gameStateObj)[5]
         return base
 
-    def defense(self, gameStateObj, stat='DEF'):
-        defense = int(self.stats[stat] * cf.CONSTANTS['defense_coef'])
+    def defense(self, gameStateObj, equation='DEFENSE', item=None, dist=0):
+        defense = GC.EQUATIONS.get_equation(equation, self, item, dist)
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
         defense += self.get_support_bonuses(gameStateObj)[1]
         return defense
 
     def get_rating(self):
-        return (self.stats['HP'] - 10)//2 + max(self.stats['STR'], self.stats['MAG']) + self.stats['SKL'] + \
-            self.stats['SPD'] + self.stats['LCK']//2 + self.stats['DEF'] + self.stats['RES']
+        return GC.EQUATIONS.get_rating(self)
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj, script=True):

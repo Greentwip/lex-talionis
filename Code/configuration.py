@@ -116,29 +116,16 @@ def read_constants_file():
              'double_wexp': 1, # Give wexp for every hit (so if you double, you get 2x wexp)
              'miss_wexp': 1, # Give wexp even if you do no damage or miss
              'title': 'Lex Talionis Engine',
-             'damage_str_coef': 1.0,
-             'damage_mag_coef': 1.0,
-             'avoid_speed_coef': 2.0,
-             'avoid_luck_coef': 1.0,
-             'accuracy_skill_coef': 2.0,
-             'accuracy_luck_coef': 0.5,
-             'crit_accuracy_skill_coef': 1.0,
-             'crit_avoid_luck_coef': 1.0,
-             'defense_coef': 1.0,
-             'staff_accuracy_magic_coef': 5.0,
-             'staff_accuracy_skill_coef': 1.0,
-             'staff_avoid_res_coef': 5.0,
-             'staff_avoid_distance_coef': 2.0,
              'support': 1, # 0 - No supports, 1 - Conversations in combat, Conversations in base
              'support_bonus': 3, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
              'support_range': 3, # 0 - Entire map
              'support_growth_range': 1, # 0 - Entire map
              'support_end_chapter': 0, # Points gained for ending a chapter with both alive
              'support_end_turn': 1, # Points gained for ending turn in range
-             'support_combat': 1, # Points gained for combat in range
-             'support_interact': 1, # Points for interacting
+             'support_combat': 0, # Points gained for combat in range
+             'support_interact': 0, # Points for interacting
              'support_limit': 5, # Limit to number of support level: 0 - No limit
-             'support_s_limit': 0, # Limit to number of s support levels (>4): 0 - No limit
+             'support_s_limit': 1, # Limit to number of s support levels (>4): 0 - No limit
              }
 
     if os.path.isfile('Data/constants.ini'):
@@ -187,19 +174,6 @@ def read_constants_file():
     lines['fatal_wexp'] = int(lines['fatal_wexp'])
     lines['double_wexp'] = int(lines['double_wexp'])
     lines['miss_wexp'] = int(lines['miss_wexp'])
-    lines['damage_str_coef'] = float(lines['damage_str_coef'])
-    lines['damage_mag_coef'] = float(lines['damage_mag_coef'])
-    lines['avoid_speed_coef'] = float(lines['avoid_speed_coef'])
-    lines['avoid_luck_coef'] = float(lines['avoid_luck_coef'])
-    lines['accuracy_skill_coef'] = float(lines['accuracy_skill_coef'])
-    lines['accuracy_luck_coef'] = float(lines['accuracy_luck_coef'])
-    lines['crit_accuracy_skill_coef'] = float(lines['crit_accuracy_skill_coef'])
-    lines['crit_avoid_luck_coef'] = float(lines['crit_avoid_luck_coef'])
-    lines['defense_coef'] = float(lines['defense_coef'])
-    lines['staff_accuracy_magic_coef'] = float(lines['staff_accuracy_magic_coef'])
-    lines['staff_accuracy_skill_coef'] = float(lines['staff_accuracy_skill_coef'])
-    lines['staff_avoid_res_coef'] = float(lines['staff_avoid_res_coef'])
-    lines['staff_avoid_distance_coef'] = float(lines['staff_avoid_distance_coef'])
     lines['support'] = int(lines['support'])
     lines['support_bonus'] = int(lines['support_bonus'])
     lines['support_range'] = int(lines['support_range'])

@@ -1462,7 +1462,7 @@
         <id>Silence</id>
         <spritetype>Staff</spritetype>
         <spriteid>6</spriteid>       
-        <components>spell,uses,detrimental,status,custom_ai_value,target_restrict,hit,wexp,exp,staff_hit</components>
+        <components>spell,uses,detrimental,status,custom_ai_value,target_restrict,hit,wexp,exp,alternate_hit,alternate_avoid</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
@@ -1481,13 +1481,16 @@
 
         <wexp>5</wexp>
         <exp>30</exp>
+
+        <alternate_hit>STAFF_HIT</alternate_hit>
+        <alternate_avoid>STAFF_AVOID</alternate_avoid>
     </item>
 
     <item name="Sleep">
         <id>Sleep</id>
         <spritetype>Staff</spritetype>
         <spriteid>7</spriteid>       
-        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp,staff_hit</components>
+        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp,alternate_hit,alternate_avoid</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
@@ -1504,13 +1507,15 @@
         <exp>35</exp>
 
         <map_hit_color>-248,0,-248</map_hit_color>
+        <alternate_hit>STAFF_HIT</alternate_hit>
+        <alternate_avoid>STAFF_AVOID</alternate_avoid>
     </item>
 
     <item name="Berserk">
         <id>Berserk</id>
         <spritetype>Staff</spritetype>
         <spriteid>8</spriteid>       
-        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp,staff_hit</components>
+        <components>spell,uses,status,hit,detrimental,map_hit_color,wexp,exp,alternate_hit,alternate_avoid</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
@@ -1527,6 +1532,8 @@
         <exp>40</exp>
 
         <map_hit_color>248,64,-248</map_hit_color>
+        <alternate_hit>STAFF_HIT</alternate_hit>
+        <alternate_avoid>STAFF_AVOID</alternate_avoid>
     </item>
 
     <item name="Warp">
