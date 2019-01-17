@@ -134,24 +134,24 @@ def get_range(item, unit):
     if len(item.RNG) == 1:
         r = item.RNG[0]
         if r == 'MAG/2':
-            return [unit.stats['MAG']//2]
+            return [GC.EQUATIONS.get_magic_damage(unit)//2]
         elif r == 'MAG/2 + 1':
-            return [unit.stats['MAG']//2 + 1]
+            return [GC.EQUATIONS.get_magic_damage(unit)//2 + 1]
         else:
             return [int(r)]
     elif len(item.RNG) == 2:
         r1 = item.RNG[0]
         r2 = item.RNG[1]
         if r1 == 'MAG/2':
-            r1 = unit.stats['MAG']//2
+            r1 = GC.EQUATIONS.get_magic_damage(unit)//2
         elif r1 == 'MAG/2 + 1':
-            return unit.stats['MAG']//2 + 1
+            return GC.EQUATIONS.get_magic_damage(unit)//2 + 1
         else:
             r1 = int(r1)
         if r2 == 'MAG/2':
-            r2 = unit.stats['MAG']//2
+            r2 = GC.EQUATIONS.get_magic_damage(unit)//2
         elif r2 == 'MAG/2 + 1':
-            return unit.stats['MAG']//2 + 1
+            return GC.EQUATIONS.get_magic_damage(unit)//2 + 1
         else:
             r2 = int(r2)
         return list(range(r1, r2 + 1))
@@ -269,6 +269,9 @@ class UsesComponent(object):
     def increment(self):
         self.uses += 1
         self.uses = min(self.uses, self.total_uses)
+
+    def set(self, uses):
+        self.uses = uses
                
 class WeaponComponent(object):
     def __init__(self, stats):

@@ -1899,7 +1899,7 @@ def drawRescuePreview(surf, gameStateObj):
     rescuee = gameStateObj.cursor.getHoveredUnit(gameStateObj)
     window = GC.IMAGESDICT['RescueWindow'].copy()
     width = window.get_width()
-    con = str(rescuee.stats['CON'])
+    con = str(rescuee.getWeight())
     aid = str(rescuer.getAid())
     num_font = GC.FONT['text_blue']
     num_font.blit(con, window, (width - num_font.size(con)[0] - 3, 72))

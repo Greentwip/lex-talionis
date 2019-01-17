@@ -1607,7 +1607,7 @@
         <id>Hammerne</id>
         <spritetype>Staff</spritetype>
         <spriteid>12</spriteid>       
-        <components>spell,uses,beneficial,wexp,exp,no_ai,hammerne</components>
+        <components>spell,uses,beneficial,wexp,exp,no_ai,repair</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>

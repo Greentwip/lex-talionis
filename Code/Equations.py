@@ -75,5 +75,20 @@ class Parser(object):
     def get_rating(self, unit, item=None, dist=0):
         return self.equations['RATING'](self.equations, unit, item, dist)
 
+    def get_aid(self, unit, item=None, dist=0):
+        return self.equations['RESCUE_AID'](self.equations, unit, item, dist)
+
+    def get_weight(self, unit, item=None, dist=0):
+        return self.equations['RESCUE_WEIGHT'](self.equations, unit, item, dist)
+
+    def get_skill_charge(self, unit, item=None, dist=0):
+        return self.equations['CHARGE_INC'](self.equations, unit, item, dist)
+
+    def get_steal_atk(self, unit, item=None, dist=0):
+        return self.equations['STEAL_ATK'](self.equations, unit, item, dist)
+
+    def get_steal_def(self, unit, item=None, dist=0):
+        return self.equations['STEAL_DEF'](self.equations, unit, item, dist)
+
     def get_equation(self, lhs, unit, item=None, dist=0):
         return self.equations[lhs](self.equations, unit, item, dist)

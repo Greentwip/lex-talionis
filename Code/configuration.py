@@ -78,7 +78,6 @@ def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum
              'speed_to_double': 4, # How much AS is needed to double
              'max_promotions': 10, # Allowed number of promotion options for a unit
-             'mounted_aid': 15, # What a mounted units CON is subtracted from to determine AID
              'crit': 3, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 2x damage minus 2x defense, 3 - 3x damage minus 3x defense
              'turnwheel': 0, # Whether to use the turnwheel
              'overworld': 0, # Whether to have an overworld
@@ -138,7 +137,6 @@ def read_constants_file():
     lines['max_items'] = int(lines['max_items'])
     lines['max_promotions'] = int(lines['max_promotions'])
     lines['speed_to_double'] = int(lines['speed_to_double'])
-    lines['mounted_aid'] = int(lines['mounted_aid'])
     lines['crit'] = int(lines['crit'])
     lines['turnwheel'] = int(lines['turnwheel'])
     lines['overworld'] = int(lines['overworld'])

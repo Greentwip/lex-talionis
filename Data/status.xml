@@ -406,6 +406,8 @@
         <image_index>3,2</image_index>
         <desc>Halves SKL/SPD.</desc>
         <components>rescue,negative</components>
+
+        <rescue>SKL,SPD</rescue>
     </status>
 
     <!-- CLASS SKILLS -->

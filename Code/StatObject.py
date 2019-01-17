@@ -2,11 +2,9 @@ from collections import OrderedDict
 
 try:
     import GlobalConstants as GC
-    import configuration as cf
     import ClassData
 except ImportError:
     from . import GlobalConstants as GC
-    from . import configuration as cf
     from . import ClassData
 
 # === Helper component class for unit stats ===================================
@@ -120,12 +118,12 @@ class Stat(object):
 
 def build_stat_dict(stats):
     st = OrderedDict()
-    for idx, name in enumerate(cf.CONSTANTS['stat_names']):
+    for idx, name in enumerate(GC.Equations.stat_list):
         st[name] = Stat(idx, stats[idx])
     return st
 
 def build_stat_dict_plus(stats):
     st = OrderedDict()
-    for idx, name in enumerate(cf.CONSTANTS['stat_names']):
+    for idx, name in enumerate(GC.Equations.stat_list):
         st[name] = Stat(idx, stats[idx][0], stats[idx][1])
     return st

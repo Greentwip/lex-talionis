@@ -636,10 +636,13 @@ class UnitObject(object):
         return self.hasRunGeneralAI
 
     def getAid(self):
-        if 'Mounted' in self.tags:
-            return max(0, cf.CONSTANTS['mounted_aid'] - self.stats['CON'])
-        else:
-            return max(0, self.stats['CON'] - 1)
+        return GC.EQUATIONS.get_aid(self)
+
+    def getWeight(self):
+        return GC.EQUATIONS.get_weight(self)
+
+    def get_skill_charge(self):
+        return GC.EQUATIONS.get_skill_charge(self)
 
     def canWield(self, item):
         """
@@ -1045,7 +1048,8 @@ class UnitObject(object):
         if position is None:
             position = self.position
         return [unit for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and 
-                (Utility.calculate_distance(unit.position, position) == 1) and unit.getStealables() and self.stats['SPD'] > unit.stats['SPD']]
+                Utility.calculate_distance(unit.position, position) == 1 and unit.getStealables() and
+                GC.EQUATIONS.get_steal_atk(self) > GC.EQUATIONS.get_steal_def(unit)]
 
     # Given an item and a position, returns a list of valid tiles to attack
     def getWalls(self, gameStateObj, item, position=None):
@@ -1281,7 +1285,7 @@ class UnitObject(object):
     # Finds all adjacent units who have things that can be stolen
     def getStealPartners(self, gameStateObj, rng=1):
         return [unit for unit in self.getAdjacentUnits(gameStateObj, rng) if self.checkIfEnemy(unit) and
-                self.stats['SPD'] > unit.stats['SPD'] and unit.getStealables()]
+                GC.EQUATIONS.get_steal_atk(self) > GC.EQUATIONS.get_steal_def(unit) and unit.getStealables()]
 
     def getStealables(self):
         if len(self.items) <= 0:
@@ -1543,7 +1547,7 @@ class UnitObject(object):
         return max(cf.CONSTANTS['minimum_damage'], damage)
 
     def compute_heal(self, target, gameStateObj, item, mode=None):
-        heal = int(eval(item.heal)) + self.stats['MAG']
+        heal = int(eval(item.heal)) + GC.EQUATIONS.get_magic_damage(self, item)
         if self is not target:
             heal += sum(status.caretaker for status in self.status_effects if status.caretaker)
 

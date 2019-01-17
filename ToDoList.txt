@@ -28,7 +28,7 @@
 - Check that Canto adds one wait, not 4!!
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
-- Add automatic CON and MOV scaling on promotion.. so like Cavalier -> Great Knight loses 1 mov, but Knight to Great Knight gains 2 mov.
+- Test automatic CON and MOV scaling on promotion.. so like Cavalier -> Great Knight loses 1 mov, but Knight to Great Knight gains 2 mov.
 - Test filtering class wexp -- so you could do reclassing?
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
@@ -39,7 +39,7 @@
 - Test MAG to accuracy as well (or add flag for FE GBA style staves) -- or try and make it work with both
 - Test Berserk works
 - Add Fog of War
-- Add Hammerne state
+- Test repair state
 - Test other_anim component support (like self_anim)
 - Test all aoe (Latona)
 - Test support for generic rank bonuses

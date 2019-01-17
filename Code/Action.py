@@ -548,6 +548,24 @@ class UseItem(Action):
         if self.item.c_uses:
             self.item.c_uses.increment()
 
+class RepairItem(Action):
+    def __init__(self, item):
+        self.item = item
+        self.item_old_uses = self.item.uses.uses if self.item.uses else 0
+        self.item_old_c_uses = self.item.c_uses.uses if self.item.c_uses else 0
+
+    def do(self, gameStateObj):
+        if self.item.uses:
+            self.item.uses.reset()
+        if self.item.c_uses:
+            self.item.c_uses.reset()
+
+    def reverse(self, gameStateObj):
+        if self.item.uses:
+            self.item.uses.set(self.item_old_uses)
+        if self.item.c_uses:
+            self.item.c_uses.set(self.item.item_old_c_uses)
+
 class GainExp(Action):
     def __init__(self, unit, exp, in_combat=None):
         self.unit = unit
@@ -576,6 +594,8 @@ class GainExp(Action):
             self.unit.level = 1
             self.unit.set_exp(0)
             self.levelup_list = new_klass['promotion']
+            if len(self.levelup_list) < new_klass['bases']: # Fill in with new classes bases - current stats
+                self.levelup_list.extend([new_klass['bases'][i] - self.current_stats[i] for i in range(len(self.levelup_list), len(new_klass['bases']))])
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_klass['max'][index] - self.current_stats[index])
             self.unit.apply_levelup(self.levelup_list)

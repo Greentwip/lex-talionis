@@ -567,13 +567,13 @@ class MenuState(StateMachine.State):
                 # If the unit does not have a traveler
                 if not cur_unit.TRV and not cur_unit.hasAttacked:
                     # AID has to be higher than CON
-                    if any((adjally.stats['CON'] <= cur_unit.getAid() and not adjally.TRV and 'Mounted' not in adjally.tags) for adjally in adjallies):
+                    if any((adjally.getWeight() <= cur_unit.getAid() and not adjally.TRV and 'Mounted' not in adjally.tags) for adjally in adjallies):
                         options.append(cf.WORDS['Rescue'])
-                    if any((adjally.TRV and gameStateObj.get_unit_from_id(adjally.TRV).stats['CON'] <= cur_unit.getAid()) for adjally in adjallies):
+                    if any((adjally.TRV and gameStateObj.get_unit_from_id(adjally.TRV).getWeight() <= cur_unit.getAid()) for adjally in adjallies):
                         options.append(cf.WORDS['Take'])
                 # If the unit has a traveler
                 if cur_unit.TRV and not cur_unit.hasAttacked:
-                    if any((adjally.getAid() >= gameStateObj.get_unit_from_id(cur_unit.TRV).stats['CON'] and not adjally.TRV) for adjally in adjallies):
+                    if any((adjally.getAid() >= gameStateObj.get_unit_from_id(cur_unit.TRV).getWeight() and not adjally.TRV) for adjally in adjallies):
                         options.append(cf.WORDS['Give'])
             # If the unit has an item
             if cur_unit.items:
@@ -684,14 +684,14 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('stealselect')
             elif selection == cf.WORDS['Rescue']:
                 good_positions = [unit.position for unit in cur_unit.getValidPartners(gameStateObj)
-                                  if unit.stats['CON'] <= cur_unit.getAid() and not unit.TRV and 'Mounted' not in unit.tags]
+                                  if unit.getWeight() <= cur_unit.getAid() and not unit.TRV and 'Mounted' not in unit.tags]
                 cur_unit.validPartners = CustomObjects.MapSelectHelper(good_positions)
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
                 gameStateObj.stateMachine.changeState('rescueselect')
             elif selection == cf.WORDS['Take']:
                 good_positions = [unit.position for unit in cur_unit.getValidPartners(gameStateObj) if unit.TRV and
-                                  gameStateObj.get_unit_from_id(unit.TRV).stats['CON'] <= cur_unit.getAid()]
+                                  gameStateObj.get_unit_from_id(unit.TRV).getWeight() <= cur_unit.getAid()]
                 cur_unit.validPartners = CustomObjects.MapSelectHelper(good_positions)
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
@@ -709,7 +709,7 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('dropselect')
             elif selection == cf.WORDS['Give']:
                 good_positions = [unit.position for unit in cur_unit.getTeamPartners(gameStateObj) if not unit.TRV and
-                                  unit.getAid() >= gameStateObj.get_unit_from_id(cur_unit.TRV).stats['CON']]
+                                  unit.getAid() >= gameStateObj.get_unit_from_id(cur_unit.TRV).getWeight()]
                 cur_unit.validPartners = CustomObjects.MapSelectHelper(good_positions)
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
@@ -1213,6 +1213,11 @@ class SpellState(StateMachine.State):
                         spell.extra_select_targets.append(cur_unit)  # Must be done after handle_extra_select
                         self.end(gameStateObj, metaDataObj)
                         self.begin(gameStateObj, metaDataObj)
+                    elif spell.repair:
+                        self.reapply_old_values(spell)
+                        Action.do(Action.EquipItem(cur_unit, spell), gameStateObj)
+                        gameStateObj.stateMachine.changeState('repair')
+                        GC.SOUNDDICT['Select 1'].play()
                     else:
                         self.reapply_old_values(spell)
                         defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, cur_unit.position, spell)
@@ -1545,6 +1550,59 @@ class StealState(StateMachine.State):
 
     def end(self, gameStateObj, metaDataObj):
         gameStateObj.info_surf = None
+
+class RepairState(StealState):
+    name = 'repair'
+
+    def begin(self, gameStateObj, metaDataObj):
+        gameStateObj.cursor.drawState = 0
+        gameStateObj.info_surf = None
+        self.initiator = gameStateObj.cursor.currentSelectedUnit
+        self.initiator.sprite.change_state('chosen', gameStateObj)
+        self.customer = gameStateObj.cursor.getHoveredUnit(gameStateObj)
+        self.item = self.initiator.items[0]
+        options = self.customer.getRepairables()
+        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self.customer, options, 'auto', gameStateObj=gameStateObj)
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+        first_push = self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
+
+        if 'DOWN' in directions:
+            GC.SOUNDDICT['Select 6'].play()
+            gameStateObj.activeMenu.moveDown(first_push)
+        elif 'UP' in directions:
+            GC.SOUNDDICT['Select 6'].play()
+            gameStateObj.activeMenu.moveUp(first_push)
+
+        if event == 'BACK':
+            GC.SOUNDDICT['Select 2'].play()
+            gameStateObj.activeMenu = None
+            gameStateObj.stateMachine.back()
+
+        elif event == 'SELECT':
+            GC.SOUNDDICT['Select 1'].play()
+            selection = gameStateObj.activeMenu.getSelection()
+            Action.do(Action.RepairItem(selection), gameStateObj)
+            Action.do(Action.HasAttacked(self.initiator), gameStateObj)
+            if self.initiator.has_canto():
+                gameStateObj.stateMachine.changeState('menu')
+            else:
+                gameStateObj.stateMachine.clear()
+                gameStateObj.stateMachine.changeState('free')
+                Action.do(Action.Wait(self.initiator), gameStateObj)
+            gameStateObj.activeMenu = None
+            # Give exp -- cleanup
+            Action.do(Action.GainWexp(self.initiator, self.item), gameStateObj)
+            if self.item.exp:
+                Action.do(Action.GainExp(self.initiator, self.item.exp), gameStateObj)
+            Action.do(Action.UseItem(self.item), gameStateObj)
+            if self.item.uses and self.item.uses.uses <= 0:
+                Action.do(Action.RemoveItem(self.initiator, self.item), gameStateObj)
+
+        elif event == 'INFO':
+            gameStateObj.activeMenu.toggle_info()
 
 class FeatChoiceState(StateMachine.State):
     name = 'feat_choice'

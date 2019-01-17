@@ -50,7 +50,6 @@ def create_class_dict():
                             'max_level': int(klass.find('max_level').text) if klass.find('max_level') is not None else Utility.find_max_level(tier, cf.CONSTANTS['max_level'])}
         class_dict[c_id]['bases'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['bases'])))
         class_dict[c_id]['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['growths'])))
-        class_dict[c_id]['promotion'].extend([0] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['promotion'])))
         class_dict[c_id]['max'].extend([cf.CONSTANTS['max_stat']] * (cf.CONSTANTS['num_stats'] - len(class_dict[c_id]['max'])))
     return class_dict
 

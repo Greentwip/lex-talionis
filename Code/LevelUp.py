@@ -313,6 +313,8 @@ class levelUpScreen(object):
             # self.levelup_list = [x + y for x, y in zip(self.levelup_list, new_class['promotion'])] # Add lists together
             self.levelup_list = new_class['promotion'] # No two level ups, too much gain in one level...
             current_stats = list(self.unit.stats.values())
+            if len(self.levelup_list) < new_class['bases']: # Fill in with new classes bases - current stats
+                self.levelup_list.extend([new_class['bases'][i] - current_stats[i].base_stat for i in range(len(self.levelup_list), len(new_class['bases']))])
             assert len(self.levelup_list) == len(new_class['max']) == len(current_stats), "%s %s %s" % (self.levelup_list, new_class['max'], current_stats)
             for index, stat in enumerate(self.levelup_list):
                 self.levelup_list[index] = min(stat, new_class['max'][index] - current_stats[index].base_stat)

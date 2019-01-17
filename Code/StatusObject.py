@@ -66,7 +66,7 @@ class StatusObject(object):
         serial_dict['parent_id'] = self.parent_id
         serial_dict['count'] = self.count.count if self.count else None
         if self.rescue:
-            serial_dict['rescue'] = (self.rescue.skl_penalty, self.rescue.spd_penalty)
+            serial_dict['rescue'] = self.rescue.penalties
         return serial_dict
 
     def draw(self, surf, topleft, cooldown=True):
@@ -161,9 +161,9 @@ class WeaknessComponent(object):
         self.num = num
 
 class RescueComponent(object):
-    def __init__(self):
-        self.skl_penalty = None
-        self.spd_penalty = None
+    def __init__(self, line):
+        self.stats = line.split(',')
+        self.penalties = [None for _ in self.stats]
 
 class CountComponent(object):
     def __init__(self, orig_count):
@@ -481,10 +481,9 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
 
     if status.rescue:
         # Rescue penalty
-        status.rescue.skl_penalty = -unit.stats['SKL'].base_stat//2
-        unit.stats['SKL'].bonuses += status.rescue.skl_penalty
-        status.rescue.spd_penalty = -unit.stats['SPD'].base_stat//2
-        unit.stats['SPD'].bonuses += status.rescue.spd_penalty
+        for idx, stat in enumerate(status.rescue.stats):
+            status.rescue.penalties[idx] = -unit.stats[stat].base_stat//2
+            unit.stats[stat].bonuses += status.rescue.penalties[idx]
 
     if status.name == "Clumsy":
         if 'horsemanship' in unit.status_bundle:
@@ -560,8 +559,8 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
     if status.growth_mod:
         unit.apply_growth_mod([-growth for growth in status.growth_mod])
     if status.rescue:
-        unit.stats['SKL'].bonuses -= status.rescue.skl_penalty
-        unit.stats['SPD'].bonuses -= status.rescue.spd_penalty
+        for idx, stat in enumerate(status.rescue.stats):
+            unit.stats[stat].bonuses -= status.rescue.penalties[idx]
     if status.flying and not clean_up:
         unit.acquire_tile_status(gameStateObj, force=True)
     if status.passive:
@@ -656,7 +655,7 @@ def statusparser(s_id):
                     my_components['weakness'] = WeaknessComponent(damage_type, num)
                 # Others...
                 elif component == 'rescue':
-                    my_components['rescue'] = RescueComponent()
+                    my_components['rescue'] = RescueComponent(status.find('rescue').text)
                 elif component == 'count':
                     my_components['count'] = CountComponent(int(status.find('count').text))
                 elif component == 'caretaker':
@@ -727,11 +726,11 @@ def deserialize(s_dict, unit=None):
             status.aura.set_parent_unit(unit)
         # For rescue
         if s_dict.get('rescue'):
-            status.rescue.skl_penalty = int(s_dict['rescue'][0])
-            status.rescue.spd_penalty = int(s_dict['rescue'][1])
+            for idx, stat in enumerate(status.rescue.stats):
+                status.rescue.penalties[idx] = int(s_dict['rescue'][idx])
         elif status.rescue:
-            status.rescue.skl_penalty = -unit.stats['SKL'].base_stat//2
-            status.rescue.spd_penalty = -unit.stats['SPD'].base_stat//2
+            for idx, stat in enumerate(status.rescue.stats):
+                status.rescue.penalties[idx] = -unit.stats[stat].base_stat//2
         if status.passive:
             for item in unit.items:
                 status.passive.apply_mod(item)

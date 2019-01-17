@@ -976,7 +976,7 @@ class AnimationCombat(Combat):
             # Wexp and Skill Charge
             if attacker_results and not self.p1.isDying:
                 if not self.skill_used:
-                    Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p1, self.p1.get_skill_charge()), gameStateObj)
                 self.handle_wexp(attacker_results, self.item, gameStateObj)
 
             # EXP and Records
@@ -1003,7 +1003,7 @@ class AnimationCombat(Combat):
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 # WEXP and Skills
                 if defender_results:
-                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.get_skill_charge()), gameStateObj)
                     self.handle_wexp(defender_results, self.p2.getMainWeapon(), gameStateObj)
                 # Exp and Records
                 if self.p2.team == 'player' and not self.p2.isSummon():
@@ -1575,7 +1575,7 @@ class MapCombat(Combat):
             # WEXP and Skills
             if attacker_results and not self.p1.isDying:
                 if not self.skill_used:
-                    Action.do(Action.ChargeAllSkills(self.p1, self.p1.stats['SKL']), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p1, self.p1.get_skill_charge()), gameStateObj)
                 self.handle_wexp(attacker_results, self.item, gameStateObj)
 
             # Exp and Records
@@ -1607,7 +1607,7 @@ class MapCombat(Combat):
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 # WEXP and Skills
                 if defender_results:
-                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.stats['SKL']), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.get_skill_charge()), gameStateObj)
                     self.handle_wexp(defender_results, self.p2.getMainWeapon(), gameStateObj)
                 # EXP and Records
                 if self.p2.team == 'player' and not self.p2.isSummon():  
