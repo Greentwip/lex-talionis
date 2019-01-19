@@ -569,12 +569,12 @@ class ConvoyTrader(object):
 
     def insert_item(self, index, item):
         self.items.insert(index, item)
-        item.owner = 0
+        item.item_owner = 0
         self.convoy.append(item)
 
     def remove_item(self, item):
         self.items.remove(item)
-        item.owner = 0
+        item.item_owner = 0
         if item != "Empty Slot":
             self.convoy.remove(item)
 
@@ -789,11 +789,11 @@ class PrepListState(StateMachine.State):
         if event == 'SELECT':
             selection = self.menu.getSelection()
             if selection and not self.info:
-                if selection.owner:
+                if selection.item_owner:
                     GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.stateMachine.changeState('prep_trade')
                     gameStateObj.stateMachine.changeState('transition_out')
-                    gameStateObj.cursor.secondSelectedUnit = gameStateObj.get_unit_from_id(selection.owner)
+                    gameStateObj.cursor.secondSelectedUnit = gameStateObj.get_unit_from_id(selection.item_owner)
                 elif len(gameStateObj.cursor.currentSelectedUnit.items) < cf.CONSTANTS['max_items']:
                     GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.cursor.currentSelectedUnit.add_item(selection)
@@ -841,7 +841,7 @@ class PrepListState(StateMachine.State):
         surf.blit(self.owner_surf, (156, 0))
         item_owner = None
         if self.menu.getSelection():
-            item_owner = gameStateObj.get_unit_from_id(self.menu.getSelection().owner)
+            item_owner = gameStateObj.get_unit_from_id(self.menu.getSelection().item_owner)
         if item_owner:
             item_owner = item_owner.name
         else:
@@ -1170,8 +1170,8 @@ class BaseMarketState(StateMachine.State):
                     value = (item.value * item.uses.uses)//2 if item.uses else item.value//2
                     gameStateObj.game_constants['money'] += value
                     self.money_counter_disp.start(value)
-                    if item.owner:
-                        owner = gameStateObj.get_unit_from_id(item.owner)
+                    if item.item_owner:
+                        owner = gameStateObj.get_unit_from_id(item.item_owner)
                         owner.remove_item(item)
                     else:
                         gameStateObj.convoy.remove(item)

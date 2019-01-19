@@ -27,7 +27,7 @@ class Active_Skill(object):
             unit.tags.add('ActiveSkillCharged')
         logger.debug('%s increased charge to %s', self.name, self.current_charge)
 
-    def valid_weapons(self, weapons):
+    def valid_weapons(self, unit, weapons):
         return weapons
 
 class Critical(Active_Skill):
@@ -36,7 +36,7 @@ class Critical(Active_Skill):
         self.mode = "Attack"
 
     def check_valid(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
+        valid_weapons = self.valid_weapons(unit, [item for item in unit.items if item.weapon])
         # Needs to be done this way to handle the case where you have a weapon that can crit
         # and a weapon that can't crit, but only the weapon that can't crit can reach an enemy unit
         if not unit.hasAttacked:
@@ -56,7 +56,7 @@ class Critical(Active_Skill):
         self.item.guaranteed_crit = self.orig_crit
         self.item = None
 
-    def valid_weapons(self, weapons):
+    def valid_weapons(self, unit, weapons):
         return [weapon for weapon in weapons if not weapon.magic]
 
 class Charge(Active_Skill):
@@ -65,7 +65,7 @@ class Charge(Active_Skill):
         self.mode = 'Attack'
 
     def check_valid(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
+        valid_weapons = self.valid_weapons(unit, [item for item in unit.items if item.weapon])
         if not unit.hasAttacked:
             for weapon in valid_weapons:
                 # Essentially get valid targets
@@ -91,8 +91,8 @@ class Charge(Active_Skill):
         self.item.RNG = self.original_range
         self.item = None
 
-    def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if weapon.TYPE == 'Lance' and 1 in weapon.get_range()]
+    def valid_weapons(self, unit, weapons):
+        return [weapon for weapon in weapons if weapon.TYPE == 'Lance' and 1 in weapon.get_range(unit)]
 
 class Knock_Out(Active_Skill):
     def __init__(self, name, required_charge):
@@ -100,7 +100,7 @@ class Knock_Out(Active_Skill):
         self.mode = 'Attack'
 
     def check_valid(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
+        valid_weapons = self.valid_weapons(unit, [item for item in unit.items if item.weapon])
         if not unit.hasAttacked:
             for weapon in valid_weapons:
                 if unit.getValidTargetPositions(gameStateObj, weapon):
@@ -118,7 +118,7 @@ class Knock_Out(Active_Skill):
         self.item.status.remove(self.s_id)
         self.item = None
 
-    def valid_weapons(self, weapons):
+    def valid_weapons(self, unit, weapons):
         return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Lance', 'Sword', 'Bow')]
 
 class Twin_Strike(Active_Skill):
@@ -148,7 +148,7 @@ class Cleave(Active_Skill):
         self.mode = 'Attack'
 
     def check_valid(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons([item for item in unit.items if item.weapon])
+        valid_weapons = self.valid_weapons(unit, [item for item in unit.items if item.weapon])
         if not unit.hasAttacked and valid_weapons:
             # Essentially get valid targets
             enemy_positions = [enemy.position for enemy in gameStateObj.allunits if enemy.position and unit.checkIfEnemy(enemy)] + \
@@ -174,8 +174,8 @@ class Cleave(Active_Skill):
         self.item.no_double = self.original_no_double
         self.item = None
 
-    def valid_weapons(self, weapons):
-        return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Sword') and 1 in weapon.get_range()]
+    def valid_weapons(self, unit, weapons):
+        return [weapon for weapon in weapons if weapon.TYPE in ('Axe', 'Sword') and 1 in weapon.get_range(unit)]
 
 class True_Strike(Active_Skill):
     def __init__(self, name, required_charge):

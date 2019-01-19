@@ -32,7 +32,7 @@
 - Test filtering class wexp -- so you could do reclassing?
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
-- Implement stationary weapon event tiles
+- Test stationary weapon event tiles
 - Test MAG range (Physic staff, etc.)
 - Test wexp gain works like GBA FE (on double hit, double? On hit or miss?)
 - Test MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)

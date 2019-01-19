@@ -16,7 +16,7 @@ class ItemObject(object):
         self.spriteid = spriteid # Number of sprite to be picked from spritesheet list
         
         self.id = i_id
-        self.owner = 0
+        self.item_owner = 0
         self.name = str(name)
         self.value = int(value) # Value for one use of item, or for an infinite item
         self.RNG = RNG.split('-') # Comes in the form of looking like '1-2' or '1' or '2-3' or '3-10'
@@ -44,19 +44,23 @@ class ItemObject(object):
 
         self.loadSprites()
 
-    def get_range(self):
-        if self.owner:
-            return get_range(self, self.owner)
+    def get_range(self, unit=None):
+        if unit:
+            return get_item_range(self, self.item_owner)
         else:
             return []
 
     def get_range_string(self):
         return '-'.join(self.RNG)
 
+    def is_ranged(self):
+        # Whether maximum range is not 0 or 1
+        return not (self.RNG[-1] == '0' or self.RNG[-1] == '1')
+
     def serialize(self):
         serial_dict = {}
         serial_dict['id'] = self.id
-        serial_dict['owner'] = self.owner
+        serial_dict['owner'] = self.item_owner
         serial_dict['droppable'] = self.droppable
         serial_dict['locked'] = self.locked
         serial_dict['event_combat'] = self.event_combat
@@ -130,28 +134,28 @@ class ItemObject(object):
         if self.icon:  
             self.icon.draw(surf, (left, top))
 
-def get_range(item, unit):
+def get_item_range(item, unit):
     if len(item.RNG) == 1:
         r = item.RNG[0]
         if r == 'MAG/2':
-            return [GC.EQUATIONS.get_magic_damage(unit)//2]
+            return [GC.EQUATIONS.get_magic_damage(unit, item)//2]
         elif r == 'MAG/2 + 1':
-            return [GC.EQUATIONS.get_magic_damage(unit)//2 + 1]
+            return [GC.EQUATIONS.get_magic_damage(unit, item)//2 + 1]
         else:
             return [int(r)]
     elif len(item.RNG) == 2:
         r1 = item.RNG[0]
         r2 = item.RNG[1]
         if r1 == 'MAG/2':
-            r1 = GC.EQUATIONS.get_magic_damage(unit)//2
+            r1 = GC.EQUATIONS.get_magic_damage(unit, item)//2
         elif r1 == 'MAG/2 + 1':
-            return GC.EQUATIONS.get_magic_damage(unit)//2 + 1
+            return GC.EQUATIONS.get_magic_damage(unit, item)//2 + 1
         else:
             r1 = int(r1)
         if r2 == 'MAG/2':
-            r2 = GC.EQUATIONS.get_magic_damage(unit)//2
+            r2 = GC.EQUATIONS.get_magic_damage(unit, item)//2
         elif r2 == 'MAG/2 + 1':
-            return GC.EQUATIONS.get_magic_damage(unit)//2 + 1
+            return GC.EQUATIONS.get_magic_damage(unit, item)//2 + 1
         else:
             r2 = int(r2)
         return list(range(r1, r2 + 1))
@@ -290,7 +294,7 @@ class ExtraSelectComponent(object):
         return '-'.join(self.RNG)
 
     def get_range(self, unit):
-        return get_range(self, unit)
+        return get_item_range(self, unit)
 
 class AOEComponent(object):
     def __init__(self, mode, number=0):
@@ -326,7 +330,7 @@ class AOEComponent(object):
             return cursor_position, list(splash_positions - {cursor_position})
         elif self.mode == 'Blast':
             if self.number == 'MAG/2':
-                num = item.owner.stats['MAG']//2
+                num = item.item_owner.stats['MAG']//2
             else:
                 num = int(self.number)
             splash_positions = Utility.find_manhattan_spheres(range(num + 1), cursor_position)
@@ -340,10 +344,10 @@ class AOEComponent(object):
             splash_positions = [position for position in splash_positions if position != unit_position]
             return None, splash_positions
         elif self.mode == 'AllAllies':
-            splash_positions = [unit.position for unit in gameStateObj.allunits if item.owner.checkIfAlly(unit)]
+            splash_positions = [unit.position for unit in gameStateObj.allunits if item.item_owner.checkIfAlly(unit)]
             return None, splash_positions
         elif self.mode == 'AllEnemies':
-            splash_positions = [unit.position for unit in gameStateObj.allunits if item.owner.checkIfEnemy(unit)]
+            splash_positions = [unit.position for unit in gameStateObj.allunits if item.item_owner.checkIfEnemy(unit)]
             return None, splash_positions
         elif self.mode == 'AllUnits':
             splash_positions = [unit.position for unit in gameStateObj.allunits]
@@ -521,7 +525,7 @@ def deserialize(item_dict):
         item = items[0]
 
     if 'owner' in item_dict:
-        item.owner = item_dict['owner']
+        item.item_owner = item_dict['owner']
     if item_dict['droppable']:
         item.droppable = True
     if item_dict['event_combat']:

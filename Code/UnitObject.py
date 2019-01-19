@@ -255,7 +255,7 @@ class UnitObject(object):
                 blit_num(surf, crit, 64, 67)
         # Blit enemy hit and mt
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
-                Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().get_range():
+                Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().get_range(enemyunit):
             e_mt = enemyunit.compute_damage(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
             e_hit = enemyunit.compute_hit(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
             if cf.CONSTANTS['crit']:
@@ -365,7 +365,7 @@ class UnitObject(object):
             # Check enemy vs player
             e_num = 1
             if e_wep and not e_wep.no_double and isinstance(enemyunit, UnitObject) and \
-                    Utility.calculate_distance(self.position, enemyunit.position) in e_wep.get_range():
+                    Utility.calculate_distance(self.position, enemyunit.position) in e_wep.get_range(enemyunit):
                 if e_wep.brave:
                     e_num *= 2
                 if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemyunit.outspeed(self, e_wep):
@@ -930,7 +930,7 @@ class UnitObject(object):
             return []
         potentialRange = []
         for item in allWeapons:
-            for rng in item.get_range():
+            for rng in item.get_range(self):
                 potentialRange.append(rng)
         return list(set(potentialRange)) # Remove duplicates
 
@@ -938,7 +938,7 @@ class UnitObject(object):
         allItems = [item for item in self.items if (item.spell or item.weapon) and self.canWield(item)]
         if not allItems:
             return 0
-        maxRange = max([max(item.get_range()) for item in allItems])
+        maxRange = max([max(item.get_range(self)) for item in allItems])
         return maxRange
 
     # Gets location of every possible attack given all ValidMoves
@@ -1006,14 +1006,14 @@ class UnitObject(object):
             while enemy_units:
                 current_pos = enemy_units.pop()
                 for valid_move in valid_moves:
-                    if Utility.calculate_distance(valid_move, current_pos) in item.get_range():
+                    if Utility.calculate_distance(valid_move, current_pos) in item.get_range(self):
                         targets.add(current_pos)
                         break
         elif item.spell:
             if item.spell.targets == 'Tile':
-                targets = Utility.get_shell(valid_moves, item.get_range(), gameStateObj.map)
+                targets = Utility.get_shell(valid_moves, item.get_range(self), gameStateObj.map)
             elif item.spell.targets == 'TileNoUnit':
-                targets = set(Utility.get_shell(valid_moves, item.get_range(), gameStateObj.map))
+                targets = set(Utility.get_shell(valid_moves, item.get_range(self), gameStateObj.map))
                 unit_positions = {unit.position for unit in gameStateObj.allunits if unit.position}
                 targets -= unit_positions
             elif item.beneficial:
@@ -1022,7 +1022,7 @@ class UnitObject(object):
                 while ally_units:
                     current_pos = ally_units.pop()
                     for valid_move in valid_moves:
-                        if Utility.calculate_distance(valid_move, current_pos) in item.get_range():
+                        if Utility.calculate_distance(valid_move, current_pos) in item.get_range(self):
                             targets.add(current_pos)
                             break
             else:
@@ -1033,14 +1033,14 @@ class UnitObject(object):
                 while enemy_units:
                     current_pos = enemy_units.pop()
                     for valid_move in valid_moves:
-                        if Utility.calculate_distance(valid_move, current_pos) in item.get_range():
+                        if Utility.calculate_distance(valid_move, current_pos) in item.get_range(self):
                             targets.add(current_pos)
                             break
 
         # Handle line of sight if necessary
         targets = list(targets)
         if ((item.weapon and cf.CONSTANTS['line_of_sight']) or (item.spell and cf.CONSTANTS['spell_line_of_sight'])):
-            targets = Utility.line_of_sight(valid_moves, targets, max(item.get_range()), gameStateObj)
+            targets = Utility.line_of_sight(valid_moves, targets, max(item.get_range(self)), gameStateObj)
         return targets
 
     def getStealTargets(self, gameStateObj, position=None):
@@ -1058,7 +1058,7 @@ class UnitObject(object):
             position = self.position
         targets = []
         for tile_position, tile in gameStateObj.map.tiles.items():
-            if 'HP' in gameStateObj.map.tile_info_dict[tile_position] and Utility.calculate_distance(tile_position, position) in item.get_range():
+            if 'HP' in gameStateObj.map.tile_info_dict[tile_position] and Utility.calculate_distance(tile_position, position) in item.get_range(self):
                 targets.append(tile)
         return targets
         
@@ -1076,11 +1076,11 @@ class UnitObject(object):
             return [] # no valid weapon
 
         # calculate legal targets for cursor
-        attacks = Utility.find_manhattan_spheres(my_weapon.get_range(), self.position)
+        attacks = Utility.find_manhattan_spheres(my_weapon.get_range(self), self.position)
         attacks = [pos for pos in attacks if gameStateObj.map.check_bounds(pos)]
         attacks = [pos for pos in attacks if not gameStateObj.compare_teams(self.team, gameStateObj.grid_manager.get_team_node(pos))]
         if cf.CONSTANTS['line_of_sight']:
-            attacks = Utility.line_of_sight([self.position], attacks, max(my_weapon.get_range()), gameStateObj)
+            attacks = Utility.line_of_sight([self.position], attacks, max(my_weapon.get_range(self)), gameStateObj)
 
         # Now actually find true and splash attack positions
         true_attacks = []
@@ -1118,7 +1118,7 @@ class UnitObject(object):
             return [] # no valid weapon
 
         # calculate
-        ValidAttacks = Utility.find_manhattan_spheres(my_spell.get_range(), self.position)
+        ValidAttacks = Utility.find_manhattan_spheres(my_spell.get_range(self), self.position)
         ValidAttacks = [pos for pos in ValidAttacks if gameStateObj.map.check_bounds(pos)]
 
         # Now filter based on target
@@ -1130,7 +1130,7 @@ class UnitObject(object):
             ValidAttacks = [pos for pos in ValidAttacks if pos not in ally_unit_positions]
 
         if cf.CONSTANTS['spell_line_of_sight']:
-            ValidAttacks = Utility.line_of_sight([self.position], ValidAttacks, max(my_spell.get_range()), gameStateObj)
+            ValidAttacks = Utility.line_of_sight([self.position], ValidAttacks, max(my_spell.get_range(self)), gameStateObj)
         return ValidAttacks
 
     def displaySpellAttacks(self, gameStateObj, spell=None):
@@ -1152,9 +1152,9 @@ class UnitObject(object):
 
         enemy_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
                           [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]]
-        valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in my_weapon.get_range()]
+        valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in my_weapon.get_range(self)]
         if cf.CONSTANTS['line_of_sight']:
-            valid_targets = Utility.line_of_sight([self.position], valid_targets, max(my_weapon.get_range()), gameStateObj)
+            valid_targets = Utility.line_of_sight([self.position], valid_targets, max(my_weapon.get_range(self)), gameStateObj)
         return valid_targets
 
     # Finds all valid target positions given the main spell you are using
@@ -1170,7 +1170,7 @@ class UnitObject(object):
         if my_spell.spell.targets == 'Ally':
             if my_spell.heal:
                 # This is done more robustly to account for the interaction between healing effects and AOE
-                places_i_can_target = Utility.find_manhattan_spheres(my_spell.get_range(), self.position)
+                places_i_can_target = Utility.find_manhattan_spheres(my_spell.get_range(self), self.position)
                 valid_pos = [unit.position for unit in gameStateObj.allunits if unit.position and 
                              unit.position in places_i_can_target and self.checkIfAlly(unit)]
                 targetable_position = []
@@ -1180,30 +1180,30 @@ class UnitObject(object):
                         targetable_position.append(pos)
 
                 # targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and 
-                #                        unit.currenthp < unit.stats['HP'] and Utility.calculate_distance(unit.position, self.position) in my_spell.get_range()]
+                #                        unit.currenthp < unit.stats['HP'] and Utility.calculate_distance(unit.position, self.position) in my_spell.get_range(self)]
             elif my_spell.target_restrict:
                 targetable_position = [target.position for target in gameStateObj.allunits if target.position and
-                                       self.checkIfAlly(target) and Utility.calculate_distance(target.position, self.position) in my_spell.get_range() and 
+                                       self.checkIfAlly(target) and Utility.calculate_distance(target.position, self.position) in my_spell.get_range(self) and 
                                        eval(my_spell.target_restrict)]
             else:
                 targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and
-                                       Utility.calculate_distance(unit.position, self.position) in my_spell.get_range()]
+                                       Utility.calculate_distance(unit.position, self.position) in my_spell.get_range(self)]
         elif my_spell.spell.targets == 'Enemy':
             targetable_position = [target.position for target in gameStateObj.allunits if target.position and self.checkIfEnemy(target) and
-                                   Utility.calculate_distance(target.position, self.position) in my_spell.get_range() and
+                                   Utility.calculate_distance(target.position, self.position) in my_spell.get_range(self) and
                                    (not my_spell.target_restrict or eval(my_spell.target_restrict))]
         elif my_spell.spell.targets == 'Unit':
             targetable_position = [unit.position for unit in gameStateObj.allunits if unit.position and
-                                   Utility.calculate_distance(unit.position, self.position) in my_spell.get_range()]
+                                   Utility.calculate_distance(unit.position, self.position) in my_spell.get_range(self)]
         elif my_spell.spell.targets.startswith('Tile'):
-            targetable_position = Utility.find_manhattan_spheres(my_spell.get_range(), self.position)
+            targetable_position = Utility.find_manhattan_spheres(my_spell.get_range(self), self.position)
             targetable_position = [pos for pos in targetable_position if gameStateObj.map.check_bounds(pos)]
             if my_spell.spell.targets == 'TileNoUnit':
                 targetable_position = [pos for pos in targetable_position if not gameStateObj.grid_manager.get_unit_node(pos)]
             if my_spell.unlock:
                 targetable_position = [position for position in targetable_position if 'Locked' in gameStateObj.map.tile_info_dict[position]]
             # This might take a while
-            elif my_spell.aoe.mode == 'Blast' and len(my_spell.get_range()) < 7:
+            elif my_spell.aoe.mode == 'Blast' and len(my_spell.get_range(self)) < 7:
                 valid_positions = []
                 for pos in targetable_position:
                     team = gameStateObj.grid_manager.get_team_node(pos)
@@ -1219,7 +1219,7 @@ class UnitObject(object):
                 targetable_position = valid_positions
 
         if cf.CONSTANTS['spell_line_of_sight']:
-            validSpellTargets = Utility.line_of_sight([self.position], targetable_position, max(my_spell.get_range()), gameStateObj)
+            validSpellTargets = Utility.line_of_sight([self.position], targetable_position, max(my_spell.get_range(self)), gameStateObj)
         else:
             validSpellTargets = targetable_position
         return validSpellTargets
@@ -2034,7 +2034,7 @@ class UnitObject(object):
         logger.debug("Removing %s from %s items.", item, self.name)
         was_mainweapon = self.getMainWeapon() == item
         self.items.remove(item)
-        item.owner = 0
+        item.item_owner = 0
         for status_on_hold in item.status_on_hold:
             StatusObject.HandleStatusRemoval(status_on_hold, self)
         if was_mainweapon and self.canWield(item):
@@ -2073,7 +2073,7 @@ class UnitObject(object):
                         StatusObject.HandleStatusAddition(new_status, self)
         else:
             self.items.insert(index, item)
-            item.owner = self.id
+            item.item_owner = self.id
             if item is not "EmptySlot":
                 # apply passive item skill
                 for status in self.status_effects:

@@ -103,7 +103,7 @@ class BattleAnimationManager(object):
             elif magic:
                 weapon = 'Magic' + item.spritetype
                 check_item = True # Make sure that we have the spell also
-            elif max(item.get_range()) > 1 and (item.spritetype != 'Lance' or distance > 1):
+            elif max(item.is_ranged()) > 1 and (item.spritetype != 'Lance' or distance > 1):
                 # Ranged Lances use Melee animation if adjacent
                 weapon = 'Ranged' + item.spritetype
             else:

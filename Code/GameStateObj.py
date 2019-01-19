@@ -168,8 +168,10 @@ class GameStateObj(object):
         self.map = SaveLoad.create_map('Data/Level' + str(self.game_constants['level']))
         if map_info:
             self.action_log.replay_map_commands(self)
-            for position, current_hp in map_info['HP']:
+            for position, current_hp in map_info.get('HP', []):
                 self.map.tiles[position].set_hp(current_hp)
+            for position, serialized_item in map_info.get('Weapons', []):
+                self.map.tile_info_dict[position]['Weapon'] = ItemMethods.deserialize(serialized_item)
 
         # Statuses
         for index, info in enumerate(load_info['allunits']):
@@ -431,7 +433,7 @@ class GameStateObj(object):
                     for item in unit.items:
                         unit.remove_item(item)
                         if not item.locked:
-                            item.owner = 0
+                            item.item_owner = 0
                             self.convoy.append(item)
 
         # Remove unnecessary information between levels

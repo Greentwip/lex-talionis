@@ -507,6 +507,10 @@ class MenuState(StateMachine.State):
             options.append(cf.WORDS['Escape'])
         elif 'Arrive' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Arrive'])
+        if 'Weapon' in gameStateObj.map.tile_info_dict[cur_unit.position]:
+            weapon = gameStateObj.map.tile_info_dict[cur_unit.position]['Weapon']
+            if cur_unit.canWield(weapon):
+                options.append(weapon.name)
         # If the unit is standing on a switch
         if 'Switch' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             options.append(cf.WORDS['Switch'])
@@ -664,6 +668,8 @@ class MenuState(StateMachine.State):
                         else: # Solo
                             gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, cur_unit, cur_unit, cur_unit.position, [], status.active.item, status)
                             gameStateObj.stateMachine.changeState('combat')
+            elif 'Weapon' in gameStateObj.map.tile_info_dict[cur_unit.position] and selection == gameStateObj.map.tile_info_dict[cur_unit.position]['Weapon'].name:
+                gameStateObj.stateMachine.changeState('tileattack')
             elif selection == cf.WORDS['Attack']:
                 gameStateObj.stateMachine.changeState('weapon')
             elif selection == cf.WORDS['Spells']:
@@ -933,19 +939,29 @@ class ItemChildState(StateMachine.State):
 class WeaponState(StateMachine.State):
     name = 'weapon'
 
+    def get_options(self, unit, gameStateObj):
+        options = [item for item in unit.items if item.weapon and unit.canWield(item)]  # Apply straining for skill
+        if unit.current_skill:
+            options = unit.current_skill.active.valid_weapons(unit, options)
+        # Only shows options I can use now
+        options = [item for item in options if unit.getValidTargetPositions(gameStateObj, item)]
+        return options
+
+    def disp_attacks(self, unit, gameStateObj):
+        unit.displayAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
+
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         gameStateObj.info_surf = None
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         cur_unit.sprite.change_state('chosen', gameStateObj)
-        options = [item for item in cur_unit.items if item.weapon and cur_unit.canWield(item)]  # Apply straining for skill
-        if cur_unit.current_skill:
-            options = cur_unit.current_skill.active.valid_weapons(options)
-        # Only shows options I can use now
-        options = [item for item in options if cur_unit.getValidTargetPositions(gameStateObj, item)]
-        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(cur_unit, options, 'auto', gameStateObj=gameStateObj)
+        options = self.get_options(cur_unit, gameStateObj)
+        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, options, 'auto', gameStateObj=gameStateObj)
         self.handle_mod(cur_unit, gameStateObj)
-        cur_unit.displayAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
+        self.disp_attacks(cur_unit, gameStateObj)
+
+    def proceed(self, gameStateObj):
+        gameStateObj.stateMachine.changeState('attack')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
@@ -959,34 +975,28 @@ class WeaponState(StateMachine.State):
             gameStateObj.activeMenu.moveDown(first_push)
             gameStateObj.highlight_manager.remove_highlights()
             self.handle_mod(cur_unit, gameStateObj)
-            cur_unit.displayAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
+            self.disp_attacks(cur_unit, gameStateObj)
         elif 'UP' in directions:
             GC.SOUNDDICT['Select 6'].play()
             gameStateObj.info_surf = None
             gameStateObj.activeMenu.moveUp(first_push)
             gameStateObj.highlight_manager.remove_highlights()
             self.handle_mod(cur_unit, gameStateObj)
-            cur_unit.displayAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
+            self.disp_attacks(cur_unit, gameStateObj)
 
         if event == 'BACK' and not gameStateObj.tutorial_mode:
             GC.SOUNDDICT['Select 4'].play()
-            if cur_unit.current_skill:
-                cur_unit.current_skill.active.reverse_mod()
+            self.reverse_mod(cur_unit, gameStateObj)
             gameStateObj.stateMachine.back()
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
-            cur_unit.equip(selection)
+            Action.do(Action.EquipItem(cur_unit, selection), gameStateObj)
             gameStateObj.stateMachine.changeState('attack')
 
         elif event == 'INFO':
             gameStateObj.activeMenu.toggle_info()
-
-    def end(self, gameStateObj, metaDataObj):
-        gameStateObj.activeMenu = None
-        gameStateObj.highlight_manager.remove_highlights()
-        gameStateObj.info_surf = None
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
@@ -996,6 +1006,11 @@ class WeaponState(StateMachine.State):
             gameStateObj.activeMenu.drawInfo(mapSurf)
         return mapSurf
 
+    def end(self, gameStateObj, metaDataObj):
+        gameStateObj.activeMenu = None
+        gameStateObj.highlight_manager.remove_highlights()
+        gameStateObj.info_surf = None
+
     def handle_mod(self, cur_unit, gameStateObj):
         if cur_unit.current_skill:
             cur_unit.current_skill.active.apply_mod(cur_unit, gameStateObj.activeMenu.getSelection(), gameStateObj)
@@ -1004,13 +1019,32 @@ class WeaponState(StateMachine.State):
         if cur_unit.current_skill:
             cur_unit.current_skill.active.reverse_mod()
 
+class SpellWeaponState(WeaponState):
+    name = 'spellweapon'
+
+    def get_options(self, unit, gameStateObj):
+        options = [item for item in unit.items if item.spell and unit.canWield(item)]
+        # Only shows options I can use
+        options = [item for item in options if unit.getValidSpellTargetPositions(gameStateObj, item)]
+        return options
+
+    def disp_attacks(self, unit, gameStateObj):
+        unit.displaySpellAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
+
+    def proceed(self, gameStateObj):
+        gameStateObj.stateMachine.changeState('spell')
+
 class AttackState(StateMachine.State):
     name = 'attack'
+
+    def get_weapon(self, unit, gameStateObj):
+        return unit.getMainWeapon()
 
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 2
         self.attacker = gameStateObj.cursor.currentSelectedUnit
-        self.validTargets = CustomObjects.MapSelectHelper(self.attacker.getValidTargetPositions(gameStateObj, self.attacker.getMainWeapon()))
+        weapon = self.get_weapon(self.attacker, gameStateObj)
+        self.validTargets = CustomObjects.MapSelectHelper(self.attacker.getValidTargetPositions(gameStateObj, weapon))
         closest_position = self.validTargets.get_closest(gameStateObj.cursor.position)
         gameStateObj.cursor.setPosition(closest_position, gameStateObj)
         gameStateObj.highlight_manager.remove_highlights()
@@ -1083,63 +1117,12 @@ class AttackState(StateMachine.State):
             gameStateObj.cursor.currentSelectedUnit.displayAttackInfo(mapSurf, gameStateObj, gameStateObj.cursor.currentHoveredTile)
         return mapSurf
 
-class SpellWeaponState(StateMachine.State):
-    name = 'spellweapon'
+class TileAttackState(AttackState):
+    name = 'tileattack'
 
-    def begin(self, gameStateObj, metaDataObj):
-        gameStateObj.cursor.drawState = 0
-        gameStateObj.info_surf = None
-        cur_unit = gameStateObj.cursor.currentSelectedUnit
-        cur_unit.sprite.change_state('chosen', gameStateObj)
-        options = [item for item in cur_unit.items if item.spell and cur_unit.canWield(item)]
-        # Only shows options I can use
-        options = [item for item in options if cur_unit.getValidSpellTargetPositions(gameStateObj, item)]
-        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, options, 'auto', gameStateObj=gameStateObj)
-        gameStateObj.cursor.currentSelectedUnit.displaySpellAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
-
-    def take_input(self, eventList, gameStateObj, metaDataObj):
-        event = gameStateObj.input_manager.process_input(eventList)
-        first_push = self.fluid_helper.update(gameStateObj)
-        directions = self.fluid_helper.get_directions()
-
-        if 'DOWN' in directions:
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.info_surf = None
-            gameStateObj.activeMenu.moveDown(first_push)
-            gameStateObj.highlight_manager.remove_highlights()
-            gameStateObj.cursor.currentSelectedUnit.displaySpellAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
-        elif 'UP' in directions:
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.info_surf = None
-            gameStateObj.activeMenu.moveUp(first_push)
-            gameStateObj.highlight_manager.remove_highlights()
-            gameStateObj.cursor.currentSelectedUnit.displaySpellAttacks(gameStateObj, gameStateObj.activeMenu.getSelection())
-
-        if event == 'BACK' and not gameStateObj.tutorial_mode:
-            GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.stateMachine.back()
-
-        elif event == 'SELECT':
-            GC.SOUNDDICT['Select 1'].play()
-            selection = gameStateObj.activeMenu.getSelection()
-            gameStateObj.cursor.currentSelectedUnit.equip(selection)
-            gameStateObj.stateMachine.changeState('spell')
-
-        elif event == 'INFO':
-            gameStateObj.activeMenu.toggle_info()
-
-    def draw(self, gameStateObj, metaDataObj):
-        mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        if gameStateObj.activeMenu:
-            gameStateObj.cursor.currentSelectedUnit.drawItemDescription(mapSurf, gameStateObj)
-        if gameStateObj.activeMenu:
-            gameStateObj.activeMenu.drawInfo(mapSurf)
-        return mapSurf
-
-    def end(self, gameStateObj, metaDataObj):
-        gameStateObj.activeMenu = None
-        gameStateObj.highlight_manager.remove_highlights()
-        gameStateObj.info_surf = None
+    def get_weapon(self, unit, gameStateObj):
+        weapon = gameStateObj.map.tile_info_dict[unit.position]['Weapon']
+        return weapon
 
 class SpellState(StateMachine.State):
     name = 'spell'
