@@ -1,15 +1,17 @@
-import os
+import os, glob
 from PIL import Image
 import numpy as np
 
-loc = '../Data/'
+# loc = '../Data/'
+loc = './'
 # Get all sprites
-imageList = []
-for root, dirs, files in os.walk(loc):
-    for name in files:
-        if name.endswith('.png'):
-            full_name = os.path.join(root, name)
-            imageList.append(full_name)
+# imageList = []
+# for root, dirs, files in os.walk(loc):
+#     for name in files:
+#         if name.endswith('.png'):
+#             full_name = os.path.join(root, name)
+#             imageList.append(full_name)
+imageList = glob.glob('*.png')
 
 #http://stackoverflow.com/questions/9166400/convert-rgba-png-to-rgb-with-pil
 def alpha_to_color(image, color=(128, 160, 128)):

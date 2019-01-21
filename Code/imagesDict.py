@@ -8,12 +8,19 @@ except ImportError:
 COLORKEY = (128, 160, 128)
 def getImages(home='./'):
     # General Sprites
-    IMAGESDICT = {}
-    for root, dirs, files in os.walk(home + 'Sprites/General/'):
+
+    def general_sprites(root, files):
         for name in files:
             if name.endswith('.png'):
                 full_name = os.path.join(root, name)
                 IMAGESDICT[name[:-4]] = Engine.image_load(full_name, convert_alpha=True)
+
+    IMAGESDICT = {}
+    for root, dirs, files in os.walk(home + 'Sprites/General/'):
+        general_sprites(root, files)    
+    if os.path.exists(home + 'Data/GeneralSprites/'):
+        for root, dirs, files in os.walk(home + 'Data/GeneralSprites/'):
+            general_sprites(root, files)
 
     # Icon Sprites
     loc = home + 'Sprites/Icons/'

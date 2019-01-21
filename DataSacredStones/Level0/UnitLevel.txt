@@ -18,6 +18,7 @@
 #
 # --------------------------------------------
 faction;Grado;Soldier;Empire;A soldier of Grado
+faction;Renais;Soldier;Empire;A soldier of Renais
 # Player Characters
 player;0;0;Seth;4,4;None
 # Enemies
@@ -29,5 +30,27 @@ enemy;0;0;Fighter;1;Iron Axe;8,6;Attack;Grado
 # === Reinforcements ===
 # Player Characters
 player;0;Eirika_1;Eirika;12,9;None
+player;0;RenaisKnight_1;Knight;1;;None;None;Renais
+player;0;RenaisKnight_2;Knight;1;;None;None;Renais
+player;0;RenaisGeneral_2;General;1;;None;None;Renais
+player;0;RenaisGeneral_2;General;1;;None;None;Renais
+player;0;Franz;Franz;None;None
+player;0;FakeFado;Peer;1;;None;None;Renais
+player;0;RenaisSoldier_1;Soldier;1;;None;None;Renais
 # Enemies
+enemy;0;GradoShaman_1;Shaman;1;;None;None;Grado
+enemy;0;GradoShaman_2;Shaman;1;;None;None;Grado
+enemy;0;GradoDruid_1;Druid;1;;None;None;Grado
+enemy;0;GradoDruid_2;Druid;1;;None;None;Grado
+enemy;0;GradoGreatKnight_1;Great_Knight;1;;None;None;Grado
+enemy;0;GradoGreatKnight_2;Great_Knight;1;;None;None;Grado
+enemy;0;GradoPaladin_1;Paladin;1;;None;None;Grado
+enemy;0;GradoPaladin_2;Paladin;1;;None;None;Grado
+enemy;0;GradoMageKnight_1;Mage_Knight;1;;None;None;Grado
+enemy;0;GradoMageKnight_2;Mage_Knight;1;;None;None;Grado
+enemy;0;GradoGeneral;General;1;;None;None;Grado
+enemy;0;GradoNecromancer;Necromancer;1;;None;None;Grado
+enemy;0;Valter;Valter;None;None
+enemy;0;GradoWyvern_1;Wyvern_Rider;1;;None;None;Grado
+enemy;0;GradoWyvern_2;Wyvern_Rider;1;;None;None;Grado
 # === Triggers ===

@@ -788,6 +788,11 @@ class Dialogue_Scene(object):
         # Remove global status
         elif line[0] == 'remove_global_status':
             Action.do(Action.RemoveGlobalStatus(line[1]), gameStateObj)
+        # Load submap
+        elif line[0] == 'load_submap':
+            gameStateObj.map.load_submap(line, gameStateObj.game_constants['level'])
+        elif line[0] == 'close_submap':
+            gameStateObj.map.close_submap()
 
         # === CLEANUP
         elif line[0] == 'arrange_formation':
@@ -820,9 +825,12 @@ class Dialogue_Scene(object):
                         Action.do(Action.Reset(unit), gameStateObj)
         elif line[0] == 'remove_enemies':
             exception = line[1] if len(line) > 1 else None
-            units_to_remove = [unit for unit in gameStateObj.allunits if unit.team != "enemy" and unit.id != exception]
+            units_to_remove = [unit for unit in gameStateObj.allunits if unit.position and unit.team.startswith("enemy") and unit.id != exception]
             # Remove enemies
             for unit in units_to_remove:
+                Action.do(Action.LeaveMap(unit), gameStateObj)
+        elif line[0] == 'remove_all':
+            for unit in [unit for unit in gameStateObj.allunits if unit.position]:
                 Action.do(Action.LeaveMap(unit), gameStateObj)
         elif line[0] == 'kill_all':
             call_out = line[1] if len(line) > 1 else None
@@ -948,6 +956,9 @@ class Dialogue_Scene(object):
         # === ENDINGS BOX
         elif line[0] == 'endings':
             self.add_ending(line, gameStateObj)
+        # === LOCATION CARD
+        elif line[0] == 'location_card':
+            self.add_location_card(line)
         # === Pop dialog off top
         elif line[0] == 'pop_dialog':
             if self.dialog:
@@ -1141,6 +1152,17 @@ class Dialogue_Scene(object):
         self.current_state = "Waiting"
 
         self.dialog.append(new_cinematic)
+
+    def add_location_card(self, line):
+        text = line[1]
+        font = 'text_white'
+        location_card = LocationCard(text, font)
+
+        self.waittime = 2000
+        self.last_wait_update = Engine.get_time()
+        self.current_state = "Waiting"
+
+        self.dialog.append(location_card)
 
     def add_ending(self, line, gameStateObj):
         portrait = line[1]
@@ -2023,6 +2045,58 @@ class Cinematic(object):
     def draw(self, surf, unit_sprites=None):
         self.update()
         surf.blit(self.image, (0, 0))
+
+class LocationCard(object):
+    card = GC.IMAGESDICT['LocationCard']
+
+    def __init__(self, text, font):
+        self.text = text
+        self.main_font = GC.FONT[font]
+
+        self.wait = 2000
+        self.transition_state = 'fade_in'
+        self.start_time = Engine.get_time()
+
+        # To match dialog
+        self.waiting = False # Never waiting on unit input
+        self.done = True # Always ready to move on to next dialog object
+        self.hold = True # Always show, even if waiting
+        self.solo_flag = True # As many of these on the screen as possible
+        self.talk = False
+
+    def populate_surface(self):
+        self.surface = Engine.copy_surface(self.card)
+        x_pos = self.surface.get_width()//2 - self.main_font.size(self.text)[0]//2
+        self.main_font.blit(self.text, self.surface, (x_pos, 5))
+
+    def hurry_up(self):
+        pass
+
+    def is_done(self):
+        return self.done
+
+    def update(self):
+        current_time = Engine.get_time()
+        if current_time - self.start_time > self.wait + 200:
+            self.transition_state = 'fade_out'
+            self.start_time = current_time
+        
+        if self.transition_state == 'fade_in':
+            transition = max((current_time - self.start_time)/2, 100)
+            self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
+            if transition >= 100:
+                self.transition_state = 'normal'
+        elif self.transition_state == 'normal':
+            self.image = self.surface.copy()
+        elif self.transition_state == 'fade_out':
+            transition = 100 - max((current_time - self.start_time)/2, 100)
+            self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
+            if transition <= 0:
+                self.done = True
+
+    def draw(self, surf, unit_sprites=None):
+        self.update()
+        surf.blit(self.image, (8, 0))
 
 class EndingsDisplay(object):
     def __init__(self, message_system, portrait1, title, text, stats, font='text_white'):
