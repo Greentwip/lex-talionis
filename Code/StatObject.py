@@ -118,12 +118,12 @@ class Stat(object):
 
 def build_stat_dict(stats):
     st = OrderedDict()
-    for idx, name in enumerate(GC.Equations.stat_list):
+    for idx, name in enumerate(GC.EQUATIONS.stat_list):
         st[name] = Stat(idx, stats[idx])
     return st
 
 def build_stat_dict_plus(stats):
     st = OrderedDict()
-    for idx, name in enumerate(GC.Equations.stat_list):
+    for idx, name in enumerate(GC.EQUATIONS.stat_list):
         st[name] = Stat(idx, stats[idx][0], stats[idx][1])
     return st

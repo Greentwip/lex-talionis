@@ -116,7 +116,7 @@ def read_constants_file():
              'miss_wexp': 1, # Give wexp even if you do no damage or miss
              'title': 'Lex Talionis Engine',
              'support': 1, # 0 - No supports, 1 - Conversations in combat, Conversations in base
-             'support_bonus': 3, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
+             'support_bonus': 4, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
              'support_range': 3, # 0 - Entire map
              'support_growth_range': 1, # 0 - Entire map
              'support_end_chapter': 0, # Points gained for ending a chapter with both alive

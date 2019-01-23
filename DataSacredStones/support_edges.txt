@@ -1,8 +1,13 @@
-# C Support at 12
-# B Support at 24
-# A Support at 36
-# S Support at 48
-# Support Partner 1; Support Partner 2; Starting Value; Rate of Growth; Limit
+# C Support at 80
+# B Support at 160
+# A Support at 240
+80;160;240
+# Support Partner 1; Support Partner 2; Starting Value; Increment; Limit
 # Order of names should match order in Data/SupportConvos. I use alphabetical to keep it simple.
-Renae;Sam;6;6;4
-# Romantic support - but how...
+Eirika;Ephraim;7;20;3
+Eirika;Seth;8;27;3
+Eirika;Saleh;2;40;3
+Eirika;L'Arachel;5;40;3
+Eirika;Tana;10;40;3
+Eirika;Innes;5;40;3
+Eirika;Forde;10;40;3

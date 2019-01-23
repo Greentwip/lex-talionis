@@ -7,9 +7,9 @@ cinematic;In its despair, mankind|appealed to the heavens, and|from a blinding l
 t;5
 b;RuneBackground
 t;6
-cinematic;The Sacred Stones;center
+cinematic;The Sacred Stones;center;extra_wait
 cinematic;These five glorious treasures|held the power to dispel evil.;center
-cinematic;The hero Grado and his warriors|used the Sacred Stones to combat|evil's darkness. They defeated|the Demon King and sealed his|soul away within the stones.
+cinematic;The hero Grado and his warriors|used the Sacred Stones to combat|evil's darkness. They defeated|the Demon King and sealed his|soul away within the stones.;center
 cinematic;With the darkness imprisoned,|peace returned to Magvel.;center
 t;1
 b;BlackBackground

@@ -886,6 +886,12 @@ class Dialogue_Scene(object):
             elif line[1] == '4':
                 self.transition = 4
                 self.transition_transparency = 255
+            elif line[1] == '5': # TODO (change this -- add light anim)
+                self.transition = 1
+                self.transition_transparency = 0
+            elif line[1] == '6':
+                self.transition = 2
+                self.transition_transparency = 255
             self.transition_last_update = Engine.get_time()
             self.current_state = "Transitioning"
         
@@ -1137,17 +1143,19 @@ class Dialogue_Scene(object):
 
     def add_cinematic(self, line):
         text = line[1]
+        center = False
+        extra_wait = 0
         if len(line) > 2:
             flags = line[2:]
             if 'center' in flags:
                 center = True
-            else:
-                center = False
+            if 'extra_wait' in flags:
+                extra_wait = 1000
         font = 'chapter_yellow'
 
-        new_cinematic = Cinematic(text, font, center=center)
+        new_cinematic = Cinematic(text, font, center=center, extra_wait=extra_wait)
         # Wait a certain amount of time before next one
-        self.waittime = new_cinematic.determine_wait()
+        self.waittime = new_cinematic.total_wait()
         self.last_wait_update = Engine.get_time()
         self.current_state = "Waiting"
 
@@ -1976,15 +1984,18 @@ class Credits(object):
         surf.blit(self.surface, self.position)
 
 class Cinematic(object):
-    def __init__(self, text, font, wait=False, center=False):
+    def __init__(self, text, font, center=False, extra_wait=0):
         self.text = text.split('|')
         self.center = center
-        self.wait = wait
         self.wait_flag = False
         self.main_font = GC.FONT[font]
 
         self.transition_state = 'fade_in'
         self.start_time = Engine.get_time()
+        self.transition_time = 400
+        self.wait_time = len(text) * 24 + extra_wait
+
+        self.populate_surface()
 
         # To match dialog
         self.waiting = False # Never waiting on unit input
@@ -2007,15 +2018,8 @@ class Cinematic(object):
                 y_pos = GC.WINHEIGHT//2 + (idx - half)*32 + 8
             self.main_font.blit(line, self.surface, (x_pos, y_pos))
 
-    def determine_wait(self):
-        time = len(self.text) * 16
-        if self.wait:
-            time += self.get_pause() * 2
-        return time
-
-    def get_pause(self):
-        # -~ adds one in place
-        return -~self.length * 1000 # 1500
+    def total_wait(self):
+        return self.transition_time * 2 + self.wait_time
 
     def hurry_up(self):
         pass
@@ -2025,21 +2029,21 @@ class Cinematic(object):
 
     def update(self):
         current_time = Engine.get_time()
-        if current_time - self.start_time > self.wait + 200:
+        if current_time - self.start_time > self.wait_time + self.transition_time:
             self.transition_state = 'fade_out'
             self.start_time = current_time
         
         if self.transition_state == 'fade_in':
-            transition = max((current_time - self.start_time)/2, 100)
+            transition = 100 - Utility.clamp((current_time - self.start_time)/(self.transition_time/100), 0, 100)
             self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
-            if transition >= 100:
+            if transition <= 0:
                 self.transition_state = 'normal'
         elif self.transition_state == 'normal':
             self.image = self.surface.copy()
         elif self.transition_state == 'fade_out':
-            transition = 100 - max((current_time - self.start_time)/2, 100)
+            transition = Utility.clamp((current_time - self.start_time)/(self.transition_time/100), 0, 100)
             self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
-            if transition <= 0:
+            if transition >= 100:
                 self.done = True
 
     def draw(self, surf, unit_sprites=None):
@@ -2047,9 +2051,8 @@ class Cinematic(object):
         surf.blit(self.image, (0, 0))
 
 class LocationCard(object):
-    card = GC.IMAGESDICT['LocationCard']
-
     def __init__(self, text, font):
+        self.card = GC.IMAGESDICT['LocationCard']
         self.text = text
         self.main_font = GC.FONT[font]
 

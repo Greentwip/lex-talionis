@@ -6,7 +6,8 @@ class Parser(object):
         with open(fn) as fp:
             lines = [line.strip() for line in fp.readlines() if not line.startswith('#')]
         stat_line = lines[0]
-        equations = [l.replace(" ", "") for l in lines[1:]]
+        # equations = [l.replace(" ", "") for l in lines[1:]]
+        equations = [l for l in lines[1:]]
 
         self.stat_list = ['HP'] + stat_line.split(';') + ['MOV']
         assert len(set(self.stat_list)) == len(self.stat_list)

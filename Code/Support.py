@@ -72,10 +72,12 @@ class Support_Node(object):
         return sum(edge.support_level >= 4 for edge in self.adjacent.values())
 
 class Support_Edge(object):
-    def __init__(self, supports, script_loc):
-        self.supports = [int(x) for x in supports]
+    def __init__(self, support_obj, starting_value, increment, max_support, script_loc):
+        self.support_obj = support_obj
+        self.current_value = starting_value
         self.support_level = 0
-        self.current_value = 0
+        self.inc = increment
+        self.max_support = max_support
         self.script = script_loc
         self.reset()
 
@@ -85,25 +87,23 @@ class Support_Edge(object):
 
     def increment(self, value):
         # If I've reached the point that I could support again, but I've already supported this chapter, then I stop increment value
-        if self.support_level < self.available_level() and self.support_levels_this_chapter > 0:
+        if self.support_level < self.available_support_level() and self.support_levels_this_chapter > 0:
             return
-        self.current_value += value
-        self.value_added_this_chapter += value
+        self.current_value += self.inc * value
+        self.value_added_this_chapter += self.inc * value
 
     def increment_support_level(self):
         self.support_level += 1
         self.support_levels_this_chapter += 1
 
-    def available_level(self):
-        current_value = self.current_value
-        for idx, support in enumerate(self.supports):
-            current_value -= support
-            if current_value < 0:
-                return idx
-        return len(self.supports)
+    def available_support_level(self):
+        for idx, limit in enumerate(self.support_obj.limits):
+            if self.current_value < limit:
+                return min(self.max_support, idx)
+        return min(self.max_support, len(self.support_obj.limits))
 
     def can_support(self):
-        return self.support_level < self.available_level() and self.support_levels_this_chapter == 0
+        return self.support_level < self.available_support_level() and self.support_levels_this_chapter == 0
 
     def get_support_level(self):
         return self.support_level
@@ -124,16 +124,16 @@ class Support_Graph(object):
                 self.add_node(name, affinity)
 
         with open(edge_fp, 'r') as edge_data:
-            for line in edge_data.readlines():
-                line = line.strip()
-                if not line or line.startswith('#'):
-                    continue
+            lines = [l.strip() for l in edge_data.readlines() if l and not l.startswith('#')]
+            self.limits = [int(x) for x in lines[0].split(';')]
+            supports = lines[1:]
+            for line in supports:
                 # print(line)
                 s_l = line.split(';')
                 frm, to = s_l[:2]
-                supports = s_l[2:]
+                starting_value, increment, max_support = [int(x) for x in s_l[2:]]
                 script_loc = 'Data/SupportConvos/' + frm + to + '.txt'
-                self.add_edge(frm, to, supports, script_loc)
+                self.add_edge(frm, to, starting_value, increment, max_support, script_loc)
 
     def add_node(self, name, affinity):
         self.node_dict[name] = Support_Node(name, affinity)
@@ -144,8 +144,8 @@ class Support_Graph(object):
         else:
             return None
 
-    def add_edge(self, frm, to, supports, script_loc):
-        edge = Support_Edge(supports, script_loc)
+    def add_edge(self, frm, to, starting_value, increment, max_support, script_loc):
+        edge = Support_Edge(self, starting_value, increment, max_support, script_loc)
         self.node_dict[frm].add_neighbor(self.node_dict[to], edge)
         self.node_dict[to].add_neighbor(self.node_dict[frm], edge)
 
@@ -287,3 +287,5 @@ def create_affinity_dict(fn):
 
 if os.path.exists('Data/affinity.txt'):
     AFFINITY_DICT = create_affinity_dict('Data/affinity.txt')
+else:
+    AFFINITY_DICT = {}

@@ -51,9 +51,9 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     # And general abstraction information    
     get_metaDataObj(levelfolder, metaDataObj)
 
-    starting_music = CustomObjects.PhaseMusic(overview_dict['player_phase_music'], overview_dict['enemy_phase_music'],
-                                              overview_dict.get('other_phase_music', None), overview_dict.get('player_battle_music', None),
-                                              overview_dict.get('enemy_battle_music', None))
+    starting_music = CustomObjects.PhaseMusic(overview_dict.get('player_phase_music'), overview_dict.get('enemy_phase_music'),
+                                              overview_dict.get('other_phase_music'), overview_dict.get('player_battle_music'),
+                                              overview_dict.get('enemy_battle_music'))
 
     # Get tiles
     currentMap = create_map(levelfolder, overview_dict)

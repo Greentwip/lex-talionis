@@ -620,11 +620,11 @@ class PhaseMusic(object):
         self.other_name = other
         self.player_battle_name = player_battle
         self.enemy_battle_name = enemy_battle
-        self.player_music = GC.MUSICDICT[self.player_name]
-        self.enemy_music = GC.MUSICDICT[self.enemy_name]
-        self.other_music = GC.MUSICDICT.get(self.other_name, None)
-        self.player_battle_music = GC.MUSICDICT.get(self.player_battle_name, None)
-        self.enemy_battle_music = GC.MUSICDICT.get(self.enemy_battle_name, None)
+        self.player_music = GC.MUSICDICT.get(self.player_name)
+        self.enemy_music = GC.MUSICDICT.get(self.enemy_name)
+        self.other_music = GC.MUSICDICT.get(self.other_name)
+        self.player_battle_music = GC.MUSICDICT.get(self.player_battle_name)
+        self.enemy_battle_music = GC.MUSICDICT.get(self.enemy_battle_name)
 
     def get_phase_music(self, phase_name):
         if phase_name == 'player':
