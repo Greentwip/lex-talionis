@@ -39,6 +39,21 @@ def easing(current_time, begin, change, total_time):
     """
     return change * current_time / float(total_time) + begin
 
+def linear_ease(start, end, current, total_time):
+    t = clamp(current / float(total_time), 0, 1)
+    return start + (end - start) * t
+
+# === QUADRATIC EASING =====================================================
+# Ease In starts slow and rapidly accelerates near the end
+def quad_ease_in(start, end, current, total_time):
+    t = clamp(current / float(total_time), 0, 1)
+    return start + (end - start) * (t * t)
+
+# Ease Out starts fast and rapidly slows near the end
+def quad_ease_out(start, end, current, total_time):
+    t = clamp(current / float(total_time), 0, 1)
+    return start + (end - start) * (t * (2 - t))
+
 # === DETERMINES IF TIME FITS WITHIN VALUE =============================
 def determine_perc(time, period, width):
     """

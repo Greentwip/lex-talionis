@@ -59,6 +59,12 @@ class WorldMapBackground(object):
         for highlight in self.wm_highlights:
             highlight.remove()
 
+    def add_marker(self, sprite, position):
+        self.wm_markers.append(WMMarker(sprite, position))
+
+    def clear_markers(self):
+        self.wm_markers = []
+
     def add_sprite(self, name, klass, gender, team, position):
         # Key is string assigned by user. Value is units class, gender, team, starting_position
         self.wm_sprites[name] = GenericMapSprite.GenericMapSprite(klass, gender, team, position)
@@ -120,10 +126,11 @@ class WorldMapBackground(object):
         # Highlights
         for highlight in self.wm_highlights:
             highlight.draw(image)
-        self.wm_highlights = [highlight for highlight in self.wm_highlights if not highlight.remove_clear]
+        self.wm_highlights = [highlight for highlight in self.wm_highlights if not highlight.remove]
         # Draw label
         for label in self.wm_labels:
             label.draw(image)
+        self.wm_labels = [label for label in self.wm_labels if not label.remove]
         # Update world_map_sprites
         for key, wm_unit in self.wm_sprites.items():
             wm_unit.update()
@@ -139,13 +146,48 @@ class WorldMapBackground(object):
         surf.blit(image, (0, 0))
 
 class WMLabel(object):
-    def __init__(self, name, position, font=GC.FONT['chapter_yellow']):
-        self.name = name
-        self.font = font
+    def __init__(self, name, position):
+        self.font = GC.FONT['Label']
+        if name in GC.IMAGESDICT:
+            self.surface = GC.IMAGESDICT[name]
+        else:
+            size = self.font.size(name)
+            self.surface = Engine.create_surface(size, transparent=True)
+            self.font.blit(name, self.surface, (0, 0))
         self.position = position
 
+        self.state = 'fade_in'
+        self.transition_counter = 0
+        self.transition_speed = 12
+        self.remove = False
+
     def draw(self, surf):
-        self.font.blit(self.name, surf, self.position)
+        if self.state == 'fade_in':
+            progress = float(self.transition_counter)/self.transition_speed
+            transparency = int(100*progress)
+            image = Image_Modification.flickerImageTranslucent(self.surface, transparency)
+            pos_x = int(Utility.quad_ease_out(16, 0, progress, 1))
+            pos = self.position[0] + pos_x, self.position[1]
+            if progress >= 1:
+                self.state = 'normal'
+            else:
+                self.transition_counter += 1
+        elif self.state == 'normal':
+            image = self.surface
+            pos = self.position
+        elif self.state == 'fade_out':
+            progress = float(self.transition_counter)/self.transition_speed
+            transparency = int(100*progress)
+            image = Image_Modification.flickerImageTranslucent(self.surface, transparency)
+            pos_x = int(Utility.quad_ease_out(16, 0, progress, 1))
+            pos = self.position[0] + pos_x, self.position[1]
+            if progress <= 0:
+                # self.state = 'remove_me'
+                pass
+            else:
+                self.transition_counter -= 1
+
+        surf.blit(image, pos)
 
 class WMHighlight(object):
     def __init__(self, sprite, position):
@@ -154,17 +196,17 @@ class WMHighlight(object):
         self.trans_value = 0
         self.trans_dir = True
 
-        self.remove_flag = False
-        self.remove_clear = False
+        self.remove_asap = False
+        self.remove = False
 
     def update(self):
         if self.trans_dir:
-            self.trans_value += 1
-            if self.trans_value >= 50:
-                self.trans_value = 50
+            self.trans_value += 2
+            if self.trans_value >= 100:
+                self.trans_value = 100
                 self.trans_dir = False
         else:
-            self.trans_value -= 1
+            self.trans_value -= 2
             if self.trans_value <= 0:
                 self.trans_value = 0
                 self.trans_dir = True
@@ -174,9 +216,24 @@ class WMHighlight(object):
         return False
 
     def remove(self):
-        self.remove_flag = True
+        self.remove_asap = True
 
     def draw(self, surf):
         self.update()
-        image = Image_Modification.flickerImageTranslucent(Engine.copy_surface(self.sprite), self.trans_value)
+        image = Image_Modification.flickerImageTranslucentBlend(self.sprite, 2.55*self.trans_value)
+        Engine.blit(image, surf, self.position, None, Engine.BLEND_RGB_ADD)
+        # surf.blit(image, self.position)
+
+class WMMarker(object):
+    def __init__(self, sprite, position):
+        self.sprite = sprite
+        self.position = position
+
+        self.current_idx = 0
+
+    def draw(self, surf):
+        self.current_idx += 1
+        x_pos = self.current_idx/8
+        y_pos = self.current_idx%8
+        image = Engine.subsurface(self.sprite, (x_pos*8, y_pos*8, 8, 8))
         surf.blit(image, self.position)
