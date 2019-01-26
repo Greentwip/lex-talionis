@@ -274,6 +274,18 @@ class Dialogue_Scene(object):
         elif line[0] == 'remove_foreground':
             self.foreground = None
 
+        # === MOVIES
+        elif line[0] == 'foreground_movie' or line[0] == 'background_movie':
+            movie = Background.MovieBackground(line[1], speed=0, loop=False, fade_out='fade_out' in line)
+            if line[0] == 'foreground_movie':
+                self.foreground = movie
+            elif line[0] == 'background_movie':
+                self.background = movie
+            if 'hold' in line:
+                self.waittime = int(1e6)
+                self.last_wait_update = Engine.get_time()
+                self.current_state = "Waiting"
+
         # === WORLD MAP
         elif line[0] == 'wm_move':
             new_position = self.parse_pos(line[1], gameStateObj)
@@ -1151,17 +1163,13 @@ class Dialogue_Scene(object):
 
     def add_cinematic(self, line):
         text = line[1]
-        center = False
-        extra_wait = 0
         if len(line) > 2:
             flags = line[2:]
-            if 'center' in flags:
-                center = True
         else:
             flags = []
         font = 'chapter_yellow'
 
-        new_cinematic = Cinematic(text, font, center=center, extra_wait=extra_wait, flags=flags)
+        new_cinematic = Cinematic(text, font, flags=flags)
         # Wait a certain amount of time before next one
         self.waittime = new_cinematic.total_wait()
         self.last_wait_update = Engine.get_time()
@@ -1196,8 +1204,9 @@ class Dialogue_Scene(object):
     def draw(self, surf):
         # Draw if background exists
         if self.background:
-            # Blit Background
-            self.background.draw(surf)
+            if self.background.draw(surf) == 'Done':
+                self.background = None  # Done
+                self.current_state = "Processing" # Done waiting. Head back to processing
 
         # Update unit sprites -- if results in true, delete the unit sprite. -- faciliates 'r' command fade out
         delete = [key for key, unit in self.unit_sprites.items() if unit.update()]
@@ -1217,7 +1226,9 @@ class Dialogue_Scene(object):
                     break
 
         if self.foreground:
-            self.foreground.draw(surf)
+            if self.foreground.draw(surf) == 'Done':
+                self.foreground = None  # Done
+                self.current_state = "Processing" # Done waiting. Head back to processing
 
         s = GC.IMAGESDICT['BlackBackground'].copy()
         s.fill((0, 0, 0, self.transition_transparency))
@@ -1999,10 +2010,10 @@ class Credits(object):
         surf.blit(self.surface, self.position)
 
 class Cinematic(object):
-    def __init__(self, text, font, center=False, flags=None):
+    def __init__(self, text, font, flags=None):
         self.flags = flags or []
         self.text = text.split('|')
-        self.center = center
+        self.center = 'center' in self.flags
         self.wait_flag = False
         self.main_font = GC.FONT[font]
 
@@ -2012,7 +2023,10 @@ class Cinematic(object):
             self.transition_state = 'fade_in'
         self.start_time = Engine.get_time()
         self.transition_time = 1400
-        self.wait_time = len(text) * 54 + (1000 if 'extra_wait' in self.flags else 0)
+        if 'infinite_wait' in self.flags:
+            self.wait_time = int(1e6)
+        else:
+            self.wait_time = len(text) * 54 + (1000 if 'extra_wait' in self.flags else 0)
 
         self.populate_surface()
 

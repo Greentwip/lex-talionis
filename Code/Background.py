@@ -63,22 +63,32 @@ class StaticBackground(object):
         self.state = "Out"
 
 class MovieBackground(object):
-    def __init__(self, movie_prefix):
+    def __init__(self, movie_prefix, speed=125, loop=True, fade_out=False):
         self.counter = 0
         self.movie_prefix = movie_prefix
         self.num_frames = len([image_name for image_name in GC.IMAGESDICT if image_name.startswith(movie_prefix)])
 
         self.last_update = 0
-        self.speed = 125
+        self.speed = speed
+        self.loop = loop
+        self.fade_out = fade_out
 
     def draw(self, surf):
         if Engine.get_time() - self.last_update > self.speed:
             self.counter += 1
             self.last_update = Engine.get_time()
             if self.counter >= self.num_frames:
-                self.counter = 0
+                if self.loop:
+                    self.counter = 0
+                else:
+                    return False
         image = GC.IMAGESDICT[self.movie_prefix + str(self.counter)]
+        if self.fade_out:
+            progress = float(self.counter)/self.num_frames
+            transparency = 100 - int(100*progress)
+            image = Image_Modification.flickerImageTranslucent(image, transparency)
         surf.blit(image, (0, 0))
+        return True
 
 class Foreground(object):
     def __init__(self):

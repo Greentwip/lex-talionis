@@ -5,8 +5,10 @@ cinematic;In an age long past...|evil flooded over the land.|Creatures awash in 
 wait;1400
 cinematic;In its despair, mankind|appealed to the heavens, and|from a blinding light came hope.;center
 # Light transition
+foreground_movie;Light0_;hold
+cinematic;The Sacred Stones;center;infinite_wait;no_fade_in;no_fade_out
+background_movie;Light1_;hold;fade_out
 b;RuneBackground
-t;6
 cinematic;The Sacred Stones;center;extra_wait;no_fade_in
 wait;1400
 cinematic;These five glorious treasures|held the power to dispel evil.;center
@@ -95,6 +97,7 @@ wm_label_clear
 wm_highlight_clear
 r;Fado
 wait;500
+wm_marker;wm_blue_marker;104,32
 wm_marker;wm_red_marker;128,88
 # Enemy Soldiers appear on map
 # Enemy soldiers move toward Renais
