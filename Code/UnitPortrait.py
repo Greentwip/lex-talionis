@@ -52,6 +52,7 @@ class UnitPortrait(object):
         self.transition = 'trans2color' if transition else 0
         self.transition_transparency = 100 if transition else 0  # 100 is most transparency
         self.transition_last_update = Engine.get_time()
+        self.slide = slide
 
         # Blinking set up
         self.blinking = 2 # 0- Don't blink, 1-hold blink, 2-Blink pseudorandomly

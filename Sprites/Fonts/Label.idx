@@ -1,0 +1,33 @@
+alluppercase
+stacked
+space_offset -4
+width       16
+height      16
+transrgb    0  0  0
+A   0   0   12
+B   1   0   7
+C   2   0   12
+D   3   0   15
+E   4   0   13
+F   5   0   13
+G   6   0   12
+H   7   0   13
+I   8   0   10
+J   9   0   10
+K   10   0   8
+L   11   0   13
+M   12   0   13
+N   13   0   14
+O   14   0   13
+P   15   0   7
+Q   18   0   8
+R   17   0   14
+S   18   0   12
+T   19   0   12
+U   20   0   15
+V   21   0   7
+W   22   0   8
+X   23   0   8
+Y   24   0   8
+Z   25   0   8
+space 25 0   8

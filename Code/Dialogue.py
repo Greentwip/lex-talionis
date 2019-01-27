@@ -34,6 +34,7 @@ class Dialogue_Scene(object):
 
         # Background sprite
         self.background = None
+        self.midground = None
         self.foreground = None
         # Dictionary of scene sprites
         self.unit_sprites = {}
@@ -87,8 +88,9 @@ class Dialogue_Scene(object):
         # Handles skipping
         self.skippable_commands = {'s', 'u', 'qu', 't', 'wait', 'bop', 'mirror',
                                    'wm_move_sprite', 'map_pan', 'set_expression',
-                                   'credits', 'endings', 'start_move', 
-                                   'move_sprite', 'qmove_sprite'}
+                                   'credits', 'endings', 'cinematic', 'start_move', 
+                                   'move_sprite', 'qmove_sprite', 'midground_movie',
+                                   'foreground_movie'}
 
         # Handles unit face priority
         self.priority_counter = 1
@@ -116,6 +118,9 @@ class Dialogue_Scene(object):
         # Reset transition
         self.transition = 0
         self.transition_transparency = 0
+        # Remove midground and foreground
+        self.midground = None
+        self.foreground = None
 
     def read_script(self, gameStateObj=None, metaDataObj=None):
         while(self.scene_lines_index < len(self.scene_lines) and self.current_state == "Processing"):
@@ -243,6 +248,7 @@ class Dialogue_Scene(object):
             return
         # time = Engine.get_true_time()
         logger.info('Script line to parse: %s', line)
+        print(line)
         # === SKIPPING DIALOGUE
         # End skip
         if line[0] == 'end_skip':
@@ -275,12 +281,14 @@ class Dialogue_Scene(object):
             self.foreground = None
 
         # === MOVIES
-        elif line[0] == 'foreground_movie' or line[0] == 'background_movie':
-            movie = Background.MovieBackground(line[1], speed=0, loop=False, fade_out='fade_out' in line)
+        elif line[0] == 'foreground_movie' or line[0] == 'midground_movie':
+            movie = Background.MovieBackground(
+                line[1], speed='slow' in line, loop='loop' in line, 
+                fade_out='fade_out' in line)
             if line[0] == 'foreground_movie':
                 self.foreground = movie
-            elif line[0] == 'background_movie':
-                self.background = movie
+            elif line[0] == 'midground_movie':
+                self.midground = movie
             if 'hold' in line:
                 self.waittime = int(1e6)
                 self.last_wait_update = Engine.get_time()
@@ -331,7 +339,7 @@ class Dialogue_Scene(object):
             self.background.clear_highlights()
         elif line[0] == 'wm_marker':
             new_pos = self.parse_pos(line[2], gameStateObj)
-            self.background.add_marker(GC.IMAGESDICT[line[1]], new_position)
+            self.background.add_marker(GC.IMAGESDICT[line[1]], new_pos)
         elif line[0] == 'wm_marker_clear':
             self.background.clear_markers()
         elif line[0] == 'wm_cursor':
@@ -903,12 +911,6 @@ class Dialogue_Scene(object):
             elif line[1] == '4':
                 self.transition = 4
                 self.transition_transparency = 255
-            elif line[1] == '5': # TODO (change this -- add light anim)
-                self.transition = 1
-                self.transition_transparency = 0
-            elif line[1] == '6':
-                self.transition = 2
-                self.transition_transparency = 255
             self.transition_last_update = Engine.get_time()
             self.current_state = "Transitioning"
         
@@ -986,6 +988,8 @@ class Dialogue_Scene(object):
         elif line[0] == 'pop_dialog':
             if self.dialog:
                 self.dialog.pop()
+        elif line[0] == 'clear_dialog':
+            self.dialog = []
 
         # === Show Victory Screen
         elif line[0] == 'victory_screen':
@@ -1167,13 +1171,14 @@ class Dialogue_Scene(object):
             flags = line[2:]
         else:
             flags = []
-        font = 'chapter_yellow'
+        font = 'chapter_white'
 
         new_cinematic = Cinematic(text, font, flags=flags)
         # Wait a certain amount of time before next one
-        self.waittime = new_cinematic.total_wait()
-        self.last_wait_update = Engine.get_time()
-        self.current_state = "Waiting"
+        if 'infinite_wait' not in flags:
+            self.waittime = new_cinematic.total_wait()
+            self.last_wait_update = Engine.get_time()
+            self.current_state = "Waiting"
 
         self.dialog.append(new_cinematic)
 
@@ -1204,8 +1209,12 @@ class Dialogue_Scene(object):
     def draw(self, surf):
         # Draw if background exists
         if self.background:
-            if self.background.draw(surf) == 'Done':
-                self.background = None  # Done
+            self.background.draw(surf)
+
+        # Draw if midground exists
+        if self.midground:
+            if self.midground.draw(surf) == 'Done':
+                self.midground = None  # Done
                 self.current_state = "Processing" # Done waiting. Head back to processing
 
         # Update unit sprites -- if results in true, delete the unit sprite. -- faciliates 'r' command fade out
@@ -1263,6 +1272,8 @@ class Dialogue_Scene(object):
             slide = 'left'
         else:
             slide = None
+        if 'Narration' in line:
+            position[1] = 30
         assert name in GC.PORTRAITDICT, "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(name)
         blink = GC.PORTRAITDICT[name]['blink']
         mouth = GC.PORTRAITDICT[name]['mouth']
@@ -2043,12 +2054,12 @@ class Cinematic(object):
             if self.center:
                 x_pos = GC.WINWIDTH//2 - self.main_font.size(line)[0]//2
             else:
-                x_pos = 16
+                x_pos = 12
             half = len(self.text)//2
             if len(self.text)%2:  # If odd
-                y_pos = GC.WINHEIGHT//2 + (idx - half)*32 - 8
+                y_pos = GC.WINHEIGHT//2 + (idx - half)*24 - 6
             else:
-                y_pos = GC.WINHEIGHT//2 + (idx - half)*32 + 8
+                y_pos = GC.WINHEIGHT//2 + (idx - half)*24 + 6
             self.main_font.blit(line, self.surface, (x_pos, y_pos))
 
     def total_wait(self):

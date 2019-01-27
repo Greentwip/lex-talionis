@@ -2290,7 +2290,7 @@ class PromotionChoiceState(StateMachine.State):
             anim.draw(surf, (self.anim_offset + 12, 0))
 
         # Class Reel
-        GC.FONT['class_purple'].blit(self.menu.getSelection(), surf, (114, 5), space_offset=-2)
+        GC.FONT['class_purple'].blit(self.menu.getSelection(), surf, (114, 5))
 
         # Weapon Icons
         for idx, weapon in enumerate(self.weapon_icons[self.menu.currentSelection]):

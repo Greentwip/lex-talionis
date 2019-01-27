@@ -1,6 +1,6 @@
 # bmpfont.py
 # By Paul Sidorsky - Freeware
-# Updated by rainlash May 2016, January 2017
+# Updated by rainlash May 2016, January 2017, January 2019
 
 """Provides support for bitmapped fonts using pygame.
 
@@ -68,12 +68,15 @@ class BmpFont:
         # Setup default values.
         self.alluppercase = False
         self.alllowercase = False
+        self.stacked = False
         self.chartable = {}
         self.idxfile = Engine.engine_constants['home'] + "Sprites/Fonts/" + name.split('_')[0] + '.idx'
         self.bmpfile = Engine.engine_constants['home'] + "Sprites/Fonts/" + name + '.png'
+        self.space_offset = 0
         self.width = 8
         self.height = 16
         self.transrgb = (0, 0, 0)
+        self.memory = {}
 
         # Read the font index.  File errors will bubble up to caller.
         f = open(self.idxfile, "r")
@@ -89,6 +92,10 @@ class BmpFont:
                 self.alluppercase = True
             elif words[0] == "alllowercase":
                 self.alllowercase = True
+            elif words[0] == 'stacked':
+                self.stacked = True
+            elif words[0] == 'space_offset':
+                self.space_offset = int(words[1])
             elif words[0] == "width":
                 self.width = int(words[1])
             elif words[0] == "height":
@@ -127,8 +134,61 @@ class BmpFont:
     #                          font width and height.  If false, pos is
     #                          specified in pixels, allowing for precise
     #                          text positioning.
-    def blit(self, string, surf, pos=(0, 0), usetextxy=False, space_offset=0):
+    def blit(self, string, surf, pos=(0, 0), usetextxy=False):
         """Draw a string to a surface using the bitmapped font."""
+        def normal_render(x):
+            # Render the font.
+            for c in string:
+                if c not in self.memory:
+                    try:
+                        char_pos_x = self.chartable[c][0]
+                        char_pos_y = self.chartable[c][1]
+                        char_width = self.chartable[c][2]
+                    except KeyError as e:
+                        char_pos_x = 0
+                        char_pos_y = 0
+                        char_width = 4
+                        print(e)
+                        print("%s is not chartable"%(c))
+                        print('string', string)
+                    subsurf = Engine.subsurface(self.surface, (char_pos_x, char_pos_y, self.width, self.height))
+                    self.memory[c] = (subsurf, char_width)
+                else:
+                    subsurf, char_width = self.memory[c]
+                Engine.blit(surf, subsurf, (x, y))
+                # surf.blit(self.surface, (x, y), ((char_pos_x, char_pos_y), (self.width, self.height))) # subsurface
+                x += char_width + self.space_offset
+
+        def stacked_render(x):
+            orig_x = x
+            for c in string:
+                if c not in self.memory:
+                    try:
+                        char_pos_x = self.chartable[c][0]
+                        char_pos_y = self.chartable[c][1]
+                        char_width = self.chartable[c][2]
+                    except KeyError as e:
+                        char_pos_x = 0
+                        char_pos_y = 0
+                        char_width = 4
+                        print(e)
+                        print("%s is not chartable"%(c))
+                        print('string', string)
+
+                    highsurf = Engine.subsurface(self.surface, (char_pos_x, char_pos_y, self.width, self.height))
+                    print(char_pos_x, char_pos_y + self.height, self.width, self.height)
+                    print(self.surface.get_width(), self.surface.get_height())
+                    lowsurf = Engine.subsurface(self.surface, (char_pos_x, char_pos_y + self.height, self.width, self.height))
+                    self.memory[c] = (highsurf, lowsurf, char_width)
+            for c in string:
+                highsurf, lowsurf, char_width = self.memory[c]
+                Engine.blit(surf, lowsurf, (x, y))
+                x += char_width + self.space_offset
+            for c in string:
+                highsurf, lowsurf, char_width = self.memory[c]
+                Engine.blit(surf, highsurf, (orig_x, y))
+                orig_x += char_width + self.space_offset
+
         x, y = pos
         if usetextxy:
             x *= self.width
@@ -145,24 +205,10 @@ class BmpFont:
         if self.alllowercase:
             string = string.lower()
 
-        # Render the font.
-        for c in string:
-            try:
-                char_pos_x = self.chartable[c][0]
-                char_pos_y = self.chartable[c][1]
-                char_width = self.chartable[c][2]
-            except KeyError as e:
-                char_pos_x = 0
-                char_pos_y = 0
-                char_width = 4
-                print(e)
-                print("%s is not chartable"%(c))
-                print('string', string)
-
-            subsurf = Engine.subsurface(self.surface, (char_pos_x, char_pos_y, self.width, self.height))
-            Engine.blit(surf, subsurf, (x, y))
-            # surf.blit(self.surface, (x, y), ((char_pos_x, char_pos_y), (self.width, self.height))) # subsurface
-            x += char_width + space_offset
+        if self.stacked:
+            stacked_render(x)
+        else:
+            normal_render(x)
 
     # size() - Returns the length and height of a string (height will always be self.height)
     # Parameters:  string     - the string that is to be measured. All characters must
