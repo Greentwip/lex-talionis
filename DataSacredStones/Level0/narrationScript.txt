@@ -117,14 +117,37 @@ r;Fado
 wait;500
 wm_marker;wm_blue_marker;104,32
 wm_marker;wm_red_marker;128,88
+wait;500
 # Enemy Soldiers appear on map
+wm_qload;soldier1;80,16;Soldier;M;enemy
+wm_qload;soldier2;124,80;Soldier;M;enemy
+wm_qload;soldier3;140,80;Soldier;M;enemy
 # Enemy soldiers move toward Renais
+wm_move_and_remove;soldier1;128,48
+wm_move_and_remove;soldier2;112,36
+wm_move_and_remove;soldier3;128,48
 s;Narrator;Grado's forces move quickly, seizing one territory after another.{w};auto_top;narration;hold
+wait;400
 u;Ephraim;Left;SlideLeft
 # Ephraim appears on map
+wait;200
+wm_qload;ephraim;88,48;Ephraim_Lord;M;player
+wm_move;ephraim;84,60;slow
 s;Narrator;Compounding King Fado's worries, his son, Prince Ephraim, has gone missing.{w};auto_top;narration;hold
-# Duessel, Glen, and Selena appear on map
+wm_remove;ephraim
+wait;220
+r;Ephraim
+# General, Valter, and Selena appear on map
+wm_qload;selena;108,92;Mage_Knight;F;enemy
+wm_qload;general;124,80;General;M;enemy
+wm_qload;valter;136,84;Wyvern_Knight;M;enemy
+wm_move;selena;84,32
+wm_move;general;100,40
+wm_move;valter;116,32
 s;Narrator;Grado's momentum carries its armies to the gates of Castle Renais itself{w};auto_top;narration;hold
 # Eirika, Fado appear on map
+wm_load;eirika;90,20;Eirika_Lord;F;player
+wm_load;fado;102,28;Peer;M;player
+wait;600
 s;Narrator;Renais will fall...{br}It is inevitable.{w};auto_top;narration;hold
 t;1

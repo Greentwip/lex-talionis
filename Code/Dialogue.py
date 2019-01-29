@@ -295,13 +295,13 @@ class Dialogue_Scene(object):
                 self.current_state = "Waiting"
 
         # === WORLD MAP
-        elif line[0] == 'wm_move':
+        elif line[0] == 'wm_pan':
             new_position = self.parse_pos(line[1], gameStateObj)
-            self.background.move(new_position)
-        elif line[0] == 'wm_qmove':
+            self.background.pan(new_position)
+        elif line[0] == 'wm_qpan':
             new_position = self.parse_pos(line[1], gameStateObj)
-            self.background.quick_move(new_position)
-        elif line[0] == 'wm_load_sprite' or line[0] == 'wm_load' or line[0] == 'wm_add':
+            self.background.quick_pan(new_position)
+        elif line[0] in ('wm_load', 'wm_qload', 'wm_add'):
             starting_position = self.parse_pos(line[2], gameStateObj)
             if line[0] == 'wm_add':
                 starting_position = (starting_position[0]*16, starting_position[1]*16)
@@ -313,16 +313,19 @@ class Dialogue_Scene(object):
                     break
             else:
                 klass, gender, team = line[3:6]
-            self.background.add_sprite(line[1], klass, gender, team, starting_position)
-        elif line[0] == 'wm_remove_sprite' or line[0] == 'wm_remove':
+            transition_in = line[0] == 'wm_load'
+            self.background.add_sprite(line[1], klass, gender, team, starting_position, transition_in)
+        elif line[0] == 'wm_remove':
             self.background.remove_sprite(line[1])
-        elif line[0] == 'wm_move_sprite':
+        elif line[0] == 'wm_qremove':
+            self.background.quick_remove_sprite(line[1])
+        elif line[0] == 'wm_move':
             new_position = self.parse_pos(line[2], gameStateObj)
-            self.background.move_sprite(line[1], new_position)
+            self.background.move_sprite(line[1], new_position, slow='slow' in line)
         elif line[0] == 'wm_move_unit':
             new_position = self.parse_pos(line[2], gameStateObj)
             new_position = (new_position[0]*16, new_position[1]*16)
-            self.background.move_sprite(line[1], new_position)
+            self.background.move_sprite(line[1], new_position, slow='slow' in line)
         elif line[0] == 'wm_label':
             name = line[1]
             position = self.parse_pos(line[2], gameStateObj)

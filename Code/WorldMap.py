@@ -67,26 +67,32 @@ class WorldMapBackground(object):
     def clear_markers(self):
         self.wm_markers = []
 
-    def add_sprite(self, name, klass, gender, team, position):
+    def add_sprite(self, name, klass, gender, team, position, transition_in=False):
         # Key is string assigned by user. Value is units class, gender, team, starting_position
-        self.wm_sprites[name] = GenericMapSprite.GenericMapSprite(klass, gender, team, position)
+        self.wm_sprites[name] = GenericMapSprite.GenericMapSprite(klass, gender, team, position, transition_in)
 
-    def remove_sprite(self, name):
+    def quick_remove_sprite(self, name):
         del self.wm_sprites[name]
 
-    def move_sprite(self, name, new_pos):
+    def remove_sprite(self, name):
         if name in self.wm_sprites:
-            self.wm_sprites[name].move(new_pos)
+            self.wm_sprites[name].remove()
         elif cf.OPTIONS['debug']:
             print('Error! ', name, ' not in self.wm_sprites')
 
-    def quick_move(self, new_pos):
+    def move_sprite(self, name, new_pos, slow=False):
+        if name in self.wm_sprites:
+            self.wm_sprites[name].move(new_pos, slow)
+        elif cf.OPTIONS['debug']:
+            print('Error! ', name, ' not in self.wm_sprites')
+
+    def quick_pan(self, new_pos):
         self.x += new_pos[0]
         self.y += new_pos[1]
 
         self.x, self.y = self.bound(self.x, self.y)
 
-    def move(self, new_pos):
+    def pan(self, new_pos):
         self.old_x = self.x
         self.old_y = self.y
         self.target_x = self.x + new_pos[0]
@@ -142,6 +148,7 @@ class WorldMapBackground(object):
         # World map sprites
         for key, wm_unit in self.wm_sprites.items():
             wm_unit.draw(image)
+        self.wm_sprites = [unit for unit in self.wm_sprites if not unit.remove_flag]
         # Cursor
         if self.cursor:
             self.cursor.image = Engine.subsurface(self.cursor.passivesprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))

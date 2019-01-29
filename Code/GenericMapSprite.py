@@ -2,21 +2,25 @@ import math
 
 try:
     import GlobalConstants as GC
-    import Engine
+    import Engine, Image_Modification
 except ImportError:
     from . import GlobalConstants as GC
-    from . import Engine
+    from . import Engine, Image_Modification
 
 class GenericMapSprite(object):
-    def __init__(self, klass, gender, team, position):
+    def __init__(self, klass, gender, team, position, transition_in=False):
         self.standspritesName = team + klass + gender # Ex: EnemyMercenaryM
         self.movespritesName = team + klass + gender + '_move' # Ex: EnemyMercenaryM_move
         self.position = position # Describes the actual position of the sprite
         self.new_position = position # Describe where the sprite wants to go
+        # For transition
+        self.state = 'fade_in' if transition_in else 'normal'
+        self.transition_counter = 0
 
         self.isMoving = False
         self.selected = False
         self.hovered = False
+        self.remove_flag = False
         self.loadSprites()
 
         # Counters
@@ -27,12 +31,20 @@ class GenericMapSprite(object):
     def draw(self, surf):
         x, y = self.position
         topleft = x - max(0, (self.image.get_width() - 16)//2), y - max(0, self.image.get_height() - 16)
+        if self.state != 'normal':
+            progress = int(float(self.transition_counter/32)*100.)
+            self.image = Image_Modification.flickerImageBlackColorKey(self.image, progress)
         surf.blit(self.image, topleft)
 
-    def move(self, new_pos):
+    def move(self, new_pos, slow=False):
         target = self.new_position[0] + new_pos[0], self.new_position[1] + new_pos[1]
         self.new_position = target
+        self.cur_speed = 1 if slow else 2
         self.isMoving = True
+
+    def remove(self):
+        self.state = 'fade_out'
+        self.transition_counter = 32
 
     def teleport(self, new_pos):
         self.position = new_pos
@@ -51,14 +63,21 @@ class GenericMapSprite(object):
                 self.moveSpriteCounter = 0
             self.lastUpdate = currentTime
 
+        # Transition counter logic
+        if self.state == 'fade_in':
+            self.transition_counter += 1
+        elif self.state == 'fade_out':
+            self.transition_counter -= 1
+            if self.transition_counter <= 0:
+                self.remove_flag = True
+
         # Move unit if he/she needs to be moved
         if self.isMoving:
             if currentTime - self.last_move_update > 50:
                 # Finds difference between new_position and position
-                unit_speed = 2
                 diff_pos = (self.new_position[0] - self.position[0], self.new_position[1] - self.position[1])
                 # No longer moving if difference of position is small
-                if diff_pos[0] <= unit_speed and diff_pos[0] >= -unit_speed and diff_pos[1] <= unit_speed and diff_pos[1] >= -unit_speed:
+                if -self.cur_speed <= diff_pos[0] <= self.cur_speed and -self.cur_speed <= diff_pos[1] <= self.cur_speed:
                     # Close enough for gov't work
                     self.position = self.new_position
                     self.isMoving = False
@@ -72,7 +91,7 @@ class GenericMapSprite(object):
                         self.image = Engine.subsurface(self.moveUp, (self.moveSpriteCounter*48, 0, 48, 40))
                     else:
                         self.image = Engine.subsurface(self.moveDown, (self.moveSpriteCounter*48, 0, 48, 40))
-                    updatedown_position = (self.position[0] + unit_speed * math.cos(angle), self.position[1] + unit_speed * math.sin(angle))
+                    updatedown_position = (self.position[0] + self.cur_speed * math.cos(angle), self.position[1] + self.cur_speed * math.sin(angle))
                     self.position = updatedown_position
 
                 self.last_move_update = currentTime

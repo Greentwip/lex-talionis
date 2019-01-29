@@ -46,8 +46,8 @@ wm_cursor;7,9
 wait;500
 wm_add;Nia;7,9
 wm_add;customVillager;8,9;Citizen;F;other
-wm_move_sprite;Nia;0,-16
-wm_move_sprite;customVillager;0,-16
+wm_move;Nia;0,-16
+wm_move;customVillager;0,-16
 wm_cursor;7,8
 wait;1000
 wm_remove_cursor
