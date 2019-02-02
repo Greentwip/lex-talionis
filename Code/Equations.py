@@ -18,6 +18,7 @@ class Parser(object):
                 print('%s is not a valid combat equation' % line)
                 continue
             lhs, rhs = line.split('=')
+            lhs = lhs.strip()
             self.equations[lhs] = self.tokenize(rhs)
 
         replacement_dict = self.create_replacement_dict()
@@ -42,10 +43,10 @@ class Parser(object):
         rhs = [dic.get(n, n) for n in rhs]
         rhs = ''.join(rhs)
         rhs = 'int(%s)' % rhs
+        # print(lhs, rhs)
         exec("def %s(equations, unit, item=None, dist=0): return %s" % (lhs, rhs), self.equations)
         # self.equations[lhs] = rhs
 
-    # TODO use exec to make these perma functions
     def get_attackspeed(self, unit, item=None, dist=0):
         return self.equations['AS'](self.equations, unit, item, dist)
 

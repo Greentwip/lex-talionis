@@ -32,7 +32,7 @@ class GenericMapSprite(object):
         x, y = self.position
         topleft = x - max(0, (self.image.get_width() - 16)//2), y - max(0, self.image.get_height() - 16)
         if self.state != 'normal':
-            progress = int(float(self.transition_counter/32)*100.)
+            progress = 100 - int(self.transition_counter/32.*100.)
             self.image = Image_Modification.flickerImageBlackColorKey(self.image, progress)
         surf.blit(self.image, topleft)
 
@@ -42,16 +42,21 @@ class GenericMapSprite(object):
         self.cur_speed = 1 if slow else 2
         self.isMoving = True
 
-    def remove(self):
-        self.state = 'fade_out'
-        self.transition_counter = 32
+    def offset(self, new_pos):
+        target = self.new_position[0] + new_pos[0], self.new_position[1] + new_pos[1]
+        self.position = target
 
     def teleport(self, new_pos):
         self.position = new_pos
 
-    def set_target(self, new_pos):
+    def set_target(self, new_pos, slow=False):
         self.new_position = new_pos
+        self.cur_speed = 1 if slow else 2
         self.isMoving = True
+
+    def remove(self):
+        self.state = 'fade_out'
+        self.transition_counter = 32
 
     def update(self):
         currentTime = Engine.get_time()
@@ -66,6 +71,8 @@ class GenericMapSprite(object):
         # Transition counter logic
         if self.state == 'fade_in':
             self.transition_counter += 1
+            if self.transition_counter > 32:
+                self.state = 'normal'
         elif self.state == 'fade_out':
             self.transition_counter -= 1
             if self.transition_counter <= 0:

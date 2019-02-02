@@ -13,6 +13,24 @@ r;Renae;Ophie
 t;1
 remove_background
 t;2
+inc_game_constant;money;10000
+u;Renae;Left
+s;Renae;If you give me 10000 gold, I'll join your quest!
+if;gameStateObj.game_constants['money'] >= 10000
+    choice;recruit_renae;Give Renae 10000 gold?;Yes,No
+    if;gameStateObj.game_constants['recruit_renae'] == 'Yes'
+        # Renae joins your team
+        convert;Renae;player
+        inc_game_constant;money;-10000
+        s;Renae;This is the beginning of a very lucrative relationship!
+    else
+        s;Renae;Hmmph! Your loss!
+    end
+else
+    s;Renae;What! You don't have 10000 gold? Then, goodbye!
+end
+r;Renae
+end_skip
 trigger;basic
 interact_unit;Sam;3,15;Miss,Miss
 if;sum(1 for unit in gameStateObj.allunits if unit.team == 'enemy' and unit.position) == 1

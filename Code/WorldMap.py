@@ -86,6 +86,24 @@ class WorldMapBackground(object):
         elif cf.OPTIONS['debug']:
             print('Error! ', name, ' not in self.wm_sprites')
 
+    def set_sprite(self, name, new_pos, slow=False):
+        if name in self.wm_sprites:
+            self.wm_sprites[name].set_target(new_pos, slow)
+        elif cf.OPTIONS['debug']:
+            print('Error! ', name, ' not in self.wm_sprites')
+
+    def offset_sprite(self, name, new_pos):
+        if name in self.wm_sprites:
+            self.wm_sprites[name].offset(new_pos)
+        elif cf.OPTIONS['debug']:
+            print('Error! ', name, ' not in self.wm_sprites')
+
+    def teleport_sprite(self, name, new_pos):
+        if name in self.wm_sprites:
+            self.wm_sprites[name].teleport(new_pos)
+        elif cf.OPTIONS['debug']:
+            print('Error! ', name, ' not in self.wm_sprites')
+
     def quick_pan(self, new_pos):
         self.x += new_pos[0]
         self.y += new_pos[1]
@@ -146,9 +164,10 @@ class WorldMapBackground(object):
         for key, wm_unit in self.wm_sprites.items():
             wm_unit.update()
         # World map sprites
-        for key, wm_unit in self.wm_sprites.items():
+        sorted_sprites = sorted(self.wm_sprites.values(), key=lambda unit: unit.position[1])
+        for wm_unit in sorted_sprites:
             wm_unit.draw(image)
-        self.wm_sprites = [unit for unit in self.wm_sprites if not unit.remove_flag]
+        self.wm_sprites = {name: unit for name, unit in self.wm_sprites.items() if not unit.remove_flag}
         # Cursor
         if self.cursor:
             self.cursor.image = Engine.subsurface(self.cursor.passivesprite, (GC.CURSORSPRITECOUNTER.count*GC.TILEWIDTH*2, 0, GC.TILEWIDTH*2, GC.TILEHEIGHT*2))
@@ -252,7 +271,7 @@ class WMMarker(object):
 
     def draw(self, surf):
         self.current_idx += 1
-        x_pos = self.current_idx/8
+        x_pos = (self.current_idx//8)%8
         y_pos = self.current_idx%8
         image = Engine.subsurface(self.sprite, (x_pos*8, y_pos*8, 8, 8))
         surf.blit(image, self.position)

@@ -1,13 +1,9 @@
-# C Support at 80
-# B Support at 160
-# A Support at 240
-80;160;240
-# Support Partner 1; Support Partner 2; Starting Value; Increment; Limit
+# Support Partner ID 1; Support Partner ID 2;Num Points for First Support;Num Points for Second Support;Num Points for Third Support;...(etc.)
 # Order of names should match order in Data/SupportConvos. I use alphabetical to keep it simple.
-Eirika;Ephraim;7;20;3
-Eirika;Seth;8;27;3
-Eirika;Saleh;2;40;3
-Eirika;L'Arachel;5;40;3
-Eirika;Tana;10;40;3
-Eirika;Innes;5;40;3
-Eirika;Forde;10;40;3
+Eirika;Ephraim;13;20;20
+Eirika;Seth;18;27;27
+Eirika;Saleh;38;40;40
+Eirika;L'Arachel;35;40;40
+Eirika;Tana;30;40;40
+Eirika;Innes;35;40;40
+Eirika;Forde;30;40;40

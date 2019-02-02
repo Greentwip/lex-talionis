@@ -87,7 +87,7 @@ class Dialogue_Scene(object):
 
         # Handles skipping
         self.skippable_commands = {'s', 'u', 'qu', 't', 'wait', 'bop', 'mirror',
-                                   'wm_move_sprite', 'map_pan', 'set_expression',
+                                   'map_pan', 'set_expression',
                                    'credits', 'endings', 'cinematic', 'start_move', 
                                    'move_sprite', 'qmove_sprite', 'midground_movie',
                                    'foreground_movie'}
@@ -313,7 +313,7 @@ class Dialogue_Scene(object):
                     break
             else:
                 klass, gender, team = line[3:6]
-            transition_in = line[0] == 'wm_load'
+            transition_in = line[0] == 'wm_load' and not self.do_skip
             self.background.add_sprite(line[1], klass, gender, team, starting_position, transition_in)
         elif line[0] == 'wm_remove':
             self.background.remove_sprite(line[1])
@@ -321,11 +321,30 @@ class Dialogue_Scene(object):
             self.background.quick_remove_sprite(line[1])
         elif line[0] == 'wm_move':
             new_position = self.parse_pos(line[2], gameStateObj)
-            self.background.move_sprite(line[1], new_position, slow='slow' in line)
+            if self.do_skip:
+                self.background.offset_sprite(line[1], new_position)
+            else:
+                self.background.move_sprite(line[1], new_position, slow='slow' in line)
         elif line[0] == 'wm_move_unit':
             new_position = self.parse_pos(line[2], gameStateObj)
             new_position = (new_position[0]*16, new_position[1]*16)
-            self.background.move_sprite(line[1], new_position, slow='slow' in line)
+            if self.do_skip:
+                self.background.offset_sprite(line[1], new_position)
+            else:
+                self.background.move_sprite(line[1], new_position, slow='slow' in line)
+        elif line[0] == 'wm_set':
+            new_position = self.parse_pos(line[2], gameStateObj)
+            if self.do_skip:
+                self.background.teleport_sprite(line[1], new_position)
+            else:
+                self.background.set_sprite(line[1], new_position, slow='slow' in line)
+        elif line[0] == 'wm_set_unit':
+            new_position = self.parse_pos(line[2], gameStateObj)
+            new_position = (new_position[0]*16, new_position[1]*16)
+            if self.do_skip:
+                self.background.teleport_sprite(line[1], new_position)
+            else:
+                self.background.set_sprite(line[1], new_position, slow='slow' in line)
         elif line[0] == 'wm_label':
             name = line[1]
             position = self.parse_pos(line[2], gameStateObj)

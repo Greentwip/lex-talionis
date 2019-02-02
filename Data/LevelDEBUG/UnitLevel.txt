@@ -23,6 +23,7 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Sam;3,17;None
 player;0;0;Eliza;4,17;None
+other;0;0;Renae;5,17;None
 player;0;0;Fighter;10;Iron Axe,Glimmer;3,16;None;Resistance
 # Enemies
 # Generics
