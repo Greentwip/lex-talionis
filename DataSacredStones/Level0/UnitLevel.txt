@@ -20,7 +20,7 @@
 faction;Grado;Soldier;Empire;A soldier of Grado
 faction;Renais;Soldier;Empire;A soldier of Renais
 # Player Characters
-player;0;0;Seth;4,4;None
+player;0;Seth_1;Seth;4,4;None
 # Enemies
 # Bosses
 enemy;0;0;O'Neill;10,8;HardGuard
@@ -32,7 +32,7 @@ enemy;0;0;Fighter;1;Iron Axe;8,6;Attack;Grado
 player;0;Eirika_1;Eirika;12,9;None
 player;0;RenaisKnight_1;Knight;1;;None;None;Renais
 player;0;RenaisKnight_2;Knight;1;;None;None;Renais
-player;0;RenaisGeneral_2;General;1;;None;None;Renais
+player;0;RenaisGeneral_1;General;1;;None;None;Renais
 player;0;RenaisGeneral_2;General;1;;None;None;Renais
 player;0;Franz;Franz;None;None
 player;0;FakeFado;Peer;1;;None;None;Renais
@@ -54,3 +54,6 @@ enemy;0;Valter;Valter;None;None
 enemy;0;GradoWyvern_1;Wyvern_Rider;1;;None;None;Grado
 enemy;0;GradoWyvern_2;Wyvern_Rider;1;;None;None;Grado
 # === Triggers ===
+trigger;Enemy1;9,6;15,7;9,6
+trigger;Enemy1;8,6;15,7;8,6
+trigger;Enemy1;O'Neill;15,8;10,8

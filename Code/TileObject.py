@@ -241,10 +241,7 @@ class MapObject(object):
         
     def parse_tile_info(self, tile_info_location):
         logger.info('Parsing tile info at %s', tile_info_location)
-        self.tile_info_dict = {}
-        for x in range(self.width):
-            for y in range(self.height):
-                self.tile_info_dict[(x, y)] = {}
+        self.reset_tile_info()
 
         if not os.path.isfile(tile_info_location):
             return None
@@ -445,41 +442,11 @@ class MapObject(object):
         self.reset_all_tile_sprites()
         self.loadSprites()
 
-    def load_submap(self, line, currentLevelIndex):
-        if self.is_submap:
-            self.close_submap(main_map=False)
-        tile_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
-        colorkey, width, height = self.build_color_key(Engine.image_load(tile_data_suffix))
-        # Saving old data
-        self.old_width, self.old_height = self.width, self.height
-        self.old_tiles = {k: v for k, v in self._tiles.items()}  # Makes a copy
-        self.old_tile_sprites = {k: v for k, v in self.tile_sprites.items()}
-        # New data
-        self.width = width
-        self.height = height
-        self.populate_tiles(colorkey)
-        map_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'
-        self.mapfilename = map_data_suffix
-        self.reset_all_tile_sprites()
-        # self.loadSprites()
-        # Handle grabbing normal sprites
-        self.map_image = Engine.image_load(self.mapfilename, convert=True)
-        Engine.set_colorkey(self.map_image, COLORKEY, rleaccel=True)
-        self.is_submap = True
-
-    def close_submap(self, main_map=True):
-        if not self.is_submap:
-            return
-        self.is_submap = False
-        self.width, self.height = self.old_width, self.old_height
-        self._tiles = self.old_tiles
-        self.tile_sprites = self.old_tile_sprites
-        if main_map:
-            self.sprites_loaded_flag = False
-            self.loadSprites()
-
-    def reset_tile_info(self, line=None):
+    def reset_tile_info(self):
         self.tile_info_dict = {}
+        for x in range(self.width):
+            for y in range(self.height):
+                self.tile_info_dict[(x, y)] = {}
 
     # Init weather
     def add_weather(self, weather):

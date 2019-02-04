@@ -9,14 +9,14 @@ try:
     import InputManager, Engine
     import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    import Boundary, Objective, Overworld, ClassData
+    import Boundary, Objective, Overworld, ClassData, TileObject
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import InputManager, Engine
     from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     from . import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    from . import Boundary, Objective, Overworld, ClassData
+    from . import Boundary, Objective, Overworld, ClassData, TileObject
 
 import logging
 logger = logging.getLogger(__name__)
@@ -56,14 +56,33 @@ class GameStateObj(object):
 
     def start_map(self, tilemap):
         self.map = tilemap
+        self.old_map = None
+        self.build_map_surf()
+        self.build_grid()
 
-        # Set up blitting surface
+    def build_map_surf(self):
         mapSurfWidth = max(self.map.width * GC.TILEWIDTH, GC.WINWIDTH)
         mapSurfHeight = max(self.map.height * GC.TILEHEIGHT, GC.WINHEIGHT)
         self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
+    def build_grid(self):
         self.grid_manager = AStar.Grid_Manager(self.map)
         self.boundary_manager = Boundary.BoundaryInterface(self.map)
+
+    def load_submap(self, name):
+        if not self.old_map:
+            self.old_map = self.map
+        tilefilename = 'Data/Level' + name + '/TileData.png'
+        mapfilename = 'Data/Level' + name + '/MapSprite.png'
+        levelfolder = 'Data/Level' + name
+        submap = TileObject.MapObject(mapfilename, tilefilename, levelfolder, self.map.weather)
+        self.start_map(submap)
+
+    def close_submap(self):
+        if not self.old_map:
+            return
+        self.start_map(self.old_map)
+        self.old_map = None
 
     def get_convoy(self):
         return self._convoy[self.current_party]

@@ -609,6 +609,9 @@ class Dialogue_Scene(object):
         elif line[0] == 'start_move':
             self.current_state = "Paused"
             gameStateObj.stateMachine.changeState('movement')
+            # Camera follow
+            if len(line) > 1:
+                gameStateObj.cursor.camera_follow = self.get_unit(line[1]).id
         elif line[0] == 'interact_unit':
             # Read input
             attacker = line[1]
@@ -659,9 +662,12 @@ class Dialogue_Scene(object):
                     gameStateObj.stateMachine.changeState('movement')
 
         # === HANDLE CURSOR
-        elif line[0] == 'set_cursor':
+        elif line[0] == 'set_cursor' or line[0] == 'place_cursor':
             coord = self.get_cursor_coord(line[1], gameStateObj)
-            gameStateObj.cursor.centerPosition(coord, gameStateObj)
+            if line[0] == 'set_cursor':
+                gameStateObj.cursor.centerPosition(coord, gameStateObj)
+            else:
+                gameStateObj.cursor.setPosition(coord, gameStateObj)
             if 'immediate' not in line and not self.do_skip:
                 gameStateObj.stateMachine.changeState('move_camera')
                 self.current_state = "Paused"
@@ -674,14 +680,17 @@ class Dialogue_Scene(object):
                 gameStateObj.cursor.drawState = 0
         elif line[0] == 'flash_cursor':
             # Macro -- inserted backwards
-            self.scene_lines.insert(self.scene_lines_index, ['disp_cursor', '0'])
-            self.scene_lines.insert(self.scene_lines_index, ['wait', '500'])
-            self.scene_lines.insert(self.scene_lines_index, ['disp_cursor', '1'])
-            self.scene_lines.insert(self.scene_lines_index, ['set_cursor', line[1]])
+            self.scene_lines.insert(self.scene_lines_index + 1, 'disp_cursor;0')
+            self.scene_lines.insert(self.scene_lines_index + 1, 'wait;1000')
+            self.scene_lines.insert(self.scene_lines_index + 1, 'disp_cursor;1')
+            self.scene_lines.insert(self.scene_lines_index + 1, 'place_cursor;%s' % line[1])
         elif line[0] == 'set_camera':
             pos1 = self.parse_pos(line[1], gameStateObj)
-            pos2 = self.parse_pos(line[2], gameStateObj)
-            gameStateObj.cameraOffset.center2(pos1, pos2)
+            if len(line) > 2:
+                pos2 = self.parse_pos(line[2], gameStateObj)
+                gameStateObj.cameraOffset.center2(pos1, pos2)
+            else:
+                gameStateObj.cameraOffset.set_xy(pos1[0], pos1[1])
             if 'immediate' not in line and not self.do_skip:
                 gameStateObj.stateMachine.changeState('move_camera')      
                 self.current_state = "Paused"
@@ -837,9 +846,10 @@ class Dialogue_Scene(object):
             Action.do(Action.RemoveGlobalStatus(line[1]), gameStateObj)
         # Load submap
         elif line[0] == 'load_submap':
-            gameStateObj.map.load_submap(line, gameStateObj.game_constants['level'])
+            gameStateObj.load_submap(line[1])
+        # Remove submap            
         elif line[0] == 'close_submap':
-            gameStateObj.map.close_submap()
+            gameStateObj.close_submap()
 
         # === CLEANUP
         elif line[0] == 'arrange_formation':
@@ -2124,8 +2134,10 @@ class LocationCard(object):
         self.card = GC.IMAGESDICT['LocationCard']
         self.text = text
         self.main_font = GC.FONT[font]
+        self.populate_surface()
 
-        self.wait = 2000
+        self.wait = int(100 * 16.66)  # 100 frames
+        self.transition_time = int(15 * 16.66)  # 15 frames
         self.transition_state = 'fade_in'
         self.start_time = Engine.get_time()
 
@@ -2149,21 +2161,21 @@ class LocationCard(object):
 
     def update(self):
         current_time = Engine.get_time()
-        if current_time - self.start_time > self.wait + 200:
+        if current_time - self.start_time > self.wait + self.transition_time:
             self.transition_state = 'fade_out'
             self.start_time = current_time
         
         if self.transition_state == 'fade_in':
-            transition = max((current_time - self.start_time)/2, 100)
+            transition = int(Utility.linear_ease(100, 0, current_time - self.start_time, self.transition_time))
             self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
-            if transition >= 100:
+            if transition <= 0:
                 self.transition_state = 'normal'
         elif self.transition_state == 'normal':
             self.image = self.surface.copy()
         elif self.transition_state == 'fade_out':
-            transition = 100 - max((current_time - self.start_time)/2, 100)
+            transition = int(Utility.linear_ease(0, 100, current_time - self.start_time, self.transition_time))
             self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
-            if transition <= 0:
+            if transition >= 100:
                 self.done = True
 
     def draw(self, surf, unit_sprites=None):

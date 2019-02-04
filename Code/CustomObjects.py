@@ -506,9 +506,6 @@ class CameraOffset(object):
         # Where the camera actually is
         self.current_x = x
         self.current_y = y
-        # Where the camera was
-        self.old_x = x
-        self.old_y = y
 
         self.speed = 8.0 # Linear. 
 
@@ -517,11 +514,9 @@ class CameraOffset(object):
 
     def set_x(self, x):
         self.x = x
-        self.old_x = x
 
     def set_y(self, y):
         self.y = y
-        self.old_y = y
 
     def force_x(self, x):
         self.current_x = self.x = x
@@ -532,8 +527,6 @@ class CameraOffset(object):
     def set_xy(self, x, y):
         self.x = x
         self.y = y
-        self.old_x = x
-        self.old_y = y
 
     def get_xy(self):
         return (self.current_x, self.current_y)

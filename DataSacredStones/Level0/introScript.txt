@@ -11,18 +11,20 @@ add_unit;Seth;9,4;immediate
 add_unit;Eirika;8,4;immediate
 add_unit;FakeFado;7,3;immediate
 # Transition in
-t;1
+t;2
 location_card;Renais Castle
 # Soldier appears from bottom left
-add_unit;RenaisSoldier_1
+pop_dialog
+add_unit;RenaisSoldier_1;3,14
 # Moves to position
 move_unit;RenaisSoldier_1;7,11
 start_move
 move_unit;RenaisSoldier_1;7,6
 start_move
-flash_cursor;Soldier
+set_camera;0,0
+flash_cursor;RenaisSoldier_1
 u;Fado;Left
-qu;SoldierGrey;OutsideRight
+qu;SoldierGrey;OffscreenRight
 move_sprite;SoldierGrey;MidRight
 s;SoldierGrey;Your Majesty, I bear bad news.{w}{clear}The castle gate has been breached.|Emperor Vigarde's forces are within the castle walls.
 s;Fado;I understand.
@@ -47,15 +49,17 @@ s;Fado;Seth.
 u;Seth;FarRight
 s;Seth;Yes, Your Majesty?
 s;Fado;Take Eirika and head for Frelia.|King Hayden is an honorable man. I trust he will keep you safe.
-s;Seth;Understood|And what of Your Majesty?
+s;Seth;Understood.|And what of Your Majesty?
 s;Fado;Me? I shall remain here.|We have long held Grado among our dearest allies, yet now, they attack?|I must know why.
 s;Fado;Am I somehow responsible for this? Have I erred in my leadership?|Renais is mine to guide... How could I have failed her so?
 bop;Eirika
 s;Eirika;Father, you can't stay! You mustn't!|If you remain behind, then so shall I!
 s;Fado;Go now, Seth! Ride! Take her to safety!
 r;Eirika;Fado;Seth
+wait;300
 # Seth moves and rescues Eirika
 move_unit;Seth;7,4;normal;stack
+start_move
 remove_unit;Eirika;immediate
 flash_cursor;Seth
 u;Eirika;MidRight;u;Seth;FarRight
@@ -71,6 +75,7 @@ move_unit;Franz;6,10
 start_move
 remove_unit;Seth;immediate
 remove_unit;Eirika;immediate
+remove_unit;Franz;immediate
 # Knights walk in
 move_unit;RenaisGeneral_1;5,4
 move_unit;RenaisGeneral_2;9,4
@@ -107,7 +112,7 @@ add_unit;GradoNecromancer;6,11;immediate
 move_unit;GradoGeneral;7,6
 move_unit;GradoNecromancer;6,7
 start_move
-flash_cursor;Fado
+flash_cursor;FakeFado
 u;Fado;Left
 s;Fado;Ephraim, Eirika... You must survive.
 t;3
@@ -143,6 +148,7 @@ t;2
 # Franz rides away
 move_unit;Franz;0,2
 start_move
+remove_unit;Franz
 flash_cursor;Seth
 t;1
 b;Forest
@@ -161,7 +167,7 @@ add_unit;GradoWyvern_1;14,4
 add_unit;GradoWyvern_2;14,6
 move_unit;Valter;10,5
 move_unit;GradoWyvern_1;11,4
-move_unit;GradoWyvern_1;11,6
+move_unit;GradoWyvern_2;11,6
 start_move
 move_unit;Valter;9,5
 start_move
@@ -199,6 +205,7 @@ remove_unit;Eirika;immediate
 wait;50
 move_unit;Seth;0,2
 start_move
+remove_unit;Seth
 flash_cursor;Valter
 u;Valter;Right
 s;Valter;Such terrible wounds, and still he holds to his duty?|How entertaining.|Fly away, little man. Fly away. Try to outrun death.|More time to savor the hunt... and the kill.
@@ -211,6 +218,7 @@ t;2
 trigger;Seth1
 add_unit;Eirika;8,5;immediate;stack
 move_unit;Eirika;9,5
+start_move
 flash_cursor;Eirika
 t;1
 b;Forest

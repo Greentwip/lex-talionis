@@ -7,7 +7,7 @@ t;2
 map_pan
 set_cursor;Vincent
 move_unit;Vincent;23,3
-start_move
+start_move;Vincent
 set_cursor;Vincent
 disp_cursor;1
 wait;500
@@ -71,7 +71,7 @@ disp_cursor;1
 wait;500
 disp_cursor;0
 move_unit;Jules;5,14
-start_move
+start_move;Jules
 set_cursor;Ophie
 t;1
 b;Desert
@@ -88,7 +88,7 @@ remove_background
 t;2
 set_cursor;Jules
 move_unit;Jules;9,5
-start_move
+start_move;Jules
 set_cursor;Ophie
 u;Ophie;Left
 s;Ophie;Come on. There's no time to waste!{w};auto
