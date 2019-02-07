@@ -993,6 +993,20 @@ class AddTag(Action):
         if not self.already_present:
             self.unit.tags.remove(self.new_tag)
 
+class RemoveTag(Action):
+    def __init__(self, unit, tag):
+        self.unit = unit
+        self.tag = tag
+        self.already_present = tag in unit.tags
+
+    def do(self, gameStateObj):
+        if self.already_present:
+            self.unit.tags.remove(self.tag)
+
+    def reverse(self, gameStateObj):
+        if self.already_present:
+            self.unit.tags.add(self.tag)
+
 class AddTalk(Action):
     def __init__(self, unit1, unit2):
         self.unit1 = unit1

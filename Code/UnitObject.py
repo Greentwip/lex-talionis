@@ -874,7 +874,7 @@ class UnitObject(object):
     def apply_levelup(self, levelup_list, hp_up=False):
         logger.debug("Applying levelup %s to %s", levelup_list, self.name)
         # Levelup_list should be a len(8) list.
-        for idx, name in enumerate(cf.CONSTANTS['stat_names']):
+        for idx, name in enumerate(GC.EQUATIONS.stat_list):
             self.stats[name].base_stat += levelup_list[idx]
         # Handle the case where this is done in base
         if hp_up:
@@ -883,7 +883,7 @@ class UnitObject(object):
     # For bonuses
     def apply_stat_change(self, levelup_list):
         logger.debug("Applying stat change %s to %s", levelup_list, self.name)
-        for idx, name in enumerate(cf.CONSTANTS['stat_names']):
+        for idx, name in enumerate(GC.EQUATIONS.stat_list):
             self.stats[name].bonuses += levelup_list[idx]
 
         # Handle changed cases

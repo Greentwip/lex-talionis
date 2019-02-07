@@ -6,14 +6,14 @@ import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
-import Code.SaveLoad as SaveLoad
 
 import Code.ItemMethods as ItemMethods
 import Code.Weapons as Weapons
 import Code.StatusObject as StatusObject
 
 import Code.UnitSprite as UnitSprite
-from Code.Dialogue import UnitPortrait
+import Code.ClassData as ClassData
+from Code.UnitPortrait import UnitPortrait
 
 try:
     import EditorUtilities
@@ -271,7 +271,7 @@ class GlobalData(object):
 
         # === Portrait Data ===
         # Has mouth and blink positions by name
-        portrait_dict = SaveLoad.create_portrait_dict()
+        portrait_dict = GC.PORTRAITDICT
         # Setting up portrait data
         self.portrait_data = OrderedDict()
         for name, portrait in portrait_dict.items():
@@ -284,7 +284,7 @@ class GlobalData(object):
             portrait.image = portrait.image.convert_alpha()
         
         # === Class Data ===
-        self.class_dict = SaveLoad.create_class_dict()
+        self.class_dict = ClassData.create_class_dict()
         self.class_data = OrderedDict()
         for klass_id, klass in self.class_dict.items():
             self.class_data[klass_id] = Klass(klass)

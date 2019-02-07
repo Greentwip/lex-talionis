@@ -357,6 +357,15 @@
         <components>shrug_off,class_skill</components>
     </status>
 
+    <status name="Windwall">
+        <id>Windwall</id>
+        <image_index>2,9</image_index>
+        <desc>Negates effective bonus of bows.</desc>
+        <components>remove_tag</components>
+
+        <remove_tag>Flying</remove_tag>
+    </status>
+
     <status name="Evasion">
         <id>Evasion</id>
         <image_index>3,3</image_index>

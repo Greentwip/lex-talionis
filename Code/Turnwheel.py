@@ -364,8 +364,10 @@ class TurnwheelDisplay(object):
         # Num Uses
         if gameStateObj.game_constants.get('max_turnwheel_uses', -1) > 0:
             uses_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
-            GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['current_turnwheel_uses']), (4, 4))
-            surf.blit(uses_bg, GC.WINWIDTH - 48 - 4, GC.WINHEIGHT - 24 - 4 - self.transition)
+            uses_text = str(gameStateObj.game_constants['current_turnwheel_uses']) + ' Left'
+            x = 48 - GC.FONT['text_blue'].size(uses_text)[0] - 8
+            GC.FONT['text_blue'].blit(uses_text, uses_bg, (x, 4))
+            surf.blit(uses_bg, (GC.WINWIDTH - 48 - 4, GC.WINHEIGHT - 24 - 4 - self.transition))
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):

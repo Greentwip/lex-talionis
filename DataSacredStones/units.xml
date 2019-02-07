@@ -698,4 +698,25 @@
         <skills></skills>
     </unit>
 
+    <!-- Level 15 Boss B -->
+    <unit name="Valter">
+        <id>Valter</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,S,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>48,20,10,18,18,4,14,13,11</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Spear,Killer Lance,dFili Shield</inventory>
+        
+        <level>13</level>
+        <class>Wyvern_Knight</class>
+        <desc>??</desc>
+        
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
 </unit_catalog>

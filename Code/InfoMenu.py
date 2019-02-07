@@ -413,7 +413,7 @@ class InfoMenu(StateMachine.State):
         # For each left stat
         stats = ['STR', 'MAG', 'SKL', 'SPD', 'DEF', 'RES']
         for idx, stat in enumerate(stats):
-            index = cf.CONSTANTS['stat_names'].index(stat)
+            index = GC.EQUATIONS.stat_list.index(stat)
             self.build_groove(menu_surf, (27, GC.TILEHEIGHT*idx + 32), int(max_stats[index]/float(cf.CONSTANTS['max_stat'])*44), 
                               self.unit.stats[stat].base_stat/float(max_stats[index]))
             self.unit.stats[stat].draw(menu_surf, self.unit, (47, GC.TILEHEIGHT*idx + 24))

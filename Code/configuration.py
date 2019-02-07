@@ -103,7 +103,6 @@ def read_constants_file():
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
              'max_stat': 20, # Maximum value that a non-HP stat can be. Irrespective of class caps. 
              'num_stats': 10, # Number of stats that a unit has (Includes HP, CON, and MOV)
-             'stat_names': 'HP,STR,MAG,SKL,SPD,LCK,DEF,RES,CON,MOV', # Stat names. These are mostly hardset. Don't change them without consulting rainlash
              'max_level': '10,20,20', # Maximum Level for class by tier ('10, 20, 20,')
              'promoted_level': 19, # Add this to a promoted units level to determine how many levels they've had
              'auto_promote': 0, # Promote after max-level?
@@ -161,7 +160,6 @@ def read_constants_file():
     lines['num_skills'] = int(lines['num_skills'])
     lines['max_stat'] = int(lines['max_stat'])
     lines['num_stats'] = int(lines['num_stats'])
-    lines['stat_names'] = lines['stat_names'].split(',')
     lines['max_level'] = [int(n) for n in lines['max_level'].split(',')]
     lines['auto_promote'] = int(lines['auto_promote'])
     lines['promoted_level'] = int(lines['promoted_level'])

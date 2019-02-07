@@ -493,6 +493,9 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
             if status.name == "Clumsy":
                 HandleStatusRemoval(status, unit, gameStateObj)
 
+    if status.remove_tag:
+        Action.do(Action.RemoveTag(status.remove_tag, unit), gameStateObj)
+
     if status.flying:
         unit.remove_tile_status(gameStateObj, force=True)
         
@@ -561,6 +564,8 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
     if status.rescue:
         for idx, stat in enumerate(status.rescue.stats):
             unit.stats[stat].bonuses -= status.rescue.penalties[idx]
+    if status.remove_tag:
+        Action.do(Action.AddTag(status.remove_tag, unit), gameStateObj)
     if status.flying and not clean_up:
         unit.acquire_tile_status(gameStateObj, force=True)
     if status.passive:

@@ -2430,6 +2430,20 @@
         <desc>Permanently raises all of the user's growth rates by 5.</desc>   
     </item>
 
+    <!-- Miscellaneous -->
+    <item name="Fili Shield">
+        <id>Fili Shield</id>
+        <spritetype>Valuable</spritetype>
+        <spriteid>1</spriteid>       
+        <components>status_on_hold</components>
+        
+        <RNG>0</RNG>
+        <value>10000</value>
+        <desc>Negates effective bonus of bows.</desc>   
+
+        <status_on_hold>Windwall</status_on_hold>
+    </item>
+
     <!-- Money -->
     <item name="Red Gem">
         <id>Red Gem</id>
