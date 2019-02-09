@@ -3,8 +3,6 @@
 # Shows Green Villagers vs. Red Soldiers -> Vagnius and Sydney stand out.
 # Set initial money
 set_game_constant;money;1500
-set_game_constant;max_turnwheel_uses;1
-set_game_constant;current_turnwheel_uses;1
 m;Mount Briggs
 add_unit;F1
 add_unit;F2

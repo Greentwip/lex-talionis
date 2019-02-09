@@ -84,11 +84,25 @@ class GameStateObj(object):
         self.start_map(self.old_map)
         self.old_map = None
 
-    def get_convoy(self):
-        return self._convoy[self.current_party]
+    def get_convoy(self, party=None):
+        if party is None:
+            party = self.current_party
+        if party not in self._convoy:
+            self._convoy[party] = []
+        return self._convoy[party]
 
     convoy = property(get_convoy)
 
+    def get_money(self, party=None):
+        if party is None:
+            party = self.current_party
+        return self._money[party]
+
+    def inc_money(self, amount, party=None):
+        if party is None:
+            party = self.current_party
+        self._money[party] += amount
+        
     # Start a new game
     def build_new(self):
         logger.info("Build New")
@@ -101,7 +115,7 @@ class GameStateObj(object):
         self.map = None
         self.game_constants = Counter()
         self.game_constants['level'] = 0
-        self.game_constants['money'] = 0
+        self._money = Counter()
         self._convoy = {0: []}
         self.current_party = 0
         self.play_time = 0
@@ -576,7 +590,7 @@ class GameStateObj(object):
     def output_progress(self):
         with open('Saves/progress_log.txt', 'a') as p_log:
             p_log.write('\n')
-            p_log.write('\n=== Level ' + str(self.game_constants['level']) + ' === Money: ' + str(self.game_constants['money']))
+            p_log.write('\n=== Level ' + str(self.game_constants['level']) + ' === Money: ' + str(self.get_money()))
             for unit in self.allunits:
                 p_log.write('\n*** ' + unit.name + ': ' + ','.join([skill.name for skill in unit.status_effects]))
                 p_log.write('\nLvl ' + str(unit.level) + ', Exp ' + str(unit.exp))

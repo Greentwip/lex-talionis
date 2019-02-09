@@ -1,6 +1,8 @@
 # Intro Script 8
 # 
 # A villager arrives, telling that they're under attack. Everyone get ready.
+set_game_constant;max_turnwheel_uses;8
+set_game_constant;current_turnwheel_uses;8
 m;Mount Briggs
 set_cursor;Vagnius;immediate
 b;TacticsRoom

@@ -1,4 +1,6 @@
 # Intro Script Level 5
+set_game_constant;max_turnwheel_uses;5
+set_game_constant;current_turnwheel_uses;5
 m;Mount Briggs
 add_unit;N1
 add_unit;N2

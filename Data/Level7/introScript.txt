@@ -1,4 +1,6 @@
 # Intro Script 7
+set_game_constant;max_turnwheel_uses;7
+set_game_constant;current_turnwheel_uses;7
 m;Ambient Forest
 set_cursor;0,0;immediate
 t;2

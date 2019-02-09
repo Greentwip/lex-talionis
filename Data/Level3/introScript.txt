@@ -1,4 +1,6 @@
 # Intro Script 3
+set_game_constant;max_turnwheel_uses;3
+set_game_constant;current_turnwheel_uses;3
 m;Awakening - Easy Now
 arrange_formation
 set_cursor;0,20;immediate

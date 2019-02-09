@@ -2,6 +2,8 @@
 # Ophie and Prim in Forest
 m;Ambient Forest
 add_component;Sidney;Boss
+set_game_constant;max_turnwheel_uses;1
+set_game_constant;current_turnwheel_uses;1
 b;Forest
 t;2
 u;Prim;Right

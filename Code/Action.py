@@ -909,19 +909,20 @@ class ChangeParty(Action):
         self.unit.party = self.old_party
 
 class GiveGold(Action):
-    def __init__(self, amount):
+    def __init__(self, amount, party):
         self.amount = amount
+        self.party = party
 
     def do(self, gameStateObj):
-        gameStateObj.game_constants['money'] += self.amount
+        gameStateObj.inc_money(self.amount, self.party)
         gameStateObj.banners.append(Banner.acquiredGoldBanner(self.amount))
         gameStateObj.stateMachine.changeState('itemgain')
 
     def execute(self, gameStateObj):
-        gameStateObj.game_constants['money'] += self.amount
+        gameStateObj.inc_money(self.amount, self.party)
 
     def reverse(self, gameStateObj):
-        gameStateObj.game_constants['money'] -= self.amount
+        gameStateObj.inc_money(-self.amount, self.party)
 
 class ChangeGameConstant(Action):
     def __init__(self, constant, new_value):

@@ -1,4 +1,6 @@
 # Intro Script 3
+set_game_constant;max_turnwheel_uses;4
+set_game_constant;current_turnwheel_uses;4
 m;Awakening - Easy Now
 convert;Eliza;player
 arrange_formation

@@ -143,9 +143,10 @@ class StatusMenu(StateMachine.State):
         GC.FONT['text_blue'].blit(str(gameStateObj.turncount), turn_count_surf, (0, 0))
         surfaces.append((turn_count_surf, (GC.WINWIDTH//3 - 16 - turn_count_surf.get_width(), 38)))                    
         # MoneySurf
-        money_size = (GC.FONT['text_blue'].size(str(gameStateObj.game_constants['money']))[0] + 1, GC.FONT['text_blue'].height)
+        money = str(gameStateObj.get_money())
+        money_size = (GC.FONT['text_blue'].size(money)[0] + 1, GC.FONT['text_blue'].height)
         money_surf = Engine.create_surface(money_size, transparent=True, convert=True)
-        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), money_surf, (0, 0))
+        GC.FONT['text_blue'].blit(money, money_surf, (0, 0))
         surfaces.append((money_surf, (2*GC.WINWIDTH//3 - 8 - 4 - money_surf.get_width(), 38)))
 
         # Get win and loss conditions

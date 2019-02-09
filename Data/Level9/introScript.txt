@@ -1,4 +1,6 @@
 # Intro Script 9
+set_game_constant;max_turnwheel_uses;9
+set_game_constant;current_turnwheel_uses;9
 m;Sootballs
 b;Sewers
 t;2

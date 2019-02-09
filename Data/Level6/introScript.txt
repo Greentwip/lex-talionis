@@ -1,5 +1,7 @@
 # Intro Script
 # Outside the Prison
+set_game_constant;max_turnwheel_uses;6
+set_game_constant;current_turnwheel_uses;6
 m;Sootballs
 arrange_formation
 set_game_constant;switches;0

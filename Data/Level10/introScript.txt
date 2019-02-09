@@ -1,4 +1,6 @@
 # Intro Script 10
+set_game_constant;max_turnwheel_uses;10
+set_game_constant;current_turnwheel_uses;10
 layer_tile_sprite;1;12,9;top_walkway2
 layer_tile_sprite;1;10,10;top_walkway
 layer_tile_sprite;2;10,7;top_gap

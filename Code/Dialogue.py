@@ -540,7 +540,11 @@ class Dialogue_Scene(object):
 
         # Give the player gold!
         elif line[0] == 'gold':
-            Action.do(Action.GiveGold(int(line[1])), gameStateObj)
+            if len(line) > 2:
+                party = int(line[2])
+            else:
+                party = gameStateObj.current_party
+            Action.do(Action.GiveGold(int(line[1]), party), gameStateObj)
             self.current_state = "Paused"
 
         elif line[0] == 'remove_item':
@@ -968,6 +972,18 @@ class Dialogue_Scene(object):
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     Action.do(Action.AddTag(unit, line[2]), gameStateObj)
+        elif line[0] == 'merge_parties':
+            host, guest = int(line[1]), int(line[2])
+            for unit in gameStateObj.allunits:
+                if unit.party == guest:
+                    Action.do(Action.ChangeParty(unit, host), gameStateObj)
+            # Merge items
+            for item in gameStateObj._convoy[guest]:
+                gameStateObj._convoy[host].append(item)
+            gameStateObj._convoy[guest] = []
+            # Merge money
+            gameStateObj._money[host] += gameStateObj._money[guest]
+            gameStateObj._money[guest] = 0
 
         # === HANDLE TALKING
         elif line[0] == 'add_talk':

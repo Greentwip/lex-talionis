@@ -1,4 +1,6 @@
 # Intro Script 2
+set_game_constant;max_turnwheel_uses;2
+set_game_constant;current_turnwheel_uses;2
 m;Hum of the Streets
 add_unit;S1
 add_unit;S2

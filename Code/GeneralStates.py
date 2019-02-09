@@ -199,8 +199,8 @@ class OptionsMenuState(StateMachine.State):
             options.append(cf.WORDS['End'])
             info_desc.append(cf.WORDS['End_desc'])
         if cf.CONSTANTS['turnwheel']:
-            options.insert(0, cf.WORDS['Turnwheel'])
-            info_desc.insert(0, cf.WORDS['Turnwheel_desc'])
+            options.insert(1, cf.WORDS['Turnwheel'])
+            info_desc.insert(1, cf.WORDS['Turnwheel_desc'])
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(None, options, 'auto', gameStateObj=gameStateObj, info_desc=info_desc)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
@@ -2919,7 +2919,7 @@ class ShopState(StateMachine.State):
                 selection = self.shopMenu.getSelection()
                 value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                 if ('Convoy' in gameStateObj.game_constants or len(self.unit.items) < cf.CONSTANTS['max_items']) and\
-                        (gameStateObj.game_constants['money'] - value) >= 0:
+                        (gameStateObj.get_money() - value) >= 0:
                     GC.SOUNDDICT['Select 1'].play()
                     self.stateMachine.changeState('buy_sure')
                     if len(self.unit.items) >= cf.CONSTANTS['max_items']:
@@ -2927,7 +2927,7 @@ class ShopState(StateMachine.State):
                     else:
                         self.display_message = self.get_dialog(cf.WORDS['Shop_check'])
                     self.shopMenu.takes_input = False
-                elif (gameStateObj.game_constants['money'] - value) < 0:
+                elif (gameStateObj.get_money() - value) < 0:
                     GC.SOUNDDICT['Select 4'].play()
                     self.display_message = self.get_dialog(cf.WORDS['Shop_no_money'])
                 elif len(self.unit.items) >= cf.CONSTANTS['max_items']:
@@ -2987,7 +2987,7 @@ class ShopState(StateMachine.State):
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                     Action.execute(Action.GiveItem(self.unit, ItemMethods.itemparser(str(selection.id))[0]), gameStateObj)
                     # gameStateObj.game_constants['money'] -= value
-                    Action.do(Action.ChangeGameConstant('money', gameStateObj.game_constants['money'] - value), gameStateObj)
+                    Action.execute(Action.GiveGold(-value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(-value)
                     self.display_message = self.get_dialog('Buying anything else?')
                     # self.unit.hasAttacked = True
@@ -3022,7 +3022,7 @@ class ShopState(StateMachine.State):
                     self.myMenu.currentSelection = 0 # Reset selection
                     value = (selection.value * selection.uses.uses)//2 if selection.uses else selection.value//2 # Divide by 2 because selling
                     # gameStateObj.game_constants['money'] += value
-                    Action.do(Action.ChangeGameConstant('money', gameStateObj.game_constants['money'] + value), gameStateObj)
+                    Action.execute(Action.GiveGold(value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(value)
                     self.display_message = self.get_dialog(self.back_message)
                     # self.unit.hasAttacked = True
@@ -3074,9 +3074,9 @@ class ShopState(StateMachine.State):
 
         if self.stateMachine.getState() in ['sell', 'sell_sure'] or \
                 (self.stateMachine.getState() == 'choice' and self.buy_sell_menu.getSelection() == cf.WORDS['Sell']):
-            self.myMenu.draw(surf, gameStateObj.game_constants['money'])
+            self.myMenu.draw(surf, gameStateObj.get_money())
         else:
-            self.shopMenu.draw(surf, gameStateObj.game_constants['money'])
+            self.shopMenu.draw(surf, gameStateObj.get_money())
 
         if self.stateMachine.getState() == 'choice' and self.display_message.done:
             self.buy_sell_menu.draw(surf)
@@ -3087,7 +3087,8 @@ class ShopState(StateMachine.State):
         for simple_surf, rect in self.draw_surfaces:
             surf.blit(simple_surf, rect)
 
-        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), surf, (223 - GC.FONT['text_yellow'].size(str(gameStateObj.game_constants['money']))[0], 48))
+        money = str(gameStateObj.get_money())
+        GC.FONT['text_blue'].blit(money, surf, (223 - GC.FONT['text_yellow'].size(money)[0], 48))
         self.money_counter_disp.draw(surf)
 
         # Draw current info

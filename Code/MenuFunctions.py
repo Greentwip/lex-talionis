@@ -1482,7 +1482,7 @@ class ConvoyMenu(object):
         dist = int(120//len(self.order)) - 1
         if self.disp_value:
             dist = int(160//len(self.order)) - 1
-            self.menus[self.order[self.selection_index]].draw(surf, gameStateObj.game_constants['money'])
+            self.menus[self.order[self.selection_index]].draw(surf, gameStateObj.get_money())
         else:
             self.menus[self.order[self.selection_index]].draw(surf)
         # Draw item icons

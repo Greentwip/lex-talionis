@@ -321,7 +321,7 @@ def draw_funds(surf, gameStateObj):
     GC.FONT['text_white'].blit(': Info', surf, (123 + GC.FONT['text_blue'].size(helper)[0], 143))
     # Draw Funds display
     surf.blit(GC.IMAGESDICT['FundsDisplay'], (168, 137))
-    money = str(gameStateObj.game_constants['money'])
+    money = str(gameStateObj.get_money())
     size = GC.FONT['text_blue'].size(money)[0]
     GC.FONT['text_blue'].blit(money, surf, (219 - size, 140))
 
@@ -1125,7 +1125,7 @@ class BaseMarketState(StateMachine.State):
                 selection = self.current_menu.getSelection()
                 if selection:
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
-                    if gameStateObj.game_constants['money'] - value >= 0:
+                    if gameStateObj.get_money() - value >= 0:
                         self.state = 'Buy_Sure'
                         GC.SOUNDDICT['Select 1'].play()
                     else:
@@ -1144,7 +1144,7 @@ class BaseMarketState(StateMachine.State):
                     else:
                         gameStateObj.convoy.append(item)
                     value = (item.value * item.uses.uses) if item.uses else item.value
-                    gameStateObj.game_constants['money'] -= value
+                    gameStateObj.inc_money(-value)
                     self.money_counter_disp.start(-value)
                     self.update_options(gameStateObj)
                 else:
@@ -1168,7 +1168,7 @@ class BaseMarketState(StateMachine.State):
                     GC.SOUNDDICT['Select 1'].play()
                     item = self.current_menu.getSelection()
                     value = (item.value * item.uses.uses)//2 if item.uses else item.value//2
-                    gameStateObj.game_constants['money'] += value
+                    gameStateObj.inc_money(value)
                     self.money_counter_disp.start(value)
                     if item.item_owner:
                         owner = gameStateObj.get_unit_from_id(item.item_owner)
@@ -1228,7 +1228,7 @@ class BaseMarketState(StateMachine.State):
         
         # Draw Money
         mapSurf.blit(self.money_surf, (10, GC.WINHEIGHT - 24))
-        GC.FONT['text_blue'].blit(str(gameStateObj.game_constants['money']), mapSurf, (16, GC.WINHEIGHT - 20))
+        GC.FONT['text_blue'].blit(str(gameStateObj.get_money()), mapSurf, (16, GC.WINHEIGHT - 20))
         # Draw money counter display
         self.money_counter_disp.draw(mapSurf)
 
