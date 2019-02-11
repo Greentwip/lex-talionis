@@ -87,7 +87,7 @@ class Dialogue_Scene(object):
 
         # Handles skipping
         self.skippable_commands = {'s', 'u', 'qu', 't', 'wait', 'bop', 'mirror',
-                                   'map_pan', 'set_expression',
+                                   'map_pan', 'set_expression', 'sound',
                                    'credits', 'endings', 'cinematic', 'start_move', 
                                    'move_sprite', 'qmove_sprite', 'midground_movie',
                                    'foreground_movie'}
@@ -501,6 +501,8 @@ class Dialogue_Scene(object):
         elif line[0] == 'mf':
             logger.debug('Fade out music')
             Engine.music_thread.fade_back()
+        elif line[0] == 'sound':
+            GC.SOUNDDICT[line[1]].play()
 
         # === HANDLE ITEMS
         # Give the optional unit an item or give the unit named in the line the item

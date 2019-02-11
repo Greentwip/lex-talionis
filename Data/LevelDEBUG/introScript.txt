@@ -14,6 +14,7 @@ s;Ophie;I am a waffle!{w}{br}Waffle good! Waffle strong!
 r;Renae;Ophie
 t;1
 remove_background
+sound;Legendary Weapon
 t;2
 inc_game_constant;money;10000
 u;Renae;Left

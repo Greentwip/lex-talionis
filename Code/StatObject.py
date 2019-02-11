@@ -15,52 +15,52 @@ class Stat(object):
         self.bonuses = bonus
 
     def __float__(self):
-        return float(self.base_stat) + self.bonuses
+        return max(0, float(self.base_stat) + self.bonuses)
 
     def __int__(self):
-        return self.base_stat + self.bonuses
+        return max(0, self.base_stat + self.bonuses)
 
     def __str__(self):
-        return str(self.base_stat + self.bonuses)
+        return str(max(0, self.base_stat + self.bonuses))
 
     def __repr__(self):
-        return str(self.base_stat + self.bonuses)
+        return str(max(0, self.base_stat + self.bonuses))
 
     def __sub__(self, other):
-        return self.base_stat + self.bonuses - other
+        return max(0, self.base_stat + self.bonuses) - other
 
     def __add__(self, other):
-        return self.base_stat + self.bonuses + other
+        return max(0, self.base_stat + self.bonuses) + other
 
     def __rsub__(self, other):
-        return other - self.base_stat - self.bonuses
+        return other - max(0, self.base_stat + self.bonuses)
 
     def __radd__(self, other):
-        return other + self.base_stat + self.bonuses
+        return other + max(0, self.base_stat + self.bonuses)
 
     def __mul__(self, other):
-        return (self.base_stat + self.bonuses) * other
+        return max(0, self.base_stat + self.bonuses) * other
 
     def __rmul__(self, other):
-        return other * (self.base_stat + self.bonuses)
+        return other * max(0, self.base_stat + self.bonuses)
 
     def __div__(self, other):
-        return (self.base_stat + self.bonuses) / other
+        return max(0, self.base_stat + self.bonuses) / other
 
     def __floordiv__(self, other):
-        return (self.base_stat + self.bonuses) // other
+        return max(0, self.base_stat + self.bonuses) // other
 
     def __rdiv__(self, other):
-        return other / (self.base_stat + self.bonuses)
+        return other / max(0, self.base_stat + self.bonuses)
 
     def __rfloordiv__(self, other):
-        return other // (self.base_stat + self.bonuses)
+        return other // max(0, self.base_stat + self.bonuses)
 
     def __neg__(self):
-        return -(self.base_stat + self.bonuses)
+        return -max(0, self.base_stat + self.bonuses)
 
     def __cmp__(self, other):
-        total = self.base_stat + self.bonuses
+        total = max(0, self.base_stat + self.bonuses)
         if total > other:
             return 1
         elif total == other:
@@ -70,22 +70,22 @@ class Stat(object):
 
     # Python 3 needs these explicitly defined
     def __lt__(self, other):
-        return self.base_stat + self.bonuses < other
+        return max(0, self.base_stat + self.bonuses) < other
 
     def __gt__(self, other):
-        return self.base_stat + self.bonuses > other
+        return max(0, self.base_stat + self.bonuses) > other
 
     def __le__(self, other):
-        return self.base_stat + self.bonuses <= other
+        return max(0, self.base_stat + self.bonuses) <= other
 
     def __ge__(self, other):
-        return self.base_stat + self.bonuses >= other
+        return max(0, self.base_stat + self.bonuses) >= other
 
     def __eq__(self, other):
-        return self.base_stat + self.bonuses == other
+        return max(0, self.base_stat + self.bonuses) == other
 
     def __ne__(self, other):
-        return self.base_stat + self.bonuses != other
+        return max(0, self.base_stat + self.bonuses) != other
 
     def serialize(self):
         return (self.base_stat, self.bonuses)

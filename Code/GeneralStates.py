@@ -734,13 +734,14 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('vendor')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Seize']:
+                gameStateObj.stateMachine.clear()
+                gameStateObj.stateMachine.changeState('free')
                 cur_unit.seize(gameStateObj)
-            elif selection in [cf.WORDS['Escape'], cf.WORDS['Arrive']]:
+            elif selection in (cf.WORDS['Escape'], cf.WORDS['Arrive']):
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
                 cur_unit.escape(gameStateObj)
             elif selection == cf.WORDS['Switch']:
-                # cur_unit.hasAttacked = True
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
                 switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
@@ -763,7 +764,6 @@ class MenuState(StateMachine.State):
                 search_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, unit=cur_unit, name=search_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
-                # cur_unit.hasAttacked = True
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
             elif selection == cf.WORDS['Talk']:
                 positions = [unit.position for unit in gameStateObj.allunits if unit.position in cur_unit.getAdjacentPositions(gameStateObj) and 
