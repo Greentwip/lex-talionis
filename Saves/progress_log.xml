@@ -219,3 +219,25 @@
 	</units>
 </level>
 
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<money>6000</money>
+	<convoy></convoy>
+	<units>
+		<unit name="Sam">
+			<level>7</level>
+			<exp>0</exp>
+			<items>Shine Ward 18,Mend 15,Fortune 10</items>
+			<wexp>0,0,0,0,31,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Eliza">
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Lance 45,Javelin 20</items>
+			<wexp>0,21,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+

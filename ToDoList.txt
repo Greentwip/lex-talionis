@@ -15,6 +15,9 @@
 - Parties
 
 - New Screenshots in all marketing content
+- When I fix events, make escape, seize, switch, search, etc, all work the same way -- also add "unit_end_turn" command
+
+- Add Fire weather
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---

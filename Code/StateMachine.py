@@ -970,8 +970,10 @@ class MenuState(State):
                 gameStateObj.stateMachine.changeState('vendor')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Seize']:
+                gameStateObj.stateMachine.clear()
+                gameStateObj.stateMachine.changeState('free')
                 cur_unit.seize(gameStateObj)
-            elif selection in [cf.WORDS['Escape'], cf.WORDS['Arrive']]:
+            elif selection in (cf.WORDS['Escape'], cf.WORDS['Arrive']):
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
                 cur_unit.escape(gameStateObj)

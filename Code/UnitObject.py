@@ -2036,11 +2036,14 @@ class UnitObject(object):
 
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
+        self.hasAttacked = True
+        gameStateObj.stateMachine.changeState('wait')
         gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def seize(self, gameStateObj):
         self.hasAttacked = True
+        gameStateObj.stateMachine.changeState('wait')
         gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 

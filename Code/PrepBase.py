@@ -152,12 +152,16 @@ class PrepPickUnitsState(StateMachine.State):
                 GC.SOUNDDICT['Select 4'].play()  # Locked/Lord Character
             elif selection.position:
                 GC.SOUNDDICT['Select 1'].play()
+                selection.leave(gameStateObj)
+                selection.remove_from_map(gameStateObj)
                 selection.position = None
             else:
                 possible_position = gameStateObj.check_formation_spots()
                 if possible_position:
                     GC.SOUNDDICT['Select 1'].play()
                     selection.position = possible_position
+                    selection.place_on_map(gameStateObj)
+                    selection.arrive(gameStateObj)
                     selection.reset() # Make sure unit is not 'wait'...
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
