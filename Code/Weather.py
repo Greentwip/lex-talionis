@@ -18,6 +18,13 @@ class Weather(object):
 
         self.l_x, self.u_x, self.l_y, self.u_y = bounds
 
+        if self.name == "Fire":
+            self.static = True
+            self.blend = GC.IMAGESDICT['FireBG']
+        else:
+            self.static = False
+            self.blend = None
+
     def update(self, current_time, gameStateObj):
         for particle in self.particles:
             particle.update(gameStateObj)
@@ -34,9 +41,11 @@ class Weather(object):
         if self.abundance <= 0 and not self.particles:
             self.remove_me = True
 
-    def draw(self, surf):
+    def draw(self, surf, pos_x=0, pos_y=0):
+        if self.blend:
+            Engine.blit(surf, self.blend, (pos_x, pos_y), None, Engine.BLEND_RGB_ADD)
         for particle in self.particles:
-            particle.draw(surf)
+            particle.draw(surf, pos_x, pos_y)
 
 class Raindrop(object):
     def __init__(self, pos):
@@ -52,8 +61,8 @@ class Raindrop(object):
         if self.x > gameStateObj.map.width*GC.TILEWIDTH or self.y > gameStateObj.map.height*GC.TILEHEIGHT:
             self.remove_me = True
 
-    def draw(self, surf):
-        surf.blit(self.sprite, (self.x, self.y))
+    def draw(self, surf, pos_x=0, pos_y=0):
+        surf.blit(self.sprite, (self.x + pos_x, self.y + pos_y))
 
 class Sand(Raindrop):
     def __init__(self, pos):
@@ -95,6 +104,35 @@ class Smoke(Raindrop):
             self.sprite = self.top_sprite
             self.on_bottom_flag = False
 
+class Fire(Raindrop):
+    full_sprite = GC.IMAGESDICT['FireParticle']
+    sprites = [Engine.subsurface(full_sprite, (0, i*2, 3, 2)) for i in range(6)]
+
+    def __init__(self, pos):
+        self.x = pos[0]
+        self.y = pos[1]
+        self.speed = random.randint(1, 4)
+        self.remove_me = False
+        self.sprite = self.sprites[-1]
+
+    def update(self, gameStateObj):
+        self.x -= random.randint(0, self.speed)
+        self.y -= random.randint(0, self.speed)
+        if self.y > 112:
+            self.sprite = self.sprites[-1]
+        elif self.y > 104:
+            self.sprite = self.sprites[-2]
+        elif self.y > 88:
+            self.sprite = self.sprites[-3]
+        elif self.y > 80:
+            self.sprite = self.sprites[-4]
+        elif self.y > 72:
+            self.sprite = self.sprites[-5]
+        elif self.y > 64:
+            self.sprite = self.sprites[-6]
+        else:
+            self.remove_me = True
+
 class Snow(Raindrop):
     def __init__(self, pos):
         self.x = pos[0]
@@ -133,7 +171,7 @@ class WarpFlower(object):
         if self.x < 0 or self.y < 0 or self.x > gameStateObj.map.width*GC.TILEWIDTH or self.y > gameStateObj.map.height*GC.TILEHEIGHT:
             self.remove_me = True
 
-    def draw(self, surf):
+    def draw(self, surf, pos_x, pos_y):
         surf.blit(self.sprite, (self.x, self.y))
 
 class LightMote(object):
@@ -165,7 +203,7 @@ class LightMote(object):
                 self.remove_me = True
                 self.transparency = 100
 
-    def draw(self, surf):
+    def draw(self, surf, pos_x, pos_y):
         surf.blit(Image_Modification.flickerImageTranslucent(self.sprite, self.transparency), (self.x, self.y))
 
 class DarkMote(LightMote):
@@ -178,6 +216,7 @@ class DarkMote(LightMote):
 WEATHER_CATALOG = {'Rain': Raindrop,
                    'Sand': Sand,
                    'Smoke': Smoke,
+                   'Fire': Fire,
                    'Snow': Snow,
                    'Light': LightMote,
                    'Dark': DarkMote,

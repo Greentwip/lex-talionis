@@ -663,6 +663,7 @@ class GameStateObj(object):
         for cursor in self.fake_cursors:
             cursor.draw(mapSurf)
         # Draw weather
+        pos_x, pos_y = self.cameraOffset.get_x() * GC.TILEWIDTH, self.cameraOffset.get_y() * GC.TILEHEIGHT
         for weather in self.map.weather:
-            weather.draw(mapSurf)
+            weather.draw(mapSurf, pos_x, pos_y)
         return mapSurf
