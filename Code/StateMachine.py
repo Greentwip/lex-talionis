@@ -2179,8 +2179,8 @@ class CombatState(State):
         if gameStateObj.cursor:
             gameStateObj.cursor.draw(mapSurf)
         # Draw weather
-        for particle in gameStateObj.map.weather:
-            particle.draw(mapSurf)
+        for weather in gameStateObj.map.weather:
+            weather.draw(mapSurf, pos_x, pos_y)
         mapSurf.blit(viewbox_bg, (pos_x, pos_y))
         return mapSurf
 
@@ -3321,6 +3321,7 @@ def drawMap(gameStateObj):
     for cursor in gameStateObj.fake_cursors:
         cursor.draw(mapSurf)
     # Draw weather
+    pos_x, pos_y = gameStateObj.cameraOffset.get_x() * GC.TILEWIDTH, gameStateObj.cameraOffset.get_y() * GC.TILEHEIGHT
     for weather in gameStateObj.map.weather:
-        weather.draw(mapSurf)
+        weather.draw(mapSurf, pos_x, pos_y)
     return mapSurf

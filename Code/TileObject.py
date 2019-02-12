@@ -567,6 +567,9 @@ class MapObject(object):
         elif weather == "Dark":
             bounds = (0, self.width*GC.TILEWIDTH, 0, self.height*GC.TILEHEIGHT)
             self.weather.append(Weather.Weather('Dark', .04, bounds, (self.width, self.height)))
+        elif weather == "Fire":
+            bounds = (0, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
+            self.weather.append(Weather.Weather('Fire', .05, bounds, (GC.TILEX, GC.TILEY)))
 
     def remove_weather(self, name):
         self.weather = [weather for weather in self.weather if weather.name != name]
