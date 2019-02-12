@@ -588,6 +588,8 @@ class UnitObject(object):
     def leave(self, gameStateObj, serializing=False):
         if self.position:
             logger.debug('Leave %s %s %s', self, self.name, self.position)
+            if gameStateObj.cursor.currentHoveredUnit is self:
+                gameStateObj.cursor.remove_unit_display()
             if not serializing:
                 gameStateObj.grid_manager.set_unit_node(self.position, None)
                 gameStateObj.boundary_manager.leave(self, gameStateObj)
@@ -1758,7 +1760,7 @@ class UnitObject(object):
 
         self.sprite.change_state('normal')
         # Handle support increment
-        if gameStateObj.support and cf.CONSTANTS['support_end_turn']:
+        if self.position and gameStateObj.support and cf.CONSTANTS['support_end_turn']:
             gameStateObj.support.end_turn(self, gameStateObj)
 
         # changing state

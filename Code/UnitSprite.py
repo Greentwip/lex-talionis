@@ -76,48 +76,9 @@ class UnitSprite(object):
                 image = Image_Modification.flickerImageWhiteColorKey(image, 255)
                 image = Image_Modification.flickerImageTranslucentColorKey(image, int(100*self.unit.deathCounter//27))
             else:
-                self.transition_counter -= Engine.get_delta()
-                if self.transition_counter < 0:
-                    self.transition_counter = 0
                 image = Image_Modification.flickerImageTranslucentColorKey(image, 100 - self.transition_counter//(self.transition_time//100))
-                if self.transition_counter <= 0:
-                    if self.transition_state == 'fade_out':
-                        self.transition_state = 'normal'
-                        if self.state == 'fake_transition_out':
-                            self.change_state('normal', gameStateObj)
-                        self.unit.die(gameStateObj)
-                    elif self.transition_state == 'fade_out_event':
-                        self.transition_state = 'normal'
-                        if self.state == 'fake_transition_out':
-                            self.change_state('normal', gameStateObj)
-                        self.unit.die(gameStateObj, event=True)
-                    elif self.transition_state == 'warp_out':
-                        gameStateObj.map.initiate_warp_flowers(self.unit.position)
-                        self.unit.die(gameStateObj, event=True)
-                        self.transition_state = 'normal'
-                        if self.state == 'fake_transition_out':
-                            self.change_state('normal', gameStateObj)
-                    elif self.transition_state in ('fade_move', 'warp_move'):
-                        self.unit.leave(gameStateObj)
-                        self.unit.position = self.next_position
-                        self.unit.arrive(gameStateObj)
-                        gameStateObj.cursor.setPosition(self.unit.position, gameStateObj)
-                        # gameStateObj.stateMachine.changeState('move_camera')
-                        self.next_position = None
-                        if self.transition_state == 'fade_move':
-                            self.set_transition('fade_in')
-                        elif self.transition_state == 'warp_move':
-                            gameStateObj.map.initiate_warp_flowers(self.unit.position)
-                            self.set_transition('warp_in')
         elif self.transition_state == 'warp_in' or self.transition_state == 'fade_in':
-            self.transition_counter -= Engine.get_delta()
-            if self.transition_counter < 0:
-                self.transition_counter = 0
             image = Image_Modification.flickerImageTranslucentColorKey(image, self.transition_counter//(self.transition_time//100))
-            if self.transition_counter <= 0:
-                self.transition_state = 'normal'
-                if self.state == 'fake_transition_in':
-                    self.change_state('normal', gameStateObj)
         
         if self.unit.flicker:
             color = self.unit.flicker[2]
@@ -466,8 +427,51 @@ class UnitSprite(object):
                     self.unit.leave(gameStateObj)
                     self.unit.position = None
 
+    def update_transition(self, gameStateObj):
+        if self.transition_state in WARP_OUT_SET:
+            if not self.unit.deathCounter:
+                self.transition_counter -= Engine.get_delta()
+                if self.transition_counter < 0:
+                    self.transition_counter = 0
+                    if self.transition_state == 'fade_out':
+                        self.transition_state = 'normal'
+                        if self.state == 'fake_transition_out':
+                            self.change_state('normal', gameStateObj)
+                        self.unit.die(gameStateObj)
+                    elif self.transition_state == 'fade_out_event':
+                        self.transition_state = 'normal'
+                        if self.state == 'fake_transition_out':
+                            self.change_state('normal', gameStateObj)
+                        self.unit.die(gameStateObj, event=True)
+                    elif self.transition_state == 'warp_out':
+                        gameStateObj.map.initiate_warp_flowers(self.unit.position)
+                        self.unit.die(gameStateObj, event=True)
+                        self.transition_state = 'normal'
+                        if self.state == 'fake_transition_out':
+                            self.change_state('normal', gameStateObj)
+                    elif self.transition_state in ('fade_move', 'warp_move'):
+                        self.unit.leave(gameStateObj)
+                        self.unit.position = self.next_position
+                        self.unit.arrive(gameStateObj)
+                        gameStateObj.cursor.setPosition(self.unit.position, gameStateObj)
+                        # gameStateObj.stateMachine.changeState('move_camera')
+                        self.next_position = None
+                        if self.transition_state == 'fade_move':
+                            self.set_transition('fade_in')
+                        elif self.transition_state == 'warp_move':
+                            gameStateObj.map.initiate_warp_flowers(self.unit.position)
+                            self.set_transition('warp_in')
+        elif self.transition_state == 'warp_in' or self.transition_state == 'fade_in':
+            self.transition_counter -= Engine.get_delta()
+            if self.transition_counter < 0:
+                self.transition_counter = 0
+                self.transition_state = 'normal'
+                if self.state == 'fake_transition_in':
+                    self.change_state('normal', gameStateObj)
+
     def update(self, gameStateObj):
         self.update_state(gameStateObj)
+        self.update_transition(gameStateObj)
             
         # Update status effects
         # Status effects

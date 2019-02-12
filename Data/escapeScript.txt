@@ -32,7 +32,7 @@ end
 #
 # Universal
 remove_unit;{unit}
-wait;200
+wait;400
 if;not any(unit.team in ("player", "other") for unit in gameStateObj.allunits if unit.position)
 	win_game
 end
