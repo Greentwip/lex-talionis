@@ -1,0 +1,62 @@
+pose;Dodge
+f;1;Sword_000
+sound;Horse Step 1
+f;1;Sword_000
+f;3;Sword_048
+f;27;Sword_049
+sound;Horse Step 1
+f;1;Sword_049
+f;4;Sword_048
+
+pose;Attack
+f;6;Sword_000
+f;7;Sword_001
+f;5;Sword_002
+sound;Horse Step 3
+f;1;Sword_002
+f;5;Sword_003
+spell
+sound;Weapon Pull
+f;1;Sword_003
+f;1;Sword_004
+start_loop
+f;4;Sword_004
+end_loop
+f;4;Sword_004
+f;6;Sword_046
+sound;Horse Step 1
+f;1;Sword_046
+f;7;Sword_027
+f;7;Sword_028
+
+pose;Critical
+f;6;Sword_000
+f;7;Sword_001
+f;5;Sword_002
+sound;Horse Step 3
+f;1;Sword_002
+f;5;Sword_003
+sound;Weapon Pull
+f;1;Sword_003
+f;2;Sword_047
+f;1;Sword_004
+f;3;Sword_047
+f;1;Sword_004
+f;3;Sword_047
+f;1;Sword_004
+spell
+f;1;Sword_047
+f;1;Sword_004
+start_loop
+f;4;Sword_004
+end_loop
+f;4;Sword_004
+f;6;Sword_046
+sound;Horse Step 1
+f;1;Sword_046
+f;7;Sword_027
+f;7;Sword_028
+
+pose;Stand
+f;4;Sword_000
+

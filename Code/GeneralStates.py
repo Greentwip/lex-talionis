@@ -198,7 +198,7 @@ class OptionsMenuState(StateMachine.State):
         if not gameStateObj.tutorial_mode or all(unit.finished for unit in gameStateObj.allunits if unit.team == 'player'):
             options.append(cf.WORDS['End'])
             info_desc.append(cf.WORDS['End_desc'])
-        if cf.CONSTANTS['turnwheel']:
+        if cf.CONSTANTS['turnwheel'] and 'Turnwheel' in gameStateObj.game_constants:
             options.insert(1, cf.WORDS['Turnwheel'])
             info_desc.insert(1, cf.WORDS['Turnwheel_desc'])
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(None, options, 'auto', gameStateObj=gameStateObj, info_desc=info_desc)
@@ -534,7 +534,7 @@ class MenuState(StateMachine.State):
                     options.append(cf.WORDS['Talk'])
                     break
             # If supports happen in battle
-            if cf.CONSTANTS['support'] == 1 and 'AllowSupports' in gameStateObj.game_constants:
+            if cf.CONSTANTS['support'] == 1 and 'Supports' in gameStateObj.game_constants:
                 for adjunit in adjunits:
                     if gameStateObj.support.can_support(cur_unit.id, adjunit.id):
                         options.append(cf.WORDS['Support'])
@@ -2054,6 +2054,7 @@ class PhaseChangeState(StateMachine.State):
     name = 'phase_change'
 
     def begin(self, gameStateObj, metaDataObj):
+        self.save_state(gameStateObj)
         logger.debug('Phase Start')
         Action.do(Action.LockTurnwheel(gameStateObj.phase.get_current_phase() != 'player'), gameStateObj)
         # All units can now move and attack, etc.
@@ -2068,7 +2069,9 @@ class PhaseChangeState(StateMachine.State):
     def end(self, gameStateObj, metaDataObj):
         logger.debug('Phase End')
         Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
-        # Save state at beginning of each turn
+    
+    # Save state at beginning of each turn
+    def save_state(self, gameStateObj):
         if gameStateObj.phase.get_current_phase() == 'player':
             logger.debug("Saving as we enter player phase!")
             name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount)

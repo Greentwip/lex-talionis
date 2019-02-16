@@ -174,6 +174,7 @@ class GameStateObj(object):
         self.playtime = load_info['playtime']
         self._convoy = {party_id: [ItemMethods.deserialize(item_dict) for item_dict in party_convoy] for party_id, party_convoy in load_info['convoy'].items()}
         self._convoy = {party_id: [item for item in party_convoy if item] for party_id, party_convoy in self._convoy.items()}
+        self._money = Counter({party_id: money for party_id, money in load_info['money'].items()})
         self.current_party = load_info['current_party']
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
@@ -405,6 +406,7 @@ class GameStateObj(object):
                    'playtime': self.playtime,
                    'turncount': self.turncount,
                    'convoy': {party_id: [item.serialize() for item in party_convoy] for party_id, party_convoy in self._convoy.items()},
+                   'money': self._money,
                    'current_party': self.current_party,
                    'objective': self.objective.serialize() if self.objective else None,
                    'phase_music': self.phase_music.serialize() if self.phase_music else None,

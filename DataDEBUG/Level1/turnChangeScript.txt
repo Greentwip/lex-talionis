@@ -1,0 +1,4 @@
+if;gameStateObj.turncount == 2
+    add_unit;Yohn;2,0
+    change_party;Yohn;1
+end

@@ -408,8 +408,7 @@ class UnitMenu(StateMachine.State):
                 pos = (offsets[idx] + 64 - 15 - 2, 40)
                 self.help_boxes.append(InfoMenu.Help_Box(titles[idx], pos, InfoMenu.Help_Dialog(cf.WORDS[titles[idx] + '_desc'])))
 
-    fighting_stats = {'STR', 'MAG', 'SKL', 'SPD', 'LCK', 'DEF', 'RES', 'CON', 'MOV'}
-    # ['MOV', 'CON', 'Aid', 'Rat', 'Trv']
+    fighting_stats = set(GC.EQUATIONS.stat_list[1:])
 
     def sort(self, gameStateObj=None):
         if self.current_sort == 'Name':

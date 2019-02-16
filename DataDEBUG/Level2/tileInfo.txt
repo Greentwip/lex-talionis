@@ -1,0 +1,11 @@
+0,1:Formation=0
+0,0:Formation=0
+1,5:Shop=Glimmer,Heal,Fire,Vulnerary
+2,11:Shop=Iron Sword,Iron Lance,Slim Lance,Iron Axe,Hatchet,Willow Bow
+7,7:Village=2
+2,1:Formation=0
+15,1:Village=3
+2,0:Formation=0
+1,0:Formation=0
+4,1:Village=1
+1,1:Formation=0

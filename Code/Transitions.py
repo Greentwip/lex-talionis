@@ -123,6 +123,8 @@ class StartStart(StateMachine.State):
             gameStateObj.save_slot = 'DEBUG'
             gameStateObj.game_constants['level'] = 'DEBUG'
             levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+            if not os.path.exists(levelfolder):
+                return
             # Load the first level
             SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
             # Hardset the name of the first level

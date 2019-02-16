@@ -1,0 +1,264 @@
+pose;Dodge
+f;1;Lance_000
+f;3;Lance_059
+f;27;Lance_060
+f;4;Lance_059
+
+pose;Attack
+f;6;Lance_000
+f;10;Lance_001
+f;6;Lance_002
+sound;Horse Step 3
+f;1;Lance_002
+f;6;Lance_003
+f;16;Lance_004
+f;4;Lance_005
+sound;Weapon Swing
+f;1;Lance_005
+f;3;Lance_006
+platform_shake
+f;1;Lance_006
+enemy_flash_white;8
+f;1;Lance_006
+screen_flash_white;4
+f;1;Lance_006
+f;3;Lance_007;Lance_007_under
+hit_spark
+start_hit
+wait_for_hit;Lance_007;Lance_007_under
+f;4;Lance_007;Lance_007_under
+f;5;Lance_008
+sound;Horse Step 2
+f;1;Lance_008
+f;2;Lance_009
+sound;Weapon Pull
+f;1;Lance_009
+f;3;Lance_010
+f;4;Lance_011
+f;4;Lance_012
+f;1;Lance_013
+f;1;Lance_014
+f;5;Lance_015
+f;1;Lance_016
+f;2;Lance_017
+f;1;Lance_018
+f;3;Lance_019
+platform_shake
+f;1;Lance_019
+f;3;Lance_020
+f;4;Lance_021
+sound;Horse Step 2
+f;1;Lance_021
+f;5;Lance_022
+f;5;Lance_023
+f;6;Lance_024
+f;4;Lance_025
+f;16;Lance_026
+f;6;Lance_027
+f;5;Lance_028
+sound;Horse Step 1
+f;1;Lance_028
+f;7;Lance_029
+
+pose;Critical
+f;6;Lance_000
+f;10;Lance_001
+f;6;Lance_002
+sound;Horse Step 3
+f;1;Lance_002
+f;6;Lance_003
+f;6;Lance_004
+f;3;Lance_030
+sound;Heavy Spear Spin
+f;1;Lance_030
+f;3;Lance_031
+f;3;Lance_032
+f;3;Lance_033
+f;3;Lance_034
+f;3;Lance_035
+f;6;Lance_036
+f;6;Lance_037
+f;6;Lance_038
+f;6;Lance_035
+f;6;Lance_036
+f;3;Lance_039
+f;2;Lance_040
+f;3;Lance_041
+sound;Horse Step 1
+f;1;Lance_041
+platform_shake
+f;1;Lance_041
+f;2;Lance_042
+f;3;Lance_043
+f;5;Lance_044
+sound;Horse Step 1
+f;1;Lance_044
+platform_shake
+f;1;Lance_044
+f;5;Lance_045
+f;5;Lance_046
+f;2;Lance_040
+sound;Horse Step 1
+f;1;Lance_040
+platform_shake
+f;1;Lance_040
+f;3;Lance_041
+f;2;Lance_042
+f;3;Lance_043
+sound;Horse Step 1
+f;1;Lance_043
+platform_shake
+f;1;Lance_043
+f;5;Lance_044
+f;5;Lance_045
+f;4;Lance_046
+sound;Horse Step 1
+f;1;Lance_046
+platform_shake
+f;1;Lance_046
+f;1;Lance_040
+f;2;Lance_041
+f;1;Lance_042
+sound;Horse Step 1
+f;1;Lance_042
+platform_shake
+f;1;Lance_042
+f;2;Lance_043
+f;3;Lance_044
+f;3;Lance_045
+sound;Horse Step 1
+f;1;Lance_045
+platform_shake
+f;1;Lance_045
+f;3;Lance_046
+f;1;Lance_040
+f;2;Lance_041
+f;1;Lance_042
+sound;Horse Step 1
+f;1;Lance_042
+platform_shake
+f;1;Lance_042
+f;2;Lance_043
+f;3;Lance_044
+f;3;Lance_045
+f;3;Lance_046
+sound;Horse Step 1
+f;1;Lance_046
+platform_shake
+f;1;Lance_046
+f;1;Lance_040
+f;2;Lance_041
+f;1;Lance_042
+f;2;Lance_043
+sound;Horse Step 1
+f;1;Lance_043
+platform_shake
+f;1;Lance_043
+f;3;Lance_044
+f;3;Lance_045
+f;3;Lance_046
+f;1;Lance_040
+f;2;Lance_041
+sound;Horse Step 1
+f;1;Lance_041
+platform_shake
+f;1;Lance_041
+f;1;Lance_042
+f;2;Lance_043
+f;3;Lance_044
+f;3;Lance_045
+f;3;Lance_046
+enemy_flash_white;8
+f;1;Lance_046
+foreground_blend;2;248,248,248
+start_hit
+f;2;Lance_007;Lance_007_under
+crit_spark
+wait_for_hit;Lance_007;Lance_007_under
+f;4;Lance_007;Lance_007_under
+f;5;Lance_008
+sound;Horse Step 2
+f;1;Lance_008
+f;2;Lance_009
+sound;Weapon Pull
+f;1;Lance_009
+f;3;Lance_010
+f;4;Lance_011
+f;4;Lance_012
+f;1;Lance_013
+f;1;Lance_014
+f;5;Lance_015
+f;1;Lance_016
+f;2;Lance_017
+f;1;Lance_018
+f;3;Lance_019
+platform_shake
+f;1;Lance_019
+f;3;Lance_020
+f;4;Lance_021
+sound;Horse Step 2
+f;1;Lance_021
+f;5;Lance_022
+f;5;Lance_023
+f;6;Lance_024
+f;4;Lance_025
+f;16;Lance_026
+f;6;Lance_027
+f;5;Lance_028
+sound;Horse Step 1
+f;1;Lance_028
+f;7;Lance_029
+
+pose;Miss
+f;6;Lance_000
+f;10;Lance_001
+f;6;Lance_002
+sound;Horse Step 3
+f;1;Lance_002
+f;6;Lance_003
+f;16;Lance_004
+f;4;Lance_005
+sound;Weapon Swing
+f;1;Lance_005
+f;3;Lance_006
+platform_shake
+f;1;Lance_006
+f;2;Lance_061
+miss
+f;30;Lance_061
+f;5;Lance_008
+sound;Horse Step 2
+f;1;Lance_008
+f;2;Lance_009
+sound;Weapon Pull
+f;1;Lance_009
+f;3;Lance_010
+f;4;Lance_011
+f;4;Lance_012
+f;1;Lance_013
+f;1;Lance_014
+f;5;Lance_015
+f;1;Lance_016
+f;2;Lance_017
+f;1;Lance_018
+f;3;Lance_019
+f;3;Lance_020
+f;4;Lance_021
+platform_shake
+f;1;Lance_021
+f;5;Lance_022
+f;5;Lance_023
+sound;Horse Step 2
+f;1;Lance_023
+f;6;Lance_024
+f;4;Lance_025
+f;16;Lance_026
+f;6;Lance_027
+f;5;Lance_028
+sound;Horse Step 1
+f;1;Lance_028
+f;7;Lance_029
+
+pose;Stand
+f;4;Lance_000
+

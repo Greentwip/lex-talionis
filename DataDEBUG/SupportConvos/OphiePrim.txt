@@ -1,0 +1,12 @@
+u;Ophie;Left;u;Prim;Right
+if;self.name == 0
+    s;Ophie;Hi
+elif;self.name == 1
+    s;Prim;Hi
+elif;self.name == 2
+    s;Ophie;Bye
+elif;self.name == 3
+    s;Prim;Bye
+end
+r;Ophie;Prim
+inc_support

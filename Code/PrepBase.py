@@ -1299,7 +1299,7 @@ class BaseMainState(StateMachine.State):
                 color_control[1] = 'text_white'
             if gameStateObj.base_conversations:
                 color_control[2] = 'text_white'
-            if gameStateObj.support and 'AllowSupports' in gameStateObj.game_constants:
+            if gameStateObj.support and 'Supports' in gameStateObj.game_constants:
                 color_control[3] = 'text_white'
             topleft = 4, GC.WINHEIGHT//2 - (len(options)*16 + 8)//2
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, shimmer=2, gem=False)

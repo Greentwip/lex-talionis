@@ -2,7 +2,7 @@ b;Town
 t;2
 inc_game_constant;money;5000
 set_game_constant;Convoy
-set_game_constant;AllowSupports
+set_game_constant;Supports
 add_global_status;fLuck +4
 set_game_constant;max_turnwheel_uses;1
 set_game_constant;current_turnwheel_uses;1

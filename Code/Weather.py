@@ -7,7 +7,7 @@ except ImportError:
     from . import Engine, Image_Modification
 
 class Weather(object):
-    def __init__(self, name, abundance, bounds, size):
+    def __init__(self, name, abundance, bounds, size, static=False, blend=None):
         width, height = size
         self.name = name
         self.particle = WEATHER_CATALOG[name]
@@ -18,12 +18,8 @@ class Weather(object):
 
         self.l_x, self.u_x, self.l_y, self.u_y = bounds
 
-        if self.name == "Fire":
-            self.static = True
-            self.blend = GC.IMAGESDICT['FireBG']
-        else:
-            self.static = False
-            self.blend = None
+        self.static = static
+        self.blend = blend
 
     def update(self, current_time, gameStateObj):
         for particle in self.particles:
@@ -171,8 +167,8 @@ class WarpFlower(object):
         if self.x < 0 or self.y < 0 or self.x > gameStateObj.map.width*GC.TILEWIDTH or self.y > gameStateObj.map.height*GC.TILEHEIGHT:
             self.remove_me = True
 
-    def draw(self, surf, pos_x, pos_y):
-        surf.blit(self.sprite, (self.x, self.y))
+    def draw(self, surf, pos_x=0, pos_y=0):
+        surf.blit(self.sprite, (self.x + pos_x, self.y + pos_y))
 
 class LightMote(object):
     def __init__(self, pos):

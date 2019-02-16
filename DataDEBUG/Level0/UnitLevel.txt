@@ -1,0 +1,38 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Factions
+faction;Soldier;Soldier;Empire;An imperial soldier
+faction;Monk;Monk;Neutral;A monk at this monastery
+# Player Characters
+player;0;0;Ophie;9,9;None
+player;0;0;Prim;10,9;None
+player;0;0;Yohn;8,9;None
+#
+# Enemies
+# Named
+enemy;0;0;Sidney;18,4;HardGuard
+# Generics (already on field)
+# Vagnius's soldiers
+enemy;0;0;Soldier;f1;Iron Lance;18,5;SoftGuard;Soldier
+enemy;0;0;Soldier;f1;Iron Lance;19,6;SoftGuard;Soldier
+enemy;0;0;Soldier;f1;Iron Lance;19,4;SoftGuard;Soldier
+# Sidney's thugs
+enemy;0;0;Fighter;f1;Hatchet;19,3;SoftGuard;Soldier
+enemy;0;0;Fighter;f1;Hatchet;18,3;SoftGuard;Soldier

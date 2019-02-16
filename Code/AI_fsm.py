@@ -696,7 +696,7 @@ class Primary_AI(object):
             # Do I add a new status to the target
             my_status = 1 if item.status and any(s_id not in [s.id for s in target.status_effects] for s_id in item.status) else 0
             my_accuracy = Utility.clamp(self.unit.compute_hit(target, gameStateObj, item, 'Attack')/100.0, 0, 1)
-            my_crit_accuracy = Utility.clamp(self.unit.compute_crit(target, gameStateObj, item, 'Attack')/100,0, 0, 1)
+            my_crit_accuracy = Utility.clamp(self.unit.compute_crit(target, gameStateObj, item, 'Attack')/100.0, 0, 1)
 
             target_damage = 0
             target_accuracy = 0

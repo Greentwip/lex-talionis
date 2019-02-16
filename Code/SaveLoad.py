@@ -96,10 +96,10 @@ def get_metaDataObj(levelfolder, metaDataObj):
 
     metaDataObj['name'] = overview_dict['name']
     metaDataObj['preparationFlag'] = bool(int(overview_dict['prep_flag']))
-    metaDataObj['prep_music'] = overview_dict['prep_music'] if int(overview_dict['prep_flag']) else None
+    metaDataObj['prep_music'] = overview_dict.get('prep_music') if int(overview_dict['prep_flag']) else None
     metaDataObj['pickFlag'] = bool(int(overview_dict['pick_flag']))
     metaDataObj['baseFlag'] = overview_dict['base_flag'] if overview_dict['base_flag'] != '0' else False
-    metaDataObj['base_music'] = overview_dict['base_music'] if overview_dict['base_flag'] != '0' else None
+    metaDataObj['base_music'] = overview_dict.get('base_music') if overview_dict['base_flag'] != '0' else None
     metaDataObj['marketFlag'] = bool(int(overview_dict['market_flag']))
     metaDataObj['transitionFlag'] = bool(int(overview_dict['transition_flag']))
     metaDataObj['prebaseScript'] = prebaseScript_filename
@@ -126,10 +126,6 @@ def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, 
         current_mode = unitLine[1].split(',')
     elif unitLine[0] == 'load_player_characters':
         pass
-    #     for unit in allunits:
-    #         if unit.team == 'player' and not unit.dead:
-    #             # Event ID is unit name
-    #             reinforceUnits[unit.name] = (unit.id, None)
     elif unitLine[0] == 'trigger':
         trigger_name = unitLine[1]
         if trigger_name not in triggers:

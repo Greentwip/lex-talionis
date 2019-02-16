@@ -1,0 +1,60 @@
+# This files allows for quick AI presets to be defined, so you don't have to enter them by hand.
+# AI Documentation:
+# AI State 1 handles the action AI
+# AI State 2 handles the movement AI, if action AI fails
+# Possible States for AI1:
+#    - 1:    Move  
+#    - 2:    Attack  
+#    - 4:    Steal  
+#    - 8:    Attack Tile  
+#    - 16:   Loot Village  
+#    - 32:   Unlock Chest or Door  
+#    - 64:   Use ThiefEscape event tile  
+#    - 128:  Use regular Escape event tile  
+#    - 256:  Use Enemy_Seize event tiles
+# Possible States for AI2:
+#    - 0: Do not move
+#    - 1: Move towards opponents
+#    - 2: Move towards allies
+#    - 3: move towards unlooted and unclosed villages or HP
+#    - 4: move towards unlooted and unopened chests/doors
+#    - 5: move towards escape tiles
+#    - 6: move towards thief escape tiles
+#    - 7: move towards boss unit
+#    - 8: move towards enemy seize tiles
+#    - A string: move towards unit whose name or event_id matches string
+# Possible States for view_range (secondary AI):
+#    - 0: Do not look
+#    - 1: Look up to my Movement*2 + maximum range of item away
+#    - 2: Look at entire map
+# Priority:
+# 		Higher priority units move first
+# Teams to Ignore:
+# 		If Primary AI is 4, Teams to Ignore's first value should be an integer. It will then define not what teams to 
+#       ignore but rather how many items the thief will hold before attempting to escape
+#
+# For entry
+# Enter values separated by spaces
+# AI Name - Primary AI State - Secondary AI State - Teams to ignore - Names to ignore - Viewing Range - AI Priority
+# Example:
+# Pursue 1 1 - - 2 20
+# AttackOther 1 2 [player,enemy,enemy2] - 2 10
+#
+None 					0 0 - - 0 20
+DoNothing   			0 0 - - 0 20
+Attack 					3 1 - - 1 20
+Pursue      			3 1 - - 2 20
+SoftGuard   			3 0 - - 0 20
+HardGuard   			2 0 - - 0 20
+Unlock      			37 4 - - 2 30
+Escape      			129 5 - - 2 30
+ThiefEscape 			65 6 - - 2 30
+Unlock2         		37 4 [2] - 2 30
+AttackThiefEscape   	67 6 - - 2 30
+PursueIgnoreOther   	3 1 [other] - 2 20
+SoftGuardIgnoreOther	3 0 [other] - 0 20
+PursueVillage			19 3 - - 2 20
+Support					3 2 - - 2 10
+FollowBoss				3 7 - - 2 15
+FollowWagon             3 Wagon - - 2 20
+Seize                   259 8 - - 2 20

@@ -1,0 +1,72 @@
+<mode_catalog>
+
+    <difficulty name="Hard">
+        <id>1</id>
+        <!-- 0=Casual, 1=Classic -->
+        <death>?</death>
+        <!-- 0=Random, 1=Fixed, 2=Hybrid -->
+        <growths>?</growths>
+        <rng>true_hit</rng>
+        <tutorial>1</tutorial>
+        <color>Green</color>
+
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
+        <enemy_growths>0,0,0,0,0,0,0,0,0,0</enemy_growths>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
+        <enemy_bases>0,0,0,0,0,0,0,0,0,0</enemy_bases>
+
+        <autolevel_enemies>0</autolevel_enemies>
+        <autolevel_players>0</autolevel_players>
+
+        <truelevel_enemies>0</truelevel_enemies>
+    </difficulty>
+
+    <difficulty name="Lunatic">
+        <id>2</id>
+        <!-- 0=Casual, 1=Classic -->
+        <death>?</death>
+        <!-- 0=Random, 1=Fixed, 2=Hybrid -->
+        <growths>?</growths>
+        <rng>true_hit+</rng>
+        <tutorial>0</tutorial>
+        <color>Red</color>
+
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_growths>20,10,5,15,5,0,0,0,0,0</player_growths>
+        <enemy_growths>5,35,35,20,30,20,0,0,0,0</enemy_growths>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
+        <enemy_bases>0,0,1,0,0,0,0,0,0,0</enemy_bases>
+
+        <autolevel_enemies>0</autolevel_enemies>
+        <autolevel_players>0</autolevel_players>
+
+        <truelevel_enemies>game_constants['level']//5</truelevel_enemies>
+    </difficulty>
+
+    <difficulty name="Grandmaster">
+        <id>3</id>
+        <!-- 0=Casual, 1=Classic -->
+        <death>1</death>
+        <!-- 0=Random, 1=Fixed, 2=Hybrid -->
+        <growths>1</growths>
+        <rng>hybrid</rng>
+        <tutorial>0</tutorial>
+        <color>Blue</color>
+
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
+        <enemy_growths>0,0,0,0,0,0,0,0,0,0</enemy_growths>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
+        <enemy_bases>0,0,0,0,0,0,0,0,0,0</enemy_bases>
+
+        <autolevel_enemies>0</autolevel_enemies>
+        <autolevel_players>0</autolevel_players>
+
+        <truelevel_enemies>0</truelevel_enemies>
+    </difficulty>
+
+</mode_catalog>

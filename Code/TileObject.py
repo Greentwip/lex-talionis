@@ -470,7 +470,7 @@ class MapObject(object):
             self.weather.append(Weather.Weather('Dark', .04, bounds, (self.width, self.height)))
         elif weather == "Fire":
             bounds = (0, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
-            self.weather.append(Weather.Weather('Fire', .05, bounds, (GC.TILEX, GC.TILEY)))
+            self.weather.append(Weather.Weather('Fire', .05, bounds, (GC.TILEX, GC.TILEY), static=True, blend=GC.IMAGESDICT['FireBG']))
 
     def remove_weather(self, name):
         self.weather = [weather for weather in self.weather if weather.name != name]

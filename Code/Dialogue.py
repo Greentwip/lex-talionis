@@ -510,10 +510,12 @@ class Dialogue_Scene(object):
             # Find receiver
             if line[1] == '{unit}' and self.unit:
                 receiver = self.unit
+            elif line[1] == '{unit2}' and self.unit2:
+                receiver = self.unit2
             elif line[1] == 'Convoy':
                 receiver = None
             else:
-                receiver = gameStateObj.get_unit_from_name(line[1])
+                receiver = gameStateObj.get_unit_from_id(line[1])
             # Append item to list of units items
             if line[2] != "0":
                 item = ItemMethods.itemparser(line[2])
@@ -986,6 +988,8 @@ class Dialogue_Scene(object):
             # Merge money
             gameStateObj._money[host] += gameStateObj._money[guest]
             gameStateObj._money[guest] = 0
+        elif line[0] == 'clear_turnwheel_history':
+            gameStateObj.turnwheel.reset_first_free_action()
 
         # === HANDLE TALKING
         elif line[0] == 'add_talk':

@@ -330,6 +330,22 @@ class Combat(object):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
                     gameStateObj.stateMachine.changeState('dialogue')
 
+    def turnwheel_death_messages(self, all_units, gameStateObj):
+        messages = []
+        dying_units = [u for u in all_units if isinstance(u, UnitObject.UnitObject) and u.isDying]
+        any_player_dead = any(not u.team.startswith('enemy') for u in all_units)
+        for unit in dying_units:
+            if unit.team.startswith('enemy'):
+                if any_player_dead:
+                    messages.append("%s was defeated" % unit.name)
+                else:
+                    messages.append("Prevailed over %s" % unit.name)
+            else:
+                messages.append("%s was defeated" % unit.name)
+
+        for message in messages:
+            Action.do(Action.Message(message), gameStateObj)
+
 class AnimationCombat(Combat):
     def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat, ai_combat):
         self.p1 = attacker
@@ -1042,13 +1058,12 @@ class AnimationCombat(Combat):
 
         # Handle death and sprite changing
         self.check_death()
+        if not self.p1.isDying:
+            self.p1.sprite.change_state('normal', gameStateObj)
         if not self.p2.isDying:
             self.p2.sprite.change_state('normal', gameStateObj)
-        else:
-            if self.p2.team.startswith('enemy'):
-                Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
-            else:
-                Action.do(Action.Message("%s was defeated" % self.p2.name), gameStateObj)
+
+        self.turnwheel_death_messages(all_units, gameStateObj)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end
@@ -1542,18 +1557,7 @@ class MapCombat(Combat):
             if isinstance(unit, UnitObject.UnitObject):
                 unit.sprite.change_state('normal', gameStateObj)
 
-        if not self.p1.isDying:
-            if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.isDying:
-                if self.p2.team.startswith('enemy'):
-                    Action.do(Action.Message("Prevailed over %s" % self.p2.name), gameStateObj)
-                else:
-                    Action.do(Action.Message("%s was defeated" % self.p2.name), gameStateObj)
-            for unit in self.splash:
-                if isinstance(unit, UnitObject.UnitObject) and unit.isDying:
-                    if self.p2.team.startswith('enemy'):
-                        Action.do(Action.Message("Prevailed over %s" % unit.name), gameStateObj)
-                    else:
-                        Action.do(Action.Message("%s was defeated" % unit.name), gameStateObj)
+        self.turnwheel_death_messages(all_units, gameStateObj)
 
         # === HANDLE STATE STACK ==
         # Handle where we go at very end

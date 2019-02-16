@@ -98,6 +98,8 @@ class ActionLog(object):
 
         print(self.unique_moves)
 
+        self.locked = self.get_last_lock()
+
         for move in reversed(self.unique_moves):
             if isinstance(move, self.Move):
                 if move.end:
@@ -115,6 +117,7 @@ class ActionLog(object):
         self.current_move = self.unique_moves[self.current_move_index - 1]
         print("Backward", self.current_move_index, self.current_move, self.action_index)
         self.current_move_index -= 1
+        action = None
         if isinstance(self.current_move, self.Move):
             if self.current_unit:
                 while self.action_index >= self.current_move.begin:
@@ -124,34 +127,36 @@ class ActionLog(object):
                 return []
             else:
                 if self.hovered_unit:
-                    self.hovered_unit.sprite.turnwheel_indicator = False
-                    gameStateObj.cursor.drawState = 0                   
+                    self.hover_off(gameStateObj)      
                 self.current_unit = self.current_move.unit
                 if self.current_move.end:
                     while self.action_index > self.current_move.end:
                         action = self.run_action_backward(gameStateObj)
-                    gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
-                    self.current_unit.sprite.turnwheel_indicator = True
-                    gameStateObj.cursor.drawState = 3
-                    self.hovered_unit = self.current_unit
+                    prev_action = None
+                    if self.action_index >= 1:
+                        prev_action = self.actions[self.action_index]
+                        print("Prev action", prev_action)
+                    if self.current_unit.position:
+                        gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
+                    elif isinstance(prev_action, Action.Die):
+                        gameStateObj.cursor.centerPosition(prev_action.old_pos, gameStateObj)
+                    self.hover_on(self.current_unit, gameStateObj)
                     text_list = self.get_unit_turn(self.current_unit, self.action_index)
                     self.current_move_index += 1  # Make sure we don't skip first half of this
+                    print("In Backward", text_list, self.current_unit.name, self.current_unit.position, prev_action)
                     return text_list
                 else:
                     while self.action_index >= self.current_move.begin:
                         action = self.run_action_backward(gameStateObj)
                     gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)                    
-                    self.current_unit.sprite.turnwheel_indicator = True
-                    gameStateObj.cursor.drawState = 3
-                    self.hovered_unit = self.current_unit
+                    self.hover_on(self.current_unit, gameStateObj)
                     return []
         else:
             if self.current_move[0] == 'Phase':
                 while self.action_index > self.current_move[1]:
                     action = self.run_action_backward(gameStateObj)
                 if self.hovered_unit:
-                    self.hovered_unit.sprite.turnwheel_indicator = False
-                    gameStateObj.cursor.drawState = 0
+                    self.hover_off(gameStateObj)
                 if self.current_move[2] == 'player':
                     gameStateObj.cursor.autocursor(gameStateObj)
                 return ["Start of %s Phase" % self.current_move[2].capitalize()]
@@ -159,8 +164,7 @@ class ActionLog(object):
                 while self.action_index >= self.current_move[1]:
                     action = self.run_action_backward(gameStateObj)
                 if self.hovered_unit:
-                    self.hovered_unit.sprite.turnwheel_indicator = False
-                    gameStateObj.cursor.drawState = 0
+                    self.hover_off(gameStateObj)
                 next_move = self.unique_moves[self.current_move_index - 1]
                 if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
                     return self.backward(gameStateObj)
@@ -179,26 +183,28 @@ class ActionLog(object):
         self.current_move = self.unique_moves[self.current_move_index]
         print("Forward", self.current_move_index, self.current_move, self.action_index)
         self.current_move_index += 1
+        action = None
         if isinstance(self.current_move, self.Move):
             if self.current_unit:
                 while self.action_index < self.current_move.end:
                     action = self.run_action_forward(gameStateObj)
-                gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)                    
+                if self.current_unit.position:
+                    gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
+                elif isinstance(action, Action.Die):
+                    gameStateObj.cursor.centerPosition(action.old_pos, gameStateObj)
                 text_list = self.get_unit_turn(self.current_unit, self.action_index)
+                print("In Forward", text_list, self.current_unit.name, action)
                 self.current_unit = None
                 return text_list
             else:
                 if self.hovered_unit:
-                    self.hovered_unit.sprite.turnwheel_indicator = False
-                    gameStateObj.cursor.drawState = 0
+                    self.hover_off(gameStateObj)
                 self.current_unit = self.current_move.unit
                 while self.action_index < self.current_move.begin - 1:
                     # Does next action, so -1 is necessary
                     action = self.run_action_forward(gameStateObj)
                 gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
-                self.current_unit.sprite.turnwheel_indicator = True
-                gameStateObj.cursor.drawState = 3
-                self.hovered_unit = self.current_unit
+                self.hover_on(self.current_unit, gameStateObj)
                 self.current_move_index -= 1  # Make sure we don't skip second half of this
                 return []
         else:
@@ -206,8 +212,7 @@ class ActionLog(object):
                 while self.action_index < self.current_move[1]:
                     action = self.run_action_forward(gameStateObj)
                 if self.hovered_unit:
-                    self.hovered_unit.sprite.turnwheel_indicator = False  
-                    gameStateObj.cursor.drawState = 0
+                    self.hover_off(gameStateObj)
                 if self.current_move[2] == 'player':
                     gameStateObj.cursor.autocursor(gameStateObj)
                 return ["Start of %s Phase" % self.current_move[2].capitalize()]
@@ -215,8 +220,7 @@ class ActionLog(object):
                 while self.action_index < self.current_move[1]:
                     action = self.run_action_forward(gameStateObj)
                 if self.hovered_unit:
-                    self.hovered_unit.sprite.turnwheel_indicator = False
-                    gameStateObj.cursor.drawState = 0
+                    self.hover_off(gameStateObj)
                 next_move = self.unique_moves[self.current_move_index]
                 if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
                     return self.forward(gameStateObj)
@@ -293,6 +297,20 @@ class ActionLog(object):
         if self.first_free_action == -1:
             print("*** First Free Action ***")
             self.first_free_action = self.action_index
+
+    def reset_first_free_action(self):
+        print("*** First Free Action ***")
+        self.first_free_action = self.action_index
+
+    def hover_on(self, unit, gameStateObj):
+        unit.sprite.turnwheel_indicator = True
+        gameStateObj.cursor.drawState = 3
+        self.hovered_unit = unit
+
+    def hover_off(self, gameStateObj):
+        self.hovered_unit.sprite.turnwheel_indicator = False
+        gameStateObj.cursor.drawState = 0
+        self.hovered_unit = None
 
     def serialize(self, gameStateObj):
         return ([action.serialize(gameStateObj) for action in self.actions], self.first_free_action)

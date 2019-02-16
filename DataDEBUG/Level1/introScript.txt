@@ -1,0 +1,33 @@
+# Enemies appear
+set_cursor;17,7
+add_unit;Sidney
+add_tag;Sidney;Boss
+disp_cursor;1
+wait;1000
+disp_cursor;0
+u;Sidney;FarRight
+s;Sidney;Hah! Found you little mice!{w}{br}Now I'm gonna crush you!{w};auto
+r;Sidney
+add_unit;F1;17,6
+add_unit;F2;16,7
+add_unit;F3;17,5
+add_unit;S1;17,9
+add_unit;S2;17,8
+add_unit;S3;17,4
+add_unit;A1;17,2
+wait;200
+move_unit;S1;16,6
+move_unit;S2;15,7
+move_unit;S3;7,7
+move_unit;F1;11,5
+move_unit;F2;7,8
+move_unit;F3;12,6
+move_unit;A1;16,4
+start_move
+set_cursor;Joel
+u;Joel;FarLeft
+u;Sidney;FarRight
+s;Joel;Not without goin' through me first!{w};auto
+s;Sidney;Boys, looks like we found ourselves another traitor!{w}{br}Well, bud, we'll show you what happens when you cross the Empire!{w};auto
+r;Joel;Sidney
+gold;20000

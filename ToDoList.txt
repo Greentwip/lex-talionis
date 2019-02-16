@@ -26,7 +26,9 @@
 - New Screenshots in all marketing content
 - When I fix events, make escape, seize, switch, search, etc, all work the same way -- also add "unit_end_turn" command
 
-- Add Fire weather
+- Add Fire to Level Editor
+- Add Current Party to Properties of Level Editor
+- Test LEVEL EDITOR!
 
 - Check that Canto adds one wait, not 4!!
 - Check that you can skip over overworld sections without repercussions
@@ -49,6 +51,8 @@
 - Test support for weapons with "cannot_be_countered"
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
 - Test that enemy ai takes critical into account
+- Test removing a stat from stat list (InfoMenu, UnitMenu, Combat)
+- Supports in Unit Menu
 
 To Test Action:
 WarpIn

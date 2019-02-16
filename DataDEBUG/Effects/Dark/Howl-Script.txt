@@ -1,0 +1,191 @@
+pose;Attack
+darken
+wait;4
+darken
+wait;27
+# Lasts 56 frames
+enemy_effect;GleipnirRune
+sound;Gleipnir1
+wait;2
+pan
+wait;30
+sound;Gleipnir3
+wait;24
+wait;6
+enemy_effect;GleipnirWhirl
+wait;10
+enemy_effect;Boulders
+wait;99
+enemy_effect;GleipnirGust
+sound;Gleipnir2
+wait;7
+# === Here are the Gleipnir Rays - Frame 302
+under_effect;GleipnirSmallRay;-16,0
+wait;4
+effect;GleipnirBigRay;24,0
+wait;6
+under_effect;GleipnirSmallRay;16,0
+# Ray5
+effect;GleipnirBigRay;80,0
+wait;3
+under_effect;GleipnirSmallRay;48,0
+wait;2
+# Ray10
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;3
+# Ray17
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;2
+effect;GleipnirBigRay;80,0
+wait;3
+under_effect;GleipnirSmallRay;48,0
+wait;2
+# Ray 28
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;2
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;4
+# Ray 42
+effect;GleipnirBigRay;80,0
+wait;2
+under_effect;GleipnirSmallRay;48,0
+wait;2
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;2
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;3
+effect;GleipnirBigRay;80,0
+wait;3
+under_effect;GleipnirSmallRay;48,0
+# Ray 64
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;2
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;3
+effect;GleipnirBigRay;80,0
+wait;16
+# === End Gleipnir Rays
+lighten
+clear_all_effects
+screen_flash_white;10
+wait;10
+spell_hit
+enemy_effect;GleipnirFlash
+wait;36
+pan
+wait;4
+lighten
+wait;8
+end_parent_loop
+
+pose;Miss
+darken
+wait;4
+darken
+wait;27
+# Lasts 56 frames
+enemy_effect;GleipnirRune
+sound;Gleipnir1
+wait;2
+pan
+wait;30
+sound;Gleipnir3
+wait;24
+wait;6
+enemy_effect;GleipnirWhirl
+wait;10
+enemy_effect;Boulders
+wait;99
+enemy_effect;GleipnirGust
+sound;Gleipnir2
+wait;10
+# === Here are the Gleipnir Rays - Frame 302
+under_effect;GleipnirSmallRay;-16,0
+wait;4
+effect;GleipnirBigRay;24,0
+wait;6
+under_effect;GleipnirSmallRay;16,0
+# Ray5
+effect;GleipnirBigRay;80,0
+wait;3
+under_effect;GleipnirSmallRay;48,0
+wait;2
+# Ray10
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;3
+# Ray17
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;2
+effect;GleipnirBigRay;80,0
+wait;3
+under_effect;GleipnirSmallRay;48,0
+wait;2
+# Ray 28
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;2
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;4
+# Ray 42
+effect;GleipnirBigRay;80,0
+wait;2
+under_effect;GleipnirSmallRay;48,0
+wait;2
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;2
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;3
+effect;GleipnirBigRay;80,0
+wait;3
+under_effect;GleipnirSmallRay;48,0
+# Ray 64
+effect;GleipnirBigRay;-40,0
+wait;4
+under_effect;GleipnirSmallRay;-16,0
+wait;2
+effect;GleipnirBigRay;24,0
+wait;4
+under_effect;GleipnirSmallRay;16,0
+wait;3
+effect;GleipnirBigRay;80,0
+wait;16
+# === End Gleipnir Rays
+clear_all_effects
+stop_sound;Gleipnir1
+screen_flash_white;2
+wait;2
+lighten
+miss
+wait;36
+pan
+wait;4
+lighten
+wait;8
+end_parent_loop

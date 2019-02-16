@@ -1,0 +1,11 @@
+# affinity.txt -- order of this should match order of Data/Items/Affinity.png
+# Attackspeed (AS) not currently supported
+# Name -- Damage - Resist - Accuracy - Avoid - Crit - Dodge - AS
+Lightning 0 0 0 0 0 0 0
+Dark 1 0 0 5 0 0 0
+Ice 0 0 0 0 0 0 0
+Earth 1 1 0 0 0 0 0
+Fire 1 0 5 0 0 0 0
+Water 0 1 0 5 0 0 0
+Light 0 1 5 0 0 0 0
+Wind 0 0 5 5 0 0 0

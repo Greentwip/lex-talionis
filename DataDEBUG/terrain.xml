@@ -1,0 +1,611 @@
+<terrain_data>
+
+    <terrain name="--">
+        <id>1</id>
+        <color>0,0,0</color>
+        <minimap>Wall</minimap>
+        <platform>Wall</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+
+        <mtype>Fence</mtype>
+    </terrain>
+	
+	<terrain name="Cliff">
+        <id>2</id>
+        <color>136,136,104</color>
+        <minimap>Cliff</minimap>
+        <platform>Cliff</platform>
+
+        <DEF>1</DEF>
+        <AVO>30</AVO>
+        
+        <mtype>Cliff</mtype>
+    </terrain>
+	
+	<terrain name="Fence">
+        <id>3</id>
+        <color>160,200,160</color>
+        <minimap>Wall</minimap>
+        <platform>Wall</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Fence</mtype>
+    </terrain>
+	
+	<terrain name="Wall">
+        <id>5</id>
+        <color>160,168,160</color>
+        <minimap>Wall</minimap>
+        <platform>Wall</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Wall</mtype>
+    </terrain>
+		
+    <terrain name="Plain">
+        <id>7</id>
+        <color>192,224,48</color>
+        <minimap>Grass</minimap>
+        <platform>Plains</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+	
+	<terrain name="Road">
+        <id>8</id>
+        <color>240,240,128</color>
+        <minimap>Sand</minimap>
+        <platform>Road</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+	
+	<terrain name="Floor">
+        <id>9</id>
+        <color>84,84,84</color>
+        <minimap>Floor</minimap>
+        <platform>Floor</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Bank">
+        <id>10</id>
+        <color>48,224,224</color>
+        <minimap>Coast</minimap>
+        <platform>River</platform>
+        
+        <DEF>0</DEF>
+        <AVO>-5</AVO>
+        
+        <!-- Light, Medium, Heavy --> 
+        <mtype>Bank</mtype>
+    </terrain>
+
+    <terrain name="Coast">
+        <id>11</id>
+        <color>224,224,24</color>
+        <minimap>Coast</minimap>
+        <platform>Lake</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <!-- Light, Medium, Heavy -->  
+        <mtype>Bank</mtype>
+    </terrain>
+	
+	<terrain name="Bridge">
+        <id>12</id>
+        <color>162,150,162</color>
+        <minimap>Bridge</minimap>
+        <platform>Bridge</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+	
+	<terrain name="Ruins">
+        <id>13</id>
+        <color>208,224,232</color>
+        <minimap>Ruins</minimap>
+        <platform>Ruins</platform>
+        
+        <DEF>0</DEF>
+        <AVO>10</AVO>
+        
+        <mtype>Ruins</mtype>
+    </terrain>
+
+    <terrain name="Floor">
+        <id>13</id>
+        <color>92,92,92</color>
+        <minimap>Grass</minimap>
+        <platform>Ruins</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+	
+	<terrain name="River">
+        <id>14</id>
+        <color>128,248,248</color>
+        <minimap>River</minimap>
+        <platform>River</platform>
+        
+        <DEF>0</DEF>
+        <AVO>-10</AVO>
+        
+        <mtype>River</mtype>
+    </terrain>
+
+    <terrain name="Rapids">
+        <id>15</id>
+        <color>64,128,248</color>
+        <minimap>River</minimap>
+        <platform>River</platform>
+        
+        <DEF>-2</DEF>
+        <AVO>-30</AVO>
+        
+        <mtype>Rapids</mtype>
+    </terrain>
+
+    <terrain name="Inn">
+        <id>16</id>
+        <color>160,88,88</color>
+        <minimap>House</minimap>
+        <platform>House</platform>
+        
+        <DEF>0</DEF>
+        <AVO>10</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+	
+	<terrain name="House">
+        <id>17</id>
+        <color>160,88,80</color>
+        <minimap>House</minimap>
+        <platform>House</platform>
+        
+        <DEF>0</DEF>
+        <AVO>10</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Vendor">
+        <id>18</id>
+        <color>176,160,72</color>
+        <minimap>Shop</minimap>
+        <platform>Vendor</platform>
+        
+        <DEF>0</DEF>
+        <AVO>10</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+	
+	<terrain name="Armory">
+        <id>19</id>
+        <color>168,160,72</color>
+        <minimap>Shop</minimap>
+        <platform>Armory</platform>
+        
+        <DEF>0</DEF>
+        <AVO>10</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+	
+	<terrain name="Village">
+        <id>20</id>
+        <color>200,0,0</color>
+        <minimap>House</minimap>
+        <platform>Village</platform>
+        
+        <DEF>0</DEF>
+        <AVO>10</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Thicket">
+        <id>21</id>
+        <color>16,84,16</color>
+        <minimap>Thicket</minimap>
+        <platform>Thicket</platform>
+        
+        <DEF>2</DEF>
+        <AVO>40</AVO>
+        
+        <mtype>Thicket</mtype>
+    </terrain>
+	
+	<terrain name="Sea">
+        <id>22</id>
+        <color>136,136,248</color>
+        <minimap>Sea</minimap>
+        <platform>Sea</platform>
+        
+        <DEF>0</DEF>
+        <AVO>-10</AVO>
+        
+        <mtype>Sea</mtype>
+    </terrain>
+	
+	<terrain name="Lake">
+        <id>23</id>
+        <color>88,184,240</color>
+        <minimap>Sea</minimap>
+        <platform>Lake</platform>
+        
+        <DEF>0</DEF>
+        <AVO>-10</AVO>
+        
+        <mtype>Sea</mtype>
+    </terrain>
+    
+   <terrain name="Forest">
+        <id>24</id>
+        <color>64,128,64</color>
+        <minimap>Forest</minimap>
+        <platform>Forest</platform>
+        
+        <DEF>1</DEF>
+        <AVO>20</AVO>
+        
+        <mtype>Forest</mtype>
+    </terrain>
+	
+	<terrain name="Pillar">
+        <id>25</id>
+        <color>192,168,128</color>
+        <minimap>Pillar</minimap>
+        <platform>Pillar</platform>
+        
+        <DEF>1</DEF>
+        <AVO>20</AVO>
+        
+        <mtype>Pillar</mtype>
+    </terrain>
+    
+    <terrain name="Hill">
+        <id>26</id>
+        <color>184,128,56</color>
+        <minimap>Hill</minimap>
+        <platform>Hill</platform>
+        
+        <DEF>1</DEF>
+        <AVO>30</AVO>
+        
+        <mtype>Hill</mtype>
+    </terrain>
+    
+    <terrain name="Mntn">
+        <id>27</id>
+        <color>216,176,120</color>
+        <minimap>Mountain</minimap>
+        <platform>Mountain</platform>
+        
+        <DEF>2</DEF>
+        <AVO>40</AVO>
+        
+        <mtype>Mountain</mtype>
+    </terrain>
+    
+    <terrain name="Fort">
+        <id>28</id>
+        <color>168,80,168</color>
+        <minimap>Fort</minimap>
+        <platform>Fort</platform>
+        
+        <DEF>2</DEF>
+        <AVO>20</AVO>
+        
+        <mtype>Fort</mtype>
+    </terrain>
+    
+    <terrain name="Throne">
+        <id>29</id>
+        <color>232,216,64</color>
+        <minimap>Throne</minimap>
+        <platform>Throne</platform>
+        
+        <DEF>2</DEF>
+        <AVO>20</AVO>
+        
+        <mtype>Throne</mtype>
+    </terrain>
+    
+    <terrain name="Gate">
+        <id>30</id>
+        <color>32,96,216</color>
+        <minimap>Throne</minimap>
+        <platform>Gate</platform>
+        
+        <DEF>2</DEF>
+        <AVO>20</AVO>
+        
+        <mtype>Throne</mtype>
+    </terrain>
+
+    <terrain name="Door">
+        <id>31</id>
+        <color>80,0,0</color>
+        <minimap>Door</minimap>
+        <platform>Floor</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Wall</mtype>
+    </terrain>
+
+    <terrain name="Chest">
+        <id>32</id>
+        <color>248,72,8</color>
+        <minimap>Chest</minimap>
+        <platform>Chest</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Roof">
+        <id>33</id>
+        <color>136,120,144</color>
+        <minimap>Wall</minimap>
+        <platform>Floor</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Wall</mtype>
+    </terrain>
+
+    <terrain name="Table">
+        <id>34</id>
+        <color>136,120,152</color>
+        <minimap>Wall</minimap>
+        <platform>Floor</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Table</mtype>
+    </terrain>
+
+    <terrain name="Snag">
+        <id>35</id>
+        <color>176,120,176</color>
+        <minimap>Snag</minimap>
+        <platform>Forest</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Fence</mtype>
+    </terrain>
+
+    <!--Sea Cliff-->
+    <terrain name="Cliff">
+        <id>36</id>
+        <color>136,144,104</color>
+        <minimap>Coast</minimap>
+        <platform>Cliff</platform>
+
+        <DEF>1</DEF>
+        <AVO>30</AVO>
+        
+        <mtype>Cliff</mtype>
+    </terrain>
+
+    <terrain name="Pier">
+        <id>37</id>
+        <color>216,160,88</color>
+        <minimap>Pier</minimap>
+        <platform>Deck</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Deck">
+        <id>38</id>
+        <color>192,136,104</color>
+        <minimap>Pier</minimap>
+        <platform>Deck</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Stairs">
+        <id>39</id>
+        <color>84,24,84</color>
+        <minimap>Floor</minimap>
+        <platform>Floor</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Stairs</mtype>
+    </terrain>
+
+    <terrain name="Barrel">
+        <id>40</id>
+        <color>168,104,56</color>
+        <minimap>Wall</minimap>
+        <platform>Deck</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Fence</mtype>>
+    </terrain>
+
+    <terrain name="Crate">
+        <id>41</id>
+        <color>168,104,0</color>
+        <minimap>Wall</minimap>
+        <platform>Deck</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Fence</mtype>
+    </terrain>
+    
+    <terrain name="Switch">
+        <id>42</id>
+        <color>232,216,56</color>
+        <minimap>Switch</minimap>
+        <platform>Floor</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Desert">
+        <id>43</id>
+        <color>248,248,0</color>
+        <minimap>Desert</minimap>
+        <platform>Sand</platform>
+        
+        <DEF>0</DEF>
+        <AVO>5</AVO>
+        
+        <mtype>Desert</mtype>
+    </terrain>
+
+    <!-- Desert Cliff-->
+    <terrain name="Cliff">
+        <id>44</id>
+        <color>168,144,80</color>
+        <minimap>Desert_Cliff</minimap>
+        <platform>Cliff</platform>
+
+        <DEF>1</DEF>
+        <AVO>30</AVO>
+        
+        <mtype>Cliff</mtype>
+    </terrain>
+
+    <terrain name="Fossil">
+        <id>45</id>
+        <color>248,248,208</color>
+        <minimap>Wall</minimap>
+        <platform>Sand</platform>
+
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Fence</mtype>
+    </terrain>    
+
+    <terrain name="Sand">
+        <id>46</id>
+        <color>248,248,152</color>
+        <minimap>Sand</minimap>
+        <platform>Sand</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <!-- Light, Medium, Heavy -->  
+        <mtype>Normal</mtype>
+    </terrain>
+
+    <terrain name="Snow">
+        <id>47</id>
+        <color>248,248,248</color>
+        <minimap>Snow</minimap>
+        <platform>Snow</platform>
+        
+        <DEF>0</DEF>
+        <AVO>-5</AVO>
+        
+        <!-- Light, Medium, Heavy -->  
+        <mtype>Snow</mtype>
+    </terrain>
+
+    <!-- Chasm -->
+    <terrain name="--">
+        <id>48</id>
+        <color>8,8,8</color>
+        <minimap>Dark_Snow</minimap>
+        <platform>Cliff</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <!-- Light, Medium, Heavy -->  
+        <mtype>Wall</mtype>
+    </terrain>
+
+    <!-- Snow Cliff-->
+    <terrain name="Cliff">
+        <id>49</id>
+        <color>248,208,208</color>
+        <minimap>Snow_Cliff</minimap>
+        <platform>Cliff</platform>
+
+        <DEF>1</DEF>
+        <AVO>30</AVO>
+        
+        <mtype>Cliff</mtype>
+    </terrain>
+
+    <terrain name="Mast">
+        <id>50</id>
+        <color>248,240,176</color>
+        <minimap>Wall</minimap>
+        <platform>Deck</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+        
+        <mtype>Wall</mtype>
+    </terrain>
+
+    <terrain name="Roof">
+        <id>60</id>
+        <color>128,32,32</color>
+        <minimap>Wall</minimap>
+        <platform>Wall</platform>
+        
+        <DEF>0</DEF>
+        <AVO>0</AVO>
+
+        <mtype>Wall</mtype>
+    </terrain>
+</terrain_data>

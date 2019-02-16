@@ -1,0 +1,8 @@
+if;gameStateObj.turncount == 2
+    add_unit;Drake;2,18
+    add_unit;Joel;3,18
+    add_unit;Nia;2,17
+    add_unit;Yohn;3,17
+    merge_parties;0;1
+    clear_turnwheel_history
+end

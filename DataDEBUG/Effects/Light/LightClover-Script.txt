@@ -1,0 +1,12 @@
+pose;Attack
+blend
+f;1;Clover1
+f;1;Clover2
+f;1;Clover3
+f;1;Clover4
+f;1;Clover5
+f;1;Clover6
+f;1;Clover7
+f;1;Clover8
+f;1;Clover9
+wait;1

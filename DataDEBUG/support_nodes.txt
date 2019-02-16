@@ -1,0 +1,33 @@
+# Keeps track of every unit which has an affinity
+# [id of unit];[affinity]
+# Player Units
+Ophie;Fire
+Prim;Water
+Joel;Water
+Nia;Wind
+Drake;Earth
+Althea;Light
+Renae;Earth
+Theo;Dark
+Sam;Dark
+Eliza;Light
+Coyote;Wind
+Kayla;Fire
+#
+# Named Enemy units (mostly Bosses)
+Sidney;Earth
+Brigham;Light
+Kiley;Fire
+Midas;Water
+Harold;Earth
+Jack;Wind
+Vincent;Wind
+Razia;Fire
+Marduk;Dark
+Vagnius;Fire
+Jakin;Wind
+Boaz;Earth
+Ulver;Fire
+#
+# Other units
+Yohn;Light
