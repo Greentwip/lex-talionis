@@ -1042,8 +1042,10 @@ class AnimationCombat(Combat):
 
         if self.p1.checkIfEnemy(self.p2):
             Action.do(Action.Message("%s attacked %s" % (self.p1.name, self.p2.name)), gameStateObj)
-        else:
+        elif self.p1 is not self.p2:
             Action.do(Action.Message("%s helped %s" % (self.p1.name, self.p2.name)), gameStateObj)
+        else:
+            Action.do(Action.Message("%s used %s" % (self.p1.name, self.item)), gameStateObj)
 
         if not self.p1.has_canto_plus() and not self.event_combat:
             gameStateObj.stateMachine.changeState('wait') # Event combats do not cause unit to wait

@@ -450,15 +450,20 @@ class TurnwheelState(StateMachine.State):
                 self.turnwheel_effect()
                 gameStateObj.background.fade_out()
                 gameStateObj.game_constants['current_turnwheel_uses'] -= 1
+            elif not gameStateObj.action_log.locked:
+                self.back_out(gameStateObj)
             else:
                 GC.SOUNDDICT['Error'].play()
 
         elif action == 'BACK':
-            GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.action_log.reset(gameStateObj)
-            self.transition_out = 24
-            self.display.fade_out()
-            gameStateObj.background.fade_out()
+            self.back_out(gameStateObj)
+
+    def back_out(self, gameStateObj):
+        GC.SOUNDDICT['Select 4'].play()
+        gameStateObj.action_log.reset(gameStateObj)
+        self.transition_out = 24
+        self.display.fade_out()
+        gameStateObj.background.fade_out()
 
     def turnwheel_effect(self):
         image, script = GC.ANIMDICT.get_effect('TurnwheelFlash', None)

@@ -9,14 +9,14 @@ try:
     import InputManager, Engine
     import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    import Boundary, Objective, Overworld, ClassData, TileObject
+    import Boundary, Objective, Overworld, ClassData, TileObject, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import InputManager, Engine
     from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     from . import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    from . import Boundary, Objective, Overworld, ClassData, TileObject
+    from . import Boundary, Objective, Overworld, ClassData, TileObject, Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -56,7 +56,6 @@ class GameStateObj(object):
 
     def start_map(self, tilemap):
         self.map = tilemap
-        self.old_map = None
         self.build_map_surf()
         self.build_grid()
 
@@ -72,6 +71,10 @@ class GameStateObj(object):
     def load_submap(self, name):
         if not self.old_map:
             self.old_map = self.map
+            units = [unit for unit in self.allunits if unit.position]
+            self.leave_actions = [Action.LeaveMap(unit) for unit in units]
+            for action in self.leave_actions:
+                action.do(self)
         tilefilename = 'Data/Level' + name + '/TileData.png'
         mapfilename = 'Data/Level' + name + '/MapSprite.png'
         levelfolder = 'Data/Level' + name
@@ -79,9 +82,14 @@ class GameStateObj(object):
         self.start_map(submap)
 
     def close_submap(self):
+        print(self.old_map)
         if not self.old_map:
             return
+        print("closing submap!")
         self.start_map(self.old_map)
+        for action in self.leave_actions:
+            action.reverse(self)
+        self.leave_actions = None
         self.old_map = None
 
     def get_convoy(self, party=None):
@@ -292,6 +300,7 @@ class GameStateObj(object):
             if unit.position:
                 unit.place_on_map(self)
                 unit.arrive(self, serializing=False)
+        self.old_map = None
 
         self.info_menu_struct = {'current_state': 0,
                                  'scroll_units': [],
@@ -302,6 +311,7 @@ class GameStateObj(object):
         return len(self.get_units_in_party(self.current_party))
 
     def get_units_in_party(self, party):
+        print(party)
         return [unit for unit in self.allunits if unit.team == 'player' and not unit.dead and not unit.generic_flag and unit.party == party]
 
     def check_rout(self):

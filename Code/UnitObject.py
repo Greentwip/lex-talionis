@@ -1872,6 +1872,7 @@ class UnitObject(object):
                        'event_id': self.event_id,
                        'position': self.position,
                        'name': self.name,
+                       'party': self.party,
                        'team': self.team,
                        'faction_icon': self.faction_icon,
                        'klass': self.klass,

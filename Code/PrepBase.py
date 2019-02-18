@@ -5,12 +5,12 @@ import os
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import StateMachine, MenuFunctions, ItemMethods, Background
+    import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates
     import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import StateMachine, MenuFunctions, ItemMethods, Background
+    from . import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates
     from . import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 
 class PrepMainState(StateMachine.State):
@@ -234,7 +234,7 @@ class PrepFormationState(StateMachine.State):
             gameStateObj.stateMachine.changeState('minimap')
 
         elif cf.OPTIONS['cheat']:
-            StateMachine.wizard_mode(eventList, gameStateObj)
+            GeneralStates.wizard_mode(eventList, gameStateObj)
 
         gameStateObj.cursor.take_input(eventList, gameStateObj)
             
@@ -338,8 +338,8 @@ class PrepItemsState(StateMachine.State):
 
         if not self.started:
             # print([(unit.name, unit.dead) for unit in gameStateObj.allunits])
-            units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
-            units = sorted(units, key=lambda unit: bool(unit.position), reverse=True)
+            player_units = gameStateObj.get_units_in_party(gameStateObj.current_party) 
+            units = sorted(player_units, key=lambda unit: bool(unit.position), reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 3, 4, 'center')
             if self.name == 'base_items' or self.name == 'base_armory_pick':
                 gameStateObj.activeMenu.mode = 'items'
@@ -1061,7 +1061,7 @@ class BaseMarketState(StateMachine.State):
                 return 'repeat'
 
     def update_options(self, gameStateObj):
-        my_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
+        my_units = gameStateObj.get_units_in_party(gameStateObj.current_party) 
         all_items = [item for item in gameStateObj.convoy]
         for unit in my_units:
             for item in unit.items:
@@ -1416,7 +1416,7 @@ class BaseSupportConvoState(StateMachine.State):
     show_map = False
 
     def begin(self, gameStateObj, metaDataObj):
-        self.units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.generic_flag]
+        self.units = [unit for unit in gameStateObj.get_units_in_party(gameStateObj.current_party) if not unit.generic_flag]
 
         if not hasattr(self, 'state'):
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 1, 9, (4, 4))

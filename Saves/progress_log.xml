@@ -298,3 +298,82 @@
 	</units>
 </level>
 
+<level name="1">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;Turnwheel,1;Supports,1;current_turnwheel_uses,-1;level,1</game_constants>
+	<convoy>Rapier 20</convoy>
+	<units>
+		<unit name="Ophie">
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>1</level>
+			<exp>0</exp>
+			<items>Glimmer Ward 30,Heal 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Yohn">
+			<level>14</level>
+			<exp>5</exp>
+			<items>Mithril Sword 15</items>
+			<wexp>80,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+
+<level name="2">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;Turnwheel,1;Supports,1;current_turnwheel_uses,-1;level,2</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>1</level>
+			<exp>0</exp>
+			<items>Glimmer Ward 30,Heal 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Yohn">
+			<level>14</level>
+			<exp>48</exp>
+			<items>Mithril Sword 13</items>
+			<wexp>82,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Joel">
+			<level>3</level>
+			<exp>92</exp>
+			<items>Iron Axe 40,Vulnerary 2</items>
+			<wexp>0,0,21,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Nia">
+			<level>3</level>
+			<exp>50</exp>
+			<items>Willow Bow 42,Vulnerary 2</items>
+			<wexp>0,0,0,19,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Drake">
+			<level>5</level>
+			<exp>14</exp>
+			<items>Iron Lance 44,Iron Sword 43</items>
+			<wexp>13,17,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+

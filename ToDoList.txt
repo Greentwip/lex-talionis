@@ -30,6 +30,7 @@
 - Add Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
 
+- Welshie says converting a unit screws up level up?
 - Check that Canto adds one wait, not 4!!
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
