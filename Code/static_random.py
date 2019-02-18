@@ -1,3 +1,5 @@
+import random
+
 # https://en.wikipedia.org/wiki/Linear_congruential_generator
 class lcg(object):
     def __init__(self, seed=1):
@@ -37,7 +39,9 @@ class StaticRandom(object):
         self.other_random = lcg(seed + 2)
         self.levelup_random_dict = {}
 
-r = StaticRandom()
+# Switch back to this when turnwheel is in place
+# r = StaticRandom()
+r = StaticRandom(seed=random.randint(0, 1024))
 
 def get_combat():
     return r.combat_random.randint(0, 99)
@@ -88,4 +92,3 @@ if __name__ == '__main__':
     print(pos)
     shuffle(pos)
     print(pos)
-
