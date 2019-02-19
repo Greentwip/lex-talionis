@@ -3,12 +3,35 @@
 # FERepo to Lex Talionis Format for Full Combat Animations
 # Takes in FERepo data... a set of images along with a *.txt file that serves as the script.
 
-import glob
+import glob, sys, datetime
 from collections import OrderedDict
 from PIL import Image
 
 COLORKEY = 128, 160, 128
 WIDTH_LIMIT = 240 * 5
+
+class Logger(object):
+    def __init__(self, name, mode):
+        self.log = open(name, mode)
+        self.stdout = sys.stdout
+        sys.stdout = self
+        self.stderr = sys.stderr
+        sys.stderr = self
+
+        self.write(str(datetime.datetime.now()) + '\n')
+
+    def __del__(self):
+        sys.stdout = self.stdout
+        sys.stderr = self.stderr
+        self.log.close()
+
+    def write(self, data):
+        self.log.write(data)
+        self.stdout.write(data)
+        # self.stderr.write(data)
+
+    def flush(self):
+        self.log.flush()
 
 def convert_gba(im):
     width, height = im.size
@@ -429,7 +452,7 @@ def write_scripts(script, images, weapon_type):
     elif weapon_type == 'Bow':
         with open('RangedBow-Script.txt', 'w') as s:
             write_script(ranged_script, s)
-    elif weapon_type == 'Disarmed':
+    elif weapon_type == 'Disarmed' or weapon_type == 'Unarmed':
         # only need stand and dodge frames
         unarmed_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
         with open('Unarmed-Script.txt', 'w') as s:
@@ -443,6 +466,8 @@ def write_scripts(script, images, weapon_type):
 
     return melee_images, ranged_images
 
+log = Logger('fe_repo_to_lex.log', 'a')
+
 images = glob.glob('*.png')
 script = glob.glob('*.txt')
 
@@ -453,10 +478,12 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Handaxe', 'Bow', 'Magic'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed', 'Handaxe', 'Bow', 'Magic'}
 weapon_type = script[:-4]
 if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
+
+print("Converting %s to Lex Talionis format..." % script)
 
 # Convert to images
 images = {name[:-4]: Image.open(name) for name in images}
@@ -511,7 +538,7 @@ preprocess(ranged_images)
 
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
-if weapon_type == 'Disarmed':
+if weapon_type == 'Disarmed' or weapon_type == 'Unarmed':
     weapon_type = 'Unarmed'
 if weapon_type == 'Handaxe':
     weapon_type = 'Axe'
