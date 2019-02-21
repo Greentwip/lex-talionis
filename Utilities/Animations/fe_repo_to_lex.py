@@ -47,6 +47,7 @@ def determine_bg_color(im):
     return color
 
 def animation_collater(images, weapon_type):
+    bad_images = set()
     index_lines = []
     for name, image in images.items():
         width, height = image.size
@@ -62,7 +63,8 @@ def animation_collater(images, weapon_type):
         # Now get bbox
         bbox = image.getbbox()
         if not bbox:
-            print('Replace instances of %s with "wait" command!' % name)
+            print('%s is a bad image. Replacing with "wait" in script' % name)
+            bad_images.add(name)
             continue
         left, upper, right, lower = bbox
         width, height = right - left, lower - upper
@@ -115,7 +117,9 @@ def animation_collater(images, weapon_type):
     sprite_sheet.save(weapon_type + '-GenericBlue.png')
     index_script.close()
 
-def write_scripts(script, images, weapon_type):
+    return bad_images
+
+def parse_script(script, images, weapon_type):
     # Open fe repo script
     with open(script) as s:
         script_lines = s.readlines()
@@ -132,29 +136,76 @@ def write_scripts(script, images, weapon_type):
     dodge_front = False
     used_names = set()
 
-    def write_frame(current_pose, name, num_frames):
-        if (name + '_under') in images:
-            current_pose.append('f;' + str(num_frames) + ';' + name + ';' + name + '_under')
-            used_names.add(name + '_under')
-        else:
-            current_pose.append('f;' + str(num_frames) + ';' + name)
-        used_names.add(name)
+    class Pose(list):
+        def append(self, obj):
+            if isinstance(obj, Frame) and self and isinstance(self[-1], Frame) and obj.name == self[-1].name:
+                self[-1].length += obj.length
+            else:
+                super(Pose, self).append(obj)
 
-    def write_over_frame(current_pose, name, num_frames):
-        if (name + '_under') in images:
-            current_pose.append('of;' + str(num_frames) + ';' + name + ';' + name + '_under')
-            used_names.add(name + '_under')
-        else:
-            current_pose.append('of;' + str(num_frames) + ';' + name)
-        used_names.add(name)
+    class Frame(object):
+        def __init__(self, name, length, over=False):
+            self.name = name
+            self.length = length
+            self.over = over
 
-    def write_wait_for_hit(current_pose, name):
-        if (name + '_under') in images:
-            current_pose.append('wait_for_hit;' + name + ';' + name + '_under')
-            used_names.add(name + '_under')
-        else:
-            current_pose.append('wait_for_hit;' + name)
-        used_names.add(name)
+            if (self.name + '_under') in images:
+                used_names.add(self.name + '_under')
+            used_names.add(self.name)
+
+        def __str__(self):
+            if self.over:
+                command = 'of'
+            else:
+                command = 'f'
+            if (self.name + '_under') in images:
+                ret = '%s;%d;%s;%s_under' % (command, self.length, self.name, self.name)
+            else:
+                ret = '%s;%d;%s' % (command, self.length, self.name)
+            return ret
+
+    class WaitForHit(object):
+        def __init__(self, name):
+            self.name = name
+
+            if (self.name + '_under') in images:
+                used_names.add(self.name + '_under')
+            used_names.add(self.name)
+
+        def __str__(self):
+            if (self.name + '_under') in images:
+                ret = 'wait_for_hit;%s;%s_under' % (self.name, self.name)
+            else:
+                ret = 'wait_for_hit;%s' % self.name
+            return ret
+
+    class Sound(object):
+        def __init__(self, name):
+            self.name = name
+
+        def __str__(self):
+            return 'sound;%s' % self.name
+
+    class Effect(object):
+        def __init__(self, name):
+            self.name = name
+
+        def __str__(self):
+            return 'effect;%s' % self.name
+
+    class DodgeStart(object):
+        def __init__(self):
+            pass
+
+        def __str__(self):
+            return ''
+
+    class Loop(object):
+        def __init__(self, end):
+            self.end = end
+
+        def __str__(self):
+            return 'end_loop' if self.end else 'start_loop'
 
     def save_mode(mode):
         if weapon_type == 'Magic':
@@ -195,17 +246,17 @@ def write_scripts(script, images, weapon_type):
         line = line.strip()
         if not line:
             continue
-        
         if line.startswith('/// - '):
             if current_mode:
                 save_mode(current_mode)
             if line.startswith('/// - Mode '):
                 current_mode = int(line[11:])
-                current_pose = []  # New current pose
+                current_pose = Pose()  # New current pose
                 throwing_axe = False
                 current_frame = None
                 dodge_front = False
                 shield_toss = False
+                l_loop_start = False
             else:
                 break  # Done
 
@@ -214,32 +265,44 @@ def write_scripts(script, images, weapon_type):
             write_extra_frame = True
             if command_code == '01':
                 if throwing_axe:
-                    current_pose.append('start_loop')
-                    write_frame(current_pose, current_frame, 1)
-                    current_pose.append('end_loop')
-                    write_frame(current_pose, current_frame, 8)
+                    current_pose.append(Loop(0))
+                    current_pose.append(Frame(current_frame, 1))
+                    current_pose.append(Loop(1))
+                    current_pose.append(Frame(current_frame, 8))
+                elif l_loop_start:
+                    current_pose.append(Loop(1))
+                    l_loop_start = False
                 elif current_mode == 12:  # Miss
-                    write_frame(current_pose, current_frame, 1)
+                    current_pose.append(Frame(current_frame, 1))
                     current_pose.append('miss')
-                    write_frame(current_pose, current_frame, 30)
+                    current_pose.append(Frame(current_frame, 30))
                 elif current_mode == 5 or current_mode == 6:  # Ranged
-                    current_pose.append('start_loop')
-                    write_frame(current_pose, current_frame, 4)
-                    current_pose.append('end_loop')
-                    write_frame(current_pose, current_frame, 4)
+                    current_pose.append(Loop(0))
+                    current_pose.append(Frame(current_frame, 4))
+                    current_pose.append(Loop(1))
+                    current_pose.append(Frame(current_frame, 4))
                 elif current_mode == 7 or current_mode == 8:  # Dodge
-                    if dodge_front:
-                        write_over_frame(current_pose, current_frame, 26)
-                    else:
-                        write_frame(current_pose, current_frame, 26)
+                    # Count number of frames already written to the dodge
+                    cur_index = len(current_pose) - 1
+                    cur = current_pose[cur_index]
+                    counter = 0
+                    while not isinstance(cur, DodgeStart):
+                        if isinstance(cur, Frame):
+                            counter += cur.length
+                        cur_index -= 1
+                        if cur_index < 0:
+                            break
+                        cur = current_pose[cur_index]
+                    # 30 frames in a dodge
+                    current_pose.append(Frame(current_frame, 30 - counter, over=dodge_front))
                 elif current_mode in (1, 2, 3, 4):
-                    write_wait_for_hit(current_pose, current_frame)
+                    current_pose.append(WaitForHit(current_frame))
                     if shield_toss:
                         current_pose.append('end_child_loop')
                     else:
-                        write_frame(current_pose, current_frame, 4)
+                        current_pose.append(Frame(current_frame, 4))
                 elif current_mode in (9, 10, 11):
-                    write_frame(current_pose, current_frame, 3)
+                    current_pose.append(Frame(current_frame, 3))
                 write_extra_frame = False  # 01 does not drop 1 frame after it runs
             elif command_code == '02':
                 write_extra_frame = False  # Normally says this is a dodge, but that doesn't matter
@@ -264,19 +327,20 @@ def write_scripts(script, images, weapon_type):
             elif command_code in ('08', '09', '0A', '0B', '0C'):  # Start crit
                 crit = True
                 current_pose.append('enemy_flash_white;8')
-                write_frame(current_pose, current_frame, 1)
+                current_pose.append(Frame(current_frame, 1))
                 current_pose.append('foreground_blend;2;248,248,248')
                 start_hit = True
                 write_extra_frame = False
             elif command_code == '0D':  # End
-                write_frame(current_pose, current_frame, 1)
+                current_pose.append(Frame(current_frame, 1))
                 write_extra_frame = False
             elif command_code == '0E':  # Dodge
+                current_pose.append(DodgeStart())
                 write_extra_frame = False
             elif command_code == '13':
-                current_pose.append('start_loop')
-                write_frame(current_pose, current_frame, 1)
-                current_pose.append('end_loop')
+                current_pose.append(Loop(0))
+                current_pose.append(Frame(current_frame, 1))
+                current_pose.append(Loop(1))
                 throwing_axe = True
             elif command_code == '14':
                 current_pose.append('screen_shake')
@@ -288,91 +352,92 @@ def write_scripts(script, images, weapon_type):
             elif command_code == '1A':  # Start hit
                 crit = False
                 current_pose.append('enemy_flash_white;8')
-                write_frame(current_pose, current_frame, 1)
+                current_pose.append(Frame(current_frame, 1))
                 current_pose.append('screen_flash_white;4')
                 start_hit = True
             elif command_code in ('1F', '20', '21'):  # Actual hit
                 write_extra_frame = False
             # Sounds and other effects
             elif command_code == '19':
-                current_pose.append('sound;Bow')
+                current_pose.append(Sound('Bow'))
             elif command_code == '1B':
-                current_pose.append('sound;Foot Step')
+                current_pose.append(Sound('Foot Step'))
             elif command_code == '1C':
-                current_pose.append('sound;Horse Step 1')
+                current_pose.append(Sound('Horse Step 1'))
             elif command_code == '1D':
-                current_pose.append('sound;Horse Step 3')
+                current_pose.append(Sound('Horse Step 3'))
             elif command_code == '1E':
-                current_pose.append('sound;Horse Step 2')
+                current_pose.append(Sound('Horse Step 2'))
             elif command_code == '22':
-                current_pose.append('sound;Weapon Pull')
+                current_pose.append(Sound('Weapon Pull'))
             elif command_code == '23':
-                current_pose.append('sound;Weapon Push')
+                current_pose.append(Sound('Weapon Push'))
             elif command_code == '24':
-                current_pose.append('sound;Weapon Swing')
+                current_pose.append(Sound('Weapon Swing'))
             elif command_code == '25':
-                current_pose.append('sound;Heavy Wing Flap')
+                current_pose.append(Sound('Heavy Wing Flap'))
             elif command_code == '26' or command_code == '27':
-                current_pose.append('effect;ShieldToss')
+                current_pose.append(Effect('ShieldToss'))
                 shield_toss = True
             elif command_code == '28':
-                current_pose.append('sound;ShamanRune')
+                current_pose.append(Sound('ShamanRune'))
             elif command_code == '2B':
-                current_pose.append('sound;ArmorShift')
+                current_pose.append(Sound('ArmorShift'))
             elif command_code == '2E':
-                current_pose.append('effect;MageInit')
+                current_pose.append(Effect('MageInit'))
                 print('Change "effect;MageInit" to "effect;SageInit" if working with Sage animations')
             elif command_code == '2F':
-                current_pose.append('effect;MageCrit')
+                current_pose.append(Effect('MageCrit'))
                 print('Change "effect;MageCrit" to "effect;SageCrit" if working with Sage animations')
             elif command_code == '30':
                 current_pose.append('effect;DirtKick')
             elif command_code == '33':
-                current_pose.append('sound;Battle Cry')
+                current_pose.append(Sound('Battle Cry'))
             elif command_code == '34':
-                current_pose.append('sound;Step Back 1')
+                current_pose.append(Sound('Step Back 1'))
             elif command_code == '35':
-                current_pose.append('sound;Long Wing Flap')
+                current_pose.append(Sound('Long Wing Flap'))
             elif command_code == '36':
-                current_pose.append('sound;Unsheathe')
+                current_pose.append(Sound('Unsheathe'))
             elif command_code == '37':
-                current_pose.append('sound;Sheathe')
+                current_pose.append(Sound('Sheathe'))
             elif command_code == '38':
-                current_pose.append('sound;Heavy Spear Spin')
+                current_pose.append(Sound('Heavy Spear Spin'))
             elif command_code == '41':
-                current_pose.append('sound;Axe Pull')
+                current_pose.append(Sound('Axe Pull'))
             elif command_code == '42':
-                current_pose.append('sound;Axe Push')
+                current_pose.append(Sound('Axe Push'))
             elif command_code == '43':
-                current_pose.append('sound;Weapon Click')
+                current_pose.append(Sound('Weapon Click'))
             elif command_code == '44':
-                current_pose.append('sound;Weapon Shine')
+                current_pose.append(Sound('Weapon Shine'))
             elif command_code == '47':
-                current_pose.append('effect;Cape Animation')
+                current_pose.append(Effect('Cape Animation'))
                 print('Replace "effect;Cape Animation" with actual frames for cape animation in a loop')
             elif command_code == '49':
-                current_pose.append('sound;SageRune')
+                current_pose.append(Sound('SageRune'))
             elif command_code == '4B':
-                current_pose.append('sound;MonkRune')
+                current_pose.append(Sound('MonkRune'))
             elif command_code == '4F':
-                current_pose.append('sound;DruidCrit')
+                current_pose.append(Sound('DruidCrit'))
             elif command_code == '51':
                 current_pose.append('screen_flash_white;4')
             elif command_code == '79':
-                current_pose.append('sound;StrategistRune')
+                current_pose.append(Sound('StrategistRune'))
             elif command_code == '7A':
-                current_pose.append('sound;StrategistCrit')
+                current_pose.append(Sound('StrategistCrit'))
             else:
                 print('Unknown Command Code: C%s' % command_code)
             
             if write_extra_frame and current_frame:
-                if dodge_front:
-                    write_over_frame(current_pose, current_frame, 1)
-                else:
-                    write_frame(current_pose, current_frame, 1)
+                current_pose.append(Frame(current_frame, 1, over=dodge_front))
             
         elif line.startswith('~~~'):
             pass
+
+        elif line == 'L':
+            current_pose.append(Loop(0))
+            l_loop_start = True
 
         else:
             num_frames, _, png_name = line.split()
@@ -385,52 +450,28 @@ def write_scripts(script, images, weapon_type):
                 begin = False
             current_frame = name
             if not (start_hit and crit):  # Don't write this frame if we're starting a crit
-                if dodge_front:
-                    write_over_frame(current_pose, current_frame, num_frames)
-                else:
-                    write_frame(current_pose, current_frame, num_frames)
+                current_pose.append(Frame(current_frame, num_frames, over=dodge_front))
             if start_hit:
                 if crit:
                     current_pose.append('start_hit')
-                    write_frame(current_pose, current_frame, 2)
+                    current_pose.append(Frame(current_frame, 2))
                     current_pose.append('crit_spark')
                 else:
-                    write_frame(current_pose, current_frame, 2)
+                    current_pose.append(Frame(current_frame, 2))
                     current_pose.append('hit_spark')
                     current_pose.append('start_hit')
                 start_hit = False
 
+    return melee_script, melee_images, ranged_script, ranged_images
+
+def write_script(weapon_type, melee_script, ranged_script):
     def write_script(script, s):
         for pose, line_list in script.items():
             s.write('pose;' + pose + '\n')
             for line in line_list:
-                s.write(line + '\n')
+                if str(line):
+                    s.write(str(line) + '\n')                    
             s.write('\n')
-
-    def collate_script(script):
-        for pose in script.keys():
-            new_line_list = []
-            old_line_list = [_ for _ in script[pose]]
-            prev, curr = None, None
-            while old_line_list:
-                curr = old_line_list.pop()
-                if prev:
-                    if curr.startswith('f;') and prev.startswith('f;'):
-                        c_s = curr.split(';')
-                        p_s = prev.split(';')
-                        if p_s[2:] == c_s[2:]:
-                            curr = 'f;' + str(int(c_s[1]) + int(p_s[1])) + ';' + ';'.join(c_s[2:])
-                            prev = None
-                if prev:
-                    new_line_list.append(prev)
-                prev = curr
-            if prev:
-                new_line_list.append(prev)
-            script[pose] = list(reversed(new_line_list))
-
-    # Combines frame numbers if they are the same frame
-    collate_script(melee_script)
-    collate_script(ranged_script)
 
     # Now actually write scripts
     if weapon_type == 'Sword':
@@ -464,8 +505,7 @@ def write_scripts(script, images, weapon_type):
         with open('Unarmed-Script.txt', 'w') as s:
             write_script(unarmed_script, s)
 
-    return melee_images, ranged_images
-
+# === START ==================================================================
 log = Logger('fe_repo_to_lex.log', 'a')
 
 images = glob.glob('*.png')
@@ -512,7 +552,8 @@ for name in images.keys():
             new_images[name + '_under'] = image2
 images.update(new_images)
 
-melee_image_names, ranged_image_names = write_scripts(script, images, weapon_type)
+melee_script, melee_image_names, ranged_script, ranged_image_names = parse_script(script, images, weapon_type)
+
 melee_images = OrderedDict()
 ranged_images = OrderedDict()
 for name, image in sorted(images.items()):
@@ -542,16 +583,32 @@ if weapon_type == 'Disarmed' or weapon_type == 'Unarmed':
     weapon_type = 'Unarmed'
 if weapon_type == 'Handaxe':
     weapon_type = 'Axe'
+
+bad_images = set()
 if weapon_type not in ('Bow', 'Magic'):
-    animation_collater(melee_images, weapon_type)
+    bad_images |= animation_collater(melee_images, weapon_type)
 if weapon_type == 'Magic':
-    animation_collater(melee_images, 'Unarmed')
+    bad_images |= animation_collater(melee_images, 'Unarmed')
 if ranged_images:
     if weapon_type == 'Sword':
-        animation_collater(ranged_images, 'Magic' + weapon_type)
+        bad_images |= animation_collater(ranged_images, 'Magic' + weapon_type)
     elif weapon_type in ('Lance', 'Axe', 'Bow'):
-        animation_collater(ranged_images, 'Ranged' + weapon_type)
+        bad_images |= animation_collater(ranged_images, 'Ranged' + weapon_type)
     elif weapon_type == 'Magic':
-        animation_collater(ranged_images, 'Magic')
+        bad_images |= animation_collater(ranged_images, 'Magic')
+
+def replace_bad_images(script, bad_images):
+    for idx, command in enumerate(script):
+        if isinstance(command, parse_script.Frame) and command.name in bad_images:
+            script[idx] = 'wait;%d' % command.length
+        elif isinstance(command, parse_script.WaitForHit) and command.name in bad_images:
+            script[idx] = 'wait_for_hit'
+
+if bad_images:
+    replace_bad_images(melee_script, bad_images)
+    replace_bad_images(ranged_script, bad_images)
+
+# Actually write the script
+write_script(weapon_type, melee_script, ranged_script)
 
 print(' === Done! ===')
