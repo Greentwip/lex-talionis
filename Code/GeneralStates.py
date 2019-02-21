@@ -723,8 +723,11 @@ class MenuState(StateMachine.State):
             elif selection == cf.WORDS['Visit']:
                 village_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Village']]
                 village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
-                gameStateObj.stateMachine.changeState('dialogue')
+                if os.path.exists(village_script):
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
+                    gameStateObj.stateMachine.changeState('dialogue')
+                else:
+                    logger.error("%s does not exist!", village_script)
                 # cur_unit.hasAttacked = True
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
             elif selection == cf.WORDS['Armory']:
@@ -745,8 +748,11 @@ class MenuState(StateMachine.State):
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
                 switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
-                gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
-                gameStateObj.stateMachine.changeState('dialogue')
+                if os.path.exists(switch_script):
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
+                    gameStateObj.stateMachine.changeState('dialogue')
+                else:
+                    logger.error('%s does not exist!', switch_script)
             elif selection == cf.WORDS['Unlock']:
                 avail_pos = [pos for pos in cur_unit.getAdjacentPositions(gameStateObj) + [cur_unit.position] if cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[pos]]
                 if len(avail_pos) > 1:
@@ -956,7 +962,7 @@ class WeaponState(StateMachine.State):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         cur_unit.sprite.change_state('chosen', gameStateObj)
         options = self.get_options(cur_unit, gameStateObj)
-        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, options, 'auto', gameStateObj=gameStateObj)
+        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(cur_unit, options, 'auto', gameStateObj=gameStateObj)
         self.handle_mod(cur_unit, gameStateObj)
         self.disp_attacks(cur_unit, gameStateObj)
 
@@ -993,7 +999,7 @@ class WeaponState(StateMachine.State):
             GC.SOUNDDICT['Select 1'].play()
             selection = gameStateObj.activeMenu.getSelection()
             Action.do(Action.EquipItem(cur_unit, selection), gameStateObj)
-            gameStateObj.stateMachine.changeState('attack')
+            self.proceed(gameStateObj)
 
         elif event == 'INFO':
             gameStateObj.activeMenu.toggle_info()

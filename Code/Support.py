@@ -100,7 +100,7 @@ class Support_Edge(object):
             current_value -= support
             if current_value < 0:
                 return idx
-        return len(self.supports)
+        return len(self.support_limits)
 
     def can_support(self):
         return self.support_level < self.available_support_level() and self.support_levels_this_chapter == 0

@@ -311,9 +311,10 @@ class SimpleMenu(Counters.CursorControl):
 class ChoiceMenu(SimpleMenu):
     def __init__(self, owner, options, topleft, gameStateObj=None, horizontal=False,
                  background='BaseMenuBackgroundOpaque', limit=None, hard_limit=False,
-                 info_desc=[], color_control=None, ignore=None, width=None, shimmer=0,
+                 info_desc=None, color_control=None, ignore=None, width=None, shimmer=0,
                  gem=True):
         self.set_width = width
+        info_desc = info_desc or []
 
         SimpleMenu.__init__(self, owner, options, topleft, background)
 
@@ -343,10 +344,10 @@ class ChoiceMenu(SimpleMenu):
 
         self.info_flag = False
         self.help_boxes = []
-        for index, desc in enumerate(info_desc):
+        for index, desc in enumerate(self.options):
             if isinstance(self.options[index], ItemMethods.ItemObject):
                 self.help_boxes.append(self.options[index].get_help_box())
-            else:
+            elif len(info_desc) > index:
                 self.help_boxes.append(InfoMenu.Help_Dialog(info_desc[index]))
 
         self.takes_input = True

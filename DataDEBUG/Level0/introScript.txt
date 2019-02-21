@@ -1,3 +1,0 @@
-set_game_constant;Supports
-set_game_constant;Convoy
-set_game_constant;Turnwheel

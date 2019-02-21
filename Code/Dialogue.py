@@ -989,7 +989,7 @@ class Dialogue_Scene(object):
             gameStateObj._money[host] += gameStateObj._money[guest]
             gameStateObj._money[guest] = 0
         elif line[0] == 'clear_turnwheel_history':
-            gameStateObj.turnwheel.reset_first_free_action()
+            gameStateObj.action_log.reset_first_free_action()
 
         # === HANDLE TALKING
         elif line[0] == 'add_talk':

@@ -1,4 +1,0 @@
-if;gameStateObj.turncount == 2
-    gold;500
-    give_item;Convoy;Rapier
-end
