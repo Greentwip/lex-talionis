@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 version = "0.8.8.1"
-# === GLOBAL cf.CONSTANTS ===========================================
+# === GLOBAL CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000//FPS
 TILEY = 10
