@@ -64,43 +64,48 @@ class PropertyMenu(QtGui.QWidget):
         self.name = LtGui.StringBox('Chapter Name')
         self.grid.addWidget(self.name, 0, 0)
 
+        self.party = LtGui.IntBox('Chapter Party')
+        self.party.setMinimum(0)
+        self.party.setMaximum(15)
+        self.grid.addWidget(self.party, 1, 0)
+
         self.prep = QtGui.QCheckBox('Show Prep Menu?')
-        self.grid.addWidget(self.prep, 1, 0)
+        self.grid.addWidget(self.prep, 2, 0)
 
         self.prep_music = LtGui.MusicBox('Prep Music')
-        self.grid.addWidget(self.prep_music, 2, 0)
+        self.grid.addWidget(self.prep_music, 3, 0)
 
         self.pick = QtGui.QCheckBox('Allow Pick Units?')
-        self.grid.addWidget(self.pick, 3, 0)
+        self.grid.addWidget(self.pick, 4, 0)
 
         self.prep.stateChanged.connect(self.prep_enable)
 
         self.base = QtGui.QCheckBox('Show Base Menu?')
-        self.grid.addWidget(self.base, 4, 0)
+        self.grid.addWidget(self.base, 5, 0)
 
         self.base_music = LtGui.MusicBox('Base Music')
-        self.grid.addWidget(self.base_music, 5, 0)
+        self.grid.addWidget(self.base_music, 6, 0)
 
         self.base_bg = LtGui.ImageBox('Base Image')
-        self.grid.addWidget(self.base_bg, 6, 0)
+        self.grid.addWidget(self.base_bg, 7, 0)
 
         self.base.stateChanged.connect(self.base_enable)
 
         self.market = QtGui.QCheckBox('Allow Prep/Base Market?')
-        self.grid.addWidget(self.market, 7, 0)
+        self.grid.addWidget(self.market, 8, 0)
 
         self.transition = QtGui.QCheckBox('Show Chpt. Transition?')
-        self.grid.addWidget(self.transition, 8, 0)
+        self.grid.addWidget(self.transition, 9, 0)
 
-        EditorUtilities.add_line(self.grid, 9)
+        EditorUtilities.add_line(self.grid, 10)
         self.music_button = QtGui.QPushButton('Phase Music')
         self.music_button.clicked.connect(self.edit_music)
-        self.grid.addWidget(self.music_button, 10, 0)
-        EditorUtilities.add_line(self.grid, 11)
+        self.grid.addWidget(self.music_button, 11, 0)
+        EditorUtilities.add_line(self.grid, 12)
 
-        self.create_weather(12)
-        EditorUtilities.add_line(self.grid, 14)
-        self.create_objective(15)
+        self.create_weather(13)
+        EditorUtilities.add_line(self.grid, 15)
+        self.create_objective(16)
 
         self.update()
 
@@ -118,9 +123,9 @@ class PropertyMenu(QtGui.QWidget):
         weather = QtGui.QLabel('Weather')
         grid.addWidget(weather, 1, 0)
 
-        self.weathers = ('Light', 'Dark', 'Rain', 'Sand', 'Snow')
+        self.weathers = ('Light', 'Dark', 'Rain', 'Sand', 'Snow', 'Fire')
         # This stupidity is necessary for some reason
-        self.functions = (self.light_check, self.dark_check, self.rain_check, self.sand_check, self.snow_check)
+        self.functions = (self.light_check, self.dark_check, self.rain_check, self.sand_check, self.snow_check, self.fire_check)
         self.weather_boxes = []
         for idx, weather in enumerate(self.weathers):
             label = QtGui.QLabel(weather)
@@ -143,6 +148,7 @@ class PropertyMenu(QtGui.QWidget):
     def rain_check(self): self.weather_check(2)
     def sand_check(self): self.weather_check(3)
     def snow_check(self): self.weather_check(4)
+    def fire_check(self): self.weather_check(5)
 
     def create_objective(self, row):
         label = QtGui.QLabel('WIN CONDITION')
@@ -174,6 +180,7 @@ class PropertyMenu(QtGui.QWidget):
 
     def new(self):
         self.name.setText('Example Name')
+        self.party.setValue(0)
         self.prep.setChecked(False)
         self.base.setChecked(False)
         self.market.setChecked(False)
@@ -198,6 +205,7 @@ class PropertyMenu(QtGui.QWidget):
 
     def load(self, overview):
         self.name.setText(overview['name'])
+        self.party.setValue(int(overview.get('current_party', 0)))
         self.prep.setChecked(bool(int(overview['prep_flag'])))
         self.base.setChecked(overview['base_flag'] != '0')
         self.market.setChecked(bool(int(overview['market_flag'])))
@@ -229,6 +237,7 @@ class PropertyMenu(QtGui.QWidget):
     def save(self):
         overview = OrderedDict()
         overview['name'] = self.name.text()
+        overview['current_party'] = str(self.party.value())
         overview['prep_flag'] = '1' if self.prep.isChecked() else '0'
         overview['prep_music'] = self.prep_music.text()
         overview['pick_flag'] = '1' if self.pick.isChecked() else '0'

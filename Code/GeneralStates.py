@@ -728,7 +728,6 @@ class MenuState(StateMachine.State):
                     gameStateObj.stateMachine.changeState('dialogue')
                 else:
                     logger.error("%s does not exist!", village_script)
-                # cur_unit.hasAttacked = True
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
             elif selection == cf.WORDS['Armory']:
                 gameStateObj.stateMachine.changeState('armory')
@@ -902,7 +901,7 @@ class ItemChildState(StateMachine.State):
                         gameStateObj.activeMenu = None
                         gameStateObj.stateMachine.back()
                         gameStateObj.stateMachine.back()
-                    # cur_unit.hasAttacked = True # Using a booster counts as an action
+                    # Using a booster counts as an action
                     Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                     gameStateObj.stateMachine.changeState('free')
                     gameStateObj.stateMachine.changeState('wait')
@@ -922,7 +921,6 @@ class ItemChildState(StateMachine.State):
                 if item in cur_unit.items:
                     Action.do(Action.DiscardItem(gameStateObj.activeMenu.owner, item), gameStateObj)
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
-                # cur_unit.hasAttacked = True # Discarding an item counts as an action
                 if cur_unit.items: # If the unit still has some items
                     gameStateObj.stateMachine.back()
                 else: # If the unit has no more items, head all the way back to menu. 
@@ -1513,7 +1511,6 @@ class StealState(StateMachine.State):
             Action.do(Action.RemoveItem(self.rube, selection), gameStateObj)
             Action.execute(Action.DropItem(self.initiator, selection), gameStateObj)
             # self.initiator.add_item(selection)
-            # self.initiator.hasAttacked = True
             Action.do(Action.HasAttacked(self.initiator), gameStateObj)
             if self.initiator.has_canto():
                 gameStateObj.stateMachine.changeState('menu')
@@ -2674,7 +2671,6 @@ class ItemDiscardChildState(StateMachine.State):
                     Action.do(Action.DiscardItem(gameStateObj.activeMenu.owner, item), gameStateObj)
                 self.menu = None
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
-                # gameStateObj.activeMenu.owner.hasAttacked = True # Discarding an item counts as an action
                 if len(gameStateObj.activeMenu.owner.items) > cf.CONSTANTS['max_items']: # If the unit still has >5 items
                     gameStateObj.stateMachine.back() # back to itemdiscard
                 else: # If the unit has <=5 items, just head back before item discard 
@@ -2999,7 +2995,6 @@ class ShopState(StateMachine.State):
                     Action.execute(Action.GiveGold(-value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(-value)
                     self.display_message = self.get_dialog('Buying anything else?')
-                    # self.unit.hasAttacked = True
                     Action.do(Action.HasAttacked(self.unit), gameStateObj)
                     self.myMenu.updateOptions(self.unit.items)
                     self.stateMachine.changeState('buy')
@@ -3034,7 +3029,6 @@ class ShopState(StateMachine.State):
                     Action.execute(Action.GiveGold(value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(value)
                     self.display_message = self.get_dialog(self.back_message)
-                    # self.unit.hasAttacked = True
                     Action.do(Action.HasAttacked(self.unit), gameStateObj)
                     self.myMenu.updateOptions(self.unit.items)
                     if len(self.unit.items) <= 0:

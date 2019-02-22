@@ -149,9 +149,9 @@ class GameStateObj(object):
 
     def default_mode_choice(self):
         if self.mode['growths'] == '?':
-            self.mode['growths'] = 0
+            self.mode['growths'] = 1  # Fixed
         if self.mode['death'] == '?':
-            self.mode['death'] = 1
+            self.mode['death'] = 1  # Classic
 
     def check_mode(self, legal_modes):
         return 'All' in legal_modes or self.mode['name'] in legal_modes or self.mode['id'] in legal_modes

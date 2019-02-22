@@ -100,6 +100,30 @@ class StringBox(QtGui.QWidget):
     def setText(self, text):
         self.txt.setText(text)
 
+class IntBox(QtGui.QWidget):
+    def __init__(self, label, window=None):
+        super(IntBox, self).__init__(window)
+        self.grid = QtGui.QGridLayout()
+        self.setLayout(self.grid)
+        self.window = window
+
+        label = QtGui.QLabel(label)
+        self.grid.addWidget(label, 0, 0)
+        self.txt = QtGui.QSpinBox()
+        self.grid.addWidget(self.txt, 0, 1)
+
+    def setMinimum(self, i):
+        self.txt.setMinimum(i)
+
+    def setMaximum(self, i):
+        self.txt.setMaximum(i)
+
+    def value(self):
+        return self.txt.value()
+
+    def setValue(self, i):
+        self.txt.setValue(i)
+
 class SignalList(QtGui.QListWidget):
     def __init__(self, parent=None, del_func=None):
         super(SignalList, self).__init__()

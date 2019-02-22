@@ -46,7 +46,7 @@ class Raindrop(object):
     def __init__(self, pos):
         self.x = pos[0]
         self.y = pos[1]
-        self.sprite = EditorUtilities.create_image(GC.IMAGESDICT['Rain'].convert_alpha())
+        self.sprite = EditorUtilities.create_image(GC.IMAGESDICT['Rain'])
         self.speed = 2
         self.remove_me = False
 
@@ -58,6 +58,34 @@ class Raindrop(object):
 
     def get_image(self):
         return self.sprite, (self.x, self.y)
+
+class Fire(Raindrop):
+    def __init__(self, pos):
+        self.x = pos[0]
+        self.y = pos[1]
+        self.full_sprite = GC.IMAGESDICT['FireParticle']
+        self.sprites = [EditorUtilities.create_image(Engine.subsurface(self.full_sprite, (0, i*2, 3, 2))) for i in range(6)]
+        self.speed = random.randint(1, 4)
+        self.remove_me = False
+        self.sprite = self.sprites[-1]
+
+    def update(self, gameStateObj):
+        self.x -= random.randint(0, self.speed)
+        self.y -= random.randint(0, self.speed)
+        if self.y > 112:
+            self.sprite = self.sprites[-1]
+        elif self.y > 104:
+            self.sprite = self.sprites[-2]
+        elif self.y > 88:
+            self.sprite = self.sprites[-3]
+        elif self.y > 80:
+            self.sprite = self.sprites[-4]
+        elif self.y > 72:
+            self.sprite = self.sprites[-5]
+        elif self.y > 64:
+            self.sprite = self.sprites[-6]
+        else:
+            self.remove_me = True
 
 class Sand(Raindrop):
     def __init__(self, pos):
@@ -138,5 +166,6 @@ class DarkMote(LightMote):
 WEATHER_CATALOG = {'Rain': Raindrop,
                    'Sand': Sand,
                    'Snow': Snow,
+                   'Fire': Fire,
                    'Light': LightMote,
                    'Dark': DarkMote}

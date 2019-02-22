@@ -44,14 +44,11 @@ class ItemObject(object):
 
         self.loadSprites()
 
-    def get_range(self, unit=None):
-        if unit:
-            return get_item_range(self, self.item_owner)
-        else:
-            return []
+    def get_range(self, unit):
+        return get_item_range(self, unit)
 
     def get_range_string(self):
-        return '-'.join(self.RNG)
+        return '-'.join(self.RNG).replace('MAG', 'MP')
 
     def is_ranged(self):
         # Whether maximum range is not 0 or 1
@@ -138,9 +135,7 @@ def get_item_range(item, unit):
     if len(item.RNG) == 1:
         r = item.RNG[0]
         if r == 'MAG/2':
-            return [GC.EQUATIONS.get_magic_damage(unit, item)//2]
-        elif r == 'MAG/2 + 1':
-            return [GC.EQUATIONS.get_magic_damage(unit, item)//2 + 1]
+            return [max(1, GC.EQUATIONS.get_magic_damage(unit, item)//2)]
         else:
             return [int(r)]
     elif len(item.RNG) == 2:
@@ -148,17 +143,13 @@ def get_item_range(item, unit):
         r2 = item.RNG[1]
         if r1 == 'MAG/2':
             r1 = GC.EQUATIONS.get_magic_damage(unit, item)//2
-        elif r1 == 'MAG/2 + 1':
-            return GC.EQUATIONS.get_magic_damage(unit, item)//2 + 1
         else:
             r1 = int(r1)
         if r2 == 'MAG/2':
             r2 = GC.EQUATIONS.get_magic_damage(unit, item)//2
-        elif r2 == 'MAG/2 + 1':
-            return GC.EQUATIONS.get_magic_damage(unit, item)//2 + 1
         else:
             r2 = int(r2)
-        return list(range(r1, r2 + 1))
+        return list(range(r1, max(r2, 1) + 1))
     else:
         print('%s has an unsupported range: %s' % (item, item.get_range_string()))
         return []
@@ -330,7 +321,7 @@ class AOEComponent(object):
             return cursor_position, list(splash_positions - {cursor_position})
         elif self.mode == 'Blast':
             if self.number == 'MAG/2':
-                num = item.item_owner.stats['MAG']//2
+                num = GC.EQUATIONS.get_magic_damage(gameStateObj.get_unit_from_id(item.item_owner), item)//2
             else:
                 num = int(self.number)
             splash_positions = Utility.find_manhattan_spheres(range(num + 1), cursor_position)

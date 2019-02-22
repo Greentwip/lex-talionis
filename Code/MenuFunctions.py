@@ -1752,6 +1752,8 @@ class TradeMenu(Counters.CursorControl):
         # Get items
         item1 = "EmptySlot"
         item2 = "EmptySlot"
+        # Item 2 is where the item came from
+        # Item 1 is where the item is going
         if self.selection1 < cf.CONSTANTS['max_items'] and self.selection1 < len(self.options1):
             item1 = self.options1[self.selection1]
         elif self.selection1 > cf.CONSTANTS['max_items']-1 and self.selection1 - cf.CONSTANTS['max_items'] < len(self.options2):
@@ -1772,20 +1774,22 @@ class TradeMenu(Counters.CursorControl):
             return 
 
         # Now swap items
-        if self.selection1 < cf.CONSTANTS['max_items']:
-            if self.selection2 < cf.CONSTANTS['max_items']:
-                Action.do(Action.TradeItem(self.owner, self.owner, item1, item2), gameStateObj)
+        # Selection 1 is where the item is going
+        # Selection 2 is where the item came from
+        if self.selection2 < cf.CONSTANTS['max_items']:
+            if self.selection1 < cf.CONSTANTS['max_items']:
+                Action.do(Action.TradeItem(self.owner, self.owner, item2, item1), gameStateObj)
                 # self.swap(self.owner, self.owner, item1, item2)
             else:
                 # self.swap(self.owner, self.partner, item1, item2)
-                Action.do(Action.TradeItem(self.owner, self.partner, item1, item2), gameStateObj)
+                Action.do(Action.TradeItem(self.owner, self.partner, item2, item1), gameStateObj)
         else:
-            if self.selection2 < cf.CONSTANTS['max_items']:
+            if self.selection1 < cf.CONSTANTS['max_items']:
                 # self.swap(self.partner, self.owner, item1, item2)
-                Action.do(Action.TradeItem(self.partner, self.owner, item1, item2), gameStateObj)
+                Action.do(Action.TradeItem(self.partner, self.owner, item2, item1), gameStateObj)
             else:
                 # self.swap(self.partner, self.partner, item1, item2)
-                Action.do(Action.TradeItem(self.partner, self.partner, item1, item2), gameStateObj)
+                Action.do(Action.TradeItem(self.partner, self.partner, item2, item1), gameStateObj)
 
         self.selection2 = None
         # self.owner.hasTraded = True

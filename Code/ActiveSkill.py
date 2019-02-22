@@ -505,16 +505,16 @@ class Longshot(PassiveSkill):
         if item.TYPE == 'Bow':
             item.longshot = True
             item.orig_RNG = item.RNG[:]
-            if item.RNG[-1] == 'MAG/2':
-                item.RNG = [item.RNG[0], 'MAG/2 + 1']
-            else:
+            if item.RNG[-1] != 'MAG/2':
                 item.RNG = [item.RNG[0], str(int(item.RNG[-1]) + 1)]
             # Else no change -- doesn't handle magic range
+            item.help_box = False
 
     def reverse_mod(self, item):
         if item.longshot:
             item.longshot = False
             item.RNG = item.orig_RNG
+            item.help_box = False
 
 class Slayer(PassiveSkill):
     def apply_mod(self, item):
@@ -588,9 +588,7 @@ class Metamagic_Status(PassiveSkill):
         if Weapons.TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast'):
             item.overcharged = True
             item.orig_aoe = item.aoe
-            if item.orig_aoe.number == 'MAG/2':
-                new_num = 'MAG/2 + 1'
-            else:
+            if item.orig_aoe.number != 'MAG/2':
                 new_num = int(item.orig_aoe.number) + 1
             item.aoe = ItemMethods.AOEComponent('Blast', new_num)
 

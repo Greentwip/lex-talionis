@@ -607,6 +607,9 @@ class MainEditor(QtGui.QMainWindow):
         elif weather == "Dark":
             bounds = (0, width*GC.TILEWIDTH, 0, height*GC.TILEHEIGHT)
             self.weather.append(QtWeather.Weather('Dark', .04, bounds, (width, height)))
+        elif weather == "Fire":
+            bounds = (0, width*GC.TILEWIDTH, height*GC.TILEHEIGHT, height*GC.TILEHEIGHT+16)
+            self.weather.append(QtWeather.Weather('Fire', .05, bounds, (width, height)))
 
     def remove_weather(self, name):
         self.weather = [weather for weather in self.weather if weather.name != name]

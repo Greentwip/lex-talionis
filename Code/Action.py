@@ -506,7 +506,6 @@ class TradeItem(Action):
         self.item_index2 = unit2.items.index(item2) if item2 != "EmptySlot" else 4
         self.hasTraded = self.unit1.hasTraded
         self.hasMoved = self.unit1.hasMoved
-        # self.hasTraded2 = self.unit2.hasTraded
 
     def swap(self, unit1, unit2, item1, item2, item_index1, item_index2):
         # Do the swap
@@ -520,13 +519,11 @@ class TradeItem(Action):
     def do(self, gameStateObj):
         self.swap(self.unit1, self.unit2, self.item1, self.item2, self.item_index1, self.item_index2)
         self.unit1.hasTraded = True
-        # self.unit2.hasTraded = True
         self.unit1.hasMoved = True
 
     def reverse(self, gameStateObj):
         self.swap(self.unit1, self.unit2, self.item2, self.item1, self.item_index2, self.item_index1)
         self.unit1.hasTraded = self.hasTraded
-        # self.unit2.hasTraded = self.hasTraded2
         self.unit1.hasMoved = self.hasMoved
 
 class UseItem(Action):

@@ -26,11 +26,9 @@
 - New Screenshots in all marketing content
 - When I fix events, make escape, seize, switch, search, etc, all work the same way -- also add "unit_end_turn" command
 
-- Add Fire to Level Editor
-- Add Current Party to Properties of Level Editor
+- Test Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
 
-- Welshie says converting a unit screws up level up?
 - Check that Canto adds one wait, not 4!!
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
@@ -39,7 +37,6 @@
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
 - Test stationary weapon event tiles
-- Test MAG range (Physic staff, etc.)
 - Test wexp gain works like GBA FE (on double hit, double? On hit or miss?)
 - Test MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)
 - Test MAG to accuracy as well (or add flag for FE GBA style staves) -- or try and make it work with both

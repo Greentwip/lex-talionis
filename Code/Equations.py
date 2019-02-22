@@ -43,7 +43,6 @@ class Parser(object):
         rhs = [dic.get(n, n) for n in rhs]
         rhs = ''.join(rhs)
         rhs = 'int(%s)' % rhs
-        # print(lhs, rhs)
         exec("def %s(equations, unit, item=None, dist=0): return %s" % (lhs, rhs), self.equations)
         # self.equations[lhs] = rhs
 
