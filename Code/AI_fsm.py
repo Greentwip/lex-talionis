@@ -671,6 +671,17 @@ class Primary_AI(object):
                 self.item_to_use = item
                 self.max_tp = tp
 
+    def get_crit_damage(self, item, target, raw_damage, gameStateObj):
+        my_crit_damage = 0
+        if item.crit is not None:
+            if cf.CONSTANTS['crit'] == 1:
+                my_crit_damage = self.unit.damage(gameStateObj, item)
+            elif cf.CONSTANTS['crit'] == 2:
+                my_crit_damage = raw_damage
+            elif cf.CONSTANTS['crit'] == 3:
+                my_crit_damage = 2 * raw_damage
+        return Utility.clamp(my_crit_damage/float(target.currenthp), 0, 1)
+
     def compute_priority_weapon(self, defender, splash, move, item, gameStateObj):
         terms = []
 
@@ -681,15 +692,7 @@ class Primary_AI(object):
         if defender:
             target = defender
             raw_damage = self.unit.compute_damage(target, gameStateObj, item, 'Attack')
-            my_crit_damage = 0
-            if item.crit is not None:
-                if cf.CONSTANTS['crit'] == 1:
-                    my_crit_damage = self.damage(gameStateObj, item)
-                elif cf.CONSTANTS['crit'] == 2:
-                    my_crit_damage = raw_damage
-                elif cf.CONSTANTS['crit'] == 3:
-                    my_crit_damage = 2 * raw_damage
-            my_crit_damage = Utility.clamp(my_crit_damage/float(target.currenthp), 0, 1)
+            my_crit_damage = self.get_crit_damage(item, target, raw_damage, gameStateObj)
 
             # Damage I do compared to targets current health
             my_damage = Utility.clamp(raw_damage/float(target.currenthp), 0, 1) # Essentially incorporates weakness into calc
@@ -801,6 +804,7 @@ class Primary_AI(object):
 
             for target in targets:
                 raw_damage = self.unit.compute_damage(target, gameStateObj, spell)
+                my_crit_damage = self.get_crit_damage(spell, target, raw_damage, gameStateObj)
                 my_damage = Utility.clamp(raw_damage/float(target.currenthp), 0, 1)
                 if spell.status and any(s_id not in [s.id for s in target.status_effects] for s_id in spell.status):
                     if (not spell.target_restrict or eval(spell.target_restrict)) and \
@@ -811,12 +815,15 @@ class Primary_AI(object):
                 else:
                     my_status = 0
                 my_accuracy = Utility.clamp(self.unit.compute_hit(target, gameStateObj, spell)/100.0, 0, 1)
+                my_crit_accuracy = Utility.clamp(self.unit.compute_crit(target, gameStateObj, spell, 'Attack')/100.0, 0, 1)
 
                 if self.unit.checkIfEnemy(target):
                     offensive_term += my_damage*my_accuracy
+                    offensive_term += my_crit_damage*my_crit_accuracy*my_accuracy
                     status_term += my_status*my_accuracy
                 else:
                     offensive_term -= my_damage*my_accuracy
+                    offensive_term -= my_crit_damage*my_crit_accuracy*my_accuracy
                     status_term -= my_status*my_accuracy
 
             # If neither of these is good, just skip it

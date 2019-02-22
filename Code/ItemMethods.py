@@ -135,9 +135,13 @@ def get_item_range(item, unit):
     if len(item.RNG) == 1:
         r = item.RNG[0]
         if r == 'MAG/2':
-            return [max(1, GC.EQUATIONS.get_magic_damage(unit, item)//2)]
+            r1 = max(1, GC.EQUATIONS.get_magic_damage(unit, item)//2)
         else:
-            return [int(r)]
+            r1 = int(r)
+        if item.longshot:
+            return [r1, r1 + 1]
+        else:
+            return [r1]
     elif len(item.RNG) == 2:
         r1 = item.RNG[0]
         r2 = item.RNG[1]
@@ -149,6 +153,7 @@ def get_item_range(item, unit):
             r2 = GC.EQUATIONS.get_magic_damage(unit, item)//2
         else:
             r2 = int(r2)
+        r2 += (1 if item.longshot else 0)
         return list(range(r1, max(r2, 1) + 1))
     else:
         print('%s has an unsupported range: %s' % (item, item.get_range_string()))
@@ -267,6 +272,9 @@ class UsesComponent(object):
 
     def set(self, uses):
         self.uses = uses
+
+    def can_repair(self):
+        return self.uses < self.total_uses
                
 class WeaponComponent(object):
     def __init__(self, stats):

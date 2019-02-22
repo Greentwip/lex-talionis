@@ -32,7 +32,7 @@ class DebugState(StateMachine.State):
                     self.buffer_count = 0
                 elif event.key == Engine.key_map['backspace']:
                     self.current_command = self.current_command[:-1]
-                elif event.key == Engine.key_map['up'] and Engine.get_pressed()[Engine.key_map['ctrl']]:
+                elif event.key == Engine.key_map['up'] and Engine.get_pressed()[Engine.key_map['ctrl']] and commands:
                     self.buffer_count += 1
                     self.current_command = commands[-self.buffer_count]
                 else:

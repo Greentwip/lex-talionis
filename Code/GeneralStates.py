@@ -1202,7 +1202,7 @@ class SpellState(StateMachine.State):
                         self.begin(gameStateObj, metaDataObj)
                     elif spell.repair:
                         self.reapply_old_values(spell)
-                        Action.do(Action.EquipItem(cur_unit, spell), gameStateObj)
+                        Action.do(Action.EquipItem(attacker, spell), gameStateObj)
                         gameStateObj.stateMachine.changeState('repair')
                         GC.SOUNDDICT['Select 1'].play()
                     else:
@@ -1548,7 +1548,7 @@ class RepairState(StealState):
         self.customer = gameStateObj.cursor.getHoveredUnit(gameStateObj)
         self.item = self.initiator.items[0]
         options = self.customer.getRepairables()
-        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self.customer, options, 'auto', gameStateObj=gameStateObj)
+        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self.customer, options, 'auto', gameStateObj=gameStateObj, disp_total_uses=True)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
@@ -2462,6 +2462,7 @@ class PromotionState(StateMachine.State):
 
         elif self.current_state == 'Leave':
             if current_time - self.last_update > 160:  # 10 frames
+                self.unit.set_exp(0)
                 if isinstance(gameStateObj.combatInstance, Interaction.AnimationCombat):
                     gameStateObj.stateMachine.back()
                     gameStateObj.stateMachine.back()

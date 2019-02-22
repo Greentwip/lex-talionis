@@ -27,7 +27,7 @@ class UnitMenu(StateMachine.State):
                            ('Personal Data', ['MOV', 'CON', 'Aid', 'Rat', 'Trv'], [4, 33, 60, 82, 106]),
                            ('Weapon Level', Weapons.TRIANGLE.types, [9 + idx*16 for idx in range(len(Weapons.TRIANGLE.types))])]
             if cf.CONSTANTS['support']:
-                self.states.append(('Support Chance', ['Ally'], [0]))
+                self.states.append(('Support Chance', ['Ally', 'Ally', 'Ally'], [0, 32, 64]))
             self.state_index = 0
             self.prev_state_index = 0
             self.unit_index = 1 # 0 means on banner
@@ -268,7 +268,7 @@ class UnitMenu(StateMachine.State):
         elif state == 'Weapon Level':
             titles, offsets = self.draw_weapon_level_state(state_surf, idx)
         elif state == 'Support Chance':
-            titles, offsets = self.draw_support_chance_state(state_surf, idx)
+            titles, offsets = self.draw_support_chance_state(state_surf, idx, gameStateObj)
 
         if not prev:
             self.summon_help_boxes(titles, offsets)
@@ -395,9 +395,15 @@ class UnitMenu(StateMachine.State):
 
         return titles, offsets
 
-    def draw_support_chance_state(self, surf, idx):
+    def draw_support_chance_state(self, surf, idx, gameStateObj):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
+
+        for idx, unit in enumerate(self.avail_units()):
+            top = idx*16 + 16
+            for index, (name, affinity, support_level) in enumerate(gameStateObj.support.get_supports(unit.id)):
+                pos = (24 + index*32 - GC.FONT['text_blue'].size(name)[0], top)
+                GC.FONT['text_blue'].blit(name, surf, pos)
 
         return titles, offsets
 

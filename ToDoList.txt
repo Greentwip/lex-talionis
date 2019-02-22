@@ -17,14 +17,14 @@
 - Submaps
 - Overworld
 - Parties (maybe just convoy differentiation -- since Anchorman has managed different parties pretty well themselves)
-- Check that casual doesn't have a death cooldown.
-- Check that HP/minis shows up after NOT using formation?
+- Check that casual doesn't have a death cooldown (bbhood?)
 - Add "having 2+ parties" ability to the Engine and Wiki.
 - Test player phase and enemy phase battle animation music
 - Add support section to wiki
 
 - New Screenshots in all marketing content
 - When I fix events, make escape, seize, switch, search, etc, all work the same way -- also add "unit_end_turn" command
+- Split up gaining exp, gaining level, and promoting into separate routines that use the Action system
 
 - Test Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
@@ -32,7 +32,6 @@
 - Check that Canto adds one wait, not 4!!
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
-- Test automatic CON and MOV scaling on promotion.. so like Cavalier -> Great Knight loses 1 mov, but Knight to Great Knight gains 2 mov.
 - Test filtering class wexp -- so you could do reclassing?
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
@@ -42,7 +41,6 @@
 - Test MAG to accuracy as well (or add flag for FE GBA style staves) -- or try and make it work with both
 - Test Berserk works
 - Add Fog of War
-- Test repair state
 - Test other_anim component support (like self_anim)
 - Test all aoe (Latona)
 - Test support for generic rank bonuses
@@ -51,6 +49,7 @@
 - Test that enemy ai takes critical into account
 - Test removing a stat from stat list (InfoMenu, UnitMenu, Combat)
 - Supports in Unit Menu
+- Provoke doesn't disappear on killing provoker?
 
 To Test Action:
 WarpIn

@@ -312,8 +312,9 @@ class ChoiceMenu(SimpleMenu):
     def __init__(self, owner, options, topleft, gameStateObj=None, horizontal=False,
                  background='BaseMenuBackgroundOpaque', limit=None, hard_limit=False,
                  info_desc=None, color_control=None, ignore=None, width=None, shimmer=0,
-                 gem=True):
+                 gem=True, disp_total_uses=False):
         self.set_width = width
+        self.disp_total_uses = disp_total_uses
         info_desc = info_desc or []
 
         SimpleMenu.__init__(self, owner, options, topleft, background)
@@ -367,7 +368,10 @@ class ChoiceMenu(SimpleMenu):
             return self.set_width
         for option in self.options:
             if isinstance(option, ItemMethods.ItemObject): # If it is an item
-                return 104 # This is the recommended menu width for items
+                if self.disp_total_uses:
+                    return 120
+                else:
+                    return 104 # This is the recommended menu width for items
             else:
                 option_width = GC.FONT['text_white'].size(option)[0]
                 if option_width > longest_width_needed:
@@ -492,11 +496,18 @@ class ChoiceMenu(SimpleMenu):
                         main_font = GC.FONT['text_white']
                         uses_font = GC.FONT['text_blue']
                     main_font.blit(str(option), surf, (left + 20, top))
-                    uses_string = "--"
-                    if option.uses:
-                        uses_string = str(option.uses)
-                    elif option.c_uses:
-                        uses_string = str(option.c_uses)
+                    if self.disp_total_uses:
+                        uses_string = "--/--"
+                        if option.uses:
+                            uses_string = str(option.uses) + '/' + str(option.uses.total_uses)
+                        elif option.c_uses:
+                            uses_string = str(option.c_uses) + '/' + str(option.c_uses.total_uses)
+                    else:
+                        uses_string = "--"
+                        if option.uses:
+                            uses_string = str(option.uses)
+                        elif option.c_uses:
+                            uses_string = str(option.c_uses)
                     pos = (left + self.menu_width - 4 - uses_font.size(uses_string)[0] - (5 if self.limit and len(self.options) > self.limit else 0), top)
                     uses_font.blit(uses_string, surf, pos)
                 else:

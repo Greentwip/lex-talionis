@@ -1060,6 +1060,26 @@
         <targets>Tile</targets>
     </item>
 
+    <item name="Hammerne">
+        <id>Hammerne</id>
+        <spritetype>Light</spritetype>
+        <spriteid>10</spriteid>       
+        <components>spell,uses,beneficial,wexp,no_ai,exp,repair,target_restrict,unrepairable</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>1-7</RNG>
+        <value>600</value>
+        <desc>Repairs a weapon or staff to full uses.</desc>
+        <target_restrict>any(item.uses and item.uses.can_repair() and not item.unrepairable for item in target.items)</target_restrict>
+        
+        <LVL>C</LVL>
+        <targets>Ally</targets>
+
+        <wexp>8</wexp>
+        <exp>40</exp>
+    </item>
+
     <item name="Refresh">
         <id>Refresh</id>
         <spritetype>Light</spritetype>

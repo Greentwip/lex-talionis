@@ -644,6 +644,7 @@ class GainExp(Action):
         self.in_combat = None  # Don't need this anymore
 
     def execute(self, gameStateObj):
+        print(self.exp_amount, self.unit.exp, self.promoted_to, self.unit.level, self.unit.klass)
         if self.exp_amount + self.unit.exp >= 100:
             klass_dict = ClassData.class_dict[self.unit.klass]
             max_level = klass_dict['max_level']
@@ -1167,6 +1168,21 @@ class RemoveStatus(Action):
 
     def reverse(self, gameStateObj):
         StatusObject.HandleStatusAddition(self.status_obj, self.unit, gameStateObj)
+
+class TetherStatus(Action):
+    def __init__(self, status_obj, applied_status_obj, parent, child):
+        self.status_obj = status_obj
+        self.applied_status_obj = applied_status_obj
+        self.parent = parent
+        self.child = child
+
+    def do(self, gameStateObj):
+        self.status_obj.children.append(self.child.id)
+        self.applied_status_obj.parent_id = self.parent.id
+
+    def reverse(self, gameStateObj):
+        self.status_obj.children.remove(self.child.id)
+        self.applied_status_obj.parent_id = None
 
 class ApplyStatChange(Action):
     def __init__(self, unit, stat_change):

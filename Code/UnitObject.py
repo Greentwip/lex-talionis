@@ -1300,6 +1300,11 @@ class UnitObject(object):
         else:
             return self.items
 
+    def getRepairables(self):
+        return [item for item in self.items if 
+                (item.uses and item.uses.can_repair() and not item.unrepairable) or 
+                (item.c_uses and item.c_uses.can_repair() and not item.unrepairable)]
+
     # locates the closest ally
     def closest_ally(self, gameStateObj):
         ally_list = []

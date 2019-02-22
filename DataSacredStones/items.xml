@@ -1607,13 +1607,14 @@
         <id>Hammerne</id>
         <spritetype>Staff</spritetype>
         <spriteid>12</spriteid>       
-        <components>spell,uses,beneficial,wexp,exp,no_ai,repair</components>
+        <components>spell,uses,beneficial,wexp,exp,no_ai,repair,target_restrict,unrepairable</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
         <RNG>1-7</RNG>
         <value>600</value>
         <desc>Repairs a weapon or staff to full uses</desc>
+        <target_restrict>any(item.uses and item.uses.can_repair() and not item.unrepairable for item in target.items)</target_restrict>
         
         <LVL>C</LVL>
         <targets>Ally</targets>

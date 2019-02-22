@@ -288,26 +288,24 @@ class Combat(object):
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(self.p2) and not unit.isDying:
                         applied_status = StatusObject.statusparser(status.status_after_battle)
                         if status.tether:
-                            status.children.append(unit.id)
-                            applied_status.parent_id = self.p1.id
-                        StatusObject.HandleStatusAddition(applied_status, unit, gameStateObj)
+                            Action.do(Action.TetherStatus(status, applied_status, self.p1, unit))
+                        Action.do(Action.ApplyStatus(self.p1, applied_status), gameStateObj)
             if status.status_after_help and not self.p1.isDying:
                 for unit in [self.p2] + self.splash:
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfAlly(unit) and not unit.isDying:
                         applied_status = StatusObject.statusparser(status.status_after_help)
-                        StatusObject.HandleStatusAddition(applied_status, unit, gameStateObj)
+                        Action.do(Action.ApplyStatus(self.p1, applied_status), gameStateObj)
             if status.lost_on_attack and (self.item.weapon or self.item.detrimental):
-                StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
+                Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
             elif status.lost_on_interact and (self.item.weapon or self.item.spell):
-                StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
+                Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
         if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
             for status in self.p2.status_effects:
                 if status.status_after_battle and not (status.tether and self.p2.isDying):
                     applied_status = StatusObject.statusparser(status.status_after_battle)
                     if status.tether:
-                        status.children.append(self.p1.id)
-                        applied_status.parent_id = self.p2.id
-                    StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
+                        Action.do(Action.TetherStatus(status, applied_status, self.p2, self.p1))
+                    Action.do(Action.ApplyStatus(self.p1, applied_status), gameStateObj)
 
     def handle_supports(self, all_units, gameStateObj):
         if gameStateObj.support and cf.CONSTANTS['support']:
