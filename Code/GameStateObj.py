@@ -399,6 +399,7 @@ class GameStateObj(object):
     #         item.removeSprites()
 
     def save(self):
+        self.action_log.record = False
         # Reset all position dependant voodoo -- Done by gameStateObj at once instead of one at a time...
         for unit in self.allunits:
             unit.leave(self, serializing=True)
@@ -440,6 +441,7 @@ class GameStateObj(object):
                         'version': GC.version,
                         'mode_id': self.mode['id'],
                         'save_slot': self.save_slot}
+        self.action_log.record = True
         return to_save, to_save_meta
 
     def loadSprites(self):
@@ -476,7 +478,7 @@ class GameStateObj(object):
                 elif cf.CONSTANTS['convoy_on_death']:
                     # Give all of the unit's items to the convoy
                     for item in unit.items:
-                        unit.remove_item(item)
+                        unit.remove_item(item, self)
                         if not item.locked:
                             item.item_owner = 0
                             self.convoy.append(item)
@@ -552,7 +554,7 @@ class GameStateObj(object):
         # First, give all
         for unit in my_units:
             for item in reversed(unit.items):
-                unit.remove_item(item)
+                unit.remove_item(item, self)
                 self.convoy.append(item)
         # Now restock convoy
         self.restock_convoy()
@@ -569,7 +571,7 @@ class GameStateObj(object):
             if units_that_can_wield:
                 # Give randomly
                 unit = units_that_can_wield.pop()
-                unit.add_item(weapon)
+                unit.add_item(weapon, self)
                 self.convoy.remove(weapon)
                 # print(unit.name, weapon)
         # Distribute spells
@@ -583,7 +585,7 @@ class GameStateObj(object):
             if units_that_can_wield:
                 # Give randomly
                 unit = units_that_can_wield.pop()
-                unit.add_item(spell)
+                unit.add_item(spell, self)
                 self.convoy.remove(spell)
                 # print(unit.name, spell)
         # Distribute healing items
@@ -595,7 +597,7 @@ class GameStateObj(object):
         for healing_item in reversed(healing_items):
             if units_that_can_wield:
                 unit = units_that_can_wield.pop()
-                unit.add_item(healing_item)
+                unit.add_item(healing_item, self)
                 self.convoy.remove(healing_item)
         # Done
 

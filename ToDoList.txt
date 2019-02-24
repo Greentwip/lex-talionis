@@ -22,6 +22,13 @@
 - Test player phase and enemy phase battle animation music
 - Add support section to wiki
 
+- Fix Intersection between items, statuses, turnwheel actions, and saving/loading the game
+- When you give a unit an item that gives a status. You will have
+    - Give Item Action
+    - Give Status Actions
+- Run it backwards and the status will be removed twice... Hmmm..
+- Maybe need to MAKE SURE ALL ACTIONS NEVER CALL ANOTHER ACTION
+
 - New Screenshots in all marketing content
 - When I fix events, make escape, seize, switch, search, etc, all work the same way -- also add "unit_end_turn" command
 - Split up gaining exp, gaining level, and promoting into separate routines that use the Action system

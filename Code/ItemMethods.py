@@ -113,9 +113,6 @@ class ItemObject(object):
     def __repr__(self):
         return self.name
 
-    def equip(self, ownerunit):
-        ownerunit.equip(self)
-
     def get_help_box(self):
         if not self.help_box:
             self.help_box = self.create_help_box()

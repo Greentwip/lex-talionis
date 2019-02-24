@@ -264,7 +264,7 @@ class AI(object):
         if self.target_to_interact_with:
             if self.item_to_use:
                 if self.item_to_use in self.unit.items:
-                    self.unit.equip(self.item_to_use)
+                    self.unit.equip(self.item_to_use, gameStateObj)
                     if self.item_to_use.weapon or self.item_to_use.spell:
                         self.unit.displaySingleAttack(gameStateObj, self.target_to_interact_with, self.item_to_use)
                     defender, splash = Interaction.convert_positions(gameStateObj, self.unit, self.unit.position, self.target_to_interact_with, self.item_to_use)
@@ -275,8 +275,8 @@ class AI(object):
                         self.unit.handle_fight_quote(defender, gameStateObj)
                 elif 'steal' in self.unit.status_bundle:
                     unit = gameStateObj.get_unit_from_pos(self.target_to_interact_with)
-                    unit.remove_item(self.item_to_use)
-                    self.unit.add_item(self.item_to_use)
+                    unit.remove_item(self.item_to_use, gameStateObj)
+                    self.unit.add_item(self.item_to_use, gameStateObj)
                     # Make most recently acquired item droppable
                     if self.unit.team != 'player':
                         for item in self.unit.items:
@@ -566,7 +566,7 @@ class Primary_AI(object):
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj, test=True)
             if self.orig_item and EQUIP:
-                self.unit.equip(self.orig_item)
+                self.unit.equip(self.orig_item, gameStateObj)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
         # Iterated through every weapon at this move?
         elif self.item_index > len(self.items) - 1:
@@ -582,7 +582,7 @@ class Primary_AI(object):
             self.item_index += 1
             if self.item_index < len(self.items):
                 if EQUIP:
-                    self.unit.equip(self.items[self.item_index])
+                    self.unit.equip(self.items[self.item_index], gameStateObj)
                 self.get_valid_targets(gameStateObj)
         else:
             move = self.valid_moves[self.move_index]
@@ -602,7 +602,7 @@ class Primary_AI(object):
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj, test=True)
             if self.orig_item and EQUIP:
-                self.unit.equip(self.orig_item)
+                self.unit.equip(self.orig_item, gameStateObj)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
         elif self.target_index >= len(self.valid_targets):
             self.target_index = 0
@@ -610,7 +610,7 @@ class Primary_AI(object):
             logger.debug('Item Index %s' % self.item_index)
             if self.item_index < len(self.items):
                 if EQUIP:
-                    self.unit.equip(self.items[self.item_index])
+                    self.unit.equip(self.items[self.item_index], gameStateObj)
                 logger.debug(self.items[self.item_index].name)
                 self.get_all_valid_targets(gameStateObj)
                 self.possible_moves = self.get_possible_moves(gameStateObj)

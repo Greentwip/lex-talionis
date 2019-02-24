@@ -536,11 +536,11 @@ class Dialogue_Scene(object):
                 if len(line) > 2:
                     for item in receiver.items:
                         if item.id == line[2]:
-                            receiver.equip(item)
+                            receiver.equip(item, gameStateObj)
                             break
                 else:
                     m = receiver.getMainWeapon()
-                    receiver.equip(m)
+                    receiver.equip(m, gameStateObj)
 
         # Give the player gold!
         elif line[0] == 'gold':
@@ -564,7 +564,7 @@ class Dialogue_Scene(object):
             skill = StatusObject.statusparser(line[2])
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit and skill:
-                Action.do(Action.ApplyStatus(unit, skill), gameStateObj)
+                StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
                 if 'no_display' not in line:
                     gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
                     gameStateObj.stateMachine.changeState('itemgain')

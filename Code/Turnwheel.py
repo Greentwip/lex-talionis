@@ -15,6 +15,8 @@ class ActionLog(object):
         self.action_index = -1  # Means no actions
         self.first_free_action = -1
         self.locked = False
+        self.record = True  # whether the action log is currently recording
+        self.action_depth = 0
 
         # For playback
         self.current_unit = None
@@ -389,6 +391,7 @@ class TurnwheelDisplay(object):
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
+        gameStateObj.action_log.record = False
         GC.SOUNDDICT['TurnwheelIn2'].play()
         # Lower volume
         self.current_volume = Engine.music_thread.volume
@@ -527,5 +530,7 @@ class TurnwheelState(StateMachine.State):
         return surf
 
     def end(self, gameStateObj, metaDataObj):
+        gameStateObj.boundary_manager.reset(gameStateObj)
         Engine.music_thread.set_volume(self.current_volume)
         self.display = None
+        gameStateObj.action_log.record = True

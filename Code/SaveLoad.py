@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 def load_level(levelfolder, gameStateObj, metaDataObj):
     # Done at the beginning of a new level and ONLY then
     GC.U_ID = 100
+    gameStateObj.action_log.record = False
     # Assorted Files
     unitfilename = levelfolder + '/UnitLevel.txt'
 
@@ -72,7 +73,9 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
         current_mode = parse_unit_line(unitLine, current_mode, gameStateObj.allunits, gameStateObj.factions, 
                                        reinforceUnits, prefabs, gameStateObj.triggers, gameStateObj)
     Triggers.finalize_triggers(gameStateObj.allunits, reinforceUnits, gameStateObj.triggers, gameStateObj.map)
+
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective, music=starting_music)
+    gameStateObj.action_log.record = True
 
 def create_map(levelfolder, overview_dict=None):
     if not overview_dict:
@@ -221,9 +224,10 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
 
             if 'items' in legend:
+                print("Does this ever happen?")
                 u_i['items'] = legend['items']
             else:
-                u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text)
+                u_i['items'] = []
             # Parse wexp
             u_i['wexp'] = unit.find('wexp').text.split(',')
             for index, wexp in enumerate(u_i['wexp'][:]):
@@ -249,6 +253,11 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
                 reinforceUnits[u_i['event_id']] = (u_i['u_id'], u_i['position'])
             else: # Unit does start on board
                 cur_unit.position = u_i['position']
+
+            # Items
+            items = ItemMethods.itemparser(unit.find('inventory').text)
+            for item in items:
+                cur_unit.add_item(item, gameStateObj)
 
             # Status Effects and Skills
             get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)
@@ -297,7 +306,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
     u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
 
-    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
+    stats, u_i['growths'], u_i['growth_points'], items, u_i['wexp'], u_i['level'] = \
         get_unit_info(u_i['team'], u_i['klass'], u_i['level'], legend['items'],
                       gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
@@ -306,6 +315,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     u_i['tags'] = class_dict[u_i['klass']]['tags']
     u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
+    u_i['items'] = []
 
     cur_unit = UnitObject.UnitObject(u_i)
 
@@ -315,6 +325,10 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
         reinforceUnits[u_i['event_id']] = (cur_unit.id, u_i['position'])
     else: # Unit does start on board
         cur_unit.position = u_i['position']
+
+    # Items
+    for item in items:
+        cur_unit.add_item(item, gameStateObj)
 
     # Status Effects and Skills
     get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)

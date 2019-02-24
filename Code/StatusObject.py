@@ -95,17 +95,6 @@ class StatusObject(object):
     def get_help_box(self):
         return InfoMenu.Help_Dialog(self.desc)
 
-    def remove_children(self, gameStateObj):
-        logger.debug('Removing children from %s', self.id)
-        for u_id in reversed(self.children):
-            child_unit = gameStateObj.get_unit_from_id(u_id)
-            if child_unit:
-                for c_status in child_unit.status_effects:
-                    if c_status.id == self.tether:
-                        HandleStatusRemoval(c_status, child_unit, gameStateObj)
-                        break
-        self.children = []
-
     # If the attribute is not found
     def __getattr__(self, attr):
         if attr.startswith('__') and attr.endswith('__'):
@@ -278,7 +267,7 @@ class Status_Processor(object):
                     output = HandleStatusEndStep(self.current_status, self.current_unit, gameStateObj)
 
                 if output == "Remove": # Returns "Remove" if status has run out of time and should just be removed
-                    Action.do(Action.RemoveStatus(self.current_unit, self.current_status), gameStateObj)
+                    HandleStatusRemoval(self.current_status, self.current_unit, gameStateObj)
                     self.state.changeState('new_status')
                 else:
                     self.oldhp = output[0]
@@ -415,11 +404,11 @@ def HandleStatusEndStep(status, unit, gameStateObj):
             Action.do(Action.ApplyStatChange(unit, status.endstep_rhythm_stat_change.change), gameStateObj)
 
     if status.lost_on_endstep:
-        Action.do(Action.RemoveStatus(status, unit), gameStateObj)
+        HandleStatusRemoval(status, unit, gameStateObj)
 
     return oldhp, unit.currenthp
 
-def HandleStatusAddition(status, unit, gameStateObj=None):
+def HandleStatusAddition(status, unit, gameStateObj):
     if not isinstance(unit, UnitObject.UnitObject):
         return
     logger.info('Adding Status %s to %s at %s', status.id, unit.name, unit.position)
@@ -444,8 +433,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
            
     if not status.momentary:  
         # Actually Add!
-        unit.status_bundle.update(list(status.components)) 
-        unit.status_effects.append(status)
+        Action.do(Action.ApplyStatus(unit, status), gameStateObj)
 
     # --- Momentary status ---
     # Momentary status do need to be worked with Actions
@@ -471,7 +459,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
     if status.clear:
         for status in unit.status_effects:
             if status.time:
-                Action.do(Action.RemoveStatus(status, unit), gameStateObj)
+                HandleStatusRemoval(status, unit, gameStateObj)
 
     # --- Non-momentary status ---
     if status.stat_change:
@@ -530,7 +518,7 @@ def HandleStatusAddition(status, unit, gameStateObj=None):
     # current status effects affecting them and check if any have always animations. If they do, they draw them...
     return status
 
-def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
+def HandleStatusRemoval(status, unit, gameStateObj, clean_up=False):
     if not isinstance(status, StatusObject):
         # Must be a unique id
         for s in unit.status_effects:
@@ -544,8 +532,8 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
             
     logger.info('Removing status %s from %s at %s', status.id, unit.name, unit.position)
     if status in unit.status_effects:
-        unit.status_effects.remove(status)
-        unit.status_bundle.subtract(list(status.components))
+        Action.do(Action.RemoveStatus(unit, status), gameStateObj)
+        
     else:
         logger.warning('Status %s %s not present...', status.id, status.name)
         logger.warning(unit.status_effects)
@@ -575,9 +563,10 @@ def HandleStatusRemoval(status, unit, gameStateObj=None, clean_up=False):
     if status.aura_child:
         status.parent_status.remove_child(unit)
     if status.tether:
-        status.remove_children()
+        Action.do(Action.UnTetherStatus(status), gameStateObj)
     if status.status_on_complete and not clean_up:
-        Action.do(Action.ApplyStatus(unit, statusparser(status.status_on_complete)), gameStateObj)
+        status_obj = statusparser(status.status_on_complete)
+        HandleStatusAddition(status_obj, unit, gameStateObj)
     if status.ephemeral:
         unit.isDying = True
         # unit.set_hp(0)

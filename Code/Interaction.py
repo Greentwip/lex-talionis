@@ -124,10 +124,10 @@ class Combat(object):
         # Status
         for status_obj in result.def_status:
             status_obj.parent_id = result.attacker.id
-            Action.do(Action.ApplyStatus(result.defender, status_obj), gameStateObj)
+            StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
         for status_obj in result.atk_status:
             status_obj.parent_id = result.defender.id
-            Action.do(Action.ApplyStatus(result.attacker, status_obj), gameStateObj)
+            StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP
@@ -288,24 +288,24 @@ class Combat(object):
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(self.p2) and not unit.isDying:
                         applied_status = StatusObject.statusparser(status.status_after_battle)
                         if status.tether:
-                            Action.do(Action.TetherStatus(status, applied_status, self.p1, unit))
-                        Action.do(Action.ApplyStatus(self.p1, applied_status), gameStateObj)
+                            Action.do(Action.TetherStatus(status, applied_status, self.p1, unit), gameStateObj)
+                        StatusObject.HandleStatusAddition(applied_status, unit, gameStateObj)
             if status.status_after_help and not self.p1.isDying:
                 for unit in [self.p2] + self.splash:
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfAlly(unit) and not unit.isDying:
                         applied_status = StatusObject.statusparser(status.status_after_help)
-                        Action.do(Action.ApplyStatus(self.p1, applied_status), gameStateObj)
+                        StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
             if status.lost_on_attack and (self.item.weapon or self.item.detrimental):
-                Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
+                StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
             elif status.lost_on_interact and (self.item.weapon or self.item.spell):
-                Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
+                StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
         if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
             for status in self.p2.status_effects:
                 if status.status_after_battle and not (status.tether and self.p2.isDying):
                     applied_status = StatusObject.statusparser(status.status_after_battle)
                     if status.tether:
-                        Action.do(Action.TetherStatus(status, applied_status, self.p2, self.p1))
-                    Action.do(Action.ApplyStatus(self.p1, applied_status), gameStateObj)
+                        Action.do(Action.TetherStatus(status, applied_status, self.p2, self.p1), gameStateObj)
+                    StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
 
     def handle_supports(self, all_units, gameStateObj):
         if gameStateObj.support and cf.CONSTANTS['support']:

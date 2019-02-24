@@ -480,7 +480,7 @@ class PrepItemsChoicesState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Give All']:
                 for item in reversed(gameStateObj.cursor.currentSelectedUnit.items):
-                    gameStateObj.cursor.currentSelectedUnit.remove_item(item)
+                    gameStateObj.cursor.currentSelectedUnit.remove_item(item, gameStateObj)
                     gameStateObj.convoy.append(item)
                 # Can no longer use items
                 self.menu.update_grey(1, False)
@@ -571,12 +571,12 @@ class ConvoyTrader(object):
     def canWield(self, item):
         return True
 
-    def insert_item(self, index, item):
+    def insert_item(self, index, item, gameStateObj=None):
         self.items.insert(index, item)
         item.item_owner = 0
         self.convoy.append(item)
 
-    def remove_item(self, item):
+    def remove_item(self, item, gameStateObj=None):
         self.items.remove(item)
         item.item_owner = 0
         if item != "Empty Slot":
@@ -800,7 +800,7 @@ class PrepListState(StateMachine.State):
                     gameStateObj.cursor.secondSelectedUnit = gameStateObj.get_unit_from_id(selection.item_owner)
                 elif len(gameStateObj.cursor.currentSelectedUnit.items) < cf.CONSTANTS['max_items']:
                     GC.SOUNDDICT['Select 1'].play()
-                    gameStateObj.cursor.currentSelectedUnit.add_item(selection)
+                    gameStateObj.cursor.currentSelectedUnit.add_item(selection, gameStateObj)
                     gameStateObj.convoy.remove(selection)
                 else: # Unit has too many items -- Trade with convoy instead
                     GC.SOUNDDICT['Select 1'].play()
@@ -934,7 +934,7 @@ class PrepTransferState(StateMachine.State):
                 selection = self.owner_menu.getSelection()
                 if selection:
                     GC.SOUNDDICT['Select 1'].play()
-                    gameStateObj.cursor.currentSelectedUnit.remove_item(selection)
+                    gameStateObj.cursor.currentSelectedUnit.remove_item(selection, gameStateObj)
                     gameStateObj.convoy.append(selection)
                     self.menu.updateOptions(gameStateObj.convoy)
                     self.menu.goto(selection)
@@ -946,7 +946,7 @@ class PrepTransferState(StateMachine.State):
                     selection = self.menu.getSelection()
                     if selection:
                         gameStateObj.convoy.remove(selection)
-                        gameStateObj.cursor.currentSelectedUnit.add_item(selection)
+                        gameStateObj.cursor.currentSelectedUnit.add_item(selection, gameStateObj)
                     self.menu.updateOptions(gameStateObj.convoy)
                     self.owner_menu.updateOptions(gameStateObj.cursor.currentSelectedUnit.items)
             else:
@@ -1144,7 +1144,7 @@ class BaseMarketState(StateMachine.State):
                     GC.SOUNDDICT['Select 1'].play()
                     item = ItemMethods.itemparser(str(self.current_menu.getSelection().id))[0] # Create a copy
                     if self.cur_unit and len(self.cur_unit.items) < cf.CONSTANTS['max_items']:
-                        self.cur_unit.add_item(item)
+                        self.cur_unit.add_item(item, gameStateObj)
                     else:
                         gameStateObj.convoy.append(item)
                     value = (item.value * item.uses.uses) if item.uses else item.value
@@ -1176,7 +1176,7 @@ class BaseMarketState(StateMachine.State):
                     self.money_counter_disp.start(value)
                     if item.item_owner:
                         owner = gameStateObj.get_unit_from_id(item.item_owner)
-                        owner.remove_item(item)
+                        owner.remove_item(item, gameStateObj)
                     else:
                         gameStateObj.convoy.remove(item)
                     self.update_options(gameStateObj)

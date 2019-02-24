@@ -55,7 +55,10 @@ class Action(object):
             elif isinstance(value, StatusObject.StatusObject):
                 for unit in gameStateObj.allunits:
                     if value in unit.status_effects:
+                        print(self)
+                        print(unit.name)
                         value = ('Status', unit.id, unit.status_effects.index(value))
+                        print(value)
                         break
                 else:
                     value = ('UniqueStatus', value.serialize())
@@ -83,6 +86,11 @@ class Action(object):
                 setattr(self, name, ItemMethods.deserialize(value[1]))
             elif value[0] == 'Status':
                 unit = gameStateObj.get_unit_from_id(value[1])
+                print(cls)
+                print(name)
+                print(value)
+                print(unit.name)
+                print(unit.status_effects)
                 setattr(self, name, unit.status_effects[value[2]])
             elif value[0] == 'UniqueStatus':
                 setattr(self, name, StatusObject.deserialize(value[1]))
@@ -224,6 +232,10 @@ class LeaveMap(Action):
         self.unit = unit
         self.old_pos = self.unit.position
 
+        # Yeah this is janky, but right now is required to nest an action
+        # within another action
+        self.untether_actions = [UnTetherStatus(s) for s in self.unit.status_effects if s.tether]
+
     def do(self, gameStateObj):
         self.unit.leave(gameStateObj)
         self.unit.remove_from_map(gameStateObj)
@@ -233,6 +245,9 @@ class LeaveMap(Action):
         self.unit.position = self.old_pos
         self.unit.place_on_map(gameStateObj)
         self.unit.arrive(gameStateObj)
+
+        for action in self.untether_actions:
+            action.reverse(gameStateObj)
 
 class Wait(Action):
     def __init__(self, unit):
@@ -419,7 +434,7 @@ class GiveItem(Action):
 
     def do(self, gameStateObj):
         if len(self.unit.items) < cf.CONSTANTS['max_items']:
-            self.unit.add_item(self.item)
+            self.unit.add_item(self.item, gameStateObj)
             gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
             gameStateObj.stateMachine.changeState('itemgain')
         elif self.unit.team == 'player':
@@ -430,7 +445,7 @@ class GiveItem(Action):
 
     def execute(self, gameStateObj):
         if len(self.unit.items) < cf.CONSTANTS['max_items']:
-            self.unit.add_item(self.item)
+            self.unit.add_item(self.item, gameStateObj)
         elif self.unit.team == 'player':
             self.convoy = True
             gameStateObj.convoy.append(self.item)
@@ -439,7 +454,7 @@ class GiveItem(Action):
         if self.convoy:
             self.convoy.remove(self.item)
         else:
-            self.unit.remove_item(self.item)
+            self.unit.remove_item(self.item, gameStateObj)
 
 class DropItem(Action):
     def __init__(self, unit, item):
@@ -448,17 +463,17 @@ class DropItem(Action):
 
     def do(self, gameStateObj):
         self.item.droppable = False
-        self.unit.add_item(self.item)
+        self.unit.add_item(self.item, gameStateObj)
         gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
         gameStateObj.stateMachine.changeState('itemgain')
 
     def execute(self, gameStateObj):
         self.item.droppable = False
-        self.unit.add_item(self.item)
+        self.unit.add_item(self.item, gameStateObj)
 
     def reverse(self, gameStateObj):
         self.item.droppable = True
-        self.unit.remove_item(self.item)
+        self.unit.remove_item(self.item, gameStateObj)
 
 class DiscardItem(Action):
     def __init__(self, unit, item):
@@ -467,19 +482,19 @@ class DiscardItem(Action):
         self.item_index = self.unit.items.index(self.item)
 
     def do(self, gameStateObj):
-        self.unit.remove_item(self.item)
+        self.unit.remove_item(self.item, gameStateObj)
         gameStateObj.convoy.append(self.item)
 
     def reverse(self, gameStateObj):
         gameStateObj.convoy.remove(self.item)
-        self.unit.insert_item(self.item_index, self.item)
+        self.unit.insert_item(self.item_index, self.item, gameStateObj)
 
 class RemoveItem(DiscardItem):
     def do(self, gameStateObj):
-        self.unit.remove_item(self.item)
+        self.unit.remove_item(self.item, gameStateObj)
 
     def reverse(self, gameStateObj):
-        self.unit.insert_item(self.item_index, self.item)
+        self.unit.insert_item(self.item_index, self.item, gameStateObj)
 
 class EquipItem(Action):
     """
@@ -491,10 +506,10 @@ class EquipItem(Action):
         self.old_idx = self.unit.items.index(self.item)
 
     def do(self, gameStateObj):
-        self.unit.equip(self.item)
+        self.unit.equip(self.item, gameStateObj)
 
     def reverse(self, gameStateObj):
-        self.unit.insert_item(self.old_idx, self.item)
+        self.unit.insert_item(self.old_idx, self.item, gameStateObj)
 
 class TradeItem(Action):
     def __init__(self, unit1, unit2, item1, item2):
@@ -507,22 +522,22 @@ class TradeItem(Action):
         self.hasTraded = self.unit1.hasTraded
         self.hasMoved = self.unit1.hasMoved
 
-    def swap(self, unit1, unit2, item1, item2, item_index1, item_index2):
+    def swap(self, unit1, unit2, item1, item2, item_index1, item_index2, gameStateObj):
         # Do the swap
         if item1 and item1 is not "EmptySlot":
-            unit1.remove_item(item1)
-            unit2.insert_item(item_index2, item1)
+            unit1.remove_item(item1, gameStateObj)
+            unit2.insert_item(item_index2, item1, gameStateObj)
         if item2 and item2 is not "EmptySlot":
-            unit2.remove_item(item2)
-            unit1.insert_item(item_index1, item2)   
+            unit2.remove_item(item2, gameStateObj)
+            unit1.insert_item(item_index1, item2, gameStateObj)   
 
     def do(self, gameStateObj):
-        self.swap(self.unit1, self.unit2, self.item1, self.item2, self.item_index1, self.item_index2)
+        self.swap(self.unit1, self.unit2, self.item1, self.item2, self.item_index1, self.item_index2, gameStateObj)
         self.unit1.hasTraded = True
         self.unit1.hasMoved = True
 
     def reverse(self, gameStateObj):
-        self.swap(self.unit1, self.unit2, self.item2, self.item1, self.item_index2, self.item_index1)
+        self.swap(self.unit1, self.unit2, self.item2, self.item1, self.item_index2, self.item_index1, gameStateObj)
         self.unit1.hasTraded = self.hasTraded
         self.unit1.hasMoved = self.hasMoved
 
@@ -817,6 +832,7 @@ class Die(Action):
         self.unit = unit
         self.old_pos = unit.position
 
+        self.leave_action = LeaveMap(self.unit)
         self.drop_action = None
 
     def do(self, gameStateObj):
@@ -827,9 +843,7 @@ class Die(Action):
             self.drop_action.do(gameStateObj)
 
         # I no longer have a position
-        self.unit.leave(gameStateObj)
-        self.unit.remove_from_map(gameStateObj)
-        self.unit.position = None
+        self.leave_action.do(gameStateObj)
         ##
         self.unit.dead = True
         self.unit.isDying = False
@@ -839,9 +853,7 @@ class Die(Action):
         self.unit.sprite.set_transition('normal')
         self.unit.sprite.change_state('normal', gameStateObj)
 
-        self.unit.position = self.old_pos
-        self.unit.place_on_map(gameStateObj)
-        self.unit.arrive(gameStateObj)
+        self.leave_action.reverse(gameStateObj)
 
         if self.drop_action:
             self.drop_action.reverse(gameStateObj)
@@ -1146,28 +1158,27 @@ class ApplyStatus(Action):
     def __init__(self, unit, status_obj):
         self.unit = unit
         self.status_obj = status_obj
-        self.actually_added = True
 
     def do(self, gameStateObj):
-        if not StatusObject.HandleStatusAddition(self.status_obj, self.unit, gameStateObj):
-            self.actually_added = False
+        self.unit.status_bundle.update(list(self.status_obj.components)) 
+        self.unit.status_effects.append(self.status_obj)
 
     def reverse(self, gameStateObj):
-        if self.actually_added:
-            StatusObject.HandleStatusRemoval(self.status_obj, self.unit, gameStateObj)
+        self.unit.status_effects.remove(self.status_obj)
+        self.unit.status_bundle.subtract(list(self.status_obj.components))
 
 class RemoveStatus(Action):
     def __init__(self, unit, status_obj):
         self.unit = unit
         self.status_obj = status_obj
-        # Do we have to worry about time?
-        # Or is it automatically taken care of
 
     def do(self, gameStateObj):
-        StatusObject.HandleStatusRemoval(self.status_obj, self.unit, gameStateObj)
+        self.unit.status_effects.remove(self.status_obj)
+        self.unit.status_bundle.subtract(list(self.status_obj.components))
 
     def reverse(self, gameStateObj):
-        StatusObject.HandleStatusAddition(self.status_obj, self.unit, gameStateObj)
+        self.unit.status_bundle.update(list(self.status_obj.components)) 
+        self.unit.status_effects.append(self.status_obj)
 
 class TetherStatus(Action):
     def __init__(self, status_obj, applied_status_obj, parent, child):
@@ -1183,6 +1194,30 @@ class TetherStatus(Action):
     def reverse(self, gameStateObj):
         self.status_obj.children.remove(self.child.id)
         self.applied_status_obj.parent_id = None
+
+# Also removes child statii
+class UnTetherStatus(Action):
+    def __init__(self, status_obj):
+        self.status_obj = status_obj
+        self.children = self.status_obj.children
+
+    def do(self, gameStateObj):
+        for u_id in reversed(self.children):
+            child_unit = gameStateObj.get_unit_from_id(u_id)
+            if child_unit:
+                for c_status in child_unit.status_effects:
+                    if c_status.id == self.status_obj.tether:
+                        StatusObject.HandleStatusRemoval(c_status, child_unit, gameStateObj)
+                        break
+        self.status_obj.children = []
+
+    def reverse(self, gameStateObj):
+        for u_id in self.children:
+            child_unit = gameStateObj.get_unit_from_id(u_id)
+            if child_unit:
+                self.status_obj.children.append(u_id)
+                applied_status = StatusObject.statusparser(self.status_obj.tether)
+                StatusObject.HandleStatusAddition(applied_status, child_unit, gameStateObj)
 
 class ApplyStatChange(Action):
     def __init__(self, unit, stat_change):
@@ -1523,13 +1558,22 @@ class RemoveGlobalStatus(Action):
 
 # === Master Functions for adding to action log ===
 def do(action, gameStateObj):
+    gameStateObj.action_log.action_depth += 1
     action.do(gameStateObj)
-    gameStateObj.action_log.append(action)
+    gameStateObj.action_log.action_depth -= 1
+    if gameStateObj.action_log.record and gameStateObj.action_log.action_depth <= 0:
+        gameStateObj.action_log.append(action)
 
 def execute(action, gameStateObj):
+    gameStateObj.action_log.action_depth += 1
     action.execute(gameStateObj)
-    gameStateObj.action_log.append(action)
+    gameStateObj.action_log.action_depth -= 1
+    if gameStateObj.action_log.record and gameStateObj.action_log.action_depth <= 0:
+        gameStateObj.action_log.append(action)
 
 def reverse(action, gameStateObj):
+    gameStateObj.action_log.action_depth += 1
     action.reverse(gameStateObj)
-    gameStateObj.action_log.remove(action)
+    gameStateObj.action_log.action_depth -= 1
+    if gameStateObj.action_log.record and gameStateObj.action_log.action_depth <= 0:
+        gameStateObj.action_log.remove(action)

@@ -80,13 +80,9 @@ class UnitObject(object):
         # --- Item list
         # --- ADD ITEMS ---
         self.items = []
-        for item_dict in info['items']:
-            if isinstance(item_dict, dict):
-                item = ItemMethods.deserialize(item_dict)
-                self.items.append(item) # Don't need to add item any more, since they're still present on unit
-            else:
-                item = item_dict
-                self.add_item(item)
+        for item_ser in info['items']:
+            item = ItemMethods.deserialize(item_ser)
+            self.items.append(item) # Don't need to add item any more, since they're still present on unit
 
         # --- The Units AI
         self.ai_descriptor = info['ai']
@@ -610,6 +606,9 @@ class UnitObject(object):
             logger.debug('Remove %s %s %s', self, self.name, self.position)
             for status in gameStateObj.map.status_effects:
                 StatusObject.HandleStatusRemoval(status, self, gameStateObj)
+            for status in self.status_effects:
+                if status.tether:
+                    Action.do(Action.UnTetherStatus(status), gameStateObj)
 
     def place_on_map(self, gameStateObj):
         if self.position:
@@ -1848,7 +1847,7 @@ class UnitObject(object):
             if status.active:
                 status.active.current_charge = 0
             if status.tether:
-                status.remove_children(gameStateObj)
+                Action.UnTetherStatus(status).do(gameStateObj)
         self.tags.discard('ActiveSkillCharged')
         # Items with chapter counts should be reset
         for item in self.items:
@@ -1858,6 +1857,7 @@ class UnitObject(object):
         self.position = None
         # Unit sprite should be reset
         self.sprite.change_state('normal', gameStateObj)
+        # Units should be reset
         # Units should be reset
         self.reset()
 
@@ -2028,28 +2028,28 @@ class UnitObject(object):
         return 'locktouch' in self.status_bundle or any(item.unlock for item in self.items) 
 
     # Wrapper around way of inserting item
-    def equip(self, item):
+    def equip(self, item, gameStateObj):
         # Moves the item to the top and makes it mainweapon
         if item in self.items and self.items.index(item) == 0:
             return  # Don't need to do anything
-        self.insert_item(0, item)
+        self.insert_item(0, item, gameStateObj)
 
     # Wrappers around way of inserting item
-    def add_item(self, item):
+    def add_item(self, item, gameStateObj):
         index = len(self.items)
-        self.insert_item(index, item)
+        self.insert_item(index, item, gameStateObj)
 
     # This does the adding and subtracting of statuses
-    def remove_item(self, item):
+    def remove_item(self, item, gameStateObj):
         logger.debug("Removing %s from %s items.", item, self.name)
         was_mainweapon = self.getMainWeapon() == item
         self.items.remove(item)
         item.item_owner = 0
         for status_on_hold in item.status_on_hold:
-            StatusObject.HandleStatusRemoval(status_on_hold, self)
+            StatusObject.HandleStatusRemoval(status_on_hold, self, gameStateObj)
         if was_mainweapon and self.canWield(item):
             for status_on_equip in item.status_on_equip:
-                StatusObject.HandleStatusRemoval(status_on_equip, self)
+                StatusObject.HandleStatusRemoval(status_on_equip, self, gameStateObj)
         # remove passive item skill
         for status in self.status_effects:
             if status.passive:
@@ -2058,14 +2058,14 @@ class UnitObject(object):
         if was_mainweapon and self.getMainWeapon():
             for status_on_equip in self.getMainWeapon().status_on_equip:
                 new_status = StatusObject.statusparser(status_on_equip)
-                StatusObject.HandleStatusAddition(new_status, self)
+                StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
             # apply passive item skill
             # for status in self.status_effects:
             #    if status.passive:
             #        status.passive.apply_mod(self.items[0])
 
     # This does the adding and subtracting of statuses
-    def insert_item(self, index, item):
+    def insert_item(self, index, item, gameStateObj):
         logger.debug("Inserting %s to %s items at index %s.", item, self.name, index)
         # Are we just reordering our items?
         if item in self.items:
@@ -2075,12 +2075,12 @@ class UnitObject(object):
                 # You unequipped a different item, so remove its status.
                 if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                     for status_on_equip in self.items[1].status_on_equip:
-                        StatusObject.HandleStatusRemoval(status_on_equip, self)
+                        StatusObject.HandleStatusRemoval(status_on_equip, self, gameStateObj)
                 # Now add yours
                 if self.canWield(item):
                     for status_on_equip in item.status_on_equip:
                         new_status = StatusObject.statusparser(status_on_equip)
-                        StatusObject.HandleStatusAddition(new_status, self)
+                        StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
         else:
             self.items.insert(index, item)
             item.item_owner = self.id
@@ -2092,17 +2092,17 @@ class UnitObject(object):
                 # Item statuses      
                 for status_on_hold in item.status_on_hold:
                     new_status = StatusObject.statusparser(status_on_hold)
-                    StatusObject.HandleStatusAddition(new_status, self)
+                    StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
                 if self.getMainWeapon() == item: # If new mainweapon...
                     # You unequipped a different item, so remove its status.
                     if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                         for status_on_equip in self.items[1].status_on_equip:
-                            StatusObject.HandleStatusRemoval(status_on_equip, self)
+                            StatusObject.HandleStatusRemoval(status_on_equip, self, gameStateObj)
                     # Now add yours
                     if self.canWield(item):
                         for status_on_equip in item.status_on_equip:
                             new_status = StatusObject.statusparser(status_on_equip)
-                            StatusObject.HandleStatusAddition(new_status, self)
+                            StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
 
     def die(self, gameStateObj, event=False):
         if event:
