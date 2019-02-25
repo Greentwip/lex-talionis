@@ -35,69 +35,79 @@ class Action(object):
     def update(self, gameStateObj):
         pass
 
+    def serialize_obj(self, value, gameStateObj):
+        if isinstance(value, UnitObject.UnitObject):
+            value = ('Unit', value.id)
+        elif isinstance(value, ItemMethods.ItemObject):
+            for unit in gameStateObj.allunits:
+                if value in unit.items:
+                    value = ('Item', unit.id, unit.items.index(value))
+                    break
+            else:
+                if value in gameStateObj.convoy:
+                    value = ('ConvoyItem', gameStateObj.convoy.index(value))
+                else:
+                    value = ('UniqueItem', value.serialize())
+        elif isinstance(value, StatusObject.StatusObject):
+            for unit in gameStateObj.allunits:
+                if value in unit.status_effects:
+                    print(self)
+                    print(unit.name)
+                    value = ('Status', unit.id, unit.status_effects.index(value))
+                    print(value)
+                    break
+            else:
+                value = ('UniqueStatus', value.serialize())
+        elif isinstance(value, list):
+            value = ('List', [self.serialize_obj(v, gameStateObj) for v in value])
+        elif isinstance(value, Action):  # This only works if two actions never refer to one another
+            value = ('Action', value.serialize(gameStateObj))
+        else:
+            value = ('Generic', value)
+        return value
+
     def serialize(self, gameStateObj):
         ser_dict = {}
         for attr in self.__dict__.items():
             # print(attr)
             name, value = attr
-            if isinstance(value, UnitObject.UnitObject):
-                value = ('Unit', value.id)
-            elif isinstance(value, ItemMethods.ItemObject):
-                for unit in gameStateObj.allunits:
-                    if value in unit.items:
-                        value = ('Item', unit.id, unit.items.index(value))
-                        break
-                else:
-                    if value in gameStateObj.convoy:
-                        value = ('ConvoyItem', gameStateObj.convoy.index(value))
-                    else:
-                        value = ('UniqueItem', value.serialize())
-            elif isinstance(value, StatusObject.StatusObject):
-                for unit in gameStateObj.allunits:
-                    if value in unit.status_effects:
-                        print(self)
-                        print(unit.name)
-                        value = ('Status', unit.id, unit.status_effects.index(value))
-                        print(value)
-                        break
-                else:
-                    value = ('UniqueStatus', value.serialize())
-            elif isinstance(value, Action):  # This only works if two actions never refer to one another
-                value = ('Action', value.serialize(gameStateObj))
-            else:
-                value = ('Generic', value)
+            value = self.serialize_obj(value, gameStateObj)
             ser_dict[name] = value
         # print(ser_dict)
         return (self.__class__.__name__, ser_dict)
+
+    def deserialize_obj(self, value, gameStateObj):
+        if value[0] == 'Unit':
+            return gameStateObj.get_unit_from_id(value[1])
+        elif value[0] == 'Item':
+            unit = gameStateObj.get_unit_from_id(value[1])
+            return unit.items[value[2]]
+        elif value[0] == 'ConvoyItem':
+            return gameStateObj.convoy[value[1]]
+        elif value[0] == 'UniqueItem':
+            return ItemMethods.deserialize(value[1])
+        elif value[0] == 'Status':
+            unit = gameStateObj.get_unit_from_id(value[1])
+            print(self)
+            print(value)
+            print(unit.name)
+            print(unit.status_effects)
+            return unit.status_effects[value[2]]
+        elif value[0] == 'UniqueStatus':
+            return StatusObject.deserialize(value[1])
+        elif value[0] == 'List':
+            return [self.deserialize_obj(v, gameStateObj) for v in value[1]]
+        elif value[0] == 'Action':
+            return Action.deserialize(value[1][1], gameStateObj)
+        else:
+            return value[1]
 
     @classmethod
     def deserialize(cls, ser_dict, gameStateObj):
         self = cls.__new__(cls)
         # print(cls.__name__)
         for name, value in ser_dict.items():
-            if value[0] == 'Unit':
-                setattr(self, name, gameStateObj.get_unit_from_id(value[1]))
-            elif value[0] == 'Item':
-                unit = gameStateObj.get_unit_from_id(value[1])
-                setattr(self, name, unit.items[value[2]])
-            elif value[0] == 'ConvoyItem':
-                setattr(self, name, gameStateObj.convoy[value[1]])
-            elif value[0] == 'UniqueItem':
-                setattr(self, name, ItemMethods.deserialize(value[1]))
-            elif value[0] == 'Status':
-                unit = gameStateObj.get_unit_from_id(value[1])
-                print(cls)
-                print(name)
-                print(value)
-                print(unit.name)
-                print(unit.status_effects)
-                setattr(self, name, unit.status_effects[value[2]])
-            elif value[0] == 'UniqueStatus':
-                setattr(self, name, StatusObject.deserialize(value[1]))
-            elif value[0] == 'Action':
-                setattr(self, name, Action.deserialize(value[1][1], gameStateObj))
-            else:
-                setattr(self, name, value[1])
+            setattr(self, name, self.deserialize_obj(value))
         return self
 
 class Move(Action):
@@ -1200,6 +1210,7 @@ class UnTetherStatus(Action):
     def __init__(self, status_obj):
         self.status_obj = status_obj
         self.children = self.status_obj.children
+        self.child_status = []
 
     def do(self, gameStateObj):
         for u_id in reversed(self.children):
@@ -1207,16 +1218,26 @@ class UnTetherStatus(Action):
             if child_unit:
                 for c_status in child_unit.status_effects:
                     if c_status.id == self.status_obj.tether:
+                        self.child_status.append(c_status)
                         StatusObject.HandleStatusRemoval(c_status, child_unit, gameStateObj)
                         break
+        print(self.status_obj)
+        print(self.status_obj.tether)
+        print(self.children)
+        print(self.child_status)
         self.status_obj.children = []
+        assert len(self.children) == len(self.child_status)
 
     def reverse(self, gameStateObj):
-        for u_id in self.children:
+        print(self.children)
+        print(self.child_status)
+        assert len(self.children) == len(self.child_status)
+        for idx, u_id in enumerate(self.children):
+            print(idx, u_id)
             child_unit = gameStateObj.get_unit_from_id(u_id)
             if child_unit:
                 self.status_obj.children.append(u_id)
-                applied_status = StatusObject.statusparser(self.status_obj.tether)
+                applied_status = self.child_status[idx]
                 StatusObject.HandleStatusAddition(applied_status, child_unit, gameStateObj)
 
 class ApplyStatChange(Action):
