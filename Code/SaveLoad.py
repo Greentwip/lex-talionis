@@ -223,11 +223,6 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             u_i['stats'] = build_stat_dict(stats)
             logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
 
-            if 'items' in legend:
-                print("Does this ever happen?")
-                u_i['items'] = legend['items']
-            else:
-                u_i['items'] = []
             # Parse wexp
             u_i['wexp'] = unit.find('wexp').text.split(',')
             for index, wexp in enumerate(u_i['wexp'][:]):
@@ -255,7 +250,8 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
                 cur_unit.position = u_i['position']
 
             # Items
-            items = ItemMethods.itemparser(unit.find('inventory').text)
+            items = [ItemMethods.itemparser(item) for item in unit.find('inventory').text.split(',')]
+            gameStateObj.add_items(items)
             for item in items:
                 cur_unit.add_item(item, gameStateObj)
 
@@ -315,7 +311,6 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     u_i['tags'] = class_dict[u_i['klass']]['tags']
     u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
-    u_i['items'] = []
 
     cur_unit = UnitObject.UnitObject(u_i)
 
@@ -327,6 +322,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
         cur_unit.position = u_i['position']
 
     # Items
+    gameStateObj.add_items(items)
     for item in items:
         cur_unit.add_item(item, gameStateObj)
 
@@ -366,10 +362,15 @@ def create_summon(summon_info, summoner, position, gameStateObj):
     u_i['tags'].add('Summon_' + str(summon_info.s_id) + '_' + str(summoner.id)) # Add unique identifier
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
-    stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'], u_i['level'] = \
+    stats, u_i['growths'], u_i['growth_points'], items, u_i['wexp'], u_i['level'] = \
         get_unit_info(u_i['team'], u_i['klass'], u_i['level'], summon_info.item_line, gameStateObj.mode, gameStateObj.game_constants)
     u_i['stats'] = build_stat_dict(stats)
     unit = UnitObject.UnitObject(u_i)
+
+    # Items
+    gameStateObj.add_items(items)
+    for item in items:
+        unit.add_item(item, gameStateObj)
 
     # Status Effects and Skills
     my_seed = sum(u_i['position']) if u_i['position'] else 0
@@ -405,7 +406,10 @@ def get_unit_info(team, klass, level, item_line, mode, game_constants, force_fix
     stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, ClassData.class_dict[klass]['max'], mode, force_fixed=force_fixed)
 
     # Handle items
-    items = ItemMethods.itemparser(item_line)
+    if item_line:
+        items = [ItemMethods.itemparser(item) for item in item_line.split(',')]
+    else:
+        items = []
 
     # Handle required wexp
     wexp = ClassData.class_dict[klass]['wexp_gain'][:]
@@ -571,6 +575,8 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
     gameStateObj.loadSprites()
 
     if any(isinstance(unit.id, int) for unit in gameStateObj.allunits):
-        GC.U_ID = max(unit.id for unit in gameStateObj.allunits if isinstance(unit.id, int))
+        GC.U_ID = max(unit.id for unit in gameStateObj.allunits if isinstance(unit.id, int)) + 1
     else:
         GC.U_ID = 100
+    ItemMethods.ItemObject.next_uid = max(gameStateObj.allitems.keys()) + 1
+    StatusObject.StatusObject.next_uid = max(gameStateObj.allstatuses.keys()) + 1

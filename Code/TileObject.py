@@ -284,7 +284,8 @@ class MapObject(object):
                 status_list.append(StatusObject.statusparser(status))
             property_value = status_list
         elif property_name == 'Weapon':
-            property_value = ItemMethods.itemparser(property_value)[0]
+            # For now we're ignoring saving Stationary Weapons, which means they can't have uses...
+            property_value = ItemMethods.itemparser(property_value)
         elif property_name in ("Escape", "Arrive"):
             self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
         elif property_name == "Formation":
@@ -329,10 +330,6 @@ class MapObject(object):
     def serialize(self):
         serial_dict = {}
         serial_dict['HP'] = [(pos, hp.currenthp) for pos, hp in self.hp.items()]
-        serial_dict['Weapons'] = []
-        for pos, property_list in self.tile_info_dict.items():
-            if 'Weapon' in property_list:
-                serial_dict['Weapons'].append((pos, property_list['Weapon'].serialize()))
         return serial_dict
 
     def layer_tile_sprite(self, layer, coord, image_filename):

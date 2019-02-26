@@ -115,6 +115,8 @@ class GameStateObj(object):
     def build_new(self):
         logger.info("Build New")
         self.allunits = []
+        self.allitems = {}
+        self.allstatuses = {}
         self.factions = {}
         self.allreinforcements = {}
         self.prefabs = []
@@ -174,13 +176,15 @@ class GameStateObj(object):
         logger.info("Load")
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
+        self.allitems = {info['uid']: ItemMethods.deserialize(info) for info in load_info['allitems']}
+        self.allstatuses = {info['uid']: StatusObject.deserialize(info) for info in load_info['allstatuses']}
         self.factions = load_info['factions'] if 'factions' in load_info else (load_info['groups'] if 'groups' in load_info else {})
         self.allreinforcements = load_info['allreinforcements'] 
         self.prefabs = load_info['prefabs']
         self.triggers = load_info.get('triggers', dict())
         map_info = load_info['map']
         self.playtime = load_info['playtime']
-        self._convoy = {party_id: [ItemMethods.deserialize(item_dict) for item_dict in party_convoy] for party_id, party_convoy in load_info['convoy'].items()}
+        self._convoy = {party_id: [self.get_item_from_uid(uid) for uid in party_convoy] for party_id, party_convoy in load_info['convoy'].items()}
         self._convoy = {party_id: [item for item in party_convoy if item] for party_id, party_convoy in self._convoy.items()}
         self._money = Counter({party_id: money for party_id, money in load_info['money'].items()})
         self.current_party = load_info['current_party']
@@ -203,7 +207,16 @@ class GameStateObj(object):
         self.unlocked_lore = load_info['unlocked_lore']
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
-        # Action log
+
+        # Statuses
+        # for index, info in enumerate(load_info['allunits']):
+        #     for s_dict in info['status_effects']:
+        #         if isinstance(s_dict, dict):
+        #             StatusObject.deserialize(s_dict, self.allunits[index])
+        #         else:
+        #             self.allunits[index].status_effects.append(s_dict)
+
+        # Action Log
         self.action_log = Turnwheel.ActionLog.deserialize(load_info['action_log'], self)
 
         # Map
@@ -212,16 +225,8 @@ class GameStateObj(object):
             self.action_log.replay_map_commands(self)
             for position, current_hp in map_info.get('HP', []):
                 self.map.tiles[position].set_hp(current_hp)
-            for position, serialized_item in map_info.get('Weapons', []):
-                self.map.tile_info_dict[position]['Weapon'] = ItemMethods.deserialize(serialized_item)
-
-        # Statuses
-        for index, info in enumerate(load_info['allunits']):
-            for s_dict in info['status_effects']:
-                if isinstance(s_dict, dict):
-                    StatusObject.deserialize(s_dict, self.allunits[index])
-                else:
-                    self.allunits[index].status_effects.append(s_dict)
+            # for position, serialized_item in map_info.get('Weapons', []):
+            #     self.map.tile_info_dict[position]['Weapon'] = ItemMethods.deserialize(serialized_item)
 
         # Support
         if cf.CONSTANTS['support']:
@@ -298,7 +303,7 @@ class GameStateObj(object):
         for unit in self.allunits:
             unit.resetUpdates()
             if unit.position:
-                unit.place_on_map(self)
+                Action.PlaceOnMap(unit, unit.position).do(self)
                 unit.arrive(self, serializing=False)
         self.old_map = None
 
@@ -355,6 +360,22 @@ class GameStateObj(object):
                 if any_id in (unit.name, unit.id, unit.event_id):
                     return unit
 
+    def get_item_from_uid(self, u_id):
+        return self.allitems.get(u_id)
+
+    def add_item(self, item):
+        self.allitems[item.uid] = item
+
+    def add_items(self, items):
+        for item in items:
+            self.allitems[item.uid] = item
+
+    def get_status_from_uid(self, u_id):
+        return self.allstatuses.get(u_id)
+
+    def add_status(self, status):
+        self.allstatuses[status.uid] = status
+
     def check_formation_spots(self):
         # Returns None if no spot available
         # Returns a spot if a spot is available
@@ -403,12 +424,12 @@ class GameStateObj(object):
         # Reset all position dependant voodoo -- Done by gameStateObj at once instead of one at a time...
         for unit in self.allunits:
             unit.leave(self, serializing=True)
-            unit.remove_from_map(self)
         ser_units = [unit.serialize(self) for unit in self.allunits]
         for unit in self.allunits:
             unit.arrive(self, serializing=True)
-            unit.place_on_map(self)
         to_save = {'allunits': ser_units,
+                   'allitems': [item.serialize() for item in self.allitems.values()],
+                   'allstatuses': [status.serialize() for status in self.allstatuses.values()],
                    'factions': self.factions,
                    'allreinforcements': self.allreinforcements,
                    'prefabs': self.prefabs,
@@ -416,7 +437,7 @@ class GameStateObj(object):
                    'map': self.map.serialize() if self.map else None,
                    'playtime': self.playtime,
                    'turncount': self.turncount,
-                   'convoy': {party_id: [item.serialize() for item in party_convoy] for party_id, party_convoy in self._convoy.items()},
+                   'convoy': {party_id: [item.uid for item in party_convoy] for party_id, party_convoy in self._convoy.items()},
                    'money': self._money,
                    'current_party': self.current_party,
                    'objective': self.objective.serialize() if self.objective else None,
@@ -463,7 +484,7 @@ class GameStateObj(object):
         # Units should leave (first, because clean_up removes position)
         for unit in self.allunits:
             unit.leave(self)
-            unit.remove_from_map(self)
+            Action.RemoveFromMap(unit).do(self)
         for unit in self.allunits:
             unit.clean_up(self)
 

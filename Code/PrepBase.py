@@ -5,12 +5,12 @@ import os
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates
+    import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates, Action
     import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates
+    from . import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates, Action
     from . import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
 
 class PrepMainState(StateMachine.State):
@@ -153,14 +153,12 @@ class PrepPickUnitsState(StateMachine.State):
             elif selection.position:
                 GC.SOUNDDICT['Select 1'].play()
                 selection.leave(gameStateObj)
-                selection.remove_from_map(gameStateObj)
-                selection.position = None
+                Action.RemoveFromMap(selection).do(gameStateObj)
             else:
                 possible_position = gameStateObj.check_formation_spots()
                 if possible_position:
                     GC.SOUNDDICT['Select 1'].play()
-                    selection.position = possible_position
-                    selection.place_on_map(gameStateObj)
+                    Action.PlaceOnMap(selection, possible_position).do(gameStateObj)
                     selection.arrive(gameStateObj)
                     selection.reset() # Make sure unit is not 'wait'...
         elif event == 'BACK':
@@ -1030,7 +1028,7 @@ class BaseMarketState(StateMachine.State):
         if not self.started:
             self.cur_unit = gameStateObj.cursor.currentSelectedUnit
             self.update_options(gameStateObj)
-            items_for_sale = ItemMethods.itemparser(','.join(list(gameStateObj.market_items)))
+            items_for_sale = [ItemMethods.itemparser(item) for item in gameStateObj.market_items]
             self.shop_menu = MenuFunctions.ConvoyMenu(None, items_for_sale, (GC.WINWIDTH - 160 - 4, 40), disp_value="Buy")
             self.choice_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS["Buy"], cf.WORDS["Sell"]], (16, 16), gem=False, background='BrownBackgroundOpaque')
             self.buy_sure_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS['Buy'], cf.WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
@@ -1142,7 +1140,8 @@ class BaseMarketState(StateMachine.State):
                 selection = self.buy_sure_menu.getSelection()
                 if selection == cf.WORDS['Buy']:
                     GC.SOUNDDICT['Select 1'].play()
-                    item = ItemMethods.itemparser(str(self.current_menu.getSelection().id))[0] # Create a copy
+                    item = ItemMethods.itemparser(str(self.current_menu.getSelection().id)) # Create a copy
+                    gameStateObj.add_item(item)
                     if self.cur_unit and len(self.cur_unit.items) < cf.CONSTANTS['max_items']:
                         self.cur_unit.add_item(item, gameStateObj)
                     else:

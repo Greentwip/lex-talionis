@@ -520,7 +520,7 @@ class Dialogue_Scene(object):
             if line[2] != "0":
                 item = ItemMethods.itemparser(line[2])
                 if item:
-                    item = item[0]
+                    gameStateObj.add_item(item)
                     self.add_item(receiver, item, gameStateObj, 'no_banner' not in line)
                 else:
                     logger.error("Could not find item matching %s", line[2])
@@ -872,12 +872,9 @@ class Dialogue_Scene(object):
                                    if 'Formation' in value and not gameStateObj.grid_manager.get_unit_node(pos)]
             for index, unit in enumerate(player_units[:len(formation_spots)]):
                 if force:
-                    unit.leave(gameStateObj)
-                    unit.remove_from_map(gameStateObj)
-                unit.position = formation_spots[index]
-                # print(unit.name, unit.position)
-                unit.place_on_map(gameStateObj)
-                unit.arrive(gameStateObj)
+                    Action.do(Action.LeaveMap(unit), gameStateObj)
+                new_pos = formation_spots[index]
+                Action.do(Action.ArriveOnMap(unit, new_pos), gameStateObj)
         elif line[0] == 'reset_units':
             for unit in gameStateObj.allunits:
                 Action.do(Action.Reset(unit), gameStateObj)

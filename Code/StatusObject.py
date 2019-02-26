@@ -14,11 +14,15 @@ logger = logging.getLogger(__name__)
 
 # === New Status Object ========================================================
 class StatusObject(object):
-    def __init__(self, s_id, name, components, desc, image_index=(0, 0)):
+    next_uid = 100
+
+    def __init__(self, s_id, name, components, desc, image_index=None):
+        self.uid = StatusObject.next_uid
+        StatusObject.next_uid += 1
         self.id = s_id
         self.name = name
         self.desc = desc
-        self.image_index = image_index
+        self.image_index = image_index or (0, 0)
 
         self.children = []
 
@@ -57,6 +61,7 @@ class StatusObject(object):
 
     def serialize(self):
         serial_dict = {}
+        serial_dict['uid'] = self.uid
         serial_dict['id'] = self.id
         serial_dict['time_left'] = self.time.time_left if self.time else None
         serial_dict['upkeep_sc_count'] = self.upkeep_stat_change.count if self.upkeep_stat_change else None
@@ -431,9 +436,9 @@ def HandleStatusAddition(status, unit, gameStateObj):
         s_copy.already_reflected = True # So we don't get infinite reflections between two units with reflect
         HandleStatusAddition(s_copy, p_unit, gameStateObj)
            
-    if not status.momentary:  
-        # Actually Add!
-        Action.do(Action.ApplyStatus(unit, status), gameStateObj)
+    if not status.momentary:
+        gameStateObj.add_status(status)  
+        Action.do(Action.GiveStatus(unit, status), gameStateObj)
 
     # --- Momentary status ---
     # Momentary status do need to be worked with Actions
@@ -532,7 +537,7 @@ def HandleStatusRemoval(status, unit, gameStateObj, clean_up=False):
             
     logger.info('Removing status %s from %s at %s', status.id, unit.name, unit.position)
     if status in unit.status_effects:
-        Action.do(Action.RemoveStatus(unit, status), gameStateObj)
+        Action.do(Action.TakeStatus(unit, status), gameStateObj)
         
     else:
         logger.warning('Status %s %s not present...', status.id, status.name)
@@ -700,7 +705,8 @@ def deserialize(s_dict, unit=None):
     status = statusparser(s_dict['id'])
     if not status:
         return
-    # status = HandleStatusAddition(status, unit, gameStateObj)
+    status.uid = s_dict['uid']
+
     if s_dict['time_left']:
         status.time.time_left = s_dict['time_left']
     if s_dict.get('count') is not None:
@@ -730,6 +736,7 @@ def deserialize(s_dict, unit=None):
                 status.passive.apply_mod(item)
         unit.status_effects.append(status)
         unit.status_bundle.update(list(status.components))
+    return status
 
 # Populate feat_list
 def get_feat_list(status_data):

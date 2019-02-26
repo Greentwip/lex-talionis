@@ -584,10 +584,10 @@ class StartPreloadedLevels(StartLoad):
         gameStateObj.save_slot = 'Preload ' + level['name']
         # Convoy
         for item_id, uses in level['convoy']:
-            items = ItemMethods.itemparser(item_id)
-            if not items:
+            item = ItemMethods.itemparser(item_id)
+            if not item:
                 continue
-            item = items[0]
+            gameStateObj.add_item(item)
             if item.uses:
                 item.uses.uses = int(uses)
             gameStateObj.convoy.append(item)
@@ -601,18 +601,17 @@ class StartPreloadedLevels(StartLoad):
             legend['position'] = 'None'
             legend['unit_id'] = unit_dict['name']
             legend['ai'] = 'None'
-            legend['items'] = []
-            # Get items
-            for item_id, uses in unit_dict['items']:
-                items = ItemMethods.itemparser(item_id)
-                if not items:
-                    continue
-                item = items[0]
-                if item.uses:
-                    item.uses.uses = int(uses)
-                legend['items'].append(item)
             # Reinforcement units can be empty, since they won't spawn in as reinforcements
             unit = SaveLoad.add_unit_from_legend(legend, gameStateObj.allunits, {}, gameStateObj)
+            # Get items
+            for item_id, uses in unit_dict['items']:
+                item = ItemMethods.itemparser(item_id)
+                if not item:
+                    continue
+                gameStateObj.add_item(item)                    
+                if item.uses:
+                    item.uses.uses = int(uses)
+                unit.add_item(item, gameStateObj)
             # Level up the unit
             for level_num in range(unit_dict['level'] - unit.level):
                 unit_klass = ClassData.class_dict[unit.klass]

@@ -45,6 +45,7 @@ COLORDICT = {'bright_blue': (0, 168, 248),
              'navy_blue': (24, 24, 88)}
 
 U_ID = 100
+
 SUSPEND_LOC = 'Saves/Suspend.pmeta'
 
 Engine.init()

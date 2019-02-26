@@ -78,11 +78,7 @@ class UnitObject(object):
         self.wexp = info['wexp']
 
         # --- Item list
-        # --- ADD ITEMS ---
         self.items = []
-        for item_ser in info['items']:
-            item = ItemMethods.deserialize(item_ser)
-            self.items.append(item) # Don't need to add item any more, since they're still present on unit
 
         # --- The Units AI
         self.ai_descriptor = info['ai']
@@ -600,22 +596,6 @@ class UnitObject(object):
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
             self.acquire_tile_status(gameStateObj)
             self.acquire_aura_status(gameStateObj, serializing=serializing)
-
-    def remove_from_map(self, gameStateObj):
-        if self.position:
-            logger.debug('Remove %s %s %s', self, self.name, self.position)
-            for status in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusRemoval(status, self, gameStateObj)
-            for status in self.status_effects:
-                if status.tether:
-                    Action.do(Action.UnTetherStatus(status), gameStateObj)
-
-    def place_on_map(self, gameStateObj):
-        if self.position:
-            logger.debug('Place %s %s %s', self, self.name, self.position)
-            for status in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusAddition(status, self, gameStateObj)
-            self.previous_position = self.position
 
     # Pathfinding algorithm
     def getPath(self, gameStateObj, goalPosition, ally_block=False):
@@ -1885,13 +1865,13 @@ class UnitObject(object):
                        'level': self.level,
                        'exp': self.exp,
                        'tags': self.tags,
-                       'status_effects': [status.serialize() for status in self.status_effects],
+                       'status_effects': [status.uid for status in self.status_effects],
                        'desc': self.desc,
                        'growths': self.growths,
                        'growth_points': self.growth_points,
                        'currenthp': self.currenthp,
                        'wexp': self.wexp,
-                       'items': [item.serialize() for item in self.items],
+                       'items': [item.uid for item in self.items],
                        'ai': self.ai_descriptor,
                        'records': self.records,
                        'dead': self.dead,

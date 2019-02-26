@@ -1,5 +1,6 @@
 # Actions
 # All permanent changes to game state are reified as actions.
+import sys
 
 try:
     import GlobalConstants as GC
@@ -32,32 +33,13 @@ class Action(object):
     def reverse(self, gameStateObj):
         pass
 
-    def update(self, gameStateObj):
-        pass
-
     def serialize_obj(self, value, gameStateObj):
         if isinstance(value, UnitObject.UnitObject):
             value = ('Unit', value.id)
         elif isinstance(value, ItemMethods.ItemObject):
-            for unit in gameStateObj.allunits:
-                if value in unit.items:
-                    value = ('Item', unit.id, unit.items.index(value))
-                    break
-            else:
-                if value in gameStateObj.convoy:
-                    value = ('ConvoyItem', gameStateObj.convoy.index(value))
-                else:
-                    value = ('UniqueItem', value.serialize())
+            value = ('Item', value.uid)
         elif isinstance(value, StatusObject.StatusObject):
-            for unit in gameStateObj.allunits:
-                if value in unit.status_effects:
-                    print(self)
-                    print(unit.name)
-                    value = ('Status', unit.id, unit.status_effects.index(value))
-                    print(value)
-                    break
-            else:
-                value = ('UniqueStatus', value.serialize())
+            value = ('Status', value.uid)
         elif isinstance(value, list):
             value = ('List', [self.serialize_obj(v, gameStateObj) for v in value])
         elif isinstance(value, Action):  # This only works if two actions never refer to one another
@@ -80,34 +62,24 @@ class Action(object):
         if value[0] == 'Unit':
             return gameStateObj.get_unit_from_id(value[1])
         elif value[0] == 'Item':
-            unit = gameStateObj.get_unit_from_id(value[1])
-            return unit.items[value[2]]
-        elif value[0] == 'ConvoyItem':
-            return gameStateObj.convoy[value[1]]
-        elif value[0] == 'UniqueItem':
-            return ItemMethods.deserialize(value[1])
+            return gameStateObj.get_item_from_uid(value[1])
         elif value[0] == 'Status':
-            unit = gameStateObj.get_unit_from_id(value[1])
-            print(self)
-            print(value)
-            print(unit.name)
-            print(unit.status_effects)
-            return unit.status_effects[value[2]]
-        elif value[0] == 'UniqueStatus':
-            return StatusObject.deserialize(value[1])
+            return gameStateObj.get_status_from_uid(value[1])
         elif value[0] == 'List':
             return [self.deserialize_obj(v, gameStateObj) for v in value[1]]
         elif value[0] == 'Action':
-            return Action.deserialize(value[1][1], gameStateObj)
+            name, value = value[1][0], value[1][1]
+            action = getattr(sys.modules[__name__], name)
+            return action.deserialize(value, gameStateObj)
         else:
             return value[1]
 
     @classmethod
     def deserialize(cls, ser_dict, gameStateObj):
         self = cls.__new__(cls)
-        # print(cls.__name__)
+        print('Deserialize: %s' % cls.__name__)
         for name, value in ser_dict.items():
-            setattr(self, name, self.deserialize_obj(value))
+            setattr(self, name, self.deserialize_obj(value, gameStateObj))
         return self
 
 class Move(Action):
@@ -207,37 +179,47 @@ class ArriveOnMap(Action):
     def __init__(self, unit, pos):
         self.unit = unit
         self.pos = pos
+        self.place_on_map = PlaceOnMap(unit, pos)
 
     def do(self, gameStateObj):
-        self.unit.position = self.pos
-        self.unit.place_on_map(gameStateObj)
+        self.place_on_map.do(gameStateObj)
         self.unit.arrive(gameStateObj)
 
     def reverse(self, gameStateObj):
         self.unit.leave(gameStateObj)
-        self.unit.remove_from_map(gameStateObj)
-        self.unit.position = None
+        self.place_on_map.reverse(gameStateObj)
 
 class WarpIn(ArriveOnMap):
     def do(self, gameStateObj):
-        self.unit.position = self.pos
+        self.place_on_map.do(gameStateObj)
         self.unit.sprite.set_transition('warp_in')
         gameStateObj.map.initiate_warp_flowers(self.pos)
-        self.unit.place_on_map(gameStateObj)
         self.unit.arrive(gameStateObj)
 
 class FadeIn(ArriveOnMap):
     def do(self, gameStateObj):
-        self.unit.position = self.pos
+        self.place_on_map.do(gameStateObj)
         if gameStateObj.map.on_border(self.pos) and gameStateObj.map.tiles[self.pos].name not in ('Stairs', 'Fort'):
             self.unit.sprite.spriteOffset = [num*GC.TILEWIDTH for num in gameStateObj.map.which_border(self.pos)]
             self.unit.sprite.set_transition('fake_in')
         else:
             self.unit.sprite.set_transition('fade_in')
-        self.unit.place_on_map(gameStateObj)
         self.unit.arrive(gameStateObj)
 
 class LeaveMap(Action):
+    def __init__(self, unit):
+        self.unit = unit
+        self.remove_from_map = RemoveFromMap(self.unit)
+
+    def do(self, gameStateObj):
+        self.unit.leave(gameStateObj)
+        self.remove_from_map.do(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.remove_from_map.reverse(gameStateObj)
+        self.unit.arrive(gameStateObj)
+
+class RemoveFromMap(Action):
     def __init__(self, unit):
         self.unit = unit
         self.old_pos = self.unit.position
@@ -247,20 +229,47 @@ class LeaveMap(Action):
         self.untether_actions = [UnTetherStatus(s) for s in self.unit.status_effects if s.tether]
 
     def do(self, gameStateObj):
-        self.unit.leave(gameStateObj)
-        self.unit.remove_from_map(gameStateObj)
+        if self.unit.position:
+            # Global Statuses
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusRemoval(status, self.unit, gameStateObj)
+            for action in self.untether_actions:
+                action.do(gameStateObj)
         self.unit.position = None
 
     def reverse(self, gameStateObj):
         self.unit.position = self.old_pos
-        self.unit.place_on_map(gameStateObj)
-        self.unit.arrive(gameStateObj)
+        if self.unit.position:
+            # Global Statuses
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusAddition(status, self.unit, gameStateObj)
+            for action in self.untether_actions:
+                action.reverse(gameStateObj)
+            self.unit.previous_position = self.unit.position
 
-        for action in self.untether_actions:
-            action.reverse(gameStateObj)
+class PlaceOnMap(Action):
+    def __init__(self, unit, new_pos):
+        self.unit = unit
+        self.new_pos = new_pos
+
+    def do(self, gameStateObj):
+        self.unit.position = self.new_pos
+        if self.unit.position:
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusAddition(status, self.unit, gameStateObj)
+            self.unit.previous_position = self.unit.position
+
+    def reverse(self, gameStateObj):
+        if self.unit.position:
+            # Global Statuses
+            for status in gameStateObj.map.status_effects:
+                StatusObject.HandleStatusRemoval(status, self.unit, gameStateObj)
+        self.unit.position = None
 
 class Wait(Action):
     def __init__(self, unit):
+        print(unit)
+        print(unit.name)
         self.unit = unit
         self.hasMoved = unit.hasMoved
         self.hasTraded = unit.hasTraded
@@ -840,20 +849,18 @@ class Miracle(Action):
 class Die(Action):
     def __init__(self, unit):
         self.unit = unit
-        self.old_pos = unit.position
-
-        self.leave_action = LeaveMap(self.unit)
-        self.drop_action = None
+        self.leave_map = LeaveMap(self.unit)
+        self.drop = None
 
     def do(self, gameStateObj):
         # Drop any travelers
         if self.unit.TRV:
             drop_me = gameStateObj.get_unit_from_id(self.unit.TRV)
-            self.drop_action = Drop(self.unit, drop_me, self.unit.position)
-            self.drop_action.do(gameStateObj)
+            self.drop = Drop(self.unit, drop_me, self.unit.position)
+            self.drop.do(gameStateObj)
 
         # I no longer have a position
-        self.leave_action.do(gameStateObj)
+        self.leave_map.do(gameStateObj)
         ##
         self.unit.dead = True
         self.unit.isDying = False
@@ -863,10 +870,10 @@ class Die(Action):
         self.unit.sprite.set_transition('normal')
         self.unit.sprite.change_state('normal', gameStateObj)
 
-        self.leave_action.reverse(gameStateObj)
+        self.leave_map.reverse(gameStateObj)
 
-        if self.drop_action:
-            self.drop_action.reverse(gameStateObj)
+        if self.drop:
+            self.drop.reverse(gameStateObj)
 
 class Resurrect(Action):
     def __init__(self, unit):
@@ -1164,10 +1171,12 @@ class RecordRandomState(Action):
         static_random.set_combat_random_state(self.old)
 
 # === SKILL AND STATUS ACTIONS ===================================================
-class ApplyStatus(Action):
+class GiveStatus(Action):
     def __init__(self, unit, status_obj):
         self.unit = unit
         self.status_obj = status_obj
+        print(unit.name)
+        print(self.status_obj)
 
     def do(self, gameStateObj):
         self.unit.status_bundle.update(list(self.status_obj.components)) 
@@ -1177,7 +1186,7 @@ class ApplyStatus(Action):
         self.unit.status_effects.remove(self.status_obj)
         self.unit.status_bundle.subtract(list(self.status_obj.components))
 
-class RemoveStatus(Action):
+class TakeStatus(Action):
     def __init__(self, unit, status_obj):
         self.unit = unit
         self.status_obj = status_obj
@@ -1217,28 +1226,24 @@ class UnTetherStatus(Action):
             child_unit = gameStateObj.get_unit_from_id(u_id)
             if child_unit:
                 for c_status in child_unit.status_effects:
+                    print(c_status, c_status.id, self.status_obj.tether)
                     if c_status.id == self.status_obj.tether:
                         self.child_status.append(c_status)
                         StatusObject.HandleStatusRemoval(c_status, child_unit, gameStateObj)
                         break
-        print(self.status_obj)
-        print(self.status_obj.tether)
-        print(self.children)
-        print(self.child_status)
+        assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
         self.status_obj.children = []
-        assert len(self.children) == len(self.child_status)
 
     def reverse(self, gameStateObj):
-        print(self.children)
-        print(self.child_status)
-        assert len(self.children) == len(self.child_status)
+        assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
         for idx, u_id in enumerate(self.children):
-            print(idx, u_id)
             child_unit = gameStateObj.get_unit_from_id(u_id)
             if child_unit:
                 self.status_obj.children.append(u_id)
                 applied_status = self.child_status[idx]
+                print(child_unit, applied_status)
                 StatusObject.HandleStatusAddition(applied_status, child_unit, gameStateObj)
+        self.child_status = []  # Clear the child status to restore statefulness
 
 class ApplyStatChange(Action):
     def __init__(self, unit, stat_change):

@@ -244,7 +244,7 @@ class Refresh(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Refresh')[0]
+        self.item = ItemMethods.itemparser('so_Refresh')
 
     def check_valid(self, unit, gameStateObj):
         adj_units = unit.getTeamPartners(gameStateObj)
@@ -261,7 +261,7 @@ class Command(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Command')[0]
+        self.item = ItemMethods.itemparser('so_Command')
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked and any(ally_unit.isDone() for ally_unit in gameStateObj.allunits if ally_unit.position and unit.team == ally_unit.team):
@@ -275,7 +275,7 @@ class Heal(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Heal')[0]
+        self.item = ItemMethods.itemparser('so_Heal')
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked and any(Utility.calculate_distance(ally_unit.position, unit.position) == 1 and
@@ -291,7 +291,7 @@ class Shove(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Shove')[0]
+        self.item = ItemMethods.itemparser('so_Shove')
 
     def check_valid(self, unit, gameStateObj):
         adj_units = unit.getAdjacentUnits(gameStateObj)
@@ -308,7 +308,7 @@ class Swap(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Swap')[0]
+        self.item = ItemMethods.itemparser('so_Swap')
 
     def check_valid(self, unit, gameStateObj):
         adj_units = unit.getAdjacentUnits(gameStateObj)
@@ -329,7 +329,7 @@ class Aegis(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Aegis')[0]
+        self.item = ItemMethods.itemparser('so_Aegis')
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked and self.get_choices(unit, gameStateObj):
@@ -343,7 +343,7 @@ class Revelation(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Revelation')[0]
+        self.item = ItemMethods.itemparser('so_Revelation')
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked and self.get_choices(unit, gameStateObj):
@@ -357,7 +357,7 @@ class Rally(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Interact'
-        self.item = ItemMethods.itemparser('so_Rally')[0]
+        self.item = ItemMethods.itemparser('so_Rally')
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked:
@@ -371,7 +371,7 @@ class Summon(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Tile'
-        self.item = ItemMethods.itemparser('so_Summon_1')[0]
+        self.item = ItemMethods.itemparser('so_Summon_1')
 
     def get_choices(self, summoner, gameStateObj):
         return [position for position in summoner.getAdjacentPositions(gameStateObj)
@@ -386,7 +386,7 @@ class Wildcall(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Tile'
-        self.item = ItemMethods.itemparser('so_Summon_2')[0]
+        self.item = ItemMethods.itemparser('so_Summon_2')
 
     def already_present(self, summoner, unit):
         summon_tag = [tag for tag in unit.tags if tag.startswith('Summon_')][0]
@@ -411,13 +411,13 @@ class Dash(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Solo'
-        self.item = ItemMethods.itemparser('so_Refresh')[0]
+        self.item = ItemMethods.itemparser('so_Refresh')
 
 class Rage(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Solo'
-        self.item = ItemMethods.itemparser('so_Rage')[0]
+        self.item = ItemMethods.itemparser('so_Rage')
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked and not any(status.id in ('Weakened', 'Rage_Status') for status in unit.status_effects):
@@ -428,7 +428,7 @@ class Fade(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
         self.mode = 'Solo'
-        self.item = ItemMethods.itemparser('so_Fade')[0]
+        self.item = ItemMethods.itemparser('so_Fade')
 
     def check_valid(self, unit, gameStateObj):
         if not unit.hasAttacked and not any(status.id == 'Fade_Status' for status in unit.status_effects):

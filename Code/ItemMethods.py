@@ -9,15 +9,18 @@ except ImportError:
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):
+    next_uid = 100
+
     def __init__(self, i_id, name, spritetype, spriteid, components, value, RNG,
                  desc, aoe, weapontype, status, status_on_hold, status_on_equip,
-                 droppable=False, locked=False, event_combat=False):
-        self.spritetype = spritetype # Consumable, Sword, Used for spriting in list of sprites
-        self.spriteid = spriteid # Number of sprite to be picked from spritesheet list
-        
+                 droppable=False, locked=False, event_combat=False):        
+        self.uid = ItemObject.next_uid
+        ItemObject.next_uid += 1
         self.id = i_id
         self.item_owner = 0
         self.name = str(name)
+        self.spritetype = spritetype # Consumable, Sword, Used for spriting in list of sprites
+        self.spriteid = spriteid # Number of sprite to be picked from spritesheet list
         self.value = int(value) # Value for one use of item, or for an infinite item
         self.RNG = RNG.split('-') # Comes in the form of looking like '1-2' or '1' or '2-3' or '3-10'
         self.event_combat = event_combat
@@ -56,6 +59,7 @@ class ItemObject(object):
 
     def serialize(self):
         serial_dict = {}
+        serial_dict['uid'] = self.uid
         serial_dict['id'] = self.id
         serial_dict['owner'] = self.item_owner
         serial_dict['droppable'] = self.droppable
@@ -388,137 +392,131 @@ class SummonComponent(object):
         self.s_id = s_id
 
 # === ITEM PARSER ======================================================
-# Takes a string of item ids, as well as the database of item data, and outputs a list of items.
-def itemparser(itemstring):
-    Items = []
-    if itemstring: # itemstring needs to exist
-        idlist = itemstring.split(',')
-        for itemid in idlist:
-            droppable = False
-            event_combat = False
-            if itemid.startswith('d'):
-                itemid = itemid[1:] # Strip the first d off
-                droppable = True
-            elif itemid.startswith('e'):
-                itemid = itemid[1:]
-                event_combat = True
+# Takes an item id, as well as the database of item data, and outputs an item
+def itemparser(itemid):
+    droppable = False
+    event_combat = False
+    if itemid.startswith('d'):
+        itemid = itemid[1:] # Strip the first d off
+        droppable = True
+    elif itemid.startswith('e'):
+        itemid = itemid[1:]
+        event_combat = True
+    try:
+        item = GC.ITEMDATA[itemid]
+    except KeyError as e:
+        print("Key Error %s. %s cannot be found in items.xml"%(e, itemid))
+        return None
+
+    components = item['components']
+    if components:
+        components = components.split(',')
+    else:
+        components = []
+
+    aoe = AOEComponent('Normal', 0)
+    if 'weapon' in components or 'spell' in components:
+        weapontype = item['weapontype']
+        if weapontype == 'None':
+            weapontype = None
+    else:
+        weapontype = None
+
+    if 'locked' in components:
+        locked = True
+    else:
+        locked = False
+    status = []
+    status_on_hold = []
+    status_on_equip = []
+
+    my_components = {}
+    for component in components:
+        if component == 'uses':
             try:
-                item = GC.ITEMDATA[itemid]
+                my_components['uses'] = UsesComponent(int(item['uses']))
             except KeyError as e:
-                print("Key Error %s. %s cannot be found in items.xml"%(e, itemid))
+                raise KeyError("You are missing uses component line for %s item" % itemid)
+        elif component == 'c_uses':
+            my_components['c_uses'] = UsesComponent(int(item['c_uses']))
+        elif component == 'weapon':
+            stats = [item['MT'], item['HIT'], item['LVL']]
+            my_components['weapon'] = WeaponComponent(stats)
+        elif component == 'usable':
+            my_components['usable'] = UsableComponent()
+        elif component == 'spell':
+            my_components['spell'] = SpellComponent(item['LVL'], item['targets'])
+        elif component == 'extra_select':
+            my_components['extra_select'] = [ExtraSelectComponent(*c.split(',')) for c in item['extra_select'].split(';')]
+            my_components['extra_select_index'] = 0
+            my_components['extra_select_targets'] = []
+        elif component == 'status':
+            statusid = item['status'].split(',')
+            for s_id in statusid:
+                status.append(s_id)
+        elif component == 'status_on_hold':
+            statusid = item['status_on_hold'].split(',')
+            for s_id in statusid:
+                status_on_hold.append(s_id)
+        elif component == 'status_on_equip':
+            statusid = item['status_on_equip'].split(',')
+            for s_id in statusid:
+                status_on_equip.append(s_id)
+        elif component == 'effective':
+            try:
+                effective_against, bonus = item['effective'].split(';')
+                effective_against = effective_against.split(',')
+                my_components['effective'] = EffectiveComponent(effective_against, int(bonus))
+            except:
                 continue
+        elif component == 'permanent_stat_increase':
+            stat_increase = Utility.intify_comma_list(item['stat_increase'])
+            my_components['permanent_stat_increase'] = stat_increase
+        elif component == 'permanent_growth_increase':
+            stat_increase = Utility.intify_comma_list(item['growth_increase'])
+            my_components['permanent_growth_increase'] = stat_increase
+        elif component == 'promotion':
+            legal_classes = item['promotion'].split(',')
+            my_components['promotion'] = legal_classes
+        elif component == 'aoe':
+            info_line = item['aoe'].split(',')
+            aoe = AOEComponent(*info_line)
+        # Affects map animation
+        elif component == 'map_hit_color':
+            my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
+            assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
+        elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase', 'wexp', 'extra_tile_damage'):
+            if component in item:
+                my_components[component] = int(item[component])
+            elif component == 'crit':
+                my_components['crit'] = 0
+        elif component in ('movement', 'self_movement'):
+            mode, magnitude = item[component].split(',')
+            my_components[component] = MovementComponent(mode, magnitude)
+        elif component == 'summon':
+            klass = item['summon_klass']
+            items = item['summon_items']
+            name = item['summon_name']
+            desc = item['summon_desc']
+            ai = item['summon_ai']
+            s_id = item['summon_s_id']
+            my_components['summon'] = SummonComponent(klass, items, name, desc, ai, s_id)
+        elif component in item:
+            my_components[component] = item[component]
+        else:
+            my_components[component] = True
+    current_item = ItemObject(itemid, item['name'], item['spritetype'], item['spriteid'], my_components,
+                              item['value'], item['RNG'], item['desc'],
+                              aoe, weapontype, status, status_on_hold, status_on_equip,
+                              droppable=droppable, locked=locked, event_combat=event_combat)
 
-            components = item['components']
-            if components:
-                components = components.split(',')
-            else:
-                components = []
-
-            aoe = AOEComponent('Normal', 0)
-            if 'weapon' in components or 'spell' in components:
-                weapontype = item['weapontype']
-                if weapontype == 'None':
-                    weapontype = None
-            else:
-                weapontype = None
-
-            if 'locked' in components:
-                locked = True
-            else:
-                locked = False
-            status = []
-            status_on_hold = []
-            status_on_equip = []
-
-            my_components = {}
-            for component in components:
-                if component == 'uses':
-                    try:
-                        my_components['uses'] = UsesComponent(int(item['uses']))
-                    except KeyError as e:
-                        raise KeyError("You are missing uses component line for %s item" % itemid)
-                elif component == 'c_uses':
-                    my_components['c_uses'] = UsesComponent(int(item['c_uses']))
-                elif component == 'weapon':
-                    stats = [item['MT'], item['HIT'], item['LVL']]
-                    my_components['weapon'] = WeaponComponent(stats)
-                elif component == 'usable':
-                    my_components['usable'] = UsableComponent()
-                elif component == 'spell':
-                    my_components['spell'] = SpellComponent(item['LVL'], item['targets'])
-                elif component == 'extra_select':
-                    my_components['extra_select'] = [ExtraSelectComponent(*c.split(',')) for c in item['extra_select'].split(';')]
-                    my_components['extra_select_index'] = 0
-                    my_components['extra_select_targets'] = []
-                elif component == 'status':
-                    statusid = item['status'].split(',')
-                    for s_id in statusid:
-                        status.append(s_id)
-                elif component == 'status_on_hold':
-                    statusid = item['status_on_hold'].split(',')
-                    for s_id in statusid:
-                        status_on_hold.append(s_id)
-                elif component == 'status_on_equip':
-                    statusid = item['status_on_equip'].split(',')
-                    for s_id in statusid:
-                        status_on_equip.append(s_id)
-                elif component == 'effective':
-                    try:
-                        effective_against, bonus = item['effective'].split(';')
-                        effective_against = effective_against.split(',')
-                        my_components['effective'] = EffectiveComponent(effective_against, int(bonus))
-                    except:
-                        continue
-                elif component == 'permanent_stat_increase':
-                    stat_increase = Utility.intify_comma_list(item['stat_increase'])
-                    my_components['permanent_stat_increase'] = stat_increase
-                elif component == 'permanent_growth_increase':
-                    stat_increase = Utility.intify_comma_list(item['growth_increase'])
-                    my_components['permanent_growth_increase'] = stat_increase
-                elif component == 'promotion':
-                    legal_classes = item['promotion'].split(',')
-                    my_components['promotion'] = legal_classes
-                elif component == 'aoe':
-                    info_line = item['aoe'].split(',')
-                    aoe = AOEComponent(*info_line)
-                # Affects map animation
-                elif component == 'map_hit_color':
-                    my_components['map_hit_color'] = tuple(int(c) for c in item['map_hit_color'].split(','))
-                    assert len(my_components['map_hit_color']) == 3 # No translucency allowed right now
-                elif component in ('damage', 'hit', 'weight', 'exp', 'crit', 'wexp_increase', 'wexp', 'extra_tile_damage'):
-                    if component in item:
-                        my_components[component] = int(item[component])
-                    elif component == 'crit':
-                        my_components['crit'] = 0
-                elif component in ('movement', 'self_movement'):
-                    mode, magnitude = item[component].split(',')
-                    my_components[component] = MovementComponent(mode, magnitude)
-                elif component == 'summon':
-                    klass = item['summon_klass']
-                    items = item['summon_items']
-                    name = item['summon_name']
-                    desc = item['summon_desc']
-                    ai = item['summon_ai']
-                    s_id = item['summon_s_id']
-                    my_components['summon'] = SummonComponent(klass, items, name, desc, ai, s_id)
-                elif component in item:
-                    my_components[component] = item[component]
-                else:
-                    my_components[component] = True
-            currentItem = ItemObject(itemid, item['name'], item['spritetype'], item['spriteid'], my_components,
-                                     item['value'], item['RNG'], item['desc'],
-                                     aoe, weapontype, status, status_on_hold, status_on_equip,
-                                     droppable=droppable, locked=locked, event_combat=event_combat)
-
-            Items.append(currentItem)          
-    return Items
+    return current_item
 
 def deserialize(item_dict):
-    items = itemparser(item_dict['id'])
-    if not items:
+    item = itemparser(item_dict['id'])
+    if not item:
         return None
-    else:
-        item = items[0]
+    item.uid = item_dict['uid']
 
     if 'owner' in item_dict:
         item.item_owner = item_dict['owner']

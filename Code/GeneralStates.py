@@ -2829,7 +2829,7 @@ class ShopState(StateMachine.State):
                 itemids = gameStateObj.map.tile_info_dict[self.unit.position]['Shop']
 
             # Get items
-            items_for_sale = ItemMethods.itemparser(itemids)
+            items_for_sale = [ItemMethods.itemparser(item) for item in itemids.split(',')]
             
             topleft = (GC.WINWIDTH//2 - 80 + 4, 3*GC.WINHEIGHT//8+8)
             self.shopMenu = MenuFunctions.ShopMenu(self.unit, items_for_sale, topleft, limit=5, buy=True)
@@ -2991,7 +2991,9 @@ class ShopState(StateMachine.State):
                     GC.SOUNDDICT['Select 1'].play()
                     selection = self.shopMenu.getSelection()
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
-                    Action.execute(Action.GiveItem(self.unit, ItemMethods.itemparser(str(selection.id))[0]), gameStateObj)
+                    new_item = ItemMethods.itemparser(str(selection.id))
+                    gameStateObj.add_item(new_item)
+                    Action.execute(Action.GiveItem(self.unit, new_item), gameStateObj)
                     # gameStateObj.game_constants['money'] -= value
                     Action.execute(Action.GiveGold(-value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(-value)
