@@ -3,11 +3,13 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import CustomObjects, ActiveSkill, Interaction, InfoMenu, UnitObject, Action, Utility, Engine
+    import CustomObjects, ActiveSkill, Interaction, InfoMenu
+    import UnitObject, Aura, Action, Utility, Engine
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import CustomObjects, ActiveSkill, Interaction, InfoMenu, UnitObject, Action, Utility, Engine
+    from . import CustomObjects, ActiveSkill, Interaction, InfoMenu
+    from . import UnitObject, Aura, Action, Utility, Engine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -691,7 +693,7 @@ def statusparser(s_id):
                     aura_range = int(status.find('range').text)
                     child = status.find('child').text
                     target = status.find('target').text
-                    my_components['aura'] = ActiveSkill.Aura(aura_range, target, child)
+                    my_components['aura'] = Aura.Aura(aura_range, target, child)
                 elif status.find(component) is not None and status.find(component).text:
                     my_components[component] = status.find(component).text
                 else:
@@ -701,7 +703,7 @@ def statusparser(s_id):
 
             return currentStatus
 
-def deserialize(s_dict, unit=None):
+def deserialize(s_dict):
     status = statusparser(s_dict['id'])
     if not status:
         return
@@ -721,22 +723,24 @@ def deserialize(s_dict, unit=None):
         status.children = s_dict['children']
     if s_dict.get('parent_id'):
         status.parent_id = s_dict['parent_id']
-    if unit:
-        if status.aura:
-            status.aura.set_parent_unit(unit)
-        # For rescue
-        if s_dict.get('rescue'):
-            for idx, stat in enumerate(status.rescue.stats):
-                status.rescue.penalties[idx] = int(s_dict['rescue'][idx])
-        elif status.rescue:
-            for idx, stat in enumerate(status.rescue.stats):
-                status.rescue.penalties[idx] = -unit.stats[stat].base_stat//2
-        if status.passive:
-            for item in unit.items:
-                status.passive.apply_mod(item)
-        unit.status_effects.append(status)
-        unit.status_bundle.update(list(status.components))
+
     return status
+
+def attach_to_unit(status, unit):
+    """
+    Done (on load) after loading both the unit and the status to attach 
+    the status correctly to the unit after a suspend.
+    """
+    if status.aura:
+        status.aura.set_parent_unit(unit)    
+    if status.rescue:
+        for idx, stat in enumerate(status.rescue.stats):
+            status.rescue.penalties[idx] = -unit.stats[stat].base_stat//2
+    if status.passive:
+        for item in unit.items:
+            status.passive.apply_mod(item)
+    unit.status_effects.append(status)
+    unit.status_bundle.update(list(status.components))
 
 # Populate feat_list
 def get_feat_list(status_data):

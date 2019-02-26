@@ -208,6 +208,14 @@ class GameStateObj(object):
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
 
+        # Unit Items and Statuses
+        for idx, unit in enumerate(self.allunits):
+            for item_uid in load_info['allunits'][idx]['items']:
+                unit.items.append(self.get_item_from_uid(item_uid))
+            for status_uid in load_info['allunits'][idx]['status_effects']:
+                status = self.get_status_from_uid(status_uid)
+                StatusObject.attach_to_unit(status, unit)
+
         # Statuses
         # for index, info in enumerate(load_info['allunits']):
         #     for s_dict in info['status_effects']:

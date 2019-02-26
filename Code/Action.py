@@ -1175,8 +1175,6 @@ class GiveStatus(Action):
     def __init__(self, unit, status_obj):
         self.unit = unit
         self.status_obj = status_obj
-        print(unit.name)
-        print(self.status_obj)
 
     def do(self, gameStateObj):
         self.unit.status_bundle.update(list(self.status_obj.components)) 
@@ -1226,7 +1224,7 @@ class UnTetherStatus(Action):
             child_unit = gameStateObj.get_unit_from_id(u_id)
             if child_unit:
                 for c_status in child_unit.status_effects:
-                    print(c_status, c_status.id, self.status_obj.tether)
+                    # print(c_status, c_status.id, self.status_obj.tether)
                     if c_status.id == self.status_obj.tether:
                         self.child_status.append(c_status)
                         StatusObject.HandleStatusRemoval(c_status, child_unit, gameStateObj)
@@ -1241,7 +1239,6 @@ class UnTetherStatus(Action):
             if child_unit:
                 self.status_obj.children.append(u_id)
                 applied_status = self.child_status[idx]
-                print(child_unit, applied_status)
                 StatusObject.HandleStatusAddition(applied_status, child_unit, gameStateObj)
         self.child_status = []  # Clear the child status to restore statefulness
 
