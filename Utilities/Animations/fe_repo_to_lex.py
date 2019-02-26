@@ -119,6 +119,77 @@ def animation_collater(images, weapon_type):
 
     return bad_images
 
+class Pose(list):
+    def append(self, obj):
+        if isinstance(obj, Frame) and self and isinstance(self[-1], Frame) and obj.name == self[-1].name:
+            self[-1].length += obj.length
+        else:
+            super(Pose, self).append(obj)
+
+class Frame(object):
+    def __init__(self, name, length, used_names, over=False):
+        self.name = name
+        self.length = length
+        self.over = over
+
+        if (self.name + '_under') in images:
+            used_names.add(self.name + '_under')
+        used_names.add(self.name)
+
+    def __str__(self):
+        if self.over:
+            command = 'of'
+        else:
+            command = 'f'
+        if (self.name + '_under') in images:
+            ret = '%s;%d;%s;%s_under' % (command, self.length, self.name, self.name)
+        else:
+            ret = '%s;%d;%s' % (command, self.length, self.name)
+        return ret
+
+class WaitForHit(object):
+    def __init__(self, name, used_names):
+        self.name = name
+
+        if (self.name + '_under') in images:
+            used_names.add(self.name + '_under')
+        used_names.add(self.name)
+
+    def __str__(self):
+        if (self.name + '_under') in images:
+            ret = 'wait_for_hit;%s;%s_under' % (self.name, self.name)
+        else:
+            ret = 'wait_for_hit;%s' % self.name
+        return ret
+
+class Sound(object):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return 'sound;%s' % self.name
+
+class Effect(object):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return 'effect;%s' % self.name
+
+class DodgeStart(object):
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        return ''
+
+class Loop(object):
+    def __init__(self, end):
+        self.end = end
+
+    def __str__(self):
+        return 'end_loop' if self.end else 'start_loop'
+
 def parse_script(script, images, weapon_type):
     # Open fe repo script
     with open(script) as s:
@@ -136,79 +207,8 @@ def parse_script(script, images, weapon_type):
     dodge_front = False
     used_names = set()
 
-    class Pose(list):
-        def append(self, obj):
-            if isinstance(obj, Frame) and self and isinstance(self[-1], Frame) and obj.name == self[-1].name:
-                self[-1].length += obj.length
-            else:
-                super(Pose, self).append(obj)
-
-    class Frame(object):
-        def __init__(self, name, length, over=False):
-            self.name = name
-            self.length = length
-            self.over = over
-
-            if (self.name + '_under') in images:
-                used_names.add(self.name + '_under')
-            used_names.add(self.name)
-
-        def __str__(self):
-            if self.over:
-                command = 'of'
-            else:
-                command = 'f'
-            if (self.name + '_under') in images:
-                ret = '%s;%d;%s;%s_under' % (command, self.length, self.name, self.name)
-            else:
-                ret = '%s;%d;%s' % (command, self.length, self.name)
-            return ret
-
-    class WaitForHit(object):
-        def __init__(self, name):
-            self.name = name
-
-            if (self.name + '_under') in images:
-                used_names.add(self.name + '_under')
-            used_names.add(self.name)
-
-        def __str__(self):
-            if (self.name + '_under') in images:
-                ret = 'wait_for_hit;%s;%s_under' % (self.name, self.name)
-            else:
-                ret = 'wait_for_hit;%s' % self.name
-            return ret
-
-    class Sound(object):
-        def __init__(self, name):
-            self.name = name
-
-        def __str__(self):
-            return 'sound;%s' % self.name
-
-    class Effect(object):
-        def __init__(self, name):
-            self.name = name
-
-        def __str__(self):
-            return 'effect;%s' % self.name
-
-    class DodgeStart(object):
-        def __init__(self):
-            pass
-
-        def __str__(self):
-            return ''
-
-    class Loop(object):
-        def __init__(self, end):
-            self.end = end
-
-        def __str__(self):
-            return 'end_loop' if self.end else 'start_loop'
-
     def save_mode(mode):
-        if weapon_type == 'Magic':
+        if weapon_type == 'Magic' or weapon_type == 'Staff':
             if mode not in (5, 6, 7, 9, 11):
                 used_names.clear()
                 return
@@ -266,21 +266,21 @@ def parse_script(script, images, weapon_type):
             if command_code == '01':
                 if throwing_axe:
                     current_pose.append(Loop(0))
-                    current_pose.append(Frame(current_frame, 1))
+                    current_pose.append(Frame(current_frame, 1, used_names))
                     current_pose.append(Loop(1))
-                    current_pose.append(Frame(current_frame, 8))
+                    current_pose.append(Frame(current_frame, 8, used_names))
                 elif l_loop_start:
                     current_pose.append(Loop(1))
                     l_loop_start = False
                 elif current_mode == 12:  # Miss
-                    current_pose.append(Frame(current_frame, 1))
+                    current_pose.append(Frame(current_frame, 1, used_names))
                     current_pose.append('miss')
-                    current_pose.append(Frame(current_frame, 30))
+                    current_pose.append(Frame(current_frame, 30, used_names))
                 elif current_mode == 5 or current_mode == 6:  # Ranged
                     current_pose.append(Loop(0))
-                    current_pose.append(Frame(current_frame, 4))
+                    current_pose.append(Frame(current_frame, 4, used_names))
                     current_pose.append(Loop(1))
-                    current_pose.append(Frame(current_frame, 4))
+                    current_pose.append(Frame(current_frame, 4, used_names))
                 elif current_mode == 7 or current_mode == 8:  # Dodge
                     # Count number of frames already written to the dodge
                     cur_index = len(current_pose) - 1
@@ -294,15 +294,15 @@ def parse_script(script, images, weapon_type):
                             break
                         cur = current_pose[cur_index]
                     # 30 frames in a dodge
-                    current_pose.append(Frame(current_frame, 30 - counter, over=dodge_front))
+                    current_pose.append(Frame(current_frame, 30 - counter, used_names, over=dodge_front))
                 elif current_mode in (1, 2, 3, 4):
-                    current_pose.append(WaitForHit(current_frame))
+                    current_pose.append(WaitForHit(current_frame, used_names))
                     if shield_toss:
                         current_pose.append('end_child_loop')
                     else:
-                        current_pose.append(Frame(current_frame, 4))
+                        current_pose.append(Frame(current_frame, 4, used_names))
                 elif current_mode in (9, 10, 11):
-                    current_pose.append(Frame(current_frame, 3))
+                    current_pose.append(Frame(current_frame, 3, used_names))
                 write_extra_frame = False  # 01 does not drop 1 frame after it runs
             elif command_code == '02':
                 write_extra_frame = False  # Normally says this is a dodge, but that doesn't matter
@@ -311,7 +311,7 @@ def parse_script(script, images, weapon_type):
             elif command_code == '04':
                 write_extra_frame = False  # Normally prepares some code for returning to stand
             elif command_code == '05':  # Start spell
-                if weapon_type == 'Sword' or weapon_type == 'Magic':
+                if weapon_type in ('Sword', 'Magic', 'Staff'):
                     current_pose.append('spell')
                 elif weapon_type == 'Lance':
                     current_pose.append('spell;Javelin')
@@ -327,19 +327,19 @@ def parse_script(script, images, weapon_type):
             elif command_code in ('08', '09', '0A', '0B', '0C'):  # Start crit
                 crit = True
                 current_pose.append('enemy_flash_white;8')
-                current_pose.append(Frame(current_frame, 1))
+                current_pose.append(Frame(current_frame, 1, used_names))
                 current_pose.append('foreground_blend;2;248,248,248')
                 start_hit = True
                 write_extra_frame = False
             elif command_code == '0D':  # End
-                current_pose.append(Frame(current_frame, 1))
+                current_pose.append(Frame(current_frame, 1, used_names))
                 write_extra_frame = False
             elif command_code == '0E':  # Dodge
                 current_pose.append(DodgeStart())
                 write_extra_frame = False
             elif command_code == '13':
                 current_pose.append(Loop(0))
-                current_pose.append(Frame(current_frame, 1))
+                current_pose.append(Frame(current_frame, 1, used_names))
                 current_pose.append(Loop(1))
                 throwing_axe = True
             elif command_code == '14':
@@ -352,7 +352,7 @@ def parse_script(script, images, weapon_type):
             elif command_code == '1A':  # Start hit
                 crit = False
                 current_pose.append('enemy_flash_white;8')
-                current_pose.append(Frame(current_frame, 1))
+                current_pose.append(Frame(current_frame, 1, used_names))
                 current_pose.append('screen_flash_white;4')
                 start_hit = True
             elif command_code in ('1F', '20', '21'):  # Actual hit
@@ -430,7 +430,7 @@ def parse_script(script, images, weapon_type):
                 print('Unknown Command Code: C%s' % command_code)
             
             if write_extra_frame and current_frame:
-                current_pose.append(Frame(current_frame, 1, over=dodge_front))
+                current_pose.append(Frame(current_frame, 1, used_names, over=dodge_front))
             
         elif line.startswith('~~~'):
             pass
@@ -450,14 +450,14 @@ def parse_script(script, images, weapon_type):
                 begin = False
             current_frame = name
             if not (start_hit and crit):  # Don't write this frame if we're starting a crit
-                current_pose.append(Frame(current_frame, num_frames, over=dodge_front))
+                current_pose.append(Frame(current_frame, num_frames, used_names, over=dodge_front))
             if start_hit:
                 if crit:
                     current_pose.append('start_hit')
-                    current_pose.append(Frame(current_frame, 2))
+                    current_pose.append(Frame(current_frame, 2, used_names))
                     current_pose.append('crit_spark')
                 else:
-                    current_pose.append(Frame(current_frame, 2))
+                    current_pose.append(Frame(current_frame, 2, used_names))
                     current_pose.append('hit_spark')
                     current_pose.append('start_hit')
                 start_hit = False
@@ -504,6 +504,9 @@ def write_script(weapon_type, melee_script, ranged_script):
         unarmed_script = {pose: line_list for pose, line_list in ranged_script.items() if pose in ('Stand', 'Dodge')}
         with open('Unarmed-Script.txt', 'w') as s:
             write_script(unarmed_script, s)
+    elif weapon_type == 'Staff':
+        with open('MagicStaff-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
 
 # === START ==================================================================
 log = Logger('fe_repo_to_lex.log', 'a')
@@ -518,7 +521,7 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed', 'Handaxe', 'Bow', 'Magic'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed', 'Handaxe', 'Bow', 'Magic', 'Staff'}
 weapon_type = script[:-4]
 if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
@@ -585,9 +588,9 @@ if weapon_type == 'Handaxe':
     weapon_type = 'Axe'
 
 bad_images = set()
-if weapon_type not in ('Bow', 'Magic'):
+if weapon_type not in ('Bow', 'Magic', 'Staff'):
     bad_images |= animation_collater(melee_images, weapon_type)
-if weapon_type == 'Magic':
+if weapon_type == 'Magic' or weapon_type == 'Staff':
     bad_images |= animation_collater(melee_images, 'Unarmed')
 if ranged_images:
     if weapon_type == 'Sword':
@@ -596,13 +599,16 @@ if ranged_images:
         bad_images |= animation_collater(ranged_images, 'Ranged' + weapon_type)
     elif weapon_type == 'Magic':
         bad_images |= animation_collater(ranged_images, 'Magic')
+    elif weapon_type == 'Staff':
+        bad_images |= animation_collater(ranged_images, 'MagicStaff')
 
 def replace_bad_images(script, bad_images):
-    for idx, command in enumerate(script):
-        if isinstance(command, parse_script.Frame) and command.name in bad_images:
-            script[idx] = 'wait;%d' % command.length
-        elif isinstance(command, parse_script.WaitForHit) and command.name in bad_images:
-            script[idx] = 'wait_for_hit'
+    for pose, line_list in script.items():
+        for idx, command in enumerate(line_list):
+            if isinstance(command, Frame) and command.name in bad_images:
+                line_list[idx] = 'wait;%d' % command.length
+            elif isinstance(command, WaitForHit) and command.name in bad_images:
+                line_list[idx] = 'wait_for_hit'
 
 if bad_images:
     replace_bad_images(melee_script, bad_images)
