@@ -1517,7 +1517,7 @@ class StealState(StateMachine.State):
             else:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
-                Action.do(Action.Wait(self.initiator), gameStateObj)
+                self.initiator.wait(gameStateObj)
             gameStateObj.activeMenu = None
             # Give exp
             exp = cf.CONSTANTS['steal_exp']
@@ -1577,7 +1577,7 @@ class RepairState(StealState):
             else:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
-                Action.do(Action.Wait(self.initiator), gameStateObj)
+                self.initiator.wait(gameStateObj)
             gameStateObj.activeMenu = None
             # Give exp -- cleanup
             Action.do(Action.GainWexp(self.initiator, self.item), gameStateObj)
@@ -2798,7 +2798,7 @@ class WaitState(StateMachine.State):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
         gameStateObj.stateMachine.back()
         for unit in gameStateObj.allunits:
-            if unit.hasAttacked:
+            if unit.hasAttacked and not unit.finished:
                 unit.wait(gameStateObj)
         return 'repeat'
 
