@@ -417,8 +417,10 @@ class UnitSprite(object):
                 # self.change_state('normal', gameStateObj)
                 return
             self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
-            self.spriteOffset[0] = int(GC.TILEWIDTH * (currentTime - self.unit.lastMoveTime) // cf.CONSTANTS['Unit Speed'] * self.netposition[0])
-            self.spriteOffset[1] = int(GC.TILEHEIGHT * (currentTime - self.unit.lastMoveTime) // cf.CONSTANTS['Unit Speed'] * self.netposition[1])
+            dt = currentTime - self.unit.lastMoveTime
+            unit_speed = self.unit.get_unit_speed()
+            self.spriteOffset[0] = int(GC.TILEWIDTH * dt / unit_speed * self.netposition[0])
+            self.spriteOffset[1] = int(GC.TILEHEIGHT * dt / unit_speed * self.netposition[1])
             self.handle_net_position(self.netposition)
             self.update_move_sprite_counter(currentTime, 80)
         elif self.state == 'fake_transition_in':

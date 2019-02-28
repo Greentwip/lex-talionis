@@ -2187,6 +2187,12 @@ class UnitObject(object):
         if not event:
             logger.debug('%s %s dies', self.name, self)
 
+    def get_unit_speed(self):
+        """
+        Returns the time the unit should spend getting from one tile to the next
+        """
+        return cf.CONSTANTS['Unit Speed']
+
     def play_movement_sound(self, gameStateObj):
         if 'flying' in self.status_bundle:
             GC.SOUNDDICT['Heavy Wing Flap'].play(-1)
@@ -2234,7 +2240,8 @@ class UnitObject(object):
 
         # === GAMELOGIC ===
         # === MOVE ===
-        if self in gameStateObj.moving_units and currentTime - self.lastMoveTime > cf.CONSTANTS['Unit Speed'] and \
+        if self in gameStateObj.moving_units and \
+                currentTime - self.lastMoveTime > self.get_unit_speed() and \
                 gameStateObj.stateMachine.getState() == 'movement':
             # logger.debug('Moving!')
             if self.path: # and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
