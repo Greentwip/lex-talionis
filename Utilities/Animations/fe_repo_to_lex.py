@@ -439,8 +439,15 @@ def parse_script(script, images, weapon_type):
             current_pose.append(Loop(0))
             l_loop_start = True
 
+        elif line.startswith('S'):
+            print('Cannot parse "%s"! Skipping over this line...' % line)
+
         else:
-            num_frames, _, png_name = line.split()
+            try:
+                num_frames, _, png_name = line.split()
+            except ValueError:
+                print('Cannot parse "%s"! Skipping over this line...' % line)
+                continue
             num_frames = int(num_frames)
             name = png_name[:-4]
             if name not in images:
@@ -514,7 +521,14 @@ log = Logger('fe_repo_to_lex.log', 'a')
 images = glob.glob('*.png')
 script = glob.glob('*.txt')
 
-if len(script) == 1:
+if len(script) == 2:
+    if script[0].endswith('_without_comment.txt'):
+        script = script[1]
+    elif script[1].endswith('_without_comment.txt'):
+        script = script[0]
+    else:
+        raise ValueError("Could not determine which *.txt file to use!")
+elif len(script) == 1:
     script = script[0]
 elif len(script) == 0:
     raise ValueError("No script file present in current directory!")
