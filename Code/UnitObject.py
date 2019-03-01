@@ -673,6 +673,11 @@ class UnitObject(object):
         else:
             return True # does not have a level so it can be used
 
+        if not item.TYPE:
+            if itemLvl in Weapons.EXP.wexp_dict or itemLvl == '--' or itemLvl == self.name:
+                return True
+            else:
+                return False
         idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
         unitwexp = self.wexp[idx]
         if itemLvl in Weapons.EXP.wexp_dict and unitwexp >= Weapons.EXP.wexp_dict[itemLvl]:

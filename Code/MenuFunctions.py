@@ -1623,7 +1623,7 @@ class ConvoyMenu(object):
         sorted_dict = {}
         for w_type in self.order:
             sorted_dict[w_type] = [option for option in options if w_type == option.TYPE]
-        sorted_dict['Consumable'] = [option for option in options if not option.weapon and not option.spell]
+        sorted_dict['Consumable'] = [option for option in options if not option.TYPE]
         for key, value in sorted_dict.items():
             value.sort(key=lambda item: item.c_uses.uses if item.c_uses else 100)
             value.sort(key=lambda item: item.uses.uses if item.uses else 100)

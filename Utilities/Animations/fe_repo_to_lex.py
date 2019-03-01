@@ -311,7 +311,7 @@ def parse_script(script, images, weapon_type):
             elif command_code == '04':
                 write_extra_frame = False  # Normally prepares some code for returning to stand
             elif command_code == '05':  # Start spell
-                if weapon_type in ('Sword', 'Magic', 'Staff'):
+                if weapon_type in ('Sword', 'Magic', 'Staff', 'Neutral'):
                     current_pose.append('spell')
                 elif weapon_type == 'Lance':
                     current_pose.append('spell;Javelin')
@@ -514,6 +514,14 @@ def write_script(weapon_type, melee_script, ranged_script):
     elif weapon_type == 'Staff':
         with open('MagicStaff-Script.txt', 'w') as s:
             write_script(ranged_script, s)
+    elif weapon_type == 'Neutral':
+        with open('Neutral-Script.txt', 'w') as s:
+            write_script(melee_script, s)
+        with open('RangedNeutral-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
+        unarmed_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
+        with open('Unarmed-Script.txt', 'w') as s:
+            write_script(ranged_script, s)
 
 # === START ==================================================================
 log = Logger('fe_repo_to_lex.log', 'a')
@@ -535,10 +543,16 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed', 'Handaxe', 'Bow', 'Magic', 'Staff'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed',
+                'Handaxe', 'Bow', 'Magic', 'Staff', 'Monster'}
 weapon_type = script[:-4]
 if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
+
+if weapon_type == 'Disarmed':
+    weapon_type = 'Unarmed'
+if weapon_type == 'Monster':
+    weapon_type = 'Neutral'
 
 print("Converting %s to Lex Talionis format..." % script)
 
@@ -596,20 +610,17 @@ preprocess(ranged_images)
 
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
-if weapon_type == 'Disarmed' or weapon_type == 'Unarmed':
-    weapon_type = 'Unarmed'
-if weapon_type == 'Handaxe':
-    weapon_type = 'Axe'
-
 bad_images = set()
 if weapon_type not in ('Bow', 'Magic', 'Staff'):
     bad_images |= animation_collater(melee_images, weapon_type)
-if weapon_type == 'Magic' or weapon_type == 'Staff':
+if weapon_type == 'Magic':
     bad_images |= animation_collater(melee_images, 'Unarmed')
+if weapon_type == 'Neutral':
+    bad_images |= animation_collater(ranged_images, 'Unarmed')
 if ranged_images:
     if weapon_type == 'Sword':
         bad_images |= animation_collater(ranged_images, 'Magic' + weapon_type)
-    elif weapon_type in ('Lance', 'Axe', 'Bow'):
+    elif weapon_type in ('Lance', 'Axe', 'Bow', 'Neutral', 'Handaxe'):
         bad_images |= animation_collater(ranged_images, 'Ranged' + weapon_type)
     elif weapon_type == 'Magic':
         bad_images |= animation_collater(ranged_images, 'Magic')

@@ -98,16 +98,20 @@ class BattleAnimationManager(object):
             if not self.generate(klass):
                 return None
             check_item = False
+            if item:
+                item_type = item.TYPE or 'Neutral'
+            else:
+                item_type = None
             if not item:
                 weapon = 'Unarmed'
             elif magic:
-                weapon = 'Magic' + item.spritetype
+                weapon = 'Magic' + item_type
                 check_item = True # Make sure that we have the spell also
-            elif max(item.RNG) > 1 and (item.spritetype != 'Lance' or distance > 1):
-                # Ranged Lances use Melee animation if adjacent
-                weapon = 'Ranged' + item.spritetype
+            elif max(item.RNG) > 1 and (item_type != 'Lance' or distance > 1):
+                # Ranged Lances use Melee animation if adjacent    
+                weapon = 'Ranged' + item_type
             else:
-                weapon = item.spritetype
+                weapon = item_type
             if weapon in self.directory[klass]:
                 if check_item and item.id not in self.effects:
                     return None
