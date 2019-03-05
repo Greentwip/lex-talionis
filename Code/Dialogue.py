@@ -2073,6 +2073,14 @@ class UnitPortrait(object):
 
     def set_expression(self, commands):
         self.expression = set(commands)
+        if 'Full_Blink' in self.expression:
+            self.expression.add('CloseEyes')
+        if 'Half_Blink' in self.expression:
+            self.expression.add('HalfCloseEyes')
+        if 'Smiling' in self.expression:
+            self.expression.add('Smile')
+        if 'Normal' in self.expression:
+            self.expression = set()
 
     def move(self, new_position):
         self.new_position = self.new_position[0] + new_position[0], self.new_position[1] + new_position[1]

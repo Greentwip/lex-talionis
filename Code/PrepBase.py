@@ -1380,7 +1380,7 @@ class BaseInfoState(StateMachine.State):
         options = [key for key in gameStateObj.base_conversations]
         color_control = [('text_white' if white else 'text_grey') for key, white in gameStateObj.base_conversations.items()]
         topleft = 4 + gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.topleft[1] + 2*16
-        gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, gem=False)
+        gameStateObj.childMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, gem=False, limit=5)
 
         # Transition in:
         if gameStateObj.stateMachine.from_transition() or gameStateObj.stateMachine.get_last_state() == 'dialogue':

@@ -1801,7 +1801,7 @@ class FeatChoiceState(State):
 
         elif event == 'INFO':
             GC.SOUNDDICT['Select 2'].play()                        
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.cursor.currentSelectedUnit)
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.cursor.currentSelectedUnit, one_unit_only=True)
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()

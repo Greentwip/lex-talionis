@@ -1841,7 +1841,9 @@ class UnitObject(object):
             if status.count:
                 status.count.count = status.count.orig_count
             if status.active:
-                status.active.current_charge = 0
+                status.active.reset_charge()
+            if status.automatic:
+                status.automatic.reset_charge()
             if status.tether:
                 status.remove_children(gameStateObj)
         self.tags.discard('ActiveSkillCharged')
