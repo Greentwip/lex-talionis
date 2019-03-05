@@ -343,7 +343,10 @@ class Dialogue_Scene(object):
             self.add_unit_sprite(line, metaDataObj, transition=False)
         # Change a unit's expression
         elif line[0] == 'set_expression':
-            self.unit_sprites[line[1]].expression = line[2]
+            # Legal commands (Smile, NoSmile, NormalBlink, OpenEyes, CloseEyes, HalfCloseEyes)
+            # Default (NoSmile, NormalBlink)
+            commands = line[2].split(',') if len(line) > 2 else []
+            self.unit_sprites[line[1]].set_expression(commands)
         # Remove a unit from the scene
         elif line[0] == 'r':
             for name in line[1:]:
@@ -1145,17 +1148,19 @@ class Dialogue_Scene(object):
         else:
             position = [int(line[2]), int(line[3])]    
             mirrorflag = True if 'mirror' in line else False
+        # Priority
         if 'LowPriority' in line:
             priority = self.priority_counter - 1000
         else:
             priority = self.priority_counter
         self.priority_counter += 1
-        if 'Full_Blink' in line:
-            expression = 'Full_Blink'
-        elif 'Smiling' in line:
-            expression = 'Smiling'
-        else:
-            expression = 'Normal'
+        # Expressions
+        legal_expressions = ("Smile", "OpenEyes", "CloseEyes", "HalfCloseEyes")
+        expression = []
+        for exp in legal_expressions:
+            if exp in line:
+                expression.append(exp)
+        # Blink/Mouth positions
         assert name in metaDataObj['portrait_dict'], "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(name)
         blink = metaDataObj['portrait_dict'][name]['blink']
         mouth = metaDataObj['portrait_dict'][name]['mouth']
@@ -2005,7 +2010,7 @@ class EndingsDisplay(object):
             self.font.blit(new_line, surf, (self.x_position + 16, 48 + index*self.font.height))
 
 class UnitPortrait(object):
-    def __init__(self, portrait_name, blink_position, mouth_position, position, priority=0, mirror=False, transition=False, expression='Normal'):
+    def __init__(self, portrait_name, blink_position, mouth_position, position, priority=0, mirror=False, transition=False, expression=None):
         self.name = portrait_name
         try:
             portrait_sprite = GC.UNITDICT[portrait_name + 'Portrait'].copy()
@@ -2049,12 +2054,11 @@ class UnitPortrait(object):
         self.transition_last_update = Engine.get_time()
 
         # Blinking set up
-        self.blinking = 2 # 0- Don't blink, 1-hold blink, 2-Blink pseudorandomly
         self.offset_blinking = [x for x in range(-2000, 2000, 125)]
         self.blink_counter = Counters.generic3Counter(7000 + random.choice(self.offset_blinking), 40, 40) # 3 frames for each
 
         # Expression
-        self.expression = expression
+        self.expression = set(expression) if expression else set()
 
         # For bop
         self.bops_remaining = 0
@@ -2066,6 +2070,9 @@ class UnitPortrait(object):
 
     def stop_talking(self):
         self.talking = False
+
+    def set_expression(self, commands):
+        self.expression = set(commands)
 
     def move(self, new_position):
         self.new_position = self.new_position[0] + new_position[0], self.new_position[1] + new_position[1]
@@ -2118,9 +2125,7 @@ class UnitPortrait(object):
 
         if not self.talking:
             self.talk_state = 0
-
-        if self.blinking == 2:
-            self.blink_counter.update(current_time)
+        self.blink_counter.update(current_time)
 
         if self.transition:
             # 14 frames for Unit Face to appear
@@ -2167,36 +2172,33 @@ class UnitPortrait(object):
         return False
 
     def create_image(self):
-        if self.blinking == 2:
-            if self.blink_counter.count == 0:
-                if self.expression == "Full_Blink":
-                    self.image.blit(self.fullblink, self.blink_position)
-                elif self.expression == "Half_Blink":
-                    self.image.blit(self.halfblink, self.blink_position)
-                else:
-                    self.image = self.portrait.copy()
-            elif self.blink_counter.count == 1:
-                if self.expression == "Full_Blink":
-                    self.image.blit(self.fullblink, self.blink_position)
-                else:
-                    self.image.blit(self.halfblink, self.blink_position)
-            elif self.blink_counter.count == 2:
-                self.image.blit(self.fullblink, self.blink_position)
-        elif self.blinking == 1:
+        self.image = self.portrait.copy()
+        if "CloseEyes" in self.expression:
             self.image.blit(self.fullblink, self.blink_position)
+        elif "HalfCloseEyes" in self.expression:
+            self.image.blit(self.halfblink, self.blink_position)
+        elif "OpenEyes" in self.expression:
+            pass
+        else:
+            if self.blink_counter.count == 0:  # Open eyes
+                pass
+            elif self.blink_counter.count == 1:  # Half-lidded eyes
+                self.image.blit(self.halfblink, self.blink_position)
+            elif self.blink_counter.count == 2:  # Closed eyes
+                self.image.blit(self.fullblink, self.blink_position)
 
         if self.talk_state == 0:
-            if self.expression == "Smiling":
+            if "Smile" in self.expression:
                 self.image.blit(self.closesmile, self.mouth_position)
             else:
                 self.image.blit(self.closemouth, self.mouth_position)
         elif self.talk_state == 1 or self.talk_state == 3:
-            if self.expression == "Smiling":
+            if "Smile" in self.expression:
                 self.image.blit(self.halfsmile, self.mouth_position)
             else:
                 self.image.blit(self.halfmouth, self.mouth_position)
         elif self.talk_state == 2:
-            if self.expression == "Smiling":
+            if "Smile" in self.expression:
                 self.image.blit(self.opensmile, self.mouth_position) 
             else:
                 self.image.blit(self.openmouth, self.mouth_position)

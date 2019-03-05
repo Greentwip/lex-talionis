@@ -9,6 +9,9 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
+- Add all missing sounds
+- Add support to fe_repo_to_lex for Dragonstone
+
 - Turnwheel
 - Submaps
 - Overworld
@@ -16,8 +19,6 @@
 
 - New Screenshots in all marketing content
 - When I fix events, make escape, seize, switch, search, etc, all work the same way -- also add "unit_end_turn" command
-
-- Add Fire weather
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
