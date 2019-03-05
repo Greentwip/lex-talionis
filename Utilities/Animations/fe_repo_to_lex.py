@@ -327,7 +327,8 @@ def parse_script(script, images, weapon_type):
             elif command_code in ('08', '09', '0A', '0B', '0C'):  # Start crit
                 crit = True
                 current_pose.append('enemy_flash_white;8')
-                current_pose.append(Frame(current_frame, 1, used_names))
+                if current_frame:
+                    current_pose.append(Frame(current_frame, 1, used_names))
                 current_pose.append('foreground_blend;2;248,248,248')
                 start_hit = True
                 write_extra_frame = False
