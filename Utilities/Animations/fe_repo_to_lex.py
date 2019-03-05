@@ -208,7 +208,7 @@ def parse_script(script, images, weapon_type):
     used_names = set()
 
     def save_mode(mode):
-        if weapon_type == 'Magic' or weapon_type == 'Staff':
+        if weapon_type in ('Magic', 'Staff', 'Refresh'):
             if mode not in (5, 6, 7, 9, 11):
                 used_names.clear()
                 return
@@ -311,7 +311,7 @@ def parse_script(script, images, weapon_type):
             elif command_code == '04':
                 write_extra_frame = False  # Normally prepares some code for returning to stand
             elif command_code == '05':  # Start spell
-                if weapon_type in ('Sword', 'Magic', 'Staff', 'Neutral'):
+                if weapon_type in ('Sword', 'Magic', 'Staff', 'Neutral', 'Refresh'):
                     current_pose.append('spell')
                 elif weapon_type == 'Lance':
                     current_pose.append('spell;Javelin')
@@ -353,7 +353,8 @@ def parse_script(script, images, weapon_type):
             elif command_code == '1A':  # Start hit
                 crit = False
                 current_pose.append('enemy_flash_white;8')
-                current_pose.append(Frame(current_frame, 1, used_names))
+                if current_frame:
+                    current_pose.append(Frame(current_frame, 1, used_names))
                 current_pose.append('screen_flash_white;4')
                 start_hit = True
             elif command_code in ('1F', '20', '21'):  # Actual hit
@@ -501,7 +502,7 @@ def write_script(weapon_type, melee_script, ranged_script):
     elif weapon_type == 'Bow':
         with open('RangedBow-Script.txt', 'w') as s:
             write_script(ranged_script, s)
-    elif weapon_type == 'Disarmed' or weapon_type == 'Unarmed':
+    elif weapon_type == 'Unarmed':
         # only need stand and dodge frames
         unarmed_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
         with open('Unarmed-Script.txt', 'w') as s:
@@ -522,7 +523,13 @@ def write_script(weapon_type, melee_script, ranged_script):
             write_script(ranged_script, s)
         unarmed_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
         with open('Unarmed-Script.txt', 'w') as s:
+            write_script(unarmed_script, s)
+    elif weapon_type == 'Refresh':
+        with open('Refresh-Script.txt', 'w') as s:
             write_script(ranged_script, s)
+        unarmed_script = {pose: line_list for pose, line_list in melee_script.items() if pose in ('Stand', 'Dodge')}
+        with open('Unarmed-Script.txt', 'w') as s:
+            write_script(unarmed_script, s)
 
 # === START ==================================================================
 log = Logger('fe_repo_to_lex.log', 'a')
@@ -544,15 +551,15 @@ elif len(script) == 0:
 else:
     raise ValueError("Could not determine which *.txt file to use!")
 
-weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed',
-                'Handaxe', 'Bow', 'Magic', 'Staff', 'Monster'}
+weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed', 'Handaxe',
+                'Bow', 'Magic', 'Staff', 'Monster', 'Dragonstone', 'Refresh'}
 weapon_type = script[:-4]
 if weapon_type not in weapon_types:
     raise ValueError("%s not a currently supported weapon type!" % weapon_type)
 
 if weapon_type == 'Disarmed':
     weapon_type = 'Unarmed'
-if weapon_type == 'Monster':
+if weapon_type == 'Monster' or weapon_type == 'Dragonstone':
     weapon_type = 'Neutral'
 
 print("Converting %s to Lex Talionis format..." % script)
@@ -612,9 +619,9 @@ preprocess(ranged_images)
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
 bad_images = set()
-if weapon_type not in ('Bow', 'Magic', 'Staff'):
+if weapon_type not in ('Bow', 'Magic', 'Staff', 'Refresh'):
     bad_images |= animation_collater(melee_images, weapon_type)
-if weapon_type == 'Magic':
+if weapon_type in ('Magic', 'Refresh'):
     bad_images |= animation_collater(melee_images, 'Unarmed')
 if weapon_type == 'Neutral':
     bad_images |= animation_collater(ranged_images, 'Unarmed')
@@ -627,6 +634,8 @@ if ranged_images:
         bad_images |= animation_collater(ranged_images, 'Magic')
     elif weapon_type == 'Staff':
         bad_images |= animation_collater(ranged_images, 'MagicStaff')
+    elif weapon_type == 'Refresh':
+        bad_images |= animation_collater(ranged_images, 'Refresh')
 
 def replace_bad_images(script, bad_images):
     for pose, line_list in script.items():
