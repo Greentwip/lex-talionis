@@ -28,7 +28,8 @@ player;0;0;Myrmidon;10;Iron Sword,Willow Bow,Hammerne;3,16;None;Althea
 player;0;0;Sniper;10;Magebane Bow;4,16;None;Resistance
 # Enemies
 # Generics
-enemy;0;0;Knight;10;;3,15;None;Resistance
+enemy;0;0;Knight;1;Superior Lance;3,15;None;Resistance
+enemy;0;0;Myrmidon;10;Lancereaver;3,14;None;Resistance
 # === Reinforcements ===
 # Player Characters
 player;0;Soldier1;Soldier;1;Iron Lance;None;None;Resistance

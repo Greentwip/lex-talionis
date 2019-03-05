@@ -446,7 +446,10 @@ class Dialogue_Scene(object):
             self.add_unit_sprite(line, transition=False)
         # Change a unit's expression
         elif line[0] == 'set_expression':
-            self.unit_sprites[line[1]].expression = line[2]
+            # Legal commands (Smile, NoSmile, NormalBlink, OpenEyes, CloseEyes, HalfCloseEyes)
+            # Default (NoSmile, NormalBlink)
+            commands = line[2].split(',') if len(line) > 2 else []
+            self.unit_sprites[line[1]].set_expression(commands)
         # Remove a unit from the scene
         elif line[0] == 'r':
             for name in line[1:]:
@@ -1306,25 +1309,19 @@ class Dialogue_Scene(object):
         else:
             position = [int(line[2]), int(line[3])]    
             mirrorflag = True if 'mirror' in line else False
+        # Priority
         if 'LowPriority' in line:
             priority = self.priority_counter - 1000
         else:
             priority = self.priority_counter
         self.priority_counter += 1
-        if 'Full_Blink' in line:
-            expression = 'Full_Blink'
-        elif 'Smiling' in line:
-            expression = 'Smiling'
-        else:
-            expression = 'Normal'
-        if 'SlideRight' in line:
-            slide = 'right'
-        elif 'SlideLeft' in line:
-            slide = 'left'
-        else:
-            slide = None
-        if 'Narration' in line:
-            position[1] = 30
+        # Expressions
+        legal_expressions = ("Smile", "OpenEyes", "CloseEyes", "HalfCloseEyes")
+        expression = []
+        for exp in legal_expressions:
+            if exp in line:
+                expression.append(exp)
+        # Blink/Mouth positions
         assert name in GC.PORTRAITDICT, "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(name)
         blink = GC.PORTRAITDICT[name]['blink']
         mouth = GC.PORTRAITDICT[name]['mouth']

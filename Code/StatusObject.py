@@ -60,6 +60,7 @@ class StatusObject(object):
             self.always_animation.loadSprites()
         if self.active and self.active.item:
             self.active.item.loadSprites()
+        self.help_box = None
 
     def serialize(self):
         serial_dict = {}
@@ -100,7 +101,9 @@ class StatusObject(object):
             surf.blit(chosen_cooldown, topleft) 
 
     def get_help_box(self):
-        return InfoMenu.Help_Dialog(self.desc)
+        if not self.help_box:
+            self.help_box = InfoMenu.Help_Dialog(self.desc)
+        return self.help_box
 
     # If the attribute is not found
     def __getattr__(self, attr):
@@ -639,18 +642,9 @@ def statusparser(s_id):
                     limit = int(limit)
                     my_components['endstep_rhythm_stat_change'] = RhythmStatChangeComponent(change, reset, init_count, limit)
                 # Combat changes
-                elif component == 'conditional_avoid':
-                    avoid, conditional = status.find('conditional_avoid').text.split(';')
-                    my_components['conditional_avoid'] = ConditionalComponent('conditional_avoid', avoid, conditional)
-                elif component == 'conditional_hit':
-                    hit, conditional = status.find('conditional_hit').text.split(';')
-                    my_components['conditional_hit'] = ConditionalComponent('conditional_hit', hit, conditional)
-                elif component == 'conditional_mt':
-                    mt, conditional = status.find('conditional_mt').text.split(';')
-                    my_components['conditional_mt'] = ConditionalComponent('conditional_mt', mt, conditional)
-                elif component == 'conditional_resist':
-                    mt, conditional = status.find('conditional_resist').text.split(';')
-                    my_components['conditional_resist'] = ConditionalComponent('conditional_resist', mt, conditional)
+                elif component.startswith('conditional_'):
+                    value, conditional = status.find(component).text.split(';')
+                    my_components[component] = ConditionalComponent(component, value, conditional)
                 elif component == 'weakness':
                     damage_type, num = status.find('weakness').text.split(',')
                     my_components['weakness'] = WeaknessComponent(damage_type, num)

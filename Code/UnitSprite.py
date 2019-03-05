@@ -175,24 +175,27 @@ class UnitSprite(object):
                 else:
                     offset = 2
                 surf.blit(GC.IMAGESDICT['TalkMarker'], (topleft[0], topleft[1] + offset))
-            if self.unit.checkIfEnemy(cur_unit):
+            elif self.unit.checkIfEnemy(cur_unit) and cur_unit.team == 'player':
                 self.draw_warning_marker(surf, left, top, cur_unit)
 
     def draw_warning_marker(self, surf, left, top, cur_unit):
-        items = self.unit.items
-        # print(items)
-        # Effective Weapons
-        if any(item.effective and any(comp in cur_unit.tags for comp in item.effective.against) for item in items):
+        def draw_marker(name):
             frame = (Engine.get_time()//125)%8
             topleft = (left + 5, top - 12)
-            surf.blit(Engine.subsurface(GC.IMAGESDICT['DangerMarker'], (frame*8, 0, 8, 16)), topleft)
-        # Killer Weapons and Master Weapons
-        for item in items:
-            if (item.warning and eval(item.warning)) or \
-                    (item.reverse and cur_unit.getMainWeapon() and Weapons.TRIANGLE.compute_advantage(item, cur_unit.getMainWeapon())[0]):
-                frame = (Engine.get_time()//125)%8
-                topleft = (left + 5, top - 12)
-                surf.blit(Engine.subsurface(GC.IMAGESDICT['WarningMarker'], (frame*8, 0, 8, 16)), topleft)
+            surf.blit(Engine.subsurface(GC.IMAGESDICT[name + 'Marker'], (frame*8, 0, 8, 16)), topleft)
+
+        items = self.unit.items
+        weapon = cur_unit.getMainWeapon()
+        # Effective Weapons
+        if any(item.effective and any(comp in cur_unit.tags for comp in item.effective.against) for item in items):
+            draw_marker('Danger')
+        # Killer Weapons and Master Weapons and Reaver Weapons
+        else:
+            for item in items:
+                if (item.warning and eval(item.warning)) or \
+                        (item.reverse and weapon and Weapons.TRIANGLE.compute_advantage(item, weapon)[0]):
+                    draw_marker('Warning')
+                    break
 
     def draw_hp(self, surf, gameStateObj):
         current_time = Engine.get_time()
@@ -391,8 +394,10 @@ class UnitSprite(object):
                 # self.change_state('normal', gameStateObj)
                 return
             self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
-            self.spriteOffset[0] = int(GC.TILEWIDTH * (currentTime - self.unit.lastMoveTime) // cf.CONSTANTS['Unit Speed'] * self.netposition[0])
-            self.spriteOffset[1] = int(GC.TILEHEIGHT * (currentTime - self.unit.lastMoveTime) // cf.CONSTANTS['Unit Speed'] * self.netposition[1])
+            dt = currentTime - self.unit.lastMoveTime
+            unit_speed = self.unit.get_unit_speed()
+            self.spriteOffset[0] = int(GC.TILEWIDTH * dt / unit_speed * self.netposition[0])
+            self.spriteOffset[1] = int(GC.TILEHEIGHT * dt / unit_speed * self.netposition[1])
             self.handle_net_position(self.netposition)
             self.update_move_sprite_counter(currentTime, 80)
         elif self.state == 'fake_transition_in':

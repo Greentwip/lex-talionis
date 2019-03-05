@@ -9,6 +9,13 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
+- Add all missing sounds (FEXP Battlestep)
+- Add support to fe_repo_to_lex for Dragonstone
+
+Take Drop infinite movement with canto? (for turnwheel branch)
+Add separate combine action to convoy (for turnwheel branch)
+Casual death? Check other_game
+
 - Turnwheel
     - Make it pretty and work the way FE Echoes works
     - If loading crashed save, allow execution of turnwheel forward
@@ -42,6 +49,7 @@
 - Test filtering class wexp -- so you could do reclassing?
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
+- Test Turnwheel limits
 - Test stationary weapon event tiles
 - Test wexp gain works like GBA FE (on double hit, double? On hit or miss?)
 - Test MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)
@@ -111,7 +119,6 @@ Cannot activate turnwheel on enemy turn
 "Start of player phase" can't actually be chosen by turnwheel!
 
 does movement, killing units, attacking in turnwheel have an animation?
-
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---

@@ -1530,9 +1530,9 @@
         <value>1</value>
         <desc></desc>
 
-        <MT>3</MT>
-        <HIT>90</HIT>
-        <LVL>D</LVL>
+		<MT>3</MT>
+		<HIT>90</HIT>
+		<LVL>--</LVL>
     </item>
 
     <!-- Other Items -->

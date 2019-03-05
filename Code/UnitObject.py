@@ -649,12 +649,13 @@ class UnitObject(object):
             unitwexp = self.wexp[idx] if klass_wexp[idx] else 0
         else:
             unitwexp = 1
+
         if itemLvl in Weapons.EXP.wexp_dict and unitwexp >= Weapons.EXP.wexp_dict[itemLvl]:
             return True
         elif unitwexp > 0:
             itemLvl = itemLvl.split(',')
             for n in itemLvl:
-                if n == self.id or n == self.klass or n == self.name:
+                if n == self.id or n == self.klass or n == self.name or n == '--':
                     return True
         return False
 
@@ -1825,7 +1826,9 @@ class UnitObject(object):
             if status.count:
                 status.count.count = status.count.orig_count
             if status.active:
-                status.active.current_charge = 0
+                status.active.reset_charge()
+            if status.automatic:
+                status.automatic.reset_charge()
             if status.tether:
                 Action.UnTetherStatus(status).do(gameStateObj)
         self.tags.discard('ActiveSkillCharged')
@@ -2090,6 +2093,12 @@ class UnitObject(object):
         else:
             Action.do(Action.Die(self), gameStateObj)
 
+    def get_unit_speed(self):
+        """
+        Returns the time the unit should spend getting from one tile to the next
+        """
+        return cf.CONSTANTS['Unit Speed']
+
     def play_movement_sound(self, gameStateObj):
         if 'flying' in self.status_bundle:
             GC.SOUNDDICT['Heavy Wing Flap'].play(-1)
@@ -2123,7 +2132,8 @@ class UnitObject(object):
 
         # === GAMELOGIC ===
         # === MOVE ===
-        if self in gameStateObj.moving_units and currentTime - self.lastMoveTime > cf.CONSTANTS['Unit Speed'] and \
+        if self in gameStateObj.moving_units and \
+                currentTime - self.lastMoveTime > self.get_unit_speed() and \
                 gameStateObj.stateMachine.getState() == 'movement':
             # logger.debug('Moving!')
             if self.path: # and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement

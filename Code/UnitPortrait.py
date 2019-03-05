@@ -9,7 +9,7 @@ except ImportError:
 
 class UnitPortrait(object):
     def __init__(self, portrait_name, blink_position, mouth_position, position, 
-                 priority=0, mirror=False, transition=False, expression='Normal', 
+                 priority=0, mirror=False, transition=False, expression=None, 
                  slide=None):
         self.name = portrait_name
         try:
@@ -55,12 +55,11 @@ class UnitPortrait(object):
         self.slide = slide
 
         # Blinking set up
-        self.blinking = 2 # 0- Don't blink, 1-hold blink, 2-Blink pseudorandomly
         self.offset_blinking = [x for x in range(-2000, 2000, 125)]
         self.blink_counter = Counters.generic3Counter(7000 + random.choice(self.offset_blinking), 40, 40) # 3 frames for each
 
         # Expression
-        self.expression = expression
+        self.expression = set(expression) if expression else set()
 
         # For bop
         self.bops_remaining = 0
@@ -72,6 +71,17 @@ class UnitPortrait(object):
 
     def stop_talking(self):
         self.talking = False
+
+    def set_expression(self, commands):
+        self.expression = set(commands)
+        if 'Full_Blink' in self.expression:
+            self.expression.add('CloseEyes')
+        if 'Half_Blink' in self.expression:
+            self.expression.add('HalfCloseEyes')
+        if 'Smiling' in self.expression:
+            self.expression.add('Smile')
+        if 'Normal' in self.expression:
+            self.expression = set()
 
     def move(self, new_position):
         self.new_position = self.new_position[0] + new_position[0], self.new_position[1] + new_position[1]
@@ -124,9 +134,7 @@ class UnitPortrait(object):
 
         if not self.talking:
             self.talk_state = 0
-
-        if self.blinking == 2:
-            self.blink_counter.update(current_time)
+        self.blink_counter.update(current_time)
 
         if self.transition:
             # 14 frames for Unit Face to appear
@@ -173,36 +181,33 @@ class UnitPortrait(object):
         return False
 
     def create_image(self):
-        if self.blinking == 2:
-            if self.blink_counter.count == 0:
-                if self.expression == "Full_Blink":
-                    self.image.blit(self.fullblink, self.blink_position)
-                elif self.expression == "Half_Blink":
-                    self.image.blit(self.halfblink, self.blink_position)
-                else:
-                    self.image = self.portrait.copy()
-            elif self.blink_counter.count == 1:
-                if self.expression == "Full_Blink":
-                    self.image.blit(self.fullblink, self.blink_position)
-                else:
-                    self.image.blit(self.halfblink, self.blink_position)
-            elif self.blink_counter.count == 2:
-                self.image.blit(self.fullblink, self.blink_position)
-        elif self.blinking == 1:
+        self.image = self.portrait.copy()
+        if "CloseEyes" in self.expression:
             self.image.blit(self.fullblink, self.blink_position)
+        elif "HalfCloseEyes" in self.expression:
+            self.image.blit(self.halfblink, self.blink_position)
+        elif "OpenEyes" in self.expression:
+            pass
+        else:
+            if self.blink_counter.count == 0:  # Open eyes
+                pass
+            elif self.blink_counter.count == 1:  # Half-lidded eyes
+                self.image.blit(self.halfblink, self.blink_position)
+            elif self.blink_counter.count == 2:  # Closed eyes
+                self.image.blit(self.fullblink, self.blink_position)
 
         if self.talk_state == 0:
-            if self.expression == "Smiling":
+            if "Smile" in self.expression:
                 self.image.blit(self.closesmile, self.mouth_position)
             else:
                 self.image.blit(self.closemouth, self.mouth_position)
         elif self.talk_state == 1 or self.talk_state == 3:
-            if self.expression == "Smiling":
+            if "Smile" in self.expression:
                 self.image.blit(self.halfsmile, self.mouth_position)
             else:
                 self.image.blit(self.halfmouth, self.mouth_position)
         elif self.talk_state == 2:
-            if self.expression == "Smiling":
+            if "Smile" in self.expression:
                 self.image.blit(self.opensmile, self.mouth_position) 
             else:
                 self.image.blit(self.openmouth, self.mouth_position)

@@ -72,7 +72,8 @@ def terminate(crash=False):
     sys.exit()
 
 def final(crash=False):
-    configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
+    if 'temp_Screen Size' in configuration.OPTIONS:
+        configuration.OPTIONS['Screen Size'] = configuration.OPTIONS['temp_Screen Size']
     configuration.write_config_file() # Write last saved options to config file
     if crash:
         create_crash_save()

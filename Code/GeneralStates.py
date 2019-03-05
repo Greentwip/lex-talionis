@@ -1628,7 +1628,7 @@ class FeatChoiceState(StateMachine.State):
 
         elif event == 'INFO':
             GC.SOUNDDICT['Select 2'].play()                        
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.cursor.currentSelectedUnit)
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.cursor.currentSelectedUnit, one_unit_only=True)
 
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
@@ -2988,7 +2988,7 @@ class ShopState(StateMachine.State):
             elif event == 'SELECT':
                 choice = self.sure_menu.getSelection()
                 if choice == cf.WORDS['Yes']:
-                    GC.SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['GoldExchange'].play()
                     selection = self.shopMenu.getSelection()
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                     new_item = ItemMethods.itemparser(str(selection.id))
@@ -3022,7 +3022,7 @@ class ShopState(StateMachine.State):
             elif event == 'SELECT':
                 choice = self.sure_menu.getSelection()
                 if choice == cf.WORDS['Yes']:
-                    GC.SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['GoldExchange'].play()
                     selection = self.myMenu.getSelection()
                     Action.do(Action.RemoveItem(self.unit, selection), gameStateObj)
                     # self.unit.remove_item(selection)

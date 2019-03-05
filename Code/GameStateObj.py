@@ -507,9 +507,9 @@ class GameStateObj(object):
                 elif cf.CONSTANTS['convoy_on_death']:
                     # Give all of the unit's items to the convoy
                     for item in unit.items:
-                        unit.remove_item(item, self)
                         if not item.locked:
-                            item.item_owner = 0
+                            unit.remove_item(item, self)
+                            item.owner = 0
                             self.convoy.append(item)
 
         # Remove unnecessary information between levels

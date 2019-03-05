@@ -39,6 +39,8 @@ class StaticRandom(object):
         self.growth_random = lcg(seed + 1)
         self.other_random = lcg(seed + 2)
 
+# Switch back to this when turnwheel is in place
+# r = StaticRandom()
 r = StaticRandom()
 
 def set_seed(self, seed):
