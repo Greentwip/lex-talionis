@@ -405,6 +405,12 @@ def parse_script(script, images, weapon_type):
                 current_pose.append(Sound('Sheathe'))
             elif command_code == '38':
                 current_pose.append(Sound('Heavy Spear Spin'))
+            elif command_code == '3A':
+                current_pose.append(Sound('RefreshDance'))
+            elif command_code == '3B':
+                current_pose.append(Sound('RefreshFlute'))
+            elif command_code == '3C':
+                current_pose.append(Sound('Sword Whoosh'))
             elif command_code == '41':
                 current_pose.append(Sound('Axe Pull'))
             elif command_code == '42':
@@ -413,6 +419,8 @@ def parse_script(script, images, weapon_type):
                 current_pose.append(Sound('Weapon Click'))
             elif command_code == '44':
                 current_pose.append(Sound('Weapon Shine'))
+            elif command_code == '45':
+                current_pose.append(Sound('Neigh'))
             elif command_code == '47':
                 current_pose.append(Effect('Cape Animation'))
                 print('Replace "effect;Cape Animation" with actual frames for cape animation in a loop')
@@ -424,6 +432,14 @@ def parse_script(script, images, weapon_type):
                 current_pose.append(Sound('DruidCrit'))
             elif command_code == '51':
                 current_pose.append('screen_flash_white;4')
+            elif command_code == '5A':
+                current_pose.append(Sound('MautheDoogGrowl'))
+            elif command_code == '5B':
+                current_pose.append(Sound('MautheDoogBark'))
+            elif command_code == '5C':
+                current_pose.append(Sound('MautheDoogHowl'))
+            elif command_code == '5D':
+                current_pose.append(Sound('MautheDoogWalk'))
             elif command_code == '79':
                 current_pose.append(Sound('StrategistRune'))
             elif command_code == '7A':
