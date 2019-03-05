@@ -3120,7 +3120,7 @@ class ShopState(State):
             elif event == 'SELECT':
                 choice = self.sure_menu.getSelection()
                 if choice == cf.WORDS['Yes']:
-                    GC.SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['GoldExchange'].play()
                     selection = self.shopMenu.getSelection()
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                     if len(self.unit.items) < cf.CONSTANTS['max_items']:
@@ -3154,7 +3154,7 @@ class ShopState(State):
             elif event == 'SELECT':
                 choice = self.sure_menu.getSelection()
                 if choice == cf.WORDS['Yes']:
-                    GC.SOUNDDICT['Select 1'].play()
+                    GC.SOUNDDICT['GoldExchange'].play()
                     selection = self.myMenu.getSelection()
                     self.unit.remove_item(selection)
                     self.myMenu.currentSelection = 0 # Reset selection

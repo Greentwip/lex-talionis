@@ -9,8 +9,17 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Add all missing sounds
+- Add all missing sounds (FEXP Battlestep)
 - Add support to fe_repo_to_lex for Dragonstone
+
+Is game supposed to be memey or not?
+Help Bar is busted
+Warning symbol seems to be busted?
+Take Drop infinitie movement with canto?
+Add separate combine action to convoy
+Quick screenshot button?
+Metamagic sticks around between battles
+No 2 in bbhood in credits
 
 - Turnwheel
 - Submaps
