@@ -1321,6 +1321,16 @@ class Dialogue_Scene(object):
         for exp in legal_expressions:
             if exp in line:
                 expression.append(exp)
+        # Slide
+        if 'SlideRight' in line:
+            slide = 'right'
+        elif 'SlideLeft' in line:
+            slide = 'left'
+        else:
+            slide = None
+        # Narration
+        if 'Narration' in line:
+            position[1] = 30
         # Blink/Mouth positions
         assert name in GC.PORTRAITDICT, "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(name)
         blink = GC.PORTRAITDICT[name]['blink']

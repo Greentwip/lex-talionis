@@ -355,6 +355,7 @@ class Drop(Action):
         self.droppee = droppee
         self.pos = pos
         self.hasTraded = self.unit.hasTraded
+        self.droppeeHasAttacked = self.droppee.hasAttacked
 
     def do(self, gameStateObj):
         self.droppee.position = self.pos
@@ -381,6 +382,7 @@ class Drop(Action):
         self.unit.strTRV = self.droppee.name
         self.unit.hasTraded = self.hasTraded
         self.unit.hasAttacked = False
+        self.droppee.hasAttacked = self.droppeeHasAttacked
         self.droppee.position = None
         self.droppee.leave(gameStateObj)
         if 'savior' not in self.unit.status_bundle:

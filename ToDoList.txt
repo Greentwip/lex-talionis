@@ -12,9 +12,9 @@
 - Add all missing sounds (FEXP Battlestep)
 - Add support to fe_repo_to_lex for Dragonstone
 
-Take Drop infinite movement with canto? (for turnwheel branch)
+Take Drop infinite movement with canto? (for turnwheel branch) (Check this)
 Add separate combine action to convoy (for turnwheel branch)
-Casual death? Check other_game
+Casual death? Check other_game (- Check that casual doesn't have a death cooldown)
 
 - Turnwheel
     - Make it pretty and work the way FE Echoes works
@@ -24,17 +24,18 @@ Casual death? Check other_game
 - Submaps
 - Overworld
 - Parties (maybe just convoy differentiation -- since Anchorman has managed different parties pretty well themselves)
-- Check that casual doesn't have a death cooldown (bbhood?)
 - Add "having 2+ parties" ability to the Engine and Wiki.
 - Test player phase and enemy phase battle animation music
 - Add support section to wiki
 
+*** Check that this fix happened ***
 - Fix Intersection between items, statuses, turnwheel actions, and saving/loading the game
 - When you give a unit an item that gives a status. You will have
     - Give Item Action
     - Give Status Actions
 - Run it backwards and the status will be removed twice... Hmmm..
 - Maybe need to MAKE SURE ALL ACTIONS NEVER CALL ANOTHER ACTION
+************************************
 
 - New Screenshots in all marketing content
 - When I fix events, make escape, seize, switch, search, etc, all work the same way -- also add "unit_end_turn" command
@@ -43,7 +44,6 @@ Casual death? Check other_game
 - Test Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
 
-- Check that Canto adds one wait, not 4!!
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
 - Test filtering class wexp -- so you could do reclassing?
@@ -64,7 +64,6 @@ Casual death? Check other_game
 - Test that enemy ai takes critical into account
 - Test removing a stat from stat list (InfoMenu, UnitMenu, Combat)
 - Supports in Unit Menu
-- Provoke doesn't disappear on killing provoker?
 
 To Test Action:
 WarpIn

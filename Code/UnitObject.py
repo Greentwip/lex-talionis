@@ -1270,15 +1270,10 @@ class UnitObject(object):
                 GC.EQUATIONS.get_steal_atk(self) > GC.EQUATIONS.get_steal_def(unit) and unit.getStealables()]
 
     def getStealables(self):
-        if len(self.items) <= 0:
-            return []
-        if self.getMainWeapon():
-            if len(self.items) > 1:
-                return [item for item in self.items if item is not self.getMainWeapon()]
-            else:
-                return []
+        if cf.CONSTANTS['steal'] == 0:
+            return [item for item in self.items if not item.weapon and not item.spell]
         else:
-            return self.items
+            return [item for item in self.items if item is not self.getMainWeapon()]
 
     def getRepairables(self):
         return [item for item in self.items if 
