@@ -246,7 +246,7 @@ class UnitObject(object):
                 crit = self.compute_crit(enemyunit, gameStateObj, self.getMainWeapon(), 'Attack')
                 blit_num(surf, crit, 64, 67)
         # Blit enemy hit and mt
-        if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
+        if not self.getMainWeapon().cannot_be_countered and isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
                 Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().get_range(enemyunit):
             e_mt = enemyunit.compute_damage(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
             e_hit = enemyunit.compute_hit(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
@@ -352,20 +352,22 @@ class UnitObject(object):
             elif my_num == 4:
                 surf.blit(GC.IMAGESDICT['x4'], x2_position_player)
 
-            e_wep = enemyunit.getMainWeapon()
+            # ie if weapon can be countered
+            if not my_wep.cannot_be_countered:
+                e_wep = enemyunit.getMainWeapon()
 
-            # Check enemy vs player
-            e_num = 1
-            if e_wep and not e_wep.no_double and isinstance(enemyunit, UnitObject) and \
-                    Utility.calculate_distance(self.position, enemyunit.position) in e_wep.get_range(enemyunit):
-                if e_wep.brave:
-                    e_num *= 2
-                if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemyunit.outspeed(self, e_wep):
-                    e_num *= 2
-            if e_num == 2:
-                surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
-            elif e_num == 4:
-                surf.blit(GC.IMAGESDICT['x4'], x2_position_enemy)
+                # Check enemy vs player
+                e_num = 1
+                if e_wep and not e_wep.no_double and isinstance(enemyunit, UnitObject) and \
+                        Utility.calculate_distance(self.position, enemyunit.position) in e_wep.get_range(enemyunit):
+                    if e_wep.brave:
+                        e_num *= 2
+                    if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemyunit.outspeed(self, e_wep):
+                        e_num *= 2
+                if e_num == 2:
+                    surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
+                elif e_num == 4:
+                    surf.blit(GC.IMAGESDICT['x4'], x2_position_enemy)
 
     def create_spell_info(self, gameStateObj, otherunit):
         if self.getMainSpell().spell.targets in ['Ally', 'Enemy', 'Unit']:
@@ -1719,7 +1721,7 @@ class UnitObject(object):
             return 0
 
     def crit_avoid(self, gameStateObj, item=None, dist=0):
-        base = item.crit + GC.EQUATIONS.get_crit_avoid(self, item, dist)
+        base = GC.EQUATIONS.get_crit_avoid(self, item, dist)
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         base += self.get_support_bonuses(gameStateObj)[5]
         return base

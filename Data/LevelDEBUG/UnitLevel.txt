@@ -26,6 +26,9 @@ player;0;0;Eliza;4,17;None
 other;0;0;Renae;5,17;None
 player;0;0;Cavalier;10;Iron Sword,Willow Bow,Hammerne;3,16;None;Althea
 player;0;0;Sniper;10;Magebane Bow;4,16;None;Resistance
+
+player;0;0;Soldier;1;Iron Lance;16,2;None;Althea
+enemy;0;0;Fighter;1;Iron Axe,Rusted Axe;16,1;Attack;Resistance
 # Enemies
 # Generics
 enemy;0;0;Knight;1;Superior Lance;3,15;None;Resistance

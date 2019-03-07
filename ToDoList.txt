@@ -12,7 +12,6 @@
 - Add all missing sounds (FEXP Battlestep)
 - Add support to fe_repo_to_lex for Dragonstone
 
-Take Drop infinite movement with canto? (for turnwheel branch) (Check this)
 Add separate combine action to convoy (for turnwheel branch)
 Casual death? Check other_game (- Check that casual doesn't have a death cooldown)
 
@@ -49,19 +48,15 @@ Casual death? Check other_game (- Check that casual doesn't have a death cooldow
 - Test filtering class wexp -- so you could do reclassing?
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
-- Test Turnwheel limits
-- Test stationary weapon event tiles
+- Test stationary weapon event tiles + saving + turnwheel
 - Test wexp gain works like GBA FE (on double hit, double? On hit or miss?)
 - Test MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)
 - Test MAG to accuracy as well (or add flag for FE GBA style staves) -- or try and make it work with both
 - Test Berserk works
 - Add Fog of War
-- Test other_anim component support (like self_anim)
 - Test all aoe (Latona)
 - Test support for generic rank bonuses
-- Test support for weapons with "cannot_be_countered"
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
-- Test that enemy ai takes critical into account
 - Test removing a stat from stat list (InfoMenu, UnitMenu, Combat)
 - Supports in Unit Menu
 

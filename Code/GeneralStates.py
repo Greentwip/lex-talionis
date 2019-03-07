@@ -183,25 +183,31 @@ class FreeState(StateMachine.State):
 
 class OptionsMenuState(StateMachine.State):
     name = 'optionsmenu'
+    re_load = True
 
     def begin(self, gameStateObj, metaDataObj):
-        gameStateObj.cursor.drawState = 0
-        options = [cf.WORDS['Unit'], cf.WORDS['Objective'], cf.WORDS['Options']]
-        info_desc = [cf.WORDS['Unit_desc'], cf.WORDS['Objective_desc'], cf.WORDS['Options_desc']]
-        if not gameStateObj.tutorial_mode:
-            if gameStateObj.mode['death']:  # If classic mode
-                options.append(cf.WORDS['Suspend'])
-                info_desc.append(cf.WORDS['Suspend_desc'])
-            else:  # If casual mode
-                options.append(cf.WORDS['Save'])
-                info_desc.append(cf.WORDS['Save_desc'])
-        if not gameStateObj.tutorial_mode or all(unit.finished for unit in gameStateObj.allunits if unit.team == 'player'):
-            options.append(cf.WORDS['End'])
-            info_desc.append(cf.WORDS['End_desc'])
-        if cf.CONSTANTS['turnwheel'] and 'Turnwheel' in gameStateObj.game_constants:
-            options.insert(1, cf.WORDS['Turnwheel'])
-            info_desc.insert(1, cf.WORDS['Turnwheel_desc'])
-        gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(None, options, 'auto', gameStateObj=gameStateObj, info_desc=info_desc)
+        if self.re_load:
+            gameStateObj.cursor.drawState = 0
+            options = [cf.WORDS['Unit'], cf.WORDS['Objective'], cf.WORDS['Options']]
+            info_desc = [cf.WORDS['Unit_desc'], cf.WORDS['Objective_desc'], cf.WORDS['Options_desc']]
+            if not gameStateObj.tutorial_mode:
+                if gameStateObj.mode['death']:  # If classic mode
+                    options.append(cf.WORDS['Suspend'])
+                    info_desc.append(cf.WORDS['Suspend_desc'])
+                else:  # If casual mode
+                    options.append(cf.WORDS['Save'])
+                    info_desc.append(cf.WORDS['Save_desc'])
+            if not gameStateObj.tutorial_mode or all(unit.finished for unit in gameStateObj.allunits if unit.team == 'player'):
+                options.append(cf.WORDS['End'])
+                info_desc.append(cf.WORDS['End_desc'])
+            if cf.CONSTANTS['turnwheel'] and 'Turnwheel' in gameStateObj.game_constants:
+                options.insert(1, cf.WORDS['Turnwheel'])
+                info_desc.insert(1, cf.WORDS['Turnwheel_desc'])
+            gameStateObj.activeMenu = \
+                MenuFunctions.ChoiceMenu(None, options, 'auto', 
+                                         gameStateObj=gameStateObj, info_desc=info_desc)
+        else:
+            self.re_load = True
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
@@ -240,6 +246,7 @@ class OptionsMenuState(StateMachine.State):
             elif selection == cf.WORDS['Objective']:
                 gameStateObj.stateMachine.changeState('status_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
+                self.re_load = False
             elif selection == cf.WORDS['Options']:
                 gameStateObj.stateMachine.changeState('config_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
@@ -247,7 +254,14 @@ class OptionsMenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('unit_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Turnwheel']:
-                gameStateObj.stateMachine.changeState('turnwheel')
+                if gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0:
+                    gameStateObj.stateMachine.changeState('turnwheel')
+                else:
+                    banner = Banner.customBanner(cf.WORDS['Turnwheel_empty'])
+                    banner.sound = GC.SOUNDDICT['Error']
+                    gameStateObj.banners.append(banner)
+                    gameStateObj.stateMachine.changeState('itemgain')
+                    self.re_load = False
 
         elif event == 'INFO':
             gameStateObj.activeMenu.toggle_info()
