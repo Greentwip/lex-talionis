@@ -59,7 +59,7 @@ PRIMARYAI = {'Move': 1,
 
 class AI(object):
     def __init__(self, unit, ai1=0, ai2=0, team_ignore=[], name_ignore=[],
-                 view_range=1, ai_priority=20, ai_group=0):
+                 view_range=1, ai_priority=20, ai_group=None):
         self.unit = unit
         self.ai1_state = 0
         self.ai2_state = 0
@@ -74,7 +74,7 @@ class AI(object):
 
         self.state = 'Init'
 
-        self.range = view_range # (0, 1, 2)
+        self.view_range = view_range # (0, 1, 2)
         self.priority = ai_priority # higher moves first
 
         # Commands
@@ -113,8 +113,8 @@ class AI(object):
 
             if self.state == 'Init':
                 self.start_time = Engine.get_time()
-                logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, Range: %s', 
-                             self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.range)
+                logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, View Range: %s', 
+                             self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.view_range)
                 self.clean_up()
                 if self.ai1_state & PRIMARYAI['Move']:
                     self.valid_moves = self.get_true_valid_moves(gameStateObj)
@@ -198,7 +198,7 @@ class AI(object):
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and
                                               (unit.name == self.ai2_state or unit.event_id == self.ai2_state)]
 
-                self.inner_ai = Secondary_AI(self.available_targets, self.unit, self.range, gameStateObj)
+                self.inner_ai = Secondary_AI(self.available_targets, self.unit, self.view_range, gameStateObj)
                 self.state = 'Secondary'
 
             elif self.state == 'Secondary':
@@ -212,7 +212,7 @@ class AI(object):
 
             elif self.state == 'Tertiary':
                 # Filter using range
-                if self.range == 0 or self.range == 1:
+                if self.view_range == 0 or self.view_range == 1:
                     self.available_targets = []
                 success = self.run_tertiary_ai(self.valid_moves, self.available_targets, gameStateObj)
                 self.state = 'Done'
@@ -867,7 +867,7 @@ class Secondary_AI(object):
         self.all_targets = available_targets
 
         self.unit = unit
-        self.range = view_range
+        self.view_range = view_range
         self.double_move = self.unit.stats['MOV']*2 + self.unit.getMaxRange()
 
         self.grid = gameStateObj.grid_manager.get_grid(self.unit)
@@ -884,7 +884,10 @@ class Secondary_AI(object):
         self.max_tp = 0
         self.best_target = None
         self.best_path = None
-        self.available_targets = [unit for unit in self.all_targets if Utility.calculate_distance(unit.position, self.unit.position) <= self.double_move]
+        if self.view_range > 0:
+            self.available_targets = [unit for unit in self.all_targets if Utility.calculate_distance(unit.position, self.unit.position) <= self.double_move]
+        else:
+            self.available_targets = []
         self.position_to_move_to = None
 
     def update(self, gameStateObj):
@@ -932,7 +935,7 @@ class Secondary_AI(object):
             return True
 
         else:
-            if self.range == 2 and not self.widen_flag:
+            if self.view_range == 2 and not self.widen_flag:
                 # Widen search to all not looked over yet
                 logger.debug("Widening Search!")
                 self.widen_flag = True
