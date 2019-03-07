@@ -27,6 +27,7 @@
 #    - 0: Do not look
 #    - 1: Look up to my Movement*2 + maximum range of item away
 #    - 2: Look at entire map
+#    - Any other integer: Look up to integer range away
 # Priority:
 # 		Higher priority units move first
 # Teams to Ignore:

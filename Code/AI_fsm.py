@@ -29,6 +29,7 @@
     - 0: Do not look
     - 1: Look up to my Movement*2 + maximum range of item away
     - 2: Look at entire map
+    - Any other integer: Look up to integer range away
 """
 try:
     import GlobalConstants as GC
@@ -211,8 +212,7 @@ class AI(object):
                     self.state = 'Tertiary'
 
             elif self.state == 'Tertiary':
-                # Filter using range
-                if self.view_range == 0 or self.view_range == 1:
+                if self.view_range != 2:  # Only do this if we're supposed to look forever
                     self.available_targets = []
                 success = self.run_tertiary_ai(self.valid_moves, self.available_targets, gameStateObj)
                 self.state = 'Done'
@@ -884,8 +884,10 @@ class Secondary_AI(object):
         self.max_tp = 0
         self.best_target = None
         self.best_path = None
-        if self.view_range > 0:
+        if self.view_range in (1, 2):
             self.available_targets = [unit for unit in self.all_targets if Utility.calculate_distance(unit.position, self.unit.position) <= self.double_move]
+        elif self.view_range > 0:
+            self.available_targets = [unit for unit in self.all_targets if Utility.calculate_distance(unit.position, self.unit.position) <= self.view_range]
         else:
             self.available_targets = []
         self.position_to_move_to = None
