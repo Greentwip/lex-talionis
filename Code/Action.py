@@ -925,6 +925,20 @@ class ChangeAI(Action):
         self.unit.ai_descriptor = self.old_ai
         self.unit.get_ai(self.old_ai)
 
+class AIGroupPing(Action):
+    def __init__(self, unit):
+        self.unit = unit
+        self.old_range = self.unit.ai.range
+        self.old_ai_group_flag = self.unit.ai.ai_group_flag
+
+    def do(self, gameStateObj):
+        self.unit.ai.range = 2 # allow group to see whole universe
+        self.unit.ai.ai_group_flag = True # Don't need to do this more than once
+
+    def reverse(self, gameStateObj):
+        self.unit.ai.range = self.old_range
+        self.unit.ai.ai_group_flag = self.old_ai_group_flag
+
 class ChangeParty(Action):
     def __init__(self, unit, new_party):
         self.unit = unit

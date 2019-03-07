@@ -1384,8 +1384,7 @@ class UnitObject(object):
         if self.ai_group:
             for unit in gameStateObj.allunits:
                 if unit.team == self.team and unit.ai_group == self.ai_group:
-                    unit.ai.range = 2 # allow group to see whole universe
-                    unit.ai.ai_group_flag = True # Don't need to do this more than once
+                    Action.do(Action.AIGroupPing(unit), gameStateObj)
                     if not self.hasMoved and self.hasRunAI():  # We need to tell this guy to try again
                         gameStateObj.ai_unit_list.append(self)  # Move him up to next on the list
                         self.reset_ai()

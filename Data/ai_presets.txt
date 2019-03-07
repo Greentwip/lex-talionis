@@ -30,7 +30,7 @@
 # Priority:
 # 		Higher priority units move first
 # Teams to Ignore:
-# 		If Primary AI is 4, Teams to Ignore's first value should be an integer. It will then define not what teams to 
+# 		If Primary AI contains AI State 4, Teams to Ignore's first value should be an integer. It will then define not what team to 
 #       ignore but rather how many items the thief will hold before attempting to escape
 #
 # For entry
