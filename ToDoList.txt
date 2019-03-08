@@ -9,7 +9,6 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Add all missing sounds (FEXP Battlestep)
 - Add support to fe_repo_to_lex for Dragonstone
 
 Add separate combine action to convoy (for turnwheel branch)

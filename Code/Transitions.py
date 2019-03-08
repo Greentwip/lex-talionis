@@ -443,13 +443,15 @@ class StartAllSaves(StartLoad):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
+        first_push = self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
                         
-        if event == 'DOWN':
+        if 'DOWN' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveDown()
-        elif event == 'UP':
+            gameStateObj.activeMenu.moveDown(first_push)
+        elif 'UP' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveUp()
+            gameStateObj.activeMenu.moveUp(first_push)
 
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()

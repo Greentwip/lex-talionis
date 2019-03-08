@@ -665,7 +665,7 @@ class GameStateObj(object):
                 level = unit.level + (tier - 1) * cf.CONSTANTS['max_level'][tier]
                 p_log.write('\t\t\t<level>' + str(level) + '</level>\n')
                 p_log.write('\t\t\t<exp>' + str(unit.exp) + '</exp>\n')
-                p_log.write('\t\t\t<items>' + ','.join([item.name + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]) + '</items>\n')
+                p_log.write('\t\t\t<items>' + ','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]) + '</items>\n')
                 p_log.write('\t\t\t<wexp>' + ','.join([str(wexp) for wexp in unit.wexp]) + '</wexp>\n')
                 p_log.write('\t\t\t<skills>' + ','.join([skill.id for skill in unit.status_effects if not skill.class_skill]) + '</skills>\n')
                 p_log.write('\t\t</unit>\n')
