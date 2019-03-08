@@ -5,7 +5,7 @@ try:
     import configuration as cf
     import static_random
     import Interaction, MenuFunctions, AStar, Weapons, TileObject
-    import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
+    import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusObject
     import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
     from StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
 except ImportError:
@@ -13,7 +13,7 @@ except ImportError:
     from . import configuration as cf
     from . import static_random
     from . import Interaction, MenuFunctions, AStar, Weapons, TileObject
-    from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, StatusObject
+    from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusObject
     from . import Utility, LevelUp, ItemMethods, Engine, Banner, TextChunk
     from Code.StatObject import Stat, build_stat_dict_plus  # Needed so old saves can load
 
@@ -103,6 +103,7 @@ class UnitObject(object):
         self.deathCounter = 0
 
         self.sprite = UnitSprite.UnitSprite(self)
+        self.movement_sound = UnitSound.UnitSound(self)
         self.arrowCounter = 0
         self.arrowAnim = [0, 1, 2]
         self.flicker = None
@@ -2201,24 +2202,10 @@ class UnitObject(object):
         return cf.CONSTANTS['Unit Speed']
 
     def play_movement_sound(self, gameStateObj):
-        if 'flying' in self.status_bundle:
-            GC.SOUNDDICT['Heavy Wing Flap'].play(-1)
-        elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
-            GC.SOUNDDICT['Horse Steps'].play(-1)
-        elif 'Armor' in self.tags or self.movement_group == 1:
-            GC.SOUNDDICT['Heavy Foot Steps 1'].play(-1)
-        else:
-            GC.SOUNDDICT['Light Foot Steps 1'].play(-1)
+        self.movement_sound.play()
 
     def stop_movement_sound(self, gameStateObj):
-        if 'flying' in self.status_bundle:
-            GC.SOUNDDICT['Heavy Wing Flap'].stop()
-        elif 'Mounted' in self.tags or self.movement_group in [2, 3]:
-            GC.SOUNDDICT['Horse Steps'].stop()
-        elif 'Armor' in self.tags or self.movement_group == 1:
-            GC.SOUNDDICT['Heavy Foot Steps 1'].stop()
-        else:
-            GC.SOUNDDICT['Light Foot Steps 1'].stop()
+        self.movement_sound.stop()
 
     def handle_miracle(self, gameStateObj):
         self.isDying = False
@@ -2282,6 +2269,7 @@ class UnitObject(object):
 
         if self.position:
             self.sprite.update(gameStateObj)
+            self.movement_sound.update()
 
         # === UP and DOWN Arrow COUNTER logic - For itemAdvantageArrows
         if currentTime - self.lastArrowUpdate > 130:
