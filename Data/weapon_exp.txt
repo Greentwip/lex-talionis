@@ -1,3 +1,4 @@
+# Rank - Value - Accuracy - Damage - Critical Rate
 D;1
 C;16
 B;41

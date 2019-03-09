@@ -73,7 +73,7 @@
         <id>Berserk</id>
         <desc>Enraged. Unit will attack without regard for allies.</desc>
         <image_index>9,7</image_index>
-        <components>always_animation,time,negative,un_selectable,ai_change</components>
+        <components>always_animation,time,negative,un_selectable,ai_change,ignore_alliances</components>
 
         <time>3</time>
         <ai_change>Berserk</ai_change>

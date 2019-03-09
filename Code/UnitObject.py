@@ -1320,6 +1320,8 @@ class UnitObject(object):
         return positions
 
     def checkIfAlly(self, unit): 
+        if 'ignore_alliances' in self.status_bundle:
+            return True
         if hasattr(unit, 'team'): # check if not a tile
             if self.team == 'player':
                 return True if (unit.team == 'player' or unit.team == 'other') else False
@@ -1332,6 +1334,8 @@ class UnitObject(object):
         return False
 
     def checkIfEnemy(self, unit):
+        if 'ignore_alliances' in self.status_bundle:
+            return True
         if hasattr(unit, 'team'): # check if not a tile
             if self.team == 'player':
                 return True if (unit.team == 'enemy' or unit.team == 'enemy2') else False

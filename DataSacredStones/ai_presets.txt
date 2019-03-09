@@ -55,3 +55,4 @@ PursueVillage			19 3 - - 2 20
 Support					3 2 - - 2 10
 FollowBoss				3 7 - - 2 15
 FollowWagon             3 Wagon - - 2 20
+Berserk                 3 9 - - 2 0

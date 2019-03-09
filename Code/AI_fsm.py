@@ -195,6 +195,9 @@ class AI(object):
                 elif self.ai2_state == 8:
                     self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                                               if 'Enemy_Seize' in gameStateObj.map.tile_info_dict[position]]
+                elif self.ai2_state == 9:
+                    self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and unit is not self.unit and
+                                              unit.team not in self.team_ignore and unit.name not in self.name_ignore]
                 else:
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and
                                               (unit.name == self.ai2_state or unit.event_id == self.ai2_state)]

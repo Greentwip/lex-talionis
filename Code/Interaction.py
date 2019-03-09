@@ -162,10 +162,12 @@ class Combat(object):
         if not cf.CONSTANTS['miss_wexp']:  # If miss wexp is not on, only include hits
             results = [result for result in results if result.outcome]
         if cf.CONSTANTS['double_wexp']:
+            already_fatal = False
             for result in results:
                 Action.do(Action.GainWexp(result.attacker, item), gameStateObj)
-                if cf.CONSTANTS['fatal_wexp'] and result.defender.isDying:
+                if not already_fatal and cf.CONSTANTS['fatal_wexp'] and result.defender.isDying:
                     Action.do(Action.GainWexp(result.attacker, item), gameStateObj)
+                    already_fatal = True
         elif results:
             unit = results[0].attacker
             Action.do(Action.GainWexp(unit, item), gameStateObj)
