@@ -48,12 +48,9 @@ Casual death? Check other_game (- Check that casual doesn't have a death cooldow
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
 - Test stationary weapon event tiles + saving + turnwheel
-- Test MAG range to Blast zones as well (alternatively, add hit all enemies within range mechanic)
 - Add Fog of War
-- Test all aoe (Latona)
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
 - Test removing a stat from stat list (InfoMenu, UnitMenu, Combat)
-- Supports in Unit Menu
 
 To Test Action:
 WarpIn

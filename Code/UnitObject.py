@@ -1535,6 +1535,8 @@ class UnitObject(object):
         return max(cf.CONSTANTS['minimum_damage'], damage)
 
     def compute_heal(self, target, gameStateObj, item, mode=None):
+        if item.heal == 'All':
+            return target.stats['HP'] - target.currenthp
         heal = int(eval(item.heal)) + GC.EQUATIONS.get_heal(self, item)
         if self is not target:
             heal += sum(status.caretaker for status in self.status_effects if status.caretaker)

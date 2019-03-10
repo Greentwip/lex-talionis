@@ -1,0 +1,42 @@
+Version (0.8.9) of the Engine is out now. You can find it in the usual place. This is a small bug-fix update, so if everything is going well on your end, there is no pressing need to upgrade.
+
+I've played through BBHood217's The Raymond Chronicles, a complete game made using the Lex Talionis Engine. It's very impressive, and I'm proud someone else was able to use the Engine to create their own work! Check it out if you get the chance.
+
+What's New:
+
+Spoiler
+The fe_repo_to_lex.exe has been updated. It should now automatically convert nearly every animation you can find in the Animation Directory, except Dragonstone animations. I'm still working on those.
+Better sounds for unit movement. If you want movement sounds, re-download the Audio/sfx/ folder from the Dropbox.
+AI view range is now fully customizable. If you've taken a peak at Data/ai_presets.txt, you'd be familiar with the view range parameter. It can now be set to any integer to control exactly how far away you want an AI's secondary AI to look.
+The set_expression command now works slightly differently. You can find out more on the wiki. The old way of using it still works, but is now considered deprecated.
+Can now have more than 6 base conversations and not have the conversation selection menu go off the screen.
+Automatic charge (like for Metamagic) is no longer carried between levels.
+Help Boxes for skills outside of the Info Menu now display correctly
+Warning markers now only show up when a player character is selected.
+Weapons without a type should now work.
+
+Outstanding Bugs:
+
+Spoiler
+I still haven't figured out why casual mode sometimes has dead units not come back for the next chapter. If they die in Chapter 0, sometimes they skip Chapter 1 and only show up again in Chapter 2. If anyone has any leads or can reproduce this bug, please contact me.
+
+
+Coming Soon™
+
+Spoiler
+I've been working on the major 0.9.0 update for a while because it required a complete restructuring of the Engine to support the big change in this update -- A working Turnwheel, which will allow the player to re-do their actions if they so desire. It should work exactly the Turnwheel from Echoes. I'm hoping to release this soon, perhaps in a couple of months. Other changes in the upcoming update include:
+
+Better support for having multiple parties, each with their own convoy and money.
+Support for submaps within chapters, so you can have different actual maps show up during the intro and outro scripts and move units around, engage in combat, etc on the maps.
+Fully customizable combat equations (if you want damage to be based off SKL instead of STR, well now's your chance)
+Supports
+Lots of other small changes -- I've been trying to add in every feature found in the Sacred Stones (so things like Hammerne staff, Berserk staff, Ballistas, MAG/2 Weapon range, etc.)
+In the far far future:
+
+Overworld (already halfway done)
+Fog of War
+Dialogue Editor
+Game Editor
+Unify Level, Dialogue, and Game Editor into one Campaign Editor
+
+Also, if anyone has a list of the conversions from Fire Emblem battle animation commands codes (like C5C) to actual sound along with the ripped sounds themselves for the FE8 exclusive sounds, please PM me. I'm missing all the combat sounds for FE8 and would like to rectify this. Thanks!

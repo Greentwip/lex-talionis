@@ -726,10 +726,10 @@ class HelpGraph(object):
         self.current = None
 
         if state == 'Personal Data':
-            self.populate_personal_data()
+            self.populate_personal_data(gameStateObj)
             self.initial = "Strength"
         elif state == 'Personal Growths':
-            self.populate_personal_data(growths=True)
+            self.populate_personal_data(gameStateObj, growths=True)
             self.initial = "Strength"
         elif state == 'Equipment':
             self.populate_equipment()
@@ -744,7 +744,7 @@ class HelpGraph(object):
             else:
                 self.initial = "Unit Desc"
 
-    def populate_personal_data(self, growths=False):
+    def populate_personal_data(self, gameStateObj, growths=False):
         self.help_boxes["Strength"] = Help_Box("Strength", (88, 26), Help_Dialog(cf.WORDS['STR_desc']))
         self.help_boxes["Magic"] = Help_Box("Magic", (88, GC.TILEHEIGHT + 26), Help_Dialog(cf.WORDS['MAG_desc']))
         self.help_boxes["Skill"] = Help_Box("Skill", (88, GC.TILEHEIGHT*2 + 26), Help_Dialog(cf.WORDS['SKL_desc']))
@@ -761,7 +761,8 @@ class HelpGraph(object):
             self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), Help_Dialog(cf.WORDS['Aid_desc']))
         self.help_boxes["Traveler"] = Help_Box("Traveler", (152, GC.TILEHEIGHT*4 + 26), Help_Dialog(cf.WORDS['Trv_desc']))
         if cf.CONSTANTS['support']:
-            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog(cf.WORDS['Affin_desc']))
+            affinity = gameStateObj.support.node_dict[self.unit.name].affinity
+            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog('Gives ' + affinity.desc))
         else:
             self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog(cf.WORDS['Rat_desc']))
 

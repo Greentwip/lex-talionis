@@ -26,8 +26,8 @@ class UnitMenu(StateMachine.State):
                            ('Equipment', ['Equip', 'Atk', 'Hit', 'Avoid'], [16, 72, 103, 136]),
                            ('Personal Data', ['MOV', 'CON', 'Aid', 'Rat', 'Trv'], [4, 33, 60, 82, 106]),
                            ('Weapon Level', Weapons.TRIANGLE.types, [9 + idx*16 for idx in range(len(Weapons.TRIANGLE.types))])]
-            if cf.CONSTANTS['support']:
-                self.states.append(('Support Chance', ['Ally', 'Ally', 'Ally'], [0, 32, 64]))
+            if cf.CONSTANTS['support'] and False:  # TODO: Figure out what the hell this is
+                self.states.append(('Support Chance', ['Ally'], [11]))
             self.state_index = 0
             self.prev_state_index = 0
             self.unit_index = 1 # 0 means on banner
@@ -398,12 +398,22 @@ class UnitMenu(StateMachine.State):
     def draw_support_chance_state(self, surf, idx, gameStateObj):
         titles = self.states[idx][1]
         offsets = self.states[idx][2]
+        font = GC.FONT['text_white']
+        for idx in range(len(titles)):
+            font.blit(cf.WORDS[titles[idx]], surf, (offsets[idx], 0))
 
+        party_members = gameStateObj.get_units_in_party(gameStateObj.current_party)
         for idx, unit in enumerate(self.avail_units()):
             top = idx*16 + 16
+            counter = 0
             for index, (name, affinity, support_level) in enumerate(gameStateObj.support.get_supports(unit.id)):
-                pos = (24 + index*32 - GC.FONT['text_blue'].size(name)[0], top)
-                GC.FONT['text_blue'].blit(name, surf, pos)
+                pos = (9 + index*49, top)
+                if support_level > 0 and name in [unit.name for unit in party_members]:
+                    GC.FONT['text_blue'].blit(name, surf, pos)
+                    counter += 1
+            for index in range(counter, 3):
+                pos = (9 + index*49, top)
+                GC.FONT['text_blue'].blit('---', surf, pos)
 
         return titles, offsets
 

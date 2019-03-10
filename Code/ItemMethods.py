@@ -344,13 +344,15 @@ class AOEComponent(object):
             splash_positions = [position for position in splash_positions if position != unit_position]
             return None, splash_positions
         elif self.mode == 'AllAllies':
-            splash_positions = [unit.position for unit in gameStateObj.allunits if item.item_owner.checkIfAlly(unit)]
+            item_owner = gameStateObj.get_unit_from_id(item.item_owner)
+            splash_positions = [unit.position for unit in gameStateObj.allunits if unit.position and item_owner.checkIfAlly(unit)]
             return None, splash_positions
         elif self.mode == 'AllEnemies':
-            splash_positions = [unit.position for unit in gameStateObj.allunits if item.item_owner.checkIfEnemy(unit)]
+            item_owner = gameStateObj.get_unit_from_id(item.item_owner)
+            splash_positions = [unit.position for unit in gameStateObj.allunits if unit.position and item_owner.checkIfEnemy(unit)]
             return None, splash_positions
         elif self.mode == 'AllUnits':
-            splash_positions = [unit.position for unit in gameStateObj.allunits]
+            splash_positions = [unit.position for unit in gameStateObj.allunits if unit.position]
             return None, splash_positions
         elif self.mode == 'AllTiles':
             splash_positions = tileMap.tiles.keys()
