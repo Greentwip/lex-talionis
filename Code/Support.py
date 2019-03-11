@@ -221,10 +221,11 @@ class Support_Graph(object):
         for other_id, edge in node.adjacent.items():
             if other_id in other_ids:
                 Action.do(Action.SupportGain(unit.id, other_id, gain), gameStateObj)
-                # edge.increment(gain)
-
-    def end_turn(self, unit, gameStateObj):
-        self._end_general(unit, gameStateObj, cf.CONSTANTS['support_end_turn'])
+                
+    def end_turn(self, gameStateObj):
+        for unit in gameStateObj.allunits:
+            if unit.position and unit.team == 'player':
+                self._end_general(unit, gameStateObj, cf.CONSTANTS['support_end_turn'])
 
     def end_combat(self, unit, gameStateObj):
         self._end_general(unit, gameStateObj, cf.CONSTANTS['support_combat'])

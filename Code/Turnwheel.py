@@ -96,12 +96,26 @@ class ActionLog(object):
                     finalize(current_move)
                     current_move = None
                 self.unique_moves.append(('Lock', action_index, action.lock))
-        self.current_move_index = len(self.unique_moves)
 
+        # Handle extra actions off the right of the action log (like equipping an item)
+        if self.unique_moves:
+            last_move = self.unique_moves[-1]
+            last_action_index = len(self.actions) - 1
+            if isinstance(last_move, self.Move):
+                if last_move.end < last_action_index:
+                    self.unique_moves.append(('Extra', last_move.end + 1, last_action_index))
+            elif last_move < last_action_index:
+                self.unique_moves.append(('Extra', last_move[1] + 1, last_action_index))
+
+        print('*** Turnwheel Begin! ***')
         print(self.unique_moves)
 
+        self.current_move_index = len(self.unique_moves)
+
+        # Determine starting lock
         self.locked = self.get_last_lock()
 
+        # Get the text message
         for move in reversed(self.unique_moves):
             if isinstance(move, self.Move):
                 if move.end:
@@ -153,30 +167,33 @@ class ActionLog(object):
                     gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)                    
                     self.hover_on(self.current_unit, gameStateObj)
                     return []
-        else:
-            if self.current_move[0] == 'Phase':
-                while self.action_index > self.current_move[1]:
-                    action = self.run_action_backward(gameStateObj)
-                if self.hovered_unit:
-                    self.hover_off(gameStateObj)
-                if self.current_move[2] == 'player':
-                    gameStateObj.cursor.autocursor(gameStateObj)
-                return ["Start of %s Phase" % self.current_move[2].capitalize()]
-            elif self.current_move[0] == 'Arrive':
-                while self.action_index >= self.current_move[1]:
-                    action = self.run_action_backward(gameStateObj)
-                if self.hovered_unit:
-                    self.hover_off(gameStateObj)
-                next_move = self.unique_moves[self.current_move_index - 1]
-                if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
-                    return self.backward(gameStateObj)
-                else:
-                    return []
-            elif self.current_move[0] == 'Lock':
-                while self.action_index >= self.current_move[1]:
-                    action = self.run_action_backward(gameStateObj)
-                self.locked = self.get_last_lock()
-                return self.backward(gameStateObj)  # Go again
+        elif self.current_move[0] == 'Phase':
+            while self.action_index > self.current_move[1]:
+                action = self.run_action_backward(gameStateObj)
+            if self.hovered_unit:
+                self.hover_off(gameStateObj)
+            if self.current_move[2] == 'player':
+                gameStateObj.cursor.autocursor(gameStateObj)
+            return ["Start of %s Phase" % self.current_move[2].capitalize()]
+        elif self.current_move[0] == 'Arrive':
+            while self.action_index >= self.current_move[1]:
+                action = self.run_action_backward(gameStateObj)
+            if self.hovered_unit:
+                self.hover_off(gameStateObj)
+            next_move = self.unique_moves[self.current_move_index - 1]
+            if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
+                return self.backward(gameStateObj)
+            else:
+                return []
+        elif self.current_move[0] == 'Lock':
+            while self.action_index >= self.current_move[1]:
+                action = self.run_action_backward(gameStateObj)
+            self.locked = self.get_last_lock()
+            return self.backward(gameStateObj)  # Go again
+        elif self.current_move[0] == 'Extra':
+            while self.action_index >= self.current_move[1]:
+                action = self.run_action_backward(gameStateObj)
+            return self.backward(gameStateObj)  # Go again
 
     def forward(self, gameStateObj):
         if self.current_move_index >= len(self.unique_moves):
@@ -197,6 +214,11 @@ class ActionLog(object):
                 text_list = self.get_unit_turn(self.current_unit, self.action_index)
                 print("In Forward", text_list, self.current_unit.name, action)
                 self.current_unit = None
+                # Extra Moves
+                if self.current_move_index < len(self.unique_moves):
+                    next_move = self.unique_moves[self.current_move_index]
+                    if isinstance(next_move, tuple) and next_move[0] == 'Extra':
+                        self.forward(gameStateObj)  # Skip through the extra move
                 return text_list
             else:
                 if self.hovered_unit:
@@ -209,30 +231,36 @@ class ActionLog(object):
                 self.hover_on(self.current_unit, gameStateObj)
                 self.current_move_index -= 1  # Make sure we don't skip second half of this
                 return []
-        else:
-            if self.current_move[0] == 'Phase':
-                while self.action_index < self.current_move[1]:
-                    action = self.run_action_forward(gameStateObj)
-                if self.hovered_unit:
-                    self.hover_off(gameStateObj)
-                if self.current_move[2] == 'player':
-                    gameStateObj.cursor.autocursor(gameStateObj)
-                return ["Start of %s Phase" % self.current_move[2].capitalize()]
-            elif self.current_move[0] == 'Arrive':
-                while self.action_index < self.current_move[1]:
-                    action = self.run_action_forward(gameStateObj)
-                if self.hovered_unit:
-                    self.hover_off(gameStateObj)
+        elif self.current_move[0] == 'Phase':
+            while self.action_index < self.current_move[1]:
+                action = self.run_action_forward(gameStateObj)
+            if self.hovered_unit:
+                self.hover_off(gameStateObj)
+            if self.current_move[2] == 'player':
+                gameStateObj.cursor.autocursor(gameStateObj)
+            return ["Start of %s Phase" % self.current_move[2].capitalize()]
+        elif self.current_move[0] == 'Arrive':
+            while self.action_index < self.current_move[1]:
+                action = self.run_action_forward(gameStateObj)
+            if self.hovered_unit:
+                self.hover_off(gameStateObj)                    
+            if self.current_move_index < len(self.unique_moves):
                 next_move = self.unique_moves[self.current_move_index]
-                if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
-                    return self.forward(gameStateObj)
-                else:
-                    return []
-            elif self.current_move[0] == 'Lock':
-                while self.action_index < self.current_move[1]:
-                    action = self.run_action_forward(gameStateObj)
-                self.locked = self.current_move[2]
-                return self.forward(gameStateObj)  # Go again
+            else:
+                next_move = None
+            if isinstance(next_move, tuple) and next_move[0] == 'Arrive':
+                return self.forward(gameStateObj)
+            else:
+                return []
+        elif self.current_move[0] == 'Lock':
+            while self.action_index < self.current_move[1]:
+                action = self.run_action_forward(gameStateObj)
+            self.locked = self.current_move[2]
+            return self.forward(gameStateObj)  # Go again
+        elif self.current_move[0] == 'Extra':
+            while self.action_index < self.current_move[1]:
+                action = self.run_action_forward(gameStateObj)
+            return []
 
     def finalize(self):
         # Remove all actions after where we turned back to

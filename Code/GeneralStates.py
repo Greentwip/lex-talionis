@@ -31,6 +31,9 @@ class TurnChangeState(StateMachine.State):
         # gameStateObj.boundary_manager.draw_flag = 0
         # If player phase, save last position of cursor
         if gameStateObj.phase.get_current_phase() == 'player':
+            # Handle support increment
+            if gameStateObj.support and cf.CONSTANTS['support_end_turn']:
+                gameStateObj.support.end_turn(gameStateObj)
             gameStateObj.statedict['previous_cursor_position'] = gameStateObj.cursor.position
         # Clear all previous states in stateMachine except me - Loose the memory.
         current_state = gameStateObj.stateMachine.state[-1]

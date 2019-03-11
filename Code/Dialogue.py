@@ -673,9 +673,9 @@ class Dialogue_Scene(object):
                     gameStateObj.stateMachine.changeState('movement')
 
         # === HANDLE CURSOR
-        elif line[0] == 'set_cursor' or line[0] == 'place_cursor':
+        elif line[0] == 'set_cursor' or line[0] == 'center_cursor':
             coord = self.get_cursor_coord(line[1], gameStateObj)
-            if line[0] == 'set_cursor':
+            if line[0] == 'center_cursor':
                 gameStateObj.cursor.centerPosition(coord, gameStateObj)
             else:
                 gameStateObj.cursor.setPosition(coord, gameStateObj)
@@ -694,7 +694,7 @@ class Dialogue_Scene(object):
             self.scene_lines.insert(self.scene_lines_index + 1, 'disp_cursor;0')
             self.scene_lines.insert(self.scene_lines_index + 1, 'wait;1000')
             self.scene_lines.insert(self.scene_lines_index + 1, 'disp_cursor;1')
-            self.scene_lines.insert(self.scene_lines_index + 1, 'place_cursor;%s' % line[1])
+            self.scene_lines.insert(self.scene_lines_index + 1, 'set_cursor;%s' % line[1])
         elif line[0] == 'set_camera':
             pos1 = self.parse_pos(line[1], gameStateObj)
             if len(line) > 2:
@@ -888,6 +888,13 @@ class Dialogue_Scene(object):
                 for unit in gameStateObj.allunits:
                     if line[1] in (unit.id, unit.event_id, unit.team):
                         Action.do(Action.Reset(unit), gameStateObj)
+        elif line[0] == 'unit_wait':
+            if line[1] == '{unit}':
+                self.unit.wait(gameStateObj)
+            else:
+                for unit in gameStateObj.allunits:
+                    if line[1] in (unit.id, unit.event_id, unit.team):
+                        unit.wait(gameStateObj)
         elif line[0] == 'remove_enemies':
             exception = line[1] if len(line) > 1 else None
             units_to_remove = [unit for unit in gameStateObj.allunits if unit.position and unit.team.startswith("enemy") and unit.id != exception]

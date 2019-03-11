@@ -1747,9 +1747,6 @@ class UnitObject(object):
         logger.debug('%s %s waits', self.name, self)
 
         self.sprite.change_state('normal')
-        # Handle support increment
-        if self.position and gameStateObj.support and cf.CONSTANTS['support_end_turn']:
-            gameStateObj.support.end_turn(self, gameStateObj)
 
         # changing state
         Action.do(Action.Wait(self), gameStateObj)

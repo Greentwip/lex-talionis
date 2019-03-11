@@ -427,3 +427,25 @@
 	</units>
 </level>
 
+<level name="1">
+	<mode>Lunatic</mode>
+	<game_constants>money,1500;Supports,1;current_turnwheel_uses,-1;level,1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<level>1</level>
+			<exp>54</exp>
+			<items>Iron Sword 43</items>
+			<wexp>10,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>1</level>
+			<exp>22</exp>
+			<items>Glimmer 27,Heal 30</items>
+			<wexp>0,0,0,0,3,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+
