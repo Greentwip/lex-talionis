@@ -45,11 +45,13 @@ Casual death? Check other_game (- Check that casual doesn't have a death cooldow
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
 - Test filtering class wexp -- so you could do reclassing?
+=== These go together -- before animation special effects ===
 - Implement legendary animation
 - Implement Devil axe effect --  -- gotta think about this...
+- Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
+=============================================================
 - Test stationary weapon event tiles + saving + turnwheel
 - Add Fog of War
-- Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
 - Test removing a stat from stat list (InfoMenu, UnitMenu, Combat)
 
 To Test Action:

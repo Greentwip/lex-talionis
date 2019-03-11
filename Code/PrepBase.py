@@ -1416,7 +1416,8 @@ class BaseSupportConvoState(StateMachine.State):
     show_map = False
 
     def begin(self, gameStateObj, metaDataObj):
-        self.units = [unit for unit in gameStateObj.get_units_in_party(gameStateObj.current_party) if not unit.generic_flag]
+        self.units = [unit for unit in gameStateObj.get_units_in_party(gameStateObj.current_party)
+                      if not unit.generic_flag and unit.id in gameStateObj.support.node_dict]
 
         if not hasattr(self, 'state'):
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 1, 9, (4, 4))
@@ -1468,17 +1469,21 @@ class BaseSupportConvoState(StateMachine.State):
             if self.state:
                 GC.SOUNDDICT['Select 1'].play()
                 unit, level = gameStateObj.childMenu.getSelection()
-                owner = gameStateObj.childMenu.owner
-                edge = gameStateObj.support.node_dict[owner.id].adjacent[unit.id]
-                # print(level, edge.available_level())
-                if level < edge.available_level():
-                    if os.path.exists(edge.script):
-                        support_script = edge.script
+                if unit:
+                    owner = gameStateObj.childMenu.owner
+                    edge = gameStateObj.support.node_dict[owner.id].adjacent[unit.id]
+                    # print(level, edge.available_level())
+                    # if level < edge.available_level():
+                    if gameStateObj.support.can_support(unit.id, owner.id):
+                        if os.path.exists(edge.script):
+                            support_script = edge.script
+                        else:
+                            support_script = 'Data/SupportConvos/GenericScript.txt'
+                        gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=unit, unit2=owner, name=level))
+                        gameStateObj.stateMachine.changeState('dialogue')
+                        gameStateObj.stateMachine.changeState('transition_out')
                     else:
-                        support_script = 'Data/SupportConvos/GenericScript.txt'
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=unit, unit2=owner, name=level))
-                    gameStateObj.stateMachine.changeState('dialogue')
-                    gameStateObj.stateMachine.changeState('transition_out')
+                        GC.SOUNDDICT['Error'].play()
                 else:
                     GC.SOUNDDICT['Error'].play()
             else:
@@ -1496,7 +1501,7 @@ class BaseSupportConvoState(StateMachine.State):
                 gameStateObj.childMenu = None
                 gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
-            StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
 
 class BaseCodexChildState(StateMachine.State):
     show_map = False

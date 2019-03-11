@@ -857,11 +857,7 @@ class SupportMenu(object):
         self.back_surf.blit(shimmer, (136 - shimmer.get_width() - 1, 136 - shimmer.get_height() - 5))
         self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
 
-        self.currentSelection = 0
-        self.currentLevel = 0
-
         self.cursor = GC.IMAGESDICT['menuHand']
-
         self.cursor_flag = False
 
     def moveDown(self, first_push=True):
@@ -872,8 +868,8 @@ class SupportMenu(object):
             else:
                 self.currentSelection -= 1
         # Check limit for new row
-        limit = len(self.options[self.currentSelection][2].supports) - 1
-        self.currentLevel = min(self.currentLevel, limit)
+        limit = max(0, self.options[self.currentSelection][2].available_support_level() - 1)
+        self.currentLevel = Utility.clamp(self.currentLevel, 0, limit)
 
     def moveUp(self, first_push=True):
         self.currentSelection -= 1
@@ -883,13 +879,13 @@ class SupportMenu(object):
             else:
                 self.currentSelection += 1
         # Check limit for new row
-        limit = len(self.options[self.currentSelection][2].supports) - 1
-        self.currentLevel = min(self.currentLevel, limit)
+        limit = max(0, self.options[self.currentSelection][2].available_support_level() - 1)
+        self.currentLevel = Utility.clamp(self.currentLevel, 0, limit)
 
     def moveRight(self, first_push=True):
         self.currentLevel += 1
-        limit = len(self.options[self.currentSelection][2].supports) - 1
-        self.currentLevel = min(self.currentLevel, limit)
+        limit = max(0, self.options[self.currentSelection][2].available_support_level() - 1)
+        self.currentLevel = Utility.clamp(self.currentLevel, 0, limit)
 
     def moveLeft(self, first_push=True):
         self.currentLevel -= 1
@@ -902,6 +898,9 @@ class SupportMenu(object):
         return self.options[self.currentSelection][0], self.currentLevel
 
     def updateOptions(self, gameStateObj):
+        self.currentSelection = 0
+        self.currentLevel = 0
+
         names = list(gameStateObj.support.node_dict[self.owner.id].adjacent)
         # convert names to units
         self.options = []
@@ -919,8 +918,6 @@ class SupportMenu(object):
             affinity = gameStateObj.support.node_dict[name].affinity
             edge = gameStateObj.support.node_dict[self.owner.id].adjacent[name]
             self.options.append((other_unit, affinity, edge))
-
-        self.currentSelection = 0
 
     def update(self):
         pass
@@ -944,17 +941,20 @@ class SupportMenu(object):
 
             # Blit name
             position = (24 + 1, 4 + index*16)
-            GC.FONT['text_white'].blit(unit.name, back_surf, position)
+            if unit:
+                GC.FONT['text_white'].blit(unit.name, back_surf, position)
+            else:
+                GC.FONT['text_white'].blit('---', back_surf, position)
 
             # Blit Affinity
             affinity.draw(back_surf, (72, 3 + index*16))
 
             # Blit LVS
             letters = ['@', '`', '~', '%'] # C, B, A, S
-            limit = len(edge.supports)
+            limit = len(edge.support_limits)
             letters = letters[:limit]
             for level, letter in enumerate(letters):
-                if gameStateObj.support.can_support(unit.id, self.owner.id) and edge.support_level == level:
+                if unit and gameStateObj.support.can_support(unit.id, self.owner.id) and edge.support_level == level:
                     font = GC.FONT['text_green']
                 elif edge.support_level > level:
                     font = GC.FONT['text_white']
