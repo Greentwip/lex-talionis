@@ -761,8 +761,12 @@ class HelpGraph(object):
             self.help_boxes["Aid"] = Help_Box("Aid", (152, GC.TILEHEIGHT*3 + 26), Help_Dialog(cf.WORDS['Aid_desc']))
         self.help_boxes["Traveler"] = Help_Box("Traveler", (152, GC.TILEHEIGHT*4 + 26), Help_Dialog(cf.WORDS['Trv_desc']))
         if cf.CONSTANTS['support']:
-            affinity = gameStateObj.support.node_dict[self.unit.name].affinity
-            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog('Gives ' + affinity.desc))
+            if self.unit.name in gameStateObj.support.node_dict:
+                affinity_desc = gameStateObj.support.node_dict[self.unit.name].affinity.desc
+                affinity_desc = 'Gives ' + affinity_desc
+            else:
+                affinity_desc = cf.WORDS['NoAffin_desc']
+            self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog(affinity_desc))
         else:
             self.help_boxes["Affin"] = Help_Box("Affin", (152, GC.TILEHEIGHT*5 + 26), Help_Dialog(cf.WORDS['Rat_desc']))
 

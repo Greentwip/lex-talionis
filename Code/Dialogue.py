@@ -815,7 +815,7 @@ class Dialogue_Scene(object):
             Action.do(Action.ClearLayer(layer), gameStateObj)
         # Change one tile
         elif line[0] == 'replace_tile':
-            pos_list = self.get_position(line[1])
+            pos_list = self.get_position(line[1], gameStateObj)
             tile_id = int(line[2])
             Action.do(Action.ReplaceTiles(pos_list, tile_id), gameStateObj)
             self.reset_boundary_manager = True

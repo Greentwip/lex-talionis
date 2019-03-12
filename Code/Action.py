@@ -1376,7 +1376,8 @@ class ChangeTileSprite(Action):
         self.old_image_name = None
 
     def do(self, gameStateObj):
-        self.old_image_name = gameStateObj.map.tile_sprites[self.pos].image_name
+        if self.pos in gameStateObj.map.tile_sprites:
+            self.old_image_name = gameStateObj.map.tile_sprites[self.pos].image_name
         gameStateObj.map.change_tile_sprites(self.pos, self.sprite_name, self.size, self.transition)
 
     def execute(self, gameStateObj):
@@ -1404,7 +1405,7 @@ class ReplaceTiles(Action):
 
     def reverse(self, gameStateObj):
         for position, tile_id in self.old_ids.items():
-            gameStateObj.map.replace_tiles(position, tile_id, gameStateObj.grid_manager)
+            gameStateObj.map.replace_tile(position, tile_id, gameStateObj.grid_manager)
 
 class AreaReplaceTiles(Action):
     run_on_load = True

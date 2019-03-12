@@ -449,3 +449,39 @@
 	</units>
 </level>
 
+<level name="2">
+	<mode>Lunatic</mode>
+	<game_constants>current_turnwheel_uses,1;level,2;money,1500;max_turnwheel_uses,1;Turnwheel,1;Supports,1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<level>3</level>
+			<exp>41</exp>
+			<items>Iron Sword 35,Hand Axe 20</items>
+			<wexp>16,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>1</level>
+			<exp>92</exp>
+			<items>Heal 28,Glimmer 24</items>
+			<wexp>0,0,0,0,8,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Joel">
+			<level>4</level>
+			<exp>26</exp>
+			<items>Iron Axe 39,Vulnerary 3</items>
+			<wexp>0,0,22,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Nia">
+			<level>3</level>
+			<exp>75</exp>
+			<items>Willow Bow 39,Vulnerary 3</items>
+			<wexp>0,0,0,21,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+
