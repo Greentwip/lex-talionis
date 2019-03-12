@@ -9,7 +9,7 @@ Because this was coded entirely from scratch, we are not bound by the limitation
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
 # Downloads
-release v0.8.0 - 64-bit Windows only
+release v0.8.9 - 64-bit Windows only
 
 *Dropbox:* https://www.dropbox.com/s/1ikh26td9d68z5n/the_lion_throne.zip?dl=0
 
@@ -80,7 +80,7 @@ To get the Lex Talionis engine code on your machine, create a new folder.
 Then, in the command line or a terminal, type:
 
 ```
-git clone https://github.com/rainlash/lex-talionis
+git clone https://gitlab.com/rainlash/lex-talionis
 ```
 
 You will also need to download the audio files, which are not stored on Git because of their size. 
