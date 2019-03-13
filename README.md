@@ -33,7 +33,7 @@ Lex Talionis is the custom Fire Emblem engine that runs The Lion Throne. If you'
 
 Not interested in coding? That's fine -- you can create a whole new game with touching any code. 
 
-There is a simple [Tutorial](https://github.com/rainlash/lex-talionis/wiki) here, which will teach you how to get started today, without having to learn how to code! 
+There is a simple [Tutorial](https://gitlab.com/rainlash/lex-talionis/wikis/home) here, which will teach you how to get started today, without having to learn how to code! 
 
 But if you have Python experience or want to do something I did not expect, the code is entirely open-source and can be changed to meet your needs.
 
