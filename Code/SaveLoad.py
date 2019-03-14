@@ -207,8 +207,8 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
                 mode_bases = gameStateObj.mode['player_bases']
                 mode_growths = gameStateObj.mode['player_growths']
             else:
-                mode_bases = gameStateObj.mode['boss_bases']
-                mode_growths = gameStateObj.mode['boss_growths']
+                mode_bases = gameStateObj.mode.get('boss_bases', gameStateObj.mode['enemy_bases'])
+                mode_growths = gameStateObj.mode.get('boss_growths', gameStateObj.mode['enemy_growths'])
             stats = [sum(x) for x in zip(stats, mode_bases)]
             assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long" % (stats, cf.CONSTANTS['num_stats'])
 
@@ -223,7 +223,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             if u_i['team'] == 'player' or u_i['team'] == 'other':
                 num_autolevels = int(eval(gameStateObj.mode['autolevel_players']))
             else:
-                num_autolevels = int(eval(gameStateObj.mode['autolevel_bosses']))
+                num_autolevels = int(eval(gameStateObj.mode.get('autolevel_bosses', '0')))
             stats, u_i['growth_points'] = \
                 auto_level(stats, u_i['growths'], num_autolevels, class_dict[u_i['klass']]['max'], 
                            gameStateObj.mode, growth_points=u_i['growth_points'])

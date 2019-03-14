@@ -107,7 +107,10 @@ class MapObject(object):
     def change_tile_sprites(self, coord, image_filename, size, transition=None):
         for x in range(coord[0], coord[0] + size[0]):
             for y in range(coord[1], coord[1] + size[1]):
-                pos = (x - coord[0], y - coord[1])
+                if image_filename:
+                    pos = (x - coord[0], y - coord[1])
+                else:
+                    pos = (x, y)
                 self.tile_sprites[(x, y)] = TileSprite(None, (x, y), self)
                 if transition:
                     self.tile_sprites[(x, y)].new_image_name = image_filename
@@ -117,6 +120,7 @@ class MapObject(object):
                         # To be moved to global during next update
                         self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
                 else:
+                    print(x, y, image_filename, pos)
                     self.tile_sprites[(x, y)].image_name = image_filename
                     self.tile_sprites[(x, y)].position = pos
                     self.tile_sprites[(x, y)].loadSprites()
@@ -134,11 +138,13 @@ class MapObject(object):
         surf.blit(self.map_image, (0, 0))
         for position, tile in self.tile_sprites.items():
             tile.draw(surf, position)
-            
+        
+        """    
         need_draw = [position for position in self.tile_sprites if not self.tile_sprites[position].new_image]
         for position in need_draw:
             self.tile_sprites[position].draw(self.map_image, position) # Done, can place on main layer
             del self.tile_sprites[position] # Can delete now that it has been permanently etched onto map image
+        """
                 
         # Layers
         for layer in self.layers:
@@ -148,7 +154,7 @@ class MapObject(object):
         for pos, highlight in self.escape_highlights.items():
             highlight.draw(surf, pos, gameStateObj.highlight_manager.updateIndex, 0)
 
-        if gameStateObj.stateMachine.getState() in ['prep_formation', 'prep_formation_select']:
+        if gameStateObj.stateMachine.getState() in ('prep_formation', 'prep_formation_select'):
             for pos, highlight in self.formation_highlights.items():
                 highlight.draw(surf, pos, gameStateObj.highlight_manager.updateIndex, 0)
 
