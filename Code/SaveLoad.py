@@ -207,8 +207,8 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
                 mode_bases = gameStateObj.mode['player_bases']
                 mode_growths = gameStateObj.mode['player_growths']
             else:
-                mode_bases = gameStateObj.mode['enemy_bases']
-                mode_growths = gameStateObj.mode['enemy_growths']
+                mode_bases = gameStateObj.mode['boss_bases']
+                mode_growths = gameStateObj.mode['boss_growths']
             stats = [sum(x) for x in zip(stats, mode_bases)]
             assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long" % (stats, cf.CONSTANTS['num_stats'])
 
@@ -219,6 +219,14 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
 
             num_levelups = u_i['level'] - 1 + (cf.CONSTANTS['promoted_level'] if class_dict[u_i['klass']]['tier'] > 1 else 0)
             stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj.mode)
+            # Handle autolevels
+            if u_i['team'] == 'player' or u_i['team'] == 'other':
+                num_autolevels = int(eval(gameStateObj.mode['autolevel_players']))
+            else:
+                num_autolevels = int(eval(gameStateObj.mode['autolevel_bosses']))
+            stats, u_i['growth_points'] = \
+                auto_level(stats, u_i['growths'], num_autolevels, class_dict[u_i['klass']]['max'], 
+                           gameStateObj.mode, growth_points=u_i['growth_points'])
 
             u_i['stats'] = build_stat_dict(stats)
             logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
@@ -458,9 +466,10 @@ def get_skills(unit, classes, level, gameStateObj, feat=True, seed=0):
     # handle having a status that gives stats['HP']
     unit.set_hp(int(unit.stats['HP']))
 
-def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False):
+def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False, growth_points=None):
     stats = bases[:]
-    growth_points = [50 for growth in growths]
+    if not growth_points:
+        growth_points = [50 for growth in growths]
     leveling = cf.CONSTANTS['enemy_leveling']
 
     if leveling == 3:

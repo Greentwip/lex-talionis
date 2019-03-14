@@ -711,7 +711,7 @@ class Primary_AI(object):
                 target_damage = Utility.clamp(target.compute_damage(self.unit, gameStateObj, target.getMainWeapon(), 'Defense')/float(self.unit.currenthp), 0, 1)
                 target_accuracy = Utility.clamp(target.compute_hit(self.unit, gameStateObj, target.getMainWeapon(), 'Defense')/100.0, 0, 1)
 
-            double = 1 if self.unit.attackspeed() >= target.attackspeed() + cf.CONSTANTS['speed_to_double'] else 0
+            double = 1 if self.unit.outspeed(target, item, gameStateObj) else 0
             chance_i_kill_target_on_first = my_damage*my_accuracy if my_damage == 1 else 0
 
             if double and target_damage >= 1:

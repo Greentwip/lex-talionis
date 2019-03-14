@@ -625,7 +625,7 @@ class InfoMenu(StateMachine.State):
             dam = '--'
             acc = '--'
         avo = str(self.unit.avoid(gameStateObj))
-        atkspd = str(self.unit.attackspeed())
+        atkspd = str(self.unit.attackspeed(gameStateObj))
         RngWidth = GC.FONT['text_blue'].size(rng)[0]
         AtkWidth = GC.FONT['text_blue'].size(dam)[0]
         HitWidth = GC.FONT['text_blue'].size(acc)[0]

@@ -128,8 +128,10 @@ def create_difficulty_dict(fp):
         cur['name'] = name
         cur['enemy_growths'] = [int(num) for num in cur['enemy_growths'].split(',')]
         cur['player_growths'] = [int(num) for num in cur['player_growths'].split(',')]
+        cur['boss_growths'] = [int(num) for num in cur['boss_growths'].split(',')]
         cur['enemy_bases'] = [int(num) for num in cur['enemy_bases'].split(',')]
         cur['player_bases'] = [int(num) for num in cur['player_bases'].split(',')]
+        cur['boss_bases'] = [int(num) for num in cur['boss_bases'].split(',')]
     return difficulty_dict
 DIFFICULTYDATA = create_difficulty_dict(loc + 'Data/difficulty_modes.xml')
 

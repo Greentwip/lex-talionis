@@ -226,20 +226,20 @@ class Solver(object):
         else:
             return False
 
-    def defender_has_vantage(self):
-        return isinstance(self.defender, UnitObject.UnitObject) and self.defender.outspeed(self.attacker, self.defender.getMainWeapon()) and \
+    def defender_has_vantage(self, gameStateObj):
+        return isinstance(self.defender, UnitObject.UnitObject) and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj) and \
             'vantage' in self.defender.status_bundle and not self.item.cannot_be_countered and \
             self.defender_can_counterattack() and self.item.weapon
 
-    def def_double(self):
+    def def_double(self, gameStateObj):
         return (cf.CONSTANTS['def_double'] or 'vantage' in self.defender.status_bundle or 'def_double' in self.defender.status_bundle) and \
-            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.defender.getMainWeapon())
+            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj)
 
     def determine_state(self, gameStateObj):
         logger.debug('Interaction State 1: %s', self.state)
         if self.state == 'Init':
             if self.defender:
-                if self.defender_has_vantage():
+                if self.defender_has_vantage(gameStateObj):
                     self.state = 'Defender'
                 else:
                     self.state = 'Attacker'
@@ -260,11 +260,11 @@ class Solver(object):
             elif self.defender.currenthp > 0:
                 if self.item.brave and self.item_uses(self.item) and self.defender.currenthp > 0:
                     self.state = 'AttackerBrave'
-                elif (self.def_rounds < 1 or self.def_double()) and \
+                elif (self.def_rounds < 1 or self.def_double(gameStateObj)) and \
                         self.item.weapon and not self.item.cannot_be_countered and isinstance(self.defender, UnitObject.UnitObject) and \
                         self.defender_can_counterattack():
                     self.state = 'Defender'
-                elif self.atk_rounds < 2 and self.item.weapon and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item):
+                elif self.atk_rounds < 2 and self.item.weapon and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item):
                     self.state = 'Attacker'
                 else:
                     self.state = 'Done'
@@ -281,12 +281,12 @@ class Solver(object):
                 else:
                     self.index = 0
                     self.state = 'SplashBrave'
-            elif (self.def_rounds < 1 or self.def_double()) and \
+            elif (self.def_rounds < 1 or self.def_double(gameStateObj)) and \
                     self.item.weapon and self.defender and isinstance(self.defender, UnitObject.UnitObject) and \
                     self.defender.currenthp > 0 and self.defender_can_counterattack() and not self.item.cannot_be_countered:
                 self.index = 0
                 self.state = 'Defender'
-            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and \
+            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and \
                     self.item_uses(self.item) and self.defender.currenthp > 0:
                 self.index = 0
                 self.state = 'Attacker'
@@ -297,11 +297,11 @@ class Solver(object):
             if self.splash:
                 self.state = 'SplashBrave'
                 self.index = 0
-            elif (self.def_rounds < 1 or self.def_double()) and \
+            elif (self.def_rounds < 1 or self.def_double(gameStateObj)) and \
                     self.item.weapon and self.defender and isinstance(self.defender, UnitObject.UnitObject) and \
                     not self.item.cannot_be_countered and self.defender.currenthp > 0 and self.defender_can_counterattack():
                 self.state = 'Defender'
-            elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item) and self.defender.currenthp > 0:
+            elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item) and self.defender.currenthp > 0:
                 self.state = 'Attacker'
             else:
                 self.state = 'Done'
@@ -309,11 +309,11 @@ class Solver(object):
         elif self.state == 'SplashBrave':
             if self.index < len(self.splash):
                 self.state = 'SplashBrave'
-            elif (self.def_rounds < 1 or self.def_double()) and \
+            elif (self.def_rounds < 1 or self.def_double(gameStateObj)) and \
                     self.item.weapon and self.defender and isinstance(self.defender, UnitObject.UnitObject) and \
                     self.defender.currenthp > 0 and self.defender_can_counterattack() and not self.item.cannot_be_countered:
                 self.state = 'Defender'
-            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and \
+            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and \
                     self.item_uses(self.item) and self.defender.currenthp > 0:
                 self.state = 'Attacker'
             else:
@@ -324,21 +324,21 @@ class Solver(object):
             if self.attacker.currenthp > 0:
                 if self.defender.getMainWeapon().brave and self.item_uses(self.defender.getMainWeapon()):
                     self.state = 'DefenderBrave'
-                elif self.def_rounds < 2 and self.defender_has_vantage():
+                elif self.def_rounds < 2 and self.defender_has_vantage(gameStateObj):
                     self.state = 'Attacker'
-                elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item) and not self.item.no_double:
+                elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item) and not self.item.no_double:
                     self.state = 'Attacker'
-                elif self.def_double() and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
+                elif self.def_double(gameStateObj) and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
                     self.state = 'Defender'
 
         elif self.state == 'DefenderBrave':
             self.state = 'Done'
             if self.attacker.currenthp > 0:
-                if self.def_rounds < 2 and self.defender_has_vantage():
+                if self.def_rounds < 2 and self.defender_has_vantage(gameStateObj):
                     self.state = 'Attacker'
-                if self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item) and self.item_uses(self.item) and not self.item.no_double:
+                if self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item) and not self.item.no_double:
                     self.state = 'Attacker'
-                elif self.def_double() and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
+                elif self.def_double(gameStateObj) and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
                     self.state = 'Defender'
 
         elif self.state == 'Summon':

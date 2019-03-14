@@ -338,7 +338,7 @@ class UnitObject(object):
             if not my_wep.no_double:
                 if my_wep.brave:
                     my_num *= 2
-                if self.outspeed(enemyunit, my_wep):
+                if self.outspeed(enemyunit, my_wep, gameStateObj):
                     my_num *= 2
                 if my_wep.uses or my_wep.c_uses:
                     if my_wep.uses:
@@ -363,7 +363,8 @@ class UnitObject(object):
                         Utility.calculate_distance(self.position, enemyunit.position) in e_wep.get_range(enemyunit):
                     if e_wep.brave:
                         e_num *= 2
-                    if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and enemyunit.outspeed(self, e_wep):
+                    if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
+                            enemyunit.outspeed(self, e_wep, gameStateObj):
                         e_num *= 2
                 if e_num == 2:
                     surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
@@ -530,7 +531,7 @@ class UnitObject(object):
             dam = str(self.damage(gameStateObj, item))
             acc = str(self.accuracy(gameStateObj, item))
             avo = str(self.avoid(gameStateObj, item))
-            atkspd = str(self.attackspeed(item))
+            atkspd = str(self.attackspeed(gameStateObj, item))
             AtkWidth = GC.FONT['text_blue'].size(dam)[0]
             HitWidth = GC.FONT['text_blue'].size(acc)[0]
             AvoidWidth = GC.FONT['text_blue'].size(avo)[0]
@@ -1439,7 +1440,7 @@ class UnitObject(object):
 
         return bonuses
 
-    def outspeed(self, target, item):
+    def outspeed(self, target, item, gameStateObj, mode=None):
         """
         Returns bool: whether self doubles target
         """
@@ -1448,6 +1449,7 @@ class UnitObject(object):
 
         advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
         a, b = 0, 0
+        # Weapon Advantage
         if advantage[0] > 0:
             a += advantage[0] * Weapons.ADVANTAGE.get_advantage(item, self.wexp).attackspeed
         else:
@@ -1456,7 +1458,16 @@ class UnitObject(object):
             b += advantage[1] * Weapons.ADVANTAGE.get_advantage(target.getMainWeapon(), target.wexp).attackspeed
         else:
             b -= advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).attackspeed
-        return self.attackspeed() + a >= target.attackspeed() + b + cf.CONSTANTS['speed_to_double']
+        # Skills & Status
+        for status in self.status_effects:
+            if status.conditional_attackspeed and eval(status.conditional_attackspeed.conditional, globals(), locals()):
+                bonus = int(eval(status.conditional_attackspeed.value, globals(), locals()))
+                a += bonus
+        for status in target.status_effects:
+            if status.conditional_attackspeed and eval(status.conditional_attackspeed.conditional, globals(), locals()):
+                bonus = int(eval(status.conditional_attackspeed.value, globals(), locals()))
+                b += bonus
+        return self.attackspeed(gameStateObj, item) + a >= target.attackspeed(gameStateObj) + b + cf.CONSTANTS['speed_to_double']
 
     # computes the damage dealt by me using this item
     def compute_damage(self, target, gameStateObj, item, mode=None, hybrid=None, crit=0):
@@ -1621,10 +1632,13 @@ class UnitObject(object):
         else:
             return 0
 
-    def attackspeed(self, item=None):
+    def attackspeed(self, gameStateObj, item=None):
         if not item:
             item = self.getMainWeapon()
         attackspeed = GC.EQUATIONS.get_attackspeed(self, item)
+        for status in self.status_effects:
+            if status.attackspeed:
+                attackspeed += int(eval(status.attackspeed, globals(), locals()))
         return attackspeed
 
     def accuracy(self, gameStateObj, item=None, dist=0):

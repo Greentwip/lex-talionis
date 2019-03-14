@@ -13,12 +13,15 @@
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
         <enemy_growths>0,0,0,0,0,0,0,0,0,0</enemy_growths>
+        <boss_growths>0,0,0,0,0,0,0,0,0,0</boss_growths>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
         <enemy_bases>0,0,0,0,0,0,0,0,0,0</enemy_bases>
+        <boss_bases>0,0,0,0,0,0,0,0,0,0</boss_bases>
 
         <autolevel_enemies>0</autolevel_enemies>
         <autolevel_players>0</autolevel_players>
+        <autolevel_bosses>0</autolevel_bosses>
 
         <truelevel_enemies>0</truelevel_enemies>
     </difficulty>
@@ -36,12 +39,15 @@
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_growths>20,10,5,15,5,0,0,0,0,0</player_growths>
         <enemy_growths>5,35,35,20,30,20,0,0,0,0</enemy_growths>
+        <boss_growths>5,35,35,20,30,20,0,0,0,0</boss_growths>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
         <enemy_bases>0,0,1,0,0,0,0,0,0,0</enemy_bases>
+        <boss_bases>0,0,0,0,0,0,0,0,0,0</boss_bases>
 
         <autolevel_enemies>0</autolevel_enemies>
         <autolevel_players>0</autolevel_players>
+        <autolevel_bosses>0</autolevel_bosses>
 
         <truelevel_enemies>game_constants['level']//5</truelevel_enemies>
     </difficulty>
@@ -59,12 +65,15 @@
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
         <enemy_growths>0,0,0,0,0,0,0,0,0,0</enemy_growths>
+        <boss_growths>0,0,0,0,0,0,0,0,0,0</boss_growths>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
         <enemy_bases>0,0,0,0,0,0,0,0,0,0</enemy_bases>
+        <boss_bases>0,0,0,0,0,0,0,0,0,0</boss_bases>
 
         <autolevel_enemies>0</autolevel_enemies>
         <autolevel_players>0</autolevel_players>
+        <autolevel_bosses>0</autolevel_bosses>
 
         <truelevel_enemies>0</truelevel_enemies>
     </difficulty>
