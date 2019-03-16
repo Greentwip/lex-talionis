@@ -99,8 +99,6 @@ class Cursor(object):
         GC.SOUNDDICT['Select 5'].play()
         x, y = self.position
         self.position = x + dx, y + dy
-        if gameStateObj.highlight_manager.check_arrow(self.position):
-            self.border_position = self.position
         self.place_arrows(gameStateObj)
         # Remove unit display
         self.remove_unit_display()
@@ -114,7 +112,8 @@ class Cursor(object):
                 self.spriteOffset[1] += 12*dy
 
     def place_arrows(self, gameStateObj):
-        # if gameStateObj.stateMachine.getState() == 'move' and gameStateObj.highlight_manager.check_arrow(self.position):
+        if gameStateObj.highlight_manager.check_arrow(self.position):
+            self.border_position = self.position
         if gameStateObj.stateMachine.getState() == 'move':
             if self.border_position:
                 self.movePath = self.currentSelectedUnit.getPath(gameStateObj, self.border_position)

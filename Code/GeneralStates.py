@@ -2867,7 +2867,7 @@ class ShopState(StateMachine.State):
             gameStateObj.stateMachine.changeState("transition_in")
             return 'repeat'
 
-    def init_draw(self, gameStateObj, metaDataObj):
+    def init_draw(self):
         self.draw_surfaces = []
         # Light background
         bg = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH+8, 48), 'ClearMenuBackground')

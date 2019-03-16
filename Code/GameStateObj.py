@@ -229,20 +229,6 @@ class GameStateObj(object):
 
         # Map
         self.map = SaveLoad.create_map('Data/Level' + str(self.game_constants['level']))
-        if map_info:
-            self.action_log.replay_map_commands(self)
-            for position, current_hp in map_info.get('HP', []):
-                self.map.tiles[position].set_hp(current_hp)
-            # for position, serialized_item in map_info.get('Weapons', []):
-            #     self.map.tile_info_dict[position]['Weapon'] = ItemMethods.deserialize(serialized_item)
-
-        # Support
-        if cf.CONSTANTS['support']:
-            self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt')
-            self.support.deserialize(support_dict)
-        else:
-            self.support = None
-
         # Set up blitting surface
         if self.map:
             mapSurfWidth = self.map.width * GC.TILEWIDTH
@@ -250,11 +236,27 @@ class GameStateObj(object):
             self.mapSurf = Engine.create_surface((mapSurfWidth, mapSurfHeight))
 
             self.grid_manager = AStar.Grid_Manager(self.map)
+
+        if map_info:
+            self.action_log.replay_map_commands(self)
+            for position, current_hp in map_info.get('HP', []):
+                self.map.tiles[position].set_hp(current_hp)
+            # for position, serialized_item in map_info.get('Weapons', []):
+            #     self.map.tile_info_dict[position]['Weapon'] = ItemMethods.deserialize(serialized_item)
+
+        if self.map:
             self.boundary_manager = Boundary.BoundaryInterface(self.map)
 
             for unit in self.allunits:
                 if unit.position:
                     self.grid_manager.set_unit_node(unit.position, unit)
+
+        # Support
+        if cf.CONSTANTS['support']:
+            self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt')
+            self.support.deserialize(support_dict)
+        else:
+            self.support = None
 
         self.generic()
         if 'phase_info' in load_info:

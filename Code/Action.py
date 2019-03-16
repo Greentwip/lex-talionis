@@ -268,8 +268,6 @@ class PlaceOnMap(Action):
 
 class Wait(Action):
     def __init__(self, unit):
-        print(unit)
-        print(unit.name)
         self.unit = unit
         self.hasMoved = unit.hasMoved
         self.hasTraded = unit.hasTraded
@@ -540,8 +538,6 @@ class TradeItem(Action):
         self.item2 = item2
         self.item_index1 = unit1.items.index(item1) if item1 != "EmptySlot" else 4
         self.item_index2 = unit2.items.index(item2) if item2 != "EmptySlot" else 4
-        self.hasTraded = self.unit1.hasTraded
-        self.hasMoved = self.unit1.hasMoved
 
     def swap(self, unit1, unit2, item1, item2, item_index1, item_index2, gameStateObj):
         # Do the swap
@@ -554,13 +550,23 @@ class TradeItem(Action):
 
     def do(self, gameStateObj):
         self.swap(self.unit1, self.unit2, self.item1, self.item2, self.item_index1, self.item_index2, gameStateObj)
-        self.unit1.hasTraded = True
-        self.unit1.hasMoved = True
 
     def reverse(self, gameStateObj):
         self.swap(self.unit1, self.unit2, self.item2, self.item1, self.item_index2, self.item_index1, gameStateObj)
-        self.unit1.hasTraded = self.hasTraded
-        self.unit1.hasMoved = self.hasMoved
+
+class OwnerHasTraded(Action):
+    def __init__(self, owner):
+        self.owner = owner
+        self.hasTraded = self.owner.hasTraded
+        self.hasMoved = self.owner.hasMoved
+
+    def do(self, gameStateObj):
+        self.owner.hasTraded = True
+        self.owner.hasMoved = True
+
+    def reverse(self, gameStateObj):
+        self.owner.hasTraded = self.hasTraded
+        self.owner.hasMoved = self.hasMoved
 
 class UseItem(Action):
     """

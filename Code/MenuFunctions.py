@@ -1790,17 +1790,21 @@ class TradeMenu(Counters.CursorControl):
         if self.selection2 < cf.CONSTANTS['max_items']:
             if self.selection1 < cf.CONSTANTS['max_items']:
                 Action.do(Action.TradeItem(self.owner, self.owner, item2, item1), gameStateObj)
+                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
                 # self.swap(self.owner, self.owner, item1, item2)
             else:
                 # self.swap(self.owner, self.partner, item1, item2)
                 Action.do(Action.TradeItem(self.owner, self.partner, item2, item1), gameStateObj)
+                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
         else:
             if self.selection1 < cf.CONSTANTS['max_items']:
                 # self.swap(self.partner, self.owner, item1, item2)
                 Action.do(Action.TradeItem(self.partner, self.owner, item2, item1), gameStateObj)
+                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
             else:
                 # self.swap(self.partner, self.partner, item1, item2)
                 Action.do(Action.TradeItem(self.partner, self.partner, item2, item1), gameStateObj)
+                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
 
         self.selection2 = None
         # self.owner.hasTraded = True
