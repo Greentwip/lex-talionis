@@ -1623,7 +1623,9 @@
         <uses>1</uses>
         <RNG>0-1</RNG>
         <value>200</value>
-        <desc>Opens locked doors and chests.</desc>   
+        <desc>Opens locked doors and chests.</desc>
+        
+        <key>Chest,Door</key>   
     </item>
 
     <item name="Angelic Robe">

@@ -525,6 +525,9 @@ class Dialogue_Scene(object):
                 if item:
                     gameStateObj.add_item(item)
                     self.add_item(receiver, item, gameStateObj, 'no_banner' not in line)
+                    tile = gameStateObj.map.tiles.get(self.tile_pos, None)
+                    if self.unit and self.unit.team != 'player' and tile and tile.name == "Chest":
+                        Action.do(Action.MakeItemDroppable(self.unit, item), gameStateObj)
                 else:
                     logger.error("Could not find item matching %s", line[2])
             elif line[2] == "0" and 'no_banner' not in line:

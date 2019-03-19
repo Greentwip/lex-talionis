@@ -566,11 +566,22 @@ class MenuState(StateMachine.State):
                     options.append(cf.WORDS['Vendor'])
             # If the unit is on or adjacent to an unlockable door or on a treasure chest
             if not cur_unit.hasAttacked:
-                if 'locktouch' in cur_unit.status_bundle or any(item.key for item in cur_unit.items):
-                    if cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[cur_unit.position]:
+                tile_info = gameStateObj.map.tile_info_dict
+                tiles = gameStateObj.map.tiles
+                unlock_key = cur_unit.get_unlock_key()
+                if 'locktouch' in cur_unit.status_bundle:
+                    if cf.WORDS['Locked'] in tile_info[cur_unit.position]:
                         options.append(cf.WORDS['Unlock'])
-                    elif any([cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[tile.position] for tile in adjtiles]):
+                    elif any(cf.WORDS['Locked'] in tile_info[tile.position] for tile in adjtiles):
                         options.append(cf.WORDS['Unlock'])
+                elif unlock_key:
+                    if cf.WORDS['Locked'] in tile_info[cur_unit.position] and tiles[cur_unit.position].name in unlock_key.key.split(','):
+                        options.append(cf.WORDS['Unlock'])
+                    else:
+                        for tile in adjtiles:
+                            if cf.WORDS['Locked'] in tile_info[tile.position] and tile.name in unlock_key.key.split(','):
+                                options.append(cf.WORDS['Unlock'])
+                                break
             # If the unit is on a searchable tile
             if 'Search' in gameStateObj.map.tile_info_dict[cur_unit.position] and not cur_unit.hasAttacked:
                 options.append(cf.WORDS['Search'])
@@ -774,7 +785,7 @@ class MenuState(StateMachine.State):
                     gameStateObj.cursor.setPosition(closest_position, gameStateObj)
                     gameStateObj.stateMachine.changeState('unlockselect')
                 elif len(avail_pos) == 1:
-                    item = cur_unit.get_unlock_item()
+                    item = cur_unit.get_unlock_key()
                     cur_unit.unlock(avail_pos[0], item, gameStateObj)
                 else:
                     logger.error('Made a mistake in allowing unit to access Unlock!')
@@ -1404,7 +1415,7 @@ class SelectState(StateMachine.State):
                     gameStateObj.stateMachine.changeState('dialogue')
             elif self.name == 'unlockselect':
                 gameStateObj.stateMachine.changeState('menu')
-                item = cur_unit.get_unlock_item()
+                item = cur_unit.get_unlock_key()
                 cur_unit.unlock(gameStateObj.cursor.position, item, gameStateObj)
             else:
                 logger.warning('SelectState does not have valid name: %s', self.name)

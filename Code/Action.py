@@ -871,6 +871,7 @@ class Miracle(Action):
 class Die(Action):
     def __init__(self, unit):
         self.unit = unit
+        self.old_pos = self.unit.position
         self.leave_map = LeaveMap(self.unit)
         self.drop = None
 
@@ -948,15 +949,15 @@ class ChangeAI(Action):
 class AIGroupPing(Action):
     def __init__(self, unit):
         self.unit = unit
-        self.old_range = self.unit.ai.range
+        self.old_range = self.unit.ai.view_range
         self.old_ai_group_flag = self.unit.ai.ai_group_flag
 
     def do(self, gameStateObj):
-        self.unit.ai.range = 2 # allow group to see whole universe
+        self.unit.ai.view_range = 2 # allow group to see whole universe
         self.unit.ai.ai_group_flag = True # Don't need to do this more than once
 
     def reverse(self, gameStateObj):
-        self.unit.ai.range = self.old_range
+        self.unit.ai.view_range = self.old_range
         self.unit.ai.ai_group_flag = self.old_ai_group_flag
 
 class ChangeParty(Action):
@@ -986,6 +987,24 @@ class GiveGold(Action):
 
     def reverse(self, gameStateObj):
         gameStateObj.inc_money(-self.amount, self.party)
+
+class MakeItemDroppable(Action):
+    """ 
+    Done after adding item to unit
+    """
+    def __init__(self, unit, item):
+        self.unit = unit
+        self.item_to_drop = item
+        self.drop = [i.droppable for i in self.unit.items]
+
+    def do(self, gameStateObj):
+        for item in self.unit.items:
+            item.droppable = False
+        self.item_to_drop.droppable = True
+
+    def reverse(self, gameStateObj):
+        for idx, item in enumerate(self.unit.items):
+            item.droppable = self.drop[idx]
 
 class ChangeGameConstant(Action):
     def __init__(self, constant, new_value):
@@ -1350,10 +1369,6 @@ class FinalizeActiveSkill(Action):
 
     def do(self, gameStateObj):
         self.status.active.current_charge = 0
-        # If no other active skills, can remove active skill charged
-        if not any(skill.active and skill.active.required_charge > 0 and 
-                   skill.active.current_charge >= skill.active.required_charge for skill in self.unit.status_effects):
-            self.unit.tags.discard('ActiveSkillCharged')
         if self.status.active.mode == 'Attack':
             self.status.active.reverse_mod()
 

@@ -65,7 +65,8 @@ class UnitSprite(object):
         top = y * GC.TILEHEIGHT + self.spriteOffset[1]
 
         # Active Skill Icon
-        if not self.unit.isDying and 'ActiveSkillCharged' in self.unit.tags:
+        if not self.unit.isDying and any(status.active.check_charged() and status.active.required_charge > 0
+                                         for status in self.unit.status_effects if status.active):
             active_icon = GC.ICONDICT["ActiveSkill"]
             active_icon = Engine.subsurface(active_icon, (GC.PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
             topleft = (left - max(0, (active_icon.get_width() - 16)//2), top - max(0, (active_icon.get_height() - 16)//2))

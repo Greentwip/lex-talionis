@@ -1847,7 +1847,6 @@ class UnitObject(object):
                 status.automatic.reset_charge()
             if status.tether:
                 Action.UnTetherStatus(status).do(gameStateObj)
-        self.tags.discard('ActiveSkillCharged')
         # Items with chapter counts should be reset
         for item in self.items:
             if item.c_uses:
@@ -2016,8 +2015,8 @@ class UnitObject(object):
                 gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
                 gameStateObj.stateMachine.changeState('itemgain')
 
-    def get_unlock_item(self):
-        keys = [item for item in self.items if item.unlock and not item.spell]
+    def get_unlock_key(self):
+        keys = [item for item in self.items if item.key]
         item = None
         if keys and 'locktouch' not in self.status_bundle:
             item = keys[0]

@@ -901,13 +901,13 @@ class SupportMenu(object):
         self.currentSelection = 0
         self.currentLevel = 0
 
-        names = list(gameStateObj.support.node_dict[self.owner.id].adjacent)
+        ids = sorted(gameStateObj.support.node_dict[self.owner.id].adjacent)
         # convert names to units
         self.options = []
-        for name in names:
+        for other_id in ids:
             other_unit = None
             for unit in gameStateObj.allunits:
-                if unit.team == 'player' and name == unit.id:
+                if unit.team == 'player' and other_id == unit.id:
                     other_unit = unit
                     break
             # if gameStateObj.support.node_dict[name].dead:
@@ -915,8 +915,8 @@ class SupportMenu(object):
             # else:
             #     continue
             # We haven't found unit yet, so just skip
-            affinity = gameStateObj.support.node_dict[name].affinity
-            edge = gameStateObj.support.node_dict[self.owner.id].adjacent[name]
+            affinity = gameStateObj.support.node_dict[other_id].affinity
+            edge = gameStateObj.support.node_dict[self.owner.id].adjacent[other_id]
             self.options.append((other_unit, affinity, edge))
 
     def update(self):
@@ -931,7 +931,7 @@ class SupportMenu(object):
             if unit:
                 unit_sprite = unit.sprite
                 unit_image = unit_sprite.create_image('passive')
-                if index == self.currentSelection:
+                if index == self.currentSelection and self.cursor_flag:
                     unit_image = unit_sprite.create_image('active')
                 if gameStateObj.support.node_dict[unit.id].dead:
                     unit_image = unit_sprite.create_image('gray')

@@ -329,8 +329,9 @@ class GameStateObj(object):
     def get_total_party_members(self):
         return len(self.get_units_in_party(self.current_party))
 
-    def get_units_in_party(self, party):
-        print(party)
+    def get_units_in_party(self, party=None):
+        if party is None:
+            party = self.current_party
         return [unit for unit in self.allunits if unit.team == 'player' and not unit.dead and not unit.generic_flag and unit.party == party]
 
     def check_rout(self):
@@ -558,7 +559,8 @@ class GameStateObj(object):
                     edge.reset()
 
     def restock_convoy(self):
-        items_with_uses = sorted((item for item in self.convoy if item.uses), key=lambda item: item.id)
+        cur_convoy = self._convoy[self.current_party]
+        items_with_uses = sorted((item for item in cur_convoy if item.uses), key=lambda item: item.id)
         # Actually restock
         current_item = items_with_uses[0]
         for item in items_with_uses[1:]:
@@ -579,11 +581,11 @@ class GameStateObj(object):
             else:
                 current_item = item
         # remove all items with <= 0 uses
-        self.convoy = [item for item in self.convoy if not item.uses or item.uses.uses > 0]
+        self._convoy[self.current_party] = [item for item in cur_convoy if not item.uses or item.uses.uses > 0]
 
     def quick_sort_inventories(self, units):
         logger.debug("Quicksorting Inventories")
-        my_units = [unit for unit in units if unit.team == 'player' and not unit.dead]
+        my_units = self.get_units_in_party()
         random.shuffle(my_units)
         # print([my_unit.name for my_unit in my_units])
         # First, give all

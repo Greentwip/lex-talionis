@@ -282,9 +282,7 @@ class AI(object):
                     self.unit.add_item(self.item_to_use, gameStateObj)
                     # Make most recently acquired item droppable
                     if self.unit.team != 'player':
-                        for item in self.unit.items:
-                            item.droppable = False
-                        self.item_to_use.droppable = True
+                        Action.do(Action.MakeItemDroppable(self.unit, self.item_to_use), gameStateObj)
                     self.unit.handle_steal_banner(self.item_to_use, gameStateObj)
             else:
                 tile_info = gameStateObj.map.tile_info_dict[self.target_to_interact_with]
@@ -296,7 +294,7 @@ class AI(object):
                 elif 'Destructible' in tile_info:
                     gameStateObj.map.destroy(tile, gameStateObj)
                 elif 'Locked' in tile_info:
-                    item = self.unit.get_unlock_item()
+                    item = self.unit.get_unlock_key()
                     self.unit.unlock(self.target_to_interact_with, item, gameStateObj)
                 elif 'Escape' or 'Thief_Escape' in tile_info:
                     if self.unit.position != self.target_to_interact_with:

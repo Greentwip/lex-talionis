@@ -59,7 +59,6 @@ class DebugState(StateMachine.State):
                 for skill in cur_unit.status_effects:
                     if skill.active:
                         skill.active.current_charge = skill.active.required_charge
-                        cur_unit.tags.add('ActiveSkillCharged')
                     if skill.automatic:
                         skill.automatic.current_charge = skill.automatic.required_charge
         elif split_command[0] == 'win_game':
