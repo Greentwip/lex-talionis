@@ -310,11 +310,15 @@ class GameStateObj(object):
 
         # Reset the units updates on load
         # And have the units arrive on map
+        self.action_log.record = False
         for unit in self.allunits:
             unit.resetUpdates()
             if unit.position:
-                Action.PlaceOnMap(unit, unit.position).do(self)
-                unit.arrive(self, serializing=False)
+                # Action.PlaceOnMap(unit, unit.position).do(self)
+                # unit.arrive(self, serializing=False)
+                Action.ArriveOnMap(unit, unit.position).do(self)
+        self.action_log.record = True
+        
         self.old_map = None
 
         self.info_menu_struct = {'current_state': 0,

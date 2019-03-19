@@ -21,20 +21,10 @@ load_player_characters
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Sam;3,17;None
-player;0;0;Eliza;4,17;None
-other;0;0;Renae;5,17;None
-player;0;0;Cavalier;10;Iron Sword,Willow Bow,Hammerne;16,5;None;Althea
-player;0;0;Sniper;10;Magebane Bow;4,16;None;Resistance
-player;0;0;Cleric;10;;16,3;None;Althea
-enemy;0;0;Shaman;1;Flux;16,1;Attack;Resistance
+player;0;0;Joel;3,17;None
+enemy;0;0;Shaman;5;Flux;3,12;None;Resistance
 # Enemies
-# Generics
-enemy;0;0;Knight;1;Superior Lance;3,15;None;Resistance
-enemy;0;0;Myrmidon;10;Lancereaver;3,14;None;Resistance
 # === Reinforcements ===
 # Player Characters
-player;0;Soldier1;Soldier;1;Iron Lance;None;None;Resistance
 # Enemies
 # === Triggers ===
-trigger;basic;Sam;3,23;3,17

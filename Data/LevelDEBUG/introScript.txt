@@ -5,20 +5,3 @@ set_game_constant;Convoy
 set_game_constant;Supports
 set_game_constant;Turnwheel
 add_global_status;fLuck +4
-set_game_constant;max_turnwheel_uses;1
-set_game_constant;current_turnwheel_uses;1
-u;Renae;Left;Smile;CloseEyes
-bop;Renae
-s;Renae;You don't have to tell me twice!{w}{br}Catch you all later!
-u;Ophie;Right
-set_expression;Ophie;HalfCloseEyes
-s;Ophie;I am a waffle!{w}{br}Waffle good! Waffle strong!
-set_expression;Ophie
-wait;10000
-r;Renae;Ophie
-t;1
-remove_background
-sound;Legendary Weapon
-t;2
-end_skip
-trigger;basic

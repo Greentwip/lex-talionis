@@ -108,6 +108,7 @@ class UnitObject(object):
         self.reset()
         self.finished = info.get('finished', False)
         self.current_move_action = None
+        self.current_arrive_action = None
 
         self.resetUpdates()
     
@@ -1801,6 +1802,7 @@ class UnitObject(object):
         self.path = []
         self.movement_left = self.stats['MOV']
         self.current_move_action = None
+        self.current_arrive_action = None
 
     # This is required to reset certain time dependant counters, because pygame counts from the beginning of each session
     # So if you spent 700 seconds in one session, the self.lastUpdate might be 700,000
@@ -2107,6 +2109,14 @@ class UnitObject(object):
         else:
             Action.do(Action.Die(self), gameStateObj)
 
+    def move_back(self, gameStateObj):
+        if self.current_arrive_action:
+            Action.reverse(self.current_arrive_action, gameStateObj)
+            self.current_arrive_action = None
+        if self.current_move_action:
+            Action.reverse(self.current_move_action, gameStateObj)
+            self.current_move_action = None
+
     def get_unit_speed(self):
         """
         Returns the time the unit should spend getting from one tile to the next
@@ -2152,7 +2162,8 @@ class UnitObject(object):
                 # self.sprite.change_state('normal', gameStateObj)
                 self.unlock_active()
                 # Add status for new position
-                self.arrive(gameStateObj)
+                self.current_arrive_action = Action.MoveArrive(self)
+                Action.do(self.current_arrive_action, gameStateObj)
                 self.stop_movement_sound(gameStateObj)
                 if gameStateObj.stateMachine.getPreviousState() != 'dialogue':
                     self.hasMoved = True

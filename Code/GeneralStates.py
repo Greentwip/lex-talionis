@@ -442,8 +442,7 @@ class CantoWaitState(StateMachine.State):
             cur_unit.wait(gameStateObj) # Canto
 
         elif event == 'BACK':
-            Action.reverse(cur_unit.current_move_action, gameStateObj)
-            cur_unit.current_move_action = None
+            cur_unit.move_back(gameStateObj)
             gameStateObj.stateMachine.back()
 
     def end(self, gameStateObj, metaDataObj):
@@ -644,9 +643,7 @@ class MenuState(StateMachine.State):
                     cur_unit.wait(gameStateObj)
             else:
                 # puts unit back - handles status
-                if cur_unit.current_move_action:
-                    Action.reverse(cur_unit.current_move_action, gameStateObj)
-                    cur_unit.current_move_action = None
+                cur_unit.move_back(gameStateObj)
                 # cur_unit.reset()
                 gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
                 gameStateObj.stateMachine.changeState('move')

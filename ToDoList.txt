@@ -41,6 +41,7 @@ Casual death? Check other_game (- Check that casual doesn't have a death cooldow
 
 - Test Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
+- Add autotile support to LevelEditor
 
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...

@@ -446,6 +446,9 @@ class TurnwheelState(StateMachine.State):
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
 
+        if self.transition_out > 0:  # Don't take input after a choice has been made
+            return
+
         if 'DOWN' in directions or 'RIGHT' in directions:
             GC.SOUNDDICT['Select 1'].play()
             old_message = None

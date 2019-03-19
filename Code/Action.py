@@ -126,6 +126,19 @@ class Move(Action):
         self.unit.path = []
         self.unit.arrive(gameStateObj)
 
+class MoveArrive(Action):
+    def __init__(self, unit):
+        self.unit = unit
+
+    def do(self, gameStateObj):
+        self.unit.arrive(gameStateObj)
+
+    def execute(self, gameStateObj):
+        pass
+
+    def reverse(self, gameStateObj):
+        pass
+
 # Just another name for move
 class CantoMove(Move):
     pass
@@ -280,6 +293,7 @@ class Wait(Action):
         self.unit.hasAttacked = True
         self.unit.finished = True
         self.unit.current_move_action = None
+        self.unit.current_arrive_action = None
 
     def reverse(self, gameStateObj):
         self.unit.hasMoved = self.hasMoved

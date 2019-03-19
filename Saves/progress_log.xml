@@ -485,3 +485,53 @@
 	</units>
 </level>
 
+<level name="3">
+	<mode>Lunatic</mode>
+	<game_constants>current_turnwheel_uses,2;level,3;money,1500;max_turnwheel_uses,2;Turnwheel,1;Supports,1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<level>3</level>
+			<exp>86</exp>
+			<items>Iron Sword 32,Vulnerary 2,Potion 3,Slim Lance 35,Hatchet 35</items>
+			<wexp>18,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>2</level>
+			<exp>76</exp>
+			<items>Heal 22,Glimmer 23,Heal 30,Vulnerary 3</items>
+			<wexp>0,0,0,0,15,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Joel">
+			<level>5</level>
+			<exp>60</exp>
+			<items>Hand Axe 19,Iron Axe 33,Vulnerary 3</items>
+			<wexp>0,0,29,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Nia">
+			<level>5</level>
+			<exp>35</exp>
+			<items>Willow Bow 32,Vulnerary 3,Angelic Robe 1</items>
+			<wexp>0,0,0,27,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Althea">
+			<level>2</level>
+			<exp>97</exp>
+			<items>Fire 24,Vulnerary 3</items>
+			<wexp>0,0,0,0,0,12,0</wexp>
+			<skills>Resistance +2</skills>
+		</unit>
+		<unit name="Drake">
+			<level>5</level>
+			<exp>95</exp>
+			<items>Iron Sword 40,Iron Lance 41,Spiritbane 2</items>
+			<wexp>14,20,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+
