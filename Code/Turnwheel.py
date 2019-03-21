@@ -26,12 +26,12 @@ class ActionLog(object):
         self.unique_moves = []
 
     def append(self, action):
-        print("Add Action: %s" % action.__class__.__name__)
+        print("Add Action %d: %s" % (self.action_index + 1, action.__class__.__name__))
         self.actions.append(action)
         self.action_index += 1
 
     def remove(self, action):
-        print("Remove Action: %s" % action.__class__.__name__)
+        print("Remove Action %d: %s" % (self.action_index, action.__class__.__name__))
         self.actions.remove(action)
         self.action_index -= 1
 

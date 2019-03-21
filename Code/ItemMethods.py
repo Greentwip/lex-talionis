@@ -301,6 +301,13 @@ class AOEComponent(object):
         self.mode = mode
         self.number = number
 
+    def get_number(self, item, gameStateObj):
+        if self.number == 'MAG/2':
+            num = GC.EQUATIONS.get_magic_damage(gameStateObj.get_unit_from_id(item.item_owner), item)//2
+        else:
+            num = int(self.number)
+        return num
+
     def get_positions(self, unit_position, cursor_position, gameStateObj, item):
         tileMap = gameStateObj.map
         if self.mode == 'Normal':
@@ -329,10 +336,7 @@ class AOEComponent(object):
             splash_positions = {position for position in other_position if tileMap.check_bounds(position)}
             return cursor_position, list(splash_positions - {cursor_position})
         elif self.mode == 'Blast':
-            if self.number == 'MAG/2':
-                num = GC.EQUATIONS.get_magic_damage(gameStateObj.get_unit_from_id(item.item_owner), item)//2
-            else:
-                num = int(self.number)
+            num = self.get_number(item, gameStateObj)
             splash_positions = Utility.find_manhattan_spheres(range(num + 1), cursor_position)
             splash_positions = {position for position in splash_positions if tileMap.check_bounds(position)}
             if item.weapon:

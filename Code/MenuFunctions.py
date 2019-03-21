@@ -1022,15 +1022,21 @@ class MainMenu(object):
     def getSelectionIndex(self):
         return self.currentSelection
 
-    def moveDown(self):
+    def moveDown(self, first_push=True):
         self.currentSelection += 1
         if self.currentSelection > len(self.options) - 1:
-            self.currentSelection = 0
+            if first_push:
+                self.currentSelection = 0
+            else:
+                self.currentSelection -= 1
 
-    def moveUp(self):
+    def moveUp(self, first_push=True):
         self.currentSelection -= 1
         if self.currentSelection < 0:
-            self.currentSelection = len(self.options) - 1
+            if first_push:
+                self.currentSelection = len(self.options) - 1
+            else:
+                self.currentSelection += 1
 
     def updateOptions(self, options):
         self.options = options
@@ -1057,13 +1063,13 @@ class ChapterSelectMenu(MainMenu):
     def set_color(self, idx, color):
         self.colors[idx] = color
 
-    def moveUp(self):
-        MainMenu.moveUp(self)
+    def moveUp(self, first_push=True):
+        MainMenu.moveUp(self, first_push)
         if self.use_rel_y:
             self.rel_pos_y -= self.menu_height
 
-    def moveDown(self):
-        MainMenu.moveDown(self)
+    def moveDown(self, first_push=True):
+        MainMenu.moveDown(self, first_push)
         if self.use_rel_y:
             self.rel_pos_y += self.menu_height
 

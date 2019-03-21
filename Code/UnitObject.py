@@ -791,7 +791,7 @@ class UnitObject(object):
 
         if movement.mode != 'Warp':
             if new_pos != self.position:
-                Action.do(Action.Teleport(self, new_pos), gameStateObj)
+                Action.do(Action.ForcedMovement(self, new_pos), gameStateObj)
 
     def get_nearest_open_space(self, gameStateObj):
         for r in range(1, 15):
@@ -1197,7 +1197,7 @@ class UnitObject(object):
                     if team and not gameStateObj.compare_teams(self.team, team):
                         valid_positions.append(pos)
                     else:
-                        for x_pos in Utility.find_manhattan_spheres(range(1, my_spell.aoe.number + 1), pos):
+                        for x_pos in Utility.find_manhattan_spheres(range(1, my_spell.aoe.get_number(my_spell, gameStateObj) + 1), pos):
                             if gameStateObj.map.check_bounds(x_pos):
                                 team = gameStateObj.grid_manager.get_team_node(x_pos)
                                 if team and not gameStateObj.compare_teams(self.team, team):

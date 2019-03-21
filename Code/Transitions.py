@@ -422,6 +422,7 @@ class StartAllSaves(StartLoad):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             # For transition
+            self.fluid_helper.update_speed(128)
             self.selection = None
             self.state = "transition_in"
             self.position_x = 3*GC.WINWIDTH//2

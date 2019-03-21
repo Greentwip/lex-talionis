@@ -143,7 +143,7 @@ class MoveArrive(Action):
 class CantoMove(Move):
     pass
 
-class Teleport(Action):
+class SimpleMove(Action):
     """
     A script directed move, no animation
     """
@@ -161,6 +161,12 @@ class Teleport(Action):
         self.unit.leave(gameStateObj)
         self.unit.position = self.old_pos
         self.unit.arrive(gameStateObj)
+
+class Teleport(SimpleMove):
+    pass
+
+class ForcedMovement(SimpleMove):
+    pass
 
 class Warp(Action):
     def __init__(self, unit, new_pos):
@@ -627,6 +633,8 @@ class GainExp(Action):
         self.old_level = self.unit.level
         self.current_stats = [s.base_stat for s in self.unit.stats.values()]
         self.levelup_list = None
+        self.current_growth_points = self.unit.growth_points[:]
+        self.new_growth_points = None
 
         self.promoted_to = None  # Determined on reverse
         self.current_class = self.unit.klass
@@ -705,6 +713,7 @@ class GainExp(Action):
             klass_dict = ClassData.class_dict[self.unit.klass]
             max_level = klass_dict['max_level']
             # Level Up
+            self.unit.growth_points = self.new_growth_points[:]
             if self.unit.level >= max_level:
                 if cf.CONSTANTS['auto_promote'] and klass_dict['turns_into']: # If has at least one class to turn into
                     self._forward_class_change(gameStateObj, True)
@@ -726,6 +735,8 @@ class GainExp(Action):
             max_level = klass_dict['max_level']
             stats_after_levelup = [s.base_stat for s in self.unit.stats.values()]
             self.levelup_list = [a - b for a, b in zip(stats_after_levelup, self.current_stats)]
+            self.new_growth_points = self.unit.growth_points[:]
+            self.unit.growth_points = self.current_growth_points[:]
             if self.unit.level == 1:  # Promoted here
                 self._reverse_class_change(gameStateObj, True)
             elif self.unit.level >= max_level and self.unit.exp >= 99:

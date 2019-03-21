@@ -204,4 +204,3 @@ Staff_desc;Staff mastery level.
 Light_desc;Light magic mastery level.
 Anima_desc;Anima magic mastery level.
 Dark_desc;Dark magic mastery level.
-Spells;Staff

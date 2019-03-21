@@ -535,3 +535,67 @@
 	</units>
 </level>
 
+<level name="4">
+	<mode>Lunatic</mode>
+	<game_constants>switches,3;Convoy,1;current_turnwheel_uses,3;level,4;money,1500;max_turnwheel_uses,3;Turnwheel,1;Supports,1</game_constants>
+	<convoy>Angelic Robe 1,Spiritbane 2,Heal 22,Vulnerary 2,Secret Book 1</convoy>
+	<units>
+		<unit name="Ophie">
+			<level>4</level>
+			<exp>92</exp>
+			<items>Iron Sword 42,Rapier 16,Steel Axe 29</items>
+			<wexp>23,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>4</level>
+			<exp>41</exp>
+			<items>Heal 20,Glimmer 22</items>
+			<wexp>0,0,0,0,26,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Joel">
+			<level>6</level>
+			<exp>89</exp>
+			<items>Iron Axe 29,Hatchet 27,Hand Axe 15,Willow Bow 43</items>
+			<wexp>0,0,43,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Nia">
+			<level>6</level>
+			<exp>38</exp>
+			<items>Willow Bow 21,Vulnerary 3,Mana Ring 1,Skeleton Key 1</items>
+			<wexp>0,0,0,34,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Althea">
+			<level>4</level>
+			<exp>72</exp>
+			<items>Fire 20,Vulnerary 3,Javelin 20</items>
+			<wexp>0,0,0,0,0,16,0</wexp>
+			<skills>Resistance +2</skills>
+		</unit>
+		<unit name="Drake">
+			<level>7</level>
+			<exp>7</exp>
+			<items>Iron Lance 32,Iron Sword 26,Vulnerary 2</items>
+			<wexp>15,29,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Renae">
+			<level>4</level>
+			<exp>86</exp>
+			<items>Iron Sword 41,Steel Sword 27,Vulnerary 1</items>
+			<wexp>21,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Theo">
+			<level>5</level>
+			<exp>8</exp>
+			<items>Slim Lance 32,Iron Lance 42,Vulnerary 1</items>
+			<wexp>0,22,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+

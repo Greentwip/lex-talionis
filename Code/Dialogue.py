@@ -834,7 +834,7 @@ class Dialogue_Scene(object):
             property_list = line[2:] if len(line) > 2 else None
             if property_list:
                 for tile_property in property_list:
-                    Action.do(Action.AddTileProperty(coord, tile_property), gameStateObj)
+                    Action.do(Action.AddTileProperty(coord, tile_property.split('=')), gameStateObj)
             else:
                 for tile_property in gameStateObj.map.tile_info_dict[coord].items():
                     Action.do(Action.RemoveTileProperty(coord, tile_property), gameStateObj)
