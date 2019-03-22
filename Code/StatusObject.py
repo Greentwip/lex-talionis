@@ -473,9 +473,9 @@ def HandleStatusAddition(status, unit, gameStateObj):
 
     # --- Non-momentary status ---
     if status.stat_change:
-        unit.apply_stat_change(status.stat_change)
+        Action.do(Action.ApplyStatChange(unit, status.stat_change), gameStateObj)
     if status.growth_mod:
-        unit.apply_growth_mod(status.growth_mod)
+        Action.do(Action.ApplyGrowthMod(unit, status.growth_mod), gameStateObj)
 
     if status.rescue:
         # Rescue penalty
@@ -554,11 +554,13 @@ def HandleStatusRemoval(status, unit, gameStateObj, clean_up=False):
         Action.do(Action.ChangeAI(unit, status.original_ai), gameStateObj)
         
     if status.upkeep_stat_change:
-        unit.apply_stat_change([-stat*(status.upkeep_stat_change.count) for stat in status.upkeep_stat_change.stat_change])
+        # unit.apply_stat_change([-stat*(status.upkeep_stat_change.count) for stat in status.upkeep_stat_change.stat_change])
+        Action.do(Action.ApplyStatChange(unit, [-stat*(status.upkeep_stat_change.count) for stat in status.upkeep_stat_change.stat_change]), gameStateObj)
     if status.stat_change:
-        unit.apply_stat_change([-stat for stat in status.stat_change])
+        # unit.apply_stat_change([-stat for stat in status.stat_change])
+        Action.do(Action.ApplyStatChange(unit, [-stat for stat in status.stat_change]), gameStateObj)
     if status.growth_mod:
-        unit.apply_growth_mod([-growth for growth in status.growth_mod])
+        Action.do(Action.ApplyGrowthMod(unit, [-growth for growth in status.growth_mod]), gameStateObj)
     if status.rescue:
         for idx, stat in enumerate(status.rescue.stats):
             unit.stats[stat].bonuses -= status.rescue.penalties[idx]

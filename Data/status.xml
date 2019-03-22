@@ -5,7 +5,7 @@
         <desc>Generic Feat placeholder</desc>
         <image_index>0,0</image_index>
         <components>hidden,feat_list</components>
-        <feat_list>fStrength +2,fMagic +2,fSkill +3,fSpeed +2,fDefense +2,fResistance +2,fMovement +1,fConstitution +3, fMaximum HP +5,fLuck +4</feat_list>
+        <feat_list>fStrength +2,fMagic +2,fSkill +3,fSpeed +2,fDefense +2,fResistance +2,fMovement +1,fConstitution +3,fMaximum HP +5,fLuck +4</feat_list>
     </status>
 
 	<!-- Ever-lasting Regeneration -->

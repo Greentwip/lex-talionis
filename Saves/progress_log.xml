@@ -599,3 +599,74 @@
 	</units>
 </level>
 
+<level name="5">
+	<mode>Lunatic</mode>
+	<game_constants>Dead_Wagons,10;Convoy,1;level,5;money,1500;max_turnwheel_uses,4;Turnwheel,1;switches,3;current_turnwheel_uses,4;noir,1;Supports,1</game_constants>
+	<convoy>Angelic Robe 1,Heal 22,Secret Book 1,Skeleton Key 1,Mana Ring 1,Javelin 20,Rapier 20,Sapphire --,Fly 10</convoy>
+	<units>
+		<unit name="Ophie">
+			<level>5</level>
+			<exp>60</exp>
+			<items>Iron Sword 37,Rapier 16,Vulnerary 2,Magebane Sword 15</items>
+			<wexp>27,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>5</level>
+			<exp>41</exp>
+			<items>Glimmer 18,Heal 16,Ruby --</items>
+			<wexp>0,0,0,0,33,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Joel">
+			<level>8</level>
+			<exp>24</exp>
+			<items>Iron Axe 24,Hatchet 26,Steel Axe 26,Hand Axe 14,Spiritbane 2</items>
+			<wexp>0,0,53,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Nia">
+			<level>7</level>
+			<exp>24</exp>
+			<items>Willow Bow 15,Vulnerary 2,Willow Bow 43,Mithril Mail 1,Oak Bow 30</items>
+			<wexp>0,0,0,39,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Althea">
+			<level>5</level>
+			<exp>94</exp>
+			<items>Wind 28,Fire 18,Wyrmsfire 9,Fire 30,Shine 20</items>
+			<wexp>0,0,0,0,0,21,0</wexp>
+			<skills>Speed +2</skills>
+		</unit>
+		<unit name="Drake">
+			<level>8</level>
+			<exp>9</exp>
+			<items>Iron Lance 29,Iron Sword 25,Vulnerary 1,Talisman 1,Great Lance 25</items>
+			<wexp>16,32,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Renae">
+			<level>5</level>
+			<exp>95</exp>
+			<items>Flareblade 22,Steel Sword 27,Iron Sword 38,Vulnerary 1,Thunder 30</items>
+			<wexp>26,0,0,0,0,0,0</wexp>
+			<skills>Resistance +2</skills>
+		</unit>
+		<unit name="Theo">
+			<level>6</level>
+			<exp>71</exp>
+			<items>Iron Lance 39,Slim Lance 29,Javelin 19,Vulnerary 1</items>
+			<wexp>0,29,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Eliza">
+			<level>3</level>
+			<exp>56</exp>
+			<items>Steel Lance 29,Iron Lance 45,Slim Lance 32,Javelin 19,Prim's Charm --</items>
+			<wexp>0,26,0,0,0,0,0</wexp>
+			<skills>Underdog</skills>
+		</unit>
+	</units>
+</level>
+

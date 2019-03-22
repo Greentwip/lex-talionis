@@ -1323,6 +1323,17 @@ class ApplyStatChange(Action):
         self.unit.movement_left = self.movement_left
         self.unit.set_hp(self.currenthp)
 
+class ApplyGrowthMod(Action):
+    def __init__(self, unit, growth_mod):
+        self.unit = unit
+        self.growth_mod = growth_mod
+
+    def do(self, gameStateObj):
+        self.unit.apply_growth_mod(self.growth_mod)
+
+    def reverse(self, gameStateObj):
+        self.unit.apply_growth_mod([-i for i in self.growth_mod])
+
 class ChangeStatusCount(Action):
     def __init__(self, status, new_count):
         self.status = status
