@@ -5,7 +5,7 @@ block_cipher = None
 import sys
 sys.modules['FixTk'] = None
 
-a = Analysis(['fe_repo_to_lex.py'],
+a = Analysis(['fegba2lt_animations.py'],
              pathex=['.'],
              binaries=[],
              datas=[],
@@ -40,7 +40,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='fe_repo_to_lex',
+          name='fegba2lt_animations',
           debug=False,
           strip=False,
           upx=True,
