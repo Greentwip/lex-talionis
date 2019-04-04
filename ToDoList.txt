@@ -38,10 +38,14 @@ Casual death? Check other_game (- Check that casual doesn't have a death cooldow
 - When I fix events, make escape, seize, switch, search, etc, all work the same way
 - Split up gaining exp, gaining level, and promoting into separate routines that use the Action system
 - Add filtering class wexp -- so you could do reclassing?
+- Add music fade clear and music clear
 
 - Test Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
 - Add autotile support to LevelEditor
+- Test auras on equipped items (status_on_equip)
+- Add palette swap for animations (like FERecolor, FEBuilder)
+- Add FE GBA to LT map sprite converter with all four teams
 
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
