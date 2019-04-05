@@ -469,30 +469,22 @@ class GiveItem(Action):
     def __init__(self, unit, item):
         self.unit = unit
         self.item = item
-        self.convoy = False
 
+    # with banner
     def do(self, gameStateObj):
-        if len(self.unit.items) < cf.CONSTANTS['max_items']:
+        if self.unit.team == 'player' or len(self.unit.items) < cf.CONSTANTS['max_items']:
             self.unit.add_item(self.item, gameStateObj)
             gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
             gameStateObj.stateMachine.changeState('itemgain')
-        elif self.unit.team == 'player':
-            self.convoy = True
-            gameStateObj.convoy.append(self.item)
-            gameStateObj.banners.append(Banner.sent_to_convoyBanner(self.item))
-            gameStateObj.stateMachine.changeState('itemgain')
 
+    # there shouldn't be any time this is called where the player has not already checked 
+    # that there are less than cf.CONSTANTS['max_items'] items in their inventory
     def execute(self, gameStateObj):
-        if len(self.unit.items) < cf.CONSTANTS['max_items']:
+        if self.unit.team == 'player' or len(self.unit.items) < cf.CONSTANTS['max_items']:
             self.unit.add_item(self.item, gameStateObj)
-        elif self.unit.team == 'player':
-            self.convoy = True
-            gameStateObj.convoy.append(self.item)
 
     def reverse(self, gameStateObj):
-        if self.convoy:
-            self.convoy.remove(self.item)
-        else:
+        if self.item in self.unit.items:
             self.unit.remove_item(self.item, gameStateObj)
 
 class DropItem(Action):

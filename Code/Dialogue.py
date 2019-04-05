@@ -526,7 +526,7 @@ class Dialogue_Scene(object):
                     gameStateObj.add_item(item)
                     self.add_item(receiver, item, gameStateObj, 'no_banner' not in line)
                     tile = gameStateObj.map.tiles.get(self.tile_pos, None)
-                    if self.unit and self.unit.team != 'player' and tile and tile.name == "Chest":
+                    if self.unit and self.unit.team.startswith('enemy') and tile and tile.name == "Chest":
                         Action.do(Action.MakeItemDroppable(self.unit, item), gameStateObj)
                 else:
                     logger.error("Could not find item matching %s", line[2])
@@ -1679,11 +1679,14 @@ class Dialogue_Scene(object):
 
     def add_item(self, unit, item, gameStateObj, banner=True):
         if unit:
-            if banner:
+            if banner:  # You can make convoy decision here
                 Action.do(Action.GiveItem(unit, item), gameStateObj)
                 self.current_state = "Paused"
-            else:
+            # Decides for you now
+            elif len(self.unit.items) < cf.CONSTANTS['max_items']:
                 Action.execute(Action.GiveItem(unit, item), gameStateObj)
+            else:
+                Action.execute(Action.PutItemInConvoy(item), gameStateObj)
         else:
             if banner:
                 Action.do(Action.PutItemInConvoy(item), gameStateObj)
