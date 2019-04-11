@@ -31,11 +31,12 @@ class MainView(QtGui.QGraphicsView):
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
-        pos = scene_pos.x(), scene_pos.y()
+        image = pixmap.pixmap().toImage()
+        pos = int(scene_pos.x()), int(scene_pos.y())
 
         if event.button() == QtCore.Qt.LeftButton:
             dlg = QtGui.QColorDialog()
-            dlg.setCurrentColor(QtGui.QColor(pixmap.get(pos)))
+            dlg.setCurrentColor(QtGui.QColor(image.pixel(pos[0], pos[1])))
             if dlg.exec_():
                 self.window.change_color(pos, dlg.currentColor())
 
@@ -117,13 +118,17 @@ class MainEditor(QtGui.QWidget):
         self.image_map = ImageMap(image_file)
 
     def change_color(self, pos, color):
+        print('MainEditor', 'change color', pos, color)
         palette_idx = self.image_map.get(pos[0], pos[1])
-        self.color_swap(palette_idx, color)
+        self.palette_editor.palette_list.get_current_palette().set_color(palette_idx, color)
+        print('MainEditor', 'change color', pos, color)
+        # self.color_swap(palette_idx, color)
 
     def update_view(self):
         self.view.show_image()
 
     def color_swap(self, palette_idx, new_color):
+        print('MainEditor', 'color_swap', palette_idx, new_color)
         for x in range(self.view.image.width()):
             for y in range(self.view.image.height()):
                 if self.image_map.get(x, y) == palette_idx:
@@ -198,9 +203,10 @@ class Animation(QtGui.QWidget):
         self.class_text.textChanged.connect(self.class_text_change)
         self.weapon_text = QtGui.QLineEdit()
         self.palette_text = QtGui.QLineEdit()
+        self.palette_text.textChanged.connect(self.palette_text_change)        
 
         self.playable = False
-        self.play_button = QtGui.QPushButton("View Animation")
+        self.play_button = QtGui.QPushButton("View Animations")
         self.play_button.clicked.connect(self.play_animation)
         self.play_button.setEnabled(self.playable)
 
@@ -223,7 +229,10 @@ class Animation(QtGui.QWidget):
         self.playable = False
 
     def class_text_change(self):
-        self.window.palette_editor.set_current_palette_name(self.class_text.text())
+        pass
+
+    def palette_text_change(self):
+        self.window.palette_editor.set_current_palette_name(self.palette_text.text())
 
     def load_info(self, c, w, p):
         self.class_text.setText(c)
@@ -245,7 +254,7 @@ class Animation(QtGui.QWidget):
             self.palette_text.setText('GenericBlue')
 
 class ColorDisplay(QtGui.QPushButton):
-    colorChanged = QtCore.pyqtSignal(int, QtCore.QString)
+    colorChanged = QtCore.pyqtSignal(int, QtGui.QColor)
 
     def __init__(self, idx, parent=None):
         super(ColorDisplay, self).__init__(parent)
@@ -260,7 +269,7 @@ class ColorDisplay(QtGui.QPushButton):
 
     def setColor(self, color):
         if color != self._color:
-            self.colorChanged.emit(self.idx, color)
+            self.colorChanged.emit(self.idx, QtGui.QColor(color))
             self._color = color
 
         if self._color:
@@ -294,6 +303,7 @@ class PaletteDisplay(QtGui.QWidget):
         self.main_editor = self.palette_editor.window
 
         self.colors = colors
+        self.displays = []
 
         self.layout = QtGui.QHBoxLayout()
         self.layout.setSpacing(0)
@@ -305,6 +315,11 @@ class PaletteDisplay(QtGui.QWidget):
             color_display.setColor(color.name())
             color_display.colorChanged.connect(self.palette_editor.color_swap)
             self.layout.addWidget(color_display, 0, QtCore.Qt.AlignCenter)
+            self.displays.append(color_display)
+
+    def set_color(self, idx, color):
+        print('PaletteDisplay', 'set_color', idx, color)
+        self.displays[idx].setColor(color.name())
 
 class PaletteFrame(QtGui.QWidget):
     def __init__(self, idx, image_filename, window=None):
@@ -325,14 +340,17 @@ class PaletteFrame(QtGui.QWidget):
         self.name_label = QtGui.QLabel(self.name)
         copy = QtGui.QPushButton("Duplicate")
         copy.clicked.connect(lambda: window.duplicate(self.idx))
-        palette_display = PaletteDisplay(self.colors, window)
+        self.palette_display = PaletteDisplay(self.colors, window)
         layout.addWidget(radio_button)
-        layout.addWidget(self.name)
-        layout.addWidget(palette_display)
+        layout.addWidget(self.name_label)
+        layout.addWidget(self.palette_display)
         layout.addWidget(copy)
 
     def set_name(self, name):
         self.name_label.setText(name)
+
+    def set_color(self, idx, color):
+        self.palette_display.set_color(idx, color)
 
     def get_colors(self):
         self.colors = []
@@ -365,7 +383,7 @@ class PaletteList(QtGui.QListWidget):
         self.setItemWidget(item, pf)
 
     def duplicate(self, idx):
-        new_idx = len(self.palettes) - 1
+        new_idx = len(self.palette_frames) - 1
         self.add_palette(new_idx, self.palette_frames[idx].full_name)
         self.set_current_palette(new_idx)
 
@@ -373,6 +391,9 @@ class PaletteList(QtGui.QListWidget):
         # self.radio_button_group.button(idx).setChecked(False)
         self.current_idx = idx
         self.radio_button_group.button(idx).setChecked(True)
+
+    def get_current_palette(self):
+        return self.palette_frames[self.current_idx]
 
     def set_palette_by_name(self, name):
         palette_names = [p.name for p in self.palettes]
@@ -409,12 +430,13 @@ class PaletteEditor(QtGui.QWidget):
 
     def color_swap(self, idx, new):
         new = QtGui.QColor(new)
-        self.editor.color_swap(idx, new)
+        self.window.color_swap(idx, new)
 
     def set_current_palette(self, idx):
         self.palette_list.set_current_palette(idx)
 
     def set_current_palette_name(self, name):
+        print('PaletteEditor', 'set_current_palette_name', name)
         self.palette_list.set_palette_name(self.palette_list.current_idx, name)
 
 if __name__ == '__main__':
