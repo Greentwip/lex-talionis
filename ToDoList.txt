@@ -12,6 +12,12 @@
 - Add support to fe_repo_to_lex for Dragonstone
 
 Add separate combine action to convoy (for turnwheel branch)
+Arena
+Jealousy System
+Repair Market
+When Dialogue Editor, make commands accessible
+Fix how ExpGain/Level Up/Promotion interacts with Turnwheel
+New Game +
 Casual death? Check other_game (- Check that casual doesn't have a death cooldown)
 
 - Turnwheel

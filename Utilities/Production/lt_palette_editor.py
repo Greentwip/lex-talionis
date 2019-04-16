@@ -116,6 +116,7 @@ class MainEditor(QtGui.QWidget):
         self.view.clear_scene()
         self.view.set_new_image(image_file)
         self.image_map = ImageMap(image_file)
+        self.update_view()
 
     def change_color(self, pos, color):
         print('MainEditor', 'change color', pos, color)
@@ -143,11 +144,14 @@ class MainEditor(QtGui.QWidget):
 
     def get_images_from_index(self, fn):
         image_header = fn[:-10]
-        images = glob.glob(image_header + "-*.png")
+        images = glob.glob(str(image_header + "-*.png"))
+        print(images)
         return images
 
     def get_info(self, image_fn):
-        klass, weapon, palette = image_fn[:-4].split('-')
+        print('MainEditor', 'get_info', image_fn)
+        image_name = os.path.split(image_fn[:-4])[-1]
+        klass, weapon, palette = image_name.split('-')
         return klass, weapon, palette
 
     def load_class(self):
@@ -169,18 +173,20 @@ class MainEditor(QtGui.QWidget):
                 self.palette_editor.clear()
                 self.palette_editor.load_palettes(image_files)
                 self.palette_editor.set_current_palette(0)
+                self.animation.set_palette_text()
+                # self.update_view()
 
     def load_image(self):
         image_filename = QtGui.QFileDialog.getOpenFileName(self, "Choose Image PNG", QtCore.QDir.currentPath(),
-                                                       "PNG Files (*.png);;All Files (*)")
+                                                           "PNG Files (*.png);;All Files (*)")
         if image_filename:
             self.set_image(image_filename)
             self.animation.clear_info()
             self.palette_editor.clear()
             self.palette_editor.load_palettes([image_filename])
             self.palette_editor.set_current_palette(0)
-            self.animation.set_current_palette()
-            self.update_view()
+            self.animation.set_palette_text()
+            # self.update_view()
 
     def save(self):
         pass
@@ -247,7 +253,7 @@ class Animation(QtGui.QWidget):
 
         self.playable = True
 
-    def set_current_palette(self, palette=None):
+    def set_palette_text(self, palette=None):
         if palette:
             self.palette_text.setText(palette)
         else:
@@ -391,6 +397,8 @@ class PaletteList(QtGui.QListWidget):
         # self.radio_button_group.button(idx).setChecked(False)
         self.current_idx = idx
         self.radio_button_group.button(idx).setChecked(True)
+        self.window.window.animation.set_palette_text(self.palette_frames[idx].name)
+        self.window.window.set_image(self.palette_frames[idx].full_name)
 
     def get_current_palette(self):
         return self.palette_frames[self.current_idx]
@@ -437,7 +445,8 @@ class PaletteEditor(QtGui.QWidget):
 
     def set_current_palette_name(self, name):
         print('PaletteEditor', 'set_current_palette_name', name)
-        self.palette_list.set_palette_name(self.palette_list.current_idx, name)
+        if self.palette_list:
+            self.palette_list.set_palette_name(self.palette_list.current_idx, name)
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
