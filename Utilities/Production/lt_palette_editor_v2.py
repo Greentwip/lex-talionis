@@ -40,6 +40,8 @@ class MainView(QtGui.QGraphicsView):
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
         pixmap = self.scene.itemAt(scene_pos)
+        if not pixmap:
+            return
         image = pixmap.pixmap().toImage()
         pos = int(scene_pos.x()), int(scene_pos.y())
 
@@ -86,9 +88,17 @@ class ImageMapList(object):
         return self.list[self.current_index]
 
     def set_current_map(self, weapon_name):
+        print(weapon_name)
         for idx, image_map in enumerate(self.list):
             if image_map.weapon_name == weapon_name:
                 self.current_index = idx
+                break
+        else:
+            print("Couldn't find %s" % weapon_name)
+            print(self.get_available_weapons())
+
+    def set_current_idx(self, idx):
+        self.current_index = idx
 
     def get_available_weapons(self):
         return [image_map.weapon_name for image_map in self.list]
@@ -138,7 +148,7 @@ class ColorDisplay(QtGui.QPushButton):
 
     def mousePressEvent(self, e):
         if e.button() == QtCore.Qt.RightButton:
-            self.set_color(QtGui.QtColor("black").name())
+            self.set_color(QtGui.QColor("black").name())
 
         return super(ColorDisplay, self).mousePressEvent(e)
 
@@ -201,6 +211,7 @@ class PaletteFrame(QtGui.QWidget):
         return [color_display.color() for color_display in self.palette_display.color_display_list]
 
     def set_name(self, name):
+        self.name = name
         self.name_label.setText(name)
 
     def set_color(self, idx, color):
@@ -221,7 +232,7 @@ class PaletteFrame(QtGui.QWidget):
     def from_palette(cls, new_idx, palette_frame, window):
         p = cls(new_idx, None, window)
         p.name = palette_frame.name
-        color_list = palette_frame.palette_display.color_list
+        color_list = [QtGui.QColor(c) for c in palette_frame.get_colors()]
         p.create_widgets(color_list)
         return p
 
@@ -246,7 +257,7 @@ class PaletteList(QtGui.QListWidget):
         self.setMinimumWidth(self.sizeHintForColumn(0))
 
     def duplicate(self, idx):
-        new_idx = len(self.list) - 1
+        new_idx = len(self.list)
         item = QtGui.QListWidgetItem(self)
         self.addItem(item)
         new_pf = PaletteFrame.from_palette(new_idx, self.list[idx], self)
@@ -257,6 +268,8 @@ class PaletteList(QtGui.QListWidget):
     def set_current_palette(self, idx):
         self.current_index = idx
         self.radio_button_group.button(idx).setChecked(True)
+        self.window.palette_text.setText(self.get_current_palette().name)
+        self.window.update_view()
 
     def get_current_palette(self):
         return self.list[self.current_index]
@@ -321,8 +334,8 @@ class MainEditor(QtGui.QWidget):
         self.palette_text = QtGui.QLineEdit()
         self.palette_text.textChanged.connect(self.palette_text_change)
 
-        self.play_button = QtGui.QPushButton("View Animations")
-        self.play_button.clicked.connect(self.view_animations)
+        self.play_button = QtGui.QPushButton("View Animation")
+        self.play_button.clicked.connect(self.view_animation)
         self.play_button.setEnabled(False)
 
         self.info_form.addRow("Class", self.class_text)
@@ -336,11 +349,11 @@ class MainEditor(QtGui.QWidget):
         color_idx = image_map.get(position[0], position[1])
         palette_frame.set_color(color_idx, color)
 
-    def view_animations(self):
+    def view_animation(self):
         pass
 
     def load_script(self, fn):
-        with open(self, fn) as script:
+        with open(fn) as script:
             lines = script.readlines()
         self.scripts.append(lines)
 
@@ -360,8 +373,8 @@ class MainEditor(QtGui.QWidget):
     def palette_text_change(self):
         self.palette_list.get_current_palette().set_name(self.palette_text.text())
 
-    def weapon_changed(self, item):
-        self.item_map_list.set_current_map(str(item))
+    def weapon_changed(self, idx):
+        self.image_map_list.set_current_idx(idx)
         self.update_view()
 
     def update_view(self):
@@ -379,8 +392,13 @@ class MainEditor(QtGui.QWidget):
     def get_images_from_index(self, fn):
         image_header = fn[:-10]
         images = glob.glob(str(image_header + "-*.png"))
-        print(images)
         return images
+
+    def get_all_index_files(self, index_file):
+        head, tail = os.path.split(index_file)
+        class_name = tail.split('-')[0]
+        index_files = glob.glob(head + '/' + class_name + "*-Index.txt")
+        return index_files
 
     def load_class(self):
         # starting_path = QtCore.QDir.currentPath() + '/../Data'
@@ -388,7 +406,7 @@ class MainEditor(QtGui.QWidget):
                                                        "Index Files (*-Index.txt);;All Files (*)")
         if index_file:
             self.clear_info()
-            weapon_index_files = self.get_all_index_files(index_file)
+            weapon_index_files = self.get_all_index_files(str(index_file))
             for index_file in weapon_index_files:  # One for each weapon
                 script_file = self.get_script_from_index(index_file)
                 image_files = [str(i) for i in self.get_images_from_index(index_file)]
