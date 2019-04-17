@@ -17,11 +17,16 @@ class MainView(QtGui.QGraphicsView):
         self.image = None
         self.screen_scale = 1
 
-    def set_image(self, image_map, palette):
-        # TODO generate image from palette (pixel by pixel)
-        image = None
+    def set_image(self, image_map, palette_frame):
+        colors = [QtGui.QColor(c).rgb() for c in palette_frame.get_colors()]
+        width, height = image_map.width, image_map.height
+        image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+        for x in range(width):
+            for y in range(height):
+                idx = image_map.get(x, y)
+                image.setPixel(x, y, colors[idx])
         self.image = QtGui.QImage(image)
-        self.image = self.image.convertToFormat(QtGui.QImage.Format_ARGB32)
+        # self.image = self.image.convertToFormat(QtGui.QImage.Format_ARGB32)
         self.setSceneRect(0, 0, self.image.width(), self.image.height())
 
     def clear_scene(self):
@@ -42,7 +47,7 @@ class MainView(QtGui.QGraphicsView):
             dlg = QtGui.QColorDialog()
             dlg.setCurrentColor(QtGui.QColor(image.pixel(pos[0], pos[1])))
             if dlg.exec_():
-                self.window.change_palette(pos, dlg.currentColor())
+                self.window.change_current_palette(pos, dlg.currentColor())
 
     def wheelEvent(self, event):
         if event.delta() > 0 and self.screen_scale < self.max_scale:
@@ -113,8 +118,8 @@ class ColorDisplay(QtGui.QPushButton):
 
     def set_color(self, color):
         if color != self._color:
-            self.colorChanged.emit(self.idx, QtGui.QColor(color))
             self._color = color
+            self.colorChanged.emit(self.idx, QtGui.QColor(color))
 
         if self._color:
             self.setStyleSheet("background-color: %s;" % self._color)
@@ -129,11 +134,11 @@ class ColorDisplay(QtGui.QPushButton):
         if self._color:
             dlg.setCurrentColor(QtGui.QColor(self._color))
         if dlg.exec_():
-            self.setColor(dlg.currentColor().name())
+            self.set_color(dlg.currentColor().name())
 
     def mousePressEvent(self, e):
         if e.button() == QtCore.Qt.RightButton:
-            self.setColor(QtGui.QtColor("black").name())
+            self.set_color(QtGui.QtColor("black").name())
 
         return super(ColorDisplay, self).mousePressEvent(e)
 
@@ -142,7 +147,6 @@ class PaletteDisplay(QtGui.QWidget):
         super(PaletteDisplay, self).__init__(window)
         self.window = window
         self.main_editor = self.window.window.window
-        self.color_list = colors
 
         self.color_display_list = []
 
@@ -152,16 +156,18 @@ class PaletteDisplay(QtGui.QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
-        for idx, color in enumerate(self.color_list):
+        for idx, color in enumerate(colors):
             color_display = ColorDisplay(idx, self)
             color_display.set_color(color.name())
-            # TODO figure out what this needs to connect to
-            color_display.colorChanged.connect(self.main_editor.update_view)
+            color_display.colorChanged.connect(self.on_color_change)
             self.layout.addWidget(color_display, 0, QtCore.Qt.AlignCenter)
             self.color_display_list.append(color_display)
 
     def set_color(self, idx, color):
         self.color_display_list[idx].set_color(color.name())
+
+    def on_color_change(self, idx, color):
+        self.main_editor.update_view()
 
 class PaletteFrame(QtGui.QWidget):
     def __init__(self, idx, image_filename=None, window=None):
@@ -180,16 +186,19 @@ class PaletteFrame(QtGui.QWidget):
         self.setLayout(layout)
 
         radio_button = QtGui.QRadioButton()
-        window.radio_button_group.addButton(radio_button, self.idx)
-        radio_button.clicked.connect(lambda: window.set_current_palette(self.idx))
+        self.window.radio_button_group.addButton(radio_button, self.idx)
+        radio_button.clicked.connect(lambda: self.window.set_current_palette(self.idx))
         self.name_label = QtGui.QLabel(self.name)
         copy = QtGui.QPushButton("Duplicate")
-        copy.clicked.connect(lambda: window.duplicate(self.idx))
-        self.palette_display = PaletteDisplay(palette, window)
+        copy.clicked.connect(lambda: self.window.duplicate(self.idx))
+        self.palette_display = PaletteDisplay(palette, self)
         layout.addWidget(radio_button)
         layout.addWidget(self.name_label)
         layout.addWidget(self.palette_display)
         layout.addWidget(copy)
+
+    def get_colors(self):
+        return [color_display.color() for color_display in self.palette_display.color_display_list]
 
     def set_name(self, name):
         self.name_label.setText(name)
@@ -217,24 +226,24 @@ class PaletteFrame(QtGui.QWidget):
         return p
 
 class PaletteList(QtGui.QListWidget):
-    def __init__(self, image_filenames, window=None):
+    def __init__(self, window=None):
         super(PaletteList, self).__init__(window)
         self.window = window
+        self.uniformItemSizes = True
 
         self.list = []
         self.current_index = 0
         self.radio_button_group = QtGui.QButtonGroup()
 
-        for idx, fn in enumerate(image_filenames):
-            self.add_palette_from_image(idx, fn)
-
-    def add_palette_from_image(self, idx, image_filename):
+    def add_palette_from_image(self, image_filename):
         item = QtGui.QListWidgetItem(self)
         self.addItem(item)
-        pf = PaletteFrame(idx, image_filename, self)
+        pf = PaletteFrame(len(self.list), image_filename, self)
         self.list.append(pf)
         item.setSizeHint(pf.minimumSizeHint())
         self.setItemWidget(item, pf)
+        # Try and make it the right size
+        self.setMinimumWidth(self.sizeHintForColumn(0))
 
     def duplicate(self, idx):
         new_idx = len(self.list) - 1
@@ -282,11 +291,12 @@ class MainEditor(QtGui.QWidget):
         self.grid.addWidget(self.main_view, 0, 0)
         self.grid.addWidget(self.palette_list, 0, 1, 2, 1)
         self.info_form = QtGui.QFormLayout()
-        self.grid.addLayout(self.info_grid, 1, 0)
+        self.grid.addLayout(self.info_form, 1, 0)
 
         self.create_info_bars()
+        self.clear_info()
 
-    def create_menus(self):
+    def create_menu_bar(self):
         load_class_anim = QtGui.QAction("Load Class Animation...", self, triggered=self.load_class)
         load_single_anim = QtGui.QAction("Load Single Animation...", self, triggered=self.load_single)
         load_image = QtGui.QAction("Load Image...", self, triggered=self.load_image)
@@ -300,7 +310,7 @@ class MainEditor(QtGui.QWidget):
         file_menu.addAction(save)
         file_menu.addAction(exit)
 
-        self.menuBar.addMenu(file_menu)
+        self.menu_bar.addMenu(file_menu)
 
     def create_info_bars(self):
         self.class_text = QtGui.QLineEdit()
@@ -313,12 +323,18 @@ class MainEditor(QtGui.QWidget):
 
         self.play_button = QtGui.QPushButton("View Animations")
         self.play_button.clicked.connect(self.view_animations)
-        self.play_button.setEnabled = False
+        self.play_button.setEnabled(False)
 
         self.info_form.addRow("Class", self.class_text)
         self.info_form.addRow("Weapon", self.weapon_box)
         self.info_form.addRow("Palette", self.palette_text)
         self.info_form.addRow(self.play_button)
+
+    def change_current_palette(self, position, color):
+        palette_frame = self.palette_list.get_current_palette()
+        image_map = self.image_map_list.get_current_map()
+        color_idx = image_map.get(position[0], position[1])
+        palette_frame.set_color(color_idx, color)
 
     def view_animations(self):
         pass
@@ -331,8 +347,9 @@ class MainEditor(QtGui.QWidget):
     def clear_info(self):
         self.class_text.setEnabled(True)
         self.class_text.setText('')
-        self.weapon_text.setText('')
+        self.weapon_box.clear()
         self.palette_text.setText('')
+        self.play_button.setEnabled(False)
         self.image_map_list.clear()
         self.palette_list.clear()
         self.scripts = []
@@ -374,7 +391,7 @@ class MainEditor(QtGui.QWidget):
             weapon_index_files = self.get_all_index_files(index_file)
             for index_file in weapon_index_files:  # One for each weapon
                 script_file = self.get_script_from_index(index_file)
-                image_files = self.get_images_from_index(index_file)
+                image_files = [str(i) for i in self.get_images_from_index(index_file)]
                 if image_files:
                     self.load_script(script_file)
                     self.play_button.setEnabled = True
@@ -386,6 +403,7 @@ class MainEditor(QtGui.QWidget):
                 self.weapon_box.addItem(weapon)
             klass_name = os.path.split(image_files[0][:-4])[-1].split('-')[0]  # Klass
             self.class_text.setText(klass_name)
+            self.palette_list.set_current_palette(0)
             self.update_view()
 
     def load_single(self):
@@ -393,7 +411,7 @@ class MainEditor(QtGui.QWidget):
                                                        "Index Files (*-Index.txt);;All Files (*)")
         if index_file:
             script_file = self.get_script_from_index(index_file)
-            image_files = self.get_images_from_index(index_file)
+            image_files = [str(i) for i in self.get_images_from_index(index_file)]
             if image_files:
                 self.clear_info()
                 self.load_script(script_file)
@@ -405,6 +423,7 @@ class MainEditor(QtGui.QWidget):
                 self.weapon_box.addItem(self.image_map_list.get_current_map().weapon_name)
                 klass_name = os.path.split(image_files[0][:-4])[-1].split('-')[0]  # Klass
                 self.class_text.setText(klass_name)
+                self.palette_list.set_current_palette(0)
                 self.update_view()
 
     def load_image(self):
@@ -413,10 +432,11 @@ class MainEditor(QtGui.QWidget):
         if image_filename:
             self.clear_info()
             self.play_button.setEnabled = False
-            self.image_map_list.add_map_from_image(image_filename)
-            self.palette_list.add_palette_from_image(image_filename)
+            self.image_map_list.add_map_from_image(str(image_filename))
+            self.palette_list.add_palette_from_image(str(image_filename))
             self.palette_text.setText(self.palette_list.get_current_palette().name)
             self.class_text.setEnabled(False)
+            self.palette_list.set_current_palette(0)
             self.update_view()
 
     def save(self):
@@ -424,6 +444,6 @@ class MainEditor(QtGui.QWidget):
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
-    window = MainEditor()
-    window.show()
+    main_editor = MainEditor()
+    main_editor.show()
     app.exec_()
