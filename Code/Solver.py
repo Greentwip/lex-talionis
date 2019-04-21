@@ -147,6 +147,10 @@ class Solver(object):
             if self.item.summon:
                 result.summoning = SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, metaDataObj, gameStateObj)
 
+        # Make last attack against a boss a crit!
+        if cf.CONSTANTS['boss_crit'] and 'Boss' in defender.tags and result.outcome and result.def_damage >= defender.currenthp:
+            result.outcome = 2
+
         # Handle lifelink and vampire
         if result.def_damage > 0:
             if self.item.lifelink:
@@ -191,6 +195,10 @@ class Solver(object):
             for s_id in self.defender.getMainWeapon().status:
                 status_object = StatusObject.statusparser(s_id)
                 result.def_status.append(status_object)
+
+        # Make last attack against a boss a crit!
+        if cf.CONSTANTS['boss_crit'] and 'Boss' in self.attacker.tags and result.outcome and result.def_damage >= self.attacker.currenthp:
+            result.outcome = 2
 
         # Handle lifelink and vampire
         if result.def_damage > 0:

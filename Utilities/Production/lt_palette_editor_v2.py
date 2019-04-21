@@ -187,6 +187,16 @@ class MainEditor(QtGui.QWidget):
                 return True
         return False
 
+    def auto_load(self):
+        starting_path = QtCore.QDir.currentPath()
+        check_here = str(QtCore.QDir.currentPath() + '/pe_config.txt')
+        if os.path.exists(check_here):
+            with open(check_here) as fp:
+                directory = fp.readline().strip()
+            if os.path.exists(directory):
+                starting_path = directory
+        return starting_path
+
     def load_class(self):
         # starting_path = QtCore.QDir.currentPath() + '/../Data'
         index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Class", QtCore.QDir.currentPath(),
@@ -214,8 +224,14 @@ class MainEditor(QtGui.QWidget):
             self.palette_list.set_current_palette(0)
 
     def load_single(self):
-        index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Animation", QtCore.QDir.currentPath(),
+        starting_path = self.auto_load()
+        print(starting_path)
+        index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Animation", starting_path,
                                                        "Index Files (*-Index.txt);;All Files (*)")
+        auto_load = str(QtCore.QDir.currentPath() + '/pe_config.txt')
+        with open(auto_load, 'w') as fp:
+            print(os.path.relpath(str(index_file)))
+            fp.write(os.path.relpath(str(index_file)))
         if index_file:
             script_file = self.get_script_from_index(index_file)
             image_files = [str(i) for i in self.get_images_from_index(index_file)]

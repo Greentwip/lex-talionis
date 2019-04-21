@@ -1,0 +1,1 @@
+..\..\Data\Animations\Archer\Archer0-Unarmed-Index.txt

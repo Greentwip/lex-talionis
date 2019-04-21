@@ -5,14 +5,15 @@ class ImageView(QtGui.QGraphicsView):
     def __init__(self, window=None):
         QtGui.QGraphicsView.__init__(self)
         self.window = window
-        self.setFixedSize(240, 160)
         self.scene = QtGui.QGraphicsScene(self)
         self.setScene(self.scene)
-        self.setSceneRect(0, 0, 240, 160)
+        self.setFixedSize(240, 160)
         # self.fitInView(0, 0, 240, 160, QtCore.Qt.KeepAspectRatio)
 
         self.image = QtGui.QImage(240, 160, QtGui.QImage.Format_ARGB32)
         self.screen_scale = 1
+
+        # self.image_counter = 0
 
     def clear_scene(self):
         self.scene.clear()
@@ -20,17 +21,22 @@ class ImageView(QtGui.QGraphicsView):
     def show_image(self):
         if self.image:
             self.clear_scene()
+            # bg = QtGui.QImage(240, 160, QtGui.QImage.Format_ARGB32)
+            # self.scene.addPixmap(QtGui.QPixmap.fromImage(bg))
             self.scene.addPixmap(QtGui.QPixmap.fromImage(self.image))
 
     def new_frame(self, frame, offset):
         self.image = QtGui.QImage(240, 160, QtGui.QImage.Format_ARGB32)
+        self.image.fill(QtGui.QColor("white"))
         painter = QtGui.QPainter()
-        # f = frame.copy()
         painter.begin(self.image)
         painter.drawImage(offset[0], offset[1], frame.copy())  # Draw image on top of autotiles
         painter.end()
         # self.image = f
         # self.image.paste(QtGui.QImage(frame), offset)
+        self.setSceneRect(0, 0, 240, 160)
+        # self.image.save('image_%d.png' % self.image_counter)
+        # self.image_counter += 1
         self.show_image()
 
 class Animator(QtGui.QDialog):

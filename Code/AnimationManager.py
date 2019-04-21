@@ -100,6 +100,8 @@ class BattleAnimationManager(object):
             check_item = False
             if not item:
                 weapon = 'Unarmed'
+            elif item.use_custom_anim and item.use_custom_anim in self.directory[klass]:
+                weapon = item.use_custom_anim
             elif magic:
                 weapon = 'Magic' + item.spritetype
                 check_item = True # Make sure that we have the spell also
