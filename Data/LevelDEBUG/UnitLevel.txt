@@ -30,6 +30,7 @@ player;0;0;MageF;1;Fire;3,16;None;Resistance
 # Generics
 enemy;0;0;Knight;1;Superior Lance;3,15;None;Resistance
 enemy;0;0;Myrmidon;10;Lancereaver;3,14;None;Resistance
+enemy;0;0;Brigand;10;Iron Axe;16,4;PursueTile;Resistance
 # === Reinforcements ===
 # Player Characters
 player;0;Soldier1;Soldier;1;Iron Lance;None;None;Resistance

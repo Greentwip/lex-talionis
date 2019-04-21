@@ -59,3 +59,5 @@ Support					3 2 - - 2 10
 FollowBoss				3 7 - - 2 15
 FollowWagon             3 Wagon - - 2 20
 Seize                   259 8 - - 2 20
+AttackTile              11 1 - - 1 20
+PursueTile              11 1 - - 2 20
