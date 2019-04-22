@@ -40,7 +40,8 @@ def read_config_file():
     try:
         parse_config('Saves/config.ini')
     except:
-        parse_config('Data/config.ini')
+        if os.path.exists('Data/config.ini'):
+            parse_config('Data/config.ini')
 
     lines['debug'] = int(lines['debug'])
     lines['cheat'] = int(lines['cheat'])
