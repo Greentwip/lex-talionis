@@ -84,16 +84,22 @@ def color_change_band(new_images, series, palette, current, test_im, (x, y)):
         # new = remove_bad_color(remove_bad_color(new))
         new_images[band].paste(new, (x*WIDTH, y*HEIGHT))
 
-def make_autotiles_from_image(fn, dir_out):
-    autotile_templates = []
-    for fp in sorted(os.listdir('.')):
+def create_autotiles_from_image(fn, dir_out):
+    if not os.path.exists('AutotileTemplates'):
+        print('Autotile templates are missing!')
+        print('Make sure all autotile templates are located in "Editor/AutotileTemplates/')
+        return
+    
+    # Otherwise
+    autotile_templates = []        
+    for fp in sorted(os.listdir('AutotileTemplates')):
         if fp.endswith('.png') and fp != 'MapSprite.png' and not fp.startswith('autotile'):
             autotile_templates.append(fp)
 
     print('Reading files %s...' %(len(autotile_templates)))
     books = []
     for template in autotile_templates:
-        image = Image.open(template)
+        image = Image.open('AutotileTemplates/' + template)
         width = image.size[0]/16
         number = width/WIDTH*image.size[1]/HEIGHT
         minitiles = [Series() for x in range(number)]

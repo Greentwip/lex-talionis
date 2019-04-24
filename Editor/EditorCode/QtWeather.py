@@ -69,7 +69,7 @@ class Fire(Raindrop):
         self.remove_me = False
         self.sprite = self.sprites[-1]
 
-    def update(self, gameStateObj):
+    def update(self, current_time, tile_data):
         self.x -= random.randint(0, self.speed)
         self.y -= random.randint(0, self.speed)
         if self.y > 112:

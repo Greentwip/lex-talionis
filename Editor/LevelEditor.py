@@ -524,7 +524,7 @@ class MainEditor(QtGui.QMainWindow):
         if image_file:
             self.set_image(image_file)
             self.tile_data.new(image_file)
-            Autotiles.create_autotiles_from_image(image_file, self.directory + '/Autotiles/')
+            Autotiles.create_autotiles_from_image(str(image_file), self.directory + '/Autotiles/')
             self.update_view()
 
     def open(self):

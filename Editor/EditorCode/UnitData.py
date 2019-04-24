@@ -281,8 +281,6 @@ class UnitData(object):
         u_i['faction_icon'] = faction.faction_icon
         u_i['desc'] = faction.desc
 
-        print('Legend Items', legend['items'])
-
         stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = \
             self.get_unit_info(Data.class_dict, u_i['klass'], u_i['level'], legend['items'])
         u_i['stats'] = build_stat_dict(stats)
@@ -327,7 +325,6 @@ class UnitData(object):
         stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
 
         # Handle items
-        print('Item Line', item_line, item_line.split(','))
         items = [ItemMethods.itemparser(item) for item in item_line.split(',') if item]
 
         # Handle required wexp
