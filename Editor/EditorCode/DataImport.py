@@ -47,8 +47,8 @@ def build_named_units(class_dict):
         # u_i['growths'] = SaveLoad.intify_comma_list(unit.find('growths').text)
         # u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
         # assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
-
-        u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text)
+        u_i['items'] = [ItemMethods.itemparser(item) for item in unit.find('inventory').text.split(',') if item]
+        # u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text.split(','))
         # # Parse wexp
         # u_i['wexp'] = unit.find('wexp').text.split(',')
         # for index, wexp in enumerate(u_i['wexp'][:]):
@@ -151,7 +151,7 @@ class Unit(object):
         new_unit.faction_icon = self.faction_icon
         new_unit.desc = self.desc
         new_unit.team = self.team
-        new_unit.items = [ItemMethods.itemparser(item.id)[0] for item in self.items]
+        new_unit.items = [ItemMethods.itemparser(item.id) for item in self.items]
         new_unit.ai = self.ai
         new_unit.image = self.image
         new_unit.extra_statuses = self.extra_statuses
@@ -253,7 +253,7 @@ class GlobalData(object):
 
         # === Item Data ===
         self.item_data = OrderedDict()
-        items = [ItemMethods.itemparser(item)[0] for item in GC.ITEMDATA]
+        items = [ItemMethods.itemparser(item) for item in GC.ITEMDATA]
         items = sorted(items, key=lambda item: GC.ITEMDATA[item.id]['num'])
         items = [item for item in items if not item.virtual]
         for item in items:

@@ -719,7 +719,7 @@
     </status>
 
     <status name="Summon">
-        <id>Gate</id>
+        <id>Summon</id>
         <image_index>9,0</image_index>
         <desc>Activated. Summons a dark phantom to aid you.</desc>
         <components>active,class_skill</components>

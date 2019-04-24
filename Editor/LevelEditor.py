@@ -15,6 +15,7 @@ from Code.imagesDict import COLORKEY
 from EditorCode import PropertyMenu, Terrain, TileInfo, UnitData
 from EditorCode import EditorUtilities, Faction, Triggers, QtWeather
 from EditorCode.DataImport import Data
+from EditorCode import Autotiles
 
 # TODO: Created Units
 
@@ -523,6 +524,7 @@ class MainEditor(QtGui.QMainWindow):
         if image_file:
             self.set_image(image_file)
             self.tile_data.new(image_file)
+            Autotiles.create_autotiles_from_image(image_file, self.directory + '/Autotiles/')
             self.update_view()
 
     def open(self):

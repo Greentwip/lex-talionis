@@ -2854,7 +2854,7 @@ class ShopState(StateMachine.State):
                 itemids = gameStateObj.map.tile_info_dict[self.unit.position]['Shop']
 
             # Get items
-            items_for_sale = [ItemMethods.itemparser(item) for item in itemids.split(',')]
+            items_for_sale = [ItemMethods.itemparser(item) for item in itemids.split(',') if item]
             
             topleft = (GC.WINWIDTH//2 - 80 + 4, 3*GC.WINHEIGHT//8+8)
             self.shopMenu = MenuFunctions.ShopMenu(self.unit, items_for_sale, topleft, limit=5, buy=True)

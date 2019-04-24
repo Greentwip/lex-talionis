@@ -95,7 +95,7 @@ def build_units(class_dict, portrait_data):
         u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
         assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
 
-        u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text)
+        u_i['items'] = [ItemMethods.itemparser(item) for item in unit.find('inventory').text if item]
         # Parse wexp
         u_i['wexp'] = unit.find('wexp').text.split(',')
         for index, wexp in enumerate(u_i['wexp'][:]):
@@ -1300,7 +1300,7 @@ class MainEditor(QtGui.QMainWindow):
         menu.tick(current_time)
 
 def load_data(window):
-    item_data = [ItemMethods.itemparser(item)[0] for item in GC.ITEMDATA]
+    item_data = [ItemMethods.itemparser(item) for item in GC.ITEMDATA]
     item_data = sorted(item_data, key=lambda item: GC.ITEMDATA[item.id]['num'])
     item_data = [item for item in item_data if not item.virtual]
     for item in item_data:

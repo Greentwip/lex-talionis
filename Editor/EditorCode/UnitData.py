@@ -3,7 +3,6 @@ import sys
 from PyQt4 import QtGui, QtCore
 
 sys.path.append('../')
-import Code.configuration as cf
 import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
 Engine.engine_constants['home'] = '../'
@@ -12,7 +11,7 @@ import Code.GlobalConstants as GC
 import Code.ItemMethods as ItemMethods
 import Code.Weapons as Weapons
 
-from Code.StatObject import Stat
+from Code.StatObject import build_stat_dict
 import Code.Utility as Utility
 from Code.Triggers import Trigger
 
@@ -282,9 +281,11 @@ class UnitData(object):
         u_i['faction_icon'] = faction.faction_icon
         u_i['desc'] = faction.desc
 
+        print('Legend Items', legend['items'])
+
         stats, u_i['growths'], u_i['growth_points'], u_i['items'], u_i['wexp'] = \
             self.get_unit_info(Data.class_dict, u_i['klass'], u_i['level'], legend['items'])
-        u_i['stats'] = self.build_stat_dict(stats)
+        u_i['stats'] = build_stat_dict(stats)
         
         u_i['tags'] = Data.class_dict[u_i['klass']]['tags']
         if '_' in legend['ai']:
@@ -310,12 +311,6 @@ class UnitData(object):
 
         # Extra Skills
         cur_unit.extra_statuses = legend['extra_status']
-
-    def build_stat_dict(self, stats):
-        st = OrderedDict()
-        for idx, name in enumerate(cf.CONSTANTS['stat_names']):
-            st[name] = Stat(idx, stats[idx])
-        return st
     
     def get_unit_info(self, class_dict, klass, level, item_line):
         # Handle stats
@@ -332,7 +327,8 @@ class UnitData(object):
         stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
 
         # Handle items
-        items = ItemMethods.itemparser(item_line)
+        print('Item Line', item_line, item_line.split(','))
+        items = [ItemMethods.itemparser(item) for item in item_line.split(',') if item]
 
         # Handle required wexp
         wexp = class_dict[klass]['wexp_gain'][:]
