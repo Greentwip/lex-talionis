@@ -377,16 +377,16 @@ class AI(object):
 
     # === ATTACK TILE AI ===
     def run_attack_tile_ai(self, valid_moves, gameStateObj):
-        available_targets = [position for position, tile in gameStateObj.map.tiles 
+        available_targets = [position for position, tile in gameStateObj.map.tiles.items() 
                              if 'HP' in gameStateObj.map.tile_info_dict[position]]
         avail_items = [item for item in self.unit.items if item.weapon]
         avail_items = sorted(avail_items, key=lambda x: x.MT, reverse=True)
 
         for item in avail_items:
-            for target in available_targets:
+            for position in available_targets:
                 for move in valid_moves:
-                    if Utility.calculate_distance(move, target.position) in item.get_range(self.unit):
-                        self.target_to_interact_with = target.position
+                    if Utility.calculate_distance(move, position) in item.get_range(self.unit):
+                        self.target_to_interact_with = position
                         self.position_to_move_to = move
                         self.item_to_use = item
                         return True

@@ -30,17 +30,18 @@ def read_config_file():
                          ('key_DOWN', 274),
                          ('key_START', 115)])
 
+    def parse_config(fn):
+        with open(fn) as config_file:
+            for line in config_file:
+                split_line = line.strip().split('=')
+                lines[split_line[0]] = split_line[1]
+
     # Try saves folder first
-    if os.path.isfile('Saves/config.ini'):
-        with open('Saves/config.ini') as config_file:
-            for line in config_file:
-                split_line = line.strip().split('=')
-                lines[split_line[0]] = split_line[1]
-    elif os.path.isfile('Data/config.ini'):
-        with open('Data/config.ini') as config_file:
-            for line in config_file:
-                split_line = line.strip().split('=')
-                lines[split_line[0]] = split_line[1]
+    try:
+        parse_config('Saves/config.ini')
+    except:
+        if os.path.exists('Data/config.ini'):
+            parse_config('Data/config.ini')
 
     lines['debug'] = int(lines['debug'])
     lines['cheat'] = int(lines['cheat'])
