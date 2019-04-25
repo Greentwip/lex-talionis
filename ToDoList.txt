@@ -14,6 +14,8 @@
 Take Drop infinite movement with canto? (for turnwheel branch)
 Add separate combine action to convoy (for turnwheel branch)
 Casual death? Check other_game
+- Arena, FOW, Overworld, % Activation Skills, Better Commands
+- Automatic Updater
 
 - Turnwheel
 - Submaps
