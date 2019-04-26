@@ -1,7 +1,10 @@
 # Autotile maker part 2
-import os
+import os, sys
 from collections import Counter
 from PIL import Image
+
+sys.path.append('../')
+from Code.imagesDict import COLORKEY
 
 WIDTH, HEIGHT = 16, 16
 
@@ -40,20 +43,25 @@ class PaletteData(object):
     def __init__(self, arr):
         self.arr = arr
         self.data = list(arr.getdata()) 
-        count = 1
         self.uniques = reduce(lambda l, x: l if x in l else l+[x], self.data, [])
+        # Sort by most popular
         self.uniques = sorted(self.uniques, key=lambda x: self.data.count(x), reverse=True)
         self.palette = self.data[:]
         # self.simple_palette = self.data[:]
-        for u in self.uniques:
+        """
+        for idx, u in enumerate(self.uniques):
             for index, pixel in enumerate(self.data):
                 if pixel == u:
-                    self.palette[index] = count
+                    # Each pixel in the palette is assigned its color id
+                    self.palette[index] = idx + 1
                 # if pixel[2] > pixel[1] and pixel[2] > pixel[0]:
                 #    self.simple_palette[index] = 1 # Blue
                 # else:
                 #    self.simple_palette[index] = 0 # Not really blue
-            count += 1
+        """
+        for index, pixel in enumerate(self.data):
+            # Each pixel in the palette is assigned its color id
+            self.palette[index] = self.uniques.index(pixel)
 
 def remove_bad_color(new):
     for i in range(WIDTH):
@@ -62,17 +70,20 @@ def remove_bad_color(new):
             if color[0] == 8 and color[1] == 8 and color[2] == 8:
                 adjacent_colors = Counter()
                 for pos in [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]:
-                    if pos[0] >= 0 and pos[1] >=0 and pos[0] < 8 and pos[1] < 8:
+                    if pos[0] >= 0 and pos[1] >= 0 and pos[0] < WIDTH and pos[1] < HEIGHT:
                         adjacent_colors[new.getpixel(pos)] += 1
                 most_common = adjacent_colors.most_common(1)[0][0]
                 new.putpixel((i, j), most_common)
     return new
 
-def color_change_band(new_images, series, palette, current, test_im, (x, y)):
-    # Build color conversion dictionary
+# Changes the color of a band to match palette color of map
+def color_change_band(autotile_frames, series, closest_frame, tile, pos):
+    x, y = pos
+    # Converts colors from closest frame to tile
     color_conversion_dict = {}
-    for index, color in enumerate(palette.data):
-        color_conversion_dict[color] = test_im.data[index]
+    for index, color in enumerate(closest_frame.data):
+        color_conversion_dict[color] = tile.data[index]
+    # TODO: What colors are missing?
 
     # Now actually build new images
     for band in range(16):
@@ -82,9 +93,9 @@ def color_change_band(new_images, series, palette, current, test_im, (x, y)):
             new.putpixel((index%WIDTH, index/HEIGHT), new_color)
         # Now fix any that are black -- do it twice
         # new = remove_bad_color(remove_bad_color(new))
-        new_images[band].paste(new, (x*WIDTH, y*HEIGHT))
+        autotile_frames[band].paste(new, (x*WIDTH, y*HEIGHT))
 
-def create_autotiles_from_image(fn, dir_out):
+def create_autotiles_from_image(map_sprite_fn, dir_out):
     if not os.path.exists('AutotileTemplates'):
         print('Autotile templates are missing!')
         print('Make sure all autotile templates are located in "Editor/AutotileTemplates/')
@@ -96,51 +107,56 @@ def create_autotiles_from_image(fn, dir_out):
         if fp.endswith('.png') and fp != 'MapSprite.png' and not fp.startswith('autotile'):
             autotile_templates.append(fp)
 
-    print('Reading files %s...' %(len(autotile_templates)))
-    books = []
+    print('Reading %s autotile templates...' %(len(autotile_templates)))
+    books = []  # Each autotile template becomes a book
+    # A book contains a dictionary of positions as keys and series as values
     for template in autotile_templates:
         image = Image.open('AutotileTemplates/' + template)
-        width = image.size[0]/16
-        number = width/WIDTH*image.size[1]/HEIGHT
-        minitiles = [Series() for x in range(number)]
-        print(width, image.size[1], number)
-        for band in range(16):
-            for x in range(width/WIDTH):
-                for y in range(image.size[1]/HEIGHT):
-                    palette = image.crop((band*width + x*WIDTH, y*HEIGHT, band*width + x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
-                    minitiles[x + y*width/WIDTH].append(PaletteData(palette))
+        width = image.size[0]/16  # There are 16 frames 
+        num_tiles_x = width/WIDTH
+        num_tiles_y = image.size[1]/HEIGHT
+        number = num_tiles_x*num_tiles_y
+        minitiles = [Series() for _ in range(number)]
+        for frame in range(16):  # There are 16 frames, stacked hoirzontally with one another
+            x_offset = frame*width
+            for x in range(num_tiles_x):
+                for y in range(num_tiles_y):
+                    palette = image.crop((x_offset + x*WIDTH, y*HEIGHT, x_offset + x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
+                    minitiles[x + y*num_tiles_x].append(PaletteData(palette))
         assert all(len(series.series) == 16 for series in minitiles)
         books.append(minitiles)
 
     print('Making new files...')
-    main = Image.open(fn)
+    map_sprite = Image.open(map_sprite_fn)
 
-    new_images = [Image.new('RGB', main.size) for _ in range(16)]
-    print(main.size)
+    autotile_frames = [Image.new('RGB', map_sprite.size, COLORKEY) for _ in range(16)]
+    print(map_sprite.size)
 
     print('Comparison...')
-    for x in range(main.size[0]/WIDTH):
-        for y in range(main.size[1]/HEIGHT):
+    for x in range(map_sprite.size[0]/WIDTH):
+        for y in range(map_sprite.size[1]/HEIGHT):
             print(x, y)
-            current = main.crop((x*WIDTH, y*HEIGHT, x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
-            test_im = PaletteData(current)
+            tile = map_sprite.crop((x*WIDTH, y*HEIGHT, x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
+            tile_palette = PaletteData(tile)
+
             closest_series = None
-            closest_palette = None
-            min_sim = 400
+            closest_frame = None
+            min_sim = WIDTH*HEIGHT/16
             for book in books:
                 for series in book:
-                    for palette in series.series:
-                        similarity = similar(palette.palette, test_im.palette)
+                    for frame in series.series:
+                        similarity = similar(frame.palette, tile_palette.palette)
                         if similarity < min_sim:
                             min_sim = similarity
+                            print(min_sim)
                             closest_series = series
-                            closest_palette = palette
-            print(min_sim)
+                            closest_frame = frame
             if closest_series:
-                color_change_band(new_images, closest_series, closest_palette, current, test_im, (x, y))
+                color_change_band(autotile_frames, closest_series, closest_frame, tile_palette, (x, y))
 
     print('Saving...')
     if not os.path.exists(dir_out):
         os.mkdir(dir_out)
-    for idx, n in enumerate(new_images):
+    for idx, n in enumerate(autotile_frames):
         n.save(dir_out + '/autotile' + str(idx) + '.png')
+    print('Done!')

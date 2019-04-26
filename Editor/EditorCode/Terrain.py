@@ -54,6 +54,7 @@ class TileData(object):
 
     def __init__(self):
         self.tiles = {}
+        self.image_file = None
         self.width, self.height = 0, 0
 
     def clear(self):
@@ -70,6 +71,7 @@ class TileData(object):
 
     def new(self, image_file):
         self.clear()
+        self.image_file = str(image_file)
         image = QtGui.QImage(image_file)
         self.width, self.height = image.width() / 16, image.height() / 16
 

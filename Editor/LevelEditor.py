@@ -524,8 +524,22 @@ class MainEditor(QtGui.QMainWindow):
         if image_file:
             self.set_image(image_file)
             self.tile_data.new(image_file)
-            Autotiles.create_autotiles_from_image(str(image_file), self.directory + '/Autotiles/')
             self.update_view()
+
+    def generate_autotiles(self):
+        map_sprite_filename = self.directory + '/MapSprite.png'
+        full_map_sprite_filename = self.directory + '/MapSprite_full.png'
+        if os.path.exists(full_map_sprite_filename):
+            Autotiles.create_autotiles_from_image(full_map_sprite_filename, self.directory + '/Autotiles/')
+        else:
+            shutil.copy(map_sprite_filename, full_map_sprite_filename)  # Make a backup
+            Autotiles.create_autotiles_from_image(map_sprite_filename, self.directory + '/Autotiles/')
+
+        # When complete
+        self.set_image(map_sprite_filename)
+        self.autotiles.clear()
+        auto_loc = self.directory + '/Autotiles/'
+        self.autotiles.load(auto_loc)
 
     def open(self):
         if self.maybe_save():
@@ -816,6 +830,7 @@ class MainEditor(QtGui.QMainWindow):
         self.save_as_act = QtGui.QAction("&Save As...", self, shortcut="Ctrl+Shift+S", triggered=self.save_as)
         self.exit_act = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q", triggered=self.close)
         self.import_act = QtGui.QAction("&Import Map...", self, shortcut="Ctrl+I", triggered=self.import_new_map)
+        self.autotiles_act = QtGui.QAction("Generate Autotiles...", self, triggered=self.generate_autotiles)
         self.reload_act = QtGui.QAction("&Reload", self, shortcut="Ctrl+R", triggered=self.load_data)
         self.about_act = QtGui.QAction("&About", self, triggered=self.about)
 
@@ -827,6 +842,7 @@ class MainEditor(QtGui.QMainWindow):
         file_menu.addAction(self.save_as_act)
         file_menu.addSeparator()
         file_menu.addAction(self.import_act)
+        file_menu.addAction(self.autotiles_act)
         file_menu.addAction(self.reload_act)
         file_menu.addSeparator()
         file_menu.addAction(self.exit_act)
