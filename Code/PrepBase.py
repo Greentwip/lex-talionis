@@ -166,7 +166,7 @@ class PrepPickUnitsState(StateMachine.State):
             # gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
-            StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
@@ -552,7 +552,7 @@ class PrepTradeSelectState(StateMachine.State):
             gameStateObj.activeMenu.currentSelection = self.currentSelection
             gameStateObj.stateMachine.back()
         elif event == 'INFO':
-            StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
@@ -1039,7 +1039,7 @@ class BaseMarketState(StateMachine.State):
 
             # Create money surf
             self.money_surf = MenuFunctions.CreateBaseMenuSurf((56, 24))
-            g_surf = Engine.subsurface(GC.IMAGESDICT['GoldenWords'], (40, 50, 9, 9))
+            g_surf = Engine.subsurface(GC.IMAGESDICT['GoldenWords'], (40, 47, 11, 11))
             self.money_surf.blit(g_surf, (45, 8))
             self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((66, GC.WINHEIGHT - 40))
 

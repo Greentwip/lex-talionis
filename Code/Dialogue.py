@@ -625,7 +625,7 @@ class Dialogue_Scene(object):
             gameStateObj.stateMachine.changeState('movement')
             # Camera follow
             if len(line) > 1:
-                gameStateObj.cursor.camera_follow = self.get_unit(line[1]).id
+                gameStateObj.cursor.camera_follow = gameStateObj.get_unit(line[1]).id
         elif line[0] == 'interact_unit':
             # Read input
             attacker = line[1]
@@ -740,7 +740,7 @@ class Dialogue_Scene(object):
             Action.do(Action.ChangeObjective(win_condition=line[1]), gameStateObj)
             # gameStateObj.objective.win_condition_string = line[1]
         elif line[0] == 'change_objective_loss_condition':
-            Action.do(Action.ChangeObjective(loss_condiion=line[1]), gameStateObj)
+            Action.do(Action.ChangeObjective(loss_condition=line[1]), gameStateObj)
             # gameStateObj.objective.loss_condition_string = line[1]
         elif line[0] == 'minimum_number_banner':
             gameStateObj.banners.append(Banner.tooFewUnitsBanner())

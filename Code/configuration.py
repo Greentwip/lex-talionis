@@ -108,6 +108,7 @@ def read_constants_file():
              'promoted_level': 19, # Add this to a promoted units level to determine how many levels they've had
              'auto_promote': 0, # Promote after max-level?
              'minimum_damage': 0, # Minimum amount of damage that can be dealt (switch to 1 to make it like FE2 or FE15)
+             'boss_crit': 0, # Whether the lethal hit on a boss shows a crit
              'steal_exp': 0, # Amount of exp gained from stealing
              'unarmed_punish': 0, # How much weapon disadvantage an unarmed unit gets
              'convoy_on_death': 0, # Should dead units give all of their items to the convoy at the end of each level?

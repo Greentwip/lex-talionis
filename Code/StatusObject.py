@@ -26,7 +26,7 @@ class StatusObject(object):
         self.desc = desc
         self.image_index = image_index or (0, 0)
 
-        self.children = []
+        self.children = set()
 
         # Creates component slots
         self.components = components # Consumable, Weapon, Spell Bigger Picture
@@ -40,6 +40,12 @@ class StatusObject(object):
 
     def __repr__(self):
         return self.name
+
+    def add_child(self, child):
+        self.children.add(child)
+
+    def remove_child(self, child):
+        self.children.discard(child)
 
     def removeSprites(self):
         self.image = None
@@ -716,7 +722,7 @@ def deserialize(s_dict):
     if s_dict.get('charge'):
         status.active.current_charge = s_dict['charge']
     if s_dict.get('children'):
-        status.children = s_dict['children']
+        status.children = set(s_dict['children'])
     if s_dict.get('parent_id'):
         status.parent_id = s_dict['parent_id']
 

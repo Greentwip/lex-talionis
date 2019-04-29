@@ -128,6 +128,10 @@ class Solver(object):
                     result.def_damage = -self.attacker.compute_heal(defender, gameStateObj, self.item, mode='Attack')
                 if self.item.movement:
                     result.def_movement = self.item.movement
+
+            elif self.item.half and self.item.hit is not None and self.item.damage is not None:
+                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
+
         else:
             result.outcome = 1
             result.def_damage = -int(eval(self.item.heal)) if self.item.heal else 0

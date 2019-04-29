@@ -3018,7 +3018,10 @@ class ShopState(StateMachine.State):
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                     new_item = ItemMethods.itemparser(str(selection.id))
                     gameStateObj.add_item(new_item)
-                    Action.execute(Action.GiveItem(self.unit, new_item), gameStateObj)
+                    if len(self.unit.items) >= cf.CONSTANTS['max_items']:
+                        Action.execute(Action.PutItemInConvoy(new_item), gameStateObj)
+                    else:
+                        Action.execute(Action.GiveItem(self.unit, new_item), gameStateObj)
                     # gameStateObj.game_constants['money'] -= value
                     Action.execute(Action.GiveGold(-value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(-value)

@@ -551,9 +551,9 @@ class AnimationCombat(Combat):
                 self.last_update = current_time
                 self.combat_state = 'Pre_Init'
                 # Start Battle Music
-                if self.p1.team in ('player', 'other'):
+                if self.p1.team in ('player', 'other') and gameStateObj.phase_music.player_battle_music:
                     Engine.music_thread.fade_in(gameStateObj.phase_music.player_battle_music)
-                else:
+                elif gameStateObj.phase_music.enemy_battle_music:
                     Engine.music_thread.fade_in(gameStateObj.phase_music.enemy_battle_music)
 
         elif self.combat_state == 'Pre_Init':
@@ -635,7 +635,7 @@ class AnimationCombat(Combat):
             if self.viewbox_clamp_state > 0:
                 self.build_viewbox(gameStateObj)
             else:
-                self.finish()
+                self.finish(gameStateObj)
                 self.clean_up(gameStateObj, metaDataObj)
                 self.end_skip()
                 return True
@@ -774,10 +774,14 @@ class AnimationCombat(Combat):
             self.focus_right = False
         self.move_camera()
 
-    def finish(self):
+    def finish(self, gameStateObj):
         self.p1.unlock_active()
         self.p2.unlock_active()
-        Engine.music_thread.fade_back()
+        # fade back music IF AND ONLY IF it was faded in!
+        if self.p1.team in ('player', 'other') and gameStateObj.phase_music.player_battle_music:
+            Engine.music_thread.fade_back()
+        elif gameStateObj.phase_music.enemy_battle_music:
+            Engine.music_thread.fade_back()
 
     def shake(self, num):
         self.current_shake = 1

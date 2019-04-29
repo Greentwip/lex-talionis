@@ -1252,7 +1252,7 @@ class GameOverState(StateMachine.State):
 
         self.transparency = 100
         self.backgroundCounter = 0
-        Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_game_over')], 1)
+        Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_game_over')])
 
         # Make background
         self.MovingSurf = Engine.create_surface((256, 256), transparent=True, convert=True)

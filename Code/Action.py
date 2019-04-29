@@ -15,6 +15,9 @@ except ImportError:
     from . import StatusObject, Banner, LevelUp, Weapons, ClassData
     from . import Utility, ItemMethods, UnitObject
 
+import logging
+logger = logging.getLogger(__name__)
+
 class Action(object):
     run_on_load = False
 
@@ -1239,8 +1242,11 @@ class GiveStatus(Action):
         self.unit.status_effects.append(self.status_obj)
 
     def reverse(self, gameStateObj):
-        self.unit.status_effects.remove(self.status_obj)
-        self.unit.status_bundle.subtract(list(self.status_obj.components))
+        if self.status_obj in self.unit.status_effects:
+            self.unit.status_effects.remove(self.status_obj)
+            self.unit.status_bundle.subtract(list(self.status_obj.components))
+        else:
+            logger.error("Status Object %s not in %s's status effects", self.status_obj.id, self.unit.name)
 
 class TakeStatus(Action):
     def __init__(self, unit, status_obj):
@@ -1263,18 +1269,18 @@ class TetherStatus(Action):
         self.child = child
 
     def do(self, gameStateObj):
-        self.status_obj.children.append(self.child.id)
+        self.status_obj.add_child(self.child.id)
         self.applied_status_obj.parent_id = self.parent.id
 
     def reverse(self, gameStateObj):
-        self.status_obj.children.remove(self.child.id)
+        self.status_obj.remove_child(self.child.id)
         self.applied_status_obj.parent_id = None
 
 # Also removes child statii
 class UnTetherStatus(Action):
     def __init__(self, status_obj):
         self.status_obj = status_obj
-        self.children = self.status_obj.children
+        self.children = list(self.status_obj.children)
         self.child_status = []
 
     def do(self, gameStateObj):
@@ -1288,14 +1294,14 @@ class UnTetherStatus(Action):
                         StatusObject.HandleStatusRemoval(c_status, child_unit, gameStateObj)
                         break
         assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
-        self.status_obj.children = []
+        self.status_obj.children = set()
 
     def reverse(self, gameStateObj):
         assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
         for idx, u_id in enumerate(self.children):
             child_unit = gameStateObj.get_unit_from_id(u_id)
             if child_unit:
-                self.status_obj.children.append(u_id)
+                self.status_obj.add_child(u_id)
                 applied_status = self.child_status[idx]
                 StatusObject.HandleStatusAddition(applied_status, child_unit, gameStateObj)
         self.child_status = []  # Clear the child status to restore statefulness
@@ -1383,8 +1389,17 @@ class FinalizeActiveSkill(Action):
 
     def do(self, gameStateObj):
         self.status.active.current_charge = 0
+        # Remove cleave from item so it no longer cleaves
         if self.status.active.mode == 'Attack':
             self.status.active.reverse_mod()
+
+    def reverse(self, gameStateObj):
+        # if self.status.active.mode == 'Attack':
+        #     self.status.active.apply_mod()
+        # Don't need to apply mod on reverse because theres 
+        # no place inbetween the apply and reverse mod actions
+        # for the turnwheel to land on
+        self.status.active.current_charge = self.old_charge
 
 class FinalizeAutomaticSkill(Action):
     def __init__(self, status, unit):
