@@ -390,6 +390,9 @@ class GameStateObj(object):
 
     def add_status(self, status):
         self.allstatuses[status.uid] = status
+        # We need to remember to register the items that are used by the Active Skills
+        if status.active and status.active.item:
+            self.allitems[status.active.item.uid] = status.active.item
 
     def check_formation_spots(self):
         # Returns None if no spot available

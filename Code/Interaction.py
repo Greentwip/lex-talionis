@@ -333,7 +333,7 @@ class Combat(object):
     def turnwheel_death_messages(self, all_units, gameStateObj):
         messages = []
         dying_units = [u for u in all_units if isinstance(u, UnitObject.UnitObject) and u.isDying]
-        any_player_dead = any(not u.team.startswith('enemy') for u in all_units)
+        any_player_dead = any(not u.team.startswith('enemy') for u in dying_units)
         for unit in dying_units:
             if unit.team.startswith('enemy'):
                 if any_player_dead:

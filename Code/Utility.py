@@ -62,9 +62,9 @@ def determine_perc(time, period, width):
     """
     cur_time = time%period
     if cur_time < width//2:
-        return float(cur_time)/width/2
+        return float(cur_time)/(width/2)
     elif cur_time < width:
-        return 1. - float(cur_time - width//2)/width/2
+        return 1. - float(cur_time - width//2)/(width/2)
     else:
         return 0.
 

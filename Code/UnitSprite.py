@@ -166,7 +166,7 @@ class UnitSprite(object):
         # Talk, Warning and Danger icons
         if gameStateObj.cursor.currentSelectedUnit:
             cur_unit = gameStateObj.cursor.currentSelectedUnit
-            if (cur_unit, self.unit.name) in gameStateObj.talk_options:
+            if (cur_unit.id, self.unit.id) in gameStateObj.talk_options:
                 frame = (Engine.get_time()//100)%8
                 topleft = (left - 1, top - 12)
                 if frame in (0, 1, 2):
@@ -178,6 +178,25 @@ class UnitSprite(object):
                 surf.blit(GC.IMAGESDICT['TalkMarker'], (topleft[0], topleft[1] + offset))
             elif self.unit.checkIfEnemy(cur_unit) and cur_unit.team == 'player':
                 self.draw_warning_marker(surf, left, top, cur_unit)
+            elif gameStateObj.support.get_edge(cur_unit.id, self.unit.id):
+                level = gameStateObj.support.get_edge(cur_unit.id, self.unit.id).get_support_level()
+                if level > 0:
+                    level = min(level, 3)
+                    icon = Engine.subsurface(GC.IMAGESDICT['MapSupportIcons65'], ((level-1)*8, 0, 8, 11))
+                    frame = (Engine.get_time()//100)%8
+                    topleft = (left + 4, top - 11)
+                    if frame in (0, 1, 2):
+                        offset = 0
+                    elif frame in (3, 7):
+                        offset = 1
+                    else:
+                        offset = 2
+                    # diff = Utility.determine_perc(Engine.get_time(), 2000, 2000)
+                    # print(diff)
+                    # diff = Utility.clamp(255. * diff, 0, 255)
+                    # tint = (0, -64, 128, diff)
+                    # icon = Image_Modification.color_tint(icon.copy(), tint)
+                    surf.blit(icon, (topleft[0], topleft[1] + offset))
 
     def draw_warning_marker(self, surf, left, top, cur_unit):
         def draw_marker(name):
@@ -193,8 +212,10 @@ class UnitSprite(object):
         # Killer Weapons and Master Weapons and Reaver Weapons
         else:
             for item in items:
-                if (item.warning and eval(item.warning)) or \
-                        (item.reverse and weapon and Weapons.TRIANGLE.compute_advantage(item, weapon)[0]):
+                if item.warning and eval(item.warning):
+                    draw_marker('Warning')
+                    break
+                elif item.reverse and weapon and Weapons.TRIANGLE.compute_advantage(item, weapon)[0] > 0:
                     draw_marker('Warning')
                     break
 

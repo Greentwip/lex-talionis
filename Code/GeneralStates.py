@@ -2089,7 +2089,7 @@ class PhaseChangeState(StateMachine.State):
         for unit in gameStateObj.allunits:
             if not unit.dead:
                 Action.do(Action.Reset(unit), gameStateObj)
-        Action.do(Action.MarkPhase(gameStateObj.phase.get_current_phase()), gameStateObj)
+        # Mark phase used to be here
         gameStateObj.cursor.drawState = 0
         gameStateObj.activeMenu = None
         gameStateObj.phase.slide_in(gameStateObj)
@@ -2140,7 +2140,7 @@ class StatusState(StateMachine.State):
         while processing and count < 10:
             output = gameStateObj.status.update(gameStateObj)
             if output == 'Done':
-                gameStateObj.stateMachine.back()
+                self.leave(gameStateObj)
                 processing = False
             elif output == 'Waiting' or output == 'Death':
                 processing = False
@@ -2151,6 +2151,11 @@ class StatusState(StateMachine.State):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         gameStateObj.status.draw(mapSurf, gameStateObj)
         return mapSurf
+
+    def leave(self, gameStateObj):
+        gameStateObj.stateMachine.back()
+        if self.name == 'status':
+            Action.do(Action.MarkPhase(gameStateObj.phase.get_current_phase()), gameStateObj)
 
 class ExpGainState(StateMachine.State):
     name = 'expgain'

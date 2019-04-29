@@ -1244,6 +1244,7 @@ class GiveStatus(Action):
     def reverse(self, gameStateObj):
         if self.status_obj in self.unit.status_effects:
             self.unit.status_effects.remove(self.status_obj)
+            # this is just a bad system -- hodge podgy and bad
             self.unit.status_bundle.subtract(list(self.status_obj.components))
         else:
             logger.error("Status Object %s not in %s's status effects", self.status_obj.id, self.unit.name)
