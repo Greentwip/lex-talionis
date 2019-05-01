@@ -23,6 +23,7 @@ nif_range;3
     f;2;Shoot4
 # Pause
 wait;8
+sound;FireHit
 enemy_flash_white;8
 enemy_effect;Explosion
 spell_hit

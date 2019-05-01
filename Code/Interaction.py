@@ -1341,7 +1341,7 @@ class MapCombat(Combat):
                     for health_bar in self.health_bars.values():
                         health_bar.shake(2)
             elif result.def_damage < 0: # Heal
-                GC.SOUNDDICT['heal'].play()
+                GC.SOUNDDICT['MapHeal'].play()
             elif result.def_damage == 0 and (item.weapon or (item.spell and item.damage)): # No Damage if weapon or spell with damage!
                 GC.SOUNDDICT['No Damage'].play()
             else:

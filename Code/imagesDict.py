@@ -55,8 +55,13 @@ def getSounds(home='./'):
 
     loc = home + 'Audio/sfx/'
     if os.path.isdir(loc):
-        sfxnameList = [sfx[:-4] for sfx in os.listdir(loc) if sfx.endswith('.wav') or sfx.endswith('.ogg')]
-        sfxList = [Engine.create_sound(loc + sfx) for sfx in os.listdir(loc) if sfx.endswith('.wav') or sfx.endswith('.ogg')]
+        sfxnameList, sfxList = [], []
+        for root, dirs, files in os.walk(loc):
+            for name in files:
+                if name.endswith('.wav') or name.endswith('.ogg'):
+                    full_name = os.path.join(root, name)
+                    sfxnameList.append(name[:-4])
+                    sfxList.append(Engine.create_sound(full_name))
         SOUNDDICT = SoundDict(zip(sfxnameList, sfxList))
     else:
         SOUNDDICT = SoundDict()

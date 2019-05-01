@@ -260,7 +260,7 @@ class PrepFormationSelectState(StateMachine.State):
         # Swap unit positions       
         if event == 'SELECT':
             if cf.WORDS['Formation'] in gameStateObj.map.tile_info_dict[gameStateObj.cursor.position]: 
-                GC.SOUNDDICT['Select 1'].play()
+                GC.SOUNDDICT['FormationSelect'].play()
                 gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
                 cur_unit = gameStateObj.cursor.currentSelectedUnit
                 if gameStateObj.cursor.currentHoveredUnit:

@@ -366,7 +366,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
         old_hp = unit.currenthp
         Action.do(Action.ChangeHP(unit, hp_change), gameStateObj)
         if unit.currenthp > old_hp:
-            GC.SOUNDDICT['heal'].play()
+            GC.SOUNDDICT['MapHeal'].play()
 
     if status.upkeep_stat_change:
         Action.do(Action.ApplyStatChange(unit, status.upkeep_stat_change.stat_change), gameStateObj)
