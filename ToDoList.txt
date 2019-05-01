@@ -11,9 +11,6 @@
 
 - Add support to fe_repo_to_lex for Dragonstone (and Sage?)
 
-- Add support markers to main map (like Talk) (also check Talk actually works)
-- check G in money in market sell screen
-
 Add separate combine action to convoy (for turnwheel branch)
 Arena
 Jealousy System

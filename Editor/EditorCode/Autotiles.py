@@ -1,12 +1,17 @@
 # Autotile maker part 2
 import os, sys
-from collections import Counter
+from collections import Counter, OrderedDict
 from PIL import Image
 
 sys.path.append('../')
 from Code.imagesDict import COLORKEY
 
 WIDTH, HEIGHT = 16, 16
+
+def similar_slow(p1, p2):
+    p1_diff = [(1 if x[1] - x[0] else 0) for x in zip(p1[1:], p1)]
+    p2_diff = [(1 if x[1] - x[0] else 0) for x in zip(p2[1:], p2)]
+    return sum(i != j for i, j in zip(p1_diff, p2_diff))
 
 def similar(p1, p2):
     return sum(i != j for i, j in zip(p1, p2))
@@ -34,19 +39,30 @@ class Series(object):
                 return True
         return False
 
+    def is_present_fast(self, test):
+        test_palette = test.palette
+        all_palettes = [im.palette for im in self.series]
+        for palette in all_palettes:
+            if similar_fast(test_palette, palette, False):
+                return True
+        return False
+
     def is_present_slow(self, test):
         if test.palette in [im.palette for im in self.series]:
             return True
         return False
 
+    def get_frames_with_color(self, color):
+        return [im for im in self.series if color in im.colors]
+
 class PaletteData(object):
     def __init__(self, arr):
         self.arr = arr
-        self.data = list(arr.getdata()) 
-        self.uniques = reduce(lambda l, x: l if x in l else l+[x], self.data, [])
+        self.colors = list(arr.getdata()) 
+        self.uniques = reduce(lambda l, x: l if x in l else l+[x], self.colors, [])
         # Sort by most popular
-        self.uniques = sorted(self.uniques, key=lambda x: self.data.count(x), reverse=True)
-        self.palette = self.data[:]
+        self.uniques = sorted(self.uniques, key=lambda x: self.colors.count(x), reverse=True)
+        self.palette = self.colors[:]
         # self.simple_palette = self.data[:]
         """
         for idx, u in enumerate(self.uniques):
@@ -59,7 +75,7 @@ class PaletteData(object):
                 # else:
                 #    self.simple_palette[index] = 0 # Not really blue
         """
-        for index, pixel in enumerate(self.data):
+        for index, pixel in enumerate(self.colors):
             # Each pixel in the palette is assigned its color id
             self.palette[index] = self.uniques.index(pixel)
 
@@ -77,18 +93,40 @@ def remove_bad_color(new):
     return new
 
 # Changes the color of a band to match palette color of map
-def color_change_band(autotile_frames, series, closest_frame, tile, pos):
+def color_change_band(map_tiles, autotile_frames, closest_book, closest_series,
+                      closest_frame, tile, pos):
     x, y = pos
     # Converts colors from closest frame to tile
     color_conversion_dict = {}
-    for index, color in enumerate(closest_frame.data):
-        color_conversion_dict[color] = tile.data[index]
-    # TODO: What colors are missing?
+    for index, color in enumerate(closest_frame.colors):
+        color_conversion_dict[color] = tile.colors[index]
+
+    # What colors are missing?
+    def fix_missing_color(color):
+        # Does that color show up in other frames in the autotile band?
+        for series in closest_book:
+            frames_with_color = series.get_frames_with_color(color)
+            for f in frames_with_color:
+                for map_tile in map_tiles.values():
+                    # If so, do those frames show up in the map sprite?
+                    if similar_fast(f.palette, map_tile.palette, False):
+                        # If so, add the color conversion to the dict
+                        color_index = f.colors.index(color)
+                        new_color = map_tile.colors[color_index]
+                        color_conversion_dict[color] = new_color
+                        print("%s has become %s" % (color, new_color))
+                        return
+
+    for band in range(16):
+        for index, color in enumerate(closest_series.series[band].colors):
+            if color not in color_conversion_dict:
+                print('Missing Color: %s' % str(color))
+                fix_missing_color(color)
 
     # Now actually build new images
     for band in range(16):
         new = Image.new('RGB', (WIDTH, HEIGHT))
-        for index, color in enumerate(series.series[band].data):
+        for index, color in enumerate(closest_series.series[band].colors):
             new_color = color_conversion_dict.get(color, (8, 8, 8))
             new.putpixel((index%WIDTH, index/HEIGHT), new_color)
         # Now fix any that are black -- do it twice
@@ -105,6 +143,7 @@ def create_autotiles_from_image(map_sprite_fn, dir_out):
     autotile_templates = []        
     for fp in sorted(os.listdir('AutotileTemplates')):
         if fp.endswith('.png') and fp != 'MapSprite.png' and not fp.startswith('autotile'):
+            print(fp)
             autotile_templates.append(fp)
 
     print('Reading %s autotile templates...' %(len(autotile_templates)))
@@ -133,30 +172,46 @@ def create_autotiles_from_image(map_sprite_fn, dir_out):
     print(map_sprite.size)
 
     print('Comparison...')
+    map_tiles = OrderedDict()
     for x in range(map_sprite.size[0]/WIDTH):
         for y in range(map_sprite.size[1]/HEIGHT):
-            print(x, y)
             tile = map_sprite.crop((x*WIDTH, y*HEIGHT, x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
             tile_palette = PaletteData(tile)
+            map_tiles[(x, y)] = tile_palette
 
-            closest_series = None
-            closest_frame = None
-            min_sim = WIDTH*HEIGHT/16
-            for book in books:
-                for series in book:
-                    for frame in series.series:
-                        similarity = similar(frame.palette, tile_palette.palette)
-                        if similarity < min_sim:
-                            min_sim = similarity
-                            print(min_sim)
-                            closest_series = series
-                            closest_frame = frame
-            if closest_series:
-                color_change_band(autotile_frames, closest_series, closest_frame, tile_palette, (x, y))
+    now_an_autotile = []
+    for x, y in map_tiles:
+        print(x, y)
+        tile_palette = map_tiles[(x, y)]
+        closest_series = None
+        closest_frame = None
+        closest_book = None
+        min_sim = WIDTH*HEIGHT/16
+        for bidx, book in enumerate(books):
+            for sidx, series in enumerate(book):
+                for fidx, frame in enumerate(series.series):
+                    similarity = similar(frame.palette, tile_palette.palette)
+                    if similarity < min_sim:
+                        min_sim = similarity
+                        print(min_sim)
+                        closest_series = series
+                        closest_frame = frame
+                        closest_book = book
+                        print(bidx, sidx, fidx)
+        if closest_series:
+            color_change_band(map_tiles, autotile_frames, closest_book, closest_series, closest_frame, tile_palette, (x, y))
+            now_an_autotile.append((x, y))
 
     print('Saving...')
+    # Fill spots with green
+    for x, y in now_an_autotile:
+        print(x, y)
+        for i in range(WIDTH):
+            for j in range(HEIGHT):
+                map_sprite.putpixel((x*WIDTH + i, y*HEIGHT + j), COLORKEY)
+    map_sprite.save(dir_out + '/MapSprite.png')
     if not os.path.exists(dir_out):
         os.mkdir(dir_out)
     for idx, n in enumerate(autotile_frames):
-        n.save(dir_out + '/autotile' + str(idx) + '.png')
+        n.save(dir_out + '/Autotiles/autotile' + str(idx) + '.png')
     print('Done!')

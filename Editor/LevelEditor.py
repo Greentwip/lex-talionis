@@ -530,10 +530,10 @@ class MainEditor(QtGui.QMainWindow):
         map_sprite_filename = self.directory + '/MapSprite.png'
         full_map_sprite_filename = self.directory + '/MapSprite_full.png'
         if os.path.exists(full_map_sprite_filename):
-            Autotiles.create_autotiles_from_image(full_map_sprite_filename, self.directory + '/Autotiles/')
+            Autotiles.create_autotiles_from_image(full_map_sprite_filename, self.directory)
         else:
             shutil.copy(map_sprite_filename, full_map_sprite_filename)  # Make a backup
-            Autotiles.create_autotiles_from_image(map_sprite_filename, self.directory + '/Autotiles/')
+            Autotiles.create_autotiles_from_image(map_sprite_filename, self.directory)
 
         # When complete
         self.set_image(map_sprite_filename)
