@@ -1,5 +1,5 @@
 # Autotile maker part 2
-import os, sys
+import os, sys, time
 from collections import Counter, OrderedDict
 from PIL import Image
 
@@ -8,20 +8,59 @@ from Code.imagesDict import COLORKEY
 
 WIDTH, HEIGHT = 16, 16
 
+"""
+Speeds:
+MATLAB: 4.3 seconds 79 matches bad colors
+SLOW: 1.5 seconds 47 matches bad colors
+REGULAR: 0.32 seconds 27 matches
+FAST: 0.01 seconds 24 matches
+"""
+
+def diff(seq):
+    iterable = iter(seq)
+    prev = next(iterable)
+    for element in iterable:
+        yield bool(element - prev)
+        prev = element
+
 def similar_slow(p1, p2):
-    p1_diff = [(1 if x[1] - x[0] else 0) for x in zip(p1[1:], p1)]
-    p2_diff = [(1 if x[1] - x[0] else 0) for x in zip(p2[1:], p2)]
-    return sum(i != j for i, j in zip(p1_diff, p2_diff))
+    return sum(i != j for i, j in zip(diff(p1), diff(p2)))
+
+def transpose_sorted(p):
+    return [y for x, y in sorted(zip(range(WIDTH*WIDTH), p), key=lambda (x, y): x%WIDTH)]
+
+def transpose_lc(p):
+    return [p[i*WIDTH + j] for j in range(WIDTH) for i in range(WIDTH)]
+
+def similar_matlab(p1, p2):
+    # print(p1)
+    p1_diff_row = [diff(row) for row in [p1[i*WIDTH:i*WIDTH+HEIGHT] for i in range(HEIGHT)]]
+    p1_diff_row = [item for sublist in p1_diff_row for item in sublist]
+    # print(p1_diff_row)
+    transposed_p1 = transpose_lc(p1)
+    # print(transposed_p1)
+    p1_diff_col = [diff(col) for col in [transposed_p1[i*WIDTH:i*WIDTH+HEIGHT] for i in range(HEIGHT)]]
+    p1_diff_col = [item for sublist in p1_diff_col for item in sublist]
+    # print(p1_diff_col)
+    # print(p2)
+    p2_diff_row = [diff(row) for row in [p2[i*WIDTH:i*WIDTH+HEIGHT] for i in range(HEIGHT)]]
+    p2_diff_row = [item for sublist in p2_diff_row for item in sublist]
+    # print(p2_diff_row)
+    transposed_p2 = transpose_lc(p2)
+    # print(transposed_p2)
+    p2_diff_col = [diff(col) for col in [transposed_p2[i*WIDTH:i*WIDTH+HEIGHT] for i in range(HEIGHT)]]
+    p2_diff_col = [item for sublist in p2_diff_col for item in sublist]
+    # print(p2_diff_col)
+    row_diff = similar(p1_diff_row, p2_diff_row)
+    col_diff = similar(p1_diff_col, p2_diff_col)
+    # print(row_diff, col_diff)
+    return row_diff + col_diff
 
 def similar(p1, p2):
     return sum(i != j for i, j in zip(p1, p2))
 
-def similar_fast(p1, p2, output=True):
-    if p1 == p2:
-        if output:
-            print('0')
-        return True
-    return False
+def similar_fast(p1, p2):
+    return 0 if p1 == p2 else WIDTH*HEIGHT
 
 class Series(object):
     def __init__(self):
@@ -109,7 +148,7 @@ def color_change_band(map_tiles, autotile_frames, closest_book, closest_series,
             for f in frames_with_color:
                 for map_tile in map_tiles.values():
                     # If so, do those frames show up in the map sprite?
-                    if similar_fast(f.palette, map_tile.palette, False):
+                    if similar_fast(f.palette, map_tile.palette):
                         # If so, add the color conversion to the dict
                         color_index = f.colors.index(color)
                         new_color = map_tile.colors[color_index]
@@ -156,7 +195,7 @@ def create_autotiles_from_image(map_sprite_fn, dir_out):
         num_tiles_y = image.size[1]/HEIGHT
         number = num_tiles_x*num_tiles_y
         minitiles = [Series() for _ in range(number)]
-        for frame in range(16):  # There are 16 frames, stacked hoirzontally with one another
+        for frame in range(16):  # There are 16 frames, stacked horizontally with one another
             x_offset = frame*width
             for x in range(num_tiles_x):
                 for y in range(num_tiles_y):
@@ -182,15 +221,17 @@ def create_autotiles_from_image(map_sprite_fn, dir_out):
     now_an_autotile = []
     for x, y in map_tiles:
         print(x, y)
+        # e1 = time.time()
         tile_palette = map_tiles[(x, y)]
         closest_series = None
         closest_frame = None
         closest_book = None
-        min_sim = WIDTH*HEIGHT/16
+        min_sim = 16
+        # min_sim = 2*WIDTH*(WIDTH-1)/16
         for bidx, book in enumerate(books):
             for sidx, series in enumerate(book):
                 for fidx, frame in enumerate(series.series):
-                    similarity = similar(frame.palette, tile_palette.palette)
+                    similarity = similar_fast(frame.palette, tile_palette.palette)
                     if similarity < min_sim:
                         min_sim = similarity
                         print(min_sim)
@@ -201,14 +242,15 @@ def create_autotiles_from_image(map_sprite_fn, dir_out):
         if closest_series:
             color_change_band(map_tiles, autotile_frames, closest_book, closest_series, closest_frame, tile_palette, (x, y))
             now_an_autotile.append((x, y))
+        # print(time.time() - e1)
 
     print('Saving...')
     # Fill spots with green
     for x, y in now_an_autotile:
-        print(x, y)
         for i in range(WIDTH):
             for j in range(HEIGHT):
                 map_sprite.putpixel((x*WIDTH + i, y*HEIGHT + j), COLORKEY)
+    print(len(now_an_autotile))
     map_sprite.save(dir_out + '/MapSprite.png')
     if not os.path.exists(dir_out):
         os.mkdir(dir_out)
