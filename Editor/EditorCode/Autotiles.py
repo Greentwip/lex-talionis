@@ -1,6 +1,7 @@
 # Autotile maker part 2
 import os, sys, time
 from collections import Counter, OrderedDict
+from PyQt4 import QtGui, QtCore
 from PIL import Image
 
 sys.path.append('../')
@@ -172,24 +173,123 @@ def color_change_band(map_tiles, autotile_frames, closest_book, closest_series,
         # new = remove_bad_color(remove_bad_color(new))
         autotile_frames[band].paste(new, (x*WIDTH, y*HEIGHT))
 
-def create_autotiles_from_image(map_sprite_fn, dir_out):
-    if not os.path.exists('AutotileTemplates'):
-        print('Autotile templates are missing!')
-        print('Make sure all autotile templates are located in "Editor/AutotileTemplates/')
-        return
-    
-    # Otherwise
-    autotile_templates = []        
-    for fp in sorted(os.listdir('AutotileTemplates')):
-        if fp.endswith('.png') and fp != 'MapSprite.png' and not fp.startswith('autotile'):
-            print(fp)
-            autotile_templates.append(fp)
+class AutotileMaker(object):
+    def __init__(self, map_sprite_fn, dir_out, window):
+        self.map_sprite_fn = map_sprite_fn
+        self.dir_out = dir_out
+        self.window = window
 
-    print('Reading %s autotile templates...' %(len(autotile_templates)))
-    books = []  # Each autotile template becomes a book
-    # A book contains a dictionary of positions as keys and series as values
-    for template in autotile_templates:
-        image = Image.open('AutotileTemplates/' + template)
+        self.running = True
+
+        self.autotile_templates = self.gather_autotile_templates()
+        self.books = []
+        self.now_an_autotile = []
+
+        # Set up progress Dialog
+        msg = "Generating Autotiles..."
+        self.progress_dlg = QtGui.QProgressDialog(msg, "Cancel", 0, 100, window)
+        self.progress_dlg.setAutoClose(True)
+        self.progress_dlg.setWindowTitle(msg)
+        self.progress_dlg.canceled.connect(self.cancel)
+        self.progress_dlg.show()
+        self.progress_dlg.setValue(0)
+
+        # === Timing ===
+        self.main_timer = QtCore.QTimer()
+        self.main_timer.timeout.connect(self.tick)
+        self.main_timer.start(1)  # 120 FPS
+
+        self.next_autotile_template = list(reversed(self.autotile_templates))
+        self.state = 1
+
+    def tick(self):
+        if self.running:
+            self.update_step()
+        else:
+            self.main_timer.stop()
+
+    def cancel(self):
+        self.running = False
+
+    def complete(self):
+        self.running = False
+        # When complete
+        self.window.set_image(self.dir_out + '/MapSprite.png')
+        self.window.autotiles.clear()
+        auto_loc = self.dir_out + '/Autotiles/'
+        self.window.autotiles.load(auto_loc)
+
+    def gather_autotile_templates(self):
+        autotile_templates = []        
+        for fp in sorted(os.listdir('AutotileTemplates')):
+            if fp.endswith('.png') and fp != 'MapSprite.png' and not fp.startswith('autotile'):
+                print(fp)
+                autotile_templates.append(fp)
+        return autotile_templates
+
+    def update_step(self):
+        if self.state == 1:  # Load autotile templates
+            if self.next_autotile_template:
+                template = self.next_autotile_template.pop()
+                idx = len(self.autotile_templates) - 1 - len(self.next_autotile_template)
+                self.read_autotile_template(template)
+                self.progress_dlg.setValue(int(20*idx/len(self.autotile_templates)))
+            else:
+                self.state = 2
+
+        elif self.state == 2:  # Create new images
+            print('Making new files...')
+            self.map_sprite = Image.open(self.map_sprite_fn)
+
+            self.autotile_frames = [Image.new('RGB', self.map_sprite.size, COLORKEY) for _ in range(16)]
+            print(self.map_sprite.size)
+            self.state = 3
+
+        elif self.state == 3:
+            print('Comparison...')
+            self.map_tiles = OrderedDict()
+            for x in range(self.map_sprite.size[0]/WIDTH):
+                for y in range(self.map_sprite.size[1]/HEIGHT):
+                    tile = self.map_sprite.crop((x*WIDTH, y*HEIGHT, x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
+                    tile_palette = PaletteData(tile)
+                    self.map_tiles[(x, y)] = tile_palette
+            self.next_map_tile = list(reversed(self.map_tiles.keys()))
+            self.progress_dlg.setValue(25)
+            self.state = 4
+
+        elif self.state == 4:
+            if self.next_map_tile:
+                pos = self.next_map_tile.pop()
+                idx = len(self.map_tiles) - 1 - len(self.next_map_tile)
+                self.create_autotiles_from_image(pos)
+                self.progress_dlg.setValue(25 + int(74*idx/len(self.map_tiles)))
+            else:
+                self.state = 5
+
+        elif self.state == 5:
+            print('Saving...')
+            self.progress_dlg.setValue(99)
+            # Fill spots with green
+            for x, y in self.now_an_autotile:
+                for i in range(WIDTH):
+                    for j in range(HEIGHT):
+                        self.map_sprite.putpixel((x*WIDTH + i, y*HEIGHT + j), COLORKEY)
+            print(len(self.now_an_autotile))
+            self.map_sprite.save(self.dir_out + '/MapSprite.png')
+            if not os.path.exists(self.dir_out):
+                os.mkdir(self.dir_out)
+            for idx, n in enumerate(self.autotile_frames):
+                n.save(self.dir_out + '/Autotiles/autotile' + str(idx) + '.png')
+            print('Done!')
+
+            self.progress_dlg.setValue(100)
+            self.complete()
+            self.progress_dlg.hide()
+
+    def read_autotile_template(self, fn):
+        # Each autotile template becomes a book
+        # A book contains a dictionary of positions as keys and series as values
+        image = Image.open('AutotileTemplates/' + fn)
         width = image.size[0]/16  # There are 16 frames 
         num_tiles_x = width/WIDTH
         num_tiles_y = image.size[1]/HEIGHT
@@ -202,33 +302,19 @@ def create_autotiles_from_image(map_sprite_fn, dir_out):
                     palette = image.crop((x_offset + x*WIDTH, y*HEIGHT, x_offset + x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
                     minitiles[x + y*num_tiles_x].append(PaletteData(palette))
         assert all(len(series.series) == 16 for series in minitiles)
-        books.append(minitiles)
+        self.books.append(minitiles)
 
-    print('Making new files...')
-    map_sprite = Image.open(map_sprite_fn)
-
-    autotile_frames = [Image.new('RGB', map_sprite.size, COLORKEY) for _ in range(16)]
-    print(map_sprite.size)
-
-    print('Comparison...')
-    map_tiles = OrderedDict()
-    for x in range(map_sprite.size[0]/WIDTH):
-        for y in range(map_sprite.size[1]/HEIGHT):
-            tile = map_sprite.crop((x*WIDTH, y*HEIGHT, x*WIDTH + WIDTH, y*HEIGHT + HEIGHT))
-            tile_palette = PaletteData(tile)
-            map_tiles[(x, y)] = tile_palette
-
-    now_an_autotile = []
-    for x, y in map_tiles:
+    def create_autotiles_from_image(self, pos):
+        x, y = pos
         print(x, y)
         # e1 = time.time()
-        tile_palette = map_tiles[(x, y)]
+        tile_palette = self.map_tiles[(x, y)]
         closest_series = None
         closest_frame = None
         closest_book = None
         min_sim = 16
         # min_sim = 2*WIDTH*(WIDTH-1)/16
-        for bidx, book in enumerate(books):
+        for bidx, book in enumerate(self.books):
             for sidx, series in enumerate(book):
                 for fidx, frame in enumerate(series.series):
                     similarity = similar_fast(frame.palette, tile_palette.palette)
@@ -240,20 +326,6 @@ def create_autotiles_from_image(map_sprite_fn, dir_out):
                         closest_book = book
                         print(bidx, sidx, fidx)
         if closest_series:
-            color_change_band(map_tiles, autotile_frames, closest_book, closest_series, closest_frame, tile_palette, (x, y))
-            now_an_autotile.append((x, y))
+            color_change_band(self.map_tiles, self.autotile_frames, closest_book, closest_series, closest_frame, tile_palette, (x, y))
+            self.now_an_autotile.append((x, y))
         # print(time.time() - e1)
-
-    print('Saving...')
-    # Fill spots with green
-    for x, y in now_an_autotile:
-        for i in range(WIDTH):
-            for j in range(HEIGHT):
-                map_sprite.putpixel((x*WIDTH + i, y*HEIGHT + j), COLORKEY)
-    print(len(now_an_autotile))
-    map_sprite.save(dir_out + '/MapSprite.png')
-    if not os.path.exists(dir_out):
-        os.mkdir(dir_out)
-    for idx, n in enumerate(autotile_frames):
-        n.save(dir_out + '/Autotiles/autotile' + str(idx) + '.png')
-    print('Done!')
