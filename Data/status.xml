@@ -533,7 +533,7 @@
     <status name="Rex Aegis">
         <id>Rex_Aegis</id>
         <image_index>10,9</image_index>
-        <desc>Grants Avoid +500 and Defense +100 against enemies further than two tiles away.</desc>
+        <desc>Grants Avoid +500 and Defense +100 vs. enemies more than two tiles away.</desc>
         <components>conditional_avoid,conditional_resist</components>
 
         <conditional_resist>100;Utility.gt(Utility.calculate_distance(self.position, target.position), 2)</conditional_resist>

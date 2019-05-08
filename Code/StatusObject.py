@@ -581,7 +581,7 @@ def HandleStatusRemoval(status, unit, gameStateObj, clean_up=False):
     if status.aura_child:
         status.parent_status.remove_child(unit)
     if status.tether:
-        Action.do(Action.UnTetherStatus(status), gameStateObj)
+        Action.do(Action.UnTetherStatus(status, unit.id), gameStateObj)
     if status.status_on_complete and not clean_up:
         status_obj = statusparser(status.status_on_complete)
         HandleStatusAddition(status_obj, unit, gameStateObj)

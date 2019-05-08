@@ -11,6 +11,9 @@
 
 - Add support to fe_repo_to_lex for Dragonstone (and Sage?)
 
+- Check that Scathe enemy AI actually works (debug log?)
+- Something is wrong with Continue/Saving + Static Random
+
 Add separate combine action to convoy (for turnwheel branch)
 Arena
 Jealousy System

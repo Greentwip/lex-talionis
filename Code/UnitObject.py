@@ -1846,7 +1846,7 @@ class UnitObject(object):
             if status.automatic:
                 status.automatic.reset_charge()
             if status.tether:
-                Action.UnTetherStatus(status).do(gameStateObj)
+                Action.UnTetherStatus(status, self.id).do(gameStateObj)
         # Items with chapter counts should be reset
         for item in self.items:
             if item.c_uses:

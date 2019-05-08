@@ -248,7 +248,7 @@ class RemoveFromMap(Action):
 
         # Yeah this is janky, but right now is required to nest an action
         # within another action
-        self.untether_actions = [UnTetherStatus(s) for s in self.unit.status_effects if s.tether]
+        self.untether_actions = [UnTetherStatus(s, self.unit.id) for s in self.unit.status_effects if s.tether]
 
     def do(self, gameStateObj):
         if self.unit.position:
@@ -887,6 +887,7 @@ class Die(Action):
             drop_me = gameStateObj.get_unit_from_id(self.unit.TRV)
             self.drop = Drop(self.unit, drop_me, self.unit.position)
             self.drop.do(gameStateObj)
+            GC.SOUNDDICT['RescuedFalling'].play()
 
         # I no longer have a position
         self.leave_map.do(gameStateObj)
@@ -1244,7 +1245,6 @@ class GiveStatus(Action):
     def reverse(self, gameStateObj):
         if self.status_obj in self.unit.status_effects:
             self.unit.status_effects.remove(self.status_obj)
-            # this is just a bad system -- hodge podgy and bad
             self.unit.status_bundle.subtract(list(self.status_obj.components))
         else:
             logger.error("Status Object %s not in %s's status effects", self.status_obj.id, self.unit.name)
@@ -1279,27 +1279,35 @@ class TetherStatus(Action):
 
 # Also removes child statii
 class UnTetherStatus(Action):
-    def __init__(self, status_obj):
+    def __init__(self, status_obj, unit_id):
         self.status_obj = status_obj
-        self.children = list(self.status_obj.children)
+        self.true_children = []
         self.child_status = []
+        self.unit_id = unit_id
 
     def do(self, gameStateObj):
-        for u_id in reversed(self.children):
+        children = list(self.status_obj.children)
+        for u_id in reversed(children):
             child_unit = gameStateObj.get_unit_from_id(u_id)
             if child_unit:
                 for c_status in child_unit.status_effects:
                     # print(c_status, c_status.id, self.status_obj.tether)
-                    if c_status.id == self.status_obj.tether:
+                    # Only remove the statuses that come from the right unit
+                    if c_status.id == self.status_obj.tether and c_status.parent_id == self.unit_id:
                         self.child_status.append(c_status)
+                        self.true_children.append(u_id)
                         StatusObject.HandleStatusRemoval(c_status, child_unit, gameStateObj)
                         break
-        assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
+        # assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
+        # Sometimes a tether child status can be removed (Like remove_range or Restore staff)
+        # This is not a problem, the tether child status does not inform the parent tether status
+        # So the parent tether status still thinks that the child tether status still exists
+        # But it doesn't
         self.status_obj.children = set()
 
     def reverse(self, gameStateObj):
-        assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
-        for idx, u_id in enumerate(self.children):
+        # assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
+        for idx, u_id in enumerate(self.true_children):
             child_unit = gameStateObj.get_unit_from_id(u_id)
             if child_unit:
                 self.status_obj.add_child(u_id)

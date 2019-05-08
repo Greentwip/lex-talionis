@@ -1371,7 +1371,7 @@ class Dialogue_Scene(object):
                 return
             new_unitLine = unitLine[:]
             new_unitLine.insert(4, create)
-            unit = SaveLoad.create_unit(new_unitLine, gameStateObj.allunits, gameStateObj.factions, gameStateObj.allreinforcements, metaDataObj, gameStateObj)
+            unit = SaveLoad.create_unit(new_unitLine, gameStateObj.allunits, gameStateObj.factions, gameStateObj.allreinforcements, gameStateObj)
             position = self.parse_pos(unitLine[5], gameStateObj)
         else:
             context = gameStateObj.allreinforcements.get(which_unit)
