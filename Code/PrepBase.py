@@ -1240,7 +1240,10 @@ class BaseMarketState(StateMachine.State):
         mapSurf.blit(self.owner_surf, (156, 0))
         item_owner = None
         if self.current_menu.getSelection():
-            item_owner = gameStateObj.get_unit_from_id(self.current_menu.getSelection().owner)
+            print(self.current_menu.getSelection())
+            print(self.current_menu.getSelection().item_owner)
+            item_owner = gameStateObj.get_unit_from_id(self.current_menu.getSelection().item_owner)
+            print(item_owner)
         if item_owner:
             item_owner = item_owner.name
         elif self.state == cf.WORDS["Sell"] or (self.state == "Free" and self.choice_menu.getSelection() == cf.WORDS['Sell']):

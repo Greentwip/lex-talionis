@@ -18,7 +18,7 @@ if;self.name == 'Promises'
     s;Sam;No, but we each have jobs, responsibilities, ambitions.{w}{br}Those too can strand us apart.{w}{br}I don't want to look back on today with any regrets. 
     s;Kayla;Nor do I.
     s;Sam;Well, then,{w}{br}after this is over... if we're both still...{w}{br}around.{w}{br}I'd like to make this fling official.
-    give_item;Kayla;Energy Ring
+    give_item;Kayla;Energy Ring;no_choice
     s;Kayla;Ah! A ring?
     s;Sam;I'd been meaning to give it to you for a while...{w}{br}but I could never find the right time.{w}{br}So how 'bout it?
     s;Kayla;Of course!
@@ -67,7 +67,7 @@ elif;self.name == 'Althea and Ophie'
     s;Ophie;Well, uh, I'm all done here...{w}{br}So I'd better get going...{w}{br}I'm sure someone else could use help.
     set_expression;Althea;Normal
     s;Althea;Wait, Ophie. Before you go...
-    give_item;Ophie;Althea's Charm
+    give_item;Ophie;Althea's Charm;no_choice
     s;Ophie;Uh... Thanks.{w}{br}You sure you want to give this to me?
     s;Althea;Oh, its nothing. Take it.
     s;Ophie;Right...{w}{br}Well, I'll be off.
@@ -118,7 +118,7 @@ elif;self.name == 'Theo and Eliza'
     s;Theo;Gulp. I would never.
     s;Eliza;Hmmph!
     r;Eliza;Theo
-    give_item;Eliza;Secret Book
+    give_item;Eliza;Secret Book;no_choice
     grey_base_convo;Theo and Eliza
     t;1
 end

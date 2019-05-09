@@ -24,13 +24,13 @@ if;self.name == 'Theo Sphinx, Pt. IV'
 	s;Theo;The silver-haired dame was all business.{w};auto;noir
 	s;Kayla;No, don't tell me.{w}{br}That damned girl!{w};auto
 	s;Theo;Your game is up, Kayla.{w}{br}Hand over the tome.{w};auto
-	s;Theo;Sad to see such a pretty girl turning herself to a life a crime.{w};auto;noir
+	s;Theo;Sad to see such a pretty girl turning herself to a life of crime.{w};auto;noir
 	s;Kayla;The tome, what?{w};auto
 	s;Theo;She wasn't making this any easier on herself.{w};auto;noir 
 	s;Theo;Don't play dumb with me, Kayla. Prim's tome!{w};auto
 	s;Kayla;Hah. You're a bit late on the uptake, Theo.{w}{br}I've already transformed Prim's tome into something much grander!{w}{br}Behold!{w};auto
 	# Give Theo Howl
-	give_item;Theo;Howl
+	give_item;Theo;Howl;no_choice
 	s;Theo;With something like that in her possession,{w}{br}the dame was obviously connected to someone up high.{w}{br}But I had a job to finish.{w}{br}Though she tried to fight back, I cuffed her and brought her to the station.{w};auto;noir
 	r;Kayla
 	s;Theo;This was on Sam's plate now.{w}{br}Too bad about Miss Prim's tome...{w}{br}but my job here was done.{w}{br}Another case closed by Private Eye Theo Sphinx.{w};auto;noir
@@ -79,7 +79,7 @@ elif;self.name == 'Training'
 	s;Coyote;Huff.
 	s;Ophie;Ah! I did it.
 	s;Coyote;Catch.
-	give_item;Ophie;Rapier
+	give_item;Ophie;Rapier;no_choice
 	s;Coyote;Attacking trees will not improve your swordsmanship.{w}{br}Meet me here tomorrow when the sun is halfway down the western sky.
 	r;Coyote
 	s;Ophie;Uh... Yeah.{w}{br}Sure, I guess!{w}{br}I'll be ready!

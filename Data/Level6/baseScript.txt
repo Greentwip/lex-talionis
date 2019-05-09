@@ -107,7 +107,7 @@ elif;self.name == 'Cipher'
 	s;Sam;No problem.{w}{br}It's not everyday I find someone who shares my fascination with the magical arts...
 	s;Kayla;And it's not everyday a spell's cipher is solved that quickly, handsome.{w}{br}Now be on your way.{w}{br}A lady needs time to prepare.
 	r;Sam;Kayla
-	give_item;Kayla;Disintegrate
+	give_item;Kayla;Disintegrate;no_choice
 	grey_base_convo;Cipher
 	t;1
 end

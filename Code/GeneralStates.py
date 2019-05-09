@@ -2574,7 +2574,8 @@ class ItemGainState(StateMachine.State):
             current_banner = gameStateObj.banners.pop()
             gameStateObj.stateMachine.back()
 
-            if isinstance(current_banner, Banner.acquiredItemBanner) and len(current_banner.unit.items) > cf.CONSTANTS['max_items']:
+            if isinstance(current_banner, Banner.acquiredItemBanner) and current_banner.allows_choice and \
+                    len(current_banner.unit.items) > cf.CONSTANTS['max_items']:
                 gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(current_banner.unit, current_banner.unit.items, 'auto', gameStateObj=gameStateObj)
                 gameStateObj.cursor.currentSelectedUnit = current_banner.unit
                 gameStateObj.stateMachine.changeState('itemdiscard')

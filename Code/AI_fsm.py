@@ -135,7 +135,10 @@ class AI(object):
             elif self.state == 'Steal':
                 if self.ai1_state & PRIMARYAI['Unlock'] and self.unit.can_unlock():
                     success = self.run_unlock_ai(self.valid_moves, gameStateObj)
-                elif self.ai1_state & PRIMARYAI['Steal'] and 'steal' in self.unit.status_bundle and len(self.unit.items) < cf.CONSTANTS['max_items']:
+                # It's done this way (instead of "if not success and ...")
+                # because if a thief should unlock something, they shouldn't be
+                # easily distracted by trying to steal things near them
+                if not success and self.ai1_state & PRIMARYAI['Steal'] and 'steal' in self.unit.status_bundle and len(self.unit.items) < cf.CONSTANTS['max_items']:
                     success = self.run_steal_ai(gameStateObj, self.valid_moves)
                 self.state = 'Attack_Init'
 
@@ -365,11 +368,10 @@ class AI(object):
             for move in valid_moves:
                 # We can be adjacent
                 if Utility.calculate_distance(move, target.position) <= 1:
-                    if target.name == 'Chest' or True:
-                        num_before = len(self.unit.items) + 1
-                        if num_before >= cf.CONSTANTS['max_items'] or \
-                                (self.team_ignore and self.team_ignore[0].isdigit() and num_before >= int(self.team_ignore[0])):
-                            self.thief_to_escape()  # For next time
+                    num_before = len(self.unit.items) + (1 if target.name == 'Chest' else 0)
+                    if num_before >= cf.CONSTANTS['max_items'] or \
+                            (self.team_ignore and self.team_ignore[0].isdigit() and num_before >= int(self.team_ignore[0])):
+                        self.thief_to_escape()  # For next time
                     self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     return True

@@ -52,6 +52,7 @@ class Banner(object):
 class acquiredItemBanner(Banner):
     def __init__(self, unit, item):
         Banner.__init__(self) # Super
+        self.allows_choice = True
         self.unit = unit
         self.item = item
         article = 'an' if self.item.name[0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] else 'a'
@@ -64,6 +65,11 @@ class acquiredItemBanner(Banner):
             self.banner_font = ['text_blue', 'text_white', 'text_white', 'text_white', 'text_blue', 'text_blue']
         self.figure_out_size()
         self.sound = GC.SOUNDDICT['Item']
+
+class nochoiceItemBanner(acquiredItemBanner):
+    def __init__(self, unit, item):
+        acquiredItemBanner.__init__(self, unit, item)
+        self.allows_choice = False
 
 class sent_to_convoyBanner(Banner):
     def __init__(self, item):

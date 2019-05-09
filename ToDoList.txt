@@ -13,6 +13,7 @@
 
 - Check that Scathe enemy AI actually works (debug log?)
 - Something is wrong with Continue/Saving + Static Random
+- Drake is permanently Hexed? Carried over from ending a previous chapter next to a Hex Mage
 
 Add separate combine action to convoy (for turnwheel branch)
 Arena
@@ -22,6 +23,8 @@ When Dialogue Editor, make commands accessible
 Fix how ExpGain/Level Up/Promotion interacts with Turnwheel
 New Game +
 Casual death? Check other_game (- Check that casual doesn't have a death cooldown)
+
+- Rapidly tapping A on Dialogue sometimes causes it to jitter up and down while leaving (probably just need to rewrite how dialogue is rendered to the screen anyway...)
 
 - Turnwheel
     - Make it pretty and work the way FE Echoes works

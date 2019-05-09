@@ -469,15 +469,19 @@ class PutItemInConvoy(Action):
         gameStateObj.convoy.remove(self.item)
 
 class GiveItem(Action):
-    def __init__(self, unit, item):
+    def __init__(self, unit, item, choice=True):
         self.unit = unit
         self.item = item
+        self.choice = choice
 
     # with banner
     def do(self, gameStateObj):
         if self.unit.team == 'player' or len(self.unit.items) < cf.CONSTANTS['max_items']:
             self.unit.add_item(self.item, gameStateObj)
-            gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
+            if self.choice:
+                gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
+            else:
+                gameStateObj.banners.append(Banner.nochoiceItemBanner(self.unit, self.item))
             gameStateObj.stateMachine.changeState('itemgain')
 
     # there shouldn't be any time this is called where the player has not already checked 

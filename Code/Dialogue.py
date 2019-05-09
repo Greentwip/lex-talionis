@@ -524,13 +524,13 @@ class Dialogue_Scene(object):
                 item = ItemMethods.itemparser(line[2])
                 if item:
                     gameStateObj.add_item(item)
-                    self.add_item(receiver, item, gameStateObj, 'no_banner' not in line)
+                    self.add_item(receiver, item, gameStateObj, 'no_choice' not in line)
                     tile = gameStateObj.map.tiles.get(self.tile_pos, None)
                     if self.unit and self.unit.team.startswith('enemy') and tile and tile.name == "Chest":
                         Action.do(Action.MakeItemDroppable(self.unit, item), gameStateObj)
                 else:
                     logger.error("Could not find item matching %s", line[2])
-            elif line[2] == "0" and 'no_banner' not in line:
+            elif line[2] == "0":
                 gameStateObj.banners.append(Banner.foundNothingBanner(receiver))
                 gameStateObj.stateMachine.changeState('itemgain')
                 self.current_state = "Paused"
@@ -1677,22 +1677,18 @@ class Dialogue_Scene(object):
         position_list = [position for position in rein_positions if gameStateObj.map.tile_info_dict[position]['Reinforcement'] == pos_line]
         return position_list
 
-    def add_item(self, unit, item, gameStateObj, banner=True):
+    def add_item(self, unit, item, gameStateObj, choice=True):
         if unit:
-            if banner:  # You can make convoy decision here
-                Action.do(Action.GiveItem(unit, item), gameStateObj)
-                self.current_state = "Paused"
-            # Decides for you now
-            elif len(self.unit.items) < cf.CONSTANTS['max_items']:
-                Action.execute(Action.GiveItem(unit, item), gameStateObj)
+            if choice:  # You can make convoy decision here
+                Action.do(Action.GiveItem(unit, item), gameStateObj)    
+            elif len(unit.items) < cf.CONSTANTS['max_items']:
+                Action.do(Action.GiveItem(unit, item, False), gameStateObj)
             else:
-                Action.execute(Action.PutItemInConvoy(item), gameStateObj)
-        else:
-            if banner:
                 Action.do(Action.PutItemInConvoy(item), gameStateObj)
-                self.current_state = "Paused"
-            else:
-                Action.execute(Action.PutItemInConvoy(item), gameStateObj)
+            self.current_state = "Paused"
+        else:
+            Action.do(Action.PutItemInConvoy(item), gameStateObj)
+            self.current_state = "Paused"
         
 # === DIALOG CLASS ============================================================
 class Dialog(object):
@@ -1794,9 +1790,9 @@ class Dialog(object):
     def _add_letter(self, letter):
         self.text_lines[-1][-1][0] += letter
         
-    def _next_char(self): # draw the next character
+    def _next_char(self):  # draw the next character
         if self.waiting:
-            return True# Wait!
+            return True  # Wait!
         if self.is_done():
             return True
         text_string = ''.join(self.text)

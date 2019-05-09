@@ -28,7 +28,7 @@ if;self.name == 'Midnight Rendezvous'
 	s;Sam;...There is something very wrong with that man.{w}{br}...
 	move_sprite;Sam;-24,0
 	s;Sam;What's this?
-	give_item;Sam;Fortune
+	give_item;Sam;Fortune;no_choice
 	r;Sam
 	grey_base_convo;Midnight Rendezvous
 	t;1

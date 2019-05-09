@@ -44,7 +44,7 @@ elif;self.name == 'Apologies'
 	s;Sam;But as a member of the Resistance...{w}{br}no more insubordination, got that?{w}{br}I must be confident my orders will be followed.
 	s;Eliza;...O-of course!
 	s;Sam;I was saving this for your return.{w}{br}I expected it to be a couple more solstices, but...{w};auto
-	give_item;Eliza;Short Spear
+	give_item;Eliza;Short Spear;no_choice
 	s;Eliza;You won't regret this, Sam. Thank you.
 	r;Sam;Eliza
 	grey_base_convo;Apologies

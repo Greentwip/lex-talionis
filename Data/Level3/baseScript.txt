@@ -32,7 +32,7 @@ if;self.name == 'Ophie meets Renae'
 	s;Renae;Don't act so grouchy...{w}{br}Just testing your reflexes.{w};auto
 	s;Ophie;With a sword?!{w};auto
 	s;Renae;Yeah! Luckily, you passed.{w}{br}Here take this.{w};auto
-	give_item;Ophie;Rapier
+	give_item;Ophie;Rapier;no_choice
 	s;Ophie;The sword?{w};auto
 	s;Renae;Hey! This is no ordinary sword!{w}{br}This baby'll cut through the toughest armor like its butter!{w}{br}It'll come in handy.{w};auto
 	s;Ophie;Thanks, I think?{w};auto
@@ -121,7 +121,7 @@ elif;self.name == 'Ophie meets Theo'
 	s;Theo;Well, I might just have a book you'd be interested in.{w}{br}Now where is it...{w};auto
 	s;Ophie;...{w};auto
 	s;Theo;Ah, here.{w};auto
-	give_item;Ophie;Secret Book
+	give_item;Ophie;Secret Book;no_choice
 	s;Ophie;What's this?{w};auto
 	s;Theo;A book on combat.{w}{br}If you study it, perhaps your skills will improve.{w};auto
 	s;Ophie;Well, I'll see.{w}{br}The Rusonoon monks also loved their books.{w};auto
