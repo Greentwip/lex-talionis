@@ -130,7 +130,7 @@ class Solver(object):
                     result.def_movement = self.item.movement
 
             elif self.item.half and self.item.hit is not None and self.item.damage is not None:
-                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
+                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid) // 2
 
         else:
             result.outcome = 1

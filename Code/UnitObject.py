@@ -1668,7 +1668,7 @@ class UnitObject(object):
         else:
             accuracy = 10000
         # Generic rank bonuses
-        if item.weapon or item.spell:
+        if (item.weapon or item.spell) and item.TYPE:
             idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
             accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[0]
         return accuracy
@@ -1711,7 +1711,7 @@ class UnitObject(object):
             damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
         elif item.spell:
             if item.damage:
-                damage += item.damage + GC.EQUATIONS.get_damage(self, item)
+                damage += item.damage + GC.EQUATIONS.get_magic_damage(self, item)
                 # Generic rank bonuses
                 idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
                 damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
@@ -1825,6 +1825,7 @@ class UnitObject(object):
         self.validPartners = []
 
     def clean_up(self, gameStateObj, event=False):
+        logger.debug("Cleaning up unit %s", self.id)
         # Place any rescued units back in the gameStateObj.allunits list
         if self.TRV and not event:
             self.unrescue(gameStateObj)

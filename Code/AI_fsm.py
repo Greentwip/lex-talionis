@@ -975,7 +975,8 @@ class Secondary_AI(object):
             # Mutiliply that by the chance I hit
             max_damage = 0
             status_term = 0
-            for item in self.unit.items:
+            items = [item for item in self.unit.items if self.unit.canWield(item)]
+            for item in items:
                 if item.status:
                     status_term = 1
                 if item.weapon or item.spell:

@@ -1385,7 +1385,7 @@ class ChargeAllSkills(Action):
             if status.active:
                 status.active.increase_charge(self.unit, self.new_charge)
             elif status.automatic:
-                status.active.increase_charge(self.unit, self.new_charge)
+                status.automatic.increase_charge(self.unit, self.new_charge)
 
     def reverse(self, gameStateObj=None):
         for idx, status in enumerate(self.unit.status_effects):

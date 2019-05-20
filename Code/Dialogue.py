@@ -986,6 +986,11 @@ class Dialogue_Scene(object):
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     Action.do(Action.AddTag(unit, line[2]), gameStateObj)
+        elif line[0] == 'remove_tag':
+            unit_specifier = self.get_id(line[1], gameStateObj)
+            for unit in gameStateObj.allunits:
+                if unit_specifier in (unit.id, unit.event_id, unit.position):
+                    Action.do(Action.RemoveTag(unit, line[2]), gameStateObj)
         elif line[0] == 'merge_parties':
             host, guest = int(line[1]), int(line[2])
             for unit in gameStateObj.allunits:

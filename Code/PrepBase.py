@@ -325,7 +325,7 @@ def draw_funds(surf, gameStateObj):
     surf.blit(GC.IMAGESDICT['FundsDisplay'], (168, 137))
     money = str(gameStateObj.get_money())
     size = GC.FONT['text_blue'].size(money)[0]
-    GC.FONT['text_blue'].blit(money, surf, (219 - size, 140))
+    GC.FONT['text_blue'].blit(money, surf, (219 - size, 141))
 
 class PrepItemsState(StateMachine.State):
     show_map = False
@@ -1240,10 +1240,7 @@ class BaseMarketState(StateMachine.State):
         mapSurf.blit(self.owner_surf, (156, 0))
         item_owner = None
         if self.current_menu.getSelection():
-            print(self.current_menu.getSelection())
-            print(self.current_menu.getSelection().item_owner)
             item_owner = gameStateObj.get_unit_from_id(self.current_menu.getSelection().item_owner)
-            print(item_owner)
         if item_owner:
             item_owner = item_owner.name
         elif self.state == cf.WORDS["Sell"] or (self.state == "Free" and self.choice_menu.getSelection() == cf.WORDS['Sell']):

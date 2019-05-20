@@ -451,8 +451,8 @@ class AutomaticSkill(object):
     def check_charged(self):
         return self.current_charge >= self.required_charge
 
-    def increase_charge(self, unit):
-        self.current_charge += unit.get_skill_charge()
+    def increase_charge(self, unit, inc):
+        self.current_charge += inc
         if self.check_charged():
             self.current_charge = self.required_charge
         logger.debug('%s increased charge to %s', self.name, self.current_charge)

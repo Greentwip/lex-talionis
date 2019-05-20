@@ -209,7 +209,7 @@
         <wexp>B,0,0,0,0,0,0</wexp>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
 		<bases>20,9,0,11,9,4,5,2,7</bases>
-		<growths>120,65,5,55,40,20,35,20</growths>
+		<growths>120,65,5,55,50,20,35,20</growths>
         
         <inventory>Rusted Sword,Vulnerary</inventory>
         

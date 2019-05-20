@@ -1286,7 +1286,7 @@ class SpellState(StateMachine.State):
         GC.SOUNDDICT['Select 1'].play()
 
     def reapply_old_values(self, spell):
-        if spell.extra_select:  # Time to re-apply old values
+        if spell.extra_select and spell.extra_select_index > 0:  # Time to re-apply old values
             spell.extra_select_index = 0
             spell.spell.targets = spell.true_targets
             spell.RNG = spell.true_RNG
