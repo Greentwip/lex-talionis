@@ -126,15 +126,15 @@ elif;gameStateObj.turncount == 14
 elif;gameStateObj.turncount >= 16
 	# Infinite Reinforcements start
 	if;gameStateObj.turncount%2
-		create_unit;w_Sage;gameStateObj.turncount;r0;warp;closest
-		create_unit;w_Oracle;gameStateObj.turncount;r0;warp;closest
-		create_unit;w_Warlock;gameStateObj.turncount;r0;warp;closest
-		create_unit;w_Ranger;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Sage;gameStateObj.turncount - 10;r0;warp;closest
+		create_unit;w_Oracle;gameStateObj.turncount - 10;r0;warp;closest
+		create_unit;w_Warlock;gameStateObj.turncount - 10;r0;warp;closest
+		create_unit;w_Ranger;gameStateObj.turncount - 10;r0;warp;closest
 	else
-		create_unit;w_Berserker;gameStateObj.turncount;r0;warp;closest
-		create_unit;w_Warrior;gameStateObj.turncount;r0;warp;closest
-		create_unit;w_Swordmaster;gameStateObj.turncount;r0;warp;closest
-		create_unit;w_Dragoon;gameStateObj.turncount;r0;warp;closest
+		create_unit;w_Berserker;gameStateObj.turncount - 10;r0;warp;closest
+		create_unit;w_Warrior;gameStateObj.turncount - 10;r0;warp;closest
+		create_unit;w_Swordmaster;gameStateObj.turncount - 10;r0;warp;closest
+		create_unit;w_Dragoon;gameStateObj.turncount - 10;r0;warp;closest
 	end
 	wait;500
 end

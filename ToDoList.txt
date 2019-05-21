@@ -11,19 +11,12 @@
 
 - Add support to fe_repo_to_lex for Dragonstone (and Sage?)
 
-- Check that Scathe enemy AI actually works (debug log?)
 - Something is wrong with Continue/Saving + Static Random?
 - Drake is permanently Hexed? Carried over from ending a previous chapter next to a Hex Mage
 - Check that you can remove metamagic_status (overcharged) at clean_up. 
 - Turnwheel doesn't replace tile sprite layers, but does work on terrain?
-- Warpflowers are not spawned correctly when using Warp staff
 - Extra Skill (+9) somehow
 - Some Auras aren't showing up in status?
-- Level 17 Dragoon!
-- Make supports faster for later characters
-- Add remove tag to wiki
-- Add cannot_be_crit status component
-- Add ignore_effective status component
 
 Add separate combine action to convoy (for turnwheel branch)
 Arena

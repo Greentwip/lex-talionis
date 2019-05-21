@@ -160,11 +160,6 @@ class ConditionalComponent(object):
     def __repr__(self):
         return self.value
 
-class WeaknessComponent(object):
-    def __init__(self, damage_type, num):
-        self.damage_type = damage_type
-        self.num = num
-
 class RescueComponent(object):
     def __init__(self, line):
         self.stats = line.split(',')
@@ -653,9 +648,6 @@ def statusparser(s_id):
                 elif component.startswith('conditional_'):
                     value, conditional = status.find(component).text.split(';')
                     my_components[component] = ConditionalComponent(component, value, conditional)
-                elif component == 'weakness':
-                    damage_type, num = status.find('weakness').text.split(',')
-                    my_components['weakness'] = WeaknessComponent(damage_type, num)
                 # Others...
                 elif component == 'rescue':
                     my_components['rescue'] = RescueComponent(status.find('rescue').text)

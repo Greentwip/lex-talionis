@@ -292,8 +292,7 @@ class UnitObject(object):
         # Blit my item -- This gets blit every frame
         white = False
         if isinstance(enemyunit, UnitObject):
-            if (self.getMainWeapon().effective and any([comp in enemyunit.tags for comp in self.getMainWeapon().effective.against])) or \
-                    any([status.weakness and status.weakness.damage_type == self.getMainWeapon().TYPE for status in enemyunit.status_effects]):
+            if enemyunit.check_effective(self.getMainWeapon()):
                 white = True
         else:  # Tile Object
             if self.getMainWeapon().extra_tile_damage:
@@ -302,9 +301,7 @@ class UnitObject(object):
         # Blit enemy item
         if isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon():
             white = False
-            if (enemyunit.getMainWeapon().effective and any([comp in self.tags for comp in enemyunit.getMainWeapon().effective.against])):
-                white = True
-            elif any([status.weakness and status.weakness.damage_type == enemyunit.getMainWeapon().TYPE for status in self.status_effects]):
+            if self.check_effective(enemyunit.getMainWeapon()):
                 white = True
             y_pos = topleft[1] + 83
             if not cf.CONSTANTS['crit']: y_pos -= 16
@@ -1414,6 +1411,17 @@ class UnitObject(object):
                     return False
         return True
 
+    def check_effective(self, item):
+        if item.effective:
+            e_against = item.effective.against
+            for tag in e_against:
+                if tag in self.tags:
+                    for status in self.status_effects:
+                        if status.uneffective == tag:
+                            return False
+                    return True
+        return False
+
     def has_canto(self):
         return 'canto' in self.status_bundle or 'canto_plus' in self.status_bundle
 
@@ -1488,9 +1496,8 @@ class UnitObject(object):
 
         else:
             # Determine effective
-            if item.effective:
-                if any((unit_tag in item.effective.against) for unit_tag in target.tags):
-                    damage += item.effective.bonus
+            if target.check_effective(item):
+                damage += item.effective.bonus
             # Weapon Triangle
             advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
             if advantage[0] > 0:
@@ -1525,10 +1532,6 @@ class UnitObject(object):
                 if status.conditional_resist and eval(status.conditional_resist.conditional, globals(), locals()):
                     new_damage = int(eval(status.conditional_resist.value, globals(), locals()))
                     damage -= new_damage
-            # Determine weakness
-            for status in target.status_effects:
-                if status.weakness and status.weakness.damage_type == item.TYPE:
-                    damage += status.weakness.num
         
         if item.guaranteed_crit:
             crit = cf.CONSTANTS['crit'] or 1
@@ -1605,6 +1608,8 @@ class UnitObject(object):
         if not isinstance(target, UnitObject):
             return 0
         if my_item.crit is None:
+            return 0
+        if 'cannot_be_crit' in target.status_bundle:
             return 0
 
         # Calculations

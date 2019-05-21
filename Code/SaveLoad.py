@@ -259,6 +259,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
 
             # Items
             items = [ItemMethods.itemparser(item) for item in unit.find('inventory').text.split(',') if item]
+            items = [item for item in items if item]  # Remove Nones
             gameStateObj.add_items(items)
             for item in items:
                 cur_unit.add_item(item, gameStateObj)
@@ -418,6 +419,7 @@ def get_unit_info(team, klass, level, item_line, mode, game_constants, force_fix
         items = [ItemMethods.itemparser(item) for item in item_line.split(',') if item]
     else:
         items = []
+    items = [item for item in items if item]  # Remove Nones
 
     # Handle required wexp
     wexp = ClassData.class_dict[klass]['wexp_gain'][:]

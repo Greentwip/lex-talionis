@@ -956,8 +956,7 @@ class AnimationCombat(Combat):
         self.foreground.draw(surf)
 
     def draw_item(self, surf, item, other_item, unit, other, topleft):
-        white = True if (item.effective and any(comp in other.tags for comp in item.effective.against)) or \
-            any(status.weakness and status.weakness.damage_type == self.item.TYPE for status in other.status_effects) else False
+        white = other.check_effective(item)
         item.draw(surf, (topleft[0] + 2, topleft[1] + 3), white)
 
         # Blit advantage -- This must be blit every frame
@@ -1670,8 +1669,7 @@ class HealthBar(object):
             if self.item:
                 if self.other:
                     if isinstance(self.other, UnitObject.UnitObject):
-                        white = True if (self.item.effective and any(comp in self.other.tags for comp in self.item.effective.against)) or \
-                            any(status.weakness and status.weakness.damage_type == self.item.TYPE for status in self.other.status_effects) else False
+                        white = self.other.check_effective(self.item)
                     else:  # Tile Object
                         white = True if self.item.extra_tile_damage else False
                 else:

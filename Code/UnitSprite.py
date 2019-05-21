@@ -207,7 +207,7 @@ class UnitSprite(object):
         items = self.unit.items
         weapon = cur_unit.getMainWeapon()
         # Effective Weapons
-        if any(item.effective and any(comp in cur_unit.tags for comp in item.effective.against) for item in items):
+        if any(cur_unit.check_effective(item) for item in items):
             draw_marker('Danger')
         # Killer Weapons and Master Weapons and Reaver Weapons
         else:
