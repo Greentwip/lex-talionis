@@ -11,15 +11,15 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects
-    import Utility, Weapons, Objective, Triggers, ClassData
+    import TileObject, ItemMethods, UnitObject, StatusCatalog, CustomObjects
+    import Utility, Weapons, Objective, Triggers, ClassData, Action
     from StatObject import build_stat_dict
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import TileObject, ItemMethods, UnitObject, StatusObject, CustomObjects
-    from . import Utility, Weapons, Objective, Triggers, ClassData
+    from . import TileObject, ItemMethods, UnitObject, StatusCatalog, CustomObjects
+    from . import Utility, Weapons, Objective, Triggers, ClassData, Action
     from Code.StatObject import build_stat_dict
 
 import logging
@@ -242,9 +242,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             
             u_i['desc'] = unit.find('desc').text
             # Tags
-            class_tags = class_dict[u_i['klass']]['tags']
-            personal_tags = set(unit.find('tags').text.split(',')) if unit.find('tags') is not None and unit.find('tags').text is not None else set()
-            u_i['tags'] = class_tags | personal_tags
+            u_i['tags'] = set(unit.find('tags').text.split(',')) if unit.find('tags') is not None and unit.find('tags').text is not None else set()
 
             u_i['ai'] = legend['ai']
             u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
@@ -268,10 +266,11 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
             personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []
-            c_s = [StatusObject.statusparser(status) for status in personal_skills]
+            c_s = [StatusCatalog.statusparser(status) for status in personal_skills]
             for status in c_s:  
                 if status:
-                    StatusObject.HandleStatusAddition(status, cur_unit, gameStateObj)
+                    gameStateObj.add_status(status)
+                    Action.do(Action.AddStatus(cur_unit, status), gameStateObj)
             # handle having a status that gives stats['HP']
             cur_unit.set_hp(int(cur_unit.stats['HP']))
 
@@ -317,7 +316,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
-    u_i['tags'] = class_dict[u_i['klass']]['tags']
+    u_i['tags'] = set()
     u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
@@ -340,9 +339,11 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
 
     # Extra Skills
     if len(unitLine) == 10:
-        statuses = [StatusObject.statusparser(status) for status in unitLine[9].split(',')]
+        statuses = [StatusCatalog.statusparser(status) for status in unitLine[9].split(',')]
         for status in statuses:
-            StatusObject.HandleStatusAddition(status, cur_unit, gameStateObj)
+            if status:
+                gameStateObj.add_status(status)
+                Action.do(Action.AddStatus(cur_unit, status), gameStateObj)
 
     allunits.append(cur_unit)
     return cur_unit
@@ -367,7 +368,7 @@ def create_summon(summon_info, summoner, position, gameStateObj):
     u_i['name'] = summon_info.name
     u_i['desc'] = summon_info.desc
     u_i['ai'] = summon_info.ai if summoner.team != 'player' else 'None'
-    u_i['tags'] = set(class_dict[u_i['klass']]['tags'].split(',')) if class_dict[u_i['klass']]['tags'] else set()
+    u_i['tags'] = set()
     u_i['tags'].add('Summon_' + str(summon_info.s_id) + '_' + str(summoner.id)) # Add unique identifier
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
@@ -455,16 +456,17 @@ def get_skills(unit, classes, level, gameStateObj, feat=True, seed=0):
         for status in class_skills:
             if status == 'Feat':
                 counter = 0
-                while StatusObject.feat_list[(seed + counter)%len(StatusObject.feat_list)] in class_skills:
+                while StatusCatalog.feat_list[(seed + counter)%len(StatusCatalog.feat_list)] in class_skills:
                     counter += 1
-                class_skills.append(StatusObject.feat_list[(seed + counter)%len(StatusObject.feat_list)])
+                class_skills.append(StatusCatalog.feat_list[(seed + counter)%len(StatusCatalog.feat_list)])
     class_skills = [status for status in class_skills if status != 'Feat']
     logger.debug('Class Skills %s', class_skills)
     # === Actually add statuses
-    status_effects = [StatusObject.statusparser(status) for status in class_skills]
+    status_effects = [StatusCatalog.statusparser(status) for status in class_skills]
     for status in status_effects:
         if status:
-            StatusObject.HandleStatusAddition(status, unit, gameStateObj)
+            gameStateObj.add_status(status)
+            Action.do(Action.AddStatus(unit, status), gameStateObj)
     # handle having a status that gives stats['HP']
     unit.set_hp(int(unit.stats['HP']))
 
@@ -594,6 +596,6 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
     else:
         ItemMethods.ItemObject.next_uid = 1
     if gameStateObj.allstatuses:
-        StatusObject.StatusObject.next_uid = max(gameStateObj.allstatuses.keys()) + 1
+        StatusCatalog.Status.next_uid = max(gameStateObj.allstatuses.keys()) + 1
     else:
-        StatusObject.StatusObject.next_uid = 1
+        StatusCatalog.Status.next_uid = 1

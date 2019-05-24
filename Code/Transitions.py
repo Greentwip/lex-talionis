@@ -6,8 +6,8 @@ import os, time
 try:
     import GlobalConstants as GC
     import configuration as cf
-    import CustomObjects, MenuFunctions, SaveLoad, StateMachine
-    import Dialogue, Engine, Image_Modification, Weather, Background, ClassData
+    import CustomObjects, MenuFunctions, SaveLoad, StateMachine, ClassData
+    import Dialogue, Engine, Image_Modification, Weather, Background
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
@@ -568,7 +568,7 @@ class StartPreloadedLevels(StartLoad):
             self.build_new_game(preloaded_level, gameStateObj, metaDataObj)
 
     def build_new_game(self, level, gameStateObj, metaDataObj):
-        import ItemMethods, StatusObject
+        import ItemMethods, StatusCatalog, Action
         gameStateObj.build_new() # Make the gameStateObj ready for a new game
 
         levelfolder = 'Data/Level' + str(level['name'])
@@ -628,8 +628,6 @@ class StartPreloadedLevels(StartLoad):
                         unit.loadSprites()
                         unit.level = 1
                         unit.movement_group = unit_klass['movement_group']
-                        if unit_klass['tags']:
-                            unit.tags |= unit_klass['tags']
                         levelup_list = unit_klass['promotion']
                         current_stats = list(unit.stats.values())
                         assert len(levelup_list) == len(unit_klass['max']) == len(current_stats), "%s %s %s" % (levelup_list, unit_klass['max'], current_stats)
@@ -644,10 +642,11 @@ class StartPreloadedLevels(StartLoad):
             # Get skills
             for skill_id in unit_dict['skills']:
                 if skill_id not in (s.id for s in unit.status_effects):
-                    skill = StatusObject.statusparser(skill_id)
+                    skill = StatusCatalog.statusparser(skill_id)
+                    gameStateObj.add_status(skill)
                     if skill:
-                        StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
-            unit.change_hp(100)  # reset currenthp
+                        Action.AddStatus(unit, skill).do(gameStateObj)
+            unit.change_hp(1000)  # reset currenthp
 
         # Actually Load the first level
         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)

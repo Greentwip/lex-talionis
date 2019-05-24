@@ -6,14 +6,14 @@ try:
     from imagesDict import COLORKEY
     import GlobalConstants as GC
     import configuration as cf
-    import StatusObject, CustomObjects, Dialogue, ItemMethods
-    import Image_Modification, Engine, Weather, Utility
+    import StatusCatalog, CustomObjects, Dialogue, ItemMethods
+    import Image_Modification, Engine, Weather, Utility, Action
 except ImportError:
     from Code.imagesDict import COLORKEY
     from . import GlobalConstants as GC
     from . import configuration as cf
-    from . import StatusObject, CustomObjects, Dialogue, ItemMethods
-    from . import Image_Modification, Engine, Weather, Utility
+    from . import StatusCatalog, CustomObjects, Dialogue, ItemMethods
+    from . import Image_Modification, Engine, Weather, Utility, Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -287,7 +287,7 @@ class MapObject(object):
             # Turn these string of ids into a list of status objects
             status_list = []
             for status in property_value.split(','):
-                status_list.append(StatusObject.statusparser(status))
+                status_list.append(StatusCatalog.statusparser(status))
             property_value = status_list
         elif property_name == 'Weapon':
             # For now we're ignoring saving Stationary Weapons, which means they can't have uses...
@@ -478,25 +478,24 @@ class MapObject(object):
     def remove_weather(self, name):
         self.weather = [weather for weather in self.weather if weather.name != name]
 
-    def add_global_status(self, s_id, gameStateObj=None):
+    def add_global_status(self, s_id, gameStateObj):
         if any(status.id == s_id for status in self.status_effects):
             return  # No stacking at all of global statuses
-        status_obj = StatusObject.statusparser(s_id)
+        status_obj = StatusCatalog.statusparser(s_id)
+        gameStateObj.add_status(status_obj)
         self.status_effects.add(status_obj)
-        if gameStateObj:
-            for unit in gameStateObj.allunits:
-                if unit.position:
-                    StatusObject.HandleStatusAddition(status_obj, unit, gameStateObj)
+        for unit in gameStateObj.allunits:
+            if unit.position:
+                Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
 
-    def remove_global_status(self, s_id, gameStateObj=None):
+    def remove_global_status(self, s_id, gameStateObj):
         if not any(status.id == s_id for status in self.status_effects):
             return  # Must have the right status to remove
         status_obj = [status for status in self.status_effects if status.id == s_id][0]
         self.status_effects.discard(status_obj)
-        if gameStateObj:
-            for unit in gameStateObj.allunits:
-                if unit.position:
-                    StatusObject.HandleStatusRemoval(status_obj, unit, gameStateObj)
+        for unit in gameStateObj.allunits:
+            if unit.position:
+                Action.do(Action.RemoveStatus(unit, status_obj), gameStateObj)
 
     def create_display(self, coord, gameStateObj):
         if coord in self.hp:

@@ -41,7 +41,7 @@ class Action(object):
             value = ('Unit', value.id)
         elif isinstance(value, ItemMethods.ItemObject):
             value = ('Item', value.uid)
-        elif isinstance(value, StatusObject.StatusObject):
+        elif isinstance(value, StatusCatalog.Status):
             value = ('Status', value.uid)
         elif isinstance(value, list):
             value = ('List', [self.serialize_obj(v, gameStateObj) for v in value])
@@ -249,12 +249,15 @@ class RemoveFromMap(Action):
         # Yeah this is janky, but right now is required to nest an action
         # within another action
         self.untether_actions = [UnTetherStatus(s, self.unit.id) for s in self.unit.status_effects if s.tether]
+        self.global_remove_actions = []
 
     def do(self, gameStateObj):
         if self.unit.position:
             # Global Statuses
             for status in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusRemoval(status, self.unit, gameStateObj)
+                remove = RemoveStatus(self.unit, status)
+                remove.do(gameStateObj)
+                self.global_remove_actions.append(remove)
             for action in self.untether_actions:
                 action.do(gameStateObj)
         self.unit.position = None
@@ -263,8 +266,8 @@ class RemoveFromMap(Action):
         self.unit.position = self.old_pos
         if self.unit.position:
             # Global Statuses
-            for status in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusAddition(status, self.unit, gameStateObj)
+            for remove in self.global_remove_actions:
+                remove.reverse(gameStateObj)
             for action in self.untether_actions:
                 action.reverse(gameStateObj)
             self.unit.previous_position = self.unit.position
@@ -274,18 +277,23 @@ class PlaceOnMap(Action):
         self.unit = unit
         self.new_pos = new_pos
 
+        self.global_add_actions = []
+
     def do(self, gameStateObj):
         self.unit.position = self.new_pos
         if self.unit.position:
             for status in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusAddition(status, self.unit, gameStateObj)
+                add = AddStatus(self.unit, status)
+                add.do(gameStateObj)
+                self.global_add_actions.append(add)
             self.unit.previous_position = self.unit.position
 
     def reverse(self, gameStateObj):
         if self.unit.position:
             # Global Statuses
-            for status in gameStateObj.map.status_effects:
-                StatusObject.HandleStatusRemoval(status, self.unit, gameStateObj)
+            # for status in gameStateObj.map.status_effects:
+            for add in self.global_add_actions:
+                add.reverse(gameStateObj)
         self.unit.position = None
 
 class Wait(Action):
@@ -340,6 +348,7 @@ class Rescue(Action):
         self.unit = unit
         self.rescuee = rescuee
         self.old_pos = self.rescuee.position
+        self.rescue_status = None
 
     def do(self, gameStateObj):
         self.unit.TRV = self.rescuee.id
@@ -353,7 +362,10 @@ class Rescue(Action):
             self.rescuee.position = None
         self.unit.hasAttacked = True
         if 'savior' not in self.unit.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.unit, gameStateObj)
+            if not self.rescue_status:
+                self.rescue_status = StatusCatalog.statusparser("Rescue")
+                gameStateObj.add_status(self.rescue_status)
+            AddStatus(self.unit, self.rescue_status).do(gameStateObj)
 
     def execute(self, gameStateObj):
         self.unit.TRV = self.rescuee.id
@@ -362,7 +374,7 @@ class Rescue(Action):
         self.rescuee.position = None
         self.unit.hasAttacked = True
         if 'savior' not in self.unit.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.unit, gameStateObj)
+            AddStatus(self.unit, self.rescue_status).execute(gameStateObj)
 
     def reverse(self, gameStateObj):
         self.rescuee.position = self.old_pos
@@ -377,6 +389,7 @@ class Drop(Action):
         self.pos = pos
         self.hasTraded = self.unit.hasTraded
         self.droppeeHasAttacked = self.droppee.hasAttacked
+        self.rescue_status = None
 
     def do(self, gameStateObj):
         self.droppee.position = self.pos
@@ -407,19 +420,29 @@ class Drop(Action):
         self.droppee.position = None
         self.droppee.leave(gameStateObj)
         if 'savior' not in self.unit.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.unit, gameStateObj)
+            if not self.rescue_status:
+                self.rescue_status = StatusCatalog.statusparser("Rescue")
+                gameStateObj.add_status(self.rescue_status)
+            AddStatus(self.unit, self.rescue_status).do(gameStateObj)
 
 class Give(Action):
     def __init__(self, unit, other_unit):
         self.unit = unit
         self.other_unit = other_unit
+        self.rescue_status = [status for status in self.unit.status_effects if status.id == 'Rescue']
+        if self.rescue_status:
+            self.rescue_status = self.rescue_status[0]
+        self.other_rescue_status = None
 
     def do(self, gameStateObj):
         self.other_unit.TRV = self.unit.TRV
         self.other_unit.strTRV = self.unit.strTRV
         self.unit.hasAttacked = True
         if 'savior' not in self.other_unit.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.other_unit, gameStateObj)
+            if not self.other_rescue_status:
+                self.other_rescue_status = StatusCatalog.statusparser("Rescue")
+                gameStateObj.add_status(self.other_rescue_status)
+            AddStatus(self.other_unit, self.other_rescue_status).do(gameStateObj)
         self.unit.unrescue(gameStateObj)
 
     def reverse(self, gameStateObj):
@@ -427,7 +450,7 @@ class Give(Action):
         self.unit.strTRV = self.other_unit.strTRV
         self.unit.hasAttacked = False
         if 'savior' not in self.unit.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.unit, gameStateObj)
+            AddStatus(self.unit, self.rescue_status).do(gameStateObj)
         self.other_unit.unrescue(gameStateObj)
 
 class Take(Action):
@@ -435,13 +458,20 @@ class Take(Action):
         self.unit = unit
         self.other_unit = other_unit
         self.hasTraded = self.unit.hasTraded
+        self.rescue_status = None
+        self.other_rescue_status = [status for status in self.other_unit.status_effects if status.id == 'Rescue']
+        if self.other_rescue_status:
+            self.other_rescue_status = self.other_rescue_status[0]
 
     def do(self, gameStateObj):
         self.unit.TRV = self.other_unit.TRV
         self.unit.strTRV = self.other_unit.strTRV
         self.unit.hasTraded = True
         if 'savior' not in self.unit.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.unit, gameStateObj)
+            if not self.rescue_status:
+                self.rescue_status = StatusCatalog.statusparser("Rescue")
+                gameStateObj.add_status(self.rescue_status)
+            AddStatus(self.unit, self.rescue_status).do(gameStateObj)
         self.other_unit.unrescue(gameStateObj)
 
     def reverse(self, gameStateObj):
@@ -449,7 +479,7 @@ class Take(Action):
         self.other_unit.strTRV = self.unit.strTRV
         self.unit.hasTraded = self.hasTraded
         if 'savior' not in self.other_unit.status_bundle:
-            StatusObject.HandleStatusAddition(StatusObject.statusparser("Rescue"), self.other_unit, gameStateObj)
+            AddStatus(self.other_unit, self.other_rescue_status).do(gameStateObj)
         self.unit.unrescue(gameStateObj)
 
 # === ITEM ACTIONS ==========================================================
@@ -625,179 +655,89 @@ class RepairItem(Action):
             self.item.c_uses.set(self.item.item_old_c_uses)
 
 class GainExp(Action):
-    def __init__(self, unit, exp, in_combat=None):
+    def __init__(self, unit, exp):
         self.unit = unit
-        self.exp_amount = exp
         self.old_exp = self.unit.exp
-        self.old_level = self.unit.level
-        self.current_stats = [s.base_stat for s in self.unit.stats.values()]
-        self.levelup_list = None
-        self.current_growth_points = self.unit.growth_points[:]
-        self.new_growth_points = None
-
-        self.promoted_to = None  # Determined on reverse
-        self.current_class = self.unit.klass
-
-        self.current_skills = [s.id for s in self.unit.status_effects]
-        self.added_skills = []  # Determined on reverse
-
-        self.in_combat = in_combat
-
-    def _forward_class_change(self, gameStateObj, promote=True):
-        old_klass = ClassData.class_dict[self.current_class]
-        new_klass = ClassData.class_dict[self.promoted_to]
-        self.unit.leave(gameStateObj)
-        self.unit.klass = self.promoted_to
-        self.unit.removeSprites()
-        self.unit.loadSprites()
-        if promote:
-            self.unit.level = 1
-            self.unit.set_exp(0)
-            self.levelup_list = new_klass['promotion']
-            if len(self.levelup_list) < new_klass['bases']: # Fill in with new classes bases - current stats
-                self.levelup_list.extend([new_klass['bases'][i] - self.current_stats[i] for i in range(len(self.levelup_list), len(new_klass['bases']))])
-            for index, stat in enumerate(self.levelup_list):
-                self.levelup_list[index] = min(stat, new_klass['max'][index] - self.current_stats[index])
-            self.unit.apply_levelup(self.levelup_list)
-            self.unit.increase_wexp(new_klass['wexp_gain'], gameStateObj, banner=False)
-        self.unit.movement_group = new_klass['movement_group']
-        # Handle tags
-        if old_klass['tags']:
-            self.unit.tags -= old_klass['tags']
-        if new_klass['tags']:
-            self.unit.tags |= new_klass['tags']
-        self.unit.arrive(gameStateObj)
-
-    def _reverse_class_change(self, gameStateObj, promote=True):
-        old_klass = ClassData.class_dict[self.current_class]
-        new_klass = ClassData.class_dict[self.promoted_to]
-        self.unit.leave(gameStateObj)
-        self.unit.klass = self.current_class
-        self.unit.removeSprites()
-        self.unit.loadSprites()
-        if promote:
-            self.unit.level = self.old_level
-            self.unit.set_exp(self.old_exp)
-            self.unit.apply_levelup([-x for x in self.levelup_list])
-            self.unit.increase_wexp([-x for x in new_klass['wexp_gain']], gameStateObj, banner=False)
-        self.unit.movement_group = old_klass['movement_group']
-        # Handle tags
-        if new_klass['tags']:
-            self.unit.tags -= new_klass['tags']
-        if old_klass['tags']:
-            self.unit.tags |= old_klass['tags']
-        self.unit.arrive(gameStateObj)
-
-    def _add_skills(self, gameStateObj):
-        # If we don't already have this skill
-        for s_id in self.added_skills:
-            skill = StatusObject.statusparser(s_id)
-            if skill.stack or skill.id not in (s.id for s in self.unit.status_effects):
-                StatusObject.HandleStatusAddition(skill, self.unit, gameStateObj)
-
-    def _remove_skills(self, added_skills, gameStateObj):
-        # If we don't already have this skill
-        for skill in added_skills:
-            StatusObject.HandleStatusRemoval(skill, self.unit, gameStateObj)
-            self.added_skills.append(skill.id)
+        self.exp = exp
 
     def do(self, gameStateObj):
-        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.unit, exp=self.exp_amount, in_combat=self.in_combat))
-        gameStateObj.stateMachine.changeState('expgain')
-        self.in_combat = None  # Don't need this anymore
-
-    def execute(self, gameStateObj):
-        print(self.exp_amount, self.unit.exp, self.promoted_to, self.unit.level, self.unit.klass)
-        if self.exp_amount + self.unit.exp >= 100:
-            klass_dict = ClassData.class_dict[self.unit.klass]
-            max_level = klass_dict['max_level']
-            # Level Up
-            self.unit.growth_points = self.new_growth_points[:]
-            if self.unit.level >= max_level:
-                if cf.CONSTANTS['auto_promote'] and klass_dict['turns_into']: # If has at least one class to turn into
-                    self._forward_class_change(gameStateObj, True)
-                else:
-                    self.unit.set_exp(99)
-            else:
-                self.unit.set_exp((self.unit.exp + self.exp_amount)%100)
-                self.unit.level += 1
-                self.unit.apply_levelup(self.levelup_list)
-            self._add_skills(gameStateObj)    
-        else:
-            self.unit.change_exp(self.exp_amount)
+        self.unit.set_exp((self.old_exp + self.exp)%100)
 
     def reverse(self, gameStateObj):
-        self.promoted_to = self.unit.klass
-        added_skills = [skill for skill in self.unit.status_effects if skill.id not in self.current_skills]
-        if self.unit.exp < self.exp_amount: # Leveled up
-            klass_dict = ClassData.class_dict[self.current_class]
-            max_level = klass_dict['max_level']
-            stats_after_levelup = [s.base_stat for s in self.unit.stats.values()]
-            self.levelup_list = [a - b for a, b in zip(stats_after_levelup, self.current_stats)]
-            self.new_growth_points = self.unit.growth_points[:]
-            self.unit.growth_points = self.current_growth_points[:]
-            if self.unit.level == 1:  # Promoted here
-                self._reverse_class_change(gameStateObj, True)
-            elif self.unit.level >= max_level and self.unit.exp >= 99:
-                self.unit.set_exp(self.old_exp)
-            else:
-                self.unit.set_exp(100 - self.exp_amount + self.unit.exp)
-                self.unit.level -= 1
-                self.unit.apply_levelup([-x for x in self.levelup_list])
-            self._remove_skills(added_skills, gameStateObj)
-        else:
-            self.unit.change_exp(-self.exp_amount)
+        self.unit.set_exp(self.old_exp)
 
-class Promote(GainExp):
+class SetExp(GainExp):
+    def do(self, gameStateObj):
+        self.unit.set_exp(self.exp)
+
+class IncLevel(Action):  # Assumes unit did not promote
     def __init__(self, unit):
         self.unit = unit
 
-        self.old_exp = self.unit.exp
-        self.old_level = self.unit.level
-        self.current_stats = [s.base_stat for s in self.unit.stats.values()]
-        self.levelup_list = None
-
-        self.promoted_to = None
-        self.current_class = self.unit.klass
-
-        self.current_skills = [s.id for s in self.unit.status_effects]
-        self.added_skills = []  # Determined on reverse
-
     def do(self, gameStateObj):
-        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.unit, exp=0, force_promote=True))
-        gameStateObj.stateMachine.changeState('expgain')
-
-    def execute(self, gameStateObj):
-        self._forward_class_change(gameStateObj, True)
-        self._add_skills(gameStateObj)
+        self.unit.level += 1
 
     def reverse(self, gameStateObj):
-        self.promoted_to = self.unit.klass
-        added_skills = [skill for skill in self.unit.status_effects if skill.id not in self.current_skills]
-        stats_after_levelup = [s.base_stat for s in self.unit.stats.values()]
-        self.levelup_list = [a - b for a, b in zip(stats_after_levelup, self.current_stats)]
-        self._reverse_class_change(gameStateObj, True)
-        self._remove_skills(added_skills, gameStateObj)
+        self.unit.level -= 1
 
-class PermanentStatIncrease(Action):
-    def __init__(self, unit, stat_increase):
+class Promote(Action):
+    def __init__(self, unit, new_klass):
         self.unit = unit
-        self.current_stats = [stat.base_stat for stat in self.unit.stats.values()]
-        self.stat_increase = stat_increase
+        self.old_exp = self.unit.exp
+        self.old_level = self.unit.level
+        self.old_klass = ClassData.class_dict[unit.klass]
+        self.new_klass = ClassData.class_dict[new_klass]
+        self.levelup_list = self.new_klass['promotion']
+        self.new_wexp = self.new_klass['wexp_gain']
+        current_stats = list(self.unit.stats.values())
+        # Any stat that's not defined, fill in with new classes bases - current stats
+        if len(self.levelup_list) < new_class['bases']:
+            missing_idxs = range(len(self.levelup_list), len(new_class['bases']))
+            new_bases = [new_class['bases'][i] - current_stats[i].base_stat for i in missing_idxs]
+            self.levelup_list.extend(new_bases)
+        assert len(self.levelup_list) == len(self.new_klass['max']) == len(current_stats), "%s %s %s" % (self.levelup_list, new_class['max'], current_stats)
+        # check maxes
+        for index, stat in enumerate(self.levelup_list):
+            self.levelup_list[index] = min(stat, self.new_klass['max'][index] - current_stats[index].base_stat)
+
+    def get_data(self):
+        return self.levelup_list, self.new_wexp
 
     def do(self, gameStateObj):
-        gameStateObj.levelUpScreen.append(LevelUp.levelUpScreen(gameStateObj, unit=self.unit, exp=0, force_level=self.stat_increase))
-        gameStateObj.stateMachine.changeState('expgain')
+        self.unit.klass = self.new_klass['id']
+        self.unit.set_exp(0)
+        self.unit.level = 1
+        self.unit.movement_group = self.new_klass['movement_group']
+        self.unit.apply_levelup(self.levelup_list)
 
-    def execute(self, gameStateObj):
+    def reverse(self, gameStateObj):
+        self.unit.klass = self.old_klass['id']
+        self.unit.set_exp(self.old_exp)
+        self.unit.level = self.old_level
+        self.unit.movement_group = self.old_klass['movement_group']
+        self.unit.apply_levelup([-x for x in self.levelup_list])
+
+class ApplyLevelUp(Action):
+    def __init__(self, unit, stat_increase):
+        self.unit = unit
+        current_stats = [stat.base_stat for stat in self.unit.stats.values()]
+        self.stat_increase = stat_increase
         klass = ClassData.class_dict[self.unit.klass]
         for index, stat in enumerate(self.stat_increase):
-            self.stat_increase[index] = min(stat, klass['max'][index] - self.current_stats[index])
+            self.stat_increase[index] = min(stat, klass['max'][index] - current_stats[index])
+
+    def do(self, gameStateObj):
+        self.unit.apply_levelup(self.stat_increase)
+
+    def reverse(self, gameStateObj):
+        self.unit.apply_levelup([-x for x in self.stat_increase])
+
+class PermanentStatIncrease(ApplyLevelUp):
+    def do(self, gameStateObj):
         self.unit.apply_levelup(self.stat_increase, True)
 
     def reverse(self, gameStateObj):
-        for idx, stat in enumerate(self.unit.stats.values()):
-            stat.base_stat = self.current_stats[idx]
+        self.unit.apply_levelup([-x for x in self.stat_increase])
         # Since hp_up...
         self.unit.change_hp(-self.stat_increase[0])
 
@@ -1077,29 +1017,29 @@ class AddTag(Action):
     def __init__(self, unit, new_tag):
         self.unit = unit
         self.new_tag = new_tag
-        self.already_present = new_tag in unit.tags
+        self.already_present = new_tag in unit._tags
 
     def do(self, gameStateObj):
         if not self.already_present:
-            self.unit.tags.add(self.new_tag)
+            self.unit._tags.add(self.new_tag)
 
     def reverse(self, gameStateObj):
         if not self.already_present:
-            self.unit.tags.remove(self.new_tag)
+            self.unit._tags.remove(self.new_tag)
 
 class RemoveTag(Action):
     def __init__(self, unit, tag):
         self.unit = unit
         self.tag = tag
-        self.already_present = tag in unit.tags
+        self.already_present = tag in unit._tags
 
     def do(self, gameStateObj):
         if self.already_present:
-            self.unit.tags.remove(self.tag)
+            self.unit._tags.remove(self.tag)
 
     def reverse(self, gameStateObj):
         if self.already_present:
-            self.unit.tags.add(self.tag)
+            self.unit._tags.add(self.tag)
 
 class AddTalk(Action):
     def __init__(self, unit1, unit2):
@@ -1237,6 +1177,111 @@ class RecordRandomState(Action):
         static_random.set_combat_random_state(self.old)
 
 # === SKILL AND STATUS ACTIONS ===================================================
+class AddStatus(Action):
+    def __init__(self, unit, status_obj):
+        self.unit = unit
+        self.status_obj = status_obj
+        self.actions = []
+
+    def do(self, gameStateObj):
+        if self.status_obj.uid not in gameStateObj.allstatuses:
+            print('Major problem!')
+            print('%s not found in allstatuses!' % self.status_obj)
+            
+        logger.info('Adding Status %s to %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
+
+        if not self.status_obj.stack:
+            for status in self.unit.status_effects:
+                if status.id == self.status_obj.id:
+                    logger.info('Status %s already present', status.id)
+                    if status.time:
+                        self.actions.append(RemoveStatus(self.unit, status))
+                    else:
+                        return  # just ignore this new one
+
+        if not self.status_obj.momentary:
+            self.actions.append(GiveStatus(self.unit, self.status_obj))
+
+        # --- Momentary status ---
+        if self.status_obj.refresh:
+            self.actions.append(Reset(self.unit))
+            for status in self.unit.status_effects:
+                if status.automatic and status.automatic.check_charged():
+                    self.actions.append(FinalizeAutomaticSkill(status, self.unit))
+
+        if self.status_obj.skill_restore:
+            self.actions.append(ChargeAllSkills(self.unit, 1000))
+
+        if self.status_obj.clear:
+            for status in self.unit.status_effects:
+                if status.time:
+                    self.actions.append(RemoveStatus(self.unit, self.status_obj))
+
+        # --- Non-momentary status ---
+        if self.status_obj.mind_control:
+            self.status_obj.original_team = self.unit.team
+            p_unit = gameStateObj.get_unit_from_id(self.status_obj.parent_id)
+            self.actions.append(ChangeTeam(self.unit, p_unit.team))
+
+        if self.status_obj.ai_change:
+            self.status_obj.original_ai = self.unit.ai_descriptor
+            self.actions.append(ChangeAI(self.unit, self.status_obj.ai_change))
+
+        if self.status_obj.stat_change:
+            self.actions.append(ApplyStatChange(self.unit, self.status_obj.stat_change))
+        if self.status_obj.growth_mod:
+            self.actions.append(ApplyGrowthMod(self.unit, self.status_obj.growth_mod))
+
+        if self.status_obj.stat_halve:
+            penalties = [(-stat.base_stat//2 if name in self.status_obj.stat_halve.stats else 0)
+                         for name, stat in self.unit.stats.items()]
+            self.status_obj.stat_halve.penalties = penalties
+            self.actions.append(ApplyStatChange(self.unit, penalties))
+
+        if self.status_obj.flying:
+            self.unit.remove_tile_status(gameStateObj, force=True)
+
+        if self.status_obj.passive:
+            for item in self.unit.items:
+                self.status_obj.passive.apply_mod(item)
+
+        if self.status_obj.aura:
+            ??.propagate_aura(self.unit, self.status_obj.aura, gameStateObj)
+
+        if self.status_obj.shrug_off:
+            for status in self.unit.status_effects:
+                if status.time and status.negative and status.time.time_left > 1:
+                    self.actions.append(ShrugOff(status))
+
+        # If you have shrug off...
+        if 'shrug_off' in self.unit.status_bundle and \
+                self.status_obj.time and self.status_obj.time > 1:
+            self.actions.append(ShrugOff(self.status_obj))
+
+        for action in self.actions:
+            action.do(gameStateObj)
+
+        # Does not need to be reversed -- turnwheel takes care of this
+        if self.status_obj.affects_movement:
+            if self.unit.team.startswith('enemy'):
+                gameStateObj.boundary_manager._remove_unit(self.unit, gameStateObj)
+                if self.unit.position:
+                    gameStateObj.boundary_manager._add_unit(self.unit, gameStateObj)
+
+    def reverse(self, gameStateObj):
+        for action in self.actions:
+            action.reverse(gameStateObj)
+
+        if self.status_obj.aura:
+            ??.release_aura(self.unit, self.status_obj.aura)
+
+        if self.status_obj.passive:
+            for item in self.unit.items:
+                self.status_obj.passive.reverse_mod(item)
+
+        if self.status_obj.flying:
+            self.unit.acquire_tile_status(gameStateObj, force=True)
+
 class GiveStatus(Action):
     def __init__(self, unit, status_obj):
         self.unit = unit
@@ -1245,13 +1290,115 @@ class GiveStatus(Action):
     def do(self, gameStateObj):
         self.unit.status_bundle.update(list(self.status_obj.components)) 
         self.unit.status_effects.append(self.status_obj)
+        self.status_obj.parent_id = self.unit.id
 
     def reverse(self, gameStateObj):
         if self.status_obj in self.unit.status_effects:
+            self.status_obj.parent_id = None
             self.unit.status_effects.remove(self.status_obj)
             self.unit.status_bundle.subtract(list(self.status_obj.components))
         else:
             logger.error("Status Object %s not in %s's status effects", self.status_obj.id, self.unit.name)
+
+class RemoveStatus(Action):
+    def __init__(self, unit, status_obj, clean_up=False):
+        self.unit = unit
+        self.status_obj = status_obj
+        self.actions = []
+        self.clean_up = clean_up
+
+    def do(self, gameStateObj):
+        if not isinstance(status, StatusCatalog.Status):
+            # Then it must be an integer (the status id)
+            for status in self.unit.status_effects:
+                if self.status_obj == status.id:
+                    self.status_obj = status
+                    break
+            else:
+                logger.warning('Status ID %s not present...', status)
+                logger.warning(self.unit.status_effects)
+                return
+
+        logger.info('Removing status %s from %s at %s', status.id, unit.name, unit.position)
+        if self.status_obj in self.unit.status_effects:
+            self.actions.append(TakeStatus(self.unit, self.status_obj))
+        else:
+            logger.warning('Status %s %s not present...', status.id, status.name)
+            logger.warning(unit.status_effects)
+            return
+
+        # --- Non-momentary status ---
+        if self.status_obj.mind_control:
+            self.actions.append(ChangeTeam(self.unit, self.status_obj.original_team))
+
+        if self.status_obj.ai_change:
+            self.actions.append(ChangeAI(self.unit, self.status_obj.original_ai))
+
+        if self.status_obj.upkeep_stat_change:
+            stat_change = [-stat*(self.status_obj.upkeep_stat_change.count) for stat in 
+                           self.status_obj.upkeep_stat_change.stat_change]
+            self.actions.append(ApplyStatChange(self.unit, stat_change))
+        if self.status_obj.stat_change:
+            stat_change = [-stat for stat in self.status_obj.stat_change]
+            self.actions.append(ApplyStatChange(self.unit, stat_change))
+        if self.status_obj.growth_mod:
+            growth_mod = [-growth for growth in self.status_obj.growth_mod]
+            self.actions.append(ApplyStatChange(self.unit, growth_mod))
+
+        if self.status_obj.stat_halve:
+            penalties = [-stat for stat in self.status_obj.stat_halve.penalties]
+            self.actions.append(ApplyStatChange(self.unit, penalties))
+
+        if self.status_obj.flying and not self.clean_up:
+            self.unit.acquire_tile_status(gameStateObj, force=True)
+
+        if self.status_obj.passive:
+            for item in self.unit.items:
+                self.status_obj.passive.reverse_mod(item)
+
+        if self.status_obj.aura:
+            ??.release_aura(self.unit, self.status_obj.aura)
+
+        if self.status_obj.tether:
+            self.actions.append(UnTetherStatus(self.status_obj, self.unit.id))
+
+        if self.status_obj.status_chain and not self.clean_up:
+            new_status = StatusCatalog.statusparser(self.status_obj.status_chain)
+            gameStateObj.add_status(new_status)
+            self.actions.append(AddStatus(self.unit, new_status))
+
+        # TODO. Replace this with custom event script on remove
+        if self.status_obj.ephemeral:
+            self.unit.isDying = True
+            self.actions.append(ChangeHP(self.unit, -10000))
+            gameStateObj.stateMachine.changeState('dying')
+
+        for action in self.actions:
+            action.do(gameStateObj)
+
+        # Does not need to be reversed -- turnwheel takes care of this
+        if self.status.affects_movement:
+            if self.unit.team.startswith('enemy'):
+                gameStateObj.boundary_manager._remove_unit(unit, gameStateObj)
+                if self.unit.position:
+                    gameStateObj.boundary_manager._add_unit(unit, gameStateObj)
+
+    def reverse(self, gameStateObj):
+        for action in self.actions:
+            action.reverse(gameStateObj)
+        
+        if self.status_obj.flying:
+            self.unit.remove_tile_status(gameStateObj, force=True)
+
+        if self.status_obj.passive:
+            for item in self.unit.items:
+                self.status_obj.passive.apply_mod(item)
+
+        if self.status_obj.aura:
+            ??.propagate_aura(self.unit, self.status_obj.aura, gameStateObj)
+
+        if self.status_obj.ephemeral:
+            self.unit.isDying = False
 
 class TakeStatus(Action):
     def __init__(self, unit, status_obj):
@@ -1259,12 +1406,14 @@ class TakeStatus(Action):
         self.status_obj = status_obj
 
     def do(self, gameStateObj):
+        self.status_obj.parent_id = None
         self.unit.status_effects.remove(self.status_obj)
         self.unit.status_bundle.subtract(list(self.status_obj.components))
 
     def reverse(self, gameStateObj):
         self.unit.status_bundle.update(list(self.status_obj.components)) 
         self.unit.status_effects.append(self.status_obj)
+        self.status_obj.parent_id = self.unit.id
 
 class TetherStatus(Action):
     def __init__(self, status_obj, applied_status_obj, parent, child):
@@ -1300,7 +1449,7 @@ class UnTetherStatus(Action):
                     if c_status.id == self.status_obj.tether and c_status.parent_id == self.unit_id:
                         self.child_status.append(c_status)
                         self.true_children.append(u_id)
-                        StatusObject.HandleStatusRemoval(c_status, child_unit, gameStateObj)
+                        RemoveStatus(child_unit, c_status).do(gameStateObj)
                         break
         # assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
         # Sometimes a tether child status can be removed (Like remove_range or Restore staff)
@@ -1316,7 +1465,7 @@ class UnTetherStatus(Action):
             if child_unit:
                 self.status_obj.add_child(u_id)
                 applied_status = self.child_status[idx]
-                StatusObject.HandleStatusAddition(applied_status, child_unit, gameStateObj)
+                AddStatus(child_unit, applied_status).do(gameStateObj)
         self.child_status = []  # Clear the child status to restore statefulness
 
 class ApplyStatChange(Action):
@@ -1421,12 +1570,13 @@ class FinalizeAutomaticSkill(Action):
         self.current_charge = status.automatic.current_charge
 
     def do(self, gameStateObj):
-        self.s = StatusObject.statusparser(self.status.automatic.status)
-        StatusObject.HandleStatusAddition(self.s, self.unit, gameStateObj)
+        self.s = StatusCatalog.statusparser(self.status.automatic.status)
+        gameStateObj.add_status(self.s)
+        AddStatus(self.unit, self.s).do(gameStateObj)
         self.status.automatic.reset_charge()
 
     def reverse(self, gameStateObj):
-        StatusObject.HandleStatusRemoval(self.s, self.unit, gameStateObj)
+        RemoveStatus(self.unit, self.s).do(gameStateObj)
         self.status.automatic.current_charge = self.current_charge
 
 class ShrugOff(Action):

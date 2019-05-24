@@ -277,7 +277,6 @@ class GameStateObj(object):
         self.main_menu = None
         # Combat slots
         self.combatInstance = None
-        self.levelUpScreen = []
         # Banner slots
         self.banners = []
         # Status slots
@@ -314,13 +313,12 @@ class GameStateObj(object):
         for unit in self.allunits:
             unit.resetUpdates()
             if unit.position:
-                # Action.PlaceOnMap(unit, unit.position).do(self)
-                # unit.arrive(self, serializing=False)
                 Action.ArriveOnMap(unit, unit.position).do(self)
         self.action_log.record = True
         
         self.old_map = None
 
+        self.exp_gain_struct = None  # Used to pass in information to the GainExpState
         self.info_menu_struct = {'current_state': 0,
                                  'scroll_units': [],
                                  'one_unit_only': False,
@@ -439,13 +437,13 @@ class GameStateObj(object):
 
     def save(self):
         self.action_log.record = False
-        # Reset all position dependant voodoo -- Done by gameStateObj at once instead of one at a time...
-        for unit in self.allunits:
-            unit.leave(self, serializing=True)
-        ser_units = [unit.serialize(self) for unit in self.allunits]
-        for unit in self.allunits:
-            unit.arrive(self, serializing=True)
-        to_save = {'allunits': ser_units,
+        # # Reset all position dependant voodoo -- Done by gameStateObj at once instead of one at a time...
+        # for unit in self.allunits:
+        #     unit.leave(self, serializing=True)
+        # ser_units = [unit.serialize(self) for unit in self.allunits]
+        # for unit in self.allunits:
+        #     unit.arrive(self, serializing=True)
+        to_save = {'allunits': [unit.serialize(self) for unit in self.allunits],
                    'allitems': [item.serialize() for item in self.allitems.values()],
                    'allstatuses': [status.serialize() for status in self.allstatuses.values()],
                    'factions': self.factions,

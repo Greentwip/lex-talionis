@@ -2,12 +2,12 @@ try:
     import configuration as cf
     import static_random
     import UnitObject, TileObject, Action
-    import StatusObject, SaveLoad, Utility
+    import StatusCatalog, SaveLoad, Utility
 except ImportError:
     from . import configuration as cf
     from . import static_random
     from . import UnitObject, TileObject, Action
-    from . import StatusObject, SaveLoad, Utility
+    from . import StatusCatalog, SaveLoad, Utility
 
 import logging
 logger = logging.getLogger(__name__)
@@ -145,7 +145,8 @@ class Solver(object):
         if result.outcome:
             # Handle status
             for s_id in self.item.status:
-                status_object = StatusObject.statusparser(s_id)
+                status_object = StatusCatalog.statusparser(s_id)
+                gameStateObj.add_status(status_object)
                 result.def_status.append(status_object)
             # Handle summon
             if self.item.summon:
@@ -197,7 +198,8 @@ class Solver(object):
 
         if result.outcome:
             for s_id in self.defender.getMainWeapon().status:
-                status_object = StatusObject.statusparser(s_id)
+                status_object = StatusCatalog.statusparser(s_id)
+                gameStateObj.add_status(status_object)
                 result.def_status.append(status_object)
 
         # Make last attack against a boss a crit!

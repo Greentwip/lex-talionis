@@ -23,7 +23,7 @@ Arena
 Jealousy System
 Repair Market
 When Dialogue Editor, make commands accessible
-Fix how ExpGain/Level Up/Promotion interacts with Turnwheel
+Fix how ExpGain/Level Up/Promotion interacts with Turnwheel!!!
 New Game +
 Casual death? Check other_game (- Check that casual doesn't have a death cooldown)
 
@@ -39,15 +39,6 @@ Casual death? Check other_game (- Check that casual doesn't have a death cooldow
 - Parties (maybe just convoy differentiation -- since Anchorman has managed different parties pretty well themselves)
 - Add "having 2+ parties" ability to the Engine and Wiki.
 - Test player phase and enemy phase battle animation music
-
-*** Check that this fix happened ***
-- Fix Intersection between items, statuses, turnwheel actions, and saving/loading the game
-- When you give a unit an item that gives a status. You will have
-    - Give Item Action
-    - Give Status Actions
-- Run it backwards and the status will be removed twice... Hmmm..
-- Maybe need to MAKE SURE ALL ACTIONS NEVER CALL ANOTHER ACTION
-************************************
 
 - New Screenshots in all marketing content
 - When I fix events, make escape, seize, switch, search, etc, all work the same way

@@ -5,16 +5,16 @@ try:
     import configuration as cf
     import static_random
     import Interaction, MenuFunctions, AStar, Weapons, TileObject, ClassData
-    import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusObject
-    import Utility, ItemMethods, Engine, Banner, TextChunk, Action
+    import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusCatalog
+    import Utility, Engine, Banner, TextChunk, Action
     from StatObject import build_stat_dict_plus  # Needed so old saves can load
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import Interaction, MenuFunctions, AStar, Weapons, TileObject, ClassData
-    from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusObject
-    from . import Utility, ItemMethods, Engine, Banner, TextChunk, Action
+    from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusCatalog
+    from . import Utility, Engine, Banner, TextChunk, Action
     from Code.StatObject import build_stat_dict_plus  # Needed so old saves can load
 
 import logging
@@ -45,7 +45,7 @@ class UnitObject(object):
         self.exp = int(info.get('exp', 0))
         
         # --- Optional tags and Skills
-        self.tags = info['tags']
+        self._tags = info['tags']
         self.status_effects = []
         self.status_bundle = Multiset()
 
@@ -703,6 +703,14 @@ class UnitObject(object):
     def set_exp(self, exp):
         self.exp = int(exp)
 
+    @property
+    def tags(self):
+        return self._tags + ClassData.class_dict[self.klass]['tags']
+
+    @tags.setter
+    def tags(self, value):
+        self._tags = value
+
     def get_internal_level(self):
         unit_klass = ClassData.class_dict[self.klass]
         return Utility.internal_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])
@@ -736,13 +744,16 @@ class UnitObject(object):
 
         # Actually use item
         if item.permanent_stat_increase:
-            Action.do(Action.PermanentStatIncrease(self, item.permanent_stat_increase), gameStateObj)
+            gameStateObj.exp_gain_struct = (self, item.permanent_stat_increase, None, 'booster')
+            gameStateObj.stateMachine.changeState('exp_gain')
         elif item.permanent_growth_increase:
             Action.do(Action.PermanentGrowthIncrease(self, item.permanent_growth_increase), gameStateObj)
         elif item.wexp_increase:
             Action.do(Action.GainWexp(self, item.wexp_increase), gameStateObj)
         elif item.promotion:
-            Action.do(Action.Promote(self), gameStateObj)
+            # Action.do(Action.Promote(self), gameStateObj)
+            gameStateObj.exp_gain_struct = (self, 0, None, 'item_promote')
+            gameStateObj.stateMachine.changeState('exp_gain')
         elif item.call_item_script:
             call_item_script = 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
@@ -809,7 +820,7 @@ class UnitObject(object):
         return False
 
     # Stat-specific levelup function
-    def level_up(self, gameStateObj, class_info, apply_level=True):
+    def level_up(self, gameStateObj, class_info):
         levelup_list = [0 for x in self.stats]
         growths = self.growths
         if self.team == 'player':
@@ -849,9 +860,7 @@ class UnitObject(object):
                 growths[index] = max(0, growths[index] - 100)
                 if self.stats.values()[index].base_stat + levelup_list[index] >= class_info['max'][index]:
                     growths[index] = 0
-                    
-        if apply_level:
-            self.apply_levelup(levelup_list)                    
+                                    
         return levelup_list
 
     # For regular levels
@@ -1842,7 +1851,7 @@ class UnitObject(object):
             if status.time or status.remove_range:
                 # Without clean_up parameter, certain statuses can give out other status on removal, statuses we don't want
                 # Like if you remove flying, you can get tile statuses, which you obviously don't want at this point
-                StatusObject.HandleStatusRemoval(status, self, gameStateObj, clean_up=True)
+                Action.RemoveStatus(self, status, clean_up=True).do(gameStateObj)
         # Units with status_counts should have theirs reset
         for status in self.status_effects:
             if status.count:
@@ -1888,7 +1897,7 @@ class UnitObject(object):
                        'gender': self.gender,
                        'level': self.level,
                        'exp': self.exp,
-                       'tags': self.tags,
+                       'tags': self._tags,
                        'status_effects': [status.uid for status in self.status_effects],
                        'desc': self.desc,
                        'growths': self.growths,
@@ -1909,12 +1918,13 @@ class UnitObject(object):
         if self.position and (force or 'flying' not in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
                 if status not in self.status_effects:
-                    StatusObject.HandleStatusAddition(status, self, gameStateObj)
+                    gameStateObj.add_status(status)
+                    Action.do(Action.AddStatus(self, status), gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):
         if self.position and (force or 'flying' not in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
-                StatusObject.HandleStatusRemoval(status, self, gameStateObj)
+                Action.do(Action.RemoveStatus(self, status), gameStateObj)
 
     def acquire_aura_status(self, gameStateObj, serializing=False):
         if self.position:
@@ -1942,9 +1952,6 @@ class UnitObject(object):
                     aura.apply(other_unit, gameStateObj)
 
     def remove_aura_status(self, gameStateObj, serializing=False):
-        # for status in reversed(self.status_effects):
-            # if status.aura_child:
-                # StatusObject.HandleStatusRemoval(status, self, gameStateObj)
         # Remove me from the effects of other auras
         if self.position:
             for aura in gameStateObj.grid_manager.get_aura_node(self.position):
@@ -1989,8 +1996,8 @@ class UnitObject(object):
     def unrescue(self, gameStateObj):
         self.TRV = 0
         self.strTRV = "---"
-        StatusObject.HandleStatusRemoval("Rescue", self, gameStateObj)
         # Remove rescue penalty
+        Action.RemoveStatus(self, "Rescue").do(gameStateObj)
 
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
@@ -2050,10 +2057,10 @@ class UnitObject(object):
         self.items.remove(item)
         item.item_owner = 0
         for status_on_hold in item.status_on_hold:
-            StatusObject.HandleStatusRemoval(status_on_hold, self, gameStateObj)
+            Action.do(Action.RemoveStatus(self, status_on_hold), gameStateObj)
         if was_mainweapon and self.canWield(item):
             for status_on_equip in item.status_on_equip:
-                StatusObject.HandleStatusRemoval(status_on_equip, self, gameStateObj)
+                Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
         # remove passive item skill
         for status in self.status_effects:
             if status.passive:
@@ -2061,12 +2068,9 @@ class UnitObject(object):
         # There may be a new item equipped
         if was_mainweapon and self.getMainWeapon():
             for status_on_equip in self.getMainWeapon().status_on_equip:
-                new_status = StatusObject.statusparser(status_on_equip)
-                StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
-            # apply passive item skill
-            # for status in self.status_effects:
-            #    if status.passive:
-            #        status.passive.apply_mod(self.items[0])
+                new_status = StatusCatalog.statusparser(status_on_equip)
+                gameStateObj.add_status(new_status)
+                Action.do(Action.AddStatus(self, new_status), gameStateObj)
 
     # This does the adding and subtracting of statuses
     def insert_item(self, index, item, gameStateObj):
@@ -2079,12 +2083,13 @@ class UnitObject(object):
                 # You unequipped a different item, so remove its status.
                 if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                     for status_on_equip in self.items[1].status_on_equip:
-                        StatusObject.HandleStatusRemoval(status_on_equip, self, gameStateObj)
+                        Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
                 # Now add yours
                 if self.canWield(item):
                     for status_on_equip in item.status_on_equip:
-                        new_status = StatusObject.statusparser(status_on_equip)
-                        StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
+                        new_status = StatusCatalog.statusparser(status_on_equip)
+                        gameStateObj.add_status(new_status)
+                        Action.do(Action.AddStatus(self, new_status), gameStateObj)
         else:
             self.items.insert(index, item)
             item.item_owner = self.id
@@ -2095,18 +2100,20 @@ class UnitObject(object):
                         status.passive.apply_mod(item)
                 # Item statuses      
                 for status_on_hold in item.status_on_hold:
-                    new_status = StatusObject.statusparser(status_on_hold)
-                    StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
+                    new_status = StatusCatalog.statusparser(status_on_hold)
+                    gameStateObj.add_status(new_status)
+                    Action.do(Action.AddStatus(self, new_status), gameStateObj)
                 if self.getMainWeapon() == item: # If new mainweapon...
                     # You unequipped a different item, so remove its status.
                     if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
                         for status_on_equip in self.items[1].status_on_equip:
-                            StatusObject.HandleStatusRemoval(status_on_equip, self, gameStateObj)
+                            Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
                     # Now add yours
                     if self.canWield(item):
                         for status_on_equip in item.status_on_equip:
-                            new_status = StatusObject.statusparser(status_on_equip)
-                            StatusObject.HandleStatusAddition(new_status, self, gameStateObj)
+                            new_status = StatusCatalog.statusparser(status_on_equip)
+                            gameStateObj.add_status(new_status)
+                            Action.do(Action.AddStatus(self, new_status), gameStateObj)
 
     def die(self, gameStateObj, event=False):
         if event:

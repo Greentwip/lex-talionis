@@ -4,13 +4,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
-    import StatusObject, Utility, Dialogue, Engine, Image_Modification
+    import StatusCatalog, Utility, Dialogue, Engine, Image_Modification
     import GUIObjects, Weapons, Action, Background, Solver, ClassData
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import CustomObjects, UnitObject, Banner, TileObject, BattleAnimation
-    from . import StatusObject, Utility, Dialogue, Engine, Image_Modification
+    from . import StatusCatalog, Utility, Dialogue, Engine, Image_Modification
     from . import GUIObjects, Weapons, Action, Background, Solver, ClassData
 
 import logging
@@ -120,14 +120,24 @@ class Combat(object):
             elif result.def_damage < 0:
                 result.def_damage_done = min(-result.def_damage, result.defender.stats['HP'] - result.defender.currenthp)
 
+    def _handle_reflect(self, attacker, defender, status_obj, gameStateObj):
+        if 'reflect' in defender.status_bundle and not status_obj.already_reflected:
+            status_copy = StatusCatalog.statusparser(status_obj.id)
+            gameStateObj.add_status(status_copy)
+            status_copy.already_reflected = True
+            status_copy.giver_id = defender.id
+            Action.do(Action.AddStatus(attacker, status_copy), gameStateObj)
+
     def _apply_result(self, result, gameStateObj):
         # Status
         for status_obj in result.def_status:
-            status_obj.parent_id = result.attacker.id
-            StatusObject.HandleStatusAddition(status_obj, result.defender, gameStateObj)
+            status_obj.giver_id = result.attacker.id
+            Action.do(Action.AddStatus(result.defender, status_obj), gameStateObj)
+            self._handle_reflect(result.attacker, result.defender, status_obj, gameStateObj)
         for status_obj in result.atk_status:
-            status_obj.parent_id = result.defender.id
-            StatusObject.HandleStatusAddition(status_obj, result.attacker, gameStateObj)
+            status_obj.giver_id = result.defender.id
+            Action.do(Action.AddStatus(result.attacker, status_obj), gameStateObj)
+            self._handle_reflect(result.defender, result.attacker, status_obj, gameStateObj)
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP
@@ -288,26 +298,29 @@ class Combat(object):
             if status.status_after_battle and not (self.p1.isDying and status.tether):
                 for unit in [self.p2] + self.splash:
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(self.p2) and not unit.isDying:
-                        applied_status = StatusObject.statusparser(status.status_after_battle)
+                        applied_status = StatusCatalog.statusparser(status.status_after_battle)
+                        gameStateObj.add_status(applied_status)
                         if status.tether:
                             Action.do(Action.TetherStatus(status, applied_status, self.p1, unit), gameStateObj)
-                        StatusObject.HandleStatusAddition(applied_status, unit, gameStateObj)
+                        Action.do(Action.AddStatus(unit, applied_status), gameStateObj)
             if status.status_after_help and not self.p1.isDying:
                 for unit in [self.p2] + self.splash:
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfAlly(unit) and not unit.isDying:
-                        applied_status = StatusObject.statusparser(status.status_after_help)
-                        StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
+                        applied_status = StatusCatalog.statusparser(status.status_after_help)
+                        gameStateObj.add_status(applied_status)
+                        Action.do(Action.AddStatus(unit, applied_status), gameStateObj)
             if status.lost_on_attack and (self.item.weapon or self.item.detrimental):
-                StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
+                Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
             elif status.lost_on_interact and (self.item.weapon or self.item.spell):
-                StatusObject.HandleStatusRemoval(status, self.p1, gameStateObj)
+                Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
         if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
             for status in self.p2.status_effects:
                 if status.status_after_battle and not (status.tether and self.p2.isDying):
-                    applied_status = StatusObject.statusparser(status.status_after_battle)
+                    applied_status = StatusCatalog.statusparser(status.status_after_battle)
+                    gameStateObj.add_status(applied_status)
                     if status.tether:
                         Action.do(Action.TetherStatus(status, applied_status, self.p2, self.p1), gameStateObj)
-                    StatusObject.HandleStatusAddition(applied_status, self.p1, gameStateObj)
+                    Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)
 
     def handle_supports(self, all_units, gameStateObj):
         if gameStateObj.support and cf.CONSTANTS['support']:
@@ -604,9 +617,9 @@ class AnimationCombat(Combat):
                 self.combat_state = 'Exp'
 
         elif self.combat_state == 'Exp':
-            if not gameStateObj.levelUpScreen:
-                self.last_update = current_time
-                self.combat_state = 'OutWait'
+            # Waits here for exp gain state to finish
+            self.last_update = current_time
+            self.combat_state = 'OutWait'
 
         elif self.combat_state == 'OutWait':
             if skip or current_time - self.last_update > 820:
@@ -1016,7 +1029,8 @@ class AnimationCombat(Combat):
                     my_exp = int(Utility.clamp(my_exp, cf.CONSTANTS['min_exp'], 100))
 
                 if my_exp > 0:
-                    Action.do(Action.GainExp(self.p1, my_exp, in_combat=self), gameStateObj)
+                    gameStateObj.exp_gain_struct = (self.p1, my_exp, self, 'init')
+                    gameStateObj.stateMachine.changeState('exp_gain')
 
             if self.p2 and not self.p2.isDying:
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
@@ -1029,7 +1043,8 @@ class AnimationCombat(Combat):
                     my_exp, records = self.calc_init_exp_p2(defender_results)
                     Action.do(Action.UpdateUnitRecords(self.p2, records), gameStateObj)
                     if my_exp > 0:
-                        Action.do(Action.GainExp(self.p2, my_exp, in_combat=self), gameStateObj)
+                        gameStateObj.exp_gain_struct = (self.p2, my_exp, self, 'init')
+                        gameStateObj.stateMachine.changeState('exp_gain')
 
     def check_death(self):
         if self.p1.currenthp <= 0:
@@ -1610,7 +1625,8 @@ class MapCombat(Combat):
 
                 # Also handles actually adding the exp to the unit
                 if my_exp > 0:
-                    Action.do(Action.GainExp(self.p1, my_exp), gameStateObj)
+                    gameStateObj.exp_gain_struct = (self.p1, my_exp, self, 'init')
+                    gameStateObj.stateMachine.changeState('exp_gain')
 
             if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and not self.p2.isDying and self.p2 is not self.p1:
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
@@ -1623,7 +1639,8 @@ class MapCombat(Combat):
                     my_exp, records = self.calc_init_exp_p2(defender_results)
                     Action.do(Action.UpdateUnitRecords(self.p2, records), gameStateObj)
                     if my_exp > 0:
-                        Action.do(Action.GainExp(self.p2, my_exp), gameStateObj)
+                        gameStateObj.exp_gain_struct = (self.p2, my_exp, self, 'init')
+                        gameStateObj.stateMachine.changeState('exp_gain')
 
         # Handle after battle statuses
         self.handle_statuses(gameStateObj)

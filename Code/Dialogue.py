@@ -4,13 +4,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Cursor, Background, UnitPortrait
+    import MenuFunctions, SaveLoad, Image_Modification, StatusCatalog, Cursor, Background, UnitPortrait
     import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import MenuFunctions, SaveLoad, Image_Modification, StatusObject, Cursor, Background, UnitPortrait
+    from . import MenuFunctions, SaveLoad, Image_Modification, StatusCatalog, Cursor, Background, UnitPortrait
     from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
 
 import logging
@@ -567,10 +567,11 @@ class Dialogue_Scene(object):
 
         # Add a skill/status to a unit
         elif line[0] == 'give_skill':
-            skill = StatusObject.statusparser(line[2])
+            skill = StatusCatalog.statusparser(line[2])
+            gameStateObj.add_status(skill)
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit and skill:
-                StatusObject.HandleStatusAddition(skill, unit, gameStateObj)
+                Action.do(Action.AddStatus(unit, skill), gameStateObj)
                 if 'no_display' not in line:
                     gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
                     gameStateObj.stateMachine.changeState('itemgain')
@@ -581,7 +582,8 @@ class Dialogue_Scene(object):
             exp = int(line[2])
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit:
-                Action.do(Action.GainExp(unit, exp), gameStateObj)
+                gameStateObj.exp_gain_struct = (unit, exp, None, 'init')
+                gameStateObj.stateMachine.changeState('exp_gain')
                 self.current_state = "Paused"
 
         # destroy a destructible object
