@@ -6,14 +6,14 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import StatusObject, Banner, LevelUp, Weapons, ClassData
-    import Utility, ItemMethods, UnitObject
+    import StatusCatalog, Banner, Weapons, ClassData
+    import Utility, ItemMethods, UnitObject, Aura
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import StatusObject, Banner, LevelUp, Weapons, ClassData
-    from . import Utility, ItemMethods, UnitObject
+    from . import StatusCatalog, Banner, Weapons, ClassData
+    from . import Utility, ItemMethods, UnitObject, Aura
 
 import logging
 logger = logging.getLogger(__name__)
@@ -691,11 +691,11 @@ class Promote(Action):
         self.new_wexp = self.new_klass['wexp_gain']
         current_stats = list(self.unit.stats.values())
         # Any stat that's not defined, fill in with new classes bases - current stats
-        if len(self.levelup_list) < new_class['bases']:
-            missing_idxs = range(len(self.levelup_list), len(new_class['bases']))
-            new_bases = [new_class['bases'][i] - current_stats[i].base_stat for i in missing_idxs]
+        if len(self.levelup_list) < self.new_klass['bases']:
+            missing_idxs = range(len(self.levelup_list), len(self.new_klass['bases']))
+            new_bases = [self.new_klass['bases'][i] - current_stats[i].base_stat for i in missing_idxs]
             self.levelup_list.extend(new_bases)
-        assert len(self.levelup_list) == len(self.new_klass['max']) == len(current_stats), "%s %s %s" % (self.levelup_list, new_class['max'], current_stats)
+        assert len(self.levelup_list) == len(self.new_klass['max']) == len(current_stats), "%s %s %s" % (self.levelup_list, self.new_klass['max'], current_stats)
         # check maxes
         for index, stat in enumerate(self.levelup_list):
             self.levelup_list[index] = min(stat, self.new_klass['max'][index] - current_stats[index].base_stat)
@@ -1220,7 +1220,7 @@ class AddStatus(Action):
         # --- Non-momentary status ---
         if self.status_obj.mind_control:
             self.status_obj.original_team = self.unit.team
-            p_unit = gameStateObj.get_unit_from_id(self.status_obj.parent_id)
+            p_unit = gameStateObj.get_unit_from_id(self.status_obj.owner_id)
             self.actions.append(ChangeTeam(self.unit, p_unit.team))
 
         if self.status_obj.ai_change:
@@ -1246,7 +1246,7 @@ class AddStatus(Action):
                 self.status_obj.passive.apply_mod(item)
 
         if self.status_obj.aura:
-            ??.propagate_aura(self.unit, self.status_obj.aura, gameStateObj)
+            Aura.propagate_aura(self.unit, self.status_obj, gameStateObj)
 
         if self.status_obj.shrug_off:
             for status in self.unit.status_effects:
@@ -1273,7 +1273,7 @@ class AddStatus(Action):
             action.reverse(gameStateObj)
 
         if self.status_obj.aura:
-            ??.release_aura(self.unit, self.status_obj.aura)
+            Aura.release_aura(self.unit, self.status_obj, gameStateObj)
 
         if self.status_obj.passive:
             for item in self.unit.items:
@@ -1290,11 +1290,11 @@ class GiveStatus(Action):
     def do(self, gameStateObj):
         self.unit.status_bundle.update(list(self.status_obj.components)) 
         self.unit.status_effects.append(self.status_obj)
-        self.status_obj.parent_id = self.unit.id
+        self.status_obj.owner_id = self.unit.id
 
     def reverse(self, gameStateObj):
         if self.status_obj in self.unit.status_effects:
-            self.status_obj.parent_id = None
+            self.status_obj.owner_id = None
             self.unit.status_effects.remove(self.status_obj)
             self.unit.status_bundle.subtract(list(self.status_obj.components))
         else:
@@ -1308,7 +1308,7 @@ class RemoveStatus(Action):
         self.clean_up = clean_up
 
     def do(self, gameStateObj):
-        if not isinstance(status, StatusCatalog.Status):
+        if not isinstance(self.status_obj, StatusCatalog.Status):
             # Then it must be an integer (the status id)
             for status in self.unit.status_effects:
                 if self.status_obj == status.id:
@@ -1319,12 +1319,13 @@ class RemoveStatus(Action):
                 logger.warning(self.unit.status_effects)
                 return
 
-        logger.info('Removing status %s from %s at %s', status.id, unit.name, unit.position)
+        logger.info('Removing status %s from %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
         if self.status_obj in self.unit.status_effects:
             self.actions.append(TakeStatus(self.unit, self.status_obj))
         else:
-            logger.warning('Status %s %s not present...', status.id, status.name)
-            logger.warning(unit.status_effects)
+            logger.warning('Status %s %s %s not present...', self.status_obj.id, self.status_obj.name, self.status_obj.uid)
+            logger.warning(self.unit.status_effects)
+            logger.warning([s.uid for s in self.unit.status_effects])
             return
 
         # --- Non-momentary status ---
@@ -1357,7 +1358,7 @@ class RemoveStatus(Action):
                 self.status_obj.passive.reverse_mod(item)
 
         if self.status_obj.aura:
-            ??.release_aura(self.unit, self.status_obj.aura)
+            Aura.release_aura(self.unit, self.status_obj, gameStateObj)
 
         if self.status_obj.tether:
             self.actions.append(UnTetherStatus(self.status_obj, self.unit.id))
@@ -1377,11 +1378,11 @@ class RemoveStatus(Action):
             action.do(gameStateObj)
 
         # Does not need to be reversed -- turnwheel takes care of this
-        if self.status.affects_movement:
+        if self.status_obj.affects_movement:
             if self.unit.team.startswith('enemy'):
-                gameStateObj.boundary_manager._remove_unit(unit, gameStateObj)
+                gameStateObj.boundary_manager._remove_unit(self.unit, gameStateObj)
                 if self.unit.position:
-                    gameStateObj.boundary_manager._add_unit(unit, gameStateObj)
+                    gameStateObj.boundary_manager._add_unit(self.unit, gameStateObj)
 
     def reverse(self, gameStateObj):
         for action in self.actions:
@@ -1395,7 +1396,7 @@ class RemoveStatus(Action):
                 self.status_obj.passive.apply_mod(item)
 
         if self.status_obj.aura:
-            ??.propagate_aura(self.unit, self.status_obj.aura, gameStateObj)
+            Aura.propagate_aura(self.unit, self.status_obj, gameStateObj)
 
         if self.status_obj.ephemeral:
             self.unit.isDying = False
@@ -1406,14 +1407,14 @@ class TakeStatus(Action):
         self.status_obj = status_obj
 
     def do(self, gameStateObj):
-        self.status_obj.parent_id = None
+        self.status_obj.owner_id = None
         self.unit.status_effects.remove(self.status_obj)
         self.unit.status_bundle.subtract(list(self.status_obj.components))
 
     def reverse(self, gameStateObj):
         self.unit.status_bundle.update(list(self.status_obj.components)) 
         self.unit.status_effects.append(self.status_obj)
-        self.status_obj.parent_id = self.unit.id
+        self.status_obj.owner_id = self.unit.id
 
 class TetherStatus(Action):
     def __init__(self, status_obj, applied_status_obj, parent, child):
@@ -1424,11 +1425,11 @@ class TetherStatus(Action):
 
     def do(self, gameStateObj):
         self.status_obj.add_child(self.child.id)
-        self.applied_status_obj.parent_id = self.parent.id
+        self.applied_status_obj.giver_id = self.parent.id
 
     def reverse(self, gameStateObj):
         self.status_obj.remove_child(self.child.id)
-        self.applied_status_obj.parent_id = None
+        self.applied_status_obj.giver_id = None
 
 # Also removes child statii
 class UnTetherStatus(Action):
@@ -1446,7 +1447,7 @@ class UnTetherStatus(Action):
                 for c_status in child_unit.status_effects:
                     # print(c_status, c_status.id, self.status_obj.tether)
                     # Only remove the statuses that come from the right unit
-                    if c_status.id == self.status_obj.tether and c_status.parent_id == self.unit_id:
+                    if c_status.id == self.status_obj.tether and c_status.giver_id == self.unit_id:
                         self.child_status.append(c_status)
                         self.true_children.append(u_id)
                         RemoveStatus(child_unit, c_status).do(gameStateObj)
@@ -1800,7 +1801,7 @@ class RemoveWeather(Action):
         gameStateObj.map.add_weather(self.weather)
 
 class AddGlobalStatus(Action):
-    run_on_load = True
+    # run_on_load = True
 
     def __init__(self, status):
         self.status = status
@@ -1812,7 +1813,7 @@ class AddGlobalStatus(Action):
         gameStateObj.map.remove_global_status(self.status, gameStateObj)
 
 class RemoveGlobalStatus(Action):
-    run_on_load = True
+    # run_on_load = True
 
     def __init__(self, status):
         self.status = status

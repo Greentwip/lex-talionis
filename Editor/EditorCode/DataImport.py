@@ -9,7 +9,7 @@ import Code.GlobalConstants as GC
 
 import Code.ItemMethods as ItemMethods
 import Code.Weapons as Weapons
-import Code.StatusObject as StatusObject
+import Code.StatusCatalog as StatusCatalog
 
 import Code.UnitSprite as UnitSprite
 import Code.ClassData as ClassData
@@ -64,7 +64,7 @@ def build_named_units(class_dict):
 
         # Personal Skills
         personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []
-        u_i['skills'] = [StatusObject.statusparser(status) for status in personal_skills]
+        u_i['skills'] = [StatusCatalog.statusparser(status) for status in personal_skills]
 
         units[u_i['id']] = Unit(u_i)
     return units
@@ -263,7 +263,7 @@ class GlobalData(object):
 
         # === Skill Data ===
         self.skill_data = OrderedDict()
-        skills = [StatusObject.statusparser(skill.find('id').text) for skill in GC.STATUSDATA.getroot().findall('status')]
+        skills = [StatusCatalog.statusparser(skill.find('id').text) for skill in GC.STATUSDATA.getroot().findall('status')]
         for skill in skills:
             if skill.image:
                 skill.image = skill.image.convert_alpha()

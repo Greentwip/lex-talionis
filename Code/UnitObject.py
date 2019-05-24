@@ -6,7 +6,7 @@ try:
     import static_random
     import Interaction, MenuFunctions, AStar, Weapons, TileObject, ClassData
     import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusCatalog
-    import Utility, Engine, Banner, TextChunk, Action
+    import Utility, Engine, Banner, TextChunk, Action, Aura
     from StatObject import build_stat_dict_plus  # Needed so old saves can load
 except ImportError:
     from . import GlobalConstants as GC
@@ -14,7 +14,7 @@ except ImportError:
     from . import static_random
     from . import Interaction, MenuFunctions, AStar, Weapons, TileObject, ClassData
     from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusCatalog
-    from . import Utility, Engine, Banner, TextChunk, Action
+    from . import Utility, Engine, Banner, TextChunk, Action, Aura
     from Code.StatObject import build_stat_dict_plus  # Needed so old saves can load
 
 import logging
@@ -26,8 +26,8 @@ class Multiset(Counter):
 
 # === GENERIC UNIT OBJECT =====================================================
 class UnitObject(object):
-    x_positions = [0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 5, 4, 3, 2, 1]
-    y_positions = [0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0]
+    x_positions = (0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 5, 4, 3, 2, 1)
+    y_positions = (0, 1, 2, 3, 3, 3, 3, 3, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0)
 
 # === INITIALIZATION ==========================================================    
     def __init__(self, info):
@@ -588,7 +588,7 @@ class UnitObject(object):
                 gameStateObj.grid_manager.set_unit_node(self.position, None)
                 gameStateObj.boundary_manager.leave(self, gameStateObj)
             self.remove_tile_status(gameStateObj)
-        self.remove_aura_status(gameStateObj, serializing=serializing)
+        Aura.leave(self, gameStateObj)
 
     def arrive(self, gameStateObj, serializing=False):
         if self.position:
@@ -597,7 +597,7 @@ class UnitObject(object):
                 gameStateObj.grid_manager.set_unit_node(self.position, self)
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
             self.acquire_tile_status(gameStateObj)
-            self.acquire_aura_status(gameStateObj, serializing=serializing)
+            Aura.arrive(self, gameStateObj)
 
     # Pathfinding algorithm
     def getPath(self, gameStateObj, goalPosition, ally_block=False):
@@ -705,7 +705,7 @@ class UnitObject(object):
 
     @property
     def tags(self):
-        return self._tags + ClassData.class_dict[self.klass]['tags']
+        return self._tags | ClassData.class_dict[self.klass]['tags']
 
     @tags.setter
     def tags(self, value):
@@ -1925,73 +1925,6 @@ class UnitObject(object):
         if self.position and (force or 'flying' not in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
                 Action.do(Action.RemoveStatus(self, status), gameStateObj)
-
-    def acquire_aura_status(self, gameStateObj, serializing=False):
-        if self.position:
-            # Handle Auras
-            if not serializing:
-                self.pull_auras(gameStateObj)
-
-            # Give other people my aura if it is within their range
-            for status in self.status_effects:
-                if status.aura:
-                    self.propagate_aura(status.aura, gameStateObj)
-    
-    def propagate_aura(self, aura, gameStateObj):
-        # Get affected positions
-        if self.position:
-            gameStateObj.grid_manager.reset_aura(aura)
-            positions = Utility.find_manhattan_spheres(range(1, aura.aura_range+1), self.position)
-            positions = [pos for pos in positions if gameStateObj.map.check_bounds(pos)]
-            if cf.CONSTANTS['aura_los']:
-                positions = Utility.line_of_sight([self.position], positions, aura.aura_range, gameStateObj)
-            for pos in positions:
-                gameStateObj.grid_manager.add_aura_node(pos, aura)
-                other_unit = gameStateObj.grid_manager.get_unit_node(pos)
-                if other_unit:
-                    aura.apply(other_unit, gameStateObj)
-
-    def remove_aura_status(self, gameStateObj, serializing=False):
-        # Remove me from the effects of other auras
-        if self.position:
-            for aura in gameStateObj.grid_manager.get_aura_node(self.position):
-                aura.remove(self, gameStateObj)
-
-            # Remove my auras
-            for status in self.status_effects:
-                if status.aura:
-                    for pos in gameStateObj.grid_manager.get_aura_positions(status.aura):
-                        gameStateObj.grid_manager.remove_aura_node(pos, status.aura)
-                        other_unit = gameStateObj.grid_manager.get_unit_node(pos)
-                        if other_unit:
-                            status.aura.remove(other_unit, gameStateObj)
-                            if not serializing:
-                                other_unit.repull_aura(status.aura, gameStateObj)
-                    gameStateObj.grid_manager.reset_aura(status.aura)
-
-    def pull_auras(self, gameStateObj):
-        # Get other peoples auras
-        if self.position:
-            for aura in gameStateObj.grid_manager.get_aura_node(self.position):
-                aura.apply(self, gameStateObj)
-
-    def repull_aura(self, old_aura, gameStateObj):
-        # Get other auras like this aura
-        if self.position:
-            for aura in gameStateObj.grid_manager.get_aura_node(self.position):
-                if old_aura.child == aura.child:
-                    aura.apply(self, gameStateObj)
-
-    def add_aura_highlights(self, gameStateObj):
-        for status in self.status_effects:
-            if status.aura:
-                positions = gameStateObj.grid_manager.get_aura_positions(status.aura)
-                for pos in positions:
-                    gameStateObj.highlight_manager.add_highlight(pos, 'aura', allow_overlap=True)
-
-    def remove_aura_highlights(self, gameStateObj):
-        # Remove all highlights that share a name with my aura
-        gameStateObj.highlight_manager.remove_aura_highlights()
 
     def unrescue(self, gameStateObj):
         self.TRV = 0

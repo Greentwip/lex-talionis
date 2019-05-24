@@ -6,14 +6,14 @@ try:
     import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
     import Interaction, StatusCatalog, ItemMethods, Background
     import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-    import StateMachine, Action
+    import StateMachine, Action, Aura
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
     from . import Interaction, StatusCatalog, ItemMethods, Background
     from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-    from . import StateMachine, Action
+    from . import StateMachine, Action, Aura
 
 import logging
 logger = logging.getLogger(__name__)
@@ -339,7 +339,7 @@ class MoveState(StateMachine.State):
             if cur_unit.getMainWeapon():
                 cur_unit.displayExcessAttacks(gameStateObj, self.validMoves)
         cur_unit.displayMoves(gameStateObj, self.validMoves)
-        cur_unit.add_aura_highlights(gameStateObj)
+        Aura.add_aura_highlights(cur_unit, gameStateObj)
 
         gameStateObj.cursor.place_arrows(gameStateObj)
 
@@ -485,7 +485,7 @@ class MenuState(StateMachine.State):
             # Shows the canto moves in the menu
             # if not gameStateObj.allhighlights:
             cur_unit.displayMoves(gameStateObj, ValidMoves)
-        cur_unit.add_aura_highlights(gameStateObj)
+        Aura.add_aura_highlights(cur_unit, gameStateObj)
 
         # Play menu script if it exists
         if not self.started:

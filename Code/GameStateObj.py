@@ -8,15 +8,17 @@ try:
     import configuration as cf
     import InputManager, Engine
     import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
-    import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
+    import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
     import Boundary, Objective, Overworld, ClassData, TileObject, Action
+    import Highlight, Aura
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import InputManager, Engine
     from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
-    from . import StatusObject, UnitObject, SaveLoad, ItemMethods, Turnwheel
+    from . import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
     from . import Boundary, Objective, Overworld, ClassData, TileObject, Action
+    from . import Highlight, Aura
 
 import logging
 logger = logging.getLogger(__name__)
@@ -51,6 +53,10 @@ class GameStateObj(object):
         self.objective = objective
         self.phase_music = music
         self.turncount = 0
+
+        for unit in self.allunits:
+            if unit.position:
+                Action.ArriveOnMap(unit, unit.position).do(self)
 
         self.generic()
 
@@ -177,7 +183,7 @@ class GameStateObj(object):
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
         self.allitems = {info['uid']: ItemMethods.deserialize(info) for info in load_info['allitems']}
-        self.allstatuses = {info['uid']: StatusObject.deserialize(info) for info in load_info['allstatuses']}
+        self.allstatuses = {info['uid']: StatusCatalog.deserialize(info) for info in load_info['allstatuses']}
         self.factions = load_info['factions'] if 'factions' in load_info else (load_info['groups'] if 'groups' in load_info else {})
         self.allreinforcements = load_info['allreinforcements'] 
         self.prefabs = load_info['prefabs']
@@ -208,13 +214,17 @@ class GameStateObj(object):
         self.market_items = load_info.get('market_items', set())
         self.mode = load_info.get('mode', self.default_mode())
 
+        # Child Statuses
+        for status in self.allstatuses.values():
+            if status.aura and status.aura.child_uid is not None:
+                status.aura.child_status = self.get_status_from_uid(status.aura.child_uid)
         # Unit Items and Statuses
         for idx, unit in enumerate(self.allunits):
             for item_uid in load_info['allunits'][idx]['items']:
                 unit.items.append(self.get_item_from_uid(item_uid))
             for status_uid in load_info['allunits'][idx]['status_effects']:
                 status = self.get_status_from_uid(status_uid)
-                StatusObject.attach_to_unit(status, unit)
+                StatusCatalog.attach_to_unit(status, unit)
 
         # Statuses
         # for index, info in enumerate(load_info['allunits']):
@@ -250,6 +260,9 @@ class GameStateObj(object):
             for unit in self.allunits:
                 if unit.position:
                     self.grid_manager.set_unit_node(unit.position, unit)
+                    for status in unit.status_effects:
+                        if status.aura:
+                            Aura.update_grid_manager_on_load(unit, status, self)
 
         # Support
         if cf.CONSTANTS['support']:
@@ -303,18 +316,16 @@ class GameStateObj(object):
         self.cameraOffset = CustomObjects.CameraOffset(self.cursor.position[0], self.cursor.position[1])
         self.cursor.autocursor(self, force=True)
         # Other slots
-        self.highlight_manager = CustomObjects.HighlightController()
+        self.highlight_manager = Highlight.HighlightController()
         self.allarrows = []
         self.allanimations = []
 
         # Reset the units updates on load
         # And have the units arrive on map
-        self.action_log.record = False
         for unit in self.allunits:
             unit.resetUpdates()
-            if unit.position:
-                Action.ArriveOnMap(unit, unit.position).do(self)
-        self.action_log.record = True
+            # if unit.position:
+                # Action.ArriveOnMap(unit, unit.position).do(self)
         
         self.old_map = None
 
@@ -391,6 +402,9 @@ class GameStateObj(object):
         # We need to remember to register the items that are used by the Active Skills
         if status.active and status.active.item:
             self.allitems[status.active.item.uid] = status.active.item
+        # We need to remember to register an aura's child status
+        if status.aura:
+            self.add_status(status.aura.child_status)
 
     def check_formation_spots(self):
         # Returns None if no spot available

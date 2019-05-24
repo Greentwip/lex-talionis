@@ -4,12 +4,12 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import CustomObjects, ActiveSkill, Interaction, InfoMenu
-    import UnitObject, Aura, Action, Utility, Engine
+    import Aura, Action, Utility, Engine
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import CustomObjects, ActiveSkill, Interaction, InfoMenu
-    from . import UnitObject, Aura, Action, Utility, Engine
+    from . import Aura, Action, Utility, Engine
 
 import logging
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ class Status(object):
         self.name = name
         self.desc = desc
         self.image_index = image_index or (0, 0)
-        self.parent_id = None  # Like item_owner but for statuses
+        self.owner_id = None  # Like item_owner but for statuses
         self.giver_id = None  # Who created/gave away this status
 
         self.children = set()
@@ -76,12 +76,13 @@ class Status(object):
         serial_dict['id'] = self.id
         serial_dict['time_left'] = self.time.time_left if self.time else None
         serial_dict['upkeep_sc_count'] = self.upkeep_stat_change.count if self.upkeep_stat_change else None
-        serial_dict['charge'] = self.active.current_charge if self.active else None
+        serial_dict['active_charge'] = self.active.current_charge if self.active else None
         serial_dict['children'] = self.children
-        serial_dict['parent_id'] = self.parent_id
+        serial_dict['owner_id'] = self.owner_id
         serial_dict['giver_id'] = self.giver_id
         serial_dict['count'] = self.count.count if self.count else None
-        serial_dict['stat_halve_penalties'] = self.stat_halve.penalties
+        serial_dict['stat_halve_penalties'] = self.stat_halve.penalties if self.stat_halve else None
+        serial_dict['aura_child_uid'] = self.aura.child_status.uid if self.aura else None
         return serial_dict
 
     def draw(self, surf, topleft, cooldown=True):
@@ -272,7 +273,7 @@ class Status_Processor(object):
                     output = HandleStatusEndStep(self.current_status, self.current_unit, gameStateObj)
 
                 if output == "Remove": # Returns "Remove" if status has run out of time and should just be removed
-                    HandleStatusRemoval(self.current_status, self.current_unit, gameStateObj)
+                    Action.do(Action.RemoveStatus(self.current_unit, self.current_status), gameStateObj)
                     self.state.changeState('new_status')
                 else:
                     self.oldhp = output[0]
@@ -346,7 +347,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
             return "Remove" # Don't process. Status has no more effect on unit
 
     elif status.remove_range:
-        p_unit = gameStateObj.get_unit_from_id(status.parent_id)
+        p_unit = gameStateObj.get_unit_from_id(status.owner_id)
         if not p_unit or not p_unit.position or not unit.position or Utility.calculate_distance(p_unit.position, unit.position) > status.remove_range:
             return "Remove"
 
@@ -393,7 +394,7 @@ def HandleStatusEndStep(status, unit, gameStateObj):
         Action.do(Action.ChangeStatusCount(status.endstep_stat_change, status.endstep_stat_change.count + 1), gameStateObj)
 
     if status.lost_on_endstep:
-        HandleStatusRemoval(status, unit, gameStateObj)
+        Action.do(Action.RemoveStatus(unit, status), gameStateObj)
 
     return oldhp, unit.currenthp
 
@@ -493,17 +494,20 @@ def deserialize(s_dict):
         return
     status.uid = s_dict['uid']
 
-    if s_dict['time_left']:
+    if s_dict['time_left'] is not None:
         status.time.time_left = s_dict['time_left']
-    if s_dict.get('count') is not None:
+    if s_dict['count'] is not None:
         status.count.count = s_dict['count']
-    if s_dict['upkeep_sc_count']:
+    if s_dict['upkeep_sc_count'] is not None:
         status.upkeep_stat_change.count = s_dict['upkeep_sc_count']
-    if s_dict.get('charge'):
-        status.active.current_charge = s_dict['charge']
-    if s_dict.get('children'):
-        status.children = set(s_dict['children'])
-    status.parent_id = s_dict['parent_id']
+    if s_dict['active_charge'] is not None:
+        status.active.current_charge = s_dict['active_charge']
+    if s_dict['stat_halve_penalties'] is not None:
+        status.stat_halve.penalties = s_dict['stat_halve_penalties']
+    if s_dict['aura_child_uid'] is not None:
+        status.aura.child_uid = s_dict['aura_child_uid']
+    status.children = set(s_dict['children'])
+    status.owner_id = s_dict['owner_id']
     status.giver_id = s_dict['giver_id']
 
     return status
@@ -513,11 +517,6 @@ def attach_to_unit(status, unit):
     Done (on load) after loading both the unit and the status to attach 
     the status correctly to the unit after a suspend.
     """
-    if status.aura:
-        status.aura.set_parent_unit(unit)    
-    if status.rescue:
-        for idx, stat in enumerate(status.rescue.stats):
-            status.rescue.penalties[idx] = -unit.stats[stat].base_stat//2
     if status.passive:
         for item in unit.items:
             status.passive.apply_mod(item)

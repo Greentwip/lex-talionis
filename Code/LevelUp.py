@@ -13,7 +13,6 @@ except ImportError:
 ####################################################################
 class GainExpState(StateMachine.State):
     name = 'gainexp'
-    level_up_wait = 1660
     
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
@@ -264,15 +263,20 @@ class GainExpState(StateMachine.State):
                 self.exp_bar.draw(surf)
 
         elif self.state.getState() == 'level_up':
-            self.level_up_animation.draw(surf, gameStateObj)
+            if self.level_up_animation:
+                self.level_up_animation.draw(surf, gameStateObj)
 
         elif self.state.getState() == 'level_screen':
-            self.level_up_screen.draw(surf, gameStateObj)
+            if self.level_up_screen:
+                self.level_up_screen.draw(surf, gameStateObj)
+
+        return surf
 
 class LevelUpScreen(object):
     bg = GC.IMAGESDICT['LevelScreen']
     width, height = bg.get_width(), bg.get_height()
     spark_time = 320
+    level_up_wait = 1960
 
     spark = GC.IMAGESDICT['StatUpSpark']
     underline = GC.IMAGESDICT['StatUnderline']
@@ -284,7 +288,7 @@ class LevelUpScreen(object):
         self.levelup_list = levelup_list
         self.level1 = level1
         self.level2 = level2
-        self.current_spark = 0
+        self.current_spark = -1
 
         self.unit_scroll_offset = 80
         self.screen_scroll_offset = self.width + 32
@@ -306,6 +310,14 @@ class LevelUpScreen(object):
         else:
             position = (10, i * 16 + 35)
         return position
+
+    def inc_spark(self):
+        self.current_spark += 1
+        if self.current_spark >= len(self.levelup_list):
+            return True
+        elif self.levelup_list[self.current_spark] == 0:
+            return self.inc_spark()
+        return False
 
     def update(self, current_time):
         if self.state == 'scroll_in':
@@ -333,27 +345,21 @@ class LevelUpScreen(object):
                 self.state_time = current_time
 
         elif self.state == 'get_next_spark':
-            done = False
-            while self.levelup_list[self.current_spark] == 0:
-                self.current_spark += 1
-                if self.current_spark > len(self.levelup_list) - 1:
-                    done = True
-                    break
-
+            done = self.inc_spark()
             if done:
-                self.state = 'scroll_out'
+                self.state = 'level_up_wait'
                 self.state_time = current_time
             else:
                 pos = self.get_position(self.current_spark)
                 arrow_animation = CustomObjects.Animation(
-                    self.uparrow, (pos[0] + 31, pos[1] - 37), (10, 1), animation_speed=32,
+                    self.uparrow, (pos[0] + 45, pos[1] - 11), (10, 1), animation_speed=32,
                     ignore_map=True, hold=True)
                 self.arrow_animations.append(arrow_animation)
                 self.animations.append(self.make_spark(pos))
                 increase = Utility.clamp(self.levelup_list[self.current_spark], 1, 7)
-                row = Engine.subsurface(self.numbers, (0, (increase - 1)*24, 2*28, 24))
+                row = Engine.subsurface(self.numbers, (0, (increase - 1)*24, 10*28, 24))
                 number_animation = CustomObjects.Animation(
-                    row, (pos[0] + 29, pos[1] + 23), (2, 1), animation_speed=32, 
+                    row, (pos[0] + 43, pos[1] + 49), (10, 1), animation_speed=32, 
                     ignore_map=True, hold=True)
                 number_animation.frameCount = -5  # delay this animation for 5 frames
                 self.animations.append(number_animation)
@@ -365,6 +371,12 @@ class LevelUpScreen(object):
         elif self.state == 'spark_wait':
             if current_time - self.state_time > self.spark_time:
                 self.state = 'get_next_spark'
+
+        elif self.state == 'level_up_wait':
+            if current_time - self.state_time > self.level_up_wait:
+                self.animations = []
+                self.state = 'scroll_out'
+                self.state_time = current_time
 
     def draw(self, surf, gameStateObj):
         sprite = self.bg.copy()
@@ -391,9 +403,10 @@ class LevelUpScreen(object):
                     new_underline_surf = Engine.subsurface(new_underline_surf, rect)
                     self.underline_offset = max(0, self.underline_offset - 6)
                     pos = self.get_position(idx)
-                    pos = (pos[0] + self.underline_offset//2, pos[1])
+                    pos = (pos[0] + self.underline_offset//2 + 2, pos[1] + 10)
                 else:
                     pos = self.get_position(idx)
+                    pos = (pos[0] + 4, pos[1] + 11)
                 sprite.blit(new_underline_surf, pos)
 
         # Update and draw arrow animations
@@ -409,7 +422,7 @@ class LevelUpScreen(object):
             width = GC.FONT['text_blue'].size(str(text))[0]
             GC.FONT['text_blue'].blit(str(text), sprite, (pos[0] + 40 - width, pos[1]))
 
-        pos = (6 - self.screen_scroll_offset, GC.WINHEIGHT - 8 - self.width)
+        pos = (6 - self.screen_scroll_offset, GC.WINHEIGHT - 8 - self.height)
         surf.blit(sprite, pos)
 
         # Blit unit's pic

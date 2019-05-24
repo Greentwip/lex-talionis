@@ -8,12 +8,14 @@ try:
     import configuration as cf
     import StatusCatalog, CustomObjects, Dialogue, ItemMethods
     import Image_Modification, Engine, Weather, Utility, Action
+    import Highlight
 except ImportError:
     from Code.imagesDict import COLORKEY
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import StatusCatalog, CustomObjects, Dialogue, ItemMethods
     from . import Image_Modification, Engine, Weather, Utility, Action
+    from . import Highlight
 
 import logging
 logger = logging.getLogger(__name__)
@@ -189,9 +191,9 @@ class MapObject(object):
             # Re-add escape highlights if necessary
             for position, tile_values in self.tile_info_dict.items():
                 if "Escape" in tile_values or "Arrive" in tile_values:
-                    self.escape_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
+                    self.escape_highlights[position] = Highlight.Highlight(GC.IMAGESDICT["YellowHighlight"])
                 if "Formation" in tile_values:
-                    self.formation_highlights[position] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
+                    self.formation_highlights[position] = Highlight.Highlight(GC.IMAGESDICT["BlueHighlight"])
 
             # Re-add associated status sprites
             for position, value in self.tile_info_dict.items():
@@ -293,9 +295,9 @@ class MapObject(object):
             # For now we're ignoring saving Stationary Weapons, which means they can't have uses...
             property_value = ItemMethods.itemparser(property_value)
         elif property_name in ("Escape", "Arrive"):
-            self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
+            self.escape_highlights[coord] = Highlight.Highlight(GC.IMAGESDICT["YellowHighlight"])
         elif property_name == "Formation":
-            self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
+            self.formation_highlights[coord] = Highlight.Highlight(GC.IMAGESDICT["BlueHighlight"])
         elif property_name == "HP":
             self.hp[coord] = TileHP(int(property_value))
         self.tile_info_dict[coord][property_name] = property_value
