@@ -276,9 +276,13 @@ class PromotionState(StateMachine.State):
         gameStateObj.stateMachine.changeState('exp_gain')
 
     def update_battle_anim(self, old_anim):
+        """
+        Done so that when in combat, the in combat animation updates also
+        """
         item = self.unit.getMainWeapon()
         magic = Weapons.TRIANGLE.isMagic(item) if item else False
         anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender, item, magic)
+        # anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender)
         if anim:
             # Build animation
             script = anim['script']
@@ -288,8 +292,9 @@ class PromotionState(StateMachine.State):
                 frame_dir = anim['images']['Generic' + Utility.get_color(self.unit.team)]
             self.unit.battle_anim = BattleAnimation.BattleAnimation(self.unit, frame_dir, script)
             self.unit.battle_anim.awake(owner=old_anim.owner, parent=old_anim.parent, partner=old_anim.partner,
-                                        right=old_anim.right, at_range=old_anim.at_range, init_speed=old_anim.entrance,
+                                        right=old_anim.right, at_range=old_anim.at_range, init_speed=old_anim.init_speed,
                                         init_position=old_anim.init_position)
+            self.unit.battle_anim.entrance = 0
         else:
             self.unit.battle_anim = old_anim
 

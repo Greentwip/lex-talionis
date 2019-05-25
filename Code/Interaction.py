@@ -1625,7 +1625,7 @@ class MapCombat(Combat):
 
                 # Also handles actually adding the exp to the unit
                 if my_exp > 0:
-                    gameStateObj.exp_gain_struct = (self.p1, my_exp, self, 'init')
+                    gameStateObj.exp_gain_struct = (self.p1, my_exp, None, 'init')
                     gameStateObj.stateMachine.changeState('exp_gain')
 
             if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and not self.p2.isDying and self.p2 is not self.p1:
@@ -1639,7 +1639,7 @@ class MapCombat(Combat):
                     my_exp, records = self.calc_init_exp_p2(defender_results)
                     Action.do(Action.UpdateUnitRecords(self.p2, records), gameStateObj)
                     if my_exp > 0:
-                        gameStateObj.exp_gain_struct = (self.p2, my_exp, self, 'init')
+                        gameStateObj.exp_gain_struct = (self.p2, my_exp, None, 'init')
                         gameStateObj.stateMachine.changeState('exp_gain')
 
         # Handle after battle statuses

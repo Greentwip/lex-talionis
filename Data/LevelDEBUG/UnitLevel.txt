@@ -21,8 +21,7 @@
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Drake;3,17;None
-player;0;0;Renae;3,19;None
+player;0;0;Myrmidon;10;Iron Sword,Iron Lance;3,17;None;Resistance
 # Shaman by Armory
 enemy;0;0;Shaman;1;Flux;3,13;None;Resistance
 #enemy;0;0;Dracoknight;4;Iron Lance,Vulnerary,Delphi Shield;6,1;Attack;Resistance

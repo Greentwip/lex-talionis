@@ -34,7 +34,7 @@ class GainExpState(StateMachine.State):
                 gameStateObj.stateMachine.back()  # Done here
                 return "repeat"
 
-            self.levelup_list = self.unit.level_up(gameStateObj, self.unit_klass)
+            self.levelup_list = None
             self.new_wexp = None
 
             # timing
@@ -105,6 +105,7 @@ class GainExpState(StateMachine.State):
                     self.exp_bar.fade_out()
                     self.state_time = current_time
                 else:
+                    self.levelup_list = self.unit.level_up(gameStateObj, self.unit_klass)
                     Action.do(Action.IncLevel(self.unit), gameStateObj)
                     Action.do(Action.ApplyLevelUp(self.unit, self.levelup_list), gameStateObj)
                     self.state.changeState('exp100')
@@ -162,7 +163,7 @@ class GainExpState(StateMachine.State):
                     self.combat_object.lighten_ui()
                 # check for weapon experience gain
                 if self.new_wexp:
-                    Action.do(Action.GainWexp(self.unit, self.new_wexp))
+                    Action.do(Action.GainWexp(self.unit, self.new_wexp), gameStateObj)
                 # check for skill gain
                 for level_needed, class_skill in self.unit_klass['skills']:
                     if self.unit.level == level_needed:
@@ -188,7 +189,9 @@ class GainExpState(StateMachine.State):
                     if len(class_options) > 1:
                         gameStateObj.cursor.currentSelectedUnit = self.unit
                         gameStateObj.stateMachine.changeState('promotion_choice')
-                        gameStateObj.stateMachine.changeState('transition_out')  # We are leaving
+                        gameStateObj.stateMachine.changeState('transition_out')
+                        # We are leaving
+                        self.state.clear()
                         self.state.changeState('wait')
                         self.state_time = current_time
                     elif len(class_options) == 1:
@@ -196,6 +199,7 @@ class GainExpState(StateMachine.State):
                         self.unit.new_klass = class_options[0]
                         gameStateObj.stateMachine.changeState('promotion')
                         gameStateObj.stateMachine.changeState('transition_out')  # We are leaving
+                        self.state.clear()
                         self.state.changeState('wait')
                         self.state_time = current_time
                     else:
@@ -216,9 +220,11 @@ class GainExpState(StateMachine.State):
             self.unit.loadSprites()
 
             if self.combat_object:
-                self.darken_ui()
-                self.combat_object.update_battle_anim(old_anim)
+                self.combat_object.darken_ui()
+                if old_anim:
+                    self.combat_object.update_battle_anim(old_anim)
 
+            self.state.clear()
             self.state.changeState('level_screen')
             self.state_time = current_time
 
@@ -249,7 +255,7 @@ class GainExpState(StateMachine.State):
 
         elif self.state.getState() == 'wait':
             if current_time - self.state_time > 1000:  # Wait a while
-                self.state.back()
+                gameStateObj.stateMachine.back()
 
     def draw(self, gameStateObj, metaDataObj):
         if self.combat_object:
@@ -285,7 +291,7 @@ class LevelUpScreen(object):
 
     def __init__(self, unit, levelup_list, level1, level2):
         self.unit = unit
-        self.levelup_list = levelup_list
+        self.levelup_list = levelup_list[:8]
         self.level1 = level1
         self.level2 = level2
         self.current_spark = -1
