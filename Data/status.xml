@@ -1006,8 +1006,8 @@
         <components>conditional_mt,conditional_hit,negative,remove_range,always_animation</components>
 
         <remove_range>10</remove_range>
-        <conditional_mt>-2;target.id != status.parent_id and mode == 'Attack'</conditional_mt>
-        <conditional_hit>-30;target.id != status.parent_id and mode == 'Attack'</conditional_hit>
+        <conditional_mt>-2;target.id != status.giver_id and mode == 'Attack'</conditional_mt>
+        <conditional_hit>-30;target.id != status.giver_id and mode == 'Attack'</conditional_hit>
         <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
         <always_animation>MapProvoke,3,1,3</always_animation>
     </status>

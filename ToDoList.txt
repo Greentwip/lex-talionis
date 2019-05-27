@@ -9,118 +9,63 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-- Add support to fe_repo_to_lex for Dragonstone (and Sage?)
-
-- Drake is permanently Hexed? Carried over from ending a previous chapter next to a Hex Mage
-- Check that you can remove metamagic_status (overcharged) at clean_up. 
-- Turnwheel doesn't replace tile sprite layers, but does work on terrain? (happened on Chapter 9)
-- Extra Skill (+9) somehow
-
-- Need to play through Desert Chapter
-
-Add separate combine action to convoy (for turnwheel branch)
-Arena
-Jealousy System??
-Repair Market?
-When Dialogue Editor, make commands accessible
-New Game + ? (difficulty modes only accessible after beating a difficulty?)
-
-- Rapidly tapping A on Dialogue sometimes causes it to jitter up and down while leaving (probably just need to rewrite how dialogue is rendered to the screen anyway...)
-
-- Turnwheel
-    - Make it pretty and work the way FE Echoes works
-    - If loading crashed save, allow execution of turnwheel forward
-    - Add turnwheel finalize script
-    - Check that max turnwheel, turnwheel count etc works
-- Submaps
-- Overworld
-- Add "having 2+ parties" ability to the Engine and Wiki.
+v0.9.0
+- Need to play through Desert Chapter, checking for:
+    - Drake is permanently Hexed? Carried over from ending a previous chapter next to a Hex Mage 
+    - Extra Skill (+9) somehow
+    - New Screenshots in all marketing content
 - Test player phase and enemy phase battle animation music
-- Fix music fade in/out
-
-- New Screenshots in all marketing content
-- When I fix events, make visit, escape?, seize, switch, search, etc, all work the same way
-
+- Add "having 2+ parties" ability to the Wiki.
 - Test Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
-- Test auras on equipped items (status_on_equip)
-- Add palette swap for animations (like FERecolor, FEBuilder)
-- Add FE GBA to LT map sprite converter with all four teams
+- Test palette swap for animations
+- Test FE GBA to LT map sprite converter with all four teams
 
+v0.9.1
+- Fix music fade in/out
+- Add multiple 0-4, 5-9 map sprites for each class
+- Add separate combine action to convoy
+- Add support to fe_repo_to_lex for Dragonstone (and Sage?)
+
+v0.9.2 -- overworld & submap update
+- Test overworld
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
-=== These go together -- before animation special effects ===
-- Implement legendary animation
-- Implement Devil axe effect --  -- gotta think about this...
+- Test submap
+
+v0.9.3 -- combat update & activated status update
+- Arena
+- Make sure you can have any number of combat results in a combat
+- For animation
+- Implement legendary animation and skill animation section to animations
+- Unify how activated, automatic, and percent skills work
+- Implement Devil axe effect -- (gives user a percent skill to die)
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
-=============================================================
+
+v0.9.4 -- dialogue and command update
+- Dialogue Editor
+- Split dialogue and commands into 2 separate files
+- Really, just require how dialogue works
+- Rapidly tapping A on Dialogue sometimes causes it to jitter up and down while leaving (probably just need to rewrite how dialogue is rendered to the screen anyway...)
+- When I fix events, make visit, escape?, seize, switch, search, etc, all work the same way
+- Instead of current system, use system of triggers which trigger events. Then can simply attach events to items and statuses and that becomes very easy
+
+Later on:
 - Test stationary weapon event tiles + saving + turnwheel
 - Add Fog of War
 - Test removing a stat from stat list (InfoMenu, UnitMenu, Combat)
+- Jealousy System??
+- Repair Market?
+- New Game + ? (difficulty modes only accessible after beating a difficulty?)
 
-To Test Action:
-WarpIn
-LeaveMap
-Fully Test RecordRandomState
-FinalizeActiveSkill
-FinalizeAutomaticSkill
--- These need to be tested on load as well
-ChangeTileSprite
-ReplaceTiles
-AreaReplaceTiles
-LayerTileSprite
-LayerTerrain
-ShowLayer
-HideLayer
-ClearLayer
-AddTileProperty
-RemoveTileProperty
-AddWeather
-RemoveWeather
-
-Upon activation of turnwheel:
-Music Fades
-Gong sounds mean turnwheel has been activated
-Display translates in
-Turn 1 in upper right
-2 lines of text through top banner
-Num turnwheel uses in bottom right
-Units left to move in bottomleft (Left:    19/20)
-Small bright border around top and bottom and black outer fade
-
-When the turnwheel is moved forward or backwards in time, clicking sound is emitted
-"Start of Player Phase" (hovers over Lord Character)
-"(nothing at all)" (hovers over Delthea -- who I moved first)
-"Delthea attacked Gargoyle"/"Prevailed over Gargoyle"
-
-When turnwheel is actived -- crazy green animation occurs
-Loud sound like crashing water + magic is emitted
-While crazy green animation occurs, turnwheel fades out
-
-"Catria activated Defensive"
-When you move without attacking, no text is displayed
-"Delthea attacked Gargoyle" with nothing else if Delthea does not defeat Gargoyle
-
-So each movement gets two turnwheel clicks, one for before they've taken their turn, and one for after they've taken their turn. During both of these cursor is hovered over unit in question.
-
-Cannot activate turnwheel on enemy turn
-"Start of enemy phase"
-
-"Start of player phase" can't actually be chosen by turnwheel!
-
-does movement, killing units, attacking in turnwheel have an animation?
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- AI ---
 - Red highlight appears over position of last enemy fought while using 'other' team AI.
 --- ENGINE ---
-- Dialogue Tester
 - Game Editor??
 - Android Support (pygame_sdl2)
 - Mac/Linux Support
---- SUPPORTS ---
-- Confirm Path Of Radiance style supports work
-- Add GBA style supports
 =============
 --- EXTRA ---
 =============
@@ -139,12 +84,3 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Pulsing arrow (transparency and color)
 - Allow user to control arrow movement (option)
 - Allow quick attack on enemy, quick spell on ally (option)
---- DIALOG SYSTEM ---
-- Functions - may be needed for Normal, Hard, Lunatic differentiation
-- Use Dictionary instead of if/elif system? -- premature optimization?
-- Use getattr() instead of dictionary or if/elif system??
---- MUSIC --- ??
-- Replace with Open-Source Music - Especially Ghibli (they are especially litigious)
-- Replace with Fire Emblem 6-8 music?
-- Replace with Own Music?
-- Replace with Classical? (Kevin MacLeod)

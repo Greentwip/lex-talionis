@@ -1848,7 +1848,7 @@ class UnitObject(object):
         # Units should have their temporary statuses removed
         # Create copy so we can iterate it over without messing around with stuff...
         for status in self.status_effects[:]:
-            if status.time or status.remove_range:
+            if status.time or status.remove_range or status.lost_on_interact or status.lost_on_endstep:
                 # Without clean_up parameter, certain statuses can give out other status on removal, statuses we don't want
                 # Like if you remove flying, you can get tile statuses, which you obviously don't want at this point
                 Action.RemoveStatus(self, status, clean_up=True).do(gameStateObj)
