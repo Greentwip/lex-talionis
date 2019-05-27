@@ -506,6 +506,16 @@ class Dialogue_Scene(object):
             Engine.music_thread.fade_back()
         elif line[0] == 'sound':
             GC.SOUNDDICT[line[1]].play()
+        elif line[0] == 'change_music':
+            if gameStateObj.phase_music:
+                # Phase name, musical piece
+                gameStateObj.phase_music.change_music(line[1], line[2])
+        elif line[0] == 'music_clear':
+            logger.debug('Clear music stack')
+            Engine.music_thread.clear()
+        # Music fade clear would just be 
+        # > music_clear
+        # > mf
 
         # === HANDLE ITEMS
         # Give the optional unit an item or give the unit named in the line the item
@@ -760,10 +770,6 @@ class Dialogue_Scene(object):
             gameStateObj.statedict['levelIsComplete'] = 'loss'
         elif line[0] == 'win_game':
             gameStateObj.statedict['levelIsComplete'] = 'win'
-        elif line[0] == 'change_music':
-            if gameStateObj.phase_music:
-                # Phase name, musical piece
-                gameStateObj.phase_music.change_music(line[1], line[2])
 
         elif line[0] == 'battle_save':
             # Using a flag instead of just going to battle save state because if I save while

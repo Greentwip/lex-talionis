@@ -211,13 +211,10 @@ class GainExpState(StateMachine.State):
 
         elif self.state.getState() == 'promote':
             old_anim = self.unit.battle_anim
-            self.unit.removeSprites()
 
             promote_action = Action.Promote(self.unit, self.unit.new_klass)
             self.levelup_list, self.new_wexp = promote_action.get_data()
             Action.do(promote_action, gameStateObj)
-
-            self.unit.loadSprites()
 
             if self.combat_object:
                 self.combat_object.darken_ui()

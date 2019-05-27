@@ -366,8 +366,7 @@ class MapObject(object):
                         x, y = sprite.position
                         self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
             else:
-                self.layers[layer].show = True
-                self.layers[layer].fade = 100          
+                self.layers[layer].fullshow()          
         # Terrain layer
         if len(self.terrain_layers) > layer:
             self.terrain_layers[layer].show = True
@@ -386,8 +385,7 @@ class MapObject(object):
                         x, y = sprite.position
                         self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
             else:
-                self.layers[layer].show = False
-                self.layers[layer].fade = 0
+                self.layers[layer].fullhide()
         # Terrain layer
         if len(self.terrain_layers) > layer:
             self.terrain_layers[layer].show = False
@@ -616,6 +614,18 @@ class Layer(object):
 
     def remove(self, image_name, position):
         self.sprites = [s for s in self.sprites if s.image_name != image_name or s.position != position]
+
+    def fullshow(self):
+        self.show = True
+        self.fade = 100
+        for sprite in self.sprites:
+            sprite.image = Image_Modification.flickerImageTranslucentColorKey(sprite.true_image, 0)
+
+    def fullhide(self):
+        self.show = False
+        self.fade = 0
+        for sprite in self.sprites:
+            sprite.image = Image_Modification.flickerImageTranslucentColorKey(sprite.true_image, 100)
 
     def draw(self, surf):
         if self.show and self.fade < 100:

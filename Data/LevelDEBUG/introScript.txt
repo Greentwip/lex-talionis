@@ -5,3 +5,7 @@ set_game_constant;Convoy
 set_game_constant;Supports
 set_game_constant;Turnwheel
 add_global_status;fLuck +4
+layer_tile_sprite;1;4,17;Door
+layer_tile_sprite;1;5,17;Door
+layer_tile_sprite;2;4,17;OpenChest
+layer_tile_sprite;2;5,17;OpenChest

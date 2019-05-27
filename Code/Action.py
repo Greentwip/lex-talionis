@@ -704,18 +704,22 @@ class Promote(Action):
         return self.levelup_list, self.new_wexp
 
     def do(self, gameStateObj):
+        self.unit.removeSprites()
         self.unit.klass = self.new_klass['id']
         self.unit.set_exp(0)
         self.unit.level = 1
         self.unit.movement_group = self.new_klass['movement_group']
         self.unit.apply_levelup(self.levelup_list)
+        self.unit.loadSprites()
 
     def reverse(self, gameStateObj):
+        self.unit.removeSprites()
         self.unit.klass = self.old_klass['id']
         self.unit.set_exp(self.old_exp)
         self.unit.level = self.old_level
         self.unit.movement_group = self.old_klass['movement_group']
         self.unit.apply_levelup([-x for x in self.levelup_list])
+        self.unit.loadSprites()
 
 class ApplyLevelUp(Action):
     def __init__(self, unit, stat_increase):

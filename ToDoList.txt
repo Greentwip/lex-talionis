@@ -11,21 +11,19 @@
 
 - Add support to fe_repo_to_lex for Dragonstone (and Sage?)
 
-- Something is wrong with Continue/Saving + Static Random?
 - Drake is permanently Hexed? Carried over from ending a previous chapter next to a Hex Mage
 - Check that you can remove metamagic_status (overcharged) at clean_up. 
-- Turnwheel doesn't replace tile sprite layers, but does work on terrain?
+- Turnwheel doesn't replace tile sprite layers, but does work on terrain? (happened on Chapter 9)
 - Extra Skill (+9) somehow
-- Some Auras aren't showing up in status?
+
+- Need to play through Desert Chapter
 
 Add separate combine action to convoy (for turnwheel branch)
 Arena
-Jealousy System
-Repair Market
+Jealousy System??
+Repair Market?
 When Dialogue Editor, make commands accessible
-Fix how ExpGain/Level Up/Promotion interacts with Turnwheel!!!
-New Game +
-Casual death? Check other_game (- Check that casual doesn't have a death cooldown)
+New Game + ? (difficulty modes only accessible after beating a difficulty?)
 
 - Rapidly tapping A on Dialogue sometimes causes it to jitter up and down while leaving (probably just need to rewrite how dialogue is rendered to the screen anyway...)
 
@@ -36,19 +34,15 @@ Casual death? Check other_game (- Check that casual doesn't have a death cooldow
     - Check that max turnwheel, turnwheel count etc works
 - Submaps
 - Overworld
-- Parties (maybe just convoy differentiation -- since Anchorman has managed different parties pretty well themselves)
 - Add "having 2+ parties" ability to the Engine and Wiki.
 - Test player phase and enemy phase battle animation music
+- Fix music fade in/out
 
 - New Screenshots in all marketing content
-- When I fix events, make escape, seize, switch, search, etc, all work the same way
-- Split up gaining exp, gaining level, and promoting into separate routines that use the Action system
-- Add filtering class wexp -- so you could do reclassing?
-- Add music fade clear and music clear
+- When I fix events, make visit, escape?, seize, switch, search, etc, all work the same way
 
 - Test Current Party to Properties of Level Editor
 - Test LEVEL EDITOR!
-- Add autotile support to LevelEditor
 - Test auras on equipped items (status_on_equip)
 - Add palette swap for animations (like FERecolor, FEBuilder)
 - Add FE GBA to LT map sprite converter with all four teams
@@ -68,8 +62,6 @@ To Test Action:
 WarpIn
 LeaveMap
 Fully Test RecordRandomState
-ApplyStatus
-RemoveStatus
 FinalizeActiveSkill
 FinalizeAutomaticSkill
 -- These need to be tested on load as well
@@ -138,7 +130,7 @@ FOR FUTURE UPDATES TO THE ENGINE:
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
 - Add Awakening-style dialogue backlog...??** On R press
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
-- Add other numbers to Level Up Numbers (5 - 7)
+- Add other numbers to Level Up Numbers (6 - 7)
 - Comment many of the functions with purposes
 - Allow fully custom stat definitions
 --- AWAKENING UI ---
