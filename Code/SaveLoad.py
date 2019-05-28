@@ -44,7 +44,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     overview_filename = levelfolder + '/overview.txt'
     overview_dict = read_overview_file(overview_filename)
     if 'current_party' in overview_dict:
-        gameStateObj.current_party = int(overview_dict['current_party'])
+        gameStateObj.current_party = overview_dict['current_party']
     # Get objective
     starting_objective = Objective.Objective(overview_dict['display_name'], overview_dict['win_condition'], overview_dict['loss_condition'])
 
@@ -57,7 +57,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
                                               overview_dict.get('enemy_battle_music'))
 
     # Get tiles
-    currentMap = create_map(levelfolder, overview_dict)
+    currentMap = create_map(gameStateObj, levelfolder, overview_dict)
     gameStateObj.start_map(currentMap)
 
     # === Process unit data ===
@@ -77,14 +77,14 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     gameStateObj.start(allreinforcements=reinforceUnits, prefabs=prefabs, objective=starting_objective, music=starting_music)
     gameStateObj.action_log.record = True
 
-def create_map(levelfolder, overview_dict=None):
+def create_map(gameStateObj, levelfolder, overview_dict=None):
     if not overview_dict:
         overview_filename = levelfolder + '/overview.txt'
         overview_dict = read_overview_file(overview_filename)
     tilefilename = levelfolder + '/TileData.png'
     mapfilename = levelfolder + '/MapSprite.png'
     weather = overview_dict['weather'].split(',') if 'weather' in overview_dict else []
-    currentMap = TileObject.MapObject(mapfilename, tilefilename, levelfolder, weather)
+    currentMap = TileObject.MapObject(gameStateObj, mapfilename, tilefilename, levelfolder, weather)
     return currentMap
 
 def get_metaDataObj(levelfolder, metaDataObj):
@@ -266,10 +266,9 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)
             # Personal Skills
             personal_skills = unit.find('skills').text.split(',') if unit.find('skills') is not None and unit.find('skills').text is not None else []
-            c_s = [StatusCatalog.statusparser(status) for status in personal_skills]
+            c_s = [StatusCatalog.statusparser(status, gameStateObj) for status in personal_skills]
             for status in c_s:  
                 if status:
-                    gameStateObj.add_status(status)
                     Action.do(Action.AddStatus(cur_unit, status), gameStateObj)
             # handle having a status that gives stats['HP']
             cur_unit.set_hp(int(cur_unit.stats['HP']))
@@ -339,10 +338,9 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
 
     # Extra Skills
     if len(unitLine) == 10:
-        statuses = [StatusCatalog.statusparser(status) for status in unitLine[9].split(',')]
+        statuses = [StatusCatalog.statusparser(status, gameStateObj) for status in unitLine[9].split(',')]
         for status in statuses:
             if status:
-                gameStateObj.add_status(status)
                 Action.do(Action.AddStatus(cur_unit, status), gameStateObj)
 
     allunits.append(cur_unit)
@@ -462,10 +460,9 @@ def get_skills(unit, classes, level, gameStateObj, feat=True, seed=0):
     class_skills = [status for status in class_skills if status != 'Feat']
     logger.debug('Class Skills %s', class_skills)
     # === Actually add statuses
-    status_effects = [StatusCatalog.statusparser(status) for status in class_skills]
+    status_effects = [StatusCatalog.statusparser(status, gameStateObj) for status in class_skills]
     for status in status_effects:
         if status:
-            gameStateObj.add_status(status)
             Action.do(Action.AddStatus(unit, status), gameStateObj)
     # handle having a status that gives stats['HP']
     unit.set_hp(int(unit.stats['HP']))
@@ -599,4 +596,3 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
         StatusCatalog.Status.next_uid = max(gameStateObj.allstatuses.keys()) + 1
     else:
         StatusCatalog.Status.next_uid = 100
-    print(StatusCatalog.Status.next_uid)

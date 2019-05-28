@@ -145,8 +145,7 @@ class Solver(object):
         if result.outcome:
             # Handle status
             for s_id in self.item.status:
-                status_object = StatusCatalog.statusparser(s_id)
-                gameStateObj.add_status(status_object)
+                status_object = StatusCatalog.statusparser(s_id, gameStateObj)
                 result.def_status.append(status_object)
             # Handle summon
             if self.item.summon:
@@ -198,8 +197,7 @@ class Solver(object):
 
         if result.outcome:
             for s_id in self.defender.getMainWeapon().status:
-                status_object = StatusCatalog.statusparser(s_id)
-                gameStateObj.add_status(status_object)
+                status_object = StatusCatalog.statusparser(s_id, gameStateObj)
                 result.def_status.append(status_object)
 
         # Make last attack against a boss a crit!

@@ -6,6 +6,7 @@ from collections import OrderedDict, Counter
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import InputManager, Engine
     import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
@@ -14,6 +15,7 @@ try:
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import InputManager, Engine
     from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
     from . import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
@@ -84,7 +86,7 @@ class GameStateObj(object):
         tilefilename = 'Data/Level' + name + '/TileData.png'
         mapfilename = 'Data/Level' + name + '/MapSprite.png'
         levelfolder = 'Data/Level' + name
-        submap = TileObject.MapObject(mapfilename, tilefilename, levelfolder, self.map.weather)
+        submap = TileObject.MapObject(self, mapfilename, tilefilename, levelfolder, self.map.weather)
         self.start_map(submap)
 
     def close_submap(self):
@@ -131,6 +133,11 @@ class GameStateObj(object):
         self.map = None
         self.game_constants = Counter()
         self.game_constants['level'] = 0
+        # Set up random seed
+        random_seed = random.randint(0, 1023)
+        logger.debug('Random Seed: %d', random_seed)
+        self.game_constants['_random_seed'] = random_seed
+
         self._money = Counter()
         self._convoy = {0: []}
         self.current_party = 0
@@ -184,6 +191,10 @@ class GameStateObj(object):
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
         self.allitems = {info['uid']: ItemMethods.deserialize(info) for info in load_info['allitems']}
         self.allstatuses = {info['uid']: StatusCatalog.deserialize(info) for info in load_info['allstatuses']}
+
+        ItemMethods.ItemObject.next_uid = max(self.allitems.keys()) + 1
+        StatusCatalog.Status.next_uid = max(self.allstatuses.keys()) + 1
+
         self.factions = load_info['factions'] if 'factions' in load_info else (load_info['groups'] if 'groups' in load_info else {})
         self.allreinforcements = load_info['allreinforcements'] 
         self.prefabs = load_info['prefabs']
@@ -196,6 +207,7 @@ class GameStateObj(object):
         self.current_party = load_info['current_party']
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
+        static_random.set_seed(self.game_constants.get('_random_seed', 0))
         self.level_constants = load_info['level_constants']
         self.objective = Objective.Objective.deserialize(load_info['objective']) if load_info['objective'] else None
         self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music']) if load_info['phase_music'] else None
@@ -220,15 +232,11 @@ class GameStateObj(object):
                 status.aura.child_status = self.get_status_from_uid(status.aura.child_uid)
         # Unit Items and Statuses
         for idx, unit in enumerate(self.allunits):
-            print(unit.name, unit.klass, unit.position)
             for item_uid in load_info['allunits'][idx]['items']:
                 unit.items.append(self.get_item_from_uid(item_uid))
             for status_uid in load_info['allunits'][idx]['status_effects']:
-                print(status_uid)
                 status = self.get_status_from_uid(status_uid)
-                print(status)
                 StatusCatalog.attach_to_unit(status, unit)
-            print(unit.status_effects)
 
         # Statuses
         # for index, info in enumerate(load_info['allunits']):
@@ -242,7 +250,11 @@ class GameStateObj(object):
         self.action_log = Turnwheel.ActionLog.deserialize(load_info['action_log'], self)
 
         # Map
-        self.map = SaveLoad.create_map('Data/Level' + str(self.game_constants['level']))
+        logger.info('Creating map...')
+        logger.info('%d' % StatusCatalog.Status.next_uid)
+        logger.info('%d' % max(self.allstatuses.keys()))
+        self.map = SaveLoad.create_map(self, 'Data/Level' + str(self.game_constants['level']))
+        logger.info('Done creating map...')
         # Set up blitting surface
         if self.map:
             mapSurfWidth = self.map.width * GC.TILEWIDTH
@@ -283,6 +295,7 @@ class GameStateObj(object):
 
     def generic(self):
         logger.info("Generic")
+
         lord_units = [unit for unit in self.allunits if unit.position and 'Lord' in unit.tags and unit.team == 'player']
         lord_position = lord_units[0].position if lord_units else (0, 0)
         # Certain variables change if this is being initialized at beginning of game, and not a save state
@@ -403,14 +416,15 @@ class GameStateObj(object):
     def get_status_from_uid(self, u_id):
         return self.allstatuses.get(u_id)
 
-    def add_status(self, status):
+    def register_status(self, status):
+        logger.info('Registering status %s as %s', status, status.uid)
         self.allstatuses[status.uid] = status
         # We need to remember to register the items that are used by the Active Skills
         if status.active and status.active.item:
             self.allitems[status.active.item.uid] = status.active.item
         # We need to remember to register an aura's child status
         if status.aura:
-            self.add_status(status.aura.child_status)
+            self.register_status(status.aura.child_status)
 
     def check_formation_spots(self):
         # Returns None if no spot available

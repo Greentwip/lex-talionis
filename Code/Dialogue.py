@@ -401,9 +401,9 @@ class Dialogue_Scene(object):
                 gameStateObj.overworld.set_next_location(None)
         elif line[0] == 'ow_move_party' or line[0] == 'ow_quick_move_party':
             if len(line) > 2:
-                party_id = int(line[2])
+                party_id = line[2]
             else:
-                party_id = 0
+                party_id = '0'
             # Start move
             if line[0] == 'ow_quick_move_party' or self.do_skip:
                 gameStateObj.overworld.quick_move_party(line[1], party_id, gameStateObj)
@@ -412,11 +412,11 @@ class Dialogue_Scene(object):
                 self.current_state = "Paused"
                 gameStateObj.stateMachine.changeState('overworld_effects')
         elif line[0] == 'ow_add_party':
-            party_id = int(line[2])
+            party_id = line[2]
             lords = line[3].split(',')  # Unit IDs
             gameStateObj.overworld.add_party(line[1], party_id, lords, gameStateObj)
         elif line[0] == 'ow_remove_party':
-            gameStateObj.overworld.remove_party(int(line[2]))
+            gameStateObj.overworld.remove_party(line[2])
         # elif line[0] == 'ow_add_party_member':
         #     party_id = int(line[1])
         #     gameStateObj.overworld.add_party_member(party_id, line[2].split(','))
@@ -561,7 +561,7 @@ class Dialogue_Scene(object):
         # Give the player gold!
         elif line[0] == 'gold':
             if len(line) > 2:
-                party = int(line[2])
+                party = line[2]
             else:
                 party = gameStateObj.current_party
             Action.do(Action.GiveGold(int(line[1]), party), gameStateObj)
@@ -577,8 +577,7 @@ class Dialogue_Scene(object):
 
         # Add a skill/status to a unit
         elif line[0] == 'give_skill':
-            skill = StatusCatalog.statusparser(line[2])
-            gameStateObj.add_status(skill)
+            skill = StatusCatalog.statusparser(line[2], gameStateObj)
             unit = self.unit if line[1] == '{unit}' else gameStateObj.get_unit_from_name(line[1])
             if unit and skill:
                 Action.do(Action.AddStatus(unit, skill), gameStateObj)
@@ -990,7 +989,7 @@ class Dialogue_Scene(object):
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
-                    Action.do(Action.ChangeParty(unit, int(line[2])), gameStateObj)
+                    Action.do(Action.ChangeParty(unit, line[2]), gameStateObj)
         elif line[0] == 'add_tag':
             unit_specifier = self.get_id(line[1], gameStateObj)
             for unit in gameStateObj.allunits:
@@ -1002,7 +1001,7 @@ class Dialogue_Scene(object):
                 if unit_specifier in (unit.id, unit.event_id, unit.position):
                     Action.do(Action.RemoveTag(unit, line[2]), gameStateObj)
         elif line[0] == 'merge_parties':
-            host, guest = int(line[1]), int(line[2])
+            host, guest = line[1], line[2]
             for unit in gameStateObj.allunits:
                 if unit.party == guest:
                     Action.do(Action.ChangeParty(unit, host), gameStateObj)

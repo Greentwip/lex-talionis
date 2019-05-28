@@ -7,7 +7,7 @@ import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
-import Code.CustomObjects as CustomObjects
+import Code.Highlight as Highlight
 
 try:
     import EditorUtilities
@@ -98,9 +98,9 @@ class TileInfo(object):
         for tile_property in property_list:
             property_name, property_value = tile_property.split('=')
             if property_name in ("Escape", "Arrive"):
-                self.escape_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["YellowHighlight"])
+                self.escape_highlights[coord] = Highlight.Highlight(GC.IMAGESDICT["YellowHighlight"])
             elif property_name == "Formation":
-                self.formation_highlights[coord] = CustomObjects.Highlight(GC.IMAGESDICT["BlueHighlight"])
+                self.formation_highlights[coord] = Highlight.Highlight(GC.IMAGESDICT["BlueHighlight"])
             self.tile_info_dict[coord][property_name] = property_value
 
     def get_images(self):

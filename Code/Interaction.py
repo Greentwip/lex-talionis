@@ -122,8 +122,7 @@ class Combat(object):
 
     def _handle_reflect(self, attacker, defender, status_obj, gameStateObj):
         if 'reflect' in defender.status_bundle and not status_obj.already_reflected:
-            status_copy = StatusCatalog.statusparser(status_obj.id)
-            gameStateObj.add_status(status_copy)
+            status_copy = StatusCatalog.statusparser(status_obj.id, gameStateObj)
             status_copy.already_reflected = True
             status_copy.giver_id = defender.id
             Action.do(Action.AddStatus(attacker, status_copy), gameStateObj)
@@ -298,16 +297,14 @@ class Combat(object):
             if status.status_after_battle and not (self.p1.isDying and status.tether):
                 for unit in [self.p2] + self.splash:
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(self.p2) and not unit.isDying:
-                        applied_status = StatusCatalog.statusparser(status.status_after_battle)
-                        gameStateObj.add_status(applied_status)
+                        applied_status = StatusCatalog.statusparser(status.status_after_battle, gameStateObj)
                         if status.tether:
                             Action.do(Action.TetherStatus(status, applied_status, self.p1, unit), gameStateObj)
                         Action.do(Action.AddStatus(unit, applied_status), gameStateObj)
             if status.status_after_help and not self.p1.isDying:
                 for unit in [self.p2] + self.splash:
                     if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfAlly(unit) and not unit.isDying:
-                        applied_status = StatusCatalog.statusparser(status.status_after_help)
-                        gameStateObj.add_status(applied_status)
+                        applied_status = StatusCatalog.statusparser(status.status_after_help, gameStateObj)
                         Action.do(Action.AddStatus(unit, applied_status), gameStateObj)
             if status.lost_on_attack and (self.item.weapon or self.item.detrimental):
                 Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
@@ -316,8 +313,7 @@ class Combat(object):
         if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
             for status in self.p2.status_effects:
                 if status.status_after_battle and not (status.tether and self.p2.isDying):
-                    applied_status = StatusCatalog.statusparser(status.status_after_battle)
-                    gameStateObj.add_status(applied_status)
+                    applied_status = StatusCatalog.statusparser(status.status_after_battle, gameStateObj)
                     if status.tether:
                         Action.do(Action.TetherStatus(status, applied_status, self.p2, self.p1), gameStateObj)
                     Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)

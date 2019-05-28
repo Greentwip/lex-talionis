@@ -1627,7 +1627,7 @@ class FeatChoiceState(StateMachine.State):
             initiator = gameStateObj.cursor.currentHoveredUnit
         options = []
         for feat in StatusCatalog.feat_list:
-            options.append(StatusCatalog.statusparser(feat))
+            options.append(StatusCatalog.statusparser(feat, gameStateObj))
         self.menu = MenuFunctions.FeatChoiceMenu(initiator, options)
         self.info = False
 
@@ -1661,7 +1661,6 @@ class FeatChoiceState(StateMachine.State):
             GC.SOUNDDICT['Select 1'].play()
             selection = self.menu.getSelection()
             gameStateObj.stateMachine.back()
-            gameStateObj.add_status(selection)
             Action.do(Action.AddStatus(gameStateObj.cursor.currentSelectedUnit, selection), gameStateObj)
             gameStateObj.banners.append(Banner.gainedSkillBanner(gameStateObj.cursor.currentSelectedUnit, selection))
             gameStateObj.stateMachine.changeState('itemgain')
@@ -2090,9 +2089,7 @@ class PhaseChangeState(StateMachine.State):
         logger.debug('Phase Start')
         Action.do(Action.LockTurnwheel(gameStateObj.phase.get_current_phase() != 'player'), gameStateObj)
         # All units can now move and attack, etc.
-        for unit in gameStateObj.allunits:
-            if not unit.dead:
-                Action.do(Action.Reset(unit), gameStateObj)
+        Action.do(Action.ResetAll([unit for unit in gameStateObj.allunits if not unit.dead]), gameStateObj)
         # Mark phase used to be here
         gameStateObj.cursor.drawState = 0
         gameStateObj.activeMenu = None

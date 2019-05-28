@@ -88,11 +88,11 @@ def remove_aura_highlights(unit, gameStateObj):
     gameStateObj.highlight_manager.remove_aura_highlights()
 
 class Aura(object):
-    def __init__(self, aura_range, target, child_id):
+    def __init__(self, aura_range, target, child_id, gameStateObj):
         self.aura_range = int(aura_range)
         self.target = target
         self.child_id = child_id
-        self.child_status = StatusCatalog.statusparser(child_id)
+        self.child_status = StatusCatalog.statusparser(child_id, gameStateObj)
 
     def apply(self, owner, unit, gameStateObj):
         if (self.target == 'Ally' and owner.checkIfAlly(unit) and owner is not unit) or \

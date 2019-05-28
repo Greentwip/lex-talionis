@@ -400,7 +400,7 @@ def HandleStatusEndStep(status, unit, gameStateObj):
 
 # === STATUS PARSER ======================================================
 # Takes one status id, as well as the database of status data, and outputs a status object.
-def statusparser(s_id):
+def statusparser(s_id, gameStateObj=None):
     for status in GC.STATUSDATA.getroot().findall('status'):
         if status.find('id').text == s_id:
             components = status.find('components').text
@@ -478,13 +478,16 @@ def statusparser(s_id):
                     aura_range = int(status.find('range').text)
                     child = status.find('child').text
                     target = status.find('target').text
-                    my_components['aura'] = Aura.Aura(aura_range, target, child)
+                    my_components['aura'] = Aura.Aura(aura_range, target, child, gameStateObj)
                 elif status.find(component) is not None and status.find(component).text:
                     my_components[component] = status.find(component).text
                 else:
                     my_components[component] = True
 
             currentStatus = Status(s_id, name, my_components, desc, image_index)
+            if gameStateObj:
+                gameStateObj.register_status(currentStatus)
+            # Otherwise already registered
 
             return currentStatus
 

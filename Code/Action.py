@@ -342,6 +342,19 @@ class Reset(Action):
         self.unit.hasRunAttackAI = self.hasRunAttackAI
         self.unit.hasRunGeneralAI = self.hasRunGeneralAI
 
+class ResetAll(Action):
+    def __init__(self, units):
+        self.units = units
+        self.actions = [Reset(unit) for unit in self.units]
+
+    def do(self, gameStateObj):
+        for action in self.actions:
+            action.do(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        for action in self.actions:
+            action.reverse(gameStateObj)
+
 # === RESCUE ACTIONS ==========================================================
 class Rescue(Action):
     def __init__(self, unit, rescuee):
@@ -363,8 +376,7 @@ class Rescue(Action):
         self.unit.hasAttacked = True
         if 'savior' not in self.unit.status_bundle:
             if not self.rescue_status:
-                self.rescue_status = StatusCatalog.statusparser("Rescue")
-                gameStateObj.add_status(self.rescue_status)
+                self.rescue_status = StatusCatalog.statusparser("Rescue", gameStateObj)
             AddStatus(self.unit, self.rescue_status).do(gameStateObj)
 
     def execute(self, gameStateObj):
@@ -421,8 +433,7 @@ class Drop(Action):
         self.droppee.leave(gameStateObj)
         if 'savior' not in self.unit.status_bundle:
             if not self.rescue_status:
-                self.rescue_status = StatusCatalog.statusparser("Rescue")
-                gameStateObj.add_status(self.rescue_status)
+                self.rescue_status = StatusCatalog.statusparser("Rescue", gameStateObj)
             AddStatus(self.unit, self.rescue_status).do(gameStateObj)
 
 class Give(Action):
@@ -440,8 +451,7 @@ class Give(Action):
         self.unit.hasAttacked = True
         if 'savior' not in self.other_unit.status_bundle:
             if not self.other_rescue_status:
-                self.other_rescue_status = StatusCatalog.statusparser("Rescue")
-                gameStateObj.add_status(self.other_rescue_status)
+                self.other_rescue_status = StatusCatalog.statusparser("Rescue", gameStateObj)
             AddStatus(self.other_unit, self.other_rescue_status).do(gameStateObj)
         self.unit.unrescue(gameStateObj)
 
@@ -469,8 +479,7 @@ class Take(Action):
         self.unit.hasTraded = True
         if 'savior' not in self.unit.status_bundle:
             if not self.rescue_status:
-                self.rescue_status = StatusCatalog.statusparser("Rescue")
-                gameStateObj.add_status(self.rescue_status)
+                self.rescue_status = StatusCatalog.statusparser("Rescue", gameStateObj)
             AddStatus(self.unit, self.rescue_status).do(gameStateObj)
         self.other_unit.unrescue(gameStateObj)
 
@@ -1369,8 +1378,7 @@ class RemoveStatus(Action):
             self.actions.append(UnTetherStatus(self.status_obj, self.unit.id))
 
         if self.status_obj.status_chain and not self.clean_up:
-            new_status = StatusCatalog.statusparser(self.status_obj.status_chain)
-            gameStateObj.add_status(new_status)
+            new_status = StatusCatalog.statusparser(self.status_obj.status_chain, gameStateObj)
             self.actions.append(AddStatus(self.unit, new_status))
 
         # TODO. Replace this with custom event script on remove
@@ -1576,8 +1584,7 @@ class FinalizeAutomaticSkill(Action):
         self.current_charge = status.automatic.current_charge
 
     def do(self, gameStateObj):
-        self.s = StatusCatalog.statusparser(self.status.automatic.status)
-        gameStateObj.add_status(self.s)
+        self.s = StatusCatalog.statusparser(self.status.automatic.status, gameStateObj)
         AddStatus(self.unit, self.s).do(gameStateObj)
         self.status.automatic.reset_charge()
 

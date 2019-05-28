@@ -24,7 +24,7 @@ DESTRUCTION_ANIM_TIME = 500
 
 # === GENERIC MAP OBJECT
 class MapObject(object):
-    def __init__(self, mapfilename, tilefilename, levelfolder, weather=None):
+    def __init__(self, gameStateObj, mapfilename, tilefilename, levelfolder, weather=None):
         colorkey, self.width, self.height = self.build_color_key(Engine.image_load(tilefilename, convert=True))
 
         self._tiles = {} # The mechanical information about the tile organized by position
@@ -36,7 +36,7 @@ class MapObject(object):
 
         self.levelfolder = levelfolder
         self.mapfilename = mapfilename
-        self.parse_tile_info(self.levelfolder + '/' + 'tileInfo.txt')
+        self.parse_tile_info(self.levelfolder + '/' + 'tileInfo.txt', gameStateObj)
 
         self.weather = []
         if weather:
@@ -247,7 +247,7 @@ class MapObject(object):
             logger.error('Could not find tile matching id: %s', tile_id)
             return None # Couldn't find any that match id
         
-    def parse_tile_info(self, tile_info_location):
+    def parse_tile_info(self, tile_info_location, gameStateObj):
         logger.info('Parsing tile info at %s', tile_info_location)
         self.reset_tile_info()
 
@@ -269,9 +269,9 @@ class MapObject(object):
                 y2 = int(coord[3])
                 for i in range(x1, x2+1):
                     for j in range(y1, y2+1):
-                        self.parse_tile_line((i, j), line[1].split(';'))
+                        self.parse_tile_line((i, j), line[1].split(';'), gameStateObj)
             else:
-                self.parse_tile_line((x1, y1), line[1].split(';'))
+                self.parse_tile_line((x1, y1), line[1].split(';'), gameStateObj)
 
     def parse_tile_line(self, coord, property_list, gameStateObj):
         if property_list:
@@ -289,8 +289,7 @@ class MapObject(object):
             # Turn these string of ids into a list of status objects
             status_list = []
             for status in property_value.split(','):
-                status_obj = StatusCatalog.statusparser(status)
-                gameStateObj.add_status(status_obj)
+                status_obj = StatusCatalog.statusparser(status, gameStateObj)
                 status_list.append(status_obj)
             property_value = status_list
         elif property_name == 'Weapon':
@@ -483,8 +482,7 @@ class MapObject(object):
     def add_global_status(self, s_id, gameStateObj):
         if any(status.id == s_id for status in self.status_effects):
             return  # No stacking at all of global statuses
-        status_obj = StatusCatalog.statusparser(s_id)
-        gameStateObj.add_status(status_obj)
+        status_obj = StatusCatalog.statusparser(s_id, gameStateObj)
         self.status_effects.add(status_obj)
         for unit in gameStateObj.allunits:
             if unit.position:

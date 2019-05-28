@@ -41,7 +41,7 @@ class StaticRandom(object):
         
 r = StaticRandom()
 
-def set_seed(self, seed):
+def set_seed(seed):
     r.set_seed(seed)
 
 def get_combat():

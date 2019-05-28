@@ -642,8 +642,7 @@ class StartPreloadedLevels(StartLoad):
             # Get skills
             for skill_id in unit_dict['skills']:
                 if skill_id not in (s.id for s in unit.status_effects):
-                    skill = StatusCatalog.statusparser(skill_id)
-                    gameStateObj.add_status(skill)
+                    skill = StatusCatalog.statusparser(skill_id, gameStateObj)
                     if skill:
                         Action.AddStatus(unit, skill).do(gameStateObj)
             unit.change_hp(1000)  # reset currenthp

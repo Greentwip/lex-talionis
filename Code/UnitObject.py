@@ -1916,14 +1916,14 @@ class UnitObject(object):
 
     def acquire_tile_status(self, gameStateObj, force=False):
         if self.position and (force or 'flying' not in self.status_bundle):
-            for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
-                if status not in self.status_effects:
-                    Action.do(Action.AddStatus(self, status), gameStateObj)
+            for status_obj in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
+                if status_obj not in self.status_effects:
+                    Action.do(Action.AddStatus(self, status_obj), gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):
         if self.position and (force or 'flying' not in self.status_bundle):
-            for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
-                Action.do(Action.RemoveStatus(self, status), gameStateObj)
+            for status_obj in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
+                Action.do(Action.RemoveStatus(self, status_obj.id), gameStateObj)
 
     def unrescue(self, gameStateObj):
         self.TRV = 0
@@ -2000,8 +2000,7 @@ class UnitObject(object):
         # There may be a new item equipped
         if was_mainweapon and self.getMainWeapon():
             for status_on_equip in self.getMainWeapon().status_on_equip:
-                new_status = StatusCatalog.statusparser(status_on_equip)
-                gameStateObj.add_status(new_status)
+                new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
                 Action.do(Action.AddStatus(self, new_status), gameStateObj)
 
     # This does the adding and subtracting of statuses
@@ -2019,8 +2018,7 @@ class UnitObject(object):
                 # Now add yours
                 if self.canWield(item):
                     for status_on_equip in item.status_on_equip:
-                        new_status = StatusCatalog.statusparser(status_on_equip)
-                        gameStateObj.add_status(new_status)
+                        new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
                         Action.do(Action.AddStatus(self, new_status), gameStateObj)
         else:
             self.items.insert(index, item)
@@ -2032,8 +2030,7 @@ class UnitObject(object):
                         status.passive.apply_mod(item)
                 # Item statuses      
                 for status_on_hold in item.status_on_hold:
-                    new_status = StatusCatalog.statusparser(status_on_hold)
-                    gameStateObj.add_status(new_status)
+                    new_status = StatusCatalog.statusparser(status_on_hold, gameStateObj)
                     Action.do(Action.AddStatus(self, new_status), gameStateObj)
                 if self.getMainWeapon() == item: # If new mainweapon...
                     # You unequipped a different item, so remove its status.
@@ -2043,8 +2040,7 @@ class UnitObject(object):
                     # Now add yours
                     if self.canWield(item):
                         for status_on_equip in item.status_on_equip:
-                            new_status = StatusCatalog.statusparser(status_on_equip)
-                            gameStateObj.add_status(new_status)
+                            new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
                             Action.do(Action.AddStatus(self, new_status), gameStateObj)
 
     def die(self, gameStateObj, event=False):

@@ -13,12 +13,9 @@ v0.9.0
 - Need to play through Desert Chapter, checking for:
     - Drake is permanently Hexed? Carried over from ending a previous chapter next to a Hex Mage 
     - Extra Skill (+9) somehow
-    - Character lost miracle status? (Something's fucky with the way tile statuses work)
     - Make turnwheel gif manually
-- Add "having 2+ parties" ability to the Wiki.
-- Set random seed on New Game
 - Check that victory screen correctly display MVP
-- Test Current Party to Properties of Level Editor
+- Test Current Party to Properties of Level Editor -- just make sure it actually propagates its value correctly to the overview.txt file
 - Test LEVEL EDITOR!
 - Test palette swap for animations
 - Test FE GBA to LT map sprite converter with all four teams

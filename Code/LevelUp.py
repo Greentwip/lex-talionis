@@ -171,8 +171,7 @@ class GainExpState(StateMachine.State):
                             gameStateObj.cursor.currentSelectedUnit = self.unit
                             gameStateObj.stateMachine.changeState('feat_choice')
                         else:
-                            skill = StatusCatalog.statusparser(class_skill)
-                            gameStateObj.add_status(skill)
+                            skill = StatusCatalog.statusparser(class_skill, gameStateObj)
                             # If we don't already have this skill
                             if skill.stack or skill.id not in (s.id for s in self.unit.status_effects):
                                 Action.do(Action.AddStatus(self.unit, skill), gameStateObj)
