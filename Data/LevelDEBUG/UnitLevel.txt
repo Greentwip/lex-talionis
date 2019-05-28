@@ -17,21 +17,17 @@
 # ai refers to what kind of AI the unit should possess.
 #
 # --------------------------------------------
-#load_player_characters
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Myrmidon;10;Rusted Sword;3,17;None;Resistance
-enemy;0;0;Knight;1;Iron Lance;2,13;Attack;Resistance
-enemy;0;0;Knight;1;Iron Lance;7,17;Attack;Resistance
-# Shaman by Armory
-#enemy;0;0;Shaman;1;Flux;3,13;None;Resistance
-#enemy;0;0;Dracoknight;4;Iron Lance,Vulnerary,Delphi Shield;6,1;Attack;Resistance
-#player;0;0;Oracle;1;Warp;16,16;None;Resistance
-#player;0;0;Renae;16,17;None
+#player;0;0;Myrmidon;10;Rusted Sword;3,17;None;Resistance
+player;0;0;Theo;3,17;None
+player;0;0;Renae;1,18;None
 # Enemies
-# =======
 # Generics
+enemy;0;0;Mage;5;Fire;6,16;None;Resistance
+#enemy;0;0;Knight;1;Iron Lance;2,13;Attack;Resistance
+#enemy;0;0;Knight;1;Iron Lance;7,17;Attack;Resistance
 # === Reinforcements ===
 # Player Characters
 # Enemies
