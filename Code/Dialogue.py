@@ -930,10 +930,12 @@ class Dialogue_Scene(object):
             else:
                 Action.do(Action.ChangeLevelConstant(line[1], 1), gameStateObj)
         elif line[0] == 'inc_level_constant':
+            print(gameStateObj.level_constants)
             if len(line) > 2:
                 Action.do(Action.ChangeLevelConstant(line[1], gameStateObj.level_constants[line[1]] + int(eval(line[2]))), gameStateObj)
             else:
                 Action.do(Action.ChangeLevelConstant(line[1], gameStateObj.level_constants[line[1]] + 1), gameStateObj)
+            print(gameStateObj.level_constants)
         # should be remembered for all game
         elif line[0] == 'set_game_constant':
             if len(line) > 2:

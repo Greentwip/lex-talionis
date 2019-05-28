@@ -22,8 +22,8 @@ faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Myrmidon;10;Rusted Sword;3,17;None;Resistance
-enemy;0;0;Knight;1;Iron Lance;2,13;None;Resistance
-enemy;0;0;Knight;1;Iron Lance;7,17;None;Resistance
+enemy;0;0;Knight;1;Iron Lance;2,13;Attack;Resistance
+enemy;0;0;Knight;1;Iron Lance;7,17;Attack;Resistance
 # Shaman by Armory
 #enemy;0;0;Shaman;1;Flux;3,13;None;Resistance
 #enemy;0;0;Dracoknight;4;Iron Lance,Vulnerary,Delphi Shield;6,1;Attack;Resistance

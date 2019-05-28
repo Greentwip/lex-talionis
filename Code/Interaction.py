@@ -1550,8 +1550,10 @@ class MapCombat(Combat):
                 if isinstance(self.p2, UnitObject.UnitObject):
                     if self.p1.checkIfEnemy(self.p2):
                         Action.do(Action.Message("%s attacked %s" % (self.p1.name, self.p2.name)), gameStateObj)
-                    else:
+                    elif self.p1 is not self.p2:
                         Action.do(Action.Message("%s helped %s" % (self.p1.name, self.p2.name)), gameStateObj)
+                    else:
+                        Action.do(Action.Message("%s used %s" % (self.p1.name, self.item)), gameStateObj)
                 else:
                     Action.do(Action.Message("%s attacked a tile" % self.p1.name), gameStateObj)
             else:

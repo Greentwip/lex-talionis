@@ -1918,7 +1918,6 @@ class UnitObject(object):
         if self.position and (force or 'flying' not in self.status_bundle):
             for status in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
                 if status not in self.status_effects:
-                    gameStateObj.add_status(status)
                     Action.do(Action.AddStatus(self, status), gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):

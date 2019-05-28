@@ -273,23 +273,25 @@ class MapObject(object):
             else:
                 self.parse_tile_line((x1, y1), line[1].split(';'))
 
-    def parse_tile_line(self, coord, property_list):
+    def parse_tile_line(self, coord, property_list, gameStateObj):
         if property_list:
             for tile_property in property_list:
-                self.add_tile_property(coord, tile_property.split('='))
+                self.add_tile_property(coord, tile_property.split('='), gameStateObj)
         else:
             # Empty dictionary
             for tile_property in self.tile_info_dict[coord].items():
                 self.remove_tile_property(coord, tile_property)
 
-    def add_tile_property(self, coord, tile_property):
+    def add_tile_property(self, coord, tile_property, gameStateObj):
         property_name, property_value = tile_property
         # Handle special cases...
         if property_name == 'Status': # Treasure does not need to be split. It is split by the itemparser function itself.
             # Turn these string of ids into a list of status objects
             status_list = []
             for status in property_value.split(','):
-                status_list.append(StatusCatalog.statusparser(status))
+                status_obj = StatusCatalog.statusparser(status)
+                gameStateObj.add_status(status_obj)
+                status_list.append(status_obj)
             property_value = status_list
         elif property_name == 'Weapon':
             # For now we're ignoring saving Stationary Weapons, which means they can't have uses...

@@ -220,11 +220,15 @@ class GameStateObj(object):
                 status.aura.child_status = self.get_status_from_uid(status.aura.child_uid)
         # Unit Items and Statuses
         for idx, unit in enumerate(self.allunits):
+            print(unit.name, unit.klass, unit.position)
             for item_uid in load_info['allunits'][idx]['items']:
                 unit.items.append(self.get_item_from_uid(item_uid))
             for status_uid in load_info['allunits'][idx]['status_effects']:
+                print(status_uid)
                 status = self.get_status_from_uid(status_uid)
+                print(status)
                 StatusCatalog.attach_to_unit(status, unit)
+            print(unit.status_effects)
 
         # Statuses
         # for index, info in enumerate(load_info['allunits']):
@@ -263,6 +267,8 @@ class GameStateObj(object):
                     for status in unit.status_effects:
                         if status.aura:
                             Aura.update_grid_manager_on_load(unit, status, self)
+
+            self.boundary_manager.reset(self)
 
         # Support
         if cf.CONSTANTS['support']:

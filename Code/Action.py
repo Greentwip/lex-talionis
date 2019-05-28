@@ -80,7 +80,7 @@ class Action(object):
     @classmethod
     def deserialize(cls, ser_dict, gameStateObj):
         self = cls.__new__(cls)
-        print('Deserialize: %s' % cls.__name__)
+        # print('Deserialize: %s' % cls.__name__)
         for name, value in ser_dict.items():
             setattr(self, name, self.deserialize_obj(value, gameStateObj))
         return self
@@ -986,7 +986,7 @@ class ChangeLevelConstant(Action):
         self.new_value = new_value
 
     def do(self, gameStateObj):
-        self.present = self.constant in gameStateObj.level_constants
+        self.already_present = self.constant in gameStateObj.level_constants
         self.old_value = gameStateObj.level_constants[self.constant]   
         gameStateObj.level_constants[self.constant] = self.new_value
 
@@ -1191,6 +1191,7 @@ class AddStatus(Action):
         if self.status_obj.uid not in gameStateObj.allstatuses:
             print('Major problem!')
             print('%s not found in allstatuses!' % self.status_obj)
+            logger.error("%s not found in allstatuses", self.status_obj)
             
         logger.info('Adding Status %s to %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
 
@@ -1659,7 +1660,7 @@ class AreaReplaceTiles(Action):
 
     def reverse(self, gameStateObj):
         for position, tile_id in self.old_ids.items():
-            gameStateObj.map.replace_tiles(position, tile_id, gameStateObj.grid_manager)
+            gameStateObj.map.replace_tile(position, tile_id, gameStateObj.grid_manager)
 
 class LayerTileSprite(Action):
     run_on_load = True
@@ -1762,10 +1763,10 @@ class AddTileProperty(Action):
         self.tile_property = tile_property
 
     def do(self, gameStateObj):
-        gameStateObj.map.add_tile_property(self.coord, self.tile_property)
+        gameStateObj.map.add_tile_property(self.coord, self.tile_property, gameStateObj)
 
     def reverse(self, gameStateObj):
-        gameStateObj.map.remove_tile_property(self.coord, self.tile_property)
+        gameStateObj.map.remove_tile_property(self.coord, self.tile_property, gameStateObj)
 
 class RemoveTileProperty(Action):
     run_on_load = True
@@ -1778,7 +1779,7 @@ class RemoveTileProperty(Action):
         gameStateObj.map.remove_tile_property(self.coord, self.tile_property)
 
     def reverse(self, gameStateObj):
-        gameStateObj.map.add_tile_property(self.coord, self.tile_property)
+        gameStateObj.map.add_tile_property(self.coord, self.tile_property, gameStateObj)
 
 class AddWeather(Action):
     run_on_load = True

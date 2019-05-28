@@ -11,4 +11,6 @@ win_condition;Reach turn 6
 loss_condition;Sam dies
 player_phase_music;Brave Story 61
 enemy_phase_music;In the Midst
+player_battle_music;Fire Treasure
+enemy_battle_music;Dragon Boy
 weather;Fire

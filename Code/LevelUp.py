@@ -327,6 +327,11 @@ class LevelUpScreen(object):
             self.unit_scroll_offset = max(0, self.unit_scroll_offset - 10)
             self.screen_scroll_offset = max(0, self.screen_scroll_offset - 20)
             if self.unit_scroll_offset == 0 and self.screen_scroll_offset == 0:
+                self.state = 'init_wait'
+                self.state_time = current_time
+
+        elif self.state == 'init_wait':
+            if current_time - self.state_time > 300:
                 if self.level1 == self.level2:  # Don't bother with level up spark
                     self.state = 'get_next_spark'
                 else:
@@ -358,7 +363,8 @@ class LevelUpScreen(object):
                     self.uparrow, (pos[0] + 45, pos[1] - 11), (10, 1), animation_speed=32,
                     ignore_map=True, hold=True)
                 self.arrow_animations.append(arrow_animation)
-                self.animations.append(self.make_spark(pos))
+                spark_pos = pos[0] + 14, pos[1] + 26
+                self.animations.append(self.make_spark(spark_pos))
                 increase = Utility.clamp(self.levelup_list[self.current_spark], 1, 7)
                 row = Engine.subsurface(self.numbers, (0, (increase - 1)*24, 10*28, 24))
                 number_animation = CustomObjects.Animation(
@@ -389,7 +395,7 @@ class LevelUpScreen(object):
         long_name = ClassData.class_dict[self.unit.klass]['long_name']
         GC.FONT['text_white'].blit(long_name, sprite, (12, 3))
         GC.FONT['text_yellow'].blit(cf.WORDS['Lv'], sprite, (self.width//2 + 12, 3))
-        if self.state in ('scroll_in'):
+        if self.state in ('scroll_in', 'init_wait'):
             level = str(self.level1)
         else:
             level = str(self.level2)
@@ -406,7 +412,7 @@ class LevelUpScreen(object):
                     new_underline_surf = Engine.subsurface(new_underline_surf, rect)
                     self.underline_offset = max(0, self.underline_offset - 6)
                     pos = self.get_position(idx)
-                    pos = (pos[0] + self.underline_offset//2 + 2, pos[1] + 10)
+                    pos = (pos[0] + self.underline_offset//2 + 1, pos[1] + 10)
                 else:
                     pos = self.get_position(idx)
                     pos = (pos[0] + 4, pos[1] + 11)

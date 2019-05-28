@@ -37,6 +37,7 @@ elif;self.name == '3'
 	change_tile_sprite;10,4;floor
 	replace_tile;10,3;9
 	switch_pulled_banner
+end
 # Check if we've pulled all three switches
 if;gameStateObj.level_constants['switches'] >= 3
 	# Open Gates

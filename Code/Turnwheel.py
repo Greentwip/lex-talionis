@@ -9,6 +9,9 @@ except ImportError:
     from . import InputManager, StateMachine, MenuFunctions, BattleAnimation
     from . import Background, Action, Engine, Image_Modification, Weather, Dialogue
 
+import logging
+logger = logging.getLogger(__name__)
+
 class ActionLog(object):
     def __init__(self):
         self.actions = []
@@ -26,12 +29,12 @@ class ActionLog(object):
         self.unique_moves = []
 
     def append(self, action):
-        print("Add Action %d: %s" % (self.action_index + 1, action.__class__.__name__))
+        logger.info("Add Action %d: %s", self.action_index + 1, action.__class__.__name__)
         self.actions.append(action)
         self.action_index += 1
 
     def remove(self, action):
-        print("Remove Action %d: %s" % (self.action_index, action.__class__.__name__))
+        logger.info("Remove Action %d: %s", self.action_index, action.__class__.__name__)
         self.actions.remove(action)
         self.action_index -= 1
 

@@ -594,8 +594,9 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
     if gameStateObj.allitems:
         ItemMethods.ItemObject.next_uid = max(gameStateObj.allitems.keys()) + 1
     else:
-        ItemMethods.ItemObject.next_uid = 1
+        ItemMethods.ItemObject.next_uid = 100
     if gameStateObj.allstatuses:
         StatusCatalog.Status.next_uid = max(gameStateObj.allstatuses.keys()) + 1
     else:
-        StatusCatalog.Status.next_uid = 1
+        StatusCatalog.Status.next_uid = 100
+    print(StatusCatalog.Status.next_uid)
