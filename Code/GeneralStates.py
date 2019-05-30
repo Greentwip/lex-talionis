@@ -1808,12 +1808,13 @@ class DialogueState(StateMachine.State):
             logger.info('Player wins!')
             # Run the outro_script
             if not gameStateObj.statedict['outroScriptDone'] and os.path.exists(metaDataObj['outroScript']):
+                # Update statistics first
+                gameStateObj.update_statistics(metaDataObj)
                 outro_script = Dialogue.Dialogue_Scene(metaDataObj['outroScript'])
                 gameStateObj.message.append(outro_script)
                 gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.statedict['outroScriptDone'] = True
             else:
-                gameStateObj.update_statistics(metaDataObj)
                 gameStateObj.increment_supports()
                 gameStateObj.clean_up()
                 if not cf.CONSTANTS['overworld'] and isinstance(gameStateObj.game_constants['level'], int):

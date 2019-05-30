@@ -241,3 +241,25 @@
 	</units>
 </level>
 
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,390;Supports,1</game_constants>
+	<convoy>Iron Sword 45</convoy>
+	<units>
+		<unit name="Theo">
+			<level>4</level>
+			<exp>36</exp>
+			<items>Iron Lance 43,Vulnerary 3</items>
+			<wexp>0,18,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Renae">
+			<level>4</level>
+			<exp>14</exp>
+			<items>Iron Sword 43,Vulnerary 3</items>
+			<wexp>17,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+
