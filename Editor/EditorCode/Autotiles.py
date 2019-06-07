@@ -276,8 +276,8 @@ class AutotileMaker(object):
                         self.map_sprite.putpixel((x*WIDTH + i, y*HEIGHT + j), COLORKEY)
             print(len(self.now_an_autotile))
             self.map_sprite.save(self.dir_out + '/MapSprite.png')
-            if not os.path.exists(self.dir_out):
-                os.mkdir(self.dir_out)
+            if not os.path.exists(self.dir_out + '/Autotiles'):
+                os.mkdir(self.dir_out + '/Autotiles')
             for idx, n in enumerate(self.autotile_frames):
                 n.save(self.dir_out + '/Autotiles/autotile' + str(idx) + '.png')
             print('Done!')
