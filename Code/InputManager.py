@@ -122,7 +122,9 @@ class InputManager(object):
                         # If the state changed
                         if pushed != self.joys_pressed[button]:
                             self.joys_pressed[button] = pushed
-                            if not pushed:
+                            if pushed:
+                                self.key_down_events.append(button)
+                            else:
                                 self.key_up_events.append(button)
 
                     # if the button is configured to a hat direction... 
@@ -135,7 +137,9 @@ class InputManager(object):
                         pushed = amount == config[3]
                         if pushed != self.joys_pressed[button]:
                             self.joys_pressed[button] = pushed
-                            if not pushed:
+                            if pushed:
+                                self.key_down_events.append(button)
+                            else:
                                 self.key_up_events.append(button)
 
     def print_key_pressed(self):

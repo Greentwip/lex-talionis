@@ -15,6 +15,7 @@ v0.9.0
     - Extra Skill (+9) somehow
 - Test LEVEL EDITOR!
 - Test palette swap for animations
+- Test take and drop (infinite movement?)
 
 v0.9.1
 - Fix music fade in/out -- rewrite music thread (loops, battle music, sections of music)
@@ -52,6 +53,7 @@ Later on:
 - Jealousy System??
 - Repair Market?
 - New Game + ? (difficulty modes only accessible after beating a difficulty?)
+- Automatic Updater
 
 
 FOR FUTURE UPDATES TO THE ENGINE:
