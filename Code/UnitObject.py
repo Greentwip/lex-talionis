@@ -579,21 +579,21 @@ class UnitObject(object):
         surf.blit(gameStateObj.info_surf, topleft)
 
 # === TARGETING AND OTHER UTILITY FUNCTIONS ===================================
-    def leave(self, gameStateObj, serializing=False):
+    def leave(self, gameStateObj, test=False):
         if self.position:
             logger.debug('Leave %s %s %s', self, self.name, self.position)
             if gameStateObj.cursor.currentHoveredUnit is self:
                 gameStateObj.cursor.remove_unit_display()
-            if not serializing:
+            if not test:
                 gameStateObj.grid_manager.set_unit_node(self.position, None)
                 gameStateObj.boundary_manager.leave(self, gameStateObj)
             self.remove_tile_status(gameStateObj)
         Aura.leave(self, gameStateObj)
 
-    def arrive(self, gameStateObj, serializing=False):
+    def arrive(self, gameStateObj, test=False):
         if self.position:
             logger.debug('Arrive %s %s %s', self, self.name, self.position)
-            if not serializing:
+            if not test:
                 gameStateObj.grid_manager.set_unit_node(self.position, self)
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
             self.acquire_tile_status(gameStateObj)

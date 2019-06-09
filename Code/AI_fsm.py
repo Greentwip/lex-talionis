@@ -231,7 +231,7 @@ class AI(object):
                 self.state = 'Init'
                 return True
         if QUICK_MOVE:
-            self.quick_move(orig_pos, gameStateObj, test=True) # Return back to original position so that the in-between frames aren't weird
+            self.quick_move(orig_pos, gameStateObj) # Return back to original position so that the in-between frames aren't weird
         return False
 
     def act(self, gameStateObj):
@@ -304,10 +304,10 @@ class AI(object):
                         return # Didn't actually reach ThiefEscape point
                     self.unit.escape(gameStateObj)
                 
-    def quick_move(self, move, gameStateObj, test=False):
-        self.unit.leave(gameStateObj, serializing=test)
+    def quick_move(self, move, gameStateObj):
+        self.unit.leave(gameStateObj, test=True)
         self.unit.position = move
-        self.unit.arrive(gameStateObj, serializing=test)
+        self.unit.arrive(gameStateObj, test=True)
 
     def ai_group_ping(self, gameStateObj):
         # Notify others in my group that I am onto somebody...
@@ -486,7 +486,7 @@ class Primary_AI(object):
         self.possible_moves = []
         self.move_index = 0
         if not ATTACK_MODE and QUICK_MOVE and self.valid_moves:
-            self.quick_move(self.valid_moves[self.move_index], gameStateObj, test=True)
+            self.quick_move(self.valid_moves[self.move_index], gameStateObj)
 
         self.target_to_interact_with = None
         self.position_to_move_to = None
@@ -553,10 +553,10 @@ class Primary_AI(object):
         else:
             return []
 
-    def quick_move(self, move, gameStateObj, test=False):
-        self.unit.leave(gameStateObj, serializing=test)
+    def quick_move(self, move, gameStateObj):
+        self.unit.leave(gameStateObj, test=True)
         self.unit.position = move
-        self.unit.arrive(gameStateObj, serializing=test)
+        self.unit.arrive(gameStateObj, test=True)
 
     def run(self, gameStateObj):
         if ATTACK_MODE:
@@ -567,7 +567,7 @@ class Primary_AI(object):
         # Iterated through every move?
         if self.move_index > len(self.valid_moves) - 1:
             if QUICK_MOVE:
-                self.quick_move(self.orig_pos, gameStateObj, test=True)
+                self.quick_move(self.orig_pos, gameStateObj)
             if self.orig_item and EQUIP:
                 self.unit.equip(self.orig_item, gameStateObj)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
@@ -577,7 +577,7 @@ class Primary_AI(object):
             self.move_index += 1
             # Quick move at this moment so valid_targets can include self -- normal time the quick move is used
             if QUICK_MOVE and self.move_index < len(self.valid_moves):
-                self.quick_move(self.valid_moves[self.move_index], gameStateObj, test=True)
+                self.quick_move(self.valid_moves[self.move_index], gameStateObj)
             self.get_valid_targets(gameStateObj)
         # Check if find new targets using a different move
         elif self.target_index > len(self.valid_targets) - 1:
@@ -592,7 +592,7 @@ class Primary_AI(object):
             target = self.valid_targets[self.target_index]
             item = self.items[self.item_index]
             if QUICK_MOVE and self.unit.position != move:
-                self.quick_move(move, gameStateObj, test=True)
+                self.quick_move(move, gameStateObj)
             self.determine_utility(move, target, item, gameStateObj)
             self.target_index += 1
 
@@ -603,7 +603,7 @@ class Primary_AI(object):
         # logger.debug('%s %s %s %s %s %s', self.move_index, self.target_index, self.item_index, self.possible_moves, self.valid_targets, self.items)
         if self.item_index >= len(self.items):
             if QUICK_MOVE:
-                self.quick_move(self.orig_pos, gameStateObj, test=True)
+                self.quick_move(self.orig_pos, gameStateObj)
             if self.orig_item and EQUIP:
                 self.unit.equip(self.orig_item, gameStateObj)
             return (True, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
@@ -632,7 +632,7 @@ class Primary_AI(object):
             else:   
                 move = self.possible_moves[self.move_index]
             if QUICK_MOVE and self.unit.position != move:
-                self.quick_move(move, gameStateObj, test=True)
+                self.quick_move(move, gameStateObj)
             # logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
             # Only if we have line of sight, since we get every possible position to strike from
             # Determine whether we need line of sight

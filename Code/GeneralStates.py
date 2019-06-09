@@ -1165,7 +1165,12 @@ class SpellState(StateMachine.State):
         # If there are valid targets for this weapon
         if valid_targets:
             attacker.validSpellTargets = CustomObjects.MapSelectHelper(valid_targets)
-            closest_position = attacker.validSpellTargets.get_closest(attacker.position)
+            if spell.heal:
+                units = sorted([gameStateObj.grid_manager.get_unit_node(pos) for pos in valid_targets], 
+                               key=lambda unit: unit.currenthp)
+                closest_position = units[0].position
+            else:
+                closest_position = attacker.validSpellTargets.get_closest(attacker.position)
             gameStateObj.cursor.setPosition(closest_position, gameStateObj)
         else: # syntactic sugar
             logger.error('SpellState has no valid targets! Mistakes were made.')

@@ -15,7 +15,6 @@ v0.9.0
     - Extra Skill (+9) somehow
 - Test LEVEL EDITOR!
 - Test palette swap for animations
-- Test FE GBA to LT map sprite converter with all four teams
 
 v0.9.1
 - Fix music fade in/out -- rewrite music thread (loops, battle music, sections of music)

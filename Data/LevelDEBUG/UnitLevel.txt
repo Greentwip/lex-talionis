@@ -23,6 +23,7 @@ faction;Resistance;Bandit;Resistance;Nope
 #player;0;0;Myrmidon;10;Rusted Sword;3,17;None;Resistance
 player;0;0;Theo;3,17;None
 player;0;0;Renae;1,18;None
+player;0;0;Prim;3,16;None
 # Enemies
 # Generics
 enemy;0;0;Mage;5;Fire;6,16;None;Resistance

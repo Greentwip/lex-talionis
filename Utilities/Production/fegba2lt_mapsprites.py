@@ -1,5 +1,5 @@
 # Converts FERepo Map Sprites to Lex Talionis Format
-import os, glob
+import glob, difflib
 from PIL import Image
 
 gray_dict = {(88, 72, 120): (64, 64, 64),
@@ -68,12 +68,16 @@ images = glob.glob('*.png')
 # Pair images
 images_dict = {}
 for image in images:
-    if 'Moving' in image:
-        standing_name = image.replace('Moving', 'Standing')
-        if not os.path.exists(standing_name):
+    if 'moving' in image.lower():
+        standing_name = image.lower().replace('moving', 'standing')
+        match = difflib.get_close_matches(standing_name, images, 1)
+        if not match:
+            print("Couldn't find a match for %s!" % image)
             continue
-        shared_name = image[:image.index('Moving')]
-        images_dict[shared_name] = (standing_name, image)
+        else:
+            match = match[0]
+        shared_name = image.lower().replace('moving', '').replace('.png', '')
+        images_dict[shared_name] = (match, image)
 
 for name, pair in images_dict.items():
     standing, moving = pair
@@ -149,8 +153,7 @@ for name, pair in images_dict.items():
     gray_passive_sprites = color_convert(passive_sprites, gray_dict)
     new_s.paste(gray_passive_sprites, (0, height//3))
 
-    print("Rename %s:" % name)
-    new_name = raw_input("> ")
+    new_name = name
 
     new_s.save("player" + new_name + ".png")
     new_m.save("player" + new_name + "_move.png")

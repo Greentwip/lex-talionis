@@ -7,10 +7,10 @@ Joel;Water
 Nia;Wind
 Drake;Earth
 Althea;Light
-Renae;Earth
+Renae;Light
 Theo;Dark
 Sam;Dark
-Eliza;Light
+Eliza;Earth
 Coyote;Wind
 Kayla;Fire
 #
