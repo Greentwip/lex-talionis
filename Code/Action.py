@@ -400,15 +400,18 @@ class Drop(Action):
         self.droppee = droppee
         self.pos = pos
         self.hasTraded = self.unit.hasTraded
-        self.droppeeHasAttacked = self.droppee.hasAttacked
+        self.hasAttacked = self.unit.hasAttacked
+        self.droppee_wait_action = Wait(self.droppee)
         self.rescue_status = None
 
     def do(self, gameStateObj):
         self.droppee.position = self.pos
         self.droppee.arrive(gameStateObj)
-        self.droppee.wait(gameStateObj, script=False)
-        self.droppee.hasAttacked = True
+        # self.droppee.wait(gameStateObj, script=False)
+        self.droppee.sprite.change_state('normal')
+        self.droppee_wait_action.do(gameStateObj)
         self.unit.hasTraded = True  # Can no longer do everything
+        self.unit.hasAttacked = True  # Can no longer do everything
         if Utility.calculate_distance(self.unit.position, self.pos) == 1:
             self.droppee.sprite.set_transition('fake_in')
             self.droppee.sprite.spriteOffset = [(self.unit.position[0] - self.pos[0])*GC.TILEWIDTH,
@@ -418,17 +421,20 @@ class Drop(Action):
     def execute(self, gameStateObj):
         self.droppee.position = self.pos
         self.droppee.arrive(gameStateObj)
-        self.droppee.wait(gameStateObj, script=False)
+        # self.droppee.wait(gameStateObj, script=False)
+        self.droppee.sprite.change_state('normal')
+        self.droppee_wait_action.execute(gameStateObj)
         self.droppee.hasAttacked = True
         self.unit.hasTraded = True  # Can no longer do everything
+        self.unit.hasAttacked = True  # Can no longer do everything
         self.unit.unrescue(gameStateObj)
 
     def reverse(self, gameStateObj):
         self.unit.TRV = self.droppee.id
         self.unit.strTRV = self.droppee.name
         self.unit.hasTraded = self.hasTraded
-        self.unit.hasAttacked = False
-        self.droppee.hasAttacked = self.droppeeHasAttacked
+        self.unit.hasAttacked = self.hasAttacked
+        self.droppee_wait_action.reverse(gameStateObj)
         self.droppee.position = None
         self.droppee.leave(gameStateObj)
         if 'savior' not in self.unit.status_bundle:

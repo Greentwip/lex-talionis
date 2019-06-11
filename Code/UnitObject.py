@@ -891,7 +891,7 @@ class UnitObject(object):
 # === TILE ALGORITHMS ===
     # Kind of a wrapper around the recursive algorithm for finding movement
     def getValidMoves(self, gameStateObj, force=False):
-        if not force and self.hasMoved and (not self.has_canto() or self.finished): # No Valid moves once moved
+        if not force and self.hasMoved and (not self.has_canto() or self.isDone()): # No Valid moves once moved
             return set()
         if not self.position:  # Not sure how this is possible...
             return set()

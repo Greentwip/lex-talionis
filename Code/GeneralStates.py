@@ -200,7 +200,7 @@ class OptionsMenuState(StateMachine.State):
                 else:  # If casual mode
                     options.append(cf.WORDS['Save'])
                     info_desc.append(cf.WORDS['Save_desc'])
-            if not gameStateObj.tutorial_mode or all(unit.finished for unit in gameStateObj.allunits if unit.team == 'player'):
+            if not gameStateObj.tutorial_mode or all(unit.isDone() for unit in gameStateObj.allunits if unit.team == 'player'):
                 options.append(cf.WORDS['End'])
                 info_desc.append(cf.WORDS['End_desc'])
             if cf.CONSTANTS['turnwheel'] and 'Turnwheel' in gameStateObj.game_constants:
@@ -333,7 +333,7 @@ class MoveState(StateMachine.State):
         # Set moves
         # gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
         self.validMoves = cur_unit.getValidMoves(gameStateObj)
-        if not cur_unit.hasAttacked:
+        if not cur_unit.hasAttacked and not cur_unit.hasTraded:
             if cur_unit.getMainSpell():
                 cur_unit.displayExcessSpellAttacks(gameStateObj, self.validMoves)
             if cur_unit.getMainWeapon():
@@ -392,7 +392,7 @@ class MoveState(StateMachine.State):
                     GC.SOUNDDICT['Error'].play()
                 else:
                     # SOUND - Footstep sounds but no select sound
-                    if cur_unit.hasAttacked: # If we've already attacked, we're done. Move to free
+                    if cur_unit.hasAttacked or cur_unit.hasTraded:
                         cur_unit.current_move_action = Action.CantoMove(cur_unit, gameStateObj.cursor.position)
                         """gameStateObj.stateMachine.clear()
                         gameStateObj.stateMachine.changeState('free')
@@ -463,10 +463,10 @@ class MenuState(StateMachine.State):
             gameStateObj.stateMachine.changeState('free')
             return
 
-        if cur_unit.has_canto():
-            ValidMoves = cur_unit.getValidMoves(gameStateObj)
-        else:
-            ValidMoves = [cur_unit.position]
+        #if cur_unit.has_canto():
+        #    ValidMoves = cur_unit.getValidMoves(gameStateObj)
+        #else:
+        ValidMoves = [cur_unit.position]
 
         if not cur_unit.hasAttacked:
             cur_unit.sprite.change_state('menu', gameStateObj)
@@ -484,7 +484,8 @@ class MenuState(StateMachine.State):
         if cur_unit.has_canto():
             # Shows the canto moves in the menu
             # if not gameStateObj.allhighlights:
-            cur_unit.displayMoves(gameStateObj, ValidMoves)
+            CantoMoves = cur_unit.getValidMoves(gameStateObj)
+            cur_unit.displayMoves(gameStateObj, CantoMoves)
         Aura.add_aura_highlights(cur_unit, gameStateObj)
 
         # Play menu script if it exists
@@ -2442,7 +2443,7 @@ class WaitState(StateMachine.State):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
         gameStateObj.stateMachine.back()
         for unit in gameStateObj.allunits:
-            if unit.hasAttacked and not unit.finished:
+            if unit.hasAttacked and not unit.isDone():
                 unit.wait(gameStateObj)
         return 'repeat'
 

@@ -75,7 +75,7 @@ class ActionLog(object):
         current_move = None
         for action_index in range(self.first_free_action, len(self.actions)):
             action = self.actions[action_index]
-            if isinstance(action, Action.Move) or isinstance(action, Action.Teleport):
+            if type(action) == Action.Move or type(action) == Action.Teleport:
                 if current_move:
                     finalize(current_move)
                 current_move = self.Move(action.unit, action_index)
@@ -407,7 +407,7 @@ class TurnwheelDisplay(object):
         # Unit Count
         count_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
         player_units = [unit for unit in gameStateObj.allunits if unit.team == "player" and unit.position and not unit.dead]
-        unused_units = [unit for unit in player_units if not unit.finished]
+        unused_units = [unit for unit in player_units if not unit.isDone()]
         count_str = str(len(unused_units)) + "/" + str(len(player_units))
         count_size = GC.FONT['text_blue'].size(count_str)[0]
         GC.FONT['text_blue'].blit(count_str, count_bg, (24 - count_size/2, 3))

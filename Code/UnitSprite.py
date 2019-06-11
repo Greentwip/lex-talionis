@@ -375,6 +375,10 @@ class UnitSprite(object):
             self.netposition = (newPosition[0] - self.unit.position[0], newPosition[1] - self.unit.position[1])
             self.handle_net_position(self.netposition)
         elif self.state == 'selected':
+            # Doesn't hold for all mounted units -- Strategist//Mage Knight
+            #if 'Mounted' in self.unit.tags:
+            #    self.image_state = 'right'
+            #else:
             self.image_state = 'down'
 
     def update_state(self, gameStateObj):
@@ -382,7 +386,7 @@ class UnitSprite(object):
         # if self.unit == gameStateObj.cursor.currentSelectedUnit:
         #    print(self.state)
         if self.state == 'normal':
-            if self.unit.finished and not self.unit.isDying and not self.unit.isActive:
+            if self.unit.isDone() and not self.unit.isDying and not self.unit.isActive:
                 self.image_state = 'gray'
             elif gameStateObj.cursor.currentHoveredUnit == self.unit and self.unit.team == 'player' and gameStateObj.cursor.drawState:
                 self.image_state = 'active'

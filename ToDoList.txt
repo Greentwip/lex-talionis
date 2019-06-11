@@ -10,12 +10,9 @@
 - Restore (Restore)
 
 v0.9.0
-- Need to play through Desert Chapter, checking for:
-    - Drake is permanently Hexed? Carried over from ending a previous chapter next to a Hex Mage 
-    - Extra Skill (+9) somehow
+- Check that standing next to 2 Shamans, then winning the game, you do not continue to have hex.
 - Test LEVEL EDITOR!
 - Test palette swap for animations
-- Test take and drop (infinite movement?)
 
 v0.9.1
 - Fix music fade in/out -- rewrite music thread (loops, battle music, sections of music)
@@ -67,14 +64,14 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- EXTRA ---
 =============
 - Add Fake arrival to Give/Take
-- Submaps -- Double positions for units? Copied units? Not quite sure...
+- After you Take a unit, you should not be able to Give??
 - If you are on impassable terrain, take damage.
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
 - Add Awakening-style dialogue backlog...??** On R press
 - Have Music Crossfade? -- Not possible with Pygame (SDL_mixer)! only one streamed music channel at a time :(
 - Add other numbers to Level Up Numbers (6 - 7)
 - Comment many of the functions with purposes
-- Allow fully custom stat definitions
+- Allow fully custom stat definitions (and have it effect the menus)
 --- AWAKENING UI ---
 - Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
 - Transparent dude moves with arrow
