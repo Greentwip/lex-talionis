@@ -226,7 +226,7 @@ class AI(object):
             # if cf.OPTIONS['debug']: print('AI Time Taken:', Engine.get_time() - time1)
 
             if success or self.state == 'Done':
-                # print('AI Time Taken:', Engine.get_time() - self.start_time)
+                print('AI Time Taken:', Engine.get_time() - self.start_time)
                 self.did_something = success
                 self.state = 'Init'
                 return True
@@ -673,6 +673,20 @@ class Primary_AI(object):
                 self.position_to_move_to = move
                 self.item_to_use = item
                 self.max_tp = tp
+
+    # Need to test speed...
+    def nearby_enemies1(self, gameStateObj, unit, pos):
+        enemy_list = [u for u in gameStateObj.allunits if u.position and u is not unit and unit.checkIfEnemy(u)]
+        if not enemy_list:
+            return 100 # No enemies?
+        dist_list = [4 - max(4, Utility.calculate_distance(enemy.position, pos)) for enemy in enemy_list]
+        return sum(dist_list)        
+
+    # between these two...
+    def nearby_enemies2(self, gameStateObj, unit, pos):
+        positions = Utility.get_adjacent_positions(pos, rng=3)
+        dist = sum(not gameStateObj.compare_teams(unit.team, gameStateObj.grid_manager.get_team_node(pos)) for position in positions)
+        return dist
 
     def get_crit_damage(self, item, target, raw_damage, gameStateObj):
         my_crit_damage = 0
