@@ -185,16 +185,23 @@ class GameStateObj(object):
         for unit in self.allunits:
             print(unit.name, unit.event_id, unit.position)
 
+    def set_next_uids(self):
+        if self.allitems:
+            ItemMethods.ItemObject.next_uid = max(self.allitems.keys()) + 1
+        else:
+            ItemMethods.ItemObject.next_uid = 100
+        if self.allstatuses:
+            StatusCatalog.Status.next_uid = max(self.allstatuses.keys()) + 1
+        else:
+            StatusCatalog.Status.next_uid = 100
+
     def load(self, load_info):
         logger.info("Load")
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
         self.allitems = {info['uid']: ItemMethods.deserialize(info) for info in load_info['allitems']}
         self.allstatuses = {info['uid']: StatusCatalog.deserialize(info) for info in load_info['allstatuses']}
-
-        ItemMethods.ItemObject.next_uid = max(self.allitems.keys()) + 1
-        StatusCatalog.Status.next_uid = max(self.allstatuses.keys()) + 1
-
+        self.set_next_uids()
         self.factions = load_info['factions'] if 'factions' in load_info else (load_info['groups'] if 'groups' in load_info else {})
         self.allreinforcements = load_info['allreinforcements'] 
         self.prefabs = load_info['prefabs']
@@ -251,8 +258,6 @@ class GameStateObj(object):
 
         # Map
         logger.info('Creating map...')
-        logger.info('%d' % StatusCatalog.Status.next_uid)
-        logger.info('%d' % max(self.allstatuses.keys()))
         self.map = SaveLoad.create_map(self, 'Data/Level' + str(self.game_constants['level']))
         logger.info('Done creating map...')
         # Set up blitting surface

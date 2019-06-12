@@ -430,7 +430,8 @@ class MainEditor(QtGui.QMainWindow):
         self.create_dock_windows()
 
         # Whether anything has changed since the last save
-        self.modified = False
+        # For now just always modified
+        self.modified = True
 
         # === Timing ===
         self.main_timer = QtCore.QTimer()
@@ -775,7 +776,7 @@ class MainEditor(QtGui.QMainWindow):
             if ok:
                 self.current_level_name = text
             else:
-                return
+                return False
             new = True
 
         data_directory = str(QtCore.QDir.currentPath() + '/../Data')
@@ -788,7 +789,7 @@ class MainEditor(QtGui.QMainWindow):
                 if ret == QtGui.QMessageBox.Save:
                     self.clear_directory(level_directory)
                 else:
-                    return
+                    return False
             else:
                 os.mkdir(level_directory)
 
@@ -815,6 +816,7 @@ class MainEditor(QtGui.QMainWindow):
             fp.write(os.path.relpath(str(self.directory)))
 
         print('Saved Level' + self.current_level_name)
+        return True
 
     # === Create Menu ===
     def create_actions(self):
@@ -910,7 +912,7 @@ class MainEditor(QtGui.QMainWindow):
 
     def maybe_save(self):
         if self.modified:
-            ret = QtGui.QMessageBox.warning(self, "Level Editor", "The level has been modified.\n"
+            ret = QtGui.QMessageBox.warning(self, "Level Editor", "The level may have been modified.\n"
                                             "Do you want to save your changes?",
                                             QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
             if ret == QtGui.QMessageBox.Save:
@@ -935,10 +937,10 @@ class MainEditor(QtGui.QMainWindow):
     def about(self):
         QtGui.QMessageBox.about(self, "About Lex Talionis",
             "<p>This is the <b>Lex Talionis</b> Level Editor.</p>"
-            "<p>Check out https://www.github.com/rainlash/lex-talionis "
+            "<p>Check out https://gitlab.com/rainlash/lex-talionis/wikis/home "
             "for more information and helpful tutorials.</p>"
             "<p>This program has been freely distributed under the MIT License.</p>"
-            "<p>Copyright 2014-2018 rainlash.</p>")
+            "<p>Copyright 2014-2019 rainlash.</p>")
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

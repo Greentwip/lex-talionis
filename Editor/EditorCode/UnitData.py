@@ -325,7 +325,11 @@ class UnitData(object):
         stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
 
         # Handle items
-        items = [ItemMethods.itemparser(item) for item in item_line.split(',') if item]
+        if item_line:
+            items = [ItemMethods.itemparser(item) for item in item_line.split(',') if item]
+        else:
+            items = []
+        items = [item for item in items if item]  # Remove Nones
 
         # Handle required wexp
         wexp = class_dict[klass]['wexp_gain'][:]

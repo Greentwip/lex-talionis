@@ -348,3 +348,25 @@
 	</units>
 </level>
 
+<level name="1">
+	<mode>Hard</mode>
+	<game_constants>_random_seed,220;current_turnwheel_uses,-1;level,1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Sam">
+			<level>7</level>
+			<exp>0</exp>
+			<items>Shine 20,Mend 15,Fortune 10</items>
+			<wexp>0,0,0,0,31,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Drake">
+			<level>5</level>
+			<exp>0</exp>
+			<items>Iron Sword 45,Iron Lance 45</items>
+			<wexp>11,16,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+

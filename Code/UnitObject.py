@@ -134,8 +134,8 @@ class UnitObject(object):
         self.generic_flag = False
         try:
             # Ex: HectorPortrait
-            self.bigportrait = Engine.subsurface(GC.UNITDICT[self.id + 'Portrait'], (0, 0, 96, 80))
-            self.portrait = Engine.subsurface(GC.UNITDICT[self.id + 'Portrait'], (96, 16, 32, 32))
+            self.bigportrait = Engine.subsurface(GC.UNITDICT[str(self.id) + 'Portrait'], (0, 0, 96, 80))
+            self.portrait = Engine.subsurface(GC.UNITDICT[str(self.id) + 'Portrait'], (96, 16, 32, 32))
         except KeyError:
             self.generic_flag = True
             self.bigportrait = GC.UNITDICT['Generic_Portrait_' + self.klass]

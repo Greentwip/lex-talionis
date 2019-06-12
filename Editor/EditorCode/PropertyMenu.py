@@ -48,10 +48,7 @@ class MusicDialog(QtGui.QDialog):
         dialog.load(music_text)
         dialog.setWindowTitle('Set Chapter Music')
         result = dialog.exec_()
-        if result == QtGui.QDialog.Accepted:
-            return dialog.save(), True
-        else:
-            return None, False
+        return dialog.save(), True
 
 class PropertyMenu(QtGui.QWidget):
     def __init__(self, window=None):

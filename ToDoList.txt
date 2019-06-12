@@ -10,8 +10,6 @@
 - Restore (Restore)
 
 v0.9.0
-- Check that standing next to 2 Shamans, then winning the game, you do not continue to have hex.
-- Test LEVEL EDITOR!
 - Test palette swap for animations
 
 v0.9.1
