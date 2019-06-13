@@ -1495,6 +1495,8 @@ class UnitObject(object):
             return 0
         if not item.weapon and not item.spell:
             return 0
+        if item.no_damage:
+            return 0
 
         dist = Utility.calculate_distance(self.position, target.position)
         damage = self.damage(gameStateObj, item, dist)
@@ -1705,6 +1707,8 @@ class UnitObject(object):
         if not item:
             item = self.getMainWeapon()
         if not item:
+            return 0
+        if item.no_damage:
             return 0
 
         damage = self.get_support_bonuses(gameStateObj)[0]

@@ -1234,8 +1234,9 @@ class AddStatus(Action):
 
         if self.status_obj.clear:
             for status in self.unit.status_effects:
-                if status.time:
-                    self.actions.append(RemoveStatus(self.unit, self.status_obj))
+                if self.status_obj.clear is True or status.id in self.status_obj.clear.split(','):
+                    if status.time:
+                        self.actions.append(RemoveStatus(self.unit, self.status_obj))
 
         # --- Non-momentary status ---
         if self.status_obj.mind_control:

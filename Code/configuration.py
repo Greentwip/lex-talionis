@@ -4,6 +4,7 @@ import os
 def read_config_file():
     lines = OrderedDict([('debug', 1),
                          ('cheat', 1),
+                         ('random_seed', -1),
                          ('Screen Size', 2),
                          ('Sound Buffer Size', 4),
                          ('Animation', 'Always'),
@@ -45,6 +46,7 @@ def read_config_file():
 
     lines['debug'] = int(lines['debug'])
     lines['cheat'] = int(lines['cheat'])
+    lines['random_seed'] = int(lines['random_seed'])
     lines['Screen Size'] = int(lines['Screen Size'])
     lines['Sound Buffer Size'] = int(lines['Sound Buffer Size'])
     lines['Unit Speed'] = int(lines['Unit Speed'])

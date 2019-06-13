@@ -1048,11 +1048,11 @@
         <RNG>1</RNG>
         <uses>20</uses>
         <value>50</value>
-        <desc>User may damage themselves</desc>
+        <desc></desc>
         <weight>15</weight>
         
         <MT>13</MT>
-        <HIT>50</HIT>
+        <HIT>60</HIT>
         <LVL>B</LVL>
         <crit>5</crit>
     </item>
@@ -1228,7 +1228,7 @@
         <id>Longbow</id>
         <spritetype>Bow</spritetype>
         <spriteid>7</spriteid>       
-        <components>weapon,uses,weight,effective,effective</components>
+        <components>weapon,uses,weight,crit,effective</components>
         <weapontype>Bow</weapontype>
  
         <uses>20</uses>
@@ -1384,7 +1384,7 @@
         <value>150</value>
         <desc>Fully restore's an ally's HP</desc>
         
-        <heal>1000</heal>
+        <heal>99</heal>
         <LVL>C</LVL>
         <targets>Ally</targets>    
 
@@ -1426,7 +1426,7 @@
         <value>1000</value>
         <desc>Restores (User's Magic + 10) HP to all allies within range.</desc>
         
-        <heal>1000</heal>
+        <heal>10</heal>
         <LVL>A</LVL>
         <targets>Ally</targets>
         <aoe>Blast,MAG/2</aoe>    
@@ -1854,7 +1854,7 @@
         <MT>8</MT>
         <HIT>80</HIT>
         <LVL>D</LVL>
-        <crit>0</crit>
+        <crit>5</crit>
     </item>
 
     <item name="Elfire">
@@ -2001,7 +2001,7 @@
     </item>
 
     <item name="Eclipse">
-        <id>Flux</id>
+        <id>Eclipse</id>
         <spritetype>Dark</spritetype>
         <spriteid>3</spriteid>       
         <components>weapon,uses,weight,map_hit_color,status_on_equip,cannot_be_countered,wexp,ignore_def</components>
@@ -2085,26 +2085,10 @@
     </item>
 
     <!-- Neutral -->
-    <item name="Fang">
-        <id>Fang</id>
-        <spritetype>Neutral</spritetype>
-        <spriteid>0</spriteid>       
-        <components>weapon,locked</components>
-        <weapontype>None</weapontype>
- 
-        <RNG>1</RNG>
-        <value>1</value>
-        <desc></desc>
-
-		<MT>3</MT>
-		<HIT>90</HIT>
-		<LVL>D</LVL>
-    </item>
-
     <item name="Dragonstone">
         <id>Dragonstone</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>1</spriteid>       
+        <spriteid>0</spriteid>       
         <components>weapon,uses,weight,crit,effective,status_on_equip,wexp</components>
         <weapontype>None</weapontype>
  
@@ -2122,6 +2106,323 @@
         <LVL>Myrrh</LVL>
         <crit>15</crit>
         <wexp>0</wexp>
+    </item>
+
+    <item name="Wretched Air">
+        <id>Wretched Air</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>0</spriteid>       
+        <components>weapon,locked,status_on_equip,ignore_def,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1-2</RNG>
+        <value>0</value>
+        <desc>Ignore's enemy defence</desc>
+
+        <MT>10</MT>
+        <HIT>100</HIT>
+        <LVL>--</LVL>
+
+        <status_on_equip>Wretched_Air</status_on_equip>
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Nightmare">
+        <id>Nightmare</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>1</spriteid>       
+        <components>spell,uses,weight,locked,detrimental,wexp,status,alternate_hit,alternate_avoid,hit,map_hit_color,aoe</components>
+        <weapontype>Staff</weapontype>
+ 
+        <RNG>0</RNG>
+        <value>0</value>
+        <uses>1</uses>
+        <weight>8</weight>
+        <desc>Sends all enemies in range 3 to sleep</desc>
+        <status>Sleep</status>
+
+        <LVL>--</LVL>
+        <targets>Enemy</targets>
+        <hit>70</hit>
+        <aoe>Blast,3</aoe>
+
+        <wexp>0</wexp>
+
+        <map_hit_color>-248,0,-248</map_hit_color>
+        <alternate_hit>STAFF_HIT</alternate_hit>
+        <alternate_avoid>STAFF_AVOID</alternate_avoid>
+    </item>
+
+    <item name="Demon Light">
+        <id>Demon Light</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>2</spriteid>       
+        <components>weapon,magic,locked,status_on_equip,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1-3</RNG>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>15</MT>
+        <HIT>60</HIT>
+        <LVL>--</LVL>
+
+        <status_on_equip>Demon_Light</status_on_equip>
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Ravager">
+        <id>Ravager</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>3</spriteid>       
+        <components>weapon,locked,status_on_equip,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>15</MT>
+        <HIT>85</HIT>
+        <LVL>--</LVL>
+
+        <status_on_equip>Ravager</status_on_equip>
+        <wexp>0</wexp>
+        <crit>10</crit>
+    </item>
+
+    <item name="Demon Surge">
+        <id>Demon Surge</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>4</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>Dark</weapontype>
+ 
+        <RNG>1-2</RNG>
+        <weight>10</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>11</MT>
+        <HIT>80</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Shadowshot">
+        <id>Shadowshot</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>5</spriteid>       
+        <components>weapon,weight,locked,wexp,crit,cannot_be_countered</components>
+        <weapontype>Dark</weapontype>
+ 
+        <RNG>3-10</RNG>
+        <weight>20</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>13</MT>
+        <HIT>70</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+        <crit>5</crit>
+    </item>
+
+    <item name="Sharp Claw">
+        <id>Sharp Claw</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>6</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <weight>14</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>14</MT>
+        <HIT>65</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Rotten Claw">
+        <id>Rotten Claw</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>7</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <weight>8</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>7</MT>
+        <HIT>80</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Fetid Claw">
+        <id>Fetid Claw</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>8</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <weight>10</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>12</MT>
+        <HIT>75</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Poison Claw">
+        <id>Poison Claw</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>9</spriteid>       
+        <components>status,weapon,weight,locked,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <weight>10</weight>
+        <value>0</value>
+        <desc></desc>
+        <status>Poison</status>
+
+        <MT>6</MT>
+        <HIT>65</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Lethal Talon">
+        <id>Lethal Talon</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>10</spriteid>       
+        <components>status,weapon,weight,locked,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <weight>12</weight>
+        <value>0</value>
+        <desc></desc>
+        <status>Poison</status>
+
+        <MT>10</MT>
+        <HIT>60</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Fiery Fang">
+        <id>Fiery Fang</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>10</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <weight>5</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>5</MT>
+        <HIT>90</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Hellfang">
+        <id>Hellfang</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>10</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>None</weapontype>
+ 
+        <RNG>1</RNG>
+        <weight>8</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>13</MT>
+        <HIT>80</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Evil Eye">
+        <id>Evil Eye</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>10</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>Dark</weapontype>
+ 
+        <RNG>1-2</RNG>
+        <weight>6</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>7</MT>
+        <HIT>85</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+    </item>
+
+    <item name="Crimson Eye">
+        <id>Crimson Eye</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>10</spriteid>       
+        <components>weapon,weight,locked,wexp,crit</components>
+        <weapontype>Dark</weapontype>
+ 
+        <RNG>1-2</RNG>
+        <weight>13</weight>
+        <value>0</value>
+        <desc></desc>
+
+        <MT>14</MT>
+        <HIT>70</HIT>
+        <LVL>--</LVL>
+
+        <wexp>0</wexp>
+        <crit>5</crit>
+    </item>
+
+    <item name="Stone">
+        <id>Stone</id>
+        <spritetype>Neutral</spritetype>
+        <spriteid>10</spriteid>       
+        <components>spell,detrimental,hit,status,uses,weight,locked,wexp</components>
+        <weapontype>Dark</weapontype>
+ 
+        <RNG>1-3</RNG>
+        <weight>8</weight>
+        <uses>5</uses>
+        <value>0</value>
+        <desc></desc>
+        <status>Petrify</status>
+
+        <hit>65</hit>
+        <LVL>--</LVL>
+
+        <wexp>5</wexp>
     </item>
 
     <!-- Other Items -->
@@ -2152,7 +2453,7 @@
         <value>1000</value>
         <desc>Restores all HP.</desc>
         
-        <heal>80</heal> 
+        <heal>99</heal> 
 
         <map_hit_color>96,144,232</map_hit_color>
     </item>
@@ -2173,16 +2474,45 @@
         <self_anim>MapSpiritbane,5,4,20</self_anim>
     </item>
 
-    <item name="Skeleton Key">
-        <id>Skeleton Key</id>
+    <item name="Antitoxin">
+        <id>Antitoxin</id>
+        <spritetype>Consumable</spritetype>
+        <spriteid>4</spriteid>
+        <components>usable,status,uses,beneficial,map_hit_color</components>
+
+        <uses>3</uses>
+        <RNG>0</RNG>
+        <value>117</value>
+        <desc>Cures poison status</desc>
+        <status>Clear_Poison</status>
+
+        <map_hit_color>96,144,232</map_hit_color>
+    </item>
+
+    <item name="Chest Key">
+        <id>Chest Key</id>
+        <spritetype>Consumable</spritetype>
+        <spriteid>7</spriteid>       
+        <components>uses,key</components>
+ 
+        <uses>1</uses>
+        <RNG>1</RNG>
+        <value>300</value>
+        <desc>Opens locked chests</desc>   
+        <key>Chest</key>
+    </item>
+
+    <item name="Door Key">
+        <id>Door Key</id>
         <spritetype>Consumable</spritetype>
         <spriteid>6</spriteid>       
         <components>uses,key</components>
  
         <uses>1</uses>
-        <RNG>0-1</RNG>
-        <value>300</value>
-        <desc>Opens locked doors and chests.</desc>   
+        <RNG>1</RNG>
+        <value>50</value>
+        <desc>Opens locked doors</desc>
+        <key>Door</key>   
     </item>
 
     <!-- Stat boosters -->
@@ -2381,7 +2711,7 @@
     <item name="Ocean Seal">
         <id>Ocean Seal</id>
         <spritetype>Boosters</spritetype>
-        <spriteid>14</spriteid>       
+        <spriteid>19</spriteid>       
         <components>usable,uses,promotion,booster,beneficial</components>
         
         <promotion>Thief,Pirate</promotion>
@@ -2417,6 +2747,19 @@
         <desc>Promotes Ephraim.</desc>   
     </item>
 
+    <item name="Master Seal">
+        <id>Master Seal</id>
+        <spritetype>Boosters</spritetype>
+        <spriteid>14</spriteid>       
+        <components>usable,uses,promotion,booster,beneficial</components>
+        
+        <promotion>Mercenary,Myrmidon,Fighter,Thief,Pirate,Pegasus_Knight,Wyvern_Rider,Cavalier,Archer,Knight,Mage,Shaman,Cleric,Monk,Troubadour</promotion>
+        <uses>1</uses>
+        <RNG>0</RNG>
+        <value>0</value>
+        <desc>Promotes all normal classes</desc>   
+    </item>
+
     <item name="Metis's Tome">
         <id>Metis's Tome</id>
         <spritetype>Boosters</spritetype>
@@ -2433,8 +2776,8 @@
     <!-- Miscellaneous -->
     <item name="Fili Shield">
         <id>Fili Shield</id>
-        <spritetype>Valuable</spritetype>
-        <spriteid>1</spriteid>       
+        <spritetype>Boosters</spritetype>
+        <spriteid>20</spriteid>       
         <components>status_on_hold</components>
         
         <RNG>0</RNG>
@@ -2442,6 +2785,19 @@
         <desc>Negates effective bonus of bows.</desc>   
 
         <status_on_hold>Windwall</status_on_hold>
+    </item>
+
+    <item name="Hoplon Guard">
+        <id>Hoplon Guard</id>
+        <spritetype>Boosters</spritetype>
+        <spriteid>18</spriteid>       
+        <components>status_on_hold</components>
+        
+        <RNG>0</RNG>
+        <value>5000</value>
+        <desc>User is immune to critical attacks</desc>   
+
+        <status_on_hold>Crit_Immune</status_on_hold>
     </item>
 
     <!-- Money -->
@@ -2479,42 +2835,6 @@
     </item>
 
     <!-- Unobtainable Skill Only Items -->
-    <item name="Rage">
-        <id>so_Rage</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>8,10</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>0</RNG>
-        <desc>I done broked something.</desc>
-        <status>Rage_Status</status>
-    </item>
-
-    <item name="Fade">
-        <id>so_Fade</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>9,1</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>0</RNG>
-        <desc>I done broked something.</desc>
-        <status>Fade_Status</status>
-    </item>
-
-    <item name="Shove">
-        <id>so_Shove</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>4,4</spriteid>
-        <components>movement,virtual,detrimental</components>
-
-        <value>1</value>
-        <RNG>1</RNG>
-        <desc>I done broked something.</desc>
-        <movement>Shove,1</movement>
-    </item>
-
     <item name="Refresh">
         <id>so_Refresh</id>
         <spritetype>Skills</spritetype>
@@ -2528,50 +2848,6 @@
         
         <map_hit_color>248,248,0</map_hit_color>
         <sfx_on_cast>RefreshDanceMap</sfx_on_cast>   
-    </item>
-
-    <item name="Aegis">
-        <id>so_Aegis</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>10,3</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>1</RNG>
-        <desc>I done broked something.</desc>
-        <status>Aegis_Status</status>
-    </item>
-
-    <item name="Revelation">
-        <id>so_Revelation</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>8,3</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>1</RNG>
-        <desc>I done broked something.</desc>
-        <status>Revelation_Status</status>
-    </item>
-
-    <item name="Rally">
-        <id>so_Rally</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>10,1</spriteid>
-        <components>spell,status,virtual,beneficial,aoe,exp,map_hit_color,aoe_anim,sfx_on_hit</components>
-        <weapontype>None</weapontype>
-
-        <value>1</value>
-        <RNG>0</RNG>
-        <desc>I done broked something.</desc>
-        <status>Rally_Child</status>
-        <targets>Ally</targets>
-        <aoe>Blast,3</aoe>
-        <LVL>D</LVL>
-        <exp>-1</exp>
-
-        <map_hit_color>-128,0,248</map_hit_color>
-        <sfx_on_hit>Rally</sfx_on_hit>
     </item>
 
     <item name="Summon_1">
