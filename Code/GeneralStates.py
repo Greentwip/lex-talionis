@@ -257,7 +257,7 @@ class OptionsMenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('unit_menu')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Turnwheel']:
-                if gameStateObj.game_constants.get('current_turnwheel_uses', 1) > -10:
+                if cf.OPTIONS['cheat'] or gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0:
                     gameStateObj.stateMachine.changeState('turnwheel')
                 else:
                     banner = Banner.customBanner(cf.WORDS['Turnwheel_empty'])

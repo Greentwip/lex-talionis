@@ -169,6 +169,12 @@ class StatusMenu(StateMachine.State):
             GC.FONT['text_white'].blit(loss_con, hold_surf, (8, 36 + 16*len(win_cons) + index*16))
 
         surfaces.append((hold_surf, (8, 34 + back_surf.get_height() + 2)))
+
+        seed = str(gameStateObj.game_constants['_random_seed'])
+        seed_size = GC.FONT['text_numbers'].size(seed)[0]
+        seed_surf = Engine.create_surface((28, 16), transparent=True, convert=True)
+        GC.FONT['text_numbers'].blit(seed, seed_surf, (14 - seed_size/2, 0))
+        surfaces.append((seed_surf, (GC.WINWIDTH - 28, 0)))
             
         return surfaces
 

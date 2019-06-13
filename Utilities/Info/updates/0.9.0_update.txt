@@ -1,0 +1,93 @@
+The Turnwheel Update
+
+## Turnwheel
+
+As prophesied, SoonTM is Now. **Version 0.9.0** of the **Lex Talionis Engine** has been released!
+
+[[Turnwheel Gif]]
+
+So yeah this update took forever. It required a massive overhaul of the Engine to make any possible action the player can take during a battle reversible. And because of this, I had to do a lot of testing for this update. As I am only one person, there are probably still some new and improved bugs lurking about, since so much of the Engine changed.
+
+# Turnwheel Info 
+
+In the Lion Throne, I have set it up so that each level completed will grant the player one additional turnwheel use.
+
+You can learn how to add the Turnwheel to your own game here: https://gitlab.com/rainlash/lex-talionis/wikis/100.-Miscellaneous-Stuff#managing-the-turnwheel
+
+## Supports
+
+The Engine now has support for Supports.
+
+[[Support Image1]]
+
+You can set up your supports to work like the GBA games where supports are gained in combat, or like Path of Radiance, where you choose who to support with whom in base.
+
+You can learn how to add Support to your own game here:
+
+https://gitlab.com/rainlash/lex-talionis/wikis/27.-Supports
+
+[[Support Image2]]
+
+Other feature additions:
+
+Added more customization options for combat equations. Removed some of the customization options in `Data/constants.ini` (Check out the new file `Data/equations.txt`)
+Added more control over how Weapon Experience is gained.
+Added a minimum damage keyword to set minimum damage that can be dealt.
+Different classes can now gain experience at different rates (Added class exp multiplier)
+Units with Steal can now gain exp when stealing (set constant "steal_exp")
+Added support for multiple player parties in Engine (see https://gitlab.com/rainlash/lex-talionis/wikis/29.-Multiple-Parties)
+Can now change phase music with the event command `change_music` (like `change_music;player;Distant Roads`). Can now clear music stack with `music_clear`
+Can now change what statuses count as feats
+Can now change what stats Rescue will halve. In fact, rescue status can now be any status effect, as long as it's ID is "Rescue"
+Added `cannot_be_crit` status component. While held, unit cannot be crit...
+Added `no_choice` flag to event command "give_item"
+Lethal hit on a boss can now be forced to show a critical
+Can now set items to use custom animations (like Durandal for Roy...)
+Items can now have range of MAG/2
+Can scale boss growths and boss bases by difficulty mode
+Statuses can now apply attackspeed bonuses and penalties
+And probably a lot more that I've since forgotten.
+
+
+Other notes:
+
+Like usual with big update changes, you will not be able to use old saves with this version of the Engine.
+
+The newest version of the FEGBA2LT_animation_converter should handle everything but Mages, Sages, Dancers, and Manaketes.
+
+I also wrote a new utility that converts map sprites from GBA format to Lex Talionis format.
+
+You can find these download links for these utilities here: https://gitlab.com/rainlash/lex-talionis/wikis/101.-Utilities
+
+Can now automatically generate autotiles within the Level Editor.
+
+Data files that need to be updated if you move to this version:
+items.xml (Skeleton Key)
+status.xml (Rescue, Feat List)
+equations.xml
+constants.ini
+If you want supports:
+affinity.txt
+support_edges.txt
+support_nodes.txt
+
+There have also been Audio/sfx updates
+
+
+Other bug/minor fixes:
+
+Unit portraits are now correctly rendered when ID and Name are different.
+Units with Canto can no longer Rescue/Drop chain infinitely.
+Xbox controllers work again.
+Player controlled healers now prioritize lowest HP unit in range when starting selection
+Victory screen now displays correct values
+Unit tags and class tags now split
+Disintegrate now correctly does half damage on miss
+
+Next Update:
+
+v0.9.1 will be a small feature update
+- Fix music fade in/out -- rewrite music thread (loops, battle music, sections of music)
+- Add multiple 0-4, 5-9 map sprites for each class
+- Add separate combine action to convoy
+- Add support to fe_repo_to_lex for Dragonstone units and Mages/Sages
