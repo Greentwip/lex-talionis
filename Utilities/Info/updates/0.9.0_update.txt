@@ -66,12 +66,16 @@ items.xml (Skeleton Key)
 status.xml (Rescue, Feat List)
 equations.xml
 constants.ini
+difficulty_modes.xml
+words.txt
 If you want supports:
 affinity.txt
 support_edges.txt
 support_nodes.txt
 
 There have also been Audio/sfx updates
+
+IF you'd rather start your game from the normal Fire Emblem base, I now have a bundle of data files that I created for the Sacred Stones in the Lex Talionis Engine. You can download it here [Link]
 
 
 Other bug/minor fixes:

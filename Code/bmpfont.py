@@ -227,6 +227,7 @@ class BmpFont:
             except KeyError as e:
                 print(e)
                 print("%s is not chartable"%(c))
+                print("string", string)
                 char_width = 4
             length += char_width
         return (length, self.height)

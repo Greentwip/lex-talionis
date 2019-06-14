@@ -282,7 +282,7 @@
         <desc>Negates effective bonus of bows.</desc>
         <components>uneffective</components>
 
-        <uneffective>Flying<uneffective>
+        <uneffective>Flying</uneffective>
     </status>
 
     <status name="Crit Immune">

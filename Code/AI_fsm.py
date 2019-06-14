@@ -226,7 +226,7 @@ class AI(object):
             # if cf.OPTIONS['debug']: print('AI Time Taken:', Engine.get_time() - time1)
 
             if success or self.state == 'Done':
-                print('AI Time Taken:', Engine.get_time() - self.start_time)
+                # print('AI Time Taken:', Engine.get_time() - self.start_time)
                 self.did_something = success
                 self.state = 'Init'
                 return True

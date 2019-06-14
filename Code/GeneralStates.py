@@ -889,6 +889,8 @@ class ItemChildState(StateMachine.State):
                 use = False
             elif selection.booster and not current_unit.can_use_booster(selection):
                 use = False
+            elif selection.target_restrict and not eval(selection.target_restrict):
+                use = False
             if use:
                 options.append(cf.WORDS['Use'])
         if 'Convoy' in gameStateObj.game_constants:

@@ -19,8 +19,9 @@ class PromotionChoiceState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.unit = gameStateObj.cursor.currentSelectedUnit
-            class_options = ClassData.class_dict[self.unit.klass]['turns_into']
-            self.menu = MenuFunctions.ChoiceMenu(self.unit, class_options, (14, 13), width=80)
+            self.class_options = ClassData.class_dict[self.unit.klass]['turns_into']
+            display_options = [ClassData.class_dict[c]['long_name'] for c in self.class_options]
+            self.menu = MenuFunctions.ChoiceMenu(self.unit, display_options, (14, 13), width=80)
 
             self.on_child_menu = False
             self.child_menu = None
@@ -28,7 +29,7 @@ class PromotionChoiceState(StateMachine.State):
             # Animations
             self.animations = []
             self.weapon_icons = []
-            for option in class_options:
+            for option in self.class_options:
                 anim = GC.ANIMDICT.partake(option, self.unit.gender)
                 if anim:
                     # Build animation
@@ -95,7 +96,7 @@ class PromotionChoiceState(StateMachine.State):
             if self.on_child_menu:
                 selection = self.child_menu.getSelection()
                 if selection == cf.WORDS['Change']:
-                    self.unit.new_klass = self.menu.getSelection()
+                    self.unit.new_klass = self.class_options[self.menu.getSelectionIndex()]
                     GC.SOUNDDICT['Select 1'].play()
                     gameStateObj.stateMachine.changeState('promotion')
                     gameStateObj.stateMachine.changeState('transition_out')

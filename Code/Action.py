@@ -1203,6 +1203,7 @@ class AddStatus(Action):
         self.actions = []
 
     def do(self, gameStateObj):
+        self.actions = []
         if self.status_obj.uid not in gameStateObj.allstatuses:
             print('Major problem!')
             print('%s not found in allstatuses!' % self.status_obj)
@@ -1236,7 +1237,7 @@ class AddStatus(Action):
             for status in self.unit.status_effects:
                 if self.status_obj.clear is True or status.id in self.status_obj.clear.split(','):
                     if status.time:
-                        self.actions.append(RemoveStatus(self.unit, self.status_obj))
+                        self.actions.append(RemoveStatus(self.unit, status))
 
         # --- Non-momentary status ---
         if self.status_obj.mind_control:
@@ -1329,6 +1330,7 @@ class RemoveStatus(Action):
         self.clean_up = clean_up
 
     def do(self, gameStateObj):
+        self.actions = []
         if not isinstance(self.status_obj, StatusCatalog.Status):
             # Then it must be an integer (the status id)
             for status in self.unit.status_effects:
@@ -1336,7 +1338,7 @@ class RemoveStatus(Action):
                     self.status_obj = status
                     break
             else:
-                logger.warning('Status ID %s not present...', status)
+                logger.warning('Status ID %s not present...', self.status_obj)
                 logger.warning(self.unit.status_effects)
                 return
 

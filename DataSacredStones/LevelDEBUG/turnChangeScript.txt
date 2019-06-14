@@ -25,8 +25,8 @@ if;gameStateObj.get_unit_from_name('Eirika').position[0] <= 7 and 'EnemyRein' no
     wait;1000
     disp_cursor;0
     # Announcement
-    u;Soldier2;Left
-    s;Soldier2;I've found them! Straggers from Renais! Don't let them get away.
-    r;Soldier2
+    u;SoldierGrey;Left
+    s;SoldierGrey;I've found them! Straggers from Renais! Don't let them get away.
+    r;SoldierGrey
     set_level_constant;EnemyRein
 end

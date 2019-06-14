@@ -1384,7 +1384,7 @@
         <value>150</value>
         <desc>Fully restore's an ally's HP</desc>
         
-        <heal>99</heal>
+        <heal>All</heal>
         <LVL>C</LVL>
         <targets>Ally</targets>    
 
@@ -1418,7 +1418,7 @@
         <id>Fortify</id>
         <spritetype>Staff</spritetype>
         <spriteid>4</spriteid>       
-        <components>spell,heal,uses,aoe,beneficial,map_hit_color,wexp,exp</components>
+        <components>spell,heal,uses,aoe,beneficial,map_hit_color,wexp,exp,max_exp</components>
         <weapontype>Staff</weapontype>
  
         <uses>8</uses>
@@ -1434,6 +1434,7 @@
         <map_hit_color>96,144,232</map_hit_color>
         <wexp>5</wexp>
         <exp>60</exp>
+        <max_exp>60</max_exp>
     </item>
 
     <item name="Restore">
@@ -1610,7 +1611,7 @@
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
-        <RNG>1-7</RNG>
+        <RNG>1</RNG>
         <value>600</value>
         <desc>Repairs a weapon or staff to full uses</desc>
         <target_restrict>any(item.uses and item.uses.can_repair() and not item.unrepairable for item in target.items)</target_restrict>
@@ -1667,7 +1668,7 @@
         <id>Latona</id>
         <spritetype>Staff</spritetype>
         <spriteid>15</spriteid>       
-        <components>spell,heal,uses,aoe,beneficial,map_hit_color,exp,status</components>
+        <components>spell,heal,uses,aoe,beneficial,map_hit_color,exp,status,max_exp</components>
         <weapontype>Staff</weapontype>
  
         <uses>3</uses>
@@ -1675,7 +1676,7 @@
         <value>0</value>
         <desc>Restores HP and condition of all allied units</desc>
         
-        <heal>1000</heal>
+        <heal>All</heal>
         <status>Clear</status>
         <LVL>S</LVL>
         <targets>Ally</targets>
@@ -1683,6 +1684,7 @@
 
         <map_hit_color>96,144,232</map_hit_color>
         <exp>10</exp>
+        <max_exp>10</max_exp>
     </item>
 
     <!-- Light -->
@@ -2004,13 +2006,13 @@
         <id>Eclipse</id>
         <spritetype>Dark</spritetype>
         <spriteid>3</spriteid>       
-        <components>weapon,uses,weight,map_hit_color,status_on_equip,cannot_be_countered,wexp,ignore_def</components>
+        <components>weapon,uses,weight,map_hit_color,status_on_equip,cannot_be_countered,wexp,ignore_def,no_double</components>
         <weapontype>Dark</weapontype>
  
         <uses>5</uses>
         <RNG>3-10</RNG>
         <value>800</value>
-        <weight>8</weight>
+        <weight>12</weight>
         <desc>Halve's the enemy's current HP</desc>
         <status_on_equip>Eclipse_Helper</status_on_equip>
 
@@ -2111,7 +2113,7 @@
     <item name="Wretched Air">
         <id>Wretched Air</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>0</spriteid>       
+        <spriteid>1</spriteid>       
         <components>weapon,locked,status_on_equip,ignore_def,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2130,7 +2132,7 @@
     <item name="Nightmare">
         <id>Nightmare</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>1</spriteid>       
+        <spriteid>2</spriteid>       
         <components>spell,uses,weight,locked,detrimental,wexp,status,alternate_hit,alternate_avoid,hit,map_hit_color,aoe</components>
         <weapontype>Staff</weapontype>
  
@@ -2156,7 +2158,7 @@
     <item name="Demon Light">
         <id>Demon Light</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>2</spriteid>       
+        <spriteid>3</spriteid>       
         <components>weapon,magic,locked,status_on_equip,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2175,7 +2177,7 @@
     <item name="Ravager">
         <id>Ravager</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>3</spriteid>       
+        <spriteid>4</spriteid>       
         <components>weapon,locked,status_on_equip,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2195,7 +2197,7 @@
     <item name="Demon Surge">
         <id>Demon Surge</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>4</spriteid>       
+        <spriteid>5</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>Dark</weapontype>
  
@@ -2214,7 +2216,7 @@
     <item name="Shadowshot">
         <id>Shadowshot</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>5</spriteid>       
+        <spriteid>6</spriteid>       
         <components>weapon,weight,locked,wexp,crit,cannot_be_countered</components>
         <weapontype>Dark</weapontype>
  
@@ -2234,7 +2236,7 @@
     <item name="Sharp Claw">
         <id>Sharp Claw</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>6</spriteid>       
+        <spriteid>7</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2253,7 +2255,7 @@
     <item name="Rotten Claw">
         <id>Rotten Claw</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>7</spriteid>       
+        <spriteid>8</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2272,7 +2274,7 @@
     <item name="Fetid Claw">
         <id>Fetid Claw</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>8</spriteid>       
+        <spriteid>9</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2291,7 +2293,7 @@
     <item name="Poison Claw">
         <id>Poison Claw</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>9</spriteid>       
+        <spriteid>10</spriteid>       
         <components>status,weapon,weight,locked,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2311,7 +2313,7 @@
     <item name="Lethal Talon">
         <id>Lethal Talon</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>10</spriteid>       
+        <spriteid>11</spriteid>       
         <components>status,weapon,weight,locked,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2331,7 +2333,7 @@
     <item name="Fiery Fang">
         <id>Fiery Fang</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>10</spriteid>       
+        <spriteid>12</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2350,7 +2352,7 @@
     <item name="Hellfang">
         <id>Hellfang</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>10</spriteid>       
+        <spriteid>13</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>None</weapontype>
  
@@ -2369,7 +2371,7 @@
     <item name="Evil Eye">
         <id>Evil Eye</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>10</spriteid>       
+        <spriteid>14</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>Dark</weapontype>
  
@@ -2388,7 +2390,7 @@
     <item name="Crimson Eye">
         <id>Crimson Eye</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>10</spriteid>       
+        <spriteid>15</spriteid>       
         <components>weapon,weight,locked,wexp,crit</components>
         <weapontype>Dark</weapontype>
  
@@ -2408,7 +2410,7 @@
     <item name="Stone">
         <id>Stone</id>
         <spritetype>Neutral</spritetype>
-        <spriteid>10</spriteid>       
+        <spriteid>16</spriteid>       
         <components>spell,detrimental,hit,status,uses,weight,locked,wexp</components>
         <weapontype>Dark</weapontype>
  
@@ -2420,6 +2422,7 @@
         <status>Petrify</status>
 
         <hit>65</hit>
+        <targets>Enemy</targets>
         <LVL>--</LVL>
 
         <wexp>5</wexp>
@@ -2453,7 +2456,7 @@
         <value>1000</value>
         <desc>Restores all HP.</desc>
         
-        <heal>99</heal> 
+        <heal>All</heal> 
 
         <map_hit_color>96,144,232</map_hit_color>
     </item>
@@ -2478,13 +2481,14 @@
         <id>Antitoxin</id>
         <spritetype>Consumable</spritetype>
         <spriteid>4</spriteid>
-        <components>usable,status,uses,beneficial,map_hit_color</components>
+        <components>usable,status,uses,beneficial,map_hit_color,target_restrict</components>
 
         <uses>3</uses>
         <RNG>0</RNG>
         <value>117</value>
         <desc>Cures poison status</desc>
         <status>Clear_Poison</status>
+        <target_restrict>any(status.id == 'Poison' for status in current_unit.status_effects)</target_restrict>
 
         <map_hit_color>96,144,232</map_hit_color>
     </item>
@@ -2499,7 +2503,7 @@
         <RNG>1</RNG>
         <value>300</value>
         <desc>Opens locked chests</desc>   
-        <key>Chest</key>
+        <key>House,Chest</key>
     </item>
 
     <item name="Door Key">

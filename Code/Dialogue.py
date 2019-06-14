@@ -248,7 +248,6 @@ class Dialogue_Scene(object):
             return
         # time = Engine.get_true_time()
         logger.info('Script line to parse: %s', line)
-        print(line)
         # === SKIPPING DIALOGUE
         # End skip
         if line[0] == 'end_skip':
@@ -929,12 +928,10 @@ class Dialogue_Scene(object):
             else:
                 Action.do(Action.ChangeLevelConstant(line[1], 1), gameStateObj)
         elif line[0] == 'inc_level_constant':
-            print(gameStateObj.level_constants)
             if len(line) > 2:
                 Action.do(Action.ChangeLevelConstant(line[1], gameStateObj.level_constants[line[1]] + int(eval(line[2]))), gameStateObj)
             else:
                 Action.do(Action.ChangeLevelConstant(line[1], gameStateObj.level_constants[line[1]] + 1), gameStateObj)
-            print(gameStateObj.level_constants)
         # should be remembered for all game
         elif line[0] == 'set_game_constant':
             if len(line) > 2:
@@ -1389,9 +1386,9 @@ class Dialogue_Scene(object):
             position = self.parse_pos(unitLine[5], gameStateObj)
         else:
             context = gameStateObj.allreinforcements.get(which_unit)
-            print(gameStateObj.allreinforcements)
-            print(which_unit)
-            print(context)
+            #print(gameStateObj.allreinforcements)
+            #print(which_unit)
+            #print(context)
             if context:
                 u_id, position = context
                 unit = gameStateObj.get_unit_from_id(u_id)
@@ -1433,11 +1430,11 @@ class Dialogue_Scene(object):
                 logger.error('Could not find unit %s', new_pos)
                 return
 
-        print("Add Unit: New Pos")
-        print(new_pos)
+        #print("Add Unit: New Pos")
+        #print(new_pos)
         if new_pos == [None]:
-            print(context)
-            print(which_unit)
+            #print(context)
+            #print(which_unit)
             logger.warning('Position for "add_unit" is not set!')
             return
 

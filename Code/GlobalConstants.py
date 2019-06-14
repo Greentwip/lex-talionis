@@ -126,12 +126,14 @@ def create_difficulty_dict(fp):
         difficulty_dict[name] = {c.tag: c.text for c in entry}
         cur = difficulty_dict[name]
         cur['name'] = name
-        cur['enemy_growths'] = [int(num) for num in cur['enemy_growths'].split(',')]
-        cur['player_growths'] = [int(num) for num in cur['player_growths'].split(',')]
-        cur['boss_growths'] = [int(num) for num in cur['boss_growths'].split(',')]
-        cur['enemy_bases'] = [int(num) for num in cur['enemy_bases'].split(',')]
-        cur['player_bases'] = [int(num) for num in cur['player_bases'].split(',')]
-        cur['boss_bases'] = [int(num) for num in cur['boss_bases'].split(',')]
+        for var in ('enemy_growths', 'player_growths', 'boss_growths', 'enemy_bases', 'player_bases', 'boss_bases'):
+            if var in cur:
+                cur[var] = [int(num) for num in cur[var].split(',')]
+            else:
+                cur[var] = [0] * len(EQUATIONS.stat_list)
+        for var in ('autolevel_enemies', 'autolevel_players', 'autolevel_bosses'):
+            if var not in cur:
+                cur[var] = "0"
     return difficulty_dict
 DIFFICULTYDATA = create_difficulty_dict(loc + 'Data/difficulty_modes.xml')
 

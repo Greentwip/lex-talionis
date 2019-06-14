@@ -11,30 +11,17 @@
 
 v0.9.0
 - Test that all Sacred Stones Items work
-    - Fortify
-    - Restore
-    - Sleep
     - Berserk
-    - Warp
-    - Hammerne
-    - Unlock
-    - Barrier
-    - Latona
-    - Excalibur
-    - Luna
-    - Eclipse
-    - Chest Key
-    - Door Key
     - Knight Crest
     - Master Seal
-    - Metis's Tome
-    - Fili Shield
-    - Antitoxin / Poison Weapons
     - Dragonstone
     - Wretched Air
     - Nightmare
     - Lethal Talon
     - Stone
+
+- Test that Berserk works correctly when applied to player characters
+- Test that Berserk correctly ends, and this ending is affected by the turnwheel
 
 
 

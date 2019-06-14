@@ -216,6 +216,8 @@ class Combat(object):
             my_exp += normal_exp
         if 'no_exp' in other_unit.status_bundle:
             my_exp = 0
+        if self.item.max_exp:
+            my_exp = min(my_exp, int(self.item.max_exp))
         logger.debug('Attacker gained %s exp', my_exp)
         return my_exp, (damage, healing, kills)
 
