@@ -1750,6 +1750,8 @@ class AIState(StateMachine.State):
 
             else: # Done
                 logger.debug('Done with AI')
+                for unit in gameStateObj.ai_unit_list:
+                    unit.reset_ai()
                 gameStateObj.ai_build_flag = True
                 gameStateObj.ai_unit_list = []
                 gameStateObj.ai_current_unit = None

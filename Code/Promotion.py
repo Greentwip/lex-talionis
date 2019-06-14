@@ -150,7 +150,7 @@ class PromotionChoiceState(StateMachine.State):
         GC.FONT['class_purple'].blit(self.menu.getSelection(), surf, (114, 5))
 
         # Weapon Icons
-        for idx, weapon in enumerate(self.weapon_icons[self.menu.currentSelection]):
+        for idx, weapon in enumerate(self.weapon_icons[self.menu.getSelectionIndex()]):
             weapon.draw(surf, (130 + 16*idx, 32))
 
         # Menus
@@ -162,7 +162,7 @@ class PromotionChoiceState(StateMachine.State):
 
         # Description
         font = GC.FONT['convo_white']
-        desc = ClassData.class_dict[self.menu.getSelection()]['desc']
+        desc = ClassData.class_dict[self.class_options[self.menu.getSelectionIndex()]]['desc']
         text = TextChunk.line_wrap(TextChunk.line_chunk(desc), 208, font)
         for idx, line in enumerate(text):
             font.blit(line, surf, (14, font.height * idx + 120))

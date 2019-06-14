@@ -52,12 +52,8 @@ class Weapon_Triangle(object):
             return (0, cf.CONSTANTS['unarmed_punish'])
         elif not weapon2:
             return (cf.CONSTANTS['unarmed_punish'], 0)
-        if not weapon1.TYPE and not weapon2.TYPE:
+        if not weapon1.TYPE or not weapon2.TYPE:
             return (0, 0)
-        elif not weapon1.TYPE:
-            return (0, 2)
-        elif not weapon2.TYPE:
-            return (2, 0)
         if weapon1.ignore_weapon_advantage or weapon2.ignore_weapon_advantage:
             return (0, 0)
 
@@ -197,8 +193,15 @@ class Weapon_Exp(object):
                 break
         return current_letter
 
+    def get_item_requirement(self, lvl):
+        if lvl in self.wexp_dict:
+            return self.wexp_dict[lvl]
+        else:
+            return 0
+
     def get_rank_bonus(self, wexp):
-        if wexp <= 0: return (0, 0, 0)
+        if wexp <= 0: 
+            return (0, 0, 0)
         return self.rank_bonuses[self.number_to_letter(wexp)]
 
     # Returns a float between 0 and 1 desribing how closes number is to next tier from previous tier

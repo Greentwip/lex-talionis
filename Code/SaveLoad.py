@@ -434,7 +434,7 @@ def get_unit_info(team, klass, level, item_line, mode, game_constants, force_fix
             continue
         if weapon_type:
             wexp_index = Weapons.TRIANGLE.name_to_index[weapon_type]
-            item_requirement = Weapons.EXP.wexp_dict[item_level]
+            item_requirement = Weapons.EXP.get_item_requirement(item_level)
             # print(item, weapon_type, wexp_index, item_requirement, wexp[wexp_index])
             if item_requirement > wexp[wexp_index] and wexp[wexp_index] > 0:
                 wexp[wexp_index] = item_requirement

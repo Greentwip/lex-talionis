@@ -81,7 +81,6 @@ class UnitObject(object):
         self.items = []
 
         # --- The Units AI
-        self.ai_descriptor = info['ai']
         self.get_ai(info['ai'])
 
         # --- Stats -- this level
@@ -645,16 +644,19 @@ class UnitObject(object):
         else:
             return True # does not have a level so it can be used
 
+        if not itemLvl: # does not have a level so it can be used
+            return True
+
         if item.TYPE:
             idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
             # Filter by klass wexp
-            unitwexp = self.wexp[idx] if klass_wexp[idx] else 0
+            my_wexp = self.wexp[idx] if klass_wexp[idx] else 0
         else:
-            unitwexp = 1
+            my_wexp = 1
 
-        if itemLvl in Weapons.EXP.wexp_dict and unitwexp >= Weapons.EXP.wexp_dict[itemLvl]:
+        if itemLvl in Weapons.EXP.wexp_dict and my_wexp >= Weapons.EXP.wexp_dict[itemLvl]:
             return True
-        elif unitwexp > 0:
+        elif my_wexp > 0:
             itemLvl = itemLvl.split(',')
             for n in itemLvl:
                 if n == self.id or n == self.klass or n == self.name or n == '--':
@@ -674,7 +676,7 @@ class UnitObject(object):
                 if num > 0:
                     self.wexp[index] += item
         else:  # Normal item
-            increase = item.wexp if item.wexp else 1
+            increase = item.wexp if item.wexp is not None else 1
             if item.TYPE in Weapons.TRIANGLE.name_to_index:
                 self.wexp[Weapons.TRIANGLE.name_to_index[item.TYPE]] += increase
         if banner:
@@ -1196,7 +1198,7 @@ class UnitObject(object):
             if my_spell.unlock:
                 targetable_position = [position for position in targetable_position if 'Locked' in gameStateObj.map.tile_info_dict[position]]
             # This might take a while
-            elif my_spell.aoe.mode == 'Blast' and len(my_spell.get_range(self)) < 7:
+            elif my_spell.aoe.mode in ('Blast', 'EnemyBlast') and len(my_spell.get_range(self)) < 7:
                 valid_positions = []
                 for pos in targetable_position:
                     team = gameStateObj.grid_manager.get_team_node(pos)
@@ -1369,6 +1371,9 @@ class UnitObject(object):
         gameStateObj.stateMachine.changeState('itemgain')
 
     def get_ai(self, ai_line):
+        self.reset_ai()
+        self.ai_descriptor = ai_line
+        logger.info('New AI Descriptor: %s', self.ai_descriptor)
         if '_' in ai_line:
             ai_line, self.ai_group = ai_line.split('_')
         else:
@@ -1725,14 +1730,16 @@ class UnitObject(object):
             else:
                 damage += GC.EQUATIONS.get_damage(self, item, dist)
             # Generic rank bonuses
-            idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
-            damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
+            if item.TYPE:
+                idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+                damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
         elif item.spell:
             if item.damage:
                 damage += item.damage + GC.EQUATIONS.get_magic_damage(self, item)
                 # Generic rank bonuses
-                idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
-                damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
+                if item.TYPE:
+                    idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+                    damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
             else:
                 return 0
         else:
@@ -1753,8 +1760,9 @@ class UnitObject(object):
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             accuracy += self.get_support_bonuses(gameStateObj)[4]
             # Generic rank bonuses
-            idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
-            accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
+            if item.TYPE:
+                idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
+                accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
             return accuracy
         else:
             return 0

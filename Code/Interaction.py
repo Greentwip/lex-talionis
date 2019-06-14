@@ -121,9 +121,8 @@ class Combat(object):
                 result.def_damage_done = min(-result.def_damage, result.defender.stats['HP'] - result.defender.currenthp)
 
     def _handle_reflect(self, attacker, defender, status_obj, gameStateObj):
-        if 'reflect' in defender.status_bundle and not status_obj.already_reflected:
+        if 'reflect' in defender.status_bundle:
             status_copy = StatusCatalog.statusparser(status_obj.id, gameStateObj)
-            status_copy.already_reflected = True
             status_copy.giver_id = defender.id
             Action.do(Action.AddStatus(attacker, status_copy), gameStateObj)
 

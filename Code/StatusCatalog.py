@@ -27,6 +27,7 @@ class Status(object):
         self.image_index = image_index or (0, 0)
         self.owner_id = None  # Like item_owner but for statuses
         self.giver_id = None  # Who created/gave away this status
+        self.data = {}  # Stores persistent data that needs to be kept across saves
 
         self.children = set()
 
@@ -77,12 +78,14 @@ class Status(object):
         serial_dict['time_left'] = self.time.time_left if self.time else None
         serial_dict['upkeep_sc_count'] = self.upkeep_stat_change.count if self.upkeep_stat_change else None
         serial_dict['active_charge'] = self.active.current_charge if self.active else None
+        serial_dict['automatic_charge'] = self.automatic.current_charge if self.automatic else None
         serial_dict['children'] = self.children
         serial_dict['owner_id'] = self.owner_id
         serial_dict['giver_id'] = self.giver_id
         serial_dict['count'] = self.count.count if self.count else None
         serial_dict['stat_halve_penalties'] = self.stat_halve.penalties if self.stat_halve else None
         serial_dict['aura_child_uid'] = self.aura.child_status.uid if self.aura else None
+        serial_dict['data'] = self.data
         return serial_dict
 
     def draw(self, surf, topleft, cooldown=True):
@@ -505,6 +508,8 @@ def deserialize(s_dict):
         status.upkeep_stat_change.count = s_dict['upkeep_sc_count']
     if s_dict['active_charge'] is not None:
         status.active.current_charge = s_dict['active_charge']
+    if s_dict['automatic_charge'] is not None:
+        status.automatic.current_charge = s_dict['automatic_charge']
     if s_dict['stat_halve_penalties'] is not None:
         status.stat_halve.penalties = s_dict['stat_halve_penalties']
     if s_dict['aura_child_uid'] is not None:
@@ -512,6 +517,7 @@ def deserialize(s_dict):
     status.children = set(s_dict['children'])
     status.owner_id = s_dict['owner_id']
     status.giver_id = s_dict['giver_id']
+    status.data = s_dict['data']  # Get back persistent data
 
     return status
 

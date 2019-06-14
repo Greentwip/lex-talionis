@@ -16,7 +16,7 @@ if;gameStateObj.turncount == 2
     s;Gilliam;I've stronger armor than you do. I'll take the lead. Watch my back.
     r;Franz;Gilliam
 end
-if;gameStateObj.get_unit_from_name('Eirika').position[0] <= 7 and 'EnemyRein' not in gameStateObj.level_constants
+if;gameStateObj.get_unit_from_name('Seth').position[0] <= 7 and 'EnemyRein' not in gameStateObj.level_constants
     # Move reinforcements into the game
     trigger;EnemyRein
     # Hover cursor over main soldier; (13, 9) is final position of soldier

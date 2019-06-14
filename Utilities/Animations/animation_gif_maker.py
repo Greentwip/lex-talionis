@@ -21,7 +21,7 @@ class DummyItem(object):
 class Animator(object):
     def __init__(self, klass, gender, name, item):
         self.unit = None  # Dummy unit object since we probably don't need it
-        if item:
+        if item and item.TYPE:
             magic = any([t in item.TYPE for t in ('Anima', 'Dark', 'Light')])
         else:
             magic = False

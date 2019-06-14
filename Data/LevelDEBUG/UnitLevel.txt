@@ -20,7 +20,7 @@
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;MyrmidonF;10;Rusted Sword;3,17;None;Resistance
+player;0;0;Sniper;10;Willow Bow;3,17;None;Resistance
 player;0;0;Cavalier;10;Rusted Sword;4,17;None;Resistance
 player;0;0;Cavalier;10;Rusted Sword;3,16;None;Resistance
 player;0;0;Skirmisher;10;Rusted Lance;4,16;None;Resistance

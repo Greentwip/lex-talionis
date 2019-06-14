@@ -326,9 +326,9 @@ class Reset(Action):
         self.hasTraded = unit.hasTraded
         self.hasAttacked = unit.hasAttacked
         self.finished = unit.finished
-        self.hasRunMoveAI = unit.hasRunMoveAI
-        self.hasRunAttackAI = unit.hasRunAttackAI
-        self.hasRunGeneralAI = unit.hasRunGeneralAI
+        # self.hasRunMoveAI = unit.hasRunMoveAI
+        # self.hasRunAttackAI = unit.hasRunAttackAI
+        # self.hasRunGeneralAI = unit.hasRunGeneralAI
 
     def do(self, gameStateObj):
         self.unit.reset()
@@ -338,9 +338,9 @@ class Reset(Action):
         self.unit.hasTraded = self.hasTraded
         self.unit.hasAttacked = self.hasAttacked
         self.unit.finished = self.finished
-        self.unit.hasRunMoveAI = self.hasRunMoveAI
-        self.unit.hasRunAttackAI = self.hasRunAttackAI
-        self.unit.hasRunGeneralAI = self.hasRunGeneralAI
+        # self.unit.hasRunMoveAI = self.hasRunMoveAI
+        # self.unit.hasRunAttackAI = self.hasRunAttackAI
+        # self.unit.hasRunGeneralAI = self.hasRunGeneralAI
 
 class ResetAll(Action):
     def __init__(self, units):
@@ -909,12 +909,12 @@ class ChangeAI(Action):
         self.new_ai = new_ai
 
     def do(self, gameStateObj):
-        self.unit.ai_descriptor = self.new_ai
         self.unit.get_ai(self.new_ai)
+        logger.info('New AI: %s', self.unit.ai_descriptor)
 
     def reverse(self, gameStateObj):
-        self.unit.ai_descriptor = self.old_ai
         self.unit.get_ai(self.old_ai)
+        logger.info('New AI: %s', self.unit.ai_descriptor)
 
 class AIGroupPing(Action):
     def __init__(self, unit):
@@ -1241,12 +1241,13 @@ class AddStatus(Action):
 
         # --- Non-momentary status ---
         if self.status_obj.mind_control:
-            self.status_obj.original_team = self.unit.team
+            self.status_obj.data['original_team'] = self.unit.team
             p_unit = gameStateObj.get_unit_from_id(self.status_obj.owner_id)
             self.actions.append(ChangeTeam(self.unit, p_unit.team))
 
         if self.status_obj.ai_change:
-            self.status_obj.original_ai = self.unit.ai_descriptor
+            self.status_obj.data['original_ai'] = self.unit.ai_descriptor
+            logger.info('%s %s', self.unit, self.status_obj.ai_change)
             self.actions.append(ChangeAI(self.unit, self.status_obj.ai_change))
 
         if self.status_obj.stat_change:
@@ -1353,10 +1354,11 @@ class RemoveStatus(Action):
 
         # --- Non-momentary status ---
         if self.status_obj.mind_control:
-            self.actions.append(ChangeTeam(self.unit, self.status_obj.original_team))
+            self.actions.append(ChangeTeam(self.unit, self.status_obj.data['original_team']))
 
         if self.status_obj.ai_change:
-            self.actions.append(ChangeAI(self.unit, self.status_obj.original_ai))
+            logger.info('%s %s %s', self.unit, self.unit.ai_descriptor, self.status_obj.data['original_ai'])
+            self.actions.append(ChangeAI(self.unit, self.status_obj.data['original_ai']))
 
         if self.status_obj.upkeep_stat_change:
             stat_change = [-stat*(self.status_obj.upkeep_stat_change.count) for stat in 

@@ -16,7 +16,7 @@
         <image_index>3,4</image_index>
         <components>always_animation,hp_percentage,time,negative</components>
 
-        <time>5</time>
+        <time>6</time>
         <hp_percentage>-15</hp_percentage>
         <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
         <always_animation>MapPoison,5,2,8</always_animation>
@@ -42,7 +42,7 @@
 		<image_index>9,7</image_index>
 		<components>stat_change,no_weapons,always_animation,time,negative,stun,affects_movement</components>
 
-		<time>5</time>
+		<time>6</time>
 		<!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
     	<stat_change>0,0,0,0,0,0,0,0,0,-99</stat_change>
 		<!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
@@ -56,7 +56,7 @@
         <image_index>9,7</image_index>
         <components>always_animation,time,negative,un_selectable,ai_change,ignore_alliances</components>
 
-        <time>3</time>
+        <time>4</time>
         <ai_change>Berserk</ai_change>
         <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
         <always_animation>MapBerserk,5,2,7</always_animation>
@@ -69,7 +69,7 @@
         <image_index>7,0</image_index>
         <components>no_magic_weapons,always_animation,time,negative</components>
 
-        <time>2</time>
+        <time>4</time>
         <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
         <always_animation>MapSilence,4,1,4</always_animation>
     </status>

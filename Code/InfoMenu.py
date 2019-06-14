@@ -617,7 +617,7 @@ class InfoMenu(StateMachine.State):
         GC.FONT['text_yellow'].blit(cf.WORDS["Avoid"], menu_surf, (78, top + 32))
 
         if self.unit.getMainWeapon():
-            rng = self.unit.getMainWeapon().get_range_string()
+            rng = self.unit.getMainWeapon().get_true_range_string(self.unit)
             dam = str(self.unit.damage(gameStateObj))
             acc = str(self.unit.accuracy(gameStateObj))
         else:

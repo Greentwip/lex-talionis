@@ -2123,7 +2123,7 @@
 
         <MT>10</MT>
         <HIT>100</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <status_on_equip>Wretched_Air</status_on_equip>
         <wexp>0</wexp>
@@ -2143,10 +2143,10 @@
         <desc>Sends all enemies in range 3 to sleep</desc>
         <status>Sleep</status>
 
-        <LVL>--</LVL>
-        <targets>Enemy</targets>
+        <LVL></LVL>
+        <targets>Tile</targets>
         <hit>70</hit>
-        <aoe>Blast,3</aoe>
+        <aoe>EnemyBlast,3</aoe>
 
         <wexp>0</wexp>
 
@@ -2168,7 +2168,7 @@
 
         <MT>15</MT>
         <HIT>60</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <status_on_equip>Demon_Light</status_on_equip>
         <wexp>0</wexp>
@@ -2187,7 +2187,7 @@
 
         <MT>15</MT>
         <HIT>85</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <status_on_equip>Ravager</status_on_equip>
         <wexp>0</wexp>
@@ -2208,7 +2208,7 @@
 
         <MT>11</MT>
         <HIT>80</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2227,7 +2227,7 @@
 
         <MT>13</MT>
         <HIT>70</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
         <crit>5</crit>
@@ -2247,7 +2247,7 @@
 
         <MT>14</MT>
         <HIT>65</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2266,7 +2266,7 @@
 
         <MT>7</MT>
         <HIT>80</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2285,7 +2285,7 @@
 
         <MT>12</MT>
         <HIT>75</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2300,12 +2300,12 @@
         <RNG>1</RNG>
         <weight>10</weight>
         <value>0</value>
-        <desc></desc>
+        <desc>Poisons on contact</desc>
         <status>Poison</status>
 
         <MT>6</MT>
         <HIT>65</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2320,12 +2320,12 @@
         <RNG>1</RNG>
         <weight>12</weight>
         <value>0</value>
-        <desc></desc>
+        <desc>Poisons on contact</desc>
         <status>Poison</status>
 
         <MT>10</MT>
         <HIT>60</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2344,7 +2344,7 @@
 
         <MT>5</MT>
         <HIT>90</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2363,7 +2363,7 @@
 
         <MT>13</MT>
         <HIT>80</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2382,7 +2382,7 @@
 
         <MT>7</MT>
         <HIT>85</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
     </item>
@@ -2401,7 +2401,7 @@
 
         <MT>14</MT>
         <HIT>70</HIT>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>0</wexp>
         <crit>5</crit>
@@ -2418,12 +2418,12 @@
         <weight>8</weight>
         <uses>5</uses>
         <value>0</value>
-        <desc></desc>
+        <desc>Petrifies on hit</desc>
         <status>Petrify</status>
 
         <hit>65</hit>
         <targets>Enemy</targets>
-        <LVL>--</LVL>
+        <LVL></LVL>
 
         <wexp>5</wexp>
     </item>

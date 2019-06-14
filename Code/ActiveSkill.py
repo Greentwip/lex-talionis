@@ -580,12 +580,15 @@ class Nosferatu(PassiveSkill):
 class Metamagic_Status(PassiveSkill):
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if Weapons.TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast'):
+        if Weapons.TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast', 'EnemyBlast'):
             item.overcharged = True
             item.orig_aoe = item.aoe
             if item.orig_aoe.number != 'MAG/2':
                 new_num = int(item.orig_aoe.number) + 1
-            item.aoe = ItemMethods.AOEComponent('Blast', new_num)
+            if item.aoe.mode == 'EnemyBlast':
+                item.aoe = ItemMethods.AOEComponent('EnemyBlast', new_num)
+            else:
+                item.aoe = ItemMethods.AOEComponent('Blast', new_num)
 
     def reverse_mod(self, item):
         if item.overcharged:

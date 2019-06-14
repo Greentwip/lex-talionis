@@ -50,6 +50,13 @@ class ItemObject(object):
     def get_range(self, unit):
         return get_item_range(self, unit)
 
+    def get_true_range_string(self, unit):
+        item_rng = get_item_range(self, unit)
+        if min(item_rng) == max(item_rng):
+            return str(item_rng[0])
+        else:
+            return str(item_rng[0]) + '-' + str(item_rng[-1])
+
     def get_range_string(self):
         return '-'.join(self.RNG).replace('MAG', 'MP')
 
@@ -155,6 +162,8 @@ def get_item_range(item, unit):
         else:
             r2 = int(r2)
         r2 += (1 if item.longshot else 0)
+        if item.longshot:
+            print('Hey I have longshot!')
         return list(range(r1, max(r2, 1) + 1))
     else:
         print('%s has an unsupported range: %s' % (item, item.get_range_string()))
@@ -169,10 +178,7 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
         font2 = GC.FONT['text_yellow']
 
         if self.item.weapon:
-            if ',' in self.item.weapon.LVL:
-                weaponLVL = 'Prf'
-            else:
-                weaponLVL = self.item.weapon.LVL
+            weaponLVL = self.item.weapon.strLVL
             self.first_line_text = [' ', weaponLVL, ' Mt ', str(self.item.weapon.MT), ' Hit ', str(self.item.weapon.HIT)]
             if cf.CONSTANTS['crit']:
                 self.first_line_text += [' Crit ', str(self.item.crit) if self.item.crit is not None else '--']
@@ -187,10 +193,7 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
             self.first_line_font += [font2, font1]
 
         elif self.item.spell:
-            if ',' in self.item.spell.LVL:
-                spellLVL = 'Prf'
-            else:
-                spellLVL = self.item.spell.LVL
+            spellLVL = self.item.spell.strLVL
             self.first_line_text = [' ', spellLVL]
             self.first_line_font = [font1, font1]
             if self.item.damage is not None:
@@ -283,7 +286,12 @@ class WeaponComponent(object):
         self.MT = int(MT)
         self.HIT = int(HIT)
         self.LVL = LVL
-        self.strLVL = self.LVL if self.LVL in ('A', 'B', 'C', 'D', 'E', 'S', 'SS') else 'Prf' # Display Prf if Lvl is weird
+        if self.LVL in ('A', 'B', 'C', 'D', 'E', 'S', 'SS'):
+            self.strLVL = self.LVL
+        elif self.LVL:
+            self.strLVL = 'Prf'
+        else:
+            self.strLVL = '--'
 
 class ExtraSelectComponent(object):
     def __init__(self, RNG, targets):
@@ -335,10 +343,15 @@ class AOEComponent(object):
                               (p[0] - 1, p[1] + 1), (p[0], p[1] + 1), (p[0] + 1, p[1] + 1)]
             splash_positions = {position for position in other_position if tileMap.check_bounds(position)}
             return cursor_position, list(splash_positions - {cursor_position})
-        elif self.mode == 'Blast':
+        elif self.mode == 'Blast' or self.mode == 'EnemyBlast':
             num = self.get_number(item, gameStateObj)
             splash_positions = Utility.find_manhattan_spheres(range(num + 1), cursor_position)
-            splash_positions = {position for position in splash_positions if tileMap.check_bounds(position)}
+            if self.mode == 'Blast':
+                splash_positions = {position for position in splash_positions if tileMap.check_bounds(position)}
+            elif self.mode == 'EnemyBlast':
+                item_owner = gameStateObj.get_unit_from_id(item.item_owner)
+                splash_positions = {pos for pos in splash_positions if tileMap.check_bounds(pos) and 
+                                    not gameStateObj.compare_teams(item_owner.team, gameStateObj.grid_manager.get_team_node(pos))}
             if item.weapon:
                 return cursor_position, list(splash_positions - {cursor_position})
             else:
@@ -380,7 +393,12 @@ class SpellComponent(object):
         self.name = 'spell'
         self.LVL = LVL
         self.targets = targets # Ally, Enemy, Tile... maybe more?
-        self.strLVL = self.LVL if self.LVL in ['A', 'B', 'C', 'D', 'E', 'S', 'SS'] else 'Prf' # Display Prf is Lvl is weird
+        if self.LVL in ('A', 'B', 'C', 'D', 'E', 'S', 'SS'):
+            self.strLVL = self.LVL
+        elif self.LVL:
+            self.strLVL = 'Prf'
+        else:
+            self.strLVL = '--'
 
 class MovementComponent(object):
     def __init__(self, mode, magnitude):
