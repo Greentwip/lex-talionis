@@ -57,7 +57,9 @@ The newest version of the FEGBA2LT_animation_converter should handle everything 
 
 I also wrote a new utility that converts map sprites from GBA format to Lex Talionis format.
 
-You can find these download links for these utilities here: https://gitlab.com/rainlash/lex-talionis/wikis/101.-Utilities
+If you'd rather start your game from the normal Fire Emblem base, I now have a bundle of data files that I created for the Sacred Stones in the Lex Talionis Engine.
+
+You can find these download links for these utilities and packages here: https://gitlab.com/rainlash/lex-talionis/wikis/101.-Utilities
 
 Can now automatically generate autotiles within the Level Editor.
 
@@ -74,9 +76,6 @@ support_edges.txt
 support_nodes.txt
 
 There have also been Audio/sfx updates
-
-IF you'd rather start your game from the normal Fire Emblem base, I now have a bundle of data files that I created for the Sacred Stones in the Lex Talionis Engine. You can download it here [Link]
-
 
 Other bug/minor fixes:
 

@@ -10,9 +10,7 @@
 - Restore (Restore)
 
 v0.9.0
-- Include Sacred Stones items.xml, equations.txt, constants.ini, status.xml, class_info.xml, units.xml, ...
 - Build Lex Talionis and post
-
 
 v0.9.1
 - Fix music fade in/out -- rewrite music thread (loops, battle music, sections of music)
