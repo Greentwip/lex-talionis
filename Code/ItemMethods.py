@@ -162,8 +162,6 @@ def get_item_range(item, unit):
         else:
             r2 = int(r2)
         r2 += (1 if item.longshot else 0)
-        if item.longshot:
-            print('Hey I have longshot!')
         return list(range(r1, max(r2, 1) + 1))
     else:
         print('%s has an unsupported range: %s' % (item, item.get_range_string()))

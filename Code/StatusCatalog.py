@@ -508,7 +508,7 @@ def deserialize(s_dict):
         status.upkeep_stat_change.count = s_dict['upkeep_sc_count']
     if s_dict['active_charge'] is not None:
         status.active.current_charge = s_dict['active_charge']
-    if s_dict['automatic_charge'] is not None:
+    if s_dict.get('automatic_charge') is not None:
         status.automatic.current_charge = s_dict['automatic_charge']
     if s_dict['stat_halve_penalties'] is not None:
         status.stat_halve.penalties = s_dict['stat_halve_penalties']
@@ -517,7 +517,7 @@ def deserialize(s_dict):
     status.children = set(s_dict['children'])
     status.owner_id = s_dict['owner_id']
     status.giver_id = s_dict['giver_id']
-    status.data = s_dict['data']  # Get back persistent data
+    status.data = s_dict.get('data', {})  # Get back persistent data
 
     return status
 

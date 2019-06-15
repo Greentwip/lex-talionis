@@ -254,6 +254,9 @@ class GainExpState(StateMachine.State):
                 gameStateObj.stateMachine.back()
 
     def draw(self, gameStateObj, metaDataObj):
+        if not self.started:
+            return StateMachine.State.draw(self, gameStateObj, metaDataObj)
+
         if self.combat_object:
             under_state = gameStateObj.stateMachine.get_under_state(self)
             surf = under_state.draw(gameStateObj, metaDataObj)

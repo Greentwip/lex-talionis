@@ -122,7 +122,6 @@ class MapObject(object):
                         # To be moved to global during next update
                         self.animations.append(CustomObjects.Animation(GC.IMAGESDICT['Snag'], (x, y - 1), (5, 13), animation_speed=DESTRUCTION_ANIM_TIME//(13*5)))
                 else:
-                    print(x, y, image_filename, pos)
                     self.tile_sprites[(x, y)].image_name = image_filename
                     self.tile_sprites[(x, y)].position = pos
                     self.tile_sprites[(x, y)].loadSprites()
@@ -138,6 +137,7 @@ class MapObject(object):
         if self.autotiles:
             surf.blit(self.autotiles[self.autotile_frame], (0, 0))
         surf.blit(self.map_image, (0, 0))
+
         for position, tile in self.tile_sprites.items():
             tile.draw(surf, position)
         
@@ -559,9 +559,8 @@ class TileSprite(object):
         self.image_name = image_name
         self.position = position
         self.map_reference = parent_map # Keeps a reference to the parent map
-        self.loadSprites()
-
         self.reset_transition()
+        self.loadSprites()
 
     def reset_transition(self):
         self.new_image = None
@@ -574,8 +573,10 @@ class TileSprite(object):
         rect = (self.position[0]*GC.TILEWIDTH, self.position[1]*GC.TILEHEIGHT, GC.TILEWIDTH, GC.TILEHEIGHT)
         if self.image_name is None:
             self.image = Engine.subsurface(self.map_reference.map_image, rect)
+            self.image = self.image.convert()
         else:
             self.image = Engine.subsurface(self.map_reference.loose_tile_sprites[self.image_name], rect)
+            self.image = self.image.convert()
 
     def removeSprites(self):
         self.image = None
@@ -583,6 +584,7 @@ class TileSprite(object):
     def loadNewSprites(self):
         rect = (self.new_position[0]*GC.TILEWIDTH, self.new_position[1]*GC.TILEHEIGHT, GC.TILEWIDTH, GC.TILEHEIGHT)
         self.new_image = Engine.subsurface(self.map_reference.loose_tile_sprites[self.new_image_name], rect)
+        self.new_image = self.new_image.convert()
 
     def draw(self, surf, position):
         pos = (position[0] * GC.TILEWIDTH, position[1] * GC.TILEHEIGHT)
