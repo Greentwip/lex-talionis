@@ -993,7 +993,7 @@ class Help_Box(Counters.CursorControl):
             helpleft = GC.WINWIDTH - self.help_dialog.get_width() - 8
         else:
             helpleft = self.cursor_position[0] - min(GC.TILEWIDTH*2, self.cursor_position[0]) # Don't go to far to the left
-        if self.cursor_position[1] > GC.WINHEIGHT//2 + 8:
+        if self.cursor_position[1] >= GC.WINHEIGHT//2 + 8:
             helptop = self.cursor_position[1] - self.help_dialog.get_height()
         else:
             helptop = self.cursor_position[1] + 16

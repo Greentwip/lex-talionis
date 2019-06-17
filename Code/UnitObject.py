@@ -1694,11 +1694,11 @@ class UnitObject(object):
             accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[0]
         return accuracy
 
-    def avoid(self, gameStateObj, item=None, dist=0):
-        if item and item.alternate_avoid:
-            base = GC.EQUATIONS.get_equation(item.alternate_avoid, self, item, dist)
+    def avoid(self, gameStateObj, item_to_avoid=None, dist=0):
+        if item_to_avoid and item_to_avoid.alternate_avoid:
+            base = GC.EQUATIONS.get_equation(item_to_avoid.alternate_avoid, self, self.getMainWeapon(), dist)
         else:
-            base = GC.EQUATIONS.get_avoid(self, item, dist)
+            base = GC.EQUATIONS.get_avoid(self, self.getMainWeapon(), dist)
         
         base += self.get_support_bonuses(gameStateObj)[3]
         for status in self.status_effects:
@@ -1767,14 +1767,14 @@ class UnitObject(object):
         else:
             return 0
 
-    def crit_avoid(self, gameStateObj, item=None, dist=0):
-        base = GC.EQUATIONS.get_crit_avoid(self, item, dist)
+    def crit_avoid(self, gameStateObj, item_to_avoid=None, dist=0):
+        base = GC.EQUATIONS.get_crit_avoid(self, self.getMainWeapon(), dist)
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         base += self.get_support_bonuses(gameStateObj)[5]
         return base
 
-    def defense(self, gameStateObj, equation='DEFENSE', item=None, dist=0):
-        defense = GC.EQUATIONS.get_equation(equation, self, item, dist)
+    def defense(self, gameStateObj, equation='DEFENSE', item_to_avoid=None, dist=0):
+        defense = GC.EQUATIONS.get_equation(equation, self, self.getMainWeapon(), dist)
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
         defense += self.get_support_bonuses(gameStateObj)[1]
