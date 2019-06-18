@@ -455,3 +455,95 @@
 	</units>
 </level>
 
+<level name="7">
+	<mode>Lunatic</mode>
+	<game_constants>Dead_Wagons,10;Convoy,1;line_cross,16;level,7;money,1500;max_turnwheel_uses,6;Turnwheel,1;switches,2;Civ_Escape,5;current_turnwheel_uses,6;noir,2;Supports,1</game_constants>
+	<convoy>Angelic Robe 1,Spiritbane 3,Secret Book 1,Prim's Charm --,Mana Ring 1,Sapphire --,Magebane Sword 15,Mithril Mail 1,Heal 4,Great Lance 25,Willow Bow 13,Ruby --,Talisman 1,Fire 12,Mithril Lance 20,Speedwings 1,Longbow 19,Nyx 18,Vulnerary 2,Great Lance 24,Vulnerary 2,Short Spear 14,Energy Ring 1</convoy>
+	<units>
+		<unit name="Ophie">
+			<level>10</level>
+			<exp>77</exp>
+			<items>Steel Sword 26,Iron Sword 30,Rapier 14,Gustblade 17</items>
+			<wexp>51,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Prim">
+			<level>10</level>
+			<exp>71</exp>
+			<items>Physic 12,Mend 8,Glimmer 15,Shine 18,Heal 18</items>
+			<wexp>0,0,0,0,65,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Joel">
+			<level>11</level>
+			<exp>83</exp>
+			<items>Hatchet 13,Iron Axe 21,Steel Axe 25,Hand Axe 15,Potion 2</items>
+			<wexp>0,0,67,16,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Nia">
+			<level>10</level>
+			<exp>62</exp>
+			<items>Oak Bow 24,Willow Bow 24,Potion 3</items>
+			<wexp>0,0,0,61,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Althea">
+			<level>12</level>
+			<exp>86</exp>
+			<items>Thunder 28,Wind 10,Fire 26,Wyrmsfire 7,Fly 2</items>
+			<wexp>0,0,0,0,0,63,0</wexp>
+			<skills>Defense +2</skills>
+		</unit>
+		<unit name="Drake">
+			<level>11</level>
+			<exp>93</exp>
+			<items>Iron Lance 35,Javelin 16,Iron Sword 23</items>
+			<wexp>36,47,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Renae">
+			<level>9</level>
+			<exp>78</exp>
+			<items>Flareblade 9,Rapier 20,Steel Sword 17</items>
+			<wexp>42,0,0,0,0,0,0</wexp>
+			<skills>Resistance +2</skills>
+		</unit>
+		<unit name="Theo">
+			<level>9</level>
+			<exp>77</exp>
+			<items>Steel Lance 29,Iron Lance 34,Javelin 15,Vulnerary 1</items>
+			<wexp>0,45,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Eliza">
+			<level>8</level>
+			<exp>97</exp>
+			<items>Slim Lance 23,Iron Lance 20,Short Spear 14,Javelin 12,Skeleton Key 1</items>
+			<wexp>0,38,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Sam">
+			<level>11</level>
+			<exp>46</exp>
+			<items>Fortune 2,Rescue 2,Shine 10,Mend 7</items>
+			<wexp>0,0,0,0,67,0,0</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Kayla">
+			<level>11</level>
+			<exp>0</exp>
+			<items>Flux 20,Spiritbane 3,Fly 5</items>
+			<wexp>0,0,0,0,0,0,66</wexp>
+			<skills></skills>
+		</unit>
+		<unit name="Coyote">
+			<level>9</level>
+			<exp>1</exp>
+			<items>Rusted Sword 20,Superior Edge 10,Vulnerary 3</items>
+			<wexp>41,0,0,0,0,0,0</wexp>
+			<skills></skills>
+		</unit>
+	</units>
+</level>
+

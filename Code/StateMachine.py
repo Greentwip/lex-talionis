@@ -263,7 +263,7 @@ class State(object):
             gameStateObj.map.update(gameStateObj)
             gameStateObj.highlight_manager.update()
             for unit in gameStateObj.allunits:
-                unit.update(gameStateObj)
+                unit.update(gameStateObj)             
             gameStateObj.cursor.update(gameStateObj)
             for cursor in gameStateObj.fake_cursors:
                 cursor.update(gameStateObj)
