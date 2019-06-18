@@ -256,7 +256,11 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
                 cur_unit.position = u_i['position']
 
             # Items
-            items = [ItemMethods.itemparser(item) for item in unit.find('inventory').text.split(',') if item]
+            inventory_text = unit.find('inventory').text
+            if inventory_text:
+                items = [ItemMethods.itemparser(item) for item in inventory_text.split(',') if item]
+            else:
+                items = []
             items = [item for item in items if item]  # Remove Nones
             gameStateObj.add_items(items)
             for item in items:

@@ -47,7 +47,12 @@ def build_named_units(class_dict):
         # u_i['growths'] = SaveLoad.intify_comma_list(unit.find('growths').text)
         # u_i['growths'].extend([0] * (cf.CONSTANTS['num_stats'] - len(u_i['growths'])))
         # assert len(u_i['growths']) == cf.CONSTANTS['num_stats'], "growths %s must be exactly %s integers long"%(stats, cf.CONSTANTS['num_stats'])
-        u_i['items'] = [ItemMethods.itemparser(item) for item in unit.find('inventory').text.split(',') if item]
+        inventory_text = unit.find('inventory').text
+        if inventory_text:
+            u_i['items'] = [ItemMethods.itemparser(item) for item in inventory_text.split(',') if item]
+        else:
+            u_i['items'] = []
+        u_i['items'] = [item for item in u_i['items'] if item]  # Remove Nones
         # u_i['items'] = ItemMethods.itemparser(unit.find('inventory').text.split(','))
         # # Parse wexp
         # u_i['wexp'] = unit.find('wexp').text.split(',')
