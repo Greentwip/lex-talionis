@@ -22,7 +22,7 @@ class Parser(object):
             self.equations[lhs] = self.tokenize(rhs)
 
         replacement_dict = self.create_replacement_dict()
-        for lhs in self.equations.keys():
+        for lhs in list(self.equations.keys()):
             self.fix(lhs, replacement_dict)
 
     def tokenize(self, s):

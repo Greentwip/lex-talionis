@@ -539,12 +539,15 @@ class StartPreloadedLevels(StartLoad):
                 for unit in units.findall('unit'):
                     unit_dict = {}
                     unit_dict['name'] = unit.get('name')
+                    unit_dict['party'] = unit.find('party').text if unit.find('party') is not None else None
+                    unit_dict['class'] = unit.find('class').text if unit.find('class') is not None else None
                     unit_dict['level'] = int(unit.find('level').text)
                     unit_dict['exp'] = int(unit.find('exp').text)
                     unit_dict['items'] = parse_item_uses_list(unit.find('items').text)
                     unit_dict['wexp'] = [int(x) for x in unit.find('wexp').text.split(',')]
                     skill_text = unit.find('skills').text
                     unit_dict['skills'] = [x for x in skill_text.split(',')] if skill_text else []
+                    unit_dict['dead'] = int(unit.find('dead').text) if unit.find('dead') is not None else 0
                     unit_list.append(unit_dict)
                 level_dict['units'] = unit_list
                 return level_dict
@@ -586,7 +589,7 @@ class StartPreloadedLevels(StartLoad):
         else:
             gameStateObj.mode = gameStateObj.default_mode()
         gameStateObj.default_mode_choice()
-        for key, value in level['game_constants']:
+        for key, value in level['game_constants'].iteritems():
             gameStateObj.game_constants[key] = value
         gameStateObj.save_slot = 'Preload ' + level['name']
         # Convoy
@@ -610,6 +613,15 @@ class StartPreloadedLevels(StartLoad):
             legend['ai'] = 'None'
             # Reinforcement units can be empty, since they won't spawn in as reinforcements
             unit = SaveLoad.add_unit_from_legend(legend, gameStateObj.allunits, {}, gameStateObj)
+
+            # Put unit in the correct party
+            if unit_dict['party'] is not None:
+                unit.party = unit_dict['party']
+
+            # Remove starting items
+            for item in reversed(unit.items):
+                Action.RemoveItem(unit, item).execute(gameStateObj)
+
             # Get items
             for item_id, uses in unit_dict['items']:
                 item = ItemMethods.itemparser(item_id)
@@ -626,21 +638,15 @@ class StartPreloadedLevels(StartLoad):
                 if unit.level >= max_level:
                     class_options = unit_klass['turns_into']
                     if class_options:
-                        unit.klass = class_options[0]
-                        unit_klass = ClassData.class_dict[unit.klass]
-                        unit.removeSprites()
-                        unit.loadSprites()
-                        unit.level = 1
-                        unit.movement_group = unit_klass['movement_group']
-                        levelup_list = unit_klass['promotion']
-                        current_stats = list(unit.stats.values())
-                        assert len(levelup_list) == len(unit_klass['max']) == len(current_stats), "%s %s %s" % (levelup_list, unit_klass['max'], current_stats)
-                        for index, stat in enumerate(levelup_list):
-                            levelup_list[index] = min(stat, unit_klass['max'][index] - current_stats[index].base_stat)
-                        unit.apply_levelup(levelup_list)
+                        if unit_dict['class'] in class_options:
+                            new_klass = unit_dict['class']
+                        else:
+                            new_klass = class_options[0]
+                        Action.Promote(unit, new_klass).execute(gameStateObj)
                 else:
                     unit.level += 1
-                    unit.level_up(gameStateObj, unit_klass)
+                    leveluplist = unit.level_up(gameStateObj, unit_klass)
+                    unit.apply_levelup(leveluplist, True)
             unit.set_exp(unit_dict['exp'])
             unit.wexp = unit_dict['wexp']
             # Get skills
@@ -651,7 +657,11 @@ class StartPreloadedLevels(StartLoad):
                         Action.AddStatus(unit, skill).do(gameStateObj)
             unit.change_hp(1000)  # reset currenthp
 
-        # Actually Load the first level
+            # Handle units that are already dead
+            if unit_dict['dead']:
+                unit.dead = True
+
+        # Actually load the level
         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
         # Hardset the name of the first level
         gameStateObj.stateMachine.clear()

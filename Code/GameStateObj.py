@@ -143,7 +143,7 @@ class GameStateObj(object):
 
         self._money = Counter()
         self._convoy = {0: []}
-        self.current_party = 0
+        self.current_party = '0'  # Party is always a string, not an integer
         self.play_time = 0
         self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if cf.CONSTANTS['support'] else None
         self.overworld = Overworld.Overworld()
@@ -681,18 +681,6 @@ class GameStateObj(object):
                 self.convoy.remove(healing_item)
         # Done
 
-    def output_progress(self):
-        with open('Saves/progress_log.txt', 'a') as p_log:
-            p_log.write('\n')
-            p_log.write('\n=== Level ' + str(self.game_constants['level']) + ' === Money: ' + str(self.get_money()))
-            for unit in self.allunits:
-                p_log.write('\n*** ' + unit.name + ': ' + ','.join([skill.name for skill in unit.status_effects]))
-                p_log.write('\nLvl ' + str(unit.level) + ', Exp ' + str(unit.exp))
-                p_log.write('\nWexp: ' + ', '.join([str(wexp_num) for wexp_num in unit.wexp]))
-                p_log.write('\nItems: ' + ', '.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]))
-            p_log.write('\n*** Convoy:')
-            p_log.write('\nItems: ' + ', '.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in self.convoy]))
-
     def output_progress_xml(self):
         klasses = ClassData.class_dict
         with open('Saves/progress_log.xml', 'a') as p_log:
@@ -709,16 +697,15 @@ class GameStateObj(object):
             # Units
             p_log.write('\t<units>\n')
             for unit in self.allunits:
-                if unit.dead:  # Don't write about dead units
-                    continue
-                p_log.write('\t\t<unit name="' + unit.name + '">\n')
-                tier = min(klasses[unit.klass]['tier'], len(cf.CONSTANTS['max_level']) - 1)
-                level = unit.level + (tier - 1) * cf.CONSTANTS['max_level'][tier]
-                p_log.write('\t\t\t<level>' + str(level) + '</level>\n')
+                p_log.write('\t\t<unit name="' + str(unit.id) + '">\n')
+                p_log.write('\t\t\t<party>' + str(unit.party) + '</party>\n')
+                p_log.write('\t\t\t<class>' + str(unit.klass) + '</class>\n')
+                p_log.write('\t\t\t<level>' + str(unit.level) + '</level>\n')
                 p_log.write('\t\t\t<exp>' + str(unit.exp) + '</exp>\n')
                 p_log.write('\t\t\t<items>' + ','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]) + '</items>\n')
                 p_log.write('\t\t\t<wexp>' + ','.join([str(wexp) for wexp in unit.wexp]) + '</wexp>\n')
                 p_log.write('\t\t\t<skills>' + ','.join([skill.id for skill in unit.status_effects if not skill.class_skill]) + '</skills>\n')
+                p_log.write('\t\t\t<dead>' + str(1 if unit.dead else 0) + '</dead>\n')
                 p_log.write('\t\t</unit>\n')
             p_log.write('\t</units>\n')
             p_log.write('</level>\n\n')

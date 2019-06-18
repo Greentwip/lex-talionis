@@ -184,7 +184,7 @@
     <level name="DEBUG">
         <mode>Hard</mode>
         <money>0</money>
-        <game_constants></game_constants>
+        <game_constants>Turnwheel,1</game_constants>
         <convoy></convoy>
         <units>
             <unit name="Ophie">
