@@ -528,7 +528,11 @@ class StartPreloadedLevels(StartLoad):
             if level.get('name') == name:
                 level_dict['name'] = level.get('name')
                 level_dict['mode'] = level.find('mode').text
-                level_dict['game_constants'] = parse_game_constants(level.find('game_constants').text)
+                try:
+                    level_dict['game_constants'] = parse_game_constants(level.find('game_constants').text)
+                except AttributeError as e:
+                    print('Could not load game constants: %s' % e)
+                    level_dict['game_constants'] = {}
                 level_dict['convoy'] = parse_item_uses_list(level.find('convoy').text)
                 units = level.find('units')
                 unit_list = []
