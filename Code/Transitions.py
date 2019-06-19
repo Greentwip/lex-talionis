@@ -6,11 +6,13 @@ import os, time
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import CustomObjects, MenuFunctions, SaveLoad, StateMachine, ClassData
     import Dialogue, Engine, Image_Modification, Weather, Background
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, ClassData
     from . import Dialogue, Engine, Image_Modification, Weather, Background
 
@@ -589,8 +591,11 @@ class StartPreloadedLevels(StartLoad):
         else:
             gameStateObj.mode = gameStateObj.default_mode()
         gameStateObj.default_mode_choice()
+        gameStateObj.game_constants['level'] = level['name']
         for key, value in level['game_constants'].iteritems():
             gameStateObj.game_constants[key] = value
+        static_random.set_seed(gameStateObj.game_constants.get('_random_seed', 0))
+
         gameStateObj.save_slot = 'Preload ' + level['name']
         # Convoy
         for item_id, uses in level['convoy']:
@@ -632,7 +637,14 @@ class StartPreloadedLevels(StartLoad):
                     item.uses.uses = int(uses)
                 unit.add_item(item, gameStateObj)
             # Level up the unit
-            for level_num in range(unit_dict['level'] - unit.level):
+            max_level = ClassData.class_dict[unit.klass]['max_level']
+            old_class_tier = ClassData.class_dict[unit.klass]['tier']
+            if unit_dict['class']:
+                new_class_tier = ClassData.class_dict[unit_dict['class']]['tier']
+            else:
+                new_class_tier = -10  # Really low
+            tier_diff = max(0, new_class_tier - old_class_tier) * max_level
+            for level_num in range(unit_dict['level'] + tier_diff - unit.level):
                 unit_klass = ClassData.class_dict[unit.klass]
                 max_level = unit_klass['max_level']
                 if unit.level >= max_level:

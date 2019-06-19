@@ -682,7 +682,6 @@ class GameStateObj(object):
         # Done
 
     def output_progress_xml(self):
-        klasses = ClassData.class_dict
         with open('Saves/progress_log.xml', 'a') as p_log:
             p_log.write('<level name="' + str(self.game_constants['level']) + '">\n')
             p_log.write('\t<mode>' + self.mode['name'] + '</mode>\n')
@@ -704,7 +703,7 @@ class GameStateObj(object):
                 p_log.write('\t\t\t<exp>' + str(unit.exp) + '</exp>\n')
                 p_log.write('\t\t\t<items>' + ','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]) + '</items>\n')
                 p_log.write('\t\t\t<wexp>' + ','.join([str(wexp) for wexp in unit.wexp]) + '</wexp>\n')
-                p_log.write('\t\t\t<skills>' + ','.join([skill.id for skill in unit.status_effects if not skill.class_skill]) + '</skills>\n')
+                p_log.write('\t\t\t<skills>' + ','.join([skill.id for skill in unit.status_effects]) + '</skills>\n')
                 p_log.write('\t\t\t<dead>' + str(1 if unit.dead else 0) + '</dead>\n')
                 p_log.write('\t\t</unit>\n')
             p_log.write('\t</units>\n')
