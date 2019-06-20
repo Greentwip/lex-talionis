@@ -2472,6 +2472,12 @@ class ShopState(StateMachine.State):
                 Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_vendor')])
             # Get data
             self.unit = gameStateObj.cursor.currentSelectedUnit
+
+            self.buy_value_mod = 1.0
+            for status in self.unit.status_effects:
+                if status.buy_value_mod:
+                    self.buy_value_mod *= status.buy_value_mod
+
             if self.name == 'market':
                 itemids = gameStateObj.market_items
             else:
@@ -2481,7 +2487,7 @@ class ShopState(StateMachine.State):
             items_for_sale = [ItemMethods.itemparser(item) for item in itemids.split(',') if item]
             
             topleft = (GC.WINWIDTH//2 - 80 + 4, 3*GC.WINHEIGHT//8+8)
-            self.shopMenu = MenuFunctions.ShopMenu(self.unit, items_for_sale, topleft, limit=5, buy=True)
+            self.shopMenu = MenuFunctions.ShopMenu(self.unit, items_for_sale, topleft, limit=5, buy=True, buy_value_mod=self.buy_value_mod)
             self.myMenu = MenuFunctions.ShopMenu(self.unit, self.unit.items, topleft, limit=5, buy=False)
             self.buy_sell_menu = MenuFunctions.ChoiceMenu(self.unit, [cf.WORDS['Buy'], cf.WORDS['Sell']], (80, 32), background='ActualTransparent', horizontal=True)
             self.sure_menu = MenuFunctions.ChoiceMenu(self.unit, [cf.WORDS['Yes'], cf.WORDS['No']], (80, 32), background='ActualTransparent', horizontal=True)
@@ -2573,6 +2579,7 @@ class ShopState(StateMachine.State):
             elif event == 'SELECT' and not self.info:
                 selection = self.shopMenu.getSelection()
                 value = (selection.value * selection.uses.uses) if selection.uses else selection.value
+                value = int(value * self.buy_value_mod)
                 if ('Convoy' in gameStateObj.game_constants or len(self.unit.items) < cf.CONSTANTS['max_items']) and\
                         (gameStateObj.get_money() - value) >= 0:
                     GC.SOUNDDICT['Select 1'].play()
@@ -2640,6 +2647,7 @@ class ShopState(StateMachine.State):
                     GC.SOUNDDICT['GoldExchange'].play()
                     selection = self.shopMenu.getSelection()
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
+                    value = int(value * self.buy_value_mod)
                     new_item = ItemMethods.itemparser(str(selection.id))
                     gameStateObj.add_item(new_item)
                     if len(self.unit.items) >= cf.CONSTANTS['max_items']:

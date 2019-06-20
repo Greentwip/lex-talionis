@@ -1763,6 +1763,18 @@
         <desc>Grants LCK +10.</desc>   
     </item>
 
+    <item name="Silver Card">
+        <id>Silver Card</id>
+        <spritetype>Boosters</spritetype>
+        <spriteid>5</spriteid>       
+        <components>status_on_hold,beneficial</components>
+
+        <RNG>0</RNG>
+        <value>0</value>
+        <status_on_hold>Merchant</status_on_hold>
+        <desc>Can buy items for reduced cost.</desc>   
+    </item>
+
     <item name="Ruby">
         <id>Ruby</id>
         <spritetype>Valuable</spritetype>

@@ -9,3 +9,4 @@
 3,16:Formation=0
 2,17:Formation=0
 3,19:Search=0
+3,17:Shop=Iron Sword,Steel Sword,Iron Lance,Vulnerary

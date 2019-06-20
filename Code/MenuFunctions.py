@@ -1399,10 +1399,11 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
 
 # Serves as controller class for host of menus
 class ConvoyMenu(object):
-    def __init__(self, owner, options, topleft, disp_value=None):
+    def __init__(self, owner, options, topleft, disp_value=None, buy_value_mod=1.0):
         self.owner = owner
         self.topleft = topleft
         self.disp_value = disp_value
+        self.buy_value_mod = buy_value_mod
 
         self.order = Weapons.TRIANGLE.types + ["Consumable"]
         self.wexp_icons = [Weapons.Icon(name, grey=True) for name in self.order]
@@ -1440,9 +1441,10 @@ class ConvoyMenu(object):
         self.menus = {}
         if self.disp_value:
             buy = True if self.disp_value == "Buy" else False
+            buy_value_mod = self.buy_value_mod if buy else 1.0
             for w_type in self.order:
-                self.menus[w_type] = ShopMenu(self.owner, sorted_dict[w_type], self.topleft, limit=7, hard_limit=True, buy=buy, shimmer=2)
-            self.menus["Consumable"] = ShopMenu(self.owner, sorted_dict['Consumable'], self.topleft, limit=7, hard_limit=True, buy=buy, shimmer=2)
+                self.menus[w_type] = ShopMenu(self.owner, sorted_dict[w_type], self.topleft, limit=7, hard_limit=True, buy=buy, shimmer=2, buy_value_mod=buy_value_mod)
+            self.menus["Consumable"] = ShopMenu(self.owner, sorted_dict['Consumable'], self.topleft, limit=7, hard_limit=True, buy=buy, shimmer=2, buy_value_mod=buy_value_mod)
         else:
             for w_type in self.order:
                 self.menus[w_type] = ChoiceMenu(self.owner, sorted_dict[w_type], self.topleft, limit=7, hard_limit=True, width=120, shimmer=2, gem=False)
@@ -1526,14 +1528,11 @@ class ConvoyMenu(object):
 
 # Simple shop menu
 class ShopMenu(ChoiceMenu):
-    def __init__(self, owner, options, topleft, limit=5, hard_limit=True, background='BaseMenuBackground', buy=True, shimmer=0):
+    def __init__(self, owner, options, topleft, limit=5, hard_limit=True, background='BaseMenuBackground', buy=True, shimmer=0, buy_value_mod=1.0):
         ChoiceMenu.__init__(self, owner, options, topleft, limit=limit, hard_limit=hard_limit, background=background, width=120, shimmer=shimmer, gem=False)
         # Whether we are buying or selling
-        if buy:
-            self.denominator = 1
-        else:
-            self.denominator = 2
-
+        self.buy = buy
+        self.buy_value_mod = buy_value_mod
         self.takes_input = False
 
         self.lastUpdate = Engine.get_time()
@@ -1576,15 +1575,30 @@ class ShopMenu(ChoiceMenu):
             true_value = None
             if option.uses:
                 uses_string = str(option.uses.uses)
-                true_value = option.uses.uses * option.value // self.denominator
+                true_value = option.uses.uses * option.value
+                if self.buy:
+                    true_value *= self.buy_value_mod
+                else:
+                    true_value //= 2
+                true_value = int(true_value)
                 value_string = str(true_value)
             elif option.c_uses:
                 uses_string = str(option.c_uses)
-                true_value = option.value // self.denominator
-                value_string = str(option.value // self.denominator)
+                true_value = option.value
+                if self.buy:
+                    true_value *= self.buy_value_mod
+                else:
+                    true_value //= 2
+                true_value = int(true_value)
+                value_string = str(true_value)
             elif option.value:
-                true_value = option.value // self.denominator
-                value_string = str(option.value // self.denominator)
+                true_value = option.value
+                if self.buy:
+                    true_value *= self.buy_value_mod
+                else:
+                    true_value //= 2
+                true_value = int(true_value)
+                value_string = str(true_value)
 
             if option.locked or not option.value or (self.owner and not self.owner.canWield(option)):
                 name_font = GC.FONT['text_grey']
@@ -1594,12 +1608,12 @@ class ShopMenu(ChoiceMenu):
                 uses_font = GC.FONT['text_blue']
             if not option.value:
                 value_font = GC.FONT['text_grey']
-            elif self.denominator == 1:
+            elif self.buy:
                 if money < true_value:
                     value_font = GC.FONT['text_grey']
                 else:
                     value_font = GC.FONT['text_blue']
-            elif self.denominator == 2:
+            elif not self.buy:
                 value_font = GC.FONT['text_blue']
 
             name_font.blit(str(option), surf, (self.topleft[0] + 20, self.topleft[1] + 4 + index*16))

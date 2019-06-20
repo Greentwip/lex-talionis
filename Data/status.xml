@@ -346,6 +346,16 @@
         <stat_change>0,0,0,0,0,10,0,0,0,0</stat_change>
     </status>
 
+    <!-- Used by Silver Card -->
+    <status name="Merchant">
+        <id>Merchant</id>
+        <desc>Can buy items at reduced prices.</desc>
+        <image_index>11,9</image_index>
+        <components>buy_value_mod</components>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <buy_value_mod>0.5</buy_value_mod>
+    </status>
+
     <!-- Used by Superior Weapons -->
     <status name="Swordbreaker">
         <id>Swordbreaker</id>

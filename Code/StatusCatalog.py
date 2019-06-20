@@ -451,6 +451,8 @@ def statusparser(s_id, gameStateObj=None):
                     my_components['caretaker'] = int(status.find('caretaker').text)
                 elif component == 'remove_range':
                     my_components['remove_range'] = int(status.find('remove_range').text)
+                elif component == 'buy_value_mod':
+                    my_components['buy_value_mod'] = float(status.find('buy_value_mod').text)
                 elif component == 'hp_percentage':
                     percentage = status.find('hp_percentage').text
                     my_components['hp_percentage'] = HPPercentageComponent(percentage)

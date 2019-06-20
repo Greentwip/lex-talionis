@@ -270,18 +270,20 @@ class UnitSprite(object):
                 topleft = (left - max(0, (rescueIcon.get_width() - 16)//2), top - max(0, (rescueIcon.get_height() - 16)//2))
                 surf.blit(rescueIcon, topleft)
 
-    def get_sprites(self, team):
-        gender = 'M' if self.unit.gender < 5 else 'F'
+    def get_sprites(self, team):        
         try:
-            unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
-            unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
-        except KeyError:  # Try the other gender
-            try:
-                gender = 'F' if self.unit.gender < 5 else 'M'
-                unit_stand_sprites = GC.UNITDICT[team + self.unit.klass + gender]
-                unit_move_sprites = GC.UNITDICT[team + self.unit.klass + gender + '_move']
-            except KeyError:
-                raise KeyError("You are missing map animations for the %s class" % self.unit.klass)
+            # Gender is an integer 0 - 9, check that first
+            try_this = team + self.unit.klass + str(self.unit.gender)
+            if try_this not in GC.UNITDICT:
+                gender = 'M' if self.unit.gender < 5 else 'F'
+                try_this = team + self.unit.klass + gender
+                if try_this not in GC.UNITDICT:
+                    gender = 'F' if self.unit.gender < 5 else 'M'
+                    try_this = team + self.unit.klass + gender
+            unit_stand_sprites = GC.UNITDICT[try_this]
+            unit_move_sprites = GC.UNITDICT[try_this + '_move']
+        except KeyError:
+            raise KeyError("You are missing map animations for the %s class: %s team" % (self.unit.klass, team))
         return unit_stand_sprites, unit_move_sprites
 
     def loadSprites(self):

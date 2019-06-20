@@ -336,7 +336,7 @@ class PrepItemsState(StateMachine.State):
 
         if not self.started:
             # print([(unit.name, unit.dead) for unit in gameStateObj.allunits])
-            player_units = gameStateObj.get_units_in_party(gameStateObj.current_party) 
+            player_units = gameStateObj.get_units_in_party(gameStateObj.current_party)
             units = sorted(player_units, key=lambda unit: bool(unit.position), reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 3, 4, 'center')
             if self.name == 'base_items' or self.name == 'base_armory_pick':
@@ -1027,9 +1027,14 @@ class BaseMarketState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
             self.cur_unit = gameStateObj.cursor.currentSelectedUnit
+            self.buy_value_mod = 1.0
+            if self.cur_unit:
+                for status in self.cur_unit.status_effects:
+                    if status.buy_value_mod:
+                        self.buy_value_mod *= status.buy_value_mod
             self.update_options(gameStateObj)
             items_for_sale = [ItemMethods.itemparser(item) for item in gameStateObj.market_items]
-            self.shop_menu = MenuFunctions.ConvoyMenu(None, items_for_sale, (GC.WINWIDTH - 160 - 4, 40), disp_value="Buy")
+            self.shop_menu = MenuFunctions.ConvoyMenu(None, items_for_sale, (GC.WINWIDTH - 160 - 4, 40), disp_value="Buy", buy_value_mod=self.buy_value_mod)
             self.choice_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS["Buy"], cf.WORDS["Sell"]], (16, 16), gem=False, background='BrownBackgroundOpaque')
             self.buy_sure_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS['Buy'], cf.WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
             self.sell_sure_menu = MenuFunctions.ChoiceMenu(None, [cf.WORDS['Sell'], cf.WORDS['Cancel']], 'center', gameStateObj, horizontal=True, gem=False, background='BrownBackgroundOpaque')
@@ -1127,6 +1132,7 @@ class BaseMarketState(StateMachine.State):
                 selection = self.current_menu.getSelection()
                 if selection:
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
+                    value = int(value * self.buy_value_mod)
                     if gameStateObj.get_money() - value >= 0:
                         self.state = 'Buy_Sure'
                         GC.SOUNDDICT['Select 1'].play()
@@ -1148,6 +1154,7 @@ class BaseMarketState(StateMachine.State):
                     else:
                         gameStateObj.convoy.append(item)
                     value = (item.value * item.uses.uses) if item.uses else item.value
+                    value = int(value * self.buy_value_mod)
                     gameStateObj.inc_money(-value)
                     self.money_counter_disp.start(-value)
                     self.update_options(gameStateObj)

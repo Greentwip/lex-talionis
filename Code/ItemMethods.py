@@ -58,6 +58,9 @@ class ItemObject(object):
             return str(item_rng[0]) + '-' + str(item_rng[-1])
 
     def get_range_string(self):
+        # If is actually a burst from current position, display that in item.
+        if self.RNG[-1] == '0' and self.aoe and self.aoe.mode in ('Blast', 'EnemyBlast'):
+            return self.aoe.number.replace('MAG', 'MP')
         return '-'.join(self.RNG).replace('MAG', 'MP')
 
     def is_ranged(self):

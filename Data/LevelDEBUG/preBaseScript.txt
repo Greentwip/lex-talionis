@@ -1,1 +1,3 @@
 set_game_constant;Supports
+give_item;Drake;Silver Card;no_choice
+add_to_market;Vulnerary
