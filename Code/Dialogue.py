@@ -533,13 +533,13 @@ class Dialogue_Scene(object):
                 item = ItemMethods.itemparser(line[2])
                 if item:
                     gameStateObj.add_item(item)
-                    self.add_item(receiver, item, gameStateObj, 'no_choice' not in line)
+                    self.add_item(receiver, item, gameStateObj, 'no_choice' not in line, 'no_banner' not in line)
                     tile = gameStateObj.map.tiles.get(self.tile_pos, None)
                     if self.unit and self.unit.team.startswith('enemy') and tile and tile.name == "Chest":
                         Action.do(Action.MakeItemDroppable(self.unit, item), gameStateObj)
                 else:
                     logger.error("Could not find item matching %s", line[2])
-            elif line[2] == "0":
+            elif line[2] == "0" and 'no_banner' not in line:
                 gameStateObj.banners.append(Banner.foundNothingBanner(receiver))
                 gameStateObj.stateMachine.changeState('itemgain')
                 self.current_state = "Paused"
@@ -1688,18 +1688,21 @@ class Dialogue_Scene(object):
         position_list = [position for position in rein_positions if gameStateObj.map.tile_info_dict[position]['Reinforcement'] == pos_line]
         return position_list
 
-    def add_item(self, unit, item, gameStateObj, choice=True):
-        if unit:
-            if choice:  # You can make convoy decision here
-                Action.do(Action.GiveItem(unit, item), gameStateObj)    
-            elif len(unit.items) < cf.CONSTANTS['max_items']:
-                Action.do(Action.GiveItem(unit, item, False), gameStateObj)
-            else:
-                Action.do(Action.PutItemInConvoy(item), gameStateObj)
+    def add_item(self, unit, item, gameStateObj, choice=True, banner=True):
+        if banner:
+            func = Action.do  # Displays banner
             self.current_state = "Paused"
         else:
-            Action.do(Action.PutItemInConvoy(item), gameStateObj)
-            self.current_state = "Paused"
+            func = Action.execute  # Does not display banner
+        if unit:
+            if choice:  # You can make convoy decision here
+                func(Action.GiveItem(unit, item), gameStateObj)    
+            elif len(unit.items) < cf.CONSTANTS['max_items']:
+                func(Action.GiveItem(unit, item, False), gameStateObj)
+            else:
+                func(Action.PutItemInConvoy(item), gameStateObj)
+        else:
+            func(Action.PutItemInConvoy(item), gameStateObj)
         
 # === DIALOG CLASS ============================================================
 class Dialog(object):

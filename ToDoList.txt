@@ -9,16 +9,12 @@
 - Shadowshot (Hex)
 - Restore (Restore)
 
-v0.9.0
-- Build Lex Talionis and post
-
 v0.9.1
 - Fix music fade in/out -- rewrite music thread (loops, battle music, sections of music)
 - Add separate combine action to convoy
 - Add support to fe_repo_to_lex for Dragonstone (and Sage?)
 - Add AI taking into account nearby allies/enemies?
-- Test palette swap for animations
-- Add 'no_banner' to give item
+- Fix and Test Palette Editor
 
 v0.9.2 -- overworld & submap update
 - Test overworld
@@ -35,12 +31,12 @@ v0.9.3 -- combat update & activated status update
 - Implement Devil axe effect -- (gives user a percent skill to die)
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
 - Remake how passive and active skills are scripted in the status.xml
-- Redo how passive skills work at all
+- Redo how passive skills work entirely
 
 v0.9.4 -- dialogue and command update
 - Dialogue Editor
 - Split dialogue and commands into 2 separate files
-- Really, just require how dialogue works
+- Really, just totally rewrite how dialogue works
 - Rapidly tapping A on Dialogue sometimes causes it to jitter up and down while leaving (probably just need to rewrite how dialogue is rendered to the screen anyway...)
 - When I fix events, make visit, escape?, seize, switch, search, etc, all work the same way
 - Instead of current system, use system of triggers which trigger events. Then can simply attach events to items and statuses and that becomes very easy
@@ -66,7 +62,6 @@ FOR FUTURE UPDATES TO THE ENGINE:
 --- EXTRA ---
 =============
 - Add Fake arrival to Give/Take
-- After you Take a unit, you should not be able to Give??
 - If you are on impassable terrain, take damage.
 - Add levelup quotes - optional - Because characters don't really matter for this game, probably not
 - Add Awakening-style dialogue backlog...??** On R press
