@@ -880,12 +880,15 @@ class PrepTransferState(StateMachine.State):
             all_items = gameStateObj.convoy
             self.menu = MenuFunctions.ConvoyMenu(gameStateObj.cursor.currentSelectedUnit, all_items, (GC.WINWIDTH - 120 - 4, 40))
             self.menu.set_take_input(False)
-            cur_unit = gameStateObj.cursor.currentSelectedUnit
-            self.choice_menu = MenuFunctions.ChoiceMenu(cur_unit, [cf.WORDS["Give"], cf.WORDS["Take"]], (60, 16), gem=False, background='BrownBackgroundOpaque')
-            self.owner_menu = MenuFunctions.ChoiceMenu(cur_unit, cur_unit.items, (6, 72), limit=5, hard_limit=True, width=104, gem=False, shimmer=2)
+            self.cur_unit = gameStateObj.cursor.currentSelectedUnit
+            self.options = [cf.WORDS["Give"], cf.WORDS["Take"], cf.WORDS["Merge"]]
+            self.choice_menu = MenuFunctions.ChoiceMenu(self.cur_unit, self.options, (60, 8), gem=False, background='BrownBackgroundOpaque')
+            self.choice_menu.ignore = [False, False, not any(self.can_merge(item, gameStateObj.convoy) for item in self.cur_unit.items)]
+            self.choice_menu.color_control = ['text_grey' if i else 'text_white' for i in self.choice_menu.ignore]
+            self.owner_menu = MenuFunctions.ChoiceMenu(self.cur_unit, self.cur_unit.items, (6, 72), limit=5, hard_limit=True, width=104, gem=False, shimmer=2)
             self.owner_menu.takes_input = False
             self.owner_menu.draw_face = True
-            self.state = "Free" # Can also be Give, Take
+            self.state = "Free" # Can also be Give, Take, Merge1, Merge2
             self.info = False
 
             # Hide active menu
@@ -897,6 +900,22 @@ class PrepTransferState(StateMachine.State):
                 gameStateObj.stateMachine.changeState("transition_in")
                 return 'repeat'
 
+    def can_merge(self, item, convoy):
+        if item.uses and item.uses.can_repair():
+            for i in convoy:
+                if i.id == item.id:
+                    return True
+
+    def merge_items(self, host, guest):
+        diff_needed = host.uses.total_uses - host.uses.uses
+        if diff_needed > 0:
+            if guest.uses.uses >= diff_needed:
+                guest.uses.uses -= diff_needed
+                host.uses.uses += diff_needed
+            else:
+                host.uses.uses += guest.uses.uses
+                guest.uses.uses = 0
+
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
@@ -904,70 +923,135 @@ class PrepTransferState(StateMachine.State):
 
         if 'DOWN' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            if self.state == cf.WORDS['Give']:
+            if self.state == 'Give':
                 self.owner_menu.moveDown(first_push)
-            elif self.state == cf.WORDS['Take']:
+            elif self.state == 'Take':
+                self.menu.moveDown(first_push)
+            elif self.state == 'Merge1':
+                self.owner_menu.moveDown(first_push)
+                self.menu.goto_same_item_id(self.owner_menu.getSelection())
+            elif self.state == 'Merge2':
                 self.menu.moveDown(first_push)
             else:
                 self.choice_menu.moveDown(first_push)
         elif 'UP' in directions:
             GC.SOUNDDICT['Select 6'].play()
-            if self.state == cf.WORDS['Give']:
+            if self.state == 'Give':
                 self.owner_menu.moveUp(first_push)
-            elif self.state == cf.WORDS['Take']:
+            elif self.state == 'Take':
+                self.menu.moveUp(first_push)
+            elif self.state == 'Merge1':
+                self.owner_menu.moveUp(first_push)
+                self.menu.goto_same_item_id(self.owner_menu.getSelection())
+            elif self.state == 'Merge2':
                 self.menu.moveUp(first_push)
             else:
                 self.choice_menu.moveUp(first_push)
         elif 'RIGHT' in directions:
-            # GC.SOUNDDICT['Select 6'].play()
-            GC.SOUNDDICT['TradeRight'].play()
-            self.menu.moveRight(first_push)
+            if self.state in ('Give', 'Take', 'Free'):
+                GC.SOUNDDICT['TradeRight'].play()
+                self.menu.moveRight(first_push)
+            else:
+                GC.SOUNDDICT['Error'].play()
         elif 'LEFT' in directions:
-            GC.SOUNDDICT['TradeRight'].play()
-            # GC.SOUNDDICT['Select 6'].play()
-            self.menu.moveLeft(first_push)
+            if self.state in ('Give', 'Take', 'Free'):
+                GC.SOUNDDICT['TradeRight'].play()
+                self.menu.moveLeft(first_push)
+            else:
+                GC.SOUNDDICT['Error'].play()
 
         if event == 'SELECT':
-            if self.state == cf.WORDS['Give']:
+            if self.state == 'Give':
                 selection = self.owner_menu.getSelection()
                 if selection:
                     GC.SOUNDDICT['Select 1'].play()
-                    gameStateObj.cursor.currentSelectedUnit.remove_item(selection, gameStateObj)
+                    self.cur_unit.remove_item(selection, gameStateObj)
                     gameStateObj.convoy.append(selection)
                     self.menu.updateOptions(gameStateObj.convoy)
                     self.menu.goto(selection)
                     # Goto the item in self.menu
-                    self.owner_menu.updateOptions(gameStateObj.cursor.currentSelectedUnit.items)
-            elif self.state == cf.WORDS['Take']:
-                if len(gameStateObj.cursor.currentSelectedUnit.items) < cf.CONSTANTS['max_items']:
+                    self.owner_menu.updateOptions(self.cur_unit.items)
+                    self.choice_menu.ignore = [False, False, not any(self.can_merge(item, gameStateObj.convoy) for item in self.cur_unit.items)]
+                    self.choice_menu.color_control = ['text_grey' if i else 'text_white' for i in self.choice_menu.ignore]
+            elif self.state == 'Take':
+                if len(self.cur_unit.items) < cf.CONSTANTS['max_items']:
                     GC.SOUNDDICT['Select 1'].play()
                     selection = self.menu.getSelection()
                     if selection:
                         gameStateObj.convoy.remove(selection)
-                        gameStateObj.cursor.currentSelectedUnit.add_item(selection, gameStateObj)
+                        self.cur_unit.add_item(selection, gameStateObj)
                     self.menu.updateOptions(gameStateObj.convoy)
-                    self.owner_menu.updateOptions(gameStateObj.cursor.currentSelectedUnit.items)
+                    self.owner_menu.updateOptions(self.cur_unit.items)
+                    self.choice_menu.ignore = [False, False, not any(self.can_merge(item, gameStateObj.convoy) for item in self.cur_unit.items)]
+                    self.choice_menu.color_control = ['text_grey' if i else 'text_white' for i in self.choice_menu.ignore]
+            elif self.state == 'Merge1':
+                selection = self.owner_menu.getSelection()
+                if selection:
+                    GC.SOUNDDICT['Select 2'].play()
+                    self.state = "Merge2"
+                    self.menu.set_take_input(True)
+            elif self.state == 'Merge2':
+                my_item = self.owner_menu.getSelection()
+                convoy_item = self.menu.getSelection()
+                if my_item and convoy_item and my_item.id == convoy_item.id:
+                    GC.SOUNDDICT['Select 1'].play()
+                    self.merge_items(my_item, convoy_item)
+                    if convoy_item.uses.uses <= 0:
+                        gameStateObj.convoy.remove(convoy_item)
+                    self.menu.updateOptions(gameStateObj.convoy)
+                    self.owner_menu.ignore = [not self.can_merge(item, gameStateObj.convoy) for item in self.cur_unit.items]
+                    can_still_merge = not all(self.owner_menu.ignore)
+                    self.owner_menu.color_control = ['text_grey' if i else 'text_white' for i in self.owner_menu.ignore]
+                    self.owner_menu.updateOptions(self.cur_unit.items)
+                    self.choice_menu.ignore = [False, False, not can_still_merge]
+                    self.choice_menu.color_control = ['text_grey' if i else 'text_white' for i in self.choice_menu.ignore]
+                    if can_still_merge:
+                        self.state = "Merge1"
+                        self.owner_menu.moveDown(True)
+                        self.menu.goto_same_item_id(self.owner_menu.getSelection())
+                    else:
+                        self.state = "Free"
+                        self.choice_menu.moveTo(0)    
+                    self.menu.set_take_input(False)
+                else:
+                    GC.SOUNDDICT['Error'].play()
             else:
                 GC.SOUNDDICT['Select 1'].play()
-                selection = self.choice_menu.getSelection()
-                self.state = selection
-                if self.state == cf.WORDS['Give']:
+                selection_index = self.choice_menu.getSelectionIndex()
+                if selection_index == 0:
+                    self.state = "Give"
+                elif selection_index == 1: 
+                    self.state = "Take"
+                elif selection_index == 2:
+                    self.state = "Merge1"
+                if self.state == "Give" or self.state == "Merge1":
                     self.owner_menu.takes_input = True
+                    if self.state == "Merge1":
+                        self.owner_menu.ignore = [not self.can_merge(item, gameStateObj.convoy) for item in self.cur_unit.items]
+                        self.owner_menu.color_control = ['text_grey' if i else 'text_white' for i in self.owner_menu.ignore]
+                        self.owner_menu.updateOptions(self.cur_unit.items)
+                        self.owner_menu.moveTo(self.owner_menu.color_control.index('text_white'))
+                        self.menu.goto_same_item_id(self.owner_menu.getSelection())
                 else:
                     self.menu.set_take_input(True)
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            if self.state == cf.WORDS['Give'] or self.state == cf.WORDS['Take']:
+            if self.state in ('Give', 'Take', 'Merge1'):
                 if self.info:
                     self.info = False
                 else:
                     self.state = "Free"
                     self.owner_menu.takes_input = False
                     self.menu.set_take_input(False)
+                    self.owner_menu.ignore = None
+                    self.owner_menu.color_control = None
+            elif self.state == 'Merge2':
+                self.state = "Merge1"
+                self.menu.set_take_input(False)
             else:
                 gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
-            if self.state == cf.WORDS['Give'] or self.state == cf.WORDS['Take']:
+            if self.state != "Free":
                 self.info = not self.info
                 if self.info:
                     GC.SOUNDDICT['Info In'].play()
@@ -976,9 +1060,9 @@ class PrepTransferState(StateMachine.State):
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
-        if self.state == cf.WORDS["Give"]:
+        if self.state in ("Give", "Merge1"):
             self.owner_menu.update()
-        elif self.state == cf.WORDS["Take"]:
+        elif self.state in ("Take", "Merge2"):
             self.menu.update()
         else:
             self.choice_menu.update()
@@ -994,13 +1078,13 @@ class PrepTransferState(StateMachine.State):
         if self.info:
             selection = None
             position = None
-            if self.state == cf.WORDS["Give"]:
+            if self.state in ("Give", "Merge1"):
                 selection = self.owner_menu.getSelection()
                 if selection:
                     help_box = selection.get_help_box()
                     height = 16*self.owner_menu.currentSelection - help_box.get_height() + 64
                     position = (16, height)
-            elif self.state == cf.WORDS["Take"]:
+            elif self.state in ("Take", "Merge2"):
                 selection = self.menu.getSelection()
                 if selection:
                     help_box = selection.get_help_box()

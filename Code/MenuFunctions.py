@@ -408,7 +408,7 @@ class ChoiceMenu(SimpleMenu):
                 self.scroll = 0
             self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options) - self.limit))
 
-        if self.ignore and self.ignore[self.currentSelection]:
+        if self.ignore and self.ignore[self.currentSelection] and not all(self.ignore):
             self.moveDown()
 
         if not self.options:
@@ -425,7 +425,7 @@ class ChoiceMenu(SimpleMenu):
                 self.scroll = self.currentSelection - self.limit + 1
             self.scroll = max(self.scroll, 0) # Scroll cannot go negative
 
-        if self.ignore and self.ignore[self.currentSelection]:
+        if self.ignore and self.ignore[self.currentSelection] and not all(self.ignore):
             self.moveUp()
 
         if not self.options:
@@ -444,7 +444,8 @@ class ChoiceMenu(SimpleMenu):
     def moveTo(self, index):
         self.currentSelection = index
         self.scroll = index
-        self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options) - self.limit))
+        if self.limit:
+            self.scroll = Utility.clamp(self.scroll, 0, max(0, len(self.options) - self.limit))
 
     def draw(self, surf, gameStateObj=None):
         if self.horizontal:
@@ -1494,6 +1495,17 @@ class ConvoyMenu(object):
             self.selection_index = len(self.order) - 1
         item_index = self.menus[self.order[self.selection_index]].options.index(item)
         self.menus[self.order[self.selection_index]].moveTo(item_index)
+
+    def goto_same_item_id(self, item):
+        if item.TYPE:
+            self.selection_index = self.order.index(item.TYPE)
+        else:
+            self.selection_index = len(self.order) - 1
+        item_menu = self.menus[self.order[self.selection_index]]
+        for idx, match in enumerate(item_menu.options):
+            if match.id == item.id:
+                item_menu.moveTo(idx)
+                return
 
     def update(self):
         self.menus[self.order[self.selection_index]].update()

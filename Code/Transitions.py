@@ -585,16 +585,21 @@ class StartPreloadedLevels(StartLoad):
 
         # === Populate ===
         # Mode, Money, Level...
+        gameStateObj.game_constants['level'] = level['name']
+        try:
+            gameStateObj.game_constants['level'] = int(gameStateObj.game_constants['level'])
+        except ValueError:  # That's fine just keep going
+            pass
+        for key, value in level['game_constants'].iteritems():
+            gameStateObj.game_constants[key] = value
+        static_random.set_seed(gameStateObj.game_constants.get('_random_seed', 0))
+
         modes = [mode for mode in GC.DIFFICULTYDATA.values() if level['mode'] == mode['name'] or level['mode'] == mode['id']]
         if modes:
             gameStateObj.mode = modes[0]
         else:
             gameStateObj.mode = gameStateObj.default_mode()
         gameStateObj.default_mode_choice()
-        gameStateObj.game_constants['level'] = level['name']
-        for key, value in level['game_constants'].iteritems():
-            gameStateObj.game_constants[key] = value
-        static_random.set_seed(gameStateObj.game_constants.get('_random_seed', 0))
 
         gameStateObj.save_slot = 'Preload ' + level['name']
         # Convoy
