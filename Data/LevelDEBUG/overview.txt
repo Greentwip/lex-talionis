@@ -1,11 +1,11 @@
 name;DEBUG
 current_party;1
-prep_flag;1
+prep_flag;0
 pick_flag;1
 base_flag;0
 market_flag;0
 transition_flag;0
-player_phase_music;Brave Story 61
+player_phase_music;Helms Deep
 enemy_phase_music;In the Midst
 player_battle_music;Fire Treasure
 enemy_battle_music;Dragon Boy

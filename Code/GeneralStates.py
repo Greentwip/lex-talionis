@@ -111,7 +111,7 @@ class FreeState(StateMachine.State):
         if gameStateObj.cursor.currentSelectedUnit:
             gameStateObj.cursor.currentSelectedUnit.sprite.change_state('normal')
             gameStateObj.cursor.currentSelectedUnit = None
-        Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
+        Engine.music_thread.fade_to_normal(gameStateObj)
         self.info_counter = 0
         # So the turnwheel cannot go back before this moment
         if gameStateObj.turncount == 1:
@@ -2108,7 +2108,7 @@ class PhaseChangeState(StateMachine.State):
 
     def end(self, gameStateObj, metaDataObj):
         logger.debug('Phase End')
-        Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
+        Engine.music_thread.fade_to_normal(gameStateObj)
     
     # Save state at beginning of each turn
     def save_state(self, gameStateObj):

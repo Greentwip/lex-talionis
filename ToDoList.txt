@@ -10,7 +10,6 @@
 - Restore (Restore)
 
 v0.9.1
-- Fix music fade in/out -- rewrite music thread (loops, battle music, sections of music)
 - Add support to fe_repo_to_lex for Dragonstone (and Sage?)
 - Add AI taking into account nearby allies/enemies?
 - Fix and Test Palette Editor

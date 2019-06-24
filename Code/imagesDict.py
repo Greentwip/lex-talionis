@@ -75,6 +75,12 @@ def getSounds(home='./'):
         musicnameList = [music[:-4] for music in os.listdir(loc) if music.endswith('.ogg')]
         musicList = [(loc + music) for music in os.listdir(loc) if music.endswith('.ogg')]
         MUSICDICT = MusicDict(zip(musicnameList, musicList))
+        # Add additional names for the loops as well
+        for idx, music_name in enumerate(musicnameList):
+            if music_name.endswith(' - Start'):
+                MUSICDICT[music_name[:-8]] = musicList[idx]
+            elif music_name.endswith('- Start'):
+                MUSICDICT[music_name[:-7]] = musicList[idx]               
     else:
         MUSICDICT = MusicDict()
 

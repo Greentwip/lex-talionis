@@ -26,10 +26,12 @@ player;0;0;Cavalier;10;Rusted Sword;3,16;None;Resistance
 player;0;0;Prim;4,16;None
 # Enemies
 # Generics
-enemy;0;0;Mage;5;Fire;6,16;None;Resistance
+enemy;0;Mage1;Mage;5;Fire;6,16;None;Resistance
 #enemy;0;0;Knight;1;Iron Lance;2,13;Attack;Resistance
 #enemy;0;0;Knight;1;Iron Lance;7,17;Attack;Resistance
 # === Reinforcements ===
 # Player Characters
 # Enemies
 # === Triggers ===
+trigger;Mage1;Mage1;-1,16;0,16
+trigger;Mage2;Mage1;0,16;6,16

@@ -374,7 +374,7 @@ class LevelUpScreen(object):
                     ignore_map=True, hold=True)
                 number_animation.frameCount = -5  # delay this animation for 5 frames
                 self.animations.append(number_animation)
-                GC.SOUNDDICT['stat Up'].play()
+                GC.SOUNDDICT['Stat Up'].play()
                 self.underline_offset = 36 # for underline growing
                 self.state = 'spark_wait'
                 self.state_time = current_time
