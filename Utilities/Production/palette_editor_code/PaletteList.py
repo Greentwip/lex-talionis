@@ -140,13 +140,18 @@ class PaletteList(QtGui.QListWidget):
         print(image_filename)
         item = QtGui.QListWidgetItem(self)
         self.addItem(item)
-        print(len(self.list))
         pf = PaletteFrame(len(self.list), image_filename, self)
         self.list.append(pf)
         item.setSizeHint(pf.minimumSizeHint())
         self.setItemWidget(item, pf)
         # Try and make it the right size
         self.setMinimumWidth(self.sizeHintForColumn(0))
+        return pf
+
+    def remove_last_palette(self):
+        print('Removing last palette!')
+        self.takeItem(len(self.list) - 1)
+        self.list.pop()
 
     def duplicate(self, idx):
         new_idx = len(self.list)
@@ -166,6 +171,9 @@ class PaletteList(QtGui.QListWidget):
     def get_current_palette(self):
         return self.list[self.current_index]
 
+    def get_last_palette(self):
+        return self.list[-1]
+
     def get_palette(self, idx):
         return self.list[idx]
 
@@ -175,3 +183,4 @@ class PaletteList(QtGui.QListWidget):
             l.deleteLater()
         self.list = []
         self.current_index = 0
+        print(len(self.list))

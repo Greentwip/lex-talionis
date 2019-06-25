@@ -21,7 +21,7 @@ class MainView(QtGui.QGraphicsView):
         self.image = None
         self.screen_scale = 1
 
-    def set_image(self, image_map, palette_frame):
+    def create_image(self, image_map, palette_frame):
         colors = [QtGui.QColor(c).rgb() for c in palette_frame.get_colors()]
         width, height = image_map.width, image_map.height
         image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
@@ -29,7 +29,10 @@ class MainView(QtGui.QGraphicsView):
             for y in range(height):
                 idx = image_map.get(x, y)
                 image.setPixel(x, y, colors[idx])
-        self.image = QtGui.QImage(image)
+        return QtGui.QImage(image)
+
+    def set_image(self, image_map, palette_frame):
+        self.image = self.create_image(image_map, palette_frame)
         # self.image = self.image.convertToFormat(QtGui.QImage.Format_ARGB32)
         self.setSceneRect(0, 0, self.image.width(), self.image.height())
 
@@ -144,6 +147,7 @@ class MainEditor(QtGui.QWidget):
         self.image_map_list.clear()
         self.palette_list.clear()
         self.scripts = []
+        self.mode = 0  # 1 - Class, 2 - Animation, 3 - Basic Image, 0 - Not defined yet
 
     def class_text_change(self):
         pass
@@ -162,9 +166,27 @@ class MainEditor(QtGui.QWidget):
         self.main_view.show_image()
 
     def get_script_from_index(self, fn):
-        script = fn[:-10] + '-Script.txt'
+        script = str(fn[:-10] + '-Script.txt')
         if os.path.exists(script):
             return script
+
+        head, tail = os.path.split(script)
+        s_l = tail.split('-')
+        class_name = s_l[0]
+        gender_num = int(class_name[-1])
+        new_gender_num = (gender_num//5)*5
+        new_class_name = class_name[:-1] + str(new_gender_num)
+        new_script_name = '-'.join([new_class_name] + s_l[1:])
+        script = os.path.join(head, new_script_name)
+        if os.path.exists(script):
+            return script
+
+        new_class_name = class_name[:-1] + "0"
+        new_script_name = '-'.join([new_class_name] + s_l[1:])
+        script = os.path.join(head, new_script_name)
+        if os.path.exists(script):
+            return script
+
         return None
 
     def get_images_from_index(self, fn):
@@ -180,14 +202,17 @@ class MainEditor(QtGui.QWidget):
 
     def handle_duplicates(self, palette, image_map):
         for existing_palette in self.palette_list.list[:-1]:
-            # TODO palette != existing_palette
-            print(palette.name, existing_palette.name)
+            # print('Image Map Weapon: %s' % image_map.weapon_name)
+            # print('Existing Palette %s' % existing_palette.name)
+            # print(existing_palette.get_colors())
+            # print('New Palette %s' % palette.name)
+            # print(palette.get_colors())
             if existing_palette.name == palette.name and palette.get_colors() != existing_palette.get_colors():
                 image_map.reorder(palette, existing_palette)
                 return True
         return False
 
-    def auto_load(self):
+    def auto_load_path(self):
         starting_path = QtCore.QDir.currentPath()
         check_here = str(QtCore.QDir.currentPath() + '/pe_config.txt')
         if os.path.exists(check_here):
@@ -197,14 +222,22 @@ class MainEditor(QtGui.QWidget):
                 starting_path = directory
         return starting_path
 
+    def auto_save_path(self, index_file):
+        auto_load = str(QtCore.QDir.currentPath() + '/pe_config.txt')
+        with open(auto_load, 'w') as fp:
+            print(os.path.relpath(str(index_file)))
+            fp.write(os.path.relpath(str(index_file)))
+
     def load_class(self):
+        starting_path = self.auto_load_path()
         # starting_path = QtCore.QDir.currentPath() + '/../Data'
-        index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Class", QtCore.QDir.currentPath(),
+        index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Class", starting_path,
                                                        "Index Files (*-Index.txt);;All Files (*)")
         if index_file:
+            self.auto_save_path(index_file)
             self.clear_info()
             weapon_index_files = self.get_all_index_files(str(index_file))
-            for index_file in weapon_index_files:  # One for each weapon
+            for index_file in weapon_index_files:  # One image_map for each weapon
                 script_file = self.get_script_from_index(index_file)
                 image_files = [str(i) for i in self.get_images_from_index(index_file)]
                 if image_files:
@@ -214,7 +247,7 @@ class MainEditor(QtGui.QWidget):
                     self.play_button.setEnabled(True)
                     for image_filename in image_files:
                         self.palette_list.add_palette_from_image(image_filename)
-                        dup = self.handle_duplicates(self.palette_list.get_current_palette(), image_map)
+                        dup = self.handle_duplicates(self.palette_list.get_last_palette(), image_map)
                         if dup:
                             self.palette_list.remove_last_palette()
             for weapon in self.image_map_list.get_available_weapons():
@@ -222,17 +255,14 @@ class MainEditor(QtGui.QWidget):
             klass_name = os.path.split(image_files[0][:-4])[-1].split('-')[0]  # Klass
             self.class_text.setText(klass_name)
             self.palette_list.set_current_palette(0)
+            self.mode = 1
 
     def load_single(self):
-        starting_path = self.auto_load()
-        print(starting_path)
+        starting_path = self.auto_load_path()
         index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Animation", starting_path,
                                                        "Index Files (*-Index.txt);;All Files (*)")
-        auto_load = str(QtCore.QDir.currentPath() + '/pe_config.txt')
-        with open(auto_load, 'w') as fp:
-            print(os.path.relpath(str(index_file)))
-            fp.write(os.path.relpath(str(index_file)))
         if index_file:
+            self.auto_save_path(index_file)
             script_file = self.get_script_from_index(index_file)
             image_files = [str(i) for i in self.get_images_from_index(index_file)]
             if image_files:
@@ -247,19 +277,62 @@ class MainEditor(QtGui.QWidget):
                 klass_name = os.path.split(image_files[0][:-4])[-1].split('-')[0]  # Klass
                 self.class_text.setText(klass_name)
                 self.palette_list.set_current_palette(0)
+            self.mode = 2
 
     def load_image(self):
-        image_filename = QtGui.QFileDialog.getOpenFileName(self, "Choose Image PNG", QtCore.QDir.currentPath(),
+        starting_path = self.auto_load_path()
+        image_filename = QtGui.QFileDialog.getOpenFileName(self, "Choose Image PNG", starting_path,
                                                            "PNG Files (*.png);;All Files (*)")
         if image_filename:
+            self.auto_save_path(image_filename)
             self.clear_info()
             self.image_map_list.add_map_from_image(str(image_filename))
             self.palette_list.add_palette_from_image(str(image_filename))
             self.class_text.setEnabled(False)
             self.palette_list.set_current_palette(0)
+            self.mode = 3
+
+    def maybe_save(self):
+        ret = QtGui.QMessageBox.warning(self, "Palette Editor", "These images may have been modified.\n"
+                                        "Do you want to save your changes?",
+                                        QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
+        if ret == QtGui.QMessageBox.Save:
+            return self.save()
+        elif ret == QtGui.QMessageBox.Cancel:
+            return False
+        return True
 
     def save(self):
-        pass
+        if self.mode == 3:
+            # Save as... PNG (defaults to name with palette )
+            name = QtGui.QFileDialog.getSaveFileName(self, 'Save Image', self.auto_load_path())
+            image_map = self.image_map_list.get_current_map()
+            palette = self.palette_list.get_current_palette()
+            image = self.main_view.create_image(image_map, palette)
+            pixmap = QtGui.QPixmap.fromImage(image)
+            pixmap.save(name, 'png')
+        elif self.mode == 2:
+            # Save all palettes with their palette names
+            image_map = self.image_map_list.get_current_map()
+            for palette in self.palette_list.list:
+                image = self.main_view.create_image(image_map, palette)
+                pixmap = QtGui.QPixmap.fromImage(image)
+                head, tail = os.path.split(image_map.image_filename)
+                tail = '-'.join([str(self.class_text.text()), str(image_map.weapon_name), str(palette.name)]) + '.png'
+                new_filename = os.path.join(head, tail)
+                pixmap.save(new_filename, 'png')
+            msg = QtGui.QMessageBox.information(self, "Save Sucessful", "Successfully Saved!")
+        elif self.mode == 1:
+            # Save all weapons * palettes with their palette names
+            for image_map in self.image_map_list.list:
+                for palette in self.palette_list.list:
+                    image = self.main_view.create_image(image_map, palette)
+                    pixmap = QtGui.QPixmap.fromImage(image)
+                    head, tail = os.path.split(image_map.image_filename)
+                    tail = '-'.join([str(self.class_text.text()), str(image_map.weapon_name), str(palette.name)]) + '.png'
+                    new_filename = os.path.join(head, tail)
+                    pixmap.save(new_filename, 'png')
+            msg = QtGui.QMessageBox.information(self, "Save Sucessful", "Successfully Saved!")
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

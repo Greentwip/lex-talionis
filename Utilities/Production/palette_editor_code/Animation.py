@@ -27,7 +27,7 @@ class ImageView(QtGui.QGraphicsView):
 
     def new_frame(self, frame, offset):
         self.image = QtGui.QImage(240, 160, QtGui.QImage.Format_ARGB32)
-        self.image.fill(QtGui.QColor("white"))
+        self.image.fill(QtGui.QColor(128, 160, 128))
         painter = QtGui.QPainter()
         painter.begin(self.image)
         painter.drawImage(offset[0], offset[1], frame.copy())  # Draw image on top of autotiles
@@ -58,17 +58,25 @@ class Animator(QtGui.QDialog):
         self.playing = False
 
         self.view = ImageView()
-        self.grid.addWidget(self.view, 0, 0, 1, 2)
+        self.grid.addWidget(self.view, 0, 0, 1, 3)
 
         self.pose_box = QtGui.QComboBox()
         self.pose_box.uniformItemSizes = True
         self.pose_box.activated.connect(self.current_pose_changed)
         self.grid.addWidget(self.pose_box, 1, 0)
 
+        self.fps_box = QtGui.QSpinBox(self)
+        self.fps_box.setSuffix(' fps')
+        self.fps_box.setValue(30)
+        self.fps_box.setMaximum(60)
+        self.fps_box.setMinimum(1)
+        self.fps_box.valueChanged.connect(self.change_fps)
+        self.grid.addWidget(self.fps_box, 1, 1)
+
         self.play_button = QtGui.QPushButton('Play')
         # self.play_button.setEnabled(False)
         self.play_button.clicked.connect(self.play)
-        self.grid.addWidget(self.play_button, 1, 1)
+        self.grid.addWidget(self.play_button, 1, 2)
 
         self.populate()
 
@@ -79,7 +87,15 @@ class Animator(QtGui.QDialog):
         # === Timing ===
         self.main_timer = QtCore.QTimer()
         self.main_timer.timeout.connect(self.tick)
-        self.main_timer.start(200)  # 30 FPS  # TODO Fix
+        self.change_timer_speed(30)
+        self.main_timer.start()
+
+    def change_timer_speed(self, fps):
+        self.timer_speed = int(1000/float(fps))
+        self.main_timer.setInterval(self.timer_speed)
+
+    def change_fps(self, val):
+        self.change_timer_speed(val)
 
     def populate(self):
         self.frames = {}
@@ -110,19 +126,25 @@ class Animator(QtGui.QDialog):
 
     def current_pose_changed(self, pose):
         self.current_pose = str(self.pose_box.currentText())
+        self.playing = False
+        self.play_button.setEnabled(True)
+        self.script_index = 0
 
     def tick(self):
-        print(self.playing, self.num_frames)
+        # print(self.playing, self.num_frames)
         if self.playing:
             self.num_frames -= 1
             self.num_frames = max(0, self.num_frames)
             self.read_script()
+        else:  # Display standing anim by default
+            self.num_frames = 0
+            self.read_script('Stand')
 
-    def read_script(self):
-        script = self.poses[self.current_pose]
+    def read_script(self, pose=None):
+        script = self.poses[pose] if pose else self.poses[self.current_pose]
         while self.script_index < len(script) and self.num_frames <= 0:
             line = script[self.script_index]
-            print(line)
+            #print(line)
             self.parse_line(line)
             self.script_index += 1
             if self.script_index >= len(script):

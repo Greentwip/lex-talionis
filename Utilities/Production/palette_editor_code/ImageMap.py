@@ -5,6 +5,7 @@ class ImageMap(object):
     def __init__(self, image_filename):
         self.script = None
         self.index = None
+        self.image_filename = image_filename
         self.grid = []
         self.weapon_name = os.path.split(image_filename)[-1].split('-')[-2]
         print(self.weapon_name)
@@ -19,6 +20,8 @@ class ImageMap(object):
                 if color not in colors:
                     colors.append(color)
                 self.grid.append(colors.index(color))
+
+        self.already_reordered = False
 
     def get(self, x, y):
         return self.grid[x * self.height + y]
@@ -40,11 +43,14 @@ class ImageMap(object):
         return self.index
 
     def reorder(self, old_palette, new_palette):
+        if self.already_reordered:
+            return
         order_swap = {}
         for idx, color in enumerate(old_palette.get_colors()):
             order_swap[idx] = new_palette.get_colors().index(color)
         print(order_swap)
         self.grid = [order_swap[i] for i in self.grid]
+        self.already_reordered = True
 
 class ImageMapList(object):
     def __init__(self):
