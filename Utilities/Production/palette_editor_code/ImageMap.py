@@ -47,10 +47,15 @@ class ImageMap(object):
 
     def reorder(self, old_palette, new_palette):
         if self.already_reordered:
+            print("Already Reordered!")
             return
         order_swap = {}
+        colors = new_palette.get_colors()
         for idx, color in enumerate(old_palette.get_colors()):
-            order_swap[idx] = new_palette.get_colors().index(color)
+            if color in colors:
+                order_swap[idx] = colors.index(color)
+            else:
+                order_swap[idx] = idx
         print(order_swap)
         self.grid = [order_swap[i] for i in self.grid]
         self.already_reordered = True

@@ -207,8 +207,9 @@ class MainEditor(QtGui.QWidget):
             # print(existing_palette.get_colors())
             # print('New Palette %s' % palette.name)
             # print(palette.get_colors())
-            if existing_palette.name == palette.name and palette.get_colors() != existing_palette.get_colors():
-                image_map.reorder(palette, existing_palette)
+            if existing_palette.name == palette.name:
+                if palette.get_colors() != existing_palette.get_colors():
+                    image_map.reorder(palette, existing_palette)
                 return True
         return False
 
@@ -231,7 +232,7 @@ class MainEditor(QtGui.QWidget):
     def load_class(self):
         if not self.maybe_save():
             return
-        
+
         starting_path = self.auto_load_path()
         # starting_path = QtCore.QDir.currentPath() + '/../Data'
         index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Class", starting_path,
@@ -335,6 +336,7 @@ class MainEditor(QtGui.QWidget):
             for image_map in self.image_map_list.list:
                 for palette in self.palette_list.list:
                     image = self.main_view.create_image(image_map, palette)
+                    # image = image.convertToFormat(QtGui.QImage.Format_RGB32)
                     pixmap = QtGui.QPixmap.fromImage(image)
                     head, tail = os.path.split(image_map.image_filename)
                     tail = '-'.join([str(self.class_text.text()), str(image_map.weapon_name), str(palette.name)]) + '.png'

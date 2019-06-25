@@ -22,7 +22,7 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Sniper;10;Willow Bow,Willow Bow,Silver Card;3,17;None;Resistance
 player;0;0;Drake;4,17;None
-player;0;0;Cavalier;10;Rusted Sword;3,16;None;Resistance
+player;0;0;Knight;10;Iron Lance;3,16;None;Resistance
 player;0;0;Prim;4,16;None
 # Enemies
 # Generics

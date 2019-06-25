@@ -1,1 +1,1 @@
-..\..\Data\Animations\Knight\Knight0-Lance-Index.txt
+..\..\Data\Animations\Myrmidon\Myrmidon0-MagicSword-Index.txt

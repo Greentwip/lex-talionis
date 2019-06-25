@@ -116,6 +116,8 @@ class PaletteFrame(QtGui.QWidget):
             for y in range(image.height()):
                 grid_index = image_map.get(x, y)
                 color = QtGui.QColor(image.pixel(x, y))
+                while grid_index > len(colors) - 1:
+                    colors.append(QtGui.QColor("black"))  # Sometimes more than 16 colors
                 # if color != colors[grid_index]:
                 #     print(grid_index, colors[grid_index].getRgb(), color.getRgb())
                 colors[grid_index] = color
