@@ -13,13 +13,16 @@ class ImageMap(object):
         image = pixmap.toImage()
         self.width, self.height = image.width(), image.height()
 
-        colors = []
+        self.colors = []
         for x in range(self.width):
             for y in range(self.height):
                 color = QtGui.QColor(image.pixel(x, y))
-                if color not in colors:
-                    colors.append(color)
-                self.grid.append(colors.index(color))
+                if color not in self.colors:
+                    self.colors.append(color)
+                self.grid.append(self.colors.index(color))
+
+        for idx, color in enumerate(self.colors):
+            print(idx, color.getRgb())
 
         self.already_reordered = False
 
@@ -76,11 +79,22 @@ class ImageMapList(object):
     def get_available_weapons(self):
         return [image_map.weapon_name for image_map in self.list]
 
-    def add_map_from_image(self, image_filename):
-        image_map = ImageMap(image_filename)
-        self.list.append(image_map)
-        return image_map
+    def add_map_from_images(self, image_filenames):
+        best_image_map = None
+        most_colors = 0
+        for image_filename in image_filenames:
+            image_map = ImageMap(image_filename)
+            num_colors = len(image_map.colors)
+            if num_colors > most_colors:
+                best_image_map = image_map
+                most_colors = num_colors
+            print(image_filename, num_colors)
+        print("best_image_map")
+        print(best_image_map.image_filename)
+        self.list.append(best_image_map)
+        return best_image_map
 
     def clear(self):
+        print('Image Map List clear')
         self.list = []
         self.current_index = 0

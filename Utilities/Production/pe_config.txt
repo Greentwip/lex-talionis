@@ -1,1 +1,1 @@
-..\..\Data\Animations\Archer\Archer0-Unarmed-Index.txt
+..\..\Data\Animations\Knight\Knight0-Lance-Index.txt

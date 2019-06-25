@@ -39,6 +39,13 @@ class ImageView(QtGui.QGraphicsView):
         # self.image_counter += 1
         self.show_image()
 
+    def new_over_frame(self, frame, offset):
+        painter = QtGui.QPainter()
+        painter.begin(self.image)
+        painter.drawImage(offset[0], offset[1], frame.copy())  # Draw image on top of autotiles
+        painter.end()
+        self.show_image()
+
 class Animator(QtGui.QDialog):
     def __init__(self, image, index, script, window=None):
         super(Animator, self).__init__(window)
@@ -154,14 +161,15 @@ class Animator(QtGui.QDialog):
                 break
 
     def parse_line(self, line):
-        if line[0] == 'f':
+        if line[0] == 'f' or line[0] == 'of':
             self.num_frames = int(line[1])
             frame, offset = self.frames.get(line[2])
-            self.view.new_frame(frame, offset)
-        elif line[0] == 'of':
-            self.num_frames = int(line[1])
-            frame, offset = self.frames.get(line[2])
-            self.view.new_frame(frame, offset)
+            if len(line) > 3:
+                under_frame, under_offset = self.frames.get(line[3])
+                self.view.new_frame(under_frame, under_offset)
+                self.view.new_over_frame(frame, offset)
+            else:
+                self.view.new_frame(frame, offset)
         elif line[0] == 'uf':
             self.num_frames = int(line[1])
             frame, offset = self.frames.get(line[2])

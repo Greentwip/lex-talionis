@@ -70,14 +70,14 @@ class PaletteDisplay(QtGui.QWidget):
         self.main_editor.update_view()
 
 class PaletteFrame(QtGui.QWidget):
-    def __init__(self, idx, image_filename=None, window=None):
+    def __init__(self, idx, image_filename=None, image_map=None, window=None):
         super(PaletteFrame, self).__init__(window)
         self.window = window
 
         self.idx = idx
-        if image_filename:
+        if image_filename and image_map:
             self.name = image_filename[:-4].split('-')[-1]
-            palette = self.get_palette_from_image(image_filename)
+            palette = self.get_palette_from_image(image_filename, image_map)
 
             self.create_widgets(palette)
 
@@ -107,15 +107,22 @@ class PaletteFrame(QtGui.QWidget):
     def set_color(self, idx, color):
         self.palette_display.set_color(idx, color)
 
-    def get_palette_from_image(self, fn):
+    def get_palette_from_image(self, fn, image_map):
         colors = []
         pixmap = QtGui.QPixmap(fn)
         image = pixmap.toImage()
+        colors = [QtGui.QColor("black")] * 16
         for x in range(image.width()):
             for y in range(image.height()):
+                grid_index = image_map.get(x, y)
                 color = QtGui.QColor(image.pixel(x, y))
-                if color not in colors:
-                    colors.append(color)
+                # if color != colors[grid_index]:
+                #     print(grid_index, colors[grid_index].getRgb(), color.getRgb())
+                colors[grid_index] = color
+        # Make sure there are always at least 16 colors
+        # print(len(colors))
+        # colors.extend([QtGui.QColor("black")] * (16 - len(colors)))
+
         return colors
 
     @classmethod
@@ -136,11 +143,11 @@ class PaletteList(QtGui.QListWidget):
         self.current_index = 0
         self.radio_button_group = QtGui.QButtonGroup()
 
-    def add_palette_from_image(self, image_filename):
+    def add_palette_from_image(self, image_filename, image_map):
         print(image_filename)
         item = QtGui.QListWidgetItem(self)
         self.addItem(item)
-        pf = PaletteFrame(len(self.list), image_filename, self)
+        pf = PaletteFrame(len(self.list), image_filename, image_map, self)
         self.list.append(pf)
         item.setSizeHint(pf.minimumSizeHint())
         self.setItemWidget(item, pf)
@@ -178,9 +185,11 @@ class PaletteList(QtGui.QListWidget):
         return self.list[idx]
 
     def clear(self):
-        for idx, l in enumerate(self.list):
+        print('PaletteList clear')
+        # Need to remove things in reverse order, duh
+        for idx, l in reversed(list(enumerate(self.list))):
+            print(idx)
             self.takeItem(idx)
             l.deleteLater()
         self.list = []
         self.current_index = 0
-        print(len(self.list))

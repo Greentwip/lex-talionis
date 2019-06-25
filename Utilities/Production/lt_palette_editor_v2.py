@@ -92,6 +92,17 @@ class MainEditor(QtGui.QWidget):
         self.create_info_bars()
         self.clear_info()
 
+        self.loading = False
+        self.load_timer = QtCore.QTimer()
+        self.load_timer.timeout.connect(self.tick)
+        self.load_timer.start(1)
+
+    def tick(self):
+        if self.loading:
+            self.update_step()
+        else:
+            self.load_timer.stop()
+
     def create_menu_bar(self):
         load_class_anim = QtGui.QAction("Load Class Animation...", self, triggered=self.load_class)
         load_single_anim = QtGui.QAction("Load Single Animation...", self, triggered=self.load_single)
@@ -228,7 +239,52 @@ class MainEditor(QtGui.QWidget):
             print(os.path.relpath(str(index_file)))
             fp.write(os.path.relpath(str(index_file)))
 
+    def create_progress_bar(self, msg):
+        progress_dlg = QtGui.QProgressDialog()
+        # progress_dlg.setWindowModality(QtCore.Qt.WindowModal)
+        # progress_dlg.setModal(True)
+        progress_dlg.setLabelText(msg)
+        progress_dlg.setWindowTitle(msg)
+        progress_dlg.setCancelButton(None)
+        progress_dlg.setRange(0, 0)
+        progress_dlg.setMinimumDuration(0)
+        progress_dlg.show()
+        progress_dlg.setValue(0)
+        return progress_dlg
+
+    def update_step(self):
+        if self.current_index_file:
+            if self.current_image_file:
+                self.palette_list.add_palette_from_image(self.current_image_file, self.image_map)
+                dup = self.handle_duplicates(self.palette_list.get_last_palette(), self.image_map)
+                if dup:
+                    self.palette_list.remove_last_palette()
+                self.current_image_file = None
+            elif self.image_files:
+                self.current_image_file = self.image_files.pop(0)
+            else:
+                self.current_index_file = None
+        elif self.weapon_index_files:
+            self.current_index_file = self.weapon_index_files.pop(0)
+            script_file = self.get_script_from_index(self.current_index_file)
+            self.image_files = [str(i) for i in self.get_images_from_index(self.current_index_file)]
+            self.orig_image_files = self.image_files[:]
+            self.image_map = self.image_map_list.add_map_from_images(self.image_files)
+            self.image_map.load_script(script_file)
+            self.image_map.set_index(self.current_index_file)
+            self.play_button.setEnabled(True)
+        else:
+            for weapon in self.image_map_list.get_available_weapons():
+                self.weapon_box.addItem(weapon)
+            klass_name = os.path.split(self.orig_image_files[0][:-4])[-1].split('-')[0]  # Klass
+            self.class_text.setText(klass_name)
+            self.palette_list.set_current_palette(0)
+            self.loading = False
+            self.progress_bar.hide()            
+
     def load_class(self):
+        if not self.maybe_save():
+            return
         starting_path = self.auto_load_path()
         # starting_path = QtCore.QDir.currentPath() + '/../Data'
         index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Class", starting_path,
@@ -236,70 +292,55 @@ class MainEditor(QtGui.QWidget):
         if index_file:
             self.auto_save_path(index_file)
             self.clear_info()
-            weapon_index_files = self.get_all_index_files(str(index_file))
-            for index_file in weapon_index_files:  # One image_map for each weapon
-                script_file = self.get_script_from_index(index_file)
-                image_files = [str(i) for i in self.get_images_from_index(index_file)]
-                if image_files:
-                    image_map = self.image_map_list.add_map_from_image(image_files[0])
-                    image_map.load_script(script_file)
-                    image_map.set_index(index_file)
-                    self.play_button.setEnabled(True)
-                    for image_filename in image_files:
-                        self.palette_list.add_palette_from_image(image_filename)
-                        dup = self.handle_duplicates(self.palette_list.get_last_palette(), image_map)
-                        if dup:
-                            self.palette_list.remove_last_palette()
-            for weapon in self.image_map_list.get_available_weapons():
-                self.weapon_box.addItem(weapon)
-            klass_name = os.path.split(image_files[0][:-4])[-1].split('-')[0]  # Klass
-            self.class_text.setText(klass_name)
-            self.palette_list.set_current_palette(0)
             self.mode = 1
+            self.loading = True
+            self.progress_bar = self.create_progress_bar("Loading Class...")
+            self.weapon_index_files = self.get_all_index_files(str(index_file))
+            self.current_index_file = None  # Setup
+            self.current_image_file = None  # Setup
+            self.load_timer.start()
 
     def load_single(self):
+        if not self.maybe_save():
+            return
         starting_path = self.auto_load_path()
         index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Animation", starting_path,
                                                        "Index Files (*-Index.txt);;All Files (*)")
         if index_file:
             self.auto_save_path(index_file)
-            script_file = self.get_script_from_index(index_file)
-            image_files = [str(i) for i in self.get_images_from_index(index_file)]
-            if image_files:
-                self.clear_info()
-                image_map = self.image_map_list.add_map_from_image(image_files[0])
-                image_map.load_script(script_file)
-                image_map.set_index(index_file)
-                self.play_button.setEnabled(True)
-                for image_filename in image_files:
-                    self.palette_list.add_palette_from_image(image_filename)
-                self.weapon_box.addItem(self.image_map_list.get_current_map().weapon_name)
-                klass_name = os.path.split(image_files[0][:-4])[-1].split('-')[0]  # Klass
-                self.class_text.setText(klass_name)
-                self.palette_list.set_current_palette(0)
+            self.clear_info()
             self.mode = 2
+            self.loading = True
+            self.progress_bar = self.create_progress_bar("Loading Class...")
+            self.weapon_index_files = [str(index_file)]
+            self.current_index_file = None  # Setup
+            self.current_image_file = None  # Setup
+            self.load_timer.start()
 
     def load_image(self):
+        if not self.maybe_save():
+            return
         starting_path = self.auto_load_path()
         image_filename = QtGui.QFileDialog.getOpenFileName(self, "Choose Image PNG", starting_path,
                                                            "PNG Files (*.png);;All Files (*)")
         if image_filename:
             self.auto_save_path(image_filename)
             self.clear_info()
-            self.image_map_list.add_map_from_image(str(image_filename))
-            self.palette_list.add_palette_from_image(str(image_filename))
+            image_map = self.image_map_list.add_map_from_images([str(image_filename)])
+            self.palette_list.add_palette_from_image(str(image_filename), image_map)
             self.class_text.setEnabled(False)
             self.palette_list.set_current_palette(0)
             self.mode = 3
 
     def maybe_save(self):
-        ret = QtGui.QMessageBox.warning(self, "Palette Editor", "These images may have been modified.\n"
-                                        "Do you want to save your changes?",
-                                        QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
-        if ret == QtGui.QMessageBox.Save:
-            return self.save()
-        elif ret == QtGui.QMessageBox.Cancel:
-            return False
+        if self.mode:
+            ret = QtGui.QMessageBox.warning(self, "Palette Editor", "These images may have been modified.\n"
+                                            "Do you want to save your changes?",
+                                            QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
+            if ret == QtGui.QMessageBox.Save:
+                return self.save()
+            elif ret == QtGui.QMessageBox.Cancel:
+                return False
         return True
 
     def save(self):
@@ -321,7 +362,7 @@ class MainEditor(QtGui.QWidget):
                 tail = '-'.join([str(self.class_text.text()), str(image_map.weapon_name), str(palette.name)]) + '.png'
                 new_filename = os.path.join(head, tail)
                 pixmap.save(new_filename, 'png')
-            msg = QtGui.QMessageBox.information(self, "Save Sucessful", "Successfully Saved!")
+            msg = QtGui.QMessageBox.information(self, "Save Successful", "Successfully Saved!")
         elif self.mode == 1:
             # Save all weapons * palettes with their palette names
             for image_map in self.image_map_list.list:
@@ -332,7 +373,8 @@ class MainEditor(QtGui.QWidget):
                     tail = '-'.join([str(self.class_text.text()), str(image_map.weapon_name), str(palette.name)]) + '.png'
                     new_filename = os.path.join(head, tail)
                     pixmap.save(new_filename, 'png')
-            msg = QtGui.QMessageBox.information(self, "Save Sucessful", "Successfully Saved!")
+            msg = QtGui.QMessageBox.information(self, "Save Successful", "Successfully Saved!")
+        return True
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
