@@ -1,1 +1,1 @@
-..\..\Data\Animations\Myrmidon\Myrmidon0-MagicSword-Index.txt
+..\..\Data\Animations\Myrmidon\Myrmidon0-Unarmed-Ophie.png

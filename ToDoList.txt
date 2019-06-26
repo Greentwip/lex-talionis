@@ -10,7 +10,7 @@
 - Restore (Restore)
 
 v0.9.1
-- Add support to fe_repo_to_lex for Dragonstone (and Sage?) -- Check Axe Wyvern/Myrmidon...
+- Add support to fe_repo_to_lex for Dragonstone
 - Add AI taking into account nearby allies/enemies?
 - Palette Editor
     - Add Undo functionality?

@@ -81,6 +81,8 @@ class MainEditor(QtGui.QWidget):
         self.image_map_list = ImageMap.ImageMapList()
         self.scripts = []
 
+        self.undo_stack = QtGui.QUndoStack(self)
+
         self.create_menu_bar()
 
         self.grid.setMenuBar(self.menu_bar)
@@ -106,7 +108,16 @@ class MainEditor(QtGui.QWidget):
         file_menu.addAction(save)
         file_menu.addAction(exit)
 
+        undo_action = QtGui.QAction("Undo", self, shortcut="Ctrl+Z", triggered=self.undo)
+        redo_action = QtGui.QAction("Redo", self, triggered=self.redo)
+        redo_action.setShortcuts(["Ctrl+Y", "Ctrl+Shift+Z"])
+
+        edit_menu = QtGui.QMenu("&Edit", self)
+        edit_menu.addAction(undo_action)
+        edit_menu.addAction(redo_action)
+
         self.menu_bar.addMenu(file_menu)
+        self.menu_bar.addMenu(edit_menu)
 
     def create_info_bars(self):
         self.class_text = QtGui.QLineEdit()
@@ -125,6 +136,12 @@ class MainEditor(QtGui.QWidget):
         self.info_form.addRow("Weapon", self.weapon_box)
         self.info_form.addRow("Palette", self.palette_text)
         self.info_form.addRow(self.play_button)
+
+    def undo(self):
+        self.undo_stack.undo()
+
+    def redo(self):
+        self.undo_stack.redo()
 
     def change_current_palette(self, position, color):
         palette_frame = self.palette_list.get_current_palette()
@@ -148,6 +165,7 @@ class MainEditor(QtGui.QWidget):
         self.palette_list.clear()
         self.scripts = []
         self.mode = 0  # 1 - Class, 2 - Animation, 3 - Basic Image, 0 - Not defined yet
+        self.undo_stack.clear()
 
     def class_text_change(self):
         pass

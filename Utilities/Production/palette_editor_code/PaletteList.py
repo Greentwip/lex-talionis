@@ -16,7 +16,17 @@ class ColorDisplay(QtGui.QPushButton):
         self.resize(16, 16)
         self.pressed.connect(self.onColorPicker)
 
-    def set_color(self, color):
+    def set_color(self, color, create=False):
+        if create:
+            self.change_color(color)
+        else:
+            palette_list = self.window.window.window
+            command = CommandColorChange(
+                palette_list, self.window.window.idx, self.idx, color, 
+                "%d: Changing Color from %s to %s" % (self.idx, self._color, color))
+            self.window.main_editor.undo_stack.push(command)
+
+    def change_color(self, color):
         if color != self._color:
             self._color = color
             self.colorChanged.emit(self.idx, QtGui.QColor(color))
@@ -58,7 +68,7 @@ class PaletteDisplay(QtGui.QWidget):
 
         for idx, color in enumerate(colors):
             color_display = ColorDisplay(idx, self)
-            color_display.set_color(color.name())
+            color_display.set_color(color.name(), create=True)
             color_display.colorChanged.connect(self.on_color_change)
             self.layout.addWidget(color_display, 0, QtCore.Qt.AlignCenter)
             self.color_display_list.append(color_display)
@@ -104,6 +114,12 @@ class PaletteFrame(QtGui.QWidget):
         self.name = name
         self.name_label.setText(name)
 
+    def get_color_display(self, idx):
+        return self.palette_display.color_display_list[idx]
+
+    def get_color(self, idx):
+        return self.palette_display.color_display_list[idx].color()
+
     def set_color(self, idx, color):
         self.palette_display.set_color(idx, color)
 
@@ -129,7 +145,7 @@ class PaletteFrame(QtGui.QWidget):
 
     @classmethod
     def from_palette(cls, new_idx, palette_frame, window):
-        p = cls(new_idx, None, window)
+        p = cls(new_idx, None, None, window)
         p.name = palette_frame.name
         color_list = [QtGui.QColor(c) for c in palette_frame.get_colors()]
         p.create_widgets(color_list)
@@ -163,13 +179,8 @@ class PaletteList(QtGui.QListWidget):
         self.list.pop()
 
     def duplicate(self, idx):
-        new_idx = len(self.list)
-        item = QtGui.QListWidgetItem(self)
-        self.addItem(item)
-        new_pf = PaletteFrame.from_palette(new_idx, self.list[idx], self)
-        self.list.append(new_pf)
-        item.setSizeHint(new_pf.minimumSizeHint())
-        self.setItemWidget(item, new_pf)
+        command = CommandDuplicate(self, idx, "Duplicate Palette %d" % idx)
+        self.window.undo_stack.push(command)
 
     def set_current_palette(self, idx):
         self.current_index = idx
@@ -195,3 +206,42 @@ class PaletteList(QtGui.QListWidget):
             l.deleteLater()
         self.list = []
         self.current_index = 0
+
+class CommandDuplicate(QtGui.QUndoCommand):
+    def __init__(self, palette_list, idx, description):
+        super(CommandDuplicate, self).__init__(description)
+        self.palette_list = palette_list
+        self.idx = idx
+
+    def redo(self):
+        new_idx = len(self.palette_list.list)
+        item = QtGui.QListWidgetItem(self.palette_list)
+        self.palette_list.addItem(item)
+        new_pf = PaletteFrame.from_palette(new_idx, self.palette_list.list[self.idx], self.palette_list)
+        self.palette_list.list.append(new_pf)
+        item.setSizeHint(new_pf.minimumSizeHint())
+        self.palette_list.setItemWidget(item, new_pf)
+
+    def undo(self):
+        # Delete last item
+        self.palette_list.takeItem(self.palette_list.count() - 1)
+        self.palette_list.list.pop()
+
+class CommandColorChange(QtGui.QUndoCommand):
+    def __init__(self, palette_list, palette_idx, color_idx, new_color, description):
+        super(CommandColorChange, self).__init__(description)
+        self.palette_list = palette_list
+        self.palette_idx = palette_idx
+        self.color_idx = color_idx
+        self.old_color = self.palette_list.get_palette(palette_idx).get_color(color_idx)
+        self.new_color = new_color
+
+    def change_color(self, color):
+        color_display = self.palette_list.get_palette(self.palette_idx).get_color_display(self.color_idx)
+        color_display.change_color(color)
+
+    def redo(self):
+        self.change_color(self.new_color)
+
+    def undo(self):
+        self.change_color(self.old_color)
