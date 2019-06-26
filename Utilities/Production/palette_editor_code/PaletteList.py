@@ -211,6 +211,7 @@ class CommandDuplicate(QtGui.QUndoCommand):
     def __init__(self, palette_list, idx, description):
         super(CommandDuplicate, self).__init__(description)
         self.palette_list = palette_list
+        self.old_idx = palette_list.current_index
         self.idx = idx
 
     def redo(self):
@@ -226,6 +227,7 @@ class CommandDuplicate(QtGui.QUndoCommand):
         # Delete last item
         self.palette_list.takeItem(self.palette_list.count() - 1)
         self.palette_list.list.pop()
+        self.palette_list.set_current_palette(self.old_idx)
 
 class CommandColorChange(QtGui.QUndoCommand):
     def __init__(self, palette_list, palette_idx, color_idx, new_color, description):
