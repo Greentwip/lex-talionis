@@ -2005,10 +2005,10 @@ class UnitObject(object):
         if was_mainweapon and self.canWield(item):
             for status_on_equip in item.status_on_equip:
                 Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
-        # remove passive item skill
+        # remove item mods skills
         for status in self.status_effects:
-            if status.passive:
-                status.passive.reverse_mod(item)
+            if status.item_mod:
+                status.item_mod.reverse_mod(item)
         # There may be a new item equipped
         if was_mainweapon and self.getMainWeapon():
             for status_on_equip in self.getMainWeapon().status_on_equip:
@@ -2036,10 +2036,10 @@ class UnitObject(object):
             self.items.insert(index, item)
             item.item_owner = self.id
             if item is not "EmptySlot":
-                # apply passive item skill
+                # apply item mod skills
                 for status in self.status_effects:
-                    if status.passive:
-                        status.passive.apply_mod(item)
+                    if status.item_mod:
+                        status.item_mod.apply_mod(item)
                 # Item statuses      
                 for status_on_hold in item.status_on_hold:
                     new_status = StatusCatalog.statusparser(status_on_hold, gameStateObj)

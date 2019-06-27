@@ -477,8 +477,11 @@ def statusparser(s_id, gameStateObj=None):
                     charge = int(status.find('automatic').text)
                     status_id = status.find('status').text
                     my_components['automatic'] = ActiveSkill.AutomaticSkill(name, charge, status_id)
-                elif component == 'passive':
-                    my_components['passive'] = getattr(ActiveSkill, s_id)(name)
+                elif component == 'item_mod':
+                    conditional = status.find('item_mod_conditional').text if status.find('item_mod_conditional') is not None else None
+                    effect_add = status.find('item_mod_effect_add').text.split(';') if status.find('item_mod_effect_add') is not None else None
+                    effect_change = status.find('item_mod_effect_change').text.split(';') if status.find('item_mod_effect_change') is not None else None
+                    my_components['item_mod'] = ActiveSkill.ItemModComponent(s_id, conditional, effect_add, effect_change)
                 elif component == 'aura':
                     aura_range = int(status.find('range').text)
                     child = status.find('child').text
@@ -528,9 +531,9 @@ def attach_to_unit(status, unit):
     Done (on load) after loading both the unit and the status to attach 
     the status correctly to the unit after a suspend.
     """
-    if status.passive:
+    if status.item_mod:
         for item in unit.items:
-            status.passive.apply_mod(item)
+            status.item_mod.apply_mod(item)
     unit.status_effects.append(status)
     unit.status_bundle.update(list(status.components))
 

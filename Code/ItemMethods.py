@@ -90,7 +90,13 @@ class ItemObject(object):
 
     def __setstate__(self, d):
         self.__dict__.update(d)
-        
+
+    def __getitem__(self, key):
+        return self.__dict__.get(key)
+
+    def __setitem__(self, key, item):
+        self.__dict__[key] = item
+    
     def draw(self, surf, topleft, white=False, cooldown=False):
         ItemSurf = self.image
         if white:
@@ -150,7 +156,7 @@ def get_item_range(item, unit):
         else:
             r1 = int(r)
         if item.longshot:
-            return [r1, r1 + 1]
+            return [r1, r1 + item.longshot]
         else:
             return [r1]
     elif len(item.RNG) == 2:
@@ -164,7 +170,7 @@ def get_item_range(item, unit):
             r2 = GC.EQUATIONS.get_magic_damage(unit, item)//2
         else:
             r2 = int(r2)
-        r2 += (1 if item.longshot else 0)
+        r2 += item.longshot if item.longshot else 0
         return list(range(r1, max(r2, 1) + 1))
     else:
         print('%s has an unsupported range: %s' % (item, item.get_range_string()))

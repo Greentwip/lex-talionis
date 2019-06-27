@@ -30,8 +30,7 @@ v0.9.3 -- combat update & activated status update
 - Implement Devil axe effect -- (gives user a percent skill to die)
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
 - Transform and Revert for Manaketes
-- Remake how passive and active skills are scripted in the status.xml
-- Redo how passive skills work entirely
+- Remake how active skills are scripted in the status.xml
 
 v0.9.4 -- dialogue and command update
 - Dialogue Editor

@@ -1264,9 +1264,9 @@ class AddStatus(Action):
         if self.status_obj.flying:
             self.unit.remove_tile_status(gameStateObj, force=True)
 
-        if self.status_obj.passive:
+        if self.status_obj.item_mod:
             for item in self.unit.items:
-                self.status_obj.passive.apply_mod(item)
+                self.status_obj.item_mod.apply_mod(item)
 
         if self.status_obj.aura:
             Aura.propagate_aura(self.unit, self.status_obj, gameStateObj)
@@ -1298,9 +1298,9 @@ class AddStatus(Action):
         if self.status_obj.aura:
             Aura.release_aura(self.unit, self.status_obj, gameStateObj)
 
-        if self.status_obj.passive:
+        if self.status_obj.item_mod:
             for item in self.unit.items:
-                self.status_obj.passive.reverse_mod(item)
+                self.status_obj.item_mod.reverse_mod(item)
 
         if self.status_obj.flying:
             self.unit.acquire_tile_status(gameStateObj, force=True)
@@ -1378,9 +1378,9 @@ class RemoveStatus(Action):
         if self.status_obj.flying and not self.clean_up:
             self.unit.acquire_tile_status(gameStateObj, force=True)
 
-        if self.status_obj.passive:
+        if self.status_obj.item_mod:
             for item in self.unit.items:
-                self.status_obj.passive.reverse_mod(item)
+                self.status_obj.item_mod.reverse_mod(item)
 
         if self.status_obj.aura:
             Aura.release_aura(self.unit, self.status_obj, gameStateObj)
@@ -1415,9 +1415,9 @@ class RemoveStatus(Action):
         if self.status_obj.flying:
             self.unit.remove_tile_status(gameStateObj, force=True)
 
-        if self.status_obj.passive:
+        if self.status_obj.item_mod:
             for item in self.unit.items:
-                self.status_obj.passive.apply_mod(item)
+                self.status_obj.item_mod.apply_mod(item)
 
         if self.status_obj.aura:
             Aura.propagate_aura(self.unit, self.status_obj, gameStateObj)

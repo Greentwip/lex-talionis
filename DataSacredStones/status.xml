@@ -272,7 +272,11 @@
         <id>Slayer</id>
         <image_index>5,6</image_index>
         <desc>Effective against monsters</desc>
-        <components>passive,class_skill</components>
+        <components>item_mod,class_skill</components>
+
+        <item_mod_conditional>item.weapon</item_mod_conditional>
+        <item_mod_effect_add>effective;add('Monster');remove('Monster')</item_mod_effect_add>
+        <item_mod_effect_change>effective;ItemMethods.EffectiveComponent(['Monster'], item.MT*2)</item_mod_effect_change>
     </status>
 
     <!-- Item statuses -->

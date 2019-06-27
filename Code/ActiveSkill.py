@@ -457,140 +457,58 @@ class AutomaticSkill(object):
             self.current_charge = self.required_charge
         logger.debug('%s increased charge to %s', self.name, self.current_charge)
 
-# PASSIVE SKILLS
-class PassiveSkill(object):
-    def __init__(self, name):
-        self.name = name
+class ItemModComponent(object):
+    def __init__(self, uid, conditional, effect_add=None, effect_change=None):
+        self.uid = uid
+        self.conditional = conditional
+        self.effect_add = effect_add
+        self.effect_change = effect_change
 
-class Swordfaire(PassiveSkill):
+    def add_effect(self, item):
+        command = 'item.' + self.effect_add[0] + '.' + self.effect_add[1]
+        logger.debug("Execute Command %s", command)
+        exec(command)
+
+    def reverse_effect(self, item):
+        command = 'item.' + self.effect_add[0] + '.' + self.effect_add[2]
+        logger.debug("Execute Command %s", command)
+        exec(command)
+
+    def change_effect(self, item):
+        orig_val = item[self.effect_change[0]]
+        val = eval(self.effect_change[1])
+        logger.debug('Set %s to %s', self.effect_change[0], val)
+        item['orig_' + self.effect_change[0]] = orig_val
+        item[self.effect_change[0]] = val
+
+    def change_effect_back(self, item):
+        orig_val = item['orig_' + self.effect_change[0]]
+        logger.debug('Set %s to %s', self.effect_change[0], orig_val)
+        item[self.effect_change[0]] = orig_val
+
     def apply_mod(self, item):
         self.reverse_mod(item)
-        if item.TYPE == 'Sword':
-            item.swordfaire = True
-            item.orig_brave = item.brave
-            item.brave = True
-
+        if eval(self.conditional):
+            item[self.uid] = True
+            if self.effect_add and self.effect_change:
+                if item[self.effect_add[0]]:
+                    self.add_effect(item)
+                else:
+                    self.change_effect(item)
+            elif self.effect_change:
+                self.change_effect(item)
+            elif self.effect_add:
+                self.add_effect(item)
+                
     def reverse_mod(self, item):
-        if item.swordfaire:
-            item.swordfaire = False
-            item.brave = item.orig_brave  
-
-class Lancefaire(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.TYPE == 'Lance':
-            item.lancefaire = True
-            item.orig_counter = item.cannot_be_countered
-            item.cannot_be_countered = True
-
-    def reverse_mod(self, item):
-        if item.lancefaire:
-            item.lancefaire = False
-            item.cannot_be_countered = item.orig_counter
-
-class Axefaire(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.TYPE == 'Axe':
-            item.axefaire = True
-            item.orig_ignore_half_def = item.ignore_half_def
-            item.ignore_half_def = True
-
-    def reverse_mod(self, item):
-        if item.axefaire:
-            item.axefaire = False
-            item.ignore_half_def = item.orig_ignore_half_def
-
-class Longshot(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.TYPE == 'Bow':
-            item.longshot = True
-
-    def reverse_mod(self, item):
-        if item.longshot:
-            item.longshot = False
-
-class Slayer(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.weapon:
-            item.slayer = True
-            item.old_effective = item.effective
-            if item.effective:
-                new_effective = list(set(item.effective.against).add('Monster'))
-                item.effective = ItemMethods.EffectiveComponent(new_effective, item.MT*2)
-            else:
-                item.effective = ItemMethods.EffectiveComponent(['Monster'], item.MT*2)
-
-    def reverse_mod(self, item):
-        if item.slayer:
-            item.slayer = False
-            item.effective = item.old_effective
-
-class Celeste(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.weapon:
-            item.status.append('Weakened')
-            item.celeste = True
-
-    def reverse_mod(self, item):
-        if item.celeste:
-            item.celeste = False
-            item.status = [s_id for s_id in item.status if s_id != 'Weakened']
-
-class Immobilize(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.weapon:
-            item.status.append('Immobilized')
-            item.immobilize = True
-
-    def reverse_mod(self, item):
-        if item.immobilize:
-            item.immobilize = False
-            item.status = [s_id for s_id in item.status if s_id != 'Immobilized']
-
-class Slow(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.weapon:
-            item.status.append('Slowed')
-            item.slow = True
-
-    def reverse_mod(self, item):
-        if item.slow:
-            item.slow = False
-            item.status = [s_id for s_id in item.status if s_id != 'Slowed']
-
-class Nosferatu(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if item.TYPE == 'Dark':
-            item.nosferatu = True
-            item.old_lifelink = item.lifelink
-            item.lifelink = True
-
-    def reverse_mod(self, item):
-        if item.nosferatu:
-            item.lifelink = item.old_lifelink
-            item.nosferatu = False
-
-class Metamagic_Status(PassiveSkill):
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if Weapons.TRIANGLE.isMagic(item) and item.aoe.mode in ('Normal', 'Blast', 'EnemyBlast'):
-            item.overcharged = True
-            item.orig_aoe = item.aoe
-            if item.orig_aoe.number != 'MAG/2':
-                new_num = int(item.orig_aoe.number) + 1
-            if item.aoe.mode == 'EnemyBlast':
-                item.aoe = ItemMethods.AOEComponent('EnemyBlast', new_num)
-            else:
-                item.aoe = ItemMethods.AOEComponent('Blast', new_num)
-
-    def reverse_mod(self, item):
-        if item.overcharged:
-            item.overcharged = False
-            item.aoe = item.orig_aoe
+        if item[self.uid]:
+            item[self.uid] = False
+            if self.effect_add and self.effect_change:
+                if item['orig_' + self.effect_change[0]]:
+                    self.change_effect_back(item)
+                else:
+                    self.reverse_effect(item)
+            elif self.effect_change:
+                self.change_effect_back(item)
+            elif self.effect_add:
+                self.reverse_effect(item)
