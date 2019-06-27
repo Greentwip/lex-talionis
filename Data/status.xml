@@ -748,7 +748,7 @@
         <id>Swordfaire</id>
         <image_index>5,6</image_index>
         <desc>While wielding a sword, it gains the brave property.</desc>
-        <components>passive,class_skill</components>
+        <components>item_mod,class_skill</components>
     </status>
 
     <status name="Lancefaire">
