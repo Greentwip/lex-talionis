@@ -17,14 +17,14 @@ class GainExpState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         if not self.started:
-            self.unit, self.exp_gain, self.combat_object, starting_state, = \
+            self.unit, self.exp_gain, self.combat_object, self.starting_state, = \
                 gameStateObj.exp_gain_struct
             gameStateObj.exp_gain_struct = None
             self.old_exp = self.unit.exp
             self.old_level = self.unit.level
             self.unit_klass = ClassData.class_dict[self.unit.klass]
 
-            self.state = CustomObjects.StateMachine(starting_state)
+            self.state = CustomObjects.StateMachine(self.starting_state)
             self.state_time = Engine.get_time()
             self.exp_bar = None
             self.level_up_animation = None
@@ -164,19 +164,20 @@ class GainExpState(StateMachine.State):
                 # check for weapon experience gain
                 if self.new_wexp:
                     Action.do(Action.GainWexp(self.unit, self.new_wexp), gameStateObj)
-                # check for skill gain
-                for level_needed, class_skill in self.unit_klass['skills']:
-                    if self.unit.level == level_needed:
-                        if class_skill == 'Feat':
-                            gameStateObj.cursor.currentSelectedUnit = self.unit
-                            gameStateObj.stateMachine.changeState('feat_choice')
-                        else:
-                            skill = StatusCatalog.statusparser(class_skill, gameStateObj)
-                            # If we don't already have this skill
-                            if skill.stack or skill.id not in (s.id for s in self.unit.status_effects):
-                                Action.do(Action.AddStatus(self.unit, skill), gameStateObj)
-                                gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
-                                gameStateObj.stateMachine.changeState('itemgain')
+                # check for skill gain unless you are using a booster
+                if self.starting_state != "booster":
+                    for level_needed, class_skill in self.unit_klass['skills']:
+                        if self.unit.level == level_needed:
+                            if class_skill == 'Feat':
+                                gameStateObj.cursor.currentSelectedUnit = self.unit
+                                gameStateObj.stateMachine.changeState('feat_choice')
+                            else:
+                                skill = StatusCatalog.statusparser(class_skill, gameStateObj)
+                                # If we don't already have this skill
+                                if skill.stack or skill.id not in (s.id for s in self.unit.status_effects):
+                                    Action.do(Action.AddStatus(self.unit, skill), gameStateObj)
+                                    gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
+                                    gameStateObj.stateMachine.changeState('itemgain')
 
         # Wait 100 ms before transferring to the promotion state
         elif self.state.getState() == 'prepare_promote':

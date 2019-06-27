@@ -1,12 +1,12 @@
-3,14:Formation=0
 4,18:Seize=0
 4,15:Formation=0
 4,17:Formation=0
 16,2:HP=3;Destructible=1
 4,13:Formation=0
-2,15:Formation=0
-2,13:Formation=0
 3,16:Formation=0
+2,13:Formation=0
 2,17:Formation=0
-3,19:Search=0
+2,15:Formation=0
 3,17:Shop=Iron Sword,Steel Sword,Iron Lance,Vulnerary
+3,14:Formation=0
+3,19:Search=0

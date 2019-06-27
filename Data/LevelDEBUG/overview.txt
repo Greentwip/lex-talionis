@@ -9,7 +9,7 @@ player_phase_music;Helms Deep
 enemy_phase_music;In the Midst
 player_battle_music;Fire Treasure
 enemy_battle_music;Dragon Boy
-display_name;Survive Ambush,{6 - gameStateObj.turncount} turns left
+display_name;Kill Enemies,{len([u for u in gameStateObj.allunits if u.team == 'enemy' and not u.dead])} left.
 win_condition;Reach turn 6
 loss_condition;Sam dies
 weather;Light

@@ -10,10 +10,7 @@
 - Restore (Restore)
 
 v0.9.1
-- Add support to fe_repo_to_lex for Dragonstone
-- Add AI taking into account nearby allies/enemies?
 - Palette Editor
-    - Add Undo functionality?
     - Build Palette Editor
 
 v0.9.2 -- overworld & submap update
@@ -30,6 +27,7 @@ v0.9.3 -- combat update & activated status update
 - Unify how activated, automatic, and percent skills work
 - Implement Devil axe effect -- (gives user a percent skill to die)
 - Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
+- Transform and Revert for Manaketes
 - Remake how passive and active skills are scripted in the status.xml
 - Redo how passive skills work entirely
 
@@ -49,6 +47,7 @@ Later on:
 - Repair Market?
 - New Game + ? (difficulty modes only accessible after beating a difficulty?)
 - Automatic Updater
+- Add AI taking into account nearby allies/enemies?
 
 
 FOR FUTURE UPDATES TO THE ENGINE:
