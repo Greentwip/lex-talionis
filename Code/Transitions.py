@@ -1379,10 +1379,8 @@ class ChapterTransitionState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'START': # self.CTStateMachine.getState() == 'wait':
-            # Engine.music_thread.fade_out(400)
-            # self.CTStateMachine.changeState('fade_out')
             # Alternatively
-            Engine.music_thread.fade_out(100)
+            Engine.music_thread.fade_out()
             # gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('transition_pop')
 
@@ -1423,7 +1421,7 @@ class ChapterTransitionState(StateMachine.State):
 
         elif self.CTStateMachine.getState() == 'wait':
             if currentTime - self.wait_time > 5000:
-                Engine.music_thread.fade_out(400)
+                Engine.music_thread.fade_out()
                 self.CTStateMachine.changeState('fade_out')
 
         elif self.CTStateMachine.getState() == 'fade_out':
