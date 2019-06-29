@@ -530,9 +530,8 @@ class Dialogue_Scene(object):
                 receiver = gameStateObj.get_unit_from_id(line[1])
             # Append item to list of units items
             if line[2] != "0":
-                item = ItemMethods.itemparser(line[2])
+                item = ItemMethods.itemparser(line[2], gameStateObj)
                 if item:
-                    gameStateObj.add_item(item)
                     self.add_item(receiver, item, gameStateObj, 'no_choice' not in line, 'no_banner' not in line)
                     tile = gameStateObj.map.tiles.get(self.tile_pos, None)
                     if self.unit and self.unit.team.startswith('enemy') and tile and tile.name == "Chest":

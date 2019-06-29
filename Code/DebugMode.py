@@ -57,10 +57,10 @@ class DebugState(StateMachine.State):
         elif split_command[0] == 'charge_skills':
             if cur_unit:
                 for skill in cur_unit.status_effects:
-                    if skill.active:
-                        skill.active.current_charge = skill.active.required_charge
-                    if skill.automatic:
-                        skill.automatic.current_charge = skill.automatic.required_charge
+                    if skill.activated_item_mod:
+                        skill.activated_item_mod.set_to_max()
+                    if skill.charged_status:
+                        skill.charged_status.set_to_max()
         elif split_command[0] == 'win_game':
             gameStateObj.statedict['levelIsComplete'] = 'win'
             gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt'))

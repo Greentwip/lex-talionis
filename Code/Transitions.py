@@ -604,10 +604,9 @@ class StartPreloadedLevels(StartLoad):
         gameStateObj.save_slot = 'Preload ' + level['name']
         # Convoy
         for item_id, uses in level['convoy']:
-            item = ItemMethods.itemparser(item_id)
+            item = ItemMethods.itemparser(item_id, gameStateObj)
             if not item:
                 continue
-            gameStateObj.add_item(item)
             if item.uses:
                 item.uses.uses = int(uses)
             gameStateObj.convoy.append(item)
@@ -634,10 +633,9 @@ class StartPreloadedLevels(StartLoad):
 
             # Get items
             for item_id, uses in unit_dict['items']:
-                item = ItemMethods.itemparser(item_id)
+                item = ItemMethods.itemparser(item_id, gameStateObj)
                 if not item:
                     continue
-                gameStateObj.add_item(item)                    
                 if item.uses:
                     item.uses.uses = int(uses)
                 unit.add_item(item, gameStateObj)

@@ -539,9 +539,9 @@ class MenuState(StateMachine.State):
             options.append(cf.WORDS['Spells'])
         # Active Skills
         for status in cur_unit.status_effects:
-            if status.active and status.active.check_charged():
-                if status.active.check_valid(cur_unit, gameStateObj):
-                    options.append(status.active.name)
+            if status.activated_item_mod and status.activated_item_mod.check_charged():
+                if status.activated_item_mod.check_valid(cur_unit, gameStateObj):
+                    options.append(status.name)
             if status.steal and len(cur_unit.items) < cf.CONSTANTS['max_items'] and cur_unit.getStealPartners(gameStateObj):
                 options.append(cf.WORDS['Steal'])
         if 'Mindless' not in cur_unit.tags:
@@ -670,12 +670,13 @@ class MenuState(StateMachine.State):
             selection = gameStateObj.activeMenu.getSelection()
             logger.debug('Player selected %s', selection)
             gameStateObj.highlight_manager.remove_highlights()
-            active_skills = [status for status in cur_unit.status_effects if status.active]
+            # TODO Fix with addition for internal_item
+            active_skills = [status for status in cur_unit.status_effects if status.activated_item_mod]
 
             if selection in [status.name for status in active_skills]:
                 for status in active_skills:
                     if selection == status.name or selection == status.id:
-                        if status.active.mode == 'Attack':
+                        if status.activated_item_mod:
                             cur_unit.current_skill = status
                             gameStateObj.stateMachine.changeState('weapon')
                         elif status.active.mode in ('Interact', 'Tile'):
@@ -974,7 +975,7 @@ class WeaponState(StateMachine.State):
     def get_options(self, unit, gameStateObj):
         options = [item for item in unit.items if item.weapon and unit.canWield(item)]  # Apply straining for skill
         if unit.current_skill:
-            options = unit.current_skill.active.valid_weapons(unit, options)
+            options = unit.current_skill.activated_item_mod.valid_weapons(unit, options)
         # Only shows options I can use now
         options = [item for item in options if unit.getValidTargetPositions(gameStateObj, item)]
         return options
@@ -1045,11 +1046,11 @@ class WeaponState(StateMachine.State):
 
     def handle_mod(self, cur_unit, gameStateObj):
         if cur_unit.current_skill:
-            cur_unit.current_skill.active.apply_mod(cur_unit, gameStateObj.activeMenu.getSelection(), gameStateObj)
+            cur_unit.current_skill.activated_item_mod.apply_mod(cur_unit, gameStateObj.activeMenu.getSelection(), gameStateObj)
 
     def reverse_mod(self, cur_unit, gameStateObj):
         if cur_unit.current_skill:
-            cur_unit.current_skill.active.reverse_mod()
+            cur_unit.current_skill.activated_item_mod.reverse_mod()
 
 class SpellWeaponState(WeaponState):
     name = 'spellweapon'
@@ -2648,8 +2649,7 @@ class ShopState(StateMachine.State):
                     selection = self.shopMenu.getSelection()
                     value = (selection.value * selection.uses.uses) if selection.uses else selection.value
                     value = int(value * self.buy_value_mod)
-                    new_item = ItemMethods.itemparser(str(selection.id))
-                    gameStateObj.add_item(new_item)
+                    new_item = ItemMethods.itemparser(str(selection.id), gameStateObj)
                     if len(self.unit.items) >= cf.CONSTANTS['max_items']:
                         Action.execute(Action.PutItemInConvoy(new_item), gameStateObj)
                     else:

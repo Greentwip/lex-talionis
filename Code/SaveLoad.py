@@ -262,7 +262,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             else:
                 items = []
             items = [item for item in items if item]  # Remove Nones
-            gameStateObj.add_items(items)
+            gameStateObj.register_items(items)
             for item in items:
                 cur_unit.add_item(item, gameStateObj)
 
@@ -333,7 +333,7 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
         cur_unit.position = u_i['position']
 
     # Items
-    gameStateObj.add_items(items)
+    gameStateObj.register_items(items)
     for item in items:
         cur_unit.add_item(item, gameStateObj)
 
@@ -380,7 +380,7 @@ def create_summon(summon_info, summoner, position, gameStateObj):
     unit = UnitObject.UnitObject(u_i)
 
     # Items
-    gameStateObj.add_items(items)
+    gameStateObj.register_items(items)
     for item in items:
         unit.add_item(item, gameStateObj)
 

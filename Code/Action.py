@@ -7,13 +7,13 @@ try:
     import configuration as cf
     import static_random
     import StatusCatalog, Banner, Weapons, ClassData
-    import Utility, ItemMethods, UnitObject, Aura
+    import Utility, ItemMethods, UnitObject, Aura, ActiveSkill
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import StatusCatalog, Banner, Weapons, ClassData
-    from . import Utility, ItemMethods, UnitObject, Aura
+    from . import Utility, ItemMethods, UnitObject, Aura, ActiveSkill
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1227,8 +1227,8 @@ class AddStatus(Action):
         if self.status_obj.refresh:
             self.actions.append(Reset(self.unit))
             for status in self.unit.status_effects:
-                if status.automatic and status.automatic.check_charged():
-                    self.actions.append(FinalizeAutomaticSkill(status, self.unit))
+                if status.charged_status and status.charged_status.check_charged():
+                    self.actions.append(FinalizeChargedStatus(status, self.unit))
 
         if self.status_obj.skill_restore:
             self.actions.append(ChargeAllSkills(self.unit, 1000))
@@ -1546,62 +1546,56 @@ class ChargeAllSkills(Action):
         self.unit = unit
         self.old_charge = []
         for status in self.unit.status_effects:
-            if status.active:
-                self.old_charge.append(status.active.current_charge)
-            elif status.automatic:
-                self.old_charge.append(status.automatic.current_charge)
+            for component in status.components:
+                if isinstance(component, ActiveSkill.ChargeComponent):
+                    self.old_charge.append(component.current_charge)
+                    break
             else:
                 self.old_charge.append(0)
         self.new_charge = new_charge
 
     def do(self, gameStateObj=None):
         for status in self.unit.status_effects:
-            if status.active:
-                status.active.increase_charge(self.unit, self.new_charge)
-            elif status.automatic:
-                status.automatic.increase_charge(self.unit, self.new_charge)
+            for component in status.components:
+                if isinstance(component, ActiveSkill.ChargeComponent):
+                    component.increase_charge(self.unit, self.new_charge)
+                    break
 
     def reverse(self, gameStateObj=None):
         for idx, status in enumerate(self.unit.status_effects):
-            if status.active:
-                status.active.current_charge = self.old_charge[idx]
-            elif status.automatic:
-                status.automatic.current_charge = self.old_charge[idx]
+            for component in status.components:
+                if isinstance(component, ActiveSkill.ChargeComponent):
+                    component.current_charge = self.old_charge[idx]
 
-class FinalizeActiveSkill(Action):
+class FinalizeActivatedItemMod(Action):
     def __init__(self, status, unit):
         self.status = status
         self.unit = unit
-        self.old_charge = self.status.active.current_charge
+
+        self.old_charge = self.status.activated_item_mod.current_charge
 
     def do(self, gameStateObj):
-        self.status.active.current_charge = 0
+        self.status.activated_item_mod.current_charge = 0
         # Remove cleave from item so it no longer cleaves
-        if self.status.active.mode == 'Attack':
-            self.status.active.reverse_mod()
+        self.status.activated_item_mod.reverse_mod()
 
     def reverse(self, gameStateObj):
-        # if self.status.active.mode == 'Attack':
-        #     self.status.active.apply_mod()
-        # Don't need to apply mod on reverse because theres 
-        # no place inbetween the apply and reverse mod actions
-        # for the turnwheel to land on
-        self.status.active.current_charge = self.old_charge
+        self.status.activated_item_mod.current_charge = self.old_charge
 
-class FinalizeAutomaticSkill(Action):
+class FinalizeChargedStatus(Action):
     def __init__(self, status, unit):
         self.status = status
         self.unit = unit
-        self.current_charge = status.automatic.current_charge
+        self.current_charge = status.charged_status.current_charge
 
     def do(self, gameStateObj):
-        self.s = StatusCatalog.statusparser(self.status.automatic.status, gameStateObj)
+        self.s = StatusCatalog.statusparser(self.status.charged_status.status_id, gameStateObj)
         AddStatus(self.unit, self.s).do(gameStateObj)
-        self.status.automatic.reset_charge()
+        self.status.charged_status.reset_charge()
 
     def reverse(self, gameStateObj):
         RemoveStatus(self.unit, self.s).do(gameStateObj)
-        self.status.automatic.current_charge = self.current_charge
+        self.status.charged_status.current_charge = self.current_charge
 
 class ShrugOff(Action):
     def __init__(self, status):

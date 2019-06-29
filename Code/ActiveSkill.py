@@ -6,32 +6,6 @@ except ImportError:
 import logging
 logger = logging.getLogger(__name__)
 
-class Active_Skill(object):
-    def __init__(self, name, required_charge):
-        self.name = name
-        self.required_charge = required_charge
-        self.mode = 'Solo'
-        self.current_charge = 0
-        self.item = None
-
-    def check_valid(self, unit, gameStateObj):
-        return True
-
-    def check_charged(self):
-        return self.current_charge >= self.required_charge
-
-    def reset_charge(self):
-        self.current_charge = 0
-
-    def increase_charge(self, unit, inc):
-        self.current_charge += inc
-        if self.check_charged():
-            self.current_charge = self.required_charge
-        logger.debug('%s increased charge to %s', self.name, self.current_charge)
-
-    def valid_weapons(self, unit, weapons):
-        return weapons
-
 class Critical(Active_Skill):
     def __init__(self, name, required_charge):
         Active_Skill.__init__(self, name, required_charge)
@@ -437,26 +411,6 @@ class Fade(Active_Skill):
             return True
         return False
 
-# AUTOMATIC SKILL
-class AutomaticSkill(object):
-    def __init__(self, name, required_charge, status_id):
-        self.name = name
-        self.required_charge = required_charge
-        self.current_charge = 0
-        self.status = status_id
-
-    def reset_charge(self):
-        self.current_charge = 0
-
-    def check_charged(self):
-        return self.current_charge >= self.required_charge
-
-    def increase_charge(self, unit, inc):
-        self.current_charge += inc
-        if self.check_charged():
-            self.current_charge = self.required_charge
-        logger.debug('%s increased charge to %s', self.name, self.current_charge)
-
 class ItemModComponent(object):
     def __init__(self, uid, conditional, effect_add=None, effect_change=None):
         self.uid = uid
@@ -512,3 +466,81 @@ class ItemModComponent(object):
                 self.change_effect_back(item)
             elif self.effect_add:
                 self.reverse_effect(item)
+
+class ChargeComponent(object):
+    def __init__(self, charge_method, charge_max):
+        self.charge_method = charge_method
+        self.current_charge = 0
+        self.charge_max = charge_max
+
+    def check_charged(self):
+        return self.current_charge >= self.charge_max
+
+    def reset_charge(self):
+        self.current_charge = 0
+
+    def set_to_max(self):
+        self.current_charge = self.charge_max
+
+    def increase_charge(self, unit, inc):
+        self.current_charge += inc
+        if self.check_charged():
+            self.current_charge = self.charge_max
+        logger.debug('%s increased charge to %s', self, self.current_charge)
+
+    def decrease_charge(self, unit, dec):
+        self.current_charge -= dec
+        if self.current_charge < 0:
+            self.current_charge = 0
+        logger.debug('%s decreased charge to %s', self, self.current_charge)
+
+# Charged means that the player does not control when the charge will be activated
+# Activated Means that the player controls when the charge will be activated and reset to 0
+# Percent Means there is a random chance in combat for the ability to activate
+# 
+# "charged" status -> Metamagic
+# "activated" status -> Rage
+# "percent" status -> Luna (item mod)
+#                     Lethality (item mod)
+#                     Pavise (enemy item mod)
+#                     True Strike (item mod)
+#                     Devil Axe (item mod)
+#                     Ignis (stat_change)
+#                     Armsthrift (?)                      
+#                     Sol (item mod)
+#                     Despoil (call event)
+#                     Vengeance (mt)
+#                     Miracle (enemy item mod)
+class ChargedStatusComponent(ChargeComponent):
+    def __init__(self, mode, status_id, charge_method, charge_max):
+        self.mode = mode
+        ChargeComponent.__init__(self, charge_method, charge_max)
+        self.status_id = status_id
+
+class ActivatedItemComponent(ChargeComponent):
+    def __init__(self, mode, item_id, charge_method, charge_max):
+        ChargeComponent.__init__(self, charge_method, charge_max)
+        self.item = ItemMethods.itemparser(item_id)
+
+class ActivatedItemModComponent(ItemModComponent, ChargeComponent):
+    def __init__(self, mode, uid, charge_method, charge_max, conditional, effect_add=None, effect_change=None):
+        self.uid = uid
+        ChargeComponent.__init__(self, charge_method, charge_max)
+        self.conditional = conditional
+        self.effect_add = effect_add
+        self.effect_change = effect_change
+
+    def check_valid(self, unit, gameStateObj):
+        valid_weapons = self.valid_weapons(unit, [item for item in unit.items if item.weapon])
+        if not unit.hasAttacked:
+            for weapon in valid_weapons:
+                if unit.getValidTargetPositions(gameStateObj, weapon):
+                    return True
+        return False
+
+    def valid_weapons(self, items):
+        valid_weapons = []
+        for item in items:
+            if eval(self.conditional):
+                valid_weapons.append(item)
+        return valid_weapons

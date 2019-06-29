@@ -424,7 +424,7 @@ class SummonComponent(object):
 
 # === ITEM PARSER ======================================================
 # Takes an item id, as well as the database of item data, and outputs an item
-def itemparser(itemid):
+def itemparser(itemid, gameStateObj=None):
     droppable = False
     event_combat = False
     if itemid.startswith('d'):
@@ -540,6 +540,8 @@ def itemparser(itemid):
                               item['value'], item['RNG'], item['desc'],
                               aoe, weapontype, status, status_on_hold, status_on_equip,
                               droppable=droppable, locked=locked, event_combat=event_combat)
+    if gameStateObj:
+        gameStateObj.register_item(current_item)
 
     return current_item
 

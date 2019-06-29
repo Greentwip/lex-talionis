@@ -414,10 +414,11 @@ class GameStateObj(object):
     def get_item_from_uid(self, u_id):
         return self.allitems.get(u_id)
 
-    def add_item(self, item):
+    def register_item(self, item):
+        logger.info('Registering item %s as %s', item, item.uid)
         self.allitems[item.uid] = item
 
-    def add_items(self, items):
+    def register_items(self, items):
         for item in items:
             self.allitems[item.uid] = item
 

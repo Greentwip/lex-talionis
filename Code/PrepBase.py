@@ -1230,8 +1230,7 @@ class BaseMarketState(StateMachine.State):
                 selection = self.buy_sure_menu.getSelection()
                 if selection == cf.WORDS['Buy']:
                     GC.SOUNDDICT['GoldExchange'].play()
-                    item = ItemMethods.itemparser(str(self.current_menu.getSelection().id)) # Create a copy
-                    gameStateObj.add_item(item)
+                    item = ItemMethods.itemparser(str(self.current_menu.getSelection().id), gameStateObj) # Create a copy
 
                     if self.cur_unit and len(self.cur_unit.items) < cf.CONSTANTS['max_items']:
                         self.cur_unit.add_item(item, gameStateObj)
