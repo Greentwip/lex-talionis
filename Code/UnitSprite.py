@@ -178,7 +178,7 @@ class UnitSprite(object):
                 surf.blit(GC.IMAGESDICT['TalkMarker'], (topleft[0], topleft[1] + offset))
             elif self.unit.checkIfEnemy(cur_unit) and cur_unit.team == 'player':
                 self.draw_warning_marker(surf, left, top, cur_unit)
-            elif gameStateObj.support.get_edge(cur_unit.id, self.unit.id):
+            elif gameStateObj.support and gameStateObj.support.get_edge(cur_unit.id, self.unit.id):
                 level = gameStateObj.support.get_edge(cur_unit.id, self.unit.id).get_support_level()
                 if level > 0:
                     level = min(level, 3)
