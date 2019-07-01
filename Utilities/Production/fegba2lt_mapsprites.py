@@ -76,7 +76,7 @@ for image in images:
             continue
         else:
             match = match[0]
-        shared_name = image.lower().replace('moving', '').replace('.png', '')
+        shared_name = image.replace('moving', '').replace('Moving', '').replace('.png', '')
         images_dict[shared_name] = (match, image)
 
 for name, pair in images_dict.items():

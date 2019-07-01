@@ -24,6 +24,8 @@ class Result(object):
         self.def_status = []  # Status to the defender
         self.atk_movement = None  # Movement to the attacker
         self.def_movement = None  # Movement to the defender
+        self.attacker_skill_used = None
+        self.defender_skill_used = None
         self.summoning = None
 
 # Does not check legality of attack, that is for other functions to do. 

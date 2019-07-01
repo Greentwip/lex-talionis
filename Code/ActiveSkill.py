@@ -499,36 +499,48 @@ class ChargeComponent(object):
 # Percent Means there is a random chance in combat for the ability to activate
 # 
 # "charged" status -> Metamagic
-# "activated" status -> Rage
-# "percent" status -> Luna (item mod)
-#                     Lethality (item mod)
-#                     Pavise (enemy item mod)
-#                     True Strike (item mod)
-#                     Devil Axe (item mod)
+# "activated" status (unreversible) / could just be activated item -> Rage
+# "percent" status -> Pavise (resistance)
 #                     Ignis (stat_change)
 #                     Armsthrift (?)                      
-#                     Sol (item mod)
-#                     Despoil (call event)
+#                     Despoil (call event) (needs trigger)
 #                     Vengeance (mt)
-#                     Miracle (enemy item mod)
-class ChargedStatusComponent(ChargeComponent):
-    def __init__(self, mode, status_id, charge_method, charge_max):
-        self.mode = mode
+#                     Miracle (enemy item mod) (needs trigger)
+# "activated" item -> Heal, Shove, Rally
+# "activated" item mod (could be status/but reversible) -> Luna, True Strike, Critical, Sol
+# "percent" item mod (could be status) -> Luna, Lethality, True Strike, Devil Axe
+# "charged" item mod -> NA
+# "charged" item -> NA
+# "percent" item -> NA
+# How does Lex Talionis Miracle fit in?
+# Do percent skills activate for all attack automatically? No they activate for one attac konly
+# Or do percent skills only activate for one phase YES
+# Do percent skills only activate when you are going to hit?
+# Do percent skills activate on crits? YES
+# Percent skills can have animations that replace Attack animation (Critical?)
+# or percent skills can have animations that just add before the normal Attack animation (Pavise)
+# Same with activated item mods
+
+# Combat Arts (Activated Statuses that are reversible)
+# Generally should be lost on interact but don't have to be
+# Can also be automatic (like Metamagic) in which automatically activated on upkeep
+
+# Proc (Percent-based status activations) -- always removed after the combat round
+# Adept/Brave re-trigger effect
+
+# Charged Item/Action (When fully charged, unit gains access to this item or action)
+# Removed after use
+class ProcComponent(ChargeComponent):
+    def __init__(self, status_id, activation_rate='SKL', priority=10):
+        self.status_id = status_id
+        self.activation_rate = activation_rate
+        self.priority = priority
+
+class CombatArtComponent(ChargeComponent):
+    def __init__(self, mode, status_id, charge_method, charge_max,):
+        self.mode = mode  # Activated vs Automatic
         ChargeComponent.__init__(self, charge_method, charge_max)
         self.status_id = status_id
-
-class ActivatedItemComponent(ChargeComponent):
-    def __init__(self, mode, item_id, charge_method, charge_max):
-        ChargeComponent.__init__(self, charge_method, charge_max)
-        self.item = ItemMethods.itemparser(item_id)
-
-class ActivatedItemModComponent(ItemModComponent, ChargeComponent):
-    def __init__(self, mode, uid, charge_method, charge_max, conditional, effect_add=None, effect_change=None):
-        self.uid = uid
-        ChargeComponent.__init__(self, charge_method, charge_max)
-        self.conditional = conditional
-        self.effect_add = effect_add
-        self.effect_change = effect_change
 
     def check_valid(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons(unit, [item for item in unit.items if item.weapon])
@@ -538,9 +550,15 @@ class ActivatedItemModComponent(ItemModComponent, ChargeComponent):
                     return True
         return False
 
-    def valid_weapons(self, items):
-        valid_weapons = []
-        for item in items:
-            if eval(self.conditional):
-                valid_weapons.append(item)
-        return valid_weapons
+class ChargedItemComponent(ChargeComponent):
+    def __init__(self, item_id, charge_method, charge_max):
+        ChargeComponent.__init__(self, charge_method, charge_max)
+        self.item = ItemMethods.itemparser(item_id)
+
+    def check_valid(self, unit, gameStateObj):
+        valid_weapons = self.valid_weapons(unit, [item for item in unit.items if item.weapon])
+        if not unit.hasAttacked:
+            for weapon in valid_weapons:
+                if unit.getValidTargetPositions(gameStateObj, weapon):
+                    return True
+        return False

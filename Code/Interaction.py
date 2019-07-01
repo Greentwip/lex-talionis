@@ -568,10 +568,15 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'Pre_Init':
             if skip or current_time - self.last_update > 410: # 25 frames
-                self.combat_state = 'Anim'
                 self.last_update = current_time
-                # Set up animation
-                self.current_animation = self.set_up_animation(self.current_result)
+                if self.left.item.transform or self.right.item.transform:
+                    if self.left.item.transform:
+                        self.left.battle_anim.start_anim('Transform')
+                    if self.right.item.transform:
+                        self.right.battle_anim.start_anim('Transform')
+                    self.combat_state = 'TransformAnim'
+                else:
+                    self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'Init':
             # self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
@@ -579,16 +584,44 @@ class AnimationCombat(Combat):
             self.next_result = None
             # print('Interaction: Getting a new result')
             if self.current_result is None:
+                if self.left.item.transform or self.right.item.transform:
+                    if self.left.item.transform:
+                        self.left.battle_anim.start_anim('Revert')
+                    if self.right.item.transform:
+                        self.right.battle_anim.start_anim('Revert')
+                self.combat_state = "RevertAnim"
+            else:
+                self.set_stats(gameStateObj)
+                self.old_results.append(self.current_result)
+                self.last_update = current_time
+                self.set_up_animation(self.current_result)
+
+        elif self.combat_state == 'TransformAnim':
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
+                if self.left.item.combat_effect or self.right.item.combat_effect:
+                    if self.right.item.combat_effect:
+                        effect = self.right.battle_anim.add_effect(self.right.item.combat_effect)
+                        self.right.battle_anim.children.append(effect)
+                    elif self.left.item.combat_effect:
+                        effect = self.left.battle_anim.add_effect(self.left.item.combat_effect)
+                        self.left.battle_anim.children.append(effect)                        
+                self.combat_state = "InitialEffects"
+
+        elif self.combat_state == 'InitialEffects':
+            if not self.left.battle_anim.effect_playing() and not self.right.battle_anim.effect_playing():
+                self.set_up_animation(self.current_result)
+
+        elif self.combat_state == 'RevertAnim':
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
                 self.last_update = current_time
                 self.combat_state = 'ExpWait'
                 self.focus_exp()
                 self.move_camera()
-            else:
-                self.set_stats(gameStateObj)
-                self.old_results.append(self.current_result)
+
+        elif self.combat_state == 'ActivateSkill':
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
                 self.combat_state = 'Anim'
-                self.last_update = current_time
-                self.current_animation = self.set_up_animation(self.current_result)
+                self.set_up_combat_animation(self.current_result)
 
         elif self.combat_state == 'Anim':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
@@ -770,6 +803,45 @@ class AnimationCombat(Combat):
         self.next_result = self.solver.get_a_result(gameStateObj, metaDataObj)
 
     def set_up_animation(self, result):
+        if self.current_result.attacker_skill_used:
+            self.combat_state = 'ActivateSkill'
+            self.set_up_attacker_skill_animation(result)
+        if self.current_result.defender_skill_used:
+            self.combat_state = 'ActivateSkill'
+            self.set_up_defender_skill_animation(result)
+        if not (self.current_result.attacker_skill_used or self.current_result.defender_skill_used):
+            self.combat_state = 'Anim'
+            self.set_up_combat_animation(result)
+
+    def set_up_attacker_skill_animation(self, result):
+        skill_name = result.attacker_skill_used.name
+        if result.attacker.battle_anim.has_pose(skill_name):
+            result.attacker.battle_anim.start_anim(skill_name)
+        elif result.attacker.battle_anim.has_pose('Generic Skill'):
+            result.attacker.battle_anim.start_anim(skill_name)
+        self.add_skill_icon(result.attacker_skill_used)
+        # Handle pan
+        if result.attacker == self.right:
+            self.focus_right = True
+        else:
+            self.focus_right = False
+        self.move_camera()
+
+    def set_up_defender_skill_animation(self, result):
+        skill_name = result.defender_skill_used.name
+        if result.defender.battle_anim.has_pose(skill_name):
+            result.defender.battle_anim.start_anim(skill_name)
+        elif result.defender.battle_anim.has_pose('Generic Skill'):
+            result.defender.battle_anim.start_anim(skill_name)
+        self.add_skill_icon(result.defender_skill_used)
+        # Handle pan
+        if result.defender == self.right:
+            self.focus_right = True
+        else:
+            self.focus_right = False
+        self.move_camera()
+
+    def set_up_combat_animation(self, result):
         # print(result.outcome)
         if result.outcome == 2:
             result.attacker.battle_anim.start_anim('Critical')

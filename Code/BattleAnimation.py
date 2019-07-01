@@ -144,6 +144,17 @@ class BattleAnimation(object):
         self.children = []
         self.under_children = []
 
+    def add_effect(self, name, offset=None, enemy=False):
+        image, script = GC.ANIMDICT.get_effect(name, self.palette_name)
+        child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
+        right = not self.right if enemy else self.right
+        parent = self.parent.partner if enemy else self
+        child_effect.awake(self.owner, self.partner, right, self.at_range, parent=parent)
+        if offset:
+            child_effect.effect_offset = None
+        child_effect.start_anim(self.current_pose)
+        return child_effect
+
     def end_current(self):
         # print('Animation: End Current')
         if 'Stand' in self.poses:
@@ -363,42 +374,36 @@ class BattleAnimation(object):
                 self.no_damage()
         # === EFFECTS ===
         elif line[0] == 'effect':
-            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
-            # print('Effect', script)
-            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
-            child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+            name = line[0]
             if len(line) > 2:
-                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
-            child_effect.start_anim(self.current_pose)
+                offset = tuple(int(num) for num in line[2].split(','))
+            else:
+                offset = None
+            child_effect = self.add_effect(name, offset)
             self.children.append(child_effect)
         elif line[0] == 'under_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
-            # print('Effect', script)
-            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
-            child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
+            name = line[0]
             if len(line) > 2:
-                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
-            child_effect.start_anim(self.current_pose)
+                offset = tuple(int(num) for num in line[2].split(','))
+            else:
+                offset = None
+            child_effect = self.add_effect(name, offset)
             self.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
-            child_effect = BattleAnimation(self.partner.unit, image, script, self.palette_name, self.item)
-            # Opposite effects
-            child_effect.awake(self.owner, self.parent, not self.right,
-                               self.at_range, parent=self.parent.partner)
+            name = line[0]
             if len(line) > 2:
-                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
-            child_effect.start_anim(self.current_pose)
+                offset = tuple(int(num) for num in line[2].split(','))
+            else:
+                offset = None
+            child_effect = self.add_effect(name, offset, enemy=True)
             self.partner.children.append(child_effect)
         elif line[0] == 'enemy_under_effect':
-            image, script = GC.ANIMDICT.get_effect(line[1], self.palette_name)
-            child_effect = BattleAnimation(self.partner.unit, image, script, self.palette_name, self.item)
-            # Opposite effects
-            child_effect.awake(self.owner, self.parent, not self.right,
-                               self.at_range, parent=self.parent.partner)
+            name = line[0]
             if len(line) > 2:
-                child_effect.effect_offset = tuple(int(num) for num in line[2].split(','))
-            child_effect.start_anim(self.current_pose)
+                offset = tuple(int(num) for num in line[2].split(','))
+            else:
+                offset = None
+            child_effect = self.add_effect(name, offset, enemy=True)
             self.partner.under_children.append(child_effect)
         elif line[0] == 'clear_all_effects':
             self.clear_all_effects()
@@ -505,6 +510,9 @@ class BattleAnimation(object):
 
     def done(self):
         return self.state == 'Inert' or (self.state == 'Run' and self.current_pose in self.idle_poses)
+
+    def effect_playing(self):
+        return bool(self.children or self.under_children)
 
     def dodge(self):
         if self.at_range:

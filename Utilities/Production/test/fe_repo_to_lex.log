@@ -1,0 +1,15 @@
+2019-06-25 21:20:52.735000
+Converting Magic.txt to Lex Talionis format...
+ === Done! ===
+2019-06-25 21:39:27.871000
+Converting Refresh.txt to Lex Talionis format...
+ === Done! ===
+2019-06-25 22:34:13.564000
+Traceback (most recent call last):
+  File "C:\Users\Patrick\Documents\Github\lex-talionis\Utilities\Production\test\fegba2lt_animations.py", line 580, in <module>
+    raise ValueError("Could not determine which *.txt file to use!")
+ValueError: Could not determine which *.txt file to use!
+2019-06-25 22:36:36.561000
+Converting Dragonstone.txt to Lex Talionis format...
+Unknown Command Code: C7B
+ === Done! ===

@@ -539,8 +539,11 @@ class MenuState(StateMachine.State):
             options.append(cf.WORDS['Spells'])
         # Active Skills
         for status in cur_unit.status_effects:
-            if status.activated_item_mod and status.activated_item_mod.check_charged():
-                if status.activated_item_mod.check_valid(cur_unit, gameStateObj):
+            if status.combat_art and status.combat_art.check_charged():
+                if status.combat_art.check_valid(cur_unit, gameStateObj):
+                    options.append(status.name)
+            if status.activated_item and status.activated_item.check_charged():
+                if status.activated_item.check_valid(cur_unit, gameStateObj):
                     options.append(status.name)
             if status.steal and len(cur_unit.items) < cf.CONSTANTS['max_items'] and cur_unit.getStealPartners(gameStateObj):
                 options.append(cf.WORDS['Steal'])
