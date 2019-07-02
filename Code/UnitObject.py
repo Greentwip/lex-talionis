@@ -634,7 +634,7 @@ class UnitObject(object):
         klass_wexp = ClassData.class_dict[self.klass]['wexp_gain']
         if (item.weapon or item.spell) and 'no_weapons' in self.status_bundle:
             return False
-        if Weapons.TRIANGLE.isMagic(item) and 'no_magic_weapons' in self.status_bundle:
+        if item.is_magic() and 'no_magic_weapons' in self.status_bundle:
             return False
         # if the item is a weapon
         if item.weapon:
@@ -1137,7 +1137,7 @@ class UnitObject(object):
     # FINDS POSITIONS OF VALID TARGETS TO POINT WEAPON AT
     # Finds the positions of all valid targets given the main weapon you are using
     # Only gives positions that enemy units occupy
-    def getValidTargetPositions(self, gameStateObj, weapon=None):
+    def getValidTargetPositions(self, gameStateObj, weapon=None, force_range=None):
         if weapon is None:
             my_weapon = self.getMainWeapon()
         else:
@@ -1145,11 +1145,16 @@ class UnitObject(object):
         if my_weapon is None:
             return []
 
+        if force_range is not None:
+            weapon_range = my_weapon.get_range(self)
+        else:
+            weapon_range = force_range
+
         enemy_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
                           [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]]
-        valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in my_weapon.get_range(self)]
+        valid_targets = [pos for pos in enemy_positions if Utility.calculate_distance(pos, self.position) in weapon_range]
         if cf.CONSTANTS['line_of_sight']:
-            valid_targets = Utility.line_of_sight([self.position], valid_targets, max(my_weapon.get_range(self)), gameStateObj)
+            valid_targets = Utility.line_of_sight([self.position], valid_targets, max(weapon_range), gameStateObj)
         return valid_targets
 
     # Finds all valid target positions given the main spell you are using
@@ -1524,7 +1529,7 @@ class UnitObject(object):
                 damage -= advantage[1] * Weapons.ADVANTAGE.get_advantage(target.getMainWeapon(), target.wexp).resist
             else:
                 damage += advantage[1] * Weapons.ADVANTAGE.get_disadvantage(target.getMainWeapon(), target.wexp).resist
-            if Weapons.TRIANGLE.isMagic(item):
+            if item.is_magic():
                 if item.magic_at_range and dist <= 1:
                     equation = 'DEFENSE'
                 else:
@@ -1722,7 +1727,7 @@ class UnitObject(object):
                 damage += int(eval(status.mt, globals(), locals()))
         if item.weapon:
             damage += item.weapon.MT
-            if Weapons.TRIANGLE.isMagic(item):
+            if item.is_magic():
                 if item.magic_at_range and dist <= 1:
                     damage += GC.EQUATIONS.get_damage(self, item, dist)
                 else:  # Normal

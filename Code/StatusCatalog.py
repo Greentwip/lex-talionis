@@ -57,8 +57,8 @@ class Status(object):
             self.upkeep_animation.removeSprites()
         if self.always_animation:
             self.always_animation.removeSprites()
-        if self.active and self.active.item:
-            self.active.item.removeSprites()
+        if self.activated_item and self.activated_item.item:
+            self.activated_item.item.removeSprites()
 
     def loadSprites(self):
         self.image = Engine.subsurface(GC.ITEMDICT['Skills'], (16*self.image_index[0], 16*self.image_index[1], 16, 16)) if self.image_index else None
@@ -67,8 +67,8 @@ class Status(object):
             self.upkeep_animation.loadSprites()
         if self.always_animation:
             self.always_animation.loadSprites()
-        if self.active and self.active.item:
-            self.active.item.loadSprites()
+        if self.activated_item and self.activated_item.item:
+            self.activated_item.item.loadSprites()
         self.help_box = None
 
     def serialize(self):
@@ -77,12 +77,16 @@ class Status(object):
         serial_dict['id'] = self.id
         serial_dict['time_left'] = self.time.time_left if self.time else None
         serial_dict['upkeep_sc_count'] = self.upkeep_stat_change.count if self.upkeep_stat_change else None
-        serial_dict['active_charge'] = self.active.current_charge if self.active else None
-        serial_dict['automatic_charge'] = self.automatic.current_charge if self.automatic else None
+        # serial_dict['active_charge'] = self.active.current_charge if self.active else None
+        # serial_dict['automatic_charge'] = self.automatic.current_charge if self.automatic else None
+        if self.activated_item:
+            self.data['activated_item'] = self.activated_item.current_charge
+        elif self.combat_art:
+            self.data['combat_art'] = self.combat_art.current_charge
         serial_dict['children'] = self.children
         serial_dict['owner_id'] = self.owner_id
         serial_dict['giver_id'] = self.giver_id
-        serial_dict['count'] = self.count.count if self.count else None
+        # serial_dict['count'] = self.count.count if self.count else None
         serial_dict['stat_halve_penalties'] = self.stat_halve.penalties if self.stat_halve else None
         serial_dict['aura_child_uid'] = self.aura.child_status.uid if self.aura else None
         serial_dict['data'] = self.data
@@ -404,6 +408,7 @@ def HandleStatusEndStep(status, unit, gameStateObj):
 # === STATUS PARSER ======================================================
 # Takes one status id, as well as the database of status data, and outputs a status object.
 def statusparser(s_id, gameStateObj=None):
+    def find(text):
     for status in GC.STATUSDATA.getroot().findall('status'):
         if status.find('id').text == s_id:
             components = status.find('components').text
@@ -467,16 +472,6 @@ def statusparser(s_id, gameStateObj=None):
                 elif component == 'unit_tint':
                     info_line = status.find('unit_tint').text
                     my_components['unit_tint'] = UnitTintComponent(info_line)
-                elif component == 'active':
-                    charge = int(status.find('active').text)
-                    try:
-                        my_components['active'] = getattr(ActiveSkill, s_id)(name, charge)
-                    except AttributeError as e:
-                        print("AttributeError %s. Missing ActiveSkill %s (not your fault)" % (e, name))
-                elif component == 'automatic':
-                    charge = int(status.find('automatic').text)
-                    status_id = status.find('status').text
-                    my_components['automatic'] = ActiveSkill.AutomaticSkill(name, charge, status_id)
                 elif component == 'item_mod':
                     conditional = status.find('item_mod_conditional').text if status.find('item_mod_conditional') is not None else None
                     effect_add = status.find('item_mod_effect_add').text.split(';') if status.find('item_mod_effect_add') is not None else None
@@ -487,6 +482,27 @@ def statusparser(s_id, gameStateObj=None):
                     child = status.find('child').text
                     target = status.find('target').text
                     my_components['aura'] = Aura.Aura(aura_range, target, child, gameStateObj)
+                elif component == 'combat_art' or component == 'automatic_combat_art':
+                    mode = ActiveSkill.Mode.ACTIVATED if component == 'combat_art' else ActiveSkill.Mode.AUTOMATIC
+                    child_status = status.find('combat_art_status').text if status.find('combat_art_status') is not None else None
+                    charge_method = status.find('charge_method').text if status.find('charge_method') is not None else 'SKL'
+                    charge_max = int(status.find('charge_max').text) if status.find('charge_max') is not None else 60
+                    valid_weapons_func = exec(status.find('valid_weapons_func').text) if status.find('valid_weapons_func') is not None else lambda (self, u, w): w
+                    check_valid_func = exec(status.find('check_valid_func').text) if status.find('check_valid_func') is not None else lambda (self, u, gameStateObj): True
+                    my_components[component] = ActiveSkill.CombatArtComponent(mode, child_status, valid_weapons_func, check_valid_func, charge_method, charge_max)
+                elif component == 'activated_item':
+                    activated_item_id = status.find('activated_item').text if status.find('activated_item') is not None else None
+                    charge_method = status.find('charge_method').text if status.find('charge_method') is not None else 'SKL'
+                    charge_max = int(status.find('charge_max').text) if status.find('charge_max') is not None else 0
+                    check_valid_func = exec(status.find('check_valid_func').text) if status.find('check_valid_func') is not None else lambda (self, u, gameStateObj): True
+                    get_choices_func = exec(status.find('get_choices_func').text) if status.find('get_choices_func') is not None else lambda (self, u, gameStateObj): None
+                    my_components['activated_item'] = ActiveSkill.ActivatedItemComponent(activated_item_id, check_valid_func, get_choices_func, charge_method, charge_max)
+                elif component == 'proc':
+                    child_status = status.find('proc_status').text if status.find('proc_status') is not None else None
+                    charge_method = status.find('proc_rate').text if status.find('proc_rate') is not None else 'SKL'
+                    priority = int(status.find('proc_priority').text) if status.find('proc_priority') is not None else 10
+                    valid_items_func = exec(status.find('valid_items_func').text) if status.find('valid_items_func') is not None else lambda (self, w): w
+                    my_components['proc'] = ActiveSkill.ProcComponent(child_status, charge_method, priority)
                 elif status.find(component) is not None and status.find(component).text:
                     my_components[component] = status.find(component).text
                 else:
@@ -507,14 +523,14 @@ def deserialize(s_dict):
 
     if s_dict['time_left'] is not None:
         status.time.time_left = s_dict['time_left']
-    if s_dict['count'] is not None:
-        status.count.count = s_dict['count']
+    # if s_dict['count'] is not None:
+    #     status.count.count = s_dict['count']
     if s_dict['upkeep_sc_count'] is not None:
         status.upkeep_stat_change.count = s_dict['upkeep_sc_count']
-    if s_dict['active_charge'] is not None:
-        status.active.current_charge = s_dict['active_charge']
-    if s_dict.get('automatic_charge') is not None:
-        status.automatic.current_charge = s_dict['automatic_charge']
+    # if s_dict['active_charge'] is not None:
+    #     status.active.current_charge = s_dict['active_charge']
+    # if s_dict.get('automatic_charge') is not None:
+    #     status.automatic.current_charge = s_dict['automatic_charge']
     if s_dict['stat_halve_penalties'] is not None:
         status.stat_halve.penalties = s_dict['stat_halve_penalties']
     if s_dict['aura_child_uid'] is not None:
@@ -523,6 +539,10 @@ def deserialize(s_dict):
     status.owner_id = s_dict['owner_id']
     status.giver_id = s_dict['giver_id']
     status.data = s_dict.get('data', {})  # Get back persistent data
+    if s_dict.get('activated_item') is not None:
+        status.activated_item.current_charge = s_dict['activated_item']
+    if s_dict.get('combat_art') is not None:
+        status.combat_art.current_charge = s_dict['combat_art']
 
     return status
 

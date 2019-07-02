@@ -67,6 +67,9 @@ class ItemObject(object):
         # Whether maximum range is not 0 or 1
         return not (self.RNG[-1] == '0' or self.RNG[-1] == '1')
 
+    def is_magic(self):
+        return self.magic or self.magic_at_range or self.TYPE in Weapons.TRIANGLE.magic_types
+
     def serialize(self):
         serial_dict = {}
         serial_dict['uid'] = self.uid

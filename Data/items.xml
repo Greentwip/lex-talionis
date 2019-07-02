@@ -1829,18 +1829,6 @@
     </item>
 
     <!-- Unobtainable Skill Only Items -->
-    <item name="Rage">
-        <id>so_Rage</id>
-        <spritetype>Skills</spritetype>
-        <spriteid>8,10</spriteid>
-        <components>status,virtual,beneficial</components>
-
-        <value>1</value>
-        <RNG>0</RNG>
-        <desc>I done broked something.</desc>
-        <status>Rage_Status</status>
-    </item>
-
     <item name="Fade">
         <id>so_Fade</id>
         <spritetype>Skills</spritetype>

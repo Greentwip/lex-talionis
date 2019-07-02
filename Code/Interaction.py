@@ -59,13 +59,13 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
         # XOR below
         if animation_wanted(attacker, defender) != toggle_anim:
             distance = Utility.calculate_distance(attacker.position, def_pos)
-            magic = Weapons.TRIANGLE.isMagic(item)
+            magic = item.is_magic()
             if magic and item.magic_at_range and distance <= 1:
                 magic = False
             attacker_anim = GC.ANIMDICT.partake(attacker.klass, attacker.gender, item, magic, distance)
             defender_item = defender.getMainWeapon()
             if defender_item:
-                magic = Weapons.TRIANGLE.isMagic(defender_item)
+                magic = defender_item.is_magic()
                 # Not magic animation at close combat for a magic at range item
                 if magic and defender_item.magic_at_range and distance <= 1:
                     magic = False

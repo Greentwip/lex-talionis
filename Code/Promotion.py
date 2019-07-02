@@ -281,7 +281,7 @@ class PromotionState(StateMachine.State):
         Done so that when in combat, the in combat animation updates also
         """
         item = self.unit.getMainWeapon()
-        magic = Weapons.TRIANGLE.isMagic(item) if item else False
+        magic = item.is_magic() if item else False
         anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender, item, magic)
         # anim = GC.ANIMDICT.partake(self.unit.klass, self.unit.gender)
         if anim:
