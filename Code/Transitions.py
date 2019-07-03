@@ -499,7 +499,7 @@ class StartPreloadedLevels(StartLoad):
         name, color = [], []
         for level in GC.PRELOADDATA.getroot().findall('level'):
             name.append(level.get('name'))
-            color.append(GC.DIFFICULTYDATA[level.find('mode').text]['color'])
+            color.append(GC.DIFFICULTYDATA[level.find('mode').text].get('color', 'Green'))
         return name, color
 
     def preload_level(self, name):
