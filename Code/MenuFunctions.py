@@ -937,18 +937,17 @@ class SupportMenu(object):
                 if gameStateObj.support.node_dict[unit.id].dead:
                     unit_image = unit_sprite.create_image('gray')
                 topleft = (4 - 24, 10 + (index+1)*16 - unit_image.get_height())
-            # TODO Blit ???
             units.append((unit_image, topleft))
 
             # Blit name
-            position = (24 + 1, 4 + index*16)
+            position = (24 + 1, 4 + index*16 + 8)
             if unit:
                 GC.FONT['text_white'].blit(unit.name, back_surf, position)
             else:
                 GC.FONT['text_white'].blit('---', back_surf, position)
 
             # Blit Affinity
-            affinity.draw(back_surf, (72, 3 + index*16))
+            affinity.draw(back_surf, (72, 3 + index*16 + 8))
 
             # Blit LVS
             letters = ['@', '`', '~', '%'] # C, B, A, S
@@ -961,17 +960,21 @@ class SupportMenu(object):
                     font = GC.FONT['text_white']
                 else:
                     font = GC.FONT['text_grey']
-                font.blit(letter, back_surf, (90 + level*10, 4 + index*16))
+                font.blit(letter, back_surf, (90 + level*10, 4 + index*16 + 8))
 
         surf.blit(back_surf, self.topleft)
         for unit in units:
             if unit[0]:
                 surf.blit(unit[0], (self.topleft[0] + unit[1][0], self.topleft[1] + unit[1][1]))
 
+        # Blit Name -- Affin -- LV
+        if GC.IMAGESDICT.get('SupportWords'):
+            surf.blit(GC.IMAGESDICT['SupportWords'], (104, 12))
+
         # Blit cursor
         if self.cursor_flag:
             left = self.currentLevel*10 + self.topleft[0] + 100 - 12 - 10
-            top = self.currentSelection*16 + self.topleft[1] + 4
+            top = self.currentSelection*16 + self.topleft[1] + 4 + 8
             surf.blit(self.cursor, (left, top))
 
 # Simple start menu

@@ -17,6 +17,8 @@ from EditorCode import EditorUtilities, Faction, Triggers, QtWeather
 from EditorCode.DataImport import Data
 from EditorCode import Autotiles
 
+__version__ = "0.9.0.3"
+
 # TODO: Created Units
 
 class MainView(QtGui.QGraphicsView):
@@ -409,7 +411,7 @@ class Dock(QtGui.QDockWidget):
 class MainEditor(QtGui.QMainWindow):
     def __init__(self):
         super(MainEditor, self).__init__()
-        self.setWindowTitle('Lex Talionis Level Editor v' + GC.version)
+        self.setWindowTitle('Lex Talionis Level Editor v' + __version__)
         self.installEventFilter(self)
 
         # Data

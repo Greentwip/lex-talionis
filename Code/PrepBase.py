@@ -1373,7 +1373,7 @@ class BaseMainState(StateMachine.State):
         Engine.music_thread.fade_in(GC.MUSICDICT[metaDataObj['base_music']])
         self.done = False
         gameStateObj.cursor.drawState = 0
-        background_image = GC.IMAGESDICT.get(metaDataObj['baseFlag'], 'MainBase')
+        background_image = GC.IMAGESDICT.get(metaDataObj['baseFlag'], GC.IMAGESDICT['MainBase'])
         gameStateObj.background = Background.StaticBackground(background_image, fade=False)
 
         if gameStateObj.main_menu:
