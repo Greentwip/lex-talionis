@@ -14,10 +14,10 @@
         <id>Poison</id>
         <desc>Suffers damage over time.</desc>
         <image_index>3,4</image_index>
-        <components>always_animation,hp_percentage,time,negative</components>
+        <components>always_animation,upkeep_damage,time,negative</components>
 
         <time>6</time>
-        <hp_percentage>-15</hp_percentage>
+        <upkeep_damage>1,5</upkeep_damage>
         <!-- Animation frame data (Name of animation, x, y, total_num_frames) -->
         <always_animation>MapPoison,5,2,8</always_animation>
     </status>
@@ -209,9 +209,9 @@
         <id>Rescue</id>
         <image_index>3,2</image_index>
         <desc>Halves SKL/SPD.</desc>
-        <components>rescue,negative</components>
+        <components>stat_halve,negative</components>
 
-        <rescue>SKL,SPD</rescue>
+        <stat_halve>SKL,SPD</stat_halve>
     </status>
 
     <!-- CLASS SKILLS -->

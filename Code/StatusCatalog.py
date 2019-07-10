@@ -3,11 +3,13 @@
 try:
     import GlobalConstants as GC
     import configuration as cf
+    import static_random
     import CustomObjects, ActiveSkill, Interaction, InfoMenu
     import Aura, Action, Utility, Engine
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
+    from . import static_random
     from . import CustomObjects, ActiveSkill, Interaction, InfoMenu
     from . import Aura, Action, Utility, Engine
 
@@ -358,6 +360,17 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
         hp_change = int(int(unit.stats['HP']) * status.hp_percentage.percentage/100.0)
         old_hp = unit.currenthp
         Action.do(Action.ChangeHP(unit, hp_change), gameStateObj)
+        if unit.currenthp > old_hp:
+            GC.SOUNDDICT['MapHeal'].play()
+
+    elif status.upkeep_damage:
+        if ',' in status.upkeep_damage:
+            low_damage, high_damage = status.upkeep_damage.split(',')
+            damage_dealt = static_random.shuffle(range(int(low_damage), int(high_damage)))[0]
+        else:
+            damage_dealt = int(status.upkeep_damage)
+        old_hp = unit.currenthp
+        Action.do(Action.ChangeHP(unit, damage_dealt), gameStateObj)
         if unit.currenthp > old_hp:
             GC.SOUNDDICT['MapHeal'].play()
 
