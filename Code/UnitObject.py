@@ -623,9 +623,6 @@ class UnitObject(object):
     def getWeight(self):
         return GC.EQUATIONS.get_weight(self)
 
-    def get_skill_charge(self):
-        return GC.EQUATIONS.get_skill_charge(self)
-
     def canWield(self, item):
         """
         Returns True if it can be wielded/used, and False otherwise

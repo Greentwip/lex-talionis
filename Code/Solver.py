@@ -3,11 +3,13 @@ try:
     import static_random
     import UnitObject, TileObject, Action
     import StatusCatalog, SaveLoad, Utility
+    import Equations
 except ImportError:
     from . import configuration as cf
     from . import static_random
     from . import UnitObject, TileObject, Action
     from . import StatusCatalog, SaveLoad, Utility
+    from . import Equations
 
 import logging
 logger = logging.getLogger(__name__)
@@ -24,9 +26,260 @@ class Result(object):
         self.def_status = []  # Status to the defender
         self.atk_movement = None  # Movement to the attacker
         self.def_movement = None  # Movement to the defender
-        self.attacker_skill_used = None
-        self.defender_skill_used = None
+        self.attacker_proc_used = None  # Proc skill used by the attacker
+        self.defender_proc_used = None  # Proc skill used by the defender
+        self.adept_proc = None
         self.summoning = None
+
+class SolverStateMachine(object):
+    def __init__(self, starting_state):
+        self.state = starting_state
+        self.states = {'PreInit': PreInitState,
+                       'Init': InitState,
+                       'Attacker': AttackerState,
+                       'AttackerBrave': AttackerBraveState,
+                       'Defender': DefenderState,
+                       'DefenderBrave': DefenderBraveState,
+                       'Splash': SplashState,
+                       'SplashBrave': SplashBraveState,
+                       'Summon': SummonState,
+                       'Done': DoneState}
+
+    def get_state(self):
+        return self.state
+
+    def change_state(self, state):
+        self.state = self.states[state]() if state else None
+
+    def ratchet(self, solver, gameStateObj, metaDataObj):
+        self.change_state(self.state.get_next_state(solver, gameStateObj))
+        if self.get_state():
+            result = self.get_state().process(solver, gameStateObj, metaDataObj)
+            return result
+        return None
+
+class SolverState(object):
+    def __init__(self):
+        pass
+
+    def get_next_state(self, solver, gameStateObj):
+        return None
+
+    def process(self, solver, gameStateObj, metaDataObj):
+        return None
+
+class PreInitState(SolverState):
+    def get_next_state(self, solver, gameStateObj):
+        return 'Init'
+
+class InitState(object):
+    def get_next_state(self, solver, gameStateObj):
+        if solver.defender:
+            if solver.defender_has_vantage(gameStateObj):
+                return 'Defender'
+            else:
+                return 'Attacker'
+        elif solver.splash:
+            return 'Splash'
+        elif solver.item.summon:
+            return 'Summon'
+        else:
+            return 'Done'
+
+    def process(self, solver, gameStateObj, metaDataObj):
+        solver.remove_pre_proc(gameStateObj)
+        solver.reset()
+        solver.atk_pre_proc = self.get_attacker_pre_proc(solver.attacker, gameStateObj)
+        if solver.defender:
+            solver.def_pre_proc = self.get_defender_pre_proc(solver.defender, gameStateObj)
+        return None
+
+    def get_attacker_pre_proc(self, unit, gameStateObj):
+        proc_statuses = [s for s in unit.status_effects if s.attack_pre_proc]
+        proc_statuses = sorted(proc_statuses, lambda x: x.attack_pre_proc.priority, reversed=True)
+        for status in proc_statuses:
+            roll = static_random.get_combat()
+            expr = Equations.get_expression(status.attack_pre_proc.rate)
+            if roll < expr:
+                status_obj = StatusCatalog.statusparser(status.attack_pre_proc.status_id)
+                Action.do(Action.AddStatus(unit, status_obj))
+                return status_obj
+        return None
+
+    def get_defender_pre_proc(self, unit, gameStateObj):
+        proc_statuses = [s for s in unit.status_effects if s.defense_pre_proc]
+        proc_statuses = sorted(proc_statuses, lambda x: x.defense_pre_proc.priority, reversed=True)
+        for status in proc_statuses:
+            roll = static_random.get_combat()
+            expr = Equations.get_expression(status.defense_pre_proc.rate)
+            if roll < expr:
+                status_obj = StatusCatalog.statusparser(status.defense_pre_proc.status_id)
+                Action.do(Action.AddStatus(unit, status_obj))
+                return status_obj
+        return None
+
+class AttackerState(SolverState):
+    def check_for_brave(self, solver, unit, item):
+        if item.brave:
+            return True
+        for status in unit.status_effects:
+            if status.adept_proc:
+                roll = static_random.get_combat()
+                expr = Equations.get_expression(status.adept_proc.rate, unit)
+                if roll < expr:
+                    solver.adept_proc = status
+                    return True
+        return False
+
+    def get_next_state(self, solver, gameStateObj):
+        if solver.splash:
+            return 'Splash'
+        elif solver.defender.currenthp > 0:
+            if solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
+                return 'AttackerBrave'
+            elif solver.allow_counterattack(gameStateObj):
+                return 'Defender'
+            elif solver.atk_rounds < 2 and solver.item.weapon and \
+                    solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                    solver.item_uses(solver.item):
+                return 'Attacker'
+            elif solver.next_round():
+                return 'Init'
+            else:
+                return 'Done'
+        else:
+            return 'Done'
+
+    def process(self, solver, gameStateObj, metaDataObj):
+        Action.do(Action.UseItem(solver.item), gameStateObj)
+        solver.uses_count += 1
+        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.defender, solver.item)
+        result.adept_proc = solver.adept_proc
+        solver.adept_proc = None
+        solver.atk_rounds += 1
+        return result
+
+class AttackerBraveState(AttackerState):
+    def get_next_state(self, solver, gameStateObj):
+        if solver.splash and any(s.currenthp > 0 for s in solver.splash):
+            return 'SplashBrave'
+        elif solver.defender.currenthp > 0:
+            if solver.allow_counterattack(gameStateObj):
+                return 'Defender'
+            elif solver.atk_rounds < 2 and solver.item.weapon and \
+                    solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                    solver.item_uses(solver.item):
+                return 'Attacker'
+            elif solver.next_round():
+                return 'Init'
+            else:
+                return 'Done'
+        else:
+            return 'Done'
+
+class DefenderState(AttackerState):
+    def get_next_state(self, solver, gameStateObj):
+        if solver.attacker.currenthp > 0:
+            ditem = solver.defender.getMainWeapon()
+            if solver.item_uses(ditem) and self.check_for_brave(solver, solver.defender, ditem):
+                return 'DefenderBrave'
+            elif solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
+                return 'Attacker'
+            elif solver.atk_rounds < 2 and solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                    solver.item_uses(solver.item) and not solver.item.no_double:
+                return 'Attacker'
+            elif solver.def_double(gameStateObj) and solver.defender_can_counterattack() and \
+                    not ditem.no_double:
+                return 'Defender'
+            elif solver.next_round():
+                return 'Init'
+        return 'Done'
+
+    def process(self, solver, gameStateObj, metaDataObj):
+        ditem = solver.defender.getMainWeapon()
+        Action.do(Action.UseItem(ditem), gameStateObj)
+        result = self.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem)
+        result.adept_proc = solver.adept_proc
+        solver.adept_proc = None
+        solver.def_rounds += 1
+        return result
+
+class DefenderBraveState(DefenderState):
+    def get_next_state(self, solver, gameStateObj):
+        if solver.attacker.currenthp > 0:
+            ditem = solver.defender.getMainWeapon()
+            if solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
+                return 'Attacker'
+            elif solver.atk_rounds < 2 and solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                    solver.item_uses(solver.item) and not solver.item.no_double:
+                return 'Attacker'
+            elif solver.def_double(gameStateObj) and solver.defender_can_counterattack() and \
+                    not ditem.no_double:
+                return 'Defender'
+            elif solver.next_round():
+                return 'Init'
+        return 'Done'
+
+class SplashState(AttackerState):
+    def __init__(self, solver, gameStateObj):
+        self.index = 0
+
+    def get_next_state(self, solver, gameStateObj):
+        if self.index < len(solver.splash):
+            return None
+        if solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
+            if solver.defender and solver.defender.currenthp > 0:
+                return 'AttackerBrave'
+            elif any(s.currenthp > 0 for s in solver.splash):
+                return 'SplashBrave'
+        if solver.allow_counterattack(gameStateObj):
+            return 'Defender'
+        elif solver.defender and solver.atk_rounds < 2 and \
+                solver.attacker.outspeed(solver.defender, solver.item. gameStateObj) and \
+                solver.item_uses(solver.item) and solver.defender.currenthp > 0:
+            return 'Attacker'
+        elif solver.next_round():
+            return 'Init'
+        else:
+            return 'Done'
+
+    def process(self, solver, gameStateObj, metaDataObj):
+        if solver.uses_count < 1:
+            Action.do(Action.UseItem(solver.item), gameStateObj)
+            solver.uses_count += 1
+        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.splash[solver.index], solver.item)
+        result.adept_proc = solver.adept_proc
+        solver.adept_proc = None
+        self.index += 1
+        return result
+
+class SplashBraveState(SplashState):
+    def get_next_state(self, solver, gameStateObj):
+        if self.index < len(solver.splash):
+            return None
+        elif solver.allow_counterattack(gameStateObj):
+            return 'Defender'
+        elif solver.defender and solver.atk_rounds < 2 and \
+                solver.attacker.outspeed(solver.defender, solver.item. gameStateObj) and \
+                solver.item_uses(solver.item) and solver.defender.currenthp > 0:
+            return 'Attacker'
+        elif solver.next_round():
+            return 'Init'
+        else:
+            return 'Done'
+
+class SummonState(SolverState):
+    def get_next_state(self, solver, gameStateObj):
+        return 'Done'
+
+    def process(self, solver, gameStateObj, metaDataObj):
+        Action.do(Action.UseItem(solver.item), gameStateObj)
+        result = solver.generate_summon_phase(gameStateObj, metaDataObj)
+        return result
+
+class DoneState(SolverState):
+    def process(self, solver, gameStateObj, metaDataObj):
+        return None
 
 # Does not check legality of attack, that is for other functions to do. 
 # Assumes attacker can attack all defenders using item and skill
@@ -40,7 +293,7 @@ class Solver(object):
         self.item = item
         self.skill_used = skill_used
         if event_combat:
-            # Must make a copy because other things use whether event_combat is full as True/False values
+            # Must make a copy because we'll be modifying this list
             self.event_combat = [e for e in event_combat]
         else:
             self.event_combat = None
@@ -48,17 +301,20 @@ class Solver(object):
         if not event_combat and (self.item.event_combat or (self.defender and self.defender.getMainWeapon() and self.defender.getMainWeapon().event_combat)):
             self.event_combat = ['hit'] * 8  # Default event combat for evented items
 
-        self.state = 'Init'
+        self.state_machine = SolverStateMachine('PreInit')
+
         self.current_round = 0
         self.total_rounds = 1
         self.atk_rounds = 0
         self.def_rounds = 0
 
         self.uses_count = 0
-        self.index = 0
+
+        self.atk_pre_proc = None
+        self.def_pre_proc = None
+        self.adept_proc = None
 
     def reset(self):
-        self.state = 'Init'
         self.current_round += 1
         self.atk_rounds = 0
         self.def_rounds = 0
@@ -95,8 +351,8 @@ class Solver(object):
             result.outcome = 2
             result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid, crit=cf.CONSTANTS['crit'])
 
-    def generate_attacker_phase(self, gameStateObj, metaDataObj, defender):
-        result = Result(self.attacker, defender)
+    def generate_phase(self, gameStateObj, metaDataObj, attacker, defender, item):
+        result = Result(attacker, defender)
         if self.event_combat:
             event_command = self.event_combat.pop()
         else:
@@ -108,58 +364,62 @@ class Solver(object):
         assert isinstance(defender, UnitObject.UnitObject) or isinstance(defender, TileObject.TileObject), \
             "Only Units and Tiles can engage in combat! %s" % (defender)
         
-        to_hit = self.attacker.compute_hit(defender, gameStateObj, self.item, mode="Attack")
+        # Add proc skills
+        result.attacker_proc_used = self.get_attacker_proc(attacker)
+        result.defender_proc_used = self.get_defender_proc(defender)
+
+        to_hit = attacker.compute_hit(defender, gameStateObj, item, mode="Attack")
         rng_mode = gameStateObj.mode['rng']
         roll = self.generate_roll(rng_mode, event_command)
 
         hybrid = to_hit if rng_mode == 'hybrid' else None
 
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
-        if self.item.weapon:
+        if item.weapon:
             if roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle):
-                result.outcome = (2 if self.item.guaranteed_crit else 1)
-                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
+                result.outcome = (2 if item.guaranteed_crit else 1)
+                result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid)
                 if cf.CONSTANTS['crit']: 
-                    self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid, event_command)
+                    self.handle_crit(result, attacker, defender, item, 'Attack', gameStateObj, hybrid, event_command)
                     
             # Missed but does half damage
-            elif self.item.half:
-                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid) // 2
+            elif item.half_on_miss:
+                result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid) // 2
                 # print(result.def_damage)
 
-        elif self.item.spell:
-            if not self.item.hit or (roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle)):
-                result.outcome = (2 if self.item.guaranteed_crit else 1)
-                if self.item.damage is not None:
-                    result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid)
+        elif item.spell:
+            if not item.hit or (roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle)):
+                result.outcome = (2 if item.guaranteed_crit else 1)
+                if item.damage is not None:
+                    result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid)
                     if cf.CONSTANTS['crit']: 
-                        self.handle_crit(result, self.attacker, defender, self.item, 'Attack', gameStateObj, hybrid, event_command)
-                elif self.item.heal is not None:
-                    result.def_damage = -self.attacker.compute_heal(defender, gameStateObj, self.item, mode='Attack')
-                if self.item.movement:
-                    result.def_movement = self.item.movement
+                        self.handle_crit(result, attacker, defender, item, 'Attack', gameStateObj, hybrid, event_command)
+                elif item.heal is not None:
+                    result.def_damage = -attacker.compute_heal(defender, gameStateObj, item, mode='Attack')
+                if item.movement:
+                    result.def_movement = item.movement
 
-            elif self.item.half and self.item.hit is not None and self.item.damage is not None:
-                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, self.item, mode='Attack', hybrid=hybrid) // 2
+            elif item.half_on_miss and item.hit is not None and item.damage is not None:
+                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid) // 2
 
         else:
             result.outcome = 1
-            result.def_damage = -int(eval(self.item.heal)) if self.item.heal else 0
-            if self.attacker is not defender and self.item.heal:
-                result.def_damage -= sum(status.caretaker for status in self.attacker.status_effects if status.caretaker)
-            if self.item.movement:
-                result.def_movement = self.item.movement
-            if self.item.self_movement:
-                result.atk_movement = self.item.self_movement
+            result.def_damage = -int(eval(item.heal)) if item.heal else 0
+            if attacker is not defender and item.heal:
+                result.def_damage -= sum(status.caretaker for status in attacker.status_effects if status.caretaker)
+            if item.movement:
+                result.def_movement = item.movement
+            if item.self_movement:
+                result.atk_movement = item.self_movement
 
         if result.outcome:
             # Handle status
-            for s_id in self.item.status:
+            for s_id in item.status:
                 status_object = StatusCatalog.statusparser(s_id, gameStateObj)
                 result.def_status.append(status_object)
             # Handle summon
-            if self.item.summon:
-                result.summoning = SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, metaDataObj, gameStateObj)
+            if item.summon:
+                result.summoning = SaveLoad.create_summon(item.summon, attacker, self.def_pos, metaDataObj, gameStateObj)
 
         # Make last attack against a boss a crit!
         if cf.CONSTANTS['boss_crit'] and 'Boss' in defender.tags and result.outcome and result.def_damage >= defender.currenthp:
@@ -167,64 +427,21 @@ class Solver(object):
 
         # Handle lifelink and vampire
         if result.def_damage > 0:
-            if self.item.lifelink:
+            if item.lifelink:
                 result.atk_damage -= result.def_damage
-            if self.item.half_lifelink:
+            if item.half_lifelink:
                 result.atk_damage -= result.def_damage//2
             # Handle Vampire Status
-            for status in self.attacker.status_effects:
+            for status in attacker.status_effects:
                 if status.vampire and defender.currenthp - result.def_damage <= 0 and \
                    not any(status.miracle and (not status.count or status.count.count > 0) for status in defender.status_effects):
                     result.atk_damage -= eval(status.vampire)
         
-        return result
-
-    def generate_defender_phase(self, gameStateObj):
-        # Assumes Capable of counterattacking
-        result = Result(self.defender, self.attacker)
-        if self.event_combat:
-            event_command = self.event_combat.pop()
-        else:
-            event_command = None
-        if event_command == 'quit':
-            return None
-
-        to_hit = self.defender.compute_hit(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense")
-        rng_mode = gameStateObj.mode['rng']
-        roll = self.generate_roll(rng_mode, event_command)
-
-        hybrid = to_hit if rng_mode == 'hybrid' else None
-        # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
-        if roll < to_hit:
-            result.outcome = (2 if self.item.guaranteed_crit else 1)
-            result.def_damage = self.defender.compute_damage(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense", hybrid=hybrid)
-            if cf.CONSTANTS['crit']: 
-                self.handle_crit(result, self.defender, self.attacker, self.defender.getMainWeapon(), "Defense", gameStateObj, hybrid, event_command)
-
-        # Missed but does half damage
-        elif self.defender.getMainWeapon().half:
-            result.def_damage = self.defender.compute_damage(self.attacker, gameStateObj, self.defender.getMainWeapon(), mode="Defense", hybrid=hybrid) // 2
-
-        if result.outcome:
-            for s_id in self.defender.getMainWeapon().status:
-                status_object = StatusCatalog.statusparser(s_id, gameStateObj)
-                result.def_status.append(status_object)
-
-        # Make last attack against a boss a crit!
-        if cf.CONSTANTS['boss_crit'] and 'Boss' in self.attacker.tags and result.outcome and result.def_damage >= self.attacker.currenthp:
-            result.outcome = 2
-
-        # Handle lifelink and vampire
-        if result.def_damage > 0:
-            if self.defender.getMainWeapon().lifelink:
-                result.atk_damage -= result.def_damage
-            if self.defender.getMainWeapon().half_lifelink:
-                result.atk_damage -= result.def_damage//2
-            # Handle Vampire Status
-            for status in self.defender.status_effects:
-                if status.vampire and self.attacker.currenthp - result.def_damage <= 0 and \
-                        not any(status.miracle and (not status.count or status.count.count > 0) for status in self.attacker.status_effects):
-                    result.atk_damage -= eval(status.vampire)
+        # Remove proc skills
+        if result.attacker_proc_used:
+            Action.do(Action.RemoveStatus(attacker, result.attacker_proc_used))
+        if result.defender_proc_used:
+            Action.do(Action.RemoveStatus(defender, result.defender_proc_used))
 
         return result
 
@@ -272,175 +489,44 @@ class Solver(object):
             isinstance(self.defender, UnitObject.UnitObject) and \
             self.defender.currenthp > 0 and self.current_round + 1 < self.total_rounds
 
-    def determine_state(self, gameStateObj):
-        logger.debug('Interaction State 1: %s', self.state)
-        if self.state == 'Init':
-            if self.defender:
-                if self.defender_has_vantage(gameStateObj):
-                    self.state = 'Defender'
-                else:
-                    self.state = 'Attacker'
-            elif self.splash:
-                self.state = 'Splash'
-                self.index = 0
-            elif self.item.summon:  # Hacky?
-                self.state = 'Summon'
-            else:
-                self.state = 'Done'
+    def get_attacker_proc(self, unit, gameStateObj):
+        proc_statuses = [s for s in unit.status_effects if s.attack_proc]
+        proc_statuses = sorted(proc_statuses, lambda x: x.attack_proc.priority, reversed=True)
+        for status in proc_statuses:
+            roll = static_random.get_combat()
+            expr = Equations.get_expression(status.attack_proc.rate, unit)
+            if roll < expr:
+                status_obj = StatusCatalog.statusparser(status.attack_proc.status_id)
+                Action.do(Action.AddStatus(unit, status_obj))
+                return status_obj
+        return None
 
-        elif self.state == 'Attacker':
-            if (not self.defender or isinstance(self.defender, TileObject.TileObject)) and not self.splash:  # Just leave if tile mode
-                self.state = 'Done'
-            elif self.splash:
-                self.state = 'Splash'
-                self.index = 0
-            elif self.defender.currenthp > 0:
-                if self.item_uses(self.item) and (self.item.brave or self.adept_activated(self.attacker)):
-                    self.state = 'AttackerBrave'
-                elif self.allow_counterattack(gameStateObj):
-                    self.state = 'Defender'
-                elif self.atk_rounds < 2 and self.item.weapon and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item):
-                    self.state = 'Attacker'
-                elif self.next_round():
-                    self.reset()
-                else:
-                    self.state = 'Done'
-            else:
-                self.state = 'Done'
+    def get_defender_proc(self, unit, gameStateObj):
+        proc_statuses = [s for s in unit.status_effects if s.defense_proc]
+        proc_statuses = sorted(proc_statuses, lambda x: x.defense_proc.priority, reversed=True)
+        for status in proc_statuses:
+            roll = static_random.get_combat()
+            expr = Equations.get_expression(status.defense_proc.rate, unit)
+            if roll < expr:
+                status_obj = StatusCatalog.statusparser(status.defense_proc.status_id)
+                Action.do(Action.AddStatus(unit, status_obj))
+                return status_obj
+        return None
 
-        elif self.state == 'Splash':
-            if self.index < len(self.splash):
-                self.state = 'Splash'
-            elif self.item_uses(self.item) and (self.item.brave or self.adept_activated(self.attacker)):
-                if self.defender and self.defender.currenthp > 0:
-                    self.index = 0
-                    self.state = 'AttackerBrave'
-                else:
-                    self.index = 0
-                    self.state = 'SplashBrave'
-            elif self.allow_counterattack(gameStateObj):
-                self.index = 0
-                self.state = 'Defender'
-            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and \
-                    self.item_uses(self.item) and self.defender.currenthp > 0:
-                self.index = 0
-                self.state = 'Attacker'
-            elif self.next_round():
-                self.reset()
-            else:
-                self.state = 'Done'
-
-        elif self.state == 'AttackerBrave':
-            if self.splash:
-                self.state = 'SplashBrave'
-                self.index = 0
-            elif self.allow_counterattack(gameStateObj):
-                self.state = 'Defender'
-            elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item) and self.defender.currenthp > 0:
-                self.state = 'Attacker'
-            elif self.next_round():
-                self.reset()
-            else:
-                self.state = 'Done'
-
-        elif self.state == 'SplashBrave':
-            if self.index < len(self.splash):
-                self.state = 'SplashBrave'
-            elif self.allow_counterattack(gameStateObj):
-                self.state = 'Defender'
-            elif self.defender and self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and \
-                    self.item_uses(self.item) and self.defender.currenthp > 0:
-                self.state = 'Attacker'
-            elif self.next_round():
-                self.reset()
-            else:
-                self.state = 'Done'
-
-        elif self.state == 'Defender':
-            self.state = 'Done'
-            if self.attacker.currenthp > 0:
-                ditem = self.defender.getMainWeapon()
-                if self.item_uses(ditem) and (ditem.brave or self.adept_activated(self.defender)):
-                    self.state = 'DefenderBrave'
-                elif self.def_rounds < 2 and self.defender_has_vantage(gameStateObj):
-                    self.state = 'Attacker'
-                elif self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item) and not self.item.no_double:
-                    self.state = 'Attacker'
-                elif self.def_double(gameStateObj) and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
-                    self.state = 'Defender'
-                elif self.next_round():
-                    self.reset()
-
-        elif self.state == 'DefenderBrave':
-            self.state = 'Done'
-            if self.attacker.currenthp > 0:
-                if self.def_rounds < 2 and self.defender_has_vantage(gameStateObj):
-                    self.state = 'Attacker'
-                if self.atk_rounds < 2 and self.attacker.outspeed(self.defender, self.item, gameStateObj) and self.item_uses(self.item) and not self.item.no_double:
-                    self.state = 'Attacker'
-                elif self.def_double(gameStateObj) and self.defender_can_counterattack() and not self.defender.getMainWeapon().no_double:
-                    self.state = 'Defender'
-                elif self.next_round():
-                    self.reset()
-
-        elif self.state == 'Summon':
-            self.state = 'Done'
+    def remove_pre_proc(self, gameStateObj):
+        if self.atk_pre_proc:
+            Action.do(Action.RemoveStatus(self.attacker, self.atk_pre_proc), gameStateObj)
+        if self.def_pre_proc:
+            Action.do(Action.RemoveStatus(self.defender, self.def_pre_proc), gameStateObj)
 
     def get_a_result(self, gameStateObj, metaDataObj):
-        result = None
-
-        self.determine_state(gameStateObj)
-        logger.debug('Interaction State 2: %s', self.state)
-
         old_random_state = static_random.get_combat_random_state()
-
-        if self.state == 'Done':
-            result = None
-
-        elif self.state == 'Attacker':
-            Action.do(Action.UseItem(self.item), gameStateObj)
-            self.uses_count += 1
-            result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.defender)
-            self.atk_rounds += 1
-
-        elif self.state == 'Splash':
-            if self.uses_count < 1:
-                Action.do(Action.UseItem(self.item), gameStateObj)
-                self.uses_count += 1
-            result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.splash[self.index])
-            self.index += 1
-
-        elif self.state == 'AttackerBrave':
-            Action.do(Action.UseItem(self.item), gameStateObj)
-            self.uses_count += 1
-            result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.defender)
-
-        elif self.state == 'SplashBrave':
-            if self.uses_count < 2:
-                Action.do(Action.UseItem(self.item), gameStateObj)
-                self.uses_count += 1
-            result = self.generate_attacker_phase(gameStateObj, metaDataObj, self.splash[self.index])
-            self.index += 1
-
-        elif self.state == 'Defender':
-            Action.do(Action.UseItem(self.defender.getMainWeapon()), gameStateObj)
-            self.def_rounds += 1
-            result = self.generate_defender_phase(gameStateObj)
-
-        elif self.state == 'DefenderBrave':
-            Action.do(Action.UseItem(self.defender.getMainWeapon()), gameStateObj)
-            result = self.generate_defender_phase(gameStateObj)
-
-        elif self.state == 'Summon':
-            Action.do(Action.UseItem(self.item), gameStateObj)
-            result = self.generate_summon_phase(gameStateObj, metaDataObj)
-
-        # Event command must have been quit
-        if result is None:
-            self.state = 'Done'
-
-        if self.state != "Done":
-            new_random_state = static_random.get_combat_random_state()
-            Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)
-                
+        result = None
+        while not result:
+            result = self.state_machine.ratchet(gameStateObj, metaDataObj)
+            if self.state_machine.get_state():
+                new_random_state = static_random.get_combat_random_state()
+                Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)
+            else:
+                break
         return result

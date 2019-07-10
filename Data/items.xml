@@ -1381,7 +1381,7 @@
         <id>Ruin</id>
         <spritetype>Dark</spritetype>
         <spriteid>2</spriteid>       
-        <components>weapon,uses,half,map_hit_color</components>
+        <components>weapon,uses,half_on_miss,map_hit_color</components>
         <weapontype>Dark</weapontype>
  
         <uses>15</uses>
@@ -1480,7 +1480,7 @@
         <id>Disintegrate</id>
         <spritetype>Dark</spritetype>
         <spriteid>8</spriteid>       
-        <components>spell,uses,hit,damage,half,detrimental,map_hit_color</components>
+        <components>spell,uses,hit,damage,half_on_miss,detrimental,map_hit_color</components>
         <weapontype>Dark</weapontype>
  
         <uses>3</uses>

@@ -21,9 +21,9 @@ class Parser(object):
             lhs = lhs.strip()
             self.equations[lhs] = self.tokenize(rhs)
 
-        replacement_dict = self.create_replacement_dict()
+        self.replacement_dict = self.create_replacement_dict()
         for lhs in list(self.equations.keys()):
-            self.fix(lhs, replacement_dict)
+            self.fix(lhs, self.replacement_dict)
 
     def tokenize(self, s):
         return re.split('([^a-zA-Z_])', s)
@@ -82,9 +82,6 @@ class Parser(object):
     def get_weight(self, unit, item=None, dist=0):
         return self.equations['RESCUE_WEIGHT'](self.equations, unit, item, dist)
 
-    def get_skill_charge(self, unit, item=None, dist=0):
-        return self.equations['CHARGE_INC'](self.equations, unit, item, dist)
-
     def get_steal_atk(self, unit, item=None, dist=0):
         return self.equations['STEAL_ATK'](self.equations, unit, item, dist)
 
@@ -96,3 +93,10 @@ class Parser(object):
 
     def get_equation(self, lhs, unit, item=None, dist=0):
         return self.equations[lhs](self.equations, unit, item, dist)
+
+    def get_expression(self, expr, unit):
+        expr = self.tokenize(expr)
+        expr = [self.replacement_dict.get(n, n) for n in expr]
+        expr = ''.join(expr)
+        expr = 'int(%s)' % expr
+        return eval(expr)

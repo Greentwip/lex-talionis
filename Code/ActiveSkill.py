@@ -113,9 +113,9 @@ class ChargeComponent(object):
 # "charged" item -> NA
 # "percent" item -> NA
 # How does Lex Talionis Miracle fit in?
-# Do percent skills activate for all attack automatically? No they activate for one attac konly
+# Do percent skills activate for all attack automatically? No they activate for one attack only
 # Or do percent skills only activate for one phase YES
-# Do percent skills only activate when you are going to hit?
+# Do percent skills only activate when you are going to hit? Depends on game -- Here NO
 # Do percent skills activate on crits? YES
 # Percent skills can have animations that replace Attack animation (Critical?)
 # or percent skills can have animations that just add before the normal Attack animation (Pavise)
@@ -177,5 +177,5 @@ class ActivatedItemComponent(ChargeComponent):
 class ProcComponent(object):
     def __init__(self, status_id, proc_rate='SKL', priority=10):
         self.status_id = status_id
-        self.proc_rate = proc_rate
+        self.rate = proc_rate
         self.priority = priority

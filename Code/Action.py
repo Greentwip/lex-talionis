@@ -6,13 +6,13 @@ try:
     import GlobalConstants as GC
     import configuration as cf
     import static_random
-    import StatusCatalog, Banner, Weapons, ClassData
+    import StatusCatalog, Banner, Weapons, ClassData, Equations
     import Utility, ItemMethods, UnitObject, Aura, ActiveSkill
 except ImportError:
     from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
-    from . import StatusCatalog, Banner, Weapons, ClassData
+    from . import StatusCatalog, Banner, Weapons, ClassData, Equations
     from . import Utility, ItemMethods, UnitObject, Aura, ActiveSkill
 
 import logging
@@ -1542,23 +1542,29 @@ class DecrementStatusTime(Action):
         self.status.time.increment()
 
 class ChargeAllSkills(Action):
-    def __init__(self, unit, new_charge):
+    def __init__(self, unit, new_charge=None):
         self.unit = unit
         self.old_charge = []
+        self.new_charge = []
         for status in self.unit.status_effects:
             for component in status.components:
                 if isinstance(component, ActiveSkill.ChargeComponent):
                     self.old_charge.append(component.current_charge)
+                    if new_charge:
+                        expr = new_charge
+                    else:
+                        expr = Equations.get_expression(component.charge_method, self.unit)
+                    self.new_charge.append(expr)
                     break
             else:
                 self.old_charge.append(0)
-        self.new_charge = new_charge
+                self.new_charge.append(0)
 
     def do(self, gameStateObj=None):
-        for status in self.unit.status_effects:
+        for idx, status in enumerate(self.unit.status_effects):
             for component in status.components:
                 if isinstance(component, ActiveSkill.ChargeComponent):
-                    component.increase_charge(self.unit, self.new_charge)
+                    component.increase_charge(self.unit, self.new_charge[idx])
                     break
 
     def reverse(self, gameStateObj=None):

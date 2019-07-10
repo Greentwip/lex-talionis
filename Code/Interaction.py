@@ -504,6 +504,7 @@ class AnimationCombat(Combat):
         # logger.debug(self.combat_state)
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
+
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
             self.next_result = None
             self.set_stats(gameStateObj)
@@ -574,9 +575,7 @@ class AnimationCombat(Combat):
                         self.left.battle_anim.start_anim('Transform')
                     if self.right.item.transform:
                         self.right.battle_anim.start_anim('Transform')
-                    self.combat_state = 'TransformAnim'
-                else:
-                    self.set_up_animation(self.current_result)
+                self.combat_state = 'TransformAnim'
 
         elif self.combat_state == 'Init':
             # self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
@@ -598,6 +597,14 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'TransformAnim':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
+                if self.solver.atk_pre_proc:
+                    self.set_up_pre_proc_animation(self.solver.attacker, self.solver.atk_pre_proc)
+                if self.solver.def_pre_proc:
+                    self.set_up_pre_proc_animation(self.solver.defender, self.solver.def_pre_proc)
+                self.combat_state = "PreProcSkill"
+
+        elif self.combat_state == 'PreProcSkill':
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
                 if self.left.item.combat_effect or self.right.item.combat_effect:
                     if self.right.item.combat_effect:
                         effect = self.right.battle_anim.add_effect(self.right.item.combat_effect)
@@ -609,7 +616,7 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'InitialEffects':
             if not self.left.battle_anim.effect_playing() and not self.right.battle_anim.effect_playing():
-                self.set_up_animation(self.current_result)
+                self.set_up_animation(self.current_result)  # To Proc Skill or Anim
 
         elif self.combat_state == 'RevertAnim':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
@@ -618,7 +625,7 @@ class AnimationCombat(Combat):
                 self.focus_exp()
                 self.move_camera()
 
-        elif self.combat_state == 'ActivateSkill':
+        elif self.combat_state == 'ProcSkill':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
                 self.combat_state = 'Anim'
                 self.set_up_combat_animation(self.current_result)
@@ -803,23 +810,23 @@ class AnimationCombat(Combat):
         self.next_result = self.solver.get_a_result(gameStateObj, metaDataObj)
 
     def set_up_animation(self, result):
-        if self.current_result.attacker_skill_used:
-            self.combat_state = 'ActivateSkill'
-            self.set_up_attacker_skill_animation(result)
-        if self.current_result.defender_skill_used:
-            self.combat_state = 'ActivateSkill'
-            self.set_up_defender_skill_animation(result)
+        if self.current_result.attacker_proc_used:
+            self.combat_state = 'ProcSkill'
+            self.set_up_attacker_proc_animation(result)
+        if self.current_result.defender_proc_used:
+            self.combat_state = 'ProcSkill'
+            self.set_up_defender_proc_animation(result)
         if not (self.current_result.attacker_skill_used or self.current_result.defender_skill_used):
             self.combat_state = 'Anim'
             self.set_up_combat_animation(result)
 
-    def set_up_attacker_skill_animation(self, result):
-        skill_name = result.attacker_skill_used.name
+    def set_up_attacker_proc_animation(self, result):
+        skill_name = result.attacker_proc_used.name
         if result.attacker.battle_anim.has_pose(skill_name):
             result.attacker.battle_anim.start_anim(skill_name)
-        elif result.attacker.battle_anim.has_pose('Generic Skill'):
+        elif result.attacker.battle_anim.has_pose('Generic Proc'):
             result.attacker.battle_anim.start_anim(skill_name)
-        self.add_skill_icon(result.attacker_skill_used)
+        self.add_skill_icon(result.attacker_proc_used)
         # Handle pan
         if result.attacker == self.right:
             self.focus_right = True
@@ -827,15 +834,29 @@ class AnimationCombat(Combat):
             self.focus_right = False
         self.move_camera()
 
-    def set_up_defender_skill_animation(self, result):
-        skill_name = result.defender_skill_used.name
+    def set_up_defender_proc_animation(self, result):
+        skill_name = result.defender_proc_used.name
         if result.defender.battle_anim.has_pose(skill_name):
             result.defender.battle_anim.start_anim(skill_name)
-        elif result.defender.battle_anim.has_pose('Generic Skill'):
+        elif result.defender.battle_anim.has_pose('Generic Proc'):
             result.defender.battle_anim.start_anim(skill_name)
-        self.add_skill_icon(result.defender_skill_used)
+        self.add_skill_icon(result.defender_proc_used)
         # Handle pan
         if result.defender == self.right:
+            self.focus_right = True
+        else:
+            self.focus_right = False
+        self.move_camera()
+
+    def set_up_pre_proc_animation(self, unit, skill):
+        skill_name = skill.name
+        if unit.battle_anim.has_pose(skill_name):
+            unit.battle_anim.start_anim(skill_name)
+        elif unit.battle_anim.has_pose('Generic Proc'):
+            unit.battle_anim.start_anim(skill_name)
+        self.add_skill_icon(skill)
+        # Handle pan
+        if unit == self.right:
             self.focus_right = True
         else:
             self.focus_right = False
@@ -1077,7 +1098,7 @@ class AnimationCombat(Combat):
             # Wexp and Skill Charge
             if attacker_results and not self.p1.isDying:
                 if not self.skill_used:
-                    Action.do(Action.ChargeAllSkills(self.p1, self.p1.get_skill_charge()), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p1), gameStateObj)
                 self.handle_wexp(attacker_results, self.item, gameStateObj)
 
             # EXP and Records
@@ -1105,7 +1126,7 @@ class AnimationCombat(Combat):
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 # WEXP and Skills
                 if defender_results:
-                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.get_skill_charge()), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p2), gameStateObj)
                     self.handle_wexp(defender_results, self.p2.getMainWeapon(), gameStateObj)
                 # Exp and Records
                 if self.p2.team == 'player' and not self.p2.isSummon():
@@ -1670,7 +1691,7 @@ class MapCombat(Combat):
             # WEXP and Skills
             if attacker_results and not self.p1.isDying:
                 if not self.skill_used:
-                    Action.do(Action.ChargeAllSkills(self.p1, self.p1.get_skill_charge()), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p1), gameStateObj)
                 self.handle_wexp(attacker_results, self.item, gameStateObj)
 
             # Exp and Records
@@ -1703,7 +1724,7 @@ class MapCombat(Combat):
                 defender_results = [result for result in self.old_results if result.attacker is self.p2]
                 # WEXP and Skills
                 if defender_results:
-                    Action.do(Action.ChargeAllSkills(self.p2, self.p2.get_skill_charge()), gameStateObj)
+                    Action.do(Action.ChargeAllSkills(self.p2), gameStateObj)
                     self.handle_wexp(defender_results, self.p2.getMainWeapon(), gameStateObj)
                 # EXP and Records
                 if self.p2.team == 'player' and not self.p2.isSummon():  

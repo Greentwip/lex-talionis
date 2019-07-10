@@ -510,12 +510,11 @@ def statusparser(s_id, gameStateObj=None):
                     check_valid_func = exec(status.find('check_valid_func').text) if status.find('check_valid_func') is not None else lambda (self, u, gameStateObj): True
                     get_choices_func = exec(status.find('get_choices_func').text) if status.find('get_choices_func') is not None else lambda (self, u, gameStateObj): None
                     my_components['activated_item'] = ActiveSkill.ActivatedItemComponent(activated_item_id, check_valid_func, get_choices_func, charge_method, charge_max)
-                elif component == 'proc':
+                elif component in ('attack_proc', 'defense_proc', 'attack_pre_proc', 'defense_pre_proc', 'adept_proc'):
                     child_status = status.find('proc_status').text if status.find('proc_status') is not None else None
                     charge_method = status.find('proc_rate').text if status.find('proc_rate') is not None else 'SKL'
                     priority = int(status.find('proc_priority').text) if status.find('proc_priority') is not None else 10
-                    valid_items_func = exec(status.find('valid_items_func').text) if status.find('valid_items_func') is not None else lambda (self, w): w
-                    my_components['proc'] = ActiveSkill.ProcComponent(child_status, charge_method, priority)
+                    my_components[component] = ActiveSkill.ProcComponent(child_status, charge_method, priority)
                 elif status.find(component) is not None and status.find(component).text:
                     my_components[component] = status.find(component).text
                 else:

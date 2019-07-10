@@ -830,7 +830,7 @@
         <id>Luna</id>
         <image_index>4,3</image_index>
         <desc>Proc. Ignore enemy's Defense or Resistance.</desc>
-        <components>proc,class_skill</components>
+        <components>attack_proc,class_skill</components>
         
         <proc_status>Luna_proc</proc_status>
         <proc_rate>SKL</proc_rate>
@@ -852,7 +852,7 @@
         <id>Sol</id>
         <image_index>4,2</image_index>
         <desc>Activated. Recover HP equal to damage dealt to the enemy.</desc>
-        <components>proc,class_skill</components>
+        <components>attack_proc,class_skill</components>
 
         <proc_status>Sol_proc</proc_status>
         <proc_rate>SKL</proc_rate>
@@ -867,6 +867,43 @@
         
         <item_mod_conditional>True</item_mod_conditional>
         <item_mod_effect_change>lifelink;True</item_mod_effect_change>
+    </status>
+
+    <status name="Vantage">
+        <id>Vantage</id>
+        <image_index>4,3</image_index>
+        <desc>Proc. Attack first even on defense.</desc>
+        <components>pre_proc,class_skill</components>
+        
+        <proc_status>Vantage_proc</proc_status>
+        <proc_rate>SPD</proc_rate>
+    </status>
+
+    <status name="Vantage">
+        <id>Vantage_proc</id>
+        <image_index>4,3</image_index>
+        <desc></desc>
+        <components>vantage,hidden</components>    
+    </status>
+
+    <status name="Pavise">
+        <id>Pavise</id>
+        <image_index>4,2</image_index>
+        <desc>Activated. Ignore attacker's damage.</desc>
+        <components>defense_proc,class_skill</components>
+
+        <proc_status>Pavise_proc</proc_status>
+        <proc_rate>SKL</proc_rate>
+    </status>
+
+    <status name="Pavise">
+        <id>Pavise_proc</id>
+        <image_index>4,2</image_index>
+        <desc></desc>
+        <components>resist,hidden</components>
+        
+        <!-- Just an unholy amount of defense -->
+        <resist>500</resist>
     </status>
 
     <!-- Passive Item Mod Skills -->
