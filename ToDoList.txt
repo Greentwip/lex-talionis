@@ -18,6 +18,14 @@ v0.9.2 -- overworld & submap update
 - Check that you can skip over overworld sections without repercussions
     - Or disallow skipping over overworld...
 - Test submap
+- Confirm c_uses works (can't use it at 0 c_uses)
+- Determine differnce between Push movement and Shove movement
+- Check that Swap actually works
+- Try out a spell with 3 extra targets.
+- Test that summon still works
+- Switch lifelink to only heal amount of damage actually dealt
+- Test that eval of warning = True actually works
+- check whether locked actually works
 
 v0.9.3 -- combat update & activated status update
 - Arena
@@ -40,6 +48,10 @@ v0.9.4 -- dialogue and command update
 - Rapidly tapping A on Dialogue sometimes causes it to jitter up and down while leaving (probably just need to rewrite how dialogue is rendered to the screen anyway...)
 - When I fix events, make visit, escape?, seize, switch, search, etc, all work the same way
 - Instead of current system, use system of triggers which trigger events. Then can simply attach events to items and statuses and that becomes very easy
+
+v0.9.5 -- menu update
+- Fix menus
+- Take in Mouse input as well
 
 Later on:
 - Test stationary weapon event tiles + saving + turnwheel

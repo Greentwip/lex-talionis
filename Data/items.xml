@@ -976,7 +976,7 @@
         <value>80</value>
         <desc>Ally gains +50 accuracy until next turn.</desc>
         <status>Fortune</status>
-        <custom_ai>not target.isDone() and target.accuracy(gameStateObj) &lt; 80</custom_ai> 
+        <custom_ai>not target.isDone() and target.accuracy(gameStateObj) &lt; 100</custom_ai> 
         
         <LVL>D</LVL>
         <targets>Ally</targets>    
@@ -1587,7 +1587,7 @@
         <id>Spiritbane</id>
         <spritetype>Consumable</spritetype>
         <spriteid>5</spriteid>
-        <components>usable,status,uses,beneficial,map_hit_color,self_anim</components>
+        <components>usable,status,uses,beneficial,map_hit_color,other_anim</components>
 
         <uses>3</uses>
         <RNG>0</RNG>
@@ -1596,7 +1596,7 @@
         <status>Resistant</status>
 
         <map_hit_color>96,144,232</map_hit_color>
-        <self_anim>MapSpiritbane,5,4,20</self_anim>
+        <other_anim>MapSpiritbane,5,4,20</other_anim>
     </item>
 
     <item name="Barkskin">
@@ -1632,7 +1632,7 @@
         <id>Angelic Robe</id>
         <spritetype>Boosters</spritetype>
         <spriteid>0</spriteid>       
-        <components>usable,uses,permanent_stat_increase,booster,beneficial</components>
+        <components>usable,uses,permanent_stat_increase,booster</components>
         
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_increase>5,0,0,0,0,0,0,0,0,0</stat_increase>
@@ -1833,7 +1833,7 @@
         <id>so_Fade</id>
         <spritetype>Skills</spritetype>
         <spriteid>9,1</spriteid>
-        <components>status,virtual,beneficial</components>
+        <components>status,beneficial</components>
 
         <value>1</value>
         <RNG>0</RNG>
@@ -1845,7 +1845,7 @@
         <id>so_Shove</id>
         <spritetype>Skills</spritetype>
         <spriteid>4,4</spriteid>
-        <components>movement,virtual,detrimental</components>
+        <components>movement,detrimental</components>
 
         <value>1</value>
         <RNG>1</RNG>
@@ -1857,7 +1857,7 @@
         <id>so_Refresh</id>
         <spritetype>Skills</spritetype>
         <spriteid>3,9</spriteid>
-        <components>status,virtual,beneficial</components>
+        <components>status,beneficial</components>
 
         <value>1</value>
         <RNG>1</RNG>
@@ -1869,7 +1869,7 @@
         <id>so_Aegis</id>
         <spritetype>Skills</spritetype>
         <spriteid>10,3</spriteid>
-        <components>status,virtual,beneficial</components>
+        <components>status,beneficial</components>
 
         <value>1</value>
         <RNG>1</RNG>
@@ -1881,7 +1881,7 @@
         <id>so_Revelation</id>
         <spritetype>Skills</spritetype>
         <spriteid>8,3</spriteid>
-        <components>status,virtual,beneficial</components>
+        <components>status,beneficial</components>
 
         <value>1</value>
         <RNG>1</RNG>
@@ -1893,7 +1893,7 @@
         <id>so_Rally</id>
         <spritetype>Skills</spritetype>
         <spriteid>10,1</spriteid>
-        <components>spell,status,virtual,beneficial,aoe,exp,map_hit_color,aoe_anim,sfx_on_hit</components>
+        <components>spell,status,beneficial,aoe,exp,map_hit_color,aoe_anim,sfx_on_hit</components>
         <weapontype>None</weapontype>
 
         <value>1</value>
@@ -1913,7 +1913,7 @@
         <id>so_Summon_1</id>
         <spritetype>Skills</spritetype>
         <spriteid>9,0</spriteid>
-        <components>summon,virtual,beneficial</components>
+        <components>summon,beneficial</components>
 
         <value>1</value>
         <RNG>1</RNG>

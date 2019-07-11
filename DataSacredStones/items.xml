@@ -204,7 +204,6 @@
         <value>60</value>
         <desc>For light swordfighters only</desc>
         <weight>5</weight>
-        <warning>True</warning>
         
         <MT>8</MT>
         <HIT>75</HIT>
@@ -224,7 +223,6 @@
         <value>65</value>
         <desc></desc>
         <weight>7</weight>
-        <warning>True</warning>
         
         <MT>9</MT>
         <HIT>75</HIT>
@@ -542,7 +540,6 @@
         <value>60</value>
         <desc></desc>
         <weight>9</weight>
-        <warning>True</warning>
         
         <MT>10</MT>
         <HIT>70</HIT>
@@ -1172,7 +1169,6 @@
         <value>70</value>
         <desc></desc>
         <weight>7</weight>
-        <warning>True</warning>
 
         <effective>Flying;18</effective>
         
@@ -2622,7 +2618,7 @@
         <id>Swiftsole</id>
         <spritetype>Boosters</spritetype>
         <spriteid>7</spriteid>       
-        <components>usable,uses,permanent_stat_increase,booster,beneficial,affects_movement</components>
+        <components>usable,uses,permanent_stat_increase,booster,beneficial</components>
         
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_increase>0,0,0,0,0,0,0,0,0,2</stat_increase>
@@ -2843,7 +2839,7 @@
         <id>so_Refresh</id>
         <spritetype>Skills</spritetype>
         <spriteid>3,9</spriteid>
-        <components>status,virtual,beneficial,map_hit_color,sfx_on_cast</components>
+        <components>status,beneficial,map_hit_color,sfx_on_cast</components>
 
         <value>1</value>
         <RNG>1</RNG>
@@ -2858,7 +2854,7 @@
         <id>so_Summon_1</id>
         <spritetype>Skills</spritetype>
         <spriteid>9,0</spriteid>
-        <components>summon,virtual,beneficial,exp</components>
+        <components>summon,beneficial,exp</components>
 
         <value>1</value>
         <RNG>1</RNG>

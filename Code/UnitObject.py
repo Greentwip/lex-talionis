@@ -1008,7 +1008,7 @@ class UnitObject(object):
                 targets = set(Utility.get_shell(valid_moves, item.get_range(self), gameStateObj.map))
                 unit_positions = {unit.position for unit in gameStateObj.allunits if unit.position}
                 targets -= unit_positions
-            elif item.beneficial:
+            elif item.spell.targets == 'Ally':
                 ally_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfAlly(unit) and
                               unit.team not in team_ignore and unit.name not in name_ignore]
                 while ally_units:
@@ -1017,13 +1017,24 @@ class UnitObject(object):
                         if Utility.calculate_distance(valid_move, current_pos) in item.get_range(self):
                             targets.add(current_pos)
                             break
-            else:
+            elif item.spell.targets == 'Enemy':
                 enemy_units = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit) and
                                unit.team not in team_ignore and unit.name not in name_ignore]
                 # Don't want this line, since AI does not consider tiles in the Primary AI
                 # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.items() if tile.stats['HP']]
                 while enemy_units:
                     current_pos = enemy_units.pop()
+                    for valid_move in valid_moves:
+                        if Utility.calculate_distance(valid_move, current_pos) in item.get_range(self):
+                            targets.add(current_pos)
+                            break
+            else:
+                units = [unit.position for unit in gameStateObj.allunits if unit.position and
+                         unit.team not in team_ignore and unit.name not in name_ignore]
+                # Don't want this line, since AI does not consider tiles in the Primary AI
+                # enemy_units += [pos for pos, tile in gameStateObj.map.tiles.items() if tile.stats['HP']]
+                while units:
+                    current_pos = units.pop()
                     for valid_move in valid_moves:
                         if Utility.calculate_distance(valid_move, current_pos) in item.get_range(self):
                             targets.add(current_pos)
@@ -1724,7 +1735,13 @@ class UnitObject(object):
                 damage += int(eval(status.mt, globals(), locals()))
         if item.weapon:
             damage += item.weapon.MT
-            if item.is_magic():
+        elif item.spell and item.damage:
+            damage += item.damage
+
+        if item.weapon or (item.spell and item.damage):
+            if item.alternate_damage:
+                damage += GC.EQUATIONS.get_equation(item.alternate_damage, self, item, dist)
+            elif item.is_magic():
                 if item.magic_at_range and dist <= 1:
                     damage += GC.EQUATIONS.get_damage(self, item, dist)
                 else:  # Normal
@@ -1735,15 +1752,6 @@ class UnitObject(object):
             if item.TYPE:
                 idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
                 damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
-        elif item.spell:
-            if item.damage:
-                damage += item.damage + GC.EQUATIONS.get_magic_damage(self, item)
-                # Generic rank bonuses
-                if item.TYPE:
-                    idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
-                    damage += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
-            else:
-                return 0
         else:
             return 0
 
@@ -1758,7 +1766,10 @@ class UnitObject(object):
             else:
                 return None
         if item.crit is not None and (item.weapon or item.spell):
-            accuracy = item.crit + GC.EQUATIONS.get_crit(self, item, dist)
+            if item.alternate_crit:
+                accuracy = item.crit + GC.EQUATIONS.get_equation(item.alternate_crit, self, item, dist)
+            else:
+                accuracy = item.crit + GC.EQUATIONS.get_crit(self, item, dist)
             accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
             accuracy += self.get_support_bonuses(gameStateObj)[4]
             # Generic rank bonuses
@@ -1770,7 +1781,10 @@ class UnitObject(object):
             return 0
 
     def crit_avoid(self, gameStateObj, item_to_avoid=None, dist=0):
-        base = GC.EQUATIONS.get_crit_avoid(self, self.getMainWeapon(), dist)
+        if item_to_avoid.alternate_crit_avoid:
+            base = GC.EQUATIONS.get_equation(item_to_avoid.alternate_crit_avoid, self, self.getMainWeapon(), dist)
+        else:
+            base = GC.EQUATIONS.get_crit_avoid(self, self.getMainWeapon(), dist)
         base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
         base += self.get_support_bonuses(gameStateObj)[5]
         return base
@@ -1780,7 +1794,7 @@ class UnitObject(object):
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
         defense += self.get_support_bonuses(gameStateObj)[1]
-        return defense
+        return max(0, defense)
 
     def get_rating(self):
         return GC.EQUATIONS.get_rating(self)

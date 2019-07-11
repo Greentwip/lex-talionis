@@ -135,7 +135,7 @@ class AttackerState(SolverState):
         if solver.splash:
             return 'Splash'
         elif solver.defender.currenthp > 0:
-            if solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
+            if solver.item.weapon and solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
                 return 'AttackerBrave'
             elif solver.allow_counterattack(gameStateObj):
                 return 'Defender'
@@ -227,7 +227,7 @@ class SplashState(AttackerState):
     def get_next_state(self, solver, gameStateObj):
         if self.index < len(solver.splash):
             return None
-        if solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
+        if solver.item.weapon and solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
             if solver.defender and solver.defender.currenthp > 0:
                 return 'AttackerBrave'
             elif any(s.currenthp > 0 for s in solver.splash):

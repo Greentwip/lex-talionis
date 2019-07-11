@@ -127,7 +127,11 @@ class ItemObject(object):
         try:
             self.image = Engine.subsurface(GC.ITEMDICT[self.spritetype], (16*sprite_id[0], 16*sprite_id[1], 16, 16))
         except ValueError:
-            raise ValueError("Item %s is trying to read from position %s on %s sprite which does not exist." % (self.id, sprite_id[1], self.spritetype))
+            print("Item %s is trying to read from position %s on %s sprite which does not exist." % (self.id, sprite_id[1], self.spritetype))
+            try:
+                self.image = Engine.subsurface(GC.ITEMDICT[self.spritetype], (0, 0, 16, 16))
+            except ValueError:
+                raise ValueError("Item %s is trying to read from %s sprite which does not exist." % (self.id, self.spritetype))
         self.help_box = None
 
     def __str__(self):
