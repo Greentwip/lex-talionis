@@ -1399,7 +1399,7 @@ class Dialogue_Scene(object):
                     return
             # print(unit.id, position)
             if unit.dead:
-                logger.warning('Unit %s is dead', u_id)
+                logger.warning('Unit %s is dead', unit.id)
                 return
         if not unit:
             logger.error('Could not find unit %s', which_unit)

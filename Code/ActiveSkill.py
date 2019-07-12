@@ -1,5 +1,4 @@
 import enum
-import types
 
 try:
     import ItemMethods
@@ -141,17 +140,17 @@ class CombatArtComponent(ChargeComponent):
         self.mode = mode  # Activated vs Automatic
         ChargeComponent.__init__(self, charge_method, charge_max)
         self.status_id = status_id
-        self.valid_weapons = types.MethodType(valid_weapons_func, self)
-        self.check_valid = types.MethodType(check_valid_func, self)
+        self.valid_weapons_func = valid_weapons_func
+        self.check_valid_func = check_valid_func
 
     def is_activated(self):
         return self.mode == Mode.ACTIVATED
 
     def valid_weapons(self, unit, weapons):
-        return []
+        return eval(self.valid_weapons_func)
 
     def check_valid(self, unit, gameStateObj):
-        return False
+        return eval(self.check_valid_func)
 
     def basic_check(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons(unit, [i for i in unit.items if i.weapon])
@@ -165,14 +164,14 @@ class ActivatedItemComponent(ChargeComponent):
                  charge_method, charge_max):
         ChargeComponent.__init__(self, charge_method, charge_max)
         self.item = ItemMethods.itemparser(item_id)
-        self.check_valid = types.MethodType(check_valid_func, self)
-        self.get_choices = types.MethodType(get_choices_func, self)
+        self.check_valid_func = check_valid_func
+        self.get_choices_func = get_choices_func
 
     def check_valid(self, unit, gameStateObj):
-        return False
+        return eval(self.check_valid_func)
 
     def get_choices(self, unit, gameStateObj):
-        return None
+        return eval(self.get_choices_func)
 
 class ProcComponent(object):
     def __init__(self, status_id, proc_rate='SKL', priority=10):

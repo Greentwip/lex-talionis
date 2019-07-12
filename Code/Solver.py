@@ -33,7 +33,6 @@ class Result(object):
 
 class SolverStateMachine(object):
     def __init__(self, starting_state):
-        self.state = starting_state
         self.states = {'PreInit': PreInitState,
                        'Init': InitState,
                        'Attacker': AttackerState,
@@ -44,6 +43,7 @@ class SolverStateMachine(object):
                        'SplashBrave': SplashBraveState,
                        'Summon': SummonState,
                        'Done': DoneState}
+        self.change_state(starting_state)
 
     def get_state(self):
         return self.state
@@ -96,7 +96,7 @@ class InitState(object):
 
     def get_attacker_pre_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.attack_pre_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.attack_pre_proc.priority, reversed=True)
+        proc_statuses = sorted(proc_statuses, lambda x: x.attack_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = Equations.get_expression(status.attack_pre_proc.rate)
@@ -108,7 +108,7 @@ class InitState(object):
 
     def get_defender_pre_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.defense_pre_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.defense_pre_proc.priority, reversed=True)
+        proc_statuses = sorted(proc_statuses, lambda x: x.defense_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = Equations.get_expression(status.defense_pre_proc.rate)
@@ -198,7 +198,7 @@ class DefenderState(AttackerState):
     def process(self, solver, gameStateObj, metaDataObj):
         ditem = solver.defender.getMainWeapon()
         Action.do(Action.UseItem(ditem), gameStateObj)
-        result = self.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem)
+        result = solver.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem)
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
         solver.def_rounds += 1
@@ -365,8 +365,8 @@ class Solver(object):
             "Only Units and Tiles can engage in combat! %s" % (defender)
         
         # Add proc skills
-        result.attacker_proc_used = self.get_attacker_proc(attacker)
-        result.defender_proc_used = self.get_defender_proc(defender)
+        result.attacker_proc_used = self.get_attacker_proc(attacker, gameStateObj)
+        result.defender_proc_used = self.get_defender_proc(defender, gameStateObj)
 
         to_hit = attacker.compute_hit(defender, gameStateObj, item, mode="Attack")
         rng_mode = gameStateObj.mode['rng']
@@ -491,25 +491,25 @@ class Solver(object):
 
     def get_attacker_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.attack_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.attack_proc.priority, reversed=True)
+        proc_statuses = sorted(proc_statuses, lambda x: x.attack_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = Equations.get_expression(status.attack_proc.rate, unit)
             if roll < expr:
                 status_obj = StatusCatalog.statusparser(status.attack_proc.status_id)
-                Action.do(Action.AddStatus(unit, status_obj))
+                Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
                 return status_obj
         return None
 
     def get_defender_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.defense_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.defense_proc.priority, reversed=True)
+        proc_statuses = sorted(proc_statuses, lambda x: x.defense_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = Equations.get_expression(status.defense_proc.rate, unit)
             if roll < expr:
                 status_obj = StatusCatalog.statusparser(status.defense_proc.status_id)
-                Action.do(Action.AddStatus(unit, status_obj))
+                Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
                 return status_obj
         return None
 
@@ -523,7 +523,7 @@ class Solver(object):
         old_random_state = static_random.get_combat_random_state()
         result = None
         while not result:
-            result = self.state_machine.ratchet(gameStateObj, metaDataObj)
+            result = self.state_machine.ratchet(self, gameStateObj, metaDataObj)
             if self.state_machine.get_state():
                 new_random_state = static_random.get_combat_random_state()
                 Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)

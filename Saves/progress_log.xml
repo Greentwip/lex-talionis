@@ -1087,3 +1087,11 @@
 	</units>
 </level>
 
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,78;Supports,1</game_constants>
+	<convoy>Silver Card --</convoy>
+	<units>
+	</units>
+</level>
+

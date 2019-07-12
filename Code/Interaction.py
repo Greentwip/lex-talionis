@@ -326,8 +326,10 @@ class Combat(object):
                 gameStateObj.support.end_combat(self.p1, gameStateObj)
 
     def handle_skill_used(self, gameStateObj):
-        if self.skill_used and self.skill_used.active:
-            Action.do(Action.FinalizeActiveSkill(self.skill_used, self.p1), gameStateObj)
+        if self.skill_used:
+            if self.skill_used.combat_art:
+                Action.do(Action.RemoveStatus(self.p1, self.skill_used.combat_art.status_id), gameStateObj)
+            Action.do(Action.ResetCharge(self.skill_used), gameStateObj)
 
     def handle_death(self, gameStateObj, metaDataObj, all_units):
         for unit in all_units:
@@ -570,11 +572,10 @@ class AnimationCombat(Combat):
         elif self.combat_state == 'Pre_Init':
             if skip or current_time - self.last_update > 410: # 25 frames
                 self.last_update = current_time
-                if self.left.item.transform or self.right.item.transform:
-                    if self.left.item.transform:
-                        self.left.battle_anim.start_anim('Transform')
-                    if self.right.item.transform:
-                        self.right.battle_anim.start_anim('Transform')
+                if self.left_item and self.left_item.transform and self.left.battle_anim.has_anim('Transform'):
+                    self.left.battle_anim.start_anim('Transform')
+                if self.right_item and self.right_item.transform and self.right.battle_anim.has_anim('Transform'):
+                    self.right.battle_anim.start_anim('Transform')
                 self.combat_state = 'TransformAnim'
 
         elif self.combat_state == 'Init':
@@ -583,11 +584,10 @@ class AnimationCombat(Combat):
             self.next_result = None
             # print('Interaction: Getting a new result')
             if self.current_result is None:
-                if self.left.item.transform or self.right.item.transform:
-                    if self.left.item.transform:
-                        self.left.battle_anim.start_anim('Revert')
-                    if self.right.item.transform:
-                        self.right.battle_anim.start_anim('Revert')
+                if self.left_item and self.left_item.transform and self.left.battle_anim.has_anim('Revert'):
+                    self.left.battle_anim.start_anim('Revert')
+                if self.right_item and self.right_item.transform and self.right.battle_anim.has_anim('Revert'):
+                    self.right.battle_anim.start_anim('Revert')
                 self.combat_state = "RevertAnim"
             else:
                 self.set_stats(gameStateObj)
@@ -605,13 +605,12 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'PreProcSkill':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
-                if self.left.item.combat_effect or self.right.item.combat_effect:
-                    if self.right.item.combat_effect:
-                        effect = self.right.battle_anim.add_effect(self.right.item.combat_effect)
-                        self.right.battle_anim.children.append(effect)
-                    elif self.left.item.combat_effect:
-                        effect = self.left.battle_anim.add_effect(self.left.item.combat_effect)
-                        self.left.battle_anim.children.append(effect)                        
+                if self.right_item and self.right_item.combat_effect:
+                    effect = self.right.battle_anim.add_effect(self.right_item.combat_effect)
+                    self.right.battle_anim.children.append(effect)
+                elif self.left_item and self.left_item.combat_effect:
+                    effect = self.left.battle_anim.add_effect(self.left_item.combat_effect)
+                    self.left.battle_anim.children.append(effect)                        
                 self.combat_state = "InitialEffects"
 
         elif self.combat_state == 'InitialEffects':
@@ -816,7 +815,7 @@ class AnimationCombat(Combat):
         if self.current_result.defender_proc_used:
             self.combat_state = 'ProcSkill'
             self.set_up_defender_proc_animation(result)
-        if not (self.current_result.attacker_skill_used or self.current_result.defender_skill_used):
+        if not (self.current_result.attacker_proc_used or self.current_result.defender_proc_used):
             self.combat_state = 'Anim'
             self.set_up_combat_animation(result)
 

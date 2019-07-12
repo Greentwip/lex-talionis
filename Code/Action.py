@@ -1226,9 +1226,9 @@ class AddStatus(Action):
         # --- Momentary status ---
         if self.status_obj.refresh:
             self.actions.append(Reset(self.unit))
-            for status in self.unit.status_effects:
-                if status.charged_status and status.charged_status.check_charged():
-                    self.actions.append(FinalizeChargedStatus(status, self.unit))
+            # for status in self.unit.status_effects:
+            #     if status.charged_status and status.charged_status.check_charged():
+            #         self.actions.append(FinalizeChargedStatus(status, self.unit))
 
         if self.status_obj.skill_restore:
             self.actions.append(ChargeAllSkills(self.unit, 1000))
@@ -1560,48 +1560,36 @@ class ChargeAllSkills(Action):
                 self.old_charge.append(0)
                 self.new_charge.append(0)
 
-    def do(self, gameStateObj=None):
+    def do(self, gameStateObj):
         for idx, status in enumerate(self.unit.status_effects):
             for component in status.components:
                 if isinstance(component, ActiveSkill.ChargeComponent):
                     component.increase_charge(self.unit, self.new_charge[idx])
                     break
 
-    def reverse(self, gameStateObj=None):
+    def reverse(self, gameStateObj):
         for idx, status in enumerate(self.unit.status_effects):
             for component in status.components:
                 if isinstance(component, ActiveSkill.ChargeComponent):
                     component.current_charge = self.old_charge[idx]
 
-class FinalizeActivatedItemMod(Action):
-    def __init__(self, status, unit):
+class ResetCharge(Action):
+    def __init__(self, status):
         self.status = status
-        self.unit = unit
-
-        self.old_charge = self.status.activated_item_mod.current_charge
+        self.old_charge = 0  # Placeholder
 
     def do(self, gameStateObj):
-        self.status.activated_item_mod.current_charge = 0
-        # Remove cleave from item so it no longer cleaves
-        self.status.activated_item_mod.reverse_mod()
+        for component in self.status.components:
+            if isinstance(component, ActiveSkill.ChargeComponent):
+                self.old_charge = component.current_charge
+                component.reset_charge()
+                break
 
     def reverse(self, gameStateObj):
-        self.status.activated_item_mod.current_charge = self.old_charge
-
-class FinalizeChargedStatus(Action):
-    def __init__(self, status, unit):
-        self.status = status
-        self.unit = unit
-        self.current_charge = status.charged_status.current_charge
-
-    def do(self, gameStateObj):
-        self.s = StatusCatalog.statusparser(self.status.charged_status.status_id, gameStateObj)
-        AddStatus(self.unit, self.s).do(gameStateObj)
-        self.status.charged_status.reset_charge()
-
-    def reverse(self, gameStateObj):
-        RemoveStatus(self.unit, self.s).do(gameStateObj)
-        self.status.charged_status.current_charge = self.current_charge
+        for component in self.status.components:
+            if isinstance(component, ActiveSkill.ChargeComponent):
+                component.current_charge = self.old_charge
+                break
 
 class ShrugOff(Action):
     def __init__(self, status):

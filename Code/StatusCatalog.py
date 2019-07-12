@@ -421,7 +421,6 @@ def HandleStatusEndStep(status, unit, gameStateObj):
 # === STATUS PARSER ======================================================
 # Takes one status id, as well as the database of status data, and outputs a status object.
 def statusparser(s_id, gameStateObj=None):
-    def find(text):
     for status in GC.STATUSDATA.getroot().findall('status'):
         if status.find('id').text == s_id:
             components = status.find('components').text
@@ -500,15 +499,15 @@ def statusparser(s_id, gameStateObj=None):
                     child_status = status.find('combat_art_status').text if status.find('combat_art_status') is not None else None
                     charge_method = status.find('charge_method').text if status.find('charge_method') is not None else 'SKL'
                     charge_max = int(status.find('charge_max').text) if status.find('charge_max') is not None else 60
-                    valid_weapons_func = exec(status.find('valid_weapons_func').text) if status.find('valid_weapons_func') is not None else lambda (self, u, w): w
-                    check_valid_func = exec(status.find('check_valid_func').text) if status.find('check_valid_func') is not None else lambda (self, u, gameStateObj): True
+                    valid_weapons_func = status.find('valid_weapons_func').text if status.find('valid_weapons_func') is not None else 'weapons'
+                    check_valid_func = status.find('check_valid_func').text if status.find('check_valid_func') is not None else 'True'
                     my_components[component] = ActiveSkill.CombatArtComponent(mode, child_status, valid_weapons_func, check_valid_func, charge_method, charge_max)
                 elif component == 'activated_item':
                     activated_item_id = status.find('activated_item').text if status.find('activated_item') is not None else None
                     charge_method = status.find('charge_method').text if status.find('charge_method') is not None else 'SKL'
                     charge_max = int(status.find('charge_max').text) if status.find('charge_max') is not None else 0
-                    check_valid_func = exec(status.find('check_valid_func').text) if status.find('check_valid_func') is not None else lambda (self, u, gameStateObj): True
-                    get_choices_func = exec(status.find('get_choices_func').text) if status.find('get_choices_func') is not None else lambda (self, u, gameStateObj): None
+                    check_valid_func = status.find('check_valid_func').text if status.find('check_valid_func') is not None else 'True'
+                    get_choices_func = status.find('get_choices_func').text if status.find('get_choices_func') is not None else 'None'
                     my_components['activated_item'] = ActiveSkill.ActivatedItemComponent(activated_item_id, check_valid_func, get_choices_func, charge_method, charge_max)
                 elif component in ('attack_proc', 'defense_proc', 'attack_pre_proc', 'defense_pre_proc', 'adept_proc'):
                     child_status = status.find('proc_status').text if status.find('proc_status') is not None else None

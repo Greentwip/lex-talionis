@@ -486,6 +486,9 @@ class BattleAnimation(object):
         self.wait_for_hit = True
         self.reset()
 
+    def has_anim(self, pose):
+        return pose in self.poses
+
     def resume(self):
         # print('Animation: Resume')
         if self.state == 'Wait':

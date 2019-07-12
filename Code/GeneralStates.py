@@ -680,8 +680,9 @@ class MenuState(StateMachine.State):
                     if selection == status.name:
                         if status.combat_art:
                             status_obj = StatusCatalog.statusparser(status.combat_art.status_id)
-                            cur_unit.current_skill = (status, Action.AddStatus(cur_unit, status_obj))
-                            Action.do(cur_unit.current_skill[1], gameStateObj)
+                            status.add_action = Action.AddStatus(cur_unit, status_obj)
+                            Action.do(status.add_action, gameStateObj)
+                            cur_unit.current_skill = status                            
                             gameStateObj.stateMachine.changeState('weapon')
                         elif status.activated_item:
                             valid_choices = status.activated_item.get_choices(cur_unit, gameStateObj)
@@ -977,7 +978,7 @@ class WeaponState(StateMachine.State):
     def get_options(self, unit, gameStateObj):
         options = [item for item in unit.items if item.weapon and unit.canWield(item)]  # Apply straining for skill
         if unit.current_skill:
-            options = unit.current_skill[0].combat_art.valid_weapons(unit, options)
+            options = unit.current_skill.combat_art.valid_weapons(unit, options)
         # Only shows options I can use now
         options = [item for item in options if unit.getValidTargetPositions(gameStateObj, item)]
         return options
@@ -1020,7 +1021,7 @@ class WeaponState(StateMachine.State):
             GC.SOUNDDICT['Select 4'].play()
             self.reverse_mod(cur_unit, gameStateObj)
             if cur_unit.current_skill:
-                Action.reverse(cur_unit.current_skill[1], gameStateObj)
+                Action.reverse(cur_unit.current_skill.add_action, gameStateObj)
                 cur_unit.current_skill = None
             gameStateObj.stateMachine.back()
 
@@ -1118,7 +1119,7 @@ class AttackState(StateMachine.State):
             GC.SOUNDDICT['Select 1'].play()
             attacker = gameStateObj.cursor.currentSelectedUnit
             defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, gameStateObj.cursor.position, attacker.getMainWeapon())
-            gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, gameStateObj.cursor.position, splash, attacker.getMainWeapon(), attacker.current_skill[0])
+            gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, gameStateObj.cursor.position, splash, attacker.getMainWeapon(), attacker.current_skill)
             gameStateObj.stateMachine.changeState('combat')
             attacker.current_skill = None
             # Handle fight quote

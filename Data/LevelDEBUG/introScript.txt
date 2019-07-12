@@ -10,13 +10,3 @@ layer_tile_sprite;1;5,17;Door
 layer_tile_sprite;2;4,17;OpenChest
 layer_tile_sprite;2;5,17;OpenChest
 remove_background
-wait;200
-trigger;Mage1
-wait;500
-trigger;Mage2
-#m;Preparing for Battle
-#wait;5000
-#m;Stalwarts Unite
-#wait;5000
-#mf
-#wait;5000

@@ -1154,9 +1154,9 @@ class UnitObject(object):
             return []
 
         if force_range is not None:
-            weapon_range = my_weapon.get_range(self)
-        else:
             weapon_range = force_range
+        else:
+            weapon_range = my_weapon.get_range(self)
 
         enemy_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)] + \
                           [position for position, tile in gameStateObj.map.tiles.items() if 'HP' in gameStateObj.map.tile_info_dict[position]]

@@ -650,7 +650,7 @@
         <charge_method>SKL</charge_method>
         <charge_max>30</charge_max>
         <combat_art_status>Critical_item_mod</combat_art_status>
-        <valid_weapons_func>lambda (self, unit, weapons): [w for w in weapons if not w.is_magic()]</valid_weapons_func>
+        <valid_weapons_func>[w for w in weapons if not w.is_magic()]</valid_weapons_func>
     </status>
 
     <status name="Critical">
@@ -672,13 +672,8 @@
         <charge_method>SKL</charge_method>
         <charge_max>15</charge_max>
         <combat_art_status>Cleave_item_mod</combat_art_status>
-        <valid_weapons_func>lambda (self, unit, weapons): [w for w in weapons if w.TYPE in ('Axe', 'Sword') and 1 in w.get_range(unit)]</valid_weapons_func>
-        <check_valid_func>def check_valid(self, unit, gameStateObj):
-            \nvalid_weapons = self.valid_weapons(unit, [i for i in unit.items if i.weapon])
-            \nfor weapon in valid_weapons:
-            \n    if unit.getValidTargetPositions(gameStateObj, weapon, [1]):
-            \n        return True
-            \nreturn False</check_valid_func>
+        <valid_weapons_func>[w for w in weapons if w.TYPE in ('Axe', 'Sword') and 1 in w.get_range(unit)]</valid_weapons_func>
+        <check_valid_func>any(unit.getValidTargetPositions(gameStateObj, weapon, [1]) for weapon in self.valid_weapons(unit, [i for i in unit.items if i.weapon])</check_valid_func>
     </status>
 
     <status name="Cleave">
@@ -748,8 +743,8 @@
         <components>activated_item,class_skill</components>
 
         <activated_item>so_Shove</activated_item>
-        <check_valid_func>lambda (self, unit, gameStateObj): any(adj_unit.check_shove(unit.position, 1, gameStateObj) for adj_unit in unit.getAdjacentUnits(gameStateObj))</check_valid_func>
-        <get_choices_func>lambda (self, unit, gameStateObj): [u.position for u in unit.getAdjacentUnits(gameStateObj)]</get_choices_func>
+        <check_valid_func>any(adj_unit.check_shove(unit.position, 1, gameStateObj) for adj_unit in unit.getAdjacentUnits(gameStateObj))</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getAdjacentUnits(gameStateObj)]</get_choices_func>
     </status>
 
     <status name="Refresh">
@@ -759,8 +754,8 @@
         <components>activated_item,class_skill</components>
 
         <activated_item>so_Refresh</activated_item>
-        <check_valid_func>lambda (self, unit, gameStateObj): any(adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj)</check_valid_func>
-        <get_choices_func>lambda (self, unit, gameStateObj): [u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
+        <check_valid_func>any(adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj)</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
     </status>
 
     <status name="Fade">
@@ -783,8 +778,8 @@
         <activated_item>so_Aegis</activated_item>
         <charge_method>SKL</charge_method>
         <charge_max>60</charge_max>
-        <check_valid_func>lambda (self, unit, gameStateObj): bool(self.get_choices(unit, gameStateObj))</check_valid_func>
-        <get_choices_func>lambda (self, unit, gameStateObj): [u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj))</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
     </status>
 
     <status name="Revelation">
@@ -796,8 +791,8 @@
         <activated_item>so_Revelation</activated_item>
         <charge_method>SKL</charge_method>
         <charge_max>60</charge_max>
-        <check_valid_func>lambda (self, unit, gameStateObj): bool(self.get_choices(unit, gameStateObj))</check_valid_func>
-        <get_choices_func>lambda (self, unit, gameStateObj): [u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj))</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
     </status>
 
     <status name="Rally">
@@ -820,8 +815,8 @@
         <activated_item>so_Summon_1</activated_item>
         <charge_method>MAG</charge_method>
         <charge_max>60</charge_max>
-        <check_valid_func>lambda (self, unit, gameStateObj): bool(self.get_choices(unit, gameStateObj))</check_valid_func>
-        <get_choices_func>lambda (self, unit, gameStateObj): [pos for pos in unit.getAdjacentPositions(gameStateObj) if not gameStateObj.grid_manager.get_unit_node(pos)]</get_choices_func>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj))</check_valid_func>
+        <get_choices_func>[pos for pos in unit.getAdjacentPositions(gameStateObj) if not gameStateObj.grid_manager.get_unit_node(pos)]</get_choices_func>
     </status>
 
     <!-- Proc Skills -->
