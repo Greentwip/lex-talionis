@@ -1317,9 +1317,11 @@ class MapCombat(Combat):
                 return True
             self.results.append(next_result)
             if cf.CONSTANTS['simultaneous_aoe']:
-                if self.solver.state == 'Attacker' and self.solver.index < len(self.solver.splash):
+                if self.solver.state_machine.get_state_name().startswith('Attacker') and \
+                        self.solver.splash:
                     self.results.append(self.solver.get_a_result(gameStateObj, metaDataObj))
-                while self.solver.state == 'Splash' and self.solver.index < len(self.solver.splash):
+                while self.solver.state_machine.get_state_name().startswith('Splash') and \
+                        self.solver.state_machine.get_state().index < len(self.solver.splash):
                     self.results.append(self.solver.get_a_result(gameStateObj, metaDataObj))
 
             self.begin_phase(gameStateObj)
@@ -1625,15 +1627,14 @@ class MapCombat(Combat):
         # Remove combat state
         gameStateObj.stateMachine.back()
 
-        if self.skill_used and self.skill_used.active:
+        if self.skill_used and self.skill_used.combat_art:
             Action.do(Action.Message("%s activated %s" % (self.p1.name, self.skill_used.name)), gameStateObj)
 
         # Reset states if you're not using a solo skill
-        if self.skill_used and self.skill_used.active and self.skill_used.active.mode == 'Solo':
-            # self.p1.hasTraded = True  # Can still attack, can't move
+        if self.skill_used and self.skill_used.activated_item and self.skill_used.activated_item.can_still_act:
+            # Can still attack, can't move
             Action.do(Action.HasTraded(self.p1), gameStateObj)
         else:
-            # self.p1.hasAttacked = True
             Action.do(Action.HasAttacked(self.p1), gameStateObj)
             if self.p2:
                 if isinstance(self.p2, UnitObject.UnitObject):

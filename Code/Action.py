@@ -1547,13 +1547,13 @@ class ChargeAllSkills(Action):
         self.old_charge = []
         self.new_charge = []
         for status in self.unit.status_effects:
-            for component in status.components:
+            for component in status.components.values():
                 if isinstance(component, ActiveSkill.ChargeComponent):
                     self.old_charge.append(component.current_charge)
                     if new_charge:
                         expr = new_charge
                     else:
-                        expr = Equations.get_expression(component.charge_method, self.unit)
+                        expr = GC.EQUATIONS.get_expression(component.charge_method, self.unit)
                     self.new_charge.append(expr)
                     break
             else:
@@ -1562,31 +1562,31 @@ class ChargeAllSkills(Action):
 
     def do(self, gameStateObj):
         for idx, status in enumerate(self.unit.status_effects):
-            for component in status.components:
+            for component in status.components.values():
                 if isinstance(component, ActiveSkill.ChargeComponent):
                     component.increase_charge(self.unit, self.new_charge[idx])
                     break
 
     def reverse(self, gameStateObj):
         for idx, status in enumerate(self.unit.status_effects):
-            for component in status.components:
+            for component in status.components.values():
                 if isinstance(component, ActiveSkill.ChargeComponent):
                     component.current_charge = self.old_charge[idx]
 
 class ResetCharge(Action):
     def __init__(self, status):
         self.status = status
-        self.old_charge = 0  # Placeholder
+        self.old_charge = 0  # Placeholder -- updated by do()
 
     def do(self, gameStateObj):
-        for component in self.status.components:
+        for component in self.status.components.values():
             if isinstance(component, ActiveSkill.ChargeComponent):
                 self.old_charge = component.current_charge
                 component.reset_charge()
                 break
 
     def reverse(self, gameStateObj):
-        for component in self.status.components:
+        for component in self.status.components.values():
             if isinstance(component, ActiveSkill.ChargeComponent):
                 component.current_charge = self.old_charge
                 break

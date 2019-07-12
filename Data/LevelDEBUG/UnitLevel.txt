@@ -20,8 +20,9 @@
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Myrmidon;1;Iron Sword;3,17;None;Resistance
+player;0;0;Fighter;5;Iron Axe,Energy Drink;3,17;None;Resistance
 # Enemies
-enemy;0;0;Fighter;1;;3,14;None;Resistance
+enemy;0;0;Soldier;1;Iron Lance;3,14;None;Resistance
+enemy;0;0;Soldier;1;Iron Lance;4,14;None;Resistance
 
 

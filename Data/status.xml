@@ -67,6 +67,18 @@
         <stat_change>0,0,0,0,-4,0,5,0,0,0</stat_change>
     </status>
 
+    <!-- Skill Restore Status -->
+    <status name="Skill_Restore">
+        <id>Skill_Restore</id>
+        <desc></desc>
+        <image_index>9,8</image_index>
+        <components>skill_restore,momentary</components>
+
+        <time>5</time>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <stat_change>0,0,0,0,-4,0,5,0,0,0</stat_change>
+    </status>
+
     <!-- Stun Status -->
 	<status name="Stun">
 		<id>Stun</id>
@@ -657,10 +669,10 @@
         <id>Critical_item_mod</id>
         <image_index>3,5</image_index>
         <desc></desc>
-        <components>item_mod,hidden,lost_on_interact,lost_on_endstep</components>
+        <components>item_mod</components>
 
         <item_mod_conditional>True</item_mod_conditional>
-        <item_mod_effect_change>item.guaranteed_crit;True</item_mod_effect_change>
+        <item_mod_effect_change>guaranteed_crit;True</item_mod_effect_change>
     </status>
 
     <status name="Cleave">
@@ -673,17 +685,17 @@
         <charge_max>15</charge_max>
         <combat_art_status>Cleave_item_mod</combat_art_status>
         <valid_weapons_func>[w for w in weapons if w.TYPE in ('Axe', 'Sword') and 1 in w.get_range(unit)]</valid_weapons_func>
-        <check_valid_func>any(unit.getValidTargetPositions(gameStateObj, weapon, [1]) for weapon in self.valid_weapons(unit, [i for i in unit.items if i.weapon])</check_valid_func>
+        <check_valid_func>any([unit.getValidTargetPositions(gameStateObj, weapon, [1]) for weapon in self.valid_weapons(unit, [i for i in unit.items if i.weapon])])</check_valid_func>
     </status>
 
     <status name="Cleave">
         <id>Cleave_item_mod</id>
         <image_index>2,7</image_index>
         <desc></desc>
-        <components>item_mod,hidden,lost_on_interact,lost_on_endstep</components>
+        <components>item_mod</components>
 
         <item_mod_conditional>True</item_mod_conditional>
-        <item_mod_effect_change>item.aoe;ItemMethods.AOEComponent('Cleave', 1);item.RNG;['1'];item.no_double;True</item_mod_effect_change>
+        <item_mod_effect_change>aoe;ItemMethods.AOEComponent('Cleave', 1);RNG;['1'];no_double;True</item_mod_effect_change>
     </status>
 
     <status name="Trueshot">
@@ -743,7 +755,7 @@
         <components>activated_item,class_skill</components>
 
         <activated_item>so_Shove</activated_item>
-        <check_valid_func>any(adj_unit.check_shove(unit.position, 1, gameStateObj) for adj_unit in unit.getAdjacentUnits(gameStateObj))</check_valid_func>
+        <check_valid_func>any([adj_unit.check_shove(unit.position, 1, gameStateObj) for adj_unit in unit.getAdjacentUnits(gameStateObj)])</check_valid_func>
         <get_choices_func>[u.position for u in unit.getAdjacentUnits(gameStateObj)]</get_choices_func>
     </status>
 
@@ -754,7 +766,7 @@
         <components>activated_item,class_skill</components>
 
         <activated_item>so_Refresh</activated_item>
-        <check_valid_func>any(adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj)</check_valid_func>
+        <check_valid_func>any([adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj])</check_valid_func>
         <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
     </status>
 

@@ -48,7 +48,11 @@ class SolverStateMachine(object):
     def get_state(self):
         return self.state
 
+    def get_state_name(self):
+        return self.state_name
+
     def change_state(self, state):
+        self.state_name = state
         self.state = self.states[state]() if state else None
 
     def ratchet(self, solver, gameStateObj, metaDataObj):
@@ -221,7 +225,7 @@ class DefenderBraveState(DefenderState):
         return 'Done'
 
 class SplashState(AttackerState):
-    def __init__(self, solver, gameStateObj):
+    def __init__(self):
         self.index = 0
 
     def get_next_state(self, solver, gameStateObj):
@@ -235,7 +239,7 @@ class SplashState(AttackerState):
         if solver.allow_counterattack(gameStateObj):
             return 'Defender'
         elif solver.defender and solver.atk_rounds < 2 and \
-                solver.attacker.outspeed(solver.defender, solver.item. gameStateObj) and \
+                solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
                 solver.item_uses(solver.item) and solver.defender.currenthp > 0:
             return 'Attacker'
         elif solver.next_round():
@@ -247,7 +251,7 @@ class SplashState(AttackerState):
         if solver.uses_count < 1:
             Action.do(Action.UseItem(solver.item), gameStateObj)
             solver.uses_count += 1
-        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.splash[solver.index], solver.item)
+        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.splash[self.index], solver.item)
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
         self.index += 1
@@ -318,6 +322,9 @@ class Solver(object):
         self.current_round += 1
         self.atk_rounds = 0
         self.def_rounds = 0
+
+    def get_state(self):
+        return self.state_machine.get_state()
 
     def generate_roll(self, rng_mode, event_command=None):
         if event_command:

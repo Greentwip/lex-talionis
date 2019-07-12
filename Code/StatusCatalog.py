@@ -41,7 +41,7 @@ class Status(object):
         self.loadSprites()
 
     def __str__(self):
-        return self.name
+        return self.id
 
     def __repr__(self):
         return self.id
@@ -79,8 +79,6 @@ class Status(object):
         serial_dict['id'] = self.id
         serial_dict['time_left'] = self.time.time_left if self.time else None
         serial_dict['upkeep_sc_count'] = self.upkeep_stat_change.count if self.upkeep_stat_change else None
-        # serial_dict['active_charge'] = self.active.current_charge if self.active else None
-        # serial_dict['automatic_charge'] = self.automatic.current_charge if self.automatic else None
         if self.activated_item:
             self.data['activated_item'] = self.activated_item.current_charge
         elif self.combat_art:
@@ -100,10 +98,10 @@ class Status(object):
 
         # Cooldown
         if cooldown:
-            if self.active:
-                self.draw_cooldown(surf, topleft, self.active.current_charge, self.active.required_charge)
-            elif self.automatic:
-                self.draw_cooldown(surf, topleft, self.automatic.current_charge, self.automatic.required_charge)
+            if self.combat_art:
+                self.draw_cooldown(surf, topleft, self.combat_art.current_charge, self.combat_art.charge_max)
+            elif self.activated_item:
+                self.draw_cooldown(surf, topleft, self.activated_item.current_charge, self.activated_item.charge_max)
             elif self.count:
                 self.draw_cooldown(surf, topleft, self.count.count, self.count.orig_count)
 
@@ -344,8 +342,10 @@ class Status_Processor(object):
             self.state_buffer = False
 
 def check_automatic(status, unit, gameStateObj):
-    if status.automatic and status.automatic.check_charged():
-        Action.do(Action.FinalizeAutomaticSkill(status, unit), gameStateObj)
+    if status.combat_art and status.combat_art.is_automatic() and status.combat_art.check_charged():
+        status_obj = statusparser(status.combat_art.status_id, gameStateObj)
+        Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
+        Action.do(Action.ResetCharge(status), gameStateObj)
         
 def HandleStatusUpkeep(status, unit, gameStateObj):
     oldhp = unit.currenthp
@@ -501,14 +501,15 @@ def statusparser(s_id, gameStateObj=None):
                     charge_max = int(status.find('charge_max').text) if status.find('charge_max') is not None else 60
                     valid_weapons_func = status.find('valid_weapons_func').text if status.find('valid_weapons_func') is not None else 'weapons'
                     check_valid_func = status.find('check_valid_func').text if status.find('check_valid_func') is not None else 'True'
-                    my_components[component] = ActiveSkill.CombatArtComponent(mode, child_status, valid_weapons_func, check_valid_func, charge_method, charge_max)
-                elif component == 'activated_item':
+                    my_components['combat_art'] = ActiveSkill.CombatArtComponent(mode, child_status, valid_weapons_func, check_valid_func, charge_method, charge_max)
+                elif component == 'activated_item' or component == 'quick_activated_item':
+                    can_still_act = component == 'quick_activated_item'
                     activated_item_id = status.find('activated_item').text if status.find('activated_item') is not None else None
                     charge_method = status.find('charge_method').text if status.find('charge_method') is not None else 'SKL'
                     charge_max = int(status.find('charge_max').text) if status.find('charge_max') is not None else 0
                     check_valid_func = status.find('check_valid_func').text if status.find('check_valid_func') is not None else 'True'
                     get_choices_func = status.find('get_choices_func').text if status.find('get_choices_func') is not None else 'None'
-                    my_components['activated_item'] = ActiveSkill.ActivatedItemComponent(activated_item_id, check_valid_func, get_choices_func, charge_method, charge_max)
+                    my_components['activated_item'] = ActiveSkill.ActivatedItemComponent(activated_item_id, check_valid_func, get_choices_func, charge_method, charge_max, can_still_act)
                 elif component in ('attack_proc', 'defense_proc', 'attack_pre_proc', 'defense_pre_proc', 'adept_proc'):
                     child_status = status.find('proc_status').text if status.find('proc_status') is not None else None
                     charge_method = status.find('proc_rate').text if status.find('proc_rate') is not None else 'SKL'
@@ -534,14 +535,10 @@ def deserialize(s_dict):
 
     if s_dict['time_left'] is not None:
         status.time.time_left = s_dict['time_left']
-    # if s_dict['count'] is not None:
-    #     status.count.count = s_dict['count']
+    if s_dict['count'] is not None:
+        status.count.count = s_dict['count']
     if s_dict['upkeep_sc_count'] is not None:
         status.upkeep_stat_change.count = s_dict['upkeep_sc_count']
-    # if s_dict['active_charge'] is not None:
-    #     status.active.current_charge = s_dict['active_charge']
-    # if s_dict.get('automatic_charge') is not None:
-    #     status.automatic.current_charge = s_dict['automatic_charge']
     if s_dict['stat_halve_penalties'] is not None:
         status.stat_halve.penalties = s_dict['stat_halve_penalties']
     if s_dict['aura_child_uid'] is not None:

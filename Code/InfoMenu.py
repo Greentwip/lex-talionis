@@ -647,11 +647,11 @@ class InfoMenu(StateMachine.State):
         status.draw(menu_surf, pos)
         if status.time:
             GC.FONT['text_blue'].blit(str(status.time.time_left), menu_surf, (pos[0] + 16, pos[1]))
-        elif status.active and status.active.required_charge > 0:
-            output = str(status.active.current_charge) + '/' + str(status.active.required_charge)
+        elif status.combat_art and status.combat_art.charge_max > 0:
+            output = str(status.combat_art.current_charge) + '/' + str(status.combat_art.charge_max)
             GC.FONT['text_blue'].blit(output, menu_surf, (pos[0] + 16, pos[1]))
-        elif status.automatic and status.automatic.required_charge > 0:
-            output = str(status.automatic.current_charge) + '/' + str(status.automatic.required_charge)
+        elif status.activated_item and status.activated_item.charge_max > 0:
+            output = str(status.activated_item.current_charge) + '/' + str(status.activated_item.charge_max)
             GC.FONT['text_blue'].blit(output, menu_surf, (pos[0] + 16, pos[1]))
         elif status.count:
             output = str(status.count.count) + '/' + str(status.count.orig_count)
@@ -809,10 +809,10 @@ class HelpGraph(object):
         skills = [status for status in self.unit.status_effects if status.class_skill]
 
         for index, skill in enumerate(skills):
-            if skill.active:
-                description = skill.desc + ' ' + str(skill.active.current_charge) + '/' + str(skill.active.required_charge)
-            elif skill.automatic:
-                description = skill.desc + ' ' + str(skill.automatic.current_charge) + '/' + str(skill.automatic.required_charge)
+            if skill.combat_art and skill.combat_art.charge_max > 0:
+                description = skill.desc + ' ' + str(skill.combat_art.current_charge) + '/' + str(skill.combat_art.charge_max)
+            elif skill.activated_item and skill.activated_item.charge_max > 0:
+                description = skill.desc + ' ' + str(skill.activated_item.current_charge) + '/' + str(skill.activated_item.charge_max)
             else:
                 description = skill.desc
             left_pos = index*((GC.WINWIDTH - 96)//max(cf.CONSTANTS['num_skills'], len(skills))) + 92

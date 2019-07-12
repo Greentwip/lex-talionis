@@ -27,17 +27,17 @@ class ItemModComponent(object):
 
     def change_effect(self, item):
         for i in range(len(self.effect_change)/2):
-            orig_val = item[self.effect_change[i]]
-            val = eval(self.effect_change[i + 1])
-            logger.debug('Set %s to %s', self.effect_change[i], val)
-            item['orig_' + self.effect_change[i]] = orig_val
-            item[self.effect_change[i]] = val
+            orig_val = item[self.effect_change[i*2]]
+            val = eval(self.effect_change[i*2 + 1])
+            logger.debug('Set %s to %s', self.effect_change[i*2], val)
+            item['orig_' + self.effect_change[i*2]] = orig_val
+            item[self.effect_change[i*2]] = val
 
     def change_effect_back(self, item):
         for i in range(len(self.effect_change)/2):
-            orig_val = item['orig_' + self.effect_change[i]]
-            logger.debug('Set %s to %s', self.effect_change[i], orig_val)
-            item[self.effect_change[i]] = orig_val
+            orig_val = item['orig_' + self.effect_change[i*2]]
+            logger.debug('Set %s to %s', self.effect_change[i*2], orig_val)
+            item[self.effect_change[i*2]] = orig_val
 
     def apply_mod(self, item):
         self.reverse_mod(item)
@@ -146,11 +146,14 @@ class CombatArtComponent(ChargeComponent):
     def is_activated(self):
         return self.mode == Mode.ACTIVATED
 
+    def is_automatic(self):
+        return self.mode == Mode.AUTOMATIC
+
     def valid_weapons(self, unit, weapons):
-        return eval(self.valid_weapons_func)
+        return eval(self.valid_weapons_func, globals(), locals())
 
     def check_valid(self, unit, gameStateObj):
-        return eval(self.check_valid_func)
+        return eval(self.check_valid_func, globals(), locals())
 
     def basic_check(self, unit, gameStateObj):
         valid_weapons = self.valid_weapons(unit, [i for i in unit.items if i.weapon])
@@ -161,17 +164,18 @@ class CombatArtComponent(ChargeComponent):
 
 class ActivatedItemComponent(ChargeComponent):
     def __init__(self, item_id, check_valid_func, get_choices_func,
-                 charge_method, charge_max):
+                 charge_method, charge_max, can_still_act=False):
         ChargeComponent.__init__(self, charge_method, charge_max)
+        self.can_still_act = can_still_act
         self.item = ItemMethods.itemparser(item_id)
         self.check_valid_func = check_valid_func
         self.get_choices_func = get_choices_func
 
     def check_valid(self, unit, gameStateObj):
-        return eval(self.check_valid_func)
+        return eval(self.check_valid_func, globals(), locals())
 
     def get_choices(self, unit, gameStateObj):
-        return eval(self.get_choices_func)
+        return eval(self.get_choices_func, globals(), locals())
 
 class ProcComponent(object):
     def __init__(self, status_id, proc_rate='SKL', priority=10):

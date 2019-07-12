@@ -679,7 +679,7 @@ class MenuState(StateMachine.State):
                 for status in cur_unit.status_effects:
                     if selection == status.name:
                         if status.combat_art:
-                            status_obj = StatusCatalog.statusparser(status.combat_art.status_id)
+                            status_obj = StatusCatalog.statusparser(status.combat_art.status_id, gameStateObj)
                             status.add_action = Action.AddStatus(cur_unit, status_obj)
                             Action.do(status.add_action, gameStateObj)
                             cur_unit.current_skill = status                            
@@ -1019,7 +1019,6 @@ class WeaponState(StateMachine.State):
 
         if event == 'BACK' and not gameStateObj.tutorial_mode:
             GC.SOUNDDICT['Select 4'].play()
-            self.reverse_mod(cur_unit, gameStateObj)
             if cur_unit.current_skill:
                 Action.reverse(cur_unit.current_skill.add_action, gameStateObj)
                 cur_unit.current_skill = None

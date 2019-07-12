@@ -1614,6 +1614,21 @@
         <map_hit_color>96,144,232</map_hit_color>
     </item>
 
+    <item name="Energy Drink">
+        <id>Energy Drink</id>
+        <spritetype>Consumable</spritetype>
+        <spriteid>8</spriteid>
+        <components>usable,status,uses,map_hit_color</components>
+
+        <uses>1</uses>
+        <RNG>0</RNG>
+        <value>300</value>
+        <desc>A draught that recharges all skills.</desc>
+        <status>Skill_Restore</status>
+
+        <map_hit_color>96,144,232</map_hit_color>
+    </item>
+
     <item name="Skeleton Key">
         <id>Skeleton Key</id>
         <spritetype>Consumable</spritetype>
