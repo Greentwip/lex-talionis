@@ -27,6 +27,8 @@ v0.9.2 -- overworld & submap update
 - Test that eval of warning = True actually works
 - check whether locked actually works
 
+- Move add item, remove item, insert_item, and equip into Actions
+
 v0.9.3 -- combat update & activated status update
 - Arena
 - Make sure you can have any number of combat results in a combat

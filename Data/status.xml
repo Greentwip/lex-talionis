@@ -713,7 +713,7 @@
         <id>trueshot_status</id>
         <image_index>5,9</image_index>
         <desc></desc>
-        <components>hit,hidden,lost_on_interact,lost_on_endstep</components>
+        <components>hit</components>
 
         <hit>100</hit>
     </status>
@@ -721,7 +721,7 @@
     <status name="Metamagic">
         <id>Metamagic</id>
         <image_index>8,7</image_index>
-        <desc>Automatic Combat Art. When charged, next attack has increased area of blast +1.</desc>
+        <desc>Automatic Art. When charged, next attack has increased area of blast +1.</desc>
         <components>automatic_combat_art,class_skill</components>
 
         <charge_method>SKL</charge_method>
@@ -741,7 +741,7 @@
         <unit_tint>248,0,248,900,300,.75</unit_tint>
 
         <item_mod_conditional>item.is_magic() and item.aoe.mode in ('Normal', 'Blast', 'EnemyBlast')</item_mod_conditional>
-        <item_mod_effect_change>aoe;ItemMethods.AOEComponent(item.aoe.mode if item.aoe.mode in ('Blast, 'EnemyBlast') else 'Blast', item.aoe.get_number() + 1)</item_mod_effect_change>
+        <item_mod_effect_change>aoe;ItemMethods.AOEComponent((item.aoe.mode if item.aoe.mode in ('Blast', 'EnemyBlast') else 'Blast'), item.aoe.get_number(item, gameStateObj) + 1)</item_mod_effect_change>
     </status>
 
     <!-- Activated Item Skills -->
@@ -766,7 +766,7 @@
         <components>activated_item,class_skill</components>
 
         <activated_item>so_Refresh</activated_item>
-        <check_valid_func>any([adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj])</check_valid_func>
+        <check_valid_func>any([adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj)])</check_valid_func>
         <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
     </status>
 
@@ -911,6 +911,23 @@
         
         <!-- Just an unholy amount of defense -->
         <resist>500</resist>
+    </status>
+
+    <status name="Adept">
+        <id>Adept</id>
+        <image_index>4,3</image_index>
+        <desc>Proc. Attack again.</desc>
+        <components>adept_proc,class_skill</components>
+        
+        <proc_status>Adept_proc</proc_status>
+        <proc_rate>SPD</proc_rate>
+    </status>
+
+    <status name="Adept">
+        <id>Adept_proc</id>
+        <image_index>4,3</image_index>
+        <desc></desc>
+        <components></components>    
     </status>
 
     <!-- Passive Item Mod Skills -->

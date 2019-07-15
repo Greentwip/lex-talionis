@@ -139,3 +139,68 @@ class DamageNumber(object):
                 else:
                     true_pos = pos[0] - 7*self.length + 14*self.idx, pos[1] - self.top_pos
                 surf.blit(self.image, true_pos)
+
+class SkillIcon(object):
+    def __init__(self, skill, right=False, small=False):
+        self.skill = skill
+        self.right = right
+        self.small = small
+        self.font = GC.FONT['text_white']
+        self.text = self.skill.name 
+        self.text_width = self.font.size(self.text)[0]
+        if self.small:
+            self.true_icon = Engine.create_surface((16, 16), transparent=True)
+            self.skill.draw(self.true_icon, (0, 0), cooldown=False)
+        else:
+            self.true_icon = Engine.create_surface((self.text_width + 4 + 16 + 2, 16), transparent=True)
+            if self.right:
+                self.skill.draw(self.true_icon, (0, 0), cooldown=False)
+                self.font.blit(self.text, self.true_icon, (16 + 4, 0))
+            else:
+                self.skill.draw(self.true_icon, (self.text_width + 4, 0), cooldown=False)
+                self.font.blit(self.text, self.true_icon, (0, 0))
+
+        self.start_time = Engine.get_time()
+        self.done = False
+        self.state = 0
+
+        self.fade_time = 300 if self.small else 400
+        self.hold_time = 700 if self.small else 1100
+        self.left_pos = 0
+
+    def update(self):
+        new_time = float(Engine.get_time() - self.start_time)
+        # Initial Shake and Fade_in
+        if self.state == 0:
+            # Position
+            self.left_pos = 10 * math.exp(-new_time/250) * math.sin(new_time/25)
+            # Transparency
+            new_transparency = max(0, (200 - new_time)/2)
+            self.icon = Image_Modification.flickerImageTranslucent(self.true_icon, new_transparency)
+            if new_time > self.fade_time:
+                self.state = 1
+                self.left_pos = 0
+        # Hold
+        elif self.state == 1:
+            if new_time > self.hold_time:
+                self.state = 2
+        # Fade-out
+        elif self.state == 2:
+            state_time = new_time - self.hold_time
+            # Transparency
+            new_transparency = state_time/3
+            self.icon = Image_Modification.flickerImageTranslucent(self.true_icon, new_transparency)
+            if state_time > self.fade_time:
+                self.done = True
+
+    def draw(self, surf, pos=None):
+        if self.icon:
+            if self.small:
+                true_pos = pos[0] + self.left_pos, pos[1]
+                surf.blit(self.icon, true_pos)
+            else:
+                if self.right:
+                    x_pos = GC.WINWIDTH - 4 - self.text_width - 4 - 16 + self.left_pos - 2
+                else:
+                    x_pos = self.left_pos + 4
+                surf.blit(self.icon, (x_pos, 32))

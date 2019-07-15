@@ -392,7 +392,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>5</movement_group>
         <tags></tags>
-        <skills>1,Inspiration;5,Skill_Aura;8,Feat</skills>
+        <skills>1,Refresh;5,Skill_Aura;8,Feat</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>55,20,40,60,75,50,15,40</growths>
 		<bases>10,0,1,2,3,0,1,2,4,5</bases>

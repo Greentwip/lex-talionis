@@ -2024,7 +2024,7 @@ class UnitObject(object):
         # remove item mods skills
         for status in self.status_effects:
             if status.item_mod:
-                status.item_mod.reverse_mod(item)
+                status.item_mod.reverse_mod(item, gameStateObj)
         # There may be a new item equipped
         if was_mainweapon and self.getMainWeapon():
             for status_on_equip in self.getMainWeapon().status_on_equip:
@@ -2055,7 +2055,7 @@ class UnitObject(object):
                 # apply item mod skills
                 for status in self.status_effects:
                     if status.item_mod:
-                        status.item_mod.apply_mod(item)
+                        status.item_mod.apply_mod(item, gameStateObj)
                 # Item statuses      
                 for status_on_hold in item.status_on_hold:
                     new_status = StatusCatalog.statusparser(status_on_hold, gameStateObj)

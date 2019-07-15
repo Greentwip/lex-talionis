@@ -55,8 +55,10 @@ class SolverStateMachine(object):
         self.state_name = state
         self.state = self.states[state]() if state else None
 
-    def ratchet(self, solver, gameStateObj, metaDataObj):
-        self.change_state(self.state.get_next_state(solver, gameStateObj))
+    def ratchet(self, solver, gameStateObj, metaDataObj):      
+        next_state = self.state.get_next_state(solver, gameStateObj)
+        if next_state != self.state_name:
+            self.change_state(next_state)
         if self.get_state():
             result = self.get_state().process(solver, gameStateObj, metaDataObj)
             return result
@@ -230,7 +232,7 @@ class SplashState(AttackerState):
 
     def get_next_state(self, solver, gameStateObj):
         if self.index < len(solver.splash):
-            return None
+            return 'Splash'
         if solver.item.weapon and solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
             if solver.defender and solver.defender.currenthp > 0:
                 return 'AttackerBrave'
@@ -260,7 +262,7 @@ class SplashState(AttackerState):
 class SplashBraveState(SplashState):
     def get_next_state(self, solver, gameStateObj):
         if self.index < len(solver.splash):
-            return None
+            return 'SplashBrave'
         elif solver.allow_counterattack(gameStateObj):
             return 'Defender'
         elif solver.defender and solver.atk_rounds < 2 and \

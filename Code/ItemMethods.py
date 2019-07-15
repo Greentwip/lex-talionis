@@ -355,7 +355,9 @@ class AOEComponent(object):
             other_position = [(p[0] - 1, p[1] - 1), (p[0], p[1] - 1), (p[0] + 1, p[1] - 1),
                               (p[0] - 1, p[1]), (p[0] + 1, p[1]),
                               (p[0] - 1, p[1] + 1), (p[0], p[1] + 1), (p[0] + 1, p[1] + 1)]
-            splash_positions = {position for position in other_position if tileMap.check_bounds(position)}
+            item_owner = gameStateObj.get_unit_from_id(item.item_owner)
+            splash_positions = {pos for pos in other_position if tileMap.check_bounds(pos) and 
+                                not gameStateObj.compare_teams(item_owner.team, gameStateObj.grid_manager.get_team_node(pos))}
             return cursor_position, list(splash_positions - {cursor_position})
         elif self.mode == 'Blast' or self.mode == 'EnemyBlast':
             num = self.get_number(item, gameStateObj)

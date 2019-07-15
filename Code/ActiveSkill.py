@@ -15,56 +15,56 @@ class ItemModComponent(object):
         self.effect_add = effect_add
         self.effect_change = effect_change
 
-    def add_effect(self, item):
+    def add_effect(self, item, gameStateObj):
         command = 'item.' + self.effect_add[0] + '.' + self.effect_add[1]
         logger.debug("Execute Command %s", command)
         exec(command)
 
-    def reverse_effect(self, item):
+    def reverse_effect(self, item, gameStateObj):
         command = 'item.' + self.effect_add[0] + '.' + self.effect_add[2]
         logger.debug("Execute Command %s", command)
         exec(command)
 
-    def change_effect(self, item):
+    def change_effect(self, item, gameStateObj):
         for i in range(len(self.effect_change)/2):
             orig_val = item[self.effect_change[i*2]]
-            val = eval(self.effect_change[i*2 + 1])
+            val = eval(self.effect_change[i*2 + 1], globals(), locals())
             logger.debug('Set %s to %s', self.effect_change[i*2], val)
             item['orig_' + self.effect_change[i*2]] = orig_val
             item[self.effect_change[i*2]] = val
 
-    def change_effect_back(self, item):
+    def change_effect_back(self, item, gameStateObj):
         for i in range(len(self.effect_change)/2):
             orig_val = item['orig_' + self.effect_change[i*2]]
             logger.debug('Set %s to %s', self.effect_change[i*2], orig_val)
             item[self.effect_change[i*2]] = orig_val
 
-    def apply_mod(self, item):
-        self.reverse_mod(item)
-        if eval(self.conditional):
+    def apply_mod(self, item, gameStateObj):
+        self.reverse_mod(item, gameStateObj)
+        if eval(self.conditional, globals(), locals()):
             item[self.uid] = True
             if self.effect_add and self.effect_change:
                 if item[self.effect_add[0]]:
-                    self.add_effect(item)
+                    self.add_effect(item, gameStateObj)
                 else:
                     self.change_effect(item)
             elif self.effect_change:
-                self.change_effect(item)
+                self.change_effect(item, gameStateObj)
             elif self.effect_add:
-                self.add_effect(item)
+                self.add_effect(item, gameStateObj)
                 
-    def reverse_mod(self, item):
+    def reverse_mod(self, item, gameStateObj):
         if item[self.uid]:
             item[self.uid] = False
             if self.effect_add and self.effect_change:
                 if item['orig_' + self.effect_change[0]]:
-                    self.change_effect_back(item)
+                    self.change_effect_back(item, gameStateObj)
                 else:
-                    self.reverse_effect(item)
+                    self.reverse_effect(item, gameStateObj)
             elif self.effect_change:
-                self.change_effect_back(item)
+                self.change_effect_back(item, gameStateObj)
             elif self.effect_add:
-                self.reverse_effect(item)
+                self.reverse_effect(item, gameStateObj)
 
 class ChargeComponent(object):
     def __init__(self, charge_method, charge_max):

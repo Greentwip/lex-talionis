@@ -1111,3 +1111,67 @@
 	</units>
 </level>
 
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,286;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,878;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,1014;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,191;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,878;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,304;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,916;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>Convoy,1;level,DEBUG;money,5000;Turnwheel,1;current_turnwheel_uses,-1;_random_seed,751;Supports,1</game_constants>
+	<convoy>Silver Card --,Iron Sword 45</convoy>
+	<units>
+	</units>
+</level>
+

@@ -146,6 +146,8 @@ class BattleAnimation(object):
 
     def add_effect(self, name, offset=None, enemy=False):
         image, script = GC.ANIMDICT.get_effect(name, self.palette_name)
+        print(name)
+        print(script.keys())
         child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
         right = not self.right if enemy else self.right
         parent = self.parent.partner if enemy else self
@@ -374,7 +376,7 @@ class BattleAnimation(object):
                 self.no_damage()
         # === EFFECTS ===
         elif line[0] == 'effect':
-            name = line[0]
+            name = line[1]
             if len(line) > 2:
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
@@ -382,7 +384,7 @@ class BattleAnimation(object):
             child_effect = self.add_effect(name, offset)
             self.children.append(child_effect)
         elif line[0] == 'under_effect':
-            name = line[0]
+            name = line[1]
             if len(line) > 2:
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
@@ -390,7 +392,7 @@ class BattleAnimation(object):
             child_effect = self.add_effect(name, offset)
             self.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
-            name = line[0]
+            name = line[1]
             if len(line) > 2:
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
@@ -398,7 +400,7 @@ class BattleAnimation(object):
             child_effect = self.add_effect(name, offset, enemy=True)
             self.partner.children.append(child_effect)
         elif line[0] == 'enemy_under_effect':
-            name = line[0]
+            name = line[1]
             if len(line) > 2:
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
@@ -417,10 +419,7 @@ class BattleAnimation(object):
                 item_id = line[1]
             else:
                 item_id = self.item.id
-            image, script = GC.ANIMDICT.get_effect(item_id, self.palette_name)
-            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
-            child_effect.awake(self.owner, self.partner, self.right, self.at_range, parent=self)
-            child_effect.start_anim(self.current_pose)
+            child_effect = self.add_effect(item_id)
             self.children.append(child_effect)
         elif line[0] == 'static':
             self.static = not self.static

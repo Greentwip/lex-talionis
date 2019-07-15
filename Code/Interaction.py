@@ -35,8 +35,9 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
         main_defender = None
     splash_units = [unit for unit in gameStateObj.allunits if unit.position in splash_positions]
     # Only attack enemies if we are using a weapon. If we are using a spell, attack all.
-    if item.weapon:
-        splash_units = [unit for unit in splash_units if attacker.checkIfEnemy(unit)]
+    # if item.weapon:
+    #     splash_units = [unit for unit in splash_units if attacker.checkIfEnemy(unit)]
+    # Above Removed. Replaced with better Cleave code in the AOE Component
     # Beneficial stuff only affects allies
     if item.beneficial and item.spell:
         splash_units = [unit for unit in splash_units if attacker.checkIfAlly(unit)]
@@ -448,6 +449,9 @@ class AnimationCombat(Combat):
         # For display damage number animations
         self.damage_numbers = []
 
+        # For display skill icons
+        self.skill_icons = []
+
         # To match MapCombat
         self.health_bars = {self.left: self.left_hp_bar, self.right: self.right_hp_bar}
         self.splash = []  # This'll never be used
@@ -611,6 +615,8 @@ class AnimationCombat(Combat):
                 elif self.left_item and self.left_item.combat_effect:
                     effect = self.left.battle_anim.add_effect(self.left_item.combat_effect)
                     self.left.battle_anim.children.append(effect)                        
+                if self.skill_used:
+                    self.add_skill_icon(self.p1, self.skill_used)
                 self.combat_state = "InitialEffects"
 
         elif self.combat_state == 'InitialEffects':
@@ -825,7 +831,7 @@ class AnimationCombat(Combat):
             result.attacker.battle_anim.start_anim(skill_name)
         elif result.attacker.battle_anim.has_pose('Generic Proc'):
             result.attacker.battle_anim.start_anim(skill_name)
-        self.add_skill_icon(result.attacker_proc_used)
+        self.add_skill_icon(result.attacker, result.attacker_proc_used)
         # Handle pan
         if result.attacker == self.right:
             self.focus_right = True
@@ -839,7 +845,7 @@ class AnimationCombat(Combat):
             result.defender.battle_anim.start_anim(skill_name)
         elif result.defender.battle_anim.has_pose('Generic Proc'):
             result.defender.battle_anim.start_anim(skill_name)
-        self.add_skill_icon(result.defender_proc_used)
+        self.add_skill_icon(result.defender, result.defender_proc_used)
         # Handle pan
         if result.defender == self.right:
             self.focus_right = True
@@ -853,7 +859,7 @@ class AnimationCombat(Combat):
             unit.battle_anim.start_anim(skill_name)
         elif unit.battle_anim.has_pose('Generic Proc'):
             unit.battle_anim.start_anim(skill_name)
-        self.add_skill_icon(skill)
+        self.add_skill_icon(unit, skill)
         # Handle pan
         if unit == self.right:
             self.focus_right = True
@@ -875,6 +881,9 @@ class AnimationCombat(Combat):
         else:
             self.focus_right = False
         self.move_camera()
+
+    def add_skill_icon(self, unit, skill):
+        self.skill_icons.append(GUIObjects.SkillIcon(skill, unit == self.right))
 
     def finish(self, gameStateObj):
         self.p1.unlock_active()
@@ -1004,15 +1013,20 @@ class AnimationCombat(Combat):
             self.left.battle_anim.draw(surf, (0, 0), left_range_offset, self.pan_offset)
             self.right.battle_anim.draw(surf, (0, 0), right_range_offset, self.pan_offset)
 
+        # Skill icon animations
+        for skill_icon in self.skill_icons:
+            skill_icon.update()
+            skill_icon.draw(surf)
+        self.skill_icons = [s for s in self.skill_icons if not s.done]
+
         # Damage number animations
         for damage_num in self.damage_numbers:
             damage_num.update()
             if damage_num.left:
-                left_pos = 94 + left_range_offset - total_shake_x + self.pan_offset
-                damage_num.draw(surf, (left_pos, 40))
+                x_pos = 94 + left_range_offset - total_shake_x + self.pan_offset
             else:
-                right_pos = 146 + right_range_offset - total_shake_x + self.pan_offset
-                damage_num.draw(surf, (right_pos, 40))
+                x_pos = 146 + right_range_offset - total_shake_x + self.pan_offset
+            damage_num.draw(surf, (x_pos, 40))
         self.damage_numbers = [d for d in self.damage_numbers if not d.done]
 
         # Make combat surf
@@ -1304,6 +1318,7 @@ class MapCombat(Combat):
         self.aoe_anim_flag = False # Have we shown the aoe animation yet?
 
         self.damage_numbers = []
+        self.skill_icons = []
 
         self.health_bars = {}
 
@@ -1320,7 +1335,8 @@ class MapCombat(Combat):
                 if self.solver.state_machine.get_state_name().startswith('Attacker') and \
                         self.solver.splash:
                     self.results.append(self.solver.get_a_result(gameStateObj, metaDataObj))
-                while self.solver.state_machine.get_state_name().startswith('Splash') and \
+                while self.solver.state_machine.get_state() and \
+                        self.solver.state_machine.get_state_name().startswith('Splash') and \
                         self.solver.state_machine.get_state().index < len(self.solver.splash):
                     self.results.append(self.solver.get_a_result(gameStateObj, metaDataObj))
 
@@ -1359,6 +1375,15 @@ class MapCombat(Combat):
                     gameStateObj.cursor.drawState = 2
                 for hp_bar in self.health_bars.values():
                     hp_bar.force_position_update(gameStateObj)
+                for result in self.results:
+                    if result.attacker_proc_used and result.attacker.position not in [s.right for s in self.skill_icons]:
+                        pos = result.attacker.position
+                        skill_icon = GUIObjects.SkillIcon(result.attacker_proc_used, pos, small=True)
+                        self.skill_icons.append(skill_icon)
+                    if result.defender_proc_used:
+                        pos = result.defender.position
+                        skill_icon = GUIObjects.SkillIcon(result.defender_proc_used, pos, small=True)
+                        self.skill_icons.append(skill_icon)
 
             elif self.combat_state == 'Init':
                 if skip or current_time > self.length_of_combat // 5 + self.additional_time:
@@ -1612,6 +1637,15 @@ class MapCombat(Combat):
         # Health Bars
         for hp_bar in self.health_bars.values():
             hp_bar.draw(surf, gameStateObj)
+        # Skill Icons
+        for skill_icon in self.skill_icons:
+            skill_icon.update()
+            position = skill_icon.right
+            c_pos = gameStateObj.cameraOffset.get_xy()
+            rel_x = position[0] - c_pos[0]
+            rel_y = position[1] - c_pos[1]
+            skill_icon.draw(surf, (rel_x * GC.TILEWIDTH + 4, rel_y * GC.TILEHEIGHT))
+        self.skill_icons = [s for s in self.skill_icons if not s.done]
         # Damage numbers    
         for damage_num in self.damage_numbers:
             damage_num.update()

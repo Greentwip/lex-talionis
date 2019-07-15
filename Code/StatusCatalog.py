@@ -535,7 +535,7 @@ def deserialize(s_dict):
 
     if s_dict['time_left'] is not None:
         status.time.time_left = s_dict['time_left']
-    if s_dict['count'] is not None:
+    if s_dict.get('count') is not None:
         status.count.count = s_dict['count']
     if s_dict['upkeep_sc_count'] is not None:
         status.upkeep_stat_change.count = s_dict['upkeep_sc_count']
@@ -554,14 +554,14 @@ def deserialize(s_dict):
 
     return status
 
-def attach_to_unit(status, unit):
+def attach_to_unit(status, unit, gameStateObj):
     """
     Done (on load) after loading both the unit and the status to attach 
     the status correctly to the unit after a suspend.
     """
     if status.item_mod:
         for item in unit.items:
-            status.item_mod.apply_mod(item)
+            status.item_mod.apply_mod(item, gameStateObj)
     unit.status_effects.append(status)
     unit.status_bundle.update(list(status.components))
 
