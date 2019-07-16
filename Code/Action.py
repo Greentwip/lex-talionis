@@ -2,18 +2,12 @@
 # All permanent changes to game state are reified as actions.
 import sys
 
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import StatusCatalog, Banner, Weapons, ClassData, Equations
-    import Utility, ItemMethods, UnitObject, Aura, ActiveSkill
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import StatusCatalog, Banner, Weapons, ClassData, Equations
-    from . import Utility, ItemMethods, UnitObject, Aura, ActiveSkill
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import static_random
+from . import Utility
+from . import Banner, Weapons, ClassData, Aura
+from . import StatusCatalog
 
 import logging
 logger = logging.getLogger(__name__)
@@ -37,6 +31,7 @@ class Action(object):
         pass
 
     def serialize_obj(self, value, gameStateObj):
+        from . import UnitObject, ItemMethods
         if isinstance(value, UnitObject.UnitObject):
             value = ('Unit', value.id)
         elif isinstance(value, ItemMethods.ItemObject):

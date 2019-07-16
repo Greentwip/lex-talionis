@@ -1,17 +1,11 @@
 # === Imports ==================================================================
 # Custom imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import CustomObjects, ActiveSkill, Interaction, InfoMenu
-    import Aura, Action, Utility, Engine
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import CustomObjects, ActiveSkill, Interaction, InfoMenu
-    from . import Aura, Action, Utility, Engine
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import static_random
+from . import CustomObjects, ActiveSkill, HelpMenu
+from . import Utility, Engine
+from . import HealthBar
 
 import logging
 logger = logging.getLogger(__name__)
@@ -117,7 +111,7 @@ class Status(object):
 
     def get_help_box(self):
         if not self.help_box:
-            self.help_box = InfoMenu.Help_Dialog(self.desc)
+            self.help_box = HelpMenu.Help_Dialog(self.desc)
         return self.help_box
 
     # If the attribute is not found
@@ -238,13 +232,14 @@ class Status_Processor(object):
         self.start_time_for_this_status = Engine.get_time()
 
         # Health bar
-        self.health_bar = Interaction.HealthBar('splash', None, None)
+        self.health_bar = HealthBar.HealthBar('splash', None, None)
 
         # Waiting timer
         self.wait_time = 200
         self.started_waiting = Engine.get_time()
 
     def update(self, gameStateObj):
+        from . import Action
         current_time = Engine.get_time()
 
         # Beginning process
@@ -342,12 +337,14 @@ class Status_Processor(object):
             self.state_buffer = False
 
 def check_automatic(status, unit, gameStateObj):
+    from . import Action
     if status.combat_art and status.combat_art.is_automatic() and status.combat_art.check_charged():
         status_obj = statusparser(status.combat_art.status_id, gameStateObj)
         Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
         Action.do(Action.ResetCharge(status), gameStateObj)
         
 def HandleStatusUpkeep(status, unit, gameStateObj):
+    from . import Action
     oldhp = unit.currenthp
     if status.time:
         Action.do(Action.DecrementStatusTime(status), gameStateObj)
@@ -407,6 +404,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
     return oldhp, unit.currenthp 
 
 def HandleStatusEndStep(status, unit, gameStateObj):
+    from . import Action
     oldhp = unit.currenthp
 
     if status.endstep_stat_change:
@@ -490,6 +488,7 @@ def statusparser(s_id, gameStateObj=None):
                     effect_change = status.find('item_mod_effect_change').text.split(';') if status.find('item_mod_effect_change') is not None else None
                     my_components['item_mod'] = ActiveSkill.ItemModComponent(s_id, conditional, effect_add, effect_change)
                 elif component == 'aura':
+                    from . import Aura
                     aura_range = int(status.find('range').text)
                     child = status.find('child').text
                     target = status.find('target').text

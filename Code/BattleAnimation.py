@@ -1,13 +1,8 @@
 import random
 
-try:
-    import GlobalConstants as GC
-    import Engine, Image_Modification
-    import CustomObjects
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Engine, Image_Modification
-    from . import CustomObjects
+from . import GlobalConstants as GC
+from . import Engine, Image_Modification
+from . import CustomObjects
 
 speed = 1
 

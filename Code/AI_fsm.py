@@ -31,14 +31,10 @@
     - 2: Look at entire map
     - Any other integer: Look up to integer range away
 """
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import UnitObject, Interaction, Utility, AStar, Engine, Action
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import UnitObject, Interaction, Utility, AStar, Engine, Action
+
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import UnitObject, Interaction, Utility, AStar, Engine, Action
 
 import logging
 logger = logging.getLogger(__name__)

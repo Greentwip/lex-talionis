@@ -1,16 +1,13 @@
 import os
 from collections import OrderedDict
-try:
-    import bmpfont, Engine, imagesDict, Equations
-    import configuration as cf
-except ImportError:
-    from . import bmpfont, Engine, imagesDict, Equations
-    from . import configuration as cf
+
+from . import bmpfont, Engine, imagesDict, Equations
+from . import configuration as cf
 
 import logging
 logger = logging.getLogger(__name__)
 
-version = "0.9.0.1"
+version = "0.9.0.3"
 # === GLOBAL CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000//FPS

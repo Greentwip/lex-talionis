@@ -1,11 +1,6 @@
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import Utility, Image_Modification, Engine, GenericMapSprite
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import Utility, Image_Modification, Engine, GenericMapSprite
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Utility, Image_Modification, Engine, GenericMapSprite
 
 class WorldMapBackground(object):
     def __init__(self, sprite, labels=True):

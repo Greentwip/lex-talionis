@@ -1,9 +1,5 @@
-try:
-    import GlobalConstants as GC
-    import InputManager, Engine
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import InputManager, Engine
+from . import GlobalConstants as GC
+from . import InputManager, Engine
 
 import logging
 logger = logging.getLogger(__name__)

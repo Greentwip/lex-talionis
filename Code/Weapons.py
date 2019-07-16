@@ -1,11 +1,6 @@
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import Engine
-except:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import Engine
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Engine
 
 # === WEAPON TRIANGLE OBJECT ==================================================
 class Weapon_Triangle(object):

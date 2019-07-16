@@ -1,16 +1,9 @@
 # Imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import Engine, StateMachine
-    import Image_Modification, MenuFunctions, Weapons, InfoMenu
-    import GUIObjects, Counters, Background, ClassData
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import Engine, StateMachine
-    from . import Image_Modification, MenuFunctions, Weapons, InfoMenu
-    from . import GUIObjects, Counters, Background, ClassData
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Engine, StateMachine
+from . import Image_Modification, BaseMenuSurf, Weapons, InfoMenu
+from . import GUIObjects, Counters, Background, ClassData
 
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -49,7 +42,7 @@ class UnitMenu(StateMachine.State):
             # For sort
             self.current_sort = 'Name'
             self.descending = False
-            self.sort_surf = MenuFunctions.CreateBaseMenuSurf((64, 24))
+            self.sort_surf = BaseMenuSurf.CreateBaseMenuSurf((64, 24))
             self.sort_surf = Image_Modification.flickerImageTranslucent(self.sort_surf, 10)
             self.sort_arrow_counter = Counters.ArrowCounter()
             self.sort_arrow_counter.arrow_anim = [0, 1, 2]

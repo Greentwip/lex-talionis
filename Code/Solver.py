@@ -1,15 +1,7 @@
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import UnitObject, TileObject, Action
-    import StatusCatalog, SaveLoad, Utility
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import UnitObject, TileObject, Action
-    from . import StatusCatalog, SaveLoad, Utility
+from . import configuration as cf
+from . import static_random
+from . import UnitObject, TileObject, Action
+from . import StatusCatalog, SaveLoad, Utility
 
 import logging
 logger = logging.getLogger(__name__)

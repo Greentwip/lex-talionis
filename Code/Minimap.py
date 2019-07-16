@@ -1,9 +1,5 @@
-try:
-    import GlobalConstants as GC
-    import Utility, Image_Modification, Engine
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Utility, Image_Modification, Engine
+from . import GlobalConstants as GC
+from . import Utility, Image_Modification, Engine
 
 class Link(object):
     def __init__(self, pos):

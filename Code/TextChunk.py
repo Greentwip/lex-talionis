@@ -1,9 +1,5 @@
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
+from . import GlobalConstants as GC
+from . import configuration as cf
 
 def command_chunk(text, num_lines):
     # Split on breaks and clears

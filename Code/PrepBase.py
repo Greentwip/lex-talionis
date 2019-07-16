@@ -2,16 +2,12 @@
 import os
 
 # Custom imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates, Action
-    import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import StateMachine, MenuFunctions, ItemMethods, Background, GeneralStates, Action
-    from . import Image_Modification, CustomObjects, Dialogue, WorldMap, Engine, TextChunk, Banner
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Image_Modification, Engine, TextChunk
+from . import StateMachine, MenuFunctions, ItemMethods, GeneralStates
+from . import CustomObjects, Dialogue, WorldMap, Action
+from . import Background, BaseMenuSurf, Banner
 
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -174,7 +170,7 @@ class PrepPickUnitsState(StateMachine.State):
             MenuFunctions.drawUnitItems(surf, (4, 4 + 40), gameStateObj.activeMenu.getSelection(), include_top=True)
 
         # Draw Pick Units screen
-        backSurf = MenuFunctions.CreateBaseMenuSurf((132, 24), 'WhiteMenuBackgroundOpaque')
+        backSurf = BaseMenuSurf.CreateBaseMenuSurf((132, 24), 'WhiteMenuBackgroundOpaque')
         topleft = (110, 4)
         player_units = [unit for unit in gameStateObj.allunits if unit.position and unit.team == 'player']
         num_lords = len([unit for unit in player_units if 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]])
@@ -346,7 +342,7 @@ class PrepItemsState(StateMachine.State):
             self.font = GC.FONT['text_white']
             self.commands = [cf.WORDS['Optimize'], cf.WORDS['Manage']]
             pos = (33 + self.font.size(self.commands[0])[0] + 16, self.font.size(self.commands[0])[1]*len(self.commands) + 8)
-            self.quick_sort_disp = MenuFunctions.CreateBaseMenuSurf(pos, 'BrownBackgroundOpaque')
+            self.quick_sort_disp = BaseMenuSurf.CreateBaseMenuSurf(pos, 'BrownBackgroundOpaque')
             self.quick_sort_disp = Image_Modification.flickerImageTranslucent(self.quick_sort_disp, 10)
             for idx, button in enumerate(self.buttons):
                 self.quick_sort_disp.blit(button, (4 + 33//2 - button.get_width()//2, idx*self.font.height + 8 - button.get_height()//2 + 4))
@@ -724,7 +720,7 @@ class PrepUseItemState(StateMachine.State):
 
     def draw_use_desc(self, surf, desc):
         topleft = (110, 80)
-        back_surf = MenuFunctions.CreateBaseMenuSurf((136, 64), 'SharpClearMenuBG')
+        back_surf = BaseMenuSurf.CreateBaseMenuSurf((136, 64), 'SharpClearMenuBG')
         surf.blit(back_surf, topleft)
 
         font = GC.FONT['text_white']
@@ -741,9 +737,9 @@ class PrepListState(StateMachine.State):
 
     def begin(self, gameStateObj, metaDataObj):
         if not self.started:
-            # self.name_surf = MenuFunctions.CreateBaseMenuSurf((56, 24), 'TransMenuBackground60')
+            # self.name_surf = BaseMenuSurf.CreateBaseMenuSurf((56, 24), 'TransMenuBackground60')
             self.name_surf = GC.IMAGESDICT['TradeName']
-            self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
+            self.owner_surf = BaseMenuSurf.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
             self.info = False
 
             # Hide active Menu
@@ -1127,13 +1123,13 @@ class BaseMarketState(StateMachine.State):
             self.current_menu = self.shop_menu
 
             # Create money surf
-            self.money_surf = MenuFunctions.CreateBaseMenuSurf((56, 24))
+            self.money_surf = BaseMenuSurf.CreateBaseMenuSurf((56, 24))
             g_surf = Engine.subsurface(GC.IMAGESDICT['GoldenWords'], (40, 47, 11, 11))
             self.money_surf.blit(g_surf, (45, 8))
             self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((66, GC.WINHEIGHT - 40))
 
             # Create owner surf
-            self.owner_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
+            self.owner_surf = BaseMenuSurf.CreateBaseMenuSurf((96, 24), 'TransMenuBackground60')
 
             if not gameStateObj.background:
                 gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])

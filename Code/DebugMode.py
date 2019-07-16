@@ -1,11 +1,6 @@
-try:
-    import Engine
-    import GlobalConstants as GC
-    import StateMachine, Dialogue, MenuFunctions
-except:
-    from . import Engine
-    from . import GlobalConstants as GC
-    from . import StateMachine, Dialogue, MenuFunctions
+from . import Engine
+from . import GlobalConstants as GC
+from . import StateMachine, Dialogue, MenuFunctions
 
 commands = []
 

@@ -1,16 +1,8 @@
-# Display Unit Info function
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import StateMachine, Interaction, Image_Modification, Engine
-    import Utility, ClassData, Background
-    import Weapons, BattleAnimation, MenuFunctions, TextChunk
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import StateMachine, Interaction, Image_Modification, Engine
-    from . import Utility, ClassData, Background
-    from . import Weapons, BattleAnimation, MenuFunctions, TextChunk
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import StateMachine, Interaction, Image_Modification, Engine
+from . import Utility, ClassData, Background
+from . import Weapons, BattleAnimation, MenuFunctions, TextChunk
 
 class PromotionChoiceState(StateMachine.State):
     name = 'promotion_choice'

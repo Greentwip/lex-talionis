@@ -1,11 +1,6 @@
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import Engine, InputManager
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import Engine, InputManager
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Engine, InputManager
 
 import logging
 logger = logging.getLogger(__name__)

@@ -1,12 +1,8 @@
 # A* implementation
 import heapq
 
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
+from . import GlobalConstants as GC
+from . import configuration as cf
 
 try:
     import fast_pathfinding # noqa

@@ -1,9 +1,6 @@
 import enum
 
-try:
-    import ItemMethods
-except ImportError:
-    from . import ItemMethods
+from . import ItemMethods
 
 import logging
 logger = logging.getLogger(__name__)

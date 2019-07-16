@@ -1,13 +1,8 @@
 import re, datetime
 
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import MenuFunctions, Background, StateMachine, Image_Modification, Engine
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import MenuFunctions, Background, StateMachine, Image_Modification, Engine
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import BaseMenuSurf, Background, StateMachine, Image_Modification, Engine
 
 class Objective(object):
     def __init__(self, display_name, win_condition, loss_condition):
@@ -64,7 +59,7 @@ class Objective(object):
             surf_height = 16 * self.num_lines + 8
 
             # Blit background
-            BGSurf = MenuFunctions.CreateBaseMenuSurf((self.surf_width + 16, surf_height), 'BaseMenuBackgroundOpaque')
+            BGSurf = BaseMenuSurf.CreateBaseMenuSurf((self.surf_width + 16, surf_height), 'BaseMenuBackgroundOpaque')
             if self.num_lines == 1:
                 BGSurf.blit(GC.IMAGESDICT['Shimmer1'], (BGSurf.get_width() - 1 - GC.IMAGESDICT['Shimmer1'].get_width(), 4))
             elif self.num_lines == 2:
@@ -121,7 +116,7 @@ class StatusMenu(StateMachine.State):
         pos = (24 + name_back_surf.get_width()//2 - name_surf.get_width()//2, 3 + name_back_surf.get_height()//2 - name_surf.get_height()//2)
         surfaces.append((name_surf, pos))                    
         # Background
-        back_surf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH - 8, 24), 'WhiteMenuBackgroundOpaque')
+        back_surf = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH - 8, 24), 'WhiteMenuBackgroundOpaque')
         surfaces.append((back_surf, (4, 34)))
         # Get Words
         golden_words_surf = GC.IMAGESDICT['GoldenWords']
@@ -153,7 +148,7 @@ class StatusMenu(StateMachine.State):
         win_cons, win_connectives = gameStateObj.objective.get_win_conditions(gameStateObj)
         loss_cons, loss_connectives = gameStateObj.objective.get_loss_conditions(gameStateObj)
 
-        hold_surf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH - 16, 8 + 16 + 16 + 16*len(win_cons) + 16 * len(loss_cons)))
+        hold_surf = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH - 16, 8 + 16 + 16 + 16*len(win_cons) + 16 * len(loss_cons)))
         hold_surf.blit(GC.IMAGESDICT['Lowlight'], (2, 12))
 
         GC.FONT['text_yellow'].blit(cf.WORDS['Win Conditions'], hold_surf, (4, 4))

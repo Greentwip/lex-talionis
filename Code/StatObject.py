@@ -1,11 +1,7 @@
 from collections import OrderedDict
 
-try:
-    import GlobalConstants as GC
-    import ClassData
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import ClassData
+from . import GlobalConstants as GC
+from . import ClassData
 
 # === Helper component class for unit stats ===================================
 class Stat(object):
@@ -47,10 +43,16 @@ class Stat(object):
     def __div__(self, other):
         return max(0, self.base_stat + self.bonuses) / other
 
+    def __truediv__(self, other):
+        return max(0, self.base_stat + self.bonuses) / other
+
     def __floordiv__(self, other):
         return max(0, self.base_stat + self.bonuses) // other
 
     def __rdiv__(self, other):
+        return other / max(0, self.base_stat + self.bonuses)
+
+    def __rtruediv__(self, other):
         return other / max(0, self.base_stat + self.bonuses)
 
     def __rfloordiv__(self, other):

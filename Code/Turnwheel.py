@@ -1,13 +1,9 @@
 # Turnwheel & Event Log
 import os, math
-try:
-    import GlobalConstants as GC
-    import InputManager, StateMachine, MenuFunctions, BattleAnimation
-    import Background, Action, Engine, Image_Modification, Weather, Dialogue
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import InputManager, StateMachine, MenuFunctions, BattleAnimation
-    from . import Background, Action, Engine, Image_Modification, Weather, Dialogue
+
+from . import GlobalConstants as GC
+from . import InputManager, StateMachine, BaseMenuSurf, BattleAnimation
+from . import Background, Action, Engine, Image_Modification, Weather, Dialogue
 
 import logging
 logger = logging.getLogger(__name__)
@@ -388,7 +384,7 @@ class TurnwheelDisplay(object):
         # Turnwheel message
         if self.desc:
             num_lines = len(self.desc)
-            bg = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH, 8 + 16*num_lines), 'ClearMenuBackground')
+            bg = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH, 8 + 16*num_lines), 'ClearMenuBackground')
             for idx, line in enumerate(self.desc):
                 GC.FONT['text_white'].blit(line, bg, (4, 4 + 16*idx))
             if self.transition != 0:
@@ -398,14 +394,14 @@ class TurnwheelDisplay(object):
         golden_words_surf = GC.IMAGESDICT['GoldenWords']
         # Get Turn
         turn_surf = Engine.subsurface(golden_words_surf, (0, 17, 26, 10))
-        turn_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
+        turn_bg = BaseMenuSurf.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
         turn_bg.blit(turn_surf, (4, 6))
         turn_str = str(self.turn)
         turn_size = GC.FONT['text_blue'].size(turn_str)[0]
         GC.FONT['text_blue'].blit(turn_str, turn_bg, (48 - 4 - turn_size, 3))
         surf.blit(turn_bg, (GC.WINWIDTH - 48 - 4, 4 + self.transition))
         # Unit Count
-        count_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
+        count_bg = BaseMenuSurf.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
         player_units = [unit for unit in gameStateObj.allunits if unit.team == "player" and unit.position and not unit.dead]
         unused_units = [unit for unit in player_units if not unit.isDone()]
         count_str = str(len(unused_units)) + "/" + str(len(player_units))
@@ -414,7 +410,7 @@ class TurnwheelDisplay(object):
         surf.blit(count_bg, (4, GC.WINHEIGHT - 24 - 4 - self.transition))
         # Num Uses
         if gameStateObj.game_constants.get('max_turnwheel_uses', -1) > 0:
-            uses_bg = MenuFunctions.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
+            uses_bg = BaseMenuSurf.CreateBaseMenuSurf((48, 24), 'TransMenuBackground')
             uses_text = str(gameStateObj.game_constants['current_turnwheel_uses']) + ' Left'
             x = 48 - GC.FONT['text_blue'].size(uses_text)[0] - 8
             GC.FONT['text_blue'].blit(uses_text, uses_bg, (x, 4))
