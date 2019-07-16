@@ -7,7 +7,7 @@ from . import configuration as cf
 from . import static_random
 from . import Utility
 from . import Banner, Weapons, ClassData, Aura
-from . import StatusCatalog
+from . import StatusCatalog, ActiveSkill
 
 import logging
 logger = logging.getLogger(__name__)
