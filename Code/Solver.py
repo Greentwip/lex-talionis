@@ -1,3 +1,4 @@
+from . import GlobalConstants as GC
 from . import configuration as cf
 from . import static_random
 from . import UnitObject, TileObject, Action
@@ -97,10 +98,10 @@ class InitState(object):
         proc_statuses = sorted(proc_statuses, lambda x: x.attack_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
-            expr = GC.EQUATIONS.get_expression(status.attack_pre_proc.rate)
+            expr = GC.EQUATIONS.get_expression(status.attack_pre_proc.rate, unit)
             if roll < expr:
                 status_obj = StatusCatalog.statusparser(status.attack_pre_proc.status_id, gameStateObj)
-                Action.do(Action.AddStatus(unit, status_obj))
+                Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
                 return status_obj
         return None
 
@@ -109,10 +110,10 @@ class InitState(object):
         proc_statuses = sorted(proc_statuses, lambda x: x.defense_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
-            expr = GC.EQUATIONS.get_expression(status.defense_pre_proc.rate)
+            expr = GC.EQUATIONS.get_expression(status.defense_pre_proc.rate, unit)
             if roll < expr:
                 status_obj = StatusCatalog.statusparser(status.defense_pre_proc.status_id, gameStateObj)
-                Action.do(Action.AddStatus(unit, status_obj))
+                Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
                 return status_obj
         return None
 

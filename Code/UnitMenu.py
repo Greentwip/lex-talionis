@@ -2,7 +2,7 @@
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Engine, StateMachine
-from . import Image_Modification, BaseMenuSurf, Weapons, InfoMenu
+from . import Image_Modification, BaseMenuSurf, Weapons, HelpMenu
 from . import GUIObjects, Counters, Background, ClassData
 
 class UnitMenu(StateMachine.State):
@@ -412,10 +412,10 @@ class UnitMenu(StateMachine.State):
 
     def summon_help_boxes(self, titles, offsets):
         if not self.help_boxes:
-            self.help_boxes.append(InfoMenu.Help_Box('Name', (28 - 15, 40), InfoMenu.Help_Dialog(cf.WORDS['Name_desc'])))
+            self.help_boxes.append(HelpMenu.Help_Box('Name', (28 - 15, 40), HelpMenu.Help_Dialog(cf.WORDS['Name_desc'])))
             for idx in range(len(titles)):
                 pos = (offsets[idx] + 64 - 15 - 2, 40)
-                self.help_boxes.append(InfoMenu.Help_Box(titles[idx], pos, InfoMenu.Help_Dialog(cf.WORDS[titles[idx] + '_desc'])))
+                self.help_boxes.append(HelpMenu.Help_Box(titles[idx], pos, HelpMenu.Help_Dialog(cf.WORDS[titles[idx] + '_desc'])))
 
     fighting_stats = set(GC.EQUATIONS.stat_list[1:])
 
