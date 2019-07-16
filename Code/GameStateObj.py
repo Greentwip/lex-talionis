@@ -138,6 +138,7 @@ class GameStateObj(object):
             random_seed = int(cf.OPTIONS['random_seed'])
         else:
             random_seed = random.randint(0, 1023)
+        static_random.set_seed(random_seed)
         logger.debug('Random Seed: %d', random_seed)
         self.game_constants['_random_seed'] = random_seed
 

@@ -1794,6 +1794,9 @@ class UnitObject(object):
         if 'flying' not in self.status_bundle:
             defense += gameStateObj.map.tiles[self.position].stats['DEF']
         defense += self.get_support_bonuses(gameStateObj)[1]
+        for status in self.status_effects:
+            if status.resist:
+                defense += int(eval(status.resist, globals(), locals()))
         return max(0, defense)
 
     def get_rating(self):

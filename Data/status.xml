@@ -836,7 +836,7 @@
     <status name="Luna">
         <id>Luna</id>
         <image_index>4,3</image_index>
-        <desc>Proc. Ignore enemy's Defense or Resistance.</desc>
+        <desc>Proc. SKL%. Ignore enemy's Defense or Resistance.</desc>
         <components>attack_proc,class_skill</components>
         
         <proc_status>Luna_proc</proc_status>
@@ -863,7 +863,6 @@
 
         <proc_status>Sol_proc</proc_status>
         <proc_rate>SKL</proc_rate>
-        <proc_priority>10</proc_priority>
     </status>
 
     <status name="Sol">
@@ -880,7 +879,7 @@
         <id>Vantage</id>
         <image_index>4,3</image_index>
         <desc>Proc. Attack first even on defense.</desc>
-        <components>pre_proc,class_skill</components>
+        <components>defense_pre_proc,class_skill</components>
         
         <proc_status>Vantage_proc</proc_status>
         <proc_rate>SPD</proc_rate>

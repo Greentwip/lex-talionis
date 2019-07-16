@@ -576,9 +576,9 @@ class AnimationCombat(Combat):
         elif self.combat_state == 'Pre_Init':
             if skip or current_time - self.last_update > 410: # 25 frames
                 self.last_update = current_time
-                if self.left_item and self.left_item.transform and self.left.battle_anim.has_anim('Transform'):
+                if self.left_item and self.left_item.transform and self.left.battle_anim.has_pose('Transform'):
                     self.left.battle_anim.start_anim('Transform')
-                if self.right_item and self.right_item.transform and self.right.battle_anim.has_anim('Transform'):
+                if self.right_item and self.right_item.transform and self.right.battle_anim.has_pose('Transform'):
                     self.right.battle_anim.start_anim('Transform')
                 self.combat_state = 'TransformAnim'
 
@@ -588,9 +588,9 @@ class AnimationCombat(Combat):
             self.next_result = None
             # print('Interaction: Getting a new result')
             if self.current_result is None:
-                if self.left_item and self.left_item.transform and self.left.battle_anim.has_anim('Revert'):
+                if self.left_item and self.left_item.transform and self.left.battle_anim.has_pose('Revert'):
                     self.left.battle_anim.start_anim('Revert')
-                if self.right_item and self.right_item.transform and self.right.battle_anim.has_anim('Revert'):
+                if self.right_item and self.right_item.transform and self.right.battle_anim.has_pose('Revert'):
                     self.right.battle_anim.start_anim('Revert')
                 self.combat_state = "RevertAnim"
             else:
@@ -1644,7 +1644,7 @@ class MapCombat(Combat):
             c_pos = gameStateObj.cameraOffset.get_xy()
             rel_x = position[0] - c_pos[0]
             rel_y = position[1] - c_pos[1]
-            skill_icon.draw(surf, (rel_x * GC.TILEWIDTH + 4, rel_y * GC.TILEHEIGHT))
+            skill_icon.draw(surf, (rel_x * GC.TILEWIDTH - 2, rel_y * GC.TILEHEIGHT - 16))
         self.skill_icons = [s for s in self.skill_icons if not s.done]
         # Damage numbers    
         for damage_num in self.damage_numbers:

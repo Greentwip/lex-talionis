@@ -34,6 +34,7 @@ class StaticRandom(object):
         self.set_seed(seed)
 
     def set_seed(self, seed):
+        print('Setting Seed %d' % seed)
         self.seed = seed
         self.combat_random = lcg(seed)
         self.growth_random = lcg(seed + 1)

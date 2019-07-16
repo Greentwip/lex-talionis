@@ -1,15 +1,15 @@
 try:
+    import GlobalConstants as GC
     import configuration as cf
     import static_random
     import UnitObject, TileObject, Action
     import StatusCatalog, SaveLoad, Utility
-    import Equations
 except ImportError:
+    from . import GlobalConstants as GC
     from . import configuration as cf
     from . import static_random
     from . import UnitObject, TileObject, Action
     from . import StatusCatalog, SaveLoad, Utility
-    from . import Equations
 
 import logging
 logger = logging.getLogger(__name__)
@@ -105,9 +105,9 @@ class InitState(object):
         proc_statuses = sorted(proc_statuses, lambda x: x.attack_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
-            expr = Equations.get_expression(status.attack_pre_proc.rate)
+            expr = GC.EQUATIONS.get_expression(status.attack_pre_proc.rate)
             if roll < expr:
-                status_obj = StatusCatalog.statusparser(status.attack_pre_proc.status_id)
+                status_obj = StatusCatalog.statusparser(status.attack_pre_proc.status_id, gameStateObj)
                 Action.do(Action.AddStatus(unit, status_obj))
                 return status_obj
         return None
@@ -117,9 +117,9 @@ class InitState(object):
         proc_statuses = sorted(proc_statuses, lambda x: x.defense_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
-            expr = Equations.get_expression(status.defense_pre_proc.rate)
+            expr = GC.EQUATIONS.get_expression(status.defense_pre_proc.rate)
             if roll < expr:
-                status_obj = StatusCatalog.statusparser(status.defense_pre_proc.status_id)
+                status_obj = StatusCatalog.statusparser(status.defense_pre_proc.status_id, gameStateObj)
                 Action.do(Action.AddStatus(unit, status_obj))
                 return status_obj
         return None
@@ -131,7 +131,7 @@ class AttackerState(SolverState):
         for status in unit.status_effects:
             if status.adept_proc:
                 roll = static_random.get_combat()
-                expr = Equations.get_expression(status.adept_proc.rate, unit)
+                expr = GC.EQUATIONS.get_expression(status.adept_proc.rate, unit)
                 if roll < expr:
                     solver.adept_proc = status
                     return True
@@ -156,13 +156,16 @@ class AttackerState(SolverState):
         else:
             return 'Done'
 
+    def increment_round(self, solver):
+        solver.atk_rounds += 1
+
     def process(self, solver, gameStateObj, metaDataObj):
         Action.do(Action.UseItem(solver.item), gameStateObj)
         solver.uses_count += 1
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.defender, solver.item)
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
-        solver.atk_rounds += 1
+        self.increment_round(solver)
         return result
 
 class AttackerBraveState(AttackerState):
@@ -183,6 +186,9 @@ class AttackerBraveState(AttackerState):
         else:
             return 'Done'
 
+    def increment_round(self, solver):
+        pass
+
 class DefenderState(AttackerState):
     def get_next_state(self, solver, gameStateObj):
         if solver.attacker.currenthp > 0:
@@ -201,13 +207,16 @@ class DefenderState(AttackerState):
                 return 'Init'
         return 'Done'
 
+    def increment_round(self, solver):
+        solver.def_rounds += 1
+
     def process(self, solver, gameStateObj, metaDataObj):
         ditem = solver.defender.getMainWeapon()
         Action.do(Action.UseItem(ditem), gameStateObj)
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem)
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
-        solver.def_rounds += 1
+        self.increment_round(solver)
         return result
 
 class DefenderBraveState(DefenderState):
@@ -225,6 +234,9 @@ class DefenderBraveState(DefenderState):
             elif solver.next_round():
                 return 'Init'
         return 'Done'
+
+    def increment_round(self, solver):
+        pass
 
 class SplashState(AttackerState):
     def __init__(self):
@@ -448,9 +460,9 @@ class Solver(object):
         
         # Remove proc skills
         if result.attacker_proc_used:
-            Action.do(Action.RemoveStatus(attacker, result.attacker_proc_used))
+            Action.do(Action.RemoveStatus(attacker, result.attacker_proc_used), gameStateObj)
         if result.defender_proc_used:
-            Action.do(Action.RemoveStatus(defender, result.defender_proc_used))
+            Action.do(Action.RemoveStatus(defender, result.defender_proc_used), gameStateObj)
 
         return result
 
@@ -503,9 +515,9 @@ class Solver(object):
         proc_statuses = sorted(proc_statuses, lambda x: x.attack_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
-            expr = Equations.get_expression(status.attack_proc.rate, unit)
+            expr = GC.EQUATIONS.get_expression(status.attack_proc.rate, unit)
             if roll < expr:
-                status_obj = StatusCatalog.statusparser(status.attack_proc.status_id)
+                status_obj = StatusCatalog.statusparser(status.attack_proc.status_id, gameStateObj)
                 Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
                 return status_obj
         return None
@@ -515,9 +527,9 @@ class Solver(object):
         proc_statuses = sorted(proc_statuses, lambda x: x.defense_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
-            expr = Equations.get_expression(status.defense_proc.rate, unit)
+            expr = GC.EQUATIONS.get_expression(status.defense_proc.rate, unit)
             if roll < expr:
-                status_obj = StatusCatalog.statusparser(status.defense_proc.status_id)
+                status_obj = StatusCatalog.statusparser(status.defense_proc.status_id, gameStateObj)
                 Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
                 return status_obj
         return None
