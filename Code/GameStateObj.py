@@ -136,8 +136,14 @@ class GameStateObj(object):
         self._convoy = {0: []}
         self.current_party = '0'  # Party is always a string, not an integer
         self.play_time = 0
-        self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt') if cf.CONSTANTS['support'] else None
-        self.overworld = Overworld.Overworld()
+        if cf.CONSTANTS['support']:
+            self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt')
+        else:
+            self.support = None
+        if cf.CONSTANTS['overworld']:
+            self.overworld = Overworld.Overworld()
+        else:
+            self.overworld = None
         self.unlocked_lore = []
         self.statistics = []
         self.market_items = set()
