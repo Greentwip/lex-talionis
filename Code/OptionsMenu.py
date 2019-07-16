@@ -1,16 +1,8 @@
-try:
-    import imagesDict
-    import GlobalConstants as GC
-    import configuration as cf
-    import CustomObjects, MenuFunctions, Image_Modification, Engine
-    import StateMachine, Counters, GUIObjects, Background
-except ImportError:
-    from . import imagesDict
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import CustomObjects, MenuFunctions, Image_Modification, Engine
-    from . import StateMachine, Counters, GUIObjects, Background
-
+from . import imagesDict
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import CustomObjects, BaseMenuSurf, Image_Modification, Engine
+from . import StateMachine, Counters, GUIObjects, Background
 
 class OptionsMenu(StateMachine.State, Counters.CursorControl):
     show_map = False
@@ -261,7 +253,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         size_of_text = GC.FONT['text_white'].size("Invalid Choice!")
         width = size_of_text[0]
         height = size_of_text[1]
-        pop_up_surf = MenuFunctions.CreateBaseMenuSurf((width + 16 - width%8, height + 16 - height%8))
+        pop_up_surf = BaseMenuSurf.CreateBaseMenuSurf((width + 16 - width%8, height + 16 - height%8))
         surf.blit(Image_Modification.flickerImageTranslucent(GC.IMAGESDICT['BlackBackground'].copy(), 60), (0, 0))
         topleft = (GC.WINWIDTH//2 - pop_up_surf.get_width()//2, GC.WINHEIGHT//2 - pop_up_surf.get_height()//2)
         surf.blit(pop_up_surf, topleft)
@@ -392,7 +384,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         surf.blit(self.cursor, moving_cursor_position)
 
     def drawInfo(self, surf):
-        mainInfoSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH + 16, 16), 'ClearMenuBackground')
+        mainInfoSurf = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH + 16, 16), 'ClearMenuBackground')
         surf.blit(mainInfoSurf, (-8, GC.WINHEIGHT - 16))
 
         if self.state.getState() == "Config":
@@ -411,7 +403,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         GC.FONT['text_white'].blit(info_text, surf, (GC.WINWIDTH//2 - GC.FONT['text_white'].size(info_text)[0]//2, GC.WINHEIGHT - 16))
 
     def drawSlide(self, surf):
-        mainSlideSurf = MenuFunctions.CreateBaseMenuSurf((228, 104))
+        mainSlideSurf = BaseMenuSurf.CreateBaseMenuSurf((228, 104))
         surf.blit(mainSlideSurf, (6, 36))
 
         if self.state.getState() == 'Config' or (self.state.getState() == 'TopMenu' and self.currentSelection == 0):
@@ -421,12 +413,12 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
             config_font = GC.FONT['text_grey']
             controls_font = GC.FONT['text_yellow']
 
-        configSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH//2 - 8, 24), 'ClearMenuBackground')
+        configSlideSurf = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH//2 - 8, 24), 'ClearMenuBackground')
         surf.blit(configSlideSurf, (4, 4))
         config_position = (4 + configSlideSurf.get_width()//2 - config_font.size('Config')[0]//2, 16 - config_font.size('Config')[1]//2)
         config_font.blit(cf.WORDS['Config'], surf, config_position)
 
-        controlsSlideSurf = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH//2 - 8, 24), 'ClearMenuBackground')
+        controlsSlideSurf = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH//2 - 8, 24), 'ClearMenuBackground')
         surf.blit(controlsSlideSurf, (GC.WINWIDTH//2 + 4, 4))
         controls_position = (GC.WINWIDTH//2 + 4 + controlsSlideSurf.get_width()//2 - controls_font.size('Controls')[0]//2, 16 - controls_font.size('Controls')[1]//2)
         controls_font.blit(cf.WORDS['Controls'], surf, controls_position)

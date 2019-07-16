@@ -1,7 +1,4 @@
-try:
-    import GlobalConstants as GC
-except ImportError:
-    from . import GlobalConstants as GC
+from . import GlobalConstants as GC
 
 class UnitSound(object):
     sound_catalog = {

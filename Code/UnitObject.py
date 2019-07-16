@@ -1,21 +1,15 @@
 import os
 from collections import Counter
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import Interaction, MenuFunctions, AStar, Weapons, TileObject, ClassData
-    import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusCatalog
-    import Utility, Engine, Banner, TextChunk, Action, Aura
-    from StatObject import build_stat_dict_plus  # Needed so old saves can load
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import Interaction, MenuFunctions, AStar, Weapons, TileObject, ClassData
-    from . import AI_fsm, Image_Modification, Dialogue, UnitSprite, UnitSound, StatusCatalog
-    from . import Utility, Engine, Banner, TextChunk, Action, Aura
-    from Code.StatObject import build_stat_dict_plus  # Needed so old saves can load
+
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import static_random
+from . import Utility, Engine, Image_Modification, TextChunk
+from . import Aura, Banner, BaseMenuSurf, ClassData
+from . import AStar, Weapons, UnitSprite, UnitSound
+from . import Dialogue, StatusCatalog, Action
+
+from Code.StatObject import build_stat_dict_plus  # Needed so old saves can load
 
 import logging
 logger = logging.getLogger(__name__)
@@ -441,7 +435,7 @@ class UnitObject(object):
                 height += 16
             # if self.getMainSpell().hit is not None:
             #     height += 16
-            real_surf = MenuFunctions.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
+            real_surf = BaseMenuSurf.CreateBaseMenuSurf((80, height), 'BaseMenuBackgroundOpaque')
             BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
             BGSurf.blit(real_surf, (2, 4))
             BGSurf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
@@ -509,7 +503,7 @@ class UnitObject(object):
         width, height = (96, 56) # ??
         item = gameStateObj.activeMenu.getSelection()
         
-        real_surf = MenuFunctions.CreateBaseMenuSurf((width, height), 'BaseMenuBackgroundOpaque')
+        real_surf = BaseMenuSurf.CreateBaseMenuSurf((width, height), 'BaseMenuBackgroundOpaque')
         BGSurf = Engine.create_surface((real_surf.get_width() + 2, real_surf.get_height() + 4), transparent=True, convert=True)
         BGSurf.blit(real_surf, (2, 4))
         BGSurf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))
@@ -1155,6 +1149,7 @@ class UnitObject(object):
     # Finds all valid target positions given the main spell you are using
     # Gets all valid target positions given 1 main spell
     def getValidSpellTargetPositions(self, gameStateObj, spell=None, targets=None, rng=None):
+        from . import Interaction
         # Assumes targetable
         if spell is None:
             my_spell = self.getMainSpell()
@@ -1371,6 +1366,7 @@ class UnitObject(object):
         gameStateObj.stateMachine.changeState('itemgain')
 
     def get_ai(self, ai_line):
+        from . import AI_fsm
         self.reset_ai()
         self.ai_descriptor = ai_line
         logger.info('New AI Descriptor: %s', self.ai_descriptor)
@@ -1467,7 +1463,7 @@ class UnitObject(object):
         """
         Returns bool: whether self doubles target
         """
-        if isinstance(target, TileObject.TileObject):
+        if not isinstance(target, UnitObject):
             return False
 
         advantage = Weapons.TRIANGLE.compute_advantage(item, target.getMainWeapon())
@@ -1506,7 +1502,7 @@ class UnitObject(object):
         dist = Utility.calculate_distance(self.position, target.position)
         damage = self.damage(gameStateObj, item, dist)
 
-        if isinstance(target, TileObject.TileObject):
+        if not isinstance(target, UnitObject):  # Therefore must be tile object
             if item.extra_tile_damage:
                 damage += item.extra_tile_damage
 

@@ -2,20 +2,12 @@ import os, math
 from collections import OrderedDict
 
 # Custom imports
-try:
-    from imagesDict import COLORKEY
-    import GlobalConstants as GC
-    import configuration as cf
-    import StatusCatalog, CustomObjects, Dialogue, ItemMethods
-    import Image_Modification, Engine, Weather, Utility, Action
-    import Highlight
-except ImportError:
-    from Code.imagesDict import COLORKEY
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import StatusCatalog, CustomObjects, Dialogue, ItemMethods
-    from . import Image_Modification, Engine, Weather, Utility, Action
-    from . import Highlight
+from Code.imagesDict import COLORKEY
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import StatusCatalog, CustomObjects, ItemMethods
+from . import Image_Modification, Engine, Weather, Utility, Action
+from . import Highlight
 
 import logging
 logger = logging.getLogger(__name__)
@@ -202,6 +194,7 @@ class MapObject(object):
                         status.loadSprites()
 
     def destroy(self, tile, gameStateObj):
+        from . import Dialogue
         if 'Destructible' in self.tile_info_dict[tile.position]:
             destroy_index = self.tile_info_dict[tile.position]['Destructible']
             script_name = self.levelfolder + '/destroyScript.txt'

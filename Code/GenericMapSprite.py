@@ -1,11 +1,7 @@
 import math
 
-try:
-    import GlobalConstants as GC
-    import Engine, Image_Modification
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Engine, Image_Modification
+from . import GlobalConstants as GC
+from . import Engine, Image_Modification
 
 class GenericMapSprite(object):
     def __init__(self, klass, gender, team, position, transition_in=False):

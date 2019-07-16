@@ -3,24 +3,14 @@ import random
 from collections import OrderedDict, Counter
 
 # Custom imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import InputManager, Engine
-    import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
-    import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    import Boundary, Objective, Overworld, ClassData, TileObject, Action
-    import Highlight, Aura
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import InputManager, Engine
-    from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
-    from . import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
-    from . import Boundary, Objective, Overworld, ClassData, TileObject, Action
-    from . import Highlight, Aura
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import static_random
+from . import InputManager, Engine
+from . import CustomObjects, StateMachine, AStar, Support, Dialogue, Cursor
+from . import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
+from . import Boundary, Objective, Overworld, TileObject, Action
+from . import Highlight, Aura
 
 import logging
 logger = logging.getLogger(__name__)

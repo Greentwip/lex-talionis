@@ -1,16 +1,12 @@
 import collections
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import ItemMethods, Image_Modification, Utility, Engine, Counters
-    import InfoMenu, GUIObjects, Action
-    import CustomObjects, TextChunk, Weapons
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import ItemMethods, Image_Modification, Utility, Engine, Counters
-    from . import InfoMenu, GUIObjects, Action
-    from . import CustomObjects, TextChunk, Weapons
+
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Image_Modification, Utility, Engine, Counters, TextChunk
+from . import HelpMenu, GUIObjects
+from . import CustomObjects, Action, Weapons
+from . import ItemMethods
+from . import BaseMenuSurf
 
 import logging
 logger = logging.getLogger(__name__)
@@ -127,78 +123,12 @@ class BriefPopUpDisplay(object):
                 else:
                     my_surf = self.surf
                 surf.blit(my_surf, (self.topright[0] - self.width, self.topright[1]))
-        
-def CreateBaseMenuSurf(size, baseimage='BaseMenuBackground', top_left_sigil=None):
-    width, height = size
-    menuBaseSprite = GC.IMAGESDICT[baseimage]
-    # Get total width and height.
-    # Each piece of the menu (9) should be 1/3 of these dimensions
-    mBSWidth = menuBaseSprite.get_width()
-    mBSHeight = menuBaseSprite.get_height()
-
-    # Force the width and height to be correct!
-    full_width = width - width%(mBSWidth//3)
-    full_height = height - height%(mBSHeight//3)
-    width = mBSWidth//3
-    height = mBSHeight//3
-
-    assert full_width%(width) == 0, "The dimensions of the menu are wrong - the sprites will not line up correctly. They must be multiples of 8. %s" %(width)
-    assert full_height%(height) == 0, "The dimensions of the manu are wrong - the sprites will not line up correctly. They must be multiples of 8. %s" %(height)
-
-    # Create simple surfs to be blitted from the menuBaseSprite
-    TopLeftSurf = Engine.subsurface(menuBaseSprite, (0, 0, width, height))
-    TopSurf = Engine.subsurface(menuBaseSprite, (width, 0, width, height))
-    TopRightSurf = Engine.subsurface(menuBaseSprite, (2*width, 0, width, height))
-    LeftSurf = Engine.subsurface(menuBaseSprite, (0, height, width, height))
-    CenterSurf = Engine.subsurface(menuBaseSprite, (width, height, width, height))
-    RightSurf = Engine.subsurface(menuBaseSprite, (2*width, height, width, height))
-    BottomLeftSurf = Engine.subsurface(menuBaseSprite, (0, 2*height, width, height))
-    BottomSurf = Engine.subsurface(menuBaseSprite, (width, 2*height, width, height))
-    BottomRightSurf = Engine.subsurface(menuBaseSprite, (2*width, 2*height, width, height))
-
-    # Create transparent background
-    MainMenuSurface = Engine.create_surface((full_width, full_height), transparent=True, convert=True)
-
-    # Blit Center sprite
-    for positionx in range(full_width//width - 2):
-        for positiony in range(full_height//height - 2):
-            topleft = ((positionx+1)*width, (positiony+1)*height)
-            MainMenuSurface.blit(CenterSurf, topleft)
-
-    # Blit Edges
-    for position in range(full_width//width - 2): # For each position in which this would fit
-        topleft = ((position+1)*width, 0)
-        MainMenuSurface.blit(TopSurf, topleft)
-    # --
-    for position in range(full_width//width - 2):
-        topleft = ((position+1)*width, full_height - height)
-        MainMenuSurface.blit(BottomSurf, topleft)
-    # --
-    for position in range(full_height//height - 2):
-        topleft = (0, (position+1)*height)
-        MainMenuSurface.blit(LeftSurf, topleft)
-    # --
-    for position in range(full_height//height - 2):
-        topleft = (full_width - width, (position+1)*height)
-        MainMenuSurface.blit(RightSurf, topleft)
-
-    # Perhaps switch order in which these are blitted
-    # Blit corners
-    MainMenuSurface.blit(TopLeftSurf, (0, 0))
-    # --
-    MainMenuSurface.blit(TopRightSurf, (full_width - width, 0))
-    # --
-    MainMenuSurface.blit(BottomLeftSurf, (0, full_height - height))
-    # --
-    MainMenuSurface.blit(BottomRightSurf, (full_width - width, full_height - height))
-
-    return MainMenuSurface
 
 class Lore_Display(object):
     def __init__(self, starting_entry):
         self.topleft = (72, 4)
         self.menu_width = GC.WINWIDTH - 72 - 4
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, GC.WINHEIGHT - 8))
+        self.back_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, GC.WINHEIGHT - 8))
 
         self.update_entry(starting_entry)
 
@@ -322,14 +252,14 @@ class ChoiceMenu(SimpleMenu):
         self.horizontal = horizontal
 
         if self.horizontal: # Does not support items
-            self.bg_surf = CreateBaseMenuSurf((GC.FONT['text_white'].size('  '.join(self.options))[0] + 16, 24), background)
+            self.bg_surf = BaseMenuSurf.CreateBaseMenuSurf((GC.FONT['text_white'].size('  '.join(self.options))[0] + 16, 24), background)
         else:
             if limit and (len(self.options) > limit or hard_limit):
                 height = (8 + 16*limit)
             else:
                 height = (8 + 16*len(self.options)) 
             # Add small gem
-            bg_surf = CreateBaseMenuSurf((self.menu_width, height), background)
+            bg_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, height), background)
             self.bg_surf = Engine.create_surface((bg_surf.get_width() + 2, bg_surf.get_height() + 4), transparent=True, convert=True)
             self.bg_surf.blit(bg_surf, (2, 4))
             if gem:
@@ -349,7 +279,7 @@ class ChoiceMenu(SimpleMenu):
             if isinstance(self.options[index], ItemMethods.ItemObject):
                 self.help_boxes.append(self.options[index].get_help_box())
             elif len(info_desc) > index:
-                self.help_boxes.append(InfoMenu.Help_Dialog(info_desc[index]))
+                self.help_boxes.append(HelpMenu.Help_Dialog(info_desc[index]))
 
         self.takes_input = True
         self.draw_face = False
@@ -571,7 +501,7 @@ class ItemUseMenu(SimpleMenu):
         self.currentSelection = self.legal_indices[self.true_selection]
 
     def draw(self, surf):
-        BGSurf = CreateBaseMenuSurf((self.menu_width, 16*5+8), self.background)
+        BGSurf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, 16*5+8), self.background)
         # Blit face
         face_image = self.owner.bigportrait.copy()
         face_image = Engine.flip_horiz(face_image)
@@ -683,7 +613,7 @@ class ComplexMenu(SimpleMenu):
 
     def draw(self, surf):
         split_num = len(self.options)//2
-        BGSurf = CreateBaseMenuSurf((self.menu_width*2, 16*split_num+8), self.background)
+        BGSurf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width*2, 16*split_num+8), self.background)
         self.draw_highlight(BGSurf, self.currentSelection)
 
         for index, option in enumerate(self.options):
@@ -761,7 +691,7 @@ class FeatChoiceMenu(ComplexMenu):
         label = cf.WORDS['Feat Choice']
         width = GC.FONT['text_white'].size(label)[0]
         menu_width = width - width%8 + 16
-        bg_surf = CreateBaseMenuSurf((menu_width, 24))
+        bg_surf = BaseMenuSurf.CreateBaseMenuSurf((menu_width, 24))
         GC.FONT['text_white'].blit(label, bg_surf, (menu_width//2 - width//2, 4))
         surf.blit(bg_surf, (0, 0))
 
@@ -771,7 +701,7 @@ class ModeSelectMenu(SimpleMenu):
         self.toggle = toggle
         self.currentSelection = default
 
-        self.label = CreateBaseMenuSurf((96, 88), 'BaseMenuBackgroundOpaque')
+        self.label = BaseMenuSurf.CreateBaseMenuSurf((96, 88), 'BaseMenuBackgroundOpaque')
         shimmer = GC.IMAGESDICT['Shimmer2']
         self.label.blit(shimmer, (96 - shimmer.get_width() - 1, 88 - shimmer.get_height() - 5))
         self.label = Image_Modification.flickerImageTranslucent(self.label, 10)
@@ -853,7 +783,7 @@ class SupportMenu(object):
         self.owner = owner
         self.updateOptions(gameStateObj)
         self.topleft = topleft
-        self.back_surf = CreateBaseMenuSurf((136, 136), background)
+        self.back_surf = BaseMenuSurf.CreateBaseMenuSurf((136, 136), background)
         shimmer = GC.IMAGESDICT['Shimmer2']
         self.back_surf.blit(shimmer, (136 - shimmer.get_width() - 1, 136 - shimmer.get_height() - 5))
         self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
@@ -1136,7 +1066,7 @@ class HorizOptionsMenu(Counters.CursorControl):
         self.font = GC.FONT['text_white']
         self.spacing = '    '
 
-        self.BGSurf = CreateBaseMenuSurf(self.get_menu_size())
+        self.BGSurf = BaseMenuSurf.CreateBaseMenuSurf(self.get_menu_size())
         self.half_width = self.BGSurf.get_width()//2
         self.topleft = GC.WINWIDTH//2 - self.half_width, GC.WINHEIGHT//2 - self.BGSurf.get_height()//2
 
@@ -1226,7 +1156,7 @@ class UnitSelectMenu(Counters.CursorControl):
         self.cursor_y_offset = 0
 
         # Build background
-        self.backsurf = CreateBaseMenuSurf(self.menu_size, 'BaseMenuBackgroundOpaque')
+        self.backsurf = BaseMenuSurf.CreateBaseMenuSurf(self.menu_size, 'BaseMenuBackgroundOpaque')
         shimmer = GC.IMAGESDICT['Shimmer2']
         self.backsurf.blit(shimmer, (self.backsurf.get_width() - shimmer.get_width() - 1, self.backsurf.get_height() - shimmer.get_height() - 5))
         self.backsurf = Image_Modification.flickerImageTranslucent(self.backsurf, 10)
@@ -1369,7 +1299,7 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
         GC.FONT['text_blue'].blit(str(unit.exp), surf, (topleft[0] + 97 - GC.FONT['text_blue'].size(str(unit.exp))[0], topleft[1] - 19))
 
     if include_bottom:
-        blue_backSurf = CreateBaseMenuSurf((104, 16*cf.CONSTANTS['max_items']+8), 'BaseMenuBackgroundOpaque')
+        blue_backSurf = BaseMenuSurf.CreateBaseMenuSurf((104, 16*cf.CONSTANTS['max_items']+8), 'BaseMenuBackgroundOpaque')
         if shimmer:
             img = GC.IMAGESDICT['Shimmer' + str(shimmer)]
             blue_backSurf.blit(img, (blue_backSurf.get_width() - img.get_width() - 1, blue_backSurf.get_height() - img.get_height() - 5))
@@ -1560,9 +1490,9 @@ class ShopMenu(ChoiceMenu):
 
     def draw(self, surf, money):
         if self.limit:
-            BGSurf = CreateBaseMenuSurf((self.menu_width, 16*self.limit+8), 'BaseMenuBackgroundOpaque')
+            BGSurf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, 16*self.limit+8), 'BaseMenuBackgroundOpaque')
         else:
-            BGSurf = CreateBaseMenuSurf((self.menu_width, 16*len(self.options)+8), 'BaseMenuBackgroundOpaque')
+            BGSurf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, 16*len(self.options)+8), 'BaseMenuBackgroundOpaque')
         if self.shimmer:
             img = GC.IMAGESDICT['Shimmer' + str(self.shimmer)]
             BGSurf.blit(img, (BGSurf.get_width() - img.get_width() - 1, BGSurf.get_height() - img.get_height() - 5))
@@ -1700,7 +1630,7 @@ class TradeMenu(Counters.CursorControl):
         GC.FONT['text_white'].blit(self.partner.name, surf, (GC.WINWIDTH - 24 - GC.FONT['text_white'].size(self.partner.name)[0]//2, 0))
 
         # Blit menu background
-        BGSurf1 = CreateBaseMenuSurf((self.menuWidth, self.optionHeight*cf.CONSTANTS['max_items']+8))
+        BGSurf1 = BaseMenuSurf.CreateBaseMenuSurf((self.menuWidth, self.optionHeight*cf.CONSTANTS['max_items']+8))
 
         BGSurf2 = Engine.copy_surface(BGSurf1)
         second_topleft = (self.topleft[0] + BGSurf1.get_width() + 8, self.topleft[1])
@@ -1989,7 +1919,7 @@ class RecordsDisplay(ChoiceMenu):
         self.total_turns = sum([option[1] for option in self.options])
         self.mvp_dict = self.get_game_mvp_dict(stats)
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        self.back_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
         img = GC.IMAGESDICT['Shimmer2']
         self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
         self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
@@ -2039,7 +1969,7 @@ class RecordsDisplay(ChoiceMenu):
             surf.blit(highlightSurf, topleft)
 
     def create_top_banner(self):
-        banner_surf = CreateBaseMenuSurf((self.menu_width, 24), 'WhiteMenuBackground75')
+        banner_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, 24), 'WhiteMenuBackground75')
         GC.FONT['text_yellow'].blit(cf.WORDS['Total Turns'], banner_surf, (4, 4))
         total_turns = str(self.total_turns)
         GC.FONT['text_blue'].blit(total_turns, banner_surf, (92 - GC.FONT['text_blue'].size(total_turns)[0], 4))
@@ -2091,7 +2021,7 @@ class UnitStats(RecordsDisplay):
 
         self.set_up()
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        self.back_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
         img = GC.IMAGESDICT['Shimmer2']
         self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
         self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
@@ -2145,7 +2075,7 @@ class MVPDisplay(RecordsDisplay):
         self.total_turns = sum([level.turncount for level in stats])
         self.mvp_dict = self.get_game_mvp_dict(stats)
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        self.back_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
         img = GC.IMAGESDICT['Shimmer2']
         self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
         self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)
@@ -2189,7 +2119,7 @@ class ChapterStats(MVPDisplay):
 
         self.set_up()
 
-        self.back_surf = CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
+        self.back_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, (self.limit+1)*16+8), 'BaseMenuBackgroundOpaque')
         img = GC.IMAGESDICT['Shimmer2']
         self.back_surf.blit(img, (self.back_surf.get_width() - 1 - img.get_width(), self.back_surf.get_height() - 5 - img.get_height()))
         self.back_surf = Image_Modification.flickerImageTranslucent(self.back_surf, 10)

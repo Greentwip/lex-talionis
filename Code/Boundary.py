@@ -1,9 +1,5 @@
-try:
-    import GlobalConstants as GC
-    import Utility, Engine
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Utility, Engine
+from . import GlobalConstants as GC
+from . import Utility, Engine
 
 # === BOUNDARY MANAGER ============================================
 class BoundaryInterface(object):

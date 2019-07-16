@@ -1,10 +1,7 @@
 import random, math
-try:
-    import GlobalConstants as GC
-    import Engine, Image_Modification
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Engine, Image_Modification
+
+from . import GlobalConstants as GC
+from . import Engine, Image_Modification
 
 class Weather(object):
     def __init__(self, name, abundance, bounds, size, blend=None):
@@ -101,9 +98,9 @@ class Smoke(Raindrop):
 
 class Fire(Raindrop):
     full_sprite = GC.IMAGESDICT['FireParticle']
-    sprites = [Engine.subsurface(full_sprite, (0, i*2, 3, 2)) for i in range(6)]
 
     def __init__(self, pos):
+        Fire.sprites = [Engine.subsurface(Fire.full_sprite, (0, i*2, 3, 2)) for i in range(6)]
         self.x = pos[0]
         self.y = pos[1]
         self.speed = random.randint(1, 4)
@@ -114,17 +111,17 @@ class Fire(Raindrop):
         self.x -= random.randint(0, self.speed)
         self.y -= random.randint(0, self.speed)
         if self.y > 112:
-            self.sprite = self.sprites[-1]
+            self.sprite = Fire.sprites[-1]
         elif self.y > 104:
-            self.sprite = self.sprites[-2]
+            self.sprite = Fire.sprites[-2]
         elif self.y > 88:
-            self.sprite = self.sprites[-3]
+            self.sprite = Fire.sprites[-3]
         elif self.y > 80:
-            self.sprite = self.sprites[-4]
+            self.sprite = Fire.sprites[-4]
         elif self.y > 72:
-            self.sprite = self.sprites[-5]
+            self.sprite = Fire.sprites[-5]
         elif self.y > 64:
-            self.sprite = self.sprites[-6]
+            self.sprite = Fire.sprites[-6]
         else:
             self.remove_me = True
 

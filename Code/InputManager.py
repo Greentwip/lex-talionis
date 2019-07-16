@@ -1,9 +1,5 @@
-try:
-    import configuration as cf
-    import Engine
-except ImportError:
-    from . import configuration as cf
-    from . import Engine
+from . import configuration as cf
+from . import Engine
 
 class InputManager(object):
     def __init__(self):

@@ -7,20 +7,12 @@ except ImportError:
     import pickle
 
 # Custom imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import TileObject, ItemMethods, UnitObject, StatusCatalog, CustomObjects
-    import Utility, Weapons, Objective, Triggers, ClassData, Action
-    from StatObject import build_stat_dict
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import TileObject, ItemMethods, UnitObject, StatusCatalog, CustomObjects
-    from . import Utility, Weapons, Objective, Triggers, ClassData, Action
-    from Code.StatObject import build_stat_dict
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import static_random
+from . import TileObject, ItemMethods, UnitObject, StatusCatalog, CustomObjects
+from . import Utility, Weapons, Objective, Triggers, ClassData, Action
+from Code.StatObject import build_stat_dict
 
 import logging
 logger = logging.getLogger(__name__)

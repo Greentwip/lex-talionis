@@ -1,14 +1,9 @@
 from collections import OrderedDict
 
 # Custom imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import Utility, Weapons
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import Utility, Weapons
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Utility, Weapons
 
 # === PARSES A SKILL LINE =====================================================
 def class_skill_parser(skill_text):

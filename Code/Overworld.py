@@ -1,14 +1,10 @@
 import os
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import StateMachine, SaveLoad, Dialogue, MenuFunctions, CustomObjects
-    import Utility, Engine, InputManager, GenericMapSprite, Image_Modification
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import StateMachine, SaveLoad, Dialogue, MenuFunctions, CustomObjects
-    from . import Utility, Engine, InputManager, GenericMapSprite, Image_Modification
+
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import StateMachine, SaveLoad, Dialogue, MenuFunctions, CustomObjects
+from . import Utility, Engine, InputManager, Image_Modification
+from . import GenericMapSprite, BaseMenuSurf
 
 class OverworldCursor(object):
     image = GC.IMAGESDICT['OverworldCursor']
@@ -783,7 +779,7 @@ class OverworldState(StateMachine.State):
                 cur_party.hover_over()
         elif self.triggers_done:
             # Draw R: Info display
-            camp_surf = MenuFunctions.CreateBaseMenuSurf((96, 24), 'WhiteMenuBackground75')
+            camp_surf = BaseMenuSurf.CreateBaseMenuSurf((96, 24), 'WhiteMenuBackground75')
             helper = Engine.get_key_name(cf.OPTIONS['key_INFO']).upper()
             GC.FONT['text_yellow'].blit(helper, camp_surf, (4, 3))
             GC.FONT['text_white'].blit(': Make Camp Here', camp_surf, (4 + GC.FONT['text_blue'].size(helper)[0], 3))

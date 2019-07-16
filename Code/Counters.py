@@ -1,9 +1,5 @@
-try:
-    import Engine
-    from GlobalConstants import IMAGESDICT
-except ImportError:
-    from . import Engine
-    from Code.GlobalConstants import IMAGESDICT
+from . import Engine
+from Code.GlobalConstants import IMAGESDICT
 
 # Helper global object for passive sprite animations
 class generic3Counter(object):

@@ -1,19 +1,11 @@
 import os
 
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
-    import Interaction, StatusCatalog, ItemMethods, Background
-    import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-    import StateMachine, Action, Aura
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
-    from . import Interaction, StatusCatalog, ItemMethods, Background
-    from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-    from . import StateMachine, Action, Aura
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
+from . import Interaction, StatusCatalog, ItemMethods, Background
+from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
+from . import StateMachine, Action, Aura, BaseMenuSurf
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1929,7 +1921,7 @@ class VictoryState(StateMachine.State):
             turns ='0'
             mvp = 'None'
         menu_width = 96
-        bg = MenuFunctions.CreateBaseMenuSurf((menu_width, 40), 'BaseMenuBackgroundOpaque')
+        bg = BaseMenuSurf.CreateBaseMenuSurf((menu_width, 40), 'BaseMenuBackgroundOpaque')
         img = GC.IMAGESDICT['Shimmer2']
         bg.blit(img, (bg.get_width() - 1 - img.get_width(), bg.get_height() - 5 - img.get_height()))
         bg = Image_Modification.flickerImageTranslucent(bg, 10)
@@ -2508,7 +2500,7 @@ class ShopState(StateMachine.State):
     def init_draw(self):
         self.draw_surfaces = []
         # Light background
-        bg = MenuFunctions.CreateBaseMenuSurf((GC.WINWIDTH+8, 48), 'ClearMenuBackground')
+        bg = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH+8, 48), 'ClearMenuBackground')
         self.bg = Engine.subsurface(bg, (4, 0, GC.WINWIDTH, 48))
         # Portrait
         PortraitSurf = self.portrait

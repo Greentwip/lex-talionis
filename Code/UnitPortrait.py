@@ -1,11 +1,7 @@
 import random, math
 
-try:
-    import GlobalConstants as GC
-    import Engine, Counters, Image_Modification
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Engine, Counters, Image_Modification
+from . import GlobalConstants as GC
+from . import Engine, Counters, Image_Modification
 
 class UnitPortrait(object):
     def __init__(self, portrait_name, blink_position, mouth_position, position, 

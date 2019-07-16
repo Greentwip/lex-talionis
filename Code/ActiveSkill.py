@@ -1,7 +1,4 @@
-try:
-    import ItemMethods, Utility, Weapons
-except ImportError:
-    from . import ItemMethods, Utility, Weapons
+from . import ItemMethods, Utility, Weapons
 
 import logging
 logger = logging.getLogger(__name__)

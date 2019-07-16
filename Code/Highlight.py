@@ -1,9 +1,5 @@
-try:
-    import GlobalConstants as GC
-    import Engine, Aura
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Engine, Aura
+from . import GlobalConstants as GC
+from . import Engine, Aura
 
 import logging
 logger = logging.getLogger(__name__)

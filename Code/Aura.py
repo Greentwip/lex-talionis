@@ -1,9 +1,5 @@
-try:
-    import configuration as cf
-    import StatusCatalog, Utility, Action
-except ImportError:
-    from . import configuration as cf
-    from . import StatusCatalog, Utility, Action
+from . import configuration as cf
+from . import Utility
 
 import logging
 logger = logging.getLogger(__name__)
@@ -89,17 +85,20 @@ def remove_aura_highlights(unit, gameStateObj):
 
 class Aura(object):
     def __init__(self, aura_range, target, child_id, gameStateObj):
+        from . import StatusCatalog
         self.aura_range = int(aura_range)
         self.target = target
         self.child_id = child_id
         self.child_status = StatusCatalog.statusparser(child_id, gameStateObj)
 
     def apply(self, owner, unit, gameStateObj):
+        from . import Action
         if (self.target == 'Ally' and owner.checkIfAlly(unit) and owner is not unit) or \
            (self.target == 'Enemy' and owner.checkIfEnemy(unit)):
             logger.debug('Applying Aura %s to %s at %s', self.child_status.name, unit.name, unit.position)
             Action.do(Action.AddStatus(unit, self.child_status), gameStateObj) 
 
     def remove(self, unit, gameStateObj):
+        from . import Action
         Action.do(Action.RemoveStatus(unit, self.child_status, unit), gameStateObj)
         # Action.do(Action.RemoveStatus(unit, self.child_id, unit), gameStateObj)

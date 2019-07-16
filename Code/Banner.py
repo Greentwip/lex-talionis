@@ -1,9 +1,5 @@
-try:
-    import GlobalConstants as GC
-    import MenuFunctions, Engine, Image_Modification, Weapons
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import MenuFunctions, Engine, Image_Modification, Weapons
+from . import GlobalConstants as GC
+from . import BaseMenuSurf, Engine, Image_Modification, Weapons
 
 class Banner(object):
     def __init__(self):
@@ -23,7 +19,7 @@ class Banner(object):
     def draw(self, surf, gameStateObj):
         self.write_index = 6
         if not self.surf:
-            bg_surf = MenuFunctions.CreateBaseMenuSurf(self.size, 'BaseMenuBackgroundOpaque')
+            bg_surf = BaseMenuSurf.CreateBaseMenuSurf(self.size, 'BaseMenuBackgroundOpaque')
             self.surf = Engine.create_surface((self.size[0] + 2, self.size[1] + 4), convert=True, transparent=True)
             self.surf.blit(bg_surf, (2, 4))
             self.surf.blit(GC.IMAGESDICT['SmallGem'], (0, 0))

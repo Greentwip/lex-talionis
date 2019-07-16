@@ -1,14 +1,8 @@
 # Display Unit Info function
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import StateMachine, CustomObjects, Image_Modification, Engine, Action
-    import StatusCatalog, Banner, Utility, ClassData
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import StateMachine, CustomObjects, Image_Modification, Engine, Action
-    from . import StatusCatalog, Banner, Utility, ClassData
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import StateMachine, CustomObjects, Image_Modification, Engine, Action
+from . import StatusCatalog, Banner, Utility, ClassData
 
 ####################################################################
 class GainExpState(StateMachine.State):

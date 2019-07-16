@@ -1,13 +1,8 @@
 import os, pickle, math
 
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import Utility, Image_Modification, Engine
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import Utility, Image_Modification, Engine
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Utility, Image_Modification, Engine
 
 import logging
 logger = logging.getLogger(__name__)

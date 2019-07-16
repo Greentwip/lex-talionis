@@ -1,7 +1,4 @@
-try:
-    import Utility
-except ImportError:
-    from . import Utility
+from . import Utility
 
 # === TRIGGER STUFF ===
 class Trigger(object):

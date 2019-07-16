@@ -1,11 +1,8 @@
 import os
 from collections import OrderedDict
-try:
-    import bmpfont, Engine, imagesDict, Equations
-    import configuration as cf
-except ImportError:
-    from . import bmpfont, Engine, imagesDict, Equations
-    from . import configuration as cf
+
+from . import bmpfont, Engine, imagesDict, Equations
+from . import configuration as cf
 
 import logging
 logger = logging.getLogger(__name__)

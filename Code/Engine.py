@@ -6,10 +6,7 @@ if PYGAME_SDL2:
 import pygame
 import sys
 
-try:
-    import configuration
-except:
-    from . import configuration
+from . import configuration
 
 import logging
 logger = logging.getLogger(__name__)

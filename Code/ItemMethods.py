@@ -1,11 +1,7 @@
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import InfoMenu, MenuFunctions, Image_Modification, Utility, Weapons, Engine, TextChunk
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import InfoMenu, MenuFunctions, Image_Modification, Utility, Weapons, Engine, TextChunk
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import Image_Modification, Utility, Weapons, Engine, TextChunk
+from . import BaseMenuSurf, HelpMenu
 
 # === GENERIC ITEM OBJECT ========================================
 class ItemObject(object):
@@ -140,7 +136,7 @@ class ItemObject(object):
         if self.weapon or self.spell:
             return Help_Dialog(self)
         else:
-            return InfoMenu.Help_Dialog(self.desc)
+            return HelpMenu.Help_Dialog(self.desc)
 
     def drawType(self, surf, left, top):
         if self.icon:  
@@ -174,7 +170,7 @@ def get_item_range(item, unit):
         print('%s has an unsupported range: %s' % (item, item.get_range_string()))
         return []
 
-class Help_Dialog(InfoMenu.Help_Dialog_Base):
+class Help_Dialog(HelpMenu.Help_Dialog_Base):
     def __init__(self, item):
         self.last_time = self.start_time = 0
         self.transition_in = self.transition_out = False
@@ -221,7 +217,7 @@ class Help_Dialog(InfoMenu.Help_Dialog_Base):
             self.output_desc_lines = []
         size_x = first_line_length + 24
         size_y = 32 + len(self.output_desc_lines)*16
-        self.help_surf = MenuFunctions.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')  
+        self.help_surf = BaseMenuSurf.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')  
         self.h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
 
     def draw(self, surf, pos):

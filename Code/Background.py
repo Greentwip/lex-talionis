@@ -1,9 +1,5 @@
-try:
-    import GlobalConstants as GC
-    import Image_Modification, Engine
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import Image_Modification, Engine
+from . import GlobalConstants as GC
+from . import Image_Modification, Engine
 
 class MovingBackground(object):
     def __init__(self, BGSurf):

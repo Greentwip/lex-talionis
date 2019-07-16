@@ -3,18 +3,12 @@
 import os, time
 
 # Custom imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import CustomObjects, MenuFunctions, SaveLoad, StateMachine, ClassData
-    import Dialogue, Engine, Image_Modification, Weather, Background
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, ClassData
-    from . import Dialogue, Engine, Image_Modification, Weather, Background
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import static_random
+from . import Engine, Image_Modification
+from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue
+from . import ClassData, BaseMenuSurf, Weather, Background
 
 import logging
 logger = logging.getLogger(__name__)
@@ -38,7 +32,7 @@ class Button(object):
 
 class TimeDisplay(object):
     def __init__(self):
-        self.image = MenuFunctions.CreateBaseMenuSurf((128, 24), 'NoirMessageWindow')
+        self.image = BaseMenuSurf.CreateBaseMenuSurf((128, 24), 'NoirMessageWindow')
         self.pos = [-128, GC.WINHEIGHT-24]
         self.state = 'right'
 
@@ -238,7 +232,7 @@ class StartOption(StateMachine.State):
                         text = 'Loading a game will remove suspend!'
                         width = 180
                         position = (4, 6)
-                    self.banner = MenuFunctions.CreateBaseMenuSurf((width, 24), 'DarkMenuBackground')
+                    self.banner = BaseMenuSurf.CreateBaseMenuSurf((width, 24), 'DarkMenuBackground')
                     self.banner = Image_Modification.flickerImageTranslucent(self.banner, 10)
                     MenuFunctions.OutlineFont(GC.BASICFONT, text, self.banner, GC.COLORDICT['off_white'], GC.COLORDICT['off_black'], position)
                     self.state = "click_once"

@@ -1,17 +1,11 @@
 import re, math, itertools
 # Custom imports
-try:
-    import GlobalConstants as GC
-    import configuration as cf
-    import static_random
-    import MenuFunctions, SaveLoad, Image_Modification, StatusCatalog, Cursor, Background, UnitPortrait
-    import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
-except ImportError:
-    from . import GlobalConstants as GC
-    from . import configuration as cf
-    from . import static_random
-    from . import MenuFunctions, SaveLoad, Image_Modification, StatusCatalog, Cursor, Background, UnitPortrait
-    from . import Interaction, ItemMethods, WorldMap, Utility, UnitObject, Engine, Banner, TextChunk, Action
+from . import GlobalConstants as GC
+from . import configuration as cf
+from . import static_random
+from . import Engine, TextChunk, Utility, Image_Modification
+from . import BaseMenuSurf, Background, UnitPortrait, WorldMap, Banner, Cursor
+from . import StatusCatalog, ItemMethods, Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -43,12 +37,12 @@ class Dialogue_Scene(object):
         
         # Optional unit
         self.unit = unit
-        if self.unit and isinstance(self.unit, UnitObject.UnitObject):
+        if self.unit and hasattr(self.unit, 'lock_active'):
             # logger.debug('locking %s', self.unit)
             self.unit.lock_active()
         self.unit1 = unit  # Alternate name
         self.unit2 = unit2
-        if self.unit2 and isinstance(self.unit2, UnitObject.UnitObject):
+        if self.unit2 and hasattr(self.unit, 'lock_active'):
             # logger.debug('locking %s', self.unit2)
             self.unit2.lock_active()
         # Name -- What is the given event name for this tile
@@ -235,10 +229,10 @@ class Dialogue_Scene(object):
 
     def end(self):
         self.done = True
-        if self.unit and isinstance(self.unit, UnitObject.UnitObject):
+        if self.unit and hasattr(self.unit, 'unlock_active'):
             # logger.debug('Unlocking %s', self.unit)
             self.unit.unlock_active()
-        if self.unit2 and isinstance(self.unit2, UnitObject.UnitObject):
+        if self.unit2 and hasattr(self.unit, 'unlock_active'):
             # logger.debug('Unlocking %s', self.unit2)
             self.unit2.unlock_active()
         return
@@ -1374,6 +1368,7 @@ class Dialogue_Scene(object):
         self.dialog[-1].waiting = False
 
     def add_unit(self, gameStateObj, metaDataObj, which_unit, new_pos, transition, placement, shuffle=True, create=None):
+        from Code.SaveLoad import create_unit
         # Find unit
         if create:
             unitLine = gameStateObj.prefabs.get(which_unit)
@@ -1382,7 +1377,7 @@ class Dialogue_Scene(object):
                 return
             new_unitLine = unitLine[:]
             new_unitLine.insert(4, create)
-            unit = SaveLoad.create_unit(new_unitLine, gameStateObj.allunits, gameStateObj.factions, gameStateObj.allreinforcements, gameStateObj)
+            unit = create_unit(new_unitLine, gameStateObj.allunits, gameStateObj.factions, gameStateObj.allreinforcements, gameStateObj)
             position = self.parse_pos(unitLine[5], gameStateObj)
         else:
             context = gameStateObj.allreinforcements.get(which_unit)
@@ -1554,6 +1549,7 @@ class Dialogue_Scene(object):
             unit.die(gameStateObj, event=event)
 
     def interact_unit(self, gameStateObj, attacker, defender, event_combat=False):
+        from . import Interaction
         if ',' in attacker:
             attacker = gameStateObj.get_unit_from_pos(self.parse_pos(attacker, gameStateObj))
         else:
@@ -1739,7 +1735,7 @@ class Dialog(object):
         self.waiting_cursor_flag = waiting_cursor_flag
         self.preempt_break = False
 
-        self.dlog_box = MenuFunctions.CreateBaseMenuSurf(size, background) # Background of text box
+        self.dlog_box = BaseMenuSurf.CreateBaseMenuSurf(size, background) # Background of text box
         self.topleft = None
         self.text_width = self.dlog_box.get_width() - 16
         self.text_height = self.dlog_box.get_height() - 16
@@ -1921,7 +1917,7 @@ class Dialog(object):
     def add_nametag(self, surf):
         if (not self.unit_sprites or self.owner not in self.unit_sprites) and self.owner != "Narrator":
             dialogue_position = self.topleft
-            name_tag_surf = MenuFunctions.CreateBaseMenuSurf((64, 16), 'NameTagMenu')
+            name_tag_surf = BaseMenuSurf.CreateBaseMenuSurf((64, 16), 'NameTagMenu')
             pos = (dialogue_position[0] - 4, dialogue_position[1] - 10)
             if pos[0] < 0:
                 pos = dialogue_position[0] + 16, pos[1]
