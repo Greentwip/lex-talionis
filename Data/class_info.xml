@@ -28,7 +28,7 @@
         <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
         <wexp_gain>1,0,0,0,0,0,0</wexp_gain>
         <promotes_from></promotes_from>
-        <turns_into>Swordmaster,Vanguard</turns_into>
+        <turns_into>Swordmaster</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>

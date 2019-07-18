@@ -194,6 +194,9 @@ class SkillIcon(object):
             if self.small:
                 true_pos = pos[0] + self.left_pos, pos[1]
                 surf.blit(self.icon, true_pos)
+            elif pos:
+                true_pos = pos[0] + self.left_pos - self.text_width/2 - 8, pos[1]
+                surf.blit(self.icon, true_pos)
             else:
                 if self.right:
                     x_pos = GC.WINWIDTH - 4 - self.text_width - 4 - 16 + self.left_pos - 2

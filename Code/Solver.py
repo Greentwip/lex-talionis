@@ -131,23 +131,23 @@ class AttackerState(SolverState):
         return False
 
     def get_next_state(self, solver, gameStateObj):
-        if solver.splash:
-            return 'Splash'
-        elif solver.defender.currenthp > 0:
-            if solver.item.weapon and solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
-                return 'AttackerBrave'
-            elif solver.allow_counterattack(gameStateObj):
-                return 'Defender'
-            elif solver.atk_rounds < 2 and solver.item.weapon and \
-                    solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
-                    solver.item_uses(solver.item):
-                return 'Attacker'
-            elif solver.next_round():
-                return 'Init'
-            else:
-                return 'Done'
-        else:
-            return 'Done'
+        if solver.attacker.currenthp > 0:
+            if solver.splash and any(s.currenthp > 0 for s in solver.splash):
+                return 'Splash'
+            elif solver.defender.currenthp > 0:
+                if solver.item.weapon and solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
+                    return 'AttackerBrave'
+                elif solver.allow_counterattack(gameStateObj):
+                    return 'Defender'
+                elif solver.atk_rounds < 2 and solver.item.weapon and \
+                        solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                        solver.item_uses(solver.item):
+                    return 'Attacker'
+                elif solver.next_round():
+                    return 'Init'
+                else:
+                    return 'Done'
+        return 'Done'
 
     def increment_round(self, solver):
         solver.atk_rounds += 1
@@ -163,28 +163,28 @@ class AttackerState(SolverState):
 
 class AttackerBraveState(AttackerState):
     def get_next_state(self, solver, gameStateObj):
-        if solver.splash and any(s.currenthp > 0 for s in solver.splash):
-            return 'SplashBrave'
-        elif solver.defender.currenthp > 0:
-            if solver.allow_counterattack(gameStateObj):
-                return 'Defender'
-            elif solver.atk_rounds < 2 and solver.item.weapon and \
-                    solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
-                    solver.item_uses(solver.item):
-                return 'Attacker'
-            elif solver.next_round():
-                return 'Init'
-            else:
-                return 'Done'
-        else:
-            return 'Done'
+        if solver.attacker.currenthp > 0:
+            if solver.splash and any(s.currenthp > 0 for s in solver.splash):
+                return 'SplashBrave'
+            elif solver.defender.currenthp > 0:
+                if solver.allow_counterattack(gameStateObj):
+                    return 'Defender'
+                elif solver.atk_rounds < 2 and solver.item.weapon and \
+                        solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                        solver.item_uses(solver.item):
+                    return 'Attacker'
+                elif solver.next_round():
+                    return 'Init'
+                else:
+                    return 'Done'
+        return 'Done'
 
     def increment_round(self, solver):
         pass
 
 class DefenderState(AttackerState):
     def get_next_state(self, solver, gameStateObj):
-        if solver.attacker.currenthp > 0:
+        if solver.attacker.currenthp > 0 and solver.defender.currenthp > 0:
             ditem = solver.defender.getMainWeapon()
             if solver.item_uses(ditem) and self.check_for_brave(solver, solver.defender, ditem):
                 return 'DefenderBrave'
@@ -214,7 +214,7 @@ class DefenderState(AttackerState):
 
 class DefenderBraveState(DefenderState):
     def get_next_state(self, solver, gameStateObj):
-        if solver.attacker.currenthp > 0:
+        if solver.attacker.currenthp > 0 and solver.defender.currenthp > 0:
             ditem = solver.defender.getMainWeapon()
             if solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
                 return 'Attacker'
@@ -236,21 +236,24 @@ class SplashState(AttackerState):
         self.index = 0
 
     def get_next_state(self, solver, gameStateObj):
-        if self.index < len(solver.splash):
-            return 'Splash'
-        if solver.item.weapon and solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
-            if solver.defender and solver.defender.currenthp > 0:
-                return 'AttackerBrave'
-            elif any(s.currenthp > 0 for s in solver.splash):
-                return 'SplashBrave'
-        if solver.allow_counterattack(gameStateObj):
-            return 'Defender'
-        elif solver.defender and solver.atk_rounds < 2 and \
-                solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
-                solver.item_uses(solver.item) and solver.defender.currenthp > 0:
-            return 'Attacker'
-        elif solver.next_round():
-            return 'Init'
+        if solver.attacker.currenthp > 0:
+            if self.index < len(solver.splash):
+                return 'Splash'
+            if solver.item.weapon and solver.item_uses(solver.item) and self.check_for_brave(solver, solver.attacker, solver.item):
+                if solver.defender and solver.defender.currenthp > 0:
+                    return 'AttackerBrave'
+                elif any(s.currenthp > 0 for s in solver.splash):
+                    return 'SplashBrave'
+            if solver.allow_counterattack(gameStateObj):
+                return 'Defender'
+            elif solver.defender and solver.atk_rounds < 2 and \
+                    solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                    solver.item_uses(solver.item) and solver.defender.currenthp > 0:
+                return 'Attacker'
+            elif solver.next_round():
+                return 'Init'
+            else:
+                return 'Done'
         else:
             return 'Done'
 
@@ -266,16 +269,19 @@ class SplashState(AttackerState):
 
 class SplashBraveState(SplashState):
     def get_next_state(self, solver, gameStateObj):
-        if self.index < len(solver.splash):
-            return 'SplashBrave'
-        elif solver.allow_counterattack(gameStateObj):
-            return 'Defender'
-        elif solver.defender and solver.atk_rounds < 2 and \
-                solver.attacker.outspeed(solver.defender, solver.item. gameStateObj) and \
-                solver.item_uses(solver.item) and solver.defender.currenthp > 0:
-            return 'Attacker'
-        elif solver.next_round():
-            return 'Init'
+        if solver.attacker.currenthp > 0:
+            if self.index < len(solver.splash):
+                return 'SplashBrave'
+            elif solver.allow_counterattack(gameStateObj):
+                return 'Defender'
+            elif solver.defender and solver.atk_rounds < 2 and \
+                    solver.attacker.outspeed(solver.defender, solver.item. gameStateObj) and \
+                    solver.item_uses(solver.item) and solver.defender.currenthp > 0:
+                return 'Attacker'
+            elif solver.next_round():
+                return 'Init'
+            else:
+                return 'Done'
         else:
             return 'Done'
 
@@ -439,17 +445,20 @@ class Solver(object):
         if cf.CONSTANTS['boss_crit'] and 'Boss' in defender.tags and result.outcome and result.def_damage >= defender.currenthp:
             result.outcome = 2
 
-        # Handle lifelink and vampire
+        # Handle lifelink and vampire and deflect_damage
         if result.def_damage > 0:
             if item.lifelink:
                 result.atk_damage -= result.def_damage
             if item.half_lifelink:
                 result.atk_damage -= result.def_damage//2
-            # Handle Vampire Status
+            # Handle Vampire and deflect_damage Status
             for status in attacker.status_effects:
                 if status.vampire and defender.currenthp - result.def_damage <= 0 and \
                    not any(status.miracle and (not status.count or status.count.count > 0) for status in defender.status_effects):
                     result.atk_damage -= eval(status.vampire)
+                if status.deflect_damage:
+                    result.atk_damage += result.def_damage
+                    result.def_damage = 0
         
         # Remove proc skills
         if result.attacker_proc_used:
@@ -499,9 +508,10 @@ class Solver(object):
         return False
 
     def next_round(self):
-        return self.attacker.currenthp > 0 and self.defender and \
+        result = self.attacker.currenthp > 0 and self.defender and \
             isinstance(self.defender, UnitObject.UnitObject) and \
-            self.defender.currenthp > 0 and self.current_round + 1 < self.total_rounds
+            self.defender.currenthp > 0 and self.current_round < self.total_rounds
+        return result
 
     def get_attacker_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.attack_proc]

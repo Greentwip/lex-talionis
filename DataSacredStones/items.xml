@@ -905,7 +905,7 @@
         <id>Devil Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>8</spriteid>       
-        <components>weapon,weight,uses,crit,wexp</components>
+        <components>weapon,weight,uses,crit,wexp,status_on_equip</components>
         <weapontype>Axe</weapontype>
  
         <RNG>1</RNG>
@@ -913,10 +913,11 @@
         <value>44</value>
         <desc>User may damage themselves</desc>
         <weight>18</weight>
+        <status_on_equip>Devil_Luck</status_on_equip>
         
         <MT>18</MT>
-        <HIT>55</HIT>
-        <LVL>E</LVL>
+        <HIT>155</HIT>
+        <LVL>D</LVL>
         <wexp>8</wexp>
     </item>
 

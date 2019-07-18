@@ -875,6 +875,23 @@
         <item_mod_effect_change>lifelink;True</item_mod_effect_change>
     </status>
 
+    <status name="Devil's Luck">
+        <id>Devil_Luck</id>
+        <image_index>6,8</image_index>
+        <desc>Chance to kill self -- horribly</desc>
+        <components>attack_proc</components>
+
+        <proc_status>Devil_proc</proc_status>
+        <proc_rate>31 - LCK</proc_rate>
+    </status>
+
+    <status name="Devil's Luck">
+        <id>Devil_proc</id>
+        <image_index>6,8</image_index>
+        <desc></desc>
+        <components>deflect_damage,hidden</components>
+    </status>
+
     <status name="Vantage">
         <id>Vantage2</id>
         <image_index>4,3</image_index>

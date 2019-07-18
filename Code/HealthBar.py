@@ -98,6 +98,13 @@ class HealthBar(object):
                     position = (x + 27, y - 3)
                 surf.blit(self.gem, position)
 
+            # Blit skill icons
+            for idx, skill_icon in enumerate(self.skill_icons):
+                skill_icon.update()
+                x, y = self.true_position[0] + width/2, self.true_position[1] - 16 - idx*16
+                skill_icon.draw(surf, (x, y))
+            self.skill_icons = [s for s in self.skill_icons if not s.done]
+
     def build_c_surf(self):
         c_surf = self.c_surf.copy()
         # Blit Hit
@@ -188,6 +195,9 @@ class HealthBar(object):
         elif num == 3:
             self.shake_set = [(3, 3), (0, 0), (0, 0), (-3, -3), (0, 0), (0, 0), (3, 3), (0, 0), (-3, -3), (0, 0), (3, 3), (0, 0), (-3, -3), (3, 3), (0, 0)]
 
+    def add_skill_icon(self, skill_icon):
+        self.skill_icons.append(skill_icon)
+
     def update(self, status_obj=False):
         # Make blinds wider
         self.blinds = Utility.clamp(self.blinds, self.blinds + self.blind_speed, 1)
@@ -272,3 +282,5 @@ class HealthBar(object):
         self.shake_set = [(0, 0)]
         self.shake_offset = (0, 0)
         self.current_shake = 0
+        # for skill icons
+        self.skill_icons = []

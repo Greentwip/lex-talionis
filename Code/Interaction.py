@@ -730,19 +730,28 @@ class AnimationCombat(Combat):
                 self.play_hit_sound()
 
     def start_damage_num_animation(self, result):
+        def build_numbers(damage, left):
+            str_damage = str(abs(damage))
+            for idx, num in enumerate(str_damage):
+                if result.outcome == 2 and damage > 0:  # Crit
+                    d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Yellow')
+                    self.damage_numbers.append(d)
+                elif damage < 0:
+                    d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Cyan')
+                    self.damage_numbers.append(d)
+                elif damage > 0:
+                    d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Red')
+                    self.damage_numbers.append(d)
+
+        # Damage dealt to defender
         damage = result.def_damage
-        str_damage = str(abs(damage))
         left = self.left == result.defender
-        for idx, num in enumerate(str_damage):
-            if result.outcome == 2:  # Crit
-                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Yellow')
-                self.damage_numbers.append(d)
-            elif result.def_damage < 0:
-                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Cyan')
-                self.damage_numbers.append(d)
-            elif result.def_damage > 0:
-                d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Red')
-                self.damage_numbers.append(d)
+        build_numbers(damage, left)
+        
+        # Damage dealt to attacker
+        # damage = result.atk_damage
+        # left = self.left == result.attacker
+        # build_numbers(damage, left)
 
     def play_hit_sound(self):
         if self.current_result.defender.currenthp <= 0:
@@ -1314,12 +1323,19 @@ class MapCombat(Combat):
         self.aoe_anim_flag = False # Have we shown the aoe animation yet?
 
         self.damage_numbers = []
-        self.skill_icons = []
         self.pre_proc_done = False
 
         self.health_bars = {}
 
     def update(self, gameStateObj, metaDataObj, skip=False):
+        def add_skill_icon(unit, skill):
+            if unit in self.health_bars:
+                hp_bar = self.health_bars[unit]
+                hp_bar.force_position_update(gameStateObj)
+                right = hp_bar.order == 'right' or hp_bar.order == 'middle'
+                skill_icon = GUIObjects.SkillIcon(skill, right)
+                hp_bar.add_skill_icon(skill_icon)
+
         current_time = Engine.get_time() - self.last_update
         # Get the results needed for this phase
         if not self.results:
@@ -1339,15 +1355,12 @@ class MapCombat(Combat):
 
             self.begin_phase(gameStateObj)
 
+            # Animate Pre-Proc skills (Vantage)
             if not self.pre_proc_done:
                 if self.solver.atk_pre_proc:
-                    pos = self.p1.position
-                    skill_icon = GUIObjects.SkillIcon(self.solver.atk_pre_proc, pos, small=True)
-                    self.skill_icons.append(skill_icon)
+                    add_skill_icon(self.p1, self.solver.atk_pre_proc)    
                 if self.solver.def_pre_proc:
-                    pos = self.p2.position
-                    skill_icon = GUIObjects.SkillIcon(self.solver.def_pre_proc, pos, small=True)
-                    self.skill_icons.append(skill_icon)
+                    add_skill_icon(self.p2, self.solver.def_pre_proc)
                 self.pre_proc_done = True
 
         elif self.results:
@@ -1385,15 +1398,11 @@ class MapCombat(Combat):
                 for hp_bar in self.health_bars.values():
                     hp_bar.force_position_update(gameStateObj)
                 for result in self.results:
-                    if result.attacker_proc_used and result.attacker.position not in [s.right for s in self.skill_icons]:
-                        pos = result.attacker.position
-                        skill_icon = GUIObjects.SkillIcon(result.attacker_proc_used, pos, small=True)
-                        self.skill_icons.append(skill_icon)
+                    if result.attacker_proc_used:
+                        add_skill_icon(result.attacker, result.attacker_proc_used)
                     if result.defender_proc_used:
-                        pos = result.defender.position
-                        skill_icon = GUIObjects.SkillIcon(result.defender_proc_used, pos, small=True)
-                        self.skill_icons.append(skill_icon)
-
+                        add_skill_icon(result.defender, result.defender_proc_used)
+                        
             elif self.combat_state == 'Init':
                 if skip or current_time > self.length_of_combat // 5 + self.additional_time:
                     gameStateObj.cursor.drawState = 0
@@ -1646,15 +1655,7 @@ class MapCombat(Combat):
         # Health Bars
         for hp_bar in self.health_bars.values():
             hp_bar.draw(surf, gameStateObj)
-        # Skill Icons
-        for skill_icon in self.skill_icons:
-            skill_icon.update()
-            position = skill_icon.right
-            c_pos = gameStateObj.cameraOffset.get_xy()
-            rel_x = position[0] - c_pos[0]
-            rel_y = position[1] - c_pos[1]
-            skill_icon.draw(surf, (rel_x * GC.TILEWIDTH - 2, rel_y * GC.TILEHEIGHT - 16))
-        self.skill_icons = [s for s in self.skill_icons if not s.done]
+
         # Damage numbers    
         for damage_num in self.damage_numbers:
             damage_num.update()
