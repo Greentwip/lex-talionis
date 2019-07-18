@@ -1315,6 +1315,7 @@ class MapCombat(Combat):
 
         self.damage_numbers = []
         self.skill_icons = []
+        self.pre_proc_done = False
 
         self.health_bars = {}
 
@@ -1338,6 +1339,17 @@ class MapCombat(Combat):
 
             self.begin_phase(gameStateObj)
 
+            if not self.pre_proc_done:
+                if self.solver.atk_pre_proc:
+                    pos = self.p1.position
+                    skill_icon = GUIObjects.SkillIcon(self.solver.atk_pre_proc, pos, small=True)
+                    self.skill_icons.append(skill_icon)
+                if self.solver.def_pre_proc:
+                    pos = self.p2.position
+                    skill_icon = GUIObjects.SkillIcon(self.solver.def_pre_proc, pos, small=True)
+                    self.skill_icons.append(skill_icon)
+                self.pre_proc_done = True
+
         elif self.results:
             if self.combat_state == 'Pre_Init':
                 # Move Camera
@@ -1348,6 +1360,7 @@ class MapCombat(Combat):
                 # sprite changes
                 if self.results[0].defender == self.p1:
                     if self.p2 and self.p1.checkIfEnemy(self.p2):
+                        self.p2.sprite.change_state('combat_attacker', gameStateObj)
                         self.p1.sprite.change_state('combat_counter', gameStateObj)
                     else:
                         self.p1.sprite.change_state('combat_active', gameStateObj)
@@ -1476,7 +1489,7 @@ class MapCombat(Combat):
                 else:
                     sound_to_play = 'Attack Hit ' + str(random.randint(1, 5)) # Choose a random hit sound
                 GC.SOUNDDICT[sound_to_play].play()
-                if result.outcome == 2: # critical
+                if result.outcome == 2 or result.attacker_proc_used: # critical
                     for health_bar in self.health_bars.values():
                         health_bar.shake(3)
                 else:

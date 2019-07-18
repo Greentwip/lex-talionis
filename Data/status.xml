@@ -876,7 +876,7 @@
     </status>
 
     <status name="Vantage">
-        <id>Vantage</id>
+        <id>Vantage2</id>
         <image_index>4,3</image_index>
         <desc>Proc. Attack first even on defense.</desc>
         <components>defense_pre_proc,class_skill</components>

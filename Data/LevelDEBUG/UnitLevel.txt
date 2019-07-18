@@ -22,7 +22,7 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Swordmaster;5;Iron Sword;2,14;None;Resistance
 # Enemies
-enemy;0;0;Warrior;5;Iron Axe;3,14;None;Resistance
+enemy;0;0;Warrior;5;Iron Axe;3,14;Pursue;Resistance
 
 
 
