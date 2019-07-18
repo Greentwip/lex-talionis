@@ -73,7 +73,10 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                 attacker_script = attacker_anim['script']
                 attacker_color = Utility.get_color(attacker.team)
                 name = None
-                if attacker.name in attacker_anim['images']:
+                if attacker.id in attacker_anim['images']:
+                    name = attacker.id
+                    attacker_frame_dir = attacker_anim['images'][name]
+                elif attacker.name in attacker_anim['images']:
                     name = attacker.name
                     attacker_frame_dir = attacker_anim['images'][name]
                 elif 'Generic' + attacker_color in attacker_anim['images']:
@@ -85,7 +88,10 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                 # Build defender animation
                 defender_script = defender_anim['script']
                 defender_color = Utility.get_color(defender.team)
-                if defender.name in defender_anim['images']:
+                if defender.id in defender_anim['images']:
+                    name = defender.id
+                    defender_frame_dir = defender_anim['images'][name]
+                elif defender.name in defender_anim['images']:
                     name = defender.name
                     defender_frame_dir = defender_anim['images'][name]
                 elif 'Generic' + defender_color in defender_anim['images']:
