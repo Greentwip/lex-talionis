@@ -333,7 +333,13 @@ class Combat(object):
                     gameStateObj.map.destroy(unit, gameStateObj)
                 else:
                     gameStateObj.stateMachine.changeState('dying')
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit))
+                    killer = None
+                    if unit is self.p1:
+                        killer = self.p2
+                    else:
+                        killer = self.p1
+                    scene = Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit, unit2=killer)
+                    gameStateObj.message.append(scene)
                     gameStateObj.stateMachine.changeState('dialogue')
 
     def turnwheel_death_messages(self, all_units, gameStateObj):
