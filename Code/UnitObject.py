@@ -766,13 +766,9 @@ class UnitObject(object):
 
             possible_positions = Utility.raytrace(self.position, infinite_position)
             path = possible_positions[::-1] # Reverse because travel_algorithm expects reversed path
-            new_path = Utility.travel_algorithm(gameStateObj, path, move_mag, self, gameStateObj.grid_manager.get_grid(self))
-
-            # New position is last position on new_path
-            # TODO this movement can eventually be animated like normal movement
-            new_pos = new_path.position[-1]
+            new_pos = Utility.travel_algorithm(gameStateObj, path, move_mag, self, gameStateObj.grid_manager.get_grid(self))
         elif movement.mode == 'Shove':
-            new_position = self.check_shove(other_pos, 1, gameStateObj)
+            new_position = self.check_shove(other_pos, move_mag, gameStateObj)
             if new_position:
                 self.sprite.set_transition('fake_in')
                 self.sprite.spriteOffset = [(self.position[0] - new_position[0])*GC.TILEWIDTH, (self.position[1] - new_position[1])*GC.TILEHEIGHT]

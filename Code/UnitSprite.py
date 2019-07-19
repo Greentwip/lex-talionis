@@ -212,7 +212,7 @@ class UnitSprite(object):
         # Killer Weapons and Master Weapons and Reaver Weapons
         else:
             for item in items:
-                if item.warning and eval(item.warning):
+                if item.warning and (item.warning is True or eval(item.warning)):
                     draw_marker('Warning')
                     break
                 elif item.reverse and weapon and Weapons.TRIANGLE.compute_advantage(item, weapon)[0] > 0:

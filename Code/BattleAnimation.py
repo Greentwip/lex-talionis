@@ -139,18 +139,26 @@ class BattleAnimation(object):
         self.children = []
         self.under_children = []
 
-    def add_effect(self, name, offset=None, enemy=False):
+    def get_effect(self, name, offset=None, enemy=False):
         image, script = GC.ANIMDICT.get_effect(name, self.palette_name)
-        print(name)
-        print(script.keys())
-        child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
-        right = not self.right if enemy else self.right
-        parent = self.parent.partner if enemy else self
-        child_effect.awake(self.owner, self.partner, right, self.at_range, parent=parent)
-        if offset:
-            child_effect.effect_offset = None
-        child_effect.start_anim(self.current_pose)
-        return child_effect
+        if script:
+            child_effect = BattleAnimation(self.unit, image, script, self.palette_name, self.item)
+            right = not self.right if enemy else self.right
+            parent = self.parent.partner if enemy else self
+            child_effect.awake(self.owner, self.partner, right, self.at_range, parent=parent)
+            if offset:
+                child_effect.effect_offset = None
+            child_effect.start_anim(self.current_pose)
+            return child_effect
+        else:
+            return None
+
+    def remove_effects(self, effects):
+        for effect in effects:
+            if effect in self.children:
+                self.children.remove(effect)
+            if effect in self.under_children:
+                self.under_children.remove(effect)
 
     def end_current(self):
         # print('Animation: End Current')
@@ -376,32 +384,36 @@ class BattleAnimation(object):
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
                 offset = None
-            child_effect = self.add_effect(name, offset)
-            self.children.append(child_effect)
+            child_effect = self.get_effect(name, offset)
+            if child_effect:
+                self.children.append(child_effect)
         elif line[0] == 'under_effect':
             name = line[1]
             if len(line) > 2:
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
                 offset = None
-            child_effect = self.add_effect(name, offset)
-            self.under_children.append(child_effect)
+            child_effect = self.get_effect(name, offset)
+            if child_effect:
+                self.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
             name = line[1]
             if len(line) > 2:
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
                 offset = None
-            child_effect = self.add_effect(name, offset, enemy=True)
-            self.partner.children.append(child_effect)
+            child_effect = self.get_effect(name, offset, enemy=True)
+            if child_effect:
+                self.partner.children.append(child_effect)
         elif line[0] == 'enemy_under_effect':
             name = line[1]
             if len(line) > 2:
                 offset = tuple(int(num) for num in line[2].split(','))
             else:
                 offset = None
-            child_effect = self.add_effect(name, offset, enemy=True)
-            self.partner.under_children.append(child_effect)
+            child_effect = self.get_effect(name, offset, enemy=True)
+            if child_effect:
+                self.partner.under_children.append(child_effect)
         elif line[0] == 'clear_all_effects':
             self.clear_all_effects()
         elif line[0] == 'blend':
@@ -414,8 +426,9 @@ class BattleAnimation(object):
                 item_id = line[1]
             else:
                 item_id = self.item.id
-            child_effect = self.add_effect(item_id)
-            self.children.append(child_effect)
+            child_effect = self.get_effect(item_id)
+            if child_effect:
+                self.children.append(child_effect)
         elif line[0] == 'static':
             self.static = not self.static
         elif line[0] == 'over_static':

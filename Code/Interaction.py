@@ -459,6 +459,7 @@ class AnimationCombat(Combat):
 
         # For display skill icons
         self.skill_icons = []
+        self.proc_effects = []
 
         # To match MapCombat
         self.health_bars = {self.left: self.left_hp_bar, self.right: self.right_hp_bar}
@@ -590,12 +591,25 @@ class AnimationCombat(Combat):
                     self.right.battle_anim.start_anim('Transform')
                 self.combat_state = 'TransformAnim'
 
+        elif self.combat_state == 'TransformAnim':
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
+                if self.solver.atk_pre_proc:
+                    self.set_up_proc_animation(self.solver.attacker, self.solver.atk_pre_proc)
+                if self.solver.def_pre_proc:
+                    self.set_up_proc_animation(self.solver.defender, self.solver.def_pre_proc)
+                if self.solver.atk_charge_proc:
+                    self.set_up_proc_animation(self.solver.attacker, self.solver.atk_charge_proc)
+                if self.solver.def_charge_proc:
+                    self.set_up_proc_animation(self.solver.defender, self.solver.def_charge_proc)
+                self.combat_state = "PreProcSkill"
+
         elif self.combat_state == 'Init':
             # self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
             self.current_result = self.next_result
             self.next_result = None
             # print('Interaction: Getting a new result')
             if self.current_result is None:
+                # End Battle and End Round
                 if self.left_item and self.left_item.transform and self.left.battle_anim.has_pose('Revert'):
                     self.left.battle_anim.start_anim('Revert')
                 if self.right_item and self.right_item.transform and self.right.battle_anim.has_pose('Revert'):
@@ -605,15 +619,10 @@ class AnimationCombat(Combat):
                 self.set_stats(gameStateObj)
                 self.old_results.append(self.current_result)
                 self.last_update = current_time
-                self.set_up_animation(self.current_result)
-
-        elif self.combat_state == 'TransformAnim':
-            if self.left.battle_anim.done() and self.right.battle_anim.done():
-                if self.solver.atk_pre_proc:
-                    self.set_up_pre_proc_animation(self.solver.attacker, self.solver.atk_pre_proc)
-                if self.solver.def_pre_proc:
-                    self.set_up_pre_proc_animation(self.solver.defender, self.solver.def_pre_proc)
-                self.combat_state = "PreProcSkill"
+                if self.current_result.new_round:
+                    self.combat_state = "TransformAnim"
+                else:
+                    self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'PreProcSkill':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
@@ -623,7 +632,7 @@ class AnimationCombat(Combat):
                 elif self.left_item and self.left_item.combat_effect:
                     effect = self.left.battle_anim.add_effect(self.left_item.combat_effect)
                     self.left.battle_anim.children.append(effect)                        
-                if self.skill_used:
+                if self.skill_used:  # For command skills
                     self.add_skill_icon(self.p1, self.skill_used)
                 self.combat_state = "InitialEffects"
 
@@ -631,20 +640,25 @@ class AnimationCombat(Combat):
             if not self.left.battle_anim.effect_playing() and not self.right.battle_anim.effect_playing():
                 self.set_up_animation(self.current_result)  # To Proc Skill or Anim
 
-        elif self.combat_state == 'RevertAnim':
+        elif self.combat_state == 'AdeptProcSkill':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
-                self.last_update = current_time
-                self.combat_state = 'ExpWait'
-                self.focus_exp()
-                self.move_camera()
+                self.set_up_animation(self.current_result)
 
-        elif self.combat_state == 'ProcSkill':
+        elif self.combat_state == 'AttackProcSkill':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
-                self.combat_state = 'Anim'
-                self.set_up_combat_animation(self.current_result)
+                self.set_up_animation(self.current_result)
+
+        elif self.combat_state == 'DefenseProcSkill':
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
+                self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'Anim':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
+                # Remove proc effects from this result
+                self.left.battle_anim.remove_effects(self.proc_effects)
+                self.right.battle_anim.remove_effects(self.proc_effects)
+                self.proc_effects = []
+
                 self.combat_state = 'Init'
 
         elif self.combat_state == 'HP_Change':
@@ -660,6 +674,13 @@ class AnimationCombat(Combat):
                 if self.left_hp_bar.true_hp <= 0 or self.right_hp_bar.true_hp <= 0 and self.current_result.attacker.battle_anim.state != 'Dying':
                     self.current_result.attacker.battle_anim.wait_for_dying()
                 self.combat_state = 'Anim'
+
+        elif self.combat_state == 'RevertAnim':
+            if self.left.battle_anim.done() and self.right.battle_anim.done():
+                self.last_update = current_time
+                self.combat_state = 'ExpWait'
+                self.focus_exp()
+                self.move_camera()
 
         elif self.combat_state == 'ExpWait':
             if skip or current_time - self.last_update > 450:
@@ -832,50 +853,29 @@ class AnimationCombat(Combat):
         self.next_result = self.solver.get_a_result(gameStateObj, metaDataObj)
 
     def set_up_animation(self, result):
-        if self.current_result.attacker_proc_used:
-            self.combat_state = 'ProcSkill'
-            self.set_up_attacker_proc_animation(result)
-        if self.current_result.defender_proc_used:
-            self.combat_state = 'ProcSkill'
-            self.set_up_defender_proc_animation(result)
-        if not (self.current_result.attacker_proc_used or self.current_result.defender_proc_used):
+        if result.adept_proc and self.combat_state not in ("AdeptProcSkill", "AttackProcSkill", "DefenseProcSkill"):
+            self.combat_state = "AdeptProcSkill"
+            self.set_up_proc_animation(result.attacker, result.adept_proc)
+        elif result.attacker_proc_used and self.combat_state not in ("AdeptProcSkill", "DefenseProcSkill"):
+            self.combat_state = 'AttackProcSkill'
+            self.set_up_proc_animation(result.attacker, result.attacker_proc_used)
+        elif result.defender_proc_used and self.combat_state != "DefenseProcSkill":
+            self.combat_state = 'DefenseProcSkill'
+            self.set_up_proc_animation(result.defender, result.defender_proc_used)
+        else:
             self.combat_state = 'Anim'
             self.set_up_combat_animation(result)
 
-    def set_up_attacker_proc_animation(self, result):
-        skill_name = result.attacker_proc_used.name
-        if result.attacker.battle_anim.has_pose(skill_name):
-            result.attacker.battle_anim.start_anim(skill_name)
-        elif result.attacker.battle_anim.has_pose('Generic Proc'):
-            result.attacker.battle_anim.start_anim(skill_name)
-        self.add_skill_icon(result.attacker, result.attacker_proc_used)
-        # Handle pan
-        if result.attacker == self.right:
-            self.focus_right = True
-        else:
-            self.focus_right = False
-        self.move_camera()
-
-    def set_up_defender_proc_animation(self, result):
-        skill_name = result.defender_proc_used.name
-        if result.defender.battle_anim.has_pose(skill_name):
-            result.defender.battle_anim.start_anim(skill_name)
-        elif result.defender.battle_anim.has_pose('Generic Proc'):
-            result.defender.battle_anim.start_anim(skill_name)
-        self.add_skill_icon(result.defender, result.defender_proc_used)
-        # Handle pan
-        if result.defender == self.right:
-            self.focus_right = True
-        else:
-            self.focus_right = False
-        self.move_camera()
-
-    def set_up_pre_proc_animation(self, unit, skill):
-        skill_name = skill.name
-        if unit.battle_anim.has_pose(skill_name):
-            unit.battle_anim.start_anim(skill_name)
+    def set_up_proc_animation(self, unit, skill):
+        effect = unit.battle_anim.get_effect(skill.name)
+        if unit.battle_anim.has_pose(skill.name):
+            unit.battle_anim.start_anim(skill.name)
         elif unit.battle_anim.has_pose('Generic Proc'):
-            unit.battle_anim.start_anim(skill_name)
+            unit.battle_anim.start_anim(skill.name)
+        elif effect:
+            unit.battle_anim.children.append(effect)
+            self.proc_effects.append(effect)
+
         self.add_skill_icon(unit, skill)
         # Handle pan
         if unit == self.right:
@@ -1367,13 +1367,16 @@ class MapCombat(Combat):
 
             self.begin_phase(gameStateObj)
 
-            # Animate Pre-Proc skills (Vantage)
-            if not self.pre_proc_done:
+            # Animate Pre-Proc skills (Vantage, Charge)
+            if self.results[0].new_round:
                 if self.solver.atk_pre_proc:
                     add_skill_icon(self.p1, self.solver.atk_pre_proc)    
                 if self.solver.def_pre_proc:
                     add_skill_icon(self.p2, self.solver.def_pre_proc)
-                self.pre_proc_done = True
+                if self.solver.atk_charge_proc:
+                    add_skill_icon(self.p1, self.solver.atk_charge_proc)    
+                if self.solver.def_charge_proc:
+                    add_skill_icon(self.p2, self.solver.def_charge_proc)
 
         elif self.results:
             if self.combat_state == 'Pre_Init':
@@ -1414,6 +1417,8 @@ class MapCombat(Combat):
                         add_skill_icon(result.attacker, result.attacker_proc_used)
                     if result.defender_proc_used:
                         add_skill_icon(result.defender, result.defender_proc_used)
+                    if result.adept_proc:
+                        add_skill_icon(result.attacker, result.adept_proc)
                         
             elif self.combat_state == 'Init':
                 if skip or current_time > self.length_of_combat // 5 + self.additional_time:
@@ -1585,13 +1590,13 @@ class MapCombat(Combat):
 
     def apply_result(self, result, gameStateObj):
         self._apply_result(result, gameStateObj)
+        def_pos = result.defender.position
+        atk_pos = result.attacker.position
         # Movement
-        if result.atk_movement and result.defender.position:
-            def_position = result.defender.position
-            result.attacker.handle_forced_movement(def_position, result.atk_movement, gameStateObj)
+        if result.atk_movement and def_pos:
+            result.attacker.handle_forced_movement(def_pos, result.atk_movement, gameStateObj)
         if result.def_movement:
-            atk_position = result.attacker.position
-            result.defender.handle_forced_movement(atk_position, result.def_movement, gameStateObj, self.def_pos)
+            result.defender.handle_forced_movement(atk_pos, result.def_movement, gameStateObj, self.def_pos)
         # Summoning
         if result.summoning:
             result.summoning.sprite.set_transition('warp_in')

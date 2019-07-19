@@ -143,7 +143,7 @@ class AttackerState(SolverState):
                         solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
                         solver.item_uses(solver.item):
                     return 'Attacker'
-                elif solver.next_round():
+                elif solver.next_round(gameStateObj):
                     return 'Init'
                 else:
                     return 'Done'
@@ -158,6 +158,8 @@ class AttackerState(SolverState):
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.defender, solver.item)
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
+        result.new_round = solver.new_round
+        solver.new_round = None
         self.increment_round(solver)
         return result
 
@@ -173,7 +175,7 @@ class AttackerBraveState(AttackerState):
                         solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
                         solver.item_uses(solver.item):
                     return 'Attacker'
-                elif solver.next_round():
+                elif solver.next_round(gameStateObj):
                     return 'Init'
                 else:
                     return 'Done'
@@ -196,7 +198,7 @@ class DefenderState(AttackerState):
             elif solver.def_double(gameStateObj) and solver.defender_can_counterattack() and \
                     not ditem.no_double:
                 return 'Defender'
-            elif solver.next_round():
+            elif solver.next_round(gameStateObj):
                 return 'Init'
         return 'Done'
 
@@ -209,6 +211,8 @@ class DefenderState(AttackerState):
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem)
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
+        result.new_round = solver.new_round
+        solver.new_round = None
         self.increment_round(solver)
         return result
 
@@ -224,7 +228,7 @@ class DefenderBraveState(DefenderState):
             elif solver.def_double(gameStateObj) and solver.defender_can_counterattack() and \
                     not ditem.no_double:
                 return 'Defender'
-            elif solver.next_round():
+            elif solver.next_round(gameStateObj):
                 return 'Init'
         return 'Done'
 
@@ -250,7 +254,7 @@ class SplashState(AttackerState):
                     solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
                     solver.item_uses(solver.item) and solver.defender.currenthp > 0:
                 return 'Attacker'
-            elif solver.next_round():
+            elif solver.next_round(gameStateObj):
                 return 'Init'
             else:
                 return 'Done'
@@ -264,6 +268,8 @@ class SplashState(AttackerState):
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.splash[self.index], solver.item)
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
+        result.new_round = solver.new_round
+        solver.new_round = None
         self.index += 1
         return result
 
@@ -278,7 +284,7 @@ class SplashBraveState(SplashState):
                     solver.attacker.outspeed(solver.defender, solver.item. gameStateObj) and \
                     solver.item_uses(solver.item) and solver.defender.currenthp > 0:
                 return 'Attacker'
-            elif solver.next_round():
+            elif solver.next_round(gameStateObj):
                 return 'Init'
             else:
                 return 'Done'
@@ -322,17 +328,18 @@ class Solver(object):
 
         self.current_round = 0
         self.total_rounds = 1
-        self.atk_rounds = 0
-        self.def_rounds = 0
 
         self.uses_count = 0
 
         self.atk_pre_proc = None
         self.def_pre_proc = None
-        self.adept_proc = None
+        self.adept_proc = None  # Kept here until next result is created, then fed into next result
+        self.atk_charge_proc = None
+        self.def_charge_proc = None
 
     def reset(self):
         self.current_round += 1
+        self.new_round = True
         self.atk_rounds = 0
         self.def_rounds = 0
 
@@ -448,9 +455,9 @@ class Solver(object):
         # Handle lifelink and vampire and deflect_damage
         if result.def_damage > 0:
             if item.lifelink:
-                result.atk_damage -= result.def_damage
+                result.atk_damage -= min(result.def_damage, defender.currenthp)
             if item.half_lifelink:
-                result.atk_damage -= result.def_damage//2
+                result.atk_damage -= min(result.def_damage//2, defender.currenthp)
             # Handle Vampire and deflect_damage Status
             for status in attacker.status_effects:
                 if status.vampire and defender.currenthp - result.def_damage <= 0 and \
@@ -504,14 +511,29 @@ class Solver(object):
             (self.def_rounds < 1 or self.def_double(gameStateObj)) and \
             self.defender_can_counterattack()
 
-    def adept_activated(self, unit):
-        return False
+    def check_charge(self, unit, unit2, item, status, gameStateObj):
+        return eval(status.charge, globals(), locals())
 
-    def next_round(self):
-        result = self.attacker.currenthp > 0 and self.defender and \
-            isinstance(self.defender, UnitObject.UnitObject) and \
-            self.defender.currenthp > 0 and self.current_round < self.total_rounds
-        return result
+    def next_round(self, gameStateObj):
+        # Check for charge
+        if self.defender and isinstance(self.defender, UnitObject.UnitObject) and \
+                self.attacker.currenthp > 0 and self.defender.currenthp > 0:
+            # Check for charge
+            for status in self.attacker.status_effects:
+                if status.charge and self.check_charge(self.attacker, self.defender, self.item, status, gameStateObj):
+                    self.total_rounds += 1
+                    self.atk_charge_proc = status
+                    break
+            else:
+                for status in self.defender.status_effects:
+                    if status.charge and self.check_charge(self.defender, self.attacker, self.defender.getMainWeapon(), status, gameStateObj):
+                        self.total_rounds += 1
+                        self.def_charge_proc = status
+                        break
+
+            result = self.current_round < self.total_rounds
+            return result
+        return False
 
     def get_attacker_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.attack_proc]
@@ -548,9 +570,12 @@ class Solver(object):
         result = None
         while not result:
             result = self.state_machine.ratchet(self, gameStateObj, metaDataObj)
+            
+            new_random_state = static_random.get_combat_random_state()
+            Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)
+            
             if self.state_machine.get_state():
-                new_random_state = static_random.get_combat_random_state()
-                Action.do(Action.RecordRandomState(old_random_state, new_random_state), gameStateObj)
+                pass
             else:
                 break
         return result

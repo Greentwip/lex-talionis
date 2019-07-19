@@ -19,31 +19,18 @@ v0.9.2 -- overworld & submap update
     - Or disallow skipping over overworld...
 - Test submap
 
-- Adept Proc Animation both map and non-map
-- Continue???
+- Gif of Adept working
+- Gif of Pavise working
 
-- Confirm c_uses works (can't use it at 0 c_uses)
-- Determine difference between Push movement and Shove movement
-- Check that Swap actually works
 - Try out a spell with 3 extra targets.
 - Test that summon still works
-- Switch lifelink to only heal amount of damage actually dealt
-- Test that eval of warning = True actually works
 - check whether locked items are actually locked (drop, trade, discard)
 
 v0.9.3 -- combat update & activated status update
 - Arena
-- Make sure you can have any number of combat results in a combat
-    - Implement Adept -> Make sure it can show up as pose -> gets added to attacker skill used
-    - Implement Continue -> Make sure you can modify Solver.total_rounds on the fly - also have it show up as an ending pose...
-- For animation
 - Test legendary animation (<combat_effect>Legendary</combat_effect>)
 - Add skill animation section to animations
-- Unify how activated, automatic, and percent skills work
-- Implement Devil axe effect -- (gives user a percent skill to die)
-- Add Lethality, Pavise, Sure Strike, and Pierce -- maybe Devil Axe also?
 - Test Transform and Revert for Manaketes
-- Remake how active skills are scripted in the status.xml
 
 v0.9.4 -- dialogue and command update
 - Dialogue Editor

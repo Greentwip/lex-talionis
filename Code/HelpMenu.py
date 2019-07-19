@@ -348,6 +348,8 @@ class Help_Dialog(Help_Dialog_Base):
         self.last_time = self.start_time = 0
         self.transition_in = self.transition_out = False
         # Set up variables needed for algorithm
+        if not description:
+            description = ''
         description_length = self.font.size(description)[0]
         # Hard set num_lines if description is very short.
         if len(description) < 24:
@@ -376,6 +378,8 @@ class Help_Dialog(Help_Dialog_Base):
             self.strings.append(''.join(line)) 
         # Find the greater of the two lengths
         greater_line_len = max([self.font.size(string)[0] for string in self.strings])
+        if self.name:
+            greater_line_len = max(greater_line_len, self.font.size(self.name)[0])
 
         size_x = greater_line_len + 24
         self.width = size_x

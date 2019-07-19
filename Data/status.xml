@@ -759,6 +759,28 @@
         <get_choices_func>[u.position for u in unit.getAdjacentUnits(gameStateObj)]</get_choices_func>
     </status>
 
+    <status name="Swap">
+        <id>Swap</id>
+        <image_index>4,4</image_index>
+        <desc>Activated. Swap position with an adjacent unit.</desc>
+        <components>activated_item,class_skill</components>
+
+        <activated_item>so_Swap</activated_item>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj))</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getAdjacentUnits(gameStateObj)]</get_choices_func>
+    </status>
+
+    <status name="Push">
+        <id>Push</id>
+        <image_index>4,4</image_index>
+        <desc>Activated. Pushes unit 3 spaces away.</desc>
+        <components>activated_item,class_skill</components>
+
+        <activated_item>so_Push</activated_item>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj))</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getAdjacentUnits(gameStateObj)]</get_choices_func>
+    </status>
+
     <status name="Refresh">
         <id>Refresh</id>
         <image_index>3,9</image_index>
@@ -911,7 +933,7 @@
 
     <status name="Pavise">
         <id>Pavise</id>
-        <image_index>4,2</image_index>
+        <image_index>10,3</image_index>
         <desc>Activated. Ignore attacker's damage.</desc>
         <components>defense_proc,class_skill</components>
 
@@ -921,7 +943,7 @@
 
     <status name="Pavise">
         <id>Pavise_proc</id>
-        <image_index>4,2</image_index>
+        <image_index>10,3</image_index>
         <desc></desc>
         <components>resist,hidden</components>
         
@@ -931,8 +953,8 @@
 
     <status name="Adept">
         <id>Adept</id>
-        <image_index>4,3</image_index>
-        <desc>Proc. Attack again.</desc>
+        <image_index>11,10</image_index>
+        <desc>Proc. SPD% Attack again.</desc>
         <components>adept_proc,class_skill</components>
         
         <proc_status>Adept_proc</proc_status>
@@ -941,9 +963,27 @@
 
     <status name="Adept">
         <id>Adept_proc</id>
-        <image_index>4,3</image_index>
+        <image_index>11,10</image_index>
         <desc></desc>
         <components></components>    
+    </status>
+
+    <status name="Charge">
+        <id>Thracia_Charge</id>
+        <image_index>4,3</image_index>
+        <desc></desc>
+        <components>charge,class_skill</components>
+
+        <charge>(unit.currenthp &gt; unit2.currenthp) and (unit.attackspeed(gameStateObj, item) &gt; unit2.attackspeed(gameStateObj))</charge>
+    </status>
+
+    <status name="Charge">
+        <id>Genealogy_Charge</id>
+        <image_index>4,3</image_index>
+        <desc></desc>
+        <components>charge,class_skill</components>
+
+        <charge>(unit.currenthp &gt; 25) and (static_random.get_combat() &lt; (unit.attackspeed(gameStateObj, item) - unit2.attackspeed(gameStateObj) + unit.currenthp//2))</charge>
     </status>
 
     <!-- Passive Item Mod Skills -->

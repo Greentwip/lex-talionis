@@ -488,7 +488,7 @@
         <id>Iron Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,warning</components>
         <weapontype>Axe</weapontype>
  
         <uses>45</uses>
@@ -1618,9 +1618,9 @@
         <id>Energy Drink</id>
         <spritetype>Consumable</spritetype>
         <spriteid>8</spriteid>
-        <components>usable,status,uses,map_hit_color</components>
+        <components>usable,status,c_uses,map_hit_color</components>
 
-        <uses>1</uses>
+        <c_uses>1</c_uses>
         <RNG>0</RNG>
         <value>300</value>
         <desc>A draught that recharges all skills.</desc>
@@ -1866,6 +1866,31 @@
         <RNG>1</RNG>
         <desc>I done broked something.</desc>
         <movement>Shove,1</movement>
+    </item>
+
+    <item name="Swap">
+        <id>so_Swap</id>
+        <spritetype>Skills</spritetype>
+        <spriteid>4,4</spriteid>
+        <components>movement,self_movement,detrimental</components>
+
+        <value>1</value>
+        <RNG>1</RNG>
+        <desc>I done broked something.</desc>
+        <movement>Swap,0</movement>
+        <self_movement>Swap,0</self_movement>
+    </item>
+
+    <item name="Push">
+        <id>so_Push</id>
+        <spritetype>Skills</spritetype>
+        <spriteid>4,4</spriteid>
+        <components>movement,detrimental</components>
+
+        <value>1</value>
+        <RNG>1</RNG>
+        <desc>I done broked something.</desc>
+        <movement>Push,3</movement>
     </item>
 
     <item name="Refresh">
