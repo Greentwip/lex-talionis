@@ -934,7 +934,7 @@
     <status name="Pavise">
         <id>Pavise</id>
         <image_index>10,3</image_index>
-        <desc>Activated. Ignore attacker's damage.</desc>
+        <desc>Proc. Ignore attacker's damage.</desc>
         <components>defense_proc,class_skill</components>
 
         <proc_status>Pavise_proc</proc_status>

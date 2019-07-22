@@ -120,6 +120,21 @@ def color_tint(image, color):
 
     return image
 
+def screen_dodge(image, color):
+    image = Engine.copy_surface(image)
+    # Invert image
+    inv = Engine.copy_surface(image)
+    Engine.fill(inv, (255, 255, 255))
+    inv.blit(image, (0, 0), None, Engine.BLEND_RGBA_SUB)
+    # Multiply with new color
+    inv_color = tuple([256 - c for c in color])
+    Engine.fill(inv, inv_color, None, Engine.BLEND_RGBA_MULT)
+    # Invert image again
+    new_inv = Engine.copy_surface(inv)
+    Engine.fill(new_inv, (255, 255, 255))
+    new_inv.blit(inv, (0, 0), None, Engine.BLEND_RGBA_SUB)
+    return new_inv
+
 # Gets a color that is between the two colors in a linear way
 def color_transition(color1, color2):
     # A number between 1 and 20 that changes at a set pace in a linear fashion

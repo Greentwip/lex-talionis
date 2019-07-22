@@ -488,7 +488,7 @@
         <id>Iron Axe</id>
         <spritetype>Axe</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight,warning</components>
+        <components>weapon,uses,weight</components>
         <weapontype>Axe</weapontype>
  
         <uses>45</uses>

@@ -4,15 +4,15 @@ import glob, os
 from PIL import Image
 import palette_index
 
-COLORKEY = (128, 160, 128)
-# COLORKEY = (0, 0, 0)
+# COLORKEY = (128, 160, 128)
+COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
-YLIMIT = 70
+YLIMIT = 140
 XLIMIT = 0
-palette_set = palette_index.hero_shield
+palette_set = None
 
-folder = 'hero_shield/'
-name = 'Shield'
+folder = 'great_shield3/'
+name = 'pavise'
 
 if os.path.exists(folder + 'Background.png'):
     background = Image.open(folder + 'Background.png').convert('RGB')

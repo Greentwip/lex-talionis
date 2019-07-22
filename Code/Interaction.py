@@ -460,6 +460,7 @@ class AnimationCombat(Combat):
         # For display skill icons
         self.skill_icons = []
         self.proc_effects = []
+        self.proc_wait = 0
 
         # To match MapCombat
         self.health_bars = {self.left: self.left_hp_bar, self.right: self.right_hp_bar}
@@ -641,15 +642,18 @@ class AnimationCombat(Combat):
                 self.set_up_animation(self.current_result)  # To Proc Skill or Anim
 
         elif self.combat_state == 'AdeptProcSkill':
-            if self.left.battle_anim.done() and self.right.battle_anim.done():
+            if self.left.battle_anim.done() and self.right.battle_anim.done() and \
+                    current_time - self.proc_wait > 400:
                 self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'AttackProcSkill':
-            if self.left.battle_anim.done() and self.right.battle_anim.done():
+            if self.left.battle_anim.done() and self.right.battle_anim.done() and \
+                    current_time - self.proc_wait > 400:
                 self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'DefenseProcSkill':
-            if self.left.battle_anim.done() and self.right.battle_anim.done():
+            if self.left.battle_anim.done() and self.right.battle_anim.done() and \
+                    current_time - self.proc_wait > 400:
                 self.set_up_animation(self.current_result)
 
         elif self.combat_state == 'Anim':
@@ -873,8 +877,11 @@ class AnimationCombat(Combat):
         elif unit.battle_anim.has_pose('Generic Proc'):
             unit.battle_anim.start_anim(skill.name)
         elif effect:
+            self.proc_wait = Engine.get_time()
             unit.battle_anim.children.append(effect)
             self.proc_effects.append(effect)
+        else:
+            self.proc_wait = Engine.get_time()
 
         self.add_skill_icon(unit, skill)
         # Handle pan

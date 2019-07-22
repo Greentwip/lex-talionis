@@ -43,6 +43,9 @@ class BattleAnimation(object):
         self.flash_color = None
         self.flash_frames = 0
         self.flash_image = None
+        self.screen_dodge_color = None
+        self.screen_dodge_frames = 0
+        self.screen_dodge_image = None
         # Opacity
         self.opacity = 255
         # Offset
@@ -314,6 +317,16 @@ class BattleAnimation(object):
             color = tuple([int(num) for num in line[2].split(',')])
             if self.partner:
                 self.partner.flash(num_frames, color)
+        elif line[0] == 'parent_screen_dodge':
+            num_frames = self.get_frames(line[1])
+            color = tuple([int(num) for num in line[2].split(',')])
+            if self.parent:
+                self.parent.screen_dodge(num_frames, color)
+        elif line[0] == 'enemy_screen_dodge':
+            num_frames = self.get_frames(line[1])
+            color = tuple([int(num) for num in line[2].split(',')])
+            if self.partner:
+                self.partner.screen_dodge(num_frames, color)
         elif line[0] == 'enemy_gray':
             num_frames = self.get_frames(line[1])
             if self.partner:
@@ -534,6 +547,10 @@ class BattleAnimation(object):
         self.flash_frames = num
         self.flash_color = color
 
+    def screen_dodge(self, num, color):
+        self.screen_dodge_frames = num
+        self.screen_dodge_color = color
+
     def no_damage(self):
         # print('No Damage!')
         if self.right:
@@ -638,6 +655,18 @@ class BattleAnimation(object):
                         self.flash_color = None
                         self.flash_frames = 0
                         self.flash_image = None
+
+                # Self screen dodge
+                if self.screen_dodge_color:
+                    if not self.screen_dodge_image:
+                        self.screen_dodge_image = Image_Modification.screen_dodge(image.convert_alpha(), self.screen_dodge_color)
+                    self.screen_dodge_frames -= 1
+                    image = self.screen_dodge_image
+                    # If done
+                    if self.screen_dodge_frames <= 0:
+                        self.screen_dodge_color = None
+                        self.screen_dodge_frames = 0
+                        self.screen_dodge_image = None
 
                 if self.opacity != 255:
                     if self.blend:
