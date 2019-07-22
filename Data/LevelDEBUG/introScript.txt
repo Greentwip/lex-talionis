@@ -13,3 +13,4 @@ remove_background
 b;WorldMap;map
 wm_qpan;140,408
 wait;2000
+s;Django;Wow
