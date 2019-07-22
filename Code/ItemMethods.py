@@ -9,7 +9,7 @@ class ItemObject(object):
 
     def __init__(self, i_id, name, spritetype, spriteid, components, value, RNG,
                  desc, aoe, weapontype, status, status_on_hold, status_on_equip,
-                 droppable=False, locked=False, event_combat=False):        
+                 droppable=False, event_combat=False):        
         self.uid = ItemObject.next_uid
         ItemObject.next_uid += 1
         self.id = i_id
@@ -21,8 +21,6 @@ class ItemObject(object):
         self.RNG = RNG.split('-') # Comes in the form of looking like '1-2' or '1' or '2-3' or '3-10'
         self.event_combat = event_combat
         self.droppable = droppable # Whether this item is given to its owner's killer upon death
-        self.locked = locked # Whether this item can be traded, sold, or dropped.
-        assert not(self.droppable == self.locked == True), "%s can't be both droppable and locked to a unit!" %(self.name)
         self.desc = desc # Text description of item
         # Status IDs
         self.status = status
@@ -40,6 +38,10 @@ class ItemObject(object):
         self.components = components # Consumable, Weapon, Spell Bigger Picture
         for component_key, component_value in self.components.items():
             self.__dict__[component_key] = component_value
+
+        if self.droppable == self.locked == True:
+            print("%s can't be both droppable and locked to a unit!" % self.name)
+            self.droppable = False
 
         self.loadSprites()
 
@@ -72,7 +74,6 @@ class ItemObject(object):
         serial_dict['id'] = self.id
         serial_dict['owner'] = self.item_owner
         serial_dict['droppable'] = self.droppable
-        serial_dict['locked'] = self.locked
         serial_dict['event_combat'] = self.event_combat
         serial_dict['uses'] = self.uses.uses if self.uses else None
         serial_dict['c_uses'] = self.c_uses.uses if self.c_uses else None
@@ -102,11 +103,9 @@ class ItemObject(object):
             ItemSurf = Image_Modification.flickerImageWhite(ItemSurf.convert_alpha(), abs(255 - Engine.get_time()%510))
             # ItemSurf = Image_Modification.transition_image_white(ItemSurf)
         surf.blit(ItemSurf, topleft)
-        # if self.locked:
-        #    locked_icon = GC.IMAGESDICT['LockedIcon']
-        #    locked_rect = locked_icon.get_rect()
-        #    locked_rect.bottomright = (ItemRect.right - 1, ItemRect.bottom - 1)
-        #    surf.blit(locked_icon, locked_rect)
+        if self.locked:
+            locked_icon = GC.IMAGESDICT['LockedIcon']
+            surf.blit(locked_icon, topleft)
 
     def removeSprites(self):
         self.image = None
@@ -419,13 +418,11 @@ class MovementComponent(object):
         self.magnitude = magnitude
 
 class SummonComponent(object):
-    def __init__(self, klass, items, name, desc, ai, s_id):
+    def __init__(self, klass, items, name, desc):
         self.klass = klass
-        self.name = name
         self.item_line = items
+        self.name = name
         self.desc = desc
-        self.ai = ai
-        self.s_id = s_id
 
 # === ITEM PARSER ======================================================
 # Takes an item id, as well as the database of item data, and outputs an item
@@ -458,10 +455,6 @@ def itemparser(itemid, gameStateObj=None):
     else:
         weapontype = None
 
-    if 'locked' in components:
-        locked = True
-    else:
-        locked = False
     status = []
     status_on_hold = []
     status_on_equip = []
@@ -534,9 +527,7 @@ def itemparser(itemid, gameStateObj=None):
             items = item['summon_items']
             name = item['summon_name']
             desc = item['summon_desc']
-            ai = item['summon_ai']
-            s_id = item['summon_s_id']
-            my_components['summon'] = SummonComponent(klass, items, name, desc, ai, s_id)
+            my_components['summon'] = SummonComponent(klass, items, name, desc)
         elif component in item:
             my_components[component] = item[component]
         else:
@@ -544,7 +535,7 @@ def itemparser(itemid, gameStateObj=None):
     current_item = ItemObject(itemid, item['name'], item['spritetype'], item['spriteid'], my_components,
                               item['value'], item['RNG'], item['desc'],
                               aoe, weapontype, status, status_on_hold, status_on_equip,
-                              droppable=droppable, locked=locked, event_combat=event_combat)
+                              droppable=droppable, event_combat=event_combat)
     if gameStateObj:
         gameStateObj.register_item(current_item)
 
@@ -562,8 +553,6 @@ def deserialize(item_dict):
         item.droppable = True
     if item_dict['event_combat']:
         item.event_combat = True
-    if item_dict['locked']:
-        item.locked = True
     if item_dict['uses']:
         item.uses.uses = item_dict['uses']
     if item_dict['c_uses']:

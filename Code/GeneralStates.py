@@ -889,10 +889,14 @@ class ItemChildState(StateMachine.State):
                 use = False
             if use:
                 options.append(cf.WORDS['Use'])
-        if 'Convoy' in gameStateObj.game_constants:
-            options.append(cf.WORDS['Storage'])
-        else:
-            options.append(cf.WORDS['Discard'])
+        if not selection.locked:
+            if 'Convoy' in gameStateObj.game_constants:
+                options.append(cf.WORDS['Storage'])
+            else:
+                options.append(cf.WORDS['Discard'])
+
+        if not options:
+            options.append(cf.WORDS['Placeholder'])
              
         self.menu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
 
@@ -2219,7 +2223,11 @@ class ItemDiscardState(StateMachine.State):
             self.pennant = Banner.Pennant(cf.WORDS['Discard'])
         options = gameStateObj.cursor.currentSelectedUnit.items
         if not gameStateObj.activeMenu:
-            gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, options, 'auto', gameStateObj=gameStateObj)
+            ignore = [option.locked for option in options]
+            color = ['text_grey' if i else 'text_white' for i in ignore]
+            gameStateObj.activeMenu = \
+                MenuFunctions.ChoiceMenu(gameStateObj.cursor.currentSelectedUnit, options, 'auto', 
+                                         gameStateObj=gameStateObj, color_control=color, ignore=ignore)
         else:
             gameStateObj.activeMenu.updateOptions(options)
         self.childMenu = None

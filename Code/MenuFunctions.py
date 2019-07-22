@@ -1747,6 +1747,7 @@ class TradeMenu(Counters.CursorControl):
 
         if (item1 is item2) or (item1 is not "EmptySlot" and item1.locked) or (item2 is not "EmptySlot" and item2.locked):
             self.selection2 = None
+            GC.SOUNDDICT['Error'].play()
             return 
 
         # Now swap items
