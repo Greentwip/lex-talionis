@@ -442,7 +442,8 @@ class Dialogue_Scene(object):
             # Legal commands (Smile, NoSmile, NormalBlink, OpenEyes, CloseEyes, HalfCloseEyes)
             # Default (NoSmile, NormalBlink)
             commands = line[2].split(',') if len(line) > 2 else []
-            self.unit_sprites[line[1]].set_expression(commands)
+            name = self.get_name(line[1])
+            self.unit_sprites[name].set_expression(commands)
         # Remove a unit from the scene
         elif line[0] == 'r':
             for name in line[1:]:
@@ -1549,7 +1550,7 @@ class Dialogue_Scene(object):
         if ',' in attacker:
             attacker = gameStateObj.get_unit_from_pos(self.parse_pos(attacker, gameStateObj))
         else:
-            attacker = gameStateObj.get_unit(attacker)
+            attacker = self.get_unit(attacker, gameStateObj)
         if not attacker:
             logger.error('Interact unit routine could not find %s', attacker)
             return
@@ -1557,7 +1558,7 @@ class Dialogue_Scene(object):
         if ',' in defender:
             def_pos = self.parse_pos(defender, gameStateObj)
         else:
-            defender = gameStateObj.get_unit(defender)
+            defender = self.get_unit(defender, gameStateObj)
             if not defender:
                 logger.error('Interact unit routine could not find %s', defender)
                 return
