@@ -552,6 +552,9 @@ class MenuState(StateMachine.State):
                     if gameStateObj.support.can_support(cur_unit.id, adjunit.id):
                         options.append(cf.WORDS['Support'])
                         break
+            # If the unit is on an arena tile
+            if 'Arena' in gameStateObj.map.tile_info_dict[cur_unit.position]:
+                options.append(cf.WORDS['Arena'])
             # If the unit is on a village tile
             if 'Village' in gameStateObj.map.tile_info_dict[cur_unit.position]:
                 options.append(cf.WORDS['Visit'])
@@ -751,6 +754,9 @@ class MenuState(StateMachine.State):
                 else:
                     logger.error("%s does not exist!", village_script)
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
+            elif selection == cf.WORDS['Arena']:
+                gameStateObj.stateMachine.changeState('arena')
+                gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Armory']:
                 gameStateObj.stateMachine.changeState('armory')
                 gameStateObj.stateMachine.changeState('transition_out')
@@ -1615,6 +1621,129 @@ class RepairState(StealState):
 
         elif event == 'INFO':
             gameStateObj.activeMenu.toggle_info()
+
+class ArenaState(StateMachine.State):
+    name = 'arena'
+
+    def begin(self, gameStateObj, metaDataObj):
+        # Get data needed
+        self.initiator = gameStateObj.cursor.currentSelectedUnit
+        self.opponent, self.opponent_weapon, self.wager = self.get_arena_info(self.initiator, gameStateObj)
+
+        # Set up assuming things go to plan
+        self.state_machine = CustomObjects.StateMachine('wager')
+        self.display_message = self.get_dialog('Would you like to wager %d gold?' % self.wager)
+        self.wager_menu = MenuFunctions.ChoiceMenu(self.unit, [cf.WORDS['Yes'], cf.WORDS['No']], (80, 32), background='ActualTransparent', horizontal=True)
+
+        # Set up draw
+        if 'ArenaBackground' in GC.IMAGESDICT:
+            gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['ArenaBackground'])
+        else:
+            gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['RuneBackground'])
+        bg = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH+8, 48), 'ClearMenuBackground')
+        self.bg = Engine.subsurface(bg, (4, 0, GC.WINWIDTH, 48))
+        self.portrait = GC.IMAGESDICT.get('ArenaPortrait')
+
+        # TODO check that they have a WEAPON -- otherwise can't enter.
+        if cf.CONSTANTS['arena_weapons']:
+            self.initiator_weapon = self.get_weapon(self.initiator, gameStateObj)
+            if not self.initiator_weapon:
+                self.state_machine = CustomObjects.StateMachine('no_weapon')
+                self.wager_menu = None
+                self.display_message = self.get_dialog("What! You don't have a weapon! Get out of here!")
+
+    def get_arena_info(self, unit, gameStateObj):
+        weapon = None
+        while not weapon:
+            new_unit = SaveLoad.create_unit()
+            weapon = self.get_weapon(new_unit, gameStateObj)
+        wager = 500
+        return new_unit, weapon, wager
+
+    def get_weapon(self, unit, gameStateObj):
+        return None
+
+    def get_dialog(self, text):
+        return Dialogue.Dialog(text, 'Narrator', (60, 8), (144, 48), 'text_white', 'ActualTransparent', waiting_cursor_flag=False)
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+        first_push = self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
+
+        if self.stateMachine.getState() == 'wager':
+            if 'DOWN' in directions or 'RIGHT' in directions:
+                GC.SOUNDDICT['Select 6'].play()
+                self.wager_menu.moveDown(first_push)
+            elif 'UP' in directions or 'LEFT' in directions:
+                GC.SOUNDDICT['Select 6'].play()
+                self.wager_menu.moveUp(first_push)
+
+            if event == 'BACK':
+                GC.SOUNDDICT['Select 4'].play()
+                self.display_message = self.get_dialog('What are you wasting my time for?')
+                self.wager_menu = None
+                self.state_machine.changeState('close')
+
+            elif event == 'SELECT':
+                GC.SOUNDDICT['Select 1'].play()
+                selection = self.menu.getSelection()
+                if selection == cf.WORDS['Yes']:
+                    self.display_message = self.get_dialog("Good luck. Don't get yourself killed.")
+                    self.wager_menu = None
+                    self.state_machine.changeState('combat')
+                elif selection == cf.WORDS['No']:
+                    self.display_message = self.get_dialog('What are you wasting my time for?')
+                    self.wager_menu = None
+                    self.state_machine.changeState('close')
+
+        elif self.stateMachine.getState() == 'combat':
+            if event:
+                GC.SOUNDDICT['Select 1'].play()
+                if self.display_message.done:
+                    gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, self.initiator, self.opponent, self.initiator.position, [], self.item, arena=True)
+                    gameStateObj.stateMachine.changeState('combat')
+                if self.display_message.waiting: # Remove waiting check
+                    self.display_message.waiting = False
+
+        elif self.stateMachine.getState() == 'close':
+            if event == 'BACK':
+                GC.SOUNDDICT['Select 4'].play()
+                gameStateObj.state_machine.changeState('transition_pop')
+            elif event == 'SELECT':
+                GC.SOUNDDICT['Select 1'].play()
+                if self.display_message.done:
+                    gameStateObj.state_machine.changeState('transition_pop')
+                if self.display_message.waiting: # Remove waiting check
+                    self.display_message.waiting = False 
+
+    def draw(self, gameStateObj, metaDataObj):
+        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        # Draw background
+
+        surf.blit(self.bg, (0, 0))
+
+        if self.display_message:
+            self.display_message.draw(surf)
+
+        if self.wager_menu and self.display_message.done:
+            self.wager_menu.draw(surf)
+
+        if self.portrait:
+            surf.blit(self.portrait, (3, 0))
+
+        surf.blit(GC.IMAGESDICT['MoneyBG'], (172, 48))
+        money = str(gameStateObj.get_money())
+        GC.FONT['text_blue'].blit(money, surf, (223 - GC.FONT['text_blue'].size(money)[0], 48))
+
+        if self.state_machine.getState() == 'combat':
+            # Display duelist info
+            duelist_info_bg = BaseMenuSurf.CreateBaseMenuSurf((120, 40))
+            GC.FONT['text_white'].blit(self.opponent.klass, duelist_info_bg, (32, 4))
+
+            surf.blit(duelist_info_bg, (GC.WINWIDTH//2 - 120//2, 76))
+
+        return surf
 
 class FeatChoiceState(StateMachine.State):
     name = 'feat_choice'
@@ -2651,7 +2780,7 @@ class ShopState(StateMachine.State):
                     # gameStateObj.game_constants['money'] -= value
                     Action.execute(Action.GiveGold(-value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(-value)
-                    self.display_message = self.get_dialog('Buying anything else?')
+                    self.display_message = self.get_dialog(cf.WORDS['Shop_buy_again'])
                     Action.do(Action.HasAttacked(self.unit), gameStateObj)
                     self.myMenu.updateOptions(self.unit.items)
                     self.stateMachine.changeState('buy')
@@ -2691,11 +2820,11 @@ class ShopState(StateMachine.State):
                     if len(self.unit.items) <= 0:
                         self.myMenu.takes_input = False
                         self.stateMachine.changeState('choice')
-                        self.display_message = self.get_dialog('Do you need anything else?')
+                        self.display_message = self.get_dialog(cf.WORDS['Shop_again'])
                     else:
                         self.stateMachine.changeState('sell')
                         self.myMenu.takes_input = True
-                        self.display_message = self.get_dialog('Selling anything else?')
+                        self.display_message = self.get_dialog(cf.WORDS['Shop_sell_again'])
                 else:
                     GC.SOUNDDICT['Select 4'].play()
                     self.stateMachine.changeState('sell')
@@ -2732,7 +2861,7 @@ class ShopState(StateMachine.State):
         if self.display_message:
             self.display_message.draw(surf)
 
-        if self.stateMachine.getState() in ['sell', 'sell_sure'] or \
+        if self.stateMachine.getState() in ('sell', 'sell_sure') or \
                 (self.stateMachine.getState() == 'choice' and self.buy_sell_menu.getSelection() == cf.WORDS['Sell']):
             self.myMenu.draw(surf, gameStateObj.get_money())
         else:
