@@ -1,11 +1,13 @@
 import os
 
+from . import static_random
+
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 from . import Interaction, StatusCatalog, ItemMethods, Background
 from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-from . import StateMachine, Action, Aura, BaseMenuSurf
+from . import StateMachine, Action, Aura, BaseMenuSurf, ClassData
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1627,8 +1629,8 @@ class ArenaState(StateMachine.State):
 
     def begin(self, gameStateObj, metaDataObj):
         # Get data needed
-        self.initiator = gameStateObj.cursor.currentSelectedUnit
-        self.opponent, self.opponent_weapon, self.wager = self.get_arena_info(self.initiator, gameStateObj)
+        self.unit = gameStateObj.cursor.currentSelectedUnit
+        self.opponent, self.opponent_weapon, self.wager = self.get_arena_info(self.unit, gameStateObj)
 
         # Set up assuming things go to plan
         self.state_machine = CustomObjects.StateMachine('wager')
@@ -1644,20 +1646,44 @@ class ArenaState(StateMachine.State):
         self.bg = Engine.subsurface(bg, (4, 0, GC.WINWIDTH, 48))
         self.portrait = GC.IMAGESDICT.get('ArenaPortrait')
 
-        # TODO check that they have a WEAPON -- otherwise can't enter.
         if cf.CONSTANTS['arena_weapons']:
-            self.initiator_weapon = self.get_weapon(self.initiator, gameStateObj)
-            if not self.initiator_weapon:
-                self.state_machine = CustomObjects.StateMachine('no_weapon')
+            self.unit_weapon = self.get_weapon(self.unit, gameStateObj)
+            if not self.unit_weapon:
+                self.state_machine = CustomObjects.StateMachine('close')
+                self.wager_menu = None
+                self.display_message = self.get_dialog("What! You don't have a weapon! Get out of here!")
+        else:
+            self.unit_weapon = self.unit.getMainWeapon()
+            if not self.unit_weapon:
+                self.state_machine = CustomObjects.StateMachine('close')
                 self.wager_menu = None
                 self.display_message = self.get_dialog("What! You don't have a weapon! Get out of here!")
 
     def get_arena_info(self, unit, gameStateObj):
         weapon = None
+        my_klass = self.unit.klass
+        my_tier = ClassData.class_dict[my_klass]['tier']
+        max_level = ClassData.class_dict[my_klass]['max_level']
+        classes_in_my_tier = [c for c, v in ClassData.class_dict if v['tier'] == my_tier and 
+                              'ArenaIgnore' not in v['tags'] and v['max_level'] == max_level]
         while not weapon:
-            new_unit = SaveLoad.create_unit()
+            class_rng = static_random.get_other(0, len(classes_in_my_tier))
+            low_level = max(1, self.unit.level - cf.CONSTANTS['arena_level_range']), 
+            high_level = min(max_level, self.unit.level + cf.CONSTANTS['arena_level_range'])
+            level_rng = static_random.get_other(low_level, high_level)
+            percent = (level_rng - low_level) / float(high_level - low_level)
+            new_klass = classes_in_my_tier[class_rng]
+            legend = {'team': 'enemy', 'event_id': "0", 'class': new_klass, 
+                      'level': level_rng, 'items': [], 'position': self.unit.position,
+                      'ai': 'None'}
+            new_unit = SaveLoad.create_unit(legend, gameStateObj.allunits, None, None, gameStateObj)
             weapon = self.get_weapon(new_unit, gameStateObj)
-        wager = 500
+        
+        new_unit.add_item(weapon, gameStateObj)
+
+        wager = int(percent * (cf.CONSTANTS['arena_wager_max'] - cf.CONSTANTS['arena_wager_min']) + cf.CONSTANTS['arena_wager_min'])
+        wager = min(gameStateObj.get_money(), wager)
+        
         return new_unit, weapon, wager
 
     def get_weapon(self, unit, gameStateObj):
@@ -1701,7 +1727,7 @@ class ArenaState(StateMachine.State):
             if event:
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.done:
-                    gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, self.initiator, self.opponent, self.initiator.position, [], self.item, arena=True)
+                    gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, self.unit, self.opponent, self.unit.position, [], self.unit_weapon, arena=True)
                     gameStateObj.stateMachine.changeState('combat')
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False
@@ -1739,7 +1765,11 @@ class ArenaState(StateMachine.State):
         if self.state_machine.getState() == 'combat':
             # Display duelist info
             duelist_info_bg = BaseMenuSurf.CreateBaseMenuSurf((120, 40))
-            GC.FONT['text_white'].blit(self.opponent.klass, duelist_info_bg, (32, 4))
+            GC.FONT['text_white'].blit('LV', duelist_info_bg, (4, 4))
+            GC.FONT['text_blue'].blit(self.opponent.level, duelist_info_bg, (28, 4))
+            GC.FONT['text_white'].blit(self.opponent.klass, duelist_info_bg, (60, 4))
+            GC.FONT['text_white'].blit('Duelist', duelist_info_bg, (4, 20))
+            GC.FONT['text_white'].blit(self.opponent_weapon.name, duelist_info_bg, (60, 20))
 
             surf.blit(duelist_info_bg, (GC.WINWIDTH//2 - 120//2, 76))
 

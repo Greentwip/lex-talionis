@@ -130,10 +130,12 @@ def read_constants_file():
              'support_limit': 5, # Limit to number of support level: 0 - No limit
              'support_s_limit': 1, # Limit to number of s support levels (>4): 0 - No limit
              'arena_global_limit': 0, # Limit to number of times can use an arena in a level: 0 - No limit
-             'arena_unit_limit': 0, # Limit to number of times each unit can use an arean in a level: 0 - No limit
+             'arena_unit_limit': 0, # Limit to number of times each unit can use an arena in a level: 0 - No limit
              'arena_death': 1, # Units defeated in the arena are killed. Set to 0 to leave them with 1 HP
              'arena_weapons': 1, # Units will be provided with basic weapons in the arena. Set to 0 to have to bring your own
-             'arena_basic_weapons': 'Iron Sword,Iron Lance,Iron Axe,Willow Bow,Fire,Glimmer,Flux'
+             'arena_basic_weapons': 'Iron Sword,Iron Lance,Iron Axe,Willow Bow,Fire,Glimmer,Flux',
+             'arena_wager_min': 500,
+             'arena_wager_max': 900,
              }
 
     if os.path.isfile('Data/constants.ini'):

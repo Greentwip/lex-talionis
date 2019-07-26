@@ -64,6 +64,9 @@ def shuffle(lst):
     r.other_random.shuffle(lst)
     return lst
 
+def get_other(a, b):
+    return r.other_random.randint(a, b)
+
 # === Returns the index of a weighted list
 def weighted_choice(choices, generator=None):
     if generator:

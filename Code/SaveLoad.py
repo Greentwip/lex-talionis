@@ -277,6 +277,11 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     legend = {'team': unitLine[0], 'unit_type': unitLine[1], 'event_id': unitLine[2], 
               'class': unitLine[3], 'level': unitLine[4], 'items': unitLine[5], 
               'position': unitLine[6], 'ai': unitLine[7], 'faction': unitLine[8]}
+    if len(unitLine) == 10:
+        legend['status'] = unitLine[9]
+    return create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStateObj)
+
+def create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStateObj):
     class_dict = ClassData.class_dict
 
     u_i = {}
@@ -303,7 +308,10 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
         force_fixed = True
     u_i['level'] = int(legend['level'])
     u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
-    u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
+    if legend.get('faction'):
+        u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
+    else:
+        u_i['name'], u_i['faction_icon'], u_i['desc'] = 'Duelist', None, ''
 
     stats, u_i['growths'], u_i['growth_points'], items, u_i['wexp'], u_i['level'] = \
         get_unit_info(u_i['team'], u_i['klass'], u_i['level'], legend['items'],
@@ -333,8 +341,8 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)
 
     # Extra Skills
-    if len(unitLine) == 10:
-        statuses = [StatusCatalog.statusparser(status, gameStateObj) for status in unitLine[9].split(',')]
+    if legend.get('status'):
+        statuses = [StatusCatalog.statusparser(status, gameStateObj) for status in legend.get('status').split(',')]
         for status in statuses:
             if status:
                 Action.do(Action.AddStatus(cur_unit, status), gameStateObj)
