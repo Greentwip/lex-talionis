@@ -749,6 +749,13 @@ class TileObject(object):
         if self.position in self.map_ref.hp:
             self.map_ref.hp[self.position].change_hp(dhp)
 
+    # To shadow UnitObject
+    def lock_active(self):
+        pass
+
+    def unlock_active(self):
+        pass
+
     currenthp = property(get_hp, set_hp)
 
 # === Tile HP Object =====================================================

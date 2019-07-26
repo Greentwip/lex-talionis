@@ -37,12 +37,12 @@ class Dialogue_Scene(object):
         
         # Optional unit
         self.unit = unit
-        if self.unit and hasattr(self.unit, 'lock_active'):
+        if self.unit:
             # logger.debug('locking %s', self.unit)
             self.unit.lock_active()
         self.unit1 = unit  # Alternate name
         self.unit2 = unit2
-        if self.unit2 and hasattr(self.unit, 'lock_active'):
+        if self.unit2:
             # logger.debug('locking %s', self.unit2)
             self.unit2.lock_active()
         # Name -- What is the given event name for this tile
@@ -229,10 +229,10 @@ class Dialogue_Scene(object):
 
     def end(self):
         self.done = True
-        if self.unit and hasattr(self.unit, 'unlock_active'):
+        if self.unit:
             # logger.debug('Unlocking %s', self.unit)
             self.unit.unlock_active()
-        if self.unit2 and hasattr(self.unit, 'unlock_active'):
+        if self.unit2:
             # logger.debug('Unlocking %s', self.unit2)
             self.unit2.unlock_active()
         return
