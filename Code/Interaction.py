@@ -628,11 +628,13 @@ class AnimationCombat(Combat):
         elif self.combat_state == 'PreProcSkill':
             if self.left.battle_anim.done() and self.right.battle_anim.done():
                 if self.right_item and self.right_item.combat_effect:
-                    effect = self.right.battle_anim.add_effect(self.right_item.combat_effect)
-                    self.right.battle_anim.children.append(effect)
+                    effect = self.right.battle_anim.get_effect(self.right_item.combat_effect)
+                    if effect:
+                        self.right.battle_anim.add_effect(effect, 'Effect')
                 elif self.left_item and self.left_item.combat_effect:
-                    effect = self.left.battle_anim.add_effect(self.left_item.combat_effect)
-                    self.left.battle_anim.children.append(effect)                        
+                    effect = self.left.battle_anim.get_effect(self.left_item.combat_effect)
+                    if effect:
+                        self.left.battle_anim.add_effect(effect, 'Effect')
                 if self.skill_used:  # For command skills
                     self.add_skill_icon(self.p1, self.skill_used)
                 self.combat_state = "InitialEffects"
@@ -878,7 +880,7 @@ class AnimationCombat(Combat):
             unit.battle_anim.start_anim(skill.name)
         elif effect:
             self.proc_wait = Engine.get_time()
-            unit.battle_anim.children.append(effect)
+            unit.battle_anim.add_effect(effect, 'Effect')
             self.proc_effects.append(effect)
         else:
             self.proc_wait = Engine.get_time()

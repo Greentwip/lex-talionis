@@ -9,7 +9,7 @@ COLORKEY = (0, 0, 0)
 FIND_COLORKEY = False
 NEW_COLORKEY = None
 WIDTH_LIMIT = 240*5
-folder = 'pavise'
+folder = 'legendary'
 index_lines = []
 
 files = glob.glob(folder + '/*.png')

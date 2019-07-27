@@ -1,4 +1,4 @@
-pose;Stand
+pose;Effect
 blend
 wait;10
 f;2;pavise0

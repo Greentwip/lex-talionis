@@ -1849,7 +1849,7 @@
         <id>Makara</id>
         <spritetype>Lance</spritetype>
         <spriteid>17</spriteid>       
-        <components>weapon,weight,status,map_hit_color,magic_at_range,ignore_weapon_advantage</components>
+        <components>weapon,weight,status,map_hit_color,magic_at_range,ignore_weapon_advantage,combat_effect</components>
         <weapontype>Lance</weapontype>
  
         <RNG>1-2</RNG>
@@ -1863,6 +1863,7 @@
         <LVL>A</LVL>
 
         <map_hit_color>-248,0,-248</map_hit_color>
+        <combat_effect>Legend</combat_effect>
     </item>
 
     <!-- Unobtainable Skill Only Items -->

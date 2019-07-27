@@ -156,6 +156,11 @@ class BattleAnimation(object):
         else:
             return None
 
+    def add_effect(self, effect, pose=None):
+        if pose:
+            effect.change_pose(pose)
+        self.children.append(effect)
+
     def remove_effects(self, effects):
         for effect in effects:
             if effect in self.children:
@@ -431,7 +436,7 @@ class BattleAnimation(object):
             self.clear_all_effects()
         elif line[0] == 'blend':
             if self.blend:
-                self.blend = None
+                self.blend = 0
             else:
                 self.blend = Engine.BLEND_RGB_ADD
         elif line[0] == 'spell':
@@ -501,10 +506,13 @@ class BattleAnimation(object):
             self.end_next_loop += 1
 
     def start_anim(self, pose):
-        self.current_pose = pose
+        self.change_pose(pose)
         self.script_index = 0
         self.wait_for_hit = True
         self.reset()
+
+    def change_pose(self, pose):
+        self.current_pose = pose
 
     def has_pose(self, pose):
         return pose in self.poses

@@ -118,6 +118,13 @@ def read_constants_file():
              'double_wexp': 1, # Give wexp for every hit (so if you double, you get 2x wexp)
              'miss_wexp': 1, # Give wexp even if you do no damage or miss
              'steal': 0, # 0 - Normal GBA Steal, 1 - Can steal everything but equipped weapons
+             'save_slots': 3,
+             'music_main': '',
+             'music_game_over': '',
+             'music_armory': '',
+             'music_vendor': '',
+             'music_promotion': '',
+             'attribution': 'created by rainlash',
              'title': 'Lex Talionis Engine',
              'support': 1, # 0 - No supports, 1 - Conversations in combat, Conversations in base
              'support_bonus': 4, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
@@ -147,7 +154,8 @@ def read_constants_file():
 
     float_lines = {'exp_curve', 'exp_magnitude', 'heal_curve', 'heal_magnitude', 
                    'heal_min', 'boss_bonus', 'kill_multiplier'}
-    string_lines = {'title'}
+    string_lines = {'title', 'music_main', 'music_game_over', 'music_armory',
+                    'music_vendor', 'music_promotion', 'attribution'}
     int_list_lines = {'max_level'}
     string_list_lines = {'arena_basic_weapons'}
     for k, v in lines.items():
