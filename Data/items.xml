@@ -1517,6 +1517,28 @@
         <map_hit_color>128,-248,248</map_hit_color>
     </item>
 
+    <item name="Searing Blades">
+        <id>Searing Blades</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>8</spriteid>       
+        <components>spell,extra_select,uses,map_hit_color,hit,damage</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>1-7</RNG>
+        <value>1500</value>
+        <desc>Shoot 3 fire blades at targets of your choice.</desc>
+        
+        <LVL>B</LVL>
+        <targets>Enemy</targets>
+        <hit>70</hit>
+        <damage>5</damage>
+
+        <extra_select>1-7,Enemy;1-7,Enemy</extra_select>
+
+        <map_hit_color>224,96,-200</map_hit_color>
+    </item>
+
     <!-- Neutral -->
     <item name="Fang">
         <id>Fang</id>
@@ -1963,8 +1985,6 @@
         <summon_items>Iron Axe</summon_items>
         <summon_name>Phantom</summon_name>
         <summon_desc>A summoned phantom</summon_desc>
-        <summon_ai>Pursue</summon_ai>
-        <summon_s_id>Phantom</summon_s_id>
     </item>
     
 </item_catalog> 

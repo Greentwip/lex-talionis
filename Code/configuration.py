@@ -129,6 +129,13 @@ def read_constants_file():
              'support_interact': 0, # Points for interacting
              'support_limit': 5, # Limit to number of support level: 0 - No limit
              'support_s_limit': 1, # Limit to number of s support levels (>4): 0 - No limit
+             'arena_global_limit': 0, # Limit to number of times can use an arena in a level: 0 - No limit
+             'arena_unit_limit': 0, # Limit to number of times each unit can use an arena in a level: 0 - No limit
+             'arena_death': 1, # Units defeated in the arena are killed. Set to 0 to leave them with 1 HP
+             'arena_weapons': 1, # Units will be provided with basic weapons in the arena. Set to 0 to have to bring your own
+             'arena_basic_weapons': 'Iron Sword,Iron Lance,Iron Axe,Willow Bow,Fire,Glimmer,Flux',
+             'arena_wager_min': 500,
+             'arena_wager_max': 900,
              }
 
     if os.path.isfile('Data/constants.ini'):
@@ -138,54 +145,22 @@ def read_constants_file():
                     split_line = line.strip().split('=')
                     lines[split_line[0]] = split_line[1]
 
-    lines['max_items'] = int(lines['max_items'])
-    lines['max_promotions'] = int(lines['max_promotions'])
-    lines['speed_to_double'] = int(lines['speed_to_double'])
-    lines['crit'] = int(lines['crit'])
-    lines['turnwheel'] = int(lines['turnwheel'])
-    lines['overworld'] = int(lines['overworld'])
-    lines['flying_mcost_column'] = int(lines['flying_mcost_column'])
-    lines['fleet_mcost_column'] = int(lines['fleet_mcost_column'])
-    lines['exp_curve'] = float(lines['exp_curve'])
-    lines['exp_magnitude'] = float(lines['exp_magnitude'])
-    lines['exp_offset'] = int(lines['exp_offset'])
-    lines['status_exp'] = int(lines['status_exp'])
-    lines['heal_curve'] = float(lines['heal_curve'])
-    lines['heal_magnitude'] = float(lines['heal_magnitude'])
-    lines['heal_min'] = float(lines['heal_min'])
-    lines['kill_multiplier'] = float(lines['kill_multiplier'])
-    lines['boss_bonus'] = float(lines['boss_bonus'])
-    lines['min_exp'] = int(lines['min_exp'])
-    lines['line_of_sight'] = int(lines['line_of_sight'])
-    lines['spell_line_of_sight'] = int(lines['spell_line_of_sight'])
-    lines['aura_los'] = int(lines['aura_los'])
-    lines['simultaneous_aoe'] = int(lines['simultaneous_aoe'])
-    lines['def_double'] = int(lines['def_double'])
-    lines['enemy_leveling'] = int(lines['enemy_leveling'])
-    lines['num_skills'] = int(lines['num_skills'])
-    lines['max_stat'] = int(lines['max_stat'])
-    lines['num_stats'] = int(lines['num_stats'])
-    lines['max_level'] = [int(n) for n in lines['max_level'].split(',')]
-    lines['auto_promote'] = int(lines['auto_promote'])
-    lines['promoted_level'] = int(lines['promoted_level'])
-    lines['minimum_damage'] = int(lines['minimum_damage'])
-    lines['steal_exp'] = int(lines['steal_exp'])
-    lines['unarmed_punish'] = int(lines['unarmed_punish'])
-    lines['convoy_on_death'] = int(lines['convoy_on_death'])
-    lines['fatal_wexp'] = int(lines['fatal_wexp'])
-    lines['double_wexp'] = int(lines['double_wexp'])
-    lines['miss_wexp'] = int(lines['miss_wexp'])
-    lines['steal'] = int(lines['steal'])
-    lines['support'] = int(lines['support'])
-    lines['support_bonus'] = int(lines['support_bonus'])
-    lines['support_range'] = int(lines['support_range'])
-    lines['support_growth_range'] = int(lines['support_growth_range'])
-    lines['support_end_chapter'] = int(lines['support_end_chapter'])
-    lines['support_end_turn'] = int(lines['support_end_turn'])
-    lines['support_combat'] = int(lines['support_combat'])
-    lines['support_interact'] = int(lines['support_interact'])
-    lines['support_limit'] = int(lines['support_limit'])
-    lines['support_s_limit'] = int(lines['support_s_limit'])
+    float_lines = {'exp_curve', 'exp_magnitude', 'heal_curve', 'heal_magnitude', 
+                   'heal_min', 'boss_bonus', 'kill_multiplier'}
+    string_lines = {'title'}
+    int_list_lines = {'max_level'}
+    string_list_lines = {'arena_basic_weapons'}
+    for k, v in lines.items():
+        if k in float_lines:
+            lines[k] = float(v)
+        elif k in string_lines:
+            lines[k] = v
+        elif k in int_list_lines:
+            lines[k] = [int(n) for n in v.split(',')]
+        elif k in string_list_lines:
+            lines[k] = v.split(',')
+        else:
+            lines[k] = int(v)
 
     return lines
 

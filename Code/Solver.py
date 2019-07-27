@@ -23,6 +23,7 @@ class Result(object):
         self.defender_proc_used = None  # Proc skill used by the defender
         self.adept_proc = None
         self.summoning = None
+        self.new_round = True
 
 class SolverStateMachine(object):
     def __init__(self, starting_state):
@@ -446,7 +447,7 @@ class Solver(object):
                 result.def_status.append(status_object)
             # Handle summon
             if item.summon:
-                result.summoning = SaveLoad.create_summon(item.summon, attacker, self.def_pos, metaDataObj, gameStateObj)
+                result.summoning = SaveLoad.create_summon(item.summon, attacker, self.def_pos, gameStateObj)
 
         # Make last attack against a boss a crit!
         if cf.CONSTANTS['boss_crit'] and 'Boss' in defender.tags and result.outcome and result.def_damage >= defender.currenthp:
@@ -476,7 +477,7 @@ class Solver(object):
         return result
 
     def generate_summon_phase(self, gameStateObj, metaDataObj):
-        the_summon = SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, metaDataObj, gameStateObj)
+        the_summon = SaveLoad.create_summon(self.item.summon, self.attacker, self.def_pos, gameStateObj)
 
         result = Result(self.attacker, the_summon)
         result.summoning = the_summon

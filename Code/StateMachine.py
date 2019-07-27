@@ -44,6 +44,7 @@ class StateMachine(object):
                            'trade': GeneralStates.TradeState,
                            'steal': GeneralStates.StealState,
                            'repair': GeneralStates.RepairState,
+                           'arena': GeneralStates.ArenaState,
                            'dialogue': GeneralStates.DialogueState,
                            'transparent_dialogue': GeneralStates.DialogueState,
                            'victory': GeneralStates.VictoryState,
