@@ -213,7 +213,7 @@ def parse_script(script, images, weapon_type):
                 used_names.clear()
                 return
         if weapon_type in ('Transform', 'Revert'):
-            if mode != 1:
+            if mode not in (1, 9, 11):
                 used_names.clear()
                 return
         if mode in (1, 2):
@@ -315,7 +315,7 @@ def parse_script(script, images, weapon_type):
             elif command_code == '04':
                 write_extra_frame = False  # Normally prepares some code for returning to stand
             elif command_code == '05':  # Start spell
-                if weapon_type in ('Sword', 'Magic', 'Staff', 'Neutral', 'Refresh'):
+                if weapon_type in ('Sword', 'Magic', 'Staff', 'Neutral', 'Refresh', 'Dragonstone'):
                     current_pose.append('spell')
                 elif weapon_type == 'Lance':
                     current_pose.append('spell;Javelin')
@@ -553,7 +553,7 @@ def write_script(weapon_type, melee_script, ranged_script):
             write_script(unarmed_script, s)
     elif weapon_type == 'Dragonstone':
         with open('Dragonstone-Script.txt', 'w') as s:
-            write_script(melee_script, s)
+            write_script(ranged_script, s)
     elif weapon_type == 'Refresh':
         with open('Refresh-Script.txt', 'w') as s:
             write_script(ranged_script, s)
@@ -631,12 +631,15 @@ melee_script, melee_image_names, ranged_script, ranged_image_names = \
 # Extra transform and revert poses for Dragonstone
 if weapon_type == 'Dragonstone':
     transform_script, transform_image_names, _, _ = parse_script('Transform.txt', images, 'Transform')
-    melee_script['Transform'] = transform_script['Attack']
-    melee_image_names.update(transform_image_names)
+    ranged_script['Transform'] = transform_script['Attack']
+    # Change stand
+    ranged_script['TransformStand'] = ranged_script['Stand']
+    ranged_script['Stand'] = transform_script['Stand']
+    ranged_image_names.update(transform_image_names)
 
     revert_script, revert_image_names, _, _ = parse_script('Revert.txt', images, 'Revert')
-    melee_script['Revert'] = revert_script['Attack']
-    melee_image_names.update(revert_image_names)
+    ranged_script['Revert'] = revert_script['Attack']
+    ranged_image_names.update(revert_image_names)
 
 melee_images = OrderedDict()
 ranged_images = OrderedDict()
@@ -664,7 +667,7 @@ preprocess(ranged_images)
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
 bad_images = set()
-if weapon_type not in ('Bow', 'Magic', 'Staff', 'Refresh'):
+if weapon_type not in ('Bow', 'Magic', 'Staff', 'Refresh', 'Dragonstone'):
     bad_images |= animation_collater(melee_images, weapon_type)
 if weapon_type in ('Magic', 'Refresh'):
     bad_images |= animation_collater(melee_images, 'Unarmed')
@@ -675,12 +678,10 @@ if ranged_images:
         bad_images |= animation_collater(ranged_images, 'Magic' + weapon_type)
     elif weapon_type in ('Lance', 'Axe', 'Bow', 'Neutral', 'Handaxe'):
         bad_images |= animation_collater(ranged_images, 'Ranged' + weapon_type)
-    elif weapon_type == 'Magic':
-        bad_images |= animation_collater(ranged_images, 'Magic')
+    elif weapon_type in ('Magic', 'Refresh', 'Dragonstone'):
+        bad_images |= animation_collater(ranged_images, weapon_type)
     elif weapon_type == 'Staff':
         bad_images |= animation_collater(ranged_images, 'MagicStaff')
-    elif weapon_type == 'Refresh':
-        bad_images |= animation_collater(ranged_images, 'Refresh')
 
 def replace_bad_images(script, bad_images):
     for pose, line_list in script.items():

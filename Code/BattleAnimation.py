@@ -12,7 +12,7 @@ class Loop(object):
         self.end_index = 0
 
 class BattleAnimation(object):
-    idle_poses = {'Stand', 'RangedStand'}
+    idle_poses = {'Stand', 'RangedStand', 'TransformStand'}
 
     def __init__(self, unit, anim, script, palette_name=None, item=None):
         self.unit = unit
@@ -62,6 +62,14 @@ class BattleAnimation(object):
         self.owner = None
         self.parent = None
 
+    def get_stand(self):
+        if self.transformed:
+            self.current_pose = 'TransformStand'
+        elif self.at_range:
+            self.current_pose = 'RangedStand'
+        else:
+            self.current_pose = 'Stand'
+
     def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
         # print('Awake')
         self.owner = owner
@@ -69,10 +77,11 @@ class BattleAnimation(object):
         self.parent = parent if parent else self
         self.right = right
         self.at_range = at_range
+        self.transformed = False
         self.init_speed = init_speed
         self.entrance = init_speed
         self.init_position = init_position
-        self.current_pose = 'RangedStand' if self.at_range else 'Stand'
+        self.get_stand()
         self.current_frame = None
         self.under_frame = None
         self.over_frame = None
@@ -171,7 +180,7 @@ class BattleAnimation(object):
     def end_current(self):
         # print('Animation: End Current')
         if 'Stand' in self.poses:
-            self.current_pose = 'RangedStand' if self.at_range else 'Stand'
+            self.get_stand()
             self.state = 'Run'
         else:
             self.state = 'Inert'
@@ -182,7 +191,7 @@ class BattleAnimation(object):
         self.script_index = 0
 
     def finish(self):
-        self.current_pose = 'RangedStand' if self.at_range else 'Stand'
+        self.get_stand()
         self.state = 'Leaving'
         self.script_index = 0
 
@@ -507,6 +516,10 @@ class BattleAnimation(object):
 
     def start_anim(self, pose):
         self.change_pose(pose)
+        if self.current_pose == 'Transform':
+            self.transformed = True
+        elif self.current_pose == 'Revert':
+            self.transformed = False
         self.script_index = 0
         self.wait_for_hit = True
         self.reset()

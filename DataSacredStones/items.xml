@@ -2088,7 +2088,7 @@
         <id>Dragonstone</id>
         <spritetype>Neutral</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight,crit,effective,status_on_equip,wexp</components>
+        <components>weapon,uses,weight,crit,effective,status_on_equip,wexp,transform</components>
         <weapontype>None</weapontype>
  
         <RNG>1</RNG>
@@ -2102,7 +2102,7 @@
 
         <MT>16</MT>
         <HIT>100</HIT>
-        <LVL>Myrrh</LVL>
+        <LVL></LVL>
         <crit>15</crit>
         <wexp>0</wexp>
     </item>

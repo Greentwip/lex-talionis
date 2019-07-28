@@ -44,7 +44,7 @@ class ItemModComponent(object):
                 if item[self.effect_add[0]]:
                     self.add_effect(item, gameStateObj)
                 else:
-                    self.change_effect(item)
+                    self.change_effect(item, gameStateObj)
             elif self.effect_change:
                 self.change_effect(item, gameStateObj)
             elif self.effect_add:

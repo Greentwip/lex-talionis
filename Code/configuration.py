@@ -103,6 +103,8 @@ def read_constants_file():
              'simultaneous_aoe': 1, # Whether AOE attacks on many targets are resolved simultaneously or in order
              'def_double': 1, # Whether units on defense can double their attackers
              'enemy_leveling': 1, # How to level up non-player units
+             'rng': 'true_hit',
+             'set_roll': 49,
              'num_skills': 5, # How many class_skills a fully ranked unit should have (not actually a hard limit, just for drawing)
              'max_stat': 20, # Maximum value that a non-HP stat can be. Irrespective of class caps. 
              'num_stats': 10, # Number of stats that a unit has (Includes HP, CON, and MOV)
@@ -155,7 +157,7 @@ def read_constants_file():
     float_lines = {'exp_curve', 'exp_magnitude', 'heal_curve', 'heal_magnitude', 
                    'heal_min', 'boss_bonus', 'kill_multiplier'}
     string_lines = {'title', 'music_main', 'music_game_over', 'music_armory',
-                    'music_vendor', 'music_promotion', 'attribution'}
+                    'music_vendor', 'music_promotion', 'attribution', 'rng'}
     int_list_lines = {'max_level'}
     string_list_lines = {'arena_basic_weapons'}
     for k, v in lines.items():

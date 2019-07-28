@@ -276,7 +276,7 @@
 
         <item_mod_conditional>item.weapon</item_mod_conditional>
         <item_mod_effect_add>effective;add('Monster');remove('Monster')</item_mod_effect_add>
-        <item_mod_effect_change>effective;ItemMethods.EffectiveComponent(['Monster'], item.MT*2)</item_mod_effect_change>
+        <item_mod_effect_change>effective;ItemMethods.EffectiveComponent(['Monster'], item.weapon.MT*2)</item_mod_effect_change>
     </status>
 
     <status name="Devil's Luck">

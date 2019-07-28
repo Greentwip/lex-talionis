@@ -1,6 +1,7 @@
 pose;Effect
 blend
 static
+sound;Legendary Weapon
 f;23;legend0
 f;1;legend1
 f;1;legend2

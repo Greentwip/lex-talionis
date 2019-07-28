@@ -1,0 +1,29 @@
+2019-07-27 17:26:55.700000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
+2019-07-27 18:32:09.871000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
+2019-07-27 18:39:00.081000
+Traceback (most recent call last):
+  File "C:\Users\Patrick\Documents\Github\lex-talionis\Utilities\Animations\Monsters\Manakete\Dragonstone\fegba2lt_animations.py", line 586, in <module>
+    raise ValueError("Could not determine which *.txt file to use!")
+ValueError: Could not determine which *.txt file to use!
+2019-07-27 18:39:13.547000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
+2019-07-27 18:40:03.509000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
+2019-07-27 18:41:32.381000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
+2019-07-27 18:47:53.877000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
+2019-07-27 18:53:41.258000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
+2019-07-27 18:55:52.623000
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
