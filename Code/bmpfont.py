@@ -160,6 +160,7 @@ class BmpFont:
             orig_x = x
             for c in string:
                 if c not in self.memory:
+
                     try:
                         char_pos_x = self.chartable[c][0]
                         char_pos_y = self.chartable[c][1]
@@ -201,6 +202,7 @@ class BmpFont:
             string = string.upper()
         if self.alllowercase:
             string = string.lower()
+        string = string.replace('_', ' ')
 
         if self.stacked:
             stacked_render(x)
@@ -218,6 +220,7 @@ class BmpFont:
             string = string.upper()
         if self.alllowercase:
             string = string.lower()
+        string = string.replace('_', ' ')
         for c in string:
             try:
                 char_width = self.chartable[c][2]

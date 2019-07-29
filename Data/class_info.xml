@@ -10,7 +10,7 @@
         <turns_into></turns_into>
         <!-- Light Foot,  Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
-        <tags></tags>
+        <tags>ArenaIgnore</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,0,0,0,0,0,0,0</growths>
@@ -671,7 +671,7 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
-        <tags></tags>
+        <tags>ArenaIgnore</tags>
         <skills></skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,45,0,55,0,45,20,25</growths>
@@ -691,7 +691,7 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
-        <tags></tags>
+        <tags>ArenaIgnore</tags>
         <skills>1,Resist_Status;5,Reflect</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>105,55,15,40,20,35,55,35</growths>
@@ -712,7 +712,7 @@
         <turns_into>Phantom</turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
-        <tags>Mindless</tags>
+        <tags>Mindless,ArenaIgnore</tags>
         <skills>1,Ephemeral</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>95,75,0,45,60,0,20,20</growths>
@@ -731,7 +731,7 @@
         <turns_into></turns_into>
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
-        <tags></tags>
+        <tags>ArenaIgnore</tags>
         <skills>1,Ghost</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
         <growths>15,0,0,0,0,0,0,0</growths>

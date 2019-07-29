@@ -125,10 +125,11 @@ def read_constants_file():
              'music_game_over': '',
              'music_armory': '',
              'music_vendor': '',
+             'music_arena': '',
              'music_promotion': '',
              'attribution': 'created by rainlash',
              'title': 'Lex Talionis Engine',
-             'support': 1, # 0 - No supports, 1 - Conversations in combat, Conversations in base
+             'support': 1, # 0 - No supports, 1 - Conversations in combat, 2 - Conversations in base
              'support_bonus': 4, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
              'support_range': 3, # 0 - Entire map
              'support_growth_range': 1, # 0 - Entire map
@@ -143,8 +144,9 @@ def read_constants_file():
              'arena_death': 1, # Units defeated in the arena are killed. Set to 0 to leave them with 1 HP
              'arena_weapons': 1, # Units will be provided with basic weapons in the arena. Set to 0 to have to bring your own
              'arena_basic_weapons': 'Iron Sword,Iron Lance,Iron Axe,Willow Bow,Fire,Glimmer,Flux',
-             'arena_wager_min': 500,
-             'arena_wager_max': 900,
+             'arena_wager_min': 500,  # Minimum amount that can be wagered in arena
+             'arena_wager_max': 900,  # Maximum amount that can be wagered in arena
+             'arena_level_range': 3,  # How far off in levels enemy arena units can be
              }
 
     if os.path.isfile('Data/constants.ini'):

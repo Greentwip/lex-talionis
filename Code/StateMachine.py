@@ -62,6 +62,7 @@ class StateMachine(object):
                            'vendor': GeneralStates.ShopState,
                            'armory': GeneralStates.ShopState,
                            'market': GeneralStates.ShopState,
+                           'repair_shop': GeneralStates.RepairShopState,
                            'battle_save': GeneralStates.BattleSaveState,
                            'dialog_options': GeneralStates.DialogOptionsState,
                            'wait': GeneralStates.WaitState,

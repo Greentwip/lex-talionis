@@ -22,6 +22,17 @@ Shop_max;Your hands are full. {wait}{clear}If you had a convoy, I could send it 
 Shop_no_money;Sorry. You don't have enough money.
 Shop_check;Are you sure?
 Shop_no_value;You can't sell that here.
+Arena_open;Would you like to wager %d gold?
+Arena_back;What are you wasting my time for?
+Arena_combat;Good luck. Don't get yourself killed.
+Arena_noweapon;What! You don't have a weapon! Get out of here!
+Arena_limit;Arena's closed, kid.
+Repair_opener;I'm a blacksmith. {wait}{clear}You need something repaired?
+Repair_leave;Be careful out there.
+Repair_check;Are you sure?
+Repair_no_value;I can't repair that.
+Repair_back;Second thoughts?
+Repair_again;Need anything else fixed up?
 Win Conditions;Win Conditions
 Loss Conditions;Loss Conditions
 Character;Character

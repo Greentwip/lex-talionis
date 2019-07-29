@@ -1375,10 +1375,11 @@ class ConvoyMenu(object):
         self.menus = {}
         if self.disp_value:
             buy = True if self.disp_value == "Buy" else False
+            mode = "Buy" if buy else "Sell"
             buy_value_mod = self.buy_value_mod if buy else 1.0
             for w_type in self.order:
-                self.menus[w_type] = ShopMenu(self.owner, sorted_dict[w_type], self.topleft, limit=7, hard_limit=True, buy=buy, shimmer=2, buy_value_mod=buy_value_mod)
-            self.menus["Consumable"] = ShopMenu(self.owner, sorted_dict['Consumable'], self.topleft, limit=7, hard_limit=True, buy=buy, shimmer=2, buy_value_mod=buy_value_mod)
+                self.menus[w_type] = ShopMenu(self.owner, sorted_dict[w_type], self.topleft, limit=7, hard_limit=True, mode=mode, shimmer=2, buy_value_mod=buy_value_mod)
+            self.menus["Consumable"] = ShopMenu(self.owner, sorted_dict['Consumable'], self.topleft, limit=7, hard_limit=True, mode=mode, shimmer=2, buy_value_mod=buy_value_mod)
         else:
             for w_type in self.order:
                 self.menus[w_type] = ChoiceMenu(self.owner, sorted_dict[w_type], self.topleft, limit=7, hard_limit=True, width=120, shimmer=2, gem=False)
@@ -1473,10 +1474,11 @@ class ConvoyMenu(object):
 
 # Simple shop menu
 class ShopMenu(ChoiceMenu):
-    def __init__(self, owner, options, topleft, limit=5, hard_limit=True, background='BaseMenuBackground', buy=True, shimmer=0, buy_value_mod=1.0):
+    def __init__(self, owner, options, topleft, limit=5, hard_limit=True,
+                 background='BaseMenuBackground', mode='Buy', shimmer=0, buy_value_mod=1.0):
         ChoiceMenu.__init__(self, owner, options, topleft, limit=limit, hard_limit=hard_limit, background=background, width=120, shimmer=shimmer, gem=False)
         # Whether we are buying or selling
-        self.buy = buy
+        self.mode = mode
         self.buy_value_mod = buy_value_mod
         self.takes_input = False
 
@@ -1520,8 +1522,11 @@ class ShopMenu(ChoiceMenu):
             true_value = None
             if option.uses:
                 uses_string = str(option.uses.uses)
-                true_value = option.uses.uses * option.value
-                if self.buy:
+                if self.mode == 'Repair':
+                    true_value = (option.uses.total_uses - option.uses.uses) * option.value
+                else:
+                    true_value = option.uses.uses * option.value
+                if self.mode in ('Buy', 'Repair'):
                     true_value *= self.buy_value_mod
                 else:
                     true_value //= 2
@@ -1529,16 +1534,22 @@ class ShopMenu(ChoiceMenu):
                 value_string = str(true_value)
             elif option.c_uses:
                 uses_string = str(option.c_uses)
-                true_value = option.value
-                if self.buy:
+                if self.mode in ('Buy', 'Sell'):
+                    true_value = option.value
+                else:
+                    true_value = 0
+                if self.mode in ('Buy', 'Repair'):
                     true_value *= self.buy_value_mod
                 else:
                     true_value //= 2
                 true_value = int(true_value)
                 value_string = str(true_value)
-            elif option.value:
-                true_value = option.value
-                if self.buy:
+            else:
+                if self.mode in ('Buy', 'Sell'):
+                    true_value = option.value
+                else:
+                    true_value = 0
+                if self.mode in ('Buy', 'Repair'):
                     true_value *= self.buy_value_mod
                 else:
                     true_value //= 2
@@ -1551,14 +1562,14 @@ class ShopMenu(ChoiceMenu):
             else:
                 name_font = GC.FONT['text_white']
                 uses_font = GC.FONT['text_blue']
-            if not option.value:
+            if not true_value:
                 value_font = GC.FONT['text_grey']
-            elif self.buy:
+            elif self.mode in ('Buy', 'Repair'):
                 if money < true_value:
                     value_font = GC.FONT['text_grey']
                 else:
                     value_font = GC.FONT['text_blue']
-            elif not self.buy:
+            else:
                 value_font = GC.FONT['text_blue']
 
             name_font.blit(str(option), surf, (self.topleft[0] + 20, self.topleft[1] + 4 + index*16))

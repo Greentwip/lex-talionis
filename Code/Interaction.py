@@ -44,7 +44,9 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
     logger.debug('Main Defender: %s, Splash: %s', main_defender, splash_units)
     return main_defender, splash_units
 
-def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_used=None, event_combat=None, ai_combat=False, toggle_anim=False):
+def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, 
+                 skill_used=None, event_combat=None, ai_combat=False, 
+                 toggle_anim=False, arena=False):
     def animation_wanted(attacker, defender):
         return (cf.OPTIONS['Animation'] == 'Always' or
                 (cf.OPTIONS['Animation'] == 'Your Turn' and attacker.team == 'player') or
@@ -84,7 +86,7 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                     name = 'Generic' + attacker_color
                     attacker_frame_dir = attacker_anim['images'][name]
                 else:  # Just a map combat
-                    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+                    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat, arena)
                 attacker.battle_anim = BattleAnimation.BattleAnimation(attacker, attacker_frame_dir, attacker_script, name, item)
                 # Build defender animation
                 defender_script = defender_anim['script']
@@ -99,11 +101,11 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item, skill_
                     name = 'Generic' + defender_color
                     defender_frame_dir = defender_anim['images'][name]
                 else:
-                    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+                    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat, arena)
                 defender.battle_anim = BattleAnimation.BattleAnimation(defender, defender_frame_dir, defender_script, name, defender.getMainWeapon())
-                return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat)
+                return AnimationCombat(attacker, defender, def_pos, item, skill_used, event_combat, ai_combat, arena)
     # default
-    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+    return MapCombat(attacker, defender, def_pos, splash, item, skill_used, event_combat, arena)
 
 # Abstract base class for combat
 class Combat(object):
@@ -263,7 +265,11 @@ class Combat(object):
     def handle_miracle(self, gameStateObj, all_units):
         for unit in all_units:
             if unit.isDying and isinstance(unit, UnitObject.UnitObject):
-                if any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
+                # Check for arena miracle
+                if self.arena and unit.team == 'player' and not cf.CONSTANTS['arena_death']:
+                    Action.do(Action.Miracle(unit), gameStateObj)
+                # check for regular miracle
+                elif any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
                     Action.do(Action.Miracle(unit), gameStateObj)
                     Action.do(Action.Message("%s activated Miracle" % unit.name), gameStateObj)
 
@@ -338,9 +344,7 @@ class Combat(object):
         for unit in all_units:
             if unit.isDying:
                 logger.debug('%s is dying.', unit.name)
-                if not isinstance(unit, UnitObject.UnitObject):
-                    gameStateObj.map.destroy(unit, gameStateObj)
-                else:
+                if isinstance(unit, UnitObject.UnitObject):
                     gameStateObj.stateMachine.changeState('dying')
                     killer = None
                     if unit is self.p1:
@@ -350,6 +354,13 @@ class Combat(object):
                     scene = Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit, unit2=killer)
                     gameStateObj.message.append(scene)
                     gameStateObj.stateMachine.changeState('dialogue')
+                else:
+                    gameStateObj.map.destroy(unit, gameStateObj)
+        # Remove non-player characters from the game permanently
+        if self.arena:
+            for unit in all_units:
+                if unit.team != 'player':
+                    unit.die(gameStateObj, True)
 
     def turnwheel_death_messages(self, all_units, gameStateObj):
         messages = []
@@ -368,7 +379,8 @@ class Combat(object):
             Action.do(Action.Message(message), gameStateObj)
 
 class AnimationCombat(Combat):
-    def __init__(self, attacker, defender, def_pos, item, skill_used, event_combat, ai_combat):
+    def __init__(self, attacker, defender, def_pos, item, skill_used, 
+                 event_combat, ai_combat, arena):
         self.p1 = attacker
         self.p2 = defender
         # The attacker is always on the right unless the defender is a player and the attacker is not
@@ -394,6 +406,7 @@ class AnimationCombat(Combat):
         self.skill_used = skill_used
         self.event_combat = event_combat
         self.ai_combat = ai_combat
+        self.arena = arena
 
         self.solver = Solver.Solver(attacker, defender, def_pos, [], item, skill_used, event_combat)
         self.old_results = []
@@ -1324,7 +1337,8 @@ class SimpleHPBar(object):
             surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp - 40) * 2 + 5, pos[1] - 4)) # End HP Blip
 
 class MapCombat(Combat):
-    def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat):
+    def __init__(self, attacker, defender, def_pos, splash, item, skill_used, 
+                 event_combat, arena):
         self.p1 = attacker
         self.p2 = defender
         self.def_pos = def_pos
@@ -1332,6 +1346,7 @@ class MapCombat(Combat):
         self.item = item
         self.skill_used = skill_used
         self.event_combat = event_combat
+        self.arena = arena
 
         self.solver = Solver.Solver(attacker, defender, def_pos, splash, item, skill_used, event_combat)
         self.results = []

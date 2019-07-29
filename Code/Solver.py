@@ -119,8 +119,11 @@ class InitState(object):
         return None
 
 class AttackerState(SolverState):
+    def is_brave(self, item):
+        return item.brave or item.brave_attack
+
     def check_for_brave(self, solver, unit, item):
-        if item.brave:
+        if self.is_brave(item):
             return True
         for status in unit.status_effects:
             if status.adept_proc:
@@ -186,6 +189,9 @@ class AttackerBraveState(AttackerState):
         pass
 
 class DefenderState(AttackerState):
+    def is_brave(self, item):
+        return item.brave or item.brave_defense
+
     def get_next_state(self, solver, gameStateObj):
         if solver.attacker.currenthp > 0 and solver.defender.currenthp > 0:
             ditem = solver.defender.getMainWeapon()

@@ -460,6 +460,15 @@ class GameStateObj(object):
         self.remove_fake_cursors()
         self.tutorial_mode = False
 
+    def arena_closed(self, unit):
+        if cf.CONSTANTS['arena_global_limit'] > 0 and \
+                self.level_constants['_global_arena_uses'] > cf.CONSTANTS['arena_global_limit']:
+            return True
+        elif cf.CONSTANTS['arena_unit_limit'] > 0 and \
+                self.level_constants['_' + unit.id + '_arena_uses'] > cf.CONSTANTS['arena_unit_limit']:
+            return True
+        return False
+
     # def removeSprites(self):
     #     # Decouple sprites
     #     for unit in self.allunits:
