@@ -1,13 +1,4 @@
 <status_catalog>
-    <!-- STATUS -->
-    <status name="Feat">
-        <id>Feat</id>
-        <desc>Generic Feat placeholder</desc>
-        <image_index>0,0</image_index>
-        <components>hidden,feat_list</components>
-        <feat_list>fStrength +2,fMagic +2,fSkill +3,fSpeed +2,fDefense +2,fResistance +2,fMovement +1,fConstitution +3,fMaximum HP +5,fLuck +4</feat_list>
-    </status>
-
 	<!-- Ever-lasting Regeneration -->
 	<status name="Regeneration">
 		<id>Regeneration</id>
@@ -67,24 +58,12 @@
         <stat_change>0,0,0,0,-4,0,5,0,0,0</stat_change>
     </status>
 
-    <!-- Skill Restore Status -->
-    <status name="Skill_Restore">
-        <id>Skill_Restore</id>
-        <desc></desc>
-        <image_index>9,8</image_index>
-        <components>skill_restore,momentary</components>
-
-        <time>5</time>
-        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
-        <stat_change>0,0,0,0,-4,0,5,0,0,0</stat_change>
-    </status>
-
     <!-- Stun Status -->
 	<status name="Stun">
 		<id>Stun</id>
 		<desc>Paralyzed. Cannot move, attack, or counterattack.</desc>
 		<image_index>9,7</image_index>
-		<components>stat_change,no_weapons,always_animation,time,negative,stun,affects_movement</components>
+		<components>stat_change,no_weapons,always_animation,time,negative,un_selectable,affects_movement</components>
 
 		<time>2</time>
 		<!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
@@ -200,7 +179,7 @@
         <id>fStrength +2</id>
         <desc>Grants STR +2.</desc>
         <image_index>0,1</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,2,0,0,0,0,0,0,0,0</stat_change>
     </status>
@@ -209,7 +188,7 @@
         <id>fMagic +2</id>
         <desc>Grants MAG +2.</desc>
         <image_index>0,2</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,2,0,0,0,0,0,0,0</stat_change>
     </status>
@@ -218,7 +197,7 @@
         <id>fSkill +3</id>
         <desc>Grants SKL +3.</desc>
         <image_index>0,3</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,3,0,0,0,0,0,0</stat_change>
     </status>
@@ -227,7 +206,7 @@
         <id>fSpeed +2</id>
         <desc>Grants SPD +2.</desc>
         <image_index>0,4</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,2,0,0,0,0,0</stat_change>
     </status>
@@ -236,7 +215,7 @@
         <id>fDefense +2</id>
         <desc>Grants DEF +2.</desc>
         <image_index>0,5</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,2,0,0,0</stat_change>
     </status>
@@ -245,7 +224,7 @@
         <id>fResistance +2</id>
         <desc>Grants RES +2.</desc>
         <image_index>0,6</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,2,0,0</stat_change>
     </status>
@@ -254,7 +233,7 @@
         <id>fConstitution +3</id>
         <desc>Grants CON +3.</desc>
         <image_index>0,10</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,0,3,0</stat_change>
     </status>
@@ -263,7 +242,7 @@
         <id>fMovement +1</id>
         <desc>Grants MOV +1.</desc>
         <image_index>0,8</image_index>
-        <components>stat_change,class_skill,affects_movement</components>
+        <components>feat,stat_change,class_skill,affects_movement</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,0,0,0,0,1</stat_change>
     </status>
@@ -272,7 +251,7 @@
         <id>fMaximum HP +5</id>
         <desc>Grants HP +5.</desc>
         <image_index>0,7</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>5,0,0,0,0,0,0,0,0,0</stat_change>
     </status>
@@ -281,7 +260,7 @@
         <id>fLuck +4</id>
         <desc>Grants LCK +4.</desc>
         <image_index>0,9</image_index>
-        <components>stat_change,class_skill</components>
+        <components>feat,stat_change,class_skill</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,0,0,0,0,4,0,0,0,0</stat_change>
     </status>

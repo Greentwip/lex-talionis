@@ -1920,12 +1920,15 @@
         <id>so_Refresh</id>
         <spritetype>Skills</spritetype>
         <spriteid>3,9</spriteid>
-        <components>status,beneficial</components>
+        <components>status,beneficial,map_hit_color,sfx_on_cast</components>
 
         <value>1</value>
         <RNG>1</RNG>
         <desc>I done broked something.</desc>
         <status>Refresh_Status</status>
+        
+        <map_hit_color>248,248,0</map_hit_color>
+        <sfx_on_cast>RefreshDanceMap</sfx_on_cast>   
     </item>
 
     <item name="Aegis">

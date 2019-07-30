@@ -566,10 +566,15 @@ def attach_to_unit(status, unit, gameStateObj):
 
 # Populate feat_list
 def get_feat_list(status_data):
+    feat_list = []
     for status in status_data.getroot().findall('status'):
-        if status.find('id').text == 'Feat':
-            feat_list = status.find('feat_list').text if status.find('feat_list') is not None else ''
-            return feat_list.split(',')
-    return []
+        components = status.find('components').text
+        if components:
+            components = components.split(',')
+        else:
+            components = []
+        if 'feat' in components:
+            feat_list.append(status.find('id').text)
+    return feat_list
 
 feat_list = get_feat_list(GC.STATUSDATA)

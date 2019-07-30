@@ -2855,19 +2855,16 @@
         <id>so_Summon_1</id>
         <spritetype>Skills</spritetype>
         <spriteid>9,0</spriteid>
-        <components>summon,beneficial,exp</components>
+        <components>summon,beneficial</components>
 
         <value>1</value>
         <RNG>1</RNG>
         <desc>Summons a phantom.</desc>
-        <exp>10</exp>
 
         <summon_klass>Phantom</summon_klass>
         <summon_items>Iron Axe</summon_items>
         <summon_name>Phantom</summon_name>
         <summon_desc>A summoned phantom</summon_desc>
-        <summon_ai>Pursue</summon_ai>
-        <summon_s_id>Phantom</summon_s_id>
     </item>
     
 </item_catalog> 

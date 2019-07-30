@@ -495,11 +495,6 @@ class MenuState(StateMachine.State):
         options = []
         # Find adjacent positions
         gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
-        # === Handle Stun ===
-        if 'stun' in cur_unit.status_bundle:
-            gameStateObj.stateMachine.back()
-            gameStateObj.stateMachine.changeState('canto_wait')
-            return 'repeat'
         cur_unit.current_skill = None
 
         adjtiles = cur_unit.getAdjacentTiles(gameStateObj)

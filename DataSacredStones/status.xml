@@ -252,20 +252,26 @@
         <components>steal,class_skill</components>
     </status>
 
-    <status name="Dance">
+    <status name="Refresh">
         <id>Refresh</id>
         <image_index>3,9</image_index>
-        <desc>Activated. Adjacent unit can act again.</desc>
-        <components>active,class_skill</components>
-        <active>0</active>
+        <desc>Activated. Adjacent unit is refreshed.</desc>
+        <components>activated_item,class_skill</components>
+
+        <activated_item>so_Refresh</activated_item>
+        <check_valid_func>any([adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj)])</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
     </status>
 
     <status name="Summon">
         <id>Summon</id>
         <image_index>9,0</image_index>
-        <desc>Activated. Summon a dark phantom to aid you</desc>
-        <components>active,class_skill</components>
-        <active>0</active>
+        <desc>Activated. Summons a dark phantom to aid you.</desc>
+        <components>activated_item,class_skill</components>
+
+        <activated_item>so_Summon_1</activated_item>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj))</check_valid_func>
+        <get_choices_func>[pos for pos in unit.getAdjacentPositions(gameStateObj) if not gameStateObj.grid_manager.get_unit_node(pos)]</get_choices_func>
     </status>
 
     <status name="Slayer">

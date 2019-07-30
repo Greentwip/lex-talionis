@@ -1,0 +1,107 @@
+List of all status components
+
+## Combat
+### General additions to combat formulas
+hit
+avoid
+mt
+resist -> should be renamed "protect"
+crit_hit
+crit_avoid
+attackspeed
+### Only during combat -- usually requires knowledge of opponent
+conditional_hit
+conditional_avoid
+conditional_mt
+conditional_resist -> should be renamed "conditional_protect"
+conditional_crit_hit
+conditional_crit_avoid
+conditional_attackspeed
+### Other combat affecting statuses
+no_weapons
+no_magic_weapons
+ -> no_physical_weapons
+deflect_damage
+cannot_be_crit -> replace with high crit_avoid
+vampire
+uneffective
+
+### Movement components
+affects_movement
+fleet_of_foot -> should be remade to just change to a specific column in mcost.txt
+flying -> should be remade to just ignore terrain bonuses/penalties/statuses
+pass_through
+ -> movement_change
+canto
+canto_plus
+
+### Stat modification
+stat_change
+growth_mod
+stat_halve -> turn into stat_percentage
+
+### Upkeep modifications
+upkeep_stat_change
+hp_percentage -> rename "upkeep_damage_percentage"
+upkeep_damage
+
+### aesthetic components
+upkeep_animation
+always_animation
+unit_tint
+unit_translucent -> should be combined with unit_tint
+
+### Control components
+time
+remove_range
+lost_on_interact
+lost_on_endstep
+
+### Type Components
+feat
+negative
+hidden
+class_skill
+
+### Advanced components
+item_mod
+combat_art
+automatic_combat_art
+activated_item
+attack_proc
+attack_pre_proc
+defense_proc
+defense_pre_proc
+adept_proc
+charge
+aura
+aura_child -> Look into fusing with tether?
+
+### Status components
+status_after_battle
+status_after_help
+status_on_complete
+tether -> Look into fusing with aura_child and putting only on child status
+
+### Momentary components -> Make all of these into Item components
+momentary
+skill_restore
+clear
+refresh
+
+### Other miscellaneous components
+locktouch
+savior
+evasion
+shrug_off
+steal
+vantage
+def_double
+no_exp
+caretaker
+miracle
+ephemeral
+ignore_alliances
+un_selectable
+ai_change
+buy_value_mod
