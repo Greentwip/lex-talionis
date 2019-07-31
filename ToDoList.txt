@@ -15,7 +15,9 @@ v0.9.1
 
 v0.9.3 -- combat update & activated status update
 - Arena
-- Repair Vendor
+    - Give Gold on success or take it away on failure
+    - Add B button tapout
+    - Fix jank
 - Add/Test Unique Luna Animation
 
 v0.9.4 -- dialogue and command update

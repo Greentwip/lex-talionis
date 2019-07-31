@@ -7,6 +7,7 @@
 2,13:Formation=0
 2,17:Formation=0
 2,15:Formation=0
-3,17:Shop=Iron Sword,Steel Sword,Iron Lance,Vulnerary
+3,17:Repair=0
+3,18:Arena=0
 3,14:Formation=0
 3,19:Search=0

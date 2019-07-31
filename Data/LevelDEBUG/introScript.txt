@@ -1,6 +1,6 @@
 b;Town
 t;2
-inc_game_constant;money;5000
+gold;5000
 set_game_constant;Convoy
 set_game_constant;Supports
 set_game_constant;Turnwheel

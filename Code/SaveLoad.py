@@ -307,11 +307,14 @@ def create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStat
         legend['level'] = legend['level'][1:]
         force_fixed = True
     u_i['level'] = int(legend['level'])
-    u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
+    if type(legend['position']) == str:
+        u_i['position'] = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
+    else:
+        u_i['position'] = legend['position']
     if legend.get('faction'):
         u_i['name'], u_i['faction_icon'], u_i['desc'] = factions[legend['faction']]
     else:
-        u_i['name'], u_i['faction_icon'], u_i['desc'] = 'Duelist', None, ''
+        u_i['name'] = 'Duelist'
 
     stats, u_i['growths'], u_i['growth_points'], items, u_i['wexp'], u_i['level'] = \
         get_unit_info(u_i['team'], u_i['klass'], u_i['level'], legend['items'],

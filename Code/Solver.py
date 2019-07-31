@@ -314,7 +314,7 @@ class DoneState(SolverState):
 # Does not check legality of attack, that is for other functions to do. 
 # Assumes attacker can attack all defenders using item and skill
 class Solver(object):
-    def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat=None):
+    def __init__(self, attacker, defender, def_pos, splash, item, skill_used, event_combat=None, arena=False):
         self.attacker = attacker
         self.defender = defender
         self.def_pos = def_pos
@@ -330,11 +330,14 @@ class Solver(object):
         # If the item being used has the event combat property, then that too.
         if not event_combat and (self.item.event_combat or (self.defender and self.defender.getMainWeapon() and self.defender.getMainWeapon().event_combat)):
             self.event_combat = ['hit'] * 8  # Default event combat for evented items
+        self.arena = arena
 
         self.state_machine = SolverStateMachine('PreInit')
 
         self.current_round = 0
         self.total_rounds = 1
+        if self.arena:
+            self.total_rounds = 20
 
         self.uses_count = 0
 
@@ -497,7 +500,9 @@ class Solver(object):
 
     def defender_can_counterattack(self):
         weapon = self.defender.getMainWeapon()
-        if weapon and self.item_uses(weapon) and Utility.calculate_distance(self.attacker.position, self.defender.position) in weapon.get_range(self.defender):
+        if self.arena and weapon:
+            return True
+        elif weapon and self.item_uses(weapon) and Utility.calculate_distance(self.attacker.position, self.defender.position) in weapon.get_range(self.defender):
             return True
         else:
             return False

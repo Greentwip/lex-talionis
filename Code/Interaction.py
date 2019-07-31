@@ -360,7 +360,9 @@ class Combat(object):
         if self.arena:
             for unit in all_units:
                 if unit.team != 'player':
-                    unit.die(gameStateObj, True)
+                    # Action.execute(Action.Die(unit), gameStateObj)
+                    unit.position = None
+                    unit.dead = True
 
     def turnwheel_death_messages(self, all_units, gameStateObj):
         messages = []
@@ -400,7 +402,10 @@ class AnimationCombat(Combat):
             self.left = self.p2
             self.left_item = self.left.getMainWeapon()
         self.def_pos = def_pos
-        distance = Utility.calculate_distance(self.p1.position, self.p2.position)
+        if arena:
+            distance = 1
+        else:
+            distance = Utility.calculate_distance(self.p1.position, self.p2.position)
         self.at_range = distance - 1 if distance > 1 else 0 
         self.item = item
         self.skill_used = skill_used
@@ -408,7 +413,8 @@ class AnimationCombat(Combat):
         self.ai_combat = ai_combat
         self.arena = arena
 
-        self.solver = Solver.Solver(attacker, defender, def_pos, [], item, skill_used, event_combat)
+        self.solver = Solver.Solver(attacker, defender, def_pos, [], item, skill_used, event_combat, arena)
+
         self.old_results = []
 
         self.left_stats, self.right_stats = None, None
@@ -520,8 +526,11 @@ class AnimationCombat(Combat):
             GC.FONT['text_brown'].blit(name, self.right_bar, (47 - size_x // 2, 5 + (8 if cf.CONSTANTS['crit'] else 0)))
 
         # Platforms
-        left_platform_type = gameStateObj.map.tiles[self.left.position].platform
-        right_platform_type = gameStateObj.map.tiles[self.right.position].platform
+        if self.arena:
+            left_platform_type = right_platform_type = "Arena"
+        else:
+            left_platform_type = gameStateObj.map.tiles[self.left.position].platform
+            right_platform_type = gameStateObj.map.tiles[self.right.position].platform
         if self.at_range:
             suffix = '-Ranged'
         else:
@@ -546,7 +555,9 @@ class AnimationCombat(Combat):
                 gameStateObj.stateMachine.changeState('move_camera')
 
             self.init_draw(gameStateObj, metaDataObj)
-            if self.ai_combat:
+            if self.arena:
+                self.combat_state = 'Fade'
+            elif self.ai_combat:
                 self.combat_state = 'RedOverlay_Init'
             else:
                 self.combat_state = 'Fade'
@@ -1348,7 +1359,9 @@ class MapCombat(Combat):
         self.event_combat = event_combat
         self.arena = arena
 
-        self.solver = Solver.Solver(attacker, defender, def_pos, splash, item, skill_used, event_combat)
+        self.solver = Solver.Solver(attacker, defender, def_pos, splash, item, skill_used, event_combat, arena)
+        if self.arena:
+            self.solver.total_rounds = 20
         self.results = []
         self.old_results = []
 

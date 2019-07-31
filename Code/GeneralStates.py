@@ -561,6 +561,9 @@ class MenuState(StateMachine.State):
                     options.append(cf.WORDS['Armory'])
                 else:
                     options.append(cf.WORDS['Vendor'])
+            # If the unit is on a repair shop tile
+            if 'Repair' in gameStateObj.map.tile_info_dict[cur_unit.position]:
+                options.append(cf.WORDS['Repair'])
             # If the unit is on or adjacent to an unlockable door or on a treasure chest
             if not cur_unit.hasAttacked:
                 tile_info = gameStateObj.map.tile_info_dict
@@ -759,6 +762,9 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Vendor']:
                 gameStateObj.stateMachine.changeState('vendor')
+                gameStateObj.stateMachine.changeState('transition_out')
+            elif selection == cf.WORDS['Repair']:
+                gameStateObj.stateMachine.changeState('repair_shop')
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Seize']:
                 gameStateObj.stateMachine.clear()
@@ -1631,25 +1637,27 @@ class ArenaState(StateMachine.State):
             # Set up assuming things go to plan
             self.state_machine = CustomObjects.StateMachine('wager')
             self.display_message = self.get_dialog(cf.WORDS['Arena_open'] % self.wager)
-            self.wager_menu = MenuFunctions.ChoiceMenu(self.unit, [cf.WORDS['Yes'], cf.WORDS['No']], (80, 32), background='ActualTransparent', horizontal=True)
+            self.wager_menu = MenuFunctions.ChoiceMenu(
+                self.unit, [cf.WORDS['Yes'], cf.WORDS['No']], (112, 28), 
+                background='ActualTransparent', horizontal=True)
 
             # Set up draw
             if 'ArenaBackground' in GC.IMAGESDICT:
-                gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['ArenaBackground'])
+                gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['ArenaBackground'], fade=False)
             else:
-                gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['RuneBackground'])
+                gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['RuneBackground'], fade=False)
             bg = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH+8, 48), 'ClearMenuBackground')
             self.bg = Engine.subsurface(bg, (4, 0, GC.WINWIDTH, 48))
             self.portrait = GC.IMAGESDICT.get('ArenaPortrait')
             Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_arena')])
 
-            if gameStateObj.arena_closed():
+            if gameStateObj.arena_closed(self.unit):
                 self.state_machine = CustomObjects.StateMachine('close')
                 self.wager_menu = None
                 self.display_message = self.get_dialog(cf.WORDS['Arena_limit'])
 
             elif cf.CONSTANTS['arena_weapons']:
-                self.unit_weapon = self.get_weapon_from_unit(self.unit.klass, gameStateObj)
+                self.unit_weapon = self.get_weapon_from_unit(self.unit, gameStateObj)
                 if not self.unit_weapon:
                     self.state_machine = CustomObjects.StateMachine('close')
                     self.wager_menu = None
@@ -1670,11 +1678,11 @@ class ArenaState(StateMachine.State):
         my_klass = self.unit.klass
         my_tier = ClassData.class_dict[my_klass]['tier']
         max_level = ClassData.class_dict[my_klass]['max_level']
-        classes_in_my_tier = [c for c, v in ClassData.class_dict if v['tier'] == my_tier and 
+        classes_in_my_tier = [c for c, v in ClassData.class_dict.items() if v['tier'] == my_tier and 
                               'ArenaIgnore' not in v['tags'] and v['max_level'] == max_level]
         while not new_unit:
-            class_rng = static_random.get_other(0, len(classes_in_my_tier))
-            low_level = max(1, self.unit.level - cf.CONSTANTS['arena_level_range']), 
+            class_rng = static_random.get_other(0, len(classes_in_my_tier) - 1)
+            low_level = max(1, self.unit.level - cf.CONSTANTS['arena_level_range'])
             high_level = min(max_level, self.unit.level + cf.CONSTANTS['arena_level_range'])
             level_rng = static_random.get_other(low_level, high_level)
             percent = (level_rng - low_level) / float(high_level - low_level)
@@ -1683,9 +1691,10 @@ class ArenaState(StateMachine.State):
             if not weapon:
                 continue
             legend = {'team': 'enemy', 'event_id': "0", 'class': new_klass, 
-                      'level': level_rng, 'items': [weapon], 'position': self.unit.position,
+                      'level': str(level_rng), 'items': str(weapon), 'position': None,
                       'ai': 'None'}
-            new_unit = SaveLoad.create_unit(legend, gameStateObj.allunits, None, None, gameStateObj)
+            new_unit = SaveLoad.create_unit_from_legend(legend, gameStateObj.allunits, None, None, gameStateObj)
+            new_unit.position = self.unit.position
 
         wager = int(percent * (cf.CONSTANTS['arena_wager_max'] - cf.CONSTANTS['arena_wager_min']) + cf.CONSTANTS['arena_wager_min'])
         wager = min(gameStateObj.get_money(), wager)
@@ -1705,14 +1714,14 @@ class ArenaState(StateMachine.State):
         return ItemMethods.itemparser(new_weapon_id, gameStateObj)
 
     def get_dialog(self, text):
-        return Dialogue.Dialog(text, 'Narrator', (60, 8), (144, 48), 'text_white', 'ActualTransparent', waiting_cursor_flag=False)
+        return Dialogue.Dialog(text, 'Narrator', (60, 8), (160, 48), 'text_white', 'ActualTransparent', waiting_cursor_flag=False)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
 
-        if self.stateMachine.getState() == 'wager':
+        if self.state_machine.getState() == 'wager':
             if 'DOWN' in directions or 'RIGHT' in directions:
                 GC.SOUNDDICT['Select 6'].play()
                 self.wager_menu.moveDown(first_push)
@@ -1728,7 +1737,7 @@ class ArenaState(StateMachine.State):
 
             elif event == 'SELECT':
                 GC.SOUNDDICT['Select 1'].play()
-                selection = self.menu.getSelection()
+                selection = self.wager_menu.getSelection()
                 if selection == cf.WORDS['Yes']:
                     self.display_message = self.get_dialog(cf.WORDS['Arena_combat'])
                     self.wager_menu = None
@@ -1738,12 +1747,12 @@ class ArenaState(StateMachine.State):
                     self.wager_menu = None
                     self.state_machine.changeState('close')
 
-        elif self.stateMachine.getState() == 'combat':
+        elif self.state_machine.getState() == 'combat':
             if event:
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.done:
                     gameStateObj.level_constants['_global_arena_uses'] += 1
-                    gameStateObj.level_constants['_' + self.unit.id + '_arena_uses'] += 1
+                    gameStateObj.level_constants['_' + str(self.unit.id) + '_arena_uses'] += 1
                     gameStateObj.combatInstance = \
                         Interaction.start_combat(
                             gameStateObj, self.unit, self.opponent, self.unit.position, 
@@ -1752,14 +1761,14 @@ class ArenaState(StateMachine.State):
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False
 
-        elif self.stateMachine.getState() == 'close':
+        elif self.state_machine.getState() == 'close':
             if event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
-                gameStateObj.state_machine.changeState('transition_pop')
+                gameStateObj.stateMachine.changeState('transition_pop')
             elif event == 'SELECT':
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.done:
-                    gameStateObj.state_machine.changeState('transition_pop')
+                    gameStateObj.stateMachine.changeState('transition_pop')
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False 
 
@@ -1773,7 +1782,7 @@ class ArenaState(StateMachine.State):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         # Draw background
 
-        surf.blit(self.bg, (0, 0))
+        surf.blit(self.bg, (0, 8))
 
         if self.display_message:
             self.display_message.draw(surf)
@@ -1792,7 +1801,7 @@ class ArenaState(StateMachine.State):
             # Display duelist info
             duelist_info_bg = BaseMenuSurf.CreateBaseMenuSurf((120, 40))
             GC.FONT['text_white'].blit('LV', duelist_info_bg, (4, 4))
-            GC.FONT['text_blue'].blit(self.opponent.level, duelist_info_bg, (28, 4))
+            GC.FONT['text_blue'].blit(str(self.opponent.level), duelist_info_bg, (28, 4))
             GC.FONT['text_white'].blit(self.opponent.klass, duelist_info_bg, (60, 4))
             GC.FONT['text_white'].blit('Duelist', duelist_info_bg, (4, 20))
             GC.FONT['text_white'].blit(self.opponent_weapon.name, duelist_info_bg, (60, 20))
@@ -1804,6 +1813,10 @@ class ArenaState(StateMachine.State):
     def finish(self, gameStateObj, metaDataObj):
         gameStateObj.background = None
         gameStateObj.activeMenu = gameStateObj.hidden_active    
+        if self.opponent:
+            # Action.execute(Action.Die(self.opponent), gameStateObj)
+            self.opponent.position = None
+            self.opponent.dead = True
 
 class FeatChoiceState(StateMachine.State):
     name = 'feat_choice'
@@ -2977,7 +2990,7 @@ class RepairShopState(StateMachine.State):
 
             self.myMenu = MenuFunctions.ShopMenu(
                 self.unit, self.unit.items, topleft, 
-                limit=5, mode="Buy", buy_value_mod=self.buy_value_mod)
+                limit=5, mode="Repair", buy_value_mod=self.buy_value_mod)
             self.sure_menu = MenuFunctions.ChoiceMenu(
                 self.unit, [cf.WORDS['Yes'], cf.WORDS['No']], (80, 32), 
                 background='ActualTransparent', horizontal=True)
@@ -3018,6 +3031,7 @@ class RepairShopState(StateMachine.State):
 
         if self.state_machine.getState() == 'open':
             if self.display_message.done:
+                self.myMenu.takes_input = True
                 self.state_machine.changeState('repair')
             if event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
@@ -3027,7 +3041,7 @@ class RepairShopState(StateMachine.State):
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False 
 
-        elif self.stateMachine.getState() == 'repair':
+        elif self.state_machine.getState() == 'repair':
             if 'DOWN' in directions:
                 GC.SOUNDDICT['Select 6'].play()
                 self.myMenu.moveDown(first_push)
@@ -3056,7 +3070,7 @@ class RepairShopState(StateMachine.State):
             elif event == 'INFO':
                 self.info = not self.info
 
-        elif self.stateMachine.getState() == 'repair_sure':
+        elif self.state_machine.getState() == 'repair_sure':
             if event == 'LEFT':
                 GC.SOUNDDICT['Select 6'].play()
                 self.sure_menu.moveDown()
@@ -3064,7 +3078,7 @@ class RepairShopState(StateMachine.State):
                 GC.SOUNDDICT['Select 6'].play()
                 self.sure_menu.moveUp()
             elif event == 'BACK':
-                self.stateMachine.changeState('repair')
+                self.state_machine.changeState('repair')
                 self.myMenu.takes_input = True
                 self.display_message = self.get_dialog(cf.WORDS['Repair_back'])
             elif event == 'SELECT':
@@ -3072,12 +3086,15 @@ class RepairShopState(StateMachine.State):
                 if choice == cf.WORDS['Yes']:
                     GC.SOUNDDICT['GoldExchange'].play()
                     selection = self.myMenu.getSelection()
-                    Action.do(Action.RepairItem(selection), gameStateObj)
                     self.myMenu.currentSelection = 0 # Reset selection
+
                     value = (selection.value * (selection.uses.total_uses - selection.uses.uses)) if selection.uses else 0
                     value = int(value * self.buy_value_mod)
                     Action.execute(Action.GiveGold(-value, gameStateObj.current_party), gameStateObj)
                     self.money_counter_disp.start(-value)
+
+                    Action.do(Action.RepairItem(selection), gameStateObj)
+                    
                     self.display_message = self.get_dialog(cf.WORDS['Repair_again'])
                     Action.do(Action.HasAttacked(self.unit), gameStateObj)
                     self.myMenu.updateOptions(self.unit.items)
@@ -3085,11 +3102,11 @@ class RepairShopState(StateMachine.State):
                     self.myMenu.takes_input = True
                 else:
                     GC.SOUNDDICT['Select 4'].play()
-                    self.stateMachine.changeState('repair')
+                    self.state_machine.changeState('repair')
                     self.myMenu.takes_input = True
                     self.display_message = self.get_dialog(cf.WORDS['Repair_back'])
 
-        elif self.stateMachine.getState() == 'close':
+        elif self.state_machine.getState() == 'close':
             if event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.back()
@@ -3116,7 +3133,7 @@ class RepairShopState(StateMachine.State):
 
         self.myMenu.draw(surf, gameStateObj.get_money())
 
-        if self.stateMachine.getState() == 'repair_sure':
+        if self.state_machine.getState() == 'repair_sure':
             self.sure_menu.draw(surf)
 
         for simple_surf, rect in self.draw_surfaces:
@@ -3131,7 +3148,7 @@ class RepairShopState(StateMachine.State):
             selection = self.myMenu.getSelection()
             if selection:
                 help_box = selection.get_help_box()
-                help_box.draw(surf, (8, 16*self.myMenu.get_relative_index() + 32 - 4))
+                help_box.draw(surf, (8, 16*self.myMenu.get_relative_index() + 64 - 4))
 
         return surf
 

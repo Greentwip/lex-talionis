@@ -465,7 +465,7 @@ class GameStateObj(object):
                 self.level_constants['_global_arena_uses'] > cf.CONSTANTS['arena_global_limit']:
             return True
         elif cf.CONSTANTS['arena_unit_limit'] > 0 and \
-                self.level_constants['_' + unit.id + '_arena_uses'] > cf.CONSTANTS['arena_unit_limit']:
+                self.level_constants['_' + str(unit.id) + '_arena_uses'] > cf.CONSTANTS['arena_unit_limit']:
             return True
         return False
 

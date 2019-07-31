@@ -143,7 +143,7 @@ def read_constants_file():
              'arena_unit_limit': 0, # Limit to number of times each unit can use an arena in a level: 0 - No limit
              'arena_death': 1, # Units defeated in the arena are killed. Set to 0 to leave them with 1 HP
              'arena_weapons': 1, # Units will be provided with basic weapons in the arena. Set to 0 to have to bring your own
-             'arena_basic_weapons': 'Iron Sword,Iron Lance,Iron Axe,Willow Bow,Fire,Glimmer,Flux',
+             'arena_basic_weapons': 'Iron Sword,Iron Lance,Iron Axe,Willow Bow,Glimmer,Fire,Flux',
              'arena_wager_min': 500,  # Minimum amount that can be wagered in arena
              'arena_wager_max': 900,  # Maximum amount that can be wagered in arena
              'arena_level_range': 3,  # How far off in levels enemy arena units can be
@@ -159,7 +159,7 @@ def read_constants_file():
     float_lines = {'exp_curve', 'exp_magnitude', 'heal_curve', 'heal_magnitude', 
                    'heal_min', 'boss_bonus', 'kill_multiplier'}
     string_lines = {'title', 'music_main', 'music_game_over', 'music_armory',
-                    'music_vendor', 'music_promotion', 'attribution', 'rng'}
+                    'music_vendor', 'music_promotion', 'music_arena', 'attribution', 'rng'}
     int_list_lines = {'max_level'}
     string_list_lines = {'arena_basic_weapons'}
     for k, v in lines.items():

@@ -1531,7 +1531,6 @@ class ShopMenu(ChoiceMenu):
                 else:
                     true_value //= 2
                 true_value = int(true_value)
-                value_string = str(true_value)
             elif option.c_uses:
                 uses_string = str(option.c_uses)
                 if self.mode in ('Buy', 'Sell'):
@@ -1543,7 +1542,6 @@ class ShopMenu(ChoiceMenu):
                 else:
                     true_value //= 2
                 true_value = int(true_value)
-                value_string = str(true_value)
             else:
                 if self.mode in ('Buy', 'Sell'):
                     true_value = option.value
@@ -1554,7 +1552,7 @@ class ShopMenu(ChoiceMenu):
                 else:
                     true_value //= 2
                 true_value = int(true_value)
-                value_string = str(true_value)
+            value_string = str(true_value)
 
             if option.locked or not option.value or (self.owner and not self.owner.canWield(option)):
                 name_font = GC.FONT['text_grey']
