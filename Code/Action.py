@@ -192,7 +192,7 @@ class FadeMove(Warp):
         self.unit.sprite.set_transition('fade_move')
         self.unit.sprite.set_next_position(self.new_pos)
 
-class ArriveOnMap(Action):
+class SimpleArrive(Action):
     def __init__(self, unit, pos):
         self.unit = unit
         self.pos = pos
@@ -205,6 +205,9 @@ class ArriveOnMap(Action):
     def reverse(self, gameStateObj):
         self.unit.leave(gameStateObj)
         self.place_on_map.reverse(gameStateObj)
+
+class ArriveOnMap(SimpleArrive):
+    pass
 
 class WarpIn(ArriveOnMap):
     def do(self, gameStateObj):

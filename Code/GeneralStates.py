@@ -1636,7 +1636,8 @@ class ArenaState(StateMachine.State):
         if not self.started:
             # Get data needed
             self.unit = gameStateObj.cursor.currentSelectedUnit
-            self.opponent, self.opponent_weapon, self.wager = self.get_arena_info(self.unit, gameStateObj)
+            self.opponent = None
+            self.legend, self.opponent_weapon_id, self.wager = self.get_arena_info(self.unit, gameStateObj)
 
             # Set up assuming things go to plan
             self.state_machine = CustomObjects.StateMachine('wager')
@@ -1647,12 +1648,13 @@ class ArenaState(StateMachine.State):
 
             # Set up draw
             if 'ArenaBackground' in GC.IMAGESDICT:
-                gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['ArenaBackground'], fade=False)
+                self.background = Background.StaticBackground(GC.IMAGESDICT['ArenaBackground'], fade=False)
             else:
-                gameStateObj.background = Background.StaticBackground(GC.IMAGESDICT['RuneBackground'], fade=False)
+                self.background = Background.StaticBackground(GC.IMAGESDICT['RuneBackground'], fade=False)
             bg = BaseMenuSurf.CreateBaseMenuSurf((GC.WINWIDTH+8, 48), 'ClearMenuBackground')
             self.bg = Engine.subsurface(bg, (4, 0, GC.WINWIDTH, 48))
             self.portrait = GC.IMAGESDICT.get('ArenaPortrait')
+            self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((223, 32))
             Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_arena')])
 
             if gameStateObj.arena_closed(self.unit):
@@ -1678,39 +1680,37 @@ class ArenaState(StateMachine.State):
             return 'repeat'
 
     def get_arena_info(self, unit, gameStateObj):
-        new_unit = None
         my_klass = self.unit.klass
         my_tier = ClassData.class_dict[my_klass]['tier']
         max_level = ClassData.class_dict[my_klass]['max_level']
         classes_in_my_tier = [c for c, v in ClassData.class_dict.items() if v['tier'] == my_tier and 
                               'ArenaIgnore' not in v['tags'] and v['max_level'] == max_level]
-        while not new_unit:
+        legend = None
+        while not legend:
             class_rng = static_random.get_other(0, len(classes_in_my_tier) - 1)
             low_level = max(1, self.unit.level - cf.CONSTANTS['arena_level_range'])
             high_level = min(max_level, self.unit.level + cf.CONSTANTS['arena_level_range'])
             level_rng = static_random.get_other(low_level, high_level)
             percent = (level_rng - low_level) / float(high_level - low_level)
             new_klass = classes_in_my_tier[class_rng]
-            weapon = self.get_weapon_from_klass(new_klass, gameStateObj)
-            if not weapon:
+            weapon_id = self.get_weapon_id_from_klass(new_klass, gameStateObj)
+            if not weapon_id:
                 continue
             legend = {'team': 'enemy', 'event_id': "0", 'class': new_klass, 
-                      'level': str(level_rng), 'items': str(weapon), 'position': None,
+                      'level': str(level_rng), 'items': weapon_id, 'position': self.unit.position,
                       'ai': 'None'}
-            new_unit = SaveLoad.create_unit_from_legend(legend, gameStateObj.allunits, None, None, gameStateObj)
-            new_unit.position = self.unit.position
 
         wager = int(percent * (cf.CONSTANTS['arena_wager_max'] - cf.CONSTANTS['arena_wager_min']) + cf.CONSTANTS['arena_wager_min'])
         wager = min(gameStateObj.get_money(), wager)
 
-        return new_unit, weapon, wager
+        return legend, weapon_id, wager
 
-    def get_weapon_from_klass(self, klass, gameStateObj):
+    def get_weapon_id_from_klass(self, klass, gameStateObj):
         class_data = ClassData.class_dict[klass]
         wexp_gain = class_data['wexp_gain']
         max_index = wexp_gain.index(max(wexp_gain))
         new_weapon_id = cf.CONSTANTS['arena_basic_weapons'][max_index]
-        return ItemMethods.itemparser(new_weapon_id, gameStateObj)
+        return new_weapon_id
 
     def get_weapon_from_unit(self, unit, gameStateObj):
         max_index = unit.wexp.index(max(unit.wexp))
@@ -1743,10 +1743,20 @@ class ArenaState(StateMachine.State):
                 GC.SOUNDDICT['Select 1'].play()
                 selection = self.wager_menu.getSelection()
                 if selection == cf.WORDS['Yes']:
+                    GC.SOUNDDICT['GoldExchange'].play()
+                    Action.execute(Action.GiveGold(-self.wager, gameStateObj.current_party), gameStateObj)
+                    self.money_counter_disp.start(-self.wager)
+
+                    # Actually create unit here!
+                    self.opponent = SaveLoad.create_unit_from_legend(self.legend, gameStateObj.allunits, None, None, gameStateObj)
+                    self.opponent_weapon = self.opponent.items[0] if self.opponent.items else None
+                    Action.do(Action.SimpleArrive(self.opponent, self.opponent.position), gameStateObj)
+
                     self.display_message = self.get_dialog(cf.WORDS['Arena_combat'])
                     self.wager_menu = None
                     self.state_machine.changeState('combat')
                 elif selection == cf.WORDS['No']:
+                    GC.SOUNDDICT['Select 4'].play()
                     self.display_message = self.get_dialog(cf.WORDS['Arena_back'])
                     self.wager_menu = None
                     self.state_machine.changeState('close')
@@ -1755,6 +1765,7 @@ class ArenaState(StateMachine.State):
             if event:
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.done:
+                    gameStateObj.level_constants['_wager'] = self.wager
                     gameStateObj.level_constants['_global_arena_uses'] += 1
                     gameStateObj.level_constants['_' + str(self.unit.id) + '_arena_uses'] += 1
                     gameStateObj.combatInstance = \
@@ -1785,6 +1796,7 @@ class ArenaState(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
         # Draw background
+        self.background.draw(surf)
 
         surf.blit(self.bg, (0, 8))
 
@@ -1800,6 +1812,7 @@ class ArenaState(StateMachine.State):
         surf.blit(GC.IMAGESDICT['MoneyBG'], (172, 48))
         money = str(gameStateObj.get_money())
         GC.FONT['text_blue'].blit(money, surf, (223 - GC.FONT['text_blue'].size(money)[0], 48))
+        self.money_counter_disp.draw(surf)
 
         if self.state_machine.getState() == 'combat':
             # Display duelist info
@@ -1815,12 +1828,14 @@ class ArenaState(StateMachine.State):
         return surf
 
     def finish(self, gameStateObj, metaDataObj):
-        gameStateObj.background = None
+        self.background = None
         gameStateObj.activeMenu = gameStateObj.hidden_active    
-        if self.opponent:
-            # Action.execute(Action.Die(self.opponent), gameStateObj)
-            self.opponent.position = None
-            self.opponent.dead = True
+        if self.opponent and not self.opponent.dead:
+            # self.opponent.position = None
+            self.opponent.dead = True  # Forget about this unit permanently!
+            Action.execute(Action.LeaveMap(self.opponent), gameStateObj)
+            # Reset player 1's position now that we've removed his fighter
+            Action.execute(Action.SimpleMove(self.unit, self.unit.position), gameStateObj)
 
 class FeatChoiceState(StateMachine.State):
     name = 'feat_choice'
@@ -2189,6 +2204,10 @@ class CombatState(StateMachine.State):
         if event == 'START':
             self.skip = True
             gameStateObj.combatInstance.skip()
+        elif event == 'BACK':
+            if gameStateObj.combatInstance.arena:
+                GC.SOUNDDICT['Select 4'].play()
+                gameStateObj.combatInstance.arena_stop()
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)

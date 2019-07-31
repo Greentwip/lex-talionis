@@ -55,8 +55,8 @@ def start_combat(gameStateObj, attacker, defender, def_pos, splash, item,
     toggle_anim = gameStateObj.input_manager.is_pressed('AUX')
     # Whether animation combat is even allowed
     if (not splash and attacker is not defender and isinstance(defender, UnitObject.UnitObject) and not item.movement and not item.self_movement):
-        # XOR below
-        if animation_wanted(attacker, defender) != toggle_anim:
+        # XOR below and ALWAYS use animations with the arena
+        if arena or animation_wanted(attacker, defender) != toggle_anim:
             distance = Utility.calculate_distance(attacker.position, def_pos)
             magic = item.is_magic()
             if magic and item.magic_at_range and distance <= 1:
@@ -274,14 +274,19 @@ class Combat(object):
                     Action.do(Action.Message("%s activated Miracle" % unit.name), gameStateObj)
 
     def handle_item_gain(self, gameStateObj, all_units):
-        for unit in all_units:
-            if unit.isDying and isinstance(unit, UnitObject.UnitObject):
+        units = [u for u in all_units if isinstance(u, UnitObject.UnitObject)]
+        for unit in units:
+            if unit.isDying:
                 for item in unit.items:
                     if item.droppable:
                         if unit in self.splash or unit is self.p2:
                             Action.do(Action.DropItem(self.p1, item), gameStateObj)
                         elif self.p2:
                             Action.do(Action.DropItem(self.p2, item), gameStateObj)
+
+        if self.arena and self.p2.dead:
+            action = Action.GiveGold(gameStateObj.level_constants['_wager']*2, gameStateObj.current_party)
+            Action.do(action, gameStateObj)
 
     def handle_state_stack(self, gameStateObj):
         if self.event_combat:
@@ -356,13 +361,20 @@ class Combat(object):
                     gameStateObj.stateMachine.changeState('dialogue')
                 else:
                     gameStateObj.map.destroy(unit, gameStateObj)
+
+    def arena_cleanup(self, gameStateObj):
         # Remove non-player characters from the game permanently
         if self.arena:
-            for unit in all_units:
-                if unit.team != 'player':
-                    # Action.execute(Action.Die(unit), gameStateObj)
-                    unit.position = None
-                    unit.dead = True
+            # self.p2.position = None
+            self.p2.dead = True  # Forget about this unit permanently!
+            Action.execute(Action.LeaveMap(self.p2), gameStateObj)
+            # Reset player 1's position now that we've removed his fighter
+            Action.execute(Action.SimpleMove(self.p1, self.p1.position), gameStateObj)
+
+    def arena_stop(self):
+        if self.arena:
+            # Set the solvers total rounds low
+            self.solver.total_rounds = 0
 
     def turnwheel_death_messages(self, all_units, gameStateObj):
         messages = []
@@ -739,6 +751,7 @@ class AnimationCombat(Combat):
             if skip or self.bar_offset <= 0:
                 self.bar_offset = 0
                 self.combat_state = 'FadeOut'
+                self.arena_cleanup(gameStateObj) 
 
         elif self.combat_state == 'FadeOut':
             # end viewbox clamping
@@ -1835,6 +1848,7 @@ class MapCombat(Combat):
 
         self.handle_supports(all_units, gameStateObj)
 
+        self.arena_cleanup(gameStateObj)
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items

@@ -115,14 +115,14 @@ class BriefPopUpDisplay(object):
             # Fade in and move up
             if self.update_num > 0:
                 my_surf = Image_Modification.flickerImageTranslucent(self.surf, self.update_num)
-                surf.blit(my_surf, (self.topright[0] - self.width, self.topright[1] + self.update_num//5))
+                surf.blit(my_surf, (self.topright[0] - self.width + 8, self.topright[1] + self.update_num//5))
             # Fade out
             else: 
                 if self.update_num < -100:
                     my_surf = Image_Modification.flickerImageTranslucent(self.surf, -self.update_num - 100)
                 else:
                     my_surf = self.surf
-                surf.blit(my_surf, (self.topright[0] - self.width, self.topright[1]))
+                surf.blit(my_surf, (self.topright[0] - self.width + 8, self.topright[1]))
 
 class Lore_Display(object):
     def __init__(self, starting_entry):
