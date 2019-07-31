@@ -1128,7 +1128,7 @@ class AttackState(StateMachine.State):
             attacker.current_skill = None
             # Handle fight quote
             if defender and isinstance(defender, UnitObject.UnitObject):
-                defender.handle_fight_quote(gameStateObj.cursor.currentSelectedUnit, gameStateObj)
+                defender.handle_fight_quote(attacker, gameStateObj)
 
         if directions:
             GC.SOUNDDICT['Select 6'].play()
@@ -1247,6 +1247,10 @@ class SpellState(StateMachine.State):
                         gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, cur_unit.position, splash, spell)
                         gameStateObj.stateMachine.changeState('combat')
                         GC.SOUNDDICT['Select 1'].play()
+                        # Handle fight quote
+                        if defender and isinstance(defender, UnitObject.UnitObject):
+                            defender.handle_fight_quote(attacker, gameStateObj)
+                            
             elif targets == 'Tile' or targets == 'TileNoUnit':
                 if spell.extra_select and spell.extra_select_index < len(spell.extra_select):
                     self.handle_extra_select(gameStateObj, spell)

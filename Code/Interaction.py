@@ -1690,8 +1690,7 @@ class MapCombat(Combat):
             
         # Small state changes
         for player in players:
-            if isinstance(player, UnitObject.UnitObject):
-                player.lock_active()
+            player.lock_active()
 
     # Clean up combat phase
     def end_phase(self, gameStateObj):
@@ -1701,8 +1700,7 @@ class MapCombat(Combat):
             players.add(result.defender)
         # Small state changes
         for player in players:
-            if isinstance(player, UnitObject.UnitObject):
-                player.unlock_active()
+            player.unlock_active()
         self.additional_time = 0
 
     def draw(self, surf, gameStateObj):
