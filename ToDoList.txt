@@ -15,9 +15,7 @@ v0.9.1
 
 v0.9.3 -- combat update & activated status update
 - Arena
-    - Give Gold on success or take it away on failure
-    - Add B button tapout
-    - Fix jank
+    - Seems to believe p2 is the attacker sometimes in solver, but not in UI
 
 v0.9.4 -- dialogue and command update
 - Dialogue Editor

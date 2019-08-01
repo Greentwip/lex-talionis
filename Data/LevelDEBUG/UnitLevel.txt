@@ -23,7 +23,7 @@ faction;Resistance;Bandit;Resistance;Nope
 player;0;0;Swordmaster;5;Iron Sword,Steel Sword;2,14;None;Resistance
 player;0;0;Sage;1;Searing Blades,Energy Drink;1,14;None;Resistance
 # Enemies
-enemy;0;0;Warrior;5;Iron Axe;3,14;None;Resistance
+enemy;0;0;Dracolord;5;Iron Lance;3,14;None;Resistance
 enemy;0;0;Warrior;5;Iron Axe;4,13;None;Resistance
 enemy;0;0;Warrior;5;Iron Axe;4,15;None;Resistance
 

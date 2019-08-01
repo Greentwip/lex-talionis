@@ -1193,6 +1193,22 @@ class RecordRandomState(Action):
     def reverse(self, gameStateObj):
         static_random.set_combat_random_state(self.old)
 
+class RecordOtherRandomState(Action):
+    run_on_load = True
+    
+    def __init__(self, old, new):
+        self.old = old
+        self.new = new
+
+    def do(self, gameStateObj):
+        pass
+
+    def execute(self, gameStateObj):
+        static_random.set_other_random_state(self.new)
+
+    def reverse(self, gameStateObj):
+        static_random.set_other_random_state(self.old)
+
 # === SKILL AND STATUS ACTIONS ===================================================
 class AddStatus(Action):
     def __init__(self, unit, status_obj):

@@ -159,7 +159,7 @@ class AttackerState(SolverState):
     def process(self, solver, gameStateObj, metaDataObj):
         Action.do(Action.UseItem(solver.item), gameStateObj)
         solver.uses_count += 1
-        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.defender, solver.item)
+        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.defender, solver.item, 'Attack')
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
         result.new_round = solver.new_round
@@ -215,7 +215,7 @@ class DefenderState(AttackerState):
     def process(self, solver, gameStateObj, metaDataObj):
         ditem = solver.defender.getMainWeapon()
         Action.do(Action.UseItem(ditem), gameStateObj)
-        result = solver.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem)
+        result = solver.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem, 'Defense')
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
         result.new_round = solver.new_round
@@ -272,7 +272,7 @@ class SplashState(AttackerState):
         if solver.uses_count < 1:
             Action.do(Action.UseItem(solver.item), gameStateObj)
             solver.uses_count += 1
-        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.splash[self.index], solver.item)
+        result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.splash[self.index], solver.item, 'Attack')
         result.adept_proc = solver.adept_proc
         solver.adept_proc = None
         result.new_round = solver.new_round
@@ -388,7 +388,7 @@ class Solver(object):
             result.outcome = 2
             result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid, crit=cf.CONSTANTS['crit'])
 
-    def generate_phase(self, gameStateObj, metaDataObj, attacker, defender, item):
+    def generate_phase(self, gameStateObj, metaDataObj, attacker, defender, item, mode):
         result = Result(attacker, defender)
         if self.event_combat:
             event_command = self.event_combat.pop()
@@ -405,7 +405,7 @@ class Solver(object):
         result.attacker_proc_used = self.get_attacker_proc(attacker, gameStateObj)
         result.defender_proc_used = self.get_defender_proc(defender, gameStateObj)
 
-        to_hit = attacker.compute_hit(defender, gameStateObj, item, mode="Attack")
+        to_hit = attacker.compute_hit(defender, gameStateObj, item, mode=mode)
         rng_mode = gameStateObj.mode['rng']
         roll = self.generate_roll(rng_mode, event_command)
 
@@ -415,29 +415,29 @@ class Solver(object):
         if item.weapon:
             if roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle):
                 result.outcome = (2 if item.guaranteed_crit else 1)
-                result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid)
+                result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid)
                 if cf.CONSTANTS['crit']: 
-                    self.handle_crit(result, attacker, defender, item, 'Attack', gameStateObj, hybrid, event_command)
+                    self.handle_crit(result, attacker, defender, item, mode, gameStateObj, hybrid, event_command)
                     
             # Missed but does half damage
             elif item.half_on_miss:
-                result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid) // 2
+                result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid) // 2
                 # print(result.def_damage)
 
         elif item.spell:
             if not item.hit or (roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle)):
                 result.outcome = (2 if item.guaranteed_crit else 1)
                 if item.damage is not None:
-                    result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid)
+                    result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid)
                     if cf.CONSTANTS['crit']: 
-                        self.handle_crit(result, attacker, defender, item, 'Attack', gameStateObj, hybrid, event_command)
+                        self.handle_crit(result, attacker, defender, item, mode, gameStateObj, hybrid, event_command)
                 elif item.heal is not None:
-                    result.def_damage = -attacker.compute_heal(defender, gameStateObj, item, mode='Attack')
+                    result.def_damage = -attacker.compute_heal(defender, gameStateObj, item, mode=mode)
                 if item.movement:
                     result.def_movement = item.movement
 
             elif item.half_on_miss and item.hit is not None and item.damage is not None:
-                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, item, mode='Attack', hybrid=hybrid) // 2
+                result.def_damage = self.attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid) // 2
 
         else:
             result.outcome = 1

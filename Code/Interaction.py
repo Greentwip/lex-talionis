@@ -284,7 +284,7 @@ class Combat(object):
                         elif self.p2:
                             Action.do(Action.DropItem(self.p2, item), gameStateObj)
 
-        if self.arena and self.p2.dead:
+        if self.arena and self.p2.currenthp <= 0:
             action = Action.GiveGold(gameStateObj.level_constants['_wager']*2, gameStateObj.current_party)
             Action.do(action, gameStateObj)
 
@@ -374,6 +374,7 @@ class Combat(object):
     def arena_stop(self):
         if self.arena:
             # Set the solvers total rounds low
+            # self.arena_cancelled = True
             self.solver.total_rounds = 0
 
     def turnwheel_death_messages(self, all_units, gameStateObj):
@@ -1169,7 +1170,7 @@ class AnimationCombat(Combat):
     def handle_exp(self, gameStateObj):
         self.check_death()
         # Handle exp and stat gain
-        if not self.event_combat and (self.item.weapon or self.item.spell):
+        if not self.event_combat and (self.item.weapon or self.item.spell) and (not self.arena or self.p2.currenthp <= 0):
             attacker_results = [result for result in self.old_results if result.attacker is self.p1]
             # Wexp and Skill Charge
             if attacker_results and not self.p1.isDying:

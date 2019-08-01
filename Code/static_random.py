@@ -67,6 +67,12 @@ def shuffle(lst):
 def get_other(a, b):
     return r.other_random.randint(a, b)
 
+def get_other_random_state():
+    return r.other_random.state
+
+def set_other_random_state(state):
+    r.other_random.state = state
+
 # === Returns the index of a weighted list
 def weighted_choice(choices, generator=None):
     if generator:

@@ -1686,6 +1686,7 @@ class ArenaState(StateMachine.State):
         classes_in_my_tier = [c for c, v in ClassData.class_dict.items() if v['tier'] == my_tier and 
                               'ArenaIgnore' not in v['tags'] and v['max_level'] == max_level]
         legend = None
+        old = static_random.get_other_random_state()
         while not legend:
             class_rng = static_random.get_other(0, len(classes_in_my_tier) - 1)
             low_level = max(1, self.unit.level - cf.CONSTANTS['arena_level_range'])
@@ -1700,6 +1701,9 @@ class ArenaState(StateMachine.State):
                       'level': str(level_rng), 'items': weapon_id, 'position': self.unit.position,
                       'ai': 'None'}
 
+        new = static_random.get_other_random_state()
+        Action.do(Action.RecordOtherRandomState(old, new), gameStateObj)
+        
         wager = int(percent * (cf.CONSTANTS['arena_wager_max'] - cf.CONSTANTS['arena_wager_min']) + cf.CONSTANTS['arena_wager_min'])
         wager = min(gameStateObj.get_money(), wager)
 
