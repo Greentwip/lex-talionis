@@ -270,7 +270,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags>Sword</tags>
-        <skills></skills>
+        <skills>1,Lethality</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
         <growths>50,5,5,45,40,40,5,20</growths>
         <bases>16,3,3,1,9,0,2,0,6,7</bases>
@@ -414,7 +414,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>1</movement_group>
         <tags>Armor</tags>
-        <skills></skills>
+        <skills>1,Pavise</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>75,30,0,25,10,20,23,25</growths>
 		<bases>17,6,0,4,4,0,8,4,10,5</bases>
@@ -599,7 +599,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>0</movement_group>
         <tags></tags>
-        <skills></skills>
+        <skills>1,Sure_Strike</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
 		<growths>65,30,0,30,20,30,15,25</growths>
 		<bases>21,7,0,6,7,0,5,3,8,6</bases>
@@ -923,7 +923,7 @@
         <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
         <movement_group>2</movement_group>
         <tags>Flying,Mounted,Dragon</tags>
-        <skills></skills>
+        <skills>1,Luna</skills>
         <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
         <growths>65,35,0,30,30,25,15,20</growths>
         <bases>20,7,0,8,9,0,7,2,9,8</bases>

@@ -226,7 +226,7 @@
         <id>Flying</id>
         <image_index>3,10</image_index>
         <desc>Grants flying.</desc>
-        <components>flying,pass_through,class_skill,affects_movement</components>
+        <components>flying,class_skill,affects_movement</components>
     </status>
 
     <status name="Critical +15">
@@ -300,6 +300,89 @@
         <image_index>6,8</image_index>
         <desc></desc>
         <components>deflect_damage,hidden</components>
+    </status>
+
+    <status name="Great Shield">
+        <id>Pavise</id>
+        <image_index>10,3</image_index>
+        <desc>Proc. Ignore attacker's damage.</desc>
+        <components>defense_proc,class_skill</components>
+
+        <proc_status>Pavise_proc</proc_status>
+        <proc_rate>SKL</proc_rate>
+    </status>
+
+    <status name="Great Shield">
+        <id>Pavise_proc</id>
+        <image_index>10,3</image_index>
+        <desc></desc>
+        <components>resist,hidden</components>
+        
+        <!-- Just an unholy amount of defense -->
+        <resist>500</resist>
+    </status>
+
+    <status name="Sure Strike">
+        <id>Sure_Strike</id>
+        <image_index>10,3</image_index>
+        <desc>Proc. Guarantees hit.</desc>
+        <components>attack_proc,class_skill</components>
+
+        <proc_status>Sure_Strike_proc</proc_status>
+        <proc_rate>SKL</proc_rate>
+    </status>
+
+    <status name="Sure Strike">
+        <id>Sure_Strike_proc</id>
+        <image_index>10,3</image_index>
+        <desc></desc>
+        <components>hit,hidden</components>
+        
+        <!-- Just an unholy amount of hit -->
+        <hit>500</hit>
+    </status>
+
+    <status name="Lethality">
+        <id>Lethality</id>
+        <image_index>10,3</image_index>
+        <desc>Proc. Guarantees kill.</desc>
+        <components>attack_proc,class_skill</components>
+
+        <proc_status>Lethality_proc</proc_status>
+        <proc_rate>SKL//4</proc_rate>
+        <proc_priority>20</proc_priority>
+    </status>
+
+    <status name="Lethality">
+        <id>Lethality_proc</id>
+        <image_index>10,3</image_index>
+        <desc></desc>
+        <components>mt,hidden</components>
+        
+        <!-- Just an unholy amount of hit -->
+        <mt>200</mt>
+    </status>
+
+    <status name="Luna">
+        <id>Luna</id>
+        <image_index>4,3</image_index>
+        <desc>Proc. Ignore enemy's Defense or Resistance.</desc>
+        <components>attack_proc,class_skill</components>
+        
+        <proc_status>Luna_proc</proc_status>
+        <proc_rate>SKL</proc_rate>
+        <!-- If two proc skills would activate at once, the one with the higher priority takes precedence -->
+        <proc_priority>11</proc_priority>
+    </status>
+
+    <status name="Luna">
+        <id>Luna_proc</id>
+        <image_index>4,3</image_index>
+        <desc></desc>
+        <components>item_mod,hidden</components>
+        
+        <item_mod_conditional>True</item_mod_conditional>
+        <item_mod_effect_change>ignore_def;True</item_mod_effect_change>
     </status>
 
     <!-- Item statuses -->
