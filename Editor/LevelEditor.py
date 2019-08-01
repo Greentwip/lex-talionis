@@ -17,7 +17,7 @@ from EditorCode import EditorUtilities, Faction, Triggers, QtWeather
 from EditorCode.DataImport import Data
 from EditorCode import Autotiles
 
-__version__ = "0.9.0.4"
+__version__ = "0.9.3"
 
 # TODO: Created Units
 
