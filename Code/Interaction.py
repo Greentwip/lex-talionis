@@ -808,7 +808,7 @@ class AnimationCombat(Combat):
 
     def start_damage_num_animation(self, result):
         def build_numbers(damage, left):
-            str_damage = str(abs(damage))
+            str_damage = str(min(999, abs(damage)))
             for idx, num in enumerate(str_damage):
                 if result.outcome == 2 and damage > 0:  # Crit
                     d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'Yellow')
@@ -900,7 +900,7 @@ class AnimationCombat(Combat):
         if result.adept_proc and self.combat_state not in ("AdeptProcSkill", "AttackProcSkill", "DefenseProcSkill"):
             self.combat_state = "AdeptProcSkill"
             self.set_up_proc_animation(result.attacker, result.adept_proc)
-        elif result.attacker_proc_used and self.combat_state not in ("AdeptProcSkill", "DefenseProcSkill"):
+        elif result.attacker_proc_used and self.combat_state not in ("AttackProcSkill", "DefenseProcSkill"):
             self.combat_state = 'AttackProcSkill'
             self.set_up_proc_animation(result.attacker, result.attacker_proc_used)
         elif result.defender_proc_used and self.combat_state != "DefenseProcSkill":
@@ -1621,7 +1621,7 @@ class MapCombat(Combat):
 
     def start_damage_num_animation(self, result):
         damage = result.def_damage
-        str_damage = str(abs(damage))
+        str_damage = str(min(999, abs(damage)))
         left = result.defender.position
         for idx, num in enumerate(str_damage):
             if result.outcome == 2:  # Crit

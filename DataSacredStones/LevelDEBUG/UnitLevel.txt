@@ -24,8 +24,9 @@ faction;Eliza;Eliza;Neutral;Eliza
 #player;0;0;Eirika;12,9;None
 player;0;0;Seth;13,8;None
 #player;0;0;Gilliam;6,1;None
-enemy;0;0;Bishop;10;Shine;11,7;Pursue;Soldier
+enemy;0;0;Swordmaster;1;Iron Sword;11,7;Pursue;Soldier
 player;0;0;Manakete;10;Dragonstone;11,8;None;Soldier
+player;0;0;Assassin;1;Iron Sword;11,9;None;Soldier
 # Enemies
 # Bosses
 enemy;0;0;Breguet;2,2;HardGuard
