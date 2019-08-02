@@ -20,7 +20,6 @@ v0.9.3 -- combat update & activated status update
 - Test Arena options
 - Add Arena options to wiki
 - Add Advanced Status components to wiki
-- Test integer damage on upkeep
 - Add and Test item battle music
 
 v0.9.4 -- dialogue and command update

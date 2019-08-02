@@ -285,7 +285,7 @@ class Status_Processor(object):
                     if self.oldhp != self.newhp:
                         logger.debug('HP change: %s %s', self.oldhp, self.newhp)
                         # self.health_bar.update()
-                        # self.start_time_for_this_status = current_time + self.health_bar.time_for_change - 400
+                        self.start_time_for_this_status = current_time
                         gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
                         self.current_unit.sprite.change_state('status_active', gameStateObj)
                         self.state.changeState('processing')
@@ -364,14 +364,14 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
         if unit.currenthp > old_hp:
             GC.SOUNDDICT['MapHeal'].play()
 
-    elif status.upkeep_damage:
+    if status.upkeep_damage:
         if ',' in status.upkeep_damage:
             low_damage, high_damage = status.upkeep_damage.split(',')
-            damage_dealt = static_random.shuffle(range(int(low_damage), int(high_damage)))[0]
+            damage_dealt = static_random.get_other(int(low_damage), int(high_damage))
         else:
             damage_dealt = int(status.upkeep_damage)
         old_hp = unit.currenthp
-        Action.do(Action.ChangeHP(unit, damage_dealt), gameStateObj)
+        Action.do(Action.ChangeHP(unit, -damage_dealt), gameStateObj)
         if unit.currenthp > old_hp:
             GC.SOUNDDICT['MapHeal'].play()
 
@@ -394,12 +394,6 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
             gameStateObj.boundary_manager._remove_unit(unit, gameStateObj)
             if unit.position:
                 gameStateObj.boundary_manager._add_unit(unit, gameStateObj)
-
-    # unit.change_hp(0)  # Just check bounds
-    # # if unit.currenthp > int(unit.stats['HP']):
-    # #     unit.currenthp = int(unit.stats['HP'])
-    # if unit.movement_left > int(unit.stats['MOV']):
-    #     unit.movement_left = max(0, int(unit.stats['MOV']))
 
     return oldhp, unit.currenthp 
 
