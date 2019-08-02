@@ -1,0 +1,133 @@
+Like usual, saves don't work
+
+Major Things added:
+
+## New Advanced Status Components
+New status components to make your lives easier and more customizable
+
+Be wary however, since these status components are generally controlled through custom user-defined python code, when the python code is evaluated at runtime if not written perfectly it can crash the engine.
+
+This of course means that you will have to update your status.xml file if you upgrade to this version of the Engine.
+
+### Item Modification Status Component
+Instead of passive status component, which was defined inside of the Python code itself, there is a new status component: item_mod. This component when applied on a status, like the "passive" status component, can change the unit's item's properties. Want a status that makes all of the unit's sword brave (or magical, or effective versus Horses?) Then this is your status! 
+
+For instance, this status will make all of your items crit all the time:
+
+    <status name="Critical">
+        <id>Critical_item_mod</id>
+        <image_index>3,5</image_index>
+        <desc></desc>
+        <components>item_mod</components>
+
+        <item_mod_conditional>True</item_mod_conditional>
+        <item_mod_effect_change>guaranteed_crit;True</item_mod_effect_change>
+    </status>
+
+This status will have all of your items ignore the opponent's defense:
+
+    <status name="Luna">
+        <id>Luna_proc</id>
+        <image_index>4,3</image_index>
+        <desc></desc>
+        <components>item_mod,hidden</components>
+        
+        <item_mod_conditional>True</item_mod_conditional>
+        <item_mod_effect_change>ignore_def;True</item_mod_effect_change>
+    </status>
+
+### Combat Arts
+
+The "active" component has been replaced with the "combat_art" component. These charge whenever a unit would gain weapon exp. Here's an example Combat Art that needs 40 charge to be activated and charges by unit's SKL every time. When fully charged and activated, a combat art will give a another status to the unit for the action.
+
+    <status name="Trueshot">
+        <id>Trueshot</id>
+        <image_index>5,9</image_index>
+        <desc>Combat Art. +100 hit on next attack.</desc>
+        <components>combat_art,class_skill</components>
+
+        <charge_method>SKL</charge_method>
+        <charge_max>40</charge_max>
+        <combat_art_status>trueshot_status</combat_art_status>
+    </status>
+
+    <status name="Trueshot">
+        <id>trueshot_status</id>
+        <image_index>5,9</image_index>
+        <desc></desc>
+        <components>hit</components>
+
+        <hit>100</hit>
+    </status>
+
+You can also use the "automatic_combat_art" component to have combat arts activate automatically at the beginning of any turn in which they have been charged.
+
+### Activated Items
+
+There's a new status component that gives its holder an additional action (in the form of a temporary item). It also can be charged just like combat arts. You can use this component to give units other actions apart from their held items.
+
+    <status name="Refresh">
+        <id>Refresh</id>
+        <image_index>3,9</image_index>
+        <desc>Activated. Adjacent unit is refreshed.</desc>
+        <components>activated_item,class_skill</components>
+
+        <activated_item>so_Refresh</activated_item>
+        <check_valid_func>any([adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj)])</check_valid_func>
+        <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
+    </status>
+
+This refresh status gives the unit the ability to use the so_Refresh item, which would be defined in the items.xml.
+
+### Proc Skills
+
+Lastly, rng proc skills have added. They can activate while attacking or while defending, and they can affect the entire combat or just one attack.
+
+    <status name="Sol">
+        <id>Sol</id>
+        <image_index>4,2</image_index>
+        <desc>Proc. SKL%. Recover HP equal to damage dealt to the enemy.</desc>
+        <components>attack_proc,class_skill</components>
+
+        <proc_status>Sol_proc</proc_status>
+        <proc_rate>SKL</proc_rate>
+    </status>
+
+    <status name="Sol">
+        <id>Sol_proc</id>
+        <image_index>4,2</image_index>
+        <desc></desc>
+        <components>item_mod,hidden</components>
+        
+        <item_mod_conditional>True</item_mod_conditional>
+        <item_mod_effect_change>lifelink;True</item_mod_effect_change>
+    </status>
+
+Above is an example of Sol which will activate SKL% of the time.
+
+"attack_proc": chance to proc when attacking (Luna, Sol, etc.)
+"defense_proc": chance to proc when defending (Pavise, Aegis, etc.)
+"attack_pre_proc": chance to proc at the beginning of battle when attacking 
+"defense_pre_proc": chance to proc at the beginning of battle when defending (Vantage)
+"adept_proc": chance to attack immediately after last attack (Adept)
+
+## Other updates
+
+1. {unit2} in dialogs should be more useful. {unit2} has been added to the death_quote_info.txt as the unit's killer.
+2. FE4/FE5 style Charge added as status component. Let's unit activate another round of battle.
+3. Repair shop added as a new event tile
+4. Arena added as a new event tile. More info here: TODO ARENA INFO
+5. feat_list master status no longer required. Now just label any statuses you want to use as feats with the "feat" component.
+6. Dragonstone animations (FE8 formatting) should now be convertable by the fegba2lt_animation.exe converted found here. Make sure there is a Dragonstone.txt, Transform.txt, and Revert.txt script in the initial directory.
+7. Legendary animation now available. Use the component "combat_effect" on an item and then this attribute `<combat_effect>Legend</combat_effect>`
+8. Summoning should work again. Check out how its done in the status.xml/item.xml included with the Lion Throne
+9. Added ability to merge items together in the "Transfer" menu
+10. Added Silver Card capability
+
+## Minor Bug Fixes/Features
+1. Nosferatu and other lifelink items now only heal up to damage dealt.
+2. Enemy battle music should now be able to be changed
+3. Using a controller should be less likely to crash the game when its an unexpected type of controller.
+4. Integer damage on upkeep with "upkeep_damage" component
+5. Items can now define force the battle music with "battle_music" component
+6. Map Sprites can now use 0-9 for gender instead of M and F if you so wish.
