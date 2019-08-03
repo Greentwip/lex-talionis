@@ -5,7 +5,7 @@
         <id>Iron Sword</id>
         <spritetype>Sword</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,uses,weight,battle_music</components>
         <weapontype>Sword</weapontype>
  
         <uses>45</uses>
@@ -17,6 +17,7 @@
         <MT>3</MT>
         <HIT>90</HIT>
         <LVL>D</LVL>
+        <battle_music>Lady Eboshi</battle_music>
     </item>
 
     <item name="Rusted Sword">
