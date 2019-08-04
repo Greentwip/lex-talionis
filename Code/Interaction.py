@@ -267,7 +267,7 @@ class Combat(object):
             if unit.isDying and isinstance(unit, UnitObject.UnitObject):
                 # Check for arena miracle
                 if self.arena and unit.team == 'player' and not cf.CONSTANTS['arena_death']:
-                    Action.do(Action.Miracle(unit), gameStateObj)
+                    Action.execute(Action.Miracle(unit), gameStateObj)
                 # check for regular miracle
                 elif any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
                     Action.do(Action.Miracle(unit), gameStateObj)

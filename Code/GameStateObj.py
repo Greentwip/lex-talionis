@@ -462,10 +462,10 @@ class GameStateObj(object):
 
     def arena_closed(self, unit):
         if cf.CONSTANTS['arena_global_limit'] > 0 and \
-                self.level_constants['_global_arena_uses'] > cf.CONSTANTS['arena_global_limit']:
+                self.level_constants['_global_arena_uses'] >= cf.CONSTANTS['arena_global_limit']:
             return True
         elif cf.CONSTANTS['arena_unit_limit'] > 0 and \
-                self.level_constants['_' + str(unit.id) + '_arena_uses'] > cf.CONSTANTS['arena_unit_limit']:
+                self.level_constants['_' + str(unit.id) + '_arena_uses'] >= cf.CONSTANTS['arena_unit_limit']:
             return True
         return False
 

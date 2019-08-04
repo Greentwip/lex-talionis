@@ -14,11 +14,8 @@ v0.9.1
     - Build Palette Editor
 
 v0.9.3 -- combat update & activated status update
-- Test Test Test
 - Build Engine v0.9.3
 - Build Level Editor v0.9.3
-- Test Arena options
-- Add Advanced Status components to wiki
 
 v0.9.4 -- dialogue and command update
 - Dialogue Editor
