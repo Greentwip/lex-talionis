@@ -96,7 +96,7 @@ class InitState(object):
 
     def get_attacker_pre_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.attack_pre_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.attack_pre_proc.priority, reverse=True)
+        proc_statuses = sorted(proc_statuses, key=lambda x: x.attack_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = GC.EQUATIONS.get_expression(status.attack_pre_proc.rate, unit)
@@ -108,7 +108,7 @@ class InitState(object):
 
     def get_defender_pre_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.defense_pre_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.defense_pre_proc.priority, reverse=True)
+        proc_statuses = sorted(proc_statuses, key=lambda x: x.defense_pre_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = GC.EQUATIONS.get_expression(status.defense_pre_proc.rate, unit)
@@ -549,7 +549,7 @@ class Solver(object):
 
     def get_attacker_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.attack_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.attack_proc.priority, reverse=True)
+        proc_statuses = sorted(proc_statuses, key=lambda x: x.attack_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = GC.EQUATIONS.get_expression(status.attack_proc.rate, unit)
@@ -561,7 +561,7 @@ class Solver(object):
 
     def get_defender_proc(self, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.defense_proc]
-        proc_statuses = sorted(proc_statuses, lambda x: x.defense_proc.priority, reverse=True)
+        proc_statuses = sorted(proc_statuses, key=lambda x: x.defense_proc.priority, reverse=True)
         for status in proc_statuses:
             roll = static_random.get_combat()
             expr = GC.EQUATIONS.get_expression(status.defense_proc.rate, unit)
