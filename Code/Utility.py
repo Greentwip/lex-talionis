@@ -1,24 +1,16 @@
 # Utility Functions
 try:
-    # When I have python 3 CYTHON modules
-    # try:
-    #     import manhattan_sphere
-    # except ImportError:
-    #     from . import manhattan_sphere
-    import manhattan_sphere
+    from . import manhattan_sphere
     FAST_SPHERE = True
-except:
+except Exception as e:
+    print(e)
     FAST_SPHERE = False
     print('Fast manhattan sphere generation not available. Falling back on default Python implementation.')
 try:
-    # When I have python 3 CYTHON modules
-    # try:
-    #     import LOS
-    # except ImportError:
-    #     from . import LOS
-    import LOS
+    from . import LOS
     FAST_LOS = True
-except:
+except Exception as e:
+    print(e)
     FAST_LOS = False
     print('Fast line of sight calculation not available. Falling back on default Python implementation.')
 # === TAXICAB DISTANCE =================================================

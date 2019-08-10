@@ -5,16 +5,17 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 
 try:
-    import fast_pathfinding # noqa
+    from . import fast_pathfinding # noqa
     FAST_PATHFINDING = True
-except:
+except Exception as e:
+    print(e)
     FAST_PATHFINDING = False
     print('Fast pathfinding not available. Falling back on default Python implementation.')
 
 if FAST_PATHFINDING:
-    from fast_pathfinding import Grid_Manager as Grid_Manager
-    from fast_pathfinding import AStar as AStar
-    from fast_pathfinding import Djikstra as Djikstra
+    from .fast_pathfinding import Grid_Manager as Grid_Manager
+    from .fast_pathfinding import AStar as AStar
+    from .fast_pathfinding import Djikstra as Djikstra
 else:
     def compare_teams(team1, team2):
         # Returns True if allies, false if enemies

@@ -21,6 +21,7 @@ cdef class Node:
     cdef public int g
     cdef public float h
     cdef public float f
+
     def __init__(self, int x, int y, bint reachable, int cost):
         """
         Initialize new cell
@@ -41,6 +42,15 @@ cdef class Node:
         self.g = 0
         self.h = 0
         self.f = 0
+
+    def __gt__(self, n):
+        return self.cost > n
+
+    def __lt__(self, n):
+        return self.cost < n
+
+    def __hash__(self):
+        return hash(str(id(self)))
 
 class Grid_Manager(object):
     __slots__ = ['gridHeight', 'gridWidth', 'grids', 'team_map', 'unit_map', 'aura_map', 'known_auras']
