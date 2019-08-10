@@ -9,7 +9,7 @@ Because this was coded entirely from scratch, we are not bound by the limitation
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
 # Downloads
-release v0.9.0 - 64-bit Windows only
+release v0.9.3 - 64-bit Windows only
 
 *Dropbox:* https://www.dropbox.com/s/1ikh26td9d68z5n/the_lion_throne.zip?dl=0
 
@@ -68,8 +68,8 @@ However, if you are familiar with Python, Pygame, and Git, read on to find out h
 
 To run the engine, you will need to download and install the following:
 
-* [Python 2.7.x+](https://www.python.org/downloads/release/python-2712/) - Python 3.x will not work
-* [Pygame 1.9.1+](http://www.pygame.org/download.shtml) - The framework used to handle rendering and sound. If you have pip, you should try installing it with pip first: `pip install pygame`. Check this link out for more information: https://www.pygame.org/wiki/GettingStarted but remember we are working with Python 2.7.x, not Python 3.
+* [Python 3.7.x+](https://www.python.org/downloads/release/python-2712/) - As of August 2019, Python 2.x will no longer work
+* [Pygame 1.9.4+](http://www.pygame.org/download.shtml) - The framework used to handle rendering and sound. If you have pip, you should try installing it with pip first: `pip install pygame`. Check this link out for more information: https://www.pygame.org/wiki/GettingStarted.
 
 ### Installing
 
