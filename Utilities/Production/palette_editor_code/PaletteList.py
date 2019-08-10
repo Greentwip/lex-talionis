@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 class ColorDisplay(QtGui.QPushButton):
     colorChanged = QtCore.pyqtSignal(int, QtGui.QColor)

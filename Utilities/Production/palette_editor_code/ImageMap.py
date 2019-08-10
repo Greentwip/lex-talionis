@@ -1,5 +1,5 @@
 import os
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 
 class ImageMap(object):
     def __init__(self, image_filename):

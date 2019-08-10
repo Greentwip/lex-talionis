@@ -1,5 +1,7 @@
 import sys
-from PyQt4 import QtGui, QtCore
+
+from PyQt5.QtWidgets import * 
+from PyQt5.QtCore import *
 
 sys.path.append('../')
 import Code.configuration as cf
@@ -8,16 +10,10 @@ import Code.Engine as Engine
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 
-try:
-    import DataImport
-    from DataImport import Data
-    import EditorUtilities
-    from CustomGUI import GenderBox, CheckableComboBox
-except ImportError:
-    from . import DataImport
-    from EditorCode.DataImport import Data
-    from . import EditorUtilities
-    from EditorCode.CustomGUI import GenderBox, CheckableComboBox
+from . import DataImport
+from EditorCode.DataImport import Data
+from . import EditorUtilities
+from EditorCode.CustomGUI import GenderBox, CheckableComboBox
 
 class HasModes(object):
     def create_mode_combobox(self):
@@ -26,32 +22,32 @@ class HasModes(object):
         for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()):
             self.mode_box.addItem(name)
             row = self.mode_box.model().item(idx, 0)
-            row.setCheckState(QtCore.Qt.Checked)
+            row.setCheckState(Qt.Checked)
         self.form.addRow('Modes:', self.mode_box)
 
     def populate_mode(self, unit):
         for index, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()):
             row = self.mode_box.model().item(index, 0)
             if name in unit.mode:
-                row.setCheckState(QtCore.Qt.Checked)
+                row.setCheckState(Qt.Checked)
             else:
-                row.setCheckState(QtCore.Qt.Unchecked)
+                row.setCheckState(Qt.Unchecked)
 
     def get_modes(self):
         return [name for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values())
-                if self.mode_box.model().item(idx, 0).checkState() == QtCore.Qt.Checked]
+                if self.mode_box.model().item(idx, 0).checkState() == Qt.Checked]
 
-class LoadUnitDialog(QtGui.QDialog, HasModes):
+class LoadUnitDialog(QDialog, HasModes):
     def __init__(self, instruction, parent):
         super(LoadUnitDialog, self).__init__(parent)
-        self.form = QtGui.QFormLayout(self)
-        self.form.addRow(QtGui.QLabel(instruction))
+        self.form = QFormLayout(self)
+        self.form.addRow(QLabel(instruction))
 
         self.create_menus()
 
     def create_menus(self):
         # Team
-        self.team_box = QtGui.QComboBox()
+        self.team_box = QComboBox()
         self.team_box.uniformItemSizes = True
         for team in DataImport.teams:
             self.team_box.addItem(team)
@@ -59,9 +55,9 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
         self.form.addRow('Team:', self.team_box)
 
         # Unit Select
-        self.unit_box = QtGui.QComboBox()
+        self.unit_box = QComboBox()
         self.unit_box.uniformItemSizes = True
-        self.unit_box.setIconSize(QtCore.QSize(32, 32))
+        self.unit_box.setIconSize(QSize(32, 32))
         self.unit_data = list(Data.unit_data.values())
         for idx, unit in enumerate(self.unit_data):
             if unit.image:
@@ -71,18 +67,18 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
         self.form.addRow(self.unit_box)
 
         # Saved
-        self.saved_checkbox = QtGui.QCheckBox('Load from last level?')
+        self.saved_checkbox = QCheckBox('Load from last level?')
         self.form.addRow(self.saved_checkbox)
 
         # AI
-        self.ai_select = QtGui.QComboBox()
+        self.ai_select = QComboBox()
         self.ai_select.uniformItemSizes = True
         for ai_name in GC.AIDATA:
             self.ai_select.addItem(ai_name)
         self.form.addRow('Select AI:', self.ai_select)
 
         # AI Group
-        self.ai_group = QtGui.QLineEdit()
+        self.ai_group = QLineEdit()
         self.form.addRow('AI Group:', self.ai_group)
 
         self.create_mode_combobox()
@@ -90,7 +86,7 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
         self.ai_select.setEnabled(str(self.team_box.currentText()) != 'player')
         self.ai_group.setEnabled(str(self.team_box.currentText()) != 'player')
 
-        self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
+        self.buttonbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
         self.buttonbox.accepted.connect(self.accept)
         self.buttonbox.rejected.connect(self.reject)
@@ -122,7 +118,7 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
             dialog.load(current_unit)
         dialog.setWindowTitle(title)
         result = dialog.exec_()
-        if result == QtGui.QDialog.Accepted:
+        if result == QDialog.Accepted:
             unit = list(Data.unit_data.values())[dialog.unit_box.currentIndex()]
             unit.team = dialog.get_team()
             unit.ai = dialog.get_ai()
@@ -136,11 +132,11 @@ class LoadUnitDialog(QtGui.QDialog, HasModes):
 class ReinLoadUnitDialog(LoadUnitDialog):
     def __init__(self, instruction, parent):
         super(LoadUnitDialog, self).__init__(parent)
-        self.form = QtGui.QFormLayout(self)
-        self.form.addRow(QtGui.QLabel(instruction))
+        self.form = QFormLayout(self)
+        self.form.addRow(QLabel(instruction))
 
         # Pack
-        self.pack = QtGui.QLineEdit(parent.current_pack())
+        self.pack = QLineEdit(parent.current_pack())
         self.form.addRow('Group:', self.pack)
 
         self.create_menus()
@@ -164,7 +160,7 @@ class ReinLoadUnitDialog(LoadUnitDialog):
             dialog.load(current_unit)
         dialog.setWindowTitle(title)
         result = dialog.exec_()
-        if result == QtGui.QDialog.Accepted:
+        if result == QDialog.Accepted:
             unit = list(Data.unit_data.values())[dialog.unit_box.currentIndex()]
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
@@ -177,18 +173,18 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         else:
             return None, False
 
-class CreateUnitDialog(QtGui.QDialog, HasModes):
+class CreateUnitDialog(QDialog, HasModes):
     def __init__(self, instruction, unit_data, parent):
         super(CreateUnitDialog, self).__init__(parent)
-        self.form = QtGui.QFormLayout(self)
-        self.form.addRow(QtGui.QLabel(instruction))
+        self.form = QFormLayout(self)
+        self.form.addRow(QLabel(instruction))
         self.unit_data = unit_data
 
         self.create_menus()
 
     def create_menus(self):
         # Team
-        self.team_box = QtGui.QComboBox()
+        self.team_box = QComboBox()
         self.team_box.uniformItemSizes = True
         for team in DataImport.teams:
             self.team_box.addItem(team)
@@ -196,15 +192,15 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
         self.form.addRow('Team:', self.team_box)
 
         # Class
-        self.class_box = QtGui.QComboBox()
+        self.class_box = QComboBox()
         self.class_box.uniformItemSizes = True
-        self.class_box.setIconSize(QtCore.QSize(48, 32))
+        self.class_box.setIconSize(QSize(48, 32))
         for klass in Data.class_data.values():
             self.class_box.addItem(EditorUtilities.create_icon(klass.get_image('player', 0)), klass.name)
         self.form.addRow('Class:', self.class_box)
 
         # Level
-        self.level = QtGui.QSpinBox()
+        self.level = QSpinBox()
         self.level.setMinimum(1)
         self.form.addRow('Level:', self.level)
 
@@ -217,23 +213,23 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
         self.form.addRow('Items: ', item_grid)   
 
         # AI
-        self.ai_select = QtGui.QComboBox()
+        self.ai_select = QComboBox()
         self.ai_select.uniformItemSizes = True
         for ai_name in GC.AIDATA:
             self.ai_select.addItem(ai_name)
         self.form.addRow('AI:', self.ai_select)
 
         # AI Group
-        self.ai_group = QtGui.QLineEdit()
+        self.ai_group = QLineEdit()
         self.form.addRow('AI Group:', self.ai_group)
 
         self.ai_select.setEnabled(str(self.team_box.currentText()) != 'player')
         self.ai_group.setEnabled(str(self.team_box.currentText()) != 'player')
 
         # Faction
-        self.faction_select = QtGui.QComboBox()
+        self.faction_select = QComboBox()
         self.faction_select.uniformItemSizes = True
-        self.faction_select.setIconSize(QtCore.QSize(32, 32))
+        self.faction_select.setIconSize(QSize(32, 32))
         for faction_name, faction in self.unit_data.factions.items():
             image = GC.UNITDICT.get(faction.faction_icon + 'Emblem')
             if image:
@@ -245,7 +241,7 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
 
         self.create_mode_combobox()
 
-        self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
+        self.buttonbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
         self.buttonbox.accepted.connect(self.accept)
         self.buttonbox.rejected.connect(self.reject)
@@ -274,26 +270,26 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
         self.gender_changed(unit.gender)
 
     def set_up_items(self):
-        item_grid = QtGui.QGridLayout()
-        self.add_item_button = QtGui.QPushButton('Add Item')
+        item_grid = QGridLayout()
+        self.add_item_button = QPushButton('Add Item')
         self.add_item_button.clicked.connect(self.add_item_box)
-        self.remove_item_button = QtGui.QPushButton('Remove Item')
+        self.remove_item_button = QPushButton('Remove Item')
         self.remove_item_button.clicked.connect(self.remove_item_box)
 
         self.item_boxes = []
         for num in range(cf.CONSTANTS['max_items']):
-            self.item_boxes.append((self.create_item_combo_box(), QtGui.QCheckBox(), QtGui.QCheckBox()))
+            self.item_boxes.append((self.create_item_combo_box(), QCheckBox(), QCheckBox()))
         for index, item in enumerate(self.item_boxes):
             item_box, drop, event = item
-            item_grid.addWidget(item_box, index + 1, 0, 1, 2, QtCore.Qt.AlignTop)
-            item_grid.addWidget(drop, index + 1, 2, QtCore.Qt.AlignTop)
-            item_grid.addWidget(event, index + 1, 3, QtCore.Qt.AlignTop)
+            item_grid.addWidget(item_box, index + 1, 0, 1, 2, Qt.AlignTop)
+            item_grid.addWidget(drop, index + 1, 2, Qt.AlignTop)
+            item_grid.addWidget(event, index + 1, 3, Qt.AlignTop)
 
-        item_grid.addWidget(QtGui.QLabel('Name:'), 0, 0, 1, 2, QtCore.Qt.AlignTop)
-        item_grid.addWidget(QtGui.QLabel('Drop?'), 0, 2, QtCore.Qt.AlignTop)
-        item_grid.addWidget(QtGui.QLabel('Event?'), 0, 3, QtCore.Qt.AlignTop)
-        item_grid.addWidget(self.add_item_button, cf.CONSTANTS['max_items'] + 2, 0, 1, 2, QtCore.Qt.AlignBottom)
-        item_grid.addWidget(self.remove_item_button, cf.CONSTANTS['max_items'] + 2, 2, 1, 2, QtCore.Qt.AlignBottom)
+        item_grid.addWidget(QLabel('Name:'), 0, 0, 1, 2, Qt.AlignTop)
+        item_grid.addWidget(QLabel('Drop?'), 0, 2, Qt.AlignTop)
+        item_grid.addWidget(QLabel('Event?'), 0, 3, Qt.AlignTop)
+        item_grid.addWidget(self.add_item_button, cf.CONSTANTS['max_items'] + 2, 0, 1, 2, Qt.AlignBottom)
+        item_grid.addWidget(self.remove_item_button, cf.CONSTANTS['max_items'] + 2, 2, 1, 2, Qt.AlignBottom)
         self.clear_item_box()
         return item_grid
 
@@ -321,9 +317,9 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
             self.remove_item_button.setEnabled(False)
 
     def create_item_combo_box(self):
-        item_box = QtGui.QComboBox()
+        item_box = QComboBox()
         item_box.uniformItemSizes = True
-        item_box.setIconSize(QtCore.QSize(16, 16))
+        item_box.setIconSize(QSize(16, 16))
         for item in Data.item_data.values():
             if item.image:
                 item_box.addItem(EditorUtilities.create_icon(item.image), item.name)
@@ -388,7 +384,7 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
             dialog.load(current_unit)
         dialog.setWindowTitle(title)
         result = dialog.exec_()
-        if result == QtGui.QDialog.Accepted:
+        if result == QDialog.Accepted:
             unit = dialog.create_unit()
             return unit, True
         else:
@@ -397,12 +393,12 @@ class CreateUnitDialog(QtGui.QDialog, HasModes):
 class ReinCreateUnitDialog(CreateUnitDialog):
     def __init__(self, instruction, unit_data, parent):
         super(CreateUnitDialog, self).__init__(parent)
-        self.form = QtGui.QFormLayout(self)
-        self.form.addRow(QtGui.QLabel(instruction))
+        self.form = QFormLayout(self)
+        self.form.addRow(QLabel(instruction))
         self.unit_data = unit_data
 
         # Pack
-        self.pack = QtGui.QLineEdit(parent.current_pack())
+        self.pack = QLineEdit(parent.current_pack())
         self.form.addRow('Pack:', self.pack)
 
         self.create_menus()

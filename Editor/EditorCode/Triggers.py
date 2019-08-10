@@ -1,14 +1,11 @@
-from PyQt4 import QtGui
+from PyQt5.QtWidgets import * 
 
-try:
-    from CustomGUI import SignalList
-except ImportError:
-    from EditorCode.CustomGUI import SignalList
+from EditorCode.CustomGUI import SignalList
 
-class TriggerMenu(QtGui.QWidget):
+class TriggerMenu(QWidget):
     def __init__(self, unit_data, view, window=None):
         super(TriggerMenu, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
         self.view = view
@@ -22,9 +19,9 @@ class TriggerMenu(QtGui.QWidget):
 
         self.arrow = None
 
-        self.add_trigger_button = QtGui.QPushButton('Add Trigger')
+        self.add_trigger_button = QPushButton('Add Trigger')
         self.add_trigger_button.clicked.connect(self.add_trigger)
-        self.remove_trigger_button = QtGui.QPushButton('Remove Trigger')
+        self.remove_trigger_button = QPushButton('Remove Trigger')
         self.remove_trigger_button.clicked.connect(self.remove_trigger)
 
         self.grid.addWidget(self.list, 0, 0)
@@ -32,9 +29,9 @@ class TriggerMenu(QtGui.QWidget):
         self.grid.addWidget(self.remove_trigger_button, 2, 0)
 
     def add_trigger(self):
-        trigger, ok = QtGui.QInputDialog.getText(self, "New Trigger", 'Enter name of new move trigger:')
+        trigger, ok = QInputDialog.getText(self, "New Trigger", 'Enter name of new move trigger:')
         if ok:
-            item = QtGui.QListWidgetItem(trigger)
+            item = QListWidgetItem(trigger)
             self.list.addItem(item)
             self.unit_data.add_trigger(trigger)
             self.list.scrollToBottom()
@@ -68,7 +65,7 @@ class TriggerMenu(QtGui.QWidget):
         self.unit_data = unit_data
         # Ingest Data
         for trigger_name in self.unit_data.triggers:
-            item = QtGui.QListWidgetItem(trigger_name)
+            item = QListWidgetItem(trigger_name)
             self.list.addItem(item)
 
     def clear(self):

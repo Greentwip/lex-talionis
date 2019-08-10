@@ -1,18 +1,15 @@
 from collections import OrderedDict
 
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import * 
+from PyQt5.QtCore import *
 
-try:
-    import CustomGUI as LtGui
-    import EditorUtilities
-except ImportError:
-    from . import CustomGUI as LtGui
-    from . import EditorUtilities
+from . import CustomGUI as LtGui
+from . import EditorUtilities
 
-class MusicDialog(QtGui.QDialog):
+class MusicDialog(QDialog):
     def __init__(self, parent):
         super(MusicDialog, self).__init__(parent)
-        music_grid = QtGui.QGridLayout(self)
+        music_grid = QGridLayout(self)
         music_grid.setVerticalSpacing(0)
 
         self.player_music = LtGui.MusicBox('Player Phase Music')
@@ -50,10 +47,10 @@ class MusicDialog(QtGui.QDialog):
         result = dialog.exec_()
         return dialog.save(), True
 
-class PropertyMenu(QtGui.QWidget):
+class PropertyMenu(QWidget):
     def __init__(self, window=None):
         super(PropertyMenu, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         # self.grid.setVerticalSpacing(1)
         self.setLayout(self.grid)
         self.window = window
@@ -66,18 +63,18 @@ class PropertyMenu(QtGui.QWidget):
         self.party.setMaximum(15)
         self.grid.addWidget(self.party, 1, 0)
 
-        self.prep = QtGui.QCheckBox('Show Prep Menu?')
+        self.prep = QCheckBox('Show Prep Menu?')
         self.grid.addWidget(self.prep, 2, 0)
 
         self.prep_music = LtGui.MusicBox('Prep Music')
         self.grid.addWidget(self.prep_music, 3, 0)
 
-        self.pick = QtGui.QCheckBox('Allow Pick Units?')
+        self.pick = QCheckBox('Allow Pick Units?')
         self.grid.addWidget(self.pick, 4, 0)
 
         self.prep.stateChanged.connect(self.prep_enable)
 
-        self.base = QtGui.QCheckBox('Show Base Menu?')
+        self.base = QCheckBox('Show Base Menu?')
         self.grid.addWidget(self.base, 5, 0)
 
         self.base_music = LtGui.MusicBox('Base Music')
@@ -88,14 +85,14 @@ class PropertyMenu(QtGui.QWidget):
 
         self.base.stateChanged.connect(self.base_enable)
 
-        self.market = QtGui.QCheckBox('Allow Prep/Base Market?')
+        self.market = QCheckBox('Allow Prep/Base Market?')
         self.grid.addWidget(self.market, 8, 0)
 
-        self.transition = QtGui.QCheckBox('Show Chpt. Transition?')
+        self.transition = QCheckBox('Show Chpt. Transition?')
         self.grid.addWidget(self.transition, 9, 0)
 
         EditorUtilities.add_line(self.grid, 10)
-        self.music_button = QtGui.QPushButton('Phase Music')
+        self.music_button = QPushButton('Phase Music')
         self.music_button.clicked.connect(self.edit_music)
         self.grid.addWidget(self.music_button, 11, 0)
         EditorUtilities.add_line(self.grid, 12)
@@ -116,8 +113,8 @@ class PropertyMenu(QtGui.QWidget):
             self.enemy_battle_music = music['enemy_battle_music']
 
     def create_weather(self, row):
-        grid = QtGui.QGridLayout()
-        weather = QtGui.QLabel('Weather')
+        grid = QGridLayout()
+        weather = QLabel('Weather')
         grid.addWidget(weather, 1, 0)
 
         self.weathers = ('Light', 'Dark', 'Rain', 'Sand', 'Snow', 'Fire')
@@ -125,11 +122,11 @@ class PropertyMenu(QtGui.QWidget):
         self.functions = (self.light_check, self.dark_check, self.rain_check, self.sand_check, self.snow_check, self.fire_check)
         self.weather_boxes = []
         for idx, weather in enumerate(self.weathers):
-            label = QtGui.QLabel(weather)
-            grid.addWidget(label, 0, idx + 1, alignment=QtCore.Qt.AlignHCenter)
-            check_box = QtGui.QCheckBox()
+            label = QLabel(weather)
+            grid.addWidget(label, 0, idx + 1, alignment=Qt.AlignHCenter)
+            check_box = QCheckBox()
             check_box.stateChanged.connect(self.functions[idx])
-            grid.addWidget(check_box, 1, idx + 1, alignment=QtCore.Qt.AlignHCenter)
+            grid.addWidget(check_box, 1, idx + 1, alignment=Qt.AlignHCenter)
             self.weather_boxes.append(check_box)
 
         self.grid.addLayout(grid, row, 0, 2, 1)
@@ -148,8 +145,8 @@ class PropertyMenu(QtGui.QWidget):
     def fire_check(self): self.weather_check(5)
 
     def create_objective(self, row):
-        label = QtGui.QLabel('WIN CONDITION')
-        self.grid.addWidget(label, row, 0, alignment=QtCore.Qt.AlignHCenter)
+        label = QLabel('WIN CONDITION')
+        self.grid.addWidget(label, row, 0, alignment=Qt.AlignHCenter)
 
         self.simple_display = LtGui.StringBox('Simple Display')
         self.grid.addWidget(self.simple_display, row + 1, 0)

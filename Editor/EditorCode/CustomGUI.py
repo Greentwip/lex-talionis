@@ -1,17 +1,18 @@
 # Custom GUI widgets
 import os, shutil
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
-class MusicBox(QtGui.QWidget):
+class MusicBox(QWidget):
     def __init__(self, label, music='', window=None):
         super(MusicBox, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
 
-        self.label = QtGui.QLabel(label)
-        self.txt = QtGui.QLineEdit(music)
-        self.button = QtGui.QPushButton('...')
+        self.label = QLabel(label)
+        self.txt = QLineEdit(music)
+        self.button = QPushButton('...')
         self.button.clicked.connect(self.change)
 
         self.grid.addWidget(self.label, 0, 0)
@@ -19,9 +20,9 @@ class MusicBox(QtGui.QWidget):
         self.grid.addWidget(self.button, 0, 2)
 
     def change(self):
-        starting_path = QtCore.QDir.currentPath() + '/../Audio/music'
+        starting_path = QDir.currentPath() + '/../Audio/music'
         print(starting_path)
-        music_file = QtGui.QFileDialog.getOpenFileName(self, "Select Music File", starting_path,
+        music_file = QFileDialog.getOpenFileName(self, "Select Music File", starting_path,
                                                        "OGG Files (*.ogg);;All Files (*)")
         if music_file:
             music_file = str(music_file)
@@ -39,16 +40,16 @@ class MusicBox(QtGui.QWidget):
     def setText(self, text):
         self.txt.setText(text)
 
-class ImageBox(QtGui.QWidget):
+class ImageBox(QWidget):
     def __init__(self, label, image='', window=None):
         super(ImageBox, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
 
-        self.label = QtGui.QLabel(label)
-        self.txt = QtGui.QLineEdit(image)
-        self.button = QtGui.QPushButton('...')
+        self.label = QLabel(label)
+        self.txt = QLineEdit(image)
+        self.button = QPushButton('...')
         self.button.clicked.connect(self.change)
 
         self.grid.addWidget(self.label, 0, 0)
@@ -56,14 +57,14 @@ class ImageBox(QtGui.QWidget):
         self.grid.addWidget(self.button, 0, 2)
 
     def change(self):
-        starting_path = QtCore.QDir.currentPath() + '/../Sprites/General/Panoramas'
+        starting_path = QDir.currentPath() + '/../Sprites/General/Panoramas'
         print(starting_path)
-        image_file = QtGui.QFileDialog.getOpenFileName(self, "Select Image File", starting_path,
+        image_file = QFileDialog.getOpenFileName(self, "Select Image File", starting_path,
                                                        "PNG Files (*.png);;All Files (*)")
         if image_file:
-            image = QtGui.QImage(image_file)
+            image = QImage(image_file)
             if image.width() != 240 or image.height() != 160:
-                QtGui.QErrorMessage().showMessage("Image chosen is not 240 pixels wide by 160 pixels high!")
+                QErrorMessage().showMessage("Image chosen is not 240 pixels wide by 160 pixels high!")
                 return
             image_file = str(image_file)
             starting_path = str(starting_path)
@@ -80,16 +81,16 @@ class ImageBox(QtGui.QWidget):
     def setText(self, text):
         self.txt.setText(text)
 
-class StringBox(QtGui.QWidget):
+class StringBox(QWidget):
     def __init__(self, label, text='', max_length=None, window=None):
         super(StringBox, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
 
-        label = QtGui.QLabel(label)
+        label = QLabel(label)
         self.grid.addWidget(label, 0, 0)
-        self.txt = QtGui.QLineEdit(text)
+        self.txt = QLineEdit(text)
         if max_length:
             self.txt.setMaxLength(max_length)
         self.grid.addWidget(self.txt, 0, 1)
@@ -100,16 +101,16 @@ class StringBox(QtGui.QWidget):
     def setText(self, text):
         self.txt.setText(text)
 
-class IntBox(QtGui.QWidget):
+class IntBox(QWidget):
     def __init__(self, label, window=None):
         super(IntBox, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
 
-        label = QtGui.QLabel(label)
+        label = QLabel(label)
         self.grid.addWidget(label, 0, 0)
-        self.txt = QtGui.QSpinBox()
+        self.txt = QSpinBox()
         self.grid.addWidget(self.txt, 0, 1)
 
     def setMinimum(self, i):
@@ -124,7 +125,7 @@ class IntBox(QtGui.QWidget):
     def setValue(self, i):
         self.txt.setValue(i)
 
-class SignalList(QtGui.QListWidget):
+class SignalList(QListWidget):
     def __init__(self, parent=None, del_func=None):
         super(SignalList, self).__init__()
         self.parent = parent
@@ -137,18 +138,18 @@ class SignalList(QtGui.QListWidget):
 
     def keyPressEvent(self, event):
         super(SignalList, self).keyPressEvent(event)
-        if self.del_func and event.key() == QtCore.Qt.Key_Delete:
+        if self.del_func and event.key() == Qt.Key_Delete:
             self.del_func()
 
 class DragAndDropSignalList(SignalList):
-    itemMoved = QtCore.pyqtSignal(int, int, QtGui.QListWidgetItem)
+    itemMoved = pyqtSignal(int, int, QListWidgetItem)
 
     def __init__(self, parent=None, del_func=None):
         super(DragAndDropSignalList, self).__init__(parent, del_func)
 
         self.setAcceptDrops(True)
         self.setDragEnabled(True)
-        self.setDragDropMode(QtGui.QAbstractItemView.InternalMove)
+        self.setDragDropMode(QAbstractItemView.InternalMove)
         self.drag_item = None
         self.drag_row = None
 
@@ -162,31 +163,31 @@ class DragAndDropSignalList(SignalList):
         self.drag_row = self.row(self.drag_item)
         super(DragAndDropSignalList, self).startDrag(supportedActions)
 
-class CheckableComboBox(QtGui.QComboBox):
+class CheckableComboBox(QComboBox):
     def __init__(self):
         super(CheckableComboBox, self).__init__()
         self.view().pressed.connect(self.handleItemPressed)
-        self.setModel(QtGui.QStandardItemModel(self))
+        self.setModel(QStandardItemModel(self))
 
     def handleItemPressed(self, index):
         item = self.model().itemFromIndex(index)
-        if item.checkState() == QtCore.Qt.Checked:
-            item.setCheckState(QtCore.Qt.Unchecked)
+        if item.checkState() == Qt.Checked:
+            item.setCheckState(Qt.Unchecked)
         else:
-            item.setCheckState(QtCore.Qt.Checked)
+            item.setCheckState(Qt.Checked)
 
-class GenderBox(QtGui.QGroupBox):
+class GenderBox(QGroupBox):
     def __init__(self, window=None):
         super(GenderBox, self).__init__()
         self.window = window
 
-        self.radios = (QtGui.QRadioButton("Male:"), QtGui.QRadioButton("Female:"))
+        self.radios = (QRadioButton("Male:"), QRadioButton("Female:"))
         self.radios[0].setChecked(True)
         self.gender = 0
 
-        hbox = QtGui.QHBoxLayout()
+        hbox = QHBoxLayout()
 
-        self.gender_buttons = QtGui.QButtonGroup()
+        self.gender_buttons = QButtonGroup()
         for idx, radio in enumerate(self.radios):
             hbox.addWidget(radio)
             self.gender_buttons.addButton(radio, idx)

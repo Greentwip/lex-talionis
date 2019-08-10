@@ -1,4 +1,7 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import * 
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+
 import sys
 from itertools import count
 sys.path.append('../')
@@ -9,25 +12,25 @@ import Code.GlobalConstants as GC
 # Editor Utilities
 
 # === VIEW AND CONTROLLER METHODS ============================================
-class ImageWidget(QtGui.QWidget):
+class ImageWidget(QWidget):
     def __init__(self, surface, parent=None):
         super(ImageWidget, self).__init__(parent)
         w = surface.get_width()
         h = surface.get_height()
         self.data = surface.get_buffer().raw
-        # self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_RGB32)
-        self.image = QtGui.QImage(self.data, w, h, QtGui.QImage.Format_ARGB32)
+        # self.image = QImage(self.data, w, h, QImage.Format_RGB32)
+        self.image = QImage(self.data, w, h, QImage.Format_ARGB32)
         self.resize(w, h)
 
 def create_icon(image):
     icon = ImageWidget(image)
-    icon = QtGui.QPixmap(icon.image)
-    icon = QtGui.QIcon(icon)
+    icon = QPixmap(icon.image)
+    icon = QIcon(icon)
     return icon
 
 def create_pixmap(image):
     icon = ImageWidget(image)
-    icon = QtGui.QPixmap(icon.image)
+    icon = QPixmap(icon.image)
     return icon
 
 def create_image(image):
@@ -44,13 +47,13 @@ def create_cursor():
     return create_image(activesprite)
 
 def setOpacity(image, opacity):
-    new_img = QtGui.QImage(image.size(), QtGui.QImage.Format_ARGB32)
-    new_img.fill(QtCore.Qt.transparent)
+    new_img = QImage(image.size(), QImage.Format_ARGB32)
+    new_img.fill(Qt.transparent)
 
-    painter = QtGui.QPainter()
+    painter = QPainter()
     painter.begin(new_img)
     painter.setOpacity(opacity)
-    painter.drawImage(QtCore.QRect(0, 0, image.width(), image.height()), image)
+    painter.drawImage(QRect(0, 0, image.width(), image.height()), image)
     painter.end()
 
     return new_img
@@ -68,19 +71,19 @@ def next_available_event_id(reinforcements):
 
 # === MAKE PRETTY ===
 def stretch(grid):
-    box_h = QtGui.QHBoxLayout()
+    box_h = QHBoxLayout()
     box_h.addStretch(1)
     box_h.addLayout(grid)
     box_h.addStretch(1)
-    box_v = QtGui.QVBoxLayout()
+    box_v = QVBoxLayout()
     box_v.addStretch(1)
     box_v.addLayout(box_h)
     box_v.addStretch(1)
     return box_v
 
 def add_line(grid, row):
-    line = QtGui.QFrame()
-    line.setFrameStyle(QtGui.QFrame.HLine)
+    line = QFrame()
+    line.setFrameStyle(QFrame.HLine)
     line.setLineWidth(0)
     grid.addWidget(line, row, 0)
 

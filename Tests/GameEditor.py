@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 import sys
 sys.path.append('../')
 import Code.configuration as cf

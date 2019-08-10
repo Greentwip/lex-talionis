@@ -1,17 +1,15 @@
 import sys
-from PyQt4 import QtGui, QtCore
+
+from PyQt5.QtWidgets import * 
+from PyQt5.QtCore import *
 
 sys.path.append('../')
 import Code.Engine as Engine
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 
-try:
-    import EditorUtilities
-    from CustomGUI import SignalList
-except ImportError:
-    from . import EditorUtilities
-    from EditorCode.CustomGUI import SignalList
+from . import EditorUtilities
+from EditorCode.CustomGUI import SignalList
 
 all_faction_icons = [key[:-6] for key in GC.UNITDICT if key.endswith('Emblem')]
 
@@ -22,17 +20,17 @@ class Faction(object):
         self.faction_icon = faction_icon
         self.desc = desc
 
-class FactionDialog(QtGui.QDialog):
+class FactionDialog(QDialog):
     def __init__(self, instruction, faction=None, parent=None):
         super(FactionDialog, self).__init__(parent)
-        self.form = QtGui.QFormLayout(self)
-        self.form.addRow(QtGui.QLabel(instruction))
+        self.form = QFormLayout(self)
+        self.form.addRow(QLabel(instruction))
 
-        self.id_line_edit = QtGui.QLineEdit()
-        self.unit_name_line_edit = QtGui.QLineEdit()
-        self.faction_icon_box = QtGui.QComboBox()
-        self.faction_icon_box.setIconSize(QtCore.QSize(32, 32))
-        self.desc_text_edit = QtGui.QTextEdit()
+        self.id_line_edit = QLineEdit()
+        self.unit_name_line_edit = QLineEdit()
+        self.faction_icon_box = QComboBox()
+        self.faction_icon_box.setIconSize(QSize(32, 32))
+        self.desc_text_edit = QTextEdit()
         self.desc_text_edit.setFixedHeight(48)
 
         for faction_icon in all_faction_icons:
@@ -52,7 +50,7 @@ class FactionDialog(QtGui.QDialog):
         self.form.addRow("Faction Icon:", self.faction_icon_box)
         self.form.addRow("Description:", self.desc_text_edit)
 
-        self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
+        self.buttonbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
         self.buttonbox.accepted.connect(self.accept)
         self.buttonbox.rejected.connect(self.reject)
@@ -67,32 +65,32 @@ class FactionDialog(QtGui.QDialog):
         dialog.setWindowTitle(title)
         result = dialog.exec_()
         faction_obj = dialog.build_faction()
-        return faction_obj, result == QtGui.QDialog.Accepted
+        return faction_obj, result == QDialog.Accepted
 
-class FactionMenu(QtGui.QWidget):
+class FactionMenu(QWidget):
     def __init__(self, unit_data, view, window=None):
         super(FactionMenu, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
         self.view = view
 
-        # self.load_player_characters = QtGui.QCheckBox('Load saved player characters?')
+        # self.load_player_characters = QCheckBox('Load saved player characters?')
         # self.load_player_characters.stateChanged.connect(self.set_load_player_characters)
 
         self.list = SignalList(self, del_func=self.remove_faction)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
-        self.list.setIconSize(QtCore.QSize(32, 32))
+        self.list.setIconSize(QSize(32, 32))
 
         self.unit_data = unit_data
         self.load(unit_data)
 
         self.list.itemDoubleClicked.connect(self.modify_faction)
 
-        self.add_faction_button = QtGui.QPushButton('Add Faction')
+        self.add_faction_button = QPushButton('Add Faction')
         self.add_faction_button.clicked.connect(self.add_faction)
-        self.remove_faction_button = QtGui.QPushButton('Remove Faction')
+        self.remove_faction_button = QPushButton('Remove Faction')
         self.remove_faction_button.clicked.connect(self.remove_faction)
 
         # self.grid.addWidget(self.load_player_characters, 0, 0)
@@ -101,7 +99,7 @@ class FactionMenu(QtGui.QWidget):
         self.grid.addWidget(self.remove_faction_button, 3, 0)
 
     def create_item(self, faction):
-        item = QtGui.QListWidgetItem(faction.faction_id)
+        item = QListWidgetItem(faction.faction_id)
 
         image = GC.UNITDICT.get(faction.faction_icon + 'Emblem')
         if image:

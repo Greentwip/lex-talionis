@@ -1,17 +1,15 @@
 import os
 # Terrain Data Menu
-from PyQt4 import QtGui, QtCore
+from PyQt5.QtWidgets import * 
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 
 import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
 Engine.engine_constants['home'] = '../'
 
-try:
-    from DataImport import Data
-    from CustomGUI import SignalList
-except ImportError:
-    from EditorCode.DataImport import Data
-    from EditorCode.CustomGUI import SignalList
+from EditorCode.DataImport import Data
+from EditorCode.CustomGUI import SignalList
 
 class Autotiles(object):
     def __init__(self):
@@ -26,7 +24,7 @@ class Autotiles(object):
         self.autotile_frame = 0
         if os.path.exists(auto_loc):
             files = sorted([fp for fp in os.listdir(auto_loc) if fp.startswith('autotile') and fp.endswith('.png')], key=lambda x: int(x[8:-4]))
-            self.autotiles = [QtGui.QImage(auto_loc + image) for image in files]
+            self.autotiles = [QImage(auto_loc + image) for image in files]
         else:
             self.autotiles = []
 
@@ -65,14 +63,14 @@ class TileData(object):
 
     def load(self, tilefp):
         self.tiles = {}
-        tiledata = QtGui.QImage(tilefp)
+        tiledata = QImage(tilefp)
         colorkey, self.width, self.height = self.build_color_key(tiledata)
         self.populate_tiles(colorkey)
 
     def new(self, image_file):
         self.clear()
         self.image_file = str(image_file)
-        image = QtGui.QImage(image_file)
+        image = QImage(image_file)
         self.width, self.height = image.width() / 16, image.height() / 16
 
         mapObj = []
@@ -80,7 +78,7 @@ class TileData(object):
             mapObj.append([])
         for y in range(self.height):
             for x in range(self.width):
-                color = QtGui.QColor.fromRgb(*self.GRASS_TILE)
+                color = QColor.fromRgb(*self.GRASS_TILE)
                 mapObj[x].append((color.red(), color.green(), color.blue()))
 
         self.populate_tiles(mapObj)
@@ -95,8 +93,8 @@ class TileData(object):
             mapObj.append([])
         for y in range(height):
             for x in range(width):
-                pos = QtCore.QPoint(x, y)
-                color = QtGui.QColor.fromRgb(tiledata.pixel(pos))
+                pos = QPoint(x, y)
+                color = QColor.fromRgb(tiledata.pixel(pos))
                 mapObj[x].append((color.red(), color.green(), color.blue()))
 
         return mapObj, width, height
@@ -107,35 +105,35 @@ class TileData(object):
                 cur = colorKeyObj[x][y]
                 self.tiles[(x, y)] = cur
 
-class TerrainMenu(QtGui.QWidget):
+class TerrainMenu(QWidget):
     def __init__(self, tile_data, view, window=None):
         super(TerrainMenu, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.tile_data = tile_data
         self.window = window
 
         self.view = view
 
-        self.alpha_slider = QtGui.QSlider(QtCore.Qt.Horizontal, self)
+        self.alpha_slider = QSlider(Qt.Horizontal, self)
         self.alpha_slider.setRange(0, 255)
         self.alpha_slider.setValue(192)
-        self.grid.addWidget(QtGui.QLabel("Transparency"), 0, 0)
+        self.grid.addWidget(QLabel("Transparency"), 0, 0)
         self.grid.addWidget(self.alpha_slider, 0, 1)
 
         self.list = SignalList(self)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
-        self.list.setIconSize(QtCore.QSize(32, 32))
+        self.list.setIconSize(QSize(32, 32))
 
         # Ingest terrain_data
         for color, terrain in Data.terrain_data.items():
             tid, name = terrain
-            pixmap = QtGui.QPixmap(32, 32)
-            pixmap.fill(QtGui.QColor(color[0], color[1], color[2]))
+            pixmap = QPixmap(32, 32)
+            pixmap.fill(QColor(color[0], color[1], color[2]))
 
-            item = QtGui.QListWidgetItem(tid + ': ' + name)
-            item.setIcon(QtGui.QIcon(pixmap))
+            item = QListWidgetItem(tid + ': ' + name)
+            item.setIcon(QIcon(pixmap))
             self.list.addItem(item)
 
         self.grid.addWidget(self.list, 1, 0, 1, 2)

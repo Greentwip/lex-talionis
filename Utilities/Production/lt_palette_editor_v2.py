@@ -1,6 +1,6 @@
 import sys, os
 import glob
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 
 from palette_editor_code import PaletteList
 from palette_editor_code import ImageMap

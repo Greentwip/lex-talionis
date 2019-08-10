@@ -1,6 +1,8 @@
 from collections import OrderedDict
 import sys
-from PyQt4 import QtGui, QtCore
+
+from PyQt5.QtWidgets import * 
+from PyQt5.QtCore import *
 
 sys.path.append('../')
 import Code.Engine as Engine
@@ -15,16 +17,10 @@ from Code.StatObject import build_stat_dict
 import Code.Utility as Utility
 from Code.Triggers import Trigger
 
-try:
-    import DataImport
-    from DataImport import Data
-    import EditorUtilities, Faction, UnitDialogs
-    from CustomGUI import DragAndDropSignalList
-except ImportError:
-    from . import DataImport
-    from EditorCode.DataImport import Data
-    from . import EditorUtilities, Faction, UnitDialogs
-    from EditorCode.CustomGUI import DragAndDropSignalList
+from . import DataImport
+from EditorCode.DataImport import Data
+from . import EditorUtilities, Faction, UnitDialogs
+from EditorCode.CustomGUI import DragAndDropSignalList
 
 class UnitData(object):
     def __init__(self):
@@ -366,7 +362,7 @@ class UnitData(object):
         return stats, growth_points
 
 # This allows for drawing the units items to the right of the unit on the list menu
-class ItemDelegate(QtGui.QStyledItemDelegate):
+class ItemDelegate(QStyledItemDelegate):
     def __init__(self, unit_data=None, rein=False):
         super(ItemDelegate, self).__init__()
         self.unit_data = unit_data
@@ -383,10 +379,10 @@ class ItemDelegate(QtGui.QStyledItemDelegate):
             rect = option.rect
             painter.drawImage(rect.right() - ((idx + 1) * 16), rect.center().y() - 8, EditorUtilities.create_image(image))
 
-class UnitMenu(QtGui.QWidget):
+class UnitMenu(QWidget):
     def __init__(self, unit_data, view, window):
         super(UnitMenu, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
         self.view = view
@@ -396,7 +392,7 @@ class UnitMenu(QtGui.QWidget):
         self.list = DragAndDropSignalList(self, del_func=self.remove_unit)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
-        self.list.setIconSize(QtCore.QSize(32, 32))
+        self.list.setIconSize(QSize(32, 32))
         self.delegate = ItemDelegate(unit_data)
         self.list.setItemDelegate(self.delegate)
         self.list.itemMoved.connect(self.drag_unit)
@@ -404,14 +400,14 @@ class UnitMenu(QtGui.QWidget):
         self.load(unit_data)
         self.list.currentItemChanged.connect(self.center_on_unit)
         self.list.itemDoubleClicked.connect(self.modify_unit)
-        # delete_key = QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Delete), self.list)
-        # self.connect(delete_key, QtCore.SIGNAL('activated()'), self.remove_unit)
+        # delete_key = QShortcut(QKeySequence(Qt.Key_Delete), self.list)
+        # self.connect(delete_key, SIGNAL('activated()'), self.remove_unit)
 
-        self.load_unit_button = QtGui.QPushButton('Load Unit')
+        self.load_unit_button = QPushButton('Load Unit')
         self.load_unit_button.clicked.connect(self.load_unit)
-        self.create_unit_button = QtGui.QPushButton('Create Unit')
+        self.create_unit_button = QPushButton('Create Unit')
         self.create_unit_button.clicked.connect(self.create_unit)
-        self.remove_unit_button = QtGui.QPushButton('Remove Unit')
+        self.remove_unit_button = QPushButton('Remove Unit')
         self.remove_unit_button.clicked.connect(self.remove_unit)
 
         self.grid.addWidget(self.list, 2, 0)
@@ -425,13 +421,13 @@ class UnitMenu(QtGui.QWidget):
     #     self.view.tool = 'Units'
 
     def create_mode_view_box(self):
-        self.mode_view_label = QtGui.QLabel("Current Mode:")
+        self.mode_view_label = QLabel("Current Mode:")
         names = [mode['name'] for mode in GC.DIFFICULTYDATA.values()]
-        self.mode_view_combobox = QtGui.QComboBox()
+        self.mode_view_combobox = QComboBox()
         for name in names:
             self.mode_view_combobox.addItem(name)
 
-        hbox = QtGui.QHBoxLayout()
+        hbox = QHBoxLayout()
         hbox.addWidget(self.mode_view_label)
         hbox.addWidget(self.mode_view_combobox)
         self.grid.addLayout(hbox, 0, 0)
@@ -476,14 +472,14 @@ class UnitMenu(QtGui.QWidget):
 
     def create_item(self, unit):
         if unit.generic:
-            item = QtGui.QListWidgetItem(str(unit.klass) + ': L' + str(unit.level))
+            item = QListWidgetItem(str(unit.klass) + ': L' + str(unit.level))
         else:
-            item = QtGui.QListWidgetItem(unit.id)
+            item = QListWidgetItem(unit.id)
         klass = Data.class_data.get(unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
         if not unit.position:
-            item.setTextColor(QtGui.QColor("red"))
+            item.setTextColor(QColor("red"))
         return item
 
     def load_unit(self):
@@ -506,7 +502,7 @@ class UnitMenu(QtGui.QWidget):
                 self.window.update_view()
         else:
             # Show pop-up
-            QtGui.QMessageBox.critical(self, "No Faction!", "Must create at least one faction to create a generic unit!")
+            QMessageBox.critical(self, "No Faction!", "Must create at least one faction to create a generic unit!")
 
     def remove_unit(self):
         unit_idx = self.list.currentRow()
@@ -555,16 +551,16 @@ class ReinforcementMenu(UnitMenu):
         self.delegate = ItemDelegate(unit_data, rein=True)
         self.list.setItemDelegate(self.delegate)
 
-        self.pack_view_label = QtGui.QLabel("Group to display:")
-        self.pack_view_combobox = QtGui.QComboBox()
+        self.pack_view_label = QLabel("Group to display:")
+        self.pack_view_combobox = QComboBox()
         self.packs = []
 
-        hbox = QtGui.QHBoxLayout()
+        hbox = QHBoxLayout()
         hbox.addWidget(self.pack_view_label)
         hbox.addWidget(self.pack_view_combobox)
         self.grid.addLayout(hbox, 1, 0)
 
-        self.duplicate_group_button = QtGui.QPushButton('Duplicate Group')
+        self.duplicate_group_button = QPushButton('Duplicate Group')
         self.duplicate_group_button.clicked.connect(self.duplicate_current_pack)
         self.grid.addWidget(self.duplicate_group_button, 5, 0)
 
@@ -606,14 +602,14 @@ class ReinforcementMenu(UnitMenu):
 
     def create_item(self, unit):
         if unit.generic:
-            item = QtGui.QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- L' + str(unit.level))
+            item = QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- L' + str(unit.level))
         else:
-            item = QtGui.QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- ' + unit.name)
+            item = QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- ' + unit.name)
         klass = Data.class_data.get(unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
         if not unit.position:
-            item.setTextColor(QtGui.QColor("red"))
+            item.setTextColor(QColor("red"))
         if unit.pack not in self.packs:
             self.packs.append(unit.pack)
             self.pack_view_combobox.addItem(unit.pack)
@@ -640,7 +636,7 @@ class ReinforcementMenu(UnitMenu):
                 self.window.update_view()
         else:
             # Show pop-up
-            QtGui.QErrorMessage().showMessage("Must create at least one faction to use generic units!")
+            QErrorMessage().showMessage("Must create at least one faction to use generic units!")
 
     def remove_unit(self):
         unit_idx = self.list.currentRow()
@@ -690,7 +686,7 @@ class ReinforcementMenu(UnitMenu):
 
     def duplicate_current_pack(self):
         current_pack = self.current_pack()  # Need to be saved since it changes within this function's for loop
-        new_name, ok = QtGui.QInputDialog.getText(self, "Duplicate Group", 'Enter name of duplicated group:',
+        new_name, ok = QInputDialog.getText(self, "Duplicate Group", 'Enter name of duplicated group:',
                                                   text=current_pack if current_pack else "")
         if ok:
             if not any(rein.pack == new_name for rein in self.unit_data.reinforcements):
@@ -707,7 +703,7 @@ class ReinforcementMenu(UnitMenu):
                 self.window.update_view()
             else:
                 # Show pop-up
-                QtGui.QErrorMessage().showMessage("Must use new name for duplicated group!")
+                QErrorMessage().showMessage("Must use new name for duplicated group!")
 
     def tick(self, current_time):
         if GC.PASSIVESPRITECOUNTER.update(current_time):

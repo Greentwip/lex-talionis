@@ -1,4 +1,4 @@
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 COLORKEY = (128, 160, 128)
 
 class ImageView(QtGui.QGraphicsView):

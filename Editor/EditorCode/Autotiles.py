@@ -1,7 +1,7 @@
 # Autotile maker part 2
 import os, sys, time
 from collections import Counter, OrderedDict
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from PIL import Image
 
 sys.path.append('../')
@@ -28,7 +28,7 @@ def similar_slow(p1, p2):
     return sum(i != j for i, j in zip(diff(p1), diff(p2)))
 
 def transpose_sorted(p):
-    return [y for x, y in sorted(zip(range(WIDTH*WIDTH), p), key=lambda (x, y): x%WIDTH)]
+    return [y for x, y in sorted(zip(range(WIDTH*WIDTH), p), key=lambda t: t[0]%WIDTH)]
 
 def transpose_lc(p):
     return [p[i*WIDTH + j] for j in range(WIDTH) for i in range(WIDTH)]
@@ -187,7 +187,7 @@ class AutotileMaker(object):
 
         # Set up progress Dialog
         msg = "Generating Autotiles..."
-        self.progress_dlg = QtGui.QProgressDialog(msg, "Cancel", 0, 100, window)
+        self.progress_dlg = QProgressDialog(msg, "Cancel", 0, 100, window)
         self.progress_dlg.setAutoClose(True)
         self.progress_dlg.setWindowTitle(msg)
         self.progress_dlg.canceled.connect(self.cancel)
@@ -195,7 +195,7 @@ class AutotileMaker(object):
         self.progress_dlg.setValue(0)
 
         # === Timing ===
-        self.main_timer = QtCore.QTimer()
+        self.main_timer = QTimer()
         self.main_timer.timeout.connect(self.tick)
         self.main_timer.start(1)  # 120 FPS
 

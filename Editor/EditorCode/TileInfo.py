@@ -1,6 +1,9 @@
 # Terrain Data Menu
 import sys
-from PyQt4 import QtGui, QtCore
+
+from PyQt5.QtWidgets import * 
+from PyQt5.QtCore import *
+from PyQt5.QtGui import QIcon
 
 sys.path.append('../')
 import Code.Engine as Engine
@@ -9,14 +12,9 @@ Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 import Code.Highlight as Highlight
 
-try:
-    import EditorUtilities
-    from CustomGUI import SignalList, CheckableComboBox
-    from DataImport import Data
-except ImportError:
-    from . import EditorUtilities
-    from EditorCode.CustomGUI import SignalList, CheckableComboBox
-    from EditorCode.DataImport import Data
+from . import EditorUtilities
+from EditorCode.CustomGUI import SignalList, CheckableComboBox
+from EditorCode.DataImport import Data
 
 class InfoKind(object):
     def __init__(self, num, name, kind):
@@ -113,11 +111,11 @@ class TileInfo(object):
                 image_coords[coord] = EditorUtilities.ImageWidget(kinds[name].image).image
         return image_coords
 
-class ComboDialog(QtGui.QDialog):
+class ComboDialog(QDialog):
     def __init__(self, instruction, items, item_list=None, parent=None):
         super(ComboDialog, self).__init__(parent)
-        self.form = QtGui.QFormLayout(self)
-        self.form.addRow(QtGui.QLabel(instruction))
+        self.form = QFormLayout(self)
+        self.form.addRow(QLabel(instruction))
 
         self.items = items
         if item_list is None:
@@ -126,7 +124,7 @@ class ComboDialog(QtGui.QDialog):
         # Create item combo box
         self.item_box = CheckableComboBox()
         self.item_box.uniformItemSizes = True
-        self.item_box.setIconSize(QtCore.QSize(16, 16))
+        self.item_box.setIconSize(QSize(16, 16))
         for idx, item in enumerate(self.items.values()):
             if item.image:
                 self.item_box.addItem(EditorUtilities.create_icon(item.image), item.id)
@@ -134,12 +132,12 @@ class ComboDialog(QtGui.QDialog):
                 self.item_box.addItem(item.id)
             row = self.item_box.model().item(idx, 0)
             if item.id in item_list:
-                row.setCheckState(QtCore.Qt.Checked)
+                row.setCheckState(Qt.Checked)
             else:
-                row.setCheckState(QtCore.Qt.Unchecked)
+                row.setCheckState(Qt.Unchecked)
         self.form.addRow(self.item_box)
 
-        self.buttonbox = QtGui.QDialogButtonBox(QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel, QtCore.Qt.Horizontal, self)
+        self.buttonbox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, Qt.Horizontal, self)
         self.form.addRow(self.buttonbox)
         self.buttonbox.accepted.connect(self.accept)
         self.buttonbox.rejected.connect(self.reject)
@@ -148,7 +146,7 @@ class ComboDialog(QtGui.QDialog):
         item_list = []
         for idx, item in enumerate(self.items):
             row = self.item_box.model().item(idx, 0)
-            if row.checkState() == QtCore.Qt.Checked:
+            if row.checkState() == Qt.Checked:
                 item_list.append(item)
         return item_list
 
@@ -158,12 +156,12 @@ class ComboDialog(QtGui.QDialog):
         dialog.setWindowTitle(title)
         result = dialog.exec_()
         items = dialog.getCheckedItems()
-        return items, result == QtGui.QDialog.Accepted
+        return items, result == QDialog.Accepted
 
-class TileInfoMenu(QtGui.QWidget):
+class TileInfoMenu(QWidget):
     def __init__(self, view, window=None):
         super(TileInfoMenu, self).__init__(window)
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.window = window
 
@@ -172,7 +170,7 @@ class TileInfoMenu(QtGui.QWidget):
         self.list = SignalList(self)
         self.list.setMinimumSize(128, 320)
         self.list.uniformItemSizes = True
-        self.list.setIconSize(QtCore.QSize(32, 32))
+        self.list.setIconSize(QSize(32, 32))
 
         # Ingest Data
         self.info = sorted(kinds.values(), key=lambda x: x.num)
@@ -180,8 +178,8 @@ class TileInfoMenu(QtGui.QWidget):
             image = Engine.transform_scale(info.image, (32, 32))
             pixmap = EditorUtilities.create_pixmap(image)
 
-            item = QtGui.QListWidgetItem(info.name)
-            item.setIcon(QtGui.QIcon(pixmap))
+            item = QListWidgetItem(info.name)
+            item.setIcon(QIcon(pixmap))
             self.list.addItem(item)
 
         self.grid.addWidget(self.list, 0, 0)
@@ -208,13 +206,13 @@ class TileInfoMenu(QtGui.QWidget):
             else:
                 return None
         elif kind == 'string':
-            text, ok = QtGui.QInputDialog.getText(self, self.get_current_name(), 'Enter ID to use:')
+            text, ok = QInputDialog.getText(self, self.get_current_name(), 'Enter ID to use:')
             if ok:
                 return text
             else:
                 return None
         elif kind == 'int':
-            text, ok = QtGui.QInputDialog.getInt(self, self.get_current_name(), 'Set Starting HP:', 10, 0)
+            text, ok = QInputDialog.getInt(self, self.get_current_name(), 'Set Starting HP:', 10, 0)
             if ok:
                 return text
             else:
