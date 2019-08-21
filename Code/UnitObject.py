@@ -825,15 +825,15 @@ class UnitObject(object):
             for index in range(8):
                 growth = growths[index]
                 if leveling == 1: # Fixed
-                    levelup_list[index] = min((self.growth_points[index] + growth)//100, class_info['max'][index] - self.stats.values()[index].base_stat)
+                    levelup_list[index] = min((self.growth_points[index] + growth)//100, class_info['max'][index] - list(self.stats.values())[index].base_stat)
                     self.growth_points[index] = (self.growth_points[index] + growth)%100
                 elif leveling == 0: # Random
                     while growth > 0:
                         levelup_list[index] += 1 if r.randint(0, 99) < growth else 0
                         growth -= 100
-                    levelup_list[index] = min(levelup_list[index], class_info['max'][index] - self.stats.values()[index].base_stat)
+                    levelup_list[index] = min(levelup_list[index], class_info['max'][index] - list(self.stats.values())[index].base_stat)
         else: # Hybrid and Default
-            growths = [growth if self.stats.values()[index].base_stat < class_info['max'][index] else 0 for index, growth in enumerate(growths)]
+            growths = [growth if list(self.stats.values())[index].base_stat < class_info['max'][index] else 0 for index, growth in enumerate(growths)]
             growth_sum = sum(growths)
             num_choices = growth_sum//100
             self.growth_points[0] += growth_sum%100
@@ -847,7 +847,7 @@ class UnitObject(object):
                 index = static_random.weighted_choice(growths, r)
                 levelup_list[index] += 1
                 growths[index] = max(0, growths[index] - 100)
-                if self.stats.values()[index].base_stat + levelup_list[index] >= class_info['max'][index]:
+                if list(self.stats.values())[index].base_stat + levelup_list[index] >= class_info['max'][index]:
                     growths[index] = 0
                                     
         return levelup_list

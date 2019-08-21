@@ -2,7 +2,7 @@ name;DEBUG
 current_party;1
 prep_flag;0
 pick_flag;0
-base_flag;0
+base_flag;1
 market_flag;0
 transition_flag;0
 player_phase_music;Helms Deep

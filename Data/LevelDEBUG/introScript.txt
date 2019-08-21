@@ -10,3 +10,7 @@ layer_tile_sprite;1;5,17;Door
 layer_tile_sprite;2;4,17;OpenChest
 layer_tile_sprite;2;5,17;OpenChest
 remove_background
+u;Ophie;Left
+u;Joel;Right
+wait;5000
+r;Ophie;Joel

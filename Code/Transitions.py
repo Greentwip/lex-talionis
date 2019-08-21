@@ -584,7 +584,7 @@ class StartPreloadedLevels(StartLoad):
             gameStateObj.game_constants['level'] = int(gameStateObj.game_constants['level'])
         except ValueError:  # That's fine just keep going
             pass
-        for key, value in level['game_constants'].iteritems():
+        for key, value in level['game_constants'].items():
             gameStateObj.game_constants[key] = value
         static_random.set_seed(gameStateObj.game_constants.get('_random_seed', 0))
 
@@ -747,7 +747,7 @@ class StartMode(StateMachine.State):
 
         if self.state == 'difficulty_setup':
             if self.no_difficulty_choice():
-                gameStateObj.mode = GC.DIFFICULTYDATA.values()[0].copy()
+                gameStateObj.mode = list(GC.DIFFICULTYDATA.values())[0].copy()
                 self.death_choice = gameStateObj.mode['death'] == '?'
                 self.growth_choice = gameStateObj.mode['growths'] == '?'
                 self.state = 'death_setup'

@@ -159,7 +159,7 @@ class WorldMapBackground(object):
         for key, wm_unit in self.wm_sprites.items():
             wm_unit.update()
         # World map sprites
-        sorted_sprites = sorted(self.wm_sprites.values(), key=lambda unit: unit.position[1])
+        sorted_sprites = sorted(list(self.wm_sprites.values()), key=lambda unit: unit.position[1])
         for wm_unit in sorted_sprites:
             wm_unit.draw(image)
         self.wm_sprites = {name: unit for name, unit in self.wm_sprites.items() if not unit.remove_flag}
