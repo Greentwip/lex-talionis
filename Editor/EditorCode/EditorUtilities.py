@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import * 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QFrame
+from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter
 
 import sys
 from itertools import count

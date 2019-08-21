@@ -1,8 +1,9 @@
 # Terrain Data Menu
 import sys
 
-from PyQt5.QtWidgets import * 
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QWidget, QDialog, QFormLayout, QLabel, QInputDialog
+from PyQt5.QtWidgets import QDialogButtonBox, QGridLayout, QListWidgetItem
+from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon
 
 sys.path.append('../')

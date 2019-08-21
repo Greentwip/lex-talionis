@@ -1,8 +1,8 @@
 import os
 # Terrain Data Menu
-from PyQt5.QtWidgets import * 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QGridLayout, QWidget, QSlider, QLabel, QListWidgetItem
+from PyQt5.QtCore import Qt, QPoint, QSize
+from PyQt5.QtGui import QImage, QIcon, QPixmap, QColor
 
 import Code.Engine as Engine
 # So that the code basically starts looking in the parent directory
@@ -71,7 +71,7 @@ class TileData(object):
         self.clear()
         self.image_file = str(image_file)
         image = QImage(image_file)
-        self.width, self.height = image.width() / 16, image.height() / 16
+        self.width, self.height = image.width() // 16, image.height() // 16
 
         mapObj = []
         for x in range(self.width):

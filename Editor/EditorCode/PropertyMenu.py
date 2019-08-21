@@ -1,7 +1,8 @@
 from collections import OrderedDict
 
-from PyQt5.QtWidgets import * 
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QGridLayout, QDialog, QWidget, QCheckBox, QPushButton
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtCore import Qt
 
 from . import CustomGUI as LtGui
 from . import EditorUtilities

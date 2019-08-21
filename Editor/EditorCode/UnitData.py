@@ -1,8 +1,10 @@
 from collections import OrderedDict
 import sys
 
-from PyQt5.QtWidgets import * 
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QWidget, QStyledItemDelegate, QGridLayout, QPushButton, QErrorMessage
+from PyQt5.QtWidgets import QLabel, QComboBox, QHBoxLayout, QListWidgetItem, QMessageBox, QInputDialog
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QColor
 
 sys.path.append('../')
 import Code.Engine as Engine
@@ -479,7 +481,7 @@ class UnitMenu(QWidget):
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
         if not unit.position:
-            item.setTextColor(QColor("red"))
+            item.setForeground(QColor("red"))
         return item
 
     def load_unit(self):
@@ -609,7 +611,7 @@ class ReinforcementMenu(UnitMenu):
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))
         if not unit.position:
-            item.setTextColor(QColor("red"))
+            item.setForeground(QColor("red"))
         if unit.pack not in self.packs:
             self.packs.append(unit.pack)
             self.pack_view_combobox.addItem(unit.pack)

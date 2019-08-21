@@ -1,7 +1,11 @@
 # Custom GUI widgets
 import os, shutil
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QWidget, QErrorMessage, QSpinBox, QListWidget, QListWidgetItem, QAbstractItemView
+from PyQt5.QtWidgets import QComboBox, QGroupBox, QRadioButton, QHBoxLayout
+from PyQt5.QtWidgets import QButtonGroup
+from PyQt5.QtGui import QImage, QStandardItemModel
+from PyQt5.QtCore import Qt, pyqtSignal, QDir
 
 class MusicBox(QWidget):
     def __init__(self, label, music='', window=None):
@@ -22,7 +26,7 @@ class MusicBox(QWidget):
     def change(self):
         starting_path = QDir.currentPath() + '/../Audio/music'
         print(starting_path)
-        music_file = QFileDialog.getOpenFileName(self, "Select Music File", starting_path,
+        music_file, _ = QFileDialog.getOpenFileName(self, "Select Music File", starting_path,
                                                        "OGG Files (*.ogg);;All Files (*)")
         if music_file:
             music_file = str(music_file)
@@ -59,7 +63,7 @@ class ImageBox(QWidget):
     def change(self):
         starting_path = QDir.currentPath() + '/../Sprites/General/Panoramas'
         print(starting_path)
-        image_file = QFileDialog.getOpenFileName(self, "Select Image File", starting_path,
+        image_file, _ = QFileDialog.getOpenFileName(self, "Select Image File", starting_path,
                                                        "PNG Files (*.png);;All Files (*)")
         if image_file:
             image = QImage(image_file)

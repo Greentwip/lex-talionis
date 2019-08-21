@@ -9,6 +9,8 @@ class BattleAnimationManager(object):
         self.directory = {}
         for root, dirs, files in os.walk(home + 'Data/Animations/'):
             for name in files:
+                if not (name.endswith('.png') or name.endswith('.txt')):
+                    continue
                 try:
                     klass, weapon, desc = name.split('-')
                 except ValueError as e:

@@ -1,9 +1,10 @@
 from collections import OrderedDict
 import sys, os, shutil, math
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QDockWidget, QMainWindow, QErrorMessage, QFileDialog, QInputDialog, QMessageBox
+from PyQt5.QtWidgets import QAction, QMenu, QApplication
+from PyQt5.QtGui import QPainter, QPainterPath, QColor, QImage, QPixmap, QBrush, QPen, qRgb, qRgba, QCursor
+from PyQt5.QtCore import Qt, QTimer, QElapsedTimer, QDir
 
 sys.path.append('./')
 sys.path.append('../')
@@ -366,10 +367,10 @@ class MainView(QGraphicsView):
             self.window.terrain_menu.mouse_release()
 
     def wheelEvent(self, event):
-        if event.delta() > 0 and self.screen_scale < 4:
+        if event.angleDelta().y() > 0 and self.screen_scale < 4:
             self.screen_scale += 1
             self.scale(2, 2)
-        elif event.delta() < 0 and self.screen_scale > 1:
+        elif event.angleDelta().y() < 0 and self.screen_scale > 1:
             self.screen_scale -= 1
             self.scale(0.5, 0.5)
 
@@ -504,27 +505,26 @@ class MainEditor(QMainWindow):
             self.new_level()
 
     def new_level(self):
-        if self.maybe_save():
-            image_file = QFileDialog.getOpenFileName(self, "Choose Map PNG", QDir.currentPath(),
-                                                           "PNG Files (*.png);;All Files (*)")
-            if image_file:
-                self.set_image(image_file)
-                self.autotiles.clear()
-                self.overview_dict = OrderedDict()
-                self.properties_menu.new()
-                self.tile_info.clear()
-                self.unit_data.clear()
-                self.faction_menu.clear()
-                self.unit_menu.clear()
-                self.reinforcement_menu.clear()
-                self.tile_data.new(image_file)
+        image_file, _ = QFileDialog.getOpenFileName(self, "Choose Map PNG", QDir.currentPath(),
+                                                       "PNG Files (*.png);;All Files (*)")
+        if image_file:
+            self.set_image(image_file)
+            self.autotiles.clear()
+            self.overview_dict = OrderedDict()
+            self.properties_menu.new()
+            self.tile_info.clear()
+            self.unit_data.clear()
+            self.faction_menu.clear()
+            self.unit_menu.clear()
+            self.reinforcement_menu.clear()
+            self.tile_data.new(image_file)
 
-                self.status_bar.showMessage('Created New Level')
+            self.status_bar.showMessage('Created New Level')
 
-                self.update_view()
+            self.update_view()
 
     def import_new_map(self):
-        image_file = QFileDialog.getOpenFileName(self, "Choose Map PNG", QDir.currentPath(),
+        image_file, _ = QFileDialog.getOpenFileName(self, "Choose Map PNG", QDir.currentPath(),
                                                        "PNG Files (*.png);;All Files (*)")
         if image_file:
             self.set_image(image_file)

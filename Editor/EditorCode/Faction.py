@@ -1,7 +1,8 @@
 import sys
 
-from PyQt5.QtWidgets import * 
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QDialog, QLabel, QFormLayout, QLineEdit, QComboBox, QTextEdit
+from PyQt5.QtWidgets import QDialogButtonBox, QDialog, QWidget, QGridLayout, QPushButton, QListWidgetItem
+from PyQt5.QtCore import Qt, QSize
 
 sys.path.append('../')
 import Code.Engine as Engine

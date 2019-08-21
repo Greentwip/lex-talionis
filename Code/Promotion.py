@@ -27,7 +27,9 @@ class PromotionChoiceState(StateMachine.State):
                     # Build animation
                     script = anim['script']
                     name = None
-                    if self.unit.name in anim['images']:
+                    if self.unit.id in anim['images']:
+                        name = self.unit.id
+                    elif self.unit.name in anim['images']:
                         name = self.unit.name
                     else:
                         color = 'Blue' if self.unit.team == 'player' else 'Red'

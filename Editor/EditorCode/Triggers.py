@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import * 
+from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QInputDialog, QListWidgetItem
 
 from EditorCode.CustomGUI import SignalList
 
