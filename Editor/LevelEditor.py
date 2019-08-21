@@ -532,13 +532,16 @@ class MainEditor(QMainWindow):
             self.update_view()
 
     def generate_autotiles(self):
-        map_sprite_filename = self.directory + '/MapSprite.png'
-        full_map_sprite_filename = self.directory + '/MapSprite_full.png'
-        if os.path.exists(full_map_sprite_filename):
-            self.a = Autotiles.AutotileMaker(full_map_sprite_filename, self.directory, self)
+        if self.directory:
+            map_sprite_filename = self.directory + '/MapSprite.png'
+            full_map_sprite_filename = self.directory + '/MapSprite_full.png'
+            if os.path.exists(full_map_sprite_filename):
+                self.a = Autotiles.AutotileMaker(full_map_sprite_filename, self.directory, self)
+            else:
+                shutil.copy(map_sprite_filename, full_map_sprite_filename)  # Make a backup
+                self.a = Autotiles.AutotileMaker(map_sprite_filename, self.directory, self)
         else:
-            shutil.copy(map_sprite_filename, full_map_sprite_filename)  # Make a backup
-            self.a = Autotiles.AutotileMaker(map_sprite_filename, self.directory, self)
+            print("Please save me first!!!")
 
     def open(self):
         if self.maybe_save():

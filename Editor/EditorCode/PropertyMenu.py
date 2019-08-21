@@ -104,6 +104,8 @@ class PropertyMenu(QWidget):
 
         self.update()
 
+        self.new()
+
     def edit_music(self):
         music, ok = MusicDialog.editMusic(self, (self.player_music, self.enemy_music, self.other_music, self.player_battle_music, self.enemy_battle_music))
         if ok:
