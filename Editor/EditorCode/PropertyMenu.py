@@ -207,10 +207,10 @@ class PropertyMenu(QWidget):
         self.base.setChecked(overview['base_flag'] != '0')
         self.market.setChecked(bool(int(overview['market_flag'])))
         self.transition.setChecked(bool(int(overview['transition_flag'])))
-        self.prep_music.setText(overview['prep_music'] if self.prep.isChecked() else '')
+        self.prep_music.setText(overview.get('prep_music', '') if self.prep.isChecked() else '')
         self.pick.setChecked(bool(int(overview['pick_flag'])))
-        self.base_music.setText(overview['base_music'] if self.base.isChecked() else '')
-        self.base_bg.setText(overview['base_flag'] if self.base.isChecked() else '')
+        self.base_music.setText(overview.get('base_music', '') if self.base.isChecked() else '')
+        self.base_bg.setText(overview.get('base_flag', '') if self.base.isChecked() else '')
 
         self.player_music = overview.get('player_phase_music', '')
         self.enemy_music = overview.get('enemy_phase_music', '')
