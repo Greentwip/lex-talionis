@@ -255,7 +255,7 @@ class MiniMap(object):
             else:
                 return self.get_sprite((8, 1))
         # Door
-        elif key == 'Door':
+    elif key == 'Door':
             return self.door_type(position)
         # Wall, River, Desert, Sea
         elif key in self.complex_map:

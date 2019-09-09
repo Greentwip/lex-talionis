@@ -103,7 +103,7 @@ class ActionLog(object):
             if isinstance(last_move, self.Move):
                 if last_move.end < last_action_index:
                     self.unique_moves.append(('Extra', last_move.end + 1, last_action_index))
-            elif last_move < last_action_index:
+            elif last_move[1] < last_action_index:
                 self.unique_moves.append(('Extra', last_move[1] + 1, last_action_index))
 
         logger.info('*** Turnwheel Begin! ***')
