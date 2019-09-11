@@ -25,7 +25,7 @@ class ItemModComponent(object):
     def change_effect(self, item, gameStateObj):
         for i in range(len(self.effect_change)//2):
             orig_val = item[self.effect_change[i*2]]
-            val = eval(self.effect_change[i*2 + 1], locals())
+            val = eval(self.effect_change[i*2 + 1], locals(), globals())
             logger.debug('Set %s to %s', self.effect_change[i*2], val)
             item['orig_' + self.effect_change[i*2]] = orig_val
             item[self.effect_change[i*2]] = val
