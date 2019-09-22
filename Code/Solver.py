@@ -90,7 +90,7 @@ class InitState(object):
         solver.remove_pre_proc(gameStateObj)
         solver.reset()
         solver.atk_pre_proc = self.get_attacker_pre_proc(solver.attacker, gameStateObj)
-        if solver.defender:
+        if solver.defender and isinstance(solver.defender, UnitObject.UnitObject):
             solver.def_pre_proc = self.get_defender_pre_proc(solver.defender, gameStateObj)
         return None
 
@@ -144,7 +144,7 @@ class AttackerState(SolverState):
                 elif solver.allow_counterattack(gameStateObj):
                     return 'Defender'
                 elif solver.atk_rounds < 2 and solver.item.weapon and \
-                        solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                        solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
                         solver.item_uses(solver.item):
                     return 'Attacker'
                 elif solver.next_round(gameStateObj):
@@ -176,7 +176,7 @@ class AttackerBraveState(AttackerState):
                 if solver.allow_counterattack(gameStateObj):
                     return 'Defender'
                 elif solver.atk_rounds < 2 and solver.item.weapon and \
-                        solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                        solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
                         solver.item_uses(solver.item):
                     return 'Attacker'
                 elif solver.next_round(gameStateObj):
@@ -199,7 +199,7 @@ class DefenderState(AttackerState):
                 return 'DefenderBrave'
             elif solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
                 return 'Attacker'
-            elif solver.atk_rounds < 2 and solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+            elif solver.atk_rounds < 2 and solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
                     solver.item_uses(solver.item) and not solver.item.no_double:
                 return 'Attacker'
             elif solver.def_double(gameStateObj) and solver.defender_can_counterattack() and \
@@ -229,7 +229,7 @@ class DefenderBraveState(DefenderState):
             ditem = solver.defender.getMainWeapon()
             if solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
                 return 'Attacker'
-            elif solver.atk_rounds < 2 and solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+            elif solver.atk_rounds < 2 and solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
                     solver.item_uses(solver.item) and not solver.item.no_double:
                 return 'Attacker'
             elif solver.def_double(gameStateObj) and solver.defender_can_counterattack() and \
@@ -258,7 +258,7 @@ class SplashState(AttackerState):
             if solver.allow_counterattack(gameStateObj):
                 return 'Defender'
             elif solver.defender and solver.atk_rounds < 2 and \
-                    solver.attacker.outspeed(solver.defender, solver.item, gameStateObj) and \
+                    solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
                     solver.item_uses(solver.item) and solver.defender.currenthp > 0:
                 return 'Attacker'
             elif solver.next_round(gameStateObj):
@@ -288,7 +288,7 @@ class SplashBraveState(SplashState):
             elif solver.allow_counterattack(gameStateObj):
                 return 'Defender'
             elif solver.defender and solver.atk_rounds < 2 and \
-                    solver.attacker.outspeed(solver.defender, solver.item. gameStateObj) and \
+                    solver.attacker.outspeed(solver.defender, solver.item. gameStateObj, "Attack") and \
                     solver.item_uses(solver.item) and solver.defender.currenthp > 0:
                 return 'Attacker'
             elif solver.next_round(gameStateObj):
@@ -403,7 +403,9 @@ class Solver(object):
         
         # Add proc skills
         result.attacker_proc_used = self.get_attacker_proc(attacker, gameStateObj)
-        result.defender_proc_used = self.get_defender_proc(defender, gameStateObj)
+        # Tiles cannot have proc effects
+        if isinstance(defender, UnitObject.UnitObject):
+            result.defender_proc_used = self.get_defender_proc(defender, gameStateObj)
 
         to_hit = attacker.compute_hit(defender, gameStateObj, item, mode=mode)
         rng_mode = gameStateObj.mode['rng']
@@ -508,13 +510,13 @@ class Solver(object):
             return False
 
     def defender_has_vantage(self, gameStateObj):
-        return isinstance(self.defender, UnitObject.UnitObject) and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj) and \
+        return isinstance(self.defender, UnitObject.UnitObject) and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj, "Defense") and \
             'vantage' in self.defender.status_bundle and not self.item.cannot_be_countered and \
             self.defender_can_counterattack() and self.item.weapon
 
     def def_double(self, gameStateObj):
         return (cf.CONSTANTS['def_double'] or 'vantage' in self.defender.status_bundle or 'def_double' in self.defender.status_bundle) and \
-            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj)
+            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj, "Defense")
 
     def allow_counterattack(self, gameStateObj):
         return isinstance(self.defender, UnitObject.UnitObject) and \

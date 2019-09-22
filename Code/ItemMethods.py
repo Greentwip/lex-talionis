@@ -399,6 +399,13 @@ class EffectiveComponent(object):
         self.against = effective_against
         self.bonus = bonus
 
+    def add(self, val):
+        self.against.append(val)
+
+    def remove(self, val):
+        if val in self.against:
+            self.against.remove(val)
+
 class SpellComponent(object):
     def __init__(self, LVL, targets):
         self.name = 'spell'

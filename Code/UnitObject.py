@@ -329,7 +329,7 @@ class UnitObject(object):
             if not my_wep.no_double:
                 if my_wep.brave:
                     my_num *= 2
-                if self.outspeed(enemyunit, my_wep, gameStateObj):
+                if self.outspeed(enemyunit, my_wep, gameStateObj, "Attack"):
                     my_num *= 2
                 if my_wep.uses or my_wep.c_uses:
                     if my_wep.uses:
@@ -355,7 +355,7 @@ class UnitObject(object):
                     if e_wep.brave:
                         e_num *= 2
                     if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
-                            enemyunit.outspeed(self, e_wep, gameStateObj):
+                            enemyunit.outspeed(self, e_wep, gameStateObj, "Defense"):
                         e_num *= 2
                 if e_num == 2:
                     surf.blit(GC.IMAGESDICT['x2'], x2_position_enemy)
