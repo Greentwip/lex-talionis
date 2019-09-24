@@ -1917,11 +1917,11 @@ class AIState(StateMachine.State):
 
         if gameStateObj.ai_build_flag:
             # Get list of units to process for this turn
-            gameStateObj.ai_unit_list = [unit for unit in gameStateObj.allunits if unit.position and not unit.isDone() and 
-                                         unit.team == gameStateObj.phase.get_current_phase()]
+            gameStateObj.ai_unit_list = [unit for unit in gameStateObj.allunits if unit.position and not unit.isDone()
+                                         and unit.team == gameStateObj.phase.get_current_phase()]
             # Sort by distance to closest enemy (ascending)
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.distance_to_closest_enemy(gameStateObj))
-            gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.ai_group if unit.ai.ai_group else 0)
+            gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.ai_group or '')
             gameStateObj.ai_unit_list = sorted(gameStateObj.ai_unit_list, key=lambda unit: unit.ai.priority, reverse=True)
             # Reverse, because we will be popping them off the end
             gameStateObj.ai_unit_list.reverse()

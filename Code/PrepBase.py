@@ -113,7 +113,7 @@ class PrepPickUnitsState(StateMachine.State):
             player_units = gameStateObj.get_units_in_party(gameStateObj.current_party) 
             lord_units = [unit for unit in player_units if unit.position and 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]]
             non_lord_units = [unit for unit in player_units if unit not in lord_units]
-            units = lord_units + sorted(non_lord_units, key=lambda unit: unit.position, reverse=True)
+            units = lord_units + sorted(non_lord_units, key=lambda unit: bool(unit.position), reverse=True)
             gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 2, 6, (110, 24))
     
         if not gameStateObj.background:

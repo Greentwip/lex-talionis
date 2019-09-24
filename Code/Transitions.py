@@ -571,7 +571,7 @@ class StartPreloadedLevels(StartLoad):
             self.build_new_game(preloaded_level, gameStateObj, metaDataObj)
 
     def build_new_game(self, level, gameStateObj, metaDataObj):
-        import ItemMethods, StatusCatalog, Action
+        from . import ItemMethods, StatusCatalog, Action
         gameStateObj.build_new() # Make the gameStateObj ready for a new game
 
         levelfolder = 'Data/Level' + str(level['name'])

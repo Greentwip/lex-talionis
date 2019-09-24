@@ -378,7 +378,7 @@ class AI(object):
         available_targets = [position for position, tile in gameStateObj.map.tiles.items() 
                              if 'HP' in gameStateObj.map.tile_info_dict[position]]
         avail_items = [item for item in self.unit.items if item.weapon]
-        avail_items = sorted(avail_items, key=lambda x: x.MT, reverse=True)
+        avail_items = sorted(avail_items, key=lambda x: x.weapon.MT, reverse=True)
 
         for item in avail_items:
             for position in available_targets:
