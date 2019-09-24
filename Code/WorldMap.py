@@ -121,7 +121,7 @@ class WorldMapBackground(object):
         return x, y
 
     def create_cursor(self, coord):
-        from Cursor import Cursor
+        from .Cursor import Cursor
         self.cursor = Cursor('Cursor', coord, fake=True)
 
     def remove_cursor(self):
