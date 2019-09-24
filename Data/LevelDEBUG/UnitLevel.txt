@@ -21,11 +21,11 @@ faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Sage;1;Wind,Searing Blades,Energy Drink;1,14;None;Resistance
-player;0;0;Fighter;5;Iron Axe,Energy Drink;2,14;None;Resistance
+player;0;0;Archer;5;Poison Bow,Iron Axe,Energy Drink;14,2;None;Resistance
 # Enemies
 # Generics
 enemy;0;0;Warrior;5;Iron Axe;3,14;None;Resistance
-enemy;0;0;Fighter;1;Iron Axe;4,13;Attack;Resistance
+enemy;0;0;Fighter;1;Adamant Axe;4,13;Attack;Resistance
 enemy;0;0;Warrior;5;Iron Axe;4,15;None;Resistance
 # === Reinforcements ===
 # Player Characters

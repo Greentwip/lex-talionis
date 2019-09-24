@@ -520,7 +520,8 @@ class GameStateObj(object):
                    'market_items': self.market_items,
                    'mode': self.mode,
                    'message': [message.serialize() for message in self.message],
-                   'phase_info': (self.phase.current, self.phase.previous)}
+                   'phase_info': (self.phase.current, self.phase.previous)
+                   }
         import time
         to_save_meta = {'playtime': self.playtime,
                         'realtime': time.time(),

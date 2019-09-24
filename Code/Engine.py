@@ -341,12 +341,12 @@ class MusicThread(object):
     def fade_in(self, next_song, num_plays=-1, time=0):
         if not next_song:
             logger.info('Music: Song does not exist')
-            return
+            return None
         logger.info('Music: Fade in')
         # Confirm thats its not already at the top of the stack
         if self.song_stack and self.song_stack[-1].is_same_song(next_song):
             logger.info('Music: Already Present')
-            return
+            return None
         # Determine if song is in stack
         for song in self.song_stack:
             # If so, move to top of stack
@@ -378,12 +378,14 @@ class MusicThread(object):
         else:
             self.fade_out()
 
+        return self.next_song
+
     def fade_back(self):
         logger.info('Music: Fade back')
         # Confirm that there is something to pop
         if not self.song_stack:
             return
-        self.song_stack.pop()
+        last_song = self.song_stack.pop()
 
         if self.song_stack:
             self.next_song = self.song_stack[-1]
@@ -393,7 +395,7 @@ class MusicThread(object):
         # Start fade out process
         if self.state == 'fade_out':
             pass  # Just piggyback off other fade_out
-        else:
+        elif not last_song.is_same_song(self.next_song.name):  # Only if we're fading into something new
             self.fade_out()
 
     def fade_out(self):

@@ -453,9 +453,10 @@ class Solver(object):
 
         if result.outcome:
             # Handle status
-            for s_id in item.status:
-                status_object = StatusCatalog.statusparser(s_id, gameStateObj)
-                result.def_status.append(status_object)
+            if isinstance(defender, UnitObject.UnitObject):
+                for s_id in item.status:
+                    status_object = StatusCatalog.statusparser(s_id, gameStateObj)
+                    result.def_status.append(status_object)
             # Handle summon
             if item.summon:
                 result.summoning = SaveLoad.create_summon(item.summon, attacker, self.def_pos, gameStateObj)

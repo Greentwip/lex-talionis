@@ -704,7 +704,7 @@ class Promote(Action):
         self.new_wexp = self.new_klass['wexp_gain']
         current_stats = list(self.unit.stats.values())
         # Any stat that's not defined, fill in with new classes bases - current stats
-        if len(self.levelup_list) < self.new_klass['bases']:
+        if len(self.levelup_list) < len(self.new_klass['bases']):
             missing_idxs = range(len(self.levelup_list), len(self.new_klass['bases']))
             new_bases = [self.new_klass['bases'][i] - current_stats[i].base_stat for i in missing_idxs]
             self.levelup_list.extend(new_bases)
@@ -800,6 +800,21 @@ class ChangeHP(Action):
 
     def reverse(self, gameStateObj=None):
         self.unit.set_hp(self.old_hp)
+
+class ChangeTileHP(Action):
+    def __init__(self, pos, num):
+        self.position = pos
+        self.num = num
+        self.old_hp = 1
+
+    def do(self, gameStateObj):
+        tile = gameStateObj.map.tiles[self.position]
+        self.old_hp = tile.currenthp
+        tile.change_hp(self.num)
+
+    def reverse(self, gameStateObj):
+        tile = gameStateObj.map.tiles[self.position]
+        tile.set_hp(self.old_hp)
 
 class Miracle(Action):
     def __init__(self, unit):

@@ -146,7 +146,10 @@ class Combat(object):
         # HP
         Action.do(Action.ChangeHP(result.attacker, -result.atk_damage), gameStateObj)
         if result.defender:
-            Action.do(Action.ChangeHP(result.defender, -result.def_damage), gameStateObj)
+            if isinstance(result.defender, UnitObject.UnitObject):
+                Action.do(Action.ChangeHP(result.defender, -result.def_damage), gameStateObj)
+            else:  # TileObject
+                Action.do(Action.ChangeTileHP(result.defender.position, -result.def_damage), gameStateObj)
 
     def find_broken_items(self):
         # Handle items that were used
@@ -494,6 +497,9 @@ class AnimationCombat(Combat):
         self.proc_effects = []
         self.proc_wait = 0
 
+        # For music
+        self.music_fade_in = None
+
         # To match MapCombat
         self.health_bars = {self.left: self.left_hp_bar, self.right: self.right_hp_bar}
         self.splash = []  # This'll never be used
@@ -555,7 +561,6 @@ class AnimationCombat(Combat):
         # logger.debug(self.combat_state)
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
-
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
             self.next_result = None
             self.set_stats(gameStateObj)
@@ -614,18 +619,7 @@ class AnimationCombat(Combat):
                 self.name_offset = self.max_position_offset
                 self.last_update = current_time
                 self.combat_state = 'Pre_Init'
-                # Start Battle Music
-                ditem = self.p2.getMainWeapon()
-                if self.item.battle_music and GC.MUSICDICT.get(self.item.battle_music):
-                    item_music = GC.MUSICDICT.get(self.item.battle_music)
-                    Engine.music_thread.fade_in(item_music)
-                elif ditem and ditem.battle_music and GC.MUSICDICT.get(ditem.battle_music):
-                    item_music = GC.MUSICDICT.get(ditem.battle_music)
-                    Engine.music_thread.fade_in(item_music)
-                elif self.p1.team in ('player', 'other') and gameStateObj.phase_music.player_battle_music:
-                    Engine.music_thread.fade_in(gameStateObj.phase_music.player_battle_music)
-                elif gameStateObj.phase_music.enemy_battle_music:
-                    Engine.music_thread.fade_in(gameStateObj.phase_music.enemy_battle_music)
+                self.start_battle_music(gameStateObj)
 
         elif self.combat_state == 'Pre_Init':
             if skip or current_time - self.last_update > 410: # 25 frames
@@ -862,6 +856,20 @@ class AnimationCombat(Combat):
         vb_height = GC.WINHEIGHT - vb_y - (vb_multiplier * (GC.TILEY - true_y)) * GC.TILEHEIGHT
         self.viewbox = (vb_x, vb_y, vb_width, vb_height)
 
+    def start_battle_music(self, gameStateObj):
+        # Start Battle Music
+        ditem = self.p2.getMainWeapon()
+        if self.item.battle_music and GC.MUSICDICT.get(self.item.battle_music):
+            item_music = GC.MUSICDICT.get(self.item.battle_music)
+            self.music_fade_in = Engine.music_thread.fade_in(item_music)
+        elif ditem and ditem.battle_music and GC.MUSICDICT.get(ditem.battle_music):
+            item_music = GC.MUSICDICT.get(ditem.battle_music)
+            self.music_fade_in = Engine.music_thread.fade_in(item_music)
+        elif self.p1.team in ('player', 'other') and gameStateObj.phase_music.player_battle_music:
+            self.music_fade_in = Engine.music_thread.fade_in(gameStateObj.phase_music.player_battle_music)
+        elif gameStateObj.phase_music.enemy_battle_music:
+            self.music_fade_in = Engine.music_thread.fade_in(gameStateObj.phase_music.enemy_battle_music)
+
     def set_stats(self, gameStateObj):
         result = self.current_result
         # Calc stats
@@ -961,13 +969,7 @@ class AnimationCombat(Combat):
         self.p2.unlock_active()
         # fade back music IF AND ONLY IF it was faded in!
         ditem = self.p2.getMainWeapon()
-        if self.item.battle_music and GC.MUSICDICT.get(self.item.battle_music):
-            Engine.music_thread.fade_back()
-        elif ditem and ditem.battle_music and GC.MUSICDICT.get(ditem.battle_music):
-            Engine.music_thread.fade_back()
-        elif self.p1.team in ('player', 'other') and gameStateObj.phase_music.player_battle_music:
-            Engine.music_thread.fade_back()
-        elif gameStateObj.phase_music.enemy_battle_music:
+        if self.music_fade_in:
             Engine.music_thread.fade_back()
 
     def shake(self, num):
