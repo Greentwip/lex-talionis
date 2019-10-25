@@ -28,7 +28,7 @@ class UnitObject(object):
         # --- Basic properties
         self.id = info['u_id']
         self.event_id = info['event_id']
-        self.position = info['position']
+        self.position = self.previous_position = info['position']
         self.name = info['name']
         self.team = info['team']
         self.party = info.get('party', 0)

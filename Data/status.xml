@@ -554,9 +554,11 @@
         <id>Charge</id>
         <image_index>6,3</image_index>
         <desc>Adds (distance moved - 2) this turn to damage.</desc>
-        <components>mt,class_skill</components>
+        <components>conditional_mt,class_skill</components>
 
-        <mt>max(0, Utility.calculate_distance(self.position, self.previous_position) - 2) if self.position else 0</mt>
+        <conditional_mt>max(0, Utility.calculate_distance(self.position, gameStateObj.action_log.get_previous_position(self)) - 2) if self.position else 0;mode == 'Attack'</conditional_mt>
+
+        <mt></mt>
     </status>
 
     <status name="Focus">
@@ -828,7 +830,7 @@
         <activated_item>so_Summon_1</activated_item>
         <charge_method>MAG</charge_method>
         <charge_max>60</charge_max>
-        <check_valid_func>bool(self.get_choices(unit, gameStateObj))</check_valid_func>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj)) and not any(unit.name == 'Phantom' for unit in gameStateObj.allunits if unit.position)</check_valid_func>
         <get_choices_func>[pos for pos in unit.getAdjacentPositions(gameStateObj) if not gameStateObj.grid_manager.get_unit_node(pos)]</get_choices_func>
     </status>
 

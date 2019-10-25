@@ -1315,6 +1315,27 @@
         <map_hit_color>224,96,-200</map_hit_color>
     </item>
 
+    <item name="Lightning">
+        <id>Lightning_Bolt</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>8</spriteid>       
+        <components>spell,uses,aoe,hit,damage,detrimental,ai_speed_up,map_hit_color</components>
+        <weapontype>Anima</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>5</RNG>
+        <value>600</value>
+        <desc>Shoots a line of lightning.</desc>
+        <aoe>Line,0</aoe>
+        
+        <damage>11</damage>
+        <hit>85</hit>
+        <LVL>B</LVL>
+        <targets>Tile</targets>
+
+        <map_hit_color>224,224,-200</map_hit_color>
+    </item>
+
     <item name="Meteor">
         <id>Meteor</id>
         <spritetype>Anima</spritetype>
@@ -1642,7 +1663,7 @@
         <spriteid>8</spriteid>
         <components>usable,status,c_uses,map_hit_color</components>
 
-        <c_uses>1</c_uses>
+        <c_uses>2</c_uses>
         <RNG>0</RNG>
         <value>300</value>
         <desc>A draught that recharges all skills.</desc>

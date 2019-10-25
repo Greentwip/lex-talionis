@@ -91,6 +91,7 @@ class TurnChangeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('end_step')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        gameStateObj.input_manager.process_input(eventList)
         return 'repeat'
 
 class FreeState(StateMachine.State):
