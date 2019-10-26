@@ -8,6 +8,7 @@ if;gameStateObj.turncount == 2
     add_talk;Ophie;Althea
     give_item;Ophie;Iron Sword
     # show_layer;2
+    add_unit;p3_2
 end
 if;gameStateObj.turncount == 4
     set_cursor;0,0;force_hold
