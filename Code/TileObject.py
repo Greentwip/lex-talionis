@@ -273,7 +273,7 @@ class MapObject(object):
         else:
             # Empty dictionary
             for tile_property in self.tile_info_dict[coord].items():
-                self.remove_tile_property(coord, tile_property)
+                self.remove_tile_property_from_name(coord, tile_property[0])
 
     def add_tile_property(self, coord, tile_property, gameStateObj):
         property_name, property_value = tile_property
@@ -296,8 +296,7 @@ class MapObject(object):
             self.hp[coord] = TileHP(int(property_value))
         self.tile_info_dict[coord][property_name] = property_value
 
-    def remove_tile_property(self, coord, tile_property):
-        property_name, property_value = tile_property
+    def remove_tile_property_from_name(self, coord, property_name):
         del self.tile_info_dict[coord][property_name]
         if property_name == "HP" and coord in self.hp:
             del self.hp[coord]

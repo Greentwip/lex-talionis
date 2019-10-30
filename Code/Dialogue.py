@@ -836,16 +836,16 @@ class Dialogue_Scene(object):
                 for tile_property in property_list:
                     Action.do(Action.AddTileProperty(coord, tile_property.split('=')), gameStateObj)
             else:
-                for tile_property in list(gameStateObj.map.tile_info_dict[coord].items()):
-                    Action.do(Action.RemoveTileProperty(coord, tile_property), gameStateObj)
+                for tile_property_name in list(gameStateObj.map.tile_info_dict[coord].keys()):
+                    Action.do(Action.RemoveTileProperty(coord, tile_property_name), gameStateObj)
         elif line[0] == 'add_tile_property':
             coord = self.parse_pos(line[1], gameStateObj)
             tile_property = line[2]
             Action.do(Action.AddTileProperty(coord, tile_property), gameStateObj)
         elif line[0] == 'remove_tile_property':
             coord = self.parse_pos(line[1], gameStateObj)
-            tile_property = line[2]
-            Action.do(Action.RemoveTileProperty(coord, tile_property), gameStateObj)
+            tile_property_name = line[2]
+            Action.do(Action.RemoveTileProperty(coord, tile_property_name), gameStateObj)
         # Add weather
         elif line[0] == 'add_weather':
             Action.do(Action.AddWeather(line[1]), gameStateObj)

@@ -1806,15 +1806,18 @@ class AddTileProperty(Action):
 class RemoveTileProperty(Action):
     run_on_load = True
 
-    def __init__(self, coord, tile_property):
+    def __init__(self, coord, tile_property_name):
         self.coord = coord
-        self.tile_property = tile_property
+        self.tile_property_name = tile_property_name
+        self.tile_property_value = None
 
     def do(self, gameStateObj):
-        gameStateObj.map.remove_tile_property(self.coord, self.tile_property)
+        self.tile_property_value = gameStateObj.map.tile_info_dict[self.coord][self.tile_property_name]
+        gameStateObj.map.remove_tile_property_from_name(self.coord, self.tile_property_name)
 
     def reverse(self, gameStateObj):
-        gameStateObj.map.add_tile_property(self.coord, self.tile_property, gameStateObj)
+        tile_property = (self.tile_property_name, self.tile_property_value)
+        gameStateObj.map.add_tile_property(self.coord, tile_property, gameStateObj)
 
 class AddWeather(Action):
     run_on_load = True

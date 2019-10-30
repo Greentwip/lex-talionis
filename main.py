@@ -117,6 +117,7 @@ if __name__ == '__main__':
     except Exception as e:
         logger.exception(e)
         inform_error()
+        print('*** Lex Talionis Engine Version %s ***' % GC.version)
         print('Main Crash {0}'.format(str(e)))
         # Now print exception to screen
         import time
