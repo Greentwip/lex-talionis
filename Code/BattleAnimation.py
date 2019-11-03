@@ -159,7 +159,7 @@ class BattleAnimation(object):
             parent = self.parent.partner if enemy else self
             child_effect.awake(self.owner, self.partner, right, self.at_range, parent=parent)
             if offset:
-                child_effect.effect_offset = None
+                child_effect.effect_offset = offset
             child_effect.start_anim(self.current_pose)
             return child_effect
         else:
