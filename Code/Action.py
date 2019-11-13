@@ -1307,7 +1307,7 @@ class AddStatus(Action):
 
         # If you have shrug off...
         if 'shrug_off' in self.unit.status_bundle and \
-                self.status_obj.time and self.status_obj.total_time > 1:
+                self.status_obj.time and self.status_obj.time.total_time > 1:
             self.actions.append(ShrugOff(self.status_obj))
 
         for action in self.actions:
