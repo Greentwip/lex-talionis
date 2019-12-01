@@ -866,7 +866,7 @@ class SupportMenu(object):
                     unit_image = unit_sprite.create_image('active')
                 if gameStateObj.support.node_dict[unit.id].dead:
                     unit_image = unit_sprite.create_image('gray')
-                topleft = (4 - 24, 10 + (index+1)*16 - unit_image.get_height())
+                topleft = (4 - 24, 16 + 2 + (index+1)*16 - unit_image.get_height())
             units.append((unit_image, topleft))
 
             # Blit name
