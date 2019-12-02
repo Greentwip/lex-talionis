@@ -1706,10 +1706,18 @@ class TradeMenu(Counters.CursorControl):
     def setSelection(self):
         self.selection2 = self.selection1
 
-        if self.selection1 < 5:
-            self.selection1 = 5
+        # Trading item FROM the unit on the left
+        if self.selection1 < cf.CONSTANTS['max_items']:
+            if len(self.options2) < cf.CONSTANTS['max_items']:
+                self.selection1 = cf.CONSTANTS['max_items'] + len(self.options2)
+            else:
+                self.selection1 = cf.CONSTANTS['max_items']
+        # Trading item FROM the unit on the right
         else:
-            self.selection1 = 0
+            if len(self.options1) < cf.CONSTANTS['max_items']:
+                self.selection1 = len(self.options1)
+            else:
+                self.selection1 = 0
 
     def drawInfo(self, surf):
         if self.info_flag:
@@ -1781,6 +1789,12 @@ class TradeMenu(Counters.CursorControl):
                 Action.do(Action.TradeItem(self.partner, self.partner, item2, item1), gameStateObj)
                 Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
 
+        tmp = self.selection2
+        self.selection2 = None
+        if tmp < cf.CONSTANTS['max_items']:
+            self.selection1 = min(tmp, self._get_max_selectable1()-1)
+        else:
+            self.selection1 = min(tmp, self._get_max_selectable2()-1+cf.CONSTANTS['max_items'])
         self.selection2 = None
         # self.owner.hasTraded = True
                 
@@ -1797,29 +1811,71 @@ class TradeMenu(Counters.CursorControl):
     def toggle_info(self):
         self.info_flag = not self.info_flag
 
+    def _get_max_selectable1(self):
+        '''Get the maximum number of selectable menu items
+           on the left side of the trading screen. Depends
+           upon number of items in inventory and whether a
+           trade is active.
+        '''
+        # Allow an empty slot to be selectable if user is choosing trade destination
+        empty_slot = int(
+            self.selection2 is not None and
+            self.selection2 > cf.CONSTANTS['max_items']-1 and
+            len(self.options1) < cf.CONSTANTS['max_items'])
+        return max(len(self.options1) + empty_slot, 1)
+
+    def _get_max_selectable2(self):
+        '''Get the maximum number of selectable menu items
+           on the right side of the trading screen. Depends
+           upon number of items in inventory and whether a
+           trade is active.
+        '''
+        # Allow an empty slot to be selectable if user is choosing trade destination
+        empty_slot = int(
+            self.selection2 is not None and
+            self.selection2 < cf.CONSTANTS['max_items'] and
+            len(self.options2) < cf.CONSTANTS['max_items'])
+        return max(len(self.options2) + empty_slot, 1)
+
     def moveDown(self, first_push=True):
-        if self.selection1 < cf.CONSTANTS['max_items']-1 or (self.selection1 > cf.CONSTANTS['max_items']-1 and self.selection1 < cf.CONSTANTS['max_items']*2-1):
-            self.selection1 += 1
-            self.cursor_y_offset = -1
-            return True
-        return False
+        if self.selection1 < cf.CONSTANTS['max_items'] and len(self.options1) > 1:
+            # Wrap down to start if moving cursor past the edge of the left menu
+            tmp = (self.selection1 + 1) % self._get_max_selectable1()
+            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
+            self.selection1 = tmp
+        elif self.selection1 > cf.CONSTANTS['max_items']-1 and len(self.options2) > 1:
+            # Wrap down to start if moving cursor past the edge of the right menu
+            tmp = (self.selection1 - cf.CONSTANTS['max_items'] + 1) % self._get_max_selectable2() + cf.CONSTANTS['max_items']
+            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
+            self.selection1 = tmp
+        else:
+            return False
+        return True
 
     def moveUp(self, first_push=True):
-        if (self.selection1 > 0 and self.selection1 < cf.CONSTANTS['max_items']) or self.selection1 > cf.CONSTANTS['max_items']:
-            self.selection1 -= 1
-            self.cursor_y_offset = 1
-            return True
-        return False
+        if self.selection1 < cf.CONSTANTS['max_items'] and len(self.options1) > 1:
+            # Wrap up to end if moving cursor past the edge of the left menu
+            tmp = (self.selection1 - 1) % self._get_max_selectable1()
+            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
+            self.selection1 = tmp
+        elif self.selection1 > cf.CONSTANTS['max_items']-1 and len(self.options2) > 1:
+            # Wrap up to end if moving cursor past the edge of the right menu
+            tmp = (self.selection1 - cf.CONSTANTS['max_items'] - 1) % self._get_max_selectable2() + cf.CONSTANTS['max_items']
+            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
+            self.selection1 = tmp
+        else:
+            return False
+        return True
 
     def moveLeft(self, first_push=True):
         if self.selection1 > cf.CONSTANTS['max_items']-1:
-            self.selection1 -= 5
+            self.selection1 = min(self.selection1 - 5, self._get_max_selectable1()-1)
             return True
         return False
 
     def moveRight(self, first_push=True):
         if self.selection1 < cf.CONSTANTS['max_items']:
-            self.selection1 += 5
+            self.selection1 = min(self.selection1, self._get_max_selectable2()-1) + 5
             return True
         return False
 
