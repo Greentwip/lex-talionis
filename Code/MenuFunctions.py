@@ -1704,6 +1704,7 @@ class TradeMenu(Counters.CursorControl):
                 uses_font.blit('--', surf, (right - uses_font.size('--')[0], height))
 
     def setSelection(self):
+        # This puts the secondary hand in the spot the original hand came from
         self.selection2 = self.selection1
 
         # Trading item FROM the unit on the left
@@ -1789,13 +1790,14 @@ class TradeMenu(Counters.CursorControl):
                 Action.do(Action.TradeItem(self.partner, self.partner, item2, item1), gameStateObj)
                 Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
 
+        # This part puts the main hand at the location you traded to
+        # Otherwise the main hand would stay in its original spot
         tmp = self.selection2
         self.selection2 = None
         if tmp < cf.CONSTANTS['max_items']:
             self.selection1 = min(tmp, self._get_max_selectable1()-1)
         else:
             self.selection1 = min(tmp, self._get_max_selectable2()-1+cf.CONSTANTS['max_items'])
-        self.selection2 = None
         # self.owner.hasTraded = True
                 
     # def swap(self, unit1, unit2, item1, item2):
