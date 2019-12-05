@@ -671,7 +671,8 @@ class MenuState(StateMachine.State):
             logger.debug('Player selected %s', selection)
             gameStateObj.highlight_manager.remove_highlights()
 
-            if selection in [status.name for status in cur_unit.status_effects]:
+            # Only applies to statuses that are combat arts or have activated items
+            if selection in [status.name for status in cur_unit.status_effects if status.combat_art or status.activated_item]:
                 for status in cur_unit.status_effects:
                     if selection == status.name:
                         if status.combat_art:
