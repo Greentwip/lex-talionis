@@ -183,7 +183,9 @@ class PromotionState(StateMachine.State):
                 # Build animation
                 script = self.right_anim['script']
                 name = None
-                if self.unit.name in self.right_anim['images']:
+                if self.unit.id in self.right_anim['images']:
+                    name = self.unit.id
+                elif self.unit.name in self.right_anim['images']:
                     name = self.unit.name
                 else:
                     name = 'Generic' + color
@@ -198,7 +200,9 @@ class PromotionState(StateMachine.State):
                 # Build animation
                 script = self.left_anim['script']
                 name = None
-                if self.unit.name in self.left_anim['images']:
+                if self.unit.id in self.left_anim['images']:
+                    name = self.unit.id
+                elif self.unit.name in self.left_anim['images']:
                     name = self.unit.name
                 else:
                     name = 'Generic' + color
@@ -281,7 +285,9 @@ class PromotionState(StateMachine.State):
         if anim:
             # Build animation
             script = anim['script']
-            if self.unit.name in anim['images']:
+            if self.unit.id in anim['images']:
+                frame_dir = anim['images'][self.unit.id]
+            elif self.unit.name in anim['images']:
                 frame_dir = anim['images'][self.unit.name]
             else:
                 frame_dir = anim['images']['Generic' + Utility.get_color(self.unit.team)]

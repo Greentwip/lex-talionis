@@ -20,7 +20,7 @@
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Warlock;1;Howl,Searing Blades,Lightning_Bolt,Energy Drink;1,14;None;Resistance
+player;0;0;Cavalier;10;Howl,Searing Blades,Lightning_Bolt,Energy Drink;1,14;None;Resistance
 player;0;0;Swordmaster;1;;1,15;None;Resistance
 # player;0;0;Archer;5;Poison Bow,Iron Axe,Energy Drink;14,2;None;Resistance
 # Enemies
