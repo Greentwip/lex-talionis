@@ -573,7 +573,7 @@ class ConvoyTrader(object):
     def remove_item(self, item, gameStateObj=None):
         self.items.remove(item)
         item.item_owner = 0
-        if item != "Empty Slot":
+        if item != "EmptySlot":
             self.convoy.remove(item)
 
 class PrepTradeState(StateMachine.State):

@@ -7,7 +7,7 @@ from . import configuration as cf
 from . import static_random
 from . import Utility
 from . import Banner, Weapons, ClassData, Aura
-from . import StatusCatalog, ActiveSkill
+from . import StatusCatalog, ActiveSkill, PrepBase
 
 import logging
 logger = logging.getLogger(__name__)
@@ -42,6 +42,8 @@ class Action(object):
             value = ('List', [self.serialize_obj(v, gameStateObj) for v in value])
         elif isinstance(value, Action):  # This only works if two actions never refer to one another
             value = ('Action', value.serialize(gameStateObj))
+        elif isinstance(value, PrepBase.ConvoyTrader):
+            value = ('ConvoyTrader', None)  # List does not need to be reversible
         else:
             value = ('Generic', value)
         return value
