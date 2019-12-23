@@ -1466,15 +1466,15 @@ class TradeState(StateMachine.State):
         gameStateObj.activeMenu.updateOptions(initiator.items, partner.items)
 
         event = gameStateObj.input_manager.process_input(eventList)
-        self.fluid_helper.update(gameStateObj)
+        first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
 
         if 'DOWN' in directions:
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveDown()
+            if gameStateObj.activeMenu.moveDown(first_push):
+                GC.SOUNDDICT['Select 6'].play()
         elif 'UP' in directions:
-            GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.activeMenu.moveUp()
+            if gameStateObj.activeMenu.moveUp(first_push):
+                GC.SOUNDDICT['Select 6'].play()
 
         if event == 'RIGHT':
             if gameStateObj.activeMenu.moveRight():
@@ -1484,19 +1484,17 @@ class TradeState(StateMachine.State):
                 GC.SOUNDDICT['TradeRight'].play()
 
         elif event == 'BACK':
-            if gameStateObj.activeMenu.selection2 is not None:
+            if gameStateObj.activeMenu.is_selection_set():
                 GC.SOUNDDICT['Select 4'].play()
-                gameStateObj.activeMenu.selection2 = None
+                gameStateObj.activeMenu.unsetSelection()
             else:
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.activeMenu = None
-                # if initiator.hasTraded:
-                #     initiator.hasMoved = True
                 gameStateObj.stateMachine.changeState('menu')
                                          
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
-            if gameStateObj.activeMenu.selection2 is not None:
+            if gameStateObj.activeMenu.is_selection_set():
                 gameStateObj.activeMenu.tradeItems(gameStateObj)
             else:
                 gameStateObj.activeMenu.setSelection()

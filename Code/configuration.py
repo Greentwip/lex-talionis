@@ -129,6 +129,7 @@ def read_constants_file():
              'music_promotion': '',
              'attribution': 'created by rainlash',
              'title': 'Lex Talionis Engine',
+             'title_particles': 'Smoke',
              'support': 1, # 0 - No supports, 1 - Conversations in combat, 2 - Conversations in base
              'support_bonus': 4, # 0 - No bonus, 1 - Use own affinity, 2 - Use other affinity, 3 - Use average of affinites, 4 - Use sum of affinities
              'support_range': 3, # 0 - Entire map
@@ -159,7 +160,8 @@ def read_constants_file():
     float_lines = {'exp_curve', 'exp_magnitude', 'heal_curve', 'heal_magnitude', 
                    'heal_min', 'boss_bonus', 'kill_multiplier'}
     string_lines = {'title', 'music_main', 'music_game_over', 'music_armory',
-                    'music_vendor', 'music_promotion', 'music_arena', 'attribution', 'rng'}
+                    'music_vendor', 'music_promotion', 'music_arena', 
+                    'attribution', 'rng', 'title_particles'}
     int_list_lines = {'max_level'}
     string_list_lines = {'arena_basic_weapons'}
     for k, v in lines.items():

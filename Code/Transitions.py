@@ -95,7 +95,10 @@ class StartStart(StateMachine.State):
             gameStateObj.press_start = MenuFunctions.Logo(GC.IMAGESDICT['PressStart'], (GC.WINWIDTH//2, 4*GC.WINHEIGHT//5))
             gameStateObj.title_bg = Background.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
-            gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
+            if cf.CONSTANTS['title_particles'] in Weather.WEATHER_CATALOG:
+                gameStateObj.title_particles = Weather.Weather(cf.CONSTANTS['title_particles'], .075, bounds, (GC.TILEX, GC.TILEY))
+            else:
+                gameStateObj.title_particles = None
             # Wait until saving thread has finished
             if hasattr(gameStateObj, 'saving_thread'):
                 gameStateObj.saving_thread.join()
@@ -164,8 +167,9 @@ class StartStart(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         # gameStateObj.logo.draw(surf)
@@ -308,8 +312,9 @@ class StartOption(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         gameStateObj.button_a.draw(surf)
         gameStateObj.button_b.draw(surf)
         if self.menu:
@@ -400,8 +405,9 @@ class StartLoad(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT/2])
         surf.blit(self.title_surf, (self.title_pos[0], self.title_pos[1] + self.rel_title_pos_y))
@@ -856,8 +862,9 @@ class StartMode(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         if self.menu:
             self.menu.draw(surf)
             surf.blit(self.title_surf, self.title_pos)
@@ -959,8 +966,9 @@ class StartNew(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.draw(surf, center=[self.position_x, GC.WINHEIGHT//2])
         # selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
@@ -1080,8 +1088,9 @@ class StartExtras(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         # GC.FONT['text_white'].blit(cf.CONSTANTS['attribution'], surf, (4, GC.WINHEIGHT - 16))
         # gameStateObj.logo.draw(surf)
         gameStateObj.button_a.draw(surf)
@@ -1109,8 +1118,9 @@ class StartWait(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             currentTime = Engine.get_time()
             if hasattr(self, 'wait_time') and currentTime - self.wait_time > 100 and currentTime - self.wait_time < 200:
@@ -1140,7 +1150,10 @@ class StartSave(StateMachine.State):
             gameStateObj.button_b = Button(5, (GC.WINWIDTH - 32, GC.WINHEIGHT - 16), 'key_BACK')
             gameStateObj.title_bg = Background.MovieBackground('title_background')
             bounds = (-GC.WINHEIGHT, GC.WINWIDTH, GC.WINHEIGHT, GC.WINHEIGHT+16)
-            gameStateObj.title_particles = Weather.Weather('Smoke', .075, bounds, (GC.TILEX, GC.TILEY))
+            if cf.CONSTANTS['title_particles'] in Weather.WEATHER_CATALOG:
+                gameStateObj.title_particles = Weather.Weather(cf.CONSTANTS['title_particles'], .075, bounds, (GC.TILEX, GC.TILEY))
+            else:
+                gameStateObj.title_particles = None
             # self.time_display = TimeDisplay()
             # if not hasattr(gameStateObj, 'save_slots') or not gameStateObj.save_slots:
             gameStateObj.save_slots = load_saves()
@@ -1205,8 +1218,9 @@ class StartSave(StateMachine.State):
     def draw(self, gameStateObj, metaDataObj):
         surf = gameStateObj.generic_surf
         gameStateObj.title_bg.draw(surf)
-        gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
-        gameStateObj.title_particles.draw(surf)
+        if gameStateObj.title_particles:
+            gameStateObj.title_particles.update(Engine.get_time(), gameStateObj)
+            gameStateObj.title_particles.draw(surf)
         if gameStateObj.activeMenu:
             currentTime = Engine.get_time()
             if hasattr(self, 'wait_time') and currentTime - self.wait_time > 100 and currentTime - self.wait_time < 200:

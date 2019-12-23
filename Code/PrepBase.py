@@ -600,27 +600,25 @@ class PrepTradeState(StateMachine.State):
     def take_input(self, eventList, gameStateObj, metaDataObj):
         self.menu.updateOptions(self.initiator.items, self.partner.items)
         event = gameStateObj.input_manager.process_input(eventList)
-        self.fluid_helper.update(gameStateObj)
+        first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
         if 'DOWN' in directions:
-            GC.SOUNDDICT['Select 6'].play()
-            self.menu.moveDown()
+            if self.menu.moveDown(first_push):
+                GC.SOUNDDICT['Select 6'].play()
         elif 'UP' in directions:
-            GC.SOUNDDICT['Select 6'].play()
-            self.menu.moveUp()
+            if self.menu.moveUp(first_push):
+                GC.SOUNDDICT['Select 6'].play()
         elif event == 'RIGHT':
             if self.menu.moveRight():
-                # GC.SOUNDDICT['Select 6'].play() # TODO NOT the exact SOuND
                 GC.SOUNDDICT['TradeRight'].play()
         elif event == 'LEFT':
             if self.menu.moveLeft():
-                # GC.SOUNDDICT['Select 6'].play()
                 GC.SOUNDDICT['TradeRight'].play()
 
         elif event == 'BACK':
-            if self.menu.selection2 is not None:
+            if self.menu.is_selection_set():
                 GC.SOUNDDICT['Select 4'].play()
-                self.menu.selection2 = None
+                self.menu.unsetSelection()
             else:
                 GC.SOUNDDICT['Select 4'].play()
                 # gameStateObj.stateMachine.back()
@@ -628,7 +626,7 @@ class PrepTradeState(StateMachine.State):
                                               
         elif event == 'SELECT':
             GC.SOUNDDICT['Select 1'].play()
-            if self.menu.selection2 is not None:
+            if self.menu.is_selection_set():
                 self.menu.tradeItems(gameStateObj)
             else:
                 self.menu.setSelection()

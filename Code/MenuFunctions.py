@@ -1609,16 +1609,18 @@ class ShopMenu(ChoiceMenu):
 
 # Menu used for trading between units
 class TradeMenu(Counters.CursorControl):
-    def __init__(self, owner, partner, options1, options2):
+    def __init__(self, owner, partner, owner_items, partner_items):
         self.owner = owner
         self.partner = partner
-        self.options1 = options1
-        self.options2 = options2
+        self.owner_items = owner_items
+        self.partner_items = partner_items
 
         self.topleft = (12, 68)
         # Where the cursor hands are at
-        self.selection1 = 0 # Main hand
-        self.selection2 = None # Secondary Hand
+        # First number is which side of the menu (left (0) or right (1))
+        # Second number is which item index
+        self.main_hand = [0, 0] # Main hand
+        self.extra_hand = None # Secondary Hand
 
         Counters.CursorControl.__init__(self)
         self.cursor_y_offset = 0
@@ -1662,32 +1664,31 @@ class TradeMenu(Counters.CursorControl):
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
         for slot in range((self.menuWidth - 16)//width): # Gives me the amount of highlight needed
-            topleft = (self.topleft[0] + 8 + slot*width + (self.menuWidth+8)*(self.selection1//cf.CONSTANTS['max_items']), 
-                       self.topleft[1] + 11 + (self.selection1%cf.CONSTANTS['max_items'])*16)
+            topleft = (self.topleft[0] + 8 + slot*width + (self.menuWidth+8)*self.main_hand[0], 
+                       self.topleft[1] + 11 + (self.main_hand[1]*16))
             surf.blit(highlightSurf, topleft)
 
-        self.draw_items(surf, self.options1, self.topleft, BGSurf1.get_width(), self.owner)
-        self.draw_items(surf, self.options2, second_topleft, BGSurf2.get_width(), self.partner)
+        self.draw_items(surf, self.owner_items, self.topleft, BGSurf1.get_width(), self.owner)
+        self.draw_items(surf, self.partner_items, second_topleft, BGSurf2.get_width(), self.partner)
 
-        if self.selection2 is not None:
-            left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*(self.selection2//cf.CONSTANTS['max_items'])
-            top = self.topleft[1] + 4 + (self.selection2%cf.CONSTANTS['max_items'])*self.optionHeight
+        if self.extra_hand is not None:
+            left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*self.extra_hand[0]
+            top = self.topleft[1] + 4 + self.extra_hand[1]*self.optionHeight
             surf.blit(self.cursor, (left, top))
 
         # Cursor location        
-        left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*(self.selection1//cf.CONSTANTS['max_items'])
-        top = self.topleft[1] + 4 + (self.selection1%cf.CONSTANTS['max_items'])*16 + self.cursor_y_offset*8
+        left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*self.main_hand[0]
+        top = self.topleft[1] + 4 + self.main_hand[1]*16 + self.cursor_y_offset*8
         self.cursor_y_offset = 0 # reset
         surf.blit(self.cursor, (left, top))
 
-    def draw_items(self, surf, options, topleft, width, owner):
-        # Blit second unit's items
-        for index, option in enumerate(options):
-            option.draw(surf, (topleft[0] + 4, topleft[1] + 4 + index*self.optionHeight))
-            if option.locked:
+    def draw_items(self, surf, items, topleft, width, owner):
+        for index, item in enumerate(items):
+            item.draw(surf, (topleft[0] + 4, topleft[1] + 4 + index*self.optionHeight))
+            if item.locked:
                 font = GC.FONT['text_yellow']
                 uses_font = GC.FONT['text_blue']
-            elif owner.canWield(option):
+            elif owner.canWield(item):
                 font = GC.FONT['text_white']
                 uses_font = GC.FONT['text_blue']
             else:
@@ -1695,51 +1696,67 @@ class TradeMenu(Counters.CursorControl):
                 uses_font = GC.FONT['text_grey']
             height = self.topleft[1] + 5 + index*self.optionHeight
             right = topleft[0] + width - 4
-            font.blit(str(option), surf, (topleft[0] + 20, height))
-            if option.uses:
-                uses_font.blit(str(option.uses), surf, (right - uses_font.size(str(option.uses))[0], height))
-            elif option.c_uses:
-                uses_font.blit(str(option.c_uses), surf, (right - uses_font.size(str(option.c_uses))[0], height))
+            font.blit(str(item), surf, (topleft[0] + 20, height))
+            if item.uses:
+                uses_font.blit(str(item.uses), surf, (right - uses_font.size(str(item.uses))[0], height))
+            elif item.c_uses:
+                uses_font.blit(str(item.c_uses), surf, (right - uses_font.size(str(item.c_uses))[0], height))
             else:
                 uses_font.blit('--', surf, (right - uses_font.size('--')[0], height))
 
-    def setSelection(self):
-        # This puts the secondary hand in the spot the original hand came from
-        self.selection2 = self.selection1
-
-        # Trading item FROM the unit on the left
-        if self.selection1 < cf.CONSTANTS['max_items']:
-            if len(self.options2) < cf.CONSTANTS['max_items']:
-                self.selection1 = cf.CONSTANTS['max_items'] + len(self.options2)
-            else:
-                self.selection1 = cf.CONSTANTS['max_items']
-        # Trading item FROM the unit on the right
-        else:
-            if len(self.options1) < cf.CONSTANTS['max_items']:
-                self.selection1 = len(self.options1)
-            else:
-                self.selection1 = 0
-
     def drawInfo(self, surf):
         if self.info_flag:
-            side_flag = False
-            if self.selection1 < cf.CONSTANTS['max_items'] and self.selection1 < len(self.options1):
-                option = self.options1[self.selection1]
-                idx = self.selection1
-            elif self.selection1 > cf.CONSTANTS['max_items']-1 and self.selection1 - cf.CONSTANTS['max_items'] < len(self.options2):
-                option = self.options2[self.selection1-cf.CONSTANTS['max_items']]
-                idx = self.selection1-cf.CONSTANTS['max_items']
-                side_flag = True
+            # If on an owner item
+            if self.main_hand[0] == 0 and self.main_hand[1] < len(self.owner_items):
+                option = self.owner_items[self.main_hand[1]]
+                idx = self.main_hand[1]
+            elif self.main_hand[0] == 1 and self.main_hand[1] < len(self.partner_items):
+                option = self.partner_items[self.main_hand[1]]
+                idx = self.main_hand[1]
             else:
                 self.info_flag = False
                 return
             if isinstance(option, ItemMethods.ItemObject):
                 help_box = option.get_help_box()
                 top = self.topleft[1] + 4 + 16*idx - help_box.get_height()
-                if side_flag:
+                if self.main_hand[0] == 1:
                     help_box.draw(surf, (GC.WINWIDTH - 8 - help_box.get_width(), top))
                 else:
                     help_box.draw(surf, (self.topleft[0] + 8, top))
+
+    def is_selection_set(self):
+        return self.extra_hand is not None
+
+    def unsetSelection(self):
+        self.extra_hand = None
+
+    def setSelection(self):
+        # This puts the secondary hand in the spot the original hand came from
+        self.extra_hand = [self.main_hand[0], self.main_hand[1]]
+
+        # Trading item FROM the unit on the left
+        if self.main_hand[0] == 0:  # Main hand was on left
+            self.main_hand[0] = 1  # Move hand to right
+            # Move hand to highest empty spot available
+            if len(self.partner_items) < cf.CONSTANTS['max_items']:
+                self.main_hand[1] = self._get_max_selectable2() - 1
+            else:
+                self.main_hand[1] = self.main_hand[1]  # Index doesn't change
+            # if len(self.partner_items) < cf.CONSTANTS['max_items']:
+            #     self.main_hand[1] = len(self.partner_items)
+            # else:  # if not available, top of items
+            #     self.main_hand[1] = 0
+        # Trading item FROM the unit on the right
+        else:
+            self.main_hand[0] = 0
+            if len(self.owner_items) < cf.CONSTANTS['max_items']:
+                self.main_hand[1] = self._get_max_selectable1() - 1
+            else:
+                self.main_hand[1] = self.main_hand[1]
+            # if len(self.owner_items) < cf.CONSTANTS['max_items']:
+            #     self.main_hand[1] = len(self.owner_items)
+            # else:
+            #     self.main_hand[1] = 0
 
     def tradeItems(self, gameStateObj):
         # swaps selected item and current item
@@ -1748,67 +1765,42 @@ class TradeMenu(Counters.CursorControl):
         item2 = "EmptySlot"
         # Item 2 is where the item came from
         # Item 1 is where the item is going
-        if self.selection1 < cf.CONSTANTS['max_items'] and self.selection1 < len(self.options1):
-            item1 = self.options1[self.selection1]
-        elif self.selection1 > cf.CONSTANTS['max_items']-1 and self.selection1 - cf.CONSTANTS['max_items'] < len(self.options2):
-            item1 = self.options2[self.selection1-cf.CONSTANTS['max_items']]
-        if self.selection2 < cf.CONSTANTS['max_items'] and self.selection2 < len(self.options1):
-            item2 = self.options1[self.selection2]
-        elif self.selection2 > cf.CONSTANTS['max_items']-1 and self.selection2 - cf.CONSTANTS['max_items'] < len(self.options2):
-            item2 = self.options2[self.selection2-cf.CONSTANTS['max_items']]
-
-        """
-        if cf.OPTIONS['debug']:
-            print(self.options1, self.options2)
-            print(item1, item2)
-        """
+        if self.main_hand[0] == 0 and self.main_hand[1] < len(self.owner_items):
+            item1 = self.owner_items[self.main_hand[1]]
+        elif self.main_hand[0] == 1 and self.main_hand[1] < len(self.partner_items):
+            item1 = self.partner_items[self.main_hand[1]]
+        if self.extra_hand[0] == 0 and self.extra_hand[1] < len(self.owner_items):
+            item2 = self.owner_items[self.extra_hand[1]]
+        elif self.extra_hand[0] == 1 and self.extra_hand[1] < len(self.partner_items):
+            item2 = self.partner_items[self.extra_hand[1]]
 
         if (item1 is item2) or (item1 is not "EmptySlot" and item1.locked) or (item2 is not "EmptySlot" and item2.locked):
-            self.selection2 = None
+            self.extra_hand = None
             GC.SOUNDDICT['Error'].play()
             return 
 
         # Now swap items
-        # Selection 1 is where the item is going
-        # Selection 2 is where the item came from
-        if self.selection2 < cf.CONSTANTS['max_items']:
-            if self.selection1 < cf.CONSTANTS['max_items']:
+        # Main hand is where the item is going
+        # Extra hand is where the item came from
+        if self.extra_hand[0] == 0:
+            if self.main_hand[0] == 0:
                 Action.do(Action.TradeItem(self.owner, self.owner, item2, item1), gameStateObj)
-                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
-                # self.swap(self.owner, self.owner, item1, item2)
             else:
-                # self.swap(self.owner, self.partner, item1, item2)
                 Action.do(Action.TradeItem(self.owner, self.partner, item2, item1), gameStateObj)
-                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
         else:
-            if self.selection1 < cf.CONSTANTS['max_items']:
-                # self.swap(self.partner, self.owner, item1, item2)
+            if self.main_hand[0] == 0:
                 Action.do(Action.TradeItem(self.partner, self.owner, item2, item1), gameStateObj)
-                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
             else:
-                # self.swap(self.partner, self.partner, item1, item2)
                 Action.do(Action.TradeItem(self.partner, self.partner, item2, item1), gameStateObj)
-                Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
+        Action.do(Action.OwnerHasTraded(self.owner), gameStateObj)
 
         # This part puts the main hand at the location you traded to
         # Otherwise the main hand would stay in its original spot
-        tmp = self.selection2
-        self.selection2 = None
-        if tmp < cf.CONSTANTS['max_items']:
-            self.selection1 = min(tmp, self._get_max_selectable1()-1)
+        if self.extra_hand[0] == 0:
+            self.main_hand = [self.extra_hand[0], min(self.extra_hand[1], self._get_max_selectable1() - 1)]
         else:
-            self.selection1 = min(tmp, self._get_max_selectable2()-1+cf.CONSTANTS['max_items'])
-        # self.owner.hasTraded = True
-                
-    # def swap(self, unit1, unit2, item1, item2):
-    #     selection1 = self.selection1%5
-    #     selection2 = self.selection2%5
-    #     if item1 is not "EmptySlot":
-    #         unit1.remove_item(item1)
-    #         unit2.insert_item(selection2, item1)
-    #     if item2 is not "EmptySlot":
-    #         unit2.remove_item(item2)
-    #         unit1.insert_item(selection1, item2)
+            self.main_hand = [self.extra_hand[0], min(self.extra_hand[1], self._get_max_selectable2() - 1)]
+        self.extra_hand = None
 
     def toggle_info(self):
         self.info_flag = not self.info_flag
@@ -1819,12 +1811,13 @@ class TradeMenu(Counters.CursorControl):
            upon number of items in inventory and whether a
            trade is active.
         '''
-        # Allow an empty slot to be selectable if user is choosing trade destination
+        # Allows an empty slot to be selectable if user is choosing trade destination
         empty_slot = int(
-            self.selection2 is not None and
-            self.selection2 > cf.CONSTANTS['max_items']-1 and
-            len(self.options1) < cf.CONSTANTS['max_items'])
-        return max(len(self.options1) + empty_slot, 1)
+            self.extra_hand is not None and
+            self.extra_hand[0] == 1 and
+            len(self.owner_items) < cf.CONSTANTS['max_items'] and
+            len(self.partner_items) > 0)
+        return max(len(self.owner_items) + empty_slot, 1)
 
     def _get_max_selectable2(self):
         '''Get the maximum number of selectable menu items
@@ -1832,58 +1825,63 @@ class TradeMenu(Counters.CursorControl):
            upon number of items in inventory and whether a
            trade is active.
         '''
-        # Allow an empty slot to be selectable if user is choosing trade destination
+        # Allows an empty slot to be selectable if user is choosing trade destination
         empty_slot = int(
-            self.selection2 is not None and
-            self.selection2 < cf.CONSTANTS['max_items'] and
-            len(self.options2) < cf.CONSTANTS['max_items'])
-        return max(len(self.options2) + empty_slot, 1)
+            self.extra_hand is not None and
+            self.extra_hand[0] == 0 and
+            len(self.partner_items) < cf.CONSTANTS['max_items'] and
+            len(self.owner_items) > 0)
+        return max(len(self.partner_items) + empty_slot, 1)
 
     def moveDown(self, first_push=True):
-        if self.selection1 < cf.CONSTANTS['max_items'] and len(self.options1) > 1:
-            # Wrap down to start if moving cursor past the edge of the left menu
-            tmp = (self.selection1 + 1) % self._get_max_selectable1()
-            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
-            self.selection1 = tmp
-        elif self.selection1 > cf.CONSTANTS['max_items']-1 and len(self.options2) > 1:
-            # Wrap down to start if moving cursor past the edge of the right menu
-            tmp = (self.selection1 - cf.CONSTANTS['max_items'] + 1) % self._get_max_selectable2() + cf.CONSTANTS['max_items']
-            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
-            self.selection1 = tmp
+        if self.main_hand[0] == 0:
+            num_allowed = self._get_max_selectable1()
+        else:
+            num_allowed = self._get_max_selectable2()
+        if first_push:
+            tmp = (self.main_hand[1] + 1) % num_allowed  # wrap past
+        else:
+            tmp = min(self.main_hand[1] + 1, num_allowed - 1)
+        if tmp != self.main_hand[1]:  # If it moved
+            self.cursor_y_offset = 1 if tmp < self.main_hand[1] else -1
+            self.main_hand[1] = tmp
+            return True
         else:
             return False
-        return True
 
     def moveUp(self, first_push=True):
-        if self.selection1 < cf.CONSTANTS['max_items'] and len(self.options1) > 1:
-            # Wrap up to end if moving cursor past the edge of the left menu
-            tmp = (self.selection1 - 1) % self._get_max_selectable1()
-            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
-            self.selection1 = tmp
-        elif self.selection1 > cf.CONSTANTS['max_items']-1 and len(self.options2) > 1:
-            # Wrap up to end if moving cursor past the edge of the right menu
-            tmp = (self.selection1 - cf.CONSTANTS['max_items'] - 1) % self._get_max_selectable2() + cf.CONSTANTS['max_items']
-            self.cursor_y_offset = 1 if tmp < self.selection1 else -1
-            self.selection1 = tmp
+        if self.main_hand[0] == 0:
+            num_allowed = self._get_max_selectable1()
+        else:
+            num_allowed = self._get_max_selectable2()
+        if first_push:
+            tmp = (self.main_hand[1] - 1) % num_allowed  # wrap past
+        else:
+            tmp = max(self.main_hand[1] - 1, 0)
+        if tmp != self.main_hand[1]:  # If it moved
+            self.cursor_y_offset = 1 if tmp < self.main_hand[1] else -1
+            self.main_hand[1] = tmp
+            return True
         else:
             return False
-        return True
 
     def moveLeft(self, first_push=True):
-        if self.selection1 > cf.CONSTANTS['max_items']-1:
-            self.selection1 = min(self.selection1 - 5, self._get_max_selectable1()-1)
+        if self.main_hand[0] == 1:
+            self.main_hand[0] = 0
+            self.main_hand[1] = min(self.main_hand[1], self._get_max_selectable1() - 1)
             return True
         return False
 
     def moveRight(self, first_push=True):
-        if self.selection1 < cf.CONSTANTS['max_items']:
-            self.selection1 = min(self.selection1, self._get_max_selectable2()-1) + 5
+        if self.main_hand[0] == 0:
+            self.main_hand[0] = 1
+            self.main_hand[1] = min(self.main_hand[1], self._get_max_selectable2() - 1)
             return True
         return False
 
-    def updateOptions(self, options1, options2):
-        self.options1 = options1
-        self.options2 = options2
+    def updateOptions(self, owner_items, partner_items):
+        self.owner_items = owner_items
+        self.partner_items = partner_items
 
 def drawTradePreview(surf, gameStateObj, steal=False):
     unit = gameStateObj.cursor.getHoveredUnit(gameStateObj)

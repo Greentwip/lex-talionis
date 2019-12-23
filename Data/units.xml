@@ -11,7 +11,7 @@
 		<bases>12,3,1,5,7,2,1,1</bases>
 		<growths>105,55,35,75,80,80,40,40</growths>
         
-        <inventory>Iron Sword,Steel Sword,Mithril Sword,Vulnerary,Brave Sword</inventory>
+        <inventory>Iron Sword</inventory>
         
         <level>1</level>
         <class>Myrmidon</class>

@@ -50,7 +50,9 @@ class Raindrop(object):
     def update(self, gameStateObj):
         self.x += self.speed
         self.y += self.speed*4
-        if self.x > gameStateObj.map.width*GC.TILEWIDTH or self.y > gameStateObj.map.height*GC.TILEHEIGHT:
+        if hasattr(gameStateObj, 'map') and gameStateObj.map and \
+                (self.x > gameStateObj.map.width*GC.TILEWIDTH or
+                 self.y > gameStateObj.map.height*GC.TILEHEIGHT):
             self.remove_me = True
 
     def draw(self, surf, pos_x=0, pos_y=0):
@@ -67,7 +69,8 @@ class Sand(Raindrop):
     def update(self, gameStateObj):
         self.x += self.speed*2
         self.y -= self.speed
-        if self.x > gameStateObj.map.width*GC.TILEWIDTH or self.y < -32:
+        if hasattr(gameStateObj, 'map') and gameStateObj.map and \
+                (self.x > gameStateObj.map.width*GC.TILEWIDTH or self.y < -32):
             self.remove_me = True
 
 class Smoke(Raindrop):
@@ -145,7 +148,9 @@ class Snow(Raindrop):
 
         self.x += speed
         self.y += speed
-        if self.x > gameStateObj.map.width * GC.TILEWIDTH or self.y > gameStateObj.map.height * GC.TILEHEIGHT:
+        if hasattr(gameStateObj, 'map') and gameStateObj.map and \
+                (self.x > gameStateObj.map.width * GC.TILEWIDTH or
+                 self.y > gameStateObj.map.height * GC.TILEHEIGHT):
             self.remove_me = True
 
 class WarpFlower(object):
@@ -160,7 +165,10 @@ class WarpFlower(object):
     def update(self, gameStateObj):
         self.x += self.speed*math.cos(self.angle)
         self.y += self.speed*math.sin(self.angle)
-        if self.x < 0 or self.y < 0 or self.x > gameStateObj.map.width*GC.TILEWIDTH or self.y > gameStateObj.map.height*GC.TILEHEIGHT:
+        if hasattr(gameStateObj, 'map') and gameStateObj.map and \
+                (self.x < 0 or self.y < 0 or 
+                 self.x > gameStateObj.map.width*GC.TILEWIDTH or
+                 self.y > gameStateObj.map.height*GC.TILEHEIGHT):
             self.remove_me = True
 
     def draw(self, surf, pos_x=0, pos_y=0):
