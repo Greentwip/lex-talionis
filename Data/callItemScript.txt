@@ -1,0 +1,4 @@
+# A sample call item script
+if;self.unit2.id == "Exp Drink"
+    give_exp;{unit};50
+end

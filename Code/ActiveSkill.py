@@ -78,6 +78,9 @@ class ChargeComponent(object):
     def set_to_max(self):
         self.current_charge = self.charge_max
 
+    def get_max(self):
+        return self.charge_max
+
     def increase_charge(self, unit, inc):
         self.current_charge += inc
         if self.check_charged():

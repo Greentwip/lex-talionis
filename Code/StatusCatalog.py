@@ -75,7 +75,7 @@ class Status(object):
         serial_dict['upkeep_sc_count'] = self.upkeep_stat_change.count if self.upkeep_stat_change else None
         if self.activated_item:
             self.data['activated_item'] = self.activated_item.current_charge
-        elif self.combat_art:
+        if self.combat_art:
             self.data['combat_art'] = self.combat_art.current_charge
         serial_dict['children'] = self.children
         serial_dict['owner_id'] = self.owner_id
@@ -540,10 +540,10 @@ def deserialize(s_dict):
     status.owner_id = s_dict['owner_id']
     status.giver_id = s_dict['giver_id']
     status.data = s_dict.get('data', {})  # Get back persistent data
-    if s_dict.get('activated_item') is not None:
-        status.activated_item.current_charge = s_dict['activated_item']
-    if s_dict.get('combat_art') is not None:
-        status.combat_art.current_charge = s_dict['combat_art']
+    if status.data.get('activated_item') is not None:
+        status.activated_item.current_charge = status.data['activated_item']
+    if status.data.get('combat_art') is not None:
+        status.combat_art.current_charge = status.data['combat_art']
 
     return status
 

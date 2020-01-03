@@ -65,12 +65,17 @@ class UnitSprite(object):
         top = y * GC.TILEHEIGHT + self.spriteOffset[1]
 
         # Active Skill Icon
-        if not self.unit.isDying and any(status.active.check_charged() and status.active.required_charge > 0
-                                         for status in self.unit.status_effects if status.active):
-            active_icon = GC.ICONDICT["ActiveSkill"]
-            active_icon = Engine.subsurface(active_icon, (GC.PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
-            topleft = (left - max(0, (active_icon.get_width() - 16)//2), top - max(0, (active_icon.get_height() - 16)//2))
-            surf.blit(active_icon, topleft)
+        if not self.unit.isDying:
+            for status in self.unit.status_effects:
+                if (status.combat_art and status.combat_art.check_charged()
+                   and status.combat_art.get_max() > 0 and status.combat_art.is_activated()) \
+                   or (status.activated_item and status.activ.check_charged()
+                   and status.activated_item.get_max() > 0):
+                    active_icon = GC.ICONDICT["ActiveSkill"]
+                    active_icon = Engine.subsurface(active_icon, (GC.PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
+                    topleft = (left - max(0, (active_icon.get_width() - 16)//2), top - max(0, (active_icon.get_height() - 16)//2))
+                    surf.blit(active_icon, topleft)
+                    break
 
         if self.transition_state in WARP_OUT_SET:
             if self.unit.deathCounter:

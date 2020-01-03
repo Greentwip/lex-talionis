@@ -836,8 +836,21 @@
 
     <!-- Proc Skills -->
     <!-- These skills can activate during combat, giving the character that activates the skill a status effect that lasts until the end of that attack in combat -->
+    <!-- The activated version of Luna -->
     <status name="Luna">
         <id>Luna</id>
+        <image_index>4,3</image_index>
+        <desc>Combat Art. Ignore enemy's Defense or Resistance.</desc>
+        <components>combat_art,class_skill</components>
+
+        <charge_method>SKL</charge_method>
+        <charge_max>40</charge_max>
+        <combat_art_status>Luna_proc</combat_art_status>
+    </status>
+
+    <!-- The proc version of Luna -->
+    <status name="Luna">
+        <id>Luna2</id>
         <image_index>4,3</image_index>
         <desc>Proc. SKL%. Ignore enemy's Defense or Resistance.</desc>
         <components>attack_proc,class_skill</components>
@@ -858,10 +871,23 @@
         <item_mod_effect_change>ignore_def;True</item_mod_effect_change>
     </status>
 
+    <!-- The activated version of Sol -->
     <status name="Sol">
         <id>Sol</id>
         <image_index>4,2</image_index>
-        <desc>Activated. Recover HP equal to damage dealt to the enemy.</desc>
+        <desc>Combat Art. Recover HP equal to damage dealt to enemy.</desc>
+        <components>combat_art,class_skill</components>
+
+        <charge_method>SKL</charge_method>
+        <charge_max>40</charge_max>
+        <combat_art_status>Sol_proc</combat_art_status>
+    </status>
+
+    <!-- The proc version of Sol -->
+    <status name="Sol">
+        <id>Sol2</id>
+        <image_index>4,2</image_index>
+        <desc>Proc. SKL%. Recover HP equal to damage dealt to enemy.</desc>
         <components>attack_proc,class_skill</components>
 
         <proc_status>Sol_proc</proc_status>

@@ -339,7 +339,7 @@ class MapObject(object):
             self.layers.append(Layer())
         self.layers[layer].append(new_sprite)
 
-    def layer_terrain(self, layer, fn, coord, grid_manager=None):
+    def layer_terrain(self, layer, coord, fn,grid_manager=None):
         while len(self.terrain_layers) <= layer:
             self.terrain_layers.append(TerrainLayer(self))
         self.terrain_layers[layer].add(fn, coord)
@@ -671,7 +671,7 @@ class TerrainLayer(object):
 
     def reset(self, old_terrain_ids):
         self._tiles = {}
-        for position, tile_id in old_terrain_ids:
+        for position, tile_id in old_terrain_ids.items():
             for terrain in GC.TERRAINDATA.getroot().findall('terrain'):
                 if int(terrain.find('id').text) == tile_id:
                     new_tile = TileObject(tile_id, terrain.get('name'), terrain.find('minimap').text, terrain.find('platform').text, position,
@@ -708,6 +708,8 @@ class TileObject(object):
 
         # Stats
         self.position = position
+        # print(self.position)
+        assert type(self.position) == tuple
         self.stats = OrderedDict()
         self.stats['DEF'] = int(DEF)
         self.stats['RES'] = self.stats['DEF']

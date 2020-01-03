@@ -425,9 +425,6 @@ class GameStateObj(object):
     def register_status(self, status):
         logger.info('Registering status %s as %s', status, status.uid)
         self.allstatuses[status.uid] = status
-        # We need to remember to register the items that are used by the Active Skills
-        if status.active and status.active.item:
-            self.allitems[status.active.item.uid] = status.active.item
         # We need to remember to register an aura's child status
         if status.aura:
             self.register_status(status.aura.child_status)

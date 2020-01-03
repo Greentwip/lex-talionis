@@ -1672,6 +1672,20 @@
         <map_hit_color>96,144,232</map_hit_color>
     </item>
 
+    <item name="Exp Drink">
+        <id>Exp Drink</id>
+        <spritetype>Consumable</spritetype>
+        <spriteid>8</spriteid>
+        <components>usable,uses,map_hit_color,call_item_script,booster</components>
+
+        <uses>2</uses>
+        <RNG>0</RNG>
+        <value>300</value>
+        <desc>A draught that gives 50 exp.</desc>
+
+        <map_hit_color>96,144,232</map_hit_color>
+    </item>
+
     <item name="Skeleton Key">
         <id>Skeleton Key</id>
         <spritetype>Consumable</spritetype>

@@ -1724,8 +1724,10 @@ class LayerTerrain(Action):
         self.old_terrain_ids = {}
 
     def do(self, gameStateObj):
-        for position, tile in gameStateObj.map.terrain_layers[self.layer]._tiles.items():
-            self.old_terrain_ids[position] = tile.tile_id
+        if self.layer < len(gameStateObj.map.terrain_layers):
+            terrain_layer = gameStateObj.map.terrain_layers[self.layer]
+            for position, tile in terrain_layer._tiles.items():
+                self.old_terrain_ids[position] = tile.tile_id
         gameStateObj.map.layer_terrain(self.layer, self.coord, self.image_name, gameStateObj.grid_manager)
 
     def reverse(self, gameStateObj):

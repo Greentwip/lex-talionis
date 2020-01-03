@@ -150,6 +150,12 @@ class ItemObject(object):
         if self.icon:  
             self.icon.draw(surf, (left, top))
 
+    def lock_active(self):
+        pass
+
+    def unlock_active(self):
+        pass
+
 def get_item_range(item, unit):
     if len(item.RNG) == 1:
         r = item.RNG[0]

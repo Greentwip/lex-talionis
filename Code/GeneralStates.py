@@ -253,6 +253,7 @@ class OptionsMenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Turnwheel']:
                 if cf.OPTIONS['cheat'] or gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0:
+                # if gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0:                    
                     gameStateObj.stateMachine.changeState('turnwheel')
                 else:
                     banner = Banner.customBanner(cf.WORDS['Turnwheel_empty'])
@@ -2449,7 +2450,7 @@ class ItemDiscardState(StateMachine.State):
         if 'Convoy' in gameStateObj.game_constants:
             self.pennant = Banner.Pennant(cf.WORDS['Storage_info'])
         else:
-            self.pennant = Banner.Pennant(cf.WORDS['Discard'])
+            self.pennant = Banner.Pennant(cf.WORDS['Discard_info'])
         options = gameStateObj.cursor.currentSelectedUnit.items
         if not gameStateObj.activeMenu:
             ignore = [option.locked for option in options]
