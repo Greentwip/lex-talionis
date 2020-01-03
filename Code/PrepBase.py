@@ -1005,11 +1005,14 @@ class PrepTransferState(StateMachine.State):
                         self.menu.goto_same_item_id(self.owner_menu.getSelection())
                     else:
                         self.state = "Free"
-                        self.choice_menu.moveTo(0)    
+                        self.choice_menu.moveTo(0)
+                        self.owner_menu.takes_input = False
+                        self.owner_menu.ignore = None    
+                        self.owner_menu.color_control = None
                     self.menu.set_take_input(False)
                 else:
                     GC.SOUNDDICT['Error'].play()
-            else:
+            else:  # Free State
                 GC.SOUNDDICT['Select 1'].play()
                 selection_index = self.choice_menu.getSelectionIndex()
                 if selection_index == 0:
