@@ -339,7 +339,7 @@ class MapObject(object):
             self.layers.append(Layer())
         self.layers[layer].append(new_sprite)
 
-    def layer_terrain(self, layer, coord, fn,grid_manager=None):
+    def layer_terrain(self, layer, coord, fn, grid_manager=None):
         while len(self.terrain_layers) <= layer:
             self.terrain_layers.append(TerrainLayer(self))
         self.terrain_layers[layer].add(fn, coord)

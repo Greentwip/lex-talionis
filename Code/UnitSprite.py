@@ -69,7 +69,7 @@ class UnitSprite(object):
             for status in self.unit.status_effects:
                 if (status.combat_art and status.combat_art.check_charged()
                    and status.combat_art.get_max() > 0 and status.combat_art.is_activated()) \
-                   or (status.activated_item and status.activ.check_charged()
+                   or (status.activated_item and status.activated_item.check_charged()
                    and status.activated_item.get_max() > 0):
                     active_icon = GC.ICONDICT["ActiveSkill"]
                     active_icon = Engine.subsurface(active_icon, (GC.PASSIVESPRITECOUNTER.count*32, 0, 32, 32))
