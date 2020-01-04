@@ -161,11 +161,12 @@ def default_previous_classes(cur_class, classes):
     if cur_class not in ClassData.class_dict:
         raise KeyError("Cannot find %s in class_info.xml." % cur_class)
     klass = ClassData.class_dict[cur_class]
-    while klass['tier'] > len(classes) and klass['promotes_from']:
+    while klass['promotes_from']:
         prev_class = klass['promotes_from']
         if prev_class not in classes:
             classes.insert(0, prev_class)
-            cur_class = prev_class
+        cur_class = prev_class
+        klass = ClassData.class_dict[cur_class]
 
 def add_unit(unitLine, allunits, reinforceUnits, gameStateObj):
     assert len(unitLine) == 6, "unitLine %s must have length 6"%(unitLine)
