@@ -709,7 +709,7 @@ class TileObject(object):
         # Stats
         self.position = position
         # print(self.position)
-        assert type(self.position) == tuple
+        assert not self.position or type(self.position) == tuple
         self.stats = OrderedDict()
         self.stats['DEF'] = int(DEF)
         self.stats['RES'] = self.stats['DEF']
