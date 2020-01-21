@@ -1657,11 +1657,15 @@ class MapCombat(Combat):
         self._apply_result(result, gameStateObj)
         def_pos = result.defender.position
         atk_pos = result.attacker.position
-        # Movement
-        if result.atk_movement and def_pos:
-            result.attacker.handle_forced_movement(def_pos, result.atk_movement, gameStateObj)
-        if result.def_movement:
-            result.defender.handle_forced_movement(atk_pos, result.def_movement, gameStateObj, self.def_pos)
+        # Handle Swap Movement!!!
+        if result.atk_movement and result.def_movement and def_pos and \
+                result.atk_movement.mode == "Swap" and result.def_movement.mode == "Swap":
+            Action.do(Action.SwapMovement(result.attacker, result.defender), gameStateObj)
+        else:
+            if result.atk_movement and def_pos:
+                result.attacker.handle_forced_movement(def_pos, result.atk_movement, gameStateObj)
+            if result.def_movement:
+                result.defender.handle_forced_movement(atk_pos, result.def_movement, gameStateObj, self.def_pos)
         # Summoning
         if result.summoning:
             result.summoning.sprite.set_transition('warp_in')

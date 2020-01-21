@@ -160,7 +160,8 @@ class GainExpState(StateMachine.State):
                     Action.do(Action.GainWexp(self.unit, self.new_wexp), gameStateObj)
                 # check for skill gain unless you are using a booster
                 if self.starting_state != "booster":
-                    for level_needed, class_skill in self.unit_klass['skills']:
+                    unit_klass = ClassData.class_dict[self.unit.klass]
+                    for level_needed, class_skill in unit_klass['skills']:
                         if self.unit.level == level_needed:
                             if class_skill == 'Feat':
                                 gameStateObj.cursor.currentSelectedUnit = self.unit

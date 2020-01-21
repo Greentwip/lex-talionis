@@ -168,6 +168,29 @@ class Teleport(SimpleMove):
 class ForcedMovement(SimpleMove):
     pass
 
+class SwapMovement(SimpleMove):
+    def __init__(self, unit1, unit2):
+        self.unit1 = unit1
+        self.unit2 = unit2
+        self.unit1_pos = unit1.position
+        self.unit2_pos = unit2.position
+
+    def do(self, gameStateObj):
+        self.unit1.leave(gameStateObj)
+        self.unit2.leave(gameStateObj)
+        self.unit1.position = self.unit2_pos
+        self.unit2.position = self.unit1_pos
+        self.unit1.arrive(gameStateObj)
+        self.unit2.arrive(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.unit1.leave(gameStateObj)
+        self.unit2.leave(gameStateObj)
+        self.unit1.position = self.unit1_pos
+        self.unit2.position = self.unit2_pos
+        self.unit1.arrive(gameStateObj)
+        self.unit2.arrive(gameStateObj)
+
 class Warp(Action):
     def __init__(self, unit, new_pos):
         self.unit = unit
@@ -724,7 +747,7 @@ class Promote(Action):
         self.unit.set_exp(0)
         self.unit.level = 1
         self.unit.movement_group = self.new_klass['movement_group']
-        self.unit.apply_levelup(self.levelup_list)
+        self.unit.apply_levelup(self.levelup_list, True)
         self.unit.loadSprites()
 
     def reverse(self, gameStateObj):
@@ -733,7 +756,7 @@ class Promote(Action):
         self.unit.set_exp(self.old_exp)
         self.unit.level = self.old_level
         self.unit.movement_group = self.old_klass['movement_group']
-        self.unit.apply_levelup([-x for x in self.levelup_list])
+        self.unit.apply_levelup([-x for x in self.levelup_list], True)
         self.unit.loadSprites()
 
 class ApplyLevelUp(Action):
@@ -756,7 +779,7 @@ class PermanentStatIncrease(ApplyLevelUp):
         self.unit.apply_levelup(self.stat_increase, True)
 
     def reverse(self, gameStateObj):
-        self.unit.apply_levelup([-x for x in self.stat_increase])
+        self.unit.apply_levelup([-x for x in self.stat_increase], True)
         # Since hp_up...
         self.unit.change_hp(-self.stat_increase[0])
 
