@@ -550,6 +550,15 @@
         <mt>item.weight/2 if item.weight else 0</mt>
     </status>
 
+    <status name="Ranger's Guile">
+        <id>Rangers Guile</id>
+        <image_index>8,1</image_index>
+        <desc>Grants +30 hit while on Plains or Forest.</desc>
+        <components>hit,class_skill</components>
+
+        <hit>30 if gameStateObj.map.tiles[self.position].name in ('Plain', 'Forest') else 0</hit>
+    </status>
+
     <status name="Charge">
         <id>Charge</id>
         <image_index>6,3</image_index>
