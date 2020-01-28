@@ -1,9 +1,7 @@
-#!/usr/bin/env/python2.7
-
 # FERepo to Lex Talionis Format for Full Combat Animations
 # Takes in FERepo data... a set of images along with a *.txt file that serves as the script.
 
-import glob, sys, datetime
+import os, sys, glob, datetime
 from collections import OrderedDict
 from PIL import Image
 
@@ -35,10 +33,10 @@ class Logger(object):
 
 def convert_gba(im):
     width, height = im.size
-    for x in xrange(width):
-        for y in xrange(height):
+    for x in range(width):
+        for y in range(height):
             color = im.getpixel((x, y))
-            new_color = (color[0] / 8 * 8), (color[1] / 8 * 8), (color[2] / 8 * 8)
+            new_color = (color[0] // 8 * 8), (color[1] // 8 * 8), (color[2] // 8 * 8)
             im.putpixel((x, y), new_color)
     return im
 
@@ -54,8 +52,8 @@ def animation_collater(images, weapon_type):
         bg_color = determine_bg_color(image)
 
         # Convert colorkey colors to 0, 0, 0
-        for x in xrange(width):
-            for y in xrange(height):
+        for x in range(width):
+            for y in range(height):
                 color = image.getpixel((x, y))
                 if color == bg_color:
                     image.putpixel((x, y), (0, 0, 0))
@@ -108,8 +106,8 @@ def animation_collater(images, weapon_type):
         x += width
 
     # Now convert 0, 0, 0 back to COLORKEY
-    for x in xrange(total_width):
-        for y in xrange(max_height):
+    for x in range(total_width):
+        for y in range(max_height):
             color = sprite_sheet.getpixel((x, y))
             if color == (0, 0, 0):
                 sprite_sheet.putpixel((x, y), COLORKEY)
@@ -577,13 +575,13 @@ if len(script) == 2:
     elif script[1].endswith('_without_comment.txt'):
         script = script[0]
     else:
-        raise ValueError("Could not determine which *.txt file to use!")
+        raise ValueError("Could not determine which *.txt file to use! %s" % script)
 elif len(script) == 1:
     script = script[0]
 elif len(script) == 0:
     raise ValueError("No script file present in current directory!")
 else:
-    raise ValueError("Could not determine which *.txt file to use!")
+    raise ValueError("Could not determine which *.txt file to use! %s" % script)
 
 weapon_types = {'Sword', 'Lance', 'Axe', 'Disarmed', 'Unarmed', 'Handaxe',
                 'Bow', 'Magic', 'Staff', 'Monster', 'Dragonstone', 'Refresh'}
@@ -629,7 +627,7 @@ melee_script, melee_image_names, ranged_script, ranged_image_names = \
     parse_script(script, images, weapon_type)
 
 # Extra transform and revert poses for Dragonstone
-if weapon_type == 'Dragonstone':
+if weapon_type == 'Dragonstone' and os.path.exists('Transform.txt'):
     transform_script, transform_image_names, _, _ = parse_script('Transform.txt', images, 'Transform')
     ranged_script['Transform'] = transform_script['Attack']
     # Change stand
@@ -655,8 +653,8 @@ def preprocess(images):
         width, height = image.size
 
         # Convert colorkey colors to 0, 0, 0
-        for x in xrange(width):
-            for y in xrange(height):
+        for x in range(width):
+            for y in range(height):
                 color = image.getpixel((x, y))
                 if color == (0, 0, 0):
                     image.putpixel((x, y), (40, 40, 40))
