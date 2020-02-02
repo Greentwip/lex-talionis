@@ -13,3 +13,4 @@
 3,17:Repair=0
 2,17:Formation=0
 3,19:Search=0
+0,0:Enemy_Seize=0;Village=0

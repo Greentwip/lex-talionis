@@ -194,6 +194,8 @@ class AI(object):
                 elif self.ai2_state == 8:
                     self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                                               if 'Enemy_Seize' in gameStateObj.map.tile_info_dict[position]]
+                    self.available_targets += [unit for unit in gameStateObj.allunits if unit.position and self.unit.checkIfEnemy(unit) and 
+                                               unit.team not in self.team_ignore and unit.name not in self.name_ignore]
                 elif self.ai2_state == 9:
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and unit is not self.unit and
                                               unit.team not in self.team_ignore and unit.name not in self.name_ignore]
@@ -916,7 +918,7 @@ class Secondary_AI(object):
             # Find a path to target
             my_path = None
             limit = self.double_move if not self.widen_flag else None
-            my_path = self.getPath(target.position, gameStateObj, limit=limit)
+            my_path = self.get_path(target.position, gameStateObj, limit=limit)
             # We didn't find a path, or the path was longer than double move, so ignore target and continue
             if not my_path:
                 logger.debug("No valid path to %s.", target.name)
@@ -960,7 +962,7 @@ class Secondary_AI(object):
 
         return False
 
-    def getPath(self, goal_pos, gameStateObj, limit=None):
+    def get_path(self, goal_pos, gameStateObj, limit=None):
         self.pathfinder.set_goal_pos(goal_pos)
         self.pathfinder.process(gameStateObj, adj_good_enough=True, ally_block=self.ally_flag, limit=limit)
         my_path = self.pathfinder.path
@@ -1002,5 +1004,11 @@ class Secondary_AI(object):
             terms.append((damage_term, 30))
             terms.append((weakness_term, 30))
             terms.append((status_term, 20))
+
+        # Must be moving towards a tile
+        else:
+            if 'Enemy_Seize' in gameStateObj.map.tile_info_dict[target.position]:
+                # Winning the game term
+                terms.append((10.0, 120))  # Should be worth 10x more than everything else
 
         return Utility.process_terms(terms)

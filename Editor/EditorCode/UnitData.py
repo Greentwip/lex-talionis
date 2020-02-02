@@ -161,7 +161,9 @@ class UnitData(object):
         self.add_unit_from_legend(legend, mode)
 
     def add_unit_from_legend(self, legend, mode):
-        cur_unit = Data.unit_data[legend['unit_id']]
+        cur_unit = Data.unit_data.get(legend['unit_id'])
+        if not cur_unit:
+            return
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         cur_unit.position = position
         cur_unit.ai = legend['ai']
@@ -283,12 +285,15 @@ class UnitData(object):
             self.get_unit_info(Data.class_dict, u_i['klass'], u_i['level'], legend['items'])
         u_i['stats'] = build_stat_dict(stats)
         
-        u_i['tags'] = Data.class_dict[u_i['klass']]['tags']
+        cur_class = Data.class_dict.get(u_i['klass'], Data.class_dict.get('Citizen'))
+        if not cur_class:
+            raise KeyError("Must have Citizen class! Do not delete Citizen class!")
+        u_i['tags'] = cur_class['tags']
         if '_' in legend['ai']:
             u_i['ai'], u_i['ai_group'] = legend['ai'].split('_')
         else:
             u_i['ai'], u_i['ai_group'] = legend['ai'], None
-        u_i['movement_group'] = Data.class_dict[u_i['klass']]['movement_group']
+        u_i['movement_group'] = cur_class['movement_group']
         u_i['skills'] = []
         u_i['generic'] = True
         u_i['mode'] = mode
@@ -311,8 +316,14 @@ class UnitData(object):
     def get_unit_info(self, class_dict, klass, level, item_line):
         # Handle stats
         # hp, str, mag, skl, spd, lck, def, res, con, mov
-        bases = class_dict[klass]['bases'][:] # Using copies    
-        growths = class_dict[klass]['growths'][:] # Using copies
+        cur_class = class_dict.get(klass)
+        if not cur_class:  # Fallback to Citizen class
+            klass = 'Citizen'
+        cur_class = class_dict.get(klass)
+        if not cur_class:
+            raise KeyError("Must have Citizen class! Do not delete Citizen class!")
+        bases = cur_class['bases'][:] # Using copies    
+        growths = cur_class['growths'][:] # Using copies
 
         # ignoring modify stats for now
         # bases = [sum(x) for x in zip(bases, gameStateObj.modify_stats['enemy_bases'])]
@@ -320,7 +331,7 @@ class UnitData(object):
 
         stats, growth_points = self.auto_level(bases, growths, level)
         # Make sure we don't exceed max
-        stats = [Utility.clamp(stat, 0, class_dict[klass]['max'][index]) for index, stat in enumerate(stats)]
+        stats = [Utility.clamp(stat, 0, cur_class['max'][index]) for index, stat in enumerate(stats)]
 
         # Handle items
         if item_line:
@@ -330,7 +341,7 @@ class UnitData(object):
         items = [item for item in items if item]  # Remove Nones
 
         # Handle required wexp
-        wexp = class_dict[klass]['wexp_gain'][:]
+        wexp = cur_class['wexp_gain'][:]
         # print(klass, wexp)
         for item in items:
             if item.weapon:
