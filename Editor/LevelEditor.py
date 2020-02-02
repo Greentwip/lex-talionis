@@ -428,7 +428,6 @@ class MainEditor(QMainWindow):
 
         self.directory = None
         self.current_level_name = None
-        self.image = None
 
         self.create_actions()
         self.create_menus()
@@ -492,8 +491,8 @@ class MainEditor(QMainWindow):
 
     # === Loading Data ===
     def set_image(self, image_file):
-        self.image = QImage(image_file)
-        if self.image.width() % 16 != 0 or self.image.height() % 16 != 0:
+        image = QImage(image_file)
+        if image.width() % 16 != 0 or image.height() % 16 != 0:
             QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
             return
         self.view.clear_scene()
@@ -805,7 +804,7 @@ class MainEditor(QMainWindow):
         self.write_overview(overview_filename)
 
         map_sprite_filename = level_directory + '/MapSprite.png'
-        pixmap = QPixmap.fromImage(self.image)
+        pixmap = QPixmap.fromImage(self.view.image)
         pixmap.save(map_sprite_filename, 'png')
 
         tile_data_filename = level_directory + '/TileData.png'
