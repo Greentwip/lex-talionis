@@ -22,12 +22,12 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Strategist;10;Howl,Searing Blades,Lightning_Bolt,Energy Drink;1,14;None;Resistance
 player;0;0;Vanguard;5;Poison Bow,Iron Axe,Exp Drink;2,14;None;Resistance
-player;0;0;Swordmaster;1;Poison Bow,Iron Lance,Energy Drink;2,15;None;Resistance
 player;0;0;Duke;5;Poison Bow,Iron Lance,Energy Drink;0,1;None;Resistance
 player;0;0;Ophie;3,14;None
 player;0;0;Prim;4,15;None
 # Enemies
 # Generics
+enemy;0;0;Myrmidon;5;Iron Sword,Poison Bow,Iron Lance,Energy Drink;2,15;None;Resistance
 enemy;0;0;Dragoon;5;Adamant Lance;15,5;Seize;Resistance
 enemy;0;0;Myrmidon;5;Iron Sword;14,4;Seize;Resistance
 # === Reinforcements ===

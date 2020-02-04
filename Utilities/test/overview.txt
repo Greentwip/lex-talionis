@@ -1,0 +1,14 @@
+name;Test Chapter
+current_party;0
+prep_flag;0
+pick_flag;1
+base_flag;0
+market_flag;0
+transition_flag;1
+player_phase_music;(Anime) Brand_New_World
+enemy_phase_music;(Anime) Black_Swallowtail
+player_battle_music;(Anime) BLESS_YoUr_NAME
+enemy_battle_music;(Anime) Gekijouron
+display_name;Defend Throne
+win_condition;Defend Throne
+loss_condition;Throne Lost

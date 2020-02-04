@@ -80,13 +80,16 @@ def intify_comma_list(comma_string):
         s_l = []
     return s_l
 
+# === LESS THAN OR EQUAL ===============================================
+def lte(a, b):
+    return a <= b
 # === GREATER THAN OR EQUAL ============================================
 def gte(a, b):
     return a >= b
-# === LESS THAN =======================================================
+# === LESS THAN ========================================================
 def lt(a, b):
     return a < b
-# === GREATER THAN =======================================================
+# === GREATER THAN =====================================================
 def gt(a, b):
     return a > b
 

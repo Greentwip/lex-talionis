@@ -600,6 +600,24 @@
         <avoid>30 if Utility.lt(self.currenthp, self.stats['HP']/2.) else 0</avoid>
     </status>
 
+    <status name="Resolve">
+        <id>Resolve</id>
+        <image_index>8,8</image_index>
+        <desc>Grants effective STR, SKL, and SPD 1.5x if HP is under half.</desc>
+        <components>mt,avoid,hit,attackspeed,crit,class_skill</components>
+
+        <!-- Add STR/2 to mt, so you effectively hit for STR/2 extra damage -->
+        <mt>self.stats['STR'].base_stat//2 if self.currenthp &lt;= self.stats['HP']/2. and item and not item.is_magic() else 0</mt>
+        <!-- Add SKL/2 to hit, so you effectively have SKL extra accuracy (assuming Accuracy = SKL*2 normally) -->
+        <hit>(self.stats['SKL'].base_stat//2)*2 if self.currenthp &lt;= self.stats['HP']/2. else 0</hit>
+        <!-- Add SPD/2 to avoid, so you effectively have SPD extra avoid (assuming Avoid = SPD*2 normally) -->
+        <avoid>(self.stats['SPD'].base_stat//2)*2 if self.currenthp &lt;= self.stats['HP']/2. else 0</avoid>
+        <!-- Add SPD/2 to attackspeed, so you effectivly have SPD/2 extra attackspeed -->
+        <attackspeed>self.stats['SPD'].base_stat//2 if self.currenthp &lt;= self.stats['HP']/2. else 0</attackspeed>
+        <!-- Add SKL/2 to crit, so you effectively have SKL/4 extra crit (assuming Crit Rate = SKL/2 normally) -->
+        <crit>(self.stats['SKL'].base_stat//4 if self.currenthp &lt;= self.stats['HP']/2. else 0</crit>
+    </status>
+
     <status name="Conductance">
         <id>Conductance</id>
         <image_index>4,6</image_index>

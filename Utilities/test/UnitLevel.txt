@@ -1,0 +1,43 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+faction;Raider;Raider;Bandit;A group of bandits who spend their lives plundering.
+# Player Characters
+player;0;0;Lys;13,13;None
+player;0;0;Franz;12,17;None
+player;0;0;Eirika;12,12;None
+player;0;0;Seth;13,18;None
+player;0;0;Gilliam;7,9;None
+# Enemies
+# Bosses
+enemy;0;0;Breguet;1,20;None_HardGuard
+# Generics
+enemy;0;0;Archer;3;Oak Bow;2,18;Attack;Raider
+enemy;0;0;Archer;3;dWillow Bow;4,20;Attack;Raider
+enemy;0;0;Cavalier;2;dIron Sword,Iron Lance;7,3;Attack;Raider
+enemy;0;0;Cavalier;2;dIron Sword,Iron Lance;9,4;Attack;Raider
+enemy;0;0;Mercenary;1;dIron Sword;11,21;Attack;Raider
+enemy;0;0;Mercenary;1;dIron Sword;13,22;Attack;Raider
+enemy;0;0;Fighter;1;Iron Axe;2,13;Attack;Raider
+enemy;0;0;Fighter;1;Iron Axe;2,10;Attack;Raider
+enemy;0;0;Fighter;1;Iron Axe;0,6;Attack;Raider
+# === Reinforcements ===
+# Player Characters
+# Enemies
+# === Triggers ===

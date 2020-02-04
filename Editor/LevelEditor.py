@@ -804,8 +804,25 @@ class MainEditor(QMainWindow):
         self.write_overview(overview_filename)
 
         map_sprite_filename = level_directory + '/MapSprite.png'
-        pixmap = QPixmap.fromImage(self.view.image)
+        image = self.view.image
+        assert image.width() > 0 and image.height() > 0, "The image being saved is null! This should not be possible!"
+        # Handle colorkey
+        # because the image has alpha, and we need to remove the alpha from the image
+        # and replace alpha sections with COLORKEY
+        qCOLORKEY = qRgba(*COLORKEY, 255)
+        new_color = qRgba(0, 0, 0, 0)
+        for x in range(image.width()):
+            for y in range(image.height()):
+                if image.pixel(x, y) == new_color:
+                    image.setPixel(x, y, qCOLORKEY)
+        image = image.convertToFormat(QImage.Format_RGB32)
+        pixmap = QPixmap.fromImage(image)
+        assert pixmap.width() > 0 and pixmap.height() > 0, "The pixmap being saved is null! This should not be possible!"
         pixmap.save(map_sprite_filename, 'png')
+
+        # Now convert it back to alpha
+        image = self.directory + '/MapSprite.png'
+        self.set_image(image)
 
         tile_data_filename = level_directory + '/TileData.png'
         self.write_tile_data(tile_data_filename)

@@ -62,7 +62,7 @@ class TileData(object):
         return self.tiles
 
     def load(self, tilefp):
-        self.tiles = {}
+        self.clear()
         tiledata = QImage(tilefp)
         colorkey, self.width, self.height = self.build_color_key(tiledata)
         self.populate_tiles(colorkey)
