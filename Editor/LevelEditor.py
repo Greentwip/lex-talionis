@@ -426,6 +426,7 @@ class MainEditor(QMainWindow):
         self.status_bar = self.statusBar()
         self.status_bar.showMessage('Ready')
 
+        self.map_image_file = None
         self.directory = None
         self.current_level_name = None
 
@@ -491,7 +492,9 @@ class MainEditor(QMainWindow):
 
     # === Loading Data ===
     def set_image(self, image_file):
+        self.map_image_file = image_file
         image = QImage(image_file)
+        print("Loading %s (a %dx%d image)..." % (image_file, image.width(), image.height()))
         if image.width() % 16 != 0 or image.height() % 16 != 0:
             QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
             return
@@ -505,7 +508,7 @@ class MainEditor(QMainWindow):
 
     def new_level(self):
         image_file, _ = QFileDialog.getOpenFileName(self, "Choose Map PNG", QDir.currentPath(),
-                                                       "PNG Files (*.png);;All Files (*)")
+                                                    "PNG Files (*.png);;All Files (*)")
         if image_file:
             self.set_image(image_file)
             self.autotiles.clear()
@@ -522,23 +525,36 @@ class MainEditor(QMainWindow):
 
             self.update_view()
 
+    def is_same_size(self, image1: QImage, image2: QImage) -> bool:
+        return image1.width() == image2.width() and image1.height() == image2.height()
+
     def import_new_map(self):
         image_file, _ = QFileDialog.getOpenFileName(self, "Choose Map PNG", QDir.currentPath(),
-                                                       "PNG Files (*.png);;All Files (*)")
+                                                    "PNG Files (*.png);;All Files (*)")
         if image_file:
+            if not self.is_same_size(self.view.image, QImage(image_file)):
+                self.tile_data.new(image_file)
             self.set_image(image_file)
-            self.tile_data.new(image_file)
+            self.remove_full_image()
             self.update_view()
+
+    def remove_full_image(self):
+        self.autotiles.clear()
+        if self.directory:
+            full_map_sprite_filename = self.directory + '/MapSprite_full.png'
+            if os.path.exists(full_map_sprite_filename):
+                os.remove(full_map_sprite_filename)
 
     def generate_autotiles(self):
         if self.directory:
-            map_sprite_filename = self.directory + '/MapSprite.png'
+            # map_sprite_filename = self.directory + '/MapSprite.png'
+            map_sprite_filename = self.map_image_file
             full_map_sprite_filename = self.directory + '/MapSprite_full.png'
             if os.path.exists(full_map_sprite_filename):
-                self.a = Autotiles.AutotileMaker(full_map_sprite_filename, self.directory, self)
+                self.autotile_maker = Autotiles.AutotileMaker(full_map_sprite_filename, self.directory, self)
             else:
                 shutil.copy(map_sprite_filename, full_map_sprite_filename)  # Make a backup
-                self.a = Autotiles.AutotileMaker(map_sprite_filename, self.directory, self)
+                self.autotile_maker = Autotiles.AutotileMaker(map_sprite_filename, self.directory, self)
         else:
             print("Please save me first!!!")
 
@@ -793,6 +809,7 @@ class MainEditor(QMainWindow):
                                                 "Do you want to overwrite it?",
                                                 QMessageBox.Save | QMessageBox.Cancel)
                 if ret == QMessageBox.Save:
+                    print("Removing %s..." % (level_directory))
                     self.clear_directory(level_directory)
                 else:
                     return False
@@ -805,6 +822,7 @@ class MainEditor(QMainWindow):
 
         map_sprite_filename = level_directory + '/MapSprite.png'
         image = self.view.image
+        print("Saving %s (a %dx%d image)..." % (map_sprite_filename, image.width(), image.height()), flush=True)
         assert image.width() > 0 and image.height() > 0, "The image being saved is null! This should not be possible!"
         # Handle colorkey
         # because the image has alpha, and we need to remove the alpha from the image
@@ -821,7 +839,7 @@ class MainEditor(QMainWindow):
         pixmap.save(map_sprite_filename, 'png')
 
         # Now convert it back to alpha
-        image = self.directory + '/MapSprite.png'
+        image = level_directory + '/MapSprite.png'
         self.set_image(image)
 
         tile_data_filename = level_directory + '/TileData.png'
