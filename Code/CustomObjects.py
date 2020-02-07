@@ -548,24 +548,24 @@ class PhaseMusic(object):
         return cls(*info)
 
     def change_music(self, phase_name, music_name):
-        if music_name not in GC.MUSICDICT:
+        if music_name != 'None' and music_name not in GC.MUSICDICT:
             logging.error('Music %s not in GC.MUSICDICT', music_name)
             return None
         if phase_name == 'player':
             self.player_name = music_name
-            self.player_music = GC.MUSICDICT[music_name]
+            self.player_music = GC.MUSICDICT.get(music_name)
         elif phase_name == 'enemy' or phase_name == 'enemy2':
             self.enemy_name = music_name
-            self.enemy_music = GC.MUSICDICT[music_name]
+            self.enemy_music = GC.MUSICDICT.get(music_name)
         elif phase_name == 'other':
             self.other_name = music_name
-            self.other_music = GC.MUSICDICT[music_name]
+            self.other_music = GC.MUSICDICT.get(music_name)
         elif phase_name == 'player_battle':
             self.player_battle_name = music_name
-            self.player_battle_music = GC.MUSICDICT[music_name]
+            self.player_battle_music = GC.MUSICDICT.get(music_name)
         elif phase_name == 'enemy_battle' or phase_name == 'enemy2_battle':
             self.enemy_battle_name = music_name
-            self.enemy_battle_music = GC.MUSICDICT[music_name]            
+            self.enemy_battle_music = GC.MUSICDICT.get(music_name)           
         else:
             logging.error('Unsupported phase name: %s', phase_name)
             return None        

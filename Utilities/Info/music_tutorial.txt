@@ -1,0 +1,57 @@
+Certainly. Music is sort of barebones, since it was one of the last things I added to the game and was never my main focus. Also, pygame (And python in general) doesn't have great support for playing music, so I had to make do with the limited support available when making the engine. Even making music loop is difficult in pygame.
+
+The tracks MUST be in .ogg format. Do not use any other format.
+
+# Music Stack
+
+So the way that music works in the Lex Talionis Engine is that there is a stack of songs that the Engine keeps track of. 
+
+For example, when the game starts up, the Engine places the title theme on the stack and begins playing it. When it reaches the end of song, the current track will loop. 
+
+Let's say you enter a new level so the introScript.txt is run. In that script, the "m" command is used (like "m;Rhapsody in Blue"). This will place a new song on top of the stack. 
+
+So now your stack is:
+
+> Rhapsody in Blue (currently playing)
+> Title Theme 
+
+Let's say the introScript ends and the player phase begins. The player phase music will start up, of course. Let's say its "Winds of Change".
+
+> Winds of Change (currently playing)
+> Rhapsody in Blue
+> Title Theme
+
+As you can see, every song lives on the music stack forever unless you use the "music_clear" command, which clears the stack. But I do not recommend using that command right now.
+
+Let's say the enemy phase starts up, and the enemy phase music is also "Rhapsody in Blue". The Engine will look at the stack and see that Rhapsody in Blue is already in the stack. It will move it to the top, and because it has memory of where Rhapsody in Blue was stopped previously, it is able to resume playing the song at that point. You can't have two copies of the same song in the stack at once.
+
+> Rhapsody in Blue (currently playing)
+> Winds of Change
+> Title Theme 
+
+Now another script is called and two musics are placed on the stack in quick succession (maybe someone died).
+
+> Dies Irae (currently playing)
+> New World Symphony
+> Rhapsody in Blue
+> Winds of Change
+> Title Theme 
+
+You can use the "mf" command to pop the top song off the stack, never to be remembered again. The Engine will go back to the previously playing song and resume playing that. 
+
+> New World Symphony (currently playing)
+> Rhapsody in Blue
+> Winds of Change
+> Title Theme 
+
+When you call "m;Dies Irae" again, it will start at the beginning since the stack has no memory of it.
+
+That should explain the stack well enough.
+
+# Change Music
+
+There's also the "change_music" command, which will change what the game has stored as player phase, enemy phase, or battle music. For instance, "change_music;enemy;Really Evil Song". This will NOT change the currently playing music that is literally playing. Only the next time the player or enemy or battle music is needed by the Engine will you notice a difference. You cannot currently use "change_music" to set the phase or battle music to no music at all. 
+
+I am planning an update that will allow you to use change_music to set phase or battle music to no music at all. When available, that will be used like this: "change_music;player;None". This update will also make "music_clear" stop the currently playing music, because as is, there is no way to stop the currently playing music after music clear except by throwing a new song on the stack and then using "mf" on it. Expect a small update on music soon, since I haven't taken a look at it in a while and I'm noticing some flaws.
+
+Right now, I would not make all music stop for a bit -- there doesn't seem to be an easy way to GUARANTEE that all music would stop. I would just find an .ogg file of ambient noise, or with no sound at all and play that instead as a workaround until the "music_clear" command works better.
