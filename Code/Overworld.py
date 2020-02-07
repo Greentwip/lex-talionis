@@ -847,9 +847,7 @@ class OverworldOptionsState(StateMachine.State):
             selection = self.menu.getSelection()
             GC.SOUNDDICT['Select 1'].play()
             if selection == cf.WORDS['Save']:
-                # Create child menu with additional options
-                options = [cf.WORDS['Yes'], cf.WORDS['No']]
-                gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
+                gameStateObj.shared_state_data['option_owner'] = selection
                 gameStateObj.stateMachine.changeState('optionchild')
             elif selection == cf.WORDS['Options']:
                 gameStateObj.stateMachine.changeState('config_menu')

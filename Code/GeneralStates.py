@@ -230,16 +230,13 @@ class OptionsMenuState(StateMachine.State):
             GC.SOUNDDICT['Select 1'].play()
             if selection == cf.WORDS['End']:
                 if cf.OPTIONS['Confirm End']:
-                    # Create child menu with additional options
-                    options = [cf.WORDS['Yes'], cf.WORDS['No']]
-                    gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
+                    gameStateObj.shared_state_data['option_owner'] = selection
                     gameStateObj.stateMachine.changeState('optionchild')
                 else:
                     gameStateObj.stateMachine.changeState('turn_change')
             elif selection == cf.WORDS['Suspend'] or selection == cf.WORDS['Save']:
                 # Create child menu with additional options
-                options = [cf.WORDS['Yes'], cf.WORDS['No']]
-                gameStateObj.childMenu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
+                gameStateObj.shared_state_data['option_owner'] = selection
                 gameStateObj.stateMachine.changeState('optionchild')
             elif selection == cf.WORDS['Objective']:
                 gameStateObj.stateMachine.changeState('status_menu')
@@ -273,16 +270,26 @@ class OptionsMenuState(StateMachine.State):
         return mapSurf
 
 class OptionChildState(StateMachine.State):
-    name = 'optionschild'
+    name = 'optionchild'
+
+    def begin(self, gameStateObj, metaDataObj):
+        # Create child menu with additional options
+        if gameStateObj.activeMenu:
+            options = [cf.WORDS['Yes'], cf.WORDS['No']]
+            selection = gameStateObj.shared_state_data['option_owner']
+            self.menu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
+        else:
+            # gameStateObj.stateMachine.back()
+            self.menu = None
 
     def take_input(self, eventList, gameStateObj, metaDataObj): 
         event = gameStateObj.input_manager.process_input(eventList) 
         if event == 'DOWN':
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.childMenu.moveDown()
+            self.menu.moveDown()
         elif event == 'UP':
             GC.SOUNDDICT['Select 6'].play()
-            gameStateObj.childMenu.moveUp()
+            self.menu.moveUp()
 
         # Back - to optionsmenu state
         elif event == 'BACK':
@@ -290,13 +297,14 @@ class OptionChildState(StateMachine.State):
             gameStateObj.stateMachine.back()
 
         elif event == 'SELECT':
-            selection = gameStateObj.childMenu.getSelection()
+            selection = self.menu.getSelection()
             if selection == cf.WORDS['Yes']:
                 GC.SOUNDDICT['Select 1'].play()
-                if gameStateObj.childMenu.owner == cf.WORDS['End']:
+                if self.menu.owner == cf.WORDS['End']:
                     # gameStateObj.stateMachine.changeState('turn_change')
                     gameStateObj.stateMachine.changeState('ai')
-                elif gameStateObj.childMenu.owner == cf.WORDS['Suspend']:
+                    gameStateObj.activeMenu = None
+                elif self.menu.owner == cf.WORDS['Suspend']:
                     gameStateObj.stateMachine.back() # Go all the way back if we choose YES
                     gameStateObj.stateMachine.back()
                     logger.info('Suspending game...')
@@ -304,20 +312,41 @@ class OptionChildState(StateMachine.State):
                     gameStateObj.save_slots = None # Reset save slots
                     gameStateObj.stateMachine.clear()
                     gameStateObj.stateMachine.changeState('start_start') 
-                elif gameStateObj.childMenu.owner == cf.WORDS['Save']:
+                    gameStateObj.activeMenu = None
+                elif self.menu.owner == cf.WORDS['Save']:
                     gameStateObj.stateMachine.back()
                     gameStateObj.stateMachine.back()
                     logger.info('Creating battle save...')
                     gameStateObj.save_kind = 'Battle'
                     gameStateObj.stateMachine.changeState('start_save')
                     gameStateObj.stateMachine.changeState('transition_out')
-                gameStateObj.activeMenu = None
+                    gameStateObj.activeMenu = None
+                elif self.menu.owner in (cf.WORDS['Discard'], cf.WORDS['Storage']):
+                    item = gameStateObj.shared_state_data['option_item']
+                    cur_unit = gameStateObj.shared_state_data['option_unit']
+                    if item in cur_unit.items:
+                        Action.do(Action.DiscardItem(gameStateObj.activeMenu.owner, item), gameStateObj)
+                    gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
+                    if cur_unit.items: # If the unit still has some items
+                        gameStateObj.stateMachine.back()
+                        gameStateObj.stateMachine.back()
+                    else: # If the unit has no more items, head all the way back to menu. 
+                        gameStateObj.activeMenu = None
+                        gameStateObj.stateMachine.back()
+                        gameStateObj.stateMachine.back()
+                        gameStateObj.stateMachine.back()
             else:
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.back()
 
+    def draw(self, gameStateObj, metaDataObj):
+        mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        if self.menu:
+            self.menu.draw(mapSurf, gameStateObj)
+        return mapSurf  
+
     def end(self, gameStateObj, metaDataObj):
-        gameStateObj.childMenu = None # Remove menu
+        self.menu = None # Remove menu
 
 class MoveState(StateMachine.State):
     name = 'move'
@@ -958,15 +987,10 @@ class ItemChildState(StateMachine.State):
                 gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
                 gameStateObj.stateMachine.back()
             elif selection == cf.WORDS['Storage'] or selection == cf.WORDS['Discard']:
-                if item in cur_unit.items:
-                    Action.do(Action.DiscardItem(gameStateObj.activeMenu.owner, item), gameStateObj)
-                gameStateObj.activeMenu.currentSelection = 0 # Reset selection?
-                if cur_unit.items: # If the unit still has some items
-                    gameStateObj.stateMachine.back()
-                else: # If the unit has no more items, head all the way back to menu. 
-                    gameStateObj.activeMenu = None
-                    gameStateObj.stateMachine.back()
-                    gameStateObj.stateMachine.back()
+                gameStateObj.shared_state_data['option_owner'] = selection
+                gameStateObj.shared_state_data['option_item'] = item
+                gameStateObj.shared_state_data['option_unit'] = cur_unit
+                gameStateObj.stateMachine.changeState('optionchild')
 
     def end(self, gameStateObj, metaDataObj):
         self.menu = None
@@ -978,7 +1002,7 @@ class ItemChildState(StateMachine.State):
             gameStateObj.cursor.currentSelectedUnit.drawItemDescription(mapSurf, gameStateObj)
         if self.menu:
             self.menu.draw(mapSurf, gameStateObj)
-        return mapSurf
+        return mapSurf  
 
 class WeaponState(StateMachine.State):
     name = 'weapon'

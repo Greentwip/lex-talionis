@@ -30,6 +30,7 @@ class GameStateObj(object):
         self.activeMenu = None
         self.childMenu = None
         self.background = None
+        self.shared_state_data = {}
         # Surface holder
         self.info_surf = None
         # playtime
