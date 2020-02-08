@@ -11,6 +11,8 @@ if;gameStateObj.turncount == 2
     give_item;Ophie;Iron Sword
     # show_layer;2
     add_unit;p3_2
+    change_music;player_battle;None
+    change_music;enemy_battle;None
 end
 if;gameStateObj.turncount == 4
     set_cursor;0,0;force_hold

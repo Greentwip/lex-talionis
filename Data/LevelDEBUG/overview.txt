@@ -7,7 +7,7 @@ market_flag;0
 transition_flag;0
 player_phase_music;Fire Treasure
 enemy_phase_music;In the Midst
-player_battle_music;Fire Treasure
+player_battle_music;Best Detectives
 enemy_battle_music;Dragon Boy
 display_name;Kill Enemies,{len([u for u in gameStateObj.allunits if u.team == 'enemy' and not u.dead])} left.
 win_condition;Reach turn 6

@@ -506,7 +506,7 @@ class Dialogue_Scene(object):
                 gameStateObj.phase_music.change_music(line[1], line[2])
         elif line[0] == 'music_clear':
             logger.debug('Clear music stack')
-            Engine.music_thread.clear()
+            Engine.music_thread.fade_clear()
         # Music fade clear would just be 
         # > music_clear
         # > mf

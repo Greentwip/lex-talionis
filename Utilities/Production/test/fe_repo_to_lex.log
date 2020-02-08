@@ -13,3 +13,11 @@ ValueError: Could not determine which *.txt file to use!
 Converting Dragonstone.txt to Lex Talionis format...
 Unknown Command Code: C7B
  === Done! ===
+2020-01-27 19:02:50.535880
+Traceback (most recent call last):
+  File "fegba2lt_animations.py", line 584, in <module>
+    raise ValueError("No script file present in current directory!")
+ValueError: Could not determine which *.txt file to use! ['Dragonstone-Index.txt', 'Dragonstone-Script.txt', 'Dragonstone.txt']
+2020-01-27 19:03:16.320142
+Converting Dragonstone.txt to Lex Talionis format...
+ === Done! ===
