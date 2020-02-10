@@ -20,7 +20,7 @@ from EditorCode import EditorUtilities, Faction, Triggers, QtWeather
 from EditorCode.DataImport import Data
 from EditorCode import Autotiles
 
-__version__ = "0.9.3.13"
+__version__ = "0.9.3.14"
 
 # TODO: Created Units
 
@@ -204,11 +204,11 @@ class MainView(QGraphicsView):
                 else:
                     if self.window.dock_visibility['Units']:                            
                         current_mode = self.window.unit_menu.current_mode_view()
-                        current_unit = self.unit_data.get_unit_from_pos(pos, current_mode)
+                        current_unit = self.unit_data.get_unit_from_pos(pos, [current_mode])
                     elif self.window.dock_visibility['Reinforcements']:
                         current_mode = self.window.reinforcement_menu.current_mode_view()
                         current_pack = self.window.reinforcement_menu.current_pack()
-                        current_unit = self.unit_data.get_rein_from_pos(pos, current_mode, current_pack)
+                        current_unit = self.unit_data.get_rein_from_pos(pos, [current_mode], current_pack)
                     if current_unit:
                         self.window.trigger_menu.set_current_arrow(current_unit, pos)
                     else:
@@ -261,8 +261,8 @@ class MainView(QGraphicsView):
                 if event.button() == Qt.LeftButton:
                     current_unit = self.window.unit_menu.get_current_unit()
                     if current_unit:
-                        current_mode = self.window.unit_menu.current_mode_view()
-                        under_unit = self.unit_data.get_unit_from_pos(pos, current_mode)
+                        modes = current_unit.mode
+                        under_unit = self.unit_data.get_unit_from_pos(pos, modes)
                         if under_unit:
                             print('Removing Unit')
                             under_unit.position = None
@@ -284,7 +284,8 @@ class MainView(QGraphicsView):
                             self.window.unit_menu.get_current_item().setForeground(QColor("black"))
                         self.window.update_view()
                 elif event.button() == Qt.RightButton:
-                    current_idx = self.unit_data.get_idx_from_pos(pos, self.window.unit_menu.current_mode_view())
+                    current_mode = self.window.unit_menu.current_mode_view()
+                    current_idx = self.unit_data.get_idx_from_pos(pos, [current_mode])
                     print('Current IDX %s' % current_idx)
                     if current_idx >= 0:
                         self.window.unit_menu.set_current_idx(current_idx)
@@ -309,7 +310,7 @@ class MainView(QGraphicsView):
                 elif event.button() == Qt.RightButton:
                     current_mode = self.window.reinforcement_menu.current_mode_view()
                     current_pack = self.window.reinforcement_menu.current_pack()
-                    current_idx = self.unit_data.get_ridx_from_pos(pos, current_mode, current_pack)
+                    current_idx = self.unit_data.get_ridx_from_pos(pos, [current_mode], current_pack)
                     print(current_idx)
                     if current_idx >= 0:
                         self.window.reinforcement_menu.set_current_idx(current_idx)
@@ -346,11 +347,11 @@ class MainView(QGraphicsView):
             info = None
             current_unit_mode = self.window.unit_menu.current_mode_view()
             current_rein_mode = self.window.reinforcement_menu.current_mode_view()
-            if self.window.dock_visibility['Units'] and self.unit_data.get_unit_from_pos(pos, current_unit_mode):
-                info = self.unit_data.get_unit_str(pos, current_unit_mode)
+            if self.window.dock_visibility['Units'] and self.unit_data.get_unit_from_pos(pos, [current_unit_mode]):
+                info = self.unit_data.get_unit_str(pos, [current_unit_mode])
             elif self.window.dock_visibility['Reinforcements'] and \
-                    self.unit_data.get_rein_from_pos(pos, current_rein_mode, self.window.reinforcement_menu.current_pack()):
-                info = self.unit_data.get_reinforcement_str(pos, current_rein_mode, self.window.reinforcement_menu.current_pack())
+                    self.unit_data.get_rein_from_pos(pos, [current_rein_mode], self.window.reinforcement_menu.current_pack()):
+                info = self.unit_data.get_reinforcement_str(pos, [current_rein_mode], self.window.reinforcement_menu.current_pack())
             elif self.window.dock_visibility['Event Tiles'] and self.tile_info.get(pos):
                 info = self.tile_info.get_str(pos)
             elif self.window.dock_visibility['Terrain'] and pos in self.tile_data.tiles:

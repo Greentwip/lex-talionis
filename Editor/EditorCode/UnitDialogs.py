@@ -14,29 +14,24 @@ import Code.GlobalConstants as GC
 from . import DataImport
 from EditorCode.DataImport import Data
 from . import EditorUtilities
-from EditorCode.CustomGUI import GenderBox, CheckableComboBox
+from EditorCode.CustomGUI import GenderBox
+from EditorCode.multi_select_combo_box import MultiSelectComboBox
 
 class HasModes(object):
     def create_mode_combobox(self):
-        self.mode_box = CheckableComboBox()
-        self.mode_box.uniformItemSizes = True
-        for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()):
-            self.mode_box.addItem(name)
-            row = self.mode_box.model().item(idx, 0)
-            row.setCheckState(Qt.Checked)
+        self.mode_box = MultiSelectComboBox()
+        mode_names = list(mode['name'] for mode in GC.DIFFICULTYDATA.values())
+        for mode_name in mode_names:
+            self.mode_box.addItem(mode_name)
+        self.mode_box.setCurrentTexts(mode_names)
         self.form.addRow('Modes:', self.mode_box)
 
     def populate_mode(self, unit):
-        for index, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values()):
-            row = self.mode_box.model().item(index, 0)
-            if name in unit.mode:
-                row.setCheckState(Qt.Checked)
-            else:
-                row.setCheckState(Qt.Unchecked)
+        self.mode_box.ResetSelection()
+        self.mode_box.setCurrentTexts(unit.mode)
 
     def get_modes(self):
-        return [name for idx, name in enumerate(mode['name'] for mode in GC.DIFFICULTYDATA.values())
-                if self.mode_box.model().item(idx, 0).checkState() == Qt.Checked]
+        return self.mode_box.currentText()
 
 class LoadUnitDialog(QDialog, HasModes):
     def __init__(self, instruction, parent):

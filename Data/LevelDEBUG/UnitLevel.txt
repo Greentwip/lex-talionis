@@ -21,16 +21,33 @@ faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Strategist;10;Howl,Searing Blades,Lightning_Bolt,Energy Drink;1,14;None;Resistance
-player;0;0;Vanguard;5;Poison Bow,Iron Axe,Exp Drink;2,14;None;Resistance
+player;0;0;Coyote;2,14;None
 player;0;0;Duke;5;Poison Bow,Iron Lance,Energy Drink;0,1;None;Resistance
 player;0;0;Ophie;3,14;None
 player;0;0;Prim;4,15;None
 # Enemies
 # Generics
+mode;Grandmaster
+enemy;0;0;Shaman;4;Rusted Axe;5,12;Attack;Resistance
+mode;Hard
+enemy;0;0;Brigand;2;Rusted Axe;5,12;Attack;Resistance
+mode;Hard,Lunatic,Grandmaster
 enemy;0;0;Myrmidon;5;Iron Sword,Poison Bow,Iron Lance,Energy Drink;2,15;None;Resistance
 enemy;0;0;Dragoon;5;Adamant Lance;15,5;Seize;Resistance
 enemy;0;0;Myrmidon;5;Iron Sword;14,4;Seize;Resistance
+mode;Lunatic
+enemy;0;0;Warlock;3;Iron Axe;5,12;Attack;Resistance
 # === Reinforcements ===
 # Player Characters
+mode;Hard,Lunatic
+player;0;Joel_2;Joel;15,15;None
+mode;Hard,Lunatic,Grandmaster
+player;0;Alina_1;Althea;None;None
+player;0;1_1;Renae;None;None
 # Enemies
+# Generics
+mode;Hard
+enemy;0;pack2_2;Cavalier;4;Mithril Sword;3,13;None;Resistance
+mode;Hard,Lunatic,Grandmaster
+enemy;0;pack2_1;Cavalier;5;Iron Sword;16,16;None;Resistance
 # === Triggers ===

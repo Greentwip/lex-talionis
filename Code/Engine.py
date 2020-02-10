@@ -1,4 +1,3 @@
-#! usr/bin/env python2.7
 PYGAME_SDL2 = False
 if PYGAME_SDL2:
     import pygame_sdl2

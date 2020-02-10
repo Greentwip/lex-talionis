@@ -76,41 +76,41 @@ class UnitData(object):
                     return rein
         return None
 
-    def get_unit_from_pos(self, pos, mode):
+    def get_unit_from_pos(self, pos, modes):
         for unit in self.units:
-            if unit.position == pos and mode in unit.mode:
+            if unit.position == pos and any(mode in modes for mode in unit.mode):
                 return unit
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
 
-    def get_rein_from_pos(self, pos, mode, pack):
+    def get_rein_from_pos(self, pos, modes, pack):
         for rein in self.reinforcements:
-            if rein.position == pos and mode in rein.mode and rein.pack == pack:
+            if rein.position == pos and any(mode in modes for mode in rein.mode) and rein.pack == pack:
                 return rein
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
 
-    def get_idx_from_pos(self, pos, mode):
+    def get_idx_from_pos(self, pos, modes):
         for idx, unit in enumerate(self.units):
-            if unit.position == pos and mode in unit.mode:
+            if unit.position == pos and any(mode in modes for mode in unit.mode):
                 return idx
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
         return -1
 
-    def get_ridx_from_pos(self, pos, mode, pack):
+    def get_ridx_from_pos(self, pos, modes, pack):
         for idx, rein in enumerate(self.reinforcements):
-            if rein.position == pos and mode in rein.mode and rein.pack == pack:
+            if rein.position == pos and any(mode in modes for mode in rein.mode) and rein.pack == pack:
                 return idx
         # print('Could not find unit at %s, %s' % (pos[0], pos[1]))
         return -1
 
-    def get_unit_str(self, pos, mode):
+    def get_unit_str(self, pos, modes):
         for unit in self.units:
-            if unit.position == pos and mode in unit.mode:
+            if unit.position == pos and any(mode in modes for mode in unit.mode):
                 return unit.name + ': ' + unit.klass + ' ' + str(unit.level) + ' -- ' + ','.join([item.name for item in unit.items])
         return ''
 
-    def get_reinforcement_str(self, pos, pack, mode):
+    def get_reinforcement_str(self, pos, modes, pack):
         for rein in self.reinforcements:
-            if rein.position == pos and mode in rein.mode and rein.pack == pack:
+            if rein.position == pos and any(mode in modes for mode in rein.mode) and rein.pack == pack:
                 return pack + '_' + str(rein.event_id) + ': ' + rein.klass + ' ' + str(rein.level) + ' -- ' + ','.join([item.name for item in rein.items])
         return ''
 
@@ -118,7 +118,7 @@ class UnitData(object):
         def read_trigger_line(unitLine, current_mode):
             if ',' in unitLine[2]:
                 position = tuple(int(n) for n in unitLine[2].split(','))
-                return self.get_unit_from_pos(position, current_mode[0])
+                return self.get_unit_from_pos(position, current_mode)
             else:
                 unit = self.get_unit_from_id(unitLine[2])
                 if unit:
@@ -597,7 +597,7 @@ class ReinforcementMenu(UnitMenu):
         unit = self.unit_data.reinforcements[idx]
         if unit.position:
             current_mode = str(self.mode_view_combobox.currentText())
-            if current_mode not in unit.mode:
+            if current_mode not in unit.mode and unit.mode:
                 EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
             EditorUtilities.setComboBox(self.pack_view_combobox, unit.pack)
             self.view.center_on_pos(unit.position)
@@ -617,7 +617,7 @@ class ReinforcementMenu(UnitMenu):
         if unit.generic:
             item = QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- L' + str(unit.level))
         else:
-            item = QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- ' + unit.name)
+            item = QListWidgetItem(unit.pack + '_' + str(unit.event_id) + ' -- ' + unit.id)
         klass = Data.class_data.get(unit.klass)
         if klass:
             item.setIcon(EditorUtilities.create_icon(klass.get_image(unit.team, unit.gender)))

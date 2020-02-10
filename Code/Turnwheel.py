@@ -59,7 +59,7 @@ class ActionLog(object):
             self.end = end
 
         def __repr__(self):
-            return '%s %s %s' % (self.unit.name, self.begin, self.end)
+            return 'Move: %s %s %s' % (self.unit.name, self.begin, self.end)
 
     def set_up(self):
         def finalize(move):
@@ -80,11 +80,12 @@ class ActionLog(object):
                     current_move.end = action_index
                     finalize(current_move)
                     current_move = None
-            elif isinstance(action, Action.ArriveOnMap):
-                if current_move:
-                    finalize(current_move)
-                    current_move = None
-                self.unique_moves.append(('Arrive', action_index, action.unit.id))                    
+            # Arriving on the map is just not an action :(
+            # elif isinstance(action, Action.ArriveOnMap):
+            #     if current_move:
+            #         finalize(current_move)
+            #         current_move = None
+            #     self.unique_moves.append(('Arrive', action_index, action.unit.id))                    
             elif isinstance(action, Action.MarkPhase):
                 if current_move:
                     finalize(current_move)

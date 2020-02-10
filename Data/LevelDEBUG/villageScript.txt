@@ -1,4 +1,5 @@
 set_origin
-# set_tile_info;o0,0
 remove_tile_property;o0,0;Village
-s;Lyn;Wow
+u;Joel;Left;u;{unit};Right
+s;Joel;I'm ready to rumble!
+add_unit;Joel;o0,1;fade;closest
