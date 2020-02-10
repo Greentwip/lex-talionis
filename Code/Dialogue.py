@@ -841,7 +841,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'add_tile_property':
             coord = self.parse_pos(line[1], gameStateObj)
             tile_property = line[2]
-            Action.do(Action.AddTileProperty(coord, tile_property), gameStateObj)
+            Action.do(Action.AddTileProperty(coord, tile_property.split('=')), gameStateObj)
         elif line[0] == 'remove_tile_property':
             coord = self.parse_pos(line[1], gameStateObj)
             tile_property_name = line[2]

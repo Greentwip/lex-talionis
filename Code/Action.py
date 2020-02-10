@@ -1822,13 +1822,13 @@ class AddTileProperty(Action):
 
     def __init__(self, coord, tile_property):
         self.coord = coord
-        self.tile_property = tile_property
+        self.tile_property = tile_property  # Already split
 
     def do(self, gameStateObj):
         gameStateObj.map.add_tile_property(self.coord, self.tile_property, gameStateObj)
 
     def reverse(self, gameStateObj):
-        gameStateObj.map.remove_tile_property(self.coord, self.tile_property, gameStateObj)
+        gameStateObj.map.remove_tile_property_from_name(self.coord, self.tile_property[0])
 
 class RemoveTileProperty(Action):
     run_on_load = True

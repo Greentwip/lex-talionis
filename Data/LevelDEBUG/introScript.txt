@@ -7,6 +7,7 @@ set_game_constant;Turnwheel
 add_global_status;fLuck +4
 set_game_constant;max_turnwheel_uses;1
 set_game_constant;current_turnwheel_uses;1
+add_tile_property;0,5;Escape=0
 layer_terrain;1;4,17;base_terrain
 replace_tile;3,17;2
 layer_tile_sprite;2;4,17;OpenChest;base_terrain
