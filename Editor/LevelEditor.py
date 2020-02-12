@@ -20,7 +20,7 @@ from EditorCode import EditorUtilities, Faction, Triggers, QtWeather
 from EditorCode.DataImport import Data
 from EditorCode import Autotiles
 
-__version__ = "0.9.3.14"
+__version__ = "0.9.3.14b"
 
 # TODO: Created Units
 
@@ -274,14 +274,17 @@ class MainView(QGraphicsView):
                                 new_unit.position = pos
                                 self.unit_data.add_unit(new_unit)
                                 self.window.unit_menu.add_unit(new_unit)
+                                self.window.unit_menu.center(new_unit)
                             else:
                                 print('Move Unit')
                                 current_unit.position = pos
+                                self.window.unit_menu.center(current_unit)
                         else:
                             print('Place Unit')
                             current_unit.position = pos
                             # Reset the color
                             self.window.unit_menu.get_current_item().setForeground(QColor("black"))
+                            self.window.unit_menu.center(current_unit)
                         self.window.update_view()
                 elif event.button() == Qt.RightButton:
                     current_mode = self.window.unit_menu.current_mode_view()
@@ -301,11 +304,13 @@ class MainView(QGraphicsView):
                             new_unit.position = pos
                             self.unit_data.add_reinforcement(new_unit)
                             self.window.reinforcement_menu.add_unit(new_unit)
+                            self.window.reinforcement_menu.center(new_unit)
                         else:
                             print('Place Unit')
                             current_unit.position = pos
                             # Reset the color
                             self.window.reinforcement_menu.get_current_item().setForeground(QColor("black"))
+                            self.window.reinforcement_menu.center(current_unit)
                         self.window.update_view()
                 elif event.button() == Qt.RightButton:
                     current_mode = self.window.reinforcement_menu.current_mode_view()

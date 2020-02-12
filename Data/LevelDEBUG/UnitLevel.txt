@@ -20,7 +20,6 @@
 faction;Althea;Althea;Resistance;Nope
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-# player;0;0;Strategist;10;Howl,Searing Blades,Lightning_Bolt,Energy Drink;1,14;None;Resistance
 player;0;0;Coyote;2,14;None
 player;0;0;Duke;5;Poison Bow,Iron Lance,Energy Drink;0,1;None;Resistance
 player;0;0;Ophie;3,14;None
@@ -40,11 +39,17 @@ mode;Lunatic
 enemy;0;0;Warlock;3;Iron Axe;5,12;Attack;Resistance
 # === Reinforcements ===
 # Player Characters
-mode;Hard,Lunatic
-player;0;Joel_2;Joel;15,15;None
+mode;Grandmaster
+player;0;Joel_1;Joel;15,15;None
+player;0;Althea_1;Althea;15,16;None
+mode;Hard
+player;0;Joel_1;Joel;15,15;None
+player;0;Althea_1;Althea;15,16;None
 mode;Hard,Lunatic,Grandmaster
-player;0;Alina_1;Althea;None;None
-player;0;1_1;Renae;None;None
+player;0;soft_boi_1;Mercenary;4;Iron Sword,Mithril Sword;12,4;None;Resistance
+mode;Lunatic
+player;0;Joel_1;Joel;15,15;None
+player;0;Althea_1;Althea;15,16;None
 # Enemies
 # Generics
 mode;Hard
@@ -53,5 +58,5 @@ enemy;0;hard_boi_1;Thief;5;Iron Sword;27,10;None;Resistance
 mode;Hard,Lunatic,Grandmaster
 enemy;0;pack2_1;Cavalier;5;Iron Sword;16,16;None;Resistance
 mode;Lunatic,Grandmaster
-enemy;0;hard_boi_2;Assassin;5;Iron Sword;27,10;None;Resistance
+enemy;0;hard_boi_1;Assassin;5;Iron Sword;27,10;None;Resistance
 # === Triggers ===

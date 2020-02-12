@@ -64,9 +64,11 @@ def setComboBox(combo_box, value):
         combo_box.setCurrentIndex(i)
 
 # === Event ID ===
-def next_available_event_id(reinforcements):
+def next_available_event_id(pack_mates, unit=None):
+    if unit and unit in pack_mates:
+        pack_mates.remove(unit)
     for num in count(start=1):
-        if not any(rein.event_id == num for rein in reinforcements):
+        if not any(rein.event_id == num for rein in pack_mates):
             return num
 
 # === MAKE PRETTY ===

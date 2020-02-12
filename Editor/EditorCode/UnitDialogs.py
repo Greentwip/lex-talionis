@@ -158,13 +158,15 @@ class ReinLoadUnitDialog(LoadUnitDialog):
         result = dialog.exec_()
         if result == QDialog.Accepted:
             unit = list(Data.unit_data.values())[dialog.unit_box.currentIndex()]
+            unit.team = dialog.get_team()
             unit.ai = dialog.get_ai()
             unit.saved = bool(dialog.saved_checkbox.isChecked())
             unit.ai_group = str(dialog.ai_group.text())
-            unit.pack = str(dialog.pack.text())
-            same_pack = [rein for rein in parent.unit_data.reinforcements if rein.pack == unit.pack]
-            unit.event_id = EditorUtilities.next_available_event_id(same_pack)
             unit.mode = dialog.get_modes()
+            unit.pack = str(dialog.pack.text())
+            same_pack = [rein for rein in parent.unit_data.reinforcements if rein.pack == unit.pack and
+                         any(mode in unit.mode for mode in rein.mode)]
+            unit.event_id = EditorUtilities.next_available_event_id(same_pack, unit)
             return unit, True
         else:
             return None, False
@@ -353,7 +355,7 @@ class CreateUnitDialog(QDialog, HasModes):
     def get_ai(self):
         return str(self.ai_select.currentText()) if self.ai_select.isEnabled() else 'None'
 
-    def create_unit(self):
+    def create_unit(self, current_unit=None):
         info = {}
         info['faction'] = str(self.faction_select.currentText())
         faction = self.unit_data.factions[info['faction']]
@@ -373,6 +375,24 @@ class CreateUnitDialog(QDialog, HasModes):
         created_unit = DataImport.Unit(info)
         return created_unit
 
+    def modify_current_unit(self, unit):
+        unit.faction = str(self.faction_select.currentText())
+        faction = self.unit_data.factions[unit.faction]
+        if faction:
+            unit.name = faction.unit_name
+            unit.faction_icon = faction.faction_icon
+            unit.desc = faction.desc
+        unit.level = int(self.level.value())
+        unit.gender = int(self.gender.value())
+        unit.klass = str(self.class_box.currentText())
+        unit.items = self.getItems()
+        unit.ai = self.get_ai()
+        unit.ai_group = str(self.ai_group.text())
+        unit.team = str(self.team_box.currentText())
+        unit.generic = True
+        unit.mode = self.get_modes()
+        return unit
+
     @classmethod
     def getUnit(cls, parent, title, instruction, current_unit=None):
         dialog = cls(instruction, parent.unit_data, parent)
@@ -381,7 +401,7 @@ class CreateUnitDialog(QDialog, HasModes):
         dialog.setWindowTitle(title)
         result = dialog.exec_()
         if result == QDialog.Accepted:
-            unit = dialog.create_unit()
+            unit = dialog.create_unit(current_unit)
             return unit, True
         else:
             return None, False
@@ -423,7 +443,7 @@ class ReinCreateUnitDialog(CreateUnitDialog):
         self.team_changed(0)
         self.gender_changed(unit.gender)
 
-    def create_unit(self):
+    def create_unit(self, current_unit=None):
         info = {}
         info['faction'] = str(self.faction_select.currentText())
         faction = self.unit_data.factions[info['faction']]
@@ -437,10 +457,36 @@ class ReinCreateUnitDialog(CreateUnitDialog):
         info['items'] = self.getItems()
         info['ai'] = self.get_ai()
         info['ai_group'] = str(self.ai_group.text())
+        info['mode'] = self.get_modes()
         info['pack'] = str(self.pack.text())
-        info['event_id'] = EditorUtilities.next_available_event_id([rein for rein in self.unit_data.reinforcements if rein.pack == info['pack']])
+        pack_mates = [rein for rein in self.unit_data.reinforcements if rein.pack == info['pack'] and
+                      any(mode in info['mode'] for mode in rein.mode)]
+        info['event_id'] = EditorUtilities.next_available_event_id(pack_mates, current_unit)
         info['team'] = str(self.team_box.currentText())
         info['generic'] = True
-        info['mode'] = self.get_modes()
+        
         created_unit = DataImport.Unit(info)
         return created_unit
+
+    def modify_current_unit(self, unit):
+        unit.faction = str(self.faction_select.currentText())
+        faction = self.unit_data.factions[unit.faction]
+        if faction:
+            unit.name = faction.unit_name
+            unit.faction_icon = faction.faction_icon
+            unit.desc = faction.desc
+        unit.level = int(self.level.value())
+        unit.gender = int(self.gender.value())
+        unit.klass = str(self.class_box.currentText())
+        unit.items = self.getItems()
+        unit.ai = self.get_ai()
+        unit.ai_group = str(self.ai_group.text())
+        unit.mode = self.get_modes()
+        unit.pack = str(self.pack.text())
+        pack_mates = [rein for rein in self.unit_data.reinforcements if rein.pack == unit.pack and
+                      any(mode in unit.mode for mode in rein.mode)]
+        unit.event_id = EditorUtilities.next_available_event_id(pack_mates, unit)
+        unit.team = str(self.team_box.currentText())
+        unit.generic = True
+        
+        return unit

@@ -161,9 +161,10 @@ class UnitData(object):
         self.add_unit_from_legend(legend, mode)
 
     def add_unit_from_legend(self, legend, mode):
-        cur_unit = Data.unit_data.get(legend['unit_id'])
-        if not cur_unit:
+        unit_prefab = Data.unit_data.get(legend['unit_id'])
+        if not unit_prefab:
             return
+        cur_unit = unit_prefab.copy()
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         cur_unit.position = position
         cur_unit.ai = legend['ai']
@@ -175,7 +176,9 @@ class UnitData(object):
             cur_unit.saved = False
         if legend['event_id'] != "0": # unit does not start on board
             if '_' in legend['event_id']:
-                cur_unit.pack, cur_unit.event_id = legend['event_id'].split('_')
+                split_term = legend['event_id'].split('_')
+                cur_unit.pack = '_'.join(split_term[:-1])
+                cur_unit.event_id = split_term[-1]
                 cur_unit.event_id = int(cur_unit.event_id)
             else:
                 cur_unit.pack, cur_unit.event_id = legend['event_id'], 1
@@ -465,13 +468,20 @@ class UnitMenu(QWidget):
     def set_current_idx(self, idx):
         self.list.setCurrentRow(idx)
 
-    def center_on_unit(self, item, prev):
+    def center_on_unit(self, item, prev=None):
         idx = self.list.row(item)
         # idx = int(idx)
         unit = self.unit_data.units[idx]
         if unit.position:
             current_mode = str(self.mode_view_combobox.currentText())
-            if current_mode not in unit.mode:
+            if unit.mode and current_mode not in unit.mode:
+                EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
+            self.view.center_on_pos(unit.position)
+
+    def center(self, unit):
+        if unit.position:
+            current_mode = str(self.mode_view_combobox.currentText())
+            if unit.mode and current_mode not in unit.mode:
                 EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
             self.view.center_on_pos(unit.position)
 
@@ -586,7 +596,8 @@ class ReinforcementMenu(UnitMenu):
 
     def get_current_unit(self):
         if self.unit_data.reinforcements:
-            return self.unit_data.reinforcements[self.list.currentRow()]
+            rein = self.unit_data.reinforcements[self.list.currentRow()]
+            return rein
         else:
             return None
 
@@ -599,7 +610,7 @@ class ReinforcementMenu(UnitMenu):
         unit = self.unit_data.reinforcements[idx]
         if unit.position:
             current_mode = str(self.mode_view_combobox.currentText())
-            if current_mode not in unit.mode and unit.mode:
+            if unit.mode and current_mode not in unit.mode:
                 EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
             EditorUtilities.setComboBox(self.pack_view_combobox, unit.pack)
             self.view.center_on_pos(unit.position)
@@ -657,22 +668,23 @@ class ReinforcementMenu(UnitMenu):
         unit_idx = self.list.currentRow()
         self.list.takeItem(unit_idx)
         unit = self.unit_data.reinforcements[unit_idx]
-        self.check_remove_pack(unit)
         self.unit_data.remove_reinforcement_from_idx(unit_idx)
+        self.check_remove_pack(unit.pack)
         self.window.update_view()
 
-    def check_remove_pack(self, unit):
-        if unit.pack:
-            for rein in self.unit_data.reinforcements:
-                if unit.pack == rein.pack:
-                    break
-            else:
-                # Remove pack from pack combo
-                self.pack_view_combobox.removeItem(unit.pack)
+    def check_remove_pack(self, old_pack):
+        for rein in self.unit_data.reinforcements:
+            if rein.pack == old_pack:
+                break
+        else:
+            # Remove pack from pack combo
+            idx = self.pack_view_combobox.findText(old_pack)
+            self.pack_view_combobox.removeItem(idx)
 
     def modify_unit(self, item):
         idx = self.list.row(item)
         unit = self.unit_data.reinforcements[idx]
+        old_pack = unit.pack
         if unit.generic:
             modified_unit, ok = UnitDialogs.ReinCreateUnitDialog.getUnit(self, "Create Reinforcement", "Enter values for reinforcement:", unit)
         else:
@@ -681,11 +693,11 @@ class ReinforcementMenu(UnitMenu):
             modified_unit.position = unit.position
             # Replace unit
             self.list.takeItem(idx)
-            self.check_remove_pack(unit)
             item = self.create_item(modified_unit)
             self.list.insertItem(idx, item)
             self.list.setCurrentRow(self.list.row(item))
             self.unit_data.replace_reinforcement(idx, modified_unit)
+            self.check_remove_pack(old_pack)
             if modified_unit.generic:
                 self.last_touched_generic = modified_unit
             print(idx, self.list.row(item))

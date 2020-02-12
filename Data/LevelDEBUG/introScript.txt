@@ -13,7 +13,7 @@ replace_tile;3,17;2
 layer_tile_sprite;2;4,17;OpenChest;base_terrain
 layer_tile_sprite;2;5,17;OpenChest;base_terrain
 add_unit;hard_boi_1
-add_unit;lun_boi_1;4,0
+add_unit;soft_boi_1;4,0
 remove_background
 u;Ophie;Left
 u;Joel;Right
