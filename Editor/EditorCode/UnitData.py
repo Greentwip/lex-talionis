@@ -252,7 +252,9 @@ class UnitData(object):
         u_i['id'] = GC.U_ID
         u_i['team'] = legend['team']
         if '_' in legend['event_id']:
-            u_i['pack'], u_i['event_id'] = legend['event_id'].split('_')
+            split_term = legend['event_id'].split('_')
+            u_i['pack'] = '_'.join(split_term[:-1])
+            u_i['event_id'] = split_term[-1]
             u_i['event_id'] = int(u_i['event_id'])
         elif legend['event_id'] != '0':
             u_i['pack'] = legend['event_id']

@@ -264,6 +264,27 @@
         <LVL>B</LVL>
     </item>
 
+    <item name="Fire Breath">
+        <id>Fire Breath</id>
+        <spritetype>Anima</spritetype>
+        <spriteid>0</spriteid>
+        <components>weapon,weight,crit,effective,wexp,transform</components>
+        <weapontype>Anima</weapontype>
+
+        <RNG>1</RNG>
+        <value>0</value>
+        <weight>0</weight>
+        <desc>hot</desc>
+
+        <effective>Monster;32</effective>
+
+        <MT>16</MT>
+        <HIT>100</HIT>
+        <LVL>D</LVL>
+        <crit>15</crit>
+        <wexp>0</wexp>
+    </item>
+
     <!-- Lances -->
     <item name="Iron Lance">
         <id>Iron Lance</id>

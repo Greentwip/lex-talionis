@@ -198,7 +198,26 @@
 		<bases>12,3,0,2,3,0,4,0,7,7</bases>
 		<max>40,15,15,15,15,20,15,15,20</max>
         <desc>Mounted knights with superior movement.</desc>
-    </class>   
+    </class>
+
+    <class id="Retainer">
+        <short_name>Retainer</short_name>
+        <long_name>Retainer</long_name>
+        <tier>1</tier>
+        <!-- Swords, Lances, Axes, Bows, Light, Anima, Dark -->
+        <wexp_gain>0,1,0,0,0,1,0</wexp_gain>
+        <promotes_from></promotes_from>
+        <turns_into>Paladin</turns_into>
+        <!-- Light Foot, Armors, Heavy Cav, Light Cav, Regular, Mages -->
+        <movement_group>2</movement_group>
+        <tags>Mounted</tags>
+        <skills>1,Canto;5,Savior;8,Feat</skills>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <growths>100,45,5,55,35,40,20,30</growths>
+        <bases>12,3,0,2,3,0,4,0,7,7</bases>
+        <max>40,15,15,15,15,20,15,15,20</max>
+        <desc>Mounted knights with superior movement.</desc>
+    </class>      
 
     <class id="Paladin">
         <short_name>Paladin</short_name>
