@@ -1419,7 +1419,7 @@ class Dialogue_Scene(object):
 
         #print("Add Unit: New Pos")
         #print(new_pos)
-        if new_pos == [None]:
+        if None in new_pos:
             #print(context)
             #print(which_unit)
             logger.warning('Position for "add_unit" is not set!')

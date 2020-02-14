@@ -499,8 +499,13 @@ class MainEditor(QMainWindow):
     # === Loading Data ===
     def set_image(self, image_file):
         self.map_image_file = image_file
+        # This section is for fixing weird png errors
+        pixmap = QPixmap()
+        pixmap.load(image_file)
+        pixmap.save(image_file, "PNG")
+        # End weird section
         image = QImage(image_file)
-        print("Loading %s (a %dx%d image)..." % (image_file, image.width(), image.height()))
+        print("Loading %s (a %dx%d image)..." % (image_file, image.width(), image.height()), flush=True)
         if image.width() % 16 != 0 or image.height() % 16 != 0:
             QErrorMessage().showMessage("Image width and/or height is not divisible by 16!")
             return
@@ -538,7 +543,7 @@ class MainEditor(QMainWindow):
         image_file, _ = QFileDialog.getOpenFileName(self, "Choose Map PNG", QDir.currentPath(),
                                                     "PNG Files (*.png);;All Files (*)")
         if image_file:
-            if not self.is_same_size(self.view.image, QImage(image_file)):
+            if not self.view.image or not self.is_same_size(self.view.image, QImage(image_file)):
                 self.tile_data.new(image_file)
             self.set_image(image_file)
             self.remove_full_image()
