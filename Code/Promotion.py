@@ -174,7 +174,9 @@ class PromotionState(StateMachine.State):
             # Start music
             self.promotion_music = cf.CONSTANTS.get('music_promotion')
             if self.promotion_music:
-                Engine.music_thread.fade_in(GC.MUSICDICT[self.promotion_music])
+                next_song = Engine.music_thread.fade_in(GC.MUSICDICT[self.promotion_music])
+                if not next_song:  # Same song as before
+                    self.promotion_music = None
 
             self.unit = gameStateObj.cursor.currentSelectedUnit
             color = Utility.get_color(self.unit.team)
