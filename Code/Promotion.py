@@ -172,7 +172,9 @@ class PromotionState(StateMachine.State):
 
         if not self.started:
             # Start music
-            Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_promotion')])
+            self.promotion_music = cf.CONSTANTS.get('music_promotion')
+            if self.promotion_music:
+                Engine.music_thread.fade_in(GC.MUSICDICT[self.promotion_music])
 
             self.unit = gameStateObj.cursor.currentSelectedUnit
             color = Utility.get_color(self.unit.team)
@@ -340,7 +342,8 @@ class PromotionState(StateMachine.State):
                     gameStateObj.stateMachine.changeState('transition_double_pop')
                     gameStateObj.background.fade_out()
                 self.current_state = 'Done'  # Inert state
-                Engine.music_thread.fade_back()
+                if self.promotion_music:
+                    Engine.music_thread.fade_back()
                 return 'repeat'
 
         if self.current_anim:

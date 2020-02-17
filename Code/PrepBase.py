@@ -421,11 +421,13 @@ class PrepItemsChoicesState(StateMachine.State):
                 grayed_out[5] = True
             options = [cf.WORDS['Trade'], cf.WORDS['Use'], cf.WORDS['List'], cf.WORDS['Transfer'], cf.WORDS['Give All'], cf.WORDS['Market']]
             self.menu = MenuFunctions.GreyMenu(gameStateObj.cursor.currentSelectedUnit, options, (128, 80), grayed_out=grayed_out)
+            self.background = None
 
         if hasattr(gameStateObj, 'hidden_item_child_option'):
             self.menu.setSelection(gameStateObj.hidden_item_child_option)
-        if not gameStateObj.background:
-            gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+
+        self.set_background(gameStateObj)
+
         if gameStateObj.activeMenu:
             gameStateObj.activeMenu.set_extra_marker(False)
         if any(self.can_use(item, gameStateObj) for item in gameStateObj.cursor.currentSelectedUnit.items):
@@ -437,6 +439,13 @@ class PrepItemsChoicesState(StateMachine.State):
         if gameStateObj.stateMachine.from_transition():
             gameStateObj.stateMachine.changeState("transition_in")
             return 'repeat'
+
+    def set_background(self, gameStateObj):
+        if self.background:
+            gameStateObj.background = self.background
+        elif not gameStateObj.background:
+            gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
+        self.background = gameStateObj.background
 
     def can_use(self, item, gameStateObj):
         current_unit = gameStateObj.cursor.currentSelectedUnit

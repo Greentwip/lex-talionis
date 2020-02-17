@@ -2429,6 +2429,11 @@ class ItemGainState(StateMachine.State):
 
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
+        # Need to return to the correct background when using a booster from
+        # the prep or base menus
+        under_state = gameStateObj.stateMachine.get_under_state(self)
+        if under_state and under_state.name == 'prep_items_choices':
+            under_state.set_background(gameStateObj)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
