@@ -113,8 +113,8 @@ class PrepPickUnitsState(StateMachine.State):
             player_units = gameStateObj.get_units_in_party(gameStateObj.current_party) 
             lord_units = [unit for unit in player_units if unit.position and 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]]
             non_lord_units = [unit for unit in player_units if unit not in lord_units]
-            units = lord_units + sorted(non_lord_units, key=lambda unit: bool(unit.position), reverse=True)
-            gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 2, 6, (110, 24))
+            self.units = lord_units + sorted(non_lord_units, key=lambda unit: bool(unit.position), reverse=True)
+            gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 2, 6, (110, 24))
     
         if not gameStateObj.background:
             gameStateObj.background = Background.MovingBackground(GC.IMAGESDICT['RuneBackground'])
@@ -162,7 +162,7 @@ class PrepPickUnitsState(StateMachine.State):
             # gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
 
     def draw(self, gameStateObj, metaDataObj):
         surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
@@ -333,8 +333,8 @@ class PrepItemsState(StateMachine.State):
         if not self.started:
             # print([(unit.name, unit.dead) for unit in gameStateObj.allunits])
             player_units = gameStateObj.get_units_in_party(gameStateObj.current_party)
-            units = sorted(player_units, key=lambda unit: bool(unit.position), reverse=True)
-            gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(units, 3, 4, 'center')
+            self.units = sorted(player_units, key=lambda unit: bool(unit.position), reverse=True)
+            gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 3, 4, 'center')
             if self.name == 'base_items' or self.name == 'base_armory_pick':
                 gameStateObj.activeMenu.mode = 'items'
             # for display
@@ -392,7 +392,7 @@ class PrepItemsState(StateMachine.State):
             # gameStateObj.stateMachine.back()
             gameStateObj.stateMachine.changeState('transition_pop')
         elif event == 'INFO':
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
         elif event == 'START':
             gameStateObj.quick_sort_inventories(gameStateObj.allunits)
 
@@ -548,7 +548,9 @@ class PrepTradeSelectState(StateMachine.State):
             gameStateObj.activeMenu.currentSelection = self.currentSelection
             gameStateObj.stateMachine.back()
         elif event == 'INFO':
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection())
+            player_units = gameStateObj.get_units_in_party(gameStateObj.current_party)
+            units = sorted(player_units, key=lambda unit: bool(unit.position), reverse=True)
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=units)
 
     def draw(self, gameStateObj, metaDataObj):
         mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
@@ -756,9 +758,9 @@ class PrepListState(StateMachine.State):
             return 'repeat'
 
     def calc_all_items(self, gameStateObj):
-        my_units = [unit for unit in gameStateObj.allunits if unit.team == 'player' and not unit.dead]
+        player_units = gameStateObj.get_units_in_party(gameStateObj.current_party) 
         all_items = [item for item in gameStateObj.convoy]
-        for unit in my_units:
+        for unit in player_units:
             for item in unit.items:
                 all_items.append(item)
         return all_items
