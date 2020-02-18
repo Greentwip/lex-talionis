@@ -91,9 +91,9 @@
 		<bases>11,1,5,4,5,5,2,3</bases>
 		<growths>60,15,85,40,60,60,20,55</growths>
         
-        <inventory>Fire,Vulnerary,Guiding Ring</inventory>
+        <inventory>Fire,Vulnerary</inventory>
         
-        <level>9</level>
+        <level>2</level>
         <class>Mage</class>
         <desc>A forthright but elegant and refined sorceress.</desc>
         

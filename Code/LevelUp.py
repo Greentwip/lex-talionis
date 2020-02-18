@@ -88,7 +88,8 @@ class GainExpState(StateMachine.State):
                 max_level = self.unit_klass['max_level']
                 if self.unit.level >= max_level:  # Do I promote?
                     GC.SOUNDDICT['Experience Gain'].stop()
-                    if cf.CONSTANTS['auto_promote'] and self.unit_klass['turns_into']:
+                    if cf.CONSTANTS['auto_promote'] and self.unit_klass['turns_into'] and \
+                            'no_auto_promote' not in self.unit.tags:
                         self.exp_bar.update(100)
                         GC.SOUNDDICT['Level Up'].play()
                     else:
@@ -179,7 +180,8 @@ class GainExpState(StateMachine.State):
             self.exp_bar.update()
             if current_time - self.state_time > 100:
                 class_options = self.unit_klass['turns_into']
-                if cf.CONSTANTS['auto_promote'] and class_options:
+                if cf.CONSTANTS['auto_promote'] and class_options and \
+                        'no_auto_promote' not in self.unit.tags:
                     self.exp_bar.update(0)
                     if len(class_options) > 1:
                         gameStateObj.cursor.currentSelectedUnit = self.unit
@@ -201,7 +203,7 @@ class GainExpState(StateMachine.State):
                         Action.do(Action.SetExp(self.unit, 99), gameStateObj)
                         gameStateObj.stateMachine.back()
                 else:
-                    Action.do(Action.SetExp(self.unit, 99))
+                    Action.do(Action.SetExp(self.unit, 99), gameStateObj)
                     gameStateObj.stateMachine.back()
 
         elif self.state.getState() == 'promote':
