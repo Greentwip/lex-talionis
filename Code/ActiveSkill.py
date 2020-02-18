@@ -36,15 +36,39 @@ class ItemModComponent(object):
             logger.debug('Set %s to %s', self.effect_change[i*2], orig_val)
             item[self.effect_change[i*2]] = orig_val
 
+    def add_and_change_effect(self, item, gameStateObj):
+        for i in range(len(self.effect_change)//2):
+            orig_val = item[self.effect_change[i*2]]
+            if orig_val:
+                self.add_effect(item, gameStateObj)
+            else:
+                val = eval(self.effect_change[i*2 + 1], locals(), globals())
+                logger.debug('Set %s to %s', self.effect_change[i*2], val)
+                if orig_val is None:
+                    # Need a non-null thing to save value as
+                    item['orig_' + self.effect_change[i*2]] = 'None'  
+                else:
+                    item['orig_' + self.effect_change[i*2]] = orig_val
+                item[self.effect_change[i*2]] = val
+
+    def add_and_change_effect_back(self, item, gameStateObj):
+        for i in range(len(self.effect_change)//2):
+            # If we "changed" the value of this component
+            orig_val = item['orig_' + self.effect_change[i*2]]
+            if orig_val:
+                if orig_val == 'None':
+                    orig_val = None
+                logger.debug('Set %s to %s', self.effect_change[i*2], orig_val)
+                item[self.effect_change[i*2]] = orig_val
+            else:
+                self.reverse_effect(item, gameStateObj)
+
     def apply_mod(self, item, gameStateObj):
         self.reverse_mod(item, gameStateObj)
         if eval(self.conditional, locals()):
             item[self.uid] = True
             if self.effect_add and self.effect_change:
-                if item[self.effect_add[0]]:
-                    self.add_effect(item, gameStateObj)
-                else:
-                    self.change_effect(item, gameStateObj)
+                self.add_and_change_effect(item, gameStateObj)
             elif self.effect_change:
                 self.change_effect(item, gameStateObj)
             elif self.effect_add:
@@ -54,10 +78,7 @@ class ItemModComponent(object):
         if item[self.uid]:
             item[self.uid] = False
             if self.effect_add and self.effect_change:
-                if item['orig_' + self.effect_change[0]]:
-                    self.change_effect_back(item, gameStateObj)
-                else:
-                    self.reverse_effect(item, gameStateObj)
+                self.add_and_change_effect_back(item, gameStateObj)
             elif self.effect_change:
                 self.change_effect_back(item, gameStateObj)
             elif self.effect_add:
