@@ -401,7 +401,7 @@
     <terrain name="Snag">
         <id>35</id>
         <color>176,120,176</color>
-        <minimap>Snag</minimap>
+        <minimap>Thicket</minimap>
         <platform>Forest</platform>
         
         <DEF>0</DEF>
