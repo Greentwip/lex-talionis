@@ -1762,7 +1762,9 @@ class UnitObject(object):
                 accuracy = item.crit + GC.EQUATIONS.get_equation(item.alternate_crit, self, item, dist)
             else:
                 accuracy = item.crit + GC.EQUATIONS.get_crit(self, item, dist)
-            accuracy += sum(int(eval(status.crit_hit, globals(), locals())) for status in self.status_effects if status.crit_hit)
+            for status in self.status_effects:
+                if status.crit_hit:
+                    accuracy += int(eval(status.crit_hit, globals(), locals()))
             accuracy += self.get_support_bonuses(gameStateObj)[4]
             # Generic rank bonuses
             if item.TYPE:
@@ -1777,7 +1779,9 @@ class UnitObject(object):
             base = GC.EQUATIONS.get_equation(item_to_avoid.alternate_crit_avoid, self, self.getMainWeapon(), dist)
         else:
             base = GC.EQUATIONS.get_crit_avoid(self, self.getMainWeapon(), dist)
-        base += sum(int(eval(status.crit_avoid, globals(), locals())) for status in self.status_effects if status.crit_avoid)
+        for status in self.status_effects:
+            if status.crit_avoid:
+                base += int(eval(status.crit_avoid, globals(), locals()))
         base += self.get_support_bonuses(gameStateObj)[5]
         return base
 
