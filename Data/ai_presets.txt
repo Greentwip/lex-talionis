@@ -23,6 +23,8 @@
 #    - 7: move towards boss unit
 #    - 8: move towards enemy seize tiles
 #    - 9: move towards any unit
+#    -10: move towards unlooted destructible tiles without HP
+#    -11: move towards tiles with HP
 #    - A string: move towards unit whose name or event_id matches string
 # Possible States for view_range (secondary AI):
 #    - 0: Do not look
@@ -55,11 +57,12 @@ Unlock2         		37 4 [2] - 2 30
 AttackThiefEscape   	67 6 - - 2 30
 PursueIgnoreOther   	3 1 [other] - 2 20
 SoftGuardIgnoreOther	3 0 [other] - 0 20
-PursueVillage			19 3 - - 2 20
+PursueVillage			19 10 - - 2 20
 Support					3 2 - - 2 10
 FollowBoss				3 7 - - 2 15
 FollowWagon             3 Wagon - - 2 20
 Seize                   259 8 - - 2 20
 Berserk                 3 9 - - 2 0
 AttackTile              11 1 - - 1 20
-PursueTile              11 1 - - 2 20
+PursueTile              11 11 - - 2 20
+PursueVillageTile       27 3 - - 2 20

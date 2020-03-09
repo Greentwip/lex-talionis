@@ -24,6 +24,9 @@
     - 6: move towards thief escape tiles
     - 7: move towards boss unit
     - 8: move towards enemy seize tiles
+    - 9: move towards any unit
+    -10: move towards unlooted destructible ojects without HP
+    -11: move towards tiles with HP
     - A string: move towards unit whose name or event_id matches string
 # Possible States for view_range (secondary AI):
     - 0: Do not look
@@ -199,6 +202,13 @@ class AI(object):
                 elif self.ai2_state == 9:
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and unit is not self.unit and
                                               unit.team not in self.team_ignore and unit.name not in self.name_ignore]
+                elif self.ai2_state == 10:
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
+                                              if 'Destructible' in gameStateObj.map.tile_info_dict[position] and
+                                              'HP' not in gameStateObj.map.tile_info_dict[position]]
+                elif self.ai2_state == 11:
+                    self.available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
+                                              if 'HP' in gameStateObj.map.tile_info_dict[position]]
                 else:
                     self.available_targets = [unit for unit in gameStateObj.allunits if unit.position and
                                               (unit.name == self.ai2_state or unit.event_id == self.ai2_state)]

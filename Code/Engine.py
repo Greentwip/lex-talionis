@@ -1,7 +1,4 @@
-PYGAME_SDL2 = False
-if PYGAME_SDL2:
-    import pygame_sdl2
-    pygame_sdl2.import_as_pygame()
+NO_AUDIO = False
 import pygame
 import sys
 
@@ -25,10 +22,10 @@ BLEND_RGBA_MULT = pygame.BLEND_RGBA_MULT
 # === INITIALIZING FUNCTIONS =================================================
 def init():
     # pygame.mixer.pre_init(44100, -16, 1, 512)
-    if not PYGAME_SDL2:
+    if not NO_AUDIO:
         pygame.mixer.pre_init(44100, -16, 2, 256 * 2**configuration.OPTIONS['Sound Buffer Size'])
     pygame.init()
-    if not PYGAME_SDL2:
+    if not NO_AUDIO:
         pygame.mixer.init()
 
 def simple_init():
@@ -56,13 +53,11 @@ def remove_display():
     pygame.display.quit()
 
 def build_font(ttf, size):
-    if PYGAME_SDL2:
-        size += 2
     return pygame.font.Font(ttf, size)
 
 def terminate(crash=False):
     final(crash)
-    if not PYGAME_SDL2:
+    if not NO_AUDIO:
         pygame.mixer.music.stop()
         pygame.mixer.quit()
     pygame.quit()
@@ -199,6 +194,7 @@ QUIT = pygame.QUIT
 KEYUP = pygame.KEYUP
 KEYDOWN = pygame.KEYDOWN
 key_map = {'d': pygame.K_d,
+           '`': pygame.K_BACKQUOTE,
            'enter': pygame.K_RETURN,
            'backspace': pygame.K_BACKSPACE,
            'up': pygame.K_UP,
@@ -485,7 +481,7 @@ class MusicThread(object):
             pygame.mixer.music.load(current_song.name)
             pygame.mixer.music.play(0)
 
-if PYGAME_SDL2:
+if NO_AUDIO:
     music_thread = NoMusicThread()
 else:
     music_thread = MusicThread()

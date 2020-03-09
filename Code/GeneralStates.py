@@ -2154,6 +2154,8 @@ class VictoryState(StateMachine.State):
             level_statistic = gameStateObj.statistics[-1]
         else:
             level_statistic = None
+            print("You need to call 'victory_screen' in a different script than the one you call 'win_game' in!")
+            print("'win_game' isn't processed until the end of the script it is called in.")
         self.state = 'init'
         self.stat_surf = self.create_stat_surf(level_statistic)
         self.stat_surf_target = self.stat_surf.get_height() + 4
@@ -2167,7 +2169,7 @@ class VictoryState(StateMachine.State):
             turns = str(stats.turncount)
             mvp = stats.get_mvp()
         else:
-            turns ='0'
+            turns = '0'
             mvp = 'None'
         menu_width = 96
         bg = BaseMenuSurf.CreateBaseMenuSurf((menu_width, 40), 'BaseMenuBackgroundOpaque')

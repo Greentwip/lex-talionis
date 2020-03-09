@@ -198,7 +198,10 @@ class Combat(object):
         damage, healing, kills = 0, 0, 0
 
         damage_done = sum([result.def_damage_done for result in applicable_results])
-        if not self.item.heal:
+        
+        if self.item.heal:
+            healing += damage_done
+        else:
             damage += damage_done
 
         if self.item.exp:
@@ -209,7 +212,6 @@ class Combat(object):
         elif self.item.spell:
             if self.item.heal:
                 # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
-                healing += damage_done
                 normal_exp = max(5, int(p1_klass['exp_multiplier']*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_internal_level()) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
                 normal_exp = int(p1_klass['exp_multiplier']*cf.CONSTANTS['status_exp'])

@@ -23,6 +23,7 @@
 
 # === IMPORT MODULES ==========================================================
 import os
+from datetime import datetime
 
 # Custom imports
 import Code.imagesDict as imagesDict
@@ -71,6 +72,11 @@ def run(gameStateObj, metaDataObj):
 
         new_size = (GC.WINWIDTH * cf.OPTIONS['Screen Size'], GC.WINHEIGHT * cf.OPTIONS['Screen Size'])
         Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
+        # Check for taking screenshot
+        for event in eventList:
+            if event.type == Engine.KEYDOWN and event.key == Engine.key_map['`']:
+                current_time = str(datetime.now()).replace(' ', '_').replace(':', '.')
+                Engine.save_surface(mapSurf, "Lex_Talionis_%s.png" % current_time)
         # Keep gameloop (update, renders, etc) ticking
         Engine.update_display()
         gameStateObj.playtime += GC.FPSCLOCK.tick(GC.FPS)

@@ -30,17 +30,17 @@ class InputManager:
         # probably copy the same sort of system I use for the joystick configuration for the 
         # keyboard. But that's getting fancy for a simple tutorial. 
         self.key_map = {
-            K_UP : 'up',
-            K_DOWN : 'down',
-            K_LEFT : 'left',
-            K_RIGHT : 'right',
-            K_RETURN : 'start',
-            K_a : 'A',
-            K_b : 'B',
-            K_x : 'X',
-            K_y : 'Y',
-            K_l : 'L',
-            K_r : 'R'
+            K_UP: 'up',
+            K_DOWN: 'down',
+            K_LEFT: 'left',
+            K_RIGHT: 'right',
+            K_RETURN: 'start',
+            K_a: 'A',
+            K_b: 'B',
+            K_x: 'X',
+            K_y: 'Y',
+            K_l: 'L',
+            K_r: 'R'
         }
         
         # This dictionary will tell you which logical buttons are pressed, whether it's 

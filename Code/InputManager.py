@@ -108,7 +108,7 @@ class InputManager(object):
                         self.key_up_events.append(button)
                     else:
                         self.key_down_events.append(button)
-                elif all_keys and event.type == Engine.KEYUP:
+                elif all_keys and event.type == Engine.KEYDOWN:
                     self.unavailable_button = event.key
                     return 'NEW'
 
