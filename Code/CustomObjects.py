@@ -484,8 +484,29 @@ class CameraOffset(object):
         self.pan_to = corners[idx:] + corners[:idx]
         # print(self.pan_to)
 
+    def set_travel_limits(self, tilemap):
+        if self.x < 0:
+            self.set_x(0)
+        if self.y < 0:
+            self.set_y(0)
+        if self.x > (tilemap.width - GC.TILEX): # Need this minus to account for size of screen
+            self.set_x(tilemap.width - GC.TILEX)
+        if self.y > (tilemap.height - GC.TILEY):
+            self.set_y(tilemap.height - GC.TILEY)
+
+    def set_limits(self, tilemap):
+        if self.current_x < 0:
+            self.current_x = 0
+        elif self.current_x > (tilemap.width - GC.TILEX): # Need this minus to account for size of screen
+            self.current_x = (tilemap.width - GC.TILEX)
+        if self.current_y < 0:
+            self.current_y = 0
+        elif self.current_y > (tilemap.height - GC.TILEY):
+            self.current_y = (tilemap.height - GC.TILEY)
+        
     def update(self, gameStateObj):
-        gameStateObj.set_camera_limits()
+        if gameStateObj.map:
+            self.set_travel_limits(gameStateObj.map)
         if self.current_x != self.x:
             if self.current_x > self.x:
                 self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)/self.speed
@@ -506,14 +527,8 @@ class CameraOffset(object):
             self.x, self.y = self.pan_to.pop()
 
         # Make sure current_x and current_y do not go off screen
-        if self.current_x < 0:
-            self.current_x = 0
-        elif self.current_x > (gameStateObj.map.width - GC.TILEX): # Need this minus to account for size of screen
-            self.current_x = (gameStateObj.map.width - GC.TILEX)
-        if self.current_y < 0:
-            self.current_y = 0
-        elif self.current_y > (gameStateObj.map.height - GC.TILEY):
-            self.current_y = (gameStateObj.map.height - GC.TILEY)
+        if gameStateObj.map:
+            self.set_limits(gameStateObj.map)
         # logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
 class PhaseMusic(object):

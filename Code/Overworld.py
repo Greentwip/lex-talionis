@@ -460,7 +460,7 @@ class Overworld(object):
                     route.fade_in()
 
     def hide_location(self, level_id):
-        OverworldLocation[level_id].fade_out()
+        self.locations[level_id].fade_out()
         for route_id, route in self.routes.items():
             if level_id == route_id[0]:
                 if self.locations[route_id[1]].show:
@@ -557,7 +557,7 @@ class Overworld(object):
     def get_location(self, location_id, direction):
         valid_directions = {i: None for i in range(1, 10)}
         for name, route in self.routes.items():
-            if location_id in name:
+            if route.show and location_id in name:
                 if location_id == name[0]:
                     valid_directions[route.route[0]] = name[1]
                 else:
@@ -856,10 +856,14 @@ class OverworldOptionsState(StateMachine.State):
         elif event == 'INFO':
             self.toggle_info()
 
+    def update(self, gameStateObj, metaDataObj):
+        StateMachine.State.update(self, gameStateObj, metaDataObj)
+        gameStateObj.overworld.update(gameStateObj)
+
     def draw(self, gameStateObj, metaDataObj):
-        mapSurf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
-        gameStateObj.overworld.draw(mapSurf, gameStateObj, False)
+        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        gameStateObj.overworld.draw(surf, gameStateObj, False)
         if self.menu:
-            self.menu.draw(mapSurf, gameStateObj)
-            self.menu.drawInfo(mapSurf)
-        return mapSurf
+            self.menu.draw(surf, gameStateObj)
+            self.menu.drawInfo(surf)
+        return surf

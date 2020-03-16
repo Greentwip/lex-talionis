@@ -49,7 +49,7 @@ class SolverStateMachine(object):
         self.state_name = state
         self.state = self.states[state]() if state else None
 
-    def ratchet(self, solver, gameStateObj, metaDataObj):      
+    def ratchet(self, solver, gameStateObj, metaDataObj):   
         next_state = self.state.get_next_state(solver, gameStateObj)
         if next_state != self.state_name:
             self.change_state(next_state)
@@ -135,6 +135,8 @@ class AttackerState(SolverState):
         return False
 
     def get_next_state(self, solver, gameStateObj):
+        if solver.event_combat and solver.event_combat[-1] == 'quit':
+            return 'Done'
         if solver.attacker.currenthp > 0:
             if solver.splash and any(s.currenthp > 0 for s in solver.splash):
                 return 'Splash'
@@ -169,6 +171,8 @@ class AttackerState(SolverState):
 
 class AttackerBraveState(AttackerState):
     def get_next_state(self, solver, gameStateObj):
+        if solver.event_combat and solver.event_combat[-1] == 'quit':
+            return 'Done'
         if solver.attacker.currenthp > 0:
             if solver.splash and any(s.currenthp > 0 for s in solver.splash):
                 return 'SplashBrave'
@@ -193,6 +197,8 @@ class DefenderState(AttackerState):
         return item.brave or item.brave_defense
 
     def get_next_state(self, solver, gameStateObj):
+        if solver.event_combat and solver.event_combat[-1] == 'quit':
+            return 'Done'
         if solver.attacker.currenthp > 0 and solver.defender.currenthp > 0:
             ditem = solver.defender.getMainWeapon()
             if solver.item_uses(ditem) and self.check_for_brave(solver, solver.defender, ditem):
@@ -225,6 +231,8 @@ class DefenderState(AttackerState):
 
 class DefenderBraveState(DefenderState):
     def get_next_state(self, solver, gameStateObj):
+        if solver.event_combat and solver.event_combat[-1] == 'quit':
+            return 'Done'
         if solver.attacker.currenthp > 0 and solver.defender.currenthp > 0:
             ditem = solver.defender.getMainWeapon()
             if solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
@@ -324,7 +332,7 @@ class Solver(object):
         self.skill_used = skill_used
         if event_combat:
             # Must make a copy because we'll be modifying this list
-            self.event_combat = [e for e in event_combat]
+            self.event_combat = [e.lower() for e in event_combat]
         else:
             self.event_combat = None
         # If the item being used has the event combat property, then that too.
@@ -414,7 +422,7 @@ class Solver(object):
         hybrid = to_hit if rng_mode == 'hybrid' else None
 
         # if cf.OPTIONS['debug']: print('To Hit:', to_hit, ' Roll:', roll)
-        if item.weapon:
+        if item.weapon and attacker is not defender:
             if roll < to_hit and (defender not in self.splash or 'evasion' not in defender.status_bundle):
                 result.outcome = (2 if item.guaranteed_crit else 1)
                 result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid)

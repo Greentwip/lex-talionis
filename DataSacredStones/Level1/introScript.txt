@@ -15,13 +15,13 @@ t;1
 b;InsideCastle
 t;2
 end_skip
-u;Soldier1;Left;u;Tana;Right
-s;Soldier1;Princess Tana! Grado's forces are approaching!
+u;SoldierBlue;Left;u;Tana;Right
+s;SoldierBlue;Princess Tana! Grado's forces are approaching!
 s;Tana;What? So soon? Ah, we've had no time!
-s;Soldier1;Milady, we lack the arms to defend this place. You must return to Castle Frelia.
+s;SoldierBlue;Milady, we lack the arms to defend this place. You must return to Castle Frelia.
 s;Tana;I can't! Not yet. We haven't found Eirika and her companions yet.{w}{br}Eirika is my friend, and she needs my help. I won't abandon her.{w}{br}Oh, I know! Go and ask Father-- I mean King Hayden for more troops.
-s;Soldier1;Yes, Your Highness!
-r;Soldier1
+s;SoldierBlue;Yes, Your Highness!
+r;SoldierBlue
 s;Tana;Eirika, please be safe!
 t;1
 qr;Tana
@@ -52,14 +52,14 @@ disp_cursor;0
 t;1
 b;Plains
 t;2
-u;Soldier2;Left;u;Breguet;Right
-s;Soldier2;Commander Breguet, the enemy appears to be fortifying its position in the castle.
+u;SoldierRed;Left;u;Breguet;Right
+s;SoldierRed;Commander Breguet, the enemy appears to be fortifying its position in the castle.
 s;Breguet;Hmph.{w}{br}They're tenacious, but they have no hope of stopping our advance.
-s;Soldier2;What are your orders, sir?
+s;SoldierRed;What are your orders, sir?
 s;Breguet;Ha! Orders? You just stand here and watch. I'll crush them myself!
-s;Soldier2;As you command, sir.
+s;SoldierRed;As you command, sir.
 t;1
-qr;Soldier2;Breguet
+qr;SoldierRed;Breguet
 remove_background
 t;2
 end_skip
@@ -96,11 +96,11 @@ s;Tana;Who--? I am Tana, Princess of Frelia.{w}{br}I will not permit you to abus
 s;Breguet;Frelia's royal brat, huh? How convenient...
 s;Tana;Leave this castle immediately.{w}{br}If you harm me, my father and brother will chase you to the earth's end.
 s;Breguet;Yes, I've heard how King Hayden dotes on his precious little daughter.{w}{br}Let's see how true that is. You'll make us a fine hostage, my dear.{w}{br}Seize the girl and lock her up!
-u;Soldier2;FarRight
-s;Soldier2;Right away, sir!
+u;SoldierRed;FarRight
+s;SoldierRed;Right away, sir!
 s;Tana;No! Let me go!
 t;1
-r;Breguet;Tana;Soldier2
+r;Breguet;Tana;SoldierRed
 remove_background
 t;2
 end_skip

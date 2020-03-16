@@ -1275,3 +1275,231 @@
 	</units>
 </level>
 
+<level name="1">
+	<mode>Normal</mode>
+	<game_constants>level,1;_random_seed,128;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Seth">
+			<party>0</party>
+			<class>Paladin</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Steel Sword 29,Silver Lance 20,Vulnerary 3</items>
+			<wexp>181,181,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Eirika">
+			<party>0</party>
+			<class>Eirika_Lord</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Vulnerary 3,Rapier 40</items>
+			<wexp>1,0,0,0,0,0,0,0</wexp>
+			<skills></skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Franz">
+			<party>0</party>
+			<class>Cavalier</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 46,Iron Lance 45,Vulnerary 3,Vulnerary 3</items>
+			<wexp>1,31,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="0">
+	<mode>Normal</mode>
+	<game_constants>level,0;_random_seed,128;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Seth">
+			<party>0</party>
+			<class>Paladin</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Steel Sword 29,Silver Lance 20,Vulnerary 3</items>
+			<wexp>181,181,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Eirika">
+			<party>0</party>
+			<class>Eirika_Lord</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Vulnerary 3,Rapier 40</items>
+			<wexp>1,0,0,0,0,0,0,0</wexp>
+			<skills></skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Franz">
+			<party>0</party>
+			<class>Cavalier</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 46,Iron Lance 45,Vulnerary 3,Vulnerary 3</items>
+			<wexp>1,31,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="0">
+	<mode>Normal</mode>
+	<game_constants>level,0;_random_seed,343;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Seth">
+			<party>0</party>
+			<class>Paladin</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Steel Sword 29,Silver Lance 20,Vulnerary 3</items>
+			<wexp>181,181,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Eirika">
+			<party>0</party>
+			<class>Eirika_Lord</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Vulnerary 3,Rapier 40</items>
+			<wexp>1,0,0,0,0,0,0,0</wexp>
+			<skills></skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Franz">
+			<party>0</party>
+			<class>Cavalier</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 46,Iron Lance 45,Vulnerary 3,Vulnerary 3</items>
+			<wexp>1,31,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="0">
+	<mode>Normal</mode>
+	<game_constants>level,0;_random_seed,343;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Seth">
+			<party>0</party>
+			<class>Paladin</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Steel Sword 29,Silver Lance 20,Vulnerary 3</items>
+			<wexp>181,181,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Eirika">
+			<party>0</party>
+			<class>Eirika_Lord</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Vulnerary 3,Rapier 40</items>
+			<wexp>1,0,0,0,0,0,0,0</wexp>
+			<skills></skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Franz">
+			<party>0</party>
+			<class>Cavalier</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 46,Iron Lance 45,Vulnerary 3,Vulnerary 3</items>
+			<wexp>1,31,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="0">
+	<mode>Normal</mode>
+	<game_constants>level,0;_random_seed,139;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Seth">
+			<party>0</party>
+			<class>Paladin</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Steel Sword 29,Silver Lance 20,Vulnerary 3</items>
+			<wexp>181,181,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Eirika">
+			<party>0</party>
+			<class>Eirika_Lord</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Vulnerary 3,Rapier 40</items>
+			<wexp>1,0,0,0,0,0,0,0</wexp>
+			<skills></skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Franz">
+			<party>0</party>
+			<class>Cavalier</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 46,Iron Lance 45,Vulnerary 3,Vulnerary 3</items>
+			<wexp>1,31,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="0">
+	<mode>Normal</mode>
+	<game_constants>level,0;_random_seed,236;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Seth">
+			<party>0</party>
+			<class>Paladin</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Steel Sword 29,Silver Lance 20,Vulnerary 3</items>
+			<wexp>181,181,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Eirika">
+			<party>0</party>
+			<class>Eirika_Lord</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Vulnerary 3,Rapier 40</items>
+			<wexp>1,0,0,0,0,0,0,0</wexp>
+			<skills></skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Franz">
+			<party>0</party>
+			<class>Cavalier</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 46,Iron Lance 45,Vulnerary 3,Vulnerary 3</items>
+			<wexp>1,31,0,0,0,0,0,0</wexp>
+			<skills>Canto</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
