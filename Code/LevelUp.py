@@ -6,11 +6,18 @@ from . import StatusCatalog, Banner, Utility, ClassData
 
 ####################################################################
 class GainExpState(StateMachine.State):
-    name = 'gainexp'
+    name = 'exp_gain'
     
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         if not self.started:
+            if gameStateObj.exp_gain_struct is None:
+                # Generally can only happen if a player character attacks a player character
+                # Then two exp_gain commands will be put on the stack
+                # but of course the second exp gain struct will be overwrite the first
+                # So we just ignore the first
+                gameStateObj.stateMachine.back()
+                return 'repeat'
             self.unit, self.exp_gain, self.combat_object, self.starting_state, = \
                 gameStateObj.exp_gain_struct
             gameStateObj.exp_gain_struct = None

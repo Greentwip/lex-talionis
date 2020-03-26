@@ -2009,6 +2009,7 @@ class DialogueState(StateMachine.State):
         self.hurry_up_time = 0
 
     def begin(self, gameStateObj, metaDataObj):
+        logger.info('Begin Dialogue State')
         cf.CONSTANTS['Unit Speed'] = 120
         if self.name != 'transparent_dialogue':
             gameStateObj.cursor.drawState = 0
@@ -2048,8 +2049,9 @@ class DialogueState(StateMachine.State):
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):
         logger.debug('Ending dialogue state')
+        last_message = None
         if self.message and gameStateObj.message:
-            gameStateObj.message.pop()
+            last_message = gameStateObj.message.pop()
         # Did any tiles change?
         if self.message.reset_boundary_manager:
             gameStateObj.boundary_manager.reset(gameStateObj)
@@ -2065,7 +2067,8 @@ class DialogueState(StateMachine.State):
                 gameStateObj.message.append(outro_script)
                 gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.statedict['outroScriptDone'] = True
-            else:
+            elif not os.path.exists(metaDataObj['outroScript']) or last_message.scene == metaDataObj['outroScript']:  # We can only leave from an outroScript
+                # Prevents leaving from an internal interactScript within the outroScript
                 gameStateObj.increment_supports()
                 gameStateObj.clean_up()
                 if not cf.CONSTANTS['overworld'] and isinstance(gameStateObj.game_constants['level'], int):
@@ -2109,6 +2112,7 @@ class DialogueState(StateMachine.State):
         # Don't need to fade to normal if we're just heading back to a event script
         # Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
 
+        logger.info('Repeat Dialogue State!')
         return 'repeat'
 
     def update(self, gameStateObj, metaDataObj):
@@ -2119,6 +2123,7 @@ class DialogueState(StateMachine.State):
         if self.message:
             self.message.update(gameStateObj, metaDataObj)
         else:
+            logger.info('Done with Dialogue State!')
             gameStateObj.stateMachine.back()
             return 'repeat'
 

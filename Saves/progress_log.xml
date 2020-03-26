@@ -1503,3 +1503,269 @@
 	</units>
 </level>
 
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>level,DEBUG;_random_seed,587;Supports,1;Convoy,1;Turnwheel,1;max_turnwheel_uses,1;current_turnwheel_uses,1</game_constants>
+	<convoy>Silver Card --,Potion 3</convoy>
+	<units>
+		<unit name="Ophie">
+			<party>1</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>11</exp>
+			<items>Iron Sword 44</items>
+			<wexp>9,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>1</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Glimmer 29,Heal 30</items>
+			<wexp>0,0,0,0,2,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>1</party>
+			<class>Fighter</class>
+			<level>3</level>
+			<exp>0</exp>
+			<items>Iron Axe 45,Vulnerary 3</items>
+			<wexp>0,0,16,0,0,0,0</wexp>
+			<skills>Cleave</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>level,DEBUG;_random_seed,813;Supports,1;Convoy,1;Turnwheel,1;max_turnwheel_uses,1;current_turnwheel_uses,1</game_constants>
+	<convoy>Silver Card --,Potion 3</convoy>
+	<units>
+		<unit name="Ophie">
+			<party>1</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>1</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>6</exp>
+			<items>Heal 29,Glimmer 30</items>
+			<wexp>0,0,0,0,2,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>1</party>
+			<class>Fighter</class>
+			<level>3</level>
+			<exp>0</exp>
+			<items>Iron Axe 45,Vulnerary 3</items>
+			<wexp>0,0,16,0,0,0,0</wexp>
+			<skills>Cleave</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>level,DEBUG;_random_seed,710;Supports,1;Convoy,1;Turnwheel,1;max_turnwheel_uses,1;current_turnwheel_uses,1</game_constants>
+	<convoy>Silver Card --,Potion 3</convoy>
+	<units>
+		<unit name="Ophie">
+			<party>1</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>1</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>6</exp>
+			<items>Heal 29,Glimmer 30</items>
+			<wexp>0,0,0,0,2,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>1</party>
+			<class>Fighter</class>
+			<level>3</level>
+			<exp>0</exp>
+			<items>Iron Axe 45,Vulnerary 3</items>
+			<wexp>0,0,16,0,0,0,0</wexp>
+			<skills>Cleave</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>level,DEBUG;_random_seed,299;Supports,1;Convoy,1;Turnwheel,1;max_turnwheel_uses,1;current_turnwheel_uses,1</game_constants>
+	<convoy>Silver Card --,Potion 3</convoy>
+	<units>
+		<unit name="Ophie">
+			<party>1</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>1</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>6</exp>
+			<items>Heal 29,Glimmer 30</items>
+			<wexp>0,0,0,0,2,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>1</party>
+			<class>Fighter</class>
+			<level>3</level>
+			<exp>0</exp>
+			<items>Iron Axe 45,Vulnerary 3</items>
+			<wexp>0,0,16,0,0,0,0</wexp>
+			<skills>Cleave</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>level,DEBUG;_random_seed,1015;Supports,1;Convoy,1;Turnwheel,1;max_turnwheel_uses,1;current_turnwheel_uses,1</game_constants>
+	<convoy>Silver Card --,Potion 3</convoy>
+	<units>
+		<unit name="Ophie">
+			<party>1</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>1</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Heal 28,Glimmer 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>1</party>
+			<class>Fighter</class>
+			<level>3</level>
+			<exp>0</exp>
+			<items>Iron Axe 45,Vulnerary 3</items>
+			<wexp>0,0,16,0,0,0,0</wexp>
+			<skills>Cleave</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="1">
+	<mode>Hard</mode>
+	<game_constants>level,1;_random_seed,485;money,1500;Supports,1;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<party>0</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>0</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Glimmer 30,Heal 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
+<level name="2">
+	<mode>Hard</mode>
+	<game_constants>level,2;_random_seed,485;money,1500;Supports,1;current_turnwheel_uses,1;Turnwheel,1;max_turnwheel_uses,1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<party>0</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>0</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Glimmer 30,Heal 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>0</party>
+			<class>Fighter</class>
+			<level>3</level>
+			<exp>0</exp>
+			<items>Iron Axe 45,Vulnerary 3</items>
+			<wexp>0,0,16,0,0,0,0</wexp>
+			<skills>Cleave</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Nia">
+			<party>0</party>
+			<class>Archer</class>
+			<level>3</level>
+			<exp>18</exp>
+			<items>Willow Bow 44,Vulnerary 3</items>
+			<wexp>0,0,0,17,0,0,0</wexp>
+			<skills>Prescience</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+

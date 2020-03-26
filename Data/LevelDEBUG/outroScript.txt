@@ -1,1 +1,8 @@
 victory_screen
+set_cursor;Prim
+equip_item;Prim;Heal
+interact_unit;Prim;Ophie;--
+wait;300
+u;Ophie;Left
+s;Ophie;Damn! That hurt!
+r;Ophie

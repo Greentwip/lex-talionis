@@ -15,7 +15,10 @@ layer_tile_sprite;2;5,17;OpenChest;base_terrain
 add_unit;hard_boi_1
 add_unit;soft_boi_1;4,0
 remove_background
+set_cursor;Prim
+equip_item;Prim;Heal
+interact_unit;Prim;Ophie;--
+wait;300
 u;Ophie;Left
-u;Joel;Right
-wait;5000
-r;Ophie;Joel
+s;Ophie;Damn! That hurt!
+r;Ophie

@@ -637,7 +637,7 @@ class Dialogue_Scene(object):
             if len(line) > 3:
                 event_combat = [command.lower() for command in reversed(line[3].split(','))]
             else:
-                event_combat = None
+                event_combat = ['--'] * 8  # Default event combat so that the Engine knows its an event combat
             self.interact_unit(gameStateObj, attacker, defender, event_combat)
         elif line[0] == 'remove_unit' or line[0] == 'kill_unit':
             # Read input
