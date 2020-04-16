@@ -4,7 +4,7 @@ gold;5000
 set_game_constant;Convoy
 set_game_constant;Supports
 set_game_constant;Turnwheel
-add_global_status;fLuck +4
+# add_global_status;fLuck +4
 set_game_constant;max_turnwheel_uses;1
 set_game_constant;current_turnwheel_uses;1
 add_tile_property;0,5;Escape=0

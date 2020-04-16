@@ -343,7 +343,7 @@
         <desc>Can buy items at reduced prices.</desc>
         <image_index>11,9</image_index>
         <components>buy_value_mod</components>
-        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+
         <buy_value_mod>0.5</buy_value_mod>
     </status>
 
@@ -603,7 +603,7 @@
     <status name="Resolve">
         <id>Resolve</id>
         <image_index>8,8</image_index>
-        <desc>Grants effective STR, SKL, and SPD 1.5x if HP is under half.</desc>
+        <desc>Grants +50% STR, SKL, and SPD if HP is under half.</desc>
         <components>mt,avoid,hit,attackspeed,crit,class_skill</components>
 
         <!-- Add STR/2 to mt, so you effectively hit for STR/2 extra damage -->

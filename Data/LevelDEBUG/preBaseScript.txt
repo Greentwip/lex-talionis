@@ -1,6 +1,6 @@
 set_game_constant;Supports
-give_item;Drake;Silver Card;no_choice;no_banner
-give_item;Drake;Potion;no_choice;no_banner
+# give_item;Drake;Silver Card;no_choice;no_banner
+# give_item;Drake;Potion;no_choice;no_banner
 add_to_market;Vulnerary
 unlock_lore;Ophie
 unlock_lore;Prim
