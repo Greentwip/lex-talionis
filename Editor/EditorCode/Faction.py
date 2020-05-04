@@ -126,7 +126,7 @@ class FactionMenu(QWidget):
     def remove_faction(self):
         idx = self.list.currentRow()
         self.list.takeItem(idx)
-        del self.unit_data.factions[self.unit_data.factions.key()[idx]]
+        del self.unit_data.factions[self.unit_data.factions.keys()[idx]]
 
     # def set_load_player_characters(self, state):
     #     self.unit_data.load_player_characters = bool(state)
