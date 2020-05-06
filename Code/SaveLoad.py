@@ -193,15 +193,26 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             u_i['gender'] = int(unit.find('gender').text)
             u_i['level'] = int(unit.find('level').text)
 
+            # Tags
+            u_i['tags'] = set(unit.find('tags').text.split(',')) if unit.find('tags') is not None and unit.find('tags').text is not None else set()
+
             stats = Utility.intify_comma_list(unit.find('bases').text)
             for n in range(len(stats), cf.CONSTANTS['num_stats']):
                 stats.append(class_dict[u_i['klass']]['bases'][n])
-            if u_i['team'] == 'player' or u_i['team'] == 'other': # Modify stats
+
+            if 'IgnoreBonusStats' in u_i['tags']:
+                mode_bases = [0] * cf.CONSTANTS['num_stats']
+            elif u_i['team'] == 'player' or u_i['team'] == 'other': # Modify stats
                 mode_bases = gameStateObj.mode['player_bases']
-                mode_growths = gameStateObj.mode['player_growths']
             else:
                 mode_bases = gameStateObj.mode.get('boss_bases', gameStateObj.mode['enemy_bases'])
+            if 'IgnoreBonusGrowths' in u_i['tags']:
+                mode_growths = [0] * cf.CONSTANTS['num_stats']
+            elif u_i['team'] == 'player' or u_i['team'] == 'other': # Modify stats
+                mode_growths = gameStateObj.mode['player_growths']
+            else:
                 mode_growths = gameStateObj.mode.get('boss_growths', gameStateObj.mode['enemy_growths'])
+                
             stats = [sum(x) for x in zip(stats, mode_bases)]
             assert len(stats) == cf.CONSTANTS['num_stats'], "bases %s must be exactly %s integers long" % (stats, cf.CONSTANTS['num_stats'])
 
@@ -234,8 +245,6 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             assert len(u_i['wexp']) == len(Weapons.TRIANGLE.types), "%s's wexp must have as many slots as there are weapon types."%(u_i['name'])
             
             u_i['desc'] = unit.find('desc').text
-            # Tags
-            u_i['tags'] = set(unit.find('tags').text.split(',')) if unit.find('tags') is not None and unit.find('tags').text is not None else set()
 
             u_i['ai'] = legend['ai']
             u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
