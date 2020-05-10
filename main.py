@@ -105,6 +105,8 @@ def inform_error():
 # === START === START === START  === START ===  START === START === START === #
 if __name__ == '__main__':
     import logging, traceback
+    logging.logThreads = 0
+    logging.logProcesses = 0
     logger = logging.getLogger(__name__)
     try:
         handle_debug_logs()

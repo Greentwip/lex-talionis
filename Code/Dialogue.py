@@ -18,7 +18,7 @@ class Dialogue_Scene(object):
     def __init__(self, scene, unit=None, unit2=None, name=None, tile_pos=None, if_flag=False):
         self.scene = scene
         if self.scene:
-            with open(scene, 'r') as scenefp: # Open this scene's file database
+            with open(scene, encoding='utf-8', mode='r') as scenefp: # Open this scene's file database
                 self.scene_lines = scenefp.readlines()
         else:
             self.scene_lines = []
@@ -242,6 +242,7 @@ class Dialogue_Scene(object):
             return
         # time = Engine.get_true_time()
         logger.info('Script line to parse: %s', line)
+        print(line, flush=True)
         # === SKIPPING DIALOGUE
         # End skip
         if line[0] == 'end_skip':

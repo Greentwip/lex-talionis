@@ -76,7 +76,7 @@ class BmpFont:
         self.memory = {}
 
         # Read the font index.  File errors will bubble up to caller.
-        f = open(self.idxfile, "r")
+        f = open(self.idxfile, encoding='utf-8', mode="r")
 
         for x in f.readlines():
             # Remove EOL, if any.
