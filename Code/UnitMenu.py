@@ -4,6 +4,7 @@ from . import configuration as cf
 from . import Engine, StateMachine
 from . import Image_Modification, BaseMenuSurf, Weapons, HelpMenu
 from . import GUIObjects, Counters, Background, ClassData
+from . import CustomObjects
 
 class UnitMenu(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
@@ -68,7 +69,7 @@ class UnitMenu(StateMachine.State):
 
         if event == 'INFO':
             if self.unit_index:
-                StateMachine.CustomObjects.handle_info_key(gameStateObj, metaDataObj, self.units[self.unit_index-1])
+                CustomObjects.handle_info_key(gameStateObj, metaDataObj, self.units[self.unit_index-1])
             else:
                 self.info = not self.info
         elif event == 'BACK':
