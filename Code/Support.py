@@ -109,7 +109,7 @@ class Support_Graph(object):
         self.read_fp(node_fp, edge_fp)
 
     def read_fp(self, node_fp, edge_fp):
-        with open(node_fp, 'r') as node_data:
+        with open(node_fp, mode='r', encoding='utf-8') as node_data:
             for line in node_data.readlines():
                 line = line.strip()
                 if not line or line.startswith('#'):
@@ -118,7 +118,7 @@ class Support_Graph(object):
                 name, affinity = line.split(';')
                 self.add_node(name, affinity)
 
-        with open(edge_fp, 'r') as edge_data:
+        with open(edge_fp, mode='r', encoding='utf-8') as edge_data:
             lines = [l.strip() for l in edge_data.readlines() if l and not l.startswith('#')]
             for line in lines:
                 # print(line)
@@ -258,7 +258,7 @@ class Support_Graph(object):
 
 def create_affinity_dict(fn):
     d = {}
-    with open(fn) as fp:
+    with open(fn, mode='r', encoding='utf-8') as fp:
         lines = fp.readlines()
 
     counter = 0

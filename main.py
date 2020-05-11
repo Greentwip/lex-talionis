@@ -117,7 +117,7 @@ if __name__ == '__main__':
         my_level = logging.DEBUG
     else:
         my_level = logging.WARNING
-    logging.basicConfig(filename='./Saves/debug.log.1', filemode='w',
+    logging.basicConfig(handlers=[logging.FileHandler('./Saves/debug.log.1', 'w', 'utf-8')],
                         level=my_level, format='%(relativeCreated)d %(levelname)7s:%(module)16s: %(message)s')
     logger.info('*** Lex Talionis Engine Version %s ***' % GC.version)
     try:

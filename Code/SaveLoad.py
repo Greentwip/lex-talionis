@@ -25,7 +25,7 @@ def load_level(levelfolder, gameStateObj, metaDataObj):
     # Assorted Files
     unitfilename = levelfolder + '/UnitLevel.txt'
 
-    unitFile = open(unitfilename, 'r')
+    unitFile = open(unitfilename, 'r', encoding='utf-8')
     unitcontent = unitFile.readlines()
     unitFile.close()
         
@@ -106,7 +106,7 @@ def get_metaDataObj(levelfolder, metaDataObj):
 
 def read_overview_file(overview_filename):
     overview_lines = {}
-    with open(overview_filename, 'r') as mainInfo:
+    with open(overview_filename, mode='r', encoding='utf-8') as mainInfo:
         for line in mainInfo:
             split_line = line.strip().split(";", 1)
             overview_lines[split_line[0]] = split_line[1]

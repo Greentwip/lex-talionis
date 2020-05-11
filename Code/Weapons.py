@@ -18,7 +18,7 @@ class Weapon_Triangle(object):
         return len(self.types)
 
     def parse_file(self, fn):
-        with open(fn) as fp:
+        with open(fn, mode='r', encoding='utf-8') as fp:
             lines = fp.readlines()
 
         for index, line in enumerate(lines):
@@ -86,7 +86,7 @@ class Weapon_Advantage(object):
         self.parse_file(fn)
 
     def parse_file(self, fn):
-        with open(fn) as fp:
+        with open(fn, mode='r', encoding='utf-8') as fp:
             lines = [l.strip() for l in fp.readlines()]
 
         on_disadvantage = False
@@ -148,7 +148,7 @@ class Weapon_Exp(object):
         self.parse_file(fn)
 
     def parse_file(self, fn):
-        with open(fn) as fp:
+        with open(fn, mode='r', encoding='utf-8') as fp:
             lines = fp.readlines()
 
         for line in lines:

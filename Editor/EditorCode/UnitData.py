@@ -38,7 +38,7 @@ class UnitData(object):
     def load(self, fp):
         self.clear()
         current_mode = [mode['name'] for mode in GC.DIFFICULTYDATA.values()] # Defaults to all modes
-        with open(fp) as data:
+        with open(fp, mode='r', encoding='utf-8') as data:
             unitcontent = data.readlines()
             for line in unitcontent:
                 # Process each line that was in the level file.

@@ -3,7 +3,7 @@ import re
 
 class Parser(object):
     def __init__(self, fn):
-        with open(fn) as fp:
+        with open(fn, mode='r', encoding='utf-8') as fp:
             lines = [line.strip() for line in fp.readlines() if not line.startswith('#')]
         stat_line = lines[0]
         # equations = [l.replace(" ", "") for l in lines[1:]]

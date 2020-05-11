@@ -32,7 +32,7 @@ class WorldMapBackground(object):
         self.cursor = None
 
     def parse_labels(self, fp):
-        with open(fp, 'r') as label_data:
+        with open(fp, mode='r', encoding='utf-8') as label_data:
             for line in label_data:
                 split_line = line.strip().split(';')
                 coord = (int(split_line[1]), int(split_line[2]))

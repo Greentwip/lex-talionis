@@ -185,7 +185,7 @@ def read_words_file():
             return dict.get(self, key, key)
     lines = WordDict()
     if os.path.isfile('Data/words.txt'):
-        with open('Data/words.txt') as words_file:
+        with open('Data/words.txt', mode='r', encoding='utf-8') as words_file:
             for line in words_file:
                 split_line = line.strip().split(';')
                 if len(split_line) == 2:

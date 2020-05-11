@@ -14,6 +14,11 @@ layer_tile_sprite;2;4,17;OpenChest;base_terrain
 layer_tile_sprite;2;5,17;OpenChest;base_terrain
 add_unit;hard_boi_1
 add_unit;soft_boi_1;4,0
-u;Ophie;Left
-s;Ophie;Wow, what great bañana 
+u;Joël;Left
+s;Joël;The qúiçk browñ fóx jumps óvér the lázý dog.
+u;Nia;Right
+s;Nia;¡áàâäéèêëíìîïóòôöúùûüýÿ?
+s;Nia;¡ÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜÝŸ!
+s;Joël;Þæð iß {red}ÑØÐ{black} Åccœƿ⁊æble!
+r;Joël;Nia
 remove_background

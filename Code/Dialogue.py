@@ -242,7 +242,6 @@ class Dialogue_Scene(object):
             return
         # time = Engine.get_true_time()
         logger.info('Script line to parse: %s', line)
-        print(line, flush=True)
         # === SKIPPING DIALOGUE
         # End skip
         if line[0] == 'end_skip':

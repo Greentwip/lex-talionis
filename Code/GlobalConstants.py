@@ -7,7 +7,7 @@ from . import configuration as cf
 import logging
 logger = logging.getLogger(__name__)
 
-version = "0.9.3.19"
+version = "0.9.3.20"
 # === GLOBAL CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000//FPS
@@ -136,7 +136,7 @@ DIFFICULTYDATA = create_difficulty_dict(loc + 'Data/difficulty_modes.xml')
 
 def create_mcost_dict(fp):
     mcost_dict = {}
-    with open(fp, 'r') as mcost_data:
+    with open(fp, mode='r', encoding='utf-8') as mcost_data:
         for line in mcost_data.readlines():
             if line.startswith('#'):
                 continue
@@ -149,7 +149,7 @@ def create_ai_dict(fp):
     ai_dict = OrderedDict()
     if not os.path.exists(fp):
         return ai_dict
-    with open(fp, 'r') as ai_data:
+    with open(fp, mode='r', encoding='utf-8') as ai_data:
         for line in ai_data.readlines():
             if line.startswith('#'):
                 continue
@@ -171,7 +171,7 @@ def create_overworld_data(fp):
     cur_dict = None
     if not os.path.exists(fp):
         return overworld_data
-    with open(fp, 'r') as data:
+    with open(fp, mode='r', encoding='utf-8') as data:
         for line in data.readlines():
             if line.startswith('#'):
                 continue

@@ -681,7 +681,7 @@ class GameStateObj(object):
         # Done
 
     def output_progress_xml(self):
-        with open('Saves/progress_log.xml', 'a') as p_log:
+        with open('Saves/progress_log.xml', mode='a', encoding='utf-8') as p_log:
             p_log.write('<level name="' + str(self.game_constants['level']) + '">\n')
             p_log.write('\t<mode>' + self.mode['name'] + '</mode>\n')
             # Game Constants

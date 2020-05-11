@@ -660,7 +660,7 @@ class MainEditor(QMainWindow):
 
     # === Save ===
     def write_overview(self, fp):
-        with open(fp, 'w') as overview:
+        with open(fp, mode='w', encoding='utf-8') as overview:
             for k, v in self.overview_dict.items():
                 if v:
                     overview.write(k + ';' + v + '\n')
@@ -678,7 +678,7 @@ class MainEditor(QMainWindow):
             pixmap.save(fp, 'png')
 
     def write_tile_info(self, fp):
-        with open(fp, 'w') as tile_info:
+        with open(fp, mode='w', encoding='utf-8') as tile_info:
             for coord, properties in self.tile_info.tile_info_dict.items():
                 value = self.tile_info.get_str(coord)
                 if value:
@@ -756,7 +756,7 @@ class MainEditor(QMainWindow):
                             unit_level.write('mode;' + ','.join(current_mode) + '\n')
                         write_unit_line(unit)
 
-        with open(fp, 'w') as unit_level:
+        with open(fp, mode='w', encoding='utf-8') as unit_level:
             unit_level.write(EditorUtilities.unit_level_header)
             factions = self.unit_data.factions
             # if self.unit_data.load_player_characters:

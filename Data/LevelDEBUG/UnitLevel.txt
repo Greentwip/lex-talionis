@@ -35,14 +35,8 @@ mode;Lunatic
 enemy;0;0;Warlock;3;Iron Axe;5,12;Attack;Resistance
 # === Reinforcements ===
 # Player Characters
-mode;Grandmaster
-player;0;Joel_1;Joel;15,15;None
-mode;Hard
-player;0;Joel_1;Joel;15,15;None
-mode;Hard,Lunatic,Grandmaster
-#player;0;soft_boi_1;Mercenary;4;Iron Sword,Mithril Sword;12,4;None;Resistance
-mode;Lunatic
-player;0;Joel_1;Joel;15,15;None
+mode;All
+player;0;0;Joël;15,15;None
 # Enemies
 # Generics
 mode;Hard

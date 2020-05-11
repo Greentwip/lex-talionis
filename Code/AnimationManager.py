@@ -140,7 +140,7 @@ class BattleAnimationManager(object):
         frame_directory = {}
         index_lines = []
         # print(index)
-        with open(index) as fp:
+        with open(index, mode='r', encoding='utf-8') as fp:
             index_lines = [line.strip().split(';') for line in fp.readlines()]
 
         for idx, line in enumerate(index_lines):
@@ -157,7 +157,7 @@ class BattleAnimationManager(object):
         return frame_directory
 
     def parse_script(self, script):
-        with open(script) as fp:
+        with open(script, mode='r', encoding='utf-8') as fp:
             all_lines = [line.strip() for line in fp.readlines()]
             all_lines = [line.split(';') for line in all_lines if line and not line.startswith('#')]
 
