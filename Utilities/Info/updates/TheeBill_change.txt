@@ -1,0 +1,22 @@
+Feel free to delete this file once the web tutorial is updated. I hope this is a fine place to put this.
+Anyways this is how the choice event command works now:
+
+old: choice;title;header;options
+
+example: choice;SaveEmmeryn;Try to save Emmeryn?;Yes,No,Smash
+
+new: choice;title;header;options;arrangement
+
+example: choice;SaveEmmeryn;Try to save Emmeryn?;Yes,No,Smash;v
+
+arrangement: can be either horizontal or vertical. Determines how choices are displayed. 
+
+arrangement accepts h or horizontal for horizontal layout and v or vertical for vertical layout. 
+If nothing is typed for arrangement, it'll just be treated as horizontal 
+(this will save people using the old choice command from running into issues or having
+ to tediously convert)
+
+Code changes were done to the following files:
+- GeneralStates.py
+- Dialogue.py
+- MenuFunctions.py 

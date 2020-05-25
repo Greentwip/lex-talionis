@@ -22,7 +22,7 @@ class Dialogue_Scene(object):
                 self.scene_lines = scenefp.readlines()
         else:
             self.scene_lines = []
-        if cf.OPTIONS['debug']: 
+        if cf.OPTIONS['debug']:
             if not self.count_if_statements():
                 logger.error('ERROR: Incorrect number of if and end statements! %s', scene)
 
@@ -34,7 +34,7 @@ class Dialogue_Scene(object):
         self.unit_sprites = {}
         # Dialogs
         self.dialog = []
-        
+
         # Optional unit
         self.unit = unit
         if self.unit:
@@ -82,7 +82,7 @@ class Dialogue_Scene(object):
         # Handles skipping
         self.skippable_commands = {'s', 'u', 'qu', 't', 'wait', 'bop', 'mirror',
                                    'map_pan', 'set_expression', 'sound',
-                                   'credits', 'endings', 'cinematic', 'start_move', 
+                                   'credits', 'endings', 'cinematic', 'start_move',
                                    'move_sprite', 'qmove_sprite', 'midground_movie',
                                    'foreground_movie'}
 
@@ -276,7 +276,7 @@ class Dialogue_Scene(object):
         # === MOVIES
         elif line[0] == 'foreground_movie' or line[0] == 'midground_movie':
             movie = Background.MovieBackground(
-                line[1], speed='slow' in line, loop='loop' in line, 
+                line[1], speed='slow' in line, loop='loop' in line,
                 fade_out='fade_out' in line)
             if line[0] == 'foreground_movie':
                 self.foreground = movie
@@ -507,7 +507,7 @@ class Dialogue_Scene(object):
         elif line[0] == 'music_clear':
             logger.debug('Clear music stack')
             Engine.music_thread.fade_clear()
-        # Music fade clear would just be 
+        # Music fade clear would just be
         # > music_clear
         # > mf
 
@@ -605,7 +605,7 @@ class Dialogue_Scene(object):
             to_which_position = line[2] if len(line) > 2 else None
             transition = line[3] if (len(line) > 3 and line[3]) else 'fade'
             placement = line[4] if (len(line) > 4 and line[4]) else 'give_up'
-            order = True if len(line) > 5 else False 
+            order = True if len(line) > 5 else False
             self.add_unit(gameStateObj, metaDataObj, which_unit, to_which_position, transition, placement, shuffle=not order)
         elif line[0] == 'create_unit':
             # Read input
@@ -614,7 +614,7 @@ class Dialogue_Scene(object):
             to_which_position = line[3] if len(line) > 3 else None
             transition = line[4] if (len(line) > 4 and line[4]) else 'fade'
             placement = line[5] if (len(line) > 5 and line[5]) else 'give_up'
-            order = True if len(line) > 6 else False 
+            order = True if len(line) > 6 else False
             self.add_unit(gameStateObj, metaDataObj, which_unit, to_which_position, transition, placement, shuffle=not order, create=level)
         elif line[0] == 'move_unit':
             # Read input
@@ -710,7 +710,7 @@ class Dialogue_Scene(object):
             else:
                 gameStateObj.cameraOffset.set_xy(pos1[0], pos1[1])
             if 'immediate' not in line and not self.do_skip:
-                gameStateObj.stateMachine.changeState('move_camera')      
+                gameStateObj.stateMachine.changeState('move_camera')
                 self.current_state = "Paused"
         elif line[0] == 'tutorial_mode':
             if line[1] == '0':
@@ -861,7 +861,7 @@ class Dialogue_Scene(object):
         # Load submap
         elif line[0] == 'load_submap':
             gameStateObj.load_submap(line[1])
-        # Remove submap            
+        # Remove submap
         elif line[0] == 'close_submap':
             gameStateObj.close_submap()
 
@@ -938,7 +938,7 @@ class Dialogue_Scene(object):
             gameStateObj.market_items.add(line[1])
         elif line[0] == 'remove_from_market':
             gameStateObj.market_items.discard(line[1])
-            
+
         # === TRANSITIONS
         elif line[0] == 't': # Handle transition
             if line[1] == '1':
@@ -955,7 +955,7 @@ class Dialogue_Scene(object):
                 self.transition_transparency = 255
             self.transition_last_update = Engine.get_time()
             self.current_state = "Transitioning"
-        
+
         # === CHANGING UNITS
         elif line[0] == 'convert':
             assert len(line) == 3
@@ -1023,13 +1023,18 @@ class Dialogue_Scene(object):
             name = line[1]
             header = line[2]
             options = line[3].split(',')
+            # Check for arrangement if specified.
+            if len(line) > 4 and line[4] in ('v', 'vertical', 'h', 'horizontal'):
+                arrangement = 'v'
+            else:
+                arrangement = 'h'
             # Save results to the game constants
-            gameStateObj.game_constants['choice'] = (name, header, options)
+            gameStateObj.game_constants['choice'] = (name, header, options, arrangement)
             self.current_state = "Paused"
             gameStateObj.stateMachine.changeState('dialog_options')
-            
+
         # === DIALOGUE BOX
-        # Add line of text          
+        # Add line of text
         elif line[0] == 's':
             self.evaluate_evals(line, gameStateObj)
             self.add_dialog(line)
@@ -1280,7 +1285,7 @@ class Dialogue_Scene(object):
 
         # Update unit sprites -- if results in true, delete the unit sprite. -- faciliates 'r' command fade out
         delete = [key for key, unit in self.unit_sprites.items() if unit.update()]
-        for key in delete: 
+        for key in delete:
             del self.unit_sprites[key]
 
         # === SCENE SPRITES ===
@@ -1314,7 +1319,7 @@ class Dialogue_Scene(object):
             if 'mirror' in line:
                 mirrorflag = not mirrorflag
         else:
-            position = [int(line[2]), int(line[3])]    
+            position = [int(line[2]), int(line[3])]
             mirrorflag = True if 'mirror' in line else False
         # Priority
         if 'LowPriority' in line:
@@ -1706,14 +1711,14 @@ class Dialogue_Scene(object):
             func = Action.execute  # Does not display banner
         if unit:
             if choice:  # You can make convoy decision here
-                func(Action.GiveItem(unit, item), gameStateObj)    
+                func(Action.GiveItem(unit, item), gameStateObj)
             elif len(unit.items) < cf.CONSTANTS['max_items']:
                 func(Action.GiveItem(unit, item, False), gameStateObj)
             else:
                 func(Action.PutItemInConvoy(item), gameStateObj)
         else:
             func(Action.PutItemInConvoy(item), gameStateObj)
-        
+
 # === DIALOG CLASS ============================================================
 class Dialog(object):
     def __init__(self, text, owner, position, size, font,
@@ -1735,7 +1740,7 @@ class Dialog(object):
         self.scroll_y = 0 # For scroll effect
 
         self.set_text() # Converts {} style constructs into commands. Adds truetext to text
-       
+
         self.main_font = GC.FONT[font]
         self.current_font = font.split('_')[0]
         self.current_color = font.split('_')[1]
@@ -1813,7 +1818,7 @@ class Dialog(object):
 
     def _add_letter(self, letter):
         self.text_lines[-1][-1][0] += letter
-        
+
     def _next_char(self):  # draw the next character
         if self.waiting:
             return True  # Wait!
@@ -1851,7 +1856,7 @@ class Dialog(object):
             self._next_line()
         elif letter == "{black}":
             self.current_color = "black"
-            self._next_chunk()            
+            self._next_chunk()
         elif letter == "{red}":
             self.current_color = "red"
             self._next_chunk()
@@ -1864,7 +1869,7 @@ class Dialog(object):
                     self._add_letter(letter)
             else:
                 self._add_letter(letter) # Add the letter to the most recent chunk
- 
+
         return False
 
     def _get_word_width(self, word):
@@ -1876,7 +1881,7 @@ class Dialog(object):
                 previous_lines = chunk + previous_lines
 
         return font.size(previous_lines + word[::-1])[0] # Can actually differ from above due to ligatures/digraphs.
-            
+
     def draw_text(self, surf, pos):
         x, y = pos
         self.scroll_help = int(math.ceil(self.scroll_y/float(self.main_font.height)))
@@ -1923,7 +1928,7 @@ class Dialog(object):
         # If we wouldn't actually be on the dialogue box
         if x_position > self.dlog_box.get_width() + self.topleft[0] - 24:
             x_position = self.topleft[0] + self.dlog_box.get_width() - 24
-        elif x_position < self.topleft[0] + 8: 
+        elif x_position < self.topleft[0] + 8:
             x_position = self.topleft[0] + 8
 
         surf.blit(tail_surf, (x_position, y_position))
@@ -1985,7 +1990,7 @@ class Dialog(object):
             end_text_position = self.draw_text(text_surf, (0, 0))
             scroll = int(self.main_font.height*self.scroll_help - self.scroll_y)
         text_surf = Engine.subsurface(text_surf, (0, scroll, text_surf.get_width(), text_surf.get_height() - scroll))
-            
+
         surf_pos = self.position
         if surf_pos == 'center':
             self.topleft = (GC.WINWIDTH//2 - self.dlog_box.get_width()//2, GC.WINHEIGHT//2 - self.dlog_box.get_height()//2)
@@ -2170,7 +2175,7 @@ class Cinematic(object):
             else:
                 self.transition_state = 'fade_out'
                 self.start_time = current_time
-        
+
         if self.transition_state == 'fade_in':
             transition = int(Utility.linear_ease(100, 0, current_time - self.start_time, self.transition_time))
             self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
@@ -2223,7 +2228,7 @@ class LocationCard(object):
         if current_time - self.start_time > self.wait + self.transition_time:
             self.transition_state = 'fade_out'
             self.start_time = current_time
-        
+
         if self.transition_state == 'fade_in':
             transition = int(Utility.linear_ease(100, 0, current_time - self.start_time, self.transition_time))
             self.image = Image_Modification.flickerImageTranslucent(self.surface, transition)
