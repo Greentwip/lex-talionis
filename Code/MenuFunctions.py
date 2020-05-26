@@ -1127,12 +1127,9 @@ class HorizOptionsMenu(Counters.CursorControl):
         surf.blit(self.cursor, (self.topleft[0] - 16 + start_left + self.cursorAnim[self.cursorCounter], self.topleft[1] + 20))
 
 class VertOptionsMenu(HorizOptionsMenu):
-    def __init__(self, header, options):
-        super().__init__(header, options)
-
     def get_menu_size(self):
         h_text = self.font.size(self.text)[0]
-        h_options = self.font.size(self._get_largest_option())[0]
+        h_options = max([self.font.size(option)[0] for option in self.options])
         h_size = max(h_text, h_options)
         width = h_size + 16 - h_size%8
         height = (24 + 16*len(self.options))
@@ -1160,22 +1157,11 @@ class VertOptionsMenu(HorizOptionsMenu):
             surf.blit(highlightSurf, topleft)
 
         # blit options
-        pos_y = top - 16
-        for option in self.options:
-            pos_y += 16
-            self.font.blit(str(option), surf, (left + 16, pos_y))
+        for idx, option in enumerate(self.options):
+            self.font.blit(str(option), surf, (left + 16, top + (16 * idx)))
 
         # blit cursor
         surf.blit(self.cursor, (left + self.cursorAnim[self.cursorCounter], cursor_y))
-
-    def _get_largest_option(self) -> str:
-        """Return the option with the most characters
-        """
-        max = ''
-        for option in self.options:
-            if len(option) > len(max):
-                max = option
-        return max
                 
 # For Pick Unit and Prep Item
 class UnitSelectMenu(Counters.CursorControl):

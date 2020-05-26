@@ -1025,7 +1025,7 @@ class Dialogue_Scene(object):
             options = line[3].split(',')
             # Check for arrangement if specified.
             if len(line) > 4 and line[4] in ('v', 'vertical', 'h', 'horizontal'):
-                arrangement = 'v'
+                arrangement = line[4]
             else:
                 arrangement = 'h'
             # Save results to the game constants

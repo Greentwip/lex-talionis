@@ -16,8 +16,11 @@ add_unit;hard_boi_1
 add_unit;soft_boi_1;4,0
 u;Joel;Left
 s;Joel;í
+choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash
 s;Joel;The qúiçk browñ fóx jumps óvér the lázý dog.
+choice;SaveWaffle;Save Emmeryn?;Yes,No,Smash;v
 u;Nia;Right
+choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash;horizontal
 s;Nia;¡áàâäéèêëíìîïóòôöúùûüýÿ?
 s;Nia;¡ÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜÝŸ!
 s;Joel;Þæð iß {red}ÑØÐ{black} Åccœƿ⁊æble!

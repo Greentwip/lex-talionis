@@ -2670,8 +2670,8 @@ class DialogOptionsState(StateMachine.State):
             self.menu = MenuFunctions.VertOptionsMenu(header, options)
             self.menu_arrangement = 'v'
         else:
-            if not arrangement in ('h', 'horizontal'):
-                logging.debug('The option menu arrangement was detected as neither vertical or horizontal')
+            if arrangement not in ('h', 'horizontal'):
+                logger.debug('The option menu arrangement was detected as neither vertical or horizontal')
             self.menu = MenuFunctions.HorizOptionsMenu(header, options)
             self.menu_arrangement = 'h'
 
