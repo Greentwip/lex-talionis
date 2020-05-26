@@ -33,7 +33,7 @@ class Logo(object):
         self.image = None
         self.height = self.texture.get_height()//8
         self.width = self.texture.get_width()
-    
+
         self.logo_counter = 0
         self.logo_anim = [0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1]
         self.last_update = 0
@@ -117,7 +117,7 @@ class BriefPopUpDisplay(object):
                 my_surf = Image_Modification.flickerImageTranslucent(self.surf, self.update_num)
                 surf.blit(my_surf, (self.topright[0] - self.width + 8, self.topright[1] + self.update_num//5))
             # Fade out
-            else: 
+            else:
                 if self.update_num < -100:
                     my_surf = Image_Modification.flickerImageTranslucent(self.surf, -self.update_num - 100)
                 else:
@@ -156,7 +156,7 @@ class Lore_Display(object):
 
     def draw(self, surf):
         surf.blit(self.image, self.topleft)
-    
+
 # === MENUS ============================================================ ###
 # Abstract menu class. Must implement personal draw function
 class SimpleMenu(Counters.CursorControl):
@@ -208,7 +208,7 @@ class SimpleMenu(Counters.CursorControl):
             if self.currentSelection > len(self.options) - 1:
                 self.currentSelection = 0
             else:
-                self.cursor_y_offset = -1  
+                self.cursor_y_offset = -1
         else:
             self.currentSelection = min(self.currentSelection + 1, len(self.options) - 1)
 
@@ -218,9 +218,9 @@ class SimpleMenu(Counters.CursorControl):
             if self.currentSelection < 0:
                 self.currentSelection = len(self.options) - 1
             else:
-                self.cursor_y_offset = 1  
+                self.cursor_y_offset = 1
         else:
-            self.currentSelection = max(self.currentSelection - 1, 0)     
+            self.currentSelection = max(self.currentSelection - 1, 0)
 
     def updateOptions(self, options):
         self.options = options
@@ -257,7 +257,7 @@ class ChoiceMenu(SimpleMenu):
             if limit and (len(self.options) > limit or hard_limit):
                 height = (8 + 16*limit)
             else:
-                height = (8 + 16*len(self.options)) 
+                height = (8 + 16*len(self.options))
             # Add small gem
             bg_surf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, height), background)
             self.bg_surf = Engine.create_surface((bg_surf.get_width() + 2, bg_surf.get_height() + 4), transparent=True, convert=True)
@@ -538,9 +538,9 @@ class ComplexMenu(SimpleMenu):
             if hasattr(option, 'name'):
                 option_width = GC.FONT['text_white'].size(option.name)[0]
             else:
-                option_width = GC.FONT['text_white'].size(option)[0] 
+                option_width = GC.FONT['text_white'].size(option)[0]
             if hasattr(option, 'draw'):
-                option_width += 16 
+                option_width += 16
             if option_width > longest_width_needed:
                 longest_width_needed = option_width
 
@@ -557,7 +557,7 @@ class ComplexMenu(SimpleMenu):
             self.currentSelection = next_selection
         elif self.currentSelection > split_num:
             next_selection = self.currentSelection - 1
-            while not self.isIndexValid(next_selection): 
+            while not self.isIndexValid(next_selection):
                 next_selection -= 1
                 if next_selection < split_num:
                     return
@@ -921,7 +921,7 @@ class MainMenu(object):
         if background.startswith('ChapterSelect'):
             self.menu_width = 192
             self.menu_height = 30
-        
+
         self.cursorCounter = 0 # Helper counter for cursor animation
         self.cursorAnim = [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]
         self.lastUpdate = Engine.get_time()
@@ -937,16 +937,16 @@ class MainMenu(object):
             top = center[1] - (len(self.options)/2.0 - index)*(self.menu_height+1) + (20 if self.background.startswith('ChapterSelect') else 0) # What is this formula?
             left = center[0] - BGSurf.get_width()//2
             surf.blit(BGSurf, (left, top))
-         
+
             position = (center[0] - GC.BASICFONT.size(str(option))[0]//2, top + BGSurf.get_height()//2 - GC.BASICFONT.size(str(option))[1]//2)
             color_transition = Image_Modification.color_transition(GC.COLORDICT['light_blue'], GC.COLORDICT['off_black'])
             OutlineFont(GC.BASICFONT, str(option), surf, GC.COLORDICT['off_white'], color_transition, position)
-  
+
         if show_cursor:
             height = center[1] - 12 - (len(self.options)/2.0 - self.currentSelection)*(self.menu_height+1) + self.cursorAnim[self.cursorCounter]
             if self.background.startswith('ChapterSelect'):
-                height += 22 
-            
+                height += 22
+
             surf.blit(self.cursor1, (center[0] - self.menu_width//2 - self.cursor1.get_width()//2 - 8, height))
             surf.blit(self.cursor2, (center[0] + self.menu_width//2 - self.cursor2.get_width()//2 + 8, height))
 
@@ -1048,14 +1048,14 @@ class ChapterSelectMenu(MainMenu):
             if self.use_transparency:
                 BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, abs(diff)*30)
             surf.blit(BGSurf, (center[0] - BGSurf.get_width()//2, top))
-         
+
         if show_cursor:
             center_y = center[1] - 12 + self.cursorAnim[self.cursorCounter]
             if self.use_rel_y:
                 height = center_y + self.rel_pos_y
             else:
                 height = center_y + self.currentSelection*(self.menu_height+1) - (len(self.options)-1)*self.menu_height//2 - 4
-            
+
             surf.blit(self.cursor1, (center[0] - self.menu_width//2 - self.cursor1.get_width()//2 - 8, height))
             surf.blit(self.cursor2, (center[0] + self.menu_width//2 - self.cursor2.get_width()//2 + 8, height))
 
@@ -1113,7 +1113,7 @@ class HorizOptionsMenu(Counters.CursorControl):
         if prev_words:
             prev_words += self.spacing
         start_left = self.font.size(prev_words)[0] + option_start
-        for slot in range(num_highlights):    
+        for slot in range(num_highlights):
             topleft = (slot*highlight_width + start_left - 2, 20 + 9)
             bg_surf.blit(highlightSurf, topleft)
 
@@ -1122,10 +1122,61 @@ class HorizOptionsMenu(Counters.CursorControl):
 
         # blit menu
         surf.blit(bg_surf, self.topleft)
-  
+
         # blit cursor
         surf.blit(self.cursor, (self.topleft[0] - 16 + start_left + self.cursorAnim[self.cursorCounter], self.topleft[1] + 20))
-        
+
+class VertOptionsMenu(HorizOptionsMenu):
+    def __init__(self, header, options):
+        super().__init__(header, options)
+
+    def get_menu_size(self):
+        h_text = self.font.size(self.text)[0]
+        h_options = self.font.size(self._get_largest_option())[0]
+        h_size = max(h_text, h_options)
+        width = h_size + 16 - h_size%8
+        height = (24 + 16*len(self.options))
+        return (width, height)
+
+    def draw(self, surf):
+        bg_surf = self.BGSurf.copy()
+        top = self.topleft[1] + 4 + 16
+        left = self.topleft[0]
+
+        # blit first line
+        self.font.blit(self.text, bg_surf, (self.half_width - self.font.size(self.text)[0]//2, 4))
+
+        cursor_y = top + 16 * self.options.index(self.getSelection())
+
+        # blit menu
+        surf.blit(bg_surf, self.topleft)
+
+        # blit highlight
+        highlightSurf = GC.IMAGESDICT['MenuHighlight']
+        highlight_width = highlightSurf.get_width()
+        num_highlights = self.half_width - 16
+        for slot in range(num_highlights):
+            topleft = (slot*highlight_width + left + 16, cursor_y + 9)
+            surf.blit(highlightSurf, topleft)
+
+        # blit options
+        pos_y = top - 16
+        for option in self.options:
+            pos_y += 16
+            self.font.blit(str(option), surf, (left + 16, pos_y))
+
+        # blit cursor
+        surf.blit(self.cursor, (left + self.cursorAnim[self.cursorCounter], cursor_y))
+
+    def _get_largest_option(self) -> str:
+        """Return the option with the most characters
+        """
+        max = ''
+        for option in self.options:
+            if len(option) > len(max):
+                max = option
+        return max
+                
 # For Pick Unit and Prep Item
 class UnitSelectMenu(Counters.CursorControl):
     def __init__(self, units, units_per_row, num_rows, topleft):
@@ -1146,7 +1197,7 @@ class UnitSelectMenu(Counters.CursorControl):
             self.menu_size = GC.WINWIDTH - 16, self.option_height*self.num_rows + 8
         else:
             self.menu_size = self.getMenuSize()
-        
+
         self.menu_width = self.menu_size[0]
         self.highlight = True
         self.draw_extra_marker = None
@@ -1160,7 +1211,7 @@ class UnitSelectMenu(Counters.CursorControl):
         shimmer = GC.IMAGESDICT['Shimmer2']
         self.backsurf.blit(shimmer, (self.backsurf.get_width() - shimmer.get_width() - 1, self.backsurf.get_height() - shimmer.get_height() - 5))
         self.backsurf = Image_Modification.flickerImageTranslucent(self.backsurf, 10)
-    
+
     def updateOptions(self, options):
         self.options = options
 
@@ -1219,7 +1270,7 @@ class UnitSelectMenu(Counters.CursorControl):
             highlightSurf = GC.IMAGESDICT['MenuHighlight']
             width = highlightSurf.get_width()
             for slot in range((self.option_length-4)//width): # Gives me the amount of highlight needed
-                left = self.topleft[0] + 20 + x_center + self.currentSelection%self.units_per_row*self.option_length + slot*width 
+                left = self.topleft[0] + 20 + x_center + self.currentSelection%self.units_per_row*self.option_length + slot*width
                 top = self.topleft[1] + (self.currentSelection-self.scroll*self.units_per_row)//self.units_per_row*self.option_height + 12
                 surf.blit(highlightSurf, (left, top))
         if self.draw_extra_marker:
@@ -1276,7 +1327,7 @@ class UnitSelectMenu(Counters.CursorControl):
             highlightSurf = GC.IMAGESDICT['MenuHighlight']
             width = highlightSurf.get_width()
             for slot in range((self.option_length-20)//width): # Gives me the amount of highlight needed
-                left = self.topleft[0] + 20 + selection%self.units_per_row*self.option_length + slot*width 
+                left = self.topleft[0] + 20 + selection%self.units_per_row*self.option_length + slot*width
                 top = self.topleft[1] + (selection-self.scroll)//self.units_per_row*self.option_height + 12
                 surf.blit(highlightSurf, (left, top))
 
@@ -1498,7 +1549,7 @@ class ShopMenu(ChoiceMenu):
         if self.shimmer:
             img = GC.IMAGESDICT['Shimmer' + str(self.shimmer)]
             BGSurf.blit(img, (BGSurf.get_width() - img.get_width() - 1, BGSurf.get_height() - img.get_height() - 5))
-        BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)    
+        BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
         # Blit background
         surf.blit(BGSurf, self.topleft)
 
@@ -1516,7 +1567,7 @@ class ShopMenu(ChoiceMenu):
         # Blit options
         for index, option in enumerate(self.options[self.scroll:self.scroll+self.limit]):
             option.draw(surf, (self.topleft[0] + 4, self.topleft[1] + 4 + index*16))
-                
+
             uses_string = '--'
             value_string = '--'
             true_value = None
@@ -1579,8 +1630,8 @@ class ShopMenu(ChoiceMenu):
             value_font.blit(value_string, surf, (left, self.topleft[1] + 4 + index*16))
         if not self.options:
             GC.FONT['text_grey'].blit(cf.WORDS['Nothing'], surf, (self.topleft[0] + 20, self.topleft[1] + 4))
-                         
-        if self.takes_input:          
+
+        if self.takes_input:
             self.draw_cursor(surf, self.currentSelection-self.scroll)
 
         if self.limit == 7: # Base Market Convoy menu
@@ -1664,7 +1715,7 @@ class TradeMenu(Counters.CursorControl):
         highlightSurf = GC.IMAGESDICT['MenuHighlight']
         width = highlightSurf.get_width()
         for slot in range((self.menuWidth - 16)//width): # Gives me the amount of highlight needed
-            topleft = (self.topleft[0] + 8 + slot*width + (self.menuWidth+8)*self.main_hand[0], 
+            topleft = (self.topleft[0] + 8 + slot*width + (self.menuWidth+8)*self.main_hand[0],
                        self.topleft[1] + 11 + (self.main_hand[1]*16))
             surf.blit(highlightSurf, topleft)
 
@@ -1676,7 +1727,7 @@ class TradeMenu(Counters.CursorControl):
             top = self.topleft[1] + 4 + self.extra_hand[1]*self.optionHeight
             surf.blit(self.cursor, (left, top))
 
-        # Cursor location        
+        # Cursor location
         left = self.topleft[0] - 10 + self.cursorAnim[self.cursorCounter] + (self.menuWidth+8)*self.main_hand[0]
         top = self.topleft[1] + 4 + self.main_hand[1]*16 + self.cursor_y_offset*8
         self.cursor_y_offset = 0 # reset
@@ -1777,7 +1828,7 @@ class TradeMenu(Counters.CursorControl):
         if (item1 is item2) or (item1 is not "EmptySlot" and item1.locked) or (item2 is not "EmptySlot" and item2.locked):
             self.extra_hand = None
             GC.SOUNDDICT['Error'].play()
-            return 
+            return
 
         # Now swap items
         # Main hand is where the item is going
@@ -1957,7 +2008,7 @@ def drawRescuePreview(surf, gameStateObj):
     num_font.blit(aid, window, (width - num_font.size(aid)[0] - 3, 24))
     rescuer_surf = rescuer.sprite.create_image('passive')
     rescuee_surf = rescuee.sprite.create_image('passive')
-    left = 12 - max(0, (rescuer_surf.get_width() - 16)//2) 
+    left = 12 - max(0, (rescuer_surf.get_width() - 16)//2)
     top = 8 - max(0, (rescuer_surf.get_width() - 16)//2)
     window.blit(rescuer_surf, (left, top))
     window.blit(rescuee_surf, (left, top + 48))
@@ -2167,7 +2218,7 @@ class MVPDisplay(RecordsDisplay):
             GC.FONT['text_yellow'].blit(str(index+self.scroll+1), back_surf, (10, y))
             GC.FONT['text_white'].blit(unit, back_surf, (41, y))
             self.draw_record(back_surf, record, y)
-            
+
         surf.blit(back_surf, (8 + offset_x, 32 + offset_y))
 
         if not offset_x and not offset_y:
