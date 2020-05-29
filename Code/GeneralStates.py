@@ -371,7 +371,7 @@ class MoveState(StateMachine.State):
         # Play move script if it exists
         if not self.started:
             move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
-            if gameStateObj.tutorial_mode and os.path.exists(move_script_name):
+            if os.path.exists(move_script_name):
                 move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit)
                 gameStateObj.message.append(move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
@@ -516,7 +516,7 @@ class MenuState(StateMachine.State):
         # Play menu script if it exists
         if not self.started:
             menu_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
-            if gameStateObj.tutorial_mode and os.path.exists(menu_script_name):
+            if os.path.exists(menu_script_name):
                 menu_script = Dialogue.Dialogue_Scene(menu_script_name, unit=cur_unit)
                 gameStateObj.message.append(menu_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
@@ -1115,7 +1115,7 @@ class AttackState(StateMachine.State):
 
         # Play attack script if it exists
         attack_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
-        if gameStateObj.tutorial_mode and os.path.exists(attack_script_name):
+        if os.path.exists(attack_script_name):
             attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker)
             gameStateObj.message.append(attack_script)
             gameStateObj.stateMachine.changeState('transparent_dialogue')
