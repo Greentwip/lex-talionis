@@ -1518,6 +1518,8 @@ class UnTetherStatus(Action):
         self.unit_id = unit_id
 
     def do(self, gameStateObj):
+        self.true_children.clear()
+        self.child_status.clear()
         children = list(self.status_obj.children)
         for u_id in reversed(children):
             child_unit = gameStateObj.get_unit_from_id(u_id)
@@ -1535,7 +1537,7 @@ class UnTetherStatus(Action):
         # This is not a problem, the tether child status does not inform the parent tether status
         # So the parent tether status still thinks that the child tether status still exists
         # But it doesn't
-        self.status_obj.children = set()
+        self.status_obj.children.clear()
 
     def reverse(self, gameStateObj):
         # assert len(self.children) == len(self.child_status), "UnTetherStatus Action is broken"
@@ -1545,7 +1547,8 @@ class UnTetherStatus(Action):
                 self.status_obj.add_child(u_id)
                 applied_status = self.child_status[idx]
                 AddStatus(child_unit, applied_status).do(gameStateObj)
-        self.child_status = []  # Clear the child status to restore statefulness
+        self.true_children.clear()
+        self.child_status.clear()  # Clear the child status to restore statefulness
 
 class ApplyStatChange(Action):
     def __init__(self, unit, stat_change):
