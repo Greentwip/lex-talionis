@@ -17,7 +17,7 @@ credits;Custom Map Sprites;rainlash;dondon151
 credits;Additional Spriting Resources;FE7x Team;Lexou
 credits;Additional Map Animations;Duelyst;Red Mystery Dungeon
 credits;Custom Combat Animations;rainlash;AstraLunaSol;Dei;Fe7x Team;Keeks;Klokinator;MageKnight404;Temp
-credits;Custom Spell Animations;Arch
+credits;Custom Spell Animations;Arch;BBHood217
 credits;Writing;rainlash
 credits;SFX Resources;BBHood217
 credits;Music Arrangement;rainlash;WinstonJoe
