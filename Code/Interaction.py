@@ -273,6 +273,10 @@ class Combat(object):
                 # Check for arena miracle
                 if self.arena and unit.team == 'player' and not cf.CONSTANTS['arena_death']:
                     Action.execute(Action.Miracle(unit), gameStateObj)
+                    if self.arena == 'arena_base':
+                        # Doesn't count as a fight if you lose
+                        gameStateObj.level_constants['_' + str(unit.id) + '_arena_uses'] -= 1
+                        
                 # check for regular miracle
                 elif any(status.miracle and (not status.count or status.count.count > 0) for status in unit.status_effects):
                     Action.do(Action.Miracle(unit), gameStateObj)
@@ -289,7 +293,7 @@ class Combat(object):
                         elif self.p2:
                             Action.do(Action.DropItem(self.p2, item), gameStateObj)
 
-        if self.arena and self.p2.currenthp <= 0:
+        if self.arena and self.p2.currenthp <= 0 and gameStateObj.level_constants['_wager'] > 0:
             action = Action.GiveGold(gameStateObj.level_constants['_wager']*2, gameStateObj.current_party)
             Action.do(action, gameStateObj)
 
@@ -303,6 +307,8 @@ class Combat(object):
                 # Check if this is an ai controlled player
                 if gameStateObj.stateMachine.getPreviousState() == 'ai':
                     pass
+                elif self.arena == 'arena_base':
+                    gameStateObj.stateMachine.changeState('base_arena_choice')
                 elif not self.p1.hasAttacked:
                     gameStateObj.stateMachine.changeState('menu')
                 elif self.p1.has_canto_plus() and not self.p1.isDying:
@@ -339,7 +345,7 @@ class Combat(object):
                     Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)
 
     def handle_supports(self, all_units, gameStateObj):
-        if gameStateObj.support and cf.CONSTANTS['support']:
+        if gameStateObj.support and cf.CONSTANTS['support'] and self.arena != 'arena_base':
             gameStateObj.support.check_interact(self.p1, all_units, gameStateObj)
             if not self.p1.isDying:
                 gameStateObj.support.end_combat(self.p1, gameStateObj)
@@ -370,13 +376,19 @@ class Combat(object):
     def arena_cleanup(self, gameStateObj):
         # Remove non-player characters from the game permanently
         if self.arena:
+            if self.arena == 'arena_base':
+                if self.p1.position == (0, 0):
+                    self.p1.position = None
+                if self.solver.total_rounds == 0 and self.p2.currenthp > 0:  # Arena was cancelled
+                    # Doesn't count as a fight if you leave
+                    gameStateObj.level_constants['_' + str(self.p1.id) + '_arena_uses'] -= 1
             # self.p2.position = None
             self.p2.dead = True  # Forget about this unit permanently!
             Action.execute(Action.LeaveMap(self.p2), gameStateObj)
             # Reset player 1's position now that we've removed his fighter
             Action.execute(Action.SimpleMove(self.p1, self.p1.position), gameStateObj)
 
-    def arena_stop(self):
+    def arena_stop(self, gameStateObj):
         if self.arena:
             # Set the solvers total rounds low
             # self.arena_cancelled = True
@@ -575,7 +587,9 @@ class AnimationCombat(Combat):
                 gameStateObj.stateMachine.changeState('move_camera')
 
             self.init_draw(gameStateObj, metaDataObj)
-            if self.arena:
+            if self.arena == 'arena_base':
+                self.combat_state = 'ArenaFromBase'
+            elif self.arena:
                 self.combat_state = 'Fade'
             elif self.ai_combat:
                 self.combat_state = 'RedOverlay_Init'
@@ -592,6 +606,17 @@ class AnimationCombat(Combat):
                 gameStateObj.cursor.drawState = 0
                 gameStateObj.highlight_manager.remove_highlights()
                 self.combat_state = 'Fade'
+
+        elif self.combat_state == 'ArenaFromBase':
+            self.viewbox_clamp_state = self.total_viewbox_clamp_states
+            self.build_viewbox(gameStateObj)
+            self.combat_state = 'Entrance'
+            left_pos = (self.left.position[0] - gameStateObj.cameraOffset.get_x()) * GC.TILEWIDTH, \
+                (self.left.position[1] - gameStateObj.cameraOffset.get_y()) * GC.TILEHEIGHT
+            right_pos = (self.right.position[0] - gameStateObj.cameraOffset.get_x()) * GC.TILEWIDTH, \
+                (self.right.position[1] - gameStateObj.cameraOffset.get_y()) * GC.TILEHEIGHT
+            self.left.battle_anim.awake(self, self.right.battle_anim, False, self.at_range, self.max_position_offset, left_pos) # Stand
+            self.right.battle_anim.awake(self, self.left.battle_anim, True, self.at_range, self.max_position_offset, right_pos) # Stand
 
         elif self.combat_state == 'Fade':
             # begin viewbox clamping

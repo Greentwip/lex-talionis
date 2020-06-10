@@ -1661,12 +1661,17 @@ class ArenaState(StateMachine.State):
         if not self.started:
             # Get data needed
             self.unit = gameStateObj.cursor.currentSelectedUnit
+            if not self.unit.position:
+                self.unit.position = (0, 0)
             self.opponent = None
             self.legend, self.opponent_weapon_id, self.wager = self.get_arena_info(self.unit, gameStateObj)
 
             # Set up assuming things go to plan
             self.state_machine = CustomObjects.StateMachine('wager')
-            self.display_message = self.get_dialog(cf.WORDS['Arena_open'] % self.wager)
+            if self.wager > 0:
+                self.display_message = self.get_dialog(cf.WORDS['Arena_open'] % self.wager)
+            else:
+                self.display_message = self.get_dialog(cf.WORDS['Arena_open_no_wager'])
             self.wager_menu = MenuFunctions.ChoiceMenu(
                 self.unit, [cf.WORDS['Yes'], cf.WORDS['No']], (112, 28),
                 background='ActualTransparent', horizontal=True)
@@ -1704,7 +1709,7 @@ class ArenaState(StateMachine.State):
             gameStateObj.stateMachine.changeState("transition_in")
             return 'repeat'
 
-    def get_arena_info(self, unit, gameStateObj):
+    def get_random_legend(self, unit, gameStateObj):
         my_klass = self.unit.klass
         my_tier = ClassData.class_dict[my_klass]['tier']
         max_level = ClassData.class_dict[my_klass]['max_level']
@@ -1725,9 +1730,28 @@ class ArenaState(StateMachine.State):
             legend = {'team': 'enemy', 'event_id': "0", 'class': new_klass,
                       'level': str(level_rng), 'items': weapon_id, 'position': self.unit.position,
                       'ai': 'None'}
-
+        
         new = static_random.get_other_random_state()
         Action.do(Action.RecordOtherRandomState(old, new), gameStateObj)
+
+        return legend, weapon_id, percent
+
+    def get_arena_info(self, unit, gameStateObj):
+        num_times_visited = int(gameStateObj.level_constants['_' + str(unit.id) + '_arena_uses'])
+        event_id = 'arena%d' % num_times_visited
+        if event_id in gameStateObj.allreinforcements:
+            uid, pos = gameStateObj.allreinforcements[event_id]
+            enemy = gameStateObj.get_unit(uid)
+            items = ','.join([item.id for item in enemy.items])
+            legend = {'team': 'enemy', 'event_id': "0", 'class': enemy.klass,
+                      'level': str(enemy.level), 'items': items, 'position': self.unit.position,
+                      'ai': 'None'}
+            weapon_id = enemy.getMainWeapon().id if enemy.getMainWeapon() else None
+            percent = 1.
+            if not weapon_id:
+                legend, weapon_id, percent = self.get_random_legend(unit, gameStateObj)
+        else:
+            legend, weapon_id, percent = self.get_random_legend(unit, gameStateObj)
 
         wager = int(percent * (cf.CONSTANTS['arena_wager_max'] - cf.CONSTANTS['arena_wager_min']) + cf.CONSTANTS['arena_wager_min'])
         wager = min(gameStateObj.get_money(), wager)
@@ -1772,9 +1796,10 @@ class ArenaState(StateMachine.State):
                 GC.SOUNDDICT['Select 1'].play()
                 selection = self.wager_menu.getSelection()
                 if selection == cf.WORDS['Yes']:
-                    GC.SOUNDDICT['GoldExchange'].play()
-                    Action.execute(Action.GiveGold(-self.wager, gameStateObj.current_party), gameStateObj)
-                    self.money_counter_disp.start(-self.wager)
+                    if self.wager > 0:
+                        GC.SOUNDDICT['GoldExchange'].play()
+                        Action.execute(Action.GiveGold(-self.wager, gameStateObj.current_party), gameStateObj)
+                        self.money_counter_disp.start(-self.wager)
 
                     # Actually create unit here!
                     self.opponent = SaveLoad.create_unit_from_legend(self.legend, gameStateObj.allunits, None, None, gameStateObj)
@@ -1800,7 +1825,7 @@ class ArenaState(StateMachine.State):
                     gameStateObj.combatInstance = \
                         Interaction.start_combat(
                             gameStateObj, self.unit, self.opponent, self.unit.position,
-                            [], self.unit_weapon, arena=True)
+                            [], self.unit_weapon, arena=self.name)
                     gameStateObj.stateMachine.changeState('combat')
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False
@@ -2243,7 +2268,7 @@ class CombatState(StateMachine.State):
         elif event == 'BACK':
             if gameStateObj.combatInstance.arena:
                 GC.SOUNDDICT['Select 4'].play()
-                gameStateObj.combatInstance.arena_stop()
+                gameStateObj.combatInstance.arena_stop(gameStateObj)
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)

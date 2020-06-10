@@ -1163,7 +1163,7 @@ class VertOptionsMenu(HorizOptionsMenu):
         # blit cursor
         surf.blit(self.cursor, (left + self.cursorAnim[self.cursorCounter], cursor_y))
                 
-# For Pick Unit and Prep Item
+# For Pick Unit and Prep Item and Arena Choice
 class UnitSelectMenu(Counters.CursorControl):
     def __init__(self, units, units_per_row, num_rows, topleft):
         self.options = units
@@ -1282,6 +1282,8 @@ class UnitSelectMenu(Counters.CursorControl):
             unit_image = unit.sprite.create_image('passive')
             if self.mode == 'position' and not unit.position:
                 unit_image = unit.sprite.create_image('gray')
+            elif self.mode == 'arena' and unit.currenthp <= 1:
+                unit_image = unit.sprite.create_image('gray')
             elif unit == self.options[self.currentSelection]:
                 unit_image = unit.sprite.create_image('active')
             topleft = (self.topleft[0] - 4 + x_center + left*self.option_length, self.topleft[1] + 2 + (top+1)*self.option_height - unit_image.get_height() + 8)
@@ -1294,6 +1296,8 @@ class UnitSelectMenu(Counters.CursorControl):
                     font = GC.FONT['text_grey']
                 elif unit.position and 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]:
                     font = GC.FONT['text_green']  # Locked/Lord character
+            elif self.mode == 'arena' and unit.currenthp <= 1:
+                font = GC.FONT['text_grey']
             position = (self.topleft[0] + 20 + 1 + 16 + x_center + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)
             font.blit(unit.name, surf, position)
 

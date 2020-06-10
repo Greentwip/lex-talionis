@@ -142,6 +142,7 @@ def read_constants_file():
              'support_s_limit': 1, # Limit to number of s support levels (>4): 0 - No limit
              'arena_global_limit': 0, # Limit to number of times can use an arena in a level: 0 - No limit
              'arena_unit_limit': 0, # Limit to number of times each unit can use an arena in a level: 0 - No limit
+             'arena_in_base': 0, # Can access the arena in the base menu.
              'arena_death': 1, # Units defeated in the arena are killed. Set to 0 to leave them with 1 HP
              'arena_weapons': 1, # Units will be provided with basic weapons in the arena. Set to 0 to have to bring your own
              'arena_basic_weapons': 'Iron Sword,Iron Lance,Iron Axe,Willow Bow,Glimmer,Fire,Flux',

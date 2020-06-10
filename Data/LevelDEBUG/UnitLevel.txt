@@ -34,6 +34,8 @@ enemy;0;0;Warrior;13;Iron Axe;2,13;None;Resistance
 player;0;0;Knight;5;Iron Lance;2,12;None;Resistance
 #enemy;0;0;Dragoon;5;Adamant Lance;15,5;Seize;Resistance
 #enemy;0;0;Myrmidon;5;Iron Sword;14,4;Seize;Resistance
+enemy;0;arena0;Soldier;20;Mithril Lance;0,0;None;Resistance
+enemy;0;arena1;Archer;3;Willow Bow;0,0;None;Resistance
 mode;Lunatic
 enemy;0;0;Warlock;3;Iron Axe;5,12;Attack;Resistance
 # === Reinforcements ===

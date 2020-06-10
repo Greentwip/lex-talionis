@@ -23,6 +23,7 @@ Shop_no_money;Sorry. You don't have enough money.
 Shop_check;Are you sure?
 Shop_no_value;You can't sell that here.
 Arena_open;Would you like to wager %d gold?
+Arena_open_no_wager;You think ya ready, kid?
 Arena_back;What are you wasting my time for?
 Arena_combat;Good luck. Don't get yourself killed.
 Arena_noweapon;What! You don't have a weapon! Get out of here!

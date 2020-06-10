@@ -1,0 +1,8 @@
+# base script
+b;TacticsFloor;map
+wm_add;customSam;7,2;Tactician;M;player
+wm_add;customOphie;12,6;Myrmidon;M;player
+wm_add;Joel;11,6
+if;setattr(gameStateObj, "background", gameStateObj.message[-1].background)
+    wait;1
+end

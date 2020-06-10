@@ -1393,12 +1393,20 @@ class BaseMainState(StateMachine.State):
             if cf.CONSTANTS['support'] == 2:
                 options.insert(3, cf.WORDS['Supports'])
                 color_control.insert(3, 'text_grey')
+            # In base Arena
+            if cf.CONSTANTS['arena_in_base']:
+                options.insert(3, cf.WORDS['Arena'])
+                color_control.insert(3, 'text_grey')
             if metaDataObj['marketFlag']:
                 color_control[1] = 'text_white'
             if gameStateObj.base_conversations:
                 color_control[2] = 'text_white'
-            if gameStateObj.support and 'Supports' in gameStateObj.game_constants:
-                color_control[3] = 'text_white'
+            if cf.CONSTANTS['support'] == 2 and gameStateObj.support and 'Supports' in gameStateObj.game_constants:
+                idx = options.index(cf.WORDS['Supports'])
+                color_control[idx] = 'text_white'
+            if cf.CONSTANTS['arena_in_base'] and 'Arena' in gameStateObj.game_constants:
+                idx = options.index(cf.WORDS['Arena'])
+                color_control[idx] = 'text_white'
             topleft = 4, GC.WINHEIGHT//2 - (len(options)*16 + 8)//2
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self, options, topleft, color_control=color_control, shimmer=2, gem=False)
 
@@ -1445,6 +1453,9 @@ class BaseMainState(StateMachine.State):
             elif selection == cf.WORDS['Convos']:
                 GC.SOUNDDICT['Select 1'].play()
                 gameStateObj.stateMachine.changeState('base_info')
+            elif selection == cf.WORDS['Arena']:
+                GC.SOUNDDICT['Select 1'].play()
+                gameStateObj.stateMachine.changeState('base_arena_choice')
             elif selection == cf.WORDS['Supports']:
                 GC.SOUNDDICT['Select 1'].play()
                 # gameStateObj.stateMachine.changeState('base_support_child')
@@ -1509,6 +1520,75 @@ class BaseInfoState(StateMachine.State):
 
     def finish(self, gameStateObj, metaDataObj):
         gameStateObj.childMenu = None
+
+class BaseArenaState(StateMachine.State):
+    show_map = False
+
+    def begin(self, gameStateObj, metaDataObj):
+        self.units = gameStateObj.get_units_in_party(gameStateObj.current_party)
+        gameStateObj.activeMenu = MenuFunctions.UnitSelectMenu(self.units, 2, 9, (110, 4))
+        gameStateObj.activeMenu.mode = 'arena'
+        self.portrait = GC.IMAGESDICT.get('ArenaPortrait')
+
+        # Transition in:
+        if gameStateObj.stateMachine.from_transition():
+            gameStateObj.stateMachine.changeState("transition_in")
+            return 'repeat'
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+        first_push = self.fluid_helper.update(gameStateObj)
+        directions = self.fluid_helper.get_directions()
+
+        if 'DOWN' in directions:
+            GC.SOUNDDICT['Select 5'].play()
+            gameStateObj.activeMenu.moveDown(first_push)
+        elif 'UP' in directions:
+            GC.SOUNDDICT['Select 5'].play()
+            gameStateObj.activeMenu.moveUp(first_push)
+        elif 'LEFT' in directions:
+            GC.SOUNDDICT['Select 5'].play()
+            gameStateObj.activeMenu.moveLeft(first_push)
+        elif 'RIGHT' in directions:
+            GC.SOUNDDICT['Select 5'].play()
+            gameStateObj.activeMenu.moveRight(first_push)
+
+        if event == 'SELECT':
+            selection = gameStateObj.activeMenu.getSelection()
+            if selection.currenthp > 1:
+                GC.SOUNDDICT['Select 1'].play()
+                gameStateObj.cursor.currentSelectedUnit = selection
+                gameStateObj.stateMachine.changeState('arena_base')
+                gameStateObj.stateMachine.changeState('transition_out')
+            else:
+                GC.SOUNDDICT['Error'].play()
+        elif event == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
+            gameStateObj.stateMachine.clear()
+            gameStateObj.stateMachine.changeState('base_main')
+        elif event == 'INFO':
+            CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
+
+    def draw(self, gameStateObj, metaDataObj):
+        surf = StateMachine.State.draw(self, gameStateObj, metaDataObj)
+        if gameStateObj.activeMenu and gameStateObj.activeMenu.getSelection():
+            MenuFunctions.drawUnitItems(surf, (6, 8+16*4), gameStateObj.activeMenu.getSelection(), include_face=True, shimmer=2)
+        if self.portrait:
+            surf.blit(self.portrait, (3, 0))
+        if gameStateObj.activeMenu and gameStateObj.activeMenu.getSelection():
+            unit = gameStateObj.activeMenu.getSelection()
+            hp_surf = BaseMenuSurf.CreateBaseMenuSurf((56, 24), 'BaseMenuBackgroundOpaque')
+            hp_surf = Image_Modification.flickerImageTranslucent(hp_surf, 10)
+            current_hp = str(unit.currenthp)
+            max_hp = str(unit.stats['HP'])
+            text = "HP: %s/%s" % (current_hp, max_hp)
+            GC.FONT['text_white'].blit(text, hp_surf, (56//2 - GC.FONT['text_white'].size(text)[0]//2, 4))
+            surf.blit(hp_surf, (54, 48))
+
+        return surf
+
+    def finish(self, gameStateObj, metaDataObj):
+        gameStateObj.activeMenu = None
 
 class BaseSupportConvoState(StateMachine.State):
     show_map = False
