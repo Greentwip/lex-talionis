@@ -2,7 +2,7 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Counters, Engine
 from . import BaseMenuSurf
-from . import ClassData
+from . import ClassData, TextChunk
 
 class HelpGraph(object):
     def __init__(self, state, unit, gameStateObj):
@@ -350,45 +350,27 @@ class Help_Dialog(Help_Dialog_Base):
         # Set up variables needed for algorithm
         if not description:
             description = ''
-        description_length = self.font.size(description)[0]
         # Hard set num_lines if description is very short.
         if len(description) < 24:
             num_lines = 1
 
-        lines = []
-        for line in range(num_lines):
-            lines.append([])
-        length_reached = False # Whether we've reached over the length of the description
-        which_line = 0 # Which line are we reading
-        # Place description into balanced size lines
-        for character in description:
-            if length_reached and character == ' ':
-                which_line += 1
-                length_reached = False
-                continue
-            lines[which_line].append(character)
-            length_so_far = self.font.size(''.join(lines[which_line]))[0]
-            if length_so_far > description_length//num_lines:
-                length_reached = True
-            elif length_so_far > GC.WINWIDTH - 8:
-                length_reached = True
-        # Reform strings
-        self.strings = []
-        for line in lines:
-            self.strings.append(''.join(line)) 
+        self.strings = TextChunk.split(self.font, description, num_lines)
+        print(self.strings)
+        print([self.font.size(string)[0] for string in self.strings])
+
         # Find the greater of the two lengths
         greater_line_len = max([self.font.size(string)[0] for string in self.strings])
         if self.name:
             greater_line_len = max(greater_line_len, self.font.size(self.name)[0])
 
-        size_x = greater_line_len + 24
-        self.width = size_x
+        self.width = greater_line_len + 24
         if name:
             num_lines += 1
-        size_y = self.font.height * num_lines + 16
+        self.height = self.font.height * num_lines + 16
+        print(self.width, self.height)
 
-        self.help_surf = BaseMenuSurf.CreateBaseMenuSurf((size_x, size_y), 'MessageWindowBackground')
-        self.h_surf = Engine.create_surface((size_x, size_y + 3), transparent=True)
+        self.help_surf = BaseMenuSurf.CreateBaseMenuSurf((self.width, self.height), 'MessageWindowBackground')
+        self.h_surf = Engine.create_surface((self.width, self.height + 3), transparent=True)
 
     def draw(self, surf, pos):
         time = Engine.get_time()

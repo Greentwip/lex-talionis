@@ -98,3 +98,28 @@ def line_wrap(chunks, width, font, test=False):
         if cur_line:
             lines.append(' '.join(cur_line))
     return lines
+
+def split(font, string, num_lines):
+    total_length = font.size(string)[0]
+    lines = []
+    for line in range(num_lines):
+        lines.append([])
+    new_line = False
+    which_line = 0
+    for character in string:
+        if new_line and character == ' ':
+            which_line += 1
+            new_line = False
+            if which_line >= len(lines):
+                break
+            else:
+                continue
+                
+        lines[which_line].append(character)
+        length_so_far = font.size(''.join(lines[which_line]))[0]
+        if length_so_far > total_length // num_lines:
+            new_line = True
+        elif length_so_far > GC.WINWIDTH - 8:
+            new_line = True
+
+    return [''.join(line) for line in lines]
