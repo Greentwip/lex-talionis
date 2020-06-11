@@ -1,7 +1,10 @@
-from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QColorDialog, QPushButton, QWidget, QHBoxLayout, QRadioButton, \
+    QLabel, QListWidget, QButtonGroup, QListWidgetItem, QUndoCommand
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QColor, QPixmap
 
-class ColorDisplay(QtGui.QPushButton):
-    colorChanged = QtCore.pyqtSignal(int, QtGui.QColor)
+class ColorDisplay(QPushButton):
+    colorChanged = pyqtSignal(int, QColor)
 
     def __init__(self, idx, window):
         super(ColorDisplay, self).__init__(window)
@@ -29,7 +32,7 @@ class ColorDisplay(QtGui.QPushButton):
     def change_color(self, color):
         if color != self._color:
             self._color = color
-            self.colorChanged.emit(self.idx, QtGui.QColor(color))
+            self.colorChanged.emit(self.idx, QColor(color))
 
         if self._color:
             self.setStyleSheet("background-color: %s;" % self._color)
@@ -40,19 +43,19 @@ class ColorDisplay(QtGui.QPushButton):
         return self._color
 
     def onColorPicker(self):
-        dlg = QtGui.QColorDialog()
+        dlg = QColorDialog()
         if self._color:
-            dlg.setCurrentColor(QtGui.QColor(self._color))
+            dlg.setCurrentColor(QColor(self._color))
         if dlg.exec_():
             self.set_color(dlg.currentColor().name())
 
     def mousePressEvent(self, e):
-        if e.button() == QtCore.Qt.RightButton:
-            self.set_color(QtGui.QColor("black").name())
+        if e.button() == Qt.RightButton:
+            self.set_color(QColor("black").name())
 
         return super(ColorDisplay, self).mousePressEvent(e)
 
-class PaletteDisplay(QtGui.QWidget):
+class PaletteDisplay(QWidget):
     def __init__(self, colors, window):
         super(PaletteDisplay, self).__init__(window)
         self.window = window
@@ -60,7 +63,7 @@ class PaletteDisplay(QtGui.QWidget):
 
         self.color_display_list = []
 
-        self.layout = QtGui.QHBoxLayout()
+        self.layout = QHBoxLayout()
         self.layout.setSpacing(0)
         self.layout.setMargin(0)
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -70,7 +73,7 @@ class PaletteDisplay(QtGui.QWidget):
             color_display = ColorDisplay(idx, self)
             color_display.set_color(color.name(), create=True)
             color_display.colorChanged.connect(self.on_color_change)
-            self.layout.addWidget(color_display, 0, QtCore.Qt.AlignCenter)
+            self.layout.addWidget(color_display, 0, Qt.AlignCenter)
             self.color_display_list.append(color_display)
 
     def set_color(self, idx, color):
@@ -79,7 +82,7 @@ class PaletteDisplay(QtGui.QWidget):
     def on_color_change(self, idx, color):
         self.main_editor.update_view()
 
-class PaletteFrame(QtGui.QWidget):
+class PaletteFrame(QWidget):
     def __init__(self, idx, image_filename=None, image_map=None, window=None):
         super(PaletteFrame, self).__init__(window)
         self.window = window
@@ -92,14 +95,14 @@ class PaletteFrame(QtGui.QWidget):
             self.create_widgets(palette)
 
     def create_widgets(self, palette):
-        layout = QtGui.QHBoxLayout()
+        layout = QHBoxLayout()
         self.setLayout(layout)
 
-        radio_button = QtGui.QRadioButton()
+        radio_button = QRadioButton()
         self.window.radio_button_group.addButton(radio_button, self.idx)
         radio_button.clicked.connect(lambda: self.window.set_current_palette(self.idx))
-        self.name_label = QtGui.QLabel(self.name)
-        copy = QtGui.QPushButton("Duplicate")
+        self.name_label = QLabel(self.name)
+        copy = QPushButton("Duplicate")
         copy.clicked.connect(lambda: self.window.duplicate(self.idx))
         self.palette_display = PaletteDisplay(palette, self)
         layout.addWidget(radio_button)
@@ -125,21 +128,21 @@ class PaletteFrame(QtGui.QWidget):
 
     def get_palette_from_image(self, fn, image_map):
         colors = []
-        pixmap = QtGui.QPixmap(fn)
+        pixmap = QPixmap(fn)
         image = pixmap.toImage()
-        colors = [QtGui.QColor("black")] * 16
+        colors = [QColor("black")] * 16
         for x in range(image.width()):
             for y in range(image.height()):
                 grid_index = image_map.get(x, y)
-                color = QtGui.QColor(image.pixel(x, y))
+                color = QColor(image.pixel(x, y))
                 while grid_index > len(colors) - 1:
-                    colors.append(QtGui.QColor("black"))  # Sometimes more than 16 colors
+                    colors.append(QColor("black"))  # Sometimes more than 16 colors
                 # if color != colors[grid_index]:
                 #     print(grid_index, colors[grid_index].getRgb(), color.getRgb())
                 colors[grid_index] = color
         # Make sure there are always at least 16 colors
         # print(len(colors))
-        # colors.extend([QtGui.QColor("black")] * (16 - len(colors)))
+        # colors.extend([QColor("black")] * (16 - len(colors)))
 
         return colors
 
@@ -147,11 +150,11 @@ class PaletteFrame(QtGui.QWidget):
     def from_palette(cls, new_idx, palette_frame, window):
         p = cls(new_idx, None, None, window)
         p.name = palette_frame.name
-        color_list = [QtGui.QColor(c) for c in palette_frame.get_colors()]
+        color_list = [QColor(c) for c in palette_frame.get_colors()]
         p.create_widgets(color_list)
         return p
 
-class PaletteList(QtGui.QListWidget):
+class PaletteList(QListWidget):
     def __init__(self, window=None):
         super(PaletteList, self).__init__(window)
         self.window = window
@@ -159,11 +162,11 @@ class PaletteList(QtGui.QListWidget):
 
         self.list = []
         self.current_index = 0
-        self.radio_button_group = QtGui.QButtonGroup()
+        self.radio_button_group = QButtonGroup()
 
     def add_palette_from_image(self, image_filename, image_map):
         print(image_filename)
-        item = QtGui.QListWidgetItem(self)
+        item = QListWidgetItem(self)
         self.addItem(item)
         pf = PaletteFrame(len(self.list), image_filename, image_map, self)
         self.list.append(pf)
@@ -207,7 +210,7 @@ class PaletteList(QtGui.QListWidget):
         self.list = []
         self.current_index = 0
 
-class CommandDuplicate(QtGui.QUndoCommand):
+class CommandDuplicate(QUndoCommand):
     def __init__(self, palette_list, idx, description):
         super(CommandDuplicate, self).__init__(description)
         self.palette_list = palette_list
@@ -216,7 +219,7 @@ class CommandDuplicate(QtGui.QUndoCommand):
 
     def redo(self):
         new_idx = len(self.palette_list.list)
-        item = QtGui.QListWidgetItem(self.palette_list)
+        item = QListWidgetItem(self.palette_list)
         self.palette_list.addItem(item)
         new_pf = PaletteFrame.from_palette(new_idx, self.palette_list.list[self.idx], self.palette_list)
         self.palette_list.list.append(new_pf)
@@ -229,7 +232,7 @@ class CommandDuplicate(QtGui.QUndoCommand):
         self.palette_list.list.pop()
         self.palette_list.set_current_palette(self.old_idx)
 
-class CommandColorChange(QtGui.QUndoCommand):
+class CommandColorChange(QUndoCommand):
     def __init__(self, palette_list, palette_idx, color_idx, new_color, description):
         super(CommandColorChange, self).__init__(description)
         self.palette_list = palette_list

@@ -19,6 +19,25 @@
         <LVL>D</LVL>
     </item>
 
+    <item name="Iron Pants">
+        <id>Iron Pants</id>
+        <spritetype>Lance</spritetype>
+        <spriteid>0</spriteid>       
+        <components>weapon,uses,weight,crit</components>
+        <weapontype>Lance</weapontype>
+ 
+            <uses>45</uses>
+        <value>8</value>
+        <RNG>1</RNG>
+        <weight>8</weight>
+        <desc>A standard weapon.</desc>
+        
+        <MT>7</MT>
+        <HIT>80</HIT>
+        <LVL>E</LVL>
+        <crit>0</crit>
+    </item>
+
     <item name="Rusted Sword">
         <id>Rusted Sword</id>
         <spritetype>Sword</spritetype>

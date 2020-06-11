@@ -1,5 +1,6 @@
 import os
-from PyQt5 import QtGui
+
+from PyQt5.QtGui import QPixmap, QColor
 
 class ImageMap(object):
     def __init__(self, image_filename):
@@ -9,14 +10,14 @@ class ImageMap(object):
         self.grid = []
         self.weapon_name = os.path.split(image_filename)[-1].split('-')[-2]
         print(self.weapon_name)
-        pixmap = QtGui.QPixmap(image_filename)
+        pixmap = QPixmap(image_filename)
         image = pixmap.toImage()
         self.width, self.height = image.width(), image.height()
 
         self.colors = []
         for x in range(self.width):
             for y in range(self.height):
-                color = QtGui.QColor(image.pixel(x, y))
+                color = QColor(image.pixel(x, y))
                 if color not in self.colors:
                     self.colors.append(color)
                 self.grid.append(self.colors.index(color))

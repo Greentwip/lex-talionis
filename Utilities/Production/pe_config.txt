@@ -1,1 +1,1 @@
-..\..\Data\Animations\Myrmidon\Myrmidon0-MagicSword-Index.txt
+('C:\Users\pbradley\Documents\Github\lex-talionis\Data\Animations\Mercenary\Mercenary0-Unarmed-Coyote.png', 'PNG Files (*.png)')

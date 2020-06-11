@@ -1,19 +1,24 @@
 import sys, os
 import glob
-from PyQt5 import QtGui, QtCore
+
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QMenuBar, QColorDialog, \
+    QUndoStack, QAction, QMenu, QWidget, QLineEdit, QComboBox, QPushButton, \
+    QFileDialog, QMessageBox, QApplication, QGridLayout, QFormLayout
+from PyQt5.QtCore import Qt, QDir
+from PyQt5.QtGui import QColor, QImage, QPixmap
 
 from palette_editor_code import PaletteList
 from palette_editor_code import ImageMap
 from palette_editor_code import Animation
 
-class MainView(QtGui.QGraphicsView):
+class MainView(QGraphicsView):
     min_scale = 1
     max_scale = 5
 
     def __init__(self, window=None):
-        QtGui.QGraphicsView.__init__(self)
+        QGraphicsView.__init__(self)
         self.window = window
-        self.scene = QtGui.QGraphicsScene(self)
+        self.scene = QGraphicsScene(self)
         self.setScene(self.scene)
 
         self.setMouseTracking(True)
@@ -22,18 +27,18 @@ class MainView(QtGui.QGraphicsView):
         self.screen_scale = 1
 
     def create_image(self, image_map, palette_frame):
-        colors = [QtGui.QColor(c).rgb() for c in palette_frame.get_colors()]
+        colors = [QColor(c).rgb() for c in palette_frame.get_colors()]
         width, height = image_map.width, image_map.height
-        image = QtGui.QImage(width, height, QtGui.QImage.Format_ARGB32)
+        image = QImage(width, height, QImage.Format_ARGB32)
         for x in range(width):
             for y in range(height):
                 idx = image_map.get(x, y)
                 image.setPixel(x, y, colors[idx])
-        return QtGui.QImage(image)
+        return QImage(image)
 
     def set_image(self, image_map, palette_frame):
         self.image = self.create_image(image_map, palette_frame)
-        # self.image = self.image.convertToFormat(QtGui.QImage.Format_ARGB32)
+        # self.image = self.image.convertToFormat(QImage.Format_ARGB32)
         self.setSceneRect(0, 0, self.image.width(), self.image.height())
 
     def clear_scene(self):
@@ -42,7 +47,7 @@ class MainView(QtGui.QGraphicsView):
     def show_image(self):
         if self.image:
             self.clear_scene()
-            self.scene.addPixmap(QtGui.QPixmap.fromImage(self.image))
+            self.scene.addPixmap(QPixmap.fromImage(self.image))
 
     def mousePressEvent(self, event):
         scene_pos = self.mapToScene(event.pos())
@@ -52,9 +57,9 @@ class MainView(QtGui.QGraphicsView):
         image = pixmap.pixmap().toImage()
         pos = int(scene_pos.x()), int(scene_pos.y())
 
-        if event.button() == QtCore.Qt.LeftButton:
-            dlg = QtGui.QColorDialog()
-            dlg.setCurrentColor(QtGui.QColor(image.pixel(pos[0], pos[1])))
+        if event.button() == Qt.LeftButton:
+            dlg = QColorDialog()
+            dlg.setCurrentColor(QColor(image.pixel(pos[0], pos[1])))
             if dlg.exec_():
                 self.window.change_current_palette(pos, dlg.currentColor())
 
@@ -66,53 +71,53 @@ class MainView(QtGui.QGraphicsView):
             self.screen_scale -= 1
             self.scale(0.5, 0.5)
 
-class MainEditor(QtGui.QWidget):
+class MainEditor(QWidget):
     def __init__(self):
         super(MainEditor, self).__init__()
         self.setWindowTitle('Lex Talionis Palette Editor v5.9.0')
         self.setMinimumSize(640, 480)
 
-        self.grid = QtGui.QGridLayout()
+        self.grid = QGridLayout()
         self.setLayout(self.grid)
 
         self.main_view = MainView(self)
-        self.menu_bar = QtGui.QMenuBar(self)
+        self.menu_bar = QMenuBar(self)
         self.palette_list = PaletteList.PaletteList(self)
         self.image_map_list = ImageMap.ImageMapList()
         self.scripts = []
 
-        self.undo_stack = QtGui.QUndoStack(self)
+        self.undo_stack = QUndoStack(self)
 
         self.create_menu_bar()
 
         self.grid.setMenuBar(self.menu_bar)
         self.grid.addWidget(self.main_view, 0, 0)
         self.grid.addWidget(self.palette_list, 0, 1, 2, 1)
-        self.info_form = QtGui.QFormLayout()
+        self.info_form = QFormLayout()
         self.grid.addLayout(self.info_form, 1, 0)
 
         self.create_info_bars()
         self.clear_info()
 
     def create_menu_bar(self):
-        load_class_anim = QtGui.QAction("Load Class Animation...", self, triggered=self.load_class)
-        load_single_anim = QtGui.QAction("Load Single Animation...", self, triggered=self.load_single)
-        load_image = QtGui.QAction("Load Image...", self, triggered=self.load_image)
-        save = QtGui.QAction("&Save...", self, shortcut="Ctrl+S", triggered=self.save)
-        exit = QtGui.QAction("E&xit...", self, shortcut="Ctrl+Q", triggered=self.close)
+        load_class_anim = QAction("Load Class Animation...", self, triggered=self.load_class)
+        load_single_anim = QAction("Load Single Animation...", self, triggered=self.load_single)
+        load_image = QAction("Load Image...", self, triggered=self.load_image)
+        save = QAction("&Save...", self, shortcut="Ctrl+S", triggered=self.save)
+        exit = QAction("E&xit...", self, shortcut="Ctrl+Q", triggered=self.close)
 
-        file_menu = QtGui.QMenu("&File", self)
+        file_menu = QMenu("&File", self)
         file_menu.addAction(load_class_anim)
         file_menu.addAction(load_single_anim)
         file_menu.addAction(load_image)
         file_menu.addAction(save)
         file_menu.addAction(exit)
 
-        undo_action = QtGui.QAction("Undo", self, shortcut="Ctrl+Z", triggered=self.undo)
-        redo_action = QtGui.QAction("Redo", self, triggered=self.redo)
+        undo_action = QAction("Undo", self, shortcut="Ctrl+Z", triggered=self.undo)
+        redo_action = QAction("Redo", self, triggered=self.redo)
         redo_action.setShortcuts(["Ctrl+Y", "Ctrl+Shift+Z"])
 
-        edit_menu = QtGui.QMenu("&Edit", self)
+        edit_menu = QMenu("&Edit", self)
         edit_menu.addAction(undo_action)
         edit_menu.addAction(redo_action)
 
@@ -120,15 +125,15 @@ class MainEditor(QtGui.QWidget):
         self.menu_bar.addMenu(edit_menu)
 
     def create_info_bars(self):
-        self.class_text = QtGui.QLineEdit()
+        self.class_text = QLineEdit()
         self.class_text.textChanged.connect(self.class_text_change)
-        self.weapon_box = QtGui.QComboBox()
+        self.weapon_box = QComboBox()
         self.weapon_box.uniformItemSizes = True
         self.weapon_box.activated.connect(self.weapon_changed)
-        self.palette_text = QtGui.QLineEdit()
+        self.palette_text = QLineEdit()
         self.palette_text.textChanged.connect(self.palette_text_change)
 
-        self.play_button = QtGui.QPushButton("View Animation")
+        self.play_button = QPushButton("View Animation")
         self.play_button.clicked.connect(self.view_animation)
         self.play_button.setEnabled(False)
 
@@ -232,8 +237,8 @@ class MainEditor(QtGui.QWidget):
         return False
 
     def auto_load_path(self):
-        starting_path = QtCore.QDir.currentPath()
-        check_here = str(QtCore.QDir.currentPath() + '/pe_config.txt')
+        starting_path = QDir.currentPath()
+        check_here = str(QDir.currentPath() + '/pe_config.txt')
         if os.path.exists(check_here):
             with open(check_here) as fp:
                 directory = fp.readline().strip()
@@ -242,7 +247,7 @@ class MainEditor(QtGui.QWidget):
         return starting_path
 
     def auto_save_path(self, index_file):
-        auto_load = str(QtCore.QDir.currentPath() + '/pe_config.txt')
+        auto_load = str(QDir.currentPath() + '/pe_config.txt')
         with open(auto_load, 'w') as fp:
             print(os.path.relpath(str(index_file)))
             fp.write(os.path.relpath(str(index_file)))
@@ -252,8 +257,8 @@ class MainEditor(QtGui.QWidget):
             return
 
         starting_path = self.auto_load_path()
-        # starting_path = QtCore.QDir.currentPath() + '/../Data'
-        index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Class", starting_path,
+        # starting_path = QDir.currentPath() + '/../Data'
+        index_file = QFileDialog.getOpenFileName(self, "Choose Class", starting_path,
                                                        "Index Files (*-Index.txt);;All Files (*)")
         if index_file:
             self.auto_save_path(index_file)
@@ -283,7 +288,7 @@ class MainEditor(QtGui.QWidget):
         if not self.maybe_save():
             return
         starting_path = self.auto_load_path()
-        index_file = QtGui.QFileDialog.getOpenFileName(self, "Choose Animation", starting_path,
+        index_file = QFileDialog.getOpenFileName(self, "Choose Animation", starting_path,
                                                        "Index Files (*-Index.txt);;All Files (*)")
         if index_file:
             self.auto_save_path(index_file)
@@ -307,7 +312,7 @@ class MainEditor(QtGui.QWidget):
         if not self.maybe_save():
             return
         starting_path = self.auto_load_path()
-        image_filename = QtGui.QFileDialog.getOpenFileName(self, "Choose Image PNG", starting_path,
+        image_filename = QFileDialog.getOpenFileName(self, "Choose Image PNG", starting_path,
                                                            "PNG Files (*.png);;All Files (*)")
         if image_filename:
             self.auto_save_path(image_filename)
@@ -320,51 +325,51 @@ class MainEditor(QtGui.QWidget):
 
     def maybe_save(self):
         if self.mode:
-            ret = QtGui.QMessageBox.warning(self, "Palette Editor", "These images may have been modified.\n"
+            ret = QMessageBox.warning(self, "Palette Editor", "These images may have been modified.\n"
                                             "Do you want to save your changes?",
-                                            QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
-            if ret == QtGui.QMessageBox.Save:
+                                            QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
+            if ret == QMessageBox.Save:
                 return self.save()
-            elif ret == QtGui.QMessageBox.Cancel:
+            elif ret == QMessageBox.Cancel:
                 return False
         return True
 
     def save(self):
         if self.mode == 3:
             # Save as... PNG (defaults to name with palette )
-            name = QtGui.QFileDialog.getSaveFileName(self, 'Save Image', self.auto_load_path())
+            name = QFileDialog.getSaveFileName(self, 'Save Image', self.auto_load_path())
             image_map = self.image_map_list.get_current_map()
             palette = self.palette_list.get_current_palette()
             image = self.main_view.create_image(image_map, palette)
-            pixmap = QtGui.QPixmap.fromImage(image)
+            pixmap = QPixmap.fromImage(image)
             pixmap.save(name, 'png')
         elif self.mode == 2:
             # Save all palettes with their palette names
             image_map = self.image_map_list.get_current_map()
             for palette in self.palette_list.list:
                 image = self.main_view.create_image(image_map, palette)
-                pixmap = QtGui.QPixmap.fromImage(image)
+                pixmap = QPixmap.fromImage(image)
                 head, tail = os.path.split(image_map.image_filename)
                 tail = '-'.join([str(self.class_text.text()), str(image_map.weapon_name), str(palette.name)]) + '.png'
                 new_filename = os.path.join(head, tail)
                 pixmap.save(new_filename, 'png')
-            msg = QtGui.QMessageBox.information(self, "Save Successful", "Successfully Saved!")
+            msg = QMessageBox.information(self, "Save Successful", "Successfully Saved!")
         elif self.mode == 1:
             # Save all weapons * palettes with their palette names
             for image_map in self.image_map_list.list:
                 for palette in self.palette_list.list:
                     image = self.main_view.create_image(image_map, palette)
-                    # image = image.convertToFormat(QtGui.QImage.Format_RGB32)
-                    pixmap = QtGui.QPixmap.fromImage(image)
+                    # image = image.convertToFormat(QImage.Format_RGB32)
+                    pixmap = QPixmap.fromImage(image)
                     head, tail = os.path.split(image_map.image_filename)
                     tail = '-'.join([str(self.class_text.text()), str(image_map.weapon_name), str(palette.name)]) + '.png'
                     new_filename = os.path.join(head, tail)
                     pixmap.save(new_filename, 'png')
-            msg = QtGui.QMessageBox.information(self, "Save Successful", "Successfully Saved!")
+            msg = QMessageBox.information(self, "Save Successful", "Successfully Saved!")
         return True
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     main_editor = MainEditor()
     main_editor.show()
     app.exec_()

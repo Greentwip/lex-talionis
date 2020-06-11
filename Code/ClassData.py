@@ -30,7 +30,7 @@ def create_class_dict():
                             'id': c_id,
                             'tier': tier,
                             'wexp_gain': wexp_gain,
-                            'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from').text is not None else None,
+                            'promotes_from': klass.find('promotes_from').text if klass.find('promotes_from') is not None else None,
                             'turns_into': klass.find('turns_into').text.split(',') if klass.find('turns_into').text is not None else [],
                             'movement_group': int(klass.find('movement_group').text),
                             'tags': set(klass.find('tags').text.split(',')) if klass.find('tags').text is not None else set(),

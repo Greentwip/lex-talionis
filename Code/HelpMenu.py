@@ -355,8 +355,6 @@ class Help_Dialog(Help_Dialog_Base):
             num_lines = 1
 
         self.strings = TextChunk.split(self.font, description, num_lines)
-        print(self.strings)
-        print([self.font.size(string)[0] for string in self.strings])
 
         # Find the greater of the two lengths
         greater_line_len = max([self.font.size(string)[0] for string in self.strings])
@@ -367,7 +365,6 @@ class Help_Dialog(Help_Dialog_Base):
         if name:
             num_lines += 1
         self.height = self.font.height * num_lines + 16
-        print(self.width, self.height)
 
         self.help_surf = BaseMenuSurf.CreateBaseMenuSurf((self.width, self.height), 'MessageWindowBackground')
         self.h_surf = Engine.create_surface((self.width, self.height + 3), transparent=True)
