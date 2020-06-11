@@ -99,6 +99,22 @@ python main.py
 
 A small screen should pop up on your computer, displaying the logo. Don't worry if it takes a couple of minutes the first time it is run. It is just taking the time to turn the code text into compiled bytecode.
 
+## Building/Freezing the Code
+
+In order to build the engine, you will require Python 3.7 (not Python 3.8) and PyInstaller. Python 3.8 can't be used because PyInstaller does not support it yet.
+
+```
+pip install pyinstaller
+```
+
+to install the latest version of PyInstaller on your machine. 
+
+```
+pyinstaller main.spec
+```
+
+to build. The folder `dist/the_lion_throne` will contain the built executable and its supporting files. Visit https://gitlab.com/rainlash/lex-talionis/-/wikis/100.-Miscellaneous-Stuff#changing-the-name-of-the-executable to see what names can and can't be changed.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
