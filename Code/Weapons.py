@@ -231,7 +231,11 @@ class Icon(object):
             weaponIcons = GC.ITEMDICT['Gray_Wexp_Icons']
         else:
             weaponIcons = GC.ITEMDICT['Wexp_Icons']
-        self.image = Engine.subsurface(weaponIcons, (0, 16*self.idx, 16, 16))
+        if self.idx * 16 + 16 > weaponIcons.get_height():
+            # You have a problem
+            self.image = Engine.subsurface(weaponIcons, (0, 0, 16, 16))
+        else:
+            self.image = Engine.subsurface(weaponIcons, (0, 16*self.idx, 16, 16))
 
     def draw(self, surf, topleft, cooldown=False):
         surf.blit(self.image, topleft)

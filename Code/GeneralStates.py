@@ -1583,8 +1583,9 @@ class StealState(StateMachine.State):
             gameStateObj.activeMenu = None
             # Give exp
             exp = cf.CONSTANTS['steal_exp']
-            gameStateObj.exp_gain_struct = (self.initiator, exp, None, 'init')
-            gameStateObj.stateMachine.changeState('exp_gain')
+            if exp > 0:
+                gameStateObj.exp_gain_struct = (self.initiator, exp, None, 'init')
+                gameStateObj.stateMachine.changeState('exp_gain')
             # Display banner -- opposite order
             self.initiator.handle_steal_banner(selection, gameStateObj)
 

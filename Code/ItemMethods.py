@@ -520,6 +520,12 @@ def itemparser(itemid, gameStateObj=None):
         elif component == 'promotion':
             legal_classes = item['promotion'].split(',')
             my_components['promotion'] = legal_classes
+        elif component == 'gender_locked':
+            if '-' in item['gender_locked']:
+                genders = [int(c) for c in item['gender_locked'].split('-')]
+                my_components['gender_locked'] = list(range(*genders))
+            else:
+                my_components['gender_locked'] = [int(c) for c in item['gender_locked'].split(',')]
         elif component == 'aoe':
             info_line = item['aoe'].split(',')
             aoe = AOEComponent(*info_line)

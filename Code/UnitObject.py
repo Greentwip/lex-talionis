@@ -627,6 +627,11 @@ class UnitObject(object):
             return False
         if item.is_magic() and 'no_magic_weapons' in self.status_bundle:
             return False
+
+        if item.gender_locked:
+            if self.gender not in item.gender_locked:
+                return False
+                
         # if the item is a weapon
         if item.weapon:
             itemLvl = item.weapon.LVL
