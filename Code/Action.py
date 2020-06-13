@@ -737,11 +737,24 @@ class Promote(Action):
         # check maxes
         for index, stat in enumerate(self.levelup_list):
             self.levelup_list[index] = min(stat, self.new_klass['max'][index] - current_stats[index].base_stat)
+        # For removing statuses on promotion
+        self.sub_actions = []
 
     def get_data(self):
         return self.levelup_list, self.new_wexp
 
     def do(self, gameStateObj):
+        self.sub_actions.clear()
+        # Find the skills to remove from the previous class
+        if not cf.CONSTANTS['inherit_class_skills']:
+            for level_needed, skill in self.old_klass['skills']:
+                for status in self.unit.status_effects:
+                    if status.id == skill:
+                        new_action = RemoveStatus(self.unit, status)
+                        self.sub_actions.append(new_action)
+        for action in self.sub_actions:
+            action.do(gameStateObj)
+
         self.unit.removeSprites()
         self.unit.klass = self.new_klass['id']
         self.unit.set_exp(0)
@@ -758,6 +771,10 @@ class Promote(Action):
         self.unit.movement_group = self.old_klass['movement_group']
         self.unit.apply_levelup([-x for x in self.levelup_list], True)
         self.unit.loadSprites()
+
+        for action in self.sub_actions:
+            action.reverse(gameStateObj)
+        self.sub_actions.clear()
 
 class ApplyLevelUp(Action):
     def __init__(self, unit, stat_increase):

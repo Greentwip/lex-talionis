@@ -517,9 +517,9 @@ def itemparser(itemid, gameStateObj=None):
         elif component == 'permanent_growth_increase':
             stat_increase = Utility.intify_comma_list(item['growth_increase'])
             my_components['permanent_growth_increase'] = stat_increase
-        elif component == 'promotion':
-            legal_classes = item['promotion'].split(',')
-            my_components['promotion'] = legal_classes
+        elif component in ('promotion', 'tag_locked', 'class_locked'):
+            legal = item[component].split(',')
+            my_components[component] = legal
         elif component == 'gender_locked':
             if '-' in item['gender_locked']:
                 genders = [int(c) for c in item['gender_locked'].split('-')]

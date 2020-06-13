@@ -46,7 +46,10 @@ sound;Fenrir4
 enemy_effect;FenrirRay
 enemy_effect;FenrirExplosion
 # Ruin misses and hits at the same time!
-miss
+# Except you can't have both miss and spell_hit!
+# It will do VERY weird stuff, like applying the effect
+# of spells twice, if you have both!!!
+# miss
 spell_hit
 wait;1
 wait;15

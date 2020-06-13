@@ -111,6 +111,7 @@ def read_constants_file():
              'max_level': '10,20,20', # Maximum Level for class by tier ('10, 20, 20,')
              'promoted_level': 19, # Add this to a promoted units level to determine how many levels they've had
              'auto_promote': 0, # Promote after max-level?
+             'inherit_class_skills': 1, # Whether a unit keeps its (non-feat) class skills on promotion
              'minimum_damage': 0, # Minimum amount of damage that can be dealt (switch to 1 to make it like FE2 or FE15)
              'boss_crit': 0, # Whether the lethal hit on a boss shows a crit
              'steal_exp': 0, # Amount of exp gained from stealing

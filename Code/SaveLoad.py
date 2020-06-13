@@ -464,7 +464,9 @@ def get_skills(unit, classes, level, gameStateObj, feat=True, seed=0):
     for index, klass in enumerate(classes):
         for level_needed, class_skill in ClassData.class_dict[klass]['skills']:
             # If level is gte level needed for skill or gte max_level
-            if level >= level_needed or index < len(classes) - 1:
+            if cf.CONSTANTS['inherit_class_skills'] and index < len(classes) - 1:
+                class_skills.append(class_skill)
+            elif level >= level_needed and index == len(classes) - 1:
                 class_skills.append(class_skill)
     # === Handle Feats (Naive choice)
     if feat:

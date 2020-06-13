@@ -628,8 +628,14 @@ class UnitObject(object):
         if item.is_magic() and 'no_magic_weapons' in self.status_bundle:
             return False
 
+        if item.class_locked:
+            if self.klass not in item.class_locked:
+                return False
         if item.gender_locked:
             if self.gender not in item.gender_locked:
+                return False
+        if item.tag_locked:
+            if all(tag not in item.tag_locked for tag in self.tags):
                 return False
                 
         # if the item is a weapon
@@ -655,7 +661,7 @@ class UnitObject(object):
         elif my_wexp > 0:
             itemLvl = itemLvl.split(',')
             for n in itemLvl:
-                if n == self.id or n == self.klass or n == self.name or n == '--':
+                if n in (self.id, self.klass, self.name, '--') or n in self.tags:
                     return True
         return False
 
