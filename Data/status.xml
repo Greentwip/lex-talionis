@@ -1020,6 +1020,16 @@
         <charge>(unit.currenthp &gt; 25) and (static_random.get_combat() &lt; (unit.attackspeed(gameStateObj, item) - unit2.attackspeed(gameStateObj) + unit.currenthp//2))</charge>
     </status>
 
+    <!-- Example Nihil Status -->
+    <status name="Nihil">
+        <id>Nihil</id>
+        <image_index>4,3</image_index>
+        <desc>Ignore proc skills</desc>
+        <components>nihil,class_skill</components>
+
+        <nihil>All</nihil>
+    </status>
+
     <!-- Passive Item Mod Skills -->
     <!-- These skills are always active, changing how items behave if they meet the conditional -->
     <status name="Swordfaire">

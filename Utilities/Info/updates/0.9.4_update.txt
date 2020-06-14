@@ -1,0 +1,37 @@
+Hello everyone!
+
+Let's try doing an update announcement. v0.9.3.22 of the Lex Talionis Engine is now released. 
+
+It adds support for accessing the Arena from the base. The Wiki here: https://gitlab.com/rainlash/lex-talionis/-/wikis/100.-Miscellaneous-Stuff#arena-global-constants explains how to do the thing. The capability itself should work correctly, but it doesn't look perfect, since combat still does a fade in/fade out on location even from base. 
+
+Other bugs/features:
+Fixed issue when stealing with 0 exp
+Added gender locked items <gender_locked>5,6,7,8,9</gender_locked>
+Added class locked items  <class_locked>Myrmidon,Swordmaster</class_locked>
+Added tag locked items <tag_locked>Armor</tag_locked>
+Added tags as legal weapon levels <LVL>Armor,Drake,General</LVL>
+Fixed help dialog crash if the description was too long
+Fixed issue with Ruin Ward animation missing
+Added "inherit_class_skills" game constant. By default, it is 1 (True). When turned to 0, units will lose their previous non-feat class skills on promotion.
+Added "change_portrait" command to event scripts, allowing the permanent changing of a units portrait id.
+Added "generic_feats" game constants. By default, it is 0. When turned to 1, any time a generic unit would gain a feat, they choose a random one, instead of ignoring feats (Test)
+
+Added "nihil" status component. `<nihil>{list of proc skill ids to negate}</nihil`. Alternatively, you can use <nihil>All</nihil> to have the unit ignore all proc skills.
+
+```
+    <!-- Example Nihil Status -->
+    <status name="Nihil">
+        <id>Nihil</id>
+        <image_index>4,3</image_index>
+        <desc>Ignore proc skills</desc>
+        <components>nihil,class_skill</components>
+
+        <nihil>All</nihil>
+    </status>
+```
+
+
+
+Data Changes:
+Slight change to /Data/Effects/Dark/Ruin-Script.txt to fix bug
+

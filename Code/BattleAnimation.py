@@ -103,12 +103,16 @@ class BattleAnimation(object):
             if self.frame_count >= self.num_frames:
                 self.processing = True
                 self.read_script()
-            if self.script_index >= len(self.poses[self.current_pose]):
-                # check whether we should loop or truly end
-                if self.current_pose in self.idle_poses:
-                    self.script_index = 0
-                else:
-                    self.end_current()
+            if self.current_pose in self.poses:
+                if self.script_index >= len(self.poses[self.current_pose]):
+                    # check whether we should loop or truly end
+                    if self.current_pose in self.idle_poses:
+                        self.script_index = 0
+                    else:
+                        self.end_current()
+            else:
+                self.end_current()
+
             self.frame_count += 1
             if self.entrance:
                 self.entrance -= 1
@@ -166,7 +170,7 @@ class BattleAnimation(object):
             return None
 
     def add_effect(self, effect, pose=None):
-        if pose:
+        if pose and pose in effect.poses:
             effect.change_pose(pose)
         self.children.append(effect)
 
@@ -199,6 +203,8 @@ class BattleAnimation(object):
         return max(1, int(int(num) * speed))
 
     def read_script(self):
+        if self.current_pose not in self.poses:
+            return
         script = self.poses[self.current_pose]
         while(self.script_index < len(script) and self.processing):
             line = script[self.script_index]

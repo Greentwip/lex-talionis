@@ -452,6 +452,11 @@ def statusparser(s_id, gameStateObj=None):
                     value, conditional = status.find(component).text.split(';')
                     my_components[component] = ConditionalComponent(component, value, conditional)
                 # Others...
+                elif component == 'nihil':
+                    if status.find('nihil') is not None and status.find('nihil').text is not None:
+                        my_components['nihil'] = status.find('nihil').text.split(',')
+                    else:
+                        my_components['nihil'] = ['All']
                 elif component == 'stat_halve':
                     my_components['stat_halve'] = StatHalveComponent(status.find('stat_halve').text)
                 elif component == 'count':

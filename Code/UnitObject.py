@@ -80,6 +80,8 @@ class UnitObject(object):
         # --- Stats -- this level
         self.records = info.get('records', self.default_records())
 
+        self.portrait_id = info.get('portrait_id', self.id)
+
         # --- Other Properties (Update related normally)
         self.validPartners = [] # Used by selection algorithms
         self.current_skill = None
@@ -127,8 +129,8 @@ class UnitObject(object):
         self.generic_flag = False
         try:
             # Ex: HectorPortrait
-            self.bigportrait = Engine.subsurface(GC.UNITDICT[str(self.id) + 'Portrait'], (0, 0, 96, 80))
-            self.portrait = Engine.subsurface(GC.UNITDICT[str(self.id) + 'Portrait'], (96, 16, 32, 32))
+            self.bigportrait = Engine.subsurface(GC.UNITDICT[str(self.portrait_id) + 'Portrait'], (0, 0, 96, 80))
+            self.portrait = Engine.subsurface(GC.UNITDICT[str(self.portrait_id) + 'Portrait'], (96, 16, 32, 32))
         except KeyError:
             self.generic_flag = True
             self.bigportrait = GC.UNITDICT['Generic_Portrait_' + self.klass]
@@ -1945,6 +1947,7 @@ class UnitObject(object):
                        'items': [item.uid for item in self.items],
                        'ai': self.ai_descriptor,
                        'records': self.records,
+                       'portrait_id': self.portrait_id,
                        'dead': self.dead,
                        'finished': self.finished,
                        'TRV': self.TRV,

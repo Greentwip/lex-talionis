@@ -420,7 +420,7 @@ class Dialogue_Scene(object):
         # === UNIT SPRITE
         # Add a unit to the scene
         elif line[0] == 'u':
-            # This is a complicated method of parsing unit lines using 'u' as delimeter
+            # This is a complicated method of parsing unit lines using 'u' as delimiter
             spl = []
             w = 'u'
             for x, y in itertools.groupby(line, lambda z: z == w):
@@ -429,14 +429,14 @@ class Dialogue_Scene(object):
                 spl[-1].extend(y)
 
             for sub_command in spl:
-                if self.add_unit_sprite(sub_command, transition=True):
+                if self.add_unit_sprite(gameStateObj, sub_command, transition=True):
                     # Force wait after unit sprite is drawn to allow time to transition.
                     self.waittime = 266  # 16 frames
                     self.last_wait_update = Engine.get_time()
                     self.current_state = "Waiting"
         # Add a unit to the scene without transition
         elif line[0] == 'qu':
-            self.add_unit_sprite(line, transition=False)
+            self.add_unit_sprite(gameStateObj, line, transition=False)
         # Change a unit's expression
         elif line[0] == 'set_expression':
             # Legal commands (Smile, NoSmile, NormalBlink, OpenEyes, CloseEyes, HalfCloseEyes)
@@ -957,6 +957,15 @@ class Dialogue_Scene(object):
             self.current_state = "Transitioning"
 
         # === CHANGING UNITS
+        elif line[0] == 'change_portrait':
+            unit = self.get_unit(line[1], gameStateObj)
+            portrait_id = line[2]
+            if portrait_id in GC.PORTRAITDICT:
+                unit.portrait_id = portrait_id
+                unit.bigportrait = Engine.subsurface(GC.UNITDICT[str(unit.portrait_id) + 'Portrait'], (0, 0, 96, 80))
+                unit.portrait = Engine.subsurface(GC.UNITDICT[str(unit.portrait_id) + 'Portrait'], (96, 16, 32, 32))
+            else:
+                print("%s not in portrait dictionary. Need to assign blink and mouth positions to pic" % (portrait_id))
         elif line[0] == 'convert':
             assert len(line) == 3
             unit_specifier = self.get_id(line[1], gameStateObj)
@@ -989,12 +998,14 @@ class Dialogue_Scene(object):
                 if unit.party == guest:
                     Action.do(Action.ChangeParty(unit, host), gameStateObj)
             # Merge items
-            for item in gameStateObj._convoy[guest]:
-                gameStateObj._convoy[host].append(item)
-            gameStateObj._convoy[guest] = []
+            if guest in gameStateObj._convoy and host in gameStateObj._convoy:
+                for item in gameStateObj._convoy[guest]:
+                    gameStateObj._convoy[host].append(item)
+                gameStateObj._convoy[guest] = []
             # Merge money
-            gameStateObj._money[host] += gameStateObj._money[guest]
-            gameStateObj._money[guest] = 0
+            if guest in gameStateObj._money and host in gameStateObj._money:
+                gameStateObj._money[host] += gameStateObj._money[guest]
+                gameStateObj._money[guest] = 0
         elif line[0] == 'clear_turnwheel_history':
             gameStateObj.action_log.reset_first_free_action()
 
@@ -1309,8 +1320,9 @@ class Dialogue_Scene(object):
         s.fill((0, 0, 0, self.transition_transparency))
         surf.blit(s, (0, 0))
 
-    def add_unit_sprite(self, line, transition=False):
+    def add_unit_sprite(self, gameStateObj, line, transition=False):
         name = self.get_name(line[1])
+        portrait_id = self.get_portrait_id(line[1], gameStateObj)
         if name in self.unit_sprites and not self.unit_sprites[name].remove_flag:
             return False
         if line[2] in hardset_positions:
@@ -1344,11 +1356,11 @@ class Dialogue_Scene(object):
         if 'Narration' in line:
             position[1] = 30
         # Blink/Mouth positions
-        assert name in GC.PORTRAITDICT, "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(name)
-        blink = GC.PORTRAITDICT[name]['blink']
-        mouth = GC.PORTRAITDICT[name]['mouth']
+        assert portrait_id in GC.PORTRAITDICT, "%s not in portrait dictionary. Need to assign blink and mouth positions to pic"%(portrait_id)
+        blink = GC.PORTRAITDICT[portrait_id]['blink']
+        mouth = GC.PORTRAITDICT[portrait_id]['mouth']
         self.unit_sprites[name] = UnitPortrait.UnitPortrait(
-            portrait_name=name, blink_position=blink, mouth_position=mouth, transition=transition,
+            portrait_name=portrait_id, blink_position=blink, mouth_position=mouth, transition=transition,
             position=position, priority=priority, mirror=mirrorflag, expression=expression, slide=slide)
 
         return True
@@ -1694,6 +1706,18 @@ class Dialogue_Scene(object):
             return self.unit2.name
         else:
             return name
+
+    def get_portrait_id(self, name, gameStateObj):
+        if name == '{unit}':
+            return self.unit.portrait_id
+        elif name == '{unit2}' and self.unit2:
+            return self.unit2.portrait_id
+        else:
+            unit = gameStateObj.get_unit(name)
+            if unit:
+                return unit.portrait_id
+            else:
+                return name
 
     def get_unit(self, uid, gameStateObj):
         if uid == '{unit}':

@@ -25,6 +25,16 @@ pan
 wait;14
 end_parent_loop
 
+pose;Effect
+darken
+wait;4
+lighten
+wait;8
+darken
+wait;8
+lighten
+wait;14
+
 pose;Miss
 darken
 wait;4

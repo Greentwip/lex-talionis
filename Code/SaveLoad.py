@@ -351,7 +351,7 @@ def create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStat
         cur_unit.add_item(item, gameStateObj)
 
     # Status Effects and Skills
-    get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=False)
+    get_skills(cur_unit, classes, u_i['level'], gameStateObj, feat=cf.CONSTANTS['generic_feats'])
 
     # Extra Skills
     if legend.get('status'):
@@ -399,7 +399,7 @@ def create_summon(summon_info, summoner, position, gameStateObj):
         unit.add_item(item, gameStateObj)
 
     # Status Effects and Skills
-    get_skills(unit, classes, u_i['level'], gameStateObj, feat=False)
+    get_skills(unit, classes, u_i['level'], gameStateObj, feat=cf.CONSTANTS['generic_feats'])
 
     return unit
 
@@ -459,7 +459,7 @@ def get_unit_info(team, klass, level, item_line, mode, game_constants, force_fix
 
     return stats, growths, growth_points, items, wexp, level
 
-def get_skills(unit, classes, level, gameStateObj, feat=True, seed=0):
+def get_skills(unit, classes, level, gameStateObj, feat=False):
     class_skills = []
     for index, klass in enumerate(classes):
         for level_needed, class_skill in ClassData.class_dict[klass]['skills']:
@@ -470,12 +470,12 @@ def get_skills(unit, classes, level, gameStateObj, feat=True, seed=0):
                 class_skills.append(class_skill)
     # === Handle Feats (Naive choice)
     if feat:
-        for status in class_skills:
+        for status in list(class_skills):
             if status == 'Feat':
-                counter = 0
-                while StatusCatalog.feat_list[(seed + counter)%len(StatusCatalog.feat_list)] in class_skills:
-                    counter += 1
-                class_skills.append(StatusCatalog.feat_list[(seed + counter)%len(StatusCatalog.feat_list)])
+                feat_list = [feat for feat in StatusCatalog.feat_list if feat not in class_skills]
+                random_number = static_random.get_growth() % len(feat_list)
+                new_skill = feat_list[random_number]
+                class_skills.append(new_skill)
     class_skills = [status for status in class_skills if status != 'Feat']
     logger.debug('Class Skills %s', class_skills)
     # === Actually add statuses

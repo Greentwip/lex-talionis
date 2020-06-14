@@ -1,6 +1,5 @@
 b;Town
 t;2
-gold;5000
 set_game_constant;Convoy
 set_game_constant;Supports
 set_game_constant;Turnwheel
@@ -16,6 +15,9 @@ add_unit;hard_boi_1
 add_unit;soft_boi_1;4,0
 u;Joel;Left
 s;Joel;í
+r;Joel
+change_portrait;Drake;Coyote
+u;Joel;Left
 # choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash
 s;Joel;The qúiçk browñ fóx jumps óvér the lázý dog.
 # choice;SaveWaffle;Save Emmeryn?;Yes,No,Smash;v

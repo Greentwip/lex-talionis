@@ -89,15 +89,17 @@ class InitState(object):
     def process(self, solver, gameStateObj, metaDataObj):
         solver.remove_pre_proc(gameStateObj)
         solver.reset()
-        solver.atk_pre_proc = self.get_attacker_pre_proc(solver.attacker, gameStateObj)
+        solver.atk_pre_proc = self.get_attacker_pre_proc(solver, solver.attacker, gameStateObj)
         if solver.defender and isinstance(solver.defender, UnitObject.UnitObject):
-            solver.def_pre_proc = self.get_defender_pre_proc(solver.defender, gameStateObj)
+            solver.def_pre_proc = self.get_defender_pre_proc(solver, solver.defender, gameStateObj)
         return None
 
-    def get_attacker_pre_proc(self, unit, gameStateObj):
+    def get_attacker_pre_proc(self, solver, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.attack_pre_proc]
         proc_statuses = sorted(proc_statuses, key=lambda x: x.attack_pre_proc.priority, reverse=True)
         for status in proc_statuses:
+            if solver.has_nihil(solver.defender, status):
+                continue
             roll = static_random.get_combat()
             expr = GC.EQUATIONS.get_expression(status.attack_pre_proc.rate, unit)
             if roll < expr:
@@ -106,10 +108,12 @@ class InitState(object):
                 return status_obj
         return None
 
-    def get_defender_pre_proc(self, unit, gameStateObj):
+    def get_defender_pre_proc(self, solver, unit, gameStateObj):
         proc_statuses = [s for s in unit.status_effects if s.defense_pre_proc]
         proc_statuses = sorted(proc_statuses, key=lambda x: x.defense_pre_proc.priority, reverse=True)
         for status in proc_statuses:
+            if solver.has_nihil(solver.attacker, status):
+                continue
             roll = static_random.get_combat()
             expr = GC.EQUATIONS.get_expression(status.defense_pre_proc.rate, unit)
             if roll < expr:
@@ -122,11 +126,14 @@ class AttackerState(SolverState):
     def is_brave(self, item):
         return item.brave or item.brave_attack
 
+    def check_nihil(self, solver, status):
+        return solver.has_nihil(solver.defender, status)
+
     def check_for_brave(self, solver, unit, item):
         if self.is_brave(item):
             return True
         for status in unit.status_effects:
-            if status.adept_proc:
+            if status.adept_proc and not self.check_nihil(solver, status):
                 roll = static_random.get_combat()
                 expr = GC.EQUATIONS.get_expression(status.adept_proc.rate, unit)
                 if roll < expr:
@@ -195,6 +202,9 @@ class AttackerBraveState(AttackerState):
 class DefenderState(AttackerState):
     def is_brave(self, item):
         return item.brave or item.brave_defense
+
+    def check_nihil(self, solver, status):
+        return solver.has_nihil(solver.attacker, status)
 
     def get_next_state(self, solver, gameStateObj):
         if solver.event_combat and solver.event_combat[-1] == 'quit':
@@ -410,10 +420,10 @@ class Solver(object):
             "Only Units and Tiles can engage in combat! %s" % (defender)
         
         # Add proc skills
-        result.attacker_proc_used = self.get_attacker_proc(attacker, gameStateObj)
+        result.attacker_proc_used = self.get_attacker_proc(attacker, defender, gameStateObj)
         # Tiles cannot have proc effects
         if isinstance(defender, UnitObject.UnitObject):
-            result.defender_proc_used = self.get_defender_proc(defender, gameStateObj)
+            result.defender_proc_used = self.get_defender_proc(defender, attacker, gameStateObj)
 
         to_hit = attacker.compute_hit(defender, gameStateObj, item, mode=mode)
         rng_mode = gameStateObj.mode['rng']
@@ -523,6 +533,13 @@ class Solver(object):
             'vantage' in self.defender.status_bundle and not self.item.cannot_be_countered and \
             self.defender_can_counterattack() and self.item.weapon
 
+    def has_nihil(self, unit, status) -> bool:
+        if isinstance(unit, UnitObject.UnitObject):
+            for skill in unit.status_effects:
+                if skill.nihil and ('All' in skill.nihil or status.id in skill.nihil):
+                    return True
+            return False
+
     def def_double(self, gameStateObj):
         return (cf.CONSTANTS['def_double'] or 'vantage' in self.defender.status_bundle or 'def_double' in self.defender.status_bundle) and \
             self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj, "Defense")
@@ -558,27 +575,33 @@ class Solver(object):
             return result
         return False
 
-    def get_attacker_proc(self, unit, gameStateObj):
-        proc_statuses = [s for s in unit.status_effects if s.attack_proc]
+    def get_attacker_proc(self, attacker, defender, gameStateObj):
+        if not isinstance(defender, UnitObject.UnitObject):
+            return None
+        proc_statuses = [s for s in attacker.status_effects if s.attack_proc]
         proc_statuses = sorted(proc_statuses, key=lambda x: x.attack_proc.priority, reverse=True)
         for status in proc_statuses:
+            if self.has_nihil(defender, status):
+                continue
             roll = static_random.get_combat()
-            expr = GC.EQUATIONS.get_expression(status.attack_proc.rate, unit)
+            expr = GC.EQUATIONS.get_expression(status.attack_proc.rate, attacker)
             if roll < expr:
                 status_obj = StatusCatalog.statusparser(status.attack_proc.status_id, gameStateObj)
-                Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
+                Action.do(Action.AddStatus(attacker, status_obj), gameStateObj)
                 return status_obj
         return None
 
-    def get_defender_proc(self, unit, gameStateObj):
-        proc_statuses = [s for s in unit.status_effects if s.defense_proc]
+    def get_defender_proc(self, defender, attacker, gameStateObj):
+        proc_statuses = [s for s in defender.status_effects if s.defense_proc]
         proc_statuses = sorted(proc_statuses, key=lambda x: x.defense_proc.priority, reverse=True)
         for status in proc_statuses:
+            if self.has_nihil(attacker, status):
+                continue
             roll = static_random.get_combat()
-            expr = GC.EQUATIONS.get_expression(status.defense_proc.rate, unit)
+            expr = GC.EQUATIONS.get_expression(status.defense_proc.rate, defender)
             if roll < expr:
                 status_obj = StatusCatalog.statusparser(status.defense_proc.status_id, gameStateObj)
-                Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
+                Action.do(Action.AddStatus(defender, status_obj), gameStateObj)
                 return status_obj
         return None
 
