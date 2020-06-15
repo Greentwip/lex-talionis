@@ -1576,6 +1576,12 @@ class UnitObject(object):
         elif crit == 3:
             damage *= 3
 
+        if isinstance(target, UnitObject):
+            for status in target.status_effects:
+                if status.resist_multiplier:
+                    multiplier = float(eval(status.resist_multiplier))
+                    damage = int(damage * multiplier)
+
         # Handle hybrid miss
         if hybrid:
             damage = int(damage * hybrid/100.0) 

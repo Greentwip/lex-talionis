@@ -33,7 +33,7 @@ enemy;0;0;Myrmidon;3;Iron Sword;2,14;None;Resistance
 enemy;0;0;Warrior;10;Iron Axe;2,13;None;Resistance
 enemy;0;0;Halberdier;5;Iron Lance;2,11;None;Resistance
 #player;0;0;Knight;5;Iron Lance;2,12;None;Resistance
-player;0;0;Thief;10;Iron Sword;2,12;None;Resistance
+player;0;0;Thief;10;Iron Sword;2,12;None;Resistance;Stoneskin
 #enemy;0;0;Dragoon;5;Adamant Lance;15,5;Seize;Resistance
 #enemy;0;0;Myrmidon;5;Iron Sword;14,4;Seize;Resistance
 enemy;0;arena0;Soldier;20;Mithril Lance;0,0;None;Resistance

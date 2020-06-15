@@ -58,6 +58,19 @@
         <stat_change>0,0,0,0,-4,0,5,0,0,0</stat_change>
     </status>
 
+    <!-- Stoneskin Status -->
+    <status name="Stoneskin">
+        <id>Stoneskin</id>
+        <desc>Take half damage all sources, but inflicts SPD -4.</desc>
+        <image_index>9,8</image_index>
+        <components>stat_change,time,resist_multiplier</components>
+
+        <time>5</time>
+        <resist_multiplier>0.5</resist_multiplier>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <stat_change>0,0,0,0,-4,0,0,0,0,0</stat_change>
+    </status>
+
     <!-- Stun Status -->
 	<status name="Stun">
 		<id>Stun</id>
