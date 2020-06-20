@@ -419,6 +419,10 @@ class TurnwheelDisplay(object):
 
 class TurnwheelState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
+        # Kill off any units who are currently dying
+        for unit in gameStateObj.allunits:
+            if unit.isDying:
+                unit.die(gameStateObj, event=False)
         gameStateObj.action_log.record = False
         GC.SOUNDDICT['TurnwheelIn2'].play()
         # Lower volume
@@ -463,16 +467,7 @@ class TurnwheelState(StateMachine.State):
             self.last_direction = 'FORWARD'
         elif 'UP' in directions or 'LEFT' in directions:
             GC.SOUNDDICT['Select 2'].play()
-            old_message = None
-            if self.last_direction == 'FORWARD':
-                gameStateObj.action_log.current_unit = None
-                old_message = gameStateObj.action_log.backward(gameStateObj)
-            new_message = gameStateObj.action_log.backward(gameStateObj)
-            if new_message is None:
-                new_message = old_message
-            if new_message is not None:
-                self.display.change_text(new_message, gameStateObj.turncount)
-            self.last_direction = 'BACKWARD'
+            self.go_backwards(gameStateObj)
 
         if action == 'SELECT':
             if gameStateObj.action_log.can_use():
@@ -484,13 +479,28 @@ class TurnwheelState(StateMachine.State):
                 self.turnwheel_effect()
                 gameStateObj.background.fade_out()
                 gameStateObj.game_constants['current_turnwheel_uses'] -= 1
-            elif not gameStateObj.action_log.locked:
+            elif self.name != 'force_turnwheel' and not gameStateObj.action_log.locked:
                 self.back_out(gameStateObj)
             else:
                 GC.SOUNDDICT['Error'].play()
 
         elif action == 'BACK':
-            self.back_out(gameStateObj)
+            if self.name != 'force_turnwheel':
+                self.back_out(gameStateObj)
+            else:
+                GC.SOUNDDICT['Error'].play()
+
+    def go_backwards(self, gameStateObj):
+        old_message = None
+        if self.last_direction == 'FORWARD':
+            gameStateObj.action_log.current_unit = None
+            old_message = gameStateObj.action_log.backward(gameStateObj)
+        new_message = gameStateObj.action_log.backward(gameStateObj)
+        if new_message is None:
+            new_message = old_message
+        if new_message is not None:
+            self.display.change_text(new_message, gameStateObj.turncount)
+        self.last_direction = 'BACKWARD'
 
     def back_out(self, gameStateObj):
         GC.SOUNDDICT['Select 4'].play()

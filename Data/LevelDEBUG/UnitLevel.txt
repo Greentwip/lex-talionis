@@ -22,7 +22,7 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 #player;0;0;Coyote;2,14;None
 #player;0;0;Duke;5;Poison Bow,Iron Lance,Energy Drink;0,1;None;Resistance
-# player;0;0;Ophie;3,14;None
+player;0;0;Ophie;3,14;None
 player;0;0;Drake;3,15;None
 #player;0;0;Althea;1,14;None
 #player;0;0;Sage;5;Fire;10,10;None;Resistance

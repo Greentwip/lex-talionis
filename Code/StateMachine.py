@@ -115,6 +115,7 @@ class StateMachine(object):
                            'info_menu': InfoMenu.InfoMenu,
                            'unit_menu': UnitMenu.UnitMenu,
                            'turnwheel': Turnwheel.TurnwheelState,
+                           'force_turnwheel': Turnwheel.TurnwheelState,
                            'overworld': Overworld.OverworldState,
                            'overworld_effects': Overworld.OverworldEffectsState,
                            'overworld_options': Overworld.OverworldOptionsState,

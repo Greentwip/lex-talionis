@@ -1,6 +1,9 @@
 # has our party size fallen below five?
 if;gameStateObj.get_total_party_members() < 5
     minimum_number_banner
-    lose_game
-    t;1
+    if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+        activate_turnwheel;force
+    else
+        lose_game
+    end
 end

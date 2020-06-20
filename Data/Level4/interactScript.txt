@@ -1,8 +1,11 @@
-# has our party size fallen below four?
+# has our party size fallen below five?
 if;gameStateObj.get_total_party_members() < 5
 	minimum_number_banner
-	lose_game
-	t;1
+	if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+		activate_turnwheel;force
+	else
+		lose_game
+	end
 # If no more wagons and Anders is dead win
 elif;gameStateObj.game_constants['Escaped_Wagons'] + gameStateObj.game_constants['Dead_Wagons'] >= 10
 	if;gameStateObj.check_dead('Anders')

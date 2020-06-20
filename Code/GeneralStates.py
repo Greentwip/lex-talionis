@@ -2127,6 +2127,11 @@ class DialogueState(StateMachine.State):
             gameStateObj.stateMachine.clear()
             gameStateObj.stateMachine.changeState('start_start')
             gameStateObj.stateMachine.changeState('game_over')
+        elif self.message.turnwheel_flag:
+            if self.message.turnwheel_flag == 2:
+                gameStateObj.stateMachine.changeState('force_turnwheel')
+            else:
+                gameStateObj.stateMachine.changeState('turnwheel')
         elif self.message.battle_save_flag:
             gameStateObj.stateMachine.changeState('battle_save')
         elif self.message.reset_state_flag:

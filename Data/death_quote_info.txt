@@ -18,7 +18,12 @@ if;self.unit.name == 'Ophie'
 	r;Ophie
 	kill_unit;Ophie
 	wait;200
-	lose_game
+	if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+		# Activate Turnwheel to save Ophie
+		activate_turnwheel;force
+	else
+		lose_game
+	end
 elif;self.unit.name == 'Prim'
 	u;Prim;FarRight
 	if;gameStateObj.game_constants['level'] == 0
@@ -55,7 +60,12 @@ elif;self.unit.name == 'Althea'
 		r;Althea;Drake
 		kill_unit;Althea
 		wait;200
-		lose_game
+		if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+			# Activate Turnwheel to save Althea
+			activate_turnwheel;force
+		else
+			lose_game
+		end
 	else
 		if;gameStateObj.game_constants['level'] >= 8
 			s;Althea;It seems... my best... was not good enough.{w};auto
@@ -90,7 +100,11 @@ elif;self.unit.name == 'Renae'
 	if;gameStateObj.game_constants['level'] == 3
 		kill_unit;Renae
 		wait;200
-		lose_game
+		if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+			activate_turnwheel;force
+		else
+			lose_game
+		end
 	end
 elif;self.unit.name == 'Theo'
 	u;Theo;FarRight
@@ -103,7 +117,11 @@ elif;self.unit.name == 'Sam'
 	r;Sam
 	kill_unit;Sam
 	wait;200
-	lose_game
+	if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+		activate_turnwheel;force
+	else
+		lose_game
+	end
 elif;self.unit.name == 'Eliza'
 	u;Eliza;FarRight
 	s;Eliza;I-I shouldn't have tried...{w}{br}I-I am too weak...{w};auto

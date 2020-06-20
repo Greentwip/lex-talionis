@@ -13,9 +13,6 @@ Other features:
 Class Change command and status
 Have Summons work with the turnwheel
 ProcComponent to conditional proc skills
-Turnwheel Plot Armor
-Gain_Status_After_Attack
-Gain_Status_After_Kill
 
 
 FOR FUTURE UPDATES TO THE ENGINE:

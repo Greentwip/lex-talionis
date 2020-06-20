@@ -71,6 +71,7 @@ class Dialogue_Scene(object):
         self.current_state = "Processing" # Other options are "Waiting", "Transitioning"
         self.last_state = None
         self.do_skip = False
+        self.turnwheel_flag: int = 0 # Whether to enter the turnwheel state after this scene
         self.battle_save_flag = False # Whether to enter the battle save state after this scene has completed
         self.reset_state_flag = False # Whether to reset state to free state after this scene has completed
         self.reset_boundary_manager = False # Whether to reset the boundary manager after this scene has completed. Set to true when tiles are changed
@@ -762,7 +763,11 @@ class Dialogue_Scene(object):
             gameStateObj.statedict['levelIsComplete'] = 'loss'
         elif line[0] == 'win_game':
             gameStateObj.statedict['levelIsComplete'] = 'win'
-
+        elif line[0] == 'activate_turnwheel':
+            if len(line) > 1: # Force turnwheel
+                self.turnwheel_flag = 2
+            else: # Optional Turnwheel
+                self.turnwheel_flag = 1
         elif line[0] == 'battle_save':
             # Using a flag instead of just going to battle save state because if I save while
             # there's a dialogue state on the stack, the dialogue has a surface which crashes the save

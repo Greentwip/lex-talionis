@@ -1,8 +1,11 @@
 # has our party size fallen below three?
 if;gameStateObj.get_total_party_members() < 3
 	minimum_number_banner
-	lose_game
-	t;1
+	if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+		activate_turnwheel;force
+	else
+		lose_game
+	end
 elif;gameStateObj.check_dead('Sidney')
 	win_game
 elif;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1

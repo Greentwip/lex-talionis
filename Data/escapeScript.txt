@@ -7,7 +7,11 @@ if;gameStateObj.game_constants['level'] == 4
 		inc_game_constant;Escaped_Wagons
 	end
 	if;gameStateObj.game_constants['Escaped_Wagons'] >= 4
-		lose_game
+		if;'Turnwheel' in gameStateObj.game_constants and gameStateObj.game_constants.get('current_turnwheel_uses', 1) > 0
+			activate_turnwheel;force
+		else
+			lose_game
+		end
 	# If the number of escaped wagons plus the number of dead wagons is gte than the total number of wagons, win
 	elif;gameStateObj.game_constants['Escaped_Wagons'] + gameStateObj.game_constants['Dead_Wagons'] >= 12
 		if;gameStateObj.check_dead('Anders')
@@ -23,7 +27,7 @@ if;gameStateObj.game_constants['level'] == 4
 elif;gameStateObj.game_constants['level'] == 6
 	if;self.unit.name == 'Kiley'
 		u;Kiley;Right
-		s;Kiley;Aye, looks like this Resistance can handle itself.{w}{br}I'd best be following me crew.{w}{br}They get mighty rowdy without their captain to steer 'em straight{w};auto
+		s;Kiley;Aye, looks like this Resistance can handle itself.{w}{br}I'd best be following me crew.{w}{br}They get mighty rowdy without their captain to steer 'em straight.{w};auto
 		r;Kiley
 	elif;self.unit.name == 'Prisoner'
 		inc_game_constant;Civ_Escape
