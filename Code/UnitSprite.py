@@ -247,7 +247,7 @@ class UnitSprite(object):
                         else:
                             cut_off = int((self.unit.currenthp/float(self.unit.stats['HP']))*12) + 1
                         if gameStateObj.combatInstance and self.unit in gameStateObj.combatInstance.health_bars:
-                            self.current_cut_off = int(float(gameStateObj.combatInstance.health_bars[self.unit].true_hp)/self.unit.stats['HP']*13)
+                            self.current_cut_off = int(min(float(gameStateObj.combatInstance.health_bars[self.unit].true_hp)/self.unit.stats['HP'], 1)*13)
                         else:
                             dt = current_time - self.lastHPUpdate
                             if dt > 50:

@@ -578,7 +578,7 @@ class InfoMenu(StateMachine.State):
             if item.droppable:
                 namefont = GC.FONT['text_green']
                 usefont = GC.FONT['text_green']
-            elif self.unit.canWield(item):
+            elif self.unit.canWield(item) and self.unit.canUse(item):
                 namefont = GC.FONT['text_white']
                 usefont = GC.FONT['text_blue']
             else:

@@ -187,6 +187,44 @@
         <always_animation>MapFrostbite,11,1,11</always_animation>
     </status>
 
+    <status name="Bloodcrazed">
+        <id>Bloodcrazed</id>
+        <desc>Grants Stat Bonuses (testing)</desc>
+        <image_index>5,3</image_index>
+        <components>gain_status_after_kill,gain_status_after_attack,gain_status_after_active_kill,class_skill</components>
+
+        <gain_status_after_kill>Bloodcrazed_child1</gain_status_after_kill>
+        <gain_status_after_attack>Bloodcrazed_child2</gain_status_after_attack>
+        <gain_status_after_active_kill>Bloodcrazed_child3</gain_status_after_active_kill>
+    </status>
+
+    <status name="Bloodcrazed">
+        <id>Bloodcrazed_child1</id>
+        <desc>Grants +1 STR for each kill</desc>
+        <image_index>5,3</image_index>
+        <components>stat_change,lost_on_endchapter,stack</components>
+
+        <stat_change>0,1,0,0,0,0,0,0,0,0</stat_change>
+    </status>
+
+    <status name="Bloodcrazed">
+        <id>Bloodcrazed_child2</id>
+        <desc>Grants +1 SKL for each attack</desc>
+        <image_index>5,3</image_index>
+        <components>stat_change,lost_on_endchapter,stack</components>
+
+        <stat_change>0,0,0,1,0,0,0,0,0,0</stat_change>
+    </status>
+
+    <status name="Bloodcrazed">
+        <id>Bloodcrazed_child3</id>
+        <desc>Grants +1 SPD for each kill on player phase</desc>
+        <image_index>5,3</image_index>
+        <components>stat_change,lost_on_endchapter,stack</components>
+
+        <stat_change>0,0,0,0,1,0,0,0,0,0</stat_change>
+    </status>
+
     <!-- FEATS -->
     <status name="Strength +2">
         <id>fStrength +2</id>
@@ -399,6 +437,15 @@
         <components>stat_change</components>
         <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
         <stat_change>0,5,5,5,5,0,5,5,0,0</stat_change>
+    </status>
+
+    <status name="Paragon">
+        <id>Paragon</id>
+        <desc>Doubles amount of experience received in battle.</desc>
+        <image_index>10,9</image_index>
+        <components>exp_multiplier,class_skill</components>
+
+        <exp_multiplier>2</exp_multiplier>
     </status>
 
     <status name="Canto">
@@ -737,6 +784,36 @@
         <components>hit</components>
 
         <hit>100</hit>
+    </status>
+
+    <status name="Overdrive">
+        <id>Overdrive</id>
+        <image_index>5,9</image_index>
+        <desc>Combat Art. INFINITE POWER!!!</desc>
+        <components>activated_item,class_skill</components>
+
+        <charge_method>SKL</charge_method>
+        <charge_max>0</charge_max>
+        <activated_item>so_Overdrive</activated_item>
+    </status>
+
+    <status name="INFINITE POWER!!!">
+        <id>overdrive_status</id>
+        <image_index>5,9</image_index>
+        <desc>Grants +4 STR, +4 MAG, +2 SPD</desc>
+        <components>stat_change,time</components>
+
+        <time>4</time>
+        <stat_change>0,4,4,0,2,0,0,0,0,0</stat_change>
+    </status>
+
+    <status name="Death Lotus">
+        <id>infinite_status</id>
+        <image_index>5,9</image_index>
+        <desc>Permanently lowers HP by 3</desc>
+        <components>stat_change,hidden,stack</components>
+
+        <stat_change>-3,0,0,0,0,0,0,0,0,0</stat_change>
     </status>
 
     <status name="Metamagic">

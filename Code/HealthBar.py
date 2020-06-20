@@ -56,7 +56,7 @@ class HealthBar(object):
 
             # Blit health bars -- Must be blit every frame
             if self.unit.stats['HP']:
-                fraction_hp = float(self.true_hp)/self.unit.stats['HP']
+                fraction_hp = min(float(self.true_hp)/self.unit.stats['HP'], 1)
             else:
                 fraction_hp = 0
             index_pixel = int(50*fraction_hp)

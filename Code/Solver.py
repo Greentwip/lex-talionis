@@ -210,7 +210,7 @@ class DefenderState(AttackerState):
         if solver.event_combat and solver.event_combat[-1] == 'quit':
             return 'Done'
         if solver.attacker.currenthp > 0 and solver.defender.currenthp > 0:
-            ditem = solver.defender.getMainWeapon()
+            ditem = solver.p2_item
             if solver.item_uses(ditem) and self.check_for_brave(solver, solver.defender, ditem):
                 return 'DefenderBrave'
             elif solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
@@ -229,7 +229,7 @@ class DefenderState(AttackerState):
         solver.def_rounds += 1
 
     def process(self, solver, gameStateObj, metaDataObj):
-        ditem = solver.defender.getMainWeapon()
+        ditem = solver.p2_item
         Action.do(Action.UseItem(ditem), gameStateObj)
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem, 'Defense')
         result.adept_proc = solver.adept_proc
@@ -244,7 +244,7 @@ class DefenderBraveState(DefenderState):
         if solver.event_combat and solver.event_combat[-1] == 'quit':
             return 'Done'
         if solver.attacker.currenthp > 0 and solver.defender.currenthp > 0:
-            ditem = solver.defender.getMainWeapon()
+            ditem = solver.p2_item
             if solver.def_rounds < 2 and solver.defender_has_vantage(gameStateObj):
                 return 'Attacker'
             elif solver.atk_rounds < 2 and solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
@@ -339,6 +339,7 @@ class Solver(object):
         # Have splash damage spiral out from position it started on...
         self.splash = sorted(splash, key=lambda s_unit: Utility.calculate_distance(self.def_pos, s_unit.position))
         self.item = item
+        self.p2_item = self.defender.getMainWeapon() if self.defender else None
         self.skill_used = skill_used
         if event_combat:
             # Must make a copy because we'll be modifying this list
@@ -346,7 +347,7 @@ class Solver(object):
         else:
             self.event_combat = None
         # If the item being used has the event combat property, then that too.
-        if not event_combat and (self.item.event_combat or (self.defender and self.defender.getMainWeapon() and self.defender.getMainWeapon().event_combat)):
+        if not event_combat and (self.item.event_combat or (self.defender and self.p2_item and self.p2_item.event_combat)):
             self.event_combat = ['hit'] * 8  # Default event combat for evented items
         self.arena = arena
 
@@ -520,7 +521,7 @@ class Solver(object):
         return True
 
     def defender_can_counterattack(self):
-        weapon = self.defender.getMainWeapon()
+        weapon = self.p2_item
         if self.arena and weapon:
             return True
         elif weapon and self.item_uses(weapon) and Utility.calculate_distance(self.attacker.position, self.defender.position) in weapon.get_range(self.defender):
@@ -529,7 +530,7 @@ class Solver(object):
             return False
 
     def defender_has_vantage(self, gameStateObj):
-        return isinstance(self.defender, UnitObject.UnitObject) and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj, "Defense") and \
+        return isinstance(self.defender, UnitObject.UnitObject) and self.defender.outspeed(self.attacker, self.p2_item, gameStateObj, "Defense") and \
             'vantage' in self.defender.status_bundle and not self.item.cannot_be_countered and \
             self.defender_can_counterattack() and self.item.weapon
 
@@ -542,7 +543,7 @@ class Solver(object):
 
     def def_double(self, gameStateObj):
         return (cf.CONSTANTS['def_double'] or 'vantage' in self.defender.status_bundle or 'def_double' in self.defender.status_bundle) and \
-            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.defender.getMainWeapon(), gameStateObj, "Defense")
+            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.p2_item, gameStateObj, "Defense")
 
     def allow_counterattack(self, gameStateObj):
         return isinstance(self.defender, UnitObject.UnitObject) and \
@@ -566,7 +567,7 @@ class Solver(object):
                     break
             else:
                 for status in self.defender.status_effects:
-                    if status.charge and self.check_charge(self.defender, self.attacker, self.defender.getMainWeapon(), status, gameStateObj):
+                    if status.charge and self.check_charge(self.defender, self.attacker, self.p2_item, status, gameStateObj):
                         self.total_rounds += 1
                         self.def_charge_proc = status
                         break

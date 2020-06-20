@@ -50,13 +50,13 @@ class Stat(object):
         return max(0, self.base_stat + self.bonuses) // other
 
     def __rdiv__(self, other):
-        return other / max(0, self.base_stat + self.bonuses)
+        return other / max(1, self.base_stat + self.bonuses)
 
     def __rtruediv__(self, other):
-        return other / max(0, self.base_stat + self.bonuses)
+        return other / max(1, self.base_stat + self.bonuses)
 
     def __rfloordiv__(self, other):
-        return other // max(0, self.base_stat + self.bonuses)
+        return other // max(1, self.base_stat + self.bonuses)
 
     def __neg__(self):
         return -max(0, self.base_stat + self.bonuses)

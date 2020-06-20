@@ -75,8 +75,8 @@ class ItemObject(object):
         serial_dict['owner'] = self.item_owner
         serial_dict['droppable'] = self.droppable
         serial_dict['event_combat'] = self.event_combat
-        serial_dict['uses'] = self.uses.uses if self.uses else None
-        serial_dict['c_uses'] = self.c_uses.uses if self.c_uses else None
+        serial_dict['uses'] = self.uses.uses if self.uses is not None else None
+        serial_dict['c_uses'] = self.c_uses.uses if self.c_uses is not None else None
         return serial_dict
 
     # If the attribute is not found
@@ -572,8 +572,8 @@ def deserialize(item_dict):
         item.droppable = True
     if item_dict['event_combat']:
         item.event_combat = True
-    if item_dict['uses']:
+    if item_dict['uses'] is not None:
         item.uses.uses = item_dict['uses']
-    if item_dict['c_uses']:
+    if item_dict['c_uses'] is not None:
         item.c_uses.uses = item_dict['c_uses']
     return item

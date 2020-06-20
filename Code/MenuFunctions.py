@@ -423,7 +423,7 @@ class ChoiceMenu(SimpleMenu):
                         uses_font = GC.FONT[self.color_control[index+self.scroll]]
                         if uses_font == GC.FONT['text_white']:
                             uses_font = GC.FONT['text_blue']
-                    elif self.owner.canWield(option):
+                    elif self.owner.canWield(option) and self.owner.canUse(option):
                         main_font = GC.FONT['text_white']
                         uses_font = GC.FONT['text_blue']
                     main_font.blit(str(option), surf, (left + 20, top))
@@ -1361,7 +1361,7 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
             item.draw(surf, (topleft[0] + 2, topleft[1] + index*16 + 4))
             name_font = GC.FONT['text_grey']
             use_font = GC.FONT['text_grey']
-            if unit.canWield(item):
+            if unit.canWield(item) and unit.canUse(item):
                 name_font = GC.FONT['text_white']
                 use_font = GC.FONT['text_blue']
             name_font.blit(item.name, surf, (topleft[0] + 4 + 16, topleft[1] + index*16 + 4))

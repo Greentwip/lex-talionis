@@ -576,6 +576,9 @@ class ConvoyTrader(object):
     def canWield(self, item):
         return True
 
+    def canUse(self, item):
+        return True
+
     def insert_item(self, index, item, gameStateObj=None):
         self.items.insert(index, item)
         item.item_owner = 0

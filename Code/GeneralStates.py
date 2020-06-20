@@ -546,7 +546,7 @@ class MenuState(StateMachine.State):
             options.append(cf.WORDS['Arrive'])
         if 'Weapon' in gameStateObj.map.tile_info_dict[cur_unit.position]:
             weapon = gameStateObj.map.tile_info_dict[cur_unit.position]['Weapon']
-            if cur_unit.canWield(weapon):
+            if cur_unit.canWield(weapon) and cur_unit.canUse(weapon):
                 options.append(weapon.name)
         # If the unit is standing on a switch
         if 'Switch' in gameStateObj.map.tile_info_dict[cur_unit.position]:
@@ -916,13 +916,11 @@ class ItemChildState(StateMachine.State):
         current_unit = gameStateObj.cursor.currentSelectedUnit
         # Create child menu with additional options
         options = []
-        if selection.weapon and current_unit.canWield(selection):
+        if selection.weapon and current_unit.canWield(selection) and current_unit.canUse(selection):
             options.append(cf.WORDS['Equip'])
-        if selection.usable:
+        if selection.usable and current_unit.canUse(selection):
             use = True
             if selection.heal and current_unit.currenthp >= current_unit.stats['HP']:
-                use = False
-            elif selection.c_uses and selection.c_uses.uses <= 0:
                 use = False
             elif selection.booster and not current_unit.can_use_booster(selection):
                 use = False
@@ -1008,7 +1006,7 @@ class WeaponState(StateMachine.State):
     name = 'weapon'
 
     def get_options(self, unit, gameStateObj):
-        options = [item for item in unit.items if item.weapon and unit.canWield(item)]  # Apply straining for skill
+        options = [item for item in unit.items if item.weapon and unit.canWield(item) and unit.canUse(item)]  # Apply straining for skill
         if unit.current_skill:
             options = unit.current_skill.combat_art.valid_weapons(unit, options)
         # Only shows options I can use now
@@ -1082,7 +1080,7 @@ class SpellWeaponState(WeaponState):
     name = 'spellweapon'
 
     def get_options(self, unit, gameStateObj):
-        options = [item for item in unit.items if item.spell and unit.canWield(item)]
+        options = [item for item in unit.items if item.spell and unit.canWield(item) and unit.canUse(item)]
         # Only shows options I can use
         options = [item for item in options if unit.getValidSpellTargetPositions(gameStateObj, item)]
         return options

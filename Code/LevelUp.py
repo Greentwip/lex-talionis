@@ -24,14 +24,21 @@ class GainExpState(StateMachine.State):
             self.old_exp = self.unit.exp
             self.old_level = self.unit.level
             self.unit_klass = ClassData.class_dict[self.unit.klass]
+            self.auto_promote = (cf.CONSTANTS['auto_promote'] or 'auto_promote' in self.unit.tags) and \
+                self.unit_klass['turns_into'] and 'no_auto_promote' not in self.unit.tags
 
             self.state = CustomObjects.StateMachine(self.starting_state)
             self.state_time = Engine.get_time()
             self.exp_bar = None
             self.level_up_animation = None
             self.level_up_screen = None
+
+            if not self.auto_promote:
+                # Make sure we don't go over 0 exp if no autopromote
+                max_exp = 100*(self.unit_klass['max_level'] - self.old_level) - self.old_exp
+                self.exp_gain = min(self.exp_gain, max_exp)
             
-            if self.unit.level >= self.unit_klass['max_level'] and not self.unit_klass['turns_into']:
+            if self.unit.level >= self.unit_klass['max_level'] and not self.auto_promote:
                 gameStateObj.stateMachine.back()  # Done here
                 return "repeat"
 
@@ -95,8 +102,7 @@ class GainExpState(StateMachine.State):
                 max_level = self.unit_klass['max_level']
                 if self.unit.level >= max_level:  # Do I promote?
                     GC.SOUNDDICT['Experience Gain'].stop()
-                    if cf.CONSTANTS['auto_promote'] and self.unit_klass['turns_into'] and \
-                            'no_auto_promote' not in self.unit.tags:
+                    if self.auto_promote:
                         self.exp_bar.update(100)
                         GC.SOUNDDICT['Level Up'].play()
                     else:
@@ -187,8 +193,7 @@ class GainExpState(StateMachine.State):
             self.exp_bar.update()
             if current_time - self.state_time > 100:
                 class_options = self.unit_klass['turns_into']
-                if cf.CONSTANTS['auto_promote'] and class_options and \
-                        'no_auto_promote' not in self.unit.tags:
+                if self.auto_promote:
                     self.exp_bar.update(0)
                     if len(class_options) > 1:
                         gameStateObj.cursor.currentSelectedUnit = self.unit

@@ -961,9 +961,7 @@ class Dialogue_Scene(object):
             unit = self.get_unit(line[1], gameStateObj)
             portrait_id = line[2]
             if portrait_id in GC.PORTRAITDICT:
-                unit.portrait_id = portrait_id
-                unit.bigportrait = Engine.subsurface(GC.UNITDICT[str(unit.portrait_id) + 'Portrait'], (0, 0, 96, 80))
-                unit.portrait = Engine.subsurface(GC.UNITDICT[str(unit.portrait_id) + 'Portrait'], (96, 16, 32, 32))
+                Action.do(Action.ChangePortrait(unit, portrait_id), gameStateObj)
             else:
                 print("%s not in portrait dictionary. Need to assign blink and mouth positions to pic" % (portrait_id))
         elif line[0] == 'convert':

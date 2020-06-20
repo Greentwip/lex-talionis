@@ -605,10 +605,10 @@ class UnitObject(object):
         return pathfinder.path
 
     def getMainWeapon(self):
-        return next((item for item in self.items if item.weapon and self.canWield(item)), None)
+        return next((item for item in self.items if item.weapon and self.canWield(item) and self.canUse(item)), None)
 
     def getMainSpell(self):
-        return next((item for item in self.items if item.spell and self.canWield(item)), None)
+        return next((item for item in self.items if item.spell and self.canWield(item) and self.canUse(item)), None)
 
     def hasRunAI(self):
         return self.hasRunGeneralAI
@@ -619,7 +619,14 @@ class UnitObject(object):
     def getWeight(self):
         return GC.EQUATIONS.get_weight(self)
 
-    def canWield(self, item):
+    def canUse(self, item) -> bool:
+        if item.uses and item.uses.uses <= 0:
+            return False
+        if item.c_uses and item.c_uses.uses <= 0:
+            return False
+        return True
+
+    def canWield(self, item) -> bool:
         """
         Returns True if it can be wielded/used, and False otherwise
         Now has support for no_weapons status
@@ -914,13 +921,15 @@ class UnitObject(object):
     # Uses all weapons the unit has access to find its potential range
     def findPotentialRange(self, spell=False, both=False, boundary=False):
         if both:
-            allWeapons = [item for item in self.items if self.canWield(item) and (item.weapon or (item.spell and item.detrimental))]
+            allWeapons = \
+                [item for item in self.items if self.canWield(item) and 
+                 self.canUse(item) and (item.weapon or (item.spell and item.detrimental))]
         elif spell:
-            allWeapons = [item for item in self.items if item.spell and self.canWield(item)]
+            allWeapons = [item for item in self.items if item.spell and self.canWield(item) and self.canUse(item)]
             if boundary:
                 allWeapons = [item for item in self.items if item.detrimental]
         else:
-            allWeapons = [item for item in self.items if item.weapon and self.canWield(item)]
+            allWeapons = [item for item in self.items if item.weapon and self.canWield(item) and self.canUse(item)]
         if not allWeapons:
             return []
         potentialRange = []
@@ -965,7 +974,7 @@ class UnitObject(object):
         # Now filter based on types of spells I've used
         # There are three types of spells, ALLY, ENEMY, TILE
         if not boundary:
-            my_spells = [item for item in self.items if item.spell and self.canWield(item)]
+            my_spells = [item for item in self.items if item.spell and self.canWield(item) and self.canUse(item)]
             # If can only hit allies, ignore enemies
             if all(["Ally" == spell.spell.targets for spell in my_spells]):
                 enemy_unit_positions = [unit.position for unit in gameStateObj.allunits if unit.position and self.checkIfEnemy(unit)]
@@ -1239,7 +1248,7 @@ class UnitObject(object):
     # Finds all valid target positions given all weapons the unit has access to, as opposed to the just
     # one weapon favored by getValidTargetPosition. Is a wrapper around getValidTargetPosition
     def getAllTargetPositions(self, gameStateObj):
-        allWeapons = [item for item in self.items if item.weapon and self.canWield(item)]
+        allWeapons = [item for item in self.items if item.weapon and self.canWield(item) and self.canUse(item)]
         if not allWeapons:
             return []
 
@@ -1253,7 +1262,7 @@ class UnitObject(object):
     # Finds all valid targets given all staves the unit has access to
     # Uses EVERY spell the unit has access to 
     def getAllSpellTargetPositions(self, gameStateObj):
-        allSpells = [item for item in self.items if item.spell and self.canWield(item)]
+        allSpells = [item for item in self.items if item.spell and self.canWield(item) and self.canUse(item)]
         if not allSpells:
             return []
 
@@ -1894,7 +1903,9 @@ class UnitObject(object):
         # Units should have their temporary statuses removed
         # Create copy so we can iterate it over without messing around with stuff...
         for status in self.status_effects[:]:
-            if status.time or status.remove_range or status.lost_on_interact or status.lost_on_endstep:
+            if (status.time or status.remove_range or 
+                    status.lost_on_interact or status.lost_on_endstep or 
+                    status.lost_on_attack or status.lost_on_endchapter):
                 # Without clean_up parameter, certain statuses can give out other status on removal, statuses we don't want
                 # Like if you remove flying, you can get tile statuses, which you obviously don't want at this point
                 Action.RemoveStatus(self, status, clean_up=True).do(gameStateObj)
@@ -2029,26 +2040,33 @@ class UnitObject(object):
         index = len(self.items)
         self.insert_item(index, item, gameStateObj)
 
+    def unequip_item(self, item, gameStateObj):
+        for status_on_equip in item.status_on_equip:
+            Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
+
+    def equip_item(self, item, gameStateObj):
+        for status_on_equip in item.status_on_equip:
+            new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
+            Action.do(Action.AddStatus(self, new_status), gameStateObj)
+
     # This does the adding and subtracting of statuses
     def remove_item(self, item, gameStateObj):
         logger.debug("Removing %s from %s items.", item, self.name)
-        was_mainweapon = self.getMainWeapon() == item
+        next_weapon = next((item for item in self.items if item.weapon and self.canWield(item)), None)
+        was_mainweapon = next_weapon == item
         self.items.remove(item)
         item.item_owner = 0
+        if was_mainweapon:
+            self.unequip_item(item, gameStateObj)
         for status_on_hold in item.status_on_hold:
             Action.do(Action.RemoveStatus(self, status_on_hold), gameStateObj)
-        if was_mainweapon and self.canWield(item):
-            for status_on_equip in item.status_on_equip:
-                Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
         # remove item mods skills
         for status in self.status_effects:
             if status.item_mod:
                 status.item_mod.reverse_mod(item, gameStateObj)
         # There may be a new item equipped
         if was_mainweapon and self.getMainWeapon():
-            for status_on_equip in self.getMainWeapon().status_on_equip:
-                new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
-                Action.do(Action.AddStatus(self, new_status), gameStateObj)
+            self.equip_item(self.getMainWeapon(), gameStateObj)
 
     # This does the adding and subtracting of statuses
     def insert_item(self, index, item, gameStateObj):
@@ -2059,14 +2077,11 @@ class UnitObject(object):
             self.items.insert(index, item)
             if self.getMainWeapon() == item: # If new mainweapon...
                 # You unequipped a different item, so remove its status.
-                if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
-                    for status_on_equip in self.items[1].status_on_equip:
-                        Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
+                if len(self.items) > 1 and self.canWield(self.items[1]):
+                    self.unequip_item(self.items[1], gameStateObj)
                 # Now add yours
-                if self.canWield(item):
-                    for status_on_equip in item.status_on_equip:
-                        new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
-                        Action.do(Action.AddStatus(self, new_status), gameStateObj)
+                if self.canWield(item) and self.canUse(item):
+                    self.equip_item(item, gameStateObj)
         else:
             self.items.insert(index, item)
             item.item_owner = self.id
@@ -2081,14 +2096,11 @@ class UnitObject(object):
                     Action.do(Action.AddStatus(self, new_status), gameStateObj)
                 if self.getMainWeapon() == item: # If new mainweapon...
                     # You unequipped a different item, so remove its status.
-                    if len(self.items) > 1 and self.items[1].status_on_equip and self.canWield(self.items[1]):
-                        for status_on_equip in self.items[1].status_on_equip:
-                            Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
+                    if len(self.items) > 1 and self.canWield(self.items[1]):
+                        self.unequip_item(self.items[1], gameStateObj)
                     # Now add yours
-                    if self.canWield(item):
-                        for status_on_equip in item.status_on_equip:
-                            new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
-                            Action.do(Action.AddStatus(self, new_status), gameStateObj)
+                    if self.canWield(item) and self.canUse(item):
+                        self.equip_item(item, gameStateObj)
 
     def die(self, gameStateObj, event=False):
         if event:

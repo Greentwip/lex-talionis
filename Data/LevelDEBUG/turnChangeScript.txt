@@ -4,6 +4,7 @@ if;gameStateObj.turncount == 1
 end
 if;gameStateObj.turncount == 2
     # hide_layer;1
+    change_portrait;Drake;Coyote
     add_tile_property;0,6;Escape=2
     layer_tile_sprite;1;4,17;Door;base_terrain
     layer_tile_sprite;1;5,17;Door;base_terrain

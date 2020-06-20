@@ -466,7 +466,7 @@ class Primary_AI(object):
         self.skip_flag = False
         closest_enemy_distance = self.unit.distance_to_closest_enemy(gameStateObj)
 
-        self.items = [item for item in self.unit.items if self.unit.canWield(item) and not item.no_ai]
+        self.items = [item for item in self.unit.items if self.unit.canWield(item) and self.unit.canUse(item) and not item.no_ai]
 
         # Determine if I can skip this unit's AI
         # Remove any items that only give statuses if there are no enemies nearby
@@ -516,7 +516,10 @@ class Primary_AI(object):
             return True
         if self.unit.currenthp < self.unit.stats['HP']:
             return False
-        detrimental_items = [item for item in self.unit.items if (item.weapon or (item.spell and item.detrimental)) and self.unit.canWield(item)]
+        detrimental_items = \
+            [item for item in self.unit.items if
+             (item.weapon or (item.spell and item.detrimental)) and 
+             self.unit.canWield(item) and self.unit.canUse(item)]
         if len(detrimental_items) == len(self.items):
             max_range = max(max(item.get_range(self.unit)) for item in detrimental_items) + self.unit.stats['MOV']
             if closest_enemy_distance > max_range:
@@ -997,7 +1000,7 @@ class Secondary_AI(object):
             # Mutiliply that by the chance I hit
             max_damage = 0
             status_term = 0
-            items = [item for item in self.unit.items if self.unit.canWield(item)]
+            items = [item for item in self.unit.items if self.unit.canWield(item) and self.unit.canUse(item)]
             for item in items:
                 if item.status:
                     status_term = 1

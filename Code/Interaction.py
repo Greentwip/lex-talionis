@@ -151,12 +151,18 @@ class Combat(object):
             else:  # TileObject
                 Action.do(Action.ChangeTileHP(result.defender.position, -result.def_damage), gameStateObj)
 
+    def handle_unusable_items(self, gameStateObj):
+        if self.item.c_uses and self.item.c_uses.uses <= 0:
+            Action.do(Action.UnequipItem(self.p1, self.item), gameStateObj)
+        if self.p2 and self.p2_item and self.p2_item.c_uses and self.p2_item.c_uses.uses <= 0:
+            Action.do(Action.UnequipItem(self.p2, self.p2_item), gameStateObj)
+
     def find_broken_items(self):
         # Handle items that were used
         a_broke_item, d_broke_item = False, False
         if self.item.uses and self.item.uses.uses <= 0:
             a_broke_item = True
-        if self.p2 and self.p2.getMainWeapon() and self.p2.getMainWeapon().uses and self.p2.getMainWeapon().uses.uses <= 0:
+        if self.p2 and self.p2_item and self.p2_item.uses and self.p2_item.uses.uses <= 0:
             d_broke_item = True
         return a_broke_item, d_broke_item
 
@@ -164,14 +170,14 @@ class Combat(object):
         if a_broke_item:
             Action.do(Action.RemoveItem(self.p1, self.item), gameStateObj)
         if d_broke_item:
-            Action.do(Action.RemoveItem(self.p2, self.p2.getMainWeapon()), gameStateObj)
+            Action.do(Action.RemoveItem(self.p2, self.p2_item), gameStateObj)
 
     def summon_broken_item_banner(self, a_broke_item, d_broke_item, gameStateObj):
         if a_broke_item and self.p1.team == 'player' and not self.p1.isDying:
             gameStateObj.banners.append(Banner.brokenItemBanner(self.p1, self.item))
             gameStateObj.stateMachine.changeState('itemgain')
         if d_broke_item and self.p2.team == 'player' and not self.p2.isDying:
-            gameStateObj.banners.append(Banner.brokenItemBanner(self.p2, self.p2.getMainWeapon()))
+            gameStateObj.banners.append(Banner.brokenItemBanner(self.p2, self.p2_item))
             gameStateObj.stateMachine.changeState('itemgain')
 
     def handle_wexp(self, results, item, gameStateObj):
@@ -193,7 +199,11 @@ class Combat(object):
     def calc_init_exp_p1(self, my_exp, other_unit, applicable_results):
         p1_klass = ClassData.class_dict[self.p1.klass]
         other_unit_klass = ClassData.class_dict[other_unit.klass]
-        exp_multiplier = p1_klass['exp_multiplier']*other_unit_klass['exp_when_attacked']
+        exp_multiplier = p1_klass['exp_multiplier']
+
+        for status in self.p1.status_effects:
+            if status.exp_multiplier:
+                exp_multiplier *= float(status.exp_multiplier)
 
         damage, healing, kills = 0, 0, 0
 
@@ -208,13 +218,14 @@ class Combat(object):
             normal_exp = int(self.item.exp)
         elif self.item.weapon or not self.p1.checkIfAlly(other_unit):
             level_diff = other_unit.get_internal_level() - self.p1.get_internal_level() + cf.CONSTANTS['exp_offset']
-            normal_exp = int(exp_multiplier*cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve']))
+            exp_mult = exp_multiplier*other_unit_klass['exp_when_attacked']
+            normal_exp = int(exp_mult*cf.CONSTANTS['exp_magnitude']*math.exp(level_diff*cf.CONSTANTS['exp_curve']))
         elif self.item.spell:
             if self.item.heal:
                 # Amount healed - exp drops off linearly based on level. But minimum is 5 exp
-                normal_exp = max(5, int(p1_klass['exp_multiplier']*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_internal_level()) + cf.CONSTANTS['heal_magnitude']))
+                normal_exp = max(5, int(exp_multiplier*cf.CONSTANTS['heal_curve']*(damage_done-self.p1.get_internal_level()) + cf.CONSTANTS['heal_magnitude']))
             else: # Status (Fly, Mage Shield, etc.)
-                normal_exp = int(p1_klass['exp_multiplier']*cf.CONSTANTS['status_exp'])
+                normal_exp = int(exp_multiplier*cf.CONSTANTS['status_exp'])
         else:
             normal_exp = 0
             
@@ -234,6 +245,9 @@ class Combat(object):
         p2_klass = ClassData.class_dict[self.p2.klass]
         other_unit_klass = ClassData.class_dict[self.p1.klass]
         exp_multiplier = p2_klass['exp_multiplier']*other_unit_klass['exp_when_attacked']
+        for status in self.p2.status_effects:
+            if status.exp_multiplier:
+                exp_multiplier *= float(status.exp_multiplier)
 
         damage, healing, kills = 0, 0, 0
 
@@ -336,13 +350,27 @@ class Combat(object):
                 Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
             elif status.lost_on_interact and (self.item.weapon or self.item.spell):
                 Action.do(Action.RemoveStatus(self.p1, status), gameStateObj)
-        if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1) and not self.p1.isDying:
+            if status.gain_status_after_attack and not self.p1.isDying:
+                applied_status = StatusCatalog.statusparser(status.gain_status_after_attack, gameStateObj)
+                Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)
+            if status.gain_status_after_kill and not self.p1.isDying:
+                if any(unit.isDying for unit in [self.p2] + self.splash if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(unit)):
+                    applied_status = StatusCatalog.statusparser(status.gain_status_after_kill, gameStateObj)
+                    Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)
+            if status.gain_status_after_active_kill and not self.p1.isDying:
+                if any(unit.isDying for unit in [self.p2] + self.splash if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(unit)):
+                    applied_status = StatusCatalog.statusparser(status.gain_status_after_active_kill, gameStateObj)
+                    Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)
+        if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1):
             for status in self.p2.status_effects:
-                if status.status_after_battle and not (status.tether and self.p2.isDying):
+                if status.status_after_battle and not self.p1.isDying and not (status.tether and self.p2.isDying):
                     applied_status = StatusCatalog.statusparser(status.status_after_battle, gameStateObj)
                     if status.tether:
                         Action.do(Action.TetherStatus(status, applied_status, self.p2, self.p1), gameStateObj)
                     Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)
+                if status.gain_status_after_kill and not self.p2.isDying and self.p1.isDying and self.p2.checkIfEnemy(self.p1):
+                    applied_status = StatusCatalog.statusparser(status.gain_status_after_kill, gameStateObj)
+                    Action.do(Action.AddStatus(self.p2, applied_status), gameStateObj)
 
     def handle_supports(self, all_units, gameStateObj):
         if gameStateObj.support and cf.CONSTANTS['support'] and self.arena != 'arena_base':
@@ -438,6 +466,7 @@ class AnimationCombat(Combat):
             distance = Utility.calculate_distance(self.p1.position, self.p2.position)
         self.at_range = distance - 1 if distance > 1 else 0 
         self.item = item
+        self.p2_item = self.p2.getMainWeapon()
         self.skill_used = skill_used
         self.event_combat = event_combat
         self.ai_combat = ai_combat
@@ -885,7 +914,7 @@ class AnimationCombat(Combat):
 
     def start_battle_music(self, gameStateObj):
         # Start Battle Music
-        ditem = self.p2.getMainWeapon()
+        ditem = self.p2_item
         if self.item.battle_music and GC.MUSICDICT.get(self.item.battle_music):
             item_music = GC.MUSICDICT.get(self.item.battle_music)
             self.music_fade_in = Engine.music_thread.fade_in(item_music)
@@ -901,7 +930,7 @@ class AnimationCombat(Combat):
         result = self.current_result
         # Calc stats
         a_mode = 'Attack' if result.attacker is self.p1 else 'Defense'
-        a_weapon = self.item if result.attacker is self.p1 else result.attacker.getMainWeapon()
+        a_weapon = self.item if result.attacker is self.p1 else self.p2_item
         a_hit = result.attacker.compute_hit(result.defender, gameStateObj, a_weapon, a_mode)
         a_mt = result.attacker.compute_damage(result.defender, gameStateObj, a_weapon, a_mode)
         if cf.CONSTANTS['crit']:
@@ -912,7 +941,7 @@ class AnimationCombat(Combat):
 
         if self.item.weapon and self.solver.defender_can_counterattack():
             d_mode = 'Defense' if result.attacker is self.p1 else 'Attack'
-            d_weapon = result.defender.getMainWeapon()
+            d_weapon = self.p2_item if result.attacker is self.p1 else self.item
             d_hit = result.defender.compute_hit(result.attacker, gameStateObj, d_weapon, d_mode)
             d_mt = result.defender.compute_damage(result.attacker, gameStateObj, d_weapon, d_mode)
             if cf.CONSTANTS['crit']:
@@ -995,7 +1024,6 @@ class AnimationCombat(Combat):
         self.p1.unlock_active()
         self.p2.unlock_active()
         # fade back music IF AND ONLY IF it was faded in!
-        ditem = self.p2.getMainWeapon()
         if self.music_fade_in:
             Engine.music_thread.fade_back()
 
@@ -1245,7 +1273,7 @@ class AnimationCombat(Combat):
                 # WEXP and Skills
                 if defender_results:
                     Action.do(Action.ChargeAllSkills(self.p2), gameStateObj)
-                    self.handle_wexp(defender_results, self.p2.getMainWeapon(), gameStateObj)
+                    self.handle_wexp(defender_results, self.p2_item, gameStateObj)
                 # Exp and Records
                 if self.p2.team == 'player' and not self.p2.isSummon():
                     my_exp, records = self.calc_init_exp_p2(defender_results)
@@ -1282,7 +1310,9 @@ class AnimationCombat(Combat):
         self.handle_skill_used(gameStateObj)
 
         # Create all_units list
-        all_units = [self.p1, self.p2]
+        all_units = [self.p1]
+        if self.p2 is not self.p1:
+            all_units.append(self.p2)
 
         # Handle death and sprite changing
         self.check_death()
@@ -1315,6 +1345,7 @@ class AnimationCombat(Combat):
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
+        self.handle_unusable_items(gameStateObj)
         self.remove_broken_items(a_broke_item, d_broke_item, gameStateObj)
 
 class SimpleHPBar(object):
@@ -1410,6 +1441,7 @@ class MapCombat(Combat):
         self.def_pos = def_pos
         self.splash = splash
         self.item = item
+        self.p2_item = self.p2.getMainWeapon() if self.p2 else None
         self.skill_used = skill_used
         self.event_combat = event_combat
         self.arena = arena
@@ -1543,6 +1575,8 @@ class MapCombat(Combat):
                     for result in self.results:
                         if result.attacker is self.p1:
                             item = self.item
+                        elif result.attacker is self.p2:
+                            item = self.p2_item
                         else:
                             item = result.attacker.getMainWeapon()
                         if item.sfx_on_cast and item.sfx_on_cast in GC.SOUNDDICT:
@@ -1581,6 +1615,8 @@ class MapCombat(Combat):
         if result.outcome:
             if result.attacker is self.p1:
                 item = self.item
+            elif result.attacker is self.p2:
+                item = self.p2_item
             else:
                 item = result.attacker.getMainWeapon()
             if isinstance(result.defender, UnitObject.UnitObject):
@@ -1706,14 +1742,24 @@ class MapCombat(Combat):
 
             # Calc stats
             a_mode = 'Attack' if result.attacker is self.p1 else 'Defense'
-            a_weapon = self.item if result.attacker is self.p1 else result.attacker.getMainWeapon()
+            if result.attacker is self.p1:
+                a_weapon = self.item
+            elif result.attacker is self.p2:
+                a_weapon = self.p2_item
+            else:
+                a_weapon = self.result.attacker.getMainWeapon()
             a_hit = result.attacker.compute_hit(result.defender, gameStateObj, a_weapon, a_mode)
             a_mt = result.attacker.compute_damage(result.defender, gameStateObj, a_weapon, a_mode)
             a_stats = a_hit, a_mt
 
             if self.p2 in (result.attacker, result.defender) and self.item.weapon and self.solver.defender_can_counterattack():
                 d_mode = 'Defense' if result.attacker is self.p1 else 'Attack'
-                d_weapon = result.defender.getMainWeapon()
+                if result.defender is self.p1:
+                    d_weapon = self.item
+                elif result.defender is self.p2:
+                    d_weapon = self.p2_item
+                else:
+                    d_weapon = result.defender.getMainWeapon()
                 d_hit = result.defender.compute_hit(result.attacker, gameStateObj, d_weapon, d_mode)
                 d_mt = result.defender.compute_damage(result.attacker, gameStateObj, d_weapon, d_mode)
                 d_stats = d_hit, d_mt
@@ -1814,7 +1860,7 @@ class MapCombat(Combat):
 
         # Create all_units list
         all_units = [unit for unit in self.splash] + [self.p1]
-        if self.p2: 
+        if self.p2 and self.p2 is not self.p1: 
             all_units += [self.p2]
 
         # Handle death and sprite changing
@@ -1880,7 +1926,7 @@ class MapCombat(Combat):
                 # WEXP and Skills
                 if defender_results:
                     Action.do(Action.ChargeAllSkills(self.p2), gameStateObj)
-                    self.handle_wexp(defender_results, self.p2.getMainWeapon(), gameStateObj)
+                    self.handle_wexp(defender_results, self.p2_item, gameStateObj)
                 # EXP and Records
                 if self.p2.team == 'player' and not self.p2.isSummon():  
                     my_exp, records = self.calc_init_exp_p2(defender_results)
@@ -1898,4 +1944,5 @@ class MapCombat(Combat):
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
+        self.handle_unusable_items(gameStateObj)
         self.remove_broken_items(a_broke_item, d_broke_item, gameStateObj)

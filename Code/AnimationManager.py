@@ -100,12 +100,16 @@ class BattleAnimationManager(object):
             if not item:
                 weapon = 'Unarmed'
             elif item.use_custom_anim:
-                if magic:
-                    weapon = 'Magic' + item.id
-                elif item.is_ranged() and distance > 1:
-                    weapon = 'Ranged' + item.id
+                if item.use_custom_anim is True:
+                    custom_id = item.id
                 else:
-                    weapon = item.id
+                    custom_id = item.use_custom_anim
+                if magic:
+                    weapon = 'Magic' + custom_id
+                elif item.is_ranged() and distance > 1:
+                    weapon = 'Ranged' + custom_id
+                else:
+                    weapon = custom_id
             elif magic:
                 weapon = 'Magic' + item.spritetype
                 check_item = True # Make sure that we have the spell also

@@ -1935,6 +1935,19 @@
         <status>Fade_Status</status>
     </item>
 
+    <item name="Overdrive">
+        <id>so_Overdrive</id>
+        <spritetype>Skills</spritetype>
+        <spriteid>5,9</spriteid>
+        <components>status</components>
+
+        <value>0</value>
+        <RNG>0</RNG>
+        <desc>I done broked something.</desc>
+
+        <status>overdrive_status,infinite_status</status>
+    </item>
+
     <item name="Shove">
         <id>so_Shove</id>
         <spritetype>Skills</spritetype>

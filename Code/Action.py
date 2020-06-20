@@ -5,7 +5,7 @@ import sys
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import static_random
-from . import Utility
+from . import Utility, Engine
 from . import Banner, Weapons, ClassData, Aura
 from . import StatusCatalog, ActiveSkill, PrepBase
 
@@ -604,7 +604,7 @@ class RemoveItem(DiscardItem):
 
 class EquipItem(Action):
     """
-    Assumes item is already in invetory
+    Assumes item is already in inventory
     """
     def __init__(self, unit, item):
         self.unit = unit
@@ -616,6 +616,36 @@ class EquipItem(Action):
 
     def reverse(self, gameStateObj):
         self.unit.insert_item(self.old_idx, self.item, gameStateObj)
+
+class UnequipItem(Action):
+    """
+    Used when an item should not be equipped any more
+    Ex. If an item with per-chapter uses has no more uses
+    """
+    def __init__(self, unit, item):
+        self.unit = unit
+        self.item = item
+        self.was_mainweapon = False
+        self.equip_item = None
+
+    def _get_old_weapon(self, unit):
+        return next((item for item in unit.items if item.weapon and unit.canWield(item)), None)
+
+    def do(self, gameStateObj):
+        self.was_mainweapon = self._get_old_weapon(self.unit) == self.item
+        if self.was_mainweapon:
+            if self.unit.getMainWeapon():
+                self.equip_item = EquipItem(self.unit, self.unit.getMainWeapon())
+                self.equip_item.do(gameStateObj)
+            else:
+                self.unit.unequip_item(self.item, gameStateObj)
+
+    def reverse(self, gameStateObj):
+        if self.was_mainweapon:
+            if self.equip_item:
+                self.equip_item.reverse(gameStateObj)
+            else:
+                self.unit.equip_item(self.item, gameStateObj)
 
 class TradeItem(Action):
     def __init__(self, unit1, unit2, item1, item2):
@@ -934,6 +964,22 @@ class Resurrect(Action):
         self.unit.dead = True
 
 # === GENERAL ACTIONS =========================================================
+class ChangePortrait(Action):
+    def __init__(self, unit, new_portrait_id):
+        self.unit = unit
+        self.old_portrait_id = self.unit.portrait_id
+        self.new_portrait_id = new_portrait_id
+
+    def do(self, gameStateObj):
+        self.unit.portrait_id = self.new_portrait_id
+        self.unit.bigportrait = Engine.subsurface(GC.UNITDICT[str(self.unit.portrait_id) + 'Portrait'], (0, 0, 96, 80))
+        self.unit.portrait = Engine.subsurface(GC.UNITDICT[str(self.unit.portrait_id) + 'Portrait'], (96, 16, 32, 32))
+
+    def reverse(self, gameStateObj):
+        self.unit.portrait_id = self.old_portrait_id
+        self.unit.bigportrait = Engine.subsurface(GC.UNITDICT[str(self.unit.portrait_id) + 'Portrait'], (0, 0, 96, 80))
+        self.unit.portrait = Engine.subsurface(GC.UNITDICT[str(self.unit.portrait_id) + 'Portrait'], (96, 16, 32, 32))
+
 class ChangeTeam(Action):
     def __init__(self, unit, new_team):
         self.unit = unit
