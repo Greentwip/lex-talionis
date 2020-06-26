@@ -329,7 +329,7 @@ class UnitObject(object):
 
             my_num = 1
             if not my_wep.no_double:
-                if my_wep.brave:
+                if my_wep.brave or my_wep.brave_on_attack:
                     my_num *= 2
                 if self.outspeed(enemyunit, my_wep, gameStateObj, "Attack"):
                     my_num *= 2
