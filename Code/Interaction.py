@@ -1389,7 +1389,7 @@ class SimpleHPBar(object):
         return self.is_done
 
     def draw(self, surf, pos):
-        t_hp = int(self.true_hp)
+        t_hp = max(int(self.true_hp), 0)
         # Blit HP -- Must be blit every frame
         font = GC.FONT['number_small2']
         top = pos[1] - 4
@@ -1403,35 +1403,26 @@ class SimpleHPBar(object):
             position = pos[0] - font.size('??')[0], top
             font.blit('??', surf, position)
         full_hp_blip = Engine.subsurface(self.full_hp_blip, (self.colors[self.color_tick] * 2, 0, 2, self.full_hp_blip.get_height()))
-        if self.max_hp > 80:
-            # First 40 hp
-            for index in range(40):
-                surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 4))
-            surf.blit(self.end_hp_blip, (pos[0] + 40 * 2 + 5, pos[1] + 4)) # End HP Blip
-            # Second 40 hp
-            for index in range(40):
-                surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] - 4))
-            surf.blit(self.end_hp_blip, (pos[0] + 40 * 2 + 5, pos[1] - 4)) # End HP Blip
-        elif self.max_hp <= 40:
+        if self.max_hp <= 40:
             for index in range(t_hp):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 1))
             for index in range(self.max_hp - t_hp):
                 surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp) * 2 + 5, pos[1] + 1))
             surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp) * 2 + 5, pos[1] + 1)) # End HP Blip
         else:
-            # First 40 hp
+            # Lower 40 hp  
             for index in range(min(t_hp, 40)):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] + 4))
-            if t_hp < 40:
-                for index in range(40 - t_hp):
-                    surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp) * 2 + 5, pos[1] + 4))
+            for index in range(max(40 - t_hp, 0)):
+                surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp) * 2 + 5, pos[1] + 4))
             surf.blit(self.end_hp_blip, (pos[0] + (40) * 2 + 5, pos[1] + 4)) # End HP Blip
-            # Second 40 hp
-            for index in range(max(0, t_hp - 40)):
+            # Upper 40 hp
+            for index in range(Utility.clamp(t_hp - 40, 0, 40)):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] - 4))
-            for index in range(self.max_hp - max(40, t_hp)):
-                surf.blit(self.empty_hp_blip, (pos[0] + (index + max(t_hp - 40, 0)) * 2 + 5, pos[1] - 4))
-            surf.blit(self.end_hp_blip, (pos[0] + (self.max_hp - 40) * 2 + 5, pos[1] - 4)) # End HP Blip
+            right = Utility.clamp(self.max_hp - 40, 40, 80)
+            for index in range(Utility.clamp(80 - t_hp, 0, right)):
+                surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp - 40) * 2 + 5, pos[1] - 4))
+            surf.blit(self.end_hp_blip, (pos[0] + (right) * 2 + 5, pos[1] - 4)) # End HP Blip
 
 class MapCombat(Combat):
     def __init__(self, attacker, defender, def_pos, splash, item, skill_used, 
