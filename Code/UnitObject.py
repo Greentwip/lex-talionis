@@ -2077,8 +2077,9 @@ class UnitObject(object):
             self.items.insert(index, item)
             if self.getMainWeapon() == item: # If new mainweapon...
                 # You unequipped a different item, so remove its status.
-                if len(self.items) > 1 and self.canWield(self.items[1]):
-                    self.unequip_item(self.items[1], gameStateObj)
+                prev_main_weapon = next((i for i in self.items if i.weapon and self.canWield(i) and i is not item), None)
+                if prev_main_weapon:
+                    self.unequip_item(prev_main_weapon, gameStateObj)
                 # Now add yours
                 if self.canWield(item) and self.canUse(item):
                     self.equip_item(item, gameStateObj)
@@ -2096,8 +2097,9 @@ class UnitObject(object):
                     Action.do(Action.AddStatus(self, new_status), gameStateObj)
                 if self.getMainWeapon() == item: # If new mainweapon...
                     # You unequipped a different item, so remove its status.
-                    if len(self.items) > 1 and self.canWield(self.items[1]):
-                        self.unequip_item(self.items[1], gameStateObj)
+                    prev_main_weapon = next((i for i in self.items if i.weapon and self.canWield(i) and i is not item), None)
+                    if prev_main_weapon:
+                        self.unequip_item(prev_main_weapon, gameStateObj)
                     # Now add yours
                     if self.canWield(item) and self.canUse(item):
                         self.equip_item(item, gameStateObj)

@@ -13,6 +13,8 @@ Other features:
 Class Change command and status
 Have Summons work with the turnwheel
 ProcComponent to conditional proc skills
+Bonus Exp in Base
+Skill Swap in Base and Prep
 
 
 FOR FUTURE UPDATES TO THE ENGINE:
