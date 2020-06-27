@@ -2044,6 +2044,23 @@
         <sfx_on_hit>Rally</sfx_on_hit>
     </item>
 
+    <item name="Reinforce">
+        <id>so_Reinforce</id>
+        <spritetype>Skills</spritetype>
+        <spriteid>9,0</spriteid>
+        <components>usable,booster,beneficial,call_item_script</components>
+        <weapontype>None</weapontype>
+
+        <value>0</value>
+        <RNG>0</RNG>
+        <desc>Summons reinforcements</desc>
+        <targets>Ally</targets>
+        <LVL>--</LVL>
+        <exp>13</exp>
+
+        <map_hit_color>248,0,248</map_hit_color>
+    </item>
+
     <item name="Summon_1">
         <id>so_Summon_1</id>
         <spritetype>Skills</spritetype>

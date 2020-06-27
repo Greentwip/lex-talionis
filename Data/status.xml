@@ -938,6 +938,15 @@
         <charge_max>60</charge_max>
     </status>
 
+    <status name="Reinforce">
+        <id>Reinforce</id>
+        <image_index>9,0</image_index>
+        <desc>Activated. Summons four new friends.</desc>
+        <components>activated_item,class_skill</components>
+
+        <activated_item>so_Reinforce</activated_item>
+    </status>
+
     <status name="Summon">
         <id>Summon</id>
         <image_index>9,0</image_index>

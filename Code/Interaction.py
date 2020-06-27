@@ -1724,6 +1724,12 @@ class MapCombat(Combat):
         if result.summoning:
             result.summoning.sprite.set_transition('warp_in')
             gameStateObj.allunits.append(result.summoning)
+        if self.item.call_item_script:
+            call_item_script = 'Data/callItemScript.txt'
+            if os.path.isfile(call_item_script):
+                scene = Dialogue.Dialogue_Scene(call_item_script, unit=self.p1, unit2=self.item, tile_pos=self.p1.position)
+                gameStateObj.message.append(scene)
+                gameStateObj.stateMachine.changeState('dialogue')
 
     def begin_phase(self, gameStateObj):
         players = set()
