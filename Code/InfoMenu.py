@@ -563,12 +563,8 @@ class InfoMenu(StateMachine.State):
         menu_surf = Engine.create_surface(menu_size, transparent=True)
 
         # Blit background highlight
-        index_of_mainweapon = None
         if self.unit.getMainWeapon(): # Ony highlight if unit has weapon
-            for index, item in enumerate(self.unit.items): # find first index of mainweapon
-                if item.weapon:
-                    index_of_mainweapon = index
-                    break
+            index_of_mainweapon = self.units.items.index(self.unit.getMainWeapon())
             highlightSurf = GC.IMAGESDICT['EquipmentHighlight']
             menu_surf.blit(highlightSurf, (8, 32 + 16 * index_of_mainweapon))
 

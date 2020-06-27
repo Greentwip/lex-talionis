@@ -489,7 +489,7 @@ class Solver(object):
             if item.lifelink:
                 result.atk_damage -= min(result.def_damage, defender.currenthp)
             if item.half_lifelink:
-                result.atk_damage -= min(result.def_damage//2, defender.currenthp)
+                result.atk_damage -= min(result.def_damage, defender.currenthp)//2
             # Handle Vampire and deflect_damage Status
             for status in attacker.status_effects:
                 if status.vampire and defender.currenthp - result.def_damage <= 0 and \
