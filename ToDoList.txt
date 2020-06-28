@@ -11,7 +11,7 @@
 
 Other features:
 Class Change command and status
-Have Summons work with the turnwheel
+Have Summons work with the turnwheel -> entails rewriting how summons work
 ProcComponent to conditional proc skills
 Bonus Exp in Base
 Skill Swap in Base and Prep

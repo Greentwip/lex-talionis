@@ -601,6 +601,13 @@
         <conditional_avoid>500;Utility.gt(Utility.calculate_distance(self.position, target.position), 2)</conditional_avoid>
     </status>
 
+    <status name="Rex Divinus">
+        <id>Rex_Divinus</id>
+        <image_index>10,9</image_index>
+        <desc>Immunity to statuses and forced movement.</desc>
+        <components>immune,grounded</components>
+    </status>
+
     <status name="Heavy Hitter">
         <id>Heavy Hitter</id>
         <image_index>8,1</image_index>

@@ -439,6 +439,10 @@ class Solver(object):
                 result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid)
                 if cf.CONSTANTS['crit']: 
                     self.handle_crit(result, attacker, defender, item, mode, gameStateObj, hybrid, event_command)
+                if item.movement:
+                    result.def_movement = item.movement
+                if item.self_movement:
+                    result.atk_movement = item.self_movement
                     
             # Missed but does half damage
             elif item.half_on_miss:
@@ -456,6 +460,8 @@ class Solver(object):
                     result.def_damage = -attacker.compute_heal(defender, gameStateObj, item, mode=mode)
                 if item.movement:
                     result.def_movement = item.movement
+                if item.self_movement:
+                    result.atk_movement = item.self_movement
 
             elif item.half_on_miss and item.hit is not None and item.damage is not None:
                 result.def_damage = self.attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid) // 2

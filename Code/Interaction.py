@@ -133,14 +133,16 @@ class Combat(object):
 
     def _apply_result(self, result, gameStateObj):
         # Status
-        for status_obj in result.def_status:
-            status_obj.giver_id = result.attacker.id
-            Action.do(Action.AddStatus(result.defender, status_obj), gameStateObj)
-            self._handle_reflect(result.attacker, result.defender, status_obj, gameStateObj)
-        for status_obj in result.atk_status:
-            status_obj.giver_id = result.defender.id
-            Action.do(Action.AddStatus(result.attacker, status_obj), gameStateObj)
-            self._handle_reflect(result.defender, result.attacker, status_obj, gameStateObj)
+        if isinstance(result.defender, UnitObject.UnitObject) and 'immune' not in result.defender.status_bundle:
+            for status_obj in result.def_status:
+                status_obj.giver_id = result.attacker.id
+                Action.do(Action.AddStatus(result.defender, status_obj), gameStateObj)
+                self._handle_reflect(result.attacker, result.defender, status_obj, gameStateObj)
+        if 'immune' not in result.attacker.status_bundle:
+            for status_obj in result.atk_status:
+                status_obj.giver_id = result.defender.id
+                Action.do(Action.AddStatus(result.attacker, status_obj), gameStateObj)
+                self._handle_reflect(result.defender, result.attacker, status_obj, gameStateObj)
         # Calculate true damage done
         self.calc_damage_done(result)
         # HP
@@ -336,14 +338,14 @@ class Combat(object):
         for status in self.p1.status_effects:
             if status.status_after_battle and not (self.p1.isDying and status.tether):
                 for unit in [self.p2] + self.splash:
-                    if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(self.p2) and not unit.isDying:
+                    if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfEnemy(self.p2) and not unit.isDying and 'immune' not in unit.status_bundle:
                         applied_status = StatusCatalog.statusparser(status.status_after_battle, gameStateObj)
                         if status.tether:
                             Action.do(Action.TetherStatus(status, applied_status, self.p1, unit), gameStateObj)
                         Action.do(Action.AddStatus(unit, applied_status), gameStateObj)
             if status.status_after_help and not self.p1.isDying:
                 for unit in [self.p2] + self.splash:
-                    if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfAlly(unit) and not unit.isDying:
+                    if isinstance(unit, UnitObject.UnitObject) and self.p1.checkIfAlly(unit) and not unit.isDying and 'immune' not in unit.status_bundle:
                         applied_status = StatusCatalog.statusparser(status.status_after_help, gameStateObj)
                         Action.do(Action.AddStatus(unit, applied_status), gameStateObj)
             if status.lost_on_attack and (self.item.weapon or self.item.detrimental):
@@ -363,7 +365,7 @@ class Combat(object):
                     Action.do(Action.AddStatus(self.p1, applied_status), gameStateObj)
         if self.p2 and isinstance(self.p2, UnitObject.UnitObject) and self.p2.checkIfEnemy(self.p1):
             for status in self.p2.status_effects:
-                if status.status_after_battle and not self.p1.isDying and not (status.tether and self.p2.isDying):
+                if status.status_after_battle and not self.p1.isDying and not (status.tether and self.p2.isDying) and 'immune' not in self.p1.status_bundle: 
                     applied_status = StatusCatalog.statusparser(status.status_after_battle, gameStateObj)
                     if status.tether:
                         Action.do(Action.TetherStatus(status, applied_status, self.p2, self.p1), gameStateObj)
@@ -1713,12 +1715,16 @@ class MapCombat(Combat):
         atk_pos = result.attacker.position
         # Handle Swap Movement!!!
         if result.atk_movement and result.def_movement and def_pos and \
-                result.atk_movement.mode == "Swap" and result.def_movement.mode == "Swap":
+                isinstance(result.defender, UnitObject.UnitObject) and \
+                result.atk_movement.mode == "Swap" and result.def_movement.mode == "Swap" and \
+                'grounded' not in result.attacker.status_bundle and \
+                'grounded' not in result.defender.status_bundle: 
             Action.do(Action.SwapMovement(result.attacker, result.defender), gameStateObj)
         else:
-            if result.atk_movement and def_pos:
+            if result.atk_movement and def_pos and 'grounded' not in result.attacker.status_bundle:
                 result.attacker.handle_forced_movement(def_pos, result.atk_movement, gameStateObj)
-            if result.def_movement:
+            if isinstance(result.defender, UnitObject.UnitObject) and result.def_movement and \
+                    'grounded' not in result.defender.status_bundle:
                 result.defender.handle_forced_movement(atk_pos, result.def_movement, gameStateObj, self.def_pos)
         # Summoning
         if result.summoning:
