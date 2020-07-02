@@ -68,7 +68,7 @@ However, if you are familiar with Python, Pygame, and Git, read on to find out h
 
 To run the engine, you will need to download and install the following:
 
-* [Python 3.7.x+](https://www.python.org/downloads/release/python-2712/) - As of August 2019, Python 2.x will no longer work
+* [Python 3.7.x+](https://www.python.org/downloads/release/python-378/) - As of August 2019, Python 2.x will no longer work
 * [Pygame 1.9.4+](http://www.pygame.org/download.shtml) - The framework used to handle rendering and sound. If you have pip, you should try installing it with pip first: `pip install pygame`. Check this link out for more information: https://www.pygame.org/wiki/GettingStarted.
 
 ### Installing
