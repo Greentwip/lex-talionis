@@ -1797,7 +1797,7 @@ class UnitObject(object):
             # Generic rank bonuses
             if item.TYPE:
                 idx = Weapons.TRIANGLE.name_to_index[item.TYPE]
-                accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[1]
+                accuracy += Weapons.EXP.get_rank_bonus(self.wexp[idx])[2]
             return accuracy
         else:
             return 0

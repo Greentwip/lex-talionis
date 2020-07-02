@@ -134,7 +134,10 @@ def save_surface(surf, fn):
 # assumes pygame surface
 def subsurface(surf, rect):
     x, y, width, height = rect
-    return surf.subsurface(x, y, width, height)
+    if surf and x + width <= surf.get_width() and y + height <= surf.get_height():
+        return surf.subsurface(x, y, width, height)
+    else:
+        return surf
 
 def image_load(fp, convert=False, convert_alpha=False):
     image = pygame.image.load(fp)
