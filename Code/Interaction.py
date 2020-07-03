@@ -1421,10 +1421,10 @@ class SimpleHPBar(object):
             # Upper 40 hp
             for index in range(Utility.clamp(t_hp - 40, 0, 40)):
                 surf.blit(full_hp_blip, (pos[0] + index * 2 + 5, pos[1] - 4))
-            right = Utility.clamp(self.max_hp - 40, 40, 80)
-            for index in range(Utility.clamp(80 - t_hp, 0, right)):
-                surf.blit(self.empty_hp_blip, (pos[0] + (index + t_hp - 40) * 2 + 5, pos[1] - 4))
-            surf.blit(self.end_hp_blip, (pos[0] + (right) * 2 + 5, pos[1] - 4)) # End HP Blip
+            right = Utility.clamp(self.max_hp, 0, 80)
+            for index in range(right - max(40, t_hp)):
+                surf.blit(self.empty_hp_blip, (pos[0] + (index + max(t_hp - 40, 0)) * 2 + 5, pos[1] - 4))
+            surf.blit(self.end_hp_blip, (pos[0] + (right - 40) * 2 + 5, pos[1] - 4)) # End HP Blip
 
 class MapCombat(Combat):
     def __init__(self, attacker, defender, def_pos, splash, item, skill_used, 

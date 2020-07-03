@@ -200,7 +200,7 @@ class HelpGraph(object):
         # Connect them together
         for i in range(len(statuses)):
             self.help_boxes["Status"+str(i)].right = ("Status"+str(i+1)) if i < (len(statuses) - 1) else None
-            self.help_boxes["Status"+str(i)].left = ("Status"+str(i-1)) if i > 0 else None
+            self.help_boxes["Status"+str(i)].left = ("Status"+str(i-1)) if i > 0 else 'HP'
 
         # Supports
         if gameStateObj.support:
@@ -248,6 +248,10 @@ class HelpGraph(object):
             self.help_boxes['Unit Desc'].right = "Wexp0"
             self.help_boxes['Experience'].right = "Wexp0"
             self.help_boxes['HP'].right = "Wexp0"
+        elif statuses:
+            self.help_boxes['Unit Desc'].right = "Status0"
+            self.help_boxes['Experience'].right = "Status0"
+            self.help_boxes['HP'].right = "Status0"
 
     def populate_info_menu_default(self):
         self.help_boxes["Unit Desc"] = Help_Box("Unit Desc", (16, 82), Help_Dialog(self.unit.desc))
