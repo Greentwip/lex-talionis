@@ -244,7 +244,8 @@ class UnitObject(object):
                 blit_num(surf, crit, 64, 67)
         # Blit enemy hit and mt
         if not self.getMainWeapon().cannot_be_countered and isinstance(enemyunit, UnitObject) and enemyunit.getMainWeapon() and \
-                Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().get_range(enemyunit):
+                (Utility.calculate_distance(self.position, enemyunit.position) in enemyunit.getMainWeapon().get_range(enemyunit) or 
+                 'distant_counter' in enemyunit.status_bundle):
             e_mt = enemyunit.compute_damage(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
             e_hit = enemyunit.compute_hit(self, gameStateObj, enemyunit.getMainWeapon(), 'Defense')
             if cf.CONSTANTS['crit']:

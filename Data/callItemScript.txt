@@ -1,7 +1,4 @@
 # A sample call item script
-#if;self.unit2.id == "Exp Drink"
-#    give_exp;{unit};50
-
 if;self.unit2.id == "so_Reinforce"
     set_origin
     create_unit;w_Create;self.unit.level;o1,0;warp;closest

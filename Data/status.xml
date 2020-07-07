@@ -608,6 +608,13 @@
         <components>immune,grounded</components>
     </status>
 
+    <status name="Rex Aurus">
+        <id>Rex_Aurus</id>
+        <image_index>10,9</image_index>
+        <desc>Able to counterattack at any range.</desc>
+        <components>distant_counter</components>
+    </status>
+
     <status name="Heavy Hitter">
         <id>Heavy Hitter</id>
         <image_index>8,1</image_index>

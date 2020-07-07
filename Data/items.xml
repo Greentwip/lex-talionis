@@ -2048,7 +2048,7 @@
         <id>so_Reinforce</id>
         <spritetype>Skills</spritetype>
         <spriteid>9,0</spriteid>
-        <components>usable,booster,beneficial,call_item_script</components>
+        <components>usable,booster,beneficial,call_item_script,exp</components>
         <weapontype>None</weapontype>
 
         <value>0</value>
@@ -2057,8 +2057,6 @@
         <targets>Ally</targets>
         <LVL>--</LVL>
         <exp>13</exp>
-
-        <map_hit_color>248,0,248</map_hit_color>
     </item>
 
     <item name="Summon_1">

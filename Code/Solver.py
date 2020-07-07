@@ -530,7 +530,9 @@ class Solver(object):
         weapon = self.p2_item
         if self.arena and weapon:
             return True
-        elif weapon and self.item_uses(weapon) and Utility.calculate_distance(self.attacker.position, self.defender.position) in weapon.get_range(self.defender):
+        elif weapon and self.item_uses(weapon) and \
+            (Utility.calculate_distance(self.attacker.position, self.defender.position) in weapon.get_range(self.defender) or 
+             'distant_counter' in self.defender.status_bundle):
             return True
         else:
             return False
