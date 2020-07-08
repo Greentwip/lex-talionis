@@ -1385,7 +1385,7 @@ class Dialogue_Scene(object):
         if create:
             unitLine = gameStateObj.prefabs.get(which_unit)
             if not unitLine:
-                logger.warning('Could not find %s' in unitLine)
+                logger.warning('Could not find %s in unitLine' % which_unit)
                 return
             new_unitLine = unitLine[:]
             new_unitLine.insert(4, create)

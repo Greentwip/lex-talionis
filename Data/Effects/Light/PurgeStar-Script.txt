@@ -1,0 +1,25 @@
+pose;Attack
+blend
+# White screen
+foreground_blend;4;248,248,248
+wait;4
+# White screen over
+f;2;Star0
+f;2;Star1
+f;2;Star2
+f;2;Star3
+f;1;Star4
+f;1;Star5
+f;1;Star6
+f;1;Star7
+f;1;Star8
+f;1;Star9
+f;2;Star10
+f;2;Star11
+f;2;Star12
+f;1;Star13
+f;1;Star14
+f;1;Star15
+f;1;Star16
+f;2;Star17
+wait;1
