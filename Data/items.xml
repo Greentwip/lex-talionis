@@ -1381,7 +1381,7 @@
     
     <!-- Dark -->
     <item name="Flux Ward">
-        <id>Flux</id>
+        <id>Shadowshot</id>
         <spritetype>Dark</spritetype>
         <spriteid>0</spriteid>       
         <components>weapon,uses,status,map_hit_color</components>

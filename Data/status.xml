@@ -961,6 +961,17 @@
         <activated_item>so_Reinforce</activated_item>
     </status>
 
+    <status name="Ballista">
+        <id>Ballista</id>
+        <image_index>9,0</image_index>
+        <desc>Use a ballista.</desc>
+        <components>activated_item</components>
+
+        <activated_item>Ballista</activated_item>
+        <check_valid_func>bool(self.get_choices(unit, gameStateObj)) and (unit.wexp[3] > 0)</check_valid_func>
+        <get_choices_func>unit.getTargets(gameStateObj, self.item)</get_choices_func>
+    </status>
+
     <status name="Summon">
         <id>Summon</id>
         <image_index>9,0</image_index>

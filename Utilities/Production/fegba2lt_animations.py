@@ -428,8 +428,8 @@ def parse_script(script, images, weapon_type):
                 print('Replace "effect;Cape Animation" with actual frames for cape animation in a loop')
                 print("For instance:")
                 print("start_loop")
-                print("    f;Magic033")
-                print("    f;Magic034")
+                print("    f;3;Magic033")
+                print("    f;3;Magic034")
                 print("end_loop")
             elif command_code == '49':
                 current_pose.append(Sound('SageRune'))

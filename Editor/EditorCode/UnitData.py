@@ -167,7 +167,10 @@ class UnitData(object):
         cur_unit = unit_prefab.copy()
         position = tuple([int(num) for num in legend['position'].split(',')]) if ',' in legend['position'] else None
         cur_unit.position = position
-        cur_unit.ai = legend['ai']
+        if '_' in legend['ai']:
+            cur_unit.ai, cur_unit.ai_group = legend['ai'].split('_')
+        else:
+            cur_unit.ai, cur_unit.ai_group = legend['ai'], None
         cur_unit.team = legend['team']
         cur_unit.mode = mode
         if legend['unit_type'] == '1':

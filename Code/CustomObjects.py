@@ -509,18 +509,18 @@ class CameraOffset(object):
             self.set_travel_limits(gameStateObj.map)
         if self.current_x != self.x:
             if self.current_x > self.x:
-                self.current_x -= 0.125 if self.pan_flag else (self.current_x - self.x)/self.speed
+                self.current_x -= 0.125 if self.pan_flag else min(2, (self.current_x - self.x)/self.speed)
             elif self.current_x < self.x:
-                self.current_x += 0.125 if self.pan_flag else (self.x - self.current_x)/self.speed
+                self.current_x += 0.125 if self.pan_flag else min(2, (self.x - self.current_x)/self.speed)
         if self.current_y != self.y:
             if self.current_y > self.y:
-                self.current_y -= 0.125 if self.pan_flag else (self.current_y - self.y)/self.speed
+                self.current_y -= 0.125 if self.pan_flag else min(2, (self.current_y - self.y)/self.speed)
             elif self.current_y < self.y:
-                self.current_y += 0.125 if self.pan_flag else (self.y - self.current_y)/self.speed
+                self.current_y += 0.125 if self.pan_flag else min(2, (self.y - self.current_y)/self.speed)
         # If they are close enough, make them so.
-        if abs(self.current_x - self.x) < 0.25:
+        if abs(self.current_x - self.x) <= 0.25:
             self.current_x = self.x
-        if abs(self.current_y - self.y) < 0.25:
+        if abs(self.current_y - self.y) <= 0.25:
             self.current_y = self.y
         # Move to next place on the list
         if self.pan_to and self.current_y == self.y and self.current_x == self.x:

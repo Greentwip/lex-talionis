@@ -47,7 +47,7 @@ class LoadUnitDialog(QDialog, HasModes):
         self.team_box.uniformItemSizes = True
         for team in DataImport.teams:
             self.team_box.addItem(team)
-        self.team_box.activated.connect(self.team_changed)
+        self.team_box.currentTextChanged.connect(self.team_changed)
         self.form.addRow('Team:', self.team_box)
 
         # Unit Select
