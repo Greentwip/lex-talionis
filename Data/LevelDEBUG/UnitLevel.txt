@@ -22,7 +22,7 @@ faction;Resistance;Bandit;Resistance;Nope
 enemy;0;0;Ophie;3,6;Attack_Jeritza
 enemy;0;0;Joel;4,19;Attack_Jeritza
 player;0;0;Drake;3,3;None
-# player;0;0;Shaman;5;Shadowshot;4,15;None;Resistance
+player;0;0;Shaman;5;Hex,Scathe;4,15;None;Resistance
 # Enemies
 # Generics
 enemy;0;0;Mercenary;10;Iron Sword,Vulnerary;2,15;None;Resistance;Rex_Aurus
