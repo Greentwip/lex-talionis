@@ -1343,6 +1343,10 @@ class AddStatus(Action):
         # --- Momentary status ---
         if self.status_obj.refresh:
             self.actions.append(Reset(self.unit))
+            current_phase = gameStateObj.phase.get_current_phase()
+            if current_phase != 'player' and self.unit.team == current_phase:
+                gameStateObj.ai_unit_list.append(self.unit)  # Move him up to next on the list
+                self.unit.reset_ai()
             # for status in self.unit.status_effects:
             #     if status.charged_status and status.charged_status.check_charged():
             #         self.actions.append(FinalizeChargedStatus(status, self.unit))

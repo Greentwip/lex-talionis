@@ -250,7 +250,7 @@ class OptionsMenu(StateMachine.State, Counters.CursorControl):
         return surf
 
     def drawInvalid(self, surf):
-        size_of_text = GC.FONT['text_white'].size("Invalid Choice!")
+        size_of_text = GC.FONT['text_white'].size(cf.WORDS["Invalid Choice"])
         width = size_of_text[0]
         height = size_of_text[1]
         pop_up_surf = BaseMenuSurf.CreateBaseMenuSurf((width + 16 - width%8, height + 16 - height%8))

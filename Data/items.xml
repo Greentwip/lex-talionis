@@ -1064,6 +1064,26 @@
         <map_hit_color>-248,248,248</map_hit_color>
     </item>
 
+    <item name="Reswap">
+        <id>Reswap</id>
+        <spritetype>Light</spritetype>
+        <spriteid>10</spriteid>       
+        <components>spell,uses,movement,self_movement,beneficial,no_ai,map_hit_color</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>2-10</RNG>
+        <value>600</value>
+        <desc>Swaps user.</desc>
+        
+        <LVL>B</LVL>
+        <targets>Unit</targets>
+        <movement>Swap,0</movement>
+        <self_movement>Swap,0</self_movement>
+
+        <map_hit_color>-248,248,248</map_hit_color>
+    </item>
+
     <item name="Unlock">
         <id>Unlock</id>
         <spritetype>Light</spritetype>

@@ -1431,9 +1431,9 @@ class UnitObject(object):
             for unit in gameStateObj.allunits:
                 if unit.team == self.team and unit.ai_group == self.ai_group:
                     Action.do(Action.AIGroupPing(unit), gameStateObj)
-                    if not self.hasMoved and self.hasRunAI():  # We need to tell this guy to try again
-                        gameStateObj.ai_unit_list.append(self)  # Move him up to next on the list
-                        self.reset_ai()
+                    if not unit.hasMoved and unit.hasRunAI():  # We need to tell this guy to try again
+                        gameStateObj.ai_unit_list.append(unit)  # Move him up to next on the list
+                        unit.reset_ai()
 
     def canAttack(self, gameStateObj):
         return self.getAllTargetPositions(gameStateObj) and not self.hasAttacked
