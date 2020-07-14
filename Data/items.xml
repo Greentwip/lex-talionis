@@ -929,7 +929,7 @@
     </item>
 
     <item name="Shine Ward">
-        <id>Purge</id>
+        <id>Shine</id>
         <spritetype>Light</spritetype>
         <spriteid>1</spriteid>       
         <components>weapon,uses,map_hit_color</components>
