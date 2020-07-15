@@ -1993,7 +1993,7 @@ class UnitObject(object):
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
         Action.do(Action.HasAttacked(self), gameStateObj)
-        escape_name = gameStateObj.map.tile_info_dict[self.position]['Seize']
+        escape_name = gameStateObj.map.tile_info_dict[self.position]['Escape']
         gameStateObj.stateMachine.changeState('wait')
         gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, name=escape_name, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
