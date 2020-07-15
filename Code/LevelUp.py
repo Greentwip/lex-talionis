@@ -33,7 +33,8 @@ class GainExpState(StateMachine.State):
             self.level_up_animation = None
             self.level_up_screen = None
 
-            if not self.auto_promote:
+            # If self.exp_gain is a list then this is a stat booster and is not necessary
+            if not self.auto_promote and not isinstance(self.exp_gain, list):
                 # Make sure we don't go over 0 exp if no autopromote
                 max_exp = 100*(self.unit_klass['max_level'] - self.old_level) - self.old_exp
                 self.exp_gain = min(self.exp_gain, max_exp)
