@@ -1804,3 +1804,31 @@
 	</units>
 </level>
 
+<level name="1">
+	<mode>Hard</mode>
+	<game_constants>level,1;_random_seed,136;money,1500;Supports,1;current_turnwheel_uses,-1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<party>0</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>0</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Glimmer 30,Heal 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+
