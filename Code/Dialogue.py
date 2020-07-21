@@ -558,7 +558,10 @@ class Dialogue_Scene(object):
                 party = line[2]
             else:
                 party = gameStateObj.current_party
-            Action.do(Action.GiveGold(int(line[1]), party), gameStateObj)
+            if 'no_banner' in line:
+                Action.execute(Action.GiveGold(int(line[1]), party), gameStateObj)
+            else:
+                Action.do(Action.GiveGold(int(line[1]), party), gameStateObj)
             self.current_state = "Paused"
 
         elif line[0] == 'remove_item':
@@ -575,7 +578,7 @@ class Dialogue_Scene(object):
             unit = self.get_unit(line[1], gameStateObj)
             if unit and skill:
                 Action.do(Action.AddStatus(unit, skill), gameStateObj)
-                if 'no_display' not in line:
+                if 'no_display' not in line and 'no_banner' not in line:
                     gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
                     gameStateObj.stateMachine.changeState('itemgain')
                     self.current_state = "Paused"
