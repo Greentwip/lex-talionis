@@ -554,7 +554,7 @@ class Dialogue_Scene(object):
 
         # Give the player gold!
         elif line[0] == 'gold':
-            if len(line) > 2:
+            if len(line) > 2 and line[2] != 'no_banner':
                 party = line[2]
             else:
                 party = gameStateObj.current_party
@@ -562,7 +562,7 @@ class Dialogue_Scene(object):
                 Action.execute(Action.GiveGold(int(line[1]), party), gameStateObj)
             else:
                 Action.do(Action.GiveGold(int(line[1]), party), gameStateObj)
-            self.current_state = "Paused"
+                self.current_state = "Paused"
 
         elif line[0] == 'remove_item':
             unit = self.get_unit(line[1], gameStateObj)
