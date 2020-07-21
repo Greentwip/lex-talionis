@@ -111,7 +111,7 @@
 		<bases>17,6,1,6,5,7,5,3</bases>
 		<growths>95,65,5,60,40,40,55,40</growths>
         
-        <inventory>Iron Sword,Iron Lance</inventory>
+        <inventory>Iron Sword,Iron Lance,Angelic Robe</inventory>
         
         <level>5</level>
         <class>Cavalier</class>

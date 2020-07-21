@@ -929,7 +929,7 @@
     </item>
 
     <item name="Shine Ward">
-        <id>Purge</id>
+        <id>Shine</id>
         <spritetype>Light</spritetype>
         <spriteid>1</spriteid>       
         <components>weapon,uses,map_hit_color</components>
@@ -1138,6 +1138,28 @@
         <targets>Ally</targets>
 
         <map_hit_color>248,248,0</map_hit_color>    
+    </item>
+
+    <item name="Purge">
+        <id>Purge</id>
+        <spritetype>Light</spritetype>
+        <spriteid>3</spriteid>       
+        <components>weapon,uses,weight,map_hit_color,crit,wexp,cannot_be_countered</components>
+        <weapontype>Light</weapontype>
+ 
+        <uses>5</uses>
+        <RNG>3-10</RNG>
+        <value>600</value>
+        <weight>20</weight>
+        <desc></desc>
+
+        <MT>10</MT>
+        <HIT>75</HIT>
+        <LVL>B</LVL>
+        <crit>5</crit>
+        <wexp>3</wexp>
+
+        <map_hit_color>248,248,128</map_hit_color>
     </item>
 
     <item name="Physic">

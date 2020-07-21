@@ -470,8 +470,16 @@ class Primary_AI(object):
 
         # Determine if I can skip this unit's AI
         # Remove any items that only give statuses if there are no enemies nearby
-        self.items = [i for i in self.items if not 
-                      (i.spell and i.status and i.beneficial and not i.heal and closest_enemy_distance > self.unit.stats['MOV'] + 2)]
+        view_range = 0
+        if self.unit.ai.view_range == 1:
+            view_range = self.unit.stats['MOV']*2 + self.unit.getMaxRange()
+        elif self.unit.ai.view_range == 2:
+            view_range = 100
+        elif self.unit.ai.view_range >= 3:
+            view_range = self.unit.ai.view_range
+        if closest_enemy_distance > view_range:
+            self.items = [i for i in self.items if not 
+                          (i.spell and i.status and i.beneficial and not i.heal)]
         # Remove any items that heal only me if I don't need healing
         if self.unit.currenthp >= self.unit.stats['HP']:
             self.items = [i for i in self.items if not (i.heal and max(i.get_range(self.unit)) == 0)]

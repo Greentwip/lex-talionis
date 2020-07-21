@@ -460,7 +460,7 @@ class UnitMenu(QWidget):
         return self.list.item(self.list.currentRow())
 
     def get_current_unit(self):
-        if self.unit_data.units:
+        if self.unit_data.units and self.list.currentRow() >= 0:
             return self.unit_data.units[self.list.currentRow()]
         else:
             return None
@@ -598,7 +598,7 @@ class ReinforcementMenu(UnitMenu):
     #     self.view.tool = 'Reinforcements'
 
     def get_current_unit(self):
-        if self.unit_data.reinforcements:
+        if self.unit_data.reinforcements and self.list.currentRow() >= 0:
             rein = self.unit_data.reinforcements[self.list.currentRow()]
             return rein
         else:

@@ -1993,14 +1993,26 @@ class UnitObject(object):
     def escape(self, gameStateObj):
         # Handles any events that happen on escape
         Action.do(Action.HasAttacked(self), gameStateObj)
+        if 'Escape' in gameStateObj.map.tile_info_dict[self.position]:
+            escape_name = gameStateObj.map.tile_info_dict[self.position]['Escape']
+        elif 'Arrive' in gameStateObj.map.tile_info_dict[self.position]:
+            escape_name = gameStateObj.map.tile_info_dict[self.position]['Arrive']
+        else:
+            escape_name = None
         gameStateObj.stateMachine.changeState('wait')
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, tile_pos=self.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, name=escape_name, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def seize(self, gameStateObj):
         Action.do(Action.HasAttacked(self), gameStateObj)
+        if 'Lord_Seize' in gameStateObj.map.tile_info_dict[self.position]:
+            seize_name = gameStateObj.map.tile_info_dict[self.position]['Lord_Seize']
+        elif 'Seize' in gameStateObj.map.tile_info_dict[self.position]:
+            seize_name = gameStateObj.map.tile_info_dict[self.position]['Seize']
+        else:
+            seize_name = None
         gameStateObj.stateMachine.changeState('wait')
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, tile_pos=self.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, name=seize_name, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, item, gameStateObj):

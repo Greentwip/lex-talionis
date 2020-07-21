@@ -9,7 +9,7 @@ Because this was coded entirely from scratch, we are not bound by the limitation
 The Lion Throne has innovative objectives, powerful new items, custom classes, a fully functioning skill system with activated skills, a Tellius-style base menu, and much more!
 
 # Downloads
-release v0.9.4 - 64-bit Windows only
+release v0.9.4.2 - 64-bit Windows only
 
 *Dropbox:* https://www.dropbox.com/s/1ikh26td9d68z5n/the_lion_throne.zip?dl=0
 

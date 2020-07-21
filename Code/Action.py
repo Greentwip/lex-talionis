@@ -823,12 +823,13 @@ class ApplyLevelUp(Action):
 
 class PermanentStatIncrease(ApplyLevelUp):
     def do(self, gameStateObj):
+        self.previous_hp = self.unit.currenthp
         self.unit.apply_levelup(self.stat_increase, True)
 
     def reverse(self, gameStateObj):
         self.unit.apply_levelup([-x for x in self.stat_increase], True)
         # Since hp_up...
-        self.unit.change_hp(-self.stat_increase[0])
+        self.unit.set_hp(self.previous_hp)
 
 class PermanentGrowthIncrease(Action):
     def __init__(self, unit, stat_increase):

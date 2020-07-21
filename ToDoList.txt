@@ -15,7 +15,10 @@ Have Summons work with the turnwheel -> entails rewriting how summons work
 ProcComponent to conditional proc skills
 Bonus Exp in Base
 Skill Swap in Base and Prep
+AI talk
 
+Auto-convert colors?
+Auto-convert feREPO styled map sprites?
 
 FOR FUTURE UPDATES TO THE ENGINE:
 --- ENGINE ---

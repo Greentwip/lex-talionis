@@ -352,7 +352,7 @@ class MusicThread(object):
             return None
         logger.info('Music: Fade in %s' % next_song)
         
-        if self.playing:
+        if self.playing and self.song_stack:
             current_song = self.song_stack[-1]
         else:
             current_song = None

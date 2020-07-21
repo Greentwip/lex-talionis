@@ -66,3 +66,4 @@ Berserk                 3 9 - - 2 0
 AttackTile              11 1 - - 1 20
 PursueTile              11 11 - - 2 20
 PursueVillageTile       27 3 - - 2 20
+Dancer                  3 2 - - 0 1
