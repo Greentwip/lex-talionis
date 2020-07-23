@@ -2,7 +2,8 @@
 # Open with view of map
 # Shows Green Villagers vs. Red Soldiers -> Vagnius and Sydney stand out.
 # Set initial money
-set_game_constant;money;1500
+#set_game_constant;money;1500
+gold;1500;no_banner
 set_game_constant;Supports
 m;Mount Briggs
 add_unit;F1

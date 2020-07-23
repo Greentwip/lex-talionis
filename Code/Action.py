@@ -1048,6 +1048,7 @@ class GiveGold(Action):
     def __init__(self, amount, party):
         self.amount = amount
         self.party = party
+        print(amount, party)
 
     def do(self, gameStateObj):
         gameStateObj.inc_money(self.amount, self.party)
