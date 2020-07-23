@@ -658,10 +658,10 @@ class TradeItem(Action):
 
     def swap(self, unit1, unit2, item1, item2, item_index1, item_index2, gameStateObj):
         # Do the swap
-        if item1 and item1 is not "EmptySlot":
+        if item1 and item1 != "EmptySlot":
             unit1.remove_item(item1, gameStateObj)
             unit2.insert_item(item_index2, item1, gameStateObj)
-        if item2 and item2 is not "EmptySlot":
+        if item2 and item2 != "EmptySlot":
             unit2.remove_item(item2, gameStateObj)
             unit1.insert_item(item_index1, item2, gameStateObj)   
 
