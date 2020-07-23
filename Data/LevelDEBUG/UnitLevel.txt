@@ -23,7 +23,7 @@ enemy;0;0;Ophie;None;None
 enemy;0;0;Joel;None;None
 player;0;0;Drake;9,8;None
 player;0;0;Cavalier;10;Mithril Sword;8,8;None;Resistance
-enemy;0;0;Cleric;10;Refresh_Nemid,Purge;1,7;Dancer;Resistance
+player;0;0;Cleric;10;Refresh_Nemid,Purge,Guiding Ring;1,7;None;Resistance
 enemy;0;0;Assassin;1;Mithril Sword;1,6;Attack_2;Resistance
 enemy;0;0;Paladin;1;Mithril Lance;1,5;Attack_1;Resistance
 

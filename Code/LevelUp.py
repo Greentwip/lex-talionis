@@ -39,7 +39,11 @@ class GainExpState(StateMachine.State):
                 max_exp = 100*(self.unit_klass['max_level'] - self.old_level) - self.old_exp
                 self.exp_gain = min(self.exp_gain, max_exp)
             
-            if self.unit.level >= self.unit_klass['max_level'] and not self.auto_promote:
+            if self.unit.level >= self.unit_klass['max_level'] and not self.auto_promote and \
+                    self.starting_state == 'init':
+                # We only leave if we're just gaining exp
+                # Gaining stats from boosters, promoting, or choosing promotions
+                # Should just work anyways
                 gameStateObj.stateMachine.back()  # Done here
                 return "repeat"
 
