@@ -1532,6 +1532,10 @@ class RemoveStatus(Action):
                     gameStateObj.boundary_manager._add_unit(self.unit, gameStateObj)
 
     def reverse(self, gameStateObj):
+        if not isinstance(self.status_obj, StatusCatalog.Status):
+            logger.warning('Status ID %s not present...', self.status_obj)
+            return
+
         for action in self.actions:
             action.reverse(gameStateObj)
         
