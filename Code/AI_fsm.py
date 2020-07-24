@@ -329,7 +329,7 @@ class AI(object):
         valid_positions = self.get_true_valid_moves(gameStateObj)
         self.position_to_move_to = Utility.farthest_away_pos(self.unit, valid_positions, gameStateObj.allunits)
 
-    def thief_to_escape(self):
+    def thief_to_escape(self, gameStateObj):
         # Change AI
         new_primary_ai = self.ai1_state
         if new_primary_ai & PRIMARYAI['Steal']:
@@ -338,7 +338,7 @@ class AI(object):
             new_primary_ai -= PRIMARYAI['Unlock']            
         if not new_primary_ai & PRIMARYAI['Thief Escape']:
             new_primary_ai += PRIMARYAI['Thief Escape']
-        self.change_ai(new_primary_ai, 6)
+        Action.do(Action.ModifyAI(self.unit, new_primary_ai, 6), gameStateObj)
 
     # === STEAL AI ===
     def run_steal_ai(self, gameStateObj, valid_moves):
@@ -359,7 +359,7 @@ class AI(object):
             # If we've stolen everything possible, escape time -- team ignore is used to set limit
             if len(self.unit.items) >= cf.CONSTANTS['max_items'] or \
                     (self.team_ignore and self.team_ignore[0].isdigit() and len(self.unit.items) >= int(self.team_ignore[0])):
-                self.thief_to_escape()  # For next time
+                self.thief_to_escape(gameStateObj)  # For next time
             return True
         return False
 
@@ -368,7 +368,7 @@ class AI(object):
         available_targets = [tile for position, tile in gameStateObj.map.tiles.items()
                              if 'Locked' in gameStateObj.map.tile_info_dict[position]]
         if not available_targets:
-            self.thief_to_escape()
+            self.thief_to_escape(gameStateObj)
             return False
 
         available_targets = sorted(available_targets, key=lambda tile: gameStateObj.map.tile_info_dict[tile.position].get('Locked'))
@@ -379,7 +379,7 @@ class AI(object):
                     num_before = len(self.unit.items) + (1 if target.name == 'Chest' else 0)
                     if num_before >= cf.CONSTANTS['max_items'] or \
                             (self.team_ignore and self.team_ignore[0].isdigit() and num_before >= int(self.team_ignore[0])):
-                        self.thief_to_escape()  # For next time
+                        self.thief_to_escape(gameStateObj)  # For next time
                     self.target_to_interact_with = target.position
                     self.position_to_move_to = move
                     return True

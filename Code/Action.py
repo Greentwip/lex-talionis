@@ -693,12 +693,16 @@ class UseItem(Action):
         self.item = item
 
     def do(self, gameStateObj):
+        if not self.item:
+            return
         if self.item.uses:
             self.item.uses.decrement()
         if self.item.c_uses:
             self.item.c_uses.decrement()
 
     def reverse(self, gameStateObj):
+        if not self.item:
+            return
         if self.item.uses:
             self.item.uses.increment()
         if self.item.c_uses:
@@ -1017,6 +1021,20 @@ class ChangeAI(Action):
     def reverse(self, gameStateObj):
         self.unit.get_ai(self.old_ai)
         logger.info('New AI: %s', self.unit.ai_descriptor)
+
+class ModifyAI(Action):
+    def __init__(self, unit, new_primary_ai, new_secondary_ai):
+        self.unit = unit
+        self.old_primary_ai = self.unit.ai.ai1_state
+        self.old_secondary_ai = self.unit.ai.ai2_state
+        self.new_primary_ai = new_primary_ai
+        self.new_secondary_ai = new_secondary_ai
+
+    def do(self, gameStateObj):
+        self.unit.ai.change_ai(self.new_primary_ai, self.new_secondary_ai)
+
+    def reverse(self, gameStateObj):
+        self.unit.ai.change_ai(self.old_primary_ai, self.old_secondary_ai)
 
 class AIGroupPing(Action):
     def __init__(self, unit):

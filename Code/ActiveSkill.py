@@ -177,7 +177,7 @@ class CombatArtComponent(ChargeComponent):
         return eval(self.check_valid_func, locals())
 
     def basic_check(self, unit, gameStateObj):
-        valid_weapons = self.valid_weapons(unit, [i for i in unit.items if i.weapon])
+        valid_weapons = self.valid_weapons(unit, [i for i in unit.items if i.weapon and unit.canWield(i) and unit.canUse(i)])
         for weapon in valid_weapons:
             if unit.getValidTargetPositions(gameStateObj, weapon):
                 return True
