@@ -16,6 +16,8 @@ build/
 dist/
 LevelEditor/
 *.exe
+venv/
+venv_editor/
 
 # Windows image file caches
 Thumbs.db
