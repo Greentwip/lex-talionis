@@ -38,7 +38,7 @@ class GameStateObj(object):
         # mode
         self.mode = self.default_mode()
         # Messages
-        self.message = []
+        # self.message = []
 
     # Things that change between levels always
     def start(self, allreinforcements, prefabs, objective, music):

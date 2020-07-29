@@ -16,7 +16,6 @@ ProcComponent to conditional proc skills
 Bonus Exp in Base
 Skill Swap in Base and Prep
 AI talk
-title_event
 
 Auto-convert colors?
 Auto-convert feREPO styled map sprites?
