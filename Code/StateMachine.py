@@ -46,6 +46,7 @@ class StateMachine(object):
                            'repair': GeneralStates.RepairState,
                            'arena': GeneralStates.ArenaState,
                            'arena_base': GeneralStates.ArenaState,
+                           'title_dialogue': Transitions.TitleDialogue,
                            'dialogue': GeneralStates.DialogueState,
                            'transparent_dialogue': GeneralStates.DialogueState,
                            'victory': GeneralStates.VictoryState,

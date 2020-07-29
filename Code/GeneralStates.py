@@ -2036,7 +2036,8 @@ class DialogueState(StateMachine.State):
         logger.info('Begin Dialogue State')
         cf.CONSTANTS['Unit Speed'] = 120
         if self.name != 'transparent_dialogue':
-            gameStateObj.cursor.drawState = 0
+            if hasattr(gameStateObj, 'cursor'):
+                gameStateObj.cursor.drawState = 0
         if gameStateObj.message:
             self.message = gameStateObj.message[-1]
         if self.message:

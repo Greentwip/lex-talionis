@@ -84,6 +84,80 @@ def get_save_title(save_slots):
     colors = [get_color(save_slot.mode_id) for save_slot in save_slots]
     return options, colors
 
+TITLE_SCRIPT = False
+
+class TitleDialogue(StateMachine.State):
+    name = 'title_dialogue'
+
+    def __init__(self, name='title_dialogue'):
+        StateMachine.State.__init__(self, name)
+        self.message = None
+        self.text_speed_change = MenuFunctions.BriefPopUpDisplay((GC.WINWIDTH, GC.WINHEIGHT - 16))
+        self.hurry_up_time = 0
+
+    def begin(self, gameStateObj, metaDataObj):
+        logger.info('Begin Title Dialogue State')
+        if gameStateObj.message:
+            self.message = gameStateObj.message[-1]
+        if self.message:
+            self.message.current_state = "Processing"
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+
+        if (event == 'START' or event == 'BACK') and self.message and not self.message.do_skip: # SKIP
+            GC.SOUNDDICT['Select 4'].play()
+            self.message.skip()
+
+        elif event == 'SELECT' or event == 'RIGHT' or event == 'DOWN': # Get it to move along...
+            if self.message.current_state == "Displaying" and self.message.dialog:
+                last_hit = Engine.get_time() - self.hurry_up_time
+                if last_hit > 200:  # How long it will pause before moving on to next section
+                    if self.message.dialog[-1].waiting:
+                        GC.SOUNDDICT['Select 1'].play()
+                        self.message.dialog_unpause()
+                        self.hurry_up_time = 0
+                    else:
+                        self.message.dialog[-1].hurry_up()
+                        self.hurry_up_time = Engine.get_time()
+
+        elif event == 'AUX':  # Increment the text speed to be faster
+            if cf.OPTIONS['Text Speed'] in cf.text_speed_options:
+                GC.SOUNDDICT['Select 4'].play()
+                current_index = cf.text_speed_options.index(cf.OPTIONS['Text Speed'])
+                current_index += 1
+                if current_index >= len(cf.text_speed_options):
+                    current_index = 0
+                cf.OPTIONS['Text Speed'] = cf.text_speed_options[current_index]
+                self.text_speed_change.start('Changed Text Speed!')
+
+    def end_dialogue_state(self, gameStateObj, metaDataObj):
+        logger.debug('Ending dialogue state')
+        last_message = None
+        if self.message and gameStateObj.message:
+            gameStateObj.message.pop()
+        logger.info('Repeat Dialogue State!')
+        return 'repeat'
+
+    def update(self, gameStateObj, metaDataObj):
+        if self.message:
+            self.message.update(gameStateObj, metaDataObj)
+        else:
+            logger.info('Done with Dialogue State!')
+            gameStateObj.stateMachine.back()
+            return 'repeat'
+
+        if self.message.done and self.message.current_state == "Processing":
+            gameStateObj.stateMachine.back()
+            return self.end_dialogue_state(gameStateObj, metaDataObj)
+
+    def draw(self, gameStateObj, metaDataObj):
+        mapSurf = gameStateObj.generic_surf
+        if self.message:
+            self.message.draw(mapSurf)
+        self.text_speed_change.draw(mapSurf)
+        return mapSurf
+
 class StartStart(StateMachine.State):
     name = 'start_start'
 
@@ -108,9 +182,21 @@ class StartStart(StateMachine.State):
             # Start music
             Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_main')])
 
+            # Play title script if it exists
+            title_script_name = 'Data/titleScript.txt'
+            global TITLE_SCRIPT
+            if os.path.exists(title_script_name) and \
+                    not TITLE_SCRIPT:
+                gameStateObj.build_new()
+                TITLE_SCRIPT = True
+                title_script = Dialogue.Dialogue_Scene(title_script_name)
+                gameStateObj.message.append(title_script)
+                gameStateObj.stateMachine.changeState('title_dialogue')
+
             # Transition in:
-            gameStateObj.stateMachine.changeState("transition_in")
-            return 'repeat'
+            else:
+                gameStateObj.stateMachine.changeState("transition_in")
+                return 'repeat'
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
