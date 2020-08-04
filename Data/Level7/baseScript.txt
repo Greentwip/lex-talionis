@@ -15,7 +15,7 @@ if;self.name == 'Theo Sphinx, Pt. IV'
 	b;Supply_Fort
 	t;2
 	u;Theo;Left;u;Nia;Right
-	s;Nia;...{w};auto;noir
+	s;Nia;...{w};auto
 	r;Nia
 	s;Theo;Nia didn't mince words.{w}{br}But I could tell something was going to be finished once I walked in that door--{w}{br}either this case, or me.{w}{br}The dame made like a banana and split,{w}{br}while I holstered my gun and made my way inside.{w}{clear}I was ready for answers.{w};auto;noir
 	wait;500

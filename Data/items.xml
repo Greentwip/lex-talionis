@@ -241,7 +241,7 @@
         
         <MT>5</MT>
         <HIT>80</HIT>
-        <LVL>A</LVL>
+        <LVL>B</LVL>
     </item>
 
     <item name="Master Edge">
@@ -1343,14 +1343,13 @@
         <id>Fly</id>
         <spritetype>Anima</spritetype>
         <spriteid>7</spriteid>       
-        <components>spell,uses,status,beneficial,custom_ai</components>
+        <components>spell,uses,status,beneficial,no_ai</components>
         <weapontype>Anima</weapontype>
  
         <uses>10</uses>
         <RNG>0-1</RNG>
         <value>200</value>
         <desc>Grants ally flying for 5 turns.</desc>
-        <custom_ai>not 'Rex_Aegis' in [s.id for s in target.status_effects]</custom_ai> 
         
         <LVL>C</LVL>
         <targets>Ally</targets>

@@ -1,0 +1,3 @@
+Small things to fix
+Check {clear}
+Shove doesn't work perfectly

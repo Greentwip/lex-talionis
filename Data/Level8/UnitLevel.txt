@@ -46,7 +46,7 @@ enemy;0;0;Vanguard;2;Mithril Axe;3,23;Attack_4;Claw
 enemy;0;0;Mage;10;Fire;15,15;Attack_2;Claw
 enemy;0;0;Mage;10;Thunder;17,17;Attack_2;Claw
 enemy;0;0;Mage;10;Wind;17,15;Attack_2;Claw
-enemy;0;0;Sage;12;Blizzard,dElixir;16,16;Attack_2;Claw
+enemy;0;0;Sage;2;Blizzard,dElixir;16,16;Attack_2;Claw
 # 2 Warriors above spawn, along with 1 Tactician and 1 Shaman
 enemy;0;0;Warrior;1;Mithril Axe,Oak Bow;4,3;Attack_3;Claw
 enemy;0;0;Warrior;1;Mithril Axe,Oak Bow;6,6;Attack_3;Claw

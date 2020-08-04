@@ -7,7 +7,7 @@ from . import configuration as cf
 import logging
 logger = logging.getLogger(__name__)
 
-version = "0.9.4.3b"
+version = "0.9.4.3c"
 # === GLOBAL CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000//FPS
