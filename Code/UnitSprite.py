@@ -214,6 +214,9 @@ class UnitSprite(object):
         # Effective Weapons
         if any(cur_unit.check_effective(item) for item in items):
             draw_marker('Danger')
+        # Stealable Weapons
+        elif self.unit.getStealables() and 'steal' in cur_unit.status_bundle:
+            draw_marker('Stealable')
         # Killer Weapons and Master Weapons and Reaver Weapons
         else:
             for item in items:

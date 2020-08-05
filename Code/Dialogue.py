@@ -968,10 +968,12 @@ class Dialogue_Scene(object):
         elif line[0] == 'change_portrait':
             unit = self.get_unit(line[1], gameStateObj)
             portrait_id = line[2]
-            if portrait_id in GC.PORTRAITDICT:
+            if unit and portrait_id in GC.PORTRAITDICT:
                 Action.do(Action.ChangePortrait(unit, portrait_id), gameStateObj)
-            else:
+            elif unit:
                 print("%s not in portrait dictionary. Need to assign blink and mouth positions to pic" % (portrait_id))
+            else:
+                print("Cannot find unit with name/id: %s" % line[1])
         elif line[0] == 'convert':
             assert len(line) == 3
             unit_specifier = self.get_id(line[1], gameStateObj)
