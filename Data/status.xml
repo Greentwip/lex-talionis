@@ -868,7 +868,7 @@
 
         <activated_item>so_Shove</activated_item>
         <check_valid_func>any([adj_unit.check_shove(unit.position, 1, gameStateObj) for adj_unit in unit.getAdjacentUnits(gameStateObj)])</check_valid_func>
-        <get_choices_func>[u.position for u in unit.getAdjacentUnits(gameStateObj)]</get_choices_func>
+        <get_choices_func>[u.position for u in unit.getAdjacentUnits(gameStateObj) if u.check_shove(unit.position, 1, gameStateObj)]</get_choices_func>
     </status>
 
     <status name="Swap">

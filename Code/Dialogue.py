@@ -1882,9 +1882,7 @@ class Dialog(object):
                 self._next_line()
             return True # we're waiting
         elif letter == "{clear}":
-            self.text.append("{erase}")
-            for x in range(self.num_lines-1):
-                self.text.append("{br}")
+            self.text_lines = []
             self._next_line()
         elif letter == "{erase}":
             self.text_lines = []
