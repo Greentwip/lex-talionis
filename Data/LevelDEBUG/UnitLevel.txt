@@ -29,6 +29,8 @@ player;0;0;Cleric;10;Refresh_Nemid,Purge,Guiding Ring,Restore;8,7;None;Resistanc
 #enemy;0;0;Assassin;1;Mithril Sword;1,6;None;Resistance
 enemy;0;0;Cavalier;1;Mithril Lance,Mithril Sword;1,5;None;Resistance
 enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
+enemy;0;0;Shaman;1;Iron Axe;53,20;None;Resistance
+enemy;0;0;Raider;1;Iron Axe;63,20;None;Resistance
 
 # Created units
 other;2;w_Create;Soldier;Iron Lance;0,0;Pursue;Resistance

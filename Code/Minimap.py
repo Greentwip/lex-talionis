@@ -426,12 +426,25 @@ class MiniMap(object):
         if progress != 1:
             image = self.occlude(Engine.copy_surface(image), progress)
 
-        # TODO make minimaps work with even bigger maps (current limit is 60x40)
-        pos = (GC.WINWIDTH//2 - image.get_width()//2, GC.WINHEIGHT//2 - image.get_height()//2)
-        surf.blit(image, pos)
+        # Minimap is now scrollable!
+        pos = (max(4, GC.WINWIDTH//2 - image.get_width()//2), max(4, GC.WINHEIGHT//2 - image.get_height()//2))
         x = camera_offset.x
         y = camera_offset.y
-        cursor_pos = pos[0] + x*self.scale_factor - 1, pos[1] + y*self.scale_factor - 1
+        viewport_width = GC.WINWIDTH//self.scale_factor - 2  # In tiles should be 58
+        viewport_height = GC.WINWIDTH//self.scale_factor - 2  # In tiles should be 38
+        xperc = x / (self.width - GC.TILEX) if self.width > GC.TILEX else 0
+        yperc = y / (self.height - GC.TILEY) if self.height > GC.TILEY else 0
+        xdiff = max(self.width - viewport_width, 0)
+        ydiff = max(self.height - viewport_height, 0)
+        xprogress = int(xdiff * xperc * self.scale_factor)
+        yprogress = int(ydiff * yperc * self.scale_factor)
+        rect = (xprogress, yprogress, min(image.get_width(), GC.WINWIDTH - 2 * self.scale_factor), min(image.get_height(), GC.WINHEIGHT - 2 * self.scale_factor))
+        image = Engine.subsurface(image, rect)
+        
+        image = Image_Modification.flickerImageTranslucent(image.convert_alpha(), 10)
+        surf.blit(image, pos)
+
+        cursor_pos = pos[0] + x*self.scale_factor - 1 - xprogress, pos[1] + y*self.scale_factor - 1 - yprogress
         if progress == 1:
             minimap_cursor = self.minimap_cursor
             if current_time > 1600 or (current_time > 600 and current_time < 1000):
