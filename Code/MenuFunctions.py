@@ -475,56 +475,6 @@ class ChoiceMenu(SimpleMenu):
         topleft = (self.topleft[0] - 16 + option_left + self.cursorAnim[self.cursorCounter], self.topleft[1] + 5)
         surf.blit(self.cursor, topleft)
 
-class ItemUseMenu(SimpleMenu):
-    def __init__(self, owner, option, topleft, background='BaseMenuBackground'):
-        SimpleMenu.__init__(self, owner, option, topleft, background)
-        self.legal_indices = [index for index, opt in self.options if opt.usable and opt.booster]
-        self.true_selection = 0
-        self.currentSelection = self.legal_indices[self.true_selection]
-
-    def moveUp(self, first_push=True):
-        if first_push:
-            self.true_selection += 1
-            if self.true_selection > len(self.legal_indices) - 1:
-                self.true_selection = 0
-        else:
-            self.true_selection = min(self.true_selection + 1, len(self.legal_indices) - 1)
-        self.currentSelection = self.legal_indices[self.true_selection]
-
-    def moveDown(self, first_push=True):
-        if first_push:
-            self.true_selection -= 1
-            if self.true_selection < 0:
-                self.true_selection = len(self.legal_indices) - 1
-        else:
-            self.true_selection = max(self.true_selection - 1, 0)
-        self.currentSelection = self.legal_indices[self.true_selection]
-
-    def draw(self, surf):
-        BGSurf = BaseMenuSurf.CreateBaseMenuSurf((self.menu_width, 16*5+8), self.background)
-        # Blit face
-        face_image = self.owner.bigportrait.copy()
-        face_image = Engine.flip_horiz(face_image)
-        BGSurf.blit(face_image, (0, 0))
-
-        self.draw_highlight(BGSurf, self.currentSelection)
-        for index, option in enumerate(self.options):
-            option.draw(BGSurf, (4, 4 + index*16))
-            name_font = GC.FONT['text_grey']
-            uses_font = GC.FONT['text_grey']
-            if option.usable and option.booster:
-                name_font = GC.FONT['text_white']
-                uses_font = GC.FONT['text_blue']
-            name_font.blit(str(option), BGSurf, (20, 8+index*16))
-            uses_string = "--"
-            if option.uses:
-                uses_string = str(option.uses)
-            elif option.c_uses:
-                uses_string = str(option.c_uses)
-            uses_font.blit(uses_string, BGSurf, (self.menu_width - 4 - uses_font.size(uses_string), 8+index*16))
-        surf.blit(BGSurf, self.topleft)
-        self.draw_cursor(surf, self.currentSelection)
-
 class ComplexMenu(SimpleMenu):
     def __init__(self, owner, options, topleft, background='BaseMenuBackground'):
         SimpleMenu.__init__(self, owner, options, topleft, background)

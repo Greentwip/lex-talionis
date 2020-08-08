@@ -283,6 +283,8 @@ class Status_Processor(object):
                     # If the hp_changed or the current status has a one time animation, run the process, otherwise, move onto next status
                     # Processing state handles animation and HP updating
                     if self.oldhp != self.newhp:
+                        if self.newhp > self.oldhp:
+                            GC.SOUNDDICT['MapHeal'].play()
                         logger.debug('HP change: %s %s', self.oldhp, self.newhp)
                         # self.health_bar.update()
                         self.start_time_for_this_status = current_time
@@ -359,10 +361,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
 
     if status.hp_percentage:
         hp_change = int(int(unit.stats['HP']) * status.hp_percentage.percentage/100.0)
-        old_hp = unit.currenthp
         Action.do(Action.ChangeHP(unit, hp_change), gameStateObj)
-        if unit.currenthp > old_hp:
-            GC.SOUNDDICT['MapHeal'].play()
 
     if status.upkeep_damage:
         if ',' in status.upkeep_damage:
@@ -370,10 +369,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
             damage_dealt = static_random.get_other(int(low_damage), int(high_damage))
         else:
             damage_dealt = int(status.upkeep_damage)
-        old_hp = unit.currenthp
         Action.do(Action.ChangeHP(unit, -damage_dealt), gameStateObj)
-        if unit.currenthp > old_hp:
-            GC.SOUNDDICT['MapHeal'].play()
 
     if status.upkeep_stat_change:
         Action.do(Action.ApplyStatChange(unit, status.upkeep_stat_change.stat_change), gameStateObj)
