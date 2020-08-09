@@ -158,6 +158,10 @@ class Combat(object):
             Action.do(Action.UnequipItem(self.p1, self.item), gameStateObj)
         if self.p2 and self.p2_item and self.p2_item.c_uses and self.p2_item.c_uses.uses <= 0:
             Action.do(Action.UnequipItem(self.p2, self.p2_item), gameStateObj)
+        if self.item.cooldown and not self.item.cooldown.charged:
+            Action.do(Action.UnequipItem(self.p1, self.item), gameStateObj)
+        if self.p2 and self.p2_item and self.p2_item.cooldown and not self.p2_item.cooldown.charged:
+            Action.do(Action.UnequipItem(self.p2, self.p2_item), gameStateObj)
 
     def find_broken_items(self):
         # Handle items that were used

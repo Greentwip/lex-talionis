@@ -522,7 +522,9 @@ class Solver(object):
         return result
 
     def item_uses(self, item):
-        if (item.uses and item.uses.uses <= 0) or (item.c_uses and item.c_uses.uses <= 0):
+        if (item.uses and item.uses.uses <= 0) or \
+           (item.c_uses and item.c_uses.uses <= 0) or \
+           (item.cooldown and not item.cooldown.charged):
             return False
         return True
 

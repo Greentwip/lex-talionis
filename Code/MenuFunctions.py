@@ -25,6 +25,34 @@ def OutlineFont(FONTNAME, text, surf, innercolor, outercolor, position):
     surf.blit(inner_text, position)
     return position
 
+def build_cd_groove(surf, topleft, width, fill, reverse):
+    if reverse:
+        fgs_mid = GC.IMAGESDICT['StatGrooveFillRed']
+    else:
+        fgs_mid = GC.IMAGESDICT['StatGrooveFillGreen']
+    fgs_mid = Engine.subsurface(fgs_mid, (0, 0, 1, 1))
+    back_groove_surf = GC.IMAGESDICT['StatGrooveBackSmall']
+    bgs_start = Engine.subsurface(back_groove_surf, (0, 0, 1, 3))
+    bgs_mid = Engine.subsurface(back_groove_surf, (1, 0, 1, 3))
+    bgs_end = Engine.subsurface(back_groove_surf, (2, 0, 1, 3))
+
+    # Build back groove
+    start_pos = topleft
+    surf.blit(bgs_start, start_pos)
+    for index in range(width - 2):
+        mid_pos = (topleft[0] + bgs_start.get_width() + bgs_mid.get_width()*index, topleft[1])
+        surf.blit(bgs_mid, mid_pos)
+    end_pos = (topleft[0] + bgs_start.get_width() + bgs_mid.get_width()*(width-2), topleft[1])
+    surf.blit(bgs_end, end_pos)
+
+    # Build fill groove
+    if fill == width:
+        number_of_fgs_needed = int(fill - 2)
+    else:
+        number_of_fgs_needed = int(fill - 1) # Width of groove minus section for start and end of back groove
+    for groove in range(number_of_fgs_needed):
+        surf.blit(fgs_mid, (topleft[0] + bgs_start.get_width() + groove, topleft[1] + 1))
+
 class Logo(object):
     def __init__(self, texture, center):
         self.texture = texture
@@ -433,14 +461,38 @@ class ChoiceMenu(SimpleMenu):
                             uses_string = str(option.uses) + '/' + str(option.uses.total_uses)
                         elif option.c_uses:
                             uses_string = str(option.c_uses) + '/' + str(option.c_uses.total_uses)
+                        elif option.cooldown:
+                            top -= 2
+                            if option.cooldown.charged:
+                                uses_font = GC.FONT['text_light_green']
+                                uses_string = str(option.cooldown.cd_uses) + '/' + str(option.cooldown.total_cd_uses)
+                            else:
+                                uses_font = GC.FONT['text_light_red']
+                                uses_string = str(option.cooldown.cd_turns) + '/' + str(option.cooldown.total_cd_turns)
                     else:
                         uses_string = "--"
                         if option.uses:
                             uses_string = str(option.uses)
                         elif option.c_uses:
                             uses_string = str(option.c_uses)
+                        elif option.cooldown:
+                            top -= 2
+                            if option.cooldown.charged:
+                                uses_font = GC.FONT['text_light_green']
+                                uses_string = str(option.cooldown.cd_uses)
+                            else:
+                                uses_font = GC.FONT['text_light_red']
+                                uses_string = str(option.cooldown.cd_turns)
                     pos = (left + self.menu_width - 4 - uses_font.size(uses_string)[0] - (5 if self.limit and len(self.options) > self.limit else 0), top)
                     uses_font.blit(uses_string, surf, pos)
+                    # Draw cooldown groove
+                    if option.cooldown:
+                        if option.cooldown.charged:
+                            build_cd_groove(surf, (left + self.menu_width - 19 - (5 if self.limit and len(self.options) > self.limit else 0), pos[1] + 14), 16,
+                                            int(round((int(option.cooldown.cd_uses) / int(option.cooldown.total_cd_uses)) * 16)), False)
+                        else:
+                            build_cd_groove(surf, (left + self.menu_width - 19 - (5 if self.limit and len(self.options) > self.limit else 0), pos[1] + 14), 16,
+                                            int(round((int(option.cooldown.cd_turns) / int(option.cooldown.total_cd_turns)) * 16)), True)
                 else:
                     if self.color_control:
                         main_font = GC.FONT[self.color_control[index+self.scroll]]
@@ -1316,11 +1368,24 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
                 use_font = GC.FONT['text_blue']
             name_font.blit(item.name, surf, (topleft[0] + 4 + 16, topleft[1] + index*16 + 4))
             uses_string = "--"
+            vert_adj = 0
             if item.uses:
                 uses_string = str(item.uses)
             elif item.c_uses:
                 uses_string = str(item.c_uses)
-            use_font.blit(uses_string, surf, (topleft[0] + 104 - 4 - use_font.size(uses_string)[0], topleft[1] + index*16 + 4))
+            elif item.cooldown:
+                vert_adj = 2
+                if item.cooldown.charged:
+                    uses_string = str(item.cooldown.cd_uses)
+                    use_font = GC.FONT['text_light_green']
+                    build_cd_groove(surf, (topleft[0] + 104 - 19, topleft[1] + (index+1)*16), 16,
+                                    int(round((int(item.cooldown.cd_uses) / int(item.cooldown.total_cd_uses)) * 16)), False)
+                else:
+                    uses_string = (str(item.cooldown.cd_turns))
+                    use_font = GC.FONT['text_light_red']
+                    build_cd_groove(surf, (topleft[0] + 104 - 19, topleft[1] + (index+1)*16), 16,
+                                    int(round((int(item.cooldown.cd_turns) / int(item.cooldown.total_cd_turns)) * 16)), True)
+            use_font.blit(uses_string, surf, (topleft[0] + 104 - 4 - use_font.size(uses_string)[0], topleft[1] + index*16 + 4 - vert_adj))
 
 # Serves as controller class for host of menus
 class ConvoyMenu(object):
@@ -1349,6 +1414,8 @@ class ConvoyMenu(object):
             sorted_dict[w_type] = [option for option in options if w_type == option.TYPE]
         sorted_dict['Consumable'] = [option for option in options if not option.TYPE]
         for key, value in sorted_dict.items():
+            value.sort(key=lambda item: item.cooldown.cd_turns if item.cooldown and not item.cooldown.charged else 100)
+            value.sort(key=lambda item: item.cooldown.cd_uses if item.cooldown and item.cooldown.charged else 100)
             value.sort(key=lambda item: item.c_uses.uses if item.c_uses else 100)
             value.sort(key=lambda item: item.uses.uses if item.uses else 100)
             value.sort(key=lambda item: item.name)
@@ -1511,6 +1578,7 @@ class ShopMenu(ChoiceMenu):
             uses_string = '--'
             value_string = '--'
             true_value = None
+            vert_adj = 0
             if option.uses:
                 uses_string = str(option.uses.uses)
                 if self.mode == 'Repair':
@@ -1522,8 +1590,11 @@ class ShopMenu(ChoiceMenu):
                 else:
                     true_value //= 2
                 true_value = int(true_value)
-            elif option.c_uses:
-                uses_string = str(option.c_uses)
+            elif option.c_uses or option.cooldown:
+                if option.c_uses:
+                    uses_string = str(option.c_uses)
+                else:
+                    uses_string = str(option.cooldown.cd_uses)
                 if self.mode in ('Buy', 'Sell'):
                     true_value = option.value
                 else:
@@ -1562,8 +1633,13 @@ class ShopMenu(ChoiceMenu):
                 value_font = GC.FONT['text_blue']
 
             name_font.blit(str(option), surf, (self.topleft[0] + 20, self.topleft[1] + 4 + index*16))
-
-            uses_font.blit(uses_string, surf, (self.topleft[0] + 96, self.topleft[1] + 4 + index*16))
+            if option.cooldown:
+                vert_adj = 1
+                uses_font = GC.FONT['text_light_green']
+                build_cd_groove(surf, (self.topleft[0] + 95, self.topleft[1] + (1 + index) * 16 + 1), 16,
+                                int(round((int(option.cooldown.cd_uses) / int(option.cooldown.total_cd_uses)) * 16)),
+                                False)
+            uses_font.blit(uses_string, surf, (self.topleft[0] + 96, self.topleft[1] + 4 + index*16 - vert_adj))
             left = self.topleft[0] + BGSurf.get_width() - 4 - value_font.size(value_string)[0]
             if self.limit == 7:
                 left -= 4 # to get out of the way of scroll bar
@@ -1692,6 +1768,17 @@ class TradeMenu(Counters.CursorControl):
                 uses_font.blit(str(item.uses), surf, (right - uses_font.size(str(item.uses))[0], height))
             elif item.c_uses:
                 uses_font.blit(str(item.c_uses), surf, (right - uses_font.size(str(item.c_uses))[0], height))
+            elif item.cooldown:
+                if item.cooldown.charged:
+                    uses_font = GC.FONT['text_light_green']
+                    uses_font.blit(str(item.cooldown.cd_uses), surf, (right - uses_font.size(str(item.cooldown.cd_uses))[0], height - 3))
+                    build_cd_groove(surf, (right - 15, height + self.optionHeight - 5), 16,
+                                    int(round((int(item.cooldown.cd_uses) / int(item.cooldown.total_cd_uses)) * 16)), False)
+                else:
+                    uses_font = GC.FONT['text_light_red']
+                    uses_font.blit((str(item.cooldown.cd_turns)), surf, (right - uses_font.size((str(item.cooldown.cd_turns)))[0], height - 3))
+                    build_cd_groove(surf, (right - 15, height + self.optionHeight - 5), 16,
+                                    int(round((int(item.cooldown.cd_turns) / int(item.cooldown.total_cd_turns)) * 16)), True)
             else:
                 uses_font.blit('--', surf, (right - uses_font.size('--')[0], height))
 
@@ -1894,31 +1981,43 @@ def drawTradePreview(surf, gameStateObj, steal=False):
     BGSurf.blit(bottom_of_window, (0, BGSurf.get_height() - bottom_of_window.get_height()))
     BGSurf = Image_Modification.flickerImageTranslucent(BGSurf, 10)
 
-    if items:
-        for index, item in enumerate(items):
-            # Item image
-            item.draw(BGSurf, (8, top_of_window.get_height() + index * middle_of_window.get_height() - 2))
-            if item.locked or (steal and item is unit.getMainWeapon()):
-                name_font = GC.FONT['text_grey']
-                uses_font = GC.FONT['text_grey']
+    for index, item in enumerate(items):
+        # Item image
+        item.draw(BGSurf, (8, top_of_window.get_height() + index * middle_of_window.get_height() - 2))
+        if item.locked or (steal and item is unit.getMainWeapon()):
+            name_font = GC.FONT['text_grey']
+            uses_font = GC.FONT['text_grey']
+        else:
+            name_font = GC.FONT['text_white']
+            uses_font = GC.FONT['text_blue']
+        # Name of item
+        height = top_of_window.get_height() + index * name_font.height - 2
+        right = BGSurf.get_width() - 4
+        name_font.blit(item.name, BGSurf, (25, height))
+        # Uses for item
+        if item.uses:
+            uses_width = uses_font.size(str(item.uses))[0]
+            uses_font.blit(str(item.uses), BGSurf, (right - uses_width, height))
+        elif item.c_uses:
+            uses_width = uses_font.size(str(item.c_uses))[0]
+            uses_font.blit(str(item.c_uses), BGSurf, (right - uses_width, height))
+        elif item.cooldown:
+            if item.cooldown.charged:
+                uses_font = GC.FONT['text_light_green']
+                uses_width = uses_font.size(str(item.cooldown.cd_uses))[0]
+                uses_font.blit(str(item.cooldown.cd_uses), BGSurf, (right - uses_width, height - 1))
+                build_cd_groove(BGSurf, (right - 15, height + name_font.height - 3), 16,
+                                int(round((int(item.cooldown.cd_uses) / int(item.cooldown.total_cd_uses)) * 16)), False)
             else:
-                name_font = GC.FONT['text_white']
-                uses_font = GC.FONT['text_blue']
-            # Name of item
-            height = top_of_window.get_height() + index * name_font.height - 2
-            right = BGSurf.get_width() - 4
-            name_font.blit(item.name, BGSurf, (25, height))
-            # Uses for item
-            if item.uses:
-                uses_width = uses_font.size(str(item.uses))[0]
-                uses_font.blit(str(item.uses), BGSurf, (right - uses_width, height))
-            elif item.c_uses:
-                uses_width = uses_font.size(str(item.c_uses))[0]
-                uses_font.blit(str(item.c_uses), BGSurf, (right - uses_width, height))
-            else:
-                uses_width = uses_font.size('--')[0]
-                uses_font.blit('--', BGSurf, (right - uses_width, height))
-    else:
+                uses_font = GC.FONT['text_light_red']
+                uses_width = uses_font.size((str(item.cooldown.cd_turns)))[0]
+                uses_font.blit((str(item.cooldown.cd_turns)), BGSurf, (right - uses_width, height - 1))
+                build_cd_groove(BGSurf, (right - 15, height + name_font.height - 3), 16,
+                                int(round((int(item.cooldown.cd_turns) / int(item.cooldown.total_cd_turns)) * 16)), True)
+        else:
+            uses_width = uses_font.size('--')[0]
+            uses_font.blit('--', BGSurf, (right - uses_width, height))
+    if not items:
         GC.FONT['text_grey'].blit(cf.WORDS['Nothing'], BGSurf, (25, top_of_window.get_height() - 2))
 
     # Blit Character's name and passive Sprite

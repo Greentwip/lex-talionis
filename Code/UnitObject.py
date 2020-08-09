@@ -334,11 +334,13 @@ class UnitObject(object):
                     my_num *= 2
                 if self.outspeed(enemyunit, my_wep, gameStateObj, "Attack"):
                     my_num *= 2
-                if my_wep.uses or my_wep.c_uses:
+                if my_wep.uses or my_wep.c_uses or my_wep.cooldown.charged:
                     if my_wep.uses:
                         my_num = min(my_num, my_wep.uses.uses)
                     if my_wep.c_uses:
                         my_num = min(my_num, my_wep.c_uses.uses)
+                    if my_wep.cooldown and my_wep.cooldown.charged:
+                        my_num = min(my_num, my_wep.cooldown.cd_uses)
 
             if my_num == 2:
                 surf.blit(GC.IMAGESDICT['x2'], x2_position_player)
@@ -624,6 +626,8 @@ class UnitObject(object):
         if item.uses and item.uses.uses <= 0:
             return False
         if item.c_uses and item.c_uses.uses <= 0:
+            return False
+        if item.cooldown and not item.cooldown.charged:
             return False
         return True
 
@@ -1924,6 +1928,9 @@ class UnitObject(object):
         for item in self.items:
             if item.c_uses:
                 item.c_uses.uses = item.c_uses.total_uses
+            elif item.cooldown:
+                if not item.cooldown.persist:
+                    item.cooldown.reset()
         # Units should have their positions NULLED
         self.position = None
         # Unit sprite should be reset

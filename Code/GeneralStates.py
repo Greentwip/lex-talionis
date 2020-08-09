@@ -922,6 +922,10 @@ class ItemChildState(StateMachine.State):
             use = True
             if selection.heal and current_unit.currenthp >= current_unit.stats['HP']:
                 use = False
+            elif selection.c_uses and selection.c_uses.uses <= 0:
+                use = False
+            elif selection.cooldown and not selection.cooldown.charged:
+                use = False
             elif selection.booster and not current_unit.can_use_booster(selection):
                 use = False
             elif selection.target_restrict and not eval(selection.target_restrict):
@@ -2380,6 +2384,15 @@ class PhaseChangeState(StateMachine.State):
         self.save_state(gameStateObj)
         logger.debug('Phase Start')
         Action.do(Action.LockTurnwheel(gameStateObj.phase.get_current_phase() != 'player'), gameStateObj)
+
+        # Handle cooldown items
+        units = [unit for unit in gameStateObj.allunits if 
+            (unit.team == gameStateObj.phase.get_current_phase() and unit.position)]
+        for unit in units:
+            for item in unit.items:
+                if item.cooldown and not item.cooldown.charged:
+                    Action.do(Action.CooloffItem(item), gameStateObj)
+
         # All units can now move and attack, etc.
         Action.do(Action.ResetAll([unit for unit in gameStateObj.allunits if not unit.dead]), gameStateObj)
         # Mark phase used to be here

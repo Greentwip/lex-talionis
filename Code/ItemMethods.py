@@ -77,6 +77,9 @@ class ItemObject(object):
         serial_dict['event_combat'] = self.event_combat
         serial_dict['uses'] = self.uses.uses if self.uses is not None else None
         serial_dict['c_uses'] = self.c_uses.uses if self.c_uses is not None else None
+        
+        serial_dict['cd_data'] = self.cooldown.serialize() if self.cooldown is not None else None
+        
         return serial_dict
 
     # If the attribute is not found
@@ -294,7 +297,99 @@ class UsesComponent(object):
 
     def can_repair(self):
         return self.uses < self.total_uses
-               
+
+class CooldownComponent(object):
+    def __init__(self, turns, cd_speed=1, persist='No', cd_uses=1):
+        self.cd_turns = int(turns)
+        self.total_cd_turns = self.cd_turns
+        self.old_total_cd_turns = self.total_cd_turns
+
+        self.charged = True
+        self.cd_speed = cd_speed
+        self.persist = persist.lower() in ('yes', 'y', 'true')
+
+        self.cd_uses = int(max(1, cd_uses))
+        self.total_cd_uses = self.cd_uses
+
+    def __repr__(self):
+        return str(self.turns)
+
+    def discharge(self, prior_turns):
+        """
+        Reverses getting a charge each turn
+        """
+        self.cd_turns -= self.cd_speed
+        if self.cd_turns < prior_turns:
+            self.charged = False
+            self.cd_uses = 0
+            self.total_cd_turns = prior_turns
+
+    def recharge(self):
+        """
+        Get a charge each turn
+        """
+        self.cd_turns += self.cd_speed
+        if self.cd_turns >= self.total_cd_turns:
+            self.charged = True
+            self.cd_uses = self.total_cd_uses
+            self.total_cd_turns = self.old_total_cd_turns
+
+    def decrement(self, item, gameStateObj):
+        """
+        Remove a use from the item
+        """
+        self.cd_uses -= 1
+        if self.cd_uses == 0:
+            owner = (gameStateObj.get_unit_from_id(item.item_owner))
+            cut_amount = 1
+            for status in owner.status_effects:
+                if status.cd_percent:
+                    cut_amount -= float(int(status.cd_percent) / 100)
+                    cut_amount = max(.01, cut_amount)
+            # Enter charging mode
+            self.total_cd_turns = max(int(self.old_total_cd_turns * cut_amount), 1)
+            self.charged = False
+            self.cd_turns = 0
+
+    def increment(self, prior_cd):
+        """
+        Reverse removing a use from the item
+        """ 
+        self.cd_uses += 1
+        if self.cd_uses > 0:
+            self.charged = True
+            self.cd_turns = prior_cd
+            self.total_cd_turns = self.old_total_cd_turns
+
+    def reset(self):
+        self.charged = True
+        self.total_cd_turns = self.old_total_cd_turns
+        self.cd_turns = self.total_cd_turns
+        self.cd_uses = self.total_cd_uses
+
+    def can_repair(self):
+        return False
+
+    def add(self, val):
+        self.cd_speed += val
+
+    def remove(self, val):
+        self.cd_speed -= val
+
+    def serialize(self):
+        serial_dict = {}
+        serial_dict['cd_turns'] = self.cd_turns
+        serial_dict['cd_uses'] = self.cd_uses
+        serial_dict['charged'] = self.charged
+        serial_dict['total_cd_turns'] = self.total_cd_turns
+        return serial_dict
+
+    def deserialize(self, ser_dict):
+        self.cd_turns = ser_dict['cd_turns']
+        self.cd_uses = ser_dict['cd_uses']
+        self.charged = ser_dict['charged']
+        self.total_cd_turns = ser_dict['total_cd_turns']
+
 class WeaponComponent(object):
     def __init__(self, stats):
         MT, HIT, LVL = stats
@@ -481,6 +576,11 @@ def itemparser(itemid, gameStateObj=None):
                 raise KeyError("You are missing uses component line for %s item" % itemid)
         elif component == 'c_uses':
             my_components['c_uses'] = UsesComponent(int(item['c_uses']))
+        elif component == 'cooldown':
+            cd_speed = int(item.get('cd_speed', 1))
+            persist = item.get('cd_persist', 'No')
+            my_components['cooldown'] = CooldownComponent(int(item['cooldown']), cd_speed,
+                                                          persist, int(item['cd_uses']))
         elif component == 'weapon':
             stats = [item['MT'], item['HIT'], item['LVL']]
             my_components['weapon'] = WeaponComponent(stats)
@@ -576,4 +676,8 @@ def deserialize(item_dict):
         item.uses.uses = item_dict['uses']
     if item_dict['c_uses'] is not None:
         item.c_uses.uses = item_dict['c_uses']
+
+    if item_dict['cd_data'] is not None:
+        item.cooldown.deserialize(item_dict['cd_data'])
+
     return item

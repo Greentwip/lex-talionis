@@ -1525,6 +1525,16 @@
         <components>no_exp</components>
     </status>
 
+    <status name="Cooling Pulse">
+        <id>Cooling_Pulse</id>
+        <image_index>5,6</image_index>
+        <desc>Cooldown recharge speed +1.</desc>
+        <components>item_mod,class_skill</components>
+
+        <item_mod_conditional>item.cooldown</item_mod_conditional>
+        <item_mod_effect_add>cooldown;add(1);remove(1)</item_mod_effect_add>
+    </status>
+
     <!-- Event status -->
     <status name="Remove RNG">
         <id>Remove RNG</id>

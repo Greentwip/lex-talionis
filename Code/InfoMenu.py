@@ -587,6 +587,23 @@ class InfoMenu(StateMachine.State):
             elif item.c_uses:
                 cur_uses = str(item.c_uses)
                 total_uses = str(item.c_uses.total_uses)
+            elif item.cooldown:
+                uses_height = 23
+                if not item.cooldown.charged:
+                    cur_uses = str(item.cooldown.cd_turns)
+                    total_uses = str(item.cooldown.total_cd_turns)
+                    namefont = GC.FONT['text_light_red']
+                    usefont = GC.FONT['text_light_red']
+                    MenuFunctions.build_cd_groove(menu_surf, (89, index*GC.TILEHEIGHT + 37),
+                                      40, int(round((int(cur_uses)/int(total_uses))*40)), True)
+                else:
+                    cur_uses = str(item.cooldown.cd_uses)
+                    total_uses = str(item.cooldown.total_cd_uses)
+                    namefont = GC.FONT['text_light_green']
+                    usefont = GC.FONT['text_light_green']
+                    MenuFunctions.build_cd_groove(
+                        menu_surf, (89, index*GC.TILEHEIGHT + 37),
+                        40, int(round((int(cur_uses)/int(total_uses))*40)), False)
             else:
                 cur_uses = total_uses = '--'
             usefont.blit(cur_uses, menu_surf, (104 - usefont.size(cur_uses)[0], index*GC.TILEHEIGHT + 24))

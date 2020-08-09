@@ -699,6 +699,9 @@ class UseItem(Action):
             self.item.uses.decrement()
         if self.item.c_uses:
             self.item.c_uses.decrement()
+        if self.item.cooldown:
+            self.item.cooldown.decrement(self.item, gameStateObj)
+            self.prior_cd = self.item.cooldown.cd_turns
 
     def reverse(self, gameStateObj):
         if not self.item:
@@ -707,6 +710,8 @@ class UseItem(Action):
             self.item.uses.increment()
         if self.item.c_uses:
             self.item.c_uses.increment()
+        if self.item.cooldown:
+            self.item.cooldown.increment(self.prior_cd)
 
 class RepairItem(Action):
     def __init__(self, item):
@@ -726,6 +731,19 @@ class RepairItem(Action):
         if self.item.c_uses:
             self.item.c_uses.set(self.item.item_old_c_uses)
 
+class CooloffItem(Action):
+    def __init__(self, item):
+        self.item = item
+        self.prior_turns = self.item.cooldown.total_cd_turns
+
+    def do(self, gameStateObj):
+        if self.item.cooldown:
+            self.item.cooldown.recharge()
+
+    def reverse(self, gameStateObj):
+        if self.item.cooldown:
+            self.item.cooldown.discharge(self.prior_turns)
+            
 class GainExp(Action):
     def __init__(self, unit, exp):
         self.unit = unit

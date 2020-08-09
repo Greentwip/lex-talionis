@@ -5,10 +5,11 @@
         <id>Iron Sword</id>
         <spritetype>Sword</spritetype>
         <spriteid>0</spriteid>       
-        <components>weapon,uses,weight</components>
+        <components>weapon,cooldown,weight</components>
         <weapontype>Sword</weapontype>
  
-        <uses>45</uses>
+        <cooldown>7</cooldown>
+        <cd_uses>1</cd_uses>
         <value>10</value>
         <RNG>1</RNG>
         <weight>3</weight>
