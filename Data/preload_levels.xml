@@ -1,301 +1,26 @@
 <preload_level>
-    <level name="10">
-        <mode>Lunatic</mode>
-        <money>139</money>
-        <convoy>Angelic Robe 1,Mana Ring 1,Talisman 1,Mithril Mail 1,Speedwings 1,Energy Ring 1,Energy Ring 1,Barkskin 3,Talisman 1,Mithril Mail 1,Mana Ring 1,Gustblade 15,Angelic Robe 1,Adamant Lance 15,Disintegrate 3,Mithril Axe 19,Tomahawk 10,Vulnerary 3,Energy Ring 1,Secret Book 1,Great Sword 25,Javelin 20,Mithril Sword 20,Speedwings 1,Warp 3,Hex 4,Adamant Sword 15,Silence 4,Aether 11,Boltblade 25,Meteor 1,Superior Lance 8</convoy>
-        <units>
-            <unit name="Ophie">
-                <level>17</level>
-                <exp>21</exp>
-                <items>Iron Sword 41,Magebane Sword 9,Superior Edge 5,Boltblade 25,Elixir 3</items>
-                <wexp>93,0,0,0,0,0,0</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Prim">
-                <level>16</level>
-                <exp>27</exp>
-                <items>Mend 9,Physic 11,Flux 30,Glimmer 30,Restore 10</items>
-                <wexp>0,0,0,0,97,0,23</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Joel">
-                <level>14</level>
-                <exp>83</exp>
-                <items>Hand Axe 11,Great Axe 21,Elixir 1,Iron Axe 24,Superior Axe 10</items>
-                <wexp>0,0,84,20,0,0,0</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Nia">
-                <level>18</level>
-                <exp>7</exp>
-                <items>Yew Bow 13,Willow Bow 3,Oak Bow 18,Longbow 20,Vulnerary 3</items>
-                <wexp>0,0,0,108,0,0,0</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Althea">
-                <level>18</level>
-                <exp>99</exp>
-                <items>Blizzard 1,Wyrmsfire 9,Wind 6,Fire 29,Thunder 24</items>
-                <wexp>0,0,0,0,0,109,0</wexp>
-                <skills>Speed +2</skills>
-            </unit>
-            <unit name="Drake">
-                <level>13</level>
-                <exp>89</exp>
-                <items>Javelin 2,Short Spear 15,Great Lance 25,Iron Lance 44,Vulnerary 3</items>
-                <wexp>26,59,0,0,0,0,0</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Renae">
-                <level>13</level>
-                <exp>28</exp>
-                <items>Longbow 14,Steel Sword 29,Iron Sword 45,Flareblade 25,Prim's Charm --</items>
-                <wexp>51,0,0,17,0,0,0</wexp>
-                <skills>Underdog</skills>
-            </unit>
-            <unit name="Theo">
-                <level>13</level>
-                <exp>66</exp>
-                <items>Steel Lance 26,Slim Lance 35,Great Lance 24,Short Spear 6,Vulnerary 3</items>
-                <wexp>16,52,16,0,0,0,0</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Eliza">
-                <level>17</level>
-                <exp>78</exp>
-                <items>Short Spear 14,Javelin 18,Mithril Lance 13,Iron Lance 40,Vulnerary 3</items>
-                <wexp>0,79,0,0,0,0,0</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Sam">
-                <level>16</level>
-                <exp>0</exp>
-                <items>Refresh 2,Heal 28,Physic 7,Shine 19,Fortune 10</items>
-                <wexp>0,0,0,0,97,0,0</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Kayla">
-                <level>14</level>
-                <exp>78</exp>
-                <items>Scathe 6,Howl 5,Nyx 16,Vulnerary 2</items>
-                <wexp>0,0,0,0,0,0,87</wexp>
-                <skills></skills>
-            </unit>
-            <unit name="Coyote">
-                <level>14</level>
-                <exp>45</exp>
-                <items>Short Axe 12,Mithril Sword 16,Steel Axe 7,Iron Sword 41,Potion 3</items>
-                <wexp>67,0,23,0,0,0,0</wexp>
-                <skills></skills>
-            </unit>
-        </units>
-    </level>
-    <level name="8">
-        <mode>Lunatic</mode>
-        <money>4767</money>
-        <convoy>Angelic Robe 1,Mana Ring 1,Skeleton Key 1,Talisman 1,Magebane Sword 15,Mithril Mail 1,Speedwings 1,Disintegrate 3,Energy Ring 1,Howl 10,Mend 5,Energy Ring 1,Iron Lance 9,Javelin 7,Slim Lance 17,Skeleton Key 1,Rapier 14,Fire 4,Great Lance 25,Heal 30,Iron Axe 27,Fire 30,Short Axe 15,Short Spear 15,Great Lance 23,Mithril Sword 19,Physic 15,Wyrmsfire 10,Vulnerary 3,Hex 5,Great Axe 23,Mithril Axe 20,Blizzard 2,Refresh 10</convoy>
-        <units>
-            <unit name="Ophie">
-                <level>16</level>
-                <exp>63</exp>
-                <items>Mithril Sword 7,Magebane Sword 15,Great Sword 25,Gustblade 20,Potion 2</items>
-                <wexp>82,0,0,0,0,0,0</wexp>
-                <skills>Riposte,Vantage,fMaximum HP +5,fMovement +1,Critical</skills>
-            </unit>
-            <unit name="Prim">
-                <level>12</level>
-                <exp>7</exp>
-                <items>Shine 18,Glimmer 28,Mend 14,Physic 12,Heal 4</items>
-                <wexp>0,0,0,0,81,0,16</wexp>
-                <skills>Healtouch,Miracle,fSpeed +2</skills>
-            </unit>
-            <unit name="Joel">
-                <level>13</level>
-                <exp>1</exp>
-                <items>Hatchet 14,Steel Axe 12,Longbow 18,Potion 1,Hand Axe 12</items>
-                <wexp>0,0,78,16,0,0,0</wexp>
-                <skills>Cleave,Shove,fDefense +2,fSkill +3</skills>
-            </unit>
-            <unit name="Nia">
-                <level>14</level>
-                <exp>12</exp>
-                <items>Willow Bow 24,Yew Bow 18,Longbow 19,Oak Bow 23,Elixir 2</items>
-                <wexp>0,0,0,88,0,0,0</wexp>
-                <skills>Prescience,Critical,fSpeed +2,fMaximum HP +5</skills>
-            </unit>
-            <unit name="Althea">
-                <level>15</level>
-                <exp>29</exp>
-                <items>Wind 10,Thunder 24,Fly 6,Vulnerary 3,Iron Lance 45</items>
-                <wexp>0,0,0,0,0,85,0</wexp>
-                <skills>Focus,Conductance,fMaximum HP +5,fMovement +1,Metamagic</skills>
-            </unit>
-            <unit name="Drake">
-                <level>12</level>
-                <exp>74</exp>
-                <items>Great Lance 24,Iron Lance 36,Vulnerary 3,Vulnerary 3</items>
-                <wexp>25,57,0,0,0,0,0</wexp>
-                <skills>Canto,Savior,fDefense +2</skills>
-            </unit>
-            <unit name="Renae">
-                <level>9</level>
-                <exp>71</exp>
-                <items>Iron Sword 41,Steel Sword 26,Flareblade 2,Rapier 20</items>
-                <wexp>43,0,0,0,0,0,0</wexp>
-                <skills>Locktouch,Steal,fMagic +2</skills>
-            </unit>
-            <unit name="Theo">
-                <level>10</level>
-                <exp>7</exp>
-                <items>Javelin 19,Steel Lance 28,Iron Lance 41,Short Spear 11</items>
-                <wexp>0,44,0,0,0,0,0</wexp>
-                <skills>Provoke,Shove,fMovement +1</skills>
-            </unit>
-            <unit name="Eliza">
-                <level>12</level>
-                <exp>74</exp>
-                <items>Mithril Lance 18,Slim Lance 25,Javelin 18,Short Spear 13,Prim's Charm --</items>
-                <wexp>0,61,0,0,0,0,0</wexp>
-                <skills>Synergy,fMaximum HP +5,fDefense +2</skills>
-            </unit>
-            <unit name="Sam">
-                <level>12</level>
-                <exp>82</exp>
-                <items>Mend 5,Glimmer 12,Rescue 3,Fortune 8,Restore 10</items>
-                <wexp>0,0,0,0,87,0,0</wexp>
-                <skills>Inspiration,Skill Aura,fMaximum HP +5</skills>
-            </unit>
-            <unit name="Kayla">
-                <level>13</level>
-                <exp>10</exp>
-                <items>Nyx 17,Scathe 3,Flux 11,Vulnerary 3,Warp 3</items>
-                <wexp>0,0,0,0,0,0,85</wexp>
-                <skills>Hex,Empowered,fSpeed +2,fMovement +1</skills>
-            </unit>
-            <unit name="Coyote">
-                <level>11</level>
-                <exp>47</exp>
-                <items>Iron Sword 43,Rapier 20,Superior Edge 6,Vulnerary 3,Spiritbane 3</items>
-                <wexp>63,0,16,0,0,0,0</wexp>
-                <skills>Initiative,Poise,fMaximum HP +5</skills>
-            </unit>
-        </units>
-    </level>
-    <level name="DEBUG">
-        <mode>Hard</mode>
-        <money>0</money>
-        <game_constants>Turnwheel,1</game_constants>
-        <convoy></convoy>
-        <units>
-            <unit name="Ophie">
-                <level>16</level>
-                <exp>63</exp>
-                <items>Mithril Sword 7,Steel Sword 4,Great Sword 25,Gustblade 20,Potion 2</items>
-                <wexp>82,0,0,0,0,0,0</wexp>
-                <skills>Riposte,Vantage,fMaximum HP +5,fMovement +1,Critical</skills>
-            </unit>
-            <unit name="Prim">
-                <level>12</level>
-                <exp>7</exp>
-                <items>Shine 18,Glimmer 28,Mend 14,Physic 12,Heal 4</items>
-                <wexp>0,0,0,0,81,0,16</wexp>
-                <skills>Healtouch,Miracle,fSpeed +2</skills>
-            </unit>
-            <unit name="Joel">
-                <level>13</level>
-                <exp>1</exp>
-                <items>Hatchet 14,Steel Axe 12,Longbow 18,Potion 1,Hand Axe 12</items>
-                <wexp>0,0,78,16,0,0,0</wexp>
-                <skills>Cleave,Shove,fDefense +2,fSkill +3</skills>
-            </unit>
-            <unit name="Nia">
-                <level>14</level>
-                <exp>12</exp>
-                <items>Willow Bow 24,Yew Bow 18,Longbow 19,Oak Bow 23,Elixir 2</items>
-                <wexp>0,0,0,88,0,0,0</wexp>
-                <skills>Prescience,Critical,fSpeed +2,fMaximum HP +5</skills>
-            </unit>
-            <unit name="Althea">
-                <level>9</level>
-                <exp>29</exp>
-                <items>Wind 10,Thunder 24,Fly 6,Guiding Ring 1,Iron Lance 45</items>
-                <wexp>0,0,0,0,0,85,0</wexp>
-                <skills>Focus,Conductance,fMaximum HP +5,fMovement +1,Metamagic</skills>
-            </unit>
-            <unit name="Drake">
-                <level>12</level>
-                <exp>74</exp>
-                <items>Great Lance 24,Iron Lance 36,Vulnerary 3,Vulnerary 3</items>
-                <wexp>25,57,0,0,0,0,0</wexp>
-                <skills>Canto,Savior,fDefense +2</skills>
-            </unit>
-            <unit name="Renae">
-                <level>9</level>
-                <exp>71</exp>
-                <items>Iron Sword 41,Steel Sword 26,Flareblade 2,Rapier 20</items>
-                <wexp>43,0,0,0,0,0,0</wexp>
-                <skills>Locktouch,Steal,fMagic +2</skills>
-            </unit>
-            <unit name="Theo">
-                <level>10</level>
-                <exp>7</exp>
-                <items>Javelin 19,Steel Lance 28,Iron Lance 41,Short Spear 11</items>
-                <wexp>0,44,0,0,0,0,0</wexp>
-                <skills>Provoke,Shove,fMovement +1</skills>
-            </unit>
-            <unit name="Eliza">
-                <level>12</level>
-                <exp>74</exp>
-                <items>Mithril Lance 18,Slim Lance 25,Javelin 18,Short Spear 13,Prim's Charm --</items>
-                <wexp>0,61,0,0,0,0,0</wexp>
-                <skills>Synergy,fMaximum HP +5,fDefense +2</skills>
-            </unit>
-            <unit name="Sam">
-                <level>12</level>
-                <exp>82</exp>
-                <items>Mend 5,Glimmer 12,Shine 4,Fortune 8,Restore 10</items>
-                <wexp>0,0,0,0,87,0,0</wexp>
-                <skills>Inspiration,Skill Aura,fMaximum HP +5</skills>
-            </unit>
-            <unit name="Kayla">
-                <level>13</level>
-                <exp>10</exp>
-                <items>Nyx 17,Scathe 3,Flux 11,Vulnerary 3,Barkskin 3</items>
-                <wexp>0,0,0,0,0,0,85</wexp>
-                <skills>Hex,Empowered,fSpeed +2,fMovement +1</skills>
-            </unit>
-            <unit name="Coyote">
-                <level>11</level>
-                <exp>47</exp>
-                <items>Iron Sword 43,Rapier 20,Superior Edge 6,Vulnerary 3,Spiritbane 3</items>
-                <wexp>63,0,16,0,0,0,0</wexp>
-                <skills>Initiative,Poise,fMaximum HP +5</skills>
-            </unit>
-        </units>
-    </level>
-
     <level name="9">
-        <mode>Lunatic</mode>
-        <game_constants>Convoy,True;level,9;max_turnwheel_uses,8;current_turnwheel_uses,8;_random_seed,228;Supports,1</game_constants>
-        <convoy>Angelic Robe 1,Mana Ring 1,Skeleton Key 1,Talisman 1,Magebane Sword 15,Mithril Mail 1,Speedwings 1,Disintegrate 3,Energy Ring 1,Howl 10,Mend 5,Energy Ring 1,Iron Lance 9,Javelin 7,Slim Lance 17,Skeleton Key 1,Rapier 14,Fire 4,Great Lance 25,Heal 30,Iron Axe 27,Fire 30,Short Axe 15,Short Spear 15,Great Lance 23,Mithril Sword 19,Physic 15,Wyrmsfire 10,Vulnerary 3,Hex 5,Great Axe 23,Mithril Axe 20,Blizzard 2,Refresh 10</convoy>
+        <mode>Grandmaster</mode>
+        <game_constants>level,9;_random_seed,186;Supports,1;current_turnwheel_uses,8;Turnwheel,1;max_turnwheel_uses,8;Convoy,1;switches,2;noir,3;Dead_Wagons,10;Civ_Escape,5;line_cross,11</game_constants>
+        <convoy>Barkskin 3,Spiritbane 1,Heal 29,Hex 1,Mithril Axe 16,Fire 7,Javelin 20,Iron Sword 6,Mend 4,Iron Lance 16,Superior Edge 1,Rapier 2,Nyx 13,Glimmer 30,Fortune 3,Thunder 24,Mithril Lance 1,Great Axe 24,Tomahawk 10,Scathe 9,Superior Axe 10,Long Spear 10,Talisman 1,Mithril Mail 1,Vulnerary 3,Angelic Robe 1,Adamant Lance 15,Mana Ring 1</convoy>
         <units>
             <unit name="Ophie">
                 <party>0</party>
                 <class>Swordmaster</class>
-                <level>6</level>
-                <exp>63</exp>
-                <items>Mithril Sword 7,Magebane Sword 15,Great Sword 25,Gustblade 20,Potion 2</items>
-                <wexp>82,0,0,0,0,0,0</wexp>
-                <skills>Riposte,Speed +2,Vantage,fMaximum HP +5,fMovement +1,Critical</skills>
+                <level>4</level>
+                <exp>1</exp>
+                <items>Flareblade 12,Steel Sword 3,Mithril Sword 20,Rapier 20,Elixir 2</items>
+                <wexp>84,0,0,0,0,0,0</wexp>
+                <skills>Riposte,Vantage,fStrength +2,fMovement +1,Resistance +2</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Prim">
                 <party>0</party>
                 <class>Oracle</class>
-                <level>2</level>
-                <exp>7</exp>
-                <items>Shine 18,Glimmer 28,Mend 14,Physic 12,Heal 4</items>
-                <wexp>0,0,0,0,81,0,16</wexp>
+                <level>1</level>
+                <exp>92</exp>
+                <items>Mend 10,Physic 6,Glimmer 2,Shine 2,Scathe 10</items>
+                <wexp>0,0,0,0,73,0,16</wexp>
                 <skills>Healtouch,Miracle,fSpeed +2</skills>
                 <dead>0</dead>
             </unit>
@@ -303,100 +28,100 @@
                 <party>0</party>
                 <class>Warrior</class>
                 <level>3</level>
-                <exp>1</exp>
-                <items>Hatchet 14,Steel Axe 12,Longbow 18,Potion 1,Hand Axe 12</items>
-                <wexp>0,0,78,16,0,0,0</wexp>
-                <skills>Cleave,Shove,fDefense +2,fSkill +3</skills>
+                <exp>28</exp>
+                <items>Longbow 10,Iron Axe 10,Mithril Axe 20,Vulnerary 3,Hand Axe 9</items>
+                <wexp>0,0,72,18,0,0,0</wexp>
+                <skills>Cleave,Shove,fSpeed +2,fMovement +1</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Nia">
                 <party>0</party>
                 <class>Sniper</class>
-                <level>4</level>
-                <exp>12</exp>
-                <items>Willow Bow 24,Yew Bow 18,Longbow 19,Oak Bow 23,Elixir 2</items>
+                <level>3</level>
+                <exp>67</exp>
+                <items>Longbow 17,Great Bow 22,Yew Bow 14,Willow Bow 36,Prim's Charm --</items>
                 <wexp>0,0,0,88,0,0,0</wexp>
-                <skills>Prescience,Critical,fSpeed +2,fMaximum HP +5</skills>
+                <skills>Prescience,Critical,fSpeed +2,Underdog,fStrength +2</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Althea">
                 <party>0</party>
                 <class>Sage</class>
-                <level>5</level>
-                <exp>29</exp>
-                <items>Wind 10,Thunder 24,Fly 6,Vulnerary 3,Iron Lance 45</items>
+                <level>6</level>
+                <exp>34</exp>
+                <items>Wind 13,Fire 25,Fly 4,Wyrmsfire 10</items>
                 <wexp>0,0,0,0,0,85,0</wexp>
-                <skills>Focus,Speed +2,Conductance,fMaximum HP +5,fMovement +1,Metamagic</skills>
+                <skills>Focus,Conductance,fSpeed +2,fMovement +1,Metamagic,Speed +2</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Drake">
                 <party>0</party>
                 <class>Paladin</class>
-                <level>2</level>
-                <exp>74</exp>
-                <items>Great Lance 24,Iron Lance 36,Vulnerary 3,Vulnerary 3</items>
-                <wexp>25,57,0,0,0,0,0</wexp>
-                <skills>Canto,Savior,fDefense +2</skills>
+                <level>4</level>
+                <exp>75</exp>
+                <items>Iron Sword 39,Great Lance 18,Short Spear 2,Steel Sword 30,Vulnerary 3</items>
+                <wexp>33,62,0,0,0,0,0</wexp>
+                <skills>Canto,Savior,fSpeed +2,fStrength +2</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Renae">
                 <party>0</party>
-                <class>Thief</class>
-                <level>9</level>
-                <exp>71</exp>
-                <items>Iron Sword 41,Steel Sword 26,Flareblade 2,Rapier 20</items>
-                <wexp>43,0,0,0,0,0,0</wexp>
-                <skills>Locktouch,Steal,fMagic +2</skills>
+                <class>Assassin</class>
+                <level>3</level>
+                <exp>73</exp>
+                <items>Longbow 15,Mithril Sword 11,Gustblade 5,Oak Bow 15,Vulnerary 2</items>
+                <wexp>58,0,0,20,0,0,0</wexp>
+                <skills>Locktouch,Steal,fStrength +2,fMovement +1</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Theo">
                 <party>0</party>
-                <class>Knight</class>
-                <level>10</level>
-                <exp>7</exp>
-                <items>Javelin 19,Steel Lance 28,Iron Lance 41,Short Spear 11</items>
-                <wexp>0,44,0,0,0,0,0</wexp>
-                <skills>Provoke,Shove,fMovement +1</skills>
+                <class>General</class>
+                <level>5</level>
+                <exp>8</exp>
+                <items>Javelin 5,Great Lance 21,Short Axe 11,Steel Axe 17,Potion 2</items>
+                <wexp>16,78,18,0,0,0,0</wexp>
+                <skills>Provoke,Shove,fSpeed +2,fMovement +1,Slow</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Eliza">
                 <party>0</party>
                 <class>Halberdier</class>
-                <level>2</level>
-                <exp>74</exp>
-                <items>Mithril Lance 18,Slim Lance 25,Javelin 18,Short Spear 13,Prim's Charm --</items>
-                <wexp>0,61,0,0,0,0,0</wexp>
-                <skills>Synergy,Underdog,fMaximum HP +5,fDefense +2</skills>
+                <level>3</level>
+                <exp>76</exp>
+                <items>Iron Lance 41,Short Spear 10,Great Lance 25,Steel Lance 25,Elixir 2</items>
+                <wexp>0,71,0,0,0,0,0</wexp>
+                <skills>Synergy,fSpeed +2,fStrength +2,fMovement +1</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Sam">
                 <party>0</party>
                 <class>Strategist</class>
                 <level>2</level>
-                <exp>82</exp>
-                <items>Mend 5,Glimmer 12,Rescue 3,Fortune 8,Restore 10</items>
-                <wexp>0,0,0,0,87,0,0</wexp>
-                <skills>Inspiration,Skill_Aura,fMaximum HP +5</skills>
+                <exp>40</exp>
+                <items>Fortune 9,Refresh 8,Physic 13,Shine 16,Rescue 2</items>
+                <wexp>0,0,0,0,79,0,0</wexp>
+                <skills>Refresh,Skill_Aura,Inspiration,fSpeed +2</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Kayla">
                 <party>0</party>
                 <class>Warlock</class>
-                <level>3</level>
-                <exp>10</exp>
-                <items>Nyx 17,Scathe 3,Flux 11,Vulnerary 3,Warp 3</items>
-                <wexp>0,0,0,0,0,0,85</wexp>
+                <level>4</level>
+                <exp>17</exp>
+                <items>Scathe 5,Flux 17,Hex 4,Disintegrate 3,Howl 9</items>
+                <wexp>0,0,0,0,0,0,82</wexp>
                 <skills>Hex,Empowered,fSpeed +2,fMovement +1</skills>
                 <dead>0</dead>
             </unit>
             <unit name="Coyote">
                 <party>0</party>
                 <class>Vanguard</class>
-                <level>1</level>
-                <exp>47</exp>
-                <items>Iron Sword 43,Rapier 20,Superior Edge 6,Vulnerary 3,Spiritbane 3</items>
-                <wexp>63,0,16,0,0,0,0</wexp>
-                <skills>Initiative,Poise,fMaximum HP +5</skills>
+                <level>4</level>
+                <exp>57</exp>
+                <items>Mithril Sword 17,Short Axe 13,Magebane Sword 7,Rapier 20,Vulnerary 2</items>
+                <wexp>74,0,18,0,0,0,0</wexp>
+                <skills>Initiative,Poise,fMaximum HP +5,fSpeed +2</skills>
                 <dead>0</dead>
             </unit>
         </units>

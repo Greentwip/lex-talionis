@@ -119,7 +119,7 @@ class Support_Graph(object):
                 self.add_node(name, affinity)
 
         with open(edge_fp, mode='r', encoding='utf-8') as edge_data:
-            lines = [l.strip() for l in edge_data.readlines() if l and not l.startswith('#')]
+            lines = [l.strip() for l in edge_data.readlines() if l.strip() and not l.startswith('#')]
             for line in lines:
                 # print(line)
                 s_l = line.split(';')
