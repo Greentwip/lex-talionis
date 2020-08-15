@@ -604,7 +604,7 @@ class Layer(object):
         self.sprites.append(obj)
 
     def __iter__(self):
-        return self.sprites
+        return iter(self.sprites)
 
     def remove(self, image_name, position):
         self.sprites = [s for s in self.sprites if s.image_name != image_name or s.position != position]
