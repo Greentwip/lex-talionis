@@ -1398,3 +1398,131 @@
 	</units>
 </level>
 
+<level name="11">
+	<mode>Grandmaster</mode>
+	<game_constants>level,11;_random_seed,186;Supports,1;current_turnwheel_uses,10;Turnwheel,1;max_turnwheel_uses,10;Convoy,1;switches,2;noir,3;Dead_Wagons,10;Civ_Escape,5;line_cross,11</game_constants>
+	<convoy>Scathe 4,Mithril Axe 16,Glimmer 30,Vulnerary 3,Rapier 18,Yew Bow 11,Fly 1,Fire 29,Great Lance 13,Iron Sword 41,Great Axe 24,Mithril Sword 8,Steel Lance 25,Heal 29,Vulnerary 3,Flux 15</convoy>
+	<units>
+		<unit name="Ophie">
+			<party>0</party>
+			<class>Swordmaster</class>
+			<level>7</level>
+			<exp>31</exp>
+			<items>Brave Sword 28,Adamant Sword 13,Gustblade 3,Elixir 1,Boltblade 24</items>
+			<wexp>94,0,0,0,0,0,0</wexp>
+			<skills>Riposte,Vantage,fStrength +2,fMovement +1,Critical</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>0</party>
+			<class>Oracle</class>
+			<level>3</level>
+			<exp>1</exp>
+			<items>Mend 12,Physic 11,Fortune 8,Nyx 11,Scathe 10</items>
+			<wexp>0,0,0,0,82,0,17</wexp>
+			<skills>Healtouch,Miracle,fSpeed +2,fMagic +2</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>0</party>
+			<class>Warrior</class>
+			<level>5</level>
+			<exp>52</exp>
+			<items>Mithril Axe 18,Brave Axe 28,Willow Bow 32,Superior Axe 10,Tomahawk 10</items>
+			<wexp>0,0,75,19,0,0,0</wexp>
+			<skills>Cleave,Shove,fSpeed +2,fMovement +1,Heavy Hitter</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Nia">
+			<party>0</party>
+			<class>Sniper</class>
+			<level>7</level>
+			<exp>35</exp>
+			<items>Great Bow 21,Yew Bow 17,Longbow 17,Brave Bow 30,Prim's Charm --</items>
+			<wexp>0,0,0,97,0,0,0</wexp>
+			<skills>Prescience,Critical,fSpeed +2,fStrength +2,Longshot,Underdog</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Althea">
+			<party>0</party>
+			<class>Sage</class>
+			<level>9</level>
+			<exp>58</exp>
+			<items>Wind 10,Aether 14,Wyrmsfire 8,Thunder 24</items>
+			<wexp>0,0,0,0,0,94,0</wexp>
+			<skills>Focus,Conductance,fSpeed +2,fMovement +1,Metamagic,fMagic +2,Speed +2</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Drake">
+			<party>0</party>
+			<class>Paladin</class>
+			<level>6</level>
+			<exp>91</exp>
+			<items>Steel Sword 26,Javelin 15,Mithril Lance 20,Great Lance 25,Vulnerary 1</items>
+			<wexp>37,66,0,0,0,0,0</wexp>
+			<skills>Canto,Savior,fSpeed +2,fStrength +2,Charisma</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Renae">
+			<party>0</party>
+			<class>Assassin</class>
+			<level>6</level>
+			<exp>50</exp>
+			<items>Mithril Sword 15,Oak Bow 8,Longbow 20,Flareblade 12,Vulnerary 2</items>
+			<wexp>61,0,0,25,0,0,0</wexp>
+			<skills>Locktouch,Steal,fStrength +2,fMovement +1,Ghost</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Theo">
+			<party>0</party>
+			<class>General</class>
+			<level>8</level>
+			<exp>49</exp>
+			<items>Short Axe 10,Adamant Lance 3,Great Lance 25,Elixir 2,Short Spear 5</items>
+			<wexp>16,90,22,0,0,0,0</wexp>
+			<skills>Provoke,Shove,fSpeed +2,fMovement +1,Slow,fStrength +2</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Eliza">
+			<party>0</party>
+			<class>Halberdier</class>
+			<level>6</level>
+			<exp>51</exp>
+			<items>Superior Lance 10,Iron Lance 40,Long Spear 10,Mithril Lance 20,Brave Lance 30</items>
+			<wexp>0,81,0,0,0,0,0</wexp>
+			<skills>Synergy,fSpeed +2,fStrength +2,fMovement +1,Luna,Lancebreaker</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Sam">
+			<party>0</party>
+			<class>Strategist</class>
+			<level>3</level>
+			<exp>74</exp>
+			<items>Refresh 3,Mend 13,Shine 18,Rescue 1,Silence 4</items>
+			<wexp>0,0,0,0,90,0,0</wexp>
+			<skills>Refresh,Skill_Aura,Inspiration,fSpeed +2,fMovement +1</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Kayla">
+			<party>0</party>
+			<class>Warlock</class>
+			<level>7</level>
+			<exp>70</exp>
+			<items>Howl 5,Scathe 7,Disintegrate 3,Hex 5,Stun 3</items>
+			<wexp>0,0,0,0,0,0,90</wexp>
+			<skills>Hex,Empowered,fSpeed +2,fMovement +1,Metamagic</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Coyote">
+			<party>0</party>
+			<class>Vanguard</class>
+			<level>6</level>
+			<exp>48</exp>
+			<items>Steel Axe 15,Mithril Sword 16,Magebane Sword 7,Short Axe 3,Potion 2</items>
+			<wexp>74,0,24,0,0,0,0</wexp>
+			<skills>Initiative,Poise,fMaximum HP +5,fSpeed +2,Sol</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+

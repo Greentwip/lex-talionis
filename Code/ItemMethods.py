@@ -672,12 +672,12 @@ def deserialize(item_dict):
         item.droppable = True
     if item_dict['event_combat']:
         item.event_combat = True
-    if item_dict['uses'] is not None:
+    if item_dict.get('uses') is not None:
         item.uses.uses = item_dict['uses']
-    if item_dict['c_uses'] is not None:
+    if item_dict.get('c_uses') is not None:
         item.c_uses.uses = item_dict['c_uses']
 
-    if item_dict['cd_data'] is not None:
+    if item_dict.get('cd_data') is not None:
         item.cooldown.deserialize(item_dict['cd_data'])
 
     return item

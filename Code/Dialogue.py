@@ -59,8 +59,10 @@ class Dialogue_Scene(object):
         self.waiting = False
 
         # For transition
-        self.transition = 0 # No transition
-        self.transition_transparency = 0 # 0 is transparent
+        self.transition_state = 0  # 0 -- No change, 1 -- To black, 2 -- Away from black
+        self.transition_speed = 15 * GC.FRAMERATE  # How long to transition for
+        self.transition_color = (0, 0, 0)
+        self.transition_transparency = 0  # Amount of alpha (255 fully dark)
         self.transition_last_update = Engine.get_time()
 
         self.scene_lines_index = 0 # Keeps track of where we are in the scene
@@ -111,7 +113,7 @@ class Dialogue_Scene(object):
         if not self.current_state == "Paused":
             self.current_state = "Processing"
         # Reset transition
-        self.transition = 0
+        self.transition_state = 0  # 0 -- No change, 1 -- To black, 2 -- Away from black
         self.transition_transparency = 0
         # Remove midground and foreground
         self.midground = None
@@ -202,19 +204,15 @@ class Dialogue_Scene(object):
                 self.end()
 
         elif self.current_state == "Transitioning":
-            if self.transition == 1: # Increasing
-                self.transition_transparency = current_time - self.transition_last_update
-            elif self.transition == 2:
-                self.transition_transparency = 255 - (current_time - self.transition_last_update)
-            elif self.transition == 3:
-                self.transition_transparency = (current_time - self.transition_last_update)//2
-            elif self.transition == 4:
-                self.transition_transparency = 255 - (current_time - self.transition_last_update)//2
-            if self.transition_transparency > 255 + 5*GC.FRAMERATE or self.transition_transparency < 0: # I want 5 extra frames in black
+            progress = (current_time - self.transition_last_update) / self.transition_speed
+            if self.transition_state == 1:  # Increasing transition
+                self.transition_transparency = 255 * Utility.clamp(progress, 0, 1)
+            elif self.transition_state == 2:  # Decreasing transition
+                self.transition_transparency = 255 - (255 * Utility.clamp(progress, 0, 1))
+            if progress > 1.33 or progress < 0:
                 self.current_state = "Processing"
                 if self.scene_lines_index >= len(self.scene_lines): # Check if we're done
                     self.end()
-            self.transition_transparency = Utility.clamp(self.transition_transparency, 0, 255)
 
         elif self.current_state == "Displaying": # Don't dialog while transitioning or processing
             if self.dialog: # Only update dialog if it exists, could also just be waiting or not even in this state
@@ -949,18 +947,25 @@ class Dialogue_Scene(object):
 
         # === TRANSITIONS
         elif line[0] == 't': # Handle transition
-            if line[1] == '1':
-                self.transition = 1
-                self.transition_transparency = 0 # Increasing
-            elif line[1] == '2':
-                self.transition = 2
-                self.transition_transparency = 255 # Decreasing
-            elif line[1] == '3':
-                self.transition = 3
+            mode = line[1]
+            if len(line) > 2:
+                self.transition_color = tuple([int(num) for num in line[2].split(',')])
+            if len(line) > 3:
+                self.transition_speed = int(line[3])
+            if mode == '1':
+                self.transition_state = 1
                 self.transition_transparency = 0
-            elif line[1] == '4':
-                self.transition = 4
+            elif mode == '2':
+                self.transition_state = 2
                 self.transition_transparency = 255
+            elif mode == '3':
+                self.transition_state = 1
+                self.transition_transparency = 0
+                self.transition_speed = 30 * GC.FRAMERATE
+            elif mode == '4':
+                self.transition_state = 2
+                self.transition_transparency = 255
+                self.transition_speed = 30 * GC.FRAMERATE
             self.transition_last_update = Engine.get_time()
             self.current_state = "Transitioning"
 
@@ -1325,7 +1330,10 @@ class Dialogue_Scene(object):
                 self.current_state = "Processing" # Done waiting. Head back to processing
 
         s = GC.IMAGESDICT['BlackBackground'].copy()
-        s.fill((0, 0, 0, self.transition_transparency))
+        if len(self.transition_color) == 3:
+            s.fill((*self.transition_color, self.transition_transparency))
+        else:
+            s.fill((0, 0, 0, self.transition_transparency))
         surf.blit(s, (0, 0))
 
     def add_unit_sprite(self, gameStateObj, line, transition=False):
@@ -1805,7 +1813,7 @@ class Dialog(object):
         self.hold = hold
 
         # To match dialogue scene, so it can be used in the same place.
-        self.transition = transition
+        self.transition_state = transition
         self.transition_transparency = 0
         self.dialog = False
 
@@ -1978,7 +1986,7 @@ class Dialog(object):
             surf.blit(name_tag_surf, pos)
 
     def hurry_up(self):
-        self.transition = False
+        self.transition_state = False
         while not self._next_char():
             pass # while we haven't reached the end, process all the next chars...
 
@@ -1988,11 +1996,11 @@ class Dialog(object):
         return self.done
 
     def update(self):
-        if self.transition:
+        if self.transition_state:
             self.transition_transparency += 1 # 10 is max # 10 frames to load in
             if self.transition_transparency >= 10:
                 # Done transitioning
-                self.transition = False
+                self.transition_state = False
                 if self.talk and self.owner in self.unit_sprites:
                     self.unit_sprites[self.owner].talk()
         elif self.scroll_y > 0:
@@ -2017,7 +2025,7 @@ class Dialog(object):
 
     def draw(self, surf):
         text_surf = self.text_surf.copy()
-        if self.transition:
+        if self.transition_state:
             scroll = 0
         else:
             end_text_position = self.draw_text(text_surf, (0, 0))
@@ -2030,7 +2038,7 @@ class Dialog(object):
         else:
             self.topleft = surf_pos
 
-        if self.transition:
+        if self.transition_state:
             dlog_box = Image_Modification.resize(self.dlog_box, (1, self.transition_transparency/20. + .5))
             dlog_box = Image_Modification.flickerImageTranslucent(dlog_box, 100 - self.transition_transparency*10)
             topleft = self.topleft[0], self.topleft[1] + self.dlog_box.get_height() - dlog_box.get_height()
@@ -2039,7 +2047,7 @@ class Dialog(object):
             topleft = self.topleft
         surf.blit(dlog_box, topleft)
 
-        if not self.transition:
+        if not self.transition_state:
             if self.message_tail:
                 self.add_message_tail(surf)
             self.add_nametag(surf)
