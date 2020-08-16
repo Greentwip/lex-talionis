@@ -948,7 +948,7 @@ class Dialogue_Scene(object):
         # === TRANSITIONS
         elif line[0] == 't': # Handle transition
             mode = line[1]
-            if len(line) > 2:
+            if len(line) > 2 and line[2]:
                 self.transition_color = tuple([int(num) for num in line[2].split(',')])
             if len(line) > 3:
                 self.transition_speed = int(line[3])
