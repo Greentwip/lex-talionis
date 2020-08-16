@@ -911,6 +911,47 @@ class ChangeTileHP(Action):
         tile = gameStateObj.map.tiles[self.position]
         tile.set_hp(self.old_hp)
 
+class ChangeFatigue(Action):
+    def __init__(self, unit, fatigue, ignore_tags=False):
+        self.unit = unit
+        self.fatigue = fatigue
+        self.old_fatigue = self.unit.fatigue
+        self.ignore_tags = ignore_tags
+        self.actions = []
+
+    def do(self, gameStateObj):
+        if not self.ignore_tags: 
+            if 'Tireless' in self.unit.tags or 'tireless' in self.unit.status_bundle:
+                return
+        self.unit.fatigue += self.fatigue
+        if self.unit.fatigue < 0:
+            self.unit.fatigue = 0
+
+        # Handle adding statuses whenever Fatigue changes
+        if gameStateObj.game_constants['Fatigue'] == 4:
+            if self.unit.fatigue >= GC.EQUATIONS.get_max_fatigue(self.unit):
+                fatigue_status = StatusCatalog.statusparser("Fatigued", gameStateObj)
+                self.actions.append(Action.AddStatus(self.unit, fatigue_status))
+            else:
+                if any(status.id == "Fatigued" for status in self.unit.status_effects):
+                    self.actions.append(Action.RemoveStatus(self.unit, "Fatigued"))
+        elif gameStateObj.game_constants['Fatigue'] == 5:
+            if self.unit.fatigue < GC.EQUATIONS.get_max_fatigue(self.unit):
+                fatigue_status = StatusCatalog.statusparser("Fatigued", gameStateObj)
+                self.actions.append(Action.AddStatus(self.unit, fatigue_status))
+            else:
+                if any(status.id == "Fatigued" for status in self.unit.status_effects):
+                    self.actions.append(Action.RemoveStatus(self.unit, "Fatigued"))
+
+        for action in self.actions:
+            action.do(gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.unit.fatigue = self.old_fatigue
+
+        for action in self.actions:
+            action.reverse(gameStateObj)
+
 class Miracle(Action):
     def __init__(self, unit):
         self.unit = unit

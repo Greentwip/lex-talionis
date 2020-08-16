@@ -2387,11 +2387,21 @@ class PhaseChangeState(StateMachine.State):
 
         # Handle cooldown items
         units = [unit for unit in gameStateObj.allunits if 
-            (unit.team == gameStateObj.phase.get_current_phase() and unit.position)]
+                 (unit.team == gameStateObj.phase.get_current_phase() and unit.position)]
         for unit in units:
             for item in unit.items:
                 if item.cooldown and not item.cooldown.charged:
                     Action.do(Action.CooloffItem(item), gameStateObj)
+
+        # Handle fatigue
+        if cf.CONSTANTS['fatigue'] and gameStateObj.turncount == 1 and gameStateObj.phase.get_current_phase() == 'player':
+            gameStateObj.refresh_fatigue()
+
+        # Turn by turn fatigue
+        if cf.CONSTANTS['fatigue'] == 2:
+            for unit in units:
+                if unit.team == 'player':
+                    Action.do(Action.ChangeFatigue(unit, 1), gameStateObj)
 
         # All units can now move and attack, etc.
         Action.do(Action.ResetAll([unit for unit in gameStateObj.allunits if not unit.dead]), gameStateObj)

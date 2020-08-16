@@ -152,11 +152,19 @@ class PrepPickUnitsState(StateMachine.State):
                 Action.RemoveFromMap(selection).do(gameStateObj)
             else:
                 possible_position = gameStateObj.check_formation_spots()
-                if possible_position:
+                # Check for fatigue
+                is_fatigued = False
+                if cf.CONSTANTS['fatigue'] and gameStateObj.game_constants['Fatigue'] == 1:
+                    if selection.fatigue >= GC.EQUATIONS.get_max_fatigue(selection):
+                        is_fatigued = True
+                if possible_position and not is_fatigued:
                     GC.SOUNDDICT['Select 1'].play()
                     Action.PlaceOnMap(selection, possible_position).do(gameStateObj)
                     selection.arrive(gameStateObj)
                     selection.reset() # Make sure unit is not 'wait'...
+                elif is_fatigued:
+                    GC.SOUNDDICT['Select 4'].play()  # Unit is fatigued and cannot be deployed
+                    
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
             # gameStateObj.stateMachine.back()

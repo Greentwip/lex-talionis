@@ -186,6 +186,34 @@ class Combat(object):
             gameStateObj.banners.append(Banner.brokenItemBanner(self.p2, self.p2_item))
             gameStateObj.stateMachine.changeState('itemgain')
 
+    def handle_fatigue(self, results, gameStateObj):
+        if cf.CONSTANTS['fatigue'] in (1, 2) and not self.event_combat:
+            if self.item:
+                fatigue_gain = self._compute_fatigue(self.p1, self.item, gameStateObj)
+                if cf.CONSTANTS['fatigue'] == 2:
+                    for result in results:
+                        if self.p1 is result.attacker:
+                            Action.do(Action.ChangeFatigue(self.p1, fatigue_gain), gameStateObj)
+                else:
+                    Action.do(Action.ChangeFatigue(self.p1, 1), gameStateObj)
+            if self.p2 and self.p2_item and self.p2 is not self.p1:
+                fatigue_gain = self._compute_fatigue(self.p2, self.p2_item, gameStateObj)
+                if cf.CONSTANTS['fatigue'] == 2:
+                    for result in results:
+                        if self.p2 is result.attacker:
+                            Action.do(Action.ChangeFatigue(self.p2, fatigue_gain), gameStateObj)
+                else:
+                    Action.do(Action.ChangeFatigue(self.p2, 1), gameStateObj)
+            if cf.CONSTANTS['fatigue'] == 1:
+                for splash in self.splash:
+                    Action.do(Action.ChangeFatigue(splash, 1), gameStateObj)
+
+    def _compute_fatigue(self, unit, item, gameStateObj):
+        if item.weapon or item.spell:
+            return item.fatigue or 1
+        else:
+            return item.fatigue or 0
+
     def handle_wexp(self, results, item, gameStateObj):
         if not cf.CONSTANTS['miss_wexp']:  # If miss wexp is not on, only include hits
             results = [result for result in results if result.outcome]
@@ -1348,6 +1376,8 @@ class AnimationCombat(Combat):
 
         self.handle_supports(all_units, gameStateObj)
 
+        self.handle_fatigue(self.old_results, gameStateObj)
+
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
         # Actually remove items
@@ -1946,6 +1976,8 @@ class MapCombat(Combat):
         self.handle_statuses(gameStateObj)
 
         self.handle_supports(all_units, gameStateObj)
+
+        self.handle_fatigue(self.old_results, gameStateObj)
 
         self.arena_cleanup(gameStateObj)
         self.handle_death(gameStateObj, metaDataObj, all_units)

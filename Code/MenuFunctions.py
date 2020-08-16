@@ -1295,9 +1295,15 @@ class UnitSelectMenu(Counters.CursorControl):
             font = GC.FONT['text_white']
             if self.mode == 'position':
                 if not unit.position:
-                    font = GC.FONT['text_grey']
-                elif unit.position and 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]:
-                    font = GC.FONT['text_green']  # Locked/Lord character
+                    if cf.CONSTANTS['fatigue'] and gameStateObj.game_constants['Fatigue'] == 1 and unit.fatigue >= GC.EQUATIONS.get_max_fatigue(unit):
+                        font = GC.FONT['text_dark_grey']
+                    else:
+                        font = GC.FONT['text_grey']
+                elif unit.position:
+                    if 'Formation' not in gameStateObj.map.tile_info_dict[unit.position]:
+                        font = GC.FONT['text_green']  # Locked/Lord character
+                    elif cf.CONSTANTS['fatigue'] and gameStateObj.game_constants['Fatigue'] in (2, 4) and unit.fatigue >= GC.EQUATIONS.get_max_fatigue(unit):
+                        font = GC.FONT['text_light_green']
             elif self.mode == 'arena' and unit.currenthp <= 1:
                 font = GC.FONT['text_grey']
             position = (self.topleft[0] + 20 + 1 + 16 + x_center + left*self.option_length, self.topleft[1] + 2 + top*self.option_height)

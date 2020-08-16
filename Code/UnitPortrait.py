@@ -168,10 +168,7 @@ class UnitPortrait(object):
             if current_time - self.last_bop > 150:
                 self.last_bop = current_time
                 if self.bop_state:
-                    self.position = self.position[0], self.position[1] - 2
                     self.bops_remaining -= 1
-                else:
-                    self.position = self.position[0], self.position[1] + 2
                 self.bop_state = not self.bop_state
                 
         return False
@@ -231,6 +228,8 @@ class UnitPortrait(object):
                 position = self.position[0] + int(24./100 * self.transition_transparency), self.position[1]
         else:
             position = self.position
+        # bop
+        position = position[0], position[1] + (2 if self.bop_state else 0)
             
         surf.blit(image_sprite, position)
 

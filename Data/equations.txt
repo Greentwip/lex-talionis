@@ -7,6 +7,7 @@ STR;MAG;SKL;SPD;LCK;DEF;RES;CON
 # HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON
 # AS (attackspeed), DIST (distance), WEIGHT
 # Must set up equations that calculate HIT, AVOID, CRIT, CRIT_AVOID, AS, DAMAGE, MAGIC_DAMAGE, DEFENSE, MAGIC_DEFENSE, RATING, RESCUE_AID, RESCUE_WEIGHT, STEAL_ATK, STEAL_DEF, HEAL
+# MAX_FATIGUE must be defined if using fatigue mechanics
 AS = SPD - max(0, WEIGHT - CON)
 HIT = SKL*3 + LCK
 AVOID = AS*3 + LCK
@@ -23,3 +24,4 @@ RESCUE_WEIGHT = 99 if 'Mounted' in unit.tags else CON
 STEAL_ATK = SPD
 STEAL_DEF = SPD
 HEAL = MAG
+MAX_FATIGUE = 2

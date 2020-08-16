@@ -482,6 +482,10 @@ class Solver(object):
                 for s_id in item.status:
                     status_object = StatusCatalog.statusparser(s_id, gameStateObj)
                     result.def_status.append(status_object)
+                # Handle fatigue
+                if item.target_fatigue:
+                    Action.do(Action.ChangeFatigue(defender, int(item.target_fatigue)), gameStateObj)
+
             # Handle summon
             if item.summon:
                 result.summoning = SaveLoad.create_summon(item.summon, attacker, self.def_pos, gameStateObj)

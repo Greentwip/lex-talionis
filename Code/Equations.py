@@ -91,6 +91,9 @@ class Parser(object):
     def get_heal(self, unit, item=None, dist=0):
         return self.equations['HEAL'](self.equations, unit, item, dist)
 
+    def get_max_fatigue(self, unit, item=None, dist=0):
+        return self.equations['MAX_FATIGUE'](self.equations, unit, item, dist)
+
     def get_equation(self, lhs, unit, item=None, dist=0):
         return self.equations[lhs](self.equations, unit, item, dist)
 

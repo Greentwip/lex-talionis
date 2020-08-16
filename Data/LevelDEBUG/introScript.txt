@@ -1,26 +1,7 @@
-t;1
-b;Town
-t;2
-wait;5000
-t;1
-b;Castle
-t;2
-wait;5000
-t;3
-b;Town
-t;4
-wait;5000
-t;1;255,255,255
-b;Castle
-t;2;255,255,255
-wait;5000
-t;1;255,0,0;2000
-b;Town
-t;2;0,255,0;2000
-wait;5000
 gold;1000;no_banner
 set_game_constant;Convoy
 set_game_constant;Supports
+set_game_constant;Fatigue;3
 set_game_constant;Turnwheel
 # add_global_status;fLuck +4
 set_game_constant;max_turnwheel_uses;1
@@ -32,7 +13,7 @@ layer_tile_sprite;2;4,17;OpenChest;base_terrain
 layer_tile_sprite;2;5,17;OpenChest;base_terrain
 add_unit;hard_boi_1
 add_unit;soft_boi_1;4,0
-u;Joel;OffscreenLeft
+u;Joel;Left
 s;Joel;This is the combat information window. It is a window.{w}{clear}You can see the combatant's HP and the amount of damage you will inflict.
 # choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash
 s;Joel;The qúiçk browñ fóx jumps óvér the lázý dog.

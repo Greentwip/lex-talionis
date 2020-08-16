@@ -34,22 +34,8 @@ Repair_check;Are you sure?
 Repair_no_value;I can't repair that.
 Repair_back;Second thoughts?
 Repair_again;Need anything else fixed up?
-Win Conditions;Win Conditions
-Loss Conditions;Loss Conditions
-Character;Character
 Feat Choice;Choose a Feat:
 Battle Save Header;Would you like to save?
-Atk;Atk
-Def;Def
-Avo;Avo
-Avoid;Avoid
-Hit;Hit
-Rng;Rng
-Mt;Mt
-Affi;Affi
-Affin;Affin
-AS;AS
-Lv;Lv
 STR;Str
 MAG;Mag
 SKL;Skill
@@ -73,8 +59,7 @@ Trv_desc;Who is this unit rescuing?
 Affin_desc;Determines bonuses given to other units in supports.
 NoAffin_desc;Determines bonuses given to other units in supports.
 Rat_desc;Holistic combat rating.
-Trv;Trv
-Aid;Aid
+Ftg_desc;Fatigue. A unit whose fatigue exceeds its limit cannot be deployed.
 Atk_desc;Amount of damage this weapon causes. Affected by defenses.
 Hit_desc;Chance that the attack will hit. Affected by terrain and enemies.
 Rng_desc;Weapon Range. A range of 1 can only hit adjacent spaces.
@@ -84,75 +69,29 @@ Support_Atk_desc;Amount of damage added by nearby supports.
 Support_Hit_desc;Increased chance to hit due to nearby supports.
 Support_Def_desc;Amount of damage reduced from enemy attacks by nearby supports.
 Support_Avoid_desc;Increased chance to dodge enemy attacks due to nearby supports.
-Equipment;Equipment
-Personal Data;Personal Data
-Skills & Status;Skills & Status
-Supports;Supports
-Personal Growths;Personal Growths
-Current Bonuses;Current Bonuses
 Level_desc;Unit level. How experienced a unit is.
 Exp_desc;Experience points gained. Gain 100 points to earn a new level.
 HP_desc;Hit points. The unit is removed from the battle if HP reaches 0.
-Total Turns;Total Turns
-Overall MVP;Overall MVP
 Records Header;Chapter Name       Turn Count            MVP
 MVP Header;Rank    Name        Kills    Damage    Healing
 UnitStat Header;Chapter Name        Kills    Damage    Healing
-ON;ON
-OFF;OFF
-Config;Config
 Config_desc;Change your options
-Controls;Controls
 Controls_desc;Change key mappings
 Get_Input_desc;Press a new key (or BACK to quit)
-Manage;Manage
-Formation;Formation
-Fight;Fight
-Pick Units;Pick Units
-Quick Sort;Quick Sort
-Optimize;Optimize
-Manage;Manage
-List;List
-Transfer;Transfer
-Give All;Give All
-Market;Market
-Owner;Owner
-Codex;Codex
-Convos;Convos
-Continue;Continue
-Pairings;Pairings
-Conversation;Conversation
-Library;Library
-Map;Map
-Records;Records
-Animation;Animation
 Animation_desc;Show combat animations
 temp_Screen Size_desc;Restart for change to take effect
-Unit Speed;Unit Speed
 Unit Speed_desc;Set unit movement speed
-Text Speed;Text Speed
 Text Speed_desc;Set message speed
-Cursor Speed;Cursor Speed
 Cursor Speed_desc;Set cursor speed
-Show Terrain;Show Terrain
 Show Terrain_desc;Set Terrain window display
-Show Objective;Show Objective
 Show Objective_desc;Set Chapter Goal display
-Autocursor;Autocursor
 Autocursor_desc;Set cursor to start on main hero
-HP Map Team;HP Map Team
 HP Map Team_desc;Set which team should display HP bars
-HP Map Cull;HP Map Cull
 HP Map Cull_desc;Set what kind of units should display HP
-Music Volume;Music Volume
 Music Volume_desc;Set music volume (soft - loud)
-Sound Volume;Sound Volume
 Sound Volume_desc;Set sound effect volume (soft - loud)
-Autoend Turn;Autoend Turn
 Autoend Turn_desc;End turn when no moves are available
-Confirm End;Confirm End
 Confirm End_desc;Ask again before manually ending turn?
-Display Hints;Display Hints
 Display Hints_desc;Show Tutorial
 key_SELECT;SELECT
 key_BACK;BACK
@@ -163,26 +102,10 @@ key_LEFT;LEFT
 key_RIGHT;RIGHT
 key_UP;UP
 key_DOWN;DOWN
-Overwrite;Overwrite
-Back;Back
-Shop;Shop
-Village;Village
-Locked;Locked
 Currently Unpaired;Currently Unpaired
 Currently Paired With;Currently Paired with
 Pair With;Pair with
 Invalid Choice;Invalid Choice!
-Shove;Shove
-All;All
-Solo;Solo
-Wounded;Wounded
-None;None
-Ally;Ally
-Enemy;Enemy
-Always;Always
-Never;Never
-Your Turn;Your Turn
-Combat Only;Combat Only
 rescueselect;Select a unit to rescue.
 tradeselect;Select which unit to trade with.
 takeselect;Select which unit to receive the traveler.
@@ -192,10 +115,6 @@ giveselect;Select which unit to receive the traveler.
 talkselect;Select which unit to talk to.
 Storage_info;Your inventory is full. Select an item to send to convoy.
 Discard_info;Your inventory is full. Select an item to discard.
-Nothing;Nothing
-Select Difficulty;Select Difficulty
-Select Mode;Select Mode
-Select Growths;Select Growths
 mode_Normal;Recommended for newcomers to Fire Emblem
 mode_Hard;For Fire Emblem veterans. Start here.
 mode_Lunatic;Extremely difficult. Prepare to lose.

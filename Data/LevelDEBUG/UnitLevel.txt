@@ -20,13 +20,9 @@
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Ophie;None;None
-enemy;0;0;Joel;None;None
-player;0;0;Thief;10;Iron Sword,Steel Sword;9,8;None;Resistance;Cooling_Pulse
-player;0;0;Fighter;10;Mithril Axe,Vulnerary;8,8;None;Resistance;Poison
-player;0;0;Cleric;10;Refresh_Nemid,Purge,Guiding Ring,Restore;7,8;None;Resistance
-player;0;0;Cleric;10;Refresh_Nemid,Purge,Guiding Ring,Restore;6,8;None;Resistance
-player;0;0;Cleric;10;Refresh_Nemid,Purge,Guiding Ring,Restore;8,7;None;Resistance
-#enemy;0;0;Assassin;1;Mithril Sword;1,6;None;Resistance
+player;0;0;Joel;None;None
+player;0;0;Drake;None;None
+player;0;0;Prim;None;None
 enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,5;None;Resistance
 enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
 enemy;0;0;Shaman;1;Iron Axe;53,20;None;Resistance

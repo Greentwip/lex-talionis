@@ -84,6 +84,7 @@ def read_constants_file():
              'crit': 3, # 0 - No critting, 1 - 2x damage minus 1x defense, 2 - 2x damage minus 2x defense, 3 - 3x damage minus 3x defense
              'turnwheel': 0, # Whether to use the turnwheel
              'overworld': 0, # Whether to have an overworld
+             'fatigue': 0, # 0 -- No fatigue, 1 -- Fatigue for participating in combat, 2 -- Fatigue whenever attack (even when defending), 3 -- Fatigue by 1 each turn 
              'flying_mcost_column': 6, # What column flying units should use in mcost.txt (0 indexed)
              'fleet_mcost_column': 7, # What column units with fleet_of_foot should use in mcost.txt (0 indexed)
              'exp_curve': 2.3, # How linear the exp curve is. Higher = less linear
