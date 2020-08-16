@@ -1,3 +1,10 @@
+layer_tile_sprite;2;4,17;OpenChest;base_terrain
+layer_tile_sprite;2;5,17;OpenChest;base_terrain
+set_cursor;4,17
+show_layer;2
+wait;2000
+hide_layer;2;destroy
+wait;2000
 b;Town
 t;2
 gold;1000;no_banner
