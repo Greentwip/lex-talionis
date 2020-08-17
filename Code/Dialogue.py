@@ -981,6 +981,13 @@ class Dialogue_Scene(object):
             self.current_state = "Transitioning"
 
         # === CHANGING UNITS
+        elif line[0] == 'change_name':
+            unit = self.get_unit(line[1], gameStateObj)
+            new_name = line[2]
+            if unit:
+                Action.do(Action.ChangeName(unit, new_name), gameStateObj)
+            else:
+                print("Cannot find unit with name/id: %s" % line[1])
         elif line[0] == 'change_portrait':
             unit = self.get_unit(line[1], gameStateObj)
             portrait_id = line[2]
@@ -1912,6 +1919,8 @@ class Dialog(object):
         elif letter == "{red}":
             self.current_color = "red"
             self._next_chunk()
+        elif letter == "{semicolon}":
+            self._add_letter(";")
         else:
             both_width = self._get_word_width(word)
             # print(letter, previous_lines, word[::-1], both_width, self.text_width)

@@ -14,8 +14,9 @@ layer_tile_sprite;2;5,17;OpenChest;base_terrain
 add_unit;hard_boi_1
 add_unit;soft_boi_1;4,0
 change_fatigue;Joel;12
+change_name;Joel;Frank
 u;Joel;Left
-s;Joel;This is the combat information window. It is a window.{w}{clear}You can see the combatant's HP and the amount of damage you will inflict.
+s;Joel;This is the combat{semicolon} information window. It is a window.{w}{clear}You can see the combatant's HP and the amount of damage you will inflict.
 # choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash
 s;Joel;The qúiçk browñ fóx jumps óvér the lázý dog.
 # choice;SaveWaffle;Save Emmeryn?;Yes,No,Smash;v

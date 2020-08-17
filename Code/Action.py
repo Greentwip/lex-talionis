@@ -1028,6 +1028,18 @@ class Resurrect(Action):
         self.unit.dead = True
 
 # === GENERAL ACTIONS =========================================================
+class ChangeName(Action):
+    def __init__(self, unit, new_name):
+        self.unit = unit
+        self.old_name = self.unit.name
+        self.new_name = new_name
+
+    def do(self, gameStateObj):
+        self.unit.name = self.new_name
+
+    def reverse(self, gameStateObj):
+        self.unit.name = self.old_name
+
 class ChangePortrait(Action):
     def __init__(self, unit, new_portrait_id):
         self.unit = unit
