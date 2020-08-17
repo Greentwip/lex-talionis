@@ -3,13 +3,8 @@
 - Avast Antivirus or other antiviruses may slow down certain actions that write to disk. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
 - Need to compile cython modules for Linux/Mac
 
--- MISSING ANIMS:
-- Demon Surge (Disintegrate)
-- Evil Eye (Scathe)
-- Shadowshot (Hex)
-- Restore (Restore)
-
 Other features:
+Change Name command
 Class Change command and status
 Have Summons work with the turnwheel -> entails rewriting how summons work
 ProcComponent to conditional proc skills
