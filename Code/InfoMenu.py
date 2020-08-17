@@ -737,7 +737,7 @@ class InfoMenu(StateMachine.State):
     def create_fatigue_surf(self):
         menu_size = (GC.WINWIDTH - 96, GC.WINHEIGHT)
         menu_surf = Engine.create_surface(menu_size, transparent=True)
-        max_fatigue = GC.EQUATIONS.get_max_fatigue(self.unit)
+        max_fatigue = max(1, GC.EQUATIONS.get_max_fatigue(self.unit))
         self.build_groove(menu_surf, (27, GC.WINHEIGHT - 9), 88, Utility.clamp(self.unit.fatigue / max_fatigue, 0, 1))
         GC.FONT['text_blue'].blit(str(self.unit.fatigue) + '/' + str(max_fatigue), menu_surf, (56, GC.WINHEIGHT - 17))
         GC.FONT['text_yellow'].blit(cf.WORDS['Ftg'], menu_surf, (8, GC.WINHEIGHT - 17))

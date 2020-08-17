@@ -926,22 +926,22 @@ class ChangeFatigue(Action):
         self.unit.fatigue += self.fatigue
         if self.unit.fatigue < 0:
             self.unit.fatigue = 0
-
+            
         # Handle adding statuses whenever Fatigue changes
         if gameStateObj.game_constants['Fatigue'] == 4:
             if self.unit.fatigue >= GC.EQUATIONS.get_max_fatigue(self.unit):
                 fatigue_status = StatusCatalog.statusparser("Fatigued", gameStateObj)
-                self.actions.append(Action.AddStatus(self.unit, fatigue_status))
+                self.actions.append(AddStatus(self.unit, fatigue_status))
             else:
                 if any(status.id == "Fatigued" for status in self.unit.status_effects):
-                    self.actions.append(Action.RemoveStatus(self.unit, "Fatigued"))
+                    self.actions.append(RemoveStatus(self.unit, "Fatigued"))
         elif gameStateObj.game_constants['Fatigue'] == 5:
             if self.unit.fatigue < GC.EQUATIONS.get_max_fatigue(self.unit):
                 fatigue_status = StatusCatalog.statusparser("Fatigued", gameStateObj)
-                self.actions.append(Action.AddStatus(self.unit, fatigue_status))
+                self.actions.append(AddStatus(self.unit, fatigue_status))
             else:
                 if any(status.id == "Fatigued" for status in self.unit.status_effects):
-                    self.actions.append(Action.RemoveStatus(self.unit, "Fatigued"))
+                    self.actions.append(RemoveStatus(self.unit, "Fatigued"))
 
         for action in self.actions:
             action.do(gameStateObj)
@@ -1459,6 +1459,10 @@ class AddStatus(Action):
                          for name, stat in self.unit.stats.items()]
             self.status_obj.stat_halve.penalties = penalties
             self.actions.append(ApplyStatChange(self.unit, penalties))
+
+        if self.status_obj.tireless:
+            # Make sure if a unit becomes tireless, their fatigue is set to 0
+            self.actions.append(ChangeFatigue(self.unit, -9999, True))
 
         if self.status_obj.flying:
             self.unit.remove_tile_status(gameStateObj, force=True)

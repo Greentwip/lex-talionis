@@ -195,7 +195,7 @@ class Combat(object):
                         if self.p1 is result.attacker:
                             Action.do(Action.ChangeFatigue(self.p1, fatigue_gain), gameStateObj)
                 else:
-                    Action.do(Action.ChangeFatigue(self.p1, 1), gameStateObj)
+                    Action.do(Action.ChangeFatigue(self.p1, fatigue_gain), gameStateObj)
             if self.p2 and self.p2_item and self.p2 is not self.p1:
                 fatigue_gain = self._compute_fatigue(self.p2, self.p2_item, gameStateObj)
                 if cf.CONSTANTS['fatigue'] == 2:

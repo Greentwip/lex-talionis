@@ -1,7 +1,7 @@
 gold;1000;no_banner
 set_game_constant;Convoy
 set_game_constant;Supports
-set_game_constant;Fatigue;3
+set_game_constant;Fatigue;2
 set_game_constant;Turnwheel
 # add_global_status;fLuck +4
 set_game_constant;max_turnwheel_uses;1

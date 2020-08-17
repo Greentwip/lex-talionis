@@ -1094,13 +1094,13 @@ class UnitObject(object):
     def getAttacks(self, gameStateObj, weapon=None):
         # Set-up
         if self.isDone() or self.hasAttacked:
-            return [] # No valid Attacks once you have attacked
+            return [], [] # No valid Attacks once you have attacked
         if weapon:
             my_weapon = weapon
         else:
             my_weapon = self.getMainWeapon()
         if not my_weapon:
-            return [] # no valid weapon
+            return [], [] # no valid weapon
 
         # calculate legal targets for cursor
         attacks = Utility.find_manhattan_spheres(my_weapon.get_range(self), self.position)
