@@ -1347,6 +1347,8 @@ def drawUnitItems(surf, topleft, unit, include_top=False, include_bottom=True, i
             img = GC.IMAGESDICT['Shimmer' + str(shimmer)]
             blue_backSurf.blit(img, (blue_backSurf.get_width() - img.get_width() - 1, blue_backSurf.get_height() - img.get_height() - 5))
         blue_backSurf = Image_Modification.flickerImageTranslucent(blue_backSurf, 10)
+        if include_top:
+            topleft = topleft[0], topleft[1] - 4
         surf.blit(blue_backSurf, topleft)
 
         if include_face:

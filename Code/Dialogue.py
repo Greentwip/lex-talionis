@@ -590,6 +590,13 @@ class Dialogue_Scene(object):
                 gameStateObj.stateMachine.changeState('exp_gain')
                 self.current_state = "Paused"
 
+        # Modify fatigue of a unit
+        elif line[0] == 'change_fatigue':
+            amount = int(line[2])
+            receiver = self.get_unit(line[1], gameStateObj)
+            if receiver:
+                Action.do(Action.ChangeFatigue(receiver, amount, True), gameStateObj)
+
         # destroy a destructible object
         elif line[0] == 'destroy':
             if len(line) > 1:
@@ -873,7 +880,7 @@ class Dialogue_Scene(object):
 
         # === CLEANUP
         elif line[0] == 'arrange_formation':
-            force = True if len(line) > 1 else False
+            force = (len(line) > 1)
             if force:  # force arrange
                 player_units = gameStateObj.get_units_in_party(gameStateObj.current_party)
                 formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
@@ -882,6 +889,10 @@ class Dialogue_Scene(object):
                 player_units = [unit for unit in gameStateObj.get_units_in_party(gameStateObj.current_party) if not unit.position]
                 formation_spots = [pos for pos, value in gameStateObj.map.tile_info_dict.items()
                                    if 'Formation' in value and not gameStateObj.grid_manager.get_unit_node(pos)]
+            
+            if cf.CONSTANTS['fatigue'] and gameStateObj.game_constants['Fatigue'] == 1:
+                player_units = [unit for unit in player_units if unit.fatigue < GC.EQUATIONS.get_max_fatigue(unit)]
+
             for index, unit in enumerate(player_units[:len(formation_spots)]):
                 if force:
                     Action.do(Action.LeaveMap(unit), gameStateObj)

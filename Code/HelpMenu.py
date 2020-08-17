@@ -127,6 +127,20 @@ class HelpGraph(object):
         self.help_boxes["Strength"].left = "Unit Desc"
         self.help_boxes["Skill"].left = "Unit Desc"
 
+        if cf.CONSTANTS['fatigue'] and self.unit.team == 'player' and \
+                'Fatigue' in gameStateObj.game_constants:
+            self.help_boxes["Fatigue"] = Help_Box("Fatigue", (88, GC.WINHEIGHT - 15), Help_Dialog(cf.WORDS['Ftg_desc']))
+            self.help_boxes["HP"].right = "Fatigue"
+            self.help_boxes["Fatigue"].left = "HP"
+            if skills:
+                for i in range(len(skills)):
+                    self.help_boxes["Skill" + str(i)].down = 'Fatigue'
+                self.help_boxes["Fatigue"].up = "Skill0"
+            else:
+                self.help_boxes["Resistance"].down = "Fatigue"
+                self.help_boxes["Affin"].down = "Fatigue"
+                self.help_boxes['Fatigue'].up = "Resistance"
+
     def populate_equipment(self):
         for index, item in enumerate(self.unit.items):
             pos = (88, GC.TILEHEIGHT*index + 24)

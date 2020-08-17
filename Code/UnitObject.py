@@ -71,6 +71,9 @@ class UnitObject(object):
         # --- Weapon experience points
         self.wexp = info['wexp']
 
+        # -- Fatigue
+        self.fatigue = int(info.get('fatigue', 0))
+
         # --- Item list
         self.items = []
 
@@ -750,6 +753,8 @@ class UnitObject(object):
             return any(test)
         elif item.promotion:
             return self.can_promote_using(item)
+        elif item.target_fatigue:
+            return self.fatigue > 0
         else:
             return True
 
@@ -768,6 +773,8 @@ class UnitObject(object):
             Action.do(Action.PermanentGrowthIncrease(self, item.permanent_growth_increase), gameStateObj)
         elif item.wexp_increase:
             Action.do(Action.GainWexp(self, item.wexp_increase), gameStateObj)
+        elif item.target_fatigue:
+            Action.do(Action.ChangeFatigue(self, int(item.target_fatigue)), gameStateObj)
         elif item.promotion:
             # Action.do(Action.Promote(self), gameStateObj)
             gameStateObj.exp_gain_struct = (self, 0, None, 'item_promote')
@@ -1087,13 +1094,13 @@ class UnitObject(object):
     def getAttacks(self, gameStateObj, weapon=None):
         # Set-up
         if self.isDone() or self.hasAttacked:
-            return [] # No valid Attacks once you have attacked
+            return [], [] # No valid Attacks once you have attacked
         if weapon:
             my_weapon = weapon
         else:
             my_weapon = self.getMainWeapon()
         if not my_weapon:
-            return [] # no valid weapon
+            return [], [] # no valid weapon
 
         # calculate legal targets for cursor
         attacks = Utility.find_manhattan_spheres(my_weapon.get_range(self), self.position)
@@ -1977,7 +1984,8 @@ class UnitObject(object):
                        'finished': self.finished,
                        'TRV': self.TRV,
                        'stats': [stat.serialize() for name, stat in self.stats.items()],
-                       'movement_group': self.movement_group}
+                       'movement_group': self.movement_group,
+                       'fatigue': self.fatigue}
         return serial_dict
 
     def acquire_tile_status(self, gameStateObj, force=False):

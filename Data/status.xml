@@ -33,6 +33,15 @@
         <always_animation>MapPoison,5,2,8</always_animation>
     </status>
 
+    <status name="Fatigued">
+        <id>Fatigued</id>
+        <desc>All stats lowered by 2.</desc>
+        <image_index>3,4</image_index>
+        <components>stat_change,negative</components>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <stat_change>0,-2,-2,-2,-2,0,-2,-2,0,0</stat_change>
+    </status>
+
     <!-- Resistant Status -->
 	<status name="Resistant">
 		<id>Resistant</id>

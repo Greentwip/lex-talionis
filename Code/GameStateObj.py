@@ -553,6 +553,7 @@ class GameStateObj(object):
         # Handle player death
         for unit in self.allunits:
             if unit.dead:
+                unit.fatigue = 0
                 if not int(self.mode['death']): # Casual
                     unit.dead = False
                 elif cf.CONSTANTS['convoy_on_death']:
@@ -562,6 +563,9 @@ class GameStateObj(object):
                             unit.remove_item(item, self)
                             item.owner = 0
                             self.convoy.append(item)
+
+        # Handle fatigue
+        self.clean_up_fatigue()
 
         # Remove unnecessary information between levels
         self.sweep()
@@ -601,6 +605,40 @@ class GameStateObj(object):
                 node = self.support.node_dict[unit.id]
                 for edge in node.adjacent.values():
                     edge.reset()
+
+    def refresh_fatigue(self):
+        party_units = self.get_units_in_party()
+        refresh_these = [unit for unit in party_units if not unit.position]
+
+        for unit in refresh_these:
+            unit.fatigue = 0
+
+    def clean_up_fatigue(self):
+        party_units = self.get_units_in_party()
+        penalize_these = [unit for unit in party_units if unit.fatigue >= GC.EQUATIONS.get_max_fatigue(unit)]
+        help_these = [unit for unit in party_units if unit.fatigue < GC.EQUATIONS.get_max_fatigue(unit)]
+        
+        if self.game_constants['Fatigue'] == 2:
+            fatigue_status = StatusCatalog.statusparser("Fatigued", self)
+            # Give a status to those units who are fatigued
+            for unit in penalize_these:
+                Action.do(Action.AddStatus(unit, fatigue_status), self)
+            # Remove status from those units who are not fatigued
+            for unit in help_these:
+                for status in unit.status_effects:
+                    if status.id == "Fatigued":
+                        Action.do(Action.RemoveStatus(unit, status), self)
+
+        elif self.game_constants['Fatigue'] == 3:
+            fatigue_status = StatusCatalog.statusparser("Fatigued", self)
+            # Give a status to those units who are not fatigued    
+            for unit in help_these:
+                Action.do(Action.AddStatus(unit, fatigue_status), self)
+            # Remove status from those units who are fatigued
+            for unit in penalize_these:
+                for status in unit.status_effects:
+                    if status.id == "Fatigued":
+                        Action.do(Action.RemoveStatus(unit, status), self)
 
     def restock_convoy(self):
         cur_convoy = self._convoy[self.current_party]

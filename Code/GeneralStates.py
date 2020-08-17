@@ -53,6 +53,9 @@ class TurnChangeState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('dialogue')
             # === INTRO SCRIPTS ===
             if (gameStateObj.turncount - 1) <= 0: # If it is the beginning of the game
+                for unit in gameStateObj.get_units_in_party():
+                    # Give out fatigue statuses if necessary
+                    Action.ChangeFatigue(unit, 0).do(gameStateObj)
                 # Prep Screen
                 if metaDataObj['preparationFlag']:
                     gameStateObj.stateMachine.changeState('prep_main')
@@ -558,16 +561,17 @@ class MenuState(StateMachine.State):
         if spell_targets:
             options.append(cf.WORDS['Spells'])
         # Active Skills
-        for status in cur_unit.status_effects:
-            if status.combat_art and status.combat_art.is_activated() and status.combat_art.check_charged():
-                if status.combat_art.basic_check(cur_unit, gameStateObj) and \
-                        status.combat_art.check_valid(cur_unit, gameStateObj):
-                    options.append(status.name)
-            if status.activated_item and status.activated_item.check_charged():
-                if status.activated_item.check_valid(cur_unit, gameStateObj):
-                    options.append(status.name)
-            if status.steal and len(cur_unit.items) < cf.CONSTANTS['max_items'] and cur_unit.getStealPartners(gameStateObj):
-                options.append(cf.WORDS['Steal'])
+        if not cur_unit.hasAttacked:
+            for status in cur_unit.status_effects:
+                if status.combat_art and status.combat_art.is_activated() and status.combat_art.check_charged():
+                    if status.combat_art.basic_check(cur_unit, gameStateObj) and \
+                            status.combat_art.check_valid(cur_unit, gameStateObj):
+                        options.append(status.name)
+                if status.activated_item and status.activated_item.check_charged():
+                    if status.activated_item.check_valid(cur_unit, gameStateObj):
+                        options.append(status.name)
+                if status.steal and len(cur_unit.items) < cf.CONSTANTS['max_items'] and cur_unit.getStealPartners(gameStateObj):
+                    options.append(cf.WORDS['Steal'])
         if 'Mindless' not in cur_unit.tags:
             # If the unit is adjacent to a unit it can talk to
             for adjunit in adjunits:
@@ -2387,11 +2391,21 @@ class PhaseChangeState(StateMachine.State):
 
         # Handle cooldown items
         units = [unit for unit in gameStateObj.allunits if 
-            (unit.team == gameStateObj.phase.get_current_phase() and unit.position)]
+                 (unit.team == gameStateObj.phase.get_current_phase() and unit.position)]
         for unit in units:
             for item in unit.items:
                 if item.cooldown and not item.cooldown.charged:
                     Action.do(Action.CooloffItem(item), gameStateObj)
+
+        # Handle fatigue
+        if cf.CONSTANTS['fatigue'] and gameStateObj.turncount == 1 and gameStateObj.phase.get_current_phase() == 'player':
+            gameStateObj.refresh_fatigue()
+
+        # Turn by turn fatigue
+        if cf.CONSTANTS['fatigue'] == 3:
+            for unit in units:
+                if unit.team == 'player':
+                    Action.do(Action.ChangeFatigue(unit, 1), gameStateObj)
 
         # All units can now move and attack, etc.
         Action.do(Action.ResetAll([unit for unit in gameStateObj.allunits if not unit.dead]), gameStateObj)

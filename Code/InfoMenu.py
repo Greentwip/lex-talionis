@@ -1,6 +1,6 @@
 from . import GlobalConstants as GC
 from . import configuration as cf
-from . import MenuFunctions, Engine, InputManager, StateMachine 
+from . import MenuFunctions, Engine, InputManager, StateMachine, Utility
 from . import GUIObjects, Weapons, Image_Modification, ClassData
 from . import HelpMenu
 
@@ -61,6 +61,7 @@ class InfoMenu(StateMachine.State):
         self.support_surf = None
         self.skill_surf = None
         self.class_skill_surf = None
+        self.fatigue_surf = None
 
     def back(self, gameStateObj):
         GC.SOUNDDICT['Select 4'].play()
@@ -373,6 +374,12 @@ class InfoMenu(StateMachine.State):
             if not self.class_skill_surf:
                 self.class_skill_surf = self.create_class_skill_surf()
             self.draw_class_skill_surf(main_surf)
+            if cf.CONSTANTS['fatigue'] and self.unit.team == 'player' and \
+                    'Fatigue' in gameStateObj.game_constants:
+                if not self.fatigue_surf:
+                    self.fatigue_surf = self.create_fatigue_surf()
+                self.draw_fatigue_surf(main_surf)
+
         elif self.states[self.currentState] == 'Equipment':
             if not self.equipment_surf:
                 self.equipment_surf = self.create_equipment_surf(gameStateObj)
@@ -726,3 +733,17 @@ class InfoMenu(StateMachine.State):
 
     def draw_support_surf(self, surf):
         surf.blit(self.support_surf, (96, 0))
+
+    def create_fatigue_surf(self):
+        menu_size = (GC.WINWIDTH - 96, GC.WINHEIGHT)
+        menu_surf = Engine.create_surface(menu_size, transparent=True)
+        max_fatigue = max(1, GC.EQUATIONS.get_max_fatigue(self.unit))
+        self.build_groove(menu_surf, (27, GC.WINHEIGHT - 9), 88, Utility.clamp(self.unit.fatigue / max_fatigue, 0, 1))
+        GC.FONT['text_blue'].blit(str(self.unit.fatigue) + '/' + str(max_fatigue), menu_surf, (56, GC.WINHEIGHT - 17))
+        GC.FONT['text_yellow'].blit(cf.WORDS['Ftg'], menu_surf, (8, GC.WINHEIGHT - 17))
+
+        return menu_surf
+
+    def draw_fatigue_surf(self, surf):
+        menu_position = (96, 0)
+        surf.blit(self.fatigue_surf, (menu_position))

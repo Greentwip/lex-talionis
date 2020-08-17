@@ -152,11 +152,19 @@ class PrepPickUnitsState(StateMachine.State):
                 Action.RemoveFromMap(selection).do(gameStateObj)
             else:
                 possible_position = gameStateObj.check_formation_spots()
-                if possible_position:
+                # Check for fatigue
+                is_fatigued = False
+                if cf.CONSTANTS['fatigue'] and gameStateObj.game_constants['Fatigue'] == 1:
+                    if selection.fatigue >= GC.EQUATIONS.get_max_fatigue(selection):
+                        is_fatigued = True
+                if possible_position and not is_fatigued:
                     GC.SOUNDDICT['Select 1'].play()
                     Action.PlaceOnMap(selection, possible_position).do(gameStateObj)
                     selection.arrive(gameStateObj)
                     selection.reset() # Make sure unit is not 'wait'...
+                elif is_fatigued:
+                    GC.SOUNDDICT['Select 4'].play()  # Unit is fatigued and cannot be deployed
+                    
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
             # gameStateObj.stateMachine.back()
@@ -183,6 +191,19 @@ class PrepPickUnitsState(StateMachine.State):
             GC.FONT[pick_font[index]].blit(word, backSurf, (word_index, 4))
             word_index += GC.FONT[pick_font[index]].size(word)[0]
         surf.blit(backSurf, topleft)
+
+        # Useful for telling at a glance which units are fatigued
+        if cf.CONSTANTS['fatigue'] and gameStateObj.activeMenu and gameStateObj.activeMenu.getSelection():
+            base_surf = BaseMenuSurf.CreateBaseMenuSurf((132, 24))
+            topleft = (110, 128 + 4)
+            unit = gameStateObj.activeMenu.getSelection()
+            if unit.fatigue >= GC.EQUATIONS.get_max_fatigue(unit):
+                text = cf.WORDS["Fatigued"]
+            else:
+                text = cf.WORDS["Ready!"]
+            length = GC.FONT['text_white'].size(text)[0]
+            GC.FONT['text_white'].blit(text, base_surf, (132//2 - length//2, 4))
+            surf.blit(base_surf, topleft)
 
         gameStateObj.activeMenu.draw_units(surf, -16, gameStateObj)
         gameStateObj.activeMenu.draw_cursor(surf, -16)
