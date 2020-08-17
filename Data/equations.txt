@@ -24,4 +24,4 @@ RESCUE_WEIGHT = 99 if 'Mounted' in unit.tags else CON
 STEAL_ATK = SPD
 STEAL_DEF = SPD
 HEAL = MAG
-MAX_FATIGUE = 0
+MAX_FATIGUE = HP

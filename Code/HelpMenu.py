@@ -128,7 +128,7 @@ class HelpGraph(object):
         self.help_boxes["Skill"].left = "Unit Desc"
 
         if cf.CONSTANTS['fatigue'] and self.unit.team == 'player' and \
-                'Fatigue' in gameStateObj.game_constants and '_no_display_fatigue' not in gameStateObj.game_constants:
+                'Fatigue' in gameStateObj.game_constants:
             self.help_boxes["Fatigue"] = Help_Box("Fatigue", (88, GC.WINHEIGHT - 15), Help_Dialog(cf.WORDS['Ftg_desc']))
             self.help_boxes["HP"].right = "Fatigue"
             self.help_boxes["Fatigue"].left = "HP"

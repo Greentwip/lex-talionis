@@ -1340,9 +1340,6 @@ class AnimationCombat(Combat):
 
         a_broke_item, d_broke_item = self.find_broken_items()
 
-        # Handle skills that were used
-        self.handle_skill_used(gameStateObj)
-
         # Create all_units list
         all_units = [self.p1]
         if self.p2 is not self.p1:
@@ -1377,6 +1374,9 @@ class AnimationCombat(Combat):
         self.handle_supports(all_units, gameStateObj)
 
         self.handle_fatigue(self.old_results, gameStateObj)
+
+        # Handle skills that were used
+        self.handle_skill_used(gameStateObj)
 
         self.handle_death(gameStateObj, metaDataObj, all_units)
 
@@ -1892,9 +1892,6 @@ class MapCombat(Combat):
 
         a_broke_item, d_broke_item = self.find_broken_items()
 
-        # Handle skills that were used
-        self.handle_skill_used(gameStateObj)
-
         # Create all_units list
         all_units = [unit for unit in self.splash] + [self.p1]
         if self.p2 and self.p2 is not self.p1: 
@@ -1978,6 +1975,9 @@ class MapCombat(Combat):
         self.handle_supports(all_units, gameStateObj)
 
         self.handle_fatigue(self.old_results, gameStateObj)
+
+        # Handle skills that were used
+        self.handle_skill_used(gameStateObj)
 
         self.arena_cleanup(gameStateObj)
         self.handle_death(gameStateObj, metaDataObj, all_units)

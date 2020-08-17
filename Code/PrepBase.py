@@ -192,6 +192,19 @@ class PrepPickUnitsState(StateMachine.State):
             word_index += GC.FONT[pick_font[index]].size(word)[0]
         surf.blit(backSurf, topleft)
 
+        # Useful for telling at a glance which units are fatigued
+        if cf.CONSTANTS['fatigue'] and gameStateObj.activeMenu and gameStateObj.activeMenu.getSelection():
+            base_surf = BaseMenuSurf.CreateBaseMenuSurf((132, 24))
+            topleft = (110, 128 + 4)
+            unit = gameStateObj.activeMenu.getSelection()
+            if unit.fatigue >= GC.EQUATIONS.get_max_fatigue(unit):
+                text = cf.WORDS["Fatigued"]
+            else:
+                text = cf.WORDS["Ready!"]
+            length = GC.FONT['text_white'].size(text)[0]
+            GC.FONT['text_white'].blit(text, base_surf, (132//2 - length//2, 4))
+            surf.blit(base_surf, topleft)
+
         gameStateObj.activeMenu.draw_units(surf, -16, gameStateObj)
         gameStateObj.activeMenu.draw_cursor(surf, -16)
 

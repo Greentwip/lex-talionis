@@ -375,7 +375,7 @@ class InfoMenu(StateMachine.State):
                 self.class_skill_surf = self.create_class_skill_surf()
             self.draw_class_skill_surf(main_surf)
             if cf.CONSTANTS['fatigue'] and self.unit.team == 'player' and \
-                    'Fatigue' in gameStateObj.game_constants and '_no_display_fatigue' not in gameStateObj.game_constants:
+                    'Fatigue' in gameStateObj.game_constants:
                 if not self.fatigue_surf:
                     self.fatigue_surf = self.create_fatigue_surf()
                 self.draw_fatigue_surf(main_surf)
