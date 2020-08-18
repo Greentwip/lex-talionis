@@ -308,7 +308,6 @@ class Status_Processor(object):
                 # handle death of a unit
                 if self.current_unit.currenthp <= 0:
                     self.current_unit.isDying = True
-                    gameStateObj.stateMachine.changeState('dying')
                     self.state.changeState('begin')
                     return "Death"
                 else:

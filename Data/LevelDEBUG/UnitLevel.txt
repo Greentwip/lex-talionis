@@ -24,7 +24,9 @@ player;0;0;Joel;None;None
 player;0;0;Drake;None;None
 player;0;0;Prim;None;None
 
-enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,5;None;Resistance
+player;0;0;Cleric;10;Restore;4,20;None;Resistance
+player;0;0;Thief;10;;2,5;None;Resistance
+enemy;0;0;Cavalier;1;Mithril Sword,Iron Lance;1,5;None;Resistance
 enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
 enemy;0;0;Shaman;1;Iron Axe;53,20;None;Resistance
 enemy;0;0;Raider;1;Iron Axe;63,20;None;Resistance
