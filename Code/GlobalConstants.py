@@ -73,7 +73,7 @@ EQUATIONS = Equations.Parser(loc + 'Data/equations.txt')
 
 def create_item_dict():
     item_dict = {}
-    # For each lore
+    # For each item
     for idx, entry in enumerate(ET.parse(loc + 'Data/items.xml').getroot().findall('item')):
         name = entry.find('id').text
         item_dict[name] = {c.tag: c.text for c in entry}
@@ -199,6 +199,43 @@ def create_overworld_data(fp):
                 overworld_data[cur_dict].append(party)   
     return overworld_data
 OVERWORLDDATA = create_overworld_data(loc + 'Data/overworld_data.txt')
+
+class LevelUpQuotes():
+    def __init__(self, fn):
+        self.info = {}
+        if os.path.exists(fn):
+            with open(fn, 'r') as fp:
+                lines = [l.strip().split(';') for l in fp.readlines() if l.strip()]
+            for line in lines:
+                self.info[line[0]] = []
+                for quote in line[1:]:
+                    self.info[line[0]].append(quote)
+
+    def get(self, unit_id, num_stats):
+        if unit_id in self.info:
+            if num_stats <= 1:
+                return self.info[unit_id][0]
+            elif num_stats in (2, 3):
+                return self.info[unit_id][1]
+            elif num_stats in (4, 5):
+                return self.info[unit_id][2]
+            else:
+                return self.info[unit_id][3]
+        return None
+
+    def get_capped(self, unit_id):
+        if unit_id in self.info:
+            if len(self.info[unit_id]) > 4:
+                return self.info[unit_id][4]
+        return None
+
+    def get_promotion(self, unit_id):
+        if unit_id in self.info:
+            if len(self.info[unit_id]) > 5:
+                return self.info[unit_id][5]
+        return None
+
+LEVELUPQUOTES = LevelUpQuotes(loc + 'Data/levelup_quotes.txt')
 
 FONT = {}
 for fp in os.listdir(loc + 'Sprites/Fonts'):

@@ -4,7 +4,7 @@ t;2
 credits;A Game By;rainlash;wait 
 credits;Lex Talionis Engine;rainlash;wait
 credits;Alpha Testing;rainlash;WinstonJoe;Joytis;Lynx;Cosmic;Anchorman;welshie;BBHood217
-credits;Additional Programming;djnemec;TheeBill;Lord Tweed
+credits;Additional Programming;djnemec;TheeBill;Lord Tweed;ZessDynamite
 credits;Map Design;rainlash
 credits;Map Spriting Resources;Feaw;Primefusion
 credits;Information Resources;Serenes Forest

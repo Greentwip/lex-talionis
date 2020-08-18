@@ -2,7 +2,7 @@
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import StateMachine, CustomObjects, Image_Modification, Engine, Action
-from . import StatusCatalog, Banner, Utility, ClassData
+from . import StatusCatalog, Banner, Utility, ClassData, HelpMenu
 
 ####################################################################
 class GainExpState(StateMachine.State):
@@ -73,6 +73,13 @@ class GainExpState(StateMachine.State):
             self.level_up_animation = CustomObjects.Animation(
                 GC.IMAGESDICT['LevelUpMap'], topleft, (5, 5), ignore_map=True,
                 set_timing=timing)
+
+    def take_input(self, eventList, gameStateObj, metaDataObj):
+        event = gameStateObj.input_manager.process_input(eventList)
+
+        if event == 'SELECT' and self.state.getState() == 'level_screen':
+            if self.level_up_screen:
+                self.level_up_screen.select()
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
@@ -168,8 +175,9 @@ class GainExpState(StateMachine.State):
 
         elif self.state.getState() == 'level_screen':
             if not self.level_up_screen:
+                use_quote = self.starting_state not in ("booster", "prepare_promote", "item_promote")
                 self.level_up_screen = LevelUpScreen(
-                    self.unit, self.levelup_list, self.old_level, self.unit.level)
+                    self.unit, self.levelup_list, self.old_level, self.unit.level, use_quote)
             if self.level_up_screen.update(current_time):
                 gameStateObj.stateMachine.back()
                 if self.combat_object:
@@ -303,7 +311,7 @@ class LevelUpScreen(object):
     uparrow = GC.IMAGESDICT['LevelUpArrow']
     numbers = GC.IMAGESDICT['LevelUpNumber']
 
-    def __init__(self, unit, levelup_list, level1, level2):
+    def __init__(self, unit, levelup_list, level1, level2, use_quote=False):
         self.unit = unit
         self.levelup_list = levelup_list[:8]
         self.level1 = level1
@@ -318,6 +326,22 @@ class LevelUpScreen(object):
 
         self.state = 'scroll_in'
         self.state_time = 0
+
+        # For level up quotes
+        self.levelup_quote = self.get_levelup_quote()
+        self.quote_dialog = None
+        self.draw_flag = False
+        if self.levelup_quote and use_quote:
+            self.quote_dialog = HelpMenu.LevelUpQuote_Dialog(self.levelup_quote)
+            # 16 characters per second
+            # self.level_up_wait += int(62.5 * len(self.levelup_quote))  # Have it wait extra time if there's a level up quote
+
+    def select(self):
+        if self.quote_dialog and self.draw_flag and self.state == 'level_up_wait':
+            if self.quote_dialog.end_text_position:
+                self.begin_scroll_out()
+            else:
+                self.quote_dialog.start_time = 0  # Make the quote dialog complete
 
     def make_spark(self, topleft):
         return CustomObjects.Animation(
@@ -338,6 +362,22 @@ class LevelUpScreen(object):
         elif self.levelup_list[self.current_spark] == 0:
             return self.inc_spark()
         return False
+
+    def get_levelup_quote(self):
+        num_stats = len([stat for stat in self.levelup_list if stat > 0])
+        if self.level2 < self.level1:  # Means you promoted
+            return GC.LEVELUPQUOTES.get_promotion(self.unit.id)
+        if num_stats in (0, 1):
+            if self.unit.capped_stats() and GC.LEVELUPQUOTES.get_capped(self.unit.id):
+                return GC.LEVELUPQUOTES.get_capped(self.unit.id)
+        return GC.LEVELUPQUOTES.get(self.unit.id, num_stats)
+
+    def begin_scroll_out(self):
+        self.animations = []
+        self.state = 'scroll_out'
+        if self.quote_dialog:
+            self.quote_dialog.set_transition_out()
+        self.state_time = Engine.get_time()
 
     def update(self, current_time):
         if self.state == 'scroll_in':
@@ -372,6 +412,7 @@ class LevelUpScreen(object):
         elif self.state == 'get_next_spark':
             done = self.inc_spark()
             if done:
+                self.draw_flag = True
                 self.state = 'level_up_wait'
                 self.state_time = current_time
             else:
@@ -399,10 +440,10 @@ class LevelUpScreen(object):
                 self.state = 'get_next_spark'
 
         elif self.state == 'level_up_wait':
-            if current_time - self.state_time > self.level_up_wait:
-                self.animations = []
-                self.state = 'scroll_out'
-                self.state_time = current_time
+            if self.quote_dialog:  # Don't leave prematurely if there is a level up quote
+                pass
+            elif current_time - self.state_time > self.level_up_wait:
+                self.begin_scroll_out()
 
     def draw(self, surf, gameStateObj):
         sprite = self.bg.copy()
@@ -455,6 +496,9 @@ class LevelUpScreen(object):
         left = GC.WINWIDTH - self.unit.bigportrait.get_width() - 4
         top = GC.WINHEIGHT + self.unit_scroll_offset - self.unit.bigportrait.get_height()
         surf.blit(self.unit.bigportrait, (left, top))
+
+        if self.quote_dialog and self.draw_flag and self.quote_dialog.transition_out != -1:
+            self.quote_dialog.draw(surf, (160, 22))
 
         # Update and draw animations
         self.animations = [a for a in self.animations if not a.update(gameStateObj)]

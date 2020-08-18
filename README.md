@@ -66,10 +66,10 @@ However, if you are familiar with Python, Pygame, and Git, read on to find out h
 
 ### Prerequisites
 
-To run the engine, you will need to download and install the following:
+You can always run the engine without downloading any addiitonal tools using the executable above instead. However, if you are sure you want to run the Python version of the engine (maybe in order to do modifications of your own?), you will need to download and install the following:
 
-* [Python 3.7.x+](https://www.python.org/downloads/release/python-378/) - As of August 2019, Python 2.x will no longer work
-* [Pygame 1.9.4+](http://www.pygame.org/download.shtml) - The framework used to handle rendering and sound. If you have pip, you should try installing it with pip first: `pip install pygame`. Check this link out for more information: https://www.pygame.org/wiki/GettingStarted.
+* [Python 3.7.x+](https://www.python.org/downloads/release/python-378/) - As of August 2019, Python 2.x will no longer work. If you want to build the engine into an executable using Pyinstaller, use Python 3.7, not Python 3.8+, since they are not supported by Pyinstaller.
+* [Pygame 1.9.4+](http://www.pygame.org/download.shtml) - The framework used to handle rendering and sound. If you have pip (which makes things a lot easier for the future), you should try installing it with pip first: `pip install pygame`. Check this link out for more information: https://www.pygame.org/wiki/GettingStarted.
 
 ### Installing
 

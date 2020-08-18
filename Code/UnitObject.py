@@ -732,6 +732,16 @@ class UnitObject(object):
     def tags(self, value):
         self._tags = value
 
+    def capped_stats(self) -> bool:
+        unit_klass = ClassData.class_dict[self.klass]
+        max_stats = unit_klass['max']
+        counter = 0
+        for idx, stat in enumerate(self.stats.values()):
+            if stat >= max_stats[idx]:
+                print("Capped %s %s" % (idx, stat))
+                counter += 1
+        return counter
+
     def get_internal_level(self):
         unit_klass = ClassData.class_dict[self.klass]
         return Utility.internal_level(unit_klass['tier'], self.level, cf.CONSTANTS['max_level'])

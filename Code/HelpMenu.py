@@ -408,3 +408,75 @@ class Help_Dialog(Help_Dialog_Base):
                 num_characters -= len(string)
     
         self.final_draw(surf, pos, time, help_surf)
+
+class LevelUpQuote_Dialog(Help_Dialog_Base):
+    def __init__(self, description):
+        self.font = GC.FONT['convo_black']
+        self.last_time = self.start_time = 0
+        self.transition_in = True
+        self.transition_out = False
+        self.waiting_cursor_offset = [0]*20 + [1]*2 + [2]*8 + [1]*2
+        self.waiting_cursor_offset_index = 0
+        self.end_text_position = None
+        
+        # Set up variables needed for algorithm
+        num_lines = 2
+        if self.font.size(description)[0] < 212:
+            num_lines = 1
+
+        self.strings = TextChunk.split(self.font, description, num_lines)
+
+        # Find the greater of the two lengths
+        greater_line_len = max([self.font.size(string)[0] for string in self.strings])
+        self.width = greater_line_len + 28
+        self.height = self.font.height * num_lines + 8
+
+        self.help_surf = BaseMenuSurf.CreateBaseMenuSurf((self.width, self.height), 'MessageWindowBackground')
+        self.h_surf = Engine.create_surface((self.width, self.height + 3), transparent=True)
+
+    def draw(self, surf, pos):
+        time = Engine.get_time()
+        if time > self.last_time + 1000:  # If it's been at least a second since last update
+            self.start_time = time - 16
+        self.last_time = time
+
+        h_surf = Engine.copy_surface(self.help_surf)
+
+        if cf.OPTIONS['Text Speed'] > 0:
+            num_characters = int((time - self.start_time)/float(cf.OPTIONS['Text Speed']))
+        else:
+            num_characters = 1000
+        
+        for index, string in enumerate(self.strings):
+            if num_characters > 0:
+                self.font.blit(string[:num_characters], h_surf, (8, self.font.height*index + 4))
+                if index == len(self.strings) - 1 and len(string[:num_characters]) == len(string):
+                    self.end_text_position = (8 + self.font.size(string[:num_characters])[0], self.font.height*index + 4)
+                num_characters -= len(string)
+    
+        if self.transition_in:
+            h_surf = self.handle_transition_in(time, h_surf)
+        elif self.transition_out:
+            h_surf = self.handle_transition_out(time, h_surf)
+
+        if pos[0] + h_surf.get_width()//2 > GC.WINWIDTH - 4:
+            new_pos = (GC.WINWIDTH - h_surf.get_width() - 4, pos[1] - h_surf.get_height()//2)
+        else:
+            new_pos = (pos[0] - h_surf.get_width()//2, pos[1] - h_surf.get_height()//2)
+        surf.blit(h_surf, new_pos)
+
+        # Message tail
+        if not self.transition_in and not self.transition_out:
+            message_tail_pos = (pos[0], pos[1] + h_surf.get_height()//2 - 2)
+            tail_surf = GC.IMAGESDICT['MessageWindowTail']
+            surf.blit(tail_surf, message_tail_pos)
+
+        # Draw waiting cursor
+        if self.end_text_position:
+            self.waiting_cursor_offset_index += 1
+            if self.waiting_cursor_offset_index > len(self.waiting_cursor_offset) - 1:
+                self.waiting_cursor_offset_index = 0
+
+            cursor_pos = (2 + new_pos[0] + self.end_text_position[0],
+                          5 + new_pos[1] + self.end_text_position[1] + self.waiting_cursor_offset[self.waiting_cursor_offset_index])
+            surf.blit(GC.IMAGESDICT['WaitingCursor'], cursor_pos)
