@@ -1611,7 +1611,6 @@ class RemoveStatus(Action):
         if self.status_obj.ephemeral:
             self.unit.isDying = True
             self.actions.append(ChangeHP(self.unit, -10000))
-            gameStateObj.stateMachine.changeState('dying')
 
         for action in self.actions:
             action.do(gameStateObj)

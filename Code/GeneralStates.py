@@ -124,6 +124,9 @@ class FreeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('turn_change')
             return 'repeat'
 
+        if any(unit.isDying for unit in gameStateObj.allunits):
+            gameStateObj.stateMachine.changeState('dying')
+
         event = gameStateObj.input_manager.process_input(eventList)
         # Show R unit status screen
         if event == 'INFO':
@@ -2459,6 +2462,9 @@ class StatusState(StateMachine.State):
         count = 0 # Only process as much as 10 units in a frame.
         while processing and count < 10:
             output = gameStateObj.status.update(gameStateObj)
+            if any(unit.isDying for unit in gameStateObj.allunits):
+                processing = False
+                gameStateObj.stateMachine.changeState('dying')
             if output == 'Done':
                 self.leave(gameStateObj)
                 processing = False
