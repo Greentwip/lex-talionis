@@ -862,7 +862,7 @@ class UnitObject(object):
                 leveling = int(gameStateObj.mode['growths'])
 
         r = static_random.get_levelup(self.id, self.level + class_info['tier'] * 100)
-
+        
         if leveling in (0, 1): # Fixed or Random
             for index in range(8):
                 growth = growths[index]
@@ -891,7 +891,7 @@ class UnitObject(object):
                 growths[index] = max(0, growths[index] - 100)
                 if list(self.stats.values())[index].base_stat + levelup_list[index] >= class_info['max'][index]:
                     growths[index] = 0
-                                    
+
         return levelup_list
 
     # For regular levels

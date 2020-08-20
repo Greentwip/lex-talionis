@@ -125,7 +125,9 @@ class GainExpState(StateMachine.State):
                     self.exp_bar.fade_out()
                     self.state_time = current_time
                 else:
+                    old_growth_points = self.unit.growth_points[:]
                     self.levelup_list = self.unit.level_up(gameStateObj, self.unit_klass)
+                    Action.do(Action.RecordGrowthPoints(self.unit, old_growth_points), gameStateObj)
                     Action.do(Action.IncLevel(self.unit), gameStateObj)
                     Action.do(Action.ApplyLevelUp(self.unit, self.levelup_list), gameStateObj)
                     self.state.changeState('exp100')

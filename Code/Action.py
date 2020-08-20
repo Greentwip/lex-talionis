@@ -760,6 +760,21 @@ class SetExp(GainExp):
     def do(self, gameStateObj):
         self.unit.set_exp(self.exp)
 
+class RecordGrowthPoints(Action):
+    def __init__(self, unit, old_growth_points):
+        self.unit = unit
+        self.old_growth_points = old_growth_points
+        self.new_growth_points = self.unit.growth_points
+
+    def do(self, gameStateObj):
+        pass
+
+    def execute(self, gameStateObj):
+        self.unit.growth_points = self.new_growth_points
+
+    def reverse(self, gameStateObj):
+        self.unit.growth_points = self.old_growth_points
+
 class IncLevel(Action):  # Assumes unit did not promote
     def __init__(self, unit):
         self.unit = unit
