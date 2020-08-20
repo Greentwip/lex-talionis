@@ -12,12 +12,6 @@ from . import StateMachine, Action, Aura, BaseMenuSurf, ClassData
 import logging
 logger = logging.getLogger(__name__)
 
-def wizard_mode(eventList, gameStateObj):
-    for event in eventList:
-        if event.type == Engine.KEYUP:
-            if event.key == Engine.key_map['d']:
-                gameStateObj.stateMachine.changeState('debug')
-
 class TurnChangeState(StateMachine.State):
     name = 'turn_change'
 
@@ -128,8 +122,11 @@ class FreeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('dying')
 
         event = gameStateObj.input_manager.process_input(eventList)
+        # Check if both L and R are pressed down, if so, debug state!
+        if cf.OPTIONS['cheat'] and 'AUX' in gameStateObj.input_manager.key_down_events and 'INFO' in gameStateObj.input_manager.key_down_events:
+            gameStateObj.stateMachine.changeState('debug')
         # Show R unit status screen
-        if event == 'INFO':
+        elif event == 'INFO':
             if gameStateObj.cursor.getHoveredUnit(gameStateObj):
                 CustomObjects.handle_info_key(gameStateObj, metaDataObj)
             else:  # Show enemy attacks otherwise
@@ -165,8 +162,7 @@ class FreeState(StateMachine.State):
         elif event == 'START':
             GC.SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
-        elif cf.OPTIONS['cheat']:
-            wizard_mode(eventList, gameStateObj)
+
         # Moved down here so it is done last
         gameStateObj.cursor.back_pressed = gameStateObj.input_manager.is_pressed('BACK')
         gameStateObj.cursor.take_input(eventList, gameStateObj)

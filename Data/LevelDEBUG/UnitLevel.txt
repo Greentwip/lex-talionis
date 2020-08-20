@@ -21,7 +21,7 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Ophie;None;None
 player;0;0;Joel;None;None
-player;0;0;Drake;None;None
+player;0;0;Drake;5,10;None
 player;0;0;Prim;None;None
 player;0;0;Cleric;10;;1,10;None;Resistance
 # Enemies

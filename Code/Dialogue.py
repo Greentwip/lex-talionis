@@ -638,7 +638,9 @@ class Dialogue_Scene(object):
             gameStateObj.stateMachine.changeState('movement')
             # Camera follow
             if len(line) > 1:
-                gameStateObj.cursor.camera_follow = gameStateObj.get_unit(line[1]).id
+                unit = gameStateObj.get_unit(line[1])
+                if unit:
+                    gameStateObj.cursor.camera_follow = unit.id
         elif line[0] == 'interact_unit':
             # Read input
             attacker = line[1]

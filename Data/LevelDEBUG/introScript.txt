@@ -11,10 +11,11 @@ layer_terrain;1;4,17;base_terrain
 replace_tile;3,17;2
 layer_tile_sprite;2;4,17;OpenChest;base_terrain
 layer_tile_sprite;2;5,17;OpenChest;base_terrain
-add_unit;hard_boi_1
-add_unit;soft_boi_1;4,0
 change_fatigue;Joel;12
 change_name;Joel;Frank
+set_cursor;Drake
+move_unit;Drake;20,10
+start_move;Drake
 u;Joel;Left
 s;Joel;This is the combat{semicolon} information window. It is a window.{w}{clear}You can see the combatant's HP and the amount of damage you will inflict.
 # choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash

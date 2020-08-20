@@ -337,7 +337,7 @@ class UnitObject(object):
                     my_num *= 2
                 if self.outspeed(enemyunit, my_wep, gameStateObj, "Attack"):
                     my_num *= 2
-                if my_wep.uses or my_wep.c_uses or my_wep.cooldown.charged:
+                if my_wep.uses or my_wep.c_uses or my_wep.cooldown:
                     if my_wep.uses:
                         my_num = min(my_num, my_wep.uses.uses)
                     if my_wep.c_uses:
@@ -2195,7 +2195,7 @@ class UnitObject(object):
                     if not gameStateObj.cursor.camera_follow:
                         gameStateObj.cursor.camera_follow = self.id
                 if gameStateObj.cursor.camera_follow == self.id:
-                    gameStateObj.cursor.setPosition(self.position, gameStateObj)
+                    gameStateObj.cursor.centerPosition(self.position, gameStateObj)
             else: # Path is empty, which means we are done
                 gameStateObj.moving_units.discard(self)
                 # self.sprite.change_state('normal', gameStateObj)

@@ -222,8 +222,11 @@ class PrepFormationState(StateMachine.State):
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
+        if cf.OPTIONS['cheat'] and 'AUX' in gameStateObj.input_manager.key_down_events and 'INFO' in gameStateObj.input_manager.key_down_events:
+            gameStateObj.stateMachine.changeState('debug')
+            
         # Show R unit status screen
-        if event == 'INFO':
+        elif event == 'INFO':
             CustomObjects.handle_info_key(gameStateObj, metaDataObj)
         elif event == 'AUX':
             CustomObjects.handle_aux_key(gameStateObj)
@@ -247,9 +250,6 @@ class PrepFormationState(StateMachine.State):
         elif event == 'START':
             GC.SOUNDDICT['Select 5'].play()
             gameStateObj.stateMachine.changeState('minimap')
-
-        elif cf.OPTIONS['cheat']:
-            GeneralStates.wizard_mode(eventList, gameStateObj)
 
         gameStateObj.cursor.take_input(eventList, gameStateObj)
             
