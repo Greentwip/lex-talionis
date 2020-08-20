@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 from . import bmpfont, Engine, imagesDict, Equations
 from . import configuration as cf
+from . import static_random
 
 import logging
 logger = logging.getLogger(__name__)
@@ -205,34 +206,43 @@ class LevelUpQuotes():
         self.info = {}
         if os.path.exists(fn):
             with open(fn, 'r') as fp:
-                lines = [l.strip().split(';') for l in fp.readlines() if l.strip()]
+                lines = [l.strip().split(';') for l in fp.readlines() if l.strip() and not l.strip().startswith('#')]
             for line in lines:
                 self.info[line[0]] = []
-                for quote in line[1:]:
-                    self.info[line[0]].append(quote)
+                for quotes in line[1:]:
+                    s_quotes = quotes.split('|')
+                    # List of lists
+                    self.info[line[0]].append(s_quotes)
 
-    def get(self, unit_id, num_stats):
+    def get(self, unit_id, num_stats, level):
         if unit_id in self.info:
             if num_stats <= 1:
-                return self.info[unit_id][0]
+                quotes = self.info[unit_id][0]
             elif num_stats in (2, 3):
-                return self.info[unit_id][1]
+                quotes = self.info[unit_id][1]
             elif num_stats in (4, 5):
-                return self.info[unit_id][2]
+                quotes = self.info[unit_id][2]
             else:
-                return self.info[unit_id][3]
+                quotes = self.info[unit_id][3]
+            # Return a random quote
+            r = static_random.get_levelup(unit_id, level)
+            return quotes[r.randint(0, len(quotes) - 1)]
         return None
 
-    def get_capped(self, unit_id):
+    def get_capped(self, unit_id, level):
         if unit_id in self.info:
             if len(self.info[unit_id]) > 4:
-                return self.info[unit_id][4]
+                quotes = self.info[unit_id][4]
+                r = static_random.get_levelup(unit_id, level)
+                return quotes[r.randint(0, len(quotes) - 1)]
         return None
 
-    def get_promotion(self, unit_id):
+    def get_promotion(self, unit_id, level):
         if unit_id in self.info:
             if len(self.info[unit_id]) > 5:
-                return self.info[unit_id][5]
+                quotes = self.info[unit_id][5]
+                r = static_random.get_levelup(unit_id, level)
+                return quotes[r.randint(0, len(quotes) - 1)]
         return None
 
 LEVELUPQUOTES = LevelUpQuotes(loc + 'Data/levelup_quotes.txt')

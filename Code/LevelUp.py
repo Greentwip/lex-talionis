@@ -366,11 +366,11 @@ class LevelUpScreen(object):
     def get_levelup_quote(self):
         num_stats = len([stat for stat in self.levelup_list if stat > 0])
         if self.level2 < self.level1:  # Means you promoted
-            return GC.LEVELUPQUOTES.get_promotion(self.unit.id)
+            return GC.LEVELUPQUOTES.get_promotion(self.unit.id, self.level2)
         if num_stats in (0, 1):
-            if self.unit.capped_stats() and GC.LEVELUPQUOTES.get_capped(self.unit.id):
-                return GC.LEVELUPQUOTES.get_capped(self.unit.id)
-        return GC.LEVELUPQUOTES.get(self.unit.id, num_stats)
+            if self.unit.capped_stats() and GC.LEVELUPQUOTES.get_capped(self.unit.id, self.level2):
+                return GC.LEVELUPQUOTES.get_capped(self.unit.id, self.level2)
+        return GC.LEVELUPQUOTES.get(self.unit.id, num_stats, self.level2)
 
     def begin_scroll_out(self):
         self.animations = []

@@ -473,13 +473,14 @@ class UnitMenu(QWidget):
 
     def center_on_unit(self, item, prev=None):
         idx = self.list.row(item)
+        if self.unit_data.units:
         # idx = int(idx)
-        unit = self.unit_data.units[idx]
-        if unit.position:
-            current_mode = str(self.mode_view_combobox.currentText())
-            if unit.mode and current_mode not in unit.mode:
-                EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
-            self.view.center_on_pos(unit.position)
+            unit = self.unit_data.units[idx]
+            if unit.position:
+                current_mode = str(self.mode_view_combobox.currentText())
+                if unit.mode and current_mode not in unit.mode:
+                    EditorUtilities.setComboBox(self.mode_view_combobox, unit.mode[0])
+                self.view.center_on_pos(unit.position)
 
     def center(self, unit):
         if unit.position:

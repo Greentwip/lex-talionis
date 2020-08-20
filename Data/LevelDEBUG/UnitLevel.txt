@@ -24,11 +24,11 @@ player;0;0;Joel;None;None
 player;0;0;Drake;None;None
 player;0;0;Prim;None;None
 player;0;0;Cleric;10;;1,10;None;Resistance
-
+# Enemies
+# Generics
 enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,5;None;Resistance
 enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
-enemy;0;0;Shaman;1;Iron Axe;53,20;None;Resistance
-enemy;0;0;Raider;1;Iron Axe;63,20;None;Resistance
-
-# Created units
-other;2;w_Create;Soldier;Iron Lance;0,0;Pursue;Resistance
+# === Reinforcements ===
+# Player Characters
+# Enemies
+# === Triggers ===
