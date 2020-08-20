@@ -99,6 +99,14 @@ class WorldMapBackground(object):
         elif cf.OPTIONS['debug']:
             print('Error! ', name, ' not in self.wm_sprites')
 
+    def focus_sprite(self, name):
+        if name in self.wm_sprites:
+            self.wm_sprites[name].hovered = True
+
+    def unfocus_sprite(self, name):
+        if name in self.wm_sprites:
+            self.wm_sprites[name].hovered = False
+
     def quick_pan(self, new_pos):
         self.x += new_pos[0]
         self.y += new_pos[1]

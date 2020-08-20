@@ -337,6 +337,10 @@ class Dialogue_Scene(object):
                 self.background.teleport_sprite(line[1], new_position)
             else:
                 self.background.set_sprite(line[1], new_position, slow='slow' in line)
+        elif line[0] == 'wm_focus_unit':
+            self.background.focus_sprite(line[1])
+        elif line[0] == 'wm_unfocus_unit':
+            self.background.unfocus_sprite(line[1])
         elif line[0] == 'wm_label':
             name = line[1]
             position = self.parse_pos(line[2], gameStateObj)
