@@ -271,6 +271,9 @@ class AI(object):
             gameStateObj.stateMachine.changeState('movement')
             Action.do(Action.Move(self.unit, self.position_to_move_to, path), gameStateObj)
             return True
+        elif self.position_to_move_to:
+            Action.execute(Action.Move(self.unit, self.position_to_move_to), gameStateObj)
+            return False
         else:
             return False
 

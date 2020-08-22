@@ -1600,6 +1600,23 @@
         <map_hit_color>128,-248,248</map_hit_color>
     </item>
 
+    <item name="Geas">
+        <id>Geas</id>
+        <spritetype>Dark</spritetype>
+        <spriteid>8</spriteid>       
+        <components>spell,uses,detrimental,status</components>
+        <weapontype>Dark</weapontype>
+ 
+        <uses>3</uses>
+        <RNG>1-7</RNG>
+        <value>1000</value>
+        <desc>Mind controls enemy.</desc>
+        <status>Geas_Status</status>
+        
+        <LVL>A</LVL>
+        <targets>Enemy</targets>
+    </item>
+
     <item name="Searing Blades">
         <id>Searing Blades</id>
         <spritetype>Anima</spritetype>

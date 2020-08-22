@@ -396,7 +396,7 @@ class UnitSprite(object):
         # if self.unit == gameStateObj.cursor.currentSelectedUnit:
         #    print(self.state)
         if self.state == 'normal':
-            if self.unit.isDone() and not self.unit.isDying and not self.unit.isActive:
+            if self.unit.isDone() and not self.unit.isDying:
                 self.image_state = 'gray'
             elif gameStateObj.cursor.currentHoveredUnit == self.unit and self.unit.team == 'player' and gameStateObj.cursor.drawState:
                 self.image_state = 'active'
@@ -459,14 +459,14 @@ class UnitSprite(object):
             elif self.spriteOffset[1] > 0:
                 self.spriteOffset[1] += 2
             if abs(self.spriteOffset[0]) >= GC.TILEWIDTH or abs(self.spriteOffset[1]) >= GC.TILEHEIGHT:
-                self.transition_state = 'normal'
-                self.change_state('normal', gameStateObj)
                 self.spriteOffset = [0, 0]
                 if self.transition_state == 'fake_out':
                     self.unit.die(gameStateObj, event=True)
                 else: # Rescue
                     self.unit.leave(gameStateObj)
                     self.unit.position = None
+                self.transition_state = 'normal'
+                self.change_state('normal', gameStateObj)
 
     def update_transition(self, gameStateObj):
         if self.transition_state in WARP_OUT_SET:

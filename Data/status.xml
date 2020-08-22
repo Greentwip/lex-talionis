@@ -1359,6 +1359,15 @@
         <avoid>100</avoid>
     </status>
 
+    <status name="Controlled">
+        <id>Geas_Status</id>
+        <image_index>9,1</image_index>
+        <desc>Mind Controlled</desc>
+        <components>time,mind_control</components>
+
+        <time>5</time>
+    </status>
+
     <status name="Aegis">
         <id>Aegis_Status</id>
         <image_index>10,3</image_index>

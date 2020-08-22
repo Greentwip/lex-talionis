@@ -244,8 +244,8 @@ class Cursor(object):
             return            
         logger.debug('Cursor new position %s', newposition)
         self.position = newposition
-        gameStateObj.cameraOffset.set_x(self.position[0] - GC.TILEX/2)
-        gameStateObj.cameraOffset.set_y(self.position[1] - GC.TILEY/2)
+        gameStateObj.cameraOffset.set_x(self.position[0] - GC.TILEX//2)
+        gameStateObj.cameraOffset.set_y(self.position[1] - GC.TILEY//2)
         self.remove_unit_display()
 
     def autocursor(self, gameStateObj, force=False):

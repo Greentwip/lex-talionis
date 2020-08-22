@@ -37,14 +37,8 @@ class Dialogue_Scene(object):
 
         # Optional unit
         self.unit = unit
-        if self.unit:
-            # logger.debug('locking %s', self.unit)
-            self.unit.lock_active()
         self.unit1 = unit  # Alternate name
         self.unit2 = unit2
-        if self.unit2 and hasattr(self.unit2, 'lock_active'):
-            # logger.debug('locking %s', self.unit2)
-            self.unit2.lock_active()
         # Name -- What is the given event name for this tile
         self.name = name
         # Tile Pos -- What tile is being acted on, if any (applied in unlock, switch, village, destroy, search, etc. scripts)
@@ -228,12 +222,6 @@ class Dialogue_Scene(object):
 
     def end(self):
         self.done = True
-        if self.unit:
-            # logger.debug('Unlocking %s', self.unit)
-            self.unit.unlock_active()
-        if self.unit2 and hasattr(self.unit2, 'unlock_active'):
-            # logger.debug('Unlocking %s', self.unit2)
-            self.unit2.unlock_active()
         return
 
     def parse_line(self, line, gameStateObj=None, metaDataObj=None):
@@ -593,6 +581,14 @@ class Dialogue_Scene(object):
                 gameStateObj.exp_gain_struct = (unit, exp, None, 'init')
                 gameStateObj.stateMachine.changeState('exp_gain')
                 self.current_state = "Paused"
+
+        # Increment a single stat of a unit
+        elif line[0] == 'inc_stat':
+            unit = self.get_unit(line[1], gameStateObj)
+            stat = line[2]
+            amount = line[3]
+            if unit:
+                Action.do(Action.ChangeStat(unit, stat, amount), gameStateObj)
 
         # Modify fatigue of a unit
         elif line[0] == 'change_fatigue':

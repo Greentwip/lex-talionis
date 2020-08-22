@@ -235,7 +235,7 @@ class OptionsMenuState(StateMachine.State):
                     gameStateObj.shared_state_data['option_owner'] = selection
                     gameStateObj.stateMachine.changeState('optionchild')
                 else:
-                    gameStateObj.stateMachine.changeState('turn_change')
+                    gameStateObj.stateMachine.changeState('ai')
             elif selection == cf.WORDS['Suspend'] or selection == cf.WORDS['Save']:
                 # Create child menu with additional options
                 gameStateObj.shared_state_data['option_owner'] = selection
@@ -1987,7 +1987,7 @@ class AIState(StateMachine.State):
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
-        if not any(unit.isActive or unit.isDying for unit in gameStateObj.allunits):
+        if not any(unit.isDying for unit in gameStateObj.allunits):
             # Get new unit from list if no unit or unit is not on map anymore
             if (not gameStateObj.ai_current_unit or not gameStateObj.ai_current_unit.position) and gameStateObj.ai_unit_list:
                 gameStateObj.ai_current_unit = gameStateObj.ai_unit_list.pop()
@@ -2022,13 +2022,16 @@ class AIState(StateMachine.State):
 
             else: # Done
                 logger.debug('Done with AI')
-                for unit in gameStateObj.ai_unit_list:
-                    unit.reset_ai()
-                gameStateObj.ai_build_flag = True
-                gameStateObj.ai_unit_list = []
-                gameStateObj.ai_current_unit = None
+                self.finish(gameStateObj, metaDataObj)
                 gameStateObj.stateMachine.changeState('turn_change')
                 return 'repeat'
+
+    def finish(self, gameStateObj, metaDataObj):
+        for unit in gameStateObj.ai_unit_list:
+            unit.reset_ai()
+        gameStateObj.ai_build_flag = True
+        gameStateObj.ai_unit_list = []
+        gameStateObj.ai_current_unit = None
 
 class DialogueState(StateMachine.State):
     name = 'dialogue'

@@ -99,7 +99,6 @@ class Move(Action):
 
     def do(self, gameStateObj):
         gameStateObj.moving_units.add(self.unit)
-        self.unit.lock_active()
         self.unit.sprite.change_state('moving', gameStateObj)
         # Remove tile statuses
         self.unit.leave(gameStateObj)
@@ -458,8 +457,8 @@ class Drop(Action):
         self.unit.hasTraded = self.hasTraded
         self.unit.hasAttacked = self.hasAttacked
         self.droppee_wait_action.reverse(gameStateObj)
-        self.droppee.position = None
         self.droppee.leave(gameStateObj)
+        self.droppee.position = None
         if 'savior' not in self.unit.status_bundle:
             if not self.rescue_status:
                 self.rescue_status = StatusCatalog.statusparser("Rescue", gameStateObj)
@@ -1226,6 +1225,16 @@ class IncrementTurn(Action):
     def reverse(self, gameStateObj):
         gameStateObj.turncount -= 1
 
+class ChangePhase(Action):
+    def __init__(self):
+        pass
+
+    def do(self, gameStateObj):
+        gameStateObj.phase._next()
+
+    def reverse(self, gameStateObj):
+        gameStateObj.phase._prev()
+
 class MarkPhase(Action):
     def __init__(self, phase_name):
         self.phase_name = phase_name
@@ -1468,7 +1477,7 @@ class AddStatus(Action):
         # --- Non-momentary status ---
         if self.status_obj.mind_control:
             self.status_obj.data['original_team'] = self.unit.team
-            p_unit = gameStateObj.get_unit_from_id(self.status_obj.owner_id)
+            p_unit = gameStateObj.get_unit_from_id(self.status_obj.giver_id)
             self.actions.append(ChangeTeam(self.unit, p_unit.team))
 
         if self.status_obj.ai_change:
@@ -1743,6 +1752,25 @@ class ApplyStatChange(Action):
         self.unit.apply_stat_change([-i for i in self.stat_change])
         self.unit.movement_left = self.movement_left
         self.unit.set_hp(self.currenthp)
+
+class ChangeStat(Action):
+    def __init__(self, unit, stat, amount):
+        self.unit = unit
+        self.stat = stat
+        self.amount = int(amount)
+
+    def do(self, gameStateObj):
+        if self.stat in self.unit.stats:
+            class_info = ClassData.class_dict[self.unit.klass]
+            index = list(self.unit.stats.keys()).index(self.stat)
+            stat_max = class_info['max'][index]
+            stat_value = self.unit.stats[self.stat].base_stat
+            self.amount = Utility.clamp(self.amount, -stat_value, stat_max - stat_value)
+            self.unit.stats[self.stat].base_stat += self.amount
+
+    def reverse(self, gameStateObj):
+        if self.stat in self.unit.stats:
+            self.unit.stats[self.stat].base_stat -= self.amount
 
 class ApplyGrowthMod(Action):
     def __init__(self, unit, growth_mod):

@@ -297,8 +297,11 @@ class ActionLog(object):
     def is_turned_back(self):
         return self.action_index + 1 < len(self.actions)
 
-    def can_use(self):
-        return self.is_turned_back() and not self.locked
+    def can_use(self, gameStateObj):
+        player_units = [unit for unit in gameStateObj.allunits if unit.team == "player" and unit.position and not unit.dead]
+        unused_units = [unit for unit in player_units if not unit.isDone()]
+        # Make sure that there is at least one unit that can still move.
+        return self.is_turned_back() and not self.locked and len(unused_units) >= 1
 
     def get_unit_turn(self, unit, wait_index):
         cur_index = wait_index
@@ -470,7 +473,7 @@ class TurnwheelState(StateMachine.State):
             self.go_backwards(gameStateObj)
 
         if action == 'SELECT':
-            if gameStateObj.action_log.can_use():
+            if gameStateObj.action_log.can_use(gameStateObj):
                 GC.SOUNDDICT['TurnwheelOut'].play()
                 # Play Big Turnwheel WOOSH Animation
                 gameStateObj.action_log.finalize()
@@ -533,8 +536,10 @@ class TurnwheelState(StateMachine.State):
             self.transition_out -= 1
             if self.transition_out <= 0:
                 # Let's leave now 
-                gameStateObj.stateMachine.back()
-                gameStateObj.stateMachine.back()
+                # gameStateObj.stateMachine.back()
+                # gameStateObj.stateMachine.back()
+                gameStateObj.stateMachine.clear()
+                gameStateObj.stateMachine.changeState('free')
                 # Called whenever the turnwheel is used
                 turnwheel_script_name = 'Data/turnwheelScript.txt'
                 if self.end_effect and os.path.exists(turnwheel_script_name):

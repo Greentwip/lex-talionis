@@ -70,7 +70,7 @@ class BattleAnimation(object):
         else:
             self.current_pose = 'Stand'
 
-    def awake(self, owner, partner, right, at_range, init_speed=None, init_position=None, parent=None):
+    def awake(self, owner, partner, right, at_range, init_speed=0, init_position=None, parent=None):
         # print('Awake')
         self.owner = owner
         self.partner = partner

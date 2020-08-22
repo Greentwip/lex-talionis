@@ -3,6 +3,7 @@ import os, pickle, math
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Utility, Image_Modification, Engine
+from . import Action
 
 import logging
 logger = logging.getLogger(__name__)
@@ -148,14 +149,19 @@ class Phase(object):
         if self.current >= len(self.order):
             self.current = 0
 
+    def _prev(self):
+        self.current -= 1
+        if self.current < 0:
+            self.current = len(self.order) - 1
+
     def next(self, gameStateObj):
         self.previous = self.current
         # Actually change phase
         if gameStateObj.allunits:
-            self._next()
+            Action.do(Action.ChangePhase(), gameStateObj)
             while not any(self.get_current_phase() == unit.team for unit in gameStateObj.allunits if unit.position) \
                     and self.current != 0: # Also, never skip player phase
-                self._next()
+                Action.do(Action.ChangePhase(), gameStateObj)
         else:
             self.current = 0 # If no units at all, just default to player phase?
 

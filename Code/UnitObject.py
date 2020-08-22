@@ -1867,16 +1867,6 @@ class UnitObject(object):
     def isDone(self):
         return self.finished
 
-    def lock_active(self):
-        self.isActive += 1
-
-    def unlock_active(self):
-        self.isActive -= 1
-        self.isActive = max(0, self.isActive)
-        # if self.isActive < 0:
-        #     logger.error('Something let go of this unit without grabbing hold first!')
-        #     self.isActive = 0
-
     def reset_ai(self):
         self.hasRunMoveAI = False
         self.hasRunAttackAI = False
@@ -1888,7 +1878,6 @@ class UnitObject(object):
         self.hasAttacked = False # Controls whether unit has done an action which disallows attacking, an action which ends turn
         self.finished = False # Controls whether unit has completed their turn.
         self.reset_ai()
-        self.isActive = 0
         self.isDying = False # Unit is dying
         self.path = []
         self.movement_left = self.stats['MOV']
@@ -2199,7 +2188,6 @@ class UnitObject(object):
             else: # Path is empty, which means we are done
                 gameStateObj.moving_units.discard(self)
                 # self.sprite.change_state('normal', gameStateObj)
-                self.unlock_active()
                 # Add status for new position
                 self.current_arrive_action = Action.MoveArrive(self)
                 Action.do(self.current_arrive_action, gameStateObj)
