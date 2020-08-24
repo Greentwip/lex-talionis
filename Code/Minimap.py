@@ -56,7 +56,7 @@ class Cliff_Manager(object):
         b.adjacent_links.add(a)
 
     def is_adjacent(self, pos1, pos2):
-        if pos1 in [(pos2[0], pos2[1] - 1), (pos2[0] - 1, pos2[1]), (pos2[0] + 1, pos2[1]), (pos2[0], pos2[1] + 1)]:
+        if pos1 in ((pos2[0], pos2[1] - 1), (pos2[0] - 1, pos2[1]), (pos2[0] + 1, pos2[1]), (pos2[0], pos2[1] + 1)):
             return True
         return False
 
@@ -204,6 +204,7 @@ class MiniMap(object):
                   'Dark_Snow': (13, 1),
                   'Pier': (14, 1)}
     complex_map = ('Wall', 'River', 'Sand', 'Sea')
+    cliffs = ('Cliff', 'Desert_Cliff', 'Snow_Cliff')
     scale_factor = 4
 
     def __init__(self, tile_map, units):
@@ -229,7 +230,7 @@ class MiniMap(object):
         for x in range(self.width):
             for y in range(self.height):
                 key = self.tile_map.tiles[(x, y)].minimap
-                if key in ('Cliff', 'Desert_Cliff', 'Snow_Cliff'):
+                if key in self.cliffs:
                     cliff_positions.add((x, y))
         self.cliff_manager = Cliff_Manager(cliff_positions, (self.width, self.height))
 
@@ -264,7 +265,7 @@ class MiniMap(object):
         elif key == 'Coast':
             return self.coast(position)
         # Cliff
-        elif key in ('Cliff', 'Desert_Cliff', 'Snow_Cliff'):
+        elif key in self.cliffs:
             pos = self.cliff_manager.get_orientation(position)
             if key == 'Desert_Cliff':
                 pos = (pos[0] + 4, pos[1])
@@ -288,46 +289,108 @@ class MiniMap(object):
                 else:
                     self.pin_surf.blit(Engine.subsurface(self.minimap_units, (self.scale_factor*3, 0, self.scale_factor, self.scale_factor)), pos)
 
-    def coast(self, position):
+    def coast(self, position, recurse=True):
         sea_keys = ('Sea', 'Pier', 'River', 'Bridge')
         # A is up, B is left, C is right, D is down
         # This code determines which minimap tiles fit assuming you only knew one side of the tile, and then intersects to find the best
-        a, b, c, d = None, None, None, None
+        a, b, c, d, e, f, g, h = None, None, None, None, None, None, None, None
         up_pos = position[0], position[1] - 1
-        if up_pos not in self.tile_map.tiles or self.tile_map.tiles[up_pos].minimap in sea_keys:
+        if up_pos not in self.tile_map.tiles:
+            a = {2, 3, 4, 8, 11, 12, 13}
+        elif self.tile_map.tiles[up_pos].minimap in sea_keys:
             a = {0, 1, 5, 6, 7, 9, 10}
         elif self.tile_map.tiles[up_pos].minimap == 'Coast':
-            a = {0, 1, 5, 6, 7, 9, 10, 11, 12}
+            a = {2, 3, 5, 6, 7, 9, 10, 11, 12, 13}
         else:
             a = {2, 3, 4, 8, 11, 12, 13}
         left_pos = position[0] - 1, position[1]
-        if left_pos not in self.tile_map.tiles or self.tile_map.tiles[left_pos].minimap in sea_keys:
+        if left_pos not in self.tile_map.tiles:
+            b = {1, 3, 4, 7, 10, 12, 13}
+        elif self.tile_map.tiles[left_pos].minimap in sea_keys:
             b = {0, 2, 5, 6, 8, 9, 11}
         elif self.tile_map.tiles[left_pos].minimap == 'Coast':
-            b = {0, 2, 5, 6, 8, 9, 10, 11, 12}
+            b = {1, 4, 5, 6, 8, 9, 10, 11, 12, 13}
         else:
             b = {1, 3, 4, 7, 10, 12, 13}
         right_pos = position[0] + 1, position[1]
-        if right_pos not in self.tile_map.tiles or self.tile_map.tiles[right_pos].minimap in sea_keys:
+        if right_pos not in self.tile_map.tiles:
+            c = {1, 2, 4, 6, 9, 11, 13}
+        elif self.tile_map.tiles[right_pos].minimap in sea_keys:
             c = {0, 3, 5, 7, 8, 10, 12}
         elif self.tile_map.tiles[right_pos].minimap == 'Coast':
-            c = {0, 3, 5, 7, 8, 9, 10, 11, 12}
+            c = {1, 4, 5, 7, 8, 9, 10, 11, 12, 13}
         else:
             c = {1, 2, 4, 6, 9, 11, 13}
         down_pos = position[0], position[1] + 1
-        if down_pos not in self.tile_map.tiles or self.tile_map.tiles[down_pos].minimap in sea_keys:
+        if down_pos not in self.tile_map.tiles:
+            d = {1, 2, 3, 5, 9, 10, 13}
+        elif self.tile_map.tiles[down_pos].minimap in sea_keys:
             d = {0, 4, 6, 7, 8, 11, 12}
         elif self.tile_map.tiles[down_pos].minimap == 'Coast':
-            d = {0, 4, 6, 7, 8, 9, 10, 11, 12}
+            d = {2, 3, 6, 7, 8, 9, 10, 11, 12, 13}
         else:
             d = {1, 2, 3, 5, 9, 10, 13}
-        intersection = list(a & b & c & d)
+        topleft_pos = position[0] - 1, position[1] - 1
+        if topleft_pos not in self.tile_map.tiles:
+            e = {0, 1, 2, 3, 4, 7, 8, 10, 11, 12}
+        elif self.tile_map.tiles[topleft_pos].minimap in sea_keys:
+            e = {0, 1, 2, 5, 6, 7, 8, 9, 10, 11}
+        elif self.tile_map.tiles[topleft_pos].minimap == 'Coast':
+            e = {0, 1, 2, 5, 6, 7, 8, 9, 10, 11, 12}
+        else:
+            e = {0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 12}
+        topright_pos = position[0] + 1, position[1] - 1
+        if topright_pos not in self.tile_map.tiles:
+            f = {0, 1, 2, 3, 4, 6, 8, 9, 11, 12}
+        elif self.tile_map.tiles[topright_pos].minimap in sea_keys:
+            f = {0, 1, 3, 5, 6, 7, 8, 9, 10, 12}
+        elif self.tile_map.tiles[topright_pos].minimap == 'Coast':
+            f = {0, 1, 3, 5, 6, 7, 8, 9, 10, 11, 12}
+        else:
+            f = {0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 12}
+        bottomleft_pos = position[0] - 1, position[1] + 1
+        if bottomleft_pos not in self.tile_map.tiles:
+            g = {0, 1, 2, 3, 4, 5, 7, 9, 10, 12}
+        elif self.tile_map.tiles[bottomleft_pos].minimap in sea_keys:
+            g = {0, 2, 4, 5, 6, 7, 8, 9, 11, 12}
+        elif self.tile_map.tiles[bottomleft_pos].minimap == 'Coast':
+            g = {0, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+        else:
+            g = {0, 1, 2, 3, 4, 5, 7, 9, 10, 11, 12}
+        bottomright_pos = position[0] + 1, position[1] + 1
+        if bottomright_pos not in self.tile_map.tiles:
+            h = {0, 1, 2, 3, 4, 5, 6, 9, 10, 11}
+        elif self.tile_map.tiles[bottomright_pos].minimap in sea_keys:
+            h = {0, 3, 4, 5, 6, 7, 8, 10, 11, 12}
+        elif self.tile_map.tiles[bottomright_pos].minimap == 'Coast':
+            h = {0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+        else:
+            h = {0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12}
+
+        intersection = list(a & b & c & d & e & f & g & h)
         if len(intersection) == 0:
-            value = 9
+            value = 14
         elif len(intersection) == 1:
             value = intersection[0]
         elif len(intersection) >= 2:
-            value = sorted(intersection)[-1]
+            value = sorted(intersection)[0]
+            # If we are a diagonal, we need to figure out what the left and right diagonals look like
+            # if they are also diagonals ... then we can match better
+            if recurse and value in (9, 10, 11, 12):
+                if left_pos in self.tile_map.tiles and self.tile_map.tiles[left_pos].minimap == 'Coast':
+                    left = self.coast(left_pos, False)
+                    if left == 9:
+                        value = 10
+                    elif left == 11:
+                        value = 12
+                if right_pos in self.tile_map.tiles and self.tile_map.tiles[right_pos].minimap == 'Coast':                        
+                    right = self.coast(right_pos, False)
+                    if right == 10:
+                        value = 9
+                    elif right == 12:
+                        value = 11
+        if not recurse:
+            return value
         if value == 0:
             row, column = 0, 7
         elif value == 1:
@@ -356,6 +419,8 @@ class MiniMap(object):
             row, column = 1, 6
         elif value == 13:
             row, column = 0, 5
+        elif value == 14:
+            row, column = 0, 0
 
         return self.get_sprite((row, column))
 
