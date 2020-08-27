@@ -172,7 +172,7 @@ class Combat(object):
             gameStateObj.stateMachine.changeState('itemgain')
 
     def handle_fatigue(self, results, gameStateObj):
-        if cf.CONSTANTS['fatigue'] in (1, 2) and not self.event_combat:
+        if cf.CONSTANTS['fatigue'] in (1, 2, 3) and not self.event_combat:
             if self.item:
                 fatigue_gain = self._compute_fatigue(self.p1, self.item, gameStateObj)
                 if cf.CONSTANTS['fatigue'] == 2:
@@ -194,7 +194,7 @@ class Combat(object):
                     Action.do(Action.ChangeFatigue(splash, 1), gameStateObj)
 
     def _compute_fatigue(self, unit, item, gameStateObj):
-        if item.weapon or item.spell:
+        if cf.CONSTANTS['fatigue'] in (1, 2) and (item.weapon or item.spell):
             return item.fatigue or 1
         else:
             return item.fatigue or 0

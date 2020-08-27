@@ -19,11 +19,11 @@
 # --------------------------------------------
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
-player;0;0;Ophie;None;None
-player;0;0;Joel;None;None
+player;0;0;Ophie;5,13;None
+player;0;0;Joel;5,14;None
 player;0;0;Drake;5,10;None
-player;0;0;Prim;None;None
-player;0;0;Warlock;10;;1,10;None;Resistance
+player;0;0;Prim;5,15;None
+player;0;0;Warlock;10;Flux;1,10;None;Resistance
 # Enemies
 # Generics
 enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,5;None;Resistance

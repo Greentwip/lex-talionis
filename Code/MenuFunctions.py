@@ -1963,9 +1963,11 @@ class TradeMenu(Counters.CursorControl):
         self.owner_items = owner_items
         self.partner_items = partner_items
 
-def drawTradePreview(surf, gameStateObj, steal=False):
+def drawTradePreview(surf, gameStateObj, steal=False, display_traveler=False):
     unit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
     position = unit.position
+    if display_traveler and unit.TRV:
+        unit = gameStateObj.get_unit_from_id(unit.TRV)
     items = unit.items
     window = GC.IMAGESDICT['Trade_Window']
     width, height = window.get_width(), window.get_height()

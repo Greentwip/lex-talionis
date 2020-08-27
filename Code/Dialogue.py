@@ -573,6 +573,13 @@ class Dialogue_Scene(object):
                     gameStateObj.stateMachine.changeState('itemgain')
                     self.current_state = "Paused"
 
+        # Add a skill/status to a unit
+        elif line[0] == 'remove_skill':
+            unit = self.get_unit(line[1], gameStateObj)
+            skill_id = line[2]
+            if unit:
+                Action.do(Action.RemoveStatus(unit, skill_id), gameStateObj)
+
         # Give exp to a unit
         elif line[0] == 'exp_gain' or line[0] == 'give_exp':
             exp = int(line[2])

@@ -644,7 +644,11 @@ class MenuState(StateMachine.State):
             if cur_unit.items:
                 options.append(cf.WORDS['Item'])
             if adjallies:
-                if any([unit.team == cur_unit.team and not unit.isSummon() for unit in adjallies]):
+                # Check rescued units also
+                for unit in adjallies:
+                    if unit.TRV:
+                        adjallies.append(gameStateObj.get_unit_from_id(unit.TRV))
+                if any([unit.team == cur_unit.team for unit in adjallies]):
                     options.append(cf.WORDS['Trade'])
         options.append(cf.WORDS['Wait'])
 
@@ -737,7 +741,7 @@ class MenuState(StateMachine.State):
             elif selection == cf.WORDS['Item']:
                 gameStateObj.stateMachine.changeState('item')
             elif selection == cf.WORDS['Trade']:
-                valid_choices = [unit.position for unit in cur_unit.getTeamPartners(gameStateObj) if not unit.isSummon()]
+                valid_choices = [unit.position for unit in cur_unit.getTeamPartners(gameStateObj)]
                 cur_unit.validPartners = CustomObjects.MapSelectHelper(valid_choices)
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
@@ -1362,6 +1366,7 @@ class SelectState(StateMachine.State):
         if self.name in cf.WORDS:
             self.pennant = Banner.Pennant(cf.WORDS[self.name])
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
+        self.TRV_select: bool = False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
@@ -1371,21 +1376,32 @@ class SelectState(StateMachine.State):
 
         if 'DOWN' in directions:
             GC.SOUNDDICT['Select 6'].play()
+            self.TRV_select = False
             # Get closet unit in down position
-            new_position = cur_unit.validPartners.get_down(gameStateObj.cursor.position)
-            gameStateObj.cursor.setPosition(new_position, gameStateObj)
+            target_unit = gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position)
+            traveler = None
+            if target_unit.TRV:
+                traveler = gameStateObj.get_unit_from_id(target_unit.TRV)
+            if self.name == 'tradeselect' and traveler and traveler.team == cur_unit.team:
+                self.TRV_select = True
+            else:
+                new_position = cur_unit.validPartners.get_down(gameStateObj.cursor.position)
+                gameStateObj.cursor.setPosition(new_position, gameStateObj)
         elif 'UP' in directions:
             GC.SOUNDDICT['Select 6'].play()
+            self.TRV_select = False
             # Get closet unit in up position
             new_position = cur_unit.validPartners.get_up(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
         if 'LEFT' in directions:
             GC.SOUNDDICT['Select 6'].play()
+            self.TRV_select = False
             # Get closest unit in left position
             new_position = cur_unit.validPartners.get_left(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
         elif 'RIGHT' in directions:
             GC.SOUNDDICT['Select 6'].play()
+            self.TRV_select = False
             # Get closest unit in right position
             new_position = cur_unit.validPartners.get_right(gameStateObj.cursor.position)
             gameStateObj.cursor.setPosition(new_position, gameStateObj)
@@ -1406,6 +1422,10 @@ class SelectState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('combat')
                 cur_unit.current_skill = None
             elif self.name == 'tradeselect':
+                if self.TRV_select:
+                    target = gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position)
+                    traveler = gameStateObj.get_unit_from_id(target.TRV)
+                    gameStateObj.info_menu_struct['trade_partner'] = traveler
                 gameStateObj.stateMachine.changeState('trade')
             elif self.name == 'stealselect':
                 gameStateObj.stateMachine.changeState('steal')
@@ -1470,7 +1490,7 @@ class SelectState(StateMachine.State):
         if self.pennant:
             self.pennant.draw(mapSurf, gameStateObj)
         if self.name == 'tradeselect':
-            MenuFunctions.drawTradePreview(mapSurf, gameStateObj)
+            MenuFunctions.drawTradePreview(mapSurf, gameStateObj, display_traveler=self.TRV_select)
         elif self.name == 'stealselect':
             MenuFunctions.drawTradePreview(mapSurf, gameStateObj, steal=True)
         elif self.name == 'rescueselect':
@@ -1483,17 +1503,18 @@ class TradeState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
         gameStateObj.info_surf = None
-        initiator = gameStateObj.cursor.currentSelectedUnit
-        initiator.sprite.change_state('chosen', gameStateObj)
-        partner = gameStateObj.cursor.getHoveredUnit(gameStateObj)
-        options1 = initiator.items
-        options2 = partner.items
-        gameStateObj.activeMenu = MenuFunctions.TradeMenu(initiator, partner, options1, options2)
+        self.initiator = gameStateObj.cursor.currentSelectedUnit
+        self.initiator.sprite.change_state('chosen', gameStateObj)
+        if gameStateObj.info_menu_struct.get('trade_partner'):  # can force a trade partner
+            self.partner = gameStateObj.info_menu_struct.get('trade_partner')
+        else:
+            self.partner = gameStateObj.cursor.getHoveredUnit(gameStateObj)
+        options1 = self.initiator.items
+        options2 = self.partner.items
+        gameStateObj.activeMenu = MenuFunctions.TradeMenu(self.initiator, self.partner, options1, options2)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
-        initiator = gameStateObj.cursor.currentSelectedUnit
-        partner = gameStateObj.cursor.getHoveredUnit(gameStateObj)
-        gameStateObj.activeMenu.updateOptions(initiator.items, partner.items)
+        gameStateObj.activeMenu.updateOptions(self.initiator.items, self.partner.items)
 
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)

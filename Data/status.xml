@@ -910,7 +910,7 @@
 
         <activated_item>so_Refresh</activated_item>
         <check_valid_func>any([adj_unit.isDone() for adj_unit in unit.getTeamPartners(gameStateObj)])</check_valid_func>
-        <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj)]</get_choices_func>
+        <get_choices_func>[u.position for u in unit.getTeamPartners(gameStateObj) if u.isDone()]</get_choices_func>
     </status>
 
     <status name="Fade">

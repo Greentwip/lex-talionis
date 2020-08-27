@@ -483,7 +483,7 @@ class Solver(object):
                     status_object = StatusCatalog.statusparser(s_id, gameStateObj)
                     result.def_status.append(status_object)
                 # Handle fatigue
-                if item.target_fatigue:
+                if cf.CONSTANTS['fatigue'] and item.target_fatigue:
                     Action.do(Action.ChangeFatigue(defender, int(item.target_fatigue)), gameStateObj)
 
             # Handle summon
