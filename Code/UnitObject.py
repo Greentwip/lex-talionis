@@ -1312,6 +1312,20 @@ class UnitObject(object):
             for position in splash_positions:
                 gameStateObj.highlight_manager.add_highlight(position, 'splash', allow_overlap=True)
 
+    def getSightRange(self, position, gameStateObj) -> set:
+        if not position:
+            return set()
+        if not gameStateObj.metaDataObj['fog_of_war']:
+            return set()
+        
+        base_sight_range = gameStateObj.metaDataObj['fog_of_war']
+        for status_effect in self.status_effects:
+            if status_effect.sight_range:
+                base_sight_range += int(status_effect.sight_range)
+
+        valid = Utility.find_manhattan_spheres(range(0, base_sight_range + 1), position)
+        return valid
+
     # Finds all adjacent units
     def getAdjacentUnits(self, gameStateObj, rng=1):
         adjpositions = Utility.get_adjacent_positions(self.position, rng)
@@ -1856,6 +1870,9 @@ class UnitObject(object):
 
         # changing state
         Action.do(Action.Wait(self), gameStateObj)
+
+        if not self.team.startswith('enemy'):
+            Action.do(Action.UpdateFogOfWar(self), gameStateObj)
 
         # Called whenever a unit waits
         wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'

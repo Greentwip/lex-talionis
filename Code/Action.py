@@ -318,6 +318,19 @@ class PlaceOnMap(Action):
                 add.reverse(gameStateObj)
         self.unit.position = None
 
+class UpdateFogOfWar(Action):
+    def __init__(self, unit):
+        self.unit = unit
+        self.previous_position = None
+
+    def do(self, gameStateObj):
+        self.previous_position = gameStateObj.boundary_manager.sight_marker.get(self.unit.id)
+        gameStateObj.boundary_manager.update_ally(self.unit, gameStateObj)
+
+    def reverse(self, gameStateObj):
+        if self.previous_position:
+            gameStateObj.boundary_manager.update_ally(self.unit, gameStateObj, self.previous_position)
+
 class Wait(Action):
     def __init__(self, unit):
         self.unit = unit

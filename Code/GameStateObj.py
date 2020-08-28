@@ -52,6 +52,8 @@ class GameStateObj(object):
         for unit in self.allunits:
             if unit.position:
                 Action.ArriveOnMap(unit, unit.position).do(self)
+                if not unit.team.startswith('enemy'):
+                    Action.UpdateFogOfWar(unit).do(self)
 
         self.generic()
 
@@ -758,7 +760,9 @@ class GameStateObj(object):
         # mapSurf.fill(GC.COLORDICT['bg_color']) # Start with a blank color on the surface
         # Draw the tile sprites onto this surface
         self.map.draw(mapSurf, self)
-        self.boundary_manager.draw(mapSurf, (mapSurf.get_width(), mapSurf.get_height()))
+        if self.metaDataObj['fog_of_war']:
+            self.boundary_manager.drawFogOfWar(mapSurf, (mapSurf.get_width(), mapSurf.get_height()))
+        self.boundary_manager.draw(mapSurf, (mapSurf.get_width(), mapSurf.get_height()), self)
         self.highlight_manager.draw(mapSurf)
         for arrow in self.allarrows:
             arrow.draw(mapSurf)
@@ -771,6 +775,9 @@ class GameStateObj(object):
                         ((camera_x - 1 <= unit.position[0] <= camera_x + GC.TILEX + 1 and
                          camera_y - 1 <= unit.position[1] <= camera_y + GC.TILEY + 1) or
                          unit.sprite.draw_anyway())]
+        if self.metaDataObj['fog_of_war']:
+            # Cull only enemies
+            culled_units = [unit for unit in culled_units if not unit.team.startswith('enemy') or self.boundary_manager.has_vision_at(unit.position)]
         draw_me = sorted(culled_units, key=lambda unit: unit.position[1])
         for unit in draw_me:
             unit.draw(mapSurf, self)

@@ -13,3 +13,4 @@ display_name;Kill Enemies,{len([u for u in gameStateObj.allunits if u.team == 'e
 win_condition;Reach turn 6
 loss_condition;Sam dies
 weather;Light
+fog_of_war;5

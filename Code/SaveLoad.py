@@ -97,6 +97,7 @@ def get_metaDataObj(levelfolder, metaDataObj):
     metaDataObj['base_music'] = overview_dict.get('base_music') if overview_dict['base_flag'] != '0' else None
     metaDataObj['marketFlag'] = bool(int(overview_dict['market_flag']))
     metaDataObj['transitionFlag'] = bool(int(overview_dict['transition_flag']))
+    metaDataObj['fog_of_war'] = int(overview_dict.get('fog_of_war', 0))
     metaDataObj['prebaseScript'] = prebaseScript_filename
     metaDataObj['narrationScript'] = narrationScript_filename
     metaDataObj['introScript'] = introScript_filename

@@ -1,8 +1,12 @@
+# from collections import Counter
+
 from . import GlobalConstants as GC
 from . import Utility, Engine
 
 # === BOUNDARY MANAGER ============================================
 class BoundaryInterface(object):
+    fog_of_war_tile = GC.IMAGESDICT['FogOfWarTile1']
+
     def __init__(self, tilemap):
         self.types = {'attack': GC.IMAGESDICT['RedBoundary'],
                       'all_attack': GC.IMAGESDICT['PurpleBoundary'],
@@ -22,8 +26,14 @@ class BoundaryInterface(object):
         self.all_on_flag = False
 
         self.displaying_units = set()
+        self.true_positions = {}  # Key: Unit ID, Value: Position
 
         self.surf = None
+
+        # For FoW
+        self.sight_dict = {}  # Key: Position, Value: Set of Unit IDs that can see that position
+        self.sight_marker = {}  # Key: Unit ID, Value: Position
+        self.fog_of_war_surf = None
 
     def init_grid(self):
         cells = []
@@ -70,6 +80,10 @@ class BoundaryInterface(object):
                 for y in range(self.gridHeight):
                     self.grids[k][x * self.gridHeight + y] = set()
         self.surf = None
+        self.true_positions.clear()
+
+        self.sight_dict.clear()
+        self.fog_of_war_surf = None
 
     def _add_unit(self, unit, gameStateObj):
         ValidMoves = unit.getValidMoves(gameStateObj, force=True)
@@ -94,7 +108,37 @@ class BoundaryInterface(object):
                     grid[x * self.gridHeight + y].discard(unit.id)
         self.surf = None
 
+    # Used for Fog of War
+    def _add_ally(self, unit, position, gameStateObj):
+        self.sight_marker[unit.id] = position
+        can_see = unit.getSightRange(position, gameStateObj)
+        for pos in can_see:
+            if pos not in self.sight_dict:
+                self.sight_dict[pos] = set()
+            self.sight_dict[pos].add(unit.id)
+        self.fog_of_war_surf = None
+
+    def _remove_ally(self, unit, gameStateObj):
+        self.sight_marker[unit.id] = None
+        for pos in self.sight_dict:
+            self.sight_dict[pos].discard(unit.id)
+        self.fog_of_war_surf = None
+
+    def update_ally(self, unit, gameStateObj, position=None):
+        self._remove_ally(unit, gameStateObj)
+        if position:
+            self._add_ally(unit, position, gameStateObj)
+        else:
+            self._add_ally(unit, unit.position, gameStateObj)
+
+    def has_vision_at(self, position) -> bool:
+        if position in self.sight_dict:
+            return len(self.sight_dict[position]) > 0
+        return False
+    # End Fog of War
+
     def leave(self, unit, gameStateObj):
+        self.true_positions[unit.id] = None
         if unit.team.startswith('enemy'):
             self._remove_unit(unit, gameStateObj)
         # Update ranges of other units that might be affected by my leaving
@@ -114,6 +158,7 @@ class BoundaryInterface(object):
 
     def arrive(self, unit, gameStateObj):
         if unit.position:
+            self.true_positions[unit.id] = unit.position
             if unit.team.startswith('enemy'):
                 self._add_unit(unit, gameStateObj)
 
@@ -136,8 +181,12 @@ class BoundaryInterface(object):
     def reset(self, gameStateObj):
         self.clear()
         for unit in gameStateObj.allunits:
-            if unit.position and unit.team.startswith('enemy'):
-                self._add_unit(unit, gameStateObj)
+            if unit.position:
+                self.true_positions[unit.id] = unit.position
+                if unit.team.startswith('enemy'):
+                    self._add_unit(unit, gameStateObj)
+                else:
+                    self._add_ally(unit, unit.position, gameStateObj)
 
     def toggle_all_enemy_attacks(self):
         if self.all_on_flag:
@@ -153,45 +202,61 @@ class BoundaryInterface(object):
         self.all_on_flag = False
         self.surf = None
 
-    def draw(self, surf, size):
-        if self.draw_flag:
-            if not self.surf:
-                self.surf = Engine.create_surface(size, transparent=True)
-                for grid_name in self.order:
-                    if grid_name == 'attack' and not self.displaying_units:
-                        continue
-                    elif grid_name == 'spell' and not self.displaying_units:
-                        continue
-                    elif grid_name == 'all_attack' and not self.all_on_flag:
-                        continue
-                    elif grid_name == 'all_spell' and not self.all_on_flag:
-                        continue
-                    if grid_name == 'all_attack' or grid_name == 'attack':
-                        grid = self.grids['attack']
-                    else:
-                        grid = self.grids['spell']
-                    for y in range(self.gridHeight):
-                        for x in range(self.gridWidth):
-                            cell = grid[x * self.gridHeight + y]
-                            if cell:
-                                display = any(u_id in self.displaying_units for u_id in cell) if self.displaying_units else False
-                                # print(x, y, cell, display)
-                                # If there's one above this
-                                if grid_name == 'all_attack' and display:
+    def draw(self, surf, size, gameStateObj):
+        if not self.draw_flag:
+            return
+        if not self.surf:
+            self.surf = Engine.create_surface(size, transparent=True)
+            for grid_name in self.order:
+                if grid_name == 'attack' and not self.displaying_units:
+                    continue
+                elif grid_name == 'spell' and not self.displaying_units:
+                    continue
+                elif grid_name == 'all_attack' and not self.all_on_flag:
+                    continue
+                elif grid_name == 'all_spell' and not self.all_on_flag:
+                    continue
+                if grid_name == 'all_attack' or grid_name == 'attack':
+                    grid = self.grids['attack']
+                else:
+                    grid = self.grids['spell']
+                for y in range(self.gridHeight):
+                    for x in range(self.gridWidth):
+                        cell = grid[x * self.gridHeight + y]
+                        if cell:
+                            if self.displaying_units:
+                                display = any(u_id in self.displaying_units for u_id in cell)
+                            else:
+                                display = False
+                            # print(x, y, cell, display)
+                            # If there's one above this
+                            if grid_name == 'all_attack' and display:
+                                continue
+                            if grid_name == 'all_spell' and display:
+                                continue
+                            if grid_name == 'attack' and not display:
+                                continue
+                            if grid_name == 'spell' and not display:
+                                continue
+
+                            # Handle fog of war
+                            if gameStateObj.metaDataObj['fog_of_war']:
+                                display = False
+                                for u_id in cell:
+                                    pos = self.true_positions.get(u_id)
+                                    if pos and self.has_vision_at(pos):
+                                        display = True
+                                        break
+                                if not display:
                                     continue
-                                if grid_name == 'all_spell' and display:
-                                    continue
-                                if grid_name == 'attack' and not display:
-                                    continue
-                                if grid_name == 'spell' and not display:
-                                    continue
-                                image = self.get_image(grid, x, y, grid_name)
-                                topleft = x * GC.TILEWIDTH, y * GC.TILEHEIGHT
-                                self.surf.blit(image, topleft)
-                            # else:
-                            #    print('- '),
-                        # print('\n'),
-            surf.blit(self.surf, (0, 0))
+
+                            image = self.get_image(grid, x, y, grid_name)
+                            topleft = x * GC.TILEWIDTH, y * GC.TILEHEIGHT
+                            self.surf.blit(image, topleft)
+                        # else:
+                        #    print('- '),
+                    # print('\n'),
+        surf.blit(self.surf, (0, 0))
 
     def get_image(self, grid, x, y, grid_name):
         top_pos = (x, y - 1)
@@ -211,6 +276,17 @@ class BoundaryInterface(object):
         index = top*8 + left*4 + right*2 + bottom # Binary logic to get correct index
         # print(str(index) + ' '),
         return Engine.subsurface(self.types[grid_name], (index*GC.TILEWIDTH, 0, GC.TILEWIDTH, GC.TILEHEIGHT))
+
+    def drawFogOfWar(self, surf, size):
+        if not self.fog_of_war_surf:
+            self.fog_of_war_surf = Engine.create_surface(size, transparent=True)
+            for y in range(self.gridHeight):
+                for x in range(self.gridWidth):
+                    if not self.has_vision_at((x, y)):
+                        image = self.fog_of_war_tile
+                        topleft = x * GC.TILEWIDTH, y * GC.TILEHEIGHT
+                        self.fog_of_war_surf.blit(image, topleft)
+        surf.blit(self.fog_of_war_surf, (0, 0))
 
     def print_grid(self, grid_name):
         for y in range(self.gridHeight):
