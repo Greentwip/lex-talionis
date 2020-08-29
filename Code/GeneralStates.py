@@ -1378,12 +1378,16 @@ class SelectState(StateMachine.State):
             GC.SOUNDDICT['Select 6'].play()
             self.TRV_select = False
             # Get closet unit in down position
-            target_unit = gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position)
-            traveler = None
-            if target_unit.TRV:
-                traveler = gameStateObj.get_unit_from_id(target_unit.TRV)
-            if self.name == 'tradeselect' and traveler and traveler.team == cur_unit.team:
-                self.TRV_select = True
+            if self.name == 'tradeselect':
+                target_unit = gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position)
+                traveler = None
+                if target_unit.TRV:
+                    traveler = gameStateObj.get_unit_from_id(target_unit.TRV)
+                if traveler and traveler.team == cur_unit.team:
+                    self.TRV_select = True
+                else:
+                    new_position = cur_unit.validPartners.get_down(gameStateObj.cursor.position)
+                    gameStateObj.cursor.setPosition(new_position, gameStateObj)
             else:
                 new_position = cur_unit.validPartners.get_down(gameStateObj.cursor.position)
                 gameStateObj.cursor.setPosition(new_position, gameStateObj)
