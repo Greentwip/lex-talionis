@@ -438,9 +438,9 @@ class MusicThread(object):
                         if current_song.loop:
                             current_song.swap()
                             pygame.mixer.music.load(current_song.name)
-                            pygame.mixer.music.play(0)
+                            pygame.mixer.music.play(-1)
                         elif current_song.num_plays == -1:
-                            pygame.mixer.music.play(0)
+                            pygame.mixer.music.play(-1)
                         elif current_song.num_plays > 0:
                             current_song.num_plays -= 1
                         current_song.current_time = 0

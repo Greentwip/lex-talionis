@@ -569,7 +569,7 @@ class Dialogue_Scene(object):
             if unit and skill:
                 Action.do(Action.AddStatus(unit, skill), gameStateObj)
                 if 'no_display' not in line and 'no_banner' not in line:
-                    gameStateObj.banners.append(Banner.gainedSkillBanner(self.unit, skill))
+                    gameStateObj.banners.append(Banner.gainedSkillBanner(unit, skill))
                     gameStateObj.stateMachine.changeState('itemgain')
                     self.current_state = "Paused"
 
