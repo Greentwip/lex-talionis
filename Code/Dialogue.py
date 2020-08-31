@@ -1548,7 +1548,12 @@ class Dialogue_Scene(object):
             new_pos = self.get_position(new_pos, gameStateObj)
         # If name, then we want to find a point adjacent to that characters position
         else:
-            new_pos = [gameStateObj.get_unit_from_id(new_pos).position]
+            target = gameStateObj.get_unit_from_id(new_pos)
+            if target and target.position:
+                new_pos = [target.position]
+            else:
+                logger.warning('Could not find target %s. Target is not on map.', new_pos)
+                return
 
         # Shuffle positions if necessary
         if shuffle:
