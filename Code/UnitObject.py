@@ -333,7 +333,7 @@ class UnitObject(object):
 
             my_num = 1
             if not my_wep.no_double:
-                if my_wep.brave or my_wep.brave_on_attack:
+                if my_wep.brave or my_wep.brave_attack:
                     my_num *= 2
                 if self.outspeed(enemyunit, my_wep, gameStateObj, "Attack"):
                     my_num *= 2
@@ -360,7 +360,7 @@ class UnitObject(object):
                 e_num = 1
                 if e_wep and not e_wep.no_double and isinstance(enemyunit, UnitObject) and \
                         Utility.calculate_distance(self.position, enemyunit.position) in e_wep.get_range(enemyunit):
-                    if e_wep.brave:
+                    if e_wep.brave or e_wep.brave_defense:
                         e_num *= 2
                     if (cf.CONSTANTS['def_double'] or 'def_double' in enemyunit.status_bundle) and \
                             enemyunit.outspeed(self, e_wep, gameStateObj, "Defense"):
