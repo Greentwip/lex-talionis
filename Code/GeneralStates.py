@@ -2090,6 +2090,7 @@ class DialogueState(StateMachine.State):
                 if last_hit > 200:  # How long it will pause before moving on to next section
                     if self.message.dialog[-1].waiting:
                         GC.SOUNDDICT['Select 1'].play()
+                        # GC.SOUNDDICT['Talk_Boop'].play()
                         self.message.dialog_unpause()
                         self.hurry_up_time = 0
                     else:
