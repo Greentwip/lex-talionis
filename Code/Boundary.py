@@ -94,6 +94,12 @@ class BoundaryInterface(object):
                     grid[x * self.gridHeight + y].discard(unit.id)
         self.surf = None
 
+    def recalculate_unit(self, unit, gameStateObj):
+        if unit.team.startswith('enemy'):
+            self._remove_unit(unit, gameStateObj)
+            if unit.position:
+                self._add_unit(unit, gameStateObj)
+
     def leave(self, unit, gameStateObj):
         if unit.team.startswith('enemy'):
             self._remove_unit(unit, gameStateObj)
