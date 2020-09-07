@@ -930,6 +930,9 @@ class UnitObject(object):
         pathfinder = AStar.Djikstra(self.position, my_grid, gameStateObj.map.width, gameStateObj.map.height, self.team, 'pass_through' in self.status_bundle)
         # Run the pathfinder
         movement_left = self.movement_left if not force else int(self.stats['MOV'])
+        # Makes ai zero move appear as zero move
+        if cf.CONSTANTS['zero_move'] and self.team != 'player' and self.ai and not self.ai.can_move():
+            movement_left = 0
         ValidMoves = pathfinder.process(gameStateObj.grid_manager.team_map, movement_left)
         # Own position is always a valid move
         ValidMoves.add(self.position)

@@ -27,9 +27,9 @@ player;0;0;Prim;5,15;None
 # Enemies
 # Generics
 enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,1;Pursue;Resistance
-enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;2,1;Pursue;Resistance
+enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;2,1;HardGuard;Resistance
 #enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
-enemy;0;0;Archer;10;Ballista,Willow Bow;1,5;Attack;Resistance
+enemy;0;0;Archer;10;Ballista,Willow Bow;1,5;HardGuard;Resistance
 # === Reinforcements ===
 # Player Characters
 # Enemies

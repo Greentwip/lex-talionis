@@ -118,6 +118,7 @@ def read_constants_file():
              'steal_exp': 0, # Amount of exp gained from stealing
              'unarmed_punish': 0, # How much weapon disadvantage an unarmed unit gets
              'convoy_on_death': 0, # Should dead units give all of their items to the convoy at the end of each level?
+             'zero_move': 0, # Should enemy units with an AI that doesn't move show as 0 movement?
              'fatal_wexp': 1, # Should units get double weapon experience on lethal hits
              'double_wexp': 1, # Give wexp for every hit (so if you double, you get 2x wexp)
              'miss_wexp': 1, # Give wexp even if you do no damage or miss

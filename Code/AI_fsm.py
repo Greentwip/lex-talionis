@@ -99,6 +99,9 @@ class AI(object):
         other_unit_positions = {unit.position for unit in gameStateObj.allunits if unit.position and unit is not self.unit}
         return valid_moves - other_unit_positions
 
+    def can_move(self):
+        return self.ai1_state & PRIMARYAI['Move']
+
     # Now a state machine
     def think(self, gameStateObj):
         success = False
@@ -116,7 +119,7 @@ class AI(object):
                 logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, View Range: %s', 
                              self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.view_range)
                 self.clean_up()
-                if self.ai1_state & PRIMARYAI['Move']:
+                if self.can_move():
                     self.valid_moves = self.get_true_valid_moves(gameStateObj)
                 else:
                     self.valid_moves = {self.unit.position}                    
