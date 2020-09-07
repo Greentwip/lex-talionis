@@ -1596,6 +1596,7 @@ class TransitionOutState(StateMachine.State):
     # State to be draw
     # New State
     # This state
+    
     def begin(self, gameStateObj, metaDataObj):
         self.background = GC.IMAGESDICT['BlackBackground']
         self.transition = transition_max

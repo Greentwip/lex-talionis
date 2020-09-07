@@ -1,0 +1,9 @@
+pose;Attack
+blend
+f;2;Rings1
+f;2;Rings2
+f;2;Rings3
+f;2;Rings4
+f;2;Rings5
+f;2;Rings6
+wait;1

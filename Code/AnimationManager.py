@@ -4,6 +4,7 @@ from . import Engine
 
 class BattleAnimationManager(object):
     def __init__(self, COLORKEY, home='./'):
+        self.COLORKEY = COLORKEY
         self.generated_klasses = set()
         # Class Animations
         self.directory = {}
@@ -23,9 +24,9 @@ class BattleAnimationManager(object):
                     self.directory[klass][weapon]['images'] = {}
                 full_name = os.path.join(root, name)
                 if name.endswith('.png'):
-                    image = Engine.image_load(full_name, convert=True)
-                    Engine.set_colorkey(image, COLORKEY, rleaccel=True)
-                    self.directory[klass][weapon]['images'][desc[:-4]] = image
+                    # image = Engine.image_load(full_name, convert=True)
+                    # Engine.set_colorkey(image, COLORKEY, rleaccel=True)
+                    self.directory[klass][weapon]['images'][desc[:-4]] = full_name
                 elif name.endswith('Script.txt'):
                     self.directory[klass][weapon]['script'] = full_name
                 elif name.endswith('Index.txt'):
@@ -45,8 +46,8 @@ class BattleAnimationManager(object):
                     self.effects[effect]['images'] = {}
                 full_name = os.path.join(root, name)
                 if name.endswith('.png'):
-                    image = Engine.image_load(full_name, convert_alpha=True)
-                    self.effects[effect]['images'][desc[:-4]] = image
+                    # image = Engine.image_load(full_name, convert_alpha=True)
+                    self.effects[effect]['images'][desc[:-4]] = full_name
                 elif name.endswith('Script.txt'):
                     self.effects[effect]['script'] = full_name
                 elif name.endswith('Index.txt'):
@@ -57,9 +58,14 @@ class BattleAnimationManager(object):
             klass_directory = self.directory[klass]
             for weapon in klass_directory:
                 frame_directory = {}
-                for name, anim in klass_directory[weapon]['images'].items():
+                for name, anim in list(klass_directory[weapon]['images'].items()):
                     if 'index' not in klass_directory[weapon]:
                         return False
+                    # If the animation has not been loaded before
+                    if isinstance(anim, str):
+                        anim = Engine.image_load(anim, convert=True)
+                        Engine.set_colorkey(anim, self.COLORKEY, rleaccel=True)
+                        klass_directory[weapon]['images'][name] = anim
                     frame_directory[name] = self.format_index(klass_directory[weapon]['index'], anim)
                 # print(frame_directory)
                 klass_directory[weapon]['images'] = frame_directory
@@ -84,6 +90,10 @@ class BattleAnimationManager(object):
                 if 'index' not in e_dict:
                     print("Error! Couldn't find index for %s!" % effect)
                     return False
+                # If the effect has not been loaded before
+                if isinstance(anim, str):
+                    anim = Engine.image_load(anim, convert_alpha=True)
+                    e_dict['images'][name] = anim
                 frame_directory[name] = self.format_index(e_dict['index'], anim)
             e_dict['images'] = frame_directory
             e_dict['script'] = self.parse_script(e_dict['script'])

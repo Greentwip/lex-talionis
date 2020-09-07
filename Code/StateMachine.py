@@ -158,6 +158,9 @@ class StateMachine(object):
     def clear(self):
         self.temp_state.append('clear')
 
+    def hard_clear(self):
+        self.state = [self.state[-1]]
+
     def getState(self):
         if self.state:
             return self.state[-1].name
