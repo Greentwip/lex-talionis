@@ -77,6 +77,7 @@ class StateMachine(object):
                            'prep_items': PrepBase.PrepItemsState,
                            'prep_items_choices': PrepBase.PrepItemsChoicesState,
                            'prep_transfer': PrepBase.PrepTransferState,
+                           'convoy_transfer': PrepBase.ConvoyTransferState,
                            'prep_list': PrepBase.PrepListState,
                            'prep_trade_select': PrepBase.PrepTradeSelectState,
                            'prep_trade': PrepBase.PrepTradeState,

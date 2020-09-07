@@ -594,6 +594,19 @@ class DiscardItem(Action):
         gameStateObj.convoy.remove(self.item)
         self.unit.insert_item(self.item_index, self.item, gameStateObj)
 
+class TakeItem(Action):
+    def __init__(self, unit, item):
+        self.unit = unit
+        self.item = item
+
+    def do(self, gameStateObj):
+        gameStateObj.convoy.remove(self.item)
+        self.unit.add_item(self.item, gameStateObj)
+
+    def reverse(self, gameStateObj):
+        self.unit.remove_item(self.item, gameStateObj)
+        gameStateObj.convoy.append(self.item)
+
 class RemoveItem(DiscardItem):
     def do(self, gameStateObj):
         self.unit.remove_item(self.item, gameStateObj)

@@ -477,7 +477,8 @@ class CantoWaitState(StateMachine.State):
 
 class MenuState(StateMachine.State):
     name = 'menu'
-    normal_options = {cf.WORDS[word] for word in ['Item', 'Wait', 'Take', 'Give', 'Rescue', 'Trade', 'Drop', 'Visit', 'Armory', 'Vendor', 'Spells', 'Attack', 'Steal', 'Shove']}
+    normal_options = {cf.WORDS[word] for word in ['Item', 'Wait', 'Take', 'Give', 'Rescue', 'Trade', 'Drop', 
+        'Convoy', 'Visit', 'Armory', 'Vendor', 'Spells', 'Attack', 'Steal', 'Shove']}
 
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
@@ -650,6 +651,12 @@ class MenuState(StateMachine.State):
                         adjallies.append(gameStateObj.get_unit_from_id(unit.TRV))
                 if any([unit.team == cur_unit.team for unit in adjallies]):
                     options.append(cf.WORDS['Trade'])
+            # If the unit has access to the convoy
+            if gameStateObj.game_constants['Convoy'] and 'Convoy' in cur_unit.tags:
+                options.append(cf.WORDS['Convoy'])
+            elif gameStateObj.game_constants['Convoy'] and adjallies:
+                if any(['AdjConvoy' in unit.tags and unit.team == cur_unit.team for unit in adjallies]):
+                    options.append(cf.WORDS['Convoy'])
         options.append(cf.WORDS['Wait'])
 
         # Filter by legal options here
@@ -854,6 +861,9 @@ class MenuState(StateMachine.State):
                 closest_position = cur_unit.validPartners.get_closest(cur_unit.position)
                 gameStateObj.cursor.setPosition(closest_position, gameStateObj)
                 gameStateObj.stateMachine.changeState('supportselect')
+            elif selection == cf.WORDS['Convoy']:
+                gameStateObj.stateMachine.changeState('convoy_transfer')
+                gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Wait']:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
