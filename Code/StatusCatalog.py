@@ -365,7 +365,10 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
     if status.upkeep_damage:
         if ',' in status.upkeep_damage:
             low_damage, high_damage = status.upkeep_damage.split(',')
+            old = static_random.get_other_random_state()
             damage_dealt = static_random.get_other(int(low_damage), int(high_damage))
+            new = static_random.get_other_random_state()
+            Action.do(Action.RecordOtherRandomState(old, new), gameStateObj)
         else:
             damage_dealt = int(status.upkeep_damage)
         Action.do(Action.ChangeHP(unit, -damage_dealt), gameStateObj)

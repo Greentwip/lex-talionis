@@ -1,5 +1,7 @@
 <class_info>
 <!-- Tier 0 Classes -->
+<!-- KEEP THE CITIZEN CLASS IN HERE! -->
+<!-- It's required for the level editor to work correctly -->
     <class id="Citizen">
         <short_name>Citizen</short_name>
         <long_name>Citizen</long_name>

@@ -2500,6 +2500,11 @@ class StatusState(StateMachine.State):
             if any(unit.isDying for unit in gameStateObj.allunits):
                 processing = False
                 gameStateObj.stateMachine.changeState('dying')
+                for unit in [u for u in gameStateObj.allunits if u.isDying]:
+                    # Death quote
+                    scene = Dialogue.Dialogue_Scene(metaDataObj['death_quotes'], unit=unit)
+                    gameStateObj.message.append(scene)
+                    gameStateObj.stateMachine.changeState('dialogue')
             if output == 'Done':
                 self.leave(gameStateObj)
                 processing = False
