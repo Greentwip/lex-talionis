@@ -1448,7 +1448,8 @@ class SelectState(StateMachine.State):
                 if gameStateObj.cursor.currentHoveredUnit:
                     Action.do(Action.Rescue(cur_unit, gameStateObj.cursor.currentHoveredUnit), gameStateObj)
                     if cur_unit.has_canto():
-                        gameStateObj.stateMachine.changeState('menu') # Should this be inside or outside the if statement - Is an error to not get here
+                        gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)
+                        gameStateObj.stateMachine.changeState('move')
                     else:
                         gameStateObj.stateMachine.changeState('free')
                         cur_unit.wait(gameStateObj)
@@ -1615,7 +1616,8 @@ class StealState(StateMachine.State):
             # self.initiator.add_item(selection)
             Action.do(Action.HasAttacked(self.initiator), gameStateObj)
             if self.initiator.has_canto():
-                gameStateObj.stateMachine.changeState('menu')
+                gameStateObj.cursor.setPosition(self.initiator.position, gameStateObj)
+                gameStateObj.stateMachine.changeState('move')
             else:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
@@ -1677,7 +1679,8 @@ class RepairState(StealState):
             Action.do(Action.RepairItem(selection), gameStateObj)
             Action.do(Action.HasAttacked(self.initiator), gameStateObj)
             if self.initiator.has_canto():
-                gameStateObj.stateMachine.changeState('menu')
+                gameStateObj.cursor.setPosition(self.initiator.position, gameStateObj)
+                gameStateObj.stateMachine.changeState('move')
             else:
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
