@@ -2,7 +2,7 @@
 # Takes in FERepo data... a set of images along with a *.txt file that serves as the script.
 
 import os, sys, glob, datetime
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 from PIL import Image
 
 COLORKEY = 128, 160, 128
@@ -43,6 +43,15 @@ def convert_gba(im):
 def determine_bg_color(im):
     color = im.getpixel((0, 0))
     return color
+
+def determine_bg_color_slow(im):
+    colors = Counter()
+    width, height = image.size
+    for w in range(width):
+        for h in range(height):
+            color = im.getpixel((w, h))
+            colors[color] += 1
+    return colors.most_common()[0][0]
 
 def animation_collater(images, weapon_type):
     bad_images = set()
@@ -665,7 +674,7 @@ preprocess(ranged_images)
 # Once done with building script for melee and ranged, make an image collater
 # Create image and index script
 bad_images = set()
-if weapon_type not in ('Bow', 'Magic', 'Staff', 'Refresh', 'Dragonstone'):
+if weapon_type not in ('Bow', 'Magic', 'Staff', 'Refresh', 'Dragonstone', 'Handaxe'):
     bad_images |= animation_collater(melee_images, weapon_type)
 if weapon_type in ('Magic', 'Refresh'):
     bad_images |= animation_collater(melee_images, 'Unarmed')
@@ -674,8 +683,10 @@ if weapon_type == 'Neutral':
 if ranged_images:
     if weapon_type == 'Sword':
         bad_images |= animation_collater(ranged_images, 'Magic' + weapon_type)
-    elif weapon_type in ('Lance', 'Axe', 'Bow', 'Neutral', 'Handaxe'):
+    elif weapon_type in ('Lance', 'Axe', 'Bow', 'Neutral'):
         bad_images |= animation_collater(ranged_images, 'Ranged' + weapon_type)
+    elif weapon_type == 'Handaxe':
+        bad_images |= animation_collater(ranged_images, 'RangedAxe')
     elif weapon_type in ('Magic', 'Refresh', 'Dragonstone'):
         bad_images |= animation_collater(ranged_images, weapon_type)
     elif weapon_type == 'Staff':
