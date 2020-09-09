@@ -1690,8 +1690,9 @@ class BaseArenaState(StateMachine.State):
                 GC.SOUNDDICT['Error'].play()
         elif event == 'BACK':
             GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.stateMachine.clear()
-            gameStateObj.stateMachine.changeState('base_main')
+            # gameStateObj.stateMachine.clear()
+            # gameStateObj.stateMachine.changeState('base_main')
+            gameStateObj.stateMachine.back()
         elif event == 'INFO':
             CustomObjects.handle_info_key(gameStateObj, metaDataObj, gameStateObj.activeMenu.getSelection(), scroll_units=self.units)
 

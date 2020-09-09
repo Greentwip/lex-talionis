@@ -1870,6 +1870,7 @@ class ArenaState(StateMachine.State):
                         Interaction.start_combat(
                             gameStateObj, self.unit, self.opponent, self.unit.position,
                             [], self.unit_weapon, arena=self.name)
+                    gameStateObj.stateMachine.back()
                     gameStateObj.stateMachine.changeState('combat')
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False
@@ -1928,12 +1929,6 @@ class ArenaState(StateMachine.State):
     def finish(self, gameStateObj, metaDataObj):
         self.background = None
         gameStateObj.activeMenu = gameStateObj.hidden_active
-        if self.opponent and not self.opponent.dead:
-            # self.opponent.position = None
-            self.opponent.dead = True  # Forget about this unit permanently!
-            Action.execute(Action.LeaveMap(self.opponent), gameStateObj)
-            # Reset player 1's position now that we've removed his fighter
-            Action.execute(Action.SimpleMove(self.unit, self.unit.position), gameStateObj)
 
 class FeatChoiceState(StateMachine.State):
     name = 'feat_choice'

@@ -341,7 +341,8 @@ class Combat(object):
                 if gameStateObj.stateMachine.getPreviousState() == 'ai':
                     pass
                 elif self.arena == 'arena_base':
-                    gameStateObj.stateMachine.changeState('base_arena_choice')
+                    # gameStateObj.stateMachine.changeState('base_arena_choice')
+                    pass
                 elif not self.p1.hasAttacked:
                     gameStateObj.stateMachine.changeState('menu')
                 elif self.p1.has_canto_plus() and not self.p1.isDying:

@@ -5,3 +5,4 @@ set_game_constant;Arena
 add_to_market;Vulnerary
 unlock_lore;Ophie
 unlock_lore;Prim
+gold;5000;no_banner
