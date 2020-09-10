@@ -428,7 +428,7 @@ class BattleAnimation(object):
                 offset = None
             child_effect = self.get_effect(name, offset)
             if child_effect:
-                self.under_children.append(child_effect)
+                self.parent.under_children.append(child_effect)
         elif line[0] == 'enemy_effect':
             name = line[1]
             if len(line) > 2:
