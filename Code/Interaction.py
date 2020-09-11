@@ -160,8 +160,10 @@ class Combat(object):
     def remove_broken_items(self, a_broke_item, d_broke_item, gameStateObj):
         if a_broke_item:
             Action.do(Action.RemoveItem(self.p1, self.item), gameStateObj)
+            gameStateObj.boundary_manager.recalculate_unit(self.p1, gameStateObj)
         if d_broke_item:
             Action.do(Action.RemoveItem(self.p2, self.p2_item), gameStateObj)
+            gameStateObj.boundary_manager.recalculate_unit(self.p2, gameStateObj)
 
     def summon_broken_item_banner(self, a_broke_item, d_broke_item, gameStateObj):
         if a_broke_item and self.p1.team == 'player' and not self.p1.isDying:
