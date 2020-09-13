@@ -1582,3 +1582,51 @@
 	</units>
 </level>
 
+<level name="DEBUG">
+	<mode>Hard</mode>
+	<game_constants>level,DEBUG;_random_seed,45;Supports,1;Arena,1;Convoy,1;Fatigue,1;Turnwheel,1;max_turnwheel_uses,1;current_turnwheel_uses,1</game_constants>
+	<convoy></convoy>
+	<units>
+		<unit name="Ophie">
+			<party>1</party>
+			<class>Myrmidon</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Iron Sword 45</items>
+			<wexp>8,0,0,0,0,0,0</wexp>
+			<skills>Riposte</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Joel">
+			<party>1</party>
+			<class>Fighter</class>
+			<level>3</level>
+			<exp>0</exp>
+			<items>Iron Axe 45,Vulnerary 3</items>
+			<wexp>0,0,16,0,0,0,0</wexp>
+			<skills>Cleave</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Drake">
+			<party>1</party>
+			<class>Cavalier</class>
+			<level>5</level>
+			<exp>0</exp>
+			<items>Iron Sword 45,Iron Lance 45</items>
+			<wexp>11,16,0,0,0,0,0</wexp>
+			<skills>Savior</skills>
+			<dead>0</dead>
+		</unit>
+		<unit name="Prim">
+			<party>1</party>
+			<class>Cleric</class>
+			<level>1</level>
+			<exp>0</exp>
+			<items>Heal 29,Glimmer 30</items>
+			<wexp>0,0,0,0,1,0,0</wexp>
+			<skills>Healtouch</skills>
+			<dead>0</dead>
+		</unit>
+	</units>
+</level>
+

@@ -18,6 +18,8 @@ move_unit;Drake;20,10
 start_move;Drake
 remove_skill;Drake;Canto
 custom_banner;Removed Canto!
+set_cursor;Prim
+# interact_unit;Prim;Joel;Miss,Crit
 u;Joel;Left
 s;Joel;This is the combat{semicolon} information window. It is a window.{w}{clear}You can see the combatant's HP and the amount of damage you will inflict.
 # choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash

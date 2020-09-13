@@ -372,6 +372,11 @@ class MoveState(StateMachine.State):
 
         # Play move script if it exists
         if not self.started:
+            global_move_script_name = 'Data/global_moveScript.txt'
+            if os.path.exists(global_move_script_name):
+                global_move_script = Dialogue.Dialogue_Scene(global_move_script_name, unit=cur_unit)
+                gameStateObj.message.append(global_move_script)
+                gameStateObj.stateMachine.changeState('transparent_dialogue')
             move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
             if os.path.exists(move_script_name):
                 move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit)
@@ -2193,16 +2198,18 @@ class DialogueState(StateMachine.State):
         # Handle state transparency
         if self.name == 'transparent_dialogue' and gameStateObj.stateMachine.get_under_state(self):
             gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
-        if self.message:
-            self.message.update(gameStateObj, metaDataObj)
-        else:
-            logger.info('Done with Dialogue State!')
-            gameStateObj.stateMachine.back()
-            return 'repeat'
+        # Only if top of state stack
+        if not gameStateObj.stateMachine.state or gameStateObj.stateMachine.state[-1] == self:
+            if self.message:
+                self.message.update(gameStateObj, metaDataObj)
+            else:
+                logger.info('Done with Dialogue State!')
+                gameStateObj.stateMachine.back()
+                return 'repeat'
 
-        if self.message.done and self.message.current_state == "Processing":
-            gameStateObj.stateMachine.back()
-            return self.end_dialogue_state(gameStateObj, metaDataObj)
+            if self.message.done and self.message.current_state == "Processing":
+                gameStateObj.stateMachine.back()
+                return self.end_dialogue_state(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):
         if self.name == 'transparent_dialogue' and gameStateObj.stateMachine.get_under_state(self):
