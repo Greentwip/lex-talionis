@@ -2098,7 +2098,8 @@ class UnitObject(object):
         if was_mainweapon and self.getMainWeapon():
             self.equip_item(self.getMainWeapon(), gameStateObj)
         # Handle boundary nonsense -- Using a new weapon can make your min or max range change
-        gameStateObj.boundary_manager.recalculate_unit(self, gameStateObj)
+        if gameStateObj.boundary_manager:
+            gameStateObj.boundary_manager.recalculate_unit(self, gameStateObj)
 
     # This does the adding and subtracting of statuses
     def insert_item(self, index, item, gameStateObj):
@@ -2136,7 +2137,8 @@ class UnitObject(object):
                     if self.canWield(item) and self.canUse(item):
                         self.equip_item(item, gameStateObj)
             # Handle boundary nonsense
-            gameStateObj.boundary_manager.recalculate_unit(self, gameStateObj)
+            if gameStateObj.boundary_manager:
+                gameStateObj.boundary_manager.recalculate_unit(self, gameStateObj)
 
     def die(self, gameStateObj, event=False):
         if event:
