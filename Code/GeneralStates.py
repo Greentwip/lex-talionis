@@ -2795,8 +2795,7 @@ class DialogOptionsState(StateMachine.State):
             self.menu.moveLeft()
 
         elif event == 'BACK':
-            GC.SOUNDDICT['Select 4'].play()
-            gameStateObj.stateMachine.back()
+            GC.SOUNDDICT['Error'].play()
 
         elif event == 'SELECT':
             selection = self.menu.getSelection()

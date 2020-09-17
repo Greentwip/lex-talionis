@@ -639,7 +639,7 @@
         <desc>Grants +30 hit while on Plains or Forest.</desc>
         <components>hit,class_skill</components>
 
-        <hit>30 if gameStateObj.map.tiles[self.position].name in ('Plain', 'Forest') else 0</hit>
+        <hit>30 if gameStateObj.map and self.position and gameStateObj.map.tiles[self.position].name in ('Plain', 'Forest') else 0</hit>
     </status>
 
     <status name="Charge">
