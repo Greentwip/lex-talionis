@@ -12,6 +12,8 @@ Bonus Exp in Base
 Skill Swap in Base and Prep
 AI talk
 
+Guide on installing git, Python, Pygame, Pillow and running the engine for the first time
+
 Auto-convert colors?
 Auto-convert feREPO styled map sprites?
 

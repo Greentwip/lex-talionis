@@ -504,8 +504,9 @@ class PrepItemsChoicesState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('transition_out')
             elif selection == cf.WORDS['Give All']:
                 for item in reversed(gameStateObj.cursor.currentSelectedUnit.items):
-                    gameStateObj.cursor.currentSelectedUnit.remove_item(item, gameStateObj)
-                    gameStateObj.convoy.append(item)
+                    if not item.locked:
+                        gameStateObj.cursor.currentSelectedUnit.remove_item(item, gameStateObj)
+                        gameStateObj.convoy.append(item)
                 # Can no longer use items
                 self.menu.update_grey(1, False)
             elif selection == cf.WORDS['List']:
@@ -993,7 +994,7 @@ class PrepTransferState(StateMachine.State):
         if event == 'SELECT':
             if self.state == 'Give':
                 selection = self.owner_menu.getSelection()
-                if selection:
+                if selection and not selection.locked:
                     GC.SOUNDDICT['Select 1'].play()
                     self.cur_unit.remove_item(selection, gameStateObj)
                     gameStateObj.convoy.append(selection)
@@ -1186,7 +1187,7 @@ class ConvoyTransferState(PrepTransferState):
         if event == 'SELECT':
             if self.state == 'Give':
                 selection = self.owner_menu.getSelection()
-                if selection:
+                if selection and not selection.locked:
                     GC.SOUNDDICT['Select 1'].play()
                     Action.do(Action.DiscardItem(self.cur_unit, selection), gameStateObj)
                     Action.do(Action.OwnerHasTraded(self.cur_unit), gameStateObj)

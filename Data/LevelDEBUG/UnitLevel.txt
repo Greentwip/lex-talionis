@@ -24,13 +24,13 @@ player;0;0;Joel;None;None
 player;0;0;Drake;5,10;None
 player;0;0;Prim;5,15;None
 #player;0;0;Oracle;10;Luce,Guiding Ring;1,10;None;Resistance
-player;0;0;Paladin;1;Hand Axe,Iron Lance,Vulnerary;4,14;None;Resistance
+player;0;0;General;1;Javelin,Iron Lance,Willow Bow,Vulnerary;1,10;None;Resistance
 # Enemies
 # Generics
 #enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,1;Pursue;Resistance
 enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;2,1;HardGuard;Resistance
 #enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
-enemy;0;0;Archer;10;Ballista,Willow Bow;1,9;HardGuard;Resistance
+enemy;0;0;Archer;10;Willow Bow;1,9;HardGuard;Resistance
 # === Reinforcements ===
 # Player Characters
 # Enemies

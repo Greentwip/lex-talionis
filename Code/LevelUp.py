@@ -311,7 +311,9 @@ class LevelUpScreen(object):
     spark = GC.IMAGESDICT['StatUpSpark']
     underline = GC.IMAGESDICT['StatUnderline']
     uparrow = GC.IMAGESDICT['LevelUpArrow']
-    numbers = GC.IMAGESDICT['LevelUpNumber']
+    downarrow = GC.IMAGESDICT['LevelDownArrow']
+    positive_numbers = GC.IMAGESDICT['LevelUpNumber']
+    negative_numbers = GC.IMAGESDICT['LevelDownNumber']
 
     def __init__(self, unit, levelup_list, level1, level2, use_quote=False):
         self.unit = unit
@@ -425,8 +427,13 @@ class LevelUpScreen(object):
                 self.arrow_animations.append(arrow_animation)
                 spark_pos = pos[0] + 14, pos[1] + 26
                 self.animations.append(self.make_spark(spark_pos))
-                increase = Utility.clamp(self.levelup_list[self.current_spark], 1, 7)
-                row = Engine.subsurface(self.numbers, (0, (increase - 1)*24, 10*28, 24))
+                change = self.levelup_list[self.current_spark]
+                if change >= 0:
+                    increase = Utility.clamp(change, 1, 7)
+                    row = Engine.subsurface(self.positive_numbers, (0, (increase - 1)*24, 10*28, 24))
+                elif change < 0:
+                    decrease = -Utility.clamp(change, -7, -1)
+                    row = Engine.subsurface(self.negative_numbers, (0, (decrease - 1)*24, 10*28, 24))
                 number_animation = CustomObjects.Animation(
                     row, (pos[0] + 43, pos[1] + 49), (10, 1), animation_speed=32, 
                     ignore_map=True, hold=True)
