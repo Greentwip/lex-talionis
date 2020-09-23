@@ -568,17 +568,22 @@ class DropItem(Action):
 
     def do(self, gameStateObj):
         self.item.droppable = False
-        self.unit.add_item(self.item, gameStateObj)
-        gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
-        gameStateObj.stateMachine.changeState('itemgain')
+        if self.unit.team == 'player':
+            self.unit.add_item(self.item, gameStateObj)
+            gameStateObj.banners.append(Banner.acquiredItemBanner(self.unit, self.item))
+            gameStateObj.stateMachine.changeState('itemgain')
+        elif len(self.unit.items) < cf.CONSTANTS['max_items']:
+            self.unit.add_item(self.item, gameStateObj)
 
     def execute(self, gameStateObj):
         self.item.droppable = False
-        self.unit.add_item(self.item, gameStateObj)
+        if self.unit.team == 'player' or len(self.unit.items) < cf.CONSTANTS['max_items']:
+            self.unit.add_item(self.item, gameStateObj)
 
     def reverse(self, gameStateObj):
         self.item.droppable = True
-        self.unit.remove_item(self.item, gameStateObj)
+        if self.item in self.unit.items:
+            self.unit.remove_item(self.item, gameStateObj)
 
 class DiscardItem(Action):
     def __init__(self, unit, item):
