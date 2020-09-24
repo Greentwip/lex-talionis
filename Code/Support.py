@@ -97,8 +97,13 @@ class Support_Edge(object):
                 return idx
         return len(self.support_limits)
 
-    def can_support(self):
-        return self.support_level < self.available_support_level() and self.support_levels_this_chapter == 0
+    def can_support(self) -> bool:
+        if self.support_level < self.available_support_level():
+            if self.support_levels_this_chapter == 0:
+                return True
+            elif self.support_limits[self.support_level] == 0:
+                return True
+        return False
 
     def get_support_level(self):
         return self.support_level
