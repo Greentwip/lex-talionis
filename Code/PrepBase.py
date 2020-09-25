@@ -1528,7 +1528,8 @@ class BaseMainState(StateMachine.State):
                 color_control[1] = 'text_white'
             if gameStateObj.base_conversations:
                 color_control[2] = 'text_white'
-            if cf.CONSTANTS['support'] == 2 and gameStateObj.support and 'Supports' in gameStateObj.game_constants:
+            if cf.CONSTANTS['support'] == 2 and gameStateObj.support and \
+                    'Supports' in gameStateObj.game_constants and gameStateObj.support.node_dict:
                 idx = options.index(cf.WORDS['Supports'])
                 color_control[idx] = 'text_white'
             if cf.CONSTANTS['arena_in_base'] and 'Arena' in gameStateObj.game_constants:
