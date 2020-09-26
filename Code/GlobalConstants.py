@@ -8,7 +8,7 @@ from . import static_random
 import logging
 logger = logging.getLogger(__name__)
 
-version = "0.9.4.3c"
+version = "0.9.4.4"
 # === GLOBAL CONSTANTS ===========================================
 FPS = 60
 FRAMERATE = 1000//FPS
