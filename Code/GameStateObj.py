@@ -566,7 +566,8 @@ class GameStateObj(object):
                             self.convoy.append(item)
 
         # Handle fatigue
-        self.clean_up_fatigue()
+        if cf.CONSTANTS['fatigue']:
+            self.clean_up_fatigue()
 
         # Remove unnecessary information between levels
         self.sweep()

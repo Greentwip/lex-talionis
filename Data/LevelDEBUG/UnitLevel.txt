@@ -31,6 +31,7 @@ player;0;0;Prim;5,15;None
 player;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,10;None;Resistance
 #enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
 enemy;0;0;Archer;1;Willow Bow,dPotion;1,12;HardGuard;Resistance
+enemy;0;0;Archer;1;Willow Bow,dPotion;2,12;HardGuard;Resistance
 # === Reinforcements ===
 # Player Characters
 # Enemies
