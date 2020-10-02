@@ -1,0 +1,133 @@
+KD
+
+Just finished lion throne
+Super good, and I really enjoyed it!
+I appreciated the brevity and felt like it was a perfect length
+I really liked the characters and felt like each had their own arc
+
+Moreso, I liked that none of them ever needed to get benched so I was free to use them all to their full potential. The only character I thought was a bit weak was Renea, but otherwise each had a valuable place on the team
+
+I also thought that it got a bit easy near the end. I was playing on Hard, which is probably why, but you get a lot of player phase power, so even the final boss dies very quickly to a few criticals
+
+Syvx 
+
+Hey rainlash, Your engine is incredible, I don't know anything about python or programming in general but I've been able to use the engine with ease regardless.
+
+BlueVestGuyisafraud
+
+Beyond that i'd like to say I was quite surprised by your ingenious implementation of class skills, so much so I'd wish nintendo would take a page out of your book for the official games! Do you have any plans in the future for other fan games or other creations of your own?
+
+Enigami
+
+Long time Serenes Forest lurker here brought out by this amazing game, absolutely love the mechanics changes.
+
+Shrimperor 
+
+This is really amazing! I have been enjoying this game and really love what you did with is, especially the new Heal/Magic System :)
+
+drone2426
+
+Hi. I just finished the game. It was beautiful. Everything from the music choice, to the maps, to the fluid leveling and solid difficulty curve made playing it a great experience. The gameplay was just so damn smooth. Thank you for making this.
+
+Nia OP
+
+SimSimma
+
+Cool game you've got here. I've been enjoying playing it.
+
+Rewind
+
+I just beat it. The challenge was awesome, those last 2-3 levels really tore me a new one. I couldn't come out of the last one without a casualty. Sure wish I had more stuns and sandblasts on me. The sewers really punished me. Renae, Drake, Nia and Eliza wound up really great for me. I'll play through it again; I want to torture my friends and my brother with it. Thanks again for making it; the difficulty really kept me on my toes. I never thought I'd love using a magic based thief.
+
+Thanks Rainlash. Theo cracked me up. Wow, I didn't know you were a one man band. No rush, you put out quality plus you've probably got plenty of other things keeping you busy. Anyway thanks for all your hard work. It's definitely one of my favorites. That sewer level was so fun to figure out.
+
+DemonStryker
+
+I just finished beating the game and I must say, it's a great game, I loved it from start to finish and even though difficulty is very high, I did very well, thankfully without losing any unit in any chapter. I losed two itens in house ruins, but nothing that I needed. Didn't abuse the area spells to beat it. Finished last chapter in 5 turns, killing Ulver with the Critical skill on Ophie and Nia, only needed to use the skill with Brave weapons and boom, 4 hits did it, two from each character. Best units for me: Nia, Althea, Renae(Magic Thief), Kayla, Ophie and beast Eliza, omg, turned out so amazing for me, a beast.
+
+nacho_chicken
+
+Wow, this looks very impressive! The fact that you're also making this open-source and the engine available for others to make their fangames with is worthy of commendation. I wish you the best in your efforts.
+
+Abundy
+
+Just played this hack the last few days and it was great, I loved the gameplay and even though the story wasn't the main focus it was definitely serviceable and the characters (especially the base conversations) were great as well. I didn't have too much trouble with the basic difficulty until the second to last map where I lost Theo and Joel, who I barely used.
+
+I loved the skills and being able to pick between patching up bad stats or boosting good ones (or increasing movement which I did for most of my roster) helped with units getting stat screwed, however I struggled to find a use for some of the units. Theo kinda struggled to keep up in the mid game maps and fell behind the curve as a result, my Eliza got pretty strength screwed, but even if she turned out better I don't see what would have made her worth investing in (almost all of your units have good growth rates and she has very shaky bases). As well as Coyote being a bit on the weaker side. Althea and Drake were definitely my MVPs with honorable mentions to Nia, Kayla and Ophie, Tomes giving slight stat boosts, the AoE tomes and her overall stats just made Althea super valuable in almost every chapter, Drake was the typical solid cavalier/paladin that's always nice to have in FE, most of the other units definitely had their niches(Bows being really long range and accurate made them useful, Dark&Light magic had nice tools, I bet Joel has good potential but my fighters always turn out terribly for some reason, adding some res targetting damage with magic swords made Renae fun to use beyond the usual thief utility etc.).
+
+Overall a really solid project, I'm looking forward to anything you come up with in the future.
+
+ardenzio
+
+Hi, your game is awesome, every chapter is challenging and very original.
+
+Crimson Red
+
+Though you didn't ask for them and are free to ignore them, I felt like writing my thoughts out and figure someone might be curious for a little more insight on what to expect from the game, so here are some of my thoughts on its different elements:
+
+Gameplay:
+
+(Potential gameplay spoiler warning for those who haven't beaten the game yet)
+
+I thought it was mostly good, my main issue is that reinforcements are not hinted at, both in terms of location and time spawning, and it's really annoying to just have them pop up on you without warning. The changes to certain core elements of the "Fire Emblem" experience, such as not being able to shoot magic and bows through walls, the reworking of bows to make them really feel like competent sniping tools/great for the player phase, skills that are predictable and not luck-based, etc., were great IMO, and I quite enjoyed the challenge of the game (besides the reinforcements... that felt like artificial difficulty). Overall it was pretty fun to play or I probably wouldn't have finished it, so yeah. The chapters sure were long though T_T
+
+Story: It served its purpose decently enough and I didn't particularly like or dislike it... though some grammatical mistakes kind of irked me because I have a lame, over-attentive personality, lol.
+
+But I can't really fault the story overall, not like I paid money for some epic adventure written by a team of professional writers, haha.
+
+Music: Wasn't really my preference of music, it felt mostly slow and atmospheric, but it was alright and did its job IMO. The awkward looping and lack of battle themes were a little meh, but I'm guessing the latter is because animations were added after the initial version. Also, the battle preps theme was super lame lol.
+
+Graphics: Just like the story/music, I felt like the custom sprites and such served their purpose and that was about all I expected from a fangame, so yeah. Not particularly good but nothing terrible either, IMO. Was neat seeing a certain new bow animation.
+
+Miscellaneous: The engine sometimes crashed/bugged on me as mentioned and I found that when pressing the "select" button ("Z" on my setup) and then immediately moving, it would sometimes move the cursor first and then "select" the new tile it moved to (i.e. either select the unit on it or open up the menu), which was a little annoying (I wanted it to select the unit and immediately start moving it within its movement range), but I think I just trained myself to press on my keyboard slower and mostly got over it, lol.
+
+FWIW, changing the options didn't seem to help it, seems like a weird input buffer issue, but I dunno.
+
+That aside, it's pretty good for a fan-game made by one person so I don't really feel like nitpicking any of the other small polish things since it'd feel kind of ungrateful and none of it really hurts the experience that much.
+
+ 
+
+Overall: Gotta just give props overall, there was clearly a ton of effort put into it and I'm glad I chanced upon this and played it, was my first FE fangame in a while and it genuinely felt really fun and rewarding at times to learn and make use of the various changes to the FE formula. And I just sort of see it for what it is, a fan game made by one person that honestly feels somewhat like an "example work" of what the engine can do, and I think in that sense it succeeds and so that's why despite some frustrating moments and some things I wish were a little more polished, I enjoyed it overall and think it could be fun for some hardcore FE fans that wanna scratch that itch for a challenging/unique FE experience and have reasonable expectations for a one-man fan-project.
+
+ 
+
+Anyway, thanks for making this and sharing it with us, and best of luck with your future endeavors. =)
+
+ZessDynamite
+
+I've been having a blast using the engine for my personal project; it's extremely intuitive and robust!
+
+When making my own levels, I've encountered an issue with pick units and forced deployment:
+
+  Reveal hidden contents
+I really can't thank you enough for developing this engine, it's been a dream come true! I can't wait to see where it goes with further development.
+
+Thorgrun
+
+This is a good little game you built, i have to keep reminding myself this isn't a hack, it just looks like an authentic GBA Fire Emblem game. The story-line wasn't too big like some others we all know (heres lookin at you last promise...>.>) My favorite hero was Eliza, only gave her 1 dracoshield: by endgame i could plop her ass on a pillar with a bravelance and she'd tear through literally everything!! lol xD
+
+Also i saw many complaints about the caravan level, people think its too hard, yadda yadda. lol it is actually very easy and very rewarding. I was expecting this epic battle, the problem people are having is too much bumrushing. The key is sitting back and letting everything come to you. Stop rushing forward and you will have more success. The Wyvernriders in this game have almost half their normal movement ffs. lol come on now. 🙂 
+
+Pros:
+
+Great hero development, and loved that you didn't throw 40 units in our faces forcing us to bench 70% of them anyway lol. The player must utilize all heroes. 
+The custom mugs were done nicely, no 'reskin' here 🙂 All of your maps were done very well too.
+Loved the new magic and that you could pick your heroes feats. 
+The developer is quick to reply and fix all problems. which is awesome. 
+Enjoyed the path of radiance features: Home Base, Auto-promotion at level cap, etc.
+Cons:
+
+The game itself is very short, if i hadn't run into bugs i'd have completed this in under a day. 😞 This was done so well i wanted MOAR!! lol 
+Feels like Mymrydon/Swordmaster luck/speed stats were severely nerfed, Ophie was getting hit constantly. An enemy axe user smashed him with a handaxe...o.O had to restart that one.. lol
+That's the only complaint i have for this game. 🙂 Thank you so much for working on this and sharing it with us. Im sure i will play it many more times, and post bugs if i find any more. 
+
+Kyogokudo
+
+Hey there ! I've been using your engine for over a year now and I love it. It's really intuitive and flexible.
+
+El Grillo
+
+With this I'm confident that I can leave the rest of the code alone and do everything that I have in mind for my levels with just the editor and the scripting files. I have to say again that this is a really nifty project that you've built from scratch.
+
+
+

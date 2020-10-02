@@ -1753,6 +1753,7 @@ class MapCombat(Combat):
         if result.summoning:
             result.summoning.sprite.set_transition('warp_in')
             gameStateObj.allunits.append(result.summoning)
+            Action.do(Action.SimpleArrive(result.summoning, result.summoning.position), gameStateObj)
         if self.item.call_item_script:
             call_item_script = 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
