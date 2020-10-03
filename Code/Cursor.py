@@ -112,9 +112,10 @@ class Cursor(object):
         if gameStateObj.stateMachine.getState() == 'move':
             if self.border_position:
                 self.movePath = self.currentSelectedUnit.getPath(gameStateObj, self.border_position)
-            else:
+                self.constructArrows(self.movePath[::-1], gameStateObj)
+            elif gameStateObj.highlight_manager.check_arrow(self.position):
                 self.movePath = self.currentSelectedUnit.getPath(gameStateObj, self.position)
-            self.constructArrows(self.movePath[::-1], gameStateObj)
+                self.constructArrows(self.movePath[::-1], gameStateObj)
 
     # The algorithm below is all hard-coded in, which sucks, should change it later, but it WORKS, so thats good
     # ALSO IS EXTREMELY SHITTY ALGORITHM I DON'T UNDERSTAND. was found using trial and error, for the most part

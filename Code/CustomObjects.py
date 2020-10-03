@@ -592,7 +592,7 @@ class PhaseMusic(object):
             return None        
 
 # === HANDLES PRESSING INFO AND APPLYING HELP MENU ===========================
-def handle_info_key(gameStateObj, metaDataObj, chosen_unit=None, one_unit_only=False, scroll_units=None):
+def handle_info_key(gameStateObj, metaDataObj, chosen_unit=None, one_unit_only=False, scroll_units=None, no_movement=False):
     gameStateObj.cursor.currentHoveredUnit = gameStateObj.cursor.getHoveredUnit(gameStateObj)
     if chosen_unit:
         my_unit = chosen_unit
@@ -604,6 +604,7 @@ def handle_info_key(gameStateObj, metaDataObj, chosen_unit=None, one_unit_only=F
     gameStateObj.info_menu_struct['one_unit_only'] = one_unit_only
     gameStateObj.info_menu_struct['scroll_units'] = scroll_units
     gameStateObj.info_menu_struct['chosen_unit'] = my_unit
+    gameStateObj.info_menu_struct['no_movement'] = no_movement
     gameStateObj.stateMachine.changeState('info_menu')
     gameStateObj.stateMachine.changeState('transition_out')
 

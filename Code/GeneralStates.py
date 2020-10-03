@@ -389,7 +389,9 @@ class MoveState(StateMachine.State):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         # Show R unit status screen
         if event == 'INFO':
-            CustomObjects.handle_info_key(gameStateObj, metaDataObj, cur_unit, one_unit_only=True)
+            unit = gameStateObj.grid_manager.get_unit_node(gameStateObj.cursor.position)
+            if unit:
+                CustomObjects.handle_info_key(gameStateObj, metaDataObj, unit, no_movement=True)
 
         elif event == 'AUX':
             gameStateObj.cursor.setPosition(cur_unit.position, gameStateObj)

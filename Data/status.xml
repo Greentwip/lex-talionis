@@ -633,6 +633,15 @@
         <mt>item.weight/2 if item.weight else 0</mt>
     </status>
 
+    <status name="Ignis">
+        <id>Ignis</id>
+        <image_index>8,1</image_index>
+        <desc>Adds MAG/2 to physical attacks, and STR/2 to magical attacks</desc>
+        <components>mt,class_skill</components>
+
+        <mt>self.stats['STR']//2 if item.is_magic() else self.stats['MAG']//2</mt>
+    </status>
+
     <status name="Ranger's Guile">
         <id>Rangers Guile</id>
         <image_index>8,1</image_index>

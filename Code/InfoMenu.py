@@ -67,7 +67,7 @@ class InfoMenu(StateMachine.State):
         GC.SOUNDDICT['Select 4'].play()
         gameStateObj.info_menu_struct['current_state'] = self.currentState
         gameStateObj.info_menu_struct['chosen_unit'] = self.unit
-        if not gameStateObj.info_menu_struct['one_unit_only'] and self.unit.position:
+        if not gameStateObj.info_menu_struct['one_unit_only'] and self.unit.position and not gameStateObj.info_menu_struct['no_movement']:
             gameStateObj.cursor.setPosition(self.unit.position, gameStateObj)
         gameStateObj.stateMachine.changeState('transition_pop')
 

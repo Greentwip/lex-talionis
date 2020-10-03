@@ -23,7 +23,7 @@ player;0;0;Ophie;5,13;None
 player;0;0;Joel;None;None
 player;0;0;Drake;5,10;None
 player;0;0;Prim;5,15;None
-#player;0;0;Warlock;10;SummonTest;1,10;None;Resistance
+player;0;0;Warlock;10;Flux;1,10;None;Resistance;Ignis
 #enemy2;0;0;Raider;10;Javelin,Iron Axe,Willow Bow,Mithril Axe;1,10;Attack;Resistance
 # Enemies
 # Generics
