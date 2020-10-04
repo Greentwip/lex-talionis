@@ -338,12 +338,12 @@ class ChoiceMenu(SimpleMenu):
 
     def get_topleft(self, gameStateObj):
         if self.topleft == 'auto':
-            if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
+            if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.x:
                 self.topleft = (8, 8)
             else:
                 self.topleft = (GC.WINWIDTH - self.menu_width - 8, 8)
         elif self.topleft == 'child':
-            if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.get_x():
+            if gameStateObj.cursor.position[0] > GC.TILEX//2 + gameStateObj.cameraOffset.x:
                 self.topleft = (8 + gameStateObj.activeMenu.menu_width - 32, gameStateObj.activeMenu.currentSelection*16 + 8)
             else:
                 self.topleft = (GC.WINWIDTH - 32 - 8 - gameStateObj.activeMenu.menu_width, gameStateObj.activeMenu.currentSelection*16 + 8)
