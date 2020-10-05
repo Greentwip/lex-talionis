@@ -460,6 +460,9 @@ class CantoWaitState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         cur_unit.sprite.change_state('selected', gameStateObj)
+        
+        # Play sound on first creation
+        GC.SOUNDDICT['Select 2'].play()
         # Create menu
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(cur_unit, [cf.WORDS['Wait']], 'auto', gameStateObj=gameStateObj)
 
@@ -471,11 +474,13 @@ class CantoWaitState(StateMachine.State):
             CustomObjects.handle_info_key(gameStateObj, metaDataObj, cur_unit, one_unit_only=True)
 
         elif event == 'SELECT':
+            GC.SOUNDDICT['Select 1'].play()
             gameStateObj.stateMachine.clear()
             gameStateObj.stateMachine.changeState('free')
             cur_unit.wait(gameStateObj) # Canto
 
         elif event == 'BACK':
+            GC.SOUNDDICT['Select 4'].play()
             cur_unit.move_back(gameStateObj)
             gameStateObj.stateMachine.back()
 
@@ -2910,6 +2915,8 @@ class ShopState(StateMachine.State):
             if event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.changeState('transition_pop')
+                if self.name in ('armory', 'market', 'vendor'):
+                    Engine.music_thread.fade_back()
             elif event == 'SELECT':
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.waiting: # Remove waiting check
@@ -3091,10 +3098,14 @@ class ShopState(StateMachine.State):
             if event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.back()
+                if self.name in ('armory', 'market', 'vendor'):
+                    Engine.music_thread.fade_back()
             elif event == 'SELECT':
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.done:
                     gameStateObj.stateMachine.back()
+                    if self.name in ('armory', 'market', 'vendor'):
+                        Engine.music_thread.fade_back()
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False
 
@@ -3219,6 +3230,7 @@ class RepairShopState(StateMachine.State):
             if event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.changeState('transition_pop')
+                Engine.music_thread.fade_back()
             elif event == 'SELECT':
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.waiting: # Remove waiting check
@@ -3293,10 +3305,12 @@ class RepairShopState(StateMachine.State):
             if event == 'BACK':
                 GC.SOUNDDICT['Select 4'].play()
                 gameStateObj.stateMachine.back()
+                Engine.music_thread.fade_back()
             elif event == 'SELECT':
                 GC.SOUNDDICT['Select 1'].play()
                 if self.display_message.done:
                     gameStateObj.stateMachine.back()
+                    Engine.music_thread.fade_back()
                 if self.display_message.waiting: # Remove waiting check
                     self.display_message.waiting = False
 

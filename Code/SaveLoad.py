@@ -200,13 +200,13 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             for n in range(len(stats), cf.CONSTANTS['num_stats']):
                 stats.append(class_dict[u_i['klass']]['bases'][n])
 
-            if 'IgnoreBonusStats' in u_i['tags']:
+            if 'IgnoreBonusStats' in u_i['tags'] or 'IgnoreBonusStats' in class_dict[u_i['klass']]['tags']:
                 mode_bases = [0] * cf.CONSTANTS['num_stats']
             elif u_i['team'] == 'player' or u_i['team'] == 'other': # Modify stats
                 mode_bases = gameStateObj.mode['player_bases']
             else:
                 mode_bases = gameStateObj.mode.get('boss_bases', gameStateObj.mode['enemy_bases'])
-            if 'IgnoreBonusGrowths' in u_i['tags']:
+            if 'IgnoreBonusGrowths' in u_i['tags'] or 'IgnoreBonusGrowths' in class_dict[u_i['klass']]['tags']:
                 mode_growths = [0] * cf.CONSTANTS['num_stats']
             elif u_i['team'] == 'player' or u_i['team'] == 'other': # Modify stats
                 mode_growths = gameStateObj.mode['player_growths']
@@ -224,7 +224,9 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
             num_levelups = u_i['level'] - 1 + (cf.CONSTANTS['promoted_level'] if class_dict[u_i['klass']]['tier'] > 1 else 0)
             stats, u_i['growth_points'] = auto_level(stats, mode_growths, num_levelups, class_dict[u_i['klass']]['max'], gameStateObj.mode)
             # Handle autolevels
-            if u_i['team'] == 'player' or u_i['team'] == 'other':
+            if 'IgnoreAutoLevels' in u_i['tags'] or 'IgnoreAutoLevels' in class_dict[u_i['klass']]['tags']:
+                num_autolevels = 0
+            elif u_i['team'] == 'player' or u_i['team'] == 'other':
                 num_autolevels = int(eval(gameStateObj.mode['autolevel_players']))
             else:
                 num_autolevels = int(eval(gameStateObj.mode.get('autolevel_bosses', '0')))
@@ -326,13 +328,14 @@ def create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStat
     else:
         u_i['name'] = 'Duelist'
 
+    u_i['tags'] = set()
+
     stats, u_i['growths'], u_i['growth_points'], items, u_i['wexp'], u_i['level'] = \
-        get_unit_info(u_i['team'], u_i['klass'], u_i['level'], legend['items'],
+        get_unit_info(u_i['team'], u_i['klass'], u_i['level'], u_i['tags'], legend['items'],
                       gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
     logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
     
-    u_i['tags'] = set()
     u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
@@ -389,7 +392,7 @@ def create_summon(summon_info, summoner, position, gameStateObj):
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
 
     stats, u_i['growths'], u_i['growth_points'], items, u_i['wexp'], u_i['level'] = \
-        get_unit_info(u_i['team'], u_i['klass'], summoner_internal_level, summon_info.item_line, gameStateObj.mode, gameStateObj.game_constants)
+        get_unit_info(u_i['team'], u_i['klass'], summoner_internal_level, u_i['tags'], summon_info.item_line, gameStateObj.mode, gameStateObj.game_constants)
     u_i['stats'] = build_stat_dict(stats)
     unit = UnitObject.UnitObject(u_i)
 
@@ -403,7 +406,7 @@ def create_summon(summon_info, summoner, position, gameStateObj):
 
     return unit
 
-def get_unit_info(team, klass, level, item_line, mode, game_constants, force_fixed=False):
+def get_unit_info(team, klass, level, tags, item_line, mode, game_constants, force_fixed=False):
     # Handle stats
     # hp, str, mag, skl, spd, lck, def, res, con, mov
     bases = ClassData.class_dict[klass]['bases'][:] # Using copies    
@@ -422,13 +425,26 @@ def get_unit_info(team, klass, level, item_line, mode, game_constants, force_fix
         hidden_levels = int(eval(mode['autolevel_enemies']))
         explicit_levels = int(eval(mode['truelevel_enemies']))
 
-    level += explicit_levels
+    if 'IgnoreTrueLevels' in tags or 'IgnoreTrueLevels' in ClassData.class_dict[klass]['tags']:
+        pass
+    else:
+        level += explicit_levels
 
-    bases = [sum(x) for x in zip(bases, mode_bases)]
-    growths = [sum(x) for x in zip(growths, mode_growths)]
+    if 'IgnoreBonusStats' in tags or 'IgnoreBonusStats' in ClassData.class_dict[klass]['tags']:
+        pass
+    else:
+        bases = [sum(x) for x in zip(bases, mode_bases)]
+    if 'IgnoreBonusGrowths' in tags or 'IgnoreBonusStats' in ClassData.class_dict[klass]['tags']:
+        pass
+    else:
+        growths = [sum(x) for x in zip(growths, mode_growths)]
 
     num_levelups = level - 1 + (cf.CONSTANTS['promoted_level'] if ClassData.class_dict[klass]['tier'] > 1 else 0)
-    stats, growth_points = auto_level(bases, growths, num_levelups + hidden_levels, ClassData.class_dict[klass]['max'], mode, force_fixed=force_fixed)
+    if 'IgnoreAutoLevels' in tags or 'IgnoreAutoLevels' in ClassData.class_dict[klass]['tags']:
+        pass
+    else:
+        num_levelups += hidden_levels
+    stats, growth_points = auto_level(bases, growths, num_levelups, ClassData.class_dict[klass]['max'], mode, force_fixed=force_fixed)
 
     # Handle items
     if item_line:
