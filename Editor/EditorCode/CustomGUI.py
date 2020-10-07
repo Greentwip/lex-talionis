@@ -27,7 +27,7 @@ class MusicBox(QWidget):
         starting_path = QDir.currentPath() + '/../Audio/music'
         print(starting_path)
         music_file, _ = QFileDialog.getOpenFileName(self, "Select Music File", starting_path,
-                                                       "OGG Files (*.ogg);;All Files (*)")
+                                                    "OGG Files (*.ogg);;All Files (*)")
         if music_file:
             music_file = str(music_file)
             starting_path = str(starting_path)
@@ -35,7 +35,10 @@ class MusicBox(QWidget):
             print(head)
             if os.path.normpath(head) != os.path.normpath(starting_path):
                 print('Copying ' + music_file + ' to ' + starting_path)
-                shutil.copy(music_file, starting_path)
+                if os.path.isdir(starting_path):
+                    shutil.copy(music_file, starting_path)
+                else:
+                    print("Error! %s is not a directory or does not exist!" % starting_path)
             self.setText(tail.split('.')[0])
 
     def text(self):

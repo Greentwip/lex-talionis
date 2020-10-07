@@ -2026,6 +2026,8 @@ class UnitObject(object):
             seize_name = gameStateObj.map.tile_info_dict[self.position]['Lord_Seize']
         elif 'Seize' in gameStateObj.map.tile_info_dict[self.position]:
             seize_name = gameStateObj.map.tile_info_dict[self.position]['Seize']
+        elif 'Enemy_Seize' in gameStateObj.map.tile_info_dict[self.position]:
+            seize_name = gameStateObj.map.tile_info_dict[self.position]['Enemy_Seize']
         else:
             seize_name = None
         gameStateObj.stateMachine.changeState('wait')
