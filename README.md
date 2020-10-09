@@ -75,11 +75,9 @@ You can always run the engine without downloading any addiitonal tools using the
 
 ### Installing
 
-This section requires git.
-If you don't have git, install it from here: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git.
+You can find more detailed instructions on installing Git, Python, Pygame, and other tools here: https://gitlab.com/rainlash/lex-talionis/-/wikis/102.-Installations
 
-To get the Lex Talionis engine code on your machine, create a new folder.  
-Then, in the command line or a terminal, type:
+To get the Lex Talionis engine code on your machine, in the command line or a terminal, type:
 
 ```
 git clone https://gitlab.com/rainlash/lex-talionis
@@ -87,9 +85,7 @@ git clone https://gitlab.com/rainlash/lex-talionis
 
 You will also need to download the audio files, which are not stored on Git because of their size. 
 
-On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQtnmwa?dl=0. 
-
-On the top right of the page, click "Download", then click "Direct Download".
+On Dropbox here: https://www.dropbox.com/sh/slbz2t7v1fc6uao/AACiznGLm442qcdOAGbQtnmwa?dl=1.
 
 Once the audio files are downloaded, extract the zip file and move or copy the Audio folder to the lex-talionis directory (the directory that contains main.py).
 
@@ -104,12 +100,6 @@ A small screen should pop up on your computer, displaying the logo. Don't worry 
 ## Building/Freezing the Code
 
 In order to build the engine, you will require Python 3.7 (not Python 3.8) and PyInstaller. Python 3.8 can't be used because PyInstaller does not support it yet.
-
-```
-pip install pyinstaller
-```
-
-to install the latest version of PyInstaller on your machine. 
 
 ```
 pyinstaller main.spec
