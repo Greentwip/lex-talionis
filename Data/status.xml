@@ -736,6 +736,14 @@
         <caretaker>5</caretaker>
     </status>
 
+    <status name="Live to Serve">
+        <id>Live to Serve</id>
+        <image_index>2,6</image_index>
+        <desc>Heals user 50% of health restored to target.</desc>
+        <components>live_to_serve,class_skill</components>
+        <live_to_serve>0.5</live_to_serve>
+    </status>
+
     <status name="Vantage">
         <id>Vantage</id>
         <image_index>1,7</image_index>

@@ -1489,7 +1489,7 @@ class AddStatus(Action):
         if self.status_obj.clear:
             for status in self.unit.status_effects:
                 if self.status_obj.clear is True or status.id in self.status_obj.clear.split(','):
-                    if status.time:
+                    if status.time or status.clearable:
                         self.actions.append(RemoveStatus(self.unit, status))
 
         # --- Non-momentary status ---

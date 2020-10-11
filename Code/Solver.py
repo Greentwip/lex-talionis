@@ -458,6 +458,13 @@ class Solver(object):
                         self.handle_crit(result, attacker, defender, item, mode, gameStateObj, hybrid, event_command)
                 elif item.heal is not None:
                     result.def_damage = -attacker.compute_heal(defender, gameStateObj, item, mode=mode)
+                    # Live to serve section
+                    if attacker is not defender:
+                        for status in attacker.status_effects:
+                            if status.live_to_serve:
+                                fraction = float(status.live_to_serve)
+                                actual_healing_done = min(-result.def_damage, defender.stats['HP'] - defender.currenthp)
+                                result.atk_damage -= int(fraction * actual_healing_done)
                 if item.movement:
                     result.def_movement = item.movement
                 if item.self_movement:
