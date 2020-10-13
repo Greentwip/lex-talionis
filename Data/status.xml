@@ -630,7 +630,7 @@
         <desc>Adds half weapon weight to damage.</desc>
         <components>mt,class_skill</components>
 
-        <mt>item.weight/2 if item.weight else 0</mt>
+        <mt>item.weight//2 if item.weight else 0</mt>
     </status>
 
     <status name="Ignis">
@@ -742,6 +742,14 @@
         <desc>Heals user 50% of health restored to target.</desc>
         <components>live_to_serve,class_skill</components>
         <live_to_serve>0.5</live_to_serve>
+    </status>
+
+    <status name="Imbue">
+        <id>Imbue</id>
+        <image_index>2,6</image_index>
+        <desc>Heal MAG at the start of the turn.</desc>
+        <components>upkeep_damage,class_skill</components>
+        <upkeep_damage>-unit.stats['MAG']</upkeep_damage>
     </status>
 
     <status name="Vantage">
