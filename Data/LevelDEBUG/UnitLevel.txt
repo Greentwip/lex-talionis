@@ -21,16 +21,18 @@ faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Ophie;5,13;None
 player;0;0;Joel;None;None
-player;0;0;Drake;5,10;None
+player;0;0;Drake;5,14;None
 player;0;0;Prim;5,15;None
 player;0;0;Warlock;10;Flux;1,10;None;Resistance
 #enemy2;0;0;Raider;10;Javelin,Iron Axe,Willow Bow,Mithril Axe;1,10;Attack;Resistance
 # Enemies
 # Generics
-#enemy;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,1;Pursue;Resistance
+enemy;0;0;Cavalier;1;Iron Sword;2,12;Pursue;Resistance
+enemy;0;0;Cavalier;1;Iron Sword;3,12;Pursue;Resistance
 #player;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,10;None;Resistance
 #enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
 enemy;0;0;Archer;1;Willow Bow,dPotion;1,12;HardGuard;Resistance
+#enemy;0;0;Fighter;1;Iron Axe;2,12;HardGuard;Resistance
 #enemy;0;0;Archer;1;Willow Bow,dPotion;2,12;HardGuard;Resistance
 # === Reinforcements ===
 # Player Characters

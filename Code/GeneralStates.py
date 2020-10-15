@@ -2061,7 +2061,7 @@ class AIState(StateMachine.State):
                     logger.debug('current_ai %s done with turn.', gameStateObj.ai_current_unit)
                     # The unit is now done with AI
                     # If the unit actually did something, doesn't have canto plus, and isn't going into combat, then can now wait.
-                    if did_something and not gameStateObj.ai_current_unit.has_canto_plus() and not gameStateObj.stateMachine.inList('combat'):
+                    if did_something and not gameStateObj.ai_current_unit.has_canto_plus() and not gameStateObj.stateMachine.inList('combat'):                        
                         gameStateObj.ai_current_unit.wait(gameStateObj)
                     gameStateObj.ai_current_unit = None
 

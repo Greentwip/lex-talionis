@@ -269,13 +269,14 @@ class AI(object):
         # Acts only if a unit has a position to move to
         if self.position_to_move_to and self.position_to_move_to != self.unit.position:
             path = self.unit.getPath(gameStateObj, self.position_to_move_to)
-            if self.unit.hasAttacked: # If we've already attacked, we're done.
-                self.unit.wait(gameStateObj)
+            # if self.unit.hasAttacked: # If we've already attacked, we're done.
+            #     self.unit.wait(gameStateObj)
+            gameStateObj.stateMachine.changeState('wait')
             gameStateObj.stateMachine.changeState('movement')
-            Action.do(Action.Move(self.unit, self.position_to_move_to, path), gameStateObj)
+            Action.do(Action.CantoMove(self.unit, self.position_to_move_to, path), gameStateObj)
             return True
         elif self.position_to_move_to:
-            Action.execute(Action.Move(self.unit, self.position_to_move_to), gameStateObj)
+            Action.execute(Action.CantoMove(self.unit, self.position_to_move_to), gameStateObj)
             return False
         else:
             return False
