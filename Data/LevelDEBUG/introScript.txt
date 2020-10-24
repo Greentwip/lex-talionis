@@ -14,6 +14,12 @@ layer_tile_sprite;2;5,17;OpenChest;base_terrain
 change_fatigue;Joel;12
 change_name;Joel;Frank
 set_cursor;Drake
+if;gameStateObj.get_unit('Ophie').wexp.insert(1, 31)
+    wait;1
+end
+if;gameStateObj.get_unit('Ophie').wexp.pop(2)
+    wait;1
+end
 #move_unit;Drake;20,10
 #start_move;Drake
 #remove_skill;Drake;Canto

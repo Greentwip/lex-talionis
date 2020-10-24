@@ -255,9 +255,9 @@ class HelpGraph(object):
                 self.help_boxes["Status"+str(i)].up = "Support"+str(len(supports)-1)
             self.help_boxes["Support" + str(len(supports)-1)].down = "Status0"
         if supports:
-            self.help_boxes['Unit Desc'].right = "Support" + str(min(3, len(statuses) - 1))
-            self.help_boxes['Experience'].right = "Support" + str(min(3, len(statuses) - 1))
-            self.help_boxes['HP'].right = "Support" + str(min(3, len(statuses) - 1))
+            self.help_boxes['Unit Desc'].right = "Support" + str(min(3, len(supports) - 1))
+            self.help_boxes['Experience'].right = "Support" + str(min(3, len(supports) - 1))
+            self.help_boxes['HP'].right = "Support" + str(min(3, len(supports) - 1))
         elif good_weapons:
             self.help_boxes['Unit Desc'].right = "Wexp0"
             self.help_boxes['Experience'].right = "Wexp0"
