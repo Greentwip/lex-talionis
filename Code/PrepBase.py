@@ -1764,12 +1764,16 @@ class BaseSupportConvoState(StateMachine.State):
                 self.state = gameStateObj.childMenu.moveLeft(first_push)
                 gameStateObj.childMenu.cursor_flag = self.state
         elif 'RIGHT' in directions:
-            GC.SOUNDDICT['TradeRight'].play()
             if self.state:
+                GC.SOUNDDICT['TradeRight'].play()
                 gameStateObj.childMenu.moveRight(first_push)
-            else:
+            # Has supports
+            elif gameStateObj.support.node_dict[gameStateObj.childMenu.owner.id].adjacent:
+                GC.SOUNDDICT['TradeRight'].play()
                 self.state = True
                 gameStateObj.childMenu.cursor_flag = True
+            else:
+                GC.SOUNDDICT['Error'].play()
 
         if event == 'SELECT':
             # Play conversation

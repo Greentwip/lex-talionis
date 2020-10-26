@@ -1717,7 +1717,7 @@ class MapCombat(Combat):
         str_damage = str(min(999, abs(damage)))
         left = result.defender.position
         for idx, num in enumerate(str_damage):
-            if result.outcome == 2:  # Crit
+            if result.outcome == 2 and result.def_damage > 0:  # Crit
                 d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'SmallYellow')
                 self.damage_numbers.append(d)
             elif result.def_damage < 0:
