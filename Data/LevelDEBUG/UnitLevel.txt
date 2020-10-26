@@ -20,7 +20,7 @@
 faction;Resistance;Bandit;Resistance;Nope
 # Player Characters
 player;0;0;Ophie;5,13;None
-player;0;0;Joel;None;None
+player;0;0;Joel;4,14;None
 player;0;0;Drake;5,14;None
 player;0;0;Prim;5,15;None
 player;0;0;Mage;10;Wyrmsfire;1,10;None;Resistance

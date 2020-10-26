@@ -390,6 +390,8 @@ class UnitSprite(object):
             #    self.image_state = 'right'
             #else:
             self.image_state = 'down'
+        elif self.state == 'normal':
+            self.reset_sprite_offset()
 
     def update_state(self, gameStateObj):
         currentTime = Engine.get_time()
