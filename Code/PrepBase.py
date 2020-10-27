@@ -1797,9 +1797,12 @@ class BaseSupportConvoState(StateMachine.State):
                         GC.SOUNDDICT['Error'].play()
                 else:
                     GC.SOUNDDICT['Error'].play()
-            else:
+            elif gameStateObj.support.node_dict[gameStateObj.childMenu.owner.id].adjacent:
+                GC.SOUNDDICT['Select 1'].play()
                 self.state = True
                 gameStateObj.childMenu.cursor_flag = True
+            else:
+                GC.SOUNDDICT['Error'].play()
 
         elif event == 'BACK':
             if self.state:
