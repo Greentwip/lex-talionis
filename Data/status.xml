@@ -845,6 +845,17 @@
         <activated_item>so_Overdrive</activated_item>
     </status>
 
+    <status name="Dismount">
+        <id>Dismount</id>
+        <image_index>5,9</image_index>
+        <desc>Horse.</desc>
+        <components>activated_item,class_skill</components>
+
+        <charge_method>SKL</charge_method>
+        <charge_max>0</charge_max>
+        <activated_item>so_Dismount</activated_item>
+    </status>
+
     <status name="INFINITE POWER!!!">
         <id>overdrive_status</id>
         <image_index>5,9</image_index>

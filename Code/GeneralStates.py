@@ -2336,8 +2336,7 @@ class CombatState(StateMachine.State):
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
         combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj)
-        skip = gameStateObj.combatInstance.skip
-        while skip and not combatisover and not self.animation_combat:
+        while gameStateObj.combatInstance.skip and not combatisover and not self.animation_combat:
             combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj)
         if combatisover: # StateMachine.State changing is handled in combat's clean_up function
             gameStateObj.combatInstance = None
