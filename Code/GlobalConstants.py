@@ -205,7 +205,7 @@ class LevelUpQuotes():
     def __init__(self, fn):
         self.info = {}
         if os.path.exists(fn):
-            with open(fn, 'r') as fp:
+            with open(fn, encoding='utf-8', mode='r') as fp:
                 lines = [l.strip().split(';') for l in fp.readlines() if l.strip() and not l.strip().startswith('#')]
             for line in lines:
                 self.info[line[0]] = []

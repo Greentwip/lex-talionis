@@ -2318,15 +2318,16 @@ class CombatState(StateMachine.State):
 
     def begin(self, gameStateObj, metaDataObj):
         gameStateObj.cursor.drawState = 0
-        self.skip = False
         self.unit_surf = Engine.create_surface((gameStateObj.map.width * GC.TILEWIDTH, gameStateObj.map.height * GC.TILEHEIGHT), transparent=True)
         self.animation_combat = isinstance(gameStateObj.combatInstance, Interaction.AnimationCombat)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'START':
-            self.skip = True
-            gameStateObj.combatInstance.skip()
+            if gameStateObj.combatInstance.skip:
+                gameStateObj.combatInstance.end_skip()
+            else:
+                gameStateObj.combatInstance.start_skip()
         elif event == 'BACK':
             if gameStateObj.combatInstance.arena:
                 GC.SOUNDDICT['Select 4'].play()
@@ -2334,9 +2335,10 @@ class CombatState(StateMachine.State):
 
     def update(self, gameStateObj, metaDataObj):
         StateMachine.State.update(self, gameStateObj, metaDataObj)
-        combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj, self.skip)
-        while self.skip and not combatisover and not self.animation_combat:
-            combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj, self.skip)
+        combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj)
+        skip = gameStateObj.combatInstance.skip
+        while skip and not combatisover and not self.animation_combat:
+            combatisover = gameStateObj.combatInstance.update(gameStateObj, metaDataObj)
         if combatisover: # StateMachine.State changing is handled in combat's clean_up function
             gameStateObj.combatInstance = None
             # gameStateObj.stateMachine.back() NOT NECESSARY! DONE BY the COMBAT INSTANCES CLEANUP!

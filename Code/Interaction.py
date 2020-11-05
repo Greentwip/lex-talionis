@@ -502,6 +502,7 @@ class AnimationCombat(Combat):
         self.left_hp_bar, self.right_hp_bar = SimpleHPBar(self.left), SimpleHPBar(self.right)
 
         self.combat_state = 'Start' # Start, Fade, Entrance, (Pre_Init, Anim, HP_Change, Anim), (Init, Anim, Hp_Change, Anim)
+        self.skip = False
 
         # For fade to black viewbox
         self.viewbox_clamp_state = 0
@@ -618,7 +619,7 @@ class AnimationCombat(Combat):
         self.left_platform = GC.IMAGESDICT[left_platform_type + suffix].copy()
         self.right_platform = Engine.flip_horiz(GC.IMAGESDICT[right_platform_type + suffix].copy())
 
-    def update(self, gameStateObj, metaDataObj, skip=False):
+    def update(self, gameStateObj, metaDataObj):
         # logger.debug(self.combat_state)
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
@@ -630,7 +631,7 @@ class AnimationCombat(Combat):
             gameStateObj.cursor.setPosition(self.def_pos, gameStateObj)
             self.p1.sprite.change_state('combat_attacker', gameStateObj)
             self.p2.sprite.change_state('combat_defender', gameStateObj)
-            if not skip:
+            if not self.skip:
                 gameStateObj.stateMachine.changeState('move_camera')
 
             self.init_draw(gameStateObj, metaDataObj)
@@ -649,7 +650,7 @@ class AnimationCombat(Combat):
             self.combat_state = 'RedOverlay'
 
         elif self.combat_state == 'RedOverlay':
-            if skip or current_time - self.last_update > 400:
+            if self.skip or current_time - self.last_update > 400:
                 gameStateObj.cursor.drawState = 0
                 gameStateObj.highlight_manager.remove_highlights()
                 self.combat_state = 'Fade'
@@ -667,7 +668,7 @@ class AnimationCombat(Combat):
 
         elif self.combat_state == 'Fade':
             # begin viewbox clamping
-            if skip:
+            if self.skip:
                 self.viewbox_clamp_state = self.total_viewbox_clamp_states
                 self.build_viewbox(gameStateObj)
             self.viewbox_clamp_state += 1
@@ -688,7 +689,7 @@ class AnimationCombat(Combat):
             # Translate in names, stats, hp, and platforms
             self.bar_offset += 1
             self.name_offset += 1
-            if skip or self.bar_offset >= self.max_position_offset:
+            if self.skip or self.bar_offset >= self.max_position_offset:
                 self.bar_offset = self.max_position_offset
                 self.name_offset = self.max_position_offset
                 self.last_update = current_time
@@ -696,7 +697,7 @@ class AnimationCombat(Combat):
                 self.start_battle_music(gameStateObj)
 
         elif self.combat_state == 'Pre_Init':
-            if skip or current_time - self.last_update > 410: # 25 frames
+            if self.skip or current_time - self.last_update > 410: # 25 frames
                 self.last_update = current_time
                 if self.left_item and self.left_item.transform and self.left.battle_anim.has_pose('Transform'):
                     self.left.battle_anim.start_anim('Transform')
@@ -801,7 +802,7 @@ class AnimationCombat(Combat):
                 self.move_camera()
 
         elif self.combat_state == 'ExpWait':
-            if skip or current_time - self.last_update > 450:
+            if self.skip or current_time - self.last_update > 450:
                 self.handle_exp(gameStateObj)
                 self.combat_state = 'Exp'
 
@@ -811,27 +812,27 @@ class AnimationCombat(Combat):
             self.combat_state = 'OutWait'
 
         elif self.combat_state == 'OutWait':
-            if skip or current_time - self.last_update > 820:
+            if self.skip or current_time - self.last_update > 820:
                 self.p1.battle_anim.finish()
                 self.p2.battle_anim.finish()
                 self.combat_state = 'Out1'
 
         elif self.combat_state == 'Out1': # Nametags move out
             self.name_offset -= 1
-            if skip or self.name_offset <= 0:
+            if self.skip or self.name_offset <= 0:
                 self.name_offset = 0
                 self.combat_state = 'Out2'
 
         elif self.combat_state == 'Out2': # Rest of the goods move out
             self.bar_offset -= 1
-            if skip or self.bar_offset <= 0:
+            if self.skip or self.bar_offset <= 0:
                 self.bar_offset = 0
                 self.combat_state = 'FadeOut'
                 self.arena_cleanup(gameStateObj) 
 
         elif self.combat_state == 'FadeOut':
             # end viewbox clamping
-            if skip:
+            if self.skip:
                 self.viewbox_clamp_state = 0
                 self.build_viewbox(gameStateObj)
             self.viewbox_clamp_state -= 1
@@ -843,8 +844,8 @@ class AnimationCombat(Combat):
                 self.end_skip()
                 return True
 
-        self.left_hp_bar.update(skip or self.combat_state == 'Exp')
-        self.right_hp_bar.update(skip or self.combat_state == 'Exp')
+        self.left_hp_bar.update(self.skip or self.combat_state == 'Exp')
+        self.right_hp_bar.update(self.skip or self.combat_state == 'Exp')
         if self.left.battle_anim:
             self.left.battle_anim.update()
         if self.right.battle_anim:
@@ -862,10 +863,12 @@ class AnimationCombat(Combat):
             if self.platform_current_shake > len(self.platform_shake_set):
                 self.platform_current_shake = 0
 
-    def skip(self):
+    def start_skip(self):
+        self.skip = True
         BattleAnimation.speed = 0.25
 
     def end_skip(self):
+        self.skip = False
         BattleAnimation.speed = 1
 
     def start_hit(self, sound=True, miss=False):
@@ -1472,6 +1475,7 @@ class MapCombat(Combat):
         self.length_of_combat = 2000
         self.additional_time = 0
         self.combat_state = 'Pre_Init'
+        self.skip = False
         self.aoe_anim_flag = False # Have we shown the aoe animation yet?
 
         self.damage_numbers = []
@@ -1479,7 +1483,7 @@ class MapCombat(Combat):
 
         self.health_bars = {}
 
-    def update(self, gameStateObj, metaDataObj, skip=False):
+    def update(self, gameStateObj, metaDataObj):
         def add_skill_icon(unit, skill):
             if unit in self.health_bars:
                 hp_bar = self.health_bars[unit]
@@ -1539,7 +1543,7 @@ class MapCombat(Combat):
                 for unit in self.splash:
                     if isinstance(unit, UnitObject.UnitObject):
                         unit.sprite.change_state('combat_defender', gameStateObj)
-                if not skip:
+                if not self.skip:
                     gameStateObj.stateMachine.changeState('move_camera')
                 self.combat_state = 'Init1'
 
@@ -1561,7 +1565,7 @@ class MapCombat(Combat):
                         add_skill_icon(result.attacker, result.adept_proc)
                         
             elif self.combat_state == 'Init':
-                if skip or current_time > self.length_of_combat // 5 + self.additional_time:
+                if self.skip or current_time > self.length_of_combat // 5 + self.additional_time:
                     gameStateObj.cursor.drawState = 0
                     gameStateObj.highlight_manager.remove_highlights()
 
@@ -1584,7 +1588,7 @@ class MapCombat(Combat):
                     self.combat_state = '2'
 
             elif self.combat_state == '2':
-                if skip or current_time > 2 * self.length_of_combat // 5 + self.additional_time:
+                if self.skip or current_time > 2 * self.length_of_combat // 5 + self.additional_time:
                     self.combat_state = 'Anim'
                     if self.results[0].attacker.sprite.state in {'combat_attacker', 'combat_defender'}:
                         self.results[0].attacker.sprite.change_state('combat_anim', gameStateObj)
@@ -1599,7 +1603,7 @@ class MapCombat(Combat):
                             GC.SOUNDDICT[item.sfx_on_cast].play()
 
             elif self.combat_state == 'Anim':
-                if skip or current_time > 3 * self.length_of_combat // 5 + self.additional_time:
+                if self.skip or current_time > 3 * self.length_of_combat // 5 + self.additional_time:
                     if self.results[0].attacker.sprite.state == 'combat_anim':
                         self.results[0].attacker.sprite.change_state('combat_attacker', gameStateObj)
                     for result in self.results:
@@ -1612,11 +1616,11 @@ class MapCombat(Combat):
                     self.combat_state = 'Clean'
 
             elif self.combat_state == 'Clean':
-                if skip or current_time > (3 * self.length_of_combat // 5) + self.additional_time:
+                if self.skip or current_time > (3 * self.length_of_combat // 5) + self.additional_time:
                     self.combat_state = 'Wait'
 
             elif self.combat_state == 'Wait': 
-                if skip or current_time > (4 * self.length_of_combat // 5) + self.additional_time:
+                if self.skip or current_time > (4 * self.length_of_combat // 5) + self.additional_time:
                     self.end_phase(gameStateObj)
                     self.old_results += self.results
                     self.results = []
@@ -1727,10 +1731,14 @@ class MapCombat(Combat):
                 d = GUIObjects.DamageNumber(int(num), idx, len(str_damage), left, 'SmallRed')
                 self.damage_numbers.append(d)
 
-    def skip(self):
+    def start_skip(self):
+        self.skip = True
         self.p1.sprite.reset_sprite_offset()
         if self.p2 and isinstance(self.p2, UnitObject.UnitObject):
             self.p2.sprite.reset_sprite_offset()
+
+    def end_skip(self):
+        self.skip = False
 
     def apply_result(self, result, gameStateObj):
         self._apply_result(result, gameStateObj)
@@ -1757,6 +1765,7 @@ class MapCombat(Combat):
         if self.item.call_item_script:
             call_item_script = 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
+                self.end_skip()
                 scene = Dialogue.Dialogue_Scene(call_item_script, unit=self.p1, unit2=self.item, tile_pos=self.p1.position)
                 gameStateObj.message.append(scene)
                 gameStateObj.stateMachine.changeState('dialogue')
