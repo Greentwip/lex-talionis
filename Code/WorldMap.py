@@ -22,7 +22,7 @@ class WorldMapBackground(object):
         # Labels for world map
         self.wm_labels = []
         if labels:
-            self.parse_labels('Data/world_map_labels.txt')
+            self.parse_labels('Assets/Lex-Talionis/Data/world_map_labels.txt')
 
         # Highlights
         self.wm_highlights = []

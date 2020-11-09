@@ -130,7 +130,7 @@ class Support_Graph(object):
                 s_l = line.split(';')
                 frm, to = s_l[:2]
                 support_limits = s_l[2:]
-                script_loc = 'Data/SupportConvos/' + frm + to + '.txt'
+                script_loc = 'Assets/Lex-Talionis/Data/SupportConvos/' + frm + to + '.txt'
                 self.add_edge(frm, to, support_limits, script_loc)
 
     def add_node(self, name, affinity):
@@ -284,7 +284,7 @@ def create_affinity_dict(fn):
 
     return d
 
-if os.path.exists('Data/affinity.txt'):
-    AFFINITY_DICT = create_affinity_dict('Data/affinity.txt')
+if os.path.exists('Assets/Lex-Talionis/Data/affinity.txt'):
+    AFFINITY_DICT = create_affinity_dict('Assets/Lex-Talionis/Data/affinity.txt')
 else:
     AFFINITY_DICT = {}

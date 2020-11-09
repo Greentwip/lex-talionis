@@ -27,12 +27,12 @@ def main():
     wait_for = 1
     num = 0
     while True:
-        levelfolder = 'Data/Level' + str(num)
+        levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(num)
         if not os.path.exists(levelfolder):
             break
         print('Level: %s' % num)
         time1 = time.clock()
-        SaveLoad.load_level('Data/Level' + str(num), gameStateObj, metaDataObj)
+        SaveLoad.load_level('Assets/Lex-Talionis/Data/Level' + str(num), gameStateObj, metaDataObj)
         print('Time to Load: %s' % (time.clock() - time1))
         print('Num Units: %s  Map Size: %s' % (len(gameStateObj.allunits), gameStateObj.map.width*gameStateObj.map.height))
         for unit in gameStateObj.allunits:

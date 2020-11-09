@@ -1,16 +1,17 @@
-NO_AUDIO = False
+NO_AUDIO = True
 import pygame
 import sys
 
 from . import configuration
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 engine_constants = {'current_time': 0,
                     'last_time': 0,
                     'last_fps': 0,
-                    'home': './'}
+                    'home': 'Assets/Lex-Talionis/'}
 
 BLEND_RGB_ADD = pygame.BLEND_RGB_ADD
 BLEND_RGB_SUB = pygame.BLEND_RGB_SUB

@@ -541,7 +541,7 @@ class TurnwheelState(StateMachine.State):
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
                 # Called whenever the turnwheel is used
-                turnwheel_script_name = 'Data/turnwheelScript.txt'
+                turnwheel_script_name = 'Assets/Lex-Talionis/Data/turnwheelScript.txt'
                 if self.end_effect and os.path.exists(turnwheel_script_name):
                     turnwheel_script = Dialogue.Dialogue_Scene(turnwheel_script_name)
                     gameStateObj.message.append(turnwheel_script)

@@ -426,14 +426,14 @@ class MapObject(object):
         return coord
 
     def load_new_map_tiles(self, line, currentLevelIndex):
-        tile_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
+        tile_data_suffix = 'Assets/Lex-Talionis/Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
         colorkey, width, height = self.build_color_key(Engine.image_load(tile_data_suffix))
         self.width = width
         self.height = height
         self.populate_tiles(colorkey)
 
     def load_new_map_sprite(self, line, currentLevelIndex):
-        map_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'
+        map_data_suffix = 'Assets/Lex-Talionis/Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'
         self.mapfilename = map_data_suffix
         self.reset_all_tile_sprites()
         self.loadSprites()

@@ -36,7 +36,7 @@ def main():
         gameStateObj.build_new() # Make the gameStateObj ready for a new game
         gameStateObj.set_generic_mode()
         gameStateObj.save_slot = 0
-        levelfolder = 'Data/Level' + str(num)
+        levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(num)
         # Create a save for the first game
         gameStateObj.stateMachine.clear()
         gameStateObj.stateMachine.changeState('turn_change')
@@ -64,7 +64,7 @@ def main():
                     dead_yet = True
                 elif suspended_yet:
                     gameStateObj.statedict['levelIsComplete'] = 'win'
-                    gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt'))
+                    gameStateObj.message.append(Dialogue.Dialogue_Scene('Assets/Lex-Talionis/Data/seizeScript.txt'))
                     gameStateObj.stateMachine.changeState('dialogue')
                     suspended_yet = False
                 else:

@@ -4,6 +4,7 @@ import heapq
 from . import GlobalConstants as GC
 from . import configuration as cf
 
+"""
 try:
     from . import fast_pathfinding # noqa
     FAST_PATHFINDING = True
@@ -11,6 +12,8 @@ except Exception as e:
     print(e)
     FAST_PATHFINDING = False
     print('Fast pathfinding not available. Falling back on default Python implementation.')
+"""
+FAST_PATHFINDING = False
 
 if FAST_PATHFINDING:
     from .fast_pathfinding import Grid_Manager as Grid_Manager

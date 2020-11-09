@@ -85,7 +85,7 @@ def get_metaDataObj(levelfolder, metaDataObj):
     narrationScript_filename = levelfolder + '/narrationScript.txt'
     introScript_filename = levelfolder + '/introScript.txt'
     outroScript_filename = levelfolder + '/outroScript.txt'
-    death_quote_filename = 'Data/death_quote_info.txt'
+    death_quote_filename = 'Assets/Lex-Talionis/Data/death_quote_info.txt'
 
     overview_dict = read_overview_file(overview_filename)
 
@@ -599,7 +599,7 @@ def suspendGame(gameStateObj, kind, slot=None, hard_loc=None):
     # gameStateObj.removeSprites()
     to_save, to_save_meta = gameStateObj.save()
     to_save_meta['kind'] = kind
-    to_save_meta['name'] = read_overview_file('Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
+    to_save_meta['name'] = read_overview_file('Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
 
     gameStateObj.saving_thread = threading.Thread(target=save_io, args=(copy.deepcopy(to_save), copy.deepcopy(to_save_meta), old_slot, slot, hard_loc))
     gameStateObj.saving_thread.start()
@@ -614,7 +614,7 @@ def loadGame(gameStateObj, metaDataObj, saveSlot):
     gameStateObj.load(to_save)
     gameStateObj.save_slot = saveSlot.number
 
-    levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+    levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
     get_metaDataObj(levelfolder, metaDataObj) 
 
     gameStateObj.loadSprites()

@@ -39,10 +39,10 @@ def read_config_file():
 
     # Try saves folder first
     try:
-        parse_config('Saves/config.ini')
+        parse_config('Assets/Lex-Talionis/Saves/config.ini')
     except:
-        if os.path.exists('Data/config.ini'):
-            parse_config('Data/config.ini')
+        if os.path.exists('Assets/Lex-Talionis/Data/config.ini'):
+            parse_config('Assets/Lex-Talionis/Data/config.ini')
 
     lines['debug'] = int(lines['debug'])
     lines['cheat'] = int(lines['cheat'])
@@ -73,7 +73,7 @@ def read_config_file():
     return lines
 
 def write_config_file():
-    with open('Saves/config.ini', 'w') as config_file:
+    with open('Assets/Lex-Talionis/Saves/config.ini', 'w') as config_file:
         write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.items()])
         config_file.write(write_out)
 
@@ -154,8 +154,8 @@ def read_constants_file():
              'arena_level_range': 3,  # How far off in levels enemy arena units can be
              }
 
-    if os.path.isfile('Data/constants.ini'):
-        with open('Data/constants.ini') as constants_file:
+    if os.path.isfile('Assets/Lex-Talionis/Data/constants.ini'):
+        with open('Assets/Lex-Talionis/Data/constants.ini') as constants_file:
             for line in constants_file:
                 if not line.startswith(';'):
                     split_line = line.strip().split('=')
@@ -188,8 +188,8 @@ def read_words_file():
         def __getitem__(self, key):
             return dict.get(self, key, key)
     lines = WordDict()
-    if os.path.isfile('Data/words.txt'):
-        with open('Data/words.txt', mode='r', encoding='utf-8') as words_file:
+    if os.path.isfile('Assets/Lex-Talionis/Data/words.txt'):
+        with open('Assets/Lex-Talionis/Data/words.txt', mode='r', encoding='utf-8') as words_file:
             for line in words_file:
                 split_line = line.strip().split(';')
                 if len(split_line) == 2:

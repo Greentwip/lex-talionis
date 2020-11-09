@@ -30,7 +30,7 @@ def main():
                'menu', 'attack', 'interact']
     num = 0
     while True:
-        levelfolder = 'Data/Level' + str(num)
+        levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(num)
         if not os.path.exists(levelfolder):
             break
         print('Level: %s'% num)

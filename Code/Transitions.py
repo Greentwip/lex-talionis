@@ -183,7 +183,7 @@ class StartStart(StateMachine.State):
             Engine.music_thread.fade_in(GC.MUSICDICT[cf.CONSTANTS.get('music_main')])
 
             # Play title script if it exists
-            title_script_name = 'Data/titleScript.txt'
+            title_script_name = 'Assets/Lex-Talionis/Data/titleScript.txt'
             global TITLE_SCRIPT
             if os.path.exists(title_script_name) and \
                     not TITLE_SCRIPT:
@@ -207,7 +207,7 @@ class StartStart(StateMachine.State):
             gameStateObj.set_generic_mode()
             gameStateObj.save_slot = 'DEBUG'
             gameStateObj.game_constants['level'] = 'DEBUG'
-            levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+            levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
             if not os.path.exists(levelfolder):
                 return
             # Load the first level
@@ -232,7 +232,7 @@ class StartStart(StateMachine.State):
             logger.debug('Loading game...')
             SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
             if selection.kind == 'Start': # Restart
-                levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+                levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
                 # Load the first level
                 SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
             gameStateObj.transition_from = cf.WORDS['Load Game']
@@ -391,7 +391,7 @@ class StartOption(StateMachine.State):
         selection = max(gameStateObj.save_slots, key=lambda x: x.realtime)
         SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
         if selection.kind == 'Start': # Restart
-            levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+            levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
             # Load the level
             SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
 
@@ -456,7 +456,7 @@ class StartLoad(StateMachine.State):
                 logger.debug('Loading game...')
                 SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
                 if selection.kind == 'Start': # Restart
-                    levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+                    levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
                     # Load the first level
                     SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
                 gameStateObj.transition_from = cf.WORDS['Load Game']
@@ -557,7 +557,7 @@ class StartAllSaves(StartLoad):
                 logger.debug('Loading game...')
                 SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
                 if selection.kind == 'Start': # Restart
-                    levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+                    levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
                     # Load the first level
                     SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
                 gameStateObj.transition_from = cf.WORDS['Load Game']
@@ -666,7 +666,7 @@ class StartPreloadedLevels(StartLoad):
         from . import ItemMethods, StatusCatalog, Action
         gameStateObj.build_new() # Make the gameStateObj ready for a new game
 
-        levelfolder = 'Data/Level' + str(level['name'])
+        levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(level['name'])
         SaveLoad.get_metaDataObj(levelfolder, metaDataObj)
 
         # === Populate ===
@@ -814,7 +814,7 @@ class StartRestart(StartLoad):
                 logger.debug('Restarting Level...')
                 SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
                 # Always Restart
-                levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+                levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
                 SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
                 gameStateObj.transition_from = cf.WORDS['Restart Level']
                 gameStateObj.stateMachine.changeState('start_wait')
@@ -1006,7 +1006,7 @@ class StartNew(StateMachine.State):
     def build_new_game(self, gameStateObj, metaDataObj):
         gameStateObj.build_new() # Make the gameStateObj ready for a new game
         gameStateObj.save_slot = gameStateObj.activeMenu.getSelectionIndex()
-        levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+        levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
         # Create a save for the first game
         gameStateObj.stateMachine.clear()
         gameStateObj.stateMachine.changeState('turn_change')
@@ -1267,7 +1267,7 @@ class StartSave(StateMachine.State):
                 GC.SOUNDDICT['Select 4'].play()
                 if gameStateObj.save_kind == 'Start':
                     current_states = gameStateObj.stateMachine.state
-                    levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+                    levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
                     # Load the next level anyway
                     SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
                     # Put states back
@@ -1277,7 +1277,7 @@ class StartSave(StateMachine.State):
                 GC.SOUNDDICT['Save'].play()
                 # self.selection = gameStateObj.save_slots[gameStateObj.activeMenu.getSelectionIndex()]
                 # Rename thing
-                name = SaveLoad.read_overview_file('Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
+                name = SaveLoad.read_overview_file('Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/overview.txt')['name']
                 gameStateObj.activeMenu.options[gameStateObj.activeMenu.getSelectionIndex()] = name
                 gameStateObj.activeMenu.set_color(gameStateObj.activeMenu.getSelectionIndex(), gameStateObj.mode.get('color', 'Green'))
                 self.wait_time = Engine.get_time()
@@ -1294,7 +1294,7 @@ class StartSave(StateMachine.State):
             gameStateObj.stateMachine.state = gameStateObj.stateMachine.state[:-1] # Don't save this state
             SaveLoad.suspendGame(gameStateObj, gameStateObj.save_kind, slot=gameStateObj.activeMenu.getSelectionIndex())
             if gameStateObj.save_kind == 'Start':
-                levelfolder = 'Data/Level' + str(gameStateObj.game_constants['level'])
+                levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
                 # Load the next level
                 SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
             # Put states back
@@ -1332,7 +1332,7 @@ class CreditsState(StateMachine.State):
     """Displays the credits screen, then returns"""
     def begin(self, gameStateObj, metaDataObj):
         self.show_map = False
-        self.message = Dialogue.Dialogue_Scene('Data/credits.txt')
+        self.message = Dialogue.Dialogue_Scene('Assets/Lex-Talionis/Data/credits.txt')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         event = gameStateObj.input_manager.process_input(eventList)

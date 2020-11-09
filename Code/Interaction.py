@@ -296,7 +296,7 @@ class Combat(object):
         return my_exp, (damage, healing, kills)
 
     def handle_interact_script(self, gameStateObj):
-        script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
+        script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
         if os.path.exists(script_name):
             interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None))
             gameStateObj.message.append(interact_script)
@@ -1763,7 +1763,7 @@ class MapCombat(Combat):
             gameStateObj.allunits.append(result.summoning)
             Action.do(Action.SimpleArrive(result.summoning, result.summoning.position), gameStateObj)
         if self.item.call_item_script:
-            call_item_script = 'Data/callItemScript.txt'
+            call_item_script = 'Assets/Lex-Talionis/Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
                 self.end_skip()
                 scene = Dialogue.Dialogue_Scene(call_item_script, unit=self.p1, unit2=self.item, tile_pos=self.p1.position)

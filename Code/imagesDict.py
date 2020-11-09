@@ -15,8 +15,8 @@ def getImages(home='./'):
     IMAGESDICT = {}
     for root, dirs, files in os.walk(home + 'Sprites/General/'):
         general_sprites(root, files)    
-    if os.path.exists(home + 'Data/GeneralSprites/'):
-        for root, dirs, files in os.walk(home + 'Data/GeneralSprites/'):
+    if os.path.exists(home + 'Assets/Lex-Talionis/Data/GeneralSprites/'):
+        for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/GeneralSprites/'):
             general_sprites(root, files)
 
     # Icon Sprites
@@ -24,14 +24,14 @@ def getImages(home='./'):
     ICONDICT = {image[:-4]: Engine.image_load(loc + image, convert_alpha=True) for image in os.listdir(loc) if image.endswith('.png')}
     
     # Item and Skill and Status sprites
-    loc = home + 'Data/Items/'
+    loc = home + 'Assets/Lex-Talionis/Data/Items/'
     ITEMDICT = {image[:-4]: Engine.image_load(loc + image, convert=True) for image in os.listdir(loc) if image.endswith('.png')}
     for image in ITEMDICT.values():
         Engine.set_colorkey(image, COLORKEY, rleaccel=True)
 
     # Unit Sprites
     UNITDICT = {}
-    for root, dirs, files in os.walk(home + 'Data/Characters/'):
+    for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/Characters/'):
         for name in files:
             if name.endswith('.png'):
                 full_name = os.path.join(root, name)

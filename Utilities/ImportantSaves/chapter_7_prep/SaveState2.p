@@ -13400,7 +13400,7 @@ I34632301
 sS'message'
 p2664
 (lp2665
-S'Data/Level7/turnChangeScript.txt'
+S'Assets/Lex-Talionis/Data/Level7/turnChangeScript.txt'
 p2666
 asS'unlocked_lore'
 p2667

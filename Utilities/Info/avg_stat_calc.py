@@ -8,8 +8,8 @@ except ImportError:
 
 loc = '../../'
 
-CLASSDATA = ET.parse(loc + 'Data/class_info.xml')
-UNITDATA = ET.parse(loc + 'Data/units.xml')
+CLASSDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/class_info.xml')
+UNITDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/units.xml')
 num_stats = 10
 max_stat = 20
 

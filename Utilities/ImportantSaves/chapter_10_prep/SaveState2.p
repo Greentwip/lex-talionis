@@ -9794,7 +9794,7 @@ I37286788
 sS'message'
 p2008
 (lp2009
-S'Data/Level10/turnChangeScript.txt'
+S'Assets/Lex-Talionis/Data/Level10/turnChangeScript.txt'
 p2010
 asS'unlocked_lore'
 p2011

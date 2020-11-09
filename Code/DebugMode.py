@@ -58,11 +58,11 @@ class DebugState(StateMachine.State):
                         skill.charged_status.set_to_max()
         elif split_command[0] == 'win_game':
             gameStateObj.statedict['levelIsComplete'] = 'win'
-            gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt'))
+            gameStateObj.message.append(Dialogue.Dialogue_Scene('Assets/Lex-Talionis/Data/seizeScript.txt'))
             gameStateObj.stateMachine.changeState('dialogue')
         elif split_command[0] == 'lose_game':
             gameStateObj.statedict['levelIsComplete'] = 'loss'
-            gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt'))
+            gameStateObj.message.append(Dialogue.Dialogue_Scene('Assets/Lex-Talionis/Data/escapeScript.txt'))
             gameStateObj.stateMachine.changeState('dialogue')
         else:  # Dialog command
             if cur_unit:

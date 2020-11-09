@@ -23,6 +23,10 @@
 
 # === IMPORT MODULES ==========================================================
 import os
+import sys
+
+sys.path.append('Assets/Lex-Talionis')
+
 from datetime import datetime
 
 # Custom imports

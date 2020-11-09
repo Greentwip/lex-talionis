@@ -8792,7 +8792,7 @@ I17944541
 sS'message'
 p1809
 (lp1810
-S'Data/Level5/turnChangeScript.txt'
+S'Assets/Lex-Talionis/Data/Level5/turnChangeScript.txt'
 p1811
 asS'unlocked_lore'
 p1812

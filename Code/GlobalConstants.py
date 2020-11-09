@@ -83,14 +83,14 @@ def create_item_dict():
     return item_dict
 ITEMDATA = create_item_dict()  # This is done differently because I thought the ET was slow. Turns out its not slow. Creating ItemObjects is slow.
 
-STATUSDATA = ET.parse(loc + 'Data/status.xml')
-UNITDATA = ET.parse(loc + 'Data/units.xml')
-CLASSDATA = ET.parse(loc + 'Data/class_info.xml')
-LOREDATA = ET.parse(loc + 'Data/lore.xml')
-PORTRAITDATA = ET.parse(loc + 'Data/portrait_coords.xml')
-TERRAINDATA = ET.parse(loc + 'Data/terrain.xml')
-if os.path.exists(loc + 'Data/preload_levels.xml'):
-    PRELOADDATA = ET.parse(loc + 'Data/preload_levels.xml')
+STATUSDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/status.xml')
+UNITDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/units.xml')
+CLASSDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/class_info.xml')
+LOREDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/lore.xml')
+PORTRAITDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/portrait_coords.xml')
+TERRAINDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/terrain.xml')
+if os.path.exists(loc + 'Assets/Lex-Talionis/Data/preload_levels.xml'):
+    PRELOADDATA = ET.parse(loc + 'Assets/Lex-Talionis/Data/preload_levels.xml')
 else:
     PRELOADDATA = None
 
@@ -133,7 +133,7 @@ def create_difficulty_dict(fp):
             if var not in cur:
                 cur[var] = "0"
     return difficulty_dict
-DIFFICULTYDATA = create_difficulty_dict(loc + 'Data/difficulty_modes.xml')
+DIFFICULTYDATA = create_difficulty_dict(loc + 'Assets/Lex-Talionis/Data/difficulty_modes.xml')
 
 def create_mcost_dict(fp):
     mcost_dict = {}
@@ -144,7 +144,7 @@ def create_mcost_dict(fp):
             s_line = line.strip().split()
             mcost_dict[s_line[0]] = [int(s) if s != '-' else 99 for s in s_line[1:]]
     return mcost_dict
-MCOSTDATA = create_mcost_dict(loc + 'Data/mcost.txt')
+MCOSTDATA = create_mcost_dict(loc + 'Assets/Lex-Talionis/Data/mcost.txt')
 
 def create_ai_dict(fp):
     ai_dict = OrderedDict()
@@ -165,7 +165,7 @@ def create_ai_dict(fp):
                     obj = int(obj)
                 ai_dict[s_line[0]].append(obj)
     return ai_dict
-AIDATA = create_ai_dict(loc + 'Data/ai_presets.txt')
+AIDATA = create_ai_dict(loc + 'Assets/Lex-Talionis/Data/ai_presets.txt')
 
 def create_overworld_data(fp):
     overworld_data = {}
@@ -199,7 +199,7 @@ def create_overworld_data(fp):
                 party['name'] = s_line[1]
                 overworld_data[cur_dict].append(party)   
     return overworld_data
-OVERWORLDDATA = create_overworld_data(loc + 'Data/overworld_data.txt')
+OVERWORLDDATA = create_overworld_data(loc + 'Assets/Lex-Talionis/Data/overworld_data.txt')
 
 class LevelUpQuotes():
     def __init__(self, fn):
@@ -245,7 +245,7 @@ class LevelUpQuotes():
                 return quotes[r.randint(0, len(quotes) - 1)]
         return None
 
-LEVELUPQUOTES = LevelUpQuotes(loc + 'Data/levelup_quotes.txt')
+LEVELUPQUOTES = LevelUpQuotes(loc + 'Assets/Lex-Talionis/Data/levelup_quotes.txt')
 
 FONT = {}
 for fp in os.listdir(loc + 'Sprites/Fonts'):

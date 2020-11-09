@@ -1,18 +1,24 @@
 # Utility Functions
+
+"""
 try:
-    from . import manhattan_sphere
+    import manhattan_sphere
     FAST_SPHERE = True
 except Exception as e:
     print(e)
     FAST_SPHERE = False
     print('Fast manhattan sphere generation not available. Falling back on default Python implementation.')
 try:
-    from . import LOS
+    import LOS
     FAST_LOS = True
 except Exception as e:
     print(e)
     FAST_LOS = False
     print('Fast line of sight calculation not available. Falling back on default Python implementation.')
+"""
+FAST_SPHERE = False
+FAST_LOS = False
+
 # === TAXICAB DISTANCE =================================================
 def calculate_distance(position1, position2):
     return (abs(position1[0] - position2[0]) + abs(position1[1] - position2[1]))

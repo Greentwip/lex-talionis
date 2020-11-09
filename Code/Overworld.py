@@ -669,7 +669,7 @@ class OverworldState(StateMachine.State):
         if gameStateObj.overworld.triggers:
             # Play any triggers
             trigger = gameStateObj.overworld.triggers[0]
-            overworld_script_name = 'Data/overworld_script.txt'
+            overworld_script_name = 'Assets/Lex-Talionis/Data/overworld_script.txt'
             if os.path.exists(overworld_script_name):
                 overworld_script = Dialogue.Dialogue_Scene(overworld_script_name, name=trigger)
                 gameStateObj.message.append(overworld_script)
@@ -740,7 +740,7 @@ class OverworldState(StateMachine.State):
                     level_id = cur_party.location_id
                     if level_id is not None:
                         gameStateObj.stateMachine.changeState('turn_change')
-                        levelfolder = 'Data/Level' + level_id
+                        levelfolder = 'Assets/Lex-Talionis/Data/Level' + level_id
                         SaveLoad.load_level(levelfolder, gameStateObj, metaDataObj)
                 else:
                     self.state = 'normal'
@@ -758,7 +758,7 @@ class OverworldState(StateMachine.State):
                 self.state = 'normal'
 
     def go_to_base(self, cur_party, gameStateObj, metaDataObj):
-        levelfolder = 'Data/Level' + cur_party.location_id
+        levelfolder = 'Assets/Lex-Talionis/Data/Level' + cur_party.location_id
         overview_filename = levelfolder + '/overview.txt'
         if os.path.exists(overview_filename):
             overview_dict = SaveLoad.read_overview_file(overview_filename)

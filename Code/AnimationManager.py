@@ -8,7 +8,7 @@ class BattleAnimationManager(object):
         self.generated_klasses = set()
         # Class Animations
         self.directory = {}
-        for root, dirs, files in os.walk(home + 'Data/Animations/'):
+        for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/Animations/'):
             for name in files:
                 if not (name.endswith('.png') or name.endswith('.txt')):
                     continue
@@ -34,7 +34,7 @@ class BattleAnimationManager(object):
         # Custom Spell Animations
         self.generated_effects = set()
         self.effects = {}
-        for root, dirs, files in os.walk(home + 'Data/Effects/'):
+        for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/Effects/'):
             for name in files:
                 try:
                     effect, desc = name.split('-')
