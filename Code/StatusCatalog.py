@@ -3,12 +3,14 @@
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import static_random
-from . import CustomObjects, ActiveSkill, HelpMenu
+from . import CustomObjects
+from . import ActiveSkill
+from . import HelpMenu
 from . import Utility, Engine
 from . import HealthBar
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 # === New Status Object ========================================================
 class Status(object):
@@ -217,7 +219,7 @@ class Status_Processor(object):
             self.units = [unit for unit in affected_units if unit.team == self.current_phase]
         else:
             self.units = [unit for unit in affected_units if unit.team == self.previous_phase]
-        logger.info('Building Status_Processor: %s %s %s', self.upkeep, self.current_phase, self.previous_phase)
+        print('Building Status_Processor: %s %s %s', self.upkeep, self.current_phase, self.previous_phase)
 
         # State control
         self.current_unit = None
@@ -285,7 +287,7 @@ class Status_Processor(object):
                     if self.oldhp != self.newhp:
                         if self.newhp > self.oldhp:
                             GC.SOUNDDICT['MapHeal'].play()
-                        logger.debug('HP change: %s %s', self.oldhp, self.newhp)
+                        print('HP change: %s %s', self.oldhp, self.newhp)
                         # self.health_bar.update()
                         self.start_time_for_this_status = current_time
                         gameStateObj.cursor.setPosition(self.current_unit.position, gameStateObj)
@@ -349,7 +351,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
     oldhp = unit.currenthp
     if status.time:
         Action.do(Action.DecrementStatusTime(status), gameStateObj)
-        logger.info('Time Status %s to %s at %s. Time left: %s', status.id, unit.name, unit.position, status.time.time_left)
+        print('Time Status %s to %s at %s. Time left: %s', status.id, unit.name, unit.position, status.time.time_left)
         if status.time.time_left <= 0:
             return "Remove" # Don't process. Status has no more effect on unit
 
@@ -382,7 +384,7 @@ def HandleStatusUpkeep(status, unit, gameStateObj):
     if status.upkeep_animation and unit.currenthp != oldhp:
         stota = status.upkeep_animation
         if not stota.sprite:
-            logger.error('Missing upkeep animation sprite for %s', status.name)
+            print('Missing upkeep animation sprite for %s', status.name)
         else:
             anim = CustomObjects.Animation(stota.sprite, (unit.position[0], unit.position[1] - 1), (stota.x, stota.y), stota.num_frames, on=False)
             gameStateObj.allanimations.append(anim)

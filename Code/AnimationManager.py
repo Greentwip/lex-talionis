@@ -8,50 +8,102 @@ class BattleAnimationManager(object):
         self.generated_klasses = set()
         # Class Animations
         self.directory = {}
-        for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/Animations/'):
-            for name in files:
-                if not (name.endswith('.png') or name.endswith('.txt')):
-                    continue
-                try:
-                    klass, weapon, desc = name.split('-')
-                except ValueError as e:
-                    print('%s: Error loading in %s' % (e, name))
-                    continue
-                if klass not in self.directory:
-                    self.directory[klass] = {}
-                if weapon not in self.directory[klass]:
-                    self.directory[klass][weapon] = {}
-                    self.directory[klass][weapon]['images'] = {}
-                full_name = os.path.join(root, name)
-                if name.endswith('.png'):
-                    # image = Engine.image_load(full_name, convert=True)
-                    # Engine.set_colorkey(image, COLORKEY, rleaccel=True)
-                    self.directory[klass][weapon]['images'][desc[:-4]] = full_name
-                elif name.endswith('Script.txt'):
-                    self.directory[klass][weapon]['script'] = full_name
-                elif name.endswith('Index.txt'):
-                    self.directory[klass][weapon]['index'] = full_name
+
+        def traverse_animations(dir_path):
+            for root, dirs, files in os.walk(dir_path):
+                for name in files:
+                    if not (name.endswith('.png') or name.endswith('.txt')):
+                        continue
+                    try:
+                        klass, weapon, desc = name.split('-')
+                    except ValueError as e:
+                        print('%s: Error loading in %s', e, name)
+                        continue
+                    if klass not in self.directory:
+                        self.directory[klass] = {}
+                    if weapon not in self.directory[klass]:
+                        self.directory[klass][weapon] = {}
+                        self.directory[klass][weapon]['images'] = {}
+                    full_name = os.path.join(root, name)
+                    if name.endswith('.png'):
+                        # image = Engine.image_load(full_name, convert=True)
+                        # Engine.set_colorkey(image, COLORKEY, rleaccel=True)
+                        self.directory[klass][weapon]['images'][desc[:-4]] = full_name
+                    elif name.endswith('Script.txt'):
+                        self.directory[klass][weapon]['script'] = full_name
+                    elif name.endswith('Index.txt'):
+                        self.directory[klass][weapon]['index'] = full_name
+                break
+
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Archer')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Assassin')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Berserker')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Brigand')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Cavalier')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Cleric')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Dracoknight')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Dracolord')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Dragoon')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Duke')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Fighter')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/General')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Halberdier')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Knight')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Lord')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Mage')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Mercenary')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Myrmidon')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Oracle')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Paladin')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Raider')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Retainer')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Sage')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Sentinel')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Shaman')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Skirmisher')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Sniper')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Soldier')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Strategist')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Swordmaster')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Tactician')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Thief')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Vanguard')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Warlock')
+        traverse_animations('Assets/Lex-Talionis/Data/Animations/Warrior')
+
         # Custom Spell Animations
         self.generated_effects = set()
         self.effects = {}
-        for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/Effects/'):
-            for name in files:
-                try:
-                    effect, desc = name.split('-')
-                except ValueError:
-                    print('Error loading in %s' % name)
-                    continue
-                if effect not in self.effects:
-                    self.effects[effect] = {}
-                    self.effects[effect]['images'] = {}
-                full_name = os.path.join(root, name)
-                if name.endswith('.png'):
-                    # image = Engine.image_load(full_name, convert_alpha=True)
-                    self.effects[effect]['images'][desc[:-4]] = full_name
-                elif name.endswith('Script.txt'):
-                    self.effects[effect]['script'] = full_name
-                elif name.endswith('Index.txt'):
-                    self.effects[effect]['index'] = full_name
+
+        def traverse_effects(dir_path):
+            for root, dirs, files in os.walk(dir_path):
+                for name in files:
+                    try:
+                        effect, desc = name.split('-')
+                    except ValueError:
+                        print('Error loading in %s', name)
+                        continue
+                    if effect not in self.effects:
+                        self.effects[effect] = {}
+                        self.effects[effect]['images'] = {}
+                    full_name = os.path.join(root, name)
+                    if name.endswith('.png'):
+                        # image = Engine.image_load(full_name, convert_alpha=True)
+                        self.effects[effect]['images'][desc[:-4]] = full_name
+                    elif name.endswith('Script.txt'):
+                        self.effects[effect]['script'] = full_name
+                    elif name.endswith('Index.txt'):
+                        self.effects[effect]['index'] = full_name
+                break
+
+        traverse_effects('Assets/Lex-Talionis/Data/Effects/')
+        traverse_effects('Assets/Lex-Talionis/Data/Effects/Anima/')
+        traverse_effects('Assets/Lex-Talionis/Data/Effects/Dark/')
+        traverse_effects('Assets/Lex-Talionis/Data/Effects/Light/')
+        traverse_effects('Assets/Lex-Talionis/Data/Effects/Other/')
+        traverse_effects('Assets/Lex-Talionis/Data/Effects/Procs/')
+        traverse_effects('Assets/Lex-Talionis/Data/Effects/Promotion/')
 
     def generate(self, klass):
         if klass in self.directory and klass not in self.generated_klasses:
@@ -147,7 +199,7 @@ class BattleAnimationManager(object):
             else:
                 return None, self.effects[effect]['script']
         else:
-            print('Effect %s not found in self.effects!' % effect)
+            print('Effect %s not found in self.effects!', effect)
             return None, None
 
     def format_index(self, index, anim):

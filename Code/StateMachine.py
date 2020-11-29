@@ -1,8 +1,8 @@
 from . import GlobalConstants as GC
 from . import InputManager, Engine
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 # === Finite State Machine Object ===============================
 class StateMachine(object):
@@ -130,7 +130,7 @@ class StateMachine(object):
 
     def process_temp_state(self, gameStateObj, metaDataObj):
         if self.temp_state:
-            logger.debug('Temp State: %s', self.temp_state)
+            print('Temp State: %s', self.temp_state)
         for state in self.temp_state:
             if state == 'pop':
                 if self.state:
@@ -222,7 +222,7 @@ class StateMachine(object):
         self.process_temp_state(gameStateObj, metaDataObj)
         time_end = Engine.get_true_time()
         if time_end - time_start > 25:
-            logger.debug('StateMachine took too long: %s Begin: %s, Input: %s, Update: %s, Draw: %s, End: %s', state_name,
+            print('StateMachine took too long: %s Begin: %s, Input: %s, Update: %s, Draw: %s, End: %s', state_name,
                          time_input - time_start, time_upkeep - time_input, time_update - time_upkeep, time_draw - time_update, time_end - time_draw)
         return mapSurf, repeat_flag
 

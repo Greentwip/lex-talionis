@@ -5,8 +5,8 @@ from . import GlobalConstants as GC
 from . import InputManager, StateMachine, BaseMenuSurf, BattleAnimation
 from . import Background, Action, Engine, Image_Modification, Weather, Dialogue
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class ActionLog(object):
     def __init__(self):
@@ -25,12 +25,12 @@ class ActionLog(object):
         self.unique_moves = []
 
     def append(self, action):
-        logger.info("Add Action %d: %s", self.action_index + 1, action.__class__.__name__)
+        print("Add Action %d: %s", self.action_index + 1, action.__class__.__name__)
         self.actions.append(action)
         self.action_index += 1
 
     def remove(self, action):
-        logger.info("Remove Action %d: %s", self.action_index, action.__class__.__name__)
+        print("Remove Action %d: %s", self.action_index, action.__class__.__name__)
         self.actions.remove(action)
         self.action_index -= 1
 
@@ -107,8 +107,8 @@ class ActionLog(object):
             elif last_move[1] < last_action_index:
                 self.unique_moves.append(('Extra', last_move[1] + 1, last_action_index))
 
-        logger.info('*** Turnwheel Begin! ***')
-        logger.info(self.unique_moves)
+        print('*** Turnwheel Begin! ***')
+        print(self.unique_moves)
 
         self.current_move_index = len(self.unique_moves)
 
@@ -131,7 +131,7 @@ class ActionLog(object):
             return None
         # self.fore_current_unit = None
         self.current_move = self.unique_moves[self.current_move_index - 1]
-        logger.info("Backward %s %s %s", self.current_move_index, self.current_move, self.action_index)
+        print("Backward %s %s %s", self.current_move_index, self.current_move, self.action_index)
         self.current_move_index -= 1
         action = None
         if isinstance(self.current_move, self.Move):
@@ -151,7 +151,7 @@ class ActionLog(object):
                     prev_action = None
                     if self.action_index >= 1:
                         prev_action = self.actions[self.action_index]
-                        logger.info("Prev action %s", prev_action)
+                        print("Prev action %s", prev_action)
                     if self.current_unit.position:
                         gameStateObj.cursor.centerPosition(self.current_unit.position, gameStateObj)
                     elif isinstance(prev_action, Action.Die):
@@ -159,7 +159,7 @@ class ActionLog(object):
                     self.hover_on(self.current_unit, gameStateObj)
                     text_list = self.get_unit_turn(self.current_unit, self.action_index)
                     self.current_move_index += 1  # Make sure we don't skip first half of this
-                    logger.info("In Backward %s %s %s %s", text_list, self.current_unit.name, self.current_unit.position, prev_action)
+                    print("In Backward %s %s %s %s", text_list, self.current_unit.name, self.current_unit.position, prev_action)
                     return text_list
                 else:
                     while self.action_index >= self.current_move.begin:
@@ -200,7 +200,7 @@ class ActionLog(object):
             return None
         # self.back_current_unit = None
         self.current_move = self.unique_moves[self.current_move_index]
-        logger.info("Forward %s %s %s", self.current_move_index, self.current_move, self.action_index)
+        print("Forward %s %s %s", self.current_move_index, self.current_move, self.action_index)
         self.current_move_index += 1
         action = None
         if isinstance(self.current_move, self.Move):
@@ -212,7 +212,7 @@ class ActionLog(object):
                 elif isinstance(action, Action.Die):
                     gameStateObj.cursor.centerPosition(action.old_pos, gameStateObj)
                 text_list = self.get_unit_turn(self.current_unit, self.action_index)
-                logger.info("In Forward %s %s %s", text_list, self.current_unit.name, action)
+                print("In Forward %s %s %s", text_list, self.current_unit.name, action)
                 self.current_unit = None
                 # Extra Moves
                 if self.current_move_index < len(self.unique_moves):
@@ -328,11 +328,11 @@ class ActionLog(object):
 
     def set_first_free_action(self):
         if self.first_free_action == -1:
-            logger.info("*** First Free Action ***")
+            print("*** First Free Action ***")
             self.first_free_action = self.action_index
 
     def reset_first_free_action(self):
-        logger.info("*** First Free Action ***")
+        print("*** First Free Action ***")
         self.first_free_action = self.action_index
 
     def hover_on(self, unit, gameStateObj):

@@ -4,9 +4,9 @@ import sys
 
 from . import configuration
 
-import logging
+#import logging
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 engine_constants = {'current_time': 0,
                     'last_time': 0,
@@ -87,7 +87,7 @@ def create_crash_save():
         copyfile(p_file, engine_constants['home'] + 'Saves/Suspend.p')
         copyfile(latest_file, engine_constants['home'] + 'Saves/Suspend.pmeta')
         print('\nCreated save point at last turn change! Select Continue in Main Menu to load!\n')
-        logger.debug('Created save point from %s', p_file)
+        print('Created save point from %s', p_file)
 
 # === TIMING STUFF ===========================================================
 def update_time():
@@ -96,7 +96,7 @@ def update_time():
     engine_constants['last_fps'] = engine_constants['current_time'] - engine_constants['last_time']
     if engine_constants['last_fps'] > 32:
         # print('Frame took too long! %s ms'%(engine_constants['last_fps']))
-        logger.debug('Frame took too long! %s ms', engine_constants['last_fps'])
+        print('Frame took too long! %s ms', engine_constants['last_fps'])
     
 def get_time():
     return engine_constants['current_time']
@@ -246,7 +246,7 @@ class Song(object):
             self.loop = None
 
     def swap(self):
-        logger.info('Music: Swap to Loop')
+        #print('Music: Swap to Loop')
         self.name = self.loop[:]
         self.loop = None
 
@@ -339,7 +339,7 @@ class MusicThread(object):
         pygame.mixer.music.set_volume(self.volume)
     
     def fade_to_normal(self, gameStateObj):
-        logger.info('Music: Fade to Normal')
+        print('Music: Fade to Normal')
         phase_name = gameStateObj.phase.get_current_phase()
         phase_music = gameStateObj.phase_music.get_phase_music(phase_name)
         if phase_music:
@@ -349,9 +349,9 @@ class MusicThread(object):
 
     def fade_in(self, next_song, num_plays=-1, time=0):
         if not next_song:
-            logger.info('Music: Song does not exist %s' % next_song)
+            print('Music: Song does not exist %s' % next_song)
             return None
-        logger.info('Music: Fade in %s' % next_song)
+        print('Music: Fade in %s' % next_song)
         
         if self.playing and self.song_stack:
             current_song = self.song_stack[-1]
@@ -360,19 +360,19 @@ class MusicThread(object):
 
         # Confirm thats its not already at the top of the stack and playing    
         if self.song_stack and self.song_stack[-1].is_same_song(next_song):
-            logger.info('Music: Already Present')
+            print('Music: Already Present')
             return None
 
         # Determine if song is in stack
         for song in self.song_stack:
             # If so, move to top of stack
             if song.is_same_song(next_song):
-                logger.info('Music: Pull Up %s' % next_song)
+                print('Music: Pull Up %s' % next_song)
                 self.song_stack.remove(song) 
                 self.song_stack.append(song)
                 break
         else:
-            logger.info('Music: New Song %s' % next_song)
+            print('Music: New Song %s' % next_song)
             if next_song:
                 new_song = Song(next_song, num_plays, time)
                 self.song_stack.append(new_song)
@@ -382,7 +382,7 @@ class MusicThread(object):
             current_song.current_time += pygame.mixer.music.get_pos()
 
         # This is where we are going to next
-        logger.info('Music: Next Song %s', self.song_stack[-1])
+        print('Music: Next Song %s', self.song_stack[-1])
 
         # Start fade out process
         if self.state == 'fade_out':
@@ -395,7 +395,7 @@ class MusicThread(object):
         return self.song_stack[-1]
 
     def fade_back(self):
-        logger.info('Music: Fade back')
+        print('Music: Fade back')
         # Confirm that there is something to pop
         if not self.song_stack:
             return
@@ -433,7 +433,7 @@ class MusicThread(object):
             # If the current song has ended...
             if event.type == self.end_song_event:
                 if self.state == 'normal':
-                    logger.debug('Music: Song End Event')
+                    print('Music: Song End Event')
                     if self.playing and self.song_stack:
                         current_song = self.song_stack[-1]
                         if current_song.loop:
@@ -449,13 +449,13 @@ class MusicThread(object):
                             self.stop()
                             self.fade_back()
                 elif self.state == 'fade_catch':
-                    logger.debug('Music: Fade Catch Event')
+                    print('Music: Fade Catch Event')
                     self.state = 'normal' # catches the stop from fade and returns to normal
 
         # === Update
         if self.state == 'fade_out':
             if current_time - self.fade_out_update > self.fade_out_time:
-                logger.debug('Music: Actual Fade in!')
+                print('Music: Actual Fade in!')
                 if self.playing and self.song_stack:
                     current_song = self.song_stack[-1]
                     if pygame.mixer.music.get_busy():  # Catching double fade outs?
@@ -478,7 +478,7 @@ class MusicThread(object):
 
         # If there's no music currently playing, make it so that music does play
         if self.state == 'normal' and self.playing and self.song_stack and not pygame.mixer.music.get_busy():
-            logger.debug('Music: Music not playing!')
+            print('Music: Music not playing!')
             current_song = self.song_stack[-1]
             if current_song.loop:
                 current_song.swap()

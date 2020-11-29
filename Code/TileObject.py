@@ -6,11 +6,11 @@ from Code.imagesDict import COLORKEY
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import StatusCatalog, CustomObjects, ItemMethods
-from . import Image_Modification, Engine, Weather, Utility, Action
+from . import Image_Modification, Engine, Weather, Utility
 from . import Highlight
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 DESTRUCTION_ANIM_TIME = 500
 
@@ -241,7 +241,7 @@ class MapObject(object):
             return None # Couldn't find any that match id
         
     def parse_tile_info(self, tile_info_location, gameStateObj):
-        logger.info('Parsing tile info at %s', tile_info_location)
+        print('Parsing tile info at %s', tile_info_location)
         self.reset_tile_info()
 
         if not os.path.isfile(tile_info_location):
@@ -252,7 +252,7 @@ class MapObject(object):
             tile_info = fp.readlines()
 
         for line in tile_info:
-            logger.debug('Parsing tile info line: %s', line.strip())
+            print('Parsing tile info line: %s', line.strip())
             line = line.strip().split(':') # Should split in 2. First half being coordinate. Second half being properties
             coord = line[0].split(',')
             x1 = int(coord[0])
@@ -426,14 +426,14 @@ class MapObject(object):
         return coord
 
     def load_new_map_tiles(self, line, currentLevelIndex):
-        tile_data_suffix = 'Assets/Lex-Talionis/Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
+        tile_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
         colorkey, width, height = self.build_color_key(Engine.image_load(tile_data_suffix))
         self.width = width
         self.height = height
         self.populate_tiles(colorkey)
 
     def load_new_map_sprite(self, line, currentLevelIndex):
-        map_data_suffix = 'Assets/Lex-Talionis/Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'
+        map_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'
         self.mapfilename = map_data_suffix
         self.reset_all_tile_sprites()
         self.loadSprites()
@@ -472,6 +472,8 @@ class MapObject(object):
         self.weather = [weather for weather in self.weather if weather.name != name]
 
     def add_global_status(self, s_id, gameStateObj):
+        from . import Action
+
         if any(status.id == s_id for status in self.status_effects):
             return  # No stacking at all of global statuses
         status_obj = StatusCatalog.statusparser(s_id, gameStateObj)
@@ -481,6 +483,8 @@ class MapObject(object):
                 Action.do(Action.AddStatus(unit, status_obj), gameStateObj)
 
     def remove_global_status(self, s_id, gameStateObj):
+        from . import Action
+        
         if not any(status.id == s_id for status in self.status_effects):
             return  # Must have the right status to remove
         status_obj = [status for status in self.status_effects if status.id == s_id][0]

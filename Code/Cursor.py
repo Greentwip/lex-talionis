@@ -2,8 +2,8 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Engine, InputManager
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class Cursor(object):
     def __init__(self, sprite, position, fake=False):
@@ -220,7 +220,7 @@ class Cursor(object):
     def _set_position(self, pos, func_x, func_y, gameStateObj):
         if not pos:
             return            
-        logger.debug('Cursor new position %s', pos)
+        print('Cursor new position %s', pos)
         self.position = pos
         # Recenter camera only if necessary
         if self.position[0] <= gameStateObj.cameraOffset.get_x() + 2: # Too far left
@@ -243,7 +243,7 @@ class Cursor(object):
     def centerPosition(self, newposition, gameStateObj):
         if not newposition:
             return            
-        logger.debug('Cursor new position %s', newposition)
+        print('Cursor new position %s', newposition)
         self.position = newposition
         gameStateObj.cameraOffset.set_x(self.position[0] - GC.TILEX//2)
         gameStateObj.cameraOffset.set_y(self.position[1] - GC.TILEY//2)

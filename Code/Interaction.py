@@ -6,19 +6,19 @@ from . import Engine, Image_Modification, Utility
 from . import ClassData, Banner, Background, Weapons, BattleAnimation, GUIObjects
 from . import CustomObjects, UnitObject
 from . import StatusCatalog, Dialogue
-from . import Action, Solver
+from . import Solver
 from . import HealthBar
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 def convert_positions(gameStateObj, attacker, atk_position, position, item):
-    logger.debug('attacker position: %s, position: %s, item: %s', atk_position, position, item)
+    print('attacker position: %s, position: %s, item: %s', atk_position, position, item)
     if item.weapon or item.spell:
         def_position, splash_positions = item.aoe.get_positions(atk_position, position, gameStateObj, item)
     else:
         def_position, splash_positions = position, []
-    logger.debug('def pos: %s, splash pos: %s', def_position, splash_positions)
+    print('def pos: %s, splash pos: %s', def_position, splash_positions)
     if def_position:
         main_defender = [unit for unit in gameStateObj.allunits if unit.position == def_position]  # Target units before tiles
         if not main_defender and 'HP' in gameStateObj.map.tile_info_dict[def_position]:  # Check if the tile is valid to attack
@@ -41,7 +41,7 @@ def convert_positions(gameStateObj, attacker, atk_position, position, item):
             splash_units = [unit for unit in splash_units if unit.currenthp < unit.stats['HP']]
     if item.weapon or (item.spell and not item.beneficial):
         splash_units += [gameStateObj.map.tiles[pos] for pos in splash_positions if 'HP' in gameStateObj.map.tile_info_dict[pos]]
-    logger.debug('Main Defender: %s, Splash: %s', main_defender, splash_units)
+    print('Main Defender: %s, Splash: %s', main_defender, splash_units)
     return main_defender, splash_units
 
 def get_battle_anim(unit, item, distance) -> bool:
@@ -111,12 +111,16 @@ class Combat(object):
                 result.def_damage_done = min(-result.def_damage, result.defender.stats['HP'] - result.defender.currenthp)
 
     def _handle_reflect(self, attacker, defender, status_obj, gameStateObj):
+        from . import Action
+
         if 'reflect' in defender.status_bundle:
             status_copy = StatusCatalog.statusparser(status_obj.id, gameStateObj)
             status_copy.giver_id = defender.id
             Action.do(Action.AddStatus(attacker, status_copy), gameStateObj)
 
     def _apply_result(self, result, gameStateObj):
+        from . import Action
+
         # Status
         if isinstance(result.defender, UnitObject.UnitObject) and 'immune' not in result.defender.status_bundle:
             for status_obj in result.def_status:
@@ -139,6 +143,8 @@ class Combat(object):
                 Action.do(Action.ChangeTileHP(result.defender.position, -result.def_damage), gameStateObj)
 
     def handle_unusable_items(self, gameStateObj):
+        from . import Action
+
         if self.item.c_uses and self.item.c_uses.uses <= 0:
             Action.do(Action.UnequipItem(self.p1, self.item), gameStateObj)
         if self.p2 and self.p2_item and self.p2_item.c_uses and self.p2_item.c_uses.uses <= 0:
@@ -158,6 +164,8 @@ class Combat(object):
         return a_broke_item, d_broke_item
 
     def remove_broken_items(self, a_broke_item, d_broke_item, gameStateObj):
+        from . import Action
+
         if a_broke_item:
             Action.do(Action.RemoveItem(self.p1, self.item), gameStateObj)
             gameStateObj.boundary_manager.recalculate_unit(self.p1, gameStateObj)
@@ -174,6 +182,8 @@ class Combat(object):
             gameStateObj.stateMachine.changeState('itemgain')
 
     def handle_fatigue(self, results, gameStateObj):
+        from . import Action
+
         if cf.CONSTANTS['fatigue'] in (1, 2, 3) and not self.event_combat:
             if self.item:
                 fatigue_gain = self._compute_fatigue(self.p1, self.item, gameStateObj)
@@ -202,6 +212,8 @@ class Combat(object):
             return item.fatigue or 0
 
     def handle_wexp(self, results, item, gameStateObj):
+        from . import Action
+
         if not cf.CONSTANTS['miss_wexp']:  # If miss wexp is not on, only include hits
             results = [result for result in results if result.outcome]
         if cf.CONSTANTS['double_wexp']:
@@ -259,7 +271,7 @@ class Combat(object):
             my_exp = 0
         if self.item.max_exp:
             my_exp = min(my_exp, int(self.item.max_exp))
-        logger.debug('Attacker gained %s exp', my_exp)
+        print('Attacker gained %s exp', my_exp)
         return my_exp, (damage, healing, kills)
 
     def calc_init_exp_p2(self, defender_results):
@@ -296,13 +308,15 @@ class Combat(object):
         return my_exp, (damage, healing, kills)
 
     def handle_interact_script(self, gameStateObj):
-        script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
+        script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/interactScript.txt'
         if os.path.exists(script_name):
             interact_script = Dialogue.Dialogue_Scene(script_name, unit=self.p1, unit2=(self.p2 if self.p2 else None))
             gameStateObj.message.append(interact_script)
             gameStateObj.stateMachine.changeState('dialogue')
 
     def handle_miracle(self, gameStateObj, all_units):
+        from . import Action
+
         for unit in all_units:
             if unit.isDying and isinstance(unit, UnitObject.UnitObject):
                 # Check for arena miracle
@@ -318,6 +332,8 @@ class Combat(object):
                     Action.do(Action.Message("%s activated Miracle" % unit.name), gameStateObj)
 
     def handle_item_gain(self, gameStateObj, all_units):
+        from . import Action
+
         units = [u for u in all_units if isinstance(u, UnitObject.UnitObject)]
         for unit in units:
             if unit.isDying:
@@ -355,6 +371,8 @@ class Combat(object):
                     gameStateObj.stateMachine.changeState('wait')
 
     def handle_statuses(self, gameStateObj):
+        from . import Action
+
         for status in self.p1.status_effects:
             if status.status_after_battle and not (self.p1.isDying and status.tether):
                 for unit in [self.p2] + self.splash:
@@ -401,6 +419,8 @@ class Combat(object):
                 gameStateObj.support.end_combat(self.p1, gameStateObj)
 
     def handle_skill_used(self, gameStateObj):
+        from . import Action
+
         if self.skill_used:
             if self.skill_used.combat_art:
                 Action.do(Action.RemoveStatus(self.p1, self.skill_used.combat_art.status_id), gameStateObj)
@@ -409,7 +429,7 @@ class Combat(object):
     def handle_death(self, gameStateObj, metaDataObj, all_units):
         for unit in all_units:
             if unit.isDying:
-                logger.debug('%s is dying.', unit.name)
+                print('%s is dying.', unit.name)
                 if isinstance(unit, UnitObject.UnitObject):
                     gameStateObj.stateMachine.changeState('dying')
                     killer = None
@@ -424,6 +444,8 @@ class Combat(object):
                     gameStateObj.map.destroy(unit, gameStateObj)
 
     def arena_cleanup(self, gameStateObj):
+        from . import Action
+
         # Remove non-player characters from the game permanently
         if self.arena:
             if self.arena == 'arena_base':
@@ -445,6 +467,8 @@ class Combat(object):
             self.solver.total_rounds = 0
 
     def turnwheel_death_messages(self, all_units, gameStateObj):
+        from . import Action
+
         messages = []
         dying_units = [u for u in all_units if isinstance(u, UnitObject.UnitObject) and u.isDying]
         any_player_dead = any(not u.team.startswith('enemy') for u in dying_units)
@@ -620,7 +644,7 @@ class AnimationCombat(Combat):
         self.right_platform = Engine.flip_horiz(GC.IMAGESDICT[right_platform_type + suffix].copy())
 
     def update(self, gameStateObj, metaDataObj):
-        # logger.debug(self.combat_state)
+        # print(self.combat_state)
         current_time = Engine.get_time()
         if self.combat_state == 'Start':
             self.current_result = self.solver.get_a_result(gameStateObj, metaDataObj)
@@ -1263,6 +1287,8 @@ class AnimationCombat(Combat):
             GC.FONT['number_small2'].blit(crit, surf, (right - GC.FONT['number_small2'].size(crit)[0], top + 16))
 
     def handle_exp(self, gameStateObj):
+        from . import Action
+
         self.check_death()
         # Handle exp and stat gain
         if not self.event_combat and (self.item.weapon or self.item.spell) and (not self.arena or self.p2.currenthp <= 0):
@@ -1316,6 +1342,8 @@ class AnimationCombat(Combat):
 
     # Clean up everything
     def clean_up(self, gameStateObj, metaDataObj):
+        from . import Action
+
         gameStateObj.stateMachine.back()
         # self.p1.hasAttacked = True
         Action.do(Action.HasAttacked(self.p1), gameStateObj)
@@ -1581,7 +1609,7 @@ class MapCombat(Combat):
                             anim = CustomObjects.Animation(GC.IMAGESDICT['AOE_' + self.item.id], pos, (num_frames, 1), num_frames, 32)
                             gameStateObj.allanimations.append(anim)
                         else:
-                            logger.warning('%s not in GC.IMAGESDICT. Skipping Animation', 'AOE_' + self.item.id)
+                            print('%s not in GC.IMAGESDICT. Skipping Animation', 'AOE_' + self.item.id)
                     # Weapons get extra time, spells and items do not need it, since they are one sided.
                     if not self.item.weapon:
                         self.additional_time -= self.length_of_combat // 5
@@ -1741,6 +1769,8 @@ class MapCombat(Combat):
         self.skip = False
 
     def apply_result(self, result, gameStateObj):
+        from . import Action
+
         self._apply_result(result, gameStateObj)
         def_pos = result.defender.position
         atk_pos = result.attacker.position
@@ -1763,7 +1793,7 @@ class MapCombat(Combat):
             gameStateObj.allunits.append(result.summoning)
             Action.do(Action.SimpleArrive(result.summoning, result.summoning.position), gameStateObj)
         if self.item.call_item_script:
-            call_item_script = 'Assets/Lex-Talionis/Data/callItemScript.txt'
+            call_item_script = 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
                 self.end_skip()
                 scene = Dialogue.Dialogue_Scene(call_item_script, unit=self.p1, unit2=self.item, tile_pos=self.p1.position)
@@ -1854,6 +1884,8 @@ class MapCombat(Combat):
 
     # Clean up everything
     def clean_up(self, gameStateObj, metaDataObj):
+        from . import Action
+        
         # Remove combat state
         gameStateObj.stateMachine.back()
 

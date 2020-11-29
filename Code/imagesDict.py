@@ -5,6 +5,7 @@ from . import Engine, AnimationManager
 COLORKEY = (128, 160, 128)
 def getImages(home='./'):
     # General Sprites
+    IMAGESDICT = {}
 
     def general_sprites(root, files):
         for name in files:
@@ -12,32 +13,60 @@ def getImages(home='./'):
                 full_name = os.path.join(root, name)
                 IMAGESDICT[name[:-4]] = Engine.image_load(full_name, convert_alpha=True)
 
-    IMAGESDICT = {}
-    for root, dirs, files in os.walk(home + 'Sprites/General/'):
-        general_sprites(root, files)    
-    if os.path.exists(home + 'Assets/Lex-Talionis/Data/GeneralSprites/'):
-        for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/GeneralSprites/'):
-            general_sprites(root, files)
+    def traverse_non_recursive(dir_path):
+        for root, dirs, files in os.walk(dir_path):
+            general_sprites(root, files) 
+            break
+
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/Animations/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/CombatBackgrounds/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/Highlights/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/MenuBackgrounds/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/Minimap/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/Overworld/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/Panoramas/')
+    traverse_non_recursive('Assets/Lex-Talionis/Sprites/General/Weather/')
+
+
+
+    try:
+        traverse_non_recursive('Assets/Lex-Talionis/Data/GeneralSprites/')
+        traverse_non_recursive('Assets/Lex-Talionis/Data/GeneralSprites/Panoramas/')
+        traverse_non_recursive('Assets/Lex-Talionis/Data/GeneralSprites/TitleBackground')
+    except:
+        pass
 
     # Icon Sprites
-    loc = home + 'Sprites/Icons/'
+    loc = 'Assets/Lex-Talionis/Sprites/Icons/'
     ICONDICT = {image[:-4]: Engine.image_load(loc + image, convert_alpha=True) for image in os.listdir(loc) if image.endswith('.png')}
     
     # Item and Skill and Status sprites
-    loc = home + 'Assets/Lex-Talionis/Data/Items/'
+    loc = 'Assets/Lex-Talionis/Data/Items/'
     ITEMDICT = {image[:-4]: Engine.image_load(loc + image, convert=True) for image in os.listdir(loc) if image.endswith('.png')}
     for image in ITEMDICT.values():
         Engine.set_colorkey(image, COLORKEY, rleaccel=True)
 
     # Unit Sprites
     UNITDICT = {}
-    for root, dirs, files in os.walk(home + 'Assets/Lex-Talionis/Data/Characters/'):
-        for name in files:
-            if name.endswith('.png'):
-                full_name = os.path.join(root, name)
-                image = Engine.image_load(full_name, convert=True)
-                Engine.set_colorkey(image, COLORKEY, rleaccel=True)
-                UNITDICT[name[:-4]] = image
+
+    def traverse_characters(dir_path):
+        for root, dirs, files in os.walk(dir_path):
+            for name in files:
+                if name.endswith('.png'):
+                    full_name = os.path.join(root, name)
+                    image = Engine.image_load(full_name, convert=True)
+                    Engine.set_colorkey(image, COLORKEY, rleaccel=True)
+                    UNITDICT[name[:-4]] = image
+            break
+
+    traverse_characters('Assets/Lex-Talionis/Data/Characters/')
+    traverse_characters('Assets/Lex-Talionis/Data/Characters/MapSprites/')
+    traverse_characters('Assets/Lex-Talionis/Data/Characters/NPCs/')
+    traverse_characters('Assets/Lex-Talionis/Data/Characters/OtherCharacters/')
+    traverse_characters('Assets/Lex-Talionis/Data/Characters/PlayerCharacters/')
+
+
 
     # Battle Animations
     ANIMDICT = AnimationManager.BattleAnimationManager(COLORKEY, home)

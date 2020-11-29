@@ -10,10 +10,13 @@ def CreateBaseMenuSurf(size, baseimage='BaseMenuBackground', top_left_sigil=None
     mBSHeight = menuBaseSprite.get_height()
 
     # Force the width and height to be correct!
-    full_width = width - width%(mBSWidth//3)
-    full_height = height - height%(mBSHeight//3)
-    width = mBSWidth//3
-    height = mBSHeight//3
+    mbsw_floor = mBSWidth//3
+    mbsh_floor = mBSHeight//3
+
+    full_width = width - width%mbsw_floor
+    full_height = height - height%mbsh_floor
+    width = mbsw_floor
+    height = mbsh_floor
 
     assert full_width%(width) == 0, "The dimensions of the menu are wrong - the sprites will not line up correctly. They must be multiples of 8. %s" %(width)
     assert full_height%(height) == 0, "The dimensions of the manu are wrong - the sprites will not line up correctly. They must be multiples of 8. %s" %(height)

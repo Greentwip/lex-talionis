@@ -4,12 +4,12 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Image_Modification, Utility, Engine, Counters, TextChunk
 from . import HelpMenu, GUIObjects
-from . import CustomObjects, Action, Weapons
+from . import CustomObjects, Weapons
 from . import ItemMethods
 from . import BaseMenuSurf
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 def OutlineFont(FONTNAME, text, surf, innercolor, outercolor, position):
     """ renders and blits outlined text based on the position.
@@ -1025,7 +1025,7 @@ class ChapterSelectMenu(MainMenu):
         try:
             check = center[1]
         except TypeError:
-            logger.warning("this is a gameStateObj.activeMenu... It shouldn't be. Aborting draw...")
+            print("this is a gameStateObj.activeMenu... It shouldn't be. Aborting draw...")
             return
         # Only bother to show closest 7
         start_index = max(0, self.currentSelection - 3)
@@ -1839,6 +1839,8 @@ class TradeMenu(Counters.CursorControl):
             #     self.main_hand[1] = 0
 
     def tradeItems(self, gameStateObj):
+        from . import Action
+
         # swaps selected item and current item
         # Get items
         item1 = "EmptySlot"

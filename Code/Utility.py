@@ -1,21 +1,5 @@
 # Utility Functions
 
-"""
-try:
-    import manhattan_sphere
-    FAST_SPHERE = True
-except Exception as e:
-    print(e)
-    FAST_SPHERE = False
-    print('Fast manhattan sphere generation not available. Falling back on default Python implementation.')
-try:
-    import LOS
-    FAST_LOS = True
-except Exception as e:
-    print(e)
-    FAST_LOS = False
-    print('Fast line of sight calculation not available. Falling back on default Python implementation.')
-"""
 FAST_SPHERE = False
 FAST_LOS = False
 

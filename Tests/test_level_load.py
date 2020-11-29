@@ -6,7 +6,7 @@ import cProfile
 import Code.SaveLoad as SaveLoad
 import Code.GameStateObj as GameStateObj
 
-import logging
+#import logging
 my_level = logging.DEBUG
 logging.basicConfig(filename='Tests/debug.log.test', filemode='w', level=my_level,
                     disable_existing_loggers=False, format='%(levelname)8s:%(module)20s: %(message)s')

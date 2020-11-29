@@ -3,10 +3,9 @@ import os, pickle, math
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Utility, Image_Modification, Engine
-from . import Action
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 # === Simple Finite State Machine Object ===============================
 class StateMachine(object):
@@ -155,6 +154,8 @@ class Phase(object):
             self.current = len(self.order) - 1
 
     def next(self, gameStateObj):
+        from . import Action
+
         self.previous = self.current
         # Actually change phase
         if gameStateObj.allunits:
@@ -328,15 +329,15 @@ class SaveSlot(object):
                     self.number = save_metadata['save_slot']
 
         except ValueError as e:
-            print('***Value Error: %s' % (e))
+            print('***Value Error: %s', e)
         except ImportError as e:
-            print('***Import Error: %s' % (e))
+            print('***Import Error: %s', e)
         except TypeError as e:
-            print('***Type Error: %s' % (e))
+            print('***Type Error: %s', e)
         except KeyError as e:
-            print('***Key Error: %s' % (e))
+            print('***Key Error: %s', e)
         except IOError as e:
-            print('***IO Error: %s' % (e))
+            print('***IO Error: %s', e)
 
     def get_name(self):
         return self.name + (' - ' + self.kind if self.kind else '')
@@ -462,7 +463,7 @@ class CameraOffset(object):
     def center2(self, old, new):
         x1, y1 = old
         x2, y2 = new
-        # logger.debug('Camera Center: %s %s %s %s', (x1, y1), (x2, y2), self.x, self.y)
+        # print('Camera Center: %s %s %s %s', (x1, y1), (x2, y2), self.x, self.y)
         max_x = max(x1, x2)
         max_y = max(y1, y2)
         min_x = min(x1, x2)
@@ -472,10 +473,10 @@ class CameraOffset(object):
             self.x = (max_x + min_x)//2 - GC.TILEX//2
             self.y = (max_y + min_y)//2 - GC.TILEY//2
         
-        # logger.debug('New Camera: %s %s', self.x, self.y)
+        # print('New Camera: %s %s', self.x, self.y)
 
     def check_loc(self):
-        # logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
+        # print('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
         if not self.pan_to and self.current_x == self.x and self.current_y == self.y:
             self.pan_flag = False
             return True
@@ -535,7 +536,7 @@ class CameraOffset(object):
         # Make sure current_x and current_y do not go off screen
         if gameStateObj.map:
             self.set_limits(gameStateObj.map)
-        # logger.debug('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
+        # print('Camera %s %s %s %s', self.current_x, self.current_y, self.x, self.y)
 
 class PhaseMusic(object):
     def __init__(self, player, enemy, other=None, player_battle=None, enemy_battle=None):
@@ -558,7 +559,7 @@ class PhaseMusic(object):
         elif phase_name == 'other':
             return self.other_music
         else:
-            logging.error('Unsupported phase name: %s', phase_name)
+            print('Unsupported phase name: %s', phase_name)
             return None
 
     def serialize(self):
@@ -570,7 +571,7 @@ class PhaseMusic(object):
 
     def change_music(self, phase_name, music_name):
         if music_name != 'None' and music_name not in GC.MUSICDICT:
-            logging.error('Music %s not in GC.MUSICDICT', music_name)
+            print('Music %s not in GC.MUSICDICT', music_name)
             return None
         if phase_name == 'player':
             self.player_name = music_name
@@ -588,7 +589,7 @@ class PhaseMusic(object):
             self.enemy_battle_name = music_name
             self.enemy_battle_music = GC.MUSICDICT.get(music_name)           
         else:
-            logging.error('Unsupported phase name: %s', phase_name)
+            print('Unsupported phase name: %s', phase_name)
             return None        
 
 # === HANDLES PRESSING INFO AND APPLYING HELP MENU ===========================

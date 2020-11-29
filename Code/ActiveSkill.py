@@ -1,9 +1,12 @@
 import enum
+import faulthandler
+faulthandler.enable()
+
 
 from . import ItemMethods
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class ItemModComponent(object):
     def __init__(self, uid, conditional, effect_add=None, effect_change=None):
@@ -14,26 +17,26 @@ class ItemModComponent(object):
 
     def add_effect(self, item, gameStateObj):
         command = 'item.' + self.effect_add[0] + '.' + self.effect_add[1]
-        logger.debug("Execute Command %s", command)
+        print("Execute Command %s", command)
         exec(command)
 
     def reverse_effect(self, item, gameStateObj):
         command = 'item.' + self.effect_add[0] + '.' + self.effect_add[2]
-        logger.debug("Execute Command %s", command)
+        print("Execute Command %s", command)
         exec(command)
 
     def change_effect(self, item, gameStateObj):
         for i in range(len(self.effect_change)//2):
             orig_val = item[self.effect_change[i*2]]
             val = eval(self.effect_change[i*2 + 1], locals(), globals())
-            logger.debug('Set %s to %s', self.effect_change[i*2], val)
+            print('Set %s to %s', self.effect_change[i*2], val)
             item['orig_' + self.effect_change[i*2]] = orig_val
             item[self.effect_change[i*2]] = val
 
     def change_effect_back(self, item, gameStateObj):
         for i in range(len(self.effect_change)//2):
             orig_val = item['orig_' + self.effect_change[i*2]]
-            logger.debug('Set %s to %s', self.effect_change[i*2], orig_val)
+            print('Set %s to %s', self.effect_change[i*2], orig_val)
             item[self.effect_change[i*2]] = orig_val
 
     def add_and_change_effect(self, item, gameStateObj):
@@ -43,7 +46,7 @@ class ItemModComponent(object):
                 self.add_effect(item, gameStateObj)
             else:
                 val = eval(self.effect_change[i*2 + 1], locals(), globals())
-                logger.debug('Set %s to %s', self.effect_change[i*2], val)
+                print('Set %s to %s', self.effect_change[i*2], val)
                 if orig_val is None:
                     # Need a non-null thing to save value as
                     item['orig_' + self.effect_change[i*2]] = 'None'  
@@ -58,7 +61,7 @@ class ItemModComponent(object):
             if orig_val:
                 if orig_val == 'None':
                     orig_val = None
-                logger.debug('Set %s to %s', self.effect_change[i*2], orig_val)
+                print('Set %s to %s', self.effect_change[i*2], orig_val)
                 item[self.effect_change[i*2]] = orig_val
             else:
                 self.reverse_effect(item, gameStateObj)
@@ -106,13 +109,13 @@ class ChargeComponent(object):
         self.current_charge += inc
         if self.check_charged():
             self.current_charge = self.charge_max
-        logger.debug('%s increased charge to %s', self, self.current_charge)
+        print('%s increased charge to %s', self, self.current_charge)
 
     def decrease_charge(self, unit, dec):
         self.current_charge -= dec
         if self.current_charge < 0:
             self.current_charge = 0
-        logger.debug('%s decreased charge to %s', self, self.current_charge)
+        print('%s decreased charge to %s', self, self.current_charge)
 
 # Charged means that the player does not control when the charge will be activated
 # Activated Means that the player controls when the charge will be activated and reset to 0

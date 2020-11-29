@@ -7,12 +7,12 @@ from . import static_random
 from . import Utility, Engine, Image_Modification, TextChunk
 from . import Aura, Banner, BaseMenuSurf, ClassData
 from . import AStar, Weapons, UnitSprite, UnitSound
-from . import Dialogue, StatusCatalog, Action
+from . import Dialogue, StatusCatalog
 
 from Code.StatObject import build_stat_dict_plus  # Needed so old saves can load
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class Multiset(Counter):
     def __contains__(self, item):
@@ -582,7 +582,7 @@ class UnitObject(object):
 # === TARGETING AND OTHER UTILITY FUNCTIONS ===================================
     def leave(self, gameStateObj, test=False):
         if self.position:
-            logger.debug('Leave %s %s %s', self, self.name, self.position)
+            print('Leave %s %s %s', self, self.name, self.position)
             if gameStateObj.cursor.currentHoveredUnit is self:
                 gameStateObj.cursor.remove_unit_display()
             if not test:
@@ -593,7 +593,7 @@ class UnitObject(object):
 
     def arrive(self, gameStateObj, test=False):
         if self.position:
-            logger.debug('Arrive %s %s %s', self, self.name, self.position)
+            print('Arrive %s %s %s', self, self.name, self.position)
             if not test:
                 gameStateObj.grid_manager.set_unit_node(self.position, self)
                 gameStateObj.boundary_manager.arrive(self, gameStateObj)
@@ -769,6 +769,7 @@ class UnitObject(object):
             return True
 
     def handle_booster(self, item, gameStateObj):
+        from . import Action
         Action.do(Action.UseItem(item), gameStateObj)
         if item.uses and item.uses.uses <= 0:
             gameStateObj.banners.append(Banner.brokenItemBanner(self, item))
@@ -790,7 +791,7 @@ class UnitObject(object):
             gameStateObj.exp_gain_struct = (self, 0, None, 'item_promote')
             gameStateObj.stateMachine.changeState('exp_gain')
         elif item.call_item_script:
-            call_item_script = 'Assets/Lex-Talionis/Data/callItemScript.txt'
+            call_item_script = 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(call_item_script, unit=self, unit2=item, tile_pos=self.position))
                 gameStateObj.stateMachine.changeState('dialogue')
@@ -896,7 +897,7 @@ class UnitObject(object):
 
     # For regular levels
     def apply_levelup(self, levelup_list, hp_up=False):
-        logger.debug("Applying levelup %s to %s", levelup_list, self.name)
+        print("Applying levelup %s to %s", levelup_list, self.name)
         # Levelup_list should be a len(8) list.
         for idx, name in enumerate(GC.EQUATIONS.stat_list):
             self.stats[name].base_stat += levelup_list[idx]
@@ -906,7 +907,7 @@ class UnitObject(object):
 
     # For bonuses
     def apply_stat_change(self, levelup_list):
-        logger.debug("Applying stat change %s to %s", levelup_list, self.name)
+        print("Applying stat change %s to %s", levelup_list, self.name)
         for idx, name in enumerate(GC.EQUATIONS.stat_list):
             self.stats[name].bonuses += levelup_list[idx]
 
@@ -916,7 +917,7 @@ class UnitObject(object):
             self.movement_left = max(0, int(self.stats['MOV']))
 
     def apply_growth_mod(self, growth_mod):
-        logger.debug("Applying growth modification %s to %s", growth_mod, self.name)
+        print("Applying growth modification %s to %s", growth_mod, self.name)
         self.growths = [a + b for a, b in zip(self.growths, growth_mod)]
         
 # === TILE ALGORITHMS ===
@@ -1409,7 +1410,7 @@ class UnitObject(object):
         return True
 
     def handle_fight_quote(self, target_unit, gameStateObj):
-        fight_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/fightScript.txt'
+        fight_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/fightScript.txt'
         if os.path.exists(fight_script_name):
             gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=target_unit, unit2=self))
             gameStateObj.stateMachine.changeState('dialogue')
@@ -1425,7 +1426,7 @@ class UnitObject(object):
         from . import AI_fsm
         self.reset_ai()
         self.ai_descriptor = ai_line
-        logger.info('New AI Descriptor: %s', self.ai_descriptor)
+        print('New AI Descriptor: %s', self.ai_descriptor)
         if '_' in ai_line:
             ai_line, self.ai_group = ai_line.split('_')
         else:
@@ -1451,6 +1452,7 @@ class UnitObject(object):
             self.ai = AI_fsm.AI(self, ai1, ai2, team_ignore, name_ignore, view_range, priority, self.ai_group)
 
     def notify_others_in_group(self, gameStateObj):
+        from . import Action
         if self.ai_group:
             for unit in gameStateObj.allunits:
                 if unit.team == self.team and unit.ai_group == self.ai_group:
@@ -1628,7 +1630,9 @@ class UnitObject(object):
             return target.stats['HP'] - target.currenthp
         heal = int(eval(item.heal)) + GC.EQUATIONS.get_heal(self, item)
         if self is not target:
-            heal += sum(status.caretaker for status in self.status_effects if status.caretaker)
+            for status in self.status_effects:
+                if status.caretaker:
+                    heal += int(eval(status.caretaker))
 
         return heal
 
@@ -1853,7 +1857,8 @@ class UnitObject(object):
                                                                                      
 # === ACTIONS =========================================================        
     def wait(self, gameStateObj, script=True):
-        logger.debug('%s %s waits', self.name, self)
+        from . import Action
+        print('%s %s waits', self.name, self)
 
         self.sprite.change_state('normal')
 
@@ -1861,7 +1866,7 @@ class UnitObject(object):
         Action.do(Action.Wait(self), gameStateObj)
 
         # Called whenever a unit waits
-        wait_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
+        wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
         if script and os.path.exists(wait_script_name):
             wait_script = Dialogue.Dialogue_Scene(wait_script_name, unit=self)
             gameStateObj.message.append(wait_script)
@@ -1908,7 +1913,9 @@ class UnitObject(object):
         self.validPartners = []
 
     def clean_up(self, gameStateObj, event=False):
-        logger.debug("Cleaning up unit %s", self.id)
+        from . import Action
+
+        print("Cleaning up unit %s", self.id)
         # Place any rescued units back in the gameStateObj.allunits list
         if self.TRV and not event:
             self.unrescue(gameStateObj)
@@ -1991,23 +1998,31 @@ class UnitObject(object):
         return serial_dict
 
     def acquire_tile_status(self, gameStateObj, force=False):
+        from . import Action
+
         if self.position and (force or 'flying' not in self.status_bundle):
             for status_obj in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
                 if status_obj not in self.status_effects:
                     Action.do(Action.AddStatus(self, status_obj), gameStateObj)
 
     def remove_tile_status(self, gameStateObj, force=False):
+        from . import Action
+
         if self.position and (force or 'flying' not in self.status_bundle):
             for status_obj in gameStateObj.map.tile_info_dict[self.position].get('Status', []):
                 Action.do(Action.RemoveStatus(self, status_obj.id), gameStateObj)
 
     def unrescue(self, gameStateObj):
+        from . import Action
+
         self.TRV = 0
         self.strTRV = "---"
         # Remove rescue penalty
         Action.RemoveStatus(self, "Rescue").do(gameStateObj)
 
     def escape(self, gameStateObj):
+        from . import Action
+
         # Handles any events that happen on escape
         Action.do(Action.HasAttacked(self), gameStateObj)
         if 'Escape' in gameStateObj.map.tile_info_dict[self.position]:
@@ -2017,10 +2032,12 @@ class UnitObject(object):
         else:
             escape_name = None
         gameStateObj.stateMachine.changeState('wait')
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Assets/Lex-Talionis/Data/escapeScript.txt', unit=self, name=escape_name, tile_pos=self.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, name=escape_name, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def seize(self, gameStateObj):
+        from . import Action
+
         Action.do(Action.HasAttacked(self), gameStateObj)
         if 'Lord_Seize' in gameStateObj.map.tile_info_dict[self.position]:
             seize_name = gameStateObj.map.tile_info_dict[self.position]['Lord_Seize']
@@ -2031,14 +2048,16 @@ class UnitObject(object):
         else:
             seize_name = None
         gameStateObj.stateMachine.changeState('wait')
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Assets/Lex-Talionis/Data/seizeScript.txt', unit=self, name=seize_name, tile_pos=self.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, name=seize_name, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, item, gameStateObj):
+        from . import Action
+
         # self.hasAttacked = True
         Action.do(Action.HasAttacked(self), gameStateObj)
         locked_name = gameStateObj.map.tile_info_dict[pos]['Locked']
-        unlock_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
+        unlock_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
         if os.path.exists(unlock_script):
             gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
             gameStateObj.stateMachine.changeState('dialogue')
@@ -2073,17 +2092,23 @@ class UnitObject(object):
         self.insert_item(index, item, gameStateObj)
 
     def unequip_item(self, item, gameStateObj):
+        from . import Action
+
         for status_on_equip in item.status_on_equip:
             Action.do(Action.RemoveStatus(self, status_on_equip), gameStateObj)
 
     def equip_item(self, item, gameStateObj):
+        from . import Action
+
         for status_on_equip in item.status_on_equip:
             new_status = StatusCatalog.statusparser(status_on_equip, gameStateObj)
             Action.do(Action.AddStatus(self, new_status), gameStateObj)
 
     # This does the adding and subtracting of statuses
     def remove_item(self, item, gameStateObj):
-        logger.debug("Removing %s from %s items.", item, self.name)
+        from . import Action
+
+        print("Removing %s from %s items.", item, self.name)
         next_weapon = next((item for item in self.items if item.weapon and self.canWield(item)), None)
         was_mainweapon = next_weapon == item
         self.items.remove(item)
@@ -2105,7 +2130,9 @@ class UnitObject(object):
 
     # This does the adding and subtracting of statuses
     def insert_item(self, index, item, gameStateObj):
-        logger.debug("Inserting %s to %s items at index %s.", item, self.name, index)
+        from . import Action
+
+        print("Inserting %s to %s items at index %s.", item, self.name, index)
         # Are we just reordering our items?
         if item in self.items:
             self.items.remove(item)
@@ -2143,12 +2170,16 @@ class UnitObject(object):
                 gameStateObj.boundary_manager.recalculate_unit(self, gameStateObj)
 
     def die(self, gameStateObj, event=False):
+        from . import Action
+
         if event:
             Action.do(Action.LeaveMap(self), gameStateObj)
         else:
             Action.do(Action.Die(self), gameStateObj)
 
     def move_back(self, gameStateObj):
+        from . import Action
+
         if self.current_arrive_action:
             Action.reverse(self.current_arrive_action, gameStateObj)
             self.current_arrive_action = None
@@ -2177,6 +2208,8 @@ class UnitObject(object):
 
 # === UPDATE ==================================================================       
     def update(self, gameStateObj):
+        from . import Action
+        
         currentTime = Engine.get_time()
 
         # === GAMELOGIC ===
@@ -2184,7 +2217,7 @@ class UnitObject(object):
         if self in gameStateObj.moving_units and \
                 currentTime - self.lastMoveTime > self.get_unit_speed() and \
                 gameStateObj.stateMachine.getState() == 'movement':
-            # logger.debug('Moving!')
+            # print('Moving!')
             if self.path: # and self.movement_left >= gameStateObj.map.tiles[self.path[-1]].mcost: # This causes errors with max movement
                 new_position = self.path.pop()
                 if self.position != new_position:

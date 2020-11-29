@@ -1,4 +1,3 @@
-#! usr/bin/env python2.7
 from collections import OrderedDict
 import os
 def read_config_file():
@@ -6,6 +5,8 @@ def read_config_file():
                          ('cheat', 1),
                          ('random_seed', -1),
                          ('Screen Size', 2),
+                         ('Screen Width', 1920),
+                         ('Screen Height', 1080),
                          ('Sound Buffer Size', 4),
                          ('Animation', 'Always'),
                          ('Unit Speed', 120),
@@ -41,13 +42,17 @@ def read_config_file():
     try:
         parse_config('Assets/Lex-Talionis/Saves/config.ini')
     except:
-        if os.path.exists('Assets/Lex-Talionis/Data/config.ini'):
+        try: 
             parse_config('Assets/Lex-Talionis/Data/config.ini')
+        except:
+            pass
 
     lines['debug'] = int(lines['debug'])
     lines['cheat'] = int(lines['cheat'])
     lines['random_seed'] = int(lines['random_seed'])
     lines['Screen Size'] = int(lines['Screen Size'])
+    lines['Screen Width'] = int(lines['Screen Width'])
+    lines['Screen Height'] = int(lines['Screen Height'])
     lines['Sound Buffer Size'] = int(lines['Sound Buffer Size'])
     lines['Unit Speed'] = int(lines['Unit Speed'])
     lines['Text Speed'] = int(lines['Text Speed'])
@@ -188,15 +193,15 @@ def read_words_file():
         def __getitem__(self, key):
             return dict.get(self, key, key)
     lines = WordDict()
-    if os.path.isfile('Assets/Lex-Talionis/Data/words.txt'):
+    try:
         with open('Assets/Lex-Talionis/Data/words.txt', mode='r', encoding='utf-8') as words_file:
             for line in words_file:
                 split_line = line.strip().split(';')
                 if len(split_line) == 2:
                     lines[split_line[0]] = split_line[1]
                 else:
-                    print('ERROR! unparseable words.txt line: %s' % line)
-    else:
+                    print('ERROR! unparseable words.txt line: %s', line)
+    except:
         print("ERROR! No words.txt file found in the data directory.")
 
     return lines
@@ -204,7 +209,7 @@ def read_words_file():
 OPTIONS = read_config_file()
 if not __debug__:
     OPTIONS['debug'] = False
-print('Debug: %s' % (OPTIONS['debug']))
+print('Debug: %s', OPTIONS['debug'])
 CONSTANTS = read_constants_file()
 CONSTANTS['Unit Speed'] = OPTIONS['Unit Speed']
 WORDS = read_words_file()

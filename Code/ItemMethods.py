@@ -39,8 +39,8 @@ class ItemObject(object):
         for component_key, component_value in self.components.items():
             self.__dict__[component_key] = component_value
 
-        if self.droppable == self.locked == True:
-            print("%s can't be both droppable and locked to a unit!" % self.name)
+        if self.droppable == self.locked and self.locked == True:
+            print('%s cannot be both droppable and locked to a unit!', self.name)
             self.droppable = False
 
         self.loadSprites()

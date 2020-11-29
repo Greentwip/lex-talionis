@@ -1,8 +1,8 @@
 from . import configuration as cf
 from . import Utility
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 # Called when a unit arrives on a tile
 def arrive(unit, gameStateObj):
@@ -95,7 +95,7 @@ class Aura(object):
         from . import Action
         if (self.target == 'Ally' and owner.checkIfAlly(unit) and owner is not unit) or \
            (self.target == 'Enemy' and owner.checkIfEnemy(unit)):
-            logger.debug('Applying Aura %s to %s at %s', self.child_status.name, unit.name, unit.position)
+            print('Applying Aura %s to %s at %s', self.child_status.name, unit.name, unit.position)
             Action.do(Action.AddStatus(unit, self.child_status), gameStateObj) 
 
     def remove(self, unit, gameStateObj):

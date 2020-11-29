@@ -14,7 +14,7 @@ import Code.Transitions as Transitions
 import Code.Engine as Engine
 import Code.Dialogue as Dialogue
 
-import logging
+#import logging
 
 pyautogui.PAUSE = 0
 GC.DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))

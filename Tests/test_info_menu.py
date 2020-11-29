@@ -11,7 +11,7 @@ import Code.GameStateObj as GameStateObj
 import Code.InfoMenu as InfoMenu
 import Code.CustomObjects as CustomObjects
 
-import logging
+#import logging
 
 GC.DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))
 

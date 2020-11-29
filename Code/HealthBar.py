@@ -127,7 +127,7 @@ class HealthBar(object):
         width, height = pos
         # Determine position
         self.true_position = self.topleft
-        # logger.debug("Topleft %s", self.topleft)
+        # print("Topleft %s", self.topleft)
         if self.topleft in ('p1', 'p2'):
             # Get the two positions, along with camera position
             pos1 = self.unit.position
@@ -138,11 +138,11 @@ class HealthBar(object):
             else:
                 left = True if pos1[0] < pos2[0] else False
             self.order = 'left' if left else 'right'
-            # logger.debug("%s %s %s", pos1, pos2, left)
+            # print("%s %s %s", pos1, pos2, left)
             x_pos = GC.WINWIDTH//2 - width if left else GC.WINWIDTH//2
             rel_1 = pos1[1] - c_pos[1]
             rel_2 = pos2[1] - c_pos[1]
-            # logger.debug("Health_Bar_Pos %s %s", rel_1, rel_2)
+            # print("Health_Bar_Pos %s %s", rel_1, rel_2)
             # If both are on top of screen
             if rel_1 < 5 and rel_2 < 5:
                 rel = max(rel_1, rel_2)
@@ -156,7 +156,7 @@ class HealthBar(object):
                 top_gap = min(rel_1, rel_2)
                 bottom_gap = (GC.TILEY-1) - max(rel_1, rel_2)
                 middle_gap = abs(rel_1 - rel_2)
-                # logger.debug("Gaps %s %s %s", top_gap, bottom_gap, middle_gap)
+                # print("Gaps %s %s %s", top_gap, bottom_gap, middle_gap)
                 if top_gap > bottom_gap and top_gap > middle_gap:
                     y_pos = top_gap * GC.TILEHEIGHT - 12 - height - 13 # c_surf
                 elif bottom_gap > top_gap and bottom_gap > middle_gap:
@@ -166,7 +166,7 @@ class HealthBar(object):
                     x_pos = GC.WINWIDTH//4 - width//2 if pos1[0] - c_pos[0] > GC.TILEX//2 else 3*GC.WINWIDTH//4 - width//2
                     self.order = 'middle'
             self.true_position = (x_pos, y_pos)
-            # logger.debug('True Position %s %s', x_pos, y_pos)
+            # print('True Position %s %s', x_pos, y_pos)
         elif self.topleft == 'splash': # self.topleft == 'auto':
             # Find x Position
             pos_x = self.unit.position[0] - gameStateObj.cameraOffset.get_x()
@@ -178,7 +178,7 @@ class HealthBar(object):
                 pos_y = self.unit.position[1] - gameStateObj.cameraOffset.get_y() - 3
             self.true_position = pos_x*GC.TILEWIDTH - width//2, pos_y*GC.TILEHEIGHT - 8
             self.order = 'middle'
-            # logger.debug('Other True Position %s %s', pos_x, pos_y)
+            # print('Other True Position %s %s', pos_x, pos_y)
 
     def fade_in(self):
         self.blinds = 0

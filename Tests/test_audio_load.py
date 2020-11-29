@@ -11,7 +11,7 @@ import Code.Engine as Engine
 Engine.engine_constants['home'] = '../'
 import Code.GlobalConstants as GC
 
-import logging
+#import logging
 GC.DISPLAYSURF = pygame.display.set_mode((GC.WINWIDTH, GC.WINHEIGHT))
 
 my_level = logging.DEBUG

@@ -1,8 +1,8 @@
 from . import GlobalConstants as GC
 from . import Engine, Aura
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 # === GENERIC HIGHLIGHT OBJECT ===================================
 class Highlight(object):

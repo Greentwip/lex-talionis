@@ -11,11 +11,11 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 from . import static_random
 from . import TileObject, ItemMethods, UnitObject, StatusCatalog, CustomObjects
-from . import Utility, Weapons, Objective, Triggers, ClassData, Action
+from . import Utility, Weapons, Objective, Triggers, ClassData
 from Code.StatObject import build_stat_dict
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 # === READS LEVEL FILE (BITMAP MODE) ==============================================================================
 def load_level(levelfolder, gameStateObj, metaDataObj):
@@ -113,7 +113,7 @@ def read_overview_file(overview_filename):
     return overview_lines
 
 def parse_unit_line(unitLine, current_mode, allunits, factions, reinforceUnits, prefabs, triggers, gameStateObj):
-    logger.info('Reading unit line %s', unitLine)
+    print('Reading unit line %s', unitLine)
     # New Faction
     if unitLine[0] == 'faction':
         factions[unitLine[1]] = (unitLine[2], unitLine[3], unitLine[4])
@@ -175,6 +175,8 @@ def add_unit(unitLine, allunits, reinforceUnits, gameStateObj):
     return add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj)
 
 def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
+    from . import Action
+
     class_dict = ClassData.class_dict
     for unit in GC.UNITDATA.getroot().findall('unit'):
         if unit.find('id').text == legend['unit_id']:
@@ -235,7 +237,7 @@ def add_unit_from_legend(legend, allunits, reinforceUnits, gameStateObj):
                            gameStateObj.mode, growth_points=u_i['growth_points'])
 
             u_i['stats'] = build_stat_dict(stats)
-            logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
+            print("%s's stats: %s", u_i['name'], u_i['stats'])
 
             # Parse wexp
             u_i['wexp'] = unit.find('wexp').text.split(',')
@@ -294,6 +296,8 @@ def create_unit(unitLine, allunits, factions, reinforceUnits, gameStateObj):
     return create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStateObj)
 
 def create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStateObj):
+    from . import Action
+
     class_dict = ClassData.class_dict
 
     u_i = {}
@@ -334,7 +338,7 @@ def create_unit_from_legend(legend, allunits, factions, reinforceUnits, gameStat
         get_unit_info(u_i['team'], u_i['klass'], u_i['level'], u_i['tags'], legend['items'],
                       gameStateObj.mode, gameStateObj.game_constants, force_fixed=force_fixed)
     u_i['stats'] = build_stat_dict(stats)
-    logger.debug("%s's stats: %s", u_i['name'], u_i['stats'])
+    print("%s's stats: %s", u_i['name'], u_i['stats'])
     
     u_i['ai'] = legend['ai']
     u_i['movement_group'] = class_dict[u_i['klass']]['movement_group']
@@ -476,6 +480,8 @@ def get_unit_info(team, klass, level, tags, item_line, mode, game_constants, for
     return stats, growths, growth_points, items, wexp, level
 
 def get_skills(unit, classes, level, gameStateObj, feat=False):
+    from . import Action
+    
     class_skills = []
     for index, klass in enumerate(classes):
         for level_needed, class_skill in ClassData.class_dict[klass]['skills']:
@@ -493,7 +499,7 @@ def get_skills(unit, classes, level, gameStateObj, feat=False):
                 new_skill = feat_list[random_number]
                 class_skills.append(new_skill)
     class_skills = [status for status in class_skills if status != 'Feat']
-    logger.debug('Class Skills %s', class_skills)
+    print('Class Skills %s', class_skills)
     # === Actually add statuses
     status_effects = [StatusCatalog.statusparser(status, gameStateObj) for status in class_skills]
     for status in status_effects:
@@ -558,7 +564,7 @@ def save_io(to_save, to_save_meta, old_slot, slot=None, hard_loc=None):
         save_loc = 'Saves/SaveState' + str(slot) + '.p'
         meta_loc = 'Saves/SaveState' + str(slot) + '.pmeta'
     
-    logger.info('Saving to %s', save_loc)
+    print('Saving to %s', save_loc)
 
     with open(save_loc, 'wb') as suspendFile:
         # Remove the -1 here if you want to interrogate the pickled save

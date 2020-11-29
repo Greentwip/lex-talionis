@@ -7,10 +7,10 @@ from . import configuration as cf
 from . import MenuFunctions, Dialogue, CustomObjects, UnitObject, SaveLoad
 from . import Interaction, StatusCatalog, ItemMethods, Background
 from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
-from . import StateMachine, Action, Aura, BaseMenuSurf, ClassData
+from . import StateMachine, Aura, BaseMenuSurf, ClassData
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class TurnChangeState(StateMachine.State):
     name = 'turn_change'
@@ -31,17 +31,21 @@ class TurnChangeState(StateMachine.State):
         gameStateObj.activeMenu = None
 
     def end(self, gameStateObj, metaDataObj):
+        from . import Action
+        
         # Replace previous phase
         gameStateObj.phase.next(gameStateObj)
 
         if gameStateObj.phase.get_current_phase() == 'player':
+            from . import Action
+
             # gameStateObj.turncount += 1
             Action.do(Action.IncrementTurn(), gameStateObj)
             gameStateObj.stateMachine.changeState('free')
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
-            turn_event_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
+            turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
             if os.path.isfile(turn_event_script):
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(turn_event_script))
                 gameStateObj.stateMachine.changeState('dialogue')
@@ -81,7 +85,7 @@ class TurnChangeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
             if gameStateObj.phase.get_current_phase() == 'enemy':
-                enemy_turn_event_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
+                enemy_turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
                 if os.path.isfile(enemy_turn_event_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(enemy_turn_event_script))
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -114,7 +118,7 @@ class FreeState(StateMachine.State):
         if cf.OPTIONS['Autoend Turn'] and any(unit.position for unit in gameStateObj.allunits) and \
                 all(unit.isDone() for unit in gameStateObj.allunits if unit.position and unit.team == 'player'):
             # End the turn
-            logger.info('Autoending turn.')
+            print('Autoending turn.')
             gameStateObj.stateMachine.changeState('turn_change')
             return 'repeat'
 
@@ -285,6 +289,8 @@ class OptionChildState(StateMachine.State):
             self.menu = None
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         if event == 'DOWN':
             GC.SOUNDDICT['Select 6'].play()
@@ -309,7 +315,7 @@ class OptionChildState(StateMachine.State):
                 elif self.menu.owner == cf.WORDS['Suspend']:
                     gameStateObj.stateMachine.back() # Go all the way back if we choose YES
                     gameStateObj.stateMachine.back()
-                    logger.info('Suspending game...')
+                    print('Suspending game...')
                     SaveLoad.suspendGame(gameStateObj, 'Suspend', hard_loc='Suspend')
                     gameStateObj.save_slots = None # Reset save slots
                     gameStateObj.stateMachine.clear()
@@ -318,7 +324,7 @@ class OptionChildState(StateMachine.State):
                 elif self.menu.owner == cf.WORDS['Save']:
                     gameStateObj.stateMachine.back()
                     gameStateObj.stateMachine.back()
-                    logger.info('Creating battle save...')
+                    print('Creating battle save...')
                     gameStateObj.save_kind = 'Battle'
                     gameStateObj.stateMachine.changeState('start_save')
                     gameStateObj.stateMachine.changeState('transition_out')
@@ -372,18 +378,20 @@ class MoveState(StateMachine.State):
 
         # Play move script if it exists
         if not self.started:
-            global_move_script_name = 'Assets/Lex-Talionis/Data/global_moveScript.txt'
+            global_move_script_name = 'Data/global_moveScript.txt'
             if os.path.exists(global_move_script_name):
                 global_move_script = Dialogue.Dialogue_Scene(global_move_script_name, unit=cur_unit)
                 gameStateObj.message.append(global_move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
-            move_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
+            move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
             if os.path.exists(move_script_name):
                 move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit)
                 gameStateObj.message.append(move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         gameStateObj.cursor.take_input(eventList, gameStateObj)
         cur_unit = gameStateObj.cursor.currentSelectedUnit
@@ -530,7 +538,7 @@ class MenuState(StateMachine.State):
 
         # Play menu script if it exists
         if not self.started:
-            menu_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
+            menu_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
             if os.path.exists(menu_script_name):
                 menu_script = Dialogue.Dialogue_Scene(menu_script_name, unit=cur_unit)
                 gameStateObj.message.append(menu_script)
@@ -684,6 +692,8 @@ class MenuState(StateMachine.State):
             logger.error('Somehow ended up in menu with no options!')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -724,7 +734,7 @@ class MenuState(StateMachine.State):
             GC.SOUNDDICT['Select 1'].play()
             cur_unit = cur_unit
             selection = gameStateObj.activeMenu.getSelection()
-            logger.debug('Player selected %s', selection)
+            print('Player selected %s', selection)
             gameStateObj.highlight_manager.remove_highlights()
 
             # Only applies to statuses that are combat arts or have activated items
@@ -805,7 +815,7 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('giveselect')
             elif selection == cf.WORDS['Visit']:
                 village_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Village']]
-                village_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
+                village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
                 if os.path.exists(village_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -835,7 +845,7 @@ class MenuState(StateMachine.State):
             elif selection == cf.WORDS['Switch']:
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
-                switch_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
+                switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
                 if os.path.exists(switch_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -855,7 +865,7 @@ class MenuState(StateMachine.State):
                     logger.error('Made a mistake in allowing unit to access Unlock!')
             elif selection == cf.WORDS['Search']:
                 search_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Search']]
-                search_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
+                search_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, unit=cur_unit, name=search_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
@@ -973,6 +983,8 @@ class ItemChildState(StateMachine.State):
         self.menu = MenuFunctions.ChoiceMenu(selection, options, 'child', gameStateObj=gameStateObj)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -1062,6 +1074,8 @@ class WeaponState(StateMachine.State):
         gameStateObj.stateMachine.changeState('attack')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
@@ -1145,7 +1159,7 @@ class AttackState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
 
         # Play attack script if it exists
-        attack_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
+        attack_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
         if os.path.exists(attack_script_name):
             attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker)
             gameStateObj.message.append(attack_script)
@@ -1242,6 +1256,8 @@ class SpellState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -1388,9 +1404,11 @@ class SelectState(StateMachine.State):
         if self.name in cf.WORDS:
             self.pennant = Banner.Pennant(cf.WORDS[self.name])
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
-        self.TRV_select: bool = False
+        self.TRV_select = False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         event = gameStateObj.input_manager.process_input(eventList)
         self.fluid_helper.update(gameStateObj)
@@ -1486,7 +1504,7 @@ class SelectState(StateMachine.State):
                 if gameStateObj.cursor.currentHoveredUnit:
                     # cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
                     Action.do(Action.HasTraded(cur_unit), gameStateObj)
-                    talk_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
+                    talk_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -1499,7 +1517,7 @@ class SelectState(StateMachine.State):
                     if os.path.exists(edge.script):
                         support_script = edge.script
                     else:
-                        support_script = 'Assets/Lex-Talionis/Data/SupportConvos/GenericScript.txt'
+                        support_script = 'Data/SupportConvos/GenericScript.txt'
                     level = edge.get_support_level()
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit, name=level))
                     gameStateObj.stateMachine.changeState('menu')
@@ -1509,7 +1527,7 @@ class SelectState(StateMachine.State):
                 item = cur_unit.get_unlock_key()
                 cur_unit.unlock(gameStateObj.cursor.position, item, gameStateObj)
             else:
-                logger.warning('SelectState does not have valid name: %s', self.name)
+                print('SelectState does not have valid name: %s', self.name)
                 gameStateObj.stateMachine.back() # Shouldn't happen
 
     def draw(self, gameStateObj, metaDataObj):
@@ -1602,6 +1620,8 @@ class StealState(StateMachine.State):
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self.rube, options, 'auto', gameStateObj=gameStateObj)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -1669,6 +1689,8 @@ class RepairState(StealState):
         gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(self.customer, options, 'auto', gameStateObj=gameStateObj, disp_total_uses=True)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -1766,6 +1788,8 @@ class ArenaState(StateMachine.State):
             return 'repeat'
 
     def get_random_legend(self, unit, gameStateObj):
+        from . import Action
+
         my_klass = self.unit.klass
         my_tier = ClassData.class_dict[my_klass]['tier']
         max_level = ClassData.class_dict[my_klass]['max_level']
@@ -1830,6 +1854,8 @@ class ArenaState(StateMachine.State):
         return Dialogue.Dialog(text, 'Narrator', (60, 8), (160, 48), 'text_white', 'ActualTransparent', waiting_cursor_flag=False)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -1957,6 +1983,8 @@ class FeatChoiceState(StateMachine.State):
         self.info = False
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -2037,9 +2065,9 @@ class AIState(StateMachine.State):
             if (not gameStateObj.ai_current_unit or not gameStateObj.ai_current_unit.position) and gameStateObj.ai_unit_list:
                 gameStateObj.ai_current_unit = gameStateObj.ai_unit_list.pop()
 
-            logger.debug('current_ai: %s', gameStateObj.ai_current_unit)
+            print('current_ai: %s', gameStateObj.ai_current_unit)
             if gameStateObj.ai_current_unit:
-                logger.debug('%s %s %s', gameStateObj.ai_current_unit.hasRunMoveAI,
+                print('%s %s %s', gameStateObj.ai_current_unit.hasRunMoveAI,
                              gameStateObj.ai_current_unit.hasRunAttackAI,
                              gameStateObj.ai_current_unit.hasRunGeneralAI)
 
@@ -2058,7 +2086,7 @@ class AIState(StateMachine.State):
                         gameStateObj.cursor.setPosition(gameStateObj.ai_current_unit.position, gameStateObj)
                     gameStateObj.stateMachine.changeState('move_camera')
                 if gameStateObj.ai_current_unit.hasRunAI():
-                    logger.debug('current_ai %s done with turn.', gameStateObj.ai_current_unit)
+                    print('current_ai %s done with turn.', gameStateObj.ai_current_unit)
                     # The unit is now done with AI
                     # If the unit actually did something, doesn't have canto plus, and isn't going into combat, then can now wait.
                     if did_something and not gameStateObj.ai_current_unit.has_canto_plus() and not gameStateObj.stateMachine.inList('combat'):                        
@@ -2066,7 +2094,7 @@ class AIState(StateMachine.State):
                     gameStateObj.ai_current_unit = None
 
             else: # Done
-                logger.debug('Done with AI')
+                print('Done with AI')
                 self.finish(gameStateObj, metaDataObj)
                 gameStateObj.stateMachine.changeState('turn_change')
                 return 'repeat'
@@ -2088,7 +2116,7 @@ class DialogueState(StateMachine.State):
         self.hurry_up_time = 0
 
     def begin(self, gameStateObj, metaDataObj):
-        logger.info('Begin Dialogue State')
+        print('Begin Dialogue State')
         cf.CONSTANTS['Unit Speed'] = 120
         if self.name != 'transparent_dialogue':
             gameStateObj.cursor.drawState = 0
@@ -2128,7 +2156,7 @@ class DialogueState(StateMachine.State):
                 self.text_speed_change.start('Changed Text Speed!')
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):
-        logger.debug('Ending dialogue state')
+        print('Ending dialogue state')
         last_message = None
         if self.message and gameStateObj.message:
             last_message = gameStateObj.message.pop()
@@ -2138,7 +2166,7 @@ class DialogueState(StateMachine.State):
         # HANDLE WINNING AND LOSING
         # Things done upon completion of level
         if gameStateObj.statedict['levelIsComplete'] == 'win':
-            logger.info('Player wins!')
+            print('Player wins!')
             # Run the outro_script
             if not gameStateObj.statedict['outroScriptDone'] and os.path.exists(metaDataObj['outroScript']):
                 # Update statistics first
@@ -2158,7 +2186,7 @@ class DialogueState(StateMachine.State):
 
                 # Determines the number of levels in the game
                 num_levels = 0
-                level_directories = [x[0] for x in os.walk('Assets/Lex-Talionis/Data/') if os.path.split(x[0])[1].startswith('Level')]
+                level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
                 for directory in level_directories:
                     try:
                         num = int(os.path.split(directory)[1][5:])
@@ -2179,7 +2207,7 @@ class DialogueState(StateMachine.State):
                     gameStateObj.save_kind = 'Start'
                     gameStateObj.stateMachine.changeState('start_save')
         elif gameStateObj.statedict['levelIsComplete'] == 'loss':
-            logger.info('Player loses!')
+            print('Player loses!')
             gameStateObj.stateMachine.clear()
             gameStateObj.stateMachine.changeState('start_start')
             gameStateObj.stateMachine.changeState('game_over')
@@ -2197,7 +2225,7 @@ class DialogueState(StateMachine.State):
         # Don't need to fade to normal if we're just heading back to a event script
         # Engine.music_thread.fade_to_normal(gameStateObj, metaDataObj)
 
-        logger.info('Repeat Dialogue State!')
+        print('Repeat Dialogue State!')
         return 'repeat'
 
     def update(self, gameStateObj, metaDataObj):
@@ -2210,7 +2238,7 @@ class DialogueState(StateMachine.State):
             if self.message:
                 self.message.update(gameStateObj, metaDataObj)
             else:
-                logger.info('Done with Dialogue State!')
+                print('Done with Dialogue State!')
                 gameStateObj.stateMachine.back()
                 return 'repeat'
 
@@ -2436,8 +2464,10 @@ class PhaseChangeState(StateMachine.State):
     name = 'phase_change'
 
     def begin(self, gameStateObj, metaDataObj):
+        from . import Action
+
         self.save_state(gameStateObj)
-        logger.debug('Phase Start')
+        print('Phase Start')
         Action.do(Action.LockTurnwheel(gameStateObj.phase.get_current_phase() != 'player'), gameStateObj)
 
         # Handle cooldown items
@@ -2466,17 +2496,17 @@ class PhaseChangeState(StateMachine.State):
         gameStateObj.phase.slide_in(gameStateObj)
 
     def end(self, gameStateObj, metaDataObj):
-        logger.debug('Phase End')
+        print('Phase End')
         Engine.music_thread.fade_to_normal(gameStateObj)
 
     # Save state at beginning of each turn
     def save_state(self, gameStateObj):
         if gameStateObj.phase.get_current_phase() == 'player':
-            logger.debug("Saving as we enter player phase!")
+            print("Saving as we enter player phase!")
             name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount)
             SaveLoad.suspendGame(gameStateObj, 'TurnChange ' + str(gameStateObj.turncount), hard_loc=name)
         elif gameStateObj.phase.get_current_phase() == 'enemy':
-            logger.debug("Saving as we enter enemy phase!")
+            print("Saving as we enter enemy phase!")
             name = 'L' + str(gameStateObj.game_constants['level']) + 'T' + str(gameStateObj.turncount) + 'b'
             SaveLoad.suspendGame(gameStateObj, 'EnemyTurnChange ' + str(gameStateObj.turncount), hard_loc=name)
 
@@ -2532,6 +2562,8 @@ class StatusState(StateMachine.State):
         return mapSurf
 
     def leave(self, gameStateObj):
+        from . import Action
+
         gameStateObj.stateMachine.back()
         if self.name == 'status':
             Action.do(Action.MarkPhase(gameStateObj.phase.get_current_phase()), gameStateObj)
@@ -2672,6 +2704,8 @@ class ItemDiscardChildState(StateMachine.State):
         self.menu = gameStateObj.stateMachine.state[-2].child_menu
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -2786,7 +2820,7 @@ class DialogOptionsState(StateMachine.State):
             self.menu_arrangement = 'v'
         else:
             if arrangement not in ('h', 'horizontal'):
-                logger.debug('The option menu arrangement was detected as neither vertical or horizontal')
+                print('The option menu arrangement was detected as neither vertical or horizontal')
             self.menu = MenuFunctions.HorizOptionsMenu(header, options)
             self.menu_arrangement = 'h'
 
@@ -2906,6 +2940,8 @@ class ShopState(StateMachine.State):
         self.money_counter_disp = MenuFunctions.BriefPopUpDisplay((223, 32))
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()
@@ -3220,6 +3256,8 @@ class RepairShopState(StateMachine.State):
         return Dialogue.Dialog(text, 'Narrator', (60, 8), (144, 48), 'text_white', 'ActualTransparent', waiting_cursor_flag=False)
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
+        from . import Action
+
         event = gameStateObj.input_manager.process_input(eventList)
         first_push = self.fluid_helper.update(gameStateObj)
         directions = self.fluid_helper.get_directions()

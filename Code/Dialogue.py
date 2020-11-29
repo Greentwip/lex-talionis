@@ -5,10 +5,10 @@ from . import configuration as cf
 from . import static_random
 from . import Engine, TextChunk, Utility, Image_Modification
 from . import BaseMenuSurf, Background, UnitPortrait, WorldMap, Banner, Cursor
-from . import StatusCatalog, ItemMethods, Action
+from . import StatusCatalog, ItemMethods
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 hardset_positions = {'OffscreenLeft': -96, 'FarLeft': -24, 'Left': 0, 'MidLeft': 24,
                      'MidRight': 120, 'Right': 144, 'FarRight': 168, 'OffscreenRight': 240}
@@ -67,7 +67,7 @@ class Dialogue_Scene(object):
         self.current_state = "Processing" # Other options are "Waiting", "Transitioning"
         self.last_state = None
         self.do_skip = False
-        self.turnwheel_flag: int = 0 # Whether to enter the turnwheel state after this scene
+        self.turnwheel_flag = 0 # Whether to enter the turnwheel state after this scene
         self.battle_save_flag = False # Whether to enter the battle save state after this scene has completed
         self.reset_state_flag = False # Whether to reset state to free state after this scene has completed
         self.reset_boundary_manager = False # Whether to reset the boundary manager after this scene has completed. Set to true when tiles are changed
@@ -127,7 +127,7 @@ class Dialogue_Scene(object):
                 continue
 
             line = line.split(';')
-            # logger.debug(line)
+            # print(line)
             if (self.if_flag or self.handle_if(line, gameStateObj, metaDataObj)) and (not self.do_skip or not (line[0] in self.skippable_commands)):
                 self.parse_line(line, gameStateObj, metaDataObj)
             self.scene_lines_index += 1
@@ -180,7 +180,7 @@ class Dialogue_Scene(object):
         current_time = Engine.get_time()
         if self.current_state != self.last_state:
             self.last_state = self.current_state
-            logger.debug('Dialogue Current State: %s', self.current_state)
+            print('Dialogue Current State: %s', self.current_state)
 
         if self.current_state == "Waiting" or self.current_state == "FlashCursor":
             if current_time > self.last_wait_update + self.waittime:
@@ -225,10 +225,12 @@ class Dialogue_Scene(object):
         return
 
     def parse_line(self, line, gameStateObj=None, metaDataObj=None):
+        from . import Action
+
         if line[0] == '':
             return
         # time = Engine.get_true_time()
-        logger.info('Script line to parse: %s', line)
+        print('Script line to parse: %s', line)
         # === SKIPPING DIALOGUE
         # End skip
         if line[0] == 'end_skip':
@@ -482,12 +484,12 @@ class Dialogue_Scene(object):
         # Fade in this musical accompanienment
         elif line[0] == 'm':
             if line[1] in GC.MUSICDICT:
-                logger.debug('Fade in %s', line[1])
+                print('Fade in %s', line[1])
                 Engine.music_thread.fade_in(GC.MUSICDICT[line[1]])
             else:
-                logger.warning("Couldn't find music matching %s", line[1])
+                print("Couldn't find music matching %s", line[1])
         elif line[0] == 'mf':
-            logger.debug('Fade out music')
+            print('Fade out music')
             Engine.music_thread.fade_back()
         elif line[0] == 'sound':
             GC.SOUNDDICT[line[1]].play()
@@ -496,7 +498,7 @@ class Dialogue_Scene(object):
                 # Phase name, musical piece
                 gameStateObj.phase_music.change_music(line[1], line[2])
         elif line[0] == 'music_clear':
-            logger.debug('Clear music stack')
+            print('Clear music stack')
             Engine.music_thread.fade_clear()
         # Music fade clear would just be
         # > music_clear
@@ -668,7 +670,7 @@ class Dialogue_Scene(object):
             if unit and unit.dead:
                 Action.do(Action.Resurrect(unit), gameStateObj)
             else:
-                logger.warning('Unit %s either does not exist or was not dead!', line[1])
+                print('Unit %s either does not exist or was not dead!', line[1])
         elif line[0] == 'set_next_position':
             to_which_position = line[1]
             placement = line[2] if len(line) > 2 else 'give_up'
@@ -719,7 +721,7 @@ class Dialogue_Scene(object):
             self.scene_lines.insert(self.scene_lines_index + 1, 'disp_cursor;0')
             self.scene_lines.insert(self.scene_lines_index + 1, 'wait;1000')
             self.scene_lines.insert(self.scene_lines_index + 1, 'disp_cursor;1')
-            self.scene_lines.insert(self.scene_lines_index + 1, 'set_cursor;%s' % line[1])
+            self.scene_lines.insert(self.scene_lines_index + 1, 'set_cursor;' + line[1])
         elif line[0] == 'set_camera':
             pos1 = self.parse_pos(line[1], gameStateObj)
             if len(line) > 2:
@@ -1121,7 +1123,7 @@ class Dialogue_Scene(object):
             gameStateObj.stateMachine.changeState('base_records')
             self.current_state = "Paused"
 
-        # logger.info('Time taken: %s', Engine.get_true_time() - time)
+        # print('Time taken: %s', Engine.get_true_time() - time)
 
     def evaluate_evals(self, line, gameStateObj):
         # Evaluate evals
@@ -1358,7 +1360,7 @@ class Dialogue_Scene(object):
 
         s = GC.IMAGESDICT['BlackBackground'].copy()
         if len(self.transition_color) == 3:
-            s.fill((*self.transition_color, self.transition_transparency))
+            s.fill((self.transition_color, self.transition_transparency))
         else:
             s.fill((0, 0, 0, self.transition_transparency))
         surf.blit(s, (0, 0))
@@ -1420,12 +1422,13 @@ class Dialogue_Scene(object):
         self.dialog[-1].waiting = False
 
     def add_unit(self, gameStateObj, metaDataObj, which_unit, new_pos, transition, placement, shuffle=True, create=None):
+        from . import Action
         from Code.SaveLoad import create_unit
         # Find unit
         if create:
             unitLine = gameStateObj.prefabs.get(which_unit)
             if not unitLine:
-                logger.warning('Could not find %s in unitLine' % which_unit)
+                print('Could not find %s in unitLine', which_unit)
                 return
             new_unitLine = unitLine[:]
             new_unitLine.insert(4, create)
@@ -1443,14 +1446,14 @@ class Dialogue_Scene(object):
                 unit = gameStateObj.get_unit_from_id(which_unit)
                 position = None
                 if not unit:
-                    logger.warning('Could not find %s', which_unit)
+                    print('Could not find %s', which_unit)
                     return
             # print(unit.id, position)
             if unit.dead:
-                logger.warning('Unit %s is dead!', unit.id)
+                print('Unit %s is dead!', unit.id)
                 return
             if unit.position:
-                logger.warning("Unit %s already has a position!", unit.id)
+                print("Unit %s already has a position!", unit.id)
                 return
         if not unit:
             logger.error('Could not find unit %s', which_unit)
@@ -1485,7 +1488,7 @@ class Dialogue_Scene(object):
         if None in new_pos:
             #print(context)
             #print(which_unit)
-            logger.warning('Position for "add_unit" is not set!')
+            print('Position for "add_unit" is not set!')
             return
 
         # Shuffle positions if necessary
@@ -1497,7 +1500,7 @@ class Dialogue_Scene(object):
 
         final_pos = self.get_final_pos(gameStateObj, placement, new_pos, bad_pos)
         if not final_pos:
-            logger.warning('Could not add to position %s', new_pos)
+            print('Could not add to position %s', new_pos)
             return
 
         if self.do_skip:
@@ -1511,6 +1514,7 @@ class Dialogue_Scene(object):
             Action.do(Action.ArriveOnMap(unit, final_pos), gameStateObj)
 
     def move_unit(self, gameStateObj, metaDataObj, which_unit, new_pos, transition, placement, shuffle=True):
+        from . import Action
         # Find unit
         if which_unit == '{unit}':
             unit = self.unit
@@ -1552,7 +1556,7 @@ class Dialogue_Scene(object):
             if target and target.position:
                 new_pos = [target.position]
             else:
-                logger.warning('Could not find target %s. Target is not on map.', new_pos)
+                print('Could not find target %s. Target is not on map.', new_pos)
                 return
 
         # Shuffle positions if necessary
@@ -1564,7 +1568,7 @@ class Dialogue_Scene(object):
 
         final_pos = self.get_final_pos(gameStateObj, placement, new_pos, bad_pos)
         if not final_pos:
-            logger.warning('Could not move to position %s', new_pos)
+            print('Could not move to position %s', new_pos)
             return
 
         if self.do_skip:
@@ -1593,7 +1597,7 @@ class Dialogue_Scene(object):
             logger.error('Remove unit routine could not find unit %s', which_unit)
             return
         if not unit.position:
-            logger.warning('Remove unit routine - No position')
+            print('Remove unit routine - No position')
             return
 
         if self.do_skip:
@@ -1637,7 +1641,7 @@ class Dialogue_Scene(object):
 
         item = attacker.items[0]
         if not item:
-            logger.warning("Attacker does not have a valid item to use in first slot.")
+            print("Attacker does not have a valid item to use in first slot.")
             return
         defender, splash = Interaction.convert_positions(gameStateObj, attacker, attacker.position, def_pos, item)
         gameStateObj.combatInstance = Interaction.start_combat(gameStateObj, attacker, defender, def_pos, splash, item, event_combat=event_combat)
@@ -1696,7 +1700,7 @@ class Dialogue_Scene(object):
             else:
                 return None
         else:
-            logger.warning('%s placement not supported.', placement)
+            print('%s placement not supported.', placement)
 
     def get_closest(self, new_pos, bad_pos, gameStateObj, flying=False):
         r = 0
@@ -1779,6 +1783,7 @@ class Dialogue_Scene(object):
             return gameStateObj.get_unit(uid)
 
     def add_item(self, unit, item, gameStateObj, choice=True, banner=True):
+        from . import Action
         if banner:
             func = Action.do  # Displays banner
             self.current_state = "Paused"

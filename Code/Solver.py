@@ -1,11 +1,11 @@
 from . import GlobalConstants as GC
 from . import configuration as cf
 from . import static_random
-from . import UnitObject, TileObject, Action
+from . import UnitObject, TileObject
 from . import StatusCatalog, SaveLoad, Utility
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class Result(object):
     def __init__(self, attacker, defender):
@@ -95,6 +95,8 @@ class InitState(object):
         return None
 
     def get_attacker_pre_proc(self, solver, unit, gameStateObj):
+        from . import Action
+
         proc_statuses = [s for s in unit.status_effects if s.attack_pre_proc]
         proc_statuses = sorted(proc_statuses, key=lambda x: x.attack_pre_proc.priority, reverse=True)
         for status in proc_statuses:
@@ -109,6 +111,8 @@ class InitState(object):
         return None
 
     def get_defender_pre_proc(self, solver, unit, gameStateObj):
+        from . import Action
+
         proc_statuses = [s for s in unit.status_effects if s.defense_pre_proc]
         proc_statuses = sorted(proc_statuses, key=lambda x: x.defense_pre_proc.priority, reverse=True)
         for status in proc_statuses:
@@ -154,7 +158,7 @@ class AttackerState(SolverState):
                     return 'Defender'
                 elif solver.atk_rounds < 2 and solver.item.weapon and \
                         solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
-                        solver.item_uses(solver.item):
+                        solver.item_uses(solver.item) and not solver.item.no_double:
                     return 'Attacker'
                 elif solver.next_round(gameStateObj):
                     return 'Init'
@@ -166,6 +170,8 @@ class AttackerState(SolverState):
         solver.atk_rounds += 1
 
     def process(self, solver, gameStateObj, metaDataObj):
+        from . import Action
+
         Action.do(Action.UseItem(solver.item), gameStateObj)
         solver.uses_count += 1
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.attacker, solver.defender, solver.item, 'Attack')
@@ -188,7 +194,7 @@ class AttackerBraveState(AttackerState):
                     return 'Defender'
                 elif solver.atk_rounds < 2 and solver.item.weapon and \
                         solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
-                        solver.item_uses(solver.item):
+                        solver.item_uses(solver.item) and not solver.item.no_double:
                     return 'Attacker'
                 elif solver.next_round(gameStateObj):
                     return 'Init'
@@ -229,6 +235,8 @@ class DefenderState(AttackerState):
         solver.def_rounds += 1
 
     def process(self, solver, gameStateObj, metaDataObj):
+        from . import Action
+
         ditem = solver.p2_item
         Action.do(Action.UseItem(ditem), gameStateObj)
         result = solver.generate_phase(gameStateObj, metaDataObj, solver.defender, solver.attacker, ditem, 'Defense')
@@ -277,7 +285,7 @@ class SplashState(AttackerState):
                 return 'Defender'
             elif solver.defender and solver.atk_rounds < 2 and \
                     solver.attacker.outspeed(solver.defender, solver.item, gameStateObj, "Attack") and \
-                    solver.item_uses(solver.item) and solver.defender.currenthp > 0:
+                    solver.item_uses(solver.item) and solver.defender.currenthp > 0 and not solver.item.no_double:
                 return 'Attacker'
             elif solver.next_round(gameStateObj):
                 return 'Init'
@@ -287,6 +295,8 @@ class SplashState(AttackerState):
             return 'Done'
 
     def process(self, solver, gameStateObj, metaDataObj):
+        from . import Action
+
         if solver.uses_count < 1:
             Action.do(Action.UseItem(solver.item), gameStateObj)
             solver.uses_count += 1
@@ -307,7 +317,7 @@ class SplashBraveState(SplashState):
                 return 'Defender'
             elif solver.defender and solver.atk_rounds < 2 and \
                     solver.attacker.outspeed(solver.defender, solver.item. gameStateObj, "Attack") and \
-                    solver.item_uses(solver.item) and solver.defender.currenthp > 0:
+                    solver.item_uses(solver.item) and solver.defender.currenthp > 0 and not solver.item.no_double:
                 return 'Attacker'
             elif solver.next_round(gameStateObj):
                 return 'Init'
@@ -321,6 +331,8 @@ class SummonState(SolverState):
         return 'Done'
 
     def process(self, solver, gameStateObj, metaDataObj):
+        from . import Action
+
         Action.do(Action.UseItem(solver.item), gameStateObj)
         result = solver.generate_summon_phase(gameStateObj, metaDataObj)
         return result
@@ -408,6 +420,8 @@ class Solver(object):
             result.def_damage = attacker.compute_damage(defender, gameStateObj, item, mode=mode, hybrid=hybrid, crit=cf.CONSTANTS['crit'])
 
     def generate_phase(self, gameStateObj, metaDataObj, attacker, defender, item, mode):
+        from . import Action
+
         result = Result(attacker, defender)
         if self.event_combat:
             event_command = self.event_combat.pop()
@@ -564,7 +578,7 @@ class Solver(object):
 
     def def_double(self, gameStateObj):
         return (cf.CONSTANTS['def_double'] or 'vantage' in self.defender.status_bundle or 'def_double' in self.defender.status_bundle) and \
-            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.p2_item, gameStateObj, "Defense")
+            self.def_rounds < 2 and self.defender.outspeed(self.attacker, self.p2_item, gameStateObj, "Defense") and not (self.p2_item and self.p2_item.no_double)
 
     def allow_counterattack(self, gameStateObj):
         return isinstance(self.defender, UnitObject.UnitObject) and \
@@ -598,6 +612,8 @@ class Solver(object):
         return False
 
     def get_attacker_proc(self, attacker, defender, gameStateObj):
+        from . import Action
+
         if not isinstance(defender, UnitObject.UnitObject):
             return None
         proc_statuses = [s for s in attacker.status_effects if s.attack_proc]
@@ -614,6 +630,8 @@ class Solver(object):
         return None
 
     def get_defender_proc(self, defender, attacker, gameStateObj):
+        from . import Action
+
         proc_statuses = [s for s in defender.status_effects if s.defense_proc]
         proc_statuses = sorted(proc_statuses, key=lambda x: x.defense_proc.priority, reverse=True)
         for status in proc_statuses:
@@ -628,12 +646,16 @@ class Solver(object):
         return None
 
     def remove_pre_proc(self, gameStateObj):
+        from . import Action
+
         if self.atk_pre_proc:
             Action.do(Action.RemoveStatus(self.attacker, self.atk_pre_proc), gameStateObj)
         if self.def_pre_proc:
             Action.do(Action.RemoveStatus(self.defender, self.def_pre_proc), gameStateObj)
 
     def get_a_result(self, gameStateObj, metaDataObj):
+        from . import Action
+        
         old_random_state = static_random.get_combat_random_state()
         result = None
         while not result:

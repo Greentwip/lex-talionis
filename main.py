@@ -54,9 +54,9 @@ def run(gameStateObj, metaDataObj):
         if cf.OPTIONS['debug']:
             my_new_list = gameStateObj.stateMachine.state[-5:]
             if my_new_list != my_list:
-                logger.debug('Current states %s', [state.name for state in gameStateObj.stateMachine.state])
+                print('Current states %s', [state.name for state in gameStateObj.stateMachine.state])
                 my_list = my_new_list
-                # logger.debug('Active Menu %s', gameStateObj.activeMenu)
+                # print('Active Menu %s', gameStateObj.activeMenu)
         Engine.update_time()
 
         # Get events
@@ -74,7 +74,7 @@ def run(gameStateObj, metaDataObj):
         # Update global music thread
         Engine.music_thread.update(eventList)
 
-        new_size = (GC.WINWIDTH * cf.OPTIONS['Screen Size'], GC.WINHEIGHT * cf.OPTIONS['Screen Size'])
+        new_size = (cf.OPTIONS['Screen Width'], cf.OPTIONS['Screen Height'])
         Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
         # Check for taking screenshot
         for event in eventList:
@@ -108,33 +108,34 @@ def inform_error():
 # ____________________________________________________________________________#
 # === START === START === START  === START ===  START === START === START === #
 if __name__ == '__main__':
-    import logging, traceback
-    logging.logThreads = 0
-    logging.logProcesses = 0
-    logger = logging.getLogger(__name__)
+    #import logging, traceback
+    #import trackeback
+    #logging.logThreads = 0
+    #logging.logProcesses = 0
+    #logger = logging.getLogger(__name__)
     try:
         handle_debug_logs()
     except WindowsError:
         print("Error! Debug logs in use -- Another instance of this is already running!")
         Engine.terminate()
-    if cf.OPTIONS['debug']:
-        my_level = logging.DEBUG
-    else:
-        my_level = logging.WARNING
-    logging.basicConfig(handlers=[logging.FileHandler('./Saves/debug.log.1', 'w', 'utf-8')],
-                        level=my_level, format='%(relativeCreated)d %(levelname)7s:%(module)16s: %(message)s')
-    logger.info('*** Lex Talionis Engine Version %s ***' % GC.version)
+    #if cf.OPTIONS['debug']:
+    #    my_level = logging.DEBUG
+    #else:
+    #    my_level = logging.WARNING
+    #logging.basicConfig(handlers=[logging.FileHandler('./Saves/debug.log.1', 'w', 'utf-8')],
+    #                    level=my_level, format='%(relativeCreated)d %(levelname)7s:%(module)16s: %(message)s')
+    print('*** Lex Talionis Engine Version %s ***' % GC.version)
     try:
         main()
     except Exception as e:
-        logger.exception(e)
+        print(e)
         inform_error()
         print('*** Lex Talionis Engine Version %s ***' % GC.version)
         print('Main Crash {0}'.format(str(e)))
         # Now print exception to screen
         import time
         time.sleep(0.5)
-        traceback.print_exc()
+        #traceback.print_exc()
         time.sleep(0.5)
         Engine.final(crash=True)
         inform_error()

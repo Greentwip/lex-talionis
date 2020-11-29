@@ -10,8 +10,8 @@ from . import Engine, Image_Modification
 from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue
 from . import ClassData, BaseMenuSurf, Weather, Background
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 def create_title(text, background='DarkMenu'):
     title_surf = GC.IMAGESDICT[background].copy()
@@ -96,7 +96,7 @@ class TitleDialogue(StateMachine.State):
         self.hurry_up_time = 0
 
     def begin(self, gameStateObj, metaDataObj):
-        logger.info('Begin Title Dialogue State')
+        print('Begin Title Dialogue State')
         if gameStateObj.message:
             self.message = gameStateObj.message[-1]
         if self.message:
@@ -132,18 +132,18 @@ class TitleDialogue(StateMachine.State):
                 self.text_speed_change.start('Changed Text Speed!')
 
     def end_dialogue_state(self, gameStateObj, metaDataObj):
-        logger.debug('Ending dialogue state')
+        print('Ending dialogue state')
         last_message = None
         if self.message and gameStateObj.message:
             gameStateObj.message.pop()
-        logger.info('Repeat Dialogue State!')
+        print('Repeat Dialogue State!')
         return 'repeat'
 
     def update(self, gameStateObj, metaDataObj):
         if self.message:
             self.message.update(gameStateObj, metaDataObj)
         else:
-            logger.info('Done with Dialogue State!')
+            print('Done with Dialogue State!')
             gameStateObj.stateMachine.back()
             return 'repeat'
 
@@ -229,7 +229,7 @@ class StartStart(StateMachine.State):
             print(newest)
             selection = CustomObjects.SaveSlot(newest, 3)
             # gameStateObj.activeMenu = None # Remove menu
-            logger.debug('Loading game...')
+            print('Loading game...')
             SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
             if selection.kind == 'Start': # Restart
                 levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
@@ -384,7 +384,7 @@ class StartOption(StateMachine.State):
     def continue_suspend(self, gameStateObj, metaDataObj):
         gameStateObj.activeMenu = None # Remove menu
         suspend = CustomObjects.SaveSlot(GC.SUSPEND_LOC, None)
-        logger.debug('Loading game...')
+        print('Loading game...')
         SaveLoad.loadGame(gameStateObj, metaDataObj, suspend)
 
     def load_most_recent_game(self, gameStateObj, metaDataObj):
@@ -453,7 +453,7 @@ class StartLoad(StateMachine.State):
                 GC.SOUNDDICT['Save'].play()
 
                 # gameStateObj.activeMenu = None # Remove menu
-                logger.debug('Loading game...')
+                print('Loading game...')
                 SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
                 if selection.kind == 'Start': # Restart
                     levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
@@ -554,7 +554,7 @@ class StartAllSaves(StartLoad):
                 GC.SOUNDDICT['Save'].play()
 
                 # gameStateObj.activeMenu = None # Remove menu
-                logger.debug('Loading game...')
+                print('Loading game...')
                 SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
                 if selection.kind == 'Start': # Restart
                     levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
@@ -659,7 +659,7 @@ class StartPreloadedLevels(StartLoad):
         elif event == 'SELECT':
             preloaded_level = self.preload_level(gameStateObj.activeMenu.getSelection())
             GC.SOUNDDICT['Save'].play()
-            logger.debug('Starting Preloaded Level...')
+            print('Starting Preloaded Level...')
             self.build_new_game(preloaded_level, gameStateObj, metaDataObj)
 
     def build_new_game(self, level, gameStateObj, metaDataObj):
@@ -679,6 +679,8 @@ class StartPreloadedLevels(StartLoad):
         for key, value in level['game_constants'].items():
             gameStateObj.game_constants[key] = value
         static_random.set_seed(gameStateObj.game_constants.get('_random_seed', 0))
+
+        print('transitions set_seed')
 
         modes = [mode for mode in GC.DIFFICULTYDATA.values() if level['mode'] == mode['name'] or level['mode'] == mode['id']]
         if modes:
@@ -811,7 +813,7 @@ class StartRestart(StartLoad):
                 GC.SOUNDDICT['Save'].play()
 
                 # gameStateObj.activeMenu = None # Remove menu
-                logger.debug('Restarting Level...')
+                print('Restarting Level...')
                 SaveLoad.loadGame(gameStateObj, metaDataObj, selection)
                 # Always Restart
                 levelfolder = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level'])
@@ -1622,7 +1624,7 @@ class TransitionPopState(StateMachine.State):
         self.transition = transition_max
 
     def update(self, gameStateObj, metaDataObj):
-        # logger.debug('%s %s', self, self.transition)
+        # print('%s %s', self, self.transition)
         gameStateObj.stateMachine.get_under_state(self).update(gameStateObj, metaDataObj)
 
     def draw(self, gameStateObj, metaDataObj):

@@ -39,8 +39,8 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 from . import UnitObject, Interaction, Utility, AStar, Engine, Action
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
  
 # whether to have the AI actually test move to a position
 # allows for it to recognize the effects of auras, tile statuses, etc.
@@ -89,7 +89,7 @@ class AI(object):
         self.available_targets = []
 
     def change_ai(self, ai1, ai2):
-        logger.debug('AI Change. From %s %s to %s %s', self.ai1_state, self.ai2_state, ai1, ai2)
+        print('AI Change. From %s %s to %s %s', self.ai1_state, self.ai2_state, ai1, ai2)
         self.ai1_state = ai1
         self.ai2_state = ai2
 
@@ -110,13 +110,13 @@ class AI(object):
         orig_pos = self.unit.position
 
         # Can do more than one pass through per frame if it doesn't take much time (half of a frame)
-        logger.debug('AI Thinking...')
+        print('AI Thinking...')
         while Engine.get_true_time() - time1 < GC.FRAMERATE//2:
-            logger.debug('Current State: %s', self.state)
+            print('Current State: %s', self.state)
 
             if self.state == 'Init':
                 self.start_time = Engine.get_time()
-                logger.debug('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, View Range: %s', 
+                print('Starting AI with name: %s, position: %s, class: %s, AI1: %s, AI2 %s, View Range: %s', 
                              self.unit.name, self.unit.position, self.unit.klass, self.ai1_state, self.ai2_state, self.view_range)
                 self.clean_up()
                 if self.can_move():
@@ -246,7 +246,7 @@ class AI(object):
         return False
 
     def act(self, gameStateObj):
-        logger.debug('AI Act!')
+        print('AI Act!')
         if not self.unit.hasRunMoveAI:
             if self.think(gameStateObj):
                 self.move(gameStateObj)
@@ -332,7 +332,7 @@ class AI(object):
             self.ai_group_flag = True
 
     def canto_retreat(self, gameStateObj):
-        logger.debug('Determining canto: my position %s', self.unit.position)
+        print('Determining canto: my position %s', self.unit.position)
         valid_positions = self.get_true_valid_moves(gameStateObj)
         self.position_to_move_to = Utility.farthest_away_pos(self.unit, valid_positions, gameStateObj.allunits)
 
@@ -503,7 +503,7 @@ class Primary_AI(object):
 
         # Must have determined which mode you are using by now
         self.item_index = 0
-        logger.debug('Testing Items: %s' % self.items)
+        print('Testing Items: %s' % self.items)
 
         self.valid_moves = list(valid_moves)
         self.possible_moves = []
@@ -561,16 +561,16 @@ class Primary_AI(object):
             self.valid_targets = []
 
     def get_all_valid_targets(self, gameStateObj):
-        logger.debug(self.items[self.item_index])
+        print(self.items[self.item_index])
         self.valid_targets = self.unit.getTargets(gameStateObj, self.items[self.item_index], self.valid_moves,
                                                   team_ignore=self.team_ignore, name_ignore=self.name_ignore)
         if 0 in self.items[self.item_index].get_range(self.unit):
             self.valid_targets += self.valid_moves # Hack to target self in all valid positions
             self.valid_targets = list(set(self.valid_targets))  # Only uniques
-        logger.debug('Valid Targets: %s', self.valid_targets)
+        print('Valid Targets: %s', self.valid_targets)
 
     def get_possible_moves(self, gameStateObj):
-        # logger.debug('%s %s %s %s', self.target_index, self.valid_targets, self.item_index, self.items)
+        # print('%s %s %s %s', self.target_index, self.valid_targets, self.item_index, self.items)
         if self.target_index < len(self.valid_targets) and self.item_index < len(self.items):
             # Given an item and a target, find all positions in valid_moves that I can strike the target at.
             a = Utility.find_manhattan_spheres(self.items[self.item_index].get_range(self.unit), self.valid_targets[self.target_index])
@@ -626,7 +626,7 @@ class Primary_AI(object):
         return (False, self.target_to_interact_with, self.position_to_move_to, self.item_to_use)
 
     def run_2(self, gameStateObj):
-        # logger.debug('%s %s %s %s %s %s', self.move_index, self.target_index, self.item_index, self.possible_moves, self.valid_targets, self.items)
+        # print('%s %s %s %s %s %s', self.move_index, self.target_index, self.item_index, self.possible_moves, self.valid_targets, self.items)
         if self.item_index >= len(self.items):
             if QUICK_MOVE:
                 self.quick_move(self.orig_pos, gameStateObj)
@@ -636,18 +636,18 @@ class Primary_AI(object):
         elif self.target_index >= len(self.valid_targets):
             self.target_index = 0
             self.item_index += 1
-            logger.debug('Item Index %s' % self.item_index)
+            print('Item Index %s' % self.item_index)
             if self.item_index < len(self.items):
                 if EQUIP:
                     self.unit.equip(self.items[self.item_index], gameStateObj)
-                logger.debug(self.items[self.item_index].name)
+                print(self.items[self.item_index].name)
                 self.get_all_valid_targets(gameStateObj)
                 self.possible_moves = self.get_possible_moves(gameStateObj)
         elif self.move_index >= len(self.possible_moves):
             self.move_index = 0
             self.target_index += 1
             self.possible_moves = self.get_possible_moves(gameStateObj)
-            # logger.debug('Possible Moves %s', self.possible_moves)
+            # print('Possible Moves %s', self.possible_moves)
         else:
             target = self.valid_targets[self.target_index]
             item = self.items[self.item_index]
@@ -659,7 +659,7 @@ class Primary_AI(object):
                 move = self.possible_moves[self.move_index]
             if QUICK_MOVE and self.unit.position != move:
                 self.quick_move(move, gameStateObj)
-            # logger.debug('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
+            # print('%s %s %s %s %s', self.unit.klass, self.unit.position, move, target, item)
             # Only if we have line of sight, since we get every possible position to strike from
             # Determine whether we need line of sight
             los_flag = True
@@ -693,7 +693,7 @@ class Primary_AI(object):
                 name = unit.name
             else:
                 name = '--'
-            logger.debug("Choice %s - Weapon: %s, Position: %s, Target: %s, Target's Position: %s", tp, item.name, move, name, target)
+            print("Choice %s - Weapon: %s, Position: %s, Target: %s, Target's Position: %s", tp, item.name, move, name, target)
             if tp > self.max_tp:
                 self.target_to_interact_with = target
                 self.position_to_move_to = move
@@ -777,7 +777,7 @@ class Primary_AI(object):
 
         # If neither of these is good, just skip it
         if not offensive_term and not status_term:
-            logger.debug("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
+            print("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
             return 0
 
         # How far do I have to move -- really small. Only here to break ties
@@ -787,8 +787,8 @@ class Primary_AI(object):
         else:
             distance_term = 1
 
-        logger.debug("Damage: %s, Accuracy: %s", my_damage, my_accuracy)
-        logger.debug("Offense: %s, Defense: %s, Status: %s, Distance: %s", offensive_term, defensive_term, status_term, distance_term)
+        print("Damage: %s, Accuracy: %s", my_damage, my_accuracy)
+        print("Offense: %s, Defense: %s, Status: %s, Distance: %s", offensive_term, defensive_term, status_term, distance_term)
         terms.append((offensive_term, 50))
         terms.append((status_term, 10))
         # Defensive term is modified by offensive term so that just being hard to damage does not mean you should do useless things.
@@ -817,7 +817,7 @@ class Primary_AI(object):
                         spell_heal = self.unit.compute_heal(target, gameStateObj, spell, 'Attack')
                         heal_term += Utility.clamp(min(spell_heal, missing_health)/float(target.stats['HP']), 0, 1)
 
-                logger.debug("Help: %s, Heal: %s", help_term, heal_term)
+                print("Help: %s, Heal: %s", help_term, heal_term)
                 if help_term <= 0:
                     return 0
                 
@@ -832,7 +832,7 @@ class Primary_AI(object):
                            (not spell.custom_ai or eval(spell.custom_ai)):
                             status_term += eval(spell.custom_ai_value) if spell.custom_ai_value else 0.5
 
-                logger.debug("Status: %s", status_term)
+                print("Status: %s", status_term)
                 if status_term <= 0:
                     return 0
                 terms.append((status_term, 40)) # Status term
@@ -871,14 +871,14 @@ class Primary_AI(object):
 
             # If neither of these is good, just skip it
             if offensive_term <= 0 and status_term <= 0:
-                logger.debug("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
+                print("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
                 return 0
 
             # Only here to break ties
             closest_enemy_term = Utility.clamp(closest_enemy_distance/100.0, 0, 1)
             terms.append((closest_enemy_term, 1))
 
-            logger.debug("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
+            print("Offense: %s, Defense: %s, Status: %s", offensive_term, defensive_term, status_term)
             terms.append((offensive_term, 60))
             terms.append((status_term, 20))
             terms.append((defensive_term, 20)) # Set to 1 since perfectly defended
@@ -949,14 +949,14 @@ class Secondary_AI(object):
             my_path = self.get_path(target.position, gameStateObj, limit=limit)
             # We didn't find a path, or the path was longer than double move, so ignore target and continue
             if not my_path:
-                logger.debug("No valid path to %s.", target.name)
+                print("No valid path to %s.", target.name)
                 # if cf.OPTIONS['debug']: print("No valid path to this target.", target.name)
                 # time2 = Engine.get_time()
                 # print('No Path - Secondary AI Time', time2 - time1)
                 return False
             # We found a path
             tp = self.compute_priority_secondary(target, gameStateObj, len(my_path))
-            logger.debug("Path to %s. -- %s", target.name, tp)
+            print("Path to %s. -- %s", target.name, tp)
             if tp > self.max_tp:
                 self.max_tp = tp
                 self.best_target = target
@@ -971,7 +971,7 @@ class Secondary_AI(object):
             # Check to make sure there's not some better path if we take into account our ally's positions
             # If we didn''t move very far
             if Utility.calculate_distance(self.position_to_move_to, self.unit.position) <= 1 and not self.ally_flag:
-                logger.debug("Pathfinder is trying again, taking into account allies' positions")
+                print("Pathfinder is trying again, taking into account allies' positions")
                 self.ally_flag = True
                 self.widen_flag = False
                 self.reset()
@@ -982,7 +982,7 @@ class Secondary_AI(object):
         else:
             if self.view_range == 2 and not self.widen_flag:
                 # Widen search to all not looked over yet
-                logger.debug("Widening Search!")
+                print("Widening Search!")
                 self.widen_flag = True
                 self.available_targets = [item for item in self.all_targets if item not in self.available_targets]
             else:

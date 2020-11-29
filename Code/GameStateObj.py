@@ -1,4 +1,3 @@
-#! usr/bin/env python
 import random
 from collections import OrderedDict, Counter
 
@@ -12,8 +11,8 @@ from . import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
 from . import Boundary, Objective, Overworld, TileObject, Action
 from . import Highlight, Aura
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class GameStateObj(object):
     # needed for main menu
@@ -43,7 +42,7 @@ class GameStateObj(object):
 
     # Things that change between levels always
     def start(self, allreinforcements, prefabs, objective, music):
-        logger.info("Start")
+        print("Start")
         self.allreinforcements = allreinforcements
         self.prefabs = prefabs
         self.objective = objective
@@ -115,7 +114,7 @@ class GameStateObj(object):
         
     # Start a new game
     def build_new(self):
-        logger.info("Build New")
+        print("Build New")
         self.allunits = []
         self.allitems = {}
         self.allstatuses = {}
@@ -133,7 +132,7 @@ class GameStateObj(object):
         else:
             random_seed = random.randint(0, 1023)
         static_random.set_seed(random_seed)
-        logger.debug('Random Seed: %d', random_seed)
+        print('Random Seed: %d', random_seed)
         self.game_constants['_random_seed'] = random_seed
 
         self._money = Counter()
@@ -200,7 +199,7 @@ class GameStateObj(object):
             StatusCatalog.Status.next_uid = 100
 
     def load(self, load_info):
-        logger.info("Load")
+        print("Load")
         # Rebuild gameStateObj
         self.allunits = [UnitObject.UnitObject(info) for info in load_info['allunits']]
         self.allitems = {info['uid']: ItemMethods.deserialize(info) for info in load_info['allitems']}
@@ -219,6 +218,7 @@ class GameStateObj(object):
         self.turncount = load_info['turncount']
         self.game_constants = load_info['game_constants']
         static_random.set_seed(self.game_constants.get('_random_seed', 0))
+        print('game state set seed')
         self.level_constants = load_info['level_constants']
         self.objective = Objective.Objective.deserialize(load_info['objective']) if load_info['objective'] else None
         self.phase_music = CustomObjects.PhaseMusic.deserialize(load_info['phase_music']) if load_info['phase_music'] else None
@@ -261,9 +261,9 @@ class GameStateObj(object):
         self.action_log = Turnwheel.ActionLog.deserialize(load_info['action_log'], self)
 
         # Map
-        logger.info('Creating map...')
+        print('Creating map...')
         self.map = SaveLoad.create_map(self, 'Assets/Lex-Talionis/Data/Level' + str(self.game_constants['level']))
-        logger.info('Done creating map...')
+        print('Done creating map...')
         # Set up blitting surface
         if self.map:
             mapSurfWidth = self.map.width * GC.TILEWIDTH
@@ -303,7 +303,7 @@ class GameStateObj(object):
             self.phase.current, self.phase.previous = load_info['phase_info']
 
     def generic(self):
-        logger.info("Generic")
+        print("Generic")
 
         lord_units = [unit for unit in self.allunits if unit.position and 'Lord' in unit.tags and unit.team == 'player']
         lord_position = lord_units[0].position if lord_units else (0, 0)
@@ -416,7 +416,7 @@ class GameStateObj(object):
         return self.allitems.get(u_id)
 
     def register_item(self, item):
-        logger.info('Registering item %s as %s', item, item.uid)
+        print('Registering item %s as %s', item, item.uid)
         self.allitems[item.uid] = item
 
     def register_items(self, items):
@@ -427,7 +427,7 @@ class GameStateObj(object):
         return self.allstatuses.get(u_id)
 
     def register_status(self, status):
-        logger.info('Registering status %s as %s', status, status.uid)
+        print('Registering status %s as %s', status, status.uid)
         self.allstatuses[status.uid] = status
         # We need to remember to register an aura's child status
         if status.aura:
@@ -668,7 +668,7 @@ class GameStateObj(object):
         self._convoy[self.current_party] = [item for item in cur_convoy if not item.uses or item.uses.uses > 0]
 
     def quick_sort_inventories(self, units):
-        logger.debug("Quicksorting Inventories")
+        print("Quicksorting Inventories")
         my_units = self.get_units_in_party()
         random.shuffle(my_units)
         # print([my_unit.name for my_unit in my_units])

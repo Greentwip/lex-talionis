@@ -9,8 +9,8 @@ from . import Utility, Engine
 from . import Banner, Weapons, ClassData, Aura
 from . import StatusCatalog, ActiveSkill, PrepBase
 
-import logging
-logger = logging.getLogger(__name__)
+#import logging
+#logger = logging.getLogger(__name__)
 
 class Action(object):
     run_on_load = False
@@ -1119,11 +1119,11 @@ class ChangeAI(Action):
 
     def do(self, gameStateObj):
         self.unit.get_ai(self.new_ai)
-        logger.info('New AI: %s', self.unit.ai_descriptor)
+        print('New AI: %s', self.unit.ai_descriptor)
 
     def reverse(self, gameStateObj):
         self.unit.get_ai(self.old_ai)
-        logger.info('New AI: %s', self.unit.ai_descriptor)
+        print('New AI: %s', self.unit.ai_descriptor)
 
 class ModifyAI(Action):
     def __init__(self, unit, new_primary_ai, new_secondary_ai):
@@ -1458,12 +1458,12 @@ class AddStatus(Action):
             print('%s not found in allstatuses!' % self.status_obj)
             logger.error("%s not found in allstatuses", self.status_obj)
             
-        logger.info('Adding Status %s to %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
+        print('Adding Status %s to %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
 
         if not self.status_obj.stack:
             for status in self.unit.status_effects:
                 if status.id == self.status_obj.id:
-                    logger.info('Status %s already present', status.id)
+                    print('Status %s already present', status.id)
                     if status.time:
                         self.actions.append(RemoveStatus(self.unit, status))
                     else:
@@ -1500,7 +1500,7 @@ class AddStatus(Action):
 
         if self.status_obj.ai_change:
             self.status_obj.data['original_ai'] = self.unit.ai_descriptor
-            logger.info('%s %s', self.unit, self.status_obj.ai_change)
+            print('%s %s', self.unit, self.status_obj.ai_change)
             self.actions.append(ChangeAI(self.unit, self.status_obj.ai_change))
 
         if self.status_obj.stat_change:
@@ -1596,17 +1596,17 @@ class RemoveStatus(Action):
                     self.status_obj = status
                     break
             else:
-                logger.warning('Status ID %s not present...', self.status_obj)
-                logger.warning(self.unit.status_effects)
+                print('Status ID %s not present...', self.status_obj)
+                print(self.unit.status_effects)
                 return
 
-        logger.info('Removing status %s from %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
+        print('Removing status %s from %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
         if self.status_obj in self.unit.status_effects:
             self.actions.append(TakeStatus(self.unit, self.status_obj))
         else:
-            logger.warning('Status %s %s %s not present...', self.status_obj.id, self.status_obj.name, self.status_obj.uid)
-            logger.warning(self.unit.status_effects)
-            logger.warning([s.uid for s in self.unit.status_effects])
+            print('Status %s %s %s not present...', self.status_obj.id, self.status_obj.name, self.status_obj.uid)
+            print(self.unit.status_effects)
+            print([s.uid for s in self.unit.status_effects])
             return
 
         # --- Non-momentary status ---
@@ -1614,7 +1614,7 @@ class RemoveStatus(Action):
             self.actions.append(ChangeTeam(self.unit, self.status_obj.data['original_team']))
 
         if self.status_obj.ai_change:
-            logger.info('%s %s %s', self.unit, self.unit.ai_descriptor, self.status_obj.data['original_ai'])
+            print('%s %s %s', self.unit, self.unit.ai_descriptor, self.status_obj.data['original_ai'])
             self.actions.append(ChangeAI(self.unit, self.status_obj.data['original_ai']))
 
         if self.status_obj.upkeep_stat_change:
@@ -1666,7 +1666,7 @@ class RemoveStatus(Action):
 
     def reverse(self, gameStateObj):
         if not isinstance(self.status_obj, StatusCatalog.Status):
-            logger.warning('Status ID %s not present...', self.status_obj)
+            print('Status ID %s not present...', self.status_obj)
             return
 
         for action in self.actions:
