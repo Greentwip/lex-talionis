@@ -1,5 +1,8 @@
 from collections import OrderedDict
 import os
+
+import metrosetup
+
 def read_config_file():
     lines = OrderedDict([('debug', 1),
                          ('cheat', 1),
@@ -78,9 +81,15 @@ def read_config_file():
     return lines
 
 def write_config_file():
-    with open('Assets/Lex-Talionis/Saves/config.ini', 'w') as config_file:
-        write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.items()])
-        config_file.write(write_out)
+
+    pref_file = 'config.ini'
+    write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.items()])
+    metrosetup.write_to_prefs(pref_file, write_out)
+
+    #with open(pref_dir + '/Lex-Talionis/Saves/config.ini', 'w') as config_file:
+        #write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.items()])
+        #config_file.write(write_out)
+
 
 def read_constants_file():
     lines = {'max_items': 5, # How many items can a unit carry at maximum

@@ -74,6 +74,7 @@ def run(gameStateObj, metaDataObj):
         # Update global music thread
         Engine.music_thread.update(eventList)
 
+        #new_size = (GC.WINWIDTH * cf.OPTIONS['Screen Size'], GC.WINHEIGHT * cf.OPTIONS['Screen Size'])
         new_size = (cf.OPTIONS['Screen Width'], cf.OPTIONS['Screen Height'])
         Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
         # Check for taking screenshot
@@ -125,22 +126,6 @@ if __name__ == '__main__':
     #logging.basicConfig(handlers=[logging.FileHandler('./Saves/debug.log.1', 'w', 'utf-8')],
     #                    level=my_level, format='%(relativeCreated)d %(levelname)7s:%(module)16s: %(message)s')
     print('*** Lex Talionis Engine Version %s ***' % GC.version)
-    try:
-        main()
-    except Exception as e:
-        print(e)
-        inform_error()
-        print('*** Lex Talionis Engine Version %s ***' % GC.version)
-        print('Main Crash {0}'.format(str(e)))
-        # Now print exception to screen
-        import time
-        time.sleep(0.5)
-        #traceback.print_exc()
-        time.sleep(0.5)
-        Engine.final(crash=True)
-        inform_error()
-        if cf.OPTIONS['cheat']:
-            time.sleep(10)
-        else:
-            time.sleep(20)
+    main()
+    
 # === END === END === END === END === END === END === END === END === END === #

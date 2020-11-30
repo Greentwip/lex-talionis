@@ -284,7 +284,9 @@ def create_affinity_dict(fn):
 
     return d
 
-if os.path.exists('Assets/Lex-Talionis/Data/affinity.txt'):
+#if os.path.exists('Assets/Lex-Talionis/Data/affinity.txt'):
+try:
     AFFINITY_DICT = create_affinity_dict('Assets/Lex-Talionis/Data/affinity.txt')
-else:
+#else:
+except:
     AFFINITY_DICT = {}

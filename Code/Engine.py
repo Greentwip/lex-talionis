@@ -42,6 +42,7 @@ def clock():
     return pygame.time.Clock()
 
 def build_display(size):
+    print('screen size ' + str(size[0]) + ' ' + str(size[1]))
     return pygame.display.set_mode(size)
 
 def push_display(surf, size, new_surf):

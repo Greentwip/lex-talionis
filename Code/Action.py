@@ -1456,7 +1456,7 @@ class AddStatus(Action):
         if self.status_obj.uid not in gameStateObj.allstatuses:
             print('Major problem!')
             print('%s not found in allstatuses!' % self.status_obj)
-            logger.error("%s not found in allstatuses", self.status_obj)
+            print("%s not found in allstatuses", self.status_obj)
             
         print('Adding Status %s to %s at %s', self.status_obj.id, self.unit.name, self.unit.position)
 
@@ -1578,7 +1578,7 @@ class GiveStatus(Action):
             self.unit.status_effects.remove(self.status_obj)
             self.unit.status_bundle.subtract(list(self.status_obj.components))
         else:
-            logger.error("Status Object %s not in %s's status effects", self.status_obj.id, self.unit.name)
+            print("Status Object %s not in %s's status effects", self.status_obj.id, self.unit.name)
 
 class RemoveStatus(Action):
     def __init__(self, unit, status_obj, clean_up=False):

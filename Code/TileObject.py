@@ -81,7 +81,7 @@ class MapObject(object):
                         self._tiles[(x, y)] = new_tile
                         break
                 else: # Never found terrain...
-                    logger.error('Terrain matching colorkey %s never found.', cur)
+                    print('Terrain matching colorkey %s never found.', cur)
         self.true_tiles = None  # Reset tiles
         self.true_opacity_map = None
 
@@ -237,7 +237,7 @@ class MapObject(object):
                                   [terrain.find('DEF').text, terrain.find('AVO').text], self)
                 return tile
         else:
-            logger.error('Could not find tile matching id: %s', tile_id)
+            print('Could not find tile matching id: %s', tile_id)
             return None # Couldn't find any that match id
         
     def parse_tile_info(self, tile_info_location, gameStateObj):
@@ -426,14 +426,14 @@ class MapObject(object):
         return coord
 
     def load_new_map_tiles(self, line, currentLevelIndex):
-        tile_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
+        tile_data_suffix = 'Assets/Lex-Talionis/Data/Level' + str(currentLevelIndex) + '/TileData' + line[1] + '.png'
         colorkey, width, height = self.build_color_key(Engine.image_load(tile_data_suffix))
         self.width = width
         self.height = height
         self.populate_tiles(colorkey)
 
     def load_new_map_sprite(self, line, currentLevelIndex):
-        map_data_suffix = 'Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'
+        map_data_suffix = 'Assets/Lex-Talionis/Data/Level' + str(currentLevelIndex) + '/MapSprite' + line[1] + '.png'
         self.mapfilename = map_data_suffix
         self.reset_all_tile_sprites()
         self.loadSprites()
@@ -697,7 +697,7 @@ class TerrainLayer(object):
                         self._tiles[pos] = new_tile
                         break
                 else: # Never found terrain...
-                    logger.error('Terrain matching colorkey %s never found.', cur)
+                    print('Terrain matching colorkey %s never found.', cur)
 
 # === GENERIC TILE OBJECT =======================================
 class TileObject(object):

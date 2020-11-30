@@ -19,6 +19,10 @@ TILEHEIGHT = 16
 WINWIDTH = TILEWIDTH * TILEX
 WINHEIGHT = TILEHEIGHT * TILEY
 
+SCREEN_WIDTH = cf.OPTIONS['Screen Width']
+SCREEN_HEIGHT = cf.OPTIONS['Screen Height']
+
+
 # Colors
 COLORDICT = {'bright_blue': (0, 168, 248),
              'black': (0, 0, 0),
@@ -150,6 +154,7 @@ MCOSTDATA = create_mcost_dict('Assets/Lex-Talionis/Data/mcost.txt')
 def create_ai_dict(fp):
     ai_dict = OrderedDict()
     if not os.path.exists(fp):
+        print("error finding ai")
         return ai_dict
     with open(fp, mode='r', encoding='utf-8') as ai_data:
         for line in ai_data.readlines():

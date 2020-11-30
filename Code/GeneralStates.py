@@ -45,7 +45,7 @@ class TurnChangeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
-            turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
+            turn_event_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
             if os.path.isfile(turn_event_script):
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(turn_event_script))
                 gameStateObj.stateMachine.changeState('dialogue')
@@ -85,7 +85,7 @@ class TurnChangeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
             if gameStateObj.phase.get_current_phase() == 'enemy':
-                enemy_turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
+                enemy_turn_event_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
                 if os.path.isfile(enemy_turn_event_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(enemy_turn_event_script))
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -378,12 +378,12 @@ class MoveState(StateMachine.State):
 
         # Play move script if it exists
         if not self.started:
-            global_move_script_name = 'Data/global_moveScript.txt'
+            global_move_script_name = 'Assets/Lex-Talionis/Data/global_moveScript.txt'
             if os.path.exists(global_move_script_name):
                 global_move_script = Dialogue.Dialogue_Scene(global_move_script_name, unit=cur_unit)
                 gameStateObj.message.append(global_move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
-            move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
+            move_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
             if os.path.exists(move_script_name):
                 move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit)
                 gameStateObj.message.append(move_script)
@@ -506,7 +506,7 @@ class MenuState(StateMachine.State):
         # Somehow?
         cur_unit = gameStateObj.cursor.currentSelectedUnit
         if not cur_unit:
-            logger.error('Somehow ended up in MenuState without a current selected unit...')
+            print('Somehow ended up in MenuState without a current selected unit...')
             gameStateObj.stateMachine.clear()
             gameStateObj.stateMachine.changeState('free')
             return
@@ -538,7 +538,7 @@ class MenuState(StateMachine.State):
 
         # Play menu script if it exists
         if not self.started:
-            menu_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
+            menu_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/menuScript.txt'
             if os.path.exists(menu_script_name):
                 menu_script = Dialogue.Dialogue_Scene(menu_script_name, unit=cur_unit)
                 gameStateObj.message.append(menu_script)
@@ -689,7 +689,7 @@ class MenuState(StateMachine.State):
             opt_color = ['text_green' if option not in self.normal_options else 'text_white' for option in options]
             gameStateObj.activeMenu = MenuFunctions.ChoiceMenu(cur_unit, options, 'auto', limit=8, color_control=opt_color, gameStateObj=gameStateObj)
         else:
-            logger.error('Somehow ended up in menu with no options!')
+            print('Somehow ended up in menu with no options!')
 
     def take_input(self, eventList, gameStateObj, metaDataObj):
         from . import Action
@@ -815,12 +815,12 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('giveselect')
             elif selection == cf.WORDS['Visit']:
                 village_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Village']]
-                village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
+                village_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
                 if os.path.exists(village_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
                     gameStateObj.stateMachine.changeState('dialogue')
                 else:
-                    logger.error("%s does not exist!", village_script)
+                    print("%s does not exist!", village_script)
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
             elif selection == cf.WORDS['Arena']:
                 gameStateObj.stateMachine.changeState('arena')
@@ -845,12 +845,12 @@ class MenuState(StateMachine.State):
             elif selection == cf.WORDS['Switch']:
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
-                switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
+                switch_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
                 if os.path.exists(switch_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
                     gameStateObj.stateMachine.changeState('dialogue')
                 else:
-                    logger.error('%s does not exist!', switch_script)
+                    print('%s does not exist!', switch_script)
             elif selection == cf.WORDS['Unlock']:
                 avail_pos = [pos for pos in cur_unit.getAdjacentPositions(gameStateObj) + [cur_unit.position] if cf.WORDS['Locked'] in gameStateObj.map.tile_info_dict[pos]]
                 if len(avail_pos) > 1:
@@ -862,10 +862,10 @@ class MenuState(StateMachine.State):
                     item = cur_unit.get_unlock_key()
                     cur_unit.unlock(avail_pos[0], item, gameStateObj)
                 else:
-                    logger.error('Made a mistake in allowing unit to access Unlock!')
+                    print('Made a mistake in allowing unit to access Unlock!')
             elif selection == cf.WORDS['Search']:
                 search_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Search']]
-                search_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
+                search_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, unit=cur_unit, name=search_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
@@ -1159,7 +1159,7 @@ class AttackState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
 
         # Play attack script if it exists
-        attack_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
+        attack_script_name = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
         if os.path.exists(attack_script_name):
             attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker)
             gameStateObj.message.append(attack_script)
@@ -1248,7 +1248,7 @@ class SpellState(StateMachine.State):
                 closest_position = attacker.validSpellTargets.get_closest(attacker.position)
             gameStateObj.cursor.setPosition(closest_position, gameStateObj)
         else: # syntactic sugar
-            logger.error('SpellState has no valid targets! Mistakes were made.')
+            print('SpellState has no valid targets! Mistakes were made.')
             # No valid targets, means this stays the same. They can choose another weapon or something
         attacker.displaySpellAttacks(gameStateObj)
         attacker.displaySingleAttack(gameStateObj, gameStateObj.cursor.position, item=spell)
@@ -1504,7 +1504,7 @@ class SelectState(StateMachine.State):
                 if gameStateObj.cursor.currentHoveredUnit:
                     # cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
                     Action.do(Action.HasTraded(cur_unit), gameStateObj)
-                    talk_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
+                    talk_script = 'Assets/Lex-Talionis/Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -1517,7 +1517,7 @@ class SelectState(StateMachine.State):
                     if os.path.exists(edge.script):
                         support_script = edge.script
                     else:
-                        support_script = 'Data/SupportConvos/GenericScript.txt'
+                        support_script = 'Assets/Lex-Talionis/Data/SupportConvos/GenericScript.txt'
                     level = edge.get_support_level()
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit, name=level))
                     gameStateObj.stateMachine.changeState('menu')

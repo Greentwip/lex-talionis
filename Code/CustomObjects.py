@@ -221,7 +221,7 @@ class PhaseIn(object):
         currentTime = Engine.get_time()
         time_passed = min(currentTime - self.start_time, self.display_time)
         if cf.OPTIONS['debug'] and time_passed < 0:
-            logger.error('This phase has a negative time_passed! %s %s %s', time_passed, currentTime, self.start_time)
+            print('This phase has a negative time_passed! %s %s %s', time_passed, currentTime, self.start_time)
         max_opaque = 118
 
         # Blit the banner

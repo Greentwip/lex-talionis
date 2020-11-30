@@ -24,7 +24,7 @@ class Dialogue_Scene(object):
             self.scene_lines = []
         if cf.OPTIONS['debug']:
             if not self.count_if_statements():
-                logger.error('ERROR: Incorrect number of if and end statements! %s', scene)
+                print('ERROR: Incorrect number of if and end statements! %s', scene)
 
         # Background sprite
         self.background = None
@@ -146,7 +146,7 @@ class Dialogue_Scene(object):
             return False
         elif line[0] == 'elif':
             if not self.if_stack:
-                logger.error("Syntax Error somewhere in script. 'elif' needs to be after if statement.")
+                print("Syntax Error somewhere in script. 'elif' needs to be after if statement.")
                 return # Impossible. Must have at least parsed an if before hitting an elif
             # If we haven't encountered a truth yet
             if not self.parse_stack[-1]: # if not self.if_stack[-1] and (len(self.if_stack) == 1 or all(t_value for t_value in self.if_stack[:-1])):
@@ -158,7 +158,7 @@ class Dialogue_Scene(object):
             return False
         elif line[0] == 'else':
             if not self.if_stack:
-                logger.error("Syntax Error somewhere in script. 'else' needs to be after if statement.")
+                print("Syntax Error somewhere in script. 'else' needs to be after if statement.")
                 return # Impossible. Must have at least parsed an if before hitting an else
             # If the most recent is False but the rest below are non-existent or true
             if not self.parse_stack[-1]: # not self.if_stack[-1] and (len(self.if_stack) == 1 or all(t_value for t_value in self.if_stack[:-1])):
@@ -525,7 +525,7 @@ class Dialogue_Scene(object):
                     if self.unit and self.unit.team.startswith('enemy') and tile and tile.name == "Chest":
                         Action.do(Action.MakeItemDroppable(self.unit, item), gameStateObj)
                 else:
-                    logger.error("Could not find item matching %s", line[2])
+                    print("Could not find item matching %s", line[2])
             elif line[2] == "0" and 'no_banner' not in line:
                 gameStateObj.banners.append(Banner.foundNothingBanner(receiver))
                 gameStateObj.stateMachine.changeState('itemgain')
@@ -1360,7 +1360,7 @@ class Dialogue_Scene(object):
 
         s = GC.IMAGESDICT['BlackBackground'].copy()
         if len(self.transition_color) == 3:
-            s.fill((self.transition_color, self.transition_transparency))
+            s.fill((self.transition_color[0], self.transition_color[1], self.transition_color[2], self.transition_transparency))
         else:
             s.fill((0, 0, 0, self.transition_transparency))
         surf.blit(s, (0, 0))
@@ -1456,7 +1456,7 @@ class Dialogue_Scene(object):
                 print("Unit %s already has a position!", unit.id)
                 return
         if not unit:
-            logger.error('Could not find unit %s', which_unit)
+            print('Could not find unit %s', which_unit)
             return
 
         # Determine where the unit will appear
@@ -1480,7 +1480,7 @@ class Dialogue_Scene(object):
             if new_char:
                 new_pos = [new_char.position]
             else:
-                logger.error('Could not find unit %s', new_pos)
+                print('Could not find unit %s', new_pos)
                 return
 
         #print("Add Unit: New Pos")
@@ -1527,10 +1527,10 @@ class Dialogue_Scene(object):
         else:
             unit = gameStateObj.get_unit(which_unit)
         if not unit:
-            logger.error('Move unit routine could not find unit %s', which_unit)
+            print('Move unit routine could not find unit %s', which_unit)
             return
         if not unit.position:
-            logger.error('Unit does not have position! %s %s', which_unit, unit.name)
+            print('Unit does not have position! %s %s', which_unit, unit.name)
             print('Unit does not have position! %s %s' %(which_unit, unit.name))
             gameStateObj.display_all_units()
             return
@@ -1594,7 +1594,7 @@ class Dialogue_Scene(object):
         else:
             unit = gameStateObj.get_unit(which_unit)
         if not unit:
-            logger.error('Remove unit routine could not find unit %s', which_unit)
+            print('Remove unit routine could not find unit %s', which_unit)
             return
         if not unit.position:
             print('Remove unit routine - No position')
@@ -1623,7 +1623,7 @@ class Dialogue_Scene(object):
         else:
             attacker = self.get_unit(attacker, gameStateObj)
         if not attacker:
-            logger.error('Interact unit routine could not find %s', attacker)
+            print('Interact unit routine could not find %s', attacker)
             return
 
         if ',' in defender:
@@ -1631,12 +1631,12 @@ class Dialogue_Scene(object):
         else:
             defender = self.get_unit(defender, gameStateObj)
             if not defender:
-                logger.error('Interact unit routine could not find %s', defender)
+                print('Interact unit routine could not find %s', defender)
                 return
             if defender.position:
                 def_pos = defender.position
             else:
-                logger.error('Interact unit routine cannot target a unit without a position')
+                print('Interact unit routine cannot target a unit without a position')
                 return
 
         item = attacker.items[0]
@@ -1735,7 +1735,7 @@ class Dialogue_Scene(object):
                 if (unit.id == pos or unit.event_id == pos) and unit.position:
                     return unit.position
             else:
-                logger.error("Couldn't find unit %s", pos)
+                print("Couldn't find unit %s", pos)
                 return
 
     def parse_pos(self, pos, gameStateObj):

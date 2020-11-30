@@ -111,7 +111,7 @@ class AI(object):
 
         # Can do more than one pass through per frame if it doesn't take much time (half of a frame)
         print('AI Thinking...')
-        while Engine.get_true_time() - time1 < GC.FRAMERATE//2:
+        while Engine.get_true_time() - time1 < GC.FRAMERATE:
             print('Current State: %s', self.state)
 
             if self.state == 'Init':

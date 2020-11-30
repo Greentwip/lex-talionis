@@ -548,7 +548,7 @@ def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False,
                 growths[idx] = 0
 
     else:
-        logger.error('Unsupported leveling type %s', leveling)
+        print('Unsupported leveling type %s', leveling)
 
     # Make sure we don't exceed max
     stats = [Utility.clamp(stat, 0, max_stats[index]) for index, stat in enumerate(stats)]
