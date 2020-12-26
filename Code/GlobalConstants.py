@@ -10,7 +10,7 @@ from . import static_random
 
 version = "0.9.4.4"
 # === GLOBAL CONSTANTS ===========================================
-FPS = 60
+FPS = 30
 FRAMERATE = 1000//FPS
 TILEY = 10
 TILEX = 15
