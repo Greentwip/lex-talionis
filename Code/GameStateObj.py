@@ -751,8 +751,8 @@ class GameStateObj(object):
             p_log += '\t\t</unit>\n'
         p_log += '\t</units>\n'
         p_log += '</level>\n\n'
-        pref_file = 'progress_log.xml'
-        metrosetup.write_to_prefs(pref_file, write_out)
+        pref_file = 'Saves/progress_log.xml'
+        metrosetup.write_to_prefs(pref_file, p_log)
 
 
     def drawMap(self):

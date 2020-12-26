@@ -5,6 +5,8 @@ from . import bmpfont, Engine, imagesDict, Equations
 from . import configuration as cf
 from . import static_random
 
+import metrosetup
+
 #import logging
 #logger = logging.getLogger(__name__)
 
@@ -48,7 +50,7 @@ COLORDICT = {'bright_blue': (0, 168, 248),
 
 U_ID = 100
 
-SUSPEND_LOC = 'Saves/Suspend.pmeta'
+SUSPEND_LOC = metrosetup.get_prefs_dir() + '/' 'Saves/Suspend.pmeta'
 
 Engine.init()
 

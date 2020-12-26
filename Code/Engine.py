@@ -4,6 +4,8 @@ import sys
 
 from . import configuration
 
+import metrosetup
+
 #import logging
 
 #logger = logging.getLogger(__name__)
@@ -78,7 +80,7 @@ def create_crash_save():
     import os, glob
     from shutil import copyfile
     # Get newest *.pmeta file in Saves/
-    save_metas = glob.glob(engine_constants['home'] + 'Saves/*.pmeta')
+    save_metas = glob.glob(metrosetup.get_prefs_dir() + '/' + 'Saves/*.pmeta')
     if not save_metas:
         return
     latest_file = max(save_metas, key=os.path.getmtime)
@@ -87,8 +89,8 @@ def create_crash_save():
     if not (pmeta_name.startswith('SaveState') or pmeta_name.startswith('Suspend') or pmeta_name.startswith('Restart')):
         # Copy newest *.p and *.pmeta file and call them Suspend.p and Suspend.pmeta
         p_file = latest_file[:-6] + '.p'
-        copyfile(p_file, engine_constants['home'] + 'Saves/Suspend.p')
-        copyfile(latest_file, engine_constants['home'] + 'Saves/Suspend.pmeta')
+        copyfile(p_file, metrosetup.get_prefs_dir() + '/' + 'Saves/Suspend.p')
+        copyfile(latest_file, metrosetup.get_prefs_dir() + '/' + 'Saves/Suspend.pmeta')
         print('\nCreated save point at last turn change! Select Continue in Main Menu to load!\n')
         print('Created save point from %s', p_file)
 

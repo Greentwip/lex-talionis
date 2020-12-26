@@ -48,7 +48,7 @@ def read_config_file():
             print(split_line[0])
 
     # Try saves folder first
-    contents = metrosetup.read_from_prefs('config.ini')
+    contents = metrosetup.read_from_prefs('Saves/config.ini')
         
 
     if contents is None:
@@ -88,7 +88,7 @@ def read_config_file():
 
 def write_config_file():
 
-    pref_file = 'config.ini'
+    pref_file = 'Saves/config.ini'
     write_out = '\n'.join([name + '=' + str(value) for name, value in OPTIONS.items()])
     metrosetup.write_to_prefs(pref_file, write_out)
 

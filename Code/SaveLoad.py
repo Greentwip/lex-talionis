@@ -14,6 +14,8 @@ from . import TileObject, ItemMethods, UnitObject, StatusCatalog, CustomObjects
 from . import Utility, Weapons, Objective, Triggers, ClassData
 from Code.StatObject import build_stat_dict
 
+import metrosetup
+
 #import logging
 #logger = logging.getLogger(__name__)
 
@@ -558,11 +560,11 @@ def auto_level(bases, growths, num_levelups, max_stats, mode, force_fixed=False,
 # Save IO
 def save_io(to_save, to_save_meta, old_slot, slot=None, hard_loc=None):
     if hard_loc:
-        save_loc = 'Saves/' + hard_loc + '.p'
-        meta_loc = 'Saves/' + hard_loc + '.pmeta'
+        save_loc = metrosetup.get_prefs_dir() + '/' + 'Saves/' + hard_loc + '.p'
+        meta_loc = metrosetup.get_prefs_dir() + '/' + 'Saves/' + hard_loc + '.pmeta'
     else:
-        save_loc = 'Saves/SaveState' + str(slot) + '.p'
-        meta_loc = 'Saves/SaveState' + str(slot) + '.pmeta'
+        save_loc = metrosetup.get_prefs_dir() + '/' + 'Saves/SaveState' + str(slot) + '.p'
+        meta_loc = metrosetup.get_prefs_dir() + '/' + 'Saves/SaveState' + str(slot) + '.pmeta'
     
     print('Saving to %s', save_loc)
 
@@ -574,14 +576,14 @@ def save_io(to_save, to_save_meta, old_slot, slot=None, hard_loc=None):
 
     # For restart
     if not hard_loc: # Hard loc is used for suspend, which doesn't need a restart
-        r_save = 'Saves/Restart' + str(slot) + '.p'
-        r_save_meta = 'Saves/Restart' + str(slot) + '.pmeta'
+        r_save = metrosetup.get_prefs_dir() + '/' +  'Saves/Restart' + str(slot) + '.p'
+        r_save_meta =  metrosetup.get_prefs_dir() + '/' + 'Saves/Restart' + str(slot) + '.pmeta'
         if old_slot == 'Start':
             if save_loc != r_save:
                 shutil.copy(save_loc, r_save)
                 shutil.copy(meta_loc, r_save_meta)
         else:
-            old_name = 'Saves/Restart' + str(old_slot) + '.p'
+            old_name = metrosetup.get_prefs_dir() + '/' + 'Saves/Restart' + str(old_slot) + '.p'
             if old_name != r_save:
                 shutil.copy(old_name, r_save)
                 shutil.copy(old_name + 'meta', r_save_meta)

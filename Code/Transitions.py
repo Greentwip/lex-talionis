@@ -10,6 +10,8 @@ from . import Engine, Image_Modification
 from . import CustomObjects, MenuFunctions, SaveLoad, StateMachine, Dialogue
 from . import ClassData, BaseMenuSurf, Weather, Background
 
+import metrosetup
+
 #import logging
 #logger = logging.getLogger(__name__)
 
@@ -55,7 +57,7 @@ class TimeDisplay(object):
 def load_saves():
     save_slots = []
     for num in range(0, int(cf.CONSTANTS['save_slots'])):
-        meta_fp = 'Saves/SaveState' + str(num) + '.pmeta'
+        meta_fp = metrosetup.get_prefs_dir() + '/' +  'Saves/SaveState' + str(num) + '.pmeta'
         ss = CustomObjects.SaveSlot(meta_fp, num)
         save_slots.append(ss)
     return save_slots
@@ -63,7 +65,7 @@ def load_saves():
 def load_restarts():
     save_slots = []
     for num in range(0, int(cf.CONSTANTS['save_slots'])):
-        meta_fp = 'Saves/Restart' + str(num) + '.pmeta'
+        meta_fp = metrosetup.get_prefs_dir() + '/' +  'Saves/Restart' + str(num) + '.pmeta'
         ss = CustomObjects.SaveSlot(meta_fp, num)
         save_slots.append(ss)
     return save_slots
@@ -222,7 +224,7 @@ class StartStart(StateMachine.State):
         elif event == 'INFO' and cf.OPTIONS['cheat']:
             GC.SOUNDDICT['Select 1'].play()
             import glob
-            fps = glob.glob('Saves/*.pmeta')
+            fps = glob.glob( metrosetup.get_prefs_dir() + '/' + 'Saves/*.pmeta')
             if not fps:
                 return
             newest = max(fps, key=os.path.getmtime)
@@ -525,7 +527,7 @@ class StartAllSaves(StartLoad):
     def get_all_saves(self):
         import glob
         save_slots = []
-        for meta_fn in glob.glob('Saves/L*T*.pmeta'):
+        for meta_fn in glob.glob( metrosetup.get_prefs_dir() + '/' + 'Saves/L*T*.pmeta'):
             ss = CustomObjects.SaveSlot(meta_fn, 0)
             save_slots.append(ss)
         return save_slots

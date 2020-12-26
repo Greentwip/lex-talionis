@@ -35,8 +35,14 @@ import Code.GlobalConstants as GC
 import Code.configuration as cf
 from Code import GameStateObj, Engine
 
+import metrosetup
+
 # === MAIN FUNCTION ===========================================================
 def main():
+    print('//////////////// PREFS DIR ///////////////////')
+    print(metrosetup.get_prefs_dir())
+    print(metrosetup.read_from_prefs('config.ini'))
+    metrosetup.write_to_prefs('Saves/pref.ini', 'data=ok')
     # Set Volume
     Engine.music_thread.set_volume(cf.OPTIONS['Music Volume'])
     imagesDict.set_sound_volume(cf.OPTIONS['Sound Volume'], GC.SOUNDDICT)
@@ -90,12 +96,12 @@ def run(gameStateObj, metaDataObj):
 def handle_debug_logs():
     counter = 5  # Increments all old debug logs. Destroys ones older than 5 runs.
     while counter > 0:
-        fp = ''.join(['./Saves/debug.log.', str(counter)])
+        fp = ''.join([ metrosetup.get_prefs_dir() + '/' + 'Saves/debug.log.', str(counter)])
         if os.path.exists(fp):
             if counter == 5:
                 os.remove(fp)
             else:
-                os.rename(fp, ''.join(['./Saves/debug.log.', str(counter + 1)]))
+                os.rename(fp, ''.join([metrosetup.get_prefs_dir() + '/' + 'Saves/debug.log.', str(counter + 1)]))
         counter -= 1
 
 def inform_error():
