@@ -41,14 +41,20 @@ def read_config_file():
                 split_line = line.strip().split('=')
                 lines[split_line[0]] = split_line[1]
 
+    def parse_config_from_string(data):
+        for line in data.splitlines():
+            split_line = line.strip().split('=')
+            lines[split_line[0]] = split_line[1]
+            print(split_line[0])
+
     # Try saves folder first
-    try:
-        parse_config('Assets/Lex-Talionis/Saves/config.ini')
-    except:
-        try: 
-            parse_config('Assets/Lex-Talionis/Data/config.ini')
-        except:
-            pass
+    contents = metrosetup.read_from_prefs('config.ini')
+        
+
+    if contents is None:
+        parse_config('Assets/Lex-Talionis/Data/config.ini')
+    else:
+        parse_config_from_string(contents)
 
     lines['debug'] = int(lines['debug'])
     lines['cheat'] = int(lines['cheat'])

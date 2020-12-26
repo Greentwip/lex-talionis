@@ -11,6 +11,8 @@ from . import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
 from . import Boundary, Objective, Overworld, TileObject, Action
 from . import Highlight, Aura
 
+import metrosetup
+
 #import logging
 #logger = logging.getLogger(__name__)
 
@@ -723,32 +725,35 @@ class GameStateObj(object):
         # Done
 
     def output_progress_xml(self):
-        with open('Saves/progress_log.xml', mode='a', encoding='utf-8') as p_log:
-            p_log.write('<level name="' + str(self.game_constants['level']) + '">\n')
-            p_log.write('\t<mode>' + self.mode['name'] + '</mode>\n')
-            # Game Constants
-            p_log.write('\t<game_constants>')
-            p_log.write(';'.join([str(k) + ',' + str(v) for k, v in self.game_constants.items()]))
-            p_log.write('</game_constants>\n')
-            # Convoy
-            p_log.write('\t<convoy>')
-            p_log.write(','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in self.convoy]))
-            p_log.write('</convoy>\n')
-            # Units
-            p_log.write('\t<units>\n')
-            for unit in self.allunits:
-                p_log.write('\t\t<unit name="' + str(unit.id) + '">\n')
-                p_log.write('\t\t\t<party>' + str(unit.party) + '</party>\n')
-                p_log.write('\t\t\t<class>' + str(unit.klass) + '</class>\n')
-                p_log.write('\t\t\t<level>' + str(unit.level) + '</level>\n')
-                p_log.write('\t\t\t<exp>' + str(unit.exp) + '</exp>\n')
-                p_log.write('\t\t\t<items>' + ','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]) + '</items>\n')
-                p_log.write('\t\t\t<wexp>' + ','.join([str(wexp) for wexp in unit.wexp]) + '</wexp>\n')
-                p_log.write('\t\t\t<skills>' + ','.join([skill.id for skill in unit.status_effects]) + '</skills>\n')
-                p_log.write('\t\t\t<dead>' + str(1 if unit.dead else 0) + '</dead>\n')
-                p_log.write('\t\t</unit>\n')
-            p_log.write('\t</units>\n')
-            p_log.write('</level>\n\n')
+        #with open('Saves/progress_log.xml', mode='a', encoding='utf-8') as p_log:
+        p_log = '<level name="' + str(self.game_constants['level']) + '">\n'
+        p_log += '\t<mode>' + self.mode['name'] + '</mode>\n'
+        # Game Constants
+        p_log += '\t<game_constants>'
+        p_log += ';'.join([str(k) + ',' + str(v) for k, v in self.game_constants.items()])
+        p_log += '</game_constants>\n'
+        # Convoy
+        p_log += '\t<convoy>'
+        p_log += ','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in self.convoy])
+        p_log += '</convoy>\n'
+        # Units
+        p_log += '\t<units>\n'
+        for unit in self.allunits:
+            p_log += '\t\t<unit name="' + str(unit.id) + '">\n'
+            p_log += '\t\t\t<party>' + str(unit.party) + '</party>\n'
+            p_log += '\t\t\t<class>' + str(unit.klass) + '</class>\n'
+            p_log += '\t\t\t<level>' + str(unit.level) + '</level>\n'
+            p_log += '\t\t\t<exp>' + str(unit.exp) + '</exp>\n'
+            p_log += '\t\t\t<items>' + ','.join([item.id + ' ' + str(item.uses.uses if item.uses else '--') for item in unit.items]) + '</items>\n'
+            p_log += '\t\t\t<wexp>' + ','.join([str(wexp) for wexp in unit.wexp]) + '</wexp>\n'
+            p_log += '\t\t\t<skills>' + ','.join([skill.id for skill in unit.status_effects]) + '</skills>\n'
+            p_log += '\t\t\t<dead>' + str(1 if unit.dead else 0) + '</dead>\n'
+            p_log += '\t\t</unit>\n'
+        p_log += '\t</units>\n'
+        p_log += '</level>\n\n'
+        pref_file = 'progress_log.xml'
+        metrosetup.write_to_prefs(pref_file, write_out)
+
 
     def drawMap(self):
         """Draw the map to a Surface object."""
