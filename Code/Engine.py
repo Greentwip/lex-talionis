@@ -1,4 +1,4 @@
-NO_AUDIO = True
+NO_AUDIO = False
 import pygame
 import sys
 
