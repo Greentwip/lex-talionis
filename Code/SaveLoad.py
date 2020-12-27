@@ -618,6 +618,10 @@ def suspendGame(gameStateObj, kind, slot=None, hard_loc=None):
 """returns gameStateObj from a suspend"""
 def loadGame(gameStateObj, metaDataObj, saveSlot):
     to_save = saveSlot.loadGame()
+    
+    print('////////////////// SAVE DATA ////////////////')
+    print(to_save)
+
     # Rebuild gameStateObj
     gameStateObj.load(to_save)
     gameStateObj.save_slot = saveSlot.number

@@ -122,7 +122,7 @@ class BattleAnimation(object):
                 if opacity == -1:
                     opacity = 255
                     self.flash_color = (248, 248, 248)
-                    self.flash_frames = 100  # Just a lot
+                    self.flash_frames = 25  # Just a lot
                     GC.SOUNDDICT['CombatDeath'].play()  # Play death sound now
                     # self.unit.deathCounter = 1  # Skip sound
                     self.unit.deathCounter = 0

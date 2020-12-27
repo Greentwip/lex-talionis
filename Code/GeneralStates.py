@@ -2186,7 +2186,7 @@ class DialogueState(StateMachine.State):
 
                 # Determines the number of levels in the game
                 num_levels = 0
-                level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
+                level_directories = [x[0] for x in os.walk('Assets/Lex-Talionis/Data/') if os.path.split(x[0])[1].startswith('Level')]
                 for directory in level_directories:
                     try:
                         num = int(os.path.split(directory)[1][5:])

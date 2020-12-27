@@ -24,6 +24,7 @@
 # === IMPORT MODULES ==========================================================
 import os
 import sys
+import time
 
 sys.path.append('Assets/Lex-Talionis')
 
@@ -39,10 +40,6 @@ import metrosetup
 
 # === MAIN FUNCTION ===========================================================
 def main():
-    print('//////////////// PREFS DIR ///////////////////')
-    print(metrosetup.get_prefs_dir())
-    print(metrosetup.read_from_prefs('config.ini'))
-    metrosetup.write_to_prefs('Saves/pref.ini', 'data=ok')
     # Set Volume
     Engine.music_thread.set_volume(cf.OPTIONS['Music Volume'])
     imagesDict.set_sound_volume(cf.OPTIONS['Sound Volume'], GC.SOUNDDICT)
@@ -55,42 +52,43 @@ def main():
 
 # === Main Game Loop ===
 def run(gameStateObj, metaDataObj):
-    my_list = gameStateObj.stateMachine.state[-5:]
     while True:
-        if cf.OPTIONS['debug']:
-            my_new_list = gameStateObj.stateMachine.state[-5:]
-            if my_new_list != my_list:
-                print('Current states %s', [state.name for state in gameStateObj.stateMachine.state])
-                my_list = my_new_list
-                # print('Active Menu %s', gameStateObj.activeMenu)
         Engine.update_time()
 
         # Get events
         eventList = Engine.build_event_list()
 
+        # Update global music thread
+        Engine.music_thread.update(eventList)
+
         # === UPDATE USER STATES ===
         mapSurf, repeat = gameStateObj.stateMachine.update(eventList, gameStateObj, metaDataObj)
+        
+
         while repeat:
             # We don't need to process the eventList more than once I think
             mapSurf, repeat = gameStateObj.stateMachine.update([], gameStateObj, metaDataObj)
+
         # Update global sprite counters
         GC.PASSIVESPRITECOUNTER.update()
         GC.ACTIVESPRITECOUNTER.update()
         GC.CURSORSPRITECOUNTER.update()
-        # Update global music thread
-        Engine.music_thread.update(eventList)
 
-        #new_size = (GC.WINWIDTH * cf.OPTIONS['Screen Size'], GC.WINHEIGHT * cf.OPTIONS['Screen Size'])
         new_size = (cf.OPTIONS['Screen Width'], cf.OPTIONS['Screen Height'])
+    
         Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
+        
         # Check for taking screenshot
         for event in eventList:
             if event.type == Engine.KEYDOWN and event.key == Engine.key_map['`']:
                 current_time = str(datetime.now()).replace(' ', '_').replace(':', '.')
                 Engine.save_surface(mapSurf, "Lex_Talionis_%s.png" % current_time)
         # Keep gameloop (update, renders, etc) ticking
+        
         Engine.update_display()
+
         gameStateObj.playtime += GC.FPSCLOCK.tick(GC.FPS)
+
     # === END OF MAIN GAME LOOP ===
 
 def handle_debug_logs():

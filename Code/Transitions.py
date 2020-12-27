@@ -224,7 +224,7 @@ class StartStart(StateMachine.State):
         elif event == 'INFO' and cf.OPTIONS['cheat']:
             GC.SOUNDDICT['Select 1'].play()
             import glob
-            fps = glob.glob( metrosetup.get_prefs_dir() + '/' + 'Saves/*.pmeta')
+            fps = glob.glob(metrosetup.get_prefs_dir() + '/' + 'Saves/*.pmeta')
             if not fps:
                 return
             newest = max(fps, key=os.path.getmtime)
@@ -677,6 +677,7 @@ class StartPreloadedLevels(StartLoad):
         try:
             gameStateObj.game_constants['level'] = int(gameStateObj.game_constants['level'])
         except ValueError:  # That's fine just keep going
+            print('Value error game constants')
             pass
         for key, value in level['game_constants'].items():
             gameStateObj.game_constants[key] = value

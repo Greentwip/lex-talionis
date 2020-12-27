@@ -1500,7 +1500,7 @@ class MapCombat(Combat):
         self.old_results = []
 
         self.last_update = Engine.get_time()
-        self.length_of_combat = 2000
+        self.length_of_combat = 1000
         self.additional_time = 0
         self.combat_state = 'Pre_Init'
         self.skip = False
