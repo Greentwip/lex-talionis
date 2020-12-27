@@ -17,6 +17,7 @@ elif;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
 	elif;self.unit.name == 'Joel'
 		s;Narrator;Joel attacked both enemies at once.{w}{br}Activated skills give you powerful options in battle.{w}{br}Always be aware of what skills you have at your disposal.{w}{br}Remember, to find more info on something, press{red}{eval:Engine.get_key_name(cf.OPTIONS['key_INFO'])}.{black}{w};auto;hint
 		s;Narrator;You can now proceed through the rest of the chapter on your own.{w}{br}Good luck!{w};auto;hint
-		tutorial_mode;0
+		set_level_constant;tutorial_joel
+		tutorial_mode;0		
 	end
 end
