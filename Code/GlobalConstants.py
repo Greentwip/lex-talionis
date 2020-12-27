@@ -12,7 +12,7 @@ import metrosetup
 
 version = "0.9.4.4"
 # === GLOBAL CONSTANTS ===========================================
-FPS = 120
+FPS = 60
 FRAMERATE = 1000//FPS
 TILEY = 10
 TILEX = 15
