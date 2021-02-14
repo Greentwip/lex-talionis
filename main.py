@@ -38,6 +38,7 @@ from Code import GameStateObj, Engine
 
 import metrosetup
 
+temp_canvas = None
 # === MAIN FUNCTION ===========================================================
 def main():
     # Set Volume
@@ -74,9 +75,14 @@ def run(gameStateObj, metaDataObj):
         GC.ACTIVESPRITECOUNTER.update()
         GC.CURSORSPRITECOUNTER.update()
 
-        new_size = (cf.OPTIONS['Screen Width'], cf.OPTIONS['Screen Height'])
-    
-        Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
+        #new_size = (cf.OPTIONS['Screen Width'], cf.OPTIONS['Screen Height'])
+
+        draw_rect = GC.TEMPCANVASRECT
+
+        Engine.push_display(mapSurf, (draw_rect[2], draw_rect[3]), GC.TEMPCANVAS)
+
+        GC.DISPLAYSURF.blit(GC.TEMPCANVAS, draw_rect)
+        #Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
         
         # Check for taking screenshot
         for event in eventList:

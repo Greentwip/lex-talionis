@@ -13,7 +13,7 @@ class Textdraw:
         self.font = pygame.font.Font(None, 20)
 
     def draw(self, screen, textString):
-        textBitmap = self.font.render(textString, True, BLACK)
+        textBitmap = self.font.render(textString, False, BLACK)
         screen.blit(textBitmap, [self.x, self.y])
         self.y += self.line_height
         

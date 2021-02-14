@@ -370,7 +370,7 @@ def write_text(screen, text, x, y):
     if image == None:
         if cached_font == None:
             cached_font = pygame.font.Font(pygame.font.get_default_font(), 12)
-        image = cached_font.render(text, True, (255, 255, 255))
+        image = cached_font.render(text, False, (255, 255, 255))
         cached_text[text] = image
     screen.blit(image, (x, y - image.get_height()))
 

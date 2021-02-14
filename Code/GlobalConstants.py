@@ -62,6 +62,21 @@ Engine.set_icon(small_icon)
 FPSCLOCK = Engine.clock()
 #DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
 DISPLAYSURF = Engine.build_display((cf.OPTIONS['Screen Width'], cf.OPTIONS['Screen Height']))
+
+def get_temp_canvas_rect():
+    size = (cf.OPTIONS['Screen Width'], cf.OPTIONS['Screen Height'])
+    height_proportion = 160 / size[1]
+    width = int(240 / height_proportion) 
+    height = size[1]
+    return (int((size[0] - width) / 2), 0, width, height)
+
+TEMPCANVASRECT = get_temp_canvas_rect()
+
+def build_temp_canvas():
+    return Engine.create_surface((TEMPCANVASRECT[2], TEMPCANVASRECT[3]))
+
+TEMPCANVAS = build_temp_canvas()
+
 Engine.set_caption(''.join([cf.CONSTANTS['title'], " - ", version]))
 print('Version: v%s' % version)
 

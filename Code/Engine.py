@@ -24,7 +24,6 @@ BLEND_RGBA_MULT = pygame.BLEND_RGBA_MULT
 
 # === INITIALIZING FUNCTIONS =================================================
 def init():
-    print("engine init")
     # pygame.mixer.pre_init(44100, -16, 1, 512)
     if not NO_AUDIO:
         pygame.mixer.pre_init(44100, -16, 2, 256 * 2**configuration.OPTIONS['Sound Buffer Size'])
@@ -46,7 +45,9 @@ def clock():
 
 def build_display(size):
     flags = pygame.FULLSCREEN
-    return pygame.display.set_mode(size, flags)
+    display = pygame.display.set_mode(size, flags)
+    display.fill([0, 0, 0])
+    return display
 
 def push_display(surf, size, new_surf):
     pygame.transform.scale(surf, size, new_surf)

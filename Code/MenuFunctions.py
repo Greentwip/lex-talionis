@@ -15,13 +15,13 @@ def OutlineFont(FONTNAME, text, surf, innercolor, outercolor, position):
     """ renders and blits outlined text based on the position.
         Assumes position is topleft"""
     if outercolor:
-        outer_text = FONTNAME.render(text, True, outercolor)
+        outer_text = FONTNAME.render(text, False, outercolor)
         surf.blit(outer_text, (position[0] - 1, position[1] + 1))
         surf.blit(outer_text, (position[0] + 1, position[1] + 1))
         surf.blit(outer_text, (position[0] + 1, position[1] - 1))
         surf.blit(outer_text, (position[0] - 1, position[1] - 1))
     # inner_text
-    inner_text = FONTNAME.render(text, True, innercolor)
+    inner_text = FONTNAME.render(text, False, innercolor)
     surf.blit(inner_text, position)
     return position
 
