@@ -1,0 +1,14 @@
+name;Chapter II
+prep_flag;1
+prep_music;Preparing for Battle
+pick_flag;0
+base_flag;0
+market_flag;0
+transition_flag;1
+display_name;Defeat Boss
+win_condition;Defeat Brigham
+loss_condition;Ophie dies OR Althea dies,OR,Party size falls below three
+player_phase_music;Airship Thunderchild
+enemy_phase_music;Brave Story 12
+other_phase_music;Brave Story 12
+weather;Light

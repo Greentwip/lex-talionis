@@ -1,0 +1,16 @@
+2,14:Formation=0
+1,13:Formation=0
+3,15:Formation=0
+1,16:Formation=0
+2,15:Formation=0
+1,14:Formation=0
+2,16:Formation=0
+0,14:Formation=0
+0,15:Formation=0
+23,12:Search=Hidden
+10,7:Status=tile_Regeneration
+12,2:Status=tile_Regeneration
+18,4:Status=tile_Regeneration
+23,2:Status=tile_Regeneration,Rex_Aegis;Seize=1
+1,0:Village=Abandon
+5,1:Shop=Great Sword,Great Lance,Javelin,Great Axe,Hand Axe,Longbow,Wind,Fire,Thunder,Shine,Mend,Flux

@@ -1,0 +1,13 @@
+pose;Attack
+blend
+f;2;Flash1
+f;2;Flash2
+f;2;Flash3
+f;2;Flash4
+f;2;Flash5
+f;2;Flash6
+f;2;Flash7
+f;2;Flash8
+f;2;Flash9
+f;2;Flash10
+wait;1

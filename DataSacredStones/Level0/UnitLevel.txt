@@ -1,0 +1,59 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+faction;Grado;Soldier;Empire;A soldier of Grado
+faction;Renais;Soldier;Empire;A soldier of Renais
+# Player Characters
+player;0;Seth_1;Seth;4,4;None
+# Enemies
+# Bosses
+enemy;0;0;O'Neill;10,8;HardGuard
+# Generics
+enemy;0;0;Fighter;1;Iron Axe;9,6;Attack;Grado
+enemy;0;0;Fighter;1;Iron Axe;8,6;Attack;Grado
+# === Reinforcements ===
+# Player Characters
+player;0;Eirika_1;Eirika;12,9;None
+player;0;RenaisKnight_1;Knight;1;;None;None;Renais
+player;0;RenaisKnight_2;Knight;1;;None;None;Renais
+player;0;RenaisGeneral_1;General;1;;None;None;Renais
+player;0;RenaisGeneral_2;General;1;;None;None;Renais
+player;0;Franz;Franz;None;None
+player;0;FakeFado;Peer;1;;None;None;Renais
+player;0;RenaisSoldier_1;Soldier;1;;None;None;Renais
+# Enemies
+enemy;0;GradoShaman_1;Shaman;1;;None;None;Grado
+enemy;0;GradoShaman_2;Shaman;1;;None;None;Grado
+enemy;0;GradoDruid_1;Druid;1;;None;None;Grado
+enemy;0;GradoDruid_2;Druid;1;;None;None;Grado
+enemy;0;GradoGreatKnight_1;Great_Knight;1;;None;None;Grado
+enemy;0;GradoGreatKnight_2;Great_Knight;1;;None;None;Grado
+enemy;0;GradoPaladin_1;Paladin;1;;None;None;Grado
+enemy;0;GradoPaladin_2;Paladin;1;;None;None;Grado
+enemy;0;GradoMageKnight_1;Mage_Knight;1;;None;None;Grado
+enemy;0;GradoMageKnight_2;Mage_Knight;1;;None;None;Grado
+enemy;0;GradoGeneral;General;1;;None;None;Grado
+enemy;0;GradoNecromancer;Necromancer;1;;None;None;Grado
+enemy;0;Valter;Valter;None;None
+enemy;0;GradoWyvern_1;Wyvern_Rider;1;;None;None;Grado
+enemy;0;GradoWyvern_2;Wyvern_Rider;1;;None;None;Grado
+# === Triggers ===
+trigger;Enemy1;9,6;15,7;9,6
+trigger;Enemy1;8,6;15,7;8,6
+trigger;Enemy1;O'Neill;15,8;10,8

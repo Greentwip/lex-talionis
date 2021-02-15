@@ -1,0 +1,121 @@
+<lore_catalog>
+	<lore name="Sam">
+		<long_name>Sam</long_name>
+		<type>Character</type>
+		<desc>The Resistance's leader, tactician, and part-time healer. Driven to root the Empire from Kerala. Cunning and ambitious.</desc>
+	</lore>
+
+	<lore name="Ophie">
+		<long_name>Ophie</long_name>
+		<type>Character</type>
+		<desc>An orphan raised in a Keralan monastery. Trained by the monks in the sacred Way of the Blade. A competent swordsman who yearns to right injustice.</desc>
+	</lore>
+
+	<lore name="Prim">
+		<long_name>Prim</long_name>
+		<type>Character</type>
+		<desc>An orphan raised in a Keralan monastery. Learned healing magic from the nuns. Energetic and bright.</desc>
+	</lore>
+
+	<lore name="Joel">
+		<long_name>Joel</long_name>
+		<type>Character</type>
+		<desc>A charismatic rogue and former sailor. When Kerala was invaded by the Empire, he joined up with the Resistance, unwilling to see his homeland languish under Imperial rule.</desc>
+	</lore>
+
+	<lore name="Nia">
+		<long_name>Nia</long_name>
+		<type>Character</type>
+		<desc>A skittish archer who grew up alone in the dense Keralan forests. At home there and nowhere else, it's a mystery why she joined up with the Resistance in the first place.</desc>
+	</lore>
+
+	<lore name="Althea">
+		<long_name>Althea</long_name>
+		<type>Character</type>
+		<desc>The last surviving member of the Keralan royal family. Although her tale is steeped in tragedy, she has not let it bring her down. A shy but kind-hearted young woman.</desc>
+	</lore>
+
+	<lore name="Drake">
+		<long_name>Drake</long_name>
+		<type>Character</type>
+		<desc>A disgraced former Imperial soldier. Unable to stomach the Empire's execution of the Keralan royal family, he rescued Althea and fled. Stern and serious.</desc>
+	</lore>
+
+	<lore name="Theo">
+		<long_name>Theo</long_name>
+		<type>Character</type>
+		<desc>A reserved but well-mannered individual who would've preferred a life of quiet contemplation. He is the Resistance's scholar, navigator, and engineer.</desc>
+	</lore>
+
+	<lore name="Renae">
+		<long_name>Renae</long_name>
+		<type>Character</type>
+		<desc>An impulsive thief with a large collection of knives. Has a bad habit of 'borrowing' other's stuff.</desc>
+	</lore>
+
+	<lore name="Eliza">
+		<long_name>Eliza</long_name>
+		<type>Character</type>
+		<desc>A sarcastic and moody soldier who struggles with an inferiority complex.</desc>
+	</lore>
+
+	<lore name="Coyote">
+		<long_name>Coyote</long_name>
+		<type>Character</type>
+		<desc>A quiet, brooding man with a mysterious past. Works undercover for the Confederacy.</desc>
+	</lore>
+
+	<lore name="Kayla">
+		<long_name>Kayla</long_name>
+		<type>Character</type>
+		<desc>A mage in the employ of the Confederacy of Free Cities. Currently serving as the Confederacy's liason to the Resistance. Manipulative but oddly romantic.</desc>
+	</lore>
+
+	<lore name="Ulver">
+		<long_name>Duke Ulver</long_name>
+		<type>Character</type>
+		<desc>Second only to the Empress herself, Ulver rules the Empire's colony of Kerala with an iron fist. He is strong-willed and stubborn, but extremely loyal to the Empire.</desc>
+	</lore>
+
+	<lore name="Vagnius">
+		<long_name>Colonel Vagnius</long_name>
+		<type>Character</type>
+		<desc>Duke Ulver's right-hand man. However, Vagnius harbors aspirations of his own. Conniving and ambitious, he is willing to do anything to achieve his goals.</desc>
+	</lore>
+
+	<lore name="Kerala">
+		<long_name>Kerala</long_name>
+		<type>Nation</type>
+		<desc>Kerala was once an independant, peaceful nation of poets and philosophers, ruled by the benevolent Lion King. When the Empire attacked, the reigning King, Akilees, surrendered without a fight. Now Kerala is merely another colony of the Empire.</desc>
+	</lore>
+
+	<lore name="Podoma">
+		<long_name>Podoma</long_name>
+		<type>Location</type>
+		<desc>A middling, pastoral town near the Resistance base. The Resistance rescued Althea from the Empire here.</desc>
+	</lore>
+
+	<lore name="Rajas">
+		<long_name>Rajas</long_name>
+		<type>Location</type>
+		<desc>The bustling capitol of Kerala. In legends, it is said that the Moon King himself erected the palace out of heavenly stone. Of course, now it is the seat of power for Duke Ulver and the Imperial hold on Kerala.</desc>
+	</lore>
+
+	<lore name="Tyrana">
+		<long_name>Tyrana</long_name>
+		<type>Location</type>
+		<desc>Near the foreboding, snowy peaks of the Ghat mountains lies the Tyrana prison. Run by the cruel warden Razia, it houses the political prisoners of the Empire, who are forced to work in the mines.</desc>
+	</lore>
+
+	<lore name="Empire">
+		<long_name>The Empire</long_name>
+		<type>Nation</type>
+		<desc>Once small but fiercely militaristic, the Empire began conquering other nearby nations for resources. Now a large and powerful nation, the Empire's only remaining adversary on the continent is the Confederacy of Free States.</desc>
+	</lore>
+
+	<lore name="CFS">
+		<long_name>Confederacy of Free States</long_name>
+		<type>Nation</type>
+		<desc>A league of independent nations which have banded together for their own survival against the encroach of the warmongering Empire. However, they are plagued by internal diplomatic strife, as various factions wrest for control of the league.</desc>
+	</lore>
+</lore_catalog>

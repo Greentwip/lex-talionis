@@ -1,0 +1,16 @@
+pose;Attack
+blend
+# White screen
+foreground_blend;4;248,248,248
+wait;4
+# White screen over
+f;4;Bolting1
+f;3;Bolting2
+f;3;Bolting3
+f;25;Bolting4
+f;3;Bolting5
+f;3;Bolting6
+f;3;Bolting7
+f;3;Bolting8
+f;3;Bolting9
+wait;1

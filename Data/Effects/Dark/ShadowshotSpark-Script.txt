@@ -1,0 +1,18 @@
+pose;Attack
+blend
+static
+# White screen
+foreground_blend;4;248,248,248
+wait;4
+# White screen over
+f;2;Spark0
+f;2;Spark1
+f;2;Spark2
+f;2;Spark3
+f;2;Spark4
+f;2;Spark5
+f;2;Spark6
+f;2;Spark7
+f;2;Spark8
+f;2;Spark9
+wait;1

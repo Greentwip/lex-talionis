@@ -1,0 +1,8 @@
+pose;Attack
+blend
+f;2;Magic1
+f;3;Magic2
+f;7;Magic3
+f;3;Magic4
+f;2;Magic5
+wait;1

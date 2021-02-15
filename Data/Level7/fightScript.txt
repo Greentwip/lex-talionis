@@ -1,0 +1,10 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Marduk'
+        if;not 'MardukDefault' in gameStateObj.level_constants
+            u;Marduk;Left
+            s;Marduk;You think you've won? Hah!{w}{br}Nobody can defeat me.{w}{br}You've only fallen deeper into my trap!{w}{br}Wahahaha!{w};auto
+            r;Marduk
+            set_level_constant;MardukDefault
+        end
+    end
+end

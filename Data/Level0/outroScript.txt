@@ -1,0 +1,31 @@
+# Outro Script 0
+m;Flight over Venice
+t;1
+b;Clearing
+t;2
+u;Ophie;Left
+u;Prim;Right
+s;Ophie;Prim, we can't stop now.{w};auto
+s;Prim;...*sniff* O-okay...{w};auto
+r;Ophie;Prim
+m;Mount Briggs
+t;1
+b;Monastery
+t;2
+# Vagnius and Page
+u;Soldier1;Left
+u;Vagnius;Right
+s;Vagnius;Kill the traitors. Burn it all.{w}{br}They will know the Empire does not tolerate dissent!{w};auto
+s;Soldier1;Right away, sir.{w};auto
+r;Soldier1
+u;Sidney;Left
+s;Sidney;Uh, Boss?{w};auto
+s;Vagnius;What is it?{w};auto
+s;Sidney;Sir, um, two of the... uh... monks, well they...{w}{br}They escaped, sir.{w};auto
+bop;Vagnius
+s;Vagnius;What!! After them, you fool!{w}{br}One of them could be the fugitive!{w};auto
+s;Sidney;Right away, sir!{w};auto
+r;Sidney
+s;Vagnius;What incompetents...{w}{br}The Duke will not pleased.{w};auto
+r;Vagnius
+t;1

@@ -1,0 +1,35 @@
+pose;Attack
+blend
+darken
+pan
+wait;1
+sound;Bolting2
+enemy_effect;ArcthunderMagic
+wait;2
+enemy_flash_white;8
+spell_hit
+# After health bars report done
+wait;60
+# death anim starts now?
+lighten
+wait;24
+# Death anim halfway through
+pan
+wait;16
+end_parent_loop
+
+pose;Miss
+blend
+darken
+pan
+wait;1
+sound;Bolting2
+enemy_effect;ArcthunderMagic
+wait;10
+miss
+wait;40
+lighten
+wait;24
+pan
+wait;16
+end_parent_loop

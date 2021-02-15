@@ -1,0 +1,265 @@
+# Prologue Intro script
+ow_add_party;0;0;Eirika
+ow_location_quick_show;0
+ow_location_quick_show;1
+load_submap;RenaisCastle
+set_cursor;0,14;immediate
+# Add all the starting units
+add_unit;RenaisKnight_1;1,14;immediate
+add_unit;RenaisKnight_2;4,14;immediate
+add_unit;RenaisGeneral_1;5,7;immediate
+add_unit;RenaisGeneral_2;9,7;immediate
+add_unit;Franz;5,4;immediate
+add_unit;Seth;9,4;immediate
+add_unit;Eirika;8,4;immediate
+add_unit;FakeFado;7,3;immediate
+# Transition in
+t;2
+location_card;Renais Castle
+# Soldier appears from bottom left
+pop_dialog
+add_unit;RenaisSoldier_1;3,14
+# Moves to position
+move_unit;RenaisSoldier_1;7,11
+start_move
+move_unit;RenaisSoldier_1;7,6
+start_move
+set_camera;0,0
+flash_cursor;RenaisSoldier_1
+u;Fado;Left
+qu;SoldierGrey;OffscreenRight
+move_sprite;SoldierGrey;MidRight
+s;SoldierGrey;Your Majesty, I bear bad news.{w}{clear}The castle gate has been breached.|Emperor Vigarde's forces are within the castle walls.
+s;Fado;I understand.
+s;SoldierGrey;The garrison has fallen.|We've lost contact with Prince Ephraim and can expect no aid from his men.|Your Majesty, what are we to do?
+s;Fado;...What else can we do?|Order your men to lay down their arms.
+r;Fado;SoldierGrey
+# Soldier moves offscreen -- Don't have camera chase
+move_unit;RenaisSoldier_1;7,10
+start_move
+remove_unit;RenaisSoldier_1;immediate
+# Eirika moves closer to father
+move_unit;Eirika;7,4
+start_move
+flash_cursor;Eirika
+u;Fado;Left;u;Eirika;Right
+move_sprite;Eirika;MidRight
+s;Eirika;Father...
+s;Fado;Eirika.|Are you wearing the bracelet I gave you?
+s;Eirika;Yes, I have it right here.
+s;Fado;Good.
+s;Fado;Seth.
+u;Seth;FarRight
+s;Seth;Yes, Your Majesty?
+s;Fado;Take Eirika and head for Frelia.|King Hayden is an honorable man. I trust he will keep you safe.
+s;Seth;Understood.|And what of Your Majesty?
+s;Fado;Me? I shall remain here.|We have long held Grado among our dearest allies, yet now, they attack?|I must know why.
+s;Fado;Am I somehow responsible for this? Have I erred in my leadership?|Renais is mine to guide... How could I have failed her so?
+bop;Eirika
+s;Eirika;Father, you can't stay! You mustn't!|If you remain behind, then so shall I!
+s;Fado;Go now, Seth! Ride! Take her to safety!
+r;Eirika;Fado;Seth
+wait;300
+# Seth moves and rescues Eirika
+move_unit;Seth;7,4;normal;stack
+start_move
+remove_unit;Eirika;immediate
+flash_cursor;Seth
+u;Eirika;MidRight;u;Seth;FarRight
+s;Eirika;Father!
+s;Seth;Forgive me, Your Highness.
+r;Seth;Eirika
+# Paladin and Franz ride out
+move_unit;Seth;7,5
+move_unit;Franz;6,4
+start_move
+move_unit;Seth;7,10
+move_unit;Franz;6,10
+start_move
+remove_unit;Seth;immediate
+remove_unit;Eirika;immediate
+remove_unit;Franz;immediate
+# Knights walk in
+move_unit;RenaisGeneral_1;5,4
+move_unit;RenaisGeneral_2;9,4
+start_move
+move_unit;RenaisGeneral_1;6,4
+move_unit;RenaisGeneral_2;8,4
+start_move
+# Enemies walk in
+add_unit;GradoShaman_1;0,1;immediate
+add_unit;GradoShaman_2;0,2;immediate
+add_unit;GradoDruid_1;13,10;immediate
+add_unit;GradoDruid_2;14,10;immediate
+move_unit;GradoShaman_1;0,6
+move_unit;GradoShaman_2;1,4
+move_unit;GradoDruid_1;13,3
+move_unit;GradoDruid_2;14,6
+start_move
+add_unit;GradoGreatKnight_1;4,10;immediate
+add_unit;GradoGreatKnight_2;10,10;immediate
+add_unit;GradoPaladin_1;4,12;immediate
+add_unit;GradoPaladin_2;10,12;immediate
+move_unit;GradoGreatKnight_1;4,4
+move_unit;GradoGreatKnight_2;10,4
+move_unit;GradoPaladin_1;4,6
+move_unit;GradoPaladin_2;10,6
+start_move
+add_unit;GradoMageKnight_1;4,10;immediate
+add_unit;GradoMageKnight_2;10,10;immediate
+move_unit;GradoMageKnight_1;4,8
+move_unit;GradoMageKnight_2;10,8
+start_move
+add_unit;GradoGeneral;7,10;immediate
+add_unit;GradoNecromancer;6,11;immediate
+move_unit;GradoGeneral;7,6
+move_unit;GradoNecromancer;6,7
+start_move
+flash_cursor;FakeFado
+u;Fado;Left
+s;Fado;Ephraim, Eirika... You must survive.
+t;3
+qr;Fado
+# change submap
+remove_all
+end_skip
+load_submap;OutsideRenais
+t;2
+# Seth and Franz appear out of castle
+add_unit;Seth;9,3;immediate
+move_unit;Seth;9,5
+start_move
+add_unit;Franz;9,3;immediate
+move_unit;Seth;6,5
+move_unit;Franz;6,4
+start_move
+# Eirika appears after Seth
+add_unit;Eirika;6,5;immediate
+move_unit;Eirika;7,5
+start_move
+flash_cursor;Seth
+t;1
+b;Forest
+t;2
+u;Franz;Left;u;Seth;Right
+s;Franz;General Seth!
+s;Seth;Franz, ride ahead and bring word of our coming to Frelia.|A single rider has better odds of passing unseen by Grado's men.|Convey to the throne all that has happened here and petition for reinforcements.
+s;Franz;U-understood!
+t;1
+qr;Seth;Franz
+remove_background
+t;2
+# Franz rides away
+move_unit;Franz;0,2
+start_move
+remove_unit;Franz
+flash_cursor;Seth
+t;1
+b;Forest
+t;2
+u;Seth;Left;u;Eirika;Right
+s;Seth;Princess Eirika, we must--|Quickly! Behind me!
+t;1
+qr;Seth;Eirika
+remove_background
+t;2
+# Wyvern riders appear out of the east
+add_unit;Valter;14,5
+move_unit;Valter;12,5
+start_move
+add_unit;GradoWyvern_1;14,4
+add_unit;GradoWyvern_2;14,6
+move_unit;Valter;10,5
+move_unit;GradoWyvern_1;11,4
+move_unit;GradoWyvern_2;11,6
+start_move
+move_unit;Valter;9,5
+start_move
+# Seth grabs Eirika and moves her behind him
+move_unit;Seth;7,5;normal;stack
+start_move
+move_unit;Eirika;6,5
+start_move
+flash_cursor;Valter
+t;1
+b;Forest
+t;2
+u;Eirika;FarLeft;u;Seth;MidLeft;u;Valter;Right
+s;Valter;You there, with the girl. Tell me, would that be the wayward princess of Renais?|Well, this must be my lucky day.|You're a dead man. The wench goes with me.
+s;Seth;Never!
+t;1
+qr;Eirika;Seth;Valter
+remove_background
+t;2
+# Valter moves one tile left
+move_unit;Valter;8,5
+start_move
+u;Valter;Right
+s;Valter;I am Valter, the Moonstone, Grado's finest general!{w}{clear}And you're just a corpse who does not know he is dead.
+r;Valter
+end_skip
+interact_unit;Seth;Valter;Miss,Hit,Quit
+flash_cursor;Seth
+u;Seth;Left
+s;Seth;Ahhh...{w}{clear}No...
+r;Seth
+# Seth rides, picks up Eirika, and heads west
+move_unit;Seth;6,5
+start_move
+remove_unit;Eirika;immediate
+wait;50
+move_unit;Seth;0,2
+start_move
+remove_unit;Seth
+flash_cursor;Valter
+u;Valter;Right
+s;Valter;Such terrible wounds, and still he holds to his duty?|How entertaining.|Fly away, little man. Fly away. Try to outrun death.|More time to savor the hunt... and the kill.
+r;Valter
+t;1
+# remove submap
+remove_all
+close_submap
+t;2
+add_unit;Seth;14,9
+move_unit;Seth;8,5
+start_move
+add_unit;Eirika;8,5;immediate;stack
+move_unit;Eirika;9,5
+start_move
+flash_cursor;Eirika
+t;1
+b;Forest
+t;2
+u;Seth;Left;u;Eirika;Right
+s;Seth;Princess Eirika! This way! I can see no more of Grado's men.|If we've made it this far, we've surely earned a moment's rest.|Please forgive my grabbing you so...brusquely earlier.
+s;Eirika;Don't be foolish, Seth.|If it weren't for you, I would never have made it out of the castle.|You are the reason I'm still alive. You have my gratitude.
+move_sprite;Eirika;MidRight
+s;Eirika;And whoever that man was, he was clearly after me...|It's my fault that you received such a grave wound.|Allow me to treat it, I--
+s;Seth;Your Highness, I can't allow an injury like this to be an obstacle.|We have more important matters to attend to. We must press on to Frelia.|We must fulfill his His Majesty's wishes.
+s;Eirika;...|I wonder how my father fares alone in the castle. Do you think he's safe?|And what of my brother on the Grado front? We've heard nothing from him for days.
+s;Seth;King Fado and Prince Ephraim are both valiant and brave men.|I doubt even the might of the Grado Empire can hold them in check.|More important to me, Your Highness, is that you look to your own safety.|How sad the two of them would be if something were to happen to you.|We must reach Frelia to ensure the day of your happy reunion.
+s;Eirika;Yes, of course. You're right.|Until I'm reunited with my father and brother, I must not despair.|Come, Seth. Let us go.
+t;1
+qr;Seth;Eirika
+remove_background
+t;2
+trigger;Seth2
+flash_cursor;Seth
+u;Seth;Left
+s;Seth;Once we cross that bridge, we will be in Frelia, near Border Mulan.|Let us proceed, Princess Eirika.
+r;Seth
+move_unit;Eirika;4,5
+flash_cursor;Seth
+u;Eirika;Left;u;Seth;Right
+s;Seth;Your Highness, I won't lie to you. This will not be an easy ride.|Please, take this rapier. If something should happen to me,|you must continue to Frelia, alone if need be.
+r;Eirika;Seth
+give_item;Eirika;Rapier
+trigger;Enemy1
+flash_cursor;O'Neill
+u;O'Neill;Right
+s;O'Neill;You there! Renais dogs! Where do you think you're going?
+r;O'Neill
+u;Eirika;MidLeft;u;Seth;FarLeft
+s;Seth;Grado's men...|Stand back, Princess Eirika.
+s;Eirika;It's all right, Seth.|My brother has taught me something of swordplay.|I will stand with you.
+r;Eirika;Seth

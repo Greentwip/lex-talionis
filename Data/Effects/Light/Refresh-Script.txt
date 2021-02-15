@@ -1,0 +1,16 @@
+pose;Attack
+enemy_gray;121
+pan
+wait;20
+sound;Dance2
+enemy_effect;DanceSmallDust
+wait;1
+enemy_effect;DanceLargeDust
+wait;100
+spell_hit;no_sound;no_shake
+# No longer gray
+wait;20
+pan
+wait;20
+end_parent_loop
+wait;1

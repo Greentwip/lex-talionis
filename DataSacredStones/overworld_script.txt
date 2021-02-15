@@ -1,0 +1,8 @@
+if;self.name == 'Intro2'
+    ow_next_location
+    t;2
+    wait;500
+    ow_next_location;2
+    ow_location_show;2
+    wait;1000
+end

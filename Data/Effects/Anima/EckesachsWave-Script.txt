@@ -1,0 +1,11 @@
+pose;Attack
+blend
+static
+f;2;Wave1
+f;1;Wave2
+f;1;Wave3
+f;1;Wave4
+f;2;Wave5
+f;1;Wave6
+f;1;Wave7
+wait;1

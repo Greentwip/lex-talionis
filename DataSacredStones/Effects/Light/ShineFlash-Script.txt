@@ -1,0 +1,8 @@
+pose;Attack
+blend
+static
+f;2;Flash1
+f;2;Flash2
+f;2;Flash3
+f;2;Flash4
+wait;1

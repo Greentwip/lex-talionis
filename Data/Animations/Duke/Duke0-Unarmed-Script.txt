@@ -1,0 +1,9 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;3;Dodge1
+sound;Sword Whoosh
+f;27;Dodge2
+f;5;Dodge1
+f;1;Stand

@@ -1,0 +1,25 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Sidney'
+        if;self.unit.name == 'Ophie' and not 'SidneyOphie' in gameStateObj.level_constants
+            u;Sidney;Left;u;Ophie;Right
+            s;Sidney;Heh! Finally worked up the nerve to fight?{w}{br}You shoulda kept running, boy!{w};auto
+            s;Ophie;... You scum...{w};auto
+            s;Sidney;Oh I'm scared... Heh heh heh!{w};auto
+            r;Sidney;Ophie
+            set_level_constant;SidneyOphie
+        elif;self.unit.name == 'Prim' and not 'SidneyPrim' in gameStateObj.level_constants
+            u;Sidney;Left;u;Prim;Right
+            s;Sidney;Caught you! You're not getting away this time, little mouse.{w};auto
+            s;Prim;How could you be so cruel?{w}{br}Our home...{w};auto
+            s;Sidney;Hah! You've got no home anymore, girly!{w};auto
+            s;Prim;...Y-You'll pay for what you've done!{w};auto
+            r;Sidney;Prim
+            set_level_constant;SidneyPrim
+        elif;self.unit.name not in ('Ophie', 'Prim') and not 'SidneyDefault' in gameStateObj.level_constants
+            u;Sidney;Left   
+            s;Sidney;What! How'd you manage to get past me men?{w};auto
+            r;Sidney
+            set_level_constant;SidneyDefault
+        end
+    end
+end

@@ -1,0 +1,160 @@
+# turnChange Script 10
+if;gameStateObj.turncount == 1
+	m;Dragon Boy
+	set_camera;12,23;12,17
+	u;Ophie;Right
+	s;Ophie;Now where is he!{w};auto
+	# Adjutant appears
+	move_unit;Adjutant;12,18;warp
+	#start_move
+	wait;1000
+	u;Adjutant;Left
+	qmove_sprite;Ophie;24,0
+	s;Ophie;!{w};auto
+	s;Adjutant;Duke Ulver sends his regards.{w}{br}He regrets to inform you that he is occupied at the moment.{w};auto
+	u;Sam;MidRight
+	s;Sam;He knew we were coming?{w};auto
+	s;Adjutant;Duke Ulver is well aware of your plans.{w};auto
+	s;Ophie;But--{w};auto
+	s;Adjutant;My boy, do not fret.{w}{br}The Duke has graciously decided to provide you with...{w}{br}alternative entertainment.{w};auto
+	r;Adjutant;Ophie;Sam
+	set_cursor;12,8
+	#change_tile_sprite;10,7;top_gap
+	hide_layer;1
+	show_layer;2
+	area_replace_tile;10,7;top_gap_data
+	wait;1000
+	set_cursor;12,36
+	#change_tile_sprite;10,32;bottom_gap
+	show_layer;3
+	area_replace_tile;10,32;bottom_gap_data
+	wait;1000
+	set_cursor;18,27
+	add_unit;br1;;warp;push
+	add_unit;br2;;warp;push
+	add_unit;br3;;warp;push
+	add_unit;br4;;warp;push
+	wait;1000
+	set_cursor;8,17
+	add_unit;tl1;;warp;push
+	add_unit;tl2;;warp;push
+	add_unit;tl3;;warp;push
+	add_unit;tl4;;warp;push
+	wait;1000
+	u;Sam;FarRight;u;Adjutant;Left;u;Ophie;MidRight
+	s;Sam;It's a trap!{w};auto
+	s;Adjutant;How astute.{w}{br}With that kind of acumen, it's no wonder you've come so far.{w}{clear}Well, I'm off to more important matters.{w}{br}The Duke will see you in a bit...{w}{br}If you can survive that long.{w};auto
+	r;Sam;Adjutant;Ophie
+	move_unit;Adjutant;11,3;warp
+	wait;1000
+	u;Sam;Right;u;Ophie;Left
+	s;Sam;Oh... I've blundered.{w}{br}To think we could take on the Duke.{w}{br}It was a pipe dream all along.{w};auto
+	s;Ophie;Sam, I doubted you once.{w}{br}But no longer.{w}{br}We couldn't have made it this far without your leadership.{w}{br}But that means you can't give up now.{w}{br}Together, we'll finish this.{w};auto
+	r;Sam
+	# Now it cycles through remaining characters final quotes
+	if;not gameStateObj.check_dead('Prim')
+		u;Prim;Right
+		s;Prim;I'll not give up hope.{w};auto
+		r;Prim
+	end
+	if;not gameStateObj.check_dead('Joel')
+		u;Joel;Right
+		s;Joel;I ain't usually one for waxin' sentimental,{w}{br}but it's not everyday you take on the might of the Empire.{w}{br}Bein' in the Resistance ain't easy,{w}{br}but I wouldn't trade it for anythin'.{w};auto
+		r;Joel
+	end
+	if;not gameStateObj.check_dead('Nia')
+		u;Nia;Right
+		s;Nia;Mmm...{w};auto
+		r;Nia
+	end
+	if;not gameStateObj.check_dead('Althea')
+		u;Althea;Right
+		s;Althea;I can never thank you all enough.{w}{br}I will try my best!{w};auto
+		r;Althea
+	end
+	if;not gameStateObj.check_dead('Drake')
+		u;Drake;Right
+		s;Drake;To restore Althea to the throne...{w}{br}My life is nothing in comparison to such a glorious goal.{w};auto
+		r;Drake
+	end
+	if;not gameStateObj.check_dead('Renae')
+		u;Renae;Right
+		s;Renae;They don't stand a chance with me on your side.{w};auto
+		r;Renae
+	end
+	if;not gameStateObj.check_dead('Theo')
+		u;Theo;Right
+		s;Theo;To be a part of history.{w}{br}I never imagined such an end.{w};auto
+		r;Theo
+	end
+	if;not gameStateObj.check_dead('Eliza')
+		u;Eliza;Right
+		s;Eliza;You're all idiots.{w}{br}But you're my idiots!{w}{br}I won't let you down.{w};auto
+		r;Eliza
+	end
+	if;not gameStateObj.check_dead('Kayla')
+		u;Kayla;Right
+		s;Kayla;Tsk tsk. We'll pull through.{w}{br}I guarantee it.{w};auto
+		r;Kayla
+	end
+	if;not gameStateObj.check_dead('Coyote')
+		u;Coyote;Right
+		s;Coyote;...I will repay my debts.{w};auto
+		r;Coyote
+	end
+	s;Ophie;If we give it our all...{w}{br}Well, by the light, what are waiting for!{w}{br}Let's go!{w};auto
+	r;Ophie
+elif;gameStateObj.turncount == 2
+	set_cursor;8,27
+	add_unit;bl1;;warp;push
+	add_unit;bl2;;warp;push
+	add_unit;bl3;;warp;push
+	add_unit;bl4;;warp;push
+	wait;500
+	set_cursor;18,17
+	add_unit;tr1;;warp;push
+	add_unit;tr2;;warp;push
+	add_unit;tr3;;warp;push
+	add_unit;tr4;;warp;push
+	wait;500
+elif;gameStateObj.turncount == 3
+	set_cursor;8,22
+	add_unit;l1;;warp;push
+	add_unit;l2;;warp;push
+	add_unit;l3;;warp;push
+	add_unit;l4;;warp;push
+	wait;500
+	set_cursor;18,22
+	add_unit;r1;;warp;push
+	add_unit;r2;;warp;push
+	add_unit;r3;;warp;push
+	add_unit;r4;;warp;push
+	wait;500
+elif;gameStateObj.turncount == 5
+	change_ai;Ulver;Pursue
+	# Attack nearby units and move toward allies
+	change_ai;Adjutant;Support
+	set_cursor;Ulver
+	u;Ulver;Left
+	s;Ulver;Hmmph.{w}{br}I grow tired of this game. Let's finish this then.{w};auto
+	r;Ulver
+	wait;200
+	move_unit;Ulver;12,22;warp;push
+	set_cursor;12,22
+	move_unit;Adjutant;12,15;warp;push
+	wait;400
+	add_unit;s1;;warp;push
+	add_unit;b1;;warp;push
+	add_unit;b2;;warp;push
+	add_unit;b3;;warp;push
+	add_unit;b4;;warp;push
+	wait;1000
+	# Dialogue
+	u;Ulver;Left
+	s;Ulver;You have my attention.{w}{br}Come and fight. May the strongest triumph!{w};auto
+	r;Ulver
+	u;Sam;Right
+	s;Sam;Everyone.{w}{br}This is it. This is our chance.{w}{br}Everyone outside is counting on us.{w}{br}Kiley's army, the people of Podoma, and Kerala itself.{w}{br}One last push. Give it your all.{w};auto
+	r;Sam
+	battle_save
+end

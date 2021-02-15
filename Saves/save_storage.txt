@@ -1,0 +1,1 @@
+This is where the player's saves are stored. This txt file serves as a placeholder for when there are no saves in storage, so that Git will still recognize this otherwise empty folder as worth cataloguing.

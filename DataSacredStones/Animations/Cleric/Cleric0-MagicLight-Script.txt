@@ -1,0 +1,23 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+f;3;Dodge1
+f;27;Dodge2
+f;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;4;Attack1
+f;6;Attack2
+f;5;Attack3
+f;5;Attack4
+# Start Main Spell
+spell
+start_loop
+    f;4;Attack5
+end_loop
+f;5;Attack6
+f;1;Stand

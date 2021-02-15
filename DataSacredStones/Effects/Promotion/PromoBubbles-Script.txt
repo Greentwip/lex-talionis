@@ -1,0 +1,14 @@
+pose;Attack
+static
+blend
+f;2;Bubble1
+f;2;Bubble2
+f;2;Bubble3
+f;2;Bubble4
+f;2;Bubble5
+f;2;Bubble6
+f;2;Bubble7
+f;2;Bubble8
+f;2;Bubble9
+f;1;Bubble10
+wait;1

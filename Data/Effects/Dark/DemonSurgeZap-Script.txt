@@ -1,0 +1,7 @@
+pose;Attack
+static
+f;3;Zap1
+f;3;Zap2
+wait;3
+f;3;Zap3
+wait;1

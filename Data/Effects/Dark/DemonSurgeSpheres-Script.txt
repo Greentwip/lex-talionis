@@ -1,0 +1,14 @@
+pose;Attack
+f;1;Spheres1
+f;1;Spheres2
+f;1;Spheres3
+f;1;Spheres4
+f;1;Spheres5
+f;1;Spheres6
+f;1;Spheres7
+f;1;Spheres8
+f;1;Spheres9
+f;1;Spheres10
+f;1;Spheres11
+f;1;Spheres12
+wait;1

@@ -1,0 +1,43 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+faction;Resistance;Bandit;Resistance;Nope
+# Player Characters
+player;0;0;Ophie;15,13;None
+player;0;0;Joel;4,14;None
+player;0;0;Drake;5,14;None
+player;0;0;Prim;5,15;None
+player;0;0;Althea;5,16;None
+enemy;0;0;Coyote;5,17;None
+player;0;0;Myrmidon;10;Iron Sword;1,8;None;Resistance
+enemy;0;0;Archer;1;Ballista,Goddess Icon;1,9;None;Resistance
+#enemy2;0;0;Brigand;10;Javelin,Iron Axe,Willow Bow,Mithril Axe;1,10;Attack;Resistance
+# Enemies
+# Generics
+#enemy;0;Cav;Cavalier;1;Iron Sword;2,12;Support_1;Resistance
+#enemy;0;0;Cavalier;1;Iron Sword;3,12;Pursue;Resistance
+#player;0;0;Cavalier;1;Iron Lance,Mithril Sword;1,10;None;Resistance
+#enemy;0;0;Thief;10;Iron Sword,Vulnerary;20,20;Unlock2;Resistance
+#enemy;0;0;Archer;1;Willow Bow,dPotion;1,12;HardGuard;Resistance
+#enemy;0;0;Fighter;1;Iron Axe;2,12;HardGuard;Resistance
+#enemy;0;0;Archer;1;Willow Bow,dPotion;2,12;HardGuard;Resistance
+# === Reinforcements ===
+# Player Characters
+# Enemies
+# === Triggers ===

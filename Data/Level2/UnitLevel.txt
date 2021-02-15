@@ -1,0 +1,53 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+#
+# Other Characters
+other;0;0;Althea;8,2;None
+other;0;0;Drake;7,3;None
+# Faction
+faction;Soldier;Soldier;Empire;Brigham's henchman
+#
+enemy;0;S1;Soldier;f1;eIron Lance;6,3;Attack;Soldier
+enemy;0;S2;Soldier;f3;eIron Lance;7,5;Attack;Soldier
+# Enemies
+# Boss
+enemy;0;0;Brigham;19,5;SoftGuard
+# Generics
+#
+# 3 Soldiers, 2 Fighters, 2 Archers, 2 Mercenaries, 1 Shaman
+# First Group
+enemy;0;0;Fighter;3;Iron Axe;3,12;Attack;Soldier
+enemy;0;0;Fighter;3;Iron Axe;5,9;Attack;Soldier
+enemy;0;0;Archer;1;Willow Bow;7,11;Attack;Soldier
+# Across the bridge
+enemy;0;0;Shaman;1;Flux;18,11;Attack;Soldier
+enemy;0;0;Soldier;3;Iron Lance;11,9;Attack;Soldier
+enemy;0;0;Soldier;3;Iron Lance;12,10;Attack;Soldier
+enemy;0;0;Soldier;4;Iron Lance,dVulnerary;17,3;Attack;Soldier
+enemy;0;0;Archer;1;Willow Bow;9,10;SoftGuard;Soldier
+enemy;0;0;Mercenary;3;Iron Sword;14,7;Attack;Soldier
+enemy;0;0;Mercenary;3;Iron Sword;15,5;Attack;Soldier
+# 
+# Reinforcements
+# 2 Soldiers on turn 4
+enemy;0;S3;Soldier;4;Iron Lance;19,11;Pursue;Soldier
+enemy;0;S4;Soldier;4;Iron Lance;19,12;Pursue;Soldier

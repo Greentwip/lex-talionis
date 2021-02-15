@@ -1,0 +1,5 @@
+set_origin
+remove_tile_property;o0,0;Village
+u;Joel;Left;u;{unit};Right
+s;Joel;I'm ready to rumble!
+add_unit;Joel;o0,1;fade;closest

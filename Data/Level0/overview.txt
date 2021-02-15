@@ -1,0 +1,13 @@
+name;Prologue
+prep_flag;0
+pick_flag;0
+base_flag;0
+market_flag;0
+transition_flag;0
+display_name;Escape!
+win_condition;Escape the monastery
+loss_condition;Ophie dies,OR,Prim dies
+player_phase_music;Flight over Venice
+enemy_phase_music;Brave Story 12
+other_phase_music;Brave Story 12
+weather;Light

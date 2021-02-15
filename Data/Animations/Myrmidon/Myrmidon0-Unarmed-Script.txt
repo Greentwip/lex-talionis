@@ -1,0 +1,9 @@
+pose;Dodge
+f;1;Disarmed_000
+f;3;Disarmed_001
+f;27;Disarmed_002
+f;3;Disarmed_001
+
+pose;Stand
+f;4;Disarmed_000
+

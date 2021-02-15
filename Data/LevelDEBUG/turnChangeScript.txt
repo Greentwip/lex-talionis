@@ -1,0 +1,26 @@
+# Event script that is called every time the player's turn starts. Normally handles reinforcements
+if;gameStateObj.turncount == 1
+    show_layer;1
+end
+if;gameStateObj.turncount == 2
+    # hide_layer;1
+    inc_stat;Drake;SPD;12
+    change_portrait;Drake;Coyote
+    add_tile_property;0,6;Escape=2
+    remove_tile_property;4,15;Status
+    layer_tile_sprite;1;4,17;Door;base_terrain
+    layer_tile_sprite;1;5,17;Door;base_terrain
+    change_ai;3,15;Pursue
+    add_talk;Ophie;Althea
+    give_item;Ophie;Iron Sword
+    # show_layer;2
+    add_unit;p3_2
+    change_music;player_battle;None
+    change_music;enemy_battle;None
+end
+if;gameStateObj.turncount == 4
+    set_cursor;0,0;force_hold
+    wait;500
+	change_tile_sprite;0,0;Door
+    wait;2000
+end

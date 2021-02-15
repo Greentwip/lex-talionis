@@ -1,0 +1,37 @@
+-- KNOWN ISSUES:
+- Music may not work on or even crash Mac's with El Capitan update (AudioComponent.h error in El Capitan mac)
+- Avast Antivirus or other antiviruses may slow down certain actions that write to disk. Known issue with Avast Antivirus Behaviour Shield and exiting the game.
+- Need to compile cython modules for Linux/Mac
+
+Other features:
+Change Name command
+Class Change command and status
+Have Summons work with the turnwheel -> entails rewriting how summons work
+ProcComponent to conditional proc skills
+Bonus Exp in Base
+Skill Swap in Base and Prep
+AI talk
+
+Guide on installing git, Python, Pygame, Pillow and running the engine for the first time
+
+Auto-convert colors?
+Auto-convert feREPO styled map sprites?
+
+FOR FUTURE UPDATES TO THE ENGINE:
+--- ENGINE ---
+- Mac/Linux Support
+
+=============
+--- EXTRA ---
+=============
+- Add Fake arrival to Give/Take
+- If you are on impassable terrain, take damage.
+- Add levelup quotes - optional - Because characters don't really matter for this game, probably not
+- Add Awakening-style dialogue backlog...??** On R press
+- Comment many of the functions with purposes
+--- AWAKENING UI ---
+- Awakening style attack unit, then item, rather than the opposite (option) (Use L to cycle through available weapons) (option)
+- Transparent dude moves with arrow
+- Pulsing arrow (transparency and color)
+- Allow user to control arrow movement (option)
+- Allow quick attack on enemy, quick spell on ally (option)

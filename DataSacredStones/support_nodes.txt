@@ -1,0 +1,40 @@
+# Keeps track of every unit which has an affinity
+# [name of unit];[affinity]
+# Player Units
+Eirika;Light
+Seth;Anima
+Gilliam;Thunder
+Franz;Light
+Moulder;Anima
+Vanessa;Anima
+Ross;Fire
+Neimi;Fire
+Colm;Light
+Garcia;Fire
+Innes;Ice
+Lute;Anima
+Natasha;Ice
+Cormag;Fire
+Ephraim;Fire
+Forde;Wind
+Kyle;Ice
+Amelia;Thunder
+Artur;Ice
+Gerik;Thunder
+Tethys;Fire
+Marisa;Ice
+Saleh;Wind
+Ewan;Light
+L'Arachel;Light
+Dozla;Thunder
+Rennac;Dark
+Duessel;Anima
+Myrrh;Wind
+Knoll;Dark
+Joshua;Wind
+Syrene;Thunder
+Tana;Wind
+#
+# Named Enemy units (mostly Bosses)
+#
+# Other units

@@ -1,0 +1,16 @@
+pose;Attack
+blend
+wait;1
+f;3;Elfire1
+f;3;Elfire2
+f;3;Elfire3
+f;3;Elfire4
+f;3;Elfire5
+f;3;Elfire6
+f;3;Elfire7
+f;3;Elfire8
+f;3;Elfire9
+f;3;Elfire10
+f;3;Elfire11
+f;3;Elfire12
+wait;1

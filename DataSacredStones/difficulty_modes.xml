@@ -1,0 +1,22 @@
+<mode_catalog>
+    <difficulty name="Normal">
+        <id>1</id>
+        <death>1</death>
+        <growths>0</growths>
+        <rng>true_hit</rng>
+        <tutorial>0</tutorial>
+        <color>Green</color>
+
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_growths>0,0,0,0,0,0,0,0,0,0</player_growths>
+        <enemy_growths>0,0,0,0,0,0,0,0,0,0</enemy_growths>
+        <!-- HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON, MOV -->
+        <player_bases>0,0,0,0,0,0,0,0,0,0</player_bases>
+        <enemy_bases>0,0,0,0,0,0,0,0,0,0</enemy_bases>
+
+        <autolevel_enemies>0</autolevel_enemies>
+        <autolevel_players>0</autolevel_players>
+
+        <truelevel_enemies>0</truelevel_enemies>
+    </difficulty>
+</mode_catalog>

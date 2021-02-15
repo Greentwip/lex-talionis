@@ -1,0 +1,30 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Jules'
+        if;self.unit.name != 'Ophie' and not 'JulesDefault' in gameStateObj.level_constants
+            u;Jules;Left
+            s;Jules;Man, you best back off.{w}{br}I'm gettin' a little pissed here!{w};auto
+            r;Jules
+            set_level_constant;JulesDefault
+        elif;self.unit.name == 'Ophie' and not 'JulesOphie' in gameStateObj.level_constants
+            u;Jules;Left;u;Ophie;Right
+            s;Jules;I hate to shatter your ego,{w}{br}but this is not the first time I've crossed swords, kid.{w};auto
+            s;Ophie;But it's gonna be your last.{w};auto
+            r;Jules;Ophie
+            set_level_constant;JulesOphie
+        end
+    elif;self.unit2.name == 'Vincent'
+        if;gameStateObj.check_dead('Jules') and not 'VincentJulesDead' in gameStateObj.level_constants
+            u;Vincent;Left
+            s;Vincent;You dun' killed Jules!{w}{br}You killed my b-brother! ARGH!!!{w};auto
+            r;Vincent
+            change_ai;Vincent;Pursue
+            set_level_constant;VincentJulesDead
+            set_level_constant;VincentDefault
+        elif;not 'VincentDefault' in gameStateObj.level_constants
+            u;Vincent;Left
+            s;Vincent;Ah shit, man...{w};auto
+            r;Vincent
+            set_level_constant;VincentDefault
+        end
+    end
+end

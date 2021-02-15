@@ -1,0 +1,96 @@
+pose;Dodge
+f;1;Lance_000
+sound;Horse Step 1
+f;1;Lance_000
+f;3;Lance_071
+f;26;Lance_072
+f;3;Lance_071
+sound;Horse Step 1
+f;1;Lance_071
+f;2;Lance_000
+
+pose;Attack
+f;6;Lance_000
+f;6;Lance_001
+sound;Horse Step 3
+f;1;Lance_001
+f;6;Lance_002
+f;6;Lance_003
+f;6;Lance_004
+sound;Heavy Spear Spin
+f;1;Lance_004
+f;2;Lance_005
+f;2;Lance_060
+f;3;Lance_061
+f;3;Lance_062
+sound;Weapon Click
+f;1;Lance_062
+f;10;Lance_063
+f;3;Lance_064
+spell;Javelin
+sound;Weapon Pull
+f;1;Lance_064
+f;3;Lance_065
+f;1;Lance_066
+start_loop
+f;4;Lance_066
+end_loop
+f;4;Lance_066
+f;3;Lance_030
+f;10;Lance_031
+sound;Horse Step 1
+f;1;Lance_031
+f;3;Lance_032
+f;2;Lance_033
+f;7;Lance_000
+
+pose;Critical
+f;6;Lance_000
+f;6;Lance_001
+sound;Horse Step 3
+f;1;Lance_001
+f;6;Lance_002
+f;6;Lance_003
+f;6;Lance_004
+sound;Heavy Spear Spin
+f;1;Lance_004
+f;3;Lance_005
+f;3;Lance_060
+f;3;Lance_061
+f;3;Lance_067
+sound;Heavy Spear Spin
+f;1;Lance_067
+f;3;Lance_068
+f;3;Lance_069
+f;3;Lance_070
+f;3;Lance_067
+sound;Heavy Spear Spin
+f;1;Lance_067
+f;3;Lance_068
+f;3;Lance_069
+f;3;Lance_070
+f;3;Lance_062
+sound;Weapon Click
+f;1;Lance_062
+f;10;Lance_063
+f;3;Lance_064
+spell;Javelin
+sound;Weapon Pull
+f;1;Lance_064
+f;3;Lance_065
+f;1;Lance_066
+start_loop
+f;4;Lance_066
+end_loop
+f;4;Lance_066
+f;3;Lance_030
+f;10;Lance_031
+sound;Horse Step 1
+f;1;Lance_031
+f;3;Lance_032
+f;2;Lance_033
+f;7;Lance_000
+
+pose;Stand
+f;4;Lance_000
+

@@ -1,0 +1,8 @@
+set_game_constant;Supports
+set_game_constant;Arena
+# give_item;Drake;Silver Card;no_choice;no_banner
+# give_item;Drake;Potion;no_choice;no_banner
+add_to_market;Vulnerary
+unlock_lore;Ophie
+unlock_lore;Prim
+gold;5000;no_banner

@@ -1,0 +1,266 @@
+<portrait_info>
+
+    <!-- Player Characters -->
+    <portrait name="Ophie">
+        <mouth>24,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Prim">
+        <mouth>20,48</mouth>
+        <blink>20,32</blink>
+    </portrait>
+
+    <portrait name="Joel">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Nia">
+        <mouth>24,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Drake">
+        <mouth>16,42</mouth>
+        <blink>16,26</blink>
+    </portrait>
+
+    <portrait name="Althea">
+        <mouth>22,55</mouth>
+        <blink>22,39</blink>
+    </portrait>
+
+    <portrait name="AltheaQueen">
+        <mouth>22,55</mouth>
+        <blink>22,39</blink>
+    </portrait>
+
+    <portrait name="Renae">
+        <mouth>12,48</mouth>
+        <blink>20,32</blink>
+    </portrait>
+
+    <portrait name="Theo">
+        <mouth>16,40</mouth>
+        <blink>16,24</blink>
+    </portrait>
+
+    <portrait name="Sam">
+        <mouth>25,39</mouth>
+        <blink>25,23</blink>
+    </portrait>
+
+    <portrait name="Eliza">
+        <mouth>24,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Coyote">
+        <mouth>16,44</mouth>
+        <blink>26,28</blink>
+    </portrait>
+
+    <portrait name="Kayla">
+        <mouth>32,40</mouth>
+        <blink>32,24</blink>
+    </portrait>
+
+    <!-- Enemy bosses -->
+    <portrait name="Sidney">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Brigham">
+        <mouth>17,40</mouth>
+        <blink>17,24</blink>
+    </portrait>
+
+    <portrait name="Anders">
+        <mouth>24,36</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Midas">
+        <mouth>16,40</mouth>
+        <blink>16,32</blink>
+    </portrait>
+
+    <portrait name="Harold">
+        <mouth>12,43</mouth>
+        <blink>16,24</blink>
+    </portrait>
+
+    <portrait name="Jules">
+        <mouth>24,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Vincent">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Razia">
+        <mouth>24,41</mouth>
+        <blink>24,29</blink>
+    </portrait>
+
+    <portrait name="Marduk">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Vagnius">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Jakin">
+        <mouth>16,40</mouth>
+        <blink>16,24</blink>
+    </portrait>
+
+    <portrait name="Boaz">
+        <mouth>16,40</mouth>
+        <blink>16,24</blink>
+    </portrait>
+
+    <portrait name="Adjutant">
+        <mouth>16,40</mouth>
+        <blink>16,24</blink>
+    </portrait>
+
+    <portrait name="Ulver">
+        <mouth>16,36</mouth>
+        <blink>16,16</blink>
+    </portrait>
+
+    <!-- Other named characters -->
+    <portrait name="Akilees">
+        <mouth>16,41</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Yohn">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Kiley">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Tarja">
+        <mouth>24,40</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Jack">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Jeb">
+        <mouth>24,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <!-- Unnamed NPCs -->
+    <portrait name="Soldier1">
+        <mouth>24,48</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Soldier2">
+        <mouth>24,48</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Soldier3">
+        <mouth>24,48</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Soldier4">
+        <mouth>24,48</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Bandit1">
+        <mouth>16,48</mouth>
+        <blink>16,24</blink>
+    </portrait>
+
+    <portrait name="OldMan1">
+        <mouth>16,56</mouth>
+        <blink>16,40</blink>
+    </portrait>
+
+    <portrait name="OldMan2">
+        <mouth>16,56</mouth>
+        <blink>16,40</blink>
+    </portrait>
+
+    <portrait name="OldLady1">
+        <mouth>16,48</mouth>
+        <blink>16,32</blink>
+    </portrait>
+
+    <portrait name="Mage1">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Man1">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Man2">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Man3">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Man4">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Man5">
+        <mouth>16,40</mouth>
+        <blink>24,24</blink>
+    </portrait>
+
+    <portrait name="Woman1">
+        <mouth>24,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Woman2">
+        <mouth>16,48</mouth>
+        <blink>24,32</blink>
+    </portrait>
+
+    <portrait name="Girl1">
+        <mouth>16,56</mouth>
+        <blink>24,40</blink>
+    </portrait>
+
+    <portrait name="Boy1">
+        <mouth>16,56</mouth>
+        <blink>24,40</blink>
+    </portrait>
+
+    <portrait name="Boy2">
+        <mouth>16,56</mouth>
+        <blink>24,40</blink>
+    </portrait>
+</portrait_info>

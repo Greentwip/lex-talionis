@@ -1,0 +1,16 @@
+# Village Script
+# Get a Hand Axe
+t;1
+b;House
+t;2
+u;Man4;Left
+u;{unit};Right
+s;Man4;Hmmm... You're fighting the Empire?{w}{br}Hmmph. Brave fools.{w}{br}Take this. You're gonna need it.{w};auto
+r;Man4
+r;{unit}
+# Close the village
+set_tile_info;12,3
+t;1
+remove_background
+t;2
+give_item;{unit};Hand Axe

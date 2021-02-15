@@ -1,0 +1,103 @@
+pose;Dodge
+f;1;Lance_000
+f;3;Lance_026
+f;27;Lance_027
+f;4;Lance_026
+
+pose;Attack
+f;6;Lance_000
+f;4;Lance_001
+sound;Foot Step
+f;1;Lance_001
+f;4;Lance_002
+f;8;Lance_003
+hit_spark
+start_hit
+enemy_flash_white;8
+screen_flash_white;4
+f;1;Lance_003
+f;1;Lance_004;Lance_004_under
+wait_for_hit;Lance_004;Lance_004_under
+f;4;Lance_004;Lance_004_under
+f;4;Lance_005;Lance_005_under
+sound;Weapon Pull
+f;1;Lance_005;Lance_005_under
+f;2;Lance_006
+f;5;Lance_007
+sound;Foot Step
+f;1;Lance_007
+f;3;Lance_008
+f;5;Lance_009
+sound;Foot Step
+f;1;Lance_009
+f;6;Lance_010
+f;8;Lance_011
+f;1;Lance_000
+
+pose;Critical
+f;6;Lance_000
+f;3;Lance_012
+f;4;Lance_013
+sound;Weapon Push
+f;1;Lance_013
+f;3;Lance_014
+f;23;Lance_015
+sound;Foot Step
+f;1;Lance_015
+f;4;Lance_002
+f;6;Lance_003
+enemy_flash_white;8
+sound;Weapon Push
+f;3;Lance_003
+hit_spark
+start_hit
+foreground_blend;2;248,248,248
+f;1;Lance_003
+f;1;Lance_004;Lance_004_under
+wait_for_hit;Lance_004;Lance_004_under
+f;4;Lance_004;Lance_004_under
+f;4;Lance_005;Lance_005_under
+sound;Weapon Pull
+f;1;Lance_005;Lance_005_under
+f;2;Lance_006
+f;5;Lance_007
+sound;Foot Step
+f;1;Lance_007
+f;3;Lance_008
+f;5;Lance_009
+sound;Foot Step
+f;1;Lance_009
+f;6;Lance_010
+f;8;Lance_011
+f;1;Lance_000
+
+pose;Miss
+f;6;Lance_000
+f;4;Lance_001
+sound;Foot Step
+f;1;Lance_001
+f;4;Lance_002
+f;6;Lance_003
+sound;Weapon Push
+f;1;Lance_003
+f;2;Lance_028
+miss
+f;30;Lance_028
+f;4;Lance_029
+sound;Weapon Pull
+f;1;Lance_029
+f;2;Lance_006
+f;5;Lance_007
+sound;Foot Step
+f;1;Lance_007
+f;3;Lance_008
+f;5;Lance_009
+sound;Foot Step
+f;1;Lance_009
+f;6;Lance_010
+f;8;Lance_011
+f;1;Lance_000
+
+pose;Stand
+f;4;Lance_000
+

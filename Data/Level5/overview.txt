@@ -1,0 +1,15 @@
+name;Chapter V
+prep_flag;1
+prep_music;Preparing for Battle
+pick_flag;0
+base_flag;MainBase
+base_music;The Journey to the West
+market_flag;1
+transition_flag;1
+display_name;Seize Gate
+win_condition;Seize Temple Gate
+loss_condition;Ophie dies,OR,Party size falls below 5. Currently {gameStateObj.get_total_party_members()}
+player_phase_music;The Abyssal Plains
+enemy_phase_music;Combat Theme 2
+other_phase_music;Combat Theme 2
+weather;Sand

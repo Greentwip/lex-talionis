@@ -1,0 +1,62 @@
+pose;Attack
+blend
+wait;3
+# sfx
+f;3;Wind1
+f;3;Wind2
+f;3;Wind3
+f;3;Wind4
+f;3;Wind5
+f;3;Wind6
+f;3;Wind7
+f;3;Wind8
+f;3;Wind9
+f;3;Wind10
+f;3;Wind11
+f;3;Wind12
+f;3;Wind13
+f;3;Wind14
+f;3;Wind15
+f;3;Wind16
+f;3;Wind17
+f;2;Wind18
+f;2;Wind19
+f;2;Wind20
+f;2;Wind21
+# Spell hit happens here
+# Needs sound
+wait;9
+f;2;Wind22
+f;2;Wind23
+f;2;Wind24
+wait;1
+
+pose;Miss
+blend
+wait;3
+# sfx
+f;3;Wind1
+f;3;Wind2
+f;3;Wind3
+f;3;Wind4
+f;3;Wind5
+f;3;Wind6
+f;3;Wind7
+f;3;Wind8
+f;3;Wind9
+f;3;Wind10
+f;3;Wind11
+f;3;Wind12
+f;3;Wind13
+f;3;Wind14
+f;3;Wind15
+f;3;Wind16
+f;3;Wind17
+f;2;Wind18
+f;2;Wind19
+f;2;Wind20
+f;2;Wind21
+# Spell hit happens here
+# Remainder is ignored on miss
+# Miss sound
+wait;1

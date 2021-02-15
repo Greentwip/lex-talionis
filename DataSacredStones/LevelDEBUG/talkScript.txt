@@ -1,0 +1,19 @@
+# Chapter 1 Talk Script
+# Check for Seth and Franz's conversation
+if;self.unit1.name == 'Seth' and self.unit2.name == 'Franz'
+    u;Franz;Left;u;Seth;Right
+    s;Seth;Is that you, Franz? I'm relieved to see you're still in one piece!
+    s;Franz;Y-yes...and you as well, General.{w}{br}As long as you lead us, sir, the Knights of Renais cannot lose!
+    s;Seth;Franz, you and I must work together to protect Princess Eirika.{w}{br}I want you to ride with us.
+    s;Franz;Sir! With honor, sir!
+    r;Franz;Seth
+    remove_talk;Seth;Franz
+elif;self.unit1.name == 'Eirika' and self.unit2.name == 'Franz'
+    u;Franz;Left;u;Eirika;Right
+    s;Franz;Princess Eirika, it is good to see you're well.
+    s;Eirika;Franz, you made it through unscathed.
+    s;Franz;Y-yes, Your Highness!{w}{br}I met up with Sir Gilliam of Frelia and explained the situation in Renais.{w}{clear}He told me that Princess Tana was in danger as well, here at Mulan.{w}{br}We rode as swiftly as we could.
+    s;Eirika;Tana is here?{w}{br}Franz, we must hurry!
+    s;Franz;Understood!
+    remove_talk;Eirika;Franz
+end

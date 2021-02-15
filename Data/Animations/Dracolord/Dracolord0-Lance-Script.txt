@@ -1,0 +1,205 @@
+pose;Dodge
+f;1;Lance_000
+f;3;Lance_039
+f;27;Lance_040
+f;4;Lance_039
+
+pose;Attack
+f;6;Lance_000
+f;4;Lance_001
+f;5;Lance_002
+sound;Heavy Wing Flap
+f;1;Lance_002
+f;5;Lance_003
+sound;Weapon Pull
+f;1;Lance_003
+f;3;Lance_004
+f;5;Lance_005
+sound;Heavy Wing Flap
+f;1;Lance_005
+f;3;Lance_006
+f;23;Lance_007
+enemy_flash_white;8
+f;1;Lance_007
+screen_flash_white;4
+f;1;Lance_007
+sound;Weapon Swing
+f;1;Lance_007
+f;5;Lance_008;Lance_008_under
+hit_spark
+start_hit
+f;1;Lance_009;Lance_009_under
+wait_for_hit;Lance_009;Lance_009_under
+f;4;Lance_009;Lance_009_under
+sound;Weapon Pull
+f;1;Lance_009;Lance_009_under
+f;3;Lance_010
+f;8;Lance_011
+f;5;Lance_012
+f;3;Lance_013
+f;2;Lance_014
+f;1;Lance_015
+f;1;Lance_016
+wait;19
+sound;Long Wing Flap
+wait;1
+uf;14;Lance_018_under
+uf;5;Lance_019_under
+f;2;Lance_020
+f;2;Lance_021
+f;2;Lance_022
+sound;Heavy Wing Flap
+f;1;Lance_022
+f;2;Lance_023
+f;2;Lance_024
+f;1;Lance_025
+sound;Step Back 1
+f;1;Lance_025
+platform_shake
+f;1;Lance_025
+f;8;Lance_026
+f;4;Lance_002
+f;6;Lance_001
+
+pose;Critical
+f;6;Lance_000
+f;4;Lance_027
+sound;Heavy Spear Spin
+f;1;Lance_027
+f;2;Lance_028
+f;2;Lance_029
+f;2;Lance_030
+f;2;Lance_031
+sound;Heavy Spear Spin
+f;1;Lance_031
+f;2;Lance_028
+f;2;Lance_029
+f;2;Lance_030
+f;2;Lance_031
+sound;Heavy Spear Spin
+f;1;Lance_031
+f;2;Lance_028
+f;2;Lance_029
+f;2;Lance_030
+f;2;Lance_031
+sound;Heavy Spear Spin
+f;1;Lance_031
+f;2;Lance_028
+f;2;Lance_029
+f;2;Lance_030
+f;2;Lance_031
+f;2;Lance_000
+f;3;Lance_001
+f;3;Lance_002
+sound;Heavy Wing Flap
+f;1;Lance_002
+f;4;Lance_003
+f;3;Lance_004
+f;5;Lance_005
+sound;Heavy Wing Flap
+f;1;Lance_005
+f;3;Lance_006
+f;20;Lance_007
+enemy_flash_white;8
+f;1;Lance_007
+foreground_blend;2;248,248,248
+sound;Weapon Swing
+f;1;Lance_007
+start_hit
+f;2;Lance_008;Lance_008_under
+crit_spark
+f;1;Lance_009;Lance_009_under
+wait_for_hit;Lance_009;Lance_009_under
+f;4;Lance_009;Lance_009_under
+sound;Weapon Pull
+f;1;Lance_009;Lance_009_under
+f;3;Lance_010
+f;8;Lance_011
+f;5;Lance_012
+f;3;Lance_013
+f;2;Lance_014
+f;1;Lance_015
+f;1;Lance_016
+wait;19
+sound;Long Wing Flap
+wait;1
+uf;14;Lance_018_under
+uf;5;Lance_019_under
+f;2;Lance_020
+f;2;Lance_021
+f;2;Lance_022
+sound;Heavy Wing Flap
+f;1;Lance_022
+f;2;Lance_023
+f;2;Lance_024
+f;1;Lance_025
+sound;Step Back 1
+f;1;Lance_025
+platform_shake
+f;1;Lance_025
+f;8;Lance_026
+f;4;Lance_002
+f;6;Lance_001
+
+pose;Miss
+f;6;Lance_000
+f;4;Lance_001
+f;5;Lance_002
+sound;Heavy Wing Flap
+f;1;Lance_002
+f;5;Lance_003
+sound;Weapon Pull
+f;1;Lance_003
+f;3;Lance_004
+f;5;Lance_005
+sound;Heavy Wing Flap
+f;1;Lance_005
+f;3;Lance_006
+f;23;Lance_007
+sound;Weapon Swing
+f;1;Lance_007
+f;3;Lance_041
+f;2;Lance_042
+miss
+f;30;Lance_042
+sound;Weapon Pull
+f;1;Lance_042
+f;3;Lance_010
+f;8;Lance_011
+f;5;Lance_012
+f;3;Lance_013
+f;2;Lance_014
+f;1;Lance_015
+f;1;Lance_016
+wait;19
+sound;Long Wing Flap
+wait;1
+f;3;Lance_043
+f;1;Lance_044
+f;1;Lance_045
+f;1;Lance_046
+f;1;Lance_047
+f;3;Lance_048
+f;2;Lance_049
+f;2;Lance_050
+f;3;Lance_051
+f;3;Lance_052
+f;2;Lance_020
+f;2;Lance_021
+f;2;Lance_022
+sound;Heavy Wing Flap
+f;1;Lance_022
+f;2;Lance_023
+f;2;Lance_024
+f;1;Lance_025
+sound;Step Back 1
+f;1;Lance_025
+platform_shake
+f;1;Lance_025
+f;8;Lance_026
+f;4;Lance_002
+f;6;Lance_001
+
+pose;Stand
+f;4;Lance_000
+

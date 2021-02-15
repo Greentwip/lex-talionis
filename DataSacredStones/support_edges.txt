@@ -1,0 +1,9 @@
+# Support Partner ID 1; Support Partner ID 2;Num Points for First Support;Num Points for Second Support;Num Points for Third Support;...(etc.)
+# Order of names should match order in Data/SupportConvos. I use alphabetical to keep it simple.
+Eirika;Ephraim;13;20;20
+Eirika;Seth;18;27;27
+Eirika;Saleh;38;40;40
+Eirika;L'Arachel;35;40;40
+Eirika;Tana;30;40;40
+Eirika;Innes;35;40;40
+Eirika;Forde;30;40;40

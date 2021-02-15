@@ -1,0 +1,50 @@
+pose;Attack
+darken
+wait;4
+pan
+wait;13
+sound;Nosferatu1
+enemy_effect;Rune
+wait;59
+sound;Nosferatu2
+enemy_effect;NosferatuUp
+wait;4
+enemy_flash_white;8
+wait;1
+spell_hit
+# After health bars report done
+wait;5
+pan
+wait;14
+# purple thing comes back
+sound;Nosferatu3
+effect;NosferatuDown
+wait;25
+lighten
+wait;4
+end_parent_loop
+
+pose;Miss
+darken
+wait;4
+pan
+wait;13
+sound;Nosferatu1
+enemy_effect;Rune
+wait;59
+sound;Nosferatu2
+enemy_effect;NosferatuUp
+wait;4
+wait;1
+miss
+# After health bars report done
+wait;40
+pan
+wait;14
+# purple thing comes back
+sound;Nosferatu3
+effect;NosferatuDown
+wait;25
+lighten
+wait;4
+end_parent_loop

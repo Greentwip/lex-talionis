@@ -1,0 +1,28 @@
+victory_screen
+m;Young Man from the East
+b;ClearingDark
+t;2
+u;Ophie;FarLeft
+u;Joel;FarRight
+s;Ophie;Phew... I think we lost 'em.{w};auto
+s;Joel;Nia?{w};auto
+u;Nia;MidLeft
+s;Nia;Umm... J-just us...{w};auto
+r;Nia
+s;Joel;Then we can rest here, but only for a little.{w}{br}It's a long walk back to base.{w};auto
+s;Ophie;Hmmph. That was too close!{w}{br}Sam said we weren't going to have to worry about the guards!{w};auto
+u;Althea;MidLeft
+u;Prim;MidRight
+s;Althea;I wonder what went wrong.{w};auto
+s;Ophie;That asshole's plan nearly got us killed.{w}{br}And he doesn't even show up!{w}{br}Who does he think he is?{w};auto
+s;Prim;I-I'm sure he had a good reason.{w}{br}He just made a mistake.{w}{br}This is a fluke, right?{w};auto
+s;Joel;Err...{w};auto
+s;Ophie;I'll give Sam one more chance.{w}{br}If our so-called tactician's plan fails again, Prim and I are done.{w};auto
+r;Ophie
+s;Prim;...{w};auto
+r;Prim
+u;Drake;FarLeft
+s;Althea;... Uh...{w}{br}N-No use dawdling around here, right?{w}{br}A long rest will do everyone some good.{w};auto
+s;Drake;Well said, milady.{w};auto
+r;Joel;Althea;Drake
+t;1

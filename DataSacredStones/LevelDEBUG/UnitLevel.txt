@@ -1,0 +1,50 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+faction;Soldier;Soldier;Neutral;Grado Soldier
+faction;Eliza;Eliza;Neutral;Eliza
+# Player Characters
+#player;0;0;Franz;5,1;None
+#player;0;0;Eirika;12,9;None
+player;0;0;Seth;13,8;None
+#player;0;0;Gilliam;6,1;None
+enemy;0;0;Swordmaster;1;Iron Sword;11,7;Pursue;Soldier
+player;0;0;Manakete;10;Dragonstone;11,8;None;Soldier
+player;0;0;Assassin;1;Iron Sword;11,9;None;Soldier
+# Enemies
+# Bosses
+enemy;0;0;Breguet;2,2;HardGuard
+# Generics
+#enemy;0;0;Soldier;3;Poison Lance;8,3;Attack;Soldier
+#enemy;0;0;Soldier;2;Poison Lance;3,3;Attack;Soldier
+#enemy;0;0;Soldier;2;Poison Lance;1,3;Attack;Soldier
+#enemy;0;0;Fighter;10;Poison Axe;9,5;Attack;Soldier
+#enemy;0;0;Fighter;2;Poison Axe;4,7;Attack;Soldier
+#enemy;0;0;Fighter;2;Poison Axe;2,8;Attack;Soldier
+# === Reinforcements ===
+# Player Characters
+# Other Characters
+other;0;Greenies_1;Cavalier;1;;None;None;Soldier
+other;0;Greenies_2;Mercenary;1;Iron Sword;None;None;Soldier
+# Enemies
+# Generics
+enemy;0;EnemyRein_1;Soldier;2;Iron Lance;13,9;Pursue;Soldier
+enemy;0;EnemyRein_2;Fighter;1;Iron Axe;13,8;Pursue;Soldier
+enemy;0;EnemyRein_3;Fighter;1;Iron Axe;12,9;Pursue;Soldier
+# === Triggers ===

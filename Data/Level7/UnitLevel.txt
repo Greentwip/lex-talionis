@@ -1,0 +1,112 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+#
+# Enemies
+# Bosses
+enemy;0;Marduk;Marduk;2,21;HardGuard
+enemy;0;Vagnius;Vagnius;2,21;None
+# Generics
+# Factions
+faction;Soldier;Soldier;Empire;An imperial soldier
+faction;Bandit;Bandit;Bandit;A Bandit hailing from the Ghat mountains
+# Ballista
+enemy;0;0;Ballista;10;Ballista;7,22;HardGuard;Soldier
+#enemy;0;0;Ballista;10;Ballista;5,20;HardGuard;Soldier
+enemy;0;0;Ballista;10;Ballista;3,17;HardGuard;Soldier
+# 16 Mercs, 10 Raiders, 8 Brigands (dMithril Axe, dTomahawk), 7 Skirmishers, 16 Dracoknights, 3 Dragoons (dMithril Lance), 3 Heros (dMithril Sword), 1 Sage (dBlizzard)
+# Original on map is 37 units
+# Region Left of Spawn - 4 Mercs, 1 Hero, 4 Raiders
+enemy;0;0;Mercenary;10;Iron Sword;13,4;Attack_1;Soldier
+enemy;0;0;Mercenary;10;Iron Sword;11,7;Attack;Soldier
+enemy;0;0;Mercenary;10;Iron Sword;17,4;Attack_1;Soldier
+enemy;0;0;Mercenary;10;Iron Sword;16,3;Attack_1;Soldier
+enemy;0;0;Raider;10;Hand Axe;14,1;Attack_1;Soldier
+enemy;0;0;Raider;10;Hand Axe;8,5;Attack;Soldier
+enemy;0;0;Raider;10;Steel Axe;9,7;Attack;Soldier
+enemy;0;0;Raider;10;Steel Axe;15,6;Attack_1;Soldier
+enemy;0;0;Vanguard;2;dMithril Sword;12,5;Attack_1;Soldier
+# Region Right of Spawn - 4 Skirmishers, 1 Dragoon
+enemy;0;0;Skirmisher;10;Iron Lance;23,10;Attack_2;Soldier
+enemy;0;0;Skirmisher;10;Iron Lance;25,11;Attack_2;Soldier
+enemy;0;0;Skirmisher;10;Iron Lance;19,12;Attack_2;Soldier
+enemy;0;0;Skirmisher;10;Iron Lance;25,13;Attack_2;Soldier
+enemy;0;0;Dragoon;2;dGreat Lance;24,11;Attack_2;Soldier
+# Forest - 3 Skirmishers, 1 Dragoon, 2 Raiders
+enemy;0;0;Raider;10;Iron Axe;5,12;Attack_3;Soldier
+enemy;0;0;Raider;10;Iron Axe;7,13;Attack_3;Soldier
+enemy;0;0;Skirmisher;10;Iron Lance;4,13;Attack_3;Soldier
+enemy;0;0;Skirmisher;10;Iron Lance;6,11;Attack_3;Soldier
+enemy;0;0;Skirmisher;10;Iron Lance;7,8;Attack_3;Soldier
+enemy;0;0;Dragoon;2;Steel Lance;7,11;Attack_3;Soldier
+# Open Cliff - 4 Raiders, 4 Mercs, 1 Hero
+enemy;0;0;Mercenary;10;Steel Sword;16,18;Attack_4;Soldier
+enemy;0;0;Mercenary;10;Steel Sword;18,18;Attack_4;Soldier
+enemy;0;0;Mercenary;10;Steel Sword;17,17;Attack_4;Soldier
+enemy;0;0;Mercenary;10;Steel Sword;17,19;Attack_4;Soldier
+enemy;0;0;Raider;10;Steel Axe;18,15;Attack_4;Soldier
+enemy;0;0;Raider;10;dGreat Axe;11,19;Attack_4;Soldier
+enemy;0;0;Raider;10;Steel Axe;21,18;Attack_4;Soldier
+enemy;0;0;Raider;10;Hand Axe;18,21;Attack_4;Soldier
+enemy;0;0;Vanguard;2;Steel Sword,dElixir;17,18;Attack_4;Soldier
+# Fort - 8 Mercs, 1 Hero, 1 Dragoon, 1 Sage 
+enemy;0;0;Mercenary;10;Steel Sword;3,18;Attack;Soldier
+enemy;0;0;Mercenary;10;Steel Sword;4,17;Attack;Soldier
+enemy;0;0;Mercenary;10;Steel Sword;4,21;Attack;Soldier
+enemy;0;0;Mercenary;10;Steel Sword;5,22;Attack;Soldier
+enemy;0;0;Vanguard;2;Steel Sword,Hand Axe;1,22;SoftGuard;Soldier
+enemy;0;0;Dragoon;2;Steel Lance,Javelin;3,22;SoftGuard;Soldier
+enemy;0;0;Sage;2;Fire,dBlizzard;2,17;SoftGuard;Soldier
+# 
+# Mercenary Reinforcements - When Bridges are crossed or Turn 3 happens
+enemy;0;merc1;Mercenary;10;Steel Sword;0,21;Pursue;Soldier
+enemy;0;merc2;Mercenary;10;Steel Sword;0,22;Pursue;Soldier
+enemy;0;merc3;Mercenary;10;Steel Sword;1,23;Pursue;Soldier
+enemy;0;merc4;Mercenary;10;Steel Sword;2,23;Pursue;Soldier
+# Bandit Reinforcements - When halfway point is crossed or Turn 9 happens
+enemy;0;bandit1;Brigand;10;Iron Axe;1,0;Pursue;Bandit
+enemy;0;bandit2;Brigand;10;Steel Axe;2,0;Pursue;Bandit
+enemy;0;bandit3;Brigand;10;Steel Axe;0,1;Pursue;Bandit
+enemy;0;bandit4;Brigand;10;dShort Axe;0,2;Pursue;Bandit
+enemy;0;bandit5;Brigand;10;Iron Axe;27,22;Pursue;Bandit
+enemy;0;bandit6;Brigand;10;Steel Axe;27,21;Pursue;Bandit
+enemy;0;bandit7;Brigand;10;Steel Axe;26,23;Pursue;Bandit
+enemy;0;bandit8;Brigand;10;dMithril Axe;25,23;Pursue;Bandit
+# Dracoknight Reinforcements - When 3/4 point is crossed or Turn 14 happens
+enemy;0;wr1_1;Dracoknight;10;Steel Lance;1,0;Pursue;Soldier
+enemy;0;wr1_2;Dracoknight;10;Iron Lance;2,0;Pursue;Soldier
+enemy;0;wr1_3;Dracoknight;10;Javelin;0,1;Pursue;Soldier
+enemy;0;wr1_4;Dracoknight;10;Iron Lance;0,2;Pursue;Soldier
+enemy;0;wr2_1;Dracoknight;10;Steel Lance;26,0;Pursue;Soldier
+enemy;0;wr2_2;Dracoknight;10;Iron Lance;25,0;Pursue;Soldier
+enemy;0;wr2_3;Dracoknight;10;Javelin;27,1;Pursue;Soldier
+enemy;0;wr2_4;Dracoknight;10;Iron Lance;27,2;Pursue;Soldier
+enemy;0;wr3_1;Dracoknight;10;Steel Lance;27,22;Pursue;Soldier
+enemy;0;wr3_2;Dracoknight;10;Iron Lance;27,21;Pursue;Soldier
+enemy;0;wr3_3;Dracoknight;10;Javelin;26,23;Pursue;Soldier
+enemy;0;wr3_4;Dracoknight;10;Iron Lance;25,23;Pursue;Soldier
+#enemy;0;wr4_1;Dracoknight;10;Steel Lance;0,21;Pursue;Soldier
+#enemy;0;wr4_2;Dracoknight;10;Iron Lance;0,22;Pursue;Soldier
+#enemy;0;wr4_3;Dracoknight;10;Javelin;1,23;Pursue;Soldier
+#enemy;0;wr4_4;Dracoknight;10;Iron Lance;2,23;Pursue;Soldier
+# Infinite Reinforcements -
+enemy;2;w1;Dracoknight;Mithril Lance;0,0;Pursue;Soldier;Void_Curse
+enemy;2;w2;Dracoknight;Mithril Lance;0,0;Pursue;Soldier;Void_Curse

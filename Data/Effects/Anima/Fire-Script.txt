@@ -1,0 +1,68 @@
+pose;Attack
+ignore_pan
+darken
+wait;1
+sound;FireCharge
+effect;FirePillars
+wait;24
+sound;FireBall
+f;3;Ball1
+f;2;Ball2
+f;2;Ball3
+f;10;Ball4
+pan
+f;3;Shoot1
+# How much to skip ahead
+if_range;3
+    f;2;ShootR2
+    f;2;ShootR3
+    f;2;ShootR4
+nif_range;3
+    f;2;Shoot2
+    f;2;Shoot3
+    f;2;Shoot4
+# Pause
+wait;8
+sound;FireHit
+enemy_flash_white;8
+enemy_effect;Explosion
+spell_hit
+wait;8
+lighten
+wait;2
+pan
+wait;14
+end_parent_loop
+
+pose;Miss
+ignore_pan
+darken
+wait;1
+effect;FirePillars
+wait;24
+f;3;Ball1
+f;2;Ball2
+f;2;Ball3
+f;10;Ball4
+pan
+f;3;Shoot1
+# How much to skip ahead
+if_range;3
+    f;2;ShootR2
+    f;2;ShootR3
+    f;2;ShootR4
+nif_range;3
+    f;2;Shoot2
+    f;2;Shoot3
+    f;2;Shoot4
+# Pause
+wait;8
+enemy_effect;Explosion
+wait;8
+miss
+wait;20
+lighten
+wait;2
+pan
+wait;14
+end_parent_loop

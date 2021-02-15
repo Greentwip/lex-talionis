@@ -1,0 +1,12 @@
+name;Epilogue
+prep_flag;0
+pick_flag;0
+base_flag;0
+market_flag;0
+transition_flag;0
+display_name;--
+win_condition;--
+loss_condition;--
+player_phase_music;Flight over Venice
+enemy_phase_music;Brave Story 12
+other_phase_music;Brave Story 12

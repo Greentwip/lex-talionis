@@ -1,0 +1,13 @@
+pose;Attack
+effect;ShieldAscend
+wait;64
+# wait 5 more
+wait;5
+effect;ShieldHover
+start_loop
+    wait;1
+end_loop
+clear_all_effects
+effect;ShieldDescend
+wait;20
+wait;1

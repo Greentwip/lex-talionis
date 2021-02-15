@@ -1,0 +1,26 @@
+pose;Attack
+# 1990 - 2150
+parent_tint;20;248,248,248
+wait;1
+effect;PromoBoltFast
+wait;14
+effect;PromoWhiteOrb
+wait;5
+lighten
+sound;Promotion3
+screen_flash_white;15;65
+wait;15
+parent_tint_loop;75;168,216,56;152,208,56;136,200,48;120,192,48;112,184,40;96,176,32;80,168,24;64,160,16
+wait;8
+effect;PromoRing
+wait;67
+parent_tint;10;144,184,48
+wait;10
+parent_tint;10;56,136,16
+wait;10
+parent_tint;10;48,56,16
+wait;10
+parent_tint;10;16,40,0
+wait;10
+wait;10
+wait;1

@@ -1,0 +1,12 @@
+pose;Attack
+f;4;Dust1
+f;4;Dust2
+f;4;Dust3
+f;4;Dust4
+f;4;Dust5
+f;4;Dust6
+f;4;Dust7
+f;4;Dust8
+f;4;Dust9
+f;4;Dust10
+wait;1

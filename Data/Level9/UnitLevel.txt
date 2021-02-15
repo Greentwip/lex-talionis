@@ -1,0 +1,95 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# team; 0; event_id; unit_id; position; ai
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+#
+# Enemies
+# Bosses
+enemy;0;Jakin;Jakin;4,4;SoftGuard
+enemy;0;Boaz;Boaz;26,27;SoftGuard
+# Generics
+# Faction
+faction;Templar;Templar;Templar;Guardians of the Keralan underworld
+# Swordmaster, Ranger, Dragoon, Sages, Warlock, Oracle, Warrior
+# Boaz's Bodyguards
+enemy;0;0;Sniper;5;Yew Bow;27,26;SoftGuard;Templar
+enemy;0;0;Sniper;5;Yew Bow;25,28;SoftGuard;Templar
+# Jakin's Bodyguards
+enemy;0;0;Thief;15;Boltblade;3,5;SoftGuard;Templar
+enemy;0;0;Thief;15;Boltblade;5,3;SoftGuard;Templar
+# Generics
+enemy;0;load_me;Warrior;5;Mithril Axe,Hand Axe;12,27;Attack;Templar
+enemy;0;0;Warlock;5;Ruin;4,19;Attack;Templar
+mode;Lunatic
+enemy;0;0;Warlock;5;Ruin,dWarp;18,27;Attack;Templar
+mode;Hard,Grandmaster
+enemy;0;0;Warlock;5;Ruin;18,27;Attack;Templar
+mode;All
+enemy;0;0;Dragoon;5;Adamant Lance,dSpeedwings;12,19;Attack;Templar
+enemy;0;0;Oracle;5;Corona;4,12;Attack;Templar
+enemy;0;0;Oracle;5;Corona,dSilence;18,19;Attack;Templar
+enemy;0;0;Sage;5;dAether;12,12;Attack;Templar
+enemy;0;0;Warrior;5;Mithril Axe,Hand Axe;12,4;Attack;Templar
+enemy;0;0;Swordmaster;5;Mithril Sword,Flareblade;18,12;Attack;Templar
+enemy;0;0;Warlock;5;Ruin,dStun;26,19;Attack;Templar
+enemy;0;0;Dragoon;5;Mithril Lance,dSuperior Lance;18,4;Attack;Templar
+enemy;0;0;Swordmaster;4;Mithril Sword,dBoltblade;26,12;Attack;Templar
+enemy;0;0;Warlock;5;Ruin,Stun;26,5;Attack;Templar
+enemy;0;0;Sage;5;Fire,dMeteor;25,4;Attack;Templar
+# Reinforcements
+enemy;0;p3_1;Sage;5;Aether;0,0;Pursue;Templar
+enemy;0;p3_2;Dragoon;5;Mithril Lance;0,0;Pursue;Templar
+enemy;0;p3_3;Swordmaster;5;Mithril Sword;0,0;Pursue;Templar
+enemy;0;p3_4;Oracle;5;Corona;0,0;Pursue;Templar
+
+enemy;0;p5_1;Warrior;5;Mithril Axe;0,0;Pursue;Templar
+enemy;0;p5_2;Warlock;5;Ruin;0,0;Pursue;Templar
+enemy;0;p5_3;Berserker;5;Mithril Axe;0,0;Pursue;Templar
+enemy;0;p5_4;Sniper;5;Yew Bow;0,0;Pursue;Templar
+
+enemy;0;p7_1;Sage;5;Aether;0,0;Pursue;Templar
+enemy;0;p7_2;Dragoon;5;Mithril Lance;0,0;Pursue;Templar
+enemy;0;p7_3;Swordmaster;5;Mithril Sword;0,0;Pursue;Templar
+enemy;0;p7_4;Oracle;5;Corona;0,0;Pursue;Templar
+
+enemy;0;p9_1;Warrior;5;Mithril Axe;0,0;Pursue;Templar
+enemy;0;p9_2;Warlock;5;Ruin;0,0;Pursue;Templar
+enemy;0;p9_3;Berserker;5;Mithril Axe;0,0;Pursue;Templar
+enemy;0;p9_4;Sniper;5;Yew Bow;0,0;Pursue;Templar
+
+enemy;0;p11_1;Sage;5;Aether,Meteor;0,0;Pursue;Templar
+enemy;0;p11_2;Dragoon;5;Adamant Lance,Long Spear;0,0;Pursue;Templar
+enemy;0;p11_3;Swordmaster;5;Adamant Sword;0,0;Pursue;Templar
+enemy;0;p11_4;Oracle;5;Corona,Silence,Physic;0,0;Pursue;Templar
+enemy;0;p11_5;Warrior;5;Adamant Axe,Yew Bow;0,0;Pursue;Templar
+enemy;0;p11_6;Warlock;5;Howl,Stun;0,0;Pursue;Templar
+enemy;0;p11_7;Berserker;5;Adamant Axe,Tomahawk;0,0;Pursue;Templar
+enemy;0;p11_8;Sniper;5;Great Bow;0,0;Pursue;Templar
+
+# Infinite Reinforcements
+enemy;2;w_Sage;Sage;Aether;0,0;Pursue;Templar
+enemy;2;w_Dragoon;Dragoon;Adamant Lance;0,0;Pursue;Templar
+enemy;2;w_Swordmaster;Swordmaster;Adamant Sword;0,0;Pursue;Templar
+enemy;2;w_Oracle;Oracle;Corona;0,0;Pursue;Templar
+enemy;2;w_Warrior;Warrior;Adamant Axe;0,0;Pursue;Templar
+enemy;2;w_Warlock;Warlock;Howl;0,0;Pursue;Templar
+enemy;2;w_Berserker;Berserker;Adamant Axe;0,0;Pursue;Templar
+enemy;2;w_Ranger;Sniper;Yew Bow;0,0;Pursue;Templar

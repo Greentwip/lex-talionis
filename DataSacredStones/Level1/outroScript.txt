@@ -1,0 +1,110 @@
+# Fade to black
+t;1
+b;InsideCastle
+t;2
+u;Tana;Left;u;Gilliam;MidRight
+s;Gilliam;Princess Tana
+s;Tana;Sir Gilliam...{w}{br}I'm sorry. I never meant to cause you such trouble.
+s;Gilliam;It was no trouble. I live to serve, Princess.
+# Move Eirika onscreen from offscreen
+qu;Eirika;OffscreenRight
+move_sprite;Eirika;FarRight
+s;Eirika;Tana!
+s;Tana;...Eirika?!?{w}{br}Is that really you?
+s;Eirika;Tana, what are you doing, so far from Castle Frelia?
+# This is how you tell a character to change their expression
+set_expression;Tana;Smiling
+s;Tana;I heard that Renais had fallen, and I was so worried...{w}{br}But I'm glad to see that you're safe...{w}{clear}Wait! Where is Ephraim? Is he well?
+set_expression;Tana;Normal
+s;Eirika;I wish I knew.
+s;Tana;You haven't heard from him? Oh, I hope he's not been harmed...{w}{br}Come, we must go to Castle Frelia. My lord father may know something.
+s;Eirika;Thank you, Tana.
+t;1
+qr;Tana;Gilliam;Eirika
+end_skip
+# === OVERWORLD SECTION
+show_overworld
+ow_location_quick_show;0
+ow_add_party;0;0;Eirika
+t;2
+wait;500
+ow_next_location;1
+ow_location_show;1
+wait;1000
+s;Narrator;Eirika and her companions have liberated the border castle.|Alongside Princess Tana of Frelia, they ride to the Frelian capital.{wait};auto;narration
+ow_move_party;1
+wait;1000
+t;1
+end_skip
+# === FRELIA SECTION
+b;House
+t;2
+u;Hayden;Left;u;Tana;FarRight
+s;Hayden;Oh, Tana... I'm grateful to see that you're safe and home again!|You've no idea how I worried when I heard you were under attack at Border Mulan.|You are not to leave again without my permission.|Do you understand?
+s;Tana;Don't be mad, Father.|Look, I come bearing good news.|Eirika! Come out now!
+u;Eirika;MidRight
+s;Eirika;King Hayden, I am pleased to see you again, even in these sad times.
+s;Hayden;Ah, Eirika! It does my heart good to see you safe.
+s;Eirika;Thank you. I was able to escape the castle before Renais fell.|But I'm not sure if my father...
+s;Hayden;Yes. I... have received word of your father.
+s;Eirika;Your Highness?|Please tell me. Is my father well?
+s;Hayden;...My friend King Fado...did not survive the fall of Renais Castle.
+s;Eirika;...No, it cannot be...
+r;Tana
+u;Seth;FarRight
+s;Seth;...
+s;Hayden;Rest assured, Grado will be punished for its cowardly act.|This is Frelia's promise.|Eirika, please stay here and rest.|I cannot imagine how exhausted you must be.
+s;Eirika;...
+s;Seth;King Hayden. You know of Prince Ephraim's disappearance, do you not?
+s;Hayden;Yes, we hear the prince and his men hound Grado at every turn.|It's said that he's led his forces in the empire itself.|Reports suggest he's crossed the border and now fights in Renvall.
+s;Eirika;My brother... He fights on? Even now?
+s;Hayden;Yes. My pegasus knights bought this information at a great price.|Even though Renais has fallen, he charges into the enemy's heart.|He is truly Fado's son... What a valiant youth.|I wish I knew whether he remains unharmed, but I do not.
+s;Eirika;King Hayden, I thank you for your offer, but I cannot stay.|I intend to ride to my brother's side with reinforcements.
+s;Hayden;I cannot allow it. I know how you feel, but this plan is suicide.|I would be betraying Fado's memory if I allowed any harm to befall you.|Stay here. Rest and mourn. Leave this war to the warriors.
+s;Eirika;I know you mean well, Your Majesty.|However, I have lost my father, and my twin brother is in peril.|My brother, he is a part of me... I cannot rest here in peace while he risks his life.
+s;Hayden;No. Renais has no more army. Grado's forces decimated it.|I wish Frelia could provide you with support, with soldiers, but...|My son, Innes, is on his way to meet the empire's forces. We cannot spare a single brigade.|Your own retinue of knights cannot possibly face Grado alone. Are you so determined to go?
+s;Eirika;Yes. ...With apologies
+s;Hayden;...As resolute as your father, eh? What am I to do in the face of such foolhardy determination?{w}{clear}Vanessa.
+r;Seth
+# Introductions
+u;Vanessa;FarRight
+s;Vanessa;Here, Your Highness!
+r;Vanessa
+s;Hayden;Moulder.
+u;Moulder;FarRight
+s;Moulder;You called, my king?
+r;Moulder
+s;Hayden;Gilliam.
+u;Gilliam;FarRight
+s;Gilliam;Yes, sire?
+s;Hayden;You are to accompany Princess Eirika of Renais into Grado territory.|I expect each of you to provide aid and support for her brother.
+r;Gilliam
+u;Moulder;FarRight
+s;Moulder;Hmm. Quite a grave responsibility you've given us.
+r;Moulder
+u;Vanessa;FarRight
+s;Vanessa;No matter the obstacles, we will perform our duty.
+r;Vanessa
+u;Gilliam;FarRight
+s;Gilliam;Our lives are yours.
+s;Hayden;These are some of my most trusted and stalwart vassals.|They will, no doubt, prove themselves quite valuable on your journey.|Remember, you are venturing behind enemy lines. You will need supplies.|I will have a supply convoy readied to carry your weapons and provisions.|It will remain at your side, no matter how far afield you venture.
+set_game_constant;Convoy
+s;Eirika;King Hayden, I... Thank you.
+s;Hayden;No, save your thanks for your return... with your brother, Prince Ephraim.
+s;Eirika;Yes, Your highness!
+end_skip
+gold;5000
+t;1
+qr;Hayden;Eirika;Gilliam
+b;Castle
+t;2
+u;Eirika;Left;u;Tana;Right
+s;Tana;Eirika, you don't really intend to go through with this, do you?|I can't guess how you must feel, but it's just too dangerous.|What would happen if you were captured by Grado's men?
+s;Eirika;Thank you for your concern, Tana. But I have no choice.|Don't you see, Tana? I have to go.
+s;Tana;Eirika... Oh, why is this happening? What's gone wrong with the world?
+s;Eirika;Tana...
+s;Tana;Why would Grado invade?|Emperor Vigarde is a man of peace. His people adore him.|And you and Ephraim are friends with Prince Lyon, are you not?|What could be behind this madness? Why is this happening...
+s;Eirika;I have no answers for you, Tana.|I don't want to believe it, but the reality is that we are at war.|If I do nothing, I may lose my brother as well as my father.|This is why I have to fight. It's the only answer I have.
+t;1
+qr;Tana;Eirika
+ow_trigger;Intro2

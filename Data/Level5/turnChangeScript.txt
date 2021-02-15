@@ -1,0 +1,66 @@
+# Turn Change for Level 5
+if;gameStateObj.check_dead('Jules') and not 'Rein1' in gameStateObj.level_constants
+	set_cursor;0,0
+	add_unit;pack1_1
+	add_unit;pack1_2
+	add_unit;pack1_3
+	add_unit;pack1_4
+	wait;500
+	# Reinforcements
+	set_level_constant;Rein1
+	if;not gameStateObj.check_dead('Prim')
+		set_cursor;Prim
+		disp_cursor;1
+		wait;500
+		disp_cursor;0
+		u;Prim;Left
+		s;Prim;Oh no... More of them...{w};auto
+		r;Prim
+	end
+end
+# Sam and Kayla arrive
+if;gameStateObj.turncount == 8
+	m;Stalwarts Unite
+	# Change Sam and Kayla to player controlled
+	convert;Sam;player
+	convert;Kayla;player
+	unlock_lore;CFS
+	unlock_lore;Kayla
+	# Kayla and Sam arrives
+	change_objective_loss_condition;Ophie dies OR Sam dies,OR,Party size falls below 5. Currently {gameStateObj.get_total_party_members()}
+	set_cursor;25,16
+	wait;200
+	add_unit;Sam;20,16;;closest
+	add_unit;Kayla;21,16;;closest
+	move_unit;Sam;20,15;;push
+	move_unit;Kayla;21,15;;push
+	start_move
+	set_cursor;Sam
+	u;Sam;Left;u;Kayla;Right
+	s;Sam;Looks like we're not too late...{w};auto
+	s;Kayla;I'd certainly hope not... dragging me out here on such short notice.{w}{br}There'd better be something to see.{w};auto
+	s;Sam;Look! They're making their way up the switchbacks.{w};auto
+	bop;Kayla
+	s;Kayla;Oh, how romantic!{w}{br}Our heroes dashing through the sweltering desert, bandits on their tail.{w}{br}It's just like a novel!{w};auto
+	s;Sam;We're not here to discuss literature, Kayla.{w};auto
+	s;Kayla;Tsk Tsk. A lady needs time to prepare, you know.{w}{br}But if you're in such a rush...{w}{br}Men, into formation! Spread out and take the ridge!{w};auto
+	r;Sam;Kayla
+	# Mercenaries arrive
+	#add_unit;M3;22,16
+	#add_unit;M4;25,16
+	add_unit;M1;23,16
+	add_unit;M2;24,16
+	wait;1000
+	battle_save
+elif;gameStateObj.turncount == 16 or gameStateObj.turncount == 18 or gameStateObj.turncount >= 20
+	set_cursor;0,0
+	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
+	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
+	create_unit;i2;gameStateObj.turncount-6;0,0.1,0.2,0.0,1.0,2
+	wait;500
+	set_cursor;18,16
+	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16
+	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16
+	create_unit;i2;gameStateObj.turncount-6;13,16.14,16.15,16.16,16.17,16
+	wait;500
+end

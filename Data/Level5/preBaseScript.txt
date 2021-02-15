@@ -1,0 +1,14 @@
+# preBase Script 5
+add_to_market;Steel Sword
+add_to_market;Steel Lance
+add_to_market;Steel Axe
+add_to_market;Potion
+if;not gameStateObj.check_dead('Eliza')
+    set_base_convo;Apologies
+end
+if;not gameStateObj.check_dead('Joel') and not gameStateObj.check_dead('Nia')
+    set_base_convo;Joel and Nia
+end
+if;not gameStateObj.check_dead('Theo') and gameStateObj.game_constants['noir'] >= 1
+    set_base_convo;Theo Sphinx, Pt. II
+end

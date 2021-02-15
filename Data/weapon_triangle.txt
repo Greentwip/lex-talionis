@@ -1,0 +1,7 @@
+Sword;Axe;Lance;
+Lance;Sword;Axe;
+Axe;Lance;Sword;
+Bow;;;
+Light;Dark;Anima;M
+Anima;Light;Dark;M
+Dark;Anima;Light;M

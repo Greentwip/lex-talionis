@@ -1,0 +1,10 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Brigham'
+        if;not 'BrighamDefault' in gameStateObj.level_constants
+            u;Brigham;Left
+            s;Brigham;Hmmph. Fools one and all.{w}{br}Don't you understand, Kerala is dead!{w}{br}This is the Empire's realm now.{w};auto
+            r;Brigham
+            set_level_constant;BrighamDefault
+        end
+    end
+end

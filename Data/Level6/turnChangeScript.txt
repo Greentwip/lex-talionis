@@ -1,0 +1,181 @@
+# Turn Change for Level 6
+if;gameStateObj.turncount == 1
+    m;Combat Theme 4
+    # Coyote and Kiley discuss breaking out...
+    set_cursor;Coyote
+    disp_cursor;1
+    wait;1000
+    disp_cursor;0
+    t;1
+    b;Prison
+    t;2
+    u;Coyote;Right;mirror
+    wait;500
+    u;Kiley;Left
+    s;Kiley;Boy, what you getting all antsy for?{w};auto
+    s;Coyote;The alarm. It's going off.{w};auto
+    s;Kiley;Psshaw... Just another escapee.{w}{br}His day isn't going to end well... the warden'll make sure of that.{w};auto
+    s;Coyote;...{w};auto
+    s;Kiley;See anything interesting?{w};auto
+    mirror;Coyote
+    s;Coyote;No...{w};auto
+    s;Kiley;So calm down, mate.{w}{br}You're raising my cackles.{w}{br}Anyway, if something is happening, I'm sure we'll know about it soon.{w};auto
+    s;Coyote;Aye...{w};auto
+    r;Coyote;Kiley
+    t;1
+    remove_background
+    t;2
+    # Sam talks about Switches
+    set_cursor;Sam
+    u;Sam;Left
+    u;Ophie;Right
+    s;Sam;Damn! We've been spotted.{w}{br}Okay, everyone, get a hold of yourself.{w}{br}We need to get across that chasm.{w}{br}There should be switches around here that open the gates.{w}{br}We need to pull them or we're never getting across.{w};auto
+    s;Ophie;You got it!{w};auto
+    r;Sam;Ophie
+    set_cursor;Ophie
+elif;gameStateObj.turncount == 2
+    # Razia/Soldier
+    set_cursor;Razia
+    disp_cursor;1
+    wait;1000
+    disp_cursor;0
+    u;Razia;Left
+    u;Soldier3;Right
+    s;Razia;What is going on, private?{w}{br}Why hasn't the escapee been brought to me?{w};auto
+    s;Soldier3;Ma'am. There is no escapee.{w};auto
+    s;Razia;I should hope not!{w}{br}No one has ever escaped from Tyrana Prison under my watch.{w}{br}I do not intend to break that tradition today, private.{w};auto
+    s;Soldier3;Ma'am, uh... we're under attack.{w}{br}From the Resistance.{w};auto
+    s;Razia;So? Wipe them out like all the others!{w}{br}No-one escapes, do you hear me?{w}{br}Or it'll be your skin!{w};auto
+    s;Soldier3;Aye, ma'am.{w};auto
+    r;Soldier3
+    s;Razia;Fools, all of them.{w}{br}There will be some... replacements after today's debacle.{w};auto
+    r;Razia
+    # On Turn 2, randoms
+    m;Best Detectives
+    set_cursor;C1_2
+    disp_cursor;1
+    wait;1000
+    disp_cursor;0
+    t;1
+    b;Prison
+    t;2
+    u;Jeb;Right
+    s;Jeb;You hear that?{w};auto
+    u;Jack;Left
+    s;Jack;Ah, it's just another alarm.{w}{br}Can't a man get any sleep in this hellhole!{w};auto
+    s;Jeb;Nah. I bet it's the Resistance!{w}{br}They're gonna break us out...{w};auto
+    s;Jack;Not once they see my record.{w};auto
+    s;Jeb;We'd better prepare anyway.{w}{br}Grab your weapon.{w}{br}Now's our chance to make our escape.{w}{br}I'm getting out of here tonight if I can help it, Resistance be damned.{w};auto
+    s;Jack;We'll see how well they do against the warden...{w};auto
+    r;Jack;Jeb
+    t;1
+    remove_background
+    t;2
+    set_camera;0,26;0,29
+    wait;200
+    add_unit;pack_l2_1
+    add_unit;pack_l2_2
+    wait;1000
+    set_camera;24,26;24,29
+    wait;200
+    add_unit;pack_r2_1
+    add_unit;pack_r2_2
+    wait;1000
+elif;gameStateObj.turncount == 3
+    set_camera;0,26;0,29
+    wait;200
+    add_unit;pack_l3_1
+    add_unit;pack_l3_2
+    wait;1000
+    set_camera;24,26;24,29
+    wait;200
+    add_unit;pack_r3_1
+    add_unit;pack_r3_2
+    wait;1000
+elif;gameStateObj.turncount == 4
+    set_camera;0,26;0,29
+    wait;200
+    add_unit;pack_l4_1
+    add_unit;pack_l4_2
+    wait;1000
+    set_camera;24,26;24,29
+    wait;200
+    add_unit;pack_r4_1
+    add_unit;pack_r4_2
+    wait;1000
+# Thieves
+elif;gameStateObj.turncount == 10
+    set_camera;5,0;7,0
+    wait;200
+    add_unit;pack_lt_1
+    wait;1000
+    set_camera;17,0;19,0
+    wait;200
+    add_unit;pack_rt_1
+    wait;1000
+elif;gameStateObj.turncount >= 16 and gameStateObj.turncount <= 19
+    set_camera;0,26;0,29
+    wait;200
+    create_unit;i1;gameStateObj.turncount - 4;0,27;;give_up
+    create_unit;i1;gameStateObj.turncount - 4;0,28;;give_up
+    wait;500
+    set_camera;24,26;24,29
+    wait;200
+    create_unit;i1;gameStateObj.turncount - 4;24,27;;give_up
+    create_unit;i1;gameStateObj.turncount - 4;24,28;;give_up
+    wait;500
+    set_camera;4,38;9,38
+    wait;200
+    create_unit;i2;gameStateObj.turncount - 4;6,38;;give_up
+    create_unit;i2;gameStateObj.turncount - 4;7,38;;give_up
+    wait;500
+    set_camera;15,38;20,38
+    wait;200
+    create_unit;i2;gameStateObj.turncount - 4;17,38;;give_up
+    create_unit;i2;gameStateObj.turncount - 4;18,38;;give_up
+    wait;500
+end
+# Crossing the line at y = 10
+if;not 'line_cross1' in gameStateObj.level_constants and any(unit.position[1] < 10 for unit in gameStateObj.allunits if unit.team == 'player' and unit.position)
+    set_level_constant;line_cross1
+    set_game_constant;line_cross;gameStateObj.turncount
+    set_camera;5,0;7,0
+    wait;200
+    add_unit;pack_l7_1
+    add_unit;pack_l7_2
+    wait;1000
+    set_camera;17,0;19,0
+    wait;200
+    add_unit;pack_r7_1
+    add_unit;pack_r7_2
+    wait;1000
+end
+if;gameStateObj.turncount == gameStateObj.game_constants['line_cross'] + 1
+    set_camera;5,0;7,0
+    wait;200
+    add_unit;pack_l8_1
+    add_unit;pack_l8_2
+    wait;1000
+    set_camera;17,0;19,0
+    wait;200
+    add_unit;pack_r8_1
+    add_unit;pack_r8_2
+    wait;1000
+elif;gameStateObj.turncount == gameStateObj.game_constants['line_cross'] + 2
+    set_camera;5,0;7,0
+    wait;200
+    add_unit;pack_l9_1
+    add_unit;pack_l9_2
+    wait;1000
+    set_camera;17,0;19,0
+    wait;200
+    add_unit;pack_r9_1
+    add_unit;pack_r9_2
+    add_unit;pack_r8_3
+    wait;1000
+end
+if;'BothSwitchesPulled1' in gameStateObj.level_constants and not 'BothSwitchesPulled2' in gameStateObj.level_constants
+    set_level_constant;BothSwitchesPulled2
+    # Prompt to save
+    battle_save
+end

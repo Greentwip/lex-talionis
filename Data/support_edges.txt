@@ -1,0 +1,32 @@
+# Order of the two names must match order in Data/SupportConvos. I always use alphabetical order to keep it simple.
+# Support Partner ID 1; Support Partner ID 2;Num Points for First Support;Num Points for Second Support;Num Points for Third Support;...(etc.)
+Joel;Ophie;0;10;10
+Ophie;Sam;0;8;3
+Ophie;Prim;0;6;8
+Coyote;Ophie;0;5;5
+Althea;Ophie;0;9;13
+Prim;Theo;12;15;15
+Eliza;Prim;7;3;7
+Althea;Prim;0;6;6
+Joel;Nia;2;7;22
+Coyote;Joel;9;12;12
+Joel;Renae;12;15;15
+Coyote;Nia;4;4;4
+Kayla;Nia;13;13;23
+Althea;Drake;1;6;11
+Drake;Renae;20;8;2
+Eliza;Theo;13;13;10
+Renae;Sam;5;13;13
+Eliza;Sam;1;3;3
+Kayla;Sam;2;6;6
+Coyote;Kayla;3;7;4
+# After this were conversations i've got no idea
+Sam;Theo;10;13;13
+Drake;Kayla;10;13;13
+Althea;Kayla;5;15;10
+Nia;Prim;10;13;13
+Althea;Renae;10;13;13
+Eliza;Renae;6;13;13
+Coyote;Drake;10;13;13
+Drake;Theo;10;13;13
+Eliza;Nia;20;20;20

@@ -1,0 +1,56 @@
+# Level 2 Village Script
+# Ruby
+if;self.name == '1'
+	t;1
+	b;House
+	t;2
+	u;Man1;Left
+	u;{unit};Right
+	s;Man1;Hmmm... you're not the one the boss usually sends...{w}{br}... Ah, don't want to talk?{w}{br}I understand.{w}{br}In this business, it pays to keep your mouth shut, eh?{w}{br}Speaking of payment, I've got the money, just as promised.{w}{br}You tell the boss not to worry, ol' Saint's taken care of the job.{w};auto
+	r;{unit}
+	r;Man1
+	# Close the village
+	change_tile_sprite;4,1;closed
+	set_tile_info;4,1
+	replace_tile;4,1;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Ruby
+# Potion
+elif;self.name == '2'
+	t;1
+	b;House
+	t;2
+	u;OldLady1;Left
+	u;{unit};Right
+	s;OldLady1;Oh is that you, Billy?{w}{br}Its been ages since I last saw you. How are ya doing, Billy?{w}{clear}You know me, I've been doing well -- keeping to myself.{w}{br}Trying to keep the house clean, y'know.{w}{br}Have you heard about the weather recently? I've heard it might rain soon...{w}{clear}Oh but do you hear me go on! How are you and the missus?{w}{clear} Are you taking good care of Sally? She's such a darling grandniece.{w}{clear}Well don't let me keep ya. Here take this for the road.{w};auto
+	r;{unit}
+	r;OldLady1
+	# Close the village
+	change_tile_sprite;7,7;closed
+	set_tile_info;7,7
+	replace_tile;7,7;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Potion
+# Spiritbane
+elif;self.name == '3'
+	t;1
+	b;House
+	t;2
+	u;Mage1;Left
+	u;{unit};Right
+	s;Mage1;How'd you manage to get past those Imperial forces?{w}{br}Well, anyone brave or foolish enough to fight the Empire deserves a reward.{w}{br}Here, take this.{w}{br}This should help if you're going to fight that shaman.{w};auto
+	r;{unit}
+	r;Mage1
+	# Close the village
+	change_tile_sprite;15,1;closed
+	set_tile_info;15,1
+	replace_tile;15,1;1
+	t;1
+	remove_background
+	t;2
+	give_item;{unit};Spiritbane
+end

@@ -1,0 +1,93 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+#
+# Other
+other;0;Sam;Sam;0,0;None
+other;0;Kayla;Kayla;0,0;None
+# Factions
+faction;Bandit;Bandit;Bandit;A Bandit hailing from the Ghat mountains
+faction;Claw;Claw;Empire;The Empire's elite guard
+faction;Elite;Elite;Confederacy;A member of the Confederacy's special forces
+#
+other;0;M1;Mercenary;6;Steel Sword;0,0;Pursue;Elite
+other;0;M2;Mercenary;6;Steel Sword;0,0;Pursue;Elite
+#
+# Enemies
+# Bosses
+enemy;0;0;Vincent;20,2;HardGuard
+enemy;0;0;Jules;9,13;Attack
+enemy;0;0;Vagnius;23,2;HardGuard
+# 
+# 3 Brigands, 4 Shamans, 4 Skirmishers, 4 Archers, 4 Myrmidons, 1 Cleric, 6 Mages, 2 Sentinels = 28 enemies
+# 3 Brigands in Left
+enemy;0;0;Brigand;6;Iron Axe;0,2;Attack_5;Bandit
+enemy;0;0;Brigand;6;Steel Axe;1,3;Attack_5;Bandit
+enemy;0;0;Brigand;6;Iron Axe;2,2;Attack_5;Bandit
+# Shaman by Armory
+enemy;0;0;Shaman;4;Scathe,Vulnerary;6,1;Attack;Claw
+# Mages on Cliff
+enemy;0;0;Mage;5;Fire;5,5;SoftGuard;Bandit
+enemy;0;0;Mage;5;Wind,dFly;6,7;Attack;Bandit
+# Lower pit enemies
+enemy;0;0;Myrmidon;5;Iron Sword;7,14;SoftGuard_4;Bandit
+enemy;0;0;Skirmisher;5;Iron Lance;9,12;Attack_4;Bandit
+enemy;0;0;Skirmisher;5;Iron Lance;10,13;Attack_4;Bandit
+enemy;0;0;Mage;5;Wind,Sandblast;11,14;Attack_4;Bandit
+enemy;0;0;Myrmidon;6;Steel Sword;10,10;Attack_4;Bandit
+# Upper Area enemies
+enemy;0;0;Mage;6;Wind,dSpeedwings;12,2;SoftGuard;Bandit
+enemy;0;0;Archer;4;Willow Bow;10,7;SoftGuard;Bandit
+enemy;0;0;Mage;4;Wind,Sandblast;14,1;Attack;Bandit
+# 2 Myrmidons
+enemy;0;0;Myrmidon;7;Steel Sword,Potion;17,12;Attack_3;Bandit
+enemy;0;0;Myrmidon;7;Steel Sword,Potion;18,11;Attack_3;Bandit
+# 2 Skirmishers
+enemy;0;0;Skirmisher;5;dMithril Lance;15,15;Attack_2;Bandit
+enemy;0;0;Skirmisher;5;Javelin;16,16;Attack_2;Bandit
+# Upper Cliff
+enemy;0;0;Archer;5;Poison Bow;15,5;SoftGuard;Bandit
+enemy;0;0;Archer;5;Poison Bow;18,7;SoftGuard;Bandit
+enemy;0;0;Mage;7;Fire;20,9;Attack;Bandit
+enemy;0;0;Shaman;8;dNyx,Potion;15,0;Attack;Claw
+enemy;0;0;Archer;5;dLongbow;18,4;SoftGuard;Bandit
+enemy;0;0;Fighter;8;Steel Axe;19,5;Attack;Claw
+enemy;0;0;Fighter;8;Steel Axe;21,6;Attack;Claw
+# Castle
+enemy;0;N1;Shaman;10;Flux;21,0;HardGuard;Claw
+enemy;0;N2;Shaman;10;Flux;19,0;HardGuard;Claw
+# Ruins
+mode;Lunatic
+enemy;0;0;Cleric;6;Glimmer,Heal,dRescue;23,12;SoftGuard_1;Claw
+mode;Hard,Grandmaster
+enemy;0;0;Cleric;6;Glimmer,Heal;23,12;SoftGuard_1;Claw
+mode;All
+enemy;0;0;Shaman;7;Flux;22,13;SoftGuard_1;Claw
+enemy;0;0;Shaman;7;Flux;24,13;SoftGuard_1;Claw
+# 3 Brigands, 1 Mage
+# Reinforcements
+enemy;0;pack1_1;Brigand;7;Iron Axe;0,0;Pursue;Bandit
+enemy;0;pack1_2;Brigand;7;Iron Axe;2,0;Pursue;Bandit
+enemy;0;pack1_3;Brigand;7;Iron Axe;7,0;Pursue;Bandit
+enemy;0;pack1_4;Mage;6;Fire;12,0;Pursue;Bandit
+# Infinite Reinforcements
+enemy;2;i1;Shaman;Nyx,Scathe;0,0;Pursue;Claw;Void_Curse
+enemy;2;i2;Brigand;Steel Axe,Hand Axe;0,0;Pursue;Bandit;Void_Curse

@@ -1,0 +1,19 @@
+2,11:Shop=Iron Sword
+3,14:Formation=0
+4,15:Status=Regeneration
+4,17:Formation=0
+16,2:HP=30;Destructible=1
+2,2:Destructible=1
+4,13:Formation=0
+2,15:Formation=0
+2,13:Formation=0
+3,18:Arena=0
+1,14:Arena=0
+3,16:Formation=0
+3,17:Repair=0
+2,17:Formation=0
+3,19:Search=0
+0,0:Enemy_Seize=0;Village=0
+5,15:Locked=0
+3,15:Locked=0
+18,18:Thief_Escape=0

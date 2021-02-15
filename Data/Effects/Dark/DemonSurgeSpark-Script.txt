@@ -1,0 +1,12 @@
+pose;Attack
+blend
+f;2;Spark1
+f;2;Spark2
+f;2;Spark3
+f;2;Spark4
+f;2;Spark5
+f;2;Spark6
+f;2;Spark7
+f;2;Spark8
+f;2;Spark9
+wait;1

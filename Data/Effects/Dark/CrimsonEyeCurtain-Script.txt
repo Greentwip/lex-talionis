@@ -1,0 +1,11 @@
+pose;Attack
+blend
+f;4;Curtain1
+f;4;Curtain2
+f;4;Curtain3
+f;4;Curtain4
+f;4;Curtain5
+f;4;Curtain6
+f;4;Curtain7
+f;34;Curtain8
+wait;1

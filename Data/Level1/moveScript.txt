@@ -1,0 +1,28 @@
+# moveScript 1
+if;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
+	if;not 'tutorial_nia' in gameStateObj.level_constants
+		if;self.unit.name == 'Nia'
+			fake_cursor;5,6
+			s;Narrator;Move Nia to the highlighted tile.{w};auto;hint
+		else
+			reset_state
+			s;Narrator;Choose Nia first.{w};auto;hint
+		end
+	elif;not 'tutorial_joel' in gameStateObj.level_constants
+		if;self.unit.name == 'Joel'
+			if;gameStateObj.get_unit_from_pos((7, 7)) and gameStateObj.get_unit_from_pos((7, 7)).team == 'enemy'
+				fake_cursor;6,7
+				u;Joel;Left
+				s;Joel;My turn next!{w};auto
+				r;Joel
+				s;Narrator;Move Joel to the highlighted square.{w};auto;hint
+			else
+				# Somehow Nia must have killed the unit
+				tutorial_mode;0
+			end
+		else
+			reset_state
+			s;Narrator;Choose Joel next.{w};auto;hint
+		end
+	end
+end

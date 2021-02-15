@@ -1,0 +1,101 @@
+# Level 6 Locked script
+# Cell_1 Door
+set_origin
+if;self.name == 'Cell_1'
+    change_tile_sprite;o0,0;floor_left
+    change_tile_sprite;o0,1;floor
+    replace_tile;o0,0;9
+    set_tile_info;o0,0
+    change_ai;C1_2;ThiefEscape
+    change_ai;C1_3;ThiefEscape
+    t;1
+    b;Prison
+    t;2
+    u;Jack;MidLeft;u;Jeb;FarLeft
+    u;{unit};Right
+    # A female opens the door
+    if;self.unit.gender >= 5
+        s;Jeb;Thanks, gal.{w}{br}It's not everyday I'm rescued by such a beauty!{w};auto
+        s;Jack;Quit mooning, Jeb.{w}{br}Let's get out of here while we still can.{w};auto
+        r;Jack
+        s;Jeb;If you get out of here in one piece, hit me up!{w};auto
+        r;Jeb
+    else
+        s;Jeb;Thanks man.{w}{br}You make sure you get that warden for us, eh?{w};auto
+        s;Jack;Let's go, Jeb.{w};auto
+        r;Jack
+        s;Jeb;Hasta la vista!{w};auto
+        r;Jeb
+    end
+    s;{unit};...
+    r;{unit}
+    t;1
+    remove_background
+    t;2
+    move_unit;C1_2;1,31
+    move_unit;C1_3;2,31
+    start_move
+# Cell_2 Door
+elif;self.name == 'Cell_2'
+    change_tile_sprite;o0,0;floor_left
+    change_tile_sprite;o0,1;floor
+    replace_tile;o0,0;9
+    set_tile_info;o0,0
+    change_ai;Kiley;AttackThiefEscape
+    change_ai;Coyote;Pursue
+    t;1
+    b;Prison
+    t;2
+    u;Kiley;MidLeft
+    u;Coyote;FarLeft
+    s;Kiley;Heh! Looks like you were right, mate.{w};auto
+    s;Coyote;...{w};auto
+    r;Coyote
+    mirror;Kiley
+    s;Kiley;Hey, Coyote!{w} Boy!{w}{br}Where are you going?{w}{br}Don't you want to escape?{w};auto
+    wait;200
+    s;Kiley;...Shiver me timbers, that boy's got something biting him.{w};auto
+    r;Kiley
+    t;1
+    remove_background
+    t;2
+# Cell_3 Door
+elif;self.name == 'Cell_3'
+    change_tile_sprite;o0,0;floor_left
+    replace_tile;o0,0;9
+    set_tile_info;o0,0
+# Cell_4 Door
+elif;self.name == 'Cell_4'
+    change_tile_sprite;o0,0;floor_left
+    change_tile_sprite;o0,1;floor
+    replace_tile;o0,0;9
+    set_tile_info;o0,0
+    change_ai;C2_1;ThiefEscape
+    change_ai;C2_2;ThiefEscape
+    change_ai;C2_3;ThiefEscape
+# Cell_5 Door
+elif;self.name == 'Cell_5'
+    change_tile_sprite;o0,0;floor_left
+    replace_tile;o0,0;9
+    set_tile_info;o0,0
+# Cell_6 Door
+elif;self.name == 'Cell_6'
+    change_tile_sprite;o0,0;floor_left
+    replace_tile;o0,0;9
+    set_tile_info;o0,0
+# Chest_1 Chest 10,000 g
+elif;self.name == 'Chest_1'
+    change_tile_sprite;o0,0;chest_open
+    set_tile_info;o0,0
+    give_item;{unit};Diamond
+# Chest_2 Chest Restore
+elif;self.name == 'Chest_2'
+    change_tile_sprite;o0,0;chest_open
+    set_tile_info;o0,0
+    give_item;{unit};Restore
+# Chest_3 Chest Physic
+elif;self.name == 'Chest_3'
+    change_tile_sprite;o0,0;chest_open
+    set_tile_info;o0,0
+    give_item;{unit};Physic
+end

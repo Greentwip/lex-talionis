@@ -1,0 +1,75 @@
+pose;Dodge
+f;1;Lance_000
+f;3;Lance_085
+f;27;Lance_086
+f;4;Lance_085
+
+pose;Attack
+f;6;Lance_000
+f;3;Lance_052
+sound;Heavy Spear Spin
+f;1;Lance_052
+f;2;Lance_053
+f;2;Lance_054
+f;2;Lance_055
+f;28;Lance_056
+f;3;Lance_057
+sound;Weapon Swing
+f;1;Lance_057
+f;2;Lance_058
+# Uses General Javelin Animation for now
+spell;JavelinGeneral
+f;30;Lance_059
+f;2;Lance_060
+f;2;Lance_061
+f;6;Lance_000
+start_loop
+f;4;Lance_000
+end_loop
+f;5;Lance_000
+
+pose;Critical
+f;6;Lance_000
+f;2;Lance_052
+sound;Heavy Spear Spin
+f;1;Lance_052
+f;2;Lance_053
+f;2;Lance_054
+f;2;Lance_067
+f;2;Lance_068
+sound;Heavy Spear Spin
+f;1;Lance_068
+f;2;Lance_069
+f;2;Lance_070
+f;2;Lance_071
+f;2;Lance_056
+f;4;Lance_073
+f;4;Lance_074
+f;4;Lance_075
+sound;Weapon Shine
+f;1;Lance_075
+f;8;Lance_076
+f;28;Lance_077
+f;3;Lance_057
+sound;Weapon Swing
+f;1;Lance_057
+f;2;Lance_058
+# Uses General Javelin Animation for now
+spell;JavelinGeneral
+enemy_flash_white;8
+f;1;Lance_058
+foreground_blend;2;248,248,248
+start_hit
+f;2;Lance_059
+crit_spark
+f;2;Lance_060
+f;2;Lance_061
+f;6;Lance_000
+start_loop
+f;4;Lance_000
+end_loop
+f;5;Lance_000
+
+pose;Stand
+f;6;Lance_000
+

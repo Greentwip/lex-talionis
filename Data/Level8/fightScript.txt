@@ -1,0 +1,33 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Vagnius'
+        if;self.unit.name == "Sam" and not 'VagniusSam' in gameStateObj.level_constants
+            u;Vagnius;Left;u;Sam;Right
+            s;Vagnius;Ah!{br}The leader of the rag-tag Resistance.{w}{clear}I was hoping I'd be the one to kill you.{w};auto
+            s;Sam;... {w};auto
+            s;Vagnius;Not talkative I see...{w}{br}Well no matter...{w}{br}Your smoking corpse will make for a fine trophy at my victory celebration!{w};auto
+            r;Sam;Vagnius
+            set_level_constant;VagniusSam
+        elif;self.unit.name == "Ophie" and not 'VagniusOphie' in gameStateObj.level_constants
+            u;Vagnius;Left;u;Ophie;Right
+            s;Vagnius;Hah! This is the best you Keralans have to offer?{w}{br}A child?{w};auto
+            s;Ophie;I am no child.{w};auto
+            s;Vagnius;Pah. Out of my way, boy.{w};auto
+            s;Ophie;This is for Master Yohn!{w};auto
+            r;Ophie;Vagnius
+            set_level_constant;VagniusOphie
+        elif;self.unit.name == "Prim" and not 'VagniusPrim' in gameStateObj.level_constants
+            u;Vagnius;Left;u;Prim;Right
+            s;Prim;How could you do this... These people are innocent!{w};auto
+            s;Vagnius;Innocence?{w}{br}Hah. The morals of a child.{w}{br}I care not for your innocence.{w}{br}Power. That is all I seek.{w};auto
+            s;Prim;But...{w};auto
+            s;Vagnius;Spare me your bleatings and die!{w};auto
+            r;Prim;Vagnius
+            set_level_constant;VagniusPrim
+        elif;self.unit.name not in ("Sam", "Ophie", "Prim") and not 'VagniusDefault' in gameStateObj.level_constants
+            u;Vagnius;Left
+            s;Vagnius;So everyone else has failed me. No matter.{w}{br}Nothing can stand in my way! You least of all!{w};auto
+            r;Vagnius
+            set_level_constant;VagniusDefault
+        end
+    end
+end

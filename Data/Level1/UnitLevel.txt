@@ -1,0 +1,43 @@
+
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+faction;Soldier;Soldier;Empire;An imperial soldier
+# Player Characters
+player;1;0;Ophie;3,7;None
+player;1;0;Prim;2,7;None
+player;0;0;Joel;3,6;None
+player;0;0;Nia;1,5;None
+# Enemies
+# === Reinforcements ===
+# Player Characters
+# Enemies
+# Bosses
+enemy;0;Sidney;Sidney;17,7;SoftGuard
+# Generics
+enemy;0;A1;Archer;1;Willow Bow;0,0;SoftGuard;Soldier
+enemy;0;F1;Fighter;1;Iron Axe;0,0;Attack;Soldier
+enemy;0;F2;Fighter;1;Iron Axe;0,0;Attack;Soldier
+enemy;0;F3;Fighter;2;Iron Axe;0,0;Attack;Soldier
+enemy;0;S1;Soldier;1;Iron Lance;0,0;SoftGuard;Soldier
+enemy;0;S2;Soldier;1;Iron Lance;0,0;SoftGuard;Soldier
+enemy;0;S3;Soldier;f5;Iron Lance;0,0;Attack;Soldier
+enemy;0;pack1_1;Fighter;1;Iron Axe;0,6;Pursue;Soldier
+enemy;0;pack1_2;Fighter;1;Iron Axe;0,8;Pursue;Soldier
+enemy;0;pack1_3;Soldier;1;Iron Lance;0,7;Pursue;Soldier

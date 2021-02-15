@@ -1,0 +1,8 @@
+# A sample call item script
+if;self.unit2.id == "so_Reinforce"
+    set_origin
+    create_unit;w_Create;self.unit.level;o1,0;warp;closest
+    create_unit;w_Create;self.unit.level;o-1,0;warp;closest
+    create_unit;w_Create;self.unit.level;o0,-1;warp;closest
+    create_unit;w_Create;self.unit.level;o0,1;warp;closest
+end

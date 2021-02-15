@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="36" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="91009293" tilewidth="16" tileheight="16" tilecount="1024">
+  <image source="../../Utilities/TileSets/Castle_Mountain/91009293.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="1025" name="Snow_Ruins" tilewidth="16" tileheight="16" tilecount="1024">
+  <image source="../../Utilities/TileSets/Custom/Snow_Ruins.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="2049" name="Humid_Tropical_2" tilewidth="16" tileheight="16" tilecount="1024">
+  <image source="../../Utilities/TileSets/Custom/Humid_Tropical_2.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="25" height="36">
+  <data encoding="base64" compression="zlib">
+   eJy1V79rFFEQns0emGCruTMmQoydQSzMDzQ/MI2CkPJKJcF/IVp4h/4Hgpg0IqixsNFCTEihx4EWFmJnLI1o0lhYGKMQT/yGnWFn597mcgcWH7M775tv5v3Y994+6yK6DSwT0XPYUdjpiGgFdhe4C9+I4Iyx+rzYleVz/FhMdBr+b8B3tD2FvQD/RUrylF2OU+DXKcFNAK90i1Ift1t+WXIsi94T6A/D9hpcMzmOwc6CX4E9CjTgGwL+UPI+Ie1XTI4R0ekDjlCiz3k3pKZPlI7VOCVxq2IZ/ZJrIEp92j5u+uH1GL+AIuJKUZpjDPavjAUZTQvbPmbmw+sxfgM7wE9qnvMFM6cePJYLgTn3eosyftvgFmGXXI5Rt56sZay4HCG9GlBlf5RYfr8cpeP7ilJ/zfCrlM+viZ5y+6JmTMn46hy3woDwJwNajLMB2HXTDvpz9Eqylg/LeuaxvA6sSdy5Fn2YMPUsUPZbY7D+DaAilvFS1uO6xPFzr9SgcVpPSdrXDPee0aoI+HvfxBp4A2wBPyj5djXHrMRVXKzW47nlOKv5FRiEbx7YjJPn15LrczfRF+CF4esepDiIcboUpVyNZf4J0czDHBD1YP/ryfLn4myOk9AfjgxX6jzeQl+hcbaexy4Htz2MsznaQV4c17kl43a1BbfTHDpm8/vkdpqjXW7hP+c4L3M4A/sIiOPk2cdFxr9XjhnhFozestk/dA9hX8HEKU/9Xj823LfC83tKHXhAybnI5+QhrPd3sIOIGQIO4L1bfLqWWLdLxoG/Q+XewfN7Ss6lDdFl/VWDkZw9iH3+bjG8B5fvHR+Mrt2buR/VwB5039RWN32u5XC5bd3ock0fZV74XOR7TcO063voLsBtU1Ezd9HoFik9F/WMnI6ycZPyzrXZu0DZtHluzen6M8efgxoXugv4HHoOes1W56fqVF1t1UCOTpFXW6jPeQid8Y0O69F7sIfexbYDd/12Yf8lts09j9ehrsdi1Hz3zKtN0XA5ON6ucbY7lIXP4f9zbH3c591ADrvGrdXnUI5QbSXpc16OkP5e/bC1+Xr2049/kNnZIQ==
+  </data>
+ </layer>
+</map>

@@ -1,0 +1,49 @@
+# Outro Script 10
+victory_screen
+m;Fire Treasure
+b;FinalArena
+t;2
+u;Sam;FarRight
+s;Sam;It's over.{w}{clear}We won...{w};auto
+r;Sam
+u;Ophie;MidRight
+s;Ophie;I can't believe we did it.{w}{br}We defeated... the Duke.{w};auto
+u;Sam;Left
+s;Ophie;Did you feel that, Sam?{w}{br}It's like a great weight was lifted...{w};auto
+s;Sam;Let's regroup and make our way outside.{w}{br}We must tell Rajas--{w}{br}nay, all of Kerala.{w};auto
+s;Ophie;We're free.{w}{br}Kerala is free.{w};auto
+t;3
+qr;Sam;Ophie
+b;OutsideRajas
+t;4
+u;Sam;Left;u;Kiley;Right
+# Ophie, Sam, Althea meet with Kiley outside the city
+s;Kiley;Aye, the announcement came just in time.{w}{br}We were weathering their assault,{w}{br}but they were threat'ning to push us out of the city...{w};auto
+s;Sam;And then?{w};auto
+s;Kiley;I'd never seen anything like it.{w}{br}With Ulver's death, I felt a wicked spasm go through me.{w}{br}I guess everyone did.{w};auto
+s;Kiley;It was a human tide--{w}{br}The Keralans picked up their hatchets and pikes and took to the streets.{w}{br}There was a bit of butchery for a moment,{w}{br}but then the remaining soldiers surrendered.{w}{br}Hah! Even Imperials know how to save their own skins.{w};auto
+s;Sam;...{w};auto
+qmove_sprite;Sam;-24,0
+u;Althea;MidLeft
+s;Althea;It's like a dream.{w}{br}Kerala free from the Imperials.{w};auto
+s;Sam;Erm... Perhaps,{w}{br}but there's still so much work to be done.{w}{br}We need to get you on the throne.{w}{br}The Confederacy needs to formally recognize our independence.{w}{br}The Keralan border towns still need to be liberated...{w};auto
+s;Althea;The Empire is not going to take this lying down.{w};auto
+s;Kiley;Aye, lass.{w}{br}But that's what you have me and my boys for.{w}{br}We ain't gonna let any dirty Imperials just walk in here like last time.{w};auto
+s;Althea;Sam, you're right.{w}{br}There's still so much work to do.{w}{br}But we can do this.{w}{br}With you all at my back, we'll rebuild Kerala into what it once was.{w};auto
+qmove_sprite;Kiley;24,0
+u;Drake;MidRight
+s;Drake;Your father would be proud.{w};auto
+s;Althea;...{w};auto
+s;Kiley;I'll be off then.{w}{br}I've got an army to take care of.{w}{br}And you all have your own problems to attend to.{w};auto
+r;Kiley
+u;Ophie;FarRight
+s;Sam;This chapter of our story is over.{w};auto
+s;Althea;But another one is starting right before us.{w};auto
+s;Sam;...{w};auto
+s;Drake;...{w};auto
+s;Althea;...{w};auto
+s;Ophie;Well, no use standing around if we've got things to do!{w};auto
+r;Ophie
+s;Sam;Right.{w};auto
+r;Sam;Althea;Drake
+t;3

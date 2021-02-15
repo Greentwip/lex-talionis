@@ -1,0 +1,99 @@
+pose;Stand
+f;4;Stand
+
+pose;Dodge
+f;1;Stand
+of;3;Dodge1
+of;27;Dodge2
+of;4;Dodge1
+f;1;Stand
+
+pose;Attack
+f;6;Stand
+f;3;Frame1
+f;3;Frame2
+f;4;Frame3
+f;10;Frame4
+sound;Heavy Wing Flap
+f;1;Frame5
+f;3;Frame6
+sound;Step Back 1
+f;5;Frame7
+f;7;Frame8
+f;3;Frame9
+f;3;Frame10
+f;4;Frame11
+f;4;Frame12
+f;2;Frame13
+f;3;Frame14
+f;3;Frame15
+f;4;Frame16
+f;1;Frame17
+f;4;Frame19
+f;7;Frame20
+sound;Bow
+f;10;Frame21
+f;2;Frame22
+spell;Arrow
+f;1;Frame22
+start_loop
+    f;1;Frame23
+end_loop
+f;4;Frame23
+f;5;Frame24
+f;4;Frame25
+f;6;Frame26
+sound;Foot Step
+f;7;Frame27
+f;5;Frame28
+f;10;Frame29
+f;1;Stand
+
+pose;Critical
+f;6;Stand
+f;3;Frame1
+f;3;Frame2
+f;4;Frame3
+f;10;Frame4
+sound;Heavy Wing Flap
+f;1;Frame5
+f;3;Frame6
+sound;Step Back 1
+f;5;Frame7
+f;7;Frame8
+f;3;Frame9
+f;3;Frame10
+f;4;Frame11
+f;4;Frame12
+f;3;Crit1
+sound;Heavy Spear Spin
+f;3;Crit2
+f;3;Crit3
+f;3;Crit4
+sound;Heavy Spear Spin
+f;3;Crit2
+f;3;Crit3
+f;3;Crit4
+sound;Heavy Spear Spin
+f;3;Crit2
+f;3;Crit5
+f;3;Crit6
+f;4;Crit7
+f;7;Frame20
+sound;Bow
+f;6;Frame21
+f;2;Frame22
+spell;Arrow
+f;1;Frame22
+start_loop
+    f;1;Frame23
+end_loop
+f;4;Frame23
+f;5;Frame24
+f;4;Frame25
+f;6;Frame26
+sound;Foot Step
+f;7;Frame27
+f;5;Frame28
+f;10;Frame29
+f;1;Stand

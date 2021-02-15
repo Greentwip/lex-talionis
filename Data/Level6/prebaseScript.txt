@@ -1,0 +1,89 @@
+# Prebase Script 6
+# Kayla is now on the team
+m;The Task at Hand
+unlock_lore;Tyrana
+add_to_market;Javelin
+add_to_market;Hand Axe
+add_to_market;Thunder
+add_to_market;Flux
+add_to_market;Nyx
+add_to_market;Scathe
+add_to_market;Mend
+add_to_market;Oak Bow
+add_to_market;Longbow
+add_to_market;Shine
+add_talk;Sam;Coyote
+add_talk;Ophie;Coyote
+add_talk;Kayla;Coyote
+add_talk;Sam;Kiley
+if;not gameStateObj.check_dead('Renae') and not gameStateObj.check_dead('Drake')
+    set_base_convo;Guard Duty
+end
+if;not gameStateObj.check_dead('Kayla')
+    set_base_convo;Cipher
+end
+if;not gameStateObj.check_dead('Theo') and gameStateObj.game_constants['noir'] >= 2
+    set_base_convo;Theo Sphinx, Pt. III
+end
+# Show room
+b;TacticsFloor;map
+wm_add;Sam;7,2
+wm_add;Ophie;12,6
+wm_add;Prim;10,6
+wm_add;Theo;10,9
+wm_add;Renae;2,9
+wm_add;Drake;5,6
+wm_add;Joel;9,7
+wm_add;Althea;3,6
+wm_add;Nia;13,9
+wm_add;Eliza;5,9
+t;2
+wait;500
+wm_cursor;7,2
+wait;1000
+wm_remove_cursor
+t;1
+b;TacticsRoomDay
+t;2
+u;Sam;Right
+u;Joel;FarLeft
+qu;Kayla;OffscreenLeft
+s;Sam;Good morning...{w}{br}I trust everyone had a good night's sleep?{w};auto
+s;Joel;Aye, aye, Captain.{w};auto
+# Kayla arrives
+move_sprite;Kayla;120,0
+s;Sam;Just wandering in Kayla?{w}{br}Welcome to the land of the living.{w};auto
+s;Kayla;Ah, buzz off, Sam.{w}{br}You all live in a cave!{w}{br}A dank, smelly, cave!{w}{br}How's a lady supposed to get her beauty sleep with these...{w}these...{w}{br}horrid accoutrements!{w};auto
+r;Joel
+s;Sam;Alright, we've all heard your gripes.{w}{br}If everyone would settle down, we could get down to business.{w}{br}Our next mission is our most important one yet.{w};auto
+u;Althea;FarLeft
+s;Althea;Don't you say that everytime, Sam?{w};auto
+s;Sam;Hmmm... Do I?{w}{br}Well, anyway, this time I mean it.{w}{br}The Resistance has so far achieved success through stealth.{w}{br}However, we're never going to drive the Empire out with mere subterfuge.{w}{br}We need to be able to match the Empire's might on the battlefield.{w};auto
+s;Althea;But how... They have an army...{w};auto
+s;Sam;That's why we're getting an army of our own.{w};auto
+qmove_sprite;Sam;-24,0
+u;Joel;FarRight
+s;Joel;I like where this is going.{w};auto
+s;Althea;Kayla, your Confederacy of Free States will help?{w}{br}They have an army, right?{w};auto
+r;Joel
+u;Ophie;FarRight
+s;Ophie;Pah... We'd just be trading one empire for another.{w};auto
+s;Kayla;No... the Confederacy wants to remain hands off for now.{w};auto
+s;Althea;Then where do you intend to find an army?{w};auto
+s;Sam;I'm sure everyone here has heard of Tyrana Prison.{w};auto
+s;Althea;Uh-huh...{w};auto
+r;Althea
+u;Prim;FarLeft
+s;Prim;Tyrana prison...{w}{br}What's that?{w};auto
+s;Sam;Monks don't get out much, do they?{w}{clear}Anyway, Tyrana Prison is a brutal work camp.{w}{br}Political prisoners and other dissidents are forced to labor in the mines.{w};auto
+s;Kayla;We're going to break those prisoners out.{w}{br}They'll form the backbone of our revolutionary army.{w};auto
+r;Prim
+u;Joel;FarLeft
+s;Joel;It sure is... ambitious, Captain.{w}{br}Do ya reckon' we can pull it off?{w};auto
+s;Sam;We don't have a choice. Subterfuge can only get us so far.{w}{br}We need to raise an army, and these prisoners are our best bet.{w}{br}They hate the Empire as much as we do.{w};auto
+s;Ophie;Do we have any more info?{w}{br}I don't want to go in blind.{w};auto
+s;Kayla;The Confederacy has been watching the area.{w}{br}There's a secret passage that leads straight into the prison's heart.{w}{br}Once there, we do what we can to foment a prison riot.{w};auto
+s;Ophie;Hmmm...{w};auto
+s;Sam;If there are no more questions, then everyone gear up.{w}{br}We're going straight into the heart of Imperial territory...{w};auto
+r;Joel;Prim;Ophie;Sam;Kayla
+t;1

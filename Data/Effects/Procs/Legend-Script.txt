@@ -1,0 +1,13 @@
+pose;Effect
+blend
+static
+sound;Legendary Weapon
+f;23;legend0
+f;1;legend1
+f;1;legend2
+f;1;legend3
+f;1;legend4
+f;3;legend5
+f;1;legend6
+f;29;legend7
+wait;20

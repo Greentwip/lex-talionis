@@ -1,0 +1,10 @@
+if;self.unit.team == 'player'
+    if;self.unit2.name == 'Razia'
+        if;not 'RaziaDefault' in gameStateObj.level_constants
+            u;Razia;Left
+            s;Razia;Hmmph. What incompetents.{w}{br}To the death then...{w};auto
+            r;Razia
+            set_level_constant;RaziaDefault
+        end
+    end
+end

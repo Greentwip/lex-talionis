@@ -1,0 +1,40 @@
+# OutroScript
+# Main Prison Leader is Kiley. Speaks like a pirate
+# Coyote is recruited if not already
+victory_screen
+m;Wild Arms Town
+if;not gameStateObj.check_dead('Coyote')
+	convert;Coyote;player
+end
+b;Wastes
+t;2
+u;Sam;FarLeft
+u;Kayla;MidLeft
+u;Kiley;Right
+s;Sam;Thanks for agreeing to meet with us.{w};auto
+s;Kiley;Heh! Your crew certainly got the warden good.{w}{br}Least I could do is show my proper 'preciation.{w};auto
+s;Kayla;Could've stuck around for the fight...{w};auto
+s;Sam;Kayla...{w};auto
+s;Kiley;But now that you've me and my boys, what would you have us do?{w};auto
+s;Sam;How many do you number?{w};auto
+s;Kiley;I ain't normally one for 'rithmetic, but if I had to take a gander...{w}{br}Maybe four or five hundred.{w};auto
+s;Sam;So, I would guess you don't harbor any love for the Empire?{w};auto
+s;Kiley;You pulling my leg?{w}{br}Why, if the Empress were standing before right now I wouldn't be kissing her, mate.{w};auto
+s;Sam;Uh... Well we can't induct all of your...{w}crew into the Resistance.{w}{br}You're too many.{w};auto
+s;Kayla;But with this many at our back,{w}{br}the Resistance could finally fight toe to toe with Duke Ulver's army.{w};auto
+s;Kiley;Hmmph! Me and my boys ain't exactly subtle, y'know.{w};auto
+s;Kayla;Well, the Confederacy has prepared a hiding place for such an eventuality.{w}{br}We can keep your crew hidden.{w}{br}You'll be a reserve for when the Resistance needs the firepower.{w};auto
+s;Sam;Kiley, if you agree,{w}{br}you'll be in charge of the Revolutionary Army of Kerala.{w}{br}A force to fight the Empire when and where it is needed most.{w};auto
+s;Kiley;Aye...{w}{br}Commander of an army....{w}{br}Sounds like a lot of responsibilities...{w}{clear}But, if me country needs me, what can I say?{w}{br}Plus me boys wouldn't know what to do without me.{w}{br}Joinin' the military might do 'em some good.{w};auto
+s;Sam;Great!{w};auto
+qmove_sprite;Kiley;24,0
+u;Coyote;MidRight
+s;Kayla;Coyote, you'll be coming with us.{w};auto
+s;Kiley;Eh?{w}{br}Coyote's me first mate!{w};auto
+s;Kayla;Awww. I didn't know you two were so close!{w}{br}But seriously, Coyote is a special agent for the Confederacy.{w};auto
+s;Kiley;Coyote, you never told me yer were a spook.{w};auto
+s;Coyote;Orders are orders.{w};auto
+s;Kayla;Don't worry, you'll see him soon.{w}{br}He'll be our liason.{w};auto
+s;Kiley;Aye. Well, if everythings all figured out, it's as cold as a witch's tit up here.{w}{br}Where's this hiding spot of yours, girly?{w};auto
+r;Kiley;Kayla;Coyote;Sam
+t;1

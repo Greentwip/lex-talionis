@@ -1,0 +1,15 @@
+pose;Attack
+blend
+f;2;Flux11
+f;2;Flux10
+f;2;Flux9
+f;2;Flux8
+f;2;Flux7
+f;2;Flux6
+f;2;Flux5
+f;2;Flux4
+f;2;Flux3
+f;2;Flux2
+f;2;Flux1
+f;2;Flux0
+wait;1

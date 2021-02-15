@@ -1,0 +1,28 @@
+pose;Attack
+blend
+# Also call this to accompany it
+effect;ThunderDust
+f;4;Thunder1
+# White screen
+foreground_blend;4;248,248,248
+wait;4
+# White screen over
+foreground_blend;2;48,56,248
+f;2;Thunder3
+foreground_blend;2;0,0,64
+f;2;Thunder4
+foreground_blend;22;0,0,56
+f;22;Thunder5
+foreground_blend;1;0,0,40
+f;1;Thunder6
+foreground_blend;1;0,0,16
+f;1;Thunder7
+f;1;Thunder8
+f;1;Thunder9
+f;1;Thunder10
+f;1;Thunder11
+f;1;Thunder12
+f;1;Thunder13
+f;1;Thunder14
+f;1;Thunder15
+wait;1

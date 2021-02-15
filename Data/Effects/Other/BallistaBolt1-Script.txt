@@ -1,0 +1,5 @@
+pose;Attack
+f;2;Ballista1
+f;2;Ballista2
+f;2;Ballista3
+wait;1

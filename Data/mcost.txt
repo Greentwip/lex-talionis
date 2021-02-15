@@ -1,0 +1,21 @@
+# Name - Light Foot - Armors - Heavy Cav - Light Cav - Regular - Mages - Fliers - Fleet - Water
+Cliff		-	-	-	-	-	-	1	-	-
+Fence		-	-	-	-	-	-	1	-	-
+Wall		-	-	-	-	-	-	-	-	-
+Normal		1	1	1	1	1	1	1	1	1
+Stairs		1	1	1	1	1	1	1	1	1
+Ruins		2	2	2	2	2	2	1	2	2
+Bank		2	5	-	5	-	-	1	2	2
+River		5	-	-	-	-	-	1	5	2
+Rapids		-	-	-	-	-	-	1	-	5
+Desert		2	2	3	3	2	1	1	1	2
+Snow		2	2	3	3	2	1	1	1	2
+Sea			-	-	-	-	-	-	1	-	2
+Forest		2	2	3	3	2	2	1	1	2
+Thicket		4	4	6	6	4	4	1	2	4
+Pillar		2	2	-	-	2	2	1	2	2
+Hill		4	-	-	6	3	4	1	2	3
+Mountain	-	-	-	-	-	-	1	2	-
+Fort		2	2	2	2	2	2	1	2	2
+Throne		1	1	1	1	1	1	1	1	1
+Table		2	3	-	-	2	2	1	2	2

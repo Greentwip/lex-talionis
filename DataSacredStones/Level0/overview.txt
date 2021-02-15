@@ -1,0 +1,9 @@
+name;Prologue: The Fall of Renais
+prep_flag;0
+pick_flag;1
+base_flag;0
+market_flag;0
+transition_flag;1
+display_name;Defeat Boss
+win_condition;Defeat Boss
+loss_condition;Eirika dies

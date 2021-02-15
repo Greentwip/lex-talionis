@@ -1,0 +1,12 @@
+# Give Gustblade
+t;1
+b;House
+t;2
+u;{unit};Left
+s;Narrator;This house has been long abandoned to the spreading sands...{w}{br}But what's this?{w};auto;hint
+r;{unit}
+t;1
+remove_background
+t;2
+give_item;{unit};Gustblade
+set_tile_info;1,0

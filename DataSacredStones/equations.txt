@@ -1,0 +1,26 @@
+# Calculations set-up
+# Must have HP, MOV in stats
+# HP always comes first, MOV always come last
+# Remaining stats spelled out in order here
+STR;MAG;SKL;SPD;LCK;DEF;RES;CON
+# Legal nonnumeric values:
+# HP, STR, MAG, SKL, SPD, LCK, DEF, RES, CON
+# AS (attackspeed), DIST (distance), WEIGHT
+# Must set up equations that calculate HIT, AVOID, CRIT, CRIT_AVOID, AS, DAMAGE, MAGIC_DAMAGE, DEFENSE, MAGIC_DEFENSE, RATING, RESCUE_AID, RESCUE_WEIGHT, STEAL_ATK, STEAL_DEF, HEAL
+AS = SPD - max(0, WEIGHT - CON)
+HIT = SKL*2 + LCK//2
+AVOID = AS*2 + LCK
+STAFF_HIT = MAG*5 + SKL
+STAFF_AVOID = RES*5 + DIST*2
+CRIT = SKL//2
+CRIT_AVOID = LCK
+DAMAGE = STR
+DEFENSE = DEF
+MAGIC_DAMAGE = MAG
+MAGIC_DEFENSE = RES
+RATING = (HP - 10)//2 + max(STR, MAG) + SKL + SPD + LCK//2 + DEF + RES
+RESCUE_AID = max(0, 25 - CON) if 'Mounted' in unit.tags else max(0, CON - 1)
+RESCUE_WEIGHT = CON
+STEAL_ATK = SPD
+STEAL_DEF = SPD
+HEAL = MAG

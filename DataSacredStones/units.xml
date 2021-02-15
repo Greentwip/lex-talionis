@@ -1,0 +1,722 @@
+<unit_catalog>
+	
+    <!-- Player Characters -->
+    <unit name="Eirika">
+        <id>Eirika</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>E,0,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
+		<bases>16,4,2,8,9,5,3,1,5</bases>
+		<growths>70,40,20,60,60,60,30,30</growths>
+        
+        <inventory>Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Eirika_Lord</class>
+        <desc>The princess of the Kingdom of Renais. She's elegant and kind.</desc>
+        <tags>Lord</tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Seth">
+        <id>Seth</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>A,A,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res -->
+        <bases>30,14,7,13,12,13,11,8,11</bases>
+        <growths>90,50,25,45,45,25,40,30</growths>
+        
+        <inventory>Steel Sword,Silver Lance,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Paladin</class>
+        <desc>A young commander of Renais. He's calm, composed, and skilled.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Franz">
+        <id>Franz</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>E,D,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>20,7,3,5,7,2,6,1,9</bases>
+        <growths>80,40,20,40,50,40,25,20</growths>
+        
+        <inventory>Iron Sword,Iron Lance,Vulnerary,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Cavalier</class>
+        <desc>An earnest and compassionate cavalier from Renais.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Gilliam">
+        <id>Gilliam</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,C,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>25,9,5,6,3,3,9,3,14</bases>
+        <growths>90,45,20,35,30,30,55,20</growths>
+        
+        <inventory>Iron Lance</inventory>
+        
+        <level>4</level>
+        <class>Knight</class>
+        <desc>An armoured knight from Frelia. He's quiet yet dependable.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Vanessa">
+        <id>Vanessa</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,D,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>17,5,2,7,11,4,6,5,5</bases>
+        <growths>50,35,20,55,60,50,20,30</growths>
+        
+        <inventory>Slim Lance,Javelin,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Pegasus_Knight</class>
+        <desc>A sincere, honest, and honourable pegasus knight of Frelia.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Moulder">
+        <id>Moulder</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,C,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>20,6,4,6,9,1,2,5,9</bases>
+        <growths>70,150,40,50,40,20,25,25</growths>
+        
+        <inventory>Heal,Vulnerary</inventory>
+        
+        <level>3</level>
+        <class>Cleric</class>
+        <desc>A mature priest of Frelia. He's gentle and reassuring.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Ross">
+        <id>Ross</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,E,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>15,5,2,2,3,8,3,0,8</bases>
+        <growths>80,60,35,45,40,50,30,25</growths>
+        
+        <inventory>Hatchet,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Journeyman</class>
+        <desc>A young villager. He longs to be a warrior, like his father.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Garcia">
+        <id>Garcia</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,C,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>28,8,0,7,7,3,5,1,14</bases>
+        <growths>80,65,0,40,20,40,25,15</growths>
+        
+        <inventory>Iron Axe,Hand Axe,Vulnerary</inventory>
+        
+        <level>4</level>
+        <class>Fighter</class>
+        <desc>A villager from Renais. He was once a feared military leader.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Neimi">
+        <id>Neimi</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,D,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>17,4,2,5,6,4,3,2,5</bases>
+        <growths>55,45,25,50,60,50,15,35</growths>
+        
+        <inventory>Iron Bow,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Archer</class>
+        <desc>A childhood friend of Colm who hails from Renais. She cries a lot.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Colm">
+        <id>Colm</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,C,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>18,4,2,4,10,8,3,1,6</bases>
+        <growths>70,40,20,40,65,45,25,20</growths>
+        
+        <inventory>Iron Sword,Vulnerary,Red Gem</inventory>
+        
+        <level>2</level>
+        <class>Thief</class>
+        <desc>A childhood friend of Neimi who hails from Renais. He can be snide.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Artur">
+        <id>Artur</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,0,E,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>19,0,6,6,8,2,2,6,6</bases>
+        <growths>55,0,50,50,40,25,15,55</growths>
+        
+        <inventory>Lightning,Vulnerary</inventory>
+        
+        <level>2</level>
+        <class>Monk</class>
+        <desc>A young monk from Renais. He is a very forthright and pious man.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Lute">
+        <id>Lute</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,0,0,C,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>17,0,6,6,7,8,3,5,3</bases>
+        <growths>45,0,65,30,45,45,15,40</growths>
+        
+        <inventory>Fire,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Mage</class>
+        <desc>A young mage of Renais. She believes she is a prodigy.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Natasha">
+        <id>Natasha</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,D,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>18,0,2,4,8,6,2,6,4</bases>
+        <growths>50,0,60,25,40,60,15,55</growths>
+        
+        <inventory>Mend,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Cleric</class>
+        <desc>A beautiful cleric from the Grado Empire. She’s graceful and serious.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Joshua">
+        <id>Joshua</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>C,0,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>24,8,4,13,14,7,5,2,8</bases>
+        <growths>80,35,20,55,55,30,20,20</growths>
+        
+        <inventory>Killing Edge</inventory>
+        
+        <level>5</level>
+        <class>Myrmidon</class>
+        <desc>A wandering sword fighter from Jehanna. He loves to gamble.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Ephraim">
+        <id>Ephraim</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,D,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>23,8,4,9,11,8,7,2,8</bases>
+        <growths>80,55,25,55,45,50,35,25</growths>
+        
+        <inventory>Reginleif,Steel Lance,Elixir</inventory>
+        
+        <level>4</level>
+        <class>Ephraim_Lord</class>
+        <desc>The prince of Renais. He is a man of great honour and bravery.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Forde">
+        <id>Forde</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>D,C,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>24,7,4,8,8,7,8,2,9</bases>
+        <growths>85,40,25,50,45,35,20,25</growths>
+        
+        <inventory>Steel Sword,Javelin,Vulnerary</inventory>
+        
+        <level>6</level>
+        <class>Cavalier</class>
+        <desc>A cavalier from Renais. He is skilled, but reckless. He’s Franz’s brother.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Kyle">
+        <id>Kyle</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>D,C,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con --> 
+        <bases>25,9,4,6,7,6,9,1,10</bases>
+        <growths>90,50,25,40,40,20,25,20</growths>
+        
+        <inventory>Iron Sword,Steel Lance,Vulnerary</inventory>
+        
+        <level>5</level>
+        <class>Cavalier</class>
+        <desc>A steadfast and honourable cavalier in sworn service to Renais.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Orson">
+        <id>Orson</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>A,A,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>34,15,8,13,11,4,13,7,12</bases>
+        <growths>80,55,30,45,40,25,45,30</growths>
+        
+        <inventory>Silver Sword,Steel Lance,Vulnerary</inventory>
+        
+        <level>3</level>
+        <class>Paladin</class>
+        <desc>A cavalier of Renais. He’s a devoted husband and a serene and quiet man.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Tana">
+        <id>Tana</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,D,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>20,7,4,9,13,8,6,7,5</bases>
+        <growths>65,45,25,40,65,60,20,25</growths>
+        
+        <inventory>Heavy Spear,Javelin,Vulnerary</inventory>
+        
+        <level>4</level>
+        <class>Pegasus_Knight</class>
+        <desc>A young lady of Frelia. She is both cheery and sociable.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Amelia">
+        <id>Amelia</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,E,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>16,4,2,3,4,6,2,3,6</bases>
+        <growths>70,45,30,50,50,60,35,20</growths>
+        
+        <inventory>Slim Lance,Speedwing,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Recruit</class>
+        <desc>A young girl from a small village in Grado. She is honest and sincere.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Innes">
+        <id>Innes</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,A,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>31,14,0,13,15,14,10,9,9</bases>
+        <growths>75,40,0,40,45,45,20,25</growths>
+        
+        <inventory>Silver Bow,White Gem,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Sniper</class>
+        <desc>The prince of Frelia. He’s brash and arrogant, but good at heart.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Gerik">
+        <id>Gerik</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>C,0,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>32,14,7,13,13,8,10,4,13</bases>
+        <growths>90,45,20,40,30,30,35,25</growths>
+        
+        <inventory>Steel Blade,Hero Crest,Vulnerary</inventory>
+        
+        <level>10</level>
+        <class>Mercenary</class>
+        <desc>A mercenary leader from Jehanna. He’s better known as the Desert Tiger.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Tethys">
+        <id>Tethys</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>18,1,1,2,12,10,5,4,5</bases>
+        <growths>85,5,5,10,70,80,30,75</growths>
+        
+        <inventory>Elixir,Goddess Icon,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Dancer</class>
+        <desc>A beautiful and charming dancer from Jehanna.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Marisa">
+        <id>Marisa</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>D,0,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>23,7,4,12,13,9,4,3,5</bases>
+        <growths>75,30,20,55,60,50,15,25</growths>
+        
+        <inventory>Shamshir,Elixir</inventory>
+        
+        <level>5</level>
+        <class>Myrmidon</class>
+        <desc>An aloof sword fighter from Jehanna. She’s known as the Crimson Flash.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="L'arachel">
+        <id>L'arachel</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,D,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>18,0,6,6,10,12,5,8,5</bases>
+        <growths>45,0,50,45,45,65,15,50</growths>
+        
+        <inventory>Mend,White Gem,Torch,Elixir</inventory>
+        
+        <level>3</level>
+        <class>Troubadour</class>
+        <desc>A young woman from Rausten. She fights for justice and honour.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Dozla">
+        <id>Dozla</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,B,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>43,16,0,11,9,4,11,6,16</bases>
+        <growths>85,50,0,35,40,30,30,25</growths>
+        
+        <inventory>Battle Axe,Elixir</inventory>
+        
+        <level>1</level>
+        <class>Berserker</class>
+        <desc>A berserker from Rausten. He’s a hearty man with a thirst for life.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Saleh">
+        <id>Saleh</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,C,B,A,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>30,0,16,18,14,11,8,13,8</bases>
+        <growths>50,0,30,25,40,40,30,35</growths>
+        
+        <inventory>Elfire,Thunder</inventory>
+        
+        <level>1</level>
+        <class>Sage</class>
+        <desc>A sage from the village Caer Pelyn. He’s Ewan’s solemn, but kind, teacher.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Ewan">
+        <id>Ewan</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,0,0,E,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>15,0,3,2,5,5,0,3,5</bases>
+        <growths>60,0,55,50,45,60,20,45</growths>
+        
+        <inventory>Fire,Energy Ring,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Pupil</class>
+        <desc>A sage-in-training from Jehanna. He reveres his teacher, Saleh.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Cormag">
+        <id>Cormag</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,C,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>30,14,7,9,10,4,12,2,11</bases>
+        <growths>85,55,25,40,45,35,25,15</growths>
+        
+        <inventory>Killer Lance,Iron Lance,Vulnerary</inventory>
+        
+        <level>9</level>
+        <class>Wyvern_Rider</class>
+        <desc>A wyvern knight of Grado. A gentle man, but a ferocious warrior.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Rennac">
+        <id>Rennac</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>1,0,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>28,10,5,16,17,5,9,11,7</bases>
+        <growths>65,25,15,45,60,25,25,30</growths>
+        
+        <inventory>Steel Sword,Elixir</inventory>
+        
+        <level>1</level>
+        <class>Rogue</class>
+        <desc>A lazy, greedy, but exceptional fighter from the Republic of Carcino.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Duessel">
+        <id>Duessel</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>A,A,A,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>41,17,8,12,12,8,17,9,15</bases>
+        <growths>85,55,25,40,30,20,45,30</growths>
+        
+        <inventory>Silver Axe,Silver Lance,Vulnerary</inventory>
+        
+        <level>8</level>
+        <class>Great_Knight</class>
+        <desc>A courageous general in Grado’s army. He’s better known as Obsidian.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Knoll">
+        <id>Knoll</id>
+        <gender>0</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,A,0,0,0,0,C</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>22,0,13,9,8,0,2,10,7</bases>
+        <growths>70,0,50,40,35,20,10,45</growths>
+        
+        <inventory>Flux,Nosferatu,Vulnerary</inventory>
+        
+        <level>10</level>
+        <class>Shaman</class>
+        <desc>One of Grado’s royal mages. He knows the riddle of the Dark Stone.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Myrrh">
+        <id>Myrrh</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>15,3,3,1,5,3,2,7,5</bases>
+        <growths>130,90,90,85,65,30,150,30</growths>
+        
+        <inventory>Dragonstone,Elixir,Vulnerary</inventory>
+        
+        <level>1</level>
+        <class>Manakete</class>
+        <desc>A young, pure-hearted girl from the Darkling Woods. She tends to be shy.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <unit name="Syrene">
+        <id>Syrene</id>
+        <gender>5</gender>
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>C,0,A,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>27,12,6,13,15,12,10,12,7</bases>
+        <growths>70,40,20,50,60,30,20,50</growths>
+        
+        <inventory>Silver Lance,Javelin</inventory>
+        
+        <level>1</level>
+        <class>Falcoknight</class>
+        <desc>The dutiful commander of the 3rd battalion of Frelia’s pegasus knights.</desc>
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Named NPC Characters/Bosses -->
+    <!-- Prologue Boss -->
+    <unit name="O'Neill">
+        <id>O'Neill</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,C,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>24,7,0,4,7,0,2,0,11,0</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Iron Axe</inventory>
+        
+        <level>4</level>
+        <class>Fighter</class>
+        <desc>??</desc>
+        
+        <tags>Boss</tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Level 1 Boss -->
+    <unit name="Breguet">
+        <id>Breguet</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,C,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>21,8,0,2,1,2,9,0,13,0</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Iron Lance</inventory>
+        
+        <level>4</level>
+        <class>Knight</class>
+        <desc>??</desc>
+        
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Level 2 Boss -->
+    <unit name="Bone">
+        <id>Bone</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,D,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>25,7,0,5,5,0,4,0,12</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Iron Axe</inventory>
+        
+        <level>4</level>
+        <class>Brigand</class>
+        <desc>??</desc>
+        
+        <tags>Boss</tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Level 3 Boss -->
+    <unit name="Bazba">
+        <id>Bazba</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,0,C,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>27,9,0,6,7,1,5,2,12</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Steel Axe,Hand Axe</inventory>
+        
+        <level>6</level>
+        <class>Brigand</class>
+        <desc>??</desc>
+        
+        <tags>Boss</tags>
+        <skills></skills>
+    </unit>
+
+    <!-- Level 15 Boss B -->
+    <unit name="Valter">
+        <id>Valter</id>
+        <gender>0</gender>
+        
+        <!-- Swords, Lances, Axes, Bows, Staff, Light, Anima, Dark -->
+        <wexp>0,S,0,0,0,0,0,0</wexp>
+        <!-- HP, Str, Mag, Skl, Spd, Lck, Def, Res, Con -->
+        <bases>48,20,10,18,18,4,14,13,11</bases>
+        <growths>0,0,0,0,0,0,0,0</growths>
+        
+        <inventory>Spear,Killer Lance,dFili Shield</inventory>
+        
+        <level>13</level>
+        <class>Wyvern_Knight</class>
+        <desc>??</desc>
+        
+        <tags></tags>
+        <skills></skills>
+    </unit>
+
+</unit_catalog>

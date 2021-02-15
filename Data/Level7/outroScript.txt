@@ -1,0 +1,78 @@
+# outro script 7
+victory_screen
+m;Awakening - Easy Now
+b;OutsideFort
+t;2
+u;Sam;Left;u;Drake;Right
+s;Drake;I sure hope this information is worth the effort, Sam.{w};auto
+s;Sam;I guess we'll find out.{w}{br}I'll head inside the fort and see what I can find.{w}{br}Take a breather. You've earned it.{w};auto
+r;Sam;Drake
+t;1
+b;BlackBackground
+t;2
+s;Narrator;30 minutes later...{w};auto;narration
+t;1
+b;OutsideFort
+t;2
+u;Prim;Left;u;Theo;Right
+s;Theo;Everything alright, Prim?{w};auto
+s;Prim;...Theo?{w};auto
+s;Theo;Yes...?{w};auto
+s;Prim;You know a lot about the Empire.{w};auto
+s;Theo;Uh... well... I don't know if that's true.{w}{br}There's always more to learn.{w};auto
+s;Prim;Well, do you know who that man was?{w};auto
+s;Theo;He definitely didn't seem like one of the Duke's normal lieutenants.{w}{br}That ward he used signified that much.{w}{br}I would guess he was sent here on the Empress's orders.{w}{br}Whatever's in this information must be important...{w};auto
+s;Prim;Hmmm...{w};auto
+r;Theo;Prim
+u;Sam;OffscreenLeft
+move_sprite;Sam;96,0
+u;Joel;Right
+s;Joel;Captain!{w}{br}Took you long enough.{w};auto
+s;Sam;It wasn't as easy to find as I'd been led to believe.{w}{br}Anyway, we've got what we came for. Let's go.{w};auto
+r;Joel;Sam
+t;3
+end_skip
+b;Palace_Door
+m;Mount Briggs
+t;4
+u;Vagnius;Left
+s;Vagnius;Keeping ME waiting... He will pay for this insult.{w};auto;thought_bubble
+wait;500
+qu;Adjutant;OffscreenRight
+move_sprite;Adjutant;-96,0
+s;Adjutant;The Duke will see you now. Follow me.{w};auto
+s;Vagnius;Finally.{w};auto
+r;Adjutant
+r;Vagnius
+t;1
+b;Palace
+t;2
+u;Vagnius;Left
+u;Ulver;Right
+s;Vagnius;Milord.{w};auto
+s;Ulver;Vagnius.{w};auto
+s;Vagnius;How noble of you to grace me with your--{w};auto
+s;Ulver;Vagnius.{w}{br}Spare me your ingratiations.{w}{br}What of the Resistance?{w};auto
+s;Vagnius;Marduk... has failed, milord.{w}{br}The Resistance lives.{w};auto
+s;Ulver;Hmmph!{w};auto
+s;Vagnius;But we were close this time, milord. So very, very close!{w}{br}Give me one more chance.{w};auto
+s;Ulver;Hmmm... Second chances are not the Imperial way.{w}{br}Nor a taste for failure.
+s;Vagnius;Milord?
+s;Ulver;...{w}{br}What is your plan this time?{w};auto
+s;Vagnius;The village of Podoma, milord.{w}{br}The Resistance will not ignore the feverish pleas of their own countrymen.{w}{br}I can draw them into the open and eliminate them once and for all.{w};auto
+s;Ulver;How... ignoble.{w};auto
+s;Vagnius;Milord?{w};auto
+s;Ulver;Proceed with your plan, Vagnius.{w}{br}This is your last chance.{w};auto
+s;Vagnius;Thank you, milord.{w}{br}Your magninimony is overwhelming--{w};auto
+s;Ulver;Vagnius, you are dismissed.{w};auto
+s;Vagnius;...{w};auto
+r;Vagnius
+u;Adjutant;Left
+s;Adjutant;Milord, is it wise to let him depart?{w}{br}He covets your position.{w};auto
+s;Ulver;Ha! Let the weasel plot.{w}{br}He has not the strength nor fortitude to challenge me.{w}{br}But, if he were to succeed, then it must be so.{w};auto
+s;Adjutant;Milord?{w};auto
+s;Ulver;''To the strongest.''{w}{br}Is this not the way of the Empire, Adjutant?{w};auto
+s;Adjutant;Of course, milord.{w};auto
+s;Ulver;Then we have nothing to worry about.{w};auto
+r;Adjutant;Ulver
+t;1

@@ -1,0 +1,215 @@
+pose;Dodge
+f;4;Axe_000
+f;4;Axe_037
+f;20;Axe_038
+f;4;Axe_037
+f;31;Axe_000
+
+pose;Attack
+f;6;Axe_000
+f;3;Axe_001
+f;6;Axe_002
+sound;Heavy Wing Flap
+f;1;Axe_002
+f;6;Axe_003
+sound;Weapon Swing
+f;1;Axe_003
+f;3;Axe_004
+f;6;Axe_005
+sound;Heavy Wing Flap
+f;1;Axe_005
+f;3;Axe_006
+f;22;Axe_007
+f;3;Axe_008
+platform_shake
+f;1;Axe_008
+enemy_flash_white;8
+f;1;Axe_008
+screen_flash_white;4
+f;1;Axe_008
+f;29;Axe_009;Axe_009_under
+hit_spark
+start_hit
+sound;Weapon Swing
+f;1;Axe_009;Axe_009_under
+wait_for_hit;Axe_009;Axe_009_under
+f;4;Axe_009;Axe_009_under
+f;3;Axe_010
+f;15;Axe_011
+f;1;Axe_012
+f;3;Axe_013
+f;1;Axe_014
+f;3;Axe_015
+f;1;Axe_016
+wait;18
+sound;Long Wing Flap
+wait;1
+f;2;Axe_018
+f;2;Axe_019
+f;2;Axe_020
+f;2;Axe_021
+f;2;Axe_022
+f;3;Axe_023
+f;3;Axe_024
+f;3;Axe_025
+f;3;Axe_026
+f;3;Axe_027
+f;3;Axe_028
+f;3;Axe_029
+sound;Heavy Wing Flap
+f;1;Axe_029
+f;3;Axe_030
+f;6;Axe_031
+sound;Step Back 1
+f;1;Axe_031
+sound;Foot Step
+f;1;Axe_031
+f;9;Axe_032
+f;6;Axe_002
+f;6;Axe_001
+f;6;Axe_000
+wait_for_hit;Axe_000
+f;5;Axe_000
+
+pose;Critical
+f;6;Axe_000
+f;6;Axe_033
+sound;Heavy Spear Spin
+f;1;Axe_033
+f;3;Axe_034
+f;3;Axe_035
+sound;Heavy Spear Spin
+f;1;Axe_035
+f;3;Axe_036
+f;3;Axe_034
+sound;Heavy Spear Spin
+f;1;Axe_034
+f;3;Axe_035
+f;3;Axe_036
+sound;Heavy Spear Spin
+f;1;Axe_036
+f;3;Axe_034
+f;3;Axe_035
+f;3;Axe_036
+f;3;Axe_001
+f;6;Axe_002
+sound;Heavy Wing Flap
+f;1;Axe_002
+f;6;Axe_003
+sound;Weapon Swing
+f;1;Axe_003
+f;3;Axe_004
+f;6;Axe_005
+sound;Heavy Wing Flap
+f;1;Axe_005
+f;3;Axe_006
+f;22;Axe_007
+f;3;Axe_008
+screen_shake
+f;1;Axe_008
+enemy_flash_white;8
+f;1;Axe_008
+foreground_blend;2;248,248,248
+start_hit
+f;2;Axe_009;Axe_009_under
+crit_spark
+sound;Weapon Swing
+f;1;Axe_009;Axe_009_under
+wait_for_hit;Axe_009;Axe_009_under
+f;4;Axe_009;Axe_009_under
+f;3;Axe_010
+f;15;Axe_011
+f;1;Axe_012
+f;3;Axe_013
+f;1;Axe_014
+f;3;Axe_015
+f;1;Axe_016
+wait;18
+sound;Long Wing Flap
+wait;1
+f;2;Axe_018
+f;2;Axe_019
+f;2;Axe_020
+f;2;Axe_021
+f;2;Axe_022
+f;3;Axe_023
+f;3;Axe_024
+f;3;Axe_025
+f;3;Axe_026
+f;3;Axe_027
+f;3;Axe_028
+f;3;Axe_029
+sound;Heavy Wing Flap
+f;1;Axe_029
+f;3;Axe_030
+f;6;Axe_031
+sound;Step Back 1
+f;1;Axe_031
+sound;Foot Step
+f;1;Axe_031
+f;9;Axe_032
+f;6;Axe_002
+f;6;Axe_001
+f;6;Axe_000
+wait_for_hit;Axe_000
+f;5;Axe_000
+
+pose;Miss
+f;6;Axe_000
+f;3;Axe_001
+f;6;Axe_002
+sound;Heavy Wing Flap
+f;1;Axe_002
+f;6;Axe_003
+sound;Weapon Swing
+f;1;Axe_003
+f;3;Axe_004
+f;6;Axe_005
+sound;Heavy Wing Flap
+f;1;Axe_005
+f;3;Axe_006
+f;22;Axe_007
+f;3;Axe_008
+f;27;Axe_039
+sound;Weapon Swing
+f;2;Axe_039
+miss
+f;30;Axe_039
+f;3;Axe_010
+f;15;Axe_011
+f;1;Axe_040
+f;3;Axe_013
+f;1;Axe_014
+f;3;Axe_015
+f;1;Axe_016
+wait;18
+sound;Long Wing Flap
+wait;1
+f;2;Axe_018
+f;2;Axe_019
+f;2;Axe_020
+f;2;Axe_021
+f;2;Axe_022
+f;3;Axe_023
+f;3;Axe_024
+f;3;Axe_025
+f;3;Axe_026
+f;3;Axe_027
+f;3;Axe_028
+f;3;Axe_029
+sound;Heavy Wing Flap
+f;1;Axe_029
+f;3;Axe_030
+f;6;Axe_031
+sound;Step Back 1
+f;1;Axe_031
+sound;Foot Step
+f;1;Axe_031
+f;9;Axe_032
+f;6;Axe_002
+f;6;Axe_001
+f;7;Axe_000
+
+pose;Stand
+f;19;Axe_000
+

@@ -1,0 +1,76 @@
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Saved units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+# Player Characters
+load_player_characters
+player;0;0;Renae;None;None
+player;0;0;Theo;None;None
+#
+# Enemies
+# Factions
+faction;Guard;Guard;Empire;Fort Kosheen guard
+# Boss
+enemy;0;Harold;Harold;6,18;Pursue
+# Boss Group
+enemy;0;G1;Tactician;6;Glimmer,dMend;5,18;FollowBoss;Guard
+enemy;0;G2;Sentinel;6;Iron Axe;7,18;Pursue;Guard
+#
+# 3 Sentinels, 4 Soldiers, 2 Knights, 2 Mercenaries, 1 Archers, 2 Shaman
+# Starting Enemies
+#enemy;0;0;Soldier;4;Iron Lance;5,10;SoftGuard;Guard
+enemy;0;0;Sentinel;3;Iron Axe;7,10;SoftGuard_1;Guard
+enemy;0;0;Sentinel;3;Iron Axe;8,11;SoftGuard_1;Guard
+#enemy;0;0;Soldier;4;Iron Lance,Potion;8,13;SoftGuard;Guard
+# Next enemies
+enemy;0;S4;Soldier;4;Iron Lance;18,4;HardGuard;Guard
+enemy;0;S3;Soldier;4;Iron Lance;18,4;HardGuard;Guard
+enemy;0;S2;Soldier;4;Iron Lance;18,5;HardGuard;Guard
+enemy;0;S1;Soldier;5;Iron Lance;18,12;HardGuard;Guard
+enemy;0;0;Knight;3;Iron Lance,dSkeleton Key;8,5;Attack;Guard
+enemy;0;0;Mercenary;4;Iron Sword,dSkeleton Key;15,11;Attack;Guard
+enemy;0;0;Sentinel;5;dSteel Axe;11,14;SoftGuard;Guard
+enemy;0;0;Soldier;4;Iron Lance,Potion;15,16;SoftGuard;Guard
+enemy;0;0;Shaman;2;Flux;15,13;Attack;Guard
+enemy;0;0;Archer;3;dWillow Bow;11,4;Attack;Guard
+#enemy;0;0;Sentinel;4;Iron Axe,Potion;3,8;Attack;Guard
+enemy;0;0;Shaman;2;Flux,dMana Ring;1,3;Attack;Guard
+enemy;0;0;Mercenary;5;dSteel Sword;15,3;Attack;Guard
+enemy;0;0;Mercenary;4;Iron Sword,Potion;13,9;Attack;Guard
+enemy;0;0;Mercenary;5;Iron Sword;5,5;Attack;Guard
+enemy;0;0;Mage;3;Fire;15,7;Attack;Guard
+# 2 Sentinels, 5 Soldiers, 3 Archers, 2 Shaman, 3 Mages
+# 3 Waves
+# Reinforcement, wave 1
+enemy;0;pack1_1;Sentinel;3;Iron Axe;0,0;Pursue;Guard
+enemy;0;pack1_2;Soldier;3;Iron Lance;0,0;Pursue;Guard
+enemy;0;pack1_3;Soldier;3;Iron Lance;0,0;Pursue;Guard
+enemy;0;pack1_4;Mage;3;Fire;0,0;Pursue;Guard
+enemy;0;pack1_5;Archer;3;Willow Bow;0,0;Pursue;Guard
+# Reinforcement, wave 2
+enemy;0;pack2_1;Sentinel;4;Iron Axe;0,0;Pursue;Guard
+enemy;0;pack2_2;Soldier;5;Iron Lance;0,0;Pursue;Guard
+enemy;0;pack2_3;Archer;4;Willow Bow;0,0;Pursue;Guard
+enemy;0;pack2_4;Shaman;4;Flux;0,0;Pursue;Guard
+enemy;0;pack2_5;Mage;4;Fire;0,0;Pursue;Guard
+# Reinforcement, wave 3
+enemy;0;pack3_1;Soldier;6;Steel Lance;0,0;Pursue;Guard
+enemy;0;pack3_2;Soldier;6;Steel Lance;0,0;Pursue;Guard
+enemy;0;pack3_3;Archer;5;Oak Bow;0,0;Pursue;Guard
+enemy;0;pack3_4;Shaman;5;Nyx;0,0;Pursue;Guard
+enemy;0;pack3_5;Mage;5;Fire;0,0;Pursue;Guard

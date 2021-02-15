@@ -1,0 +1,13 @@
+name;Final Chapter
+prep_flag;1
+prep_music;Preparing for Battle
+pick_flag;0
+base_flag;0
+market_flag;0
+transition_flag;1
+display_name;Defeat Ulver
+win_condition;Defeat Duke Ulver
+loss_condition;Ophie dies,OR,Sam dies
+player_phase_music;The Crowfather
+enemy_phase_music;Xing Symphony
+weather;Light,Dark

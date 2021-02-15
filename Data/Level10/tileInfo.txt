@@ -1,0 +1,13 @@
+13,3:Status=tile_Regeneration
+12,21:Formation=0
+13,22:Formation=0
+12,23:Formation=0
+11,22:Formation=0
+11,20:Formation=0
+13,20:Formation=0
+14,21:Formation=0
+14,23:Formation=0
+10,21:Formation=0
+10,23:Formation=0
+11,24:Formation=0
+13,24:Formation=0

@@ -1,0 +1,25 @@
+# menuScript
+if;cf.OPTIONS['Display Hints'] and gameStateObj.turncount == 1
+	if;self.unit.name == 'Nia'
+		if;self.unit.position == (5,6)
+			s;Narrator;Now select{red}Attack{black}to attack the soldier from afar.{w};auto;hint
+		else
+			move_unit;Nia;1,5;immediate
+			reset_state
+			reset_unit;{unit}
+			set_cursor;1,5
+			#s;Narrator;Move Nia to the highlighted tile.{w};auto;hint
+		end
+	elif;self.unit.name == 'Joel'
+		if;self.unit.position == (6,7)
+			s;Narrator;Each class has a different set of skills.{w}{br}Some skills are passive, like Ophie's{red}Riposte.{black}{w}{br}Other skills must be{red}activated,{black}like Joel's{red}Cleave.{black}{w}{br}Activated skills charge up in combat.{w}{br}When fully charged, the unit will flash yellow.{w};auto;hint
+			s;Narrator;Joel's{red}Cleave{black} allows him to hit more than one enemy at the same time.{w}{br}Try it out now.{w};auto;hint
+		else
+			move_unit;Joel;3,6;immediate
+			reset_state
+			reset_unit;{unit}
+			set_cursor;3,6
+			#s;Narrator;Move Joel to the highlighted tile.{w};auto;hint
+		end
+	end
+end

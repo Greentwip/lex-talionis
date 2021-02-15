@@ -1,0 +1,69 @@
+
+# UnitLevel.txt is used to define what units will be part of this level and where they will spawn
+# 
+# Each unit belongs on its own line
+# Syntax:
+# New Units:
+# team; 0; event_id; class; level; items; position; ai; faction; status (optional)
+# - OR -
+# Named units:
+# team; 1; event_id; unit_id; position; ai
+# - OR -
+# Created Units:
+# team; 2; event_id; class; items; position; ai; faction; status (optional)
+# 
+# event_id gives the unit a unique id that scripts can use. The unit will not start on the battlefield unless event_id == 0.
+# unit_id - unit to load from the units.xml file
+# position should be formatted like #,#
+# ai refers to what kind of AI the unit should possess.
+#
+# --------------------------------------------
+faction;Soldier;Soldier;Neutral;Grado Soldier
+faction;Eliza;Eliza;Neutral;Eliza
+# Player Characters
+player;0;0;Franz;5,1;None
+player;0;0;Eirika;12,9;None
+player;0;0;Seth;13,8;None
+player;0;0;Gilliam;6,1;None
+# Enemies
+# Bosses
+enemy;0;0;Breguet;2,2;HardGuard
+# Generics
+enemy;0;0;Soldier;3;Iron Lance;8,3;Attack;Soldier
+enemy;0;0;Soldier;2;Iron Lance;3,3;Attack;Soldier
+enemy;0;0;Soldier;2;Iron Lance;1,3;Attack;Soldier
+enemy;0;0;Fighter;2;Iron Axe;9,5;Attack;Soldier
+enemy;0;0;Fighter;2;Iron Axe;4,7;Attack;Soldier
+enemy;0;0;Fighter;2;Iron Axe;2,8;Attack;Soldier
+# === Reinforcements ===
+# Player Characters
+# Other Characters
+other;0;Greenies_1;Cavalier;1;;None;None;Soldier
+other;0;Greenies_2;Mercenary;1;Iron Sword;None;None;Soldier
+# Enemies
+# Generics
+enemy;0;EnemyRein_1;Soldier;2;Iron Lance;13,9;Pursue;Soldier
+enemy;0;EnemyRein_2;Fighter;1;Iron Axe;13,8;Pursue;Soldier
+enemy;0;EnemyRein_3;Fighter;1;Iron Axe;12,9;Pursue;Soldier
+# === Triggers ===
+trigger;Boss1;Breguet;2,5;2,2
+trigger;Enemy1;3,3;3,6;3,3
+trigger;Enemy1;2,8;2,9;2,8
+trigger;Enemy1;4,7;3,8;4,7
+trigger;Enemy1;1,3;1,6;1,3
+trigger;Enemy1;8,3;2,7;8,3
+trigger;Enemy1;9,5;1,8;9,5
+trigger;EnemySpawn;3,3;3,10;3,6
+trigger;EnemySpawn;2,8;2,10;2,9
+trigger;EnemySpawn;4,7;3,11;3,8
+trigger;EnemySpawn;1,3;1,10;1,6
+trigger;EnemySpawn;8,3;2,10;2,7
+trigger;EnemySpawn;9,5;1,10;1,8
+trigger;EnemySpawn;Breguet;2,10;2,5
+trigger;Eirika;Eirika;16,9;12,9
+trigger;Eirika;Seth;15,8;13,8
+trigger;Franz;Franz;5,-1;5,1
+trigger;Franz;Gilliam;6,-1;6,1
+trigger;EnemyRein;EnemyRein_2;15,8;13,8
+trigger;EnemyRein;EnemyRein_1;16,9;13,9
+trigger;EnemyRein;EnemyRein_3;16,9;12,9

@@ -1,0 +1,159 @@
+#turnChangeScript 8
+# Reinforcements.
+# Vagnius: Bah! Put them down!
+if;gameStateObj.turncount == 1
+	set_cursor;Vagnius
+	u;Vagnius;Right
+	u;Soldier2;Left
+	s;Vagnius;Ah, so the Resistance has finally shown their faces.{w}{br}After them! I want them strung up!{w}{br}All will see the fate of those who oppose me!{w};auto
+	s;Soldier2;Right away, milord!{w};auto
+	r;Soldier2;Vagnius
+elif;gameStateObj.turncount == 3
+	# Wyvern Riders
+	set_cursor;30,27
+	wait;200
+	add_unit;d3_1
+	add_unit;d3_2
+	add_unit;d3_3
+	wait;500
+elif;gameStateObj.turncount == 4
+	set_cursor;Vagnius
+	u;Vagnius;Right
+	u;Soldier2;Left
+	s;Vagnius;Bah! What is taking so long? Put them down!{w};auto
+	s;Soldier2;The reinforcements are on their way, milord.{w};auto
+	s;Vagnius;I want them here, now!{w}{br}The Resistance will not slip away from me, on the eve of my victory!{w};auto
+	s;Soldier2;Of course, milord.{w};auto
+	r;Soldier2;Vagnius
+	# Paladins
+	set_camera;13,0;15,0
+	wait;200
+	add_unit;p4_1
+	add_unit;p4_2
+	wait;500
+elif;gameStateObj.turncount == 5
+	# Wyvern Riders
+	set_cursor;30,27
+	wait;200
+	add_unit;d5_1
+	add_unit;d5_2
+	add_unit;d5_3
+	wait;500
+elif;gameStateObj.turncount == 6
+	# Shamans
+	set_camera;30,15;30,21
+	wait;200
+	add_unit;s4_1
+	add_unit;s4_2
+	add_unit;s4_3
+	wait;500
+	# Paladins
+	#set_camera;13,0;15,0
+	#wait;200
+	#add_unit;p6_1;;;push
+	#add_unit;p6_2;;;push
+	#wait;500
+	# Warriors
+	#set_camera;0,10;0,12
+	#wait;200
+	#add_unit;w6_1;;;push
+	#add_unit;w6_2;;;push
+	#wait;500
+elif;gameStateObj.turncount == 7
+	# Wyvern Riders
+	#set_cursor;30,27
+	#wait;200
+	#add_unit;d7_1
+	#add_unit;d7_2
+	#add_unit;d7_3
+	#wait;500
+	# Warriors
+	#set_camera;0,10;0,12
+	#wait;200
+	#add_unit;w7_1;;;push
+	##add_unit;w7_2;;;push
+	#wait;500
+### BATTLE SAVE ###
+elif;gameStateObj.turncount == 8
+ 	# Shamans
+	set_camera;30,15;30,21
+	wait;200
+	add_unit;s6_1
+	add_unit;s6_2
+	add_unit;s6_3
+	wait;500
+	# Paladins
+	set_camera;13,0;15,0
+	wait;200
+	add_unit;p8_1;;;push
+	add_unit;p8_2;;;push
+	wait;500
+	battle_save
+elif;gameStateObj.turncount == 9
+	# Wyvern Riders
+	#set_cursor;30,27
+	#wait;200
+	#add_unit;d9_1
+	#add_unit;d9_2
+	#add_unit;d9_3
+	#wait;500
+	# Warriors
+	set_camera;0,10;0,12
+	wait;200
+	add_unit;w8_1;;;push
+	add_unit;w8_2;;;push
+	wait;500
+elif;gameStateObj.turncount == 10
+	# Paladins
+	set_camera;13,0;15,0
+	wait;200
+	add_unit;p10_1;;;push
+	add_unit;p10_2;;;push
+	wait;500
+elif;gameStateObj.turncount == 11
+	# Wyvern Riders
+	#set_cursor;30,27
+	#wait;200
+	#add_unit;d11_1
+	#add_unit;d11_2
+	#add_unit;d11_3
+	#wait;500
+	# Warriors
+	set_camera;0,10;0,12
+	wait;200
+	add_unit;w9_1;;;push
+	add_unit;w9_2;;;push
+	wait;500
+elif;gameStateObj.turncount == 12
+	# Shamans
+	#set_camera;30,15;30,21
+	#wait;200
+	#add_unit;s8_1
+	#add_unit;s8_2
+	#add_unit;s8_3
+	#wait;500
+	# Paladins
+	#set_camera;13,0;15,0
+	#wait;200
+	#add_unit;p12_1;;;push
+	#add_unit;p12_2;;;push
+	#wait;500
+elif;gameStateObj.turncount == 13
+	# Warriors
+	set_camera;0,10;0,12
+	wait;200
+	add_unit;w10_1;;;push
+	add_unit;w10_2;;;push
+	wait;500
+elif;gameStateObj.turncount >= 14 and not gameStateObj.turncount%2
+	# Infinite Reinforcements
+	set_camera;0,10;0,12
+	create_unit;i3;gameStateObj.turncount - 10;0,11;;push
+	create_unit;i5;gameStateObj.turncount - 10;0,10;;push
+	create_unit;i2;gameStateObj.turncount - 10;0,12;;push
+	wait;500
+	set_camera;13,0;15,0
+	create_unit;i1;gameStateObj.turncount - 10;14,0;;push
+	create_unit;i4;gameStateObj.turncount - 10;13,0;;push
+	wait;500
+end

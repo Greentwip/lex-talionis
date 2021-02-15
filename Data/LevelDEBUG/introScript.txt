@@ -1,0 +1,42 @@
+gold;1000;no_banner
+add_unit;Cav;2,12
+give_item;Cav;Iron Axe
+set_game_constant;Convoy
+set_game_constant;Supports
+set_game_constant;Fatigue;1
+set_game_constant;Turnwheel
+# add_global_status;fLuck +4
+set_game_constant;max_turnwheel_uses;1
+set_game_constant;current_turnwheel_uses;1
+add_tile_property;0,5;Escape=0
+layer_terrain;1;4,17;base_terrain
+replace_tile;3,17;2
+layer_tile_sprite;2;4,17;OpenChest;base_terrain
+layer_tile_sprite;2;5,17;OpenChest;base_terrain
+change_fatigue;Joel;12
+change_name;Joel;Frank
+set_cursor;Drake
+if;gameStateObj.get_unit('Ophie').wexp.insert(1, 31)
+    wait;1
+end
+if;gameStateObj.get_unit('Ophie').wexp.pop(2)
+    wait;1
+end
+#move_unit;Drake;20,10
+#start_move;Drake
+#remove_skill;Drake;Canto
+#custom_banner;Removed Canto!
+set_cursor;Prim
+# interact_unit;Prim;Joel;Miss,Crit
+u;Joel;Left
+s;Joel;This is the combat{semicolon} information window. It is a window.{w}{clear}You can see the combatant's HP and the amount of damage you will inflict.
+# choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash
+s;Joel;The qúiçk browñ fóx jumps óvér the lázý dog.
+# choice;SaveWaffle;Save Emmeryn?;Yes,No,Smash;v
+u;Nia;Right
+# choice;SaveEmmeryn;Save Emmeryn?;Yes,No,Smash;horizontal
+s;Nia;¡áàâäéèêëíìîïóòôöúùûüýÿ?
+s;Nia;¡ÁÀÂÄÉÈÊËÍÌÎÏÓÒÔÖÚÙÛÜÝŸ!
+s;Joel;Þæð iß {red}ÑØÐ{black} Åccœƿ⁊æble!
+r;Joel;Nia
+remove_background

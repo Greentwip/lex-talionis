@@ -1,0 +1,10 @@
+# Level 4 Search Script
+# Give a Wyrmsfire
+if;self.name == 'Middle'
+	set_tile_info;15,8
+	give_item;{unit};Wyrmsfire
+# Give a Mithril Mail
+elif;self.name == 'Bottom'
+	set_tile_info;6,15
+	give_item;{unit};Mithril Mail
+end

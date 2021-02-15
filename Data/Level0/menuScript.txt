@@ -1,0 +1,52 @@
+# moveScript
+if;cf.OPTIONS['Display Hints']
+	if;gameStateObj.turncount == 1
+		remove_fake_cursors
+		if;self.unit.name == 'Ophie' and not self.unit.position in [(7,6),(6,7),(5,8),(4,9)]
+			move_unit;Ophie;9,9;immediate
+			reset_state
+			reset_unit;{unit}
+			set_cursor;Ophie
+			u;Prim;Right;u;Ophie;Left
+			s;Prim;We need to go, Ophie!{w}{br}Let's get as far from here as possible while we can.{w};auto
+			s;Ophie;I heard him too, Prim.{w};auto
+			s;Prim;S-sorry...{w};auto
+			r;Ophie;Prim
+		elif;self.unit.name == 'Prim' and not self.unit.position in [(7,7), (6,8), (5,9)]
+			move_unit;Prim;10,9;immediate
+			reset_state
+			reset_unit;{unit}
+			set_cursor;Prim
+			u;Prim;Right
+			s;Prim;No, that's not right... I need to move as far as possible...{w};auto
+			r;Prim
+		elif;not 'turn1_wait' in gameStateObj.level_constants
+			s;Narrator;There's nobody to attack, so just select{red}Wait.{black}{w};auto;hint
+			set_level_constant;turn1_wait
+		end
+	elif;gameStateObj.turncount == 2
+		if;not 'turn2_ophie' in gameStateObj.level_constants
+			remove_fake_cursors
+			if;self.unit.position in [(3,5), (5,5), (4,6), (4,4)]
+				s;Narrator;Now select{red}Attack!{w};auto;hint
+			else
+				move_unit;Ophie;prev_pos;immediate
+				reset_state
+				reset_unit;{unit}
+				set_cursor;Ophie
+				s;Narrator;Ophie needs to be adjacent to the enemy to attack.{w};auto
+			end
+		# Prim is adjacent to Ophie
+		elif;Utility.calculate_distance(self.unit.position, [unit.position for unit in gameStateObj.allunits if unit.name == 'Ophie'][0]) == 1
+			s;Narrator;Now select{red}Spells{black}and choose your healing tome to heal Ophie.{w};auto;hint
+		elif;self.unit.name == 'Prim'
+			u;Prim;Right
+			s;Prim;I need to be next to Ophie to heal him...{w};auto
+			r;Prim
+			move_unit;Prim;prev_pos;immediate
+			reset_state
+			reset_unit;{unit}
+			set_cursor;Prim
+		end
+	end
+end

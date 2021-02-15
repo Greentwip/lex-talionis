@@ -1,0 +1,157 @@
+# Prologue narration Script
+b;BlackBackground
+t;4
+cinematic;In an age long past...|evil flooded over the land.|Creatures awash in the dark|tide ran wild, pushing mankind|to the brink of annihilation.;center
+pop_dialog
+wait;1400
+cinematic;In its despair, mankind|appealed to the heavens, and|from a blinding light came hope.;center
+pop_dialog
+wait;500
+# Light transition
+foreground_movie;BeginLight_;hold
+b;StoneRunes
+cinematic;The Sacred Stones;center;infinite_wait;no_fade_in;no_fade_out
+midground_movie;EndLight_;hold;fade_out
+pop_dialog
+cinematic;The Sacred Stones;center;extra_wait;no_fade_in
+pop_dialog
+wait;1400
+cinematic;These five glorious treasures|held the power to dispel evil.;center
+pop_dialog
+wait;1400
+cinematic;The hero Grado and his warriors|used the Sacred Stones to combat|evil's darkness. They defeated|the Demon King and sealed his|soul away within the stones.;center
+pop_dialog
+wait;1400
+cinematic;With the darkness imprisoned,|peace returned to Magvel.;center;no_fade_out
+t;3
+pop_dialog
+b;BlackBackground
+t;2
+cinematic;But this peace would not last...;center
+pop_dialog
+wait;3200
+t;3
+end_skip
+b;OverworldSpriteSmall;map
+s;Narrator;;auto;narration;hold
+t;4
+s;Narrator;The continent of Magvel.|For some 800 years, a quiet peace reigned in the absence of the terrible darkness.|The Sacred Stones have been passed from generation to generation.|Nations have been built around their power and their legacy.{w};auto;narration;hold
+# Labels fade in from the right just like units do
+# Add 24
+wm_label;Renais;75,68
+wm_highlight;RenaisHighlight
+u;Fado;Right;SlideRight;Narration
+s;Narrator;The kingdom of Renais, ruled by Fado, the peerless Warrior King.{w};auto;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;Fado
+wait;500
+# Subtract 8
+wm_label;Frelia;30,35
+wm_highlight;FreliaHighlight
+u;Hayden;Right;SlideRight;Narration
+s;Narrator;The kingdom of Frelia, ruled by Hayden, the venerable Sage King.{w};auto;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;Hayden
+wait;500
+# Add 30
+s;Narrator;;auto_top;narration;hold
+wm_label;Jehanna;144,79
+wm_highlight;JehannaHighlight
+u;Ismaire;Left;SlideLeft
+s;Narrator;The kingdom of Jehanna, ruled by Ismaire, Queen of the White Dunes.{w};auto_top;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;Ismaire
+wait;500
+s;Narrator;;auto;narration;hold
+# Subtract 8
+wm_label;Rausten;154,30
+wm_highlight;RaustenHighlight
+u;Mansel;Left;SlideRight;Narration
+s;Narrator;The kingdom of Rausten, ruled by Mansel, the Divine Emperor.{w};auto;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;Mansel
+wait;500
+# Add 48
+s;Narrator;;auto_top;narration;hold
+wm_label;Grado;64,112
+wm_highlight;GradoHighlight
+u;VigardeHealthy;Right;SlideRight
+s;Narrator;The Grado Empire, ruled by Vigarde, the stalwart Silent Emperor.{w};auto_top;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;VigardeHealthy
+wait;500
+s;Narrator;These five countries house the power of the Sacred Stones.{w};auto;narration;hold
+wm_label;Carcino;95,51
+wm_highlight;CarcinoHighlight
+u;Klimt;Right;SlideRight;Narration
+s;Narrator;They are joined by the emerging mercantile republic of Carcino.{w};auto;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;Klimt
+wait;500
+s;Narrator;In these times of peace, tales of past conflict have drifted into legend,|and memories of the ancient dark arts have all but evaporated.{w};auto;narration;hold
+s;Narrator;It is now the year 803...|In an instant, the whole of Magvel is threatened by an unexpected atrocity.{w};auto;narration;hold
+s;Narrator;;auto_top;narration;hold
+wm_label;Grado;64,112
+wm_highlight;GradoHighlight
+u;VigardeHealthy;Right;SlideRight
+s;Narrator;The Grado Empire, the largest of the Sacred Stone nations,|has invaded the kingdom of Renais under orders from Emperor Vigarde.{w};auto_top;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;VigardeHealthy
+wait;500
+s;Narrator;;auto;narration;hold
+wm_label;Renais;75,68
+wm_highlight;RenaisHighlight
+u;Fado;Right;SlideRight;Narration
+s;Narrator;A longtime ally of Grado, Renais is caught off guard, unable to mount any resistance.{w};auto;narration;hold
+wm_label_clear
+wm_highlight_clear
+r;Fado
+wait;500
+end_skip
+s;Narrator;;auto_top;narration;hold
+wm_marker;wm_blue_marker;104,80
+wm_marker;wm_red_marker;128,136
+wait;500
+# Enemy Soldiers appear on map
+wm_qload;soldier1;108,128;Soldier;M;enemy
+wm_qload;soldier2;124,128;Soldier;M;enemy
+wm_qload;soldier3;140,128;Soldier;M;enemy
+# Enemy soldiers move toward Renais
+wm_set;soldier1;80,64
+wm_set;soldier2;112,84
+wm_set;soldier3;128,96
+s;Narrator;Grado's forces move quickly, seizing one territory after another.{w};auto_top;narration;hold
+wm_remove;soldier1
+wm_remove;soldier2
+wm_remove;soldier3
+wait;400
+u;Ephraim;Left;SlideLeft
+# Ephraim appears on map
+wait;200
+wm_qload;ephraim;88,96;Ephraim_Lord;M;player
+wm_set;ephraim;84,108;slow
+s;Narrator;Compounding King Fado's worries, his son, Prince Ephraim, has gone missing.{w};auto_top;narration;hold
+wm_remove;ephraim
+wait;220
+r;Ephraim
+# General, Valter, and Selena appear on map
+wm_qload;selena;108,140;Mage_Knight;F;enemy
+wm_qload;general;124,128;General;M;enemy
+wm_qload;valter;136,132;Wyvern_Knight;M;enemy
+wm_set;selena;84,80
+wm_set;general;100,88
+wm_set;valter;116,80
+s;Narrator;Grado's momentum carries its armies to the gates of Castle Renais itself{w};auto_top;narration;hold
+# Eirika, Fado appear on map
+wm_load;eirika;90,68;Eirika_Lord;F;player
+wm_load;fado;102,76;Peer;M;player
+wait;600
+s;Narrator;Renais will fall...{br}It is inevitable.{w};auto_top;narration;hold
+t;1

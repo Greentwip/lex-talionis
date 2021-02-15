@@ -1,0 +1,14 @@
+name;Chapter VII
+prep_flag;1
+prep_music;Preparing for Battle
+pick_flag;0
+base_flag;MainBase
+base_music;The Journey to the West
+market_flag;1
+transition_flag;1
+display_name;Seize Fort
+win_condition;Seize the fort.
+loss_condition;Ophie dies OR Sam dies,OR,Party size falls below 5. Currently {gameStateObj.get_total_party_members()}
+player_phase_music;Airship Thunderchild
+enemy_phase_music;The High Seas
+weather;Light
