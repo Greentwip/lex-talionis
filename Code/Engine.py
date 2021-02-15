@@ -47,6 +47,9 @@ def build_display(size):
     display.fill([0, 0, 0])
     return display
 
+def rotate_display(surf, angle):
+    return pygame.transform.rotate(surf, angle)    
+
 def push_display(surf, size, new_surf):
     pygame.transform.scale(surf, size, new_surf)
 

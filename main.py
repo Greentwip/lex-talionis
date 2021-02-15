@@ -70,7 +70,10 @@ def run(gameStateObj, metaDataObj):
         # Update global music thread
         Engine.music_thread.update(eventList)
 
-        #new_size = (GC.WINWIDTH * cf.OPTIONS['Screen Size'], GC.WINHEIGHT * cf.OPTIONS['Screen Size'])
+        mapSurf = Engine.rotate_display(mapSurf, -90)
+
+        #new_size = (GC.DISPLAYSURF.get_width(), GC.DISPLAYSURF.get_height())
+        
         #Engine.push_display(mapSurf, new_size, GC.DISPLAYSURF)
 
         draw_rect = GC.TEMPCANVASRECT

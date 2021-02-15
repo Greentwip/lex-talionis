@@ -59,16 +59,18 @@ Engine.set_caption(''.join([cf.CONSTANTS['title'], " - ", version]))
 print('Version: v%s' % version)
 
 def get_temp_canvas_rect(source_surface):
-    size = (source_surface.get_width(), source_surface.get_height())
+    size = (source_surface.get_height(), source_surface.get_width())
     height_proportion = 160 / size[1]
     width = int(240 / height_proportion) 
     height = size[1]
-    return (int((size[0] - width) / 2), 0, width, height)
+    return (0, int((size[0] - height) / 4), height, width)
 
 TEMPCANVASRECT = get_temp_canvas_rect(DISPLAYSURF)
 
 def build_temp_canvas():
-    return Engine.create_surface((TEMPCANVASRECT[2], TEMPCANVASRECT[3]))
+    temp_surface = Engine.create_surface((TEMPCANVASRECT[2], TEMPCANVASRECT[3]))
+    #return Engine.rotate_display(temp_surface, -90)
+    return temp_surface
 
 TEMPCANVAS = build_temp_canvas()
 
