@@ -63,7 +63,7 @@ def get_temp_canvas_rect(source_surface):
     height_proportion = 160 / size[1]
     width = int(240 / height_proportion) 
     height = size[1]
-    return (0, int((size[0] - height) / 4), height, width)
+    return (0, int((width - size[1]) / 2), height, width)
 
 TEMPCANVASRECT = get_temp_canvas_rect(DISPLAYSURF)
 
