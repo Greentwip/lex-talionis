@@ -68,6 +68,10 @@ def run(gameStateObj, metaDataObj):
         GC.PASSIVESPRITECOUNTER.update()
         GC.ACTIVESPRITECOUNTER.update()
         GC.CURSORSPRITECOUNTER.update()
+
+        Engine.get_ui_manager().update(GC.FPSCLOCK.tick(GC.FPS)/1000.0)
+
+
         # Update global music thread
         Engine.music_thread.update(eventList)
 
@@ -89,6 +93,7 @@ def run(gameStateObj, metaDataObj):
 
         GC.DISPLAYSURF.blit(TEMPCANVAS, draw_rect)
 
+        Engine.get_ui_manager().draw_ui(GC.DISPLAYSURF)
 
         # Check for taking screenshot
         for event in eventList:

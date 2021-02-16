@@ -56,6 +56,9 @@ Engine.set_icon(small_icon)
 FPSCLOCK = Engine.clock()
 DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
 
+Engine.init_ui_manager()
+
+
 def get_display_surf():
     global DISPLAYSURF
     return DISPLAYSURF
@@ -64,14 +67,7 @@ def rebuild_display_surf():
     global DISPLAYSURF
     DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
 
-def get_temp_canvas_rect(source_size):
-    size = (source_size[0], source_size[1])
-    height_proportion = 160 / size[1]
-    width = int(240 / height_proportion) 
-    height = size[1]
-    return (int((size[0] - width) / 2), 0, width, height)
-
-TEMPCANVASRECT = get_temp_canvas_rect(Engine.screen_size())
+TEMPCANVASRECT = Engine.get_temp_canvas_rect(Engine.screen_size())
 
 def build_temp_canvas():
     temp_surface = Engine.create_surface((TEMPCANVASRECT[2], TEMPCANVASRECT[3]))

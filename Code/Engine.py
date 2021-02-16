@@ -5,6 +5,12 @@ import os
 
 from . import configuration
 
+from . import pygame_gui
+
+from pygame_gui import UIManager
+from pygame_gui.elements import UIButton
+
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -30,6 +36,16 @@ def set_lost_context(lost_context):
     global LOSTCONTEXT
     LOSTCONTEXT = lost_context
 
+UIMANAGER = None
+
+UP = None
+DOWN = None
+LEFT = None
+RIGHT = None
+
+SELECT = None
+BACK = None
+
 # === INITIALIZING FUNCTIONS =================================================
 def init():
     # pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -53,6 +69,87 @@ def clock():
 
 def screen_size():
     return (pygame.display.Info().current_w, pygame.display.Info().current_h)
+
+def get_temp_canvas_rect(source_size):
+    size = (source_size[0], source_size[1])
+    height_proportion = 160 / size[1]
+    width = int(240 / height_proportion) 
+    height = size[1]
+    return (int((size[0] - width) / 2), 0, width, height)
+
+
+def init_ui_manager():
+    global UIMANAGER
+    UIMANAGER = UIManager(screen_size(), 'data/themes/default_theme.json')
+    TEMPCANVASRECT = get_temp_canvas_rect(screen_size())
+
+    button_width = 100
+    button_height = 100
+
+    UPRECT = pygame.Rect(TEMPCANVASRECT[0] + button_width,
+                         TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 2,
+                         button_width,
+                         button_height)
+
+    DOWNRECT = pygame.Rect(TEMPCANVASRECT[0] + button_width,
+                           TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height,
+                           button_width,
+                           button_height)                         
+
+    LEFTRECT = pygame.Rect(TEMPCANVASRECT[0],
+                         TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 1.5,
+                         button_width,
+                         button_height)
+
+    RIGHTRECT = pygame.Rect(TEMPCANVASRECT[0] + button_width * 2,
+                           TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 1.5,
+                           button_width,
+                           button_height)   
+    SELECTRECT = pygame.Rect(TEMPCANVASRECT[0] + TEMPCANVASRECT[2] - button_width,
+                             TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height,
+                             button_width,
+                             button_height)                         
+
+    BACKRECT = pygame.Rect(TEMPCANVASRECT[0] + TEMPCANVASRECT[2] - button_width,
+                           TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 2,
+                           button_width,
+                           button_height)                                                      
+
+
+    global UP
+    global DOWN
+    global LEFT
+    global RIGHT
+    global SELECT
+    global BACK
+
+    UP = UIButton(relative_rect=UPRECT,text='U',manager=UIMANAGER,object_id='#up')
+    DOWN = UIButton(relative_rect=DOWNRECT,text='D',manager=UIMANAGER,object_id='#down')
+    LEFT = UIButton(relative_rect=LEFTRECT,text='L',manager=UIMANAGER,object_id='#left')
+    RIGHT = UIButton(relative_rect=RIGHTRECT,text='R',manager=UIMANAGER,object_id='#right')
+
+    SELECT = UIButton(relative_rect=SELECTRECT,text='A',manager=UIMANAGER,object_id='#select')
+    BACK = UIButton(relative_rect=BACKRECT,text='B',manager=UIMANAGER,object_id='#back')
+
+"""
+    button_row_width = 100
+    button_row_height = 40
+    spacing = 20
+    for j in range(1, 10):
+        for i in range(1, 7):
+            position = (i * spacing + ((i - 1) * button_row_width),
+                        (j * spacing + ((j - 1) * button_row_height)))
+            pygame_gui.elements.UIButton(relative_rect=pygame.Rect(position,
+                                                                (button_row_width,
+                                                                    button_row_height)),
+                                        text=str(i) + ',' + str(j),
+                                        manager=UIMANAGER,
+                                        object_id='#' + str(i) + ',' + str(j))
+
+"""
+
+def get_ui_manager():
+    return UIMANAGER
 
 def build_display(size):
     flags = pygame.FULLSCREEN
@@ -203,11 +300,19 @@ APPMOUSEFOCUS = 1
 APPINPUTFOCUS = 2
 APPACTIVE     = 4
 
+class InputEvent:
+    def __init__(self, event_type, key):
+        self.type = event_type
+        self.key = key
+
 def build_event_list():
     # Get events
     eventList = [] # Clear event list
     # Only gets escape events!
     for event in pygame.event.get():
+        global UIMANAGER
+        UIMANAGER.process_events(event)
+
         if event.type == pygame.QUIT:
             terminate()
         if event.type == pygame.KEYUP and configuration.OPTIONS['cheat']:
@@ -233,7 +338,35 @@ def build_event_list():
             #if event.state & APPACTIVE == APPACTIVE:
                 #print('app is ' + ('visibile' if event.gain else 'iconified'))
 
-        
+        if event.type == pygame.USEREVENT:
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == UP:
+                    event = InputEvent(pygame.KEYDOWN, pygame.K_UP)
+                elif event.ui_element == DOWN:
+                    event = InputEvent(pygame.KEYDOWN, pygame.K_DOWN)
+                elif event.ui_element == LEFT:
+                    event = InputEvent(pygame.KEYDOWN, pygame.K_LEFT)
+                elif event.ui_element == RIGHT:
+                    event = InputEvent(pygame.KEYDOWN, pygame.K_RIGHT)
+                elif event.ui_element == SELECT:
+                    event = InputEvent(pygame.KEYDOWN, pygame.K_x)
+                elif event.ui_element == BACK:
+                    event = InputEvent(pygame.KEYDOWN, pygame.K_z)
+
+            elif event.user_type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
+                if event.ui_element == UP:
+                    event = InputEvent(pygame.KEYUP, pygame.K_UP)
+                elif event.ui_element == DOWN:
+                    event = InputEvent(pygame.KEYUP, pygame.K_DOWN)
+                elif event.ui_element == LEFT:
+                    event = InputEvent(pygame.KEYUP, pygame.K_LEFT)
+                elif event.ui_element == RIGHT:
+                    event = InputEvent(pygame.KEYUP, pygame.K_RIGHT)                    
+                elif event.ui_element == SELECT:
+                    event = InputEvent(pygame.KEYUP, pygame.K_x)
+                elif event.ui_element == BACK:
+                    event = InputEvent(pygame.KEYUP, pygame.K_z)
+
         eventList.append(event)
     return eventList
 
