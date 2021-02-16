@@ -55,17 +55,23 @@ Engine.set_icon(small_icon)
 
 FPSCLOCK = Engine.clock()
 DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
-Engine.set_caption(''.join([cf.CONSTANTS['title'], " - ", version]))
-print('Version: v%s' % version)
 
-def get_temp_canvas_rect(source_surface):
-    size = (source_surface.get_height(), source_surface.get_width())
+def get_display_surf():
+    global DISPLAYSURF
+    return DISPLAYSURF
+
+def rebuild_display_surf():
+    global DISPLAYSURF
+    DISPLAYSURF = Engine.build_display((WINWIDTH*cf.OPTIONS['Screen Size'], WINHEIGHT*cf.OPTIONS['Screen Size']))
+
+def get_temp_canvas_rect(source_size):
+    size = (source_size[0], source_size[1])
     height_proportion = 160 / size[1]
     width = int(240 / height_proportion) 
     height = size[1]
-    return (0, int((width - size[1]) / 2), height, width)
+    return (int((size[0] - width) / 2), 0, width, height)
 
-TEMPCANVASRECT = get_temp_canvas_rect(DISPLAYSURF)
+TEMPCANVASRECT = get_temp_canvas_rect(Engine.screen_size())
 
 def build_temp_canvas():
     temp_surface = Engine.create_surface((TEMPCANVASRECT[2], TEMPCANVASRECT[3]))
@@ -74,7 +80,18 @@ def build_temp_canvas():
 
 TEMPCANVAS = build_temp_canvas()
 
+def get_temp_canvas():
+    global TEMPCANVAS
+    return TEMPCANVAS
 
+def reset_temp_canvas():
+    global TEMPCANVAS
+    TEMPCANVAS = build_temp_canvas()
+
+
+
+Engine.set_caption(''.join([cf.CONSTANTS['title'], " - ", version]))
+print('Version: v%s' % version)
 
 IMAGESDICT, UNITDICT, ICONDICT, ITEMDICT, ANIMDICT = imagesDict.getImages(Engine.engine_constants['home'])
 SOUNDDICT, MUSICDICT = imagesDict.getSounds(Engine.engine_constants['home'])

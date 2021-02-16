@@ -46,6 +46,7 @@ def main():
 # === Main Game Loop ===
 def run(gameStateObj, metaDataObj):
     my_list = gameStateObj.stateMachine.state[-5:]
+
     while True:
         if cf.OPTIONS['debug']:
             my_new_list = gameStateObj.stateMachine.state[-5:]
@@ -70,7 +71,7 @@ def run(gameStateObj, metaDataObj):
         # Update global music thread
         Engine.music_thread.update(eventList)
 
-        mapSurf = Engine.rotate_display(mapSurf, -90)
+        #mapSurf = Engine.rotate_display(mapSurf, -90)
 
         #new_size = (GC.DISPLAYSURF.get_width(), GC.DISPLAYSURF.get_height())
         
@@ -78,9 +79,15 @@ def run(gameStateObj, metaDataObj):
 
         draw_rect = GC.TEMPCANVASRECT
 
-        Engine.push_display(mapSurf, (draw_rect[2], draw_rect[3]), GC.TEMPCANVAS)
+        if Engine.get_lost_context():
+            GC.reset_temp_canvas()
+            GC.rebuild_display_surf()
+            Engine.set_lost_context(False)
 
-        GC.DISPLAYSURF.blit(GC.TEMPCANVAS, draw_rect)
+        TEMPCANVAS = GC.get_temp_canvas()
+        Engine.push_display(mapSurf, (draw_rect[2], draw_rect[3]), TEMPCANVAS)
+
+        GC.DISPLAYSURF.blit(TEMPCANVAS, draw_rect)
 
 
         # Check for taking screenshot

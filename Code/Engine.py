@@ -20,6 +20,16 @@ BLEND_RGBA_ADD = pygame.BLEND_RGBA_ADD
 BLEND_RGBA_SUB = pygame.BLEND_RGBA_SUB
 BLEND_RGBA_MULT = pygame.BLEND_RGBA_MULT
 
+LOSTCONTEXT = False
+
+def get_lost_context():
+    global LOSTCONTEXT
+    return LOSTCONTEXT
+
+def set_lost_context(lost_context):
+    global LOSTCONTEXT
+    LOSTCONTEXT = lost_context
+
 # === INITIALIZING FUNCTIONS =================================================
 def init():
     # pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -40,6 +50,9 @@ def set_caption(text):
 
 def clock():
     return pygame.time.Clock()
+
+def screen_size():
+    return (pygame.display.Info().current_w, pygame.display.Info().current_h)
 
 def build_display(size):
     flags = pygame.FULLSCREEN
@@ -186,6 +199,10 @@ def transform_rotate(surf, degrees):
 def get_key_name(key_code):
     return pygame.key.name(key_code)
 
+APPMOUSEFOCUS = 1
+APPINPUTFOCUS = 2
+APPACTIVE     = 4
+
 def build_event_list():
     # Get events
     eventList = [] # Clear event list
@@ -196,6 +213,27 @@ def build_event_list():
         if event.type == pygame.KEYUP and configuration.OPTIONS['cheat']:
             if event.key == pygame.K_ESCAPE:
                 terminate()
+
+        if event.type == pygame.VIDEOEXPOSE:
+            print("Video expose event")
+
+        if event.type == pygame.ACTIVEEVENT:
+            print("Event happened")
+            print("state")
+            print(event.state)
+
+            print("Gain")
+            print(event.gain)
+            #if event.state & APPMOUSEFOCUS == APPMOUSEFOCUS:
+                #print ('mouse focus ' + ('gained' if event.gain else 'lost'))
+            if event.state & APPINPUTFOCUS == APPINPUTFOCUS:
+                print ('input focus ' + ('gained' if event.gain else 'lost'))
+                if event.gain:
+                    set_lost_context(True)
+            #if event.state & APPACTIVE == APPACTIVE:
+                #print('app is ' + ('visibile' if event.gain else 'iconified'))
+
+        
         eventList.append(event)
     return eventList
 
@@ -495,3 +533,5 @@ if NO_AUDIO:
     music_thread = NoMusicThread()
 else:
     music_thread = MusicThread()
+
+
