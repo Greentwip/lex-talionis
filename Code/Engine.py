@@ -316,20 +316,20 @@ def build_event_list():
         if event.type == pygame.QUIT:
             terminate()
         
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             pass
 
-        if event.type == pygame.KEYUP:
+        elif event.type == pygame.KEYUP:
             pass        
 
         #if event.type == pygame.KEYUP and configuration.OPTIONS['cheat']:
             #if event.key == pygame.K_ESCAPE:
                 #terminate()
 
-        if event.type == pygame.VIDEOEXPOSE:
+        elif event.type == pygame.VIDEOEXPOSE:
             print("Video expose event")
 
-        if event.type == pygame.ACTIVEEVENT:
+        elif event.type == pygame.ACTIVEEVENT:
             print("Event happened")
             print("state")
             print(event.state)
@@ -344,9 +344,9 @@ def build_event_list():
                     set_lost_context(True)
             #if event.state & APPACTIVE == APPACTIVE:
                 #print('app is ' + ('visibile' if event.gain else 'iconified'))
-
-        if event.type == pygame.USEREVENT:
+        elif event.type == pygame.USEREVENT:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                ui_element = event.ui_element
                 if event.ui_element == UP:
                     event = InputEvent(pygame.KEYDOWN, pygame.K_UP)
                 elif event.ui_element == DOWN:
@@ -359,8 +359,8 @@ def build_event_list():
                     event = InputEvent(pygame.KEYDOWN, pygame.K_x)
                 elif event.ui_element == BACK:
                     event = InputEvent(pygame.KEYDOWN, pygame.K_z)
-
-            elif event.user_type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
+            elif event.user_type == pygame_gui.UI_BUTTON_ON_HOVERED:
+                event.ui_element.unselect()
                 if event.ui_element == UP:
                     event = InputEvent(pygame.KEYUP, pygame.K_UP)
                 elif event.ui_element == DOWN:
@@ -373,7 +373,6 @@ def build_event_list():
                     event = InputEvent(pygame.KEYUP, pygame.K_x)
                 elif event.ui_element == BACK:
                     event = InputEvent(pygame.KEYUP, pygame.K_z)
-
         eventList.append(event)
     return eventList
 
@@ -392,7 +391,7 @@ def get_pressed():
     return pygame.key.get_pressed()
 
 def joystick_avail():
-    return pygame.joystick.get_count()
+    return 0
 
 def get_joystick():
     return pygame.joystick.Joystick(0)
