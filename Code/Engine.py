@@ -345,7 +345,7 @@ def build_event_list():
             #if event.state & APPACTIVE == APPACTIVE:
                 #print('app is ' + ('visibile' if event.gain else 'iconified'))
         elif event.type == pygame.USEREVENT:
-            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.user_type == pygame_gui.UI_BUTTON_START_PRESS:
                 ui_element = event.ui_element
                 if event.ui_element == UP:
                     event = InputEvent(pygame.KEYDOWN, pygame.K_UP)
@@ -359,8 +359,8 @@ def build_event_list():
                     event = InputEvent(pygame.KEYDOWN, pygame.K_x)
                 elif event.ui_element == BACK:
                     event = InputEvent(pygame.KEYDOWN, pygame.K_z)
-            elif event.user_type == pygame_gui.UI_BUTTON_ON_HOVERED:
-                event.ui_element.unselect()
+            elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                ui_element = event.ui_element
                 if event.ui_element == UP:
                     event = InputEvent(pygame.KEYUP, pygame.K_UP)
                 elif event.ui_element == DOWN:
@@ -373,6 +373,9 @@ def build_event_list():
                     event = InputEvent(pygame.KEYUP, pygame.K_x)
                 elif event.ui_element == BACK:
                     event = InputEvent(pygame.KEYUP, pygame.K_z)
+
+                ui_element.unselect()
+
         eventList.append(event)
     return eventList
 
