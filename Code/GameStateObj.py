@@ -12,6 +12,8 @@ from . import StatusCatalog, UnitObject, SaveLoad, ItemMethods, Turnwheel
 from . import Boundary, Objective, Overworld, TileObject, Action
 from . import Highlight, Aura
 
+HOME = cf.HOME
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -77,9 +79,9 @@ class GameStateObj(object):
             self.leave_actions = [Action.LeaveMap(unit) for unit in units]
             for action in self.leave_actions:
                 action.do(self)
-        tilefilename = 'Data/Level' + name + '/TileData.png'
-        mapfilename = 'Data/Level' + name + '/MapSprite.png'
-        levelfolder = 'Data/Level' + name
+        tilefilename = HOME + 'Data/Level' + name + '/TileData.png'
+        mapfilename = HOME + 'Data/Level' + name + '/MapSprite.png'
+        levelfolder = HOME + 'Data/Level' + name
         submap = TileObject.MapObject(self, mapfilename, tilefilename, levelfolder, self.map.weather)
         self.start_map(submap)
 
@@ -141,7 +143,7 @@ class GameStateObj(object):
         self.current_party = '0'  # Party is always a string, not an integer
         self.play_time = 0
         if cf.CONSTANTS['support']:
-            self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt')
+            self.support = Support.Support_Graph(HOME + 'Data/support_nodes.txt', HOME + 'Data/support_edges.txt')
         else:
             self.support = None
         if cf.CONSTANTS['overworld']:
@@ -262,7 +264,7 @@ class GameStateObj(object):
 
         # Map
         logger.info('Creating map...')
-        self.map = SaveLoad.create_map(self, 'Data/Level' + str(self.game_constants['level']))
+        self.map = SaveLoad.create_map(self, HOME + 'Data/Level' + str(self.game_constants['level']))
         logger.info('Done creating map...')
         # Set up blitting surface
         if self.map:
@@ -293,7 +295,7 @@ class GameStateObj(object):
 
         # Support
         if cf.CONSTANTS['support']:
-            self.support = Support.Support_Graph('Data/support_nodes.txt', 'Data/support_edges.txt')
+            self.support = Support.Support_Graph(HOME + 'Data/support_nodes.txt', HOME + 'Data/support_edges.txt')
             self.support.deserialize(support_dict)
         else:
             self.support = None

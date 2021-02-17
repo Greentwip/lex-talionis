@@ -9,6 +9,8 @@ from . import StateMachine, MenuFunctions, ItemMethods, GeneralStates
 from . import CustomObjects, Dialogue, WorldMap, Action
 from . import Background, BaseMenuSurf, Banner
 
+HOME = cf.HOME
+
 class PrepMainState(StateMachine.State):
     def begin(self, gameStateObj, metaDataObj):
         Engine.music_thread.fade_in(GC.MUSICDICT[metaDataObj['prep_music']])
@@ -35,7 +37,7 @@ class PrepMainState(StateMachine.State):
         # Play prep script if it exists
         if not self.started:
             self.started = True
-            prep_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/prepScript.txt'
+            prep_script_name = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/prepScript.txt'
             if os.path.exists(prep_script_name):
                 prep_script = Dialogue.Dialogue_Scene(prep_script_name)
                 gameStateObj.message.append(prep_script)
@@ -1544,7 +1546,7 @@ class BaseMainState(StateMachine.State):
             return 'repeat'
 
         # Play base script if it exists
-        base_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/in_base_script.txt'
+        base_script_name = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/in_base_script.txt'
         if os.path.exists(base_script_name):
             base_script = Dialogue.Dialogue_Scene(base_script_name)
             gameStateObj.message.append(base_script)
@@ -1637,7 +1639,7 @@ class BaseInfoState(StateMachine.State):
             selection = gameStateObj.childMenu.getSelection()
             if gameStateObj.childMenu.color_control[gameStateObj.childMenu.currentSelection] == 'text_white':
                 GC.SOUNDDICT['Select 1'].play()
-                dialogue_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/baseScript.txt'
+                dialogue_script = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/baseScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(dialogue_script, name=selection))
                 gameStateObj.stateMachine.changeState('dialogue')
                 gameStateObj.stateMachine.changeState('transition_out')
@@ -1789,7 +1791,7 @@ class BaseSupportConvoState(StateMachine.State):
                         if os.path.exists(edge.script):
                             support_script = edge.script
                         else:
-                            support_script = 'Data/SupportConvos/GenericScript.txt'
+                            support_script = HOME + 'Data/SupportConvos/GenericScript.txt'
                         gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=unit, unit2=owner, name=level))
                         gameStateObj.stateMachine.changeState('dialogue')
                         gameStateObj.stateMachine.changeState('transition_out')

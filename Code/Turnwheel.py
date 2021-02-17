@@ -4,6 +4,10 @@ import os, math
 from . import GlobalConstants as GC
 from . import InputManager, StateMachine, BaseMenuSurf, BattleAnimation
 from . import Background, Action, Engine, Image_Modification, Weather, Dialogue
+from . import configuration as cf
+
+HOME = cf.HOME
+
 
 import logging
 logger = logging.getLogger(__name__)
@@ -541,7 +545,7 @@ class TurnwheelState(StateMachine.State):
                 gameStateObj.stateMachine.clear()
                 gameStateObj.stateMachine.changeState('free')
                 # Called whenever the turnwheel is used
-                turnwheel_script_name = 'Data/turnwheelScript.txt'
+                turnwheel_script_name = HOME + 'Data/turnwheelScript.txt'
                 if self.end_effect and os.path.exists(turnwheel_script_name):
                     turnwheel_script = Dialogue.Dialogue_Scene(turnwheel_script_name)
                     gameStateObj.message.append(turnwheel_script)

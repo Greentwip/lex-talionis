@@ -9,6 +9,8 @@ from . import Interaction, StatusCatalog, ItemMethods, Background
 from . import Minimap, InputManager, Banner, Engine, Utility, Image_Modification
 from . import StateMachine, Action, Aura, BaseMenuSurf, ClassData
 
+HOME = cf.HOME
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -41,7 +43,7 @@ class TurnChangeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('status')
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
-            turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
+            turn_event_script = HOME +  'Data/Level' + str(gameStateObj.game_constants['level']) + '/turnChangeScript.txt'
             if os.path.isfile(turn_event_script):
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(turn_event_script))
                 gameStateObj.stateMachine.changeState('dialogue')
@@ -81,7 +83,7 @@ class TurnChangeState(StateMachine.State):
             gameStateObj.stateMachine.changeState('phase_change')
             # === TURN EVENT SCRIPT ===
             if gameStateObj.phase.get_current_phase() == 'enemy':
-                enemy_turn_event_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
+                enemy_turn_event_script = HOME +  'Data/Level' + str(gameStateObj.game_constants['level']) + '/enemyTurnChangeScript.txt'
                 if os.path.isfile(enemy_turn_event_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(enemy_turn_event_script))
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -372,12 +374,12 @@ class MoveState(StateMachine.State):
 
         # Play move script if it exists
         if not self.started:
-            global_move_script_name = 'Data/global_moveScript.txt'
+            global_move_script_name = HOME + 'Data/global_moveScript.txt'
             if os.path.exists(global_move_script_name):
                 global_move_script = Dialogue.Dialogue_Scene(global_move_script_name, unit=cur_unit)
                 gameStateObj.message.append(global_move_script)
                 gameStateObj.stateMachine.changeState('transparent_dialogue')
-            move_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
+            move_script_name = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/moveScript.txt'
             if os.path.exists(move_script_name):
                 move_script = Dialogue.Dialogue_Scene(move_script_name, unit=cur_unit)
                 gameStateObj.message.append(move_script)
@@ -807,7 +809,7 @@ class MenuState(StateMachine.State):
                 gameStateObj.stateMachine.changeState('giveselect')
             elif selection == cf.WORDS['Visit']:
                 village_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Village']]
-                village_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
+                village_script = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/villageScript.txt'
                 if os.path.exists(village_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(village_script, unit=cur_unit, name=village_name, tile_pos=cur_unit.position))
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -837,7 +839,7 @@ class MenuState(StateMachine.State):
             elif selection == cf.WORDS['Switch']:
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
                 switch_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Switch']]
-                switch_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
+                switch_script = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/switchScript.txt'
                 if os.path.exists(switch_script):
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(switch_script, unit=cur_unit, name=switch_name, tile_pos=cur_unit.position))
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -864,7 +866,7 @@ class MenuState(StateMachine.State):
                     logger.error('Made a mistake in allowing unit to access Unlock!')
             elif selection == cf.WORDS['Search']:
                 search_name = gameStateObj.map.tile_info_dict[cur_unit.position][cf.WORDS['Search']]
-                search_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
+                search_script = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/searchScript.txt'
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(search_script, unit=cur_unit, name=search_name, tile_pos=cur_unit.position))
                 gameStateObj.stateMachine.changeState('dialogue')
                 Action.do(Action.HasAttacked(cur_unit), gameStateObj)
@@ -1154,7 +1156,7 @@ class AttackState(StateMachine.State):
         self.fluid_helper = InputManager.FluidScroll(cf.OPTIONS['Cursor Speed'])
 
         # Play attack script if it exists
-        attack_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
+        attack_script_name = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/attackScript.txt'
         if os.path.exists(attack_script_name):
             attack_script = Dialogue.Dialogue_Scene(attack_script_name, unit=self.attacker)
             gameStateObj.message.append(attack_script)
@@ -1495,7 +1497,7 @@ class SelectState(StateMachine.State):
                 if gameStateObj.cursor.currentHoveredUnit:
                     # cur_unit.hasTraded = True  # Unit can no longer move back, but can still attack
                     Action.do(Action.HasTraded(cur_unit), gameStateObj)
-                    talk_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
+                    talk_script = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/talkScript.txt'
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(talk_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit))
                     gameStateObj.stateMachine.changeState('menu')
                     gameStateObj.stateMachine.changeState('dialogue')
@@ -1508,7 +1510,7 @@ class SelectState(StateMachine.State):
                     if os.path.exists(edge.script):
                         support_script = edge.script
                     else:
-                        support_script = 'Data/SupportConvos/GenericScript.txt'
+                        support_script = HOME + 'Data/SupportConvos/GenericScript.txt'
                     level = edge.get_support_level()
                     gameStateObj.message.append(Dialogue.Dialogue_Scene(support_script, unit=cur_unit, unit2=gameStateObj.cursor.currentHoveredUnit, name=level))
                     gameStateObj.stateMachine.changeState('menu')
@@ -2174,7 +2176,7 @@ class DialogueState(StateMachine.State):
 
                 # Determines the number of levels in the game
                 num_levels = 0
-                level_directories = [x[0] for x in os.walk('Data/') if os.path.split(x[0])[1].startswith('Level')]
+                level_directories = [x[0] for x in os.walk(HOME + 'Data/') if os.path.split(x[0])[1].startswith('Level')]
                 for directory in level_directories:
                     try:
                         num = int(os.path.split(directory)[1][5:])

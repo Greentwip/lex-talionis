@@ -9,6 +9,8 @@ from . import Aura, Banner, BaseMenuSurf, ClassData
 from . import AStar, Weapons, UnitSprite, UnitSound
 from . import Dialogue, StatusCatalog, Action
 
+HOME = cf.HOME
+
 from Code.StatObject import build_stat_dict_plus  # Needed so old saves can load
 
 import logging
@@ -790,7 +792,7 @@ class UnitObject(object):
             gameStateObj.exp_gain_struct = (self, 0, None, 'item_promote')
             gameStateObj.stateMachine.changeState('exp_gain')
         elif item.call_item_script:
-            call_item_script = 'Data/callItemScript.txt'
+            call_item_script = HOME + 'Data/callItemScript.txt'
             if os.path.isfile(call_item_script):
                 gameStateObj.message.append(Dialogue.Dialogue_Scene(call_item_script, unit=self, unit2=item, tile_pos=self.position))
                 gameStateObj.stateMachine.changeState('dialogue')
@@ -1409,7 +1411,7 @@ class UnitObject(object):
         return True
 
     def handle_fight_quote(self, target_unit, gameStateObj):
-        fight_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/fightScript.txt'
+        fight_script_name = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/fightScript.txt'
         if os.path.exists(fight_script_name):
             gameStateObj.message.append(Dialogue.Dialogue_Scene(fight_script_name, unit=target_unit, unit2=self))
             gameStateObj.stateMachine.changeState('dialogue')
@@ -1863,7 +1865,7 @@ class UnitObject(object):
         Action.do(Action.Wait(self), gameStateObj)
 
         # Called whenever a unit waits
-        wait_script_name = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
+        wait_script_name = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/waitScript.txt'
         if script and os.path.exists(wait_script_name):
             wait_script = Dialogue.Dialogue_Scene(wait_script_name, unit=self)
             gameStateObj.message.append(wait_script)
@@ -2019,7 +2021,7 @@ class UnitObject(object):
         else:
             escape_name = None
         gameStateObj.stateMachine.changeState('wait')
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/escapeScript.txt', unit=self, name=escape_name, tile_pos=self.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(HOME + 'Data/escapeScript.txt', unit=self, name=escape_name, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def seize(self, gameStateObj):
@@ -2033,14 +2035,14 @@ class UnitObject(object):
         else:
             seize_name = None
         gameStateObj.stateMachine.changeState('wait')
-        gameStateObj.message.append(Dialogue.Dialogue_Scene('Data/seizeScript.txt', unit=self, name=seize_name, tile_pos=self.position))
+        gameStateObj.message.append(Dialogue.Dialogue_Scene(HOME + 'Data/seizeScript.txt', unit=self, name=seize_name, tile_pos=self.position))
         gameStateObj.stateMachine.changeState('dialogue')
 
     def unlock(self, pos, item, gameStateObj):
         # self.hasAttacked = True
         Action.do(Action.HasAttacked(self), gameStateObj)
         locked_name = gameStateObj.map.tile_info_dict[pos]['Locked']
-        unlock_script = 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
+        unlock_script = HOME + 'Data/Level' + str(gameStateObj.game_constants['level']) + '/unlockScript.txt'
         if os.path.exists(unlock_script):
             gameStateObj.message.append(Dialogue.Dialogue_Scene(unlock_script, unit=self, name=locked_name, tile_pos=pos))
             gameStateObj.stateMachine.changeState('dialogue')

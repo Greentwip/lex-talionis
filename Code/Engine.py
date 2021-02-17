@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 engine_constants = {'current_time': 0,
                     'last_time': 0,
                     'last_fps': 0,
-                    'home': os.path.abspath(os.path.join(os.path.dirname(__file__), './../') ) + '/'}
+                    'home': configuration.HOME}
 
 BLEND_RGB_ADD = pygame.BLEND_RGB_ADD
 BLEND_RGB_SUB = pygame.BLEND_RGB_SUB
@@ -83,8 +83,8 @@ def init_ui_manager():
     UIMANAGER = UIManager(screen_size(), 'data/themes/default_theme.json')
     TEMPCANVASRECT = get_temp_canvas_rect(screen_size())
 
-    button_width = 100
-    button_height = 100
+    button_width = 150
+    button_height = 150
 
     UPRECT = pygame.Rect(TEMPCANVASRECT[0] + button_width,
                          TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 2,
@@ -105,13 +105,13 @@ def init_ui_manager():
                            TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 1.5,
                            button_width,
                            button_height)   
-    SELECTRECT = pygame.Rect(TEMPCANVASRECT[0] + TEMPCANVASRECT[2] - button_width,
+    SELECTRECT = pygame.Rect(TEMPCANVASRECT[0] + TEMPCANVASRECT[2] - button_width * 1.5,
                              TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height,
                              button_width,
                              button_height)                         
 
-    BACKRECT = pygame.Rect(TEMPCANVASRECT[0] + TEMPCANVASRECT[2] - button_width,
-                           TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 2,
+    BACKRECT = pygame.Rect(TEMPCANVASRECT[0] + TEMPCANVASRECT[2] - button_width * 1.5,
+                           TEMPCANVASRECT[1] + TEMPCANVASRECT[3] - button_height * 2.5,
                            button_width,
                            button_height)                                                      
 
@@ -315,9 +315,16 @@ def build_event_list():
 
         if event.type == pygame.QUIT:
             terminate()
-        if event.type == pygame.KEYUP and configuration.OPTIONS['cheat']:
-            if event.key == pygame.K_ESCAPE:
-                terminate()
+        
+        if event.type == pygame.KEYDOWN:
+            pass
+
+        if event.type == pygame.KEYUP:
+            pass        
+
+        #if event.type == pygame.KEYUP and configuration.OPTIONS['cheat']:
+            #if event.key == pygame.K_ESCAPE:
+                #terminate()
 
         if event.type == pygame.VIDEOEXPOSE:
             print("Video expose event")

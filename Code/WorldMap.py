@@ -2,6 +2,8 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Utility, Image_Modification, Engine, GenericMapSprite
 
+HOME = cf.HOME
+
 class WorldMapBackground(object):
     def __init__(self, sprite, labels=True):
         self.x = 0
@@ -22,7 +24,7 @@ class WorldMapBackground(object):
         # Labels for world map
         self.wm_labels = []
         if labels:
-            self.parse_labels('Data/world_map_labels.txt')
+            self.parse_labels(HOME + 'Data/world_map_labels.txt')
 
         # Highlights
         self.wm_highlights = []

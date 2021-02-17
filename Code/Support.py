@@ -4,6 +4,8 @@ from . import GlobalConstants as GC
 from . import configuration as cf
 from . import Action, Engine, Utility
 
+HOME = cf.HOME
+
 class Affinity(object):
     def __init__(self, icon_index, name, attack, defense, accuracy, avoid, crit, dodge, attackspeed):
         self.icon = Engine.subsurface(GC.ITEMDICT['Affinity'], (0, 16*icon_index, 16, 16))
@@ -130,7 +132,7 @@ class Support_Graph(object):
                 s_l = line.split(';')
                 frm, to = s_l[:2]
                 support_limits = s_l[2:]
-                script_loc = 'Data/SupportConvos/' + frm + to + '.txt'
+                script_loc = HOME + 'Data/SupportConvos/' + frm + to + '.txt'
                 self.add_edge(frm, to, support_limits, script_loc)
 
     def add_node(self, name, affinity):
@@ -284,7 +286,7 @@ def create_affinity_dict(fn):
 
     return d
 
-if os.path.exists('Data/affinity.txt'):
-    AFFINITY_DICT = create_affinity_dict('Data/affinity.txt')
+if os.path.exists(HOME + 'Data/affinity.txt'):
+    AFFINITY_DICT = create_affinity_dict(HOME + 'Data/affinity.txt')
 else:
     AFFINITY_DICT = {}
