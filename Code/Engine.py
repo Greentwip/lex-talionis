@@ -5,7 +5,7 @@ import os
 
 from . import configuration
 
-from . import pygame_gui
+import pygame_gui
 
 from pygame_gui import UIManager
 from pygame_gui.elements import UIButton
@@ -330,18 +330,13 @@ def build_event_list():
             print("Video expose event")
 
         elif event.type == pygame.ACTIVEEVENT:
-            print("Event happened")
-            print("state")
-            print(event.state)
-
-            print("Gain")
-            print(event.gain)
             #if event.state & APPMOUSEFOCUS == APPMOUSEFOCUS:
                 #print ('mouse focus ' + ('gained' if event.gain else 'lost'))
             if event.state & APPINPUTFOCUS == APPINPUTFOCUS:
                 print ('input focus ' + ('gained' if event.gain else 'lost'))
                 if event.gain:
                     set_lost_context(True)
+
             #if event.state & APPACTIVE == APPACTIVE:
                 #print('app is ' + ('visibile' if event.gain else 'iconified'))
         elif event.type == pygame.USEREVENT:

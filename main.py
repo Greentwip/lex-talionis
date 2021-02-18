@@ -84,7 +84,8 @@ def run(gameStateObj, metaDataObj):
         draw_rect = GC.TEMPCANVASRECT
 
         if Engine.get_lost_context():
-            GC.reset_temp_canvas()
+            #GC.reset_temp_canvas()
+            GC.rebuild_display_surf()
             GC.rebuild_display_surf()
             Engine.set_lost_context(False)
 
