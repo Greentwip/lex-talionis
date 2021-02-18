@@ -1,0 +1,51 @@
+Install dependencies
+
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install -y build-essential ccache git zlib1g-dev python3 python3-dev libncurses5:i386 libstdc++6:i386 zlib1g:i386 openjdk-8-jdk unzip ant ccache autoconf libtool libssl-dev
+sudo apt-get install -y --no-install-recommends make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+sudo apt-get install -y cmake zip
+
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+
+
+pyenv update
+pyenv install 3.8.1
+pyenv global 3.8.1
+
+pip install --upgrade pip
+pip install Cython==0.29
+pip install python-for-android
+
+Download Android cmdlinetools
+
+https://developer.android.com/studio
+
+mkdir ~/Android
+mkdir ~/Android/Sdk
+mkdir ~/Android/ndk
+
+./sdkmanager --sdk_root=/home/<user>/Android/Sdk "tools" "platform-tools" "platforms;android-26" "build-tools;28.0.2" "extras;android;m2repository" "extras;google;m2repository"
+
+~/Android/Sdk/tools/bin/sdkmanager "tools" "platform-tools" "platforms;android-26" "build-tools;28.0.2" "extras;android;m2repository" "extras;google;m2repository"
+
+Download Android NDK r19c and place it at root level as
+
+~/Android/ndk/r19c
+
+Finally run:
+
+export ANDROIDAPI="26"
+export NDKAPI="21"
+
+p4a apk --private ~/lex-talionis-master --package=com.greentwip.lextalionis --name "Lex Talionis" --version 0.1 --bootstrap=sdl2 --requirements=python3,pygame,kivy --sdk-dir ~/Android/Sdk --ndk-dir ~/Android/ndk/r19c --orientation sensorLandscape --release
+
+If you get this error 
+
+Exception in thread "main" java.lang.NoClassDefFoundError: javax/xml/bind/annotation/XmlSchema
+
+Just do
+
+sudo update-alternatives --config java
+
+and select the jdk 1.8 option
